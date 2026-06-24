@@ -1,304 +1,294 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.246.68.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53A2EC09B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 11:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49153A8743;
+	Wed, 24 Jun 2026 12:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.246.68.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782299300; cv=none; b=TyoRx8l4NvO6enMgC1NRDvhWHTB4BrDfZM2xGRv+KTfNfcFAQTMNNFo/IwMP8okfAyJdLsKyrNm+soCiiEygJ9iwaV19p8PxTEPgpVyzWPqfEs4Ziz5NSt1sKCm4W4rnRPQLAfUQw55zUu2Lv8MjgRfUwdnSE9+/XgnFmTxLZK8=
+	t=1782303802; cv=none; b=cnyJfgNLpa9L4yVo/9WPm/aKLzBjl+Fd+fWquvn/QyFgwU4rZrhrbdFPZvv3ZAOZr9PP7iDLWg0reus39CzmIbkafZpVHquBoZhV2Cvo+Rn+Ok8352bEIG7MG4t8XcZL8QhXYMF46OC8NtPs8eLPMyOVCuVyJMG8IUw+OhzQQsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782299300; c=relaxed/simple;
-	bh=IoBEiolJATWxZV1vpooXXrlpswz8LM+XlrdVTKXE2U0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rWGiQIid1NNxtVBeXM5Ge8rJGpYhpbyJbRGAQWbur3KX9xWM/dst3P3bxpL8JMlUMF1hccCotn8XAefSJ58lCZt6/MQyCTBUA+YoSTl4g4d+vHCGP/XU7Qq/XmbabDLCicsy2l3luzMHuli6uKZ3N7slJwr8cCHiMd7uaCm3hTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JZJUu+58; arc=none smtp.client-ip=209.85.210.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782303802; c=relaxed/simple;
+	bh=mT4IUmG+gjJ2XSH5kd4pF5LnBWREyn6mrkSCXzNj7xM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YB1ehXGdr2pyYcs11zkJQBOp6kjeqz/jgdcu/mk2vURxeFD4sZv7Fm7vw2YTjr3RfAZU2XhaFr70qxbIelwzFthI8hBHO2pv6iVNSmkLThN5ChL3Lt3jFvxSQFWgJwWNkHZXCGS4tmTsx4VkceNXZGmNPuxo4s2++UoqVzFgXLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=OddirskF; arc=none smtp.client-ip=44.246.68.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZJUu+58"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-8423610ec93so1025844b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 04:08:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="OddirskF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782299297; x=1782904097; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yXtuRuNUX2Rp2ayyKmvIq6nuFd+B5mhsEfkXh3sxMRw=;
-        b=JZJUu+58fOy0l45aJnUx1/Pv0UlrQyCGFlJ0W4bXYZ9bb6LNsnasMv1T3kb8Ifn8Mo
-         TuODECwCe3KY/lhVtb5U19SDQdcKjBkitB6Vvs/AjcblAxN3GyyYcgDiGdh4HSRBhBL4
-         +5jrv5WunsxYRnzJ4jsxTWyUVyzKq/H6sQ7tPk03Om884Eew+vIhkNLqegVo8LuB95SH
-         h3DQIlUpmKLq57Wem5xAg62CpB3Sb6yJvJxVX/1eajiOz2Vp1x0CHYhUooGhe1kya02b
-         Cwv3LO6NgTduxJlDDfa18hH1UGIvwqORJdULCDnx4M5Xl/LscRvMpGjKlvhdFlZRUeUC
-         QqVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782299297; x=1782904097;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yXtuRuNUX2Rp2ayyKmvIq6nuFd+B5mhsEfkXh3sxMRw=;
-        b=XoiBQGMux+z4dJHuqfVzxpx78o7O3V628uoXPNI15sOF8hT4bTyBZ5krEqGEEPCOtk
-         WFpuMzLSAvg1iEOmjobYoMLwX32+Ym9GL76IofGcSzYueEMPoOVszn7mqzlGcjJ6t8mt
-         BpYYX3vV/hKECpCHTqbPy5qTB4iVC60N9UFpi3KPQvXZAbNIzlJK3b+FmlLYrViN+ac/
-         D3U2olgBc5DznbnwVFlcf0UVvF580wdYuIlpINGdvFOVmDpBu+Wl1E5KWfScif4kwHZu
-         QXU+XTTZ+sxndYCjdsbhvUuWjZtpAs1O6OppT1MqpyR6bkS59pIxdz+/VNmZPYcWEc0J
-         dOcQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8DN8SyCYA2Kbzlv2fb+UDw3HrpjHdEeK2WmJCoHrFsf9WlVmmDOy0FiHANOjRataQvztc25+MJ2AoMMjqiBpsteJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysx3q+mJYfKAwwX1FKBJssYvwvVo7zt5nZBBw9zHUy/YHRJiKF
-	uQP7eIXPqX8AuY4abP4zTNgT7nkXW7WA7S5o3f8raXUHMsrULuMmor8D
-X-Gm-Gg: AfdE7ckedqjjhA6kmAXx0gZ0VDyx4lx/k+FhS2AWw4eu4t59TxV0tsl+7XO2myV33h2
-	90Z9H3relwIHabMN4xi1WZZz1c0bVvk9UbYZD/Y3++QTv74dfWvXB7qLTghDmkr9f+qXUDlKkNj
-	hMWS9MEn65dI/WwNjCD7cv4E3a0VGMUboFHbjMSbrntQWukCBGao9Aw4kd6C37UI4btsAS+Jv7z
-	Jx3CXjW+eAeQv5MzGdJCm5QVvM9dPf+bOLSRML8Tj2COkpWr+jahpQcyX+ouaQWScbJAOwsxBuR
-	tBEg1F/Zcq+EJ4UChjanIGzrFCMsuDueiInHDt9bsBT0IYradpQpNrwxtBVLnQ426im7Ey9c6BC
-	gZf1oAILtiQud+5TN17J1v7Odz8GHHKSoFXyh4uV/orwNx+J6yoISIQ6trf0pgw0A7J5ml3zCUB
-	MakFa7EL4JMRufZ1/nERFK
-X-Received: by 2002:a05:6a00:a112:b0:82f:50cd:e586 with SMTP id d2e1a72fcca58-845a2ae22e4mr3475551b3a.13.1782299296908;
-        Wed, 24 Jun 2026 04:08:16 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-845a4002c51sm1926735b3a.27.2026.06.24.04.08.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2026 04:08:15 -0700 (PDT)
-Message-ID: <ca1115c0-1509-453a-8235-08e381a3da6f@gmail.com>
-Date: Wed, 24 Jun 2026 19:08:06 +0800
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1782303799; x=1813839799;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VxTBqzN5Gt3THfa56wGHo8VwLbXXqUlB4BienGXEMbQ=;
+  b=OddirskF88YzmDLERzKAZ6QBzheENZvJza/vDcGktE2ivkqdUjc7wVCc
+   GBLacg0TBG2FukpklSZSHDuedVvukd15wCuvLr9n8OcZCpwPNxU+SBFod
+   CIW3/yzinuGQLhE1KSniTEfE7S8gbSgP9yrB7Q+6t58y+5eSNVtMd3jdQ
+   b8oE1mhIttQlU7LZkiz850q7WzpmJQLKQoIHu4iNMoJDu43tUJ+qf0z3q
+   nkTk8CwN2Lo/aTtgdCzlAqKnlb3ck/hBkJalyrxDOCEyyx0JjFce/JOYf
+   NMxmEotgWzMSxXQE+iqJ7T18a+6VX21Zq8kB90NM5RQc8enZzFjW/U9ll
+   g==;
+X-CSE-ConnectionGUID: O5/wXofeSdm9rsLTCaqN+A==
+X-CSE-MsgGUID: CPKDi91mTQa3yV8SiYaFkQ==
+X-IronPort-AV: E=Sophos;i="6.24,222,1774310400"; 
+   d="scan'208";a="22420629"
+Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
+  by internal-pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2026 12:23:16 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [205.251.233.182:21915]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.142:2525] with esmtp (Farcaster)
+ id 188fcb47-4f79-48d5-a123-690bbcaa4941; Wed, 24 Jun 2026 12:23:16 +0000 (UTC)
+X-Farcaster-Flow-ID: 188fcb47-4f79-48d5-a123-690bbcaa4941
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Wed, 24 Jun 2026 12:23:16 +0000
+Received: from dev-dsk-doebel-1a-7b355d76.us-east-1.amazon.com (10.169.119.5)
+ by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Wed, 24 Jun 2026 12:23:15 +0000
+From: Bjoern Doebel <doebel@amazon.de>
+To: <stable@vger.kernel.org>
+CC: Bjoern Doebel <doebel@amazon.de>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, David Howells <dhowells@redhat.com>
+Subject: [PATCH 6.6.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
+Date: Wed, 24 Jun 2026 12:22:54 +0000
+Message-ID: <20260624122258.2476991-1-doebel@amazon.de>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] mm/compaction: skip isolate mlocked folios when
- compact_unevictable_allowed=0
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Cc: akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
- jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- david@kernel.org, ljs@kernel.org, liam@infradead.org, rppt@kernel.org,
- bigeasy@linutronix.de, clrkwllms@kernel.org, Alexander.Krabler@kuka.com,
- Hugh Dickins <hughd@google.com>
-References: <20260604023812.3700316-1-chenwandun1@gmail.com>
- <20260604023812.3700316-2-chenwandun1@gmail.com>
- <969cb14b-5b8b-48e6-add6-4dd13101dd89@kernel.org>
- <040788a9-e0d5-478e-bb48-3d22b8b41020@gmail.com>
- <c8793c0f-7156-4cb7-9e6e-7909397e2fff@kernel.org>
-Content-Language: en-US
-From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <c8793c0f-7156-4cb7-9e6e-7909397e2fff@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+X-ClientProxiedBy: EX19D046UWB003.ant.amazon.com (10.13.139.174) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
+[ Upstream commit 119a5d573622ae90ba730d18acfae9bb75d77b9a ]
+
+When the ring buffer was first introduced, reading the non-consuming
+"trace" file required disabling the writing of the ring buffer. To make
+sure the writing was fully disabled before iterating the buffer with a
+non-consuming read, it would set the disable flag of the buffer and then
+call an RCU synchronization to make sure all the buffers were
+synchronized.
+
+The function ring_buffer_read_start() originally  would initialize the
+iterator and call an RCU synchronization, but this was for each individual
+per CPU buffer where this would get called many times on a machine with
+many CPUs before the trace file could be read. The commit 72c9ddfd4c5bf
+("ring-buffer: Make non-consuming read less expensive with lots of cpus.")
+separated ring_buffer_read_start into ring_buffer_read_prepare(),
+ring_buffer_read_sync() and then ring_buffer_read_start() to allow each of
+the per CPU buffers to be prepared, call the read_buffer_read_sync() once,
+and then the ring_buffer_read_start() for each of the CPUs which made
+things much faster.
+
+The commit 1039221cc278 ("ring-buffer: Do not disable recording when there
+is an iterator") removed the requirement of disabling the recording of the
+ring buffer in order to iterate it, but it did not remove the
+synchronization that was happening that was required to wait for all the
+buffers to have no more writers. It's now OK for the buffers to have
+writers and no synchronization is needed.
+
+Remove the synchronization and put back the interface for the ring buffer
+iterator back before commit 72c9ddfd4c5bf was applied.
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lore.kernel.org/20250630180440.3eabb514@batman.local.home
+Reported-by: David Howells <dhowells@redhat.com>
+Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there is an iterator")
+Tested-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Assisted-by: Kiro:claude-opus-4.8
+Signed-off-by: Bjoern Doebel <doebel@amazon.de>
+---
+ include/linux/ring_buffer.h |  4 +--
+ kernel/trace/ring_buffer.c  | 67 ++++++-------------------------------
+ kernel/trace/trace.c        | 14 +++-----
+ kernel/trace/trace_kdb.c    |  8 ++---
+ 4 files changed, 18 insertions(+), 75 deletions(-)
+
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index ded528d23f85..382fbaa701f9 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -129,9 +129,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
+ 
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags);
+-void ring_buffer_read_prepare_sync(void);
+-void ring_buffer_read_start(struct ring_buffer_iter *iter);
++ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+ 
+ struct ring_buffer_event *
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 508edf1f3f1e..52c7dbccafed 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5084,28 +5084,20 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+ 
+ /**
+- * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
++ * ring_buffer_read_start - start a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
+  * @flags: gfp flags to use for memory allocation
+  *
+- * This performs the initial preparations necessary to iterate
+- * through the buffer.  Memory is allocated, buffer recording
+- * is disabled, and the iterator pointer is returned to the caller.
+- *
+- * Disabling buffer recording prevents the reading from being
+- * corrupted. This is not a consuming read, so a producer is not
+- * expected.
+- *
+- * After a sequence of ring_buffer_read_prepare calls, the user is
+- * expected to make at least one call to ring_buffer_read_prepare_sync.
+- * Afterwards, ring_buffer_read_start is invoked to get things going
+- * for real.
++ * This creates an iterator to allow non-consuming iteration through
++ * the buffer. If the buffer is disabled for writing, it will produce
++ * the same information each time, but if the buffer is still writing
++ * then the first hit of a write will cause the iteration to stop.
+  *
+- * This overall must be paired with ring_buffer_read_finish.
++ * Must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
++ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -5130,51 +5122,12 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ 
+ 	atomic_inc(&cpu_buffer->resize_disabled);
+ 
+-	return iter;
+-}
+-EXPORT_SYMBOL_GPL(ring_buffer_read_prepare);
+-
+-/**
+- * ring_buffer_read_prepare_sync - Synchronize a set of prepare calls
+- *
+- * All previously invoked ring_buffer_read_prepare calls to prepare
+- * iterators will be synchronized.  Afterwards, read_buffer_read_start
+- * calls on those iterators are allowed.
+- */
+-void
+-ring_buffer_read_prepare_sync(void)
+-{
+-	synchronize_rcu();
+-}
+-EXPORT_SYMBOL_GPL(ring_buffer_read_prepare_sync);
+-
+-/**
+- * ring_buffer_read_start - start a non consuming read of the buffer
+- * @iter: The iterator returned by ring_buffer_read_prepare
+- *
+- * This finalizes the startup of an iteration through the buffer.
+- * The iterator comes from a call to ring_buffer_read_prepare and
+- * an intervening ring_buffer_read_prepare_sync must have been
+- * performed.
+- *
+- * Must be paired with ring_buffer_read_finish.
+- */
+-void
+-ring_buffer_read_start(struct ring_buffer_iter *iter)
+-{
+-	struct ring_buffer_per_cpu *cpu_buffer;
+-	unsigned long flags;
+-
+-	if (!iter)
+-		return;
+-
+-	cpu_buffer = iter->cpu_buffer;
+-
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+ 	arch_spin_lock(&cpu_buffer->lock);
+ 	rb_iter_reset(iter);
+ 	arch_spin_unlock(&cpu_buffer->lock);
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++
++	return iter;
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_read_start);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6b35666a4e0b..f57baf67726d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4792,21 +4792,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->array_buffer->buffer,
+-							 cpu, GFP_KERNEL);
+-		}
+-		ring_buffer_read_prepare_sync();
+-		for_each_tracing_cpu(cpu) {
+-			ring_buffer_read_start(iter->buffer_iter[cpu]);
++				ring_buffer_read_start(iter->array_buffer->buffer,
++						       cpu, GFP_KERNEL);
+ 			tracing_iter_reset(iter, cpu);
+ 		}
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->array_buffer->buffer,
+-						 cpu, GFP_KERNEL);
+-		ring_buffer_read_prepare_sync();
+-		ring_buffer_read_start(iter->buffer_iter[cpu]);
++			ring_buffer_read_start(iter->array_buffer->buffer,
++					       cpu, GFP_KERNEL);
+ 		tracing_iter_reset(iter, cpu);
+ 	}
+ 
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 59857a1ee44c..628c25693cef 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -43,17 +43,15 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.array_buffer->buffer,
+-						 cpu, GFP_ATOMIC);
+-			ring_buffer_read_start(iter.buffer_iter[cpu]);
++			ring_buffer_read_start(iter.array_buffer->buffer,
++					       cpu, GFP_ATOMIC);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.array_buffer->buffer,
++			ring_buffer_read_start(iter.array_buffer->buffer,
+ 						 cpu_file, GFP_ATOMIC);
+-		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
+ 
+-- 
+2.50.1
 
 
-On 6/22/26 17:55, Vlastimil Babka (SUSE) wrote:
-> On 6/18/26 13:43, Wandun wrote:
->>
->>
->> On 6/18/26 02:52, Vlastimil Babka (SUSE) wrote:
->>> On 6/4/26 04:38, Wandun Chen wrote:
->>>> From: Wandun Chen <chenwandun@lixiang.com>
->>>>
->>>> compact_unevictable_allowed is default 0 under PREEMPT_RT,
->>>> isolate_migratepages_block() skips folios with PG_unevictable set.
->>>> However, mlock_folio() sets PG_mlocked immediately but defers
->>>> PG_unevictable to mlock_folio_batch(), result in a folio with
->>>> PG_mlocked=1 but PG_unevictable=0. Compaction will isolate such a
->>>> folio.
->>>>
->>>> Fix by checking folio_test_mlocked() together with the existing
->>>> folio_test_unevictable() check.
->>>>
->>>> A similar issue has been reported by Alexander Krabler on a 6.12-rt
->>>> aarch64 system. Vlastimil suggested to check the mlocked flag [1].
->>>>
->>>> Reported-by: Alexander Krabler <Alexander.Krabler@kuka.com>
->>>> Closes: https://lore.kernel.org/all/DU0PR01MB10385345F7153F334100981888259A@DU0PR01MB10385.eurprd01.prod.exchangelabs.com/
->>>> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
->>>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
->>>> Link: https://lore.kernel.org/all/33275585-f2db-4779-89f0-3ae24b455a67@suse.cz/ [1]
->>>
->>> Well in that thread, Hugh doubted my suggestion and then it seems we didn't
->>> concluded anything. Did you actually in practice observe the issue that
->>> Alexander had, and that this patch fixed it, or is that theoretical?
->>>
->> Yes, I wrote a test case that can reproduce it in a few second.
->>
->> The test case contains 3 steps:
->> 1. mlockall
->> 2. mmap file(2GB) + trigger file write page fault;
->> 3. during step 1, trigger compact via /proc/sys/vm/compact_memory
->>
->>
->> My reproduction environment is qemu with 4GB ram, 8 core, aarch64,
->> preempt_rt and includes the tracepoint in patch 02.
->> After running the reproduction program for a few seconds, the
->> following output appears.
-> 
-> Ah, nice.
-> 
->> repro-403     [004] ....1   101.270505: mm_compaction_isolate_folio: pfn=0x71e3a mode=0x0 flags=referenced|uptodate|mlocked
->> repro-403     [004] ....1   101.270507: mm_compaction_isolate_folio: pfn=0x71e3b mode=0x0 flags=referenced|uptodate|mlocked
->> repro-403     [004] ....1   101.270513: mm_compaction_isolate_folio: pfn=0x71e3c mode=0x0 flags=referenced|uptodate|mlocked
->> repro-403     [004] ....1   101.270515: mm_compaction_isolate_folio: pfn=0x71e3d mode=0x0 flags=uptodate|mlocked
->> repro-403     [004] ....1   101.270517: mm_compaction_isolate_folio: pfn=0x71e3e mode=0x0 flags=uptodate|mlocked
->> repro-403     [004] ....1   101.270520: mm_compaction_isolate_folio: pfn=0x71e3f mode=0x0 flags=uptodate|mlocked
->>
->>
->> Unfortunately, I recently found that there is still a bug in the
->> fix patch. Setting mlocked in the mlock_folio function could happen
->> even after the page is successfully isolated, so it still cannot
->> prevent migration. Because of this, I need to think more about how
->> to fix it.
->>
->> Perhaps we should double-check whether the page is mlocked during
->> the actual migration phase.
-> 
-> So IIUC the isolation+migration might be started between the folio is
-> allocated, and mlocked? In that case the check during migration could still
-
-Yes, in that case it still be racy, it is not a good idea to check page flags.
-
-> be racy, and if the page is isolated, it's already bad for the RT process.
-
-IIUC, more accurately, the migration entry in the page talbe is real a bad for
-RT process, because isolate page doesn't modify the page table, so memory
-access continues as usual, therefore a new idea occur.
-
-S1. In the mlock[all] syscall, if mlock_vma_pages_range hit a migration entry,
-    then, it should wait for the migration to complete.
-
-S2. During the unmap phase of memory migration, prevent a page from being unmapped
-    if the page's associated vma is markd with VM_LOCKED, similar to how reclaim is
-    disabled for pages in a VM_LOCKED vma(try_to_unmap_one).
 
 
-For a page handled during the mlock[all] syscall:
-  - if migration has been already finished, there is noting to do;
-  - if migration is in progress and the migration etnry is already filled, we
-    wait (S1)
-  - if the page is in-fight, going to be isolated/migrated, S2 prevents the unmap.
-
-For a page handled during a page fault: VM_LOCKED is already set on the vma,
-so S2 guarantees it will not be unmapped, hence no migration entry.
-
-
-Thanks a lot for the detailed feedback, Vlastimil.
-
-Best regards,
-Wandun
-
-
-> 
-> So this would only be a short-term problem after the mlockall, but we don't
-> have a way for the RT process to know the moment it's all settled, right?
-
-Yes, some pages may have been isolated and will do migration.
-
-> Probably the proper solution would be for mlock[all]() itself to wait for an
-> isolated page, and only continue once it knows it can't be isolated anymore.
-> This might howver would go against some of the folio batching optimizations?
-> 
->> What do you think of this best-effort approach?
->>
->>
->> Best regards,
->> Wandun
->>
->>
->>
->>
->>
->> The full reproducer is as below:
->>
->> /* gcc repro.c -o repro -lpthread */
->>
->> #define _GNU_SOURCE
->> #include <fcntl.h>
->> #include <pthread.h>
->> #include <stdio.h>
->> #include <stdlib.h>
->> #include <sys/mman.h>
->> #include <unistd.h>
->>
->> #define PAGE_SIZE       4096
->> #define NR_PAGES        32
->> #define FILE_SIZE       (2ULL * 1024 * 1024 * 1024)
->>
->> static void *worker_fn(void *arg)
->> {
->> 	int fd = (long)arg;
->> 	size_t len = (size_t)FILE_SIZE;
->> 	char *p = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
->> 	if (p == MAP_FAILED)
->> 		return NULL;
->>
->> 	for (size_t off = 0; off + NR_PAGES * PAGE_SIZE <= len;
->> 	     off += NR_PAGES * PAGE_SIZE) {
->> 		for (int i = 0; i < NR_PAGES; i++)
->> 			p[off + i * PAGE_SIZE] = 1;
->> 		usleep(200);
->> 	}
->>
->> 	munmap(p, len);
->> 	return NULL;
->> }
->>
->> static void *compact_fn(void *arg)
->> {
->> 	(void)arg;
->> 	int fd = open("/proc/sys/vm/compact_memory", O_WRONLY);
->> 	if (fd < 0)
->> 		return NULL;
->>
->> 	while (1) {
->> 		if (write(fd, "1", 1) < 0) {}
->> 		usleep(5000);
->> 	}
->> }
->>
->> int main(void)
->> {
->> 	mlockall(MCL_CURRENT | MCL_FUTURE);
->>
->> 	int fd = open("./repro_largefile.dat", O_RDWR | O_CREAT, 0600);
->> 	if (fd < 0)
->> 		return 1;
->> 	unlink("./repro_largefile.dat");
->> 	if (ftruncate(fd, (off_t)FILE_SIZE) < 0)
->> 		return 1;
->>
->> 	printf("repro_largefile: 1 worker, %d pages/batch, Ctrl-C to stop\n",
->> 	       NR_PAGES);
->>
->> 	pthread_t compact, worker;
->> 	pthread_create(&compact, NULL, compact_fn, NULL);
->> 	pthread_create(&worker, NULL, worker_fn, (void *)(long)fd);
->>
->> 	pthread_join(worker, NULL);
->> 	return 0;
->> }
->>
->>>> ---
->>>>  mm/compaction.c | 3 ++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/mm/compaction.c b/mm/compaction.c
->>>> index b776f35ad020..7e07b792bcb5 100644
->>>> --- a/mm/compaction.c
->>>> +++ b/mm/compaction.c
->>>> @@ -1116,7 +1116,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->>>>  		is_unevictable = folio_test_unevictable(folio);
->>>>  
->>>>  		/* Compaction might skip unevictable pages but CMA takes them */
->>>> -		if (!(mode & ISOLATE_UNEVICTABLE) && is_unevictable)
->>>> +		if (!(mode & ISOLATE_UNEVICTABLE) &&
->>>> +		    (is_unevictable || folio_test_mlocked(folio)))
->>>>  			goto isolate_fail_put;
->>>>  
->>>>  		/*
->>>
->>
-> 
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
