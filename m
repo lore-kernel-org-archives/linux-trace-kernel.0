@@ -1,80 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1201D2E8897;
-	Wed, 24 Jun 2026 14:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973763C8C73
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 14:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782311551; cv=none; b=UhsvuDwwldEJBIVfnXmZKO6SZHoN6TziEWXA2PwHvqJrFdSFd505ytzbjCQ2ozEY55yHkc1FAVDm2QCE5z0ziV7RlV3MhtPPW+O8LVS6Kxj3c4ndiQNmz79jMRKdJCmoOfmWz2ytuRI15ZEyqV6Clm6mWpjpZ4rR5czgvjPCXrQ=
+	t=1782311805; cv=none; b=emNwpBKQEokCZZKH+LdjlyXjrq8jLfuHUs7fH3NBOeSUmzN22FTo6aO0MwqKPUEuE6PIrNWWSadZEKz2/gySGcnC4JKluR1NW7GMtZNROgtK7KFa6ubrw4zJgjjbafaJYhFzhlUBQ3FkRKagEQH0elL/iAtweESNNJywxb5XRxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782311551; c=relaxed/simple;
-	bh=Ltzy9N2Ct1YFt0HBLgAytdk2KKYtDwPRX4wdssbVauM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WJT2IEEtyGcehf1rAjsDjS+1BvER2dKQxVTU11okmXea89Z7Vgq9h7Q1v7CH0R26oDC+z+2oHMP6Q/eWmoXqu0rORxeBQmBHneo9kOBNLOwrIqLkBVZlLkWCLfDiyrTNAU/Ea9uSETYIbl1LqXIKzd2N1/6O6jEARFYAhEkWIe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hhs7zuPr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782311805; c=relaxed/simple;
+	bh=BLvwlESbQuCEDSXzS5tqvFwFYU3vidOruIhHVHNdGfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=X3EtZj5tQJriCP0r3WurqXcIeMBfYN5kM8eeeSk+d09tvbJ3PMsCs3fKokPFbMGMwIyPIlLcA6pDJ3PG9F8eGwJdAq+X/Bovd/DGBhuD9+G45hb6vbvxOJDtxtR9Mqjdwd50SdVFGkbDegEzCOp6v9TLzHLg6GW/v0Hb47ofW4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UmAd/CUC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hhs7zuPr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB041F000E9;
-	Wed, 24 Jun 2026 14:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782311550;
-	bh=qsK5IzzPhKFXovhsNgY6jYi9QNblCAQFQdzePht7neQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Hhs7zuPrg1Iy3HX5dIuJUivxGhJcf5qedVa4PR4LRXFvv30KdDw7Fme1Qdj2NWQte
-	 EgedfusHPjLs0lU0dq/w6Wpt7+kqmN4ybml9W41Gk/5YM75zRZ5c969uY0doSaHgLw
-	 p/cZ3LyQ7upwFuSFZTZ+0AdGZBZw2+s5Kib6HjyThoyI9hNUS7eJhaQ1sz6ts05/oe
-	 jGp98jpzJRcZEbBi/Jeuq7NQ5sy2mSxOTzGMThHbP0xp8TP+AKZd2IapSVtiMlyfNL
-	 XJH3JlWtR1QgbBGqafzuDeIQw9yWRncqU0PQ33SchFxlT+SHlp9YXu2xT2SVrbdlCb
-	 bJF4BwP/z8vew==
-Date: Wed, 24 Jun 2026 10:32:25 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Thomas
- Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Julia
- Lawall <julia.lawall@inria.fr>, Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH v3 2/2] tracing: Remove trace_printk.h from kernel.h
-Message-ID: <20260624103225.77116713@fedora>
-In-Reply-To: <20260624111152.75476a46@pumpkin>
-References: <20260624081806.120105649@kernel.org>
-	<20260624081948.301578807@kernel.org>
-	<20260624111152.75476a46@pumpkin>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UmAd/CUC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782311795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tjzQ5iUZx4dqlG760rsAJ6ErKlvbzuwirIpLM5sBmLQ=;
+	b=UmAd/CUCAYWI5M/wDlDsCe/xc5H0RU25wUu/FDmkpnWCZ+n6cOCbpbsIyXMzhudkQLnJfp
+	Uh5KuaW+EohuvSNn12CwoKE43uKP7/LiqzqEhkylK+A10qUAmwJhzUjHt1fu6ke0yDY4WM
+	JIjaX5ukespkvAmIwSr1OYmUqFskfB4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-fuOYshRCM3Ol80Tmq2a6-w-1; Wed,
+ 24 Jun 2026 10:36:29 -0400
+X-MC-Unique: fuOYshRCM3Ol80Tmq2a6-w-1
+X-Mimecast-MFC-AGG-ID: fuOYshRCM3Ol80Tmq2a6-w_1782311788
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10C6D1955DD8;
+	Wed, 24 Jun 2026 14:36:28 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.191])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1BFD8180049F;
+	Wed, 24 Jun 2026 14:36:24 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 24 Jun 2026 16:36:27 +0200 (CEST)
+Date: Wed, 24 Jun 2026 16:36:23 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 02/13] uprobes/x86: Remove struct uprobe_trampoline
+ object
+Message-ID: <ajvrZ_mMXnKrWf7h@redhat.com>
+References: <20260526205840.173790-1-jolsa@kernel.org>
+ <20260526205840.173790-3-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260526205840.173790-3-jolsa@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: rhcxx9ke_Sv25z_7A9QZqogaGJ4VdBylXSCUQ0PLD2w_1782311788
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 24 Jun 2026 11:11:52 +0100
-David Laight <david.laight.linux@gmail.com> wrote:
+On 05/26, Jiri Olsa wrote:
+>
+> Removing struct uprobe_trampoline object and it's tracking code,
+> because it's not needed. We can do same thing directly on top of
+> struct vm_area_struct objects.
+>
+> This makes the code simpler and allows easy propagation of the
+> trampoline vma object into child process in following change.
+>
+> Note the original code called destroy_uprobe_trampoline if the
+> optimiation failed, but it only freed the struct uprobe_trampoline
+> object, not the vma. The new vma leak is fixed in following change.
+>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-> That is all about changes to the file causing everything to be rebuilt,
-> not the contents of the file slowing down builds.
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-I guess I should say it better. It causes more build time if that file
-changes. That's what I meant. I update the wording to say:
+---------------------------------------------------------------------
+Although I can't convince myself I fully understand this code with or
+without this patch ;)
 
-   There have been complaints about trace_printk.h causing more build time
-   for being in kernel.h it if changes. There is also an effort to clean up
-   kernel.h to have it not include unneeded header files. Move trace_printk.h
-   out of kernel.h and place it in the headers and C files that use it.
-> 
-> The part you are moving out of normal builds is just a few #defines.
-> They won't have a significant effect on build times either.
-> 
-> So there is no point splitting out trace_controls.h.
+A couple of questions below...
 
-That is a completely different reason. trace_printk.h is about
-trace_printk() usage. The stuff split out into trace_controls.h have
-nothing to do with trace_printk()s.
+> -static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
+> +static struct vm_area_struct *get_uprobe_trampoline(struct mm_struct *mm, unsigned long vaddr)
+>  {
+> -	struct pt_regs *regs = task_pt_regs(current);
+> -	struct mm_struct *mm = current->mm;
+> -	struct uprobe_trampoline *tramp;
+> +	VMA_ITERATOR(vmi, mm, 0);
+>  	struct vm_area_struct *vma;
+>
+> -	if (!user_64bit_mode(regs))
+> -		return NULL;
+> +	if (vaddr > TASK_SIZE || vaddr < PAGE_SIZE)
+> +		return ERR_PTR(-EINVAL);
 
--- Steve
+Do we really need this check? It looks a bit confusing to me...
+vaddr is bp_vaddr from handle_swbp(), it should be valid?
+
+> +
+> +	for_each_vma(vmi, vma) {
+> +		if (!vma_is_special_mapping(vma, &tramp_mapping))
+> +			continue;
+> +		if (is_reachable_by_call(vma->vm_start, vaddr))
+> +			return vma;
+> +	}
+
+Perhaps we can later optimize this code a bit? I mean something like
+
+	start_reachable = ...;
+	end_reachable = ...;
+
+	VMA_ITERATOR(vmi, mm, start_reachable);
+
+	for_each_vma(vmi, vma) {
+		if (!vma_is_special_mapping(...))
+			continue;
+		if (vma->vm_start > end_reachable)
+			break;
+		return vma;
+	}
+
+>  static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  				  unsigned long vaddr)
+>  {
+> -	struct uprobe_trampoline *tramp;
+> -	struct vm_area_struct *vma;
+> -	bool new = false;
+> -	int err = 0;
+> +	struct pt_regs *regs = task_pt_regs(current);
+> +	struct vm_area_struct *vma, *tramp;
+>
+> +	if (!user_64bit_mode(regs))
+> +		return -EINVAL;
+>  	vma = find_vma(mm, vaddr);
+>  	if (!vma)
+>  		return -EINVAL;
+
+I guess find_vma() can't fail, the caller arch_uprobe_optimize() has called
+copy_from_vaddr() under mmap_write_lock()... Nevermind.
+
+Oleg.
 
