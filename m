@@ -1,54 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4292F8EA2
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 22:54:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772B93A7849
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 22:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782341643; cv=none; b=ju6+AUvoph9JBcR+ArSy/g0zfS1k1+bExWS/wX5nvQkjQHGIg4FEPTmArBrm0ALghb3zJHwSZdUOThi0kSDz7NNGSX0sQf56r5ZurrhAB2l2Ng4vJJEsphlXJhVbKM78Z6rulh3jFY9jVn4XCyp4skIzfACf7vHGxCgpYNYYg9s=
+	t=1782341664; cv=none; b=ibHn5xTsqKOzbKeYHM+Ynh9Gdbvdkfv/0VxmUHrg8RN+zEo8+yd7qr60eksAupsd875/t0Q85mRrHU4m59GT3GtRnUo/dYAlle00NXJFzkzZ93h4DVKXwO2YoDh4l7x9PJ2etLyQbwZBfn43ewCdGJdRDhT5f7APQER6jVRyo8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782341643; c=relaxed/simple;
-	bh=zpOCuzf+G4s0AhornyImeV1wnkb/qeiYYlxslZLliek=;
+	s=arc-20240116; t=1782341664; c=relaxed/simple;
+	bh=56P581cyET3p8pfSvFHStxu8oHOszFLpsAJpj8hvZRg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mhyQ+V31fqAAF1fbaW+7XjzmAhukuFONING9OVUrtZPR+GdeJXl3Hbg5BkNShrTq7tbMrg2bbvuGJrbFIeINCQ9dN/iAGokdWjMZ8yY+ntEK/X2IxhuvKjuCRJzzM5KGGuse074dpc/+ByA7V2Scf7lTYNpSxxvRTKqxEyPz2TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrCTfmBm; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=JCCHAEIe+wOMwY4wpn/6e67YT2X+bKqy+p+ldrQ2KupcqQ1MYkxu56EvpEqVgIRN3iMTzCDk7BkL4jU+pNt7XYQUpn5zsZczLW46spt8fOpJV+5iJdlpFPQrxGg+NVvG7Ns5nWmXyPtXzcqo43ofAiNqaUekeY/g21nRiEj3WQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAm5f3UJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrCTfmBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B8A11F00A3D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 22:54:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAm5f3UJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DADF1F00ADB
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 22:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782341642;
-	bh=tEQluaUQHs9Pq0sF7uhlZdeGFpXYplo4f7PQqgQuW+0=;
+	s=k20260515; t=1782341663;
+	bh=56P581cyET3p8pfSvFHStxu8oHOszFLpsAJpj8hvZRg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=NrCTfmBmThM1e1ywz4Uc2cTJ5NMszbpwARgHQLTV5IT7dosoyM8EUug4ZdRHO5vBK
-	 GxpbLJbPi0QS9POiBYLdSqQHSwagUc95L5+eHC9YaRepFTw4TqVg4NL5pqMrpN3M0u
-	 vMMRf/yOye5AE75iet3ERfBLDcDJalgtwIJfgN4o8bk1oDn03I2rUgTbmUSKCHYK4p
-	 rG9IfM+BtV7n1peDjDY8N7kqYHjYJ66BZWJ4/eLPSa6k5AkqjxWmQ6fyTP9rFuq07Q
-	 hcS7eC4wLX+nvvotyiW0JjXfzm9BSj6Cn6TCV8QoQC5FEI8TS1yk1e0mOD2XxACIyo
-	 Sq3/JtDJpwGbw==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5ae9fabd40fso362176e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 15:54:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rp2jPbBNzfHrstkOMtf3BBMNK/vIQfXCcBpWncWsFqEPGduCZgRZy4IniHlMh5XN2utloCMUsIdcZ4Cj43iV6tMCWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyED1PlZnIpJTfSiM1dDlEXd8qRvdEsYr77ulsU4XzFXqMaF+pf
-	53d/3G1ymNYuVA9iZwF0acX2XDzsZS+AzWhHIV2dlVmHbXyXzAEvGhNy0ImJKf0o0boLSw09S9K
-	dqdaLdxO7vWWkSR55nW1n0NWD0lawong=
-X-Received: by 2002:a05:6512:8355:b0:5ad:58c5:5d49 with SMTP id
- 2adb3069b0e04-5aea1f2939bmr10018e87.5.1782341640926; Wed, 24 Jun 2026
- 15:54:00 -0700 (PDT)
+	b=GAm5f3UJm54F7qj3ACcwYfMiGhx0fpiVaO2rFqe7P93zV07FTHwTKz1bXSlkOHfY5
+	 TB/A9TbrlhZ5dNEYrabhUw5qDFvF8QVCFjphUnvqkmohy/6K7usTVDt4R5FeqxBd/N
+	 YlfUKleNA6S67dMaaUf0dYF/71Qj88x1+iv5suPtjNOJlCdD+UqQsdfiwYXDKF03jK
+	 cxN0hdjXlFfWNhB3ieru21GjQxxJmnPKtaH/n+hLoR6SCDF910PlwmFYmNSBIneJhg
+	 7jZfRIcX9945y0F+OpbmHA0RI5Py6ZJsX2yI2fde1JdeKi6iRBGe+ZWIvMqiq+MOFp
+	 0EzoksAhuaRDA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5ad578c49afso1644792e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 15:54:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rqo4QsZ8X3zSBpw/dEk6hEQBs9nBOo8KavuRlbWdDLbG61lrIrKu3MmXxxvqGaH+v9oZGhnlMuqnFfKuELxfq3o8CU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz32SvZMO9gtzph11TvqlBkqDZjArEu20hsEHff8tf1yWl9ACJx
+	tIhBw5UbeYFKMnKQrbvJaV5Ls6PJXKZv1HABiKzrwQGegqSog+VBz79xeg9CG+9eipvS/7Mgf/r
+	lpQvqXU5oQ6JsOdXG9HKGcXmcV1Dzkec=
+X-Received: by 2002:ac2:4909:0:b0:5aa:6e60:1983 with SMTP id
+ 2adb3069b0e04-5aea1f4cc2emr7661e87.24.1782341662098; Wed, 24 Jun 2026
+ 15:54:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260623-i2c-fault-reporting-v1-0-6db1a8aabf18@mobileye.com> <20260623-i2c-fault-reporting-v1-4-6db1a8aabf18@mobileye.com>
-In-Reply-To: <20260623-i2c-fault-reporting-v1-4-6db1a8aabf18@mobileye.com>
+References: <20260623-i2c-fault-reporting-v1-0-6db1a8aabf18@mobileye.com> <20260623-i2c-fault-reporting-v1-5-6db1a8aabf18@mobileye.com>
+In-Reply-To: <20260623-i2c-fault-reporting-v1-5-6db1a8aabf18@mobileye.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 25 Jun 2026 00:53:48 +0200
-X-Gmail-Original-Message-ID: <CAD++jL==oidAtZRLkp6GS8zDj_HzVYiKK4ySiXtLGBjevY=vkQ@mail.gmail.com>
-X-Gm-Features: AVVi8CeRZhi16rK0R8T_l8f30fSkRD317i9RKDpTB3E_lRbKkea3D6tIJrIzIIU
-Message-ID: <CAD++jL==oidAtZRLkp6GS8zDj_HzVYiKK4ySiXtLGBjevY=vkQ@mail.gmail.com>
-Subject: Re: [PATCH 4/7] i2c: nomadik: return proper fault codes
+Date: Thu, 25 Jun 2026 00:54:10 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmze1K8LnMniv1gNTxXnW87AOF08vcPXnsASXn+75WG-Q@mail.gmail.com>
+X-Gm-Features: AVVi8CfWKmNuDtu_CQ8CzYherOgZFOOUsqFP_TlnPojbQL-Ikm-PqOSDWXEzGJQ
+Message-ID: <CAD++jLmze1K8LnMniv1gNTxXnW87AOF08vcPXnsASXn+75WG-Q@mail.gmail.com>
+Subject: Re: [PATCH 5/7] i2c: nomadik: change print level for fault messages
+ to debug
 To: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
 Cc: Andi Shyti <andi.shyti@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
@@ -60,21 +61,14 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Jun 23, 2026 at 6:32=E2=80=AFPM Dmitry Guzman
 <Dmitry.Guzman@mobileye.com> wrote:
 
-> I2C documentation Documentation/i2c/fault-codes.rst defines fault codes
-> for different negative results in I2C transmittion. Previously,
-> i2c-nomadik driver didn't implement them properly - it returned
-> ETIMEDOUT on most errors and EIO on master arbitration lost.
+> i2c-nomadik driver prints error message on every faulted message. This
+> is not a good practice, because in I2C a fault not always is an error,
+> sometimes it is the expected result. For example, scanning bus with
+> `i2cdetects` prints over 100 messages in dmesg (two messages per each
+> target address).
 >
-> To comply with the documentation, return the proper fault codes for
-> different conditions, namely:
->
-> - EAGAIN if arbitration lost
-> - EOVERFLOW if message is too long (>2047 bytes)
-> - ENXIO if target address is not acknowledged
-> - EIO on other errors detected by controller (for example, NACK on data)
-> - ETIMEDOUT if driver gets timeout waiting for message completion
->   without any fault condition detected by the controller (for example,
-> too long message, or SDA/SCL line stuck on 0).
+> To avoid excessive prints in the log, change the print level from err to
+> debug.
 >
 > Signed-off-by: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
 
