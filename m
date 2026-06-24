@@ -1,211 +1,264 @@
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDA43C140E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 14:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782310731; cv=pass; b=n5F5qdCeB2lDelcQjkXCWDGomKjpAMHPHjF5QPsn2y1r5beKRFhEmR33kxci7Y3pbqDSdtfbA/V4+U9bUQ7YAJbKyXwKvBm9EdGNodXtCTSWQFHGptxcyQW9AStSdzGG/PEKfm5PXrNz0fGH/wnWhaJBKo1VaLFFfKPUYtrgQdA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782310731; c=relaxed/simple;
-	bh=S43KLHfWZf4rr+LSchiMooKQ2vnBu5Vtd0C00yl/idE=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TbTPXU1ryvwlb6LHhX+9IOU/grQw4pnJ5BS2eJ+eYuQclIdDMGJIxQrne67aGQYOCjXpuBxF201JizP8CCmeNrG9l4go4NQCoa4oryWp9AcWFIWW2FS7Jh853mvPIosNW70R1+KNiuqdxZFffekonxM/Mpz9v1NLeGw1tlNMzJE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=df3sqHyt; arc=pass smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A98B3C197F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 14:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782311011; cv=none; b=P08WAeW3zBi3krMBTRaSLRkvf5AZMQDAGXqtRqzXWAsqstpB4ywXYne7VXXzVSWDXrdlw01PKCy3uvrscCOiP9sjq6RPiuVztfYcukzsbSuOqP3i265gjZJyiipmc1vuEJ+pOpM0kUhhvUqg3BJFPnhGssYYWPDHGKlUFnRN7QQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782311011; c=relaxed/simple;
+	bh=ANcnDbJl1GrE6afhpUmaNktn53Zw0TE+IUnQR7Lyflk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UZe0F+CEM0Y+FcHXOnXA1y8Bbjw1BQRnTBQ77X5SUt5miWe/2UFu2z+MZboMk9NsMLfCO8JYbth9xgUrgBIB0+X1MdKy5UxIITLZ8XQBU61SIV+Opda4BLb4fxPsL1CrVGS24uiXZGJmabfAgXc4KMNnRswyqq5TgSsSO9nX0iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CK1QgHuI; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="df3sqHyt"
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-13986d61b4eso2706745c88.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 07:18:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782310727; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hh64LZ7bnNFWiDGBk68j1KQo1m3TL+fz2wIVTWXynfthE9djeou+Iu5yOcvPpsjeo7
-         5jeX540KLKZe7wbCsNBmZ8HFxmBm4I5V1RYj+JsgROsvPr3ewUfaIBttLzS+FxzLe/bL
-         RaWrWBOzH5rmRUU6IU1g8UBet7e3TMxFudQ9Nj09NSv6oAvd2CU/LEbStZAaJQ1y4WQt
-         cR4pbiwr8P3AENPywVYYHgc2n3PVXD8k5eMxIIgLdaXHcGG1DBGyXiHKGJdw/cAwiyJ/
-         jR0oem+ZMsI/pTc2wEeTHomiv92FfUnpnsqxL1N/QWe7AbeHBHJ+HJX3b+XtdVOQX7Xl
-         bbPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=ucZ6vleVNv7XMe9m+p1ud+LWxJsaO5xEtX2/mrf+WGU=;
-        fh=HZ/0KPVTnyvYIqthtHIzv2XKkQkg/15/Ts8u83Myjlg=;
-        b=aQAfcOidSQJ/w5byXoipLqhyt+PgEYukdgMUwDfyLWTVnjlUF7KxEIu1z2YdasWd1P
-         AT8YkhmzGL50kPzuT0v8IKxWKNtFLGaPJwkHiSdhRI3GGphiaDHGl9i5NfIYnVSA0I/J
-         9NJiSJsvaYbkx+YbEL8XQnkZXnU73XYx/9GC5vevXTWLeqhikykEmtrpWTNQOeWn6bJ9
-         Ii5HP10nhmAzQ+ck3x7CfzR8sWJ/z14kPpEJ6rtms8FAi6u7qC4aOcysBnUrVVB6HEWL
-         zMM+cqdaaSIvNA6BYuE78ssUanmlQvAvmDC9PedlmPkFPyelD5dOxQyZ+CzN4gr/yfJj
-         yYkA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CK1QgHuI"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4629051c946so786356f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 07:23:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782310727; x=1782915527; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ucZ6vleVNv7XMe9m+p1ud+LWxJsaO5xEtX2/mrf+WGU=;
-        b=df3sqHytMdVQfm8AoVQf0XDsZFlP86k7xtk4HCgprtM4Sn9s7OAXQylD/qcfp/Ep9r
-         0t9p/fnfAiUBS/iQBNEPTdSrMRAMDtcJP1OwM4knL5F42tn5UEehXedN8s4JXkHtRTZK
-         VOqr9xe3z7xacVEAVUp0J8cETm9/thUkrXIXkD9i85dk8hbcnwljADl4eLtMcNHJUdq7
-         Y1FOh+re6oPej1vzugspLX8LP1l+xmKh7xNSPDHoAHZvo10EYqTi2dcHjOsy0YYdRivn
-         fRKFRvQUauDv62EyXbk7hRSdU8O/51XpfJwHFWCzmVQRJkPuzoLRk3OrekIrJxhOujO3
-         IjeQ==
+        d=gmail.com; s=20251104; t=1782311007; x=1782915807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Per6MI6n5CBZ4jce2Yah0coKW3mXxHCaIKwWKmwmsgQ=;
+        b=CK1QgHuIU3L+Hoq9eyhLAP/tW60WuHCUI7tfWelD/UEnl2Wy0NhsVkfh8AA22XEOA2
+         hDg0I3Qw0c8thCpYKIRQF2GB97/jDtHq3N7sH/zC33OPWPVMkUtDc/wZajKMWaLEVhh+
+         9ZNJdTbT7ze+PrqZ/wGdLFb1rAwCCMVFvHdTBfoD6HTQegbltGhdwjkQ+PvECoQiudJB
+         SKRNGqOXEB2kF2ZVf2qCX1biZAaWtJawZh0E366EpIQ4SAIrWsXVO2ZBPpaWDzupv+RC
+         TaMQybC2UB1JHLVfYACnBxKWlff5n5TZv8mwnhHgObgWNzrtct1UvpEaaP+EMi+/wDnr
+         NuMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782310727; x=1782915527;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ucZ6vleVNv7XMe9m+p1ud+LWxJsaO5xEtX2/mrf+WGU=;
-        b=bMBycnoAESq6qzRr8v5iCxho3lyuE4jI2byg+GmfK1fuYeq8UwY44rYiVRDZq6WlzK
-         hznvdRVso654nn7cDtcFAzSyDik5KiPd1pnBoVGazkOwgUxvpzC+SZYyI/0VEyQibuIa
-         y+LBtZyMAFlkE42yoOtHTao22WBahhmbr7vWANbtofUH8cYBCF/6x7uoQStdNWSWmVZO
-         LgEmwF8+8w1JNb+3VC4SdmKHslWfLnW3bLX3gT/GpyLdv/xc+fOeM1NnPEoeJ/X/07bM
-         0OCpV/aW7OgNwH6OSn/O4/7aMQ1fJlVLmGmfkWq7TkMPAsg69uaytNvVZNTS4zoLeCbM
-         UmCQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9+XAG4UWrxjBJeYECQ5/AMu45Pe8FW2QnYIHbuAwoUStSAkvFLGMIQuXOzQFbRCIGaSRlz4VXJEZgQyFzXHPX1MZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzsq6oeail6lcktUjn/hUWeRfEOLOZ+3MfIIYbCxNdSQwHkZIG
-	FHvYm7HrQuIjoUpM2hn3SOC1G27VZqS6cbhjm5k8IvqwoMih2OtaHha9SI32Tp50a+Qk6Za/uOn
-	LeTFh1JdZiETv7nOADMfw+xf3/oy4g6RlaJpGGNUB
-X-Gm-Gg: AfdE7cnrW6gUpDQKK1kkE2gWumWsKtRS3DBLdT8gy+g+vqDjUaqeWmWXVNjXXJtFyXc
-	5C/h2saN9KG/J6SlrMLWhEohxOjeU4Yhg/A+sI/qro9T8+H07cZoug7DIyYMkmdpXxZnPokM8oe
-	vm1N4zLQwldojx0smcldjE0UsdYYCc71qyzM/+ee+Zjs03xvMaOzI2NRFuUglWY8KfpR21Y1GL0
-	RFBXSgRdewEwzLCGS8X7TSE6EB1uh9S9wGNyWw/6Eb9ILMpnvypzYuI4gN9v1Ve59euIyNohcie
-	qEmm9nqlb/OeV5wZj+YcoOAklG4Q
-X-Received: by 2002:a05:7022:43a0:b0:12d:de3e:86a8 with SMTP id
- a92af1059eb24-139ad72bfe4mr15983384c88.38.1782310725876; Wed, 24 Jun 2026
- 07:18:45 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 24 Jun 2026 07:18:45 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 24 Jun 2026 07:18:44 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <3ec15992-2a29-434b-8c99-8b86bfcf007e@arm.com>
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-8-9d2959357853@google.com>
- <CA+EHjTw6x-mxDnJjnhE-6SV73tMrb0paKDTtOC2j6zJ1fXZDLA@mail.gmail.com>
- <CA+EHjTxu32nQ+vPV7Zmcw76_-V4g2_g=P_UzRnnO2dP1PFO2ww@mail.gmail.com> <3ec15992-2a29-434b-8c99-8b86bfcf007e@arm.com>
+        d=1e100.net; s=20251104; t=1782311007; x=1782915807;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Per6MI6n5CBZ4jce2Yah0coKW3mXxHCaIKwWKmwmsgQ=;
+        b=IN7wVQQffn8kd6pcw7EHCnISU7qEURn+iXjbckR/Z/Ri4fkmjgKOUCKXwIlMmkOy1b
+         wtDv/AYWsOIzXxD9TI5HQTD/ihn77ffUdJKd94mEq/dK9Jc6UTSg88t9upfd7RlzqnbA
+         gFhGQ95iuGG4s5UsI2sH/rIPp9iKNuApc3Qozml5bccct5YcGSYhJclElOg/qUEFIQaL
+         lgTzPfl5cvbeXnSLHHTthTXQXWCmbbY+YeEMN4dPQqmh7fGcQsDFrItYIzrQPo1Sj57U
+         crxP7CaElpSkp7EhCEiAV2+/Uy0OyzUc1TK6AQmpjOkXnYwrD+gaJW//nylogBNpG4tn
+         pvKQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqLI2L2imX/mwdcocwrzougE9WhgayNktErbXCVojy2JVYmR5FvEBEaaKdYKlSdFlf/vmgENAxV04MDOcYZbMSvMTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgnjhxeqcW5wZNm13cyXff32qCpcKQMdZF5otoHLYAOTT5t8NP
+	QDCh8XdjP1m4/tcyUQBsa405Aszyd00BRBRDZxl/gXvUCivT4e/5BkVu
+X-Gm-Gg: AfdE7cmr3gcww/7H+h/gLtkzVlWpxQRTfWJfon0jL4aNRpDQyTyqOJn97CAYllE1kO1
+	5ukGkfT3YZBKaa+xjfa7y0ZjacXvHoeiY/JiZKP6de9kqfAk7cFM7nPdKyoTFDJ7xBZvwAQoOKS
+	EwAIeEINL2LoxhpbSW/HSVeYw3lVWbBXFc99GyaBhxm1wrB51RmOYdIFeZHfMUMlnAZVUyZ/Ig9
+	24BTSNahj9+jMpR2ycrCylGZJlA4gBI+0MgzQgkNfVGiGCO0SD4dXYyhaIqKkVMVQheUd0KbLu7
+	U3v/Rn3o5a0SoAAP8xWU2xvefNTVDIVGvPjAETE03v6EbhIoJI9dqTD7u5Ng5rYADAs/eWHT6wL
+	2zppKR8SHA4si1bsxfWkEibiZ+xaZruWzEGpGYPRcXa4j5B4/8vzwM267qtpK79Xx70QCsHh4+F
+	Ufnc29Itdj6KiFwaurq2kimJJ64LQugPGUFkAISVHM/BhoaUbNPw==
+X-Received: by 2002:a05:6000:471a:b0:460:2e53:a6f6 with SMTP id ffacd0b85a97d-46d04583b35mr1261972f8f.12.1782311006854;
+        Wed, 24 Jun 2026 07:23:26 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c221d9405sm8183744f8f.22.2026.06.24.07.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2026 07:23:26 -0700 (PDT)
+Date: Wed, 24 Jun 2026 15:23:24 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: Kaitao Cheng <kaitao.cheng@linux.dev>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Jens
+ Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Paul
+ Moore <paul@paul-moore.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, David Howells
+ <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>, Randy Dunlap
+ <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Philipp
+ Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-ntfs-dev@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+ io-uring@vger.kernel.org, audit@vger.kernel.org, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, live-patching@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-pm@vger.kernel.org, rcu@vger.kernel.org, sched-ext@lists.linux.dev,
+ linux-mm@kvack.org, virtualization@lists.linux.dev, damon@lists.linux.dev,
+ llvm@lists.linux.dev, Kaitao Cheng <chengkaitao@kylinos.cn>
+Subject: Re: [PATCH v3 1/7] list: Add mutable iterator variants
+Message-ID: <20260624152324.3def88ce@pumpkin>
+In-Reply-To: <cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+	<20260622040533.29824-2-kaitao.cheng@linux.dev>
+	<20260622094242.64531b9a@pumpkin>
+	<351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
+	<cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 24 Jun 2026 07:18:44 -0700
-X-Gm-Features: AVVi8CeUzt8nV1nzvS6dw32sjloWQ_ALAuG02W0rgNOvY8pSNnpach_kfV-0O1g
-Message-ID: <CAEvNRgEKB0FhD=qhyX=0m2o+d02Jz6n6njdbFmjyiUpK3Up-4Q@mail.gmail.com>
-Subject: Re: [PATCH v8 08/46] KVM: Provide generic interface for checking
- memory private/shared status
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, Fuad Tabba <tabba@google.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
-	yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
-	aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Suzuki K Poulose <suzuki.poulose@arm.com> writes:
+On Wed, 24 Jun 2026 15:23:47 +0200
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
 
->
-> [...snip...]
->
->>>> @@ -2546,7 +2546,7 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
->>>>   bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
->>>>                                           struct kvm_gfn_range *range);
->>>>
->>>> -static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->>>> +static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->>
->> Should have read the Sashiko review first, but where is this used?
->> It's not used at all in this series...
->
-> See below:
->
->>
->> /fuad
->>
->>>>   {
->>>>          return kvm_get_vm_memory_attributes(kvm, gfn) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
->>>>   }
->>>> @@ -2557,6 +2557,16 @@ static inline bool kvm_mem_range_is_private(struct kvm *kvm, gfn_t start,
->>>>                                                    KVM_MEMORY_ATTRIBUTE_PRIVATE,
->>>>                                                    KVM_MEMORY_ATTRIBUTE_PRIVATE);
->>>>   }
->>>> +#endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
->>>> +
->>>> +#ifdef kvm_arch_has_private_mem
->>>> +typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
->>>> +DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
->>>> +
->>>> +static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->>>> +{
->>>> +       return static_call(__kvm_mem_is_private)(kvm, gfn);
->>>> +}
->>>>   #else
->>>>   static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->>>>   {
->>>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->>>> index 6669f1477013c..8b238e461b854 100644
->>>> --- a/virt/kvm/kvm_main.c
->>>> +++ b/virt/kvm/kvm_main.c
->>>> @@ -2627,6 +2627,20 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
->>>>   }
->>>>   #endif /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
->>>>
->>>> +#ifdef kvm_arch_has_private_mem
->>>> +DEFINE_STATIC_CALL_RET0(__kvm_mem_is_private, kvm_mem_is_private_t);
->>>> +EXPORT_STATIC_CALL_GPL(__kvm_mem_is_private);
->>>> +
->>>> +static void kvm_init_memory_attributes(void)
->>>> +{
->>>> +#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
->>>> +       static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
->>>> +#endif
->>>> +}
->
->
-> Here ^^ as the static call update ?
->
->
-> Suzuki
+> On 6/24/26 15:14, Kaitao Cheng wrote:
+> >=20
+> >=20
+> > =E5=9C=A8 2026/6/22 16:42, David Laight =E5=86=99=E9=81=93: =20
+> >> On Mon, 22 Jun 2026 12:05:31 +0800
+> >> Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
+> >> =20
+> >>> From: Kaitao Cheng <chengkaitao@kylinos.cn>
+> >>>
+> >>> The list_for_each*_safe() helpers are used when the loop body may
+> >>> remove the current entry.  Their API exposes the temporary cursor at
+> >>> every call site, even though most users only need it for the iterator
+> >>> implementation and never reference it in the loop body.
+> >>>
+> >>> Add *_mutable() variants for list and hlist iteration.  The new helpe=
+rs
+> >>> support both forms: callers may keep passing an explicit temporary cu=
+rsor
+> >>> when they need to inspect or reset it, or omit it and let the helper =
+use
+> >>> a unique internal cursor. =20
+> >>
+> >> I'm not really sure 'mutable' means anything either.
+> >> It is possible to make it valid for the loop body (or even other threa=
+ds)
+> >> to delete arbitrary list items - but that needs significant extra over=
+heads.
+> >>
+> >> It might be worth doing something that doesn't need the extra variable,
+> >> but there is little point doing all the churn just to rename things.
+> >> =20
+> >>>
+> >>> This makes call sites that only mutate the list through the current e=
+ntry
+> >>> less noisy, while keeping the existing *_safe() helpers available for
+> >>> compatibility.
+> >>>
+> >>> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
+> >>> ---
+> >>>  include/linux/list.h | 269 +++++++++++++++++++++++++++++++++++++----=
+--
+> >>>  1 file changed, 231 insertions(+), 38 deletions(-)
+> >>>
+> >>> diff --git a/include/linux/list.h b/include/linux/list.h
+> >>> index 09d979976b3b..1081def7cea9 100644
+> >>> --- a/include/linux/list.h
+> >>> +++ b/include/linux/list.h
+> >>> @@ -7,6 +7,7 @@
+> >>>  #include <linux/stddef.h>
+> >>>  #include <linux/poison.h>
+> >>>  #include <linux/const.h>
+> >>> +#include <linux/args.h>
+> >>> =20
+> >>>  #include <asm/barrier.h>
+> >>> =20
+> >>> @@ -763,28 +764,72 @@ static inline void list_splice_tail_init(struct=
+ list_head *list,
+> >>>  #define list_for_each_prev(pos, head) \
+> >>>  	for (pos =3D (head)->prev; !list_is_head(pos, (head)); pos =3D pos-=
+>prev)
+> >>> =20
+> >>> -/**
+> >>> - * list_for_each_safe - iterate over a list safe against removal of =
+list entry
+> >>> - * @pos:	the &struct list_head to use as a loop cursor.
+> >>> - * @n:		another &struct list_head to use as temporary storage
+> >>> - * @head:	the head for your list.
+> >>> +/*
+> >>> + * list_for_each_safe is an old interface, use list_for_each_mutable=
+ instead.
+> >>>   */
+> >>>  #define list_for_each_safe(pos, n, head) \
+> >>>  	for (pos =3D (head)->next, n =3D pos->next; \
+> >>>  	     !list_is_head(pos, (head)); \
+> >>>  	     pos =3D n, n =3D pos->next)
+> >>> =20
+> >>> +#define __list_for_each_mutable_internal(pos, tmp, head)		\
+> >>> +	for (typeof(pos) tmp =3D (pos =3D (head)->next)->next;		\ =20
+> >>
+> >> Use auto
+> >> =20
+> >>> +	     !list_is_head(pos, (head));				\
+> >>> +	     pos =3D tmp, tmp =3D pos->next)
+> >>> +
+> >>> +#define __list_for_each_mutable1(pos, head)				\
+> >>> +	__list_for_each_mutable_internal(pos, __UNIQUE_ID(next), head)
+> >>> +
+> >>> +#define __list_for_each_mutable2(pos, next, head)			\
+> >>> +	list_for_each_safe(pos, next, head)
+> >>> +
+> >>>  /**
+> >>> - * list_for_each_prev_safe - iterate over a list backwards safe agai=
+nst removal of list entry
+> >>> + * list_for_each_mutable - iterate over a list safe against entry re=
+moval
+> >>>   * @pos:	the &struct list_head to use as a loop cursor.
+> >>> - * @n:		another &struct list_head to use as temporary storage
+> >>> - * @head:	the head for your list.
+> >>> + * @...:	either (head) or (next, head)
+> >>> + *
+> >>> + * next:	another &struct list_head to use as optional temporary stor=
+age.
+> >>> + *		The temporary cursor is internal unless explicitly supplied by
+> >>> + *		the caller.
+> >>> + * head:	the head for your list.
+> >>> + */
+> >>> +#define list_for_each_mutable(pos, ...)					\
+> >>> +	CONCATENATE(__list_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
+> >>> +		(pos, __VA_ARGS__) =20
+> >>
+> >> The variable argument count logic really just slows down compilation.
+> >> Maybe there aren't enough copies of this code to make that significant.
+> >> But just because you can do it doesn't mean it is a gooD idea.
+> >> I'm also not sure it really adds anything to the readability.
+> >>
+> >> And, it you are going to make the middle argument optional there is
+> >> no need to change the macro name. =20
+> >=20
+> > Christian K=C3=B6nig and Jani Nikula also disagree with the variadic-ar=
+gument
+> > implementation approach. If we abandon that method, it means we will
+> > inevitably need to add some new macros. If mutable is not a good name,
+> > suggestions for better alternatives would be welcome; coming up with a
+> > suitable name is indeed rather tricky. =20
+>=20
+> I don't think you need to add a new macro for the specific use case that =
+people want to modify the next element of the iteration.
+>=20
+> If I remember your numbers correctly that is a really corner case and kee=
+ping using the existing *_safe() macros for that sounds perfectly fine to m=
+e.
 
-Thanks Suzuki, it is used here. kvm_mem_is_private() was and still is
-the function used to check if some gfn is private or shared. Hence, in
-this patch, the usages of kvm_mem_is_private() were not
-updated. Instead, kvm_mem_is_private() is now set up as a static call,
-and the static call is hard-wired to kvm_vm_mem_is_private() in this
-patch.
+IIRC currently you have a choice of either:
+	define               Item that can't be deleted
+	list_for_each()	     The current item.
+	list_for_each_safe() The next item.
+There is also likely to be code that updates the variables to allow
+for other scenarios.
 
-In the later wiring patch, all the places where attributes are looked up
-are updated all at once: if conversion enabled, take gmem route, else
-take VM route.
+Note that if increase a reference count and release a lock then list_for_ea=
+ch()
+is likely safer than list_for_each_safe() :-)
 
-kvm_mem_is_private() is special in that the if-else is done at KVM load
-time rather than runtime, and I believe that's for performance reasons
-since this is checked quite often from the KVM fault handling code.
+list.h has 9 variants of the 'safe' loop.
+The bloat of another 9 is getting excessive.
 
-Buut I think perhaps Fuad was referring to kvm_mem_range_is_private(),
-which is indeed not used anywhere. Binbin also asked about this, I think
-we should drop kvm_mem_range_is_private(). My reply to Binbin is at [1].
+It has to be said that this is one of my least favourite type of list...
 
-[1] https://lore.kernel.org/all/CAEvNRgGbBcrX5Fw3vNTsTOBNC=Ypi=9-S07674yPxLU9i4akjA@mail.gmail.com/
+	David
+
+>=20
+> Regards,
+> Christian.
+
