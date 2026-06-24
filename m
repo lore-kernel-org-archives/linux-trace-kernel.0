@@ -1,167 +1,156 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F08389DE3;
-	Wed, 24 Jun 2026 07:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AF539184B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 07:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782285355; cv=none; b=ODRaK1nhQpPPsMhw6YlAFcx7AIgeL0aDjuk+jZPPVwzGv8D7+tUbV+wJw3XrRLYfER/pQgz/6T9DpshcexaWWzUO+W01KxDd7Hx+1f2d0yM2kcXhKYgY2zQ0HdTvQ7iR/VS3VZwPyRqg/HSYyZnuI/YpziQAjoJ5Pync8eXtqpM=
+	t=1782287381; cv=none; b=krTzgsbNmq5Xe1AjOZ5ogMkJNHw4ZBk3mExPm3acX3DTpHndImQag4bRGmggYGbWPL06KiajEFVzCvTady4LB4xUt2/HhnIhFn3MedrL1JHbBJ+3Lvlh7i6pAuSOqS+722QbFMLAcR6QlDXuCFAyAdad6jzCyz1smXFlugnG0WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782285355; c=relaxed/simple;
-	bh=PfYTomWWcI7PSFeOzKdEGdH/2MiubdyKhna/WEa7cY8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=IIOcHapx3zkwHw8ohU60ea/q15+Esaej86mQ1NfMFq3XRASxetpAySD+VWXwPVrWNvHPcZw9A73xuU8r42MBlR2AghmGB7iauio7Q4d9/uMaTJikQExJM7e497qolZkihq9xh/u82C2RmHG18Ffxz5IlKeQBUNKQYnOsd2IbF+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=J9g94jE7; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1782287381; c=relaxed/simple;
+	bh=02QaKCuiM61VkYL+ffNjxxe+3cxugQipvDfj1mzylAc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GOyk52XTnSG13EFqp3kjO8CvBknOjHj9zDYMSIn+eGI7G7DZaoYhBnhu19SeNCZPJiLJbCNTqSHU+WkflsyikuHgDCShifSRdKbP8jFggSounswXXAlyHIbydz8Y6dVwvSAiqJTqWZ3PzCtrXPF2FBRlEDFRfCO+LIof2Y0dUz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYqM9zvw; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="J9g94jE7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1782285325; x=1782890125; i=markus.elfring@web.de;
-	bh=8dOWp3pV+ZefuPVZ5j2qaSzkQVlLtzcYfZVuW/HNwQ4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=J9g94jE7rMX0K2jQ3lJWegOVx841SU9oOhKPqhBVvkHGX4PGZAe+gz1Cuwgr2bPu
-	 MLwbLGefYPjjeWARd416rbdJ2mnJlABM/7CG18I3RpRFKmn2i/YzgoNR2dGRvuUwf
-	 mgXq4CTDV183qn/PnUh/rdQrtPo0N7/V4QcOfMofeyZJXLwbZpBxPQHuSThDHUxYX
-	 Rs59Zd3mZYhtB6jR2lT/Q800hhsXXC1Cp+EnHTrVqz/GJex0QDpY427xyIyf1H4ey
-	 HFCHEjKYXdIjq+DpcBOpX3/arpfhYB/Jwv0IFKtgOYOmdyDb/h/fJt2iYIHOzTVgs
-	 3zLlasrhmDICwIwJ0A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from client.hidden.invalid by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MdO5C-1xBLbB1KDI-00b2z7; Wed, 24
- Jun 2026 09:15:25 +0200
-Message-ID: <53c33d57-6619-41ba-8963-604337ae35db@web.de>
-Date: Wed, 24 Jun 2026 09:15:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYqM9zvw"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-46cacc39191so34009f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Jun 2026 00:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782287378; x=1782892178; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7j9BR45HPMxm5qmIlOEiQ7QyT/8TgDIa76ilzwJimWE=;
+        b=fYqM9zvwjjez46147FwfCak+jFTAULAXUjXRlfscXICxJ4X6kLqCR5buZkXAOZWlo0
+         NejRboaSgV9kNMVdrnpP0gwtGIMcv49gWVfRxaU8XuLUVvhPfCg/lc5eS4UxYDZSZux4
+         GPjZO3qLQPgL1YAOtdHwj1tndxSzxSwEV8atWXpFxW/TFfITviigkez6C5H+bM2Pwb3X
+         zU6x2I7fO/sb1nfcrBFJ7f1UC0dKsOjxjfABUAk+Tu5esOpoPWv80LRBx7P1TgBHaqG+
+         fKd1ch24dwg9dcfPdEorV+4z65aTV3O1Yj0/5C34ztBEaZJIx6X45ayBqcEZ/8SX4w6U
+         w5sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782287378; x=1782892178;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7j9BR45HPMxm5qmIlOEiQ7QyT/8TgDIa76ilzwJimWE=;
+        b=fdFnXE/praiDoyFVZyY6Os7zNQb6vsiQjOZfLwk3jMhdQUuKWmH+TmhMcV9fiLS5EH
+         t3L2uKCa36kRej1W8hwwjeU1b3jy7Pk6ahlX2CRE/eQP6Bs43YxvL/ynwXbterSg1zQ7
+         LLZD5M64bOztwH6XG3iON+LFlVnzhRnfmXCvFkYoozW8MLSocC13GbMYEjNOiFyB76ab
+         VYs3zs2NABEvtV8rOj2AuFdDk1Pj4o+GOP4d/xaJmvRsTKWANIOQzvUTHbef1RA7VCsN
+         ngVXmQYVSpqx9123od6eEwvsopvfq0shrpNFgVB4TSR1gJjyYGC+mlURKzyXM/ZkIG6z
+         p/Fw==
+X-Forwarded-Encrypted: i=1; AHgh+RqWAzDyKh3y3i9TZwd+54rR14wfxEXf4rxWLSUIdPIIzPNYy+pXKk++wbD+s5a93nu/ODA4m3W3RdXnNBWPib5ON1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrJ8x+/2z9IrbqXJZCmTV0Sr2DCvnIuKPfSNsNN3n5uEGY4Ew/
+	fEXzXk/T3WVy49TkI8L6vDtCRyUHv0G7E+TVn3XbyTkvnMEahWZ3i0Ja
+X-Gm-Gg: AfdE7ckHUaKZfK8yGD3prF1BUf9IgomSXACCHmgh4fBGGxwXNWiF9buLibmBP3ElrtN
+	7Hpme79+6Zu1it1B5I+iwst7ccin2Rr/c0D649xxVbc5i5+CG0fz621HIeSN3N/+EZMrFfzyEpp
+	iJmghfWp69REt/qd7tqRDQ+g/gStkAz6s5TIRxoJlj2H/OvcI7UrId8ZYX/HtLqcCFFX0e1iJn7
+	BawHrV5b2LJ9KMIOdX7bJE73vovCBxzWFvzZHm/9mCOqUFRi+6+q5Lc1HoS4+ra2yojRxPtlf0O
+	WfOshUezD2CV/YM1KfGBNAheLXAICRgzM3yyBBorp/udkSQxsg/z7C5NktXc+C0TrOKwj9XMBN4
+	y2ie0WS1Cg/HyfvO2+rvE6pGJLfnTpdr+mO98CkuTbMQLTGQS6bdQMnW0CCmEgvhQtnfFLAb7bY
+	7m
+X-Received: by 2002:a05:6000:27c3:b0:46b:70db:2113 with SMTP id ffacd0b85a97d-46b70ea637fmr4202651f8f.0.1782287378428;
+        Wed, 24 Jun 2026 00:49:38 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c1ee01c6csm4748563f8f.14.2026.06.24.00.49.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2026 00:49:38 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 24 Jun 2026 09:49:36 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: syzbot <syzbot+61ce80689253f42e6d80@syzkaller.appspotmail.com>,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	syzkaller-bugs@googlegroups.com, tglx@kernel.org, x86@kernel.org
+Subject: Re: [syzbot] [trace?] general protection fault in mtree_load
+Message-ID: <ajuMEI3Z3dYj7HDB@krava>
+References: <6a38dd47.713c5d62.148f7.000c.GAE@google.com>
+ <ajky0IbEvV_UDj2a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>,
- linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Brigham Campbell <me@brighamcampbell.com>,
- Jori Koolstra <jkoolstra@xs4all.nl>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20260623145147.12145-1-woradorn.laon@gmail.com>
-Subject: Re: [PATCH v3] tracing: Use seq_buf for string concatenation
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20260623145147.12145-1-woradorn.laon@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TFiC94XlxxqZbGdb/y0wk5frxVrXTtU05fENh0OowrVa8K9pe8u
- QtadBkms3J9BH2F2OZbXKcwFP9m0nBHFFsYe/dmzHELGntnSv7fr8HrFX4MQbHw3UabxIvn
- j9Zeuwqyh3PuA6/IO4h6Oy9P3fiixSjPlU1hHTnQjWdW8UiLmKByr+hwzUEX0cVSXwfNbOM
- gdP8oT8JBx9r0CwKd1dDg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bGMsl0RDInQ=;s6ChLshfZgchcskk+rGquto+txl
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ajky0IbEvV_UDj2a@redhat.com>
 
-=E2=80=A6
-> +++ b/kernel/trace/trace_events.c
-=E2=80=A6
-> @@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_e=
-vents[];
-=E2=80=A6
->  static __init int setup_trace_event(char *str)
->  {
-> -	if (bootup_event_buf[0] !=3D '\0')
-> -		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
-> +	if (seq_buf_used(&bootup_event_seq) > 0)
-> +		seq_buf_puts(&bootup_event_seq, ",");
-=E2=80=A6
+On Mon, Jun 22, 2026 at 03:04:16PM +0200, Oleg Nesterov wrote:
+> On 06/21, syzbot wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    6b5a2b7d9bc1 Merge tag 'trace-tools-v7.2' of git://git.ker..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16d56986580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ea6584355d75e0cd
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=61ce80689253f42e6d80
+> > compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+> >
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > Downloadable assets:
+> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-6b5a2b7d.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/b3cb0499fbe9/vmlinux-6b5a2b7d.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/47cfbe57f6ea/bzImage-6b5a2b7d.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+61ce80689253f42e6d80@syzkaller.appspotmail.com
+> >
+> > Oops: general protection fault, probably for non-canonical address 0xdffffc0000000011: 0000 [#1] SMP KASAN NOPTI
+> > KASAN: null-ptr-deref in range [0x0000000000000088-0x000000000000008f]
+> > CPU: 3 UID: 0 PID: 24402 Comm: syz.4.5217 Tainted: G             L      syzkaller #0 PREEMPT(full)
+> > Tainted: [L]=SOFTLOCKUP
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> > RIP: 0010:mas_root lib/maple_tree.c:759 [inline]
+> > RIP: 0010:mas_start lib/maple_tree.c:1179 [inline]
+> > RIP: 0010:mtree_load+0x16d/0xa90 lib/maple_tree.c:5657
+> > Code: 00 00 00 00 48 c7 44 24 78 ff ff ff ff e8 6b bd 84 f6 48 8b 5c 24 50 c6 84 24 9c 00 00 00 00 48 8d 7b 48 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 d6 08 00 00 48 8b 5b 48 e8 6f 1a 08 00 31 ff
+> > RSP: 0018:ffffc900039c76d8 EFLAGS: 00010206
+> > RAX: 0000000000000011 RBX: 0000000000000040 RCX: ffffffff8b848746
+> > RDX: ffff888041b6a540 RSI: ffffffff8b848775 RDI: 0000000000000088
+> > RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000001
+> > R10: 0000000000000001 R11: 000000000000751b R12: dffffc0000000000
+> > R13: ffff88802693adc0 R14: 00001fff904365a7 R15: dffffc0000000000
+> > FS:  0000000000000000(0000) GS:ffff8880d665f000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00007f44aa04f156 CR3: 00000000364d5000 CR4: 0000000000352ef0
+> > Call Trace:
+> >  <TASK>
+> >  vma_lookup include/linux/mm.h:4204 [inline]
+> >  __in_uprobe_trampoline arch/x86/kernel/uprobes.c:766 [inline]
+> >  __is_optimized arch/x86/kernel/uprobes.c:1056 [inline]
+> >  is_optimized arch/x86/kernel/uprobes.c:1067 [inline]
+> >  set_orig_insn+0x1ec/0x2a0 arch/x86/kernel/uprobes.c:1098
+> >  remove_breakpoint kernel/events/uprobes.c:1185 [inline]
+> >  register_for_each_vma+0xbb7/0xdb0 kernel/events/uprobes.c:1318
+> >  uprobe_unregister_nosync+0x12a/0x1c0 kernel/events/uprobes.c:1343
+> >  bpf_uprobe_unregister kernel/trace/bpf_trace.c:2936 [inline]
+> >  bpf_uprobe_multi_link_release+0xb3/0x1c0 kernel/trace/bpf_trace.c:2947
+> >  bpf_link_free+0xec/0x4a0 kernel/bpf/syscall.c:3273
+> >  bpf_link_put_direct kernel/bpf/syscall.c:3326 [inline]
+> >  bpf_link_release+0x5d/0x80 kernel/bpf/syscall.c:3333
+> >  __fput+0x3ff/0xb50 fs/file_table.c:512
+> >  task_work_run+0x150/0x240 kernel/task_work.c:233
+> >  exit_task_work include/linux/task_work.h:40 [inline]
+> 
+> current->mm is already NULL, the exiting task has already passed exit_mm().
+> 
+> Hopefully
+> 
+> 	[PATCHv4 01/13] uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+> 	https://lore.kernel.org/all/20260526205840.173790-2-jolsa@kernel.org/
+> 
+> should help...
 
-I suggest to use the function =E2=80=9Cseq_buf_putc=E2=80=9D instead at th=
-is source code place.
-https://elixir.bootlin.com/linux/v7.1.1/source/lib/seq_buf.c#L203-L221
+yes, that sould fix it
 
-Is there a need for corresponding error detection?
-
-Regards,
-Markus
+thanks,
+jirka
