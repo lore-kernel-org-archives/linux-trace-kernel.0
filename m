@@ -1,113 +1,126 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0299C342CB2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 13:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324EE1A5B90
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 13:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782394760; cv=none; b=tmP3eIx+8/r3HBj/Ee0HQjtv0VaODP+59wETLVKsj5GZt4FPvH3tEV9VTYYhkT4zXCp1YVAfv9w6KWCsdRX6qet8VUpKb8Xc7kULrjGw8jpCUYOmKzvdvP4sreq4DsXEU8V4XW4/JOud0z/zsKfkdRLekcjn5/VoDECiDbGF0DQ=
+	t=1782395313; cv=none; b=tnrcITUGXKcvKVjB+WVasFTApFblh01a5P17JpEDYjZJx8nUKhbuozXgOL1FdhyH5HHdEyOLMCC1cxq9WFvc/jMitiBRKUwGnkhxclLqaWmhsYiyfBWL+WlccqVcMXKYwu5X98FdohX+iR6yTpYzuwOttKyU84ou9S/YAC3zgMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782394760; c=relaxed/simple;
-	bh=+kdBpGeCCh3VUHhZsZ/4EJAxob800T1QKFGk864OpTQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1WahNxP4ITF+91mpnVve3b4a5FAGjJnJQ4fXNKUKX5OXAEOFZ1FCfwpHZxKkWOSmqwHbmpsou5ViTxxjtaARRDa2Kn7pM5U6U5CaBY+cfTFRpbPxMIohrrFidcu1EYK2gyeur9dH265n6lDw89ufhGYHS+jt04zCFA+UR4625s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fzucqzwi; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782395313; c=relaxed/simple;
+	bh=T19PEqTyX9tMQyGDoMXCvQiLrw0aQcKeYXwtmVCtvi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=m45kisYm6TofGv+CtpRbmyrmShszcapDEbrmv3sKI04vW0VdmiMbRKVkoh6nTD94Bk5r3q6fd4pJ78XcJ3x+ZPf/u9ABVgsaK+/uwXtUWE9jgDTNVxPzVSku1MkcR4xcUEMgWwWAQLi+R/iHSxKsGdDAQJXYsr9HA4q8JAuQ3rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zgv17TGk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fzucqzwi"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490b9318997so13105765e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 06:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782394757; x=1782999557; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=f4pR9K1dxaeISN5nLk9a9H7V77qeKeERtll7p7KH46E=;
-        b=FzucqzwivK8xmREkSS/Z/KLx4t7ifE8Tob6iXKXyzgvOnJThNRrxV1ajtiD6mwZO1O
-         Av672lmi+JIOZrwsCFWPlIALcvzzM69WH+Hlhr2P0X7kmZNWdLfzxTcpGzQD/j63ykGX
-         v3WcdVF8eRfvEAq+tNUxm3iUhw6zaaqFfXKdn/sUH5XdrmWBPHidvIJg6OGGWcyOv/QH
-         ac9bU4BVmEb6qVOkJkNas1Trzy+D+Rd8XQGr12rqZgJNcLHzVqpx0GZy8A3pbRWaDvAf
-         cYsHpFz/Gg5xr8bJl0Lo9ejJ3qpnngKUPBU9zAve0Ia/xVNSLR4s5o5doDxrtgStpJ1I
-         1yGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782394757; x=1782999557;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f4pR9K1dxaeISN5nLk9a9H7V77qeKeERtll7p7KH46E=;
-        b=lC9zFN0rz8yzmDhGQbA8gV7a8JI8mg3onMOdNwQRWM77Xy5ALESZd18K/9haxI6oDR
-         odUehV8DgT3UGsmpAeApV+zVq+MPi/Ge+Qh0Gs9wJoWvcTJc+IjiSrcZk7HnzvZe7+JC
-         EDcwBIisKu8XDlEmHJU22PJQ9OGsAxfD6LxlTUSwd1Ot5AElrpUcqcT7CKNa02m9Otd3
-         JC+1T8fQoONAdDdQYJTD/52cCrtQFc7ZmhSSPiByddyRa6uwzWldhafaq5vsOQ0tV1h/
-         bM5pA+So1GgdHIT0mxXFm/LBjn3piOTWJ9frXDy8D1uioU8LavI62gagMAte0QE0qNcd
-         ZxoA==
-X-Forwarded-Encrypted: i=1; AFNElJ/4uuu/HlJPLI1HwgyNwG3XO+YxvGE0cEp+sV8xbLt98t6WyDEW+L7xPyrEb9zFsBo9c6zD0icZpFwSb1LDGCVNiuA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVBIHw0vvcPaLbO5/JUa6MXGn28rEvJiKKAYQGS4c3NFe5gcX5
-	bczUGsqK/+/+DELweCs7yzjz/FD1WL2nHloOMaDDfCG5U1alpIVSoar8
-X-Gm-Gg: AfdE7cmJzgOJjF9QfA7+mp49tBo/lKG32zuYC/aIaBG1voSGsOhuOk8M3d/7nGFPFnN
-	jb8s6Jgh006M1rS8Ti+rW7rPLARhbtdpsT0OjCx+vmOICqh834fRpgTIP1m6kiOM0LmeidyljR/
-	2MjAYvmh81pq0gif0ivL20y0bQt9+xq5432f7XitgwW/ozIZATiUXLW1/PiV86lJzQUKPt8IUNE
-	n6Dx4R52T+V+lIs2v4XWgoIYqGEmN1Wc5kzGeZMwiN6R/HDMvG+4/P3Tko44nGZ3zTad4xuNtC0
-	cZ1CHlXlQk+kAQs0HurKvjYek2UfserJ2K0nj3t9V3vBM9wTIwOXVPFwaW1GWFPhqsc8ALrP7ye
-	9zICqbb9hm/OzVvu9agqThLMd6nyb5nq8vN5nC8KpgGk/nSFiMTWgrXRX213KuIp9NUn8QQ68Nc
-	XhNYmc
-X-Received: by 2002:a05:600c:a403:b0:492:4e1c:120 with SMTP id 5b1f17b1804b1-4926689988fmr31107965e9.32.1782394757186;
-        Thu, 25 Jun 2026 06:39:17 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200:b655:ff13:e355:16a3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-492660addddsm63819605e9.6.2026.06.25.06.39.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 06:39:16 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 25 Jun 2026 15:39:14 +0200
-To: Oleg Nesterov <oleg@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zgv17TGk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782395311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0IpTqu/z4GnFZE6CmkOd3go5T9JW8HRVSpYB0rd17SM=;
+	b=Zgv17TGkvciJDXqWyEqdLpRZfyFcYTM7VcPWnDmEGsL3L0qe9G+bB4W9S5l8j3tmS+y0ou
+	Y6YxiBmQ9/lPQSmObYKbz8i4hxq7v3mipP6TdaKdUNReFDWRtmb7eJx5B3uvnfElmNt6xY
+	+YhuOzYEuYDQJTAIHZNw6GlOw2z6Sc8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-692-FvjnBgH4MEq-vAndbcS9WA-1; Thu,
+ 25 Jun 2026 09:48:25 -0400
+X-MC-Unique: FvjnBgH4MEq-vAndbcS9WA-1
+X-Mimecast-MFC-AGG-ID: FvjnBgH4MEq-vAndbcS9WA_1782395304
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D60BC18A0E21;
+	Thu, 25 Jun 2026 13:48:23 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.191])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5A5941956088;
+	Thu, 25 Jun 2026 13:48:20 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 25 Jun 2026 15:48:23 +0200 (CEST)
+Date: Thu, 25 Jun 2026 15:48:18 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 04/13] uprobes/x86: Unmap trampoline vma object in case
- it's unused
-Message-ID: <aj0vgiPpnmwrfL3H@krava>
+Subject: Re: [PATCHv4 02/13] uprobes/x86: Remove struct uprobe_trampoline
+ object
+Message-ID: <aj0xonQHcEQgIi77@redhat.com>
 References: <20260526205840.173790-1-jolsa@kernel.org>
- <20260526205840.173790-5-jolsa@kernel.org>
- <ajv5lxWjNHBAUa9r@redhat.com>
+ <20260526205840.173790-3-jolsa@kernel.org>
+ <ajvrZ_mMXnKrWf7h@redhat.com>
+ <aj0veiIdtp3YcKyK@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <aj0veiIdtp3YcKyK@krava>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: 4BgxFMtfJj2HmlR9x04kUOQ7mKp2uEQ-7Mq4c1jYikM_1782395304
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ajv5lxWjNHBAUa9r@redhat.com>
 
-On Wed, Jun 24, 2026 at 05:36:55PM +0200, Oleg Nesterov wrote:
-> On 05/26, Jiri Olsa wrote:
+On 06/25, Jiri Olsa wrote:
+>
+> On Wed, Jun 24, 2026 at 04:36:23PM +0200, Oleg Nesterov wrote:
 > >
-> > In case the optimization fails, we leak new-ly created trampoline
-> > vma mapping (in case we just created it), let's unmap it.
+> > Perhaps we can later optimize this code a bit? I mean something like
 > >
-> > Fixes: ba2bfc97b462 ("uprobes/x86: Add support to optimize uprobes")
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> 
-> 
-> but I am a bit confused... It seems that this change doesn't depend on
-> the previous 03/13 which removed VM_DONTCOPY ? So I think this patch
-> could come as 3/13 after "Remove struct uprobe_trampoline object".
+> > 	start_reachable = ...;
+> > 	end_reachable = ...;
+> >
+> > 	VMA_ITERATOR(vmi, mm, start_reachable);
+> >
+> > 	for_each_vma(vmi, vma) {
+> > 		if (!vma_is_special_mapping(...))
+> > 			continue;
+> > 		if (vma->vm_start > end_reachable)
+> > 			break;
+> > 		return vma;
+> > 	}
+>
+> looks good, will try to use that
 
-ok, will move it
+See my next email, we can use for_each_vma_range().
 
-> 
-> And the subject looks misleading to me. A tramp vma may become "unused"
-> if (say) we remove some optimized breakpoint, afaics it will be never
-> unmapped. Perhaps it should say something like "don't leak on failure".
-> 
-> But this all is really minor, please ignore.
+But let me repeat, we can add this mimor optimization later, I don't want
+to delay this series.
 
-np, will change
+> > >  static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct *mm,
+> > >  				  unsigned long vaddr)
+> > >  {
+> > > -	struct uprobe_trampoline *tramp;
+> > > -	struct vm_area_struct *vma;
+> > > -	bool new = false;
+> > > -	int err = 0;
+> > > +	struct pt_regs *regs = task_pt_regs(current);
+> > > +	struct vm_area_struct *vma, *tramp;
+> > >
+> > > +	if (!user_64bit_mode(regs))
+> > > +		return -EINVAL;
+> > >  	vma = find_vma(mm, vaddr);
+> > >  	if (!vma)
+> > >  		return -EINVAL;
+> >
+> > I guess find_vma() can't fail, the caller arch_uprobe_optimize() has called
+> > copy_from_vaddr() under mmap_write_lock()... Nevermind.
+>
+> hum, how's that.. I'll check, but where's the magic? :)
 
-thanks,
-jirka
+arch_uprobe_optimize() -> copy_from_vaddr() reads this mm at the same vaddr,
+this means that vma at this vaddr must exist. Unless I am totally confused ;)
+But even if I am right please ignore. I just tried to understand if find_vma()
+can fail or not here.
+
+Oleg.
 
