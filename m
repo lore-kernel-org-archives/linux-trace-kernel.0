@@ -1,61 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13D53E1D1D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6168D3E16A4
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389757; cv=none; b=WJgRuU5LfTLyTN7nmJ2Gi486qC3DJyThOj6+QfVHlBCz2FxhZJnww0TstCfx4wqk8YJDQZpb8yryhShmFthqibkEMawBkV4EsQWyBe4SM/FCm0PewvZ+jR0bzo1+EgmLOF7W4PsgDse8JP3gJaCFHw1p3m7sEbBNNf5Y0TNQGpY=
+	t=1782389762; cv=none; b=s3H49PJM+uXd+62XkJf+BD3o63Z1SwVosm1EJDiPlnA0Xc+X2SoGtuQFn37R4DUhP8LYEqEAWc7zrZBg6oyVrZGS1TFqoEEDHSlAasvkhbT6xnYPf2XhMJd2Y/liBIHZlRHLiOxgl3GWjToYIzWFpNX6BJ+rLnFvFaO1htEiCvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389757; c=relaxed/simple;
-	bh=snaacL0F22eLdcnliPWZtoef+B3rU7gQVjHP3+UiU+Q=;
+	s=arc-20240116; t=1782389762; c=relaxed/simple;
+	bh=doaF8PCevOnMi9aWfRGPkFoJ26AML/sY8/iFS0A+4dA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=FUHJNvJxPEHu+RDaokae+TFRyR1ARg+fILYCkAKHdSTHi9GKBLWczKo3taSRtkorndUSQHtdCy9SwVs0Wrk7Ew4sH+zv6oiW3LX9RzDswlVstecuRqWWt3fLqK8ZJe0PQxWh9GAirYh3F/AvKDjKq5BsgxPxG+Tf6nBGSEVz2UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Er2O98oC; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=twahLuG8W3DnZjFkFZngAm0hgEU8WkHZcU2DdhmKRPBtWe30wx39/35wcy+1lMXG2l6Ipn66ZFIa2LwAZbNSEz9nxRXcZvsEH7DTzqn+Avf/ZTk2BDADyAftOPukBS/6mF/nYLwCs+KigqhWjWXT8Gkva7K2YPLwX5//fR8aiOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YddGAFKI; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Er2O98oC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YddGAFKI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782389754;
+	s=mimecast20190719; t=1782389759;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5u6Bk1IqmXYolPgpD7CmQDGe1bMudrO5fyI2ZkH5LNw=;
-	b=Er2O98oCXfhcG9xBszbsren+ehfz158RRo4BT7MBpYNt7s26ZF84memIBovq7glX6ffB+7
-	6EexAb+UJdWHO6v32OufoCRqRFw2+61x5pkj47pMD6M4Fw+eC0ge+8XWMwj0sxcjTZwG5v
-	O5gcB4al8nVzcLmfDNGdOyKdBG7IzF0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=2NZM6eJctoFNmmHvXy6aznY2wNFgYEhy8StOnH7QoMc=;
+	b=YddGAFKI1GzqSC6Jv7OwK8A7TAIRCD3h0dWlNeMS6GAD/akFybBok+2vjSO2XKL4CV0mvi
+	sOy8stEGLWM6r30EjMCASCF/hndTOKQMDoU8EdDTjf/h91O8eJfJWm6tGWxrCxgnKGkxA/
+	E228x7KqovqWd3Kz147QUxhVIPceFso=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-0nxdpRwsMaypoHvhNVvLsg-1; Thu,
- 25 Jun 2026 08:15:51 -0400
-X-MC-Unique: 0nxdpRwsMaypoHvhNVvLsg-1
-X-Mimecast-MFC-AGG-ID: 0nxdpRwsMaypoHvhNVvLsg_1782389750
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-660-Ij9Ju9cJNwC_VCEXTJEv9Q-1; Thu,
+ 25 Jun 2026 08:15:56 -0400
+X-MC-Unique: Ij9Ju9cJNwC_VCEXTJEv9Q-1
+X-Mimecast-MFC-AGG-ID: Ij9Ju9cJNwC_VCEXTJEv9Q_1782389755
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D336180AE2D;
-	Thu, 25 Jun 2026 12:15:50 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E450F1953952;
+	Thu, 25 Jun 2026 12:15:54 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9AD1530002E0;
-	Thu, 25 Jun 2026 12:15:47 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 725E93000B4C;
+	Thu, 25 Jun 2026 12:15:52 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
+	Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
 	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v3 12/17] rv: Add KUnit tests for some LTL monitors
-Date: Thu, 25 Jun 2026 14:14:34 +0200
-Message-ID: <20260625121440.116317-13-gmonaco@redhat.com>
+Subject: [PATCH v3 13/17] verification/rvgen: Add the rvgen kunit subcommand
+Date: Thu, 25 Jun 2026 14:14:35 +0200
+Message-ID: <20260625121440.116317-14-gmonaco@redhat.com>
 In-Reply-To: <20260625121440.116317-1-gmonaco@redhat.com>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -65,282 +64,342 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: HeIP50r5rc6jyZ4nV2sl_zCuj1vyibG3C4VEZuLrHMQ_1782389750
+X-Mimecast-MFC-PROC-ID: zZtMz_DX5QbJNPrX53jcS8MNq11FVOQUl1__B2QAtHY_1782389755
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Validate the functionality of LTL monitors by injecting events in a
-controlled environment (KUnit) and expecting reactions, just like it is
-done in DA monitors.
+Add the rvgen kunit subcommand to patch an already generated monitor for
+kunit support. It parses the handlers and create the necessary structs
+and initialisations.
+
+The only remaining manual steps are importing the test in the runner
+and writing the test itself.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- .../trace/rv/monitors/pagefault/pagefault.c   | 16 +++++
- .../rv/monitors/pagefault/pagefault_kunit.c   | 36 +++++++++++
- .../rv/monitors/pagefault/pagefault_kunit.h   | 24 ++++++++
- kernel/trace/rv/monitors/sleep/sleep.c        | 23 +++++++
- kernel/trace/rv/monitors/sleep/sleep_kunit.c  | 61 +++++++++++++++++++
- kernel/trace/rv/monitors/sleep/sleep_kunit.h  | 30 +++++++++
- kernel/trace/rv/rv_monitors_test.c            |  4 ++
- 7 files changed, 194 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_kunit.c
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_kunit.h
- create mode 100644 kernel/trace/rv/monitors/sleep/sleep_kunit.c
- create mode 100644 kernel/trace/rv/monitors/sleep/sleep_kunit.h
+ tools/verification/rvgen/Makefile             |   1 +
+ tools/verification/rvgen/__main__.py          |  15 +-
+ tools/verification/rvgen/rvgen/generator.py   |   4 +-
+ tools/verification/rvgen/rvgen/kunit.py       | 200 ++++++++++++++++++
+ .../rvgen/rvgen/templates/kunit.c             |  29 +++
+ 5 files changed, 246 insertions(+), 3 deletions(-)
+ create mode 100644 tools/verification/rvgen/rvgen/kunit.py
+ create mode 100644 tools/verification/rvgen/rvgen/templates/kunit.c
 
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/rv/monitors/pagefault/pagefault.c
-index e52500fd2d..fb66ea0926 100644
---- a/kernel/trace/rv/monitors/pagefault/pagefault.c
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
-@@ -86,3 +86,19 @@ module_exit(unregister_pagefault);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
- MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page faults");
+diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/Makefile
+index 2a2b9e64ea..48d0376a5c 100644
+--- a/tools/verification/rvgen/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -23,6 +23,7 @@ install:
+ 	$(INSTALL) rvgen/dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
+ 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+ 	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
++	$(INSTALL) rvgen/kunit.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/kunit.py
+ 	$(INSTALL) rvgen/container.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/container.py
+ 	$(INSTALL) rvgen/generator.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/generator.py
+ 	$(INSTALL) rvgen/ltl2ba.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/ltl2ba.py
+diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvgen/__main__.py
+index 5c923dc10d..e0ac562fbd 100644
+--- a/tools/verification/rvgen/__main__.py
++++ b/tools/verification/rvgen/__main__.py
+@@ -13,6 +13,7 @@ if __name__ == '__main__':
+     from rvgen.generator import Monitor
+     from rvgen.container import Container
+     from rvgen.ltl2k import ltl2k
++    from rvgen.kunit import KUnit, KUnitError
+     from rvgen.automata import AutomataError
+     import argparse
+     import sys
+@@ -41,6 +42,11 @@ if __name__ == '__main__':
+     container_parser = subparsers.add_parser("container", parents=[parent_parser])
+     container_parser.add_argument('-n', "--model_name", dest="model_name", required=True)
+ 
++    kunit_parser = subparsers.add_parser("kunit", parents=[parent_parser])
++    kunit_parser.add_argument('-n', "--model_name", dest="model_name", required=True)
++    kunit_parser.add_argument('-l', "--local", dest="local", action="store_true", required=False,
++                               help="Force looking for the monitor in the current directory only")
 +
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+#include <kunit/visibility.h>
-+#include "pagefault_kunit.h"
-+
-+const struct rv_pagefault_ops rv_pagefault_ops = {
-+	.mon = {
-+		.rv_this = &rv_this,
-+		.monitor_init = ltl_monitor_init,
-+		.monitor_destroy = ltl_monitor_destroy,
-+	},
-+	.handle_page_fault = handle_page_fault,
-+	.handle_task_newtask = handle_task_newtask,
-+};
-+EXPORT_SYMBOL_IF_KUNIT(rv_pagefault_ops);
-+#endif
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_kunit.c b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.c
+     params = parser.parse_args()
+ 
+     try:
+@@ -55,11 +61,18 @@ if __name__ == '__main__':
+             else:
+                 print("Unknown monitor class:", params.monitor_class)
+                 sys.exit(1)
+-        else:
++        elif params.subcmd == "container":
+             monitor = Container(vars(params))
++        elif params.subcmd == "kunit":
++            monitor = KUnit(vars(params))
++            monitor.print_files()
++            sys.exit(0)
+     except AutomataError as e:
+         print(f"There was an error processing {params.spec}: {e}", file=sys.stderr)
+         sys.exit(1)
++    except KUnitError as e:
++        print(f"There was an error generating KUnit files: {e}", file=sys.stderr)
++        sys.exit(1)
+ 
+     print(f"Writing the monitor into the directory {monitor.name}")
+     monitor.print_files()
+diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
+index b7ab0c70d4..a85c72fb3a 100644
+--- a/tools/verification/rvgen/rvgen/generator.py
++++ b/tools/verification/rvgen/rvgen/generator.py
+@@ -22,9 +22,9 @@ class RVGenerator:
+         self.description = extra_params.get("description", self.name) or "auto-generated"
+         self.auto_patch = extra_params.get("auto_patch")
+         if self.auto_patch:
+-            self.__fill_rv_kernel_dir()
++            self._fill_rv_kernel_dir()
+ 
+-    def __fill_rv_kernel_dir(self):
++    def _fill_rv_kernel_dir(self):
+         # find the kernel tree root relative to this file's location
+         current_dir = os.path.dirname(os.path.abspath(__file__))
+         kernel_root = os.path.abspath(os.path.join(current_dir, "../../../.."))
+diff --git a/tools/verification/rvgen/rvgen/kunit.py b/tools/verification/rvgen/rvgen/kunit.py
 new file mode 100644
-index 0000000000..56c0cffd8b
+index 0000000000..e996bd29d7
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.c
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+#include <linux/sched/deadline.h>
-+#include <linux/sched/rt.h>
-+#include "pagefault_kunit.h"
++++ b/tools/verification/rvgen/rvgen/kunit.py
+@@ -0,0 +1,200 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Copyright (C) 2026-2029 Red Hat, Inc. Gabriele Monaco <gmonaco@redhat.com>
++#
++# Generator for runtime verification kunit files
 +
-+#if IS_REACHABLE(CONFIG_RV_MON_PAGEFAULT)
++import os
++import re
++import sys
++from . import generator
 +
-+static void rv_test_pagefault(struct kunit *test)
-+{
-+	struct task_struct *target;
-+	struct rv_kunit_ctx *ctx = test->priv;
 +
-+	prepare_test(test, &rv_pagefault_ops.mon);
-+	target = kunit_kzalloc(test, sizeof(struct task_struct), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, target);
++class KUnitError(Exception):
++    """Exception raised for errors in KUnit generation and file handling."""
 +
-+	/* Initial pagefault when non-RT to start the model without failure */
-+	target->policy = SCHED_NORMAL;
-+	target->prio = MAX_RT_PRIO + 20;
-+	rv_pagefault_ops.handle_task_newtask(NULL, target, 0);
-+	rv_mock_current(ctx, target);
-+	rv_pagefault_ops.handle_page_fault(NULL, 0, NULL, 0);
 +
-+	/* RT task has a page fault */
-+	target->policy = SCHED_FIFO;
-+	target->prio = MAX_RT_PRIO - 1;
-+	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+		rv_pagefault_ops.handle_page_fault(NULL, 0, NULL, 0);
-+}
++class KUnit(generator.RVGenerator):
++    template_dir = ""
 +
-+#else
-+#define rv_test_pagefault rv_test_stub
-+#endif
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_kunit.h b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.h
-new file mode 100644
-index 0000000000..2f9652f08b
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++    def __init__(self, extra_params={}):
++        super().__init__(extra_params)
++        self.local = extra_params.get("local", False)
++        self.kunit_c = self._read_template_file("kunit.c")
++        if not self.local:
++            self._fill_rv_kernel_dir()
++        try:
++            self.monitor_path = self.__find_monitor_c_file()
++            with open(self.monitor_path, 'r') as f:
++                self.content = f.read()
++        except OSError as e:
++            raise KUnitError(e)
++        self.monitor_class = self.__detect_monitor_class()
++
++    def _read_template_file(self, file):
++        if file in ("main.c", "Kconfig"):
++            return ""
++        return super()._read_template_file(file)
++
++    def __find_monitor_c_file(self) -> str:
++        """Look for the monitor file in the kernel tree or in the current folder."""
++        if not self.local:
++            path = os.path.join(self.rv_dir, "monitors", self.name, f"{self.name}.c")
++            if os.path.exists(path):
++                return path
++
++        path = os.path.join(self.name, f"{self.name}.c")
++        if os.path.exists(path):
++            return path
++
++        raise FileNotFoundError(f"Could not find monitor C file for '{self.name}'")
++
++    def __extract_function_args(self, handler_name: str) -> str:
++        pattern = re.compile(
++            r'^\s*(.*?)\b' + re.escape(handler_name) + r'\(([^)]*)\)',
++            re.MULTILINE | re.DOTALL
++        )
++        match = pattern.search(self.content)
++        if not match:
++            return "/* XXX: fill handlers argument. */"
++
++        return match.group(2).strip()
++
++    def __parse_attach_handlers(self) -> list[str]:
++        """Find handlers by parsing when they are attached to tracepoints."""
++        probe_pattern = re.compile(
++            r'rv_attach_trace_probe\(.*, ([a-zA-Z0-9_]+)\)'
++        )
++        handlers = []
++        for match in probe_pattern.finditer(self.content):
++            handler = match.group(1)
++            if handler not in handlers:
++                handlers.append(handler)
++        return handlers
++
++    def __detect_monitor_class(self) -> str:
++        for c in ("da", "ha", "ltl"):
++            if f"{c}_monitor.h" in self.content:
++                return c
++        return "da"
++
++    def __fill_kunit_c(self, struct_name: str) -> str:
++        kunit_c = self.kunit_c
++        kunit_c = kunit_c.replace("%%MODEL_NAME%%", self.name)
++        kunit_c = kunit_c.replace("%%MODEL_NAME_UP%%", self.name.upper())
++        kunit_c = kunit_c.replace("%%MONITOR_CLASS%%", self.monitor_class)
++        kunit_c = kunit_c.replace("%%STRUCT_NAME%%", struct_name)
++        return kunit_c
++
++    def __fill_kunit_h(self, struct_name, prototypes) -> str:
++        return f"""/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Automatically generated by rvgen kunit.
 + * May need manual intervention for function prototypes that couldn't be
 + * found (e.g. are in another file) or variables to be exported.
 + */
 +
-+#ifndef __PAGEFAULT_KUNIT_H
-+#define __PAGEFAULT_KUNIT_H
++#ifndef __{self.name.upper()}_KUNIT_H
++#define __{self.name.upper()}_KUNIT_H
 +
 +#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
 +
 +#include <linux/rv.h>
 +#include <rv/kunit.h>
 +
-+extern const struct rv_pagefault_ops {
-+	struct rv_kunit_mon mon;
-+	void (*handle_page_fault)(void *data, unsigned long address, struct pt_regs *regs,
-+			      unsigned long error_code);
-+	void (*handle_task_newtask)(void *data, struct task_struct *task, u64 flags);
-+} rv_pagefault_ops;
++extern const struct {struct_name} {{
++\tstruct rv_kunit_mon mon;
++\t{"\n\t".join(prototypes)}
++}} {struct_name};
 +#endif
 +
-+#endif /* __PAGEFAULT_KUNIT_H */
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monitors/sleep/sleep.c
-index 71d2005ce5..ffd17b597d 100644
---- a/kernel/trace/rv/monitors/sleep/sleep.c
-+++ b/kernel/trace/rv/monitors/sleep/sleep.c
-@@ -247,3 +247,26 @@ module_exit(unregister_sleep);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
- MODULE_DESCRIPTION("sleep: Monitor that RT tasks do not undesirably sleep");
++#endif /* __{self.name.upper()}_KUNIT_H */
++"""
 +
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++    def __fill_monitor_handlers(self, struct_name, assignments):
++        struct_definition = f"""#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
 +#include <kunit/visibility.h>
-+#include "sleep_kunit.h"
++#include "{self.name}_kunit.h"
 +
-+const struct rv_sleep_ops rv_sleep_ops = {
-+	.mon = {
-+		.rv_this = &rv_this,
-+		.monitor_init = ltl_monitor_init,
-+		.monitor_destroy = ltl_monitor_destroy,
-+	},
-+	.handle_sched_waking = handle_sched_waking,
-+	.handle_sched_wakeup = handle_sched_wakeup,
-+	.handle_sched_set_state = handle_sched_set_state,
-+	.handle_contention_begin = handle_contention_begin,
-+	.handle_contention_end = handle_contention_end,
-+	.handle_kthread_stop = handle_kthread_stop,
-+	.handle_sys_enter = handle_sys_enter,
-+	.handle_sys_exit = handle_sys_exit,
-+	.handle_task_newtask = handle_task_newtask,
-+};
-+EXPORT_SYMBOL_IF_KUNIT(rv_sleep_ops);
-+#endif
-diff --git a/kernel/trace/rv/monitors/sleep/sleep_kunit.c b/kernel/trace/rv/monitors/sleep/sleep_kunit.c
++const struct {struct_name} {struct_name} = {{
++\t.mon = {{
++\t\t.rv_this = &rv_this,
++\t\t.monitor_init = {self.monitor_class}_monitor_init,
++\t\t.monitor_destroy = {self.monitor_class}_monitor_destroy,
++\t}},
++\t{"\n\t".join(assignments)}
++}};
++EXPORT_SYMBOL_IF_KUNIT({struct_name});
++#endif"""
++
++        if self.auto_patch:
++            try:
++                with open(self.monitor_path, 'w') as f:
++                    f.write(f"{self.content}\n{struct_definition}\n")
++            except OSError as e:
++                raise KUnitError(f"Error patching monitor file {self.monitor_path}: {e}")
++        else:
++            print(f"Append the following to {self.name}.c:\n")
++            print(struct_definition)
++        print("Now complete the test and add it to rv_monitors_test.c")
++
++    def print_files(self):
++
++        handlers = self.__parse_attach_handlers()
++
++        if not handlers:
++            print(f"No handlers found registered with rv_attach_trace_probe in {self.monitor_path}")
++            return
++
++        print("Found tracepoint handler(s):")
++        for handler in handlers:
++            print(f"  - {handler}")
++
++        prototypes = []
++        assignments = []
++        for handler in handlers:
++            arguments = self.__extract_function_args(handler)
++
++            prototypes.append(f"void (*{handler})({arguments});")
++            assignments.append(f".{handler} = {handler},")
++
++        struct_name = f"rv_{self.name}_ops"
++
++        self.__fill_monitor_handlers(struct_name, assignments)
++
++        dir_path = os.path.dirname(self.monitor_path)
++
++        header_file_path = os.path.join(dir_path, f"{self.name}_kunit.h")
++        kunit_c_file_path = os.path.join(dir_path, f"{self.name}_kunit.c")
++
++        use_backup = True
++        if os.path.exists(header_file_path) or os.path.exists(kunit_c_file_path):
++            try:
++                response = input("KUnit file(s) already exist. Overwrite? [y/N]  (N for backup): ")
++                if response.strip().lower() in ("y", "yes"):
++                    use_backup = False
++            except EOFError:
++                print("Non-interactive session detected, not overwriting existing files.")
++        else:
++            use_backup = False
++
++        if use_backup:
++            header_file_path += ".bak"
++            kunit_c_file_path += ".bak"
++
++        header_content = self.__fill_kunit_h(struct_name, prototypes)
++        try:
++            with open(header_file_path, 'w') as f:
++                f.write(header_content)
++            print(f"Successfully created KUnit header file: {header_file_path}")
++        except OSError as e:
++            raise KUnitError(f"Error writing to file {header_file_path}: {e}")
++
++        kunit_c_content = self.__fill_kunit_c(struct_name)
++        try:
++            with open(kunit_c_file_path, 'w') as f:
++                f.write(kunit_c_content)
++            print(f"Successfully created KUnit C file: {kunit_c_file_path}")
++        except OSError as e:
++            raise KUnitError(f"Error writing to file {kunit_c_file_path}: {e}")
+diff --git a/tools/verification/rvgen/rvgen/templates/kunit.c b/tools/verification/rvgen/rvgen/templates/kunit.c
 new file mode 100644
-index 0000000000..4e9e744600
+index 0000000000..d29bbf2ea5
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/sleep/sleep_kunit.c
-@@ -0,0 +1,61 @@
++++ b/tools/verification/rvgen/rvgen/templates/kunit.c
+@@ -0,0 +1,29 @@
 +// SPDX-License-Identifier: GPL-2.0
 +#include <linux/kernel.h>
 +#include <linux/rv.h>
 +#include <rv/kunit.h>
-+#include <trace/events/syscalls.h>
-+#include <trace/events/sched.h>
-+#include <uapi/linux/futex.h>
-+#include "sleep_kunit.h"
++/*
++ * XXX: include required headers, e.g.,
++ * #include <linux/sched.h>
++ */
++#include "%%MODEL_NAME%%_kunit.h"
 +
-+#if IS_REACHABLE(CONFIG_RV_MON_SLEEP)
++#if IS_ENABLED(CONFIG_RV_MON_%%MODEL_NAME_UP%%)
 +
-+static void rv_test_sleep(struct kunit *test)
++static void rv_test_%%MODEL_NAME%%(struct kunit *test)
 +{
-+	struct task_struct *target, *other;
 +	struct rv_kunit_ctx *ctx = test->priv;
-+	unsigned long args[6] = {0};
-+	struct pt_regs regs;
 +
-+	prepare_test(test, &rv_sleep_ops.mon);
-+	target = kunit_kzalloc(test, sizeof(struct task_struct), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, target);
-+	target->policy = SCHED_FIFO;
-+	target->prio = MAX_RT_PRIO - 2;
-+	other = kunit_kzalloc(test, sizeof(struct task_struct), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, other);
-+	other->policy = SCHED_FIFO;
-+	other->prio = MAX_RT_PRIO - 1;
-+	rv_sleep_ops.handle_task_newtask(NULL, target, 0);
++	prepare_test(test, &%%STRUCT_NAME%%.mon);
 +
-+	/* RT task sleeps on a non RT-friendly nanosleep */
-+	rv_mock_current(ctx, target);
-+	args[0] = CLOCK_REALTIME;
-+	syscall_set_arguments(target, &regs, args);
-+#ifdef __NR_clock_nanosleep
-+	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_clock_nanosleep);
-+#elif defined(__NR_clock_nanosleep_time64)
-+	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_clock_nanosleep_time64);
-+#endif
-+	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+		rv_sleep_ops.handle_sched_set_state(NULL, target, TASK_INTERRUPTIBLE);
-+	rv_sleep_ops.handle_sys_exit(NULL, NULL, 0);
-+
-+	/* RT task woken up by lower priority task */
-+	args[1] = FUTEX_WAIT;
-+	syscall_set_arguments(target, &regs, args);
-+	rv_mock_current(ctx, target);
-+#ifdef __NR_futex
-+	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_futex);
-+#elif defined(__NR_futex_time64)
-+	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_futex_time64);
-+#endif
-+	rv_sleep_ops.handle_sched_set_state(NULL, target, TASK_INTERRUPTIBLE);
-+	rv_mock_current(ctx, other);
-+	rv_sleep_ops.handle_sched_waking(NULL, target);
-+	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+		rv_sleep_ops.handle_sched_wakeup(NULL, target);
++	/*
++	 * XXX: write the test here
++	 * e.g.
++	 * RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
++	 *	%%STRUCT_NAME%%.handle_event(args);
++	 */
 +}
 +
 +#else
-+#define rv_test_sleep rv_test_stub
++#define rv_test_%%MODEL_NAME%% rv_test_stub
 +#endif
-diff --git a/kernel/trace/rv/monitors/sleep/sleep_kunit.h b/kernel/trace/rv/monitors/sleep/sleep_kunit.h
-new file mode 100644
-index 0000000000..2cd61e31a6
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sleep/sleep_kunit.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Automatically generated by rvgen kunit.
-+ * May need manual intervention for function prototypes that couldn't be
-+ * found (e.g. are in another file) or variables to be exported.
-+ */
-+
-+#ifndef __SLEEP_KUNIT_H
-+#define __SLEEP_KUNIT_H
-+
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+
-+extern const struct rv_sleep_ops {
-+	struct rv_kunit_mon mon;
-+	void (*handle_sched_waking)(void *data, struct task_struct *task);
-+	void (*handle_sched_wakeup)(void *data, struct task_struct *task);
-+	void (*handle_sched_set_state)(void *data, struct task_struct *task, int state);
-+	void (*handle_contention_begin)(void *data, void *lock, unsigned int flags);
-+	void (*handle_contention_end)(void *data, void *lock, int ret);
-+	void (*handle_kthread_stop)(void *data, struct task_struct *task);
-+	void (*handle_sys_enter)(void *data, struct pt_regs *regs, long id);
-+	void (*handle_sys_exit)(void *data, struct pt_regs *regs, long ret);
-+	void (*handle_task_newtask)(void *data, struct task_struct *task, u64 flags);
-+} rv_sleep_ops;
-+#endif
-+
-+#endif /* __SLEEP_KUNIT_H */
-diff --git a/kernel/trace/rv/rv_monitors_test.c b/kernel/trace/rv/rv_monitors_test.c
-index 97d3e0358f..bda6b7f50f 100644
---- a/kernel/trace/rv/rv_monitors_test.c
-+++ b/kernel/trace/rv/rv_monitors_test.c
-@@ -105,6 +105,8 @@ static void __maybe_unused rv_test_stub(struct kunit *test)
- #include "monitors/sts/sts_kunit.c"
- #include "monitors/opid/opid_kunit.c"
- #include "monitors/nomiss/nomiss_kunit.c"
-+#include "monitors/pagefault/pagefault_kunit.c"
-+#include "monitors/sleep/sleep_kunit.c"
- 
- static struct kunit_case rv_mon_test_cases[] = {
- 	KUNIT_CASE(rv_test_sco),
-@@ -112,6 +114,8 @@ static struct kunit_case rv_mon_test_cases[] = {
- 	KUNIT_CASE(rv_test_sts),
- 	KUNIT_CASE(rv_test_opid),
- 	KUNIT_CASE(rv_test_nomiss),
-+	KUNIT_CASE(rv_test_pagefault),
-+	KUNIT_CASE(rv_test_sleep),
- 	{}
- };
- 
 -- 
 2.54.0
 
