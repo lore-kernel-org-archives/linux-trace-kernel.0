@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860AC3E0720
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8103E0097
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389722; cv=none; b=SoGIhGujZxTjq/s4TlFEGrmRaFELSaKq4HjXw1adTlZrDamIcl9eyegDhj0G8xLeWqeAgdC0pj+i9hDM6xQPW+ZKjELqOpa9Brj+frXdEIvDEeyPUBfgYLrsBmR1KKhih8c0HTlANCeNyiag08KHJHXle8h6V32i4smCDoGsJG4=
+	t=1782389727; cv=none; b=BZj33Qi74GTZKi7Xz0s3LXOrkOK1OJIfbHRfcU/iFjFv9989Xx/8EZBbzH9jED8h6xhsrKClKERtIunOIf+SyIqsGj6sm7PNOTWiV8VBIDXNXxr3pF5CNnUFMu6bo9y5+EMTSxy0PhoNoCW0XOnRefZzmpx5dbv1gmTS0J74MFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389722; c=relaxed/simple;
-	bh=RNmCoxEQdhKExmwmUAJ+WGDSEvf9A+7UCDT8wBMQtYc=;
+	s=arc-20240116; t=1782389727; c=relaxed/simple;
+	bh=mgkevmxQMmRUrYaGkp5ZVVfOD0mgO9O3E4IzBSIMsFQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=flVqISKIvE2mcAFDJzihOTKTYn2jV/B+UR9S+ymdejKCSfwmqi/1PzfLzG04ruIMMGbjI8LckRnhOQvLk7lG2XjETsmNoZm5qzLXcvrW7QG+43IUo8mL68ZQcZw+89UJpYCxCKfByLqAmzMJVs+maXpGmZxgfzl1HRUZ74XaOJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JvMd97no; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=qv4X6bl43JDQ8N7L0HqDh1PsgpRVtoNzL4FUNxLNYDGvKamE2q2YfRObckfmJqKCMvhDW1QSnyO9MnoHq2aibHZHxyuqBDxtRxROwnuRW0Pa00jm5wAENFCbHWpHmRjgJVRPCwvKtehXia2s6JDIpQmXw6M+gBVEZ2U0jOLgnaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cc7X+C7I; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JvMd97no"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cc7X+C7I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782389717;
+	s=mimecast20190719; t=1782389724;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KeDeXFoIhLllW9jd86uJY8A0/vgmAz78cO5p3fLS4p4=;
-	b=JvMd97nolA4/OzIFCzbH6FclYIgkwO/vAyuopVGAgZvWY8Ain8/qRMC7day6B6OtLbNlOz
-	29eGvy5yTkhUYwIPMLE1peOstcMtS+hbSN7PPIDLjDenMgj4GdfDk/jsXavE18N5fuwnh8
-	PhiSK4TDPWtHXzci9JLZRfHICGvwhlk=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ga1TLg+51sfGcVhAZBotACUpnkUWSJF3jJfwAHPEM6g=;
+	b=Cc7X+C7Iow7uaZdz0t0yQtdogSfQTK44uwvXTY2LGUotE3URRynn+EkCJgwvUoMQnnLP7v
+	q2XvAXT2Dd4lZypD3K3LI8xSJNvTrsiB5GDggHHMYJdoGAna6GLI+c8NjbdxkOVZA2k4fW
+	Uq0hfARe1OAM8E78q2apCVEjIlEmW14=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-AeQKEuqoMMet7g3c0UsiIw-1; Thu,
- 25 Jun 2026 08:15:15 -0400
-X-MC-Unique: AeQKEuqoMMet7g3c0UsiIw-1
-X-Mimecast-MFC-AGG-ID: AeQKEuqoMMet7g3c0UsiIw_1782389714
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-v5Ops1UuNkOwFL6bBbZFAw-1; Thu,
+ 25 Jun 2026 08:15:21 -0400
+X-MC-Unique: v5Ops1UuNkOwFL6bBbZFAw-1
+X-Mimecast-MFC-AGG-ID: v5Ops1UuNkOwFL6bBbZFAw_1782389719
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E30019539AB;
-	Thu, 25 Jun 2026 12:15:14 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C378919540E5;
+	Thu, 25 Jun 2026 12:15:19 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 486403000715;
-	Thu, 25 Jun 2026 12:15:11 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3E96930002E0;
+	Thu, 25 Jun 2026 12:15:17 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v3 05/17] verification/rvgen: Add golden and spec folders for tests
-Date: Thu, 25 Jun 2026 14:14:27 +0200
-Message-ID: <20260625121440.116317-6-gmonaco@redhat.com>
+Subject: [PATCH v3 06/17] verification/rvgen: Add selftests
+Date: Thu, 25 Jun 2026 14:14:28 +0200
+Message-ID: <20260625121440.116317-7-gmonaco@redhat.com>
 In-Reply-To: <20260625121440.116317-1-gmonaco@redhat.com>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,2382 +64,353 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: -GJV8-2_xSIX1MhHnFUwL-0N3tbKOitTCJBe0xfvdyo_1782389714
+X-Mimecast-MFC-PROC-ID: xRTdab1mJyJMi6B3D_MZoVvCu6ZxZDM5CXOY3fcbvvg_1782389719
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Create reference models specifications and generated files in the golded
-folder. Those can be used as reference to validate rvgen still generates
-files as expected in automated tests.
+The rvgen code generator needs validation to ensure it produces correct
+monitor implementations from input specifications.
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Add selftests with golden reference outputs covering all monitor classes
+(DA, HA, LTL) and types (global, per_cpu, per_task, per_obj), including
+optional features like descriptions and parent monitors. Container
+generation and error handling (missing files, invalid specifications,
+missing arguments) are also validated against expected output.
+
+Acked-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- .../rvgen/tests/golden/da_global/Kconfig      |   9 +
- .../rvgen/tests/golden/da_global/da_global.c  |  95 +++++++
- .../rvgen/tests/golden/da_global/da_global.h  |  47 ++++
- .../tests/golden/da_global/da_global_trace.h  |  15 ++
- .../tests/golden/da_perobj_parent/Kconfig     |  11 +
- .../da_perobj_parent/da_perobj_parent.c       | 110 ++++++++
- .../da_perobj_parent/da_perobj_parent.h       |  64 +++++
- .../da_perobj_parent/da_perobj_parent_trace.h |  15 ++
- .../tests/golden/da_pertask_desc/Kconfig      |   9 +
- .../golden/da_pertask_desc/da_pertask_desc.c  | 105 ++++++++
- .../golden/da_pertask_desc/da_pertask_desc.h  |  64 +++++
- .../da_pertask_desc/da_pertask_desc_trace.h   |  15 ++
- .../rvgen/tests/golden/ha_percpu/Kconfig      |   9 +
- .../rvgen/tests/golden/ha_percpu/ha_percpu.c  | 244 +++++++++++++++++
- .../rvgen/tests/golden/ha_percpu/ha_percpu.h  |  72 +++++
- .../tests/golden/ha_percpu/ha_percpu_trace.h  |  19 ++
- .../rvgen/tests/golden/ltl_pertask/Kconfig    |   9 +
- .../tests/golden/ltl_pertask/ltl_pertask.c    | 107 ++++++++
- .../tests/golden/ltl_pertask/ltl_pertask.h    | 108 ++++++++
- .../golden/ltl_pertask/ltl_pertask_trace.h    |  14 +
- .../rvgen/tests/golden/test_container/Kconfig |   5 +
- .../golden/test_container/test_container.c    |  35 +++
- .../golden/test_container/test_container.h    |   3 +
- .../rvgen/tests/golden/test_da/Kconfig        |   9 +
- .../rvgen/tests/golden/test_da/test_da.c      |  95 +++++++
- .../rvgen/tests/golden/test_da/test_da.h      |  47 ++++
- .../tests/golden/test_da/test_da_trace.h      |  15 ++
- .../rvgen/tests/golden/test_ha/Kconfig        |   9 +
- .../rvgen/tests/golden/test_ha/test_ha.c      | 247 ++++++++++++++++++
- .../rvgen/tests/golden/test_ha/test_ha.h      |  72 +++++
- .../tests/golden/test_ha/test_ha_trace.h      |  19 ++
- .../rvgen/tests/golden/test_ltl/Kconfig       |  11 +
- .../rvgen/tests/golden/test_ltl/test_ltl.c    | 108 ++++++++
- .../rvgen/tests/golden/test_ltl/test_ltl.h    | 108 ++++++++
- .../tests/golden/test_ltl/test_ltl_trace.h    |  14 +
- .../rvgen/tests/specs/test_da.dot             |  16 ++
- .../rvgen/tests/specs/test_da2.dot            |  19 ++
- .../rvgen/tests/specs/test_ha.dot             |  27 ++
- .../rvgen/tests/specs/test_invalid.dot        |   8 +
- .../rvgen/tests/specs/test_invalid.ltl        |   1 +
- .../rvgen/tests/specs/test_invalid_ha.dot     |  16 ++
- .../rvgen/tests/specs/test_ltl.ltl            |   1 +
- 42 files changed, 2026 insertions(+)
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global.c
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_global/da_global_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.c
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.c
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.h
- create mode 100644 tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.h
- create mode 100644 tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.h
- create mode 100644 tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_container/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_container/test_container.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_container/test_container.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_da/test_da_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha/test_ha_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl/test_ltl_trace.h
- create mode 100644 tools/verification/rvgen/tests/specs/test_da.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_da2.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_ha.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_invalid.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_invalid.ltl
- create mode 100644 tools/verification/rvgen/tests/specs/test_invalid_ha.dot
- create mode 100644 tools/verification/rvgen/tests/specs/test_ltl.ltl
+ tools/verification/rvgen/Makefile             |  4 +
+ .../rvgen/tests/golden/ha_percpu/ha_percpu.c  |  6 +-
+ .../tests/golden/ltl_pertask/ltl_pertask.c    |  6 +-
+ .../rvgen/tests/golden/test_ha/test_ha.c      |  6 +-
+ .../rvgen/tests/golden/test_ltl/test_ltl.c    |  6 +-
+ .../rvgen/tests/rvgen_container.t             | 20 +++++
+ .../verification/rvgen/tests/rvgen_monitor.t  | 87 +++++++++++++++++++
+ .../rvgen/tests/specs/test_ha.dot             |  2 +-
+ tools/verification/tests/engine.sh            | 34 ++++++++
+ 9 files changed, 158 insertions(+), 13 deletions(-)
+ create mode 100644 tools/verification/rvgen/tests/rvgen_container.t
+ create mode 100644 tools/verification/rvgen/tests/rvgen_monitor.t
 
-diff --git a/tools/verification/rvgen/tests/golden/da_global/Kconfig b/tools/verification/rvgen/tests/golden/da_global/Kconfig
-new file mode 100644
-index 0000000000..799fbf11c3
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_global/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_DA_GLOBAL
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "da_global monitor"
-+	help
-+	  auto-generated
-diff --git a/tools/verification/rvgen/tests/golden/da_global/da_global.c b/tools/verification/rvgen/tests/golden/da_global/da_global.c
-new file mode 100644
-index 0000000000..ad4b939d23
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_global/da_global.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "da_global"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_GLOBAL
-+#include "da_global.h"
-+#include <rv/da_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+static void handle_event_1(void *data, /* XXX: fill header */)
-+{
-+	da_handle_event(event_1_da_global);
-+}
-+
-+static void handle_event_2(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event always leads to the initial state */
-+	da_handle_start_event(event_2_da_global);
-+}
-+
-+static int enable_da_global(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("da_global", /* XXX: tracepoint */, handle_event_1);
-+	rv_attach_trace_probe("da_global", /* XXX: tracepoint */, handle_event_2);
-+
-+	return 0;
-+}
-+
-+static void disable_da_global(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("da_global", /* XXX: tracepoint */, handle_event_1);
-+	rv_detach_trace_probe("da_global", /* XXX: tracepoint */, handle_event_2);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "da_global",
-+	.description = "auto-generated",
-+	.enable = enable_da_global,
-+	.disable = disable_da_global,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_da_global(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_da_global(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_da_global);
-+module_exit(unregister_da_global);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("da_global: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/da_global/da_global.h b/tools/verification/rvgen/tests/golden/da_global/da_global.h
-new file mode 100644
-index 0000000000..40b1f1c0c6
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_global/da_global.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of da_global automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME da_global
-+
-+enum states_da_global {
-+	state_a_da_global,
-+	state_b_da_global,
-+	state_max_da_global,
-+};
-+
-+#define INVALID_STATE state_max_da_global
-+
-+enum events_da_global {
-+	event_1_da_global,
-+	event_2_da_global,
-+	event_max_da_global,
-+};
-+
-+struct automaton_da_global {
-+	char *state_names[state_max_da_global];
-+	char *event_names[event_max_da_global];
-+	unsigned char function[state_max_da_global][event_max_da_global];
-+	unsigned char initial_state;
-+	bool final_states[state_max_da_global];
-+};
-+
-+static const struct automaton_da_global automaton_da_global = {
-+	.state_names = {
-+		"state_a",
-+		"state_b",
-+	},
-+	.event_names = {
-+		"event_1",
-+		"event_2",
-+	},
-+	.function = {
-+		{       state_b_da_global,       state_a_da_global },
-+		{           INVALID_STATE,       state_a_da_global },
-+	},
-+	.initial_state = state_a_da_global,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/da_global/da_global_trace.h b/tools/verification/rvgen/tests/golden/da_global/da_global_trace.h
-new file mode 100644
-index 0000000000..4d2730b71d
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_global/da_global_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_DA_GLOBAL
-+DEFINE_EVENT(event_da_monitor, event_da_global,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_da_global,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_DA_GLOBAL */
-diff --git a/tools/verification/rvgen/tests/golden/da_perobj_parent/Kconfig b/tools/verification/rvgen/tests/golden/da_perobj_parent/Kconfig
-new file mode 100644
-index 0000000000..249ba3aee8
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_perobj_parent/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_DA_PEROBJ_PARENT
-+	depends on RV
-+	# XXX: add dependencies if there
-+	depends on RV_MON_PARENT_MON
-+	default y
-+	select DA_MON_EVENTS_ID
-+	bool "da_perobj_parent monitor"
-+	help
-+	  auto-generated
-diff --git a/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.c b/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.c
-new file mode 100644
-index 0000000000..66f3a01087
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "da_perobj_parent"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+#include <monitors/parent_mon/parent_mon.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_OBJ
-+typedef /* XXX: define the target type */ *monitor_target;
-+#include "da_perobj_parent.h"
-+#include <rv/da_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+static void handle_event_1(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event is only valid in the initial state */
-+	int id = /* XXX: how do I get the id? */;
-+	monitor_target t = /* XXX: how do I get t? */;
-+	da_handle_start_run_event(id, t, event_1_da_perobj_parent);
-+}
-+
-+static void handle_event_2(void *data, /* XXX: fill header */)
-+{
-+	int id = /* XXX: how do I get the id? */;
-+	monitor_target t = /* XXX: how do I get t? */;
-+	da_handle_event(id, t, event_2_da_perobj_parent);
-+}
-+
-+static void handle_event_3(void *data, /* XXX: fill header */)
-+{
-+	int id = /* XXX: how do I get the id? */;
-+	monitor_target t = /* XXX: how do I get t? */;
-+	da_handle_event(id, t, event_3_da_perobj_parent);
-+}
-+
-+static int enable_da_perobj_parent(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("da_perobj_parent", /* XXX: tracepoint */, handle_event_1);
-+	rv_attach_trace_probe("da_perobj_parent", /* XXX: tracepoint */, handle_event_2);
-+	rv_attach_trace_probe("da_perobj_parent", /* XXX: tracepoint */, handle_event_3);
-+
-+	return 0;
-+}
-+
-+static void disable_da_perobj_parent(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("da_perobj_parent", /* XXX: tracepoint */, handle_event_1);
-+	rv_detach_trace_probe("da_perobj_parent", /* XXX: tracepoint */, handle_event_2);
-+	rv_detach_trace_probe("da_perobj_parent", /* XXX: tracepoint */, handle_event_3);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "da_perobj_parent",
-+	.description = "auto-generated",
-+	.enable = enable_da_perobj_parent,
-+	.disable = disable_da_perobj_parent,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_da_perobj_parent(void)
-+{
-+	return rv_register_monitor(&rv_this, &rv_parent_mon);
-+}
-+
-+static void __exit unregister_da_perobj_parent(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_da_perobj_parent);
-+module_exit(unregister_da_perobj_parent);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("da_perobj_parent: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.h b/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.h
-new file mode 100644
-index 0000000000..3c8dc3b224
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of da_perobj_parent automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME da_perobj_parent
-+
-+enum states_da_perobj_parent {
-+	state_a_da_perobj_parent,
-+	state_b_da_perobj_parent,
-+	state_c_da_perobj_parent,
-+	state_max_da_perobj_parent,
-+};
-+
-+#define INVALID_STATE state_max_da_perobj_parent
-+
-+enum events_da_perobj_parent {
-+	event_1_da_perobj_parent,
-+	event_2_da_perobj_parent,
-+	event_3_da_perobj_parent,
-+	event_max_da_perobj_parent,
-+};
-+
-+struct automaton_da_perobj_parent {
-+	char *state_names[state_max_da_perobj_parent];
-+	char *event_names[event_max_da_perobj_parent];
-+	unsigned char function[state_max_da_perobj_parent][event_max_da_perobj_parent];
-+	unsigned char initial_state;
-+	bool final_states[state_max_da_perobj_parent];
-+};
-+
-+static const struct automaton_da_perobj_parent automaton_da_perobj_parent = {
-+	.state_names = {
-+		"state_a",
-+		"state_b",
-+		"state_c",
-+	},
-+	.event_names = {
-+		"event_1",
-+		"event_2",
-+		"event_3",
-+	},
-+	.function = {
-+		{
-+			state_b_da_perobj_parent,
-+			state_c_da_perobj_parent,
-+			INVALID_STATE,
-+		},
-+		{
-+			INVALID_STATE,
-+			state_a_da_perobj_parent,
-+			state_c_da_perobj_parent,
-+		},
-+		{
-+			INVALID_STATE,
-+			INVALID_STATE,
-+			INVALID_STATE,
-+		},
-+	},
-+	.initial_state = state_a_da_perobj_parent,
-+	.final_states = { 1, 0, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent_trace.h b/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent_trace.h
-new file mode 100644
-index 0000000000..59bfca8f73
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_perobj_parent/da_perobj_parent_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_DA_PEROBJ_PARENT
-+DEFINE_EVENT(event_da_monitor_id, event_da_perobj_parent,
-+	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(id, state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor_id, error_da_perobj_parent,
-+	     TP_PROTO(int id, char *state, char *event),
-+	     TP_ARGS(id, state, event));
-+#endif /* CONFIG_RV_MON_DA_PEROBJ_PARENT */
-diff --git a/tools/verification/rvgen/tests/golden/da_pertask_desc/Kconfig b/tools/verification/rvgen/tests/golden/da_pertask_desc/Kconfig
-new file mode 100644
-index 0000000000..c6f3501790
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_pertask_desc/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_DA_PERTASK_DESC
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select DA_MON_EVENTS_ID
-+	bool "da_pertask_desc monitor"
-+	help
-+	  Custom description for testing
-diff --git a/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.c b/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.c
-new file mode 100644
-index 0000000000..bd76ecc3a9
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.c
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "da_pertask_desc"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_TASK
-+#include "da_pertask_desc.h"
-+#include <rv/da_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+static void handle_event_1(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event is only valid in the initial state */
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_start_run_event(p, event_1_da_pertask_desc);
-+}
-+
-+static void handle_event_2(void *data, /* XXX: fill header */)
-+{
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_event(p, event_2_da_pertask_desc);
-+}
-+
-+static void handle_event_3(void *data, /* XXX: fill header */)
-+{
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_event(p, event_3_da_pertask_desc);
-+}
-+
-+static int enable_da_pertask_desc(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("da_pertask_desc", /* XXX: tracepoint */, handle_event_1);
-+	rv_attach_trace_probe("da_pertask_desc", /* XXX: tracepoint */, handle_event_2);
-+	rv_attach_trace_probe("da_pertask_desc", /* XXX: tracepoint */, handle_event_3);
-+
-+	return 0;
-+}
-+
-+static void disable_da_pertask_desc(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("da_pertask_desc", /* XXX: tracepoint */, handle_event_1);
-+	rv_detach_trace_probe("da_pertask_desc", /* XXX: tracepoint */, handle_event_2);
-+	rv_detach_trace_probe("da_pertask_desc", /* XXX: tracepoint */, handle_event_3);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "da_pertask_desc",
-+	.description = "Custom description for testing",
-+	.enable = enable_da_pertask_desc,
-+	.disable = disable_da_pertask_desc,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_da_pertask_desc(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_da_pertask_desc(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_da_pertask_desc);
-+module_exit(unregister_da_pertask_desc);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("da_pertask_desc: Custom description for testing");
-diff --git a/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.h b/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.h
-new file mode 100644
-index 0000000000..837b238754
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of da_pertask_desc automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME da_pertask_desc
-+
-+enum states_da_pertask_desc {
-+	state_a_da_pertask_desc,
-+	state_b_da_pertask_desc,
-+	state_c_da_pertask_desc,
-+	state_max_da_pertask_desc,
-+};
-+
-+#define INVALID_STATE state_max_da_pertask_desc
-+
-+enum events_da_pertask_desc {
-+	event_1_da_pertask_desc,
-+	event_2_da_pertask_desc,
-+	event_3_da_pertask_desc,
-+	event_max_da_pertask_desc,
-+};
-+
-+struct automaton_da_pertask_desc {
-+	char *state_names[state_max_da_pertask_desc];
-+	char *event_names[event_max_da_pertask_desc];
-+	unsigned char function[state_max_da_pertask_desc][event_max_da_pertask_desc];
-+	unsigned char initial_state;
-+	bool final_states[state_max_da_pertask_desc];
-+};
-+
-+static const struct automaton_da_pertask_desc automaton_da_pertask_desc = {
-+	.state_names = {
-+		"state_a",
-+		"state_b",
-+		"state_c",
-+	},
-+	.event_names = {
-+		"event_1",
-+		"event_2",
-+		"event_3",
-+	},
-+	.function = {
-+		{
-+			state_b_da_pertask_desc,
-+			state_c_da_pertask_desc,
-+			INVALID_STATE,
-+		},
-+		{
-+			INVALID_STATE,
-+			state_a_da_pertask_desc,
-+			state_c_da_pertask_desc,
-+		},
-+		{
-+			INVALID_STATE,
-+			INVALID_STATE,
-+			INVALID_STATE,
-+		},
-+	},
-+	.initial_state = state_a_da_pertask_desc,
-+	.final_states = { 1, 0, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc_trace.h b/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc_trace.h
-new file mode 100644
-index 0000000000..4e6086c4d8
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/da_pertask_desc/da_pertask_desc_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_DA_PERTASK_DESC
-+DEFINE_EVENT(event_da_monitor_id, event_da_pertask_desc,
-+	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(id, state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor_id, error_da_pertask_desc,
-+	     TP_PROTO(int id, char *state, char *event),
-+	     TP_ARGS(id, state, event));
-+#endif /* CONFIG_RV_MON_DA_PERTASK_DESC */
-diff --git a/tools/verification/rvgen/tests/golden/ha_percpu/Kconfig b/tools/verification/rvgen/tests/golden/ha_percpu/Kconfig
-new file mode 100644
-index 0000000000..0cc185ccfd
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/ha_percpu/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_HA_PERCPU
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select HA_MON_EVENTS_IMPLICIT
-+	bool "ha_percpu monitor"
-+	help
-+	  auto-generated
+diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/Makefile
+index cfc4056c1e..2a2b9e64ea 100644
+--- a/tools/verification/rvgen/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -13,6 +13,10 @@ all:
+ .PHONY: clean
+ clean:
+ 
++.PHONY: check
++check:
++	prove -o --directives -f tests/
++
+ .PHONY: install
+ install:
+ 	$(INSTALL) rvgen/automata.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/automata.py
 diff --git a/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c b/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c
-new file mode 100644
-index 0000000000..ba7a02a18f
---- /dev/null
+index ba7a02a18f..14c781e1a3 100644
+--- a/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c
 +++ b/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "ha_percpu"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_CPU
-+/* XXX: If the monitor has several instances, consider HA_TIMER_WHEEL */
-+#define HA_TIMER_TYPE HA_TIMER_HRTIMER
-+#include "ha_percpu.h"
-+#include <rv/ha_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+#define BAR_NS(ha_mon) /* XXX: what is BAR_NS(ha_mon)? */
-+
-+#define FOO_NS /* XXX: what is FOO_NS? */
-+
-+static inline u64 bar_ns(struct ha_monitor *ha_mon)
-+{
-+	return /* XXX: what is bar_ns(ha_mon)? */;
-+}
-+
-+static u64 foo_ns = /* XXX: default value */;
-+module_param(foo_ns, ullong, 0644);
-+
-+/*
-+ * These functions define how to read and reset the environment variable.
-+ *
-+ * Common environment variables like ns-based and jiffy-based clocks have
-+ * pre-define getters and resetters you can use. The parser can infer the type
-+ * of the environment variable if you supply a measure unit in the constraint.
-+ * If you define your own functions, make sure to add appropriate memory
-+ * barriers if required.
-+ * Some environment variables don't require a storage as they read a system
-+ * state (e.g. preemption count). Those variables are never reset, so we don't
-+ * define a reset function on monitors only relying on this type of variables.
-+ */
-+static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_ha_percpu env, u64 time_ns)
-+{
-+	if (env == clk_ha_percpu)
-+		return ha_get_clk_ns(ha_mon, env, time_ns);
-+	else if (env == env1_ha_percpu)
-+		return /* XXX: how do I read env1? */
-+	else if (env == env2_ha_percpu)
-+		return /* XXX: how do I read env2? */
-+	return ENV_INVALID_VALUE;
-+}
-+
-+static void ha_reset_env(struct ha_monitor *ha_mon, enum envs_ha_percpu env, u64 time_ns)
-+{
-+	if (env == clk_ha_percpu)
-+		ha_reset_clk_ns(ha_mon, env, time_ns);
-+}
-+
-+/*
-+ * These functions are used to validate state transitions.
-+ *
-+ * They are generated by parsing the model, there is usually no need to change them.
-+ * If the monitor requires a timer, there are functions responsible to arm it when
-+ * the next state has a constraint, cancel it in any other case and to check
-+ * that it didn't expire before the callback run. Transitions to the same state
-+ * without a reset never affect timers.
-+ * Due to the different representations between invariants and guards, there is
-+ * a function to convert it in case invariants or guards are reachable from
-+ * another invariant without reset. Those are not present if not required in
-+ * the model. This is all automatic but is worth checking because it may show
-+ * errors in the model (e.g. missing resets).
-+ */
-+static inline bool ha_verify_invariants(struct ha_monitor *ha_mon,
-+					enum states curr_state, enum events event,
-+					enum states next_state, u64 time_ns)
-+{
-+	if (curr_state == S0_ha_percpu)
-+		return ha_check_invariant_ns(ha_mon, clk_ha_percpu, time_ns);
-+	else if (curr_state == S2_ha_percpu)
-+		return ha_check_invariant_ns(ha_mon, clk_ha_percpu, time_ns);
-+	return true;
-+}
-+
-+static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
-+					enum states curr_state, enum events event,
-+					enum states next_state, u64 time_ns)
-+{
-+	if (curr_state == next_state)
-+		return;
-+	if (curr_state == S2_ha_percpu)
-+		ha_inv_to_guard(ha_mon, clk_ha_percpu, BAR_NS(ha_mon), time_ns);
-+}
-+
-+static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
-+				    enum states curr_state, enum events event,
-+				    enum states next_state, u64 time_ns)
-+{
-+	bool res = true;
-+
-+	if (curr_state == S0_ha_percpu && event == event0_ha_percpu)
-+		ha_reset_env(ha_mon, clk_ha_percpu, time_ns);
-+	else if (curr_state == S0_ha_percpu && event == event1_ha_percpu)
-+		ha_reset_env(ha_mon, clk_ha_percpu, time_ns);
-+	else if (curr_state == S1_ha_percpu && event == event0_ha_percpu)
-+		ha_reset_env(ha_mon, clk_ha_percpu, time_ns);
-+	else if (curr_state == S1_ha_percpu && event == event2_ha_percpu) {
-+		res = ha_get_env(ha_mon, env1_ha_percpu, time_ns) == 0ull;
-+		ha_reset_env(ha_mon, clk_ha_percpu, time_ns);
-+	} else if (curr_state == S2_ha_percpu && event == event1_ha_percpu)
-+		res = ha_monitor_env_invalid(ha_mon, clk_ha_percpu) ||
-+		      ha_get_env(ha_mon, clk_ha_percpu, time_ns) < foo_ns;
-+	else if (curr_state == S3_ha_percpu && event == event0_ha_percpu)
-+		res = ha_monitor_env_invalid(ha_mon, clk_ha_percpu) ||
-+		      (ha_get_env(ha_mon, clk_ha_percpu, time_ns) < FOO_NS &&
-+		      ha_get_env(ha_mon, env2_ha_percpu, time_ns) == 0ull);
-+	else if (curr_state == S3_ha_percpu && event == event1_ha_percpu) {
-+		res = ha_monitor_env_invalid(ha_mon, clk_ha_percpu) ||
-+		      (ha_get_env(ha_mon, clk_ha_percpu, time_ns) < foo_ns &&
-+		      ha_get_env(ha_mon, env1_ha_percpu, time_ns) == 1ull);
-+		ha_reset_env(ha_mon, clk_ha_percpu, time_ns);
-+	}
-+	return res;
-+}
-+
-+static inline void ha_setup_invariants(struct ha_monitor *ha_mon,
-+				       enum states curr_state, enum events event,
-+				       enum states next_state, u64 time_ns)
-+{
-+	if (next_state == curr_state && event != event0_ha_percpu)
-+		return;
-+	if (next_state == S0_ha_percpu)
-+		ha_start_timer_ns(ha_mon, clk_ha_percpu, bar_ns(ha_mon), time_ns);
-+	else if (next_state == S2_ha_percpu)
-+		ha_start_timer_ns(ha_mon, clk_ha_percpu, BAR_NS(ha_mon), time_ns);
-+	else if (curr_state == S0_ha_percpu)
-+		ha_cancel_timer(ha_mon);
-+	else if (curr_state == S2_ha_percpu)
-+		ha_cancel_timer(ha_mon);
-+}
-+
-+static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-+				 enum states curr_state, enum events event,
-+				 enum states next_state, u64 time_ns)
-+{
-+	if (!ha_verify_invariants(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
-+
-+	ha_convert_inv_guard(ha_mon, curr_state, event, next_state, time_ns);
-+
-+	if (!ha_verify_guards(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
-+
-+	ha_setup_invariants(ha_mon, curr_state, event, next_state, time_ns);
-+
-+	return true;
-+}
-+
-+static void handle_event0(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event always leads to the initial state */
-+	da_handle_start_event(event0_ha_percpu);
-+}
-+
-+static void handle_event1(void *data, /* XXX: fill header */)
-+{
-+	da_handle_event(event1_ha_percpu);
-+}
-+
-+static void handle_event2(void *data, /* XXX: fill header */)
-+{
-+	da_handle_event(event2_ha_percpu);
-+}
-+
-+static int enable_ha_percpu(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event0);
-+	rv_attach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event1);
-+	rv_attach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event2);
-+
-+	return 0;
-+}
-+
-+static void disable_ha_percpu(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event0);
-+	rv_detach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event1);
-+	rv_detach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event2);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "ha_percpu",
-+	.description = "auto-generated",
-+	.enable = enable_ha_percpu,
-+	.disable = disable_ha_percpu,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_ha_percpu(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_ha_percpu(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_ha_percpu);
-+module_exit(unregister_ha_percpu);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("ha_percpu: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.h b/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.h
-new file mode 100644
-index 0000000000..2538db4f6a
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of ha_percpu automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME ha_percpu
-+
-+enum states_ha_percpu {
-+	S0_ha_percpu,
-+	S1_ha_percpu,
-+	S2_ha_percpu,
-+	S3_ha_percpu,
-+	state_max_ha_percpu,
-+};
-+
-+#define INVALID_STATE state_max_ha_percpu
-+
-+enum events_ha_percpu {
-+	event0_ha_percpu,
-+	event1_ha_percpu,
-+	event2_ha_percpu,
-+	event_max_ha_percpu,
-+};
-+
-+enum envs_ha_percpu {
-+	clk_ha_percpu,
-+	env1_ha_percpu,
-+	env2_ha_percpu,
-+	env_max_ha_percpu,
-+	env_max_stored_ha_percpu = env1_ha_percpu,
-+};
-+
-+_Static_assert(env_max_stored_ha_percpu <= MAX_HA_ENV_LEN, "Not enough slots");
-+#define HA_CLK_NS
-+
-+struct automaton_ha_percpu {
-+	char *state_names[state_max_ha_percpu];
-+	char *event_names[event_max_ha_percpu];
-+	char *env_names[env_max_ha_percpu];
-+	unsigned char function[state_max_ha_percpu][event_max_ha_percpu];
-+	unsigned char initial_state;
-+	bool final_states[state_max_ha_percpu];
-+};
-+
-+static const struct automaton_ha_percpu automaton_ha_percpu = {
-+	.state_names = {
-+		"S0",
-+		"S1",
-+		"S2",
-+		"S3",
-+	},
-+	.event_names = {
-+		"event0",
-+		"event1",
-+		"event2",
-+	},
-+	.env_names = {
-+		"clk",
-+		"env1",
-+		"env2",
-+	},
-+	.function = {
-+		{            S0_ha_percpu,            S1_ha_percpu,           INVALID_STATE },
-+		{            S0_ha_percpu,           INVALID_STATE,            S2_ha_percpu },
-+		{           INVALID_STATE,            S2_ha_percpu,            S3_ha_percpu },
-+		{            S0_ha_percpu,            S1_ha_percpu,           INVALID_STATE },
-+	},
-+	.initial_state = S0_ha_percpu,
-+	.final_states = { 1, 0, 0, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu_trace.h b/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu_trace.h
-new file mode 100644
-index 0000000000..074ddff6a6
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/ha_percpu/ha_percpu_trace.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_HA_PERCPU
-+DEFINE_EVENT(event_da_monitor, event_ha_percpu,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_ha_percpu,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+
-+DEFINE_EVENT(error_env_da_monitor, error_env_ha_percpu,
-+	     TP_PROTO(char *state, char *event, char *env),
-+	     TP_ARGS(state, event, env));
-+#endif /* CONFIG_RV_MON_HA_PERCPU */
-diff --git a/tools/verification/rvgen/tests/golden/ltl_pertask/Kconfig b/tools/verification/rvgen/tests/golden/ltl_pertask/Kconfig
-new file mode 100644
-index 0000000000..b37f46670b
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/ltl_pertask/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_LTL_PERTASK
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select LTL_MON_EVENTS_ID
-+	bool "ltl_pertask monitor"
-+	help
-+	  auto-generated
+@@ -132,7 +132,7 @@ static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
+ 		      ha_get_env(ha_mon, env2_ha_percpu, time_ns) == 0ull);
+ 	else if (curr_state == S3_ha_percpu && event == event1_ha_percpu) {
+ 		res = ha_monitor_env_invalid(ha_mon, clk_ha_percpu) ||
+-		      (ha_get_env(ha_mon, clk_ha_percpu, time_ns) < foo_ns &&
++		      (ha_get_env(ha_mon, clk_ha_percpu, time_ns) < 5000ull &&
+ 		      ha_get_env(ha_mon, env1_ha_percpu, time_ns) == 1ull);
+ 		ha_reset_env(ha_mon, clk_ha_percpu, time_ns);
+ 	}
+@@ -192,7 +192,7 @@ static int enable_ha_percpu(void)
+ {
+ 	int retval;
+ 
+-	retval = da_monitor_init();
++	retval = ha_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+@@ -211,7 +211,7 @@ static void disable_ha_percpu(void)
+ 	rv_detach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event1);
+ 	rv_detach_trace_probe("ha_percpu", /* XXX: tracepoint */, handle_event2);
+ 
+-	da_monitor_destroy();
++	ha_monitor_destroy();
+ }
+ 
+ /*
 diff --git a/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c b/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c
-new file mode 100644
-index 0000000000..1b6897200e
---- /dev/null
+index 1b6897200e..386b708104 100644
+--- a/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c
 +++ b/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "ltl_pertask"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#include "ltl_pertask.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	/*
-+	 * This is called everytime the Buchi automaton is triggered.
-+	 *
-+	 * This function could be used to fetch the atomic propositions which
-+	 * are expensive to trace. It is possible only if the atomic proposition
-+	 * does not need to be updated at precise time.
-+	 *
-+	 * It is recommended to use tracepoints and ltl_atom_update() instead.
-+	 */
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bool task_creation)
-+{
-+	/*
-+	 * This should initialize as many atomic propositions as possible.
-+	 *
-+	 * @task_creation indicates whether the task is being created. This is
-+	 * false if the task is already running before the monitor is enabled.
-+	 */
-+	ltl_atom_set(mon, LTL_EVENT_A, true/false);
-+	ltl_atom_set(mon, LTL_EVENT_B, true/false);
-+}
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ */
-+static void handle_example_event(void *data, /* XXX: fill header */)
-+{
-+	ltl_atom_update(task, LTL_EVENT_A, true/false);
-+}
-+
-+static int enable_ltl_pertask(void)
-+{
-+	int retval;
-+
-+	retval = ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("ltl_pertask", /* XXX: tracepoint */, handle_example_event);
-+
-+	return 0;
-+}
-+
-+static void disable_ltl_pertask(void)
-+{
-+	rv_detach_trace_probe("ltl_pertask", /* XXX: tracepoint */, handle_sample_event);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_ltl_pertask = {
-+	.name = "ltl_pertask",
-+	.description = "auto-generated",
-+	.enable = enable_ltl_pertask,
-+	.disable = disable_ltl_pertask,
-+};
-+
-+static int __init register_ltl_pertask(void)
-+{
-+	return rv_register_monitor(&rv_ltl_pertask, NULL);
-+}
-+
-+static void __exit unregister_ltl_pertask(void)
-+{
-+	rv_unregister_monitor(&rv_ltl_pertask);
-+}
-+
-+module_init(register_ltl_pertask);
-+module_exit(unregister_ltl_pertask);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR(/* TODO */);
-+MODULE_DESCRIPTION("ltl_pertask: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.h b/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.h
-new file mode 100644
-index 0000000000..7e5de351b8
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask.h
-@@ -0,0 +1,108 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * C implementation of Buchi automaton, automatically generated by
-+ * tools/verification/rvgen from the linear temporal logic specification.
-+ * For further information, see kernel documentation:
-+ *   Documentation/trace/rv/linear_temporal_logic.rst
-+ */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME ltl_pertask
-+
-+enum ltl_atom {
-+	LTL_EVENT_A,
-+	LTL_EVENT_B,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <= RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] = {
-+		"ev_a",
-+		"ev_b",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	S1,
-+	S2,
-+	S3,
-+	S4,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <= RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool event_b = test_bit(LTL_EVENT_B, mon->atoms);
-+	bool event_a = test_bit(LTL_EVENT_A, mon->atoms);
-+	bool val1 = !event_a;
-+
-+	if (val1)
-+		__set_bit(S0, mon->states);
-+	if (true)
-+		__set_bit(S1, mon->states);
-+	if (event_b)
-+		__set_bit(S4, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
-+{
-+	bool event_b = test_bit(LTL_EVENT_B, mon->atoms);
-+	bool event_a = test_bit(LTL_EVENT_A, mon->atoms);
-+	bool val1 = !event_a;
-+
-+	switch (state) {
-+	case S0:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S1:
-+		if (true)
-+			__set_bit(S1, next);
-+		if (true && val1)
-+			__set_bit(S2, next);
-+		if (event_b && val1)
-+			__set_bit(S3, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S2:
-+		if (true)
-+			__set_bit(S1, next);
-+		if (true && val1)
-+			__set_bit(S2, next);
-+		if (event_b && val1)
-+			__set_bit(S3, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S3:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S4:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	}
-+}
-diff --git a/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask_trace.h b/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask_trace.h
-new file mode 100644
-index 0000000000..ebd53621a5
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/ltl_pertask/ltl_pertask_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_LTL_PERTASK
-+DEFINE_EVENT(event_ltl_monitor_id, event_ltl_pertask,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_ltl_pertask,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_LTL_PERTASK */
-diff --git a/tools/verification/rvgen/tests/golden/test_container/Kconfig b/tools/verification/rvgen/tests/golden/test_container/Kconfig
-new file mode 100644
-index 0000000000..2becb65ddd
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_container/Kconfig
-@@ -0,0 +1,5 @@
-+config RV_MON_TEST_CONTAINER
-+	depends on RV
-+	bool "test_container monitor"
-+	help
-+	  Test container for grouping monitors
-diff --git a/tools/verification/rvgen/tests/golden/test_container/test_container.c b/tools/verification/rvgen/tests/golden/test_container/test_container.c
-new file mode 100644
-index 0000000000..984e2eac71
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_container/test_container.c
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+
-+#define MODULE_NAME "test_container"
-+
-+#include "test_container.h"
-+
-+struct rv_monitor rv_test_container = {
-+	.name = "test_container",
-+	.description = "Test container for grouping monitors",
-+	.enable = NULL,
-+	.disable = NULL,
-+	.reset = NULL,
-+	.enabled = 0,
-+};
-+
-+static int __init register_test_container(void)
-+{
-+	return rv_register_monitor(&rv_test_container, NULL);
-+}
-+
-+static void __exit unregister_test_container(void)
-+{
-+	rv_unregister_monitor(&rv_test_container);
-+}
-+
-+module_init(register_test_container);
-+module_exit(unregister_test_container);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("test_container: Test container for grouping monitors");
-diff --git a/tools/verification/rvgen/tests/golden/test_container/test_container.h b/tools/verification/rvgen/tests/golden/test_container/test_container.h
-new file mode 100644
-index 0000000000..83e4344326
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_container/test_container.h
-@@ -0,0 +1,3 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+extern struct rv_monitor rv_test_container;
-diff --git a/tools/verification/rvgen/tests/golden/test_da/Kconfig b/tools/verification/rvgen/tests/golden/test_da/Kconfig
-new file mode 100644
-index 0000000000..0143a148ef
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TEST_DA
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "test_da monitor"
-+	help
-+	  auto-generated
-diff --git a/tools/verification/rvgen/tests/golden/test_da/test_da.c b/tools/verification/rvgen/tests/golden/test_da/test_da.c
-new file mode 100644
-index 0000000000..b63bbf4e35
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da/test_da.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "test_da"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_CPU
-+#include "test_da.h"
-+#include <rv/da_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+static void handle_event_1(void *data, /* XXX: fill header */)
-+{
-+	da_handle_event(event_1_test_da);
-+}
-+
-+static void handle_event_2(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event always leads to the initial state */
-+	da_handle_start_event(event_2_test_da);
-+}
-+
-+static int enable_test_da(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("test_da", /* XXX: tracepoint */, handle_event_1);
-+	rv_attach_trace_probe("test_da", /* XXX: tracepoint */, handle_event_2);
-+
-+	return 0;
-+}
-+
-+static void disable_test_da(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("test_da", /* XXX: tracepoint */, handle_event_1);
-+	rv_detach_trace_probe("test_da", /* XXX: tracepoint */, handle_event_2);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
+@@ -82,7 +82,7 @@ static void disable_ltl_pertask(void)
+ /*
+  * This is the monitor register section.
+  */
+-static struct rv_monitor rv_ltl_pertask = {
 +static struct rv_monitor rv_this = {
-+	.name = "test_da",
-+	.description = "auto-generated",
-+	.enable = enable_test_da,
-+	.disable = disable_test_da,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_test_da(void)
-+{
+ 	.name = "ltl_pertask",
+ 	.description = "auto-generated",
+ 	.enable = enable_ltl_pertask,
+@@ -91,12 +91,12 @@ static struct rv_monitor rv_ltl_pertask = {
+ 
+ static int __init register_ltl_pertask(void)
+ {
+-	return rv_register_monitor(&rv_ltl_pertask, NULL);
 +	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_test_da(void)
-+{
+ }
+ 
+ static void __exit unregister_ltl_pertask(void)
+ {
+-	rv_unregister_monitor(&rv_ltl_pertask);
 +	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_test_da);
-+module_exit(unregister_test_da);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("test_da: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/test_da/test_da.h b/tools/verification/rvgen/tests/golden/test_da/test_da.h
-new file mode 100644
-index 0000000000..d55795efbb
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da/test_da.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of test_da automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME test_da
-+
-+enum states_test_da {
-+	state_a_test_da,
-+	state_b_test_da,
-+	state_max_test_da,
-+};
-+
-+#define INVALID_STATE state_max_test_da
-+
-+enum events_test_da {
-+	event_1_test_da,
-+	event_2_test_da,
-+	event_max_test_da,
-+};
-+
-+struct automaton_test_da {
-+	char *state_names[state_max_test_da];
-+	char *event_names[event_max_test_da];
-+	unsigned char function[state_max_test_da][event_max_test_da];
-+	unsigned char initial_state;
-+	bool final_states[state_max_test_da];
-+};
-+
-+static const struct automaton_test_da automaton_test_da = {
-+	.state_names = {
-+		"state_a",
-+		"state_b",
-+	},
-+	.event_names = {
-+		"event_1",
-+		"event_2",
-+	},
-+	.function = {
-+		{       state_b_test_da,       state_a_test_da },
-+		{         INVALID_STATE,       state_a_test_da },
-+	},
-+	.initial_state = state_a_test_da,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/test_da/test_da_trace.h b/tools/verification/rvgen/tests/golden/test_da/test_da_trace.h
-new file mode 100644
-index 0000000000..8bd67115d2
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da/test_da_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_TEST_DA
-+DEFINE_EVENT(event_da_monitor, event_test_da,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_test_da,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_TEST_DA */
-diff --git a/tools/verification/rvgen/tests/golden/test_ha/Kconfig b/tools/verification/rvgen/tests/golden/test_ha/Kconfig
-new file mode 100644
-index 0000000000..f4048290c7
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TEST_HA
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select HA_MON_EVENTS_ID
-+	bool "test_ha monitor"
-+	help
-+	  auto-generated
+ }
+ 
+ module_init(register_ltl_pertask);
 diff --git a/tools/verification/rvgen/tests/golden/test_ha/test_ha.c b/tools/verification/rvgen/tests/golden/test_ha/test_ha.c
-new file mode 100644
-index 0000000000..485fcd0259
---- /dev/null
+index 485fcd0259..edc4781615 100644
+--- a/tools/verification/rvgen/tests/golden/test_ha/test_ha.c
 +++ b/tools/verification/rvgen/tests/golden/test_ha/test_ha.c
-@@ -0,0 +1,247 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "test_ha"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_TASK
-+/* XXX: If the monitor has several instances, consider HA_TIMER_WHEEL */
-+#define HA_TIMER_TYPE HA_TIMER_HRTIMER
-+#include "test_ha.h"
-+#include <rv/ha_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+#define BAR_NS(ha_mon) /* XXX: what is BAR_NS(ha_mon)? */
-+
-+#define FOO_NS /* XXX: what is FOO_NS? */
-+
-+static inline u64 bar_ns(struct ha_monitor *ha_mon)
-+{
-+	return /* XXX: what is bar_ns(ha_mon)? */;
-+}
-+
-+static u64 foo_ns = /* XXX: default value */;
-+module_param(foo_ns, ullong, 0644);
-+
-+/*
-+ * These functions define how to read and reset the environment variable.
-+ *
-+ * Common environment variables like ns-based and jiffy-based clocks have
-+ * pre-define getters and resetters you can use. The parser can infer the type
-+ * of the environment variable if you supply a measure unit in the constraint.
-+ * If you define your own functions, make sure to add appropriate memory
-+ * barriers if required.
-+ * Some environment variables don't require a storage as they read a system
-+ * state (e.g. preemption count). Those variables are never reset, so we don't
-+ * define a reset function on monitors only relying on this type of variables.
-+ */
-+static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_test_ha env, u64 time_ns)
-+{
-+	if (env == clk_test_ha)
-+		return ha_get_clk_ns(ha_mon, env, time_ns);
-+	else if (env == env1_test_ha)
-+		return /* XXX: how do I read env1? */
-+	else if (env == env2_test_ha)
-+		return /* XXX: how do I read env2? */
-+	return ENV_INVALID_VALUE;
-+}
-+
-+static void ha_reset_env(struct ha_monitor *ha_mon, enum envs_test_ha env, u64 time_ns)
-+{
-+	if (env == clk_test_ha)
-+		ha_reset_clk_ns(ha_mon, env, time_ns);
-+}
-+
-+/*
-+ * These functions are used to validate state transitions.
-+ *
-+ * They are generated by parsing the model, there is usually no need to change them.
-+ * If the monitor requires a timer, there are functions responsible to arm it when
-+ * the next state has a constraint, cancel it in any other case and to check
-+ * that it didn't expire before the callback run. Transitions to the same state
-+ * without a reset never affect timers.
-+ * Due to the different representations between invariants and guards, there is
-+ * a function to convert it in case invariants or guards are reachable from
-+ * another invariant without reset. Those are not present if not required in
-+ * the model. This is all automatic but is worth checking because it may show
-+ * errors in the model (e.g. missing resets).
-+ */
-+static inline bool ha_verify_invariants(struct ha_monitor *ha_mon,
-+					enum states curr_state, enum events event,
-+					enum states next_state, u64 time_ns)
-+{
-+	if (curr_state == S0_test_ha)
-+		return ha_check_invariant_ns(ha_mon, clk_test_ha, time_ns);
-+	else if (curr_state == S2_test_ha)
-+		return ha_check_invariant_ns(ha_mon, clk_test_ha, time_ns);
-+	return true;
-+}
-+
-+static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
-+					enum states curr_state, enum events event,
-+					enum states next_state, u64 time_ns)
-+{
-+	if (curr_state == next_state)
-+		return;
-+	if (curr_state == S2_test_ha)
-+		ha_inv_to_guard(ha_mon, clk_test_ha, BAR_NS(ha_mon), time_ns);
-+}
-+
-+static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
-+				    enum states curr_state, enum events event,
-+				    enum states next_state, u64 time_ns)
-+{
-+	bool res = true;
-+
-+	if (curr_state == S0_test_ha && event == event0_test_ha)
-+		ha_reset_env(ha_mon, clk_test_ha, time_ns);
-+	else if (curr_state == S0_test_ha && event == event1_test_ha)
-+		ha_reset_env(ha_mon, clk_test_ha, time_ns);
-+	else if (curr_state == S1_test_ha && event == event0_test_ha)
-+		ha_reset_env(ha_mon, clk_test_ha, time_ns);
-+	else if (curr_state == S1_test_ha && event == event2_test_ha) {
-+		res = ha_get_env(ha_mon, env1_test_ha, time_ns) == 0ull;
-+		ha_reset_env(ha_mon, clk_test_ha, time_ns);
-+	} else if (curr_state == S2_test_ha && event == event1_test_ha)
-+		res = ha_monitor_env_invalid(ha_mon, clk_test_ha) ||
-+		      ha_get_env(ha_mon, clk_test_ha, time_ns) < foo_ns;
-+	else if (curr_state == S3_test_ha && event == event0_test_ha)
-+		res = ha_monitor_env_invalid(ha_mon, clk_test_ha) ||
-+		      (ha_get_env(ha_mon, clk_test_ha, time_ns) < FOO_NS &&
-+		      ha_get_env(ha_mon, env2_test_ha, time_ns) == 0ull);
-+	else if (curr_state == S3_test_ha && event == event1_test_ha) {
-+		res = ha_monitor_env_invalid(ha_mon, clk_test_ha) ||
-+		      (ha_get_env(ha_mon, clk_test_ha, time_ns) < foo_ns &&
-+		      ha_get_env(ha_mon, env1_test_ha, time_ns) == 1ull);
-+		ha_reset_env(ha_mon, clk_test_ha, time_ns);
-+	}
-+	return res;
-+}
-+
-+static inline void ha_setup_invariants(struct ha_monitor *ha_mon,
-+				       enum states curr_state, enum events event,
-+				       enum states next_state, u64 time_ns)
-+{
-+	if (next_state == curr_state && event != event0_test_ha)
-+		return;
-+	if (next_state == S0_test_ha)
-+		ha_start_timer_ns(ha_mon, clk_test_ha, bar_ns(ha_mon), time_ns);
-+	else if (next_state == S2_test_ha)
-+		ha_start_timer_ns(ha_mon, clk_test_ha, BAR_NS(ha_mon), time_ns);
-+	else if (curr_state == S0_test_ha)
-+		ha_cancel_timer(ha_mon);
-+	else if (curr_state == S2_test_ha)
-+		ha_cancel_timer(ha_mon);
-+}
-+
-+static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-+				 enum states curr_state, enum events event,
-+				 enum states next_state, u64 time_ns)
-+{
-+	if (!ha_verify_invariants(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
-+
-+	ha_convert_inv_guard(ha_mon, curr_state, event, next_state, time_ns);
-+
-+	if (!ha_verify_guards(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
-+
-+	ha_setup_invariants(ha_mon, curr_state, event, next_state, time_ns);
-+
-+	return true;
-+}
-+
-+static void handle_event0(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event always leads to the initial state */
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_start_event(p, event0_test_ha);
-+}
-+
-+static void handle_event1(void *data, /* XXX: fill header */)
-+{
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_event(p, event1_test_ha);
-+}
-+
-+static void handle_event2(void *data, /* XXX: fill header */)
-+{
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_event(p, event2_test_ha);
-+}
-+
-+static int enable_test_ha(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event0);
-+	rv_attach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event1);
-+	rv_attach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event2);
-+
-+	return 0;
-+}
-+
-+static void disable_test_ha(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event0);
-+	rv_detach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event1);
-+	rv_detach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event2);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "test_ha",
-+	.description = "auto-generated",
-+	.enable = enable_test_ha,
-+	.disable = disable_test_ha,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_test_ha(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_test_ha(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_test_ha);
-+module_exit(unregister_test_ha);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("test_ha: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/test_ha/test_ha.h b/tools/verification/rvgen/tests/golden/test_ha/test_ha.h
-new file mode 100644
-index 0000000000..949fa44534
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha/test_ha.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of test_ha automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME test_ha
-+
-+enum states_test_ha {
-+	S0_test_ha,
-+	S1_test_ha,
-+	S2_test_ha,
-+	S3_test_ha,
-+	state_max_test_ha,
-+};
-+
-+#define INVALID_STATE state_max_test_ha
-+
-+enum events_test_ha {
-+	event0_test_ha,
-+	event1_test_ha,
-+	event2_test_ha,
-+	event_max_test_ha,
-+};
-+
-+enum envs_test_ha {
-+	clk_test_ha,
-+	env1_test_ha,
-+	env2_test_ha,
-+	env_max_test_ha,
-+	env_max_stored_test_ha = env1_test_ha,
-+};
-+
-+_Static_assert(env_max_stored_test_ha <= MAX_HA_ENV_LEN, "Not enough slots");
-+#define HA_CLK_NS
-+
-+struct automaton_test_ha {
-+	char *state_names[state_max_test_ha];
-+	char *event_names[event_max_test_ha];
-+	char *env_names[env_max_test_ha];
-+	unsigned char function[state_max_test_ha][event_max_test_ha];
-+	unsigned char initial_state;
-+	bool final_states[state_max_test_ha];
-+};
-+
-+static const struct automaton_test_ha automaton_test_ha = {
-+	.state_names = {
-+		"S0",
-+		"S1",
-+		"S2",
-+		"S3",
-+	},
-+	.event_names = {
-+		"event0",
-+		"event1",
-+		"event2",
-+	},
-+	.env_names = {
-+		"clk",
-+		"env1",
-+		"env2",
-+	},
-+	.function = {
-+		{            S0_test_ha,            S1_test_ha,         INVALID_STATE },
-+		{            S0_test_ha,         INVALID_STATE,            S2_test_ha },
-+		{         INVALID_STATE,            S2_test_ha,            S3_test_ha },
-+		{            S0_test_ha,            S1_test_ha,         INVALID_STATE },
-+	},
-+	.initial_state = S0_test_ha,
-+	.final_states = { 1, 0, 0, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/test_ha/test_ha_trace.h b/tools/verification/rvgen/tests/golden/test_ha/test_ha_trace.h
-new file mode 100644
-index 0000000000..381bafcb33
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha/test_ha_trace.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_TEST_HA
-+DEFINE_EVENT(event_da_monitor_id, event_test_ha,
-+	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(id, state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor_id, error_test_ha,
-+	     TP_PROTO(int id, char *state, char *event),
-+	     TP_ARGS(id, state, event));
-+
-+DEFINE_EVENT(error_env_da_monitor_id, error_env_test_ha,
-+	     TP_PROTO(int id, char *state, char *event, char *env),
-+	     TP_ARGS(id, state, event, env));
-+#endif /* CONFIG_RV_MON_TEST_HA */
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl/Kconfig b/tools/verification/rvgen/tests/golden/test_ltl/Kconfig
-new file mode 100644
-index 0000000000..e2d0e721f1
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TEST_LTL
-+	depends on RV
-+	# XXX: add dependencies if there
-+	depends on RV_MON_LTL_PARENT
-+	default y
-+	select LTL_MON_EVENTS_ID
-+	bool "test_ltl monitor"
-+	help
-+	  Simple description
+@@ -132,7 +132,7 @@ static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
+ 		      ha_get_env(ha_mon, env2_test_ha, time_ns) == 0ull);
+ 	else if (curr_state == S3_test_ha && event == event1_test_ha) {
+ 		res = ha_monitor_env_invalid(ha_mon, clk_test_ha) ||
+-		      (ha_get_env(ha_mon, clk_test_ha, time_ns) < foo_ns &&
++		      (ha_get_env(ha_mon, clk_test_ha, time_ns) < 5000ull &&
+ 		      ha_get_env(ha_mon, env1_test_ha, time_ns) == 1ull);
+ 		ha_reset_env(ha_mon, clk_test_ha, time_ns);
+ 	}
+@@ -195,7 +195,7 @@ static int enable_test_ha(void)
+ {
+ 	int retval;
+ 
+-	retval = da_monitor_init();
++	retval = ha_monitor_init();
+ 	if (retval)
+ 		return retval;
+ 
+@@ -214,7 +214,7 @@ static void disable_test_ha(void)
+ 	rv_detach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event1);
+ 	rv_detach_trace_probe("test_ha", /* XXX: tracepoint */, handle_event2);
+ 
+-	da_monitor_destroy();
++	ha_monitor_destroy();
+ }
+ 
+ /*
 diff --git a/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c b/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c
-new file mode 100644
-index 0000000000..92c69b9d9a
---- /dev/null
+index 92c69b9d9a..c90d0ca009 100644
+--- a/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c
 +++ b/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "test_ltl"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+#include <monitors/ltl_parent/ltl_parent.h>
-+
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#include "test_ltl.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	/*
-+	 * This is called everytime the Buchi automaton is triggered.
-+	 *
-+	 * This function could be used to fetch the atomic propositions which
-+	 * are expensive to trace. It is possible only if the atomic proposition
-+	 * does not need to be updated at precise time.
-+	 *
-+	 * It is recommended to use tracepoints and ltl_atom_update() instead.
-+	 */
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bool task_creation)
-+{
-+	/*
-+	 * This should initialize as many atomic propositions as possible.
-+	 *
-+	 * @task_creation indicates whether the task is being created. This is
-+	 * false if the task is already running before the monitor is enabled.
-+	 */
-+	ltl_atom_set(mon, LTL_EVENT_A, true/false);
-+	ltl_atom_set(mon, LTL_EVENT_B, true/false);
-+}
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ */
-+static void handle_example_event(void *data, /* XXX: fill header */)
-+{
-+	ltl_atom_update(task, LTL_EVENT_A, true/false);
-+}
-+
-+static int enable_test_ltl(void)
-+{
-+	int retval;
-+
-+	retval = ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("test_ltl", /* XXX: tracepoint */, handle_example_event);
-+
-+	return 0;
-+}
-+
-+static void disable_test_ltl(void)
-+{
-+	rv_detach_trace_probe("test_ltl", /* XXX: tracepoint */, handle_sample_event);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_test_ltl = {
-+	.name = "test_ltl",
-+	.description = "Simple description",
-+	.enable = enable_test_ltl,
-+	.disable = disable_test_ltl,
-+};
-+
-+static int __init register_test_ltl(void)
-+{
-+	return rv_register_monitor(&rv_test_ltl, &rv_ltl_parent);
-+}
-+
-+static void __exit unregister_test_ltl(void)
-+{
-+	rv_unregister_monitor(&rv_test_ltl);
-+}
-+
-+module_init(register_test_ltl);
-+module_exit(unregister_test_ltl);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR(/* TODO */);
-+MODULE_DESCRIPTION("test_ltl: Simple description");
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.h b/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.h
+@@ -83,7 +83,7 @@ static void disable_test_ltl(void)
+ /*
+  * This is the monitor register section.
+  */
+-static struct rv_monitor rv_test_ltl = {
++static struct rv_monitor rv_this = {
+ 	.name = "test_ltl",
+ 	.description = "Simple description",
+ 	.enable = enable_test_ltl,
+@@ -92,12 +92,12 @@ static struct rv_monitor rv_test_ltl = {
+ 
+ static int __init register_test_ltl(void)
+ {
+-	return rv_register_monitor(&rv_test_ltl, &rv_ltl_parent);
++	return rv_register_monitor(&rv_this, &rv_ltl_parent);
+ }
+ 
+ static void __exit unregister_test_ltl(void)
+ {
+-	rv_unregister_monitor(&rv_test_ltl);
++	rv_unregister_monitor(&rv_this);
+ }
+ 
+ module_init(register_test_ltl);
+diff --git a/tools/verification/rvgen/tests/rvgen_container.t b/tools/verification/rvgen/tests/rvgen_container.t
 new file mode 100644
-index 0000000000..7895f2e233
+index 0000000000..fa4fb3db82
 --- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl/test_ltl.h
-@@ -0,0 +1,108 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/tools/verification/rvgen/tests/rvgen_container.t
+@@ -0,0 +1,20 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++source ../tests/engine.sh
++test_begin
 +
-+/*
-+ * C implementation of Buchi automaton, automatically generated by
-+ * tools/verification/rvgen from the linear temporal logic specification.
-+ * For further information, see kernel documentation:
-+ *   Documentation/trace/rv/linear_temporal_logic.rst
-+ */
++set_timeout 30s
 +
-+#include <linux/rv.h>
++# Help tests
++check "verify container subcommand help" \
++	"$RVGEN container -h" 0 "model_name" "class"
 +
-+#define MONITOR_NAME test_ltl
++check_and_compare_folder "container with description" \
++	"$RVGEN container -n test_container -D 'Test container for grouping monitors'" \
++	"test_container" "Writing the monitor into the directory test_container"
 +
-+enum ltl_atom {
-+	LTL_EVENT_A,
-+	LTL_EVENT_B,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <= RV_MAX_LTL_ATOM);
++# Error handling tests
++check "missing required model_name" \
++	"$RVGEN container" 2 "the following arguments are required: -n/--model_name"
 +
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] = {
-+		"ev_a",
-+		"ev_b",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	S1,
-+	S2,
-+	S3,
-+	S4,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <= RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool event_b = test_bit(LTL_EVENT_B, mon->atoms);
-+	bool event_a = test_bit(LTL_EVENT_A, mon->atoms);
-+	bool val1 = !event_a;
-+
-+	if (val1)
-+		__set_bit(S0, mon->states);
-+	if (true)
-+		__set_bit(S1, mon->states);
-+	if (event_b)
-+		__set_bit(S4, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
-+{
-+	bool event_b = test_bit(LTL_EVENT_B, mon->atoms);
-+	bool event_a = test_bit(LTL_EVENT_A, mon->atoms);
-+	bool val1 = !event_a;
-+
-+	switch (state) {
-+	case S0:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S1:
-+		if (true)
-+			__set_bit(S1, next);
-+		if (true && val1)
-+			__set_bit(S2, next);
-+		if (event_b && val1)
-+			__set_bit(S3, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S2:
-+		if (true)
-+			__set_bit(S1, next);
-+		if (true && val1)
-+			__set_bit(S2, next);
-+		if (event_b && val1)
-+			__set_bit(S3, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S3:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S4:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	}
-+}
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl/test_ltl_trace.h b/tools/verification/rvgen/tests/golden/test_ltl/test_ltl_trace.h
++test_end
+diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t b/tools/verification/rvgen/tests/rvgen_monitor.t
 new file mode 100644
-index 0000000000..3571b004c1
+index 0000000000..261476504e
 --- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl/test_ltl_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/tools/verification/rvgen/tests/rvgen_monitor.t
+@@ -0,0 +1,87 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++source ../tests/engine.sh
++test_begin
 +
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
++set_timeout 30s
 +
-+#ifdef CONFIG_RV_MON_TEST_LTL
-+DEFINE_EVENT(event_ltl_monitor_id, event_test_ltl,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_test_ltl,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_TEST_LTL */
-diff --git a/tools/verification/rvgen/tests/specs/test_da.dot b/tools/verification/rvgen/tests/specs/test_da.dot
-new file mode 100644
-index 0000000000..e555c239b2
---- /dev/null
-+++ b/tools/verification/rvgen/tests/specs/test_da.dot
-@@ -0,0 +1,16 @@
-+digraph state_automaton {
-+	{node [shape = circle] "state_b"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_state_a"};
-+	{node [shape = doublecircle] "state_a"};
-+	{node [shape = circle] "state_a"};
-+	"__init_state_a" -> "state_a";
-+	"state_a" [label = "state_a"];
-+	"state_a" -> "state_a" [ label = "event_2" ];
-+	"state_a" -> "state_b" [ label = "event_1" ];
-+	"state_b" [label = "state_b"];
-+	"state_b" -> "state_a" [ label = "event_2" ];
-+	{ rank = min ;
-+		"__init_state_a";
-+		"state_a";
-+	}
-+}
-diff --git a/tools/verification/rvgen/tests/specs/test_da2.dot b/tools/verification/rvgen/tests/specs/test_da2.dot
-new file mode 100644
-index 0000000000..cdd4192f58
---- /dev/null
-+++ b/tools/verification/rvgen/tests/specs/test_da2.dot
-@@ -0,0 +1,19 @@
-+digraph state_automaton {
-+	{node [shape = circle] "state_b"};
-+	{node [shape = circle] "state_c"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_state_a"};
-+	{node [shape = doublecircle] "state_a"};
-+	{node [shape = circle] "state_a"};
-+	"__init_state_a" -> "state_a";
-+	"state_a" [label = "state_a"];
-+	"state_a" -> "state_b" [ label = "event_1" ];
-+	"state_a" -> "state_c" [ label = "event_2" ];
-+	"state_b" [label = "state_b"];
-+	"state_b" -> "state_a" [ label = "event_2" ];
-+	"state_b" -> "state_c" [ label = "event_3" ];
-+	"state_c" [label = "state_c"];
-+	{ rank = min ;
-+		"__init_state_a";
-+		"state_a";
-+	}
-+}
++# Help and basic tests
++check "verify help page" \
++	"$RVGEN --help" 0 "Generate kernel rv monitor"
++
++check "verify monitor subcommand help" \
++	"$RVGEN monitor --help" 0 "Monitor class"
++
++# DA monitor tests - test all monitor types
++check_and_compare_folder "DA per_cpu (default name)" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t per_cpu" \
++	"test_da" "obj-\$(CONFIG_RV_MON_TEST_DA) += monitors/test_da/test_da.o"
++
++check_and_compare_folder "DA global type" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t global -n da_global" \
++	"da_global" "DA_MON_EVENTS_IMPLICIT"
++
++check_and_compare_folder "DA per_task with description" \
++	"$RVGEN monitor -c da -s tests/specs/test_da2.dot -t per_task -n da_pertask_desc -D 'Custom description for testing'" \
++	"da_pertask_desc" "#include <monitors/da_pertask_desc/da_pertask_desc_trace.h>"
++
++check_and_compare_folder "DA per_obj with parent" \
++	"$RVGEN monitor -c da -s tests/specs/test_da2.dot -t per_obj -n da_perobj_parent -p parent_mon" \
++	"da_perobj_parent" "DA_MON_EVENTS_ID"
++
++# HA monitor tests
++check_and_compare_folder "HA per_task (default name)" \
++	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_task" \
++	"test_ha" "HA_MON_EVENTS_ID"
++
++check_and_compare_folder "HA per_cpu type" \
++	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_cpu -n ha_percpu" \
++	"ha_percpu" "HA_MON_EVENTS_IMPLICIT"
++
++# LTL monitor test
++check_and_compare_folder "LTL per_task" \
++	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -n ltl_pertask" \
++	"ltl_pertask" "source \"kernel/trace/rv/monitors/ltl_pertask/Kconfig\""
++
++check_and_compare_folder "LTL per_task with parent and description (default name)" \
++	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -p ltl_parent -D 'Simple description'" \
++	"test_ltl" "LTL_MON_EVENTS_ID"
++
++# Error handling tests
++check "missing required spec argument" \
++	"$RVGEN monitor -c da -t per_cpu" 2 \
++	"the following arguments are required: -s/--spec" "Traceback (most recent call last)"
++
++check "missing required monitor type" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot" 2 \
++	"the following arguments are required: -t/--monitor_type" "Traceback (most recent call last)"
++
++check "missing required monitor class" \
++	"$RVGEN monitor -s tests/specs/test_da.dot -t per_cpu" 2 \
++	"the following arguments are required: -c/--class" "Traceback (most recent call last)"
++
++check "invalid monitor class" \
++	"$RVGEN monitor -c invalid -s tests/specs/test_da.dot -t per_cpu" 1 \
++	"Unknown monitor class" "Traceback (most recent call last)"
++
++check "missing dot file" \
++	"$RVGEN monitor -c da -s tests/specs/nonexistent.dot -t per_cpu" 1 \
++	"No such file or directory" "Traceback (most recent call last)"
++
++check "missing ltl file" \
++	"$RVGEN monitor -c ltl -s tests/specs/nonexistent.ltl -t per_task" 1 \
++	"No such file or directory" "Traceback (most recent call last)"
++
++check "invalid dot file syntax" \
++	"$RVGEN monitor -c da -s tests/specs/test_invalid.dot -t per_cpu" 1 \
++	"Not a valid .dot format" "Traceback (most recent call last)"
++
++check "invalid ha file syntax" \
++	"$RVGEN monitor -c ha -s tests/specs/test_invalid_ha.dot -t per_obj" 1 \
++	"Unrecognised event constraint" "Traceback (most recent call last)"
++
++check "invalid ltl file syntax" \
++	"$RVGEN monitor -c ltl -s tests/specs/test_invalid.ltl -t per_task" 1 \
++	"Illegal character 'i'" "Traceback (most recent call last)"
++
++test_end
 diff --git a/tools/verification/rvgen/tests/specs/test_ha.dot b/tools/verification/rvgen/tests/specs/test_ha.dot
-new file mode 100644
-index 0000000000..786aa8b220
---- /dev/null
+index 786aa8b220..af18ad7389 100644
+--- a/tools/verification/rvgen/tests/specs/test_ha.dot
 +++ b/tools/verification/rvgen/tests/specs/test_ha.dot
-@@ -0,0 +1,27 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = circle] "S1"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_S0"};
-+	{node [shape = doublecircle] "S0"};
-+	{node [shape = circle] "S0"};
-+	{node [shape = circle] "S2"};
-+	{node [shape = circle] "S3"};
-+	"__init_S0" -> "S0";
-+	"S0" [label = "S0\nclk < bar_ns()", color = green3];
-+	"S1" [label = "S1"];
-+	"S2" [label = "S2\nclk < BAR_NS()"];
-+	"S3" [label = "S3"];
-+	"S1" -> "S0" [ label = "event0;reset(clk)" ];
-+	"S0" -> "S1" [ label = "event1;reset(clk)" ];
-+	"S0" -> "S0" [ label = "event0;reset(clk)" ];
-+	"S1" -> "S2" [ label = "event2;env1 == 0;reset(clk)" ];
-+	"S2" -> "S3" [ label = "event2" ];
-+	"S2" -> "S2" [ label = "event1;clk < foo_ns" ];
-+	"S3" -> "S0" [ label = "event0;clk < FOO_NS && env2 == 0" ];
-+	"S3" -> "S1" [ label = "event1;clk < foo_ns && env1 == 1;reset(clk)" ];
-+	{ rank = min ;
-+		"__init_S0";
-+		"S0";
-+	}
+@@ -19,7 +19,7 @@ digraph state_automaton {
+ 	"S2" -> "S3" [ label = "event2" ];
+ 	"S2" -> "S2" [ label = "event1;clk < foo_ns" ];
+ 	"S3" -> "S0" [ label = "event0;clk < FOO_NS && env2 == 0" ];
+-	"S3" -> "S1" [ label = "event1;clk < foo_ns && env1 == 1;reset(clk)" ];
++	"S3" -> "S1" [ label = "event1;clk < 5us && env1 == 1;reset(clk)" ];
+ 	{ rank = min ;
+ 		"__init_S0";
+ 		"S0";
+diff --git a/tools/verification/tests/engine.sh b/tools/verification/tests/engine.sh
+index 76cc254ff9..f86d444608 100644
+--- a/tools/verification/tests/engine.sh
++++ b/tools/verification/tests/engine.sh
+@@ -5,6 +5,8 @@ test_begin() {
+ 	# included correctly.
+ 	ctr=0
+ 	[ -z "$RV" ] && RV="../rv/rv"
++	[ -z "$RVGEN" ] && RVGEN="python3 ../rvgen"
++	[ -z "$GOLDEN_DIR" ] && GOLDEN_DIR="tests/golden"
+ 	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
+ }
+ 
+@@ -109,6 +111,38 @@ check_if_exists() {
+ 	fi
+ }
+ 
++check_and_compare_folder() {
++	# Run command, compare generated folder to golden, and cleanup
++	local desc=$1
++	local command=$2
++	local generated_dir=$3
++	local expected_output=$4
++	local unexpected_output=$5
++	local golden_dir="$GOLDEN_DIR/$generated_dir"
++
++	ctr=$((ctr + 1))
++	if [ -n "$TEST_COUNT" ]; then
++		rm -rf "$generated_dir"
++		_check "$desc" "$command" 0 "$expected_output" "$unexpected_output"
++
++		if [ "$fail" -eq 0 ] && [ ! -d "$generated_dir" ]; then
++			failure "# Generated directory not found: $generated_dir"
++		fi
++
++		if [ "$fail" -ne 0 ]; then
++			:
++		elif ! diff -r "$generated_dir" "$golden_dir" &> /dev/null; then
++			failure "# Directories differ:"
++			failbuf+=$(diff -r "$generated_dir" "$golden_dir" 2>&1 | sed 's/^/#   /')
++			failbuf+=$'\n'
++		fi
++
++		report "$1"
++
++		rm -rf "$generated_dir"
++	fi
 +}
-diff --git a/tools/verification/rvgen/tests/specs/test_invalid.dot b/tools/verification/rvgen/tests/specs/test_invalid.dot
-new file mode 100644
-index 0000000000..17c63fc57f
---- /dev/null
-+++ b/tools/verification/rvgen/tests/specs/test_invalid.dot
-@@ -0,0 +1,8 @@
-+digraph invalid {
-+	{node [shape = circle] "init"};
-+	{node [shape = circle] "state1"};
-+	"init" [label = "init"];
-+	"init" -> "state1" [ label = "event_a" ];
-+	"state1" [label = "state1"];
-+	"state1" -> "init" [ label = "event_b" ];
-+}
-diff --git a/tools/verification/rvgen/tests/specs/test_invalid.ltl b/tools/verification/rvgen/tests/specs/test_invalid.ltl
-new file mode 100644
-index 0000000000..cf36307e00
---- /dev/null
-+++ b/tools/verification/rvgen/tests/specs/test_invalid.ltl
-@@ -0,0 +1 @@
-+RULE = A invalid B
-diff --git a/tools/verification/rvgen/tests/specs/test_invalid_ha.dot b/tools/verification/rvgen/tests/specs/test_invalid_ha.dot
-new file mode 100644
-index 0000000000..06de6aa870
---- /dev/null
-+++ b/tools/verification/rvgen/tests/specs/test_invalid_ha.dot
-@@ -0,0 +1,16 @@
-+digraph state_automaton {
-+	{node [shape = circle] "state_b"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_state_a"};
-+	{node [shape = doublecircle] "state_a"};
-+	{node [shape = circle] "state_a"};
-+	"__init_state_a" -> "state_a";
-+	"state_a" [label = "state_a;clk < 1"];
-+	"state_a" -> "state_a" [ label = "event_2;reset(clk)" ];
-+	"state_a" -> "state_b" [ label = "event_1;wrong_constraint" ];
-+	"state_b" [label = "state_b"];
-+	"state_b" -> "state_a" [ label = "event_2" ];
-+	{ rank = min ;
-+		"__init_state_a";
-+		"state_a";
-+	}
-+}
-diff --git a/tools/verification/rvgen/tests/specs/test_ltl.ltl b/tools/verification/rvgen/tests/specs/test_ltl.ltl
-new file mode 100644
-index 0000000000..5ed658abd6
---- /dev/null
-+++ b/tools/verification/rvgen/tests/specs/test_ltl.ltl
-@@ -0,0 +1 @@
-+RULE = always (EVENT_A imply eventually EVENT_B)
++
+ set_timeout() {
+ 	TIMEOUT="timeout -v -k 15s $1"
+ }
 -- 
 2.54.0
 
