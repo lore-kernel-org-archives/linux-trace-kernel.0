@@ -1,53 +1,92 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31222332604
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 07:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782371734; cv=none; b=fTULL5akW/llIcywGUJIkmXW4aOXc47j9s82QMu9L/Cp9Qdmzp11ZNgiZUtad3hHs3aeYX2+/tOT7EvrjIXxzbteZbAN/IPjcT2f/O9stXzbompvxLR17qIeoTd8IFMODKDcJ1xQcsJ19f1RhKf7m4GzBTOQ2iFWi//fARXTOOw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782371734; c=relaxed/simple;
-	bh=u8XCrqCgJetvR2xdyVexEcnDWRZXDkhW13PCWvw8OtE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64073815D9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 07:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782373290; cv=pass; b=nGr0X2nLwL6VVoKMN1oJv7VerQNscOKYuwkiYW9JLtYYtapqMcPvXk+27w2Gmc1RAEQTLJsKwvKLH2QtkpO9ovQzETcOlqGZsyDQfZ5OdCRvfZp/jiPNSA2wM2T4StXHLBPvX1soITVqfgBS5Pmke4QH3pqAUaaz2QU5AzUuaXk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782373290; c=relaxed/simple;
+	bh=Qvcbq0DaasBf8gUW2nSthq4nzSVZglaEH511+tU5N4k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nJFVujQiwhkul6SlseRTeTySgOuuztNbVh49WuT8xfnA2lDOXgacDZEdTAC8EHApuKxJwKIfUrSla8Qn9P+7EUmv3mKHU+LSzpcH8XkTF5eFKI6yZ84E6Ct8T+oTDEhAx1QldK09dkWAwbEjq27oBsWw+s7LbtMs4fc8LKimkco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G4Jv8KrS; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 To:Cc:Content-Type; b=LLTC4GHaYlsC98gs/Ux8ofXRYuOQnB+9+9lNqr381Y+NtKs1RA1yupkOIVhDC0vCYpDeK52OssNQ4TQLWGSRkJZsePq4N0L1N2M7hccp4rd8QjGCEuiIUzLy2YCkyPCrfGjrXhcheQ05EwsIBXfqT97JLUKxncHW5KzUTM9d6I0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NGr6iSYC; arc=pass smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G4Jv8KrS"
-X-Forwarded-Encrypted: i=1; AFNElJ/zIXfKQttLMWqc7hdzs3j8Jdc5cqPHy6Vam1p3h9wASIuMinzgV4MbIhq13L+OpvCEwrvjCB2MNRejJhj0PPWUEjE=@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782371730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n4l8kEDpwe6ZsvCFof1KiGbqck2t2+CoEwvUDbK1yNQ=;
-	b=G4Jv8KrSZoKm/h0cWk4HI8AF9Rcw5kChPmYYlIN8avju2k0n0QAuEb2b1FMW/k3KLn88he
-	/RTmhOMbtkTBI+XHZCRwtlBEFo9D4Lv++ycf8ONtLq+eLg98Pm5QbUy2Urr+TFgFOOSn27
-	mlyQoQ2rnhtIGZtyZ/ZIrUAAma3+850=
-X-Gm-Message-State: AOJu0YwXHUSPsVW/TiNGDOpbS2k6IdtUYoOQtadA4mZ+eYfBtx5YFdL1
-	2iI6wfzOeKFUGc93MgZRPt8DkCmz6MhDjXLVFuVQsaSHOFN0wIiNhEP+VxaAk4uMwhaq+oByrgc
-	yhBfTFontHDTRqoePys0yART2FAuep3OvqVdG4p4/
-X-Received: by 2002:a05:622a:1f96:b0:516:cc18:4760 with SMTP id
- d75a77b69052e-51a709958aamr5225201cf.21.1782371725540; Thu, 25 Jun 2026
- 00:15:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NGr6iSYC"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5177d1ff061so144111cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 00:41:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782373288; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TZ5U02W2mGaUCiQVNfkXv93FQN3LNv//PDM7PRzulcddKNHnw41ZP0G35snm09Fgbk
+         6B2egpyeZKTQi9RFwh8PjS44PVATL/uNXLNzUlrQCJYnXQpciMcUg8NeAq38nj7hb/3W
+         1Cu1EWjL8KMNFM2Q8MsCJK2cmh3l9NWaKuAg/fl0GmmTeVv8FrQeZcLHpSRRH63/+4L+
+         vdz+z361kZZnbxVGXuRUSgS65KADZwFIEXUaPIBIpd+sK+sbibXql+zgqc86uzLjRp3j
+         arQBtX6NATpOyfqGpdzpL9ds7rKe33eLBtlO0bf71pac5HbJgtn9X5dHyM4rHpDk7iaJ
+         7GsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=IKDmrHuQqoBYlM3iNILSe07cr8MVKcj1ghLIbtUqfRQ=;
+        fh=VqWzHEz1IpSPuiA667aEtGJ6YImAkgTtCTu/dfg/gd4=;
+        b=qBZaSirS4QJO7loyWYhialgourq6rMwXBY8Myt8OrIo57R8P1B82aXZoyyjVwFddzR
+         L4ZMede4JEJtasRQ4WOQC3G6hjGvdQ/TqK8SYaVFnwf4wQEFmoSSVEhJ5gdpBv97XvNI
+         QPHHZ75qDt7HKt0Ih/wLYAfYg/pD7j11U0f9cGRme1FO7A/R/nIvBa5ACFWwLS5KKqWt
+         6VAMb29G4T39mo8KZo6xLYvLQT+hzOEEjUeKyjqjsHk7cBMkQSFpk2vgtB0zerYSBKgx
+         hKHrs+xGeUlQEnGxbsY8mQLCfQBq9d6PYcLi7iLVPfwFP/wz276XElSA9VTkCGvRMz4w
+         T7AA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782373288; x=1782978088; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IKDmrHuQqoBYlM3iNILSe07cr8MVKcj1ghLIbtUqfRQ=;
+        b=NGr6iSYC+lcEY55yFPE7kO3jc2Pu8i1J6RoSMrYqEIbTdJ3CEbSVgVnCgzL/UKk2Do
+         fKTDTSt7T5e/oRhc644gpHbhhX4RBZfcfmf3ouTXUyq08gC30xPF3DrvuBx4GgZlXkuv
+         7t0fAHbGQKDulVnxOiV8qer1BHa2dLGvY6wGKnQlrRqH5r2mUyW/JDupPnDicElJzAWL
+         kLnihC/jAz0YOwy0MdTqu51lrA6KzSN8xPrDR2QzFz1qAqBaSqtoPh7EvAwJVwMnKq3O
+         TBg+2Jf+G2sJPEyRLK6wiFpYzCiTq4AmkpZhSTqpEw/0aTNbsA78Se5lFRCnqYrCYHJz
+         c8Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782373288; x=1782978088;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=IKDmrHuQqoBYlM3iNILSe07cr8MVKcj1ghLIbtUqfRQ=;
+        b=auMH1HmwAFuyHvy6ulSogtx8zw0YTP0pCPhaHDsf6Rk8/IC6RBXc9DEiePhdpHW2OP
+         LOUZbESU/FHjki80pBY5NuCRMaaAvAB7pQaE9OBWD1katUzVUIoPB1kXKRi0XrV20REk
+         Hpos0ePnuZhFIE5/UCE8hu9Hgr2j18a0MjbF6KyL+1fjxYiOrktLl/JIo6bl5l8ArPd5
+         X51mRSj4Ptz6SCmjI8Lz/hTYTKrZZBnJoOwnahWGmnqux/YxX2p1GUMUhoA9ZsF5h4xM
+         W/tJCrylC+jQ2CDvGT3Th5pR1Vkmgih7DxG43YG15kgtVt9iXbhNf2wW2wT4+zx8S2Kn
+         1KTw==
+X-Forwarded-Encrypted: i=1; AFNElJ8ApZCG6RekkbQgKFOgVrihXboABrDLy0EWZjk1VkSELxRfMvZuSxaA1FkHr+LfqxcKAJruFAvt6VypzUXu3WbkDoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+ImhEY5yxmNZGQi3yn5MiJecJmK48jilFIkE9Xy7DUzwnVlQb
+	YxgsAhGguW2O6l6ax2ikfVWqMeHJN7VKPq0zf1NThiX4eTHqxQ4xFturRX9DF8irHto1KayTvp2
+	5I/R1VfaxddmkQPjkDbaIYT7Q91ieIsXwxXpNTaoW
+X-Gm-Gg: AfdE7ckhhCx2nYNPMooCP8/FJiUXHs3h2P82FcK+rXSDJHe49eduChJX9uoTZNDQ7Gr
+	uzsiB7Y27urEHBQw3mYgutwtQJ+ibdtZ/C/6P7EPD6m0tsdHWikzIFvZN5yr1yLtJzp052PGJOt
+	yn6VCTPq6o4ZwPmTmgZtiX095O0SDY2Kti+E5+E6hO0YW13Rfgwc68EbLvd8EGHirbO68bVSZhW
+	koTOkNCtnCMj8nSSIoOzXPGB04BzpQlayjgZQcriN3/idOeaPi+2GKvPubG2jF8hyxWt1146g==
+X-Received: by 2002:a05:622a:120e:b0:519:56a8:2693 with SMTP id
+ d75a77b69052e-51a6ebae001mr6553451cf.24.1782373286970; Thu, 25 Jun 2026
+ 00:41:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com> <20260618-gmem-inplace-conversion-v8-37-9d2959357853@google.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-37-9d2959357853@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Thu, 25 Jun 2026 08:14:48 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTxZQf9w+iT11O3+KC-z6Sbg5qCEZ-XCR3=wRnG2k3=Maw@mail.gmail.com>
-X-Gm-Features: AVVi8Cfiom8KyzZV2HmAlpy9PB5CRyn77LPV2Q5_VbhfHk5a3YCLzvyw4gtaMNM
-Message-ID: <CA+EHjTxZQf9w+iT11O3+KC-z6Sbg5qCEZ-XCR3=wRnG2k3=Maw@mail.gmail.com>
-Subject: Re: [PATCH v8 37/46] KVM: selftests: Test that shared/private status
- is consistent across processes
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com> <20260618-gmem-inplace-conversion-v8-38-9d2959357853@google.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-38-9d2959357853@google.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Thu, 25 Jun 2026 08:40:00 +0100
+X-Gm-Features: AVVi8CdNvXe7DIQJSIUqqBW3OCX6JP2NJsxm61_dCUo-WV2w6fSxq-mU03dKtt8
+Message-ID: <CA+EHjTzEGxZQXPPsY5nynYf6ts+Jt3TBevgLpPVyHDqf4i7RGw@mail.gmail.com>
+Subject: Re: [PATCH v8 38/46] KVM: selftests: Add helpers to pin pages with CONFIG_GUP_TEST
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -76,186 +115,94 @@ Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
 	linux-coco@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-X-Migadu-Flow: FLOW_OUT
 
 On Fri, 19 Jun 2026 at 01:32, Ackerley Tng via B4 Relay
 <devnull+ackerleytng.google.com@kernel.org> wrote:
 >
-> From: Sean Christopherson <seanjc@google.com>
+> From: Ackerley Tng <ackerleytng@google.com>
 >
-> Add a test to verify that a guest_memfd's shared/private status is
-> consistent across processes, and that any shared pages previously mapped in
-> any process are unmapped from all processes.
+> Add helper functions to allow KVM selftests to pin memory using
+> CONFIG_GUP_TEST. This is useful for testing scenarios where some page has
+> an increased refcount. such as in guest_memfd in-place conversion tests.
 >
-> The test forks a child process after creating the shared guest_memfd
-> region so that the second process exists alongside the main process for the
-> entire test.
+> The helpers open /sys/kernel/debug/gup_test and invoke the
+> PIN_LONGTERM_TEST_START and PIN_LONGTERM_TEST_STOP ioctls. Since this
+> functionality depends on the kernel being built with CONFIG_GUP_TEST,
+> provide stub implementations that trigger a test failure if the
+> configuration is missing.
 >
-> The processes then take turns to access memory to check that the
-> shared/private status is consistent across processes.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
 
-Two things below, otherwise:
+nit below, otherwise:
 
 Reviewed-by: Fuad Tabba <tabba@google.com>
 
 Cheers,
 /fuad
 
-
->  .../kvm/x86/guest_memfd_conversions_test.c         | 118 +++++++++++++++++++++
->  1 file changed, 118 insertions(+)
+> ---
+>  tools/testing/selftests/kvm/include/kvm_util.h |  3 +++
+>  tools/testing/selftests/kvm/lib/kvm_util.c     | 23 +++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
 >
-> diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> index f03af2c46426f..99b0023609670 100644
-> --- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> +++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> @@ -2,6 +2,8 @@
->  /*
->   * Copyright (c) 2024, Google LLC.
->   */
-> +#include <pthread.h>
-> +#include <time.h>
->  #include <sys/mman.h>
->  #include <unistd.h>
-
-nit: include order
-
->
-> @@ -323,6 +325,122 @@ GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
->         test_private(t, 0, 0, 'A');
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index 323d06b5699ec..79ab64ac8b869 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -1195,6 +1195,9 @@ static inline int pin_self_to_any_cpu(void)
+>         return pin_task_to_any_cpu(pthread_self());
 >  }
 >
-> +/* Test that shared/private memory protections work and are seen from any process. */
-> +GMEM_CONVERSION_TEST_INIT_SHARED(forked_accesses)
+> +void pin_pages(void *vaddr, uint64_t size);
+> +void unpin_pages(void);
+> +
+>  void kvm_print_vcpu_pinning_help(void);
+>  void kvm_parse_vcpu_pinning(const char *pcpus_string, u32 vcpu_to_pcpu[],
+>                             int nr_vcpus);
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index b73817f7bc803..524ef97d634bf 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -18,6 +18,8 @@
+>  #include <unistd.h>
+>  #include <linux/kernel.h>
+>
+> +#include "../../../../mm/gup_test.h"
+> +
+>  #define KVM_UTIL_MIN_PFN       2
+>
+>  u32 guest_random_seed;
+> @@ -639,6 +641,27 @@ int __pin_task_to_cpu(pthread_t task, int cpu)
+>         return pthread_setaffinity_np(task, sizeof(cpuset), &cpuset);
+>  }
+>
+> +static int gup_test_fd = -1;
+> +
+> +void pin_pages(void *vaddr, uint64_t size)
 > +{
-> +       enum test_state {
-> +               STATE_INIT,
-> +               STATE_CHECK_SHARED,
-> +               STATE_DONE_CHECKING_SHARED,
-> +               STATE_CHECK_PRIVATE,
-> +               STATE_DONE_CHECKING_PRIVATE,
+> +       const struct pin_longterm_test args = {
+> +               .addr = (uint64_t)vaddr,
+> +               .size = size,
+> +               .flags = PIN_LONGTERM_TEST_FLAG_USE_WRITE,
 > +       };
 > +
-> +       struct sync_state {
-> +               pthread_mutex_t mutex;
-> +               pthread_cond_t cond;
-> +               enum test_state step;
-> +       } *sync;
-> +
-> +       pthread_mutexattr_t mattr;
-> +       pthread_condattr_t cattr;
-> +       pid_t child_pid, parent_pid;
-> +       int status;
-> +
-> +       sync = kvm_mmap(sizeof(*sync), PROT_READ | PROT_WRITE,
-> +                       MAP_SHARED | MAP_ANONYMOUS, -1);
-> +
-> +       pthread_mutexattr_init(&mattr);
-> +       pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED);
-> +       pthread_mutex_init(&sync->mutex, &mattr);
-> +       pthread_mutexattr_destroy(&mattr);
-> +
-> +       pthread_condattr_init(&cattr);
-> +       pthread_condattr_setpshared(&cattr, PTHREAD_PROCESS_SHARED);
-> +       pthread_cond_init(&sync->cond, &cattr);
-> +       pthread_condattr_destroy(&cattr);
-> +
-> +       sync->step = STATE_INIT;
-> +
-> +#define TEST_STATE_AWAIT(__state)                                              \
-> +       do {                                                                    \
-> +               pthread_mutex_lock(&sync->mutex);                               \
-> +               while (sync->step != (__state)) {                               \
-> +                       struct timespec ts, stop;                               \
-> +                       int ret;                                                \
-> +                                                                               \
-> +                       clock_gettime(CLOCK_REALTIME, &ts);                     \
-> +                       stop = timespec_add_ns(ts, 100 * 1000000UL);            \
-> +                                                                               \
-> +                       ret = pthread_cond_timedwait(&sync->cond, &sync->mutex, &stop); \
-> +                       if (ret == ETIMEDOUT) {                                 \
-> +                               bool alive = (child_pid == 0) ?                 \
-> +                                            (getppid() == parent_pid) :                \
-> +                                            (waitpid(child_pid, NULL, WNOHANG) == 0); \
+> +       gup_test_fd = __open_path_or_exit("/sys/kernel/debug/gup_test", O_RDWR,
+> +                                         "Is CONFIG_GUP_TEST enabled?");
 
-Not sure it's worth it, but if you want to silence Sashiko, waitid
-with WNOWAIT might be the way to go (not tested, just from looking at
-the man page). This is though very unlikely, mentioning it since
-Sashiko complained.
+nit: should you close this/reset it to -1 after the tests?
 
-
-> +                               TEST_ASSERT(alive, "Other process exited prematurely"); \
-> +                       } else {                                                \
-> +                               TEST_ASSERT(!ret, "pthread_cond_timedwait failed"); \
-> +                       }                                                       \
-> +               }                                                               \
-> +               pthread_mutex_unlock(&sync->mutex);                             \
-> +       } while (0)
 > +
-> +#define TEST_STATE_SET(__state)                                                        \
-> +       do {                                                                    \
-> +               pthread_mutex_lock(&sync->mutex);                               \
-> +               sync->step = (__state);                                         \
-> +               pthread_cond_broadcast(&sync->cond);                            \
-> +               pthread_mutex_unlock(&sync->mutex);                             \
-> +       } while (0)
-> +
-> +       parent_pid = getpid();
-> +       child_pid = fork();
-> +       TEST_ASSERT(child_pid != -1, "fork failed");
-> +
-> +       if (child_pid == 0) {
-> +               const char inconsequential = 0xdd;
-> +
-> +               TEST_STATE_AWAIT(STATE_CHECK_SHARED);
-> +
-> +               /*
-> +                * This maps the pages into the child process as well, and tests
-> +                * that the conversion process will unmap the guest_memfd memory
-> +                * from all processes.
-> +                */
-> +               host_do_rmw(t->mem, 0, 0xB, 0xC);
-> +
-> +               TEST_STATE_SET(STATE_DONE_CHECKING_SHARED);
-> +               TEST_STATE_AWAIT(STATE_CHECK_PRIVATE);
-> +
-> +               TEST_EXPECT_SIGBUS(READ_ONCE(t->mem[0]));
-> +               TEST_EXPECT_SIGBUS(WRITE_ONCE(t->mem[0], inconsequential));
-> +
-> +               TEST_STATE_SET(STATE_DONE_CHECKING_PRIVATE);
-> +               exit(0);
-> +       }
-> +
-> +       test_shared(t, 0, 0, 0xA, 0xB);
-> +
-> +       TEST_STATE_SET(STATE_CHECK_SHARED);
-> +       TEST_STATE_AWAIT(STATE_DONE_CHECKING_SHARED);
-> +
-> +       test_convert_to_private(t, 0, 0xC, 0xD);
-> +
-> +       TEST_STATE_SET(STATE_CHECK_PRIVATE);
-> +       TEST_STATE_AWAIT(STATE_DONE_CHECKING_PRIVATE);
-> +
-> +       TEST_ASSERT_EQ(waitpid(child_pid, &status, 0), child_pid);
-> +       TEST_ASSERT(WIFEXITED(status) && WEXITSTATUS(status) == 0,
-> +                   "Child exited with unexpected status");
-> +
-> +       pthread_mutex_destroy(&sync->mutex);
-> +       pthread_cond_destroy(&sync->cond);
-> +       kvm_munmap(sync, sizeof(*sync));
-> +
-> +#undef TEST_STATE_SET
-> +#undef TEST_STATE_AWAIT
+> +       TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_START, &args), 0);
 > +}
 > +
->  int main(int argc, char *argv[])
+> +void unpin_pages(void)
+> +{
+> +       TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_STOP), 0);
+> +}
+> +
+>  static u32 parse_pcpu(const char *cpu_str, const cpu_set_t *allowed_mask)
 >  {
->         TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+>         u32 pcpu = atoi_non_negative("CPU number", cpu_str);
 >
 > --
 > 2.55.0.rc0.738.g0c8ab3ebcc-goog
