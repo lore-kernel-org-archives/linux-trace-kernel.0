@@ -1,104 +1,127 @@
-Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.35.192.45])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0D137F737;
-	Thu, 25 Jun 2026 22:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.35.192.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18BE13B7AE;
+	Thu, 25 Jun 2026 23:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782425961; cv=none; b=sNpx4V8e+sL02nglSXR+ktvhXBKnTTYVioZI8nBod8z4RSTzsrTId14ED+Rg+1id8SbVpqFazw0nMXmFufsDYfTOuCYpsZPvZ0IRU4MWk8+fuXJy1m+nVpJG/91K9/urAjvr3QBYcg87GvaI7xYB1dTsUEkFZzHYfWU8IfptTfI=
+	t=1782430928; cv=none; b=LUz93YxxdARVhH4drYsSK1hwl3DPX3X2Jip6k0WL9ZwHfyUx6USkkvQ7ma+TZZzoZaIRLPG1QRiVBHn0y85mQsW8sugV9K52kKvlrscrMeN7f+kFpQQFVkbO1ZVBkHyWcbI/0xgdJS+b8jKQ2rQ8Y42YDhj4kfXzN3RHKoKtfT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782425961; c=relaxed/simple;
-	bh=hcicJlfK8T5L5/HEK78jokcPzZyJx5jTeAgBKwX0N7k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Disposition; b=OtNN6KLL2se6ta8EOwVGdgDvGmKm9evt+FFs9YorKraW8RU7PCqv0bO+HF5DO0dhpt5Iw+gh39vAGu7bPgYmbVfn2EPKRL0bVdFrjc45iap/FjX6jYFo6IsSYxvjbPt33SzUbPc4Vw9FMPhvBH9ZJB2JbchK6w43NuIKznbPkV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=fEBnOpob; arc=none smtp.client-ip=52.35.192.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1782430928; c=relaxed/simple;
+	bh=XLWncx6sAi2SL2n9opoom94BbjE0WreKNCFruJ4bcbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eSX1vhnyPXqWCfZMe2VumjoUiaDOsXft3XSYjbcuLce5UiTdxVqCpP0eDgmAtJa84XpgBaU7gQXFhUH7S+jpcQBvWiUM1IJaCLir4dAViIP9ZA6d/qjEiGfi2WRQxfWXUfd5v6Ue1wRQNWvEkEy6VyPOTEXpi++zHqR7NMKS9hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERWk9tSf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="fEBnOpob"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1782425960; x=1813961960;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gqfHYJGq1OA4xHUtal9D1MJSyJMcOMtM3Z2ja3x61Is=;
-  b=fEBnOpobgZYkytumD/TAhUknTBXpe75d7B4Y8ogCqKKE3U6Uf8CEeATq
-   n8v9ntkrK9shj8hheOO/Bn/hRR1xCuvXL1DcrH7y65oZXLSjUAkxKcq4v
-   gpK7SWLRYNSSnOfHC5lf6WYMDIO94l10DwXdC7mYyN+LyVx8EEjT+0P/B
-   UrkfRfrd9lrI8B5FuRwZ8CA7llB27tCyH02sF71K1pM+pnE84oSp89rvm
-   y04ESmXQtodCotpjXqpjAI2G46FJb10Aegx4RBSGELM94g95kF/mA+0ty
-   ELq8DQhP3z5ypZDcWPCnGbiBup3r4PLXhsiXc8Bxd9Rw9xWYRTwxQNVkc
-   w==;
-X-CSE-ConnectionGUID: ibPfposvRVi0YbYajB8Nqg==
-X-CSE-MsgGUID: i4hSxOCDQOyHW158eNz3YA==
-X-IronPort-AV: E=Sophos;i="6.24,225,1774310400"; 
-   d="scan'208";a="22299701"
-Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
-  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 22:19:17 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.111:11485]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.1.61:2525] with esmtp (Farcaster)
- id 66017a07-fe43-45c5-b0e0-c45c7745dcbc; Thu, 25 Jun 2026 22:19:17 +0000 (UTC)
-X-Farcaster-Flow-ID: 66017a07-fe43-45c5-b0e0-c45c7745dcbc
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 25 Jun 2026 22:19:16 +0000
-Received: from dev-dsk-doebel-1a-7b355d76.us-east-1.amazon.com (10.169.119.5)
- by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 25 Jun 2026 22:19:15 +0000
-From: Bjoern Doebel <doebel@amazon.de>
-To: Sasha Levin <sashal@kernel.org>
-CC: Bjoern Doebel <doebel@amazon.de>, <stable@vger.kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, David Howells
-	<dhowells@redhat.com>
-Subject: Re: [PATCH 5.15.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
-Date: Thu, 25 Jun 2026 22:19:00 +0000
-Message-ID: <aj2pQ2IPGP5eR2TO@amazon.de>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260625054005.0014.ringbuf-515@kernel.org>
-References: <20260624122351.2477592-1-doebel@amazon.de> <20260625054005.0014.ringbuf-515@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERWk9tSf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DEF11F000E9;
+	Thu, 25 Jun 2026 23:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782430926;
+	bh=7rTeWGRC3qlYe3M/STi4OqC/ckIFBCcw0pmuKzcM+Ms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ERWk9tSfkvUB3gpMoi+r8/npeOf+VTcK6LEcTQ+ydlZM4R04BnjE7NoxRlL2Y7oOp
+	 HwEILF3l/MEtXv4l1oapXtPAddR7mVIcAbFM+/NzAauaraVXtWjthqV/7Xr9jV0rmP
+	 iV/aTYKta1D6uPYRp+2hh9+GTlghECm8I505IDeByN96e5NV0eCKP7muVv5sc3JnQG
+	 O3K8AFvvCi6QK5nN6WRqQQQyuO2ODeP0WbSkJkHgCIFXVq1+HVSkMdVsvtq4txrVyP
+	 sezhtjuTBGj4tnd2fWtTX6Neebzlxe0449kNqUc5+ZQaEKrKtQDmJHaKYNRwLyfJcc
+	 gFiMuxnkCmkKg==
+Date: Thu, 25 Jun 2026 16:41:58 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Yury Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v4 2/2] tracing: Remove trace_printk.h from kernel.h
+Message-ID: <20260625234158.GA261868@ax162>
+References: <20260625104007.041432666@kernel.org>
+ <20260625104402.210473477@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-ClientProxiedBy: EX19D042UWB004.ant.amazon.com (10.13.139.150) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260625104402.210473477@kernel.org>
 
-On Thu, Jun 25, 2026 at 06:41:58AM -0400, Sasha Levin wrote:
-> > [PATCH 5.15.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
+Hi Steve,
+
+On Thu, Jun 25, 2026 at 06:40:09AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> I had to drop this one for 5.15. The upstream guard(raw_spinlock_irqsave)
-> conversion in ring_buffer_read_start() introduces a new
-> -Wdeclaration-after-statement warning on 5.15 (the guard variable ends up after
-> a statement), which the build flags as an
-> error there.
+> There have been complaints about trace_printk.h causing more build time
+> for being in kernel.h if it changes. There is also an effort to clean up
+> kernel.h to have it not include unneeded header files. Move trace_printk.h
+> out of kernel.h and place it in the headers and C files that use it.
 > 
-> Could you respin a warning-free version for 5.15 (and 5.10, which has the same
-> problem)? E.g. hoisting the declaration or keeping the explicit
-> raw_spin_lock/unlock instead of guard() on these older trees.  6.6 and 6.1 are
-> already queued.
+> Link: https://lore.kernel.org/all/CAHk-=wikCBeVFjVXiY4o-oepdbjAoir5+TcAgtL12c4u1TpZLQ@mail.gmail.com/
+> 
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 
-Absolutely, I'll send a v2.
+This patch breaks lib/test_context-analysis.c for me in several
+configurations:
 
-Best,
-Bjoern
+  In file included from lib/test_context-analysis.c:9:
+  In file included from include/linux/local_lock.h:5:
+  include/linux/local_lock_internal.h:46:2: error: use of undeclared identifier '_THIS_IP_'
+     46 |         lock_map_acquire(&l->dep_map);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/linux/lockdep.h:541:69: note: expanded from macro 'lock_map_acquire'
+    541 | #define lock_map_acquire(l)                     lock_acquire_exclusive(l, 0, 0, NULL, _THIS_IP_)
+        |                                                                                       ^~~~~~~~~
+  In file included from lib/test_context-analysis.c:9:
+  In file included from include/linux/local_lock.h:5:
+  include/linux/local_lock_internal.h:53:2: error: use of undeclared identifier '_THIS_IP_'
+     53 |         lock_map_acquire_try(&l->dep_map);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/linux/lockdep.h:542:73: note: expanded from macro 'lock_map_acquire_try'
+    542 | #define lock_map_acquire_try(l)                 lock_acquire_exclusive(l, 0, 1, NULL, _THIS_IP_)
+        |                                                                                       ^~~~~~~~~
+  In file included from lib/test_context-analysis.c:9:
+  In file included from include/linux/local_lock.h:5:
+  include/linux/local_lock_internal.h:62:2: error: use of undeclared identifier '_THIS_IP_'
+     62 |         lock_map_release(&l->dep_map);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/linux/lockdep.h:545:47: note: expanded from macro 'lock_map_release'
+    545 | #define lock_map_release(l)                     lock_release(l, _THIS_IP_)
+        |                                                                 ^~~~~~~~~
+  3 errors generated.
 
+The following diff resolves it for me, should I send it as a separate
+patch or do you want to just fold it in with a note?
 
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
-
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 621566345406..2301a701ffbb 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -10,6 +10,7 @@
+ #ifndef __LINUX_LOCKDEP_H
+ #define __LINUX_LOCKDEP_H
+ 
++#include <linux/instruction_pointer.h>
+ #include <linux/lockdep_types.h>
+ #include <linux/smp.h>
+ #include <asm/percpu.h>
+-- 
+Cheers,
+Nathan
