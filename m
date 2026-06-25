@@ -1,223 +1,219 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E6B33DEFE
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 08:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782374756; cv=pass; b=cy5Rb0YrR9hp03Z/pCLcl4R56dYQc6kmncnCEMjaia4NM9f3Ebi740JrOzRFGCFXaoAZly5AVQid4WE6p9QJan18jcD4lRlhXlCMkP00OFjqlDy9+PL2sCwalpY+iKJnoI0erguv6VQTb0lR+wgXrpV2neJr+oeTAPqzbIRw4w4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782374756; c=relaxed/simple;
-	bh=gUH5CYeDQBwLfZeJDBALuowu5eygG91h78hLIiPuwTE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WUou6h6hUVGabJOPjYaov/iGD+wvqgSxmmppf3fJHREzTTVi+OSy1kLB8CvP1o4yfuk5pAy/YeFzK//n6wYvVRhBwhPe2zSF6XsW91DQo7fF4P0m+YCtcDvNbRGQEQTCn4yPQ0slP5UKPnO9+InlJ3XxfAfTyWQ5MIrduAM0pIU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YFbONY8w; arc=pass smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92BF37C92F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 08:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782375673; cv=none; b=fXrFOeb8KoxrnlnpWoOFIdzDeJowNH1x9SM+iWVtmPBJbmJmAEba2oBnR+Xz3c+afB9+dmAtN+yBkUfQTjno66GR/utY4zbN/DYvIaCqq5T4Zl+E9iPKxakdWP1Rpl8KkFm1dXfxJUnLGrnGo7lX2pP9lApSU1d5+gmXNVfB4cc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782375673; c=relaxed/simple;
+	bh=aWuM7qwCmTghGQIE8I3bg+Denrz7BjlrHP5s7iuH75A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iSYuESvq5AArdVL3fvf9nC0mFoNOVuk9wNU/9bVdlm9k+/A0O5qxKwRiACyl4w2sS+saTPPqJHfCUmIQOpg54a2nWz+wqufSPv5vHpIFKuvyuBnFiCEjV4pQUsMpLLgN+FLy8E3re26afypeLa/eI9vy3weid8aViPoR3MkodLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aS066TTs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YFbONY8w"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-519ed52bcc6so198041cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 01:05:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782374753; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mFwRNd1N+/FjNDlDZr6AwrXZbF3zSSXNqtftW6ll2maMRFjAgLFVeV5DAM56TWzk7o
-         rOxwXQKvxYbO5pr6Map7dTCXTzsNX4Z405q5oD4k6Kn3xdn7f/hruBDm+TIYylu8yhSg
-         BG21175N1LnYcx1GnxUd2ftsgLOlv8IeSjpo+u3abmDiFl9UZb14EX3hGgjcuYEvxKAM
-         /nBlXlEXHE3aBcByWu78qVHiKfgNO3QirXcRGHJQ2Y8KAZhL+/WPu52jIpfXKXZERXs2
-         c6r7rptNwwNTYOnRqbTyUo1EOivqL454dQAxMf0kxlyL9U7oEQfV0OIlhIXeWXOr53fp
-         aQiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=9LjtIzZk3vxrXZVAwqdL1YMS08SLuDbLYjQh10VCn/I=;
-        fh=Pc9KkINhTxvBluoIgoZOHMkYN4pP8aB9IJKmH+eTQaI=;
-        b=MWWHHNVU62wctH2YhQkwUubFTHUist7IluB/pEq3aFcW6B+5CTA86Kd3mjnYwPE3An
-         zlZtqHxXlOQ/D1BtMLP/IQBJVKlPuyAcTdb+GYjZyAlE0R3p301wM+TmwCVtLBpTYopn
-         aGI4KD1JMM6MdLvne4lT/pYfxIgvStaM6q+BbhR73cWBALm6n7RXmEnKEt49fFTNQC/e
-         QOzgFAKdS3j7USsd1fAO6H2HcMdG7/gWIjUEYMUR6J+w7+P2dk7lxpsxg2jDBhMrFuU+
-         0PKe2hh1mtQFoNvIUJgFphK+RAh23bmhqxkVCSP507j/F5MJTLRps2YWWajaAfbVfXep
-         QA6w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782374753; x=1782979553; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=9LjtIzZk3vxrXZVAwqdL1YMS08SLuDbLYjQh10VCn/I=;
-        b=YFbONY8woyRitxOoL3EOCijfwZmjVqxkXb3tlHefMKLJHWvlWwefwjsAkTp7x/HB3h
-         +nM1BkP1tcuZ5cFWSybI4kh4vQDezciG4UgXYpqDxDft0FznJY7bwusIvni7jB0/PaZa
-         r30LNzjVwejPNokpTMm4iRLvJittgnmhgX/+Z1kxiCGWCAPeDfZ034qyYBZJ8JSic4QQ
-         ZvwyUeTdhQzc0Yzo6z3jFmr+82Jm5wrxkwiSd8Ao30OxgX4s5BFQry8fem7J0DnxhGeU
-         WBS6IlacsOxKFAWrg7Yx07O1XU7wcSJV5D0LGAS6yT5qhnGx4iw36hcmx5zut+E5gy4B
-         1x8A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aS066TTs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782375671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWuM7qwCmTghGQIE8I3bg+Denrz7BjlrHP5s7iuH75A=;
+	b=aS066TTsjZu6zUEK2bXa11AH74dL5zGik9e0cvhFNmBWteon3D/U3m5BPWKcLZy0mM+guV
+	RbgJlb9/HoPilTwbKT0ET3G93lOQIwiToLtegQFiHqIXE47FFB6qtmMfNJ5otUXXxuxVXY
+	0heufsXX1ePwK7QnSFFeLvg/eVVkrKk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-287-Q64uC6iFORKReC4dUOb8Ww-1; Thu, 25 Jun 2026 04:21:09 -0400
+X-MC-Unique: Q64uC6iFORKReC4dUOb8Ww-1
+X-Mimecast-MFC-AGG-ID: Q64uC6iFORKReC4dUOb8Ww_1782375668
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-460129ef947so1313783f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 01:21:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782374753; x=1782979553;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=9LjtIzZk3vxrXZVAwqdL1YMS08SLuDbLYjQh10VCn/I=;
-        b=Q/8Ti1hE/mXEIKAjI+lzuWiwGG6vURjdgA6GVowKHt5m2zJ8yd/kYPKSedG4HhniEF
-         75o0b6hDzSg+ThtBNeuJ+hsc6brr/IawS7jJ/5+lxDT1ifiAME+oGLYpKvaVAnYkrQ6G
-         Pfpmf6enfyW14LkxuGEwr7TK9npe56dfzihSBBpglQDelYnkPSoVN7/LZRO1eJ2wlDxa
-         cO195TWfm5DXycXNodi6kGkyQXC7nZ8sZd0mlVI9S0nx8Xap4/vIR6YE0ypLNLeQRKIX
-         yK6bF7ieJAVmUpfPe2jQ2AzD4gYqDwiEBBetQcKAr+eVlGeVqqDBq+IUxHuTWYiX3SLR
-         +47g==
-X-Forwarded-Encrypted: i=1; AFNElJ98PwUO8hOTznjUb5VvG0Kx89sFtd49rHVpwWXPuM49lYzPryXB3CqLxrtqUgisa2yhkb54NL8dPr4r7UdxslybSsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTWErJNTaqyC+8SUNdbiaOYyt5Zzca1RzukKVlkOnkrezau9ma
-	t5fVu+ToWAgq/imxCTP+p+AaMT2UgU286UUqmhj7oVljAE96I7kOEtRB7jNjdcH3M81INvUbnMk
-	fzlUY9jDlOo0Ys0JivlLbKBDBAZPgTlmFlHijJ0i+
-X-Gm-Gg: AfdE7cm0Ho0gZBpQvz5csTdHhZNRC1mKpw2ekszKedrtX2BgffUZ+NfugaOako83WJ0
-	TW3Qze2By+Ffx9dKkZQLIS02+IShd6QYWB0RbDVawCXZGz2o3maGJeN4PzVzsDs+WIy7lYofMqy
-	fsmlEbEinvekPFo83vO9rf6glHIKFuNOjTCZLx7UBS3N2/QDC3r7NQ6NmkP1O6vDd0YOleJ2DlH
-	mLIEdMdz020bpRccr/Ko93a7yxwG+u98PALy+nyLIv9HxAwxn9p8sRl5BYw5tLMSkLF/acNjw==
-X-Received: by 2002:a05:622a:4d99:b0:516:4f62:85ec with SMTP id
- d75a77b69052e-51a7097cdf7mr5787961cf.17.1782374752598; Thu, 25 Jun 2026
- 01:05:52 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782375668; x=1782980468;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lCB+E8DSdWQv1eWTst4zSKROxBva2X55zLB5xobJq50=;
+        b=bzUxlTQjP0r6ROzTp8dFjo3+7YB3ALwKT5cTgLbKwWpsclIRmTc+EpK2PG94LVNzfC
+         v6W9ZyFMQIDAoWxKGWKpwb50zRnrqda0EuD9ptgnqY/5D2X0Nf38nyv3opcnMAIOVKZM
+         PYGuI4yXBOVT1Yoxk/txk0EfFuFFixMp9lQ1FUa8w1X7VOOHv4vluTjRxbosu9/a3A3a
+         OgV9vw9FXk5mNSoh8k1iF7QlAfPmL3+b8IoLK0wX4pSDUAKTzucCv1ue9UIUKZo7Az0I
+         XKKeJ+doB7jDT2IGKAJbeyKAfvbKzRd6HmyYg+I2ayWRaxfFVkQQYEVbcv2HVjFK3wEu
+         xX8Q==
+X-Forwarded-Encrypted: i=1; AHgh+RqyBIH6UydIr2MXb68g2W4VYx8vta81hz6XRjd1vaB7+cR2eAjhHTk3QYh7GWzccOZIe8A/tXGH/0EZgJ1aOgnQz3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS7je7tvwdlUhwzmeiEZeiIx8k5p/dE8wVU9WfEmtdBGxTJtCF
+	+0IFWIP/niATSKDKzfEvtA204hBQfXyHiUiP/kXsgnF1acK3f9W8IXwSEzS7iVfLgZXJNzMo7nj
+	9SThaKKVWMvv1H0RtSdNSwjTkrcZ+xt3DEjIvzEEjyrGsUdz5uXw/DOWlfanDa2Wk1pu967aeyw
+	==
+X-Gm-Gg: AfdE7clkTQmKxMl9FOCRcq8zdlSLHHMughKPEOxyRMjR/w7ST2fOmVSduxzlsj4IMlS
+	gDHHtg9j/eSko1ylaxyiJtZDOad4uIpnjderJVPP7pH8qdEDmO0ySVwyBL8LxR3WW7JimXHJvjz
+	p4/Aq58zr/ZFQoJ5mpIiH37++0d4vCssqPdAQxEBeOAZDTfqqyTV9clU+0HsxwqA/SAZYc0JUwn
+	tkUGGMGEeoeXxeJn6iZ9Pd0EGJx+hKH5G6wqcay1rw98r1EREydpzcWNCQ4sxlcpXj3cNm4pTfX
+	BAMYSQeAS72ppZYTjKlWODuGKY9CCplv3V0bKDOwUGodRETSnWQA5ZLGrU82TYJdm+enlpWL5z1
+	09SfLGNlQHHX3l2E=
+X-Received: by 2002:a05:6000:40cf:b0:46d:1433:77ec with SMTP id ffacd0b85a97d-46dbf021840mr2193461f8f.2.1782375667765;
+        Thu, 25 Jun 2026 01:21:07 -0700 (PDT)
+X-Received: by 2002:a05:6000:40cf:b0:46d:1433:77ec with SMTP id ffacd0b85a97d-46dbf021840mr2193403f8f.2.1782375667348;
+        Thu, 25 Jun 2026 01:21:07 -0700 (PDT)
+Received: from [192.168.1.167] ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c1ee01d46sm13314200f8f.13.2026.06.25.01.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2026 01:21:06 -0700 (PDT)
+Message-ID: <5bd5c857c5130dd7b122112c69baf793bcf45090.camel@redhat.com>
+Subject: Re: [PATCH v4 09/13] verification/rvgen: Delete __parse_constraint()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Wander Lairson Costa
+	 <wander@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 25 Jun 2026 10:21:05 +0200
+In-Reply-To: <b22a5a3822fe53afb8e2cf1df623a0e4c9ed5f49.1781847583.git.namcao@linutronix.de>
+References: <cover.1781847583.git.namcao@linutronix.de>
+	 <b22a5a3822fe53afb8e2cf1df623a0e4c9ed5f49.1781847583.git.namcao@linutronix.de>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com> <20260618-gmem-inplace-conversion-v8-39-9d2959357853@google.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-39-9d2959357853@google.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Thu, 25 Jun 2026 09:04:00 +0100
-X-Gm-Features: AVVi8CcBY4t5giF0-A9bP1HPllgz1zAJhj3Ny1-iABTQtlbD2BJIIQOiCS34wl4
-Message-ID: <CA+EHjTxtL+usjD5XWzrEXegSAt-JD_SjH9MG1S6aOy8sWYf67g@mail.gmail.com>
-Subject: Re: [PATCH v8 39/46] KVM: selftests: Test conversion with elevated
- page refcount
-To: ackerleytng@google.com
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
-	yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
-	suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _t1nJhWHXyOK348b2-QA2sqlddelgkuDHgkP8FRJp6Y_1782375668
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Fri, 19 Jun 2026 at 01:32, Ackerley Tng via B4 Relay
-<devnull+ackerleytng.google.com@kernel.org> wrote:
->
-> From: Ackerley Tng <ackerleytng@google.com>
->
-> Add a selftest to verify that converting a shared guest_memfd page to a
-> private page fails if the page has an elevated reference count.
->
-> When KVM converts a shared page to a private one, it expects the page to
-> have a reference count equal to the reference counts taken by the
-> filemap. If another kernel subsystem holds a reference to the page, the
-> conversion must be aborted.
->
-> The test asserts that both bulk and single-page conversion attempts
-> correctly fail with EAGAIN for the pinned page. After the page is unpinned,
-> the test verifies that subsequent conversions succeed.
->
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Co-developed-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+T24gRnJpLCAyMDI2LTA2LTE5IGF0IDA3OjUyICswMjAwLCBOYW0gQ2FvIHdyb3RlOgo+IEFsbCBw
+cmV2aW91cyB1c2VycyBvZiBzZWxmLmludmFyaWFudHMgYW5kIHNlbGYuZ3VhcmRzIGhhdmUgYmVl
+bgo+IGNvbnZlcnRlZAo+IHRvIHRoZSBMYXJrIHBhcnNlciwgZGVsZXRlIF9fcGFyc2VfY29uc3Ry
+YWludHMoKSBhbmQgaXRzIGFzc29jaWF0ZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTmFtIENhbyA8
+bmFtY2FvQGxpbnV0cm9uaXguZGU+CgpUaGlzIG9uZSB3YXMgbWlzc2luZyB0aGUKClJldmlld2Vk
+LWJ5OiBHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvbT4KClRoZSBzZXJpZXMgbG9v
+a3MgcmVhZHkgZm9yIGluY2x1c2lvbiB0byBtZSwgdGhhbmtzIQoKR2FicmllbGUKCj4gLS0tCj4g
+wqB0b29scy92ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4vZG90MmsucHkgfCA2NyArKy0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQo+IC0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA2
+MyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2Vu
+L3J2Z2VuL2RvdDJrLnB5Cj4gYi90b29scy92ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4vZG90Mmsu
+cHkKPiBpbmRleCA0ZWExZWNjNTVjODAuLmYxZjVmYTI5N2FkYiAxMDA2NDQKPiAtLS0gYS90b29s
+cy92ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4vZG90MmsucHkKPiArKysgYi90b29scy92ZXJpZmlj
+YXRpb24vcnZnZW4vcnZnZW4vZG90MmsucHkKPiBAQCAtMTc3LDcgKzE3Nyw2IEBAIGNsYXNzIGhh
+MmsoZG90MmspOgo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgbm90IHNlbGYuaXNfaHlicmlkX2F1dG9t
+YXRhKCk6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIEF1dG9tYXRhRXJyb3IoIkRl
+dGVjdGVkIGRldGVybWluaXN0aWMgYXV0b21hdG9uLAo+IHVzZSB0aGUgJ2RhJyBjbGFzcyIpCj4g
+wqDCoMKgwqDCoMKgwqDCoCBzZWxmLnRyYWNlX2ggPSBzZWxmLl9yZWFkX3RlbXBsYXRlX2ZpbGUo
+InRyYWNlX2h5YnJpZC5oIikKPiAtwqDCoMKgwqDCoMKgwqAgc2VsZi5fX3BhcnNlX2NvbnN0cmFp
+bnRzKCkKPiDCoMKgwqDCoMKgwqDCoMKgIHNlbGYuaGFzX2ludmFyaWFudCA9IEZhbHNlCj4gwqDC
+oMKgwqDCoMKgwqDCoCBzZWxmLmhhc19ndWFyZCA9IEZhbHNlCj4gwqDCoMKgwqDCoMKgwqDCoCBm
+b3Igc3RhdGUgaW4gc2VsZi5fc3RhdGVzOgo+IEBAIC0zMDgsNjQgKzMwNyw2IEBAIGNsYXNzIGhh
+MmsoZG90MmspOgo+IMKgwqDCoMKgwqDCoMKgwqAgc2VwYXJhdG9yID0gIlxuXHRcdMKgwqDCoMKg
+wqAgIiBpZiBzdW0obGVuKHIpIGZvciByIGluIHJ1bGVzKSA+Cj4gODAgZWxzZSAiICIKPiDCoMKg
+wqDCoMKgwqDCoMKgIHJldHVybiBbInJlcyA9ICIgKyBzZXBhcmF0b3Iuam9pbihydWxlcykgKyAi
+OyJdCj4gwqAKPiAtwqDCoMKgIGRlZiBfX3ZhbGlkYXRlX2NvbnN0cmFpbnQoc2VsZiwga2V5OiB0
+dXBsZVtpbnQsIGludF0gfCBpbnQsCj4gY29uc3RyOiBzdHIsCj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcnVsZSwgcmVzZXQpIC0+
+IE5vbmU6Cj4gLcKgwqDCoMKgwqDCoMKgICMgZXZlbnQgY29uc3RyYWlucyBhcmUgdHVwbGVzIGFu
+ZCBhbGxvdyBib3RoIHJ1bGVzIGFuZCByZXNldAo+IC3CoMKgwqDCoMKgwqDCoCAjIHN0YXRlIGNv
+bnN0cmFpbnRzIGFyZSBvbmx5IHVzZWQgZm9yIGV4cGlyYXRpb25zIChlLmcuCj4gY2xrPE4pCj4g
+LcKgwqDCoMKgwqDCoMKgIGlmIHNlbGYuaXNfZXZlbnRfY29uc3RyYWludChrZXkpOgo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGlmIG5vdCBydWxlIGFuZCBub3QgcmVzZXQ6Cj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByYWlzZSBBdXRvbWF0YUVycm9yKCJVbnJlY29nbmlzZWQg
+ZXZlbnQgY29uc3RyYWludCAiCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAKPiBmIih7c2VsZi5zdGF0ZXNba2V5
+WzBdXX0ve3NlbGYuZXZlbnRzW2tleVsxXV19OiB7Y29uc3RyfSkiKQo+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGlmIHJ1bGUgYW5kIChydWxlWyJlbnYiXSBpbiBzZWxmLmVudl90eXBlcyBhbmQK
+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJ1bGVb
+ImVudiJdIG5vdCBpbiBzZWxmLmVudl9zdG9yZWQpOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgcmFpc2UgQXV0b21hdGFFcnJvcigiQ2xvY2tzIGluIGh5YnJpZCBhdXRvbWF0YQo+
+IGFsd2F5cyByZXF1aXJlIGEgc3RvcmFnZSIKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmIiAoe3J1bGVbImVu
+diJdfSkiKQo+IC3CoMKgwqDCoMKgwqDCoCBlbHNlOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGlmIG5vdCBydWxlOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmFpc2UgQXV0
+b21hdGFFcnJvcigiVW5yZWNvZ25pc2VkIHN0YXRlIGNvbnN0cmFpbnQgIgo+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGYiKHtzZWxmLnN0YXRlc1trZXldfToKPiB7Y29uc3RyfSkiKQo+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGlmIHJ1bGVbImVudiJdIG5vdCBpbiBzZWxmLmVudl9zdG9yZWQ6Cj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByYWlzZSBBdXRvbWF0YUVycm9yKCJTdGF0ZSBjb25z
+dHJhaW50cyBhbHdheXMKPiByZXF1aXJlIGEgc3RvcmFnZSAiCj4gLcKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZiIo
+e3J1bGVbImVudiJdfSkiKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHJ1bGVbIm9wIl0g
+bm90IGluIFsiPCIsICI8PSJdOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmFp
+c2UgQXV0b21hdGFFcnJvcigiU3RhdGUgY29uc3RyYWludHMgbXVzdCBiZSBjbG9jawo+IGV4cGly
+YXRpb25zIGxpa2UiCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZiIgY2xrPE4gKHtydWxlLnN0cmluZ30pIikK
+PiAtCj4gLcKgwqDCoCBkZWYgX19wYXJzZV9jb25zdHJhaW50cyhzZWxmKSAtPiBOb25lOgo+IC3C
+oMKgwqDCoMKgwqDCoCBzZWxmLmd1YXJkczogZGljdFtfRXZlbnRDb25zdHJhaW50S2V5LCBzdHJd
+ID0ge30KPiAtwqDCoMKgwqDCoMKgwqAgc2VsZi5pbnZhcmlhbnRzOiBkaWN0W19TdGF0ZUNvbnN0
+cmFpbnRLZXksIHN0cl0gPSB7fQo+IC3CoMKgwqDCoMKgwqDCoCBmb3Iga2V5LCBjb25zdHJhaW50
+IGluIHNlbGYuY29uc3RyYWludHMuaXRlbXMoKToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBy
+dWxlcyA9IFtdCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVzZXRzID0gW10KPiAtwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBmb3IgYywgc2VwIGluIHNlbGYuX3NwbGl0X2NvbnN0cmFpbnRfZXhw
+cihjb25zdHJhaW50KToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJ1bGUgPSBz
+ZWxmLmNvbnN0cmFpbnRfcnVsZS5zZWFyY2goYykKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHJlc2V0ID0gc2VsZi5jb25zdHJhaW50X3Jlc2V0LnNlYXJjaChjKQo+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5fX3ZhbGlkYXRlX2NvbnN0cmFpbnQoa2V5LCBj
+LCBydWxlLCByZXNldCkKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIHJ1bGU6
+Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZhbHVlID0gcnVsZVsi
+dmFsIl0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdmFsdWVfbGVu
+ID0gbGVuKHJ1bGVbInZhbCJdKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCB1bml0ID0gTm9uZQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBpZiBydWxlLmdyb3VwZGljdCgpLmdldCgidW5pdCIpOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZhbHVlX2xlbiArPSBsZW4ocnVsZVsidW5pdCJd
+KQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVuaXQg
+PSBydWxlWyJ1bml0Il0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+YyA9IGNbOi0odmFsdWVfbGVuKV0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgdmFsdWUgPSBzZWxmLl9fYWRqdXN0X3ZhbHVlKHZhbHVlLCB1bml0KQo+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBzZWxmLmlzX2V2ZW50X2NvbnN0cmFp
+bnQoa2V5KToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBjID0gc2VsZi5fX3BhcnNlX3NpbmdsZV9jb25zdHJhaW50KHJ1bGUsCj4gdmFsdWUpCj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgc2VwOgo+IC3C
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYyAr
+PSBmIiB7c2VwfSIKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxz
+ZToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjID0g
+c2VsZi5fX3BhcnNlX3RpbWVyX2NvbnN0cmFpbnQocnVsZSwKPiB2YWx1ZSkKPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcnVsZXMuYXBwZW5kKGMpCj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiByZXNldDoKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgYyA9IGYiaGFfcmVzZXRfZW52KGhhX21vbiwKPiB7cmVzZXRbImVu
+diJdfXtzZWxmLmVudW1fc3VmZml4fSwgdGltZV9ucykiCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHJlc2V0cy5hcHBlbmQoYykKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpZiBzZWxmLmlzX2V2ZW50X2NvbnN0cmFpbnQoa2V5KToKPiAtwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJlcyA9IHNlbGYuX19mb3JtYXRfZ3VhcmRfcnVsZXMocnVsZXMpICsg
+cmVzZXRzCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmd1YXJkc1trZXld
+ID0gIjsiLmpvaW4ocmVzKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmludmFyaWFudHNba2V5XSA9IHJ1bGVzWzBd
+Cj4gLQo+IMKgwqDCoMKgIGRlZiBfX2ZpbGxfdmVyaWZ5X2ludmFyaWFudHNfZnVuYyhzZWxmKSAt
+PiBsaXN0W3N0cl06Cj4gwqDCoMKgwqDCoMKgwqDCoCBpZiBub3Qgc2VsZi5oYXNfaW52YXJpYW50
+Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gW10KPiBAQCAtNDkwLDE1ICs0MzEs
+MTUgQEAgZiIiInN0YXRpYyBib29sIGhhX3ZlcmlmeV9jb25zdHJhaW50KHN0cnVjdAo+IGhhX21v
+bml0b3IgKmhhX21vbiwKPiDCoFx0XHRcdFx0IGVudW0ge3NlbGYuZW51bV9zdGF0ZXNfZGVmfSBu
+ZXh0X3N0YXRlLCB1NjQgdGltZV9ucykKPiDCoHt7IiIiKQo+IMKgCj4gLcKgwqDCoMKgwqDCoMKg
+IGlmIHNlbGYuaW52YXJpYW50czoKPiArwqDCoMKgwqDCoMKgwqAgaWYgc2VsZi5oYXNfaW52YXJp
+YW50Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRpZiAoIWhhX3Zl
+cmlmeV9pbnZhcmlhbnRzKGhhX21vbiwKPiBjdXJyX3N0YXRlLCAiCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJldmVudCwgbmV4dF9zdGF0ZSwgdGlt
+ZV9ucykpXG5cdFx0cmV0dXJuCj4gZmFsc2U7XG4iKQo+IMKgCj4gLcKgwqDCoMKgwqDCoMKgIGlm
+IHNlbGYuZ3VhcmRzOgo+ICvCoMKgwqDCoMKgwqDCoCBpZiBzZWxmLmhhc19ndWFyZDoKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgYnVmZi5hcHBlbmQoIlx0aWYgKCFoYV92ZXJpZnlfZ3VhcmRz
+KGhhX21vbiwgY3Vycl9zdGF0ZSwKPiBldmVudCwgIgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAibmV4dF9zdGF0ZSwgdGltZV9ucykpXG5cdFx0cmV0
+dXJuCj4gZmFsc2U7XG4iKQo+IMKgCj4gLcKgwqDCoMKgwqDCoMKgIGlmIHNlbGYuaW52YXJpYW50
+czoKPiArwqDCoMKgwqDCoMKgwqAgaWYgc2VsZi5oYXNfaW52YXJpYW50Ogo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRoYV9zZXR1cF9pbnZhcmlhbnRzKGhhX21vbiwg
+Y3Vycl9zdGF0ZSwKPiBldmVudCwgbmV4dF9zdGF0ZSwgdGltZV9ucyk7XG4iKQo+IMKgCj4gwqDC
+oMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiXHRyZXR1cm4gdHJ1ZTtcbn1cbiIpCj4gQEAgLTU3
+NSw3ICs1MTYsNyBAQCBmIiIic3RhdGljIGJvb2wgaGFfdmVyaWZ5X2NvbnN0cmFpbnQoc3RydWN0
+Cj4gaGFfbW9uaXRvciAqaGFfbW9uLAo+IMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHNlbGYuX19m
+aWxsX2h5YnJpZF9nZXRfcmVzZXRfZnVuY3Rpb25zKCkgKwo+IHNlbGYuX19maWxsX2NvbnN0cl9m
+dW5jKCkKPiDCoAo+IMKgwqDCoMKgIGRlZiBfZmlsbF90aW1lcl90eXBlKHNlbGYpIC0+IGxpc3Q6
+Cj4gLcKgwqDCoMKgwqDCoMKgIGlmIHNlbGYuaW52YXJpYW50czoKPiArwqDCoMKgwqDCoMKgwqAg
+aWYgc2VsZi5oYXNfaW52YXJpYW50Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4g
+Wwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIi8qIFhYWDogSWYg
+dGhlIG1vbml0b3IgaGFzIHNldmVyYWwgaW5zdGFuY2VzLAo+IGNvbnNpZGVyIEhBX1RJTUVSX1dI
+RUVMICovIiwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICIjZGVm
+aW5lIEhBX1RJTUVSX1RZUEUgSEFfVElNRVJfSFJUSU1FUiIKDQo=
 
-Not sure Sashiko's concern is worth it.
-
-Reviewed-by: Fuad Tabba <tabba@google.com>
-
-Cheers,
-/fuad
-
-> ---
->  .../kvm/x86/guest_memfd_conversions_test.c         | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> index 99b0023609670..4ebbd29029526 100644
-> --- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> +++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> @@ -441,6 +441,62 @@ GMEM_CONVERSION_TEST_INIT_SHARED(forked_accesses)
->  #undef TEST_STATE_AWAIT
->  }
->
-> +static void test_convert_to_private_fails(test_data_t *t, u64 pgoff,
-> +                                         size_t nr_pages,
-> +                                         u64 expected_error_offset)
-> +{
-> +       /* +1 to make it anything but expected_error_offset. */
-> +       u64 error_offset = expected_error_offset + 1;
-> +       u64 offset = pgoff * page_size;
-> +       int ret;
-> +
-> +       do {
-> +               ret = __gmem_set_private(t->gmem_fd, offset,
-> +                                        nr_pages * page_size, &error_offset);
-> +       } while (ret == -1 && errno == EINTR);
-> +       TEST_ASSERT(ret == -1 && errno == EAGAIN,
-> +                   "Wanted EAGAIN on page %lu, got %d (ret = %d)", pgoff,
-> +                   errno, ret);
-> +       TEST_ASSERT_EQ(error_offset, expected_error_offset);
-> +}
-> +
-> +GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(elevated_refcount, 4)
-> +{
-> +       int i;
-> +
-> +       pin_pages(t->mem + test_page * page_size, page_size);
-> +
-> +       for (i = 0; i < nr_pages; i++)
-> +               test_shared(t, i, 0, 'A', 'B');
-> +
-> +       /*
-> +        * Converting in bulk should fail as long any page in the range has
-> +        * unexpected refcounts.
-> +        */
-> +       test_convert_to_private_fails(t, 0, nr_pages, test_page * page_size);
-> +
-> +       for (i = 0; i < nr_pages; i++) {
-> +               /*
-> +                * Converting page-wise should also fail as long any page in the
-> +                * range has unexpected refcounts.
-> +                */
-> +               if (i == test_page)
-> +                       test_convert_to_private_fails(t, i, 1, test_page * page_size);
-> +               else
-> +                       test_convert_to_private(t, i, 'B', 'C');
-> +       }
-> +
-> +       unpin_pages();
-> +
-> +       gmem_set_private(t->gmem_fd, 0, nr_pages * page_size);
-> +
-> +       for (i = 0; i < nr_pages; i++) {
-> +               char expected = i == test_page ? 'B' : 'C';
-> +
-> +               test_private(t, i, expected, 'D');
-> +       }
-> +}
-> +
->  int main(int argc, char *argv[])
->  {
->         TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
->
-> --
-> 2.55.0.rc0.738.g0c8ab3ebcc-goog
->
->
