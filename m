@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D893CF1F6;
-	Thu, 25 Jun 2026 12:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB013DCD80;
+	Thu, 25 Jun 2026 12:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782391009; cv=none; b=Lw64LDJPCWNBugeQKO6ndboHPO+SBRdsMHgtQH38tDAv7ApEHS892vJ9JTpuMEaPyN2xoiQi/GIriSjpAMCv990LouklHMCCYz4Q1hhLO7e3O+qlqDRKG+Tx5w48bVyj/YUgxr1Ns/Td0FIh125maameE2LiRlbIpiijxe8GDH8=
+	t=1782392264; cv=none; b=Uw5rH2JRXgJpyezTniFHwGBiAeOKB58/gDI/q+bNZo6N/Gj9eWDZyuvHppbUPvH337JI9dRuYwYRCrCPGx1OpDK6BjWA++1zgYQVzQ7Ymu/qWJRn4PuTrtmEBX+ED16d863RVthh2srmBGJgbrHhM4E5CJcAaVhQdkWu6kglOn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782391009; c=relaxed/simple;
-	bh=rsXW/oTxxNuHiB7YJrgPUoxiGDcUurYkCysXiCxVZV8=;
+	s=arc-20240116; t=1782392264; c=relaxed/simple;
+	bh=kUD4yxqkQ3I71PGnDd7xEHq2Yhfg0jaZRyTX8ogxiA4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C1kW9VxQREqqK+xjzq5V2oZbK21kbWh7B6orYV3RyUoNCKxxQUsrIyrvnAkOM8zB0pXOVzDLYP+sTPFPLxmQ/mx4eP1Klkj4lQAMuenMPlpg24fRNilxjv736DLPqaBmdcMdydLSZ46Sq8jkTmO1ct1HlgUlPygN8pIDx1FcOCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kj8c6IOP; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=nuqj90KPeJkDnYceaYMzUYsRxLaouKhSkGv2vjoB5gA2t687t4NJDhkJ3BC7hDklEfbhCLGpv7Rb9NPK4fMK8v4QSaglqSHDaTPQEvghOmZsHzVo7grH6QgPmkJgoUYosWEcBygHZCQiNxPCFfoPKOulo8L8grpuqmuovGqaPgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHmpLCYx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kj8c6IOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 151881F000E9;
-	Thu, 25 Jun 2026 12:36:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHmpLCYx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBCE1F00A3A;
+	Thu, 25 Jun 2026 12:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782391003;
-	bh=0uu7gdoQEdoZUwJ0MDafJIXOJkq/sIP8btQOGYvnT2g=;
+	s=k20260515; t=1782392263;
+	bh=kBH/vS8hZh8Igpj0aw8/HaHtMjB3pKyKAfYdrgPsQCU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=kj8c6IOP635C/jK71RNETwqtzkumMX+bN7xVpwgoozalu59LqzLn5myc6+CGZGVOr
-	 acmJgg9QozXxSWGs5lARRAao5LNw0qlHM6bIw2O3mupJ642jqMd2RjVcDx81bTHA6f
-	 U1YjJY+qDDHAYbka7Uj/0BBpZvL2RcIUrmEweS5hPMFF2B2Y1lqZ9J32E34bYoLx/4
-	 te5gjDL4zagobX/70siQAcfOiSCDpbUQiHYUUB3BukZ4CcPbMacsICz1Sr9JNeMb6o
-	 /o/LiPtBxR9PY6IrUql8MnN6dse8gxxJb8WUj4N7DXo80yh1LwDsNuMYhUEgbD90bH
-	 s3NjbK8+MfNow==
-Message-ID: <088e9969-9104-4163-8ad4-59bec96014e0@kernel.org>
-Date: Thu, 25 Jun 2026 14:36:23 +0200
+	b=dHmpLCYxkcYHAnhShuZZiNteUIsANckSSdSG7HqREuNtilbYWQipbTko618b1Yqz0
+	 TdmqsVsHCGZsqS/WBZm4cZsmyAR29Rb2Z0yEWyZqjWRGGDfP33LlQQ6+1lxyqZxoRp
+	 yjEiovspVIARiluKrlsUuXuVAk+XCr1BoRB8pEztZQ7RjuT4jQfM5sBPW4JxKpY3v7
+	 Yr8XpCL4sC80zDNED3TFkKh0otLxXx+aGAsD4h0vpvKtyevTGOjQ3tMZyxONEStJZh
+	 27J6zBoo6Pu7SjU7iu4yPlyB6hd1OxletytvTKm7z4321BrdJn+b4w+S2Yu07TTkhf
+	 WX1h0k78BILkA==
+Message-ID: <6ed7d12a-c3a1-4572-8385-754e6d5b8b44@kernel.org>
+Date: Thu, 25 Jun 2026 14:57:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,20 +35,19 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 10/42] KVM: guest_memfd: Ensure pages are not in use
- before conversion
-To: Ackerley Tng <ackerleytng@google.com>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, ira.weiny@intel.com, jmattson@google.com,
+Subject: Re: [PATCH v8 18/46] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
+To: Sean Christopherson <seanjc@google.com>,
+ Ackerley Tng <ackerleytng@google.com>
+Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
+ brauner@kernel.org, chao.p.peng@linux.intel.com, jmattson@google.com,
  jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
  pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
  rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
  tabba@google.com, willy@infradead.org, wyihan@google.com,
  yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
  suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
  Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
  Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
  "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
@@ -58,20 +57,21 @@ To: Ackerley Tng <ackerleytng@google.com>,
  Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
  Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
  Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Youngjun Park <youngjun.park@lge.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
-References: <20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com>
- <20260522-gmem-inplace-conversion-v7-10-2f0fae496530@google.com>
- <509f9a66-5ae9-4c05-bef1-ced89fd29bf0@kernel.org>
- <CAEvNRgHM4a66Jx9++6iioQLpFY-KgPvjY5+bg_X97DfSjpXzRQ@mail.gmail.com>
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-18-9d2959357853@google.com>
+ <ajwMYCSrPlxg-Fok@google.com>
+ <CAEvNRgE8HZDOnexMJeim6TjmxGG1AUXFY2+HH1YyKB=aM6D-DQ@mail.gmail.com>
+ <ajx3vmNPRf-M9kR6@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -118,43 +118,60 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <CAEvNRgHM4a66Jx9++6iioQLpFY-KgPvjY5+bg_X97DfSjpXzRQ@mail.gmail.com>
+In-Reply-To: <ajx3vmNPRf-M9kR6@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/19/26 02:17, Ackerley Tng wrote:
-> "Vlastimil Babka (SUSE)" <vbabka@kernel.org> writes:
-> 
->> On 5/23/26 02:17, Ackerley Tng via B4 Relay wrote:
->>> From: Ackerley Tng <ackerleytng@google.com>
->>>
->>> When converting memory to private in guest_memfd, it is necessary to ensure
->>> that the pages are not currently being accessed by any other part of the
->>> kernel or userspace to avoid any current user writing to guest private
->>> memory.
->>>
->>> guest_memfd checks for unexpected refcounts to determine whether a page is
->>> still in use. The only expected refcounts after unmapping the range
->>> requested for conversion are those that are held by guest_memfd itself.
+On 6/25/26 02:35, Sean Christopherson wrote:
+> On Wed, Jun 24, 2026, Ackerley Tng wrote:
+>> Sean Christopherson <seanjc@google.com> writes:
 >>
->> Is it sufficient to only check, and not also freeze the refcount? (i.e.
->> using folio_ref_freeze()), because without freezing, anything (e.g.
->> compaction's pfn-based scanner) could do a speculative folio_try_get() and
->> the checked refcount becomes stale.
+>>>
+>>> Under what circumstances does this happen,
 >>
+>> It happened 100% of the time in selftests. Perhaps it's because in the
+>> selftests the pages are almost always freshly allocated and so the
+>> lru_add fbatch isn't full yet? (and that the host isn't super busy so
+>> lru_add fbatch doesn't get drained yet).
 > 
-> I believe there's no issue here, since the main thing here is to check
-> for long-term pins on the folio. Perhaps David can help me verify. :)
+> I chatted with Ackerley about this.  What I wanted to understand is why guest_memfd
+> pages were getting put onto per-CPU batches for lru_add(), given that guest_memfd
+> pages are unevictable.  The answer (assuming I read the code right), is that
+> lruvec_add_folio() updates stats and other per-lru metadata for the unevictable
+> lru, and does so under a per-lru lock.  I.e. we don't want to skip that stuff
+> entirely.
 
-I think I raised this in the past as well: ideally, we'd be freezing the
-refcount, then, there is no need to worry about any concurrent access.
+Hm. Our pages don't participate in any LRU activity (including
+isolation+migration). Isolation+migration would only apply once we'd support
+page migration.
 
-However, we could really only get additional page references through PFN walkers
-(or speculative references), not through page tables or GUP pins, which is what
-we care about.
+But yes, secretmem also does it like that: filemap_add_folio() will call
+folio_add_lru().
 
-So if we can tolerate a speculative bump+release of a folio reference, likely
-we're good.
+Traditionally we used the unevictable LRU only for mlock purposes.
+
+But yeah, there are "unevictable" stats involved ....
+
+> 
+> One thought I had, to avoid the IPIs that draining all per-CPU caches requires,
+> was to disallow putting guest_memfd pages in folio batches, e.g. by hacking
+> something into folio_may_be_lru_cached().  But due to taking a per-lru lock,
+> that would penalize the relatively hot path and definitely common operation of
+> faulting in guest memory.  On the other hand, memory conversion is already a
+> relatively slow operation and is relatively uncommon compared to page faults,
+> (and likely very uncommon for real world setups).  I.e. having to drain all
+> caches if conversion isn't safe penalizes a relatively slow, relatively uncommon
+> path.
+
+Yeah, the lru_add_drain_all is rather messy.
+
+We have similar code in
+
+collect_longterm_unpinnable_folios(), where we first try a lru_add_drain(), to
+then escalate to a lru_add_drain_all().
+
+Maybe we could factor that (suboptimal code) out to not have to reinvent the
+same thing multiple times?
 
 -- 
 Cheers,
