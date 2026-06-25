@@ -1,93 +1,53 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3453C13EE
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 07:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782371072; cv=pass; b=J7J6DUlLum/mzHy6bO9u7J8vislr0aoNNzD57MlTpZbhZK/LXdp4jJCPcTO1h1Hrl+XpgiGqxD1pElheNcarBZZwg1HpSMYcvwa0VMwUfYLAdQih9V652k8JWqLxWrmvvZ9Egla8zCjOPg0f+yZXa6+ExSbVug0iI1QvDhfHEJs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782371072; c=relaxed/simple;
-	bh=zdplWEMU4ZutyOkbI+3SiQhFO5MjqtwHboLbHuF46t8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31222332604
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 07:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782371734; cv=none; b=fTULL5akW/llIcywGUJIkmXW4aOXc47j9s82QMu9L/Cp9Qdmzp11ZNgiZUtad3hHs3aeYX2+/tOT7EvrjIXxzbteZbAN/IPjcT2f/O9stXzbompvxLR17qIeoTd8IFMODKDcJ1xQcsJ19f1RhKf7m4GzBTOQ2iFWi//fARXTOOw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782371734; c=relaxed/simple;
+	bh=u8XCrqCgJetvR2xdyVexEcnDWRZXDkhW13PCWvw8OtE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GYXbrYzok4WeQxanCDOvqO/lukVwd2pVKtpZfZoyJXmzEj7RZU9oO77JHQwkvAzq/o//VTnTwqh3tLDlueccxALRjOU3TLCFiSKnRJOA5/U103Fj9ONV94Tx3Oue2r1vne68iW0iQ0F1+XE39te/hynv4UqjrFsjGZYXZUvAB1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q9sZA9BW; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=nJFVujQiwhkul6SlseRTeTySgOuuztNbVh49WuT8xfnA2lDOXgacDZEdTAC8EHApuKxJwKIfUrSla8Qn9P+7EUmv3mKHU+LSzpcH8XkTF5eFKI6yZ84E6Ct8T+oTDEhAx1QldK09dkWAwbEjq27oBsWw+s7LbtMs4fc8LKimkco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G4Jv8KrS; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9sZA9BW"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-51765331535so124511cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 00:04:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782371068; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BIdwQ60q79TBH3O401c8hVJFiBQbWAmvdnMuxlQLySuDHPzwZ7NB7w94efj94Ut9vg
-         /juElHxuY/6MDBimj2B6iVosqSFJkRGNJMCv1Vsl9A8aDODP7IjgqRkcXekNC29KRn4H
-         q8TrwgLGuzCkK+Rxsk8S6mn1+D2AI4YI7efVvxP/zDmc0gRTR+uepzXAisIU0IcILZPw
-         5sL8AAd7eyEUXJ8ISVaHj2RfLALCi6u9Ud7gYXCdOrQ2egO9jLJRBPiH0eRx4OfQwQpu
-         eCgi99csNoNk0aZk1GeXEaAHTAfse9ifwX0wHdLSfC85B3McTWDEo6fvHvqv213K6lxU
-         zevA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=EviLczuyy1yyIrBaIYV/LFmo2BGtZCvU6IS38nnd4b4=;
-        fh=3jiQ4bdx4Vot+06wQCyg8262PHG/yu1MGaoj7+zTGX4=;
-        b=iH3BEjjow5vvYQiuT6Q2M4mqkXo6TN314TMP/tLDUXCEb9fo7phiJX3SQ1RZ2r3QkQ
-         pxHJhdh5lYCpe1dtR4FaqE4PorSHd6UAQdROysBDH6OKeCqYd5/Dk1dyUyd0g7gual4B
-         sH/wVGYBuO2Y4wCInZXJf5iAjCj/86i5wQb9y7rONAXhKTgSWIKR9rejwHXQXIKhCoQk
-         EIfj2S/oN9TV8EJTJfy7Pku6ssQriJk522T8lI6DVicLyjSq3kKKgsEsKxTwK1+FjsKt
-         SHk2zPq9bTbxiImK2P95x8k31NQREbL/QD6LiFP446248HYc9dwrT+F8DYd0FPGSvzo9
-         PXOw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782371068; x=1782975868; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EviLczuyy1yyIrBaIYV/LFmo2BGtZCvU6IS38nnd4b4=;
-        b=q9sZA9BWKj8e5gAjlUeJer2U2/ygGOKPecKmhNST+2LJBoxivs8AJXXFykgll7PRWs
-         yihfiGuo62y6GSheBuKyR/+LUCGaz6m1TKOXQCbY7gr032+Sv8cyOeCwJ3fHtNNnrlvk
-         ghglZnhiy5IOkjZmJz7E8N7AcVq2ZwXQ4BY+siJlDAICY3Lmasm7aJrzNAaCXL0jzQr+
-         e0Ql3yaWSYiqPAEA2wJiHk4u8un7IrseLEVKwdisFxMHQDYRTFZ6MgW9yhltmVdKimE4
-         Ja4a9271KjF0etmXnh1g2SlwlCVDG4CWteGt2IpuwKNiJL6z+ALUcRaAbLlQrVlCAYVq
-         Z4ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782371068; x=1782975868;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=EviLczuyy1yyIrBaIYV/LFmo2BGtZCvU6IS38nnd4b4=;
-        b=Pcdrk7YWgILEDd+jH0WZ55Er52VR2ul5LmXw/ehW0VldzsczLC1BcMTO/bTsfpnVaC
-         XVNYp4ST7i7MymW5xAgABy+ZpPSY+UA1Kas7bMK3jWBTzS8rBswGSBCcjCBCTiJ0/DcK
-         oxyAJLI+p9l52lDV1zNJYgYVnB9l6ksc7ja7bYB+B+HOlFcVVmaClBaWIW6mEH1ziT89
-         J/ayhCzklpQ7ovm6f0ZCiAQTqOgZfFJqryjpb7e90nCZR0W5RNghQtFTqCjgmiXACNqV
-         +OhxiNzP8okhfPqdtViVkcIhLd5fpLn/MKGRAVll4ScJc1PkxRaz1uefguuXV7cMHOSt
-         et6g==
-X-Forwarded-Encrypted: i=1; AFNElJ+xxEJ2agmwdSOLDRr8wEPnD7/On4GNdpRIj5ARh2ZmzHqvuj0pgGZrc8VqLThyjyjsdFA3BA7i7HT2NtmscYtzlQw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoRMGM6zLViTBnukiTnVrt0aZrBWlPFkNKtKr+46N7o6EUmy5n
-	bxUv35nhCcYG03Vrw4yrutBxCfPk5E8rkPNOwpnzgOTOXggsOZdx3SIOTkBfle6arR6S0AR8/2W
-	5H9srnPW7yjRM+JStXYtxjHBIWuJmEMJqIif5ssc4
-X-Gm-Gg: AfdE7cnvq7JYgIaZMZWdqaM6R+fbXiHxXsUNVsjuS52mTIB6OnBTzejJExpW0RQfu0p
-	UNjgpIbKNF8IYchqGqyg7QNh/PimTJ0lbStTAm8hUdnU8VZ28BvOjFpVWB/iMbZa1PeKoxHrjDz
-	pCBRmQSRZwcR7ero+p1d+lu413IoXZHr8ctw110Uar42gJlDxk9eDzkf/QfYeGUThKnuWs5F9iE
-	2fpeWM6VZS/ojl+vPvSVIuscbMPPZNs2DEXxIw1yJAR82sdn4M+PMyOtCROoTE/7cT3UfrYyw==
-X-Received: by 2002:ac8:5a88:0:b0:519:b655:235 with SMTP id
- d75a77b69052e-51a703faaaamr4395391cf.3.1782371067208; Thu, 25 Jun 2026
- 00:04:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G4Jv8KrS"
+X-Forwarded-Encrypted: i=1; AFNElJ/zIXfKQttLMWqc7hdzs3j8Jdc5cqPHy6Vam1p3h9wASIuMinzgV4MbIhq13L+OpvCEwrvjCB2MNRejJhj0PPWUEjE=@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782371730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n4l8kEDpwe6ZsvCFof1KiGbqck2t2+CoEwvUDbK1yNQ=;
+	b=G4Jv8KrSZoKm/h0cWk4HI8AF9Rcw5kChPmYYlIN8avju2k0n0QAuEb2b1FMW/k3KLn88he
+	/RTmhOMbtkTBI+XHZCRwtlBEFo9D4Lv++ycf8ONtLq+eLg98Pm5QbUy2Urr+TFgFOOSn27
+	mlyQoQ2rnhtIGZtyZ/ZIrUAAma3+850=
+X-Gm-Message-State: AOJu0YwXHUSPsVW/TiNGDOpbS2k6IdtUYoOQtadA4mZ+eYfBtx5YFdL1
+	2iI6wfzOeKFUGc93MgZRPt8DkCmz6MhDjXLVFuVQsaSHOFN0wIiNhEP+VxaAk4uMwhaq+oByrgc
+	yhBfTFontHDTRqoePys0yART2FAuep3OvqVdG4p4/
+X-Received: by 2002:a05:622a:1f96:b0:516:cc18:4760 with SMTP id
+ d75a77b69052e-51a709958aamr5225201cf.21.1782371725540; Thu, 25 Jun 2026
+ 00:15:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com> <20260618-gmem-inplace-conversion-v8-36-9d2959357853@google.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-36-9d2959357853@google.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Thu, 25 Jun 2026 08:03:50 +0100
-X-Gm-Features: AVVi8CfPiivQ2jTF4C4b2T4SW03MiAlvIrJh5OdhMlg3bv2FAUX7zsWQXsWcZEs
-Message-ID: <CA+EHjTzFUayXCh2SBe7Nwu7YEO3aUmL1Fo1hE_v8OvUw7MWO6w@mail.gmail.com>
-Subject: Re: [PATCH v8 36/46] KVM: selftests: Test that truncation does not
- change shared/private status
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com> <20260618-gmem-inplace-conversion-v8-37-9d2959357853@google.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-37-9d2959357853@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Fuad Tabba <fuad.tabba@linux.dev>
+Date: Thu, 25 Jun 2026 08:14:48 +0100
+X-Gmail-Original-Message-ID: <CA+EHjTxZQf9w+iT11O3+KC-z6Sbg5qCEZ-XCR3=wRnG2k3=Maw@mail.gmail.com>
+X-Gm-Features: AVVi8Cfiom8KyzZV2HmAlpy9PB5CRyn77LPV2Q5_VbhfHk5a3YCLzvyw4gtaMNM
+Message-ID: <CA+EHjTxZQf9w+iT11O3+KC-z6Sbg5qCEZ-XCR3=wRnG2k3=Maw@mail.gmail.com>
+Subject: Re: [PATCH v8 37/46] KVM: selftests: Test that shared/private status
+ is consistent across processes
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -116,61 +76,181 @@ Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
 	linux-coco@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+X-Migadu-Flow: FLOW_OUT
 
 On Fri, 19 Jun 2026 at 01:32, Ackerley Tng via B4 Relay
 <devnull+ackerleytng.google.com@kernel.org> wrote:
 >
-> From: Ackerley Tng <ackerleytng@google.com>
+> From: Sean Christopherson <seanjc@google.com>
 >
-> Add a test to verify that deallocating a page in a guest memfd region via
-> fallocate() with FALLOC_FL_PUNCH_HOLE does not alter the shared or private
-> status of the corresponding memory range.
+> Add a test to verify that a guest_memfd's shared/private status is
+> consistent across processes, and that any shared pages previously mapped in
+> any process are unmapped from all processes.
 >
-> When a page backing a guest memfd mapping is deallocated, e.g., by punching
-> a hole or truncating the file, and then subsequently faulted back in, the
-> new page must inherit the correct shared/private status tracked by
-> guest_memfd.
+> The test forks a child process after creating the shared guest_memfd
+> region so that the second process exists alongside the main process for the
+> entire test.
 >
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Co-developed-by: Sean Christopherson <seanjc@google.com>
+> The processes then take turns to access memory to check that the
+> shared/private status is consistent across processes.
+>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> ---
+
+Two things below, otherwise:
 
 Reviewed-by: Fuad Tabba <tabba@google.com>
 
 Cheers,
 /fuad
 
-> ---
->  .../selftests/kvm/x86/guest_memfd_conversions_test.c       | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+
+>  .../kvm/x86/guest_memfd_conversions_test.c         | 118 +++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
 >
 > diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> index 0b024fb7227f0..f03af2c46426f 100644
+> index f03af2c46426f..99b0023609670 100644
 > --- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
 > +++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-> @@ -10,6 +10,7 @@
->  #include <linux/sizes.h>
+> @@ -2,6 +2,8 @@
+>  /*
+>   * Copyright (c) 2024, Google LLC.
+>   */
+> +#include <pthread.h>
+> +#include <time.h>
+>  #include <sys/mman.h>
+>  #include <unistd.h>
+
+nit: include order
+
 >
->  #include "kvm_util.h"
-> +#include "kvm_syscalls.h"
->  #include "kselftest_harness.h"
->  #include "test_util.h"
->  #include "ucall_common.h"
-> @@ -309,6 +310,19 @@ GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(unallocated_folios, 8)
->                 test_convert_to_shared(t, i, 'B', 'C', 'D');
+> @@ -323,6 +325,122 @@ GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
+>         test_private(t, 0, 0, 'A');
 >  }
 >
-> +/* Truncation should not affect shared/private status. */
-> +GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
+> +/* Test that shared/private memory protections work and are seen from any process. */
+> +GMEM_CONVERSION_TEST_INIT_SHARED(forked_accesses)
 > +{
-> +       host_do_rmw(t->mem, 0, 0, 'A');
-> +       kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-> +       host_do_rmw(t->mem, 0, 0, 'A');
+> +       enum test_state {
+> +               STATE_INIT,
+> +               STATE_CHECK_SHARED,
+> +               STATE_DONE_CHECKING_SHARED,
+> +               STATE_CHECK_PRIVATE,
+> +               STATE_DONE_CHECKING_PRIVATE,
+> +       };
 > +
-> +       test_convert_to_private(t, 0, 'A', 'B');
+> +       struct sync_state {
+> +               pthread_mutex_t mutex;
+> +               pthread_cond_t cond;
+> +               enum test_state step;
+> +       } *sync;
 > +
-> +       kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-> +       test_private(t, 0, 0, 'A');
+> +       pthread_mutexattr_t mattr;
+> +       pthread_condattr_t cattr;
+> +       pid_t child_pid, parent_pid;
+> +       int status;
+> +
+> +       sync = kvm_mmap(sizeof(*sync), PROT_READ | PROT_WRITE,
+> +                       MAP_SHARED | MAP_ANONYMOUS, -1);
+> +
+> +       pthread_mutexattr_init(&mattr);
+> +       pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED);
+> +       pthread_mutex_init(&sync->mutex, &mattr);
+> +       pthread_mutexattr_destroy(&mattr);
+> +
+> +       pthread_condattr_init(&cattr);
+> +       pthread_condattr_setpshared(&cattr, PTHREAD_PROCESS_SHARED);
+> +       pthread_cond_init(&sync->cond, &cattr);
+> +       pthread_condattr_destroy(&cattr);
+> +
+> +       sync->step = STATE_INIT;
+> +
+> +#define TEST_STATE_AWAIT(__state)                                              \
+> +       do {                                                                    \
+> +               pthread_mutex_lock(&sync->mutex);                               \
+> +               while (sync->step != (__state)) {                               \
+> +                       struct timespec ts, stop;                               \
+> +                       int ret;                                                \
+> +                                                                               \
+> +                       clock_gettime(CLOCK_REALTIME, &ts);                     \
+> +                       stop = timespec_add_ns(ts, 100 * 1000000UL);            \
+> +                                                                               \
+> +                       ret = pthread_cond_timedwait(&sync->cond, &sync->mutex, &stop); \
+> +                       if (ret == ETIMEDOUT) {                                 \
+> +                               bool alive = (child_pid == 0) ?                 \
+> +                                            (getppid() == parent_pid) :                \
+> +                                            (waitpid(child_pid, NULL, WNOHANG) == 0); \
+
+Not sure it's worth it, but if you want to silence Sashiko, waitid
+with WNOWAIT might be the way to go (not tested, just from looking at
+the man page). This is though very unlikely, mentioning it since
+Sashiko complained.
+
+
+> +                               TEST_ASSERT(alive, "Other process exited prematurely"); \
+> +                       } else {                                                \
+> +                               TEST_ASSERT(!ret, "pthread_cond_timedwait failed"); \
+> +                       }                                                       \
+> +               }                                                               \
+> +               pthread_mutex_unlock(&sync->mutex);                             \
+> +       } while (0)
+> +
+> +#define TEST_STATE_SET(__state)                                                        \
+> +       do {                                                                    \
+> +               pthread_mutex_lock(&sync->mutex);                               \
+> +               sync->step = (__state);                                         \
+> +               pthread_cond_broadcast(&sync->cond);                            \
+> +               pthread_mutex_unlock(&sync->mutex);                             \
+> +       } while (0)
+> +
+> +       parent_pid = getpid();
+> +       child_pid = fork();
+> +       TEST_ASSERT(child_pid != -1, "fork failed");
+> +
+> +       if (child_pid == 0) {
+> +               const char inconsequential = 0xdd;
+> +
+> +               TEST_STATE_AWAIT(STATE_CHECK_SHARED);
+> +
+> +               /*
+> +                * This maps the pages into the child process as well, and tests
+> +                * that the conversion process will unmap the guest_memfd memory
+> +                * from all processes.
+> +                */
+> +               host_do_rmw(t->mem, 0, 0xB, 0xC);
+> +
+> +               TEST_STATE_SET(STATE_DONE_CHECKING_SHARED);
+> +               TEST_STATE_AWAIT(STATE_CHECK_PRIVATE);
+> +
+> +               TEST_EXPECT_SIGBUS(READ_ONCE(t->mem[0]));
+> +               TEST_EXPECT_SIGBUS(WRITE_ONCE(t->mem[0], inconsequential));
+> +
+> +               TEST_STATE_SET(STATE_DONE_CHECKING_PRIVATE);
+> +               exit(0);
+> +       }
+> +
+> +       test_shared(t, 0, 0, 0xA, 0xB);
+> +
+> +       TEST_STATE_SET(STATE_CHECK_SHARED);
+> +       TEST_STATE_AWAIT(STATE_DONE_CHECKING_SHARED);
+> +
+> +       test_convert_to_private(t, 0, 0xC, 0xD);
+> +
+> +       TEST_STATE_SET(STATE_CHECK_PRIVATE);
+> +       TEST_STATE_AWAIT(STATE_DONE_CHECKING_PRIVATE);
+> +
+> +       TEST_ASSERT_EQ(waitpid(child_pid, &status, 0), child_pid);
+> +       TEST_ASSERT(WIFEXITED(status) && WEXITSTATUS(status) == 0,
+> +                   "Child exited with unexpected status");
+> +
+> +       pthread_mutex_destroy(&sync->mutex);
+> +       pthread_cond_destroy(&sync->cond);
+> +       kvm_munmap(sync, sizeof(*sync));
+> +
+> +#undef TEST_STATE_SET
+> +#undef TEST_STATE_AWAIT
 > +}
 > +
 >  int main(int argc, char *argv[])
