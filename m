@@ -1,60 +1,62 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092CF3DFC8F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFC83E1718
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:16:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389772; cv=none; b=stNtec7w8C88+wy9PNQHt6omFdkDNu+iSxCBcf9/gwUBTylhRISXb9TIwSn8+WCECt6iu3WFL5Q9eV5rr/+HFwn2l0HpNsjPAMnt5ZmiFJisCp/9GjWhvCIzxC9Hm09KGA8WhQ+pZD+8yDgBdG9gHbx02G6XVTCtdhtpnQShDRQ=
+	t=1782389775; cv=none; b=O9g6kdeWHGbQA2LwbZPG7HrjfzV4lTEgOPNDiysMOJ2ejLJ+SH+FY/CMbwrqpDTRkBm8V+BXuD/+vhv+CKbgiC/45RHdXinXHvVp10C8eWOLakFPd0hVxd0LIES7f6iR7RR3zLgHlFBGYmle+kf0SbJvp4whM3RxOJAgx39Zd3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389772; c=relaxed/simple;
-	bh=UMJJJjrNyuqKKHXwlcoCKGVOtrIJdHxfCE1R/5JF09k=;
+	s=arc-20240116; t=1782389775; c=relaxed/simple;
+	bh=tJ/xw5GVRZQKYbFiO6KXEF4+CQ2wIT4JYQ+dlPhMa3o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=V6aYPgGpAotDwjkD9AD4hQnkySKL9hPDCVMLc8ufY2OhaNV/rIk5SVb22LzyjIL5lMMJXyYjo6/gJnJnzJ4TrfGLoqumShY9BEu+0TumQ8QPvpHkbiYJOzi1SRoSvLH72XJVfiDdbswnO3mDLONxst2up/HDWLXAwpZ2UTKxu9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GWOJtk13; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=krS4E9wR2c3D2E0e8n2LDeeJuATZ9oVzurOfnOYv17XBdJbJij4NVE0xpISpCuTRjDNE4YDctNDsMNxUr9Rat5a/IlMHlq2nJMB+DKLP8z98h74pLwSKoLJdj5bTggSiqwmMpBjPUvXU55CsG8ONwJHgH0dBZKSr/R3tRkfu24w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=emv5HuvE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GWOJtk13"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emv5HuvE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782389767;
+	s=mimecast20190719; t=1782389773;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TXU0UO4Jdf8ZdTGb1g2T9g/2skC4nbDakuKiBnIqHpE=;
-	b=GWOJtk13Ge6uU0kWHdmYv0DwSr9IAtYI9GLxe5cNTMDTR7u80t46F58eNHYk0YzjIjV7av
-	Bs5kBWXbwIEFIR/PKDXZUmphA82azS6FJ2I5ElUBGgf7264FSm6ukKl1RmSMg53h0v3wXP
-	LMmUaTUU++980n049VgrxbNK1mnu4dA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=2dJnQgOQKp6OC+3AGW4Po8NIKZDtM0ou7WMivXPLk60=;
+	b=emv5HuvEfpGDUulB/sKNqJU6hVVC7/PxbKVbjKlOIK12JMvCLPhxZMLtYiY4/6c1T/aw5p
+	XLnEcaX/O5FaYB5TsbEn1Kn/TMrmTH+k/+2zSj4c0k6fwbwDYnvbRLVKKi3/Nrhcq1upaU
+	ddcW+IL3lq/AdyLyWYmxSNxI31A48U0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-623-vcevBKxrOkeErF_ZajW5pg-1; Thu,
- 25 Jun 2026 08:16:04 -0400
-X-MC-Unique: vcevBKxrOkeErF_ZajW5pg-1
-X-Mimecast-MFC-AGG-ID: vcevBKxrOkeErF_ZajW5pg_1782389763
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-g316YwksP-2xkeEykNi6Og-1; Thu,
+ 25 Jun 2026 08:16:08 -0400
+X-MC-Unique: g316YwksP-2xkeEykNi6Og-1
+X-Mimecast-MFC-AGG-ID: g316YwksP-2xkeEykNi6Og_1782389767
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E3A83180ACD1;
-	Thu, 25 Jun 2026 12:16:02 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6929E193F04E;
+	Thu, 25 Jun 2026 12:16:07 +0000 (UTC)
 Received: from fedora-pc.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3B51330002E0;
-	Thu, 25 Jun 2026 12:16:00 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 69C5A30002E0;
+	Thu, 25 Jun 2026 12:16:04 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v3 14/17] verification/rvgen: Add selftests for rvgen kunit
-Date: Thu, 25 Jun 2026 14:14:36 +0200
-Message-ID: <20260625121440.116317-15-gmonaco@redhat.com>
+Subject: [PATCH v3 15/17] selftests/verification: Fix wrong errexit assumption
+Date: Thu, 25 Jun 2026 14:14:37 +0200
+Message-ID: <20260625121440.116317-16-gmonaco@redhat.com>
 In-Reply-To: <20260625121440.116317-1-gmonaco@redhat.com>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,1175 +66,102 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: 7B8MBLr1qqAIuAsHrElAl2YuPGVE7vQsEXDwFTpXIRA_1782389763
+X-Mimecast-MFC-PROC-ID: oXO2EButS6hqTInB3E-TcVtuFjN3f4uNribP23N2hIM_1782389767
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The rvgen kunit command patches monitor files and adds necessary
-definitions for kunit tests.
+RV selftest rely on bash errexit (set -e) to terminate with error, when
+a step is expected to return false, the following syntax is used:
 
-Add a test case validating its behaviour on dummy generated files and
-comparing it against reference files, like it's done for rvgen monitor.
+  ! cmd
+
+This however prevents the test from exiting when cmd is false (desired)
+but doesn't exit if cmd is true, since commands prefixed with ! are
+explicitly excluded from errexit.
+
+Use the syntax
+
+  ! cmd || false
+
+Which ends up checking the exit value of ! cmd and supplies a false
+command for errexit to evaluate.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- .../rvgen/rvgen/templates/kunit.c             |   2 +-
- .../rvgen/tests/golden/test_da_kunit/Kconfig  |   9 +
- .../golden/test_da_kunit/test_da_kunit.c      | 111 ++++++++
- .../golden/test_da_kunit/test_da_kunit.h      |  47 ++++
- .../test_da_kunit/test_da_kunit_kunit.c       |  29 ++
- .../test_da_kunit/test_da_kunit_kunit.h       |  23 ++
- .../test_da_kunit/test_da_kunit_trace.h       |  15 +
- .../rvgen/tests/golden/test_ha_kunit/Kconfig  |   9 +
- .../golden/test_ha_kunit/test_ha_kunit.c      | 264 ++++++++++++++++++
- .../golden/test_ha_kunit/test_ha_kunit.h      |  88 ++++++
- .../test_ha_kunit/test_ha_kunit_kunit.c       |  29 ++
- .../test_ha_kunit/test_ha_kunit_kunit.h       |  24 ++
- .../test_ha_kunit/test_ha_kunit_trace.h       |  19 ++
- .../rvgen/tests/golden/test_ltl_kunit/Kconfig |   9 +
- .../golden/test_ltl_kunit/test_ltl_kunit.c    | 107 +++++++
- .../golden/test_ltl_kunit/test_ltl_kunit.h    | 108 +++++++
- .../test_ltl_kunit/test_ltl_kunit_kunit.c     |  29 ++
- .../test_ltl_kunit/test_ltl_kunit_kunit.h     |  22 ++
- .../test_ltl_kunit/test_ltl_kunit_trace.h     |  14 +
- tools/verification/rvgen/tests/rvgen_kunit.t  |  32 +++
- 20 files changed, 989 insertions(+), 1 deletion(-)
- create mode 100644 tools/verification/rvgen/tests/golden/test_da_kunit/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha_kunit/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_trace.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl_kunit/Kconfig
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.c
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.h
- create mode 100644 tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_trace.h
- create mode 100644 tools/verification/rvgen/tests/rvgen_kunit.t
+ .../verification/test.d/rv_monitor_enable_disable.tc   | 10 +++++-----
+ .../verification/test.d/rv_monitor_reactor.tc          |  4 ++--
+ .../selftests/verification/test.d/rv_wwnr_printk.tc    |  4 ++--
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/verification/rvgen/rvgen/templates/kunit.c b/tools/verification/rvgen/rvgen/templates/kunit.c
-index d29bbf2ea5..402b5c8575 100644
---- a/tools/verification/rvgen/rvgen/templates/kunit.c
-+++ b/tools/verification/rvgen/rvgen/templates/kunit.c
-@@ -8,7 +8,7 @@
-  */
- #include "%%MODEL_NAME%%_kunit.h"
+diff --git a/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc b/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
+index f29236defb..61e2c8b54d 100644
+--- a/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
++++ b/tools/testing/selftests/verification/test.d/rv_monitor_enable_disable.tc
+@@ -10,7 +10,7 @@ test_simple_monitor() {
+     grep -q "$monitor$" enabled_monitors
  
--#if IS_ENABLED(CONFIG_RV_MON_%%MODEL_NAME_UP%%)
-+#if IS_REACHABLE(CONFIG_RV_MON_%%MODEL_NAME_UP%%)
+     echo 0 > "monitors/$prefix$monitor/enable"
+-    ! grep -q "$monitor$" enabled_monitors
++    ! grep -q "$monitor$" enabled_monitors || false
  
- static void rv_test_%%MODEL_NAME%%(struct kunit *test)
- {
-diff --git a/tools/verification/rvgen/tests/golden/test_da_kunit/Kconfig b/tools/verification/rvgen/tests/golden/test_da_kunit/Kconfig
-new file mode 100644
-index 0000000000..6d664ba562
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da_kunit/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TEST_DA_KUNIT
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "test_da_kunit monitor"
-+	help
-+	  auto-generated
-diff --git a/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.c b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.c
-new file mode 100644
-index 0000000000..c2916c3e86
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.c
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "test_da_kunit"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_CPU
-+#include "test_da_kunit.h"
-+#include <rv/da_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+static void handle_event_1(void *data, /* XXX: fill header */)
-+{
-+	da_handle_event(event_1_test_da_kunit);
-+}
-+
-+static void handle_event_2(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event always leads to the initial state */
-+	da_handle_start_event(event_2_test_da_kunit);
-+}
-+
-+static int enable_test_da_kunit(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("test_da_kunit", /* XXX: tracepoint */, handle_event_1);
-+	rv_attach_trace_probe("test_da_kunit", /* XXX: tracepoint */, handle_event_2);
-+
-+	return 0;
-+}
-+
-+static void disable_test_da_kunit(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("test_da_kunit", /* XXX: tracepoint */, handle_event_1);
-+	rv_detach_trace_probe("test_da_kunit", /* XXX: tracepoint */, handle_event_2);
-+
-+	da_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "test_da_kunit",
-+	.description = "auto-generated",
-+	.enable = enable_test_da_kunit,
-+	.disable = disable_test_da_kunit,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_test_da_kunit(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_test_da_kunit(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_test_da_kunit);
-+module_exit(unregister_test_da_kunit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("test_da_kunit: auto-generated");
-+
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+#include <kunit/visibility.h>
-+#include "test_da_kunit_kunit.h"
-+
-+const struct rv_test_da_kunit_ops rv_test_da_kunit_ops = {
-+	.mon = {
-+		.rv_this = &rv_this,
-+		.monitor_init = da_monitor_init,
-+		.monitor_destroy = da_monitor_destroy,
-+	},
-+	.handle_event_1 = handle_event_1,
-+	.handle_event_2 = handle_event_2,
-+};
-+EXPORT_SYMBOL_IF_KUNIT(rv_test_da_kunit_ops);
-+#endif
-diff --git a/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.h b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.h
-new file mode 100644
-index 0000000000..290a9454ca
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of test_da_kunit automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME test_da_kunit
-+
-+enum states_test_da_kunit {
-+	state_a_test_da_kunit,
-+	state_b_test_da_kunit,
-+	state_max_test_da_kunit,
-+};
-+
-+#define INVALID_STATE state_max_test_da_kunit
-+
-+enum events_test_da_kunit {
-+	event_1_test_da_kunit,
-+	event_2_test_da_kunit,
-+	event_max_test_da_kunit,
-+};
-+
-+struct automaton_test_da_kunit {
-+	char *state_names[state_max_test_da_kunit];
-+	char *event_names[event_max_test_da_kunit];
-+	unsigned char function[state_max_test_da_kunit][event_max_test_da_kunit];
-+	unsigned char initial_state;
-+	bool final_states[state_max_test_da_kunit];
-+};
-+
-+static const struct automaton_test_da_kunit automaton_test_da_kunit = {
-+	.state_names = {
-+		"state_a",
-+		"state_b",
-+	},
-+	.event_names = {
-+		"event_1",
-+		"event_2",
-+	},
-+	.function = {
-+		{       state_b_test_da_kunit,       state_a_test_da_kunit },
-+		{               INVALID_STATE,       state_a_test_da_kunit },
-+	},
-+	.initial_state = state_a_test_da_kunit,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.c b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.c
-new file mode 100644
-index 0000000000..06a280444b
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+/*
-+ * XXX: include required headers, e.g.,
-+ * #include <linux/sched.h>
-+ */
-+#include "test_da_kunit_kunit.h"
-+
-+#if IS_REACHABLE(CONFIG_RV_MON_TEST_DA_KUNIT)
-+
-+static void rv_test_test_da_kunit(struct kunit *test)
-+{
-+	struct rv_kunit_ctx *ctx = test->priv;
-+
-+	prepare_test(test, &rv_test_da_kunit_ops.mon);
-+
-+	/*
-+	 * XXX: write the test here
-+	 * e.g.
-+	 * RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+	 *	rv_test_da_kunit_ops.handle_event(args);
-+	 */
-+}
-+
-+#else
-+#define rv_test_test_da_kunit rv_test_stub
-+#endif
-diff --git a/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.h b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.h
-new file mode 100644
-index 0000000000..0094215ff4
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_kunit.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Automatically generated by rvgen kunit.
-+ * May need manual intervention for function prototypes that couldn't be
-+ * found (e.g. are in another file) or variables to be exported.
-+ */
-+
-+#ifndef __TEST_DA_KUNIT_KUNIT_H
-+#define __TEST_DA_KUNIT_KUNIT_H
-+
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+
-+extern const struct rv_test_da_kunit_ops {
-+	struct rv_kunit_mon mon;
-+	void (*handle_event_1)(void *data, /* XXX: fill header */);
-+	void (*handle_event_2)(void *data, /* XXX: fill header */);
-+} rv_test_da_kunit_ops;
-+#endif
-+
-+#endif /* __TEST_DA_KUNIT_KUNIT_H */
-diff --git a/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_trace.h b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_trace.h
-new file mode 100644
-index 0000000000..16804a79e8
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_da_kunit/test_da_kunit_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_TEST_DA_KUNIT
-+DEFINE_EVENT(event_da_monitor, event_test_da_kunit,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_test_da_kunit,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_TEST_DA_KUNIT */
-diff --git a/tools/verification/rvgen/tests/golden/test_ha_kunit/Kconfig b/tools/verification/rvgen/tests/golden/test_ha_kunit/Kconfig
-new file mode 100644
-index 0000000000..6c48770ace
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha_kunit/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TEST_HA_KUNIT
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select HA_MON_EVENTS_ID
-+	bool "test_ha_kunit monitor"
-+	help
-+	  auto-generated
-diff --git a/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.c b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.c
-new file mode 100644
-index 0000000000..69ca870ac2
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.c
-@@ -0,0 +1,264 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "test_ha_kunit"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#define RV_MON_TYPE RV_MON_PER_TASK
-+/* XXX: If the monitor has several instances, consider HA_TIMER_WHEEL */
-+#define HA_TIMER_TYPE HA_TIMER_HRTIMER
-+#include "test_ha_kunit.h"
-+#include <rv/ha_monitor.h>
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ *
-+ */
-+#define BAR_NS(ha_mon) /* XXX: what is BAR_NS(ha_mon)? */
-+
-+#define FOO_NS /* XXX: what is FOO_NS? */
-+
-+static inline u64 bar_ns(struct ha_monitor *ha_mon)
-+{
-+	return /* XXX: what is bar_ns(ha_mon)? */;
-+}
-+
-+static u64 foo_ns = /* XXX: default value */;
-+module_param(foo_ns, ullong, 0644);
-+
-+/*
-+ * These functions define how to read and reset the environment variable.
-+ *
-+ * Common environment variables like ns-based and jiffy-based clocks have
-+ * pre-define getters and resetters you can use. The parser can infer the type
-+ * of the environment variable if you supply a measure unit in the constraint.
-+ * If you define your own functions, make sure to add appropriate memory
-+ * barriers if required.
-+ * Some environment variables don't require a storage as they read a system
-+ * state (e.g. preemption count). Those variables are never reset, so we don't
-+ * define a reset function on monitors only relying on this type of variables.
-+ */
-+static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_test_ha_kunit env, u64 time_ns)
-+{
-+	if (env == clk_test_ha_kunit)
-+		return ha_get_clk_ns(ha_mon, env, time_ns);
-+	else if (env == env1_test_ha_kunit)
-+		return /* XXX: how do I read env1? */
-+	else if (env == env2_test_ha_kunit)
-+		return /* XXX: how do I read env2? */
-+	return ENV_INVALID_VALUE;
-+}
-+
-+static void ha_reset_env(struct ha_monitor *ha_mon, enum envs_test_ha_kunit env, u64 time_ns)
-+{
-+	if (env == clk_test_ha_kunit)
-+		ha_reset_clk_ns(ha_mon, env, time_ns);
-+}
-+
-+/*
-+ * These functions are used to validate state transitions.
-+ *
-+ * They are generated by parsing the model, there is usually no need to change them.
-+ * If the monitor requires a timer, there are functions responsible to arm it when
-+ * the next state has a constraint, cancel it in any other case and to check
-+ * that it didn't expire before the callback run. Transitions to the same state
-+ * without a reset never affect timers.
-+ * Due to the different representations between invariants and guards, there is
-+ * a function to convert it in case invariants or guards are reachable from
-+ * another invariant without reset. Those are not present if not required in
-+ * the model. This is all automatic but is worth checking because it may show
-+ * errors in the model (e.g. missing resets).
-+ */
-+static inline bool ha_verify_invariants(struct ha_monitor *ha_mon,
-+					enum states curr_state, enum events event,
-+					enum states next_state, u64 time_ns)
-+{
-+	if (curr_state == S0_test_ha_kunit)
-+		return ha_check_invariant_ns(ha_mon, clk_test_ha_kunit, time_ns);
-+	else if (curr_state == S2_test_ha_kunit)
-+		return ha_check_invariant_ns(ha_mon, clk_test_ha_kunit, time_ns);
-+	return true;
-+}
-+
-+static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
-+					enum states curr_state, enum events event,
-+					enum states next_state, u64 time_ns)
-+{
-+	if (curr_state == next_state)
-+		return;
-+	if (curr_state == S2_test_ha_kunit)
-+		ha_inv_to_guard(ha_mon, clk_test_ha_kunit, BAR_NS(ha_mon), time_ns);
-+}
-+
-+static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
-+				    enum states curr_state, enum events event,
-+				    enum states next_state, u64 time_ns)
-+{
-+	bool res = true;
-+
-+	if (curr_state == S0_test_ha_kunit && event == event0_test_ha_kunit)
-+		ha_reset_env(ha_mon, clk_test_ha_kunit, time_ns);
-+	else if (curr_state == S0_test_ha_kunit && event == event1_test_ha_kunit)
-+		ha_reset_env(ha_mon, clk_test_ha_kunit, time_ns);
-+	else if (curr_state == S1_test_ha_kunit && event == event0_test_ha_kunit)
-+		ha_reset_env(ha_mon, clk_test_ha_kunit, time_ns);
-+	else if (curr_state == S1_test_ha_kunit && event == event2_test_ha_kunit) {
-+		res = ha_get_env(ha_mon, env1_test_ha_kunit, time_ns) == 0ull;
-+		ha_reset_env(ha_mon, clk_test_ha_kunit, time_ns);
-+	} else if (curr_state == S2_test_ha_kunit && event == event1_test_ha_kunit)
-+		res = ha_monitor_env_invalid(ha_mon, clk_test_ha_kunit) ||
-+		      ha_get_env(ha_mon, clk_test_ha_kunit, time_ns) < foo_ns;
-+	else if (curr_state == S3_test_ha_kunit && event == event0_test_ha_kunit)
-+		res = ha_monitor_env_invalid(ha_mon, clk_test_ha_kunit) ||
-+		      (ha_get_env(ha_mon, clk_test_ha_kunit, time_ns) < FOO_NS &&
-+		      ha_get_env(ha_mon, env2_test_ha_kunit, time_ns) == 0ull);
-+	else if (curr_state == S3_test_ha_kunit && event == event1_test_ha_kunit) {
-+		res = ha_monitor_env_invalid(ha_mon, clk_test_ha_kunit) ||
-+		      (ha_get_env(ha_mon, clk_test_ha_kunit, time_ns) < 5000ull &&
-+		      ha_get_env(ha_mon, env1_test_ha_kunit, time_ns) == 1ull);
-+		ha_reset_env(ha_mon, clk_test_ha_kunit, time_ns);
-+	}
-+	return res;
-+}
-+
-+static inline void ha_setup_invariants(struct ha_monitor *ha_mon,
-+				       enum states curr_state, enum events event,
-+				       enum states next_state, u64 time_ns)
-+{
-+	if (next_state == curr_state && event != event0_test_ha_kunit)
-+		return;
-+	if (next_state == S0_test_ha_kunit)
-+		ha_start_timer_ns(ha_mon, clk_test_ha_kunit, bar_ns(ha_mon), time_ns);
-+	else if (next_state == S2_test_ha_kunit)
-+		ha_start_timer_ns(ha_mon, clk_test_ha_kunit, BAR_NS(ha_mon), time_ns);
-+	else if (curr_state == S0_test_ha_kunit)
-+		ha_cancel_timer(ha_mon);
-+	else if (curr_state == S2_test_ha_kunit)
-+		ha_cancel_timer(ha_mon);
-+}
-+
-+static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-+				 enum states curr_state, enum events event,
-+				 enum states next_state, u64 time_ns)
-+{
-+	if (!ha_verify_invariants(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
-+
-+	ha_convert_inv_guard(ha_mon, curr_state, event, next_state, time_ns);
-+
-+	if (!ha_verify_guards(ha_mon, curr_state, event, next_state, time_ns))
-+		return false;
-+
-+	ha_setup_invariants(ha_mon, curr_state, event, next_state, time_ns);
-+
-+	return true;
-+}
-+
-+static void handle_event0(void *data, /* XXX: fill header */)
-+{
-+	/* XXX: validate that this event always leads to the initial state */
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_start_event(p, event0_test_ha_kunit);
-+}
-+
-+static void handle_event1(void *data, /* XXX: fill header */)
-+{
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_event(p, event1_test_ha_kunit);
-+}
-+
-+static void handle_event2(void *data, /* XXX: fill header */)
-+{
-+	struct task_struct *p = /* XXX: how do I get p? */;
-+	da_handle_event(p, event2_test_ha_kunit);
-+}
-+
-+static int enable_test_ha_kunit(void)
-+{
-+	int retval;
-+
-+	retval = ha_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("test_ha_kunit", /* XXX: tracepoint */, handle_event0);
-+	rv_attach_trace_probe("test_ha_kunit", /* XXX: tracepoint */, handle_event1);
-+	rv_attach_trace_probe("test_ha_kunit", /* XXX: tracepoint */, handle_event2);
-+
-+	return 0;
-+}
-+
-+static void disable_test_ha_kunit(void)
-+{
-+	rv_this.enabled = 0;
-+
-+	rv_detach_trace_probe("test_ha_kunit", /* XXX: tracepoint */, handle_event0);
-+	rv_detach_trace_probe("test_ha_kunit", /* XXX: tracepoint */, handle_event1);
-+	rv_detach_trace_probe("test_ha_kunit", /* XXX: tracepoint */, handle_event2);
-+
-+	ha_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "test_ha_kunit",
-+	.description = "auto-generated",
-+	.enable = enable_test_ha_kunit,
-+	.disable = disable_test_ha_kunit,
-+	.reset = da_monitor_reset_all,
-+	.enabled = 0,
-+};
-+
-+static int __init register_test_ha_kunit(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_test_ha_kunit(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_test_ha_kunit);
-+module_exit(unregister_test_ha_kunit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("dot2k: auto-generated");
-+MODULE_DESCRIPTION("test_ha_kunit: auto-generated");
-+
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+#include <kunit/visibility.h>
-+#include "test_ha_kunit_kunit.h"
-+
-+const struct rv_test_ha_kunit_ops rv_test_ha_kunit_ops = {
-+	.mon = {
-+		.rv_this = &rv_this,
-+		.monitor_init = ha_monitor_init,
-+		.monitor_destroy = ha_monitor_destroy,
-+	},
-+	.handle_event0 = handle_event0,
-+	.handle_event1 = handle_event1,
-+	.handle_event2 = handle_event2,
-+};
-+EXPORT_SYMBOL_IF_KUNIT(rv_test_ha_kunit_ops);
-+#endif
-diff --git a/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.h b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.h
-new file mode 100644
-index 0000000000..5c428f818b
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of test_ha_kunit automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+#define MONITOR_NAME test_ha_kunit
-+
-+enum states_test_ha_kunit {
-+	S0_test_ha_kunit,
-+	S1_test_ha_kunit,
-+	S2_test_ha_kunit,
-+	S3_test_ha_kunit,
-+	state_max_test_ha_kunit,
-+};
-+
-+#define INVALID_STATE state_max_test_ha_kunit
-+
-+enum events_test_ha_kunit {
-+	event0_test_ha_kunit,
-+	event1_test_ha_kunit,
-+	event2_test_ha_kunit,
-+	event_max_test_ha_kunit,
-+};
-+
-+enum envs_test_ha_kunit {
-+	clk_test_ha_kunit,
-+	env1_test_ha_kunit,
-+	env2_test_ha_kunit,
-+	env_max_test_ha_kunit,
-+	env_max_stored_test_ha_kunit = env1_test_ha_kunit,
-+};
-+
-+_Static_assert(env_max_stored_test_ha_kunit <= MAX_HA_ENV_LEN, "Not enough slots");
-+#define HA_CLK_NS
-+
-+struct automaton_test_ha_kunit {
-+	char *state_names[state_max_test_ha_kunit];
-+	char *event_names[event_max_test_ha_kunit];
-+	char *env_names[env_max_test_ha_kunit];
-+	unsigned char function[state_max_test_ha_kunit][event_max_test_ha_kunit];
-+	unsigned char initial_state;
-+	bool final_states[state_max_test_ha_kunit];
-+};
-+
-+static const struct automaton_test_ha_kunit automaton_test_ha_kunit = {
-+	.state_names = {
-+		"S0",
-+		"S1",
-+		"S2",
-+		"S3",
-+	},
-+	.event_names = {
-+		"event0",
-+		"event1",
-+		"event2",
-+	},
-+	.env_names = {
-+		"clk",
-+		"env1",
-+		"env2",
-+	},
-+	.function = {
-+		{
-+			S0_test_ha_kunit,
-+			S1_test_ha_kunit,
-+			INVALID_STATE,
-+		},
-+		{
-+			S0_test_ha_kunit,
-+			INVALID_STATE,
-+			S2_test_ha_kunit,
-+		},
-+		{
-+			INVALID_STATE,
-+			S2_test_ha_kunit,
-+			S3_test_ha_kunit,
-+		},
-+		{
-+			S0_test_ha_kunit,
-+			S1_test_ha_kunit,
-+			INVALID_STATE,
-+		},
-+	},
-+	.initial_state = S0_test_ha_kunit,
-+	.final_states = { 1, 0, 0, 0 },
-+};
-diff --git a/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.c b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.c
-new file mode 100644
-index 0000000000..730a9a26a0
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+/*
-+ * XXX: include required headers, e.g.,
-+ * #include <linux/sched.h>
-+ */
-+#include "test_ha_kunit_kunit.h"
-+
-+#if IS_REACHABLE(CONFIG_RV_MON_TEST_HA_KUNIT)
-+
-+static void rv_test_test_ha_kunit(struct kunit *test)
-+{
-+	struct rv_kunit_ctx *ctx = test->priv;
-+
-+	prepare_test(test, &rv_test_ha_kunit_ops.mon);
-+
-+	/*
-+	 * XXX: write the test here
-+	 * e.g.
-+	 * RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+	 *	rv_test_ha_kunit_ops.handle_event(args);
-+	 */
-+}
-+
-+#else
-+#define rv_test_test_ha_kunit rv_test_stub
-+#endif
-diff --git a/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.h b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.h
-new file mode 100644
-index 0000000000..0b2030cb64
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_kunit.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Automatically generated by rvgen kunit.
-+ * May need manual intervention for function prototypes that couldn't be
-+ * found (e.g. are in another file) or variables to be exported.
-+ */
-+
-+#ifndef __TEST_HA_KUNIT_KUNIT_H
-+#define __TEST_HA_KUNIT_KUNIT_H
-+
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+
-+extern const struct rv_test_ha_kunit_ops {
-+	struct rv_kunit_mon mon;
-+	void (*handle_event0)(void *data, /* XXX: fill header */);
-+	void (*handle_event1)(void *data, /* XXX: fill header */);
-+	void (*handle_event2)(void *data, /* XXX: fill header */);
-+} rv_test_ha_kunit_ops;
-+#endif
-+
-+#endif /* __TEST_HA_KUNIT_KUNIT_H */
-diff --git a/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_trace.h b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_trace.h
-new file mode 100644
-index 0000000000..6c13ee0068
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ha_kunit/test_ha_kunit_trace.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_TEST_HA_KUNIT
-+DEFINE_EVENT(event_da_monitor_id, event_test_ha_kunit,
-+	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(id, state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor_id, error_test_ha_kunit,
-+	     TP_PROTO(int id, char *state, char *event),
-+	     TP_ARGS(id, state, event));
-+
-+DEFINE_EVENT(error_env_da_monitor_id, error_env_test_ha_kunit,
-+	     TP_PROTO(int id, char *state, char *event, char *env),
-+	     TP_ARGS(id, state, event, env));
-+#endif /* CONFIG_RV_MON_TEST_HA_KUNIT */
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl_kunit/Kconfig b/tools/verification/rvgen/tests/golden/test_ltl_kunit/Kconfig
-new file mode 100644
-index 0000000000..3e334c3442
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl_kunit/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TEST_LTL_KUNIT
-+	depends on RV
-+	# XXX: add dependencies if there
-+	select LTL_MON_EVENTS_ID
-+	bool "test_ltl_kunit monitor"
-+	help
-+	  auto-generated
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.c b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.c
-new file mode 100644
-index 0000000000..5e95a0f462
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "test_ltl_kunit"
-+
-+/*
-+ * XXX: include required tracepoint headers, e.g.,
-+ * #include <trace/events/sched.h>
-+ */
-+#include <rv_trace.h>
-+
-+
-+/*
-+ * This is the self-generated part of the monitor. Generally, there is no need
-+ * to touch this section.
-+ */
-+#include "test_ltl_kunit.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	/*
-+	 * This is called everytime the Buchi automaton is triggered.
-+	 *
-+	 * This function could be used to fetch the atomic propositions which
-+	 * are expensive to trace. It is possible only if the atomic proposition
-+	 * does not need to be updated at precise time.
-+	 *
-+	 * It is recommended to use tracepoints and ltl_atom_update() instead.
-+	 */
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bool task_creation)
-+{
-+	/*
-+	 * This should initialize as many atomic propositions as possible.
-+	 *
-+	 * @task_creation indicates whether the task is being created. This is
-+	 * false if the task is already running before the monitor is enabled.
-+	 */
-+	ltl_atom_set(mon, LTL_EVENT_A, true/false);
-+	ltl_atom_set(mon, LTL_EVENT_B, true/false);
-+}
-+
-+/*
-+ * This is the instrumentation part of the monitor.
-+ *
-+ * This is the section where manual work is required. Here the kernel events
-+ * are translated into model's event.
-+ */
-+static void handle_example_event(void *data, /* XXX: fill header */)
-+{
-+	ltl_atom_update(task, LTL_EVENT_A, true/false);
-+}
-+
-+static int enable_test_ltl_kunit(void)
-+{
-+	int retval;
-+
-+	retval = ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("test_ltl_kunit", /* XXX: tracepoint */, handle_example_event);
-+
-+	return 0;
-+}
-+
-+static void disable_test_ltl_kunit(void)
-+{
-+	rv_detach_trace_probe("test_ltl_kunit", /* XXX: tracepoint */, handle_sample_event);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_this = {
-+	.name = "test_ltl_kunit",
-+	.description = "auto-generated",
-+	.enable = enable_test_ltl_kunit,
-+	.disable = disable_test_ltl_kunit,
-+};
-+
-+static int __init register_test_ltl_kunit(void)
-+{
-+	return rv_register_monitor(&rv_this, NULL);
-+}
-+
-+static void __exit unregister_test_ltl_kunit(void)
-+{
-+	rv_unregister_monitor(&rv_this);
-+}
-+
-+module_init(register_test_ltl_kunit);
-+module_exit(unregister_test_ltl_kunit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR(/* TODO */);
-+MODULE_DESCRIPTION("test_ltl_kunit: auto-generated");
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.h b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.h
-new file mode 100644
-index 0000000000..acc503b56e
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit.h
-@@ -0,0 +1,108 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * C implementation of Buchi automaton, automatically generated by
-+ * tools/verification/rvgen from the linear temporal logic specification.
-+ * For further information, see kernel documentation:
-+ *   Documentation/trace/rv/linear_temporal_logic.rst
-+ */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME test_ltl_kunit
-+
-+enum ltl_atom {
-+	LTL_EVENT_A,
-+	LTL_EVENT_B,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <= RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] = {
-+		"ev_a",
-+		"ev_b",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	S1,
-+	S2,
-+	S3,
-+	S4,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <= RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool event_b = test_bit(LTL_EVENT_B, mon->atoms);
-+	bool event_a = test_bit(LTL_EVENT_A, mon->atoms);
-+	bool val1 = !event_a;
-+
-+	if (val1)
-+		__set_bit(S0, mon->states);
-+	if (true)
-+		__set_bit(S1, mon->states);
-+	if (event_b)
-+		__set_bit(S4, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
-+{
-+	bool event_b = test_bit(LTL_EVENT_B, mon->atoms);
-+	bool event_a = test_bit(LTL_EVENT_A, mon->atoms);
-+	bool val1 = !event_a;
-+
-+	switch (state) {
-+	case S0:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S1:
-+		if (true)
-+			__set_bit(S1, next);
-+		if (true && val1)
-+			__set_bit(S2, next);
-+		if (event_b && val1)
-+			__set_bit(S3, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S2:
-+		if (true)
-+			__set_bit(S1, next);
-+		if (true && val1)
-+			__set_bit(S2, next);
-+		if (event_b && val1)
-+			__set_bit(S3, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S3:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	case S4:
-+		if (val1)
-+			__set_bit(S0, next);
-+		if (true)
-+			__set_bit(S1, next);
-+		if (event_b)
-+			__set_bit(S4, next);
-+		break;
-+	}
-+}
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.c b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.c
-new file mode 100644
-index 0000000000..f64faef1b0
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+/*
-+ * XXX: include required headers, e.g.,
-+ * #include <linux/sched.h>
-+ */
-+#include "test_ltl_kunit_kunit.h"
-+
-+#if IS_REACHABLE(CONFIG_RV_MON_TEST_LTL_KUNIT)
-+
-+static void rv_test_test_ltl_kunit(struct kunit *test)
-+{
-+	struct rv_kunit_ctx *ctx = test->priv;
-+
-+	prepare_test(test, &rv_test_ltl_kunit_ops.mon);
-+
-+	/*
-+	 * XXX: write the test here
-+	 * e.g.
-+	 * RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+	 *	rv_test_ltl_kunit_ops.handle_event(args);
-+	 */
-+}
-+
-+#else
-+#define rv_test_test_ltl_kunit rv_test_stub
-+#endif
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.h b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.h
-new file mode 100644
-index 0000000000..b2ca34be32
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_kunit.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Automatically generated by rvgen kunit.
-+ * May need manual intervention for function prototypes that couldn't be
-+ * found (e.g. are in another file) or variables to be exported.
-+ */
-+
-+#ifndef __TEST_LTL_KUNIT_KUNIT_H
-+#define __TEST_LTL_KUNIT_KUNIT_H
-+
-+#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+
-+extern const struct rv_test_ltl_kunit_ops {
-+	struct rv_kunit_mon mon;
-+	void (*handle_example_event)(void *data, /* XXX: fill header */);
-+} rv_test_ltl_kunit_ops;
-+#endif
-+
-+#endif /* __TEST_LTL_KUNIT_KUNIT_H */
-diff --git a/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_trace.h b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_trace.h
-new file mode 100644
-index 0000000000..a054d5b2c0
---- /dev/null
-+++ b/tools/verification/rvgen/tests/golden/test_ltl_kunit/test_ltl_kunit_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_TEST_LTL_KUNIT
-+DEFINE_EVENT(event_ltl_monitor_id, event_test_ltl_kunit,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_test_ltl_kunit,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_TEST_LTL_KUNIT */
-diff --git a/tools/verification/rvgen/tests/rvgen_kunit.t b/tools/verification/rvgen/tests/rvgen_kunit.t
-new file mode 100644
-index 0000000000..174a6fac0b
---- /dev/null
-+++ b/tools/verification/rvgen/tests/rvgen_kunit.t
-@@ -0,0 +1,32 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+source ../tests/engine.sh
-+test_begin
-+
-+set_timeout 30s
-+
-+# Help tests
-+check "verify kunit subcommand help" \
-+	"$RVGEN kunit -h" 0 "model_name" "spec"
-+
-+check_and_compare_folder "KUnit generation with local lookup and test_da_kunit" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t per_cpu -n test_da_kunit && $RVGEN kunit -a -l -n test_da_kunit" \
-+	"test_da_kunit" "Now complete the test and add it to rv_monitors_test.c" "monitor_init"
-+
-+check_and_compare_folder "KUnit generation with local lookup and test_ha_kunit" \
-+	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_task -n test_ha_kunit && $RVGEN kunit -a -l -n test_ha_kunit" \
-+	"test_ha_kunit" "Successfully created KUnit" "Append the following to"
-+
-+check_and_compare_folder "KUnit generation with local lookup and test_ltl_kunit" \
-+	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -n test_ltl_kunit && $RVGEN kunit -l -n test_ltl_kunit" \
-+	"test_ltl_kunit" "monitor_init = ltl_monitor_init"
-+
-+# Error handling tests
-+check "missing required model_name" \
-+	"$RVGEN kunit" 2 "the following arguments are required: -n/--model_name"
-+
-+check "non-existent model_name with auto_patch" \
-+	"$RVGEN kunit -a -n nonexistent" 1 \
-+	"Could not find monitor C file" "Traceback (most recent call last)"
-+
-+test_end
+     echo "$monitor" >> enabled_monitors
+     grep -q 1 "monitors/$prefix$monitor/enable"
+@@ -34,12 +34,12 @@ test_container_monitor() {
+ 	test -n "$nested"
+ 
+     echo 0 > "monitors/$monitor/enable"
+-    ! grep -q "^$monitor$" enabled_monitors
++    ! grep -q "^$monitor$" enabled_monitors || false
+ 
+     for nested_dir in "monitors/$monitor"/*; do
+         [ -d "$nested_dir" ] || continue
+         nested=$(basename "$nested_dir")
+-        ! grep -q "^$monitor:$nested$" enabled_monitors
++        ! grep -q "^$monitor:$nested$" enabled_monitors || false
+     done
+ 
+     echo "$monitor" >> enabled_monitors
+@@ -71,5 +71,5 @@ for monitor_dir in monitors/*; do
+     fi
+ done
+ 
+-! echo non_existent_monitor > enabled_monitors
+-! grep -q "^non_existent_monitor$" enabled_monitors
++! echo non_existent_monitor > enabled_monitors || false
++! grep -q "^non_existent_monitor$" enabled_monitors || false
+diff --git a/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc b/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
+index 2958bf8493..516a209713 100644
+--- a/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
++++ b/tools/testing/selftests/verification/test.d/rv_monitor_reactor.tc
+@@ -64,5 +64,5 @@ done
+ 
+ monitor=$(ls /sys/kernel/tracing/rv/monitors -1 | head -n 1)
+ test -f "monitors/$monitor/reactors"
+-! echo non_existent_reactor > "monitors/$monitor/reactors"
+-! grep -q "\\[non_existent_reactor\\]" "monitors/$monitor/reactors"
++! echo non_existent_reactor > "monitors/$monitor/reactors" || false
++! grep -q "\\[non_existent_reactor\\]" "monitors/$monitor/reactors" || false
+diff --git a/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc b/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
+index 5a59432b1d..96de95edb5 100644
+--- a/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
++++ b/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
+@@ -17,13 +17,13 @@ echo printk > monitors/wwnr/reactors
+ load
+ 
+ echo 0 > monitoring_on
+-! load
++! load || false
+ echo 1 > monitoring_on
+ 
+ load
+ 
+ echo 0 > reacting_on
+-! load
++! load || false
+ echo 1 > reacting_on
+ 
+ echo nop > monitors/wwnr/reactors
 -- 
 2.54.0
 
