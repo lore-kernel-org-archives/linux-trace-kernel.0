@@ -1,128 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.35.192.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA4A28C5CB;
-	Thu, 25 Jun 2026 19:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0D137F737;
+	Thu, 25 Jun 2026 22:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.35.192.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782415353; cv=none; b=g2c3OC+Qel+ekbpm3S6PSZwXZB634OSm+7OqhKT+KRb9pvpT/ny815hKiubpwYauvk2PPys/Ha8ZVR3JPbUyTVTFPqmb6o1yp7hyXtuy3CJHniX4BwF/fzxoEby6n5++s+GEGTftepXlbEFnTXwHr0mnokLyTCFNoRPGU6979Wo=
+	t=1782425961; cv=none; b=sNpx4V8e+sL02nglSXR+ktvhXBKnTTYVioZI8nBod8z4RSTzsrTId14ED+Rg+1id8SbVpqFazw0nMXmFufsDYfTOuCYpsZPvZ0IRU4MWk8+fuXJy1m+nVpJG/91K9/urAjvr3QBYcg87GvaI7xYB1dTsUEkFZzHYfWU8IfptTfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782415353; c=relaxed/simple;
-	bh=2Txf9qrtG9xFluLwOAAnwEEQ+9CPQg1+MFCaHyW7GqM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=aFBCGwlvT2v1b81HGHCONrYWqIyYrwZZUeequMCA9FGdSKoY/xhIWqtVBN/F+WtwhAHM3qdsBczMmH0mTGpYF0anrN+gT47zz9vHvfIyaEfB3jCgdNtTNPO2eeHHFdJsgUEOqZnvMdi6sSsRvU3IRZJPJyMEobw6zL6wKD5ybGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvKr3PZe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782425961; c=relaxed/simple;
+	bh=hcicJlfK8T5L5/HEK78jokcPzZyJx5jTeAgBKwX0N7k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Disposition; b=OtNN6KLL2se6ta8EOwVGdgDvGmKm9evt+FFs9YorKraW8RU7PCqv0bO+HF5DO0dhpt5Iw+gh39vAGu7bPgYmbVfn2EPKRL0bVdFrjc45iap/FjX6jYFo6IsSYxvjbPt33SzUbPc4Vw9FMPhvBH9ZJB2JbchK6w43NuIKznbPkV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=fEBnOpob; arc=none smtp.client-ip=52.35.192.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvKr3PZe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8091F000E9;
-	Thu, 25 Jun 2026 19:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782415352;
-	bh=WnDS5j6lyeaeZIOZYGNYA3yrK95KQ7qc6yGTXVrMjFQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=VvKr3PZeX7jSfkhBXvRZF/pGRa5yn+mG6BinaFVmuNzoQ5PhPIIWhy2/1UUxx1e1g
-	 kc5vWDc4yzRS3iqPBagZ6kt+mryJBa6c6Gr+x5/2dvJYbFU5dGGEQSg/8HiLTv1GDW
-	 gQgW/jfq93EA/bwYELdwuKiPnKE8CVEj0QvTe/DpTi4OhG3aeCJ+hGHBEy6JvK83Js
-	 eYCa9/XrW+ms5Zkk7zfGCiRE8yg19Ukp/UJASML/vLapC3b34btcAVjN9QeUE0byNz
-	 YQaoL0kpPKmuXoV+fLwuddQFTrdlDC9BLVlEVyrorHzQhGGNS7qrEPgL+uKfVrAGoG
-	 hwFrk9CFbEHaw==
-Date: Thu, 25 Jun 2026 13:22:29 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Wang Han <wanghan@linux.alibaba.com>
-cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-    Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
-    Alexandre Ghiti <alex@ghiti.fr>, Masami Hiramatsu <mhiramat@kernel.org>, 
-    Mark Rutland <mark.rutland@arm.com>, 
-    Catalin Marinas <catalin.marinas@arm.com>, 
-    Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>, 
-    =?ISO-8859-15?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>, 
-    Deepak Gupta <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>, 
-    Conor Dooley <conor.dooley@microchip.com>, 
-    Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
-    Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com, 
-    xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com, 
-    jkchen@linux.alibaba.com, linux-riscv@lists.infradead.org, 
-    linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-    live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] scripts/sorttable: Handle RISC-V patchable ftrace
- entries
-In-Reply-To: <20260609063002.3943001-1-wanghan@linux.alibaba.com>
-Message-ID: <2a7abbb3-e2df-ab2a-087a-0e1604d188bb@kernel.org>
-References: <20260528082310.1994388-1-wanghan@linux.alibaba.com> <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com> <20260609063002.3943001-1-wanghan@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="fEBnOpob"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1782425960; x=1813961960;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gqfHYJGq1OA4xHUtal9D1MJSyJMcOMtM3Z2ja3x61Is=;
+  b=fEBnOpobgZYkytumD/TAhUknTBXpe75d7B4Y8ogCqKKE3U6Uf8CEeATq
+   n8v9ntkrK9shj8hheOO/Bn/hRR1xCuvXL1DcrH7y65oZXLSjUAkxKcq4v
+   gpK7SWLRYNSSnOfHC5lf6WYMDIO94l10DwXdC7mYyN+LyVx8EEjT+0P/B
+   UrkfRfrd9lrI8B5FuRwZ8CA7llB27tCyH02sF71K1pM+pnE84oSp89rvm
+   y04ESmXQtodCotpjXqpjAI2G46FJb10Aegx4RBSGELM94g95kF/mA+0ty
+   ELq8DQhP3z5ypZDcWPCnGbiBup3r4PLXhsiXc8Bxd9Rw9xWYRTwxQNVkc
+   w==;
+X-CSE-ConnectionGUID: ibPfposvRVi0YbYajB8Nqg==
+X-CSE-MsgGUID: i4hSxOCDQOyHW158eNz3YA==
+X-IronPort-AV: E=Sophos;i="6.24,225,1774310400"; 
+   d="scan'208";a="22299701"
+Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
+  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 22:19:17 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.111:11485]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.1.61:2525] with esmtp (Farcaster)
+ id 66017a07-fe43-45c5-b0e0-c45c7745dcbc; Thu, 25 Jun 2026 22:19:17 +0000 (UTC)
+X-Farcaster-Flow-ID: 66017a07-fe43-45c5-b0e0-c45c7745dcbc
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Thu, 25 Jun 2026 22:19:16 +0000
+Received: from dev-dsk-doebel-1a-7b355d76.us-east-1.amazon.com (10.169.119.5)
+ by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Thu, 25 Jun 2026 22:19:15 +0000
+From: Bjoern Doebel <doebel@amazon.de>
+To: Sasha Levin <sashal@kernel.org>
+CC: Bjoern Doebel <doebel@amazon.de>, <stable@vger.kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, David Howells
+	<dhowells@redhat.com>
+Subject: Re: [PATCH 5.15.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
+Date: Thu, 25 Jun 2026 22:19:00 +0000
+Message-ID: <aj2pQ2IPGP5eR2TO@amazon.de>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260625054005.0014.ringbuf-515@kernel.org>
+References: <20260624122351.2477592-1-doebel@amazon.de> <20260625054005.0014.ringbuf-515@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: EX19D042UWB004.ant.amazon.com (10.13.139.150) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Thu, Jun 25, 2026 at 06:41:58AM -0400, Sasha Levin wrote:
+> > [PATCH 5.15.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
+> 
+> I had to drop this one for 5.15. The upstream guard(raw_spinlock_irqsave)
+> conversion in ring_buffer_read_start() introduces a new
+> -Wdeclaration-after-statement warning on 5.15 (the guard variable ends up after
+> a statement), which the build flags as an
+> error there.
+> 
+> Could you respin a warning-free version for 5.15 (and 5.10, which has the same
+> problem)? E.g. hoisting the declaration or keeping the explicit
+> raw_spin_lock/unlock instead of guard() on these older trees.  6.6 and 6.1 are
+> already queued.
 
-On Tue, 9 Jun 2026, Wang Han wrote:
+Absolutely, I'll send a v2.
 
-> RISC-V uses -fpatchable-function-entry=8,4 when the compressed ISA is
-> enabled and -fpatchable-function-entry=4,2 otherwise. In both cases, the
-> patchable NOP area starts 8 bytes before the function symbol address.
-> The __mcount_loc entries therefore point at the patchable NOP area
-> associated with a function, while nm reports the function symbol at the
-> entry address used for the function range check.
-> 
-> After RISC-V selected HAVE_BUILDTIME_MCOUNT_SORT, sorttable started
-> applying that range check at build time. Without allowing entries just
-> before the reported function address, the mcount sorter treats valid
-> RISC-V ftrace callsites as invalid weak-function entries and writes
-> them back as zero. The resulting kernel boots with no ftrace entries,
-> breaking dynamic ftrace and users such as livepatch.
-> 
-> The failure is silent during the final link because zeroing weak-function
-> entries is an expected sorttable operation. At boot, those zero entries
-> are skipped by ftrace_process_locs(), so the only obvious symptom is that
-> the vmlinux ftrace table has lost valid callsites and ftrace users cannot
-> attach to them.
-> 
-> CONFIG_FTRACE_SORT_STARTUP_TEST also reports the table as sorted in this
-> state: it only checks that the __mcount_loc entries are in ascending
-> order, which a fully zeroed table trivially satisfies. The original
-> commit relied on this check and did not see the regression.
-> 
-> On an affected RISC-V QEMU boot with both CONFIG_FTRACE_SORT_STARTUP_TEST
-> and CONFIG_FTRACE_STARTUP_TEST enabled, the sort check still passes
-> while ftrace reports zero usable entries and the early selftests fail:
-> 
->   [    0.000000] ftrace section at ffffffff8101da98 sorted properly
->   [    0.000000] ftrace: allocating 0 entries in 128 pages
->   [    0.054999] Testing tracer function: .. no entries found ..FAILED!
->   [    0.172407] tracer: function failed selftest, disabling
->   [    0.178186] Failed to init function_graph tracer, init returned -19
-> 
-> Handle RISC-V like arm64 for the function-range check and allow
-> patchable entries up to 8 bytes before the function address.
-> 
-> With this fix, a RISC-V QEMU smoke boot with ftrace startup tests shows
-> the vmlinux ftrace table is populated and dynamic ftrace still works:
-> 
->   [    0.000000] ftrace: allocating 46749 entries in 184 pages
->   [    0.051115] Testing tracer function: PASSED
->   [    1.283782] Testing dynamic ftrace: PASSED
->   [    6.275456] Testing tracer function_graph: PASSED
-> 
-> Fixes: 0ca1724b56af ("riscv: ftrace: select HAVE_BUILDTIME_MCOUNT_SORT")
-> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
-> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Chen Pei <cp0613@linux.alibaba.com>
-> Link: https://lore.kernel.org/all/20260527113028.4b21a5de@fedora/
-> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
-
-Thanks, I'm going to pull this one out of the rest of your series since 
-this is clearly a fix and needs to go in sooner rather than later.  Queued 
-for v7.2-rc.
+Best,
+Bjoern
 
 
-- Paul
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
