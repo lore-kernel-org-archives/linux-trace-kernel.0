@@ -1,233 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4D43876B5;
-	Thu, 25 Jun 2026 01:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782352285; cv=fail; b=E1jW0qlbhVKqTjpLpMOYTRcqOcYjkS/N+dMzf9nPJEguTWgk4Nd6LspZSkp3sW6pI8TQTAR80CnS9zMcSIxPg3uNQtByRSLS7bR5oj8sRicbraZs2JAIiaAEEFxXLFxt8RnLDS8FrUF+sYrEBYifWf1FCAo48bAe13wwI2+yAXs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782352285; c=relaxed/simple;
-	bh=C6XVTJIElHpX+QIGCrdJpKCuNojy/oGKyvEu/s4PFVU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CAznpbx2SI0sliPySWgRa4q5I9K6U715OYKirzWsLHWaetbLlp/j9l322QhnV3YUClWuKLfuM8W4ORj63Qxy7UvhHOP3KKZbWvzpkKEsrIx1dM86LKq5SBB9IA4HUyGXtTugmibiQTpiLkv0VZgZIv+GY3R7lnx1cGdSYgCxyyc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dFlfRoD/; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F3A3A6B73
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 02:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782352882; cv=none; b=pdHEnDXsWy9PGp44VtjnEmdsmpusF9riJybdgj3pJxlJw0RYEmVZdLOzxUlChaOA/FQ20zLiPmV7lUBPUCW/j3DgvNXCbBBQYhaCJqKTv1WBKSucR/9CHH7pNNDMDOlo0YoVK3ERAK3DI7hf3coFdRAXhElGCK5mXV4rGzbUsqQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782352882; c=relaxed/simple;
+	bh=/gM/wzE6xLTNyKPirLgLD21U1HI/NdRJfB1ViZocnAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=JnLnU9zGWzw3YFfZ1qGNI5y0d+EAiJ+UbrWyaiunKXkwCBhNCfb2VFCd07fcwNexdLVTWgF1BL73fQQqi6IIVkRh7627Q6icOOyPPaZHpRH3dAlktFkz20IH4gepT5IZ9Ir9guqSAEHO0Sbna/s+dlssVCT6M08iXIAd5UEYTzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BKI1Bix4; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dFlfRoD/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782352280; x=1813888280;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=C6XVTJIElHpX+QIGCrdJpKCuNojy/oGKyvEu/s4PFVU=;
-  b=dFlfRoD/gWipGf6KBCNMgi8i47vCnuuGNQOnwvwcdAJhLEPeuP+u+lx5
-   w/pEfxKrHdCbrqAEt1FLLJMp77Bv7FCBxlWonfSSgiEbVpF5JhVbVCPcY
-   C9rfnSIRa348uiZOss/2lsfvefcTtXPwhKUxRGlW8PF0BKpko175h88yp
-   J+VYTakQi7tRUVHvslrLTBy+S4SUP+i5KlaU3uApcDDiuPhgRmsathWh0
-   2CDZf+tDF9B8BLz1D8a+0HeIxzG+RN8ddcUeBb8/ATK7kE2lkpJWw8Jwk
-   9vEY5gxMe18eVxte44yw5wFTCE+S6Z08cGusneE7VOjL17eucEdZQ/ivV
-   A==;
-X-CSE-ConnectionGUID: S+3ezXrmTSeasHEYsZyQ0w==
-X-CSE-MsgGUID: rMyYols9Tb+MhyHUWMxMOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11827"; a="93725080"
-X-IronPort-AV: E=Sophos;i="6.24,223,1774335600"; 
-   d="scan'208";a="93725080"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2026 18:51:19 -0700
-X-CSE-ConnectionGUID: xb94SW6qRfKVT6UkgtGKGg==
-X-CSE-MsgGUID: vyio9+qGQJqjF0Wl36Jifg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,223,1774335600"; 
-   d="scan'208";a="255034145"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2026 18:51:18 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 24 Jun 2026 18:51:17 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Wed, 24 Jun 2026 18:51:17 -0700
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (40.93.195.8) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 24 Jun 2026 18:51:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uHkAioOCye0cirRm05e2c+IvyIhRMauMWbz8kQmZDq8GkyJy1H2aanz1cgkMQ01vVwOVb4wc+X1nyf78ZCG4cbip6prraIBa0TQuLRkHa5ztbPCQ6YzAPZ3lLhXpVK0uCEvNsqn1JeNZWF9eYLxPb903H0CVGB9d2gTmxxssuIepKdTa6L2pY0fksZU3VAFgq0aT0TLfW1zqv7NVXKDhwRTJ/BxqyAty95wYelMvFN7XVWU0ZeS69guRRAoOqaST8r3SZc8a0mDRQN2F1ALzkjGeZt11jNGlPidsRu/SY5rsfP6w5ugYXO++UI66EqIbZHDRh+KcihAr+WR532OYFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gpqZ7AB4PddwUfgiSvXzYuwNvPjiNpm1Ysu2T/OYD2c=;
- b=vZ3ewn1VB8YTmUulGeMU3O1lkeyAb1OkKx1DfotgDxHc3un+CojbTJ7AlI/IXPjAGUtQlbjtmoieqMKJiwfUvOvw4m4o3ZhNiO2idIDdmRFFqa9x4ZbzWn+8HGnWpqbNl2CoCX+wOXHFu+4/yn1T25VfMfjIUkLcdV2M3F4Z6Uz3C68N+aMlfD5xZyVEs8c/fcLkPPQP1FzdsFTCDt8jynGw1dANxilPwBiTAv4g/3ZA9/2Wyw/rBD8c5oV+4VwV+YvtDsuk1MjMkBDx2QkLd+44XapE43nhqcwjklLTCD9/E1sIzjr/YG0faKK5hdm2J5VNZDrFA7G6RvNPyxt/ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB7468.namprd11.prod.outlook.com (2603:10b6:806:329::21)
- by DM4PR11MB5293.namprd11.prod.outlook.com (2603:10b6:5:390::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.13; Thu, 25 Jun
- 2026 01:51:14 +0000
-Received: from SN7PR11MB7468.namprd11.prod.outlook.com
- ([fe80::c17a:b7fa:6361:dbee]) by SN7PR11MB7468.namprd11.prod.outlook.com
- ([fe80::c17a:b7fa:6361:dbee%7]) with mapi id 15.21.0139.018; Thu, 25 Jun 2026
- 01:51:14 +0000
-Date: Thu, 25 Jun 2026 09:51:01 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Ackerley Tng <ackerleytng@google.com>, <aik@amd.com>,
-	<andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>, <brauner@kernel.org>,
-	<chao.p.peng@linux.intel.com>, <david@kernel.org>, <jmattson@google.com>,
-	<jthoughton@google.com>, <michael.roth@amd.com>, <oupton@kernel.org>,
-	<pankaj.gupta@amd.com>, <qperret@google.com>, <rick.p.edgecombe@intel.com>,
-	<rientjes@google.com>, <shivankg@amd.com>, <steven.price@arm.com>,
-	<tabba@google.com>, <willy@infradead.org>, <wyihan@google.com>,
-	<forkloop@google.com>, <pratyush@kernel.org>, <suzuki.poulose@arm.com>,
-	<aneesh.kumar@kernel.org>, <liam@infradead.org>, Paolo Bonzini
-	<pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, Axel Rasmussen
-	<axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
-	<weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, Qi Zheng
-	<qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau
-	<kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-coco@lists.linux.dev>
-Subject: Re: [PATCH v8 24/46] KVM: guest_memfd: Make in-place conversion the
- default
-Message-ID: <ajyJhZcgfYFtGfS2@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-24-9d2959357853@google.com>
- <aji/2svhcc84rn5w@yzhao56-desk.sh.intel.com>
- <CAEvNRgHYTFnHbsLLgMTCSitmnp1_j9Pomikm9qmpGTh1w8YE5Q@mail.gmail.com>
- <ajx5Vrz9ma--hrGH@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ajx5Vrz9ma--hrGH@google.com>
-X-ClientProxiedBy: KUZPR01CA0025.apcprd01.prod.exchangelabs.com
- (2603:1096:d10:26::6) To DS0PR11MB7457.namprd11.prod.outlook.com
- (2603:10b6:8:140::18)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BKI1Bix4"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260625020116epoutp04381bb491002d233e41cf15916cbb19c7~8MH_ORAII2353223532epoutp04w
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 02:01:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260625020116epoutp04381bb491002d233e41cf15916cbb19c7~8MH_ORAII2353223532epoutp04w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1782352876;
+	bh=rqciwAtiNjhmxE6qraKNhQ+B1MTRFF85VVu7t9VeR/Y=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=BKI1Bix411MlJX/P3pVhpK/c4N8xqR83Ey6oNz4fmS3j3sGvK7zynFNpoPfN6G85X
+	 UurwoLqyu3BYHnecUTrRzc3FjYJDDQ985NkDEqvSHWMVhBxfkqn5JRkTx0Fj+wegMh
+	 KSaJM4/M4uiIu75q66xMoqMExAd/moj912mDOgDo=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260625020116epcas5p38700649bc16267a411e909ea482fc18a~8MH99STCF0536605366epcas5p3z;
+	Thu, 25 Jun 2026 02:01:16 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.89]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4gm28q6YQxz6B9mG; Thu, 25 Jun
+	2026 02:01:15 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20260625015930epcas5p33fa9d4833d45b53597e2994fb9ec2577~8MGaqDO8k2255722557epcas5p3_;
+	Thu, 25 Jun 2026 01:59:30 +0000 (GMT)
+Received: from hexue-PowerEdge-R7625.. (unknown [109.105.118.129]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260625015929epsmtip2d4550d10c526f641965e1d2d4cc8e647~8MGZ0aT2G2157721577epsmtip2a;
+	Thu, 25 Jun 2026 01:59:29 +0000 (GMT)
+From: "xiaobing.li" <xiaobing.li@samsung.com>
+To: bhelgaas@google.com, logang@deltatee.com, m.szyprowski@samsung.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: kun.dou@samsung.com, peiwei.li@samsung.com
+Subject: [RFC PATCH 0/0]  PCI P2PDMA: Add observability support via
+ tracepoints, debugfs, and sysfs.
+Date: Thu, 25 Jun 2026 09:59:27 +0800
+Message-ID: <20260625015927.5704-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB7468:EE_|DM4PR11MB5293:EE_
-X-MS-Office365-Filtering-Correlation-Id: 691001c7-a1dc-48fb-ff1c-08ded25c3cbc
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|366016|56012099006|11063799006|4143699003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: 3P/8TwxqHtqh/YIyX3wbjw4VAp7tPQn+GPWGyn6jlbJnVFqKsDQ+4v9Z1f6OcPcKiTWjOk5ntnfZ1vcheEXT1kX122oaPdbwVyCqCVP10KrwZSNKXwfNgFkzPKplnsNjPN2ib+KkdjtMZHLey5MbyX9uDbuVluMpnOzmkS4DmUOYXjUQbXUNuDh/+ZzhSdNu3Daxu7TLrhPiE87Paovrwwix3J+40Ijj+zEqAtHIqZNVeWwnJm6LKVWUezNZOsZekF3jXMT11HAAD1bPdFlQ/qPVP4SHloKx1lDFuCtUsWKZUeR4U0pISNgGdje9QPo8LUikkoFa0oXXugMCW5Q0BRd75V0vZzI5xXOFnUsyUqQka3LOZO5SDtaY6j2x36uxXl5bI8/AHWwdr/UW7SdYTNEuVWMUeW50z+C1UrdDGl3Sy0fil29dTDwinXb8W5y1/WFAQ4T+UsOh1anMZ3YoiULQSWbyUmJiPTQtrc0Uo6gEvvWHv5zatWB9uMXHiqVmoIKW9+TNBYDLfG5E9bT/ZhoWrsYmtp1BDI4d3Cw4LTHZL1gBod9TdM1hqDBKDYkqEFhYTXTCUoi9wpdvydArG7mItA6jEmkawYUBByGdXa/ys4N4GP2GdqOYvV8pjSGWlGZscc5327MwnnL+VY+mkD5UYd1tGCWbfL9iMI/axFY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7468.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(366016)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Pb4uAPpBfkDox81EsdlqZ/HaWIxTJBisWdg50pqqr3i8qa1fbmDUVrw3C/+h?=
- =?us-ascii?Q?NTvRsEVnaN/RXupCZOx11+3JElw6gzlfK9qeVuZGBTZuzOf9AZnXFCmPs+Bq?=
- =?us-ascii?Q?4a+Q5E35b1rs89APj4wpEbpF/96R0BaLHCAHlf3/ZNA+uswZ0X02Hx4HOBg4?=
- =?us-ascii?Q?Ow+BK++X/nO/CS9cPW5ZTxj+bCYXttdQNkrK0ErEscF3i1GlaVz+vYGjAxaA?=
- =?us-ascii?Q?cPlvhtoMf7O43SxxqjkwR+wNPNmCe0q+D7rQyFqak5BDc0BiPGarLIdw2yHv?=
- =?us-ascii?Q?nAVvvmT5rTvVL53sNFacANQ1IOUJt5aR0phTW4Rprznz8qUC6AuSSd5hrcfN?=
- =?us-ascii?Q?hMxFQHtevyA8mmdjY/sCUphpAfV9yZfpkzgWOR+da2sUcOsoU9yd13iJv4l3?=
- =?us-ascii?Q?tk9RdbqDArWJJ3E29oUzWN8lFVml/cNIcy24sMpytEbxV0hmhd/2UfJ8EG7Z?=
- =?us-ascii?Q?v4NCQyINfQYmfe/qht3HfVUkcbM9ZjA2dMdMT6dSv8Cx9FQlCWFUT5P0IXoT?=
- =?us-ascii?Q?Du455NB20heD6b37xUV9i9+1PkfjXZBcfbDyRpHyuGSWC2O+m5Y5iyvaazI9?=
- =?us-ascii?Q?7xirikYsOA12JMDTBOz8AKdfeMA/MGTY0EgzXGbyLdOtRJ8psQtfPdOWirhW?=
- =?us-ascii?Q?hofVkse0DfS4VcL0aKPEqp5Hu5Ry1DEqqHBtnw/kEJrLPMDr9/gXS/p04Dw+?=
- =?us-ascii?Q?TC9AVJjSulzlDjJElzad53/z0KJTFHWg45qU1wY4s2x0emARxe0Ub45h7cER?=
- =?us-ascii?Q?0w8cgyovKX1l2PdUKC/XOOZZ2jBpNTv0hOELs53xKZaK6JcUtD/XZU1GYSvU?=
- =?us-ascii?Q?tcyDxAvys4ZDzmHH/1cq9th+FKPUN/a83Z1MX9I06mho4W0iDew28U8EI7Ue?=
- =?us-ascii?Q?P6naedlpJSytJk3qxI+aIclDjrsPOpNw9UfidLMXTd0vTRZt5zvgKfX4Cc+s?=
- =?us-ascii?Q?BdT++RZeq4u1h7mqLZLewmldtxqheE0iv11TIClyB7WRwb2auD7cRVyOfhhl?=
- =?us-ascii?Q?ze6EVoimmGiaYDHAyxokmUsyzAg2eeR4xBQStCDqWfDEBsdTWEcORLzV4ROP?=
- =?us-ascii?Q?4USncsml04nXadLh30DlOKzQmkM75wTyMxr/c5Qbc7NvwptjzDwizqs/q+dr?=
- =?us-ascii?Q?Psg3Yfd+mn4mWiA1zhPK0k3WEmh6eFYpB569zVyN8GRXL/A7hJfECKz0Bdsg?=
- =?us-ascii?Q?/xINkroDmIU84zomYek2EuALVAIq6TL/WbL9KOi2VT3F3axXv89QoCXKqVXd?=
- =?us-ascii?Q?cTUG7uuQkbXxoNbkHQtjO/uiKyeEXFsHJLJzo+ftroKWCkFzUIXJ3rujQTtl?=
- =?us-ascii?Q?XORoFcZA6KoYCCJxYZi4GMoQYC2uatk43m7X74papXeysZuc9Ob1CullW7TA?=
- =?us-ascii?Q?BjdpM/rd0VEbGBE59Sgq1hPHsT1HVLpLxQRY9mwbmXmRXN2UGOaHwBxwyZr4?=
- =?us-ascii?Q?5x4qPno4rwPmQxRK/yiiLPebtreReai4e9nSsPocCk49sX48CrTCWFsGssQT?=
- =?us-ascii?Q?No2+o9xYvjYmeej7V+LuJ2B8Zesz8lacfxB8sm+uNxPtFMR7wgz29sF/h30d?=
- =?us-ascii?Q?taIDUaYEod6oKV0vJePRx3lMrKAH9zezzdFvu4Oce3+yD0fMpzLBZYKLnLjc?=
- =?us-ascii?Q?cc9kUHKfqjCZcEQD91tcMkN4NRD5rrCKCsHvXg4sdObPzyAwxEG+si8VPaZw?=
- =?us-ascii?Q?kY63IYkqHNwGuQCzO6uVrPx7o7Qs/848BLv5gsJjurR29pDO1sDi1dLIZ2VT?=
- =?us-ascii?Q?OTk8beXL8Q=3D=3D?=
-X-Exchange-RoutingPolicyChecked: K3JI1c250hZVPM4jt2viKbnlvHnvC3MpVmQKWLG12KGBKpUbaJQJqvGsQTHUeh0ZpAOCh8l00yqnvlja9XdL7+hmE2+e/jgm7/1lFwPIdSuY1x4cVmE0JWPLY3auR4bdQaC71YTMUbhjpC1HlYc5DZ/YATcZCV0wNe8LbgjdQ0oI/CJVP9eoZZUFKTWCu3va/BA2+gR+INLTfWsil01Z4vDDZj8FdoHK2OmY/sWnO6uKG95fz1wv9u36a7epmvXSrpxfePuULhG+JsvUcYq6Wvdwl74DcDhAQjE2JfnXYEW8JzOG/SJK65X7/Py2zc6K7gedjESZMOQHDB9MUUWu/g==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 691001c7-a1dc-48fb-ff1c-08ded25c3cbc
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7457.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 01:51:13.9997
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ULT79I2hHVsbbzdlft9l+lnbu42yyBUQ9mzWVNug492V5EN6/ASJFJneGvDwak7lyHgvI/E/zUWYin96cFlx0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5293
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20260625015930epcas5p33fa9d4833d45b53597e2994fb9ec2577
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-505,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260625015930epcas5p33fa9d4833d45b53597e2994fb9ec2577
+References: <CGME20260625015930epcas5p33fa9d4833d45b53597e2994fb9ec2577@epcas5p3.samsung.com>
 
-On Wed, Jun 24, 2026 at 05:41:58PM -0700, Sean Christopherson wrote:
-> On Wed, Jun 24, 2026, Ackerley Tng wrote:
-> > Yan Zhao <yan.y.zhao@intel.com> writes:
-> > > With gmem_in_place_conversion=true, userspace can create guest_memfd without the
-> > > MMAP flag. In such cases, shared memory is allocated from different backends.
-> > > This means this module parameter only enables per-gmem memory attribute and does
-> > > not guarantee that gmem in-place conversion will actually occur.
-> 
-> KVM module params are pretty much always about what KVM supports, not what is
-> guaranteed to happen.
-> 
->   - enable_mmio_caching doesn't guarantee there will actually be MMIO SPTEs,
->     because maybe the guest never accesses emulated MMIO.
->   - enable_pmu doesn't guarantee VMs will get a PMU, because userspace may elect
->     not to advertise one.
->   - and so on and so forth...
-> 
-> Yes, there's a small mental jump to get from "KVM supports in-place conversion"
-> to "I need to set memory attributes on the guest_memfd instance, not the VM",
-> but I don't see that as a big hurdle, certainly not in the long term.  And once
-> the VMM code is written, I really do think most people are going to care about
-> whether or not KVM supports in-place conversion, not where PRIVATE is tracked.
-Sorry, I just saw this mail after posting my reply in [1].
+Hi all,
 
-I'm ok with gmem_in_place_conversion=true just means KVM supports in-place
-conversion, while we can still create VMs with shared memory not from gmem.
+The Linux kernel's P2P DMA infrastructure is already very mature, but currently it is not user-friendly in terms of metric observability. 
+For example, without manually adding logs, there is no intuitive data to see how many P2P transfers, which paths are taken, 
+    and how performance is. It is impossible to clearly observe P2PDMA activity from user space, making the following operations difficult:
 
-Though it still feels a bit odd to require TDX huge pages to depend on
-gmem_in_place_conversion=true when shared memory is not currently allocated from
-gmem, it should become more natural over time once gmem supports in-place
-conversions for huge page.
+- Diagnose the reasons why P2PDMA may not work (or perform poorly).
 
-[1] https://lore.kernel.org/all/ajyCn0PnFtQK+Nka@yzhao56-desk.sh.intel.com
+- Verify whether the P2PDMA mapping uses the expected type (BUS_ADDR or THRU_HOST_BRIDGE)
+
+- Monitor the use of P2PDMA in production environments
+
+- Detect potential memory leaks (unmapped allocations)
+
+P2PDMA is a subtle feature. When P2PDMA mapping cannot use BUS_ADDR (Direct PCIe Switch Path), it silently falls back to the THRU_HOST_BRIDGE, 
+       routing traffic to the host bridge. This significantly reduces performance (usually by 10 times or more), but it cannot be detected 
+       from user space.
+
+Therefore, I plan to export some metrics in the user space to better observe P2PDMA activity.
+This series of solutions adds three layers of observability:
+
+1. Tracepoints (5 events, optional, no overhead when disabled)
+
+- p2p_dma_alloc: P2P memory allocation
+
+- p2p_dma_free: P2P memory release
+
+- p2p_dma_map: P2P DMA mapping (including client/provider, mapping type,
+
+PCIe distance and process information)
+
+- p2p_dma_unmap: P2P DMA removes mapping
+
+- p2p_map_type_change: New mapping type calculations (xarray missed)
+
+All tracking points include the calling process (comm pid), enabling P2PDMA activity tracking for each process.
+
+Example:
+
+$ cat /sys/kernel/debug/tracing/trace | grep p2p_dma_map
+
+nvme[1234] map nvme0 -> p2p_mem type=BUS_ADDR dist=4
+
+python[5678] map nvme1 -> p2p_mem type=THRU_HOST_BRIDGE dist=8
+
+2. Debugfs (global cumulative counter, always available)
+
+- /sys/kernel/debug/pci-p2pdma/
+
+- 11 counters: total_mappings, bus_addr_mappings, host_bridge_mappings,
+
+total_allocations, error_count, etc.
+
+- Enable the calculation of the "BUS_ADDR ratio" to quantify the effectiveness of P2PDMA.
+
+3. Sysfs (Statistical Information for Each Device, Production Environment Safety)
+
+- /sys/bus/pci/devices/*/p2pmem/stats/
+
+- 4 attributes: alloc_count, free_count, mapped_bytes, peak_mapped_bytes
+
+Performance impact
+
+- Tracking point: Static branch, zero overhead when disabled (by default).
+
+- Debugfs/sysfs: atomic64_t counter, no locking, negligible overhead
+
+- After disabling all observability, the P2PDMA thermal path remains unchanged
 
 
-> > > To avoid confusion, could we rename this module parameter to something more
-> > > accurate, such as gmem_memory_attribute?
-> > 
-> > I asked Sean about this after getting some fixes off list. Sean said
-> > gmem_in_place_conversion is named for a host admin to use, and something
-> > like gmem_memory_attributes is too much implementation details for the
-> > admin.
-> > 
-> > Sean, would you reconsider since Yan also asked? If the admin compiled
-> > the kernel knowing what CONFIG_KVM_VM_MEMORY_ATTRIBUTES means, then the
-> > admin would also be able to use a param like gmem_memory_attributes?
-> 
-> No, because it's not all memory attributes, it's very specifically the PRIVATE
-> attribute that will get moved to guest_memfd.  I don't want to pick a name that
-> will become stale and confusing when RWX attributes come along.  The RWX bits
-> will be per-VM, while PRIVATE will be per-guest_memfd.
+I would appreciate feedback on:
+
+1. Is the overall solution worth implementing?
+2. Is the set of tracepoints appropriate? Any events I'm missing?
+3. Are the tracepoint fields sufficient for debugging?
+4. Is the debugfs/sysfs interface design acceptable?
+5. Any concerns about the implementation approach?
