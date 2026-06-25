@@ -1,153 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3B13DB96F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jun 2026 12:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDCE3D891E;
+	Thu, 25 Jun 2026 12:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389855; cv=none; b=sY5jq0hGzkmIfMRMBgRDuaDKiwic2cX9idZiuyfZA6LDkcburLyV7h0Ev5F5vahGLcgXvkOdEg+P1hwLaslENPuDQAvJ7RQ+Z7BaRgOBvHbcOyf6bwXIE9K9ZaVHAjUhjkO/mMfhBJXLaU3Gzlje6rFeQHGhRnjbaEvEblW3RPc=
+	t=1782390189; cv=none; b=ojC8Asad8eQC0yVm1pJlVhqFuhNfAUmBDDdwnfJdfmos2tSo8d0QloC9q7FkJkR6HGrKC04ydZtE6B76qhUOk+ZItz+yH+pm4jHFSx+/ymfTuA9wwOEmJcgfg3nb/LwEofvPTt6QrZxlXE5ReDXak+110JrCquaH1UGAzK/36Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389855; c=relaxed/simple;
-	bh=OIqt4eNxuZeWLvQ5uF6lgHISsxTSpgtkOwdAl/opFXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=i8XQwQGSaC9rIFzA0UNnJEx5T66Hgj1FD81BInMQhw72kN32/J5YZLGxGYbD5F351WcKslsIujr32HE33ErdT8dhp0SRZdI25bnvRRc46jI+z+OK7NItcGDK9r1qBpSx7Td7X1CwjEn8uNFxYjRKx/sXbqk0+QPC1ostbKGiN5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ffi9NBaa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782390189; c=relaxed/simple;
+	bh=LDEE5G+NOHafeWW3BlHXZZmLZjy75Uy70/2e9B7rEys=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=M06yUXymHRVUglGox4sExXvDphKhNWhI/l0yZww4sOsf0uPi7zaCKy5UsacY18N0xw00lEFUl7s6l+Qyr5tf69y7ZxtSiBbDLYgvfjbOTHHLdf+81krXmlxpQNXIFmaxV6d+2+x8RlsU8zLGIHOdlRyoOEJEC455KhJmB3SfpoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Pu82SVzy; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ffi9NBaa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782389848;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xCubuEBtiGnb4xzpMnip+En2MyRkJl+KLec/mLKHQUs=;
-	b=ffi9NBaaqz8ol53qcJVO/F5a+U/k1nJxjSqzmAlNMZJwq98bm6diVUbuyJk7Y01uIau9vK
-	52r0qeK7qDiKQBR3ARrGmNuyGJkkGQxAysDmIOo96DYPF110NH7KRcpK8ZH+78g43pZ+ie
-	mI2DVU1U/z9zCv6RqpbSMiPPDiNO5Q8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-586-VX5xTTMTPDGM8eqzrxjTOw-1; Thu,
- 25 Jun 2026 08:16:17 -0400
-X-MC-Unique: VX5xTTMTPDGM8eqzrxjTOw-1
-X-Mimecast-MFC-AGG-ID: VX5xTTMTPDGM8eqzrxjTOw_1782389775
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA8B1195419F;
-	Thu, 25 Jun 2026 12:16:15 +0000 (UTC)
-Received: from fedora-pc.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E41FA30003B8;
-	Thu, 25 Jun 2026 12:16:12 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
-	Tomas Glozar <tglozar@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v3 17/17] selftests/verification: Add selftests for deadline and stall monitors
-Date: Thu, 25 Jun 2026 14:14:39 +0200
-Message-ID: <20260625121440.116317-18-gmonaco@redhat.com>
-In-Reply-To: <20260625121440.116317-1-gmonaco@redhat.com>
-References: <20260625121440.116317-1-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Pu82SVzy"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=DtTrF+dkMhH5wL9XVdpqg+EYpu4n3AZ8BvYl3aOQkWs=;
+	b=Pu82SVzyU7dKh9zHrrRfAFclb3zu86TYxOkI5vuEUY0eNHVES52yjxGbOXUnji1L3zyjo7tWr
+	hpk2IGB9tsONDex78SNwtga9xcWfokjgnOQKPcT90UfVu7TxF3D3zYuR7ULMeiC3bH5wmKsMKGO
+	95g0/YrBB8UU0mZl7x/5OaA=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4gmHlk23FBzmV6S;
+	Thu, 25 Jun 2026 20:13:54 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 820C140539;
+	Thu, 25 Jun 2026 20:23:00 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 25 Jun 2026 20:23:00 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 25 Jun 2026 20:22:58 +0800
+Subject: Re: [PATCH v9 4/6] mm/memory-failure: add panic option for
+ unrecoverable pages
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Andrew Morton
+	<akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+	<nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+	<lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>
+References: <20260609-ecc_panic-v9-0-432a74002e74@debian.org>
+ <20260609-ecc_panic-v9-4-432a74002e74@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <80c7ddaa-dd8c-1540-f72e-2a9a56aecdb1@huawei.com>
+Date: Thu, 25 Jun 2026 20:22:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: OaOrifFcob2nQLPtUH7Exh_sDhB-gWK0n5QO9nceCRk_1782389775
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+In-Reply-To: <20260609-ecc_panic-v9-4-432a74002e74@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
 
-Add selftests to verify deadline monitors don't fail under expected
-conditions and the stall monitor report violations only when expected.
+On 2026/6/9 18:56, Breno Leitao wrote:
+> Add a sysctl panic_on_unrecoverable_memory_failure (disabled by
+> default) that triggers a kernel panic when memory_failure()
+> encounters pages that cannot be recovered.  This provides a clean
+> crash with useful debug information rather than allowing silent
+> data corruption or a delayed crash at an unrelated code path.
+> 
+> Panic eligibility is intentionally narrow: only MF_MSG_KERNEL with
+> result == MF_IGNORED panics.  After the previous patch, MF_MSG_KERNEL
+> covers PG_reserved pages and the kernel-owned pages promoted from
+> get_hwpoison_page() via -ENOTRECOVERABLE (slab, page tables,
+> large-kmalloc).
+> 
+> All other action types are excluded:
+> 
+> - MF_MSG_GET_HWPOISON and MF_MSG_KERNEL_HIGH_ORDER can be reached by
+>   transient refcount races with the page allocator (an in-flight buddy
+>   allocation has refcount 0 and is no longer on the buddy free list,
+>   briefly), and panicking on them would risk killing the box for what
+>   is actually a recoverable userspace page.
+> 
+> - MF_MSG_UNKNOWN means identify_page_state() could not classify the
+>   page; that is precisely the wrong basis for a panic decision.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- .../verification/test.d/rv_deadline.tc        | 21 ++++++++++++
- .../selftests/verification/test.d/rv_stall.tc | 33 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 tools/testing/selftests/verification/test.d/rv_deadline.tc
- create mode 100644 tools/testing/selftests/verification/test.d/rv_stall.tc
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
 
-diff --git a/tools/testing/selftests/verification/test.d/rv_deadline.tc b/tools/testing/selftests/verification/test.d/rv_deadline.tc
-new file mode 100644
-index 0000000000..b583096bed
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_deadline.tc
-@@ -0,0 +1,21 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test deadline monitors trigger no reaction
-+# requires: available_reactors deadline:monitor printk:reactor stress-ng:program
-+
-+load() { # returns true if there was a reaction
-+	local lines_before
-+	lines_before=$(dmesg | wc -l)
-+	stress-ng --cpu 2 --sched deadline --sched-period 100000000 --sched-deadline 100000000 --sched-runtime 20000000 -t 5 &
-+	stress-ng --cpu 2 --sched rr --sched-prio 50 --cyclic 1 --cyclic-policy rr --cyclic-prio 50 -t 5 &
-+	wait
-+	dmesg | tail -n +$((lines_before + 1)) | grep -q "rv: monitor [a-z]\+ does not allow event"
-+}
-+
-+echo 1 > monitors/deadline/enable
-+echo printk > monitors/deadline/reactors
-+
-+! load || false
-+
-+echo nop > monitors/deadline/reactors
-+echo 0 > monitors/deadline/enable
-diff --git a/tools/testing/selftests/verification/test.d/rv_stall.tc b/tools/testing/selftests/verification/test.d/rv_stall.tc
-new file mode 100644
-index 0000000000..8e9bcbb441
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_stall.tc
-@@ -0,0 +1,33 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test stall monitor
-+# requires: available_reactors stall:monitor printk:reactor stress-ng:program
-+
-+THRESHOLD=/sys/module/stall/parameters/threshold_jiffies
-+
-+load() { # returns true if there was a reaction
-+	local lines_before cpu
-+	cpu=$(($(nproc) - 1))
-+	lines_before=$(dmesg | wc -l)
-+	stress-ng --cpu 1 --taskset "$cpu" --sched rr --sched-prio 1 -t 3 &
-+	stress-ng --cpu 5 --taskset "$cpu" -t 3 &
-+	wait
-+	dmesg | tail -n +$((lines_before + 1)) | grep -q "rv: monitor stall does not allow event"
-+}
-+
-+echo 5000 > $THRESHOLD
-+echo 1 > monitors/stall/enable
-+echo printk > monitors/stall/reactors
-+
-+! load || false
-+
-+echo 0 > monitors/stall/enable
-+echo 70 > $THRESHOLD
-+echo 1 > monitors/stall/enable
-+
-+load
-+
-+echo nop > monitors/stall/reactors
-+echo 0 > monitors/stall/enable
-+
-+echo 1000 > $THRESHOLD
--- 
-2.54.0
-
+Thanks.
+.
