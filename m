@@ -1,81 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBCA3BB673;
-	Fri, 26 Jun 2026 16:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A95478F2F;
+	Fri, 26 Jun 2026 19:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782491265; cv=none; b=INrdZO7wvd5Y1umRdinJuB46fj7kIz29o/JOQZcoNZhCxcuTnsFdNfE1dkJVOdtduugDM+aJcl2ehZgRo/PScOmFYUll6KYU1NvTFROQq/bZkEtg3ygGBl+hkoq55MAlm0/A2EEad3rcNZPrly/sfTpYzsfLmkz5dVpBUcp0qxY=
+	t=1782500614; cv=none; b=JaZbmRDsZ6shVSgxzDlT4v5srXQUQJrCw9Kpuw1E+dYj+nRNr+jxfm93PkO8KmJ9myYHcEkGOjkmWySN8nR+td8LRDWUrGwjJRKgEsufL2adhqQDaSLBzb05FXA6KutV+rsCGcD68ovkDol0HaURJm86AKIWWv67hZbUduyuV3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782491265; c=relaxed/simple;
-	bh=ImorTgLxdVBZ8KA+SoiC+IQN13SzOs8n+JsQl8npZi0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=eYM4YETvcsRI+riLQCfY8bHNooqQ6aiflZ/L6THqVo3F/G+EnJch47x3xeBKAwtHvZ+ZmVsqZSrs+Msi+pHgW1jKila4VIMV5S1Q0lUP0HgVY+Ii7lNjfPePzshii3vvEbyfj5Zd0+o48S1poZjnM/SE+YCVosR7yqryx931h0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PQqM6y8Z; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782500614; c=relaxed/simple;
+	bh=xgD+moCIk2s9p64pqwR5V1lvrLbSEMq1BO1aJJ5fuAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qwdr3UcRB5CEugn3LNBtMlbi0qE/Ce9LjL1kL4LQCb7TT6SsuZYTg0uh88H+O1P0KPaXxsHzzlLqlJbjqlSKhN56L+xDa6y8DXxNFQ50ldNxfjrpWAKbLo4Oci3BafhT077nA26lhqrZSHy7Wqud2imqToQeN/2+Fv5XXHyR0mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tw9iWJ3A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PQqM6y8Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129131F000E9;
-	Fri, 26 Jun 2026 16:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1782491263;
-	bh=6xdhB1h20JevoCIK0FA3vdUPT1iU5NQ8QI9Cuj4CG3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=PQqM6y8Zwq77LOJE9kupv7UIeWj6h/06JBTFkhuilrKOfhlxaX3dctYkVnn8BXe7h
-	 p4nJis+WgZhlJnu+H/F9D7juqnDnGg3pyP2kzyGY15N9xdJerS2x0e0oumg42fh6wU
-	 On9cS26zBQWDtUbm0SoX4z0UCj+TB8vYPO5u5xAE=
-Date: Fri, 26 Jun 2026 09:27:42 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
- Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
- Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
- lance.yang@linux.dev, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-Subject: Re: [PATCH v10 0/6] mm/memory-failure: add panic option for
- unrecoverable pages
-Message-Id: <20260626092742.160c3c10196852f075b3f5e3@linux-foundation.org>
-In-Reply-To: <20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org>
-References: <20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tw9iWJ3A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10911F000E9;
+	Fri, 26 Jun 2026 19:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782500612;
+	bh=TyFl9GWmXNLl+QLk0gYGvkiIPobdLVhGYz9j6ia1saU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Tw9iWJ3AW/qVhYN7KGc/ZTiaZzg/3oECz+DiP4VJfyn3QB4fPWwrgNuAJIGNxs+V2
+	 gQMOySYXH+qHCB0JOy7ShmXUDJ864WlfuAmNSW4eC0jw1v5I1DDn/MBUmLRwI+Zmn+
+	 Tvx68PQugVu+ljQ23TFRCcjPeBFQjWYKgQD+yv+Dj0NPAyY7KU1ce1064Yq2UJQHNh
+	 7PCVds29NYJupkBRTBhXtnaGXQquqVp6AN7Xp9L5f6IxL0XEVKpAcZfxaTF8hC29A2
+	 GZgsbwtmAy/ydDOu69TLhC+XE3g2v+Sxjbre9Fp/7W+UikRELgut2FYBWl4v+dv3IH
+	 ZX2QubJjR77jQ==
+Date: Fri, 26 Jun 2026 12:03:25 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Yury Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v4 2/2] tracing: Remove trace_printk.h from kernel.h
+Message-ID: <20260626190325.GA3913132@ax162>
+References: <20260625104007.041432666@kernel.org>
+ <20260625104402.210473477@kernel.org>
+ <20260625234158.GA261868@ax162>
+ <20260626045119.659d1e6b@fedora>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260626045119.659d1e6b@fedora>
 
-On Fri, 26 Jun 2026 08:33:14 -0700 Breno Leitao <leitao@debian.org> wrote:
-
-> A multi-bit ECC error on a kernel-owned page that the memory failure
-> handler cannot recover is currently swallowed: PG_hwpoison is set, the
-> event is logged, and the kernel keeps running.  The corrupted memory
-> remains accessible to the kernel and either drives silent data
-> corruption or surfaces seconds-to-minutes later as an apparently
-> unrelated crash.  In a large fleet that delayed, unattributable crash
-> turns into significant engineering effort to root-cause; in a kdump
-> configuration, by the time the crash happens the original error
-> context (faulting PFN, MCE/GHES record, page state) is long gone.
+On Fri, Jun 26, 2026 at 04:51:19AM -0400, Steven Rostedt wrote:
+> On Thu, 25 Jun 2026 16:41:58 -0700
+> Nathan Chancellor <nathan@kernel.org> wrote:
 > 
-> This series adds an opt-in sysctl,
-> vm.panic_on_unrecoverable_memory_failure, that converts an
-> unrecoverable kernel-page hwpoison event into an immediate panic with
-> a clean dmesg/vmcore that still contains the original failure
-> context.  The default is disabled so existing workloads see no
-> change.
+> 
+> > The following diff resolves it for me, should I send it as a separate
+> > patch or do you want to just fold it in with a note?
+> > 
+> > diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+> > index 621566345406..2301a701ffbb 100644
+> > --- a/include/linux/lockdep.h
+> > +++ b/include/linux/lockdep.h
+> > @@ -10,6 +10,7 @@
+> >  #ifndef __LINUX_LOCKDEP_H
+> >  #define __LINUX_LOCKDEP_H
+> >  
+> > +#include <linux/instruction_pointer.h>
+> 
+> Ah, so the reason for this breakage is because lockdep was relying on
+> instruction_pointer.h, that just happened to be included in kernel.h
+> via trace_printk.h.
 
-Cool, thanks.  I added this to mm.git's mm-new branch.  Next week I'll
-move it into the mm-unstable branch, where it will receive linux-next
-exposure.
+Correct.
 
-Sashiko identified a few possible things, some pre-existing:
+> This is a separate issue, so it should be a separate patch. I'll add it
+> as patch 1 of this series.
 
-	https://sashiko.dev/#/patchset/20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org
+Sounds good, thanks!
+
+> Can you send me the config you used. This didn't trigger in my tests.
+
+It is a plain allmodconfig, for example on arm:
+
+  $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- allmodconfig lib/test_context-analysis.o
+  In file included from include/linux/local_lock_internal.h:8,
+                   from include/linux/local_lock.h:5,
+                   from lib/test_context-analysis.c:9:
+  include/linux/local_lock_internal.h: In function 'local_lock_acquire':
+  include/linux/lockdep.h:541:87: error: '_THIS_IP_' undeclared (first use in this function)
+    541 | #define lock_map_acquire(l)                     lock_acquire_exclusive(l, 0, 0, NULL, _THIS_IP_)
+        |                                                                                       ^~~~~~~~~
+  include/linux/lockdep.h:509:88: note: in definition of macro 'lock_acquire_exclusive'
+    509 | #define lock_acquire_exclusive(l, s, t, n, i)           lock_acquire(l, s, t, 0, 1, n, i)
+        |                                                                                        ^
+  include/linux/local_lock_internal.h:46:9: note: in expansion of macro 'lock_map_acquire'
+     46 |         lock_map_acquire(&l->dep_map);
+        |         ^~~~~~~~~~~~~~~~
+  include/linux/lockdep.h:541:87: note: each undeclared identifier is reported only once for each function it appears in
+  ...
+
+I also reproduced it on top of allnoconfig:
+
+  $ cat allno.config
+  CONFIG_CONTEXT_ANALYSIS_TEST=y
+  CONFIG_DEBUG_KERNEL=y
+  CONFIG_DEBUG_LOCK_ALLOC=y
+  CONFIG_EXPERT=y
+  CONFIG_MMU=y
+  CONFIG_RUNTIME_TESTING_MENU=y
+
+  $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KCONFIG_ALLCONFIG=1 clean allnoconfig lib/test_context-analysis.o
+  <same error as above>
+
+-- 
+Cheers,
+Nathan
