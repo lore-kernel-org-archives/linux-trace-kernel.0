@@ -1,50 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90E53DB336;
-	Fri, 26 Jun 2026 15:45:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBCA3BB673;
+	Fri, 26 Jun 2026 16:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782488746; cv=none; b=NZCZr5RBuIx5ap8pwv67ZYF3chmXMc8cQITNoKMYlLJDO10YFHino6Ye4FPlRM4QtyM4an/Q3pusEdYXlKp2Rk5cQF+rnjV9FvNxqHwyrVeKxpSx0UAozVnvVZjz8KNZ0p3mP64s5EfX8l3Usaai6/PJP7o2VAotttmP3I+O2VQ=
+	t=1782491265; cv=none; b=INrdZO7wvd5Y1umRdinJuB46fj7kIz29o/JOQZcoNZhCxcuTnsFdNfE1dkJVOdtduugDM+aJcl2ehZgRo/PScOmFYUll6KYU1NvTFROQq/bZkEtg3ygGBl+hkoq55MAlm0/A2EEad3rcNZPrly/sfTpYzsfLmkz5dVpBUcp0qxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782488746; c=relaxed/simple;
-	bh=qZKptdCJSkMTTyABot2IPcwQP8mWC4AcZQJO2SalZCY=;
+	s=arc-20240116; t=1782491265; c=relaxed/simple;
+	bh=ImorTgLxdVBZ8KA+SoiC+IQN13SzOs8n+JsQl8npZi0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=B4ABxozuw88AOHwpHEeWi0Aiuosu7KXLj6ohXKzwt9CQuG9jYWe4HTNsNyQC8nz3MFd1azl58PAOquQn9nftSocUy00WHNDpWDcP4BoPa7OAvv0XEkxLbGabe39JFm1l4kR+6mBoqZRruolLGTkLQO+0xlYdqZHKINxYPA2EaeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VC7qYdhV; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=eYM4YETvcsRI+riLQCfY8bHNooqQ6aiflZ/L6THqVo3F/G+EnJch47x3xeBKAwtHvZ+ZmVsqZSrs+Msi+pHgW1jKila4VIMV5S1Q0lUP0HgVY+Ii7lNjfPePzshii3vvEbyfj5Zd0+o48S1poZjnM/SE+YCVosR7yqryx931h0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PQqM6y8Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VC7qYdhV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7691F000E9;
-	Fri, 26 Jun 2026 15:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782488741;
-	bh=5nNXMDWDKH1yXvqBFyPzRpjFWZl62kKodd/S4IBn1Ns=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PQqM6y8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129131F000E9;
+	Fri, 26 Jun 2026 16:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1782491263;
+	bh=6xdhB1h20JevoCIK0FA3vdUPT1iU5NQ8QI9Cuj4CG3U=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=VC7qYdhVzne83s+YIAuvUw/NmYE9soPzXB4P2iVw55hOY+jO4CyYTCyeVepIx8l9H
-	 Cvlk7Npk3OTX96bITvLGN8G3ug/rt2eYlsx4m1vpUS9GbFhbCqUrUTlx0dSUMKg246
-	 oLWm32k2CKgtCJvZDsR1mQ1VQubzZmVz4bvZARQzRJMLpfQK5bhe5b0gt7xYaBesVa
-	 9q6DAaKqi1KnwYjnPJYyVYRJ/Kk0SgTABl6lSMavU3nEnZsbeBgsCyjJ4MIRkyDx2v
-	 /jaWzYkWrDvuDy9vf+Ia2izcQLSaRqR4d9uZyFI07ErfKG6MCbZE3NlYMLwprHQdvq
-	 cgBt5DwvcteRQ==
-Date: Sat, 27 Jun 2026 00:45:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Martin Kaiser <martin@kaiser.cx>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: eprobe: read the complete FILTER_PTR_STRING
- pointer
-Message-Id: <20260627004538.4cc8b34a4a20ee14f9a38c28@kernel.org>
-In-Reply-To: <20260626064223.60ffeeaa@fedora>
-References: <20260615145500.2662456-1-martin@kaiser.cx>
-	<20260616110910.e6420488b6a798d49951cde9@kernel.org>
-	<ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
-	<20260618105227.c58c85e9cb19bce673d9a79b@kernel.org>
-	<ajasLMUt_AMM3ztH@akranes.kaiser.cx>
-	<20260622125815.7416792c020bd3d81c01e51b@kernel.org>
-	<20260626055440.76c28d25@fedora>
-	<aj5SdK9gUIVoPmmE@akranes.kaiser.cx>
-	<20260626064223.60ffeeaa@fedora>
+	b=PQqM6y8Zwq77LOJE9kupv7UIeWj6h/06JBTFkhuilrKOfhlxaX3dctYkVnn8BXe7h
+	 p4nJis+WgZhlJnu+H/F9D7juqnDnGg3pyP2kzyGY15N9xdJerS2x0e0oumg42fh6wU
+	 On9cS26zBQWDtUbm0SoX4z0UCj+TB8vYPO5u5xAE=
+Date: Fri, 26 Jun 2026 09:27:42 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Miaohe Lin <linmiaohe@huawei.com>, David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+ lance.yang@linux.dev, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH v10 0/6] mm/memory-failure: add panic option for
+ unrecoverable pages
+Message-Id: <20260626092742.160c3c10196852f075b3f5e3@linux-foundation.org>
+In-Reply-To: <20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org>
+References: <20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,44 +53,29 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 26 Jun 2026 06:42:23 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 26 Jun 2026 08:33:14 -0700 Breno Leitao <leitao@debian.org> wrote:
 
-> On Fri, 26 Jun 2026 12:20:36 +0200
-> Martin Kaiser <martin@kaiser.cx> wrote:
+> A multi-bit ECC error on a kernel-owned page that the memory failure
+> handler cannot recover is currently swallowed: PG_hwpoison is set, the
+> event is logged, and the kernel keeps running.  The corrupted memory
+> remains accessible to the kernel and either drives silent data
+> corruption or surfaces seconds-to-minutes later as an apparently
+> unrelated crash.  In a large fleet that delayed, unattributable crash
+> turns into significant engineering effort to root-cause; in a kdump
+> configuration, by the time the crash happens the original error
+> context (faulting PFN, MCE/GHES record, page state) is long gone.
 > 
-> > > That is, to have +u0() say "this is going to be dereferencing user space".  
-> > 
-> > > I'll add Martin's patch and see if it makes the above work.  
-> > 
-> > I've just tried your command with my patch. It works for me, filenames are
-> > logged correctly.
-> 
-> Yep, this definitely looks like a fix. We have;
-> 
-> 	addr = rec + field->offset;
-> 
-> Where addr points to the location of the field on the ring buffer, thus
-> your change to make it:
-> 
-> 	val = *(unsigned long *)addr;
-> 
-> Reads the full "long size" of the event on the ring buffer, instead of
-> reading just one byte. It is "val" that gets dereferenced later by the
-> probe logic (the "+0u()"), which has all the protections we need.
-> 
-> I'll queue this up.
+> This series adds an opt-in sysctl,
+> vm.panic_on_unrecoverable_memory_failure, that converts an
+> unrecoverable kernel-page hwpoison event into an immediate panic with
+> a clean dmesg/vmcore that still contains the original failure
+> context.  The default is disabled so existing workloads see no
+> change.
 
-I've already queued this on my probes/core branch.
-(which will be probes/fixes)
+Cool, thanks.  I added this to mm.git's mm-new branch.  Next week I'll
+move it into the mm-unstable branch, where it will receive linux-next
+exposure.
 
-Thanks,
+Sashiko identified a few possible things, some pre-existing:
 
-> 
-> Thanks!
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	https://sashiko.dev/#/patchset/20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org
