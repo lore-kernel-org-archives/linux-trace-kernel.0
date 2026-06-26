@@ -1,98 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC903E3DAB;
-	Fri, 26 Jun 2026 08:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B93288B8;
+	Fri, 26 Jun 2026 09:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782463887; cv=none; b=OTd11UIZpvmCNVNUzzMXj6oCtpU4gRRQKuwXUnGTF/KaCh0ryE2pr4Z0mYVYJld9v9+L856+uC/f8SPR9FFwAIenswL9MUc3vHNPlZ68qa3A9Easa01HMZ3PlC9ml5dy1fv60jpGAbfeFnxLY1HeKBoB5Dcq5svG+XRJgip29no=
+	t=1782465972; cv=none; b=eWklr7p7GvkkgZ5IhLuJmPj3xF4eX/08sL3BWE+brtSlMuPrCWt64f8ufcisjXQzjVRTrd1n4HN4rVjRtopkpXSYs9/lwj9I1tJlk1T9QE4Vq4XYKj27QVb9XiEU5xcI8b6onKggC6QM0Cg90VxlPXcxLjOulrD8Wlin5Kgvhn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782463887; c=relaxed/simple;
-	bh=72LW1Sqy+CyJluT8dJ+TRAWGIYqhMfoj0D3AB5ay3hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EqOoRqSNcWYnhnT9yQRZjaV08cPeRk7nSijS+easOoLCIpkZO5ydHJzsmT32rxIHXTjTbyJAqxPpUnJSr5KqlIKkq2WXS7rn79IOk+/KxtkVexSIJ0v6oxfQ3Ci8tlacvSD6G75y+qK7AXN41huxj1mNcTrjjxfWF9qCDwvWpzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuN86shS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782465972; c=relaxed/simple;
+	bh=ESLUukbTyuXFhgfd0D/+0BdDSoyQJQSXwbpAwcEaCdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ocrqiVUlNKnju2YNTzrQMNd+nMoKakc6UvzNtwvqBBi1JnzFawNuo1G8e2/dGBhMC1o04z5RtWMq2KsOevjH2Py17HwU3ZmSeBmvcKdTCt3a0hX2azvMj8w+cNXqkly2gm5v4WD4Nka/f4eLEGaE3a3sqcU1BMaQ2AkYF+SykdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LS6nu51m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tBCXf1Hk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuN86shS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55C131F000E9;
-	Fri, 26 Jun 2026 08:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782463886;
-	bh=dczgg0EG8SzCmQOx10ra7Wu7tyi/QlMQ5W656css9gI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ZuN86shSSyy0XeJHxDjAleAAh3O8h5DItrYs4TSav34bAuZW0MAx9ZBBE9S3nKp+q
-	 JUucAqzuWIOp1XCgdpd9P3oFXnLbWNeWduuAN7d3BLmln+qoARZNZxKF2O06nPeYv4
-	 1dAdVGA0JDyuC0sJVCZD2wvL+fK7VqCql7n7upa+dFP/qqyZ8tCeX05jqkcgPFDC5w
-	 tFX0+2mg/DvZd1BW9undZCZbfHnid5R0fV0ghRYpjUgkCITPyYbrNbnJWUD3Su88Bu
-	 iGHlEwHR4XUomu86ZdOshDLSTLNHrTMNbY7gs9BX+9uYtxaMeTpyySj/HlKZUt2HrK
-	 5/RKab/63CQEw==
-Date: Fri, 26 Jun 2026 04:51:19 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Thomas
- Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Julia
- Lawall <julia.lawall@inria.fr>, Yury Norov <yury.norov@gmail.com>,
- linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
- intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v4 2/2] tracing: Remove trace_printk.h from kernel.h
-Message-ID: <20260626045119.659d1e6b@fedora>
-In-Reply-To: <20260625234158.GA261868@ax162>
-References: <20260625104007.041432666@kernel.org>
-	<20260625104402.210473477@kernel.org>
-	<20260625234158.GA261868@ax162>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LS6nu51m";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tBCXf1Hk"
+Date: Fri, 26 Jun 2026 11:26:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1782465968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ESLUukbTyuXFhgfd0D/+0BdDSoyQJQSXwbpAwcEaCdQ=;
+	b=LS6nu51mQxNJD0vxddn78QN7H3lj1LTRjQW+ORQiyipYcUwrVFwHEkibqkaEULhxParD8/
+	iw9QTlFesyAoubBPzc7aRwLJNySviBG8aduI1U9oPb/I3Zj22ljHzgrzS8XKiVgamH6FdH
+	6YDdv76Ew69tKZga7l0umA+ayuqnH1QuKvGRLCkMbHpa1vSWYajShZIyQ1ElTGGCKZzrkv
+	R2tYve5VPiF6Tyz5SRTXG2EjxNbjZyG/l6+/AeNxusLzbUHX8PO9+B1ZKy833Ar5mPdi9R
+	LClabLtuA9IyjYlro5oLQLIWq5T8OArDhTGnjc5FIz3kk8OPewoOC424w01CLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1782465968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ESLUukbTyuXFhgfd0D/+0BdDSoyQJQSXwbpAwcEaCdQ=;
+	b=tBCXf1HkCRueAn/IedC0QdVKzSvGp657mso2UypEf0p2lW9nxZySEbfa7NtcpMQAUYl6Cv
+	Nr5yoNpBzC2jLvDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Wandun Chen <chenwandun1@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	akpm@linux-foundation.org, vbabka@kernel.org, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org,
+	ziy@nvidia.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, david@kernel.org, ljs@kernel.org,
+	liam@infradead.org, rppt@kernel.org, clrkwllms@kernel.org,
+	Alexander.Krabler@kuka.com
+Subject: Re: [RFC PATCH 1/3] mm/compaction: skip isolate mlocked folios when
+ compact_unevictable_allowed=0
+Message-ID: <20260626092606.7BgipTin@linutronix.de>
+References: <20260604023812.3700316-1-chenwandun1@gmail.com>
+ <20260604023812.3700316-2-chenwandun1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260604023812.3700316-2-chenwandun1@gmail.com>
 
-On Thu, 25 Jun 2026 16:41:58 -0700
-Nathan Chancellor <nathan@kernel.org> wrote:
+On 2026-06-04 10:38:10 [+0800], Wandun Chen wrote:
+=E2=80=A6
+> Reported-by: Alexander Krabler <Alexander.Krabler@kuka.com>
+> Closes: https://lore.kernel.org/all/DU0PR01MB10385345F7153F33410098188825=
+9A@DU0PR01MB10385.eurprd01.prod.exchangelabs.com/
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+> Link: https://lore.kernel.org/all/33275585-f2db-4779-89f0-3ae24b455a67@su=
+se.cz/ [1]
 
+Is it possible to get a Fixes tag on the final fix so that it can be
+backported stable?
 
-> The following diff resolves it for me, should I send it as a separate
-> patch or do you want to just fold it in with a note?
-> 
-> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-> index 621566345406..2301a701ffbb 100644
-> --- a/include/linux/lockdep.h
-> +++ b/include/linux/lockdep.h
-> @@ -10,6 +10,7 @@
->  #ifndef __LINUX_LOCKDEP_H
->  #define __LINUX_LOCKDEP_H
->  
-> +#include <linux/instruction_pointer.h>
-
-Ah, so the reason for this breakage is because lockdep was relying on
-instruction_pointer.h, that just happened to be included in kernel.h
-via trace_printk.h.
-
-This is a separate issue, so it should be a separate patch. I'll add it
-as patch 1 of this series.
-
-Can you send me the config you used. This didn't trigger in my tests.
-
-Thanks,
-
--- Steve
-
-
-
->  #include <linux/lockdep_types.h>
->  #include <linux/smp.h>
->  #include <asm/percpu.h>
-
+Sebastian
