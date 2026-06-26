@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466AC37C10C;
-	Fri, 26 Jun 2026 14:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C20B3F4DCC;
+	Fri, 26 Jun 2026 14:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782483340; cv=none; b=KOR+Z3fsleXJAzKdkeNEU1riv0qNx/tmdMYeQN/djSa8GelDdFBaf/Z99PJza9ehod901Ximp2OuKoaledbuHeUJmsfybyEoKJoNA+z/B0iZF/4NhqkYmXSLlB3fPBQ7t2/zGvcREn2d5KCOWQPGZFEW62/DPSz0D3SxyNe+7fQ=
+	t=1782483350; cv=none; b=FSTcDeHsyJNtka0Sfx1gaiMfGXCOeA1aM7lueJFpNegl9zMytQ8sAGv+orPiK4GWq5j7iLTxMDlJ27IWE6DlHw9xC2Ot/TiI8eaNcfTQ22mYEExWV0DKtj9OTGrwB9m9Pot304VOEUanFHMNb7EsvZNB86Yl5A+RTqWkwGx2mRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782483340; c=relaxed/simple;
-	bh=eCMo9aVONaip3q5b5DtUrfcWhARWP+kFqF52DM9Q3zA=;
+	s=arc-20240116; t=1782483350; c=relaxed/simple;
+	bh=drig70x3LDKb/KcxWYdMP7ptK8YdfuYh0CI1kyqzTUs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OXugsFFAPC3BPDKTxWAAsWxhC8wkO7dpKTgwnS6HErWXpgpZ9IGKyNgfA9t6ogaWwH80bR6Z9gkmC8acsMcOyf55jn84iQ+6JxUJxwhoE9pPti++KO2/m0bkeFroDE2KZfbl9ZwE8tXiqLyYK0zYrpKBtSusX7w6Mm1bdBHOOas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkkNxFA3; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=SAFzJx7Z17fvKGkyQy//zwCI1PDOsul8BQzag8SmsHoV/wqjwEwEMWCa2LFRkCywf6KD+IRYRvQXc3A0/K6qH6nleUDi9vCgHjqBSTL1If0WrGTcuEmYvNksWTJMkW+G7R3g+3ReAId/m0hrEu5iBv7+AO5HTJ0ox+QXtaXTrDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1X/XjHn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkkNxFA3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D1B61F000E9;
-	Fri, 26 Jun 2026 14:15:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1X/XjHn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542C11F000E9;
+	Fri, 26 Jun 2026 14:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782483338;
-	bh=revRSyWlFX1VZbewes3wJERg51uPaOy5r+JreHzpj+M=;
+	s=k20260515; t=1782483349;
+	bh=vuFV0DbmAe1vqGCg0Y3CpSUt5AojPHDM3aed7bIGyuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fkkNxFA39sCKtJIB/5+Z5GuJKC6bPKrhHI/Q+PNvqRjIDlQ+BX95rrn4Dypv+MLhY
-	 aJaX8dAd2a4z0IP/akYrSUbaXsJvUsvezbZ+xl+AnXewQF7BF6y0SCMBSbOMedZco+
-	 pi5bAZ++pDnknz3jIhr1onIjLXrJRhEQoQ0HklKfF79H77GyiJB3hZwNQETGEsJSkR
-	 2vO880ycDcfSJzzp+gDeZBEtzJl/suVhtyvVVy+QMNbMdfWAcusozqyNRuLFmGUAtv
-	 2SKWQX0XDgSkf5p2gr3B/biTW2FB5GDNwlkp0RxL7TLN9j7Er/io2Ke8ylIw7YxEtM
-	 Q77v/5gcAjp2w==
+	b=K1X/XjHnkdoYiMI4csGw0R6A26ts0jc9AwHVLfQ1/mb36NUA7Zcv7tqbSOHTF6WXp
+	 zmcoWOfC2qKbKcOW0qY+hzJCe06PZJcg36HHC0EhPKyw/kYeP+Jl79ulyWAbjm3NPE
+	 Dpd+tqTlG8Pk6E6cbaeM/3cKNrDeL7p8OxLThvvBnlI9Uvk1CFYLg/AGYgKep5tAvX
+	 Prb2BA9TzZw7GN7wnF90VWvcGrSzvo3H3hlAuMGmsnJsa9Xq/g6isq0JtHBYeVWCvf
+	 IMsv/a0jY1odp2nkNF/C63GdPWnajVumfHs+nLrlFs6jIlus9nx0wU35JnVsNFZQTv
+	 W0WNquS2nMubw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -36,9 +36,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v11 08/11] tracing/probes: Support field specifier option for typecast
-Date: Fri, 26 Jun 2026 23:15:34 +0900
-Message-ID: <178248333421.841606.13236575618384239705.stgit@devnote2>
+Subject: [PATCH v11 09/11] tracing/probes: Add $current variable support
+Date: Fri, 26 Jun 2026 23:15:44 +0900
+Message-ID: <178248334465.841606.6894609121925726269.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178248325671.841606.17344906774310339507.stgit@devnote2>
 References: <178248325671.841606.17344906774310339507.stgit@devnote2>
@@ -54,368 +54,182 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add a field specifier option for the typecast. This works like
-container_of() macro.
+Since we can use the BTF to cast value to a structure pointer type,
+it is useful to introduce "$current" special variable support to
+fetcharg.
 
-    (STRUCT[,FIELD[.FIELD2...]])VAR
+User can define a fetcharg to access current task_struct properties
+using BTF info. e.g.
 
-This is equivalent to :
-
-    container_of(VAR, struct STRUCT, FIELD[.FIELD2...])
-
-For example:
-
- echo "f tick_nohz_handler next_tick=(tick_sched,sched_timer)timer->next_tick" >> dynamic_events
-
-This will trace tick_nohz_handler() with its tick_sched::next_tick which
-is converted from @timer by contianer_of(tick, struct tick_sched, sched_timer).
-So, if you enabkle both fprobes:tick_nohz_handler__entry and
-timer:hrtimer_expire_entry events, we will see something like:
-
-
-          <idle>-0       [002] d.h1.  3778.087272: hrtimer_expire_entry: hrtimer=00000000d63db328 f
-unction=tick_nohz_handler now=3777450051040
-          <idle>-0       [002] d.h1.  3778.087281: tick_nohz_handler__entry: (tick_nohz_handler+0x4
-/0x140) next_tick=3777450000000
-
+  $current->cpus_ptr
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ Changes in v8:
+  - Avoid uninitialized ctx->btf issue on $current without typecast.
+ Changes in v7:
+  - Fix to use force-typecast for task_struct implicitly.
  Changes in v6:
-  - Update according to the allways nested patch.
+  - Rebased on dump fetcharg patch.
+  - Remove function name/eprobe requirement for $current.
+ Changes in v5:
+  - Use s32 for bof_find_btf_id().
+ Changes in v4:
+  - Add $current in README when CONFIG_HAVE_FUNCTION_ARG_ACCESS_API=y case.
+  - Fix to prohibit using $current in eprobes and address based kprobes.
  Changes in v3:
-  - Fix error caret position.
+  - Remove $current support from eprobes (because eprobes is only for event)
+  - Prohibit uprobes to use $current.
  Changes in v2:
-  - Use byteoffset for typecast field offset instead of bitoffset. This fixes negative modulo calculation.
-  - Check whether a field is specified after typecast.
-  - Reject if typecast field option  has arrow operator.
+   - Support to parse $current in parse_btf_arg().
+   - If no typecast on $current, it automatically casted to task_struct.
+   - Check error case if $current follows something except for "-".
 ---
- Documentation/trace/eprobetrace.rst |    5 +
- Documentation/trace/fprobetrace.rst |    8 +-
- Documentation/trace/kprobetrace.rst |    8 +-
- kernel/trace/trace.c                |    4 -
- kernel/trace/trace_probe.c          |  169 ++++++++++++++++++++++++-----------
- kernel/trace/trace_probe.h          |    5 +
- 6 files changed, 135 insertions(+), 64 deletions(-)
+ Documentation/trace/fprobetrace.rst |    1 +
+ Documentation/trace/kprobetrace.rst |    1 +
+ kernel/trace/trace.c                |    4 ++--
+ kernel/trace/trace_probe.c          |   37 ++++++++++++++++++++++++++++++++++-
+ kernel/trace/trace_probe.h          |    1 +
+ kernel/trace/trace_probe_tmpl.h     |    3 +++
+ 6 files changed, 44 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/trace/eprobetrace.rst b/Documentation/trace/eprobetrace.rst
-index cd0b4aa7f896..680e0af43d5d 100644
---- a/Documentation/trace/eprobetrace.rst
-+++ b/Documentation/trace/eprobetrace.rst
-@@ -49,7 +49,10 @@ Synopsis of eprobe_events
-   (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-                   a pointer to STRUCT and then derference the pointer defined by
-                   ->MEMBER. Note that when this is used, the FIELD name does not
--                  need to be prefixed with a '$'.
-+                  need to be prefixed with a '$'. ASGN can be specified optionally.
-+		  If ASGN is specified, FIELD will be cast to the same offset
-+		  position as the ASGN member, rather than to the beginning of
-+		  the STRUCT.
-   (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
- 		  also be used with another FETCHARG instead of FIELD.
- 
 diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 6b8bb27bb62d..290a9e6f7491 100644
+index 290a9e6f7491..3392cab016b3 100644
 --- a/Documentation/trace/fprobetrace.rst
 +++ b/Documentation/trace/fprobetrace.rst
-@@ -57,10 +57,12 @@ Synopsis of fprobe-events
-                   (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-                   (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-                   and bitfield are supported.
--  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-+  (STRUCT[,ASGN])FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-                   a pointer to STRUCT and then derference the pointer defined by
--                  ->MEMBER.
--  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-+                  ->MEMBER. ASGN can be specified optionally. If ASGN is specified,
-+		  FIELD will be cast to the same offset position as the ASGN member,
-+		  rather than to the beginning of the STRUCT.
-+  (STRUCT[,ASGN])(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-                  also be used with another FETCHARG instead of FIELD.
- 
-   (\*1) This is available only when BTF is enabled.
+@@ -50,6 +50,7 @@ Synopsis of fprobe-events
+   $argN         : Fetch the Nth function argument. (N >= 1) (\*2)
+   $retval       : Fetch return value.(\*3)
+   $comm         : Fetch current task comm.
++  $current      : Fetch the address of the current task_struct.
+   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
+   \IMM          : Store an immediate value to the argument.
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
 diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index c4382765d5b2..a62707e6a9f2 100644
+index a62707e6a9f2..81e4fe38791d 100644
 --- a/Documentation/trace/kprobetrace.rst
 +++ b/Documentation/trace/kprobetrace.rst
-@@ -61,11 +61,13 @@ Synopsis of kprobe_events
- 		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
-                   "string", "ustring", "symbol", "symstr" and bitfield are
-                   supported.
--  (STRUCT)FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-+  (STRUCT[,ASGN])FIELD->MEMBER[->MEMBER] : If BTF is supported, typecast FIELD to
-                   a pointer to STRUCT and then derference the pointer defined by
-                   ->MEMBER. Note that this is available only when the probe is
--		   on function entry.
--  (STRUCT)(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-+		   on function entry. ASGN can be specified optionally. If ASGN
-+		   is specified, FIELD will be cast to the same offset position
-+		   as the ASGN member, rather than to the beginning of the STRUCT.
-+  (STRUCT[,ASGN])(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above can
-                  also be used with another FETCHARG instead of FIELD.
- 
-   (\*1) only for the probe on function entry (offs == 0). Note, this argument access
+@@ -53,6 +53,7 @@ Synopsis of kprobe_events
+   $argN		: Fetch the Nth function argument. (N >= 1) (\*1)
+   $retval	: Fetch return value.(\*2)
+   $comm		: Fetch current task comm.
++  $current      : Fetch the address of the current task_struct.
+   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*3)(\*4)
+   \IMM		: Store an immediate value to the argument.
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e56ee034c486..5670c4b91dc0 100644
+index 5670c4b91dc0..2b0b4f9acb2e 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4322,8 +4322,8 @@ static const char readme_msg[] =
+@@ -4320,13 +4320,13 @@ static const char readme_msg[] =
+ 	"\t     args: <name>=fetcharg[:type]\n"
+ 	"\t fetcharg: (%<register>|$<efield>), @<address>, @<symbol>[+|-<offset>],\n"
  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
+-	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
++	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>, $current\n"
  #ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
--	"\t           [(structname)]<argname>[->field[->field|.field...]],\n"
--	"\t           [(structname)](fetcharg)->field[->field|.field...],\n"
-+	"\t           [(structname[,field])]<argname>[->field[->field|.field...]],\n"
-+	"\t           [(structname[,field])](fetcharg)->field[->field|.field...],\n"
+ 	"\t           [(structname[,field])]<argname>[->field[->field|.field...]],\n"
+ 	"\t           [(structname[,field])](fetcharg)->field[->field|.field...],\n"
  #endif
  #else
- 	"\t           $stack<index>, $stack, $retval, $comm,\n"
+-	"\t           $stack<index>, $stack, $retval, $comm,\n"
++	"\t           $stack<index>, $stack, $retval, $comm, $current\n"
+ #endif
+ 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
+ 	"\t     kernel return probes support: $retval, $arg<N>, $comm\n"
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 1b97b125e9cb..fd006b415c68 100644
+index fd006b415c68..999dec84275d 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -568,6 +568,64 @@ static int split_next_field(char *varname, char **next_field,
- 	return ret;
- }
+@@ -692,7 +692,9 @@ static int parse_btf_arg(char *varname,
+ 	int i, is_ptr, ret;
+ 	u32 tid;
  
-+/* Inner loop for solving dot operator ('.'). Return bit-offset of the given field */
-+static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **ptype,
-+				  struct traceprobe_parse_context *ctx)
-+{
-+	const struct btf_type *type = *ptype;
-+	const struct btf_member *field;
-+	struct btf *btf = ctx_btf(ctx);
-+	char *fieldname = *pfieldname;
-+	int bitoffs = 0;
-+	u32 anon_offs;
-+	char *next;
-+	int is_ptr;
-+
-+	do {
-+		next = NULL;
-+		is_ptr = split_next_field(fieldname, &next, ctx);
-+		if (is_ptr < 0)
-+			return is_ptr;
-+
-+		anon_offs = 0;
-+		field = btf_find_struct_member(btf, type, fieldname,
-+						&anon_offs);
-+		if (IS_ERR(field)) {
-+			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-+			return PTR_ERR(field);
-+		}
-+		if (!field) {
-+			trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+-	if (!ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT))
++	/* Note: field is not separated at this point, so check prefix. */
++	if (!str_has_prefix(varname, "$current") &&
++	    !ctx->funcname && !(ctx->flags & TPARG_FL_TEVENT))
+ 		return -EINVAL;
+ 
+ 	is_ptr = split_next_field(varname, &field, ctx);
+@@ -705,6 +707,20 @@ static int parse_btf_arg(char *varname,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (!strcmp(varname, "$current")) {
++		code->op = FETCH_OP_CURRENT;
++		/* If no typecast is specified for $current, use task_struct by default */
++		ret = bpf_find_btf_id("task_struct", BTF_KIND_STRUCT, &ctx->struct_btf);
++		if (ret < 0) {
++			trace_probe_log_err(ctx->offset, NO_BTF_ENTRY);
 +			return -ENOENT;
 +		}
-+		/* Add anonymous structure/union offset */
-+		bitoffs += anon_offs;
-+
-+		/* Accumulate the bit-offsets of the dot-connected fields */
-+		if (btf_type_kflag(type)) {
-+			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
-+			ctx->last_bitsize = BTF_MEMBER_BITFIELD_SIZE(field->offset);
-+		} else {
-+			bitoffs += field->offset;
-+			ctx->last_bitsize = 0;
-+		}
-+
-+			type = btf_type_skip_modifiers(btf, field->type, NULL);
-+			if (!type) {
-+				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-+				return -EINVAL;
-+			}
-+
-+		if (next)
-+			ctx->offset += next - fieldname;
-+		fieldname = next;
-+	} while (!is_ptr && fieldname);
-+
-+	*pfieldname = fieldname;
-+	*ptype = type;
-+
-+	return bitoffs;
-+}
- /*
-  * Parse the field of data structure. The @type must be a pointer type
-  * pointing the target data structure type.
-@@ -577,15 +635,13 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 			   struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code = *pcode;
--	const struct btf_member *field;
--	u32 bitoffs, anon_offs;
--	bool is_struct = ctx->struct_btf != NULL;
- 	struct btf *btf = ctx_btf(ctx);
--	char *next;
--	int is_ptr;
-+	bool is_first_field = true;
-+	int bitoffs;
- 
- 	do {
--		if (!is_struct) {
-+		/* For the first field of typecast, @type will be the target structure type. */
-+		if (!(is_first_field && ctx->struct_btf)) {
- 			/* Outer loop for solving arrow operator ('->') */
- 			if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR) {
- 				trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-@@ -599,60 +655,25 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 				return -EINVAL;
- 			}
- 		}
--		/* Only the first type can skip being a pointer */
--		is_struct = false;
--
--		bitoffs = 0;
--		do {
--			/* Inner loop for solving dot operator ('.') */
--			next = NULL;
--			is_ptr = split_next_field(fieldname, &next, ctx);
--			if (is_ptr < 0)
--				return is_ptr;
--
--			anon_offs = 0;
--			field = btf_find_struct_member(btf, type, fieldname,
--						       &anon_offs);
--			if (IS_ERR(field)) {
--				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
--				return PTR_ERR(field);
--			}
--			if (!field) {
--				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
--				return -ENOENT;
--			}
--			/* Add anonymous structure/union offset */
--			bitoffs += anon_offs;
--
--			/* Accumulate the bit-offsets of the dot-connected fields */
--			if (btf_type_kflag(type)) {
--				bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
--				ctx->last_bitsize = BTF_MEMBER_BITFIELD_SIZE(field->offset);
--			} else {
--				bitoffs += field->offset;
--				ctx->last_bitsize = 0;
--			}
--
--			type = btf_type_skip_modifiers(btf, field->type, NULL);
--			if (!type) {
--				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
--				return -EINVAL;
--			}
--
--			ctx->offset += next - fieldname;
--			fieldname = next;
--		} while (!is_ptr && fieldname);
- 
-+		bitoffs = get_bitoffset_of_field(&fieldname, &type, ctx);
-+		if (bitoffs < 0)
-+			return bitoffs;
- 		if (++code == end) {
- 			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 			return -EINVAL;
- 		}
- 		code->op = FETCH_OP_DEREF;	/* TODO: user deref support */
- 		code->offset = bitoffs / 8;
-+		if (is_first_field && ctx->struct_btf) {
-+			/* The first field can be typecasted with field option. */
-+			code->offset -= ctx->prefix_byteoffs;
-+		}
- 		*pcode = code;
- 
- 		ctx->last_bitoffs = bitoffs % 8;
- 		ctx->last_type = type;
-+		is_first_field = false;
- 	} while (fieldname);
- 
- 	return 0;
-@@ -808,6 +829,46 @@ static int query_btf_struct(const char *sname, struct traceprobe_parse_context *
- 	return 0;
- }
- 
-+static int parse_btf_casttype(char *casttype, struct traceprobe_parse_context *ctx)
-+{
-+	char *field;
-+	int ret;
-+
-+	/* Field option - evaluated later. */
-+	field = strchr(casttype, ',');
-+	if (field)
-+		*field++ = '\0';
-+
-+	ret = query_btf_struct(casttype, ctx);
-+	if (ret < 0) {
-+		trace_probe_log_err(ctx->offset, NO_PTR_STRCT);
-+		return -EINVAL;
++		tid = (u32)ret;
++		type = ctx->last_struct =
++			btf_type_skip_modifiers(ctx->struct_btf, tid, NULL);
++		goto found_type;
 +	}
 +
-+	if (field) {
-+		struct btf_type *type = (struct btf_type *)ctx->last_struct;
+ 	if (ctx->flags & TPARG_FL_RETURN && !strcmp(varname, "$retval")) {
+ 		code->op = FETCH_OP_RETVAL;
+ 		/* Check whether the function return type is not void, even with typecast. */
+@@ -761,6 +777,7 @@ static int parse_btf_arg(char *varname,
+ 
+ found:
+ 	type = btf_type_skip_modifiers(ctx->btf, tid, NULL);
++found_type:
+ 	if (!type) {
+ 		trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+ 		return -EINVAL;
+@@ -1270,6 +1287,24 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
+ 		return 0;
+ 	}
+ 
++	/* $current returns the address of the current task_struct. */
++	if (str_has_prefix(arg, "current")) {
++		/* $current is only supported by kernel probe. */
++		if (!(ctx->flags & TPARG_FL_KERNEL)) {
++			err = TP_ERR_BAD_VAR;
++			goto inval;
++		}
++		arg += strlen("current");
++		if (*arg == '-' && IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS))
++			return parse_btf_arg(orig_arg, pcode, end, ctx);
 +
-+		ctx->offset += field - casttype;
-+		ret = get_bitoffset_of_field(&field, &ctx->last_struct, ctx);
-+		if (ret < 0)
-+			return ret;
-+		if (ret % 8) {
-+			trace_probe_log_err(ctx->offset, TYPECAST_NOT_ALIGNED);
-+			return -EINVAL;
-+		}
-+		if (field != NULL) {
-+			/* this means @field skips an arrow operator ("->"). */
-+			trace_probe_log_err(ctx->offset - 2, TYPECAST_BAD_ARROW);
-+			return -EINVAL;
-+		}
-+		ctx->prefix_byteoffs = ret / 8;
-+		/* Restore the original struct type (overwritten by get_bitoffset_of_field) */
-+		ctx->last_struct = type;
++		if (*arg != '\0')
++			goto inval;
++
++		code->op = FETCH_OP_CURRENT;
++		return 0;
 +	}
 +
-+	return ret;
-+}
-+
- /* Find the matching closing parenthesis for a given opening parenthesis. */
- static char *find_matched_close_paren(char *s)
- {
-@@ -940,14 +1001,14 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 		tmp = close + 2; /* Skip ">" after inner variable name */
- 
- 	/* resolve the typecast struct name */
--	ret = query_btf_struct(arg + 1, ctx);
--	if (ret < 0) {
--		trace_probe_log_err(orig_offset + 1, NO_PTR_STRCT);
--		return -EINVAL;
--	}
-+	ctx->offset = orig_offset + 1; /* for the '(' */
-+	ret = parse_btf_casttype(arg + 1, ctx);
-+	if (ret < 0)
-+		return ret;
- 
- 	ctx->offset = orig_offset + tmp - arg;
- 	ret = parse_btf_field(tmp, ctx->last_struct, pcode, end, ctx);
-+	ctx->prefix_byteoffs = 0;
- 	return ret;
- }
- 
+ #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+ 	len = str_has_prefix(arg, "arg");
+ 	if (len) {
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index f4fbe3010978..e7fcc77f51fc 100644
+index e7fcc77f51fc..053f72fdaece 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -451,6 +451,7 @@ struct traceprobe_parse_context {
- 	unsigned int flags;
- 	int offset;
- 	int nested_level;
-+	int prefix_byteoffs;	/* The byte offset of the prefix field of typecast */
- };
- 
- /* Each typecast consumes nested level. So the max number of typecast is 3. */
-@@ -594,7 +595,9 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"), \
- 	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
- 	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"), \
--	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses")
-+	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses") \
-+	C(TYPECAST_NOT_ALIGNED,	"Typecast field option is not byte-aligned"), \
-+	C(TYPECAST_BAD_ARROW,	"Typecast field option does not support -> operator"),
- 
- #undef C
- #define C(a, b)		TP_ERR_##a
+@@ -92,6 +92,7 @@ typedef int (*print_type_func_t)(struct trace_seq *, void *, void *);
+ 	FETCH_OP(RETVAL, none),		/* Return value */		\
+ 	FETCH_OP(IMM, imm),		/* Immediate: .immediate */	\
+ 	FETCH_OP(COMM, none),		/* Current comm */		\
++	FETCH_OP(CURRENT, none),	/* Current task_struct address */\
+ 	FETCH_OP(ARG, param),		/* Argument: .param = index */	\
+ 	FETCH_OP(FOFFS, imm),		/* File offset: .immediate */	\
+ 	FETCH_OP(IMMSTR, string),	/* Allocated string: .data */	\
+diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+index 51436f19083b..d0e9662cde00 100644
+--- a/kernel/trace/trace_probe_tmpl.h
++++ b/kernel/trace/trace_probe_tmpl.h
+@@ -112,6 +112,9 @@ process_common_fetch_insn(struct fetch_insn *code, unsigned long *val)
+ 	case FETCH_OP_IMMSTR:
+ 		*val = (unsigned long)code->data;
+ 		break;
++	case FETCH_OP_CURRENT:
++		*val = (unsigned long)current;
++		break;
+ 	default:
+ 		return -EILSEQ;
+ 	}
 
