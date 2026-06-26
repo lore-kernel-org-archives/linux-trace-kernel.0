@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEB43EFFAE;
-	Fri, 26 Jun 2026 14:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF7E3EFFAE;
+	Fri, 26 Jun 2026 14:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782483282; cv=none; b=R4dXqUK6djJdhPC7xap8NxJEgVLMuM2DlQYtIW2kXaoROgh40jsy9Y4QYCeBrbmzFegpz3hw3aIELrSpd0fhLXSnOPVEYmnG2vQhTlasYEe5EThIpmP7q515vNcH57tj2xk5ESlCOPyv0zBuiN95xw5uxVSLehukASioWUgklxM=
+	t=1782483291; cv=none; b=JR1KOUe7m6zn7VDARKKkepXJaPc1F4/KCyte+qFEe9kUCnCTy4IcJ/MDLSBPprt1xUN3OdQC6Io6/fUYwnB8R5QhO4rdzL+AwLb9DkT+ax85dfpAyXs3u/2F1qOkjLenJ2MBnDT++tMUt9OhklKIrmNZqn1xFKSQlUCX4/8hljw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782483282; c=relaxed/simple;
-	bh=brzCWiuuGFqINoBFZGv95K4h/rljuY6RV+d+NGVogyw=;
+	s=arc-20240116; t=1782483291; c=relaxed/simple;
+	bh=iwvJEEmSo6kakYtR3FrwdqO9JhTL7AXMa5BsjUanyOU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L5w8o4j3wic2GiDSMMqdQV17KpBghTLgAfUK4ZtULFsF3qrYNr1mRlZ6LOWKTvVvRSR7uQjV8tPHcIxIqqrF+13bWoaakajUIZ4wmShtFiTMS/aCIQ4xyxTuoCIdyGlYWoA7/UamdZPQe/+Z3N8FHdU/5Lss0YtTUTtN0+dnUbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7nMsFc4; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=F4cz0M9tYYaF32Y69USXSDj6YKkM/r/D+MmUPZor13nkfl6MqzGzBoC049y4K7RABf5LDNJjKDHs6mIl4KpqBbeKbVas72zr3cqR02uHF/F8WKvgjMeFQDxeuDa8nE6hoK+ndz/EtVv9Mvd3h+K9H1xErHgTwnkHZsTG2G04+9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJS3pV1Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7nMsFc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C6D1F00A3A;
-	Fri, 26 Jun 2026 14:14:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJS3pV1Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D14D1F000E9;
+	Fri, 26 Jun 2026 14:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782483280;
-	bh=BPLbjH4kxpoEtI36kcllxUoKMnXhc8+/tSHnVGlA93w=;
+	s=k20260515; t=1782483290;
+	bh=DRQQpc50/HOc5q+xOiqMoSHrmuL8PZ/YatZQSWy4Uu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=X7nMsFc4gprt52Dg0SCtZWfRirlAGhhlK/L+kNipvOh3doLiUbCTUnDSInWmVV6yY
-	 p/U1DBRtKrWp/1IRf3MiWBJrzSxpLs+IceR1K7wrSZFf010Evkm22Y9ImRxUHYMa9q
-	 zBqOsnhjRO2FkntPvpzGttvrCAY8UOMYxsKhw/JvjmJ7jlO6tI7dWEDlk4N2rEpy0Q
-	 iWuAmNyfrrClvZ0gcA03zgS6oho2dvHzG5jgrjM3oef4RKp4CvCXwek8+kQ/iLPONX
-	 5JQb5Y3K7M9hospUDrhecx+zXFHlcZM9My3YTf2dzwKkhsAWdOzAjAWmGdG/mSDc1x
-	 9ogka8FVL6mkA==
+	b=hJS3pV1Zexa+WcZsLne1IHF/E+pVDkx8yNsPhfMHYalHzy++BcXRhsACExWufF0O/
+	 QB17u9KhqjnGMFmGIPuXmptaSsCvX9M+LKsiHj6cUlweeU/Y/AVJT4fD4hdIwSEo1m
+	 N8ps5W6aMkGl7xzh1638Y1SIWF2cI6PLDikLYlmMkrktwMtGxs4BSPZIpra2k+B+3f
+	 RktnAgUwg+yc+/+I0irODp8E3mhb3UqYHMQyVMUtX2gJOGW9b3G9a+BtihNv8R3ttt
+	 gRcZNzbSFcfKXDwh0ZJjlVbCpcVW//Fx12/dBuEG6vHR7fnBctsTOHpP7Mtzd3XV5I
+	 mT8QTg3jrmySQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -36,9 +36,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v11 02/11] tracing/probes: Support dumping fetcharg program for debugging dynamic events
-Date: Fri, 26 Jun 2026 23:14:36 +0900
-Message-ID: <178248327666.841606.10742303555302930401.stgit@devnote2>
+Subject: [PATCH v11 03/11] tools/bootconfig: Ignore comment lines in dynamic_events/kprobe_events file
+Date: Fri, 26 Jun 2026 23:14:46 +0900
+Message-ID: <178248328618.841606.12096364096224070176.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178248325671.841606.17344906774310339507.stgit@devnote2>
 References: <178248325671.841606.17344906774310339507.stgit@devnote2>
@@ -54,317 +54,25 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-For debugging probe events, it is helpful to verify the compiled
-fetch instructions for each probe argument. This introduces a new
-kernel config CONFIG_PROBE_EVENTS_DUMP_FETCHARG to decode the
-instruction sequence of each argument and display it under a
-commented line starting with '#' immediately following the dynamic
-event definition (such as in dynamic_events, kprobe_events,
-uprobe_events, etc.).
+Since dynamic_events/kprobe_events files show the fetcharg debug
+information as comment lines, its reader needs to ignore it.
 
-For example:
- /sys/kernel/tracing # cat dynamic_events
- p:kprobes/p_vfs_read_0 vfs_read arg1=+0(file):ustring arg2=%ax:x16
- #  arg1: ARG(0) -> ST_USTRING(offset=0,size=4) -> END
- #  arg2: REG(80) -> ST_RAW(size=2) -> END
-
-Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v8:
-  - State this feature is only for debugging probe events.
-  - Fix dependency list after description in Kconfig.
- Changes in v7:
-   - Show trace event field name for FETCH_OP_TP_ARG.
-   - Show immediate string value for FETCH_OP_IMMSTR.
-   - Fix style issues warned by checkpatch.pl.
- Changes in v6:
-   - Newly added.
----
- kernel/trace/Kconfig        |   12 +++++
- kernel/trace/trace_eprobe.c |    2 +
- kernel/trace/trace_fprobe.c |    2 +
- kernel/trace/trace_kprobe.c |    2 +
- kernel/trace/trace_probe.c  |   96 +++++++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace_probe.h  |   79 +++++++++++++++++++++--------------
- kernel/trace/trace_uprobe.c |    3 +
- 7 files changed, 164 insertions(+), 32 deletions(-)
+ tools/bootconfig/scripts/ftrace2bconf.sh |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 084f34dc6c9f..0ab5916575a9 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -779,6 +779,18 @@ config PROBE_EVENTS_BTF_ARGS
- 	  kernel function entry or a tracepoint.
- 	  This is available only if BTF (BPF Type Format) support is enabled.
- 
-+config PROBE_EVENTS_DUMP_FETCHARG
-+	bool "Dump of dynamic probe event fetch-arguments"
-+	depends on PROBE_EVENTS
-+	default n
-+	help
-+	  This shows the dump of fetch-arguments of dynamic probe events
-+	  alongside their event definitions in the dynamic_events file
-+	  as comment lines. This is useful to debug the probe events.
-+	  Since this exposes the raw values in the dynamic_events file,
-+	  it might be a security risk. Only enable it if you need to debug
-+	  probe events themselves.
-+
- config KPROBE_EVENTS
- 	depends on KPROBES
- 	depends on HAVE_REGS_AND_STACK_ACCESS_API
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index 50518b071414..462c31145733 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -87,6 +87,8 @@ static int eprobe_dyn_event_show(struct seq_file *m, struct dyn_event *ev)
- 		seq_printf(m, " %s=%s", ep->tp.args[i].name, ep->tp.args[i].comm);
- 	seq_putc(m, '\n');
- 
-+	trace_probe_dump_args(m, &ep->tp);
-+
- 	return 0;
- }
- 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 4d1abbf66229..536781cd4c47 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -1449,6 +1449,8 @@ static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
- 		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
- 	seq_putc(m, '\n');
- 
-+	trace_probe_dump_args(m, &tf->tp);
-+
- 	return 0;
- }
- 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index a8420e6abb56..cfa807d8e760 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1320,6 +1320,8 @@ static int trace_kprobe_show(struct seq_file *m, struct dyn_event *ev)
- 		seq_printf(m, " %s=%s", tk->tp.args[i].name, tk->tp.args[i].comm);
- 	seq_putc(m, '\n');
- 
-+	trace_probe_dump_args(m, &tk->tp);
-+
- 	return 0;
- }
- 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 2ce7d62471cb..0908019aea12 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2403,3 +2403,99 @@ int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_a
- 	}
- 	return 0;
- }
-+
-+#ifdef CONFIG_PROBE_EVENTS_DUMP_FETCHARG
-+
-+struct fetch_op_decode {
-+	const char *name;
-+	void (*decode)(struct seq_file *m, struct fetch_insn *insn);
-+};
-+
-+static const struct fetch_op_decode fetch_op_decode[];
-+
-+static void fetcharg_decode_none(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_puts(m, fetch_op_decode[insn->op].name);
-+}
-+
-+static void fetcharg_decode_param(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_printf(m, "%s(%u)", fetch_op_decode[insn->op].name, insn->param);
-+}
-+
-+static void fetcharg_decode_imm(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_printf(m, "%s(0x%lx)", fetch_op_decode[insn->op].name, insn->immediate);
-+}
-+
-+static void fetcharg_decode_string(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_printf(m, "%s(%s)", fetch_op_decode[insn->op].name, (char *)insn->data);
-+}
-+
-+static void fetcharg_decode_symbol(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_printf(m, "%s(%s)", fetch_op_decode[insn->op].name, (char *)insn->data);
-+}
-+
-+static void fetcharg_decode_offset(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_printf(m, "%s(offset=%d)", fetch_op_decode[insn->op].name, insn->offset);
-+}
-+
-+static void fetcharg_decode_store(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	if (insn->op == FETCH_OP_ST_RAW)
-+		seq_printf(m, "%s(size=%u)", fetch_op_decode[insn->op].name, insn->size);
-+	else
-+		seq_printf(m, "%s(offset=%d,size=%u)", fetch_op_decode[insn->op].name,
-+			  insn->offset, insn->size);
-+}
-+
-+static void fetcharg_decode_bf(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	seq_printf(m, "%s(basesize=%u,lshift=%u,rshift=%u)",
-+		   fetch_op_decode[insn->op].name, insn->basesize, insn->lshift, insn->rshift);
-+}
-+
-+static void fetcharg_decode_tp_arg(struct seq_file *m, struct fetch_insn *insn)
-+{
-+	struct ftrace_event_field *field = insn->data;
-+
-+	seq_printf(m, "%s(%s)", fetch_op_decode[insn->op].name, field->name);
-+}
-+
-+#define FETCH_OP(opname, decode_fn) \
-+	[FETCH_OP_##opname] = { .name = #opname, .decode = fetcharg_decode_##decode_fn }
-+
-+static const struct fetch_op_decode fetch_op_decode[] = FETCH_OP_LIST;
-+#undef FETCH_OP
-+
-+static void trace_probe_dump_arg(struct seq_file *m, struct probe_arg *parg)
-+{
-+	int i;
-+
-+	seq_printf(m, "#  %s: ", parg->name);
-+	for (i = 0; i < FETCH_INSN_MAX; i++) {
-+		struct fetch_insn *insn = parg->code + i;
-+
-+		if (insn->op >= ARRAY_SIZE(fetch_op_decode) || !fetch_op_decode[insn->op].decode)
-+			seq_printf(m, "unknown(%d)", insn->op);
-+		else
-+			fetch_op_decode[insn->op].decode(m, insn);
-+
-+		if (insn->op == FETCH_OP_END)
-+			break;
-+		seq_puts(m, " -> ");
-+	}
-+	seq_putc(m, '\n');
-+}
-+
-+void trace_probe_dump_args(struct seq_file *m, struct trace_probe *tp)
-+{
-+	int i;
-+
-+	for (i = 0; i < tp->nr_args; i++)
-+		trace_probe_dump_arg(m, &tp->args[i]);
-+}
-+#endif /* CONFIG_PROBE_EVENTS_DUMP_FETCHARG */
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 2e0d8384ee5c..e36cfe39e9a8 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -83,38 +83,46 @@ static nokprobe_inline u32 update_data_loc(u32 loc, int consumed)
- /* Printing function type */
- typedef int (*print_type_func_t)(struct trace_seq *, void *, void *);
- 
--enum fetch_op {
--	FETCH_OP_NOP = 0,
--	// Stage 1 (load) ops
--	FETCH_OP_REG,		/* Register : .param = offset */
--	FETCH_OP_STACK,		/* Stack : .param = index */
--	FETCH_OP_STACKP,	/* Stack pointer */
--	FETCH_OP_RETVAL,	/* Return value */
--	FETCH_OP_IMM,		/* Immediate : .immediate */
--	FETCH_OP_COMM,		/* Current comm */
--	FETCH_OP_ARG,		/* Function argument : .param */
--	FETCH_OP_FOFFS,		/* File offset: .immediate */
--	FETCH_OP_IMMSTR,	/* Allocated string: .data */
--	FETCH_OP_EDATA,		/* Entry data: .offset */
--	// Stage 2 (dereference) op
--	FETCH_OP_DEREF,		/* Dereference: .offset */
--	FETCH_OP_UDEREF,	/* User-space Dereference: .offset */
--	// Stage 3 (store) ops
--	FETCH_OP_ST_RAW,	/* Raw: .size */
--	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
--	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
--	FETCH_OP_ST_STRING,	/* String: .offset, .size */
--	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
--	FETCH_OP_ST_SYMSTR,	/* Kernel Symbol String: .offset, .size */
--	FETCH_OP_ST_EDATA,	/* Store Entry Data: .offset */
--	// Stage 4 (modify) op
--	FETCH_OP_MOD_BF,	/* Bitfield: .basesize, .lshift, .rshift */
--	// Stage 5 (loop) op
--	FETCH_OP_LP_ARRAY,	/* Array: .param = loop count */
--	FETCH_OP_TP_ARG,	/* Trace Point argument */
--	FETCH_OP_END,
--	FETCH_NOP_SYMBOL,	/* Unresolved Symbol holder */
--};
-+#define FETCH_OP_LIST	{						\
-+	/* Stage 1 (load) ops */					\
-+	FETCH_OP(NOP, none),		/* NOP */			\
-+	FETCH_OP(REG, param),		/* Register: .param = offset */	\
-+	FETCH_OP(STACK, param),		/* Stack: .param = index */	\
-+	FETCH_OP(STACKP, none),		/* Stack pointer */		\
-+	FETCH_OP(RETVAL, none),		/* Return value */		\
-+	FETCH_OP(IMM, imm),		/* Immediate: .immediate */	\
-+	FETCH_OP(COMM, none),		/* Current comm */		\
-+	FETCH_OP(ARG, param),		/* Argument: .param = index */	\
-+	FETCH_OP(FOFFS, imm),		/* File offset: .immediate */	\
-+	FETCH_OP(IMMSTR, string),	/* Allocated string: .data */	\
-+	FETCH_OP(EDATA, offset),	/* Entry data: .offset */	\
-+	FETCH_OP(TP_ARG, tp_arg),	/* Tracepoint argument: .data */\
-+	/* Stage 2 (dereference) ops */					\
-+	FETCH_OP(DEREF, offset),	/* Dereference: .offset */	\
-+	FETCH_OP(UDEREF, offset),	/* User-space dereference: .offset */\
-+	/* Stage 3 (store) ops */					\
-+	FETCH_OP(ST_RAW, store),	/* Raw value: .size */		\
-+	FETCH_OP(ST_MEM, store),	/* Memory: .offset, .size */	\
-+	FETCH_OP(ST_UMEM, store),	/* User memory: .offset, .size */\
-+	FETCH_OP(ST_STRING, store),	/* String: .offset, .size */	\
-+	FETCH_OP(ST_USTRING, store),	/* User string: .offset, .size */\
-+	FETCH_OP(ST_SYMSTR, store),	/* Symbol name: .offset, .size */\
-+	FETCH_OP(ST_EDATA, offset),	/* Entry data: .offset */	\
-+	/* Stage 4 (modify) op */					\
-+	FETCH_OP(MOD_BF, bf),		/* Bitfield: .basesize, .lshift, .rshift*/\
-+	/* Stage 5 (loop) op */						\
-+	FETCH_OP(LP_ARRAY, param),	/* Loop array: .param = count */\
-+	/* End */							\
-+	FETCH_OP(END, none),						\
-+	/* Unresolved Symbol holder */					\
-+	FETCH_OP(NOP_SYMBOL, symbol),	/* Non loaded symbol: .data = symbol name */\
-+}
-+
-+#define FETCH_OP(opname, decode_fn) FETCH_OP_##opname
-+enum fetch_op FETCH_OP_LIST;
-+#undef FETCH_OP
-+
-+#define FETCH_NOP_SYMBOL FETCH_OP_NOP_SYMBOL
- 
- struct fetch_insn {
- 	enum fetch_op op;
-@@ -370,6 +378,13 @@ bool trace_probe_match_command_args(struct trace_probe *tp,
- int trace_probe_create(const char *raw_command, int (*createfn)(int, const char **));
- int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_args,
- 		 u8 *data, void *field);
-+#ifdef CONFIG_PROBE_EVENTS_DUMP_FETCHARG
-+void trace_probe_dump_args(struct seq_file *m, struct trace_probe *tp);
-+#else
-+static inline void trace_probe_dump_args(struct seq_file *m, struct trace_probe *tp)
-+{
-+}
-+#endif
- 
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- int traceprobe_get_entry_data_size(struct trace_probe *tp);
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index c274346853d1..b2e264a4b96c 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -765,6 +765,9 @@ static int trace_uprobe_show(struct seq_file *m, struct dyn_event *ev)
- 		seq_printf(m, " %s=%s", tu->tp.args[i].name, tu->tp.args[i].comm);
- 
- 	seq_putc(m, '\n');
-+
-+	trace_probe_dump_args(m, &tu->tp);
-+
- 	return 0;
- }
- 
+diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
+index 1603801cf126..8eed445c295e 100755
+--- a/tools/bootconfig/scripts/ftrace2bconf.sh
++++ b/tools/bootconfig/scripts/ftrace2bconf.sh
+@@ -57,6 +57,8 @@ EOF
+ kprobe_event_options() {
+ 	cat $TRACEFS/kprobe_events | while read p args; do
+ 		case $p in
++		\#*)
++		continue;;
+ 		r*)
+ 		cat 1>&2 << EOF
+ # WARN: A return probe found but it is not supported by bootconfig. Skip it.
 
