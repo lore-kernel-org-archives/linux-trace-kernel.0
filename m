@@ -1,92 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA5C30D40F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jun 2026 09:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024C83E51DB;
+	Fri, 26 Jun 2026 09:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782467012; cv=none; b=XhipYlc+fmxL6tNwOvSz/TtfQ79ogxIHoJR7MTNZqYNp5unqo+otzaVgrdVfiYr8ZLmCDAcxY7DrpLT+/fNQBIhE5tYti4Nayrr6C4/OpF9Qg4eopsSpicrRNok1AV1dsq5bNeNCdFmnVb/y7Vne1dZia6wjPsxIiqHV4Wn2K3w=
+	t=1782467692; cv=none; b=HZ5RDC1jCt3j+Oyh4sy3aaYkQHgpckGSPDyTZUpjkaCLCGBu25H+BKeiBXcsUQj7YI0FL7Kc/IV9GL5/sW6K2CjFJvTbVU9hKmF2oPbMk3bZwQ9RyN5rxkVaOXGrG2Ev85OYyWSetFpe6yT/TKGCCaYO6MX5+ai0ox+VlLQ4McM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782467012; c=relaxed/simple;
-	bh=e3Jz6bzrGgsvPdNYBZd1bmHaSP2o6lWN6RuOfpLQ3w4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=d22SLLMBwU2q5bcmMmVs4yEyqCMiDP+jvYjzSK9orlvoReEwMOlb33iNfeNuBIlEc+15hu4YImSbv0mtuzQxZP/YLx7OeAXbpjBtSuLWoFejofHsU/ONBqcutcXXVT1hrz6HPdMEJWkAmHNCgMBptOjubktgMXwpdYtMZIdsx/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J2+i2mvH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2+i2mvH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782467010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jUw4pQtoHlo8dsSFitcZ7VE4SXE623RtWl2ctOayd9s=;
-	b=J2+i2mvH1i5HLcKxF3QZD9c9TLa1FylvnDH4rSECxo2VV8jG1Ct4HtkafcDo+d6Rzo+78D
-	LdT50OTzA0ve5GZdd2otriTTT8pqzow8rWNR+Fad+CfaPNHhD7AKzao2UY36/3nHqOfeTP
-	pX2y5HJCSyx48BmxNEM1ataSHZKg8nQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-rUhmtskUM5u2M0S8Qr4ivQ-1; Fri,
- 26 Jun 2026 05:43:26 -0400
-X-MC-Unique: rUhmtskUM5u2M0S8Qr4ivQ-1
-X-Mimecast-MFC-AGG-ID: rUhmtskUM5u2M0S8Qr4ivQ_1782467005
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81FB11802668;
-	Fri, 26 Jun 2026 09:43:24 +0000 (UTC)
-Received: from fedora (unknown [10.44.33.126])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F231118005A4;
-	Fri, 26 Jun 2026 09:43:20 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 26 Jun 2026 11:43:25 +0200 (CEST)
-Date: Fri, 26 Jun 2026 11:43:20 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to
- nop10
-Message-ID: <aj5JuH6AtjDtWIVU@redhat.com>
-References: <20260526205840.173790-1-jolsa@kernel.org>
- <20260526205840.173790-6-jolsa@kernel.org>
+	s=arc-20240116; t=1782467692; c=relaxed/simple;
+	bh=uXvVK93lYXu3zjvVhZv2LQjj/WLzgItxAyTy23ODDD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GBlIkjc2RvEwBg3ypQy9T9itUuMtNWOAhU+C9/qa9uNJr8VfeG2Me4b/C7tW1p7+TpPP4zb2ABOiwCFr5hudtGkJR3+axi7cygrOjmvwU/XKWLu0YFtUeJZFG/sTqgsppES3ZVqY7/9fDwP32KXqbRMzKiRQ/xD09y6g5m+rDk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 93E84C1D66;
+	Fri, 26 Jun 2026 09:54:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id AF6C117;
+	Fri, 26 Jun 2026 09:54:42 +0000 (UTC)
+Date: Fri, 26 Jun 2026 05:54:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Martin Kaiser <martin@kaiser.cx>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: eprobe: read the complete FILTER_PTR_STRING
+ pointer
+Message-ID: <20260626055440.76c28d25@fedora>
+In-Reply-To: <20260622125815.7416792c020bd3d81c01e51b@kernel.org>
+References: <20260615145500.2662456-1-martin@kaiser.cx>
+	<20260616110910.e6420488b6a798d49951cde9@kernel.org>
+	<ajJbkeK0zXb8MtcS@akranes.kaiser.cx>
+	<20260618105227.c58c85e9cb19bce673d9a79b@kernel.org>
+	<ajasLMUt_AMM3ztH@akranes.kaiser.cx>
+	<20260622125815.7416792c020bd3d81c01e51b@kernel.org>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260526205840.173790-6-jolsa@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: eT8XEwvo6ktVIZv2nt1lXM3g5QheH84jkkgkjxHxX1M_1782467005
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: AF6C117
+X-Stat-Signature: ykuoypdejw9h3b7md4xd96ib1o47f5me
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/xOgBRXnC0wZRhJ5vUO5d1TliGYJmmChc=
+X-HE-Tag: 1782467682-294626
+X-HE-Meta: U2FsdGVkX1+UrhtUOB2G3EYmtqCMOP6dLTdKrP37IUSAmuZVTHnFA1y6PHGqK6AdLJ8KBBmY1EFAvwo6777ypoLwkUy3OVBIyt0j4FB9f/cdvDffUT4ce/Ak49lkiqSaz4DnYX4Fz+dzGAnXUZIF5atwEnON3DtyDbuAnylPwJK8frKWL5oHrvm0oR72RVx6e0klUnBSYVZnyIbOXCQw0pkCSZw1gV2P8mcNzSGwUZhHxio6TAeRKRxu7JUb+kCBTC2o4u/g2xbHFdFhIfjXRskmqRVoG12hvrzUuNHVG8jJRSMbAS4k5hd/iBJqLRFjYs1Rgdybb8sZXTkss1p18hjJYMQlV6Vi
 
-On 05/26, Jiri Olsa wrote:
->
-> which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
-> attribute in is_prefix_bad function.
+On Mon, 22 Jun 2026 12:58:15 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-...
+> The problem is that the event does not provide the information that
+> the string is in user space or not. But actually, for syscall events
+> all data pointed by syscall parameter should be in the user space.
 
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -266,7 +266,6 @@ static bool is_prefix_bad(struct insn *insn)
->  		attr = inat_get_opcode_attribute(p);
->  		switch (attr) {
->  		case INAT_MAKE_PREFIX(INAT_PFX_ES):
-> -		case INAT_MAKE_PREFIX(INAT_PFX_CS):
+I think we should make this work then:
 
-I know nothing about how x86 CPU works, so let me ask...
+  echo 'e:open syscalls.sys_enter_openat file=+u0($filename):ustring' > dynamic_events
 
-What if insn->x86_64 is false? Is it safe to allow the CS prefix in
-this case?
+That is, to have +u0() say "this is going to be dereferencing user space".
 
-Oleg.
+I'll add Martin's patch and see if it makes the above work.
 
+-- Steve
