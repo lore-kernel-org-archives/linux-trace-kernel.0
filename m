@@ -1,154 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC29317142
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jun 2026 12:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D88E2E738E;
+	Fri, 26 Jun 2026 12:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782476716; cv=none; b=gjHvHtoTUrDxhQhrBjPlpHVvSpjwxzxjT+YHW4SSq39QJb7fCQoo6d1nu/BXfM9wp4d3tfxvdzdH8E/dEIRZSaJbjHXwG29Owf8Pgq2LuOBhi8DzWWoVfTsS8zWOPngU2oO0MypX4a6J5ppjsIFPqqPx5raPr8xFCAI8bMIQW5Y=
+	t=1782478237; cv=none; b=s86xzVX5d5rsOGCLbjAU9OkncO5joU7n/zFk8jHCf6OYGNyNAyu2vDbRaurUI8zwnlNyXGvNcWuX0H4senZH0eGiEJ+tOMturRL1KFhcFi7eKvawghAWxhQqSLqToFDLSmHzLAGeBPUuj0ng3hOyG9Nu2p3IhXFAMyNeiGgSNwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782476716; c=relaxed/simple;
-	bh=Y674XKR7coUlBC/m7GkUrCEpw/Jzj1/8zEdUJbQB6JQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=m8Aer8X0viYABYP3+Rj1XO/UY9dn8RT3KKIh9fyBUPzGNYytRm0PNFzsaiO0L2Nr3us3bob7ALayPBANgB+EF2zHFtcTsZ0tZTilFxEqwPkAKR2OP8iXcEp1hkVkgGB2HDfF43isIwn7TDcsXZq9Y19K2CMopSRZLOKjYT9g9js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dA7J6/E2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782478237; c=relaxed/simple;
+	bh=FONYNlnjtYQKKhWdd3PPsq2YJhbR1niQBio60BndP/A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jSNwKcl5m8AhPxWtNPGs18tE2AOKWxOZm4uNQwipkg7nlRrn5cZmGpcfexU2Kbf/FLlcmP3T9E400uIW8/CnQzsKbfZZNFgcehDH1J5xsdMLFBfan2yUR8BXx6DLZs2d92HHw2OBSUmT/5hcd3LJBxGeVaeXZLeB8P3qxI5F7TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=SN+5JbWD; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dA7J6/E2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782476714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y674XKR7coUlBC/m7GkUrCEpw/Jzj1/8zEdUJbQB6JQ=;
-	b=dA7J6/E24SH88I6wkFdV1+3FReTfZFVmEZ6QPucQ3OYjc7NsnCHBeCWfo2QarK3Rfk4T6p
-	csO6MaWIc/0UTSseBKGCPlL2fr/zfIaWgIf/40EkSBPh0dlj163XIggPZLwCKkG0uV8Ldk
-	BTed3O3rZ6RMHqZ3rOfFnKKzRjRR98U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-463-ys5hoTe-P36bIS6srhswSA-1; Fri, 26 Jun 2026 08:25:13 -0400
-X-MC-Unique: ys5hoTe-P36bIS6srhswSA-1
-X-Mimecast-MFC-AGG-ID: ys5hoTe-P36bIS6srhswSA_1782476712
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4923d2f0dedso5090935e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jun 2026 05:25:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782476712; x=1783081512;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7mzVWJs3aKiLXCG8c+oTwzKTAB4KW8z019ld5bSjd5A=;
-        b=VfgfiEjjCI/0i2Er9PV3TrdNBZ9UKkme62Dzxy/v5l9+zFUQxQctqKiCEVGJO36aoS
-         HQX5biOykHMMDXYU5nkt6CCxlNs58dEEXW8DXEUrqC6ECyE6pQ7vXFycGwlpyMn5bZd3
-         Cq/XllDKxEk6GAYzOmdUr1fiKN/TpTPmb9+6NLbv9ws4Apsg+yJVFbcF6ltqrp4ILry+
-         5hydgImYOjb6ROuq5gKvKdA9Wdwg6iVEBuOH+Xa5SIxiwR13ogMSLxvZw2xtS01kNpsX
-         0zQmESeMfRDibfWKCsgiCUcwHMugCtdwwrWo729PYooHbnJJaTODerDT1ky/mAP1Mfk6
-         wdgQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+TeBlPV8sxwxS+Crq2TK267i929hbIbtVXj+O9nQNZImEn71S+qiyzYXouRpjCwzpDvxLVecKJN8nqp0eFPpxJ32E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv4kCgfxujWTz8UrwmEpKK131E+4KlCqeZAWkS6jRK2zlo7OmB
-	66bTRrQ/Fyl5GfqWdcJTpK5WWcstBYQG4O9DaPBjsNgSh+RSOt9IgMXlKrnXW7aSIxEW72Heyg3
-	pvlCk8gPtox/2JJJbxdxVcjnphkWJ/Xu5QvECWDQxG7Do3c4OTJmUido8wcHceINecA7xKLrpqA
-	==
-X-Gm-Gg: AfdE7cmZn3D7eD1Cglb1Cp8T4ZZvyvvt64mSnBTkSq7sToXsyNjy2GbT+rXAP9FT9a7
-	L4/JJ2+P8SwcqQfXzPn6bHZHiC06ZRy8uUYwWpXmr7UtPqcki0498ykbdlDTdybhFoToZkPFeMA
-	l4r9cAX5QjR88/ub9VbMsMZTmr1N3/bPQ6NaF0Bp+c/ojNGanhtAAgx31qak0n9E7TzCKXdeTj6
-	217JbB1AXpxByBT2i025SI8zskigjVnCThqgdtPIE4OraRgnQxa0d2n2MOEdlxtf5mrUNME9yCF
-	w+zNhdgS419LAKsyrJxAM35fiw584TXVWStQzedlVoOmK3wMefRXPLpySDWxLEj92L/A8JdRDGu
-	bKNHWIYD0p6bXLMdn5aeXDwISgfRSDOU0N1VT3wIxKQha9s2g/0Obo8lyxBiZd2uo9I6AxJEr
-X-Received: by 2002:a05:600c:a410:b0:490:be78:1861 with SMTP id 5b1f17b1804b1-49266862966mr92729475e9.4.1782476712407;
-        Fri, 26 Jun 2026 05:25:12 -0700 (PDT)
-X-Received: by 2002:a05:600c:a410:b0:490:be78:1861 with SMTP id 5b1f17b1804b1-49266862966mr92729045e9.4.1782476711979;
-        Fri, 26 Jun 2026 05:25:11 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c221d998esm23765146f8f.24.2026.06.26.05.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 05:25:11 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>, Costa
- Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, John
- Kacur <jkacur@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [RFC PATCH v2 0/4] tracing/osnoise: Track IPIs
-In-Reply-To: <20260626062658.7f95bcad@fedora>
-References: <20260617131803.2988989-1-vschneid@redhat.com>
- <20260626062658.7f95bcad@fedora>
-Date: Fri, 26 Jun 2026 14:25:09 +0200
-Message-ID: <xhsmhy0g1zdy2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="SN+5JbWD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=edR1O+4zo8Kn4wUlhsD/K514WXfjjVwDAwj4dTB/RZ0=; b=SN+5JbWDQdwpLI/BdRvp3uNU53
+	dRLUBoswABAsv5Hs5LEH6b579l7AbiuwFTc5rkyVQFYcjvoSsq99cDY62RqWhm6J1TBntI6QGgerj
+	NjJ6bpmJIAq8/eQPJiW1oq80OPQtDI2kQZf78KjGSui5YyQws8wcUAlVMIB1tz34x1zlBg36S2sYz
+	dY5k2m13E2gN+LCXYe2alpXAcb/VqP30k1u6CNpeKcT3cnkHSEmCq3cxOZWqCbaIt9MhlYz0zY36B
+	5Z6TGWE6XwsG8imtt7w07uEPn8/5wvN6O0wxyuP3L4zQXb0m2HhUpcmfL+Z1TUTRMmZj/YM98+iXe
+	dutrGSBQ==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wd60u-003yku-0i;
+	Fri, 26 Jun 2026 12:50:32 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 26 Jun 2026 05:50:10 -0700
+Subject: [PATCH v7 1/9] bootconfig: fix NULL-pointer arithmetic in
+ xbc_snprint_cmdline()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: e33ShZuZSQoV7BYG8GUDxpo_s35eZwTTKthCafBPbFw_1782476712
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260626-bootconfig_using_tools-v7-1-24ab72139c29@debian.org>
+References: <20260626-bootconfig_using_tools-v7-0-24ab72139c29@debian.org>
+In-Reply-To: <20260626-bootconfig_using_tools-v7-0-24ab72139c29@debian.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, 
+ Nicolas Schier <nsc@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev, 
+ linux-doc@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+ kernel-team@meta.com
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3061; i=leitao@debian.org;
+ h=from:subject:message-id; bh=FONYNlnjtYQKKhWdd3PPsq2YJhbR1niQBio60BndP/A=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqPnWLAsGV4zp4/cLsG9Kq5gQt1l6AF+/RKHEaP
+ egbSGfud5eJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaj51iwAKCRA1o5Of/Hh3
+ bXH1EACOTnmB6+IAH9McSqoCDnmPJTKpN/ps4FzFNzue5QWWbNEkn4w4qZ2ZkJKgIapdXMRf9I5
+ bzLkGnNzgA6MrzTUobv3qv+CTo1pMxFF019H9pavvRDolq1X8zYUI15X2CmdsgL6GTW+uJU8xfx
+ 5KuiuaOaEarFbq3KEfz8vsRo3B+A4+KA3n/L4+1Pf5R9mgIYYvIYj/HcJs1tl3410tQOYnl5Xbz
+ 5+wteq7mbAthKBNQtrRKtOrJHQyx2odjaU21uYNVhKw4jpKCffez+xgqAOD/+irQz1skkErQ5kk
+ 6RF2x27Av5p805tAIwCKT3uq2kLYeex/wxqYXOO1DBqCQJSo4D8Ov59N+++DmzZ92VkpIf5keHV
+ 3r85DI576wJa7ukAVGhLEj6CS8+uwkKJw2WASLZWrkS7njS9pxhujDZv8zMfQz+wDeXJVFyRhSw
+ hW8vDco36zUyCIajiID5jmP7JjUx4q4bR+2ncUJ0x0d/MwW/fg37pessxUZmae9jQZ5ZKJwcKmc
+ XcfzWwIzd6vI4hKyqTr1koAZyA/I6peNTT/1rsWOHMHllOHl2aXqMYKymedTC5llT18kIdCVkzs
+ jZFAZtEhw0++D5uYtTFym/sTRCvA88MIx6HVUGgxEZtJMKVSGec9HJGxhQwwXck8boiRjnLhZsx
+ roVXacZnAQwUqWg==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On 26/06/26 06:26, Steven Rostedt wrote:
-> On Wed, 17 Jun 2026 15:17:55 +0200
-> Valentin Schneider <vschneid@redhat.com> wrote:
->
->> Hi folks,
->>
->> So I've seen a few times now reports of latency spikes caused by IPIs, u=
-sually
->> because of isolation misconfiguration, but only detected at the tail of =
-end
->> e.g. a 24h timerlat run.
->>
->> It's not because those IPIs are rare, but rather that they don't by them=
-selves
->> cause a monitered CPU to reach the latency threshold, it's usually a com=
-bined
->> interference that gets us there.
->>
->> I'd like to make it easier to detect such misconfigurations and thus IPI=
-s
->> hitting supposedly-isolated CPUs. I initially kludged a timerlat option =
-to stop
->> tracing as soon as an IPI was sent to a monitored CPU, regardless of the=
- latency
->> threshold. It sort of did the trick, but Tom=C3=A1=C5=A1 convinced me ti=
-merlat wasn't
->> really the place for that.
->>
->> So here's IPI tracking added to osnoise. This time around fully in users=
-pace, as
->> Tom=C3=A1=C5=A1 pointed out to me that this will make it a lot easier to=
- deploy to older
->> kernels.
->>
->> Based on top of linux/next at 'next-20260616' to have the latest libsubc=
-md
->> changes.
->>
->
-> Hi Valentin,
->
-> My new job actually makes me very interested in IPI interference, and
-> this patch set looks *very* interesting. I'm currently finishing up my
-> orientation and hopefully next week I can start catching up on all my
-> email.
->
+xbc_snprint_cmdline() is meant to be called twice: first with
+buf=NULL, size=0 to probe the rendered length, then with a real
+buffer to fill it (the standard snprintf() two-pass pattern). The
+probe call makes the function compute "buf + size" (NULL + 0) and,
+on every iteration, advance "buf += ret" from that NULL base and
+pass the result back into snprintf().
 
-Welcome back :-) If IPIs are your thing, you may also have a look at
-[1]. I'm working on a v10 following some (surprisingly) useful feedback
-from Sashiko.
+Pointer arithmetic on a NULL pointer is undefined behavior. It is
+harmless in the in-kernel callers today, but the follow-up patches
+run this same code in the userspace tools/bootconfig parser at kernel
+build time, where host UBSan / FORTIFY_SOURCE abort the build.
 
-[1]: https://lore.kernel.org/lkml/20260505082355.1982003-1-vschneid@redhat.=
-com/
+Track a running written length (size_t) instead of mutating @buf, and
+only form "buf + len" when @buf is non-NULL. snprintf(NULL, 0, ...)
+is itself well defined and returns the would-be length, so the
+two-pass "probe then fill" usage returns identical byte counts.
 
-> I'll try to take a deeper look at this in the coming weeks.
->
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ lib/bootconfig.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-Thanks!
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index f445b7703fdd9..2ed9ee3dc81c7 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -427,10 +427,18 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ {
+ 	struct xbc_node *knode, *vnode;
+-	char *end = buf + size;
+ 	const char *val, *q;
++	size_t len = 0;
+ 	int ret;
+ 
++	/*
++	 * Track the running written length rather than advancing @buf, so we
++	 * never form "buf + size" or "buf += ret" while @buf is NULL (the
++	 * size-probe call passes buf=NULL, size=0). NULL pointer arithmetic
++	 * is undefined behavior and trips host UBSan / FORTIFY_SOURCE when
++	 * this renderer runs at kernel build time. snprintf(NULL, 0, ...)
++	 * itself is well defined and returns the would-be length.
++	 */
+ 	xbc_node_for_each_key_value(root, knode, val) {
+ 		ret = xbc_node_compose_key_after(root, knode,
+ 					xbc_namebuf, XBC_KEYLEN_MAX);
+@@ -439,10 +447,11 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ 
+ 		vnode = xbc_node_get_child(knode);
+ 		if (!vnode) {
+-			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
++			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
++				       "%s ", xbc_namebuf);
+ 			if (ret < 0)
+ 				return ret;
+-			buf += ret;
++			len += ret;
+ 			continue;
+ 		}
+ 		xbc_array_for_each_value(vnode, val) {
+@@ -452,15 +461,15 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ 			 * whitespace.
+ 			 */
+ 			q = strpbrk(val, " \t\r\n") ? "\"" : "";
+-			ret = snprintf(buf, rest(buf, end), "%s=%s%s%s ",
+-				       xbc_namebuf, q, val, q);
++			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
++				       "%s=%s%s%s ", xbc_namebuf, q, val, q);
+ 			if (ret < 0)
+ 				return ret;
+-			buf += ret;
++			len += ret;
+ 		}
+ 	}
+ 
+-	return buf - (end - size);
++	return len;
+ }
+ #undef rest
+ 
 
-> -- Steve
+-- 
+2.53.0-Meta
 
