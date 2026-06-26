@@ -1,59 +1,59 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E383BFACE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D9A3BFE2D
 	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jun 2026 21:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782509057; cv=none; b=YLCNZcpvTJp027NdvtXnDmSttSPqPIJXtGpTHpiDidGhiJco1C3XHdNiHhI2uxI18yUTyXWAf/Y9qnuvQyX4gpLFjStowZB1/XxweCpqMF/X9fT/lG+Qb6Nj3sCZUyzFwF/KChsl3PnzjSXHkoUgjGoNdinTSO9OSC+bg6+cltE=
+	t=1782509057; cv=none; b=bc1tlkfQXYkSB6QKru4AVKYoF8FLoZA5OTRn33/g215ZvbnBoUxb3cgxUYxyqmorOBqRim9P0mymau1jR9I3mpfHjWvMtuALUI97qUPE7lfZfFNq4y5BJ9PbB3XmdXvz7KtWD+UXYiz4HBMjYuCrOJugOWJtcAabYMchHE/5tfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782509057; c=relaxed/simple;
-	bh=uExNL1nj/oWe5XhvwSnHAfjPe5bh+/O0zAlD2Xcjt34=;
+	bh=15MJoGxYOwokbmT2ep4uqwHb+W57i2z4LwR8os1gSQI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gmhtBEl+fWwu5CQQNk1RrkYmx8yhznBK/L+i0ZGYTpsAqltorGBG8tgQBni2ejf4E9WUllfIDGL7hTIpC7V3ry0L/RA5n1Jy++GY0WPiOWXZ3s0Tz4n5rXu/f0xbgLjrkPrHy766ymOWgFlhPAuooWJ8jlvYFRe2md9kP3KC8QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pZrRywbX; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=L+F9kPT+iHobaGhCtvpzt933WOiJd/jh+9Wuu0gxQdue0LoyxXo2np4y77tqjtRFjR7luuA9nsZ79g/WoIyDhpkrKRgj7D5C1LKO6ZbK1OgQ/QsOCAI/iWeIqYZ63mprRXD/hF6pcOKfp8XG8yBpXoKfK5RemZGI+w+2v7up5Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNDf6A1p; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZrRywbX"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-49222b6e871so7611735e9.3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNDf6A1p"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490cf3000f0so13143145e9.1
         for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jun 2026 14:24:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20251104; t=1782509054; x=1783113854; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ogi5exKYxsdjMJIMbUiIGL58nCel5NbzqqPFgFs3s/w=;
-        b=pZrRywbX+Z0r16Aj8tAzut6s7c/trBp35LOywkidm/DdiDCdz0jbMqPLz5T48rqPtE
-         vUTKFO1OA7VFjPzQc/R1If0tC1hXAk+oS6kKt3wul0Rcl2FGuCGknH98SK6CCiiUEzNb
-         kaeAVNDJKaSOneBmyI6EkkKWVxEQbw153Si0ALQT0a69NLgw3LZzE4I2dIiBZnS2U8Ec
-         A7H1ybJRsLTDNJU8fbpBLY0nMO7GgX6tBhD7iN0CXT1r683EKNuGSyTaC7N2Tv+2wrL+
-         Kd1OQ9Q1PabPKfNW2ArLrs9Je2XCLscupi1RaDHf9r+eBrgFSoAG519mBrJUP2YNRuz9
-         KuRA==
+        bh=GFQ1mVg2iTV+EaFy1f7FWUdfqYgzR/zjDq+1fIdDKT4=;
+        b=MNDf6A1pmpd+xMUQ11tnQMQ9kACO4bD04O6gBhotIiLyQFGf4oHTjPoeP/g/CZ5EHL
+         QX1pKK56q5lHhX3A9EzzLfAL4VzQkgZGtZd82SD8Q4FDqqhOReVo6MTAxW0Nr5SG6tjR
+         bevLm6v/RDHFcalDXLrwiHfbvsj/uudZaLzJFq6h49ZDQYgNiNb5K/CSPbnsfM4nzY05
+         I+YaVAuDrViz5Q1rU03k/kpfwxRyAXqp3YMDjMYBMmEYWtQ6lDVd+9djeb9rOwUKAUY3
+         9q/X5nO7cEd4eY1Y8je+hU7+hXH3JsHoQ99jvH8a3VAnw2W2YVWuw+mmtEprq/iv0EJn
+         /MzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1782509054; x=1783113854;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ogi5exKYxsdjMJIMbUiIGL58nCel5NbzqqPFgFs3s/w=;
-        b=ERa+xXWo65DLXZqYnUIascYnHOP3g+Zj+T29/Uznc+BWSANNkA5QUXImZVSVhrIq4K
-         XJ+gSikNvfWDD+bJjLQxUwPJa4cCJL4KSrXlr/0EL4kXEzAzcJCqzkiCJJfCeZ6hXU1i
-         5K2FOEmf4sGiKijzSLebxaAEs5S5TMBfqWD3o0cNJ/JCcg07gpxPyhNB1NCOSjfINPcz
-         mUi9c3SEEM6jNOTsEfKVFX/9/uKPStQV74HMuBssJrSx5f1mZx6AfpoWMTA/gwrZsaq7
-         ZK2SQd3JXY4IVzZPffkIcMn0EYA7n/ix/sE3xLNvtQ0tF/lJRqbzcnq149lRxDEI9AFS
-         LBsQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9pJh8Tne0Ld7qwgx8LwmF9fR8udsznjTrG39BNTUFsSiQdnxaYrT/47KPaf+kUn/tCMfc2hSuyzGGg5sl9Q9npGgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5fhK9+HC3c6tjtCWxEICbFBvzvnmANuesIkN2lVMMyqOsV7kc
-	C/j2r7xsZrMZPojxxsd4b9mVUb9JFfFV6fhyeLF9fx9EJmDuW145/QYl
-X-Gm-Gg: AfdE7cnzm0OQbOBFtm6TqASsNkg5NI/oW1k9DXITmsrmCGTzmTCSvc97TB7O1hHoboM
-	yqWA0g71Z4HeiwDJDDk4GZXFGSr9zFGe+k6K18ksj0tUfVqEucxadm28SbM1ggSsBGlq3VIeq0f
-	c/Um1HhOMRWewzDTYxUAxiliUsXLensN9HhSZrcynW+XTTko4sHgKeGb9Sduqe1y3N1zQPHBxcT
-	gXq+kWRe8JolQskVI3be1f3BZlq3SNbhjQ9pJCNxxk87stLynMDy7SX/gcELSQsXbV5AKRYxwo7
-	GZf1X/tTiWfrrHZnumpxXi7Ox5MNYZ3DhDcph0HV9kCa3/wiGkAw6kYRT2pyKV7CmfUF4zci512
-	UJxSyeBs9hf4nt+4QvPvnKS7+GC7WAzFPfY1tWRa3FfbuTqCcFkXLC1ZhfplWAP3Ir77cSmbLed
-	B4vl+2IRb1yFuhW8JP3IC0W9dLsPZ1g7/6bwFU/rPxAwvosiypvhpx4eVqLTvzVJNo7qDx2A==
-X-Received: by 2002:a05:600c:4ecb:b0:492:4a50:8445 with SMTP id 5b1f17b1804b1-492668ac2efmr119163205e9.31.1782509053677;
-        Fri, 26 Jun 2026 14:24:13 -0700 (PDT)
+        bh=GFQ1mVg2iTV+EaFy1f7FWUdfqYgzR/zjDq+1fIdDKT4=;
+        b=no2+CTF2taW4xbHCNl3sNDlkmADHRpxF0/WlvvfFN6dd7OLEEyIUvA5ei1MxrFeYx0
+         jnSml66GttE0JOP//57O7+k7cK0w3JncozeSu4f3Qd+3cMls4qOt3O3Wgr/fLboPTbHE
+         uWeb1R7QLEMSYCMYHaIHFK4px4P71NzFfw6DAs1cFgJBOK/at+R4mPyGb9rnc9Wmofle
+         dAi712hcZDdql+32vl+4DoVPxkBeagVaSy84mFK2oA04bbd1owaenQC8+hKch7mKWIwP
+         gJmmwSNSBMQfjPP7vukuXpNMGqU6eXq30dNNpglvmkbeeu7uxwcRl/7gcVHpTEPA3ckB
+         QOwQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8b4n2jNK67didkq03MxjEZIo35wmHvP1/Xanpfter+Xhb6e7oyC3IB6CTE//vHtKTah3bD7i9u1jHs7MpJ0Sq+Bcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDt26NLML9e/oifTafZOAcvFRfm4YrsiYMwsNFBldvoDSVaPNT
+	m5D4WU6STwV8HbtenxNMPXjnBhK4xX5uYZWVSFJzOZu8Kdq9qjK2WgkNbnVpPWx6
+X-Gm-Gg: AfdE7ckrNW3lqG1dBKRrmBl3ylpriYQpSzG0NlpNgO/N/OP3t7/EOUvYY5sWTgizVa5
+	pikrmepZuDLjgqQ6gEWFnH0w6stwASxf6WOmyUVdwKKKw86BIvGYpgi9oSILyL8DxZAsdElQJa3
+	uEgP2EDIXEgRFbMmy1ho074s0fkZELUlh0/XejoZSyFV1nO/biggQxO2X3T0ViZYd4TPcadWOj+
+	ll7ecbRzdOOGWN2LlgHDVP3c3e3nd1cX3+v4+lyL2E10PuMtl1+9hPDFXrr5sr5Sh/1JYGt7GEI
+	SqBSJ6xolA3BAOnUimaSRgjh1Awe6bsKvmxbYRZTobQvcOm+nvln1RsKMo3LE8Z+W9fKsPQC5yG
+	N7IlbG6Tk/awJ44WQwr1JeJTnwakOEg1sszolcvs4szJqR/lYWhumWfr/7yk4HtJoKjKWk8bv1l
+	EesqyVSmiHfcBuZWJ/BqrhKsCnQqiQ6psaOXgXsfinYG0S61FrD94zAdJExapmVTMZQsLnkw==
+X-Received: by 2002:a05:600c:4e54:b0:490:b8c0:d470 with SMTP id 5b1f17b1804b1-49266891f79mr126335715e9.19.1782509054164;
+        Fri, 26 Jun 2026 14:24:14 -0700 (PDT)
 Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
         by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46e95f3d71fsm11505686f8f.12.2026.06.26.14.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -66,9 +66,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 Cc: David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH 1/2] tracing: Embed 'char comm[16]' in a structure
-Date: Fri, 26 Jun 2026 22:23:55 +0100
-Message-Id: <20260626212356.64150-2-david.laight.linux@gmail.com>
+Subject: [PATCH 2/2] tracing: Keep pid and comm[] in the same structure
+Date: Fri, 26 Jun 2026 22:23:56 +0100
+Message-Id: <20260626212356.64150-3-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260626212356.64150-1-david.laight.linux@gmail.com>
 References: <20260626212356.64150-1-david.laight.linux@gmail.com>
@@ -80,500 +80,230 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Embedding the array in a stucture makes the size explicit and lets
-structure copies be used.
+Rather than have two separate dynamic arrays on the end of struct
+saved_commandlines_buffer have a single dynamic array where each
+entry contains the pid and associated task->comm[].
+This simplifies the initialisation and lookup.
 
-Limit the size to 16 charatacters even if task_struct.comm is
-made larger (there are plans to increase it).
+Don't bother trying to initialise the pid field no a non-zero value,
+it only matters in the tracing_saved_cmdlines_seq_ops code.
+Allocate entry [0] first so that the tracing_saved_cmdlines_seq_ops
+code can just index the array with the file offset.
+
+The code now uses the correct size when determining the page 'order'
+to free the structure. The smaller size will always give the same
+'order'.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
- kernel/trace/blktrace.c              | 28 +++++++++----------
- kernel/trace/trace.c                 |  3 +-
- kernel/trace/trace.h                 |  9 ++++--
- kernel/trace/trace_events_filter.c   |  2 +-
- kernel/trace/trace_events_hist.c     | 26 +++++++----------
- kernel/trace/trace_functions_graph.c | 10 +++----
- kernel/trace/trace_output.c          | 24 ++++++++--------
- kernel/trace/trace_sched_switch.c    | 42 ++++++++++++++++------------
- 8 files changed, 75 insertions(+), 69 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 8cd2520b4c99..68ffc95548b7 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1590,20 +1590,20 @@ static void blk_log_dump_pdu(struct trace_seq *s,
- 
- static void blk_log_generic(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
- {
--	char cmd[TASK_COMM_LEN];
-+	struct trace_comm cmd;
- 
--	trace_find_cmdline(ent->pid, cmd);
-+	trace_find_cmdline(ent->pid, &cmd);
- 
- 	if (t_action(ent) & BLK_TC_ACT(BLK_TC_PC)) {
- 		trace_seq_printf(s, "%u ", t_bytes(ent));
- 		blk_log_dump_pdu(s, ent, has_cg);
--		trace_seq_printf(s, "[%s]\n", cmd);
-+		trace_seq_printf(s, "[%s]\n", cmd.comm);
- 	} else {
- 		if (t_sec(ent))
- 			trace_seq_printf(s, "%llu + %u [%s]\n",
--						t_sector(ent), t_sec(ent), cmd);
-+						t_sector(ent), t_sec(ent), cmd.comm);
- 		else
--			trace_seq_printf(s, "[%s]\n", cmd);
-+			trace_seq_printf(s, "[%s]\n", cmd.comm);
- 	}
- }
- 
-@@ -1637,30 +1637,30 @@ static void blk_log_remap(struct trace_seq *s, const struct trace_entry *ent, bo
- 
- static void blk_log_plug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
- {
--	char cmd[TASK_COMM_LEN];
-+	struct trace_comm cmd;
- 
--	trace_find_cmdline(ent->pid, cmd);
-+	trace_find_cmdline(ent->pid, &cmd);
- 
--	trace_seq_printf(s, "[%s]\n", cmd);
-+	trace_seq_printf(s, "[%s]\n", cmd.comm);
- }
- 
- static void blk_log_unplug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
- {
--	char cmd[TASK_COMM_LEN];
-+	struct trace_comm cmd;
- 
--	trace_find_cmdline(ent->pid, cmd);
-+	trace_find_cmdline(ent->pid, &cmd);
- 
--	trace_seq_printf(s, "[%s] %llu\n", cmd, get_pdu_int(ent, has_cg));
-+	trace_seq_printf(s, "[%s] %llu\n", cmd.comm, get_pdu_int(ent, has_cg));
- }
- 
- static void blk_log_split(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
- {
--	char cmd[TASK_COMM_LEN];
-+	struct trace_comm cmd;
- 
--	trace_find_cmdline(ent->pid, cmd);
-+	trace_find_cmdline(ent->pid, &cmd);
- 
- 	trace_seq_printf(s, "%llu / %llu [%s]\n", t_sector(ent),
--			 get_pdu_int(ent, has_cg), cmd);
-+			 get_pdu_int(ent, has_cg), cmd.comm);
- }
- 
- static void blk_log_msg(struct trace_seq *s, const struct trace_entry *ent,
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6eb4d3097a4d..7de658b8ee0d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -52,6 +52,7 @@
- #include <linux/sort.h>
- #include <linux/io.h> /* vmap_page_range() */
- #include <linux/fs_context.h>
-+#include <linux/trace_printk.h>
- 
- #include <asm/setup.h> /* COMMAND_LINE_SIZE */
- 
-@@ -2972,7 +2973,7 @@ print_trace_header(struct seq_file *m, struct trace_iterator *iter)
- 	seq_puts(m, "#    -----------------\n");
- 	seq_printf(m, "#    | task: %.16s-%d "
- 		   "(uid:%d nice:%ld policy:%ld rt_prio:%ld)\n",
--		   data->comm, data->pid,
-+		   data->comm.comm, data->pid,
- 		   from_kuid_munged(seq_user_ns(m), data->uid), data->nice,
- 		   data->policy, data->rt_priority);
- 	seq_puts(m, "#    -----------------\n");
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 80fe152af1dd..afd59d79e1fe 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -183,6 +183,11 @@ struct fexit_trace_entry_head {
- 
- struct trace_array;
- 
-+/* task_struct->comm[] may be truncated to save memory/width */
-+struct trace_comm {
-+	char comm[16];
-+};
-+
- /*
-  * The CPU trace array - it consists of thousands of trace entries
-  * plus some other descriptor data: (for example which task started
-@@ -203,7 +208,7 @@ struct trace_array_cpu {
- 	u64			preempt_timestamp;
- 	pid_t			pid;
- 	kuid_t			uid;
--	char			comm[TASK_COMM_LEN];
-+	struct trace_comm	comm;
- 
- #ifdef CONFIG_FUNCTION_TRACER
- 	int			ftrace_ignore_pid;
-@@ -906,7 +911,7 @@ void trace_last_func_repeats(struct trace_array *tr,
- 
- extern u64 ftrace_now(int cpu);
- 
--extern void trace_find_cmdline(int pid, char comm[]);
-+extern void trace_find_cmdline(int pid, struct trace_comm *comm);
- extern int trace_find_tgid(int pid);
- extern void trace_event_follow_fork(struct trace_array *tr, bool enable);
- 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 609325f57942..749887aff315 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -994,7 +994,7 @@ static int filter_pred_comm(struct filter_pred *pred, void *event)
- 	int cmp;
- 
- 	cmp = pred->regex->match(current->comm, pred->regex,
--				TASK_COMM_LEN);
-+				sizeof(current->comm));
- 	return cmp ^ pred->not;
- }
- 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 0dbbf6cca9bc..1b51491b2a41 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -680,7 +680,7 @@ struct track_data {
- };
- 
- struct hist_elt_data {
--	char *comm;
-+	struct trace_comm *comm;
- 	u64 *var_ref_vals;
- 	char **field_var_str;
- 	int n_field_var_str;
-@@ -756,7 +756,7 @@ static struct track_data *track_data_alloc(unsigned int key_len,
- 
- 	data->elt.private_data = elt_data;
- 
--	elt_data->comm = kzalloc(TASK_COMM_LEN, GFP_KERNEL);
-+	elt_data->comm = kzalloc_obj(*elt_data->comm);
- 	if (!elt_data->comm) {
- 		track_data_free(data);
- 		return ERR_PTR(-ENOMEM);
-@@ -1608,19 +1608,19 @@ parse_hist_trigger_attrs(struct trace_array *tr, char *trigger_str)
- 	return ERR_PTR(ret);
- }
- 
--static inline void save_comm(char *comm, struct task_struct *task)
-+static inline void save_comm(struct trace_comm *comm, struct task_struct *task)
- {
- 	if (!task->pid) {
--		strcpy(comm, "<idle>");
-+		strcpy(comm->comm, "<idle>");
- 		return;
- 	}
- 
- 	if (WARN_ON_ONCE(task->pid < 0)) {
--		strcpy(comm, "<XXX>");
-+		strcpy(comm->comm, "<XXX>");
- 		return;
- 	}
- 
--	strscpy(comm, task->comm, TASK_COMM_LEN);
-+	strscpy(comm->comm, task->comm);
- }
- 
- static void hist_elt_data_free(struct hist_elt_data *elt_data)
-@@ -1646,7 +1646,6 @@ static void hist_trigger_elt_data_free(struct tracing_map_elt *elt)
- static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
- {
- 	struct hist_trigger_data *hist_data = elt->map->private_data;
--	unsigned int size = TASK_COMM_LEN;
- 	struct hist_elt_data *elt_data;
- 	struct hist_field *hist_field;
- 	unsigned int i, n_str;
-@@ -1659,7 +1658,7 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
- 		hist_field = hist_data->fields[i];
- 
- 		if (hist_field->flags & HIST_FIELD_FL_EXECNAME) {
--			elt_data->comm = kzalloc(size, GFP_KERNEL);
-+			elt_data->comm = kzalloc_obj(*elt_data->comm);
- 			if (!elt_data->comm) {
- 				kfree(elt_data);
- 				return -ENOMEM;
-@@ -1677,8 +1676,6 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
- 
- 	BUILD_BUG_ON(STR_VAR_LEN_MAX & (sizeof(u64) - 1));
- 
--	size = STR_VAR_LEN_MAX;
--
- 	elt_data->field_var_str = kcalloc(n_str, sizeof(char *), GFP_KERNEL);
- 	if (!elt_data->field_var_str) {
- 		hist_elt_data_free(elt_data);
-@@ -1687,7 +1684,7 @@ static int hist_trigger_elt_data_alloc(struct tracing_map_elt *elt)
- 	elt_data->n_field_var_str = n_str;
- 
- 	for (i = 0; i < n_str; i++) {
--		elt_data->field_var_str[i] = kzalloc(size, GFP_KERNEL);
-+		elt_data->field_var_str[i] = kzalloc(STR_VAR_LEN_MAX, GFP_KERNEL);
- 		if (!elt_data->field_var_str[i]) {
- 			hist_elt_data_free(elt_data);
- 			return -ENOMEM;
-@@ -3449,7 +3446,7 @@ static bool cond_snapshot_update(struct trace_array *tr, void *cond_data)
- 	elt_data = context->elt->private_data;
- 	track_elt_data = track_data->elt.private_data;
- 	if (elt_data->comm)
--		strscpy(track_elt_data->comm, elt_data->comm, TASK_COMM_LEN);
-+		track_elt_data->comm = elt_data->comm;
- 
- 	track_data->updated = true;
- 
-@@ -5505,16 +5502,13 @@ static void hist_trigger_print_key(struct seq_file *m,
- 				   uval, (void *)(uintptr_t)uval);
- 		} else if (key_field->flags & HIST_FIELD_FL_EXECNAME) {
- 			struct hist_elt_data *elt_data = elt->private_data;
--			char *comm;
- 
- 			if (WARN_ON_ONCE(!elt_data))
- 				return;
- 
--			comm = elt_data->comm;
--
- 			uval = *(u64 *)(key + key_field->offset);
- 			seq_printf(m, "%s: %-16s[%10llu]", field_name,
--				   comm, uval);
-+				   elt_data->comm->comm, uval);
- 		} else if (key_field->flags & HIST_FIELD_FL_SYSCALL) {
- 			const char *syscall_name;
- 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 0d2d3a2ea7dd..e46c5aa0d4e4 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -561,19 +561,19 @@ static void print_graph_cpu(struct trace_seq *s, int cpu)
- 
- static void print_graph_proc(struct trace_seq *s, pid_t pid)
- {
--	char comm[TASK_COMM_LEN];
-+	struct trace_comm comm;
- 	/* sign + log10(MAX_INT) + '\0' */
- 	char pid_str[12];
- 	int spaces = 0;
- 	int len;
- 	int i;
- 
--	trace_find_cmdline(pid, comm);
--	comm[7] = '\0';
-+	trace_find_cmdline(pid, &comm);
-+	comm.comm[7] = '\0';
- 	sprintf(pid_str, "%d", pid);
- 
- 	/* 1 stands for the "-" character */
--	len = strlen(comm) + strlen(pid_str) + 1;
-+	len = strlen(comm.comm) + strlen(pid_str) + 1;
- 
- 	if (len < TRACE_GRAPH_PROCINFO_LENGTH)
- 		spaces = TRACE_GRAPH_PROCINFO_LENGTH - len;
-@@ -582,7 +582,7 @@ static void print_graph_proc(struct trace_seq *s, pid_t pid)
- 	for (i = 0; i < spaces / 2; i++)
- 		trace_seq_putc(s, ' ');
- 
--	trace_seq_printf(s, "%s-%s", comm, pid_str);
-+	trace_seq_printf(s, "%s-%s", comm.comm, pid_str);
- 
- 	/* Last spaces to align center */
- 	for (i = 0; i < spaces - (spaces / 2); i++)
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index a5ad76175d10..58405291b44f 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -554,12 +554,12 @@ int trace_print_lat_fmt(struct trace_seq *s, struct trace_entry *entry)
- static int
- lat_print_generic(struct trace_seq *s, struct trace_entry *entry, int cpu)
- {
--	char comm[TASK_COMM_LEN];
-+	struct trace_comm comm;
- 
--	trace_find_cmdline(entry->pid, comm);
-+	trace_find_cmdline(entry->pid, &comm);
- 
- 	trace_seq_printf(s, "%8.8s-%-7d %3d",
--			 comm, entry->pid, cpu);
-+			 comm.comm, entry->pid, cpu);
- 
- 	return trace_print_lat_fmt(s, entry);
- }
-@@ -658,11 +658,11 @@ int trace_print_context(struct trace_iterator *iter)
- 	struct trace_array *tr = iter->tr;
- 	struct trace_seq *s = &iter->seq;
- 	struct trace_entry *entry = iter->ent;
--	char comm[TASK_COMM_LEN];
-+	struct trace_comm comm;
- 
--	trace_find_cmdline(entry->pid, comm);
-+	trace_find_cmdline(entry->pid, &comm);
- 
--	trace_seq_printf(s, "%16s-%-7d ", comm, entry->pid);
-+	trace_seq_printf(s, "%16s-%-7d ", comm.comm, entry->pid);
- 
- 	if (tr->trace_flags & TRACE_ITER(RECORD_TGID)) {
- 		unsigned int tgid = trace_find_tgid(entry->pid);
-@@ -700,13 +700,13 @@ int trace_print_lat_context(struct trace_iterator *iter)
- 	entry = iter->ent;
- 
- 	if (verbose) {
--		char comm[TASK_COMM_LEN];
-+		struct trace_comm comm;
- 
--		trace_find_cmdline(entry->pid, comm);
-+		trace_find_cmdline(entry->pid, &comm);
- 
- 		trace_seq_printf(
- 			s, "%16s %7d %3d %d %08x %08lx ",
--			comm, entry->pid, iter->cpu, entry->flags,
-+			comm.comm, entry->pid, iter->cpu, entry->flags,
- 			entry->preempt_count & 0xf, iter->idx);
- 	} else {
- 		lat_print_generic(s, entry, iter->cpu);
-@@ -1276,7 +1276,7 @@ static enum print_line_t trace_ctxwake_print(struct trace_iterator *iter,
- 					     char *delim)
- {
- 	struct ctx_switch_entry *field;
--	char comm[TASK_COMM_LEN];
-+	struct trace_comm comm;
- 	int S, T;
- 
- 
-@@ -1284,7 +1284,7 @@ static enum print_line_t trace_ctxwake_print(struct trace_iterator *iter,
- 
- 	T = task_index_to_char(field->next_state);
- 	S = task_index_to_char(field->prev_state);
--	trace_find_cmdline(field->next_pid, comm);
-+	trace_find_cmdline(field->next_pid, &comm);
- 	trace_seq_printf(&iter->seq,
- 			 " %7d:%3d:%c %s [%03d] %7d:%3d:%c %s\n",
- 			 field->prev_pid,
-@@ -1293,7 +1293,7 @@ static enum print_line_t trace_ctxwake_print(struct trace_iterator *iter,
- 			 field->next_cpu,
- 			 field->next_pid,
- 			 field->next_prio,
--			 T, comm);
-+			 T, comm.comm);
- 
- 	return trace_handle_return(&iter->seq);
- }
+Is there any reason why this code uses alloc_pages() rather
+than vmalloc()?
+map_pid_to_cmdline[] is 64k*sizeof(int) so the whole structure
+expands to 512k with about 64k/20 (about 3200) pid entries even
+though the default is 128.
+AFAICT there is only one copy of the data - so it could be static.
+Perhaps with pointers to map_pid_cmdline[] and (after this patch)
+pid_comm[], both of which could be separately resized.
+
+I also noticed that map_pid_to_cmdline[] contains indexes into
+pid_comm[], restricting these to 16bits would half the data area.
+
+ kernel/trace/trace_sched_switch.c | 97 +++++++++++++------------------
+ 1 file changed, 39 insertions(+), 58 deletions(-)
+
 diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index e9f0ff962660..972883643097 100644
+index 972883643097..5e7c8cf444b8 100644
 --- a/kernel/trace/trace_sched_switch.c
 +++ b/kernel/trace/trace_sched_switch.c
-@@ -172,27 +172,33 @@ struct saved_cmdlines_buffer {
- 	unsigned *map_cmdline_to_pid;
+@@ -167,27 +167,21 @@ static size_t tgid_map_max;
+  * where interrupt is disabled.
+  */
+ static arch_spinlock_t trace_cmdline_lock = __ARCH_SPIN_LOCK_UNLOCKED;
++struct pid_comm {
++	pid_t pid;
++	struct trace_comm comm;
++};
+ struct saved_cmdlines_buffer {
+ 	unsigned map_pid_to_cmdline[PID_MAX_DEFAULT+1];
+-	unsigned *map_cmdline_to_pid;
  	unsigned cmdline_num;
  	int cmdline_idx;
--	char saved_cmdlines[];
-+	struct trace_comm saved_cmdlines[];
+-	struct trace_comm saved_cmdlines[];
++	struct pid_comm pid_comm[];
  };
  static struct saved_cmdlines_buffer *savedcmd;
  
- /* Holds the size of a cmdline and pid element */
- #define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)			\
--	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
-+	(sizeof(struct trace_comm) + sizeof((s)->map_cmdline_to_pid[0]))
- 
--static inline char *get_saved_cmdlines(int idx)
-+static inline struct trace_comm *get_saved_cmdlines(int idx)
+-/* Holds the size of a cmdline and pid element */
+-#define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)			\
+-	(sizeof(struct trace_comm) + sizeof((s)->map_cmdline_to_pid[0]))
+-
+-static inline struct trace_comm *get_saved_cmdlines(int idx)
+-{
+-	return &savedcmd->saved_cmdlines[idx];
+-}
+-
+-static inline void set_cmdline(int idx, const struct task_struct *tsk)
++static inline void set_cmdline(struct pid_comm *pid_comm, const struct task_struct *tsk)
  {
--	return &savedcmd->saved_cmdlines[idx * TASK_COMM_LEN];
-+	return &savedcmd->saved_cmdlines[idx];
- }
+-	struct trace_comm *comm = get_saved_cmdlines(idx);
++	struct trace_comm *comm = &pid_comm->comm;
  
--static inline void set_cmdline(int idx, const char *cmdline)
-+static inline void set_cmdline(int idx, const struct task_struct *tsk)
- {
--	strscpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
-+	struct trace_comm *comm = get_saved_cmdlines(idx);
-+
-+	BUILD_BUG_ON(sizeof(comm->comm) > sizeof(tsk->comm));
-+
-+	memcpy(comm->comm, tsk->comm, sizeof comm->comm);
-+	if (sizeof(comm->comm) != sizeof(tsk->comm))
-+		comm->comm[ARRAY_SIZE(comm->comm) - 1] = 0;
- }
+ 	BUILD_BUG_ON(sizeof(comm->comm) > sizeof(tsk->comm));
  
- static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
- {
--	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
-+	int order = get_order(sizeof(*s) + s->cmdline_num * sizeof(struct trace_comm));
+@@ -212,7 +206,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	int order;
  
- 	kmemleak_free(s);
- 	free_pages((unsigned long)s, order);
-@@ -222,7 +228,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	/* Figure out how much is needed to hold the given number of cmdlines */
+-	orig_size = sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
++	orig_size = sizeof(*s) + val * sizeof(s->pid_comm[0]);
+ 	order = get_order(orig_size);
+ 	size = 1 << (order + PAGE_SHIFT);
+ 	page = alloc_pages(GFP_KERNEL, order);
+@@ -224,16 +218,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	memset(s, 0, sizeof(*s));
+ 
+ 	/* Round up to actual allocation */
+-	val = (size - sizeof(*s)) / SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
++	val = (size - sizeof(*s)) / sizeof(s->pid_comm[0]);
  	s->cmdline_num = val;
  
- 	/* Place map_cmdline_to_pid array right after saved_cmdlines */
--	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
-+	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val];
- 
+-	/* Place map_cmdline_to_pid array right after saved_cmdlines */
+-	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val];
+-
  	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
  	       sizeof(s->map_pid_to_cmdline));
-@@ -273,25 +279,25 @@ int trace_save_cmdline(struct task_struct *tsk)
+-	memset(s->map_cmdline_to_pid, NO_CMDLINE_MAP,
+-	       val * sizeof(*s->map_cmdline_to_pid));
+ 
+ 	return s;
+ }
+@@ -247,6 +236,7 @@ int trace_create_savedcmd(void)
+ 
+ int trace_save_cmdline(struct task_struct *tsk)
+ {
++	struct pid_comm *pid_comm;
+ 	unsigned tpid, idx;
+ 
+ 	/* treat recording of idle task as a success */
+@@ -272,14 +262,16 @@ int trace_save_cmdline(struct task_struct *tsk)
+ 
+ 	idx = savedcmd->map_pid_to_cmdline[tpid];
+ 	if (idx == NO_CMDLINE_MAP) {
+-		idx = (savedcmd->cmdline_idx + 1) % savedcmd->cmdline_num;
+-
++		idx = savedcmd->cmdline_idx;
+ 		savedcmd->map_pid_to_cmdline[tpid] = idx;
++		if (++idx >= savedcmd->cmdline_num)
++			idx = 0;
+ 		savedcmd->cmdline_idx = idx;
  	}
  
- 	savedcmd->map_cmdline_to_pid[idx] = tsk->pid;
--	set_cmdline(idx, tsk->comm);
-+	set_cmdline(idx, tsk);
+-	savedcmd->map_cmdline_to_pid[idx] = tsk->pid;
+-	set_cmdline(idx, tsk);
++	pid_comm = savedcmd->pid_comm + idx;
++	pid_comm->pid = tsk->pid;
++	set_cmdline(pid_comm, tsk);
  
  	arch_spin_unlock(&trace_cmdline_lock);
  
- 	return 1;
- }
+@@ -288,8 +280,8 @@ int trace_save_cmdline(struct task_struct *tsk)
  
--static void __trace_find_cmdline(int pid, char comm[])
-+static void __trace_find_cmdline(int pid, struct trace_comm *comm)
+ static void __trace_find_cmdline(int pid, struct trace_comm *comm)
  {
++	struct pid_comm *pid_comm;
  	unsigned map;
- 	int tpid;
+-	int tpid;
  
  	if (!pid) {
--		strcpy(comm, "<idle>");
-+		strcpy(comm->comm, "<idle>");
+ 		strcpy(comm->comm, "<idle>");
+@@ -301,12 +293,11 @@ static void __trace_find_cmdline(int pid, struct trace_comm *comm)
  		return;
  	}
  
- 	if (WARN_ON_ONCE(pid < 0)) {
--		strcpy(comm, "<XXX>");
-+		strcpy(comm->comm, "<XXX>");
- 		return;
- 	}
- 
-@@ -300,14 +306,14 @@ static void __trace_find_cmdline(int pid, char comm[])
+-	tpid = pid & (PID_MAX_DEFAULT - 1);
+-	map = savedcmd->map_pid_to_cmdline[tpid];
++	map = savedcmd->map_pid_to_cmdline[pid & (PID_MAX_DEFAULT - 1)];
  	if (map != NO_CMDLINE_MAP) {
- 		tpid = savedcmd->map_cmdline_to_pid[map];
- 		if (tpid == pid) {
--			strscpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
-+			*comm = *get_saved_cmdlines(map);
+-		tpid = savedcmd->map_cmdline_to_pid[map];
+-		if (tpid == pid) {
+-			*comm = *get_saved_cmdlines(map);
++		pid_comm = savedcmd->pid_comm + map;
++		if (pid_comm->pid == pid) {
++			*comm = pid_comm->comm;;
  			return;
  		}
  	}
--	strcpy(comm, "<...>");
-+	strcpy(comm->comm, "<...>");
+@@ -521,42 +512,34 @@ const struct file_operations tracing_saved_tgids_fops = {
+ 	.release	= seq_release,
+ };
+ 
+-static void *saved_cmdlines_next(struct seq_file *m, void *v, loff_t *pos)
++static struct pid_comm *saved_cmdlines_entry(loff_t off)
+ {
+-	unsigned int *ptr = v;
++	struct pid_comm *pid_comm;
+ 
+-	if (*pos || m->count)
+-		ptr++;
+-
+-	(*pos)++;
++	if (off >= savedcmd->cmdline_num)
++		return NULL;
+ 
+-	for (; ptr < &savedcmd->map_cmdline_to_pid[savedcmd->cmdline_num];
+-	     ptr++) {
+-		if (*ptr == -1 || *ptr == NO_CMDLINE_MAP)
+-			continue;
++	/* Entries are used in sequence and never freed */
++	pid_comm = &savedcmd->pid_comm[off];
++	return pid_comm->pid ? pid_comm : NULL;
++}
+ 
+-		return ptr;
+-	}
++static void *saved_cmdlines_next(struct seq_file *m, void *v, loff_t *pos)
++{
++	loff_t off = *pos;
+ 
+-	return NULL;
++	v = saved_cmdlines_entry(off);
++	if (v)
++		*pos = off + 1;
++	return v;
  }
  
--void trace_find_cmdline(int pid, char comm[])
-+void trace_find_cmdline(int pid, struct trace_comm *comm)
+ static void *saved_cmdlines_start(struct seq_file *m, loff_t *pos)
  {
+-	void *v;
+-	loff_t l = 0;
+-
  	preempt_disable();
  	arch_spin_lock(&trace_cmdline_lock);
-@@ -561,11 +567,11 @@ static void saved_cmdlines_stop(struct seq_file *m, void *v)
+ 
+-	v = &savedcmd->map_cmdline_to_pid[0];
+-	while (l <= *pos) {
+-		v = saved_cmdlines_next(m, v, &l);
+-		if (!v)
+-			return NULL;
+-	}
+-
+-	return v;
++	return saved_cmdlines_entry(*pos);
+ }
+ 
+ static void saved_cmdlines_stop(struct seq_file *m, void *v)
+@@ -567,11 +550,9 @@ static void saved_cmdlines_stop(struct seq_file *m, void *v)
  
  static int saved_cmdlines_show(struct seq_file *m, void *v)
  {
--	char buf[TASK_COMM_LEN];
-+	struct trace_comm buf;
- 	unsigned int *pid = v;
+-	struct trace_comm buf;
+-	unsigned int *pid = v;
++	struct pid_comm *ptr = v;
  
--	__trace_find_cmdline(*pid, buf);
--	seq_printf(m, "%d %s\n", *pid, buf);
-+	__trace_find_cmdline(*pid, &buf);
-+	seq_printf(m, "%d %s\n", *pid, buf.comm);
+-	__trace_find_cmdline(*pid, &buf);
+-	seq_printf(m, "%d %s\n", *pid, buf.comm);
++	seq_printf(m, "%d %s\n", ptr->pid, ptr->comm.comm);
  	return 0;
  }
  
