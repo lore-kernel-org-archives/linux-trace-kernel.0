@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11BB3F660F;
-	Fri, 26 Jun 2026 14:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7464F3EFFAE;
+	Fri, 26 Jun 2026 14:14:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782483262; cv=none; b=RoRPUbI+MV184mZcRN0KGu3wqPrld7W1OBxPXnP4nXzThMwyjKSlnv+gigZZFokDbJfXzlJp7R+bMo/x6kiFoX63TdYPaOzwNNzhDHSuaP38vfj6eMyBOnZ7wlgTD6GQqeLW8l+tiAR6cjI0tn7f5KXhzSbIXdaMwRPZkp17gEY=
+	t=1782483272; cv=none; b=FGknDZsX1I6b2CmCYso5dg+VZUZEfQglLjXdCeiepl0jLmO00s4BfcGgKnHZlQHPgXfkyzRwGQrZLBqLxVHS+18jO3z+Cfv6Vlwr5vJpJDRz7hzjuskFce4AtXFYVtFzk5DdVTUeaC4J156gmX/WU22hS/4HjlxdRmIy3sxn6pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782483262; c=relaxed/simple;
-	bh=6WeEfBZ8rG6m1SW6DnxtfbwfS0Mue6OQjmOfMXiosnc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dAmUUwiCuv6eLeE+mk+FoQVvVtxwvXqOU+6RP/2FSsq95gpXplvcAPQwYNnnHvwDKeNdiN8U802zZ9wY/7BHtLGTlIvBl9bm6S5LvEKpsh5jPz4XjWl6aAxu/ZzI5cUB0GPGjJ7RPmgVy3QEN/ePBESLdSfFQLFUxNdOhNkpYKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foKHBDQm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782483272; c=relaxed/simple;
+	bh=ILB/ElfIWa9u0xQ12aAYqyj8anSCHxMnZsNP9BRN1oE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TaC/9gFMsCIOqU895+rT/xdardSC3kekKLjP9PNfbR6ApoVT96hhSIrRDjk6DP7UaNscv3BHGk2FfUJk+pwBNW0n3zomnODpg8C7rtpHZtAATU/IAk2VnAqHXCM0jgP0GdF/zx8v7wxUK/pkitbhyhCjqubjyOxTpFRnXI9HEjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHSkm1Pq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foKHBDQm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BFF1F000E9;
-	Fri, 26 Jun 2026 14:14:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHSkm1Pq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B425B1F00A3D;
+	Fri, 26 Jun 2026 14:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782483261;
-	bh=SkXzb6SusHWpjYbemZl565iVMWbnBwLhnpo+kzrmlw4=;
-	h=From:To:Cc:Subject:Date;
-	b=foKHBDQmRNlCmzzoAIYLPHl0igRL+acjd1AMpxjLShKlGKCBY1QIyO74CxQVQCZFA
-	 gGffgzKTGNwIOZpRL1SZ98FltmHAsF2gbcMZKnwNwLubleIBvH4rAEKxc/R3Xh/4z8
-	 WngspWzQfdlHUZZP3CuGTDr8BEGm3EoghL2dxJyugBARLXWXu/bJnmzUa+UYJDDKB/
-	 msSQX5bEA7Iz/EfsuOJYC3JJ09Cbh78JjFVyGyKA/hGKRPt3Yig0GcpJ+Fhy8Jawj6
-	 dqd3nWR2Yk99Mi4xOOiylR4dS+ErgEgZ5yf3XFOcM3EyvlE5v32zs+4ZqUG6VRlu5n
-	 p7X/yh9k4JUmA==
+	s=k20260515; t=1782483271;
+	bh=zA1ny7mz86qD9VEgfTKY9l9S9cY7unn92daWUtN0ORY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=WHSkm1Pqp32TDMD98U2dsB0jvyLGZNUrC7D3K4aI5nkKxlo38YZzX6FZJ7Q0U1Xx/
+	 s9cOooDptDT0zdbJluyJEQm+m7vKqSwRWfLNOYPfAyM0nVVay+QR0+XBPjlw2SXiY1
+	 4R65lKzqQL5ryNU1upjrFIRMl8dpaF9HHhU7wqeMABmMQptW47E0H+0Oqdfmtk6t21
+	 RJB86rL5AaIZI4naMlCNCfI++iyLXf6L3R8F7Lux/WZNFSR2W4hrHVh3h8YE4BpZR5
+	 GZ5YSDSXQu9RsC/a634SXNWU8DzpjLp4lt4Q/C5xC15LHHcWucYuVxB+F/At2PG1Xf
+	 BXePjSd7di7gw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -35,10 +36,12 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v11 00/11] tracing/probes: Add more typecast features
-Date: Fri, 26 Jun 2026 23:14:16 +0900
-Message-ID: <178248325671.841606.17344906774310339507.stgit@devnote2>
+Subject: [PATCH v11 01/11] tracing/probes: Allow eprobe to use variable without $ prefix
+Date: Fri, 26 Jun 2026 23:14:26 +0900
+Message-ID: <178248326672.841606.5469594713059767810.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178248325671.841606.17344906774310339507.stgit@devnote2>
+References: <178248325671.841606.17344906774310339507.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,104 +52,77 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 11th version of series to introduce more typecast features
-to probe events. The previous version is here:
+The commit 69efd863a785 ("tracing/eprobes: Allow use of BTF names
+to dereference pointers") allows eprobe to use event field without
+"$" prefix when it is used with typecast, it is natual to allow it
+without typecast.
 
- https://lore.kernel.org/all/178243982430.790911.17439694390021542101.stgit@devnote2/
-
-In this version, I fixed minor issues and add 2 patches to fix
-in-tree tools to ignore comment lines in dynamic_events[3/11][4/11].
-
-This series extends BTF typecast feature and add more options:
-
-1. Expanding BTF typecast to kprobe and fprobe.
-   (currently only function entry/exit)
-
-2. Introduce container_of like typecast. This adds a "assigned
-   member" option to the typecast.
-
-   (STRUCT,MEMBER)VAR->ANOTHER_MEMBER
-
-   This casts VAR to STRUCT type but the VAR is as the address
-   of STRUCT.MEMBER. In C, it is:
-
-   container_of(VAR, STRUCT, MEMBER)->ANOTHER_MEMBER
-
-3. Support nested typecast, e.g.
-
-   (STRUCT)((STRUCT2)VAR->MEMBER2)->MEMBER
-
-   the nest level must be smaller than 3.
-
-4. Add $current variable to point "current" task_struct.
-   This is useful with typecast, e.g.
-
-   (task_struct)$current->pid
-
-5. per-cpu dereference support.
-
-   Intrdouce this_cpu_read(VAR) and this_cpu_ptr(VAR) to
-   access per-cpu data on the current CPU (accessing other CPU
-   data is not stable, because it can be changed.)
-
-   You can access the member of per-cpu data structure using
-   typecast like:
-
-   (STRUCT)this_cpu_ptr(VAR)->MEMBER
-
-6. Support event fields without $ prefix on eprobes.
-
-   Now eprobe events can access its event fields.
-
-And added fetcharg dump feature (for debug) and updated test scripts
-to test part of them.
-
-Thanks,
-
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-base-commit: c69b5f959286395e94c237ce6d7d4970bad7f6e3
+ Changes in v8:
+  - Newly added.
+---
+ kernel/trace/trace_probe.c                         |   12 +++++++++++-
+ kernel/trace/trace_probe.h                         |    1 +
+ .../test.d/dynevent/eprobes_syntax_errors.tc       |    3 +--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-Masami Hiramatsu (Google) (11):
-      tracing/probes: Allow eprobe to use variable without $ prefix
-      tracing/probes: Support dumping fetcharg program for debugging dynamic events
-      tools/bootconfig: Ignore comment lines in dynamic_events/kprobe_events file
-      perf/probe: Ignore comment lines in dynamic_events/kprobe_events file
-      tracing/probes: Support typecast for various probe events
-      tracing/probes: Support nested typecast
-      tracing/probes: Type casting always involves nested calls
-      tracing/probes: Support field specifier option for typecast
-      tracing/probes: Add $current variable support
-      tracing/probes: Add this_cpu_read() and this_cpu_ptr() dereference method to fetcharg
-      tracing/probes: Add a new testcase for BTF typecasts
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 0da7c0b53ba7..2ce7d62471cb 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1341,7 +1341,17 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 		ret = handle_typecast(arg, pcode, end, ctx);
+ 		break;
+ 	default:
+-		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
++		if (isalpha(arg[0]) || arg[0] == '_') {
++			/* BTF variable or event field*/
++			if (ctx->flags & TPARG_FL_TEVENT) {
++				ret = parse_trace_event(arg, *pcode, ctx);
++				if (ret < 0) {
++					trace_probe_log_err(ctx->offset,
++							    NO_EVENT_FIELD);
++					return -EINVAL;
++				}
++				break;
++			}
+ 			if (!tparg_is_function_entry(ctx->flags) &&
+ 			    !tparg_is_function_return(ctx->flags)) {
+ 				trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 40b53b5b58a9..2e0d8384ee5c 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -559,6 +559,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(NO_PTR_STRCT,		"This is not a pointer to union/structure."),	\
+ 	C(NOSUP_DAT_ARG,	"Non pointer structure/union argument is not supported."),\
+ 	C(BAD_HYPHEN,		"Failed to parse single hyphen. Forgot '>'?"),	\
++	C(NO_EVENT_FIELD,	"This event field is not found."),	\
+ 	C(NO_BTF_FIELD,		"This field is not found."),	\
+ 	C(BAD_BTF_TID,		"Failed to get BTF type info."),\
+ 	C(BAD_TYPE4STR,		"This type does not fit for string."),\
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+index 2a680c086047..0e65e787e426 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+@@ -10,7 +10,7 @@ check_error() { # command-with-error-pos-by-^
+ check_error 'e ^a.'			# NO_EVENT_INFO
+ check_error 'e ^.b'			# NO_EVENT_INFO
+ check_error 'e ^a.b'			# BAD_ATTACH_EVENT
+-check_error 'e syscalls/sys_enter_openat ^foo'	# BAD_ATTACH_ARG
++check_error 'e syscalls/sys_enter_openat ^foo'	# NO_EVENT_FIELD
+ check_error 'e:^/bar syscalls/sys_enter_openat'	# NO_GROUP_NAME
+ check_error 'e:^12345678901234567890123456789012345678901234567890123456789012345/bar syscalls/sys_enter_openat'	# GROUP_TOO_LONG
+ 
+@@ -19,7 +19,6 @@ check_error 'e:^ syscalls/sys_enter_openat'		# NO_EVENT_NAME
+ check_error 'e:foo/^12345678901234567890123456789012345678901234567890123456789012345 syscalls/sys_enter_openat'	# EVENT_TOO_LONG
+ check_error 'e:foo/^bar.1 syscalls/sys_enter_openat'	# BAD_EVENT_NAME
+ 
+-check_error 'e:foo/bar syscalls/sys_enter_openat arg=^dfd'	# BAD_FETCH_ARG
+ check_error 'e:foo/bar syscalls/sys_enter_openat arg=^$foo'	# BAD_ATTACH_ARG
+ 
+ if grep -q '<attached-group>\.<attached-event>.*\[if <filter>\]' README; then
 
-
- Documentation/trace/eprobetrace.rst                |    7 
- Documentation/trace/fprobetrace.rst                |   10 
- Documentation/trace/kprobetrace.rst                |   11 
- kernel/trace/Kconfig                               |   12 
- kernel/trace/trace.c                               |    8 
- kernel/trace/trace_eprobe.c                        |    2 
- kernel/trace/trace_fprobe.c                        |    2 
- kernel/trace/trace_kprobe.c                        |    2 
- kernel/trace/trace_probe.c                         |  585 ++++++++++++++++----
- kernel/trace/trace_probe.h                         |  100 ++-
- kernel/trace/trace_probe_tmpl.h                    |   25 +
- kernel/trace/trace_uprobe.c                        |    3 
- samples/trace_events/trace-events-sample.c         |   40 +
- samples/trace_events/trace-events-sample.h         |   34 +
- tools/bootconfig/scripts/ftrace2bconf.sh           |    2 
- tools/perf/util/probe-file.c                       |    2 
- .../ftrace/test.d/dynevent/btf_probe_event.tc      |   51 ++
- .../test.d/dynevent/btf_typecast_accepted.tc       |  107 ++++
- .../test.d/dynevent/eprobes_syntax_errors.tc       |   12 
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   12 
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   12 
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 
- 22 files changed, 890 insertions(+), 154 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/btf_typecast_accepted.tc
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
