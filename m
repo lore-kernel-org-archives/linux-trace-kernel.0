@@ -1,83 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7893B25B0A2;
-	Sat, 27 Jun 2026 07:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FDC23A561;
+	Sat, 27 Jun 2026 08:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782546774; cv=none; b=Op4GGnz8fBRoDX9v4ggVr9qaimFGYg3M8FHpVXJ+8JMSgHnmeC0TzjWv97sOMKYMxPeN2W5XCMbz9mqozCislB/XdI6nhy7PJxDoIDBwtZ4AM19DW0BzkOyrWL4pQZPoKwrkxWg6CeOLa1AyRuk0TTS8b5BBjEnoZRJ0DEiDzSM=
+	t=1782549385; cv=none; b=tsZ2fI3d8EVgA4dtnuykY/mr2SJ+mm+m4rlD6lWp1a5l3IB7ftWc8RHwM7vR8FXTQohxUaSiLlMFW7Wp/ZjETa+uz4ZgTcLfU7WsSe6iyAK3Ki4z3qpzTVakkNY17v2QPqQF19g6vQvvG0Is0uvc+vAw8N8Tus1KlaroSZwSqmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782546774; c=relaxed/simple;
-	bh=RVlQtCvZvvv1cGr13Nszm1cfhyX21UVNw/O9V+ZI294=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oG7gdmUTFhYeIq+xeBwNViSznbgsMbxwIOlYgwMfyk32H7sDH2oIwwT/4aToNsd2b7/BZpZbRwHfVnBvPJBUFVw7uYbX1eYVWvCMBBTk0oP1W2YXzpNC4x1BjH+DBpiOf/a9nXT9tAz6XWjPyzJdTyUG0Dj7ieBrMgEXmQij+20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoVc6vc8; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoVc6vc8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460311F000E9;
-	Sat, 27 Jun 2026 07:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782546773;
-	bh=S0znFcK8j0MuvFWz2pu1AoWSdjFNtXQNpSRnuMwlEzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=eoVc6vc8yM9DIkM5Wo0O2t6uxw0sx2GB1/c2P9l0zVF+KOXagAc6gIrZVyliop+Qd
-	 7nfZY0dAkzYyVw8jAvnHGx5geA4y/4CXYLq06OXBuKn3reSfTXhObbuHe9gQ5ZaFuT
-	 lnyo5uaI8nyu5VAEtD/9IkEBv0GcC2DfWs3wxxr/6FtTbubs4oHPPXIVELVf4K+7VY
-	 WgmFy2isk/o9L4WzXu/02pEIqSp8VuH6m8O3I3FqFMTgIE1ochTNLkzHylHG1NO/Nm
-	 hlANvs76XOjLm23eV7mDwVjSLPNJUEtln/VbUrO/GiOuNH50gJRqnGhSm+ufJ+CDu7
-	 A0lMLVpLMK2aA==
-Date: Sat, 27 Jun 2026 10:52:42 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
-Message-ID: <aj-BShkN6BXex_ku@kernel.org>
-References: <20260626-ecc_panic-v10-0-6dacb8ad024d@debian.org>
- <20260626-ecc_panic-v10-6-6dacb8ad024d@debian.org>
+	s=arc-20240116; t=1782549385; c=relaxed/simple;
+	bh=jgCiN6tRXMSulZx3jHLTvbVwnbJHXCz4e5qQC802Gu8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=hiAPt098YwvZV7spoTsjMKZ13fHAu8ZwzVOWdPAeOIBSiL+fE5fm7rT0YLDGYa7A6qOFRFayfb/05PfPAYr2hE1ccWG+gZ0/ToyTtGFVLeHkon91sJbfxQ3qYn0C7mCcaIJ8H8hxLYD0rmagNpAKUhBdRuYwKHgXWNDItdcB98g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id D0C5A167BE9;
+	Sat, 27 Jun 2026 08:36:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0C76D20029;
+	Sat, 27 Jun 2026 08:36:14 +0000 (UTC)
+Date: Sat, 27 Jun 2026 09:36:13 +0100
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+CC: Martin Kaiser <martin@kaiser.cx>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_tracing=3A_eprobe=3A_read_th?=
+ =?US-ASCII?Q?e_complete_FILTER=5FPTR=5FSTRING_pointer?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20260627004538.4cc8b34a4a20ee14f9a38c28@kernel.org>
+References: <20260615145500.2662456-1-martin@kaiser.cx> <20260616110910.e6420488b6a798d49951cde9@kernel.org> <ajJbkeK0zXb8MtcS@akranes.kaiser.cx> <20260618105227.c58c85e9cb19bce673d9a79b@kernel.org> <ajasLMUt_AMM3ztH@akranes.kaiser.cx> <20260622125815.7416792c020bd3d81c01e51b@kernel.org> <20260626055440.76c28d25@fedora> <aj5SdK9gUIVoPmmE@akranes.kaiser.cx> <20260626064223.60ffeeaa@fedora> <20260627004538.4cc8b34a4a20ee14f9a38c28@kernel.org>
+Message-ID: <1194DB48-67C7-4602-8038-2A2297E36D94@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260626-ecc_panic-v10-6-6dacb8ad024d@debian.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 0C76D20029
+X-Stat-Signature: 4jqf5k3f6579fsfdy15r4pawazfjtoa3
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+DPBTWCX9MzD6d0EVIhylocz0U+AxO2kA=
+X-HE-Tag: 1782549374-461502
+X-HE-Meta: U2FsdGVkX19fxdjCBuNH/XZqQMQSJn4o832F2LIGxPjpGbzpbYdORWtJuvDWB4ifefONIUqlWqd+2JuvxDH6++cRhmw7HycGt57scoC0sIaKd3Wmqffl2cw3odQ7IAdvlnYEwWh8VRDt8/j1bIaCmSkVBTQomBPVAuEgJ1yWL+vDm1Ic59unpNr950XucP3myjvF6PTscVNlpSKvEmF31o6wxXn+W6qWdKZevY8aitjRy3Hy6kMrD8ap8pnRFQsxv6Vkcs2D5vttvcEibWYH71OddR5+nIJPBx423jB00imF+piB1iT+OJqHrUaaLloUk7d+b3ZwZ0AUbDhO918/DdOlzLF4eD39LKiaK799y5S6aE2yX2Crq6LdN0/JOGjUIkm7LOJZrV1GHu23PCLdaqju6T73eDVGxPrkwFakMko=
 
-Hi Breno,
 
-On Fri, Jun 26, 2026 at 08:33:20AM -0700, Breno Leitao wrote:
-> Add a destructive selftest that verifies
-> vm.panic_on_unrecoverable_memory_failure actually panics when a
-> hwpoison error hits a kernel-owned page.
 
-> +ksft_skip=4
+On June 26, 2026 4:45:38 PM GMT+01:00, Masami Hiramatsu <mhiramat@kernel=
+=2Eorg> wrote:
+>On Fri, 26 Jun 2026 06:42:23 -0400
+>Steven Rostedt <rostedt@goodmis=2Eorg> wrote:
+>
+>> =2E
+>>=20
+>> I'll queue this up=2E
+>
+>I've already queued this on my probes/core branch=2E
+>(which will be probes/fixes)
 
-...
 
-> +ksft_print() { echo "# $*"; }
-> +ksft_exit_skip() { ksft_print "$*"; exit "$ksft_skip"; }
-> +ksft_exit_fail() { echo "not ok 1 $*"; exit 1; }
+Awesome=2E Thanks Masami!
 
-There is tools/testing/selftests/kselftest/ktap_helpers.sh that already
-implements this :)
+-- Steve
 
--- 
-Sincerely yours,
-Mike.
