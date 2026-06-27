@@ -1,69 +1,90 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FDC23A561;
-	Sat, 27 Jun 2026 08:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A8A17B50F;
+	Sat, 27 Jun 2026 09:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782549385; cv=none; b=tsZ2fI3d8EVgA4dtnuykY/mr2SJ+mm+m4rlD6lWp1a5l3IB7ftWc8RHwM7vR8FXTQohxUaSiLlMFW7Wp/ZjETa+uz4ZgTcLfU7WsSe6iyAK3Ki4z3qpzTVakkNY17v2QPqQF19g6vQvvG0Is0uvc+vAw8N8Tus1KlaroSZwSqmc=
+	t=1782552199; cv=none; b=E0mne9zajbHdx+9VfFv/Pq0Q8vRP46UjATjkFFv+qGr0h9e+7r6gNOGc6Uh9EpgXmhA4I1vY2+8KWWinhV/o3/EOvKWJuF9QR13J+sddNLQTyEIXEWPqR/01Y8ad1fyYVnETJqsnKyQlsoR/1VnQlsoLItEqGOdS1mLEZIGKJ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782549385; c=relaxed/simple;
-	bh=jgCiN6tRXMSulZx3jHLTvbVwnbJHXCz4e5qQC802Gu8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=hiAPt098YwvZV7spoTsjMKZ13fHAu8ZwzVOWdPAeOIBSiL+fE5fm7rT0YLDGYa7A6qOFRFayfb/05PfPAYr2hE1ccWG+gZ0/ToyTtGFVLeHkon91sJbfxQ3qYn0C7mCcaIJ8H8hxLYD0rmagNpAKUhBdRuYwKHgXWNDItdcB98g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	s=arc-20240116; t=1782552199; c=relaxed/simple;
+	bh=fKJ3hXeFES2RpNSuyJhsOx2YjBVHuGlVrz3hG6NU1J0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t0I5lXrgH9cjZAXmrBs12gUgy0HuRWekI4mS5fFgWpYhMhtPbHDOy6klhUNDnryS+1Z+DzWvZJJSb52ekRZU23kTxoVR6y+k225ka2pKrmIDNkiHgCMQJYrR1Zxh/tswpDtvv+Q7HDEVwalqi+QrqDimogY4EQyksG2uET2ip/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id D0C5A167BE9;
-	Sat, 27 Jun 2026 08:36:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0C76D20029;
-	Sat, 27 Jun 2026 08:36:14 +0000 (UTC)
-Date: Sat, 27 Jun 2026 09:36:13 +0100
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 3B79BC3314;
+	Sat, 27 Jun 2026 09:23:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 8EFBB1B;
+	Sat, 27 Jun 2026 09:23:13 +0000 (UTC)
+Date: Sat, 27 Jun 2026 05:23:11 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-CC: Martin Kaiser <martin@kaiser.cx>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_tracing=3A_eprobe=3A_read_th?=
- =?US-ASCII?Q?e_complete_FILTER=5FPTR=5FSTRING_pointer?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20260627004538.4cc8b34a4a20ee14f9a38c28@kernel.org>
-References: <20260615145500.2662456-1-martin@kaiser.cx> <20260616110910.e6420488b6a798d49951cde9@kernel.org> <ajJbkeK0zXb8MtcS@akranes.kaiser.cx> <20260618105227.c58c85e9cb19bce673d9a79b@kernel.org> <ajasLMUt_AMM3ztH@akranes.kaiser.cx> <20260622125815.7416792c020bd3d81c01e51b@kernel.org> <20260626055440.76c28d25@fedora> <aj5SdK9gUIVoPmmE@akranes.kaiser.cx> <20260626064223.60ffeeaa@fedora> <20260627004538.4cc8b34a4a20ee14f9a38c28@kernel.org>
-Message-ID: <1194DB48-67C7-4602-8038-2A2297E36D94@goodmis.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] usb: typec: add trace point for typec_set_mode
+Message-ID: <20260627052311.18649b98@fedora>
+In-Reply-To: <ajPW9P6qZyhqtjvp@kuha>
+References: <20260617-typec_set_mode-tracepoint-v1-1-bdfbb39cfccd@pengutronix.de>
+	<ajPO6roV4HRZYGNd@kuha>
+	<43e13854-a634-4706-bc12-723c871a5579@pengutronix.de>
+	<ajPW9P6qZyhqtjvp@kuha>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 0C76D20029
-X-Stat-Signature: 4jqf5k3f6579fsfdy15r4pawazfjtoa3
-X-Rspamd-Server: rspamout06
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 56xn5xisgfc1h3rakkp99kdu3ytujj5w
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 8EFBB1B
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+DPBTWCX9MzD6d0EVIhylocz0U+AxO2kA=
-X-HE-Tag: 1782549374-461502
-X-HE-Meta: U2FsdGVkX19fxdjCBuNH/XZqQMQSJn4o832F2LIGxPjpGbzpbYdORWtJuvDWB4ifefONIUqlWqd+2JuvxDH6++cRhmw7HycGt57scoC0sIaKd3Wmqffl2cw3odQ7IAdvlnYEwWh8VRDt8/j1bIaCmSkVBTQomBPVAuEgJ1yWL+vDm1Ic59unpNr950XucP3myjvF6PTscVNlpSKvEmF31o6wxXn+W6qWdKZevY8aitjRy3Hy6kMrD8ap8pnRFQsxv6Vkcs2D5vttvcEibWYH71OddR5+nIJPBx423jB00imF+piB1iT+OJqHrUaaLloUk7d+b3ZwZ0AUbDhO918/DdOlzLF4eD39LKiaK799y5S6aE2yX2Crq6LdN0/JOGjUIkm7LOJZrV1GHu23PCLdaqju6T73eDVGxPrkwFakMko=
+X-Session-ID: U2FsdGVkX19NYMANLc1o9IuX67SxFSTjbOUYmdbT/Kc=
+X-HE-Tag: 1782552193-635815
+X-HE-Meta: U2FsdGVkX18tHMH5FQKISpJCF3z3ylpEN7fnXxNGv//UlNTTvjSi55n73awhAtNwniTqbqEcZYXQnmzv/nz4Fjm2PSA1MTS30w3GfeBZ+gKYAaTBL+MGze92asptEBp13uRe9DE70U/ymCIeQbrytkXoDlChZWfsX0mrBxEVoFC3BWoav4pGtQoVCFZgm8Ah5sPXZE5BdTsZWNxBeFY9CDHvIVLve+fWUW+ScwfL4V8DEEoFo65PrvQkzLuyGpQ+D3ap3KIeHu4pIn0ytyGEfIkR0W4k9vWw8RdY1aGqXMtySSzDKMl9o2nhsGBi9lxOJ/14Q0jI0tnz0zB3xhSBKCWUQE9H6J21DbOWVJAtFlCTVGWXsP5GZnCnKNKWputKoXfxvVI1kN29X4DO63EISg==
+
+On Thu, 18 Jun 2026 14:31:00 +0300
+Heikki Krogerus <heikki.krogerus@linux.intel.com> wrote:
+
+> > >  obj-$(CONFIG_TYPEC)            += typec.o
+> > >  typec-y                                := class.o mux.o bus.o pd.o retimer.o mode_selection.o
+> > >  typec-$(CONFIG_ACPI)           += port-mapper.o
+> > > +typec-$(CONFIG_TRACING)                += trace.o  
+> > 
+> > Thanks for the suggestion. I will do that for v2.
+> > 
+> > I also saw there is Sashiko AI feedback on this patch[1], but I am not
+> > familiar enough with how the event headers are used outside the kernel
+> > to determine if that's actionable advice or if it can be ignored.
+> > 
+> > Do you have an opinion on that?
+> > 
+> > [1]:
+> > https://sashiko.dev/#/patchset/20260617-typec_set_mode-tracepoint-v1-1-bdfbb39cfccd%40pengutronix.de  
+> 
+> It's correct. You need to use a private trace.h in this case, so just
+> move it here: drivers/usb/typec/trace.h
+> 
+> And also make sure you include everything needed in that header like
+> it's telling you.
 
 
+You may need more updates to make this work in a different directory.
 
-On June 26, 2026 4:45:38 PM GMT+01:00, Masami Hiramatsu <mhiramat@kernel=
-=2Eorg> wrote:
->On Fri, 26 Jun 2026 06:42:23 -0400
->Steven Rostedt <rostedt@goodmis=2Eorg> wrote:
->
->> =2E
->>=20
->> I'll queue this up=2E
->
->I've already queued this on my probes/core branch=2E
->(which will be probes/fixes)
+Please read the comments in:
 
+  samples/trace_events/trace-events-sample.h
 
-Awesome=2E Thanks Masami!
+and
+
+  samples/trace_events/Makefile
 
 -- Steve
-
