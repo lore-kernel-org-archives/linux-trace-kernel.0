@@ -1,142 +1,145 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71D63A1CF8
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Jun 2026 15:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7366D190462;
+	Sun, 28 Jun 2026 16:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782660405; cv=none; b=ChbP2XxAWpr6Cp1kmPYsgz771ipYRQSwbXcJxaG6qCvk5vOdWtWnKXvDtfUwP560q+DR8FL/DV2sjcfnbrzMs4J1GF47Tyzhp1IQm0MBJfSf3Acg9wvASyfZcsRykHkVC+2NjJSsS8ZwHSANEwgLVxAojRmvsnSTTiFodABS91o=
+	t=1782662600; cv=none; b=kJMGptrOMF3k2U1IlEjTBiwOwEqztKVZztXKEFQ6M6WRsId7bLuHz65LwWUWtai6npp6CWBXXMXkxwIf5XIVXdimwoJ7Jddpz0airsJH7/cV5DD1RxfaoY7ZO2sQ/8Us/+MTn613Tv6U8h8wRoMtK3AYRy2kjI0jabe62Aup7fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782660405; c=relaxed/simple;
-	bh=WBai87XxH2KfdCNpP6IHXulByZKLLRxdxBssMrSpXNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qdETNeEKCVr7pukstmg6w/nGzxEq4sjVDuVVjQ1jOGcqFK3F1mdXBHiMxRwpUOVZ6ZPGMlZuPPI8C50U9zHzO3hJBZvBMkpUfooyLWgAU6MmYclsEs9EmRcQynS7Nhs6FSSQBizKCuRyPu6bT//Uy1ZuiDFBS81jB30uTT1kOU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EuRa5dRq; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782662600; c=relaxed/simple;
+	bh=Bg7ATLfq06nhMAvgzIEIchQ4wjP8NHZa4leLVfF2GrI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=aHgmSZ7khvqrPeeY1ejrlTrO+K+dZWKJWJONzqFGpZakNTbpqW30OUL7m1DCvCT6NO/SwTBpJpFLmXjuqFv01x3GuijWVibA6uGgLSlrDi+HwQac+GWpGRKOo/4KTqExN4wvWkhHmznmfjBuFodeMmbWAuNiPjhTHhC31i8phEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4Ylx3G9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EuRa5dRq"
-Message-ID: <29129c40-4010-4862-9b4b-3bafad874568@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782660391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TeK+Cvyg2fOloDs+N1O69MAGfndJD1u5V/csmGaI8cE=;
-	b=EuRa5dRqExJZ5UWWWpG3KNz3LC4YymuAcLyPVwXcWvk6v+WIf0+qUlzYOcpbQcRpg1o2b0
-	uoZGboFK/NySptMEb4a+oiOJmd6P6J4NAq6AS/bYavpSS9HwDAi3pMtEX/sGfM3Dq2hf6i
-	NuUNlLXayuDoGU9fV1dhH08a3DkUZjQ=
-Date: Sun, 28 Jun 2026 23:26:15 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4Ylx3G9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69A51F000E9;
+	Sun, 28 Jun 2026 16:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782662599;
+	bh=vStoMMAuf3Habph9ryA7GqWRgnEHB2CaISdV5isqMNQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=j4Ylx3G9Q7SS5Lo1fqaA+jDwdjRMFYrQTd9Kuh7kGwIHAMqfyX8F6MY2zh6BraVKm
+	 ReOTxCEb2MsClBG+hNJrUCN/O7v6WhzINBLDw4+gTsqZTrLnjtWbTcxpsi5PZXZJtS
+	 h8K56Fq/ba7ZUOIz3xwrLim7O0hvzmE35KwM26ckmJexw/UWYMgSkDMAeJ7nF1Lp8y
+	 y7PM+Xyxr3TO9VMInnWX4TAgEnXnUAlWNPHF2EKCkLniDWyX0KUqQKnFhitsXjh4Pq
+	 TXdQ9VoRul47oVODsgA6Lw10FW0QsZW1nipnZbzSr6UgNVBOzow8QKJR7aSisu3R+F
+	 EP2/QC0xrIBdQ==
+Date: Mon, 29 Jun 2026 01:03:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v11 11/11] tracing/probes: Add a new testcase for BTF
+ typecasts
+Message-Id: <20260629010314.0c6563c5022c1c973788464d@kernel.org>
+In-Reply-To: <178248336390.841606.1695444929833877704.stgit@devnote2>
+References: <178248325671.841606.17344906774310339507.stgit@devnote2>
+	<178248336390.841606.1695444929833877704.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [RFC] xdp: add device context to bpf_xdp_link_attach_failed
- tracepoint
-To: Masashi Honma <masashi.honma@gmail.com>, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, kuba@kernel.org, hawk@kernel.org,
- andrii@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
- edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org
-References: <CAFk-A4mE9Jweo2hfX7y_85xbPyt0FqpMT1EvqX1OcYZ=LTLgRA@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <CAFk-A4mE9Jweo2hfX7y_85xbPyt0FqpMT1EvqX1OcYZ=LTLgRA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 2026/6/28 19:39, Masashi Honma wrote:
-> Hello, I am re-posting this mail because I forget to add [RFC].
-> 
-> The bpf_xdp_link_attach_failed tracepoint (added in commit bf4ea1d0b2cb
-> "xdp: Add tracepoint for xdp attaching failure") exposes the netlink
-> extack message produced when attaching an XDP program via BPF_LINK_CREATE
-> fails. This is useful because, unlike the netlink attach path, the
+This has a problem and needs some updates.
 
-I really appreciate that the XDP tracepoint helped someone.
+On Fri, 26 Jun 2026 23:16:04 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> bpf_link attach path does not return the extack to userspace -- the caller
-> only gets an errno (e.g. EINVAL/ERANGE).
-> 
-> We would like to use this in Cilium [1][2]: when attaching the XDP
-> datapath program fails, surface the kernel's reason (e.g. "single-buffer
-> XDP requires MTU less than ...") in the agent logs instead of an opaque
-> errno, so operators don't have to inspect dmesg on the host.
-> 
-> The limitation we hit is that the tracepoint only carries the message
-> string, so a consumer cannot tell which device a failure belongs to.
-> This matters for two reasons:
-> 
->   1. Correlation: with only the message, a consumer cannot reliably
->       attribute a failure to a specific attach, particularly if multiple
->       XDP attaches happen concurrently.
->   2. Scoping: a consumer watching this tracepoint sees XDP attach
->       failures system-wide and cannot limit them to the devices it
->       manages.
-> 
-> At the call site (bpf_xdp_link_attach() in net/core/dev.c) the net_device
-> is in scope, so exposing it looks straightforward:
-> 
->   TRACE_EVENT(bpf_xdp_link_attach_failed,
->       TP_PROTO(const char *msg, const struct net_device *dev),
->       TP_ARGS(msg, dev),
->       TP_STRUCT__entry(
->           __string(msg, msg)
->           __field(int, ifindex)
->       ),
->       TP_fast_assign(
->           __assign_str(msg);
->           __entry->ifindex = dev->ifindex;
->       ),
->       TP_printk("ifindex=%d errmsg=%s", __entry->ifindex, __get_str(msg))
->   );
-> 
->   - trace_bpf_xdp_link_attach_failed(extack._msg);
->   + trace_bpf_xdp_link_attach_failed(extack._msg, dev);
-> 
-> Before sending a formal patch I'd appreciate guidance on a few points:
-> 
->   - Should the tracepoint take const struct net_device *dev (consistent
->     with the other tracepoints in this file, and lets TP_printk show the
->     device), or just the ifindex as an int (simpler for raw_tp BPF
->     consumers, which otherwise read dev->ifindex via CO-RE)?
-> 
->   - For raw_tp consumers the argument order is effectively ABI: prepending
->     dev would shift the existing msg argument. I've appended dev above to
->     keep msg at args[0]. Is preserving the existing argument position the
->     right call, or is reordering acceptable given how new and rarely
->     consumed this tracepoint is?
-> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+> new file mode 100644
+> index 000000000000..96791e120b7d
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/btf_probe_event.tc
+> @@ -0,0 +1,51 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: BTF event with typecast and percpu access
+> +# requires: dynamic_events "this_cpu_read(<fetcharg>)":README "[(structname[,field])]<argname>[->field[->field|.field...]]":README
+> +
+> +# Check if the sample module is loaded
+> +if ! lsmod | grep -q trace_events_sample; then
+> +  modprobe trace-events-sample || exit_unsupported
 
-Good concerns. I'm not sure about these parts.
+I think this should be exit_unresolved.
 
->   - Is extending the existing tracepoint preferred, or would you rather
->     keep it as-is and expose the device context some other way?
-> 
+> +fi
+[...]
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/btf_typecast_accepted.tc b/tools/testing/selftests/ftrace/test.d/dynevent/btf_typecast_accepted.tc
+> new file mode 100644
+> index 000000000000..acf0b5a917d3
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/btf_typecast_accepted.tc
+> @@ -0,0 +1,107 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: BTF typecast and percpu access syntax validation
+> +# requires: dynamic_events "this_cpu_read(<fetcharg>)":README "[(structname[,field])]<argname>[->field[->field|.field...]]":README
+> +
+> +KPROBES=
+> +FPROBES=
+> +
+> +if grep -qF "p[:[<group>/][<event>]] <place> [<args>]" README ; then
+> +  KPROBES=yes
+> +fi
+> +if grep -qF "f[:[<group>/][<event>]] <func-name>[%return] [<args>]" README ; then
+> +  FPROBES=yes
+> +fi
+> +
+> +if [ -z "$KPROBES" -a -z "$FPROBES" ] ; then
+> +  exit_unsupported
+> +fi
+> +
+> +echo 0 > events/enable
+> +echo > dynamic_events
+> +
+> +# Load trace-events-sample module if available to have per-CPU counter structure defined
+> +if ! lsmod | grep -q trace_events_sample; then
+> +  modprobe trace-events-sample || true
 
-I'm planning to retire this tracepoint. But I think I cannot do it, if
-there's user space application relied on the tracepoint.
+I think this must be tested, and if the module is not found,
+the test must return UNRESOLVED error.
 
-I'm planning to add BPF syscall common attributes support for
-BPF_LINK_CREATE, including XDP link. By that way, the kernel will be
-able to back-propagate the 'extack._msg' to user space, when fail to
-create XDP link. Thereafter, the user space library will be able to get
-the error message alongside the errno.
+> +fi
+[...]
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+> index 0e65e787e426..1d6d1cf94f16 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc
+> @@ -21,8 +21,17 @@ check_error 'e:foo/^bar.1 syscalls/sys_enter_openat'	# BAD_EVENT_NAME
+>  
+>  check_error 'e:foo/bar syscalls/sys_enter_openat arg=^$foo'	# BAD_ATTACH_ARG
+>  
+> +check_error 'e:foo/bar syscalls/sys_enter_openat arg=^COMM'	# NO_EVENT_FIELD
+> +if grep -q '\\$current' README; then
+
+Sashiko found a problem here. Indeed. this is wrong. See below:
+
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
+> index c817158b99db..e12dc967ec76 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
+> @@ -28,4 +28,9 @@ if grep -q ".*symstr.*" README; then
+>  check_error 'p /bin/sh:10 $stack0:^symstr'	# BAD_TYPE
+>  fi
+>  
+> +# $current is not supported by uprobe
+> +if grep -q "\$current.*" README; then
+
+This is correct check.
+
+Let me fix those.
 
 Thanks,
-Leon
 
-> This would be my first XDP/BPF tracepoint change, so any direction is
-> welcome. I'm happy to send a proper patch once the shape is agreed.
-> 
-> Regards,
-> Masashi Honma
-> 
-> [1] https://github.com/cilium/cilium/issues/40777
-> [2] https://github.com/cilium/cilium/pull/46546
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
