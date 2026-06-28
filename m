@@ -1,160 +1,136 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from confino.investici.org (confino.investici.org [93.190.126.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDAC34EF04
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Jun 2026 11:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782646789; cv=pass; b=JqxgPKz6oZDnqPE1KeXAsKW/tQkezSC4gLlSE3PeZiPaNiDRkoK0fzbHAJqhyS3+lJdITtWdCUDC9gEmmNWOhy8cYweMvx9M37pXWWzhS4YOu6VSBwcPi/z5wCpBNJzs9JZAQTpL8Yii3130hv0gZtj0/P+ajC1ROvLAf/4Rxrc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782646789; c=relaxed/simple;
-	bh=d498hBMWdU3yNFxeg0vqz25RIl2j1GJoEg3MDJBpWnU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bBy1MU+VZaPl4w4wl2pkT7nDqiAKCO2nGcAbDRZMFHphORkaoy2c60u/sTKGrHVvaGATI8o+NroRG5mLRd4NAT2neln+r6bueDyOL00b0D0BoHs1b9lAD8QUoeUwp4q6F07zN9u+ITRsNbefGhQvZxXT9/mWQAr8OF0MttqRzPg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oSTAZ+7B; arc=pass smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8A840D579;
+	Sun, 28 Jun 2026 11:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782647788; cv=none; b=o+gyQ2OpUGsUTNQeVLWWgUUqBBYWj0CsBkkedfe7WltO56I+u5BzLEEzylFsaLcbwY1jed9oZTegxQ/Lj3/1NmPOUpSVie5GhDiIYEkapcnb5Y4LGLbQfx2oBXoxoZE0FeOW+UeV+EaPIV3RIxNvH8xf8A1RbETR/l2FdCHs4A4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782647788; c=relaxed/simple;
+	bh=jTWWh1tKxDFXqhkSVWN1Toj4FXa5WZltnczbZ7n9RKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YgiEVKcYzJcLlIXqWwbY5tJjCoInhR/EBx3zXcrzv2qU7SgOGuV6o3UEYqKzrcHYtHg5DqeS2SrHstyT3iBo0hzOS8IBIRpYLkF30ZL6dCDKjWoz6ToLKwHO0rD1s+Hhz74wQqER4lzLgUu9c2tob9sCGkWj51iSLnwg6qpLNWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=C9L7MwuH; arc=none smtp.client-ip=93.190.126.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSTAZ+7B"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-47231f1f8f3so1072296f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Jun 2026 04:39:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782646785; cv=none;
-        d=google.com; s=arc-20260327;
-        b=R61a1aT5GWdgteoDotLNhYINBVBp/aG5ZyZy5PkWvGMwPD2SALink0BbUSn5CBwF2E
-         pRbx946e06YsbhFdMav/ymiM6vabaIqWPbKY65tzxqd7+j5xcbkBw+7ezJleMg8cyP9L
-         xF/j1FC1HcjxnbFB/u5pv/bKcJteeAzirhTHZm/LcyEpfDWo1m3Wpf23rCnvmJVZsbq6
-         RbmVdWGNoe0+wEaHdYOH2exz5rNT5/LpEjzHaScMtsGyyJYbyCb1tOu/c3dgiZGTO76h
-         TiNqya5tGm61JDEtCF+7e7xbtkGY17esSEnKLcb5Soqy3yNs3yVLno94mnhXX/1aKSxS
-         kcyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=1k0VeFABvfpPKot2iuI8Yf+iW1BODubQlFUp6DJBWSQ=;
-        fh=TdwjGrmf2dQMrQTaMr2rzMiwCwQ3a2Jr7eCL84VxgUk=;
-        b=hdTtRkPXBYlMCfTaA/LoDB0sYd3ID3djOcGZN0ZCRpQO7kXTsB6F5u4xxbKP+hSGrS
-         VcNmkC3A1mN5UHpXj1UG6QhjLWmyYcqrqauxh21T3jM8T2nRqVNFRBz70idGbBu5AeH4
-         9voTzhwun3HnrNsBZEUQ0g4fP3+Lsv1bdj7t9i+OyVUaYilrYxic+J+GNm8EkWn0PuxI
-         BboVkiWQ0m71Ga4Vio9jn/V6H0NcjPlwRdU3qvZ7s3Qr7dG9bpt+NfcpjYtNcGaWNANa
-         04SrYVVaY979v27apwMWdMzLXXWwSqxPst4lbynqcLDTgqTboh3Y4hvCIV0o7muI8IOv
-         jjmw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782646785; x=1783251585; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1k0VeFABvfpPKot2iuI8Yf+iW1BODubQlFUp6DJBWSQ=;
-        b=oSTAZ+7BUFaCqqvsuzotB8ngAQTb+rEB9zl8svMjzjB7b5h7hasER2XV466r4ynW2h
-         aujKdUJNkJRAstFCxCptghu4IjH2l8NDqPEgvYnW+aAySXIuqXSRGUYLgMHyY6bOiYbF
-         /w/QeRDgzVwUpr7bmoaVPu9yjR0vLM3259X2FTlgdre5aJ2+F4FaKK73xC63oWiafR+G
-         W9OsuJh9SQ24W0GxgiJTSzUE5O+6gTImi0qVfS/2bfhgtN/X4zwfDQyTiW1weaiDKL5L
-         tQBoYpfUXauZ+RNN+zeiYOnXaJlIiGuYIZ9AZTDXf2NAjj/N8pkwVT87FTxoT32nXMG/
-         r+iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782646785; x=1783251585;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1k0VeFABvfpPKot2iuI8Yf+iW1BODubQlFUp6DJBWSQ=;
-        b=YM19xdFKIfniSpEQjLEQONld64YQdaeKqlveUNdkzg/hH2ICITHXBibNmlPRrhtenl
-         CCtnUGDiHvuB4b/y625ud0V3J6DZ0ZlX2wGCGyWCl0a8Iqnxj7oAFzNqLL/5IYq+ohSf
-         MHaMlIcJeTDqO8hC0xuiIjKX/bSgwcVo7O8/tTnhHCkiVKyK/BI8N9AyXiUxXh5mfv/d
-         +PcVzwKPgtEePB0HYkVZTwi7/8a7sah3i46qXb+QWn5ZWscHJsjCcpeLb+TMkn/pl2+x
-         jXB6bYoM33PLr2Hh1nYskKNXUaG5SR1ontK0/S0S/i9mXW8gHGpJDADmU+cMxWbYFKiE
-         I+6w==
-X-Forwarded-Encrypted: i=1; AHgh+RokdVq67B2CW+wi6y99o2hm32LSyP2DglCr92lTQlLwLvtGe/e418p8saZTQJb2hohAgN0CVQqldUxRsMxLzVWy8vY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUSaRhieG+wn0nEWKzjLW6iqL5oNxFMp8pp8NGSIZjund/wwt0
-	XtclQhuxLtDygcoPTHkq8FfIhQ3T1WAevCrpzUiNzWZHY+8cYF5b5qnK/oqdIzJBxN4wob3+WtZ
-	w2DEHiBUzGMP1rt3uqBaslgNko5OZ9iMMHOx5hY4=
-X-Gm-Gg: AfdE7ckpfssNvzUt9Gm8vHiE9fXJF3gIgbqHb7hecjbRcu1BjN+VPaRL5ALQcXShm9D
-	tfr1fCuglzmqCpSrDXppUf1oIfQIq+lmKUnCXxgDVVRHs7dIMST99rBsr6nTRK5jbH18gZWNxto
-	uQHW/WgBy8rxOZUqloN+PY5SePHDVeZ3SGll8nfpUSMOzt/IKuPWUpchQz1iyxEHpuFX/vWigoB
-	1uGutsT/6PPrzERg3RvmEWxJ4PP88hpDP4YduCsI1YKmVq1go+Gy9+flkNRWauKuyPqFQ==
-X-Received: by 2002:a05:6000:40cf:b0:46d:1433:77ec with SMTP id
- ffacd0b85a97d-46dbf021840mr22541235f8f.2.1782646785414; Sun, 28 Jun 2026
- 04:39:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="C9L7MwuH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1782647776;
+	bh=B/665U26R3pCtZe5u2+nqaMVhFALqRoFhzpvxj3yhEQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=C9L7MwuH2bppq7GFJ2mSf+UfnxLNkSdzzsIVOB4C0KRvscnnd0RN/aPGUwJlh1n8z
+	 V3nt040kU0LzqX3grHWJ1PcXO2dabKYVplxILLeS4X/fYrW/FO/64KVrqZPVMeNa+j
+	 2HhLudh8Sd64d33+vzIQWoulInM0pC2jhvM98i5Y=
+Received: from mx1.investici.org (unknown [127.0.0.1])
+	by confino.investici.org (Postfix) with ESMTP id 4gp7D06zgHz10tq;
+	Sun, 28 Jun 2026 11:56:16 +0000 (UTC)
+Received: by mx1.investici.org (Postfix) id 4gp7D02dr2z10nN;
+	Sun, 28 Jun 2026 11:56:16 +0000 (UTC)
+From: Bradley Morgan <include@grrlz.net>
+To: akpm@linux-foundation.org,
+	mhiramat@kernel.org
+Cc: leitao@debian.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Bradley Morgan <include@grrlz.net>,
+	stable@vger.kernel.org
+Subject: [PATCH] lib/bootconfig: fix undefined behavior involving NULL pointer arithmetic
+Date: Sun, 28 Jun 2026 11:56:16 +0000
+Message-ID: <20260628115617.3190-1-include@grrlz.net>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Masashi Honma <masashi.honma@gmail.com>
-Date: Sun, 28 Jun 2026 20:39:34 +0900
-X-Gm-Features: AVVi8CfDJaopmWM8eZVww041Hj-U2h62NQOVb61mCb6UmG7XUvpGHldL02uI0LM
-Message-ID: <CAFk-A4mE9Jweo2hfX7y_85xbPyt0FqpMT1EvqX1OcYZ=LTLgRA@mail.gmail.com>
-Subject: [RFC] xdp: add device context to bpf_xdp_link_attach_failed tracepoint
-To: netdev@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: leon.hwang@linux.dev, ast@kernel.org, daniel@iogearbox.net, 
-	kuba@kernel.org, hawk@kernel.org, andrii@kernel.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, edumazet@google.com, pabeni@redhat.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello, I am re-posting this mail because I forget to add [RFC].
+When xbc_snprint_cmdline() is called during the size-probing phase
+(with buf = NULL and size = 0), the function computes the end pointer
+as 'buf + size' (NULL + 0) and repeatedly advances the pointer via
+'buf += ret'.
 
-The bpf_xdp_link_attach_failed tracepoint (added in commit bf4ea1d0b2cb
-"xdp: Add tracepoint for xdp attaching failure") exposes the netlink
-extack message produced when attaching an XDP program via BPF_LINK_CREATE
-fails. This is useful because, unlike the netlink attach path, the
-bpf_link attach path does not return the extack to userspace -- the caller
-only gets an errno (e.g. EINVAL/ERANGE).
+Under the C standard, performing pointer arithmetic on a NULL pointer is
+undefined behavior. While harmless inside the kernel, this code is also
+compiled into the userspace host tool 'tools/bootconfig', where host
+compilers with UBSan or FORTIFY_SOURCE enabled abort the build when they
+detect NULL pointer arithmetic.
 
-We would like to use this in Cilium [1][2]: when attaching the XDP
-datapath program fails, surface the kernel's reason (e.g. "single-buffer
-XDP requires MTU less than ...") in the agent logs instead of an opaque
-errno, so operators don't have to inspect dmesg on the host.
+Fix this by tracking the running written length as an integer offset
+('len') rather than advancing 'buf' directly. Only perform pointer
+arithmetic if 'buf' is actually non-NULL.
 
-The limitation we hit is that the tracepoint only carries the message
-string, so a consumer cannot tell which device a failure belongs to.
-This matters for two reasons:
+Fixes: 5a643e462323 ("bootconfig: move xbc_snprint_cmdline() to lib/bootconfig.c")
+Cc: stable@vger.kernel.org
+Assisted-by: Gemini:gemini-3.5-flash
+Signed-off-by: Bradley Morgan <include@grrlz.net>
+---
+ lib/bootconfig.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-  1. Correlation: with only the message, a consumer cannot reliably
-      attribute a failure to a specific attach, particularly if multiple
-      XDP attaches happen concurrently.
-  2. Scoping: a consumer watching this tracepoint sees XDP attach
-      failures system-wide and cannot limit them to the devices it
-      manages.
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index f445b7703fdd..0181459505b7 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -410,8 +410,6 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
+ 
+ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+ 
+-#define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
+-
+ /**
+  * xbc_snprint_cmdline() - Render bootconfig keys under @root as a cmdline string
+  * @buf: Destination buffer (may be NULL when @size is 0 to query the length)
+@@ -427,8 +425,8 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ {
+ 	struct xbc_node *knode, *vnode;
+-	char *end = buf + size;
+ 	const char *val, *q;
++	size_t len = 0;
+ 	int ret;
+ 
+ 	xbc_node_for_each_key_value(root, knode, val) {
+@@ -439,10 +437,12 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ 
+ 		vnode = xbc_node_get_child(knode);
+ 		if (!vnode) {
+-			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
++			ret = snprintf(buf ? buf + len : NULL,
++				       size > len ? size - len : 0,
++				       "%s ", xbc_namebuf);
+ 			if (ret < 0)
+ 				return ret;
+-			buf += ret;
++			len += ret;
+ 			continue;
+ 		}
+ 		xbc_array_for_each_value(vnode, val) {
+@@ -452,17 +452,18 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ 			 * whitespace.
+ 			 */
+ 			q = strpbrk(val, " \t\r\n") ? "\"" : "";
+-			ret = snprintf(buf, rest(buf, end), "%s=%s%s%s ",
++			ret = snprintf(buf ? buf + len : NULL,
++				       size > len ? size - len : 0,
++				       "%s=%s%s%s ",
+ 				       xbc_namebuf, q, val, q);
+ 			if (ret < 0)
+ 				return ret;
+-			buf += ret;
++			len += ret;
+ 		}
+ 	}
+ 
+-	return buf - (end - size);
++	return len;
+ }
+-#undef rest
+ 
+ /* XBC parse and tree build */
+ 
+-- 
+2.53.0
 
-At the call site (bpf_xdp_link_attach() in net/core/dev.c) the net_device
-is in scope, so exposing it looks straightforward:
-
-  TRACE_EVENT(bpf_xdp_link_attach_failed,
-      TP_PROTO(const char *msg, const struct net_device *dev),
-      TP_ARGS(msg, dev),
-      TP_STRUCT__entry(
-          __string(msg, msg)
-          __field(int, ifindex)
-      ),
-      TP_fast_assign(
-          __assign_str(msg);
-          __entry->ifindex = dev->ifindex;
-      ),
-      TP_printk("ifindex=%d errmsg=%s", __entry->ifindex, __get_str(msg))
-  );
-
-  - trace_bpf_xdp_link_attach_failed(extack._msg);
-  + trace_bpf_xdp_link_attach_failed(extack._msg, dev);
-
-Before sending a formal patch I'd appreciate guidance on a few points:
-
-  - Should the tracepoint take const struct net_device *dev (consistent
-    with the other tracepoints in this file, and lets TP_printk show the
-    device), or just the ifindex as an int (simpler for raw_tp BPF
-    consumers, which otherwise read dev->ifindex via CO-RE)?
-
-  - For raw_tp consumers the argument order is effectively ABI: prepending
-    dev would shift the existing msg argument. I've appended dev above to
-    keep msg at args[0]. Is preserving the existing argument position the
-    right call, or is reordering acceptable given how new and rarely
-    consumed this tracepoint is?
-
-  - Is extending the existing tracepoint preferred, or would you rather
-    keep it as-is and expose the device context some other way?
-
-This would be my first XDP/BPF tracepoint change, so any direction is
-welcome. I'm happy to send a proper patch once the shape is agreed.
-
-Regards,
-Masashi Honma
-
-[1] https://github.com/cilium/cilium/issues/40777
-[2] https://github.com/cilium/cilium/pull/46546
