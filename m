@@ -1,156 +1,141 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9AB3382CD
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 27 Jun 2026 17:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782580497; cv=pass; b=O7ng9Q0uAnsSQ1MkO1nWZ8pnkex2AB+5MV+1IpXjKMV4Smbeony88Gkz7rJ670bc1BCeQi9D+0ydB+hg8pe7QwZzwCGg7+d4AkSpyBeRyfIQsoraGfEJFyoNw1Ow8bUrPuv7G2JY1XyIJyQveu7SwE/+B3Xugm+damHQbCMwm1k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782580497; c=relaxed/simple;
-	bh=Sa5hldT2ZYg6r/+6wae9/5GH3ZUXIje8CvnHz152sKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IQuYjsr8Gej7/+HPzRPfcR7xVHjonE2dbP1MPi9tpnNsuIoRxDVQwgNvG/j4fIoiYLKsiedZ0q9zBTBGnHXdQXHO+xZGuLw+vymYu4klqbKV945RN4dcgmSrM94CW+1coUkaxbgxJLbkm0EqtMGOPntKTde+LSILwdwUpTFU9XI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sr4A3Lla; arc=pass smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D6F2AF1D
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Jun 2026 00:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782607626; cv=none; b=Cv1m3Qa1C2pOf9Basm/kn9yNS4DukWgs2vJ/OXEi2EOFKI7RSOGQr03OsJ3zuvT15EWK1+zyXMHhNlkJ/cdAU1r2/culyzStzQ+5PvAXQlSTwxpd0EoEg0zM9DUoJeh2O2M/VWbkOx2CB1xTkBwrCdjLk1no1tyChxFeuZL0dHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782607626; c=relaxed/simple;
+	bh=JWA380ctDhP6cb9yiDI+v1kSZBNiU/P0ELQGPGUNjQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lp43m0n6MX0lZrubdo6ER+U1yR9LocMU3xteclqOpp0r+u3yea/p9Rut395LSoxNoETYI2gBrS3YYQpG67xVk16YOUkL1Ctaxqb4Jk+ahWjGgWLxIrm56C4t8T0xkfbXw1Jqjs8/FSdBkgQ+vymm8iJ1pux3hbnLsNRZ3cvdHps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zg4yAB+y; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sr4A3Lla"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8dcc3f14b93so22962506d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 27 Jun 2026 10:14:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782580494; cv=none;
-        d=google.com; s=arc-20260327;
-        b=n0pTx//9Vn1zfsB315N38yI6h56z96XJ6BQMiG87voQviZiugN0gX5/OqFVWh2At9J
-         ywjV3sytfM9tlnFZgqHOLq40pMMZ9p+QuJA44NxMjfTkTGStvAZF/5ObkzUEhy5t/nDn
-         ZQPo7hoS3Rd6OEKpNJ9KMFow3S5UOyNAElevNNf09A7hQYr2WxWbdpTAqQVZNJj4YmC3
-         9eUy/ToJ6GEUueTpxcpAO9o+OeG0uuA3TS05nU4uYP1WuiCvQPwXvfmJKEGlL/ePrPYk
-         BSUuvZSVnjXX3RHFa5UIsBCPeBYGL0LqGcOUbLu8W/VI/w2Ee6NoZO8NcOajXFA/dEq7
-         2AZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Rndg724fhT2gi/rg6KYiyv9At6WA1DcoE2rGnTpaLCE=;
-        fh=KJkSHra0aSGFcuBAi+QWMSN39jsPp9C46lDXc2Tc6wY=;
-        b=edW7WhUvLR530xwzUkX5ugRnjUBXI3hqkC9NAiv2Tjw47CpEeEGXwg+Cu0/StlPJzp
-         1R5zdaswjxqAS5UEYMzae9hd1m5zHT62RzIa7KFl/StmgaP8D5IZCc0agu0NzZCf6yjp
-         y+iy2kVMQlpwKgF7dV4u9wzOA34cFDdY6XRrdYWE0r06Z9239PxWZnwgj74Ml+1Z4Urw
-         YG8wnc2ch7a4NTrYz8f/xmAWmCkS+KHchoYC4nsLKLDI3l7/op9DPMR7WcOQ/8Q2Eku7
-         eVcyCvzFb0tic8LhotQiN+VAmujgjuqBIVIt2yuT9fq4OgSY2QjWCmMQ9du73prW1Noa
-         N47w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zg4yAB+y"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-49319ebb3a9so4633185e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 27 Jun 2026 17:47:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782580494; x=1783185294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rndg724fhT2gi/rg6KYiyv9At6WA1DcoE2rGnTpaLCE=;
-        b=Sr4A3Llap4xpgm6N/Byyxzb/2ebidz2f7NxcQCmtHj5IFBFtYsCYTSdSTKuYDoJgNz
-         4a4e2lXiwCwdsfwWzBvQZ9Qr830N63LWHbtERvyFZBOIxXu6Y2wq2hKR8otHmxtjV1It
-         BngyI4flQYia9MN6hndbKiJtFwNPCHXY7XH/vdzJy9h/V5Bo7MKMFDkOJcrBrxQmdxIT
-         LGREonmCqa5hkEb1rvr8EN/co8WJV6u+LSiUrU6cUGyZzgcvBosN4jmoyHxRiw2mctGS
-         Qptx5FIeajeU+wSLda9rSFth6t1alBVU1RJwcHPdn1ELaypGcLYE/CELuyfcOSbNBWPp
-         Gatg==
+        d=gmail.com; s=20251104; t=1782607623; x=1783212423; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lr5H8TFwybM+AlW1rdMOQH0Q1+oaaC7QfC19uDCbRGc=;
+        b=Zg4yAB+yK5jIxwbJPoV0JS6WvmmpFKbf1j3pzVfrwKvj6j+pscPkCq27rGXLNlKiBO
+         Y1TQKMLv/7K2r/eibKqN4pTRDHwSzizbEcqOt0YDKrGiEyHIg6F2vjPZD9/+Pj7QSjYR
+         YdfpC27SXtq44wmH7IhX49Zs880oEMSTwd7cW6brOGvpQDk1uabvLf1EHYtU819x/Vp8
+         h+6mKKwW//IkzltaKRj7iMoPi6xOlCMSzq6mnsAWWuUzkEsKIc7CfCOtQe2FFX4mDvVq
+         1YrQ3IGVhCfzg9fJRq1Qt0IJkegd48wmO8El56e5zeds1b0vMH/3PqiTxFDxbfS+bLaO
+         sxFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782580494; x=1783185294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Rndg724fhT2gi/rg6KYiyv9At6WA1DcoE2rGnTpaLCE=;
-        b=QWtMBNchBxVW58pOJCkqEChL/33Kh358MIGFLGL69fADZPRMIwY4B2pHh2l9XD9uDI
-         f/S6J7ZIRmGcm4vSSslXoRVZg8l2Qi6qTppvhgqb+RnKu6C++5fwCBvrvPndTxZyLXd2
-         FJyJd3HcGuvUEPIi29FskJ/cf+x88PNwystBCPrGFihlN3A3Mt8nYeGthusnoZx6ACw2
-         syqI77uTzbpYU8dwjZhQb7bXtDjIc9VA14gaRK/7MxBuRGnV7UljopiyhiuIXL+PKTTp
-         kHtgOgZPaD/SS3dAJ9W2rW3QYYWODOfI1CeO3HLWQau+pyvTN86nuZ442zigpwqhPofN
-         c+GA==
-X-Forwarded-Encrypted: i=1; AFNElJ+3ERh/3dAM5itESrsCF3uF5TrgMbMh7FHG7sCUaL9Y/v+MROa6mX3AruHVl+g7WJYEeS0+LjuEPtxdj82YtlzfHMc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRW0qa8QJV+dh9cA/LU86WG9MNzR25yp8CVSQW5aJJ+3bQIsnJ
-	oPnuU+7DKA6f93F0T4tLuqdW5IyjVpTyNPIB/gHxKAauk8aoiN1hbjs1Fxn9am2kimp7CYDbwkz
-	Ga5NWdtyfLHnMWx8l0A5Y5qhu4au+MKNtELyr
-X-Gm-Gg: AfdE7cmQdzhO0jF3dtWEHm40ZLWBHuPVWj9vvKLACkxq/V/1Q/scqtR4+xWuQxD1r6w
-	/nyf7se+yP1P3TCsANBIYJZ2HKgGto2nHFkZD5n1Tc7qmn9Qh9Z2D33ljsSKOBZBcAm1hBxkPmY
-	X3c0wmb8bsYqNqygj/3fDxHv5nb6OnKVq3fuZtmoEvWxZK2vQF5uOQTOho4bqsCC3gRBky98Zsg
-	Dg211C8Ra/1WT1rND3EdD02iX6CneJbRlKEbzb5cxwK32HgBIAoYwWfzP41461D/gM7ecyJQ+nz
-	3fbPW0nuRvfpzuIgKfFhd3fYvNM=
-X-Received: by 2002:ac8:58c4:0:b0:519:7559:3937 with SMTP id
- d75a77b69052e-51a7276b300mr173294671cf.2.1782580493825; Sat, 27 Jun 2026
- 10:14:53 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782607623; x=1783212423;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lr5H8TFwybM+AlW1rdMOQH0Q1+oaaC7QfC19uDCbRGc=;
+        b=k6Vg1ulEx+A/6Ts2S8iqpbIicttTGmqn46coEmCJAhZ5tcZIRHus7ctuQcFLjsgTVt
+         3KywgMryr1GjaMSAEN8F6BLiH0oTyc0kgxE9iL+rv4kUEsFkwFsKWDTPYUiTFOKCVV+n
+         SSNcHG/cSna62cb65Y6GN2m1QimBFLJOXyVdMtRwfXAXa+HgbSO4u1J5iJfUZaDiteO3
+         aWcEJa8Kr5Ci+sxSUjjqH32VkGWNGibxgI1Ppqfpj1+fllH+lrxxe1q+Zu2vClvE4Gzn
+         hRfsbG30AP14+dZPEmY8rAcCWADXV2BEUBXxGtEB3eSE6Z1WAciIFemuDp/rXbcWwIgP
+         DcuA==
+X-Forwarded-Encrypted: i=1; AFNElJ8r/NQNxvUcvfkeb3vRsjgW+YVnrYNhacJMwsV8PMdOQl/oj8tL4R3EKjoHgz5NqPJlkdZAHSZxqQ0mRcCpPKk5cI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMcR1Alig+EbdxeTfa0VSKOXKxZNIBuJjVOgkGei2qITqVq0Nr
+	+Ot0GjLKYK/XlDdwjUv9QiUqro7jSSru+SkQ/EeHep2aeLCYa99FMk1H
+X-Gm-Gg: AfdE7cm5SJ+wYGcybCPI7nI7heUfyf9Qqw6+AYxexP8GzMLi4B9gpMQC7vg5PAimnid
+	rcqeKTzXebNvo0ywjBUHTmqulrdn3sHIgFDHu5x5avXUSd0gHgG0x+R6H+hCBTZDwbnCn39GeWB
+	imXQf4eppnU5QRO/chZIsacM7x+2aDBnLL74AihZaUcIi885Dzx/lBe9QfcMpPRvfyxeDybzsrW
+	KkNu7FPvAQn1dFMAm09Tx+t3vLJ81p5Lx5sPvDfsF8MvHCYHmZ9j8rkrfqehc3F5Rw5GCMHF4rO
+	V18jFNNkyFSphgz3X+ExvsdH1d0RRnjkFJEHjz1tgrmMwm0CpXgaDaWVKrJBM9PjcQpt8pq8NlC
+	h+cpAOs8/ovtlCJZlWwepCHv3ecEUth4IDGtFn+MZhj/wTjzfcGQFlASDz28HpwE9X9koQ5OiaH
+	qHxAIVrlmK+ruz9r7AFOCZ7YCiEA==
+X-Received: by 2002:a05:600c:1d08:b0:493:a607:f3b8 with SMTP id 5b1f17b1804b1-493a607f49amr14531755e9.0.1782607622662;
+        Sat, 27 Jun 2026 17:47:02 -0700 (PDT)
+Received: from Dev-Null-MSI ([2a0d:3344:52ac:a808:98a4:4381:be45:536f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46e6167c05fsm24063111f8f.25.2026.06.27.17.47.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2026 17:47:01 -0700 (PDT)
+From: Yousef Alhouseen <alhouseenyousef@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com,
+	Yousef Alhouseen <alhouseenyousef@gmail.com>
+Subject: [PATCH] ring-buffer: serialize read-page order with subbuffer resize
+Date: Sun, 28 Jun 2026 02:46:53 +0200
+Message-ID: <20260628004653.28065-1-alhouseenyousef@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260622183109.1137245-1-dwindsor@gmail.com> <ajqBkKE8TpQL1mIG@redhat.com>
- <20260623125725.GW48970@noisy.programming.kicks-ass.net> <ajqJNju6MY3B0S2F@redhat.com>
-In-Reply-To: <ajqJNju6MY3B0S2F@redhat.com>
-From: David Windsor <dwindsor@gmail.com>
-Date: Sat, 27 Jun 2026 13:14:41 -0400
-X-Gm-Features: AVVi8Cf2BLETcrC-Y5ycMRcxCYiENER-6GwvG2TtezK7GfUOEgSuV7OQzuRAuW0
-Message-ID: <CAEXv5_gFBvtP9HZrQ14VAYpFbrY44o0+Qw9i=c6GM1Mnp4R83A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/uprobes: Keep shadow stack in sync for emulated CALLs
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mhiramat@kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	shuah@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 23, 2026 at 9:25=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 06/23, Peter Zijlstra wrote:
-> >
-> > On Tue, Jun 23, 2026 at 02:52:32PM +0200, Oleg Nesterov wrote:
-> > > On 06/22, David Windsor wrote:
-> > > >
-> > > > --- a/arch/x86/kernel/uprobes.c
-> > > > +++ b/arch/x86/kernel/uprobes.c
-> > > > @@ -1246,8 +1246,12 @@ static int default_post_xol_op(struct arch_u=
-probe *auprobe, struct pt_regs *regs
-> > > >           long correction =3D utask->vaddr - utask->xol_vaddr;
-> > > >           regs->ip +=3D correction;
-> > > >   } else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
-> > > > +         unsigned long retaddr =3D utask->vaddr + auprobe->defpara=
-m.ilen;
-> > > > +
-> > > >           regs->sp +=3D sizeof_long(regs); /* Pop incorrect return =
-address */
-> > > > -         if (emulate_push_stack(regs, utask->vaddr + auprobe->defp=
-aram.ilen))
-> > > > +         if (emulate_push_stack(regs, retaddr))
-> > > > +                 return -ERESTART;
-> > > > +         if (shstk_update_last_frame(retaddr))
-> > > >                   return -ERESTART;
-> > >
-> > > Well, if shstk_update_last_frame() fails after emulate_push_stack(), =
-we should
-> > > probably return another error, so that the caller handle_singlestep()=
- will kill
-> > > this task?
-> >
-> > Makes sense, the other user has a force_sig(SIGSEGV) on failure.
->
-> Offtopic question... both shstk_update_last_frame() and shstk_push() are =
-only
-> used by arch/x86/kernel/uprobes.c. But they are not symmetric in that
-> shstk_update_last_frame() returns 0 if !features_enabled(ARCH_SHSTK_SHSTK=
-),
-> while shstk_push() returns -ENOTSUPP in this case.
->
-> That is why the users can't just do "if (shstk_push(xxx)) ...". This is r=
-eally
-> minor, but perhaps it makes sense to change shstk_push() to return 0 in t=
-his
-> case too? I don't think -ENOTSUPP is actually useful...
->
+ring_buffer_read_page() checks that its spare page has the current
+subbuffer order before taking cpu_buffer->reader_lock. A concurrent
+ring_buffer_subbuf_order_set() can change the order and replace the
+reader page after that check. The reader then copies a larger subbuffer
+into the old allocation, causing an out-of-bounds write.
 
-Agreed, will send a follow-up patch changing shstk_push() to return 0
-rather than -ENOTSUPP.
+Keep spare-page allocation and release under buffer->mutex, which already
+serializes order changes. Move the read-side order check under
+reader_lock, the lock used by resize when replacing per-CPU pages.
 
-I'll send v2 shortly with the additional call to force_sig(SIGSEGV) to
-balance out the callers.
+Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
+Reported-by: syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=2dd9d02f60775ce5c1fb
+Cc: stable@vger.kernel.org
+Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
+---
+ kernel/trace/ring_buffer.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> Oleg.
->
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 56a328e94395..eed5d7cffdee 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6950,6 +6950,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return ERR_PTR(-ENODEV);
+ 
++	guard(mutex)(&buffer->mutex);
++
+ 	bpage = kzalloc_obj(*bpage);
+ 	if (!bpage)
+ 		return ERR_PTR(-ENOMEM);
+@@ -7000,6 +7002,8 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
+ 	if (!buffer || !buffer->buffers || !buffer->buffers[cpu])
+ 		return;
+ 
++	guard(mutex)(&buffer->mutex);
++
+ 	cpu_buffer = buffer->buffers[cpu];
+ 
+ 	/*
+@@ -7091,14 +7095,13 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	if (!data_page || !data_page->data)
+ 		return -1;
+ 
+-	if (data_page->order != buffer->subbuf_order)
+-		return -1;
+-
+ 	dpage = data_page->data;
+ 	if (!dpage)
+ 		return -1;
+ 
+ 	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
++	if (data_page->order != buffer->subbuf_order)
++		return -1;
+ 
+ 	reader = rb_get_reader_page(cpu_buffer);
+ 	if (!reader)
+-- 
+2.54.0
+
