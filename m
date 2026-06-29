@@ -1,182 +1,295 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1161421F0D;
-	Mon, 29 Jun 2026 12:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8537401A3C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 12:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782735925; cv=none; b=s2wBdpDlEQsFnN8GyuArHTQin2zMb6Df4ZoUJuuLJ4o19CRY6JNO/hal5MDGGdLmlyKH8hi7ATTKkbww+Wblh7nwQd5Gh0vnskR/p4wy5U0VXZfoSAQR5vlL4XbVYc42//BYcwwxP6zgnTExItr7v1gLdmRgh0OMRkqmxESE3rg=
+	t=1782737801; cv=none; b=Zx7an9bjfUD4/MGWCHq8T4M5uxYNmOo6wD4JIqPNcM0wKyUqSSSw1JRq2sVfNwP3GY7cVGCS5U5M3CDgSDoYvPGJlTfgvnbIqwGpaGzQSdpE2BF542h59B4meD/r34APt2mCAyYrG37176R3cLeevMY+//RMVMqFPeDT+G0hDhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782735925; c=relaxed/simple;
-	bh=t+8gFzSgortJ9Yri19Qk2JIjo2XNvjKtlYrTb45fUok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nv6jSK84k7RaAS/+jTMW6eyPByv2eF2AOzfLRjnNaU8+kMbL+/cvUXIi6rmByf4aS5ZgbVv+d1PrgxBSMgc+I3ah4toLOoiO9p2OKjAFNj08RePa14FPk14YsEFBcPpI9egxOOBNLGX5sXkw2OIxHobSHu3OHT5BPmiVhgz+9SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2fdxPuJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782737801; c=relaxed/simple;
+	bh=zAWj/TM5e7h+thDrLj1MEqN2AcI1HHUtKP4lddDsVIQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r0G3rknl5dH15rDl2QuMQk/fPNSyUStslbLI1Ip3parnA5P2hPv/6x+7sSzDYWqF9tbfbHuOnowYjojPK72A2YjecrcHWIeAv3ZMG5gKwVyiHbDH1iXLyzyOf59D44szlR229xr8nimQm5Mw9weqjZ5BLcbfhCHCMtM5b8eJiVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cd/MO4ak; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2fdxPuJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F691F00AC4;
-	Mon, 29 Jun 2026 12:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782735924;
-	bh=U1jtLkA6UuZsfpQiwXDViZ4TbQirP1iCEgORsJjMVIE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=c2fdxPuJZracea4THiWagUGG3qtjKlYQLO8kI5qBAOAmNyUqU+Cz2tE0LZcZK/+x6
-	 6Xk6iEoGktAUHyeB9cblz74jdddGkwaBjm0aSRvDSQySW3n0Fr3QzWtICG5O83ECq+
-	 CpGzQfZJaEmCid2LM+2XsU2ThNJ23kEbysH1NlUtWxqEIESKzs4x6d5f0OSVrFyJfm
-	 j3TScuQr22512dqslB4Ah+zgS28CuS/F239kYvXoA+o5vDrfUPnKKgS1tQAkh4mNti
-	 ITFv6t9aZ5OoDpmTegOvjzsXL8lUZRPNTyuRby3AAe3GvKu9tkUXabe/jqKUOVL1Ww
-	 sDInYPPHhFcHQ==
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Simon Schuster <schuster.simon@siemens-energy.com>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Thierry Reding <thierry.reding@kernel.org>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Dan Williams <djbw@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	"Liam R . Howlett" <liam@infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	SeongJae Park <sj@kernel.org>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Hugh Dickins <hughd@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-parisc@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	etnaviv@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	linux-tegra@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-mm@kvack.org,
-	iommu@lists.linux.dev,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	damon@lists.linux.dev,
-	Pedro Falcato <pfalcato@suse.de>,
-	Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry@kernel.org>,
-	Jann Horn <jannh@google.com>
-Subject: [PATCH 30/30] tools/testing/vma: output compared expression on ASSERT_[EQ, NE]()
-Date: Mon, 29 Jun 2026 13:23:41 +0100
-Message-ID: <432444fa4c12ae1c4047550e2b205d3e9bab458f.1782735110.git.ljs@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <cover.1782735110.git.ljs@kernel.org>
-References: <cover.1782735110.git.ljs@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cd/MO4ak"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782737798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wSr1JETcuRGYYdZKolk3JtUkQ8ducZ/gLObEH71sZrI=;
+	b=Cd/MO4akLE39QrDpHR98hH/e0hIl/35rHJgofvvdziNLHC94cbJmJtj2INqhLejh9TZxPP
+	NNmYTLKF5q1BW5hzxuB97ngjaH0H6AV/mvFc1FrjsTcH0d1Jmdk5dR6MpsTyL3wStltdTq
+	EPgV5tMYtpewAMgwrO0+AtZ+kYFUwHg=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-126-52f6IJkRP7agROi06mwu2Q-1; Mon, 29 Jun 2026 08:56:37 -0400
+X-MC-Unique: 52f6IJkRP7agROi06mwu2Q-1
+X-Mimecast-MFC-AGG-ID: 52f6IJkRP7agROi06mwu2Q_1782737796
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-c1279120710so49297666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 05:56:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782737796; x=1783342596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wSr1JETcuRGYYdZKolk3JtUkQ8ducZ/gLObEH71sZrI=;
+        b=JUpiaBDmz6QapMacq5F1dhbBEUcxos3hTNoTxcCIEZnZRILq9TAv0/Kbds7XQo/R9I
+         bDYV6YSBdlBFg+vSOhRHrXWCCAqvE4qvjF/NWiBN+Fg6D8k81uIbPwAHmgLDX9hx6HCr
+         0A+kWkQea5k98HL5lDyaQc2/ZTaM7Rh/NnY20gX/F8NRD8VHoAZQi/tXOVj98OCTpJZj
+         4SDdB/W9MZxwIwoUp4+yqB1haAdLNFUSS6gllEeFWJj1gRQqGjVUqG+pq3tveyuaykkH
+         QLiSjZHVrLCdT90dE+9IW9dHtAmtxzq+A24w7V+/7ESe2E5VKXDsOBrmdavKXLlpjSM5
+         40xw==
+X-Forwarded-Encrypted: i=1; AHgh+RoJKAKKmkgQXLsSIlUcg359nin+fx7QT4TwMMT5+fRmYwOjtocMV0d4zuSCtEekykExMQlztrVnV2RF/iZyWwlQBFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNriBulM638SG332z8nrbuR514gs0n9XA8Y/w6w1usBaZp5fvE
+	YhVBXOV/G0YsbfXpSW3NFoMU/cKC7zHL5THX+dlkM1gbnypGYzNcEHyRNE8gprzmPsiaF6dUCcp
+	ol19A7CBN3Im6wnjcRUoU/natdxHLDiaZfF3pF5T2vVa4xnnYJAmlumqYd1ELGv1RwXYIfcaRmB
+	5wNOUTt9BVH4H7crls1oIVT/QtB1z3gDf+OlMBK3BabP2C4P7U
+X-Gm-Gg: AfdE7ckMyjoyMqT4VZxdnojxl+J3cJEe6GMk/9P2J7RHzN2iu67pk8QZQpQ9gDpPjRH
+	ZMfChHGtbMwNtQDg9X4sQ4yuk4VZPim6ZGzFDzIKB4wPVg8NzPs/qISkbLuItzyOg8AkKyqZfjz
+	P50tUk9xdzNADkHqA/CeYirCBgpffCFoQ1u84zrTAnKF3SsUi2x+ebISuDrDZlsmXzcIs=
+X-Received: by 2002:a17:906:9fc4:b0:c12:45fc:c5c with SMTP id a640c23a62f3a-c1245fc3091mr290479166b.64.1782737796297;
+        Mon, 29 Jun 2026 05:56:36 -0700 (PDT)
+X-Received: by 2002:a17:906:9fc4:b0:c12:45fc:c5c with SMTP id
+ a640c23a62f3a-c1245fc3091mr290477366b.64.1782737795783; Mon, 29 Jun 2026
+ 05:56:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260617131803.2988989-1-vschneid@redhat.com> <20260617131803.2988989-3-vschneid@redhat.com>
+In-Reply-To: <20260617131803.2988989-3-vschneid@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 29 Jun 2026 14:56:24 +0200
+X-Gm-Features: AVVi8CdvJdgIeH3VsyxOkz9Elhzqqd6Z9AENxqiNKKObavOdoGbdQhxj5DMUO14
+Message-ID: <CAP4=nvRtF=Hq3rVS5jCwA-m_vJWEeROy=60T2PW4DYank-6L-w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/4] rtla/osnoise: Record IPI count in osnoise top
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: TdfL3DdZQp9ejW-7uXUk-wj46IamEyGmAujsKYVZe2s_1782737796
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the macros to output the compared values at hex for easier debugging
-when test asserts fail.
+st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
+<vschneid@redhat.com> napsal:
+>
+> Leverage the ipi_send_cpu and ipi_send_cpumask trace events to record the
+> count of IPIs sent to monitored CPUs. These interferences are already
+> accounted by the IRQ count, but this split gives a better overall picture=
+.
+>
+> This uses the newly added -i cmdline option.
+>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> ---
+>  tools/tracing/rtla/src/osnoise_top.c | 124 ++++++++++++++++++++++++++-
+>  1 file changed, 123 insertions(+), 1 deletion(-)
+>
 
-Also remove unused IS_SET() macro.
+Overall, looks good to me (see small comments below). The reported
+numbers make sense:
 
-Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
----
- tools/testing/vma/shared.h | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+[tglozar@cs9 rtla]$ sudo ./rtla osnoise top -q -c 0,1 -d 5s --ipi
+                                         Operating System Noise
+duration:   0 00:00:05 | time is in us
+CPU Period       Runtime        Noise  % CPU Aval   Max Noise   Max
+Single          HW          NMI          IRQ      Softirq       Thread
+         IPI
+ 0 #4           4000000        28481    99.28797        8977
+248        6756            0         4002           18            1
+       42
+ 1 #5           5000000        38025    99.23950        8120
+185        8403            0         5260          153          141
+       49
 
-diff --git a/tools/testing/vma/shared.h b/tools/testing/vma/shared.h
-index ca4f1238f1c7..216be4cda369 100644
---- a/tools/testing/vma/shared.h
-+++ b/tools/testing/vma/shared.h
-@@ -21,19 +21,28 @@
- 		}							\
- 	} while (0)
+(It looks good in the terminal, I'm sure Gmail will garble it...)
 
--#define ASSERT_TRUE(_expr)						\
--	do {								\
--		if (!(_expr)) {						\
--			fprintf(stderr,					\
--				"Assert FAILED at %s:%d:%s(): %s is FALSE.\n", \
--				__FILE__, __LINE__, __FUNCTION__, #_expr); \
--			return false;					\
--		}							\
-+#define __ASSERT_TRUE(_expr, _fmt, ...)					   \
-+	do {								   \
-+		if (!(_expr)) {						   \
-+			fprintf(stderr,					   \
-+				"Assert FAILED at %s:%d:%s(): %s is FALSE" \
-+				_fmt ".\n",				   \
-+				__FILE__, __LINE__, __FUNCTION__, #_expr   \
-+				__VA_OPT__(,) __VA_ARGS__);		   \
-+			return false;					   \
-+		}							   \
- 	} while (0)
+I'll compare with trace output on the next patch.
 
-+#define __TO_SCALAR(x)	((unsigned long long)(uintptr_t)(x))
-+
-+#define ASSERT_TRUE(_expr) __ASSERT_TRUE(_expr, "")
- #define ASSERT_FALSE(_expr) ASSERT_TRUE(!(_expr))
--#define ASSERT_EQ(_val1, _val2) ASSERT_TRUE((_val1) == (_val2))
--#define ASSERT_NE(_val1, _val2) ASSERT_TRUE((_val1) != (_val2))
-+#define ASSERT_EQ(_val1, _val2)						\
-+	__ASSERT_TRUE((_val1) == (_val2), " (0x%llx != 0x%llx)",	\
-+		      __TO_SCALAR(_val1), __TO_SCALAR(_val2))
-+#define ASSERT_NE(_val1, _val2) \
-+	__ASSERT_TRUE((_val1) != (_val2), " (0x%llx == 0x%llx)", \
-+		       __TO_SCALAR(_val1), __TO_SCALAR(_val2))
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
+c/osnoise_top.c
+> index 512a6299cb018..5b462a3543b97 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+>
+> [truncated]
+>
+> @@ -70,6 +72,91 @@ static struct osnoise_top_data *osnoise_alloc_top(void=
+)
+>  return NULL;
+>  }
+> +static void account_ipi(struct osnoise_tool *tool,
+> +                       unsigned long long src_cpu, unsigned long long ds=
+t_cpu)
+> +{
+> +       struct osnoise_top_cpu *cpu_data;
+> +       struct osnoise_top_data *data;
+> +       unsigned long long inc =3D 1;
+> +
+> +       data =3D tool->data;
+> +       cpu_data =3D &data->cpu_data[dst_cpu];
+> +
+> +       update_sum(&cpu_data->ipi_count, &inc);
+> +}
+> +
+> +/*
+> + * osnoise_ipi_cpu_handler - this is the handler for single CPU IPI even=
+ts.
+> + */
+> +static int
+> +osnoise_ipi_cpu_handler(struct trace_seq *s, struct tep_record *record,
+> +                    struct tep_event *event, void *context)
+> +{
+> +       struct osnoise_tool *tool;
+> +       struct osnoise_params *params;
+> +       unsigned long long src_cpu, dst_cpu;
+> +       struct trace_instance *trace =3D context;
+> +
+> +       tool =3D container_of(trace, struct osnoise_tool, trace);
+> +       params =3D to_osnoise_params(tool->params);
+> +
+> +       src_cpu =3D record->cpu;
+> +       tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
+> +
+> +       if (CPU_ISSET(dst_cpu, &params->common.monitored_cpus))
+> +               account_ipi(tool, src_cpu, dst_cpu);
 
- #define ASSERT_FLAGS_SAME_MASK(_flags, _flags_other) \
- 	ASSERT_TRUE(vma_flags_same_mask((_flags), (_flags_other)))
-@@ -53,8 +62,6 @@
- #define ASSERT_FLAGS_NONEMPTY(_flags) \
- 	ASSERT_FALSE(vma_flags_empty(_flags))
+Do we need to retrieve and pass the src_cpu here? I get it if you plan
+on using it in the future, but as far as I understand, you are
+specifically tracking the destination CPU, not the source CPU. Same
+note applies to osnoise_ipi_cpumask_handler() below.
 
--#define IS_SET(_val, _flags) ((_val & _flags) == _flags)
--
- extern bool fail_prealloc;
+> +
+> +       return 0;
+> +}
+> +
+> +static cpu_set_t cpumask_tmp_cpus;
+> +
+> +/*
+> + * osnoise_ipi_cpumask_handler - this is the handler for broadcasted IPI=
+ events.
+> + */
+> +static int
+> +osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *reco=
+rd,
+> +                        struct tep_event *event, void *context)
+> +{
+> +       struct trace_instance *trace =3D context;
+> +       struct osnoise_tool *tool;
+> +       struct osnoise_params *params;
+> +       struct tep_format_field *field;
+> +       unsigned long long src_cpu;
+> +       cpu_set_t *event_cpus;
+> +       int len;
+> +
+> +       tool =3D container_of(trace, struct osnoise_tool, trace);
+> +       params =3D to_osnoise_params(tool->params);
+> +
+> +       src_cpu =3D record->cpu;
+> +
+> +       field =3D tep_find_field(event, "cpumask");
+> +       if (!field)
+> +               return 0;
+> +
+> +       event_cpus =3D tep_get_field_raw(s, event, "cpumask", record, &le=
+n, 1);
+> +       if (!event_cpus) {
+> +               err_msg("Failed to get cpumask field\n");
+> +               return 0;
+> +       }
+> +
+> +       CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_=
+cpus);
+> +
+> +       /*
+> +        * Computing the mask weight is overkill but there is no leaner o=
+ption
+> +        * provided by glibc, e.g cpumask_first() or somesuch.
+> +        */
+> +       if (CPU_COUNT(&cpumask_tmp_cpus)) {
+> +               for (int cpu =3D 0; cpu < nr_cpus; cpu++) {
+> +                       if (CPU_ISSET(cpu, &cpumask_tmp_cpus))
+> +                               account_ipi(tool, src_cpu, cpu);
+> +               }
+> +       }
 
- /* Override vma_iter_prealloc() so we can choose to fail it. */
---
-2.54.0
+Technically, the existing code already relies on the glibc cpumask
+implementation (cpu_set_t) matching the kernel "cpumask_t" type, as
+the "cpumask" field is the latter (per
+/sys/kernel/tracing/events/ipi/ipi_send_cpumask/format), not the
+former. So I wouldn't worry about the opaqueness of cpu_set_t much.
+
+Not sure how this is handled in other tracing tools that need to use
+cpumask, I'd have to look around a bit. It might even make sense to
+have a "tools" version of the cpumask functions like cpumask_first(),
+I guess, like we already do for e.g. lists and container_of.
+
+> +
+> +       return 0;
+> +}
+> +
+>  /*
+>   * osnoise_top_handler - this is the handler for osnoise tracer events
+>   */
+
+Nit: As this is extra functionality, it'd be more readable to have the
+IPI handling after the main top handler, so that someone not familiar
+with the source code will see the core logic first. That would also
+match IPI being displayed to the right of the other numbers in the top
+output.
+
+> @@ -164,6 +251,8 @@ static void osnoise_top_header(struct osnoise_tool *t=
+op)
+>                 goto eol;
+>
+>         trace_seq_printf(s, "          IRQ      Softirq       Thread");
+> +       if (params->common.ipi)
+> +               trace_seq_printf(s, "          IPI");
+>
+>  eol:
+>         if (pretty)
+> @@ -218,7 +307,13 @@ static void osnoise_top_print(struct osnoise_tool *t=
+ool, int cpu)
+>
+>         trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
+>         trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
+> -       trace_seq_printf(s, "%12llu\n", cpu_data->thread_count);
+> +       trace_seq_printf(s, "%12llu", cpu_data->thread_count);
+> +       if (!params->common.ipi) {
+> +               trace_seq_printf(s, "\n");
+> +               return;
+> +       }
+> +
+> +       trace_seq_printf(s, " %12llu\n", cpu_data->ipi_count);
+
+Maybe at this point it is worth it to print the "\n" in a separate
+statement, readability-wise:
+
+        trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
+        trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
+        trace_seq_printf(s, "%12llu", cpu_data->thread_count);
+        if (params->common.ipi)
+                trace_seq_printf(s, " %12llu", cpu_data->ipi_count);
+        trace_seq_printf(s, "\n");
+
+It would also make diffs nicer when adding new options.
+
+> [truncated]
+
+
+Tomas
+
