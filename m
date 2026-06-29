@@ -1,79 +1,79 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8314071C8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 13:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601D636D51F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 13:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782739165; cv=pass; b=sR6sU0csgSUdlCzdkDG9J7oAE+gU35A0mnKeyhsHDf6d/ggS+mIU4/vh0sT1bd8iG1inObulT/POGgQacDoZBm541z17cbgygYkPenB6pD8ujHWnVD236gab3Xa2iLh5AWcsuSOFNfyuGhJGXX+dYNNyBJewgrncUjYZXZkR7H4=
+	t=1782739193; cv=pass; b=VuS6gVrZCgOGFmvrB0wZTMbn/KHnXDQUBJCbo0rJMS9Sql6913mekNO0qG37sEtQ3K+WtXcu2ctUV3cvodUa5lSXtQ3WX+eRKaSv+XAAcfJUuyDACQT2cFrcxE2E8OZZx2brJbK9rrtGUtXvYyRo5gxPtPxLZClPecIpfOoWY9M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782739165; c=relaxed/simple;
-	bh=VgXa8OotkXsc5lVCPZMWPb/vLUr+lpZ4UKRyqgNrIWI=;
+	s=arc-20240116; t=1782739193; c=relaxed/simple;
+	bh=hxkC8KIlEaT56UtUTbB70emjyEUY+aE3e7gX7vJtRy0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rl20epOaOOFmAdbkbh0GqurXYfb9tZ1hnnc/+u4QfvEQFSWrVpKLMq50a+DCG8+lZgQUZhX5qLgvq6rFWyvkm903i2lFBqm3hPXRQPjZsXjl7t4aRv27PKhAngecMkLTMobbzoQHb+uSPqRJt9UzsUjgPAA4IR5BOXye33YBSeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uw3zWm9x; arc=pass smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=Ln8AhkPzyO96LMvF4X32DVAVyMVeUEkVXkkSvG0avIxvHKNUsvfTEv5IEldfbtN2iylU/tvTC+ggDzMrjM46904NKC1cQ9VahDods5dj+Xyid9dzAaWaERWl5zN+BkK74yHZfZ3DahRb32KdylNbiSOLJQYCtHCugnAod5dwwjA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CKDJZhrs; arc=pass smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uw3zWm9x"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-697de23bd7dso4778084a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 06:19:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782739162; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKDJZhrs"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-697df404e32so6845555a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 06:19:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782739191; cv=none;
         d=google.com; s=arc-20260327;
-        b=ZWwLrpagKz4S9XFgGlFxHTW3Jti7j8Ddy6nE4HAcKupqhfchQ2CGm3AGMKYTJdifzm
-         OVU0De9w6Jgy7TwEUeaOZPbXGTNfy3yxAwqVJS1W6hChrnDRXoXJDqlAG108W6sh6FNX
-         6KpsYrSISzxmyMPL1NJrabPjIWXW1Obbf/6JqfOuZPwy5aLtVFfACHJ+TTj+kIBaXFRk
-         3YPhcYyXn3kRRX3NpfUCrKo4PQkXiDHA3qz+2bJnRXjTmJHoueLERZCu/Lp9AlRBcxgq
-         fZMtIaG3ZNjEs+T5w23QXnnwDyIBti8AxVwtKfP0XMS+bIpY21ta9xZHRIJrj97gsZom
-         qmpA==
+        b=odbOShRvmQ2mNjn7HmxI7rSSesVikFMB5qgTF6rC6CQ5jRfCtKXAlT1kABPrqL6hi4
+         /FoOTLr+DSuaBc/i+Ub8q2j8n2G08zUcSBriKyo2W446pZ2ttaqM0u5IMRsR8PVfbRXD
+         5pog4I4hpqPttsWaXM+xzkQUm36MoD3IwPWR76W4YJcZ5tgb1i8Iz4at/RrmLOqt2u8c
+         0WEfRWwVtGAIGTruZzGXLykFTcnFntRX4CsNMNj36508th538UU/3ae4SSwNn4BDgjxW
+         8BoHc9weFn5/X4Rl8Adwlk46cg/g+ZP5dCuq+5V1Q0XFoi1j6ks9VPs8vcGq4dBVkftl
+         teRQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=l3h/W0XWiSvohOP1AjCLVTKYd/vmWZejhF/L+6OXH4M=;
-        fh=xpXLgpmhhGhE2Yo1wBxhIwWQc53Rpgc22TjfG4Uam84=;
-        b=qEkPYhfGunt183hTMte/KxEk4TpAIxIwT60/z0YuYx8O4T0IGbvySn9do9PjKIsE6z
-         1scuNY6C8NNz+V+V6aU9Y9kmblJ0o69oMU4BGCl5LANXCChqdPKeEVYftSGAJOuR8AYa
-         WjToQICfCXWdDpwjsYsJch9S8dhWblHLPINxJXvotLzYlo+p5kYjGD2Xxp/fGiV9YZ+L
-         iDZzO69kp8wO9jzVm4EQAJILFkZUCe5+028J0CtSaYPnpRJk9QBwDbCgPNn0H/bPm9yx
-         uLtpeF91W4yLGrjrwYX7Mzs6lXovUNEyM73eEiHLO2RrXM4AJaqeHvJ9zDM7dlE6pXvU
-         ZNcA==;
+        bh=dJHc5P5+QXd+EJ+9kQea+isULXn2Dht38UwjjlHyyKw=;
+        fh=3dxa791ER3yxZlu7v0w/vrl5D44/LZJlzfQgi3FYY5E=;
+        b=CWC9dwBgMjrfEUySM7pIoanAk+akEc6UOzBagepIQ4mGtn5tb1GtJHWDpvfBO+uZAM
+         PDqenCM2uRQMgZLX3+GIbQwPcBMpanVqLntAD6B5B0XGLcvL6LZd6Ef8QGtlQxDsX88v
+         AgOoWAlUuqj5r29QUa79TGcgRE/Gsu+ObbViOLCOK66QvDaciiceKQkB4h0yTJwsb1NP
+         r/m+6TRtHSKk5iDPrYdNIdxrTd1muqDnnU4TZkoB7nSA77ceTs6wFN6MC4hRDP4aNGIY
+         cA2ZXQ2gZNrq6WSJDSKBUONgzrjAcR4hWHzmM9CTyFT0eKiBZiKnZWJD5IZR5YfWko/o
+         Hghg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782739162; x=1783343962; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782739191; x=1783343991; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l3h/W0XWiSvohOP1AjCLVTKYd/vmWZejhF/L+6OXH4M=;
-        b=Uw3zWm9xfKNptCshwtZQ+04/6HVNoduo30w/Yk2BCUqs8ab3PinjCQFJ1cmpLdv39I
-         nHxebEL2cPXcXHmNg7SElzgCH4PEw50+ywc44X3sojqzIsMD6uvCQWfp8WhmYVF0za/o
-         8+m+qZ7VHkP1uDpsrId1fak+Ip+wXPjoY/XTPVrZWNLF5PmQBnrsrPek+l1DDwBTFXDM
-         PepYW/gns+9SXUr8kcAZlUd+nV2OZjxsid9d0+bGFT3zWj5fMRYUQjk1O3WcjJUjICFS
-         vEisrTZHo4geiinEiqysYA4sgIH/Zz2F8s5bRamhvr60Bvc8QrG0ZXw6pBpOR2NAu5zk
-         cSKQ==
+        bh=dJHc5P5+QXd+EJ+9kQea+isULXn2Dht38UwjjlHyyKw=;
+        b=CKDJZhrsAaQ/2cVur7FBd2Us7z31bC0ySPVoXEJKUSMo8oTV6nQJ2cC/6YsKejMKjv
+         FMVMTXNGKYrh8yXGEavElD1CAUpTUl/gMqIaWsumAErwxS/WlDKENWd5vDcSDmHzjho/
+         MTiZO/Cfw7XE+MCckG3O01cQkCCIru2y12BjfAn3Dg0VuiVxpVT/c5ctuD9qP9e7ITFZ
+         lP9sB5WDvzNQYgfQiR80B/1xPs4ATp6lHTYAxqkGGwtm1odlnyqnTDC1pULObRa7lqXR
+         Lqt7pd9V+pCEiSdcQpM6vtO3ehzgfZNGfTGg1oIj36gN2Cbz2yEa0mBS9KFcxCMJv7Tl
+         GdPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782739162; x=1783343962;
+        d=1e100.net; s=20251104; t=1782739191; x=1783343991;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=l3h/W0XWiSvohOP1AjCLVTKYd/vmWZejhF/L+6OXH4M=;
-        b=eRxre2ed7MdNsg9rebn6w3c3AdSTxUr0Xmy4mZNv0PokYb3/ec3vrl30nT9x0YOFAN
-         OJpPUagcdcJDF1zmUMr9fbgScJ4rPnux7d67JHywC4xL1txTlLsn+2XQwZaYyUpAP6LB
-         sJ8Xkvc12uqjQhUtEjLfVHMWTQuA1JOqK5jggK0lwyr4e6WPRXfHOLRzaB01WdO0uAf6
-         t5vsDfJsLqY1YJT09DCFxBQkbhyoD0SCm5GO9Fkxb/oQe2VRW6TmtkI3YO8K39tVtmB1
-         CPP3u5M/kzZIcShfgPWNi+NvkL/l9knq/B4PYDxTIP3nw/cLIJWgy/oxLGs+G5hmBiv7
-         /npw==
-X-Forwarded-Encrypted: i=1; AHgh+RrK2pozGUBX4mhyUbdTQC9n7Jdk4+X+as1oB/oUtuO9uJXWOtJbMA3fs6UZIrJ097qYGLMTvH9rwDMpB4wCJr+YwWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7lo+egDVnLV25srx5fToPZwWHoc7mJsseavDTsivfLBTp6LlF
-	Ki7McJB5jig6HmkKxUKB31sZ/vrrm5EtwA80Ibhoyvb7c05BUUXF+r3OyZyO00obyXgHNhp4SQw
-	jBpbmoqoVETbJ2P0DL44rV4/fAFF/2U0=
-X-Gm-Gg: AfdE7clV2uQlXig6nikAbkWNatvtT7gtuzVKmxHZYM6kBKwKId4kkY7pSHVnG0/TKmv
-	Iq1D0ch4Y9xpEpHp9cn3/ko6GnG4PMzBzeH5aRIiZb7Jb5VnODXH7kxC6eCWd0a+LbWvHRu9jlF
-	hBjZytfHUsHWL+WL1Gj0OML0Xaj48NYlSCLZuxWJ34kjmuwIYOLB4YhtiocMKuvdhz46ZLS4S9O
-	pJN2tZzZ/Gymh/5+NA0NtZAhi1MLMcm62X6Mjul71zzf7VgPMWXgOXnoibqykanQTLHUBdENQ==
-X-Received: by 2002:a05:6402:a503:10b0:698:2f6d:cce with SMTP id
- 4fb4d7f45d1cf-6982f6d0eb5mr3376940a12.4.1782739162411; Mon, 29 Jun 2026
- 06:19:22 -0700 (PDT)
+        bh=dJHc5P5+QXd+EJ+9kQea+isULXn2Dht38UwjjlHyyKw=;
+        b=NQeKrlWEbqC0+Gp60soKd57urD7NK0gVOquDF0f6p8S6dUr15jAmsOkh5K/oIDMgWt
+         517WK/GhOe5DvmuWPkwiOJUGnBLgnohfKDW3g2rM+4whJx8rjeWesVB0vZx30ca8LZBM
+         hpbF+pdINoGsphMvoGX8BZgBOO6G1t3QYTNY6lPgTyGW1iYhyMevVJT79FGjGKl/7kJU
+         5DU/LKzGHr9fE+oQ2PGVLFHcT3CLTJmX/SX6Ed3Jfw13yXC1qJC030H+4zcIy6Qi/wDg
+         NQ/CU/TSrOO299jB/EWBWrzSg/hbt/Psj5cMZarFKCrOghpYe7mp7J3eiFxzbmF2DERA
+         XgTQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rqn2J8sXxVpiq+xyJeGonHdlW82Yqd0tbF5jz41f6au9XvaZqs74BqMS0lWWRDw/f0lnccSnRoIRRduxvUr7wOEAis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY+lXAnPJnf/k5do1UQMvcLNxalksumPoEOEjTzrcYdgGtMyef
+	vF5CubfwEJL5Ha+UTavWjW0DlBekTklVxcWjSjeqdPUMAWi6/YX/9wCAx2wi5XUKpPHHR0RuNrs
+	G12X3ndxXFqzrPKhFnogAJ7yqnY8dGHg=
+X-Gm-Gg: AfdE7cmhqlwZDdBUBUhVMZZy1sSE8AapK+/dJecg92DrAakNOFyO7sPGVWIqQr7Emw+
+	qefJSybYPFWR1h0oW2RC4Z9im1/stp9fh2dgnx4dqTeVuSfwKYuaBhCaET6UWbWOAfJbWsogpzt
+	lKl/Lrl3DBBwhwxr4GHzHuALYRLkjLFdz8eUou1ZcVUApN7xQzEdFyKMTAkkUSyUhQKoYMuqEBK
+	PW01zP+k/Tnd8DXmzFt1vy1LEJoAmyhKqCmKLgbQeDLMja7vC6VjcM8JcQ4lkpZfY6csFm0kw==
+X-Received: by 2002:aa7:d30d:0:b0:698:3b7c:7e39 with SMTP id
+ 4fb4d7f45d1cf-6983b7c7f6cmr3492229a12.35.1782739190617; Mon, 29 Jun 2026
+ 06:19:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,14 +81,14 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251215034153.2367756-1-dolinux.peng@gmail.com>
- <20251215034153.2367756-3-dolinux.peng@gmail.com> <20260513104758.6e64167e@gandalf.local.home>
-In-Reply-To: <20260513104758.6e64167e@gandalf.local.home>
+ <20251215034153.2367756-2-dolinux.peng@gmail.com> <20260513104229.2f39eb03@gandalf.local.home>
+In-Reply-To: <20260513104229.2f39eb03@gandalf.local.home>
 From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Mon, 29 Jun 2026 21:19:11 +0800
-X-Gm-Features: AVVi8CdmaMPz_fYrc-qy_9xfZZ5838GuDYDgMwYiajdRa56XDo91baTVPU0Vm5s
-Message-ID: <CAErzpmt2wr8AYmfUvR5=Wm8JcLeCJ=W+Uhk5ZkzSKikaUzhn4w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] fgraph: Enhance funcgraph-retval with BTF-based
- type-aware output
+Date: Mon, 29 Jun 2026 21:19:37 +0800
+X-Gm-Features: AVVi8CcwXsWLmGI1EfghufBHUvXsCA3iL3jmwnaCxFFFF7XYRD1PwQR0Vk7rgC8
+Message-ID: <CAErzpmvMd9Vixtue0pm5GJAFFvT4-8DcmopgShGNXxG5UyVsQw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] ftrace: Build trace_btf.c when CONFIG_DEBUG_INFO_BTF
+ is enabled
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
 	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -96,186 +96,70 @@ Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 13, 2026 at 10:47=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+On Wed, May 13, 2026 at 10:42=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
 g> wrote:
 >
-> On Mon, 15 Dec 2025 11:41:52 +0800
+>
+> Sorry for the late reply, I've been a bit busy on other things recently.
+>
+> On Mon, 15 Dec 2025 11:41:51 +0800
 > Donglin Peng <dolinux.peng@gmail.com> wrote:
 >
 > > From: pengdonglin <pengdonglin@xiaomi.com>
 > >
-> > The current funcgraph-retval implementation suffers from two accuracy
-> > issues:
-> >
-> > 1. Void-returning functions still print a return value, creating
-> >    misleading noise in the trace output.
-> >
-> > 2. For functions returning narrower types (e.g., char, short), the
-> >    displayed value can be incorrect because high bits of the register
-> >    may contain undefined data.
-> >
-> > This patch addresses both problems by leveraging BTF to obtain the exac=
-t
-> > return type of each traced kernel function. The key changes are:
-> >
-> > 1. Void function filtering: Functions with void return type no longer
-> >    display any return value in the trace output, eliminating unnecessar=
-y
-> >    clutter.
-> >
-> > 2. Type-aware value formatting: The return value is now properly trunca=
-ted
-> >    to match the actual width of the return type before being displayed.
-> >    Additionally, the value is formatted according to its type for bette=
-r
-> >    human readability.
-> >
-> > Here is an output comparison:
-> >
-> > Before:
-> >  # perf ftrace -G vfs_read --graph-opts retval
-> >  ...
-> >  1)               |   touch_atime() {
-> >  1)               |     atime_needs_update() {
-> >  1)   0.069 us    |       make_vfsuid(); /* ret=3D0x0 */
-> >  1)   0.067 us    |       make_vfsgid(); /* ret=3D0x0 */
-> >  1)               |       current_time() {
-> >  1)   0.197 us    |         ktime_get_coarse_real_ts64_mg(); /* ret=3D0=
-x187f886aec3ed6f5 */
-> >  1)   0.352 us    |       } /* current_time ret=3D0x69380753 */
-> >  1)   0.792 us    |     } /* atime_needs_update ret=3D0x0 */
-> >  1)   0.937 us    |   } /* touch_atime ret=3D0x0 */
-> >
-> > After:
-> >  # perf ftrace -G vfs_read --graph-opts retval
-> >  ...
-> >  2)               |   touch_atime() {
-> >  2)               |     atime_needs_update() {
-> >  2)   0.070 us    |       make_vfsuid(); /* ret=3D0x0 */
-> >  2)   0.070 us    |       make_vfsgid(); /* ret=3D0x0 */
-> >  2)               |       current_time() {
-> >  2)   0.162 us    |         ktime_get_coarse_real_ts64_mg();
-> >  2)   0.312 us    |       } /* current_time ret=3D0x69380649(trunc) */
-> >  2)   0.753 us    |     } /* atime_needs_update ret=3Dfalse */
-> >  2)   0.899 us    |   } /* touch_atime */
-> >
-> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-> > Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
-> > ---
-> >  kernel/trace/trace_functions_graph.c | 124 ++++++++++++++++++++++++---
-> >  1 file changed, 111 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_=
-functions_graph.c
-> > index 17c75cf2348e..46b66b1cfc16 100644
-> > --- a/kernel/trace/trace_functions_graph.c
-> > +++ b/kernel/trace/trace_functions_graph.c
-> > @@ -15,6 +15,7 @@
-> >
-> >  #include "trace.h"
-> >  #include "trace_output.h"
-> > +#include "trace_btf.h"
-> >
-> >  /* When set, irq functions might be ignored */
-> >  static int ftrace_graph_skip_irqs;
-> > @@ -120,6 +121,13 @@ enum {
-> >       FLAGS_FILL_END   =3D 3 << TRACE_GRAPH_PRINT_FILL_SHIFT,
-> >  };
-> >
-> > +enum {
-> > +     RETVAL_FMT_HEX   =3D BIT(0),
-> > +     RETVAL_FMT_DEC   =3D BIT(1),
-> > +     RETVAL_FMT_BOOL  =3D BIT(2),
-> > +     RETVAL_FMT_TRUNC =3D BIT(3),
-> > +};
-> > +
-> >  static void
-> >  print_graph_duration(struct trace_array *tr, unsigned long long durati=
-on,
-> >                    struct trace_seq *s, u32 flags);
-> > @@ -865,6 +873,73 @@ static void print_graph_retaddr(struct trace_seq *=
-s, struct fgraph_retaddr_ent_e
-> >
-> >  #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_G=
-RAPH_RETADDR)
-> >
-> > +static void trim_retval(unsigned long func, unsigned long *retval, boo=
-l *print_retval,
-> > +                     int *fmt)
+> > The trace_btf.c file provides BTF helper functions used by the ftrace
+> > subsystem. This change makes its compilation solely dependent on
 >
-> This function should really be in trace_btf.c and a stub when btf is not
-> enabled.
+> Nit, change logs should never say "This change". Instead it should be
+> worded as:
+>
+>   "Make the compilation of trace_btf.c soley depend on..."
 
 Thanks, I will fix it.
 
 >
 > -- Steve
 >
-> > +{
-> > +     const struct btf_type *t;
-> > +     char name[KSYM_NAME_LEN];
-> > +     struct btf *btf;
-> > +     u32 v, msb;
-> > +     int kind;
-> > +
-> > +     if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
-> > +             return;
-> > +
-> > +     if (lookup_symbol_name(func, name))
-> > +             return;
-> > +
-> > +     t =3D btf_find_func_proto(name, &btf);
-> > +     if (IS_ERR_OR_NULL(t))
-> > +             return;
-> > +
-> > +     t =3D btf_type_skip_modifiers(btf, t->type, NULL);
-> > +     kind =3D t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN;
-> > +     switch (kind) {
-> > +     case BTF_KIND_UNKN:
-> > +             *print_retval =3D false;
-> > +             break;
-> > +     case BTF_KIND_STRUCT:
-> > +     case BTF_KIND_UNION:
-> > +     case BTF_KIND_ENUM:
-> > +     case BTF_KIND_ENUM64:
-> > +             if (kind =3D=3D BTF_KIND_STRUCT || kind =3D=3D BTF_KIND_U=
-NION)
-> > +                     *fmt =3D RETVAL_FMT_HEX;
-> > +             else
-> > +                     *fmt =3D RETVAL_FMT_DEC;
-> > +
-> > +             if (t->size > sizeof(unsigned long)) {
-> > +                     *fmt |=3D RETVAL_FMT_TRUNC;
-> > +             } else {
-> > +                     msb =3D BITS_PER_BYTE * t->size - 1;
-> > +                     *retval &=3D GENMASK(msb, 0);
-> > +             }
-> > +             break;
-> > +     case BTF_KIND_INT:
-> > +             v =3D *(u32 *)(t + 1);
-> > +             if (BTF_INT_ENCODING(v) =3D=3D BTF_INT_BOOL) {
-> > +                     *fmt =3D RETVAL_FMT_BOOL;
-> > +                     msb =3D 0;
-> > +             } else {
-> > +                     if (BTF_INT_ENCODING(v) =3D=3D BTF_INT_SIGNED)
-> > +                             *fmt =3D RETVAL_FMT_DEC;
-> > +                     else
-> > +                             *fmt =3D RETVAL_FMT_HEX;
-> > +
-> > +                     if (t->size > sizeof(unsigned long)) {
-> > +                             *fmt |=3D RETVAL_FMT_TRUNC;
-> > +                             msb =3D BITS_PER_LONG - 1;
-> > +                     } else {
-> > +                             msb =3D BTF_INT_BITS(v) - 1;
-> > +                     }
-> > +             }
-> > +             *retval &=3D GENMASK(msb, 0);
-> > +             break;
-> > +     default:
-> > +             *fmt =3D RETVAL_FMT_HEX;
-> > +             break;
-> > +     }
-> > +}
-> > +
+> > CONFIG_DEBUG_INFO_BTF, allowing features like funcgraph-retval to also
+> > utilize these helpers.
+> >
+> > Additionally, the redundant dependency on CONFIG_PROBE_EVENTS_BTF_ARGS
+> > is removed, as CONFIG_DEBUG_INFO_BTF already depends on
+> > CONFIG_BPF_SYSCALL.
+> >
+> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+> > Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> > ---
+> >  kernel/trace/Kconfig  | 2 +-
+> >  kernel/trace/Makefile | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index e1214b9dc990..653c1fcefa4c 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -755,7 +755,7 @@ config FPROBE_EVENTS
+> >  config PROBE_EVENTS_BTF_ARGS
+> >       depends on HAVE_FUNCTION_ARG_ACCESS_API
+> >       depends on FPROBE_EVENTS || KPROBE_EVENTS
+> > -     depends on DEBUG_INFO_BTF && BPF_SYSCALL
+> > +     depends on DEBUG_INFO_BTF
+> >       bool "Support BTF function arguments for probe events"
+> >       default y
+> >       help
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index fc5dcc888e13..6c4bf5a6c4f3 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -116,7 +116,7 @@ obj-$(CONFIG_KGDB_KDB) +=3D trace_kdb.o
+> >  endif
+> >  obj-$(CONFIG_DYNAMIC_EVENTS) +=3D trace_dynevent.o
+> >  obj-$(CONFIG_PROBE_EVENTS) +=3D trace_probe.o
+> > -obj-$(CONFIG_PROBE_EVENTS_BTF_ARGS) +=3D trace_btf.o
+> > +obj-$(CONFIG_DEBUG_INFO_BTF) +=3D trace_btf.o
+> >  obj-$(CONFIG_UPROBE_EVENTS) +=3D trace_uprobe.o
+> >  obj-$(CONFIG_BOOTTIME_TRACING) +=3D trace_boot.o
+> >  obj-$(CONFIG_FTRACE_RECORD_RECURSION) +=3D trace_recursion_record.o
+>
