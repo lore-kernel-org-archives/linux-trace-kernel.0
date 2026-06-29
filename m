@@ -1,127 +1,136 @@
-Received: from out199-13.us.a.mail.aliyun.com (out199-13.us.a.mail.aliyun.com [47.90.199.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EE33AE188;
-	Mon, 29 Jun 2026 06:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD1A3A6B61
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 06:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782715706; cv=none; b=DYJRO4Gl8o9TkXNP6PvOiJ0ea4JDSWgFf/J8SoPHntOtJZNk9z0JGeVSDUBvjV0RKlam3tsB5XbiajwM6AeQhy0lPGR5A0/hrDHP68q9f+2Quep+xHDU7R2O78osymf8TLobh79QOaIzdoLisp9QBVy/Y5j9nEDM908knO3F6Xo=
+	t=1782715915; cv=none; b=bZHjtdYfiZfOKSWwOcjt6pCrkc10o3mcTF+beMm7ZwttlJjXSx2Gq0hHowyGpo4XwH3jo78WD6l0boB6zA+NyDRsTK/RGRNuoh57iOjYG6A/n5NNQieqPPVVgRfQ4aCM/HGRBjnlup9556ac9XUwlDK+fpzX7cysVMNLO0EEkho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782715706; c=relaxed/simple;
-	bh=S9PPBd03nshTXdebHu0IRlNHz4qa/HrTIvMxXIyLevQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A0phZaABrFuQ2vyfkMFzFj5jj7RARkvACAPK7TnGpsWeHTZPkrXgskbT/JYvGg9Xut2NMv2Xvnn9jgTHjKFro9sZAJFVofjn2DKu2aTft2XYTmd+ETCDflBu6wf1P4S/tkq+RatFZYCnM01t1IbsQSor2f5yaSbkJ85O680QNzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RMnGm7bG; arc=none smtp.client-ip=47.90.199.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1782715915; c=relaxed/simple;
+	bh=ALkXro3TmNNCZbVZHgx9H3ghIJWe+sMD5X1yGx7fpPk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ctpAohRel191MPhaukFkKga/ad3hnkk+F35yulVPggrUFKukd2yw7fJXLzNzn9jpufjtetU3YmO2WBORwSl8g0MY6nIpqtNBzMkImJslnjE0Fc1pNgrMrNTtZqLNfHHz1ZNmd+xgkxSqnlhqCQTO7UDlconnoZlkQ3NbpS8yiOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ERTRrWoJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RMnGm7bG"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782715689; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=cs5txbx9bpKaRI7bmx5ga6+SdBKGKPqwgmoXTwT+GtE=;
-	b=RMnGm7bGVVXeA52sHPH5YIYUBBBDtE6zrwfryltfVAt1PtVhGj0UefGc9IlY4gSyg3iQ2T1udaWTPKFqHDQxAe0EtD6Ic9nJfoJKeo6rAuJ8/ePC35kMOQL5QqsFeZdLKrZNHCfw+ANQZnnEpqtyfaIh4iVtImo5rksqyltPo+k=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X5nWtcO_1782715355;
-Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X5nWtcO_1782715355 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Jun 2026 14:42:36 +0800
-From: Wang Han <wanghan@linux.alibaba.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	Oleg Nesterov <oleg@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 3/7] riscv: ftrace: always preserve s0 in dynamic ftrace register frame
-Date: Mon, 29 Jun 2026 14:42:24 +0800
-Message-ID: <20260629064228.3195856-4-wanghan@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ERTRrWoJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782715913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ji0V4ni4RmhJJUHRPG50Xaton3kWCxzApZBwJGJW1x8=;
+	b=ERTRrWoJJ6xUE5HQ5OxZTByf2rx2PsaKm+MTJr5m7+OlrTL6LOGsuSBuFGVqse2/ME8VjQ
+	1UwFQ8YzYXvxTs51WWJI7Ryiq45XYkahCzCj2y93pCd4vCycPp4DvJkYHKGHrPNx1Ubk05
+	5/jlqD/a7Hej3c0ZP2Q5v1uM9vXaJ6k=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-159-miCDH-U2McWggtNzM1yz6g-1; Mon, 29 Jun 2026 02:51:51 -0400
+X-MC-Unique: miCDH-U2McWggtNzM1yz6g-1
+X-Mimecast-MFC-AGG-ID: miCDH-U2McWggtNzM1yz6g_1782715910
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45f3d008865so2262827f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Jun 2026 23:51:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782715910; x=1783320710;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4VpgbX77g0zAh4zD5ha9J/8JOvu7Er6pEgstXO5xH7M=;
+        b=H29oD2fg0UFNen1+zWgDJA30CJGFMDUUeSw/6SdbLP+PVFk1EdMinfDahnMjVofjCb
+         lWu3pEyGNpve9XVbmYFCfT1grV+vyB+uKDq/8vpgNm+sWb0SU4U19+bpMc2UOxk/0pWv
+         GRqIE4y5Iyaf11h+R6tNS4G3vaBe4xBlT1WxGUs60KmhvghjKdb87Y/mpjUck3XnY1MK
+         yXjn3WT2+OurWqO6bv6kR1ZDruMVwQKnf2B5SRpiJ/9bsh7AJf9aY/vw2b7EmwyTp27L
+         4U6gh9NlNpLjlccdlKjTMApA3CwjcCTus/z4dKi5frUfuuRSM4GQU1J3AvyuVIlpSjjH
+         2ITw==
+X-Forwarded-Encrypted: i=1; AHgh+Rppc1wGRSYuzuYy+fDpMP6FXPqVnPofvJp2ZUAhWFsxy7KVTYLUUx3Z0o5MfY6Eqd5yIH8uMp1m5RLjIDi5h+oJPL4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4r6mMC2nxUJXYAxdANPCyN1z4cZOKgpvwfvoo6nImHidCIIJb
+	1Aw2wfS0e+HYotgtQzIf9Qyi6HnwwG/b4bPl1NPTJJb5/5VSInF4WBOcrdAvN9ntjQvvzxzFybM
+	3Jfrjt3SyxSLh8JUJhH6oa+b5RSPNqh6GflL6dO09iM/I5ZaEnXEL5PmqR9HbKba5WTbiaGe5zA
+	==
+X-Gm-Gg: AfdE7cmTf9oCTEjv7lpO4xHumanSA4wIdh9F1R7g/bdby8AwjVJcXam3rdTXFocXy2n
+	xd5nZpFedHlz5G/oN2GE5Gj2wH/eRqZ2OE10zBVwK8ftusDD8An02Q6k/rT5WMKRKORohwMQu22
+	p0/bGa+wJUQeJLVmo/2BIPbJTEJgGWw3mkV+yFm/apQfub+g73AIPAJ/MHCMPQjhMKM1p1VJCRH
+	1g+9NwH/AI3nBhnIs9N5t4R6GQKZaFpdKx4D8OCSHRgk+woz4qDmGsIybvnElnLt3FILz7iqDY/
+	vSKcKoyyRr3oze2yBRF26sTMsuOZykzsAcVK34p62k9bCXD60uY1bMMpSdOCUg8XEcrxjJjmPV4
+	e3fvrp21SpEJpS5fHKL4gbFeXv4L/kbN3VB+vIDODhiZDfixFm1NQJ1fcoMvrPPczY6uQ8ye/po
+	FDbuAp
+X-Received: by 2002:a05:6000:4022:b0:473:1e79:87e6 with SMTP id ffacd0b85a97d-4731e798941mr4899974f8f.3.1782715910493;
+        Sun, 28 Jun 2026 23:51:50 -0700 (PDT)
+X-Received: by 2002:a05:6000:4022:b0:473:1e79:87e6 with SMTP id ffacd0b85a97d-4731e798941mr4899948f8f.3.1782715910079;
+        Sun, 28 Jun 2026 23:51:50 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-473dddcb295sm6521011f8f.35.2026.06.28.23.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2026 23:51:49 -0700 (PDT)
+Message-ID: <01b025c43dda6efe97646162e61002fdf5fff0e3.camel@redhat.com>
+Subject: Re: [PATCH v3 04/17] tools/rv: Add selftests
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Wen Yang <wen.yang@linux.dev>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+ Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
+ <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>
+Date: Mon, 29 Jun 2026 08:51:46 +0200
+In-Reply-To: <0c230c01-77c8-4c9e-9f49-ecb9555402cf@linux.dev>
+References: <20260625121440.116317-1-gmonaco@redhat.com>
+	 <20260625121440.116317-5-gmonaco@redhat.com>
+	 <0c230c01-77c8-4c9e-9f49-ecb9555402cf@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NX1Fqx3rE0Pl2k6rYyvpVMun2LpS6Qn82QnKOxP4JoE_1782715910
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-struct __arch_ftrace_regs declares s0 unconditionally, and both
-ftrace_regs_get_frame_pointer() and ftrace_partial_regs() read it
-unconditionally. But the SAVE_ABI_REGS / RESTORE_ABI_REGS macros in
-mcount-dyn.S only stored s0 under HAVE_FUNCTION_GRAPH_FP_TEST
-(CONFIG_FUNCTION_GRAPH_TRACER && CONFIG_FRAME_POINTER). With
-CONFIG_FRAME_POINTER=n the slot held whatever was on the stack before,
-so any callback going through ftrace_partial_regs() saw a garbage
-regs->s0. RISC-V kernels default to FRAME_POINTER=y, which is why this
-has not bitten in practice.
+Please cut down the context a bit more next time, it makes it much
+easier to find your review.
 
-Save and restore s0 unconditionally in the dynamic ftrace ABI register
-frame. This fixes the latent garbage-s0 case, brings the dynamic ftrace
-path in line with the static _mcount path (mcount.S SAVE_ABI_STATE
-already saves s0 unconditionally), and matches the frame layout already
-documented in the comment above SAVE_ABI_REGS. It is also a prerequisite
-for the upcoming reliable unwinder, which reads
-ftrace_regs_get_frame_pointer(fregs) directly.
+On Mon, 2026-06-29 at 01:10 +0800, Wen Yang wrote:
+> On 6/25/26 20:14, Gabriele Monaco wrote:
+> > +=09eval "$TIMEOUT" "$command" &> check_output.$$ &
+> > +=09bgpid=3D$!
+> > +=09pid=3D$(pgrep -f "${command%%[|;&>]*}" | tail -n1)
+>=20
+> The pgrep runs may immediately after the background fork, before the=20
+> child process has had time to exec.
 
-The cost is one extra REG_S/REG_L pair per traced call, negligible
-compared to the overall ftrace cost; the existing FREGS_SIZE_ON_STACK
-already reserved the slot, so no extra stack space is used.
+Yeah I'm aware of this but kind of ignored it for now and never seen it
+making troubles in practice..
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
----
- arch/riscv/kernel/mcount-dyn.S | 4 ----
- 1 file changed, 4 deletions(-)
+I could add some delay waiting for the task like:
 
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index 082fe0b0e3c0..26c55fba8fec 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -85,9 +85,7 @@
- 	addi	sp, sp, -FREGS_SIZE_ON_STACK
- 	REG_S	t0,  FREGS_EPC(sp)
- 	REG_S	x1,  FREGS_RA(sp)
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	REG_S	x8,  FREGS_S0(sp)
--#endif
- 	REG_S	x6,  FREGS_T1(sp)
- #ifdef CONFIG_CC_IS_CLANG
- 	REG_S	x7,  FREGS_T2(sp)
-@@ -113,9 +111,7 @@
- 	.macro RESTORE_ABI_REGS
- 	REG_L	t0, FREGS_EPC(sp)
- 	REG_L	x1, FREGS_RA(sp)
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	REG_L	x8, FREGS_S0(sp)
--#endif
- 	REG_L	x6,  FREGS_T1(sp)
- #ifdef CONFIG_CC_IS_CLANG
- 	REG_L	x7,  FREGS_T2(sp)
--- 
-2.43.0
+  while [ -z "$pid" ]; do
+    sleep .5
+    pid=3D$(pgrep -f "${command%%[|;&>]*}" | tail -n1)
+  done
+
+With probably a maximum of some N retrials in case the task never
+started or we messed up the pattern.
+That may still race in case the command exits before we pgrep it, but in
+practice that shouldn't be a problem in our tests.
+
+Any better idea? We cannot really rely on the shell's $! because command
+is using a combination of eval+timer and we'd get the wrong pid.
+
+Thanks,
+Gabriele
+
