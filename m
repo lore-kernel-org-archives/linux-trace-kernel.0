@@ -1,159 +1,283 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7A3C10AF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 07:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B303CFF58;
+	Mon, 29 Jun 2026 07:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782716710; cv=none; b=L9H3uBtqgIBOXk6bCLqM+PZKuTSAJIAZV2QkXXsR7+tWBJiiDxE6evBQctlTrCLT71nttnLn97/srPWeVpb5VbDz7QqDbAy5/EJFu76wBUpkcChM3XCfx1hJHwa0ydYzmIXwLZM9VFiznjN0vsbl07wvZMroFsJWY0/IN0FhMPU=
+	t=1782718109; cv=none; b=pXl35GdWs+WwMs2f402EQwA9M7wk8xrYHb9QXUvNkzfLEOzklUH5nCKINOidTaIUYmJlhoLlTnQhYtu2HyijW5stamCNDRIoqJ/p8TVDl+yBl8xTOoysb6Xxj9huscTDJMd+y/kuFwd+vqSk71yVVPVmHPh+DrYx1XIlqTrVimU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782716710; c=relaxed/simple;
-	bh=2TvZSbaJeZDt0QtZWKzlxR6n2gFDfREHIGZZ3L4ieGk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LsyXUhgU4YS5OC2Ppkstc1W438s0XvnJ9TTTcSb+wrIxDoPfcoEPDNI5wz5mQhNE3tlfb8bfK0oAWE9gXN6Dh0bgA72Skss1BNy4nFn9F9OT/tD+3YszDnQtsYO1ELvv1jX9o8XSNq9Tt8KHQpYQJgF77APQyaliKr6NR5xcnzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PqJzf3AX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782718109; c=relaxed/simple;
+	bh=mPs9vQQPcVELk+RDxwTkbDt8rSkSxrOkAReJFhYrAAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N4ZxEBrCMwiGqEZ89AY+NeNPlaybAP4fmqMTXYeXh2lSxF4tD5ptME8AQtRhzrJQq+V5XtzWQb9jgUcxosNNQAMzatdBtw02T4dOuaBYqvxuKKjXlA+VGB7g02C6TgM6JScjrSwVkBzC6GZwcT1JrZO5oydO/zXaVJFw96Ynt/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=pJzpYRYW; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PqJzf3AX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782716708;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2TvZSbaJeZDt0QtZWKzlxR6n2gFDfREHIGZZ3L4ieGk=;
-	b=PqJzf3AXVGQc3sfrfzDYHfVhz+22c79B22xLMqY+d5VYdAUxmsibem7g7oK4f8M0YJsvpK
-	aNK5+fbjaLydXUUaDwaItYaoVchkC24QCvt+aLuIR9M2OtXnSGojr8dYlFJql3H13iJ94l
-	8tlJOthr4urAmjS2M75PaTAgOsJ9J5I=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-AXdTEnHcNC-kc84iriRS2A-1; Mon, 29 Jun 2026 03:05:03 -0400
-X-MC-Unique: AXdTEnHcNC-kc84iriRS2A-1
-X-Mimecast-MFC-AGG-ID: AXdTEnHcNC-kc84iriRS2A_1782716702
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-470cb859d96so1158794f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 00:05:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782716702; x=1783321502;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ApRfeIMP2d5U5s8s5CxROo3JDafbwy3URSsiSmHVeIE=;
-        b=X56kTyCQNPsoy2BX0DXD0t36dIFbwncbK0xvZ4Rv4Ot/AakTnj+O5/23DsT11jdQwv
-         mERkeSyT7oeNwWZPb9UG/1Ujq/IwAGlMa4XaYH16Xe/+OuR7AohJSaEeS1E7NiRJr3eP
-         7sVXL2PU5UYoexzr9L95/FaqDcPpLnZ6eKfqHPYd9o6Rw0qeVUggoxeHq9byKdmxLMU+
-         NjORVTBWv1UizcLazSuXY0r/qVYbNs1JmDkO8iipOkezDsiUFs7njZu8BCrxs1iuzkqn
-         S7l/bw9CMB37L8zkrr45tL3N/xaZ3zXAAIfmC9p5AH6tFK/f5lg5vmoE348PNnA/9zci
-         hy8g==
-X-Forwarded-Encrypted: i=1; AHgh+RoV//FmwnPA4I5YhVdD8XfV/MK8vfdXdxAIiAg61Mvck2n978tc60E79dFfzbm7NhX0kp9dX5U3vcl//XQso3LISnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLGhl3527jyYQVh0FxWR2HfW0NQkIuuvXr1At1MZF47Q8J2Tem
-	gyHFX4qIr9wda1WY/OGChjxh+601DWN+mxuWSSth2cOUhB1odKv1uuOGoKbEPOi4SmUami/OlYT
-	wh+YqR6U3e9vWygmblgg/4SH+lWwVe+EZ1qJVHNjzBt/jHIlcn6vqUsTh2TQFUencihr+dolOGH
-	h4UMSfehOX
-X-Gm-Gg: AfdE7clkl6BVDnykJ1W7g9oZwJhdbW4twjA7x8lvEzOhJeauME5/cAPGadMs3PjEik3
-	q6wKVIPC+AJUqRRRet9hv/Em3GxgJVbrqk67D752Kcjy6aAEiDC9Gbu5KZ0C7WTxLJiaD/0NKkQ
-	eM3A0XdiGIjqQFnf5fTSINmk4ce6X/zQIZUUP7dbQ0JzOOu2hYTqJfRvgJqU4eXExBFhCqzF7Aw
-	FzGar743tGK/2T5OroYpMwKl6nrvKOBxohA+g7KnFgVHaTeLioGrl468aVSFXk54iNHlxnDdPMt
-	U+DT+aNOKwctOOjDCOAGtY2fY8PJ7HARUj3a+3hv8DaAV7rb98hFXnEb65IaG9+t5IFMm5GvH+T
-	D5oIw0EMazry8vurZUMcpOOADyJNsjl8pXkyb5CGKDJ6yTzR0q8KVB5G8DqXTZ4SJ8XqKT1xQyD
-	ewTff7
-X-Received: by 2002:a05:6000:2283:b0:473:1ccc:15bf with SMTP id ffacd0b85a97d-4731ccc1722mr5730470f8f.42.1782716702432;
-        Mon, 29 Jun 2026 00:05:02 -0700 (PDT)
-X-Received: by 2002:a05:6000:2283:b0:473:1ccc:15bf with SMTP id ffacd0b85a97d-4731ccc1722mr5730418f8f.42.1782716701970;
-        Mon, 29 Jun 2026 00:05:01 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46f978dc0a9sm23663882f8f.15.2026.06.29.00.04.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 00:04:59 -0700 (PDT)
-Message-ID: <ed538f5f3a0976ea8a0be66b20a446442f7260c1.camel@redhat.com>
-Subject: Re: [PATCH v3 14/17] verification/rvgen: Add selftests for rvgen
- kunit
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wen Yang <wen.yang@linux.dev>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
- Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
- <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Mon, 29 Jun 2026 09:04:57 +0200
-In-Reply-To: <53f2d13c-cc1d-48fd-95f0-2c1ff1edfc88@linux.dev>
-References: <20260625121440.116317-1-gmonaco@redhat.com>
-	 <20260625121440.116317-15-gmonaco@redhat.com>
-	 <53f2d13c-cc1d-48fd-95f0-2c1ff1edfc88@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="pJzpYRYW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782718101; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=pw2kzY2F6KU+khx86jC+uRtX2TajkZSRy94F+JyoD3I=;
+	b=pJzpYRYWZOI2F0Rd71CKVV2P/61ASKHwYkMhpwXAicQMXczxI6naMDQgXq861JPDqZ7rut2gAY++MPX11gyKXiHZzzLnr03E8dR5z/4giejDiD5ym3BTnKrjDESN3OgvXGQWX8Ykb7+Mh7/dq3KfZhGij7ha9KRXh1RJTKUgzEE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X5oo1Go_1782718097;
+Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X5oo1Go_1782718097 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 29 Jun 2026 15:28:19 +0800
+From: Wang Han <wanghan@linux.alibaba.com>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org,
+	Oleg Nesterov <oleg@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Petr Mladek <pmladek@suse.com>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	oliver.yang@linux.alibaba.com,
+	xueshuai@linux.alibaba.com,
+	zhuo.song@linux.alibaba.com,
+	jkchen@linux.alibaba.com,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v4 RESEND 0/7] riscv: Add reliable stack unwinding for livepatch
+Date: Mon, 29 Jun 2026 15:27:06 +0800
+Message-ID: <20260629072713.3273743-1-wanghan@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: cUkDas34fZwvgJ9F1Ngbn2BP2eSP0FMARKVbS8GFUk0_1782716702
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2026-06-29 at 01:06 +0800, Wen Yang wrote:
-> On 6/25/26 20:14, Gabriele Monaco wrote:
-> > +static void handle_example_event(void *data, /* XXX: fill header */)
-> > +{
-> > +=09ltl_atom_update(task, LTL_EVENT_A, true/false);
-> > +}
-> > +
-> > +static int enable_test_ltl_kunit(void)
-> > +{
-> > +=09int retval;
-> > +
-> > +=09retval =3D ltl_monitor_init();
-> > +=09if (retval)
-> > +=09=09return retval;
-> > +
-> > +=09rv_attach_trace_probe("test_ltl_kunit", /* XXX: tracepoint */,
-> > handle_example_event);
-> > +
-> > +=09return 0;
-> > +}
-> > +
-> > +static void disable_test_ltl_kunit(void)
-> > +{
-> > +=09rv_detach_trace_probe("test_ltl_kunit", /* XXX: tracepoint */,
-> > handle_sample_event);
-> > +
->=20
-> one typo:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 handle_sample_event should be =
-handle_example_event.
+Hi,
 
-Keep in mind that those files are not ready to build, users need to
-touch them anyway after generation from rvgen. Nevertheless, this has
-been inconsistent for a while and I should fix it.
+Sorry for the noise and inconvenience caused by the previous unthreaded
+v4 submission.
 
-> > +=09ltl_monitor_destroy();
-> > +}
-...
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_AUTHOR(/* TODO */);
->=20
-> Please use a valid string here.
+This is a resend of v4 only to fix mail threading. The patch contents
+are unchanged from the previous v4.
 
-Likewise, this is not supposed to build, we are just validating what
-rvgen produces and that's the expected output, the user will need to
-fill it with an appropriate string.
+Previous unthreaded v4:
+  https://lore.kernel.org/r/20260629064228.3195856-1-wanghan@linux.alibaba.com
 
-LTL uses a different approach compared to DA/HA in this template, I'm not
-sure it's worth aligning the two..
+This series adds the RISC-V architecture pieces needed by livepatch:
+dynamic ftrace must preserve the frame pointer context that livepatch
+uses for redirection, and the stack unwinder must be reliable enough for
+the livepatch consistency model.
 
-Thanks,
-Gabriele
+The reliable unwinder is based on frame records and explicit metadata at
+task and exception boundaries. It is intentionally conservative: it
+rejects ambiguous states instead of trying to unwind through them. The
+series then enables HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH for
+64-bit RISC-V with dynamic ftrace.
 
-> > +MODULE_DESCRIPTION("test_ltl_kunit: auto-generated");
+The first patch from v3, "scripts/sorttable: Handle RISC-V patchable
+ftrace entries", has been picked up by Paul and is already present in
+riscv/for-next as commit 57ad674d032b. It is therefore dropped from this
+v4. The remaining patches are rebased on the latest riscv/for-next.
 
+Base:
+  riscv/for-next 798246e5edfb ("riscv: acpi: Enable ARCH_HAS_ACPI_TABLE_UPGRADE")
+
+Previous versions:
+  v3: https://lore.kernel.org/r/cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com
+  v2: https://lore.kernel.org/r/20260528082310.1994388-1-wanghan@linux.alibaba.com
+  v1: https://lore.kernel.org/r/20260527123530.2593918-1-wanghan@linux.alibaba.com
+
+Changes since v3:
+  * Drop the accepted sorttable fix, now commit 57ad674d032b in
+    riscv/for-next.
+  * Rebase the remaining 7 patches on the latest riscv/for-next.
+  * Adapt the frame metadata patch to the existing call_on_irq_stack()
+    RV32 frame-pointer ABI fix by keeping metadata frame-record offsets
+    distinct from the s0-relative STACKFRAME_* offsets.
+  * Adapt the livepatch syscall selftest prefix change to the current
+    CONFIG_ARCH_HAS_SYSCALL_WRAPPER wrapper logic.
+
+Validation:
+  * Built with riscv64-unknown-linux-gnu-gcc 15.2.0 and the existing
+    configs/riscv_livepatch_config, including RISCV_ISA_C=y, EFI=y and
+    ACPI=y.
+  * make -C linux O=$PWD/build/linux/riscv ARCH=riscv \
+      CROSS_COMPILE=riscv64-unknown-linux-gnu- -j$(nproc) Image modules
+    passed.
+  * make kernel-debug ARCH=riscv GDB=riscv64-unknown-linux-gnu-gdb
+    passed.
+  * livepatch selftest modules built successfully via ./test-livepatch.sh
+    riscv.
+  * QEMU RISC-V livepatch selftests passed with PASS: 7, SKIP: 1,
+    FAIL: 0. The only skip is test-kprobe.sh because this config does
+    not enable CONFIG_KPROBES_ON_FTRACE.
+  * The ftrace function graph subset passed with 3 passed, 0 failed and
+    3 unsupported tests.
+
+Wang Han (7):
+  riscv: stacktrace: Add frame record metadata
+  riscv: stacktrace: disable KASAN and KCOV instrumentation for
+    stacktrace.o
+  riscv: ftrace: always preserve s0 in dynamic ftrace register frame
+  riscv: stacktrace: introduce stack-bound tracking helpers
+  riscv: stacktrace: switch to frame-pointer based unwinder
+  riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
+  selftests/livepatch: Add RISC-V syscall wrapper prefix
+
+ arch/riscv/Kconfig                            |   4 +
+ arch/riscv/include/asm/ptrace.h               |   9 +
+ arch/riscv/include/asm/stacktrace.h           |  65 +-
+ arch/riscv/include/asm/stacktrace/common.h    | 159 +++++
+ arch/riscv/include/asm/stacktrace/frame.h     |  53 ++
+ arch/riscv/kernel/Makefile                    |   6 +
+ arch/riscv/kernel/asm-offsets.c               |   6 +
+ arch/riscv/kernel/entry.S                     |  39 +-
+ arch/riscv/kernel/ftrace.c                    |   6 +-
+ arch/riscv/kernel/head.S                      |  23 +
+ arch/riscv/kernel/mcount-dyn.S                |   4 -
+ arch/riscv/kernel/perf_callchain.c            |   2 +-
+ arch/riscv/kernel/process.c                   |  33 +-
+ arch/riscv/kernel/stacktrace.c                | 559 +++++++++++++++---
+ .../livepatch/test_modules/test_klp_syscall.c |   2 +
+ 15 files changed, 864 insertions(+), 106 deletions(-)
+ create mode 100644 arch/riscv/include/asm/stacktrace/common.h
+ create mode 100644 arch/riscv/include/asm/stacktrace/frame.h
+
+Range-diff against v3:
+1:  8cef363cfed7 ! 1:  efd99ce56c1e riscv: stacktrace: Add frame record metadata
+    @@ Commit message
+             the secondary CPU path sets up s0 before smp_callin() so idle-task
+             unwinding does not inherit an undefined caller frame;
+           * copy_thread creates matching final metadata records for new kernel
+    -        and user tasks, and keeps s0 available for the frame-pointer chain;
+    -      * call_on_irq_stack still reserves an aligned stack slot, but links the
+    -        saved {fp, ra} with the raw frame-record size so s0 points at the
+    -        RISC-V frame record rather than past the alignment padding.
+    +        and user tasks, and keeps s0 available for the frame-pointer chain.
+     
+    -    The call_on_irq_stack adjustment fixes a latent RV32 issue. On RV64,
+    -    sizeof(struct stackframe) is equal to the stack alignment, so the old
+    -    s0 value happened to point just above the saved {fp, ra}. On RV32, the
+    -    raw frame record is 8 bytes while the reserved stack slot is 16-byte
+    -    aligned, so the old s0 value pointed into the padding. Using the raw
+    -    record size makes s0 point above the saved frame record on both RV32
+    -    and RV64 while still reserving the aligned slot.
+    +    Keep the embedded metadata-record field offsets distinct from the
+    +    s0-relative STACKFRAME_* offsets used by call_on_irq_stack(), because
+    +    the latter describe a frame record relative to s0 rather than to the
+    +    record base.
+     
+         These changes keep s0 reserved for the frame-pointer chain at task and
+    -    stack-switch boundaries.
+    +    exception boundaries.
+     
+         Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+     
+    @@ arch/riscv/kernel/asm-offsets.c: void asm_offsets(void)
+      
+      	OFFSET(HIBERN_PBE_ADDR, pbe, address);
+     @@ arch/riscv/kernel/asm-offsets.c: void asm_offsets(void)
+    - 	OFFSET(SBI_HART_BOOT_STACK_PTR_OFFSET, sbi_hart_boot_data, stack_ptr);
+    - 
+      	DEFINE(STACKFRAME_SIZE_ON_STACK, ALIGN(sizeof(struct stackframe), STACK_ALIGN));
+    + 	DEFINE(STACKFRAME_FP, offsetof(struct stackframe, fp) - sizeof(struct stackframe));
+    + 	DEFINE(STACKFRAME_RA, offsetof(struct stackframe, ra) - sizeof(struct stackframe));
+     +	DEFINE(STACKFRAME_RECORD_SIZE, sizeof(struct stackframe));
+    - 	OFFSET(STACKFRAME_FP, stackframe, fp);
+    - 	OFFSET(STACKFRAME_RA, stackframe, ra);
+    ++	OFFSET(FRAME_RECORD_FP, frame_record, fp);
+    ++	OFFSET(FRAME_RECORD_RA, frame_record, ra);
+      #ifdef CONFIG_FUNCTION_TRACER
+    + 	DEFINE(FTRACE_OPS_FUNC,		offsetof(struct ftrace_ops, func));
+    + #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+     
+      ## arch/riscv/kernel/entry.S ##
+     @@
+    @@ arch/riscv/kernel/entry.S: SYM_CODE_START(handle_exception)
+     +	 * Create a metadata frame record. The unwinder will use this to
+     +	 * identify and unwind exception boundaries.
+     +	 */
+    -+	REG_S zero, (S_STACKFRAME + STACKFRAME_FP)(sp) /* stackframe.record.fp = 0 */
+    -+	REG_S zero, (S_STACKFRAME + STACKFRAME_RA)(sp) /* stackframe.record.ra = 0 */
+    ++	REG_S zero, (S_STACKFRAME + FRAME_RECORD_FP)(sp) /* stackframe.record.fp = 0 */
+    ++	REG_S zero, (S_STACKFRAME + FRAME_RECORD_RA)(sp) /* stackframe.record.ra = 0 */
+     +#ifdef CONFIG_RISCV_M_MODE
+     +	li t0, SR_MPP
+     +	and t0, s1, t0
+    @@ arch/riscv/kernel/entry.S: SYM_CODE_START_LOCAL(handle_kernel_stack_overflow)
+     +	 * pt_regs boundary and the unwinder can resume from the pre-overflow
+     +	 * frame pointer saved in PT_S0.
+     +	 */
+    -+	REG_S zero, (S_STACKFRAME + STACKFRAME_FP)(sp)
+    -+	REG_S zero, (S_STACKFRAME + STACKFRAME_RA)(sp)
+    ++	REG_S zero, (S_STACKFRAME + FRAME_RECORD_FP)(sp)
+    ++	REG_S zero, (S_STACKFRAME + FRAME_RECORD_RA)(sp)
+     +	li t0, FRAME_META_TYPE_PT_REGS
+     +	REG_S t0, S_STACKFRAME_TYPE(sp)
+     +	addi s0, sp, S_STACKFRAME + STACKFRAME_RECORD_SIZE
+    @@ arch/riscv/kernel/entry.S: ASM_NOKPROBE(handle_kernel_stack_overflow)
+      	move a2, sp /* pt_regs */
+      	call ret_from_fork_kernel
+      	j ret_from_exception
+    -@@ arch/riscv/kernel/entry.S: SYM_FUNC_START(call_on_irq_stack)
+    - 	addi	sp, sp, -STACKFRAME_SIZE_ON_STACK
+    - 	REG_S	ra, STACKFRAME_RA(sp)
+    - 	REG_S	s0, STACKFRAME_FP(sp)
+    --	addi	s0, sp, STACKFRAME_SIZE_ON_STACK
+    -+	addi	s0, sp, STACKFRAME_RECORD_SIZE
+    - 
+    - 	/* Switch to the per-CPU shadow call stack */
+    - 	scs_save_current
+    -@@ arch/riscv/kernel/entry.S: SYM_FUNC_START(call_on_irq_stack)
+    - 	scs_load_current
+    - 
+    - 	/* Switch back to the thread stack and restore ra and s0 */
+    --	addi	sp, s0, -STACKFRAME_SIZE_ON_STACK
+    -+	addi	sp, s0, -STACKFRAME_RECORD_SIZE
+    - 	REG_L	ra, STACKFRAME_RA(sp)
+    - 	REG_L	s0, STACKFRAME_FP(sp)
+    - 	addi	sp, sp, STACKFRAME_SIZE_ON_STACK
+     
+      ## arch/riscv/kernel/head.S ##
+     @@
+    @@ arch/riscv/kernel/head.S: SYM_CODE_START(_start_kernel)
+     +	 * fp/s0 points above the metadata record (RISC-V
+     +	 * convention).
+     +	 */
+    -+	REG_S zero, (S_STACKFRAME + STACKFRAME_FP)(sp)
+    -+	REG_S zero, (S_STACKFRAME + STACKFRAME_RA)(sp)
+    ++	REG_S zero, (S_STACKFRAME + FRAME_RECORD_FP)(sp)
+    ++	REG_S zero, (S_STACKFRAME + FRAME_RECORD_RA)(sp)
+     +	li t0, FRAME_META_TYPE_FINAL
+     +	REG_S t0, S_STACKFRAME_TYPE(sp)
+     +	addi s0, sp, S_STACKFRAME + STACKFRAME_RECORD_SIZE
+2:  237864b66d78 = 2:  bc0af8ec1976 riscv: stacktrace: disable KASAN and KCOV instrumentation for stacktrace.o
+3:  e6035966a35a = 3:  ab3fbed66fff riscv: ftrace: always preserve s0 in dynamic ftrace register frame
+4:  d132087ea01e = 4:  856d1e31408a riscv: stacktrace: introduce stack-bound tracking helpers
+5:  02adea3ece82 = 5:  58aa4435e2ee riscv: stacktrace: switch to frame-pointer based unwinder
+6:  c7d7dbe7a8a1 = 6:  500f9d9eeac0 riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
+7:  ae94a234b34a < -:  ------------ selftests/livepatch: Add RISC-V syscall wrapper prefix
+-:  ------------ > 7:  3dcfa694c207 selftests/livepatch: Add RISC-V syscall wrapper prefix
+
+base-commit: 798246e5edfb3aa0b2d6dca46f41014d0b99b209
+-- 
+2.43.0
