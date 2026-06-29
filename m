@@ -1,295 +1,281 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8537401A3C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 12:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782737801; cv=none; b=Zx7an9bjfUD4/MGWCHq8T4M5uxYNmOo6wD4JIqPNcM0wKyUqSSSw1JRq2sVfNwP3GY7cVGCS5U5M3CDgSDoYvPGJlTfgvnbIqwGpaGzQSdpE2BF542h59B4meD/r34APt2mCAyYrG37176R3cLeevMY+//RMVMqFPeDT+G0hDhw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782737801; c=relaxed/simple;
-	bh=zAWj/TM5e7h+thDrLj1MEqN2AcI1HHUtKP4lddDsVIQ=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8314071C8
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 13:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782739165; cv=pass; b=sR6sU0csgSUdlCzdkDG9J7oAE+gU35A0mnKeyhsHDf6d/ggS+mIU4/vh0sT1bd8iG1inObulT/POGgQacDoZBm541z17cbgygYkPenB6pD8ujHWnVD236gab3Xa2iLh5AWcsuSOFNfyuGhJGXX+dYNNyBJewgrncUjYZXZkR7H4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782739165; c=relaxed/simple;
+	bh=VgXa8OotkXsc5lVCPZMWPb/vLUr+lpZ4UKRyqgNrIWI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r0G3rknl5dH15rDl2QuMQk/fPNSyUStslbLI1Ip3parnA5P2hPv/6x+7sSzDYWqF9tbfbHuOnowYjojPK72A2YjecrcHWIeAv3ZMG5gKwVyiHbDH1iXLyzyOf59D44szlR229xr8nimQm5Mw9weqjZ5BLcbfhCHCMtM5b8eJiVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cd/MO4ak; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=Rl20epOaOOFmAdbkbh0GqurXYfb9tZ1hnnc/+u4QfvEQFSWrVpKLMq50a+DCG8+lZgQUZhX5qLgvq6rFWyvkm903i2lFBqm3hPXRQPjZsXjl7t4aRv27PKhAngecMkLTMobbzoQHb+uSPqRJt9UzsUjgPAA4IR5BOXye33YBSeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uw3zWm9x; arc=pass smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cd/MO4ak"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782737798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wSr1JETcuRGYYdZKolk3JtUkQ8ducZ/gLObEH71sZrI=;
-	b=Cd/MO4akLE39QrDpHR98hH/e0hIl/35rHJgofvvdziNLHC94cbJmJtj2INqhLejh9TZxPP
-	NNmYTLKF5q1BW5hzxuB97ngjaH0H6AV/mvFc1FrjsTcH0d1Jmdk5dR6MpsTyL3wStltdTq
-	EPgV5tMYtpewAMgwrO0+AtZ+kYFUwHg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-126-52f6IJkRP7agROi06mwu2Q-1; Mon, 29 Jun 2026 08:56:37 -0400
-X-MC-Unique: 52f6IJkRP7agROi06mwu2Q-1
-X-Mimecast-MFC-AGG-ID: 52f6IJkRP7agROi06mwu2Q_1782737796
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-c1279120710so49297666b.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 05:56:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uw3zWm9x"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-697de23bd7dso4778084a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 06:19:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782739162; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ZWwLrpagKz4S9XFgGlFxHTW3Jti7j8Ddy6nE4HAcKupqhfchQ2CGm3AGMKYTJdifzm
+         OVU0De9w6Jgy7TwEUeaOZPbXGTNfy3yxAwqVJS1W6hChrnDRXoXJDqlAG108W6sh6FNX
+         6KpsYrSISzxmyMPL1NJrabPjIWXW1Obbf/6JqfOuZPwy5aLtVFfACHJ+TTj+kIBaXFRk
+         3YPhcYyXn3kRRX3NpfUCrKo4PQkXiDHA3qz+2bJnRXjTmJHoueLERZCu/Lp9AlRBcxgq
+         fZMtIaG3ZNjEs+T5w23QXnnwDyIBti8AxVwtKfP0XMS+bIpY21ta9xZHRIJrj97gsZom
+         qmpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=l3h/W0XWiSvohOP1AjCLVTKYd/vmWZejhF/L+6OXH4M=;
+        fh=xpXLgpmhhGhE2Yo1wBxhIwWQc53Rpgc22TjfG4Uam84=;
+        b=qEkPYhfGunt183hTMte/KxEk4TpAIxIwT60/z0YuYx8O4T0IGbvySn9do9PjKIsE6z
+         1scuNY6C8NNz+V+V6aU9Y9kmblJ0o69oMU4BGCl5LANXCChqdPKeEVYftSGAJOuR8AYa
+         WjToQICfCXWdDpwjsYsJch9S8dhWblHLPINxJXvotLzYlo+p5kYjGD2Xxp/fGiV9YZ+L
+         iDZzO69kp8wO9jzVm4EQAJILFkZUCe5+028J0CtSaYPnpRJk9QBwDbCgPNn0H/bPm9yx
+         uLtpeF91W4yLGrjrwYX7Mzs6lXovUNEyM73eEiHLO2RrXM4AJaqeHvJ9zDM7dlE6pXvU
+         ZNcA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782739162; x=1783343962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3h/W0XWiSvohOP1AjCLVTKYd/vmWZejhF/L+6OXH4M=;
+        b=Uw3zWm9xfKNptCshwtZQ+04/6HVNoduo30w/Yk2BCUqs8ab3PinjCQFJ1cmpLdv39I
+         nHxebEL2cPXcXHmNg7SElzgCH4PEw50+ywc44X3sojqzIsMD6uvCQWfp8WhmYVF0za/o
+         8+m+qZ7VHkP1uDpsrId1fak+Ip+wXPjoY/XTPVrZWNLF5PmQBnrsrPek+l1DDwBTFXDM
+         PepYW/gns+9SXUr8kcAZlUd+nV2OZjxsid9d0+bGFT3zWj5fMRYUQjk1O3WcjJUjICFS
+         vEisrTZHo4geiinEiqysYA4sgIH/Zz2F8s5bRamhvr60Bvc8QrG0ZXw6pBpOR2NAu5zk
+         cSKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782737796; x=1783342596;
+        d=1e100.net; s=20251104; t=1782739162; x=1783343962;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=wSr1JETcuRGYYdZKolk3JtUkQ8ducZ/gLObEH71sZrI=;
-        b=JUpiaBDmz6QapMacq5F1dhbBEUcxos3hTNoTxcCIEZnZRILq9TAv0/Kbds7XQo/R9I
-         bDYV6YSBdlBFg+vSOhRHrXWCCAqvE4qvjF/NWiBN+Fg6D8k81uIbPwAHmgLDX9hx6HCr
-         0A+kWkQea5k98HL5lDyaQc2/ZTaM7Rh/NnY20gX/F8NRD8VHoAZQi/tXOVj98OCTpJZj
-         4SDdB/W9MZxwIwoUp4+yqB1haAdLNFUSS6gllEeFWJj1gRQqGjVUqG+pq3tveyuaykkH
-         QLiSjZHVrLCdT90dE+9IW9dHtAmtxzq+A24w7V+/7ESe2E5VKXDsOBrmdavKXLlpjSM5
-         40xw==
-X-Forwarded-Encrypted: i=1; AHgh+RoJKAKKmkgQXLsSIlUcg359nin+fx7QT4TwMMT5+fRmYwOjtocMV0d4zuSCtEekykExMQlztrVnV2RF/iZyWwlQBFI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNriBulM638SG332z8nrbuR514gs0n9XA8Y/w6w1usBaZp5fvE
-	YhVBXOV/G0YsbfXpSW3NFoMU/cKC7zHL5THX+dlkM1gbnypGYzNcEHyRNE8gprzmPsiaF6dUCcp
-	ol19A7CBN3Im6wnjcRUoU/natdxHLDiaZfF3pF5T2vVa4xnnYJAmlumqYd1ELGv1RwXYIfcaRmB
-	5wNOUTt9BVH4H7crls1oIVT/QtB1z3gDf+OlMBK3BabP2C4P7U
-X-Gm-Gg: AfdE7ckMyjoyMqT4VZxdnojxl+J3cJEe6GMk/9P2J7RHzN2iu67pk8QZQpQ9gDpPjRH
-	ZMfChHGtbMwNtQDg9X4sQ4yuk4VZPim6ZGzFDzIKB4wPVg8NzPs/qISkbLuItzyOg8AkKyqZfjz
-	P50tUk9xdzNADkHqA/CeYirCBgpffCFoQ1u84zrTAnKF3SsUi2x+ebISuDrDZlsmXzcIs=
-X-Received: by 2002:a17:906:9fc4:b0:c12:45fc:c5c with SMTP id a640c23a62f3a-c1245fc3091mr290479166b.64.1782737796297;
-        Mon, 29 Jun 2026 05:56:36 -0700 (PDT)
-X-Received: by 2002:a17:906:9fc4:b0:c12:45fc:c5c with SMTP id
- a640c23a62f3a-c1245fc3091mr290477366b.64.1782737795783; Mon, 29 Jun 2026
- 05:56:35 -0700 (PDT)
+        bh=l3h/W0XWiSvohOP1AjCLVTKYd/vmWZejhF/L+6OXH4M=;
+        b=eRxre2ed7MdNsg9rebn6w3c3AdSTxUr0Xmy4mZNv0PokYb3/ec3vrl30nT9x0YOFAN
+         OJpPUagcdcJDF1zmUMr9fbgScJ4rPnux7d67JHywC4xL1txTlLsn+2XQwZaYyUpAP6LB
+         sJ8Xkvc12uqjQhUtEjLfVHMWTQuA1JOqK5jggK0lwyr4e6WPRXfHOLRzaB01WdO0uAf6
+         t5vsDfJsLqY1YJT09DCFxBQkbhyoD0SCm5GO9Fkxb/oQe2VRW6TmtkI3YO8K39tVtmB1
+         CPP3u5M/kzZIcShfgPWNi+NvkL/l9knq/B4PYDxTIP3nw/cLIJWgy/oxLGs+G5hmBiv7
+         /npw==
+X-Forwarded-Encrypted: i=1; AHgh+RrK2pozGUBX4mhyUbdTQC9n7Jdk4+X+as1oB/oUtuO9uJXWOtJbMA3fs6UZIrJ097qYGLMTvH9rwDMpB4wCJr+YwWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7lo+egDVnLV25srx5fToPZwWHoc7mJsseavDTsivfLBTp6LlF
+	Ki7McJB5jig6HmkKxUKB31sZ/vrrm5EtwA80Ibhoyvb7c05BUUXF+r3OyZyO00obyXgHNhp4SQw
+	jBpbmoqoVETbJ2P0DL44rV4/fAFF/2U0=
+X-Gm-Gg: AfdE7clV2uQlXig6nikAbkWNatvtT7gtuzVKmxHZYM6kBKwKId4kkY7pSHVnG0/TKmv
+	Iq1D0ch4Y9xpEpHp9cn3/ko6GnG4PMzBzeH5aRIiZb7Jb5VnODXH7kxC6eCWd0a+LbWvHRu9jlF
+	hBjZytfHUsHWL+WL1Gj0OML0Xaj48NYlSCLZuxWJ34kjmuwIYOLB4YhtiocMKuvdhz46ZLS4S9O
+	pJN2tZzZ/Gymh/5+NA0NtZAhi1MLMcm62X6Mjul71zzf7VgPMWXgOXnoibqykanQTLHUBdENQ==
+X-Received: by 2002:a05:6402:a503:10b0:698:2f6d:cce with SMTP id
+ 4fb4d7f45d1cf-6982f6d0eb5mr3376940a12.4.1782739162411; Mon, 29 Jun 2026
+ 06:19:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260617131803.2988989-1-vschneid@redhat.com> <20260617131803.2988989-3-vschneid@redhat.com>
-In-Reply-To: <20260617131803.2988989-3-vschneid@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 29 Jun 2026 14:56:24 +0200
-X-Gm-Features: AVVi8CdvJdgIeH3VsyxOkz9Elhzqqd6Z9AENxqiNKKObavOdoGbdQhxj5DMUO14
-Message-ID: <CAP4=nvRtF=Hq3rVS5jCwA-m_vJWEeROy=60T2PW4DYank-6L-w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/4] rtla/osnoise: Record IPI count in osnoise top
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TdfL3DdZQp9ejW-7uXUk-wj46IamEyGmAujsKYVZe2s_1782737796
-X-Mimecast-Originator: redhat.com
+References: <20251215034153.2367756-1-dolinux.peng@gmail.com>
+ <20251215034153.2367756-3-dolinux.peng@gmail.com> <20260513104758.6e64167e@gandalf.local.home>
+In-Reply-To: <20260513104758.6e64167e@gandalf.local.home>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Mon, 29 Jun 2026 21:19:11 +0800
+X-Gm-Features: AVVi8CdmaMPz_fYrc-qy_9xfZZ5838GuDYDgMwYiajdRa56XDo91baTVPU0Vm5s
+Message-ID: <CAErzpmt2wr8AYmfUvR5=Wm8JcLeCJ=W+Uhk5ZkzSKikaUzhn4w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] fgraph: Enhance funcgraph-retval with BTF-based
+ type-aware output
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pengdonglin <pengdonglin@xiaomi.com>, Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
-<vschneid@redhat.com> napsal:
+On Wed, May 13, 2026 at 10:47=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
 >
-> Leverage the ipi_send_cpu and ipi_send_cpumask trace events to record the
-> count of IPIs sent to monitored CPUs. These interferences are already
-> accounted by the IRQ count, but this split gives a better overall picture=
-.
+> On Mon, 15 Dec 2025 11:41:52 +0800
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
 >
-> This uses the newly added -i cmdline option.
+> > From: pengdonglin <pengdonglin@xiaomi.com>
+> >
+> > The current funcgraph-retval implementation suffers from two accuracy
+> > issues:
+> >
+> > 1. Void-returning functions still print a return value, creating
+> >    misleading noise in the trace output.
+> >
+> > 2. For functions returning narrower types (e.g., char, short), the
+> >    displayed value can be incorrect because high bits of the register
+> >    may contain undefined data.
+> >
+> > This patch addresses both problems by leveraging BTF to obtain the exac=
+t
+> > return type of each traced kernel function. The key changes are:
+> >
+> > 1. Void function filtering: Functions with void return type no longer
+> >    display any return value in the trace output, eliminating unnecessar=
+y
+> >    clutter.
+> >
+> > 2. Type-aware value formatting: The return value is now properly trunca=
+ted
+> >    to match the actual width of the return type before being displayed.
+> >    Additionally, the value is formatted according to its type for bette=
+r
+> >    human readability.
+> >
+> > Here is an output comparison:
+> >
+> > Before:
+> >  # perf ftrace -G vfs_read --graph-opts retval
+> >  ...
+> >  1)               |   touch_atime() {
+> >  1)               |     atime_needs_update() {
+> >  1)   0.069 us    |       make_vfsuid(); /* ret=3D0x0 */
+> >  1)   0.067 us    |       make_vfsgid(); /* ret=3D0x0 */
+> >  1)               |       current_time() {
+> >  1)   0.197 us    |         ktime_get_coarse_real_ts64_mg(); /* ret=3D0=
+x187f886aec3ed6f5 */
+> >  1)   0.352 us    |       } /* current_time ret=3D0x69380753 */
+> >  1)   0.792 us    |     } /* atime_needs_update ret=3D0x0 */
+> >  1)   0.937 us    |   } /* touch_atime ret=3D0x0 */
+> >
+> > After:
+> >  # perf ftrace -G vfs_read --graph-opts retval
+> >  ...
+> >  2)               |   touch_atime() {
+> >  2)               |     atime_needs_update() {
+> >  2)   0.070 us    |       make_vfsuid(); /* ret=3D0x0 */
+> >  2)   0.070 us    |       make_vfsgid(); /* ret=3D0x0 */
+> >  2)               |       current_time() {
+> >  2)   0.162 us    |         ktime_get_coarse_real_ts64_mg();
+> >  2)   0.312 us    |       } /* current_time ret=3D0x69380649(trunc) */
+> >  2)   0.753 us    |     } /* atime_needs_update ret=3Dfalse */
+> >  2)   0.899 us    |   } /* touch_atime */
+> >
+> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+> > Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> > ---
+> >  kernel/trace/trace_functions_graph.c | 124 ++++++++++++++++++++++++---
+> >  1 file changed, 111 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_=
+functions_graph.c
+> > index 17c75cf2348e..46b66b1cfc16 100644
+> > --- a/kernel/trace/trace_functions_graph.c
+> > +++ b/kernel/trace/trace_functions_graph.c
+> > @@ -15,6 +15,7 @@
+> >
+> >  #include "trace.h"
+> >  #include "trace_output.h"
+> > +#include "trace_btf.h"
+> >
+> >  /* When set, irq functions might be ignored */
+> >  static int ftrace_graph_skip_irqs;
+> > @@ -120,6 +121,13 @@ enum {
+> >       FLAGS_FILL_END   =3D 3 << TRACE_GRAPH_PRINT_FILL_SHIFT,
+> >  };
+> >
+> > +enum {
+> > +     RETVAL_FMT_HEX   =3D BIT(0),
+> > +     RETVAL_FMT_DEC   =3D BIT(1),
+> > +     RETVAL_FMT_BOOL  =3D BIT(2),
+> > +     RETVAL_FMT_TRUNC =3D BIT(3),
+> > +};
+> > +
+> >  static void
+> >  print_graph_duration(struct trace_array *tr, unsigned long long durati=
+on,
+> >                    struct trace_seq *s, u32 flags);
+> > @@ -865,6 +873,73 @@ static void print_graph_retaddr(struct trace_seq *=
+s, struct fgraph_retaddr_ent_e
+> >
+> >  #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_G=
+RAPH_RETADDR)
+> >
+> > +static void trim_retval(unsigned long func, unsigned long *retval, boo=
+l *print_retval,
+> > +                     int *fmt)
 >
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> ---
->  tools/tracing/rtla/src/osnoise_top.c | 124 ++++++++++++++++++++++++++-
->  1 file changed, 123 insertions(+), 1 deletion(-)
+> This function should really be in trace_btf.c and a stub when btf is not
+> enabled.
+
+Thanks, I will fix it.
+
 >
-
-Overall, looks good to me (see small comments below). The reported
-numbers make sense:
-
-[tglozar@cs9 rtla]$ sudo ./rtla osnoise top -q -c 0,1 -d 5s --ipi
-                                         Operating System Noise
-duration:   0 00:00:05 | time is in us
-CPU Period       Runtime        Noise  % CPU Aval   Max Noise   Max
-Single          HW          NMI          IRQ      Softirq       Thread
-         IPI
- 0 #4           4000000        28481    99.28797        8977
-248        6756            0         4002           18            1
-       42
- 1 #5           5000000        38025    99.23950        8120
-185        8403            0         5260          153          141
-       49
-
-(It looks good in the terminal, I'm sure Gmail will garble it...)
-
-I'll compare with trace output on the next patch.
-
-> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
-c/osnoise_top.c
-> index 512a6299cb018..5b462a3543b97 100644
-> --- a/tools/tracing/rtla/src/osnoise_top.c
-> +++ b/tools/tracing/rtla/src/osnoise_top.c
+> -- Steve
 >
-> [truncated]
->
-> @@ -70,6 +72,91 @@ static struct osnoise_top_data *osnoise_alloc_top(void=
-)
->  return NULL;
->  }
-> +static void account_ipi(struct osnoise_tool *tool,
-> +                       unsigned long long src_cpu, unsigned long long ds=
-t_cpu)
-> +{
-> +       struct osnoise_top_cpu *cpu_data;
-> +       struct osnoise_top_data *data;
-> +       unsigned long long inc =3D 1;
-> +
-> +       data =3D tool->data;
-> +       cpu_data =3D &data->cpu_data[dst_cpu];
-> +
-> +       update_sum(&cpu_data->ipi_count, &inc);
-> +}
-> +
-> +/*
-> + * osnoise_ipi_cpu_handler - this is the handler for single CPU IPI even=
-ts.
-> + */
-> +static int
-> +osnoise_ipi_cpu_handler(struct trace_seq *s, struct tep_record *record,
-> +                    struct tep_event *event, void *context)
-> +{
-> +       struct osnoise_tool *tool;
-> +       struct osnoise_params *params;
-> +       unsigned long long src_cpu, dst_cpu;
-> +       struct trace_instance *trace =3D context;
-> +
-> +       tool =3D container_of(trace, struct osnoise_tool, trace);
-> +       params =3D to_osnoise_params(tool->params);
-> +
-> +       src_cpu =3D record->cpu;
-> +       tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
-> +
-> +       if (CPU_ISSET(dst_cpu, &params->common.monitored_cpus))
-> +               account_ipi(tool, src_cpu, dst_cpu);
-
-Do we need to retrieve and pass the src_cpu here? I get it if you plan
-on using it in the future, but as far as I understand, you are
-specifically tracking the destination CPU, not the source CPU. Same
-note applies to osnoise_ipi_cpumask_handler() below.
-
-> +
-> +       return 0;
-> +}
-> +
-> +static cpu_set_t cpumask_tmp_cpus;
-> +
-> +/*
-> + * osnoise_ipi_cpumask_handler - this is the handler for broadcasted IPI=
- events.
-> + */
-> +static int
-> +osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *reco=
-rd,
-> +                        struct tep_event *event, void *context)
-> +{
-> +       struct trace_instance *trace =3D context;
-> +       struct osnoise_tool *tool;
-> +       struct osnoise_params *params;
-> +       struct tep_format_field *field;
-> +       unsigned long long src_cpu;
-> +       cpu_set_t *event_cpus;
-> +       int len;
-> +
-> +       tool =3D container_of(trace, struct osnoise_tool, trace);
-> +       params =3D to_osnoise_params(tool->params);
-> +
-> +       src_cpu =3D record->cpu;
-> +
-> +       field =3D tep_find_field(event, "cpumask");
-> +       if (!field)
-> +               return 0;
-> +
-> +       event_cpus =3D tep_get_field_raw(s, event, "cpumask", record, &le=
-n, 1);
-> +       if (!event_cpus) {
-> +               err_msg("Failed to get cpumask field\n");
-> +               return 0;
-> +       }
-> +
-> +       CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_=
-cpus);
-> +
-> +       /*
-> +        * Computing the mask weight is overkill but there is no leaner o=
-ption
-> +        * provided by glibc, e.g cpumask_first() or somesuch.
-> +        */
-> +       if (CPU_COUNT(&cpumask_tmp_cpus)) {
-> +               for (int cpu =3D 0; cpu < nr_cpus; cpu++) {
-> +                       if (CPU_ISSET(cpu, &cpumask_tmp_cpus))
-> +                               account_ipi(tool, src_cpu, cpu);
-> +               }
-> +       }
-
-Technically, the existing code already relies on the glibc cpumask
-implementation (cpu_set_t) matching the kernel "cpumask_t" type, as
-the "cpumask" field is the latter (per
-/sys/kernel/tracing/events/ipi/ipi_send_cpumask/format), not the
-former. So I wouldn't worry about the opaqueness of cpu_set_t much.
-
-Not sure how this is handled in other tracing tools that need to use
-cpumask, I'd have to look around a bit. It might even make sense to
-have a "tools" version of the cpumask functions like cpumask_first(),
-I guess, like we already do for e.g. lists and container_of.
-
-> +
-> +       return 0;
-> +}
-> +
->  /*
->   * osnoise_top_handler - this is the handler for osnoise tracer events
->   */
-
-Nit: As this is extra functionality, it'd be more readable to have the
-IPI handling after the main top handler, so that someone not familiar
-with the source code will see the core logic first. That would also
-match IPI being displayed to the right of the other numbers in the top
-output.
-
-> @@ -164,6 +251,8 @@ static void osnoise_top_header(struct osnoise_tool *t=
-op)
->                 goto eol;
->
->         trace_seq_printf(s, "          IRQ      Softirq       Thread");
-> +       if (params->common.ipi)
-> +               trace_seq_printf(s, "          IPI");
->
->  eol:
->         if (pretty)
-> @@ -218,7 +307,13 @@ static void osnoise_top_print(struct osnoise_tool *t=
-ool, int cpu)
->
->         trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
->         trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
-> -       trace_seq_printf(s, "%12llu\n", cpu_data->thread_count);
-> +       trace_seq_printf(s, "%12llu", cpu_data->thread_count);
-> +       if (!params->common.ipi) {
-> +               trace_seq_printf(s, "\n");
-> +               return;
-> +       }
-> +
-> +       trace_seq_printf(s, " %12llu\n", cpu_data->ipi_count);
-
-Maybe at this point it is worth it to print the "\n" in a separate
-statement, readability-wise:
-
-        trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
-        trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
-        trace_seq_printf(s, "%12llu", cpu_data->thread_count);
-        if (params->common.ipi)
-                trace_seq_printf(s, " %12llu", cpu_data->ipi_count);
-        trace_seq_printf(s, "\n");
-
-It would also make diffs nicer when adding new options.
-
-> [truncated]
-
-
-Tomas
-
+> > +{
+> > +     const struct btf_type *t;
+> > +     char name[KSYM_NAME_LEN];
+> > +     struct btf *btf;
+> > +     u32 v, msb;
+> > +     int kind;
+> > +
+> > +     if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
+> > +             return;
+> > +
+> > +     if (lookup_symbol_name(func, name))
+> > +             return;
+> > +
+> > +     t =3D btf_find_func_proto(name, &btf);
+> > +     if (IS_ERR_OR_NULL(t))
+> > +             return;
+> > +
+> > +     t =3D btf_type_skip_modifiers(btf, t->type, NULL);
+> > +     kind =3D t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN;
+> > +     switch (kind) {
+> > +     case BTF_KIND_UNKN:
+> > +             *print_retval =3D false;
+> > +             break;
+> > +     case BTF_KIND_STRUCT:
+> > +     case BTF_KIND_UNION:
+> > +     case BTF_KIND_ENUM:
+> > +     case BTF_KIND_ENUM64:
+> > +             if (kind =3D=3D BTF_KIND_STRUCT || kind =3D=3D BTF_KIND_U=
+NION)
+> > +                     *fmt =3D RETVAL_FMT_HEX;
+> > +             else
+> > +                     *fmt =3D RETVAL_FMT_DEC;
+> > +
+> > +             if (t->size > sizeof(unsigned long)) {
+> > +                     *fmt |=3D RETVAL_FMT_TRUNC;
+> > +             } else {
+> > +                     msb =3D BITS_PER_BYTE * t->size - 1;
+> > +                     *retval &=3D GENMASK(msb, 0);
+> > +             }
+> > +             break;
+> > +     case BTF_KIND_INT:
+> > +             v =3D *(u32 *)(t + 1);
+> > +             if (BTF_INT_ENCODING(v) =3D=3D BTF_INT_BOOL) {
+> > +                     *fmt =3D RETVAL_FMT_BOOL;
+> > +                     msb =3D 0;
+> > +             } else {
+> > +                     if (BTF_INT_ENCODING(v) =3D=3D BTF_INT_SIGNED)
+> > +                             *fmt =3D RETVAL_FMT_DEC;
+> > +                     else
+> > +                             *fmt =3D RETVAL_FMT_HEX;
+> > +
+> > +                     if (t->size > sizeof(unsigned long)) {
+> > +                             *fmt |=3D RETVAL_FMT_TRUNC;
+> > +                             msb =3D BITS_PER_LONG - 1;
+> > +                     } else {
+> > +                             msb =3D BTF_INT_BITS(v) - 1;
+> > +                     }
+> > +             }
+> > +             *retval &=3D GENMASK(msb, 0);
+> > +             break;
+> > +     default:
+> > +             *fmt =3D RETVAL_FMT_HEX;
+> > +             break;
+> > +     }
+> > +}
+> > +
