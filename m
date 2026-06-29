@@ -1,165 +1,88 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601D636D51F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 13:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782739193; cv=pass; b=VuS6gVrZCgOGFmvrB0wZTMbn/KHnXDQUBJCbo0rJMS9Sql6913mekNO0qG37sEtQ3K+WtXcu2ctUV3cvodUa5lSXtQ3WX+eRKaSv+XAAcfJUuyDACQT2cFrcxE2E8OZZx2brJbK9rrtGUtXvYyRo5gxPtPxLZClPecIpfOoWY9M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782739193; c=relaxed/simple;
-	bh=hxkC8KIlEaT56UtUTbB70emjyEUY+aE3e7gX7vJtRy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ln8AhkPzyO96LMvF4X32DVAVyMVeUEkVXkkSvG0avIxvHKNUsvfTEv5IEldfbtN2iylU/tvTC+ggDzMrjM46904NKC1cQ9VahDods5dj+Xyid9dzAaWaERWl5zN+BkK74yHZfZ3DahRb32KdylNbiSOLJQYCtHCugnAod5dwwjA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CKDJZhrs; arc=pass smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9BC2222C5;
+	Mon, 29 Jun 2026 13:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782740509; cv=none; b=a0rTUHlGBPEt0wfAu7JjC1w88LZqNJhna67Ysl86xIW1gS/POH232zdf33WUmiOs+2rDQowDDZ3S/hHJP6KvCdmtU8NqoTJy5sOmgSjDCRTxWWNi+qIU3WuJLYmjwnVU8NyEwlzrwdAA/CNlMaAjNQlggykJNdX+/nxIM2jCQpY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782740509; c=relaxed/simple;
+	bh=/hZEURy9HjyqcqqFq73ZLo83nMLjQcbuy5GlFL8YSpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fglAkxC92/rsKWYCBql0UJKGX/x8Y1Ah4tsAoBxfalKY3CNOIrI+U1hb6MX3nc8H9EzVV0vnzutQChZftLO2oxXheCBvmKljdnwys/ytHi3kPgmz0HUQbZ1a2/UAfisxJshSBIA2cKruiZ3YH7Kxs5Plw6FEAqM6XWTibbX/wb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=F4OwseFI; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKDJZhrs"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-697df404e32so6845555a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 06:19:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782739191; cv=none;
-        d=google.com; s=arc-20260327;
-        b=odbOShRvmQ2mNjn7HmxI7rSSesVikFMB5qgTF6rC6CQ5jRfCtKXAlT1kABPrqL6hi4
-         /FoOTLr+DSuaBc/i+Ub8q2j8n2G08zUcSBriKyo2W446pZ2ttaqM0u5IMRsR8PVfbRXD
-         5pog4I4hpqPttsWaXM+xzkQUm36MoD3IwPWR76W4YJcZ5tgb1i8Iz4at/RrmLOqt2u8c
-         0WEfRWwVtGAIGTruZzGXLykFTcnFntRX4CsNMNj36508th538UU/3ae4SSwNn4BDgjxW
-         8BoHc9weFn5/X4Rl8Adwlk46cg/g+ZP5dCuq+5V1Q0XFoi1j6ks9VPs8vcGq4dBVkftl
-         teRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=dJHc5P5+QXd+EJ+9kQea+isULXn2Dht38UwjjlHyyKw=;
-        fh=3dxa791ER3yxZlu7v0w/vrl5D44/LZJlzfQgi3FYY5E=;
-        b=CWC9dwBgMjrfEUySM7pIoanAk+akEc6UOzBagepIQ4mGtn5tb1GtJHWDpvfBO+uZAM
-         PDqenCM2uRQMgZLX3+GIbQwPcBMpanVqLntAD6B5B0XGLcvL6LZd6Ef8QGtlQxDsX88v
-         AgOoWAlUuqj5r29QUa79TGcgRE/Gsu+ObbViOLCOK66QvDaciiceKQkB4h0yTJwsb1NP
-         r/m+6TRtHSKk5iDPrYdNIdxrTd1muqDnnU4TZkoB7nSA77ceTs6wFN6MC4hRDP4aNGIY
-         cA2ZXQ2gZNrq6WSJDSKBUONgzrjAcR4hWHzmM9CTyFT0eKiBZiKnZWJD5IZR5YfWko/o
-         Hghg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782739191; x=1783343991; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dJHc5P5+QXd+EJ+9kQea+isULXn2Dht38UwjjlHyyKw=;
-        b=CKDJZhrsAaQ/2cVur7FBd2Us7z31bC0ySPVoXEJKUSMo8oTV6nQJ2cC/6YsKejMKjv
-         FMVMTXNGKYrh8yXGEavElD1CAUpTUl/gMqIaWsumAErwxS/WlDKENWd5vDcSDmHzjho/
-         MTiZO/Cfw7XE+MCckG3O01cQkCCIru2y12BjfAn3Dg0VuiVxpVT/c5ctuD9qP9e7ITFZ
-         lP9sB5WDvzNQYgfQiR80B/1xPs4ATp6lHTYAxqkGGwtm1odlnyqnTDC1pULObRa7lqXR
-         Lqt7pd9V+pCEiSdcQpM6vtO3ehzgfZNGfTGg1oIj36gN2Cbz2yEa0mBS9KFcxCMJv7Tl
-         GdPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782739191; x=1783343991;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dJHc5P5+QXd+EJ+9kQea+isULXn2Dht38UwjjlHyyKw=;
-        b=NQeKrlWEbqC0+Gp60soKd57urD7NK0gVOquDF0f6p8S6dUr15jAmsOkh5K/oIDMgWt
-         517WK/GhOe5DvmuWPkwiOJUGnBLgnohfKDW3g2rM+4whJx8rjeWesVB0vZx30ca8LZBM
-         hpbF+pdINoGsphMvoGX8BZgBOO6G1t3QYTNY6lPgTyGW1iYhyMevVJT79FGjGKl/7kJU
-         5DU/LKzGHr9fE+oQ2PGVLFHcT3CLTJmX/SX6Ed3Jfw13yXC1qJC030H+4zcIy6Qi/wDg
-         NQ/CU/TSrOO299jB/EWBWrzSg/hbt/Psj5cMZarFKCrOghpYe7mp7J3eiFxzbmF2DERA
-         XgTQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqn2J8sXxVpiq+xyJeGonHdlW82Yqd0tbF5jz41f6au9XvaZqs74BqMS0lWWRDw/f0lnccSnRoIRRduxvUr7wOEAis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY+lXAnPJnf/k5do1UQMvcLNxalksumPoEOEjTzrcYdgGtMyef
-	vF5CubfwEJL5Ha+UTavWjW0DlBekTklVxcWjSjeqdPUMAWi6/YX/9wCAx2wi5XUKpPHHR0RuNrs
-	G12X3ndxXFqzrPKhFnogAJ7yqnY8dGHg=
-X-Gm-Gg: AfdE7cmhqlwZDdBUBUhVMZZy1sSE8AapK+/dJecg92DrAakNOFyO7sPGVWIqQr7Emw+
-	qefJSybYPFWR1h0oW2RC4Z9im1/stp9fh2dgnx4dqTeVuSfwKYuaBhCaET6UWbWOAfJbWsogpzt
-	lKl/Lrl3DBBwhwxr4GHzHuALYRLkjLFdz8eUou1ZcVUApN7xQzEdFyKMTAkkUSyUhQKoYMuqEBK
-	PW01zP+k/Tnd8DXmzFt1vy1LEJoAmyhKqCmKLgbQeDLMja7vC6VjcM8JcQ4lkpZfY6csFm0kw==
-X-Received: by 2002:aa7:d30d:0:b0:698:3b7c:7e39 with SMTP id
- 4fb4d7f45d1cf-6983b7c7f6cmr3492229a12.35.1782739190617; Mon, 29 Jun 2026
- 06:19:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="F4OwseFI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=y49woqPm8tB8WLLWvn2nFdbqKXEKAzBZs8I2/c34JrI=; b=F4OwseFIEDLyWEU1hIkFs9OifA
+	3UNFh+nRMAhcP+vDTdwV9v5aR+Wjs6fFeoVCV0aSNX9bzECTKfvkACLHV7/ZDnn6uR0AX4pxYV4eb
+	t2DabiF7+Uy5+mp2kSvgWtJRfSOC3ce7XmL/U2feUFwM3lhImSpPUy3WsLlb3ZlPYY94Tjq0KbEQC
+	CLQY3aURHUC9ZxXC2OPzXv/zux43ScfoDlcTIYcD5xYwl6z1QFaSjmrKyFA5hm48htJmp1oXNcnf2
+	Qe1w3UQ0+NJ4j+Cr4/NA3dhUBbfgaQw/Pqzd0nNpIBnWI2pRlWtBRSiQUR4x9eUlvBTNBB0YW32nB
+	SqdcUnKA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1weCF4-006KaG-0l;
+	Mon, 29 Jun 2026 13:41:42 +0000
+Date: Mon, 29 Jun 2026 06:41:37 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Bradley Morgan <include@grrlz.net>
+Cc: akpm@linux-foundation.org, mhiramat@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] lib/bootconfig: fix undefined behavior involving NULL
+ pointer arithmetic
+Message-ID: <akJ0f2gsiEt01spu@gmail.com>
+References: <20260628115617.3190-1-include@grrlz.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251215034153.2367756-1-dolinux.peng@gmail.com>
- <20251215034153.2367756-2-dolinux.peng@gmail.com> <20260513104229.2f39eb03@gandalf.local.home>
-In-Reply-To: <20260513104229.2f39eb03@gandalf.local.home>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Mon, 29 Jun 2026 21:19:37 +0800
-X-Gm-Features: AVVi8CcwXsWLmGI1EfghufBHUvXsCA3iL3jmwnaCxFFFF7XYRD1PwQR0Vk7rgC8
-Message-ID: <CAErzpmvMd9Vixtue0pm5GJAFFvT4-8DcmopgShGNXxG5UyVsQw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] ftrace: Build trace_btf.c when CONFIG_DEBUG_INFO_BTF
- is enabled
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	pengdonglin <pengdonglin@xiaomi.com>, Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260628115617.3190-1-include@grrlz.net>
+X-Debian-User: leitao
 
-On Wed, May 13, 2026 at 10:42=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
->
-> Sorry for the late reply, I've been a bit busy on other things recently.
->
-> On Mon, 15 Dec 2025 11:41:51 +0800
-> Donglin Peng <dolinux.peng@gmail.com> wrote:
->
-> > From: pengdonglin <pengdonglin@xiaomi.com>
-> >
-> > The trace_btf.c file provides BTF helper functions used by the ftrace
-> > subsystem. This change makes its compilation solely dependent on
->
-> Nit, change logs should never say "This change". Instead it should be
-> worded as:
->
->   "Make the compilation of trace_btf.c soley depend on..."
+On Sun, Jun 28, 2026 at 11:56:16AM +0000, Bradley Morgan wrote:
+> When xbc_snprint_cmdline() is called during the size-probing phase
+> (with buf = NULL and size = 0), the function computes the end pointer
+> as 'buf + size' (NULL + 0) and repeatedly advances the pointer via
+> 'buf += ret'.
+> 
+> Under the C standard, performing pointer arithmetic on a NULL pointer is
+> undefined behavior. While harmless inside the kernel, this code is also
+> compiled into the userspace host tool 'tools/bootconfig', where host
+> compilers with UBSan or FORTIFY_SOURCE enabled abort the build when they
+> detect NULL pointer arithmetic.
+> 
+> Fix this by tracking the running written length as an integer offset
+> ('len') rather than advancing 'buf' directly. Only perform pointer
+> arithmetic if 'buf' is actually non-NULL.
+> 
+> Fixes: 5a643e462323 ("bootconfig: move xbc_snprint_cmdline() to lib/bootconfig.c")
 
-Thanks, I will fix it.
+Isn't commit 5a643e462323 ("bootconfig: move xbc_snprint_cmdline() to
+lib/bootconfig.c") just a code movement?
 
->
-> -- Steve
->
-> > CONFIG_DEBUG_INFO_BTF, allowing features like funcgraph-retval to also
-> > utilize these helpers.
-> >
-> > Additionally, the redundant dependency on CONFIG_PROBE_EVENTS_BTF_ARGS
-> > is removed, as CONFIG_DEBUG_INFO_BTF already depends on
-> > CONFIG_BPF_SYSCALL.
-> >
-> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-> > Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
-> > ---
-> >  kernel/trace/Kconfig  | 2 +-
-> >  kernel/trace/Makefile | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> > index e1214b9dc990..653c1fcefa4c 100644
-> > --- a/kernel/trace/Kconfig
-> > +++ b/kernel/trace/Kconfig
-> > @@ -755,7 +755,7 @@ config FPROBE_EVENTS
-> >  config PROBE_EVENTS_BTF_ARGS
-> >       depends on HAVE_FUNCTION_ARG_ACCESS_API
-> >       depends on FPROBE_EVENTS || KPROBE_EVENTS
-> > -     depends on DEBUG_INFO_BTF && BPF_SYSCALL
-> > +     depends on DEBUG_INFO_BTF
-> >       bool "Support BTF function arguments for probe events"
-> >       default y
-> >       help
-> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> > index fc5dcc888e13..6c4bf5a6c4f3 100644
-> > --- a/kernel/trace/Makefile
-> > +++ b/kernel/trace/Makefile
-> > @@ -116,7 +116,7 @@ obj-$(CONFIG_KGDB_KDB) +=3D trace_kdb.o
-> >  endif
-> >  obj-$(CONFIG_DYNAMIC_EVENTS) +=3D trace_dynevent.o
-> >  obj-$(CONFIG_PROBE_EVENTS) +=3D trace_probe.o
-> > -obj-$(CONFIG_PROBE_EVENTS_BTF_ARGS) +=3D trace_btf.o
-> > +obj-$(CONFIG_DEBUG_INFO_BTF) +=3D trace_btf.o
-> >  obj-$(CONFIG_UPROBE_EVENTS) +=3D trace_uprobe.o
-> >  obj-$(CONFIG_BOOTTIME_TRACING) +=3D trace_boot.o
-> >  obj-$(CONFIG_FTRACE_RECORD_RECURSION) +=3D trace_recursion_record.o
->
+>  	xbc_node_for_each_key_value(root, knode, val) {
+> @@ -439,10 +437,12 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  
+>  		vnode = xbc_node_get_child(knode);
+>  		if (!vnode) {
+> -			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
+> +			ret = snprintf(buf ? buf + len : NULL,
+> +				       size > len ? size - len : 0,
+
+Why not keeping rest() and updating it, instead of open coding it?
+
+Thanks for the fix.
+--breno
