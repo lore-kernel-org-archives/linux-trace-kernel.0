@@ -1,115 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0163335CB6B;
-	Mon, 29 Jun 2026 16:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287833E0C58
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 16:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782750940; cv=none; b=B3ICgxWPehMgt0TUtVZqHH4Ua3NOBeyH0ORu9TWWKKSyX+xtMLuv0TdI4AJbS20hXsOLeWbQ8J56zc/q72Wv5dlcDZ4HQnM7eDfQTN5s/SonDICpTUHiNdUcbsSznLKfVNoQ7N8R/u0TiwEm+UCXokmhCZvJAOpzMGfylBYmtT8=
+	t=1782751221; cv=none; b=Fw82ucQSolvWXw434xG1/n7ZbozG4LeqhtojH+oV6MKVeDqgAXwfF5a99AhxpIFuk6bWMj4i6J63CimlR484cR8MIoaeCpRi3qIj6xyZ3D5OpBJfFBbvND5nvVGh6LHDCC+nrDvkZvuyE5IEhqhiH+wpAstcTLgMBL0/cH+eaqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782750940; c=relaxed/simple;
-	bh=tqvibWEtQh2T48OiewXhNx0S0zqLKa3gex5DVvzFGOM=;
+	s=arc-20240116; t=1782751221; c=relaxed/simple;
+	bh=T1fLXCn3FavD3bJ3PxuobqPBjZ+A8RlVrG4IjG7DiNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XxUgGjIv/sBzujxBoeW+rrSISZ7AEhGYuwOxSeryej9d3HehzOy172UMpuK3T4nR81r05uGy++y68m7t+qlT8GG6U2FXGoARBdQNzQkLwF4zRdstrh+i6hk2CMxI6jfUFGccU7gt4ZYdJH0om+vFYl7ZeqUh196HsHL2PYBvp/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PfDXIPAD; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type:Content-Disposition; b=i9b8Lr12+97R6RelWYgGvZa9qQFdEzftiNwU7zZ73VqFmm6Y7dZBnztWw8kSahLPpLYl1dnnHIgx2duvP8tKmzFsJx/AnfaS6UOfA7VEVSALp0dB3sYoUetQJD8sJRsmSAO8aHErvIufpChyIhsA9oWakgzKmmnzY0/tyCYeGxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HsS/ztBI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PfDXIPAD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC5B21F000E9;
-	Mon, 29 Jun 2026 16:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782750938;
-	bh=tqvibWEtQh2T48OiewXhNx0S0zqLKa3gex5DVvzFGOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=PfDXIPADcSrUOwdTRGhDf130tTlUjzfb55asHDeokcwn4q2fFY7uD5zpTbQijKU2j
-	 A3h6LyrgBRhD8vjv/PCOQbIS0x10wNp15U53uZUeJSa+ZUUtNYjmvMkaFTX0FdsPtY
-	 5VFsbeAwARiOlYL96AR5bc/UJx13BAZgTchhOZXOoq884yT683+Ba+UY0kenSbPQ5G
-	 /9Y3STPVYFUZGbaD/nfway1UOiEmxiypL1sfzIHXjp28wqpXFD1BkVYOwnVTwzjxBO
-	 T6iDd2rL+GJ7Oq4z7lXn+Gf9jPYSMojIl9QVfBm4ugrQ3F58b1YoFt3gxDwWn1rh48
-	 BJyQRg2g8eDBw==
-Date: Mon, 29 Jun 2026 17:35:16 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 03/30] tools/testing/vma: use vma_start_pgoff() in merge
- tests
-Message-ID: <akKeKSnWlc416OIP@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <b501eca378b9d9734e83838102aadc9276590fba.1782735110.git.ljs@kernel.org>
- <akKR3bFV7393yOUs@gourry-fedora-PF4VCD3F>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HsS/ztBI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782751216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CviOjkV9/YgKW2WypG09pJ964/zY+DekGBGC6jJ7pxM=;
+	b=HsS/ztBIPxFQKLA5edt0czis+NYBns0cNakT88mMTi2xZKyy4iqxmjJN5hRCmQQcRaPK8G
+	qhf53DQVWVOt9xubo5xojMGdOuX5cJcFbmfY3zlrnfBGB+nOC99UKtAyZJlS44eJFwlTqM
+	LDafEdycn5zXigs1s/rak5EulDHgXUU=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-rpdYnSZOPrigYNwYjzgDog-1; Mon,
+ 29 Jun 2026 12:40:13 -0400
+X-MC-Unique: rpdYnSZOPrigYNwYjzgDog-1
+X-Mimecast-MFC-AGG-ID: rpdYnSZOPrigYNwYjzgDog_1782751212
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7874B1955F44;
+	Mon, 29 Jun 2026 16:40:12 +0000 (UTC)
+Received: from fedora (unknown [10.44.32.37])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6085F3000B76;
+	Mon, 29 Jun 2026 16:40:09 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 29 Jun 2026 18:40:12 +0200 (CEST)
+Date: Mon, 29 Jun 2026 18:40:07 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to
+ nop10
+Message-ID: <akKf511eknMCE0AB@redhat.com>
+References: <20260526205840.173790-1-jolsa@kernel.org>
+ <20260526205840.173790-6-jolsa@kernel.org>
+ <aj5JuH6AtjDtWIVU@redhat.com>
+ <akJNZN9gvZ30zKUf@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <akJNZN9gvZ30zKUf@krava>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: _PVK-dmVKgpNAB0w1G6tVFiEGT66tx-RDns3AgHy7L4_1782751212
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <akKR3bFV7393yOUs@gourry-fedora-PF4VCD3F>
 
-On Mon, Jun 29, 2026 at 11:40:13AM -0400, Gregory Price wrote:
-> On Mon, Jun 29, 2026 at 01:23:14PM +0100, Lorenzo Stoakes wrote:
-> > Now we have the vma_start_pgoff() helper, update the merge tests to make
-> > use of it for consistency.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+On 06/29, Jiri Olsa wrote:
 >
-> Question: Should we have primitive tests for vma_*_pgoff() since
-> the behavior changes depending on file/anon?
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -265,6 +265,10 @@ static bool is_prefix_bad(struct insn *insn)
 >
-> Nice to have the cleanup and clarity. Maybe worth asserting no
-> one ever breaks this.
-
-Well funny you should mention that :) I do add some asserts as I go.
-
-In my RFC series which this series is the predicate for, I add more as then
-we track virtal page off separately (see [0]).
-
-Amusingly (or not) /dev/zero breaks assumptions a bit (anonymous VMA with
-vma->vm_file that tracks by file index, just glroious). But I plan to fix
-that later!
-
+>  		attr = inat_get_opcode_attribute(p);
+>  		switch (attr) {
+> +		case INAT_MAKE_PREFIX(INAT_PFX_CS):
+> +			if (insn->x86_64)
+> +				break;
+> +			fallthrough;
+>  		case INAT_MAKE_PREFIX(INAT_PFX_ES):
+>  		case INAT_MAKE_PREFIX(INAT_PFX_DS):
+>  		case INAT_MAKE_PREFIX(INAT_PFX_SS):
 >
-> for this patch though
->
-> Reviewed-by: Gregory Price <gourry@gourry.net>
+> or we could just skip it for nop10.. maybe that's better
 
-Thanks!
+Well, if you ask me I'd agree with the "maybe that's better" plan ;)
+I mean... I don't think that INAT_PFX_CS should be "special" in is_prefix_bad.
 
-Cheers, Lorenzo
+But, whatever you do - I agree, feel free to keep my r-b.
 
-[0]:https://lore.kernel.org/linux-mm/cover.1782745153.git.ljs@kernel.org/
+Oleg.
+
