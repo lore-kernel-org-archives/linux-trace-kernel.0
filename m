@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E803F7A97
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 08:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5623F7ABC
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 08:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782722246; cv=none; b=T3aZcNs0R0zG+6NtX0to+9eoVNZfPPsYLUmeTbIqxVpFMObSc8TK9gm1wkL1viVBr3N0juxzTjdgB10kj++KjzBCTQcS2zSv9KHSkw7QcVCpXgvXuVukT1pZ5TuTUGdisSKWGVNiD26WzV4OmhmHBL7igbb4wZsqBud8gr2QQbc=
+	t=1782722249; cv=none; b=ByGP+M0HOY+J5/sADqY1dU8GWqv7EnUKcBJxwVHYbw9bQdt2vbQXD+WXVUMK/yl9whiF3hLGoskvn3KWSRmeQjbqxp7h+U6scxNXwwqrKMQN54zOLRRJpWRHDwSYKSU7qRxnCzkQyeahHr5fwFRux/bb9dK7cxgxEsDGNzJ0il0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782722246; c=relaxed/simple;
-	bh=rVLnbuq2IEhb/ffgehpuZq2/L6ZgmPETWBgrOp8WDP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=IQ1RTJNA6xg02T3tHLos8H80fZAGCH8jzWNr5Vy65Bkz8X0upbJDKaBWH/ZO+HZTMvHHlN0KjRnMMjjPxfRDlKkFn2EayetLTJax1g318HPMyfGvuQESxK9VrFWO3Wmo9rllXXIhshf0kBohsXVpIKADMT8ncXz/yMt7Aridu/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bahJ57db; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1782722249; c=relaxed/simple;
+	bh=A7e+0+H4APWJpzUDZsaZDpFQQHauBTnyxLLAznfU0OQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=muRtXnnXwuVM5/If6/FELfgZQ7wyewY5Zm2voqg61FmAOZvvE9TKlyG5HnMo1kYWioYlYbMV14WV11hMI0rfqgdNCmF7fB+wNkHxG1LlSRxsRIyExL1S2G8xEm9lXyphT8s0AJTAQ0/FWaE0cSNINGlue2IWEqaD+MU6Ovkwz7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mvtb30s+; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bahJ57db"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mvtb30s+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782722243;
+	s=mimecast20190719; t=1782722246;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=XwCb0VE91rmDrn92tIGKfoY7FaOrvKLDHtRHsqciGbg=;
-	b=bahJ57db7f6WyOeNtec1ua85TpT3Moq/jue/SywpuWbRIQlrqpKcxQNGcf7pMMrbEpq3Kf
-	PigrcwQUY0d4geiPTQyTh0Z7miDK93sMwBJP/vFfKmmR2/SCRufb4PtlcinPuI2vEP7v/F
-	M6uCr58J3Ec2HTjhiwjnru554EKMisc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OjDDAXDHlCvbTiHeVQm1rhnrTo45tpHPYvEhuWzQ8y0=;
+	b=Mvtb30s+KCrHdKAXpqhw1eg+EQgBLcnM5BlzDGqi2dVCoB3d6SNtHKW9pFJ+mdxgnSeC0M
+	LgB7pgrz1DpyBGLqa/cJS27f6UO1JPOZf9HBamefSJS2d4NGvC80OLa4NSzsp0YQcqzXAu
+	1YbSqjgX4UWo9mZdH/NtPrVukxLDoPY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-qSTisS6yPq6xnLrA0gC-Tw-1; Mon,
- 29 Jun 2026 04:37:20 -0400
-X-MC-Unique: qSTisS6yPq6xnLrA0gC-Tw-1
-X-Mimecast-MFC-AGG-ID: qSTisS6yPq6xnLrA0gC-Tw_1782722239
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-380-rgqk11_pN6W1mIl5yMiZnw-1; Mon,
+ 29 Jun 2026 04:37:23 -0400
+X-MC-Unique: rgqk11_pN6W1mIl5yMiZnw-1
+X-Mimecast-MFC-AGG-ID: rgqk11_pN6W1mIl5yMiZnw_1782722242
 Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65BE119560AD;
-	Mon, 29 Jun 2026 08:37:19 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2EFB7180044D;
+	Mon, 29 Jun 2026 08:37:22 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AED631774;
-	Mon, 29 Jun 2026 08:37:16 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D21143652A;
+	Mon, 29 Jun 2026 08:37:19 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>
@@ -50,9 +52,11 @@ Cc: John Kacur <jkacur@redhat.com>,
 	Wander Lairson Costa <wander@redhat.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH 1/4] rtla: Allow unsetting non-list custom-callback CLI options
-Date: Mon, 29 Jun 2026 10:36:51 +0200
-Message-ID: <20260629083654.1548925-1-tglozar@redhat.com>
+Subject: [PATCH 2/4] rtla: Add unit tests for unset in opt callbacks
+Date: Mon, 29 Jun 2026 10:36:52 +0200
+Message-ID: <20260629083654.1548925-2-tglozar@redhat.com>
+In-Reply-To: <20260629083654.1548925-1-tglozar@redhat.com>
+References: <20260629083654.1548925-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,552 +64,534 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: OgeazpeC3UC0NZ8P4HBcwN6fva916egYEjSUh6WtTdY_1782722239
+X-Mimecast-MFC-PROC-ID: k7CSSFrBRE3bqbWgg4ENcreWltI3p4JIAf2t7XxxbdY_1782722242
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-libsubcmd implicitly allows the user to unset already set options using
-a "no-" prefix for long options. For example, if I set the period like
-this:
-
-$ rtla timerlat -D
-Loading BPF program
-reading osnoise/timerlat_period_us returned 1000
-setting osnoise/timerlat_period_us to 1000
-reading osnoise/print_stack returned 0
-setting osnoise/print_stack to 0
-...
-<timerlat top>
-
-it can be unset by a subsequent --no-debug:
-
-$ rtla timerlat -D --no-debug
-...
-<timerlat top>
-
-Currently, this works only for boolean options. Extend the feature for
-all options by implementing handling of the "unset" argument in opt_*()
-callbacks defined in cli_p.h, except for list options, i.e. options that
-can be passed multiple times (--event, --filter, --trigger,
---on-threshold, --on-end).
-
-This allows, for example, unsetting of int/long long options, e.g. "-p":
-
-$ rtla timerlat -D -p100 --no-period
-...
-setting osnoise/timerlat_period_us to 1000
-...
-
-By default, options in params struct are reset to zero. A constant is
-added for every parameter with a different default value, which is then
-used both in <tool>_hist_args() while setting the initial value and in
-opt_*() when unsetting the option. This refactoring ensures there is no
-duplicate "magic number".
-
-The default value for opt_llong_callback() and opt_int_callback() is
-passed in struct option's defval field; new macros
-RTLA_OPT_{LLONG,INT}{,_DEFVAL} are added to define the field
-conveniently. The default value for other callbacks is hardcoded inside
-each callback's unset logic.
+Test for each opt callback that implements the unset option whether the
+option sets the specified default value back correctly.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/src/cli.c   |  42 +++----
- tools/tracing/rtla/src/cli_p.h | 219 +++++++++++++++++++++++++++------
- 2 files changed, 194 insertions(+), 67 deletions(-)
+ .../rtla/tests/unit/cli_opt_callback.c        | 295 ++++++++++++++++++
+ 1 file changed, 295 insertions(+)
 
-diff --git a/tools/tracing/rtla/src/cli.c b/tools/tracing/rtla/src/cli.c
-index c5279c9875310..fb8c972c0746b 100644
---- a/tools/tracing/rtla/src/cli.c
-+++ b/tools/tracing/rtla/src/cli.c
-@@ -192,10 +192,10 @@ struct common_params *osnoise_hist_parse_args(int argc, char **argv)
- 	actions_init(&params->common.threshold_actions);
- 	actions_init(&params->common.end_actions);
+diff --git a/tools/tracing/rtla/tests/unit/cli_opt_callback.c b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
+index 4a406af42821b..413a04f898fbb 100644
+--- a/tools/tracing/rtla/tests/unit/cli_opt_callback.c
++++ b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
+@@ -40,6 +40,30 @@ START_TEST(test_opt_llong_callback_min)
+ }
+ END_TEST
  
--	/* display data in microseconds */
--	params->common.output_divisor = 1000;
--	params->common.hist.bucket_size = 1;
--	params->common.hist.entries = 256;
-+	/* set default values */
-+	params->common.output_divisor = default_output_divisor;
-+	params->common.hist.bucket_size = default_bucket_size;
-+	params->common.hist.entries = default_entries;
- 
- 	argc = parse_options(argc, (const char **)argv,
- 			     osnoise_hist_options, osnoise_hist_usage,
-@@ -280,19 +280,15 @@ struct common_params *timerlat_top_parse_args(int argc, char **argv)
- 	actions_init(&params->common.threshold_actions);
- 	actions_init(&params->common.end_actions);
- 
--	/* disabled by default */
--	params->dma_latency = -1;
--	params->deepest_idle_state = -2;
--
--	/* display data in microseconds */
--	params->common.output_divisor = 1000;
-+	/* set default values */
-+	params->dma_latency = default_dma_latency;
-+	params->deepest_idle_state = default_deepest_idle_state;
-+	params->common.output_divisor = default_output_divisor;
-+	params->stack_format = default_stack_format;
- 
- 	/* default to BPF mode */
- 	params->mode = TRACING_MODE_BPF;
- 
--	/* default to truncate stack format */
--	params->stack_format = STACK_FORMAT_TRUNCATE;
--
- 	argc = parse_options(argc, (const char **)argv,
- 			     timerlat_top_options, timerlat_top_usage,
- 			     common_parse_options_flags);
-@@ -403,23 +399,17 @@ struct common_params *timerlat_hist_parse_args(int argc, char **argv)
- 	actions_init(&params->common.threshold_actions);
- 	actions_init(&params->common.end_actions);
- 
--	/* disabled by default */
--	params->dma_latency = -1;
--
--	/* disabled by default */
--	params->deepest_idle_state = -2;
--
--	/* display data in microseconds */
--	params->common.output_divisor = 1000;
--	params->common.hist.bucket_size = 1;
--	params->common.hist.entries = 256;
-+	/* set default values */
-+	params->dma_latency = default_dma_latency;
-+	params->deepest_idle_state = default_deepest_idle_state;
-+	params->common.output_divisor = default_output_divisor;
-+	params->common.hist.bucket_size = default_bucket_size;
-+	params->common.hist.entries = default_entries;
-+	params->stack_format = default_stack_format;
- 
- 	/* default to BPF mode */
- 	params->mode = TRACING_MODE_BPF;
- 
--	/* default to truncate stack format */
--	params->stack_format = STACK_FORMAT_TRUNCATE;
--
- 	argc = parse_options(argc, (const char **)argv,
- 			     timerlat_hist_options, timerlat_hist_usage,
- 			     common_parse_options_flags);
-diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
-index 3c939de9abf02..3a93dba60215b 100644
---- a/tools/tracing/rtla/src/cli_p.h
-+++ b/tools/tracing/rtla/src/cli_p.h
-@@ -22,6 +22,38 @@ struct timerlat_cb_data {
- 	char *trace_output;
- };
- 
-+/*
-+ * Non-zero default values for parameters
-+ */
-+static const int default_dma_latency = -1; /* -1 = unset */
-+static const int default_deepest_idle_state = -2; /* -1 = disable all, -2 = unset */
-+static const int default_output_divisor = 1000;
-+static const int default_bucket_size = 1;
-+static const int default_entries = 256;
-+static const enum stack_format default_stack_format = STACK_FORMAT_TRUNCATE;
++START_TEST(test_opt_llong_callback_unset)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
 +
-+/*
-+ * Shorthand macros for integer/long long command line options using
-+ * opt_int_callback/opt_llong_callback, with variants that set defval.
-+ *
-+ * Note: defval's type is intptr_t. opt_int_callback interprets it directly as
-+ * an int, opt_llong_callback interprets it as a pointer to a long long, as
-+ * long long does not fit into intptr_t on 32-bit architectures.
-+ */
-+#define RTLA_OPT_LLONG(s, l, v, a, h) \
-+	OPT_CALLBACK(s, l, v, a, h, opt_llong_callback)
++	ck_assert_int_eq(opt_llong_callback(&opt, "1234567890", 0), 0);
++	ck_assert_int_eq(opt_llong_callback(&opt, NULL, 1), 0);
++	ck_assert_int_eq(test_value, 0);
++}
++END_TEST
 +
-+#define RTLA_OPT_LLONG_DEFVAL(s, l, v, a, h, d) { .type = OPTION_CALLBACK, \
-+	.short_name = (s), .long_name = (l), .value = (v), .argh = (a), \
-+	.help = (h), .callback = opt_llong_callback, .defval = (intptr_t)(d) }
++START_TEST(test_opt_llong_callback_unset_defval)
++{
++	long long test_value = 0;
++	const long long default_value = 42;
++	const struct option opt = RTLA_OPT_LLONG_DEFVAL('t', "test", &test_value, "test value",
++							"test help", &default_value);
 +
-+#define RTLA_OPT_INT(s, l, v, a, h) \
-+	OPT_CALLBACK(s, l, v, a, h, opt_int_callback)
++	ck_assert_int_eq(opt_llong_callback(&opt, "1234567890", 0), 0);
++	ck_assert_int_eq(opt_llong_callback(&opt, NULL, 1), 0);
++	ck_assert_int_eq(test_value, default_value);
++}
++END_TEST
 +
-+#define RTLA_OPT_INT_DEFVAL(s, l, v, a, h, d) { .type = OPTION_CALLBACK, \
-+	.short_name = (s), .long_name = (l), .value = (v), .argh = (a), \
-+	.help = (h), .callback = opt_int_callback, .defval = (intptr_t)(d) }
-+
- /*
-  * Macros for command line options common to all tools
-  *
-@@ -108,14 +140,12 @@ struct timerlat_cb_data {
- #define RTLA_OPT_QUIET OPT_BOOLEAN('q', "quiet", &params->common.quiet, \
- 	"print only a summary at the end")
- 
--#define RTLA_OPT_TRACE_BUFFER_SIZE OPT_CALLBACK(0, "trace-buffer-size", \
-+#define RTLA_OPT_TRACE_BUFFER_SIZE RTLA_OPT_INT(0, "trace-buffer-size", \
- 	&params->common.buffer_size, "kB", \
--	"set the per-cpu trace buffer size in kB", \
--	opt_int_callback)
-+	"set the per-cpu trace buffer size in kB")
- 
--#define RTLA_OPT_WARM_UP OPT_CALLBACK(0, "warm-up", &params->common.warmup, "s", \
--	"let the workload run for s seconds before collecting data", \
--	opt_int_callback)
-+#define RTLA_OPT_WARM_UP RTLA_OPT_INT(0, "warm-up", &params->common.warmup, "s", \
-+	"let the workload run for s seconds before collecting data")
- 
- #define RTLA_OPT_AUTO(cb) OPT_CALLBACK('a', "auto", &cb_data, "us", \
- 	"set automatic trace mode, stopping the session if argument in us sample is hit", \
-@@ -143,7 +173,12 @@ static int opt_llong_callback(const struct option *opt, const char *arg, int uns
+ START_TEST(test_opt_int_callback_simple)
  {
- 	long long *value = opt->value;
+ 	int test_value = 0;
+@@ -90,6 +114,29 @@ START_TEST(test_opt_int_callback_non_numeric_suffix)
+ }
+ END_TEST
  
--	if (unset || !arg)
-+	if (unset) {
-+		*value = opt->defval ? *(long long *)opt->defval : 0;
-+		return 0;
-+	}
++START_TEST(test_opt_int_callback_unset)
++{
++	int test_value = 0;
++	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
 +
-+	if (!arg)
- 		return -1;
- 
- 	*value = get_llong_from_str((char *)arg);
-@@ -154,7 +189,12 @@ static int opt_int_callback(const struct option *opt, const char *arg, int unset
++	ck_assert_int_eq(opt_int_callback(&opt, "1234567890", 0), 0);
++	ck_assert_int_eq(opt_int_callback(&opt, NULL, 1), 0);
++	ck_assert_int_eq(test_value, 0);
++}
++END_TEST
++
++START_TEST(test_opt_int_callback_unset_defval)
++{
++	int test_value = 0;
++	const struct option opt = RTLA_OPT_INT_DEFVAL('t', "test", &test_value, "test value",
++						      "test help", 42);
++
++	ck_assert_int_eq(opt_int_callback(&opt, "1234567890", 0), 0);
++	ck_assert_int_eq(opt_int_callback(&opt, NULL, 1), 0);
++	ck_assert_int_eq(test_value, 42);
++}
++END_TEST
++
+ START_TEST(test_opt_cpus_cb)
  {
- 	int *value = opt->value;
+ 	struct common_params params = {0};
+@@ -134,6 +181,18 @@ START_TEST(test_opt_cgroup_cb_equals)
+ }
+ END_TEST
  
--	if (unset || !arg)
-+	if (unset) {
-+		*value = (int)opt->defval;
-+		return 0;
-+	}
++START_TEST(test_opt_cgroup_cb_unset)
++{
++	struct common_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_cgroup_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	if (strtoi(arg, value))
-@@ -168,7 +208,13 @@ static int opt_cpus_cb(const struct option *opt, const char *arg, int unset)
- 	struct common_params *params = opt->value;
- 	int retval;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		CPU_ZERO(&params->monitored_cpus);
-+		params->cpus = NULL;
-+		return 0;
-+	}
++	ck_assert_int_eq(opt_cgroup_cb(&opt, "cgroup", 0), 0);
++	ck_assert_int_eq(opt_cgroup_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.cgroup, 0);
++	ck_assert_ptr_null(params.cgroup_name);
++}
++END_TEST
 +
-+	if (!arg)
- 		return -1;
- 
- 	retval = parse_cpu_set((char *)arg, &params->monitored_cpus);
-@@ -183,8 +229,11 @@ static int opt_cgroup_cb(const struct option *opt, const char *arg, int unset)
+ START_TEST(test_opt_duration_cb)
  {
- 	struct common_params *params = opt->value;
+ 	struct common_params params = {0};
+@@ -154,6 +213,17 @@ START_TEST(test_opt_duration_cb_invalid)
+ }
+ END_TEST
  
--	if (unset)
--		return -1;
-+	if (unset) {
-+		params->cgroup = 0;
-+		params->cgroup_name = NULL;
-+		return 0;
-+	}
- 
- 	params->cgroup = 1;
- 	params->cgroup_name = (char *)arg;
-@@ -199,7 +248,12 @@ static int opt_duration_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_opt_duration_cb_unset)
++{
++	struct common_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_duration_cb);
++
++	ck_assert_int_eq(opt_duration_cb(&opt, "1m", 0), 0);
++	ck_assert_int_eq(opt_duration_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.duration, 0);
++}
++END_TEST
++
+ START_TEST(test_opt_event_cb)
  {
- 	struct common_params *params = opt->value;
+ 	struct trace_events *events = NULL;
+@@ -205,6 +275,19 @@ START_TEST(test_opt_housekeeping_cb_invalid)
+ }
+ END_TEST
  
--	if (unset || !arg)
-+	if (unset) {
-+		params->duration = 0;
-+		return 0;
-+	}
++START_TEST(test_opt_housekeeping_cb_unset)
++{
++	struct common_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_housekeeping_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	params->duration = parse_seconds_duration((char *)arg);
-@@ -233,7 +287,13 @@ static int opt_housekeeping_cb(const struct option *opt, const char *arg, int un
- 	struct common_params *params = opt->value;
- 	int retval;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		params->hk_cpus = 0;
-+		CPU_ZERO(&params->hk_cpu_set);
-+		return 0;
-+	}
++	nr_cpus = 4;
++	ck_assert_int_eq(opt_housekeeping_cb(&opt, "0-3", 0), 0);
++	ck_assert_int_eq(opt_housekeeping_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.hk_cpus, 0);
++	ck_assert_int_eq(CPU_COUNT(&params.hk_cpu_set), 0);
++}
++END_TEST
 +
-+	if (!arg)
- 		return -1;
- 
- 	params->hk_cpus = 1;
-@@ -249,7 +309,13 @@ static int opt_priority_cb(const struct option *opt, const char *arg, int unset)
- 	struct common_params *params = opt->value;
- 	int retval;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		memset(&params->sched_param, 0, sizeof(params->sched_param));
-+		params->set_sched = 0;
-+		return 0;
-+	}
-+
-+	if (!arg)
- 		return -1;
- 
- 	retval = parse_prio((char *)arg, &params->sched_param);
-@@ -301,9 +367,8 @@ static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
- 	"osnoise runtime in us", \
- 	opt_osnoise_runtime_cb)
- 
--#define OSNOISE_OPT_THRESHOLD OPT_CALLBACK('T', "threshold", &params->threshold, "us", \
--	"the minimum delta to be considered a noise", \
--	opt_llong_callback)
-+#define OSNOISE_OPT_THRESHOLD RTLA_OPT_LLONG('T', "threshold", &params->threshold, "us", \
-+	"the minimum delta to be considered a noise")
- 
- /*
-  * Callback functions for command line options for osnoise tools
-@@ -315,7 +380,14 @@ static int opt_osnoise_auto_cb(const struct option *opt, const char *arg, int un
- 	struct osnoise_params *params = cb_data->params;
- 	long long auto_thresh;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		params->common.stop_us = 0;
-+		params->threshold = 0;
-+		cb_data->trace_output = NULL;
-+		return 0;
-+	}
-+
-+	if (!arg)
- 		return -1;
- 
- 	auto_thresh = get_llong_from_str((char *)arg);
-@@ -332,7 +404,12 @@ static int opt_osnoise_period_cb(const struct option *opt, const char *arg, int
+ START_TEST(test_opt_priority_cb)
  {
- 	unsigned long long *period = opt->value;
+ 	struct common_params params = {0};
+@@ -226,6 +309,18 @@ START_TEST(test_opt_priority_cb_invalid)
+ }
+ END_TEST
  
--	if (unset || !arg)
-+	if (unset) {
-+		*period = 0;
-+		return 0;
-+	}
++START_TEST(test_opt_priority_cb_unset)
++{
++	struct common_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_priority_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	*period = get_llong_from_str((char *)arg);
-@@ -346,7 +423,12 @@ static int opt_osnoise_runtime_cb(const struct option *opt, const char *arg, int
- {
- 	unsigned long long *runtime = opt->value;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		*runtime = 0;
-+		return 0;
-+	}
++	ck_assert_int_eq(opt_priority_cb(&opt, "f:95", 0), 0);
++	ck_assert_int_eq(opt_priority_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.sched_param.sched_policy, 0);
++	ck_assert_int_eq(params.sched_param.sched_priority, 0);
++}
++END_TEST
 +
-+	if (!arg)
- 		return -1;
- 
- 	*runtime = get_llong_from_str((char *)arg);
-@@ -360,8 +442,10 @@ static int opt_osnoise_trace_output_cb(const struct option *opt, const char *arg
+ START_TEST(test_opt_trigger_cb)
  {
- 	const char **trace_output = opt->value;
+ 	struct trace_events *events = trace_event_alloc("sched:sched_switch");
+@@ -279,6 +374,20 @@ START_TEST(test_opt_osnoise_auto_cb)
+ }
+ END_TEST
  
--	if (unset)
--		return -1;
-+	if (unset) {
-+		*trace_output = NULL;
-+		return 0;
-+	}
- 
- 	if (!arg) {
- 		*trace_output = "osnoise_trace.txt";
-@@ -412,9 +496,8 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
- 	"timerlat period in us", \
- 	opt_timerlat_period_cb)
- 
--#define TIMERLAT_OPT_STACK OPT_CALLBACK('s', "stack", &params->print_stack, "us", \
--	"save the stack trace at the IRQ if a thread latency is higher than the argument in us", \
--	opt_llong_callback)
-+#define TIMERLAT_OPT_STACK RTLA_OPT_LLONG('s', "stack", &params->print_stack, "us", \
-+	"save the stack trace at the IRQ if a thread latency is higher than the argument in us")
- 
- #define TIMERLAT_OPT_NANO OPT_CALLBACK_NOOPT('n', "nano", params, NULL, \
- 	"display data in nanoseconds", \
-@@ -424,10 +507,10 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
- 	"set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency", \
- 	opt_dma_latency_cb)
- 
--#define TIMERLAT_OPT_DEEPEST_IDLE_STATE OPT_CALLBACK(0, "deepest-idle-state", \
-+#define TIMERLAT_OPT_DEEPEST_IDLE_STATE RTLA_OPT_INT_DEFVAL(0, "deepest-idle-state", \
- 	&params->deepest_idle_state, "n", \
- 	"only go down to idle state n on cpus used by timerlat to reduce exit from idle latency", \
--	opt_int_callback)
-+	default_deepest_idle_state)
- 
- #define TIMERLAT_OPT_AA_ONLY OPT_CALLBACK(0, "aa-only", params, "us", \
- 	"stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)", \
-@@ -459,7 +542,12 @@ static int opt_timerlat_period_cb(const struct option *opt, const char *arg, int
- {
- 	long long *period = opt->value;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		*period = 0;
-+		return 0;
-+	}
++START_TEST(test_opt_osnoise_auto_cb_unset)
++{
++	struct osnoise_params params = {0};
++	struct osnoise_cb_data cb_data = {&params};
++	const struct option opt = TEST_CALLBACK(&cb_data, opt_osnoise_auto_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	*period = get_llong_from_str((char *)arg);
-@@ -475,7 +563,15 @@ static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int u
- 	struct timerlat_params *params = cb_data->params;
- 	long long auto_thresh;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		params->common.stop_total_us = 0;
-+		params->common.stop_us = 0;
-+		params->print_stack = 0;
-+		cb_data->trace_output = NULL;
-+		return 0;
-+	}
++	ck_assert_int_eq(opt_osnoise_auto_cb(&opt, "10", 0), 0);
++	ck_assert_int_eq(opt_osnoise_auto_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.common.stop_us, 0);
++	ck_assert_int_eq(params.threshold, 0);
++	ck_assert_ptr_null(cb_data.trace_output);
++}
++END_TEST
 +
-+	if (!arg)
- 		return -1;
+ START_TEST(test_opt_osnoise_period_cb)
+ {
+ 	unsigned long long period = 0;
+@@ -299,6 +408,17 @@ START_TEST(test_opt_osnoise_period_cb_invalid)
+ }
+ END_TEST
  
- 	auto_thresh = get_llong_from_str((char *)arg);
-@@ -494,7 +590,12 @@ static int opt_dma_latency_cb(const struct option *opt, const char *arg, int uns
- 	int *dma_latency = opt->value;
- 	int retval;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		*dma_latency = default_dma_latency;
-+		return 0;
-+	}
++START_TEST(test_opt_osnoise_period_cb_unset)
++{
++	unsigned long long period = 0;
++	const struct option opt = TEST_CALLBACK(&period, opt_osnoise_period_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	retval = strtoi((char *)arg, dma_latency);
-@@ -511,7 +612,15 @@ static int opt_aa_only_cb(const struct option *opt, const char *arg, int unset)
- 	struct timerlat_params *params = opt->value;
- 	long long auto_thresh;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		params->common.stop_total_us = 0;
-+		params->common.stop_us = 0;
-+		params->print_stack = 0;
-+		params->common.aa_only = 0;
-+		return 0;
-+	}
++	ck_assert_int_eq(opt_osnoise_period_cb(&opt, "1000000", 0), 0);
++	ck_assert_int_eq(opt_osnoise_period_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(period, 0);
++}
++END_TEST
 +
-+	if (!arg)
- 		return -1;
- 
- 	auto_thresh = get_llong_from_str((char *)arg);
-@@ -527,8 +636,10 @@ static int opt_timerlat_trace_output_cb(const struct option *opt, const char *ar
+ START_TEST(test_opt_osnoise_runtime_cb)
  {
- 	const char **trace_output = opt->value;
+ 	unsigned long long runtime = 0;
+@@ -319,6 +439,17 @@ START_TEST(test_opt_osnoise_runtime_cb_invalid)
+ }
+ END_TEST
  
--	if (unset)
--		return -1;
-+	if (unset) {
-+		*trace_output = NULL;
-+		return 0;
-+	}
- 
- 	if (!arg) {
- 		*trace_output = "timerlat_trace.txt";
-@@ -576,8 +687,11 @@ static int opt_user_threads_cb(const struct option *opt, const char *arg, int un
- {
- 	struct timerlat_params *params = opt->value;
- 
--	if (unset)
--		return -1;
-+	if (unset) {
-+		params->common.user_workload = false;
-+		params->common.user_data = false;
-+		return 0;
-+	}
- 
- 	params->common.user_workload = true;
- 	params->common.user_data = true;
-@@ -589,8 +703,10 @@ static int opt_nano_cb(const struct option *opt, const char *arg, int unset)
- {
- 	struct timerlat_params *params = opt->value;
- 
--	if (unset)
--		return -1;
-+	if (unset) {
-+		params->common.output_divisor = default_output_divisor;
-+		return 0;
-+	}
- 
- 	params->common.output_divisor = 1;
- 
-@@ -601,7 +717,12 @@ static int opt_stack_format_cb(const struct option *opt, const char *arg, int un
- {
- 	int *format = opt->value;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		*format = default_stack_format;
-+		return 0;
-+	}
++START_TEST(test_opt_osnoise_runtime_cb_unset)
++{
++	unsigned long long runtime = 0;
++	const struct option opt = TEST_CALLBACK(&runtime, opt_osnoise_runtime_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	*format = parse_stack_format((char *)arg);
-@@ -616,7 +737,13 @@ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int
- {
- 	struct timerlat_params *params = opt->value;
- 
--	if (unset || !arg)
-+	if (unset) {
-+		params->timerlat_align = false;
-+		params->timerlat_align_us = 0;
-+		return 0;
-+	}
++	ck_assert_int_eq(opt_osnoise_runtime_cb(&opt, "900000", 0), 0);
++	ck_assert_int_eq(opt_osnoise_runtime_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(runtime, 0);
++}
++END_TEST
 +
-+	if (!arg)
- 		return -1;
- 
- 	params->timerlat_align = true;
-@@ -662,7 +789,12 @@ static int opt_bucket_size_cb(const struct option *opt, const char *arg, int uns
+ START_TEST(test_opt_osnoise_trace_output_cb)
  {
- 	int *bucket_size = opt->value;
+ 	const char *trace_output = NULL;
+@@ -339,6 +470,17 @@ START_TEST(test_opt_osnoise_trace_output_cb_noarg)
+ }
+ END_TEST
  
--	if (unset || !arg)
-+	if (unset) {
-+		*bucket_size = default_bucket_size;
-+		return 0;
-+	}
++START_TEST(test_opt_osnoise_trace_output_cb_unset)
++{
++	const char *trace_output = NULL;
++	const struct option opt = TEST_CALLBACK(&trace_output, opt_osnoise_trace_output_cb);
 +
-+	if (!arg)
- 		return -1;
- 
- 	*bucket_size = get_llong_from_str((char *)arg);
-@@ -676,7 +808,12 @@ static int opt_entries_cb(const struct option *opt, const char *arg, int unset)
++	ck_assert_int_eq(opt_osnoise_trace_output_cb(&opt, "trace.txt", 0), 0);
++	ck_assert_int_eq(opt_osnoise_trace_output_cb(&opt, NULL, 1), 0);
++	ck_assert_ptr_null(trace_output);
++}
++END_TEST
++
+ START_TEST(test_opt_osnoise_on_threshold_cb)
  {
- 	int *entries = opt->value;
+ 	struct actions actions = {0};
+@@ -403,6 +545,17 @@ START_TEST(test_opt_timerlat_period_cb_invalid)
+ }
+ END_TEST
  
--	if (unset || !arg)
-+	if (unset) {
-+		*entries = default_entries;
-+		return 0;
-+	}
++START_TEST(test_opt_timerlat_period_cb_unset)
++{
++	long long period = 0;
++	const struct option opt = TEST_CALLBACK(&period, opt_timerlat_period_cb);
 +
-+	if (!arg)
- 		return -1;
++	ck_assert_int_eq(opt_timerlat_period_cb(&opt, "1000", 0), 0);
++	ck_assert_int_eq(opt_timerlat_period_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(period, 0);
++}
++END_TEST
++
+ START_TEST(test_opt_timerlat_auto_cb)
+ {
+ 	struct timerlat_params params = {0};
+@@ -417,6 +570,21 @@ START_TEST(test_opt_timerlat_auto_cb)
+ }
+ END_TEST
  
- 	*entries = get_llong_from_str((char *)arg);
++START_TEST(test_opt_timerlat_auto_cb_unset)
++{
++	struct timerlat_params params = {0};
++	struct timerlat_cb_data cb_data = {&params};
++	const struct option opt = TEST_CALLBACK(&cb_data, opt_timerlat_auto_cb);
++
++	ck_assert_int_eq(opt_timerlat_auto_cb(&opt, "10", 0), 0);
++	ck_assert_int_eq(opt_timerlat_auto_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.common.stop_us, 0);
++	ck_assert_int_eq(params.common.stop_total_us, 0);
++	ck_assert_int_eq(params.print_stack, 0);
++	ck_assert_ptr_null(cb_data.trace_output);
++}
++END_TEST
++
+ START_TEST(test_opt_dma_latency_cb)
+ {
+ 	int dma_latency = 0;
+@@ -447,6 +615,17 @@ START_TEST(test_opt_dma_latency_cb_max)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_dma_latency_cb_unset)
++{
++	int dma_latency = 0;
++	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
++
++	ck_assert_int_eq(opt_dma_latency_cb(&opt, "1000", 0), 0);
++	ck_assert_int_eq(opt_dma_latency_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(dma_latency, default_dma_latency);
++}
++END_TEST
++
+ START_TEST(test_opt_aa_only_cb)
+ {
+ 	struct timerlat_params params = {0};
+@@ -460,6 +639,20 @@ START_TEST(test_opt_aa_only_cb)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_aa_only_cb_unset)
++{
++	struct timerlat_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_aa_only_cb);
++
++	ck_assert_int_eq(opt_aa_only_cb(&opt, "10", 0), 0);
++	ck_assert_int_eq(opt_aa_only_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.common.stop_us, 0);
++	ck_assert_int_eq(params.common.stop_total_us, 0);
++	ck_assert_int_eq(params.print_stack, 0);
++	ck_assert_int_eq(params.common.aa_only, 0);
++}
++END_TEST
++
+ START_TEST(test_opt_timerlat_trace_output_cb)
+ {
+ 	const char *trace_output = NULL;
+@@ -480,6 +673,17 @@ START_TEST(test_opt_timerlat_trace_output_cb_noarg)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_timerlat_trace_output_cb_unset)
++{
++	const char *trace_output = NULL;
++	const struct option opt = TEST_CALLBACK(&trace_output, opt_timerlat_trace_output_cb);
++
++	ck_assert_int_eq(opt_timerlat_trace_output_cb(&opt, "trace.txt", 0), 0);
++	ck_assert_int_eq(opt_timerlat_trace_output_cb(&opt, NULL, 1), 0);
++	ck_assert_ptr_null(trace_output);
++}
++END_TEST
++
+ START_TEST(test_opt_timerlat_on_threshold_cb)
+ {
+ 	struct actions actions = {0};
+@@ -535,6 +739,18 @@ START_TEST(test_opt_user_threads_cb)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_user_threads_cb_unset)
++{
++	struct timerlat_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_user_threads_cb);
++
++	ck_assert_int_eq(opt_user_threads_cb(&opt, NULL, 0), 0);
++	ck_assert_int_eq(opt_user_threads_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.common.user_workload, 0);
++	ck_assert_int_eq(params.common.user_data, 0);
++}
++END_TEST
++
+ START_TEST(test_opt_nano_cb)
+ {
+ 	struct timerlat_params params = {0};
+@@ -545,6 +761,17 @@ START_TEST(test_opt_nano_cb)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_nano_cb_unset)
++{
++	struct timerlat_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_nano_cb);
++
++	ck_assert_int_eq(opt_nano_cb(&opt, NULL, 0), 0);
++	ck_assert_int_eq(opt_nano_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.common.output_divisor, default_output_divisor);
++}
++END_TEST
++
+ START_TEST(test_opt_timerlat_align_cb)
+ {
+ 	struct timerlat_params params = {0};
+@@ -556,6 +783,18 @@ START_TEST(test_opt_timerlat_align_cb)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_timerlat_align_cb_unset)
++{
++	struct timerlat_params params = {0};
++	const struct option opt = TEST_CALLBACK(&params, opt_timerlat_align_cb);
++
++	ck_assert_int_eq(opt_timerlat_align_cb(&opt, "500", 0), 0);
++	ck_assert_int_eq(opt_timerlat_align_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(params.timerlat_align, 0);
++	ck_assert_int_eq(params.timerlat_align_us, 0);
++}
++END_TEST
++
+ START_TEST(test_opt_stack_format_cb)
+ {
+ 	int stack_format = 0;
+@@ -576,6 +815,17 @@ START_TEST(test_opt_stack_format_cb_invalid)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_stack_format_cb_unset)
++{
++	int stack_format = 0;
++	const struct option opt = TEST_CALLBACK(&stack_format, opt_stack_format_cb);
++
++	ck_assert_int_eq(opt_stack_format_cb(&opt, "full", 0), 0);
++	ck_assert_int_eq(opt_stack_format_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(stack_format, default_stack_format);
++}
++END_TEST
++
+ START_TEST(test_opt_bucket_size_cb)
+ {
+ 	int bucket_size = 0;
+@@ -606,6 +856,17 @@ START_TEST(test_opt_bucket_size_max)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_bucket_size_cb_unset)
++{
++	int bucket_size = 0;
++	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
++
++	ck_assert_int_eq(opt_bucket_size_cb(&opt, "100", 0), 0);
++	ck_assert_int_eq(opt_bucket_size_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(bucket_size, default_bucket_size);
++}
++END_TEST
++
+ START_TEST(test_opt_entries_cb)
+ {
+ 	int entries = 0;
+@@ -636,6 +897,17 @@ START_TEST(test_opt_entries_max)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_entries_cb_unset)
++{
++	int entries = 0;
++	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
++
++	ck_assert_int_eq(opt_entries_cb(&opt, "100", 0), 0);
++	ck_assert_int_eq(opt_entries_cb(&opt, NULL, 1), 0);
++	ck_assert_int_eq(entries, default_entries);
++}
++END_TEST
++
+ Suite *cli_opt_callback_suite(void)
+ {
+ 	Suite *s = suite_create("cli_opt_callback");
+@@ -645,23 +917,31 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_llong_callback_simple);
+ 	tcase_add_test(tc, test_opt_llong_callback_max);
+ 	tcase_add_test(tc, test_opt_llong_callback_min);
++	tcase_add_test(tc, test_opt_llong_callback_unset);
++	tcase_add_test(tc, test_opt_llong_callback_unset_defval);
+ 	tcase_add_test(tc, test_opt_int_callback_simple);
+ 	tcase_add_test(tc, test_opt_int_callback_max);
+ 	tcase_add_test(tc, test_opt_int_callback_min);
+ 	tcase_add_test(tc, test_opt_int_callback_non_numeric);
+ 	tcase_add_test(tc, test_opt_int_callback_non_numeric_suffix);
++	tcase_add_test(tc, test_opt_int_callback_unset);
++	tcase_add_test(tc, test_opt_int_callback_unset_defval);
+ 	tcase_add_test(tc, test_opt_cpus_cb);
+ 	tcase_add_exit_test(tc, test_opt_cpus_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_cgroup_cb);
+ 	tcase_add_test(tc, test_opt_cgroup_cb_equals);
++	tcase_add_test(tc, test_opt_cgroup_cb_unset);
+ 	tcase_add_test(tc, test_opt_duration_cb);
++	tcase_add_test(tc, test_opt_duration_cb_unset);
+ 	tcase_add_exit_test(tc, test_opt_duration_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_event_cb);
+ 	tcase_add_test(tc, test_opt_event_cb_multiple);
+ 	tcase_add_test(tc, test_opt_housekeeping_cb);
+ 	tcase_add_exit_test(tc, test_opt_housekeeping_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_housekeeping_cb_unset);
+ 	tcase_add_test(tc, test_opt_priority_cb);
+ 	tcase_add_exit_test(tc, test_opt_priority_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_priority_cb_unset);
+ 	tcase_add_test(tc, test_opt_trigger_cb);
+ 	tcase_add_exit_test(tc, test_opt_trigger_cb_no_event, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_filter_cb);
+@@ -670,12 +950,16 @@ Suite *cli_opt_callback_suite(void)
+ 
+ 	tc = tcase_create("osnoise");
+ 	tcase_add_test(tc, test_opt_osnoise_auto_cb);
++	tcase_add_test(tc, test_opt_osnoise_auto_cb_unset);
+ 	tcase_add_test(tc, test_opt_osnoise_period_cb);
++	tcase_add_test(tc, test_opt_osnoise_period_cb_unset);
+ 	tcase_add_exit_test(tc, test_opt_osnoise_period_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_osnoise_runtime_cb);
+ 	tcase_add_exit_test(tc, test_opt_osnoise_runtime_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_osnoise_runtime_cb_unset);
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb);
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_noarg);
++	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_unset);
+ 	tcase_add_test(tc, test_opt_osnoise_on_threshold_cb);
+ 	tcase_add_exit_test(tc, test_opt_osnoise_on_threshold_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_osnoise_on_end_cb);
+@@ -685,31 +969,42 @@ Suite *cli_opt_callback_suite(void)
+ 	tc = tcase_create("timerlat");
+ 	tcase_add_test(tc, test_opt_timerlat_period_cb);
+ 	tcase_add_exit_test(tc, test_opt_timerlat_period_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_timerlat_period_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_auto_cb);
++	tcase_add_test(tc, test_opt_timerlat_auto_cb_unset);
+ 	tcase_add_test(tc, test_opt_dma_latency_cb);
+ 	tcase_add_exit_test(tc, test_opt_dma_latency_cb_min, EXIT_FAILURE);
+ 	tcase_add_exit_test(tc, test_opt_dma_latency_cb_max, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_dma_latency_cb_unset);
+ 	tcase_add_test(tc, test_opt_aa_only_cb);
++	tcase_add_test(tc, test_opt_aa_only_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb);
+ 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_noarg);
++	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_on_threshold_cb);
+ 	tcase_add_exit_test(tc, test_opt_timerlat_on_threshold_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_timerlat_on_end_cb);
+ 	tcase_add_exit_test(tc, test_opt_timerlat_on_end_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_user_threads_cb);
++	tcase_add_test(tc, test_opt_user_threads_cb_unset);
+ 	tcase_add_test(tc, test_opt_nano_cb);
++	tcase_add_test(tc, test_opt_nano_cb_unset);
+ 	tcase_add_test(tc, test_opt_stack_format_cb);
+ 	tcase_add_exit_test(tc, test_opt_stack_format_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_stack_format_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_align_cb);
++	tcase_add_test(tc, test_opt_timerlat_align_cb_unset);
+ 	suite_add_tcase(s, tc);
+ 
+ 	tc = tcase_create("histogram");
+ 	tcase_add_test(tc, test_opt_bucket_size_cb);
+ 	tcase_add_exit_test(tc, test_opt_bucket_size_min, EXIT_FAILURE);
+ 	tcase_add_exit_test(tc, test_opt_bucket_size_max, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_bucket_size_cb_unset);
+ 	tcase_add_test(tc, test_opt_entries_cb);
+ 	tcase_add_exit_test(tc, test_opt_entries_min, EXIT_FAILURE);
+ 	tcase_add_exit_test(tc, test_opt_entries_max, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_entries_cb_unset);
+ 	suite_add_tcase(s, tc);
+ 
+ 	return s;
 -- 
 2.54.0
 
