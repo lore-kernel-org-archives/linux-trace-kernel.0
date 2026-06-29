@@ -1,84 +1,85 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD1A3A6B61
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 06:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7A3C10AF
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 07:05:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782715915; cv=none; b=bZHjtdYfiZfOKSWwOcjt6pCrkc10o3mcTF+beMm7ZwttlJjXSx2Gq0hHowyGpo4XwH3jo78WD6l0boB6zA+NyDRsTK/RGRNuoh57iOjYG6A/n5NNQieqPPVVgRfQ4aCM/HGRBjnlup9556ac9XUwlDK+fpzX7cysVMNLO0EEkho=
+	t=1782716710; cv=none; b=L9H3uBtqgIBOXk6bCLqM+PZKuTSAJIAZV2QkXXsR7+tWBJiiDxE6evBQctlTrCLT71nttnLn97/srPWeVpb5VbDz7QqDbAy5/EJFu76wBUpkcChM3XCfx1hJHwa0ydYzmIXwLZM9VFiznjN0vsbl07wvZMroFsJWY0/IN0FhMPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782715915; c=relaxed/simple;
-	bh=ALkXro3TmNNCZbVZHgx9H3ghIJWe+sMD5X1yGx7fpPk=;
+	s=arc-20240116; t=1782716710; c=relaxed/simple;
+	bh=2TvZSbaJeZDt0QtZWKzlxR6n2gFDfREHIGZZ3L4ieGk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ctpAohRel191MPhaukFkKga/ad3hnkk+F35yulVPggrUFKukd2yw7fJXLzNzn9jpufjtetU3YmO2WBORwSl8g0MY6nIpqtNBzMkImJslnjE0Fc1pNgrMrNTtZqLNfHHz1ZNmd+xgkxSqnlhqCQTO7UDlconnoZlkQ3NbpS8yiOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ERTRrWoJ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=LsyXUhgU4YS5OC2Ppkstc1W438s0XvnJ9TTTcSb+wrIxDoPfcoEPDNI5wz5mQhNE3tlfb8bfK0oAWE9gXN6Dh0bgA72Skss1BNy4nFn9F9OT/tD+3YszDnQtsYO1ELvv1jX9o8XSNq9Tt8KHQpYQJgF77APQyaliKr6NR5xcnzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PqJzf3AX; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ERTRrWoJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PqJzf3AX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782715913;
+	s=mimecast20190719; t=1782716708;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ji0V4ni4RmhJJUHRPG50Xaton3kWCxzApZBwJGJW1x8=;
-	b=ERTRrWoJJ6xUE5HQ5OxZTByf2rx2PsaKm+MTJr5m7+OlrTL6LOGsuSBuFGVqse2/ME8VjQ
-	1UwFQ8YzYXvxTs51WWJI7Ryiq45XYkahCzCj2y93pCd4vCycPp4DvJkYHKGHrPNx1Ubk05
-	5/jlqD/a7Hej3c0ZP2Q5v1uM9vXaJ6k=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=2TvZSbaJeZDt0QtZWKzlxR6n2gFDfREHIGZZ3L4ieGk=;
+	b=PqJzf3AXVGQc3sfrfzDYHfVhz+22c79B22xLMqY+d5VYdAUxmsibem7g7oK4f8M0YJsvpK
+	aNK5+fbjaLydXUUaDwaItYaoVchkC24QCvt+aLuIR9M2OtXnSGojr8dYlFJql3H13iJ94l
+	8tlJOthr4urAmjS2M75PaTAgOsJ9J5I=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-159-miCDH-U2McWggtNzM1yz6g-1; Mon, 29 Jun 2026 02:51:51 -0400
-X-MC-Unique: miCDH-U2McWggtNzM1yz6g-1
-X-Mimecast-MFC-AGG-ID: miCDH-U2McWggtNzM1yz6g_1782715910
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45f3d008865so2262827f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Jun 2026 23:51:51 -0700 (PDT)
+ us-mta-331-AXdTEnHcNC-kc84iriRS2A-1; Mon, 29 Jun 2026 03:05:03 -0400
+X-MC-Unique: AXdTEnHcNC-kc84iriRS2A-1
+X-Mimecast-MFC-AGG-ID: AXdTEnHcNC-kc84iriRS2A_1782716702
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-470cb859d96so1158794f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 00:05:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782715910; x=1783320710;
+        d=1e100.net; s=20251104; t=1782716702; x=1783321502;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4VpgbX77g0zAh4zD5ha9J/8JOvu7Er6pEgstXO5xH7M=;
-        b=H29oD2fg0UFNen1+zWgDJA30CJGFMDUUeSw/6SdbLP+PVFk1EdMinfDahnMjVofjCb
-         lWu3pEyGNpve9XVbmYFCfT1grV+vyB+uKDq/8vpgNm+sWb0SU4U19+bpMc2UOxk/0pWv
-         GRqIE4y5Iyaf11h+R6tNS4G3vaBe4xBlT1WxGUs60KmhvghjKdb87Y/mpjUck3XnY1MK
-         yXjn3WT2+OurWqO6bv6kR1ZDruMVwQKnf2B5SRpiJ/9bsh7AJf9aY/vw2b7EmwyTp27L
-         4U6gh9NlNpLjlccdlKjTMApA3CwjcCTus/z4dKi5frUfuuRSM4GQU1J3AvyuVIlpSjjH
-         2ITw==
-X-Forwarded-Encrypted: i=1; AHgh+Rppc1wGRSYuzuYy+fDpMP6FXPqVnPofvJp2ZUAhWFsxy7KVTYLUUx3Z0o5MfY6Eqd5yIH8uMp1m5RLjIDi5h+oJPL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4r6mMC2nxUJXYAxdANPCyN1z4cZOKgpvwfvoo6nImHidCIIJb
-	1Aw2wfS0e+HYotgtQzIf9Qyi6HnwwG/b4bPl1NPTJJb5/5VSInF4WBOcrdAvN9ntjQvvzxzFybM
-	3Jfrjt3SyxSLh8JUJhH6oa+b5RSPNqh6GflL6dO09iM/I5ZaEnXEL5PmqR9HbKba5WTbiaGe5zA
-	==
-X-Gm-Gg: AfdE7cmTf9oCTEjv7lpO4xHumanSA4wIdh9F1R7g/bdby8AwjVJcXam3rdTXFocXy2n
-	xd5nZpFedHlz5G/oN2GE5Gj2wH/eRqZ2OE10zBVwK8ftusDD8An02Q6k/rT5WMKRKORohwMQu22
-	p0/bGa+wJUQeJLVmo/2BIPbJTEJgGWw3mkV+yFm/apQfub+g73AIPAJ/MHCMPQjhMKM1p1VJCRH
-	1g+9NwH/AI3nBhnIs9N5t4R6GQKZaFpdKx4D8OCSHRgk+woz4qDmGsIybvnElnLt3FILz7iqDY/
-	vSKcKoyyRr3oze2yBRF26sTMsuOZykzsAcVK34p62k9bCXD60uY1bMMpSdOCUg8XEcrxjJjmPV4
-	e3fvrp21SpEJpS5fHKL4gbFeXv4L/kbN3VB+vIDODhiZDfixFm1NQJ1fcoMvrPPczY6uQ8ye/po
-	FDbuAp
-X-Received: by 2002:a05:6000:4022:b0:473:1e79:87e6 with SMTP id ffacd0b85a97d-4731e798941mr4899974f8f.3.1782715910493;
-        Sun, 28 Jun 2026 23:51:50 -0700 (PDT)
-X-Received: by 2002:a05:6000:4022:b0:473:1e79:87e6 with SMTP id ffacd0b85a97d-4731e798941mr4899948f8f.3.1782715910079;
-        Sun, 28 Jun 2026 23:51:50 -0700 (PDT)
+        bh=ApRfeIMP2d5U5s8s5CxROo3JDafbwy3URSsiSmHVeIE=;
+        b=X56kTyCQNPsoy2BX0DXD0t36dIFbwncbK0xvZ4Rv4Ot/AakTnj+O5/23DsT11jdQwv
+         mERkeSyT7oeNwWZPb9UG/1Ujq/IwAGlMa4XaYH16Xe/+OuR7AohJSaEeS1E7NiRJr3eP
+         7sVXL2PU5UYoexzr9L95/FaqDcPpLnZ6eKfqHPYd9o6Rw0qeVUggoxeHq9byKdmxLMU+
+         NjORVTBWv1UizcLazSuXY0r/qVYbNs1JmDkO8iipOkezDsiUFs7njZu8BCrxs1iuzkqn
+         S7l/bw9CMB37L8zkrr45tL3N/xaZ3zXAAIfmC9p5AH6tFK/f5lg5vmoE348PNnA/9zci
+         hy8g==
+X-Forwarded-Encrypted: i=1; AHgh+RoV//FmwnPA4I5YhVdD8XfV/MK8vfdXdxAIiAg61Mvck2n978tc60E79dFfzbm7NhX0kp9dX5U3vcl//XQso3LISnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLGhl3527jyYQVh0FxWR2HfW0NQkIuuvXr1At1MZF47Q8J2Tem
+	gyHFX4qIr9wda1WY/OGChjxh+601DWN+mxuWSSth2cOUhB1odKv1uuOGoKbEPOi4SmUami/OlYT
+	wh+YqR6U3e9vWygmblgg/4SH+lWwVe+EZ1qJVHNjzBt/jHIlcn6vqUsTh2TQFUencihr+dolOGH
+	h4UMSfehOX
+X-Gm-Gg: AfdE7clkl6BVDnykJ1W7g9oZwJhdbW4twjA7x8lvEzOhJeauME5/cAPGadMs3PjEik3
+	q6wKVIPC+AJUqRRRet9hv/Em3GxgJVbrqk67D752Kcjy6aAEiDC9Gbu5KZ0C7WTxLJiaD/0NKkQ
+	eM3A0XdiGIjqQFnf5fTSINmk4ce6X/zQIZUUP7dbQ0JzOOu2hYTqJfRvgJqU4eXExBFhCqzF7Aw
+	FzGar743tGK/2T5OroYpMwKl6nrvKOBxohA+g7KnFgVHaTeLioGrl468aVSFXk54iNHlxnDdPMt
+	U+DT+aNOKwctOOjDCOAGtY2fY8PJ7HARUj3a+3hv8DaAV7rb98hFXnEb65IaG9+t5IFMm5GvH+T
+	D5oIw0EMazry8vurZUMcpOOADyJNsjl8pXkyb5CGKDJ6yTzR0q8KVB5G8DqXTZ4SJ8XqKT1xQyD
+	ewTff7
+X-Received: by 2002:a05:6000:2283:b0:473:1ccc:15bf with SMTP id ffacd0b85a97d-4731ccc1722mr5730470f8f.42.1782716702432;
+        Mon, 29 Jun 2026 00:05:02 -0700 (PDT)
+X-Received: by 2002:a05:6000:2283:b0:473:1ccc:15bf with SMTP id ffacd0b85a97d-4731ccc1722mr5730418f8f.42.1782716701970;
+        Mon, 29 Jun 2026 00:05:01 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-473dddcb295sm6521011f8f.35.2026.06.28.23.51.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46f978dc0a9sm23663882f8f.15.2026.06.29.00.04.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2026 23:51:49 -0700 (PDT)
-Message-ID: <01b025c43dda6efe97646162e61002fdf5fff0e3.camel@redhat.com>
-Subject: Re: [PATCH v3 04/17] tools/rv: Add selftests
+        Mon, 29 Jun 2026 00:04:59 -0700 (PDT)
+Message-ID: <ed538f5f3a0976ea8a0be66b20a446442f7260c1.camel@redhat.com>
+Subject: Re: [PATCH v3 14/17] verification/rvgen: Add selftests for rvgen
+ kunit
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Wen Yang <wen.yang@linux.dev>, linux-trace-kernel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
  Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
  <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Mon, 29 Jun 2026 08:51:46 +0200
-In-Reply-To: <0c230c01-77c8-4c9e-9f49-ecb9555402cf@linux.dev>
+Date: Mon, 29 Jun 2026 09:04:57 +0200
+In-Reply-To: <53f2d13c-cc1d-48fd-95f0-2c1ff1edfc88@linux.dev>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
-	 <20260625121440.116317-5-gmonaco@redhat.com>
-	 <0c230c01-77c8-4c9e-9f49-ecb9555402cf@linux.dev>
+	 <20260625121440.116317-15-gmonaco@redhat.com>
+	 <53f2d13c-cc1d-48fd-95f0-2c1ff1edfc88@linux.dev>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -96,41 +97,63 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NX1Fqx3rE0Pl2k6rYyvpVMun2LpS6Qn82QnKOxP4JoE_1782715910
+X-Mimecast-MFC-PROC-ID: cUkDas34fZwvgJ9F1Ngbn2BP2eSP0FMARKVbS8GFUk0_1782716702
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Please cut down the context a bit more next time, it makes it much
-easier to find your review.
-
-On Mon, 2026-06-29 at 01:10 +0800, Wen Yang wrote:
+On Mon, 2026-06-29 at 01:06 +0800, Wen Yang wrote:
 > On 6/25/26 20:14, Gabriele Monaco wrote:
-> > +=09eval "$TIMEOUT" "$command" &> check_output.$$ &
-> > +=09bgpid=3D$!
-> > +=09pid=3D$(pgrep -f "${command%%[|;&>]*}" | tail -n1)
+> > +static void handle_example_event(void *data, /* XXX: fill header */)
+> > +{
+> > +=09ltl_atom_update(task, LTL_EVENT_A, true/false);
+> > +}
+> > +
+> > +static int enable_test_ltl_kunit(void)
+> > +{
+> > +=09int retval;
+> > +
+> > +=09retval =3D ltl_monitor_init();
+> > +=09if (retval)
+> > +=09=09return retval;
+> > +
+> > +=09rv_attach_trace_probe("test_ltl_kunit", /* XXX: tracepoint */,
+> > handle_example_event);
+> > +
+> > +=09return 0;
+> > +}
+> > +
+> > +static void disable_test_ltl_kunit(void)
+> > +{
+> > +=09rv_detach_trace_probe("test_ltl_kunit", /* XXX: tracepoint */,
+> > handle_sample_event);
+> > +
 >=20
-> The pgrep runs may immediately after the background fork, before the=20
-> child process has had time to exec.
+> one typo:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 handle_sample_event should be =
+handle_example_event.
 
-Yeah I'm aware of this but kind of ignored it for now and never seen it
-making troubles in practice..
+Keep in mind that those files are not ready to build, users need to
+touch them anyway after generation from rvgen. Nevertheless, this has
+been inconsistent for a while and I should fix it.
 
-I could add some delay waiting for the task like:
+> > +=09ltl_monitor_destroy();
+> > +}
+...
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_AUTHOR(/* TODO */);
+>=20
+> Please use a valid string here.
 
-  while [ -z "$pid" ]; do
-    sleep .5
-    pid=3D$(pgrep -f "${command%%[|;&>]*}" | tail -n1)
-  done
+Likewise, this is not supposed to build, we are just validating what
+rvgen produces and that's the expected output, the user will need to
+fill it with an appropriate string.
 
-With probably a maximum of some N retrials in case the task never
-started or we messed up the pattern.
-That may still race in case the command exits before we pgrep it, but in
-practice that shouldn't be a problem in our tests.
-
-Any better idea? We cannot really rely on the shell's $! because command
-is using a combination of eval+timer and we'd get the wrong pid.
+LTL uses a different approach compared to DA/HA in this template, I'm not
+sure it's worth aligning the two..
 
 Thanks,
 Gabriele
+
+> > +MODULE_DESCRIPTION("test_ltl_kunit: auto-generated");
 
