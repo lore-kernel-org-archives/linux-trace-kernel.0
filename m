@@ -1,284 +1,304 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94A53F7A9E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 09:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B24378824;
+	Mon, 29 Jun 2026 09:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782724072; cv=none; b=rfyMMU3kyjPedIlpiE2sbtEA1Y3FXunuMbgn1W0++r2F04ODUhaa6SE5vEwdSDjDp0e40JXQeu6euB4B92MOsNzl1KKTQcUW8tjQ6oCYRjjCSdK4tzKiQ3qw3qVkErPufSzi4VxOZfX23TEfFvs11b1XBfjrqbOK95ARGR5qO9I=
+	t=1782725393; cv=none; b=Q9K5WWFObcG2v39ulZslxLZxkJpgYEU0o9PVv+DZRCDiIzD6qcRJVb6Kvg3JJ3WJCy5yh/AS01EDbILL04/5JL5/TIXrYZbDR8kM3zNpJ3lqs+EvgUxkhf5q3ZLLpSB4ak82QEZ3nyfnWDE3V2nvjAr5chox9J0q+dKNrwyA1ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782724072; c=relaxed/simple;
-	bh=QkpYU2x6d5CTRAQnAvLOpdP6PC0148ML6LlO38w3JO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oyV/RbRO6ydNsTgyDo4za52LKw3tdLEX0IBYpngeZ9jlswNrvv6PR0LNwykPt3rX602DndPGHVcFEXaiCaweeJ6cu9fbFOXxE9YnK+av5Vo7N2NQ+JaR6xTyQbWXH0PV7GvN6lD565ufkOvhXrHnwdvIDK3Z9YpjhMsj7Ze4wH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9kdiYzn; arc=none smtp.client-ip=209.85.215.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782725393; c=relaxed/simple;
+	bh=jSMKyhpwOoBN2kN4mXySQg7+N1xIK06zgQcIqssIhNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C3wW7zdWHMULkuSSrvCt9ETJBtZUNCn/8oxlFUaoLV4ps1H5UE2EFX7gxQxwCnLW559Uf6Lw3OIk1WI5qXmuYTuQkMJ2h1PPJspSr6HCESSY9GsMN1YAx4/2qlF/lA+zwhl0DeC6FH1WDU8KSqWUJKaD0LYq/+W+Ah3BdvyBiY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtA7MjXR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9kdiYzn"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-c8584e80d59so1231376a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 02:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782724070; x=1783328870; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=83HbAI6qOdVU1QL6jhPAqEWUlv3tiZPtQ6kqfm9JAYo=;
-        b=h9kdiYzn+0/nrMVd+ug2h6uMDqjsLs3SyeIHDgkkKo+zOA1ZfVP4wdQ2wwAefiaU6E
-         999oyL+//qu1+dpJAcLcKJIe/tiQo047yG14ZlGYHBFEji+03FVOfP+r9Ht2g9u+4mBJ
-         +kAUKEBOqT+cyqovOy+zUM8XN3lpRsG+jYLjbJ1MjPBcc4/7CaUjjlnlNyIcBVacYbwk
-         n/O6gtgAGcnvOthR6k2wMFDtIbRrJudWukttI44jS7DPcW+Zwp+H9u+obEoQNxpHfIwe
-         PlUZOeGVF06qRSLuZ12ezy1HAF2yiK61iuVxacHVPkTsfBuEwnuq0eV1VEhCV3r9CjpB
-         7VUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782724070; x=1783328870;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=83HbAI6qOdVU1QL6jhPAqEWUlv3tiZPtQ6kqfm9JAYo=;
-        b=RZl/JF1bll8A5ej5aTiZtKGzEabyWdjcWuZHxtf2mMBvq71/mP6TqkvMsnFKZIxPan
-         q3RAxLCeMy+EyXvETdwmZH8HbTPqx2PipT0NLam8cVlTDDcA0ANbV4sa/L+me7wG5cpu
-         Ij2d8HE8j6y47CnC9NAv7WuSh0VUR3KlZVzAmVKZU7ydzTWkTXnuuRpYLLabeIIdk9yh
-         9mFyRGl/iaoBKxoG2AwehpHHgjPwkinWPgrn5SEAI151GurD5VJxfLJ9x3MY7RpU7EBU
-         TtyljRo2kAIIijbU4HVKcMFO9sbhYhICN4vazT+PErIB6/DVTQ0VYswYUubGDjv4y9vf
-         yWog==
-X-Forwarded-Encrypted: i=1; AFNElJ+FE8kVWaOej+Z3Tf6Wpcu4Rnd34IOYQno1NjcAvUkBorZleytRMMmxPwJ6RCQndetdosLIrqtAaEhEwKHcapsP0Es=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzno+DbtwiCHkeRw7+rAmEVLG6v6I7nz8Ok6DzUuxZSaVpRCJdG
-	G2Dhhj3g3IUAJSHSAUyxpkwIQGrxsr61zvW23BURMSN9JvQjMWBlBynt
-X-Gm-Gg: AfdE7cmx4oX4p+PQz3NTQyxoFLD7MfBe2Kvv8YtOUahcCiV9SnZ5JaOMKqS+koJcMeb
-	5D5pvzMMcuroPGLa7izXEupYFcFcVeWBrmije0SRHaPicHgIjxBy5JXtgfFlkM32Zid8+bD4ay/
-	lYv35hUbP3uAGE313T/DqJeEYFyq9YeISi9owjKfN7PZPPXMmhaoO2t03u8jkFv6dMm8AT7Rzgm
-	RQK6DB9AeXQHuRWzp776NwNh1AL0ah4wypZVGVt/yg+G7FExmprvXYvUzJ0oYTm74/VG2r/QSUJ
-	UR4gZtY4sQLD8XMDtCodHY7nb7p8rNZMeyzJ1ebfgVoAD5LhE9/8j8xZXKs+MDGYG0VvViw/NTa
-	O+ocvnn8LLJrip35LIci15woMcwnounmydAwFX+aH4YNO6eY2NiB6s1y7fQJS1qy1+D/rEWZNlk
-	ombWM1f6VLAf+nskxbUuyO
-X-Received: by 2002:a05:6a20:3d21:b0:3b4:85db:1be8 with SMTP id adf61e73a8af0-3bd4af22a37mr16709071637.36.1782724069917;
-        Mon, 29 Jun 2026 02:07:49 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c92bc1df037sm7189768a12.17.2026.06.29.02.07.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2026 02:07:48 -0700 (PDT)
-Message-ID: <05d7369e-341c-49f4-ae13-df3d0ad930d7@gmail.com>
-Date: Mon, 29 Jun 2026 17:07:36 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtA7MjXR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047F41F00A3A;
+	Mon, 29 Jun 2026 09:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782725392;
+	bh=Npk92WP4+iddnwXb26xetSuG1nU9c64h3XFMA6XCVrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VtA7MjXRZVQaaJ9Ih/X8IeykXC9h1JN3ed+nWlG+FOYdWGYUVvUlIiRfl8oubtyCi
+	 gOmZrcpZ7qUUKF3WHd8F3vWIfsakqRyVS0nU1BabmH05MWinufmuagmMR+lVYMj/Sh
+	 9ISoLFdQ38FmmGnyJP1nwUcRyG0El5hYGkYeIa6RyCDutA2wHCodwkG3HhA7gvREzN
+	 MsT+C+WV88u/DYSwuWI7DQ+2llBIY3R3Qte+cAsQs4hVNlZSfO9axLXh/C6eHPvdII
+	 qSVdM5bqj/+BDniFj4HC3c2DUW0+1pD55OJ1rVvyJoYtl/NFw0Nax2r+VvCkGMmUgh
+	 O6dPgtCAjuZSg==
+Date: Mon, 29 Jun 2026 10:29:41 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, linux-mm@kvack.org, 
+	david@kernel.org, willy@infradead.org, surenb@google.com, hannes@cmpxchg.org, 
+	ziy@nvidia.com, usama.arif@linux.dev, fvdl@google.com, 
+	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, Chris Mason <clm@fb.com>, 
+	David Sterba <dsterba@suse.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Oscar Salvador <osalvador@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, linux-doc@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 00/40] mm: reliable 1GB page allocation
+Message-ID: <akIjA_dqh4OHAYo4@lucifer>
+References: <20260520150018.2491267-1-riel@surriel.com>
+ <aj9yrlB0TrlYCLlf@lucifer>
+ <528e3a5fbc27c9dc7a098121c32b7679b4c9962a.camel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] mm/compaction: skip isolate mlocked folios when
- compact_unevictable_allowed=0
-To: Alexander Krabler <Alexander.Krabler@kuka.com>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-rt-devel@lists.linux.dev" <linux-rt-devel@lists.linux.dev>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "surenb@google.com" <surenb@google.com>, "mhocko@suse.com"
- <mhocko@suse.com>, "jackmanb@google.com" <jackmanb@google.com>,
- "hannes@cmpxchg.org" <hannes@cmpxchg.org>, "ziy@nvidia.com"
- <ziy@nvidia.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
- "david@kernel.org" <david@kernel.org>, "ljs@kernel.org" <ljs@kernel.org>,
- "liam@infradead.org" <liam@infradead.org>, "rppt@kernel.org"
- <rppt@kernel.org>, "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
- "clrkwllms@kernel.org" <clrkwllms@kernel.org>,
- Hugh Dickins <hughd@google.com>
-References: <20260604023812.3700316-1-chenwandun1@gmail.com>
- <20260604023812.3700316-2-chenwandun1@gmail.com>
- <969cb14b-5b8b-48e6-add6-4dd13101dd89@kernel.org>
- <040788a9-e0d5-478e-bb48-3d22b8b41020@gmail.com>
- <c8793c0f-7156-4cb7-9e6e-7909397e2fff@kernel.org>
- <ca1115c0-1509-453a-8235-08e381a3da6f@gmail.com>
- <PR3PR01MB6666C11E08516555C153D4FD82EB2@PR3PR01MB6666.eurprd01.prod.exchangelabs.com>
- <a96b0b24-c405-43c4-96ef-605bacd17cad@gmail.com>
- <PR3PR01MB6666EC8D53E75F742B37270282EB2@PR3PR01MB6666.eurprd01.prod.exchangelabs.com>
-Content-Language: en-US
-From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <PR3PR01MB6666EC8D53E75F742B37270282EB2@PR3PR01MB6666.eurprd01.prod.exchangelabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <528e3a5fbc27c9dc7a098121c32b7679b4c9962a.camel@surriel.com>
 
+TL;DR - please don't send unfiltered LLM code to list _at all_. If you want
+to share it, link to a repo.
 
+On Sat, Jun 27, 2026 at 09:36:51AM -0400, Rik van Riel wrote:
+> That is the one reason I sent out RFC code before it
+> is ready. I am looking for feedback on the concepts
+> in this series.
+...
+> Once I know what I need to do, coming up with a
+> cleaner implementation is very doable.
+...
+> The mess in the RFC is the result of trying something
+> that seemed right, watching it fail in some subtle
+> way, and trying to fix it up.
+...
+> > But the execution has to be _completely_ rethought.
+>
+> There's no argument there.
+...
+> > Another issue here is maintainer time - even this _extremely_ light-
+> > touch
+> > review has taken me a few hours (of my weekend :). To review it in
+> > detail
+> > would take probably DAYS of dedicated work.
+>
+> I suspect there is a mismatch in expectations here.
+>
+> I already knew this code has to be totally redone.
 
-On 6/26/26 21:42, Alexander Krabler wrote:
-> On 6/26/26 11:38, Wandun wrote:
->> On 6/26/26 16:45, Alexander Krabler wrote:
->>> However, we were not able to reproduce the actual race
->>> (mlockall() process waiting on a migration PTE),
->>> not in the past, not now. Might be hard to trigger that race.
->>
->> Not hard to trigger that case, I added a debug message, such as below,
->> lots of messages occur in a few second.
->>
->> diff --cc mm/memory.c
->> index ff338c2abe92,ff338c2abe92..6552b3b14f78
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@@ -4768,6 -4768,6 +4768,8 @@@ vm_fault_t do_swap_page(struct vm_faul
->>                 if (softleaf_is_migration(entry)) {
->>                         migration_entry_wait(vma->vm_mm, vmf->pmd,
->>                                              vmf->address);
->> +                       if (!strcmp(current->comm, "repro"))
->> +                               pr_err("============== hit ================\n");
->>                 } else if (softleaf_is_device_exclusive(entry)) {
->>                         vmf->page = softleaf_to_page(entry);
->>                         ret = remove_device_exclusive_entry(vmf);
-> 
-> I have a kprobe on migration_entry_wait set and logged into a ftrace buffer
-> (including kernel stacktrace).
-> Yes, this function is hit, but only inside the mmap-syscall, which is okay,
-> memory allocation is not realtime-safe.
-> 
->            repro-2090    [002] d....   811.129549: frt_migration_entry_wait: (migration_entry_wait+0x0/0x100)
->            repro-2090    [002] d....   811.129553: <stack trace>
->  => migration_entry_wait
->  => __handle_mm_fault
->  => handle_mm_fault
->  => __get_user_pages
->  => populate_vma_page_range
->  => __mm_populate
->  => vm_mmap_pgoff
->  => ksys_mmap_pgoff
->  => __arm64_sys_mmap
->  => el0_svc_common.constprop.0
->  => do_el0_svc
->  => el0_svc
->  => el0t_64_sync_handler
->  => el0t_64_sync
-> 
-> The original race was an instruction abort interrupt out of nothing due
-> to the migration PTE set by kcompactd.
-> And these kind of races I see quite often on non mlockall()-processes,
-> but can't reproduce on memory locked processes.
-> 
-> Example:
->           podman-832     [000] d....   812.447820: frt_migration_entry_wait: (migration_entry_wait+0x0/0x100)
->           podman-832     [000] d....   812.447823: <stack trace>
->  => migration_entry_wait
->  => __handle_mm_fault
->  => handle_mm_fault
->  => do_page_fault
->  => do_translation_fault
->  => do_mem_abort
->  => el0_da
->  => el0t_64_sync_handler
->  => el0t_64_sync
+I'm glad we are in agreement on this :)
 
-Hi, Alexander
+But in general I feel you have sent this and at least one other series like this
+without being as clear as you should have been.
 
-From the perspective of the root cause, there is no fundamental difference
-between these two call stacks. I modified the reproduction program, and it
-can still reproduce the situation of the second call stack
-(although it doesn't occur as frequently). The complete reproduction program
-is as follows:
+I hate to belabour the point but just to be clear:
 
+* You label one patch [DO-NOT-MERGE], but none of the others (implying they
+  are candidates for being merged) [0] and the cover letter has TODOs,
+  including trivia like naming, but nothing about the code.
 
-#define _GNU_SOURCE
-#include <fcntl.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/sysinfo.h>
-#include <unistd.h>
+* You sent a non-RFC series with identical code quality issues [1]
+  recently.
 
-#define PAGE_SIZE       4096
-#define NR_PAGES        10000
+* Until I pointed it out, you were responding to other review here as if
+  the series was genuinely was intended for (eventual) merge:
 
-static void *worker_fn(void *arg)
-{
-	int fd = (long)arg;
-	size_t len = NR_PAGES * PAGE_SIZE;
+  - "This is a userspace-visible removal. Writes to
+     /proc/sys/vm/watermark_boost_factor will now return -ENOENT instead of
+     being accepted, breaking userspace." [2]
 
-	while (1) {
-		if (ftruncate(fd, 0) < 0) {}
-		if (ftruncate(fd, len) < 0) {}
+     <-: "I'll just drop this patch for now." [3]
 
-		char *p = mmap(NULL, len, PROT_READ | PROT_WRITE,
-			       MAP_SHARED, fd, 0);
-		if (p == MAP_FAILED)
-			continue;
+  - "I left a small code nit inline, but whether you take that suggestion
+     or leave it, you can add Reviewed-by: ..." [4]
 
-		mlockall(MCL_ONFAULT |  MCL_FUTURE);
+    <-: "I sent it with this series mostly because it's needed to make the
+    series work, and to provide context on why it's needed. I'm happy to
+    resend it with a GFP mask passed in by each caller. That would look
+    better, indeed!" [5]
 
-		for (int i = 0; i < NR_PAGES; i++) {
-			for (int j = 0; j < PAGE_SIZE; j++) {
-				p[i * PAGE_SIZE + j] = 1;
-			}
-		}
+So to be concrete, if you send really rough code, Use [pre-RFC] or [DO NOT
+MERGE] (on the series as a whole) to make that clear and say so in the
+cover letter VERY VERY clearly.
 
-		usleep(200);
-		munmap(p, len);
-	}
-	return NULL;
-}
+Or, you can put it in a repo somewhere and link it in an email discussing
+the concepts (like I did with scalable CoW for instance).
 
-static void *compact_fn(void *arg)
-{
-	(void)arg;
-	int fd = open("/proc/sys/vm/compact_memory", O_WRONLY);
-	if (fd < 0)
-		return NULL;
+Also if people respond to the series as if it isn't pre-RFC, I'd suggest in
+your replies saying something like 'I intend to completely rework all this
+anyway' or something like that! :)
 
-	while (1) {
-		if (write(fd, "1", 1) < 0) {}
-		usleep(5000);
-	}
-}
+> How do people feel about splitting up the free lists,
+> so each gigabyte (well, PUD sized) chunk of memory
+> has its own free lists?
+>
+> How can we balance the desire for higher-order kernel
+> allocations, against the desire to preserve gigabyte
+> sized chunks of memory that can be used for user space?
+...
+> That's another big question. How do we balance the
+> desire to keep compaction overhead low with the desire
+> to do higher order allocations almost everywhere?
+>
+> >
+...
+>
+> I am just hoping to figure out what I should be
+> doing on a conceptual level, before figuring out
+> how to do it cleanly.
+>
+...
+>
+> I was looking for feedback on the basic concepts
+> and design in the patch series, but failed to
+> clearly communicate that.
+>
+> You provided some detailed feedback on the code,
+> but as of yet nobody has really provided any
+> opinions on things like whether it is desirable
+> at all to have the free lists per gigablock,
+> or whether we need to come up with some totally
+> different approach.
+>
+> How do we better communicate that kind of thing
+> in the future?
+>
+> Is that something to spell out more clearly in
+> the cover letter?
+>
+> Is that kind of feedback something developers
+> could even reasonably ask for? (if not, how do
+> we figure out what maintainers want?)
 
-int main(void)
-{
-	int nproc = sysconf(_SC_NPROCESSORS_ONLN);
-	if (nproc < 1)
-		nproc = 1;
+As above, firstly make it clear that the code you are sending for review is
+not to be reviewed so people don't waste highly contended maintainer time
+on that! :)
 
-	int *fds = calloc((size_t)nproc, sizeof(int));
-	if (!fds)
-		return 1;
+Also, you didn't respond to my point regarding cc'ing the right people -
+but that's clearly something you need to get right if you want this kind of
+feedback to start with.
 
-	size_t len = NR_PAGES * PAGE_SIZE;
-	for (int i = 0; i < nproc; i++) {
-		char path[64];
-		snprintf(path, sizeof(path), "./repro_%d.dat", i);
-		unlink(path);
-		fds[i] = open(path, O_RDWR | O_CREAT, 0600);
-		if (fds[i] < 0)
-			return 1;
-		if (ftruncate(fds[i], len) < 0)
-			return 1;
-	}
+For instance, you didn't cc- the page allocator maintainer (Vlastimil) on a
+series that is fundamentally changing the page allocator. That's not going
+to help with feedback.
 
-	printf("repro: %d workers, %d pages, Ctrl-C to stop\n",
-	       nproc, NR_PAGES);
+In general, this area of the page allocator and compaction isn't my
+specialism in the kernel so I can't give you the in-depth feedback you need
+on that.
 
-	pthread_t compact;
-	pthread_create(&compact, NULL, compact_fn, NULL);
+But I do have thoughts in general as to how to achieve what you want here:
 
-	pthread_t *threads = calloc((size_t)nproc, sizeof(pthread_t));
-	for (int i = 0; i < nproc; i++)
-		pthread_create(&threads[i], NULL, worker_fn, (void *)(long)fds[i]);
+Firstly - you should try to summarise what you're doing here and what
+you're changing alongside the trade-offs as clearly as you can in the cover
+letter.
 
-	pthread_join(compact, NULL);
-	return 0;
-}
+Then highlight what it is you need feedback on, broken out into clear
+questions or points that make it easy for people to respond to.
 
+And _you have already done this_ in your reply here:
 
+* "How do people feel about splitting up the free lists, so each gigabyte
+   (well, PUD sized) chunk of memory has its own free lists?"
 
+* "How can we balance the desire for higher-order kernel allocations,
+  against the desire to preserve gigabyte sized chunks of memory that can
+  be used for user space?"
 
-> 
-> Thanks,
-> Alexander
-> 
+* "How do we balance the desire to keep compaction overhead low with the
+   desire to do higher order allocations almost everywhere?"
+
+I think a really good way of doing this would be to start out with
+something like:
+
+	Right now compaction often fails to achieve what we need, with
+	fragmentation occurring anyway and (for instance) THP stalling on
+	the availability of higher order folios.
+
+etc. etc.
+
+Summarising _the problem_.
+
+Then a section about your proposed solution, e.g.:
+
+	I propose a means by which we proactively achieve gigabyte-sized
+	pageblocks with logic which maintains these as physically
+	contiguous under both ordinary and contended workloads
+
+Then list out the "secret sauce" of your approach, e.g.:
+
+	This works by arranging memory such that unmovable allocations are
+	grouped at <blah blah blah> etc.
+
+Then raise your questions e.g.:
+
+	I'd like to ask the community - how do people feel about splitting
+	up the free lists, so each gigabyte (well, PUD sized) chunk of
+	memory has its own free lists? <etc. etc.>
+
+Then make it clear whether this is an RFC that is ready for primetime or
+not:
+
+	This series is simply intended as a proof-of-concept - PLEASE DO
+	NOT REVIEW THE CODE per-se, but rather comment on the concepts!
+
+(And obviously as above, if that _is_ what you intend, underline it with
+[DO NOT MERGE] or [pre-RFC] or something like that).
+
+I'd also very strongly suggest (as I did in my original reply) breaking out
+parts that can be broken out as prerequisite series.
+
+If you're doing something good or useful _anyway_ then just send that
+separately first, and have later work rely on the earlier work.
+
+There's no rush, this is huge and will take time.
+
+A final KEY point:
+
+NEVER submit unfiltered code generated by an LLMs to the list in _any_
+form. If you want people to access code like that to test or something,
+then put it in a remote repo and link to it.
+
+The code is SO overly complicated and SO messy that it's really difficult
+for people to understand what's actually going on.
+
+At the heart of what you need here is CLARITY.
+
+You need to CLEARLY communicate what it is you're doing so busy maintainers
+can examine it. That's the _only_ way you're going to get something like
+this merged.
+
+The LLM-generated code is so awful that ain't nobody got the time to try to
+understand what it's doing.
+
+The workload for this really has to be on submitters, not maintainers.
+
+And what you've done, even if not intended, is workslopping, and that's
+really not acceptable. Quoting the kernel process on tool-generated content
+[6]:
+
+"If tools permit you to generate a contribution automatically, expect
+additional scrutiny in proportion to how much of it was generated.
+
+As with the output of any tooling, the result may be incorrect or
+inappropriate. You are expected to understand and to be able to defend
+everything you submit. If you are unable to do so, then do not submit the
+resulting changes.
+
+If you do so anyway, maintainers are entitled to reject your series without
+detailed review."
+
+As per this and my previous reply, AI slop doesn't scale, even as an RFC -
+I won't have time to reply like this in future, and we will just have to
+reject your series out of hand, which helps nobody.
+
+>
+>
 > --
-> 
-> KUKA Deutschland GmbH   Board of Directors: Michael Jürgens (Chairman), Johan Naten, Hui Zhang   Registered Office: Augsburg HRB 14914
-> 
-> This e-mail may contain confidential and/or privileged information. If you are not the intended recipient (or have received this e-mail in error) please notify the sender immediately and destroy this e-mail. Any unauthorized copying, disclosure or distribution of contents of this e-mail is strictly forbidden.
-> 
-> Please consider the environment before printing this e-mail.
+> All Rights Reversed.
 
+Thanks, Lorenzo
+
+[0]:https://lore.kernel.org/all/20260520150018.2491267-41-riel@surriel.com/
+[1]:https://lore.kernel.org/linux-mm/20260616190300.1509639-1-riel@surriel.com/
+[2]:https://lore.kernel.org/all/20260526140204.1390573-1-usama.arif@linux.dev/
+[3]:https://lore.kernel.org/all/2ecf71858845e7d14c718b1a6845389cb78b986e.camel@surriel.com/
+[4]:https://lore.kernel.org/all/20260520174749.GA1458531@zen.localdomain/
+[5]:https://lore.kernel.org/all/daa29c92f055d028a5b3ec0e42cfb1ee1496a593.camel@surriel.com/
+[6]:https://docs.kernel.org/process/generated-content.html
