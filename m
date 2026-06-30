@@ -1,89 +1,136 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E5532FA2E;
-	Tue, 30 Jun 2026 22:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CE52D2496;
+	Tue, 30 Jun 2026 23:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782860352; cv=none; b=ASdNL7OjFFTdUtdXNZe74ZOVolKSAK0kz+UFKaZcBSbPSahAr3tjikhbjJFlcI2AfDh9rvzZoRe3WnlnmAtYSDY8AJut64Z0DyLlcEhTlNc7GIh1THA2lPZj/EkHF4m4kWfWXqMZ6qtsDJamT7IVAV2Gq2asMurbvylTZ+CIIIo=
+	t=1782860779; cv=none; b=kCj4dvCoMh+lg0t1xLQCnJQFsMmP/l4EONaWqy6yOWEMypKdRnEQGiGIjHOIPGe5WdtihIwGnanEBufYwp6h3vg6jtcFZ9faOAn7BWn8lz3NqM6fxhOBVRsRbMhSMuAcEheFZhDBu9vSF+nLzIQizphS0SsWUSzkll2l6m+KCs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782860352; c=relaxed/simple;
-	bh=7Wguo1ZUvqbxvXsicL8g03KZwVIjlp+iRC2iuUcRVlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m3p9019VQsw2domdNOkVVD0fL2ZRdxoqb4QiCavR9Qnk9VEW4gQqIPOkwVoO1txlRFKE4h5RWJO8MH+x537JHgKyD6PhhhOUVoKtGB65IdkYaLcvgsWCmKCCvVT2U531HjADqKc2yzIFCUE49pR8E03wGULAL+WWy+s9PbuOlTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 1064AC077A;
-	Tue, 30 Jun 2026 22:59:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 664BF30;
-	Tue, 30 Jun 2026 22:58:57 +0000 (UTC)
-Date: Tue, 30 Jun 2026 18:58:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: peter.wang@mediatek.com, linux-scsi@vger.kernel.org,
- martin.petersen@oracle.com, avri.altman@wdc.com, alim.akhtar@samsung.com,
- jejb@linux.ibm.com, sutoshd@codeaurora.org, wsd_upstream@mediatek.com,
- linux-mediatek@lists.infradead.org, chun-hung.wu@mediatek.com,
- alice.chao@mediatek.com, cc.chou@mediatek.com, chaotian.jing@mediatek.com,
- jiajie.hao@mediatek.com, yi-fan.peng@mediatek.com, qilin.tan@mediatek.com,
- lin.gui@mediatek.com, tun-yu.yu@mediatek.com, eddie.huang@mediatek.com,
- naomi.chu@mediatek.com, ed.tsai@mediatek.com, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ufs: core: add hba parameter to trace events
-Message-ID: <20260630185857.54c55d97@gandalf.local.home>
-In-Reply-To: <16f26ea9-69d6-4f2f-9adc-c576c288a2f5@acm.org>
-References: <20250213113707.955255-1-peter.wang@mediatek.com>
-	<16f26ea9-69d6-4f2f-9adc-c576c288a2f5@acm.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1782860779; c=relaxed/simple;
+	bh=L0YdNEn01usZ5HFVBmt/SJpuNkxX/zV7tbw6fpz1UlQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BW1xsXVMWOfnr8VXO/V9gO3vJamx/HxwKOGZWuZNV2YUaONuzDdS7XBM1vIaMCLesmG2kCkTVO5FnYWfwSRHjWFovnVBAcgOI9YmlrkKN+YsGp3e2lZ5J50zZ4in/ci0o5ANMJKNozO+dOh2ufN28po8BA/HKK9lpJvhxU9M/yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kc/ghFFU; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kc/ghFFU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD6881F000E9;
+	Tue, 30 Jun 2026 23:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782860778;
+	bh=n1UCvvhGUs9c34ulNz3yl2igsM3qXoph0EPgLkRotzU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Kc/ghFFUqWWQhABkIJ3FNrCqd/8xhHOorvN7bevAdNneaLBNBLr0JTVmxDI5ZNoIC
+	 exbw5RQKXLCsnu1Qy96lWYje8VuGlHmuBb/kHZsJVsUCiIVkhHgNgaOl5YsqPuMgUp
+	 G/rQnBtlhczB6zdFhZZh5WtkV/cn/sdxy4NZn1MAzbcKXDjPk+uuLqvoci6CqRVl4Q
+	 x5yhQR49DGTzHxIKeZYqdwHOO+ZM5EjbtpeNQ8Sk2fs1tzoHbd/aaDx3774lroD/u3
+	 uLpsCA6UH1xTdruFE06PN2UWU9zYxJN11mVtPcRNMxbVCCBtK+fAgcm1K2gb1VP5Ep
+	 ohI6Kk4/tBJwg==
+Date: Wed, 1 Jul 2026 08:06:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Bradley Morgan <include@grrlz.net>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] lib/bootconfig: fix undefined behavior involving
+ NULL pointer arithmetic
+Message-Id: <20260701080614.96639cb0bfb97eb70e1d6177@kernel.org>
+In-Reply-To: <20260630174746.14795-1-include@grrlz.net>
+References: <20260630174746.14795-1-include@grrlz.net>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 664BF30
-X-Stat-Signature: uwehtoqqednqhf3zyo5jct5fcbfkhzr8
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/neeUCV/R9KHhr+SS3nL47b2vY2VzQvkE=
-X-HE-Tag: 1782860337-648722
-X-HE-Meta: U2FsdGVkX19nYBCqwu9Ixhtn09ay8RBzQ10D02bQ6sj9JfNDHi+XUt/BVZ4gGAaXgyyFLsjh8lbrwf4x+RJUcsbgjLoQE+pFkRBoKhPWJonoTwg32+oRA1Y1xvdg4Em/A6mEJW5v6irtqUi3xX04bR0xjgdImMU3GChz6lRzZlbQjRZgzPmzbJRVi1MhHvAAn0d+3nM7OKrXU0ggWrQ4X3YT7vqhxODo/OFhNtsUStSPx97/RBhxC340pR2yjuNo0ObTldNO+0gp2B05+BunahPio2cMJcm0ZCt9ASPRpbaPnS2jeDiNFb8ZTLXet79cxCGTvH5+zIBllavd2ZRAM1TtlB9R5pfMugudoQQQ8tik9aTC7JvqKQ==
 
-On Thu, 13 Feb 2025 09:19:42 -0800
-Bart Van Assche <bvanassche@acm.org> wrote:
+On Tue, 30 Jun 2026 17:47:46 +0000
+Bradley Morgan <include@grrlz.net> wrote:
 
-> On 2/13/25 3:35 AM, peter.wang@mediatek.com wrote:
-> > diff --git a/drivers/ufs/core/ufs_trace.h b/drivers/ufs/core/ufs_trace.h
-> > index 84deca2b841d..2f79982846b6 100644
-> > --- a/drivers/ufs/core/ufs_trace.h
-> > +++ b/drivers/ufs/core/ufs_trace.h
-> > @@ -83,16 +83,18 @@ UFS_CMD_TRACE_TSF_TYPES
-> >   
-> >   TRACE_EVENT(ufshcd_clk_gating,
-> >   
-> > -	TP_PROTO(const char *dev_name, int state),
-> > +	TP_PROTO(struct ufs_hba *hba, int state),
-> >   
-> > -	TP_ARGS(dev_name, state),
-> > +	TP_ARGS(hba, state),
-> >   
-> >   	TP_STRUCT__entry(
-> > -		__string(dev_name, dev_name)
-> > +		__field(struct ufs_hba *, hba)
-> > +		__string(dev_name, dev_name(hba->dev))
-> >   		__field(int, state)
-> >   	),  
+> When xbc_snprint_cmdline() is called during the size-probing phase
+> (with buf = NULL and size = 0), the function computes the end pointer
+> as 'buf + size' (NULL + 0) and repeatedly advances 'buf' via 'buf += ret'.
 > 
-> Please reduce the size of the tracing entries by removing dev_name from 
-> TP_STRUCT__entry() and by replacing 'dev_name' with 'dev_name(hba->dev)'
-> in the TP_printk() calls.
+> Under the C standard, performing pointer arithmetic on a NULL pointer is
+> undefined behavior. While harmless inside the kernel, this code is also
+> compiled into the userspace host tool 'tools/bootconfig', where host
+> compilers with UBSan or FORTIFY_SOURCE enabled abort the build when they
+> detect NULL pointer arithmetic.
+> 
+> Fix this by guarding the pointer arithmetic so 'buf' is only advanced when
+> non-NULL, and track the running written length in a separate 'len' counter
+> for the return value (which cannot be recovered from pointer math when
+> 'buf' is NULL). The rest() helper and snprintf call sites are unchanged.
+> 
+> Fixes: 51887d03aca1 ("bootconfig: init: Allow admin to use bootconfig for kernel command line")
+> Cc: stable@vger.kernel.org
+> Assisted-by: GLM:glm-5.2
+> Signed-off-by: Bradley Morgan <include@grrlz.net>
 
-For future references, please do not recommend moving dereferences into the
-TP_printk() callers. Those happen when the event is read by the user and
-the hba pointer may no longer exist.
+Oops, Breno already did it.
 
--- Steve
+https://lore.kernel.org/all/20260626-bootconfig_using_tools-v7-1-24ab72139c29@debian.org/
+
+Let me drop this patch since it makes a conflict with Breno patch.
+
+Thanks, 
+
+> ---
+>  lib/bootconfig.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> Changes since v1:
+> - Got the big guns out! :) (see Assisted-by).
+> - Addressed review from Masami Hiramatsu and Breno Leitao.
+> 
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index f445b7703fdd..c913259c80ce 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -427,8 +427,9 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+>  int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  {
+>  	struct xbc_node *knode, *vnode;
+> -	char *end = buf + size;
+> +	char *end = buf ? buf + size : NULL;
+>  	const char *val, *q;
+> +	size_t len = 0;
+>  	int ret;
+>  
+>  	xbc_node_for_each_key_value(root, knode, val) {
+> @@ -442,7 +443,9 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
+>  			if (ret < 0)
+>  				return ret;
+> -			buf += ret;
+> +			len += ret;
+> +			if (buf)
+> +				buf += ret;
+>  			continue;
+>  		}
+>  		xbc_array_for_each_value(vnode, val) {
+> @@ -456,11 +459,13 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  				       xbc_namebuf, q, val, q);
+>  			if (ret < 0)
+>  				return ret;
+> -			buf += ret;
+> +			len += ret;
+> +			if (buf)
+> +				buf += ret;
+>  		}
+>  	}
+>  
+> -	return buf - (end - size);
+> +	return len;
+>  }
+>  #undef rest
+>  
+> -- 
+> 2.53.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
