@@ -1,34 +1,36 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA13E2C15BE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 01:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9292F363F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 01:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782784435; cv=none; b=GN3b2HprNjQHoPFVjZWwdFUoknRCNZ822ZC9GDzEXlc+MOY9HSxV5hPtmmp/OZhm/00b+NwIW2ZKuwdLVm7VWjqmtcLtQ+sxDlruy5xBR7XwB9ivtM4AK0usAEAlkdUuD/Yt5EoX74m0l7NZ4wFzXaQ4bFdil7L5uhrhpzEbC74=
+	t=1782784443; cv=none; b=D+g8z2v/7Zp8TteHOKTcr3h3gi35VI/pmsnkV5uX0O8FeHcCDJCnrBAiNeZ+/BQc4prpp7xBXelwMJQ9QL72qtg2HvSaRdEiqmcS3j36Bi0KXfgAkS9PV1hUmPExDVHAJWD0b/heH6IaqpC5S0jvZo/VktjktbABScHN4zqaWYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782784435; c=relaxed/simple;
-	bh=vnf7JPkMu9uAlmUFnocqbmWTOfwkd6mWLZGraSk0JA0=;
+	s=arc-20240116; t=1782784443; c=relaxed/simple;
+	bh=wS48ivbAO1PM1sPJcRBHaHZUggW1dw14g2p7YKaedaE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mvW1imDUiZfKks3iAU2m/BmP8kI/AlNsAmvP5bVHWhdIaDreSNGw0sY6/V/xKXi8ZXYSxpPSDVRoggaeePZ7fXN747UqOquZ4NplgtzyO89UBpPvz+EzgIi6BLlT4rxV9cYVNXhhaZ2vWpomZlmVpRpD/+7xj+SP/PD03MglW5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TMgXlUlz; arc=none smtp.client-ip=95.215.58.188
+	 MIME-Version; b=Fdi2VhST2EaXC4F8TJhISqo61yClWTCLlRNLlPY0CPopAetaqnJlJwjW9NoSlftDLG4ZZPPENQcBmZ95WAun+s99JrMAjzeewi2zM9v6JCvQwBtMSnep/Q8en9jgc8Sudc5LhRUFOPSEK2A4qnfPHd/Mfj/SterNCljS/G/WkRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HCdEsvxY; arc=none smtp.client-ip=95.215.58.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TMgXlUlz"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HCdEsvxY"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782784430;
+	t=1782784439;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o+9YrpEU34OPDz2iHabTDbvzWefArLaf4fpVcXgkiMk=;
-	b=TMgXlUlzodF1IoLeynZ74eaIyV4U7rjvQXiu7RJXnASDsdrob6kxCYb1iZ3Oj2sGEoImCo
-	PpbCJQ3Y7D4H1RmilH3Ccx34B3/dsJZlglzP80/GxM6U5g9lqjT0ZKC4rAuGD3D7z53R4e
-	iFzxQ+Akjbb+4xLM01Ojlc64dPgqoAM=
+	bh=a5E2Wv8UYoqRjiCwOE+UrkeyzYMfi15mzloMMNFtFSo=;
+	b=HCdEsvxYjVKQ6EmmI5j7B6xnecAxRhSc6rfhzuMI14kpDaizRIrHAYsR/JjKtXC4uKFkk1
+	teOsq+MqPngU7zYvSZqml6WZAAA/rcCM654YRNboMuL8y+u+8VO/506nmhgkfM/V2jVPIq
+	F397V+T33rZkWn6c2WqmpTi/Jn2eGos=
 From: Ye Liu <ye.liu@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
+To: Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -42,17 +44,20 @@ Cc: Ye Liu <ye.liu@linux.dev>,
 	Gregory Price <gourry@gourry.net>,
 	Ying Huang <ying.huang@linux.alibaba.com>,
 	Alistair Popple <apopple@nvidia.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Michal Hocko <mhocko@suse.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Brendan Jackman <jackmanb@google.com>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 2/7] mm/page_owner: add MR_NEVER to enum migrate_reason and use it for last_migrate_reason
-Date: Tue, 30 Jun 2026 09:53:19 +0800
-Message-ID: <20260630015331.147174-3-ye.liu@linux.dev>
+Subject: [PATCH v3 3/7] mm: use enum migrate_reason instead of int for migration reason parameters
+Date: Tue, 30 Jun 2026 09:53:20 +0800
+Message-ID: <20260630015331.147174-4-ye.liu@linux.dev>
 In-Reply-To: <20260630015331.147174-1-ye.liu@linux.dev>
 References: <20260630015331.147174-1-ye.liu@linux.dev>
 Precedence: bulk
@@ -64,87 +69,263 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The last_migrate_reason field uses -1 as a sentinel value to mean "no
-migration has happened".  Replace the four bare -1 occurrences by
-adding a proper MR_NEVER member to enum migrate_reason, defining a
-corresponding "never_migrated" string in the MIGRATE_REASON trace
-macro, and removing the local MIGRATE_REASON_NONE define.
+Replace all 'int reason' function parameters that carry migrate_reason
+values with the proper 'enum migrate_reason' type.  This makes the
+intent explicit and leverages compiler type checking.  The affected
+subsystems are:
+
+  - page_owner: __folio_set_owner_migrate_reason(),
+                folio_set_owner_migrate_reason()
+  - migrate: migrate_pages(), migrate_pages_sync(),
+             migrate_pages_batch(), migrate_folios_move(),
+             migrate_hugetlbs(), unmap_and_move_huge_page()
+  - hugetlb: move_hugetlb_state(), htlb_allow_alloc_fallback()
+  - trace: mm_migrate_pages and mm_migrate_pages_start events
+
+The 'short last_migrate_reason' struct field and internal helper
+parameter in page_owner are intentionally left as 'short' since they
+store per-page metadata where size matters.
 
 No functional change.
 
 Signed-off-by: Ye Liu <ye.liu@linux.dev>
 ---
- include/linux/migrate_mode.h   | 1 +
- include/trace/events/migrate.h | 3 ++-
- mm/page_owner.c                | 8 ++++----
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ include/linux/hugetlb.h        |  9 +++++----
+ include/linux/migrate.h        |  6 ++++--
+ include/linux/page_owner.h     |  7 ++++---
+ include/trace/events/migrate.h |  8 ++++----
+ mm/hugetlb.c                   |  3 ++-
+ mm/migrate.c                   | 12 ++++++------
+ mm/page_owner.c                |  2 +-
+ 7 files changed, 26 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-index 265c4328b36a..05102d4d2490 100644
---- a/include/linux/migrate_mode.h
-+++ b/include/linux/migrate_mode.h
-@@ -25,6 +25,7 @@ enum migrate_reason {
- 	MR_LONGTERM_PIN,
- 	MR_DEMOTION,
- 	MR_DAMON,
-+	MR_NEVER,		/* page has never been migrated */
- 	MR_TYPES
- };
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 2abaf99321e9..fa828232dfcc 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -154,7 +154,8 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
+ bool folio_isolate_hugetlb(struct folio *folio, struct list_head *list);
+ int get_hwpoison_hugetlb_folio(struct folio *folio, bool *hugetlb, bool unpoison);
+ void folio_putback_hugetlb(struct folio *folio);
+-void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason);
++void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio,
++			enum migrate_reason reason);
+ void hugetlb_fix_reserve_counts(struct inode *inode);
+ extern struct mutex *hugetlb_fault_mutex_table;
+ u32 hugetlb_fault_mutex_hash(struct address_space *mapping, pgoff_t idx);
+@@ -424,7 +425,7 @@ static inline void folio_putback_hugetlb(struct folio *folio)
+ }
  
+ static inline void move_hugetlb_state(struct folio *old_folio,
+-					struct folio *new_folio, int reason)
++					struct folio *new_folio, enum migrate_reason reason)
+ {
+ }
+ 
+@@ -956,7 +957,7 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
+ 	return modified_mask;
+ }
+ 
+-static inline bool htlb_allow_alloc_fallback(int reason)
++static inline bool htlb_allow_alloc_fallback(enum migrate_reason reason)
+ {
+ 	bool allowed_fallback = false;
+ 
+@@ -1238,7 +1239,7 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
+ 	return 0;
+ }
+ 
+-static inline bool htlb_allow_alloc_fallback(int reason)
++static inline bool htlb_allow_alloc_fallback(enum migrate_reason reason)
+ {
+ 	return false;
+ }
+diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+index d5af2b7f577b..1f83924615d6 100644
+--- a/include/linux/migrate.h
++++ b/include/linux/migrate.h
+@@ -57,7 +57,8 @@ void putback_movable_pages(struct list_head *l);
+ int migrate_folio(struct address_space *mapping, struct folio *dst,
+ 		struct folio *src, enum migrate_mode mode);
+ int migrate_pages(struct list_head *l, new_folio_t new, free_folio_t free,
+-		  unsigned long private, enum migrate_mode mode, int reason,
++		  unsigned long private, enum migrate_mode mode,
++		  enum migrate_reason reason,
+ 		  unsigned int *ret_succeeded);
+ struct folio *alloc_migration_target(struct folio *src, unsigned long private);
+ bool isolate_movable_ops_page(struct page *page, isolate_mode_t mode);
+@@ -77,7 +78,8 @@ int set_movable_ops(const struct movable_operations *ops, enum pagetype type);
+ static inline void putback_movable_pages(struct list_head *l) {}
+ static inline int migrate_pages(struct list_head *l, new_folio_t new,
+ 		free_folio_t free, unsigned long private,
+-		enum migrate_mode mode, int reason, unsigned int *ret_succeeded)
++		enum migrate_mode mode, enum migrate_reason reason,
++		unsigned int *ret_succeeded)
+ 	{ return -ENOSYS; }
+ static inline struct folio *alloc_migration_target(struct folio *src,
+ 		unsigned long private)
+diff --git a/include/linux/page_owner.h b/include/linux/page_owner.h
+index 3328357f6dba..9fe51dfccf26 100644
+--- a/include/linux/page_owner.h
++++ b/include/linux/page_owner.h
+@@ -3,6 +3,7 @@
+ #define __LINUX_PAGE_OWNER_H
+ 
+ #include <linux/jump_label.h>
++#include <linux/migrate_mode.h>
+ 
+ #ifdef CONFIG_PAGE_OWNER
+ extern struct static_key_false page_owner_inited;
+@@ -14,7 +15,7 @@ extern void __set_page_owner(struct page *page,
+ extern void __split_page_owner(struct page *page, int old_order,
+ 			int new_order);
+ extern void __folio_copy_owner(struct folio *newfolio, struct folio *old);
+-extern void __folio_set_owner_migrate_reason(struct folio *folio, int reason);
++extern void __folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason);
+ extern void __dump_page_owner(const struct page *page);
+ extern void pagetypeinfo_showmixedcount_print(struct seq_file *m,
+ 					pg_data_t *pgdat, struct zone *zone);
+@@ -43,7 +44,7 @@ static inline void folio_copy_owner(struct folio *newfolio, struct folio *old)
+ 	if (static_branch_unlikely(&page_owner_inited))
+ 		__folio_copy_owner(newfolio, old);
+ }
+-static inline void folio_set_owner_migrate_reason(struct folio *folio, int reason)
++static inline void folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
+ {
+ 	if (static_branch_unlikely(&page_owner_inited))
+ 		__folio_set_owner_migrate_reason(folio, reason);
+@@ -68,7 +69,7 @@ static inline void split_page_owner(struct page *page, int old_order,
+ static inline void folio_copy_owner(struct folio *newfolio, struct folio *folio)
+ {
+ }
+-static inline void folio_set_owner_migrate_reason(struct folio *folio, int reason)
++static inline void folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
+ {
+ }
+ static inline void dump_page_owner(const struct page *page)
 diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-index cd01dd7b3640..11bc0aa14c7e 100644
+index 11bc0aa14c7e..15ee2ef201b5 100644
 --- a/include/trace/events/migrate.h
 +++ b/include/trace/events/migrate.h
-@@ -23,7 +23,8 @@
- 	EM( MR_CONTIG_RANGE,	"contig_range")			\
- 	EM( MR_LONGTERM_PIN,	"longterm_pin")			\
- 	EM( MR_DEMOTION,	"demotion")			\
--	EMe(MR_DAMON,		"damon")
-+	EM( MR_DAMON,		"damon")			\
-+	EMe(MR_NEVER,		"never_migrated")
+@@ -52,7 +52,7 @@ TRACE_EVENT(mm_migrate_pages,
+ 	TP_PROTO(unsigned long succeeded, unsigned long failed,
+ 		 unsigned long thp_succeeded, unsigned long thp_failed,
+ 		 unsigned long thp_split, unsigned long large_folio_split,
+-		 enum migrate_mode mode, int reason),
++		 enum migrate_mode mode, enum migrate_reason reason),
  
- /*
-  * First define the enums in the above macros to be exported to userspace
+ 	TP_ARGS(succeeded, failed, thp_succeeded, thp_failed,
+ 		thp_split, large_folio_split, mode, reason),
+@@ -65,7 +65,7 @@ TRACE_EVENT(mm_migrate_pages,
+ 		__field(	unsigned long,		thp_split)
+ 		__field(	unsigned long,		large_folio_split)
+ 		__field(	enum migrate_mode,	mode)
+-		__field(	int,			reason)
++		__field(	enum migrate_reason,	reason)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -92,13 +92,13 @@ TRACE_EVENT(mm_migrate_pages,
+ 
+ TRACE_EVENT(mm_migrate_pages_start,
+ 
+-	TP_PROTO(enum migrate_mode mode, int reason),
++	TP_PROTO(enum migrate_mode mode, enum migrate_reason reason),
+ 
+ 	TP_ARGS(mode, reason),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(enum migrate_mode, mode)
+-		__field(int, reason)
++		__field(enum migrate_reason, reason)
+ 	),
+ 
+ 	TP_fast_assign(
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 571212b80835..17732d1fdc5e 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -7182,7 +7182,8 @@ void folio_putback_hugetlb(struct folio *folio)
+ 	folio_put(folio);
+ }
+ 
+-void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason)
++void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio,
++			enum migrate_reason reason)
+ {
+ 	struct hstate *h = folio_hstate(old_folio);
+ 
+diff --git a/mm/migrate.c b/mm/migrate.c
+index d9b23909d716..49e10feeb094 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1469,7 +1469,7 @@ static int migrate_folio_move(free_folio_t put_new_folio, unsigned long private,
+ static int unmap_and_move_huge_page(new_folio_t get_new_folio,
+ 		free_folio_t put_new_folio, unsigned long private,
+ 		struct folio *src, int force, enum migrate_mode mode,
+-		int reason, struct list_head *ret)
++		enum migrate_reason reason, struct list_head *ret)
+ {
+ 	struct folio *dst;
+ 	int rc = -EAGAIN;
+@@ -1626,7 +1626,7 @@ struct migrate_pages_stats {
+  */
+ static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
+ 			    free_folio_t put_new_folio, unsigned long private,
+-			    enum migrate_mode mode, int reason,
++			    enum migrate_mode mode, enum migrate_reason reason,
+ 			    struct migrate_pages_stats *stats,
+ 			    struct list_head *ret_folios)
+ {
+@@ -1716,7 +1716,7 @@ static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
+ static void migrate_folios_move(struct list_head *src_folios,
+ 		struct list_head *dst_folios,
+ 		free_folio_t put_new_folio, unsigned long private,
+-		enum migrate_mode mode, int reason,
++		enum migrate_mode mode, enum migrate_reason reason,
+ 		struct list_head *ret_folios,
+ 		struct migrate_pages_stats *stats,
+ 		int *retry, int *thp_retry, int *nr_failed,
+@@ -1799,7 +1799,7 @@ static void migrate_folios_undo(struct list_head *src_folios,
+  */
+ static int migrate_pages_batch(struct list_head *from,
+ 		new_folio_t get_new_folio, free_folio_t put_new_folio,
+-		unsigned long private, enum migrate_mode mode, int reason,
++		unsigned long private, enum migrate_mode mode, enum migrate_reason reason,
+ 		struct list_head *ret_folios, struct list_head *split_folios,
+ 		struct migrate_pages_stats *stats, int nr_pass)
+ {
+@@ -2011,7 +2011,7 @@ static int migrate_pages_batch(struct list_head *from,
+ 
+ static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
+ 		free_folio_t put_new_folio, unsigned long private,
+-		enum migrate_mode mode, int reason,
++		enum migrate_mode mode, enum migrate_reason reason,
+ 		struct list_head *ret_folios, struct list_head *split_folios,
+ 		struct migrate_pages_stats *stats)
+ {
+@@ -2088,7 +2088,7 @@ static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
+  */
+ int migrate_pages(struct list_head *from, new_folio_t get_new_folio,
+ 		free_folio_t put_new_folio, unsigned long private,
+-		enum migrate_mode mode, int reason, unsigned int *ret_succeeded)
++		enum migrate_mode mode, enum migrate_reason reason, unsigned int *ret_succeeded)
+ {
+ 	int rc, rc_gather;
+ 	int nr_pages;
 diff --git a/mm/page_owner.c b/mm/page_owner.c
-index 342549891a8d..c2f43ab860eb 100644
+index c2f43ab860eb..4e352941a6e2 100644
 --- a/mm/page_owner.c
 +++ b/mm/page_owner.c
-@@ -339,7 +339,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
- 	depot_stack_handle_t handle;
- 
- 	handle = save_stack(gfp_mask);
--	__update_page_owner_handle(page, handle, order, gfp_mask, -1,
-+	__update_page_owner_handle(page, handle, order, gfp_mask, MR_NEVER,
- 				   ts_nsec, current->pid, current->tgid,
- 				   current->comm);
+@@ -345,7 +345,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
  	inc_stack_record_count(handle, gfp_mask, 1 << order);
-@@ -596,7 +596,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 	if (ret >= count)
- 		goto err;
+ }
  
--	if (page_owner->last_migrate_reason != -1) {
-+	if (page_owner->last_migrate_reason != MR_NEVER) {
- 		ret += scnprintf(kbuf + ret, count - ret,
- 			"Page has been migrated, last migrate reason: %s\n",
- 			migrate_reason_names[page_owner->last_migrate_reason]);
-@@ -667,7 +667,7 @@ void __dump_page_owner(const struct page *page)
- 		stack_depot_print(handle);
- 	}
- 
--	if (page_owner->last_migrate_reason != -1)
-+	if (page_owner->last_migrate_reason != MR_NEVER)
- 		pr_alert("page has been migrated, last migrate reason: %s\n",
- 			migrate_reason_names[page_owner->last_migrate_reason]);
- 	page_ext_put(page_ext);
-@@ -826,7 +826,7 @@ static void init_pages_in_zone(struct zone *zone)
- 
- 			/* Found early allocated page */
- 			__update_page_owner_handle(page, early_handle, 0, 0,
--						   -1, local_clock(), current->pid,
-+						   MR_NEVER, local_clock(), current->pid,
- 						   current->tgid, current->comm);
- 			count++;
- ext_put_continue:
+-void __folio_set_owner_migrate_reason(struct folio *folio, int reason)
++void __folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
+ {
+ 	struct page_ext *page_ext = page_ext_get(&folio->page);
+ 	struct page_owner *page_owner;
 -- 
 2.43.0
 
