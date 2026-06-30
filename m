@@ -1,145 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB04B3F8EDA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 11:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2D73EFFDB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 11:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782819175; cv=none; b=BsL3nE9VHvd1SFg+kmvOChT5LO0unwrj+KFYrsRhrkyUmzSk6rp9GQhbwDAtoG2REt9OXMUKFSrHLtyoX4ak0wf13wfw/VPubkUG6Ned7Bh0JKDhtLE2xQonrzta9TjSVa7Uo/BieTVByi86rYuosTPUQGf79BIaaDxAltgnBGc=
+	t=1782820780; cv=none; b=NbMrQUNSQoYReSqB3nDkumb6BOJyatjJIiQgioab5sMc+I33PE41bJj+Rv94xkpjUYcvK6/DGOuN8eeWiPO6r+Wj/iKNndfFUYPCqOxVz73RaiNO0EljCX/66YPCtPgrLAKkvDgpCUCP3ghGeop4ai0C8wHwjOoKlXxPUGbY0uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782819175; c=relaxed/simple;
-	bh=ffGSH4IaIJoZHP1gdRgmrd5d8SmwqeySVgXFE4JU8Lg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eNfTuKpjnGjlULAq/KelKh+OQ4eIKu2I7A4pRYB99QyOaxUzXBJ+MOiWXpaXZG4A2iyNyt6t2DS0YyUBtGRIVI0KxvBn6513U58NjQmCefdmJSswgucMpKTVKL4K1fJeCSSBKxZpCrMJ1ParK8I9XFVfrEiLPqHN/jOYHb53AUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O29M5wHq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782820780; c=relaxed/simple;
+	bh=fvWUtTUUvTpQkCVxc6+vBkhTH2MPEvAFwFLKcBihbxk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EOZcdvyZduUk2Ds6AN0/FSJ1va1xWDUn/GVZE814RXu9t3kJB0LXEXELv/GZVKeXbwN8UDwL5O4N8AydaJ5DJMhcOS9zOi/BMVufWRzpeuAMtTF1gYzaaTL3IZLJeIEj99WHM41Buxf4gyCypE/QAMKXtqZVic0sUsg1U3oTek0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p/26EK3Y; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O29M5wHq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782819173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jBTz2wXtqBvGPZiSe/mxuJQdVwaDfA6xdfyUMxtKKSg=;
-	b=O29M5wHqn9FyFjkzTcKHLKMlOeJ2bwgW2GM2vDkWgxdtk/27A1gHTD82Sd67UogNShQaRC
-	AADHA7/6uUwnkuhIC7spgThLM94z2cxjZ+IVtt/Wq+69j74nxtof734OT6wlvKqX6RQT7R
-	WoA4B38pkj4LiyGT/927bI+NXvky3x0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-33-eC8UjzByPAKPJSx9Js6ntw-1; Tue, 30 Jun 2026 07:32:51 -0400
-X-MC-Unique: eC8UjzByPAKPJSx9Js6ntw-1
-X-Mimecast-MFC-AGG-ID: eC8UjzByPAKPJSx9Js6ntw_1782819171
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c122a8e4952so405087566b.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 04:32:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/26EK3Y"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-47231f1f8f3so3802105f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 04:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782820777; x=1783425577; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Wtjkuyq+MLHO8ZADzDM8QMisoUEPsdDW4dYskthH/dw=;
+        b=p/26EK3YMD/92YGR0nKIUmKpHyW6E1LGeop/iWRq2eP7fKHjjiDPBWCxcHIuQatlwa
+         AnE4Q70SbL47IKIg7ptayW467j2NX1uSMKL2sjTMxZJrFLsQ3NADMZ2PA55mQLeYmUDO
+         9BlGMXn00nbKjb/KIi9b2wDuj7g2d7QVZSFNC/eDdu3UaIQ/qD1sJgUZnuq91056qlD7
+         SSq7Ek1Z2mzWZmsSq6SdKfXHy4G7dG5MF2l3Ch88vFcV23nmjl0FvZkr0gwi7P9919M2
+         EN8p0ynxD9xW+um0E3GrmpzYo3xCNPcBvhg4eHtZjV19ft+IZ0AesKfJwrTYm3LKIZR2
+         Lb0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782819170; x=1783423970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jBTz2wXtqBvGPZiSe/mxuJQdVwaDfA6xdfyUMxtKKSg=;
-        b=QtgrlMMoSvjjIYeT6pe8zx6u823mNcbgQJUc8qIRMFbtLnLrj6V1KTDEykwR3+Tbzc
-         G7E5aJ/iRy9XcUYKo8Ga35HYP/jOUTgAE+paezWCaObBU7Okss9v9TCa1uCTUrDgMdNx
-         LHPV2Auu7BRsP9TiRahJiq9KXDIJrpNXBYoP/kNYX1JptExlTq1Y3s8N+cybJ57nVqgX
-         M1IVPDz3kd65hKZBm0fc8d//Vr5JS3TVkJYGWy2Z0z/ccijzs9ui71EEXUKNnaYXFqw4
-         nNuvsg3y1b/MNX2CRpEuSLZ0uGvO1+Hq5519kOdgPjD25F1ogUl2iqI2DofYPphQgyA9
-         g2UQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rott+G9XhI/8nhgF7hrSxiGpMq6wadDUrJaGS4FqtqMggdy9yM3hJPHy5raoxGSkV4cbLmUPow7taBDLNZTIW8DH4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp2HHCm9+u/Q9w9LVA45LGj5r7uu7JQHz2Bh0D+wj6D4RuDM1Z
-	8tsQ6zB27/PcmB7vzTEMS3XJTmAf9hCoAKIBV5ENvjry4FzMhlpNhkcU9YgywmbtNkd29sqcmN0
-	VK9VwhRxkycZMEx34NHgEnvrFz/A7bF+bVWMgY5hh82ZmNO+ZcCDwKJ59yxgd2oThlD0Yl1oZA8
-	y3kV9PjoDeG3d4E1DE60AH3ABzCH3bVrBZ9H6vcEIS7hjQHQy3
-X-Gm-Gg: AfdE7clotpNe3bp+MBd0kfyzVo/TyMs8D/mUHUifiPRLRqyUT1HW6Q3F5qEaft7JrzO
-	Nc2f2uVr46Y7UB1alDf3jFN/4GvFD+8wnOqI9sGoxRni9plSlZtX8ix4mjAwdY1907HmjUtONHa
-	pifudAEGJPaIPyks7MuRBWsS3IWxKVWuJaQKAjT5R46kNvwHJ9KhZnBdotdpR6H7M/xRA=
-X-Received: by 2002:a17:907:bb49:b0:c12:8b1c:454f with SMTP id a640c23a62f3a-c128b1c4e6fmr130706866b.2.1782819170465;
-        Tue, 30 Jun 2026 04:32:50 -0700 (PDT)
-X-Received: by 2002:a17:907:bb49:b0:c12:8b1c:454f with SMTP id
- a640c23a62f3a-c128b1c4e6fmr130702566b.2.1782819169899; Tue, 30 Jun 2026
- 04:32:49 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782820777; x=1783425577;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Wtjkuyq+MLHO8ZADzDM8QMisoUEPsdDW4dYskthH/dw=;
+        b=Pro1zrh4GiYYRQ1Ghte2QulQmKxz6rawwM5mXf3cYxwQx40iYtqqC/mTgQEIHzURQZ
+         fPmsVV+pnP7EGKFjJt9THZ9EfVWVAsI+PFoIL18ibLIZQZq7ZM+jO4fGEKtvGlr5ilcY
+         fmjykuPzr6lUczZAIJxBiSI3qtr5tz3VixF1fA9zg79iGrXhIyfAqfttp2o5/gG4CZMc
+         9j+lmnPv5Qi1jyjydX+M1mZEKoWlKq/EmvJhnZzlyWy4CkT94nqnU3GZYlUmQYqcxExQ
+         xJyWgX3bgfidIdj7knxNiiQqj6YvxQq9YNNPbDa8jvr1B0TR3ZuWMdbmPa5RoWw+Jmf2
+         eshw==
+X-Forwarded-Encrypted: i=1; AHgh+RqYuuMBfvrh4zjliFxhgbYzcG2Uub5aX6G7Pa7ukjJdHsfBZrWb8VpBYEqcQnNaQ2VYPXnm8LYzAqy4PQsE4chUjYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwophGi85vYKEytHqwAHvw+Jb5gw3Vnl9HYVpWGp3GlAhoCv7nQ
+	N0V90pnTtmMEMBTuS/KiV9akwAD8Yh0pqUwlUYxbgTAUG2x4FryG0gtQ
+X-Gm-Gg: AfdE7cnWX4vSPG5U4jzviUHxeeuVOrYLb+1WowpElzRn4qctbPlsQ3bb+hhw+O37quJ
+	MDW8SRFUfEe03Jwc3CxBrjQC5LYTWBhVLVF7ooPDo0APSx47hsNoYapWcZ8hHOq+XtucPUuuqrL
+	/0v5obblmFsR1I39GuOCLV5O3X/Iwljwstjgkr3usMZ/HkfB0e1FLMhzTvm5+LjJVx+QeiVFjTh
+	YZFAVOi3DLUPs7WSW/uuvzy2c8Fq6esRbftJBefzHVHQ3KglHdE+fx6OHAG3b3WDgJIxogdEW0d
+	Oeat6qt/xGF/6JS9BdWpbfB70PDCAI9oqUedQ0NjFlKU3uaIh1clLJD+y/xgU3H+T/nEVlIkUfj
+	6NgpKn03n1WpzXEboyKqrm6w0FVeNx5jwm0PGnm6hOHDUHmOqijc0gYBVWlU5wttrglxY2QsYzz
+	IZqWhEQzvt8B+ttKaH26jQTqZ/
+X-Received: by 2002:a05:6000:4381:b0:475:f100:35fa with SMTP id ffacd0b85a97d-475f1003789mr2289639f8f.55.1782820776839;
+        Tue, 30 Jun 2026 04:59:36 -0700 (PDT)
+Received: from krava (37-188-177-177.red.o2.cz. [37.188.177.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-475671d02f5sm7790027f8f.28.2026.06.30.04.59.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 04:59:36 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 30 Jun 2026 13:59:29 +0200
+To: David Windsor <dwindsor@gmail.com>
+Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, shuah@kernel.org,
+	rick.p.edgecombe@intel.com, linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] x86/uprobes: Keep shadow stack in sync for
+ emulated CALLs
+Message-ID: <akOvofX6jsk5ZJ8V@krava>
+References: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260617131803.2988989-1-vschneid@redhat.com> <20260617131803.2988989-4-vschneid@redhat.com>
-In-Reply-To: <20260617131803.2988989-4-vschneid@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 30 Jun 2026 13:32:38 +0200
-X-Gm-Features: AVVi8CcQU0PbcEqWS5H0rq7ajtEDLjvGh4cBpavnLrLvOxj5BuQDFZ2rmR4JQOI
-Message-ID: <CAP4=nvSSw4wSUWMQfWRU=Ez-q0L8-Ugon_nYPvXS2d0kEBQhaw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/4] rtla/osnoise: Trace IPI events when recording
- a trace file
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 6Adxoeg1lzDNQuQ2SAZTni9A8ChdUBwKvmoSyoPMOvo_1782819171
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
 
-st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
-<vschneid@redhat.com> napsal:
->
-> IPIs can now be monitored and accounted by osnoise top. When that is
-> the case, also record them when saving a trace file.
->
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+On Mon, Jun 29, 2026 at 08:13:33PM -0400, David Windsor wrote:
+> Uprobe CALL emulation updates the normal user stack, but not the CET user
+> shadow stack. The subsequent RET then sees a stale shadow stack entry and
+> raises #CP.
+> 
+> Update the relative CALL emulation and XOL CALL fixup paths to keep the
+> shadow stack in sync.
+> 
+> Fixes: 488af8ea7131 ("x86/shstk: Wire in shadow stack interface")
+> Signed-off-by: David Windsor <dwindsor@gmail.com>
+
+hi, lgtm
+
+Tested-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+jirka
+
+
 > ---
->  tools/tracing/rtla/src/common.c  |  2 +-
->  tools/tracing/rtla/src/common.h  |  2 +-
->  tools/tracing/rtla/src/osnoise.c | 17 ++++++++++++++++-
->  3 files changed, 18 insertions(+), 3 deletions(-)
->
-
-Looks good, the numbers match between what is seen in (non-truncated)
-trace and what is detected in RTLA:
-
-$ rtla osnoise top -q -d 5s --ipi --on-end
-trace,file=3D/tmp/ipi_trace.txt | awk '/^ *[0-9]/{ print "CPU: " $1 ",
-IPI count: " $13 }'
-CPU: 0, IPI count: 20
-CPU: 1, IPI count: 2
-CPU: 2, IPI count: 1
-CPU: 3, IPI count: 3
-CPU: 4, IPI count: 0
-CPU: 5, IPI count: 2
-CPU: 6, IPI count: 1
-CPU: 7, IPI count: 1
-CPU: 8, IPI count: 0
-CPU: 9, IPI count: 0
-CPU: 10, IPI count: 2
-CPU: 11, IPI count: 3
-CPU: 12, IPI count: 0
-CPU: 13, IPI count: 20
-$ grep ipi_send_cpumask /tmp/ipi_trace.txt | wc -l
-0
-$ for cpu in {0..13}; do n=3D$(grep -F "ipi_send_cpu: cpu=3D$cpu "
-/tmp/ipi_trace.txt | wc -l); echo "CPU: $cpu, IPI count: $n"; done
-CPU: 0, IPI count: 20
-CPU: 1, IPI count: 2
-CPU: 2, IPI count: 1
-CPU: 3, IPI count: 3
-CPU: 4, IPI count: 0
-CPU: 5, IPI count: 2
-CPU: 6, IPI count: 1
-CPU: 7, IPI count: 1
-CPU: 8, IPI count: 0
-CPU: 9, IPI count: 0
-CPU: 10, IPI count: 2
-CPU: 11, IPI count: 3
-CPU: 12, IPI count: 0
-CPU: 13, IPI count: 20
-
-(This is in a VM, with apparently no ipi_send_cpumask events, so I
-didn't test that.)
-
-Tomas
-
+> 
+> v2:
+>  - propagate error from shshk_update_last_frame() rather than returning
+>    -ERESTART in default_post_xol_op(). (Oleg)
+> 
+> v1: https://lore.kernel.org/all/20260622183109.1137245-1-dwindsor@gmail.com/
+> 
+>  arch/x86/kernel/uprobes.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index ebb1baf1eb1d..d74bb54543b6 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -1246,9 +1246,15 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
+>  		long correction = utask->vaddr - utask->xol_vaddr;
+>  		regs->ip += correction;
+>  	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
+> +		unsigned long retaddr = utask->vaddr + auprobe->defparam.ilen;
+> +		int err;
+> +
+>  		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
+> -		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
+> +		if (emulate_push_stack(regs, retaddr))
+>  			return -ERESTART;
+> +		err = shstk_update_last_frame(retaddr);
+> +		if (err)
+> +			return err;
+>  	}
+>  	/* popf; tell the caller to not touch TF */
+>  	if (auprobe->defparam.fixups & UPROBE_FIX_SETF)
+> @@ -1338,6 +1344,10 @@ static bool branch_emulate_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  		 */
+>  		if (emulate_push_stack(regs, new_ip))
+>  			return false;
+> +		if (shstk_push(new_ip) == -EFAULT) {
+> +			regs->sp += sizeof_long(regs);
+> +			return false;
+> +		}
+>  	} else if (!check_jmp_cond(auprobe, regs)) {
+>  		offs = 0;
+>  	}
+> -- 
+> 2.53.0
+> 
