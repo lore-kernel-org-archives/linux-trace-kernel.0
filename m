@@ -1,177 +1,119 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7183E1227
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 18:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC77E3DF001;
+	Tue, 30 Jun 2026 19:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782845095; cv=none; b=sba9oM/CU7/G6vpxHgH06zpJDj+WcksszSW+bgFyXZ1C9uDtag4pcb2mmMEfHQudpvDCRIufOl5RsPbL3LMHcrmeAeUcSXP1SiKVppWIA2j9aIvQs8iT72SG8ANNnfIXaistsE857jBpw394VWKHpD1L6re8BR2brI4GkZ2URkE=
+	t=1782846578; cv=none; b=bjSOLRLwSugy7ck0MdnLfPpqKT3qwoYsCL0FkNo7wzwnjv1n7NLrFdA6kQXVXqNdQopU4sLUNDNQimx21OAsrL9dGCVoOZmL02OxbpazhDzU1uEP2bMqn/4FdV9O8iCnRkQvn3FLvEX2Q3+Bl9NCbH8HIJukYn2FpaehgKMTBpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782845095; c=relaxed/simple;
-	bh=EBAwhDMsQpQ3/oIE4IwMkyRqOLKzwgNV+sBSaxiGlA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eh4d0aEcJ3eyFsx/Fddsm3ky0Im2ZqxStlkEHmEO+MiKPTiwdRTJblXAc8lMx+5xZ5Zgh2Ls0FPR2SWmzqvq2TzUAgSHUGTBhA+lt/8fE1/M8Ti2QatjgH7R8oXwdYktVSLroUSvghx/HPyQkWFIOvh7ndqIwDYqPK1bKxuJ7zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=voX65xFz; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="voX65xFz"
-Message-ID: <d1e84072-7968-4a64-9497-09db83b38682@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782845090;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K4NYnx5uGWF22xzblo3NCre+Z11/WlXt9QQym/OQ8LQ=;
-	b=voX65xFzphQAoQK4qpPpuS9U8NMm6rliuA219upmY+p+Lf/lukJmc+ZVDsXUGuDzEZ7h1S
-	ynZi2+wifyr1cVF/WzlGrXolgO/XU2yUtTO6oG3pvqeEEPezPv1XfBaGhyzPVDSbpU2S1v
-	wwCQ9DOmV5DBdpGr37aCpBjs3oUA3PA=
-Date: Wed, 1 Jul 2026 02:44:45 +0800
+	s=arc-20240116; t=1782846578; c=relaxed/simple;
+	bh=LF5PJQlB6qZEExlxiMfWm3arqOg8bLxTJCexfzF38LE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uxgQM5k0HGyn2htFFXj6S55oei7a6qJuoGwpiX+F8TnP783e07DQAxni4OdqGE+pIPylDQH/wIP8n9Mi8qFh2PV4rQhoZ977xTPm7LFjVltSr8Y1rhCBWYu/Wbs0pFO/nEXNpV3KFcu5O8HYS362bpbY7u6ZL6ZIhSgB83ORqBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 16A81A0611;
+	Tue, 30 Jun 2026 19:03:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 17DC120032;
+	Tue, 30 Jun 2026 19:03:48 +0000 (UTC)
+Date: Tue, 30 Jun 2026 15:03:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Michal =?UTF-8?B?S291dG7DvQ==?=
+ <mkoutny@suse.com>
+Subject: Re: [PATCH 2/2] tracing: Keep pid and comm[] in the same structure
+Message-ID: <20260630150348.149e318c@gandalf.local.home>
+In-Reply-To: <20260630110156.5314e2e6@pumpkin>
+References: <20260626212356.64150-1-david.laight.linux@gmail.com>
+	<20260626212356.64150-3-david.laight.linux@gmail.com>
+	<20260629164912.4c1c2855@robin>
+	<20260630110156.5314e2e6@pumpkin>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/9] rv: add generic uprobe infrastructure for RV
- monitors
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1780847473.git.wen.yang@linux.dev>
- <9d1a1d491af16853b2b421f358fd6cca965588ab.1780847473.git.wen.yang@linux.dev>
- <a645534b04d9bf32f2c2caa5d2206bb87cfcb3e1.camel@redhat.com>
- <878be1d4-2f93-4fbd-a1f6-b2b7836c9c44@linux.dev>
- <ebde84b7c65cd6b01a1e8d124de0b1eaf0793006.camel@redhat.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <ebde84b7c65cd6b01a1e8d124de0b1eaf0793006.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 17DC120032
+X-Stat-Signature: st9b3p3o3d3fy6394gxtejbi4srqdm97
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/9BnfD/fcgGcfTAjl19cT7bg+YR0F+ZIQ=
+X-HE-Tag: 1782846228-192631
+X-HE-Meta: U2FsdGVkX18+NoY+1914X8Y77pMqyXJyPBQU7X3aYnKX8IbqWegc5sgnOeWWIPh5uNT2P8eYeE0kv4ZWNYCmvZsmlQ8WHFgPhaQZbMgRUBDWdoYPWMh+xswa8crM0oEVvwTqVcPwIx/IHCcgWdKoQ2DjuNp+WAINh8JyMJP/YKM4OthGcHCRyzK9YobSPO3xrNHHDxDWtaRO0/SUxzSWoLHQrNvxUSwBCubvj34sntv1VrYZSoYHoSJ6CFNAX8sO32vGj6mkPL62mydSaU7dF/0I2XHou/rXlhde/V+dj/5oHGZjvSwgVy0ApEPSPFChaCli39ng+IHY2FW04pHhAciHvrT4I9HwmBERKADXvDrhtD5LidS0KbiNduoCFL5C
 
+On Tue, 30 Jun 2026 11:01:56 +0100
+David Laight <david.laight.linux@gmail.com> wrote:
 
-
-On 6/30/26 16:48, Gabriele Monaco wrote:
-> On Mon, 2026-06-29 at 00:47 +0800, Wen Yang wrote:
->> On [2-1]~[2-5]: embedded consumer causes UAF on PREEMPT_RT
->> -----------------------------------------------------------
->>
->> The uprobe_bind selftest oopses on PREEMPT_RT(full):
->>
->>     handler_chain+0xc9: mov rax, [r15+0x18]  ; advance list iterator
->>     RAX: 000015ec00001f28   ; garbage — &uprobe->consumers after kfree
->>
->> handler_chain() reads uc->cons_node.next after uc->handler() returns,
->> still inside rcu_read_lock_trace().  That pointer is &uprobe->consumers
->> (the list head embedded in struct uprobe), which gets freed through:
->>
->>     put_uprobe()
->>       -> schedule_work(uprobe_free_deferred)   /* async */
->>          -> call_srcu(&uretprobes_srcu, ...)
->>             -> call_rcu_tasks_trace(kfree_uprobe)
->>                -> kfree(uprobe)
->>
->> rv_uprobe_sync() calls uprobe_unregister_sync() which calls
->> synchronize_srcu(&uretprobes_srcu), but that only matters after the
->> kworker has submitted work to uretprobes_srcu.  On a loaded PREEMPT_RT
->> box the kworker may not have run yet, so synchronize_srcu() returns
->> immediately and kfree(uprobe) races with the still-iterating
->> handler_chain():
->>
->>     CPU A                                CPU B
->>     consumer_del() → list_del_rcu        rcu_read_lock_trace()
->>     put_uprobe()   → schedule_work         uc->handler() returns
->>     rv_uprobe_sync():                       reading cons_node.next...
->>       synchronize_srcu(&uretprobes_srcu)
+> > It's been a long time since I worked on this, but IIRC, it was to keep
+> > the pressure down on the TLB when tracing. It updates at every
+> > sched_switch that has a trace event occurring so, I likely used normal
+> > pages which are part of the huge pages the kernel sets up and doesn't
+> > affect the TLB as much. vmalloc does have impact on the TLB pressure,
+> > and tracing should always try to avoid that.  
 > 
-> If CPU B is in an RCU trace read-side critical section this doesn't
-> return immediately, it returns after readers are done, doesn't it?
-> (well, what you really care here is the synchronize_rcu_tasks_trace()
-> but we do both).
-> 
->>       ← idle; returns immediately
->>     [kworker fires later]
->>       kfree(uprobe)  ← frees &uprobe->consumers
->>                                           cons_node.next = freed mem → CRASH
->>
-> 
-> So I had a bit of a look and as far as I understand, we don't have any
-> control over the uprobe allocation pattern (workqueues and whatnot) and
-> we don't really care as long as we deregister it appropriately.
-> 
-> What we do control is the uprobe_consumer, that must be freed only after
-> the uprobe was synchronously deregistered, that should guarantee no
-> reader is going to reference it, shouldn't it?
-> 
-> uprobe_unregister_nosync() removes it from the cons_node list, so it's
-> safe to assume any handler_chain() after the next RCU-trace grace period
-> won't see it.
-> 
-> In the sketch I sent this is happening (all kfree(b) are after
-> rv_uprobe_unregister() which does the sync). What am I missing here?
-> 
-> 
-> uprobe is also freed after both grace periods, so no reader should use
-> that either.
-> 
-> The situation you're seeing isn't fully clear to me, I applied my sketch
-> and don't see any splat on a vng box.
-> 
->> With uc embedded in the binding (as [2-1] suggests), no amount of
->> delaying kfree(binding) helps: uprobe->consumers is freed by a chain we
->> don't control.  The fix is to keep uc->cons_node in memory that outlives
->> the handler_chain() iteration, which means a separate allocation freed
->> only after rv_uprobe_sync():
->>
->>     rv_uprobe_unregister_nosync()  /* list_del_rcu + schedule_work */
->>     rv_uprobe_sync()               /* waits for any already-submitted
->> srcu work */
-> 
-> We of course need to do any free after this sync, but I don't get why we
-> need an additional allocation since the following are both plain
-> synchronous frees, why isn't a single one (on b) enough?
-> 
+> Isn't this a cache so that the pid numbers can be converted to strings
+> when the trace is read out after the actual process has exited?
+> That does mean that cache doesn't need to be updated on every trace
+> request - it might be enough to just save on process exit and lookup the
+> pid itself for running processes (the whole thing relies on pids not
+> being reused).
 
-Thank you for the patient explanation.
-You are right, and v4 implements the embedded approach.
-struct rv_uprobe directly embeds struct uprobe_consumer:
+Yes it's a cache but it only gets filled when needed. That is, after a
+trace event occurred. Tracing is very commonly used with filtering, where
+events can be seldom triggered. What is in the saved_cmdlines file should
+only be tasks that were running when a trace occurred.
 
-   struct rv_uprobe {
-       struct uprobe_consumer  uc;
-       struct uprobe          *uprobe;
-       struct inode           *inode;
-       void                   *priv;
-       int (*handler)(...);
-       int (*ret_handler)(...);
-   };
+Now what we could do is add a flag to the task struct and only set that
+when tracing happens. Only tasks that exit would be saved in this array.
+The other tasks could be queried via iterating the tasks and reporting any
+task with this bit set.
 
-rv_uprobe_free() is gone — no allocation means no explicit free.  After
-rv_uprobe_unregister() (or rv_uprobe_unregister_nosync() + 
-rv_uprobe_sync()), the caller frees the containing struct directly.  In 
-tlob:
+> 
+> >   
+> > > map_pid_to_cmdline[] is 64k*sizeof(int) so the whole structure
+> > > expands to 512k with about 64k/20 (about 3200) pid entries even
+> > > though the default is 128.    
+> > 
+> > That's because it is not dynamic. That array needs to be able to hold
+> > most PIDs. The default is 128 but it will expand to how much it can
+> > hold to allocate the full map_pid_to_cmdline. The real default for 4098
+> > page sized architectures is 6552 entries.  
+> 
+> That is double my 'quick calculation' - but both are a lot of entries.
 
-   rv_uprobe_unregister_nosync(&b->start_probe);
-   rv_uprobe_unregister_nosync(&b->stop_probe);
-   rv_uprobe_sync();
-   kfree(b);   /* frees both embedded consumers */
+I got the number by looking at saved_cmdlines_size after boot ;-)
 
-This is the pattern from your sketch.
+> 
+> > > AFAICT there is only one copy of the data - so it could be static.
+> > > Perhaps with pointers to map_pid_cmdline[] and (after this patch)
+> > > pid_comm[], both of which could be separately resized.    
+> > 
+> > map_pid_t_cmdline[] is to hold the PID_MAX_DEFAULT amount of PIDs to
+> > avoid collisions. I wouldn't resize it.  
+> 
+> If comm[] is only saved on process exit you'd likely get away with far
+> fewer entries - getting collisions for processes that have exited is
+> rather unlikely.
+> (I wonder if I could make that work.)
+> 
+> Does that memory get allocated at boot time?
+> 512k is a lot to allocated for a feature that won't usually be used.
+> OTOH you won't reliably get that much contiguous memory later on.
+> Deferring to a later time (maybe as late as the first tracing_on())
+> might be more reasonable - but that would have to use vmalloc().
+> 
+> I'm also not sure about the code that lets you trace from boot.
+> That must be able to initialise early - but I'm not sure how early.
 
-Regarding my earlier reply that argued for the separate allocation: I 
-was wrong. The key barrier is synchronize_rcu_tasks_trace() (called 
-first in uprobe_unregister_sync()), which waits for all 
-rcu_read_lock_trace() readers including handler_chain().  After it 
-returns, no cons_node.next read is in flight and embedding is safe.
+Well tracing can start before init, so pretty early.
 
-We appreciate your thorough review. All of your comments have been 
-addressed in v4.
-We'll run local tests for one or two days, and then it will be sent out 
-shortly.
-
---
-Best wishes,
-Wen
-
-
+-- Steve
