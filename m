@@ -1,62 +1,64 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0313CCA6B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 00:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233741FC8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 00:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782778419; cv=none; b=Q1sxp6h0mmQRwC/dYwMr4GOADcxPpWN9Pazg101dqHp6qteDnLy5f63wfEO+dWI4FLl//kwoauZIS+kAJYlxkUdefSFYJxkSsKrgyFXxNnCyV/Ku5CyRUL6PTnDPoiwNqB1/yuooE1m9C1zHHrJkX/lBdnIyFsvhKTFRX9AstSc=
+	t=1782778420; cv=none; b=DF0qwyeR8e3CgpgpP95opdBVeaaKwvDekDZnSWA4GZ0V3EZF+uoODT8jsMDX3gOPwKxKHAEzUsLJ9k4LnydUVEQCUF433bGuKw9cL93xSApUlpYFJ3C+4ci8X6l4/o0zENeqjtRXSQqqELP3xPx7yJdDALY9y9WoHQMDIZOwycE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782778419; c=relaxed/simple;
-	bh=xA/Vs9V7SjmvMjzEG3jYo4JXm0pLhylCX8gmEuckYbc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jXBH4crHxllVLok32GLFV0oK013V4mwlqzZHIYdR4Idd36/WGVZQG1+5XBobJ22IV0m/BeLlr3JlJiBHQXrfXDXG+B2WgH3KfsAf0h/vM2FCo7DnRTqTvevvBhjyHphru8la6RO96GtDq7Cu/mdTVQJ00x/OKx1qXk9q0vJ3y/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ExUoY7ee; arc=none smtp.client-ip=209.85.160.175
+	s=arc-20240116; t=1782778420; c=relaxed/simple;
+	bh=LpefGqISpCECkK9K+7Wu7IMXsR7Ciya9KmDiHH/yoto=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sII3nv8SHZIxhHRLmiLsabJtqu/4osQKzXf9gYaiYCiAD9A7uyYDOoPnG48omBYlF5WZ7u4q2RU89W3etFP8e0RYKslpyzDbyv5Dw3iT/Gf24XDX/1TWbirutn/8xLfqDBzs71FmmtPLJVGkuLwrc+DVB2zDxUEchn57BjpAIAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FCNhcUQp; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExUoY7ee"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c08df8513so7865841cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 17:13:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCNhcUQp"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-92e5d6f35c1so113775985a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 17:13:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782778417; x=1783383217; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jIkraZxinUJrwI8LhBH8/tkcf/KJe4Ahg7TpFa29WD4=;
-        b=ExUoY7eeULcP47M1bs6z/Galpsx9KC2Lj0Zn1QteJiSOmVaLNrAm6GBr3n7XGJZWdh
-         ZiSCJVsEq3hXviQ1iYv7ABy17INGs6u7Ocs9J6bEimYyiypdE25MNxzLEs7U0kxFXyow
-         lj/ev5mE1fBg+xlb5NnImOS+o797Uk5anjw5DQiTKXjZeIyy8TuKwjXrseZuIMrqiogQ
-         u0C0T9NsINX8TCBDiqgHw9vzDhNNu2C2Bcd5NPw4fvaVIJxG/lvdr/AFAYNxsOmUXBRi
-         pCpRUq+7XAUkrvm4s3LZFO14AxfPDh4dyq7XIA8kSIUhDq7isdEmzEtR7+jF1XLTPScE
-         28aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782778417; x=1783383217;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1782778418; x=1783383218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jIkraZxinUJrwI8LhBH8/tkcf/KJe4Ahg7TpFa29WD4=;
-        b=fDAUf0xMRvH7RERjFmZJV1z1pwyWb4MO2g2cqXkd1zYvbG1gShqhwEGhS3NBuZ3/2n
-         07Dwn/7d/hzjMysbkeDxwdvMqY5MhLnrkHsduCS0Rt/x8+zQ+YHrYh2JKpxbgtgGj6O4
-         CqboL4Z3K19eD0J5LxroyIu4uDCzN+qgYdVrUf5Kusm6azmLZZHkOPfMK/mmF8U1N7dP
-         r+WaMPKscABjpY2sOP/g7Py39a88XU309nnt4Kt1pPurARHN5Ya4aZB6mKlLnj5JIZtr
-         FjCVD7wNWcfM8oLs/JGAQ9STv2R+VJuwAtdM1DBeecgNp/BW7diV00rn741KaFLYFEVP
-         Lt7g==
-X-Forwarded-Encrypted: i=1; AFNElJ9cToOqLbHVwP4oAEY3iq3McjmYCzSa0O9nNSsX7hFAvNkYsA0NbBZZzFWVdNwAsWOLEx7kvSk8q94l5+8wO7biSIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH+MuJeFQw7w767cbQChO0Tgx8E4SKLQIqOybXDnYSMDFKq+lg
-	t6p+gf39GuQh3gjeJqA49EK0XDj0WJGlDxJk4wsN6PY9hW5U4VdNQkCp
-X-Gm-Gg: AfdE7cljfLmPXAfr+52dM9sU/y8PN8TxblKHYAChDxteRjAXn7jzfDdlAoG4Uyz3lsU
-	Sz6NeEAG1oGECbs/08g+wGH/ii4RUbWpiG4wwBtu6mR5enWFBaJEo/3MvmUnUCau9mBbwLTRF+z
-	kVx66FEGz67fkbOKMxMQJly1kRntGnBaxBZgAtBkiqCSjNAt3TzyFzvbbMluXgB8ImsDoQA98jd
-	qAUdrmEp12eJVtS61kBQVYZ/A3IVDNdVtdRH17UgBT32dd0VM5OluQyrieNiqMBnxDZPLRLLBXR
-	DGn/Y+AS3f2Qxyjh/xv8cRIv3TUXr2GbPm06EMBUVUy9rz80oLncJS6JiYQWyBncm8t2Fsr4oYl
-	Y1brWbMWnbNxR4CpDfFwlrJn3REc4R8Z0uXZ66DsqUSvuL4347zhV6ojMCyasSIsK5J0knPWdo9
-	Mi5GINMJi/32YksySOUkpD++0g9syjvuSEAvGX4qDG1V2QMzP0rSNF+95T5BqXFbXJXoVAiIEGm
-	WBW/hjbLk/IYtVyIAzXctpkOw==
-X-Received: by 2002:a05:620a:461e:b0:92b:67e6:8acb with SMTP id af79cd13be357-92e627f80cdmr276859485a.69.1782778416870;
-        Mon, 29 Jun 2026 17:13:36 -0700 (PDT)
+        bh=gBVGMUDoW3cJlDl1HiRQBX/yXVW3BQpzxrX3ECvYbGU=;
+        b=FCNhcUQpau95vnDXBW84aIEXsUGFt4JmStl/v70HkGj8qKNp/gBQq31PygwofVQZmr
+         SioF62rIZvG6GOxZrXkTSi4BEm+bi8NLZ00b3aEHThsiJlds73UyI3R/qfosdKZpRvPq
+         whPwOLQZtkJgILVpvMVs7xT6ZVYYYam1QMj/sAg6dkZI5DXcqQwiRMCLaXgsFDsUcaLP
+         FZxRZTPDgnJgbKyuhx5eKNzrO83m83JdEOgg31T0+p/NIkPajyz+g6xHqvMozxJ8xfnz
+         +WiBZiCy902JBJvwalH2wPVTmoICSI3gM+LjHqk27ltbl/PWP6qDM87b8reYNLqkd0UR
+         cKDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782778418; x=1783383218;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gBVGMUDoW3cJlDl1HiRQBX/yXVW3BQpzxrX3ECvYbGU=;
+        b=JaCSSjtr+L5tjz/fEm6MzGiNnnfK6E/9O+UommgdpOf577cdWJ5Cdeg1bclqbujQ0g
+         uh62lOpASHRBeyWFYjBCwaKUJ+Z87o9fI3hExdEf74hI9J5enrCBNnXkwEmwuhBnDycm
+         uWwLeYYMB4Lr4zrB18VG5IhLxuqJJASQar9j0wdKN3Kwnj2LR2n6N5UCDfGfI7jiqXec
+         sn/YEY++ngNYaxKU3DO3iDn9g369vCWlmNyobwvNKtbikkQCTt7N+mZlc6x8XI01Gqrh
+         +vsEv8QQQII+DGxAzaf8ajAd9bFtlsz7dQw1KOwC6r4jdTJOzkJxVbtc9yFMUe8O09Y7
+         20Iw==
+X-Forwarded-Encrypted: i=1; AFNElJ940RsCFQw46zNLx0IB9g5Q5pGdSWb9Ab12sOUDQYbQ11wT5bGnM4Mjv4z204kao+CQO5bzUXl8hrIeLaU4+PaSrd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdftUPQFpJRN21auG2RHKlacLr/3kT3UzQxFr2W//l4jXWnrDk
+	TOFoqEp8Dk5qCVzE0vXrzGCvnsIKicnUmZWt1de0GU5xsC0TK7qgqJ+h
+X-Gm-Gg: AfdE7cmx2JJkzNXg8WJLpjragw9Kh1HQAY/2OKSyQrXjaYjccVAN75cOp0/GWRjAtww
+	Ui84xseu/mIxtVPTPU0LdEJnU1LiIbQgxRfPBGcckFUjxfJtywHARaGz9hz08+hqs7Vb83TIkQ+
+	b1iOTyEBvxMsURUhVu0v+kKQhu+nXKA8h9nI4Sv0KtnzYudYqm8G0ftu+0YS0C22TrxAQxczkOp
+	udHXuFQaXGcLaqk8jBeF89NZaFqj/tJ+ef7ZdlcsSjukn4JUnxY8rT0CYZd0TnCjhzVPwjFWqG7
+	I5PIcShZqq39uRP3silCGe6mXhHItwqbcSAa2rUQFdStUDyFWLp3cdIsUYbwHsN2dohTiu3dYiS
+	Gqpv9Tv0hb6kMQ0rdaxHl1ML+e7bNOF5OeOCTXVKe5gFcVyRjmhIc6qz7RDPhCaAx4d4C+lA/Pg
+	dASwZk2d0qzjAavMAtqOy32N9zI9Toe2iWZRemUAGVRDAlgaoogwzLMO5GCthBQEQHd9FfdP2g7
+	0nHPXTOJSJv3nA=
+X-Received: by 2002:a05:620a:701b:b0:915:8502:f7fc with SMTP id af79cd13be357-92e624ad068mr278904385a.16.1782778418038;
+        Mon, 29 Jun 2026 17:13:38 -0700 (PDT)
 Received: from battery.lan (pool-138-88-31-60.washdc.fios.verizon.net. [138.88.31.60])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e6219cb9asm101975185a.21.2026.06.29.17.13.35
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e6219cb9asm101975185a.21.2026.06.29.17.13.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 17:13:36 -0700 (PDT)
+        Mon, 29 Jun 2026 17:13:37 -0700 (PDT)
 From: David Windsor <dwindsor@gmail.com>
 To: mhiramat@kernel.org,
 	oleg@redhat.com,
@@ -73,10 +75,12 @@ Cc: tglx@linutronix.de,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	David Windsor <dwindsor@gmail.com>
-Subject: [PATCH v2 1/2] x86/uprobes: Keep shadow stack in sync for emulated CALLs
-Date: Mon, 29 Jun 2026 20:13:33 -0400
-Message-ID: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
+Subject: [PATCH v2 2/2] selftests/x86: Add shadow stack uprobe CALL test
+Date: Mon, 29 Jun 2026 20:13:34 -0400
+Message-ID: <b957039191118c5eba97d01d80c494b859f115a6.1782777969.git.dwindsor@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
+References: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -85,58 +89,131 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Uprobe CALL emulation updates the normal user stack, but not the CET user
-shadow stack. The subsequent RET then sees a stale shadow stack entry and
-raises #CP.
+Add coverage for entry uprobes installed on CALL instructions while user
+shadow stack is enabled. The test puts an entry uprobe on a helper whose
+first instruction is a relative CALL, then verifies that the call/return
+sequence completes without SIGSEGV.
 
-Update the relative CALL emulation and XOL CALL fixup paths to keep the
-shadow stack in sync.
+This catches regressions where x86 uprobe CALL emulation updates the
+regular user stack but leaves the CET shadow stack stale.
 
-Fixes: 488af8ea7131 ("x86/shstk: Wire in shadow stack interface")
 Signed-off-by: David Windsor <dwindsor@gmail.com>
 ---
 
-v2:
- - propagate error from shshk_update_last_frame() rather than returning
-   -ERESTART in default_post_xol_op(). (Oleg)
+Notes:
+    v2:
+      - New patch. Adds a uprobe-on-CALL subtest to test_shadow_stack_64 to
+        cover the fix in 1/2. Verifies that an emulated CALL through a
+        uprobe leaves the shadow stack consistent with the user stack
+        (no #CP on the matching RET).
 
-v1: https://lore.kernel.org/all/20260622183109.1137245-1-dwindsor@gmail.com/
+ .../testing/selftests/x86/test_shadow_stack.c | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
- arch/x86/kernel/uprobes.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index ebb1baf1eb1d..d74bb54543b6 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1246,9 +1246,15 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
- 		long correction = utask->vaddr - utask->xol_vaddr;
- 		regs->ip += correction;
- 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
-+		unsigned long retaddr = utask->vaddr + auprobe->defparam.ilen;
-+		int err;
+diff --git a/tools/testing/selftests/x86/test_shadow_stack.c b/tools/testing/selftests/x86/test_shadow_stack.c
+index 21af54d5f4ea..3d6ca33edba4 100644
+--- a/tools/testing/selftests/x86/test_shadow_stack.c
++++ b/tools/testing/selftests/x86/test_shadow_stack.c
+@@ -873,6 +873,86 @@ static int test_uretprobe(void)
+ 	return err;
+ }
+ 
++/* Keep the CALL first so the function address is exactly the probed CALL. */
++extern void uprobe_call_trigger(void);
++asm (".pushsection .text\n"
++	".global uprobe_call_target\n"
++	".type uprobe_call_target, @function\n"
++	"uprobe_call_target:\n"
++	"	ret\n"
++	".size uprobe_call_target, .-uprobe_call_target\n"
 +
- 		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
--		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
-+		if (emulate_push_stack(regs, retaddr))
- 			return -ERESTART;
-+		err = shstk_update_last_frame(retaddr);
-+		if (err)
-+			return err;
++	".global uprobe_call_trigger\n"
++	".type uprobe_call_trigger, @function\n"
++	"uprobe_call_trigger:\n"
++	"	call uprobe_call_target\n"
++	"	ret\n"
++	".size uprobe_call_trigger, .-uprobe_call_trigger\n"
++	".popsection\n"
++);
++
++/* If CALL emulation misses the shadow stack update, this exits via SIGSEGV. */
++static int test_uprobe_call(void)
++{
++	const size_t attr_sz = sizeof(struct perf_event_attr);
++	const char *file = "/proc/self/exe";
++	int fd = -1, type, err = 1;
++	struct perf_event_attr attr;
++	struct sigaction sa = {};
++	ssize_t offset;
++
++	type = determine_uprobe_perf_type();
++	if (type < 0) {
++		if (type == -ENOENT)
++			printf("[SKIP]\tUprobe on CALL test, uprobes are not available\n");
++		return 0;
++	}
++
++	offset = get_uprobe_offset(uprobe_call_trigger);
++	if (offset < 0)
++		return 1;
++
++	sa.sa_sigaction = segv_gp_handler;
++	sa.sa_flags = SA_SIGINFO;
++	if (sigaction(SIGSEGV, &sa, NULL))
++		return 1;
++
++	/* Setup entry uprobe through perf event interface. */
++	memset(&attr, 0, attr_sz);
++	attr.size = attr_sz;
++	attr.type = type;
++	attr.config = 0;
++	attr.config1 = (__u64)(unsigned long)file;
++	attr.config2 = offset;
++
++	fd = syscall(__NR_perf_event_open, &attr, 0 /* pid */, -1 /* cpu */,
++		     -1 /* group_fd */, PERF_FLAG_FD_CLOEXEC);
++	if (fd < 0)
++		goto out;
++
++	if (sigsetjmp(jmp_buffer, 1))
++		goto out;
++
++	if (ARCH_PRCTL(ARCH_SHSTK_ENABLE, ARCH_SHSTK_SHSTK))
++		goto out;
++
++	/*
++	 * This either segfaults and goes through sigsetjmp above
++	 * or succeeds and we're good.
++	 */
++	uprobe_call_trigger();
++
++	printf("[OK]\tUprobe on CALL test\n");
++	err = 0;
++
++out:
++	ARCH_PRCTL(ARCH_SHSTK_DISABLE, ARCH_SHSTK_SHSTK);
++	signal(SIGSEGV, SIG_DFL);
++	if (fd >= 0)
++		close(fd);
++	return err;
++}
++
+ void segv_handler_ptrace(int signum, siginfo_t *si, void *uc)
+ {
+ 	/* The SSP adjustment caused a segfault. */
+@@ -1071,6 +1151,12 @@ int main(int argc, char *argv[])
+ 		goto out;
  	}
- 	/* popf; tell the caller to not touch TF */
- 	if (auprobe->defparam.fixups & UPROBE_FIX_SETF)
-@@ -1338,6 +1344,10 @@ static bool branch_emulate_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
- 		 */
- 		if (emulate_push_stack(regs, new_ip))
- 			return false;
-+		if (shstk_push(new_ip) == -EFAULT) {
-+			regs->sp += sizeof_long(regs);
-+			return false;
-+		}
- 	} else if (!check_jmp_cond(auprobe, regs)) {
- 		offs = 0;
- 	}
+ 
++	if (test_uprobe_call()) {
++		ret = 1;
++		printf("[FAIL]\tuprobe on CALL test\n");
++		goto out;
++	}
++
+ 	return ret;
+ 
+ out:
 -- 
 2.53.0
 
