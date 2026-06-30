@@ -1,125 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1783B52F1;
-	Tue, 30 Jun 2026 07:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5F51DE8BB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 08:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782804647; cv=none; b=s+03a24ZMOh2DNu0+ryUHWZdJ63ApNVQJfNyedYT95Q84E8h0ehfXNSlQD85KUeQTOEWVxwUvGGiJg0Zc5zlVci6PWrXk8EePapbD2zsY5qTug/THZoCCmPVm6FII4BVw0YySpj+B0+qFc4nvvWYcQkfRldJoQVnuXucZ+DV44w=
+	t=1782808810; cv=none; b=DD0gjh98c6d1HTMv3ZzhtqSk601rYTfwztu4ZeAjtlJO/1Hmpc0AEOtZYzr/UMeXZ9msjzoxB/FEfTXGyNJ20PfF9mkf2kYYaVMwrV6ubXEvFF613gXw8SwUZYioYWxsiRgIGSjWskuSirTfI95mVDR1e46QnjvTk3Bs9DMNF8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782804647; c=relaxed/simple;
-	bh=4+nY7sdYMvMbXZv4lNlig6lzR2pynrsj1Id4REMH7ZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U4nEo+cbaYGKPRTigXafs4CS9P/31OfkRuACXJN7n5izSkyXLpq6p3TugsKntxOJ160TU8EoNysHlrWyr3cS1yfhvD6jEOdKsqs9s7xSoyzTHo8N8oCDXHhYeXx6tETEypdvxmoZ6CWeBAzm5Q3bnWjKTXWuTXNTH25xBUhOkHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EE3n0kau; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782808810; c=relaxed/simple;
+	bh=pfJLtE9sNrRsr8aJJeZjoYBGIo41nggVe/WFiRmbh0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=nSDq+zwoQUbT8COulTct9SqJeQcpy/7CXXMSGJn8KapgXjvv9avgmeKz5UUd5fx2ijvCw7gPHwDbGiZgKxFl9QuUAtl6memPypLwtgfOZEt7Nl0OA7zheU9DtNHddEX5szRaSqw2CwxVWA+LkSUNHbPxq8rU6L+UNWM2s8B8xe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DFanpsRm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EE3n0kau"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0053A1F00A3A;
-	Tue, 30 Jun 2026 07:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782804646;
-	bh=aYfJUFaTOyFOcoxITqwdEC+0xWofxNWvq6nxR+zhb5U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=EE3n0kauPqhVKr9TxRm30FJdfFFqyKH36tH8h9mW4eBcMoikc2cB85CBk0KQk6qW1
-	 CQbHB9wnDq+Ay4JOaU0SGbQFWt9U87shatZYVeJJgXWWdYaAOdem/KGCfL9xe0xrQJ
-	 XN+oMuItztoMbK/2Om/mJme2CIwUf5r4xlgtdySfx6XDB/WV6MsnQ4ZqR8YDXAtDXq
-	 1oRx2XfJyBE8FtbRqApRxF35g5hYQOdOQZPEkmDhsCe1qCyyw7t2ivZtU8eSKJhJPx
-	 wlHjy33kDEFmL5d/o3XhiN8AcoQnlEnZ8VedhTFc4b00z0uEQpf7Mj+IzzHhGnLLtt
-	 ncm+Anzl7a9uQ==
-Message-ID: <102120c6-e560-4f15-b863-375d45af0ace@kernel.org>
-Date: Tue, 30 Jun 2026 09:30:39 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DFanpsRm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782808807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pfJLtE9sNrRsr8aJJeZjoYBGIo41nggVe/WFiRmbh0Q=;
+	b=DFanpsRmmymI1CD+e7vyoFVPOtsWJ2ui0XLUgGAPJCb5ulTAycG0NhReXkgGxpQoWVv7HF
+	2/DvD58g968ouwSSjJ7lreKuOCfX8fJXvrOFd0uS2tSraw75FBzx4lhhCVx6nKoYd3gfht
+	30leY7XWmQWC92xmhXyJ+ASvXAOUr9A=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-142-Vv1c5uwyMZSeATReHqInGA-1; Tue,
+ 30 Jun 2026 04:40:03 -0400
+X-MC-Unique: Vv1c5uwyMZSeATReHqInGA-1
+X-Mimecast-MFC-AGG-ID: Vv1c5uwyMZSeATReHqInGA_1782808801
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E1AF180057C;
+	Tue, 30 Jun 2026 08:40:00 +0000 (UTC)
+Received: from fedora (unknown [10.44.32.37])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9ACF3195608E;
+	Tue, 30 Jun 2026 08:39:55 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 30 Jun 2026 10:40:00 +0200 (CEST)
+Date: Tue, 30 Jun 2026 10:39:51 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Windsor <dwindsor@gmail.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, shuah@kernel.org, rick.p.edgecombe@intel.com,
+	jolsa@kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] x86/uprobes: Keep shadow stack in sync for
+ emulated CALLs
+Message-ID: <akOA1xldL8FGWpwp@redhat.com>
+References: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] mm: use enum migrate_reason instead of int for
- migration reason parameters
-Content-Language: en-US
-To: Ye Liu <ye.liu@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Oscar Salvador <osalvador@suse.de>, Andrew Morton
- <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260630015331.147174-1-ye.liu@linux.dev>
- <20260630015331.147174-4-ye.liu@linux.dev>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260630015331.147174-4-ye.liu@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8b5b1c7407b98f31664ad7b6a6faf20d2d4a6cad.1782777969.git.dwindsor@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: 5o_kUvn09bHmL89-PnndTkt6N3dTJMFwD83VZoXZmSk_1782808801
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/30/26 03:53, Ye Liu wrote:
-> Replace all 'int reason' function parameters that carry migrate_reason
-> values with the proper 'enum migrate_reason' type.  This makes the
-> intent explicit and leverages compiler type checking.  The affected
-> subsystems are:
-> 
->   - page_owner: __folio_set_owner_migrate_reason(),
->                 folio_set_owner_migrate_reason()
->   - migrate: migrate_pages(), migrate_pages_sync(),
->              migrate_pages_batch(), migrate_folios_move(),
->              migrate_hugetlbs(), unmap_and_move_huge_page()
->   - hugetlb: move_hugetlb_state(), htlb_allow_alloc_fallback()
->   - trace: mm_migrate_pages and mm_migrate_pages_start events
-> 
-> The 'short last_migrate_reason' struct field and internal helper
-> parameter in page_owner are intentionally left as 'short' since they
-> store per-page metadata where size matters.
-> 
-> No functional change.
-> 
-> Signed-off-by: Ye Liu <ye.liu@linux.dev>
+On 06/29, David Windsor wrote:
+>
+> Uprobe CALL emulation updates the normal user stack, but not the CET user
+> shadow stack. The subsequent RET then sees a stale shadow stack entry and
+> raises #CP.
+>
+> Update the relative CALL emulation and XOL CALL fixup paths to keep the
+> shadow stack in sync.
+>
+> Fixes: 488af8ea7131 ("x86/shstk: Wire in shadow stack interface")
+> Signed-off-by: David Windsor <dwindsor@gmail.com>
 
-Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
