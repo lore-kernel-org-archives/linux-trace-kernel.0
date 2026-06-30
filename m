@@ -1,41 +1,41 @@
 Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706D73F65F9;
-	Tue, 30 Jun 2026 12:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9AD411695;
+	Tue, 30 Jun 2026 12:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782823609; cv=none; b=YTnCL43bQ6a6X8lutQKwWAMfSQv/PaD9mVYG+8TaSMkNdSdhUNZzeB8Uoq68lMCjqWQ9zmfgHnFBPdwVnef/k5OQEtREJyG7zcwGZBcjm4rWBTJsQ+o7J2pSmgdgiN13MinSw8L6iRnGfdJm3H5vYh4IjGfF3s8oeyiHfmOpnfo=
+	t=1782823614; cv=none; b=Osswrtj0kIus9pmNr59rjjklnuX/CwudPBt2KWGuxgXHio84qNRtonqCeH8ojU0DHMqsa3PWCDnmV62U3/yecTptCX+D7luPJT3s51F2VKkUd0gbjzWhDR/L8AglLo+abDECuwMOVEfTI42CHOOMTYOmF29WCtbPsltnxwlNDy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782823609; c=relaxed/simple;
-	bh=GaED5srKVuxGk+sMRMSMg1mKfXoDXSHlZoLJEzW0g88=;
+	s=arc-20240116; t=1782823614; c=relaxed/simple;
+	bh=zs5d0EaDtC4b+XF1VC0WVAz8W6j9RlbDhsy/bvqeXbc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M1bk0OVDMTUAWacGkbk7NXKJcSzS1YBPC4LU3oguSivgAaDBfYjKEeXepO8YjgHcSI6c9otbsGE8OClLpwomRkeC3Y26SXKAqDN8NfAzpFJzYEWil9HuOhhd3QfdAPolWleRXpkpmGpKS76+GnaRdQ7tGUga9VyjX89ZAP0R7FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=hyOt5eZb; arc=none smtp.client-ip=82.195.75.108
+	 In-Reply-To:To:Cc; b=rPOG0nPBYMqM0egEeVIvbROoMA8wIq0+Ktvq+WNMf0+kd4xvVkE2ecgLHROy+92jZt6byqof18DQv4RXVfAWNlydiWGd8xG+Ey3VnFgYJpwpbBSMkHfxWlLVmopOom3rDul7i+pAPNS3BveXfWVF9mZllE+fCjFqoPj8g2XfkIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=cUGBidlh; arc=none smtp.client-ip=82.195.75.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="hyOt5eZb"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="cUGBidlh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
 	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
 	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description;
-	bh=weDADfQQC9XKEy/7w/rj1X2ztgRTHSRo5MmtKT2/6dE=; b=hyOt5eZbgEfmMIBv4QBhk37fEy
-	GSvM6THyIFD3emJUSrZo2SI9w8lL4W3F4b8YQlMsycDv3LxrUxj9XvICbP3jTcs+VFzqQfk/13GZk
-	kz7kHlClGocCPwhck9VjGDSE+24JfBCuup4MyZf6zsMgOqaczTLq9o8DtdX/u+kVhD9w3kfuNBYWQ
-	fQEtCF5tj3sotCtiK5v5XPBYxQEZr6N62LlNllPkzCSbeQyZbtuSj27lSsEqVaj/9KgkdAyVmlDrp
-	exyyepkKS69j0m6ZyBLE5SXrU2IShdTWKKabgPbF/xkOwPShPdTBTjfDZT8qQroB0xq4WsTnCnX3o
-	DYXM3+4A==;
+	bh=vCokxTSzcevyt805GhDojYbTDh8KrKHQ/7ZlaYopizI=; b=cUGBidlhaYaxKIhbqVjwiZJuck
+	Nr3Iaik0CSCulz/qZ+raPa2GGvt8Q6SmGhUT4jrmLhj7abAJ9B7Ilp2FtE4+7Z/4DSxUfaqDIkczI
+	ebRYvc/tcVfQzA7WHQok+3OnPmWIm1dQFuUw1kbK1jhMgUnn226L192kVnExpLpr3T8EM5o8ZTFhX
+	6UBcFJO3TOlQVhaO9SsVK6LsZyJdLEqdvsjaB4nzipZhzPDynAetNS9gag4cNA1zhn37sPOYmXoXl
+	1v1T47EWX9NhEqsPu8WaLrLZn8iiMqmJ1siLKaQe7KUAN5n7gnXVAEwi3Eng87iNJhcBc4dufn95e
+	FkyYNirQ==;
 Received: from authenticated-user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <leitao@debian.org>)
-	id 1weXrM-0074bM-05;
-	Tue, 30 Jun 2026 12:46:40 +0000
+	id 1weXrX-0074bc-1G;
+	Tue, 30 Jun 2026 12:46:51 +0000
 From: Breno Leitao <leitao@debian.org>
-Date: Tue, 30 Jun 2026 05:46:05 -0700
-Subject: [PATCH v10 2/6] mm/memory-failure: surface unhandlable kernel
- pages as -ENOTRECOVERABLE
+Date: Tue, 30 Jun 2026 05:46:07 -0700
+Subject: [PATCH v10 4/6] mm/memory-failure: add panic option for
+ unrecoverable pages
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260630-ecc_panic-v10-2-c6ed5b62eea2@debian.org>
+Message-Id: <20260630-ecc_panic-v10-4-c6ed5b62eea2@debian.org>
 References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
 In-Reply-To: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
 To: Miaohe Lin <linmiaohe@huawei.com>, 
@@ -64,175 +64,108 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Breno Leitao <leitao@debian.org>, linux-trace-kernel@vger.kernel.org, 
  kernel-team@meta.com
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6620; i=leitao@debian.org;
- h=from:subject:message-id; bh=GaED5srKVuxGk+sMRMSMg1mKfXoDXSHlZoLJEzW0g88=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqQ7qdfmSnk9V7vowWxhJ+2fhb0qD7NDDDv6ax9
- MMzj0i3J2yJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCakO6nQAKCRA1o5Of/Hh3
- baJhEACl3tXB/iBMjKZtuVvGXVxWjHMNEWUmKCgrKF+pBvwAg1xCR+nzPvdu+/ZInPcBmilU5Va
- ROBWT8FOz1KIDZ6r7dc272rZvS9huGCfl8NKrloKwjC2T6Wgxv+7hwRAxyR+yFTj3KSW/Xt+D9J
- NyGBsaxV1CpzAyIl7OQc1AmKt3KEhZOrLmmY4BgoKhxlW1WfpuRzh2JGvOs6KDlAPv6BlDK4gnS
- lF7vtkhmywymREDm+qqzSmYsTk4JK6ExpzaTVQffbD++N2q4ygSftdrjkx2OLCLIpcdu5MPQoC+
- TPUakIDu+8aRzCS7q/dqCbKYEd1nyfsqRohcljfA7kKSje7bEGZ9dOlixaVlvWx0wtUZdMfbM6Y
- AakspsuRDdncccB6c3DqJYrti0MKU2rEJsmV8dZ1F5xwca+Exfn0k3pkDDkrKhDwqrGUVvipwmv
- SmAFWhBRYh7VKrtjjOsVYP4uGDTg73fpNVsFgdAyI53cy0vw4cyNewsiAZYne3DHOtEus5ncdvt
- 01PhC8Nb+ROU3oi/KkSBDJAZ2PsT9h5erMazpQipoQ6Jhhwf5uVhb/N7bdUCBC6iwff39Ji6mTj
- doSISstgh/z1IlNmZ0L9P6Dsom/Vr+6jSDgjBVKY1+zQxnG93Z5kBBVVmJ4Dni1OgmDRUlxNtyj
- E8LYRE64ZDx/Fkw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3199; i=leitao@debian.org;
+ h=from:subject:message-id; bh=zs5d0EaDtC4b+XF1VC0WVAz8W6j9RlbDhsy/bvqeXbc=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqQ7qdyDcYdI/fmLTJbqkw622ovYPP9XUuCKO57
+ hCIEQ/WqMuJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCakO6nQAKCRA1o5Of/Hh3
+ bRWQEACCPnekYvw9Fn2w0swAIBxv1NRCrNyM6wD9dPBFIxVUp/2s9tfmyafFCVhxZD3+L/+7k7v
+ qILRHO6MdCHX40CWFGjZ2XNBn4XZ+YKHjheYIDvNkxUeGj6W8BpvoZnaMvYL4r/55u0Nx+vwzmv
+ NJtKmDFFufsrhyQOnVTJ3qfHI+xdUKXQQCq0FwwdyOYdD8PfxOxhGPiuK2Bs+6mRdlxGYaLGOOB
+ JZToMInRcaYJ601Y713UU7nvPenUtD2noKDnrDUvRy9IDohKMwEG7t6Y3JYstKYLzhyYdAmg7cu
+ 9Omyaa9jPaQjCSFnG3A/iEDQJOqRWoNs3z8YhcVv6HnHpWiKUkFhuuD7l5QXXKhAL7JO5k+u/6y
+ MfSIp1Qdgsp33+s0jMsOpEB+xip/RjNMeykRNnvaL22Azj0FWB+lpbP54WIPwn8Cw9vxU/Lh8mr
+ XERsZ6VlHoGOKuQC7YfV42LPVBpJjiMelczQ9HSWOuIrY9fwZU83kq8Be48SNzv32jr+Es2itfv
+ NWpbIJVfHseHTg74sID0tC6uWA6xfCblW+ajFi2u+9HMe5vPBVWkvAQCyDdBJk95MJfBg8zc9v6
+ ne8Uzdf1PIsJ/+E8OvedGrYRP3fqpyRkMBCdaursxuU2Ccs56CvmkpZko2PUhaAigXlS6z8HL+7
+ 9zP3X8sphExipWg==
 X-Developer-Key: i=leitao@debian.org; a=openpgp;
  fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-Debian-User: leitao
 
-get_any_page() collapses every HWPoisonHandlable() rejection into a
-single -EIO via the __get_hwpoison_page() -> -EBUSY -> shake_page()
--> retry path.  That is correct for the transient case (a userspace
-folio briefly off LRU during migration or compaction, which a later
-shake can drag back), but wrong for stable kernel-owned pages: slab,
-page-table, large-kmalloc and PG_reserved pages will never become
-HWPoisonHandlable(), so the retry loop is wasted work and the final
--EIO loses the "this is structurally unrecoverable" information.
-memory_failure() then maps -EIO into MF_MSG_GET_HWPOISON, which the
-panic-on-unrecoverable sysctl deliberately does not act on.
+Add a sysctl panic_on_unrecoverable_memory_failure (disabled by
+default) that triggers a kernel panic when memory_failure()
+encounters pages that cannot be recovered.  This provides a clean
+crash with useful debug information rather than allowing silent
+data corruption or a delayed crash at an unrelated code path.
 
-Introduce is_kernel_owned_page(), a small predicate that positively
-identifies pages the hwpoison handler cannot recover from:
+Panic eligibility is intentionally narrow: only MF_MSG_KERNEL with
+result == MF_IGNORED panics.  After the previous patch, MF_MSG_KERNEL
+covers PG_reserved pages and the kernel-owned pages promoted from
+get_hwpoison_page() via -ENOTRECOVERABLE (slab, page tables,
+large-kmalloc).
 
-  is_kernel_owned_page(p) :=
-      PageReserved(p) ||
-      PageSlab(head) || PageTable(head) || PageLargeKmalloc(head)
+All other action types are excluded:
 
-  where head = compound_head(p).
+- MF_MSG_GET_HWPOISON and MF_MSG_KERNEL_HIGH_ORDER can be reached by
+  transient refcount races with the page allocator (an in-flight buddy
+  allocation has refcount 0 and is no longer on the buddy free list,
+  briefly), and panicking on them would risk killing the box for what
+  is actually a recoverable userspace page.
 
-PG_reserved is a per-page flag (PF_NO_COMPOUND) and is tested on the
-page directly.  The slab, page-table and large-kmalloc page-type bits
-are only stored on the head page, so those tests resolve the compound
-head first, then re-read compound_head(page) afterwards: a concurrent
-split or compound free that moves head invalidates the just-read flags
-and the loop retries.  The lookup still takes no refcount, mirroring
-the rest of get_any_page(); the recheck closes the common split race,
-and a residual free->alloc->free in the same window can only mis-tag
-a genuinely poisoned page, never reclassify a handlable one.
+- MF_MSG_UNKNOWN means identify_page_state() could not classify the
+  page; that is precisely the wrong basis for a panic decision.
 
-No MF_SOFT_OFFLINE / page_has_movable_ops() opt-out is needed: a
-movable_ops page is always PageOffline or PageZsmalloc, whose
-page_type is mutually exclusive with slab, page-table and
-large-kmalloc, and it never carries PG_reserved, so it can never
-match any of the checks above.
-
-The list is intentionally not exhaustive.  vmalloc and kernel-stack
-pages, for example, do not carry a page_type bit and would need a
-different oracle; they keep going through the existing retry path
-unchanged.  This is the smallest set we can identify with certainty
-by page type.
-
-Wire the helper into the top of get_any_page() to short-circuit
-those pages before the retry loop runs.  On a hit, drop the caller's
-MF_COUNT_INCREASED reference (if any) and return -ENOTRECOVERABLE
-straight away.  Pages outside the helper's positive list still take
-the existing retry path and return -EIO, leaving operator-visible
-behaviour for those cases unchanged.
-
-Extend the unhandlable-page pr_err() to fire for either errno and
-update the get_hwpoison_page() kerneldoc to document the new return.
-
-memory_failure() still folds every negative return into
-MF_MSG_GET_HWPOISON via its existing "else if (res < 0)" branch, so
-this patch on its own only changes the errno that soft_offline_page()
-can propagate to its callers.  A follow-up wires -ENOTRECOVERABLE
-through memory_failure() and reports MF_MSG_KERNEL for the
-unrecoverable cases, which is what the
-panic_on_unrecoverable_memory_failure sysctl observes.
-
-Suggested-by: David Hildenbrand <david@kernel.org>
-Suggested-by: Lance Yang <lance.yang@linux.dev>
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- mm/memory-failure.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 2 deletions(-)
+ mm/memory-failure.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index f4d3e6e20e13f..087658484e242 100644
+index 5fc3de474014d..e097fc8262cf8 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -1325,6 +1325,38 @@ static inline bool HWPoisonHandlable(struct page *page, unsigned long flags)
- 	return PageLRU(page) || is_free_buddy_page(page);
+@@ -74,6 +74,8 @@ static int sysctl_memory_failure_recovery __read_mostly = 1;
+ 
+ static int sysctl_enable_soft_offline __read_mostly = 1;
+ 
++static int sysctl_panic_on_unrecoverable_mf __read_mostly;
++
+ atomic_long_t num_poisoned_pages __read_mostly = ATOMIC_LONG_INIT(0);
+ 
+ static bool hw_memory_failure __read_mostly = false;
+@@ -155,6 +157,15 @@ static const struct ctl_table memory_failure_table[] = {
+ 		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
++	},
++	{
++		.procname	= "panic_on_unrecoverable_memory_failure",
++		.data		= &sysctl_panic_on_unrecoverable_mf,
++		.maxlen		= sizeof(sysctl_panic_on_unrecoverable_mf),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
+ 	}
+ };
+ 
+@@ -1255,6 +1266,15 @@ static void update_per_node_mf_stats(unsigned long pfn,
+ 	++mf_stats->total;
  }
  
-+/*
-+ * Positive identification of pages the hwpoison handler cannot recover:
-+ * pages owned by kernel internals with no userspace mapping to unmap, no
-+ * file mapping to invalidate, and no migration target.
-+ */
-+static inline bool is_kernel_owned_page(struct page *page)
++static bool panic_on_unrecoverable_mf(enum mf_action_page_type type,
++				      enum mf_result result)
 +{
-+	struct page *head;
-+	bool kernel_owned;
++	if (!sysctl_panic_on_unrecoverable_mf)
++		return false;
 +
-+	/* PG_reserved is a per-page flag, never set on a compound page. */
-+	if (PageReserved(page))
-+		return true;
-+
-+	/*
-+	 * Page-type bits live only on the head page, so resolve any tail
-+	 * first.  The check takes no refcount; recheck the head afterwards
-+	 * so a concurrent split or compound free cannot leave us trusting
-+	 * a stale view.  A residual free->alloc->free cannot be closed here
-+	 * (frozen slab and large-kmalloc pages cannot be pinned), but is
-+	 * harmless: where a wrong verdict could panic, memory_failure() has
-+	 * already set PageHWPoison, which bars the page from the allocator.
-+	 */
-+retry:
-+	head = compound_head(page);
-+	kernel_owned = PageSlab(head) || PageTable(head) ||
-+		       PageLargeKmalloc(head);
-+	if (head != compound_head(page))
-+		goto retry;
-+	return kernel_owned;
++	return type == MF_MSG_KERNEL && result == MF_IGNORED;
 +}
 +
- static int __get_hwpoison_page(struct page *page, unsigned long flags)
- {
- 	struct folio *folio = page_folio(page);
-@@ -1371,6 +1403,19 @@ static int get_any_page(struct page *p, unsigned long flags)
- 	if (flags & MF_COUNT_INCREASED)
- 		count_increased = true;
+ /*
+  * "Dirty/Clean" indication is not 100% accurate due to the possibility of
+  * setting PG_dirty outside page lock. See also comment above set_page_dirty().
+@@ -1272,6 +1292,9 @@ static int action_result(unsigned long pfn, enum mf_action_page_type type,
+ 	pr_err("%#lx: recovery action for %s: %s\n",
+ 		pfn, action_page_types[type], action_name[result]);
  
-+	/*
-+	 * Page types we know are kernel-owned and cannot be recovered.
-+	 * Short-circuit before the shake_page() / retry loop, which
-+	 * cannot turn any of these into something HWPoisonHandlable().
-+	 * Drop the caller's reference if MF_COUNT_INCREASED took one.
-+	 */
-+	if (is_kernel_owned_page(p)) {
-+		if (count_increased)
-+			put_page(p);
-+		ret = -ENOTRECOVERABLE;
-+		goto out;
-+	}
++	if (panic_on_unrecoverable_mf(type, result))
++		panic("Memory failure: %#lx: unrecoverable page", pfn);
 +
- try_again:
- 	if (!count_increased) {
- 		ret = __get_hwpoison_page(p, flags);
-@@ -1418,7 +1463,7 @@ static int get_any_page(struct page *p, unsigned long flags)
- 		ret = -EIO;
- 	}
- out:
--	if (ret == -EIO)
-+	if (ret == -EIO || ret == -ENOTRECOVERABLE)
- 		pr_err("%#lx: unhandlable page.\n", page_to_pfn(p));
+ 	return (result == MF_RECOVERED || result == MF_DELAYED) ? 0 : -EBUSY;
+ }
  
- 	return ret;
-@@ -1475,7 +1520,10 @@ static int __get_unpoison_page(struct page *page)
-  *         -EIO for pages on which we can not handle memory errors,
-  *         -EBUSY when get_hwpoison_page() has raced with page lifecycle
-  *         operations like allocation and free,
-- *         -EHWPOISON when the page is hwpoisoned and taken off from buddy.
-+ *         -EHWPOISON when the page is hwpoisoned and taken off from buddy,
-+ *         -ENOTRECOVERABLE for kernel-owned pages identified by
-+ *         is_kernel_owned_page() (PG_reserved, slab,
-+ *         page-table, large-kmalloc) that the handler cannot recover.
-  */
- static int get_hwpoison_page(struct page *p, unsigned long flags)
- {
 
 -- 
 2.53.0-Meta
