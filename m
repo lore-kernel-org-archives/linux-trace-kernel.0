@@ -1,70 +1,70 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16FD33F5A1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 13:59:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2684440B397
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 13:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782827993; cv=none; b=CgBFtCGW56rmmek5e3Q2+e1uFXVBgLOvMB63A8z2apliYLJurGV+/Z+1dj8KJcKbr3gAuPcsOrxt64PXZxRgZYxh/1lCa+hPreux1KgwRU6Bofrov0ZQCbkHCgmsPxnQyV1IlLGpyrXj5EbCmd9HrErDhcNrFv/XsJ0DgbD+KBk=
+	t=1782827997; cv=none; b=Qmk04MUFIBcwhRClDOnnoPNkyFg9PTsdx3f8JDnmVuLzcrGQ8TJHqXYQWhk+0TJJwXUwqWlsBzyzlXOm3QVDVWEeJzK96WDDEMGfj70kmswVy2wBzCorLkU3Ulbkv9cofsH74CoJpcTif/LxL+0eKpCBsKENVG3vDT/pHGdfh0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782827993; c=relaxed/simple;
-	bh=KBj7n0jg/cOvt1k05+E5P4zUNGq3vVE/4CZ4f8xXppw=;
+	s=arc-20240116; t=1782827997; c=relaxed/simple;
+	bh=0tc3n1T+iP6UtVH2Bcubud4h5kSvkSwkUuQb0E6M6qk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lvMH2HVXWCQm4cE/zBzyCEjvvnC/iTtqxoKLSWm4oBegWthtua044Wn2pjbU6S0WVvSY4qxXikPiJaNZKNctfWkzObY0FUsrW9vSeqRlZC+ZR2MWS/hreUkt8teZZTfmzBWaRFAJ4LEqOZ3iMNW0Fa6RX3JBj0oi+bTAM6GK5Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eSnBlCGs; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=XiuifWw0FzDXT4Hq4CRQhQMe4TZI6uB+/ZQFOvDH8L9TQ9aqUkesUwaC7Hjdm0H9UoYAgkqzojvVONl835ItHSPd8BaTWKEmcidtBWiZYQBidvWYGGZ5Ed0nRaqLIOtTq8Qzh7sCoRCChBQMhq76Xi4hu5EfBc8zrD7KlCkpIGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bInivByo; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eSnBlCGs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bInivByo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782827991;
+	s=mimecast20190719; t=1782827995;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ueKJ1EobC/gGuiN1Tyib59pwiSZXC8CCC83Cv8r8RZU=;
-	b=eSnBlCGszuOqDoVEpzILEcjHbErYs2UTl1NzmH5YJiWy9bvWprhmTNLRwbACk/GWts3TAU
-	NfgGxP/KI2Kjwzgm1gatVKH34gGc/jK/1XoU+kHHIZI+0616epXpgYFId2hmnJzHVM0s1C
-	ih9iPhDhGQRD5i7186gVavOoyhION8k=
+	bh=CXNz1TXGf+nGNIC0QUsV7H5j6lVbiMDLBDuaqoAEfSs=;
+	b=bInivByobPbow8p/IBQh2WCXPKcDv7DLLA2o8ZwyUoTC1DrYwR/mcTGUnkGjMcoCxk3Jk0
+	ug82NKyFOTf4dVJeNcjXRarM1UQIvQKMtDA2YIUkMxO0UHFYWjtyV1j0lO3jqzl+kqN0+b
+	fvYSAXUJWsGgDN2LdAVXrRxCtLfHYj8=
 Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
  [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-683-s6KIgMDPO5iYWDdxN3Pg2A-1; Tue, 30 Jun 2026 09:59:49 -0400
-X-MC-Unique: s6KIgMDPO5iYWDdxN3Pg2A-1
-X-Mimecast-MFC-AGG-ID: s6KIgMDPO5iYWDdxN3Pg2A_1782827988
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-47407691804so1301486f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 06:59:49 -0700 (PDT)
+ us-mta-299-aVrwbsqlPIWSk8X9FTUN8A-1; Tue, 30 Jun 2026 09:59:53 -0400
+X-MC-Unique: aVrwbsqlPIWSk8X9FTUN8A-1
+X-Mimecast-MFC-AGG-ID: aVrwbsqlPIWSk8X9FTUN8A_1782827992
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4629f312a67so3989414f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 06:59:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782827988; x=1783432788;
+        d=1e100.net; s=20251104; t=1782827992; x=1783432792;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=ueKJ1EobC/gGuiN1Tyib59pwiSZXC8CCC83Cv8r8RZU=;
-        b=q/BI7F6KraqKgJBy4R9BBNloyRUfK9GoO067dCNBhfHFEebKV+HOoOethfmAwFnmNq
-         /3KY/qiMM29WHRdQe2JKHhfqQA9KLlFREQ/f5hOQMdyYLKYjHpg9/T5bkGGCZScxZYuf
-         f4glnrBLHFIHEgxHKewL4JUkHiBhdTS8AIVfPldSSPOTqdIoayR5d7nvB6sN05ZDJnfS
-         KN1jOfxi0NxaibIe7MST4pwVcosKIcXj6dbXiKTsFMtZ5REDFKoEScZ2QkwVojVkKnuL
-         e4vAhKgbuCvzrJWHWgyJodCtKB0LNdSKWD7FoyLrBUBTbEztsVSDfFZwk+bMkWM+j0Ir
-         N/zA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq5nosmpowYCQE3+N9XY6yr1VNFG5vyrm7LJ5xZpmVYyyg/Wd5xv6NqJJXjRGdwW+A4gOw6qpic7B/LfmuccH5uBjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/+5VW2IdcJAs7cC7J1YWv2irUh3NXf0qd7wEvA/bEsatWGG0x
-	rY2efGO0BrW4slQSih5F5USp1QEfe/JGA1mvDaJoP/a2pQApAv1OgjJy4MThtF/u/x+k3cqHyGO
-	U9rFrIMBUGx2W3oWVwJ1CIY1y2G9KPTP7YgFPf19WtPSAdhiLFeRBSU+dHblUsj2RLnR2SRLnRA
-	==
-X-Gm-Gg: AfdE7ckPguTD9IMtXGIKbfnaOe15/ZUxekaR6J4RhQbzOxeeb/oWhpyT11+CfXoY8Uw
-	bKlBuJOkfrZAUpR5UVUzK+n/5ASx+ihJHoxCXsfuVJrPLCBOCtIkPDfHJ3EHd80UUrHq9bMBDcI
-	dRDIiKJ+baYCdGesRrxTIDGPQbgnvhNeuUKsODh0dU0aWQQ663SKe9LzZdqXNBQQPuS2OoDiQck
-	ixWHM14uapWjFl9YemqkDoM1Es8zy0Xyj7Xrs1+k7FNp75EDDtQj6d+YswKwLDJ2rFzZKXb3PO+
-	QKr2O0/7p8Hqu/QC4k8EuF7F+0fHSQtMXp5un8hM5sU0iqc341qZ8CKXjA7KYVohYQWTZWjPtFl
-	99EMjLHqh5emHvwbHGFwrOwi9MJ2GuCE4CP5NCJcY3kTau0DhCsiWFTTQHQCjQyIeCNVa62eG
-X-Received: by 2002:a5d:5690:0:b0:475:3a97:8e3c with SMTP id ffacd0b85a97d-47658ba33ffmr789182f8f.18.1782827988153;
-        Tue, 30 Jun 2026 06:59:48 -0700 (PDT)
-X-Received: by 2002:a5d:5690:0:b0:475:3a97:8e3c with SMTP id ffacd0b85a97d-47658ba33ffmr789150f8f.18.1782827987665;
-        Tue, 30 Jun 2026 06:59:47 -0700 (PDT)
+        bh=CXNz1TXGf+nGNIC0QUsV7H5j6lVbiMDLBDuaqoAEfSs=;
+        b=CndwO9NdorDKRJWlpfhE4twgc9/I/4fzcLZpt4Uwf6eowSZBC2HcqxJokaA9ccza8T
+         vNy2fO8GIQzo7mHAPhgabkEYzkGT0GG6/tdO0qikfKYaqy50DUjuzDqYuYTkFHYs8T1L
+         MzmkdyFaubHBFQz8e86I0nzaMF2J9I35tuQdYLpBcyi56vQTjMg79Iz605dqt55PGInc
+         36gpR3ofWTCPw7WJZxb20RLsF4tFfwLAYTEblM2gQK44ExE1e9Y8KV+UTDXX5s2+Ire+
+         hEO8N7GfesDcCR9VnNtZf0Ll67MLCCJEEQHs9MVzxlqhB3U66RjyMH2z1VzQMMYPTpW8
+         9nMw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro1+X0jPBJ9Yvp589ZgBhqaLwPZTQ1AiQMB8kQ/L/mWZx4xAng8gBaDb1xSoMz9Kp/ZC3Ssttiov2RPY7s5EnlocS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQNwGdgTpH8i32KHh61u/z4STrR1PGzxZgENhi9VDZZpjoHlFj
+	Ogtq4wTPLzHrH1ZLCnXnwoSFzDPlMFZha4xFrga7Q+0tFMCYYLVnN4oRFqfOVIPkhIarruU+srO
+	2BNVB4yD7AezmFtH9lRFPvZUSTT25alA3h3RNnWwvEhPG60Ht3C2knRChGZ/FglRPEQvKDcVKm4
+	C6Nj8uHg==
+X-Gm-Gg: AfdE7cmhKSvFfLc0MNlFQrZbC1AvnVrDZqCVNBxA+GgU1NtEwWuaRNYi9Glel9BFJKz
+	3uAqVzaoGY2KbsTPEdldv/qo8VfFG5KmsaAYfCHS82L/VHD2GTxsMzKVo/Ds7EqearNYuW97tjU
+	v14N15HqTXjP6HmXnNZ4YZLQYqAQpZKxXRITVf1qqcMPTmKKUkg16af0XTQ2zuOqBWWs17/YVMG
+	XLqGSuTO+yDxoAiuhUl8pvIbnYpkYX1QZzTWGG0BaeUhEYXmp33zK1dEZ6QZiIGB+wKWuiobblY
+	m2mgdiuD9FqsutkOeMbif/vZxYoiHDqzFEXV3foRzd+h+b9h2KJH2qlJ29wY4gj/dfUbxY2zaqX
+	8sfj0aGrq1EFZD1di6bvW1Sb8tqqlyhPI9w/qBsx8FCmVIR+A7NSGojX8+ayLCArVdr5vM5xZ
+X-Received: by 2002:adf:e009:0:10b0:474:b9d1:3203 with SMTP id ffacd0b85a97d-47657d2db45mr841013f8f.7.1782827992415;
+        Tue, 30 Jun 2026 06:59:52 -0700 (PDT)
+X-Received: by 2002:adf:e009:0:10b0:474:b9d1:3203 with SMTP id ffacd0b85a97d-47657d2db45mr840981f8f.7.1782827991959;
+        Tue, 30 Jun 2026 06:59:51 -0700 (PDT)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47563d195b3sm8539912f8f.8.2026.06.30.06.59.45
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4756778fac3sm7443270f8f.32.2026.06.30.06.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 06:59:46 -0700 (PDT)
+        Tue, 30 Jun 2026 06:59:51 -0700 (PDT)
 From: Valentin Schneider <vschneid@redhat.com>
 To: Tomas Glozar <tglozar@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
@@ -73,13 +73,14 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
  <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, John Kacur
  <jkacur@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan
  Corbet <corbet@lwn.net>
-Subject: Re: [RFC PATCH v2 2/4] rtla/osnoise: Record IPI count in osnoise top
-In-Reply-To: <CAP4=nvRtF=Hq3rVS5jCwA-m_vJWEeROy=60T2PW4DYank-6L-w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/4] rtla/osnoise: Leverage IPI event filters
+ when tracing a subset of CPUs
+In-Reply-To: <CAP4=nvQ_x+LyDBoQWOBB4ERy8OwEp9LQzyLJJMHzYdrZzK4zyw@mail.gmail.com>
 References: <20260617131803.2988989-1-vschneid@redhat.com>
- <20260617131803.2988989-3-vschneid@redhat.com>
- <CAP4=nvRtF=Hq3rVS5jCwA-m_vJWEeROy=60T2PW4DYank-6L-w@mail.gmail.com>
-Date: Tue, 30 Jun 2026 15:59:45 +0200
-Message-ID: <xhsmho6gsw2lq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <20260617131803.2988989-5-vschneid@redhat.com>
+ <CAP4=nvQ_x+LyDBoQWOBB4ERy8OwEp9LQzyLJJMHzYdrZzK4zyw@mail.gmail.com>
+Date: Tue, 30 Jun 2026 15:59:50 +0200
+Message-ID: <xhsmhmrwcw2ll.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -87,190 +88,104 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 6WQYRfRb37iVTCV4awJ_GkLGTOAeVip9DqtnDbYx-dI_1782827988
+X-Mimecast-MFC-PROC-ID: OTF_8iuyQRmV2JLDsDBf-RnUEudp6F9A49c49592Q80_1782827992
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 29/06/26 14:56, Tomas Glozar wrote:
+On 30/06/26 12:14, Tomas Glozar wrote:
 > st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
 > <vschneid@redhat.com> napsal:
->> +/*
->> + * osnoise_ipi_cpu_handler - this is the handler for single CPU IPI eve=
-nts.
->> + */
->> +static int
->> +osnoise_ipi_cpu_handler(struct trace_seq *s, struct tep_record *record,
->> +                    struct tep_event *event, void *context)
->> +{
->> +       struct osnoise_tool *tool;
->> +       struct osnoise_params *params;
->> +       unsigned long long src_cpu, dst_cpu;
->> +       struct trace_instance *trace =3D context;
->> +
->> +       tool =3D container_of(trace, struct osnoise_tool, trace);
->> +       params =3D to_osnoise_params(tool->params);
->> +
->> +       src_cpu =3D record->cpu;
->> +       tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
->> +
->> +       if (CPU_ISSET(dst_cpu, &params->common.monitored_cpus))
->> +               account_ipi(tool, src_cpu, dst_cpu);
->
-> Do we need to retrieve and pass the src_cpu here? I get it if you plan
-> on using it in the future, but as far as I understand, you are
-> specifically tracking the destination CPU, not the source CPU. Same
-> note applies to osnoise_ipi_cpumask_handler() below.
->
-
-You're right, I fished out the src_cpu to have it available but it's not
-being used ATM.
-
->> +
->> +       return 0;
->> +}
->> +
->> +static cpu_set_t cpumask_tmp_cpus;
->> +
->> +/*
->> + * osnoise_ipi_cpumask_handler - this is the handler for broadcasted IP=
-I events.
->> + */
->> +static int
->> +osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *rec=
-ord,
->> +                        struct tep_event *event, void *context)
->> +{
->> +       struct trace_instance *trace =3D context;
->> +       struct osnoise_tool *tool;
->> +       struct osnoise_params *params;
->> +       struct tep_format_field *field;
->> +       unsigned long long src_cpu;
->> +       cpu_set_t *event_cpus;
->> +       int len;
->> +
->> +       tool =3D container_of(trace, struct osnoise_tool, trace);
->> +       params =3D to_osnoise_params(tool->params);
->> +
->> +       src_cpu =3D record->cpu;
->> +
->> +       field =3D tep_find_field(event, "cpumask");
->> +       if (!field)
->> +               return 0;
->> +
->> +       event_cpus =3D tep_get_field_raw(s, event, "cpumask", record, &l=
-en, 1);
->> +       if (!event_cpus) {
->> +               err_msg("Failed to get cpumask field\n");
->> +               return 0;
->> +       }
->> +
->> +       CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored=
-_cpus);
->> +
+>> @@ -406,6 +408,33 @@ struct osnoise_tool *osnoise_init_top(struct common=
+_params *params)
+>>                 goto out_err;
+>>         }
+>>
 >> +       /*
->> +        * Computing the mask weight is overkill but there is no leaner =
-option
->> +        * provided by glibc, e.g cpumask_first() or somesuch.
+>> +        * If tracing on a subset of possible CPUs, leverage the kernel =
+filtering
+>> +        * infrastructure to only generate events on traced CPUs.
 >> +        */
->> +       if (CPU_COUNT(&cpumask_tmp_cpus)) {
->> +               for (int cpu =3D 0; cpu < nr_cpus; cpu++) {
->> +                       if (CPU_ISSET(cpu, &cpumask_tmp_cpus))
->> +                               account_ipi(tool, src_cpu, cpu);
+>> +       if (params->cpus) {
+>> +               char filter[MAX_PATH];
+>> +
+>> +               snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n",=
+ params->cpus);
+>> +               retval =3D tracefs_event_file_write(tool->trace.inst,
+>> +                                                 "ipi", "ipi_send_cpu",=
+ "filter",
+>> +                                                 filter);
+>> +               if (retval) {
+>
+> retval is the number of bytes written here, so this should be "retval
+> < 0" like in trace_event_enable_filter() in trace.c. Same below.
+>
+
+According to the docstring:
+
+ * Return 0 on success, and -1 on error.
+
+but regardless yes that should be a '< 0' check to match existing code.
+
+>> +                       err_msg("Could not set ipi_send_cpu CPU filter\n=
+");
+>> +                       goto out_err;
+>
+> It would be useful to have --ipi work even on older kernels that don't
+> yet have your cpumask trace event filter patchset [1], for example, by
+> printing a debug message that filtering is disabled and setting a flag
+> instead of erroring out here. Then the code in
+> osnoise_ipi_cpu_handler() can preserve the CPU_ISSET check if the flag
+> is set.
+>
+> As --ipi is optional, we can choose to only support it on newer
+> kernels, but it would be nice to have it working without the filter,
+> too.
+>
+> [1] https://lore.kernel.org/linux-trace-kernel/20230707172155.70873-1-vsc=
+hneid@redhat.com/T/#u
+>
+
+Makes sense, will do.
+
 >> +               }
->> +       }
->
-> Technically, the existing code already relies on the glibc cpumask
-> implementation (cpu_set_t) matching the kernel "cpumask_t" type, as
-> the "cpumask" field is the latter (per
-> /sys/kernel/tracing/events/ipi/ipi_send_cpumask/format), not the
-> former. So I wouldn't worry about the opaqueness of cpu_set_t much.
->
-
-Right, AFAICT that's the "canonical" type for passing cpumasks around
-between userspace and kernelspace. e.g. for sched_getaffinity():
-
-manpage:
-
-    int sched_getaffinity(pid_t pid, size_t cpusetsize,
-                          cpu_set_t *mask);
-
-kernelside:
-
-    SYSCALL_DEFINE3(sched_getaffinity, pid_t, pid, unsigned int, len,
-                    unsigned long __user *, user_mask_ptr)
-    {
-            cpumask_var_t mask;
-            sched_getaffinity(pid, mask);
-            copy_to_user(user_mask_ptr, cpumask_bits(mask), ...)
-    }
-
-> Not sure how this is handled in other tracing tools that need to use
-> cpumask, I'd have to look around a bit. It might even make sense to
-> have a "tools" version of the cpumask functions like cpumask_first(),
-> I guess, like we already do for e.g. lists and container_of.
->
-
-I couldn't find anything in tools/testing/* other than the CPU_*() helpers.
-
 >> +
->> +       return 0;
->> +}
 >> +
->>  /*
->>   * osnoise_top_handler - this is the handler for osnoise tracer events
->>   */
+>> +               snprintf(filter, ARRAY_SIZE(filter), "cpumask & CPUS{%s}=
+\n", params->cpus);
+>> +               retval =3D tracefs_event_file_write(tool->trace.inst,
+>> +                                                 "ipi", "ipi_send_cpuma=
+sk", "filter",
+>> +                                                 filter);
+>> +               if (retval) {
+>> +                       err_msg("Could not set ipi_send_cpumask CPU filt=
+er\n");
+>> +                       goto out_err;
+>> +               }
 >
-> Nit: As this is extra functionality, it'd be more readable to have the
-> IPI handling after the main top handler, so that someone not familiar
-> with the source code will see the core logic first. That would also
-> match IPI being displayed to the right of the other numbers in the top
-> output.
+> Same two comments above apply here.
 >
-
-Ack.
-
->> @@ -164,6 +251,8 @@ static void osnoise_top_header(struct osnoise_tool *=
-top)
->>                 goto eol;
->>
->>         trace_seq_printf(s, "          IRQ      Softirq       Thread");
->> +       if (params->common.ipi)
->> +               trace_seq_printf(s, "          IPI");
->>
->>  eol:
->>         if (pretty)
->> @@ -218,7 +307,13 @@ static void osnoise_top_print(struct osnoise_tool *=
-tool, int cpu)
->>
->>         trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
->>         trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
->> -       trace_seq_printf(s, "%12llu\n", cpu_data->thread_count);
->> +       trace_seq_printf(s, "%12llu", cpu_data->thread_count);
->> +       if (!params->common.ipi) {
->> +               trace_seq_printf(s, "\n");
->> +               return;
 >> +       }
 >> +
->> +       trace_seq_printf(s, " %12llu\n", cpu_data->ipi_count);
+>>         tep_register_event_handler(tool->trace.tep, -1, "ipi", "ipi_send=
+_cpu",
+>>                                    osnoise_ipi_cpu_handler, NULL);
+>>
+>> --
+>> 2.54.0
+>>
 >
-> Maybe at this point it is worth it to print the "\n" in a separate
-> statement, readability-wise:
->
->         trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
->         trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
->         trace_seq_printf(s, "%12llu", cpu_data->thread_count);
->         if (params->common.ipi)
->                 trace_seq_printf(s, " %12llu", cpu_data->ipi_count);
->         trace_seq_printf(s, "\n");
->
-> It would also make diffs nicer when adding new options.
+> I was thinking that it might make sense to enable the filters also for
+> the trace output instance. On the other hand, it would make it
+> difficult to enable the event without the filter then, as specifying
+> "-e ipi" or similar only re-enables the event but does not remove the
+> filter. Maybe the better idea is to implement an option to filter any
+> event enabled through -e/--event only to the measurement CPU, as a
+> separate feature.
 >
 
-Indeed, will do.
+I had actually forgotten about applying the filters for the output
+instance... I'll look into it.
 
->> [truncated]
->
->
 > Tomas
 
