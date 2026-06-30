@@ -1,206 +1,123 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590573D6690
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 16:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F8A3DD537
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 17:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782837389; cv=none; b=bK6tzaH3Fct/fWnn5GH+oL91XN6F0ZGfRE4SR92s5FvmPt6y3XjX7w746z2nxBCqMpVbF2njdeoUWiCzHMjmyM0T0X68VaHhOe1JxUi7hqgmKuvAeyTxHkY+7J17vCijzGXt/lWsaSgEFj5hZr56VADzoft9ig/qj3mjBAupNOI=
+	t=1782840645; cv=none; b=gNEkpC+gl8qzel582BxgFYhJAYoq8XpvpkLiPwRBI7MvZC71/tdFQY8eeewIHtaDI5tXMQ0Spgkk+O4fWyHiKxq8TeMeeEmQ5xm/gwBbi0BNhjovij9WQWJVKg4PvYUGNxHdltsA3oIFD7Wlr8psBpngvvn8lKLRsVI7w0MwXiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782837389; c=relaxed/simple;
-	bh=d9wug2nxL1uyn9+xDv1rDebfpG+gnaq49E2sbVFw0kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GBln4MFwfjnKjxiiNgpmqjR5DFTbiPycDhXdHMdwL39XnwyuF0uNfwM56B2KrDGX+Mm6q/e0xrAaaCO/Iz91b5jUDEp0EpwQEIO1E2RAJ0J2hgSrQhR6DMoYxmqm86hxrQMTXAJiUFbbzyqcDuJGuHfc8fF8M2H+0yMz0NlyN9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Csm/0TAQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SuTooq+C; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Csm/0TAQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SuTooq+C; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1782840645; c=relaxed/simple;
+	bh=z6KmvGsEhliMX2kFxBWlW+oEtiV14/kK8zifG4u1OSc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kSsy6APeFKFpE/F6xqEHdWdORDbKZyKbc94R/pmheWEFqwpZtiiOBu/np28pmiyg9SIa8ATPsVw4M9iZ5PqfQrSiG5P/FWsobDtE+XisBPuIK0yZcs/ndOcoRtqxGwvTdKA2GiQaJb8EAu52FEMwlnXE23++tRyMGKcwBHGhaBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=va8T1XPx; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Csm/0TAQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SuTooq+C";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Csm/0TAQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SuTooq+C"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9485D75953;
-	Tue, 30 Jun 2026 16:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782837384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=Csm/0TAQDKcAqPahjvJm4t6wIygBvouh4o3HLWaKsgyk698bUArVP/FODSuGjNHcARgLTj
-	CJc2gPmeHEfliGZdWDOcmZZZ0vZ9z95eXBkXNuiEMJpmpW8Tp01B9gZwKHKhDLyJoN2tn+
-	chGgPP4YUFkHsmNHRAZUF9xPb+SnjMo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782837384;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=SuTooq+CQho1YfxuTrEUMCh69pnVtR5UtZwMeH7IAZfA6dmdObdMjx1/u2fLm2dXcH2Fos
-	1ruN1lCKBfY39zDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="Csm/0TAQ";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SuTooq+C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782837384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=Csm/0TAQDKcAqPahjvJm4t6wIygBvouh4o3HLWaKsgyk698bUArVP/FODSuGjNHcARgLTj
-	CJc2gPmeHEfliGZdWDOcmZZZ0vZ9z95eXBkXNuiEMJpmpW8Tp01B9gZwKHKhDLyJoN2tn+
-	chGgPP4YUFkHsmNHRAZUF9xPb+SnjMo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782837384;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=SuTooq+CQho1YfxuTrEUMCh69pnVtR5UtZwMeH7IAZfA6dmdObdMjx1/u2fLm2dXcH2Fos
-	1ruN1lCKBfY39zDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E748F779A8;
-	Tue, 30 Jun 2026 16:36:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GZUpNYPwQ2qifgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 30 Jun 2026 16:36:19 +0000
-Date: Tue, 30 Jun 2026 17:36:18 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 12/30] mm/vma: clean up anon_vma_compatible()
-Message-ID: <akPwbHbGiF1FxL6m@pedro-suse.lan>
-References: <cover.1782735110.git.ljs@kernel.org>
- <5a7a07bd2a774989849b0fea84f758059ed914df.1782735110.git.ljs@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="va8T1XPx"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c890bac374eso5237732a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 10:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782840643; x=1783445443; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxXDGdZP36dVSNVXo6OGlh08WQ4jD0j+gPBa9WDdARQ=;
+        b=va8T1XPx241WJZyMEqRecMsZNoozWVV3DSK3GRDxwRDu8pb+FaUDxvQ5brfllHB2mb
+         dAnUKRoC0cNaUKbLGVwrhM4GjxwMAoB02Px6M8cmBBwMJ1w/7SIOscdj4QoNkv7a23sB
+         g/ixTI7xYfEOSc2Gi1Gpci3vR1Eg0bbdHXY0zfCwAuV3prfmSphh+nVFeYU4aK61ivib
+         FQODMfShZw8A/MhhSqcIpUTuE86h4GiWe5K/5gu7IACEP5E+aUzCLA2lNaezL2VKC473
+         B2x9HYz2ebDgFjVz4Y340jix0kBpJyCBYdZgixQL84fEjsu/AUySgEyhHcv2MyYhwqbA
+         Gwug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782840643; x=1783445443;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxXDGdZP36dVSNVXo6OGlh08WQ4jD0j+gPBa9WDdARQ=;
+        b=ELvtbLUAg/Tl5pFWvDJ68GzbvTkenzp+Q+nRvJTurf9Xv2q/XopH6ZWMM0W//zxjZM
+         7nETZ+D4duaXFMKCthtqNxTbpfFD+p170gnZ+Jx6N60Jh/ikjg0WcLVjs6Bl3vzJ2ULi
+         gPC9Km71GwDal6DGmqKBntsugAtm8gAEIOoGaPKIemBvmBGvk9srPpLFWbAfVEa+DpSO
+         /U8Ysi6W/wn9Hbpfcx+jsDH17qUrEpyTEBDdSG9/NVjTRrnLSc2+Ml0EAr4Au+y2AZEa
+         /FrqECmqkQO5aOCuFtaLCbdqyDUEmDLBhRzfqEJCz6qUZce5rVVKwJmQiqLgzj///734
+         tiqQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoGZyCybkoPB4A9qddPt94BfkahHhPr3TqWwBwTvINYn4HR217I61z1DpCKbfWKQc406Dmq62cW28zb+4cpyrz6JW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzIO83ArhBMGNvfCw9SKSsugUeQl2HSCUCrWWvpN2IBucV52Ou
+	4b2QT6f7E+ALNFguwrAUuoHXHGL4VrfG0kncYasyRzT14le5WG+gICmaFrU4c+lzlwkNUP56Tz7
+	jTzcAZQ==
+X-Received: from pfbfb9.prod.google.com ([2002:a05:6a00:2d89:b0:847:84b8:2dcf])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b84:b0:842:6004:3fcf
+ with SMTP id d2e1a72fcca58-847adeaa420mr1564771b3a.29.1782840642918; Tue, 30
+ Jun 2026 10:30:42 -0700 (PDT)
+Date: Tue, 30 Jun 2026 10:30:42 -0700
+In-Reply-To: <a1b06afb-af6e-4666-8c7d-990e7fa150fa@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a7a07bd2a774989849b0fea84f758059ed914df.1782735110.git.ljs@kernel.org>
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_GT_50(0.00)[75];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pedro-suse.lan:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 9485D75953
-X-Spam-Score: -3.01
+Mime-Version: 1.0
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com> <a1b06afb-af6e-4666-8c7d-990e7fa150fa@intel.com>
+Message-ID: <akP9Qv_IPVEh7GAB@google.com>
+Subject: Re: [PATCH v8 07/46] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jun 29, 2026 at 01:23:23PM +0100, Lorenzo Stoakes wrote:
-> Break up the existing very large conditional, add comments and use
-> vma_[start/end]_pgoff() to make clearer what we're doing here.
+On Tue, Jun 30, 2026, Xiaoyao Li wrote:
+> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+> > -bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> > -				     unsigned long mask, unsigned long attrs);
+> > +bool kvm_range_has_vm_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> > +					unsigned long mask, unsigned long attrs);
+> >   bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+> >   					struct kvm_gfn_range *range);
+> >   bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
 > 
-> No functional change intended.
+> We have
 > 
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> ---
->  mm/vma.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
+>  - kvm_pre_set_memory_attributes()
+>  - kvm_arch_pre_set_memory_attributes()
+>  - kvm_arch_post_set_memory_attributes()
+
+Yeah, that's probably for the best.
+
+> left, do they need to be renamed as well?
 > 
-> diff --git a/mm/vma.c b/mm/vma.c
-> index b60375c6c5c3..6296acecf3b7 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -1967,14 +1967,25 @@ static int anon_vma_compatible(struct vm_area_struct *a, struct vm_area_struct *
->  {
->  	vma_flags_t diff = vma_flags_diff_pair(&a->flags, &b->flags);
->  
-> +	/* Ignore flags that mprotect() can change. */
->  	vma_flags_clear_mask(&diff, VMA_ACCESS_FLAGS);
-> +	/* Ignore flags that do not impact merging. */
->  	vma_flags_clear_mask(&diff, VMA_IGNORE_MERGE_FLAGS);
->  
-> -	return a->vm_end == b->vm_start &&
-> -		mpol_equal(vma_policy(a), vma_policy(b)) &&
-> -		a->vm_file == b->vm_file &&
-> -		vma_flags_empty(&diff) &&
-> -		b->vm_pgoff == a->vm_pgoff + ((b->vm_start - a->vm_start) >> PAGE_SHIFT);
-> +	/* Must be adjacent. */
-> +	if (a->vm_end != b->vm_start)
-> +		return false;
-> +	/* Must have matching policy. */
-> +	if (!mpol_equal(vma_policy(a), vma_policy(b)))
-> +		return false;
-> +	/* Must both be anon or map the same file (MAP_PRIVATE case). */
-> +	if (a->vm_file != b->vm_file)
-> +		return false;
-> +	/* Flags must be equivalent modulo mprotect(). */
-> +	if (!vma_flags_empty(&diff))
-> +		return false;
-> +	/* Page offset must align. */
-> +	return vma_end_pgoff(a) == vma_start_pgoff(b);
+> then the interesting one is kvm_vm_set_mem_attributes(), which contains "vm"
+> already while it means "vm ioctl". Do we need to rename it to
+> kvm_vm_set_vm_mem_attributes()?
 
-Very nice.
+I say "no" on this last one, the fact that the function is scoped to a VM ioctl
+is enough to communicate that it applies to per-VM attributes.
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-
--- 
-Pedro
+Actually, since it's a local helper, we could go with kvm_set_vm_mem_attributes()
+to be consistent with the other functions.  That just leaves
+kvm_vm_ioctl_set_mem_attributes(), which I think it appropriately scoped.
