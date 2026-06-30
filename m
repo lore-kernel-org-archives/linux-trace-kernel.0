@@ -1,71 +1,71 @@
-Received: from pdx-out-007.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-007.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.34.181.151])
+Received: from pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.246.1.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F1A26A1C4;
-	Tue, 30 Jun 2026 06:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.34.181.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAF333BBCF;
+	Tue, 30 Jun 2026 06:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.246.1.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782799426; cv=none; b=A370/ecBsBH68wMqB/ot4r7pvqrSVGM3JMKLAJnZoINrjQyRY9+UKnX3R/atF4PulUR1FXHwmMtPA8MmMSjygmeeQ2bHc5FuP4QGpXahs0/6LGw/wfbzxc8rRGuDLoqR8s6cOh1qHe/J+ftIlilUXDZrcoGemT6q4seUmjlx/ik=
+	t=1782799624; cv=none; b=chKtYI5mGxodDo5erB7orLl79nIpTJKRDHYFJct6I/bG9JfbYrR7Ia8Ea+ojsnlDxREyzLaHamk51Q4hiiKbaQQvHlFavxad0YXwRJSjw8OrmnYZUAyBnA3lmtqNrGalGWuXFxiwv+gQUrRvb2gr3g+t0x/FgJdqpXNbFP5/o5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782799426; c=relaxed/simple;
-	bh=M0nnLU7vMMeoiA8EZursO1OOQqLGtOyhTaCh5nLeXT8=;
+	s=arc-20240116; t=1782799624; c=relaxed/simple;
+	bh=5JffXCMyl3pvr8XVbKuZW6pi4Xy3qaVHJggNLcgGlPM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RuPChmam1CAs/4TCuJU7YL1wy1L79ngke0eqmjxwGCV03/NxtFv9HRhh93DmdL6jzr1Vk/ds4Z71oSCcmMC1PsCNWRFhoIzyE2ggI0LSpC+d//UvRvzp5X+NGMuhhxhDr/ZbRsMvFVRx+QiSqyNRnLtM4AdLfjsBVWClYrbu7Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=cUMnkwGZ; arc=none smtp.client-ip=52.34.181.151
+	 MIME-Version:Content-Type; b=dFTHozCN4vufY3i2rw5thVc/Q1KvnpxRWjvKCKr8l5uR2vcX0jMntEsXVjAniqzCr22AoRTRpAAZaqnhckiEb9ORtYWrIY1FYExVXQ2XTth1neBhrU9ewcEFqyhuMGOS6mpB04oBrXOKOlUwy1AD6v5+Jjnwk82KL6ZcpsNReo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=XPP2sIIM; arc=none smtp.client-ip=44.246.1.125
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="cUMnkwGZ"
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="XPP2sIIM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1782799425; x=1814335425;
+  t=1782799620; x=1814335620;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rmr4btVRER2BX4fPtwmlV+JwydvNU/M1KH18CiqhJ18=;
-  b=cUMnkwGZV758SQwH8Y164FyyiL0FFVDJlDZzvlES1st2Y5z4ZPbg0oRg
-   lPkBLBvNhMkUD5YHVEFJg8UbpKgu/fdxJPOsdwELSpLtOEIT80dCbc9vP
-   DajpjWOwNeqw8X9zdIE7x9fbAoPZ3TQNqRK3NJ8O0XujotyeVHBPKIR3H
-   g3R22QU9Gx0ItTw/rryZDSU5YWGhSbgdXNQnkaOpiabb0qJFCRCvNyl/C
-   xv6l2aiUyrD4VcHdOkF3tBu67p1/hB9f5oD5p/z3dNKjQNwVXASRW9g1M
-   eaQfyWW0lCrHKsFYTA32z/5O7wzzbGnzB3lKXmGlC+WnYWNKlm7LFAQKi
-   Q==;
-X-CSE-ConnectionGUID: aLTCayzKS5uagxBZ79M2iw==
-X-CSE-MsgGUID: cIQflDt8SZuJDSooLJSyqg==
+  bh=8ZbkaSXN58OWFlL2u0MDoyUGWdO5zkTGgolYw2Hv6l8=;
+  b=XPP2sIIM0hZ19q9xJ9x+oVaFga2tHBjEcK5Thfo9hgo21Kk8zr42ENlC
+   bf/YwAlbCzoZmAY0OieN8LUpAzuf6ad63OpJSy75NrnkYW5+3+Qfx+bbF
+   nUtQhZH0cpUwm0kPArs8rAMKIMmZ5fz78vbtiNKAEol2tFF0Df6jCVvkV
+   wAysgjIBMEFlPEF/QBbR7TGOAJA14eupXmP0ULYxtEzj3e/52QOC5Mz1k
+   ZhLwAmFXNiokfpREunFeXg0ufhFZxVzRN6QzmkxE1BfjHmd7xCE8bjVZ0
+   9pKoBYvfsO1wLDPmdWI/CrYW9Pjh0wmxmRG9A0rlIzED/ss35OT9tkLMr
+   w==;
+X-CSE-ConnectionGUID: WclxOZq0SGuMgpSvR1Tx5w==
+X-CSE-MsgGUID: YpJnGYEFTryRh1wMNRSSMg==
 X-IronPort-AV: E=Sophos;i="6.24,233,1774310400"; 
-   d="scan'208";a="22733540"
-Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
-  by internal-pdx-out-007.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 06:03:42 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.51:20408]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.142:2525] with esmtp (Farcaster)
- id 1296e2c2-a45e-46af-8e7a-292d17548063; Tue, 30 Jun 2026 06:03:42 +0000 (UTC)
-X-Farcaster-Flow-ID: 1296e2c2-a45e-46af-8e7a-292d17548063
+   d="scan'208";a="22758375"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 06:06:57 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:2396]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.31.226:2525] with esmtp (Farcaster)
+ id 0343961f-b4c4-438a-b642-1b2cbe59ba4d; Tue, 30 Jun 2026 06:06:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 0343961f-b4c4-438a-b642-1b2cbe59ba4d
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Tue, 30 Jun 2026 06:03:42 +0000
+ Tue, 30 Jun 2026 06:06:56 +0000
 Received: from dev-dsk-doebel-1a-7b355d76.us-east-1.amazon.com (10.169.119.5)
  by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Tue, 30 Jun 2026 06:03:40 +0000
+ Tue, 30 Jun 2026 06:06:55 +0000
 From: Bjoern Doebel <doebel@amazon.de>
 To: <stable@vger.kernel.org>
 CC: <sashal@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <dhowells@redhat.com>,
 	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<doebel@amazon.de>
-Subject: [PATCH v2 5.15.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
-Date: Tue, 30 Jun 2026 06:03:21 +0000
-Message-ID: <20260630060321.1494832-1-doebel@amazon.de>
+Subject: [PATCH v2 5.10.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
+Date: Tue, 30 Jun 2026 06:06:34 +0000
+Message-ID: <20260630060634.1496989-1-doebel@amazon.de>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260625054005.0014.ringbuf-515@kernel.org>
-References: <20260625054005.0014.ringbuf-515@kernel.org>
+In-Reply-To: <20260625054005.0015.ringbuf-510@kernel.org>
+References: <20260625054005.0015.ringbuf-510@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D041UWA003.ant.amazon.com (10.13.139.105) To
+X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -120,10 +120,10 @@ Signed-off-by: Bjoern Doebel <doebel@amazon.de>
  4 files changed, 22 insertions(+), 76 deletions(-)
 
 diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 3e7bfc0f65aee..b53335ed2d0ef 100644
+index 7d5a78f49d43d..be5c120922469 100644
 --- a/include/linux/ring_buffer.h
 +++ b/include/linux/ring_buffer.h
-@@ -130,9 +130,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+@@ -128,9 +128,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
  		    unsigned long *lost_events);
  
  struct ring_buffer_iter *
@@ -135,10 +135,10 @@ index 3e7bfc0f65aee..b53335ed2d0ef 100644
  
  struct ring_buffer_event *
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index e44115db0efe3..e7c472729542d 100644
+index 03a7127efc5a8..1089daa17b09e 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -5037,28 +5037,20 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+@@ -4858,28 +4858,20 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
  EXPORT_SYMBOL_GPL(ring_buffer_consume);
  
  /**
@@ -174,7 +174,7 @@ index e44115db0efe3..e7c472729542d 100644
  {
  	struct ring_buffer_per_cpu *cpu_buffer;
  	struct ring_buffer_iter *iter;
-@@ -5083,51 +5075,15 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
+@@ -4904,51 +4896,15 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
  
  	atomic_inc(&cpu_buffer->resize_disabled);
  
@@ -234,10 +234,10 @@ index e44115db0efe3..e7c472729542d 100644
  EXPORT_SYMBOL_GPL(ring_buffer_read_start);
  
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 537360be8e4e0..1a29a9d9e8685 100644
+index 5bcd4cbeeb4fe..ed32d3c4f0e76 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4803,21 +4803,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+@@ -4480,21 +4480,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
  	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
  		for_each_tracing_cpu(cpu) {
  			iter->buffer_iter[cpu] =
@@ -264,7 +264,7 @@ index 537360be8e4e0..1a29a9d9e8685 100644
  	}
  
 diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 59857a1ee44cd..628c25693cef2 100644
+index 9da76104f7a28..18d1551db2b0d 100644
 --- a/kernel/trace/trace_kdb.c
 +++ b/kernel/trace/trace_kdb.c
 @@ -43,17 +43,15 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
