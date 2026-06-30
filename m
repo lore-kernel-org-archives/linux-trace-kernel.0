@@ -1,168 +1,144 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5308C411687
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 16:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA5E22424C;
+	Tue, 30 Jun 2026 16:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782836565; cv=none; b=Y+OW5eXxCiJxVins65AA1zQhjQmfAgDGlxjFc/dPv9EtzVtuUKG8OjoV+g29fmCFtduwyIpR9xweJlVce8H7Iz4iEq4Owk43/CZvcwHjE8zYH7IQbqji1Dryyk0XmB1GhQpqW3evMUQ6ukQs17Nia+w774nd9PGTFcqw749yILk=
+	t=1782836661; cv=none; b=O7EJU2HW9/eO7q7j0t46W24odreTSlmJA+kFz5QWbv916Wh6IWwt37u5ynEa8+kTijniB+c/7cHqitd8lSFRApouludtFHoxSkngLFcvFQI4CeHGDytFtmacWWN8Mj7RIYpobWCX3UcqdOzr1E4BwdVaVxIcUhU+aODiN/9+rBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782836565; c=relaxed/simple;
-	bh=f9ATitWeLJc/9n9nbyCbroPua7yy+88T+dCF2C9W+/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OBeY3eU19F5VZAIIl5/LZpOOesb1KVXRDaOO5K9xwWZ5L3nrwP880O+YHmC7QszsABnjVUgmaefnl3hMgZW3tJ3rgeavKgvaRjk5TXEQz4pzKse/zJBRc6DSoFgx9PmdwW3mSQqz24/F2Yt1QAtdhYIXs03oYh3Ts0BF05yFsOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oHFP4ENY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0lpiglbc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oHFP4ENY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0lpiglbc; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1782836661; c=relaxed/simple;
+	bh=jA+Z5cSC4JkMlTEcMPICRNGh0TWd7xD+/PkK+LHbEkI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BzautW5UrxyUhbTsegYN+nLNpOwnGvpXai3QbsGdX2cufcHOCf0VBGbEXSkpz3AbsNVCK7qE1UwmPwEmtAUJ4FHw5YYFlQ6JbogqNdj3cSPJvlnZtK4cLRsdEH8PXCrdiTE/PaENEr2ri13K+zQhrQtw+a3d21vEgQbGvBgW2xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTTXsdkT; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oHFP4ENY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0lpiglbc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oHFP4ENY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0lpiglbc"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CC4D975E0A;
-	Tue, 30 Jun 2026 16:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782836560; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3P5pjkD1/OgRERI6ED7nD9LZ5+AzRSareSV95urOYd8=;
-	b=oHFP4ENYNv7g9kLl6zkw6zv73BimWy1yhufP/7bGIu05NSQrEeT55M4BMy0EHq1qx3AlhZ
-	MaHL2S6tHFhC1z69cbiQQOTozoWcUwQjQcy8/X1/qTXhXT0zUzQOLgN5pQ9OnwCHUX0HsK
-	B5O+uVKIhghBy7u11eTWdVIdWYBPxoA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782836560;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3P5pjkD1/OgRERI6ED7nD9LZ5+AzRSareSV95urOYd8=;
-	b=0lpiglbc+8uxUKdL0rSvsTa4T5PxU5MQ6R/5AOHsIORSWnpYHi6oRKpABxz1ssGvdgrcil
-	RSDYwUAR1H5Lp4Ag==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782836560; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3P5pjkD1/OgRERI6ED7nD9LZ5+AzRSareSV95urOYd8=;
-	b=oHFP4ENYNv7g9kLl6zkw6zv73BimWy1yhufP/7bGIu05NSQrEeT55M4BMy0EHq1qx3AlhZ
-	MaHL2S6tHFhC1z69cbiQQOTozoWcUwQjQcy8/X1/qTXhXT0zUzQOLgN5pQ9OnwCHUX0HsK
-	B5O+uVKIhghBy7u11eTWdVIdWYBPxoA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782836560;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3P5pjkD1/OgRERI6ED7nD9LZ5+AzRSareSV95urOYd8=;
-	b=0lpiglbc+8uxUKdL0rSvsTa4T5PxU5MQ6R/5AOHsIORSWnpYHi6oRKpABxz1ssGvdgrcil
-	RSDYwUAR1H5Lp4Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1EED9779A8;
-	Tue, 30 Jun 2026 16:22:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id W4P+A0ztQ2oJcQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 30 Jun 2026 16:22:36 +0000
-Date: Tue, 30 Jun 2026 17:22:34 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 07/30] mm/rmap: elide unnecessary static inline's in
- interval_tree.c
-Message-ID: <akPs-NFWs5WE3GIq@pedro-suse.lan>
-References: <cover.1782735110.git.ljs@kernel.org>
- <ed5fd5358382217a92f0a6afddcfaa030c933055.1782735110.git.ljs@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTTXsdkT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782836660; x=1814372660;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jA+Z5cSC4JkMlTEcMPICRNGh0TWd7xD+/PkK+LHbEkI=;
+  b=aTTXsdkTovPhZjBYaKleTJ4/+2a3bF0b90/KIpB+bqrY+WgZ12PAAOcR
+   RHmc1xR8Z8hda6yE7PZi6SELpadpfJ2mdtLQICaboVXISLVglfOuWqpR1
+   wn+wGmBkrV5EjUfvhDsv17/Ldac2rpruQO2wBa0wQ1Bf5GJB3TIuH6JN2
+   iP0Z1wo1FpgR1kvIigWLnpgs1NIxzrXHmWeEVuwcwRnozY7XAIXpGqxom
+   zzHPdJur4p50EY2+HjtfWmp2lHmMss4vaN5eYzlSEK4jYz3hFYntrAORm
+   2ZW3pmdtJznuGXg59jrtxwNIaYV5SBKiTsEe6T+d47J9O/nyq/zQRr2FE
+   g==;
+X-CSE-ConnectionGUID: Me/vS7ygRiWMvHi99tfDlA==
+X-CSE-MsgGUID: 2GlluxpcRJ6R0n+/r8Or3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="100983374"
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="100983374"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 09:24:19 -0700
+X-CSE-ConnectionGUID: P5X392gpQj6ht692ZNvZ0w==
+X-CSE-MsgGUID: Y/RTZ8sDRUCfvUTyYMkP/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="251255791"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.232.239]) ([10.124.232.239])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 09:24:05 -0700
+Message-ID: <6df5cb10-645c-42de-b0f8-3fdf61067653@intel.com>
+Date: Wed, 1 Jul 2026 00:24:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed5fd5358382217a92f0a6afddcfaa030c933055.1782735110.git.ljs@kernel.org>
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[75];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,pedro-suse.lan:mid]
-X-Spam-Level: 
-X-Spam-Score: -2.80
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 04/46] KVM: Decouple kvm_has_arch_private_mem from
+ CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+To: Sean Christopherson <seanjc@google.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-4-9d2959357853@google.com>
+ <6b1f0c77-f059-4f8d-8f46-443b944c59a0@intel.com>
+ <akO_Y0-ERgBoCqoQ@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <akO_Y0-ERgBoCqoQ@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 29, 2026 at 01:23:18PM +0100, Lorenzo Stoakes wrote:
-> It's not necessary to declare these functions static inline as they are
-> contained within a single compilation unit.
-
-FWIW I don't think it's technically strictly equivalent (I have a vague
-memory of inline lightly suggesting inlining a function to GCC, because of
-compat reasons). Anyway, doesn't really matter, practically any static
-function gets inlined with -O2 anyway.
-
+On 6/30/2026 9:06 PM, Sean Christopherson wrote:
+> On Tue, Jun 30, 2026, Xiaoyao Li wrote:
+>> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+>>>    arch/x86/include/asm/kvm_host.h | 4 +++-
+>>>    include/linux/kvm_host.h        | 2 +-
+>>>    2 files changed, 4 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>>> index 8e8eb8a5e8a6b..1bde67cf6eb0e 100644
+>>> --- a/arch/x86/include/asm/kvm_host.h
+>>> +++ b/arch/x86/include/asm/kvm_host.h
+>>> @@ -2394,7 +2394,9 @@ void kvm_configure_mmu(bool enable_tdp, int tdp_forced_root_level,
+>>>    		       int tdp_max_root_level, int tdp_huge_page_level);
+>>> -#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>>> +#if defined(CONFIG_KVM_SW_PROTECTED_VM) ||	\
+>>> +	defined(CONFIG_KVM_INTEL_TDX) ||	\
+>>> +	defined(CONFIG_KVM_AMD_SEV)
+>>
+>> Maybe we can just remove the #ifdef and make it always avaiable?
 > 
-> This makes the anonymous interval tree code consistent with the newly
-> updated file-backed interval tree code.
+> No, because common KVM keys off the macro to determine whether or not PRIVATE is
+> a supported attribute:
 > 
-> No functional change intended.
+>    #ifdef kvm_arch_has_private_mem
+>    static u64 kvm_supports_private_mem(struct kvm *kvm)
+>    {
+> 	return !kvm || kvm_arch_has_private_mem(kvm);
+>    }
+>    #else
+>    #define kvm_supports_private_mem(kvm) false
+>    #endif
 > 
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+> And also whether or not to provide the in-place conversion param (without PRIVATE,
+> conversions aren't supported in general):
+> 
+>    #ifdef kvm_arch_has_private_mem
+>    bool __ro_after_init gmem_in_place_conversion = !IS_ENABLED(CONFIG_KVM_VM_MEMORY_ATTRIBUTES);
+>    module_param(gmem_in_place_conversion, bool, 0444);
+>    EXPORT_SYMBOL_FOR_KVM_INTERNAL(gmem_in_place_conversion);
+>    #endif
+> 
+> I agree the #ifdeffery is ugly, but kvm_supports_private_mem() in particular
+> needs to evaluate to false if PRIVATE memory isn't supported.
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de> 
+I agree with the above after seeing the later patches. But just to the 
+state where this patch applies on top, the #ifdef is not necessary.
 
--- 
-Pedro
+Maybe add some log to explain it will be helpful.
