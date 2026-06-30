@@ -1,296 +1,133 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84B521CC51;
-	Tue, 30 Jun 2026 22:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B67C21CC51;
+	Tue, 30 Jun 2026 22:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782860058; cv=none; b=lacB41iNVErIAfBf5Y4PyN/AmBFEbKXA5CStKTgfmBNwAPor3Q6UfKsK9tbLS31qB27gRgupRgQ9RWK5KhJ4NU2fVS3JbV19SFGcVIecgpFXRVlBAB2rcoFtuAaCCzAA8bipjQ1IL/PBgc2B8ew5NyZ82mw553OvHn98cqNTRBI=
+	t=1782860329; cv=none; b=HVfPa5ZfeS6oHubyBlQ760E5HSRTLUymde3WUOagDhCDrMTzBfugt9F/FDrKFCYtxLjELB905TMeL3j9qYByR+2SuDWiMvWx3cH3vRHyWSwwTFz3F+2vh59hfmFblb8uP0zRr0wFNI84QGQB/QBtSlD4HPeD5THnS8+Oms125yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782860058; c=relaxed/simple;
-	bh=nhlcyi1k7YzAyd/xWaJ5uTbVXJnw5xY8e5w54w70ZFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gOAzZDgGFHgJ1yLlATnQnOj8UnqQEidfqaLU4VvzYseamui8XYx/sJkQjEweO47zH5WXQe2hxPVxzut5JNbZhM/GVRejLxAc1TrtwW1Ai0ChgdpwgTUNKtax3BP5AV8w3TN8ow0tzwXjsOHWHAK8Ywh4hlisAFEYI1fiG8BOrhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 113B3120162;
-	Tue, 30 Jun 2026 22:54:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id DED782002A;
-	Tue, 30 Jun 2026 22:54:12 +0000 (UTC)
-Date: Tue, 30 Jun 2026 18:54:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@sandisk.com>, Bart Van Assche
- <bvanassche@acm.org>, James Bottomley
- <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, Peter Wang <peter.wang@mediatek.com>
-Subject: [PATCH] ufs: core: tracing: Do not dereference pointers in
- TP_printk()
-Message-ID: <20260630185412.283c26c5@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1782860329; c=relaxed/simple;
+	bh=aq9jJsGvYEawxXGAy0iuy6oK59s02bFHbdyTTS22zLs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=OnS3jfucg5Exo/3vMgfbNkD15RU8e/F7PxQR4tLZZSWOMrzrtCpEtoG5d3uyxsU+OLdqZsUyjk/TSFuxzzzKbkHJCQpVhxm7D6lDAJSFgXJ8fZzLjEFGST/jj2eeQqGerseRbQDVFT4kRiQ2R7t4QEgP6T9RZMyUdbo/WIbl5rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5f/0Kqj; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5f/0Kqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD7A1F000E9;
+	Tue, 30 Jun 2026 22:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782860327;
+	bh=LzgO/WtP3CHsUyiGKcx7YHKu/av/Fuaej/8zHHRDb7w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=P5f/0Kqj6lvAulhzPauZEJUAACK0UeYeG67JPeOoa7qkcO1dP7Myuuhm4UNucWKW2
+	 9wyUc/pJrFwZNZJK4e3fwBHIyN2qhib0otVdORx2OTuX8JypEzFW1zSdHGvaI+e3kG
+	 F0D9X3WwbFvOQwBCsqfAWFWi53X9n/FbXJQND2VazLnhy63w8RJB9CqUz+PmL0q2c3
+	 Xsuj2OJn52BohKAcEmdS4AwsoicttbXsbDSbdnBo+tTB6zm879yreGjfM+nn3INXaF
+	 vVm/pKAas7BfW29vrOIlstDTbcSg2QmhyRtaxg/QthsnkKzETOb4VMGdzoPa+jbWiV
+	 SxcxGhczVzkkg==
+Date: Wed, 1 Jul 2026 07:58:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Bradley Morgan <include@grrlz.net>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] lib/bootconfig: fix undefined behavior involving
+ NULL pointer arithmetic
+Message-Id: <20260701075843.a308d7dadf327eda4015236b@kernel.org>
+In-Reply-To: <20260630174746.14795-1-include@grrlz.net>
+References: <20260630174746.14795-1-include@grrlz.net>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: DED782002A
-X-Stat-Signature: zyoctfi5yj8exifgdjdtjiiw1wczoq6j
-X-Rspamd-Server: rspamout04
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+/+8B81wbQCWuGTQCWx56jW2aMWhJFYVs=
-X-HE-Tag: 1782860052-267712
-X-HE-Meta: U2FsdGVkX18AW2wwblH81KAt+nO6TJT2J8pHS7l5BvS1ulH5YBqRoldA4T+uXifN5GuGBFqpoovRap3np6xN8WbjDEKanTUk+OdkBnYPoABp1AIqsndUrAIers5WMBoMB19hOdVQ92a6KV5k0cIWFWyTN/Pb20yp05Yzhx0tYmQW1VwSky6fj1iRjYDmpQqAyRgXthxpSNrs+58d7sLixy3C9YaVO2+AcbzGDafXgLbbcRLfO3HlS7mTrZzW/MH8Jey/H+JJVgddoheIWNHToEwayYOd0HRZoYAPcchQy0e+5rs51ZP9yELOrkNni1Iq8UKTxzFouk85siNaYfSIu+HFm6Cu7Y+XCkN2isvG/3Eub1wlYH37YODlScAzSO+081hrK6YfJ0WDIubjxrBdNA==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 30 Jun 2026 17:47:46 +0000
+Bradley Morgan <include@grrlz.net> wrote:
 
-The trace events in drivers/ufs/core/ufs_trace.h were converted to take a
-pointer to the hba structure as an argument for the tracepoint and then in
-TP_printk() the printing of the dev_name from the ring buffer was
-converted to using the dev dereferenced pointer from the hba saved
-pointer.
+> When xbc_snprint_cmdline() is called during the size-probing phase
+> (with buf = NULL and size = 0), the function computes the end pointer
+> as 'buf + size' (NULL + 0) and repeatedly advances 'buf' via 'buf += ret'.
+> 
+> Under the C standard, performing pointer arithmetic on a NULL pointer is
+> undefined behavior. While harmless inside the kernel, this code is also
+> compiled into the userspace host tool 'tools/bootconfig', where host
+> compilers with UBSan or FORTIFY_SOURCE enabled abort the build when they
+> detect NULL pointer arithmetic.
+> 
+> Fix this by guarding the pointer arithmetic so 'buf' is only advanced when
+> non-NULL, and track the running written length in a separate 'len' counter
+> for the return value (which cannot be recovered from pointer math when
+> 'buf' is NULL). The rest() helper and snprintf call sites are unchanged.
+> 
+> Fixes: 51887d03aca1 ("bootconfig: init: Allow admin to use bootconfig for kernel command line")
+> Cc: stable@vger.kernel.org
+> Assisted-by: GLM:glm-5.2
+> Signed-off-by: Bradley Morgan <include@grrlz.net>
 
-This is not allowed as the TP_printk() is executed at the time the trace
-event is read from /sys/kernel/tracing/trace file. That can happen
-literally, seconds, minutes, hours, weeks, days, or even months later!
-There is no guarantee that the hba pointer will still exist by the time it
-is dereferenced when the "trace" file is read.
+Thanks for the fix!
+Let me pick this to bootconfig/fixes.
 
-Instead, save the device name from the hba pointer at the time the
-tracepoint is called and place it into the ring buffer event. Then the
-TP_printk() can read the name directly from the ring buffer and remove the
-possibility that it will read a freed pointer and crash the kernel.
+Thank you,
 
-This was detected when testing the trace event code that looks for
-TP_printk() parameters doing illegal derferences[1]
+> ---
+>  lib/bootconfig.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> Changes since v1:
+> - Got the big guns out! :) (see Assisted-by).
+> - Addressed review from Masami Hiramatsu and Breno Leitao.
+> 
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index f445b7703fdd..c913259c80ce 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -427,8 +427,9 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+>  int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  {
+>  	struct xbc_node *knode, *vnode;
+> -	char *end = buf + size;
+> +	char *end = buf ? buf + size : NULL;
+>  	const char *val, *q;
+> +	size_t len = 0;
+>  	int ret;
+>  
+>  	xbc_node_for_each_key_value(root, knode, val) {
+> @@ -442,7 +443,9 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
+>  			if (ret < 0)
+>  				return ret;
+> -			buf += ret;
+> +			len += ret;
+> +			if (buf)
+> +				buf += ret;
+>  			continue;
+>  		}
+>  		xbc_array_for_each_value(vnode, val) {
+> @@ -456,11 +459,13 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+>  				       xbc_namebuf, q, val, q);
+>  			if (ret < 0)
+>  				return ret;
+> -			buf += ret;
+> +			len += ret;
+> +			if (buf)
+> +				buf += ret;
+>  		}
+>  	}
+>  
+> -	return buf - (end - size);
+> +	return len;
+>  }
+>  #undef rest
+>  
+> -- 
+> 2.53.0
+> 
 
-[1] https://lore.kernel.org/all/20260630184836.74d477b6@gandalf.local.home/
 
-Cc: stable@vger.kernel.org
-Fixes: 583e518e71003 ("scsi: ufs: core: Add hba parameter to trace events")
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- drivers/ufs/core/ufs_trace.h | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/ufs/core/ufs_trace.h b/drivers/ufs/core/ufs_trace.h
-index 309ae51b4906..377a3c54b9f5 100644
---- a/drivers/ufs/core/ufs_trace.h
-+++ b/drivers/ufs/core/ufs_trace.h
-@@ -89,16 +89,18 @@ TRACE_EVENT(ufshcd_clk_gating,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__field(int, state)
- 	),
- 
- 	TP_fast_assign(
-+		__assign_str(dev_name);
- 		__entry->hba = hba;
- 		__entry->state = state;
- 	),
- 
- 	TP_printk("%s: gating state changed to %s",
--		dev_name(__entry->hba->dev),
-+		__get_str(dev_name),
- 		__print_symbolic(__entry->state, UFSCHD_CLK_GATING_STATES))
- );
- 
-@@ -111,6 +113,7 @@ TRACE_EVENT(ufshcd_clk_scaling,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__string(state, state)
- 		__string(clk, clk)
- 		__field(u32, prev_state)
-@@ -119,6 +122,7 @@ TRACE_EVENT(ufshcd_clk_scaling,
- 
- 	TP_fast_assign(
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__assign_str(state);
- 		__assign_str(clk);
- 		__entry->prev_state = prev_state;
-@@ -126,7 +130,7 @@ TRACE_EVENT(ufshcd_clk_scaling,
- 	),
- 
- 	TP_printk("%s: %s %s from %u to %u Hz",
--		dev_name(__entry->hba->dev), __get_str(state), __get_str(clk),
-+		__get_str(dev_name), __get_str(state), __get_str(clk),
- 		__entry->prev_state, __entry->curr_state)
- );
- 
-@@ -138,16 +142,18 @@ TRACE_EVENT(ufshcd_auto_bkops_state,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__string(state, state)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__assign_str(state);
- 	),
- 
- 	TP_printk("%s: auto bkops - %s",
--		dev_name(__entry->hba->dev), __get_str(state))
-+		__get_str(dev_name), __get_str(state))
- );
- 
- DECLARE_EVENT_CLASS(ufshcd_profiling_template,
-@@ -158,6 +164,7 @@ DECLARE_EVENT_CLASS(ufshcd_profiling_template,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__string(profile_info, profile_info)
- 		__field(s64, time_us)
- 		__field(int, err)
-@@ -165,13 +172,14 @@ DECLARE_EVENT_CLASS(ufshcd_profiling_template,
- 
- 	TP_fast_assign(
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__assign_str(profile_info);
- 		__entry->time_us = time_us;
- 		__entry->err = err;
- 	),
- 
- 	TP_printk("%s: %s: took %lld usecs, err %d",
--		dev_name(__entry->hba->dev), __get_str(profile_info),
-+		__get_str(dev_name), __get_str(profile_info),
- 		__entry->time_us, __entry->err)
- );
- 
-@@ -200,6 +208,7 @@ DECLARE_EVENT_CLASS(ufshcd_template,
- 		__field(s64, usecs)
- 		__field(int, err)
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__field(int, dev_state)
- 		__field(int, link_state)
- 	),
-@@ -208,13 +217,14 @@ DECLARE_EVENT_CLASS(ufshcd_template,
- 		__entry->usecs = usecs;
- 		__entry->err = err;
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__entry->dev_state = dev_state;
- 		__entry->link_state = link_state;
- 	),
- 
- 	TP_printk(
- 		"%s: took %lld usecs, dev_state: %s, link_state: %s, err %d",
--		dev_name(__entry->hba->dev),
-+		__get_str(dev_name),
- 		__entry->usecs,
- 		__print_symbolic(__entry->dev_state, UFS_PWR_MODES),
- 		__print_symbolic(__entry->link_state, UFS_LINK_STATES),
-@@ -279,6 +289,7 @@ TRACE_EVENT(ufshcd_command,
- 	TP_STRUCT__entry(
- 		__field(struct scsi_device *, sdev)
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(&sdev->sdev_dev))
- 		__field(enum ufs_trace_str_t, str_t)
- 		__field(unsigned int, tag)
- 		__field(u32, doorbell)
-@@ -291,6 +302,7 @@ TRACE_EVENT(ufshcd_command,
- 	),
- 
- 	TP_fast_assign(
-+		__assign_str(dev_name);
- 		__entry->sdev = sdev;
- 		__entry->hba = hba;
- 		__entry->str_t = str_t;
-@@ -307,7 +319,7 @@ TRACE_EVENT(ufshcd_command,
- 	TP_printk(
- 		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x, hwq_id: %d",
- 		show_ufs_cmd_trace_str(__entry->str_t),
--		dev_name(&__entry->sdev->sdev_dev), __entry->tag,
-+		__get_str(dev_name), __entry->tag,
- 		__entry->doorbell, __entry->transfer_len, __entry->intr,
- 		__entry->lba, (u32)__entry->opcode, str_opcode(__entry->opcode),
- 		(u32)__entry->group_id, __entry->hwq_id
-@@ -322,6 +334,7 @@ TRACE_EVENT(ufshcd_uic_command,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__field(enum ufs_trace_str_t, str_t)
- 		__field(u32, cmd)
- 		__field(u32, arg1)
-@@ -331,6 +344,7 @@ TRACE_EVENT(ufshcd_uic_command,
- 
- 	TP_fast_assign(
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__entry->str_t = str_t;
- 		__entry->cmd = cmd;
- 		__entry->arg1 = arg1;
-@@ -340,7 +354,7 @@ TRACE_EVENT(ufshcd_uic_command,
- 
- 	TP_printk(
- 		"%s: %s: cmd: 0x%x, arg1: 0x%x, arg2: 0x%x, arg3: 0x%x",
--		show_ufs_cmd_trace_str(__entry->str_t), dev_name(__entry->hba->dev),
-+		show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
- 		__entry->cmd, __entry->arg1, __entry->arg2, __entry->arg3
- 	)
- );
-@@ -353,6 +367,7 @@ TRACE_EVENT(ufshcd_upiu,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__field(enum ufs_trace_str_t, str_t)
- 		__array(unsigned char, hdr, 12)
- 		__array(unsigned char, tsf, 16)
-@@ -361,6 +376,7 @@ TRACE_EVENT(ufshcd_upiu,
- 
- 	TP_fast_assign(
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__entry->str_t = str_t;
- 		memcpy(__entry->hdr, hdr, sizeof(__entry->hdr));
- 		memcpy(__entry->tsf, tsf, sizeof(__entry->tsf));
-@@ -369,7 +385,7 @@ TRACE_EVENT(ufshcd_upiu,
- 
- 	TP_printk(
- 		"%s: %s: HDR:%s, %s:%s",
--		show_ufs_cmd_trace_str(__entry->str_t), dev_name(__entry->hba->dev),
-+		show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
- 		__print_hex(__entry->hdr, sizeof(__entry->hdr)),
- 		show_ufs_cmd_trace_tsf(__entry->tsf_t),
- 		__print_hex(__entry->tsf, sizeof(__entry->tsf))
-@@ -384,16 +400,18 @@ TRACE_EVENT(ufshcd_exception_event,
- 
- 	TP_STRUCT__entry(
- 		__field(struct ufs_hba *, hba)
-+		__string(dev_name, dev_name(hba->dev))
- 		__field(u16, status)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->hba = hba;
-+		__assign_str(dev_name);
- 		__entry->status = status;
- 	),
- 
- 	TP_printk("%s: status 0x%x",
--		dev_name(__entry->hba->dev), __entry->status
-+		__get_str(dev_name), __entry->status
- 	)
- );
- 
 -- 
-2.53.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
