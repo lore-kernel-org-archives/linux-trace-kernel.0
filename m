@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B94326F288;
-	Tue, 30 Jun 2026 22:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541D0282F3A;
+	Tue, 30 Jun 2026 22:39:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782858821; cv=none; b=luQu+SJMj5q7Kb8T6Ol4zgjh0xIS31MJ54CQ2B/Mj1w/4rH0ADwuJytfJyTGPCrMf3d+pIU98gula8LKRj2XKsfeILL0Y0TJWETl4UhRd7CzuwnghxzGRirvM/VBGPCZP/AlncD3tTG4twfz52xryxcFaqS3V9aKujxBdG/6QUA=
+	t=1782859185; cv=none; b=fuxS3Fx4Ij8kjbzUPrtgkYFBbvcRTqOnzzjeMKr14Lul/2P0HIdbpJOr83RG20LyXulUT1gNS0S/6+/LbmLfUtYpjSXWHnGmS1srqk2FVD0BUmoLeAHQvlJAZaBDubGhga0sMYAFFd66akZ1CBih3vZ6z9sGJCUiTMYAdrY06zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782858821; c=relaxed/simple;
-	bh=PfDhfTCty8cy50XxomBebJUpYHTYGZnqKnEiOdT6AGc=;
+	s=arc-20240116; t=1782859185; c=relaxed/simple;
+	bh=bcmFRuTRz3xFXMFsvy1OnWTU+QK2rBR/OGAUL5fqFgY=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=G6R8f8sp6+L7FT/EKOhT5J1l+zfQO7eVI3KRvaXi/Lgl9Xw1hQz455tssJIqhjfxyKGp0JHnIeyJhRzo8Qwh5Ww5djHmD0UimKMHMfPeT3peSyzO5FIJIhhrZp8ENYc4VdqkRnvphlGujIpWGHNkOMDLCZUdYf25uILurcDDp0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqPNRRhk; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=Rth4xOJqcEGny7r/c6RIT6+h84zvDyRhLtROGy/sBct1mDPIdEm7H9p81CXoWhbPnuSNsO22b/fcrFDlLUZH6Pd7yIVu3QM8/LfBf4SPVgzLcjsoHU304J3kJXG3LKucvJvN/s+Ukb7FE8auX3x3nXg2gvXPyVf8jXTmY3Y9+CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtVgdWpu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqPNRRhk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966701F000E9;
-	Tue, 30 Jun 2026 22:33:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtVgdWpu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859541F000E9;
+	Tue, 30 Jun 2026 22:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782858819;
-	bh=nfsKD9GM3ZJvGDmqQFlRaZt3ShaCsQhGyjSUxj31w/I=;
+	s=k20260515; t=1782859183;
+	bh=4G7kaaTAc8WYqpYxAs+aIasDlm+/YN4ZAPXD3DbZ28Q=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mqPNRRhkZE9AmyWatl9oPrw5D8gb2kOs8ITdoOEP9s2ZjxiM/LsTaETgg7Ay3lSaU
-	 5XelscLjQY+z2464u0pya13QkL4J5v4gCN7aMhYLAxiKK4tSAz7HdWPJuIZSg+1ISb
-	 JBXY4tnBSfa5T3RfZ/VD3/p0VHFs5FgzmgGM8qZFwaDUAl05KONAMsZJd/S+1I6QXv
-	 mxuUIeFMSMaqc5wRFtIL0mnX6MSK6Mpa/6YIL/gTAAdyj7ZiWEXmxgosf0dB8uyyRI
-	 F5vpySITWhkX1rPbPbP2JpibpL8PQIzVV29okmuThGV022pWt5eKUoRh0Ba4WhAtO0
-	 ttEFBiBlgqi4A==
-Date: Wed, 1 Jul 2026 07:33:35 +0900
+	b=UtVgdWpuj6qBAEbVSFQ1jTrgtA55E4/juVPjoELVUwYydsxebJvYt3SN2UWMOD01q
+	 Xo6yoYX8JymhGFvvwNEyjPNO/bU3R8QW8jSVHfmcLJSX7bRrpgpcj4d8rGiLP7sFr4
+	 1kyrCgV+cAjKRnaKP//QCX3u0Gnx2J14rOg4i9DeYDS7Dqaa/TX7q/cchfTrBxNQVb
+	 to4uDHYLQmecXXkyrpoeIN4hXi7JgERrL1A8MJ2Mdzwr/y7xMdC6R6zLj7AnnooQT5
+	 qvpy5uzjJTIHG21PsTpp/ATGQyyiJ08ikaMpx229jHcpT2TQqa4tw5KuwDjXyBjGsh
+	 KQQAX+KyMpMmQ==
+Date: Wed, 1 Jul 2026 07:39:39 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: probes: save original sp in rethook trampoline
-Message-Id: <20260701073335.548d8f0b435b1a5fb4e41a69@kernel.org>
-In-Reply-To: <20260630194010.1824039-1-martin@kaiser.cx>
-References: <20260630194010.1824039-1-martin@kaiser.cx>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v13 04/11] perf/probe: Ignore comment lines in
+ dynamic_events/kprobe_events file
+Message-Id: <20260701073939.81842d6f6bd139a329c45c7f@kernel.org>
+In-Reply-To: <akMO53eG_4YKJH0j@google.com>
+References: <178271357142.1176915.7193483024740701480.stgit@devnote2>
+	<178271361825.1176915.16095297120719039761.stgit@devnote2>
+	<20260630073211.2a505d1f31e5fae1bf03b81a@kernel.org>
+	<akMO53eG_4YKJH0j@google.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,66 +52,69 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jun 2026 21:40:03 +0200
-Martin Kaiser <martin@kaiser.cx> wrote:
+On Mon, 29 Jun 2026 17:33:43 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-> Reading a word from the stack in a kretprobe crashes a risc-v kernel.
+> Hi Masami,
 > 
-> $ cd /sys/kernel/tracing/
-> $ echo 'r n_tty_write $stack0' > dynamic_events
-> $ echo 1 > events/kprobes/enable
-> Unable to handle kernel paging request at virtual address 0000000200000128
-> ...
-> [<ffffffff80016d16>] regs_get_kernel_stack_nth+0x26/0x38
-> [<ffffffff80177196>] process_fetch_insn+0x3ee/0x760
-> [<ffffffff80177836>] kretprobe_trace_func+0x116/0x1f0
-> [<ffffffff8017795a>] kretprobe_dispatcher+0x4a/0x58
-> [<ffffffff8013572e>] kretprobe_rethook_handler+0x5e/0x90
-> [<ffffffff80180838>] rethook_trampoline_handler+0x70/0x108
-> [<ffffffff8001ba32>] arch_rethook_trampoline_callback+0x12/0x1c
-> [<ffffffff8001ba84>] arch_rethook_trampoline+0x48/0x94
-> [<ffffffff8067872a>] tty_write+0x1a/0x30
+> On Tue, Jun 30, 2026 at 07:32:11AM +0900, Masami Hiramatsu wrote:
+> > Hi Arnaldo, Namhyung,
+> > 
+> > I forgot to CC this. Can I pick this patch via linux-trace tree,
+> > or would you pick this?
+> > This is a part of typecast series [1] only for debugging.
 > 
-> In regs_get_kernel_stack_nth, regs->sp contains an arbitrary value.
+> Thanks for letting me know.
 > 
-> arch_rethook_trampoline saves the registers from the probed function in a
-> struct pt_regs. sp is not saved. Instead, sp is decremented for
-> arch_rethook_trampoline's local stack.
-> 
-> Fix this crash and save the original sp along with the other registers.
-> Use a0 as a temporary register, it is overwritten anyway.
+> I think it's better to route this through the perf tree as we're seeing
+> a lot of cleanups all around the code base.  Having this together would
+> reduce chances of future conflicts.  Does that sound ok to you?
 
-Good catch!
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-I would like this to be handled by the RISC-V maintainers.
+OK, thanks for confirmation. Then I'll drop it from probes/for-next (and probes/core).
 
 Thank you,
 
 > 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  arch/riscv/kernel/probes/rethook_trampoline.S | 3 +++
->  1 file changed, 3 insertions(+)
+> Thanks,
+> Namhyung
 > 
-> diff --git a/arch/riscv/kernel/probes/rethook_trampoline.S b/arch/riscv/kernel/probes/rethook_trampoline.S
-> index f2cd83d9b0f0..c3aa8d8cf5af 100644
-> --- a/arch/riscv/kernel/probes/rethook_trampoline.S
-> +++ b/arch/riscv/kernel/probes/rethook_trampoline.S
-> @@ -41,6 +41,9 @@
->  	REG_S x29, PT_T4(sp)
->  	REG_S x30, PT_T5(sp)
->  	REG_S x31, PT_T6(sp)
-> +	/* save original sp */
-> +	addi a0, sp, PT_SIZE_ON_STACK
-> +	REG_S a0, PT_SP(sp)
->  	.endm
->  
->  	.macro restore_all_base_regs
-> -- 
-> 2.43.7
 > 
+> > 
+> > [1] https://lore.kernel.org/all/178271361825.1176915.16095297120719039761.stgit@devnote2/
+> > 
+> > Thanks,
+> > 
+> > On Mon, 29 Jun 2026 15:13:38 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > 
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Since dynamic_events/kprobe_events files show the fetcharg debug
+> > > information as comment lines, its reader needs to ignore it.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > ---
+> > >  tools/perf/util/probe-file.c |    2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+> > > index 4032572cbf55..4d12693a83b3 100644
+> > > --- a/tools/perf/util/probe-file.c
+> > > +++ b/tools/perf/util/probe-file.c
+> > > @@ -197,6 +197,8 @@ struct strlist *probe_file__get_rawlist(int fd)
+> > >  		idx = strlen(p) - 1;
+> > >  		if (p[idx] == '\n')
+> > >  			p[idx] = '\0';
+> > > +		if (buf[0] == '#')
+> > > +			continue;
+> > >  		ret = strlist__add(sl, buf);
+> > >  		if (ret < 0) {
+> > >  			pr_debug("strlist__add failed (%d)\n", ret);
+> > > 
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
