@@ -1,209 +1,115 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4208047AF65
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 20:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782851915; cv=pass; b=GT1mRb+IYBQHFd8YTw8qpDvtQys5oTaUC5w/KLjGcbN2rk9Lq3dYKrH1Dls+w++vcWZZSXVtMAcGJ3OLiubiKR1jkgTZhhyc+b7g2LsP+BNDllSVe2HrrSIg2LqVfi3KiSrb6AE0anvXeQI5eka5nf5rDxG54QdNatuz6YrZaOM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782851915; c=relaxed/simple;
-	bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
-	h=In-Reply-To:References:MIME-Version:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oXjTABww4hRagg8TvPS+9iqzgretVJY2nQm2bFY4WU3GaT3daiCUa1hU4BPCXRtQR44IHm5Z/lNjFkFtyLUPanpeVGgX0iAzdXHOGgG/3zIAd4QQbgBJqmKjDtAsXOaWb8Fyu8Yank7xElT39mnhK4Qk85+kz8JxRDj7WaklRKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwGDLMvd; arc=pass smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwGDLMvd"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-80bb8287d99so50180267b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 13:38:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782851913; cv=none;
-        d=google.com; s=arc-20260327;
-        b=RlqLZmJjnqpdZ7VAcYRrB/bBPQN9MojlJMGbnSfIm1lxepJQli62LBRAhePBhtTmgO
-         yifaxkBy1qSH3Yr8HNUUPhlOTqoPgR45142Q2UYGtT8kRRuk55Y4kqMLk/VF/YbM8nmH
-         3aLdQJ0zgQxnT3yGaGQFk8kMgXD/YPW0u18Q9z+6ElB+87eCwN4/20FySouyXCodKApo
-         alCL7BOmJ8cXoMcdNNWIxFCeG+lTZ9CEUSbl2mIJbMfZugecMD7AJEM/CxnSzjNGjnvD
-         sm4kWHRtFazn8Jqe7SicRgcak5vNH2/cMlsmcXY5kR9Ys+ONVVlJUTNze8fPmQnhunW4
-         Klmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:references:in-reply-to:dkim-signature;
-        bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
-        fh=bYzlg9zWARFUEA3GQ2a9HyOt6DvVEJ9D8wXGQSfMyYE=;
-        b=fzRj4a4ZyZzH8pdgY+CbF/VNJLZckpMpMHna+bc2LW8qdfzchUU7SYdO/QoRRUFYsV
-         pBTFb3KlZyRiA9SmAHfQ/Nek0mr24EoB0UnoAr9jxMCUfLENWl1HUsJu81O33mcOkwHh
-         HRtS5l+WaoYsyUIP30W7itWLVVUSpx2jFc2OtWm+TwScvYIOV7kQ9BLAMs1WtIfRQvCF
-         Nxh8uo4tbI6iDekY5lXK+Q7Jmb4VY0BKwue9ILYcdJw6bWfyTi2eoiYi3TCh2CSkZxSP
-         EVhkg3LHckadS7YIhz86OQKPqOom1zxxJtaHTeenhdjKf3ChZB8S5xADDqseU6uXhKL2
-         g5+Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782851913; x=1783456713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:references:in-reply-to:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
-        b=fwGDLMvdzzBt3FH9mVhy+4VG1AFgQMlcCH0f5rRrIpBGDXqKQdz8S9PZ0gqa7x5poh
-         zdqz0N68ZoweYDmKHG34YlSbVM0mDvdxcr/DJ5V3pUGK325QTEUfZtX/dRZTFzO+HYQO
-         Ftl56EuhD1zGTn6y62iGRd7hsDjCNe7IAk3groTrV1cAnLQjlw4c98uqojkKDJme0s+p
-         0FKEuqvGPOqEVYsaIh343CUjrCZUaPj6WcgqmjlitwiodDPAiYAFEwnvh6HuSCqRvmGq
-         eIiObxwnDa//dTE4frNoaq3+D7qHgihTatJxg+2fdyGUQ0PIwdvQvmgwKPb7fBnjuTuw
-         E1cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782851913; x=1783456713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:references:in-reply-to:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
-        b=sZISUjHLQiVMqtHw8NrbJeHQCSZSMbcAGU/f3qZFz/4ZZqzzM+T2B7NR7wbbtYpZ1k
-         JrjP7vk77834MuzWbmX8s5nixZeGfmSmRx9v0SIyvGIC/SYSVLoz1VhZ2fAiC1MWTGCI
-         VpPJt1DwTiX2mjJ4IJOoonPnwD3rJeWUC0rmdjq1vsvXcZABWytD43Ii943LH6zTxeTC
-         3PjYidT5D28CgRjB/eDP5rRHrADL2zLUzsHAEPmZbliK6QeK6Nm1kMnT/rVUoC0KQRjg
-         ypT23vzZKP/A0kgS9XIXkXNJrmkd6bNYTHAPfed3JLHG5GtSGShYSvLNnqC9QtRWfJr6
-         LG7w==
-X-Forwarded-Encrypted: i=1; AHgh+RoImleP/Jfywo0YsbueQDvIHus4qlRH7ozHbg4K+alCq8mtx9eH80znL2wOCOv5dNBAIAtP+a0xYyesc7IFgx14SyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYCU7skeUqYaKSavtncP7J/N0oDHtTyW4DHbtAyrKaS27U2w9h
-	fYaUJSjMufO7oeSpZzazGZ/7QyKvlwj0xRUsLj+L+m7HIXEYS/B+gxJEJudwgWU3Y/ZSaPsY2rz
-	G9Ju6pCYnIp+p49u1jCdfX5AgaR3Y+UI=
-X-Gm-Gg: AfdE7cnZb/nX0dIWd9wLWiAiydVR6ghsCaRviT6EajzIzOknAPLJWJ82/FENJ5O3yys
-	l+gZJ3AiLBR++SGlOQHiyoH7hk+Ye4sZKf0F2HOVKcnjptEh+ibTzA4jLSudwSZafeT5tRmTAoM
-	XCglBlstZ76M1mJuCf+Qp6RjCSM++I64Ttcq8ZN7hoTFTmog+94Q8dABRb58nAi7slznPQG8vY6
-	UbdctsvbEUgKHXdXrqe0TO1NCqoBwa+YgrjNudfigO0/mJFkqgaBTvrMmj3FbZUCyjuL4xR
-X-Received: by 2002:a05:690c:c4f2:b0:80c:85b6:75b0 with SMTP id
- 00721157ae682-810dad04909mr51464367b3.57.1782851913113; Tue, 30 Jun 2026
- 13:38:33 -0700 (PDT)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Tue, 30 Jun 2026 13:38:32 -0700
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Tue, 30 Jun 2026 13:38:32 -0700
-In-Reply-To: <20260630101425.2f7cfbea@robin>
-References: <20260628004653.28065-1-alhouseenyousef@gmail.com> <20260630101425.2f7cfbea@robin>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54533B9920;
+	Tue, 30 Jun 2026 20:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782852291; cv=none; b=McFExUdrtNVadbkqO7UfvLwohD7SoTNryQo+HMayyIjXvP9ewPuRoF7NMX9wYvu5Tj4A+86h5oHbVENmzwomMRcQyRCWN6zSLtpch5aRbUGyu9QxWGBqssQSPSBLUabG+dQQRgqTDgscozhCLRquCFXq+NxrTTj+EwcgkOIVbvo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782852291; c=relaxed/simple;
+	bh=okUmui3VnSblvrHsA0uQ2PWyrXWsJn9ztW+KVwyEb8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QiV3eu0b0zNxZZ/RUBObkWnE8s0ifwk2DS9MZ+sGRsgZxPmPlSCoMXtkAVxxYJK754p/qaezZUomnNOdPwMMY31bplrXCfw0fXbHg2aCQ5sJhCaFRgMy/F/I46uQjy7ysF4WzLwPj6tJkFsqQXm3XiyS2sdQgqcYI9tCRrqoBEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 9EEE940114;
+	Tue, 30 Jun 2026 20:44:41 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 992DC20010;
+	Tue, 30 Jun 2026 20:44:39 +0000 (UTC)
+Date: Tue, 30 Jun 2026 16:44:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, imx@lists.linux.dev,
+ dmaengine@vger.kernel.org
+Subject: Re: [PATCH] fsl-edma: tracing: no ptr dereference during log output
+Message-ID: <20260630164439.51e61b71@gandalf.local.home>
+In-Reply-To: <20260630160544.4211ae88@gandalf.local.home>
+References: <20260630200022.1826420-1-martin@kaiser.cx>
+	<20260630160544.4211ae88@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Yousef Alhouseen <alhouseenyousef@gmail.com>
-Date: Tue, 30 Jun 2026 13:38:32 -0700
-X-Gm-Features: AVVi8CeS9MpWXcK6oMQlhJxchQ6987C-gKuaNCMr5pFvOCnqWrfkAXq0VUAhg4A
-Message-ID: <CAMuQ4bWwnbr_-sTJwMFvGrU+a0A_FdGutiBAAadgokEPEMTEmQ@mail.gmail.com>
-Subject: Re: [PATCH] ring-buffer: serialize read-page order with subbuffer resize
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, petr.pavlu@suse.com, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 992DC20010
+X-Stat-Signature: escraam5swnpxnqpeejqfpqgu6pioyan
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+gSQo04mtg4lddc8VRqnjAeGh6sOoXIKg=
+X-HE-Tag: 1782852279-513083
+X-HE-Meta: U2FsdGVkX19y2SwDl4vlu3cXx7MA/npPcPGdgyjL0EyfSoivuVG5l3o2BVIlfOLzkWK4chTTmGSvRJaygmOiqaCcJd6jFIKCY8EHjJbMe733rUj/YW+32/NGWTM9yD3IMU2B59Mw4P9HsYL3OkpdDvlUhc33H/RDGJJWUDlMlGY8Oqp51LTcMa/Um7L2VJhWUjhfX/DEz3urGiCr4oArsKs1Hhpj+1H84pSZq2TgMgGqVr9aO/xM4IGkGWZJcGM9VoizH3OzDWLh9htGEwmb2FYmVB0CKwLP4JaplJfyoaeaGmUgQ8awxOV+zBkG7aIjl96Qy8aFPIY9RmYv2seXBpH/EoBUzqCnjakYfDwXhEU3eyaO0OOUX8jZawZVyFxF
 
-Thanks, Steve. Moving the order reads under the existing per-CPU locks
-is much tighter and avoids extending the allocation critical path.
-I=E2=80=99ll compile and test this direction and send v2.
+On Tue, 30 Jun 2026 16:05:44 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Tue, 30 Jun 2026 10:14:25 -0400, Steven Rostedt <rostedt@goodmis.org> wr=
-ote:
-> On Sun, 28 Jun 2026 02:46:53 +0200
-> Yousef Alhouseen <alhouseenyousef@gmail.com> wrote:
->
-> > ring_buffer_read_page() checks that its spare page has the current
-> > subbuffer order before taking cpu_buffer->reader_lock. A concurrent
-> > ring_buffer_subbuf_order_set() can change the order and replace the
-> > reader page after that check. The reader then copies a larger subbuffer
-> > into the old allocation, causing an out-of-bounds write.
-> >
-> > Keep spare-page allocation and release under buffer->mutex, which alrea=
-dy
-> > serializes order changes. Move the read-side order check under
-> > reader_lock, the lock used by resize when replacing per-CPU pages.
-> >
-> > Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub =
-page")
-> > Reported-by: syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=3D2dd9d02f60775ce5c1fb
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
-> > ---
-> > kernel/trace/ring_buffer.c | 9 ++++++---
-> > 1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 56a328e94395..eed5d7cffdee 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -6950,6 +6950,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *=
-buffer, int cpu)
-> > if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > return ERR_PTR(-ENODEV);
-> >
-> > + guard(mutex)(&buffer->mutex);
-> > +
-> > bpage =3D kzalloc_obj(*bpage);
->
-> First, do not grab locks around allocations unless the are really needed.
-> This is bad practice, as it extends the critical section and may even add
-> the allocation locking to the lock chain.
->
-> That said, just moving things around the current locks should work.
->
-> Like this (not compiled nor tested):
->
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 56a328e94395..8352f935a223 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -6954,11 +6954,11 @@ ring_buffer_alloc_read_page(struct trace_buffer *=
-buffer, int cpu)
-> if (!bpage)
-> return ERR_PTR(-ENOMEM);
->
-> - bpage->order =3D buffer->subbuf_order;
-> cpu_buffer =3D buffer->buffers[cpu];
-> local_irq_save(flags);
-> arch_spin_lock(&cpu_buffer->lock);
->
-> + bpage->order =3D buffer->subbuf_order;
-> if (cpu_buffer->free_page) {
-> bpage->data =3D cpu_buffer->free_page;
-> cpu_buffer->free_page =3D NULL;
-> @@ -7007,13 +7007,13 @@ void ring_buffer_free_read_page(struct trace_buff=
-er *buffer, int cpu,
-> * is different from the subbuffer order of the buffer -
-> * we can't reuse it
-> */
-> - if (page_ref_count(page) > 1 || data_page->order !=3D buffer->subbuf_or=
-der)
-> + if (page_ref_count(page) > 1)
-> goto out;
->
-> local_irq_save(flags);
-> arch_spin_lock(&cpu_buffer->lock);
->
-> - if (!cpu_buffer->free_page) {
-> + if (!cpu_buffer->free_page && data_page->order =3D=3D buffer->subbuf_or=
-der)
-> cpu_buffer->free_page =3D dpage;
-> dpage =3D NULL;
-> }
-> @@ -7091,15 +7091,15 @@ int ring_buffer_read_page(struct trace_buffer *bu=
-ffer,
-> if (!data_page || !data_page->data)
-> return -1;
->
-> - if (data_page->order !=3D buffer->subbuf_order)
-> - return -1;
-> -
-> dpage =3D data_page->data;
-> if (!dpage)
-> return -1;
->
-> guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
->
-> + if (data_page->order !=3D buffer->subbuf_order)
-> + return -1;
-> +
-> reader =3D rb_get_reader_page(cpu_buffer);
-> if (!reader)
-> return -1;
->
-> -- Steve
+> >  	TP_printk("offset %08x: value %08x",
+> > -		(u32)(__entry->addr - __entry->edma->membase), __entry->value)
+> > +		(u32)(__entry->addr - __entry->membase), __entry->value)  
+> 
+> Hmm, I think I should update the TP_printk checks at boot to cover this too.
+
+I created the following to catch this:
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..2da3c02bea54 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -400,10 +400,37 @@ static bool process_string(const char *fmt, int len, struct trace_event_call *ca
+ 	return true;
+ }
+ 
++static void test_double_dereference(const char *str, int len,
++				    struct trace_event_call *call)
++{
++	const char *ptr;
++	const char *end = str + len;
++
++	ptr = strstr(str, "REC->");
++
++	while (ptr && ptr < end) {
++
++		ptr += 5;
++		for (; ptr < end; ptr++) {
++			if (ptr[0] == '-' && ptr[1] == '>') {
++				WARN_ONCE(1, "Event %s has double dereference in TP_printk: %*s\n",
++					  trace_event_name(call), len, str);
++				return;
++			}
++			if (!isalnum(*ptr) && *ptr != '_')
++				break;
++		}
++
++		ptr = strstr(ptr, "REC->");
++	}
++}
++
+ static void handle_dereference_arg(const char *arg_str, u64 string_flags, int len,
+ 				   u64 *dereference_flags, int arg,
+ 				   struct trace_event_call *call)
+ {
++	test_double_dereference(arg_str, len, call);
++
+ 	if (string_flags & (1ULL << arg)) {
+ 		if (process_string(arg_str, len, call))
+ 			*dereference_flags &= ~(1ULL << arg);
+
+Enabled this event to see if it would trigger, but instead it found *another* BUG!
+
+[    0.719012][    T0] ------------[ cut here ]------------
+[    0.720850][    T0] Event ufshcd_exception_event has double dereference in TP_printk: dev_name(REC->hba->dev), REC->status
+[    0.724646][    T0] WARNING: kernel/trace/trace_events.c:416 at handle_dereference_arg+0x342/0x5a0, CPU#0: swapper/0/0
+
+
+I'll go make a fix for the ufshcd_exception_event event, and then I will
+definitely add this patch to make sure this bug isn't in other places.
+
+-- Steve
