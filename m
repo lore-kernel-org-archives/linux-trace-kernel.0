@@ -1,185 +1,115 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B23A3F0AB6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 14:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532C0365A0B;
+	Tue, 30 Jun 2026 15:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782830918; cv=none; b=YPSE0g2HV5Q3Z9GGYVhsLnW0myyQ+gF16uni4cs62iG5rREXpac3Q9M92VD0HHTdt6gzKia7aXiqH/viq5igBAjTZWQylQsws6FQSCdkPdCsvL+5VM8Ip4k9VqdMWim7FLKzSCirGqJigD5gdI/q8mPItJjntiKMtNnvX8MZwfI=
+	t=1782832989; cv=none; b=vAmB9frnSmofYBaOQPLz2q5SCUU8AfnfmeoN6eaOhjM635aFYENG5wjRyPVO/vchbpxF2ONngRr8/PJIuHB7qBN/0zgZWgl4M4nMyjz6KU2z9hJkQe25Av1+I1CWm3Z18z44IrulrC7hqZDZ4Thjgn0pf1jpIu4rYBbXVrVX99U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782830918; c=relaxed/simple;
-	bh=1Jj/c/TOCM9F8C2420YyNj+4Ly0pxwW5lqXFrBHZorY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LaJeWfuzNou7hAJERuyCI18rPY2SShSpqv6ldTU4JZ5chaL9P63i5Lc45AaNMAveOIqBuTkwRUwQSVnzJcgaohR+twe1/oAty1Pzn35A+WarFsahpYut53sZMVRk7O8XcRX0ggUdo74cdRhNDhWkDToqlIOPcnfR5YSf/FP/Qmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AMt8z6b4; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782832989; c=relaxed/simple;
+	bh=mnhOZlEbmNxq5YsCTla36EPa18OakR+bG+jTvbDU7EM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QEpVwiMe/qfO62U9HvuEZ+3Lv4pLd3W+kx0RwPfT/WFqpZGtQi2ldL4QPilbSq624sjN0RknBbvRdhF8vDqD39lUYI0NdtNOBN7sq9unn1g2LIaJJunpv32NWQHy2gFVeGcwCUzCC7FWotu5SXfkVybeCmALy3HZ4AJq2si50Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MHc1saCt; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMt8z6b4"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-493a7bd27c2so22297475e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 07:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782830916; x=1783435716; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m03AIVt/lARsmyZNqaerMYeWdNxHnC4KuUXFWS8CSvU=;
-        b=AMt8z6b4VBsSDvxJzJSry6DANpmVvMjvWG0UFsaWG2W65aGWs7dGAMXOPb2iu/kVzG
-         6Pw7vbngT+54s63gaw23ovptmlxvhX6PhdicVf38O1B3YYwBJ/ZDbNydQzvHm+WMlpxj
-         0wLh7Ct3MEJBMMaRkjDRiNW5+G0n7uQUkk5EjlU3uv36sX7+3nKNWoN7WOkpsPBxmATF
-         iwl2ewUise/Pdtg3Eakv9jCzqP5syCOGTj6XNaObvJvhPSVKW5SUjVHO8HUc/Klp6TCq
-         QEx7Q/BrQEBAWV7WOZ/fg/dRekMA0U8eBJCErdCbJNG0gUMoHQMZC2DkUSTWRLSyAYD2
-         Jxug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782830916; x=1783435716;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m03AIVt/lARsmyZNqaerMYeWdNxHnC4KuUXFWS8CSvU=;
-        b=pGK7mVsDsy/qeVT8hus3GOkzYIYv1ldhRfrtpdQCfA8LIZW6DbaUGr7epuBPC+4AVd
-         YuOKKz+YnxmtiMsdIrKZREGBvNHLV3MaD/ERdzMSTdDsRUmlIVgg25HP7w6/BGAT/8PU
-         WxwdDU6jamE5izc8sPzWUjanIYEunmpTcPs/lk27cQBPBAsSSVzlY8JHcJoEIVf8I/cI
-         2zebXHntz4SUfOIvmwSnFKFzjNG1KA0TT/Iwe0gkylDn+R09xonelhOENmOynBkNxmpu
-         prRUsaqiml6VREhUQPlSGhduyIV8FRHe44SEtYZlr1I5kN9+fr38yGU+at3w1gkIYe0s
-         bKwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/21vEQASljEMNaGr3oNJqTh6h7eN+QFterI9xpg1fJU7dOiLbcbwjh6kGI1O20GglsQ1dSDss2VdkUp+cZfP51nCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz55GlQC9nSmx5WGjDVXndBTdXzbKRHJoPXKEW12rm/NPM3VqRv
-	82Gx1ZYvJvVZ8az+6rj/5J3SDNFPJShuCx5zsKLMa0TKK8ucwHFwM2wc
-X-Gm-Gg: AfdE7ckMrYURmx4s3xt4PhuF/Qy/U/hPDGF470EwX36d1ihZ/Y+iKIsEn7zNkivU5dc
-	WdAlMvA4EdxXDhfNPytkrEzQ0WmP7XqwPzT/GZLm5Zk3OluRbogZJJBIcXqne0dE7/tTOv4T3f0
-	8yRXQqgLZVLg00lUGyiBzC5MTFXEegufkmUYCn48N4QcruJNJdWCS//NLSGpseSTuQKID2CxESp
-	8pFzyUCyr7swlXX59jqQDgDnUzbLFwqbb6a0hIjkFaOBJ+pAzwRQsacMdBw2nTViq8Q1c7V6iBL
-	TQLJ+PVYM31YykXd2NINg177c7dwWMSrAJnOxpgPzw42VDq+avtwagyQ5yzsCKul8Pis6yTePKL
-	xfkgYB4hlZmf6PjkrBQL7ISl2CbvBbNBen7Gv84IT69htyIt0F/FzQv+77C6FCNCLphVjYWvrfz
-	S7M+XtW2VoF/5Me3wE70Xn2RHt
-X-Received: by 2002:a05:600c:811a:b0:490:33b3:4be0 with SMTP id 5b1f17b1804b1-493b82aedf7mr51812715e9.20.1782830915394;
-        Tue, 30 Jun 2026 07:48:35 -0700 (PDT)
-Received: from krava (37-188-177-177.red.o2.cz. [37.188.177.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be4dd77bsm188855e9.10.2026.06.30.07.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 07:48:34 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 30 Jun 2026 16:48:30 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 05/13] uprobes/x86: Move optimized uprobe from nop5 to
- nop10
-Message-ID: <akPXPhXIf6Vz76Xc@krava>
-References: <20260526205840.173790-1-jolsa@kernel.org>
- <20260526205840.173790-6-jolsa@kernel.org>
- <aj5JuH6AtjDtWIVU@redhat.com>
- <akJNZN9gvZ30zKUf@krava>
- <akKf511eknMCE0AB@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MHc1saCt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782832988; x=1814368988;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mnhOZlEbmNxq5YsCTla36EPa18OakR+bG+jTvbDU7EM=;
+  b=MHc1saCtMsiBF66Fg81f6NeGqR5kPocL6EBqbk7JMtVxhyzCaGzaiCNu
+   K4hToOvkqG1nldxuyvxUADU7bLXxDVd+FncWUlt5vhbsWSOTCiYRydoHm
+   nI+AtOsvVnIgZbRD78HBZzjD29t6SjSe6tMM7xZu3y7Y+utUbNDVt2tWZ
+   V86GnJYPKH3CXFTpjG/Sm3iRjK4QeFvxJdx3Uhyxkm5u5kzV5pPjmsbAH
+   GHHFnR79hhXJg5E4Nfu0M5kPqe1hUaZ12pu/RxD0AGPRmVuRMltAnAXrS
+   IyhtMB4/xZpr0s16OqK4Yibs3k8/IJNHirUySwroFslhzlPF02Gn3sTyb
+   A==;
+X-CSE-ConnectionGUID: TqBX5rh4R+qB3nYFulFVLQ==
+X-CSE-MsgGUID: B0anJVctRvmxLz0kjTY0xg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="94933094"
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="94933094"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:23:07 -0700
+X-CSE-ConnectionGUID: koRW/7MOQAWk92/0rXPmZQ==
+X-CSE-MsgGUID: uXiMTSzqQL6ITT9qU5pf5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="254200312"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.232.239]) ([10.124.232.239])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:22:54 -0700
+Message-ID: <a1b06afb-af6e-4666-8c7d-990e7fa150fa@intel.com>
+Date: Tue, 30 Jun 2026 23:22:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akKf511eknMCE0AB@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 07/46] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 29, 2026 at 06:40:07PM +0200, Oleg Nesterov wrote:
-> On 06/29, Jiri Olsa wrote:
-> >
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -265,6 +265,10 @@ static bool is_prefix_bad(struct insn *insn)
-> >
-> >  		attr = inat_get_opcode_attribute(p);
-> >  		switch (attr) {
-> > +		case INAT_MAKE_PREFIX(INAT_PFX_CS):
-> > +			if (insn->x86_64)
-> > +				break;
-> > +			fallthrough;
-> >  		case INAT_MAKE_PREFIX(INAT_PFX_ES):
-> >  		case INAT_MAKE_PREFIX(INAT_PFX_DS):
-> >  		case INAT_MAKE_PREFIX(INAT_PFX_SS):
-> >
-> > or we could just skip it for nop10.. maybe that's better
-> 
-> Well, if you ask me I'd agree with the "maybe that's better" plan ;)
-> I mean... I don't think that INAT_PFX_CS should be "special" in is_prefix_bad.
-> 
-> But, whatever you do - I agree, feel free to keep my r-b.
+On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+> -bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> -				     unsigned long mask, unsigned long attrs);
+> +bool kvm_range_has_vm_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> +					unsigned long mask, unsigned long attrs);
+>   bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+>   					struct kvm_gfn_range *range);
+>   bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
 
-I ended up with the bigger change below, wdyt?
+We have
 
-jirka
+  - kvm_pre_set_memory_attributes()
+  - kvm_arch_pre_set_memory_attributes()
+  - kvm_arch_post_set_memory_attributes()
 
+left, do they need to be renamed as well?
 
----
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 92626fce06a9..521a120a0c78 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -266,6 +266,7 @@ static bool is_prefix_bad(struct insn *insn)
- 		attr = inat_get_opcode_attribute(p);
- 		switch (attr) {
- 		case INAT_MAKE_PREFIX(INAT_PFX_ES):
-+		case INAT_MAKE_PREFIX(INAT_PFX_CS):
- 		case INAT_MAKE_PREFIX(INAT_PFX_DS):
- 		case INAT_MAKE_PREFIX(INAT_PFX_SS):
- 		case INAT_MAKE_PREFIX(INAT_PFX_LOCK):
-@@ -275,15 +276,9 @@ static bool is_prefix_bad(struct insn *insn)
- 	return false;
- }
- 
--static int uprobe_init_insn(struct arch_uprobe *auprobe, struct insn *insn, bool x86_64)
-+static int uprobe_init_insn(struct arch_uprobe *auprobe, struct insn *insn)
- {
--	enum insn_mode m = x86_64 ? INSN_MODE_64 : INSN_MODE_32;
- 	u32 volatile *good_insns;
--	int ret;
--
--	ret = insn_decode(insn, auprobe->insn, sizeof(auprobe->insn), m);
--	if (ret < 0)
--		return -ENOEXEC;
- 
- 	if (is_prefix_bad(insn))
- 		return -ENOTSUPP;
-@@ -292,7 +287,7 @@ static int uprobe_init_insn(struct arch_uprobe *auprobe, struct insn *insn, bool
- 	if (insn_masking_exception(insn))
- 		return -ENOTSUPP;
- 
--	if (x86_64)
-+	if (insn->x86_64)
- 		good_insns = good_insns_64;
- 	else
- 		good_insns = good_insns_32;
-@@ -1620,16 +1615,26 @@ static int push_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
-  */
- int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long addr)
- {
-+	enum insn_mode m = is_64bit_mm(mm) ? INSN_MODE_64 : INSN_MODE_32;
- 	u8 fix_ip_or_call = UPROBE_FIX_IP;
- 	struct insn insn;
- 	int ret;
- 
--	ret = uprobe_init_insn(auprobe, &insn, is_64bit_mm(mm));
--	if (ret)
--		return ret;
-+	ret = insn_decode(&insn, auprobe->insn, sizeof(auprobe->insn), m);
-+	if (ret < 0)
-+		return -ENOEXEC;
- 
--	if (can_optimize(&insn, addr))
-+	/*
-+	 * No need to check instruction in uprobe_init_insn in case we
-+	 * are on top of optimizable nop10.
-+	 */
-+	if (can_optimize(&insn, addr)) {
- 		set_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags);
-+	} else {
-+		ret = uprobe_init_insn(auprobe, &insn);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	ret = branch_setup_xol_ops(auprobe, &insn);
- 	if (ret != -ENOSYS)
+then the interesting one is kvm_vm_set_mem_attributes(), which contains 
+"vm" already while it means "vm ioctl". Do we need to rename it to
+kvm_vm_set_vm_mem_attributes()?
+
