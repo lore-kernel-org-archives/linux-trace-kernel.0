@@ -1,209 +1,198 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2E147B413
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 20:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782852309; cv=pass; b=qaLfH+fJmaoSuoWkQn4qQOpwSO0d2EKcwFACizhPj8V3Idu3DZc7P3j4UQP9BdhYhW20kfo5nIrluosDMFoa9CbHMqx6E/s1kdY/WfAW2TXS+grJE8a1pMyL3Tl4SFn7op5kOCzDMOEBY3GTy25ErOCBiXzsTRVCTjflMCXZY44=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782852309; c=relaxed/simple;
-	bh=MtwX6PfEP7vLJDdIVNKheHf5WKk2ffhaPsYXNf4Tj2g=;
-	h=In-Reply-To:References:MIME-Version:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LCsZ439leZq2OW5SewMuJ1QdRCmFrGFs2b1ELOxyzwdEL3656Yco+2XW9xk/DEu5E5UqQkE+RnAchCtpC0sKfpFhMa/9roULn/SG/lzo6hsq/xmgly3hCUYFewHTvzvisUPckMdsVPyECYklFv3CS5wcLVXpsSLR7GMG6FyLxm8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jkcYD9pZ; arc=pass smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E32D3793C2;
+	Tue, 30 Jun 2026 20:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782852922; cv=none; b=bXRRh2m2UQuPOm2JJG/JztukbhDdV1/pXYeWPFCslIuvu+tfTcATNilO4qVkscepNvyPBw5qGl/pxJk+VB3UWlG0/y3Ee4ZwGM4f6Q7qwzvsdykQ/A3hDo7f7g2aiV0Hs6xz5OrfHxqLetrLehp0m3PT3v9h+EO9yP798rfbFjw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782852922; c=relaxed/simple;
+	bh=7sJKF/xH/OZnhgj123YyTtu81KiJuyu6J7CCCg5dllM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=k1AKXtn9zwWXNY8j7dojtzKEM0+ni9dhBtsFA/xz3D1zveSiooHSpPGjY4qihKH500Licf57j7LRSirPCF6L0rOYdZ6U4nBghdvlwL1touRxM97Rq8Z5Y5NjZXP2W6BI42d1QRJ7paHLrioEIkGEWMI2Ant2WALk+03cAHlOLLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=nIdg9WVc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkcYD9pZ"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-80cebd41372so32912367b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 13:45:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782852306; cv=none;
-        d=google.com; s=arc-20260327;
-        b=L0ZNM0bAgTxxErQRS0mxJlvFV8boBUYmbFUvnti0BogY+NmsWnQGjTdHppsW56Jbxi
-         WElXdOfRnoAm28RX7bpyHyklLx9W7leD4Zg6AXe1/L260MS+cHeXwtC12f3cLgsy2USE
-         y4flcYB4l6+wVGIuxG7umhTZ4+C2ynq9xZeHluwzs/Qo+r6ibcTAxXcpIHem/3yOYnWZ
-         BXGrElHVDYsfYwRqQrY+ju03lG5w1JFx6HoaLxi+ToNFdbixRfcsrDSRv5MtWp90oseo
-         GtCHMB1nzOUeVK3iUBFPlZcVSVZ6onTVSWzbQ2AdX2Y2sGLPhUV2YYFhBoyy0RaFuo3Q
-         BVPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:references
-         :in-reply-to:dkim-signature;
-        bh=MtwX6PfEP7vLJDdIVNKheHf5WKk2ffhaPsYXNf4Tj2g=;
-        fh=ALiLldveXUy0qUBRALW1ZadvMnZ0H9XhwdzNO1LsAMk=;
-        b=H2lDb1aELWOvTprqpR+QJuaDyJj4CoZnEz9nMBkS46plUdCj82/D7bihr1PTss3ptd
-         5wNSy5o1Xfl9c3jvOhjkQaU+CSxzkGHEhiWnHJL+6ls6AFt98m8Y5WSZrt56Tc7Z6Df4
-         tSgwA3x9HUp7wGGPOPLlz4vCDMy+NsUh7BN9WBQIDx/SEgAaXU61TI6k/snbVGwWJ5kY
-         jmM7UXPE56FLV0xqTlWd+5HQV+xAHVtB+idpmBCnOhEXElSyxOOr/jb21BzeQqQ+q3lg
-         vN4vk6Y+QUkOmR6uM02q6m8GXNfsGt76HeFd9D4jjTEbJpkXZvOS/j4Bl3uQuHyVugfk
-         f0tw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="nIdg9WVc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C2A1F000E9;
+	Tue, 30 Jun 2026 20:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782852306; x=1783457106; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:references
-         :in-reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=MtwX6PfEP7vLJDdIVNKheHf5WKk2ffhaPsYXNf4Tj2g=;
-        b=jkcYD9pZaWwoHtM7XJTFnvXYHcm6oLeNEg+Wp/0BoljdGPLBm4rnI5hX+RCL6yA/PL
-         0pDf3BxhLwOz5AVACz8wbk/gbIEXoyS16qpvi7/4QO1TFE6lblkjwKNwKFzQc753oJyI
-         ZM9nlthBaYtJtU6pYoE1g2aw7XDpD2qEWRHiQSF87zGyZ+2eMgIiUz8gn8ahvKbrKLyX
-         zAESAdjGWdh3cZGSmp/ifeIolSc/p+NqDpQyD5/fq8fVOgY7EaRsRmgU77wQaaxcWxWy
-         WqEteKtCeO9uRnMJbCs7n3PfSKp4yKtAy5uiWm6GMlUCEbnwAcStgigUov6Kk24I196E
-         twow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782852306; x=1783457106;
-        h=cc:to:subject:message-id:date:from:mime-version:references
-         :in-reply-to:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MtwX6PfEP7vLJDdIVNKheHf5WKk2ffhaPsYXNf4Tj2g=;
-        b=NKBuPF18HHXkQFpKN2kyD2pbwh+TP9mu2wTVO0lnvFQ1ISUBPfWZWtTygJhGJhyNJM
-         PhHkmnrfu54hDmWMDveP1flmcDvg0LllhbHVK9cVIFDjiZ0GslGeXzVXPgCxKDDRaOTM
-         uwIfCq4nXDHWypZW1PTQ6M9FN0hvgwvmP5s8m++DwjrUOvQFdXpXXT72/EXQ51/7Ah8D
-         cg7EF10NEREPB/ryMs+wJiMh2Ttts8LKbX5PnikfvachkmrpE7q9LjI+BenUKzTTOEnw
-         tGw7WHFqb9hjne+YwLvFnRAoEH2dRg/GIJoMLlcQ6SKXCoF8jrLQ67ELm0D6TXwaghRl
-         hPgg==
-X-Forwarded-Encrypted: i=1; AHgh+RqMgrkp84YOdC435KvOHJ82ts+0Z/PBBOQEAvi+oB9+w4X3Nq1k192TbcqtYN2xEl9/5B/baykUW+/6E4QQsJ+/EG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAv8oKgC2nDbxf5Ep/wOlI02TJkVRY2A+t2fEznVPU1NB3fctc
-	LCVuVLg+QNX8JiDyF5g7wO7M6xa4QmONcJ4gFlEw4Ggwwjz6Y3eZEyRV9ARtEuZty7E6MqwDDrx
-	3XA/r2JHqus1e6n93RM6CqMI9SqF3jt3x2yiH
-X-Gm-Gg: AfdE7cl+XtHi8Qi6lmsu42QeCr0hlKulEnERnfqwp7lsPMgsYTe+1pK/khW3tU2m7cs
-	jYjXnOxh/qIvVVtq+X8G3Eqr9FUjzKnlbrVFWRraoc9LQU0D0ZIaBIiXvDXQS4PklMzfL125aTU
-	FlnPhML6gtGE80BHt7uaPmh4pyLoCb1S9bEiPePyDcB1FAmuOsjkkfBuQDav7VoSA4SDneS0C8m
-	iXjdz3eA5IwukuhdFQ2niD5UFMuMySAhPcC8sOld6dqdEL/tRu0JxSTDmp5rB95vp91OSDkLdpU
-	+qsxzM0=
-X-Received: by 2002:a05:690c:6912:b0:80f:b0f1:920c with SMTP id
- 00721157ae682-81203a60facmr20422467b3.53.1782852306018; Tue, 30 Jun 2026
- 13:45:06 -0700 (PDT)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Tue, 30 Jun 2026 13:45:05 -0700
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Tue, 30 Jun 2026 13:45:05 -0700
-In-Reply-To: <20260630101425.2f7cfbea@robin>
-References: <20260628004653.28065-1-alhouseenyousef@gmail.com> <20260630101425.2f7cfbea@robin>
+	d=linux-foundation.org; s=korg; t=1782852920;
+	bh=PqXMviszUJ70wdko7x9w/HLJnkvQD9s/VmU8YDU8zkI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=nIdg9WVcgKuztuJWZsgQgB8qhrK7N0juK0z53//izV+A18lotNu+7Pz/5jMQGMLFy
+	 kVKPTUdFinPIsjTZAmG634V62nO9lUIJFNJsmgFSOE7zu2L0AlpVuQSpq2gCxmhvzG
+	 /hh3A1WHx/9z1qQaUHx9JqA99cUwh+egfdsAqxGA=
+Date: Tue, 30 Jun 2026 13:55:19 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Miaohe Lin <linmiaohe@huawei.com>, David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+ lance.yang@linux.dev, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH v10 0/6] mm/memory-failure: add panic option for
+ unrecoverable pages
+Message-Id: <20260630135519.404f3be5cb3850a0208f1791@linux-foundation.org>
+In-Reply-To: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
+References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Yousef Alhouseen <alhouseenyousef@gmail.com>
-Date: Tue, 30 Jun 2026 13:45:05 -0700
-X-Gm-Features: AVVi8CfPpykxJeh9g49b2nCgR12RbQluTGo5GKFcbxCkdcVQKbYEtKEQr2I9N-Y
-Message-ID: <CAMuQ4bV-HJWbS7NHPGtoyKz-_+LR335phbXeOi83EbV6kn+3gg@mail.gmail.com>
-Subject: Re: [PATCH] ring-buffer: serialize read-page order with subbuffer resize
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, petr.pavlu@suse.com, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-One issue turned up while checking the suggested locking:
-ring_buffer_subbuf_order_set() writes buffer->subbuf_order before
-taking reader_lock and never takes cpu_buffer->lock. An allocator can
-therefore take cpu_buffer->lock after the new order is published but
-before resize clears the old-order free_page, tag that old page with
-the new order, and return it.
+On Tue, 30 Jun 2026 05:46:03 -0700 Breno Leitao <leitao@debian.org> wrote:
 
-I can keep the allocations outside buffer->mutex and hold the mutex
-only while snapshotting subbuf_order and taking or returning
-free_page. That removes allocation from the critical section and
-serializes the order/free-page pair with resize. Would you prefer
-that, or should free_page and the order transition be synchronized
-another way?
+> A multi-bit ECC error on a kernel-owned page that the memory failure
+> handler cannot recover is currently swallowed: PG_hwpoison is set, the
+> event is logged, and the kernel keeps running.  The corrupted memory
+> remains accessible to the kernel and either drives silent data
+> corruption or surfaces seconds-to-minutes later as an apparently
+> unrelated crash.  In a large fleet that delayed, unattributable crash
+> turns into significant engineering effort to root-cause; in a kdump
+> configuration, by the time the crash happens the original error
+> context (faulting PFN, MCE/GHES record, page state) is long gone.
+> 
+> This series adds an opt-in sysctl,
+> vm.panic_on_unrecoverable_memory_failure, that converts an
+> unrecoverable kernel-page hwpoison event into an immediate panic with
+> a clean dmesg/vmcore that still contains the original failure
+> context.  The default is disabled so existing workloads see no
+> change.
 
-On Tue, 30 Jun 2026 10:14:25 -0400, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Sun, 28 Jun 2026 02:46:53 +0200
-> Yousef Alhouseen <alhouseenyousef@gmail.com> wrote:
->
-> > ring_buffer_read_page() checks that its spare page has the current
-> > subbuffer order before taking cpu_buffer->reader_lock. A concurrent
-> > ring_buffer_subbuf_order_set() can change the order and replace the
-> > reader page after that check. The reader then copies a larger subbuffer
-> > into the old allocation, causing an out-of-bounds write.
-> >
-> > Keep spare-page allocation and release under buffer->mutex, which already
-> > serializes order changes. Move the read-side order check under
-> > reader_lock, the lock used by resize when replacing per-CPU pages.
-> >
-> > Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
-> > Reported-by: syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=2dd9d02f60775ce5c1fb
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
-> > ---
-> > kernel/trace/ring_buffer.c | 9 ++++++---
-> > 1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 56a328e94395..eed5d7cffdee 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -6950,6 +6950,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
-> > if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > return ERR_PTR(-ENODEV);
-> >
-> > + guard(mutex)(&buffer->mutex);
-> > +
-> > bpage = kzalloc_obj(*bpage);
->
-> First, do not grab locks around allocations unless the are really needed.
-> This is bad practice, as it extends the critical section and may even add
-> the allocation locking to the lock chain.
->
-> That said, just moving things around the current locks should work.
->
-> Like this (not compiled nor tested):
->
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 56a328e94395..8352f935a223 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -6954,11 +6954,11 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
-> if (!bpage)
-> return ERR_PTR(-ENOMEM);
->
-> - bpage->order = buffer->subbuf_order;
-> cpu_buffer = buffer->buffers[cpu];
-> local_irq_save(flags);
-> arch_spin_lock(&cpu_buffer->lock);
->
-> + bpage->order = buffer->subbuf_order;
-> if (cpu_buffer->free_page) {
-> bpage->data = cpu_buffer->free_page;
-> cpu_buffer->free_page = NULL;
-> @@ -7007,13 +7007,13 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
-> * is different from the subbuffer order of the buffer -
-> * we can't reuse it
-> */
-> - if (page_ref_count(page) > 1 || data_page->order != buffer->subbuf_order)
-> + if (page_ref_count(page) > 1)
-> goto out;
->
-> local_irq_save(flags);
-> arch_spin_lock(&cpu_buffer->lock);
->
-> - if (!cpu_buffer->free_page) {
-> + if (!cpu_buffer->free_page && data_page->order == buffer->subbuf_order)
-> cpu_buffer->free_page = dpage;
-> dpage = NULL;
-> }
-> @@ -7091,15 +7091,15 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> if (!data_page || !data_page->data)
-> return -1;
->
-> - if (data_page->order != buffer->subbuf_order)
-> - return -1;
-> -
-> dpage = data_page->data;
-> if (!dpage)
-> return -1;
->
-> guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
->
-> + if (data_page->order != buffer->subbuf_order)
-> + return -1;
-> +
-> reader = rb_get_reader_page(cpu_buffer);
-> if (!reader)
-> return -1;
->
-> -- Steve
+Updated, thanks.
+
+Sashiko said things:
+	https://sashiko.dev/#/patchset/20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org
+
+
+> Changes in v10:
+> - Reuse kselftest declarations
+> - Residual race harmless documentation
+> - Link to v9: https://lore.kernel.org/r/20260609-ecc_panic-v9-0-432a74002e74@debian.org
+
+Here's how v10 altered mm.git:
+
+
+ mm/memory-failure.c                          |    6 +-
+ tools/testing/selftests/mm/hwpoison-panic.sh |   42 +++++++++--------
+ 2 files changed, 28 insertions(+), 20 deletions(-)
+
+--- a/mm/memory-failure.c~b
++++ a/mm/memory-failure.c
+@@ -1366,8 +1366,10 @@ static inline bool is_kernel_owned_page(
+ 	 * Page-type bits live only on the head page, so resolve any tail
+ 	 * first.  The check takes no refcount; recheck the head afterwards
+ 	 * so a concurrent split or compound free cannot leave us trusting
+-	 * a stale view.  A free->alloc->free in the same window is still
+-	 * possible but closing it would require taking a reference here.
++	 * a stale view.  A residual free->alloc->free cannot be closed here
++	 * (frozen slab and large-kmalloc pages cannot be pinned), but is
++	 * harmless: where a wrong verdict could panic, memory_failure() has
++	 * already set PageHWPoison, which bars the page from the allocator.
+ 	 */
+ retry:
+ 	head = compound_head(page);
+--- a/tools/testing/selftests/mm/hwpoison-panic.sh~b
++++ a/tools/testing/selftests/mm/hwpoison-panic.sh
+@@ -35,7 +35,11 @@
+ 
+ set -u
+ 
+-ksft_skip=4
++# KTAP output helpers (ktap_print_msg, ktap_skip_all, ktap_exit_fail_msg, ...).
++DIR="$(dirname "$(readlink -f "$0")")"
++# shellcheck source=../kselftest/ktap_helpers.sh
++source "${DIR}"/../kselftest/ktap_helpers.sh
++
+ sysctl_path=/proc/sys/vm/panic_on_unrecoverable_memory_failure
+ inject_path=/sys/devices/system/memory/hard_offline_page
+ kpageflags_path=/proc/kpageflags
+@@ -53,24 +57,24 @@ pagesize=$(getconf PAGE_SIZE)
+ 
+ kind=${1:-rodata}
+ 
+-ksft_print() { echo "# $*"; }
+-ksft_exit_skip() { ksft_print "$*"; exit "$ksft_skip"; }
+-ksft_exit_fail() { echo "not ok 1 $*"; exit 1; }
+-
+ if [ "$(id -u)" -ne 0 ]; then
+-	ksft_exit_skip "must run as root"
++	ktap_skip_all "must run as root"
++	exit "$KSFT_SKIP"
+ fi
+ 
+ if [ ! -w "$sysctl_path" ]; then
+-	ksft_exit_skip "$sysctl_path not present (kernel without the sysctl?)"
++	ktap_skip_all "$sysctl_path not present (kernel without the sysctl?)"
++	exit "$KSFT_SKIP"
+ fi
+ 
+ if [ ! -w "$inject_path" ]; then
+-	ksft_exit_skip "$inject_path not present (no MEMORY_HOTPLUG?)"
++	ktap_skip_all "$inject_path not present (no MEMORY_HOTPLUG?)"
++	exit "$KSFT_SKIP"
+ fi
+ 
+ if [ "${RUN_DESTRUCTIVE:-0}" != "1" ]; then
+-	ksft_exit_skip "destructive test; re-run with RUN_DESTRUCTIVE=1 inside a disposable VM"
++	ktap_skip_all "destructive test; re-run with RUN_DESTRUCTIVE=1 inside a disposable VM"
++	exit "$KSFT_SKIP"
+ fi
+ 
+ # Pick a PFN inside the kernel image rodata region of /proc/iomem.
+@@ -208,21 +212,22 @@ pgtable)
+ 	missing_msg="no usable page-table PFN found in $kpageflags_path"
+ 	;;
+ *)
+-	ksft_exit_fail "unknown kind '$kind' (expected: rodata|slab|pgtable)"
++	ktap_exit_fail_msg "unknown kind '$kind' (expected: rodata|slab|pgtable)"
+ 	;;
+ esac
+ 
+ if [ -z "$phys_addr" ]; then
+-	ksft_exit_skip "$missing_msg"
++	ktap_skip_all "$missing_msg"
++	exit "$KSFT_SKIP"
+ fi
+ 
+-ksft_print "enabling $sysctl_path"
++ktap_print_msg "enabling $sysctl_path"
+ prior=$(cat "$sysctl_path")
+-echo 1 > "$sysctl_path" || ksft_exit_fail "failed to enable sysctl"
++echo 1 > "$sysctl_path" || ktap_exit_fail_msg "failed to enable sysctl"
+ 
+ pfn=$((phys_addr / pagesize))
+-ksft_print "injecting hwpoison at phys 0x$(printf '%x' "$phys_addr") (pfn 0x$(printf '%x' "$pfn"), kind=$kind)"
+-ksft_print "expecting kernel panic: 'Memory failure: <pfn>: unrecoverable page'"
++ktap_print_msg "injecting hwpoison at phys 0x$(printf '%x' "$phys_addr") (pfn 0x$(printf '%x' "$pfn"), kind=$kind)"
++ktap_print_msg "expecting kernel panic: 'Memory failure: <pfn>: unrecoverable page'"
+ 
+ # A successful run never returns from the inject -- it panics the kernel.
+ # Reaching the code below therefore means no panic fired.  Note whether
+@@ -243,7 +248,8 @@ try_unpoison "$pfn"
+ # if it raced to another type the run is inconclusive, so skip instead.
+ kpageflags_bit_set "$pfn" "$recheck_bit"
+ case $? in
+-0)	ksft_exit_fail "$verdict (page still $kind)" ;;
+-1)	ksft_exit_skip "target PFN no longer $kind; raced before inject, inconclusive" ;;
+-*)	ksft_exit_fail "$verdict (could not reconfirm page type via $kpageflags_path)" ;;
++0)	ktap_exit_fail_msg "$verdict (page still $kind)" ;;
++1)	ktap_skip_all "target PFN no longer $kind; raced before inject, inconclusive"
++	exit "$KSFT_SKIP" ;;
++*)	ktap_exit_fail_msg "$verdict (could not reconfirm page type via $kpageflags_path)" ;;
+ esac
+_
+
