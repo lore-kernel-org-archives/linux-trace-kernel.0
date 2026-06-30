@@ -1,121 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541D0282F3A;
-	Tue, 30 Jun 2026 22:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028C431B823;
+	Tue, 30 Jun 2026 22:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782859185; cv=none; b=fuxS3Fx4Ij8kjbzUPrtgkYFBbvcRTqOnzzjeMKr14Lul/2P0HIdbpJOr83RG20LyXulUT1gNS0S/6+/LbmLfUtYpjSXWHnGmS1srqk2FVD0BUmoLeAHQvlJAZaBDubGhga0sMYAFFd66akZ1CBih3vZ6z9sGJCUiTMYAdrY06zg=
+	t=1782859721; cv=none; b=YPrNj9oKrC3a5c5m5SkDxBa0qfPcG4HFbxLr8tLkEMOBHU2cnMw210CwmUAxKKin+Fhh4tCz1miHFQNzn0NFveSfhpU1BUr/M7c/8cTAkln0S4XQO4dm4i9p7yDGJZM5lz/LHWltLjQqq8f3PGkE3tvjUXcKR7KVRsp/UfqOZaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782859185; c=relaxed/simple;
-	bh=bcmFRuTRz3xFXMFsvy1OnWTU+QK2rBR/OGAUL5fqFgY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Rth4xOJqcEGny7r/c6RIT6+h84zvDyRhLtROGy/sBct1mDPIdEm7H9p81CXoWhbPnuSNsO22b/fcrFDlLUZH6Pd7yIVu3QM8/LfBf4SPVgzLcjsoHU304J3kJXG3LKucvJvN/s+Ukb7FE8auX3x3nXg2gvXPyVf8jXTmY3Y9+CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtVgdWpu; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtVgdWpu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859541F000E9;
-	Tue, 30 Jun 2026 22:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782859183;
-	bh=4G7kaaTAc8WYqpYxAs+aIasDlm+/YN4ZAPXD3DbZ28Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=UtVgdWpuj6qBAEbVSFQ1jTrgtA55E4/juVPjoELVUwYydsxebJvYt3SN2UWMOD01q
-	 Xo6yoYX8JymhGFvvwNEyjPNO/bU3R8QW8jSVHfmcLJSX7bRrpgpcj4d8rGiLP7sFr4
-	 1kyrCgV+cAjKRnaKP//QCX3u0Gnx2J14rOg4i9DeYDS7Dqaa/TX7q/cchfTrBxNQVb
-	 to4uDHYLQmecXXkyrpoeIN4hXi7JgERrL1A8MJ2Mdzwr/y7xMdC6R6zLj7AnnooQT5
-	 qvpy5uzjJTIHG21PsTpp/ATGQyyiJ08ikaMpx229jHcpT2TQqa4tw5KuwDjXyBjGsh
-	 KQQAX+KyMpMmQ==
-Date: Wed, 1 Jul 2026 07:39:39 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v13 04/11] perf/probe: Ignore comment lines in
- dynamic_events/kprobe_events file
-Message-Id: <20260701073939.81842d6f6bd139a329c45c7f@kernel.org>
-In-Reply-To: <akMO53eG_4YKJH0j@google.com>
-References: <178271357142.1176915.7193483024740701480.stgit@devnote2>
-	<178271361825.1176915.16095297120719039761.stgit@devnote2>
-	<20260630073211.2a505d1f31e5fae1bf03b81a@kernel.org>
-	<akMO53eG_4YKJH0j@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1782859721; c=relaxed/simple;
+	bh=N7GQYOrkrSTg/gcpRmGcDLd2Ufr/tpiBtdWyE04VeY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GcP6zxKdzoYJjvUTuU/Ca5iRrUNkDBxmJq+Hs1OymNICk9UDJbszZj5UzAs8GK1cyNQfoEaKk78szdhDEWFc059Fhzf2/FRVo0PsXXjiPoyxI83XDIY/1M4VO7AckQHSUxAy5qTOjyvZYvU63pMkvgAZf7A1fEzdzzuXcYqMyqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id DB13C1C4A71;
+	Tue, 30 Jun 2026 22:48:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 0ED4F2F;
+	Tue, 30 Jun 2026 22:48:36 +0000 (UTC)
+Date: Tue, 30 Jun 2026 18:48:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Martin Kaiser <martin@kaiser.cx>, Frank
+ Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH] tracing: Warn when an event dereferences a pointer in
+ TP_printk()
+Message-ID: <20260630184836.74d477b6@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0ED4F2F
+X-Stat-Signature: 7h1q56tfmngdcoc7psyugimoy3gx4n98
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/nXMMFi7/fn457MBqMXxLZzxcGyFVfkKo=
+X-HE-Tag: 1782859716-356376
+X-HE-Meta: U2FsdGVkX18LxOcWYBCT7e0Y0lCGmfK+iuta7pVTBeIoiueIubvTYNe2lkG/Kay4d8n3KD9Q/97Aa6d/shQJRvy8j2EnQdoEykZEuhnciVXbosuQvCYHTPGWM5T1KELgP1xrTL8K/SSsMfci85Q0DR7CM7zcQlXLwC9OLlfR/MM+CbIy+oZluENm+kNFazRmTPtMt7+w5UumYOrCBQF4RRqNriyhW4n0XRoil6KX5VKti4qU7Cvm8yTWdILj0AXYui4XSgWAUwG3FFrqXrtnPznjLCA/a05Mm7Upm4i4gjc8uu+JzhtJH7eVqxyCHgdwLVx2+e1CpcimotFVq6rfRAWHUifDvEMbDSoP877XHZfrhXfSqRkKfeOpXVeAUQWl6TNyN9p5kNPHgklYgsnmlA==
 
-On Mon, 29 Jun 2026 17:33:43 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> Hi Masami,
-> 
-> On Tue, Jun 30, 2026 at 07:32:11AM +0900, Masami Hiramatsu wrote:
-> > Hi Arnaldo, Namhyung,
-> > 
-> > I forgot to CC this. Can I pick this patch via linux-trace tree,
-> > or would you pick this?
-> > This is a part of typecast series [1] only for debugging.
-> 
-> Thanks for letting me know.
-> 
-> I think it's better to route this through the perf tree as we're seeing
-> a lot of cleanups all around the code base.  Having this together would
-> reduce chances of future conflicts.  Does that sound ok to you?
+Currently on boot up and when modules are loaded, the trace event
+infrastructure will examine the TP_printk's of every event looking to see
+if it dereferences pointers on the ring buffer via printk formats like
+"%pB" and such. What it doesn't do is check if the arguments themselves
+do a dereference from a pointer.
 
-OK, thanks for confirmation. Then I'll drop it from probes/for-next (and probes/core).
+This was brought with a fix[1] to the fsl_edma event that had in the
+arguments of the TP_printk(): "__entry->edma->membase"
 
-Thank you,
+The __entry->edma is a pointer saved in the ring buffer. The dereference
+from TP_printk() happens when the user reads the "trace" file which can be
+seconds, minutes, hours, days, weeks, or even months later! There is no
+guarantee that the __entry->edma pointer will still be pointing to what it
+was when it was recorded, and could crash the kernel when a user reads the
+event.
 
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> > 
-> > [1] https://lore.kernel.org/all/178271361825.1176915.16095297120719039761.stgit@devnote2/
-> > 
-> > Thanks,
-> > 
-> > On Mon, 29 Jun 2026 15:13:38 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > 
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > Since dynamic_events/kprobe_events files show the fetcharg debug
-> > > information as comment lines, its reader needs to ignore it.
-> > > 
-> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > ---
-> > >  tools/perf/util/probe-file.c |    2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> > > index 4032572cbf55..4d12693a83b3 100644
-> > > --- a/tools/perf/util/probe-file.c
-> > > +++ b/tools/perf/util/probe-file.c
-> > > @@ -197,6 +197,8 @@ struct strlist *probe_file__get_rawlist(int fd)
-> > >  		idx = strlen(p) - 1;
-> > >  		if (p[idx] == '\n')
-> > >  			p[idx] = '\0';
-> > > +		if (buf[0] == '#')
-> > > +			continue;
-> > >  		ret = strlist__add(sl, buf);
-> > >  		if (ret < 0) {
-> > >  			pr_debug("strlist__add failed (%d)\n", ret);
-> > > 
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Add logic to the test_event_printk() that also checks for this case and
+warn if the event dereferences a pointer from the ring buffer.
 
+[1] https://lore.kernel.org/all/20260630200022.1826420-1-martin@kaiser.cx/
 
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..3b52bfd8b300 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -400,6 +400,31 @@ static bool process_string(const char *fmt, int len, struct trace_event_call *ca
+ 	return true;
+ }
+ 
++static void test_double_dereference(const char *str, int len,
++				    struct trace_event_call *call)
++{
++	const char *ptr;
++	const char *end = str + len;
++
++	ptr = strstr(str, "REC->");
++
++	while (ptr && ptr < end) {
++
++		ptr += 5;
++		for (; ptr < end; ptr++) {
++			if (ptr[0] == '-' && ptr[1] == '>') {
++				WARN_ONCE(1, "Event %s has double dereference in TP_printk: %.*s\n",
++					  trace_event_name(call), len, str);
++				return;
++			}
++			if (!isalnum(*ptr) && *ptr != '_')
++				break;
++		}
++
++		ptr = strstr(ptr, "REC->");
++	}
++}
++
+ static void handle_dereference_arg(const char *arg_str, u64 string_flags, int len,
+ 				   u64 *dereference_flags, int arg,
+ 				   struct trace_event_call *call)
+@@ -459,12 +484,6 @@ static void test_event_printk(struct trace_event_call *call)
+ 				if (in_quote) {
+ 					arg = 0;
+ 					first = false;
+-					/*
+-					 * If there was no %p* uses
+-					 * the fmt is OK.
+-					 */
+-					if (!dereference_flags)
+-						return;
+ 				}
+ 			}
+ 			if (in_quote) {
+@@ -576,6 +595,8 @@ static void test_event_printk(struct trace_event_call *call)
+ 				continue;
+ 			}
+ 
++			test_double_dereference(fmt + start_arg, e - start_arg, call);
++
+ 			if (dereference_flags & (1ULL << arg)) {
+ 				handle_dereference_arg(fmt + start_arg, string_flags,
+ 						       e - start_arg,
+@@ -589,6 +610,8 @@ static void test_event_printk(struct trace_event_call *call)
+ 		}
+ 	}
+ 
++	test_double_dereference(fmt + start_arg, i - start_arg, call);
++
+ 	if (dereference_flags & (1ULL << arg)) {
+ 		handle_dereference_arg(fmt + start_arg, string_flags,
+ 				       i - start_arg,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.53.0
+
