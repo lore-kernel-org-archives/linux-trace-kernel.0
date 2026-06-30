@@ -1,179 +1,209 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010048.outbound.protection.outlook.com [52.101.69.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E836719C553;
-	Tue, 30 Jun 2026 20:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4208047AF65
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 20:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.178
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782851821; cv=fail; b=Xza0ROmduBhMaDxDlx7nT0vTSwXbmnmURfQcWUy12N+YIAosKxsd99TcwfWf8G7LEGpzSh5Z8VAQMudgUaK9uL0+MruEoVfNJec2sRKq02jh/ANEw5TFVWIv3YFDa8ZrGFxYRkRdtxx72ApUwFB3U8ssauouVhVr3ZBGI6x3iGk=
+	t=1782851915; cv=pass; b=GT1mRb+IYBQHFd8YTw8qpDvtQys5oTaUC5w/KLjGcbN2rk9Lq3dYKrH1Dls+w++vcWZZSXVtMAcGJ3OLiubiKR1jkgTZhhyc+b7g2LsP+BNDllSVe2HrrSIg2LqVfi3KiSrb6AE0anvXeQI5eka5nf5rDxG54QdNatuz6YrZaOM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782851821; c=relaxed/simple;
-	bh=IioQaNk21fejaozWPpsoLaJyIrkhRMl61rI/2CUKN00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hBLycsZ/gXjvSj64F3kW2zvFg/OMU4ecDh7GAiCB27xCIlkyHbPdjcGzXOgP8131EiK5g4oi3GaeKjwlKK/28swtLpaqus0sVQCJQ2b7jcdE9YB9Lx3dhmSxpIuLW2lpPaHol7fRlIudzJS7Ej4V2rWhS7GTCHd/L2yT4TVz+vg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=rtc5pA/E; arc=fail smtp.client-ip=52.101.69.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1782851915; c=relaxed/simple;
+	bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
+	h=In-Reply-To:References:MIME-Version:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oXjTABww4hRagg8TvPS+9iqzgretVJY2nQm2bFY4WU3GaT3daiCUa1hU4BPCXRtQR44IHm5Z/lNjFkFtyLUPanpeVGgX0iAzdXHOGgG/3zIAd4QQbgBJqmKjDtAsXOaWb8Fyu8Yank7xElT39mnhK4Qk85+kz8JxRDj7WaklRKI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwGDLMvd; arc=pass smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="rtc5pA/E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aFg6uQYPCjTaJJ1gvuWE/ARSuvl1nLwJnJiCzZSnWgrLJy3rYpffiKz2mvCt4gAYhVK8bSR34V0ZQOlGoJ1tux72ST8hMTPxdZipPo0WfyH4aWhyU1HNZzzr4P9ZEikfoS1CwmkEuh4/IeLJoZUCtl2FbOxLvBzinEyPRzbUWc25uZRjJXkkn9b/QUOrL3muYTEgqBbetZ/KnFw/ktWMqu+1jZ57f9Y4/TOi49R60fMogioQZeLF9DGApK8oas0b1SEplpQvW5aWiO4akvx+Otcv7GnB9ITMP+z2WFM6JzwXVAFXjfdaOkr+NJhHSfJPQPisybe8Af9yrX6TM+ekLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9p642iH4XFbq2YhtahYWH2CRAmzAsdaDOkdnCZXv+mA=;
- b=YjE3LYYh2YwCZez/jDZkUbHBDu4bM7WPOh2Br5Z9LFueawmZegKIz3Gvo8MW7WOHWgyluNkLduUf1uiXSY74LnuOEUDryzrG0429ICzJJgvUEicvD5NuhfTASofUzJEllKR/ySt1EU59OrZdASK3yjHadrReunSlLPJXM9CxOMIIatIDAoJcp3ZjmXkn60TVS9q7Oge3oTehdLglp1mFcR7ml5B7JX5mB0mWM8d/cZ+LJHNaJ1D8emKLyAc2Nlv8xXdYTTSNDhR8R9ZZUhLrEzYzy7M36xzTwDZpNxEU7ajm0gjWJax4Bw8GfAdSBPt6XoOyV+MLatlDmkQ9pwPyDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9p642iH4XFbq2YhtahYWH2CRAmzAsdaDOkdnCZXv+mA=;
- b=rtc5pA/Etnyd5t75g1mdYu5SXzF1HQOnhXm+r90k7/UOgO/5SbaNHHeersKHCjLPuvSHO2uN2lptxbaRzn4MEpNBYpVXyaFngErGtIj6l6hRsMeuNvxgiefSQPPzvFkfBu1zzRg/Pq5mnsCHsJPPeUaqExYEikIbl/CAVtobr7aAG2EFBX+2WxWlgWmpr/1snWnMseh8PQ+ZhNq+5Ac9a28X29T2Mp+VivRGX9MFaoaE5K3lmUjdI4xPg6Bngqf4RkVX1oC3+2Xwi/+9s0kPB4l+0A+s1aDnm8iBp3ZN43nmfcwTQPBtCjWt6UPNBxr9CstX0hVNkPrNBTXzOC5naA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by PAXPR04MB8621.eurprd04.prod.outlook.com (2603:10a6:102:218::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.16; Tue, 30 Jun
- 2026 20:36:56 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Tue, 30 Jun 2026
- 20:36:56 +0000
-Date: Tue, 30 Jun 2026 15:36:47 -0500
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	imx@lists.linux.dev, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] fsl-edma: tracing: no ptr dereference during log output
-Message-ID: <akQo37WXqkar_cgM@SMW015318>
-References: <20260630200022.1826420-1-martin@kaiser.cx>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260630200022.1826420-1-martin@kaiser.cx>
-X-ClientProxiedBy: PH3PEPF0000409C.namprd05.prod.outlook.com
- (2603:10b6:518:1::48) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwGDLMvd"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-80bb8287d99so50180267b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 13:38:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782851913; cv=none;
+        d=google.com; s=arc-20260327;
+        b=RlqLZmJjnqpdZ7VAcYRrB/bBPQN9MojlJMGbnSfIm1lxepJQli62LBRAhePBhtTmgO
+         yifaxkBy1qSH3Yr8HNUUPhlOTqoPgR45142Q2UYGtT8kRRuk55Y4kqMLk/VF/YbM8nmH
+         3aLdQJ0zgQxnT3yGaGQFk8kMgXD/YPW0u18Q9z+6ElB+87eCwN4/20FySouyXCodKApo
+         alCL7BOmJ8cXoMcdNNWIxFCeG+lTZ9CEUSbl2mIJbMfZugecMD7AJEM/CxnSzjNGjnvD
+         sm4kWHRtFazn8Jqe7SicRgcak5vNH2/cMlsmcXY5kR9Ys+ONVVlJUTNze8fPmQnhunW4
+         Klmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:references:in-reply-to:dkim-signature;
+        bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
+        fh=bYzlg9zWARFUEA3GQ2a9HyOt6DvVEJ9D8wXGQSfMyYE=;
+        b=fzRj4a4ZyZzH8pdgY+CbF/VNJLZckpMpMHna+bc2LW8qdfzchUU7SYdO/QoRRUFYsV
+         pBTFb3KlZyRiA9SmAHfQ/Nek0mr24EoB0UnoAr9jxMCUfLENWl1HUsJu81O33mcOkwHh
+         HRtS5l+WaoYsyUIP30W7itWLVVUSpx2jFc2OtWm+TwScvYIOV7kQ9BLAMs1WtIfRQvCF
+         Nxh8uo4tbI6iDekY5lXK+Q7Jmb4VY0BKwue9ILYcdJw6bWfyTi2eoiYi3TCh2CSkZxSP
+         EVhkg3LHckadS7YIhz86OQKPqOom1zxxJtaHTeenhdjKf3ChZB8S5xADDqseU6uXhKL2
+         g5+Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782851913; x=1783456713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:references:in-reply-to:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
+        b=fwGDLMvdzzBt3FH9mVhy+4VG1AFgQMlcCH0f5rRrIpBGDXqKQdz8S9PZ0gqa7x5poh
+         zdqz0N68ZoweYDmKHG34YlSbVM0mDvdxcr/DJ5V3pUGK325QTEUfZtX/dRZTFzO+HYQO
+         Ftl56EuhD1zGTn6y62iGRd7hsDjCNe7IAk3groTrV1cAnLQjlw4c98uqojkKDJme0s+p
+         0FKEuqvGPOqEVYsaIh343CUjrCZUaPj6WcgqmjlitwiodDPAiYAFEwnvh6HuSCqRvmGq
+         eIiObxwnDa//dTE4frNoaq3+D7qHgihTatJxg+2fdyGUQ0PIwdvQvmgwKPb7fBnjuTuw
+         E1cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782851913; x=1783456713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:references:in-reply-to:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3C8MIv9sxF63rRvOttJhdisDNERH0wDhryvv0IhAoUQ=;
+        b=sZISUjHLQiVMqtHw8NrbJeHQCSZSMbcAGU/f3qZFz/4ZZqzzM+T2B7NR7wbbtYpZ1k
+         JrjP7vk77834MuzWbmX8s5nixZeGfmSmRx9v0SIyvGIC/SYSVLoz1VhZ2fAiC1MWTGCI
+         VpPJt1DwTiX2mjJ4IJOoonPnwD3rJeWUC0rmdjq1vsvXcZABWytD43Ii943LH6zTxeTC
+         3PjYidT5D28CgRjB/eDP5rRHrADL2zLUzsHAEPmZbliK6QeK6Nm1kMnT/rVUoC0KQRjg
+         ypT23vzZKP/A0kgS9XIXkXNJrmkd6bNYTHAPfed3JLHG5GtSGShYSvLNnqC9QtRWfJr6
+         LG7w==
+X-Forwarded-Encrypted: i=1; AHgh+RoImleP/Jfywo0YsbueQDvIHus4qlRH7ozHbg4K+alCq8mtx9eH80znL2wOCOv5dNBAIAtP+a0xYyesc7IFgx14SyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYCU7skeUqYaKSavtncP7J/N0oDHtTyW4DHbtAyrKaS27U2w9h
+	fYaUJSjMufO7oeSpZzazGZ/7QyKvlwj0xRUsLj+L+m7HIXEYS/B+gxJEJudwgWU3Y/ZSaPsY2rz
+	G9Ju6pCYnIp+p49u1jCdfX5AgaR3Y+UI=
+X-Gm-Gg: AfdE7cnZb/nX0dIWd9wLWiAiydVR6ghsCaRviT6EajzIzOknAPLJWJ82/FENJ5O3yys
+	l+gZJ3AiLBR++SGlOQHiyoH7hk+Ye4sZKf0F2HOVKcnjptEh+ibTzA4jLSudwSZafeT5tRmTAoM
+	XCglBlstZ76M1mJuCf+Qp6RjCSM++I64Ttcq8ZN7hoTFTmog+94Q8dABRb58nAi7slznPQG8vY6
+	UbdctsvbEUgKHXdXrqe0TO1NCqoBwa+YgrjNudfigO0/mJFkqgaBTvrMmj3FbZUCyjuL4xR
+X-Received: by 2002:a05:690c:c4f2:b0:80c:85b6:75b0 with SMTP id
+ 00721157ae682-810dad04909mr51464367b3.57.1782851913113; Tue, 30 Jun 2026
+ 13:38:33 -0700 (PDT)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Tue, 30 Jun 2026 13:38:32 -0700
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Tue, 30 Jun 2026 13:38:32 -0700
+In-Reply-To: <20260630101425.2f7cfbea@robin>
+References: <20260628004653.28065-1-alhouseenyousef@gmail.com> <20260630101425.2f7cfbea@robin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAXPR04MB8621:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb95b0ae-4a48-4969-a509-08ded6e7535b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|19092799006|23010399003|1800799024|18002099003|22082099003|3023799007|6133799003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	Ib5te/u5oVwytpXqxDwYL4kAzZop9AH1xuw062uPG0cV4UKcvXuF7y/qEhXTQUBrMswuB8xJSiIWumjp66kBADp+sQvPjWWSC/8qpu08Ey5KzX5BML3WXs2zvGfR77EMSNfduvHHi/tw7ZkZDrzHMeZu0Z+qPdXeizDZ/S9FCZGJ+3y6rxOWgBWf/Tzh/7H8Y8D7JjjoG3ariMfyM9IMtia/gJvSRnEMtuhUJ7yG/qUprJJ/NATmiP08pE2W1c88sekpR9e/vOSqiqUfytazj2m1j3COputxiwD9WobwTPl0/nqrw/pwyM/ScVjyOaX4HZR+/bb1jTYAQouk1++JMq80UCpPiBFvF+N4Bdoi4+zc/27Tu371WS4KN/pnF5cChJLsfx5+gysMzfHzj46mGLWBD+BlNHpT0OYW5zfopHmajAtgXPLDpixCivrowDht7vanIRXLxmVz3Iz7MEt0c78HA1hmxQyycseVKokcIc0H7zL5FWnDaFMgItQKktrLotkzfmQzUyest9otOSH4Pklchgd9cn05Z+gWGBm+8iFuHVYWGZE3ZoMd4Vn8+IoDsS1e9F4qBle/mJtvdi+wzOH3yT8EtmaAGwKvsa6SbDERS99aMvBysd3pp650EBD4TD+FeZcgcnqFqODNSc3GQnGZvktz7II1oT622N7qfXA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(19092799006)(23010399003)(1800799024)(18002099003)(22082099003)(3023799007)(6133799003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?43zXnHAKeaZPss8TY3z+jAKHciZ5JrjJWRc1vx/axGmP6Xx73eJNMA31hq3C?=
- =?us-ascii?Q?8JOdcnYdtpgwgPfrCirN722mAgQRZu4FEtAE5Wg9L4x3gZuNHVYfr8a8lrsQ?=
- =?us-ascii?Q?AML00wmKUdIym42sDAZRss6KC9bEQBPrEeun8X0ui/ziNkaaY/v88T0Eskck?=
- =?us-ascii?Q?G65+YIwYmpYXEotYo4OAJvir2CyHpyuHdAwcrdDgBFObnTWrl3W4X4a0U6YX?=
- =?us-ascii?Q?DlbeHIymT1Zhm9Ezw0ZJ5XCBZKXA+O3eDWGY3PKLC6UqYe2vg6HOnocCt2eG?=
- =?us-ascii?Q?TmRiwk5EFJ8wIF99T+vjeup8Oqt0+swO/tXR42vJXKQkoe6zfYe2kkMjVT5c?=
- =?us-ascii?Q?RVvfFRWqXNQ2dYp00XlZPiziWmoHi7r5cXmDKX/BE0/UJklZRiMkfRwhgf0G?=
- =?us-ascii?Q?MXwHfvuBziq7ZZWPW5mNdsFdzIwegdkTRQc8hhDdrzNkjdu2eVtSV0jpy1++?=
- =?us-ascii?Q?T6iLFRCCe9sZ4Zryv+RtGe7vqAOqHpCTEOVH7kEitRoXLH6aWp7ST8QTVMmJ?=
- =?us-ascii?Q?G0ArktAzlVYfHs6holYHI9UqFe40+5AreOCOLAwhOzDc/IRI1D+kOYV+w8IP?=
- =?us-ascii?Q?ILeippLHOsvZ8poOtG81HXaLEgGJN2Jd0N0WyHk+PPvKAFBCY0gVPp60oZM+?=
- =?us-ascii?Q?SSn+rgJDTAxfdPq5VnheH5lRT3rHkyabFZ+PkBwW9ik6XyIXW+X1/a+GKGjX?=
- =?us-ascii?Q?bC8DPE6E+Ack7OqA9Un+lj31nN4iAOZyRnSyxZ5nYEKZfIYBS52HnLcwWF0o?=
- =?us-ascii?Q?UEs6YeVNp2eFaeofSxzL0zchQYhNqMS/n8/n8cOIqOKW8ow9jFRWupDVseMh?=
- =?us-ascii?Q?dEW+4VYpPPhEg8X+LkGNdgXscWVAHm72pMiXRJ6EoU5FE7Kb5gZL42yHMvYK?=
- =?us-ascii?Q?RfkWcagJBWkbdHGXG7QlTh7B9HcD8STkWNaTl/mENGNCn3e1b4X9ILSfDRwH?=
- =?us-ascii?Q?0P2sR15amDLBlFnhDqgZmlX+ogruw4yvVMjzAvMDu5wLawoGisy0DQN776w1?=
- =?us-ascii?Q?jMLH1kzSjJki/PWR+XiQTBGjlkFfC7O62cskewfva4i7pg6yPMk6BvGG1mBh?=
- =?us-ascii?Q?nO9B8GicpUiRVuJT3i0KEdW3oKmCEZI8j+QBv2QVSZoHn/f8bdeLbcT/Mvjd?=
- =?us-ascii?Q?uxxNUNHtG+mnd+6DyPEofbvyROLn1xyoHISBxTWNeDCSRuX+cjoC/SdwBQYJ?=
- =?us-ascii?Q?JcL/8Q5flyGH/ymNxQkAErD0K4MDX2vQb1siOlbZYh4HxeqCeRg7olrA/7sv?=
- =?us-ascii?Q?pe7P3ZaRTA7W0seVSm4z+vM9+VtZ0PtlYmB97/wnsl7JFTt3cYJBBFK4aCwk?=
- =?us-ascii?Q?VFhe29o1JqUV6U3yg/CK2bsTCRMkFMlPS414hnpCsH1qBAW2cYpq4Xq4YK08?=
- =?us-ascii?Q?RxLZmnR8Xi5xaqsfgq/EGGXwVRVg/aYqUM549SkHyvhC4tycpiVD0fDntO4h?=
- =?us-ascii?Q?iB0lMGkRyGa0aYEXCL7LPy9QxY6HWyU6TJSWmjuC7QiClu/MCt9EgA3prx3Q?=
- =?us-ascii?Q?oEWJDh9o8ixE7ffVH0Wr9g7BOwEG6YqrsQbzMmfompwY8VmAg/R0vCAB6IYB?=
- =?us-ascii?Q?fi48VZQGifyQN7IQIHrd7t/ihajx1r7GrA+34tUWEU/SPAjxHhIyqIJ1WWRC?=
- =?us-ascii?Q?FTliyB5cE9f5Kk3v9O++RzDJSbXJJYwWf7E5Z4+wHnGJf3LTT0h4r06pcwAn?=
- =?us-ascii?Q?pxlroXLVQRApsfZMYHxSkE+3GEDbmUvhKxXVKlp+01QGlP0q95k6kJ7NK8zw?=
- =?us-ascii?Q?RL5REW8SY50m5B4ID8gwphl9vfQNY3xf5hibUIUbbT3en6BOtwhu?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb95b0ae-4a48-4969-a509-08ded6e7535b
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 20:36:56.1207
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IsqyUZjq/GAOo0wZH0jgKhJ/nobNZZRbr6cLuPpL9lodoUfYQh24yMsULKrlIk1pMNjY0EvkD+U2wFro6CuOZZAOx4iju7Slt+2+m/tqq0HgOwGA1tCqq1yO2Z3AMkwx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8621
+From: Yousef Alhouseen <alhouseenyousef@gmail.com>
+Date: Tue, 30 Jun 2026 13:38:32 -0700
+X-Gm-Features: AVVi8CeS9MpWXcK6oMQlhJxchQ6987C-gKuaNCMr5pFvOCnqWrfkAXq0VUAhg4A
+Message-ID: <CAMuQ4bWwnbr_-sTJwMFvGrU+a0A_FdGutiBAAadgokEPEMTEmQ@mail.gmail.com>
+Subject: Re: [PATCH] ring-buffer: serialize read-page order with subbuffer resize
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, petr.pavlu@suse.com, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 30, 2026 at 10:00:11PM +0200, Martin Kaiser wrote:
+Thanks, Steve. Moving the order reads under the existing per-CPU locks
+is much tighter and avoids extending the allocation critical path.
+I=E2=80=99ll compile and test this direction and send v2.
 
-subject need a tag to identify subsystem
-
-dmaengine: fsl-edma: tracing: remove ptr dereference during log output
-
+On Tue, 30 Jun 2026 10:14:25 -0400, Steven Rostedt <rostedt@goodmis.org> wr=
+ote:
+> On Sun, 28 Jun 2026 02:46:53 +0200
+> Yousef Alhouseen <alhouseenyousef@gmail.com> wrote:
 >
-> The fsl edma events store a pointer to a struct fsl_edma_engine in the
-> ringbuffer and dereference it when a log entry is printed. At this time,
-> the pointer may no longer be valid.
+> > ring_buffer_read_page() checks that its spare page has the current
+> > subbuffer order before taking cpu_buffer->reader_lock. A concurrent
+> > ring_buffer_subbuf_order_set() can change the order and replace the
+> > reader page after that check. The reader then copies a larger subbuffer
+> > into the old allocation, causing an out-of-bounds write.
+> >
+> > Keep spare-page allocation and release under buffer->mutex, which alrea=
+dy
+> > serializes order changes. Move the read-side order check under
+> > reader_lock, the lock used by resize when replacing per-CPU pages.
+> >
+> > Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub =
+page")
+> > Reported-by: syzbot+2dd9d02f60775ce5c1fb@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=3D2dd9d02f60775ce5c1fb
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
+> > ---
+> > kernel/trace/ring_buffer.c | 9 ++++++---
+> > 1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index 56a328e94395..eed5d7cffdee 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -6950,6 +6950,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *=
+buffer, int cpu)
+> > if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > return ERR_PTR(-ENODEV);
+> >
+> > + guard(mutex)(&buffer->mutex);
+> > +
+> > bpage =3D kzalloc_obj(*bpage);
 >
-> Event injection can be used to trigger a crash:
+> First, do not grab locks around allocations unless the are really needed.
+> This is bad practice, as it extends the critical section and may even add
+> the allocation locking to the lock chain.
 >
-> $ cd /sys/kernel/tracing
-> $ echo 'value = 0' > events/fsl_edma/edma_writeb/inject
-> $ cat trace
+> That said, just moving things around the current locks should work.
 >
-> The log output needs only edma->membase. Add a membase field at the end
-> of the event and use the new field for log output. Keep the existing
-> fields for backward compatibility.
-
-thanks you for your fix.
-
-Frank
+> Like this (not compiled nor tested):
 >
-> Fixes: 11102d0c343b ("dmaengine: fsl-edma: add trace event support")
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  drivers/dma/fsl-edma-trace.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 56a328e94395..8352f935a223 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -6954,11 +6954,11 @@ ring_buffer_alloc_read_page(struct trace_buffer *=
+buffer, int cpu)
+> if (!bpage)
+> return ERR_PTR(-ENOMEM);
 >
-> diff --git a/drivers/dma/fsl-edma-trace.h b/drivers/dma/fsl-edma-trace.h
-> index d3541301a247..45d964a3726d 100644
-> --- a/drivers/dma/fsl-edma-trace.h
-> +++ b/drivers/dma/fsl-edma-trace.h
-> @@ -19,14 +19,16 @@ DECLARE_EVENT_CLASS(edma_log_io,
->                 __field(struct fsl_edma_engine *, edma)
->                 __field(void __iomem *, addr)
->                 __field(u32, value)
-> +               __field(void __iomem *, membase)
->         ),
->         TP_fast_assign(
->                 __entry->edma = edma;
->                 __entry->addr = addr;
->                 __entry->value = value;
-> +               __entry->membase = edma->membase;
->         ),
->         TP_printk("offset %08x: value %08x",
-> -               (u32)(__entry->addr - __entry->edma->membase), __entry->value)
-> +               (u32)(__entry->addr - __entry->membase), __entry->value)
->  );
+> - bpage->order =3D buffer->subbuf_order;
+> cpu_buffer =3D buffer->buffers[cpu];
+> local_irq_save(flags);
+> arch_spin_lock(&cpu_buffer->lock);
 >
->  DEFINE_EVENT(edma_log_io, edma_readl,
-> --
-> 2.43.7
+> + bpage->order =3D buffer->subbuf_order;
+> if (cpu_buffer->free_page) {
+> bpage->data =3D cpu_buffer->free_page;
+> cpu_buffer->free_page =3D NULL;
+> @@ -7007,13 +7007,13 @@ void ring_buffer_free_read_page(struct trace_buff=
+er *buffer, int cpu,
+> * is different from the subbuffer order of the buffer -
+> * we can't reuse it
+> */
+> - if (page_ref_count(page) > 1 || data_page->order !=3D buffer->subbuf_or=
+der)
+> + if (page_ref_count(page) > 1)
+> goto out;
 >
+> local_irq_save(flags);
+> arch_spin_lock(&cpu_buffer->lock);
 >
+> - if (!cpu_buffer->free_page) {
+> + if (!cpu_buffer->free_page && data_page->order =3D=3D buffer->subbuf_or=
+der)
+> cpu_buffer->free_page =3D dpage;
+> dpage =3D NULL;
+> }
+> @@ -7091,15 +7091,15 @@ int ring_buffer_read_page(struct trace_buffer *bu=
+ffer,
+> if (!data_page || !data_page->data)
+> return -1;
+>
+> - if (data_page->order !=3D buffer->subbuf_order)
+> - return -1;
+> -
+> dpage =3D data_page->data;
+> if (!dpage)
+> return -1;
+>
+> guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+>
+> + if (data_page->order !=3D buffer->subbuf_order)
+> + return -1;
+> +
+> reader =3D rb_get_reader_page(cpu_buffer);
+> if (!reader)
+> return -1;
+>
+> -- Steve
