@@ -1,116 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534531D63F3;
-	Tue, 30 Jun 2026 00:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA13E2C15BE
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 01:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782780416; cv=none; b=sZWjm1gdZN4Api6n+wYR1UNKJr+EIJInpwqHEu9d+vlv+6tyP0etDocvzFqsOcY5m6J93TI6dZ461bqUMILpCfY5tCYKq9Nw/x2Y4X4APfs745BW32ZmLwXBXZ/SHFW8AI+ojhPrwDez/VV8EDspBpAlk1VhkHsyUdNWOhnVFfU=
+	t=1782784435; cv=none; b=GN3b2HprNjQHoPFVjZWwdFUoknRCNZ822ZC9GDzEXlc+MOY9HSxV5hPtmmp/OZhm/00b+NwIW2ZKuwdLVm7VWjqmtcLtQ+sxDlruy5xBR7XwB9ivtM4AK0usAEAlkdUuD/Yt5EoX74m0l7NZ4wFzXaQ4bFdil7L5uhrhpzEbC74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782780416; c=relaxed/simple;
-	bh=Ff2+/saOZWl49ppdlAwA0NO4KvmkJ+pzLbZXbig2LKk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nyQ6vRhKV3lfpWNWVS7GQ02i8WZeJ7fLhm1afqJNKeBpZjCu5dBH8tFynOjkP3d41NSHizxFx6vbfhAh+dGMs+VOeI0aL2t+E51o47l8F7nQCKCqt6exzDfe8+1b2ibvYo84oF62Uoeky2jaHwezdWpOdXapz7bjUar3GehXycY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUP3bVRD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782784435; c=relaxed/simple;
+	bh=vnf7JPkMu9uAlmUFnocqbmWTOfwkd6mWLZGraSk0JA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mvW1imDUiZfKks3iAU2m/BmP8kI/AlNsAmvP5bVHWhdIaDreSNGw0sY6/V/xKXi8ZXYSxpPSDVRoggaeePZ7fXN747UqOquZ4NplgtzyO89UBpPvz+EzgIi6BLlT4rxV9cYVNXhhaZ2vWpomZlmVpRpD/+7xj+SP/PD03MglW5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TMgXlUlz; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUP3bVRD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008D51F000E9;
-	Tue, 30 Jun 2026 00:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782780414;
-	bh=oQuLM8bdAxGQlcNZ/nGpA3fPi1oLAX8SqOqtOB9RlDA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=SUP3bVRDMICpoWRQ9CYvbW4onk42cJtF7CTKtMbwjV3bwAw9lSJRMfDP7IVaPevUm
-	 PmWejbxaO9HZKRVmXZstRkLsl0rXh/Jy/cAMPFQXG8FC468FioMLZHFDJmPAVQ1zQ8
-	 xJuKnciPgkI82ZOrSK7HGWFa0bORbrLYve2aEmAQp4ps3doCjzZZUJ892M553P/pDO
-	 vicNZIrPDYy3iiXOty09DQ6CtTwMvBnJOixw6l7UDBRvdObWsIzknv16DtqPz3cG4/
-	 El4b4GkH2Zj565ZDWXOdEkXyX8LD27EBxWAKBjNb4n6a6TMw9TsGFXTNkpDfv2egRC
-	 7aLwBNwYagAcw==
-Date: Tue, 30 Jun 2026 09:46:50 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Bradley Morgan <include@grrlz.net>
-Cc: Breno Leitao <leitao@debian.org>, akpm@linux-foundation.org,
- mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] lib/bootconfig: fix undefined behavior involving NULL
- pointer arithmetic
-Message-Id: <20260630094650.7c4882c3adbdd4d8f3779e3e@kernel.org>
-In-Reply-To: <0B594835-45AD-4B37-85A3-C7F54F8D668A@grrlz.net>
-References: <20260628115617.3190-1-include@grrlz.net>
-	<akJ0f2gsiEt01spu@gmail.com>
-	<0B594835-45AD-4B37-85A3-C7F54F8D668A@grrlz.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TMgXlUlz"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782784430;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o+9YrpEU34OPDz2iHabTDbvzWefArLaf4fpVcXgkiMk=;
+	b=TMgXlUlzodF1IoLeynZ74eaIyV4U7rjvQXiu7RJXnASDsdrob6kxCYb1iZ3Oj2sGEoImCo
+	PpbCJQ3Y7D4H1RmilH3Ccx34B3/dsJZlglzP80/GxM6U5g9lqjT0ZKC4rAuGD3D7z53R4e
+	iFzxQ+Akjbb+4xLM01Ojlc64dPgqoAM=
+From: Ye Liu <ye.liu@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>
+Cc: Ye Liu <ye.liu@linux.dev>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v3 2/7] mm/page_owner: add MR_NEVER to enum migrate_reason and use it for last_migrate_reason
+Date: Tue, 30 Jun 2026 09:53:19 +0800
+Message-ID: <20260630015331.147174-3-ye.liu@linux.dev>
+In-Reply-To: <20260630015331.147174-1-ye.liu@linux.dev>
+References: <20260630015331.147174-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 29 Jun 2026 14:53:05 +0100
-Bradley Morgan <include@grrlz.net> wrote:
+The last_migrate_reason field uses -1 as a sentinel value to mean "no
+migration has happened".  Replace the four bare -1 occurrences by
+adding a proper MR_NEVER member to enum migrate_reason, defining a
+corresponding "never_migrated" string in the MIGRATE_REASON trace
+macro, and removing the local MIGRATE_REASON_NONE define.
 
-> On 29 June 2026 14:41:37 BST, Breno Leitao <leitao@debian.org> wrote:
-> >On Sun, Jun 28, 2026 at 11:56:16AM +0000, Bradley Morgan wrote:
-> >> When xbc_snprint_cmdline() is called during the size-probing phase
-> >> (with buf = NULL and size = 0), the function computes the end pointer
-> >> as 'buf + size' (NULL + 0) and repeatedly advances the pointer via
-> >> 'buf += ret'.
-> >> 
-> >> Under the C standard, performing pointer arithmetic on a NULL pointer is
-> >> undefined behavior. While harmless inside the kernel, this code is also
-> >> compiled into the userspace host tool 'tools/bootconfig', where host
-> >> compilers with UBSan or FORTIFY_SOURCE enabled abort the build when they
-> >> detect NULL pointer arithmetic.
-> >> 
-> >> Fix this by tracking the running written length as an integer offset
-> >> ('len') rather than advancing 'buf' directly. Only perform pointer
-> >> arithmetic if 'buf' is actually non-NULL.
-> >> 
-> >> Fixes: 5a643e462323 ("bootconfig: move xbc_snprint_cmdline() to
-> >lib/bootconfig.c")
-> >
-> >Isn't commit 5a643e462323 ("bootconfig: move xbc_snprint_cmdline() to
-> >lib/bootconfig.c") just a code movement?
-> 
-> Ugh, Geminis bullcrap, you are right. I should've just manually looked
-> for the fixes tag (as I always do)
+No functional change.
 
-Yeah, please use the latest linus kernel. (v7.2-rc1, for now)
+Signed-off-by: Ye Liu <ye.liu@linux.dev>
+---
+ include/linux/migrate_mode.h   | 1 +
+ include/trace/events/migrate.h | 3 ++-
+ mm/page_owner.c                | 8 ++++----
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-> 
-> >>  	xbc_node_for_each_key_value(root, knode, val) {
-> >> @@ -439,10 +437,12 @@ int __init xbc_snprint_cmdline(char *buf, size_t
-> >size, struct xbc_node *root)
-> >>  
-> >>  		vnode = xbc_node_get_child(knode);
-> >>  		if (!vnode) {
-> >> -			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
-> >> +			ret = snprintf(buf ? buf + len : NULL,
-> >> +				       size > len ? size - len : 0,
-> >
-> >Why not keeping rest() and updating it, instead of open coding it?
-> >
-> >Thanks for the fix.
-> 
-> sure I'll do V2, btw if u didn't read, gemini found and fixed this.
-> As in fully. :)
-
-Hint: for fixing an issue, please just focus on fixing the issue
-and try minimizing the change for keeping backportability.
-
-Thanks,
-
-> 
-> 
-> 
-> >--breno
-> >
-> 
-> Thanks!
-
-
+diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
+index 265c4328b36a..05102d4d2490 100644
+--- a/include/linux/migrate_mode.h
++++ b/include/linux/migrate_mode.h
+@@ -25,6 +25,7 @@ enum migrate_reason {
+ 	MR_LONGTERM_PIN,
+ 	MR_DEMOTION,
+ 	MR_DAMON,
++	MR_NEVER,		/* page has never been migrated */
+ 	MR_TYPES
+ };
+ 
+diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
+index cd01dd7b3640..11bc0aa14c7e 100644
+--- a/include/trace/events/migrate.h
++++ b/include/trace/events/migrate.h
+@@ -23,7 +23,8 @@
+ 	EM( MR_CONTIG_RANGE,	"contig_range")			\
+ 	EM( MR_LONGTERM_PIN,	"longterm_pin")			\
+ 	EM( MR_DEMOTION,	"demotion")			\
+-	EMe(MR_DAMON,		"damon")
++	EM( MR_DAMON,		"damon")			\
++	EMe(MR_NEVER,		"never_migrated")
+ 
+ /*
+  * First define the enums in the above macros to be exported to userspace
+diff --git a/mm/page_owner.c b/mm/page_owner.c
+index 342549891a8d..c2f43ab860eb 100644
+--- a/mm/page_owner.c
++++ b/mm/page_owner.c
+@@ -339,7 +339,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
+ 	depot_stack_handle_t handle;
+ 
+ 	handle = save_stack(gfp_mask);
+-	__update_page_owner_handle(page, handle, order, gfp_mask, -1,
++	__update_page_owner_handle(page, handle, order, gfp_mask, MR_NEVER,
+ 				   ts_nsec, current->pid, current->tgid,
+ 				   current->comm);
+ 	inc_stack_record_count(handle, gfp_mask, 1 << order);
+@@ -596,7 +596,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+ 	if (ret >= count)
+ 		goto err;
+ 
+-	if (page_owner->last_migrate_reason != -1) {
++	if (page_owner->last_migrate_reason != MR_NEVER) {
+ 		ret += scnprintf(kbuf + ret, count - ret,
+ 			"Page has been migrated, last migrate reason: %s\n",
+ 			migrate_reason_names[page_owner->last_migrate_reason]);
+@@ -667,7 +667,7 @@ void __dump_page_owner(const struct page *page)
+ 		stack_depot_print(handle);
+ 	}
+ 
+-	if (page_owner->last_migrate_reason != -1)
++	if (page_owner->last_migrate_reason != MR_NEVER)
+ 		pr_alert("page has been migrated, last migrate reason: %s\n",
+ 			migrate_reason_names[page_owner->last_migrate_reason]);
+ 	page_ext_put(page_ext);
+@@ -826,7 +826,7 @@ static void init_pages_in_zone(struct zone *zone)
+ 
+ 			/* Found early allocated page */
+ 			__update_page_owner_handle(page, early_handle, 0, 0,
+-						   -1, local_clock(), current->pid,
++						   MR_NEVER, local_clock(), current->pid,
+ 						   current->tgid, current->comm);
+ 			count++;
+ ext_put_continue:
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
