@@ -1,220 +1,304 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from pdx-out-007.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-007.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.34.181.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB329A9FE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 06:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F1A26A1C4;
+	Tue, 30 Jun 2026 06:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.34.181.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782799396; cv=none; b=Rp4Qe0D6vO1gXiApI+p6ePHbLeZcpz5y11MJtFtsWp6HvMalI+S/UXkJjTtl7rGvCA026tZwRyCs1+VhmwcEB0SUIS99ZiyNW3raEkGcNXax0sZsJa1Q0Ur8ui13eyNjsV0KOWGEIfn+c7pL/P9lFEqCq1YajBHNQOUEGXoLTiA=
+	t=1782799426; cv=none; b=A370/ecBsBH68wMqB/ot4r7pvqrSVGM3JMKLAJnZoINrjQyRY9+UKnX3R/atF4PulUR1FXHwmMtPA8MmMSjygmeeQ2bHc5FuP4QGpXahs0/6LGw/wfbzxc8rRGuDLoqR8s6cOh1qHe/J+ftIlilUXDZrcoGemT6q4seUmjlx/ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782799396; c=relaxed/simple;
-	bh=IBRzc0iiDr752RyZmlrhOmlck4XRVCM5D9K2KWosX6k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VUfHBURiiPZk/T5CDOlbnDL20qx1aVF7yWqvYsc6cUwz4wvujgYbwwdc+b6Sng6sgUS2F8nf7Wg63nwbBD+ifUNwvrOzmqJXL8viTqfvwRxpfClUWtpJy9MNEGi8wpurB4SkkfMswKRDW86qBUDFMH3UaZYWaww+qEaCQ41bDW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eAIDybuO; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=fGbrmv/M; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1782799426; c=relaxed/simple;
+	bh=M0nnLU7vMMeoiA8EZursO1OOQqLGtOyhTaCh5nLeXT8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RuPChmam1CAs/4TCuJU7YL1wy1L79ngke0eqmjxwGCV03/NxtFv9HRhh93DmdL6jzr1Vk/ds4Z71oSCcmMC1PsCNWRFhoIzyE2ggI0LSpC+d//UvRvzp5X+NGMuhhxhDr/ZbRsMvFVRx+QiSqyNRnLtM4AdLfjsBVWClYrbu7Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=cUMnkwGZ; arc=none smtp.client-ip=52.34.181.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eAIDybuO";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="fGbrmv/M"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65U5cGV81019371
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 06:03:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mwhlEvrUiE8Lwaf2hml9/SLLvTSWaySYB0Hb8e3qF0A=; b=eAIDybuO0PlFE4OQ
-	+bURNWG5cxgvKNIeEka15ZEQEOvOvSfqh3y+uo1Ps+saXwmCcMIb797E3ONEmX/z
-	Sgvcm2UMYg7G2C2jB+nNPuogTwBzmBLk1Z7fKsMmmWKbbJEBRwZLvqM+ALSnqeXX
-	6g0ejkSB3LrHT+NOW1kScBtkMydkrgGbjmoFzddH5hsTn6+ukycR3+wyob6VBuyf
-	qdh4bpY+VsjwMibuEM0jXcQS0+TCFE3//j+XwfXp7G+JUh/8vocBfYVjVxnAh3W2
-	GQahPOrbNZ7kGDGhTM4ydu//v55Ml848D3UkZtwLg3ULCu9SujXVcLJ9LTohpdh5
-	2adiPg==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f441gruk1-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 06:03:14 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-845bc2e658aso3110860b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jun 2026 23:03:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="cUMnkwGZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782799394; x=1783404194; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mwhlEvrUiE8Lwaf2hml9/SLLvTSWaySYB0Hb8e3qF0A=;
-        b=fGbrmv/MRQQYe/y/BoTA3kzXAyNMJ7b+Cx86lSH7psSaVrgyAa+VWWHT06G4TLTw6z
-         ugAoPXSqQoPQX8xQiC2hTDgROZl0TY4mBfTXNQ2XZWZt+dTLQbagojcbvesGUXNEY7BF
-         sltILnda8h9UKyOyoXRNZw4NQPGfBJfhGeorpW5kYlwlrpZBNzQtyX0075pSK2mCtxiJ
-         oz2QHYuUJ9lnftjWElu3CNVnBpWWXUwq18DITvQabnQw/VfhOAzcheTt0gBLkUmqEcGd
-         SSDRxQYQ/D5KhVnztA8dPSNKSFGQYkfrWZ6rmjZWSdKHO/N2sOg3+mBLF2ZaGZ9Z/93D
-         9nCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782799394; x=1783404194;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mwhlEvrUiE8Lwaf2hml9/SLLvTSWaySYB0Hb8e3qF0A=;
-        b=HoU83qvhf3BWW3wUI3VnHKBSk+xXVsYzevgK1noS1+olRJ5mQxAfYLru88oVDG0pj+
-         +Gj51ZQ2NpVQaQ0SCP3Kk4+CfrZAnpvc5E/v1MNrI+TorYCpZuu3Wr5WpOt8iRJSHVsQ
-         pizx/oOBZDSY93HpnEnqB2iG33ynoRBMHySlkzrUByjZ2pByljZM/Gbook/N3lzPWlFw
-         KjKeXaYMeosDAyXt3E+SPb+EAZoXIsHri6V6P9kIDLBvyaIwvSOA7pGkE4XpRN6/pRgN
-         ac0bVOQV4q+jhPcidjXQNXAOJ2QGhm4+q9l/4jM+GszPbwqgBBPaS3eHQ6+4LR6LMAT0
-         S5+g==
-X-Forwarded-Encrypted: i=1; AHgh+Ro1aLNqi6hsMsd8DgQv1uRidpvRY87ZBMXEdL0ikWnmeY8Jbq8G7WJZirYlgQcWABJqgSTP+ekRyA+CV/C9M4CjCsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCnrEXxP2gqzJH+LG37/FhR7lj/iLmoCiuXSWVOF7mKX1r6NVL
-	HMRx9qMI2bZgMhc1n+qLnVt3YOjpQIGqM9UpDIkLfGy91bWdp0+IpWG+Mp5ljl6Ov7IaE/Wl87V
-	CGduQdTEUOXsf/sTrKxjsVAO7wtaNwgG5HZGQCCC2TuT18z9G15AsYWxW+lWYbnj1OMTQr4nCuJ
-	o=
-X-Gm-Gg: AfdE7cnV0Epoxc9lzNR2qZbnXnShy8PSyrp0Bff8Tr2PuysnbiUbRMu3okW8KyOZtVw
-	ngE9+xWv3rK/QBITfmZCNsWba9tGC15VRw17uv1rPkqXnqbn0slF40zrKd1NCyek8RAn/gprZZD
-	ZgCGEjfmh9E+f3MJ5Q33rNDScCOmcC6J+9sW9+OO6036ugASh0cQCjxY4PB6Kcll7d2Gbddk8Xl
-	pAoDY/92i/xqvue9CU48sGo5YY0mVNWs7z1WI+9ekErEM9UaLkhIod31Hh82jNa73paQB5CTfC8
-	6Q08xOaq8FZvBzeBcrKzFjKnaB9yzoFvu0VV3vypESjZfhZDg/prfLW+JIqxXet7Su59DsPWUOu
-	WUitBfZpXnlhiP0589Cd22ovhdeNKTus1uPMH7GAjtmt0
-X-Received: by 2002:a05:6a00:23c2:b0:847:7128:ecf1 with SMTP id d2e1a72fcca58-8479f2714cdmr1949405b3a.42.1782799393721;
-        Mon, 29 Jun 2026 23:03:13 -0700 (PDT)
-X-Received: by 2002:a05:6a00:23c2:b0:847:7128:ecf1 with SMTP id d2e1a72fcca58-8479f2714cdmr1949364b3a.42.1782799393145;
-        Mon, 29 Jun 2026 23:03:13 -0700 (PDT)
-Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847a00029d3sm1112600b3a.20.2026.06.29.23.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 23:03:12 -0700 (PDT)
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Date: Tue, 30 Jun 2026 11:32:46 +0530
-Subject: [PATCH 2/2] i2c: qcom-geni: Add trace events for Qualcomm GENI I2C
- driver
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1782799425; x=1814335425;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rmr4btVRER2BX4fPtwmlV+JwydvNU/M1KH18CiqhJ18=;
+  b=cUMnkwGZV758SQwH8Y164FyyiL0FFVDJlDZzvlES1st2Y5z4ZPbg0oRg
+   lPkBLBvNhMkUD5YHVEFJg8UbpKgu/fdxJPOsdwELSpLtOEIT80dCbc9vP
+   DajpjWOwNeqw8X9zdIE7x9fbAoPZ3TQNqRK3NJ8O0XujotyeVHBPKIR3H
+   g3R22QU9Gx0ItTw/rryZDSU5YWGhSbgdXNQnkaOpiabb0qJFCRCvNyl/C
+   xv6l2aiUyrD4VcHdOkF3tBu67p1/hB9f5oD5p/z3dNKjQNwVXASRW9g1M
+   eaQfyWW0lCrHKsFYTA32z/5O7wzzbGnzB3lKXmGlC+WnYWNKlm7LFAQKi
+   Q==;
+X-CSE-ConnectionGUID: aLTCayzKS5uagxBZ79M2iw==
+X-CSE-MsgGUID: cIQflDt8SZuJDSooLJSyqg==
+X-IronPort-AV: E=Sophos;i="6.24,233,1774310400"; 
+   d="scan'208";a="22733540"
+Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
+  by internal-pdx-out-007.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 06:03:42 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.51:20408]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.142:2525] with esmtp (Farcaster)
+ id 1296e2c2-a45e-46af-8e7a-292d17548063; Tue, 30 Jun 2026 06:03:42 +0000 (UTC)
+X-Farcaster-Flow-ID: 1296e2c2-a45e-46af-8e7a-292d17548063
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Tue, 30 Jun 2026 06:03:42 +0000
+Received: from dev-dsk-doebel-1a-7b355d76.us-east-1.amazon.com (10.169.119.5)
+ by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Tue, 30 Jun 2026 06:03:40 +0000
+From: Bjoern Doebel <doebel@amazon.de>
+To: <stable@vger.kernel.org>
+CC: <sashal@kernel.org>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <dhowells@redhat.com>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<doebel@amazon.de>
+Subject: [PATCH v2 5.15.y] ring-buffer: Remove ring_buffer_read_prepare_sync()
+Date: Tue, 30 Jun 2026 06:03:21 +0000
+Message-ID: <20260630060321.1494832-1-doebel@amazon.de>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260625054005.0014.ringbuf-515@kernel.org>
+References: <20260625054005.0014.ringbuf-515@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ClientProxiedBy: EX19D041UWA003.ant.amazon.com (10.13.139.105) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260630-add-tracepoints-for-qcom-geni-i2c-v1-2-474cd6cdbe27@oss.qualcomm.com>
-References: <20260630-add-tracepoints-for-qcom-geni-i2c-v1-0-474cd6cdbe27@oss.qualcomm.com>
-In-Reply-To: <20260630-add-tracepoints-for-qcom-geni-i2c-v1-0-474cd6cdbe27@oss.qualcomm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
-        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
-        Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com,
-        Praveen Talari <praveen.talari@oss.qualcomm.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1782799380; l=2683;
- i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
- bh=IBRzc0iiDr752RyZmlrhOmlck4XRVCM5D9K2KWosX6k=;
- b=GRguIRps1Bi3/M9o4D0IBX2JCV68BDEGYAw2wtgV0LraRIlf9wFlQpXsBIPhHDiRfhFk9qBdE
- KSTkwrXjSn6BmKlkDtE9UeZzmRb7e5wTKZ/O7Gb1BrdbzXqWbcmg4d7
-X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
- pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDA0OSBTYWx0ZWRfX22KMgOAumSNv
- D5IWqUtMKn9ppwktgjX94+dfhRZ3Spb71ar4g+h6pyBNyNNFQaa6sd4gQfWxb12iy5VWVhN6B75
- EVck6hUHtlngucoBWN7jrjuxkr3BMgQ=
-X-Proofpoint-ORIG-GUID: CdXDnyEp1bBt-CdSS2JJGBJArGRAkK0S
-X-Authority-Analysis: v=2.4 cv=F8dnsKhN c=1 sm=1 tr=0 ts=6a435c22 cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=EUspDBNiAAAA:8 a=0MkepCNd34v6RWspawgA:9 a=QEXdDO2ut3YA:10
- a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDA0OSBTYWx0ZWRfX2jiAcKo6Dhrg
- RDoFujjs3hIzgj+Q77r3Y5sg57GiKKf384pBQRDT2MgbJufK8rO533VACFZEXpuq2kSTo3DxZCu
- CG9JaMG3E+iLpjUoqBp1+Yy+N17YLotOr5sDpCyzsAwdV+XxTY5crRwzjdLjfanxvK+qq8dRr+b
- ovvhCfmKxt6doXKS5Pg8xKYFg309dUKUbvltdy4JC4X0VNe+fdfLv0RatHB0N3ho9OeSthuhKrp
- 4Zl6Iq7X6CzMVwCAN5lm+FCMaln9tY6+j3mxDP/Ph0d9WyhJRO2nk4Zp0qjDRw313ymegPAOWNq
- xxeMrtkZPjiZUJeqXS1q1PbR6ui51r+t/iLBlVvxqREjBgERPmiv9nOROn8AR1tFTAihPIPrPUf
- gS0UlPIwOt1NDOIzg3QsjMkDVuA9Abg4sJhiHYayplIK1y0lEBUqiFc8vIJ9A5cKHCozI1FO1gl
- ZNsPLqezKEp/5viPmCg==
-X-Proofpoint-GUID: CdXDnyEp1bBt-CdSS2JJGBJArGRAkK0S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-30_02,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- impostorscore=0 phishscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606300049
 
-Add trace event definitions for the Qualcomm GENI (Generic Interface)
-I2C driver. These trace events enable runtime debugging and performance
-analysis of I2C operations.
+[ Upstream commit 119a5d573622ae90ba730d18acfae9bb75d77b9a ]
 
-The trace events capture I2C clock configuration, interrupt status and
-error code and message.
+When the ring buffer was first introduced, reading the non-consuming
+"trace" file required disabling the writing of the ring buffer. To make
+sure the writing was fully disabled before iterating the buffer with a
+non-consuming read, it would set the disable flag of the buffer and then
+call an RCU synchronization to make sure all the buffers were
+synchronized.
 
-Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+The function ring_buffer_read_start() originally  would initialize the
+iterator and call an RCU synchronization, but this was for each individual
+per CPU buffer where this would get called many times on a machine with
+many CPUs before the trace file could be read. The commit 72c9ddfd4c5bf
+("ring-buffer: Make non-consuming read less expensive with lots of cpus.")
+separated ring_buffer_read_start into ring_buffer_read_prepare(),
+ring_buffer_read_sync() and then ring_buffer_read_start() to allow each of
+the per CPU buffers to be prepared, call the read_buffer_read_sync() once,
+and then the ring_buffer_read_start() for each of the CPUs which made
+things much faster.
+
+The commit 1039221cc278 ("ring-buffer: Do not disable recording when there
+is an iterator") removed the requirement of disabling the recording of the
+ring buffer in order to iterate it, but it did not remove the
+synchronization that was happening that was required to wait for all the
+buffers to have no more writers. It's now OK for the buffers to have
+writers and no synchronization is needed.
+
+Remove the synchronization and put back the interface for the ring buffer
+iterator back before commit 72c9ddfd4c5bf was applied.
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lore.kernel.org/20250630180440.3eabb514@batman.local.home
+Reported-by: David Howells <dhowells@redhat.com>
+Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there is an iterator")
+Tested-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Assisted-by: Kiro:claude-opus-4.8
+[doebel@amazon.de: move patch section using guard() macro into a
+separate block to address declaration after statement warning.]
+Signed-off-by: Bjoern Doebel <doebel@amazon.de>
 ---
- drivers/i2c/busses/i2c-qcom-geni.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ include/linux/ring_buffer.h |  4 +--
+ kernel/trace/ring_buffer.c  | 72 ++++++++-----------------------------
+ kernel/trace/trace.c        | 14 +++-----
+ kernel/trace/trace_kdb.c    |  8 ++---
+ 4 files changed, 22 insertions(+), 76 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 96dbf04138be..3227fab6d76e 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 3e7bfc0f65aee..b53335ed2d0ef 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -130,9 +130,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/qcom_geni_i2c.h>
-+
- #include <linux/acpi.h>
- #include <linux/clk.h>
- #include <linux/dmaengine.h>
-@@ -219,6 +222,9 @@ static int qcom_geni_i2c_conf(struct geni_se *se, unsigned long freq)
- 	val |= itr->t_low_cnt << LOW_COUNTER_SHFT;
- 	val |= itr->t_cycle_cnt;
- 	writel_relaxed(val, gi2c->se.base + SE_I2C_SCL_COUNTERS);
-+	trace_geni_i2c_bus_setup(gi2c->se.dev, gi2c->clk_freq_out,
-+				 itr->clk_div, itr->t_high_cnt,
-+				 itr->t_low_cnt, itr->t_cycle_cnt);
- 	return 0;
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags);
+-void ring_buffer_read_prepare_sync(void);
+-void ring_buffer_read_start(struct ring_buffer_iter *iter);
++ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+ 
+ struct ring_buffer_event *
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index e44115db0efe3..e7c472729542d 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5037,28 +5037,20 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+ 
+ /**
+- * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
++ * ring_buffer_read_start - start a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
+  * @flags: gfp flags to use for memory allocation
+  *
+- * This performs the initial preparations necessary to iterate
+- * through the buffer.  Memory is allocated, buffer recording
+- * is disabled, and the iterator pointer is returned to the caller.
+- *
+- * Disabling buffer recording prevents the reading from being
+- * corrupted. This is not a consuming read, so a producer is not
+- * expected.
+- *
+- * After a sequence of ring_buffer_read_prepare calls, the user is
+- * expected to make at least one call to ring_buffer_read_prepare_sync.
+- * Afterwards, ring_buffer_read_start is invoked to get things going
+- * for real.
++ * This creates an iterator to allow non-consuming iteration through
++ * the buffer. If the buffer is disabled for writing, it will produce
++ * the same information each time, but if the buffer is still writing
++ * then the first hit of a write will cause the iteration to stop.
+  *
+- * This overall must be paired with ring_buffer_read_finish.
++ * Must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
++ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -5083,51 +5075,15 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ 
+ 	atomic_inc(&cpu_buffer->resize_disabled);
+ 
+-	return iter;
+-}
+-EXPORT_SYMBOL_GPL(ring_buffer_read_prepare);
++	{
++		guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+ 
+-/**
+- * ring_buffer_read_prepare_sync - Synchronize a set of prepare calls
+- *
+- * All previously invoked ring_buffer_read_prepare calls to prepare
+- * iterators will be synchronized.  Afterwards, read_buffer_read_start
+- * calls on those iterators are allowed.
+- */
+-void
+-ring_buffer_read_prepare_sync(void)
+-{
+-	synchronize_rcu();
+-}
+-EXPORT_SYMBOL_GPL(ring_buffer_read_prepare_sync);
+-
+-/**
+- * ring_buffer_read_start - start a non consuming read of the buffer
+- * @iter: The iterator returned by ring_buffer_read_prepare
+- *
+- * This finalizes the startup of an iteration through the buffer.
+- * The iterator comes from a call to ring_buffer_read_prepare and
+- * an intervening ring_buffer_read_prepare_sync must have been
+- * performed.
+- *
+- * Must be paired with ring_buffer_read_finish.
+- */
+-void
+-ring_buffer_read_start(struct ring_buffer_iter *iter)
+-{
+-	struct ring_buffer_per_cpu *cpu_buffer;
+-	unsigned long flags;
+-
+-	if (!iter)
+-		return;
+-
+-	cpu_buffer = iter->cpu_buffer;
++		arch_spin_lock(&cpu_buffer->lock);
++		rb_iter_reset(iter);
++		arch_spin_unlock(&cpu_buffer->lock);
++	}
+ 
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+-	arch_spin_lock(&cpu_buffer->lock);
+-	rb_iter_reset(iter);
+-	arch_spin_unlock(&cpu_buffer->lock);
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++	return iter;
  }
+ EXPORT_SYMBOL_GPL(ring_buffer_read_start);
  
-@@ -252,6 +258,8 @@ static void geni_i2c_err(struct geni_i2c_dev *gi2c, int err)
- 		dev_dbg(gi2c->se.dev, "len:%d, slv-addr:0x%x, RD/WR:%d\n",
- 			gi2c->cur->len, gi2c->cur->addr, gi2c->cur->flags);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 537360be8e4e0..1a29a9d9e8685 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4803,21 +4803,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->array_buffer->buffer,
+-							 cpu, GFP_KERNEL);
+-		}
+-		ring_buffer_read_prepare_sync();
+-		for_each_tracing_cpu(cpu) {
+-			ring_buffer_read_start(iter->buffer_iter[cpu]);
++				ring_buffer_read_start(iter->array_buffer->buffer,
++						       cpu, GFP_KERNEL);
+ 			tracing_iter_reset(iter, cpu);
+ 		}
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->array_buffer->buffer,
+-						 cpu, GFP_KERNEL);
+-		ring_buffer_read_prepare_sync();
+-		ring_buffer_read_start(iter->buffer_iter[cpu]);
++			ring_buffer_read_start(iter->array_buffer->buffer,
++					       cpu, GFP_KERNEL);
+ 		tracing_iter_reset(iter, cpu);
+ 	}
  
-+	trace_geni_i2c_err(gi2c->se.dev, gi2c_log[err].err, gi2c_log[err].msg);
-+
- 	switch (err) {
- 	case GENI_ABORT_DONE:
- 		gi2c->abort_done = true;
-@@ -288,6 +296,8 @@ static irqreturn_t geni_i2c_irq(int irq, void *dev)
- 	dma = readl_relaxed(base + SE_GENI_DMA_MODE_EN);
- 	cur = gi2c->cur;
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 59857a1ee44cd..628c25693cef2 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -43,17 +43,15 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.array_buffer->buffer,
+-						 cpu, GFP_ATOMIC);
+-			ring_buffer_read_start(iter.buffer_iter[cpu]);
++			ring_buffer_read_start(iter.array_buffer->buffer,
++					       cpu, GFP_ATOMIC);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.array_buffer->buffer,
++			ring_buffer_read_start(iter.array_buffer->buffer,
+ 						 cpu_file, GFP_ATOMIC);
+-		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
  
-+	trace_geni_i2c_irq(gi2c->se.dev, m_stat, rx_st, dm_tx_st, dm_rx_st);
-+
- 	if (!cur ||
- 	    m_stat & (M_CMD_FAILURE_EN | M_CMD_ABORT_EN) ||
- 	    dm_rx_st & (DM_I2C_CB_ERR)) {
-@@ -788,6 +798,10 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 	peripheral.set_config = 1;
- 	peripheral.multi_msg = false;
- 
-+	trace_geni_i2c_bus_setup(gi2c->se.dev, gi2c->clk_freq_out,
-+				 itr->clk_div, itr->t_high_cnt,
-+				 itr->t_low_cnt, itr->t_cycle_cnt);
-+
- 	gi2c->num_msgs = num;
- 	gi2c->is_tx_multi_desc_xfer = false;
- 
-@@ -895,6 +909,7 @@ static int geni_i2c_fifo_xfer(struct geni_i2c_dev *gi2c,
- 		m_param |= ((msgs[i].addr << SLV_ADDR_SHFT) & SLV_ADDR_MSK);
- 
- 		gi2c->cur = &msgs[i];
-+
- 		if (msgs[i].flags & I2C_M_RD)
- 			ret = geni_i2c_rx_one_msg(gi2c, &msgs[i], m_param);
- 		else
-
 -- 
-2.34.1
+2.50.1
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
