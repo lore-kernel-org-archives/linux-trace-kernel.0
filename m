@@ -1,169 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A424D41B37D;
-	Tue, 30 Jun 2026 10:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB04B3F8EDA
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 11:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782816937; cv=none; b=mvbsAFgNePhUo4V2WmV9qiqv6boOxLaq5oqYz4cXr2MZGQ/JX9sFlE4wVleC8Xt3kkm6M+9BcI1/OLoDLbD3HUECHsk4vwl5pFvy6OvkdOM3m258uTaPin/POwgXAtCSlmtMfpCUCcL1iOfwHuwZb8+HzxhQfLnXWHEGhJsDT1E=
+	t=1782819175; cv=none; b=BsL3nE9VHvd1SFg+kmvOChT5LO0unwrj+KFYrsRhrkyUmzSk6rp9GQhbwDAtoG2REt9OXMUKFSrHLtyoX4ak0wf13wfw/VPubkUG6Ned7Bh0JKDhtLE2xQonrzta9TjSVa7Uo/BieTVByi86rYuosTPUQGf79BIaaDxAltgnBGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782816937; c=relaxed/simple;
-	bh=OinqCn7yZwhhZsCKKCwIFGV4JtEuLIbKl0RX5IPXpt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfFFGa0+0KibowYjoZ3agQcYdR+CcBaNgTgfyCGa29o/daamfLt2w3MsPyufM4HPGrrBR8c749zwmSVwGCUHyZoxznWluxNV5rgm/KY5QdMlI7itjQqo5tV/qWOdQI2u/+Mv8ttqNrqLMWMYZEF0Gh4mjDvmgehj0IZFKl925Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HU4nsEpy; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782819175; c=relaxed/simple;
+	bh=ffGSH4IaIJoZHP1gdRgmrd5d8SmwqeySVgXFE4JU8Lg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eNfTuKpjnGjlULAq/KelKh+OQ4eIKu2I7A4pRYB99QyOaxUzXBJ+MOiWXpaXZG4A2iyNyt6t2DS0YyUBtGRIVI0KxvBn6513U58NjQmCefdmJSswgucMpKTVKL4K1fJeCSSBKxZpCrMJ1ParK8I9XFVfrEiLPqHN/jOYHb53AUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O29M5wHq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HU4nsEpy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782816932; x=1814352932;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OinqCn7yZwhhZsCKKCwIFGV4JtEuLIbKl0RX5IPXpt0=;
-  b=HU4nsEpyZFVubkTkW/GtIp+Q6UfQRT/qtAsyb5s8qD5w8pnUWeFy/I5F
-   jxtY8sU8I0YHRKK2orDN5Ej+HnRAOIRaBiUxYZhFfXCoppxV8+netiYmq
-   XLpvfXByf3TKzDbKPHSEil7gNrWW6Xo6Lc5wE2oqXtNltBGjAhOwIL1Qn
-   FvCEQyB1Lf0jEAiKK/qW96g0XXwNNXK2Z+Y7U7kNYl4xeat8cohBYmZ4M
-   +wYeJGPsEHuLUCnjixDrhuhZrSjC0CGUa1NBvzdQYIl7gJ5Cp/A6a3p3w
-   vKdvNCgYPkyifJPW2AHBVVMTOrkVp+AmFFgRi9mdQZMs0pllqP/CXuCbQ
-   w==;
-X-CSE-ConnectionGUID: hvAO08+JRqOyqmEu50xLtA==
-X-CSE-MsgGUID: oCA/cxp/S6Swn/kyRfDLTg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="94677483"
-X-IronPort-AV: E=Sophos;i="6.24,233,1774335600"; 
-   d="scan'208";a="94677483"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 03:55:31 -0700
-X-CSE-ConnectionGUID: QRJE9D0fTAuqi24otunImw==
-X-CSE-MsgGUID: xXZpy8SqQASrfl6ZIk3hPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,233,1774335600"; 
-   d="scan'208";a="290361286"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.239.158.70]) ([10.239.158.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 03:55:17 -0700
-Message-ID: <39671141-d317-40ab-8c50-66252015514c@intel.com>
-Date: Tue, 30 Jun 2026 18:55:14 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O29M5wHq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782819173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jBTz2wXtqBvGPZiSe/mxuJQdVwaDfA6xdfyUMxtKKSg=;
+	b=O29M5wHqn9FyFjkzTcKHLKMlOeJ2bwgW2GM2vDkWgxdtk/27A1gHTD82Sd67UogNShQaRC
+	AADHA7/6uUwnkuhIC7spgThLM94z2cxjZ+IVtt/Wq+69j74nxtof734OT6wlvKqX6RQT7R
+	WoA4B38pkj4LiyGT/927bI+NXvky3x0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-33-eC8UjzByPAKPJSx9Js6ntw-1; Tue, 30 Jun 2026 07:32:51 -0400
+X-MC-Unique: eC8UjzByPAKPJSx9Js6ntw-1
+X-Mimecast-MFC-AGG-ID: eC8UjzByPAKPJSx9Js6ntw_1782819171
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c122a8e4952so405087566b.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 04:32:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782819170; x=1783423970;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jBTz2wXtqBvGPZiSe/mxuJQdVwaDfA6xdfyUMxtKKSg=;
+        b=QtgrlMMoSvjjIYeT6pe8zx6u823mNcbgQJUc8qIRMFbtLnLrj6V1KTDEykwR3+Tbzc
+         G7E5aJ/iRy9XcUYKo8Ga35HYP/jOUTgAE+paezWCaObBU7Okss9v9TCa1uCTUrDgMdNx
+         LHPV2Auu7BRsP9TiRahJiq9KXDIJrpNXBYoP/kNYX1JptExlTq1Y3s8N+cybJ57nVqgX
+         M1IVPDz3kd65hKZBm0fc8d//Vr5JS3TVkJYGWy2Z0z/ccijzs9ui71EEXUKNnaYXFqw4
+         nNuvsg3y1b/MNX2CRpEuSLZ0uGvO1+Hq5519kOdgPjD25F1ogUl2iqI2DofYPphQgyA9
+         g2UQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rott+G9XhI/8nhgF7hrSxiGpMq6wadDUrJaGS4FqtqMggdy9yM3hJPHy5raoxGSkV4cbLmUPow7taBDLNZTIW8DH4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp2HHCm9+u/Q9w9LVA45LGj5r7uu7JQHz2Bh0D+wj6D4RuDM1Z
+	8tsQ6zB27/PcmB7vzTEMS3XJTmAf9hCoAKIBV5ENvjry4FzMhlpNhkcU9YgywmbtNkd29sqcmN0
+	VK9VwhRxkycZMEx34NHgEnvrFz/A7bF+bVWMgY5hh82ZmNO+ZcCDwKJ59yxgd2oThlD0Yl1oZA8
+	y3kV9PjoDeG3d4E1DE60AH3ABzCH3bVrBZ9H6vcEIS7hjQHQy3
+X-Gm-Gg: AfdE7clotpNe3bp+MBd0kfyzVo/TyMs8D/mUHUifiPRLRqyUT1HW6Q3F5qEaft7JrzO
+	Nc2f2uVr46Y7UB1alDf3jFN/4GvFD+8wnOqI9sGoxRni9plSlZtX8ix4mjAwdY1907HmjUtONHa
+	pifudAEGJPaIPyks7MuRBWsS3IWxKVWuJaQKAjT5R46kNvwHJ9KhZnBdotdpR6H7M/xRA=
+X-Received: by 2002:a17:907:bb49:b0:c12:8b1c:454f with SMTP id a640c23a62f3a-c128b1c4e6fmr130706866b.2.1782819170465;
+        Tue, 30 Jun 2026 04:32:50 -0700 (PDT)
+X-Received: by 2002:a17:907:bb49:b0:c12:8b1c:454f with SMTP id
+ a640c23a62f3a-c128b1c4e6fmr130702566b.2.1782819169899; Tue, 30 Jun 2026
+ 04:32:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/46] KVM: Make CONFIG_KVM_VM_MEMORY_ATTRIBUTES
- selectable
-To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-5-9d2959357853@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-5-9d2959357853@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20260617131803.2988989-1-vschneid@redhat.com> <20260617131803.2988989-4-vschneid@redhat.com>
+In-Reply-To: <20260617131803.2988989-4-vschneid@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 30 Jun 2026 13:32:38 +0200
+X-Gm-Features: AVVi8CcQU0PbcEqWS5H0rq7ajtEDLjvGh4cBpavnLrLvOxj5BuQDFZ2rmR4JQOI
+Message-ID: <CAP4=nvSSw4wSUWMQfWRU=Ez-q0L8-Ugon_nYPvXS2d0kEBQhaw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/4] rtla/osnoise: Trace IPI events when recording
+ a trace file
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 6Adxoeg1lzDNQuQ2SAZTni9A8ChdUBwKvmoSyoPMOvo_1782819171
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
-> 
-> Make CONFIG_KVM_VM_MEMORY_ATTRIBUTES selectable, only for (CoCo) VM types
-> that might use vm_memory_attributes.
-> 
-> Also document CONFIG_KVM_VM_MEMORY_ATTRIBUTES to specifically be about the
-> private/shared attribute.
-
-I think this patch needs to be moved later after per-gmem shared/private 
-attribute is implemented. Because so far, TDX/SEV indeed depend on 
-CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
-
-Not to discuss if it makes sense to report TDX as supported VM TYPE when 
-CONFIG_KVM_VM_MEMORY_ATTRIBUTES is not enabled, this patch just fails 
-the compilation when
-
-   CONFIG_KVM_VM_MEMORY_ATTRIBUTES = n
-
-and KVM_INTEL_TDX/KVM_AMD_SEV is enabled:
-
-arch/x86/kvm/../../../virt/kvm/guest_memfd.c: In function 
-‘__kvm_gmem_populate’:
-arch/x86/kvm/../../../virt/kvm/guest_memfd.c:918:14: error: implicit 
-declaration of function ‘kvm_range_has_memory_attributes’ 
-[-Werror=implicit-function-declaration]
-   918 |         if (!kvm_range_has_memory_attributes(kvm, gfn, gfn + 1,
-       |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
+<vschneid@redhat.com> napsal:
+>
+> IPIs can now be monitored and accounted by osnoise top. When that is
+> the case, also record them when saving a trace file.
+>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 > ---
->   arch/x86/kvm/Kconfig | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index 24f96396cfa1c..c28393dc664eb 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -81,13 +81,16 @@ config KVM_WERROR
->   	  If in doubt, say "N".
->   
->   config KVM_VM_MEMORY_ATTRIBUTES
-> -	bool
-> +	depends on KVM_SW_PROTECTED_VM || KVM_INTEL_TDX || KVM_AMD_SEV
-> +	bool "Enable per-VM PRIVATE vs. SHARED attributes (for CoCo VMs)"
-> +	help
-> +	  Enable support for tracking PRIVATE vs. SHARED memory using per-VM
-> +	  memory attributes.
->   
->   config KVM_SW_PROTECTED_VM
->   	bool "Enable support for KVM software-protected VMs"
->   	depends on EXPERT
->   	depends on KVM_X86 && X86_64
-> -	select KVM_VM_MEMORY_ATTRIBUTES
->   	help
->   	  Enable support for KVM software-protected VMs.  Currently, software-
->   	  protected VMs are purely a development and testing vehicle for
-> @@ -138,7 +141,6 @@ config KVM_INTEL_TDX
->   	bool "Intel Trust Domain Extensions (TDX) support"
->   	default y
->   	depends on INTEL_TDX_HOST
-> -	select KVM_VM_MEMORY_ATTRIBUTES
->   	select HAVE_KVM_ARCH_GMEM_POPULATE
->   	help
->   	  Provides support for launching Intel Trust Domain Extensions (TDX)
-> @@ -162,7 +164,6 @@ config KVM_AMD_SEV
->   	depends on KVM_AMD && X86_64
->   	depends on CRYPTO_DEV_SP_PSP && !(KVM_AMD=y && CRYPTO_DEV_CCP_DD=m)
->   	select ARCH_HAS_CC_PLATFORM
-> -	select KVM_VM_MEMORY_ATTRIBUTES
->   	select HAVE_KVM_ARCH_GMEM_PREPARE
->   	select HAVE_KVM_ARCH_GMEM_INVALIDATE
->   	select HAVE_KVM_ARCH_GMEM_POPULATE
-> 
+>  tools/tracing/rtla/src/common.c  |  2 +-
+>  tools/tracing/rtla/src/common.h  |  2 +-
+>  tools/tracing/rtla/src/osnoise.c | 17 ++++++++++++++++-
+>  3 files changed, 18 insertions(+), 3 deletions(-)
+>
+
+Looks good, the numbers match between what is seen in (non-truncated)
+trace and what is detected in RTLA:
+
+$ rtla osnoise top -q -d 5s --ipi --on-end
+trace,file=3D/tmp/ipi_trace.txt | awk '/^ *[0-9]/{ print "CPU: " $1 ",
+IPI count: " $13 }'
+CPU: 0, IPI count: 20
+CPU: 1, IPI count: 2
+CPU: 2, IPI count: 1
+CPU: 3, IPI count: 3
+CPU: 4, IPI count: 0
+CPU: 5, IPI count: 2
+CPU: 6, IPI count: 1
+CPU: 7, IPI count: 1
+CPU: 8, IPI count: 0
+CPU: 9, IPI count: 0
+CPU: 10, IPI count: 2
+CPU: 11, IPI count: 3
+CPU: 12, IPI count: 0
+CPU: 13, IPI count: 20
+$ grep ipi_send_cpumask /tmp/ipi_trace.txt | wc -l
+0
+$ for cpu in {0..13}; do n=3D$(grep -F "ipi_send_cpu: cpu=3D$cpu "
+/tmp/ipi_trace.txt | wc -l); echo "CPU: $cpu, IPI count: $n"; done
+CPU: 0, IPI count: 20
+CPU: 1, IPI count: 2
+CPU: 2, IPI count: 1
+CPU: 3, IPI count: 3
+CPU: 4, IPI count: 0
+CPU: 5, IPI count: 2
+CPU: 6, IPI count: 1
+CPU: 7, IPI count: 1
+CPU: 8, IPI count: 0
+CPU: 9, IPI count: 0
+CPU: 10, IPI count: 2
+CPU: 11, IPI count: 3
+CPU: 12, IPI count: 0
+CPU: 13, IPI count: 20
+
+(This is in a VM, with apparently no ipi_send_cpumask events, so I
+didn't test that.)
+
+Tomas
 
