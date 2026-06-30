@@ -1,168 +1,240 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5993D6493
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 10:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B117C3EB10F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 10:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782813721; cv=none; b=XGRHZJRnYOVL14lQPH8Zw3Reemhu8QqbAFZm4Nl6PMdd+Ek5mxK1za5RuDWB7LozYKQdWf1a1voDHzmo+ieI/OGYfe/2+nTtukRfTDAOFCRtrvNrizQs3rGo+xS0zyZ8TAbZxu6Bi7S/J0adDsaHRwpM/o6HJmjjySa3Ue8ydsY=
+	t=1782814497; cv=none; b=uXTfdfjG9CZ7B7omSpfkaOZiiV9ks09tqVGISGEe18Ua+3WD88bb7Gq6+xlM3a7UCmMfvbvU7PBTziDtyEQWbYPi328nxzQ4aCNgHZ0e8cMaLhPgWUpjDYIdlDwmywu3b13sqzqQF0wbNqjX++VaPOhmDje03LTogTpsnRwCKl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782813721; c=relaxed/simple;
-	bh=QiQvYF8/QaSb6AfdixCPrH92YaSM0Fq4/gmq2GFZ4Qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hRE/xkLiya4OW67ZfVxNoxrTqP+pS3AAi9KZJdKLX0h1sdoKaIZEeLfxc6EfSYt9kBmKL6lUOgo7OrHJyxyYadgxnuYSucLmSfnDokziQaBICFdYoY5ci3IU+crlB4HjSmuYLN2wiWXVXx6rj/M0KvC3jnYOEzpdaIMB3U7Xjik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c43gqdaR; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782814497; c=relaxed/simple;
+	bh=CPD2cZcP8ELgG1d/dRepi4aWPdeNOB8Nlw/R9JrErcA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fbZEh7PZCaVtqOPSF424r4HB2rs0UMdcQjn2G1WWjCJiy4oJyDJNru7u00xV68AsH1m7MHyfuBbXQD0z9aBQGWp2LnXhL4Rmpo/eJ7a+i6Iacw9aT4v8A44HTs4R6WcgaIj30IRk7yAtY1rmwg2jH5SfK8d3CPxSXjzQ1jbAbZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BL0qIEa+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c43gqdaR"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-493bb510ce4so3263745e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 03:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782813718; x=1783418518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NWs0rjmcLg7NvaVW2+lqNNrpWlNXZepbMri66/CGWuA=;
-        b=c43gqdaRRLeDBVK0bQ18wKxS1OJfm8V/ZEF/2c5K839ALaJexAHEIk+bB2CV+Bevz7
-         T3logmfwlpkQ1gS4ZylEj+lNnl1jvKqsOqW2zgTn5zzQkSTtFWSGpLjIKx7tqQ5q/jWN
-         omu/9TfWynqc5lpVmS1uBIfuOZoPZi6t08C7kYg7HOWpQ/xMzGnTxPeExyRRq5/irdZ9
-         7880XlM0sPY604GwRKpb3/Arewwvf+hvsfflIywIpr4zU4qaZKl1MuPEoQneL70GqKWU
-         TqwBaC0qy9mrl/dgMbNve1qqaOowYbFEpDhkSbWb4IDTtQgzn0pLYLkRw2KG/3MwgjhG
-         c1Sw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BL0qIEa+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782814494;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UAsrVZvQquixtBabCzpS64y50o+xH9oROZmfJ7/f9J0=;
+	b=BL0qIEa+CW1KtG74NnQ7neBKhw+VSpLIl10kfYWrxkGts2RAOv+9l+UgT0DizBXM82BNn8
+	pAF4kk6aHf+DnUATzJ2W5T1ennwRDwYL+VJAVEzViBAsZK1AqAXZveG4tOqlZZPC3Wic7N
+	LddqWQLthjCT1kWtDXfNjzIhAKnGtmI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-JvjpdDc0O--1GJ3Ep8H_yA-1; Tue, 30 Jun 2026 06:14:53 -0400
+X-MC-Unique: JvjpdDc0O--1GJ3Ep8H_yA-1
+X-Mimecast-MFC-AGG-ID: JvjpdDc0O--1GJ3Ep8H_yA_1782814492
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c128c8c345eso87692866b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 03:14:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782813718; x=1783418518;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1782814492; x=1783419292;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=NWs0rjmcLg7NvaVW2+lqNNrpWlNXZepbMri66/CGWuA=;
-        b=EA9ZVkYFEAQFHegw/ZysOueY9DE8KquFfg25b1ao4702P7lLzehzQnFaOLZt0dwHDT
-         0pCYgBruYjUKRREuODEJGrJNDq+ZyO1dX8IPQ8caS23i9EEDkSO0xEgNkk7y1xNJa59E
-         +9v31IZfB8iJJ3zxLeRoevI5Mx1pRnMuQvCpiBiRwawgksiR+VT63aAQr9DgJLNmNVeI
-         0NV8FadXSK08+j2eHI6FihSZ5m+p+d6OgvWJOVqfSqaR0Qwti/5bC+9/m1CyB4RH845z
-         l6fwVZOytI6reTRqs0kUQvjQxtub9JeNLqWNwM4xUjTntWLhlET5M+yoexaHYbJdgLhV
-         oOrQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9t/hQmBpo1CSWZ4AOvGBIQtspV7Ga4ouuObbCjVIg/0DO3c6hTkzNezYc8FrdWX1vmySnljIy1fwCEjoMpxNSwDAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVcjC20ge6zYTC1YuRlYswJPU5GmPLOtzgn9Vei1knhKRjzOjt
-	NoM/MD+UTmbGAejxQnnm/kG55EGwlsXyPMwjDH0jibeUEQlIGmJupt0k
-X-Gm-Gg: AfdE7cmavD/mYFaep2UC3wg8IaDq3348a6E4C87kGk2XW/vff0e3iQ5qLp1lI1Uf8x4
-	coUQt4Ax5I+lby2wGZr5LD6vPtutpX2plSWadbMX/27nLreLTKiePFPD6ksQcKWUieU9IHGDOYu
-	Ic5y55KgsQWyGI8q6HufGre+sv5xf1WHNukepYJAtUGkpX7rws1SyN2ug0QYN3VRmuqE4qGllyD
-	1lit0n6OykfzFp9IEQpqONUJJDkYN0djbCVRnM5KXL7liLlzLlnbsoQn6VVLzN6qW0jlUA++tCK
-	qT0vC2mafm1OkuqtKz0HtwyAwd5H3x/XYK8zn8fOamUoPmLZRUM8WBwpMal+/sbfVzzL/DTYa6W
-	FZoo2lMPtpcIubb9KLP3PoCgRhJmiogs/JZV7FOgI+h8Ad/hnC7qDVm0GOiuTb9TQkeOhs72f+l
-	Vx5JNgHgL5UxPBOABJZqb4U1v+wG1e9G3RX/JLTZicqHI2GA==
-X-Received: by 2002:a05:600c:348c:b0:493:b56b:c45c with SMTP id 5b1f17b1804b1-493b82b5afdmr45416075e9.30.1782813718214;
-        Tue, 30 Jun 2026 03:01:58 -0700 (PDT)
-Received: from pumpkin (host-92-21-50-228.as13285.net. [92.21.50.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493b8ca8b1csm50682145e9.9.2026.06.30.03.01.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 03:01:57 -0700 (PDT)
-Date: Tue, 30 Jun 2026 11:01:56 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Michal =?UTF-8?B?S291dG7DvQ==?=
- <mkoutny@suse.com>
-Subject: Re: [PATCH 2/2] tracing: Keep pid and comm[] in the same structure
-Message-ID: <20260630110156.5314e2e6@pumpkin>
-In-Reply-To: <20260629164912.4c1c2855@robin>
-References: <20260626212356.64150-1-david.laight.linux@gmail.com>
-	<20260626212356.64150-3-david.laight.linux@gmail.com>
-	<20260629164912.4c1c2855@robin>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=UAsrVZvQquixtBabCzpS64y50o+xH9oROZmfJ7/f9J0=;
+        b=dWXoKiPFP2Ked79AL0Q2CmS8M/PSDm7YY7FRCfx2arm7cExh8g5X/QizTxQPHIh+rC
+         tWg1B/6fFmPpAf63yt5yOoufp/E26yOuz2OMZ7lnG2s6jH+GjlhBT7IgX3kGW+RanuuL
+         Mm/hAPsfzPHKtGjwqNUiS9wm/OZIiwQ1hLUXx4j8Qivn/ZJFzoijloqLTKCOa9AxUzY4
+         aVRIFAAarWRJHF6AuvczoUSbHEqYXM7/xmJ/7Vv2GIT95fR6696O1yC3EhAYaeI0ACwC
+         wcdQpON4h/dnBqv0elfC4OyJ3JwL8P6fJ+Rq+EDDtBlxqp/LL12T9Ll/pvtXN2RRGM9G
+         AKxg==
+X-Forwarded-Encrypted: i=1; AHgh+Rpt1/EeJ6qwjVjW3Q6EzmxfgH5fRyzEWd7sa/l/bxQCm13UvtszEEmpl5X/+FyaywMAJ0cVO5wNikvm9OWuv0j6mOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsHPylked3XRIIbq9FUNGgA4PMC0EmYODtLAVb+LVt8NSlnhHE
+	+HtYJJuGN+T5fi+boJgYycR3D65+zJItZX3ErjVWvVNC/eXx0CCFpKTJkRuatA2YZyqkl12AOMY
+	bLXy/LYjm7i1z0Zhr48qqOmotuLufD+PsmrqDbzxakUXtYx5yZYH3d1RGmo6wOrqc76tNxbtbh0
+	8v4WaMKWqo+0dEq6JncBi/RXeXATgK4hFqtPZ6Xh23zyQbLcRe
+X-Gm-Gg: AfdE7cn35pZ4AEGnQcidKQiZLUwAKo0YkP35MXwkuaxNAXo4hQK+2RNbgwfZKUolyMA
+	geg+Sw9dMX+kVlTMBrT2yjplTM6ICnh70GnP6yHPg6AXnxLe0MyMV95yb5VvtJx68Fe5l6vlhs8
+	q8ZZ6mhuV8CBEdhVEm+Q3zEWvBykrg4bCsf7IEob1bQbtcYYNMjQsLqqj0/6iyl9zrnRw=
+X-Received: by 2002:a17:907:c0d:b0:bd2:15b5:bf60 with SMTP id a640c23a62f3a-c12903c0601mr74318166b.3.1782814492079;
+        Tue, 30 Jun 2026 03:14:52 -0700 (PDT)
+X-Received: by 2002:a17:907:c0d:b0:bd2:15b5:bf60 with SMTP id
+ a640c23a62f3a-c12903c0601mr74315366b.3.1782814491533; Tue, 30 Jun 2026
+ 03:14:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20260617131803.2988989-1-vschneid@redhat.com> <20260617131803.2988989-5-vschneid@redhat.com>
+In-Reply-To: <20260617131803.2988989-5-vschneid@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 30 Jun 2026 12:14:39 +0200
+X-Gm-Features: AVVi8CdV63JL6zypYyN7ya_bbJdiYKtnKuNVcO4pMN3BA4UQwMqsLJ4ki3aRrN0
+Message-ID: <CAP4=nvQ_x+LyDBoQWOBB4ERy8OwEp9LQzyLJJMHzYdrZzK4zyw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/4] rtla/osnoise: Leverage IPI event filters when
+ tracing a subset of CPUs
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: sg6utONC455xQ1x7SG6QQLAgbFLCJWip591EPARTRXU_1782814492
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Jun 2026 16:49:12 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
+<vschneid@redhat.com> napsal:
+>
+> Instead of post-processing the events in the tracefs_iterate_raw_events()
+> callbacks, leverage the kernel event filtering infrastructure to only emi=
+t
+> IPI events if they target CPUs that are being traced, as specified by the
+> -c cmdline option.
+>
+> Note that some post-processing is still required for the ipi_send_cpumask
+> event, as the event being emitted means *some* CPUs targeted by that even=
+t
+> are monitored, but not all of them - userspace has to recompute that
+> intersection.
+>
 
-> On Fri, 26 Jun 2026 22:23:56 +0100
-> David Laight <david.laight.linux@gmail.com> wrote:
-> 
-> > Rather than have two separate dynamic arrays on the end of struct
-> > saved_commandlines_buffer have a single dynamic array where each
-> > entry contains the pid and associated task->comm[].
-> > This simplifies the initialisation and lookup.
-> > 
-> > Don't bother trying to initialise the pid field no a non-zero value,
-> > it only matters in the tracing_saved_cmdlines_seq_ops code.
-> > Allocate entry [0] first so that the tracing_saved_cmdlines_seq_ops
-> > code can just index the array with the file offset.
-> > 
-> > The code now uses the correct size when determining the page 'order'
-> > to free the structure. The smaller size will always give the same
-> > 'order'.
-> > 
-> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> > ---
-> > 
-> > Is there any reason why this code uses alloc_pages() rather
-> > than vmalloc()?  
-> 
-> It's been a long time since I worked on this, but IIRC, it was to keep
-> the pressure down on the TLB when tracing. It updates at every
-> sched_switch that has a trace event occurring so, I likely used normal
-> pages which are part of the huge pages the kernel sets up and doesn't
-> affect the TLB as much. vmalloc does have impact on the TLB pressure,
-> and tracing should always try to avoid that.
+Nit: I'd drop the "Instead of post-processing the events in the
+tracefs_iterate_raw_events() callbacks" sentence. I find it a bit
+confusing, as "instead of" is quite a strong wording implying
+post-processing is removed (at least to my perception), but in the
+next paragraph, you contradict it by saying that some post-processing
+is still done. Also the commit message is perfectly understandable
+without it.
 
-Isn't this a cache so that the pid numbers can be converted to strings
-when the trace is read out after the actual process has exited?
-That does mean that cache doesn't need to be updated on every trace
-request - it might be enough to just save on process exit and lookup the
-pid itself for running processes (the whole thing relies on pids not
-being reused).
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> ---
+>  tools/tracing/rtla/src/osnoise_top.c | 37 +++++++++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
+c/osnoise_top.c
+> index 5b462a3543b97..8040521710884 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+> @@ -93,18 +93,15 @@ osnoise_ipi_cpu_handler(struct trace_seq *s, struct t=
+ep_record *record,
+>                      struct tep_event *event, void *context)
+>  {
+>         struct osnoise_tool *tool;
+> -       struct osnoise_params *params;
+>         unsigned long long src_cpu, dst_cpu;
+>         struct trace_instance *trace =3D context;
+>
+>         tool =3D container_of(trace, struct osnoise_tool, trace);
+> -       params =3D to_osnoise_params(tool->params);
+>
+>         src_cpu =3D record->cpu;
+>         tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
+>
+> -       if (CPU_ISSET(dst_cpu, &params->common.monitored_cpus))
+> -               account_ipi(tool, src_cpu, dst_cpu);
+> +       account_ipi(tool, src_cpu, dst_cpu);
+>
+>         return 0;
+>  }
+> @@ -141,6 +138,11 @@ osnoise_ipi_cpumask_handler(struct trace_seq *s, str=
+uct tep_record *record,
+>                 return 0;
+>         }
+>
+> +       /*
+> +        * Despite already filtering for such an intersection, we need to=
+ compute
+> +        * the intersection here as the @cpumask field may contain non-mo=
+nitered
 
-> 
-> > map_pid_to_cmdline[] is 64k*sizeof(int) so the whole structure
-> > expands to 512k with about 64k/20 (about 3200) pid entries even
-> > though the default is 128.  
-> 
-> That's because it is not dynamic. That array needs to be able to hold
-> most PIDs. The default is 128 but it will expand to how much it can
-> hold to allocate the full map_pid_to_cmdline. The real default for 4098
-> page sized architectures is 6552 entries.
+Typo: non-monitered -> non-monitored
 
-That is double my 'quick calculation' - but both are a lot of entries.
+> +        * CPUs.
+> +        */
+>         CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_=
+cpus);
+>
+>         /*
+> @@ -406,6 +408,33 @@ struct osnoise_tool *osnoise_init_top(struct common_=
+params *params)
+>                 goto out_err;
+>         }
+>
+> +       /*
+> +        * If tracing on a subset of possible CPUs, leverage the kernel f=
+iltering
+> +        * infrastructure to only generate events on traced CPUs.
+> +        */
+> +       if (params->cpus) {
+> +               char filter[MAX_PATH];
+> +
+> +               snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n", =
+params->cpus);
+> +               retval =3D tracefs_event_file_write(tool->trace.inst,
+> +                                                 "ipi", "ipi_send_cpu", =
+"filter",
+> +                                                 filter);
+> +               if (retval) {
 
-> > AFAICT there is only one copy of the data - so it could be static.
-> > Perhaps with pointers to map_pid_cmdline[] and (after this patch)
-> > pid_comm[], both of which could be separately resized.  
-> 
-> map_pid_t_cmdline[] is to hold the PID_MAX_DEFAULT amount of PIDs to
-> avoid collisions. I wouldn't resize it.
+retval is the number of bytes written here, so this should be "retval
+< 0" like in trace_event_enable_filter() in trace.c. Same below.
 
-If comm[] is only saved on process exit you'd likely get away with far
-fewer entries - getting collisions for processes that have exited is
-rather unlikely.
-(I wonder if I could make that work.)
+> +                       err_msg("Could not set ipi_send_cpu CPU filter\n"=
+);
+> +                       goto out_err;
 
-Does that memory get allocated at boot time?
-512k is a lot to allocated for a feature that won't usually be used.
-OTOH you won't reliably get that much contiguous memory later on.
-Deferring to a later time (maybe as late as the first tracing_on())
-might be more reasonable - but that would have to use vmalloc().
+It would be useful to have --ipi work even on older kernels that don't
+yet have your cpumask trace event filter patchset [1], for example, by
+printing a debug message that filtering is disabled and setting a flag
+instead of erroring out here. Then the code in
+osnoise_ipi_cpu_handler() can preserve the CPU_ISSET check if the flag
+is set.
 
-I'm also not sure about the code that lets you trace from boot.
-That must be able to initialise early - but I'm not sure how early.
+As --ipi is optional, we can choose to only support it on newer
+kernels, but it would be nice to have it working without the filter,
+too.
 
-	David
+[1] https://lore.kernel.org/linux-trace-kernel/20230707172155.70873-1-vschn=
+eid@redhat.com/T/#u
 
-> 
-> > 
-> > I also noticed that map_pid_to_cmdline[] contains indexes into
-> > pid_comm[], restricting these to 16bits would half the data area.  
-> 
-> Hmm, yeah, this could be useful, as it doesn't appear one could make
-> saved_cmdline_size greater than 65536 (or even close to that).
-> 
-> -- Steve
+> +               }
+> +
+> +
+> +               snprintf(filter, ARRAY_SIZE(filter), "cpumask & CPUS{%s}\=
+n", params->cpus);
+> +               retval =3D tracefs_event_file_write(tool->trace.inst,
+> +                                                 "ipi", "ipi_send_cpumas=
+k", "filter",
+> +                                                 filter);
+> +               if (retval) {
+> +                       err_msg("Could not set ipi_send_cpumask CPU filte=
+r\n");
+> +                       goto out_err;
+> +               }
+
+Same two comments above apply here.
+
+> +       }
+> +
+>         tep_register_event_handler(tool->trace.tep, -1, "ipi", "ipi_send_=
+cpu",
+>                                    osnoise_ipi_cpu_handler, NULL);
+>
+> --
+> 2.54.0
+>
+
+I was thinking that it might make sense to enable the filters also for
+the trace output instance. On the other hand, it would make it
+difficult to enable the event without the filter then, as specifying
+"-e ipi" or similar only re-enables the event but does not remove the
+filter. Maybe the better idea is to implement an option to filter any
+event enabled through -e/--event only to the measurement CPU, as a
+separate feature.
+
+Tomas
 
