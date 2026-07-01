@@ -1,119 +1,174 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023090.outbound.protection.outlook.com [40.107.44.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D136263F44
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 13:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782914002; cv=none; b=tduryW9Dsc9AcZDx1ZKBBt0xli596NApPVOuH1yeWDPXXxhaC0CIeVBX7N2r0MG5qWsQYF++nhz0WeatZrUSFd+KyvRZXwG0Z5YCoFmuZdezPP/+HhaEBOhtkvWql4USmQz9WdYWj/h2uZYwieOQzhhlpeNMLt18VgkRl9wd7WA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782914002; c=relaxed/simple;
-	bh=k6UrRFYCyc5Lzmrh2nnW7+82Ut94TI2p/klH6GO/JIw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jvWfz/sZYX929B70Uw9o3Ff+TVQ//5Zs6i/dtqDFcsTnPO8dYz51Yd+/JzioKIx6kTlpIqwzjYTrt2xEWH7CGGhQ7FO8Ang61ErQsSXWxl83XwmgCtzhFxLCtiA+HDnAIA7AMzGfL9IsfmR/kR+97XEs4siOHlrJCvrWnHfCSYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hGcnKqXu; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D6825B2F4;
+	Wed,  1 Jul 2026 13:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782914223; cv=fail; b=OKwmuMaJsYWeOklqMdhgFePSRavbgdcy4QNdKT93zVNAr1AJSXbSs3SmxJdkHAMyg4LWAyr/JHxUVxADWqTRqe3sx2KwJ86hkkTEuIjreeYTYVTu4Yv4QnvSSCLE1CWfmTD8b2Xsfls/4fjmAvi1R5RSI5m+7n6vDsns+PtcD/I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782914223; c=relaxed/simple;
+	bh=QPlz1j4lDp/U9RBeREXmlGm4xvDNQHrS1W3kbrrrs04=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lsssBo278Y9uaDG7QadAc+LJGhtWOhOBwf9llnn/cyvbhD+SRFkbS2F57bVawwAuODof5/0+0uTqTo5dwg00ulhPajUVatmye9E0oGfeAX1cmYz2mUMGw3MOmmBhRRqYSSR6p8/XfHTeTWoNDf8Mbrb2r4Or3lm0XDoAkmS6xMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=XFutFDuy; arc=fail smtp.client-ip=40.107.44.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hGcnKqXu"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c894391f000so982007a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 06:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782914001; x=1783518801; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2dlvRC/ivhzraYV58bWG4aEWroXr163d0LU1VPS4Meg=;
-        b=hGcnKqXuDyYBtXoz9E2s3EvKuJde3fA/I5zDuDTQCmF6lWrrXkDMU0cj8a8RKAbP2J
-         /vFmnMvZyvCBxsw0bVZY0nlu3fLi+eNFRQFTgMYadZw4hFSdmS/v4cq+UYOB10mH2fKc
-         Szj8jhMEgAmjeeJjbDE5B7hVFPJH5CyBa1CXPLHY7v2XvnL4ofCnHuVvdiQe+zsrf+0E
-         zwBQmocxPDeUJnF8rRf28lut7Wfx6N04gQwxVdiGJfSMIt7wlS62ph7/xmfuprtT4hG1
-         T3TGu0K0scVdN/7hVThvmPEt3PaNQmGmRP3JQIV1R8F6k88Im7Vfc3/qVuo7HGoLufi+
-         67Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782914001; x=1783518801;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2dlvRC/ivhzraYV58bWG4aEWroXr163d0LU1VPS4Meg=;
-        b=SZWkTsLD+ELLO69cP+h8tS/RX3sWnzifqOsW2Qtbao3rwl1oFe2U0QUbaFz6BNd7OR
-         SXjMCdS3yPThWgPFUy0lKWkJqHCPJ0IScZrGJZ7HHbuc74KSqODUql+Vam7DFOk/xPsC
-         A99iosI4gyUYPXo1yhYcv+I91rkcdJOnpiA08xmcEjjAFxRE7O5SR5As0ZNyz2HDRXi9
-         D2Ox26E8sW5Y7q2q8SpuFf+ustQiGyCMtxOiuSm8fUVUDNIyEduINbup4/A+0ENimkxb
-         X7+oks+2+XvPNJYp/75gG8EP60l7Dv3ui2tFjCNT/9eMVkqaB0V1zbtD7iLZYsmiq7Ik
-         8U7A==
-X-Forwarded-Encrypted: i=1; AFNElJ9IyRsUMcHXCZHEoYjOaZfrCmzNUYtR3KBjQVFjfjIYkcNleFY8YaFFvlVgp2XkPAiXKU5cuV5FRAhtH+N9R/I++dY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE2J/jK/141HqFjTpv5GjgrwRlF8CACBIwmGV/sXGTChxOHtn/
-	kfWAS+DAqAgQXdfbkwOPxFCs7NEWv6Qco7+nN3SDN+gvlT9BBZZ4gFGV6CiKbGYpvSOwZM/bQWj
-	QAORbJg==
-X-Received: from pgam26.prod.google.com ([2002:a05:6a02:2b5a:b0:c99:aff5:707d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a11:b0:3bf:acb2:5d48
- with SMTP id adf61e73a8af0-3bff4227b8fmr926021637.38.1782914000204; Wed, 01
- Jul 2026 06:53:20 -0700 (PDT)
-Date: Wed, 1 Jul 2026 06:53:19 -0700
-In-Reply-To: <25fdb77d-20f6-4b3a-8b3a-dbba0dc47046@intel.com>
+	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="XFutFDuy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xhqXAdaPnnPoSuGf8itbITa/5eYr8jpLTzWkzET+QYIyrFBvJqmmhmp6wC3P5po0PJ/WQXAgEgCbpdd6aEL4yUZcPT2BnjNL6Iwwz3ApedvsT1Hp/nabdmfpz9etdKNVr+kPgRMPtL+kZG5RPUusrAhs1UM+X7EU6Scuc59b9nBcOy2iqr3Vf9SIRnbFwIbc1OzMOtqdUkZvF8P0f/MXqSmzapPt7ClvTsXkqn5bpky+xCHv/X585Zd9ctJNdBqRWmFD/EvZVaP42L6YZLzGpZCGQLZCK/Fgpjbp5Wb3063DMggJqw6n1DvmI9kBnTZd1XbxUK/2zMDgMXs1kgoYcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QPlz1j4lDp/U9RBeREXmlGm4xvDNQHrS1W3kbrrrs04=;
+ b=TK/bdFrmxTVqdx2HhJBbMJHwyBMBUOJmaxUhKy86IabIlHgqrRPIucjWXqXMNIqShs4bS5+G7WZUHuAP4sra5hZxHeLFu7a6ov7IO9DWn3GtUUNfu7rYttj//Riq5IEF63ImfavCR+8yHihqduNDJetfOXuhh/DWat7VhVsn6RivnoyM03R+aQFGP79SdmCguf0IR50fQUa0dlN4Gz1uFH0goTIOp3YOUDeES7Id9p9jGsL4PUlaH9T/z9r12I/UDQKC+uAvSJM0IvpcgGVe6T7OYoDhBO5lRbvuPzUcGgIa1zAltGBG/PxH+2NtumLosIaFmpFczmsV8IZoCTWTPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=transsion.com; dmarc=pass action=none
+ header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QPlz1j4lDp/U9RBeREXmlGm4xvDNQHrS1W3kbrrrs04=;
+ b=XFutFDuy76Bgo7pgNlFbmOUtNpv122P8/3LTitTWOf7H21aVzteDO9MPZbX+jp4JYakrStIZ6Wl0NU37tKTBtNjK/Nz8qsjmgxR5cCzrZcw3zjcuS/tkMceD5cNQ4b7lwaKEOuyt3wbhkP5eGwspg8DMeHEq/QqwrM4EYtAW8cM=
+Received: from SI2PR04MB5648.apcprd04.prod.outlook.com (2603:1096:4:1a4::11)
+ by TYZPR04MB7508.apcprd04.prod.outlook.com (2603:1096:405:40::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 1 Jul 2026
+ 13:56:58 +0000
+Received: from SI2PR04MB5648.apcprd04.prod.outlook.com
+ ([fe80::8ce1:b82b:3b19:f79d]) by SI2PR04MB5648.apcprd04.prod.outlook.com
+ ([fe80::8ce1:b82b:3b19:f79d%5]) with mapi id 15.21.0159.018; Wed, 1 Jul 2026
+ 13:56:58 +0000
+From: Pu Hu <hupu@transsion.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+CC: "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
+	<will@kernel.org>, "naveen@kernel.org" <naveen@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>, "yang@os.amperecomputing.com"
+	<yang@os.amperecomputing.com>, Hongyan Xia <hongyan.xia@transsion.com>, Jiazi
+ Li <jiazi.li@transsion.com>, "ada.coupriediaz@arm.com"
+	<ada.coupriediaz@arm.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+	<linux-trace-kernel@vger.kernel.org>
+Subject: Re: [RFC 0/2] arm64: kprobes: Fix single-step fault and reentry
+ handling
+Thread-Topic: [RFC 0/2] arm64: kprobes: Fix single-step fault and reentry
+ handling
+Thread-Index: AQHdCVM5llIetQ2+U0epMS9G7bPoC7ZYrJ+AgAADkAA=
+Date: Wed, 1 Jul 2026 13:56:57 +0000
+Message-ID: <ec11e9ca-ae7c-49c3-ae7b-47a70e9f86af@transsion.com>
+References: <20260701121448.3926-1-hupu@transsion.com>
+ <20260701224345.c3a215ece3660a0cbae67645@kernel.org>
+In-Reply-To: <20260701224345.c3a215ece3660a0cbae67645@kernel.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=transsion.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SI2PR04MB5648:EE_|TYZPR04MB7508:EE_
+x-ms-office365-filtering-correlation-id: 63c08f6a-a64d-4b13-0c9e-08ded7789dfa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024|23010399003|18002099003|22082099003|38070700021|6133799003|3023799007|4143699003|11063799006|56012099006;
+x-microsoft-antispam-message-info:
+ MVs8ubcG80QvusIdskNwVxXC8Us7gu0fJFcdBkSznw7mMhtnARwyEIARLEFdYPaD+5eJDV/+Ux1DYcPRwuXUymyVR+o0ZdIpSPN5jeRW74jaJfksykkI4Z1mu//8n4rNG/eZOfUpPaYa3Ysl/xzMlGid2kkQV3yH5O4As0+ixNkD+RhaziSSDhUUbmznrrDqDAzWS9fuBiIelvG3ZGzqCX1M40YwG4hffXydrUVotuRGTXqt7BPqDngCGu3HJaNCo6lnkbyaq2gjFTkZolOkoKkYGzBlmBEyjRjG31XkBqg91fcZxjc19BhekYAYQ600vfwhm8O00keQwgLVhm2nM/jl5QTjEVpSIEQpOr3SkEW7/h2FgMyzw2WsAALnbW57Ei0yavS4gms4jZ/XT6GGNIcGlM5vcWTt64g8ejulyCXrVMDQBBEpse/4vcVGrdOTeZO++KExZUOosI61pdYwVwZ15ZwFPnNr2ekLwJhgVFMR+/gmplGVbKyaQATRt2aQPd85DrAqJSxax51E+cv5AKRR3PMFdCwk/VB+6cOILQfX6rY9BAa5Q6tl7IhlvVooarJpjDdDqJ01gadqUZA3EcJhJCHcHXEZYwIPmC1RbEFMZn8XI5BCQLdXF1INw4uR27wFVcNjxKUVu+hRQva2Vo9RHkAulFTODgn8p16r86brnvknkDbQW5QKBsL4+v4juQkpQjteoHYq0MBLiJ6/63BL8OMYHuZOjHxAU71toWk=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR04MB5648.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(23010399003)(18002099003)(22082099003)(38070700021)(6133799003)(3023799007)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?VGx3Rlo1R2pFZm16dzZ3WkFyQUxCcFhLK00zNGsvZWRnaHNOTnBzVTZPSmhW?=
+ =?utf-8?B?cUlYUUNlb0Zsak5zL09zMGZxV0JtR2ZvYnBIRWJhZWJHekplby9mNTc1a3N2?=
+ =?utf-8?B?bHJwbWFxKzRJN3N4aGRPUlNWTHFaM3VqeFEreDhpQVVDK1pFWjVUSnV4VTE5?=
+ =?utf-8?B?UExRdUZzVUZOSCt6N0hURUk2RGhzK0FzZG0wTlFwT251ZWtxZXQvUW54K0xh?=
+ =?utf-8?B?WkJTdC9sY1JSVEFOSi8zQyt6RVo4R0ZEallRNFZWSmlVUzI1RWx3bWZtZXpD?=
+ =?utf-8?B?dU5XSllCdXJtdThtSmN5TzZyMmtVaEVES2Z4Wjhid2k2WUx1aGxvb0JnaFJ5?=
+ =?utf-8?B?dlNkcmt6T2hqOTAzT3dsUnY5TFdURFdnV2lzNmp4dHFib1BPWnJPeWg1QXRL?=
+ =?utf-8?B?K2o4SlNIdERkMWRBVDBadjBYS0xyeGZaTm1VNGtRUVhLSjM4TDBQS3FkMWZ1?=
+ =?utf-8?B?V24wVzl3MXo5MFpZNWRTc0xCOUU3UWJnMmM2WXB2WjNKQ2dwcXRqR0gyS0gy?=
+ =?utf-8?B?QkZZNDJ6V1NVVXhUazRwWmtpcmY2b3A2YU10d2VwSnVQODc2M0tPYzZtVGVl?=
+ =?utf-8?B?RTlsNkcxTUp6L0NPUGo2R0lrbXJwRE5Wc2J3UnJob1Y1cTl6RW83UmovQjFN?=
+ =?utf-8?B?VDAwSEppZURhQncwZFJQaTkwZFZKck1vbVR0UDdnWTNqUDkvVVZNREVJSTEz?=
+ =?utf-8?B?bEtqQUpJZ3E2T0V1WFkrR1dsRGgvT3pBR1ZTak5oT1FjY01aK3l1Q3VreFdD?=
+ =?utf-8?B?bUVEYTZ1c2RSTXA4UGxpR0pUNnN6bWlERi9zRHVuM1dtZnoxSE54bDdacXJD?=
+ =?utf-8?B?V2FaSnVHZkdNeWxVUm02YUtuS0tlcFF3M3hpWFlnV2JSV2U1dGdONTZ4OHRp?=
+ =?utf-8?B?TTZ3c3ptcW1TSC9za1VmSG8ySEFFSEZ0UFM3N1N2UlBEdm1nZ283clVQWkc2?=
+ =?utf-8?B?K3JsbVljTmVKMDd0SmY0Q1NEMjFMd1RBdG5nY3ZDRldxYUwyUjcvN1pZdDhP?=
+ =?utf-8?B?Q3ZDalVoTXI2YjJoNkZpaXBpSzhXZjNvRFM0MU9MbU9BNHNLSnBWSGxVVWxB?=
+ =?utf-8?B?akIzNFlnZm83eXd5b0htSVRyc04zQ1BGUWdVUExQUUdrRDM1ZjkzbkhJVUsy?=
+ =?utf-8?B?c3o1cGY3YXgwLzIrQk9UNDNadnk2NExWU1ZqaFl5dFBhMzhRSEtkQ2NKRU5R?=
+ =?utf-8?B?TERXZHpDdWU0RW5yYUhiTGl2bTdTa3lzZDhvUkg1YXVGZHFPMnVSV3hvUyth?=
+ =?utf-8?B?N1FGdVl2Zmw0VmJRdmpvRGZEazBlamR0RmExRkFaTFFWTWRCVHEyYUJLM0V3?=
+ =?utf-8?B?Y2JUUUIrRVBoNFhiRHRnMnJQaitPOG5IVklWd2NTNHF1OHdud09jNTlIZnFT?=
+ =?utf-8?B?Tk0wZ3h1ZjVLam5LbnBpT3BTd2dqWEpwQVJPUklYbjE0eElLL1Y0dUZMRHpP?=
+ =?utf-8?B?K3lKMDBjOTdYMjRQM2g3RjNqRVExRXJZbWoyUjhnaE5VcVRUTzdSMVhmMEps?=
+ =?utf-8?B?VVBxV2k1Z2pXZWkrcGZaYmdTZzljZExDbDcvL1hEOFJ4cDNpdHN6Q3c4UTM0?=
+ =?utf-8?B?Z3IrQXU0OHA0NFFvcmJBeDdnKzlrSVV6WFVYTlowdVpoTzgwbFFiQ1g3ejNM?=
+ =?utf-8?B?SEdBVGQ1ZUVlUGw4ZnppZXlBZFpXbTNjMFV6R29sL1FBZTcvdlJieFBjUHpF?=
+ =?utf-8?B?dXd2ZWdYQXFSdzVqeGZ1dCs0N090Y3ByNjFXdHlFcDNUUWQzdUxSK2dGNmxv?=
+ =?utf-8?B?WXJMR3YrdVlmYlRJT3hKQktLLy9saklTZTBOTkFMdjJRU3I1Q09GanRnajRU?=
+ =?utf-8?B?MEcxWUdubytMSC96UncvS2ljM2wvRFJ0MktIVlEyVWttLzVtSHYxUFRuOVZY?=
+ =?utf-8?B?cFU3amlaOXpkM0R1ck0zdWJMeTRHOGxDYkJmZmhJWk1EV3U2bEprVk1yM0FI?=
+ =?utf-8?B?d2hTUU0rU1RpN1ZwTXpaTURFaENVRjNtN0Q3ZW81WU05YXN3TjByYi84RUNU?=
+ =?utf-8?B?dUd1Q1V0ZEd2U1JHbUdiL05hV2M3OWpnN01CTmJ5NGhiNExieElURjJZcUdF?=
+ =?utf-8?B?MWY2Uk10d2xrOStBTjhnUkZOK1Fya3krTEdEeFVBSzBsQys4RTJqd2ErYzdw?=
+ =?utf-8?B?OFVUWGZWcmdMcmFsajMwcTByVCtuYXB1ZitYU2FZaWlYWTlEelhiK3hvYjJW?=
+ =?utf-8?B?MGNkNy9EMjFxQk1lZUdNa3B0d2tNcWNyNUg4ODRNaDY0TVJETDZjRXoyR0FI?=
+ =?utf-8?B?NGFYSzF1NEFRSE4vZkpJNkRTVzNvSEltd1oyMFZBT29ONXNsT0R6Qlc3d0pL?=
+ =?utf-8?B?dVRPdEpHNHdXNnJzcWFZVlAwbGtFaUVGM0I0RkRTNjdjZ0dSang0QT09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4F96EB83D26EA54AAC14489EEB8C3456@apcprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260618-gmem-inplace-conversion-v8-24-9d2959357853@google.com>
- <aji/2svhcc84rn5w@yzhao56-desk.sh.intel.com> <CAEvNRgHYTFnHbsLLgMTCSitmnp1_j9Pomikm9qmpGTh1w8YE5Q@mail.gmail.com>
- <ajx5Vrz9ma--hrGH@google.com> <ajyJhZcgfYFtGfS2@yzhao56-desk.sh.intel.com>
- <aj0Jf30PS2f7x1nt@yzhao56-desk.sh.intel.com> <aj087H1UWSFxbShR@google.com>
- <aj3H2sxymOYTWTnE@yzhao56-desk.sh.intel.com> <aj7NwCRwWEfLK-gQ@google.com> <25fdb77d-20f6-4b3a-8b3a-dbba0dc47046@intel.com>
-Message-ID: <akUbz_kJvYulaboo@google.com>
-Subject: Re: [PATCH v8 24/46] KVM: guest_memfd: Make in-place conversion the default\
-From: Sean Christopherson <seanjc@google.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>, Ackerley Tng <ackerleytng@google.com>, aik@amd.com, 
-	andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com, 
-	jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org, 
-	pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com, 
-	rientjes@google.com, shivankg@amd.com, steven.price@arm.com, tabba@google.com, 
-	willy@infradead.org, wyihan@google.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-OriginatorOrg: transsion.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SI2PR04MB5648.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63c08f6a-a64d-4b13-0c9e-08ded7789dfa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2026 13:56:57.9436
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: J0lxLa/b6YHbgpHpG9Z2AvppRgwlp/Yty9ANz9o7gzz62Cns6cLQeBhMOVi8OjsIxiXyGRe/NQTtdveAgJIPdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR04MB7508
 
-On Wed, Jul 01, 2026, Xiaoyao Li wrote:
-> On 6/27/2026 3:06 AM, Sean Christopherson wrote:
-> > On Fri, Jun 26, 2026, Yan Zhao wrote:
-> > > My first impression of gmem_in_place_conversion=true was that it enforces gmem
-> > > in-place conversion. However, it actually only enforces per-gmem private/shared
-> > > attribute.
-> > > My worry was that people might think it's a kernel bug if userspace can still
-> > > have shared memory from other sources after they configured
-> > > gmem_in_place_conversion=true.
-> > Ah, I see where you're coming from.  FWIW, truly enforcing in-place conversion
-> > is flat out impossible.  E.g. userspace can simply replace the memslot, at which
-> > point the memory effectively reverts to shared.
-> 
-> would something like below enforce the in-place conversion?
-
-No.
-
-> Userspace can create a memslot without gmem fd, but that memslot can only
-> serve as shared memory and cannot be converted. So it doesn't violate the
-> in-place conversion.
-
-But userspace can delete said memslot and replace it with a memslot pointing at
-a guest_memfd instance that was created without INIT_SHARED, at which point
-userspace has effected a shared=>private conversion.
+T24gNy8xLzIwMjYgOTo0MyBQTSwgTWFzYW1pIEhpcmFtYXRzdSB3cm90ZToNCj4gT24gV2VkLCAx
+IEp1bCAyMDI2IDEyOjE0OjU0ICswMDAwDQo+IFB1IEh1IDxodXB1QHRyYW5zc2lvbi5jb20+IHdy
+b3RlOg0KPiANCj4+IEZyb206IGh1cHUgPGh1cHVAdHJhbnNzaW9uLmNvbT4NCj4+DQo+PiBUaGlz
+IHNlcmllcyBmaXhlcyB0d28gYXJtNjQga3Byb2JlcyBpc3N1ZXMgb2JzZXJ2ZWQgd2hlbiBydW5u
+aW5nDQo+PiBzaW1wbGVwZXJmIHdpdGggcHJlZW1wdGlycSB0cmFjZXBvaW50cyBhbmQgZHdhcmYg
+Y2FsbGNoYWlucyB3aGlsZSBhDQo+PiBrcHJvYmUgaXMgYWN0aXZlIG9uIGEgZnJlcXVlbnRseSBl
+eGVjdXRlZCBrZXJuZWwgZnVuY3Rpb24uDQo+Pg0KPj4gVGhlIGNyYXNoIGhhcHBlbnMgaW4gdGhl
+IGtwcm9iZSBkZWJ1ZyBleGNlcHRpb24gcGF0aC4gV2hpbGUgYSBrcHJvYmUgaXMNCj4+IHByZXBh
+cmluZyBvciBleGVjdXRpbmcgaXRzIFhPTCBzaW5nbGUtc3RlcCBpbnN0cnVjdGlvbiwgcGVyZi90
+cmFjZSBjb2RlDQo+PiBjYW4gcnVuIGluIHRoZSBzYW1lIHdpbmRvdy4gVGhhdCBjb2RlIG1heSBl
+aXRoZXIgdGFrZSBhIGZhdWx0IG9mIGl0cyBvd24NCj4+IG9yIGhpdCBhbm90aGVyIGtwcm9iZS4N
+Cj4+DQo+PiBQYXRjaCAxIG1ha2VzIGtwcm9iZV9mYXVsdF9oYW5kbGVyKCkgaGFuZGxlIGEgZmF1
+bHQgaW4NCj4+IEtQUk9CRV9ISVRfU1MvS1BST0JFX1JFRU5URVIgb25seSB3aGVuIHRoZSBmYXVs
+dGluZyBQQyBwb2ludHMgYXQgdGhlDQo+PiBjdXJyZW50IGtwcm9iZSdzIFhPTCBpbnN0cnVjdGlv
+bi4gT3RoZXJ3aXNlIHRoZSBmYXVsdCBpcyBsZWZ0IHRvIHRoZQ0KPj4gbm9ybWFsIGZhdWx0IGhh
+bmRsaW5nIHBhdGguDQo+Pg0KPj4gUGF0Y2ggMiBhbGxvd3MgYSBrcHJvYmUgaGl0IGluIEtQUk9C
+RV9ISVRfU1MgdG8gYmUgaGFuZGxlZCBhcyBhDQo+PiByZWNvdmVyYWJsZSBvbmUtbGV2ZWwgcmVl
+bnRyeS4gT25seSBhIGhpdCB3aGlsZSBhbHJlYWR5IGluDQo+PiBLUFJPQkVfUkVFTlRFUiByZW1h
+aW5zIHVucmVjb3ZlcmFibGUuDQo+Pg0KPj4gVGhpcyBmb2xsb3dzIHRoZSBzYW1lIGxvZ2ljIGFz
+IHRoZSBleGlzdGluZyB4ODYgZml4ZXM6DQo+PiAgICA2MzgxYzI0Y2Q2ZDUgKCJrcHJvYmVzL3g4
+NjogRml4IHBhZ2UtZmF1bHQgaGFuZGxpbmcgbG9naWMiKQ0KPj4gICAgNmE1MDIyYTU2YWMzICgi
+a3Byb2Jlcy94ODY6IEFsbG93IHRvIGhhbmRsZSByZWVudGVyZWQga3Byb2JlIG9uIHNpbmdsZS1z
+dGVwcGluZyIpDQo+IA0KPiBHb29kIGNhdGNoISENCj4gVGhlIHNlcmllcyBsb29rcyBnb29kIHRv
+IG1lLg0KPiANCj4gQWNrZWQtYnk6IE1hc2FtaSBIaXJhbWF0c3UgKEdvb2dsZSkgPG1oaXJhbWF0
+QGtlcm5lbC5vcmc+DQo+IA0KPiBCdXQgaXQgc2hvdWxkIGJlIHJldmlld2VkIGJ5IGFybTY0IG1h
+aW50YWluZXJzIHRvby4NCj4gDQo+IEJUVywgaWYgeW91IGFyZSAiUHUgSHUiLCB0aGUgU2lnbmVk
+LW9mZi1ieSB0YWcgc2hvdWxkIGJlDQo+ICJQdSBIdSA8Li4uPiIgaW5zdGVhZCBvZiAiaHVwdSA8
+Li4uPiIuDQo+IA0KDQpIaSBNYXNhbWksDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXBseSBhbmQg
+QWNrZWQtYnkuDQoNClllcywgdGhhbmtzIGZvciBwb2ludGluZyB0aGlzIG91dC4gSSB3aWxsIGZp
+eCB0aGUgYXV0aG9yIG5hbWUgYW5kIHRoZQ0KU2lnbmVkLW9mZi1ieSB0YWdzIHRvIHVzZSBhIGNv
+bnNpc3RlbnQgbmFtZSBpbiB0aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZQ0KcGF0Y2hzZXQuDQoNClRo
+YW5rcywNCmh1cHUNCg0K
