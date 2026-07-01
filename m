@@ -1,162 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA69480DE3
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 11:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875133BC687
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 12:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782907060; cv=none; b=jpFGdJ+dYigBY9UMgg29ZK9X6Pi2Hp8ueRQPnecap2TxGXBFWtKAlAC4XrYP5K/kP/7YcD+Uc1AkLiglmBEpebRANltji9PmO/N7K8oBb0kahv8gWo1K2N/gQiWMtp9jeD+kKPQ5JaY12KPnuO4LqZhM8SWTNAWuGYOi7/Lng6Q=
+	t=1782907449; cv=none; b=Rlb1we/84+SVO0OoyHGC91ByinoXtlTL8RiuV/qHWMfXgVD1nY87nfLjiDsNrC+a1p9PWBBp21tHlqdkGPc/RxvNBOPiUHMrE9m1BZcBQrO13ab+hlbZdpOt2Q28/ISDh+OsBelvT9kFziUBrufOooICzZLYBcYT/myO2HH8Y5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782907060; c=relaxed/simple;
-	bh=GKzO/WyD4D/mbF6c/AmcKtFnDY+JtxUxoljaWdrLzQM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PixniNAVht1Ki9IVa3nEXsShNOQVVsZpo/8zOVyOsXcGv7txe3Xe+WmxS2uWlHgc0KqL1sOYORlqnoHldAodEERgFHwQn6Xglonk3O6WJqtfqw251DDL/JMXpDnLJC+hRdDaZAtFR/2BUQ7in4n65PeuxggZOo2OorzXbo5vknA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WEOp4lly; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782907449; c=relaxed/simple;
+	bh=Z0e3fNhe+NaGQ7aF97lAgqz2X1g+cz/s4bLcZmj9h6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JbnEc+OFDlKsWutcantPj4NW/Mv4SoHdtkwfUWhV3AgiJa4YHd+zLKNS3l60faaNrqYRf24baHIO/7p4iRePBVZRIMXyMA6V1+1G3E9v3rQvhEApCqY8b0h2r4z7bPmF2M9aj3KiYk6VIjN8GoH4etPa6/2JpAWqGKk2N8RZu+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JUZUenhG; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WEOp4lly"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782907055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GKzO/WyD4D/mbF6c/AmcKtFnDY+JtxUxoljaWdrLzQM=;
-	b=WEOp4lly61DLuM/TA3Z4QfoqWlChOxTZgsJxEcSKKvEXCPkdvP6QcPRDAAumqghpyWrYKR
-	Fcyv41FeG/WOuumDIIycdn7UECFET+o+u/EE4w2m7L5R2VegWIMv5KYvhmCdhQVkNcQI75
-	esFo50JEDMtxpUMQGfzOulGz5tjrwU4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-62-bPK3ZYf4O6uoR28aH-Wkwg-1; Wed, 01 Jul 2026 07:57:34 -0400
-X-MC-Unique: bPK3ZYf4O6uoR28aH-Wkwg-1
-X-Mimecast-MFC-AGG-ID: bPK3ZYf4O6uoR28aH-Wkwg_1782907053
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49244130073so4732905e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 04:57:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUZUenhG"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-46ed4f66256so461839f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 05:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782907447; x=1783512247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GirbTUHOpf9mltiAbkDOh+lvT6shrpDnbYlH1YZpjmE=;
+        b=JUZUenhGqPKKgp/p8b/lA5uCsXVdiDd48h2omN2aTU5JdIvxCiXEAJJsgl5PidAeks
+         /gtiFq4RUFT+GoVhOE4WJtNhOlNMMIz+XGDZHnHEaw9lR2jWqkULWaNTRAn/y+7KuVkU
+         38cjjWeKIdAP0N60oC8TmkixB3Il70GfpwAjq7fLkkKQypy0KC1szLdPve3sEOiPr/QW
+         SnNW4vDwUQ5RvU/atDMmYq8UqtawtmS5GZe9H7oRfQxTPHJ9SbjtCCRF0VNmBBUG7geK
+         tArQlP4AdmzGBwrVtR+W1F+gwBhlGjcIm80knJkcakycjFyNpdYFaB01Y9dzWHBsbLz9
+         a25Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782907053; x=1783511853;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKzO/WyD4D/mbF6c/AmcKtFnDY+JtxUxoljaWdrLzQM=;
-        b=WvsyCmqstjtno8rhsojT7lBfvib18WAkE8lN3a2pUXyBhPRJWv3ad1fzQmZzqAjDga
-         gAZdZWnowLYIv2HYG6w6hxftxy06wXcz+gtDPz+LcLn7zkTmc4pZyvYfyJg73UhfX4jg
-         c0HwV1rhhc7z9iIeflJjaUnSNyArx/IckC+xBurkClMa+bkS9f5Au3oPi5wmA6mGKTz4
-         wsUc/9KgWuYlNNUNQaXi0VZlfLSmJQWwdxpIy/VAdroZiOCTixcFtClORNq+Jj9GmNgb
-         aGc91xzfbGBNgY4t9r2WYh91L/LZ5UlWaCDSkg4E96ztLUOeeAPNkyH7AnhirmK0wfC+
-         oSPg==
-X-Gm-Message-State: AOJu0Yzr2LT/7JJc8urAvRZxIJhehciZ7UJB81l3kCwPhXYbg/7N7GPI
-	b1klXHZzBQ25w0J1GIUzPLpnuoZW5NqbNHGpQFebiT4sW0IVNUDRqivKC/X0R6eYyNo60ahcCs+
-	2+3d0ocI0NYTl8/tUWMOT4ReJHwm3HcL8T3DEGlIFJqEGQ05sdM5NxtqEGZzj19MWjWBQsqlAMA
-	==
-X-Gm-Gg: AfdE7ck0qPO6NXa5iMsCLuSvprDJc2t0irfBrj2q/eOQu2piglxCtV8p0g4dsOaEQ4x
-	Oz7H1orq7sf1bV+sj/i6PA/2oaGXnphRC5+5v5C7EW7+MTfe76v8T811MdosZsUq2tQTm6wnlhT
-	t2vmAxcl5PonldNO/FN6uQEXmD0EQLtwHsTFzBchbJkVcIAl6Q3N4H1t3KqPHtBszXVgWi1jyNs
-	AjcorNKaF1RGrqp/mf15XInFghPJx8lefIgky2f4eGcd4dZOSvSYelS4BJ9iNLxONqKA7CvNnRe
-	c7YgCPOh/QFmc6KKkB2uxVJtEQLW4VnW/Kdt5cg+rhWsheIJHYNbul3Cv4ZCJijoHsFDLrUPySv
-	xX7rSxrcu3UWi3PrvOLbK9n2NdiGRAsL3HL3scqmHoWdI26Rwea5jROFBg3FUiSMR+DqiuY7OLD
-	xvY/D8
-X-Received: by 2002:a05:600c:35d0:b0:493:c3cb:409e with SMTP id 5b1f17b1804b1-493c3cb42d9mr5624735e9.15.1782907053499;
-        Wed, 01 Jul 2026 04:57:33 -0700 (PDT)
-X-Received: by 2002:a05:600c:35d0:b0:493:c3cb:409e with SMTP id 5b1f17b1804b1-493c3cb42d9mr5624465e9.15.1782907053164;
-        Wed, 01 Jul 2026 04:57:33 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be810be8sm67046565e9.9.2026.07.01.04.57.32
+        d=1e100.net; s=20251104; t=1782907447; x=1783512247;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GirbTUHOpf9mltiAbkDOh+lvT6shrpDnbYlH1YZpjmE=;
+        b=I3Ghppp37zCONCqa1zR2R6UJAnyoJt4cJyqcSsJxK+Om+2QmZ4kbAlcYu9LQUjp4SG
+         ttuCUTlDV0+fjzX3tkTkAa74qgheA2IOP4lLYBSI28owV7znyYQC5CJEx1WqPWzRPOy5
+         B/uVLaACaKf6Mju5bwnUxeXNfA0O2Nyjm02p5xXAO/zgfHgE7+NzpnPJs5RH65P8Tn+c
+         FRKDu8nguWgHcDIPPgQ8ArWEGDMtY8QU8gZqWggF1cZ2iXV2OgPG4ahRJsUtn+eI7kKF
+         JwsWWMQyWdpouO4rQbJreXnOjdipr+5HVe/eo9Xd42dLX0NqXbjK0o7/RU7WvGzjwoff
+         ngEA==
+X-Forwarded-Encrypted: i=1; AHgh+RosfvALIbk6QYt6dG6tl6ByMjWt0U2knLVngeYr8lSXq6vTRur4w9GnYz48l6/o38mMYG0wX+e6JCNfernmhIEEi4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBUN7U3Rz24r2VcioTNgatSnSzdxyOcvIWkNj4ocvXUkZpDTuR
+	LdSTxZ90XAEVM19MgST8Aza71/P33gXQ0vluFHEuZQiaw5zIguHXNXT2
+X-Gm-Gg: AfdE7cnNsYjbBfzjiOL0/7jice8CqrX7L2BQwCIL1fpWiLVvU0sWG7SCo0OHwbPznPh
+	4dQlPVDtbzU71leZtdf4cBISqPBxf4xnxrsRSCrMpssKiP5NCdUdbWLSffwa/zkwJShXn/EgfSb
+	4aLglKNyZKTIG3SOmF9W4JYGn4/QK1IffXhs2m6Gd71PCAPHrP/lFdXsGlKgrtAmFAiqo0zJInJ
+	y/tVJGungzU+aWpW+noKoS1I4nO/RjWKZ1XRFaGh5BVeHw4nYLYNyQoMGeGqRaAbXC8QN1G+2h7
+	9hvA0lLWp86i6O5jon27PK/r3Oh2sOzoTpGGgFobYyxvu5R52qInCRI7d/96kMWB3ZItI6V491w
+	BbqQMfjl50PjiTV5L2sSKgPb8NR+YcBNsybFtG/TUZj9Dx2TwLlomr2zrPtduNMcspHg34/2mrY
+	CYto78xsBBufJr+ySFfi9ZsrRVpawismwK2aEuyd0gWgXJRQ==
+X-Received: by 2002:a05:6000:601:b0:476:5eec:309c with SMTP id ffacd0b85a97d-4775a7cb888mr2072426f8f.24.1782907446537;
+        Wed, 01 Jul 2026 05:04:06 -0700 (PDT)
+Received: from pumpkin (host-92-21-50-228.as13285.net. [92.21.50.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-475671d0403sm17307872f8f.29.2026.07.01.05.04.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 04:57:32 -0700 (PDT)
-Message-ID: <e8e6c6ddb99e096b2daf2a88891cdce703730bdd.camel@redhat.com>
-Subject: Re: [PATCH v3 2/9] rv: add generic uprobe infrastructure for RV
- monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wen Yang <wen.yang@linux.dev>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 01 Jul 2026 13:57:31 +0200
-In-Reply-To: <d1e84072-7968-4a64-9497-09db83b38682@linux.dev>
-References: <cover.1780847473.git.wen.yang@linux.dev>
-	 <9d1a1d491af16853b2b421f358fd6cca965588ab.1780847473.git.wen.yang@linux.dev>
-	 <a645534b04d9bf32f2c2caa5d2206bb87cfcb3e1.camel@redhat.com>
-	 <878be1d4-2f93-4fbd-a1f6-b2b7836c9c44@linux.dev>
-	 <ebde84b7c65cd6b01a1e8d124de0b1eaf0793006.camel@redhat.com>
-	 <d1e84072-7968-4a64-9497-09db83b38682@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        Wed, 01 Jul 2026 05:04:05 -0700 (PDT)
+Date: Wed, 1 Jul 2026 13:04:04 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Michal =?UTF-8?B?S291dG7DvQ==?=
+ <mkoutny@suse.com>
+Subject: Re: [PATCH 2/2] tracing: Keep pid and comm[] in the same structure
+Message-ID: <20260701130404.3887c0e5@pumpkin>
+In-Reply-To: <20260701063822.3af87520@gandalf.local.home>
+References: <20260626212356.64150-1-david.laight.linux@gmail.com>
+	<20260626212356.64150-3-david.laight.linux@gmail.com>
+	<20260629164912.4c1c2855@robin>
+	<20260630110156.5314e2e6@pumpkin>
+	<20260630150348.149e318c@gandalf.local.home>
+	<20260701110407.31f7b6ca@pumpkin>
+	<20260701063822.3af87520@gandalf.local.home>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Fqa8JpqH1kRBGymUcZMfyrdP2MwZ3S4H0wnTlBji83E_1782907053
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2026-07-01 at 02:44 +0800, Wen Yang wrote:
-> Thank you for the patient explanation.
-> You are right, and v4 implements the embedded approach.
-> struct rv_uprobe directly embeds struct uprobe_consumer:
->=20
-> =C2=A0=C2=A0 struct rv_uprobe {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uprobe_consumer=C2=A0 uc;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uprobe=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *uprobe;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct inode=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *inode;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *priv;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*handler)(...);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*ret_handler)(...);
-> =C2=A0=C2=A0 };
+On Wed, 1 Jul 2026 06:38:22 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Alright, great. Why are you still using double function pointers? Do you re=
-ally
-need rv_uprobe->handler instead of just using rv_uprobe->uc.handler ? That =
-also
-simplifies one function call down the road.
+> On Wed, 1 Jul 2026 11:04:07 +0100
+> David Laight <david.laight.linux@gmail.com> wrote:
+> 
+> > 
+> > I thought it was just used to do a pid->string lookup when you run 'cat trace'.
+> > But then I found the code that lets userspace read the table....
+> > I guess the latter is used by the userspace code that reads the raw trace buffer.  
+> 
+> Yes, trace-cmd uses it.
+...
+> > The userspace code could probably be given comm[] for all the running
+> > processes and those that exited while tracing_on() set.
+> > (I didn't see anything that would clear the table when the trace buffer
+> > was cleared.)  
+> 
+> Well, that would break trace-cmd. As reading the raw buffers clears the
+> trace, and trace-cmd reads the saved_cmdlines file *after* it reads the
+> trace, as during the trace it gets populated.
 
-Thanks,
-Gabriele
+So you'd need to clear it when tracing is enabled after the buffer is cleared.
+Just a matter of getting the timing right.
 
-> rv_uprobe_free() is gone =E2=80=94 no allocation means no explicit free.=
-=C2=A0 After
-> rv_uprobe_unregister() (or rv_uprobe_unregister_nosync() +=20
-> rv_uprobe_sync()), the caller frees the containing struct directly.=C2=A0=
- In=20
-> tlob:
->=20
-> =C2=A0=C2=A0 rv_uprobe_unregister_nosync(&b->start_probe);
-> =C2=A0=C2=A0 rv_uprobe_unregister_nosync(&b->stop_probe);
-> =C2=A0=C2=A0 rv_uprobe_sync();
-> =C2=A0=C2=A0 kfree(b);=C2=A0=C2=A0 /* frees both embedded consumers */
->=20
-> This is the pattern from your sketch.
->=20
-> Regarding my earlier reply that argued for the separate allocation: I=20
-> was wrong. The key barrier is synchronize_rcu_tasks_trace() (called=20
-> first in uprobe_unregister_sync()), which waits for all=20
-> rcu_read_lock_trace() readers including handler_chain().=C2=A0 After it=
-=20
-> returns, no cons_node.next read is in flight and embedding is safe.
->=20
-> We appreciate your thorough review. All of your comments have been=20
-> addressed in v4.
-> We'll run local tests for one or two days, and then it will be sent out=
-=20
-> shortly.
->=20
-> --
-> Best wishes,
-> Wen
->=20
+If trace-cmd is currently given all 6000 entries (if you've run tracing for
+long enough), then giving it all the active processes isn't going to be any
+more of a problem.
+So you could just save comm[] in the process exit path when the trace buffer
+is non-empty, or better those started before tracing was last stopped.
+You'd need to give trace-cmd the active ones first and delete the entry
+from the cache because the pid might have been reused.
+
+All just needs some coding, testing, and fixing of corner cases.
+
+-- David 
+
+> 
+> -- Steve
 
