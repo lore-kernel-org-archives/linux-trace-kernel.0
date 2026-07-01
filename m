@@ -1,98 +1,133 @@
-Received: from esa4.hc555-34.eu.iphmx.com (esa4.hc555-34.eu.iphmx.com [207.54.77.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA35230EF80;
-	Wed,  1 Jul 2026 14:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.77.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5FA48A2DE
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 15:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782915301; cv=none; b=j0i0F+n5GNmYSOQ/CGOUzbTcjbkCPSvgMZU0wCJGOWc/TpL6nRvUkukPrZLbADmMrq/mQeqtMbAmGe1NxRiU6OJgpA3hjZWqEFuyTRgO+c3MOZ5ujcRh4c78fEOYlIMGAN/t0Fgo4RVS9ulmprpIZ5SXiVKoYwWm9hwqPJjjGbk=
+	t=1782918440; cv=none; b=ZEvcJ5R/lpbW/tahSrZMRS+4YMzgWO7hi3Hv7aHL0tn124QE3Er/flMHn8WsG9tV4S/+bNWEQQ6XQK9gQ4eyyiHDzLD/f+54848YIAn1YpwHvRDupB2OeNhdUmrgKM0Cu0v7grSaE13SWaetuhNOMwBv9SSoV9sOINSKB0PjjXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782915301; c=relaxed/simple;
-	bh=CEVGvu6TCDiaCcSvmrd98Os19avfl2PEiaB4Dw/9jcE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bqw76IZmKOTLxvrjrrRJOhAOkm2ct1ArDLuAAkEg86ANMlkpbKMTkuIIC8ocNkGxo+Ybe2FNkYChlQctIjMOQS5WopyUbIqdODlF6np+oOzJgTSSz6NLje8shLhwA8EsgO7OYPGoMaXa9YRqcu5ldec0oWDFACYwsRc8frVkGdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=VlJMmE+c reason="key not found in DNS"; arc=none smtp.client-ip=207.54.77.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	s=arc-20240116; t=1782918440; c=relaxed/simple;
+	bh=mtle515uIyp+O7vElJnFWYGr1uuE1TQcAdjdXN5Vo4c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ckj8v1HwJm3ePFeaUlDeY6jkEC+PaxSpKnmxNW9GTdBqpddw9GYXXiyV2QsAUBaHBv+9Ayii5w4mSueVpU/wU2MorLxFRNCjAWl7N834DvGyUuQNGlMglnOrVsHXCgazD/rKeg7m/rIJdMfEOeIOvfD++9KV4ScA93c+ckuprS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=du7ybx56; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="VlJMmE+c"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1782915298; x=1814451298;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CEVGvu6TCDiaCcSvmrd98Os19avfl2PEiaB4Dw/9jcE=;
-  b=VlJMmE+c08YG+ffwC0IIvEbUHCedK3GRwq+WaUWF1m3etF2rihGNmwxD
-   dJFJ0sptiWAHoVCwHKGKd92YpPeAWu716st6Cv6+nEwbePxcHGHqMDBM1
-   QNiW3+4ygVPn0gOpLxIwHsZ6XwZ+bZVcSFpbkY8ik4r+xPpPOtkpiSkpQ
-   lpCSkQZic71absDOpQjKdI9Gy3mA9bdqUoLPEb0NaoUvPfi35qR2VYJJ4
-   PkhN3l+ULo8nmbKKRoEEfncUNp4bUTC1lVU9XgNLfG8azMPGByv3FiNdr
-   wLHFxLUbi7en54c4Am9LVeTAUemKIGL/U4/udRvuPBQR6a0IgQlf2MDbf
-   A==;
-X-CSE-ConnectionGUID: f9ca5hMFQ12iYAMawGVGGg==
-X-CSE-MsgGUID: gqZxerLRTgyhwn+roZ+fdQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa4.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:13:46 +0300
-X-CSE-ConnectionGUID: ErA3OLcJQ1yRxQuQaa7WWQ==
-X-CSE-MsgGUID: Zaseidf5QfKEyJp5AqiCaA==
-Received: from unknown (HELO epgd056.me-corp.lan) ([10.154.54.2])
-  by ces02_data.me-corp.lan with SMTP; 01 Jul 2026 17:19:05 +0300
-Received: by epgd056.me-corp.lan (sSMTP sendmail emulation); Wed, 01 Jul 2026 17:13:45 +0300
-Date: Wed, 1 Jul 2026 16:46:48 +0300
-From: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/7] i2c: nomadik: optimize layout of struct nmk_i2c_dev
-Message-Id: <20260701164648.93eca0250e8a4932611a2ce5@mobileye.com>
-In-Reply-To: <CAD++jLmqtG-j=Q-Ctr-1-GKVqYzcwOwWUF6AYHcKf5aXUSKE5A@mail.gmail.com>
-References: <20260623-i2c-fault-reporting-v1-0-6db1a8aabf18@mobileye.com>
-	<20260623-i2c-fault-reporting-v1-2-6db1a8aabf18@mobileye.com>
-	<CAD++jLmqtG-j=Q-Ctr-1-GKVqYzcwOwWUF6AYHcKf5aXUSKE5A@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="du7ybx56"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-38001e788d6so743977a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 08:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782918434; x=1783523234; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=35ip1FXhxTsr49Tf+Elt4WaaVNO58PfZuNT2YrZrg5w=;
+        b=du7ybx56GtUFlXWVU3O9LfpHYDV7/+pOAfpsOn3bikOwU9q6VYbpvER6Ii5TEfbid4
+         cVGaR09SdjsrGJzsKmN/yk+v0FhRORty75rVyokNjzxK8TyhzUilW2xLkb2MgKmKPMCc
+         AXL6zeLlvcL/k3UL1pnt14R02XyU25z7yY2LH3R0yT8o4mSPH07QIRNQ63+5HlF+6eNe
+         Mee8dMbugJRGxgfV3FBChkSW8XFiQktTpoNkk2YpP4HWAnrfvv0FNB5p9iNhvlXcNi0s
+         p2XwqZKe8gw2bF282V7CByNKa9hR9GbqUKZyqCWl8VM5fLHE9dY4omhI4shhIuROgFUV
+         uEsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782918434; x=1783523234;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=35ip1FXhxTsr49Tf+Elt4WaaVNO58PfZuNT2YrZrg5w=;
+        b=nS945ezhgMMBUj4RaAeI6eoXVQdrZ+0kd4g0Ty4Wh9a62hXAthBlgNcTWfeMzG6uRG
+         VaxISJAhSSd3bo5FuY5Hx8WrJEDxxI0H27IXaAs04CYQjljFzY4SCj//iOjDWC+HUsvb
+         m/CeflBxSX1tyV2cLk4xNHSDQDp+U5lvjtMTutMfioFBAa8SW45BHHjjVQT24PKh4TTk
+         8a3KFySIh8kAM+v/E+axhKSY5nx/QBCA9gGaHbHLxflvkZtBtuGoIj4UDqri4E3Z2D8O
+         354jrN2aKzPZg1HtSGfzyEmf6tvsTggFoupKeX8lRWsimBNoqHXUs1iOYiTtBasuS8WI
+         1Keg==
+X-Forwarded-Encrypted: i=1; AHgh+Rru2UHdbdQe6wra4gpuaEKEnQm+LfdaLVwMHw0rJNetzLol/l+2PAoTCMJjLUyYNOWefWu2RsBS5vCjop8F/g10YMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQZkNq37hlfCrGD0T5C1BxMYrbOo/tZzFjlApgOsJsWHvZfE+L
+	67FSjn2k38pynLO9pPmS4swi7UA7Ap7SoUV/9PrONJO93SXiJJugaJsWGyuF4X9V4H4viDfLVM/
+	iKHf0zQ==
+X-Received: from plbl14.prod.google.com ([2002:a17:902:eb0e:b0:2b0:aef9:a5a2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c50:b0:2ca:e5c:7fcf
+ with SMTP id d9443c01a7336-2ca7e654686mr23268045ad.3.1782918433131; Wed, 01
+ Jul 2026 08:07:13 -0700 (PDT)
+Date: Wed, 1 Jul 2026 08:07:12 -0700
+In-Reply-To: <e5876e41-a11a-4d5e-958f-9e247c19d387@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com>
+ <a1b06afb-af6e-4666-8c7d-990e7fa150fa@intel.com> <akP9Qv_IPVEh7GAB@google.com>
+ <e5876e41-a11a-4d5e-958f-9e247c19d387@intel.com>
+Message-ID: <akUtIDdRiU9YOr8-@google.com>
+Subject: Re: [PATCH v8 07/46] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 25 Jun 2026 00:36:49 +0200
-Linus Walleij <linusw@kernel.org> wrote:
+On Wed, Jul 01, 2026, Xiaoyao Li wrote:
+> On 7/1/2026 1:30 AM, Sean Christopherson wrote:
+> > On Tue, Jun 30, 2026, Xiaoyao Li wrote:
+> > > On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+> > > > -bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> > > > -				     unsigned long mask, unsigned long attrs);
+> > > > +bool kvm_range_has_vm_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+> > > > +					unsigned long mask, unsigned long attrs);
+> > > >    bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+> > > >    					struct kvm_gfn_range *range);
+> > > >    bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+> > > 
+> > > We have
+> > > 
+> > >   - kvm_pre_set_memory_attributes()
+> > >   - kvm_arch_pre_set_memory_attributes()
+> > >   - kvm_arch_post_set_memory_attributes()
+> > 
+> > Yeah, that's probably for the best.
+> > 
+> > > left, do they need to be renamed as well?
+> > > 
+> > > then the interesting one is kvm_vm_set_mem_attributes(), which contains "vm"
+> > > already while it means "vm ioctl". Do we need to rename it to
+> > > kvm_vm_set_vm_mem_attributes()?
+> > 
+> > I say "no" on this last one, the fact that the function is scoped to a VM ioctl
+> > is enough to communicate that it applies to per-VM attributes.
+> > 
+> > Actually, since it's a local helper, we could go with kvm_set_vm_mem_attributes()
+> > to be consistent with the other functions.  That just leaves
+> > kvm_vm_ioctl_set_mem_attributes(), which I think it appropriately scoped.
+> 
+> If we finally choose to rename kvm_vm_set_mem_attributes() to
+> kvm_set_vm_mem_attributes(), I think the trace
+> trace_kvm_vm_set_mem_attributes() needs to be renamed to keep it consistent?
 
-> Hi Dmitry,
->
-> thanks for your patch!
->
-> Also nice to see some kernel contributions directly from
-> MobilEye!
-
-Thanks for you review!
-
-> >  struct nmk_i2c_dev {
-> >         struct i2c_vendor_data          *vendor;
-> > @@ -206,13 +206,13 @@ struct nmk_i2c_dev {
-> >         u32                             clk_freq;
-> >         unsigned char                   tft;
-> >         unsigned char                   rft;
->
-> ^
-> Maybe you want to take the opportunity to change these
-> two into u8 if you're anyway changing the layout of this
-> struct?
-
-I'm waiting for review of patch 1 in the set. If I need to submit next
-version of the patchset, I'll change these two unsigned chars, as well
-as `unsigned char *buffer` in `struct i2c_nmk_client`, into u8.
-
-Best Regards,
---
-Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-
+Ya, good catch!
