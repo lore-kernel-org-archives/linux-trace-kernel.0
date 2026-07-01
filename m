@@ -1,76 +1,129 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71F1429825;
-	Wed,  1 Jul 2026 10:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91D240BCCE;
+	Wed,  1 Jul 2026 11:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782902306; cv=none; b=AwqyTMkVX76XPrnXPUbQ+fFY/nCXasS66F97eziGDa45YhlQGNcSF+d0ezoqkN0VQoaSWX+E3mS6gQEfcu5ldj5j1aA8Y876r3tyEvblAdtbT67NL7qY2Vlv3YhwwaUGeNjO45h0HFtHF2mLI+OjRrh6oGaoDc4SrwRepXE6564=
+	t=1782904070; cv=none; b=iAiCYDOwdMC5Fk8lvbbDtVzSIV843u61DFo5MU77MF+OFGnaIbGVBUFvbrmQBkQYFtoSAKpii1qkYCRBjuXpQjqgohTdjDiMlODhcAptRsnKh4uy6jmQp4iXoIf5wKEPoAcWuOFQOgtidp+5V90yfUyxLLK98vpTo0wDV9kJhRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782902306; c=relaxed/simple;
-	bh=4LXEqCAvif8zDFMLINcUCz48g2yYBZT5CVZBv6+SILk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q1G8Q9LcvEhcM+vEZUzH6kuRfs+1dldATMPSyA7ongQ2GaBMls7WtPeFhL0rlK96ncSu8BICOnMgipTWfOtLUeS4tUkzCJDbZdtukZTDutW3sqhCj0XERQaprkFJC4u49H7kGfpQJpeNuwvbeOYGFYGs3NqAave/N+4A52BxkUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 692E2167B88;
-	Wed,  1 Jul 2026 10:38:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 97CE680011;
-	Wed,  1 Jul 2026 10:38:21 +0000 (UTC)
-Date: Wed, 1 Jul 2026 06:38:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Michal =?UTF-8?B?S291dG7DvQ==?=
- <mkoutny@suse.com>
-Subject: Re: [PATCH 2/2] tracing: Keep pid and comm[] in the same structure
-Message-ID: <20260701063822.3af87520@gandalf.local.home>
-In-Reply-To: <20260701110407.31f7b6ca@pumpkin>
-References: <20260626212356.64150-1-david.laight.linux@gmail.com>
-	<20260626212356.64150-3-david.laight.linux@gmail.com>
-	<20260629164912.4c1c2855@robin>
-	<20260630110156.5314e2e6@pumpkin>
-	<20260630150348.149e318c@gandalf.local.home>
-	<20260701110407.31f7b6ca@pumpkin>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1782904070; c=relaxed/simple;
+	bh=hCvnNk/pEx9Q3BuA3GT3urPlvNsb9ZGbJEO+TxrHDhk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ISrNKXq/pgcspmDOaD6vqghancW5wO0j1g1oXIIcH7YQ7L6uw0liZdMNqwM/8jb+ys7O1IL+d1alxdidV6SBxUwBgeJAFTfi+7XXNdcU58nWX3UFtu4OlG+Tu8Ky/okdRC3R+mvLVlNw85S1s1sUG+4KOtZwKW2R/uEFm8KVhbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LNtiPidL; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LNtiPidL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782904069; x=1814440069;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hCvnNk/pEx9Q3BuA3GT3urPlvNsb9ZGbJEO+TxrHDhk=;
+  b=LNtiPidLDPr2cCEfm6nmkpfeRNI4QV3/W9S1PF5JTllnEv0I5stLmP7R
+   qJuecNfxVWxxeXE1ZFI90KMcIRSlQa2fjEy+w3ivHinUaseH7HJYePVui
+   YMP73yvTHQM8rC+OltN8X/9K5IctoVX+GfNQFQi/Aa0Ib0PIFcGVluWQZ
+   fs3D5IUYSOR+IoI313VcgY4t4gi/6mrajCQ33iaotHUCevuI03XwGAUs8
+   iXhqpbLpaR7r6hCZIdOhv9n2w1m/MV0nytJ+yUQykx+VtdMs5KWiGNLoR
+   /bEUEmcL4nrfExvkAcvK50aiXyP87Y2TJO1Fl2xhVQYMZJTtOPxRBC6oo
+   w==;
+X-CSE-ConnectionGUID: hFZnprObTNePX2nhndIJYw==
+X-CSE-MsgGUID: SfODCpYrQSa2FJ7OeXRYNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="87546077"
+X-IronPort-AV: E=Sophos;i="6.25,141,1779174000"; 
+   d="scan'208";a="87546077"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 04:07:48 -0700
+X-CSE-ConnectionGUID: qj8BVJ/XRI6zgtwRVeHuag==
+X-CSE-MsgGUID: hj6+vDsNStmOM/iX4E14dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,141,1779174000"; 
+   d="scan'208";a="248074941"
+Received: from unknown (HELO [10.239.158.49]) ([10.239.158.49])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 04:07:34 -0700
+Message-ID: <25fdb77d-20f6-4b3a-8b3a-dbba0dc47046@intel.com>
+Date: Wed, 1 Jul 2026 19:07:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 24/46] KVM: guest_memfd: Make in-place conversion the
+ default\
+To: Sean Christopherson <seanjc@google.com>, Yan Zhao <yan.y.zhao@intel.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
+ andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-24-9d2959357853@google.com>
+ <aji/2svhcc84rn5w@yzhao56-desk.sh.intel.com>
+ <CAEvNRgHYTFnHbsLLgMTCSitmnp1_j9Pomikm9qmpGTh1w8YE5Q@mail.gmail.com>
+ <ajx5Vrz9ma--hrGH@google.com> <ajyJhZcgfYFtGfS2@yzhao56-desk.sh.intel.com>
+ <aj0Jf30PS2f7x1nt@yzhao56-desk.sh.intel.com> <aj087H1UWSFxbShR@google.com>
+ <aj3H2sxymOYTWTnE@yzhao56-desk.sh.intel.com> <aj7NwCRwWEfLK-gQ@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <aj7NwCRwWEfLK-gQ@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 97CE680011
-X-Stat-Signature: mjb48d1mztyxnb3rbu5run3twrdnibn3
-X-Rspamd-Server: rspamout04
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/34CtKlOfOwqBuv4TeXC3JQDue1j8BuGA=
-X-HE-Tag: 1782902301-219688
-X-HE-Meta: U2FsdGVkX1+AkWTOW0XnRSC5SpVrYEwA4XSzOwJ4DMRh5H6VTBlSbMxLXD9jsbFDCXF+Fp4KK2MvQsR35p+xy5OTQSlKXcTnj+ujmB7nfGr9q/ukog2iJrjCSfcfos4kg5Tv7W3gu3KoxU0J4Ki9FJ/QaIO6Cmei40iDigUCDUWpyVJGQRoiqiWLtjhrt+vrME4oCnZWuA9kr6bROjgSw3z60jdOI2hdZuEBkPzNHZKXNrTujQFbpZbvWHIyHEgFeZGBTjOfEAGPbT2O4gLm1puGZKk7E4pXQ8FWHYKxMZEDUA7WngpygnF6coNf90OL9smNqRYy49pDKEcQH7mF5os9hZ3YJ9OR
 
-On Wed, 1 Jul 2026 11:04:07 +0100
-David Laight <david.laight.linux@gmail.com> wrote:
+On 6/27/2026 3:06 AM, Sean Christopherson wrote:
+> On Fri, Jun 26, 2026, Yan Zhao wrote:
+>> My first impression of gmem_in_place_conversion=true was that it enforces gmem
+>> in-place conversion. However, it actually only enforces per-gmem private/shared
+>> attribute.
+>> My worry was that people might think it's a kernel bug if userspace can still
+>> have shared memory from other sources after they configured
+>> gmem_in_place_conversion=true.
+> Ah, I see where you're coming from.  FWIW, truly enforcing in-place conversion
+> is flat out impossible.  E.g. userspace can simply replace the memslot, at which
+> point the memory effectively reverts to shared.
 
-> 
-> I thought it was just used to do a pid->string lookup when you run 'cat trace'.
-> But then I found the code that lets userspace read the table....
-> I guess the latter is used by the userspace code that reads the raw trace buffer.
+would something like below enforce the in-place conversion?
 
-Yes, trace-cmd uses it.
+Userspace can create a memslot without gmem fd, but that memslot can 
+only serve as shared memory and cannot be converted. So it doesn't 
+violate the in-place conversion.
 
-> (I found some instructions that did it that way, the output was unparseable
-> when tracing things that are happening on multiple cpu.)
-> The userspace code could probably be given comm[] for all the running
-> processes and those that exited while tracing_on() set.
-> (I didn't see anything that would clear the table when the trace buffer
-> was cleared.)
-
-Well, that would break trace-cmd. As reading the raw buffers clears the
-trace, and trace-cmd reads the saved_cmdlines file *after* it reads the
-trace, as during the trace it gets populated.
-
--- Steve
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2122,6 +2122,8 @@ static int kvm_set_memory_region(struct kvm *kvm,
+         new->flags = mem->flags;
+         new->userspace_addr = mem->userspace_addr;
+         if (mem->flags & KVM_MEM_GUEST_MEMFD) {
++               if (gmem_in_place_conversion)
++                       new->flags |= KVM_MEMSLOT_GMEM_ONLY;
+                 r = kvm_gmem_bind(kvm, new, mem->guest_memfd, 
+mem->guest_memfd_offset);
+                 if (r)
+                         goto out;
