@@ -1,172 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAC92E739D;
-	Tue, 30 Jun 2026 23:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE7C126C03;
+	Wed,  1 Jul 2026 00:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782861975; cv=none; b=BAgi6ZOoRpH2NFIa7oH2RaqXTDfxmUKv0hrFIUEXrAxvuoZ+7kSn453xdCZI3zQ651RYYJo8ed2ODbNaGh42TYYC3+ubuFPC9wv5eO3SI+tIg/UxPNJxuxoJEelPqgGEjZ0xZ/UOErUoN0UMp5Z54AmxVRRDlix05g+Gngx74Mk=
+	t=1782867114; cv=none; b=fQhRvPdrxRImzbnPgAHGriv+8RqShgQ1mCL21eLp4LqPQm5C19aMy46OEX0eOFPm83UNnMl9S80pvQXwGie/MC9GdOzA1Li0MtgwCbl9+OgWPubjidyV5XR1yk4Rl8A0LJXxcMc1AJdmVYaZZgUcZZcQMVNfEYQXnRAYHytZyts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782861975; c=relaxed/simple;
-	bh=9vGalAOsLPcJUq7KMLEtC4VkqUsqCi3zY6br5fZ9gsY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=McxMU9Ne+GM75VNAzEOeAPYeV8xdEcXBvVIP6rstr9mriXYG8LbUxHM/msRIAp8w8vFtWkqyK5viT/LFr5qe+/5LC/cZEYrRJEn9PPb4we1RBs5onyr4lpk81keyA2BmTfN9f8a9kCq1S6Hz8MKkkbHHbl4Y2PF44Ata/g1H93o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibuSdTQV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782867114; c=relaxed/simple;
+	bh=7NJl4JeMESMSex9GUk4mtHlH8Z94Fc/bJaETk+YnUoo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ogOFRLK9c+evxdSrNJz85/C9BjqKY7tfRx64o+spNACvmYHWxbneCvfOO+TxVb7fULgpG4/aJjvmjhHjti4xibk0hq3m2csh3APzUnQDoOi1Cn5+vv6IBVAzH0AB/AJR/A6A/Kk1Zl6zDKvP67XpEiGRAY4lzNd6qlg16j29O/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X16rURSX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibuSdTQV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA7AC1F000E9;
-	Tue, 30 Jun 2026 23:26:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X16rURSX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36AE31F000E9;
+	Wed,  1 Jul 2026 00:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782861974;
-	bh=UjhfWxTf1PrShdtV9sLZkODcbJd9iyF248wEEnzzhj0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ibuSdTQVWk7cvzki6/7/Swjg81STECAO7y1ETLLCTy3OFpEC7Ee0yUCUujgFv8P1s
-	 L3q1OC+dx3cN1Bf5aOy3ogR3Ma1RDSfXZbDIAWssLtcybvL77SI7kIdmZwMW5oeRkw
-	 kvuXq+D7y0cg0X+lfv+/RGfiEz9KpgHCZ25HivTCp4RHcC5uAq7p7rrro05SXO6kCw
-	 DM6/OvYDXevD8bp+67zf1DAkYgRQJ1AlJganrICYf+ft6Ub0OsPIMA4mjecUc3a5bM
-	 UfpzN0naSzEJ2HpO//B+k/TU369v40wmqIdmLDqqDItbhK+3N0OvVwHolZHGee8XbD
-	 5rrqUOdvlJbbQ==
-Date: Wed, 1 Jul 2026 08:26:11 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Bradley Morgan <include@grrlz.net>, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] lib/bootconfig: fix undefined behavior involving
- NULL pointer arithmetic
-Message-Id: <20260701082611.6575e0f37541014f67830bdc@kernel.org>
-In-Reply-To: <20260701075843.a308d7dadf327eda4015236b@kernel.org>
-References: <20260630174746.14795-1-include@grrlz.net>
-	<20260701075843.a308d7dadf327eda4015236b@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20260515; t=1782867112;
+	bh=zLi7Vg2dPMjNzDP//hBvVKYr8bQb2SeKAXa4U7pR2ko=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=X16rURSX7a1ZcuXZZyv6neAvXp/8RmXIg4iNMWu0ldcqoTZnWIQEA5unHAhf05B0W
+	 KDL4T0J2SCUMMy3LySSpl/9vdzfM5Q5xkdqOMgcruvjKPysnycz2jVDDK7yGNlWDak
+	 Im33dqEQkGfLOv/LNRfa08VpbdEPD67NDcpkApBWvRXx9evaS4QiY62zdICz5M2Pir
+	 RcqqHI+b64K71nvGvaMDv5fA/kXkz/AWXTqxbUt1gQvuhgU4X9fHSYUWWKtOfeHY8C
+	 UL52V/WOFdtKzPNdjAcs1JsdpOQUzEIiB0xnl+CRTwvFUg2LsOnGl/SRlxgKwlWRFP
+	 A7t6FuHcTZteQ==
+Date: Tue, 30 Jun 2026 18:51:49 -0600 (MDT)
+From: Paul Walmsley <pjw@kernel.org>
+To: Martin Kaiser <martin@kaiser.cx>, Masami Hiramatsu <mhiramat@kernel.org>
+cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+    Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
+    linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+    linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: probes: save original sp in rethook trampoline
+In-Reply-To: <20260701073335.548d8f0b435b1a5fb4e41a69@kernel.org>
+Message-ID: <d588ef0f-6eb0-665b-871f-5fb5a6c90547@kernel.org>
+References: <20260630194010.1824039-1-martin@kaiser.cx> <20260701073335.548d8f0b435b1a5fb4e41a69@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 1 Jul 2026 07:58:43 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed, 1 Jul 2026, Masami Hiramatsu wrote:
 
-> On Tue, 30 Jun 2026 17:47:46 +0000
-> Bradley Morgan <include@grrlz.net> wrote:
+> On Tue, 30 Jun 2026 21:40:03 +0200
+> Martin Kaiser <martin@kaiser.cx> wrote:
 > 
-> > When xbc_snprint_cmdline() is called during the size-probing phase
-> > (with buf = NULL and size = 0), the function computes the end pointer
-> > as 'buf + size' (NULL + 0) and repeatedly advances 'buf' via 'buf += ret'.
+> > Reading a word from the stack in a kretprobe crashes a risc-v kernel.
 > > 
-> > Under the C standard, performing pointer arithmetic on a NULL pointer is
-> > undefined behavior. While harmless inside the kernel, this code is also
-> > compiled into the userspace host tool 'tools/bootconfig', where host
-> > compilers with UBSan or FORTIFY_SOURCE enabled abort the build when they
-> > detect NULL pointer arithmetic.
+> > $ cd /sys/kernel/tracing/
+> > $ echo 'r n_tty_write $stack0' > dynamic_events
+> > $ echo 1 > events/kprobes/enable
+> > Unable to handle kernel paging request at virtual address 0000000200000128
+> > ...
+> > [<ffffffff80016d16>] regs_get_kernel_stack_nth+0x26/0x38
+> > [<ffffffff80177196>] process_fetch_insn+0x3ee/0x760
+> > [<ffffffff80177836>] kretprobe_trace_func+0x116/0x1f0
+> > [<ffffffff8017795a>] kretprobe_dispatcher+0x4a/0x58
+> > [<ffffffff8013572e>] kretprobe_rethook_handler+0x5e/0x90
+> > [<ffffffff80180838>] rethook_trampoline_handler+0x70/0x108
+> > [<ffffffff8001ba32>] arch_rethook_trampoline_callback+0x12/0x1c
+> > [<ffffffff8001ba84>] arch_rethook_trampoline+0x48/0x94
+> > [<ffffffff8067872a>] tty_write+0x1a/0x30
 > > 
-> > Fix this by guarding the pointer arithmetic so 'buf' is only advanced when
-> > non-NULL, and track the running written length in a separate 'len' counter
-> > for the return value (which cannot be recovered from pointer math when
-> > 'buf' is NULL). The rest() helper and snprintf call sites are unchanged.
+> > In regs_get_kernel_stack_nth, regs->sp contains an arbitrary value.
 > > 
-> > Fixes: 51887d03aca1 ("bootconfig: init: Allow admin to use bootconfig for kernel command line")
-> > Cc: stable@vger.kernel.org
-> > Assisted-by: GLM:glm-5.2
-> > Signed-off-by: Bradley Morgan <include@grrlz.net>
+> > arch_rethook_trampoline saves the registers from the probed function in a
+> > struct pt_regs. sp is not saved. Instead, sp is decremented for
+> > arch_rethook_trampoline's local stack.
+> > 
+> > Fix this crash and save the original sp along with the other registers.
+> > Use a0 as a temporary register, it is overwritten anyway.
 > 
-> Thanks for the fix!
-> Let me pick this to bootconfig/fixes.
-
-Sorry, I eventually decided to pick Breno's fix [1], because it fixes
-the same issue earlier (in bootconfig/core) and has a well documented
-comment on the code.
-
-[1] https://lore.kernel.org/all/20260626-bootconfig_using_tools-v7-1-24ab72139c29@debian.org/
-
-BTW, I decided to have several branches for bootconfig and probes.
-
-bootconfig/core is a core development branch, which is the main branch.
-The patches in this branch is for development, including new features
-and fixes. (but fixes will be moved to */fixes soon.)
-
-bootconfig/fixes is for a branch to manage fixes. This will be sent to
-Linus soon (for urgent fix), or after releasing -rc.
-
-bootconfig/for-next is for new features or cleanups, for preparing the
-next merge window, and for merge test in linux-next.
-
-If you make any patches, please check the bootconfig/core at first,
-and check bootconfig/fixes for fix.
-
-Note: The core is usually forcibly updated, actively rebased on top of
-bootconfig/fixes. The for-next is not so frequently updated, but can
-be forced update for fixing merge conflict etc. The fixes should be
-solid, but if I made mistakes I will forcibly update it before sending
-PR.
-
-Thank you,
-
+> Good catch!
 > 
-> Thank you,
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > ---
-> >  lib/bootconfig.c | 13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > Changes since v1:
-> > - Got the big guns out! :) (see Assisted-by).
-> > - Addressed review from Masami Hiramatsu and Breno Leitao.
-> > 
-> > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> > index f445b7703fdd..c913259c80ce 100644
-> > --- a/lib/bootconfig.c
-> > +++ b/lib/bootconfig.c
-> > @@ -427,8 +427,9 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
-> >  int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
-> >  {
-> >  	struct xbc_node *knode, *vnode;
-> > -	char *end = buf + size;
-> > +	char *end = buf ? buf + size : NULL;
-> >  	const char *val, *q;
-> > +	size_t len = 0;
-> >  	int ret;
-> >  
-> >  	xbc_node_for_each_key_value(root, knode, val) {
-> > @@ -442,7 +443,9 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
-> >  			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
-> >  			if (ret < 0)
-> >  				return ret;
-> > -			buf += ret;
-> > +			len += ret;
-> > +			if (buf)
-> > +				buf += ret;
-> >  			continue;
-> >  		}
-> >  		xbc_array_for_each_value(vnode, val) {
-> > @@ -456,11 +459,13 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
-> >  				       xbc_namebuf, q, val, q);
-> >  			if (ret < 0)
-> >  				return ret;
-> > -			buf += ret;
-> > +			len += ret;
-> > +			if (buf)
-> > +				buf += ret;
-> >  		}
-> >  	}
-> >  
-> > -	return buf - (end - size);
-> > +	return len;
-> >  }
-> >  #undef rest
-> >  
-> > -- 
-> > 2.53.0
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I would like this to be handled by the RISC-V maintainers.
+
+Thanks, added a Fixes: tag and cc'ed stable, and queued for v7.2-rc.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+- Paul
