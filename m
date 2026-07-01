@@ -1,94 +1,121 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2346175A9C;
-	Wed,  1 Jul 2026 13:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C3F48B373;
+	Wed,  1 Jul 2026 13:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782911946; cv=none; b=uLEj0zYdcnN3HmENznWo4IWN7VKi99yt4tOJ2CIkrQsUxY2OR0pcbxBOsm4a+qX18PEjcOSt6PeZ9JFrxHAvr574p4rhaL1Ezawkfoy40UWAavDHUur6cTLtiH/IonjrE9GxhaDjmkT7pCjySOMWBhjiXj6y7RWPXMuzdK6MsV4=
+	t=1782913433; cv=none; b=PnIuln6syry6wLryELjDtInQixHB9pKRzWmGuGQ2jQXnDjWKKXHbw2TdNZEjkif0L3GbkGjdrc2aknxh/IbKDTHbF8OiGDDyRJ3Dhz3eYMvJRuujvej3yA5+AdvrQ1Ou2xdW5sISK+hcphnJTJRwta6Lw90+qATc6D1BGza0PZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782911946; c=relaxed/simple;
-	bh=mAdFDQ8AcvQAgDJvsxsyvsNAwB4oMDL8D6ztJxqCDx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cRHjGIkHnwNTzqKUPqalPG1c7yvCD9+rdeF/Le1R3Y3R5CFvES2JyjA7KzQZQ3K6eak0GbRqIjwBySGq6E/BECEARj/FTv1pUQTpBGMj9XisgzN+NS6BjOTWxV7jU6l6HM/BZJkLnOlcAnK5q9BWzVniBppEEgP2S+dLGW+jvgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=sZdKUQnu; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1782913433; c=relaxed/simple;
+	bh=/30Yj7H1FHQfhfxQYcPsMvuuvw+xOIFAm0C0qPD8LoI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hXHrPa1H0Azg5ojOvUvGYE6VDP2dAXRf3GTpD8wKyaYkKeGVK/Fb+uIszOFpD2hGHNccedFhVbtEmHUeVAoRsKVU3O1zYGGSR8UV+kxyCH0GTp4Oe1bKoauB16agpM+KN4O9dHtVpXaAKSCgyVinclSXyqbYFTm2MlS9oQtqqrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGzX4siZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="sZdKUQnu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=D3XkahpkJHZpP7dKJ9sD5EcAJKoxvPM2S4aUH1ixxHo=; b=sZdKUQnuG3GVEcwsy01q/E56EH
-	kR3NcZf0ZDbyP5/gtSTrYi9pIGjTrvdkN6u/stI1MXtXpVGZaWsuL6l+eepq0TZZizOnBlqAQ9e02
-	bh4hQlzz3BnVJI8nbiftEcrTUx6P141DzFl8wTB4rwge90+T3OXLeZcKHLVksf3a1eTl9PWBW0YOh
-	JXU5f0kjWsZylIbTHQVD2evFrPXKPw56C/ECDe+0WHZ7TfAN8+Z3UCJrvDe3QLem8lRrlZGMjrRfD
-	313qMOfdYW3HIVGC9VePWhqf/6el6nUKHcOgILwPlzFdSFDjZbwCpOEEI/9JhIH+IxVVyLBgHFwK6
-	ilRr+l+g==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1weupo-007rq6-2l;
-	Wed, 01 Jul 2026 13:18:37 +0000
-Date: Wed, 1 Jul 2026 06:18:30 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, paulmck@kernel.org, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	bpf@vger.kernel.org, llvm@lists.linux.dev, linux-doc@vger.kernel.org, 
-	kernel-team@meta.com, Nicolas Schier <n.schier@fritz.com>
-Subject: Re: [PATCH v7 0/9] bootconfig: embed kernel.* cmdline at build time
-Message-ID: <akUTHGb7NANeqyNd@gmail.com>
-References: <20260626-bootconfig_using_tools-v7-0-24ab72139c29@debian.org>
- <20260626233327.b5c9c8de494acdde4ddf5c02@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGzX4siZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243751F000E9;
+	Wed,  1 Jul 2026 13:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782913430;
+	bh=VNkJszifhKgsSezlW4/esiesLs+zqM8RUBr857pL8GQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=cGzX4siZIUtycMFZon6aJ5LtvjxT4GuGWBSlVT6YvDkXUNhV7BCSoRUh1lM9JGuyJ
+	 NH/5heNyhlZxohPM59DtftljlXMIjldWm63pLzus+N5EELFUX56g32OubETdTRrZE0
+	 DkN9xIurQjq/ZL6GGetl2EmfsYRNo3U2onslufiZqHX29g5IAMwnffjpe17IZSHVje
+	 1PiutciaCW5qrJ9dESiK8MvaY98lfhM6GrynLEhYAE5X79tdkncuvoxsrJpxwjIdcy
+	 c3LjT/APSyohfFhXpO0dGySUtl3RyP5u5s5wromgRzImY8YitQX3VwxB3uGb++T4i5
+	 zl/vqzmZTTo8Q==
+Date: Wed, 1 Jul 2026 22:43:45 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Pu Hu <hupu@transsion.com>
+Cc: "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
+ <will@kernel.org>, "naveen@kernel.org" <naveen@kernel.org>,
+ "davem@davemloft.net" <davem@davemloft.net>, "yang@os.amperecomputing.com"
+ <yang@os.amperecomputing.com>, Hongyan Xia <hongyan.xia@transsion.com>,
+ Jiazi Li <jiazi.li@transsion.com>, "ada.coupriediaz@arm.com"
+ <ada.coupriediaz@arm.com>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [RFC 0/2] arm64: kprobes: Fix single-step fault and reentry
+ handling
+Message-Id: <20260701224345.c3a215ece3660a0cbae67645@kernel.org>
+In-Reply-To: <20260701121448.3926-1-hupu@transsion.com>
+References: <20260701121448.3926-1-hupu@transsion.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260626233327.b5c9c8de494acdde4ddf5c02@kernel.org>
-X-Debian-User: leitao
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 26, 2026 at 11:33:27PM +0900, Masami Hiramatsu wrote:
-> On Fri, 26 Jun 2026 05:50:09 -0700
-> Breno Leitao <leitao@debian.org> wrote:
+On Wed, 1 Jul 2026 12:14:54 +0000
+Pu Hu <hupu@transsion.com> wrote:
+
+> From: hupu <hupu@transsion.com>
 > 
-> > The userspace pieces (xbc_snprint_cmdline() in lib/, tools/bootconfig -C)
-> > already landed; this series wires the rendered cmdline into the kernel.
-> > 
-> > Motivation: today the embedded bootconfig is parsed at runtime, after
-> > parse_early_param() has already run, so early_param() handlers can't
-> > see embedded values. Folding the kernel.* subtree into the cmdline at
-> > build time gives a CONFIG_CMDLINE-equivalent for embedded-bootconfig
-> > users without forcing them to maintain two cmdline sources.
-> > 
-> > Behaviorally, the "kernel" subtree is rendered to a flat string at
-> > build time and stashed in .init.rodata. setup_arch() prepends it to
-> > boot_command_line before parse_early_param() runs. Overflow is a soft
-> > error: the helper logs and leaves boot_command_line untouched rather
-> > than panicking, so an oversized embedded bconf cannot brick a boot.
-> > 
+> This series fixes two arm64 kprobes issues observed when running
+> simpleperf with preemptirq tracepoints and dwarf callchains while a
+> kprobe is active on a frequently executed kernel function.
 > 
-> Thanks for update!! This looks good to me.
-> Let me pick it and test it.
+> The crash happens in the kprobe debug exception path. While a kprobe is
+> preparing or executing its XOL single-step instruction, perf/trace code
+> can run in the same window. That code may either take a fault of its own
+> or hit another kprobe.
+> 
+> Patch 1 makes kprobe_fault_handler() handle a fault in
+> KPROBE_HIT_SS/KPROBE_REENTER only when the faulting PC points at the
+> current kprobe's XOL instruction. Otherwise the fault is left to the
+> normal fault handling path.
+> 
+> Patch 2 allows a kprobe hit in KPROBE_HIT_SS to be handled as a
+> recoverable one-level reentry. Only a hit while already in
+> KPROBE_REENTER remains unrecoverable.
+> 
+> This follows the same logic as the existing x86 fixes:
+>   6381c24cd6d5 ("kprobes/x86: Fix page-fault handling logic")
+>   6a5022a56ac3 ("kprobes/x86: Allow to handle reentered kprobe on single-stepping")
 
-Thanks Masami,
+Good catch!! 
+The series looks good to me.
 
-Let me know if you need anything else from my side.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Once these land in linux-next, I'll merge them into Meta's kernel tree
-and put them into production. Looking forward to seeing how it works out.
+But it should be reviewed by arm64 maintainers too.
 
-Really appreciate all your support getting this across the line.
---breno
+BTW, if you are "Pu Hu", the Signed-off-by tag should be
+"Pu Hu <...>" instead of "hupu <...>".
+
+Thank you,
+
+> 
+> Reproducer:
+> 
+>   simpleperf record -p <pid> -f 10000 \
+>     -e preemptirq:preempt_disable \
+>     -e preemptirq:preempt_enable \
+>     --duration 9 --call-graph dwarf \
+>     -o /data/local/tmp/perf.data
+> 
+> Before this series, the crash reproduced frequently. With both patches
+> applied, it was no longer reproduced in our testing.
+> 
+> hupu (2):
+>   arm64: kprobes: Do not handle non-XOL faults as kprobe faults
+>   arm64: kprobes: Allow reentering kprobes while single-stepping
+> 
+>  arch/arm64/kernel/probes/kprobes.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 2.43.0
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
