@@ -1,118 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1083A48F4;
-	Wed,  1 Jul 2026 09:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01D9401A3C
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 10:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782899817; cv=none; b=eUZWCR/gcdY8xLVdmKFV9DL3OcNHAIz0pMH41Uf/ARUS3pk9a0ym5BqXmtaPY68j7Gq+TWImnaRG4DkZQ6vFm6c5OIEzjppeKm4HxzGD6Os6vjYePpe3i7ulovmzCjtig4Hu4OM1DvXkITcTzjtML53cq26QDwks+Pt6To+8YXg=
+	t=1782900257; cv=none; b=JexWAjP3Akj73kjHzMo6hCia+SBsNLqzclCmWjaGT07Mvh43M8UXf+g7yTOCagkKL8fcxjPZr40Zhxe9PGQhzqn60rBAxqStvLEPcJ1cNIFCqVRHC1gQadIxQOP9F8tXF9e8wVNfA57tJHJ7mpkONKgDtJF91tnygS9adFvbI6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782899817; c=relaxed/simple;
-	bh=ce5x8VsOSihGimDX+E2xZ9QKUoBE10Bad77hJiyAQ1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OOUusOOVqGWGud1hYAOGawQE0KXThOb3pfE20d4gzEppPqRhUvAi1hTwMsw0lOcLX0t+L18ksT6EBGRV0TqZ6fTT8BCTfdodZc/vtdIzXUv0Z5mXPTVdHL6ERsrH1Zcs/8dZ65+T0MNxa7ZnItCsWAzb3668d5VQN0SBrGlPEeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZVMXwNQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782900257; c=relaxed/simple;
+	bh=xnymW4sgZ0npuMNb6wrJL337/bHyYIqCEMe0cfjHx+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I6OICzRziWGkP4Z8WwQohCFFner5AO13ZacUve6PsYeS7w6uvrmkCq/1tXTCukSD2uDT00m6yz2smGE4T3yjztrOdmeFnxxix/0jKe5oK4Ov2X6Z5hCfWzjTaYqW/K4dCHIBGucdZbIA5R8WEjbd9pMbBZvY/KMivX/ZRTBTB1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pw4R7DW8; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZVMXwNQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3460C1F000E9;
-	Wed,  1 Jul 2026 09:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782899816;
-	bh=ce5x8VsOSihGimDX+E2xZ9QKUoBE10Bad77hJiyAQ1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DZVMXwNQ7Qas5su8LVUpZ9nJZzyP2uBxeA7y69zzPN45RtVQlQlUbn6BqoVClF8OQ
-	 cdNO1iGygY8gO12qIOso81h2/ovQrZtecs/m5aFsflX56hjaVdJn1UW1oDVl1Yio6K
-	 KRPnQX2cEF4iykCZPLFviJvZsj0dccJ/OtNrkWrmrDfd+Zc2DCw82CITQK1lp0tyWe
-	 FVO7hLYRhosCJheK7GEd0ZzB4RBxZA6em2G+SdpL6ItiqRo5WAo8LiBboh0bVEWu86
-	 sAwvz0MgMFy71FvJ0/B44EaogV7h2VMnc/A+pYGBJOKud9YpmG/8lNeNdIQphF8zxv
-	 fOupSSuKidQxA==
-Date: Wed, 1 Jul 2026 10:56:34 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 06/30] mm/rmap: parameterise vma_interval_tree_*() by
- address_space
-Message-ID: <akTkRC7gPzdibXhU@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <43050b10b53cdfc3627440e6b14ae2a9730b2a5c.1782735110.git.ljs@kernel.org>
- <akPsGrmaOd3JMlC2@pedro-suse.lan>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pw4R7DW8"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-493bc8fda98so3929645e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 03:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782900254; x=1783505054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yyyke20YFVyA/SXZoMyl8D8oua+btHBiB/bTldFU+Rg=;
+        b=pw4R7DW8zCkB9ec5YsVWNCaGey1CqGQlxK4DB7rIEHDFq6PJzNxGJp5T7CVyv0mh2V
+         ayYKPxapqQSEL+f/UehRNPCTAAFGm9uJzExxbZHkQ9DjC6qFK+g3riLMl2ZaAN66jQFe
+         4EYnLIZG1T6gbnYYfxhZxwxN8iFVbgm5BhRBYY1vdBiZt8vLSQTYgIdBUwFGgSEoHjHz
+         EtwVOVAEEzt12+IC9OskzCSa5PWerurt8uDMOouEPKRadLOHkaCkYXbj+asl9lIyEYmG
+         sUzE3qE5p+MwtqUzJLdCZTuoVcfVXto3Q2g/6tu/hMj5PuGCPVdfV4ujj2X26ohr83ou
+         T0aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782900254; x=1783505054;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Yyyke20YFVyA/SXZoMyl8D8oua+btHBiB/bTldFU+Rg=;
+        b=F3FebcdT6Nsh3nOENYOluPwcipMPJ+ue4bF5WGCj/i/NRIINshxqxN+pYHI2Jlf3uB
+         0AOEgqgwwXviHEh0i+TGwPp1jXEfq1KtZOZMC5tSQ6XEXFlfrZ8Wc5qI2jrShqPB3y/K
+         xl6Qm0SpBSK3/qsPPLYRYC/R8qDqgvpdymSr143xebPyNMESRetT0Uj84m5wgN77z5bF
+         5/KvnWWVInvRXuJY51y7lb8BPyab0dBA64YqxZaPvlPbrvayhwqgFlLIL7LFM/B7vUY5
+         yKUARjW1UhOPuLbF/VGEbFJkjSO7mSesUdFE8QCtV9tJGaPjTEvC8cWOVZ0l2rhJ6fh2
+         u3lA==
+X-Forwarded-Encrypted: i=1; AFNElJ+IaW7+P5jnmOIv+UewgPLWf6C7y4PhjOx3zhba3VDB+rT4Vi9WwZwTUNhbRZxR1N1BVQVw3CoR0lKgLQ0VkKyYlzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3NXEUcWTBM05OW5uw465tYW9bVDAjZ6mtnU8ttxT3A+nNV53E
+	RHD2TueTxUk+5PsRX5ivlWs46CVHIug7y8l7LDYA96NZWUq3KXBPwn+02lPaNu9Q
+X-Gm-Gg: AfdE7ckI4Y5IcPYmcJhDIwBp7GYpJkYOX1xVBDH21AE6BGbu2JC908ToXazY60O9NoO
+	U/Efxf4Ii2klqKxpVlSOwRha7RkJxyeS76uUKHDa1Q9XkWAwoxQdvSpaPs2kt/eLwIqDRFK7wnk
+	y3OGiy2A+Ml4pSKhsLkocHv92YI0nCJ9SZ12oJF+tLSQrv2yBh+kfc93B0/SIqcpGufDeXPrf4i
+	JJ4I3e+Y9F63S3uYOKlkO9Hn8bGH9jM/YTXEl6SV3ZZO2MKwHTkZPfHOhl7fuLo4s4CJnS2up2v
+	nQGaa3GpkgaXcUCE0IsS12dWAO9mrfYn1WB5uwx6yyTHOacPKN3qxJEPB9Rm3bJtdluy+Yb48Ri
+	nHlcVLP0J5EsO3JZJ1xaNUE1epaURqwUEymGe/IiQ9J+jINmrLCoDaKMFva8CyumC/xcqImOerM
+	5JGrq95zgI/2Ab/YukBb5Dx6dif/z2tWAA/4lskEjU+/3FYQ==
+X-Received: by 2002:a7b:ce90:0:b0:493:af0d:484c with SMTP id 5b1f17b1804b1-493c2bab007mr10107955e9.34.1782900248941;
+        Wed, 01 Jul 2026 03:04:08 -0700 (PDT)
+Received: from pumpkin (host-92-21-50-228.as13285.net. [92.21.50.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4756797a8besm16531383f8f.35.2026.07.01.03.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2026 03:04:08 -0700 (PDT)
+Date: Wed, 1 Jul 2026 11:04:07 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Michal =?UTF-8?B?S291dG7DvQ==?=
+ <mkoutny@suse.com>
+Subject: Re: [PATCH 2/2] tracing: Keep pid and comm[] in the same structure
+Message-ID: <20260701110407.31f7b6ca@pumpkin>
+In-Reply-To: <20260630150348.149e318c@gandalf.local.home>
+References: <20260626212356.64150-1-david.laight.linux@gmail.com>
+	<20260626212356.64150-3-david.laight.linux@gmail.com>
+	<20260629164912.4c1c2855@robin>
+	<20260630110156.5314e2e6@pumpkin>
+	<20260630150348.149e318c@gandalf.local.home>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akPsGrmaOd3JMlC2@pedro-suse.lan>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 30, 2026 at 05:19:16PM +0100, Pedro Falcato wrote:
-> On Mon, Jun 29, 2026 at 01:23:17PM +0100, Lorenzo Stoakes wrote:
-> > The file-backed mapping interval tree functions vma_interval_tree_*()
-> > accept a raw rb_root_cached pointer to determine the tree in which they are
-> > operating.
-> >
-> > However, in each case, this is always associated with an address_space data
-> > type.
-> >
-> > So simply pass a pointer to that instead to simplify the code, and more
-> > clearly differentiate between these operations and those concerning
-> > anonymous mappings.
-> >
-> > While we're here, make the generated interval tree functions static as they
-> > do not need to be used externally (any previously existing external users
-> > have now been removed).
-> >
-> > We also rename VMA parameters from 'node' to 'vma' as calling this a node
-> > is simply confusing, update the input index types to pgoff_t since they
-> > reference page offsets and rename the parameters to pgoff_start and
-> > pgoff_last.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
->
-> 1) This is fantastic
-> 2) I need to rebase my local work :)
->
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
->
-> --
-> Pedro
+On Tue, 30 Jun 2026 15:03:48 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-1) thanks :)
-2) sorry :P
+> On Tue, 30 Jun 2026 11:01:56 +0100
+> David Laight <david.laight.linux@gmail.com> wrote:
+> 
+> > > It's been a long time since I worked on this, but IIRC, it was to keep
+> > > the pressure down on the TLB when tracing. It updates at every
+> > > sched_switch that has a trace event occurring so, I likely used normal
+> > > pages which are part of the huge pages the kernel sets up and doesn't
+> > > affect the TLB as much. vmalloc does have impact on the TLB pressure,
+> > > and tracing should always try to avoid that.    
+> > 
+> > Isn't this a cache so that the pid numbers can be converted to strings
+> > when the trace is read out after the actual process has exited?
+> > That does mean that cache doesn't need to be updated on every trace
+> > request - it might be enough to just save on process exit and lookup the
+> > pid itself for running processes (the whole thing relies on pids not
+> > being reused).  
+> 
+> Yes it's a cache but it only gets filled when needed. That is, after a
+> trace event occurred. Tracing is very commonly used with filtering, where
+> events can be seldom triggered. What is in the saved_cmdlines file should
+> only be tasks that were running when a trace occurred.
+> 
+> Now what we could do is add a flag to the task struct and only set that
+> when tracing happens. Only tasks that exit would be saved in this array.
+> The other tasks could be queried via iterating the tasks and reporting any
+> task with this bit set.
 
-Cheers, Lorenzo
+I thought it was just used to do a pid->string lookup when you run 'cat trace'.
+But then I found the code that lets userspace read the table....
+I guess the latter is used by the userspace code that reads the raw trace buffer.
+(I found some instructions that did it that way, the output was unparseable
+when tracing things that are happening on multiple cpu.)
+The userspace code could probably be given comm[] for all the running
+processes and those that exited while tracing_on() set.
+(I didn't see anything that would clear the table when the trace buffer
+was cleared.)
+
+I'll try to remember to look at this when I get home.
+(I've a pi-5 with me, not doing kernel builds on it...)
+
+	David
+
