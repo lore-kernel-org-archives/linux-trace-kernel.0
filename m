@@ -1,333 +1,199 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726EB39182F
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 06:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782886302; cv=none; b=pdXTY2rSEv6exMudAC89q0OvGvtQnLD+u32X8NVMzsDnCRq5clq53i0PWkTOXSvBfUU4xrO7VLpt5EMIqq/0qVuIY2i6ZHGW67Zv1T8XmHudztiW+nmf9NSfxAQ27br0iK16nOu/4KGt6yHVtoxjDqnlsMk6DvUIUs9JCshJwow=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782886302; c=relaxed/simple;
-	bh=e3bpVA0FA/AGl4ue8CULYlfSGlIizlBIczs3neIUsRA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UrVoC8kRmINEgsWeCqDc+IrLtN8jc9NV+B+Sm7yBZzuoUPIwcI37QXx3hTsWaXt6HGrKtkVjZVTMfD9azdzh3uy7DPrJA7QsMSI4GZq9hG/xisiDPUNsJDhdDmYQNcR8d1giENUoRabT1cCzUPGNNJolDsH0apOSsxhgPbKtLAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Tl3d9P/l; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7D639EF32;
+	Wed,  1 Jul 2026 06:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782886310; cv=fail; b=t3kvxOHlMD3Ued1Nkdo494BWvygvQ5ev17l7uD8coYBdKF+/QL77rkyHGv6BFEhQVg4HFoAAV19Xq5IS54TasTNNlthueCrKAf2xRD0pzxt07aKVGWYU5NIY7O7pP/VWNizrbvhjV0r6NJEhq7M+HK5b9jXb0gpI/OHB0gB6GYA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782886310; c=relaxed/simple;
+	bh=mXpkSCXOdqBvGiRLdiJCrbEM/kNyWX2OVMfaL2EDeW4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=X3aM78FeUY5RpzYyEs+MBgLKj7wpLVCqtRdqUmK7RxDtlZVmZbQ0C7a+AjIeFCIApQNbR1H9IXoDpPDJpkxWwD3TEOjz/A8lMRDd+MtEVtREGVoIYwtxk20DYuq17Uv3uQzn8wK2B6Khm8U2+8QhbB2nNr9/on/jxacmaPYxy44=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pu0GHJUO; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=h0y10jiz; arc=fail smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Tl3d9P/l"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782886298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=me4gxxtk2UE9amPMWJ+tnnDPl3C0v42Lrd1KsRW0P9c=;
-	b=Tl3d9P/lUbMK1V5dyEoD4tPdAbzkBrxsM02ccwejdf4lEKI2WYoESppKJmW/xJqTcqrzrE
-	qbf+78dFcjskI71BncuW8LzWGbRtnPrWcBxGLI63WsHMKT/FP/3sOtSe8T9NnmZRsSG8q+
-	JW0E5vIjHszemhST0asQPC3vzamoU3U=
-From: Ye Liu <ye.liu@linux.dev>
-To: Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>
-Cc: Ye Liu <ye.liu@linux.dev>,
-	Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 3/9] mm: use enum migrate_reason instead of int for migration reason parameters
-Date: Wed,  1 Jul 2026 14:10:46 +0800
-Message-ID: <20260701061101.344679-4-ye.liu@linux.dev>
-In-Reply-To: <20260701061101.344679-1-ye.liu@linux.dev>
-References: <20260701061101.344679-1-ye.liu@linux.dev>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pu0GHJUO";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="h0y10jiz"
+X-UUID: ba40cf32751311f1b1788b6acf885367-20260701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=mXpkSCXOdqBvGiRLdiJCrbEM/kNyWX2OVMfaL2EDeW4=;
+	b=pu0GHJUOpb0YNWZL5DeD1lpjzaoQn+J5AtJpb2sEjH5gpHBeToVEdDVjeCS4U2ekkRC8Fc8NwyypX9RNgX589LKhA50MREudEsQdBrqesit/c13FSW/AZeFYBLsq3hLbLu+VH5LENKV3SFTOJ+30BmN25BDs9+RU8w+ZnJU9c3I=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.17,REQID:940d7fc3-d836-45f1-8339-f632ea194451,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:d497b38,CLOUDID:c13aad0b-cc5c-4c79-a965-86c83a4d1523,B
+	ulkID:nil,BulkQuantity:0,SF:80|81|82|83|102|110|111|836|865|888|898,TC:-5,
+	Content:0|15|50|99,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:-
+	1,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: ba40cf32751311f1b1788b6acf885367-20260701
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <peter.wang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 395962245; Wed, 01 Jul 2026 14:11:41 +0800
+Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Wed, 1 Jul 2026 14:11:40 +0800
+Received: from SG2PR04CU010.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
+ 15.2.2562.29 via Frontend Transport; Wed, 1 Jul 2026 14:11:40 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KvOLwrkRt4CI5cIkAPjasEv7uJP4iNLFO5mfwRYYCq80A13mVXbG5GahbD4vUMm5/3z0XYHe6lIZz0KQi5ExjkZhiPZO1OMHM5V1bpt6CurxG6JkOoVIjz2zssauK3xdUe9EFMVgt3Rm3jjt/OQNzwOVX3ji/60Q/WxpZq+spEVaAyVaatJFNXhZ4q8HVpPUeVPpLGGn084vCdzJcAbBUsQ0xKUk+hpNDOZOAnxnQQARSl8Kxmw9ZODpqyEFkElVhfzOnkLooOBWTB+ieHlpK8gSL23HgXWRGZlAKmfiSv4weHhJZb+Vhsfsn0pejyKy6vgr7LxNDtw1W1H/fYSMnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mXpkSCXOdqBvGiRLdiJCrbEM/kNyWX2OVMfaL2EDeW4=;
+ b=sSJQwB+JWEjCH1ZJDTT4TeApyPMNUP6yPpSSUDg2WIRDwrlReanniciLVrxM21KBLpS855RIl0HHx0r06/niYpr/Wy9l5Ev/I0wHawcd0/mWHahxriNVy8xY5VYlbI+ML7T7gz9FN6fbrlUO6adLwwtzkII3yfSr4vXFgKdM3bfxuWun69D6zeSON1aR+3u5bISAo3ejvO/he3ek9sQ29t+LcmnKsOK3qqlo51H9TDzs5S5JV/OG73eCDapa7Z0k/bbGNCbc0et530sU5zBZvOcJTriUF8nC6rFOWbxB6UwxF/QwxNrqmpuSawCOM/QJRXqnnmHodegBaebZQ3vfEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mXpkSCXOdqBvGiRLdiJCrbEM/kNyWX2OVMfaL2EDeW4=;
+ b=h0y10jizFTER5xLNNC4LSpnaeKmhZWaXzgaUApsDD6DUcn1utzY2DeBNYE+7UWTJGvkAfIqaP56TAlTLHgdOKqNQacDhEkddaBD0ZMRSYbyWt/uNRI9053qW3tlVmH8isf3BMB0WDwi/ofGYbfRUR9XlS0Ve4zp6G7ZTTyybbTc=
+Received: from PSAPR03MB5605.apcprd03.prod.outlook.com (2603:1096:301:66::6)
+ by SEZPR03MB8275.apcprd03.prod.outlook.com (2603:1096:101:18e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 1 Jul 2026
+ 06:11:38 +0000
+Received: from PSAPR03MB5605.apcprd03.prod.outlook.com
+ ([fe80::165:d36a:3f76:2925]) by PSAPR03MB5605.apcprd03.prod.outlook.com
+ ([fe80::165:d36a:3f76:2925%6]) with mapi id 15.21.0181.008; Wed, 1 Jul 2026
+ 06:11:38 +0000
+From: =?utf-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang@mediatek.com>
+To: "rostedt@goodmis.org" <rostedt@goodmis.org>
+CC: "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	=?utf-8?B?Q0MgQ2hvdSAo5ZGo5b+X5p2wKQ==?= <cc.chou@mediatek.com>,
+	"jejb@linux.ibm.com" <jejb@linux.ibm.com>, "bvanassche@acm.org"
+	<bvanassche@acm.org>, "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>,
+	=?utf-8?B?Q2hhb3RpYW4gSmluZyAo5LqV5pyd5aSpKQ==?=
+	<Chaotian.Jing@mediatek.com>, =?utf-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?=
+	<eddie.huang@mediatek.com>, =?utf-8?B?UWlsaW4gVGFuICjosK3pupLpup8p?=
+	<Qilin.Tan@mediatek.com>, =?utf-8?B?TGluIEd1aSAo5qGC5p6XKQ==?=
+	<Lin.Gui@mediatek.com>, =?utf-8?B?WWktZmFuIFBlbmcgKOW9ree+v+WHoSk=?=
+	<Yi-fan.Peng@mediatek.com>, "alim.akhtar@samsung.com"
+	<alim.akhtar@samsung.com>, =?utf-8?B?SmlhamllIEhhbyAo6YOd5Yqg6IqCKQ==?=
+	<jiajie.hao@mediatek.com>, =?utf-8?B?TmFvbWkgQ2h1ICjmnLHoqaDnlLAp?=
+	<Naomi.Chu@mediatek.com>, =?utf-8?B?QWxpY2UgQ2hhbyAo6LaZ54+u5Z2HKQ==?=
+	<Alice.Chao@mediatek.com>, =?utf-8?B?RWQgVHNhaSAo6JSh5a6X6LuSKQ==?=
+	<Ed.Tsai@mediatek.com>, wsd_upstream <wsd_upstream@mediatek.com>,
+	"avri.altman@wdc.com" <avri.altman@wdc.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, =?utf-8?B?Q2h1bi1IdW5nIFd1ICjlt6vpp7/lro8p?=
+	<Chun-hung.Wu@mediatek.com>, =?utf-8?B?VHVuLXl1IFl1ICjmuLjmlabogb8p?=
+	<Tun-yu.Yu@mediatek.com>
+Subject: Re: [PATCH v3] ufs: core: add hba parameter to trace events
+Thread-Topic: [PATCH v3] ufs: core: add hba parameter to trace events
+Thread-Index: AQHdCNLi94hno+2a0EKBFGOrIXb6GLZXoxmAgACMM4A=
+Date: Wed, 1 Jul 2026 06:11:37 +0000
+Message-ID: <e4c090a5b8402fe3db137d986f9a6639de73cc67.camel@mediatek.com>
+References: <20250214083026.1177880-1-peter.wang@mediatek.com>
+	 <20260630165612.3e21b510@gandalf.local.home>
+	 <20260630174949.16a9d867@gandalf.local.home>
+In-Reply-To: <20260630174949.16a9d867@gandalf.local.home>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PSAPR03MB5605:EE_|SEZPR03MB8275:EE_
+x-ms-office365-filtering-correlation-id: e512a848-e6c3-4a24-b510-08ded7379c59
+x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|4143699003|56012099006|11063799006|22082099003|18002099003|38070700021;
+x-microsoft-antispam-message-info: t+cnSvW6QuqcdiWNWp3Peyn80ILIiosoezyy2jANP4v2ccj9mogsMulhmPMh8ORlaDb3oeY35J0K3wGyx4NluNs40FiCoSsd5xwmWi3IxPRb4mh4U5w+Ps1KEQTA4RyhXjSxD9MD5S3q08FtclqCdh/rzsD1CMMvIQbnxbJ8iowbY9NTLwEAMLlZ8KKp7jQT3ZjrjH9m3C40+nsaHVji9x8ttDM2ZzzKW3p+R/RayxymAAGeHi5y0jf8Xx1gxJDBUsHVzyTHtKL8Pz/j3THFEm5BnrRRrc66ZrBVqGQKg5kGVICaMoH9jhWt6EfXu8LtvbwFKbc8dY5d02lboj+vU4DW3qidHqazC2KRNIlPT/qzjY9csQcfII7oXO//phDJmcW8jjs3+ER4qunt3gI56Lr/0CfSJMOs/3BEEbH+E8WP7shFZyU8T+shHq56dVxbM7cmeTDXdag/ZuRldb1xIIK4GZgVbo+R0MHkmgPFiTZfE1O2ILovkjyWwLdOg9oznCuhSQaUN2ReDpIhjFBzIbl/hqdfAEUKtV+hILbUPa2pZYUXLrWdSswEvc9aM5Lq8lJry3jPbhBiWiVKfRhgFFQO9LMxJApT06B1k0S+6pM5DyqQ7o5iHCMbhAmA4Hj8LbgcvquWJcnpQ9gFctH1DnJyI/rmEvK+oa6Asz8hF9XU6kXo661CNBybVVZHyQSWJpGIUXDx8arQ+bTEoj0bLkM86V+RsorS4zF9Q0S9PsA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR03MB5605.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(4143699003)(56012099006)(11063799006)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NkNyOGxJdjZGRDB2a2dObDNZTnhhNU9BNzZoNXlaTUhGWStyZ3ZJcHQ2MFpM?=
+ =?utf-8?B?VGhka1Q5WnZFb2ZucDZ3blpBalBmZGNJbmtxK25TenkzSkRTbHJvKzdudTFs?=
+ =?utf-8?B?TFJsUXkzWEJpcnBNSGJrblVWb0Rua1ZSbWtnMnBWbFkvRC9SQld4bUh3K1B0?=
+ =?utf-8?B?WWRTamVQS1FQa21DZEkzaXRSMG9uUDcwUVZNcWRBc3FPamptTzN1MG5UVndB?=
+ =?utf-8?B?Q3FBdEFZOERiemlsc1l4SEJjK3VlT040dk1GNjZPU0ZXK09SQjdxV3ZUR3RQ?=
+ =?utf-8?B?Q3ZVVU1oeFNUcVV6ZXl3VzBsdDFXRHFVemNibU5NQzFNS1JwOGFZK0FsR1B1?=
+ =?utf-8?B?bWZLM3lpNXNVRndrTFN3OWpLTTAyYTM1Z2dPbDRMVDN1L0ZIZ0FTUzR5TEE4?=
+ =?utf-8?B?QnNlMlNiRndxeThKdmg5ZGJENVhtZFkyeTBBSjNRSzBRZHJLUUJZMzdvckJK?=
+ =?utf-8?B?MXUwdFcwQjR6K1owZlhnb1Z2SmdJaUJjQjFSckM2cTBRakJVNEtibVozNkNZ?=
+ =?utf-8?B?SVcxVG1ETHMrQTBtUmkzUmNoQUY1UmY1ZTJnVlRpUFlRYlVoeXltbGlCc0J2?=
+ =?utf-8?B?K0NCOHFPbEh5V2FOYVo1U0ZrM1lmK0g2Y2tBdC8zbzZOeHVrM2krUHl2VGh2?=
+ =?utf-8?B?b0pHZlJMUzJ1aWxMRjVNZFd3K1BjWFZQM1kzMUJnMGxIenNnazlkYWtkWTgr?=
+ =?utf-8?B?SVVkUE5mcGRNMW5GN04yZnVkVUNGdklVQWprZ0x5NlllK0tZbmFzUjA0eUgz?=
+ =?utf-8?B?OERGVXZodTJlNFBjTnk1RHJKeE16dXdaOVQ4MElkLzllcXdjTGZISTArMHBY?=
+ =?utf-8?B?bTVRdVZaSUVibzVHUm1EM3N5OC85bDY0QWJ4OTZJWVN2cWg3KzdBRWQyYU0w?=
+ =?utf-8?B?VWJrcTZjUmdXWkRXK0lkMUhDM3R4SkhYM3RYOUt0dit1N1RIUlZCbzRuK1gy?=
+ =?utf-8?B?bkcwT25EVElTakFqakt2VXpDQXRzUit3YWdoT3Rza0dsNHpIbmkwdXJpMXZy?=
+ =?utf-8?B?a1ExYVczaWNPWHVKTjE1aEZqUHM1VjVoTkE1dVUxZTMzMTZ3OU9KZ0k4TFpy?=
+ =?utf-8?B?Mi8xY0xEdXRVcW0ydVE5VEVscytwVkdyc2Z4TUlRRWd4Mlp1ckl2dktwSjR3?=
+ =?utf-8?B?TExMTUoreEpGcSs1bzBqNmJxZjlLbUEzQ1BjdUFVb3BrNFZvNkMvb0VmWVRC?=
+ =?utf-8?B?MlVYeHFJUjhxaVlkY2Z1NVo4K3lINVJtTVQ5MmFJaGlwdWQzd3pvSFQyWEVK?=
+ =?utf-8?B?eGprK3l2bnFFTk9xeHdDZmVkSXQxcnE5WlpoR2pWTExvVGJhcHRZT002WW5a?=
+ =?utf-8?B?M3ZzeWV4akdyUVFkdml0RkIwZUpmU04rcTkwUnZEMjRYME4yRUJtSTJrSTUz?=
+ =?utf-8?B?VzJyMFRhcnI4ZG5SZDR5TG1VOXdTSlBPYSthb3FpOEZacnQ3ZnJQRkF1T0ZW?=
+ =?utf-8?B?Zm1FWTQrQ2NjVDZxWnRLREVvelIvYVBiSzlpRUxlZ3dBWmlGSDhLTkhRUjg5?=
+ =?utf-8?B?SU9ZcFlxMVhuWEYyc2VpdGdBMWhVeEZJTm5DdG5XeTdPMTlHTDY1ZjBzSlFv?=
+ =?utf-8?B?b0lVM3oyb1lFazRTQjdMRVMrWGsvY0l2Rzkrd2xmTllYajNqcXpJb1c4VWFr?=
+ =?utf-8?B?YWRPa2Nkd0d5c1RSVWpTbml1SHRway9idHFXcFViVitTOHdtN2twY1VnRTVt?=
+ =?utf-8?B?TXRYUkQwWWdCSDJDNHVuQ29zdkNHWk4rQ294aVhlTEwwR3BMdzVyQ1JlQy9o?=
+ =?utf-8?B?TUVPNXJMTUE5d0RISUZNZURzNDUvSEtCMStDQnpqNHFPYUozejB0SGRCVjFM?=
+ =?utf-8?B?bUpKNk1FWG4rSzZlUGk1MDFoS2I1ZHVCZmpMNUFzWHl4L2RTaVBoOUxZdS9z?=
+ =?utf-8?B?NGZoaG91Tnc4RS9kVkhhRnBVSzZ1aWRmWjRibVNVeXpiSmxjckZqNHcwbEM0?=
+ =?utf-8?B?ZStZbkR4YW1IU1V0Q2FYNGlVZnE2TzdBWjgxc05raXFOWC9RcXB6RGlONWZl?=
+ =?utf-8?B?czNGY29FZUJhSm5oQWs5Vm1rR3hXdHlDQ3FhTnNadk0xdGNkclRlSG1TRE8r?=
+ =?utf-8?B?aG9uU3VKdDNOZTR5V2h2UEU5YkJDM0NjQkJ5QVI0WGZZbllmOWNDYThaQ2xn?=
+ =?utf-8?B?TDExVTMwczB3eW5EWU1qRzNFMnI5UXZWdElhTTVqVnN4bGplMncwNFVZeVBZ?=
+ =?utf-8?B?bEFuNjJya2x2YUQyRnR1WmNvakh0aUJILzZ0dmZKN2MxWWRvb0drd1pGNVpW?=
+ =?utf-8?B?MjlLOUplVDM2T254QVpwaXNMMFZTVEJvdHlZNzNzbXlvNC85TFJDcjBlWGY4?=
+ =?utf-8?B?MjA1UkJ3SlFXVTgxOWl5ZDJuWllCZUpIdkZQb3BteUd5R1ZEdjFDQ3VNRnpP?=
+ =?utf-8?Q?XJlJRTjR+MNi3U9k=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B097B5C48F0B5E4C802E74DBDCCF3DE2@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Exchange-RoutingPolicyChecked: mhSyU6zevgJbygpIyNfMeEKPavwMzPXzU9MLCx7PQBtePQvR77MLeJaPWw6SBoQ4LwixPJ8KfhHHOqLQ46ShOHN8Bbc6J1/he/rRnl+M7r+Q/UyYsuycC6z0kecPvGmztXwnh6WA18q+LZ7VWguEU8NPJhrgEh2jjw/K4Vz29inI+twl4wSMOCP6GRDmRavcEbCqGrj5v2u54RORS2yHdVbwX71eYXN7dUupE8d7iDRwVpdYwIwCbu6vC5L+4UFrrGe/0dXgWLelIs68zShnyWvk7Pcfb+cqmeZO/zoNfm599iABlmIQAki95zU8Bt25KzmEB4u+1vm68NCIAbKA9g==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR03MB5605.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e512a848-e6c3-4a24-b510-08ded7379c59
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2026 06:11:37.9252
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5emJ9pIOuXNaqkUr1aGGv1ckWd5KXWMiVHbXqkX41GGiNPMbIdJFgdna5wNYwRx4EZefzyOa2Z6YI/oYiolVtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8275
+X-MTK: N
 
-Replace all 'int reason' function parameters that carry migrate_reason
-values with the proper 'enum migrate_reason' type.  This makes the
-intent explicit and leverages compiler type checking.  The affected
-subsystems are:
-
-  - page_owner: __folio_set_owner_migrate_reason(),
-                folio_set_owner_migrate_reason()
-  - migrate: migrate_pages(), migrate_pages_sync(),
-             migrate_pages_batch(), migrate_folios_move(),
-             migrate_hugetlbs(), unmap_and_move_huge_page()
-  - hugetlb: move_hugetlb_state(), htlb_allow_alloc_fallback()
-  - trace: mm_migrate_pages and mm_migrate_pages_start events
-
-The 'short last_migrate_reason' struct field and internal helper
-parameter in page_owner are intentionally left as 'short' since they
-store per-page metadata where size matters.
-
-No functional change.
-
-Signed-off-by: Ye Liu <ye.liu@linux.dev>
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
----
- include/linux/hugetlb.h        |  9 +++++----
- include/linux/migrate.h        |  6 ++++--
- include/linux/page_owner.h     |  7 ++++---
- include/trace/events/migrate.h |  8 ++++----
- mm/hugetlb.c                   |  3 ++-
- mm/migrate.c                   | 12 ++++++------
- mm/page_owner.c                |  2 +-
- 7 files changed, 26 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 2abaf99321e9..fa828232dfcc 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -154,7 +154,8 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
- bool folio_isolate_hugetlb(struct folio *folio, struct list_head *list);
- int get_hwpoison_hugetlb_folio(struct folio *folio, bool *hugetlb, bool unpoison);
- void folio_putback_hugetlb(struct folio *folio);
--void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason);
-+void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio,
-+			enum migrate_reason reason);
- void hugetlb_fix_reserve_counts(struct inode *inode);
- extern struct mutex *hugetlb_fault_mutex_table;
- u32 hugetlb_fault_mutex_hash(struct address_space *mapping, pgoff_t idx);
-@@ -424,7 +425,7 @@ static inline void folio_putback_hugetlb(struct folio *folio)
- }
- 
- static inline void move_hugetlb_state(struct folio *old_folio,
--					struct folio *new_folio, int reason)
-+					struct folio *new_folio, enum migrate_reason reason)
- {
- }
- 
-@@ -956,7 +957,7 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
- 	return modified_mask;
- }
- 
--static inline bool htlb_allow_alloc_fallback(int reason)
-+static inline bool htlb_allow_alloc_fallback(enum migrate_reason reason)
- {
- 	bool allowed_fallback = false;
- 
-@@ -1238,7 +1239,7 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
- 	return 0;
- }
- 
--static inline bool htlb_allow_alloc_fallback(int reason)
-+static inline bool htlb_allow_alloc_fallback(enum migrate_reason reason)
- {
- 	return false;
- }
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index d5af2b7f577b..1f83924615d6 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -57,7 +57,8 @@ void putback_movable_pages(struct list_head *l);
- int migrate_folio(struct address_space *mapping, struct folio *dst,
- 		struct folio *src, enum migrate_mode mode);
- int migrate_pages(struct list_head *l, new_folio_t new, free_folio_t free,
--		  unsigned long private, enum migrate_mode mode, int reason,
-+		  unsigned long private, enum migrate_mode mode,
-+		  enum migrate_reason reason,
- 		  unsigned int *ret_succeeded);
- struct folio *alloc_migration_target(struct folio *src, unsigned long private);
- bool isolate_movable_ops_page(struct page *page, isolate_mode_t mode);
-@@ -77,7 +78,8 @@ int set_movable_ops(const struct movable_operations *ops, enum pagetype type);
- static inline void putback_movable_pages(struct list_head *l) {}
- static inline int migrate_pages(struct list_head *l, new_folio_t new,
- 		free_folio_t free, unsigned long private,
--		enum migrate_mode mode, int reason, unsigned int *ret_succeeded)
-+		enum migrate_mode mode, enum migrate_reason reason,
-+		unsigned int *ret_succeeded)
- 	{ return -ENOSYS; }
- static inline struct folio *alloc_migration_target(struct folio *src,
- 		unsigned long private)
-diff --git a/include/linux/page_owner.h b/include/linux/page_owner.h
-index 3328357f6dba..9fe51dfccf26 100644
---- a/include/linux/page_owner.h
-+++ b/include/linux/page_owner.h
-@@ -3,6 +3,7 @@
- #define __LINUX_PAGE_OWNER_H
- 
- #include <linux/jump_label.h>
-+#include <linux/migrate_mode.h>
- 
- #ifdef CONFIG_PAGE_OWNER
- extern struct static_key_false page_owner_inited;
-@@ -14,7 +15,7 @@ extern void __set_page_owner(struct page *page,
- extern void __split_page_owner(struct page *page, int old_order,
- 			int new_order);
- extern void __folio_copy_owner(struct folio *newfolio, struct folio *old);
--extern void __folio_set_owner_migrate_reason(struct folio *folio, int reason);
-+extern void __folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason);
- extern void __dump_page_owner(const struct page *page);
- extern void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- 					pg_data_t *pgdat, struct zone *zone);
-@@ -43,7 +44,7 @@ static inline void folio_copy_owner(struct folio *newfolio, struct folio *old)
- 	if (static_branch_unlikely(&page_owner_inited))
- 		__folio_copy_owner(newfolio, old);
- }
--static inline void folio_set_owner_migrate_reason(struct folio *folio, int reason)
-+static inline void folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
- {
- 	if (static_branch_unlikely(&page_owner_inited))
- 		__folio_set_owner_migrate_reason(folio, reason);
-@@ -68,7 +69,7 @@ static inline void split_page_owner(struct page *page, int old_order,
- static inline void folio_copy_owner(struct folio *newfolio, struct folio *folio)
- {
- }
--static inline void folio_set_owner_migrate_reason(struct folio *folio, int reason)
-+static inline void folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
- {
- }
- static inline void dump_page_owner(const struct page *page)
-diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-index 11bc0aa14c7e..15ee2ef201b5 100644
---- a/include/trace/events/migrate.h
-+++ b/include/trace/events/migrate.h
-@@ -52,7 +52,7 @@ TRACE_EVENT(mm_migrate_pages,
- 	TP_PROTO(unsigned long succeeded, unsigned long failed,
- 		 unsigned long thp_succeeded, unsigned long thp_failed,
- 		 unsigned long thp_split, unsigned long large_folio_split,
--		 enum migrate_mode mode, int reason),
-+		 enum migrate_mode mode, enum migrate_reason reason),
- 
- 	TP_ARGS(succeeded, failed, thp_succeeded, thp_failed,
- 		thp_split, large_folio_split, mode, reason),
-@@ -65,7 +65,7 @@ TRACE_EVENT(mm_migrate_pages,
- 		__field(	unsigned long,		thp_split)
- 		__field(	unsigned long,		large_folio_split)
- 		__field(	enum migrate_mode,	mode)
--		__field(	int,			reason)
-+		__field(	enum migrate_reason,	reason)
- 	),
- 
- 	TP_fast_assign(
-@@ -92,13 +92,13 @@ TRACE_EVENT(mm_migrate_pages,
- 
- TRACE_EVENT(mm_migrate_pages_start,
- 
--	TP_PROTO(enum migrate_mode mode, int reason),
-+	TP_PROTO(enum migrate_mode mode, enum migrate_reason reason),
- 
- 	TP_ARGS(mode, reason),
- 
- 	TP_STRUCT__entry(
- 		__field(enum migrate_mode, mode)
--		__field(int, reason)
-+		__field(enum migrate_reason, reason)
- 	),
- 
- 	TP_fast_assign(
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 571212b80835..17732d1fdc5e 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -7182,7 +7182,8 @@ void folio_putback_hugetlb(struct folio *folio)
- 	folio_put(folio);
- }
- 
--void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason)
-+void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio,
-+			enum migrate_reason reason)
- {
- 	struct hstate *h = folio_hstate(old_folio);
- 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index d9b23909d716..49e10feeb094 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1469,7 +1469,7 @@ static int migrate_folio_move(free_folio_t put_new_folio, unsigned long private,
- static int unmap_and_move_huge_page(new_folio_t get_new_folio,
- 		free_folio_t put_new_folio, unsigned long private,
- 		struct folio *src, int force, enum migrate_mode mode,
--		int reason, struct list_head *ret)
-+		enum migrate_reason reason, struct list_head *ret)
- {
- 	struct folio *dst;
- 	int rc = -EAGAIN;
-@@ -1626,7 +1626,7 @@ struct migrate_pages_stats {
-  */
- static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
- 			    free_folio_t put_new_folio, unsigned long private,
--			    enum migrate_mode mode, int reason,
-+			    enum migrate_mode mode, enum migrate_reason reason,
- 			    struct migrate_pages_stats *stats,
- 			    struct list_head *ret_folios)
- {
-@@ -1716,7 +1716,7 @@ static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
- static void migrate_folios_move(struct list_head *src_folios,
- 		struct list_head *dst_folios,
- 		free_folio_t put_new_folio, unsigned long private,
--		enum migrate_mode mode, int reason,
-+		enum migrate_mode mode, enum migrate_reason reason,
- 		struct list_head *ret_folios,
- 		struct migrate_pages_stats *stats,
- 		int *retry, int *thp_retry, int *nr_failed,
-@@ -1799,7 +1799,7 @@ static void migrate_folios_undo(struct list_head *src_folios,
-  */
- static int migrate_pages_batch(struct list_head *from,
- 		new_folio_t get_new_folio, free_folio_t put_new_folio,
--		unsigned long private, enum migrate_mode mode, int reason,
-+		unsigned long private, enum migrate_mode mode, enum migrate_reason reason,
- 		struct list_head *ret_folios, struct list_head *split_folios,
- 		struct migrate_pages_stats *stats, int nr_pass)
- {
-@@ -2011,7 +2011,7 @@ static int migrate_pages_batch(struct list_head *from,
- 
- static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
- 		free_folio_t put_new_folio, unsigned long private,
--		enum migrate_mode mode, int reason,
-+		enum migrate_mode mode, enum migrate_reason reason,
- 		struct list_head *ret_folios, struct list_head *split_folios,
- 		struct migrate_pages_stats *stats)
- {
-@@ -2088,7 +2088,7 @@ static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
-  */
- int migrate_pages(struct list_head *from, new_folio_t get_new_folio,
- 		free_folio_t put_new_folio, unsigned long private,
--		enum migrate_mode mode, int reason, unsigned int *ret_succeeded)
-+		enum migrate_mode mode, enum migrate_reason reason, unsigned int *ret_succeeded)
- {
- 	int rc, rc_gather;
- 	int nr_pages;
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index c2f43ab860eb..4e352941a6e2 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -345,7 +345,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
- 	inc_stack_record_count(handle, gfp_mask, 1 << order);
- }
- 
--void __folio_set_owner_migrate_reason(struct folio *folio, int reason)
-+void __folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
- {
- 	struct page_ext *page_ext = page_ext_get(&folio->page);
- 	struct page_owner *page_owner;
--- 
-2.43.0
-
+T24gVHVlLCAyMDI2LTA2LTMwIGF0IDE3OjQ5IC0wNDAwLCBTdGV2ZW4gUm9zdGVkdCB3cm90ZToN
+Cj4gT24gVHVlLCAzMCBKdW4gMjAyNiAxNjo1NjoxMiAtMDQwMA0KPiBTdGV2ZW4gUm9zdGVkdCA8
+cm9zdGVkdEBnb29kbWlzLm9yZz4gd3JvdGU6DQo+IA0KPiA+ID4gDQo+ID4gPiDCoMKgwqAgVFBf
+cHJpbnRrKCIlczogZ2F0aW5nIHN0YXRlIGNoYW5nZWQgdG8gJXMiLA0KPiA+ID4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgIF9fZ2V0X3N0cihkZXZfbmFtZSksDQo+ID4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgZGV2X25hbWUoX19lbnRyeS0+aGJhLT5kZXYpLA0KPiA+IA0KPiA+IE5PIFlPVSBDQU4g
+Tk9UIERPIFRISVMhISEhDQo+IA0KPiBUaGlzIGlzIHdoeSB5b3Ugc2hvdWxkIGFsd2F5cyBDYw0K
+PiBsaW51eC10cmFjZS1rZXJuZWxAdmdlci5rZXJuZWwub3JnwqBvbiBhbnkNCj4gdHJhY2UgZXZl
+bnQgdXBkYXRlcy4gV2UgbG9vayB0byBjYXRjaCBidWdzIGxpa2UgdGhpcy4NCj4gDQo+IFRoZSBi
+ZWxvdyBwYXRjaCBzaG91bGQgZml4IGl0LCBhbmQgSSdsbCBzZW5kIGl0IGFzIGEgcHJvcGVyIHBh
+dGNoDQo+IHNvb246DQoNCkhpIFN0ZXZlbiwNCg0KVGhhbmsgeW91IGZvciB0aGUgcmVtaW5kZXIg
+YW5kIGZvciBmaXhpbmcgdGhpcyBidWcuDQpUaGlzIHdhcyBpbmRlZWQgbm90IHRob3JvdWdobHkg
+Y29uc2lkZXJlZC4NCg0KSG93ZXZlciwgSSBhbSBjdXJpb3VzOiBpZiB0aGUgSEJBIGlzIHJlbW92
+ZWQsIGltcGx5aW5nIHRoYXQgdGhlIA0Kc3RvcmFnZSB3b3VsZCBiZWNvbWUgdW51c2FibGUsIG1p
+Z2h0IHRoZSBzeXN0ZW0gZW5jb3VudGVyIGFuIA0KSS9PIGhhbmcgb3Igc2h1dGRvd24sIHBvdGVu
+dGlhbGx5IHByZXZlbnRpbmcgaXRzIGRldGVjdGlvbj8gDQpQZXJoYXBzIGl0J3MgYSB0aGVvcmV0
+aWNhbCBpc3N1ZSB0aGF0IHdvdWxkIG5vdCBtYW5pZmVzdCANCmluIGEgcmVhbC13b3JsZCBzaXR1
+YXRpb24/DQoNClRoYW5rcw0KUGV0ZXINCg0KDQo=
