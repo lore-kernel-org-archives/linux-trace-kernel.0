@@ -1,265 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC25A3B83FB
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 07:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1BE3B14C6;
+	Wed,  1 Jul 2026 08:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782890763; cv=none; b=Shy2L/1rx7uibv2/vREmK6rzGh8gpCppPEJ7v9drvd5qZRAlpFOF/+R4577e0Q3e4HtmdhZdwGmYZSFEYP8KQWjB4iZrvbiODwpYOTOECui1jagL0SucSz4imeU45b0EXoZSMZ3RCqXG3NDubLFK8BqXpwRVTU+xcEgSQHu3K58=
+	t=1782893142; cv=none; b=uqiyMRH76Ku3aB67QkH5z2Bbsy4O+airmFZvIIe+d9eaNZ4MVsNXzVlzxk6Qn1yd+KFbaLRs3Vgi+JMqEgZmZQpmMhjFInLdFAz90Ib/Mt2p0thW7iWYO0wNdoH4pdnmG/w/KhR+ELLMSZPT2ZXkMXS0GKmOYUr5HEv99ScYkbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782890763; c=relaxed/simple;
-	bh=fh9cVKHSPq4zHtIi72Vg5I9J/McLdcnJbUN/Exmbo2g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S1FUMWgY1oZqVAVMEVy9yIxF5hI+jpNh7bttYx44+AelPWPLc902kklx0XICZSy7lJW6m+XDYhMfwF+dsG1k5Qj14lyabizOjsmYoq5Lw884dTsL/kC4ZPauvRBYj3+GJryA5cCh4Ol1i1jiUqi2OrtguR7gQmLJAHV2IrxuMBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PDXeYLkj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782893142; c=relaxed/simple;
+	bh=DP0eg4B0OM8TO8XnS8C6gHlWxSavTjQl03mk/DOj9RE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3ZIxQPx92l8bZuMB158lw1IPu0mq715AjPCOzWV7Yn8XkIZoLgw2ULu2wsXaZXJG6fbtZpeTXoGdOB+BJzZWqqDpUgajsY/SkQaxzrfq8hs0iro4/1fni0e0hbvEzT4Zcd7stP6k23/dKszWQSGJpgF3Q7985uI0qU5z+iusSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQnMfZY0; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PDXeYLkj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782890761;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q+F87vgJy7DBZttulQHhqfGaMmavVnClUfiQw/28wgo=;
-	b=PDXeYLkjbtQxawrBLXHyeu5ZEhBfsSPizBb5VTcAjMZQpGe9sd1uaG8qT1hR73G3q4JHZ4
-	J9IF4c0hAGrM39r9KE61tLds+cxPOzAKqJJ6WcNYPR0EVX5nS1nIYSYF6893iRnx74LlZ2
-	0eeeVhGjDbT0cJIgmUTL10gjZt2EDcM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-467-i8D5B-cgOJOyWxKCo6VAgA-1; Wed, 01 Jul 2026 03:25:58 -0400
-X-MC-Unique: i8D5B-cgOJOyWxKCo6VAgA-1
-X-Mimecast-MFC-AGG-ID: i8D5B-cgOJOyWxKCo6VAgA_1782890757
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-490a767c7dcso2804825e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 00:25:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782890757; x=1783495557;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TYs40YWx82AKNvneShCKwgmMlMyJXKWY7H77xkrO5kk=;
-        b=NA1AsByLTutFoPszuqONVh16lUDWTvY+TDsKaoFwSYfLFkjmVoNbrZf0bDiVPn6OO6
-         7R9hB0rwZpwIfhJhOHs7Ww3vyEtoPfpApRutXPYy/CXeO48+YAIw7vr7UTpH4loywyzc
-         UupaVE1jMDU7/68fXCnTw78p6OTugIOA5z0my209a1Mcq3m7f3AwwzP3VNMdCCTV0FaM
-         20x/JSDBAjqyM7cD3S8DN9wkyEUuyaQFIYJO74d5bR1RHEb9vClvp4V4kVpidWeCIR+l
-         8eTIktN2vhgfB5psK6PsLlhaThdpy5xkWYu/y+tvFW677bjg0K7Al1wnsQMKITFspUGL
-         ULfA==
-X-Forwarded-Encrypted: i=1; AFNElJ+A6GPsmslXhQ9/oFk8WDllnrHKQqKkQKDTFcePx7xwnWVBy0FG2XtdMNhcrVVuvkQ075lOV9KVsjXYrYZrWo1IImI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT6YqV5nN5ExM8mYPI6Uwtc5sIe9lKln3Q6+RTkdjYeUNLRlcJ
-	OhwmlRQxOKhrEGo2Utk5L5iQQQCv64pC1Ayv2qLM31bOTqb1wmLPXl7aSdxpVJ8dVAr/37FQ7QD
-	dxTzhiD7DXe9fCJsSU7ubZgu0oKwxU6yqXV/mk6x/Dnw35jGsaZBmIDrbtJK0aTtoGgTe0u22Vg
-	==
-X-Gm-Gg: AfdE7cmlMTpHVUtbDkBUJV145+Q6mTI+NGxJQ/RU40p7j+JZz+zZ/BspECPE/8K3z1k
-	297gE2JlatBiIUM9UMM1iPrJYgTKAqmQywqzMv9qfAeWxSXMeeBxWhc4gDjuT7h3i63WArACgTz
-	9/KXlsxnUq9vwJWpqUlqErH8ZWSTY7CEMnLjybGvSgpcdy4Um1bPS/3z/t29XYsUSpymEDAxwpv
-	eYMWwQKWJWkxGtZ+git8I4zA9/XgyhoWglz7bP0OvhsIzUGSvHKFH5jWUIRblmTbCJfIY7I0iQH
-	mE3vr6unq20wQcupaEliuHrH3m9eFvjn6j8i00S/d3h6RQq5Z/PaVxRei4TSVwlgeVDHL7r4V/k
-	nxDkj+0ErRRTEcZqXGMD3Ic4nFDn9OfnzaLBbneqZZD20TFCbKF9atty4KsWyMBKXk9PBXiP0
-X-Received: by 2002:a7b:cb06:0:b0:493:a5f9:d33d with SMTP id 5b1f17b1804b1-493c2b84c1fmr4344985e9.18.1782890756674;
-        Wed, 01 Jul 2026 00:25:56 -0700 (PDT)
-X-Received: by 2002:a7b:cb06:0:b0:493:a5f9:d33d with SMTP id 5b1f17b1804b1-493c2b84c1fmr4344625e9.18.1782890756199;
-        Wed, 01 Jul 2026 00:25:56 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be81df2asm97709125e9.12.2026.07.01.00.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 00:25:55 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin
- <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, John Kacur
- <jkacur@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan
- Corbet <corbet@lwn.net>
-Subject: Re: [RFC PATCH v2 4/4] rtla/osnoise: Leverage IPI event filters
- when tracing a subset of CPUs
-In-Reply-To: <CAP4=nvT5H73ptaBaZ2fWQ+SjJ-c3eEGZbrSefMV6fxqL-va2XA@mail.gmail.com>
-References: <20260617131803.2988989-1-vschneid@redhat.com>
- <20260617131803.2988989-5-vschneid@redhat.com>
- <CAP4=nvQ_x+LyDBoQWOBB4ERy8OwEp9LQzyLJJMHzYdrZzK4zyw@mail.gmail.com>
- <xhsmhmrwcw2ll.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAP4=nvT5H73ptaBaZ2fWQ+SjJ-c3eEGZbrSefMV6fxqL-va2XA@mail.gmail.com>
-Date: Wed, 01 Jul 2026 09:25:54 +0200
-Message-ID: <xhsmhjyrfw4ql.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQnMfZY0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782893139; x=1814429139;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DP0eg4B0OM8TO8XnS8C6gHlWxSavTjQl03mk/DOj9RE=;
+  b=FQnMfZY00VYPxz8UpUgTtZallSt5HLZjXvQLkIj4CZE9Xhaj6rSkI5e5
+   lvSBLjLLeDzMpZcP/8RaPMx1reZKbmKqxCH4QmCOcyM3WNzRKZUzBc1i+
+   IWNo1OIo0QXVyHQnVEayNSfOIg+cp/5Bxn2NNcqSQnpAwLCaMWmugIdvu
+   HRP0kNWN+3qiU5D+6h2lejaHT8Hf0eiBIP8Vwj6AZ0bavlZR/NOHmcmok
+   q/c5JnE1/PWTJid4Bj8sAVi5A8/gOx+DkmgCX5tg1O96fizfOVNbvReFa
+   KlMckIPpFNf92j7LsSH+1zoR35IorV2anSD1/iscz8HnJqIjyPS1n+rsO
+   A==;
+X-CSE-ConnectionGUID: l98uhD6OSMS9e2lcfhniWg==
+X-CSE-MsgGUID: 5TgCtMTJSB2FxG9MwSPVyw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="94217852"
+X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
+   d="scan'208";a="94217852"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 01:05:26 -0700
+X-CSE-ConnectionGUID: lVWuAtoZRb+S8bw6cD6rzw==
+X-CSE-MsgGUID: G3cj1NKaRzaUjG0LX4qnIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
+   d="scan'208";a="257401196"
+Received: from unknown (HELO [10.239.158.49]) ([10.239.158.49])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 01:05:04 -0700
+Message-ID: <3b64e897-93a8-4f9c-88a9-f416ff44b09d@intel.com>
+Date: Wed, 1 Jul 2026 16:05:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: AjVkqWEOpIDVEoW9HAbBAK2LwFoseCOe8XUOT1hOaJs_1782890757
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 12/46] KVM: guest_memfd: Only prepare folios for
+ private pages
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-12-9d2959357853@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-12-9d2959357853@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 01/07/26 08:45, Tomas Glozar wrote:
-> =C3=BAt 30. 6. 2026 v 16:00 odes=C3=ADlatel Valentin Schneider
-> <vschneid@redhat.com> napsal:
->>
->> On 30/06/26 12:14, Tomas Glozar wrote:
->> > st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
->> > <vschneid@redhat.com> napsal:
->> >> @@ -406,6 +408,33 @@ struct osnoise_tool *osnoise_init_top(struct com=
-mon_params *params)
->> >>                 goto out_err;
->> >>         }
->> >>
->> >> +       /*
->> >> +        * If tracing on a subset of possible CPUs, leverage the kern=
-el filtering
->> >> +        * infrastructure to only generate events on traced CPUs.
->> >> +        */
->> >> +       if (params->cpus) {
->> >> +               char filter[MAX_PATH];
->> >> +
->> >> +               snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\=
-n", params->cpus);
->> >> +               retval =3D tracefs_event_file_write(tool->trace.inst,
->> >> +                                                 "ipi", "ipi_send_cp=
-u", "filter",
->> >> +                                                 filter);
->> >> +               if (retval) {
->> >
->> > retval is the number of bytes written here, so this should be "retval
->> > < 0" like in trace_event_enable_filter() in trace.c. Same below.
->> >
->>
->> According to the docstring:
->>
->>  * Return 0 on success, and -1 on error.
->>
->> but regardless yes that should be a '< 0' check to match existing code.
->>
->
-> I double-checked that and you are correct that the docstring says so,
-> but it's an error in the docstring. According to the manpage, it
-> returns the number of bytes written (i.e. positive on success, not
-> zero) [1]:
->
-> "RETURN VALUE
-> ...
-> tracefs_event_file_write() and tracefs_event_file_append() returns
-> *the number of bytes written to the system/event file* or negative on
-> error."
->
-> The code agrees as well: in tracefs_event_file_write() there's the
-> wrong docstring (likely copied from another function) [2]:
->
-> /*
->  * tracefs_event_file_write - write to an event file
->  * ...
->  * Return 0 on success, and -1 on error.
->  */
-> int tracefs_event_file_write(struct tracefs_instance *instance,
->     const char *system, const char *event,
->     const char *file, const char *str)
-> {
->         ....
->         ret =3D tracefs_instance_file_write(instance, path, str);
->         free(path);
->         return ret;
-> }
->
-> but the source of the return value is tracefs_instance_file_write(),
-> where the docstring is correct [3]:
->
-> /**
->  * tracefs_instance_file_write - Write in trace file of specific instance=
-.
->  * ...
->  * Returns the number of written bytes, or -1 in case of an error
->  */
-> int tracefs_instance_file_write(struct tracefs_instance *instance,
-> const char *file, const char *str)
-> {
->         return instance_file_write(instance, file, str, O_WRONLY | O_TRUN=
-C);
-> }
->
-> instance_file_write() gets the return value from write_file() [4]
-> which returns the return value of write() [5].
->
-> [1] https://man7.org/linux/man-pages/man3/tracefs_event_get_file.3.html
-> [2] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/=
-tracefs-events.c#n686
-> [3] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/=
-tracefs-instance.c#n532
-> [4] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/=
-tracefs-instance.c#n514
-> [5] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/=
-tracefs-instance.c#n496
->
-> So the "< 0" is required, the CPU filter doesn't work without it:
->
-> [tglozar@fedora rtla]$ uname -a
-> Linux fedora 7.0.12-101.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jun 11
-> 01:32:26 UTC 2026 x86_64 GNU/Linux
-> [tglozar@fedora rtla]$ sudo ./rtla osnoise top -q -c 0 --ipi
-> Could not set ipi_send_cpu CPU filter, return value: 14
-> Could not init osnoise tool
-> [tglozar@fedora rtla]$ sudo ./rtla osnoise top -q -d 5s --ipi
->                                          Operating System Noise
-> ...
-> [tglozar@fedora rtla]$
->
-> (output with additional debug print)
->
+On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+> From: Ackerley Tng <ackerleytng@google.com>
+> 
+> All-shared guest_memfd used to be only supported for non-CoCo VMs where
+> preparation doesn't apply. INIT_SHARED is about to be supported for CoCo
+> VMs in a later patch in this series.
+> 
+> In addition, KVM_SET_MEMORY_ATTRIBUTES2 is about to be supported in
+> guest_memfd in a later patch in this series.
+> 
+> This means that the kvm fault handler may now call kvm_gmem_get_pfn() on a
+> shared folio for a CoCo VM where preparation applies.
 
-Darnit, you're right! I'm surprised I didn't catch this while
-testing. Thanks!
+I don't get it clear why preparation isn't needed or should not be 
+performed for shared folio.
 
->> >> +                       err_msg("Could not set ipi_send_cpu CPU filte=
-r\n");
->> >> +                       goto out_err;
->> >
->> > It would be useful to have --ipi work even on older kernels that don't
->> > yet have your cpumask trace event filter patchset [1], for example, by
->> > printing a debug message that filtering is disabled and setting a flag
->> > instead of erroring out here. Then the code in
->> > osnoise_ipi_cpu_handler() can preserve the CPU_ISSET check if the flag
->> > is set.
->> >
->> > As --ipi is optional, we can choose to only support it on newer
->> > kernels, but it would be nice to have it working without the filter,
->> > too.
->> >
->> > [1] https://lore.kernel.org/linux-trace-kernel/20230707172155.70873-1-=
-vschneid@redhat.com/T/#u
->> >
->>
->> Makes sense, will do.
->>
->
-> Thanks!
->
->> [truncated]
->> >
->> > I was thinking that it might make sense to enable the filters also for
->> > the trace output instance. On the other hand, it would make it
->> > difficult to enable the event without the filter then, as specifying
->> > "-e ipi" or similar only re-enables the event but does not remove the
->> > filter. Maybe the better idea is to implement an option to filter any
->> > event enabled through -e/--event only to the measurement CPU, as a
->> > separate feature.
->> >
->>
->> I had actually forgotten about applying the filters for the output
->> instance... I'll look into it.
->>
->
-> Thanks. I gave it some more thought and realized enabling the event
-> without the filter should not be complicated at all. We can just
-> remove existing filters in trace_events_enable(), as
-> trace_events_enable() is called after osnoise_init_trace_tool() in
-> run_tool(). So that will make an explicit "-e ipi" drop the filter
-> from "--ipi" on the trace instance and show all IPI events. So you can
-> disregard my note about filtering -e options, it's not relevant here.
->
-
-That makes sense, that's the most intuitive option.
-
-> Tomas
-
+Before this patch, userspace VMM can create the gmem with FLAG_MMAP and 
+FLAG_INIT_SHARED. And KVM always faultin the pfn from gmem. In this 
+case, the gmem is always shared, and kvm_gmem_prepare_folio() is always 
+called when faultin from gmem. So it's OK to call preparation for shared 
+folio, right? Then what is the actual reason we cannot do it now?
