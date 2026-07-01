@@ -1,129 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E347480DC0
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 12:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4441648123E;
+	Wed,  1 Jul 2026 12:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782909287; cv=none; b=iPDU1Zhc4TZajz34DLN5O37LX7QcntvUcnTwBVqXxxeKeNgSJBhyPpuTC2FLOxchqVPOFHTkCa52MO9ERSElW755X2IIptKniGCmBisXsvfXn278+Tz/kNSxN0hMcwooPKLLCUKtrJHWezRsfIGqv4E03iXIZpX1u5gpfFMWC/o=
+	t=1782909358; cv=none; b=PN1rMz2XWGlnrOd8bOPW7BuHUojvHRQCWo0ejK0ZJhW4zRPLZxmaXkptg7Eqj86KFHm7ppYRgp+31zcNKF/DyGeQBBBcVsZzQkR6DXKtxg4gSHJ7WtTQB0iXXZEJM5jvZ9GS+7qe/HIM6CukO45QStbdL2stPfT61CdjkQaQy+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782909287; c=relaxed/simple;
-	bh=piXPXajSellerj2NyLVWyJ/OjwbQtQGrI/5XA2l2urM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UcR5uXgnDKGHkrSamnoaYF+KGYUcFJ+thQZmzyJdY/kJ7L+Wx3GRgJ88gNriWzgAFmr9TOF9tr2fxu3Kuer4Hu6NtNcNr8zTnxpXqd42XTjwTfGOcTFgJVdnjovIkPt/0RdHUzuAYLg9YFmg6VcGLLdNXJeI8gMlLCwvZgqqQOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DL3qT1f+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DL3qT1f+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782909285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=piXPXajSellerj2NyLVWyJ/OjwbQtQGrI/5XA2l2urM=;
-	b=DL3qT1f+Mnw8EbCbhFValJIihg49LNGd/+bUdTVv/0Qrc0GBsiUUQ5KEistCEhH+/AD2r4
-	j93JegRUYTCgyoBxWu8Zkhq07CEh6LRi9kYVAJYCk28coCN/u3sMu/QnHh8Y7GOIP0iTAG
-	byR/2VXm9yHdI9DUh1SYqz1L3pAr56A=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-394-2UR_aeBJMSyg1wAbVLGc6g-1; Wed, 01 Jul 2026 08:34:44 -0400
-X-MC-Unique: 2UR_aeBJMSyg1wAbVLGc6g-1
-X-Mimecast-MFC-AGG-ID: 2UR_aeBJMSyg1wAbVLGc6g_1782909283
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-47485fde05aso432312f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 05:34:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782909283; x=1783514083;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6SImA3bc67S49Aleri4ZSDqcnWVDlr+FWuRlVb8TQRg=;
-        b=mSs94GmR1DVr37gxghbWWBeJKwL5Thit2ONZeX00ZTQj7aZ+WEl8cTfhZm0sreDwaH
-         S0x2PLu90f6VsFRspAYAPvnjSxV+uh9Sc3Od5I+4mUACpmhL36SyrjTILHr25y419QbN
-         LWMA8TliL9wJAiS4tn20hNvWdUkzcUxHvtGOG8wIsZN6V/qDjbfRsLW9q/LdIiyrz3EZ
-         SGkwqUpD231DWRMsNAcXwaU4VcU/kJpjfcauhzzvCBqoTEN970S7Ze6ohzG4O4WVdkGC
-         vGUOkmDizLA7r/AiGjgt2ZEBcRh0QPCtqZWK0OO/w0M+GbTMfDR0VWwCkaPaQHFEg8iB
-         xzUg==
-X-Forwarded-Encrypted: i=1; AFNElJ/O78IYmadc4SEmC6IxhMnYmfoZxTK15K0CdBf+HbJYd1BDLfAle96OJowCViGq7T0YaPS66Epdbm0P7Vy7T3DFraE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPtbH9gTaWP4/9ouW0NwygjNufc+Nb6wlVHRr2C+wEMJwE1zWc
-	tc2yVUUQANn7lXy3WDMxypkx7ikzlhHLeCBkity8tr5OKZPnKCPWsXdrDP+RSkHs+9NoT+Ft/UZ
-	SPmbKbRhPlqfH7UZd0R2ZZViOLJd4RZKdm/WTY0qg7y7kbEVX/wJnUQlYCTYZyD0xMtHxfEA11w
-	==
-X-Gm-Gg: AfdE7cmz+5yZUvQe52y6Uu4y/xawe/oxLQbc9mnxG7pSEl+vwiIoNpQFFGJLw7eBjJQ
-	Z5UpnQdxltON+JQ514wB/VScy6lV2nioeUzOf1rfhjELpu4DPo5cobW8srJ5L8CbxHs55o7G+AV
-	rpDwnafdm5wWCzZiOfNfJyyLuqJtnLG9iHzOO0ARG0J/KLmvonKJ4GJe7QI2bGiTrQHdIR1NXhc
-	E79BNNXS14j3ALNvrLf6dAmwEkwvx8jKzYsgrPJtcwZgvqoUehawCbOx5K88H/oeVG2zWsGCQYl
-	NR5yGOQK7ERS/TDQzzezDJswqNscPy0WUzdWTdvP6jfPbpXmN5rVqysgswL7LHVPHccnWfgrk3a
-	N64d48elMEYUuVKq+SKUNUkIr8LhwIfx9f2WvGdMpYQYg/q8C5hiKlOYeDzeBKf11d+peRimYzr
-	Jg+6MK
-X-Received: by 2002:a05:600c:68d0:b0:490:e5c1:b8bf with SMTP id 5b1f17b1804b1-493c2b4d01dmr14992085e9.13.1782909282943;
-        Wed, 01 Jul 2026 05:34:42 -0700 (PDT)
-X-Received: by 2002:a05:600c:68d0:b0:490:e5c1:b8bf with SMTP id 5b1f17b1804b1-493c2b4d01dmr14991685e9.13.1782909282587;
-        Wed, 01 Jul 2026 05:34:42 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47563d19573sm15953957f8f.4.2026.07.01.05.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 05:34:42 -0700 (PDT)
-Message-ID: <84105e8f975673f9c49ed4a5c47f0437fa4f7dc4.camel@redhat.com>
-Subject: Re: [PATCH v2 1/4] rv/rtapp/sleep: Make the error more informative
- for user
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, 	linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Wed, 01 Jul 2026 14:34:40 +0200
-In-Reply-To: <9bc739eec41b6616e9f81cbe50759cefb1c3ad9c.camel@redhat.com>
-References: <cover.1781852967.git.namcao@linutronix.de>
-		 <d97b4b5c476e5792b6875ec9bbf8dc214f999516.1781852967.git.namcao@linutronix.de>
-	 <9bc739eec41b6616e9f81cbe50759cefb1c3ad9c.camel@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	s=arc-20240116; t=1782909358; c=relaxed/simple;
+	bh=R0ipzrHtpL9cmT69Li/RmN5LsEJBhMPUHcq/AnLj8mA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F/DAwhFzksuetYPdLc8ykCUKTuOPLI60bRv0dHJIiZQt0ERe5BLX+39nHPR8uYQER9UKJWpZ0VqyaEdKOd+jyY1jzCe0ioCjUBtcDnLk2grvsDr3ZeYQy27F+yGGA177JGxvYBd4zlkq551SHzM4NsPzqTstTVamFeiukrXUwYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 6168b682754911f1aa26b74ffac11d73-20260701
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NAME, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED
+	DN_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:eb5e5562-78c4-47ad-b065-71750001be0b,IP:15,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:40
+X-CID-INFO: VERSION:1.3.12,REQID:eb5e5562-78c4-47ad-b065-71750001be0b,IP:15,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:40
+X-CID-META: VersionHash:e7bac3a,CLOUDID:d8ac4425b7d5eff20ed6be87001237d6,BulkI
+	D:2607012035482P0BXQIA,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
+	2|127|136|850|865|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT
+	:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP
+	:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 6168b682754911f1aa26b74ffac11d73-20260701
+X-User: wangyan01@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <wangyan01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1496782800; Wed, 01 Jul 2026 20:35:45 +0800
+From: Wang Yan <wangyan01@kylinos.cn>
+To: Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Wang Yan <wangyan01@kylinos.cn>
+Subject: [PATCH 3/6] selftests/ftrace: fix spelling error in poll test comment
+Date: Wed,  1 Jul 2026 20:35:17 +0800
+Message-Id: <20260701123520.271580-4-wangyan01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260701123520.271580-1-wangyan01@kylinos.cn>
+References: <20260701123520.271580-1-wangyan01@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ipsGwM0CVt2Ln68BHyr5XWVCT0Ag7AuIDCKNwSEIYcQ_1782909283
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-07-01 at 14:26 +0200, Gabriele Monaco wrote:
-> On Fri, 2026-06-19 at 09:21 +0200, Nam Cao wrote:
-> > -static void handle_sched_wakeup(void *data, struct task_struct *task)
-> > +static void handle_sched_exit(void *data, bool is_switch)
-> > =C2=A0{
-> > -=09ltl_atom_pulse(task, LTL_WAKE, true);
-> > +=09ltl_atom_pulse(current, LTL_SCHEDULE_IN, true);
-> > =C2=A0}
->=20
-> Well, this triggers also in a spurious schedule: current -> current, can
-> that be a problem? Otherwise you may either use sched_switch over next
+Fix typo "happned" -> "happened" in ftrace poll test comment.
 
-sched_switch would obviously be in the wrong context.. Ignore that.
+Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
+---
+ tools/testing/selftests/ftrace/poll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> or pulse only if is_switch.
->=20
-> It probably isn't a big deal though, since there's no SLEEP prior.. But
-> we may want to avoid the noise.
->=20
-> Looks good overall.
->=20
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
->=20
-> Thanks,
-> Gabriele
+diff --git a/tools/testing/selftests/ftrace/poll.c b/tools/testing/selftests/ftrace/poll.c
+index 53258f7515e7..4da86a20dc85 100644
+--- a/tools/testing/selftests/ftrace/poll.c
++++ b/tools/testing/selftests/ftrace/poll.c
+@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
+ 	}
+ 	close(pfd.fd);
+ 
+-	/* If timeout happned (ret == 0), exit code is 1 */
++	/* If timeout happened (ret == 0), exit code is 1 */
+ 	if (ret == 0)
+ 		return 1;
+ 
+-- 
+2.25.1
 
