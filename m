@@ -1,363 +1,197 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF5D2DC32E
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 15:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC47342514;
+	Wed,  1 Jul 2026 16:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782920159; cv=none; b=M4yMoZFH53CERhAqNZI51HF77q+WH8pYC5MNkJgwc2c6cufYlw4mZnpZq1rHx4xmSMfK+WLGrImpwDzmXqSDNTiOYDqKij3Fm4NZqdu6+OH1Z3dVbG6Lc32dkDZ692NvNfefyOPm/beRQj4D5j1QB7Kli7WcaG6+d2MgfYIZvBc=
+	t=1782922122; cv=none; b=NbzNWgXl2E3Vmf4k1WlTtMl53q1zvN+LBZe7ffuCRo4OUqnue2IVJ8O6Nsg9feM68qfzG3Lg+zS3ncoFPJkP1BeIGd79DygToOLyWGkIRrlr6W9KNuV16ZJhC5d2OaoXVUiExGHLhZ+hTaNdHM0O1EBbVvlJ5nbcet6eA4xfbkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782920159; c=relaxed/simple;
-	bh=1CpXWYMXeecLyxRIvlWeS8DmEwA0TLBYjkJaloihYeU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tLrVcgZVR6n9pMBXb0sVDOB0upnDD/TyWppjdRSBsy3Cat8MaYgd4hcUmdoSb5YQ3FIZXANEFO5vEkZc5oRcEXHXUhQrsOHROvvXwYq8SqYcIxoxJZIdNuVmwg+UmNE+F/2Kx68oC6SrvdHLTmmq8J5hjc5FQEAt07vqxhTWfGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nOCDtuQu; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1782922122; c=relaxed/simple;
+	bh=mcbAkcbsEVWURkcAPa5vFsKErSyQeSmcgEUMd7efj+4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WRSDeZbUa7Xv9LfB8I1rd8nbJAzihhd2HFNvI0zB9omtPUvwaxeiCu8GeL/aJuiOzQc1nJB7jzarLx7p6tTpJmChlBTf49BuqNQdPB0PLgwFKsCpiUvLz976HPoVfYLYJ2w8LH7YtRm3LEGvvcdfnYVa3MspKJKtllHnlcFQBEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGttkpt2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nOCDtuQu"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2ca3b3141a6so8615875ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 08:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782920157; x=1783524957; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dm8qbEauKVXJhYGr90L/dxzQTMgwF1P0y0BSIo+cWM=;
-        b=nOCDtuQugR4O/383c/SCPgYa+tKqM/VdSSevk8rHpAHhNPZvkBypeNZC+ncr77KTQ/
-         3l1wZuQCLqSZzx/KJN5RuuuWhm120JEx/hZArQCVeTxvCEFKPoGFwIvf3LCAYcm5cwG1
-         LBLYMDeTdNX4BYonN/1ljHSMA7zbKSaJL8YhDZ8dvM9THhtEIwe7+KJmQBxZNQNPw2dc
-         4KK67ALH7nI6yHUNbfDftHfqPPOgC8gL98JPLVfyr51kOD2wj0m43qLt2EFcdn0MRetj
-         S0hnLiHA7uCYyAxzvby1YJitfcPzREc+lUZGipsYYJW7YeeNtiUq9dyHGotMTS7m1YSg
-         MFnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782920157; x=1783524957;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dm8qbEauKVXJhYGr90L/dxzQTMgwF1P0y0BSIo+cWM=;
-        b=W08/icHDv7R+tq5auotVZFJspKC0UTll9uUOfKr2/PF6MwCm6FXjCQdmCd7+063SBO
-         klnZb1/deFTGXuqAJAgKuGOZ5ShF7WeMGSsWIc+st7zGrUJjYJe9+l7OcJRnoowRlPPN
-         1QvCoZGbxMKMpxN/RLgxzWjEK7luC34bXBPTDxD1bYbN2j22YZ6Ekl40rmZXiNei1RWk
-         vMdjZyi1g0PG0FVuN0lz9VVhEQ3pETTbDw+SMTA2fTcnJKPoYlYSVPDC7T4OZT70KNK5
-         7VoN+MxgEJx9+u4FpvtKRo8fbo3TlJCYlBCFIRxq1gyEPzoHppQvr3zpYlW0YHpFtxys
-         qXVw==
-X-Forwarded-Encrypted: i=1; AHgh+RpJ4n1+kU6Am+vq2UxUmO4D8NAWg4dczxtGNsxl62GqTVBeV3xEQMipF8l5VNR0ZhaIBrX2aBcR+sb/G4PnMO3LVps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmCHb8aUFrE4kfl6kuw0XJwk4Dtt9nZQB0qsq5/nAEHBeUf+1R
-	vmlCaOGppfxO8tMI5Pyi4dfpmEHHUmdoOdRudMZk6EihPsHrBqVnlbsnU0JoKQpX9Mu1wMnOyci
-	sAtLOWg==
-X-Received: from plbkr11.prod.google.com ([2002:a17:903:80b:b0:2c7:3d65:ed18])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ecc6:b0:2c9:fa31:84f9
- with SMTP id d9443c01a7336-2ca7e682af0mr20521695ad.5.1782920156755; Wed, 01
- Jul 2026 08:35:56 -0700 (PDT)
-Date: Wed, 1 Jul 2026 08:35:56 -0700
-In-Reply-To: <20260618-gmem-inplace-conversion-v8-13-9d2959357853@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGttkpt2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4031F000E9;
+	Wed,  1 Jul 2026 16:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782922121;
+	bh=yhKbdhzWpnCFtUyKxv59KV9t7EFGFM4f9xMCP7qFEVc=;
+	h=From:Subject:Date:To:Cc;
+	b=DGttkpt2Q8nKCRV6vNcCihSl2s2P3sXQXJneb2lgwIMp0raQkYNBn0B1iX9JZDkVQ
+	 k4dG+eTP0xET6M0xHtUZMmPygZeNasR7NNqEs8Ao4tGxxBHVQT0dN0j35xqWlq9F3D
+	 7TsLhvMtgoml/volx9enNoXRvNhfnq/UzStbhMITnm9bZ/xCkB/ptpFu6MST6Do92a
+	 Bo7rV46eIb+rv+nHPcgdEpykB73R3FFnK2I3Ad0Q6npJcf291MYux1yByzq3FPIUbv
+	 xnwNoo5N03lozMT4svu7Zev3XAoIVv3pMjNXbAUDMNWq26FygDt4YyuolIWjGdjhAx
+	 3kDaMQyK3Hasw==
+From: Thierry Reding <thierry.reding@kernel.org>
+Subject: [PATCH v3 00/11] dma-buf: heaps: Add support for Tegra VPR
+Date: Wed, 01 Jul 2026 18:08:11 +0200
+Message-Id: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com> <20260618-gmem-inplace-conversion-v8-13-9d2959357853@google.com>
-Message-ID: <akUz3M5Z2vnioB72@google.com>
-Subject: Re: [PATCH v8 13/46] KVM: guest_memfd: Add base support for KVM_SET_MEMORY_ATTRIBUTES2
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2WNQQ6CMBBFr2K6ts20lFpceQ/jAstYRgXMFInGc
+ HepxpXLl7z//kskZMIktquXYJwo0dAvUKxXIrR1H1FSs7AwYByUsJEjRq7ldGMZGnsMpoQq2CA
+ W/8Z4osentT98Od2PZwxjDmSjpTQO/PycTTp7ubsUwOjSugKUhcJU3kotx5aQ+akYG+rjLnY1X
+ VUYOpHTk/mNHWhjtNMAlSq8K733/+MLco9XNXAUh3me32psPPb1AAAA
+X-Change-ID: 20260507-tegra-vpr-cd4bc2509c4c
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@kernel.org>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Sowjanya Komatineni <skomatineni@nvidia.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+ "T.J. Mercier" <tjmercier@google.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
+ linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
+ linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, 
+ Chun Ng <chunn@nvidia.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4551; i=treding@nvidia.com;
+ h=from:subject:message-id; bh=mcbAkcbsEVWURkcAPa5vFsKErSyQeSmcgEUMd7efj+4=;
+ b=owEBbQKS/ZANAwAKAd0jrNd/PrOhAcsmYgBqRTuFxsKTwjOCtR5nhntJn2yLMnMlfh6zt+LAH
+ 7ky+Ynu4rmJAjMEAAEKAB0WIQSI6sMIAUnM98CNyJ/dI6zXfz6zoQUCakU7hQAKCRDdI6zXfz6z
+ oQwoD/0TQ8Z6/cD6v/Zn3dSTI8WYQWxtO0vPJo49co9ceBSk7rvwa7sDWVnkq/aSR1DWCnjdTxy
+ MLbFDy8d42e7a8WASPwcb+qxk6A2DE+rORTT8tNXAHjZazxr1zUSNcD7bWpsgKSCx5aPWC1mqKr
+ Qd/jKd8UnMS98mbljjkzPqeLPL+YhkPEpJJP8DVT1i9YQMwxmEaGSZCLxuhhgKgyc30NbeIG/3q
+ RvqF9uzJW+aC+WeXK7CXK/zLuEYuBQWl2Q/o0khZFV5ky9mLOsc/5WLPo1OnbyRnV/MRyFgKLu0
+ 9bgqlw4SvKJ8pCjuf23uADlEoQG7f/dJiiftMDDtoEU8bv0k0MY18tWKYDhHo25E4op4WnnWmTY
+ dT8fZaVl4l76093yChzqBXvDxzh2Z1ScWIvcKyJ7rXameRAxhIOBNUH1fKZSvMHxnwLiu6sz6L+
+ jMDvSC6DYoDG3PkaCo5EHIRC4VLIEaDzOx4W9++lDj28rsNMbaxrT7E4/eaxGxaTxs+GSyK9OuH
+ 75g4ungRoFK/zaOhqHYK6clVpUjduhNhuGaqldgN40zWkEDO5NdGEghVx/3uGHLT0L8XOaUpm1c
+ jYi+cqYAfuQpQnJQ8c3JrVv3P4AeO1rlBm5cvphmRxQRD23EP0kUoWFgxy+eVF+WUSDoRjnyb4X
+ wTi/+K/io8cd7EQ==
+X-Developer-Key: i=treding@nvidia.com; a=openpgp;
+ fpr=88EAC3080149CCF7C08DC89FDD23ACD77F3EB3A1
 
-On Thu, Jun 18, 2026, Ackerley Tng wrote:
-> Introduce base support for KVM_SET_MEMORY_ATTRIBUTES2 in guest_memfd, which
-> just updates attributes tracked by guest_memfd.
-> 
-> Validate input fields in general. Guard usage of KVM_SET_MEMORY_ATTRIBUTES2
-> by making sure requested attributes are supported for this instance of kvm.
-> 
-> A new KVM_SET_MEMORY_ATTRIBUTES2 is defined to support writes (unlike
+This series adds support for the video protection region (VPR) used on
+Tegra SoC devices. It's a special region of memory that is protected
+from accesses by the CPU and used to store DRM protected content (both
+decrypted stream data as well as decoded video frames).
 
-Phrase this as a command using imperative mood.  The wording is also weird,
-because "support writes" makes it sound like it allows controlling WRITE attributes,
-whereas what you mean by "support writes" is "allowing KVM to write back error
-information to the struct without technically violating the semantics embedded
-in the ioctl".  It's doubly confusing because the macros use a different polarity:
-IOW means userspace is writing, but this implicitly refers to IOW as "reads".
+Patches 1 through 3 add DT binding documentation for the VPR and add the
+VPR to the list of memory-region items for display, host1x and NVDEC.
 
-> KVM_SET_MEMORY_ATTRIBUTES) in addition to reads so it can provide error
-> details to userspace. This will be used in a later patch.
-> 
-> The two ioctls use their corresponding structs with no overlap, but
-> backward compatibility is baked in for future support of
-> KVM_SET_MEMORY_ATTRIBUTES2 and struct kvm_memory_attributes2 in the VM
-> ioctl.
+New set_memory_device() and set_memory_normal() helpers are defined in
+patch 4 and will subsequently be used to set the memory type of the VPR
+to make sure it won't be accessed by the CPU once it's made part of the
+protected region.
 
-I don't understand what this paragraph is trying to say with respect to backwards
-compatibility.  It's a new ioctl and struct, there's no compatibility in sight.
+Patch 5 adds bitmap_allocate(), which is like bitmap_allocate_region()
+but works on sizes that are not a power of two.
 
-E.g.
+Patch 6 introduces new APIs needed by the Tegra VPR implementation that
+allow CMA areas to be dynamically created at runtime rather than using
+the fixed, system-wide list. This is used in this driver specifically
+because it can use an arbitrary number of these areas (though they are
+currently limited to 4).
 
-  Add a new ioctl (and matching struct), KVM_SET_MEMORY_ATTRIBUTES2, using
-  the same base ioctl number (0xd2), but with R/W semantics for the kernel
-  instead of just read semantics.  "Officially" documenting that KVM writes
-  to the payload will allow KVM to support partial/incremental conversions,
-  instead of all-or-nothing updates (which requires complex unwinding), by
-  recording the failing offset if an error occurs.
+Patch 7 adds some infrastructure for DMA heap implementations to provide
+information through debugfs.
 
-  Opportunistically add a new struct as well, even though KVM could squeeze
-  the error offset into "struct kvm_memory_attributes", as there's no cost
-  to doing so in practice.  Pad the struct with a pile of extra space to try
-  and avoid ending up with "struct kvm_memory_attributes3" in the future.
-  Use the same layout for the fields that common to version 1 of the struct,
-  e.g. to ease upgrading userspace, and to provide flexibility in KVM ever
-  adds support for KVM_SET_MEMORY_ATTRIBUTES2 at VM scope.
+The Tegra VPR implementation is added in patch 8. See its commit message
+for more details about the specifics of this implementation.
 
-> The process of setting memory attributes is set up such that the later half
-> will not fail due to allocation. Any necessary checks are performed before
-> the point of no return.
+Finally, patches 9-11 add the VPR placeholder node on Tegra234 and
+Tegra264 and hook it up to the host1x node so that it can make use of
+this region.
 
-Explain *why*.  Readers can usually understand the "what" by reading the code,
-but it's much harder to discern *why* things were done a certain way.  Some things
-go without saying, e.g. "validate input fields", but in that case, just drop the
-changelog blurb (if we _weren't_ validating input, *that* would be interesting and
-worth calling out).
+Changes in v3:
+- Link to v2: https://patch.msgid.link/20260122161009.3865888-1-thierry.reding@kernel.org
+- introduce set_memory_device() and set_memory_normal()
+- rename VPR nodes to "protected"
+- add Tegra264 placeholder nodes
 
-> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
-> Co-developed-by: Sean Christoperson <seanjc@google.com>
-> Signed-off-by: Sean Christoperson <seanjc@google.com>
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
->  include/uapi/linux/kvm.h |  13 ++++++
->  virt/kvm/Kconfig         |   1 +
->  virt/kvm/guest_memfd.c   | 116 +++++++++++++++++++++++++++++++++++++++++++++++
->  virt/kvm/kvm_main.c      |  12 +++++
->  4 files changed, 142 insertions(+)
-> 
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 419011097fa8e..956877a6aab05 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1649,6 +1649,19 @@ struct kvm_memory_attributes {
->  	__u64 flags;
->  };
->  
-> +#define KVM_SET_MEMORY_ATTRIBUTES2              _IOWR(KVMIO,  0xd2, struct kvm_memory_attributes2)
-> +
-> +struct kvm_memory_attributes2 {
-> +	union {
-> +		__u64 address;
-> +		__u64 offset;
-> +	};
-> +	__u64 size;
-> +	__u64 attributes;
-> +	__u64 flags;
-> +	__u64 reserved[12];
-> +};
-> +
->  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
->  
->  #define KVM_CREATE_GUEST_MEMFD	_IOWR(KVMIO,  0xd4, struct kvm_create_guest_memfd)
-> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-> index 297e4399fbd49..cfa2c78ba5fb9 100644
-> --- a/virt/kvm/Kconfig
-> +++ b/virt/kvm/Kconfig
-> @@ -102,6 +102,7 @@ config KVM_MMU_LOCKLESS_AGING
->  
->  config KVM_GUEST_MEMFD
->         select XARRAY_MULTI
-> +       select KVM_MEMORY_ATTRIBUTES
->         bool
->  
->  config HAVE_KVM_ARCH_GMEM_PREPARE
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 65ce795c090d9..0d14548c1ed22 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -541,11 +541,127 @@ bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn)
->  }
->  EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_is_private);
->  
-> +/*
-> + * Preallocate memory for attributes to be stored on a maple tree, pointed to
-> + * by mas.  Adjacent ranges with attributes identical to the new attributes
-> + * will be merged.  Also sets mas's bounds up for storing attributes.
-> + *
-> + * This maintains the invariant that ranges with the same attributes will
-> + * always be merged.
-> + */
-> +static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
-> +				    pgoff_t start, size_t nr_pages)
-> +{
-> +	pgoff_t end = start + nr_pages;
-> +	pgoff_t last = end - 1;
-> +	void *entry;
-> +
-> +	/* Try extending range. entry is NULL on overflow/wrap-around. */
-> +	mas_set(mas, end);
-> +	entry = mas_find(mas, end);
-> +	if (entry && xa_to_value(entry) == attributes)
-> +		last = mas->last;
-> +
-> +	if (start > 0) {
-> +		mas_set(mas, start - 1);
-> +		entry = mas_find(mas, start - 1);
-> +		if (entry && xa_to_value(entry) == attributes)
-> +			start = mas->index;
-> +	}
-> +
-> +	mas_set_range(mas, start, last);
-> +	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
-> +}
-> +
-> +static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
-> +				     size_t nr_pages, uint64_t attrs)
-> +{
-> +	struct address_space *mapping = inode->i_mapping;
-> +	struct gmem_inode *gi = GMEM_I(inode);
-> +	pgoff_t end = start + nr_pages;
-> +	struct maple_tree *mt;
-> +	struct ma_state mas;
-> +	int r;
-> +
-> +	mt = &gi->attributes;
-> +
-> +	filemap_invalidate_lock(mapping);
-> +
-> +	mas_init(&mas, mt, start);
-> +	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
-> +	if (r)
-> +		goto out;
-> +
-> +	/*
-> +	 * From this point on guest_memfd has performed necessary
-> +	 * checks and can proceed to do guest-breaking changes.
-> +	 */
-> +
-> +	kvm_gmem_invalidate_start(inode, start, end);
-> +	mas_store_prealloc(&mas, xa_mk_value(attrs));
-> +	kvm_gmem_invalidate_end(inode, start, end);
-> +out:
-> +	filemap_invalidate_unlock(mapping);
-> +	return r;
-> +}
-> +
-> +static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
-> +{
-> +	struct gmem_file *f = file->private_data;
-> +	struct inode *inode = file_inode(file);
-> +	struct kvm_memory_attributes2 attrs;
-> +	size_t nr_pages;
-> +	pgoff_t index;
-> +	int i;
-> +
-> +	if (copy_from_user(&attrs, argp, sizeof(attrs)))
-> +		return -EFAULT;
-> +
-> +	if (attrs.flags)
-> +		return -EINVAL;
-> +	for (i = 0; i < ARRAY_SIZE(attrs.reserved); i++) {
-> +		if (attrs.reserved[i])
-> +			return -EINVAL;
-> +	}
-> +	if (!kvm_arch_has_private_mem(f->kvm))
-> +		return -EINVAL;
-> +	if (attrs.attributes & ~KVM_MEMORY_ATTRIBUTE_PRIVATE)
-> +		return -EINVAL;
-> +	if (attrs.size == 0 || attrs.offset + attrs.size < attrs.offset)
-> +		return -EINVAL;
-> +	if (!PAGE_ALIGNED(attrs.offset) || !PAGE_ALIGNED(attrs.size))
-> +		return -EINVAL;
-> +
-> +	if (attrs.offset >= i_size_read(inode) ||
-> +	    attrs.offset + attrs.size > i_size_read(inode))
-> +		return -EINVAL;
-> +
-> +	nr_pages = attrs.size >> PAGE_SHIFT;
-> +	index = attrs.offset >> PAGE_SHIFT;
-> +	return __kvm_gmem_set_attributes(inode, index, nr_pages,
-> +					 attrs.attributes);
-> +}
-> +
-> +static long kvm_gmem_ioctl(struct file *file, unsigned int ioctl,
-> +			   unsigned long arg)
-> +{
-> +	switch (ioctl) {
-> +	case KVM_SET_MEMORY_ATTRIBUTES2:
-> +		if (!gmem_in_place_conversion)
-> +			return -ENOTTY;
-> +
-> +		return kvm_gmem_set_attributes(file, (void __user *)arg);
-> +	default:
-> +		return -ENOTTY;
-> +	}
-> +}
-> +
->  static struct file_operations kvm_gmem_fops = {
->  	.mmap		= kvm_gmem_mmap,
->  	.open		= generic_file_open,
->  	.release	= kvm_gmem_release,
->  	.fallocate	= kvm_gmem_fallocate,
-> +	.unlocked_ioctl	= kvm_gmem_ioctl,
->  };
->  
->  static int kvm_gmem_migrate_folio(struct address_space *mapping,
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 01761f6e25d25..a08b518cdb175 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -105,6 +105,18 @@ module_param(allow_unsafe_mappings, bool, 0444);
->  bool __ro_after_init gmem_in_place_conversion = false;
->  #endif
->  
-> +#define MEMORY_ATTRIBUTES_MATCH(one, two)				\
+Changes in v2:
+- Link to v1: https://patch.msgid.link/20250902154630.4032984-1-thierry.reding@gmail.com
+- Tegra VPR implementation is now more optimized to reduce the number of
+  (very slow) resize operations, and allows cross-chunk allocations
+- dynamic CMA areas are now trackd separately from static ones, but the
+  global number of CMA pages accounts for all areas
 
-Use the same terminology as the memory region asserts, i.e.
-SANITY_CHECK_MEM_ATTRIBUTES_FIELD.  MEMORY_ATTRIBUTES_MATCH() reads like a helper
-that checks if the two objects have the same attributes.
+Thierry
 
-And put the checks where it actually matters, i.e. in the case-statement for
-KVM_SET_MEMORY_ATTRIBUTES (again, same as KVM_SET_USER_MEMORY_REGION).  Because
-the only reason it matters for KVM is if we want to add VM-scoped support for
-KVM_SET_MEMORY_ATTRIBUTES2 in the future, at which point we'll want to use the
-same overlay shenanigans that we did for KVM_SET_USER_MEMORY_REGION2.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Chun Ng (1):
+      arm64/mm: Add set_memory_device() and set_memory_normal()
 
-> +	static_assert(offsetof(struct kvm_memory_attributes, one) ==	\
-> +		      offsetof(struct kvm_memory_attributes2, two));	\
+Thierry Reding (10):
+      dt-bindings: reserved-memory: Document Tegra VPR
+      dt-bindings: display: tegra: Document memory regions
+      dt-bindings: gpu: host1x: Document memory-regions for NVDEC
+      bitmap: Add bitmap_allocate() function
+      mm/cma: Allow dynamically creating CMA areas
+      dma-buf: heaps: Add debugfs support
+      dma-buf: heaps: Add support for Tegra VPR
+      arm64: tegra: Add VPR placeholder node on Tegra234
+      arm64: tegra: Hook up VPR to host1x
+      arm64: tegra: Add VPR placeholder node on Tegra264
 
-And then once these are landed in function scope, use BUILD_BUG_ON() with a
-do { ... } while (0).
+ .../display/tegra/nvidia,tegra124-vic.yaml         |    8 +
+ .../bindings/display/tegra/nvidia,tegra186-dc.yaml |   10 +
+ .../bindings/display/tegra/nvidia,tegra20-dc.yaml  |   10 +-
+ .../display/tegra/nvidia,tegra20-host1x.yaml       |    7 +
+ .../bindings/gpu/host1x/nvidia,tegra234-nvdec.yaml |    8 +
+ .../nvidia,tegra-video-protection-region.yaml      |   76 ++
+ arch/arm/mm/dma-mapping.c                          |    2 +-
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi           |   45 +
+ arch/arm64/boot/dts/nvidia/tegra264.dtsi           |   33 +
+ arch/arm64/include/asm/set_memory.h                |    2 +
+ arch/arm64/mm/pageattr.c                           |   16 +
+ arch/s390/mm/init.c                                |    2 +-
+ drivers/dma-buf/dma-heap.c                         |   56 +
+ drivers/dma-buf/heaps/Kconfig                      |    7 +
+ drivers/dma-buf/heaps/Makefile                     |    1 +
+ drivers/dma-buf/heaps/tegra-vpr.c                  | 1242 ++++++++++++++++++++
+ include/linux/bitmap.h                             |   25 +-
+ include/linux/cma.h                                |    8 +-
+ include/linux/dma-heap.h                           |    2 +
+ include/linux/set_memory.h                         |   11 +
+ include/trace/events/tegra_vpr.h                   |   57 +
+ kernel/dma/contiguous.c                            |    2 +-
+ mm/cma.c                                           |  187 ++-
+ mm/cma.h                                           |    5 +-
+ 24 files changed, 1775 insertions(+), 47 deletions(-)
+---
+base-commit: 703daa6d046136affd69f2a2e08f36ac4a7d5b2c
+change-id: 20260507-tegra-vpr-cd4bc2509c4c
 
-> +	static_assert(sizeof_field(struct kvm_memory_attributes, one) ==\
-> +		      sizeof_field(struct kvm_memory_attributes2, two))
-> +
-> +/* Ensure the common parts of the two structs are identical. */
-> +MEMORY_ATTRIBUTES_MATCH(address, address);
-> +MEMORY_ATTRIBUTES_MATCH(size, size);
-> +MEMORY_ATTRIBUTES_MATCH(attributes, attributes);
-> +MEMORY_ATTRIBUTES_MATCH(flags, flags);
+Best regards,
+--  
+Thierry Reding <treding@nvidia.com>
 
-Please put these asserts in the location where the overlay matters.  Actually, I
-don't think we need to enforce this?
