@@ -1,102 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4503B47F2C3;
-	Wed,  1 Jul 2026 11:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA69480DE3
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 11:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782907049; cv=none; b=nGegrL1HOVWpfoloeDaqzVaFnZou5dRfnFFuodBQCv8cW/tKZzDYU/TkYUBUOrqA5jLFf2/mfhNnUSXdj697PMUL00lGqNci48uBQ88yySIJtISzUrONYIrgdUqt7Ig/K633JW21FQ/Ude0pPTCmU0nUyqqSh7+9R5VFDgGE4gk=
+	t=1782907060; cv=none; b=jpFGdJ+dYigBY9UMgg29ZK9X6Pi2Hp8ueRQPnecap2TxGXBFWtKAlAC4XrYP5K/kP/7YcD+Uc1AkLiglmBEpebRANltji9PmO/N7K8oBb0kahv8gWo1K2N/gQiWMtp9jeD+kKPQ5JaY12KPnuO4LqZhM8SWTNAWuGYOi7/Lng6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782907049; c=relaxed/simple;
-	bh=ZUU03A8w/B6xrDBbWiu8jFWT8odRw2O+gPvzJy/toPc=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=FdKcLbGEIUXJ3pAtiufl5U/EZOsgFxrdsNl/BnuJ42Z1bToO5ApTBbQC0euGU8fwgPgH73opZj2ce3IkpIqgv31vkvHIJsuPDAguhFhUGilMj+M8ophOyMgfVVCtNYESHeRLfGm1bHPAUS0G/mxD4asmgDLTDXQWnOZexI91rFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nji7s0qv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782907060; c=relaxed/simple;
+	bh=GKzO/WyD4D/mbF6c/AmcKtFnDY+JtxUxoljaWdrLzQM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PixniNAVht1Ki9IVa3nEXsShNOQVVsZpo/8zOVyOsXcGv7txe3Xe+WmxS2uWlHgc0KqL1sOYORlqnoHldAodEERgFHwQn6Xglonk3O6WJqtfqw251DDL/JMXpDnLJC+hRdDaZAtFR/2BUQ7in4n65PeuxggZOo2OorzXbo5vknA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WEOp4lly; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nji7s0qv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9371F000E9;
-	Wed,  1 Jul 2026 11:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782907047;
-	bh=rhYXZRLA1X9ujZhf753ZxH8w0AlHmBTOEKHArhSHUxs=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=Nji7s0qv1vbRhTj+m7RDJN39fVQFcuRNmUHb56NhNqBkTwOpz4/SMnKa17/5b5gDm
-	 63CybCXVtyWyNuUs13SWTFVLJqFG/E2wtJNZP2WgQm8BUM2Gu05hkgQQB7PRug60b/
-	 QsYMToJxDqJo2qWSpSyg1jWOAk2OX6IxUP9EVlmg8MDTGVgpS9KwOakNNokhjlbQYY
-	 I43N7QP7cD0QG4DPSBv7RDj+mP+F++Hgpao6B9TZgxoqCBgQ0ZoGMnDSLtMntnqecx
-	 FYapASxnvsArpEfVbUy4cPlTtuEBQvem6j7s2OQQuUOgMNSOMWHR/wtjXt8TZfQ/cE
-	 zI5oNJhPprRqw==
-Content-Type: multipart/mixed; boundary="===============2339572275471711898=="
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WEOp4lly"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782907055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GKzO/WyD4D/mbF6c/AmcKtFnDY+JtxUxoljaWdrLzQM=;
+	b=WEOp4lly61DLuM/TA3Z4QfoqWlChOxTZgsJxEcSKKvEXCPkdvP6QcPRDAAumqghpyWrYKR
+	Fcyv41FeG/WOuumDIIycdn7UECFET+o+u/EE4w2m7L5R2VegWIMv5KYvhmCdhQVkNcQI75
+	esFo50JEDMtxpUMQGfzOulGz5tjrwU4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-62-bPK3ZYf4O6uoR28aH-Wkwg-1; Wed, 01 Jul 2026 07:57:34 -0400
+X-MC-Unique: bPK3ZYf4O6uoR28aH-Wkwg-1
+X-Mimecast-MFC-AGG-ID: bPK3ZYf4O6uoR28aH-Wkwg_1782907053
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49244130073so4732905e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 04:57:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782907053; x=1783511853;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKzO/WyD4D/mbF6c/AmcKtFnDY+JtxUxoljaWdrLzQM=;
+        b=WvsyCmqstjtno8rhsojT7lBfvib18WAkE8lN3a2pUXyBhPRJWv3ad1fzQmZzqAjDga
+         gAZdZWnowLYIv2HYG6w6hxftxy06wXcz+gtDPz+LcLn7zkTmc4pZyvYfyJg73UhfX4jg
+         c0HwV1rhhc7z9iIeflJjaUnSNyArx/IckC+xBurkClMa+bkS9f5Au3oPi5wmA6mGKTz4
+         wsUc/9KgWuYlNNUNQaXi0VZlfLSmJQWwdxpIy/VAdroZiOCTixcFtClORNq+Jj9GmNgb
+         aGc91xzfbGBNgY4t9r2WYh91L/LZ5UlWaCDSkg4E96ztLUOeeAPNkyH7AnhirmK0wfC+
+         oSPg==
+X-Gm-Message-State: AOJu0Yzr2LT/7JJc8urAvRZxIJhehciZ7UJB81l3kCwPhXYbg/7N7GPI
+	b1klXHZzBQ25w0J1GIUzPLpnuoZW5NqbNHGpQFebiT4sW0IVNUDRqivKC/X0R6eYyNo60ahcCs+
+	2+3d0ocI0NYTl8/tUWMOT4ReJHwm3HcL8T3DEGlIFJqEGQ05sdM5NxtqEGZzj19MWjWBQsqlAMA
+	==
+X-Gm-Gg: AfdE7ck0qPO6NXa5iMsCLuSvprDJc2t0irfBrj2q/eOQu2piglxCtV8p0g4dsOaEQ4x
+	Oz7H1orq7sf1bV+sj/i6PA/2oaGXnphRC5+5v5C7EW7+MTfe76v8T811MdosZsUq2tQTm6wnlhT
+	t2vmAxcl5PonldNO/FN6uQEXmD0EQLtwHsTFzBchbJkVcIAl6Q3N4H1t3KqPHtBszXVgWi1jyNs
+	AjcorNKaF1RGrqp/mf15XInFghPJx8lefIgky2f4eGcd4dZOSvSYelS4BJ9iNLxONqKA7CvNnRe
+	c7YgCPOh/QFmc6KKkB2uxVJtEQLW4VnW/Kdt5cg+rhWsheIJHYNbul3Cv4ZCJijoHsFDLrUPySv
+	xX7rSxrcu3UWi3PrvOLbK9n2NdiGRAsL3HL3scqmHoWdI26Rwea5jROFBg3FUiSMR+DqiuY7OLD
+	xvY/D8
+X-Received: by 2002:a05:600c:35d0:b0:493:c3cb:409e with SMTP id 5b1f17b1804b1-493c3cb42d9mr5624735e9.15.1782907053499;
+        Wed, 01 Jul 2026 04:57:33 -0700 (PDT)
+X-Received: by 2002:a05:600c:35d0:b0:493:c3cb:409e with SMTP id 5b1f17b1804b1-493c3cb42d9mr5624465e9.15.1782907053164;
+        Wed, 01 Jul 2026 04:57:33 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be810be8sm67046565e9.9.2026.07.01.04.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2026 04:57:32 -0700 (PDT)
+Message-ID: <e8e6c6ddb99e096b2daf2a88891cdce703730bdd.camel@redhat.com>
+Subject: Re: [PATCH v3 2/9] rv: add generic uprobe infrastructure for RV
+ monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Wen Yang <wen.yang@linux.dev>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 01 Jul 2026 13:57:31 +0200
+In-Reply-To: <d1e84072-7968-4a64-9497-09db83b38682@linux.dev>
+References: <cover.1780847473.git.wen.yang@linux.dev>
+	 <9d1a1d491af16853b2b421f358fd6cca965588ab.1780847473.git.wen.yang@linux.dev>
+	 <a645534b04d9bf32f2c2caa5d2206bb87cfcb3e1.camel@redhat.com>
+	 <878be1d4-2f93-4fbd-a1f6-b2b7836c9c44@linux.dev>
+	 <ebde84b7c65cd6b01a1e8d124de0b1eaf0793006.camel@redhat.com>
+	 <d1e84072-7968-4a64-9497-09db83b38682@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f8a1b24c80382f961103107220cab7b4de971c263d62c643b24d69c399a47abb@mail.kernel.org>
-In-Reply-To: <20260701111337.53943-6-jolsa@kernel.org>
-References: <20260701111337.53943-6-jolsa@kernel.org>
-Subject: Re: [PATCHv5 05/13] uprobes/x86: Move optimized uprobe from nop5 to nop10
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,oleg@redhat.com,peterz@infradead.org,mingo@kernel.org,mhiramat@kernel.org,andrii@kernel.org
-Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Wed,  1 Jul 2026 11:57:27 +0000 (UTC)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Fqa8JpqH1kRBGymUcZMfyrdP2MwZ3S4H0wnTlBji83E_1782907053
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---===============2339572275471711898==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Wed, 2026-07-01 at 02:44 +0800, Wen Yang wrote:
+> Thank you for the patient explanation.
+> You are right, and v4 implements the embedded approach.
+> struct rv_uprobe directly embeds struct uprobe_consumer:
+>=20
+> =C2=A0=C2=A0 struct rv_uprobe {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uprobe_consumer=C2=A0 uc;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uprobe=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *uprobe;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct inode=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *inode;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 *priv;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*handler)(...);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*ret_handler)(...);
+> =C2=A0=C2=A0 };
 
-> Note as explained in [2] we need to use following nop10:
->        PF1   PF2   ESC   NOPL  MOD   SIB   DISP32
-> NOP10: 0x66, 0x2e, 0x0f, 0x1f, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00 -- cs nopw 0x00000000(%rax,%rax,1)
->
-> which means we need to allow 0x2e prefix which maps to INAT_PFX_CS
-> attribute in is_prefix_bad function.
+Alright, great. Why are you still using double function pointers? Do you re=
+ally
+need rv_uprobe->handler instead of just using rv_uprobe->uc.handler ? That =
+also
+simplifies one function call down the road.
 
-This isn't a bug, but could the changelog be updated to describe the
-approach actually taken? The patch bypasses uprobe_init_insn() (and
-therefore is_prefix_bad()) entirely when can_optimize() is true for the
-nop10. The is_prefix_bad() function itself remains unchanged and still
-returns true for the CS prefix.
+Thanks,
+Gabriele
 
-> Unoptimize path (int3_update_unoptimize):
->
->   1) Initial optimized state:
->       48 8d 64 24 80 e8 d0 d1 d2 d3
->      Same as 3) above.
->
->   2) Trap new entries before restoring the NOP bytes:
->       [cc] 8d 64 24 80 e8 d0 d1 d2 d3
->
->      From offset 0 this traps. A thread that had already executed the
->      LEA can still reach the intact CALL at offset 5.
->
->   3) Restore bytes 1..4 of the original NOP while keeping byte 0 trapped
->      and byte 5 as CALL.
->       cc [2e 0f 1f 84] e8 d0 d1 d2 d3
->
->      From offset 0 this still traps. Offset 5 is still the CALL for any
->      thread that was already past the first LEA byte.
->
->   4) Publish the first byte of the original NOP:
->       [66] 2e 0f 1f 84 e8 d0 d1 d2 d3
->
->      From offset 0 this is the restored 10-byte NOP; the CALL opcode and
->      displacement are now only NOP operands.  Offset 5 still decodes as
->      CALL for a thread that was already there.
->
->      Tthere is only a single target uprobe-trampoline for the given nop10
->      instruction address, so the CALL instruction will not be changed across
->      unoptimization/optimization cycles.
+> rv_uprobe_free() is gone =E2=80=94 no allocation means no explicit free.=
+=C2=A0 After
+> rv_uprobe_unregister() (or rv_uprobe_unregister_nosync() +=20
+> rv_uprobe_sync()), the caller frees the containing struct directly.=C2=A0=
+ In=20
+> tlob:
+>=20
+> =C2=A0=C2=A0 rv_uprobe_unregister_nosync(&b->start_probe);
+> =C2=A0=C2=A0 rv_uprobe_unregister_nosync(&b->stop_probe);
+> =C2=A0=C2=A0 rv_uprobe_sync();
+> =C2=A0=C2=A0 kfree(b);=C2=A0=C2=A0 /* frees both embedded consumers */
+>=20
+> This is the pattern from your sketch.
+>=20
+> Regarding my earlier reply that argued for the separate allocation: I=20
+> was wrong. The key barrier is synchronize_rcu_tasks_trace() (called=20
+> first in uprobe_unregister_sync()), which waits for all=20
+> rcu_read_lock_trace() readers including handler_chain().=C2=A0 After it=
+=20
+> returns, no cons_node.next read is in flight and embedding is safe.
+>=20
+> We appreciate your thorough review. All of your comments have been=20
+> addressed in v4.
+> We'll run local tests for one or two days, and then it will be sent out=
+=20
+> shortly.
+>=20
+> --
+> Best wishes,
+> Wen
+>=20
 
-This isn't a bug, but there's a typo: "Tthere is only a single target"
-should be "There is only a single target".
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/28514315910
---===============2339572275471711898==--
