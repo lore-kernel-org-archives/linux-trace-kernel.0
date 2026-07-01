@@ -1,168 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7294A2E16;
-	Wed,  1 Jul 2026 16:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526B348C3EE
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 16:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782922154; cv=none; b=Rz3IjR2OkcakXG+hBPLWBNmu/51UDdQZKE4FtqPhjQRhIaw6WItIzb7+/tnEpXmsXBzdCx/ZirHxxWtMyyuSCnhgA5gjI6GSaAgEwmXb7n2+P3CNw0z7iDgm5gS3svMlQifYZcH5kQiQeSk0ATFzYzl9E7AtXEyVoj3R7rW9df8=
+	t=1782922172; cv=none; b=b3b41wML8UsMPSTXFYUKHkmuh3YDO/HT/cBkqxrv4yobyvZNj2t2bCd5Dgi7ldXhShBP0yDPnLsTYwSkTCkJZRup0+s5Crubme7EtFQByYlSl5YiLQ5t1Okk2mOuFHKo2TqMplUFpo6iUAdz2ARnDeyAjsTAgwlVKCfiKNf4yRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782922154; c=relaxed/simple;
-	bh=/PegpBh702nD/rEthDcQMo3aYTkbs90ol1VkbGRzl04=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sBw43N1KPdX+vXalsB+nqGpKJqCp/ad6HAqXbE+pE6C9NBlbHahD4pxUf/agWE4le0+NNhTTwXcLWTaGcx4IW75VeVZ/WVU8NO4ONYNYeC+drZcfXa1fL68FfVMxbLs/Noysm3ssMpulyln6Q0yfZog8A6NB3veXuV0D4gJQ1Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRqxn+xA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782922172; c=relaxed/simple;
+	bh=PZdjWM7sO+nieQyt0RiywxeCxZBtDRu0HUNeH72ZpVs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HwTos1pJXA6nIbdImALr9wHqphmwxJwyx+B1PfbTdZ30skpXGqpWiCXzEI26pGD5hdQwE0mN/8bsPn0r2Kfq/rp4SA11dplbkaNKcp8jjAC5HQrc2wXsIMK+iOpWb5YJCZlwwsksuEDBcE/+UABOFGfA1P2PYd6LXqc0h4ixE2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FRheYWg2; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRqxn+xA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 135A41F00A3E;
-	Wed,  1 Jul 2026 16:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782922152;
-	bh=NZ1ua092sFPJbERnBLwgyQPXHI/AIXZthh7+PsUJfz0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MRqxn+xAkXOJJLLhdGBoaVL0dEVa/CDsnQMn9qp9ZF1Oujk8XW+LUtpt68psqUmu4
-	 oZWoT7wSka6UJCE6aAuTR36fM9bmBCjZECh3RENSfvxEpKTaYpfZ66aJp7RGiQh7pS
-	 o6b8e7u0SpgKxF6jINcLov7ZVqNcrDrycMit6hs33UvOKY2ILCzwpQhm74Fw5YGNNf
-	 VUwKeQeL2qtN7xY11U8I3dePTm6oxTceB5XCBD6bLgiKYHyvBCo0hVdGXzyYVFLKyH
-	 f8voI1pinD/fjU4aEO5A6KaxA9PeQKuCDylB75Nn0J0dmTxTRql8V2lPTv+7B9ACEV
-	 cojxbCS4VzmrA==
-From: Thierry Reding <thierry.reding@kernel.org>
-Date: Wed, 01 Jul 2026 18:08:22 +0200
-Subject: [PATCH v3 11/11] arm64: tegra: Add VPR placeholder node on
- Tegra264
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FRheYWg2"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-37d125687b6so898508a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 09:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782922170; x=1783526970; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fb46jkRTl6zwGFz7DUfAUgbXgotI+sXKJjyrZvcz3JQ=;
+        b=FRheYWg2+u/d6OdGw/gZUSY4H+/LH75+ctJGPzMkU/tbBN4cCcXKUE1OcjKZtsfb1M
+         iVfLOhqxBH5zcx5m5J0LTdF9aVN4C1Gyn0LqUUKGoF9vc/Mi1t1kjQYispMayc2KY7Gf
+         0ulidEQv0PQAAQv6BXZ1wM53CtD+DeamxWtom/lwTspHqvO1CgqJjzbH4NT9DTMkSKzM
+         5s9VQXqtK4IPMhFNVtep3D0WK/+0S3DhNJnWXnZe9XsH2ogomSSf7/0KgNk3lO+RDih9
+         5zH2AzlbWhClTZPEOZ3yZ+JlOJeYo4a2veXdHLgrELGHHEHFRO8PYqY6f9MHFvylj7wo
+         FM8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782922170; x=1783526970;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fb46jkRTl6zwGFz7DUfAUgbXgotI+sXKJjyrZvcz3JQ=;
+        b=U5yGzSQ+GYwN7Kue7VuCH1Flc8pB1eDG/ZqZXUcjgKc+cWDYEaDiCpk6tEl4CK0hXB
+         uGkeiSHXtHPzD4/lF/+qLlDBY98KpkfmjB5U1rpvur8q6ms6kb2vSNwsoBz8XKhqqypB
+         EghhOqQGhEv9+VLWNJRArJ1IKfm4kfEzmyWz+TMZeG7bn3ujDCEnsw+ypDpn+PGY+2ew
+         NdrEz47OL8OxMoWArglp66fALPObn7k81p0Df5ODiKi8HIBGfqKfA6A5bEcgAzyV9Ko2
+         HluTSi6IcVjousMjpDWwU6lS/Kf39AzlWUiPIKklKFqy/5f4W7DsOxM6n4YSLWe+lXib
+         F83w==
+X-Forwarded-Encrypted: i=1; AHgh+Rq7NOTY7tUB/8eM7EbwLSqHGWDWBfGygFf72/DcxZDXJBgE+FB2lv64et9uoaEC5DSiDA/hUnqhw+lyNDhOOM/pJgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT8rOLLbQlZV8EMGem2fJ+gAipj+QjBXk9sa/PFI/24WCe5Pfp
+	uri40ML4XLbtgyUA6J+jtXY0EFyall0eirmB0LaMCv5WmPi52scbQpAOvSMDyCTKMCXWw7EPfG2
+	kXFaDrg==
+X-Received: from pjbnl12.prod.google.com ([2002:a17:90b:384c:b0:380:8669:e33b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c03:b0:37f:9ce3:ca96
+ with SMTP id 98e67ed59e1d1-380aa20dab8mr1881109a91.31.1782922169200; Wed, 01
+ Jul 2026 09:09:29 -0700 (PDT)
+Date: Wed, 1 Jul 2026 09:09:28 -0700
+In-Reply-To: <584a8f9a-1538-4f8b-b576-75ef0fa961c7@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260701-tegra-vpr-v3-11-d80f7b871bb4@nvidia.com>
-References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
-In-Reply-To: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@kernel.org>, 
- Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Sowjanya Komatineni <skomatineni@nvidia.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Russell King <linux@armlinux.org.uk>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
- Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
- "T.J. Mercier" <tjmercier@google.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
- linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
- linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2208; i=treding@nvidia.com;
- h=from:subject:message-id; bh=UDPMoi7c/r2YYc7KMYasNvRmmrFnb+/8WQEYBHJoT9o=;
- b=owEBbQKS/ZANAwAKAd0jrNd/PrOhAcsmYgBqRTuGsc2UqwsB18Ps0JNikBH538NWGoIW6yQyT
- jBWP077JiKJAjMEAAEKAB0WIQSI6sMIAUnM98CNyJ/dI6zXfz6zoQUCakU7hgAKCRDdI6zXfz6z
- oWYQD/4zNJzhF0ziH/cfp++YEWF2QzkCBtNhxlib5GS0I1XV2iIewgNdcCwyxmX5iJepLKIfpTF
- MI8uKdvbIH/rmjtfgZhLdieCQdJqxJjnUWpEPpHNDezJRFN5KAGFBa0JyDU8TwgpPWetpMpVjoi
- JtOdfDqoTulUptfcs2SnD464Cc7ULfNYO9pqD/zJ1inq5qNZeBpC/WV29fMPwNgyTk33TcYZgTh
- JQMlIV9KsjBq9UGt3g5as6AyxLkK4n870/MrIjOTAlIlG0s3dMb3TuRSRseoAZzMatNsLKoBfDv
- 3LqE29PjChBqoRhBF+74YxKk1M6vUz1Xk6hntBgcKMnATrZrXQTm9RCgqSx+E0sFxBbO5wkwl4A
- HQWbmwu0/nCUYjnSHWE7QqKWaoDnl7RvUNNkfxKA/JMlXG6qtNpGC0NsOfOBKauSfg/4MVcKd7v
- x3kBNBh+1yJMVNl5dD9HFy3hOs7EDlz5B8wD3o7taIbseFcbfLfuneSlHkB9Ar8bWAqnMQDdNZf
- qvh5iEwypLCoSYFLV96TaHcV80M8qqmGoU7nPSjhbaGLuqtx2VOyK4Lg68R3+G3zfF7XOHOzpGM
- nLfJbw6vtU4JZFhzyD3NXUzQ/3xSUuHcS7uGJf6i4/ph51+s+Zh4Ik7+mTAn6T48fzuMV/Vq6km
- 8q9G/imB3ixEDzQ==
-X-Developer-Key: i=treding@nvidia.com; a=openpgp;
- fpr=88EAC3080149CCF7C08DC89FDD23ACD77F3EB3A1
+Mime-Version: 1.0
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-17-9d2959357853@google.com> <584a8f9a-1538-4f8b-b576-75ef0fa961c7@intel.com>
+Message-ID: <akU7uAKb5E_Tklx-@google.com>
+Subject: Re: [PATCH v8 17/46] KVM: guest_memfd: Advertise KVM_SET_MEMORY_ATTRIBUTES2
+ ioctl
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-From: Thierry Reding <treding@nvidia.com>
+On Wed, Jul 01, 2026, Xiaoyao Li wrote:
+> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+> > @@ -4969,6 +4973,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+> >   		return 1;
+> >   	case KVM_CAP_GUEST_MEMFD_FLAGS:
+> >   		return kvm_gmem_get_supported_flags(kvm);
+> > +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+> > +		if (!gmem_in_place_conversion || !kvm_supports_private_mem(kvm))
+> > +			return 0;
+> > +
+> > +		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> >   #endif
+> >   	default:
+> >   		break;
+> 
+> this looks inconsistent with the
+> 
+> 	case KVM_SET_MEMORY_ATTRIBUTES2:
+> 		if (!gmem_in_place_conversion)
+> 			return -ENOTTY;
+> 
+> Well, the check of
+> 
+> 	if (!kvm_arch_has_private_mem(f->kvm))
+> 		return -EINVAL;
+> 
+> is buried in the following kvm_gmem_set_attributes(). How about moving of
+> kvm_arch_has_private_mem() check to put it along with
+> gmem_in_place_conversion check in kvm_gmem_ioctl() in Patch 13?
 
-This node contains two sets of properties, one for the case where the
-VPR is resizable (in which case the VPR region will be dynamically
-allocated at boot time) and another case where the VPR is fixed in size
-and initialized by early firmware.
+Me confused, patch 13 already adds the kvm_arch_has_private_mem() in
+kvm_gmem_set_attributes().
 
-The firmware running on the device is responsible for updating the node
-with the real physical address for the fixed VPR case and remove the
-properties needed only for resizable VPR. Similarly, if the VPR is
-resizable, the firmware should remove the "reg" property since it is no
-longer needed.
+That said, the ordering here is wonky and misleading.  A cursory read of the series
+would make one think that waiting to advertise KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES
+makes it safe/ok for KVM to plumb in support for KVM_SET_MEMORY_ATTRIBUTES2 over
+multiple patches.  But that's not actually true, because the ioctl becomes live
+the instant the code exists, userspace doesn't need to wait for KVM to formally
+advertise support.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v3:
-- comment out fixed VPR properties, assume resizable by default
-- rename node to "protected"
----
- arch/arm64/boot/dts/nvidia/tegra264.dtsi | 33 ++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+To further confuse matters, it is actually safe/ok to iteratively add support,
+because it's all effectively dead code until "Let userspace disable per-VM mem
+attributes, enable per-gmem attributes".
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra264.dtsi b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-index 4c701abd25a8..85a18d99d643 100644
---- a/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-@@ -24,6 +24,39 @@ shmem_bpmp: shmem@86070000 {
- 			reg = <0x0 0x86070000 0x0 0x2000>;
- 			no-map;
- 		};
-+
-+		vpr: protected {
-+			compatible = "nvidia,tegra-video-protection-region";
-+			status = "disabled";
-+
-+			/*
-+			 * Two variants exist for this. For fixed VPR, the
-+			 * firmware is supposed to update the "reg" property
-+			 * with the fixed memory region configured as VPR.
-+			 *
-+			 * For resizable VPR we don't care about the exact
-+			 * address and instead want a reserved region to be
-+			 * allocated with a certain size and alignment at
-+			 * boot time.
-+			 *
-+			 * The below assumes resizable VPR by default. If the
-+			 * firmwares sets up fixed VPR, it is responsible for
-+			 * adding the missing "reg" property, removing any of
-+			 * the unused properties, as well as adding a unit-
-+			 * address matching the "reg" property.
-+			 */
-+
-+			/* fixed VPR */
-+			/*
-+			reg = <0x0 0x0 0x0 0x0>;
-+			no-map;
-+			*/
-+
-+			/* resizable VPR */
-+			size = <0x0 0x70000000>;
-+			alignment = <0x0 0x100000>;
-+			reusable;
-+		};
- 	};
- 
- 	/* SYSTEM MMIO */
+So, I think we should go a step further than what I think Xiaoyao is suggesting,
+and fully squash patch 17 into patch 13.  That way the reader doesn't have to jump
+through as many mental hoops to piece together what is happening.  It'll obviously
+be a bigger patch, but should be easier to review/understand overall.
 
--- 
-2.54.0
-
+Oh, and that combined patch should carve out error_offset straightaway, so that
+the full uAPI can be reviewed in a single patch.
