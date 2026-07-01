@@ -1,248 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D5F377551
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 06:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9193B442F;
+	Wed,  1 Jul 2026 07:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782888364; cv=none; b=edftWQs+Mr1UF4cNJE89VrxtLZvKRnrUB1kfC51OoGs/Nwu6YppoV8eKIeRzT75dnYOWzGrp9xebT8bLjdsCCVB9qNJ0KT0+FaGhwPxnFd4t4983ggfsieXWHQ9QzBHATraosYqIMIuF3JueqCc64Xf7ZRnGT6GzLZk8UnSzIT4=
+	t=1782889333; cv=none; b=NuIyOQ29F08W5RrZzl6qCKWyU+Q7axHjdfcaESY6tQH/Sff3mMqDx40UhjO90MYpEver9LEFGqARQ4J2OXMwQOAYYjcx3Naqng+7n4dwYyzgtPKabuBmoxT6Akeac4htXOVcWRTrvdaV9I3E/61PR8flRv/fD3iM4V+ZRu/v45Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782888364; c=relaxed/simple;
-	bh=P6h7/GJ4nRFB935sw/Q/SrqcZXQl1/aLKw+/Zd7Xw48=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I8wBWtAhknhQTQS4tOTHQi1jOvd6ZtHX7iH1YE4nb9dx5tCY8Fa/n8VFMQWexiBn9hV+cxnn4vBhNXr5xIWxdHaiGaSko8OCPr5SZVIZk4Jg8Lt+/I03gDcnDCnKTIir98b9OTIS6ezYCvU/gTAGC7ALdMf9tIDc5NHPyyQVTvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BMd189et; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782889333; c=relaxed/simple;
+	bh=uTemCS9hJuZwaBtUWAiWvpe3nJ0DnwAEJpllNENNMkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jq3J8AfXnHTCleVp+J51yzBfn7pUq4WOTICxEVg7OmRXEqP/OeHCTig/oA4ON+RuiiFiRepxj+kPLEyAsdq+CEJV9683ybnMzwl6aEWvk++2FITgAGBRWPq8vobEFE1210GAOtmdPEltGHv4VZPQHlK4JQlT0sF19dRAigCvayo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BsZxu9in; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BMd189et"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782888362;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/yajVz5eGSdxmFXFovVfMHhACk5O+HGFB9rZykXvrdI=;
-	b=BMd189etFs95rC2JQz0xLLAPbC/sQ0ZgxjISJMJ9rA7vNyxYMOcjThDdZuA3P9qiLdSrVD
-	Bugoc8GN3eKT3DLEDzaTpm4z2BI6IpiHBFYcAlDdPkEw5Bkjg+A8jj/GdylrifA6e7kapy
-	x3mvYs4qwD2f8moyRT+/qGyhVBQYEls=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-13-bhm5dPvPNF2pNXp-FMNplw-1; Wed, 01 Jul 2026 02:45:53 -0400
-X-MC-Unique: bhm5dPvPNF2pNXp-FMNplw-1
-X-Mimecast-MFC-AGG-ID: bhm5dPvPNF2pNXp-FMNplw_1782888352
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-c126f7ef83cso32525766b.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jun 2026 23:45:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782888352; x=1783493152;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/yajVz5eGSdxmFXFovVfMHhACk5O+HGFB9rZykXvrdI=;
-        b=mvcppbvZX8MMeme///1R8IxmoFIRm4Wiaov5dOMFtblf2s8oZ80VtumR2QOdHhk3/q
-         8aYriPnlanUOJ5CpaiBqN558nBntPIFSKxiXhzAwIqqWvgnjNPAxqIZx0VKqCu5w0bAm
-         ADr78npIFUbrHj+pi7/YX7veGpeGf1RpmmFl6VpjRxMA6Fy+kF/FryqNc9iCosZIvlao
-         6Wr7moICsmgyp7xTo7smx71JsytrhVPn23/VhQ2zx86YZsBi3lfADy5enRL5dV8MIsXs
-         BhPa3+pazDyBQAnAa9401XEbUUL/VgzGwQL5ImCrQwviD2dd4OuksFZ0YIT8H7nykRo/
-         QrLQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rot0zJBSjT2KAMtArnAt8zDF3lXX57ni/dIg/zNdY8tSgyJIsMc/fipyiJsY1Anwv6OiljAXe97jCP2fNbz4sb4Tpo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo1Zsn8l9LCdrsYxcehybPdwDWu6LRyYEmT+yroSfAAAvVNrvb
-	4nvk2rJySPf1DUHNn/7z2rXMradDAhd/ZFXzE59jS2ioNDEvMvI3hH/406g16IQcsb6WeEcbtnW
-	Fp4WHEoEVuGMe+43HiV3swepZtjUb1+tDzEBigdMysWJ9URh+VI3i6x+beHMLzoL4KrpTYSb1Lg
-	zIVESGAOuwKdm62KrwDcm4uryrjp73YVK2iZcj++Xvr19XbV9X
-X-Gm-Gg: AfdE7cmsgy8fXkw5mfQloHwlIOypIaiZUiWftTJfy3aVdjuM+VCfM6By3wECGMbEKDf
-	46rjOKjav2kT5bDorys/EL1Vtd4y5o137PuvyPHMyN0VW9KAIXE1fUjMtXPAhuTJofX/dHDoPZO
-	h8FwRTTvZVYBSp1xpWOXRU3w9Rlk5/uf0n1+XAvatEvMKZWklE6gwLnabId4C5WjH0jA8=
-X-Received: by 2002:a17:907:3cc8:b0:c12:a425:cbca with SMTP id a640c23a62f3a-c12aa17e6c1mr9818766b.54.1782888352226;
-        Tue, 30 Jun 2026 23:45:52 -0700 (PDT)
-X-Received: by 2002:a17:907:3cc8:b0:c12:a425:cbca with SMTP id
- a640c23a62f3a-c12aa17e6c1mr9817266b.54.1782888351649; Tue, 30 Jun 2026
- 23:45:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BsZxu9in"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782889332; x=1814425332;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uTemCS9hJuZwaBtUWAiWvpe3nJ0DnwAEJpllNENNMkc=;
+  b=BsZxu9inLJyO6hlBjk+JmUAqD7xGtSvRyNfHKsI/QE1xmwSDjJpZiEoT
+   /AxOz6NWKW2Y2ybAphGGoyBRYDO8eN36V81zzLHkukAjqbit35Nl6WG7+
+   7eIGJ5zACZJc1fuEtFzkwJSYVTaOhjPX5LbByr/u2fr3g5kd72BXXoPVj
+   579v6TzS8Re53L1Uo7x2S11U2uLxo0CczUA/djVJ73F5zHsNyX2/zoHIo
+   KJjaTmUu28JOWlcQC++i1qvFNW7lQBi/pIfu9SNLfs/7hFZZERwlbxc5G
+   VwSbs6A+IS7ygR72cyh+HaUP9QDjEupaSx1c01W2kPc3Qu8z0+KQ12ZuG
+   A==;
+X-CSE-ConnectionGUID: E51+qz05Q1i+YHbwnYFRSw==
+X-CSE-MsgGUID: qNcvIzXzQa2qFKuW0EbqMQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="82728594"
+X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
+   d="scan'208";a="82728594"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 00:02:11 -0700
+X-CSE-ConnectionGUID: IOyXLa5dSF2JqjSse/2n1w==
+X-CSE-MsgGUID: JbKqh+eBRZqdMAtXHVxILg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
+   d="scan'208";a="275705575"
+Received: from unknown (HELO [10.239.158.49]) ([10.239.158.49])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 00:01:53 -0700
+Message-ID: <e5876e41-a11a-4d5e-958f-9e247c19d387@intel.com>
+Date: Wed, 1 Jul 2026 15:01:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260617131803.2988989-1-vschneid@redhat.com> <20260617131803.2988989-5-vschneid@redhat.com>
- <CAP4=nvQ_x+LyDBoQWOBB4ERy8OwEp9LQzyLJJMHzYdrZzK4zyw@mail.gmail.com> <xhsmhmrwcw2ll.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmhmrwcw2ll.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 1 Jul 2026 08:45:40 +0200
-X-Gm-Features: AVVi8Cfv5zggH5cBY60GJD-xLGqDK2qmvaVcwhO1nQafpkqSczbluBW1LGAsqVk
-Message-ID: <CAP4=nvT5H73ptaBaZ2fWQ+SjJ-c3eEGZbrSefMV6fxqL-va2XA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 4/4] rtla/osnoise: Leverage IPI event filters when
- tracing a subset of CPUs
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3zfxgCPYI1zR87JFAjLjbsXa_QUMedFqdUX-5bv-b7o_1782888352
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 07/46] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
+To: Sean Christopherson <seanjc@google.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-7-9d2959357853@google.com>
+ <a1b06afb-af6e-4666-8c7d-990e7fa150fa@intel.com>
+ <akP9Qv_IPVEh7GAB@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <akP9Qv_IPVEh7GAB@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=C3=BAt 30. 6. 2026 v 16:00 odes=C3=ADlatel Valentin Schneider
-<vschneid@redhat.com> napsal:
->
-> On 30/06/26 12:14, Tomas Glozar wrote:
-> > st 17. 6. 2026 v 15:18 odes=C3=ADlatel Valentin Schneider
-> > <vschneid@redhat.com> napsal:
-> >> @@ -406,6 +408,33 @@ struct osnoise_tool *osnoise_init_top(struct comm=
-on_params *params)
-> >>                 goto out_err;
-> >>         }
-> >>
-> >> +       /*
-> >> +        * If tracing on a subset of possible CPUs, leverage the kerne=
-l filtering
-> >> +        * infrastructure to only generate events on traced CPUs.
-> >> +        */
-> >> +       if (params->cpus) {
-> >> +               char filter[MAX_PATH];
-> >> +
-> >> +               snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n=
-", params->cpus);
-> >> +               retval =3D tracefs_event_file_write(tool->trace.inst,
-> >> +                                                 "ipi", "ipi_send_cpu=
-", "filter",
-> >> +                                                 filter);
-> >> +               if (retval) {
-> >
-> > retval is the number of bytes written here, so this should be "retval
-> > < 0" like in trace_event_enable_filter() in trace.c. Same below.
-> >
->
-> According to the docstring:
->
->  * Return 0 on success, and -1 on error.
->
-> but regardless yes that should be a '< 0' check to match existing code.
->
+On 7/1/2026 1:30 AM, Sean Christopherson wrote:
+> On Tue, Jun 30, 2026, Xiaoyao Li wrote:
+>> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+>>> -bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+>>> -				     unsigned long mask, unsigned long attrs);
+>>> +bool kvm_range_has_vm_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+>>> +					unsigned long mask, unsigned long attrs);
+>>>    bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+>>>    					struct kvm_gfn_range *range);
+>>>    bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+>>
+>> We have
+>>
+>>   - kvm_pre_set_memory_attributes()
+>>   - kvm_arch_pre_set_memory_attributes()
+>>   - kvm_arch_post_set_memory_attributes()
+> 
+> Yeah, that's probably for the best.
+> 
+>> left, do they need to be renamed as well?
+>>
+>> then the interesting one is kvm_vm_set_mem_attributes(), which contains "vm"
+>> already while it means "vm ioctl". Do we need to rename it to
+>> kvm_vm_set_vm_mem_attributes()?
+> 
+> I say "no" on this last one, the fact that the function is scoped to a VM ioctl
+> is enough to communicate that it applies to per-VM attributes.
+> 
+> Actually, since it's a local helper, we could go with kvm_set_vm_mem_attributes()
+> to be consistent with the other functions.  That just leaves
+> kvm_vm_ioctl_set_mem_attributes(), which I think it appropriately scoped.
 
-I double-checked that and you are correct that the docstring says so,
-but it's an error in the docstring. According to the manpage, it
-returns the number of bytes written (i.e. positive on success, not
-zero) [1]:
-
-"RETURN VALUE
-...
-tracefs_event_file_write() and tracefs_event_file_append() returns
-*the number of bytes written to the system/event file* or negative on
-error."
-
-The code agrees as well: in tracefs_event_file_write() there's the
-wrong docstring (likely copied from another function) [2]:
-
-/*
- * tracefs_event_file_write - write to an event file
- * ...
- * Return 0 on success, and -1 on error.
- */
-int tracefs_event_file_write(struct tracefs_instance *instance,
-    const char *system, const char *event,
-    const char *file, const char *str)
-{
-        ....
-        ret =3D tracefs_instance_file_write(instance, path, str);
-        free(path);
-        return ret;
-}
-
-but the source of the return value is tracefs_instance_file_write(),
-where the docstring is correct [3]:
-
-/**
- * tracefs_instance_file_write - Write in trace file of specific instance.
- * ...
- * Returns the number of written bytes, or -1 in case of an error
- */
-int tracefs_instance_file_write(struct tracefs_instance *instance,
-const char *file, const char *str)
-{
-        return instance_file_write(instance, file, str, O_WRONLY | O_TRUNC)=
-;
-}
-
-instance_file_write() gets the return value from write_file() [4]
-which returns the return value of write() [5].
-
-[1] https://man7.org/linux/man-pages/man3/tracefs_event_get_file.3.html
-[2] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/tr=
-acefs-events.c#n686
-[3] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/tr=
-acefs-instance.c#n532
-[4] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/tr=
-acefs-instance.c#n514
-[5] https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/tree/src/tr=
-acefs-instance.c#n496
-
-So the "< 0" is required, the CPU filter doesn't work without it:
-
-[tglozar@fedora rtla]$ uname -a
-Linux fedora 7.0.12-101.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jun 11
-01:32:26 UTC 2026 x86_64 GNU/Linux
-[tglozar@fedora rtla]$ sudo ./rtla osnoise top -q -c 0 --ipi
-Could not set ipi_send_cpu CPU filter, return value: 14
-Could not init osnoise tool
-[tglozar@fedora rtla]$ sudo ./rtla osnoise top -q -d 5s --ipi
-                                         Operating System Noise
-...
-[tglozar@fedora rtla]$
-
-(output with additional debug print)
-
-> >> +                       err_msg("Could not set ipi_send_cpu CPU filter=
-\n");
-> >> +                       goto out_err;
-> >
-> > It would be useful to have --ipi work even on older kernels that don't
-> > yet have your cpumask trace event filter patchset [1], for example, by
-> > printing a debug message that filtering is disabled and setting a flag
-> > instead of erroring out here. Then the code in
-> > osnoise_ipi_cpu_handler() can preserve the CPU_ISSET check if the flag
-> > is set.
-> >
-> > As --ipi is optional, we can choose to only support it on newer
-> > kernels, but it would be nice to have it working without the filter,
-> > too.
-> >
-> > [1] https://lore.kernel.org/linux-trace-kernel/20230707172155.70873-1-v=
-schneid@redhat.com/T/#u
-> >
->
-> Makes sense, will do.
->
-
-Thanks!
-
-> [truncated]
-> >
-> > I was thinking that it might make sense to enable the filters also for
-> > the trace output instance. On the other hand, it would make it
-> > difficult to enable the event without the filter then, as specifying
-> > "-e ipi" or similar only re-enables the event but does not remove the
-> > filter. Maybe the better idea is to implement an option to filter any
-> > event enabled through -e/--event only to the measurement CPU, as a
-> > separate feature.
-> >
->
-> I had actually forgotten about applying the filters for the output
-> instance... I'll look into it.
->
-
-Thanks. I gave it some more thought and realized enabling the event
-without the filter should not be complicated at all. We can just
-remove existing filters in trace_events_enable(), as
-trace_events_enable() is called after osnoise_init_trace_tool() in
-run_tool(). So that will make an explicit "-e ipi" drop the filter
-from "--ipi" on the trace instance and show all IPI events. So you can
-disregard my note about filtering -e options, it's not relevant here.
-
-Tomas
-
+If we finally choose to rename kvm_vm_set_mem_attributes() to 
+kvm_set_vm_mem_attributes(), I think the trace 
+trace_kvm_vm_set_mem_attributes() needs to be renamed to keep it consistent?
