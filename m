@@ -1,88 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE7C126C03;
-	Wed,  1 Jul 2026 00:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EB5233943
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Jul 2026 01:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782867114; cv=none; b=fQhRvPdrxRImzbnPgAHGriv+8RqShgQ1mCL21eLp4LqPQm5C19aMy46OEX0eOFPm83UNnMl9S80pvQXwGie/MC9GdOzA1Li0MtgwCbl9+OgWPubjidyV5XR1yk4Rl8A0LJXxcMc1AJdmVYaZZgUcZZcQMVNfEYQXnRAYHytZyts=
+	t=1782868990; cv=none; b=Xp94cIS7V1g/KIHdj1u/Thr5g8Bri72UhiZL6/zsf6YXq3WlA++Nqe3azgjrwOY3Us+n/ahNbmMCU1G02TsQqk+VGx3X9jpdTQKvc7vzalAfh6GO8nGyTHAGs/IoXg3MreCw5KkGCKofTsBGfH/Vpb8Y4BGzKn0ykQjVutmqEQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782867114; c=relaxed/simple;
-	bh=7NJl4JeMESMSex9GUk4mtHlH8Z94Fc/bJaETk+YnUoo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ogOFRLK9c+evxdSrNJz85/C9BjqKY7tfRx64o+spNACvmYHWxbneCvfOO+TxVb7fULgpG4/aJjvmjhHjti4xibk0hq3m2csh3APzUnQDoOi1Cn5+vv6IBVAzH0AB/AJR/A6A/Kk1Zl6zDKvP67XpEiGRAY4lzNd6qlg16j29O/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X16rURSX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782868990; c=relaxed/simple;
+	bh=Y4YpGMARZG9c6LwBaYM7iJMqslDF6brT9TtTvVI+1T0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jiA6AdnEcUqJYBbnFRuxkvWc6Xn5EL1kASaTh33UA87UVUXHD0WH364BDKfnHdWz9lkdGRe5Um1pnMXo/VGCvyy6JQz6p962HO4Q1ItUFH+K7rDpSPKyr6JxPTJf//FB028JKnO59OC8eJ+ulIM+0HlwRCsNzO/FboLI7xdyFDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XopNAdgM; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X16rURSX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36AE31F000E9;
-	Wed,  1 Jul 2026 00:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782867112;
-	bh=zLi7Vg2dPMjNzDP//hBvVKYr8bQb2SeKAXa4U7pR2ko=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=X16rURSX7a1ZcuXZZyv6neAvXp/8RmXIg4iNMWu0ldcqoTZnWIQEA5unHAhf05B0W
-	 KDL4T0J2SCUMMy3LySSpl/9vdzfM5Q5xkdqOMgcruvjKPysnycz2jVDDK7yGNlWDak
-	 Im33dqEQkGfLOv/LNRfa08VpbdEPD67NDcpkApBWvRXx9evaS4QiY62zdICz5M2Pir
-	 RcqqHI+b64K71nvGvaMDv5fA/kXkz/AWXTqxbUt1gQvuhgU4X9fHSYUWWKtOfeHY8C
-	 UL52V/WOFdtKzPNdjAcs1JsdpOQUzEIiB0xnl+CRTwvFUg2LsOnGl/SRlxgKwlWRFP
-	 A7t6FuHcTZteQ==
-Date: Tue, 30 Jun 2026 18:51:49 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Martin Kaiser <martin@kaiser.cx>, Masami Hiramatsu <mhiramat@kernel.org>
-cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-    Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
-    linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-    linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: probes: save original sp in rethook trampoline
-In-Reply-To: <20260701073335.548d8f0b435b1a5fb4e41a69@kernel.org>
-Message-ID: <d588ef0f-6eb0-665b-871f-5fb5a6c90547@kernel.org>
-References: <20260630194010.1824039-1-martin@kaiser.cx> <20260701073335.548d8f0b435b1a5fb4e41a69@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XopNAdgM"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782868987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Uz52W8u4KLE/aWGQJH75bXXpHks/NCvUx2zWmpBg4g=;
+	b=XopNAdgM1RymsQi1j5g/juFlb8A8mkH9/ZoZ7LNp1P54XcV3LX5YOgShubAupbGeGfj+De
+	74fskIOSFAxyda1qc/hhw0aS79zVqgOoV8fZm9NijKOywzt2W3qBwCYft5EBXyrXu7/fUr
+	dwD7U0Gj1A238aOWHMlpcjZePfR7xyA=
+From: Ye Liu <ye.liu@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>
+Cc: Ye Liu <ye.liu@linux.dev>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4 2/7] mm/page_owner: add MR_NEVER to enum migrate_reason and use it for last_migrate_reason
+Date: Wed,  1 Jul 2026 09:22:28 +0800
+Message-ID: <20260701012239.315262-3-ye.liu@linux.dev>
+In-Reply-To: <20260701012239.315262-1-ye.liu@linux.dev>
+References: <20260701012239.315262-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 1 Jul 2026, Masami Hiramatsu wrote:
+The last_migrate_reason field uses -1 as a sentinel value to mean "no
+migration has happened".  Replace the four bare -1 occurrences by
+adding a proper MR_NEVER member to enum migrate_reason, defining a
+corresponding "never_migrated" string in the MIGRATE_REASON trace
+macro, and updating the GDB page_owner script to use MR_NEVER instead
+of the hardcoded -1 so that lx-dump-page-owner does not incorrectly
+report unmigrated pages as migrated.
 
-> On Tue, 30 Jun 2026 21:40:03 +0200
-> Martin Kaiser <martin@kaiser.cx> wrote:
-> 
-> > Reading a word from the stack in a kretprobe crashes a risc-v kernel.
-> > 
-> > $ cd /sys/kernel/tracing/
-> > $ echo 'r n_tty_write $stack0' > dynamic_events
-> > $ echo 1 > events/kprobes/enable
-> > Unable to handle kernel paging request at virtual address 0000000200000128
-> > ...
-> > [<ffffffff80016d16>] regs_get_kernel_stack_nth+0x26/0x38
-> > [<ffffffff80177196>] process_fetch_insn+0x3ee/0x760
-> > [<ffffffff80177836>] kretprobe_trace_func+0x116/0x1f0
-> > [<ffffffff8017795a>] kretprobe_dispatcher+0x4a/0x58
-> > [<ffffffff8013572e>] kretprobe_rethook_handler+0x5e/0x90
-> > [<ffffffff80180838>] rethook_trampoline_handler+0x70/0x108
-> > [<ffffffff8001ba32>] arch_rethook_trampoline_callback+0x12/0x1c
-> > [<ffffffff8001ba84>] arch_rethook_trampoline+0x48/0x94
-> > [<ffffffff8067872a>] tty_write+0x1a/0x30
-> > 
-> > In regs_get_kernel_stack_nth, regs->sp contains an arbitrary value.
-> > 
-> > arch_rethook_trampoline saves the registers from the probed function in a
-> > struct pt_regs. sp is not saved. Instead, sp is decremented for
-> > arch_rethook_trampoline's local stack.
-> > 
-> > Fix this crash and save the original sp along with the other registers.
-> > Use a0 as a temporary register, it is overwritten anyway.
-> 
-> Good catch!
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> I would like this to be handled by the RISC-V maintainers.
+No functional change.
 
-Thanks, added a Fixes: tag and cc'ed stable, and queued for v7.2-rc.
+Signed-off-by: Ye Liu <ye.liu@linux.dev>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+---
+ include/linux/migrate_mode.h    | 1 +
+ include/trace/events/migrate.h  | 3 ++-
+ mm/page_owner.c                 | 8 ++++----
+ scripts/gdb/linux/page_owner.py | 4 +++-
+ 4 files changed, 10 insertions(+), 6 deletions(-)
 
+diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
+index 265c4328b36a..05102d4d2490 100644
+--- a/include/linux/migrate_mode.h
++++ b/include/linux/migrate_mode.h
+@@ -25,6 +25,7 @@ enum migrate_reason {
+ 	MR_LONGTERM_PIN,
+ 	MR_DEMOTION,
+ 	MR_DAMON,
++	MR_NEVER,		/* page has never been migrated */
+ 	MR_TYPES
+ };
+ 
+diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
+index cd01dd7b3640..11bc0aa14c7e 100644
+--- a/include/trace/events/migrate.h
++++ b/include/trace/events/migrate.h
+@@ -23,7 +23,8 @@
+ 	EM( MR_CONTIG_RANGE,	"contig_range")			\
+ 	EM( MR_LONGTERM_PIN,	"longterm_pin")			\
+ 	EM( MR_DEMOTION,	"demotion")			\
+-	EMe(MR_DAMON,		"damon")
++	EM( MR_DAMON,		"damon")			\
++	EMe(MR_NEVER,		"never_migrated")
+ 
+ /*
+  * First define the enums in the above macros to be exported to userspace
+diff --git a/mm/page_owner.c b/mm/page_owner.c
+index 342549891a8d..c2f43ab860eb 100644
+--- a/mm/page_owner.c
++++ b/mm/page_owner.c
+@@ -339,7 +339,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
+ 	depot_stack_handle_t handle;
+ 
+ 	handle = save_stack(gfp_mask);
+-	__update_page_owner_handle(page, handle, order, gfp_mask, -1,
++	__update_page_owner_handle(page, handle, order, gfp_mask, MR_NEVER,
+ 				   ts_nsec, current->pid, current->tgid,
+ 				   current->comm);
+ 	inc_stack_record_count(handle, gfp_mask, 1 << order);
+@@ -596,7 +596,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+ 	if (ret >= count)
+ 		goto err;
+ 
+-	if (page_owner->last_migrate_reason != -1) {
++	if (page_owner->last_migrate_reason != MR_NEVER) {
+ 		ret += scnprintf(kbuf + ret, count - ret,
+ 			"Page has been migrated, last migrate reason: %s\n",
+ 			migrate_reason_names[page_owner->last_migrate_reason]);
+@@ -667,7 +667,7 @@ void __dump_page_owner(const struct page *page)
+ 		stack_depot_print(handle);
+ 	}
+ 
+-	if (page_owner->last_migrate_reason != -1)
++	if (page_owner->last_migrate_reason != MR_NEVER)
+ 		pr_alert("page has been migrated, last migrate reason: %s\n",
+ 			migrate_reason_names[page_owner->last_migrate_reason]);
+ 	page_ext_put(page_ext);
+@@ -826,7 +826,7 @@ static void init_pages_in_zone(struct zone *zone)
+ 
+ 			/* Found early allocated page */
+ 			__update_page_owner_handle(page, early_handle, 0, 0,
+-						   -1, local_clock(), current->pid,
++						   MR_NEVER, local_clock(), current->pid,
+ 						   current->tgid, current->comm);
+ 			count++;
+ ext_put_continue:
+diff --git a/scripts/gdb/linux/page_owner.py b/scripts/gdb/linux/page_owner.py
+index 8e713a09cfe7..eeabaeed438b 100644
+--- a/scripts/gdb/linux/page_owner.py
++++ b/scripts/gdb/linux/page_owner.py
+@@ -34,6 +34,7 @@ class DumpPageOwner(gdb.Command):
+     max_pfn = None
+     p_ops = None
+     migrate_reason_names = None
++    mr_never = None
+ 
+     def __init__(self):
+         super(DumpPageOwner, self).__init__("lx-dump-page-owner", gdb.COMMAND_SUPPORT)
+@@ -65,6 +66,7 @@ class DumpPageOwner(gdb.Command):
+         self.max_pfn = int(gdb.parse_and_eval("max_pfn"))
+         self.page_ext_size = int(gdb.parse_and_eval("page_ext_size"))
+         self.migrate_reason_names = gdb.parse_and_eval('migrate_reason_names')
++        self.mr_never = int(gdb.parse_and_eval('MR_NEVER'))
+ 
+     def page_ext_invalid(self, page_ext):
+         if page_ext == gdb.Value(0):
+@@ -138,7 +140,7 @@ class DumpPageOwner(gdb.Command):
+         else:
+             gdb.write('page last free stack trace:\n')
+             stackdepot.stack_depot_print(page_owner["free_handle"])
+-        if page_owner['last_migrate_reason'] != -1:
++        if page_owner['last_migrate_reason'] != self.mr_never:
+             gdb.write('page has been migrated, last migrate reason: %s\n' % self.migrate_reason_names[page_owner['last_migrate_reason']])
+ 
+     def read_page_owner(self):
+-- 
+2.43.0
 
-- Paul
