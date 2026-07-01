@@ -1,334 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0A5411687;
-	Wed,  1 Jul 2026 10:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2153F413E;
+	Wed,  1 Jul 2026 10:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782901438; cv=none; b=f3SltPWUlXxJ82RBRhyXSr7dnl+n0PiIzKOShJkBPZZ1jNAAnS2423H+SQ08veQ/gcXPdmuNI1nwI7i1Z83i3p8XQdfkbClshvzV0J4QqCFBR8Y7JDfaQbH7DQLGP9t4cKX/d4F0IPSKOOQk1iy437J2+gW1swjyXV2oQ0x2ApE=
+	t=1782901770; cv=none; b=QwfVa+Bp2KKywjlCAJDdhHsrugNrvDfAaAj/dZsTvVlhfJqAWcwziFp/9DNbcG53JUeLWH0uyJw0E/xQpE+qE3I/9jQQsOkg2UILy2HjuXBEHtSDl7OaTTkaYP3CZpb3myQV66FfXvh0+HBqINHu0eeROE9tmfePwrrxsRs4nHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782901438; c=relaxed/simple;
-	bh=f3MCFPev4jMX0HIBqokaLJ61HFq3aRAPErTa46USvas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwnAz7Kp677WZhtERs9QEuhMRNs4yPcy0RahEfLg/etTTqOKXgMIKStP9ALvfRarS4PYTrSCjtAR4X6w66p4LJkfvw0WFLIftmjYAp84QmHiCiDGqqIvRY8dMPa7kEPK6/9aWzRk6IlCuFBfeZAoOx7STY8ZWvwKUDuD/gqiyEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0gX0K89; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0gX0K89"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0407C1F000E9;
-	Wed,  1 Jul 2026 10:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782901434;
-	bh=wQ8qOYDe5kXztHH+xJLUrlU+iOY7jfOVJOn8zyUOgpA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=X0gX0K89AEhl6+DSq4hnkO/hI4W5rOjmCIJb0AR9m+PwyStRVf0lIsm/lmnjt2vr3
-	 QxxOaKesl67hWCdXgvKo+yOXn58N6erfdHWm5E5l6GC7BwwLVwkXmXRyxW5k3Sdh8a
-	 pFg3Ga20/wO8l/9OrwmZWpU6QT16+77MTPfQtnqjmXLhA97yuKPAMSI8Ce8HQUgOiD
-	 Z9Z+zl5gR/d5+5LKPvAE1TbLsnsdcls0ABM3ZpwFrdUIwSmvHq1LahwFbuwY2jpleM
-	 q24N7RvO92QuU/OrfqEfDeB3FWoTeokeWPDzPMfSDJ/vOpgSizL3Y7rBN2vzef42g/
-	 o6Wu3FpN1225A==
-Date: Wed, 1 Jul 2026 11:23:42 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Ye Liu <ye.liu@linux.dev>
-Cc: Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/9] mm: use enum migrate_reason instead of int for
- migration reason parameters
-Message-ID: <akTqXYFncsSLniIn@lucifer>
-References: <20260701061101.344679-1-ye.liu@linux.dev>
- <20260701061101.344679-4-ye.liu@linux.dev>
+	s=arc-20240116; t=1782901770; c=relaxed/simple;
+	bh=ItwaLyYZvf1R3VyZ9xZBl7HNMPkh+C/wvAtpUdNisK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S6W0K/wh3ad1DU4mnryw8nbY70BWO9uJl1HqUvXEhElVWNrvdI3ATG3+117nkXKyT4fWyRvw0eGpNY8ICWQuEkWqsCiKE9Ra1iz/GKo8MBclQI8FLclyAUruYwuBdjcYzkE0JqhP/ZIkvoIr8T9yFH0MwUYjw9IVyHKHHByibcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lzu.edu.cn; spf=pass smtp.mailfrom=lzu.edu.cn; arc=none smtp.client-ip=162.243.161.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lzu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lzu.edu.cn
+Received: from enjou-Legion-Y7000P-2019 (unknown [123.114.53.210])
+	by app1 (Coremail) with SMTP id ygmowAAHKMLt60Rq_E3OAA--.38301S3;
+	Wed, 01 Jul 2026 18:29:11 +0800 (CST)
+From: Ren Wei <n05ec@lzu.edu.cn>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	namhyung@kernel.org,
+	yuantan098@gmail.com,
+	yifanwucs@gmail.com,
+	tomapufckgml@gmail.com,
+	zcliangcn@gmail.com,
+	bird@lzu.edu.cn,
+	hhhuang@smu.edu.sg,
+	n05ec@lzu.edu.cn
+Subject: [PATCH 1/1] tracing: Prevent out-of-bounds read in glob matching
+Date: Wed,  1 Jul 2026 18:28:46 +0800
+Message-ID: <da1aaf125fc3b63320b0c540fd6afa7c3d5b4f1a.1782836943.git.hhhuang@smu.edu.sg>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <cover.1782836943.git.hhhuang@smu.edu.sg>
+References: <cover.1782836943.git.hhhuang@smu.edu.sg>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260701061101.344679-4-ye.liu@linux.dev>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:ygmowAAHKMLt60Rq_E3OAA--.38301S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXryxCFyfWFWkGw1rJrWfAFb_yoWrtF18pF
+	WkKw13trWDJF1vgas3u39rGrWUtw4rWry2vFyDGw1S9a4DJr9rXr4F9a1qvwn5Zr4ak342
+	yrnIvrW09w4UCFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBa1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7
+	Cv6cx26r4rMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUCtCcUUUUU=
+X-CM-SenderInfo: zqqvvuo6o23hxhgxhubq/1tbiAQAPCWpEzdUDbQAAsf
 
-On Wed, Jul 01, 2026 at 02:10:46PM +0800, Ye Liu wrote:
-> Replace all 'int reason' function parameters that carry migrate_reason
-> values with the proper 'enum migrate_reason' type.  This makes the
-> intent explicit and leverages compiler type checking.  The affected
-> subsystems are:
->
->   - page_owner: __folio_set_owner_migrate_reason(),
->                 folio_set_owner_migrate_reason()
->   - migrate: migrate_pages(), migrate_pages_sync(),
->              migrate_pages_batch(), migrate_folios_move(),
->              migrate_hugetlbs(), unmap_and_move_huge_page()
->   - hugetlb: move_hugetlb_state(), htlb_allow_alloc_fallback()
->   - trace: mm_migrate_pages and mm_migrate_pages_start events
->
-> The 'short last_migrate_reason' struct field and internal helper
-> parameter in page_owner are intentionally left as 'short' since they
-> store per-page metadata where size matters.
+From: Huihui Huang <hhhuang@smu.edu.sg>
 
-Based on my own personal experience, it's ok to be short ;)
+String event fields are not necessarily NUL-terminated, so the filter
+predicate functions (filter_pred_string(), filter_pred_strloc() and
+filter_pred_strrelloc()) pass the field length to the regex match
+callbacks, and the length-aware matchers honour it.
 
->
-> No functional change.
->
-> Signed-off-by: Ye Liu <ye.liu@linux.dev>
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+regex_match_glob() was the exception: it ignored the length and called
+glob_match(), which scans the string until it hits a NUL byte. Some
+string fields are not NUL-terminated. One example is the dynamic char
+array of the xfs_* namespace tracepoints, which is copied without a
+trailing NUL. For such a field, glob matching reads past the end of
+the event field, causing a KASAN slab-out-of-bounds read in
+glob_match(), reached via regex_match_glob() and filter_match_preds()
+from the xfs_lookup tracepoint.
 
-1 nit below but otherwise LGTM so:
+Add a length-bounded glob_match_len() and use it from regex_match_glob()
+so glob matching always stops at the field boundary. The matching loop
+is factored into a shared helper so glob_match() keeps its behaviour.
 
-Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
+Fixes: 60f1d5e3bac4 ("ftrace: Support full glob matching")
+Cc: stable@vger.kernel.org
+Reported-by: Yuan Tan <yuantan098@gmail.com>
+Reported-by: Yifan Wu <yifanwucs@gmail.com>
+Reported-by: Juefei Pu <tomapufckgml@gmail.com>
+Reported-by: Zhengchuan Liang <zcliangcn@gmail.com>
+Reported-by: Xin Liu <bird@lzu.edu.cn>
+Assisted-by: Codex:GPT-5.4
+Signed-off-by: Huihui Huang <hhhuang@smu.edu.sg>
+Signed-off-by: Ren Wei <n05ec@lzu.edu.cn>
+---
+ include/linux/glob.h               |  1 +
+ kernel/trace/trace_events_filter.c |  6 ++----
+ lib/glob.c                         | 31 ++++++++++++++++++++++++++++--
+ 3 files changed, 32 insertions(+), 6 deletions(-)
 
-> ---
->  include/linux/hugetlb.h        |  9 +++++----
->  include/linux/migrate.h        |  6 ++++--
->  include/linux/page_owner.h     |  7 ++++---
->  include/trace/events/migrate.h |  8 ++++----
->  mm/hugetlb.c                   |  3 ++-
->  mm/migrate.c                   | 12 ++++++------
->  mm/page_owner.c                |  2 +-
->  7 files changed, 26 insertions(+), 21 deletions(-)
->
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index 2abaf99321e9..fa828232dfcc 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -154,7 +154,8 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
->  bool folio_isolate_hugetlb(struct folio *folio, struct list_head *list);
->  int get_hwpoison_hugetlb_folio(struct folio *folio, bool *hugetlb, bool unpoison);
->  void folio_putback_hugetlb(struct folio *folio);
-> -void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason);
-> +void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio,
-> +			enum migrate_reason reason);
->  void hugetlb_fix_reserve_counts(struct inode *inode);
->  extern struct mutex *hugetlb_fault_mutex_table;
->  u32 hugetlb_fault_mutex_hash(struct address_space *mapping, pgoff_t idx);
-> @@ -424,7 +425,7 @@ static inline void folio_putback_hugetlb(struct folio *folio)
->  }
->
->  static inline void move_hugetlb_state(struct folio *old_folio,
-> -					struct folio *new_folio, int reason)
-> +					struct folio *new_folio, enum migrate_reason reason)
->  {
->  }
->
-> @@ -956,7 +957,7 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
->  	return modified_mask;
->  }
->
-> -static inline bool htlb_allow_alloc_fallback(int reason)
-> +static inline bool htlb_allow_alloc_fallback(enum migrate_reason reason)
->  {
->  	bool allowed_fallback = false;
->
-> @@ -1238,7 +1239,7 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
->  	return 0;
->  }
->
-> -static inline bool htlb_allow_alloc_fallback(int reason)
-> +static inline bool htlb_allow_alloc_fallback(enum migrate_reason reason)
->  {
->  	return false;
->  }
-> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> index d5af2b7f577b..1f83924615d6 100644
-> --- a/include/linux/migrate.h
-> +++ b/include/linux/migrate.h
-> @@ -57,7 +57,8 @@ void putback_movable_pages(struct list_head *l);
->  int migrate_folio(struct address_space *mapping, struct folio *dst,
->  		struct folio *src, enum migrate_mode mode);
->  int migrate_pages(struct list_head *l, new_folio_t new, free_folio_t free,
-> -		  unsigned long private, enum migrate_mode mode, int reason,
-> +		  unsigned long private, enum migrate_mode mode,
-> +		  enum migrate_reason reason,
->  		  unsigned int *ret_succeeded);
->  struct folio *alloc_migration_target(struct folio *src, unsigned long private);
->  bool isolate_movable_ops_page(struct page *page, isolate_mode_t mode);
-> @@ -77,7 +78,8 @@ int set_movable_ops(const struct movable_operations *ops, enum pagetype type);
->  static inline void putback_movable_pages(struct list_head *l) {}
->  static inline int migrate_pages(struct list_head *l, new_folio_t new,
->  		free_folio_t free, unsigned long private,
-> -		enum migrate_mode mode, int reason, unsigned int *ret_succeeded)
-> +		enum migrate_mode mode, enum migrate_reason reason,
-> +		unsigned int *ret_succeeded)
->  	{ return -ENOSYS; }
->  static inline struct folio *alloc_migration_target(struct folio *src,
->  		unsigned long private)
-> diff --git a/include/linux/page_owner.h b/include/linux/page_owner.h
-> index 3328357f6dba..9fe51dfccf26 100644
-> --- a/include/linux/page_owner.h
-> +++ b/include/linux/page_owner.h
-> @@ -3,6 +3,7 @@
->  #define __LINUX_PAGE_OWNER_H
->
->  #include <linux/jump_label.h>
-> +#include <linux/migrate_mode.h>
->
->  #ifdef CONFIG_PAGE_OWNER
->  extern struct static_key_false page_owner_inited;
-> @@ -14,7 +15,7 @@ extern void __set_page_owner(struct page *page,
->  extern void __split_page_owner(struct page *page, int old_order,
->  			int new_order);
->  extern void __folio_copy_owner(struct folio *newfolio, struct folio *old);
-> -extern void __folio_set_owner_migrate_reason(struct folio *folio, int reason);
-> +extern void __folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason);
+diff --git a/include/linux/glob.h b/include/linux/glob.h
+index 861327b33e..91595e7509 100644
+--- a/include/linux/glob.h
++++ b/include/linux/glob.h
+@@ -6,5 +6,6 @@
+ #include <linux/compiler.h>	/* For __pure */
+ 
+ bool __pure glob_match(char const *pat, char const *str);
++bool __pure glob_match_len(char const *pat, char const *str, size_t len);
+ 
+ #endif	/* _LINUX_GLOB_H */
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 609325f579..6385cd662d 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1056,11 +1056,9 @@ static int regex_match_end(char *str, struct regex *r, int len)
+ 	return 0;
+ }
+ 
+-static int regex_match_glob(char *str, struct regex *r, int len __maybe_unused)
++static int regex_match_glob(char *str, struct regex *r, int len)
+ {
+-	if (glob_match(r->pattern, str))
+-		return 1;
+-	return 0;
++	return glob_match_len(r->pattern, str, len) ? 1 : 0;
+ }
+ 
+ /**
+diff --git a/lib/glob.c b/lib/glob.c
+index 7aca76c25b..c80d9dd736 100644
+--- a/lib/glob.c
++++ b/lib/glob.c
+@@ -11,6 +11,9 @@
+ MODULE_DESCRIPTION("glob(7) matching");
+ MODULE_LICENSE("Dual MIT/GPL");
+ 
++static bool __pure glob_match_str(char const *pat, char const *str,
++				  char const *str_end);
++
+ /**
+  * glob_match - Shell-style pattern matching, like !fnmatch(pat, str, 0)
+  * @pat: Shell-style pattern to match, e.g. "*.[ch]".
+@@ -40,6 +43,29 @@ MODULE_LICENSE("Dual MIT/GPL");
+  * An opening bracket without a matching close is matched literally.
+  */
+ bool __pure glob_match(char const *pat, char const *str)
++{
++	return glob_match_str(pat, str, NULL);
++}
++EXPORT_SYMBOL(glob_match);
++
++/**
++ * glob_match_len - glob match against a length-bounded string
++ * @pat: Shell-style pattern to match.
++ * @str: String to match.  Need not be NUL-terminated.
++ * @len: Number of bytes of @str that may be read.
++ *
++ * Like glob_match(), but @str is only read up to @len bytes, so it can be
++ * used on buffers that are not NUL-terminated (e.g. trace event fields).
++ * A NUL byte within @len still terminates the string.
++ */
++bool __pure glob_match_len(char const *pat, char const *str, size_t len)
++{
++	return glob_match_str(pat, str, str + len);
++}
++EXPORT_SYMBOL(glob_match_len);
++
++static bool __pure glob_match_str(char const *pat, char const *str,
++				  char const *str_end)
+ {
+ 	/*
+ 	 * Backtrack to previous * on mismatch and retry starting one
+@@ -55,9 +81,11 @@ bool __pure glob_match(char const *pat, char const *str)
+ 	 * on mismatch, or true after matching the trailing nul bytes.
+ 	 */
+ 	for (;;) {
+-		unsigned char c = *str++;
++		unsigned char c = (str_end && str >= str_end) ? '\0' : *str;
+ 		unsigned char d = *pat++;
+ 
++		str++;
++
+ 		switch (d) {
+ 		case '?':	/* Wildcard: anything but nul */
+ 			if (c == '\0')
+@@ -125,4 +153,3 @@ bool __pure glob_match(char const *pat, char const *str)
+ 		}
+ 	}
+ }
+-EXPORT_SYMBOL(glob_match);
+-- 
+2.50.1
 
-NIT: We drop externs when we change them as a rule, the extern is unnecessary.
-
->  extern void __dump_page_owner(const struct page *page);
->  extern void pagetypeinfo_showmixedcount_print(struct seq_file *m,
->  					pg_data_t *pgdat, struct zone *zone);
-> @@ -43,7 +44,7 @@ static inline void folio_copy_owner(struct folio *newfolio, struct folio *old)
->  	if (static_branch_unlikely(&page_owner_inited))
->  		__folio_copy_owner(newfolio, old);
->  }
-> -static inline void folio_set_owner_migrate_reason(struct folio *folio, int reason)
-> +static inline void folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
->  {
->  	if (static_branch_unlikely(&page_owner_inited))
->  		__folio_set_owner_migrate_reason(folio, reason);
-> @@ -68,7 +69,7 @@ static inline void split_page_owner(struct page *page, int old_order,
->  static inline void folio_copy_owner(struct folio *newfolio, struct folio *folio)
->  {
->  }
-> -static inline void folio_set_owner_migrate_reason(struct folio *folio, int reason)
-> +static inline void folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
->  {
->  }
->  static inline void dump_page_owner(const struct page *page)
-> diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-> index 11bc0aa14c7e..15ee2ef201b5 100644
-> --- a/include/trace/events/migrate.h
-> +++ b/include/trace/events/migrate.h
-> @@ -52,7 +52,7 @@ TRACE_EVENT(mm_migrate_pages,
->  	TP_PROTO(unsigned long succeeded, unsigned long failed,
->  		 unsigned long thp_succeeded, unsigned long thp_failed,
->  		 unsigned long thp_split, unsigned long large_folio_split,
-> -		 enum migrate_mode mode, int reason),
-> +		 enum migrate_mode mode, enum migrate_reason reason),
->
->  	TP_ARGS(succeeded, failed, thp_succeeded, thp_failed,
->  		thp_split, large_folio_split, mode, reason),
-> @@ -65,7 +65,7 @@ TRACE_EVENT(mm_migrate_pages,
->  		__field(	unsigned long,		thp_split)
->  		__field(	unsigned long,		large_folio_split)
->  		__field(	enum migrate_mode,	mode)
-> -		__field(	int,			reason)
-> +		__field(	enum migrate_reason,	reason)
->  	),
->
->  	TP_fast_assign(
-> @@ -92,13 +92,13 @@ TRACE_EVENT(mm_migrate_pages,
->
->  TRACE_EVENT(mm_migrate_pages_start,
->
-> -	TP_PROTO(enum migrate_mode mode, int reason),
-> +	TP_PROTO(enum migrate_mode mode, enum migrate_reason reason),
->
->  	TP_ARGS(mode, reason),
->
->  	TP_STRUCT__entry(
->  		__field(enum migrate_mode, mode)
-> -		__field(int, reason)
-> +		__field(enum migrate_reason, reason)
->  	),
->
->  	TP_fast_assign(
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 571212b80835..17732d1fdc5e 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -7182,7 +7182,8 @@ void folio_putback_hugetlb(struct folio *folio)
->  	folio_put(folio);
->  }
->
-> -void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio, int reason)
-> +void move_hugetlb_state(struct folio *old_folio, struct folio *new_folio,
-> +			enum migrate_reason reason)
->  {
->  	struct hstate *h = folio_hstate(old_folio);
->
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index d9b23909d716..49e10feeb094 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1469,7 +1469,7 @@ static int migrate_folio_move(free_folio_t put_new_folio, unsigned long private,
->  static int unmap_and_move_huge_page(new_folio_t get_new_folio,
->  		free_folio_t put_new_folio, unsigned long private,
->  		struct folio *src, int force, enum migrate_mode mode,
-> -		int reason, struct list_head *ret)
-> +		enum migrate_reason reason, struct list_head *ret)
->  {
->  	struct folio *dst;
->  	int rc = -EAGAIN;
-> @@ -1626,7 +1626,7 @@ struct migrate_pages_stats {
->   */
->  static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
->  			    free_folio_t put_new_folio, unsigned long private,
-> -			    enum migrate_mode mode, int reason,
-> +			    enum migrate_mode mode, enum migrate_reason reason,
->  			    struct migrate_pages_stats *stats,
->  			    struct list_head *ret_folios)
->  {
-> @@ -1716,7 +1716,7 @@ static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
->  static void migrate_folios_move(struct list_head *src_folios,
->  		struct list_head *dst_folios,
->  		free_folio_t put_new_folio, unsigned long private,
-> -		enum migrate_mode mode, int reason,
-> +		enum migrate_mode mode, enum migrate_reason reason,
->  		struct list_head *ret_folios,
->  		struct migrate_pages_stats *stats,
->  		int *retry, int *thp_retry, int *nr_failed,
-> @@ -1799,7 +1799,7 @@ static void migrate_folios_undo(struct list_head *src_folios,
->   */
->  static int migrate_pages_batch(struct list_head *from,
->  		new_folio_t get_new_folio, free_folio_t put_new_folio,
-> -		unsigned long private, enum migrate_mode mode, int reason,
-> +		unsigned long private, enum migrate_mode mode, enum migrate_reason reason,
->  		struct list_head *ret_folios, struct list_head *split_folios,
->  		struct migrate_pages_stats *stats, int nr_pass)
->  {
-> @@ -2011,7 +2011,7 @@ static int migrate_pages_batch(struct list_head *from,
->
->  static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
->  		free_folio_t put_new_folio, unsigned long private,
-> -		enum migrate_mode mode, int reason,
-> +		enum migrate_mode mode, enum migrate_reason reason,
->  		struct list_head *ret_folios, struct list_head *split_folios,
->  		struct migrate_pages_stats *stats)
->  {
-> @@ -2088,7 +2088,7 @@ static int migrate_pages_sync(struct list_head *from, new_folio_t get_new_folio,
->   */
->  int migrate_pages(struct list_head *from, new_folio_t get_new_folio,
->  		free_folio_t put_new_folio, unsigned long private,
-> -		enum migrate_mode mode, int reason, unsigned int *ret_succeeded)
-> +		enum migrate_mode mode, enum migrate_reason reason, unsigned int *ret_succeeded)
->  {
->  	int rc, rc_gather;
->  	int nr_pages;
-> diff --git a/mm/page_owner.c b/mm/page_owner.c
-> index c2f43ab860eb..4e352941a6e2 100644
-> --- a/mm/page_owner.c
-> +++ b/mm/page_owner.c
-> @@ -345,7 +345,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
->  	inc_stack_record_count(handle, gfp_mask, 1 << order);
->  }
->
-> -void __folio_set_owner_migrate_reason(struct folio *folio, int reason)
-> +void __folio_set_owner_migrate_reason(struct folio *folio, enum migrate_reason reason)
->  {
->  	struct page_ext *page_ext = page_ext_get(&folio->page);
->  	struct page_owner *page_owner;
-> --
-> 2.43.0
->
-
-Cheers, Lorenzo
