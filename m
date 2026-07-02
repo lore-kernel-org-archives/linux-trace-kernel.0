@@ -1,210 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754183563F0;
-	Thu,  2 Jul 2026 12:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D106F492522;
+	Thu,  2 Jul 2026 12:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782994621; cv=none; b=g4d5Szp9beIcBwuLfCCrsLMt1eqsKNgy6Og5esqhT4CGJoGgzb5yF03AzAkMjoLF+Qq/jBlaYHZ+dGebXaUpbKZUb/DAwAC61nxn2USpDxcOEDeuZ5YIhLdSSTsrXkEHw1zczwM7rhtUFLdEro8baufWUOlWBHa0gUL+vQmir4Y=
+	t=1782997117; cv=none; b=rbbgvI1yJKi+BdqmKGDx0feVDDh4sQ4hqU1LxAidrPjsvNCDH57gmsnWQh+d/BnB+kFOmGtuOR0auNnG5fkae3aK4qAac5JyIb+91NkANLKcVMsKQPYu+T36KNRpwkNT4rXXI4CEVHMNxWJdSPwcZkpKwwEebZy3GVE1cd32gUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782994621; c=relaxed/simple;
-	bh=4h/zoa0EO0oEjCowB1soFdJQhwwlc7WmH55lSMsp9ng=;
+	s=arc-20240116; t=1782997117; c=relaxed/simple;
+	bh=ShsbAZ+6W71qAbfGXVC0TvICNAKnIcCP/PU8K2kCMHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SbRPk3fVgANmq8O61HVYKQoMM0+OX1sMfYbyl+f5ebfHx9tx5HrXyEQhkmZpfNDWRtMovdrN2KOAD9fLdlkaKneL+Gs0KlTvlCD9Pa5CCeHptV+kQxZOpdr9iI62R7sgsBaUxR6HTfTsH7zBdD9omNCweJRRJVi2ghYaIEhXMOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfjRFUXE; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=VI2FPfFps6xwl9YeMpdk2NehX0ip4NOJR6tuotz4hWqkmjjSL8HOiPbBYiC2KX4UPKcE9mamceyZ0q7FksYs53Vyabk8pc8in/6JW3I44WKcPZioVf4lTriwB65YtxfrKakK74FKIJn8l9ZV9P54TUfgZDoSP0sNOveJVNgaLx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kO4usZ5Q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfjRFUXE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE691F000E9;
-	Thu,  2 Jul 2026 12:16:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kO4usZ5Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC311F000E9;
+	Thu,  2 Jul 2026 12:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782994620;
-	bh=SmrhXKb/tICfou2fB2Dbzvn0JaPripZ9jvu2bmh8Jik=;
+	s=k20260515; t=1782997116;
+	bh=E/1DCNOv6BvGR9MJ9FvUvqyYS0lnKrQcbwU1VR2yiNw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YfjRFUXEBU2dRmuBpB4h+tQRBLbIKpZBr7Vf/wGNH8GIbYIoOZ2+iJacKSoCbpVtS
-	 nLyO5ja5AytCvhqwDq0QenPxKrMKslV49oH6XBSjalGtxG47SJjiMV7MT+tzXio6ce
-	 JdlM4siO5IwFaYVLcm4KaNHxCA6hmUqsbOTyo9nlQqZd4lEWBGt33GCh9LZqRUfBBn
-	 mcQd1A7BvVsZSb2TQuY2xdCzCh+UDajG+SL5GXiJNr7mmSLrWTVjj9rBrdT9z87G/T
-	 Vy7FJvYKgcFqj/cL9xNXF6QvQ5MobsDT2Zofpc5Qxh41lYF1oSGL+QhpzzXdyRSPWv
-	 bIXuhAyMKtIcQ==
-Date: Thu, 2 Jul 2026 13:16:38 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 20/30] mm/vma: introduce vma_assert_can_modify()
-Message-ID: <akZNWNuyBU4xDDyf@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <23c7602c58cacc23ef22618a27af9a2d54addf58.1782735110.git.ljs@kernel.org>
- <akZHWwVgJfqCwA2W@pedro-suse.lan>
+	b=kO4usZ5QxTv0KTmHTZC/qASNpRJK/tbL1yjometAkq37XaVoiPj9yYNJYSMa/miOy
+	 WDumAgPKPoA6O+ZAhZknNP5uy3myN2YtroWwxIDDh/D9adoYaQBir+NbjrazmpzPB/
+	 G26xcrXk1KhYilWa5NJdthwc2uJy3iDeefPoHZlhdFDGTm+nZ6/SJsuST7sAsnkvJn
+	 dXE7Zj7K2yahM8tyC7aM0z9NdoTfrtRX0iFx9IZ2s+glDcBGyXLo+A5UHqZ60T2grQ
+	 plqvfAsOE08WmETjdkeuGfJSTD3aYifZvi/nV1eTiyVSnRKxXP1QYtapabLU1eTAKw
+	 hZ6pAM4+B/9zQ==
+Date: Thu, 2 Jul 2026 14:58:33 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, dri-devel@lists.freedesktop.org, 
+	David Hildenbrand <david@kernel.org>, Yury Norov <yury.norov@gmail.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-trace-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>, 
+	Will Deacon <will@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, linaro-mm-sig@lists.linaro.org, 
+	Heiko Carstens <hca@linux.ibm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Thierry Reding <treding@nvidia.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, John Stultz <jstultz@google.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Brian Starkey <Brian.Starkey@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Suren Baghdasaryan <surenb@google.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, devicetree@vger.kernel.org, 
+	"Liam R. Howlett" <liam@infradead.org>, linux-tegra@vger.kernel.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"T.J. Mercier" <tjmercier@google.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	iommu@lists.linux.dev, Mike Rapoport <rppt@kernel.org>, 
+	Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v3 01/11] dt-bindings: reserved-memory: Document Tegra VPR
+Message-ID: <akZde-8lFvf8rPji@orome>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-1-d80f7b871bb4@nvidia.com>
+ <178293558945.1610040.13281502080616690110.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jt3c4zsxeledpb4t"
 Content-Disposition: inline
-In-Reply-To: <akZHWwVgJfqCwA2W@pedro-suse.lan>
+In-Reply-To: <178293558945.1610040.13281502080616690110.robh@kernel.org>
 
-On Thu, Jul 02, 2026 at 12:16:32PM +0100, Pedro Falcato wrote:
-> On Mon, Jun 29, 2026 at 01:23:31PM +0100, Lorenzo Stoakes wrote:
-> > vma_assert_write_locked() and vma_assert_attached() are useful for their
-> > own purposes, however VMA code absolutely does allow the modification of
-> > non-write locked VMAs if they are at that point detached (i.e. unreachable
-> > from anywhere).
-> >
-> > It's therefore useful to be able to assert that a VMA is either
-> > detached (modification doesn't matter) or write locked (you're explicitly
-> > locked for modification).
->
-> Hmm, I was wondering why detached does not imply write_locked, and then
 
-For one obviously when detaching they are also write locked (see
-vma_mark_detached()) but yeah the point of this is when you have a VMA allocated
-which doesn't hold the appropriate lock.
+--jt3c4zsxeledpb4t
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 01/11] dt-bindings: reserved-memory: Document Tegra VPR
+MIME-Version: 1.0
 
-> realized that new VMAs aren't write-locked. Could we do it by default?
-> Like a simple:
->
-> 	vma->vm_lock_seq = __vma_raw_mm_seqnum(vma);
->
-> might do the trick. I don't see why it wouldn't work? Is there some other
-> case I am not considering?
-
-Firstly, I'd rather not rework the VMA lock logic as part of this series. It's
-subtle and such changes are tricky.
-
-I'm trying to achieve the minimum changes while adding extra validation as I can
-in preparation for the scalable CoW work.
-
-And I'm not sure wanting to alter the fundamentals of VMA locks is a good reason
-not to ack a patch :)
-
-But since you bring it up...
-
-There's subtleties here too.
-
-- At what point do you do this assignment? If it's the VMA allocation logic,
-  it's not obvious then that you even have the mmap write lock necessarily. Now
-  you're making assumptions that might be broken, or broken in future.
-
-  Now everybody who allocates a VMA has to 'just know' that they need to assign
-  an mm and mark it write-locked (but in a special new VMA way) before setting
-  the pgoff.
-
-- Detached means it is not currently in any tree, nor belongs necessarily to any
-  mm. So the concept of it being write locked is meaningless.
-
-- It's broken to perform actions on a new VMA that is not yet linked into any
-  tree that would require the VMA write lock. Currently the code _explicitly_
-  asserts that a detached VMA is not attempted to be write locked.
-
-- So we have a good way of catching people doing stupid or broken stuff to VMAs
-  that are not in the correct state (we currently _don't_ do that for detached
-  VMAs that _were_ in the tree, probably we should change that...!)
-
-- You'd have to create a new function to do this since we explicitly disallow
-  doing this right now, and that's more complexity and then you're then
-  creating a whole new meaning as to what VMA write lock acquisition is,
-  which is even more added complexity.
-
-- create_init_stack_vma() would break, so would hugetlb (lol) and static gate
-  VMAs explicitly do not belong to an mm, so there's simply no concept of them
-  being VMA write locked anyway.
-
-- I'm not sure violating the invariant of seqnum = 0 = no write locked VMAs is
-  safe.
-
-- Things get quite horrendous on fork (prior to us taking tmp's VMA write lock)
-  - you'd have to assign this field after duplicating the VMA midway through
-  attaching it to the new mm, where that mm has a new seqnum. But the new mm has
-  a seqnum of 0... so now you're having to duplicate it but alter what
-  vma_lock_init() does to reset the seqnum to 0 but then what if the
-  'duplication' logic asserts VMA write locked?
-
-It's very chicken and egg - on VMA duplication you want to be able to write the
-very fields that you need to do anything with the VMA prior to it being linked
-in anywhere.
-
-And we probably don't want to bake in the assumption that to change fundamental
-fields requires that you always hold the write lock as a consequence.
-
->
-> >
-> > Therefore introduce vma_assert_can_modify() for this purpose.
-> >
-> > While we're here, make vma_is_attached() available generally - if
-> > !CONFIG_PER_VMA_LOCKS, then there's no sense in which a VMA is
-> > detached (vma_mark_detached() is a noop), so have this default to true in
-> > this case.
-> >
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+On Wed, Jul 01, 2026 at 02:53:10PM -0500, Rob Herring (Arm) wrote:
+>=20
+> On Wed, 01 Jul 2026 18:08:12 +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > The Video Protection Region (VPR) found on NVIDIA Tegra chips is a
+> > region of memory that is protected from CPU accesses. It is used to
+> > decode and play back DRM protected content.
+> >=20
+> > It is a standard reserved memory region that can exist in two forms:
+> > static VPR where the base address and size are fixed (uses the "reg"
+> > property to describe the memory) and a resizable VPR where only the
+> > size is known upfront and the OS can allocate it wherever it can be
+> > accomodated.
+> >=20
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
 > > ---
-> >  include/linux/mmap_lock.h | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> > index 04b8f61ece5d..d513286d8160 100644
-> > --- a/include/linux/mmap_lock.h
-> > +++ b/include/linux/mmap_lock.h
-> > @@ -506,6 +506,8 @@ static inline __must_check
-> >  int vma_start_write_killable(struct vm_area_struct *vma) { return 0; }
-> >  static inline void vma_assert_write_locked(struct vm_area_struct *vma)
-> >  		{ mmap_assert_write_locked(vma->vm_mm); }
-> > +static inline bool vma_is_attached(struct vm_area_struct *vma)
-> > +		{ return true; }
-> >  static inline void vma_assert_attached(struct vm_area_struct *vma) {}
-> >  static inline void vma_assert_detached(struct vm_area_struct *vma) {}
-> >  static inline void vma_mark_attached(struct vm_area_struct *vma) {}
-> > @@ -530,6 +532,12 @@ static inline void vma_assert_stabilised(struct vm_area_struct *vma)
-> >
-> >  #endif /* CONFIG_PER_VMA_LOCK */
-> >
-> > +static inline void vma_assert_can_modify(struct vm_area_struct *vma)
-> > +{
-> > +	if (vma_is_attached(vma))
-> > +		vma_assert_write_locked(vma);
-> > +}
-> > +
-> >  static inline void mmap_write_lock(struct mm_struct *mm)
-> >  {
-> >  	__mmap_lock_trace_start_locking(mm, true);
-> > --
-> > 2.54.0
-> >
->
-> --
-> Pedro
+> > Changes in v2:
+> > - add examples for fixed and resizable VPR
+> > ---
+> >  .../nvidia,tegra-video-protection-region.yaml      | 76 ++++++++++++++=
+++++++++
+> >  1 file changed, 76 insertions(+)
+> >=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> yamllint warnings/errors:
+>=20
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/r=
+eserved-memory/nvidia,tegra-video-protection-region.example.dtb: protected@=
+2a8000000 (nvidia,tegra-video-protection-region): reg: [[2, 2818572288], [0=
+, 1879048192]] is too long
+> 	from schema $id: http://devicetree.org/schemas/reserved-memory/nvidia,te=
+gra-video-protection-region.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/r=
+eserved-memory/nvidia,tegra-video-protection-region.example.dtb: protected@=
+2a8000000 (nvidia,tegra-video-protection-region): Unevaluated properties ar=
+e not allowed ('no-map', 'reg' were unexpected)
+> 	from schema $id: http://devicetree.org/schemas/reserved-memory/nvidia,te=
+gra-video-protection-region.yaml
 
-Thanks, Lorenzo
+Any ideas why that second error shows up? It turns out that it goes away
+when the first one is fixed (which admittedly is a stupid mistake), but
+I spent quite a bit of time looking for a fix before realizing that it's
+only a side-effect of the first.
+
+Thierry
+
+--jt3c4zsxeledpb4t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpGYHcACgkQ3SOs138+
+s6FXSg/8DETX0ZuK2IIeUJbIHp/syjqHI0/Rww4Pal6HHyPG1Nmh7Mw8aUeTurgJ
+joGwb1v3IfLcjn3lMb2FCqe/oBcRBhmc8WlGWIiqiFfoTtXAPo8Rg64dg0l2ndIV
+u9BZrRKqkWLAjjq8uSoXf/8ub0GjtRGMSEiRqa4adYKV0VAUPUbQjEzfikHg91aU
+kSrCvilTLa1KSh268wVWvSEKjraNsiSBq+IoZ3L641ddHo9unPIuXnoFTZzFam4o
+xj7cgpnuBO79MYgpv5vlyz3Rz9W1twGkNdysDqEVRuh8kHJLNsaFrWhMEOeoTcMX
+iCyp3WySjGD1yBTs7VM2RXj9RvBllF0DYKc142VSpEPhsy49wMcjv8Bag05Zwzys
+LHSKvs1SF/dN62tw1x2kZs+Jd4+QcwlTfGDQbtf3Xtf88MP6QcXUUWXB+VMcWumA
+K4mrmfHiRpBrk7IW3c+b4lGwZ6Tl72Z1c6LI07ju7x3DohTXat7hYT2+iDZI1xfA
+s47ub8HQS6xthrn9/xco8ZPWOOjizZiMRSe7l/2gbvrymb1LINSe8uL0W6CFPCJ6
+G37Ad7PfTI1b60hHNGhEGteQtvty4ZuUr126ehR9qrhkvpzYWRUT/ml5MeCYjsOY
+hJrS/jVvbJcphwokdb+6MUfkHN1EC7gbyLCALmMVjSqAec+7Ds0=
+=yG1A
+-----END PGP SIGNATURE-----
+
+--jt3c4zsxeledpb4t--
