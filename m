@@ -1,80 +1,72 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F591384CD1;
-	Thu,  2 Jul 2026 07:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D60391E58;
+	Thu,  2 Jul 2026 07:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782977115; cv=none; b=qWzY9HIRefB1kc6W0ypukP6sVXCoCATAWD/NnYeSO84vLIm6cxWUOv8MWP4nID6YvPVGSR/c0YIbZ4RK1/Gw0E8ZytraigxBHSDbfEAMg6Saf0tDfTzd7GeSEuwmc9wepxQXkA8BPQJH1KPh2BOtZBgaJTuNgP7rlyGsOLenfkA=
+	t=1782977428; cv=none; b=L1tFNSM2op4H8MhoQgWKtZtUTHkA9c9TdB7FsB7kqrTtKla+m2EyclaJE6bMUkRoru4wuOzbNA4hgjQHDf8yRm5+OhHMF7IOgVMkPxvXzEbHNGAPJ/lyMiobVD//IV5CD/0DB68L3aQ5JvFORPZkISls03eoi7fs10X2cV++YYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782977115; c=relaxed/simple;
-	bh=n5z5qTTSNqAD50MPpfCiszBt8jZfAmtR/DrzWObXh3M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BiFI4/F7dHka+o5fOAriOYAQ5o+OOSijQY4QKPGOVamndHhgTJxaG3y2cK4AWcpSfR409gbLmYhuDi9Ydp6wazW5TdsHx3c7GyFmLEXSuN7o7ejrVus+uCPBgs4PkBQwOs0XqVHgNMauoYLIjuyDdclz4JBELr5dViLb9gCp9Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YDH7qtKI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nXozbYa/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1782977428; c=relaxed/simple;
+	bh=Ebo1HHx2sjMgTXVERC2o7FHxdG394UaMqGtb9jJ6pnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+Gss5miUUa27Zr3hSTKxmhxr307jd35Qg7s184uC/fUJuah6EsoHJPlM3zAVmSSiFdtD/APKvvVhR87H5ATCfuEYB5K8v8+sLL5NQlOvErswPjStF4+7UQ5Wthe1KJiSD3JrlfG56zForYtlPc9odhlyGeEQuR0YIUFKf7KoYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OH6+V1h/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YDH7qtKI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nXozbYa/"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1782977112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aEfPBz8t091mK8M23TmUS5ueXhjrCz5llTnQK6R0sfQ=;
-	b=YDH7qtKI8zSAy+ZaxsMjxQaDi+56XZKBzp5q22tDg/9ixi5f/r4vFvIGJ5DFf6Yx38JXsk
-	uuK48YPGajxY0nly5PF2pi672tYck4ftjwWHhURXAPIOxo8InlNPe88fd76h0PC1gALrHu
-	gebsiL/iCgewJW1cLrnc403G0Uyw+QFB8JhnWTlA/LnWXnX9d0rxiAREwxNbc/7NrJcg/Y
-	Dn157DyFw9kAsunHruBdRMtlkafTYxewlLPMhSyf35ch4GjwEf3pV6lSAQoJUN3yfrfc6L
-	V5shrqy1fZxoFeOoETTDxpVr5CVonpHyqtoVXp6ZNKgarJ8250BHDkKMoAf/9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1782977112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aEfPBz8t091mK8M23TmUS5ueXhjrCz5llTnQK6R0sfQ=;
-	b=nXozbYa/awkVyg7K3/Ip0TKZExLgqXmxbWF4Il6PZjBAXd8k9tzkZRnmyZvM3YfPbV+NU4
-	mtUqGGFS9mKZJzAA==
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] rv/rtapp: Add wakeup monitor
-In-Reply-To: <b33e175467a8cb8011ded2195353bc6743b4cd46.camel@redhat.com>
-References: <cover.1781852967.git.namcao@linutronix.de>
- <ba5658fa13e49ada466b84a2c211f233037180b5.1781852967.git.namcao@linutronix.de>
- <b33e175467a8cb8011ded2195353bc6743b4cd46.camel@redhat.com>
-Date: Thu, 02 Jul 2026 09:25:11 +0200
-Message-ID: <87ldbtvoo8.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OH6+V1h/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cqm9I5O4RFSXg7unUN2Zsj9l3ibq5Z8fUHQyhc1fLDg=; b=OH6+V1h/NXlzgHAQxCPnw7na//
+	5N8lTSnUA1KmF6eYL36w20/ao80SjDmXlfvKx2B3zovOGPZesBC276c85nD+4lW6MTJdoEOpS2HMI
+	lrw8puNjdzPSvzs5/5d3KKLn4MdiyqPIsMDve3vECMPoeUE2PcpLuuIx+XrXz6wVNZ8mxglx99YYC
+	kFKlGzF2pNH/4Y9aTU39yxjNT3yjeH6ExKW3bu0b4OKINEQnGf2/hry2KhpAXdxwwWEJvuDDF409q
+	QBVmBDZLhP8cgM0+w1eoOde8uhWAWblJROWo5BVCsbV2S48oIUtLzuodunq1dZdq7ThAGSl6tyhvy
+	fdzm2h6A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wfBsG-00000003VSK-43nz;
+	Thu, 02 Jul 2026 07:30:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3E32530035C; Thu, 02 Jul 2026 09:30:16 +0200 (CEST)
+Date: Thu, 2 Jul 2026 09:30:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 00/13] uprobes/x86: Fix red zone issue for optimized
+ uprobes
+Message-ID: <20260702073016.GJ49529@noisy.programming.kicks-ass.net>
+References: <20260526205840.173790-1-jolsa@kernel.org>
+ <aiEiP54zktDqAZpG@krava>
+ <CAEf4Bzbrd8xs5sSwEPR336=7z2FGcdXVtV-aVZ4W1zSjHkwwcg@mail.gmail.com>
+ <CAEf4BzYmgj55UnBX2fRoKwtc-97vc7Sf1opWcAXzSKKLr_Ei6A@mail.gmail.com>
+ <20260702072004.GA49951@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260702072004.GA49951@noisy.programming.kicks-ass.net>
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> This looks good, but if I understand it correctly, the same violation should be
-> spotted by both monitors from two different perspectives, but sleep catches more
-> things (e.g. tasks using wrong sleeping ways despite their wakeup):
->
->   # perf stat -a -e rv:error_sleep -e rv:error_wakeup -- stress-ng --cpu 5 --cpu-load 90 --sched rr -t 5
->
->    Performance counter stats for 'system wide':
->
->                285      rv:error_sleep                                         
->                 20      rv:error_wakeup                                        
->
-> Provided I don't really know what's happening down there (I just let the
-> stressor run free), this discrepancy is expected, right?
+On Thu, Jul 02, 2026 at 09:20:04AM +0200, Peter Zijlstra wrote:
 
-Thanks for testing it.
+> > I'll assume that no one has any objections to route this through
+> > bpf-next. We got reviews from Oleg, so that's great. Jiri, seems like
+> > you will do small adjustments and send v5, please do, and then unless
+> > meanwhile no one raises any issues, this will go through bpf-next.
+> > Thanks!
+> 
+> Is it already applied? If not, I can stick it in tip/perf/core (and the
+> first in /urgent).
 
-Beside monitoring low-prio task waking high-prio task, the rtapp/sleep
-monitor also checks that user uses the correct APIs for sleeping. So
-yes, this discrepancy is expected.
-
-Nam
+Oh, I see v5. I'll go grab that then.
