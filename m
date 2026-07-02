@@ -1,95 +1,68 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D253B2D0C7B;
-	Thu,  2 Jul 2026 14:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2AC4BC014;
+	Thu,  2 Jul 2026 14:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783000837; cv=none; b=PZCOoFke6SSktRRl5CxcycuVXZsM67dMp8mVu6aq2zNy0lghbWLJt3WFt+xFCkNoP8va+GnhNDr7srNR8RqoW/3G51fq//KKxnLI7ARkSNWt8ZRvrlGrrVzpHqXLCvo4yE5IlyjuTQWdjU3kvUJ/2opSBfHCzoHX+XOY8Z3zFso=
+	t=1783000843; cv=none; b=epaW0ADo0X0qED7awiD5eeMNTuo1h+Hn4yHTbdmvnKRMd3LBZ4VCx6511rt75zevR8sPycAVAJV9VG1WFiuG/jAYMs/QQgg4kWqZpr7pubwrVd/s41FSdhN5hNEFHzWW+tx+aOwrCigt61Ty9dP5XWV6ex+lSWksdA0izUXjXcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783000837; c=relaxed/simple;
-	bh=piD5E/PMTcu0sSWVmeyLtKcUF2i/dcLJ7gKqSgoZvoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V2weyFM++CUGXWC0N5yrJdhtagASjhaBg/a/WrETLs2gDcYBrn2mdy3CgKpjN17Cboh0NcCXMWXJ0KtpZ0Zjur2Hg3kfdfFPxE45V/WQB+OBlq1uwlwPT97wZSgE61+pWB/GNx7InNTU3I3mjc9k6YGmwvxQ1P4nZQGfjjtSOKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aiMpGp31; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ayfsj7VV; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1783000843; c=relaxed/simple;
+	bh=V9S4G2AT6S20sfZBXUptijols8v362/f50WgdVj9JfI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GiWAU+Ap6RPYReZ50Jqo+JYtlTdWogKPShwZI3vJHSvw2zpwl38+Yd3hcabpxbfJA1yfr/5xEyvAv51x0rJWU/fC2kPHAkhLvkuNrRHbbZS131LpGil/EPvDRQwi6AsWZ+DRKl+E19uw/UKc4/DuVTQHC6O30EBf6EhoEClZ9XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z7LCLef5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iI9u50vi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aiMpGp31";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ayfsj7VV"
-Date: Thu, 2 Jul 2026 16:00:27 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z7LCLef5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iI9u50vi"
+From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783000832;
+	s=2020; t=1783000840;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EuOcNiBA9kIHQom+t9U4CN4J3rXd4xxXtK6J3KnKndo=;
-	b=aiMpGp31PFc2QfwzD4Jb3xmgR0NFfZNU73NHxq4je+ev5ZmhfTp48nDen+X+IihkAWErA+
-	8vf08qvCQf3fIcV6BMZCRxjKMIotZIsrPMgu7TCgbQQsEu+Zu5cRW9TAP9CLlYH4tTLvYD
-	sVm9QwgcBa21hns2seWBUXBhfMXFlM4oAPXKMzU9XBkAMqj0MkUUfeIDMcP4d0wjzI8M/q
-	TR/il22DP0xmI68t3mwhdrbq0WdA0AKNvASc+D6kvjZvmI7B1hmLIQraAs7TTIdwTj6Mrg
-	Bw1wzN7j5RuY+ziCtG+RvdEHCKOQUDahz8cmBj8KESnIWYV1cjp54/cEKidO7Q==
+	bh=V9S4G2AT6S20sfZBXUptijols8v362/f50WgdVj9JfI=;
+	b=z7LCLef54NnJMy8kvXLapZ1XC23ktpSK4xf6gSa0ocNP0Pa5q5UYlZXtVzqwB2x1VlS5M9
+	W6OdLLk+2NWarEh1CHHyDCsXjgJOk2Ip23np7SSqLoVEbjulH6tadm2ioMyBPzcbVLIfO1
+	NArMD0TkkBIJ3P7jaducsJrACNW6DLkwa7uDkr1uXnsFFEz0rZ3ghXZEY8CLMbV5wTroub
+	KctWko5Q4EZ0eTS2Kl3MHM4x0ND6YxEN2JZ8llkSG5AV/fAulR8rKGTwVE9V6TmlE4Arvy
+	WJHxKPAyIauhJ6FZaNyUQYNDQ3vwz48lut04UKRg7JQ1wifFpb1TrksxqEjzIg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783000832;
+	s=2020e; t=1783000840;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EuOcNiBA9kIHQom+t9U4CN4J3rXd4xxXtK6J3KnKndo=;
-	b=ayfsj7VVHtf1/Aj+w1A00vmX3BCnIe1LONCvKYpQlZDVq9OghZAeWiibwnWW4fUfIHORkq
-	5QDgLR/Q2LAlNdBA==
-From: Thomas Weissschuh <thomas.weissschuh@linutronix.de>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Wen Yang <wen.yang@linux.dev>
-Subject: Re: [PATCH v3 03/17] verification/rvgen: Improve rv_dir discovery in
- RVGenerator
-Message-ID: <20260702155849-0a911b5a-20ca-48be-a606-ab5f9bffa551@linutronix.de>
+	bh=V9S4G2AT6S20sfZBXUptijols8v362/f50WgdVj9JfI=;
+	b=iI9u50viC7vFiL2KSGrxn6GsScgsxtqMarQ/bhhp6h5/w2pC1I3viFrfjgZ8RktlL/Pwxq
+	5WLGnszaIRF/pwBQ==
+To: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
+ <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
+ <wen.yang@linux.dev>
+Subject: Re: [PATCH v3 08/17] rv: Export task monitor slot and react symbols
+In-Reply-To: <20260625121440.116317-9-gmonaco@redhat.com>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
- <20260625121440.116317-4-gmonaco@redhat.com>
- <87y0ftijkw.fsf@yellow.woof>
+ <20260625121440.116317-9-gmonaco@redhat.com>
+Date: Thu, 02 Jul 2026 16:00:39 +0200
+Message-ID: <87se61ij94.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y0ftijkw.fsf@yellow.woof>
+Content-Type: text/plain
 
-On Thu, Jul 02, 2026 at 03:53:35PM +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > The RVGenerator class can find the RV directory (kernel/trace/rv) in the
-> > kernel tree to do some auto patching. This works by assuming PWD is
-> > either the kernel tree or tools/verification, which isn't always the
-> > case (e.g. when running from selftests).
-> >
-> > Make discovery more robust by relying on the absolute path of the
-> > current script and traversing backwards the right number of times.
-> > This should work from any location if rvgen is in the kernel tree.
-> 
-> Agree.
-> 
-> > +        # find the kernel tree root relative to this file's location
-> > +        current_dir = os.path.dirname(os.path.abspath(__file__))
-> > +        kernel_root = os.path.abspath(os.path.join(current_dir, "../../../.."))
-> 
-> 
-> The  "../../../.." makes me sad.
-> 
-> We can find the git project root instead. For example:
-> 
-> def getGitRoot():
->     return subprocess.Popen(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).communicate()[0].rstrip().decode('utf-8')
-> 
-> (stolen from https://stackoverflow.com/questions/22081209/find-the-root-of-the-git-repository-where-the-file-lives)
-> 
-> But that's not important, up to you.
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> Export rv_get_task_monitor_slot, rv_put_task_monitor_slot, and rv_react
+> to GPL modules so they can be accessed by KUnit and future monitors
+> built as kernel modules.
+>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Relying on git is problematic as the git directory might be missing.
-People might use the sources from a tarball or use funky container setups.
-
-
-Thomas
+Reviewed-by: Nam Cao <namcao@linutronix.de>
