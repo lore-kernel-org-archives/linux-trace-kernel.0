@@ -1,196 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AF510F1;
-	Thu,  2 Jul 2026 01:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C06B29CE9;
+	Thu,  2 Jul 2026 01:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782954948; cv=none; b=KvwcmVRc9+wODAlJkhsQTS9+18uh7cBflhdHy7yNCOA/tmUFt/2IWW9RvqXWiSa0h7kDzmrRtMXB3naPGZf8V7WVG0iJaLtyNHF6jug6QoBfWmebwuZsPqzzZP399OvVQkDraa9Y+u/2qvomDNUbplY6VggeDhv08eDEmEPpUCE=
+	t=1782957425; cv=none; b=csv9HtuSJ1NqgfXEGTfM1wAme6gxLhvXDRoYutoZRYPFOkpI5Unph7QKIe3DrJdHbitTrJIIySgMXf265DCOhN7Pdhf+5dnMGh7+ck2FP05XpOJbK1XJ8WrTXOQOQvXoQ9SS7+OHHrnlcSkdA79SSck4CHCJV85/QqIDtLUTv58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782954948; c=relaxed/simple;
-	bh=NBKNdAYuE0odx78pG/3i0vLnXqdd7I2SwEL4LB1OkDk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Gb/3cAp+4usdKcJcJ/VxcVRDItcpi5yBj08IF+cblMFTuBOWWc/0dHCund3uVT/m+Syf+KAAZ4hwKFXC8p5mHMG9nNMCbKE8xWbhRa74dY7PwfUQuc9Fr/31dqMYZ5I3DO8jGEOa/wYXEFwHdMadiGspCBMwUpk6Z0OptHmN0XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okV1Tz5a; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okV1Tz5a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DEA81F000E9;
-	Thu,  2 Jul 2026 01:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782954946;
-	bh=kpkwTSlW5KK/zUlaknG/+M3f+Jc9aWbyO11t0Gu6KKU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=okV1Tz5agCW+eVgjFYnxC6V0id6fTUo25mnz0GfmuVZzLfaLqEWu8H3wJBC9JwOh8
-	 pAhfniwdyYV/DfsH7oRsSrMHHdu2cmZ5eKcLRNKda6lT+QcUkRQ1DuQLYI6dlC3PuA
-	 cpiUo08Wf+dLj1+/0uFZGLHYkIVKaGr3YM5FhZBwTHOrIfHY9z6kU3roq/HVjmor3m
-	 jNf0q9W4+8g3ApwiZYf2MwkQAW6i1B7ojuToJcKav/UqmMlwx9i6B228ZSMxAU/Ebg
-	 jVjLRLDRuAzdsbLZdaleslAf49KrYJiPKK22hR7pMdT5eEaFVNME5PWfUYqVpJfj62
-	 V3Z4K9vnZDZYA==
-Date: Thu, 2 Jul 2026 10:15:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ren Wei <n05ec@lzu.edu.cn>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, namhyung@kernel.org, yuantan098@gmail.com,
- yifanwucs@gmail.com, tomapufckgml@gmail.com, zcliangcn@gmail.com,
- bird@lzu.edu.cn, hhhuang@smu.edu.sg
-Subject: Re: [PATCH 1/1] tracing: Prevent out-of-bounds read in glob
- matching
-Message-Id: <20260702101542.2b636bb4d9d9c3ad46dba9d4@kernel.org>
-In-Reply-To: <da1aaf125fc3b63320b0c540fd6afa7c3d5b4f1a.1782836943.git.hhhuang@smu.edu.sg>
-References: <cover.1782836943.git.hhhuang@smu.edu.sg>
-	<da1aaf125fc3b63320b0c540fd6afa7c3d5b4f1a.1782836943.git.hhhuang@smu.edu.sg>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1782957425; c=relaxed/simple;
+	bh=R0ipzrHtpL9cmT69Li/RmN5LsEJBhMPUHcq/AnLj8mA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NcZJ29uPbFRhVk601V8CeA4I12HbBjih5FtoYEBDroWoMo+wDomlp8B2EsVH8E6ULL6LyYvVTNqN9mmh5DrtuXeDNtEqKn5VlLFTPbhHFH6aUt8CZR9rnSExpQsnDZxUnsAydoQYb0GSuh2DvFtRsYFAMtPGqRv8gjs60tqu7Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4ecbd81875b911f1aa26b74ffac11d73-20260702
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
+	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:bb48c2b8-8096-4da5-8fdf-3fdbab575c41,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:15
+X-CID-INFO: VERSION:1.3.12,REQID:bb48c2b8-8096-4da5-8fdf-3fdbab575c41,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:15
+X-CID-META: VersionHash:e7bac3a,CLOUDID:b89364e5347170e779b4fd4e6f8d2ef7,BulkI
+	D:2607012035482P0BXQIA,BulkQuantity:1,Recheck:0,SF:17|19|38|66|78|102|127|
+	136|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,
+	Bulk:41,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR
+	:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 4ecbd81875b911f1aa26b74ffac11d73-20260702
+X-User: wangyan01@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <wangyan01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1234714517; Thu, 02 Jul 2026 09:56:57 +0800
+From: Wang Yan <wangyan01@kylinos.cn>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wang Yan <wangyan01@kylinos.cn>
+Subject: [PATCH v2] selftests/ftrace: fix spelling error in poll test comment
+Date: Thu,  2 Jul 2026 09:56:34 +0800
+Message-Id: <20260702015634.366201-1-wangyan01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed,  1 Jul 2026 18:28:46 +0800
-Ren Wei <n05ec@lzu.edu.cn> wrote:
+Fix typo "happned" -> "happened" in ftrace poll test comment.
 
-> From: Huihui Huang <hhhuang@smu.edu.sg>
-> 
-> String event fields are not necessarily NUL-terminated, so the filter
-> predicate functions (filter_pred_string(), filter_pred_strloc() and
-> filter_pred_strrelloc()) pass the field length to the regex match
-> callbacks, and the length-aware matchers honour it.
-> 
-> regex_match_glob() was the exception: it ignored the length and called
-> glob_match(), which scans the string until it hits a NUL byte. Some
-> string fields are not NUL-terminated. One example is the dynamic char
-> array of the xfs_* namespace tracepoints, which is copied without a
-> trailing NUL. For such a field, glob matching reads past the end of
-> the event field, causing a KASAN slab-out-of-bounds read in
-> glob_match(), reached via regex_match_glob() and filter_match_preds()
-> from the xfs_lookup tracepoint.
-> 
-> Add a length-bounded glob_match_len() and use it from regex_match_glob()
-> so glob matching always stops at the field boundary. The matching loop
-> is factored into a shared helper so glob_match() keeps its behaviour.
-> 
+Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
+---
+ tools/testing/selftests/ftrace/poll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Fixes: 60f1d5e3bac4 ("ftrace: Support full glob matching")
-> Cc: stable@vger.kernel.org
-> Reported-by: Yuan Tan <yuantan098@gmail.com>
-> Reported-by: Yifan Wu <yifanwucs@gmail.com>
-> Reported-by: Juefei Pu <tomapufckgml@gmail.com>
-> Reported-by: Zhengchuan Liang <zcliangcn@gmail.com>
-> Reported-by: Xin Liu <bird@lzu.edu.cn>
-> Assisted-by: Codex:GPT-5.4
-> Signed-off-by: Huihui Huang <hhhuang@smu.edu.sg>
-> Signed-off-by: Ren Wei <n05ec@lzu.edu.cn>
-> ---
->  include/linux/glob.h               |  1 +
->  kernel/trace/trace_events_filter.c |  6 ++----
->  lib/glob.c                         | 31 ++++++++++++++++++++++++++++--
->  3 files changed, 32 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/glob.h b/include/linux/glob.h
-> index 861327b33e..91595e7509 100644
-> --- a/include/linux/glob.h
-> +++ b/include/linux/glob.h
-> @@ -6,5 +6,6 @@
->  #include <linux/compiler.h>	/* For __pure */
->  
->  bool __pure glob_match(char const *pat, char const *str);
-> +bool __pure glob_match_len(char const *pat, char const *str, size_t len);
->  
->  #endif	/* _LINUX_GLOB_H */
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 609325f579..6385cd662d 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -1056,11 +1056,9 @@ static int regex_match_end(char *str, struct regex *r, int len)
->  	return 0;
->  }
->  
-> -static int regex_match_glob(char *str, struct regex *r, int len __maybe_unused)
-> +static int regex_match_glob(char *str, struct regex *r, int len)
->  {
-> -	if (glob_match(r->pattern, str))
-> -		return 1;
-> -	return 0;
-> +	return glob_match_len(r->pattern, str, len) ? 1 : 0;
->  }
->  
->  /**
-> diff --git a/lib/glob.c b/lib/glob.c
-> index 7aca76c25b..c80d9dd736 100644
-> --- a/lib/glob.c
-> +++ b/lib/glob.c
-> @@ -11,6 +11,9 @@
->  MODULE_DESCRIPTION("glob(7) matching");
->  MODULE_LICENSE("Dual MIT/GPL");
->  
-> +static bool __pure glob_match_str(char const *pat, char const *str,
-> +				  char const *str_end);
-> +
->  /**
->   * glob_match - Shell-style pattern matching, like !fnmatch(pat, str, 0)
->   * @pat: Shell-style pattern to match, e.g. "*.[ch]".
-> @@ -40,6 +43,29 @@ MODULE_LICENSE("Dual MIT/GPL");
->   * An opening bracket without a matching close is matched literally.
->   */
->  bool __pure glob_match(char const *pat, char const *str)
-> +{
-> +	return glob_match_str(pat, str, NULL);
-> +}
-> +EXPORT_SYMBOL(glob_match);
-> +
-> +/**
-> + * glob_match_len - glob match against a length-bounded string
-> + * @pat: Shell-style pattern to match.
-> + * @str: String to match.  Need not be NUL-terminated.
-> + * @len: Number of bytes of @str that may be read.
-> + *
-> + * Like glob_match(), but @str is only read up to @len bytes, so it can be
-> + * used on buffers that are not NUL-terminated (e.g. trace event fields).
-> + * A NUL byte within @len still terminates the string.
-> + */
-> +bool __pure glob_match_len(char const *pat, char const *str, size_t len)
-> +{
-> +	return glob_match_str(pat, str, str + len);
-> +}
-> +EXPORT_SYMBOL(glob_match_len);
-> +
-> +static bool __pure glob_match_str(char const *pat, char const *str,
-> +				  char const *str_end)
->  {
->  	/*
->  	 * Backtrack to previous * on mismatch and retry starting one
-> @@ -55,9 +81,11 @@ bool __pure glob_match(char const *pat, char const *str)
->  	 * on mismatch, or true after matching the trailing nul bytes.
->  	 */
->  	for (;;) {
-> -		unsigned char c = *str++;
-> +		unsigned char c = (str_end && str >= str_end) ? '\0' : *str;
->  		unsigned char d = *pat++;
->  
-> +		str++;
-> +
->  		switch (d) {
->  		case '?':	/* Wildcard: anything but nul */
->  			if (c == '\0')
-> @@ -125,4 +153,3 @@ bool __pure glob_match(char const *pat, char const *str)
->  		}
->  	}
->  }
-> -EXPORT_SYMBOL(glob_match);
-> -- 
-> 2.50.1
-> 
-
-
+diff --git a/tools/testing/selftests/ftrace/poll.c b/tools/testing/selftests/ftrace/poll.c
+index 53258f7515e7..4da86a20dc85 100644
+--- a/tools/testing/selftests/ftrace/poll.c
++++ b/tools/testing/selftests/ftrace/poll.c
+@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
+ 	}
+ 	close(pfd.fd);
+ 
+-	/* If timeout happned (ret == 0), exit code is 1 */
++	/* If timeout happened (ret == 0), exit code is 1 */
+ 	if (ret == 0)
+ 		return 1;
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
