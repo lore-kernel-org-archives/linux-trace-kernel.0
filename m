@@ -1,36 +1,49 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E91B2459E1;
-	Thu,  2 Jul 2026 20:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02D5335564;
+	Thu,  2 Jul 2026 20:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783025628; cv=none; b=Wd3VIJYLcHnVkI3oD0giZXyYFCnyMBjoHR9XSNRLmugVRC1htRkv5kqZGbTcYqlyUB9p0YjqbR1KPDnJSmEJnqvjLyeO3NfP6io+V0vJoX8nMWtImYkttsk3FvapfnkkXCE+ACgsLxV718Nqx72QkJJticjFzBCgnjFePFs2R4s=
+	t=1783025832; cv=none; b=iCycBm0wF5N5Y2Ii2NjGfaGqV71IQT/Xvj24+RdR8f7sGujcbB4IUA5j9bWVjFEHqeysmRQn8vxv6Ur3qbjc7dGMqBKGxjJQzknx63tqc5AFo1Ux1ovHXi+E7c/3aobsFYg2sY9XY86TZDkTrj8mP3h4xAE5sgsO+Bf6ULDb7Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783025628; c=relaxed/simple;
-	bh=AzLiymTuCL8cgzJkJ2VAikFwg8lHpxkwf8oZLVIYjTs=;
+	s=arc-20240116; t=1783025832; c=relaxed/simple;
+	bh=8Nmp3wHLYFKAXar638DK//coq/abiDbLyQase7ojOoY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=adO5gnoPeQ6v7k+2pCZCm/aX9q1xYri0FNIcbXNr/azOzda3Z5+ujKKfDEd2QXjscN6PbPN4bq8MpG7FgouuVvQu+dv2+JPqoHzJH7N5FY0ZU9IXpEVxebYzmSddBwW0cg4H4+wdQdLA0QQwi6+E+mtY7K4vJegxiq8eeTe5J+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id DF8AF8CD97;
-	Thu,  2 Jul 2026 20:53:44 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 2A7ED20028;
-	Thu,  2 Jul 2026 20:53:43 +0000 (UTC)
-Date: Thu, 2 Jul 2026 16:53:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Cleanup event_enable_trigger_parse() by using
- __free()
-Message-ID: <20260702165346.035f8eef@gandalf.local.home>
-In-Reply-To: <79106214-b341-46ab-8810-a206ce8fad29@web.de>
-References: <20260701174829.67ab8a33@gandalf.local.home>
-	<79106214-b341-46ab-8810-a206ce8fad29@web.de>
+	 MIME-Version:Content-Type; b=TF9bad2hcyQmNFI4IOjYRyJxT/th3h32LTY1EfLRulm+gHdRqtjd4HU5UfXQpmpFYcWkjaEMiWj61vU0L5PyM1x62ecFrfEKkH1dQBMCoBabJ/owSlQMdwpExJNofAth8FT+KaFBRqU1X5IzxkPA85jOwekpeixZ7j5CRJkKR90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEZ40vJ2; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEZ40vJ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DE11F000E9;
+	Thu,  2 Jul 2026 20:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783025831;
+	bh=GY/bHu8ysxbjFkB5NSHu/2S71hwF4DlYW+ddZeO6g8k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=LEZ40vJ28MRy8wo8OwdsdT/MvkdYqumJRkxDrL1CCkZmeUlFFlz26RDaDgYcBK0fz
+	 zlvgsl+G0TsWoNxp95VhhZyVtl4PKx+fViKF01+RKKDPlVOcmb43fTWzxOwsqFIHlt
+	 uefKMMoKu+lROGSRgGLHv4/1Rgv0wvkhpCF8neblat99MYike/WSxYx/g25rXE7m9C
+	 c7V3f9yon9zB4YLOXtQnKHquFE2ujkyJUAQK88e1sYgsJkaSEWp/8mIhbawBNEDaNX
+	 7QSTOwZ1ZDbuq5KLkSbTrhTnn/dSL3AkS85w40MB5pOk6m5NximFH2AJXJ0UZrAnYV
+	 AeT+B3vOEP5Hw==
+Date: Thu, 2 Jul 2026 16:57:13 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Thomas
+ Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Julia
+ Lawall <julia.lawall@inria.fr>, Yury Norov <yury.norov@gmail.com>,
+ regressions@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] tracing: Remove trace_printk.h from kernel.h
+Message-ID: <20260702165713.39580e1d@gandalf.local.home>
+In-Reply-To: <akZpICZ0pGqspV2u@monoceros>
+References: <20260624081806.120105649@kernel.org>
+	<20260624081948.301578807@kernel.org>
+	<akZpICZ0pGqspV2u@monoceros>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,31 +53,18 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: hkm44hoes9z34w9a34ihtcm8y5shx8hq
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 2A7ED20028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/v8zn8fSOJzhA9K718ZsAJw+bzhxl9Rxo=
-X-HE-Tag: 1783025623-478875
-X-HE-Meta: U2FsdGVkX1/Rtb8muLzSjKj9e3327T3nJYDC33bMHpv08m9lRV6zlqbg9Md5l0gzEiTl5uhQBxHg3L1tUsRlfYaqoHS1YY+fL11wRD/vZwX58O0xP+mYbhqG54YR4FUAHyGfEipNjsNdo7Yv5FrNnRn1bSwjbakPiS/7in4Fh+mnR8ulhIE45SSr30LA/jvF5aIYd6Dx/x9y3JKHGXtAt10j9HIbBY6fz1Rj4rrEbHAXazezeikLLq+jXA5/+9goh9Gz9EY89mFnF/DM/Q3Z7PxJVDSANqcsukvJ4jzQho6RpWAlTWmcxgFT7CM/YMQ3
 
-On Thu, 2 Jul 2026 11:58:02 +0200
-Markus Elfring <Markus.Elfring@web.de> wrote:
+On Thu, 2 Jul 2026 15:43:14 +0200
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
 
-> =E2=80=A6
-> > +++ b/kernel/trace/trace_events_trigger.c
-> > @@ -1739,7 +1739,7 @@ int event_enable_trigger_parse(struct event_comma=
-nd *cmd_ops,
-> >  			       char *glob, char *cmd, char *param_and_filter)
-> >  {
-> >  	struct trace_event_file *event_enable_file;
-> > -	struct enable_trigger_data *enable_data;
-> > +	struct enable_trigger_data *enable_data __free(kfree) =3D NULL; =20
-> =E2=80=A6
+> This patch became commit 9cbc3d9806d3 ("tracing: Remove trace_printk.h
+> from kernel.h") that currently is in next via
 >=20
-> How do you think about to reduce the scope for this local variable?
->
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git tr=
+ace/fixes
 
-No, it's fine as is.
+Thanks for letting me know. I'll remove it and push it up.
+
+I forgot I had it in there :-p
 
 -- Steve
