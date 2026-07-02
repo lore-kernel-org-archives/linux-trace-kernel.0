@@ -1,193 +1,290 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E445723EA94
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Jul 2026 11:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13EA3EDACC
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Jul 2026 11:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782991216; cv=none; b=Pbmhirr9Jt9I1LsAg+2LATWql4h0PeDXEuXAt8fYUhqAMSipVF9fMU9ZvsBhwfSQwofmLpA8EmT+mS1z7k/RXMD8Les9HHfBLpUHY5H77g/8aHMZXw2eM/qumaK+a23cMpmY6Rq8kvXOsrtWbfh57s4vWubVNlapz8KlIOWDw88=
+	t=1782991219; cv=none; b=kDrDtn8lDHDk2WT1gWtH8s+G9hFx+i9FeF3ma+10wTXocOuVYj81bsc203o6jHx8H2ynSxhvbkyebmuQ2kuRVQ+5xyHwxUfCnXYc6TqfQtwrixCyjqb0705P6OsmO70ZLEluy+EzsZn8eizcaEtzJwSc/ZZ3XJSOmEHwzRQuiww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782991216; c=relaxed/simple;
-	bh=z9C3BJPkAeYT5N4zbegd7qbIDCHNspObjWmKPJz27pM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSga+3+GssQcz4XM2dYer0wDVfVLx8qa2q3qjbfUx0D4JUCOn+HuKewDlZNH6QihYdasabHsBRLAmaLRhK+Celma5kWkDdISMDZd7gKsSAk2XubruofcF5QyQLGIk9+OTaJB3g+E8Wo7VYbk6lQriN+qhgpvZa2I+sk8pvf+MEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FNgpQ6KO; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782991219; c=relaxed/simple;
+	bh=X239wNR/oEz1o+9Hxr196nhAWJXbeoJAICDwBKUZxi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P8xx8aEpfa+qRmCx6UOH9d3mZrdo8YGpkcEl8Hvwjwa3KI5vsyNVKYmSrSlNqnTuH5J9+6dq7fO4wecLcxb0m4D3g8iwpTrsCG0sm7JzJy0XXLLs3meXijzkBTs9JTytIKqpqZu6eFzQpou6geJysAgEJZmdGbm0jm6NkliuJCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PgCpqqxi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oeEsfdun; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PgCpqqxi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oeEsfdun; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNgpQ6KO"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-474560436c3so1563649f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Jul 2026 04:20:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782991212; x=1783596012; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CiSMYxAAfWXzLBsuDt0wts0qfpoADcn2DxU3hQuJc2s=;
-        b=FNgpQ6KOyfmnpg/Ovf5CgVA7nldMPD48zdnqJQtEou/v2p8/XSUIkK7WIrYFsGsvuo
-         8VbRajV9xZScH+YZufhGJTz8ggRblK36rW5TCF5aV3p8yyQGy6eflWAVsyJcMXPXwxRw
-         GHdTHkpqRwxrfOZBH8Kcd/Gvi9KhnW1lngbaZXGCSR1cirQaOw52RZBkGfiDI+A1bR76
-         zrhhCu+maLtCwuEvDmlTnOgkmbmyzCE/N8BBbkpEpzaDf/4L58pkWlaM5a7eZGTkaxNh
-         eJYyiidSfnfkG89eIW7CpdFh8Fd0kVmVgh3RAbm7q+IWR+pi3zg+X3l9T20tW9U3FOgH
-         30Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782991212; x=1783596012;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CiSMYxAAfWXzLBsuDt0wts0qfpoADcn2DxU3hQuJc2s=;
-        b=VPVZyjCp3SL/HQLUeFtJR90NhJoc4MqW6uaTCQ4ibsprsIqI4BAQ8TwtQ85Itpq7W7
-         gv6t29i+lbKuSQUVolSYNib+RvMPvNumG1Cesb3nw7zRAQop91StczEvf4Z1B/bSx12y
-         9nz09bvvLKlr/zM3t0g6Qj4tEMkU3OtqKGGzqigl/dOUieK9TLj60el5g5z9Y1g58C/W
-         WotSyJFYDBBzoayRCRDZNyTJKMoM80BPnfmzdX1/Z43bUhD3+iW2zypDCSIo9p0/SUTv
-         RxMhk/zWxglCK26Yc3XPD4XkWog/1xTrn2WsKcFLdUThqhI5Px+L1ejXQdha/hlheVem
-         AnNQ==
-X-Forwarded-Encrypted: i=1; AHgh+RphUFYpKmDxxp9KeO4zwYja5/7hqfG8aKKjFUNJ7tKXKb12CltC2zZl4Zl2CBRGbvkvo9hdMVR2IK0mcY2GvTIBD9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoaKUtuTOqRHo2H6S68lM5CaJ45M7ALpP3wwK1upOlYjPG0Zyy
-	vrHZx9FmKFb5N6hxj+oC+2Pr0CQKo2JOw+dEbOV2fUxDb7I7U7PoYIhY
-X-Gm-Gg: AfdE7cncL5hF8cBmf2D38YZWKzYEGuAvt6FaPFHNP5v3+MNeXsn5z6KzTg6DeTF8JXK
-	4DTymSFI2SUim8K9YcxEDZXco5F/oCOWiEBY2hGioxafmJmNq+7nAsd6NgB9aA7nKJ68u7dAWPs
-	fVkeRk8XBvB2DRboNC9QchNyVjnQsosiPL2JIHbfykZWmB5kJUOTLPrbGi1P1SlPFahLnkPvU93
-	uZM/GGXfbBwjQ4RmXm9cRDblDZ/lWAovmN0DvoZ5b0gQaiuvNHLBzcz7vRt5imfzjuWjz5k0w6z
-	uXBibT59P8yU/OXaXqxrf5W/172h1vytUZaYebq5XIh/qSGdPlV0erLBXsBihzxbGWvSUSEM409
-	ab8Ku2nX5mEcelPu5EUa9tDMn8cTFWAies4VXMecPVkPiuxYYrEBuLuVQaQC0DRyfR/NM1dyVo4
-	/bSA5stDFLtMIG8mTzfj01xrUv
-X-Received: by 2002:a05:6000:468c:b0:474:3b78:b229 with SMTP id ffacd0b85a97d-477aeb5c73bmr4793677f8f.11.1782991211989;
-        Thu, 02 Jul 2026 04:20:11 -0700 (PDT)
-Received: from krava (37-188-223-191.red.o2.cz. [37.188.223.191])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477de3dd0b1sm7943059f8f.35.2026.07.02.04.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2026 04:20:11 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 2 Jul 2026 13:20:06 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv5 00/13] uprobes/x86: Fix red zone issue for optimized
- uprobes
-Message-ID: <akZJZth3-fVUhADl@krava>
-References: <20260701111337.53943-1-jolsa@kernel.org>
- <CAEf4BzYiPeLTbgeVEDKqU45oHBFJgU6ULgK=3i1J7dbzKS2+yg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PgCpqqxi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oeEsfdun";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PgCpqqxi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oeEsfdun"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FE9674174;
+	Thu,  2 Jul 2026 11:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782991216; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j9HqakDIjcCcTQyUF2MV7bxyTIX1upg8T2CXHTGbmPY=;
+	b=PgCpqqxie7t8+CkwpPP13NW6wQohMzurOqQ3M60mxkSvPUID4ZQOKndTpBXqeUuVhdKIfx
+	t+2FJW3O/MNyOgFxUfD/N1cfpHLCK8FHDiqwUFTQFndqACbeCmnNWvqmGlEefRvEf4d7hB
+	IQhWnkSLQ2dpEmnyOFJPaliYHOfjrfE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782991216;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j9HqakDIjcCcTQyUF2MV7bxyTIX1upg8T2CXHTGbmPY=;
+	b=oeEsfdunpBw1BldK/9+YFlfUYsk4g2GKuSeX7pnNOrhZYXAOuDPvAQY6PG7s0cv9YpWemp
+	mWdG22AvAmx0j3Cw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782991216; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j9HqakDIjcCcTQyUF2MV7bxyTIX1upg8T2CXHTGbmPY=;
+	b=PgCpqqxie7t8+CkwpPP13NW6wQohMzurOqQ3M60mxkSvPUID4ZQOKndTpBXqeUuVhdKIfx
+	t+2FJW3O/MNyOgFxUfD/N1cfpHLCK8FHDiqwUFTQFndqACbeCmnNWvqmGlEefRvEf4d7hB
+	IQhWnkSLQ2dpEmnyOFJPaliYHOfjrfE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782991216;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j9HqakDIjcCcTQyUF2MV7bxyTIX1upg8T2CXHTGbmPY=;
+	b=oeEsfdunpBw1BldK/9+YFlfUYsk4g2GKuSeX7pnNOrhZYXAOuDPvAQY6PG7s0cv9YpWemp
+	mWdG22AvAmx0j3Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C6F00779AA;
+	Thu,  2 Jul 2026 11:20:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RDeaLGtJRmoSbQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 02 Jul 2026 11:20:11 +0000
+Date: Thu, 2 Jul 2026 12:20:10 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
+	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 21/30] mm/vma: add and use vma_[add/sub]_pgoff()
+Message-ID: <akZI0n1U32Ptd0ye@pedro-suse.lan>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <794044881e454fd8ac13e59d5ff5fc86fca08b03.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYiPeLTbgeVEDKqU45oHBFJgU6ULgK=3i1J7dbzKS2+yg@mail.gmail.com>
+In-Reply-To: <794044881e454fd8ac13e59d5ff5fc86fca08b03.1782735110.git.ljs@kernel.org>
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[75];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,pedro-suse.lan:mid]
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-On Wed, Jul 01, 2026 at 04:13:26PM -0700, Andrii Nakryiko wrote:
-> On Wed, Jul 1, 2026 at 4:13 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > hi,
-> > Andrii reported an issue with optimized uprobes [1] that can clobber
-> > redzone area with call instruction storing return address on stack
-> > where user code may keep temporary data without adjusting rsp.
-> >
-> > Fixing this by moving the optimized uprobes on top of 10-bytes nop
-> > instruction, so we can squeeze another instruction to escape the
-> > redzone area before doing the call.
-> >
-> > Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
-> > if we decide to take this change.
-> >
-> > thanks,
-> > jirka
-> >
-> >
-> > v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
-> > v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
-> > v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org/
-> > v4: https://lore.kernel.org/bpf/20260526205840.173790-1-jolsa@kernel.org/
-> >
-> > v5 changes:
-> > - several selftests changes and reviewed-by tags [Jakub]
-> > - add more comments in int3_update_unoptimize [Andrii]
-> > - several other minor changes and acks [Oleg]
-> > - move insn_decode out of uprobe_init_insn to simplify the code
-> > - align uprobe_red_zone_test to 64 to make sure nop10 is not on page boundary
-> >
-> > v4 changes:
-> > - do not use 2nd int3 (ont +5 offset) because the call instruction
-> >   is allways the same for the given nop10 address [Andrii/Peter]
-> > - unmap unused trampoline vma after unsuccesfull optimization [sashiko]
-> > - small change to patch#2 moved user_64bit_mode earlier in the path
-> >   and pass/use mm_struct pointer directly from arch_uprobe_optimize
-> >   instead of gettting current->mm
-> >   Andrii, keeping your ack, please shout otherwise
-> >
-> > v3 changes:
-> > - use nop10 update suggested by Peter in [2]
-> > - remove struct uprobe_trampoline object, use vma objects directly instead
-> > - selftests fixes [sashiko]
-> > - ack from Andrii
-> >
-> > v2 changes:
-> > - several selftest fixes [sashiko]
-> > - consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
-> > - use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
-> > - allow to copy uprobe trampolines vma objects on fork [sashiko]
-> > - change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
-> > - added fork/clone tests
-> > - I kept the selftest changes and nop5->nop10 changes in separate
-> >   commits for easier review, we can squash them later if we want to keep
-> >   bisect working properly
-> >
-> >
-> > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
-> > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
-> > ---
+On Mon, Jun 29, 2026 at 01:23:32PM +0100, Lorenzo Stoakes wrote:
+> Add helpers for adding or subtracting to a VMA's page offset, exposed
+> internally for VMA users within mm in mm/vma.h.
 > 
-> ASAN-enabled test_progs runs are not happy in CI, can you please check?
+> This is to lay the foundations for tracking anonymous page offset for
+> MAP_PRIVATE file-backed mappings, where adding and subtracting from this
+> value must be reflected in both the file and anonymous offsets.
+> 
+> These are used on VMA split and downward stack expansion.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+> ---
+>  mm/nommu.c                      |  6 ++++--
+>  mm/vma.c                        |  6 +++---
+>  mm/vma.h                        | 12 ++++++++++++
+>  tools/testing/vma/include/dup.h | 13 ++++++++++++-
+>  4 files changed, 31 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/nommu.c b/mm/nommu.c
+> index 7333d855e974..c7fafcd87c14 100644
+> --- a/mm/nommu.c
+> +++ b/mm/nommu.c
+> @@ -41,6 +41,7 @@
+>  #include <asm/tlbflush.h>
+>  #include <asm/mmu_context.h>
+>  #include "internal.h"
+> +#include "vma.h"
+>  
+>  unsigned long highest_memmap_pfn;
+>  int heap_stack_gap = 0;
+> @@ -1338,7 +1339,8 @@ static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>  		region->vm_top = region->vm_end = new->vm_end = addr;
+>  	} else {
+>  		region->vm_start = new->vm_start = addr;
+> -		region->vm_pgoff = new->vm_pgoff += npages;
+> +		vma_add_pgoff(new, npages);
+> +		region->vm_pgoff = vma_start_pgoff(new);
+>  	}
+>  
+>  	vma_iter_config(vmi, new->vm_start, new->vm_end);
+> @@ -1355,7 +1357,7 @@ static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>  	delete_nommu_region(vma->vm_region);
+>  	if (new_below) {
+>  		vma->vm_region->vm_start = vma->vm_start = addr;
+> -		vma->vm_pgoff += npages;
+> +		vma_add_pgoff(vma, npages);
+>  		vma->vm_region->vm_pgoff = vma_start_pgoff(vma);
+>  	} else {
+>  		vma->vm_region->vm_end = vma->vm_end = addr;
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 185d07397ca6..cb7222e20c93 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -517,7 +517,7 @@ __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>  		new->vm_end = addr;
+>  	} else {
+>  		new->vm_start = addr;
+> -		new->vm_pgoff += linear_page_delta(vma, addr);
+> +		vma_add_pgoff(new, linear_page_delta(vma, addr));
+>  	}
+>  
+>  	err = -ENOMEM;
+> @@ -556,7 +556,7 @@ __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>  
+>  	if (new_below) {
+>  		vma->vm_start = addr;
+> -		vma->vm_pgoff += (addr - new->vm_start) >> PAGE_SHIFT;
+> +		vma_add_pgoff(vma, (addr - new->vm_start) >> PAGE_SHIFT);
+>  	} else {
+>  		vma->vm_end = addr;
+>  	}
+> @@ -3305,7 +3305,7 @@ int expand_downwards(struct vm_area_struct *vma, unsigned long address)
+>  				vm_stat_account(mm, vma->vm_flags, grow);
+>  				anon_vma_interval_tree_pre_update_vma(vma);
+>  				vma->vm_start = address;
+> -				vma->vm_pgoff -= grow;
+> +				vma_sub_pgoff(vma, grow);
+>  				/* Overwrite old entry in mtree. */
+>  				vma_iter_store_overwrite(&vmi, vma);
+>  				anon_vma_interval_tree_post_update_vma(vma);
+> diff --git a/mm/vma.h b/mm/vma.h
+> index 2342516ce00e..47fe35e5307e 100644
+> --- a/mm/vma.h
+> +++ b/mm/vma.h
+> @@ -247,6 +247,18 @@ static inline pgoff_t vmg_end_pgoff(const struct vma_merge_struct *vmg)
+>  	return vmg_start_pgoff(vmg) + vmg_pages(vmg);
+>  }
+>  
+> +static inline void vma_add_pgoff(struct vm_area_struct *vma, pgoff_t delta)
+> +{
+> +	vma_assert_can_modify(vma);
+> +	vma->vm_pgoff += delta;
+> +}
+> +
+> +static inline void vma_sub_pgoff(struct vm_area_struct *vma, pgoff_t delta)
+> +{
+> +	vma_assert_can_modify(vma);
+> +	vma->vm_pgoff -= delta;
+> +}
+> +
+>  #define VMG_STATE(name, mm_, vmi_, start_, end_, vma_flags_, pgoff_)	\
+>  	struct vma_merge_struct name = {				\
+>  		.mm = mm_,						\
+> diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
+> index 7ed165c8d9bc..41fea90a344d 100644
+> --- a/tools/testing/vma/include/dup.h
+> +++ b/tools/testing/vma/include/dup.h
+> @@ -1163,6 +1163,11 @@ static inline struct vm_area_struct *vma_next(struct vma_iterator *vmi)
+>  	return mas_find(&vmi->mas, ULONG_MAX);
+>  }
+>  
+> +static inline bool vma_is_attached(struct vm_area_struct *vma)
+> +{
+> +	return refcount_read(&vma->vm_refcnt);
+> +}
+> +
+>  /*
+>   * WARNING: to avoid racing with vma_mark_attached()/vma_mark_detached(), these
+>   * assertions should be made either under mmap_write_lock or when the object
+> @@ -1170,7 +1175,13 @@ static inline struct vm_area_struct *vma_next(struct vma_iterator *vmi)
+>   */
+>  static inline void vma_assert_attached(struct vm_area_struct *vma)
+>  {
+> -	WARN_ON_ONCE(!refcount_read(&vma->vm_refcnt));
+> +	WARN_ON_ONCE(!vma_is_attached(vma));
+> +}
+> +
+> +static inline void vma_assert_can_modify(struct vm_area_struct *vma)
+> +{
+> +	if (vma_is_attached(vma))
+> +		vma_assert_write_locked(vma);
+>  }
 
-I failed to release link in test_uprobe_fork_optimized, fix is below
-I can send new version or separate fix 
+These hunks in dup.h look lost. Should perhaps be on the previous patch
+(adding the helpers).
 
+Anyway, Obviously Correct(tm).
 
-also there's 2 things to solve/discuss once kernel changes are acked:
-- selftest changes depend on:
-  selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
-  that is taken from libbpf/usdt, I pushed the PR in here [1]
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-- as bots complained the patchset breaks bisection, because kernel
-  changes break selftests.. not sure what's prefered solution, as for
-  me I'd keep it that way rather than mixing kernel/user space changes
-
-thanks,
-jirka
-
-
-[1] https://github.com/libbpf/usdt/pull/16
----
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index eb067f029a9f..e193206fc5d2 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -988,7 +988,6 @@ static noreturn int child_func(void *arg)
- static void test_uprobe_fork_optimized(bool clone_vm)
- {
- 	struct uprobe_syscall_executed *skel = NULL;
--	struct bpf_link *link = NULL;
- 	unsigned long offset;
- 	int pid, status, err;
- 	char stack[65535];
-@@ -1001,9 +1000,9 @@ static void test_uprobe_fork_optimized(bool clone_vm)
- 	if (!ASSERT_OK_PTR(skel, "open_and_load"))
- 		goto cleanup;
- 
--	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
--				-1, "/proc/self/exe", offset, NULL);
--	if (!ASSERT_OK_PTR(link, "attach_uprobe"))
-+	skel->links.test_uprobe = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
-+					-1, "/proc/self/exe", offset, NULL);
-+	if (!ASSERT_OK_PTR(skel->links.test_uprobe, "attach_uprobe"))
- 		goto cleanup;
- 
- 	skel->bss->pid = getpid();
+-- 
+Pedro
