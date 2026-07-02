@@ -1,128 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3836F3749F6
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Jul 2026 06:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4013238F95B;
+	Thu,  2 Jul 2026 07:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782973891; cv=none; b=KNyRBTH3PBT+pDwjMB+AfCeuX6lK2OOTezPfsKiPYGRWVl6XI12WRwBE2OFjXOClqSCSAzPTx+abFdUDtMGlatZPwadW3dBgx/ZMnFu2/OIebL4MfoYBRNE1bD2YkDcz73mOyR1HQV9rNH4lXvnMDF2uC2RmtkOpIwe6TqPvsgM=
+	t=1782976821; cv=none; b=m3uRw+/s8l6aRiZyY0LXDyCtZ2fiNSKf2gctdlcEbCNzxybrWTzERy+T0B5PxHHf9xwN6br6ak9Pz0JoVLv3V/n5Be6AiOKpLK4XD1/6cWrOOQVNmFy7tUvrjPUjU5UEDKlsXdFXzeWihsFWlSswxvFSb6sh+0VetTY0MfzT8JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782973891; c=relaxed/simple;
-	bh=ef22JhW2G2o6sHdaFSTiYhD2+Z7kj6y2VxfpX3pi80k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PfMGngzxEQ2x/0xfMte9MsBNrF06VvE4pq0nDa2oh0y6+fPW8A1RgKiNAFPEwa6zC23Bm02H3N/WuZloApiXNEsB/msRj9DfWCiP7Uwk1HythtfwCGOKpucSvblRBSJXU9yWpkDgGwmbxrXMhkBD/xZUk2L8Y3MJUmk5tvOC6NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eenVnCfZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782976821; c=relaxed/simple;
+	bh=dx2VXafrO//xdt38szlB83WfwfzKrsb2hSYoKVkcfLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hb+K8aW8vkqUnaF8V6177CHH4qYW7LvXaFQudJXLBU+7dIixWYBF3J8Pp2E9mOZoqNyrMNtQusNiaYbGBAw9ezFhBgSJCdVt4iN+Xsj+l+ighLkfHAyC7RITpdagGLJjpVeFDJusvy4hYYjt1tN19jdlnr8Z3wNZ/khzCCn8rFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pHbKErVk; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eenVnCfZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782973888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ef22JhW2G2o6sHdaFSTiYhD2+Z7kj6y2VxfpX3pi80k=;
-	b=eenVnCfZdbIhoPzpMYxtODy+v5BbtMw5kFlnbgQdLyKesnWZ5TyOCKqa3eupeWvd0deHmq
-	xBji9ogkx519uYdd5cEo9tBUOzw14t5rjfPnnKcFVlaO1+IxB7BBgkqDPFhkUzIcB8xihO
-	LcAj1mEiyu/uaMbjaxim6WGvlE+NHMk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-388-GsoqpEQpOhmWtAtYfnY6yw-1; Thu, 02 Jul 2026 02:31:25 -0400
-X-MC-Unique: GsoqpEQpOhmWtAtYfnY6yw-1
-X-Mimecast-MFC-AGG-ID: GsoqpEQpOhmWtAtYfnY6yw_1782973884
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4729d2a64efso200626f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Jul 2026 23:31:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782973884; x=1783578684;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ef22JhW2G2o6sHdaFSTiYhD2+Z7kj6y2VxfpX3pi80k=;
-        b=XIwAOdVsLJejJ5d/wVu+j8vijXF5n/kGvXwjbbV8F4SBMswS/tUuQnBy0j5D9HIJN1
-         YeMsx2jnr1QhwWHHCpig4a96/pdslGf+m2ToZ+iz0idCj2xOj2FwQXOfKMMLMlSBGdsi
-         4K5xe/ww+p2U7YczqpOUsNtcCdCHyiownj3UqoUlzzHG7PuDNzVwzY4EEeOKnv3S1Nn2
-         Y3pBO0d+0RqVoOOJDEQxGiQAunRx86r/zbvGSLVpb+NdkGEUYCRbYKR+Tu91rkgWJ6DP
-         BsbFW88mHMsjGn5zfOY0+d3Fv/rRZIg+91NUsNbi46sTLFVcZ7g6nooiue7uyvAlOmWX
-         gFQw==
-X-Forwarded-Encrypted: i=1; AHgh+RrI35ErpHxQ83KoOgNHxh35vZSnScXX35mTWlwx3q3+xKyLz4uCzvCOFU4mUO/6et4BMzuSusQGq9SfTUKm2HdFbHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMCkfpnJwW1UyzNkwTJuHyTcCYR6y7r89Bjd6o+gpdFs4BaO8s
-	Ffkfj4vcb6YNtdyWvObwIL68d2uNVBawuCTRhwhNSutgnYV8zSFW0RSgZt+AXb/ybZw78xyxF3i
-	lXhM7MW85I7kynhK9t5Oi8poUzqR9WieKfQeY9oJBvgw1a++ZHKTF7UTbNrPdWAqd3GqCzhil87
-	C76z7CVH5I
-X-Gm-Gg: AfdE7clDXExgdD+fb01J6up9PLsw0woSUpmTTGarcDb4YPm62bGZOmttkTDHVbPLsB+
-	wlDrNvDuTdfhwl+kYjH+XXv1i85W3zvJX6wp/FO/hZqjN5MKinaUa97LJNu2umvgeZzHxtUTvZx
-	4AZG2eqOCmbcAwWFNyjwVsWwBiVPJMuF1b24X+ZiIGzWpfpzKXjjlE3VutcWHCKKfxWtKs/v8Vg
-	JjI+JsaHpBsvC2XTkie8VCH9Mn2xqQik6FlyCyxnyeQDfgIImhKR5F107IraaEcrH4wrRse/mOQ
-	i/fiUVMU0nuNOwsdDdLcimkQDTqPLS8Lka+6mxTtoGWXqrsM0Jtq/WREgDo7o/G5R6kgwI/+RoT
-	7wr6Fvu1nIaasp7TS/FHUZsWIOBKHXZLRxYlL+Tn3j8DlLZvYvDCgPyNHdgNVVSEVWkiNT2MIT+
-	hCye0d
-X-Received: by 2002:a05:6000:230f:b0:475:f0c2:75b0 with SMTP id ffacd0b85a97d-4774662f667mr6845138f8f.27.1782973883837;
-        Wed, 01 Jul 2026 23:31:23 -0700 (PDT)
-X-Received: by 2002:a05:6000:230f:b0:475:f0c2:75b0 with SMTP id ffacd0b85a97d-4774662f667mr6845112f8f.27.1782973883483;
-        Wed, 01 Jul 2026 23:31:23 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477de3dd0b1sm5843067f8f.35.2026.07.01.23.31.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 23:31:22 -0700 (PDT)
-Message-ID: <9b349d2c33e356e735050ddbb6fd005b8870a7d7.camel@redhat.com>
-Subject: Re: [PATCH v4 12/13] rv: Fix read_lock scope in per-task DA cleanup
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Wen
- Yang	 <wen.yang@linux.dev>, Nam Cao <namcao@linutronix.de>
-Date: Thu, 02 Jul 2026 08:31:21 +0200
-In-Reply-To: <20260701152705.6dc9d8f2@gandalf.local.home>
-References: <20260601153840.124372-1-gmonaco@redhat.com>
-		<20260601153840.124372-13-gmonaco@redhat.com>
-	 <20260701152705.6dc9d8f2@gandalf.local.home>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pHbKErVk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=s4GrMuQi2v79BhoyZqc3BN/543xsjIK9xGProY+jboI=; b=pHbKErVkucrnsb7fbxysDVlVSG
+	/M+WqSaJOq2Sr0DzscX/VDopGLY9lSnnpWak+WOOX5ykxTIFrmSAQjMt6Lhmi2DK0IyPQrbGKEQJB
+	jwf6IljbK0q1/aoIylXIjYL75ETSyv2XJnw27CzeFUB9oCPjeGuNdfyGo8aYyOzzGnIJnZ76t+yzF
+	P9AHY5qgiliC1XvY39fcd7vm/CrN6V9pmDEZBdMjaFPO7hq2DuniNiTB44q87MpRmIpNI6ucI/i+a
+	1emO8O9U3TvI4PtFLYdWeZpPJfzb4304l0jp4y21hEWRD02VVIO7o+4hO7vc5D39cn8lLujs0eis9
+	FUvK9MPg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wfBiQ-000000086O7-1mO4;
+	Thu, 02 Jul 2026 07:20:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id DC7AF30035C; Thu, 02 Jul 2026 09:20:04 +0200 (CEST)
+Date: Thu, 2 Jul 2026 09:20:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 00/13] uprobes/x86: Fix red zone issue for optimized
+ uprobes
+Message-ID: <20260702072004.GA49951@noisy.programming.kicks-ass.net>
+References: <20260526205840.173790-1-jolsa@kernel.org>
+ <aiEiP54zktDqAZpG@krava>
+ <CAEf4Bzbrd8xs5sSwEPR336=7z2FGcdXVtV-aVZ4W1zSjHkwwcg@mail.gmail.com>
+ <CAEf4BzYmgj55UnBX2fRoKwtc-97vc7Sf1opWcAXzSKKLr_Ei6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: YtAvNarM4RPyY5Ubjh4ZYVyrgh9yEzPjOj040xNib28_1782973884
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYmgj55UnBX2fRoKwtc-97vc7Sf1opWcAXzSKKLr_Ei6A@mail.gmail.com>
 
-On Wed, 2026-07-01 at 15:27 -0400, Steven Rostedt wrote:
-> On Mon,=C2=A0 1 Jun 2026 17:38:39 +0200
-> Gabriele Monaco <gmonaco@redhat.com> wrote:
->=20
-> > The da_monitor_reset_all() function for per-task monitors takes
-> > tasklist_lock while iterating over tasks, then keeps it also while
-> > iterating over idle tasks (one per CPU). The latter is not necessary
-> > since the lock needs to guard only for_each_process_thread().
-> >=20
-> > Use a scoped_guard for more compact syntax and adjust the scope only
-> > where the lock is necessary.
-> >=20
-> > Reviewed-by: Wen Yang <wen.yang@linux.dev>
-> > Reviewed-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
->=20
-> Hmm, this and patch 13 didn't get applied. Do you plan on sending them la=
-ter?
+On Thu, Jun 25, 2026 at 10:44:18PM -0700, Andrii Nakryiko wrote:
+> On Mon, Jun 8, 2026 at 1:48 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Wed, Jun 3, 2026 at 11:59 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Tue, May 26, 2026 at 10:58:27PM +0200, Jiri Olsa wrote:
+> > > > hi,
+> > > > Andrii reported an issue with optimized uprobes [1] that can clobber
+> > > > redzone area with call instruction storing return address on stack
+> > > > where user code may keep temporary data without adjusting rsp.
+> > > >
+> > > > Fixing this by moving the optimized uprobes on top of 10-bytes nop
+> > > > instruction, so we can squeeze another instruction to escape the
+> > > > redzone area before doing the call.
+> > > >
+> > > > Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+> > > > if we decide to take this change.
+> > > >
+> > > > thanks,
+> > > > jirka
+> > > >
+> > > >
+> > > > v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
+> > > > v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
+> > > > v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org/
+> > > >
+> > > > v4 changes:
+> > > > - do not use 2nd int3 (ont +5 offset) because the call instruction
+> > > >   is allways the same for the given nop10 address [Andrii/Peter]
+> > > > - unmap unused trampoline vma after unsuccesfull optimization [sashiko]
+> > > > - small change to patch#2 moved user_64bit_mode earlier in the path
+> > > >   and pass/use mm_struct pointer directly from arch_uprobe_optimize
+> > > >   instead of gettting current->mm
+> > > >   Andrii, keeping your ack, please shout otherwise
+> > >
+> > > hi,
+> > > I think bots did not find anything substantial, I have just small
+> > > selftests changes queued for v5
+> > >
+> > > any other feedback/review would be great
+> > >
+> >
+> > one small nit on only, otherwise LGTM.
+> >
+> > Peter, Masami, Ingo, should this go through tip tree or should we
+> > route this through bpf-next tree? I think we are fine either way, but
+> > might be more convenient to route through bpf-next given libbpf and
+> > BPF selftest changes.
+> >
+> 
+> I'll assume that no one has any objections to route this through
+> bpf-next. We got reviews from Oleg, so that's great. Jiri, seems like
+> you will do small adjustments and send v5, please do, and then unless
+> meanwhile no one raises any issues, this will go through bpf-next.
+> Thanks!
 
-Yes, I didn't add them to the pull request since they weren't quite fixes, =
-then
-ended up not sending a "normal" pull request for 7.2 just for these.
-I'm going to put them together for the next round.
-
-Thanks,
-Gabriele
-
+Is it already applied? If not, I can stick it in tip/perf/core (and the
+first in /urgent).
