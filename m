@@ -1,170 +1,448 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404013C2B8F;
-	Thu,  2 Jul 2026 10:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EAE3C3BE2
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Jul 2026 11:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782989544; cv=none; b=RtmYXHiXnDrnPJ+7t36rH+L+ZxyTTiCSVQ/1L6HUZlo7zTnYjTDSbD6asvcdjg4arrmleaF3iexaleQrzumb0tNbqayCgLZvxppqbkGEjuU1jn9FyDvRE+P/RNyimiYNaj0b/velI53gHvP3nj24zR3tSTsBRFSqOnigjnEgrUc=
+	t=1782990109; cv=none; b=dzMqIiZg9KiSr7af5ZgjJpWa0+g5mR2fluOGfy+17JN9q8T4wnXMoB5hPW1o9hMUCs+NyQmkICUbGWapgGmKqa0P2JKUsqdca5ggMT8mMhqA3pJTeFd1R1Z9JARHUdQZOdpfFWjgounC8tdcOExQAiq0n/jhgvsjAyOSclNEDs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782989544; c=relaxed/simple;
-	bh=Tgt4hhMcByBvGKOTB4ie6cqyN7pvf1X8oWW3X+m/fC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lusDGBetqqU+N6AYRa9rmhPrwKeCrIK6UTY5Ed1tfGOjVVszr6DI/ZYCj62CYieA5f4dHLN+kIqaUmonK32jTljK6hHQ34Ugx5hln5HRLF7Kt8Wa9UxF2uKrASWj44t1EI6J0SE7D9U0wHajg2D/7/3Wpp72/sjzzoWK55cwIu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTcgxXBi; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782990109; c=relaxed/simple;
+	bh=JyQtgGmse4TEjdg2rmDjJ6/obM+xuUDuJ54ksfTNdUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpPh6w6uRMEyjYzU91WgTUa/hZ2mFCi3jNEm6nWE6vn69DmX/KL6Zk6GTUllxGss5rvLIYPo8EBBo4GGrM13oxHyVA/8+IIOhH6vo8hZooaXbB+0e1d16CbEgozhfsrzC3aZWDmekwEswCT+ZzIA7tEsNeq8e58pfAlw7Z3gkTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bWgYyAyB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hGZBwpKZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OTPrapAy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0f1aNc6g; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTcgxXBi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782989544; x=1814525544;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Tgt4hhMcByBvGKOTB4ie6cqyN7pvf1X8oWW3X+m/fC8=;
-  b=WTcgxXBi+65sNoPmVSFNOMdw9c0jmKFqzuJWGvv8zAAzlxEFuXD1xJ2Q
-   0rFANfbOZniroBy/acnataEM+q+Yh9cC+k4tILdoZZ+nnuACyPVbCY42N
-   sn3O0bzYXnkDoUqVmHqrPDD9B6/xzIK14YjB1J24geHTFAuz3VvGezN/7
-   0LrMzkclEOLUS9nzEIvEP3rw8VPVpW6BvzPK2DChO0vfLdtXJrYFn5ob1
-   CG6zfH0DIz2dmohf88muSCM3cRPwTkk+EPVRYoN48hpFlQRXzPdqp2IVH
-   zL5+KdM0i2arW8ouWNeWyPQX3wuoMwrVRuO2pDU1t5d16fXvTGstxBTvj
-   Q==;
-X-CSE-ConnectionGUID: wGoCylRLTJq37RpQoZeLQA==
-X-CSE-MsgGUID: AiFwafKvTDOG/Yf7BvGXfA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="94341064"
-X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
-   d="scan'208";a="94341064"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 03:52:23 -0700
-X-CSE-ConnectionGUID: I7qt9/olRoyxa2x0VmcfeQ==
-X-CSE-MsgGUID: Yp1EvDSzRoq8GXy7mZVstQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
-   d="scan'208";a="282905050"
-Received: from unknown (HELO [10.239.158.38]) ([10.239.158.38])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 03:52:09 -0700
-Message-ID: <c0e2df0a-19b2-4234-b0f7-41e010452b06@intel.com>
-Date: Thu, 2 Jul 2026 18:51:46 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bWgYyAyB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hGZBwpKZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OTPrapAy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0f1aNc6g"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AB1D774160;
+	Thu,  2 Jul 2026 11:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782990104; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r0KKINu40ioY96fC+062Zyi7DbmVNL21sTF0xjIcwIQ=;
+	b=bWgYyAyBfrTMD8mfTLZ/OqkkY5PgicfJPGJQR4b5A6iU6ifYliqzryxQkEZZmEooJRyAsE
+	KxSfAzN2oPq9gevvtFP7D3LJmfsrhIhmjmQ/TJ0z5mx70BKRvVbvoejeyG/xTXT/ObP58x
+	55chfdqNVwmxqpq98WnC1ZA9/da5xEE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782990104;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r0KKINu40ioY96fC+062Zyi7DbmVNL21sTF0xjIcwIQ=;
+	b=hGZBwpKZU98HsyUfD/DlfWj5YkD30zgVTtlVrCBZu8vT8OTRH3iQLzvvpOCl5EZWXno5Uk
+	FbVbb/v7nEB8yXBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782990103; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r0KKINu40ioY96fC+062Zyi7DbmVNL21sTF0xjIcwIQ=;
+	b=OTPrapAye7GSg8hHDs6a7y0ee22+fDlA3xYf9o7WbGiBCH5L+qaBmf6GwNK3fBNkDVC5HS
+	OiJqQOFaTOxyB4K1mJKyegdU4+Vf7jGKAHFn1vHSLUYIU36OvKOozmO3HgueTqAaRfl4HB
+	wmkw8+rIs0jLQVP6u6efqz0jbLo31Jg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782990103;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r0KKINu40ioY96fC+062Zyi7DbmVNL21sTF0xjIcwIQ=;
+	b=0f1aNc6ghV70Dc0VX4Q6vLW6+K3Qwr4322g8NQJecZu+D9vlqki5RtN5ZfwauFkF9VZPsu
+	8xlmr8+5TSXfvZDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E583779AA;
+	Thu,  2 Jul 2026 11:01:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kliADxNFRmpNWgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 02 Jul 2026 11:01:39 +0000
+Date: Thu, 2 Jul 2026 12:01:37 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
+	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 17/30] mm: prefer vma_[start,end]_pgoff() to
+ vma->vm_pgoff in kernel/
+Message-ID: <akZCg73F-oGzDp1a@pedro-suse.lan>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <ea87349d63205bf4c26ea79854f179a9bf8cfb0b.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 17/46] KVM: guest_memfd: Advertise
- KVM_SET_MEMORY_ATTRIBUTES2 ioctl
-To: Sean Christopherson <seanjc@google.com>
-Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-17-9d2959357853@google.com>
- <584a8f9a-1538-4f8b-b576-75ef0fa961c7@intel.com>
- <akU7uAKb5E_Tklx-@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <akU7uAKb5E_Tklx-@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea87349d63205bf4c26ea79854f179a9bf8cfb0b.1782735110.git.ljs@kernel.org>
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[75];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,pedro-suse.lan:mid,suse.de:email]
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-On 7/2/2026 12:09 AM, Sean Christopherson wrote:
-> On Wed, Jul 01, 2026, Xiaoyao Li wrote:
->> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
->>> @@ -4969,6 +4973,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
->>>    		return 1;
->>>    	case KVM_CAP_GUEST_MEMFD_FLAGS:
->>>    		return kvm_gmem_get_supported_flags(kvm);
->>> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
->>> +		if (!gmem_in_place_conversion || !kvm_supports_private_mem(kvm))
->>> +			return 0;
->>> +
->>> +		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
->>>    #endif
->>>    	default:
->>>    		break;
->>
->> this looks inconsistent with the
->>
->> 	case KVM_SET_MEMORY_ATTRIBUTES2:
->> 		if (!gmem_in_place_conversion)
->> 			return -ENOTTY;
->>
->> Well, the check of
->>
->> 	if (!kvm_arch_has_private_mem(f->kvm))
->> 		return -EINVAL;
->>
->> is buried in the following kvm_gmem_set_attributes(). How about moving of
->> kvm_arch_has_private_mem() check to put it along with
->> gmem_in_place_conversion check in kvm_gmem_ioctl() in Patch 13?
+On Mon, Jun 29, 2026 at 01:23:28PM +0100, Lorenzo Stoakes wrote:
+> Be consistent in using vma_start_pgoff() and vma_end_pgoff(), which clearly
+> indicates which part of the VMA the page offset refers to and aids
+> greppability.
 > 
-> Me confused, patch 13 already adds the kvm_arch_has_private_mem() in
-> kvm_gmem_set_attributes().
-
-I wanted to make the check in KVM_SET_MEMORY_ATTRIBUTES2 in Patch 13 
-like something below:
-
-	case KVM_SET_MEMORY_ATTRIBUTES2:
-		if (!gmem_in_place_conversion || !kvm_arch_has_private_mem(f->kvm))
-		return -EXXX;
-
-and finally, with the introduction of kvm_supports_private_mem() in this 
-patch, it becomes:
-
-	case KVM_SET_MEMORY_ATTRIBUTES2:
-		if (!gmem_in_place_conversion || !kvm_supports_private_mem(f->kvm))
-		return -EXXX;
-
-So that the guard for KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES and 
-KVM_SET_MEMORY_ATTRIBUTES2 is consistent.
-
-> That said, the ordering here is wonky and misleading.  A cursory read of the series
-> would make one think that waiting to advertise KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES
-> makes it safe/ok for KVM to plumb in support for KVM_SET_MEMORY_ATTRIBUTES2 over
-> multiple patches.  But that's not actually true, because the ioctl becomes live
-> the instant the code exists, userspace doesn't need to wait for KVM to formally
-> advertise support.
+> This is part of a broader series laying the ground to provide a virtual
+> page offset for MAP_PRIVATE-file backed anon folios.
 > 
-> To further confuse matters, it is actually safe/ok to iteratively add support,
-> because it's all effectively dead code until "Let userspace disable per-VM mem
-> attributes, enable per-gmem attributes".
-
-yeah, before patch 24, gmem_in_place_conversion is always false. So 
-KVM_SET_MEMORY_ATTRIBUTES2 on gmem fd always return -ENOTTY.
-
-> So, I think we should go a step further than what I think Xiaoyao is suggesting,
-> and fully squash patch 17 into patch 13.  That way the reader doesn't have to jump
-> through as many mental hoops to piece together what is happening.  It'll obviously
-> be a bigger patch, but should be easier to review/understand overall.
+> No functional change intended.
 > 
-> Oh, and that combined patch should carve out error_offset straightaway, so that
-> the full uAPI can be reviewed in a single patch.
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+> ---
+>  kernel/dma/coherent.c      |  7 ++++---
+>  kernel/dma/direct.c        |  6 ++++--
+>  kernel/dma/mapping.c       |  8 +++++---
+>  kernel/dma/ops_helpers.c   |  4 ++--
+>  kernel/events/core.c       | 20 +++++++++++---------
+>  kernel/events/uprobes.c    | 11 +++++++----
+>  kernel/kcov.c              |  2 +-
+>  kernel/trace/ring_buffer.c |  3 ++-
+>  8 files changed, 36 insertions(+), 25 deletions(-)
+> 
+> diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+> index bcdc0f76d2e8..2d3195eb7e83 100644
+> --- a/kernel/dma/coherent.c
+> +++ b/kernel/dma/coherent.c
+> @@ -236,14 +236,15 @@ static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
+>  {
+>  	if (mem && vaddr >= mem->virt_base && vaddr + size <=
+>  		   (mem->virt_base + ((dma_addr_t)mem->size << PAGE_SHIFT))) {
+> -		unsigned long off = vma->vm_pgoff;
+> +		const pgoff_t pgoff_start = vma_start_pgoff(vma);
+> +		const pgoff_t pgoff_end = vma_end_pgoff(vma);
+>  		int start = (vaddr - mem->virt_base) >> PAGE_SHIFT;
+>  		unsigned long user_count = vma_pages(vma);
+>  		int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>  
+>  		*ret = -ENXIO;
+> -		if (off < count && user_count <= count - off) {
+> -			unsigned long pfn = mem->pfn_base + start + off;
+> +		if (pgoff_start < count && pgoff_end <= count) {
+> +			unsigned long pfn = mem->pfn_base + start + pgoff_start;
+>  			*ret = remap_pfn_range(vma, vma->vm_start, pfn,
+>  					       user_count << PAGE_SHIFT,
+>  					       vma->vm_page_prot);
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 4391b797d4db..436310d6e4a2 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -534,6 +534,8 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>  	unsigned long user_count = vma_pages(vma);
+>  	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>  	unsigned long pfn = PHYS_PFN(dma_to_phys(dev, dma_addr));
+> +	const pgoff_t pgoff_start = vma_start_pgoff(vma);
+> +	const pgoff_t pgoff_end = vma_end_pgoff(vma);
+>  	int ret = -ENXIO;
+>  
+>  	vma->vm_page_prot = dma_pgprot(dev, vma->vm_page_prot, attrs);
+> @@ -545,9 +547,9 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>  	if (dma_mmap_from_global_coherent(vma, cpu_addr, size, &ret))
+>  		return ret;
+>  
+> -	if (vma->vm_pgoff >= count || user_count > count - vma->vm_pgoff)
+> +	if (pgoff_start >= count || pgoff_end > count)
+>  		return -ENXIO;
+> -	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+> +	return remap_pfn_range(vma, vma->vm_start, pfn + pgoff_start,
+>  			user_count << PAGE_SHIFT, vma->vm_page_prot);
+>  }
+>  
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index 4fe04669e5e6..c986639044e9 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -761,12 +761,14 @@ EXPORT_SYMBOL_GPL(dma_free_pages);
+>  int dma_mmap_pages(struct device *dev, struct vm_area_struct *vma,
+>  		size_t size, struct page *page)
+>  {
+> -	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> +	const pgoff_t pgoff_start = vma_start_pgoff(vma);
+> +	const pgoff_t pgoff_end = vma_end_pgoff(vma);
+> +	const unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+>  
+> -	if (vma->vm_pgoff >= count || vma_pages(vma) > count - vma->vm_pgoff)
+> +	if (pgoff_start >= count || pgoff_end > count)
+>  		return -ENXIO;
+>  	return remap_pfn_range(vma, vma->vm_start,
+> -			       page_to_pfn(page) + vma->vm_pgoff,
+> +			       page_to_pfn(page) + pgoff_start,
+>  			       vma_pages(vma) << PAGE_SHIFT, vma->vm_page_prot);
+>  }
+>  EXPORT_SYMBOL_GPL(dma_mmap_pages);
+> diff --git a/kernel/dma/ops_helpers.c b/kernel/dma/ops_helpers.c
+> index 20caf9cabf69..6b5f9208d31c 100644
+> --- a/kernel/dma/ops_helpers.c
+> +++ b/kernel/dma/ops_helpers.c
+> @@ -39,7 +39,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+>  #ifdef CONFIG_MMU
+>  	unsigned long user_count = vma_pages(vma);
+>  	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> -	unsigned long off = vma->vm_pgoff;
+> +	unsigned long off = vma_start_pgoff(vma);
+>  	struct page *page = dma_common_vaddr_to_page(cpu_addr);
+>  	int ret = -ENXIO;
+>  
+> @@ -52,7 +52,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+>  		return -ENXIO;
+>  
+>  	return remap_pfn_range(vma, vma->vm_start,
+> -			page_to_pfn(page) + vma->vm_pgoff,
+> +			page_to_pfn(page) + vma_start_pgoff(vma),
+>  			user_count << PAGE_SHIFT, vma->vm_page_prot);
+>  #else
+>  	return -ENXIO;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 954c36e28101..d6d2d557ccb8 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6998,7 +6998,7 @@ static void perf_mmap_open(struct vm_area_struct *vma)
+>  	refcount_inc(&event->mmap_count);
+>  	refcount_inc(&event->rb->mmap_count);
+>  
+> -	if (vma->vm_pgoff)
+> +	if (vma_start_pgoff(vma))
+>  		refcount_inc(&event->rb->aux_mmap_count);
+>  
+>  	if (mapped)
+> @@ -7032,7 +7032,7 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+>  	 * The AUX buffer is strictly a sub-buffer, serialize using aux_mutex
+>  	 * to avoid complications.
+>  	 */
+> -	if (rb_has_aux(rb) && vma->vm_pgoff == rb->aux_pgoff &&
+> +	if (rb_has_aux(rb) && vma_start_pgoff(vma) == rb->aux_pgoff &&
+>  	    refcount_dec_and_mutex_lock(&rb->aux_mmap_count, &rb->aux_mutex)) {
+>  		/*
+>  		 * Stop all AUX events that are writing to this buffer,
+> @@ -7190,7 +7190,8 @@ static int map_range(struct perf_buffer *rb, struct vm_area_struct *vma)
+>  	 */
+>  	for (pagenum = 0; pagenum < nr_pages; pagenum++) {
+>  		unsigned long va = vma->vm_start + PAGE_SIZE * pagenum;
+> -		struct page *page = perf_mmap_to_page(rb, vma->vm_pgoff + pagenum);
+> +		struct page *page = perf_mmap_to_page(rb,
+> +				vma_start_pgoff(vma) + pagenum);
+>  
+>  		if (page == NULL) {
+>  			err = -EINVAL;
+> @@ -7348,6 +7349,7 @@ static int perf_mmap_aux(struct vm_area_struct *vma, struct perf_event *event,
+>  	u64 aux_offset, aux_size;
+>  	struct perf_buffer *rb;
+>  	int ret, rb_flags = 0;
+> +	const pgoff_t pgoff_start = vma_start_pgoff(vma);
 
-It sounds good.
+Variable decs here seem to be in reverse christmas tree order, so perhaps
+move this to the top.
+
+>  
+>  	rb = event->rb;
+>  	if (!rb)
+> @@ -7366,11 +7368,11 @@ static int perf_mmap_aux(struct vm_area_struct *vma, struct perf_event *event,
+>  	if (aux_offset < perf_data_size(rb) + PAGE_SIZE)
+>  		return -EINVAL;
+>  
+> -	if (aux_offset != vma->vm_pgoff << PAGE_SHIFT)
+> +	if (aux_offset != pgoff_start << PAGE_SHIFT)
+>  		return -EINVAL;
+>  
+>  	/* already mapped with a different offset */
+> -	if (rb_has_aux(rb) && rb->aux_pgoff != vma->vm_pgoff)
+> +	if (rb_has_aux(rb) && rb->aux_pgoff != pgoff_start)
+>  		return -EINVAL;
+>  
+>  	if (aux_size != nr_pages * PAGE_SIZE)
+> @@ -7400,7 +7402,7 @@ static int perf_mmap_aux(struct vm_area_struct *vma, struct perf_event *event,
+>  		if (vma->vm_flags & VM_WRITE)
+>  			rb_flags |= RING_BUFFER_WRITABLE;
+>  
+> -		ret = rb_alloc_aux(rb, event, vma->vm_pgoff, nr_pages,
+> +		ret = rb_alloc_aux(rb, event, pgoff_start, nr_pages,
+>  				   event->attr.aux_watermark, rb_flags);
+>  		if (ret) {
+>  			refcount_dec(&rb->mmap_count);
+> @@ -7457,7 +7459,7 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+>  		if (event->state <= PERF_EVENT_STATE_REVOKED)
+>  			return -ENODEV;
+>  
+> -		if (vma->vm_pgoff == 0)
+> +		if (!vma_start_pgoff(vma))
+>  			ret = perf_mmap_rb(vma, event, nr_pages);
+>  		else
+>  			ret = perf_mmap_aux(vma, event, nr_pages);
+> @@ -9884,7 +9886,7 @@ static bool perf_addr_filter_vma_adjust(struct perf_addr_filter *filter,
+>  					struct perf_addr_filter_range *fr)
+>  {
+>  	unsigned long vma_size = vma->vm_end - vma->vm_start;
+> -	unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
+> +	unsigned long off = vma_start_pgoff(vma) << PAGE_SHIFT;
+>  	struct file *file = vma->vm_file;
+>  
+>  	if (!perf_addr_filter_match(filter, file, off, vma_size))
+> @@ -9974,7 +9976,7 @@ void perf_event_mmap(struct vm_area_struct *vma)
+>  			/* .tid */
+>  			.start  = vma->vm_start,
+>  			.len    = vma->vm_end - vma->vm_start,
+> -			.pgoff  = (u64)vma->vm_pgoff << PAGE_SHIFT,
+> +			.pgoff  = (u64)vma_start_pgoff(vma) << PAGE_SHIFT,
+>  		},
+>  		/* .maj (attr_mmap2 only) */
+>  		/* .min (attr_mmap2 only) */
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index f23cebacbc6d..244651380ca1 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -144,12 +144,14 @@ static bool valid_vma(struct vm_area_struct *vma, bool is_register)
+>  
+>  static unsigned long offset_to_vaddr(struct vm_area_struct *vma, loff_t offset)
+>  {
+> -	return vma->vm_start + offset - ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
+> +	return vma->vm_start + offset -
+> +		((loff_t)vma_start_pgoff(vma) << PAGE_SHIFT);
+>  }
+>  
+>  static loff_t vaddr_to_offset(struct vm_area_struct *vma, unsigned long vaddr)
+>  {
+> -	return ((loff_t)vma->vm_pgoff << PAGE_SHIFT) + (vaddr - vma->vm_start);
+> +	return ((loff_t)vma_start_pgoff(vma) << PAGE_SHIFT) +
+> +		(vaddr - vma->vm_start);
+>  }
+
+Something we've seen in this series is that perhaps something like
+
+static inline loff_t vma_start_off(vma)
+{
+	return ((loff_t) vma_start_pgoff(vma)) << PAGE_SHIFT;
+}
+
+could be worth it.
+
+>  
+>  /**
+> @@ -1482,7 +1484,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  		    file_inode(vma->vm_file) != uprobe->inode)
+>  			continue;
+>  
+> -		offset = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
+> +		offset = (loff_t)vma_start_pgoff(vma) << PAGE_SHIFT;
+>  		if (uprobe->offset <  offset ||
+>  		    uprobe->offset >= offset + vma->vm_end - vma->vm_start)
+>  			continue;
+> @@ -2453,7 +2455,8 @@ static struct uprobe *find_active_uprobe_speculative(unsigned long bp_vaddr)
+>  	if (!vm_file)
+>  		return NULL;
+>  
+> -	offset = (loff_t)(vma->vm_pgoff << PAGE_SHIFT) + (bp_vaddr - vma->vm_start);
+> +	offset = (loff_t)(vma_start_pgoff(vma) << PAGE_SHIFT) +
+> +		(bp_vaddr - vma->vm_start);
+
+This is more extremely contrived logic that could be better expressed as
+
+loff_t vma_linear_off(vma, bp_vaddr);
+
+>  	uprobe = find_uprobe_rcu(vm_file->f_inode, offset);
+>  	if (!uprobe)
+>  		return NULL;
+> diff --git a/kernel/kcov.c b/kernel/kcov.c
+> index 1df373fb562b..b19b473c366a 100644
+> --- a/kernel/kcov.c
+> +++ b/kernel/kcov.c
+> @@ -512,7 +512,7 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
+>  
+>  	spin_lock_irqsave(&kcov->lock, flags);
+>  	size = kcov->size * sizeof(unsigned long);
+> -	if (kcov->area == NULL || vma->vm_pgoff != 0 ||
+> +	if (kcov->area == NULL || vma_start_pgoff(vma) ||
+
+as a nit, perhaps                 vma_start_pgoff(vma) > 0
+would be a little more idiomatic.
+
+>  	    vma->vm_end - vma->vm_start != size) {
+>  		res = -EINVAL;
+>  		goto exit;
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 56a328e94395..dfa493d54ef9 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -7613,7 +7613,8 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
+>  static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+>  			struct vm_area_struct *vma)
+>  {
+> -	unsigned long nr_subbufs, nr_pages, nr_vma_pages, pgoff = vma->vm_pgoff;
+> +	unsigned long nr_subbufs, nr_pages, nr_vma_pages;
+> +	pgoff_t pgoff = vma_start_pgoff(vma);
+>  	unsigned int subbuf_pages, subbuf_order;
+>  	struct page **pages __free(kfree) = NULL;
+>  	int p = 0, s = 0;
+
+Anyway, in general:
+
+Acked-by: Pedro Falcato <pfalcato@suse.de>
+
+-- 
+Pedro
