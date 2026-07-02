@@ -1,221 +1,193 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE03B3EC2E3
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Jul 2026 11:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E445723EA94
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Jul 2026 11:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782991001; cv=none; b=QdwgVZAw30fuVQKzb98+FByT5ZXoHWlYHVEijUcU9ENxdc92UUmsg0V+qSHCHY9feTC03mNi+/NIYkRoRcUdDySCtgck6S2QUqsjJA7fOMf1n0dlmEvxzsxHTRPwAOCNZ5YHhyVwp0pocvWaw+GumXEMiWFSfy63HvptmxSj8Rs=
+	t=1782991216; cv=none; b=Pbmhirr9Jt9I1LsAg+2LATWql4h0PeDXEuXAt8fYUhqAMSipVF9fMU9ZvsBhwfSQwofmLpA8EmT+mS1z7k/RXMD8Les9HHfBLpUHY5H77g/8aHMZXw2eM/qumaK+a23cMpmY6Rq8kvXOsrtWbfh57s4vWubVNlapz8KlIOWDw88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782991001; c=relaxed/simple;
-	bh=egNNIeSTqKDsuUgb2VZ0PZXU/HWv6jJeb1LiC5f7h6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WRbdaVb9WLv8EEvX6KhHWqxSW1wA3NlhDCgW8yJ5qnevFvSDdZ648+wD53eR+LJos+qBNFB9Ki9T5IbsWZ98z+X6KQDg5DAnRkVfaCRhKC7mjdd2bg78UnUwZRUhD51oRVpFEXzxdiiTlQTKj91fvsp45hQZGPDwpozEJiusqZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MaQ0JND5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3pvLQ4ye; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MaQ0JND5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3pvLQ4ye; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1782991216; c=relaxed/simple;
+	bh=z9C3BJPkAeYT5N4zbegd7qbIDCHNspObjWmKPJz27pM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oSga+3+GssQcz4XM2dYer0wDVfVLx8qa2q3qjbfUx0D4JUCOn+HuKewDlZNH6QihYdasabHsBRLAmaLRhK+Celma5kWkDdISMDZd7gKsSAk2XubruofcF5QyQLGIk9+OTaJB3g+E8Wo7VYbk6lQriN+qhgpvZa2I+sk8pvf+MEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FNgpQ6KO; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MaQ0JND5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3pvLQ4ye";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MaQ0JND5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3pvLQ4ye"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A77674168;
-	Thu,  2 Jul 2026 11:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782990998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eRBGEURpGsQZvwqVZtDQ4XJM7h1z4ZC8YrrvTCFqxmw=;
-	b=MaQ0JND5KWm4wpsJciLfkQvP3ai3tn4nmxHssSfFpsKDgKPYMo0CCpWKvNCaMeBjXitcJ3
-	ryZQphknx3FCsPabrXjnCA7E61K/L28Q+1mGAIXijYZw0KuJju507sLH6zDd+1GghLs0zF
-	8X9joVhTiON2oevqtL6uIb5F4wnvrBo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782990998;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eRBGEURpGsQZvwqVZtDQ4XJM7h1z4ZC8YrrvTCFqxmw=;
-	b=3pvLQ4yedxRGWLa9EIEPJidt5sWRqQteN0D5+X9wN34CbwAqs9zn4kp7F2+pWog96DCFuh
-	7UShynnYN7M9UJCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MaQ0JND5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=3pvLQ4ye
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782990998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eRBGEURpGsQZvwqVZtDQ4XJM7h1z4ZC8YrrvTCFqxmw=;
-	b=MaQ0JND5KWm4wpsJciLfkQvP3ai3tn4nmxHssSfFpsKDgKPYMo0CCpWKvNCaMeBjXitcJ3
-	ryZQphknx3FCsPabrXjnCA7E61K/L28Q+1mGAIXijYZw0KuJju507sLH6zDd+1GghLs0zF
-	8X9joVhTiON2oevqtL6uIb5F4wnvrBo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782990998;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eRBGEURpGsQZvwqVZtDQ4XJM7h1z4ZC8YrrvTCFqxmw=;
-	b=3pvLQ4yedxRGWLa9EIEPJidt5sWRqQteN0D5+X9wN34CbwAqs9zn4kp7F2+pWog96DCFuh
-	7UShynnYN7M9UJCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 13EB5779AA;
-	Thu,  2 Jul 2026 11:16:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fWCIAZJIRmp4aQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Thu, 02 Jul 2026 11:16:34 +0000
-Date: Thu, 2 Jul 2026 12:16:32 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 20/30] mm/vma: introduce vma_assert_can_modify()
-Message-ID: <akZHWwVgJfqCwA2W@pedro-suse.lan>
-References: <cover.1782735110.git.ljs@kernel.org>
- <23c7602c58cacc23ef22618a27af9a2d54addf58.1782735110.git.ljs@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNgpQ6KO"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-474560436c3so1563649f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Jul 2026 04:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782991212; x=1783596012; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CiSMYxAAfWXzLBsuDt0wts0qfpoADcn2DxU3hQuJc2s=;
+        b=FNgpQ6KOyfmnpg/Ovf5CgVA7nldMPD48zdnqJQtEou/v2p8/XSUIkK7WIrYFsGsvuo
+         8VbRajV9xZScH+YZufhGJTz8ggRblK36rW5TCF5aV3p8yyQGy6eflWAVsyJcMXPXwxRw
+         GHdTHkpqRwxrfOZBH8Kcd/Gvi9KhnW1lngbaZXGCSR1cirQaOw52RZBkGfiDI+A1bR76
+         zrhhCu+maLtCwuEvDmlTnOgkmbmyzCE/N8BBbkpEpzaDf/4L58pkWlaM5a7eZGTkaxNh
+         eJYyiidSfnfkG89eIW7CpdFh8Fd0kVmVgh3RAbm7q+IWR+pi3zg+X3l9T20tW9U3FOgH
+         30Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782991212; x=1783596012;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CiSMYxAAfWXzLBsuDt0wts0qfpoADcn2DxU3hQuJc2s=;
+        b=VPVZyjCp3SL/HQLUeFtJR90NhJoc4MqW6uaTCQ4ibsprsIqI4BAQ8TwtQ85Itpq7W7
+         gv6t29i+lbKuSQUVolSYNib+RvMPvNumG1Cesb3nw7zRAQop91StczEvf4Z1B/bSx12y
+         9nz09bvvLKlr/zM3t0g6Qj4tEMkU3OtqKGGzqigl/dOUieK9TLj60el5g5z9Y1g58C/W
+         WotSyJFYDBBzoayRCRDZNyTJKMoM80BPnfmzdX1/Z43bUhD3+iW2zypDCSIo9p0/SUTv
+         RxMhk/zWxglCK26Yc3XPD4XkWog/1xTrn2WsKcFLdUThqhI5Px+L1ejXQdha/hlheVem
+         AnNQ==
+X-Forwarded-Encrypted: i=1; AHgh+RphUFYpKmDxxp9KeO4zwYja5/7hqfG8aKKjFUNJ7tKXKb12CltC2zZl4Zl2CBRGbvkvo9hdMVR2IK0mcY2GvTIBD9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoaKUtuTOqRHo2H6S68lM5CaJ45M7ALpP3wwK1upOlYjPG0Zyy
+	vrHZx9FmKFb5N6hxj+oC+2Pr0CQKo2JOw+dEbOV2fUxDb7I7U7PoYIhY
+X-Gm-Gg: AfdE7cncL5hF8cBmf2D38YZWKzYEGuAvt6FaPFHNP5v3+MNeXsn5z6KzTg6DeTF8JXK
+	4DTymSFI2SUim8K9YcxEDZXco5F/oCOWiEBY2hGioxafmJmNq+7nAsd6NgB9aA7nKJ68u7dAWPs
+	fVkeRk8XBvB2DRboNC9QchNyVjnQsosiPL2JIHbfykZWmB5kJUOTLPrbGi1P1SlPFahLnkPvU93
+	uZM/GGXfbBwjQ4RmXm9cRDblDZ/lWAovmN0DvoZ5b0gQaiuvNHLBzcz7vRt5imfzjuWjz5k0w6z
+	uXBibT59P8yU/OXaXqxrf5W/172h1vytUZaYebq5XIh/qSGdPlV0erLBXsBihzxbGWvSUSEM409
+	ab8Ku2nX5mEcelPu5EUa9tDMn8cTFWAies4VXMecPVkPiuxYYrEBuLuVQaQC0DRyfR/NM1dyVo4
+	/bSA5stDFLtMIG8mTzfj01xrUv
+X-Received: by 2002:a05:6000:468c:b0:474:3b78:b229 with SMTP id ffacd0b85a97d-477aeb5c73bmr4793677f8f.11.1782991211989;
+        Thu, 02 Jul 2026 04:20:11 -0700 (PDT)
+Received: from krava (37-188-223-191.red.o2.cz. [37.188.223.191])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477de3dd0b1sm7943059f8f.35.2026.07.02.04.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2026 04:20:11 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 2 Jul 2026 13:20:06 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv5 00/13] uprobes/x86: Fix red zone issue for optimized
+ uprobes
+Message-ID: <akZJZth3-fVUhADl@krava>
+References: <20260701111337.53943-1-jolsa@kernel.org>
+ <CAEf4BzYiPeLTbgeVEDKqU45oHBFJgU6ULgK=3i1J7dbzKS2+yg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <23c7602c58cacc23ef22618a27af9a2d54addf58.1782735110.git.ljs@kernel.org>
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 7A77674168
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[75];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pedro-suse.lan:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYiPeLTbgeVEDKqU45oHBFJgU6ULgK=3i1J7dbzKS2+yg@mail.gmail.com>
 
-On Mon, Jun 29, 2026 at 01:23:31PM +0100, Lorenzo Stoakes wrote:
-> vma_assert_write_locked() and vma_assert_attached() are useful for their
-> own purposes, however VMA code absolutely does allow the modification of
-> non-write locked VMAs if they are at that point detached (i.e. unreachable
-> from anywhere).
+On Wed, Jul 01, 2026 at 04:13:26PM -0700, Andrii Nakryiko wrote:
+> On Wed, Jul 1, 2026 at 4:13 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > hi,
+> > Andrii reported an issue with optimized uprobes [1] that can clobber
+> > redzone area with call instruction storing return address on stack
+> > where user code may keep temporary data without adjusting rsp.
+> >
+> > Fixing this by moving the optimized uprobes on top of 10-bytes nop
+> > instruction, so we can squeeze another instruction to escape the
+> > redzone area before doing the call.
+> >
+> > Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+> > if we decide to take this change.
+> >
+> > thanks,
+> > jirka
+> >
+> >
+> > v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
+> > v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
+> > v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org/
+> > v4: https://lore.kernel.org/bpf/20260526205840.173790-1-jolsa@kernel.org/
+> >
+> > v5 changes:
+> > - several selftests changes and reviewed-by tags [Jakub]
+> > - add more comments in int3_update_unoptimize [Andrii]
+> > - several other minor changes and acks [Oleg]
+> > - move insn_decode out of uprobe_init_insn to simplify the code
+> > - align uprobe_red_zone_test to 64 to make sure nop10 is not on page boundary
+> >
+> > v4 changes:
+> > - do not use 2nd int3 (ont +5 offset) because the call instruction
+> >   is allways the same for the given nop10 address [Andrii/Peter]
+> > - unmap unused trampoline vma after unsuccesfull optimization [sashiko]
+> > - small change to patch#2 moved user_64bit_mode earlier in the path
+> >   and pass/use mm_struct pointer directly from arch_uprobe_optimize
+> >   instead of gettting current->mm
+> >   Andrii, keeping your ack, please shout otherwise
+> >
+> > v3 changes:
+> > - use nop10 update suggested by Peter in [2]
+> > - remove struct uprobe_trampoline object, use vma objects directly instead
+> > - selftests fixes [sashiko]
+> > - ack from Andrii
+> >
+> > v2 changes:
+> > - several selftest fixes [sashiko]
+> > - consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
+> > - use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+> > - allow to copy uprobe trampolines vma objects on fork [sashiko]
+> > - change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+> > - added fork/clone tests
+> > - I kept the selftest changes and nop5->nop10 changes in separate
+> >   commits for easier review, we can squash them later if we want to keep
+> >   bisect working properly
+> >
+> >
+> > [1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
+> > [2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
+> > ---
 > 
-> It's therefore useful to be able to assert that a VMA is either
-> detached (modification doesn't matter) or write locked (you're explicitly
-> locked for modification).
+> ASAN-enabled test_progs runs are not happy in CI, can you please check?
 
-Hmm, I was wondering why detached does not imply write_locked, and then
-realized that new VMAs aren't write-locked. Could we do it by default?
-Like a simple:
+I failed to release link in test_uprobe_fork_optimized, fix is below
+I can send new version or separate fix 
 
-	vma->vm_lock_seq = __vma_raw_mm_seqnum(vma);
 
-might do the trick. I don't see why it wouldn't work? Is there some other
-case I am not considering?
+also there's 2 things to solve/discuss once kernel changes are acked:
+- selftest changes depend on:
+  selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+  that is taken from libbpf/usdt, I pushed the PR in here [1]
 
-> 
-> Therefore introduce vma_assert_can_modify() for this purpose.
-> 
-> While we're here, make vma_is_attached() available generally - if
-> !CONFIG_PER_VMA_LOCKS, then there's no sense in which a VMA is
-> detached (vma_mark_detached() is a noop), so have this default to true in
-> this case.
-> 
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> ---
->  include/linux/mmap_lock.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index 04b8f61ece5d..d513286d8160 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -506,6 +506,8 @@ static inline __must_check
->  int vma_start_write_killable(struct vm_area_struct *vma) { return 0; }
->  static inline void vma_assert_write_locked(struct vm_area_struct *vma)
->  		{ mmap_assert_write_locked(vma->vm_mm); }
-> +static inline bool vma_is_attached(struct vm_area_struct *vma)
-> +		{ return true; }
->  static inline void vma_assert_attached(struct vm_area_struct *vma) {}
->  static inline void vma_assert_detached(struct vm_area_struct *vma) {}
->  static inline void vma_mark_attached(struct vm_area_struct *vma) {}
-> @@ -530,6 +532,12 @@ static inline void vma_assert_stabilised(struct vm_area_struct *vma)
->  
->  #endif /* CONFIG_PER_VMA_LOCK */
->  
-> +static inline void vma_assert_can_modify(struct vm_area_struct *vma)
-> +{
-> +	if (vma_is_attached(vma))
-> +		vma_assert_write_locked(vma);
-> +}
-> +
->  static inline void mmap_write_lock(struct mm_struct *mm)
->  {
->  	__mmap_lock_trace_start_locking(mm, true);
-> -- 
-> 2.54.0
-> 
+- as bots complained the patchset breaks bisection, because kernel
+  changes break selftests.. not sure what's prefered solution, as for
+  me I'd keep it that way rather than mixing kernel/user space changes
 
--- 
-Pedro
+thanks,
+jirka
+
+
+[1] https://github.com/libbpf/usdt/pull/16
+---
+diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+index eb067f029a9f..e193206fc5d2 100644
+--- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
++++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+@@ -988,7 +988,6 @@ static noreturn int child_func(void *arg)
+ static void test_uprobe_fork_optimized(bool clone_vm)
+ {
+ 	struct uprobe_syscall_executed *skel = NULL;
+-	struct bpf_link *link = NULL;
+ 	unsigned long offset;
+ 	int pid, status, err;
+ 	char stack[65535];
+@@ -1001,9 +1000,9 @@ static void test_uprobe_fork_optimized(bool clone_vm)
+ 	if (!ASSERT_OK_PTR(skel, "open_and_load"))
+ 		goto cleanup;
+ 
+-	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
+-				-1, "/proc/self/exe", offset, NULL);
+-	if (!ASSERT_OK_PTR(link, "attach_uprobe"))
++	skel->links.test_uprobe = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
++					-1, "/proc/self/exe", offset, NULL);
++	if (!ASSERT_OK_PTR(skel->links.test_uprobe, "attach_uprobe"))
+ 		goto cleanup;
+ 
+ 	skel->bss->pid = getpid();
