@@ -1,179 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD27B2C21F2;
-	Thu,  2 Jul 2026 10:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404013C2B8F;
+	Thu,  2 Jul 2026 10:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782989479; cv=none; b=opVF5yXpxRPtLNlWBc7tAY67kd7vMnheOU5fSdD75CKgiVpN4DMnRT1DnWM/2AjED3rDUytUI3AyhFT/blGIjM7KdxSiIIwyrPPRkCa2yGuo2KTq90GltMjbGxdKMTpfHSk35C2/c1qqkECzk9JXbipP2pJLG/4/q+Kmi/nhFp8=
+	t=1782989544; cv=none; b=RtmYXHiXnDrnPJ+7t36rH+L+ZxyTTiCSVQ/1L6HUZlo7zTnYjTDSbD6asvcdjg4arrmleaF3iexaleQrzumb0tNbqayCgLZvxppqbkGEjuU1jn9FyDvRE+P/RNyimiYNaj0b/velI53gHvP3nj24zR3tSTsBRFSqOnigjnEgrUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782989479; c=relaxed/simple;
-	bh=0Qn1ltllIXRw/FAGQooEHN6VeKOdm3O1QgQ7rdBQX2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxUm3bde2q3dmk9td6Vhvjs9Vq2emiRoYA4HhWLQLoMFfgKlamPMG+7RNGbPbiRgodybNEzXZddqRrR75sqq8PQMyZhUCP3HBCT0KlUTaLyXkHgHxUJ9Uz3nGfNQK2FIcDTIpygFKNHIvkuk2i6CL2rAlfb9nyIdesWypvX8nXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqfDPRoQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782989544; c=relaxed/simple;
+	bh=Tgt4hhMcByBvGKOTB4ie6cqyN7pvf1X8oWW3X+m/fC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lusDGBetqqU+N6AYRa9rmhPrwKeCrIK6UTY5Ed1tfGOjVVszr6DI/ZYCj62CYieA5f4dHLN+kIqaUmonK32jTljK6hHQ34Ugx5hln5HRLF7Kt8Wa9UxF2uKrASWj44t1EI6J0SE7D9U0wHajg2D/7/3Wpp72/sjzzoWK55cwIu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTcgxXBi; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqfDPRoQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A432F1F000E9;
-	Thu,  2 Jul 2026 10:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782989478;
-	bh=prNepFwbbNENFK8ZoSoOyJUpCn4wZi4Ts2NMaeAqiMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UqfDPRoQYK8ANeU4JUCLjKk9A8iE+hSWZ5wo1NqICXJ2dLmh73t4GqMO1fh0HAn1K
-	 pwTV7GYSa5WUr2DuNxzAidH757fbi4hkBVfhORzKkMPouaGSMTC3eC7P64pygPx1gg
-	 twzR4BS+XJmtcXGhnBk6IOBVH5lML7tYmNSrdqjQkghoHAUdY2a9K3BbGlsRvEzP8z
-	 qiRubXQIvMiYJo9cyIPjaUHLYRsw4Q780Fqe6cunRrITc9+NUlbI4WXrJrMsbc/go/
-	 0sJrEx4V4K3K4d+AIMG568tIZ3hxQUlIFCj6BKr8thGyIdR+Mq7VpaUHu2vgSQvE3H
-	 pIcYBXUjIpU7A==
-Date: Thu, 2 Jul 2026 11:50:56 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 13/30] mm/vma: refactor vmg_adjust_set_range() for clarity
-Message-ID: <akZCV83FL8hW2O-Y@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <ada7972f49ea7f1ff1df6d11e4651f270444f8fd.1782735110.git.ljs@kernel.org>
- <akY-Z1fsp9rHSc70@pedro-suse.lan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTcgxXBi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782989544; x=1814525544;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Tgt4hhMcByBvGKOTB4ie6cqyN7pvf1X8oWW3X+m/fC8=;
+  b=WTcgxXBi+65sNoPmVSFNOMdw9c0jmKFqzuJWGvv8zAAzlxEFuXD1xJ2Q
+   0rFANfbOZniroBy/acnataEM+q+Yh9cC+k4tILdoZZ+nnuACyPVbCY42N
+   sn3O0bzYXnkDoUqVmHqrPDD9B6/xzIK14YjB1J24geHTFAuz3VvGezN/7
+   0LrMzkclEOLUS9nzEIvEP3rw8VPVpW6BvzPK2DChO0vfLdtXJrYFn5ob1
+   CG6zfH0DIz2dmohf88muSCM3cRPwTkk+EPVRYoN48hpFlQRXzPdqp2IVH
+   zL5+KdM0i2arW8ouWNeWyPQX3wuoMwrVRuO2pDU1t5d16fXvTGstxBTvj
+   Q==;
+X-CSE-ConnectionGUID: wGoCylRLTJq37RpQoZeLQA==
+X-CSE-MsgGUID: AiFwafKvTDOG/Yf7BvGXfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="94341064"
+X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
+   d="scan'208";a="94341064"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 03:52:23 -0700
+X-CSE-ConnectionGUID: I7qt9/olRoyxa2x0VmcfeQ==
+X-CSE-MsgGUID: Yp1EvDSzRoq8GXy7mZVstQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
+   d="scan'208";a="282905050"
+Received: from unknown (HELO [10.239.158.38]) ([10.239.158.38])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 03:52:09 -0700
+Message-ID: <c0e2df0a-19b2-4234-b0f7-41e010452b06@intel.com>
+Date: Thu, 2 Jul 2026 18:51:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akY-Z1fsp9rHSc70@pedro-suse.lan>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 17/46] KVM: guest_memfd: Advertise
+ KVM_SET_MEMORY_ATTRIBUTES2 ioctl
+To: Sean Christopherson <seanjc@google.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-17-9d2959357853@google.com>
+ <584a8f9a-1538-4f8b-b576-75ef0fa961c7@intel.com>
+ <akU7uAKb5E_Tklx-@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <akU7uAKb5E_Tklx-@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 02, 2026 at 11:37:11AM +0100, Pedro Falcato wrote:
-> On Mon, Jun 29, 2026 at 01:23:24PM +0100, Lorenzo Stoakes wrote:
-> > Add comments with ASCII diagrams to describe what we're doing, avoid
-> > dubious use of PHYS_PFN(), and use vma_start_pgoff().
-> >
-> > The most complicated scenario represented here is vmg->__adjust_next_start
-> > - when this is set, vmg->[start, end] actually indicate the range to be
-> > retained, so take special care to describe this accurately.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> > ---
-> >  mm/vma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 47 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/vma.c b/mm/vma.c
-> > index 6296acecf3b7..1e99fe8aa6ef 100644
-> > --- a/mm/vma.c
-> > +++ b/mm/vma.c
-> > @@ -704,11 +704,54 @@ static void vmg_adjust_set_range(struct vma_merge_struct *vmg)
-> >  	pgoff_t pgoff;
-> >
-> >  	if (vmg->__adjust_middle_start) {
-> > -		adjust = vmg->middle;
-> > -		pgoff = adjust->vm_pgoff + PHYS_PFN(vmg->end - adjust->vm_start);
-> > +		/*
-> > +		 * vmg->start    vmg->end
-> > +		 * |             |
-> > +		 * v    merge    v
-> > +		 * <------------->
-> > +		 *         delta
-> > +		 *        <------>
-> > +		 * |------|----------------|
-> > +		 * | prev |    middle      |
-> > +		 * |------|----------------|
-> > +		 *        ^
-> > +		 *        |
-> > +		 *        middle->vm_start
-> > +		 */
-> > +		struct vm_area_struct *middle = vmg->middle;
->
-> FWIW this can be simplified to
-> 		adjust = middle;
-> 		const unsigned long delta = vmg->end - adjust->vm_start;
->
-> But I guess you're looking for explicitness here?
+On 7/2/2026 12:09 AM, Sean Christopherson wrote:
+> On Wed, Jul 01, 2026, Xiaoyao Li wrote:
+>> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+>>> @@ -4969,6 +4973,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+>>>    		return 1;
+>>>    	case KVM_CAP_GUEST_MEMFD_FLAGS:
+>>>    		return kvm_gmem_get_supported_flags(kvm);
+>>> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+>>> +		if (!gmem_in_place_conversion || !kvm_supports_private_mem(kvm))
+>>> +			return 0;
+>>> +
+>>> +		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+>>>    #endif
+>>>    	default:
+>>>    		break;
+>>
+>> this looks inconsistent with the
+>>
+>> 	case KVM_SET_MEMORY_ATTRIBUTES2:
+>> 		if (!gmem_in_place_conversion)
+>> 			return -ENOTTY;
+>>
+>> Well, the check of
+>>
+>> 	if (!kvm_arch_has_private_mem(f->kvm))
+>> 		return -EINVAL;
+>>
+>> is buried in the following kvm_gmem_set_attributes(). How about moving of
+>> kvm_arch_has_private_mem() check to put it along with
+>> gmem_in_place_conversion check in kvm_gmem_ioctl() in Patch 13?
+> 
+> Me confused, patch 13 already adds the kvm_arch_has_private_mem() in
+> kvm_gmem_set_attributes().
 
-Yeah I'm intentionally trying to make that explicit as this code is very
-confusing, so people don't have to think 'oh what was adjust again?'.
+I wanted to make the check in KVM_SET_MEMORY_ATTRIBUTES2 in Patch 13 
+like something below:
 
->
-> > +		const unsigned long delta = vmg->end - middle->vm_start;
-> > +
-> > +		pgoff = vma_start_pgoff(middle) + (delta >> PAGE_SHIFT);
-> > +		adjust = middle;
-> >  	} else if (vmg->__adjust_next_start) {
-> > -		adjust = vmg->next;
-> > -		pgoff = adjust->vm_pgoff - PHYS_PFN(adjust->vm_start - vmg->end);
-> > +		/*
-> > +		 *                Originally:
-> > +		 *
-> > +		 *            vmg->start   vmg->end
-> > +		 *            |            |
-> > +		 *            v    merge   v
-> > +		 *            <------------>
-> > +		 *            .            .
-> > +		 * merge_existing_range() updates to:
-> > +		 *            .            .
-> > +		 * vmg->start vmg->end     .
-> > +		 * |          |            .
-> > +		 * v  retain  v            .
-> > +		 * <---------->            .
-> > +		 *             delta       .
-> > +		 *            <----->      .
-> > +		 * |----------------|------|
-> > +		 * |    middle      | next |
-> > +		 * |----------------|------|
-> > +		 *                  ^
-> > +		 *                  |
-> > +		 *                  next->vm_start
-> > +		 */
-> > +		struct vm_area_struct *next = vmg->next;
-> > +		const unsigned long delta = next->vm_start - vmg->end;
-> > +
-> > +		pgoff = vma_start_pgoff(next) - (delta >> PAGE_SHIFT);
-> > +		adjust = next;
-> >  	} else {
-> >  		return;
-> >  	}
->
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+	case KVM_SET_MEMORY_ATTRIBUTES2:
+		if (!gmem_in_place_conversion || !kvm_arch_has_private_mem(f->kvm))
+		return -EXXX;
 
-Thanks!
+and finally, with the introduction of kvm_supports_private_mem() in this 
+patch, it becomes:
 
->
-> --
-> Pedro
+	case KVM_SET_MEMORY_ATTRIBUTES2:
+		if (!gmem_in_place_conversion || !kvm_supports_private_mem(f->kvm))
+		return -EXXX;
 
-Cheers, Lorenzo
+So that the guard for KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES and 
+KVM_SET_MEMORY_ATTRIBUTES2 is consistent.
+
+> That said, the ordering here is wonky and misleading.  A cursory read of the series
+> would make one think that waiting to advertise KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES
+> makes it safe/ok for KVM to plumb in support for KVM_SET_MEMORY_ATTRIBUTES2 over
+> multiple patches.  But that's not actually true, because the ioctl becomes live
+> the instant the code exists, userspace doesn't need to wait for KVM to formally
+> advertise support.
+> 
+> To further confuse matters, it is actually safe/ok to iteratively add support,
+> because it's all effectively dead code until "Let userspace disable per-VM mem
+> attributes, enable per-gmem attributes".
+
+yeah, before patch 24, gmem_in_place_conversion is always false. So 
+KVM_SET_MEMORY_ATTRIBUTES2 on gmem fd always return -ENOTTY.
+
+> So, I think we should go a step further than what I think Xiaoyao is suggesting,
+> and fully squash patch 17 into patch 13.  That way the reader doesn't have to jump
+> through as many mental hoops to piece together what is happening.  It'll obviously
+> be a bigger patch, but should be easier to review/understand overall.
+> 
+> Oh, and that combined patch should carve out error_offset straightaway, so that
+> the full uAPI can be reviewed in a single patch.
+
+It sounds good.
