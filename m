@@ -1,105 +1,143 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4738E8B9
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Jul 2026 11:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EFB3C3C00;
+	Fri,  3 Jul 2026 11:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783076861; cv=none; b=XlvFoYsSHTM0vUlkXybu6cQVnp5h3hqUwrQoF/U8iCCMC22I1La8zd4Lv+gMiEpM8FCGqn9jCf8u2UGP0sTal0QOn7fzYqnYfloLxdBLK7F4dwKbVTe4aQlls8HldOWKWITaf2aXJnl9bKdHpCfPp6xuoyCCm39/ZIPs8l9+Yek=
+	t=1783079365; cv=none; b=E37uXUo7gQggvKIIedMuDEApQsrfUMtANue5g+ixQeRvH8lt/E4DgnIn4Lgzic1dzwch/zcyqnbmj92ZMrAs4fwVu7oYY5dZYbdGorKV1z8pwzke/w/0j4Mok0g31SJ4a5RilsL2BhOb6411UGqWprzMsZzySrHh4XQV5IiRFcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783076861; c=relaxed/simple;
-	bh=GEVrl9iAypCDnU7cVBquDYwwNQsdXV+ow4a7huIPPs8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vhu/EfwcCpg6VakVnJBVPol7iSDQogBC3JPwgaqxc611uzwHXHBCNxsTaFIpgdLRJJ9u1gTVyxM6Eo8hoWGBVgq1Ly25ppN8wEapIcMy+8XPk2EkciUlhj1zY+H1CpSrDNxm6i6dsFp6VjpQ5xF7M28QEPmJEqenLSKAf+MNHWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LwQe++WA; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783079365; c=relaxed/simple;
+	bh=P263rPI62CWCfbJviCwI1dfpRrn8rqB3/1FpcSgIBe4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q/9Rm/tP8bMZyRZh6TCS9hPF/nsVkzICCaCxaNWI/h7EIEXYzC6V7il4A6ZIj10MqT5t+vEtxBC2dceFbQ5bhMpXQEyndFKJQJlHMCszT4z9yeJG39GRYFNsE0lXHMURaCnVPGquI0lP9dsO7IK5M9BEAmSGiHD4IcsQHF1Y/+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NptH2wr9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwQe++WA"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-475881b9a4bso370876f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Jul 2026 04:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783076858; x=1783681658; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7ICeSij0heCeWd1xnNWfCSIcK8dF/iVCS3zFSp56UcI=;
-        b=LwQe++WAmg8yQLAC2Hz6xsms0kyx00yyZ3MfKMRW2nHE5ygAP0cYrxl+mJ6+4zTa8F
-         hWFpu4G/Dvf5qQpg34FT4GxFY6ZGSGzQ5zpw2D3SyzGEa4TgiquaWkK3MQqP+qxrlCnN
-         2/l6E3osA9WmMpxErzMeF60D5bJhrj4pJViAMAlOB2i34eEpCWGwW6QDsNL+KFsWB08l
-         /a0I7q8J3/IdfSBVgCIaNDBluMhJZs0G+GTa1aC7pK9gzJE4CIamNKgjHLWbuf6SXb1c
-         Ky955bYHEfQyZ3qOhJjkejBC3kvdRlpLr9tuMNLT68ImTn8hS7zDgLPtBAVwGPbazo8c
-         z9zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783076858; x=1783681658;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7ICeSij0heCeWd1xnNWfCSIcK8dF/iVCS3zFSp56UcI=;
-        b=srBOvAapa+ZGDa6fBC1OHEvF78qMPN7P6KOwxTW8vE2wrb8Y56UMJfFtntTrk4hu0f
-         L+7BZCkV4w1BQ/UT2qXBskqXiHRMxzmejVAUAOLdwHvEEzoErfzJR7HX4XJkjc/Upygz
-         yGTj/mFwGXLFX8ps3HxmvN7CiMR6l2BTm2i2h2YkE9ot+jGv/qZ5j6nyB3XGrxE6lylj
-         Es4YeuP/wfxTxEc47FANn+/SWX92lDWAoh2l+qUX6g3OWWfHigr9Un3K5LPpTVWyxVJc
-         q4hjvGwx5A6uMt2II5Demg4uGC56Il4bcanNI9pdwxqFKQdYE4YgLQm4kh3c9YjLC/+o
-         5pwg==
-X-Forwarded-Encrypted: i=1; AHgh+RrfIlkW74/LK2lcpL+Cg9kHNe/CNqRk+FCEUaprXmiglMSsd7U2EHGzJf9rizPZTZZSxFPsFUvBrs65ZwiABeZM/Js=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXW/p2Vw21WxbdoGkf41Gd0cRTaBV9NjTbCeDb6G0AEB/BJ1qq
-	RQmG+bbduK9tmYNGnsiLXYzCGHzMC8jTt4dxV65PrLQnNkQHgauFp1Zn
-X-Gm-Gg: AfdE7cm+SVe5utfQsaMg3bVgn+qNJjLtF3R4RXf6JE/JjgqYVdmN5H47mRLHXX5bQW9
-	xL8zCOU2o53YFEEqvSUY/K9TaNFaijVHhwnKvYu7WU1ZyyLRpqcUuGm5xSgDKfQEsy4/oh7hBYG
-	62XxJFN8n2PuxmuPdyiU0ycxYD5xbH0LhsE9tf6XS2DgBqZFE2lJn874io0coULcGmURUuW6Son
-	ZBbmShLjvlHQBOq203VZ9KROPES9zWAin+mB4aQa/bTiKUtsb2J+gYqnEANp2/eckYioW3ZSqSk
-	CgKKknQQDGXbdvm4WoQ8jDNqNqxSLXe2KLfvNpeEFe/G7aWaTTFMob0HZhuzR62itzTDqyTSbRm
-	w3BTgIxou0GKVUrP1kihSdKFgpQRtNa09gU7+cfAgellWiIaXitPcmXMfnxkFXvLyjwJLg8Zh9t
-	WVkUkzRNcrvFjvqsTJlK/Ka7rHhuK9lcKCbrw=
-X-Received: by 2002:a05:6000:1788:b0:46d:1433:77ec with SMTP id ffacd0b85a97d-477b34b0578mr12955058f8f.2.1783076858236;
-        Fri, 03 Jul 2026 04:07:38 -0700 (PDT)
-Received: from krava (37-188-223-191.red.o2.cz. [37.188.223.191])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477db3dbacbsm17657372f8f.4.2026.07.03.04.07.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 04:07:37 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 3 Jul 2026 13:07:33 +0200
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NptH2wr9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72ED01F000E9;
+	Fri,  3 Jul 2026 11:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783079364;
+	bh=oEGfggV7R38IHP2RNYQI/TgnlkgxczOJa3nqV0igjw0=;
+	h=From:To:Cc:Subject:Date;
+	b=NptH2wr9/2KsMQAqz9ZYpSvBu6qDzremmD0Is5kT94gSbQ7n4pWZkNwmjtpb4fmPx
+	 a0Zt2n58CkjK7APb6c5hLHwG9F3Z8tvrx7xvK1tRUduc1sHPTv3xRG1VmBPYiMvpXI
+	 Wv/VzC/MOmxNhzruC1+67zb0LX4R2C6DqDA6A2reNxubKm017KikaeC1/DNT1NJMsh
+	 pSZoO26bexuX9LGJ3DKQmlRNm+ZtrC0LEkDxjF+i8CTdL/RfExljJwTd2TmrwzoEDr
+	 FtNU+LAloNfPUwYwebZFRL7ofQLaMj230eK3Bboa2JPv5kN+E6FpKcsaXGCvHpPTly
+	 BuWarC3UwTk+w==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv5 00/13] uprobes/x86: Fix red zone issue for optimized
- uprobes
-Message-ID: <akeX9SJH76guXykU@krava>
-References: <20260701111337.53943-1-jolsa@kernel.org>
- <CAEf4BzYiPeLTbgeVEDKqU45oHBFJgU6ULgK=3i1J7dbzKS2+yg@mail.gmail.com>
- <akZJZth3-fVUhADl@krava>
- <CAEf4BzaDwwW1ebPO+4r5rhmdyXk+XddWTDBzN4iOaCU8qEPZRw@mail.gmail.com>
- <20260703105859.GD651302@noisy.programming.kicks-ass.net>
+Subject: [PATCHv6 00/13] uprobes/x86: Fix red zone issue for optimized uprobes
+Date: Fri,  3 Jul 2026 13:49:04 +0200
+Message-ID: <20260703114917.238144-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260703105859.GD651302@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 03, 2026 at 12:58:59PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 02, 2026 at 09:20:25AM -0700, Andrii Nakryiko wrote:
-> 
-> > > I failed to release link in test_uprobe_fork_optimized, fix is below
-> > > I can send new version or separate fix
-> > 
-> > yeah, please fix the test, adjust comments as pointed out by AI and
-> > send v6. Seems like Peter wants to pick it up through tip, I don't
-> > mind.
-> 
-> So I should wait for v6, and not munge the below delta in?
+hi,
+Andrii reported an issue with optimized uprobes [1] that can clobber
+redzone area with call instruction storing return address on stack
+where user code may keep temporary data without adjusting rsp.
 
-yep, I'll send it out later today
+Fixing this by moving the optimized uprobes on top of 10-bytes nop
+instruction, so we can squeeze another instruction to escape the
+redzone area before doing the call.
+
+Note we need upstream update first for patch 3 (github.com/libbpf/usdt),
+if we decide to take this change.
 
 thanks,
 jirka
+
+
+v1: https://lore.kernel.org/bpf/20260514135342.22130-1-jolsa@kernel.org/
+v2: https://lore.kernel.org/bpf/20260518105957.123445-1-jolsa@kernel.org/
+v3: https://lore.kernel.org/bpf/20260521124411.31133-1-jolsa@kernel.org/
+v4: https://lore.kernel.org/bpf/20260526205840.173790-1-jolsa@kernel.org/
+v5: https://lore.kernel.org/bpf/20260701111337.53943-1-jolsa@kernel.org/
+
+
+v6 changes:
+- added upstream commit ref for patch#8
+- release link in test_uprobe_fork_optimized [ci/asan]
+
+v5 changes:
+- several selftests changes and reviewed-by tags [Jakub]
+- add more comments in int3_update_unoptimize [Andrii]
+- several other minor changes and acks [Oleg]
+- move insn_decode out of uprobe_init_insn to simplify the code
+- align uprobe_red_zone_test to 64 to make sure nop10 is not on page boundary
+
+v4 changes:
+- do not use 2nd int3 (ont +5 offset) because the call instruction
+  is allways the same for the given nop10 address [Andrii/Peter]
+- unmap unused trampoline vma after unsuccesfull optimization [sashiko]
+- small change to patch#2 moved user_64bit_mode earlier in the path
+  and pass/use mm_struct pointer directly from arch_uprobe_optimize
+  instead of gettting current->mm
+  Andrii, keeping your ack, please shout otherwise
+
+v3 changes:
+- use nop10 update suggested by Peter in [2]
+- remove struct uprobe_trampoline object, use vma objects directly instead
+- selftests fixes [sashiko]
+- ack from Andrii
+
+v2 changes:
+- several selftest fixes [sashiko]
+- consolidate is_lea_insn and is_call_insn insto single check [Jakub Sitnicki]
+- use proper mm_struct object in __in_uprobe_trampoline check [sashiko]
+- allow to copy uprobe trampolines vma objects on fork [sashiko]
+- change uprobe syscall detection error from -ENXIO to -EPROTO [Andrii]
+- added fork/clone tests
+- I kept the selftest changes and nop5->nop10 changes in separate
+  commits for easier review, we can squash them later if we want to keep
+  bisect working properly
+
+
+[1] https://lore.kernel.org/bpf/20260509003146.976844-1-andrii@kernel.org/
+[2] https://lore.kernel.org/bpf/20260518104306.GU3102624@noisy.programming.kicks-ass.net/#t
+---
+Andrii Nakryiko (1):
+      selftests/bpf: Add tests for uprobe nop10 red zone clobbering
+
+Jiri Olsa (12):
+      uprobes/x86: Use proper mm_struct in __in_uprobe_trampoline
+      uprobes/x86: Remove struct uprobe_trampoline object
+      uprobes/x86: Do not leak trampoline vma mapping on optimization failure
+      uprobes/x86: Allow to copy uprobe trampolines on fork
+      uprobes/x86: Move optimized uprobe from nop5 to nop10
+      libbpf: Change has_nop_combo to work on top of nop10
+      libbpf: Detect uprobe syscall with new error
+      selftests/bpf: Emit nop,nop10 instructions combo for x86_64 arch
+      selftests/bpf: Change uprobe syscall tests to use nop10
+      selftests/bpf: Change uprobe/usdt trigger bench code to use nop10
+      selftests/bpf: Add reattach tests for uprobe syscall
+      selftests/bpf: Add tests for forked/cloned optimized uprobes
+
+ arch/x86/kernel/uprobes.c                               | 416 +++++++++++++++++++++++++++++++++++++++++++-----------------------------
+ include/linux/uprobes.h                                 |   5 -
+ kernel/events/uprobes.c                                 |  10 --
+ kernel/fork.c                                           |   1 -
+ tools/lib/bpf/features.c                                |   4 +-
+ tools/lib/bpf/usdt.c                                    |  16 +--
+ tools/testing/selftests/bpf/bench.c                     |  20 ++--
+ tools/testing/selftests/bpf/benchs/bench_trigger.c      |  38 +++----
+ tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh |   2 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 325 ++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ tools/testing/selftests/bpf/prog_tests/usdt.c           |  74 +++++++++++--
+ tools/testing/selftests/bpf/progs/test_usdt.c           |  25 +++++
+ tools/testing/selftests/bpf/usdt.h                      |   2 +-
+ tools/testing/selftests/bpf/usdt_2.c                    |  15 ++-
+ 14 files changed, 697 insertions(+), 256 deletions(-)
