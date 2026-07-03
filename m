@@ -1,67 +1,67 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A941B37A824
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Jul 2026 14:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D683D9524
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Jul 2026 14:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783088374; cv=none; b=YxZcmlwZrLFeblc7IwVIUaRLn7Xqw/g7rMDJE7LANUpccmJqcD21MnAK0i8rmZsigiu9TcizKV+n23/HlXw9aIBcnLz5f4mxlPYc4EcprkBkBimK+Tz3VdQteqaCqxN7dVtYlttcRGcD8+4826eOB2HBqkEkcfwvhH4cELkpm9I=
+	t=1783089260; cv=none; b=cMEjFxzPa7v9aLM/Cw45GBkdwNmD9Y1Owi4yNcARkya2l/Lh9bDtXBEYjb74N4Tcm0WGwrXsgzMXR5thpSc38m1i473i2lLc21owna3dJMks7/IECYrhrXJkwLvGd5y7lsFLjJiRDeQXiwxYqkUtRr+OIvCe4axG/rA7sCzJBpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783088374; c=relaxed/simple;
-	bh=fwBNMGsGRW7LvE0wmMyeo41PuP5/RmLAB5AFTN8r+GQ=;
+	s=arc-20240116; t=1783089260; c=relaxed/simple;
+	bh=6NkC5LcUPG2IVPwDtZ9fWDIP4tLJ3eRNHirn/GHrPIY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s+t+8L8jKjgTruO7ljYdZs3AV4t46M0G2dQIaIogjmOYXuTfiKd520U5q5INr2btnhPNiC4RUvjGCUUkzoSckPUz5ss8ZiyOkXkWBqIZTlJ6M9ZJ+7a23JoII1+MIYCI5+apYrnfq9ofP7KOFVGpziS0jRl/zR62T+yuUCkpFCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VXa2HykD; arc=none smtp.client-ip=209.85.221.46
+	 In-Reply-To:Content-Type; b=kiOKVWvWp4P/QDin+eGADFP4FkTMWv+G8KNaZAkU+B+pWd2m7/7URM8Z5GZBZBh+h5yjlHkQG+cVOfjmCb/UzB6WZqXyyfBLuxDxE4TWTGQ+LT/IC/8MEaztmvnI2ZrwUJuXn2g7Ulhvhedeh+Y/Myzs/Uwb2Morj87uXpP22zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f6eQZBMY; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VXa2HykD"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-4731f5ffa74so80149f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Jul 2026 07:19:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f6eQZBMY"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-46f88060e8dso123223f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Jul 2026 07:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1783088371; x=1783693171; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1783089257; x=1783694057; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7AtJfCkfnFMyzgye8dfK/HYrK6u/oQ9FNgRgisJiufQ=;
-        b=VXa2HykDu7tPrzRJFgLIlJuq6R9LgUv/0gSGCTICAf+Xvq4sNQ+JJwhgrB47bepXw1
-         TzI+Bhn3ERoBZllGBFTtB0XHQYVsVCqnsyoO0Ntdgux1y2LJlaxmuIsaj19Ty2ma2jvG
-         kMUqQBrPsH7FFUjr7p1j96S+dYep2FWx4hJ8RiviFBz4/xPH2uwCKhYmZc1PEUu9R2ax
-         RougdRAiZVmUoE78yW+N6U4LU3d4atY0z6U0/mD0gLGa30dQtSbbgBufn2wVvg0MiQL9
-         yTfk9YvWxPBu+ryhAS63jrmbWtStA4Q76QO26aaBtqf6BTNqBwAuj8EWRM58FSMzK23A
-         MgbQ==
+        bh=ljMNR3U34F8WApvO4H/nMU/5WQkOXf/5EBBbyLdengA=;
+        b=f6eQZBMYVJSrhNfQiUAI6rQc3xzwrqvOwpVdDOSTjvWcG9esVRQ2vcNSqWAxz9cskA
+         DgkrjqggeH+Gc8SJSFem5hdxCoGOk4/AzoRpEpFWSEMsThbNKsd+9Yp92m++YgMy/dug
+         nSN26yi1mwpmbbQImTf69pm1daxFnY/3cMaJVoQWOwx9I9VkZ6cWKkYtDMIog9+jIeWT
+         eVIh5pxDM+fDbr+/H2dJcy8HR/eTvmcUaulozJNkgDeDyYujvYwnx4mtmNnnMbvYfZaI
+         lE6XA3/HhxWo807A7boSDb9SKy4wBllQiHRBh4isCDzhIvhIJIKBh7FogVzK/dZsnBUE
+         QsPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783088371; x=1783693171;
+        d=1e100.net; s=20251104; t=1783089257; x=1783694057;
         h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=7AtJfCkfnFMyzgye8dfK/HYrK6u/oQ9FNgRgisJiufQ=;
-        b=k9Cd9wp04gNMjG4JyafPp61SP//bx2IFx3gY33AQHcRpGm+xMhSAGDKly4LRiOiEEA
-         l5Om7cjLEvUgoOmihdjBXLQcVAUIrz/8uW9kjf1iHY6VP3fCjuR4EUprcTvBDGRwl9IB
-         TMyOwRTEfRsXGLZLO3wXtzLXGGiazL+P6AqE/nIUiotLSm9Z4aq/EiY4Ke3Xg11G82g3
-         JIfuDrLNrOOfx1fRkdxEXVSiRBtKayz8NMwCydCrc+vtC2sXYesjzl/sYLjQrCaN4R+m
-         LWX3YuR8mYRH3CgrilfGu/17Z3zowYNaUr3PxJ6UFPi1kCa4p/BlOIZi6npjhy9KdCCB
-         q7rg==
-X-Forwarded-Encrypted: i=1; AFNElJ/1YsjDiI6rvu1hhHExe92sOedsizRc14pnWjEKCkB4Mn3x1JRjYoJzIdzNEoPdsytihJYkZ8JSSeCYYk1DmqQqEsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ6PLvDbg/h4IHnQ762RmVHjmElB1dbAdf3VFPdosf9QL6zjMl
-	pZhCGcdhXGKXXOEnBn03LqGp0WaL9QVtwxRshGQgyAWmLinlqkJ8AaIIY0Uz9TAZtIA=
-X-Gm-Gg: AfdE7cmbcrvy8usop/sg9hYZG1tB4qPdw79lsymza4yBzBPuInaXMkE1fVAMg8cnxTP
-	P0yRA0K5nPW6zDzi+kYk9CMCQWg+7kJMZvoK/KB2kGp0Peh8OTHWbq44P+9aF3U0PDs68jCSLsB
-	8wKCXk8UWFxMpLsvVItC/bO9T6RL+ROaY5vX3xKxH58Z0ozfHqnBQpaFeDVAgBpVr4q6OTNNvyG
-	WeR7K1zSBypme9UwxCDTP/PPRqqSEVxfPsgQ+AQh2Vm3lNlVIJNz6PTC8hFORJGEK1mxzoEaAAT
-	8gjy57AUq354nNvMa7Spt/TyjipLIC+KRzf8t377TchoBCeJW3i11kuGnZo6Ik2CGMsBGiS10Nb
-	AoBgzAkQNtef9oe6uP8NiXjzuZ0oGQv7lBSFHFYEtaj5lrgOdCh4dE1q/fIEbHs9jY7ep3O/kIS
-	FRCuyyN2k=
-X-Received: by 2002:a05:600c:3596:b0:493:bda2:8d92 with SMTP id 5b1f17b1804b1-493d0f3dfa7mr471185e9.5.1783088371071;
-        Fri, 03 Jul 2026 07:19:31 -0700 (PDT)
+        bh=ljMNR3U34F8WApvO4H/nMU/5WQkOXf/5EBBbyLdengA=;
+        b=pYRhn8vBTLADxGEirgfbaiSTJdHnFTqnwtrEqKgpsYa/qzMS1MhkVTn7awdfATjDDc
+         5WJgSgRzkBdbqISUepivk1zOHgLwQPL56oghgjW07AM3x8ovd+sUkB85Lo3bZqlC4BR4
+         0NtWUA/kUU4k1iICZw8U/TW+7TxOxlAKLBsJQo1Qum55dGkoaQAAaPsOTy2DCznQzMfM
+         LxBp0XwYyl/FGYz/QJgRUe8ws6P0iWj8z61JWNh8w6zZgVRIQOZO+ueAkn9ClEc1JFgw
+         4wjrpkiFho3jQPFS8vsDpTwPbc9DN7VbN7cokwZJU4KB8RVV6IRNqQGJqUGWtt1q7s9+
+         Sakw==
+X-Forwarded-Encrypted: i=1; AFNElJ+F4INbjUFQfbJLTbEIfyJAurzuigLzRT99al/hI4EL3zraUEn+WNVC2HfheyC4C/LUW8dHxk0+Djt844sdwcmkfI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywX15Lzhuhryy9n87aaNEN+vMzgtfGWAbHLjXDirxIOw2MrBU7
+	HG4CuxrufhGTdInqOWL553aeCQtdtTShkgUWFcFTyZJi6WI73/6HEHpaS04coDAytsE=
+X-Gm-Gg: AfdE7clhFhg61xLIFKItJcJLeDqhcEw/zTVE9fTXNgfhx91s8pZqcJHByGrlnblP6EW
+	naPyh3AvQXmQ6RNnMF1Sg74bj2sYQsIyaZGgDT9mgTuivjYQRyal2NjRhWplwND4h6NxstxMfNx
+	lXRq2LFkD0TtOvxJi+3gcVADarToQdG5TV1hf+lQ0kWLvtjeJUcrQTYs9DrbLsa15LxDYNIGyZ1
+	aSv3hP9w1DhLWgC1jTCKctnywwzO9BUGEiF/untgBLrIznVEMgQ6BVTWlTmL6BCWJTlT2wSiA6X
+	IAsRAmklTlZ9bDbmEnYNzJowSILKw03RYk5MAgtYhrIKmGdlmQU3X4tWAJNIwzOewmlxbPF5q8I
+	ARmKscP6rf+D/j+zKta9Wx7PcmZLcEk4D+0hUwQrYBw3VpOix/WBXYTmcozH/H9/ClTTz1mfH+C
+	uWNx1RxHk=
+X-Received: by 2002:a05:600c:8217:b0:493:bab5:86ee with SMTP id 5b1f17b1804b1-493d0f343fdmr674415e9.4.1783089257091;
+        Fri, 03 Jul 2026 07:34:17 -0700 (PDT)
 Received: from ?IPV6:2001:1a48:8:903::e14? ([2001:1a48:8:903::e14])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493bef23feasm171149305e9.2.2026.07.03.07.19.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c636e9e9sm131864315e9.2.2026.07.03.07.34.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2026 07:19:30 -0700 (PDT)
-Message-ID: <458898c9-cfe6-4be5-ba83-f7961ed84329@suse.com>
-Date: Fri, 3 Jul 2026 16:19:28 +0200
+        Fri, 03 Jul 2026 07:34:16 -0700 (PDT)
+Message-ID: <3c945aa4-5429-4bf4-9c0b-c4745cf6024b@suse.com>
+Date: Fri, 3 Jul 2026 16:34:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,7 +69,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/30] mm: add kdoc comments for vma_start/last_pgoff()
+Subject: Re: [PATCH 03/30] tools/testing/vma: use vma_start_pgoff() in merge
+ tests
 Content-Language: en-US
 To: Lorenzo Stoakes <ljs@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>
@@ -107,9 +108,10 @@ Cc: Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>,
  SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
  Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
  Kees Cook <kees@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org,
+ etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
  linux-tegra@vger.kernel.org, kvm@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org,
  iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
@@ -118,7 +120,7 @@ Cc: Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>,
  Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
  Jann Horn <jannh@google.com>
 References: <cover.1782735110.git.ljs@kernel.org>
- <8c618dfd7de419e3b797b8bd1cd921d4c5b8878b.1782735110.git.ljs@kernel.org>
+ <b501eca378b9d9734e83838102aadc9276590fba.1782735110.git.ljs@kernel.org>
 From: Vlastimil Babka <vbabka@suse.com>
 Autocrypt: addr=vbabka@suse.com; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
@@ -159,67 +161,17 @@ Autocrypt: addr=vbabka@suse.com; keydata=
  vPA/SK8sKoM01IRxSihev/S/5WLazXB1PGemOCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR
  22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLVjXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4
  pYekxJujNeEDkUlky0Y=
-In-Reply-To: <8c618dfd7de419e3b797b8bd1cd921d4c5b8878b.1782735110.git.ljs@kernel.org>
+In-Reply-To: <b501eca378b9d9734e83838102aadc9276590fba.1782735110.git.ljs@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 6/29/26 14:23, Lorenzo Stoakes wrote:
-> Describe what vma_start_pgoff() and vma_last_pgoff() actually provide in
-> detail.
-> 
-> This is in order that we can differentiate this between functions that will
-> be added in a subsequent patch which provide a different page offset.
+> Now we have the vma_start_pgoff() helper, update the merge tests to make
+> use of it for consistency.
 > 
 > No functional change intended.
 > 
 > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
 Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-
-> ---
->  include/linux/mm.h | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 059144435729..2f00c75e66bd 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -4278,11 +4278,37 @@ static inline unsigned long vma_pages(const struct vm_area_struct *vma)
->  	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
->  }
->  
-> +/**
-> + * vma_start_pgoff() - Get the page offset of the start of @vma
-> + * @vma: The VMA whose page offset is required.
-> + *
-> + * If the VMA is file-backed, this is the page offset into the file.
-> + *
-> + * If the VMA is anonymous, this is the virtual page offset of the start of the
-> + * VMA - if unfaulted, then vma->vm_start >> PAGE_SHIFT, if faulted then the
-> + * virtual page offset at the time of first fault.
-> + *
-> + * Note that if @vma is a MAP_PRIVATE file-backed mapping, then this returns the
-> + * file offset.
-> + *
-> + * Returns: The page offset of the start of @vma.
-> + */
->  static inline pgoff_t vma_start_pgoff(const struct vm_area_struct *vma)
->  {
->  	return vma->vm_pgoff;
->  }
->  
-> +/**
-> + * vma_last_pgoff() - Get the page offset of the last page in @vma
-> + * @vma: The VMA whose last page offset is required.
-> + *
-> + * This returns the last page offset contained within @vma.
-> + *
-> + * See the description of vma_start_pgoff() for a description of VMA page
-> + * offsets.
-> + *
-> + * Returns: The last page offset of @vma.
-> + */
->  static inline pgoff_t vma_last_pgoff(const struct vm_area_struct *vma)
->  {
->  	return vma_start_pgoff(vma) + vma_pages(vma) - 1;
 
