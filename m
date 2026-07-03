@@ -1,154 +1,143 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66073D8909
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Jul 2026 13:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F3F3D3338
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Jul 2026 14:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783086072; cv=none; b=IMd1VVWRQA+FpCl+crRsj+KeYe2+spsH0d1VzXIO+OwN6iD8JwzAvOiCzMpZm5WKu5FDsOb2GEPdkNXI9VTa7awLwGLaWpZcL0f2U9DYl4rcPRSws1X/14ZPI1hJ3B73uHNYRls66ICqxxMNDCIv/OMLZuoq9DayQJl4PGpXnB0=
+	t=1783087817; cv=none; b=kIQ+zctii0zJUp2QdIg9lEizEbfZQj7laWs51J5bKO1XuWP8jsru6KyyyRzFvqfdYm3d8z8LnX20OEi/V8m/Zu3aNOMqAPzogXmFKqC1iaA7S/tqs13/Id66xwB+xqEbKRqX4CGpmV5xTswVlXgCIkAbFyQ2oeXPxUig32+d8t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783086072; c=relaxed/simple;
-	bh=he9cX6jEcZEfVujqV1zCzc5qhfJIrA0GiR+K6I2CB/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pp4IRY65q2a++Y5vXQ6ix4VHAUfa4wBrrYym8wVFvIxcof3QC33WNY7SCLOihjXIQ1EfVXlzFKA81R/+LJ0FE34d2IbETRqLA5P4AqBMH2CgInnlAiSXDnbA21Pknme9s8hUK81S9JNEiHpIJqeZj84aRT3CJmCNk2LuLFJg7Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Y733nta0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ChETj1vM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1783087817; c=relaxed/simple;
+	bh=Ikp84dHAZnxM5GlGMhGYT7BrUHq3P73VSigOMViV7M8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L7S5ieODwt2a7yJKLGmapBVuLehxlEYcwMGSdkIKgNmRxiQiAr4s+KQaBthSQXHUr86UIn+XErdLUMZobIZ9yBNGfoecdseXd4Lx91AZjJlZ1czPicpFCd8CnCJdNiyFAjmMRpTNZX77hxN+l+qHXk7XZBeAnEkOFyGqK55WWZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M7cu/g+R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Y733nta0";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ChETj1vM"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 663D16R1053891
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 3 Jul 2026 13:41:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xHoWqgO4GGZQYSbUIkeyWKJxMlWu2YG7NbRNUUTVKQE=; b=Y733nta0Ed05LQVY
-	2nkqryDpPGe+/VmOmPcrRkwvXjCULclXx+fqYVKbKabzriS3Hirs98E9MGk7MNO1
-	vFgAd8eYQUOyya0jdPDfxypWvRYzFNFjNTlQZg0TnrFL2SQOWmELjWWO9SwsKxoy
-	lJRNSJaOs3cz61rv4hM+wZH+Sm2WYGKPvnni2myBg1+iYOxTso3oGas9SmoZEHoU
-	PjFDGWGqr+tJR0Kn2cvQ1T2T+Sp9/aVw4yah+BCAgexcMXV7f9qAR1rGgNj1HTH8
-	03HxutIPCR5Eu56SDm9TsX0GECIE19j4JF7f5H3qtoUQ74nkseCm9bwucqSA/y4b
-	noIL8w==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f6dkkg49w-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Jul 2026 13:41:09 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-8f2747d334dso1572106d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Jul 2026 06:41:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783086069; x=1783690869; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xHoWqgO4GGZQYSbUIkeyWKJxMlWu2YG7NbRNUUTVKQE=;
-        b=ChETj1vMSWEzvf4zhdhElZOhdXRTCNDqn1Plf+xK0msLtf/9KJDJLqhM29lZBaw5fX
-         jjRgntNvPrj0+z5GgPSjjrJoZ2VdLFX1EkQrerJ/9t0jkPsJ8Kso/wq4/xoR/swr4h6V
-         oqyZ3dsmzFSZ3XO7RIJE/MR8J/n+XaeqSlLGKYMumLXdT9NaUbao4IX1vo/n3ZD9OptI
-         j6RjCM0oeSak/1QN3Ja1JykMa4mh2C/mbD62BdTX/E24X76Vy88aBYPxT/7CF1gAppX8
-         2IOQRcutU7i+i/twx9y0kCu6YYh7O3jpoPsp4ifCEq2gsZPccWEOCp7K+4csiPDX86Pu
-         Ai/Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M7cu/g+R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783087814;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vdLv+uitNEfIJhs9BwISrPsnB96UQFIpD1P7PQWVwIs=;
+	b=M7cu/g+RjC9Tq4k3LwLT/u43hXUtAYdf6ru0XcdEnVBgXMLXmRHhMom/3AjcTgzujpROEg
+	ZNqoNbbNSbFY/Qy+h8NKTrl83o5TSAYcpdwU2aCThOKQAYKlmb1qP5cQIG/Bd4STBXh9DA
+	xehxPlD0F/z0FwWzRZnlTRFQQa2SE4E=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-323-Z9kBFKY2NLyStJ8uqMJHcA-1; Fri, 03 Jul 2026 10:10:13 -0400
+X-MC-Unique: Z9kBFKY2NLyStJ8uqMJHcA-1
+X-Mimecast-MFC-AGG-ID: Z9kBFKY2NLyStJ8uqMJHcA_1783087812
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5aeaf9fadb5so409984e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Jul 2026 07:10:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783086069; x=1783690869;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xHoWqgO4GGZQYSbUIkeyWKJxMlWu2YG7NbRNUUTVKQE=;
-        b=suzZTeC+xsHBKHPKsbM1ICIVRCvSrxLNRKeW7KDt9XVWUvNg1sGYOGVmamGDL4+8KE
-         0q6GHBT7nCfZTGLt8lVf+hM2CQx2IjRirUpk8vBrT6ea6cSDM1itWu1Ozfa1imAh6Ybz
-         k3CycDrdqTbOvY5vhWE+yhQWZYDVQGYCVIAX/gppAJQeVgYaBGWoEu86qLhDwgGQMMTx
-         EtzKDNXMzPwMG/IoIyhsyKfBQFJ1jS+MUvOio0/nXvJeYd6npinBKKgLmuUJgqex/aWt
-         WSPYNwCpVp1Fn4ohJhq5Ro1GwmB86odr2hGSrAhVFgTJccZatYyZQuNKkkAEqLNC/fOC
-         dZaQ==
-X-Forwarded-Encrypted: i=1; AHgh+Roo558vmNYw4dsNwJ2QMmHFYibkehse+1piyklmKYUwM0lj2d7gGJX/FA3QSG+o2snYT2CWd+orWhgTpFmdvucLcN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMPnMYG4zyTPwkKfYssfC5nKOMXPY5DdUSTlw9wFARGuTWTAEO
-	A0kugO/yRWcNudVb0R92x86CLg+QcNdRInrLlKWDro3uyxjPVEPDnoahCtaxL5gPVAPQy1FANGf
-	t4OGqaOXBcZezJxUv66+LN277+uys3u+X6aNBprhiY1LXwJ40zTRUV3m5SIgYtqT0gNDQZ8TBlf
-	Y=
-X-Gm-Gg: AfdE7ck1AuEcoT/XgC7jnGdVhrv3x/u56iAaE/NwO/Ycoi4RpojxvPTOkURXFF5PVuh
-	Sng/b4ZVbOVuDspM+dQMa18KmtC5gkTEHwxI9t32GCmj02eq8GipzKvllOMZjR7K8xKKFbBJ+vN
-	H8TytsObs5TEeLXHk0jnalB4h1cpwVuLntLKaDyFy61pZt39huH8FS4Ej96OfLD88Bv7qGx1LMO
-	N9lE8VAVoqH0EMCihTebe3uC8C7kt9bWqjZs/+G2b0ovxVVGQwBgOVFdUAGl6yRFTCJHC2WHyLl
-	YUgvVi2Xq90LhqPJU8KT11QbTIfnqIBpV0q8tPTmsl8a0HGtZWqITiPi9lwKLoTUU45H0k+64xd
-	StnVPo8e+xooJ8gNn6PuCTAMNdqoYRF6vyWQ=
-X-Received: by 2002:a05:6214:83c8:20b0:8e9:f0a5:b9c0 with SMTP id 6a1803df08f44-8f3c6dc6e3fmr73950506d6.3.1783086069077;
-        Fri, 03 Jul 2026 06:41:09 -0700 (PDT)
-X-Received: by 2002:a05:6214:83c8:20b0:8e9:f0a5:b9c0 with SMTP id 6a1803df08f44-8f3c6dc6e3fmr73950186d6.3.1783086068687;
-        Fri, 03 Jul 2026 06:41:08 -0700 (PDT)
-Received: from [192.168.120.193] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-698ad13426fsm2348675a12.26.2026.07.03.06.41.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2026 06:41:07 -0700 (PDT)
-Message-ID: <b43bf30a-be47-418a-8070-4a58a1a8a972@oss.qualcomm.com>
-Date: Fri, 3 Jul 2026 15:41:04 +0200
+        d=1e100.net; s=20251104; t=1783087812; x=1783692612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vdLv+uitNEfIJhs9BwISrPsnB96UQFIpD1P7PQWVwIs=;
+        b=LbxANs630AWfvFyfUABMgf4GHN8FyytIdlfvBzygfd2Nl0zv05OhvBYnDiSnQCHJQ0
+         XkziG94NpNdbUE9eH/yheLIVmsELCU+Vu1Az2RvwEU9t0VnlJFb2DFqAw4kTAtB6Wrx2
+         7VybS3OxcWljS30WEbmLC4psxK6ZEudVrF2DnJQA/kPjvcY6dnl/HJAsSvQE7/PPmveF
+         Mcle/mnYkA4bfKV3hBl78288ZtTvH1YAGMapKNgmTJSvB80yb57Wy/EX5kzvCqElFYs2
+         zaE+NLcGGzgTcDH73DaZMRbjE8XFbvrLx98Ria9ADQkZdkUyFXWx0A42kPQTkcJ1iI+m
+         b8Kw==
+X-Forwarded-Encrypted: i=1; AHgh+Rpm0m5+lP7tUpi0gMr2pgPhJzQuVXXRJ+pMwM5Yz766T0oZBSh6t7+IEEr1Uv/ex65I5y+JOAd1XPYk6mBKOWK2CkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpIKuFcGR4cV8GV4uxPwmEFF7gOalSWCiejd6u+0VsgTyE3UK5
+	Oru9nroU2X9wyirCPoROO1bznCvL5g1OPVEBoJN9KIb//OcF0LAeNH/WcNgcQuHfAF97RhMp+pO
+	8PI/oJbP8uFdYGYEcluS5+utoNYWZ9BMtfjvAOXdF7VrBGWK6TbeZdxzj/9jZbfKZlkYukREsNl
+	Il/ZyIRqy8zFnz9Y6ufqEdwSAc6y/ztTmckxtNOx+1y8bjA57a
+X-Gm-Gg: AfdE7clpsb3dngb3TUtWIzvX6tM0yoOmVo8fDuge1Slu4gQTLuecssUhq8nb5RNU8be
+	7O8ot++wZ/E+dVtdwAQa8CdnJSegdqIrnw4c/M1awbQZ6XtWOVsfMElOFWCM74P9RN36ej9uJoZ
+	/mZF9sM6fx8V+//4J4HXyyp+GIhiWQiJCtXR3u282a++NIYXh9uSZxtLq9RpH3hoytyFsIMP3lz
+	VsH34tbQyjILoRsBpupXdx9lA==
+X-Received: by 2002:a05:6512:22d8:b0:5ae:c099:a92 with SMTP id 2adb3069b0e04-5aec68b7ea8mr1846707e87.42.1783087811895;
+        Fri, 03 Jul 2026 07:10:11 -0700 (PDT)
+X-Received: by 2002:a05:6512:22d8:b0:5ae:c099:a92 with SMTP id
+ 2adb3069b0e04-5aec68b7ea8mr1846699e87.42.1783087811357; Fri, 03 Jul 2026
+ 07:10:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] i2c: qcom-geni: Add trace events for Qualcomm GENI
- I2C driver
-To: Praveen Talari <praveen.talari@oss.qualcomm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
-        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
-        Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com
-References: <20260630-add-tracepoints-for-qcom-geni-i2c-v1-0-474cd6cdbe27@oss.qualcomm.com>
- <20260630-add-tracepoints-for-qcom-geni-i2c-v1-2-474cd6cdbe27@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260630-add-tracepoints-for-qcom-geni-i2c-v1-2-474cd6cdbe27@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAzMDEzMyBTYWx0ZWRfX5jyn2I/UBh3N
- pe3ZTb1iODZndraJp9CYhMMXe9Vl5Zn1PJ3rlWoovR/e/HipjSqH0oAFCq+qEsC/63UKmgkOh6a
- PnlOTU7YjqUiG8Chym1AcdF3pcRdDrbghpi6AVWIm6mhWKaXNgANjQJFomJlWj03oErHl+4HtBD
- H102ldXHsZinm5HHbzOyHk0N3gbp7wNRGMkq2ny4QJvcGlpfiGpl+fobzPLJF5oVLBb4XiGjfmh
- KNs5tGR6X7dRqch2k4hCwwZQneHhKNlUaPjvJyy9F6Ir7SzdeuMDzFTGJVVo8PYiD4V1lTneTGd
- wSAIIUW2GGBtW6O1SsFhg8pCD/dz3LpvqTlF/PIQUQCg6FRHSvMghd6Qc2qJFub035FE+IVsZv7
- +glQoawdGxDYoJ5VIyLgtVubFf9zRyNIq53YHGgfcNjX53XO/YxNNiujVZkg2uzfNWlFS52m0iB
- avqLc8+1+5kSELA3pmw==
-X-Authority-Analysis: v=2.4 cv=LeUMLDfi c=1 sm=1 tr=0 ts=6a47bbf5 cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
- a=EUspDBNiAAAA:8 a=od6cqOq-T75QGo3hM78A:9 a=QEXdDO2ut3YA:10
- a=OIgjcC2v60KrkQgK7BGD:22
-X-Proofpoint-ORIG-GUID: E64Lwjys0J8RIXt1lA_Col8ux9-vr2pS
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAzMDEzMyBTYWx0ZWRfX98I3L1HC2lWy
- N2ZI/qr/8ytoEoeljum9uz9xcUK6yhCTY8e6mV5tNKb38cWPURuCFIHKAxvLJs8g25QFSgDimFa
- gAmZEFWSwrMS5D//KpSFSEFsUhreMxc=
-X-Proofpoint-GUID: E64Lwjys0J8RIXt1lA_Col8ux9-vr2pS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-03_02,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607030133
+References: <20260612115121.54862-1-tglozar@redhat.com> <725da8a4ca6a46ea8ba41778971602b49d650e60.camel@redhat.com>
+ <CAP4=nvRMAZ6AJ_WQPVM2sm9jH++4RwN8DhodU7oL6-AcXNg8OA@mail.gmail.com>
+In-Reply-To: <CAP4=nvRMAZ6AJ_WQPVM2sm9jH++4RwN8DhodU7oL6-AcXNg8OA@mail.gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 3 Jul 2026 16:09:59 +0200
+X-Gm-Features: AVVi8Cf0Wjr_sdPxDoWRMx_bbnbZjyuoeK35GoDbfQ1sCxQxq9EZqfrL-f_Q518
+Message-ID: <CAP4=nvQUJY7zdcV79N_W014unSRfNizhimnmT9DoXrFVheqKww@mail.gmail.com>
+Subject: Re: [PATCH] rtla: Simplify osnoise tracer option setting code
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: -igwR8E6DFbH0u_ez4_hghhouGL3MrKwjAVdinMGLh4_1783087812
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/30/26 8:02 AM, Praveen Talari wrote:
-> Add trace event definitions for the Qualcomm GENI (Generic Interface)
-> I2C driver. These trace events enable runtime debugging and performance
-> analysis of I2C operations.
-> 
-> The trace events capture I2C clock configuration, interrupt status and
-> error code and message.
-> 
-> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
-> ---
+p=C3=A1 3. 7. 2026 v 14:11 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.com=
+> napsal:
+>
+> p=C3=A1 12. 6. 2026 v 19:55 Crystal Wood <crwood@redhat.com> napsala:
+>
+> > > OSNOISE_LL_OPTIONS takes three options: name - struct osnoise_context
+> > > field name (written "<opt>" above), path - filename inside
+> > > /sys/kernel/tracing/osnoise passed to libtracefs, and init_val - init=
+ial
+> > > value of struct fields, corresponding to an otherwise invalid option
+> > > (some options use OSNOISE_OPTION_INIT_VAL =3D -1, some use
+> > > OSNOISE_TIME_INIT_VAL =3D 0).
+> >
+> > Can we simplify by always using -1?  Especially since that's already
+> > treated as the universal "invalid" by osnoise_read_ll_config().
+> >
+> > FWIW using "init val" to mean "invalid" rather than "default" is a bit
+> > unintuitive.
+> >
+>
+> The idea behind *_INIT_VAL is to re-use a value that is invalid on the
+> osnoise tracer side to mean "not (read from tracer and) set yet (on
+> the RTLA side)". OSNOISE_TIME_INIT_VAL is used for values where 0 is
+> invalid (e.g. period, runtime), OSNOISE_OPTION_INIT_VAL is used for
+> those where 0 is valid. I believe the distinction comes from the fact
+> that some of the osnoise options are unsigned on the kernel side, and
+> -1 (=3D 18446744073709551615) is actually a valid value there. E.g.:
+>
+> [root@cs9 osnoise]# cat period_us
+> 1000000
+> [root@cs9 osnoise]# echo 18446744073709551615 > period_us
+> [root@cs9 osnoise]# cat period_us
+> 18446744073709551615
+>
+> There are values where both 0 and -1 are valid (stop_tracing_us,
+> stop_tracing_total_us, timerlat_align_us), and they use
+> OSNOISE_OPTION_INIT_VAL. Those cannot use OSNOISE_TIME_INIT_VAL as 0
+> is a meaningful and common value for them (disabled for
+> stop_us/stop_total_us, zero alignment for timerlat_align_us). Those
+> will break if pre-set to 18446744073709551615.
+>
+> Merging OSNOISE_OPTION_INIT_VAL and OSNOISE_TIME_INIT_VAL would
+> introduce this breakage to options that are using
+> OSNOISE_TIME_INIT_VAL now. IMHO the cleanest solution is dropping the
+> entire complex logic around checking if the value was read from the
+> kernel already, as there is no user: RTLA always saves the value once,
+> then restores it at the end.
+>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Ah sorry, I missed that we use get_llong_from_str() for everything,
+which already treats all values as (signed) long long, despite period
+and runtime ("OSNOISE_OPTION_INIT_VAL" options) being declared
+unsigned. We can just drop the INIT_VALs then and just use -1.
 
-Konrad
+Tomas
+
