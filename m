@@ -1,332 +1,338 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726C5246762;
-	Sat,  4 Jul 2026 14:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D96F318AE3;
+	Sat,  4 Jul 2026 23:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783176456; cv=none; b=PpHIfsyzWdiJy187mOh0Sta8kRxEI3DeqEzxNIExbPyXr4Wf673allBal8lNdqvFZld4yblYGByaGjUuZESfBiiiC1fgKP+vs6bwQW7CP9FR+BFoLqmy2cfQRU7SqiR7NHX1aQWde3bFVgjO0rGM4mnDI0ztqoSolOjlEWpT5mI=
+	t=1783208331; cv=none; b=KwkGit/dZ9nnOQlElHc6LF5fEELFI5IfNCkkxg8mVYfuBg3y1AJ0RaBO3Wu8FSjNJKoaP+PhKG1E3ZCHqeTYe87zp3DDacygmFtziMk7HO/7ujawgU3ZntOolGs+LmNe1Tk9DZp6jy9DLKf3LtqRPzFmAlBWgRyOdfY1C+i1Lcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783176456; c=relaxed/simple;
-	bh=oLmHVmiiz3zbJeL3anHiboUy/615QuDnTKNatkZtSY4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WrX7TZ+Xk320UE7gCEfNQrRptS0OmiO0CExSySrQG3Bh0InVhjKVZ0Eg/5I6e6oxKTVv6o8o36DDZVaEgMbP0xRaJQKhYXWzxDdk04M/Mp4lbKUYTfZuO5o8gOTlfwvQik90TZQve1rjWOJdOjBV3QRyppyn2obyk4joLyFD1nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSEc6BT+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783208331; c=relaxed/simple;
+	bh=s8K7gocsWH9rX7pANzHxIK07Z+WF9Hm5c4sGgOuC5gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SdbLNCgHHIS/xth6JOrJmzbBUAyhNGz0JvhyeaSX+ko+fpD/rL6lOiIsGYdNelWCKXgTNzHEgvoU4+meQoPqG2+58ezB+bB99wuFU2aWEvJMVcMKAJf78cHU12/OW/8g45ZU2QETLBXVV1OygWGxXifsUOEaRSWorv5D0/29jhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=CQASIfnk; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSEc6BT+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7528D1F00A3A;
-	Sat,  4 Jul 2026 14:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783176455;
-	bh=+I/WnwI4brAJvUkUNNsBltfUHLQpGgvBdsLqClF3mvw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=JSEc6BT+xL6E8Q99P5Q6yjxXDxYvDwWcaNXBcOFslW7noYfOhYBks8SmBnXmfXrHn
-	 TZghAGS1TUi5SWfPm5iLDbXobb6PzSNr0JdKge7G7Fy7vmOlGK65cVzAFHhWWT4tRx
-	 gEk7znUn1DxFqJ07XFrTdr87z2IU/jdyBY9+Kdyml096qOJgBtqPx7lz2uQO+IRwx+
-	 5vgycX+066RKhrkdV/gqufFvixBSXPQ76j3Lk7muQAIaQPz47sBI5trcxTieU2pOAy
-	 hvFyOnnSJHFIHh9SrSGXv9y1wdDyBo3bTml5NdZ725MJnzBcbRJMSjS3EjTAQ1VuD1
-	 3CPO4aHN2hT6w==
-Date: Sat, 4 Jul 2026 23:47:30 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Pu Hu <hupu@transsion.com>
-Cc: "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
- <will@kernel.org>, "naveen@kernel.org" <naveen@kernel.org>,
- "davem@davemloft.net" <davem@davemloft.net>, "yang@os.amperecomputing.com"
- <yang@os.amperecomputing.com>, Hongyan Xia <hongyan.xia@transsion.com>,
- Jiazi Li <jiazi.li@transsion.com>, "ada.coupriediaz@arm.com"
- <ada.coupriediaz@arm.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [RFC 0/2] arm64: kprobes: Fix single-step fault and reentry
- handling
-Message-Id: <20260704234730.46d51c47d75e7d208e7bec9f@kernel.org>
-In-Reply-To: <89c389ad-7e80-463b-9c1a-31a2e7dae814@transsion.com>
-References: <20260701121448.3926-1-hupu@transsion.com>
-	<20260701224345.c3a215ece3660a0cbae67645@kernel.org>
-	<ec11e9ca-ae7c-49c3-ae7b-47a70e9f86af@transsion.com>
-	<a6504443-8708-4f6b-819f-2052615d37df@transsion.com>
-	<89c389ad-7e80-463b-9c1a-31a2e7dae814@transsion.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="CQASIfnk"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 764091A9A;
+	Sat,  4 Jul 2026 16:38:35 -0700 (PDT)
+Received: from [10.57.39.250] (unknown [10.57.39.250])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B68F3F85F;
+	Sat,  4 Jul 2026 16:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783208319; bh=s8K7gocsWH9rX7pANzHxIK07Z+WF9Hm5c4sGgOuC5gs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CQASIfnktKJ+nJBsa+sb+UUp/whO7qPhCX8lvNLWNHjZbzL0OZNmp18ACbtwf78sq
+	 5BQyc2Gvo4iMWs88e7iwAVmUzNwMDDnMKDS5JXpoQMiHp1m54keQESKtrPapIShSsS
+	 Y/fCh+eY83Tx1TDwgjWsfX8tgU4pzalslz35LonA=
+Message-ID: <114e2488-97ed-4740-a8e8-1edd991f26c5@arm.com>
+Date: Sun, 5 Jul 2026 00:38:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 13/46] KVM: guest_memfd: Add base support for
+ KVM_SET_MEMORY_ATTRIBUTES2
+Content-Language: en-GB
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, aneesh.kumar@kernel.org,
+ liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-13-9d2959357853@google.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20260618-gmem-inplace-conversion-v8-13-9d2959357853@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Pu Hu,
+Hi
 
-Can you update this by rebasing on top of arm64 tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git)
-and update your signed-off-by with your name.
-
-Thank you,
-
-On Thu, 2 Jul 2026 10:09:51 +0000
-Pu Hu <hupu@transsion.com> wrote:
-
-> On 7/2/2026 6:07 PM, hupu wrote:
-> > On 7/1/2026 9:56 PM, Pu Hu wrote:
-> >> On 7/1/2026 9:43 PM, Masami Hiramatsu wrote:
-> >>> On Wed, 1 Jul 2026 12:14:54 +0000
-> >>> Pu Hu <hupu@transsion.com> wrote:
-> >>>
-> >>>> From: hupu <hupu@transsion.com>
-> >>>>
-> ...
-> ...>
-> > I will send the complete test case in a follow-up email.
-> > 
-> > Thanks,
-> > hupu
-> > 
+On 19/06/2026 01:31, Ackerley Tng via B4 Relay wrote:
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
-> Hi maintainers,
+> Introduce base support for KVM_SET_MEMORY_ATTRIBUTES2 in guest_memfd, which
+> just updates attributes tracked by guest_memfd.
 > 
-> As mentioned in my previous email, below is the complete test case I 
-> used to reproduce the arm64 kprobe crash on mainline.
+> Validate input fields in general. Guard usage of KVM_SET_MEMORY_ATTRIBUTES2
+> by making sure requested attributes are supported for this instance of kvm.
 > 
-> It contains:
+> A new KVM_SET_MEMORY_ATTRIBUTES2 is defined to support writes (unlike
+> KVM_SET_MEMORY_ATTRIBUTES) in addition to reads so it can provide error
+> details to userspace. This will be used in a later patch.
 > 
->    - a small kprobe module that probes folio_wait_bit_common()
->    - a userspace program that repeatedly triggers file-backed page faults
->    - a Makefile to build both parts
+> The two ioctls use their corresponding structs with no overlap, but
+> backward compatibility is baked in for future support of
+> KVM_SET_MEMORY_ATTRIBUTES2 and struct kvm_memory_attributes2 in the VM
+> ioctl.
 > 
-> Depending on the local build environment, the following variables in the
-> Makefile may need to be adjusted:
+> The process of setting memory attributes is set up such that the later half
+> will not fail due to allocation. Any necessary checks are performed before
+> the point of no return.
 > 
->      CROSS_COMPILE
->      KERN_DIR
->      DEST_PATH
-> 
-> Thanks,
-> Pu Hu
-> 
+> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
+> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+> Co-developed-by: Sean Christoperson <seanjc@google.com>
+> Signed-off-by: Sean Christoperson <seanjc@google.com>
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
-> 
-> 
-> diff --git a/misc/kprobe/Makefile b/misc/kprobe/Makefile
-> new file mode 100755
-> index 0000000..14c00c0
-> --- /dev/null
-> +++ b/misc/kprobe/Makefile
-> @@ -0,0 +1,36 @@
-> +PWD                            := $(shell pwd)
-> +ARCH                   ?= arm64
-> +CROSS_COMPILE  ?= aarch64-dumpstack-linux-gnu-
-> +KERN_DIR               ?= $(PWD)/../../output/build-mainline
-> +DEST_PATH              ?= $(PWD)/../../output
-> +Q                              := @
-> +
-> +UNIT_TEST              := fault_stress
-> +UNIT_TEST_SRC  := fault_stress.c
-> +
-> +KP_MOD                 := kp_folio
-> +obj-m                  := $(KP_MOD).o
-> +
-> +USER_CFLAGS            := -static -g -O0 -fno-omit-frame-pointer 
-> -fasynchronous-unwind-tables
-> +USER_LIBS              := -lm -lpthread
-> +EXTRA_CFLAGS   += -I$(KERN_DIR)
-> +
-> +.PHONY: all modules user clean
-> +
-> +all: modules user install
-> +
-> +modules:
-> +       $(Q)$(MAKE) -C $(KERN_DIR) M=$(PWD) 
-> EXTRA_CFLAGS="$(EXTRA_CFLAGS)" ARCH=$(ARCH) 
-> CROSS_COMPILE=$(CROSS_COMPILE) modules
-> +
-> +user:
-> +       $(Q)$(CROSS_COMPILE)gcc $(USER_CFLAGS) $(UNIT_TEST_SRC) -o 
-> $(UNIT_TEST) $(USER_LIBS)
-> +
-> +install:
-> +       $(Q)mkdir -p $(DEST_PATH)
-> +       $(Q)cp -f *.ko $(DEST_PATH)/
-> +       $(Q)cp -f $(UNIT_TEST) $(DEST_PATH)/
-> +
-> +clean:
-> +       $(Q)$(MAKE) -C $(KERN_DIR) M=$(PWD) clean
-> +       $(Q)rm -f $(UNIT_TEST)
-> +       $(Q)rm -f $(DEST_PATH)/$(UNIT_TEST) $(DEST_PATH)/*.ko
-> diff --git a/misc/kprobe/fault_stress.c b/misc/kprobe/fault_stress.c
-> new file mode 100755
-> index 0000000..10150ff
-> --- /dev/null
-> +++ b/misc/kprobe/fault_stress.c
-> @@ -0,0 +1,96 @@
-> +#define _GNU_SOURCE
-> +#include <fcntl.h>
-> +#include <pthread.h>
-> +#include <sched.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/mman.h>
-> +#include <sys/stat.h>
-> +#include <sys/types.h>
-> +#include <unistd.h>
-> +
-> +#define FILE_SIZE   (256UL * 1024 * 1024)
-> +#define NR_THREADS  8
-> +
-> +static void deep_call(int n)
-> +{
-> +       volatile char buf[4096];
-> +
-> +       memset((void *)buf, n, sizeof(buf));
-> +
-> +       if (n > 0)
-> +               deep_call(n - 1);
-> +       else
-> +               sched_yield();
-> +}
-> +
-> +static void *worker(void *arg)
-> +{
-> +       const char *path = arg;
-> +       int fd;
-> +       char *map;
-> +       unsigned long i;
-> +       volatile unsigned long sum = 0;
-> +
-> +       fd = open(path, O_RDONLY);
-> +       if (fd < 0) {
-> +               perror("open");
-> +               return NULL;
-> +       }
-> +
-> +       map = mmap(NULL, FILE_SIZE, PROT_READ, MAP_PRIVATE, fd, 0);
-> +       if (map == MAP_FAILED) {
-> +               perror("mmap");
-> +               close(fd);
-> +               return NULL;
-> +       }
-> +
-> +       for (;;) {
-> +               /*
-> +                * Drop the pages backing this mapping from the current 
-> process.
-> +                * Subsequent accesses are more likely to trigger 
-> file-backed
-> +                * page faults again.
-> +                */
-> +               madvise(map, FILE_SIZE, MADV_DONTNEED);
-> +
-> +               for (i = 0; i < FILE_SIZE; i += 4096 * 17) {
-> +                       sum += map[i];
-> +                       deep_call(64);
-> +               }
-> +       }
-> +
-> +       munmap(map, FILE_SIZE);
-> +       close(fd);
-> +       return NULL;
-> +}
-> +
-> +int main(void)
-> +{
-> +       pthread_t th[NR_THREADS];
-> +       const char *path = "/tmp/fault_stress_file";
-> +       int fd;
-> +       int i;
-> +
-> +       fd = open(path, O_CREAT | O_RDWR, 0644);
-> +       if (fd < 0) {
-> +               perror("open file");
-> +               return 1;
-> +       }
-> +
-> +       if (ftruncate(fd, FILE_SIZE) < 0) {
-> +               perror("ftruncate");
-> +               return 1;
-> +       }
-> +
-> +       close(fd);
-> +
-> +       for (i = 0; i < NR_THREADS; i++)
-> +               pthread_create(&th[i], NULL, worker, (void *)path);
-> +
-> +       for (i = 0; i < NR_THREADS; i++)
-> +               pthread_join(th[i], NULL);
-> +
-> +       return 0;
-> +}
-> +
-> diff --git a/misc/kprobe/kp_folio.c b/misc/kprobe/kp_folio.c
-> new file mode 100755
-> index 0000000..c8f3e1d
-> --- /dev/null
-> +++ b/misc/kprobe/kp_folio.c
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kprobes.h>
-> +#include <linux/sched.h>
-> +#include <linux/atomic.h>
-> +#include <linux/ratelimit.h>
-> +
-> +static atomic64_t kp_hit_count = ATOMIC64_INIT(0);
-> +
-> +static int folio_wait_bit_common_handler(
-> +                       struct kprobe *p,^M
-> +                       struct pt_regs *regs)
-> +{
-> +       unsigned long hit;
-> +
-> +       hit = atomic64_inc_return(&kp_hit_count);
-> +
-> +       pr_info("kp_folio: hit=%lu comm=%s tgid=%d tid=%d\n",
-> +               hit, current->comm, current->tgid, current->pid);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct kprobe kp_folio_wait_bit_common = {
-> +       .symbol_name = "folio_wait_bit_common",
-> +       .pre_handler = folio_wait_bit_common_handler,
-> +};
-> +
-> +static int __init kp_folio_init(void)
-> +{
-> +       int ret;
-> +
-> +       ret = register_kprobe(&kp_folio_wait_bit_common);
-> +       if (ret < 0) {
-> +               pr_err("kp_folio: register_kprobe failed, ret=%d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       pr_info("kp_folio: kprobe registered at %pS, addr=%px\n",
-> +               kp_folio_wait_bit_common.addr,
-> +               kp_folio_wait_bit_common.addr);
-> +
-> +       return 0;
-> +}
-> +
-> +static void __exit kp_folio_exit(void)
-> +{
-> +       unregister_kprobe(&kp_folio_wait_bit_common);
-> +
-> +       pr_info("kp_folio: kprobe unregistered, total hits=%lld\n",
-> +               atomic64_read(&kp_hit_count));
-> +}
-> +
-> +module_init(kp_folio_init);
-> +module_exit(kp_folio_exit);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("hupu <hupu@transsion.com>");
-> +MODULE_DESCRIPTION("simple kprobe reproducer for folio_wait_bit_common");
-> 
-> 
+
+...
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index 65ce795c090d9..0d14548c1ed22 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -541,11 +541,127 @@ bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn)
+
+...
+
+> +static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
+> +				     size_t nr_pages, uint64_t attrs)
+> +{
+> +	struct address_space *mapping = inode->i_mapping;
+> +	struct gmem_inode *gi = GMEM_I(inode);
+> +	pgoff_t end = start + nr_pages;
+> +	struct maple_tree *mt;
+> +	struct ma_state mas;
+> +	int r;
+> +
+> +	mt = &gi->attributes;
+> +
+> +	filemap_invalidate_lock(mapping);
+> +
+> +	mas_init(&mas, mt, start);
+> +	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
+> +	if (r)
+> +		goto out;
+> +
+> +	/*
+> +	 * From this point on guest_memfd has performed necessary
+> +	 * checks and can proceed to do guest-breaking changes.
+> +	 */
+> +
+> +	kvm_gmem_invalidate_start(inode, start, end);
+
+I added support for Arm CCA KVM patches with the inplace conversion and
+I am hitting the following issue.
+
+1. I am supporting INIT_SHARED + MMAP flags.
+2. VMM creates the Gmem_fd with both the flags above.
+3. Uses the shared gmem-mmap to load the initial payloads (kernel, dtb).
+4. At the VM finalization time, Populate the loaded regions one by one
+    by
+     a) copying the images to a temparory buffer - Since CCA can't really
+        load the contents in-place.
+     b) Set the "region" to Private in the gmem_fd (via 
+SET_MEMORY_ATTRIBUTES2)
+     c) Invoke CCA backend to populate the private memory via
+        ioctl(KVM_ARM_RMI_POPULATE,..) [0]
+
+[0] 
+https://lore.kernel.org/all/20260513131757.116630-27-steven.price@arm.com/
+
+
+5. Additionally, VMM can mark the entire RAM to be private before the VM
+    starts running, again via SET_MEMORY_ATTRIBUTES2. On CCA, this 
+action is measured and doesn't require the Host to "commit" memory to 
+the VM.
+Instead the host can lazily donate memory on a fault.
+
+But step (5) triggers the invalidation of both private and shared
+mappings of the gmem area, from the kvm_gmem_invalidate_start()
+above.
+
+This is because, the entire DRAM now has, some portions PRIVATE (the 
+loaded regions) and the rest are SHARED (from the Gmem_fd creation).
+  Thus, kvm_gmem_get_invalidate_filter(Dram_start, Dram_end) causes the 
+invalidation of both "PRIVATE" and "SHARED" regions, which results
+in the destruction of the already loaded data and things go south.
+
+When we know that the kvm_gmem_invalidate_xx is triggered by a 
+conversion, we don't need to invalidate the existing pages that
+are in the requested state. i.e., the following patch on top of
+this series does the trick for me :
+
+
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index a97fcac34a0e..62e0427a49f4 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -250,16 +250,23 @@ static void __kvm_gmem_invalidate_start(struct 
+gmem_file *f, pgoff_t start,
+                 KVM_MMU_UNLOCK(kvm);
+  }
+
++static void kvm_gmem_invalidate_start_filter(struct inode *inode, 
+pgoff_t start,
++                                            pgoff_t end,
++                                            enum kvm_gfn_range_filter 
+attr_filter)
++{
++       struct gmem_file *f;
++
++       kvm_gmem_for_each_file(f, inode)
++               __kvm_gmem_invalidate_start(f, start, end, attr_filter);
++}
++
+  static void kvm_gmem_invalidate_start(struct inode *inode, pgoff_t start,
+                                       pgoff_t end)
+  {
+         enum kvm_gfn_range_filter attr_filter;
+-       struct gmem_file *f;
+-
+         attr_filter = kvm_gmem_get_invalidate_filter(inode, start, end);
+
+-       kvm_gmem_for_each_file(f, inode)
+-               __kvm_gmem_invalidate_start(f, start, end, attr_filter);
++       kvm_gmem_invalidate_start_filter(inode, start, end, attr_filter);
+  }
+
+  static void __kvm_gmem_invalidate_end(struct gmem_file *f, pgoff_t start,
+@@ -724,9 +731,14 @@ static int __kvm_gmem_set_attributes(struct inode 
+*inode, pgoff_t start,
+         /*
+          * From this point on guest_memfd has performed necessary
+          * checks and can proceed to do guest-breaking changes.
++        * Also, we don't have to invalidate the regions that
++        * may already be in the requested state. Hence, we could
++        * explicitly filter the invalidations to the opposite
++        * state.
+          */
+
+-       kvm_gmem_invalidate_start(inode, start, end);
++       kvm_gmem_invalidate_start_filter(inode, start, end,
++                                       to_private ? KVM_FILTER_SHARED : 
+KVM_FILTER_PRIVATE);
+
+         if (!to_private)
+                 kvm_gmem_invalidate(inode, start, end);
+
+
+Thoughts ?
+
+Suzuki
+
+
+> +	mas_store_prealloc(&mas, xa_mk_value(attrs));
+> +	kvm_gmem_invalidate_end(inode, start, end);
+> +out:
+> +	filemap_invalidate_unlock(mapping);
+> +	return r;
+> +}
+> +
+> +static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
+> +{
+> +	struct gmem_file *f = file->private_data;
+> +	struct inode *inode = file_inode(file);
+> +	struct kvm_memory_attributes2 attrs;
+> +	size_t nr_pages;
+> +	pgoff_t index;
+> +	int i;
+> +
+> +	if (copy_from_user(&attrs, argp, sizeof(attrs)))
+> +		return -EFAULT;
+> +
+> +	if (attrs.flags)
+> +		return -EINVAL;
+> +	for (i = 0; i < ARRAY_SIZE(attrs.reserved); i++) {
+> +		if (attrs.reserved[i])
+> +			return -EINVAL;
+> +	}
+> +	if (!kvm_arch_has_private_mem(f->kvm))
+> +		return -EINVAL;
+> +	if (attrs.attributes & ~KVM_MEMORY_ATTRIBUTE_PRIVATE)
+> +		return -EINVAL;
+> +	if (attrs.size == 0 || attrs.offset + attrs.size < attrs.offset)
+> +		return -EINVAL;
+> +	if (!PAGE_ALIGNED(attrs.offset) || !PAGE_ALIGNED(attrs.size))
+> +		return -EINVAL;
+> +
+> +	if (attrs.offset >= i_size_read(inode) ||
+> +	    attrs.offset + attrs.size > i_size_read(inode))
+> +		return -EINVAL;
+> +
+> +	nr_pages = attrs.size >> PAGE_SHIFT;
+> +	index = attrs.offset >> PAGE_SHIFT;
+> +	return __kvm_gmem_set_attributes(inode, index, nr_pages,
+> +					 attrs.attributes);
+> +}
+> +
+> +static long kvm_gmem_ioctl(struct file *file, unsigned int ioctl,
+> +			   unsigned long arg)
+> +{
+> +	switch (ioctl) {
+> +	case KVM_SET_MEMORY_ATTRIBUTES2:
+> +		if (!gmem_in_place_conversion)
+> +			return -ENOTTY;
+> +
+> +		return kvm_gmem_set_attributes(file, (void __user *)arg);
+> +	default:
+> +		return -ENOTTY;
+> +	}
+> +}
+> +
+>   static struct file_operations kvm_gmem_fops = {
+>   	.mmap		= kvm_gmem_mmap,
+>   	.open		= generic_file_open,
+>   	.release	= kvm_gmem_release,
+>   	.fallocate	= kvm_gmem_fallocate,
+> +	.unlocked_ioctl	= kvm_gmem_ioctl,
+>   };
+>   
+>   static int kvm_gmem_migrate_folio(struct address_space *mapping,
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 01761f6e25d25..a08b518cdb175 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -105,6 +105,18 @@ module_param(allow_unsafe_mappings, bool, 0444);
+>   bool __ro_after_init gmem_in_place_conversion = false;
+>   #endif
+>   
+> +#define MEMORY_ATTRIBUTES_MATCH(one, two)				\
+> +	static_assert(offsetof(struct kvm_memory_attributes, one) ==	\
+> +		      offsetof(struct kvm_memory_attributes2, two));	\
+> +	static_assert(sizeof_field(struct kvm_memory_attributes, one) ==\
+> +		      sizeof_field(struct kvm_memory_attributes2, two))
+> +
+> +/* Ensure the common parts of the two structs are identical. */
+> +MEMORY_ATTRIBUTES_MATCH(address, address);
+> +MEMORY_ATTRIBUTES_MATCH(size, size);
+> +MEMORY_ATTRIBUTES_MATCH(attributes, attributes);
+> +MEMORY_ATTRIBUTES_MATCH(flags, flags);
+> +
+>   /*
+>    * Ordering of locks:
+>    *
+> 
+
