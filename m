@@ -1,31 +1,28 @@
 Received: from mout-y-111.mailbox.org (mout-y-111.mailbox.org [91.198.250.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C853E38E129;
-	Mon,  6 Jul 2026 07:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C869F3E00A1;
+	Mon,  6 Jul 2026 07:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.250.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783324654; cv=none; b=s9SVyE/IayultPC5/djtp2CGZr6B+eWfhypUvT8bC1tNpy+aY9qpMcaTxXYKEr75jLBLk4e8FaJ0l7tpXqxXO9Z9MLVDMnSHyi6SPcrPNGSvXLQ8IujDsfxr4eVThgcZGcnmH8xtWu4nEL6MazSHRnPE3WkSbB8PpEhSA4bIpVg=
+	t=1783324654; cv=none; b=i9/uqDjApAJutTddy0hixnEIBoFL7UasKmmmQ1I0PE+Bp9wXjMfALqwbhcRGSxmsZXXTdJhcwSxy7FeF4TvR5zHkZha4HbF5sSSOvG+ja61m4gWaoTtlBMjbUkrMV1ZqLejG0O0mpNv4ZLp+MOq6jbOL7oee7m1ugR/1NjAmu7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783324654; c=relaxed/simple;
-	bh=qHwnbzvpK9wYBzbeGmnuCtzzLwF8aY1zM3ldVu/OfqE=;
+	bh=uO0yuH0cgFlwuh+60ouE/XunglpmQTZB7vngb53hITQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BmXXgyRwGAJSe+XLhvRfdHSvmKOPBt7B0aRtRImXMZG+K4k2/KlUFjTSpB5C4OKM/2x2aNm9SxKCWTOnDbwn7SNh6HWTa2eSFULOtKFfsypbdmhE7C3qqXAG6V/HvntO+40GWbxNdwtfLe55M8Dx90KK69/FGC6+P6MhXKA5cj0=
+	 In-Reply-To:To:Cc; b=nwO2X2C1S+YFVHVSU3uP52haF3szEMgb3wYy8wy5ek+sT75QAC4LoH7rqcsTmx76x+F5LoOQAYUDh8m6tE4g7LrVS89yUyMZPjQ0dkC6zoJz3yyn27T7Tdn6iTE7Z1tqAT6SDnmquunXGK2bvDcwOJRhN73ECnu15A9SGxNpGZI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev; spf=pass smtp.mailfrom=mavick.dev; arc=none smtp.client-ip=91.198.250.236
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mavick.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
 	(No client certificate requested)
-	by mout-y-111.mailbox.org (Postfix) with ESMTPS id 4gt66N5P5szMldj;
-	Sun, 05 Jul 2026 01:20:12 +0200 (CEST)
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of m@mavick.dev designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=m@mavick.dev
+	by mout-y-111.mailbox.org (Postfix) with ESMTPS id 4gt66q2QHkzMlf3;
+	Sun, 05 Jul 2026 01:20:35 +0200 (CEST)
 From: Eugene Mavick <m@mavick.dev>
-Date: Sun, 05 Jul 2026 07:19:20 +0800
-Subject: [PATCH 1/4] tracing: add ref_trace_final_put tracepoint
+Date: Sun, 05 Jul 2026 07:19:23 +0800
+Subject: [PATCH 4/4] kunit: add test for ref_trace_final_put
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -34,7 +31,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260705-refcount-final-put-trace-v1-1-cdd0014626a9@mavick.dev>
+Message-Id: <20260705-refcount-final-put-trace-v1-4-cdd0014626a9@mavick.dev>
 References: <20260705-refcount-final-put-trace-v1-0-cdd0014626a9@mavick.dev>
 In-Reply-To: <20260705-refcount-final-put-trace-v1-0-cdd0014626a9@mavick.dev>
 To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
@@ -46,162 +43,217 @@ To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  linux-mm@kvack.org, Eugene Mavick <m@mavick.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4836; i=m@mavick.dev;
- h=from:subject:message-id; bh=qHwnbzvpK9wYBzbeGmnuCtzzLwF8aY1zM3ldVu/OfqE=;
- b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFmeU5kuGiV5R227xfz40tbY2TPW8N9ucCi4MlNq7mZRO
- adVpkxpHSUsDGJcDLJiiiw1WQnuGStnJRofndQDM4eVCWQIAxenAEyk4S7Dj75nhgeaw+OehfO8
- 8Gy6XJJ4osE+Zem0+UrvfB7n3pDXZGRYXT/znGHqvydvs89bdLYz6zAHaf1t6GPTTLXV4jde1ME
- EAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5737; i=m@mavick.dev;
+ h=from:subject:message-id; bh=uO0yuH0cgFlwuh+60ouE/XunglpmQTZB7vngb53hITQ=;
+ b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFmeU5kCI4JSjJN+yF3Tt2GQiRXUT953vzjuu9nCtDJOg
+ YoZRuYdpSwMYlwMsmKKLDVZCe4ZK2clGh+d1AMzh5UJZAgDF6cATMTmOyPDet/XZc0fq6Y8e7i8
+ p1yb76Vkc929VUW20Vf7Jm3YfOMvJyPDhgNNDx+mah2q3f19hrbBxbCJDbnLnCINH2+Udn97Saq
+ WAQA=
 X-Developer-Key: i=m@mavick.dev; a=openpgp;
  fpr=7C6A604768A99A6133C5928C9D1FCA7EDB7D344F
-X-Rspamd-Queue-Id: 4gt66N5P5szMldj
 
-Add ref_trace_final_put tracepoint and related core infrastructure
+Add a KUnit test suite for the ref_trace_final_put tracepoint.
 
-ref_trace_final_put fires when a reference
-count reaches zero and the object enters its final release path.
-
-The tracepoint records three fields:
-- caller: function that called the refcounting
-  function(refcount_sub_and_test, percpu_ref_put_many)
-- fn: refcounting function(eg refcount_sub_and_test)
-- obj: refcount object(struct percpu_ref, refcount_t)
+The test registers a probe function and triggers both refcount_t and
+percpu_ref final put paths, verifying that the tracepoint fires
+correctly and that the recorded fields match expected values.
 
 Signed-off-by: Eugene Mavick <m@mavick.dev>
 ---
- MAINTAINERS                      |  2 ++
- include/linux/ref_trace.h        | 26 +++++++++++++++++++++++
- include/trace/events/ref_trace.h | 46 ++++++++++++++++++++++++++++++++++++++++
- lib/Makefile                     |  2 ++
- lib/ref_trace.c                  | 12 +++++++++++
- 5 files changed, 88 insertions(+)
+ MAINTAINERS                 |   1 +
+ lib/Kconfig                 |  10 ++++
+ lib/tests/Makefile          |   1 +
+ lib/tests/ref_trace_kunit.c | 138 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 150 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 10e8253181d3..8dab37726b9d 100644
+index 8dab37726b9d..7c387ed746ee 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4210,7 +4210,9 @@ S:	Maintained
- F:	Documentation/atomic_*.txt
- F:	arch/*/include/asm/atomic*.h
- F:	include/*/atomic*.h
-+F:	include/linux/ref_trace.h
+@@ -4213,6 +4213,7 @@ F:	include/*/atomic*.h
+ F:	include/linux/ref_trace.h
  F:	include/linux/refcount.h
-+F:	lib/ref_trace.h
+ F:	lib/ref_trace.h
++F:	lib/tests/ref_trace_kunit.c
  F:	scripts/atomic/
  F:	rust/kernel/sync/atomic.rs
  F:	rust/kernel/sync/atomic/
-diff --git a/include/linux/ref_trace.h b/include/linux/ref_trace.h
-new file mode 100644
-index 000000000000..54e9fba9e3e9
---- /dev/null
-+++ b/include/linux/ref_trace.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_REF_TRACE_H
-+#define _LINUX_REF_TRACE_H
-+
-+#include <linux/tracepoint-defs.h>
-+#include <linux/instruction_pointer.h>
-+
-+/* Declare the tracepoint so tracepoint_enabled() can be used */
-+DECLARE_TRACEPOINT(ref_trace_final_put);
-+
-+#ifdef CONFIG_TRACEPOINTS
-+/* Wrapper function implemented in lib/ref_trace.c */
-+extern void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj);
-+
-+#define trace_ref_final_put(obj)						\
-+	do {									\
-+		if (tracepoint_enabled(ref_trace_final_put))			\
-+			do_ref_trace_final_put(_RET_IP_, __func__, obj);	\
-+	} while (0)
-+
-+#else /* !CONFIG_TRACEPOINTS */
-+static inline void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj) { }
-+#define trace_ref_final_put(obj) do { } while (0)
-+#endif
-+
-+#endif /* _LINUX_REF_TRACE_H */
-diff --git a/include/trace/events/ref_trace.h b/include/trace/events/ref_trace.h
-new file mode 100644
-index 000000000000..e6037a325be2
---- /dev/null
-+++ b/include/trace/events/ref_trace.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM ref_trace
-+
-+#if !defined(_TRACE_REF_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_REF_TRACE_H
-+
-+#include <linux/tracepoint.h>
-+
-+/**
-+ * ref_trace_final_put - trace when a reference count reaches zero
-+ * @caller: function that called the refcounting
-+ * function(refcount_sub_and_test, percpu_ref_put_many)
-+ * @fn: refcounting function(eg refcount_sub_and_test)
-+ * @obj: refcount object(struct percpu_ref, refcount_t)
-+ *
-+ * Tracepoint instrumentation can be added using the ref_trace_final_put
-+ * macro defined in include/linux/ref_trace.h
-+ * which uses _RET_IP_ and __func__ for caller and fn arguments respectively,
-+ * thus only requiring obj arg to be supplied
-+ */
-+TRACE_EVENT(ref_trace_final_put,
-+
-+	TP_PROTO(unsigned long caller, const char *fn, const void *obj),
-+
-+	TP_ARGS(caller, fn, obj),
-+
-+	TP_STRUCT__entry(
-+	__field(unsigned long, caller)
-+	__string(fn, fn)
-+	__field(const void *, obj)
-+	),
-+
-+	TP_fast_assign(
-+	__entry->caller = caller;
-+	__assign_str(fn);
-+	__entry->obj = obj;
-+	),
-+
-+	TP_printk("caller=%pS fn=%s obj=%p", (void *)__entry->caller, __get_str(fn), __entry->obj)
-+);
-+
-+#endif /* _TRACE_REF_TRACE_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/lib/Makefile b/lib/Makefile
-index f33a24bf1c19..41737090a95d 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -335,3 +335,5 @@ CONTEXT_ANALYSIS_test_context-analysis.o := y
- obj-$(CONFIG_CONTEXT_ANALYSIS_TEST) += test_context-analysis.o
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 00a9509636c1..c29b2ccb3c31 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -52,6 +52,16 @@ config PACKING_KUNIT_TEST
  
- subdir-$(CONFIG_FORTIFY_SOURCE) += test_fortify
+ 	  When in doubt, say N.
+ 
++config REF_TRACE_KUNIT_TEST
++	bool "ref_trace kunit test" if !KUNIT_ALL_TESTS
++	depends on KUNIT && FTRACE
++	default KUNIT_ALL_TESTS
++	help
++	  This option enables the KUnit test suite for the ref_trace_final_put
++	  tracepoint.
 +
-+obj-$(CONFIG_TRACEPOINTS) += ref_trace.o
-diff --git a/lib/ref_trace.c b/lib/ref_trace.c
++	  If unsure, say N
++
+ config BITREVERSE
+ 	tristate
+ 
+diff --git a/lib/tests/Makefile b/lib/tests/Makefile
+index 7e9c2fa52e35..828a030ad8c7 100644
+--- a/lib/tests/Makefile
++++ b/lib/tests/Makefile
+@@ -57,5 +57,6 @@ obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
+ obj-$(CONFIG_UTIL_MACROS_KUNIT) += util_macros_kunit.o
+ obj-$(CONFIG_RATELIMIT_KUNIT_TEST) += test_ratelimit.o
+ obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
++obj-$(CONFIG_REF_TRACE_KUNIT_TEST) += ref_trace_kunit.o
+ 
+ obj-$(CONFIG_TEST_RUNTIME_MODULE)		+= module/
+diff --git a/lib/tests/ref_trace_kunit.c b/lib/tests/ref_trace_kunit.c
 new file mode 100644
-index 000000000000..25f7c17c7c47
+index 000000000000..2ece6c840fe0
 --- /dev/null
-+++ b/lib/ref_trace.c
-@@ -0,0 +1,12 @@
++++ b/lib/tests/ref_trace_kunit.c
+@@ -0,0 +1,138 @@
 +// SPDX-License-Identifier: GPL-2.0
-+#define CREATE_TRACE_POINTS
++#include <linux/kernel.h>
++#include <kunit/test.h>
++#include <linux/wait_bit.h>
++#include <linux/instruction_pointer.h>
++#include <linux/kallsyms.h>
++#include <linux/percpu-refcount.h>
++#include <linux/refcount.h>
 +#include <trace/events/ref_trace.h>
 +
-+//Wrapper function for functions defined entirely in header files
-+void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj)
-+{
-+	trace_ref_trace_final_put(caller, fn, obj);
-+}
-+EXPORT_SYMBOL_GPL(do_ref_trace_final_put);
++struct data {
++	unsigned long caller;
++	const char *fn;
++	const void *obj;
++	int *flag;
++	struct kunit *test;
++};
 +
-+EXPORT_TRACEPOINT_SYMBOL_GPL(ref_trace_final_put);
++struct data refc_chk;
++struct data pcpu_chk;
++
++//called when tracepoint fires
++static void probe(
++	  void *ignore,
++	  unsigned long caller,
++	  const char *fn,
++	  const void *obj)
++{
++	struct data *chk_val;
++
++	char func_name[KSYM_SYMBOL_LEN];
++
++	sprint_symbol_no_offset(func_name, caller);
++
++	if (!strcmp(func_name, "test_refcount")) {
++		chk_val = &refc_chk;
++		KUNIT_EXPECT_FALSE(chk_val->test, memcmp(obj, chk_val->obj, sizeof(refcount_t)));
++	} else if (!strcmp(func_name, "test_percpu")) {
++		chk_val = &pcpu_chk;
++		KUNIT_EXPECT_FALSE(chk_val->test, memcmp(
++			obj, chk_val->obj, sizeof(struct percpu_ref)));
++	} else {
++		//non test function origin trace events
++		return;
++	}
++
++	struct kunit *test = chk_val->test;
++	int *flag = chk_val->flag;
++
++	//ensure past flag writes are done before reading
++	KUNIT_EXPECT_EQ(test, 1, smp_load_acquire(flag));
++	KUNIT_EXPECT_EQ(test, caller, chk_val->caller);
++
++	smp_store_release(flag, 0); //signal probe completion
++}
++
++
++
++static void test_refcount(struct kunit *test)
++{
++	refcount_t refc;
++	int flag_addr = 0;
++
++	refc_chk.caller = (unsigned long)&test_refcount;
++	refc_chk.fn = "__refcount_sub_and_test";
++	refc_chk.obj = &refc;
++	refc_chk.flag = &flag_addr;
++	refc_chk.test = test;
++
++	int *flag = refc_chk.flag;
++
++	KUNIT_EXPECT_FALSE(test, register_trace_ref_trace_final_put(probe, NULL));
++
++	refcount_set(&refc, 2);
++
++	KUNIT_EXPECT_FALSE(test, refcount_dec_and_test(&refc));
++
++	smp_store_release(flag, 1); //signal final put can happen
++
++	KUNIT_EXPECT_TRUE(test, refcount_dec_and_test(&refc));
++
++	wait_var_event(flag, smp_load_acquire(flag)); //wait for probe completion
++	unregister_trace_ref_trace_final_put(probe, NULL);
++}
++
++static void dummy_release(struct percpu_ref *ref) {}
++
++static void test_percpu(struct kunit *test)
++{
++	struct percpu_ref pcpu_ref;
++
++	int flag_addr = 1;
++
++	pcpu_chk.caller = (unsigned long)&test_percpu;
++	pcpu_chk.fn = "percpu_ref_put_many";
++	pcpu_chk.obj = &pcpu_ref;
++	pcpu_chk.flag = &flag_addr;
++	pcpu_chk.test = test;
++
++	int *flag = pcpu_chk.flag;
++
++	KUNIT_EXPECT_FALSE(test, register_trace_ref_trace_final_put(probe, NULL));
++
++	KUNIT_EXPECT_FALSE(test, percpu_ref_init(&pcpu_ref, dummy_release, 0, GFP_KERNEL));
++
++	percpu_ref_get(&pcpu_ref);
++	percpu_ref_get(&pcpu_ref);
++
++	percpu_ref_put(&pcpu_ref);
++	percpu_ref_put(&pcpu_ref);
++
++	percpu_ref_switch_to_atomic_sync(&pcpu_ref);
++
++	smp_store_release(flag, 1); //signal final put can happen
++
++	percpu_ref_put(&pcpu_ref);
++
++	wait_var_event(flag, smp_load_acquire(flag)); //wait for probe completion
++	unregister_trace_ref_trace_final_put(probe, NULL);
++	percpu_ref_exit(&pcpu_ref);
++}
++
++static struct kunit_case __refdata ref_trace_test_cases[] = {
++	KUNIT_CASE(test_refcount),
++	KUNIT_CASE(test_percpu),
++	{}
++};
++
++static struct kunit_suite ref_trace_test_suite = {
++	.name = "ref-trace",
++	.test_cases = ref_trace_test_cases,
++};
++
++kunit_test_suites(&ref_trace_test_suite);
++
++MODULE_AUTHOR("Eugene Mavick <m@mavick.dev>");
++MODULE_DESCRIPTION("KUnit test for ref_trace");
++MODULE_LICENSE("GPL");
 
 -- 
 2.51.2
