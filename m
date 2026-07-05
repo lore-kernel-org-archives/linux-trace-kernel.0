@@ -1,124 +1,111 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.thinkmo.de (s3.thinkmo.de [162.55.237.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CE02309AA
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  5 Jul 2026 02:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783217499; cv=pass; b=FcRypd3HMuAm29rnUweOfXE35xh6LmnWvvvxcfKrFWspIvW/pZw7TtjPJ8olqbe932G2XcUx3xvPFt8BwgahN/NVr9g+nnm5WWwl8Knfo7+ZkF0EgdE7nmIQmdleo8W4s8c32/erQtaWJXZH9iL7yVG28byYAPIFWBFtvt05MSw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783217499; c=relaxed/simple;
-	bh=kxNPTAlLfcSyUWT9fknGJyrPuBuy2cw+GfowXjZrhaY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RqVK70xLLb2wWO6DHVMFqw1TqrchNtwdzB0l2Vxx0vn5xept34/MvXVr0XUQoNcmg8eVuOwJLeQaC3zhLQfVdcQPfcQ59TPlg955BOG4TMg2iBjV9vf56zfa/7k5Ur/x95cpnlyhMe4VRbpZKOYXuVt9yn7NNjJ4GJ1Es374moc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmKdtRte; arc=pass smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADE5377006;
+	Sun,  5 Jul 2026 10:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.237.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783248944; cv=none; b=L8SzUOa4hvHQ1eRkEiA56A0wUa5tpYZ1CbgYlOxRriC/twMudQ9JW+o8Nq6zWBzY1lv8tN8ypILVKIQAFIYscXVU0HpUOmE74nIl7FD16dqiL8/cTL8Tkc4bCEGDMn7lgtaLST6NBIAZ3uF4U8kvKvnLrokVNiSimTY2LoCOdDY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783248944; c=relaxed/simple;
+	bh=Jtb591d4drdQdlBQreeCFEdDjy5DmBPqSGwAsh9FMfk=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=CDAzOcnlZeLTCTJgbs6soLYZdgTZvbvongeWkp38GC6JrnjpQPJLYY/ZDF70Y8Nxkq5CArZcJxI8qjZHQR9NcTtVcKVIn8DFuHPAX+E3XkyV6DKOFoyw7kw2QZlUadc9f3Kpvzxu1VEx0C9vPH1GfM2qS8rQxcSpaCYZPZQmXC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=fail smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=PZ5eKJtK; arc=none smtp.client-ip=162.55.237.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmKdtRte"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-476a130c138so1860719f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 04 Jul 2026 19:11:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783217496; cv=none;
-        d=google.com; s=arc-20260327;
-        b=sPTnWqhbAHPmDE0dLKgRURRGIfFNK8cXLC0C+1N4V91B6xRyNkI3+zI+Zbs7zhyjan
-         e78Mkpprh4frOP+UtpxbjKUhfmU/CWTDJ94eKGIxK8mLLNhnQc0z4w8/uLpWyqZSV9Jm
-         DnNB9yEKN5OfDXIGYFiKRqJb18YtjX+KuWyCsTX1ZgNAdpKw75/DfFDP+gzquMCXc77n
-         Opuy5LcJCMY+FGiz0wF80m3E8Z2W3MUzu1VunSKFAFZ2O+ZNUKcPeGzMFZad+14JFbhd
-         JJvOw1iQW5bz+oeHFXWMLNzf47VFsATFvRK6pr2pmx9zgf2ItX1nfoQkLQ99ZXJPzM9l
-         HdQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=kxNPTAlLfcSyUWT9fknGJyrPuBuy2cw+GfowXjZrhaY=;
-        fh=EIJ32paOtzX1sVXaDTcNYWexmLhI/z8S8uzyvMMW7v8=;
-        b=l5q9zqX98zlIc3hX2LzhmG0LF/qfYaeRgCm3bvCnsxZaEW8VylGFli8ODfLgAVOCeN
-         m6a8W1SZMotlLwjKDpc5Y76GWO8jbSJ9HrPBR0/U83OkqwZb3Ykrz5s+FODlFwJnLivQ
-         gQorRyP+dy0O54cNT6D4+0lFXjt8zKty8p7hL6cFRgCNLFO37R5ZX7MeggBizC/E9P5f
-         IndSJz2mnmf5HPUHRajR/xXCEb1CCiwzpEHT/k/UYQB62fxXtfvpdqhWhOaYLs89EjIP
-         m0B89odvZVwWUq/KAxXYbjB/dVrXJWZfm6FjZn7Ao+hJVa7k/8JMHQQC/xgfs0DL/jan
-         WS/g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783217496; x=1783822296; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=kxNPTAlLfcSyUWT9fknGJyrPuBuy2cw+GfowXjZrhaY=;
-        b=HmKdtRtetM2NDeuyflLPyvdy/grl0W+ptN772MGAij7+nrHbbXhc2qymfD0Kb5PqMP
-         ryLcrY6xh6NQjLQ2MJ9Fv5gSwpke/rB44sixz803C+m96rP8/YKQ/itznIpy8MUvMJil
-         UUSjNEETrVFsP0dbmZGF0Tn3b4qcSpoYCEUkoZ8qq9Jn2sZHkelYODCB7QV6sqrdr/jC
-         zrh3QMZ5ZSv+ytznAc9ha3cqn89lWqrCNun/9GbiRjj3OU2SMuSKLpEaytOpa/pF6YW7
-         m8fTrMmEk4j/DFLdZuB5BdphHJLIgP/XoFSBOmiYaqx3yiClyxJBcS/hLRavFPyCBeaM
-         ONHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783217496; x=1783822296;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kxNPTAlLfcSyUWT9fknGJyrPuBuy2cw+GfowXjZrhaY=;
-        b=K/0jsx7gqmc8S3iZIe/VKTUnMZGitJYWSwT9ZIZiUQ91R3y4M39McLeiZAkSHb/mtu
-         EfMXbrEcwIyWn7haAaa8aCZMTdiK9msFKGKbcxEB1HQ/A7D6qdmsU6gasV1qZiZ+b3ZH
-         AJlhroY5Yn3RoFlnsm0EcA0mHtj2loF9ajFlGoTlfBNRGYmxX5QOAm4IZ1lkab0YlwR2
-         MOBjdkWdZ9Tac2CDI95o1pXmWPsyWUBVfN+LsOvtJv4YrXIkwQU17foZaeUgjZaxOvV0
-         yGL/5noPngmLSLOLGXXkdzQ+nwfHcpyegEiR1pr2eFl9Ckv+NrWy/sRnhUAaLttnDnYR
-         wnLQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoiL2b2HSC+IlAUBtodQuFBwkwD2XQgNDcRyv6+d9iZ68WSRmtL45BlmYpgVwtrjzgL/ef+r5Q7uVLouFNSAJkglr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvcE6ddnk3o63RjjOJE59zOU/3PG+OBD99TMmPDVvw8AHPClDP
-	sJGcPJzERwRGuWMCVFgwt4/hPvHbw/DACw3K/dDNYSsMlq77siVSzie0hgP+TZw69vj6iHmBg7a
-	EMrvVnMwIcxXLnEC6P8ExKQUj8JsCE4w=
-X-Gm-Gg: AfdE7ckNwAiL07ANEcIQ6LhkQeQ9PUU7ZFDp2GuyOtMQRFrz+gHlAuA9iULkIp4hiZl
-	a9B8mi++pTIFrz2a/ytFDBAIfKWVh/OHy8qI9D05Uelhq9ME2Urd3PoCwpaC6OH01n2ysgQ+osN
-	/2zmykhSdCXulpnic09c785TS1SqUAs0hQJJSsZyJvs0xzmkh86TJ9HfIBLI2z/zL8yhsHRrQCw
-	yQH6wqfjYkNc0ldKFo5kd3k506K8X2rcWaNVWJzis0Ww3fDLE7bLHlp0c4LGRFGbKctMA==
-X-Received: by 2002:a05:6000:310a:b0:474:fd7a:93f2 with SMTP id
- ffacd0b85a97d-47aab961efbmr5621255f8f.15.1783217496219; Sat, 04 Jul 2026
- 19:11:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="PZ5eKJtK"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.thinkmo.de (Postfix) with ESMTP id 4gtPPX2pHHzydY;
+	Sun,  5 Jul 2026 10:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=debian.org; h=
+	content-disposition:content-type:content-type:mime-version
+	:message-id:subject:subject:from:from:date:date:received
+	:received; s=mail202007.waldi.user; t=1783248560; bh=YjYsDZvFkgX
+	3Mukgn3ePSVg2PIArW474YYn9fm8ZGsY=; b=PZ5eKJtKZ6oDdU6LqGPkLoQMr2l
+	XFNCnAVZQNIJWthQVLgHHblkWAnwHmzc02lzidP59o7CzDQJWc3DPEsX3tswT8af
+	D2FhPCawP7z3ivb4prhcdoUtn3J35tAtM+VCiK6qyVjcdSmQMm7TxX+4WKb7/quC
+	lFh8LTb/DZel0A60fgtwOPbyuwDR+d0CG4S/t7IsPp4yh1WLTvt+qzntaRaV6wFu
+	91BkaMJm9VYNggYL7K8jOeJ7HUn1MtVoszEKDZOlzDwY8hdQ5R5Sqc/Wno39hybR
+	puWnJtQUfoNiGgF2Vr8EvZpzcFzav0Yokn4RtYPvuZq0UGsbwRBPn/NZs8w==
+X-Virus-Scanned: Debian amavis at 
+Received: from mail.thinkmo.de ([127.0.0.1])
+ by localhost (mail.thinkmo.de [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id iL7rflBlvAkX; Sun,  5 Jul 2026 10:49:20 +0000 (UTC)
+Received: from steamhammer.waldi.eu.org (unknown [IPv6:2a02:8071:5af1:6518:ad11:fa76:980a:620e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.thinkmo.de (Postfix) with ESMTPSA id 4gtPPX1BrPzyd5;
+	Sun,  5 Jul 2026 10:49:20 +0000 (UTC)
+Date: Sun, 5 Jul 2026 12:49:17 +0200
+From: Bastian Blank <waldi@debian.org>
+To: Steven Rostedt <rostedt@goodmis.org>, 
+	Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rtla: Also link in ctype.c
+Message-ID: <ako2S4mzIqWwYuas@steamhammer.waldi.eu.org>
+Mail-Followup-To: Bastian Blank <waldi@debian.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFk-A4mE9Jweo2hfX7y_85xbPyt0FqpMT1EvqX1OcYZ=LTLgRA@mail.gmail.com>
- <29129c40-4010-4862-9b4b-3bafad874568@linux.dev> <CAFk-A4n9U0r07tn6XHHqmOZ++-bmM4bSd-SwdpEU-88gjKts7Q@mail.gmail.com>
- <216969a9-3584-4dc8-9e23-50fc18b31725@linux.dev>
-In-Reply-To: <216969a9-3584-4dc8-9e23-50fc18b31725@linux.dev>
-From: Masashi Honma <masashi.honma@gmail.com>
-Date: Sun, 5 Jul 2026 11:11:25 +0900
-X-Gm-Features: AVVi8Cex59Et_09q6rUsvepTcxo82qiJkYVp8jk9ZmjruPc9k_ncvXD6H4LmGwo
-Message-ID: <CAFk-A4mUijKffHg3QhOxC7Ne2rk_GVbYY2UJ-Ek497avdubzgw@mail.gmail.com>
-Subject: Re: [RFC] xdp: add device context to bpf_xdp_link_attach_failed tracepoint
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	kuba@kernel.org, hawk@kernel.org, andrii@kernel.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, edumazet@google.com, pabeni@redhat.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-2026=E5=B9=B47=E6=9C=884=E6=97=A5(=E5=9C=9F) 22:28 Leon Hwang <leon.hwang@l=
-inux.dev>:
-> Probably, you can get the 'extack->_msg' by tracing dev_xdp_attach using
-> kprobe+kretprobe or kprobe.session, if the extack is not NULL.
+rtla started to only link parts of the tools library.  It now misses the
+ctype information used by all the related string operations.  Just add
+another single file to make it build again.
 
-Thanks, that's a nice pointer -- dev_xdp_attach() has both the net_device
-(so the ifindex, which lets us correlate a failure to a specific attach)
-and the extack, and it avoids depending on the tracepoint you want to
-retire.
+Signed-off-by: Bastian Blank <waldi@debian.org>
+---
+ tools/tracing/rtla/Makefile | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-The tradeoff is that dev_xdp_attach() is a static internal function, so a
-probe on it can break across kernels (inlining/signature changes). For a
-best-effort error message that's tolerable with a graceful fallback, but
-it's a maintenance cost on our side.
-
-Since this is ultimately just an error-message improvement, and your
-in-band BPF_LINK_CREATE work would solve it cleanly for all link types, I
-think we'd lean toward waiting for that rather than adding an internal
-kprobe to Cilium. Do you have a rough timeline for the BPF_LINK_CREATE
-series? That would help us decide whether a stopgap is worth it.
-
-Regards,
-Masashi Honma.
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index 60a102538988..387bc6cc18f0 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -45,6 +45,9 @@ else
+   LIB_OUTPUT = $(CURDIR)/lib
+ endif
+ 
++LIB_CTYPE = $(LIB_OUTPUT)/ctype.o
++LIB_CTYPE_SRC = $(srctree)/tools/lib/ctype.c
++
+ LIB_STRING = $(LIB_OUTPUT)/string.o
+ LIB_STRING_SRC = $(srctree)/tools/lib/string.c
+ 
+@@ -117,12 +120,12 @@ tests/bpf/bpf_action_map.o: tests/bpf/bpf_action_map.c
+ 	$(Q)echo "BPF skeleton support is disabled, skipping tests/bpf/bpf_action_map.o"
+ endif
+ 
+-$(RTLA): $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R)
+-	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $(RTLA) $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R) $(EXTLIBS)
++$(RTLA): $(RTLA_IN) $(LIBSUBCMD) $(LIB_CTYPE) $(LIB_STRING) $(LIB_STR_ERROR_R)
++	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $(RTLA) $(RTLA_IN) $(LIBSUBCMD) $(LIB_CTYPE) $(LIB_STRING) $(LIB_STR_ERROR_R) $(EXTLIBS)
+ 
+-static: $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R)
++static: $(RTLA_IN) $(LIBSUBCMD) $(LIB_CTYPE) $(LIB_STRING) $(LIB_STR_ERROR_R)
+ 	$(eval LDFLAGS += -static)
+-	$(QUIET_LINK)$(CC) -static $(LDFLAGS) -o $(RTLA)-static $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R) $(EXTLIBS)
++	$(QUIET_LINK)$(CC) -static $(LDFLAGS) -o $(RTLA)-static $(RTLA_IN) $(LIBSUBCMD) $(LIB_CTYPE) $(LIB_STRING) $(LIB_STR_ERROR_R) $(EXTLIBS)
+ 
+ rtla.%: fixdep FORCE
+ 	make -f $(srctree)/tools/build/Makefile.build dir=. $@
+@@ -150,6 +153,9 @@ $(LIB_STR_ERROR_R): $(LIB_STR_ERROR_R_SRC) | $(LIB_OUTPUT)
+ $(LIB_STRING): $(LIB_STRING_SRC) | $(LIB_OUTPUT)
+ 	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
+ 
++$(LIB_CTYPE): $(LIB_CTYPE_SRC) | $(LIB_OUTPUT)
++	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
++
+ libsubcmd-clean:
+ 	$(call QUIET_CLEAN, libsubcmd)
+ 	$(Q)$(RM) -r -- $(LIBSUBCMD_OUTPUT)
+-- 
+2.53.0
