@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A976A1A3160;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4A1A5B8C;
 	Sun,  5 Jul 2026 01:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783214479; cv=none; b=kDnSGDL+ACiGVLYR6bxS5YGxIhR55+SEUMA6riSXal8Zt68jN1nd2SPLk5DNJTxCxFo2ZDlss4zxUtx+kbe5bs2PA70Mohsn1ecWc+aAlPACzh8u25KAUjrgN2yEgWsJeNZZcMAdrFr2tFyjUiQYXJlufUdxHE7HMznHtqQ3dBY=
+	t=1783214479; cv=none; b=tej79QTc+nq+EOVzubc/Shk6t/X7V5gGZSmIFBneP1LQxOAkBggKUX66lM0Y5PecxbM+7vLzVUoEaDcJRJkB8KdFArFrIKBXVtkOFBP7P6pa4vFXWLPklIZ4Dur827UP/okgcJs+kwC57jgza+kRU+XJ3E+lVx7ZPESFXG0hRvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783214479; c=relaxed/simple;
-	bh=aJl7nlLOWLA1emiT3W2w+Al8DEuLxD7KOL2U/1Me0R4=;
+	bh=OH6pUiTJHa8HI8N9mb0rE7HnMbkqq0RnkKcjwUxyeNY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gpcD/RCf5/RWfc7/vUkQnXdKqFstb09i36HGR8muUdj+KMmVkJtJR9zLHhFuRdIOfOfL0kAHcWwGqaOW9Di6eeOqBUep/C3Ur4uvdnhGSiexS5DHPwL4dQ2bMJPKS6zWEaLjxdEmKxd9CIDWUfLphSRja0w+5Cqms52T2gUnGo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CvIeACEb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=qLTE2kwLGUCikDxvpWGHLtpxC7jypO09+jMuUg2Ss+scgEz4zWUgkbDn4C9EudP0/LfKRdXfN1Bs1hUWK6d9UTYkHGi8ZtaTB3CUUFiyk+9AZwwlIMteSTRrvN0xD5Ik07M3hA4TiNS7XjrLW2H8RYdf4RdjQkIhqSXEePnV+ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvmxeLw7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvIeACEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3777DC4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvmxeLw7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3325CC2BCC9;
 	Sun,  5 Jul 2026 01:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1783214479;
-	bh=aJl7nlLOWLA1emiT3W2w+Al8DEuLxD7KOL2U/1Me0R4=;
+	bh=OH6pUiTJHa8HI8N9mb0rE7HnMbkqq0RnkKcjwUxyeNY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=CvIeACEbSj+AOfNaRgYMCZGKu+lLtS8WS9X586BjNPYzHeyA6WJ3bCcIwNNSezb02
-	 D17g0J8LDrLTA/hmoiZGqcg5kZxYYZ1FZZvQwAu5xDdmjGtNZX92ikIWXGly2Dog8M
-	 Zo2n3Sh5Hbb9b12Tll07xY501t6NIu9eqJHUFcWxb+ycFzOmrX8GFuX7bfQCKoJQ2G
-	 30yYlo1dvX4ufffod6YouNt+e1HPFSwk5Bft+r5Fxvs5I5T4YPp7/Yl0ao8w/BRQeI
-	 likpXVKeInaxtHqQKYnyllw1cC2wj8aL2iLEx+Kr0VBz3bMHNU2FO9nU+oGIcyEEuZ
-	 2L8b40f+vHfHQ==
+	b=jvmxeLw7VGxdlFScMXVVocyappEmmFra11a9Ypv+johLhCrIRNbqWfzfbPrdbNqGs
+	 gnNw4SpYC0hwMbplA51iDLflblhzx5JDxyFT24o3dPrzNbi4Pd0hgTA9zeGIl3zT3e
+	 cOm95S3m4R+TyYKhM0dtXvJP91CZETfMdgv4fLJKBywZuVdPGZ28y6br2iQH3VXtS6
+	 XOdGNDypT6X19fC/z236NHkujRYyDeLywWb+f5eqEzVR2+Z8cgKa/fvnZLd5H7vBeY
+	 Zo36nFwr97x2e9x1971T/jwqBnWxXTL93lx04Mbwssy9xdwp11OyAw5Mu1BZc214zz
+	 lEYR0ePq19CKg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18989C44501;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD51C44500;
 	Sun,  5 Jul 2026 01:21:19 +0000 (UTC)
 From: Eugene Mavick via B4 Relay <devnull+m.mavick.dev@kernel.org>
-Date: Sun, 05 Jul 2026 09:20:52 +0800
-Subject: [PATCH 2/4] refcount: add ref_trace_final_put tracepoint
+Date: Sun, 05 Jul 2026 09:20:51 +0800
+Subject: [PATCH 1/4] tracing: add ref_trace_final_put tracepoint
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260705-refcount-final-put-trace-v1-2-0ae936edb750@mavick.dev>
+Message-Id: <20260705-refcount-final-put-trace-v1-1-0ae936edb750@mavick.dev>
 References: <20260705-refcount-final-put-trace-v1-0-0ae936edb750@mavick.dev>
 In-Reply-To: <20260705-refcount-final-put-trace-v1-0-0ae936edb750@mavick.dev>
 To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
@@ -53,13 +53,13 @@ To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  linux-mm@kvack.org, Eugene Mavick <m@mavick.dev>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=878; i=m@mavick.dev;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4836; i=m@mavick.dev;
  h=from:subject:message-id;
- bh=oxdQX1dkebrHkQOKFGbMe1L7jn1KmiWYDIa5MeosIJI=;
- b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFmeGyv/807KiA0NbPXYPkn7mHjaVUmpXYse5O2/nPh50
- 8XpL0UudJSyMIhxMciKKbLUZCW4Z6yclWh8dFIPzBxWJpAhDFycAjCRI7WMDA/MrTK8W0pXGvLM
- 14mQLjER/Vx4pUtRfGNCYHGoZ7NZMyPDgq+JyszX12/Ufi2bXiGsJ/xxrXn5lo5M4zYNvpwAwxk
- MAA==
+ bh=qHwnbzvpK9wYBzbeGmnuCtzzLwF8aY1zM3ldVu/OfqE=;
+ b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFmeGytvvJdkW+ErErKj6k0+85WG9YriqcYSvQejHn9Ms
+ jVO00zvKGVhEONikBVTZKnJSnDPWDkr0fjopB6YOaxMIEMYuDgFYCLM0YwMHyQd7QX+uVTEReyb
+ seZ+3NcZe/WkUlxNzyyccvdIR77dW0aGqWHH00Pf+12tT5go+jD06wmDUtXodzaq3R1N/ald01S
+ 4AA==
 X-Developer-Key: i=m@mavick.dev; a=openpgp;
  fpr=7C6A604768A99A6133C5928C9D1FCA7EDB7D344F
 X-Endpoint-Received: by B4 Relay for m@mavick.dev/default with auth_id=850
@@ -68,35 +68,152 @@ Reply-To: m@mavick.dev
 
 From: Eugene Mavick <m@mavick.dev>
 
-Add the ref_trace_final_put tracepoint to __refcount_sub_and_test().
-This fires when a refcount_t reaches zero, capturing the caller
-address, the function name, and the refcount_t address.
+Add ref_trace_final_put tracepoint and related core infrastructure
+
+ref_trace_final_put fires when a reference
+count reaches zero and the object enters its final release path.
+
+The tracepoint records three fields:
+- caller: function that called the refcounting
+  function(refcount_sub_and_test, percpu_ref_put_many)
+- fn: refcounting function(eg refcount_sub_and_test)
+- obj: refcount object(struct percpu_ref, refcount_t)
 
 Signed-off-by: Eugene Mavick <m@mavick.dev>
 ---
- include/linux/refcount.h | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS                      |  2 ++
+ include/linux/ref_trace.h        | 26 +++++++++++++++++++++++
+ include/trace/events/ref_trace.h | 46 ++++++++++++++++++++++++++++++++++++++++
+ lib/Makefile                     |  2 ++
+ lib/ref_trace.c                  | 12 +++++++++++
+ 5 files changed, 88 insertions(+)
 
-diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-index ba7657ced281..7b1fbf326a21 100644
---- a/include/linux/refcount.h
-+++ b/include/linux/refcount.h
-@@ -107,6 +107,7 @@
- #include <linux/limits.h>
- #include <linux/refcount_types.h>
- #include <linux/spinlock_types.h>
-+#include <linux/ref_trace.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 10e8253181d3..8dab37726b9d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4210,7 +4210,9 @@ S:	Maintained
+ F:	Documentation/atomic_*.txt
+ F:	arch/*/include/asm/atomic*.h
+ F:	include/*/atomic*.h
++F:	include/linux/ref_trace.h
+ F:	include/linux/refcount.h
++F:	lib/ref_trace.h
+ F:	scripts/atomic/
+ F:	rust/kernel/sync/atomic.rs
+ F:	rust/kernel/sync/atomic/
+diff --git a/include/linux/ref_trace.h b/include/linux/ref_trace.h
+new file mode 100644
+index 000000000000..54e9fba9e3e9
+--- /dev/null
++++ b/include/linux/ref_trace.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_REF_TRACE_H
++#define _LINUX_REF_TRACE_H
++
++#include <linux/tracepoint-defs.h>
++#include <linux/instruction_pointer.h>
++
++/* Declare the tracepoint so tracepoint_enabled() can be used */
++DECLARE_TRACEPOINT(ref_trace_final_put);
++
++#ifdef CONFIG_TRACEPOINTS
++/* Wrapper function implemented in lib/ref_trace.c */
++extern void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj);
++
++#define trace_ref_final_put(obj)						\
++	do {									\
++		if (tracepoint_enabled(ref_trace_final_put))			\
++			do_ref_trace_final_put(_RET_IP_, __func__, obj);	\
++	} while (0)
++
++#else /* !CONFIG_TRACEPOINTS */
++static inline void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj) { }
++#define trace_ref_final_put(obj) do { } while (0)
++#endif
++
++#endif /* _LINUX_REF_TRACE_H */
+diff --git a/include/trace/events/ref_trace.h b/include/trace/events/ref_trace.h
+new file mode 100644
+index 000000000000..e6037a325be2
+--- /dev/null
++++ b/include/trace/events/ref_trace.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM ref_trace
++
++#if !defined(_TRACE_REF_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_REF_TRACE_H
++
++#include <linux/tracepoint.h>
++
++/**
++ * ref_trace_final_put - trace when a reference count reaches zero
++ * @caller: function that called the refcounting
++ * function(refcount_sub_and_test, percpu_ref_put_many)
++ * @fn: refcounting function(eg refcount_sub_and_test)
++ * @obj: refcount object(struct percpu_ref, refcount_t)
++ *
++ * Tracepoint instrumentation can be added using the ref_trace_final_put
++ * macro defined in include/linux/ref_trace.h
++ * which uses _RET_IP_ and __func__ for caller and fn arguments respectively,
++ * thus only requiring obj arg to be supplied
++ */
++TRACE_EVENT(ref_trace_final_put,
++
++	TP_PROTO(unsigned long caller, const char *fn, const void *obj),
++
++	TP_ARGS(caller, fn, obj),
++
++	TP_STRUCT__entry(
++	__field(unsigned long, caller)
++	__string(fn, fn)
++	__field(const void *, obj)
++	),
++
++	TP_fast_assign(
++	__entry->caller = caller;
++	__assign_str(fn);
++	__entry->obj = obj;
++	),
++
++	TP_printk("caller=%pS fn=%s obj=%p", (void *)__entry->caller, __get_str(fn), __entry->obj)
++);
++
++#endif /* _TRACE_REF_TRACE_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/lib/Makefile b/lib/Makefile
+index f33a24bf1c19..41737090a95d 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -335,3 +335,5 @@ CONTEXT_ANALYSIS_test_context-analysis.o := y
+ obj-$(CONFIG_CONTEXT_ANALYSIS_TEST) += test_context-analysis.o
  
- struct mutex;
- 
-@@ -393,6 +394,7 @@ bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
- 
- 	if (old > 0 && old == i) {
- 		smp_acquire__after_ctrl_dep();
-+		trace_ref_final_put(r);
- 		return true;
- 	}
- 
+ subdir-$(CONFIG_FORTIFY_SOURCE) += test_fortify
++
++obj-$(CONFIG_TRACEPOINTS) += ref_trace.o
+diff --git a/lib/ref_trace.c b/lib/ref_trace.c
+new file mode 100644
+index 000000000000..25f7c17c7c47
+--- /dev/null
++++ b/lib/ref_trace.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++#define CREATE_TRACE_POINTS
++#include <trace/events/ref_trace.h>
++
++//Wrapper function for functions defined entirely in header files
++void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj)
++{
++	trace_ref_trace_final_put(caller, fn, obj);
++}
++EXPORT_SYMBOL_GPL(do_ref_trace_final_put);
++
++EXPORT_TRACEPOINT_SYMBOL_GPL(ref_trace_final_put);
 
 -- 
 2.51.2
