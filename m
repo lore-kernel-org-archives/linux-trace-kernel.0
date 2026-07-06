@@ -1,91 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1493825A359;
-	Mon,  6 Jul 2026 16:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90A71CAA78;
+	Mon,  6 Jul 2026 17:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783355031; cv=none; b=jHTqFHHqgDvdMjDpwaBRgg+9ozWA46/CkKDZgyQJaHQSouG5nvQqXSQxoL5QW+tcokfzxNmyvSAYeR26bM5+G0bVwB8Mr4h1RPAVZf5pbKA9/Ng8Fr+vimqmjn9MA/4/RHj7TJi3K/0X3CIPcuNna7MTtKk/WFLdqlyk2B9sTdg=
+	t=1783358138; cv=none; b=tFgnwSINBDK2yDzqjcuWRPjS+1llfgDyh/mAuK44ktl0vFCETS1ov/5Z9EAYjHpJwvxJlVp0fQD1nQ8qIKqLyIX/afU4dunpkPQY4Y0SS7QEXlXuwUFFRZwiSlzj1DkFNXIRxHzRM1k4D9Mdq4UI8c0mIili+IO5scWXmsAsY8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783355031; c=relaxed/simple;
-	bh=GcZm7hTREYj/AH08uyg2/jGONo0jqSBiDWmPpkmxnrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTH1hQzVT1rQQ6DVIfr437B75qTPpH63V9vAa6fa4ZcA4xgXiktQv7GfDeJCj5cIU/FXsCPcdCS/pLFwrlrK+xS6aspqMq9fJuFnjjMCLzNLqvzHkwSbyblfpYF5DWcDTWCblgfbIpQakgR+x4ntdb/m1nqTRHWS5aY8/BKruV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBIeOIrQ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBIeOIrQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B4EB1F000E9;
-	Mon,  6 Jul 2026 16:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783355030;
-	bh=7wHt8+HkNGnM0KxjsEMNSxKDUZE1xV28kMigSgeCFxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mBIeOIrQabVsxIUz+QOTSD9LBsdjsg87Mq8zSzYyUz4LPP7CDEzQ/vXsHMoLDtrgf
-	 dEZt5lYkdRunGlUtVvX95Jdocdjo34KBqgi4ZxbDX/a03zrCfiitxcWoSJOgYkZ92V
-	 z2ZlbKtgb8Yho0Vgdg8LygVvEPOOybAj/HOCNsHkO0ruI4Vzs+jcxnZWNvy8klXH+u
-	 xq327ySGBvoJo4kBrfXUCEsTViLRrJzFefIhUhtjWcLX3SBKMin8qwtSYeR7qVn2F1
-	 pJUdUUmIhUpgmGX42UzmCLbQCclvOhhX5PvmoGVaqj1KFDM7Dahd7c+/BShR/kPSba
-	 iAQ4vh4KfzR9w==
-Date: Mon, 6 Jul 2026 19:23:38 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
-Message-ID: <akvWipFuwLt41wOM@kernel.org>
-References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
- <20260630-ecc_panic-v10-6-c6ed5b62eea2@debian.org>
- <akjS7kiGjVwWaWEz@kernel.org>
- <akvSzb0mRSS5aCg_@gmail.com>
+	s=arc-20240116; t=1783358138; c=relaxed/simple;
+	bh=JVwFr2kGA3h+tzeDHjrCglcB1Mr08Qzx5u7yyhyYk2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XRZtlrSQ8oHyndbvvDDer6f3imnxTHtq3eqHXM0H6afMaxBwpu9OHVYx1zmAQdEn1/HOKD0Zthv32hDkxsq9WPs3y4VZYwpB6lCYx+TEjySOpuVDTRefDp3SD1JvACRmDcHX4gW5oRXKYZVb5VTFmP1RP2OwpEW0IQLTet0lt94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 8D480401B3;
+	Mon,  6 Jul 2026 17:15:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id DC65C17;
+	Mon,  6 Jul 2026 17:15:33 +0000 (UTC)
+Date: Mon, 6 Jul 2026 13:15:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Yu Peng <pengyu@kylinos.cn>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] tracing/synthetic: Free type string on error path
+Message-ID: <20260706131534.70e602ef@gandalf.local.home>
+In-Reply-To: <20260603062533.1096320-2-pengyu@kylinos.cn>
+References: <20260603062533.1096320-1-pengyu@kylinos.cn>
+	<20260603062533.1096320-2-pengyu@kylinos.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akvSzb0mRSS5aCg_@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: sut9xebi1mhffbge9z7tpnztowak4k9u
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: DC65C17
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/+6WPttl1sNsyg81OQeiCztfWtLQML+GU=
+X-HE-Tag: 1783358133-541007
+X-HE-Meta: U2FsdGVkX19xumJVg3GGNHTpJ06Atd0Dot5cGW/MrAuq1URqAksw5lcoyjzXWeKdvkCldbS7FV8+3ZYzW/r9IPAmdlvf8OOAIk3zZGSS3c9H4RYJlselVDFZXt3L2MWW9c2iTpd6YLsu/LAuboyDvjg1/uP3S2NrBE9o5kf0JJgLFro0jBVT+rRKySSCnGr+CeZlWuJrxISjybSwIyLxAWbHIFkkz65UoaXMYLrd+doyXqTtdZTh6LhA00gJy8n8LH1UB3yGlenysL6B1UR1kah5SnBM8EaI5upwM+IF147WWnoZRFggN5agGkB3+K2i
 
-On Mon, Jul 06, 2026 at 09:14:22AM -0700, Breno Leitao wrote:
-> Hello Mike,
-> 
-> On Sat, Jul 04, 2026 at 12:31:26PM +0300, Mike Rapoport wrote:
-> > On Tue, Jun 30, 2026 at 05:46:09AM -0700, Breno Leitao wrote:
-> 
-> > I'm looking at these awk scripts and od encodings and I wonder if wasn't it
-> > simpler to write the test in C.
-> > 
-> > We have a bunch of helpers in tools/testing/selftests/mm/vm_utils.h for
-> > accessing /proc files and there is already /proc/iomem parser in
-> > tools/testing/selftests/mm/pfnmap.c that also could be lifter to vm_util
-> 
-> I'm fine with either approach.
-> 
-> My main concern is keeping the selftest decoupled from the feature
-> itself, so that review of the test doesn't block the feature from
-> landing. Would that work for you?
+On Wed,  3 Jun 2026 14:25:33 +0800
+Yu Peng <pengyu@kylinos.cn> wrote:
 
-Sure.
+> parse_synth_field() builds a "__data_loc ..." type string before
+> assigning it to field->type. If the seq_buf check fails, the common
+> cleanup cannot free the temporary string. Free it before leaving.
+> 
+> Signed-off-by: Yu Peng <pengyu@kylinos.cn>
+> ---
+>  kernel/trace/trace_events_synth.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index cdd5b93328358..dc15658a887cb 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -839,8 +839,10 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
+>  			seq_buf_puts(&s, "__data_loc ");
+>  			seq_buf_puts(&s, field->type);
+>  
+> -			if (WARN_ON_ONCE(!seq_buf_buffer_left(&s)))
+> +			if (WARN_ON_ONCE(!seq_buf_buffer_left(&s))) {
+> +				kfree(type);
+>  				goto free;
+> +			}
+>  			s.buffer[s.len] = '\0';
+>  
+>  			kfree(field->type);
+
+Can you do this instead?
+
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index cdd5b9332835..7ff0f00edbdd 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -828,7 +828,7 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
+ 	} else if (size == 0) {
+ 		if (synth_field_is_string(field->type) ||
+ 		    synth_field_is_stack(field->type)) {
+-			char *type;
++			char *type __free(kfree) = NULL;
  
-> Thanks
-> --breno
+ 			len = sizeof("__data_loc ") + strlen(field->type) + 1;
+ 			type = kzalloc(len, GFP_KERNEL);
+@@ -844,7 +844,7 @@ static struct synth_field *parse_synth_field(int argc, char **argv,
+ 			s.buffer[s.len] = '\0';
+ 
+ 			kfree(field->type);
+-			field->type = type;
++			field->type = no_free_ptr(type);
+ 
+ 			field->is_dynamic = true;
+ 			size = sizeof(u64);
 
--- 
-Sincerely yours,
-Mike.
+-- Steve
