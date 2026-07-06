@@ -1,264 +1,184 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EB03FF1B8
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Jul 2026 11:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A866929AB05;
+	Mon,  6 Jul 2026 12:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783336118; cv=none; b=X1hzgNNuzPU+ukPElqH/I9Nixl/2uQ8Pu+8LjbOyKmQeISx7BLyTkJlDLbQvpi0jXApR4oZn2y7nlBJOo5kPccD4N7Xjn1S2uhOn0szCEe0gsPjqeETcVisPS1K32OGAdBwna5Qdyu2TI3rjUStSXEKRescTYMJ8jZer055ZILw=
+	t=1783340542; cv=none; b=tmoYMW9+C4GWzRhwBGsP2cazGYYLQNJK5NHaS+LPv94+qnW03iyVpdqZQnln9j3E2LKvi/9C9QT+MQ7iVPGnzR/lkA82+JOtpH/s118/GbkNwaM3qEFooaHS09m3MECOMW6J1rkKogtsoFejDcfcYLnSdcCupr0QzTxtnfYqQHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783336118; c=relaxed/simple;
-	bh=soA3BDJ7EjqA5hWfm4kj9buFogwtZYzZXE0zhdq8A0g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ffzbTnG0X+lnnpgnT4P+T6JPeTPSXtr/Qgkd1Eta3ctGs8Kiy9umivFhJUQInD8BtNF6yRAABBIjxDGsMrOOz6SYlKpTs/s6m/QSepDQB6qFDSIXOSo1f+zH+LkSIJ3RbovBqne+o1qi4X2U42LW9ZW3d4sXWudRszvaa0KDhgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cV++0cZH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=fEJawWEm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1783340542; c=relaxed/simple;
+	bh=LCvKrUyihnFS4hob/L7N3B0mtCrPOVsnb9cK/e8JCi8=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=l4HSjnaXU2lR4ReZNMEQtgvdbo9e8+TwgPMKcy+kaRZpSkKnG2UZZm9aXa5JeezIvdaXJL22ypMt9cC2S9scMOgghJm50APTEgLdRU3RbiPLy09nqW/oaOlgOOcW3olS07tIubpX+wtQgGHPRvGvtquPplgh+3v53iGMfzUNu40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ao6wcOs8; arc=none smtp.client-ip=113.46.200.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cV++0cZH";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="fEJawWEm"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666AxKRJ367180
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 6 Jul 2026 11:08:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lOTzOSxHynqZ5lzAB097GOfQw5XXG6mSt3mT/6tBBeU=; b=cV++0cZHir9gZelD
-	8opZkpEb2tUMwX/Tf4NQ6gd90/l5hsfsuOJZu5svZNBwgtXP3fnD54CkfBL2sqVY
-	GwDYS0O+1cDURo1LEkXBCCG5UHsee26Kl4NVGDKH4+NI9wtLmyPCLRSgbq5rYeDo
-	NDYiBzbiBifBNGcCaTmcrrehPQ9ELXf739xdhygNMj/mCd8kOMAx94SKuV2bW47S
-	HZL2/gxe3FrNmMF4dlnIXaERGvlQ561BVjzGbc5vSvcSCzlGWqbgpxbR6NGEt6TJ
-	7f7NYomZ3bxj3+5Q0VAmQnfrekyqQgVdeBtkoRxQ7Jd1c5xwRL4GFA2N5usbOZJI
-	bamTkQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f891urj91-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Jul 2026 11:08:36 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2c354050c34so31515975ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Jul 2026 04:08:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783336116; x=1783940916; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lOTzOSxHynqZ5lzAB097GOfQw5XXG6mSt3mT/6tBBeU=;
-        b=fEJawWEmI78u4fBnfmZQtDfe5K1WVEN7r+ttvnyKpE4kIXRj6f7mb0oP9i0Xa/DLBQ
-         TWsf80Pa1cV+f9bNIFxtrFHyxWZF2mWqW5HLQQf4PTntAuXL14K7NNg1D3d0do/iZojF
-         enFtAIP5bOeg9V+NOWEkLTPI2KoxaiQyNrkvmbjrmnJVj7obMuYKhF7s045f5OCEB/fE
-         rRjh7zQSoHKgdxHM3Emmk9FscKudAuEjhE3ZMmZWVx+k0t9nhYptW9ALm/pwApDuoU48
-         AENo5E3Y1Wtg/SFP+iEz/2GGjK8HSPrz9Kfge6leCxspvAWMaAcwe0TfFnZLzk+4PX82
-         kVtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783336116; x=1783940916;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lOTzOSxHynqZ5lzAB097GOfQw5XXG6mSt3mT/6tBBeU=;
-        b=CNr/A6x8UjSamkuWhL53+NsP0uYcUeUNpYfYHH6373YQVAlruURF/7lLVhzTKLV5yS
-         uThzFGl4i1P+/A5KXpwWKlkya3oW/QvO/0g22Y8ZegVgLiQ1eKfayobYEmF7bdzWQ+fG
-         kW/lkyd3mvvrg7JwYJtUZp9XOaoZZvortPWpQUdy48ID/0sk9HWxxmJBgdVPELBhqJV2
-         OX3re9LAQVwHklxdC9nTp0zBD3GRnp8BFDrVz51ujEe54RK3zgyRnXXUSbW04bMND//E
-         vtSSGhidPhFiktKmu/j4AtkcGRCvoLW1cxtW/GH2fanFEE//BdrOvkZVkBUYPizJNSJP
-         2uDQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoyOaUtEb9/xK+GotRUCFHv5QXVFFrGpxrvNpY53BdupJORU4DOlgVjEoWFj1dCL5i61eg9C9Mo0s/KyBg33MuDilA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJfMJHGMvShlQPIgUWulxNAWqbb4gUKOm2Z9pDpozQl7hR1XfE
-	YZDoP2zJH6nuojMiJSkX0BsL2Cm/mBRikreCAPTRaq/7yv6PpSQHAymmHl+ikqCvy7Kp87jrf6a
-	9ddVUvT0Zh6oiTBoVIe1n/9CTamHKlSreMVFo6so+xFEGaO7jbCm7KaVBaj+QMXEW2EEyxpqQVd
-	w=
-X-Gm-Gg: AfdE7cn4Jp0yY3T31YxTep0xEHcWhAuCy1+qz+9mwrObOR/qaHYdQvrVaEB7DiXiVLq
-	CDpZB3Xl9Q9pIiwjNkVFPwrl8fNpaOwm+7h7w3bR3RZebCKh75RS5Frn4k9u+UapCUmLSNaSYy3
-	HKdrTcrL+UBuYbK3tmKfSjbzOBNcSDbDf4iKiDncpexK4BAJfN3AUMEVS3FI9lpzR/NtukvjLFF
-	85ZR+j6RFypSPTdvM8ee+zuDpxXtNJAowyedrB5iCyZBLzQI4sSbEdUtLW64Z8sgp2lsBZimFYl
-	TQXNqt+byRjgkhYyACA7HmB2BFjTz44ZBoGwuiA5mX9v3L7p2lnwanuQS1iTEoz4UDZrqcFDxPq
-	3BziNuXtSRFgdyVimOdtMiTeicKNPggAHW7iyJtOsFRSw
-X-Received: by 2002:a17:902:e78b:b0:2cc:98b4:e7e2 with SMTP id d9443c01a7336-2cc98b4e9b8mr39300965ad.44.1783336116082;
-        Mon, 06 Jul 2026 04:08:36 -0700 (PDT)
-X-Received: by 2002:a17:902:e78b:b0:2cc:98b4:e7e2 with SMTP id d9443c01a7336-2cc98b4e9b8mr39300675ad.44.1783336115518;
-        Mon, 06 Jul 2026 04:08:35 -0700 (PDT)
-Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad7871285sm47730685ad.64.2026.07.06.04.08.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 04:08:35 -0700 (PDT)
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Date: Mon, 06 Jul 2026 16:38:13 +0530
-Subject: [PATCH 2/2] spi: qcom-geni: add GENI SE registers trace event on
- error paths
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="ao6wcOs8"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=FqwiknrRupuJ+YbQZhTDPFtrox28ElGL/EoIq2WfmbY=;
+	b=ao6wcOs8Q5O0NVhjycbAW1PzuYgJP4S9ueRwTqolkKu7NjzVYtgU476ZL2YoTz0GZ5CYUG9hW
+	q3AhbPYdUrsp0tNVvxM+DIUtCw7piYh62hyoJk4gJwHwEkAjpB4nlSbIveM55jgeWUnNVqe9Xdg
+	1IY7cu9UXDg/xwQ3nqpH2MA=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gv3Cw5ZCKz1T4Fk;
+	Mon,  6 Jul 2026 20:13:16 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id C382A40561;
+	Mon,  6 Jul 2026 20:22:14 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 6 Jul 2026 20:22:14 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 6 Jul 2026 20:22:13 +0800
+Subject: Re: [PATCH v10 2/6] mm/memory-failure: surface unhandlable kernel
+ pages as -ENOTRECOVERABLE
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Andrew Morton
+	<akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+	<nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+	<lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>
+References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
+ <20260630-ecc_panic-v10-2-c6ed5b62eea2@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <157b0e23-9f1e-1af2-bb44-44f1f2cab8a5@huawei.com>
+Date: Mon, 6 Jul 2026 20:22:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20260630-ecc_panic-v10-2-c6ed5b62eea2@debian.org>
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260706-add-tracepoints-for-se-reg-dump-v1-2-48bd08e28cf2@oss.qualcomm.com>
-References: <20260706-add-tracepoints-for-se-reg-dump-v1-0-48bd08e28cf2@oss.qualcomm.com>
-In-Reply-To: <20260706-add-tracepoints-for-se-reg-dump-v1-0-48bd08e28cf2@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
-        aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com,
-        Praveen Talari <praveen.talari@oss.qualcomm.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783336101; l=4376;
- i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
- bh=soA3BDJ7EjqA5hWfm4kj9buFogwtZYzZXE0zhdq8A0g=;
- b=mshxjBsL4s7tH3/JNjX7VohPwJ6AxOs8q2vboeGbMu9861OFrOa9dNhHLbd1IS0UNdTmCZMq+
- Dbzv6JONoEWB8yTTTAFAoIihszsrJxmOBg40lz5nQzZHmkNfNyh8wXn
-X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
- pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
-X-Proofpoint-GUID: 0F0CzZ3Ob9dkYHEWrFMZbb048kDvB2Y4
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDExMyBTYWx0ZWRfX/jsTRSzt1YJA
- mi4Zy9VUZKaM7NxiC4UR+JXUCilUVN8sdjdtOuS/PdByj0I+e1ZQ6zlEFL9eH9L1u/e/PuV4HHm
- iquNG/LPHGFYPEYv8xKrdBetuUTTKqk=
-X-Authority-Analysis: v=2.4 cv=Mo1iLWae c=1 sm=1 tr=0 ts=6a4b8cb4 cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
- a=EUspDBNiAAAA:8 a=SuVZUjzzKY3ZPv7-dKMA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDExMyBTYWx0ZWRfX+x+WvxZza/r3
- kEHkaCHYAe2/voh0HyjLL6DonAEBbwXKFrMDdebbCEFfS59LOyuDDiya8oF5ULk0Z9GcyFvRFsF
- G2a2TOkOvKxIcoTbaJzGFY/wZtoIws1051M+fbfLORJhPpSmCe8z6yGLz2K23XFKPOZ0zY2N1Wu
- Qcr+5iTtf6tKNe6/IebYwSc9jlXNdlAFR/ng7geZlBJzrd35+67A2ZbRH75EECK1KVAsuvLFCuH
- RJHNWenNV6giF6pDYOfW8B9G3C1gWLMt5ULVngryW2NeAo9tl0d15LHSGsyR/+E2Bxi/nvNWCnB
- Fl2m/5YWk0YlpLAGSgBJOiTkauo3olsnScv82Yo3i37+oqlFBpFnaWZ3Rml3LnZEXDSrwH+EN84
- MUJzJvPE5LPP1PNuzJf5NlpD+9QHt7cxQoD7rfGqtm30rkZnhHADjE/37SFmBUW1ZfzvabYiWVx
- RHaIb/aDLqgzdgklQvQ==
-X-Proofpoint-ORIG-GUID: 0F0CzZ3Ob9dkYHEWrFMZbb048kDvB2Y4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-06_01,2026-07-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060113
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
 
-The GENI SPI driver reports various transfer failures such as command
-timeouts, DMA reset timeouts, DMA transaction errors, and unexpected
-interrupt conditions. However, diagnosing the root cause of these
-failures is difficult as the hardware state is not captured when the
-error occurs.
+On 2026/6/30 20:46, Breno Leitao wrote:
+> get_any_page() collapses every HWPoisonHandlable() rejection into a
+> single -EIO via the __get_hwpoison_page() -> -EBUSY -> shake_page()
+> -> retry path.  That is correct for the transient case (a userspace
+> folio briefly off LRU during migration or compaction, which a later
+> shake can drag back), but wrong for stable kernel-owned pages: slab,
+> page-table, large-kmalloc and PG_reserved pages will never become
+> HWPoisonHandlable(), so the retry loop is wasted work and the final
+> -EIO loses the "this is structurally unrecoverable" information.
+> memory_failure() then maps -EIO into MF_MSG_GET_HWPOISON, which the
+> panic-on-unrecoverable sysctl deliberately does not act on.
+> 
+> Introduce is_kernel_owned_page(), a small predicate that positively
+> identifies pages the hwpoison handler cannot recover from:
+> 
+>   is_kernel_owned_page(p) :=
+>       PageReserved(p) ||
+>       PageSlab(head) || PageTable(head) || PageLargeKmalloc(head)
+> 
+>   where head = compound_head(p).
+> 
+> PG_reserved is a per-page flag (PF_NO_COMPOUND) and is tested on the
+> page directly.  The slab, page-table and large-kmalloc page-type bits
+> are only stored on the head page, so those tests resolve the compound
+> head first, then re-read compound_head(page) afterwards: a concurrent
+> split or compound free that moves head invalidates the just-read flags
+> and the loop retries.  The lookup still takes no refcount, mirroring
+> the rest of get_any_page(); the recheck closes the common split race,
+> and a residual free->alloc->free in the same window can only mis-tag
+> a genuinely poisoned page, never reclassify a handlable one.
+> 
+> No MF_SOFT_OFFLINE / page_has_movable_ops() opt-out is needed: a
+> movable_ops page is always PageOffline or PageZsmalloc, whose
+> page_type is mutually exclusive with slab, page-table and
+> large-kmalloc, and it never carries PG_reserved, so it can never
+> match any of the checks above.
+> 
+> The list is intentionally not exhaustive.  vmalloc and kernel-stack
+> pages, for example, do not carry a page_type bit and would need a
+> different oracle; they keep going through the existing retry path
+> unchanged.  This is the smallest set we can identify with certainty
+> by page type.
+> 
+> Wire the helper into the top of get_any_page() to short-circuit
+> those pages before the retry loop runs.  On a hit, drop the caller's
+> MF_COUNT_INCREASED reference (if any) and return -ENOTRECOVERABLE
+> straight away.  Pages outside the helper's positive list still take
+> the existing retry path and return -EIO, leaving operator-visible
+> behaviour for those cases unchanged.
+> 
+> Extend the unhandlable-page pr_err() to fire for either errno and
+> update the get_hwpoison_page() kerneldoc to document the new return.
+> 
+> memory_failure() still folds every negative return into
+> MF_MSG_GET_HWPOISON via its existing "else if (res < 0)" branch, so
+> this patch on its own only changes the errno that soft_offline_page()
+> can propagate to its callers.  A follow-up wires -ENOTRECOVERABLE
+> through memory_failure() and reports MF_MSG_KERNEL for the
+> unrecoverable cases, which is what the
+> panic_on_unrecoverable_memory_failure sysctl observes.
+> 
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Suggested-by: Lance Yang <lance.yang@linux.dev>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  mm/memory-failure.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 50 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index f4d3e6e20e13f..087658484e242 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -1325,6 +1325,38 @@ static inline bool HWPoisonHandlable(struct page *page, unsigned long flags)
+>  	return PageLRU(page) || is_free_buddy_page(page);
+>  }
+>  
+> +/*
+> + * Positive identification of pages the hwpoison handler cannot recover:
+> + * pages owned by kernel internals with no userspace mapping to unmap, no
+> + * file mapping to invalidate, and no migration target.
+> + */
+> +static inline bool is_kernel_owned_page(struct page *page)
+> +{
+> +	struct page *head;
+> +	bool kernel_owned;
+> +
+> +	/* PG_reserved is a per-page flag, never set on a compound page. */
+> +	if (PageReserved(page))
+> +		return true;
+> +
+> +	/*
+> +	 * Page-type bits live only on the head page, so resolve any tail
+> +	 * first.  The check takes no refcount; recheck the head afterwards
+> +	 * so a concurrent split or compound free cannot leave us trusting
+> +	 * a stale view.  A residual free->alloc->free cannot be closed here
+> +	 * (frozen slab and large-kmalloc pages cannot be pinned), but is
+> +	 * harmless: where a wrong verdict could panic, memory_failure() has
+> +	 * already set PageHWPoison, which bars the page from the allocator.
+> +	 */
+> +retry:
+> +	head = compound_head(page);
 
-Add trace_geni_se_regs() calls at critical SPI error handling paths to
-automatically capture GENI serial engine debug registers when failures
-are detected. This includes:
+It's irrelevant to this issue but should we use folio?
+Anyway, this patch looks good to me.
 
-- M_CMD abort/cancel timeout
-- DMA TX/RX FSM reset timeout
-- DMA transaction failures and pending residue conditions
-- Unexpected interrupt error status
-- Premature transfer completion with pending TX/RX data
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
 
-Dumping the SE debug registers at the time of failure provides
-additional hardware context and significantly improves post-mortem
-analysis of SPI transfer issues without affecting normal operation.
-
-Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
----
- drivers/spi/spi-geni-qcom.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 26e723cfea61..7db0836308c2 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -3,6 +3,7 @@
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/qcom_geni_spi.h>
-+#include <trace/events/qcom_geni_se.h>
- 
- #include <linux/clk.h>
- #include <linux/dmaengine.h>
-@@ -184,6 +185,7 @@ static void handle_se_timeout(struct spi_controller *spi)
- 	time_left = wait_for_completion_timeout(&mas->abort_done, HZ);
- 	if (!time_left) {
- 		dev_err(mas->dev, "Failed to cancel/abort m_cmd\n");
-+		trace_geni_se_regs(se);
- 
- 		/*
- 		 * No need for a lock since SPI core has a lock and we never
-@@ -201,8 +203,10 @@ static void handle_se_timeout(struct spi_controller *spi)
- 				writel(1, se->base + SE_DMA_TX_FSM_RST);
- 				spin_unlock_irq(&mas->lock);
- 				time_left = wait_for_completion_timeout(&mas->tx_reset_done, HZ);
--				if (!time_left)
-+				if (!time_left) {
- 					dev_err(mas->dev, "DMA TX RESET failed\n");
-+					trace_geni_se_regs(se);
-+				}
- 			}
- 			if (xfer->rx_buf) {
- 				spin_lock_irq(&mas->lock);
-@@ -210,8 +214,10 @@ static void handle_se_timeout(struct spi_controller *spi)
- 				writel(1, se->base + SE_DMA_RX_FSM_RST);
- 				spin_unlock_irq(&mas->lock);
- 				time_left = wait_for_completion_timeout(&mas->rx_reset_done, HZ);
--				if (!time_left)
-+				if (!time_left) {
- 					dev_err(mas->dev, "DMA RX RESET failed\n");
-+					trace_geni_se_regs(se);
-+				}
- 			}
- 		} else {
- 			/*
-@@ -382,10 +388,12 @@ static void
- spi_gsi_callback_result(void *cb, const struct dmaengine_result *result)
- {
- 	struct spi_controller *spi = cb;
-+	struct spi_geni_master *mas = spi_controller_get_devdata(spi);
- 
- 	spi->cur_msg->status = -EIO;
- 	if (result->result != DMA_TRANS_NOERROR) {
- 		dev_err(&spi->dev, "DMA txn failed: %d\n", result->result);
-+		trace_geni_se_regs(&mas->se);
- 		spi_finalize_current_transfer(spi);
- 		return;
- 	}
-@@ -395,6 +403,7 @@ spi_gsi_callback_result(void *cb, const struct dmaengine_result *result)
- 		dev_dbg(&spi->dev, "DMA txn completed\n");
- 	} else {
- 		dev_err(&spi->dev, "DMA xfer has pending: %d\n", result->residue);
-+		trace_geni_se_regs(&mas->se);
- 	}
- 
- 	spi_finalize_current_transfer(spi);
-@@ -941,8 +950,10 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 
- 	if (m_irq & (M_CMD_OVERRUN_EN | M_ILLEGAL_CMD_EN | M_CMD_FAILURE_EN |
- 		     M_RX_FIFO_RD_ERR_EN | M_RX_FIFO_WR_ERR_EN |
--		     M_TX_FIFO_RD_ERR_EN | M_TX_FIFO_WR_ERR_EN))
-+		     M_TX_FIFO_RD_ERR_EN | M_TX_FIFO_WR_ERR_EN)) {
- 		dev_warn(mas->dev, "Unexpected IRQ err status %#010x\n", m_irq);
-+		trace_geni_se_regs(se);
-+	}
- 
- 	spin_lock(&mas->lock);
- 
-@@ -974,10 +985,13 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 					writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
- 					dev_err(mas->dev, "Premature done. tx_rem = %d bpw%d\n",
- 						mas->tx_rem_bytes, mas->cur_bits_per_word);
-+					trace_geni_se_regs(se);
- 				}
--				if (mas->rx_rem_bytes)
-+				if (mas->rx_rem_bytes) {
- 					dev_err(mas->dev, "Premature done. rx_rem = %d bpw%d\n",
- 						mas->rx_rem_bytes, mas->cur_bits_per_word);
-+					trace_geni_se_regs(se);
-+				}
- 			} else {
- 				complete(&mas->cs_done);
- 			}
-
--- 
-2.34.1
+Thanks.
+.
 
