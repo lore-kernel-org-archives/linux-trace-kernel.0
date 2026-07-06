@@ -1,73 +1,86 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from latitanza.investici.org (latitanza.investici.org [185.218.207.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E666230D403;
-	Mon,  6 Jul 2026 13:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521D5318146;
+	Mon,  6 Jul 2026 13:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.218.207.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783345016; cv=none; b=oF9Z7VzpICK8LJfoBwfAA1QU4/qIXrlvQxXePUlvr5fW7LVr2e+IQ0V4d2iprpM3brWA44ODzAefxIdnk3VDyCLabB35g7hMzaCS1X7a9vuRaoq7PuZWw28WjTtQEV9C1Fc6l0YKSDhkpcj6XKbDIb/FvaKTNiO6Vle+4ebhB9I=
+	t=1783345131; cv=none; b=W0LAihpaiP9RzaPQ4wA06zUwTjdLfyb2AjTDwiHnQ+OPB5j4TZmx/Z7X6PGL29EM3Nl8nFj5inHtgquD3tY89qnTHzhnW43I12zn4bl7P9CocLz9/ijRj9ojhOAiqTIm12d9lT/O+fr6utl7loFVH5aZT4ImeUgbVXKzAiHFX58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783345016; c=relaxed/simple;
-	bh=o36NYZa7n1UvMniLFbo2vJugvYLzERRkzk6Fn0LFVyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GZZu+a48sRX1s0vy5YBdMi9nGGQ8FRA9cstZcqPh9kseoBQjo3nYN8QASgnqwSPYk7XJBRcNb35XWIQbwvhD+Zuwyhau5Umb0bSYQrpBuA2jcUvC8OFbtu8QtWWLB3M625Br2PQNN0PauY+MLxO7vQ1tA9wQS1EXk1KQYBuhPAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 54997C228B;
-	Mon,  6 Jul 2026 13:36:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 2FEC017;
-	Mon,  6 Jul 2026 13:36:43 +0000 (UTC)
-Date: Mon, 6 Jul 2026 09:36:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Eugene Mavick <m@mavick.dev>
-Cc: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Boqun Feng <boqun@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gary
- Guo <gary@garyguo.net>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
- <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH 1/4] tracing: add ref_trace_final_put tracepoint
-Message-ID: <20260706093643.57c46df3@gandalf.local.home>
-In-Reply-To: <20260705-refcount-final-put-trace-v1-1-cdd0014626a9@mavick.dev>
-References: <20260705-refcount-final-put-trace-v1-0-cdd0014626a9@mavick.dev>
-	<20260705-refcount-final-put-trace-v1-1-cdd0014626a9@mavick.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1783345131; c=relaxed/simple;
+	bh=L5InHNMeS2peO9H59MIYUobdVy47Dw5/d+DWfQl5S6U=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=eZrnHnbXFjyrUpHXjaLzr4m0s/2TSLdDLfQSoTN4aTfE/q420EE4vE+xJHlOuNCs4oGAaY5FT7Q93Ucq5HHbHPNS3XxIT1xgr1mbjkmyIi9AkXb8JTu8Kbs6YMQwXGojQv0SLug0aR929LWIkTlYk4U4XzOPh8T+oKuDwGAEb60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=S5WJHzLv; arc=none smtp.client-ip=185.218.207.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="S5WJHzLv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1783345128;
+	bh=L5InHNMeS2peO9H59MIYUobdVy47Dw5/d+DWfQl5S6U=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=S5WJHzLvFLAeBIdTDZQFlzJtDcAxwQ3vL2jIgBnRLAEReYDzR0jVXR/yrMk+JDYzD
+	 n8Y3sRb8eZWViwUyqoVKQvtTujLuq2trZRx9laX55Ftd3ZClxNgZSjbuT468GLr0xo
+	 sUlRXoRrgZQd5oNKxYVuIq3r9lKtEPtGJ06QagC0=
+Received: from mx3.investici.org (unknown [127.0.0.1])
+	by latitanza.investici.org (Postfix) with ESMTP id 4gv56c60v8zGpJ3;
+	Mon, 06 Jul 2026 13:38:48 +0000 (UTC)
+Received: by mx3.investici.org (Postfix) id 4gv56c3jHKzGpJ0;
+	Mon, 06 Jul 2026 13:38:48 +0000 (UTC)
+Date: Mon, 06 Jul 2026 14:38:48 +0100
+From: Bradley Morgan <include@grrlz.net>
+To: Oleg Nesterov <oleg@redhat.com>, Christian Brauner <brauner@kernel.org>
+CC: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>,
+ Aleksandr Nogikh <nogikh@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Adrian Huang <adrianhuang0701@gmail.com>,
+ Kexin Sun <kexinsun@smail.nju.edu.cn>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/2=5D_signal=3A_make_sen?=
+ =?US-ASCII?Q?d=5Fsignal=5Flocked=28=29_take_const_siginfo?=
+In-Reply-To: <akuusnRXP_tyuiel@redhat.com>
+References: <20260622164029.11474-1-include@grrlz.net> <f754c4e5c82b45bcbb770aa8bb1f4ab1d87a0b0e.1782159692.git.include@grrlz.net> <20260706-karpfen-beruhen-ausschalten-9f2b0a55b8de@brauner> <akuusnRXP_tyuiel@redhat.com>
+Message-ID: <5431A102-B7A2-4FCD-82F5-1AF342B37140@grrlz.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 2FEC017
-X-Stat-Signature: wrbjydzdk7zyfpqmfcr7wgaazjfey6co
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18iOBSd1pnsrPI+vzqJgOb1sapVaUTJDoE=
-X-HE-Tag: 1783345003-529797
-X-HE-Meta: U2FsdGVkX18T6Lw+/fcbVOH4rtqF7ZifzRFdTKamy0zQqCc6fLRr5ibfZP9wg1GYcku/1WOe9lssZmFPjldoouZRMbWsmB76zw/otz1z60JUzDxmL2DZU4i08KjirFEzfCZiFNoTDgaL4SxKt9Q1m8X6hOQZx1OU/uPuqQeDONqy9NJ7EwrdjmPdcNdsV9mhJueYUEzb5/KQoyrKvLYbOev/FHwtuHJQrf+DT3pYr1a03b4b6P038OVkf/0sNNpXBjJ1lwemilyysDS91do4cvogWTkTYlhzThKAbr2xvrY7D8/JC+fGKHAqQnAcLsC3
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, 05 Jul 2026 07:19:20 +0800
-Eugene Mavick <m@mavick.dev> wrote:
+On July 6, 2026 2:33:38 PM GMT+01:00, Oleg Nesterov <oleg@redhat.com>
+wrote:
+>Just in case, I can't read the code until Wednesday, but...
+>
+>On 07/06, Christian Brauner wrote:
+>>
+>> > send_signal_locked() should not change the caller's siginfo. Make that
+>> > part of the type and keep the local rewrite on its copy.
+>> >
+>> > Suggested-by: Oleg Nesterov <oleg@redhat.com>
+>> > Signed-off-by: Bradley Morgan <include@grrlz.net>
+>>
+>> Reviewed-by: Christian Brauner (Amutable) <brauner@kernel.org>
+>
+>Agreed, but IIRC this change should be rebased on top of -mm tree (I sent
+>the patch which changes send_signal_locked(), and thanks for your review
+>btw!)
+>
+>And, again iirc, with that patch "make siginfo const" become really
+>trivial,
+>we only need to add "const" to every "kernel_siginfo *info" in the
+>send_signal_locked()'s callchain.
+>
+>Oleg.
+>
+>
 
-> +#ifdef CONFIG_TRACEPOINTS
-> +/* Wrapper function implemented in lib/ref_trace.c */
-> +extern void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj);
-> +
-> +#define trace_ref_final_put(obj)						\
-> +	do {									\
-> +		if (tracepoint_enabled(ref_trace_final_put))			\
-> +			do_ref_trace_final_put(_RET_IP_, __func__, obj);	\
-> +	} while (0)
-> +
+Makes sense, thanks a lot.
 
-
-Also, you may want to make the macro called do_trace_ref_final_put(), to
-show that it is not a tracepoint (which all start with "trace_").
-
--- Steve
+Thanks!
