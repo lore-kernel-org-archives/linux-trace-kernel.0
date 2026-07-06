@@ -1,275 +1,292 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023120.outbound.protection.outlook.com [40.107.44.120])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FC53BB682;
-	Mon,  6 Jul 2026 08:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.120
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783327051; cv=fail; b=RvEG/5o9MUd2cm9snO1RUpERpiN0dbMvr1U2pBNZH4fbxy9KNTICUQSzrOX9eluyh/2dPYXS6oSBiowj2ErdRikJS0kR8Ky6Lup6QJapDBUULodoendajh3E2TDpbhj42yml0elHRE4Zo/5WMHNQS7YdwRUUMYQWghgYm/JrGfA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783327051; c=relaxed/simple;
-	bh=JUJXjPthRjHSZvd+BsHVJbWGTaiu9Lr4rt//ZATO9tc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=oB9IzM4j4TcM1iTCc5yM87fIsBoydHS4cIbiztgz3d3Xbbhg0sxMyMQYEOuXuULokMh833ZccojRrdEWAzCaB6DQpGIER4FS2dY0ILWsje1MlrXKEQkV8TohpA1zOodLvExbaPw2fcgZhdyVsYQOLjE+lE2kw9R4M+/5UxfOw9o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=tIJr3Fzb; arc=fail smtp.client-ip=40.107.44.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57976431498;
+	Mon,  6 Jul 2026 09:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783331716; cv=none; b=q6ncUgz9ynKdFcUoMPIbfoPCaiQqLFFK2hkRigjKeE8J6Uh6ArvJ1twSf5goGC0DusZWWHZLad/Vv6mYXfGhm9AiqTmS1EITgoIKLfVOBjZv4xEioppeUkBgHppgRQ4NpjL517xqIl/dr8shrRaFq2DsotIx+gTcvd5z8L9GBrw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783331716; c=relaxed/simple;
+	bh=Eripl9vQSxPv4KujcVDrZN3otdTYf43Zp+lcUYKnkJs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FwcUahXrPOYqnYLFqgGJc4HRntVRNXKi8+4mUtBiLI5xvv2ARtPFoPncklwE0JWZqI+2Pn3fD9bBsNcQndWL1S3L36x64vIQNxKy/LAMJWKiVV+TkyvWIJtEqpDvA//xxCKopuw5p4fJ/zpXPhi2wdJmdTkJXylt2esAUc0qfrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dmaygNQU; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="tIJr3Fzb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fZrLus8DD5Oqotly00zI4PAWPgCnSbNmwEuiPqgcXAezFKDhIRyrLBS7AEcIeb6wbJK5VgfxbFzv5TERFldrlJOfr8cAXKJHQR4h+ZybuQDZ7N6XCCcV09rjXK5J6Yvz5CWrdkxgEVNPMt1Mi8oBv5yKqVi7Gt5dAbtAWv68Pp4aROYFw/vgLclrXvXIWSJIdpVbpgrUMxnUFRGmegL7KKbJRtLW0fuN0ZTSElVvN4Tm9346VOUlzW2+FSajuQ/JrqD/vpjY+uOwst56nqFxVp1xWohQ1DfFKMHrTYinMF89BA3TjHKNggRLgBSY3/sm2uSoRLpBEolCqhdxjDSCwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JUJXjPthRjHSZvd+BsHVJbWGTaiu9Lr4rt//ZATO9tc=;
- b=ESFc5zFag/6PpRo8iZ+qjSc9wQc1+4sgKxfkiRN88D10zX7F5t5A3hQO/OC6iCXWIltOOidPrcqX6dgwl8g50wRhqf+181WzkSz4bBT7fbiN1QRzKbr7sugdU8yp95qoHExKGX1lmLwuYWwoKJp76XLmiJAusCxISnXfQl+WX7cmaXYVJy8h8je9p7OE7qI/whHd/+2D3tWvczB894ANXn+0IGgab+aWLYKXwnQu01qeNOilxdIne0sAaGeqajapMiQWMrtBA2jbF4dByc/C4M40L6JufZTQQONEqGJZK+McY6q/VYFSznJ7ctb5CmhKmHbTsMECMUfbkMvlfDZ7mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=transsion.com; dmarc=pass action=none
- header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JUJXjPthRjHSZvd+BsHVJbWGTaiu9Lr4rt//ZATO9tc=;
- b=tIJr3FzbcBL+Xo0Y+wmYmpk2Q28HsDuJRoaRlZZt6wxiCAy8l+ccpkPzvmuvAd8ogWk0akjtF0fboFcdYXKkcMuVIFfoNlvJMZe1s+kwdxHy7sc7Wo7U+O3LIVGkSzposH3lM9exn7fblY8/1IQN999sdD5xRegXjO/JRKMWgrI=
-Received: from SI2PR04MB5648.apcprd04.prod.outlook.com (2603:1096:4:1a4::11)
- by TYZPR04MB7280.apcprd04.prod.outlook.com (2603:1096:400:44f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Mon, 6 Jul 2026
- 08:36:50 +0000
-Received: from SI2PR04MB5648.apcprd04.prod.outlook.com
- ([fe80::8ce1:b82b:3b19:f79d]) by SI2PR04MB5648.apcprd04.prod.outlook.com
- ([fe80::8ce1:b82b:3b19:f79d%5]) with mapi id 15.21.0181.008; Mon, 6 Jul 2026
- 08:36:50 +0000
-From: Pu Hu <hupu@transsion.com>
-To: "mhiramat@kernel.org" <mhiramat@kernel.org>
-CC: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, Hongyan Xia <hongyan.xia@transsion.com>, Pu Hu
-	<hupu@transsion.com>, Jiazi Li <jiazi.li@transsion.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
-	<linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
-	<naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
-Subject: [RFC 3/3] selftests/kprobes: Add kprobe stress test for page fault
- handling
-Thread-Topic: [RFC 3/3] selftests/kprobes: Add kprobe stress test for page
- fault handling
-Thread-Index: AQHdDSKXmNX1+B18hU+mdrRdH29+zw==
-Date: Mon, 6 Jul 2026 08:36:50 +0000
-Message-ID: <20260706083636.159883-4-hupu@transsion.com>
-References: <20260704234730.46d51c47d75e7d208e7bec9f@kernel.org>
- <20260706083636.159883-1-hupu@transsion.com>
-In-Reply-To: <20260706083636.159883-1-hupu@transsion.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=transsion.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2PR04MB5648:EE_|TYZPR04MB7280:EE_
-x-ms-office365-filtering-correlation-id: ad1cb196-bf64-4ba6-c9df-08dedb39b99f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|11063799006|4143699003|56012099006|6133799003|18002099003|22082099003|38070700021;
-x-microsoft-antispam-message-info:
- KYKuEDpqU86z0wOTmqZrAUXxxQBUIYhsy4RSXwU8OalhZKS8wIKLUANokDfuBOspa6A/MpuKmuT3wBSWfRl8/ZzwmDwSIUo239L4YtD29EZfHSWSGS5mXKSNKdPc6tm3GBooIl/HMTBirBDHEWZg2/2OdcfhVDlSC5DWdNnXTWjOd/nLsQRb4TmNS2KocMyyvC6rjFLiGFVXLsI0gHUSL9xfGIuNWg3RAaNGdFzBsYTlA2BFB4WMchU0wKjb8qJqmFJV8L/aNEPtMjRAi4AMoLRUZHx3ghP8Guunrop2f7PSbojkzRexLHeGu0RfR8auGLK9ewu7RMAilvUibKibdUZVMKLHDkYnA1oUOxXWKYuGDZ8womz1nZT2niE7P8kh+VeeQJwYS2LOLBnt+AblT1sNTDH+y3fym/Zb/VBYfGvWKWoaBh5AYU4QtUui1EOKkPFnPm6RRdT4vMf4j8uBtGCH8f/q+sFzV4/YKhugsBoOikDOJBivWsGMaOuWae1Qk4hS/qsdG/IH4d+nyHPEtWnO8h4uGJMP1+6e1JVTuEWZgQ2dA81cGey98Ur7NtZkAc9h3DLEbqwyvlbRotm3goXXiI1nYzBZvPGWMIQ3J7iwjo3hZ4P7sq9BgOxiA16E4EbZex4QxDv0SwYgU0pLiFYW9oRRyaZPxFMUme2W+RIjtu1J4kvsDmp7zgmg4wrlvUGL8N9qq3hHJDMVGL/q7HaEQ+BlFaL/szOsEYngSeE=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR04MB5648.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(11063799006)(4143699003)(56012099006)(6133799003)(18002099003)(22082099003)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ZmxOMm1ld0ZHZ1hrclNENklUclpHaDl6cFVzZFNmelk3eCtlWURxVExPUjdu?=
- =?utf-8?B?ZUZXRUd4b0R2cHJCenVpZGNCMDFGYnZxZmU5MEEyMDI5bC9ZOVZYNmZ5NHlE?=
- =?utf-8?B?dlhGUnNCUjZsek12VHRVWDM3YWhpclR4UnM1ZzhabUtSSmtPVUY2OXBMS3pH?=
- =?utf-8?B?bzVOOXI1aXlXbXNvcFQzaXpIMGs0YWRYWElDY0k2NThsUWFCdWpsY2dpZ05E?=
- =?utf-8?B?elhCUFRCbCtZeUt4NkVEMEZnRGxjMFJaVVZuOEs5K2FPVEl4ejJSZ04xYnEy?=
- =?utf-8?B?NmdncXVUc3pTeWhEL1R0S2wwNFZuNFFJdFFoTUJ6WkhmdEhGRlUvMHJRSEh3?=
- =?utf-8?B?dlk3QkREQlBlTmIzTFVDZUFhSlNtU2FKaGRRUEI1RUJ0YU5yeEFLWUFRKysr?=
- =?utf-8?B?QUhmaGVaZTUvRnEvVXRNZW9qMk9nR3BJT3B3WDFhSFNEMERxZGhFeU5DTG1s?=
- =?utf-8?B?ZjFtRkhaUjhtYWlqZkc2dDhGaDVEZzZ4UkNqRFd6VlRHZUFCNmV1bDdrZEJm?=
- =?utf-8?B?QkVpZURVVWtMaGh0azAwY3ZRNVdNREl5SmpibnNvcFpZMmZlYUN6QmZYeW03?=
- =?utf-8?B?QjVGck1pQTNmbktqN0dNbVNjRTRRc0pqQXRaYlFFZlErZGVYMUNPbFdFd01o?=
- =?utf-8?B?NnBKbkJHdXlPa3JKY1k5bFY4d0x2eVk3bmYvMjdwanBEbC9PamxFY1FiUFRr?=
- =?utf-8?B?dEU0bXA3VGJuckQxL3VlK1N4cm5lNUNkTEFJdHZFOTdtVU95MmtLamZCWW9L?=
- =?utf-8?B?OXEzQ0tpRWo2d0NIWmRjS3gwd3FVM3U0ZVdZWmJCRTgwcTBLZFhHcUM4Rmxj?=
- =?utf-8?B?NWc5aG45bnZtNnR5TkViQXdVTjZWWXp3cXJQTDhHWWRLTjNYQjV6dlBqLzdN?=
- =?utf-8?B?K3orWFd3Z2lhREtYYm16SGp1TGdzdlRLK2N6ZjQ2RlhjSlM1RGl3YnR2YW1J?=
- =?utf-8?B?Q1VIMGRyU1c2elYvUy95V2ZwanVTV2ZTQnBGdnQyZGhuVk96TDVRVjZLTnph?=
- =?utf-8?B?cEVFR20wbjh3SFVpUUVTbmlUeUNraU1uL1lxWnl3T293ZW5EL1I0VEw5V2Uw?=
- =?utf-8?B?cEJob2UvNGllWlRUcEZpei81bVVlRG5SNCtaL2M0cU53NlVyMlZWbTluZG9h?=
- =?utf-8?B?WnlTM1o1VFNTb0hZZWFCeTRXak9WK3R6UDMvTUQyYUU2MTN5TEFKdFl0K1ln?=
- =?utf-8?B?d1lHVHZZcTdFNmhiYUI5ejdhUFJ4SUMzeDc5M2JobkNJVUphbG13WWZvTHMx?=
- =?utf-8?B?M293QTRuMVNlVU1lcDZTdzRFamtQWm55NkJ4UElIUGRYY2Jic0Rib1FOck5y?=
- =?utf-8?B?TC9WQkZFR1FkOVcwUnc1dEF3M2lJTEVLRWdEWkxTZlJKRVlBK3BrSXhpMnpm?=
- =?utf-8?B?a2tqc1NDeVBCNFAyWUU0MTd1Nms4dkFvRENZYWpNNUNWS2d1Z0h5NXNuRlF6?=
- =?utf-8?B?bDA1aGo0MEpDekdSQTh5RFptUUhUbVZpMWFuS01UMy8rRE1jSmFLVWFXUFkw?=
- =?utf-8?B?aXBEN1pXUG1jWFlXVElFSXhOSTQ5TUdSclRpS0RLeGJtMkI2c0Q5N0NQUWxn?=
- =?utf-8?B?RTdDZ05TZ2lvYVlMTVV3aFRQbElMZmJsZ1hScTlBdnVac1BzanhoSm5QWXhj?=
- =?utf-8?B?aHZ0YmJMamtUaHBoREZrL3NiVmJmTXVYVitXLzgrWnVzNlpoaUZOckxtaERF?=
- =?utf-8?B?cUhJUHpKMmtEOG16aURuWW55ak5mbUcyWnFFYkpiU0ZYMEk5N2lVcFp5RUVE?=
- =?utf-8?B?OTZRUUVWSnM4S2J6ckFqZWFPWXpNNUxhVTB3WWt6VUppQlhUbzhtQzRSTzd5?=
- =?utf-8?B?cHpmRGwvL0lmUjZBZEl2RDBpYndINCtBWVBXQnl4V25hSTN4VW1adWExeVBo?=
- =?utf-8?B?NWcyUmVOU0tuR2tHV09SKzc1OGJsOEVleEExREdweXUySGZJS2ZHOTN2aDR5?=
- =?utf-8?B?bW1MaVhaeFZWOGV1THdibEoxR2cvZHJSRnJwWVNGVGRPakN1Zi9pcnpWMk05?=
- =?utf-8?B?T2ZpcHN5RDAwZ0Q0WlZTQkVHTUhwR0h1akI3RittNU9rUmFYUU1PK2lDaUYz?=
- =?utf-8?B?RjNVMnRtZXptMWVsSS9FOG5TUDNseTk2YlYybWFRVXV5TlA5WE9QOEdNSFpj?=
- =?utf-8?B?QTE0KytZNDBHWHkwdzhJMnoySUQ0WnlIQTAxZHJUbjdvckozdmc1M2tJK2xL?=
- =?utf-8?B?Zi9QdXg5NUU3bUErak5EZSs3OW53UEU2anJZMUxQQ0FyakZhWlJUSnZOcm9m?=
- =?utf-8?B?NnYwdGZnbm9mcGkycElKQnVFb1JTaXVuS2k5cFRORVZsMnhya1pibjdXTldn?=
- =?utf-8?Q?cgPIh3IFyHZpyfRBQ5?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dmaygNQU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1783331700; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=xfq7F+Q8AODgLh3MJ/odHv+Zcpwf/BRIqVh6hDn9FRM=;
+	b=dmaygNQUYmfsvc2psUVm56qN+N/JgE/LNevEphYXQ4RIR8PqX46SP1COh6NWrB2pl/H5grm4HebyjEoqS1swxTRs5FNyGqbl6yPky6/awcqeKxloCy6du6j92XwSA6ATpVYEERNtG9UnJkVESwyVa87uRKjIt2iUyXP3eoXd0J0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0X6UFuet_1783331687;
+Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0X6UFuet_1783331687 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 06 Jul 2026 17:54:59 +0800
+From: Yuanhe Shu <xiangzao@linux.alibaba.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Yuanhe Shu <xiangzao@linux.alibaba.com>
+Subject: [PATCH] x86/stacktrace: Mark arch_stack_walk() and unwinder functions notrace
+Date: Mon,  6 Jul 2026 17:54:45 +0800
+Message-Id: <20260706095445.1683434-1-xiangzao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: transsion.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR04MB5648.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad1cb196-bf64-4ba6-c9df-08dedb39b99f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2026 08:36:50.6559
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jcqZvd1JhsNkbGElRZircxfzamkLNHNzdZC+f6aT3/BMyvU7ze4Ekk3393Zrb8xq/aBTNkPyg6W0DGOawJvcZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR04MB7280
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogUHUgSHUgPGh1cHVAdHJhbnNzaW9uLmNvbT4KCkFkZCBhIHNlbGZ0ZXN0IHRoYXQgc3Ry
-ZXNzZXMga3Byb2JlIGhhbmRsaW5nIGFyb3VuZCBwYWdlIGZhdWx0IHBhdGhzLgpUaGlzIHJlcHJv
-ZHVjZXIgY29uc2lzdHMgb2Y6Ci0gQSBrcHJvYmUgbW9kdWxlIHRoYXQgcHJvYmVzIGZvbGlvX3dh
-aXRfYml0X2NvbW1vbigpCi0gQSB1c2Vyc3BhY2UgcHJvZ3JhbSB0aGF0IHJlcGVhdGVkbHkgdHJp
-Z2dlcnMgZmlsZS1iYWNrZWQgcGFnZSBmYXVsdHMKClRoaXMgaXMgcHJpbWFyaWx5IGludGVuZGVk
-IHRvIHJlcHJvZHVjZSBhcm02NCBrcHJvYmUgc3RhYmlsaXR5IGlzc3VlcwpyZWxhdGVkIHRvIFhP
-TCBzbG90IGV4ZWN1dGlvbiBhbmQgZmF1bHQgaGFuZGxpbmcgZHVyaW5nIHNpbmdsZS1zdGVwcGlu
-Zy4KClNpZ25lZC1vZmYtYnk6IFB1IEh1IDxodXB1QHRyYW5zc2lvbi5jb20+Ci0tLQogdG9vbHMv
-dGVzdGluZy9zZWxmdGVzdHMva3Byb2JlLy5naXRpZ25vcmUgICAgIHwgICAyICsKIHRvb2xzL3Rl
-c3Rpbmcvc2VsZnRlc3RzL2twcm9iZS9NYWtlZmlsZSAgICAgICB8ICA3NSArKysrKysrKysrKysr
-CiB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rcHJvYmUvZmF1bHRfc3RyZXNzLmMgfCAxMDUgKysr
-KysrKysrKysrKysrKysrCiAuLi4vc2VsZnRlc3RzL2twcm9iZS9rcHJvYmVfZm9saW9fc3RyZXNz
-LmMgICAgfCAgNzAgKysrKysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDI1MiBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMva3Byb2JlLy5n
-aXRpZ25vcmUKIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rcHJv
-YmUvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9r
-cHJvYmUvZmF1bHRfc3RyZXNzLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy90ZXN0aW5nL3Nl
-bGZ0ZXN0cy9rcHJvYmUva3Byb2JlX2ZvbGlvX3N0cmVzcy5jCgpkaWZmIC0tZ2l0IGEvdG9vbHMv
-dGVzdGluZy9zZWxmdGVzdHMva3Byb2JlLy5naXRpZ25vcmUgYi90b29scy90ZXN0aW5nL3NlbGZ0
-ZXN0cy9rcHJvYmUvLmdpdGlnbm9yZQpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAw
-MDAwMDAuLjVmZGIzZWUwMmNmMQotLS0gL2Rldi9udWxsCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL2twcm9iZS8uZ2l0aWdub3JlCkBAIC0wLDAgKzEsMiBAQAorIyBTUERYLUxpY2Vuc2Ut
-SWRlbnRpZmllcjogR1BMLTIuMC1vbmx5CitmYXVsdF9zdHJlc3MKZGlmZiAtLWdpdCBhL3Rvb2xz
-L3Rlc3Rpbmcvc2VsZnRlc3RzL2twcm9iZS9NYWtlZmlsZSBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL2twcm9iZS9NYWtlZmlsZQpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAw
-MDAuLjM5ZjIwZGU1MzcwYwotLS0gL2Rldi9udWxsCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL2twcm9iZS9NYWtlZmlsZQpAQCAtMCwwICsxLDc1IEBACisjIFNQRFgtTGljZW5zZS1JZGVu
-dGlmaWVyOiBHUEwtMi4wCisjCisjIE1ha2VmaWxlIGZvciBrcHJvYmUgZmF1bHQgc3RyZXNzIHRl
-c3QKKyMKKworaWZuZXEgKCQoS0VSTkVMUkVMRUFTRSksKQorCisjIFRoaXMgcGFydCBpcyB1c2Vk
-IGJ5IGtlcm5lbCBLYnVpbGQgd2hlbiBidWlsZGluZyB0aGUgZXh0ZXJuYWwgbW9kdWxlOgorIwor
-IyAgIG1ha2UgLUMgJChLRElSKSBNPSQoQ1VSRElSKSBBUkNIPSQoQVJDSCkgQ1JPU1NfQ09NUElM
-RT0kKENST1NTX0NPTVBJTEUpIG1vZHVsZXMKKyMKK29iai1tICs9IGtwcm9iZV9mb2xpb19zdHJl
-c3MubworCitjY2ZsYWdzLXkgKz0gLWcgLU8wIC1mbm8tb21pdC1mcmFtZS1wb2ludGVyCisKK2Vs
-c2UKKworIyBUaGlzIHBhcnQgaXMgdXNlZCB3aGVuIHJ1bm5pbmcgbWFrZSBkaXJlY3RseSBpbiB0
-aGlzIGRpcmVjdG9yeS4KKyMKKyMgICBtYWtlIEtESVI9JEJVSUxEX0RJUiBBUkNIPSRBUkNIIENS
-T1NTX0NPTVBJTEU9JENST1NTX0NPTVBJTEUgYWxsCisjCisKK1BXRAkJCQk6PSAkKHNoZWxsIHB3
-ZCkKK0FSQ0gJCQk/PSBhcm02NAorQ1JPU1NfQ09NUElMRQk/PSBhYXJjaDY0LWR1bXBzdGFjay1s
-aW51eC1nbnUtCitLRElSCQkJPz0gL2xpYi9tb2R1bGVzLyQoc2hlbGwgdW5hbWUgLXIpL2J1aWxk
-CitERVNUX1BBVEgJCT89ICQoUFdEKS9vdXQKK1EJCQkJPz0gQAorCisjIEtlcm5lbCBtb2R1bGUK
-K0tQX01PRAkJCTo9IGtwcm9iZV9mb2xpb19zdHJlc3MKK0tQX0tPCQkJOj0gJChLUF9NT0QpLmtv
-CisKKyMgVXNlcnNwYWNlIHRlc3QgcHJvZ3JhbQorVU5JVF9URVNUCQk6PSBmYXVsdF9zdHJlc3MK
-K1VOSVRfVEVTVF9TUkMJOj0gZmF1bHRfc3RyZXNzLmMKKworIyBVc2Vyc3BhY2UgQ0ZMQUdTLgor
-IyBUaGVzZSBvcHRpb25zIG1ha2UgdXNlcnNwYWNlIHN0YWNrcyBlYXNpZXIgdG8gdW53aW5kLgor
-VVNFUl9DRkxBR1MJCTo9IC1zdGF0aWMgLWcgLU8wIC1mbm8tb21pdC1mcmFtZS1wb2ludGVyIC1m
-YXN5bmNocm9ub3VzLXVud2luZC10YWJsZXMKK1VTRVJfTElCUwkJOj0gLWxtIC1scHRocmVhZAor
-CisuUEhPTlk6IGFsbCBtb2R1bGVzIHVzZXIgaW5zdGFsbCBjbGVhbgorCithbGw6IG1vZHVsZXMg
-dXNlcgorCittb2R1bGVzOgorCSQoUSkkKE1BS0UpIC1DICQoS0RJUikgXAorCQlNPSQoUFdEKSBc
-CisJCUFSQ0g9JChBUkNIKSBcCisJCUNST1NTX0NPTVBJTEU9JChDUk9TU19DT01QSUxFKSBcCisJ
-CW1vZHVsZXMKKwordXNlcjoKKwkkKFEpJChDUk9TU19DT01QSUxFKWdjYyBcCisJCSQoVVNFUl9D
-RkxBR1MpIFwKKwkJJChVTklUX1RFU1RfU1JDKSBcCisJCS1vICQoVU5JVF9URVNUKSBcCisJCSQo
-VVNFUl9MSUJTKQorCitpbnN0YWxsOiBhbGwKKwkkKFEpbWtkaXIgLXAgJChERVNUX1BBVEgpCisJ
-JChRKWNwIC1mICQoS1BfS08pICQoREVTVF9QQVRIKS8KKwkkKFEpY3AgLWYgJChVTklUX1RFU1Qp
-ICQoREVTVF9QQVRIKS8KKworY2xlYW46CisJJChRKSQoTUFLRSkgLUMgJChLRElSKSBcCisJCU09
-JChQV0QpIFwKKwkJQVJDSD0kKEFSQ0gpIFwKKwkJQ1JPU1NfQ09NUElMRT0kKENST1NTX0NPTVBJ
-TEUpIFwKKwkJY2xlYW4KKwkkKFEpcm0gLWYgJChVTklUX1RFU1QpCisJJChRKXJtIC1yZiAkKERF
-U1RfUEFUSCkKKworZW5kaWYKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2tw
-cm9iZS9mYXVsdF9zdHJlc3MuYyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2twcm9iZS9mYXVs
-dF9zdHJlc3MuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjE2MGUx
-NzJkZmE1OQotLS0gL2Rldi9udWxsCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2twcm9i
-ZS9mYXVsdF9zdHJlc3MuYwpAQCAtMCwwICsxLDEwNSBAQAorLy8gU1BEWC1MaWNlbnNlLUlkZW50
-aWZpZXI6IEdQTC0yLjAKKy8qCisgKiBmYXVsdF9zdHJlc3MuYyAtIFVzZXJzcGFjZSBwcm9ncmFt
-IHRvIHRyaWdnZXIgZmlsZS1iYWNrZWQgcGFnZSBmYXVsdHMKKyAqCisgKiBUaGlzIHByb2dyYW0g
-Y3JlYXRlcyBhIGZpbGUgYW5kIHJlcGVhdGVkbHkgbWFwcy91bm1hcHMgaXQgd2hpbGUKKyAqIGFj
-Y2Vzc2luZyBtZW1vcnksIHRyaWdnZXJpbmcgZmlsZS1iYWNrZWQgcGFnZSBmYXVsdHMuIEl0J3Mg
-ZGVzaWduZWQKKyAqIHRvIHdvcmsgd2l0aCBrcHJvYmUtZm9saW8tc3RyZXNzLmMgdG8gc3RyZXNz
-IGtwcm9iZSBoYW5kbGluZy4KKyAqLworCisjZGVmaW5lIF9HTlVfU09VUkNFCisjaW5jbHVkZSA8
-ZmNudGwuaD4KKyNpbmNsdWRlIDxwdGhyZWFkLmg+CisjaW5jbHVkZSA8c2NoZWQuaD4KKyNpbmNs
-dWRlIDxzdGRpby5oPgorI2luY2x1ZGUgPHN0ZGxpYi5oPgorI2luY2x1ZGUgPHN0cmluZy5oPgor
-I2luY2x1ZGUgPHN5cy9tbWFuLmg+CisjaW5jbHVkZSA8c3lzL3N0YXQuaD4KKyNpbmNsdWRlIDxz
-eXMvdHlwZXMuaD4KKyNpbmNsdWRlIDx1bmlzdGQuaD4KKworI2RlZmluZSBGSUxFX1NJWkUgICAo
-MjU2VUwgKiAxMDI0ICogMTAyNCkKKyNkZWZpbmUgTlJfVEhSRUFEUyAgOAorCitzdGF0aWMgdm9p
-ZCBkZWVwX2NhbGwoaW50IG4pCit7CisJdm9sYXRpbGUgY2hhciBidWZbNDA5Nl07CisKKwltZW1z
-ZXQoKHZvaWQgKilidWYsIG4sIHNpemVvZihidWYpKTsKKworCWlmIChuID4gMCkKKwkJZGVlcF9j
-YWxsKG4gLSAxKTsKKwllbHNlCisJCXNjaGVkX3lpZWxkKCk7Cit9CisKK3N0YXRpYyB2b2lkICp3
-b3JrZXIodm9pZCAqYXJnKQoreworCWNvbnN0IGNoYXIgKnBhdGggPSBhcmc7CisJaW50IGZkOwor
-CWNoYXIgKm1hcDsKKwl1bnNpZ25lZCBsb25nIGk7CisJdm9sYXRpbGUgdW5zaWduZWQgbG9uZyBz
-dW0gPSAwOworCisJZmQgPSBvcGVuKHBhdGgsIE9fUkRPTkxZKTsKKwlpZiAoZmQgPCAwKSB7CisJ
-CXBlcnJvcigib3BlbiIpOworCQlyZXR1cm4gTlVMTDsKKwl9CisKKwltYXAgPSBtbWFwKE5VTEws
-IEZJTEVfU0laRSwgUFJPVF9SRUFELCBNQVBfUFJJVkFURSwgZmQsIDApOworCWlmIChtYXAgPT0g
-TUFQX0ZBSUxFRCkgeworCQlwZXJyb3IoIm1tYXAiKTsKKwkJY2xvc2UoZmQpOworCQlyZXR1cm4g
-TlVMTDsKKwl9CisKKwlmb3IgKDs7KSB7CisJCS8qCisJCSAqIERyb3AgdGhlIHBhZ2VzIGJhY2tp
-bmcgdGhpcyBtYXBwaW5nIGZyb20gdGhlIGN1cnJlbnQKKwkJICogcHJvY2Vzcy4gU3Vic2VxdWVu
-dCBhY2Nlc3NlcyBhcmUgbW9yZSBsaWtlbHkgdG8gdHJpZ2dlcgorCQkgKiBmaWxlLWJhY2tlZCBw
-YWdlIGZhdWx0cyBhZ2Fpbi4KKwkJICovCisJCW1hZHZpc2UobWFwLCBGSUxFX1NJWkUsIE1BRFZf
-RE9OVE5FRUQpOworCisJCWZvciAoaSA9IDA7IGkgPCBGSUxFX1NJWkU7IGkgKz0gNDA5NiAqIDE3
-KSB7CisJCQlzdW0gKz0gbWFwW2ldOworCQkJZGVlcF9jYWxsKDY0KTsKKwkJfQorCX0KKworCW11
-bm1hcChtYXAsIEZJTEVfU0laRSk7CisJY2xvc2UoZmQpOworCXJldHVybiBOVUxMOworfQorCitp
-bnQgbWFpbih2b2lkKQoreworCXB0aHJlYWRfdCB0aFtOUl9USFJFQURTXTsKKwljb25zdCBjaGFy
-ICpwYXRoID0gIi90bXAvZmF1bHRfc3RyZXNzX2ZpbGUiOworCWludCBmZDsKKwlpbnQgaTsKKwor
-CWZkID0gb3BlbihwYXRoLCBPX0NSRUFUIHwgT19SRFdSLCAwNjQ0KTsKKwlpZiAoZmQgPCAwKSB7
-CisJCXBlcnJvcigib3BlbiBmaWxlIik7CisJCXJldHVybiAxOworCX0KKworCWlmIChmdHJ1bmNh
-dGUoZmQsIEZJTEVfU0laRSkgPCAwKSB7CisJCXBlcnJvcigiZnRydW5jYXRlIik7CisJCWNsb3Nl
-KGZkKTsKKwkJcmV0dXJuIDE7CisJfQorCisJY2xvc2UoZmQpOworCisJZm9yIChpID0gMDsgaSA8
-IE5SX1RIUkVBRFM7IGkrKykKKwkJcHRocmVhZF9jcmVhdGUoJnRoW2ldLCBOVUxMLCB3b3JrZXIs
-ICh2b2lkICopcGF0aCk7CisKKwlmb3IgKGkgPSAwOyBpIDwgTlJfVEhSRUFEUzsgaSsrKQorCQlw
-dGhyZWFkX2pvaW4odGhbaV0sIE5VTEwpOworCisJcmV0dXJuIDA7Cit9CmRpZmYgLS1naXQgYS90
-b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rcHJvYmUva3Byb2JlX2ZvbGlvX3N0cmVzcy5jIGIvdG9v
-bHMvdGVzdGluZy9zZWxmdGVzdHMva3Byb2JlL2twcm9iZV9mb2xpb19zdHJlc3MuYwpuZXcgZmls
-ZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjE4MWE4OWY0YzQ5NQotLS0gL2Rldi9u
-dWxsCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2twcm9iZS9rcHJvYmVfZm9saW9fc3Ry
-ZXNzLmMKQEAgLTAsMCArMSw3MCBAQAorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
-LjAKKy8qCisgKiBrcHJvYmVfZm9saW9fc3RyZXNzLmMgLSBrcHJvYmUgc3RyZXNzIHRlc3QgZm9y
-IHBhZ2UgZmF1bHQgaGFuZGxpbmcKKyAqCisgKiBUaGlzIG1vZHVsZSBpbnN0YWxscyBhIGtwcm9i
-ZSBvbiBmb2xpb193YWl0X2JpdF9jb21tb24oKSBhbmQgaXMKKyAqIGludGVuZGVkIHRvIGJlIHVz
-ZWQgdG9nZXRoZXIgd2l0aCBmYXVsdF9zdHJlc3MuYyB0byBzdHJlc3Mga3Byb2JlCisgKiBoYW5k
-bGluZyBhcm91bmQgZmF1bHQgcGF0aHMuCisgKgorICogUHJpbWFyeSB1c2UgY2FzZTogcmVwcm9k
-dWNlIGFybTY0IGtwcm9iZSBzdGFiaWxpdHkgaXNzdWVzIHJlbGF0ZWQgdG8KKyAqIFhPTCBzbG90
-IGV4ZWN1dGlvbiBhbmQgZmF1bHQgaGFuZGxpbmcgZHVyaW5nIHNpbmdsZS1zdGVwcGluZy4KKyAq
-LworCisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CisjaW5jbHVkZSA8bGludXgva2VybmVsLmg+
-CisjaW5jbHVkZSA8bGludXgva3Byb2Jlcy5oPgorI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+Cisj
-aW5jbHVkZSA8bGludXgvYXRvbWljLmg+CisjaW5jbHVkZSA8bGludXgvcmF0ZWxpbWl0Lmg+Cisj
-aW5jbHVkZSA8bGludXgva2FsbHN5bXMuaD4KKworCitzdGF0aWMgYXRvbWljNjRfdCBrcF9oaXRf
-Y291bnQgPSBBVE9NSUM2NF9JTklUKDApOworCitzdGF0aWMgaW50IGZvbGlvX3dhaXRfYml0X2Nv
-bW1vbl9oYW5kbGVyKAorCQkJc3RydWN0IGtwcm9iZSAqcCwgc3RydWN0IHB0X3JlZ3MgKnJlZ3Mp
-Cit7CisJdW5zaWduZWQgbG9uZyBoaXQ7CisKKwloaXQgPSBhdG9taWM2NF9pbmNfcmV0dXJuKCZr
-cF9oaXRfY291bnQpOworCisJcHJfaW5mbygia3BfZm9saW86IGhpdD0lbHUgY29tbT0lcyB0Z2lk
-PSVkIHRpZD0lZFxuIiwKKwkJCSAgICBoaXQsIGN1cnJlbnQtPmNvbW0sIGN1cnJlbnQtPnRnaWQs
-IGN1cnJlbnQtPnBpZCk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIHN0cnVjdCBrcHJvYmUg
-a3BfZm9saW9fcHJvYmUgPSB7CisJLnN5bWJvbF9uYW1lID0gImZvbGlvX3dhaXRfYml0X2NvbW1v
-biIsCisJLnByZV9oYW5kbGVyID0gZm9saW9fd2FpdF9iaXRfY29tbW9uX2hhbmRsZXIsCit9Owor
-CitzdGF0aWMgaW50IF9faW5pdCBrcHJvYmVfZm9saW9faW5pdCh2b2lkKQoreworCWludCByZXQ7
-CisKKwlyZXQgPSByZWdpc3Rlcl9rcHJvYmUoJmtwX2ZvbGlvX3Byb2JlKTsKKwlpZiAocmV0IDwg
-MCkgeworCQlwcl9lcnIoImtwX2ZvbGlvOiByZWdpc3Rlcl9rcHJvYmUgZmFpbGVkLCByZXQ9JWRc
-biIsIHJldCk7CisJCXJldHVybiByZXQ7CisJfQorCisJcHJfaW5mbygia3BfZm9saW86IGtwcm9i
-ZSByZWdpc3RlcmVkIGF0ICVwUywgYWRkcj0lcHhcbiIsCisJCWtwX2ZvbGlvX3Byb2JlLmFkZHIs
-IGtwX2ZvbGlvX3Byb2JlLmFkZHIpOworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyB2b2lkIF9f
-ZXhpdCBrcHJvYmVfZm9saW9fZXhpdCh2b2lkKQoreworCXVucmVnaXN0ZXJfa3Byb2JlKCZrcF9m
-b2xpb19wcm9iZSk7CisJcHJfaW5mbygia3BfZm9saW86IGtwcm9iZSB1bnJlZ2lzdGVyZWQsIHRv
-dGFsIGhpdHM9JWxsZFxuIiwKKwkJYXRvbWljNjRfcmVhZCgma3BfaGl0X2NvdW50KSk7Cit9CisK
-K21vZHVsZV9pbml0KGtwcm9iZV9mb2xpb19pbml0KTsKK21vZHVsZV9leGl0KGtwcm9iZV9mb2xp
-b19leGl0KTsKKworTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOworTU9EVUxFX0FVVEhPUigiUHUgSHUg
-PGh1cHVAdHJhbnNzaW9uLmNvbT4iKTsKK01PRFVMRV9ERVNDUklQVElPTigia3Byb2JlIHN0cmVz
-cyB0ZXN0IGZvciBmb2xpb193YWl0X2JpdF9jb21tb24iKTsKLS0gCjIuNDMuMAoK
+When the function tracer's func_stack_trace option and the function graph
+profiler (function_profile_enabled) are both active, a recursive ftrace
+reentrance can occur, leading to a hard lockup. This was observed during
+ftrace selftest (ftracetest-ktap) execution:
+
+  watchdog: Watchdog detected hard LOCKUP on cpu 204
+  RIP: profile_graph_entry+0xa0/0x160
+  Call Trace:
+   function_graph_enter+0xc9/0x120
+   arch_ftrace_ops_list_func+0x112/0x230
+   ftrace_call+0x5/0x44
+   unwind_next_frame+0x5/0x870     <-- traced by ftrace
+   arch_stack_walk+0x88/0xf0
+   stack_trace_save+0x4b/0x70
+   __ftrace_trace_stack+0x12e/0x170
+   function_stack_trace_call+0x7c/0xa0
+   arch_ftrace_ops_list_func+0x112/0x230
+   ftrace_call+0x5/0x44
+   irqtime_account_irq+0x5/0xb0
+   __irq_exit_rcu+0x12/0xc0
+   ...
+
+The root cause is a recursive ftrace reentrance:
+function_stack_trace_call() invokes __trace_stack() ->
+arch_stack_walk() -> unwind_next_frame() to capture a backtrace.
+Since the unwinder functions (__unwind_start(),
+unwind_next_frame(), unwind_get_return_address(),
+unwind_get_return_address_ptr()) are not marked notrace, the
+function graph tracer instruments them, re-entering the ftrace
+infrastructure from within an ftrace callback. This results in a
+hard lockup with interrupts disabled, detected by the watchdog NMI.
+
+On arm64 and riscv, arch_stack_walk() has already been marked
+noinstr to prevent this class of bugs. See
+commit 0fbcd8abf337 ("arm64: Prohibit instrumentation on arch_stack_walk()")
+and commit 23b2188920a2 ("riscv: stacktrace: convert arch_stack_walk() to noinstr").
+However, x86 was not fixed because:
+
+ 1) x86's return_address() uses the generic
+    __builtin_return_address() instead of arch_stack_walk(), so the
+    lockdep recursion path that triggered the arm64 fix does not
+    exist on x86.
+
+ 2) On arm64, all unwinder helpers are __always_inline within
+    arch_stack_walk(), so a single noinstr annotation suffices.
+    On riscv, the helper walk_stackframe() was already marked
+    notrace. On x86 however, the ORC unwinder implements
+    __unwind_start(), unwind_next_frame(), and
+    unwind_get_return_address() as separate non-inline exported
+    functions without any instrumentation protection, so marking
+    only arch_stack_walk() is insufficient.
+
+Fix this by marking arch_stack_walk() and the non-inline unwinder
+functions it calls (__unwind_start(), unwind_next_frame(),
+unwind_get_return_address(), unwind_get_return_address_ptr())
+as notrace, preventing ftrace from instrumenting the entire stack
+unwinding path.
+
+Fixes: 3599fe12a125 ("x86/stacktrace: Use common infrastructure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
+---
+ arch/x86/include/asm/unwind.h  | 10 +++++-----
+ arch/x86/kernel/stacktrace.c   | 12 ++++++++++--
+ arch/x86/kernel/unwind_frame.c | 10 +++++-----
+ arch/x86/kernel/unwind_guess.c | 10 +++++-----
+ arch/x86/kernel/unwind_orc.c   | 10 +++++-----
+ 5 files changed, 30 insertions(+), 22 deletions(-)
+
+diff --git a/arch/x86/include/asm/unwind.h b/arch/x86/include/asm/unwind.h
+index 7cede4dc21f0..15b699f2edc0 100644
+--- a/arch/x86/include/asm/unwind.h
++++ b/arch/x86/include/asm/unwind.h
+@@ -39,11 +39,11 @@ struct unwind_state {
+ #endif
+ };
+ 
+-void __unwind_start(struct unwind_state *state, struct task_struct *task,
+-		    struct pt_regs *regs, unsigned long *first_frame);
+-bool unwind_next_frame(struct unwind_state *state);
+-unsigned long unwind_get_return_address(struct unwind_state *state);
+-unsigned long *unwind_get_return_address_ptr(struct unwind_state *state);
++void notrace __unwind_start(struct unwind_state *state, struct task_struct *task,
++			    struct pt_regs *regs, unsigned long *first_frame);
++bool notrace unwind_next_frame(struct unwind_state *state);
++unsigned long notrace unwind_get_return_address(struct unwind_state *state);
++unsigned long *notrace unwind_get_return_address_ptr(struct unwind_state *state);
+ 
+ static inline bool unwind_done(struct unwind_state *state)
+ {
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index ee117fcf46ed..1e5a06439adb 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -12,8 +12,16 @@
+ #include <asm/stacktrace.h>
+ #include <asm/unwind.h>
+ 
+-void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+-		     struct task_struct *task, struct pt_regs *regs)
++/*
++ * arch_stack_walk() and the functions it calls (__unwind_start(),
++ * unwind_next_frame(), unwind_get_return_address(),
++ * unwind_get_return_address_ptr()) must not be instrumented by ftrace,
++ * as they are invoked from within ftrace callbacks (e.g.,
++ * function_stack_trace_call). Tracing these functions would cause
++ * recursive ftrace reentrance, leading to a hard lockup.
++ */
++void notrace arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
++			     struct task_struct *task, struct pt_regs *regs)
+ {
+ 	struct unwind_state state;
+ 	unsigned long addr;
+diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+index d8ba93778ae3..07d1b9f0208f 100644
+--- a/arch/x86/kernel/unwind_frame.c
++++ b/arch/x86/kernel/unwind_frame.c
+@@ -11,7 +11,7 @@
+ 
+ #define FRAME_HEADER_SIZE (sizeof(long) * 2)
+ 
+-unsigned long unwind_get_return_address(struct unwind_state *state)
++unsigned long notrace unwind_get_return_address(struct unwind_state *state)
+ {
+ 	if (unwind_done(state))
+ 		return 0;
+@@ -20,7 +20,7 @@ unsigned long unwind_get_return_address(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_get_return_address);
+ 
+-unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
++unsigned long *notrace unwind_get_return_address_ptr(struct unwind_state *state)
+ {
+ 	if (unwind_done(state))
+ 		return NULL;
+@@ -261,7 +261,7 @@ static bool update_stack_state(struct unwind_state *state,
+ }
+ 
+ __no_kmsan_checks
+-bool unwind_next_frame(struct unwind_state *state)
++bool notrace unwind_next_frame(struct unwind_state *state)
+ {
+ 	struct pt_regs *regs;
+ 	unsigned long *next_bp;
+@@ -370,8 +370,8 @@ bool unwind_next_frame(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ 
+-void __unwind_start(struct unwind_state *state, struct task_struct *task,
+-		    struct pt_regs *regs, unsigned long *first_frame)
++void notrace __unwind_start(struct unwind_state *state, struct task_struct *task,
++			    struct pt_regs *regs, unsigned long *first_frame)
+ {
+ 	unsigned long *bp;
+ 
+diff --git a/arch/x86/kernel/unwind_guess.c b/arch/x86/kernel/unwind_guess.c
+index 884d68a6e714..22d12e79984b 100644
+--- a/arch/x86/kernel/unwind_guess.c
++++ b/arch/x86/kernel/unwind_guess.c
+@@ -6,7 +6,7 @@
+ #include <asm/stacktrace.h>
+ #include <asm/unwind.h>
+ 
+-unsigned long unwind_get_return_address(struct unwind_state *state)
++unsigned long notrace unwind_get_return_address(struct unwind_state *state)
+ {
+ 	unsigned long addr;
+ 
+@@ -19,12 +19,12 @@ unsigned long unwind_get_return_address(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_get_return_address);
+ 
+-unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
++unsigned long *notrace unwind_get_return_address_ptr(struct unwind_state *state)
+ {
+ 	return NULL;
+ }
+ 
+-bool unwind_next_frame(struct unwind_state *state)
++bool notrace unwind_next_frame(struct unwind_state *state)
+ {
+ 	struct stack_info *info = &state->stack_info;
+ 
+@@ -48,8 +48,8 @@ bool unwind_next_frame(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ 
+-void __unwind_start(struct unwind_state *state, struct task_struct *task,
+-		    struct pt_regs *regs, unsigned long *first_frame)
++void notrace __unwind_start(struct unwind_state *state, struct task_struct *task,
++			    struct pt_regs *regs, unsigned long *first_frame)
+ {
+ 	memset(state, 0, sizeof(*state));
+ 
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 6407bc9256bf..f2a450ee66e6 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -377,7 +377,7 @@ void __init unwind_init(void)
+ 	orc_init = true;
+ }
+ 
+-unsigned long unwind_get_return_address(struct unwind_state *state)
++unsigned long notrace unwind_get_return_address(struct unwind_state *state)
+ {
+ 	if (unwind_done(state))
+ 		return 0;
+@@ -386,7 +386,7 @@ unsigned long unwind_get_return_address(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_get_return_address);
+ 
+-unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
++unsigned long *notrace unwind_get_return_address_ptr(struct unwind_state *state)
+ {
+ 	if (unwind_done(state))
+ 		return NULL;
+@@ -481,7 +481,7 @@ static bool get_reg(struct unwind_state *state, unsigned int reg_off,
+ 	return false;
+ }
+ 
+-bool unwind_next_frame(struct unwind_state *state)
++bool notrace unwind_next_frame(struct unwind_state *state)
+ {
+ 	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
+ 	enum stack_type prev_type = state->stack_info.type;
+@@ -709,8 +709,8 @@ bool unwind_next_frame(struct unwind_state *state)
+ }
+ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ 
+-void __unwind_start(struct unwind_state *state, struct task_struct *task,
+-		    struct pt_regs *regs, unsigned long *first_frame)
++void notrace __unwind_start(struct unwind_state *state, struct task_struct *task,
++			    struct pt_regs *regs, unsigned long *first_frame)
+ {
+ 	memset(state, 0, sizeof(*state));
+ 	state->task = task;
+-- 
+2.39.3
+
