@@ -1,39 +1,41 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB3E2701DC;
-	Mon,  6 Jul 2026 14:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AD33822A5;
+	Mon,  6 Jul 2026 14:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783349846; cv=none; b=jTXi4CIPY8m5sTlMwLvSqpLfhWQFnkzcpSCwF8UN/bB7KcgFuf1iGrXqIK6gBQ9any5lsjfEWBBcCPOhYgcp1UaNpSjTsuVuDbRmNNpdfqMH14sLuZJF9MLXrCMHlaPwyCLMBybe46Peh7VuUvobPDRwnO4f25KWPpGMT8Dq6Og=
+	t=1783349991; cv=none; b=iqe6v2TdNGd8hxmY3q4cSQiEJcxzvtBDBKbPT0/fz2BHXzqEPmYSFh34UQ48Av+K14Q5nYq00YkP6CxV594DHKZKzeQPPsvbAG6QQssNTcwIG4M9DSHIFKWJMX4X5FaJ5Exnc8UkTC1NdkbSwt5PabxbYtN00YYCxoKOildWy0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783349846; c=relaxed/simple;
-	bh=LAA4qWVnCC/SpR6bRRHW87rLHdrNT+nhJRGAscM+NiM=;
+	s=arc-20240116; t=1783349991; c=relaxed/simple;
+	bh=JLV6tpr3rJ75ST9YS7WzytTvmi+8ph/kKJQ3HYtwU9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=urrkreTWy276Zzb6QOZGhFB8n08EcGvhnWx3586W/4Z0oltYABXQqgBJHzez0lGmAS4Et9g+o/9yBUYU4395/6u+nkNQShlK3Xh6EZ9dxl6Yn6oosXPiKdMwpbjzCVyZecitzl/qUIw4RPqJp0bvv4ocWCpbBYvxPHZRbQODNxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=qTD5NoDD6EQvTl1AmtELTGBEZA9dH8P03A3NeXTacznWFqxIDT1GdMoyoyBqFcFedEnjgdBrfaDP9YR7htV+cox1YMJqYueq+In18j0Dwp2/bioDdExCZSsiZsOZpZTyn8kAgGI5mIDpTn5l3tRsuPfBgylnVMR6XXYIW+Vrtz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 88F92160FBA;
-	Mon,  6 Jul 2026 14:57:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id EF6E417;
-	Mon,  6 Jul 2026 14:57:14 +0000 (UTC)
-Date: Mon, 6 Jul 2026 10:57:15 -0400
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id D0F20A00FF;
+	Mon,  6 Jul 2026 14:59:41 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 258C720011;
+	Mon,  6 Jul 2026 14:59:39 +0000 (UTC)
+Date: Mon, 6 Jul 2026 10:59:39 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Yuanhe Shu <xiangzao@linux.alibaba.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
- <hpa@zytor.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH] x86/stacktrace: Mark arch_stack_walk() and unwinder
- functions notrace
-Message-ID: <20260706105715.769ba488@gandalf.local.home>
-In-Reply-To: <20260706095445.1683434-1-xiangzao@linux.alibaba.com>
-References: <20260706095445.1683434-1-xiangzao@linux.alibaba.com>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+ <konradybcio@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Mark Brown
+ <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, Mukesh Kumar Savaliya
+ <mukesh.savaliya@oss.qualcomm.com>, aniket.randive@oss.qualcomm.com,
+ chandana.chiluveru@oss.qualcomm.com
+Subject: Re: [PATCH 1/2] soc: qcom: geni-se: trace: Add trace event support
+ for GENI SE registers dump
+Message-ID: <20260706105939.7d545304@gandalf.local.home>
+In-Reply-To: <20260706-add-tracepoints-for-se-reg-dump-v1-1-48bd08e28cf2@oss.qualcomm.com>
+References: <20260706-add-tracepoints-for-se-reg-dump-v1-0-48bd08e28cf2@oss.qualcomm.com>
+	<20260706-add-tracepoints-for-se-reg-dump-v1-1-48bd08e28cf2@oss.qualcomm.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,55 +45,76 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: EF6E417
-X-Stat-Signature: iitf39djh3mortxwxkq86eue6b3bpy57
+X-Stat-Signature: uu6yosxwkakubk1mywby7bgr6uxq4qga
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 258C720011
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18rqGyHfpsRGsVI+iAO+GsZU/8T+xxEMog=
-X-HE-Tag: 1783349834-194698
-X-HE-Meta: U2FsdGVkX197Tep2RR2qfA4PEZs0l1tULf6JEJzzHABGv3FNxddOIVtPOtoE//LPdUhpuYpqlNq05jowOd9RE3orplMiiyPW0oJq6pvn1mLh5bEgKywBCNeVl81IqsYklCos7InQyy7k0lt84Gqv0qhWf1pQ8IfAsYfGnQlZeYmi+be0ZNcgOHUnawLuCXWZuBZA5v6g7lDHVTol5g7VS7tcgsrHR2fIGYsLnmMGf8DCiN0kO9MawfkgdES8tn1L0OjM3Wr+DNFFXoLAbl+/Z5ZGca78Hf6I6pttmZEBYBpY0nET3ST3/3wl3/EBbqRJzAGXpY37F3JXa1mT9B1zf7ZKeE7bNZJfOLVHmH6+AQLS4R3BTmngZGj0iXDy/cBYyOEXMMXw+yJwxUxIx8poXQ==
+X-Session-ID: U2FsdGVkX1+WzFChi0OJkl1mFRGNIttsSoW1a5AExP0=
+X-HE-Tag: 1783349979-464698
+X-HE-Meta: U2FsdGVkX19hJLE9wlLmJYf7g3+Klj0cZFNFrWDZP43p/EAH9WFQNqKArJddvap7x9e3oHFcdXKpRszwGXYo/EqMBQA70dmLcCtUQZMWIw55jaAuHAiisJSf0XOu/9G81EBhjHIE7rkxbv+2UeH1quCVZHQqRXyYv7ccJ91G1pGAq6jCj+PTdtAfVQR9SGB7FpSynsIXmWNi7kuzM6v34ZHVR59Wu0mQ6jVeAYRly0+ASSRg9oPYrIY2qmU7L/FFlpF1kkSqdlqVnz9zWASymgPs7L0cIrBrG67Yi9LB+MQdYnDrjB31hIihMh66RXW9EUSIMOZPx4S/STI+PLOfQK4CSLMIH0qzt5T5AtiF0pJu/5GZ9QuYeUlLzj81Gtird6iLlZ5ICSpsaII5vo2KhA==
 
-On Mon,  6 Jul 2026 17:54:45 +0800
-Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
+On Mon, 06 Jul 2026 16:38:12 +0530
+Praveen Talari <praveen.talari@oss.qualcomm.com> wrote:
 
-> When the function tracer's func_stack_trace option and the function graph
-> profiler (function_profile_enabled) are both active, a recursive ftrace
-> reentrance can occur, leading to a hard lockup. This was observed during
-> ftrace selftest (ftracetest-ktap) execution:
-> 
->   watchdog: Watchdog detected hard LOCKUP on cpu 204
->   RIP: profile_graph_entry+0xa0/0x160
->   Call Trace:
->    function_graph_enter+0xc9/0x120
->    arch_ftrace_ops_list_func+0x112/0x230
->    ftrace_call+0x5/0x44
->    unwind_next_frame+0x5/0x870     <-- traced by ftrace
->    arch_stack_walk+0x88/0xf0
->    stack_trace_save+0x4b/0x70
->    __ftrace_trace_stack+0x12e/0x170
->    function_stack_trace_call+0x7c/0xa0
->    arch_ftrace_ops_list_func+0x112/0x230
->    ftrace_call+0x5/0x44
->    irqtime_account_irq+0x5/0xb0
->    __irq_exit_rcu+0x12/0xc0
->    ...
-> 
-> The root cause is a recursive ftrace reentrance:
-> function_stack_trace_call() invokes __trace_stack() ->
-> arch_stack_walk() -> unwind_next_frame() to capture a backtrace.
-> Since the unwinder functions (__unwind_start(),
-> unwind_next_frame(), unwind_get_return_address(),
-> unwind_get_return_address_ptr()) are not marked notrace, the
-> function graph tracer instruments them, re-entering the ftrace
-> infrastructure from within an ftrace callback. This results in a
-> hard lockup with interrupts disabled, detected by the watchdog NMI.
+> +TRACE_EVENT(geni_se_regs,
+> +	    TP_PROTO(struct geni_se *se),
+> +
+> +	    TP_ARGS(se),
+> +
+> +	    TP_STRUCT__entry(__string(geni_se_name,		dev_name(se->dev))
+> +		__field(u32,	geni_se_m_cmd0)
+> +		__field(u32,	geni_se_m_irq_status)
+> +		__field(u32,	geni_se_s_cmd0)
+> +		__field(u32,	geni_se_s_irq_status)
+> +		__field(u32,	geni_se_status)
+> +		__field(u32,	geni_se_ios)
+> +		__field(u32,	geni_se_m_cmd_ctrl)
+> +		__field(u32,	geni_se_m_cmd_err)
+> +		__field(u32,	geni_se_m_fw_err)
+> +		__field(u32,	geni_se_tx_fifo_status)
+> +		__field(u32,	geni_se_rx_fifo_status)
+> +		__field(u32,	geni_se_tx_watermark)
+> +		__field(u32,	geni_se_rx_watermark)
+> +		__field(u32,	geni_se_rx_watermark_rfr)
+> +		__field(u32,	geni_se_m_gp_length)
+> +		__field(u32,	geni_se_s_gp_length)
+> +		__field(u32,	geni_se_dma_tx_irq)
+> +		__field(u32,	geni_se_dma_rx_irq)
+> +		__field(u32,	geni_se_dma_tx_irq_en)
+> +		__field(u32,	geni_se_dma_rx_irq_en)
+> +		__field(u32,	geni_se_dma_rx_len)
+> +		__field(u32,	geni_se_dma_rx_len_in)
+> +		__field(u32,	geni_se_dma_tx_len)
+> +		__field(u32,	geni_se_dma_tx_len_in)
+> +		__field(u32,	geni_se_dma_tx_ptr_l)
+> +		__field(u32,	geni_se_dma_tx_ptr_h)
+> +		__field(u32,	geni_se_dma_rx_ptr_l)
+> +		__field(u32,	geni_se_dma_rx_ptr_h)
+> +		__field(u32,	geni_se_dma_tx_attr)
+> +		__field(u32,	geni_se_dma_tx_max_burst)
+> +		__field(u32,	geni_se_dma_rx_attr)
+> +		__field(u32,	geni_se_dma_rx_max_burst)
+> +		__field(u32,	geni_se_dma_if_en)
+> +		__field(u32,	geni_se_dma_if_en_ro)
+> +		__field(u32,	geni_se_dma_general_cfg)
+> +		__field(u32,	geni_se_dma_qsb_trans_cfg)
+> +		__field(u32,	geni_se_dma_dbg)
+> +		__field(u32,	geni_se_m_irq_en)
+> +		__field(u32,	geni_se_s_irq_en)
+> +		__field(u32,	geni_se_gsi_event_en)
+> +		__field(u32,	geni_se_irq_en)
+> +		__field(u32,	geni_se_ser_m_clk_cfg)
+> +		__field(u32,	geni_se_ser_s_clk_cfg)
+> +		__field(u32,	geni_se_general_cfg)
+> +		__field(u32,	geni_se_output_ctrl)
+> +		__field(u32,	geni_se_clk_ctrl_ro)
+> +		__field(u32,	geni_se_fifo_if_disable)
+> +		__field(u32,	geni_se_fw_multilock_msa)
+> +		__field(u32,	geni_se_clk_sel)
+> +	    ),
 
-I'm fine with this change, but I'm wondering why the recursion protection
-didn't catch this. There may be a missing check somewhere. I'll ack this
-change, but I also want to add the check that would have prevented this
-lockup.
+Wow, a pretty big trace event! But it still fits in the ring buffer.
 
 Acked-by: Steven Rostedt <rostedt@goodmis.org>
 
 -- Steve
-
