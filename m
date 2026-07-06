@@ -1,147 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA151C84A0
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Jul 2026 15:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF65A3A7D74
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Jul 2026 15:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783350052; cv=none; b=mRSU+ZcvYqxYHCYzVQM+R05RTAWd95Jr/J6kj73WDIoEqs+sh9vpHNkcgyVFYVsybPPigazCkoxx61DetFwBWee+angV9fdztZCsp3p1swRm3qwm+Q8ylqMsx4Z2mGCa1p9Yczg0HQKY05nfjalSeDbypgZUIO1J/l19Ny+J02c=
+	t=1783352107; cv=none; b=LWoE/t0O+B4Z5aX1fiRSmPd/9Wbt+5gRM8eie8TVZ22L6bkLWXNbULMQkebgkhbWNWFmMwxvVGxZh6BcaLRftTq2N6mMZYM+JBkuTz29lmksMGmxCF2+OXX/pNHDy0q6rKWHJDs1e5JJIHBM0DayEMgHuaKqyYdAbeGRbPMHcvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783350052; c=relaxed/simple;
-	bh=QtwZc80/lu7+P0WgmV+/KjEa3xqRWGgir61mh14Au/w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g3rXbQM1pCzL3B/cddPOYlz3Uu5rvaBG1rIOLiXN78TMR5uC2zSEZdvF7kJNiBDrt8dwtml70Lnfz/w/l+TJv0KxILrIcK8IQgabbhAcewh6pEufm+9SKufKtaeVX3pMtYfv07pwpi3JccrNsJA3ISFwLB4dWwR2pohzMvQq2Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BTL1q7KE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783352107; c=relaxed/simple;
+	bh=24x+vWFLjhUk5l3YpK3HhMGF1FGUmyEy33Vjj+/mG7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gr2vXvWQstgvwsllzeIkZvJ221Bw5V4Z0jN5hHU02syHhixdtCVauZCzs4MiPjf+vv+0gfLBha5kwlB0vdTC6KWg6gzfvgWwgGQbagWeMSSK5t1PmK/6JhWNJFxpjbg0ewnYIOi2HNYfQb3gfhUU/UZ1QV20rzziSb0uClCcogM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nPdAahHJ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ZyWk+42h; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BTL1q7KE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783350049;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QtwZc80/lu7+P0WgmV+/KjEa3xqRWGgir61mh14Au/w=;
-	b=BTL1q7KEQysMV601lXG3TJZrq5L92o2Gnot9cd4QAakXkH3Pfy3ncwAY1nBQzhuk+g6O7A
-	GUN8evoITaqo6Tbt69B7XWi5W5QbeSbUAMyDEgZkbEkM6u66YRG85x/T12copZ0KGStXKR
-	yWcwoFHklRt65HVHeUkJNxQtBJtyhUg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-226-VcVhfVLBNeuNbR4SpXFhrQ-1; Mon, 06 Jul 2026 11:00:48 -0400
-X-MC-Unique: VcVhfVLBNeuNbR4SpXFhrQ-1
-X-Mimecast-MFC-AGG-ID: VcVhfVLBNeuNbR4SpXFhrQ_1783350047
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-493b786d550so33674245e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Jul 2026 08:00:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nPdAahHJ";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ZyWk+42h"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666FF65F825900
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 6 Jul 2026 15:35:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Y3zW101cLHzgWVTr7yKGtfLqHWots71GsLr4TTp2JZA=; b=nPdAahHJZa+SmQ7X
+	Om7qQXhhKSV6hKNfnZMEJofwS+PyJwzNdiSnFkYEd0WC2+Qnmv82TRM1NanVF4Ei
+	kPZIzNyrHhiFC2HVnrUEYWP9+cmjliCJZAfCIERVQ9jENehf83WUqQPvaqq9hE2U
+	2AIvqqa6zEzH7Zb+7xwZ7EkyB+QCB9JKZpzybhzZfiuqyJIZUiH4evYwGcq2ubBH
+	mShl3zLv2Mxsmp99YT9L6v2uQFIgt7gRvH4sEMJu19vctvEEfbw/LyXlgM4mTDZx
+	wT8YV8gvcXE7JjMRycdk0mzgU4BWQ+Bqfrh4hVKG2PbpqpqmD6mnMoZBHwWSPThW
+	cw3hyw==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f88t89vft-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Jul 2026 15:35:04 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-51c2d2dd52eso2034981cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Jul 2026 08:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1783352104; x=1783956904; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Y3zW101cLHzgWVTr7yKGtfLqHWots71GsLr4TTp2JZA=;
+        b=ZyWk+42hnl6FkCzOPMsLh98YteMOUNwMwbaua5kF8AAx380qFDz8eCxO4BEA40kyBW
+         Fts1RbOc4dkiPsa/NBtl4DR88VGrkgW5W4JHTipIdZ5pzoWiHcXd3L24g5vkJVXeDMWd
+         s7033Z4byi9NFoTxS/ncBgaJrKUt2D5q+EeO8gglCOA7G3kq/K+EAbYiltCX69gMypn9
+         Mm4ei6wVLDjHdtdvzHE62jkv3V8IwpylQqiXCJuwSNpFhh0xNA7PUTTGnsZ3cXtwOEfH
+         ZVndiaVbQNlIY98KOoQH/0DfIVHOglynwrRGYaosePOfHhQyv+Q2pgCk0dU3AD/AbkDd
+         NkEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783350047; x=1783954847;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XWPAPea/4nYf8fBZI2bdCug+P82JPz4RYQoXBwMUFNk=;
-        b=nC9r4Xtpf750xfS8d3z40f+xqdoMnv3CuD/sA3ZvBDfJwZ5k+aDgPjN1kCuhu6kUPr
-         QjNOpHZo8dEOGC21Ib0y/iGDV1Az75KIiVc+Mb6xnLNpSzu59M+BkWVLjKGgzGm1Wmao
-         gB/hmqRmr2nuhQUVHm83gt7ZET1N7/pm9XIoWaMIQn7D+NIt18ELMRuYDoQIiGJtkJqn
-         +826nm65OLRojWbJkwdZo/mFy6d/bOYQcwAxd9r7UsZrjrSLvnWAtOx8er0i5qmfLbqT
-         VArK5TRPPNARuTKCjSqKf3EnB3qmHRqCiX8cPbS3/2s4V5pqljko2nEEU/i3wIt/vvEE
-         comw==
-X-Forwarded-Encrypted: i=1; AHgh+RrzcLO/v1GmV2sTOtQTtCW0hAf8KRuDbSMZ5h484OraCm+Qs5B947XHI1v5JUeRJL8L3ggdJdAJ3ryf0Bv0pU7odi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweZ7mjhuRiBGEdtkzca3rf59aC/J/LOKWqlINQkiM8oUZGnK4p
-	yQ7Xu4pLXi5LqITHF+JbDQWb/yOvURi7vr3Rd7GrOmE+U83hzpzt6zLJs/OPOMiUn/pXLce9cls
-	TMobAJl1YaiOt84jyqlIcLocHheVLxF9iB+A1Oa+78zXy3ftOyRgS0mNMWIR7BZPF7/doTJSPKg
-	==
-X-Gm-Gg: AfdE7ckJiRo6LFZQrBd4LzyDP1Y+1hYZ6yn5GwBig+Np7uQF23pK4lhhEe5746WGOjZ
-	sTJ0IOqxlEFD6IMqOW4M/sWHU/GYtyjZFbKe3cQ8R/EXxra5gZI5mWV/AQoXBMwqdVITn2/eNmw
-	rH+ITvVaSSpps9GqDzgk099DNDD1T1zN83ZVv0Z7ADTq5Dq8+85Ef5yZ3gQyRVlmKg1+O94c2gk
-	eyYIsG0pELyAY46tKQnO/LFb/kPK++WwU0UU0a0mwarYbuAvzrJojNV9na+1az2CgI7DxMEovWb
-	xR6B8ouK2Fl9+fQfaqVQfyX9o/ZhNcY2d9sHyD/zecul1oL0/mzgx6yMGNd4GGx45knldvyicxA
-	wswDxPoyL2F1QQm2lpGXUpvjJmihul5hh374UrWHtkcu0Pk2qzFOn+gaExw5jJv3fbNK7cp1Y/c
-	0d0mYH
-X-Received: by 2002:a05:600c:848d:b0:493:adc3:cced with SMTP id 5b1f17b1804b1-493df0b4e28mr10439535e9.34.1783350047241;
-        Mon, 06 Jul 2026 08:00:47 -0700 (PDT)
-X-Received: by 2002:a05:600c:848d:b0:493:adc3:cced with SMTP id 5b1f17b1804b1-493df0b4e28mr10439015e9.34.1783350046859;
-        Mon, 06 Jul 2026 08:00:46 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c63172fesm641026435e9.0.2026.07.06.08.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 08:00:46 -0700 (PDT)
-Message-ID: <c8c7568dd9293b0a718584c1aa193692c128d77d.camel@redhat.com>
-Subject: Re: [PATCH 3/3] rv/reactors: add KUnit tests for reactor_panic
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: wen.yang@linux.dev
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 06 Jul 2026 17:00:44 +0200
-In-Reply-To: <810f587d63c84b64067f990299be02b88f5d8106.1781541556.git.wen.yang@linux.dev>
-References: <cover.1781541556.git.wen.yang@linux.dev>
-	 <810f587d63c84b64067f990299be02b88f5d8106.1781541556.git.wen.yang@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        d=1e100.net; s=20251104; t=1783352104; x=1783956904;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Y3zW101cLHzgWVTr7yKGtfLqHWots71GsLr4TTp2JZA=;
+        b=Gck/ZBYYcPCvwfphD/gFbzH4k4Fk+7iYexlsPtpm5v4/87msbnl7ShbZLLjgqugscC
+         E+YMw/I7uY4QTULmwfQ6IfNq9a7TCktpNsodc0UlIT7OW1F5fqLaxkPhgNrcE+wA5w6B
+         ckOCASU5hmNkQFkMtNTgzlks/OGYfmaE2djO4r+2b8OOqqs82oRcWwIjgdiATxaXr5c4
+         HAA/20/j0Tk2hwz4xwWB8I5L4aRZH5xxbVSV4PGlfDvyz7xh46k1a9PxWKe7/VjwJ7nG
+         5ODLjp//Ql29v6FQv703tcWd14x0DeIK5utheY5qFAAoFkHhWOmHdT153tG4jWwvZUDV
+         wMrA==
+X-Forwarded-Encrypted: i=1; AHgh+Ro0M7oxTA7Xi9njmNQH5reIl7cW3Mzfj850gw/4s+D3bwdhm0S2o+juk5C1+p8UCk0LAbSq2284h2mmzhLidpfDrnU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCeZ3XVOjNOLycu67bgS/HJyX2voOUAc61glUBn9ZBA/OWH+uI
+	Rnu4RT14hbFIltVevF4ZhdChoRNBAKAm+s74vguplkHHYy4w9EhCG4ShSBGxJcFMN/lueUVeHXB
+	XkGdXsAOZ7n3RPDMjBDOUvy3GC78bySEkh5CytriIPVj5D+uOTS0IqBH33A+IVp0K2iKIpjZtZp
+	I=
+X-Gm-Gg: AfdE7ck7VrzRrjBdB8u9uP9DvgsNBp2blZrYNBydPfhwRXYW3W4NJWCTChkbzoRvr/j
+	6SzfngpICxgtnCaPHBU9KGzBe2nj4w8chYmH/5ppQHBZ4cI8RrlKlI1Iawp2pMkNtSnTA5RsIV2
+	XWgprwGFOOAI2uX2WvLJ3h0ZgHnBHiFCzRDjHjd2Ag7MqKIjfAE0F9iP5Ld3/8gCp+NArjZaPSx
+	KPU3G0TGBHWqfIbxoC6R0cQQsGKdZ+os/Nwj08jkZuU2Ot/5yayUgC51NI4Lqgkiv1v0MEhqw12
+	OUaXX9EO2KN1XSbDjJpLXbjOutbqFeRqQFqvrYDy1XopLGOnDs+9qGyrRMxSMgS5pYqrswGtSt+
+	A2hgtPxFcgCTZo63cImwSlFqpA+Xq5v6lufs=
+X-Received: by 2002:a05:622a:13cd:b0:51c:f3e:781e with SMTP id d75a77b69052e-51c4be97d68mr98384951cf.6.1783352103921;
+        Mon, 06 Jul 2026 08:35:03 -0700 (PDT)
+X-Received: by 2002:a05:622a:13cd:b0:51c:f3e:781e with SMTP id d75a77b69052e-51c4be97d68mr98384441cf.6.1783352103372;
+        Mon, 06 Jul 2026 08:35:03 -0700 (PDT)
+Received: from [192.168.120.193] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c12b6054fe7sm772422566b.10.2026.07.06.08.35.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2026 08:35:02 -0700 (PDT)
+Message-ID: <8b30a278-3a53-4f0b-93bc-ee1822430b51@oss.qualcomm.com>
+Date: Mon, 6 Jul 2026 17:35:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3kY9PWnLzk7ygYa8ycARtVyTQFmvYOFN4dAYUxrvetI_1783350047
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] spi: qcom-geni: add GENI SE registers trace event on
+ error paths
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Steven Rostedt
+ <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
+        aniket.randive@oss.qualcomm.com, chandana.chiluveru@oss.qualcomm.com
+References: <20260706-add-tracepoints-for-se-reg-dump-v1-0-48bd08e28cf2@oss.qualcomm.com>
+ <20260706-add-tracepoints-for-se-reg-dump-v1-2-48bd08e28cf2@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260706-add-tracepoints-for-se-reg-dump-v1-2-48bd08e28cf2@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDE1NyBTYWx0ZWRfX0mRcC4NMBvOf
+ Jsv2BoSO82flRsQLmFHwsCByi3BebcV0n4KrmhHW9OURmRJTM8pUVeGTD0Sh0jX3qWCcDUA+bBx
+ h31s0FzrDR6rfDM7/qCUVsYOGIM3DM0=
+X-Proofpoint-GUID: W8rhlW-M2F5evucRKHQ2Djfke6FVrQQ_
+X-Authority-Analysis: v=2.4 cv=C6zZDwP+ c=1 sm=1 tr=0 ts=6a4bcb28 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
+ a=EUspDBNiAAAA:8 a=wRhyhPH_MPSplg4SnB4A:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
+ a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-ORIG-GUID: W8rhlW-M2F5evucRKHQ2Djfke6FVrQQ_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDE1NyBTYWx0ZWRfX5H94jTbiOD2T
+ FiMAVEfRN1r3ZMfJDjtY9GMun8g4zEjrmp+uN5+X8thnI+SKMvc6tvRHhPZjUvv1gNhK2Wz/zP+
+ IP6qtLvrADkl4qrlzquve6pxGP7cnnKTgrcm7KhcMA5j4P3hE/5BVS9n3WKydp5MtqKrbLAVuGR
+ Z/1ietsRJMnQUg98bGQm2r0kFuDlOqyp0Yc+2QmzYWFOgBFJcF32FWzwVRCMRH3riPyEprUXIqu
+ A3t1Rj/FmZFkeHuaaM3FGx9QBgNkLB7K2GH5t1St7araB31mg6k1reKRXEjya7iSYb8faXZBASt
+ zum9JG7NSUKA/zfAhl/OQVMWL5PzaUZNqhyuMhrvq5L9fncwiG+/iRXvlJW8xTvIBDZH9VyAWI2
+ LzK8itUdXmU4Bcy8F5+5CVugQF7AUf7SHzLjIFpDnmI9vQP1x1eMCP9WjL/orJkWhBA2gf4DByI
+ +fHZUjxgs7vWfWFSIKA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-06_02,2026-07-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 clxscore=1015 spamscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607060157
 
-On Tue, 2026-06-16 at 00:44 +0800, wen.yang@linux.dev wrote:
-> +/*
-> + * Test 2: panic notifier chain is reachable.
-> + *
-> + * vpanic() calls atomic_notifier_call_chain(&panic_notifier_list, ...).
-> + * Drive the chain directly to verify panic notifiers receive the
-> notification =E2=80=94
-> + * the observable side-effect of reactor_panic without halting the syste=
-m.
-> + */
-> +static void test_panic_notifier_called(struct kunit *test)
-> +{
-> +=09atomic_notifier_chain_register(&panic_notifier_list, &mock_panic_nb);
-> +=09atomic_notifier_call_chain(&panic_notifier_list, 0,
-> +=09=09=09=09=C2=A0=C2=A0 "panic violation message");
-> +=09atomic_notifier_chain_unregister(&panic_notifier_list,
-> &mock_panic_nb);
+On 7/6/26 1:08 PM, Praveen Talari wrote:
+> The GENI SPI driver reports various transfer failures such as command
+> timeouts, DMA reset timeouts, DMA transaction errors, and unexpected
+> interrupt conditions. However, diagnosing the root cause of these
+> failures is difficult as the hardware state is not captured when the
+> error occurs.
+> 
+> Add trace_geni_se_regs() calls at critical SPI error handling paths to
+> automatically capture GENI serial engine debug registers when failures
+> are detected. This includes:
+> 
+> - M_CMD abort/cancel timeout
+> - DMA TX/RX FSM reset timeout
+> - DMA transaction failures and pending residue conditions
+> - Unexpected interrupt error status
+> - Premature transfer completion with pending TX/RX data
+> 
+> Dumping the SE debug registers at the time of failure provides
+> additional hardware context and significantly improves post-mortem
+> analysis of SPI transfer issues without affecting normal operation.
+> 
+> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+> ---
+>  drivers/spi/spi-geni-qcom.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index 26e723cfea61..7db0836308c2 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -3,6 +3,7 @@
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/qcom_geni_spi.h>
+> +#include <trace/events/qcom_geni_se.h>
 
-I just realised this isn't even testing the reactor, it's testing the
-notifier_chain thing, I don't think we really need this here or am I missin=
-g
-something?
+nit: this could be sorted alphabetically (Mark, could you fix
+it up while applying?)
 
-Thanks,
-Gabriele
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> +
-> +=09KUNIT_EXPECT_TRUE(test, panic_test_state.notifier_called);
-> +}
-> +
-> +static struct kunit_case reactor_panic_kunit_cases[] =3D {
-> +=09KUNIT_CASE(test_panic_register_unregister),
-> +=09KUNIT_CASE(test_panic_notifier_called),
-> +=09{}
-> +};
-> +
-> +static struct kunit_suite reactor_panic_kunit_suite =3D {
-> +=09.name=09=09=3D "rv_reactor_panic",
-> +=09.init=09=09=3D reactor_panic_kunit_init,
-> +=09.test_cases=09=3D reactor_panic_kunit_cases,
-> +};
-> +
-> +kunit_test_suite(reactor_panic_kunit_suite);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("KUnit tests for reactor_panic");
-
+Konrad
