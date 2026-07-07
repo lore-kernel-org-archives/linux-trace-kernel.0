@@ -1,37 +1,36 @@
 Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09782348C70;
-	Tue,  7 Jul 2026 15:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782533F44EA;
+	Tue,  7 Jul 2026 15:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783437264; cv=none; b=G/dGmSem2xqcmv7UPXu4HGPdSdoRLQlUm7kainNZ+VVfGC5JcNvXq9QbxLXF8cg1Ivx5IG+EOzhpIO7psvVsGvyCqykvh1VeDm5HuxqLXENQPKHCXx2XBZI/DLzcfRZuPMTiITkGOMjVhT9qJv/rIK5eq9sdkRD6LBKYkQF58Is=
+	t=1783437621; cv=none; b=JGTN4E9vg8hN1eH8LTFvvXUQgWWwUw09y1aiXsh20KmJWVNmD8QdVJuTKx+LyyCOp9M6PqoEQF5zMhF//T3ZoM3NhbG1ZnQvJsVXIdfbSrPBlcDpWbu1BEtQO4V3xy+uPzJpGjpWDe2nyEZyHzjBOsXeldhapvAc9BZV0u1Y0iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783437264; c=relaxed/simple;
-	bh=HSak7QPdbaYKDPbofbC3f3ugOAa81eud4njBhRO89lE=;
+	s=arc-20240116; t=1783437621; c=relaxed/simple;
+	bh=5tuWkatnVNIK5Ry5kMSoOp5IKnPnmOr+sggrp950vT0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JDViVJliBZQa8JDBTfScHdyyq8QraT01Etq+rzRTbuJE3P7m6n5iIEyEeuQFS16WL/l2K0IW6vzJRfAQIk9aoVJixcjWjgPmPdJoG6c+0/+qTnatpvldcmV19h2xRf61nrXG1FM4Y8GdcKdmlYWlAT3eUzngQSfFhwZo0H0k9LI=
+	 MIME-Version:Content-Type; b=HMvpMZn+ltpEmmO2ONnWzWhmINdN/PhfwMKPG4z6ZjkPioVEArPcZggdDfciLbNCvffZ4d+qPWS11wVXxR7WYV+F5+9N0wgahfnNjVHUq+bFgXX9ERlsSMvp9UyqgdX3IzOQbkxc9yoQHrQsikfWtim54pdqQ1Lsffloh47RqlQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 90D9D8DAB0;
-	Tue,  7 Jul 2026 15:14:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 93AA080013;
-	Tue,  7 Jul 2026 15:14:12 +0000 (UTC)
-Date: Tue, 7 Jul 2026 11:14:15 -0400
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 46E861C385A;
+	Tue,  7 Jul 2026 15:20:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 55EDE33;
+	Tue,  7 Jul 2026 15:20:08 +0000 (UTC)
+Date: Tue, 7 Jul 2026 11:20:11 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Yuanhe Shu <xiangzao@linux.alibaba.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, "sashiko-bot@kernel.org"
- <sashiko-bot@kernel.org>, "sashiko-reviews@lists.linux.dev"
- <sashiko-reviews@lists.linux.dev>
-Subject: Re: [PATCH] tracing: Fix NULL pointer dereference in
- func_set_flag()
-Message-ID: <20260707111415.660f706b@gandalf.local.home>
-In-Reply-To: <20260624061715.1445655-1-xiangzao@linux.alibaba.com>
-References: <20260624061715.1445655-1-xiangzao@linux.alibaba.com>
+To: Chen Jun <chenjun102@huawei.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ "sashiko-bot@kernel.org" <sashiko-bot@kernel.org>,
+ "sashiko-reviews@lists.linux.dev" <sashiko-reviews@lists.linux.dev>
+Subject: Re: [PATCH] tracing: Add "within" filter for call-stack-based event
+ filtering
+Message-ID: <20260707112011.7ca6f721@gandalf.local.home>
+In-Reply-To: <20260608145556.94931-1-chenjun102@huawei.com>
+References: <20260608145556.94931-1-chenjun102@huawei.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,66 +40,93 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1na5enskhkbw57cpmcad84hnqu3nrmb5
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 93AA080013
+X-Stat-Signature: hspj7xkyc7wh4ha5dqx9y7cg53bumzat
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 55EDE33
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Grlqimhawef4jRxoekUo1j+AlmOFoB3I=
-X-HE-Tag: 1783437252-353159
-X-HE-Meta: U2FsdGVkX18GDdMOd1Pysl31j3+ubjs/5N2yJ+WJBwAWfGA/isI4S9WFr42ZE30auxddwtOSyiPq/G5Lw81OQbDEeEJGY/KeByRS/Agh4qgWC0qZ2CiH2gbJQszePYwzwNCXehTPdMd0bpMXQmdFWrEpsAX4M39K2rXWzCrGEMA35Xxi/fjZeTj4GAcOXoUXvjW1gnsOFg8iALxMqHzzOQxrw+mxwYNMcXPdhcffsBv3mQDGgazqRiLDPrhtK2aFvPjn5ECgaL76nuNapNi2Q9p56KbM1Al8keFJqNZz2lxK1AGbyhsE7HoLzsnoK4JA49BtUbmvxv4GJhosxT1Kf970kIbXGJgUmemG9wCkfQgAT0dc4jVVM7RZGl0j3fJ7oaK/HbOGHEjA7Ez6G02y2RR9dPwAFbjKWZNeVXI2FBGucDZq22lPIw==
+X-Session-ID: U2FsdGVkX1+CLvAh4fPhurGx+w7BMuJCAiIL5GIyV7g=
+X-HE-Tag: 1783437608-906688
+X-HE-Meta: U2FsdGVkX1+7rBmUntmm2xb7msXy/BaG7JLSO8l+87LPRiBM66T0N/QWdtUMyF0n286VGUwZYJv6wdTLK+8q1MMTa5RJEztHxRlRdtQB2UxKh/uUGSGsaTcJwy9D/gBkQzDXE+2RY1ge4GOrr5rn7NFEOFbIuOaqZ3M5uegqhS625CZqtvIiamcZVXScucgjJLasJ21iBTAoNFpPVbm8I8ihJ7cdHxwHH2rAWwtgnPRL3dv1v3jqZJPLweojT8TewoJaA+9rb3wehJDtUdZopXexO27t2vzhlFOzBxNFki3I3xtKhVSa3z3Wdfz4vqzDRpzDPodqLLXgcf/7ZQsP1142Vkc+Tzf3+Mkg/E/k2ojNsemZIRWiSPB+FMcJ6XLG/22dxhaAarX90EsjC1GQsFGXfFMF0pqXvGE7tx4C1jvVfe/hfFJ7Yg==
 
+From: https://sashiko.dev/#/patchset/20260608145556.94931-1-chenjun102%40huawei.com
 
-From: https://sashiko.dev/#/patchset/20260624061715.1445655-1-xiangzao%40linux.alibaba.com
-
-> commit 2140381622b995438751cdb59eb4bae6923f6a60
-> Author: Yuanhe Shu <xiangzao@linux.alibaba.com>
-> tracing: Fix NULL pointer dereference in func_set_flag()
-> This commit fixes a NULL pointer dereference in func_set_flag() by
-> moving the tracer type check before dereferencing tr->current_trace_flags.
-> > diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-> > index f283391a4dc80..cd37f20137581 100644
-> > --- a/kernel/trace/trace_functions.c
-> > +++ b/kernel/trace/trace_functions.c
-> > @@ -458,12 +458,12 @@ func_set_flag(struct trace_array *tr, u32 old_flags, u32 bit, int set)
-> >  	ftrace_func_t func;
-> >  	u32 new_flags;
+> commit dfbe6e67884d4ff73b44c46b51995f1945758a89
+> Author: Chen Jun <chenjun102@huawei.com>
+> tracing: Add "within" filter for call-stack-based event filtering
+> This commit introduces a "within" filter predicate for trace events, allowing
+> users to filter events based on whether a specific function appears in the
+> current call stack. It uses kallsyms_lookup_name() to resolve the function to
+> an address range during setup, and stack_trace_save() to capture the stack at
+> runtime to evaluate the filter condition.
+>
+> > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> > index 609325f579427..34e1a7f0b3cd0 100644
+> > --- a/kernel/trace/trace_events_filter.c
+> > +++ b/kernel/trace/trace_events_filter.c
+> [ ... ]
+> > @@ -1009,6 +1010,22 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
+> >  	return pred->op == OP_EQ ? ret : !ret;
+> >  }
 > >  
-> > -	/* Do nothing if already set. */
-> > -	if (!!set == !!(tr->current_trace_flags->val & bit))
-> > +	/* We can change this flag only when current tracer is function. */
-> > +	if (tr->current_trace != &function_trace)
-> >  		return 0;
+> > +/* Filter predicate for within. */
+> > +static int filter_pred_within(struct filter_pred *pred, void *event)
+> > +{
+> > +#ifdef CONFIG_STACKTRACE
+> > +	unsigned long entries[16];
+> > +	unsigned int nr_entries;
+> > +	int i;
+> > +
+> > +	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
+>
+> Is an array size of 16 entries sufficient here?  Since the skipnr parameter is
+> 0, several of these frames will be consumed by internal tracing and filter
+> evaluation functions (such as filter_pred_within() and
+> trace_event_buffer_commit()).
+>
+> This leaves very few slots for the actual call chain, meaning higher-level
+> functions like "vfs_read" will likely be truncated from the stack trace.
+> Could this cause the filter condition to evaluate to false incorrectly,
+> missing the events we are trying to capture?
+>
+
+This is a current limitation that may be dealt with in the future.
+
+> > +	for (i = 0; i < nr_entries; i++)
+> > +		if (pred->val <= entries[i] && entries[i] < pred->val2)
+> > +			return !pred->not;
+> > +#endif
+> > +	return pred->not;
+> > +}
+>
+> [ ... ]
+> > @@ -2002,10 +2021,28 @@ static int parse_pred(const char *str, void *data,
 > >  
-> > -	/* We can change this flag only when not running. */
-> > -	if (tr->current_trace != &function_trace)
-> > +	/* Do nothing if already set. */
-> > +	if (!!set == !!(tr->current_trace_flags->val & bit))
-> >  		return 0;
+> >  		} else if (field->filter_type == FILTER_DYN_STRING) {
+> >  			pred->fn_num = FILTER_PRED_FN_STRLOC;
+> > -		} else if (field->filter_type == FILTER_RDYN_STRING)
+> > +		} else if (field->filter_type == FILTER_RDYN_STRING) {
+> >  			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
+> > -		else {
+> > +		} else if (field->filter_type == FILTER_WITHIN) {
+> > +			unsigned long func;
+> > +
+> > +			if (op == OP_GLOB)
+> > +				goto err_free;
 >
-> This isn't a bug introduced by this patch, but while reviewing this fix for
-> tr->current_trace_flags, I noticed a similar NULL pointer dereference
-> can occur in print_graph_function() in kernel/trace/trace_functions_graph.c.
-> If a user enables the function_graph tracer, populating the ring buffer
-> with graph events, and then switches to a tracer that lacks flags and
-> does not automatically clear the ring buffer (such as hwlat, osnoise, or
-> timerlat), tr->current_trace_flags becomes NULL.
-> When the user subsequently reads the trace buffer, the fallback event handler
-> calls print_graph_function(), which unconditionally dereferences
-> tr->current_trace_flags:
->
-> kernel/trace/trace_functions_graph.c:print_graph_function() {
->     struct trace_array *tr = iter->tr;
->     return print_graph_function_flags(iter, tr->current_trace_flags->val);
-> }
->
-> Does this unconditional dereference of tr->current_trace_flags->val also
-> need a similar safety check to prevent a kernel crash?
+> Does this goto need a preceding call to parse_error()?  Other error paths in
+> this function initialize the error state before jumping to err_free.
+> Without it, users might see an unhelpful generic error message instead of a
+> syntax error indicating that the glob operator isn't supported here.
 
-No, because even though hwlat, osnoise and timerlat may not clear the main
-ring buffer, it reads it differently. Thus the print_graph_function will
-not be called.
+This is a legitimate issue.
 
-Unless you can figure out a way to get to that function with one of those
-other tracers?
+Chen, can you send a v2 and add a proper error message here?
+
+Thanks,
 
 -- Steve
+
+
+> > +
+> > +			pred->fn_num = FILTER_PRED_FN_WITHIN;
+> > +			func = kallsyms_lookup_name(pred->regex->pattern);
