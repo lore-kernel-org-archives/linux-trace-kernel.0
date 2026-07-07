@@ -1,211 +1,208 @@
-Received: from va-2-115.ptr.blmpb.com (va-2-115.ptr.blmpb.com [209.127.231.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102C63F8233
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 12:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.115
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C1635AC16;
+	Tue,  7 Jul 2026 12:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783426386; cv=none; b=daeF/PoxUENpJZ35wF2bgf2qL9MgPnGu1mzyBezCEe35z/fSJSSGqP3BnzoAr4MP/rkd+wWUpwd8W8DQja6YBRop4KCnDXo4bcYvBnpaqZT12JVjJcrsxo3sc8n4gFkBQQcLjqMRv4WlUz4F3LMY4a5f9fjwpgzyG1zZb4KqdP4=
+	t=1783426544; cv=none; b=sQVDT7GApENx0kqTDwqNqAcBEJ6BxE4JwURQ96M73yQioY2TUWIr5ICzBOh+yVZsE+CH+/ypBCZp3axAMkrekVC96Wj3FzvqaMNOx6HN4I1vpA7nTzEWwYrVG4yz7lzsDKkKVyD9Sy0mQsQwkoZtFItxX4a0ondqpmQEf/Mspr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783426386; c=relaxed/simple;
-	bh=IXzav0c4tT+2NtR3vMboPjHuLAxMgbEO+HMaiS8ivyM=;
-	h=To:Mime-Version:Subject:Date:Content-Type:Message-Id:Cc:From; b=alMdZRfn5aRV57e4+ZlB+Hp2NZCwjbbJDXJl0X24z9QJ3zFxvkT5Mg1Bm09Zmiue7Ub+ACvj0yCduHmiSfIr9Xs2Y5KAbmR2kE1UTOvp4SNQPJNTkbtYWyEC27AtQe9gOnrYvcfMHrT4cnujhqao0V7aK4zWDHw4bXxYBUr33rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=qbz4j2yo; arc=none smtp.client-ip=209.127.231.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1783426544; c=relaxed/simple;
+	bh=K/4UxBvoLplwP1TnbzWxw3/3TsMxIZDXrC28TvWcMiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bsn24MDXGHPqJNSFaQeN2wVDDtBxZvv5H9A2FJHiIv4rm+pqo/YD1Udo7/CzxpAhMY+dODIT1yDEEXgxlJ9sLXjbU26Zpft48YdmS8mD8oZNbp3mF8mSArgD74JB/s5/oRNEU4daqS2Gq+CwOh3I3OVZZ5fHRbgH18ltwhF+m8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TNdO5d+U; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="qbz4j2yo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1783426371; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=WUCot7/K7DvmbTXO2aDp1/r+7gn1NIAyCFsZSusXrB8=;
- b=qbz4j2yoKqjCaocxE32aFItWOAxRvP0QTmvv4udmAldvRXJ2ehNoRwnSoFz6CU+I9IKjCv
- dDQaj5fCPjoyzE5Jp01AnoVJr8Iydtb1vhLNNdTqlhzhzpSgFWYzgPM7S9kzZKaqrLlpZh
- 7CjuI521xEIY/GHKOj+t8qNEeLIdQm3OjfBuZH+HgGlg8htLbNf6tSGE4j6pvoat2Sj4nw
- 9w02pq/3QPwDoaUT1fc8PwWsP6BuCP5YneLDi3JGwl0Ow45gZSShg49IRH8HuucEkkgQ26
- Swp+ro/2Qaci+/pLQeyp2CiscASSIyiNi+6Do8f0J9wL4W8qxqM0s2FM31PHfw==
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TNdO5d+U"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1969F2379;
+	Tue,  7 Jul 2026 05:15:38 -0700 (PDT)
+Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FA373F7B4;
+	Tue,  7 Jul 2026 05:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783426542; bh=K/4UxBvoLplwP1TnbzWxw3/3TsMxIZDXrC28TvWcMiE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TNdO5d+UTUqiaO2n0m215MtyUHnlvQDgBMAikIE37JFWL924/I6kpflUa5nFhYyke
+	 k+JcMLhIlAQbvHvBkEF4SPEAGvyeDpBoepuFrUOEUOC3Cd0e8k86lrEkmzUih1Xbfx
+	 dpcXyStBrZwJKsn8m45phGgiYaBsgjGXU6H92Tfs=
+Message-ID: <7d969be1-244b-4ff7-a5d4-b20da09f5488@arm.com>
+Date: Tue, 7 Jul 2026 13:15:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+To: Thierry Reding <thierry.reding@kernel.org>, Will Deacon <will@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Sowjanya Komatineni <skomatineni@nvidia.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Russell King <linux@armlinux.org.uk>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+ linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+ Chun Ng <chunn@nvidia.com>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck> <akZkuwktaXFTrASP@orome>
+ <akaSJ5D98w2cHqb6@orome> <akftuw9NyRy36fXA@willie-the-truck>
+ <akuvyu1Pq0ZVMZV0@orome>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <akuvyu1Pq0ZVMZV0@orome>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: [PATCH] riscv: ftrace: reject out-of-range non-direct targets
-Date: Tue,  7 Jul 2026 20:12:35 +0800
-X-Mailer: git-send-email 2.20.1
-X-Original-From: Rui Qi <qirui.001@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Message-Id: <20260707121235.759104-1-qirui.001@bytedance.com>
-X-Lms-Return-Path: <lba+26a4ced41+3a99a8+vger.kernel.org+qirui.001@bytedance.com>
-Cc: <mark.rutland@arm.com>, <pjw@kernel.org>, <palmer@dabbelt.com>, 
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <linux-kernel@vger.kernel.org>, 
-	<linux-trace-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
-	"Rui Qi" <qirui.001@bytedance.com>
-From: "Rui Qi" <qirui.001@bytedance.com>
 
-RISC-V initializes the AUIPC half of each ftrace callsite to reach
-ftrace_caller and later only patches the JALR instruction. The old
-ftrace_make_call() code redirected any requested target outside the
-JALR immediate range back to FTRACE_ADDR.
+On 06/07/2026 2:49 pm, Thierry Reding wrote:
+> On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
+>> On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
+>>> On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+>>>> On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+>>>>> On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
+>>>>>> From: Chun Ng <chunn@nvidia.com>
+>>>>>>
+>>>>>> Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protection bits
+>>>>>> on a kernel-linear-map range.
+>>>>>
+>>>>> That sounds like a really terrible idea. Why is this necessary and how
+>>>>> does it interact with things like load_unaligned_zeropad()?
+>>>>
+>>>> This is necessary because once the memory controller has walled off the
+>>>> new memory region the CPU must not access it under any circumstances or
+>>>> it'll cause the CPU to lock up (I think technically it'll hit an SError
+>>>> but in practice that just means it'll freeze, as far as I can tell).
+>>>>
+>>>> Probably doesn't interact well at all with load_unaligned_zeropad().
+>>>>
+>>>>> I think you should unmap the memory from the linear map and memremap()
+>>>>> it instead.
+>>>>
+>>>> Given that the memory can never be accessed by the CPU after the memory
+>>>> controller locks it down, I don't think we'll even need memremap(). The
+>>>> only thing we really need is the sg_table we hand out via the DMA BUFs
+>>>> so that they can be used by device drivers to program their DMA engines
+>>>> internally.
+>>>>
+>>>> Looking through some of the architecture code around this, shouldn't we
+>>>> simply be using set_memory_encrypted() and set_memory_decrypted() for
+>>>> this? While they might've been created for slightly other use-cases,
+>>>> they seem to be doing exactly what we want (i.e. remove the page range
+>>>> from the linear mapping and flushing it, or restoring the valid bit and
+>>>> standard permissions, respectively).
+>>>
+>>> Ah... I guess we can't do it because we're not in a realm world and so
+>>> the early checks in __set_memory_enc_dec() would return early and turn
+>>> it into a no-op.
+>>>
+>>> How about if I extract a common helper and provide set_memory_p() and
+>>> set_memory_np() in terms of those. Those are available on x86 and
+>>> PowerPC as well, so fairly standard. I suppose at that point we're
+>>> closer to set_memory_valid().
+>>
+>> Why not just call set_direct_map_invalid_noflush() +
+>> flush_tlb_kernel_range() for each page? We already have APIs for this.
+> 
+> Having a "standard" helper with a fixed and documented purposed seemed
+> like a preferable approach for this particular case. We also may want to
+> make the driver that uses this buildable as a module, in which case we'd
+> need to export these rather low-level APIs. And then there's also the
+> fact that we typically call this on a rather large region of memory
+> (usually something like 512 MiB), so doing it page-by-page is rather
+> suboptimal.
+> 
+>> The big challenge I see with any linear map manipulation, however, is
+>> that it will rely on can_set_direct_map() which likely means you need to
+>> give up some performance and/or security to make this work. Does memory
+>> become inaccesible dynamically at runtime? If not, the best bet would
+>> be to describe it as a carveout in the DT and mark it as "no-map" so
+>> we avoid mapping it in the first place.
+> 
+> VPR exists in two modes: static and resizable. For static VPR we do
+> exactly that: describe it as carveout in DT with no-map and deal with it
+> accordingly in the driver. Resizable VPR is for device that have small
+> amounts of RAM. Content-protected video playback will in the worst case
+> consume around 1.8 GiB of RAM, so we want to be able to reuse for other
+> purposes when VPR is unused on those devices. In that case, the memory
+> is also described as a reserved-memory region in DT, but it is marked as
+> reusable so that it can be managed by CMA.
 
-That fallback is only valid for direct-call targets, where
-ftrace_caller can still dispatch through op->direct_call. For an
-ops-specific trampoline, the generic ftrace core requested a call to
-ops->trampoline. Redirecting the site to FTRACE_ADDR instead enters
-ftrace_caller and invokes op->func, bypassing that trampoline.
+OK, so this is dynamic TrustZone, which is essentially identical to CCA 
+delegation as far as we're concerned from the Non-Secure side. IIRC 
+there was some ongoing talk about explicitly keeping track of the state 
+of physical memory ranges in terms of being delegated to CoCo VMs or 
+not, so eventually plumbing a "delegated to TEE/other" state through all 
+the same mechanisms seems a pretty achievable goal.
 
-ftrace_modify_call() had the same issue more directly: it ignored
-old_addr and addr and always validated and updated the site as
-FTRACE_ADDR.
+For now, though, firstly I'll note we have seen this sort of thing before:
 
-Add a helper to resolve call targets consistently. Keep targets that
-fit in the existing AUIPC/JALR window, redirect only out-of-range
-direct-call targets through FTRACE_ADDR, and reject other out-of-range
-targets. Use the resolved old and new targets in ftrace_modify_call()
-so the architecture implementation follows the generic contract.
+https://lore.kernel.org/dri-devel/20240515112308.10171-1-yong.wu@mediatek.com/
 
-Signed-off-by: Rui Qi <qirui.001@bytedance.com>
----
- arch/riscv/kernel/ftrace.c | 79 +++++++++++++++++++++++++++++++-------
- 1 file changed, 65 insertions(+), 14 deletions(-)
+although that didn't seem to need explicit unmapping (likely it involved 
+a TrustZone controller that just made NS accesses RAZ/WI instead of 
+external-aborting).
 
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index b430edfb83f4..26604bbc4bb5 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -46,16 +46,19 @@ void arch_ftrace_update_code(int command)
- 	flush_icache_all();
- }
- 
--static int __ftrace_modify_call(unsigned long source, unsigned long target, bool validate)
-+static int __ftrace_modify_call(unsigned long source, unsigned long old,
-+				unsigned long target, bool validate)
- {
--	unsigned int call[2], offset;
-+	unsigned int call[2], old_call[2], offset;
- 	unsigned int replaced[2];
- 
- 	offset = target - source;
- 	call[1] = to_jalr_t0(offset);
- 
- 	if (validate) {
--		call[0] = to_auipc_t0(offset);
-+		offset = old - source;
-+		old_call[0] = to_auipc_t0(offset);
-+		old_call[1] = to_jalr_t0(offset);
- 		/*
- 		 * Read the text we want to modify;
- 		 * return must be -EFAULT on read error
-@@ -63,9 +66,10 @@ static int __ftrace_modify_call(unsigned long source, unsigned long target, bool
- 		if (copy_from_kernel_nofault(replaced, (void *)source, 2 * MCOUNT_INSN_SIZE))
- 			return -EFAULT;
- 
--		if (replaced[0] != call[0]) {
--			pr_err("%p: expected (%08x) but got (%08x)\n",
--			       (void *)source, call[0], replaced[0]);
-+		if (replaced[0] != old_call[0] || replaced[1] != old_call[1]) {
-+			pr_err("%p: expected (%08x %08x) but got (%08x %08x)\n",
-+			       (void *)source, old_call[0], old_call[1],
-+			       replaced[0], replaced[1]);
- 			return -EINVAL;
- 		}
- 	}
-@@ -77,6 +81,46 @@ static int __ftrace_modify_call(unsigned long source, unsigned long target, bool
- 	return 0;
- }
- 
-+static bool ftrace_call_target_in_range(unsigned long addr)
-+{
-+	unsigned long ftrace_addr = FTRACE_ADDR;
-+	unsigned long distance;
-+
-+	distance = addr > ftrace_addr ? addr - ftrace_addr : ftrace_addr - addr;
-+
-+	return distance <= JALR_RANGE;
-+}
-+
-+static int ftrace_resolve_call_addr(struct dyn_ftrace *rec, unsigned long addr,
-+				    unsigned long *target)
-+{
-+	unsigned long direct;
-+
-+	/*
-+	 * The AUIPC instruction is initialized for ftrace_caller and this
-+	 * implementation only patches the JALR instruction afterwards. Targets
-+	 * that fit in the existing AUIPC/JALR window can be called as-is.
-+	 */
-+	if (ftrace_call_target_in_range(addr)) {
-+		*target = addr;
-+		return 0;
-+	}
-+
-+	/*
-+	 * Out-of-range direct-call targets can still be reached through the
-+	 * ftrace_caller path, which dispatches via op->direct_call. Do not use
-+	 * this fallback for ops-specific trampolines, because ftrace_caller
-+	 * invokes op->func and would not preserve the requested trampoline.
-+	 */
-+	direct = ftrace_find_rec_direct(rec->ip);
-+	if (direct && addr == direct) {
-+		*target = FTRACE_ADDR;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
- static const struct ftrace_ops *riscv64_rec_get_ops(struct dyn_ftrace *rec)
- {
-@@ -116,19 +160,18 @@ static int ftrace_rec_update_ops(struct dyn_ftrace *rec) { return 0; }
- 
- int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- {
--	unsigned long distance, orig_addr, pc = rec->ip - MCOUNT_AUIPC_SIZE;
-+	unsigned long pc = rec->ip - MCOUNT_AUIPC_SIZE;
- 	int ret;
- 
--	ret = ftrace_rec_update_ops(rec);
-+	ret = ftrace_resolve_call_addr(rec, addr, &addr);
- 	if (ret)
- 		return ret;
- 
--	orig_addr = (unsigned long)&ftrace_caller;
--	distance = addr > orig_addr ? addr - orig_addr : orig_addr - addr;
--	if (distance > JALR_RANGE)
--		addr = FTRACE_ADDR;
-+	ret = ftrace_rec_update_ops(rec);
-+	if (ret)
-+		return ret;
- 
--	return __ftrace_modify_call(pc, addr, false);
-+	return __ftrace_modify_call(pc, 0, addr, false);
- }
- 
- int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long addr)
-@@ -215,11 +258,19 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 	unsigned long caller = rec->ip - MCOUNT_AUIPC_SIZE;
- 	int ret;
- 
-+	ret = ftrace_resolve_call_addr(rec, old_addr, &old_addr);
-+	if (ret)
-+		return ret;
-+
-+	ret = ftrace_resolve_call_addr(rec, addr, &addr);
-+	if (ret)
-+		return ret;
-+
- 	ret = ftrace_rec_update_ops(rec);
- 	if (ret)
- 		return ret;
- 
--	return __ftrace_modify_call(caller, FTRACE_ADDR, true);
-+	return __ftrace_modify_call(caller, old_addr, addr, true);
- }
- #endif
- 
--- 
-2.20.1
+If you want to be nice and start trying to build the general abstraction 
+for this, then as a first step I'd suggest following the shape of the 
+current CCA machinery - build a "delegate to TEE" operation around the 
+existing set_memory_valid() paradigm[1] with can_set_direct_map() 
+safeguards, and have something like a have_dynamic_tz() that echoes 
+is_realm_world() in terms of being set at boot when one of these regions 
+is detected by the early reserved-memory parsing, then considered in 
+force_pte_mapping() (such that it only matters if BBML3 doesn't already 
+have us covered).
+
+Thanks,
+Robin.
+
+
+[1] Personally I'd be inclined to stay away from set_memory_*crypted() 
+until that mess gets sorted out properly, but the argument could also be 
+made the other way that the "delegated" state is currently mixed up in 
+"encrypted", so technically it wouldn't be entirely inaccurate to use, 
+it would just mean that we're intentionally adding more to that cleanup 
+effort. For now it seems nicer to me to keep a distinct "made invalid 
+(due to delegation)" state that can eventually converge into a proper 
+"delegated" state once that exists, rather than get mixed up in the 
+current 
+guest-shared/guest-private/host-shared/host-private/host-delegated mess 
+most of which is not relevant for non-CoCo uses.
+
+> The resize operation is fairly slow to begin with because we need to
+> stall the GPU and put it into reset before the operation, then take it
+> out of reset and resume it afterwards.
+> 
+> What kind of performance impact do you expect?
+> 
+> Thierry
+
