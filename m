@@ -1,42 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E723E9C2F;
-	Tue,  7 Jul 2026 15:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315073612ED;
+	Tue,  7 Jul 2026 16:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783438045; cv=none; b=FSVuIuNamFRa+JOUpZ986K6CVetOpmruJxbnoRDlCRuxkoawRHJQHPt4wieFxC+/LvtqNMMq1koMuegfgCeoTvJp3cxYJA/Y4suue++XIo8hYc21RsqfmMdUnKYgLURvZNlqDK6IPuYBKbjy3UlEyC/m0sDdJG5Z6aKcTcg3taM=
+	t=1783440049; cv=none; b=C8U0v/aEj74OrbaTXpSovIIdDlKveKMILOQkaRR+d95P41Q9vuFkSPbdymzKvhogHdRDdYU5laB2cXTnl2KOM53Yu+AIGtVLZs1r32mngFuw1Z3PSoDnIGJUAUduI+VkIqG3PmmatnOfWbduiuyAez1cBy0QcN8q98QfleNSwmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783438045; c=relaxed/simple;
-	bh=yTcTkZYFCYgjzsbx0Y3RELwYeCZu/L0CAQ3MePDfBnU=;
+	s=arc-20240116; t=1783440049; c=relaxed/simple;
+	bh=1iLInY17sRnF1Bnlfy+Ib9X5BvBkkmir9bArxM2d1H4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NkK7j2JsyyMwjH2vCum0lbYHO7FGEeLsbsqW2sxkDdFXQNT4aIUhvMis+JLaeAj0euXbQXPMsGKpT0xVbRuKmhB48RrJC2k1vVh+cA63Vv6TF1AE2tBINlpMyvZP+z6yNl2rZsHS+cITSS7PhNSjr1KVYp55F0p2sp6VC4ZkhhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=d/d83HYeP0c4GF0/j+65tQUzXggxl8oUIlvYs5gVYi3sTrJGrizviHfnJCl/5JsgJRPmHVPaGyrE2IR0FNzLaLV41xyH5j8UlgCSaAwf9enB+MAoNgWvTswt7qf3cX8mtrTJk8CnrbPj2hXlqm7xqQcx3J9scKmkkJVfzjnTjZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0A7CFC31CB;
-	Tue,  7 Jul 2026 15:27:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0866C20027;
-	Tue,  7 Jul 2026 15:27:14 +0000 (UTC)
-Date: Tue, 7 Jul 2026 11:27:18 -0400
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 1752D1C3A94;
+	Tue,  7 Jul 2026 16:00:46 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 6EAAF2000E;
+	Tue,  7 Jul 2026 16:00:43 +0000 (UTC)
+Date: Tue, 7 Jul 2026 12:00:46 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Michael Bommarito <michael.bommarito@gmail.com>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>, XIAO WU <xiaowu.417@qq.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: fix use-after-free of enabler in
- user_event_mm_dup()
-Message-ID: <20260707112718.7d1442e4@gandalf.local.home>
-In-Reply-To: <CAJJ9bXy78yKmOb+x-THk4EwJxY=0si04YAMtmOu-SzarVJwRBQ@mail.gmail.com>
-References: <20260618222743.538915-1-michael.bommarito@gmail.com>
-	<tencent_89647CE40DC452B891C65C94D1B271DE8E07@qq.com>
-	<20260624200535.GA132-beaub@linux.microsoft.com>
-	<20260706160650.2791767d@gandalf.local.home>
-	<CAJJ9bXzJpYRE-NjOjiArpuJWGnFXr+jq7ukbEEdEhK9YPCbYrQ@mail.gmail.com>
-	<20260707104205.582db193@gandalf.local.home>
-	<CAJJ9bXy78yKmOb+x-THk4EwJxY=0si04YAMtmOu-SzarVJwRBQ@mail.gmail.com>
+To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Cc: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
+ daniel@iogearbox.net, kafai@meta.com, kernel-team@meta.com,
+ eddyz87@gmail.com, memxor@gmail.com, Mykyta Yatsenko <yatsenko@meta.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 0/3] tracing: Expose tracepoint BTF ids via
+ tracefs
+Message-ID: <20260707120046.31573548@gandalf.local.home>
+In-Reply-To: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
+References: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,23 +40,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 0866C20027
-X-Stat-Signature: c1detodsjrxqa6fnkcpodofbc5iui5sy
+X-Stat-Signature: k87xr15tbwbuz4jtafu5ec3kdmfycrte
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 6EAAF2000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+8X/LbQq+S6noAZJrWCl20x35vH6P26Hk=
-X-HE-Tag: 1783438034-387290
-X-HE-Meta: U2FsdGVkX19os0Ok/iA3xJDH9fXasZ4VRTf/V0FdCXfBRa6v8gvy7DXMMQeLP/WM/kvmU+4kfYImZfR/ymq/GdHIeb/vDk266q0aUupdIHl/aBqove+vqCBY5IxdoT9ceGJ/L/kTAX5daFioA6BK4EqbqSND4NmAecE8Q6ATrJMegAqrhgkihBtrDI6tUXlQNSWyh1MBTsmUtZwy8019mXwRQzXKBTXSYGo+RumKs6ya7FD64MDwqNlzklb2tPawneQl++Q+MHjUqxMnicgEYhSGBHsqOLhpZOWS69Tyd6BlSRqXBUa7y7OY+2ed6fl5BNn6IJv1zh73AP2wNxEqk55p0f38W3sj
+X-Session-ID: U2FsdGVkX18TssPEFq94GGqlz+p+9aRp8eeLIFlutH4=
+X-HE-Tag: 1783440043-387885
+X-HE-Meta: U2FsdGVkX1/Tx9nyManP9zwP+a3L82cJx81X4QDK9XWbb3e8XlhJm0qXPF1os5W79zy/LIkiAsEW8f27ieUKfLPdreBktAOtFsAg8ZPCAjErgfds4BgoppbOxbCr0+CxP3uiRUALSGhPR0xu72VIJiVuj07x7zpA3cFJ+t5VPzl9MG8PDXKAG+7ykiZu6A9DFgrHhwOFZacggrxph8MUe/IVa5QZHyhXD2TLA7aJgnrH9b6g9jiXy+0FRQHNksiQJl9ISNHjYBLuGtGBk8Cm74mhIeSvEEjG/esQkrh4rep5iAUnASGcIKnlmmDc87IKPa9PxRI0DrGF1/2t/AM5wkyLPPGYTDQ7
 
-On Tue, 7 Jul 2026 10:43:40 -0400
-Michael Bommarito <michael.bommarito@gmail.com> wrote:
+On Mon, 18 May 2026 08:23:14 -0700
+Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
 
-> > Ah, you're going to send a new version. I'll drop the one I pulled then.  
+> BPF and other consumers that want to attach to or decode a generic
+> tracepoint need three pieces of BTF information for it:
 > 
-> Saw your pull for-linus and I was just about to send a separate patch
-> set for the second UAF with a ktest (as 2/2).  I can do either way,
-> just let me know which is easier
+>   - the BTF of the object that owns the tracepoint's types
+>   - the FUNC_PROTO describing the tracepoint arguments (with names),
+>     consumed by raw_tp / tp_btf BPF programs
+>   - the STRUCT id of trace_event_raw_<call>, the ring-buffer record
+>     consumed by classic BPF_PROG_TYPE_TRACEPOINT programs
+> 
+> Today none of this is easily discoverable from userspace. The kernel
+> knows the ids - resolve_btfids fills them in at link time - but
+> consumers have to search them by the naming convention
+> ("__bpf_trace_<name>", "trace_event_raw_<name>"), walking BTF for
+> every tracepoint.
 
-I'll drop it and take your new one.
+I'll pull this in even though it adds 100K to the kernel:
+
+   text    data     bss     dec     hex filename
+40506047        15709518        16661184        72876749        45802cd /tmp/vmlinux.new
+40499064        15615294        16661184        72775542        4567776 /tmp/vmlinux.old
 
 -- Steve
