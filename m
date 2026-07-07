@@ -1,63 +1,63 @@
 Received: from mail-pz2-f1.google.com (mail-pz2-f1.google.com [74.125.228.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D15A3D891D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 12:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2BD414A05
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 13:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783429195; cv=none; b=meKGe4WKHlSNntDBlihoiaSnF8mJh0D44SbfKwjWeK7LDQ4bleKL3Q/qghWaenstEOmyNrP1Hc6wa2K+Fos9ZLXinKu/4FMSnNaytm0AzO/urUjn97/TlOyornydO6WqlaihLvpuU1Cmum1Sybe/KEEwtHh8tlhJi8+8KCibL74=
+	t=1783429207; cv=none; b=GrLry4NVoqwQ6tmFMexcf3MjtLr+CgJSthxcyRN1OsN1xLoRFY6WjH9fcoc4efKRSA0D6kLR02YTUezVZzQ8Fv3jQEBmMKDkZsXID5srmj5uoL61hD1ezIPh/fWDy3COK0Nl/K2JMKj1LmJP10vhGykksqwzyoNdUFRgfUC/jnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783429195; c=relaxed/simple;
-	bh=yole13EigkRSd7xBnzu90SvW8e/P0ie4BQTT6so7T30=;
+	s=arc-20240116; t=1783429207; c=relaxed/simple;
+	bh=Uu6ffgw5ANp4RrdWNurpzkvUhN3Hlg5sZPnNxmwEMzY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YYZCrG0rnxPNLA0vOPhTsqg79eo1OihUmaXCCliRWb22kRVMPFqwrL4jq/1QMCYWsxl3XrdKkyCPex9+mB1fRP7GzMBnIimFTAhWZZkjKQmIk8BIB8bo2Va2gn95rOaQTeDWqdP9EpKwsDXRMq30kZmlzZGNZCPO9MrWJdjkSVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLFeF4Wo; arc=none smtp.client-ip=74.125.228.1
+	 MIME-Version; b=OOp669R9XsakjfZhQPMnYde7aSyqHHjfDr1iMd28kSFwtNsAZ7Xe589kx2u1Xr55JFUCapW/xkg00ufvTjIu5djCMKI0k/VKGX8RtJaNUr6Hd2hQcev6d1PCl2GO6louHY1o37dI6aEgGAnq3k294kQNlHbVQnpBUjmN/MYC3yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PwkjeeuH; arc=none smtp.client-ip=74.125.228.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLFeF4Wo"
-Received: by mail-pz2-f1.google.com with SMTP id 41be03b00d2f7-ca696c4b152so31713a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 05:59:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PwkjeeuH"
+Received: by mail-pz2-f1.google.com with SMTP id 41be03b00d2f7-c9fe62e0da3so655856a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 06:00:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783429194; x=1784033994; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783429206; x=1784034006; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=RSA218qTv4mgdJzlBuvqRuFwwy+LpVW2vHjrCuIOTHM=;
-        b=LLFeF4WoVhr1Qr4l8//yLNNC8cKXeoxkjBeiM6bTGASy0g5RHfuvF3ihwFV8chigt7
-         NInO3yzgyKgab25uEjAHOaijgwKEuxy6m9QFy2ijFipPMcnZQsKmkcdbHgw/SpLqTm5C
-         oM9i/Utwpypb+KNjdO2RAkvi67CLF838BN3srwZekCnP4KfZVtvmXDh3ECxrLr/QNHMn
-         O7xVhXGz0Zb5q4GHhg7nrhrxGDGrMJrTgNTsKPvA8Z6/DjVrBr8Hgt+YMoSeyfHjGMjj
-         UYnvvJ/bVYc7SqZgMBHrr3o4gyJJ0CW5aEcp9ZRHkLuRupQ106suKTUV6g3Gjo4mIKXx
-         V+tQ==
+         :message-id:reply-to;
+        bh=dRG4koxyQiwY5tLrrrfMaCr8tCYmTMxhC2SFHMMXrW4=;
+        b=PwkjeeuHcuI7JrU3TRG0eyjEBDcKRA+t32SN+/gGpoHv65T062UMR+lPu08l9P3GwY
+         NIRLLrtF5NNrr6NSLQEuelBD9AGdNEUTz7o1bvq6nGpoM7Q3fNA0wIHXp/cQh4miMHJg
+         47m/5ciV0PDdBSgYHZlPOT1e81mZdmdcCqd8cOoUxx1UJco/yLu1DATr4PnReHFp+Tv/
+         eQm/xpP15DD7cf3t/GCY0cN1s1gHARSdJWfeYncrB53L62xrH/2UnSZDp565kCv+bjdf
+         rvIjtx4FM+TgTazzc8dy1WyjqSEi9rUiTmFUt54EK3W1jPCFgkmwGYdxFXwexz98SZHr
+         Lnew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783429194; x=1784033994;
+        d=1e100.net; s=20251104; t=1783429206; x=1784034006;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=RSA218qTv4mgdJzlBuvqRuFwwy+LpVW2vHjrCuIOTHM=;
-        b=fR2+2GZrRJEZnpg/5FMmHGpOaQQAZ2JRaj2tP0iMdwFuNuTihGZ9jT1sAgCw+AA0SZ
-         7m8tVJ/XCBUqlbp5x3IRaSt5fIh1jmXZjQhu2Pr/Y14xTHMY+VJQJeNqyk2o8WHOg1Qd
-         e0ImP2PO4vq3GkrHie5PGlbmUOSksCmmwwbuE5FFlI0yeyKF0OclBFLcTMKq3dQe2lmg
-         iMZ1SzZeRkS8qdy3fuwEcwxYHlpnjrGR3KUeKr6K0RjmMYXus10V5BFEUvGk+a7a/74J
-         qkfp8yN5AMPrNPrxdf1EUQQJwmQE4huIH0mY6jpkjhpVgfR/NVyT66ofJwpqo8sW5IAG
-         9h1A==
-X-Forwarded-Encrypted: i=1; AHgh+RpNZPyPROtJ8zO6fN2bRce/B88eMoCKPTzivZHJx6fTKW8CbnxTVYxfspaFTfLqHoAn9IuZA/Tpsing00RpG//+31o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz16q67CGyDNRRO74psQ6lO6tL6czsG/i/2blQPM7ycyGNMumIg
-	7zjDBcoz3tkDFsIk2x5ZBKwP0idr4hVFA4vYRow3IpySWRKfhMr0Wky4b63QXsiQ
-X-Gm-Gg: AfdE7cno+2LbNGvZfH74WmfeTIFQYc7hKCftI2bAvXbFIrKd06rbzeP0YGnqeMJ9M0B
-	vkSJ8LhkOSw63ltapytJOq0iGsPjbVRLjyVux7jwnmFqLw8XvAIFLuLcdFgOZNry7FRqyeq77f3
-	mPp1789M6W9XNKF0qURiMJHE6vLihVCeq8s/Njj/3MGyvUxlHdFWVIsvxvD0n2wgmAFGuENyu3b
-	JZiTh38zPxCqG2YE5LNP5/Z0kbXo6CQ9D2sSn/djWr+myU8TyxRsPTUTFT8NYDTzO2p98UN1aag
-	t7PyOyFU2vbGgkOG/wg2YfweX3wxQR28O3itYZABpG6RP+7zsft78n5R57UHfFau9dgUx4gtgej
-	7JdyWqbjXFvXu7Mj3wqRrXqai0Qc7+NF5bsxS4B9Bp58/LUPcSgKE4HIu7bfXoWw4naN+xelfcH
-	MrFluHaWOjD0F/TSY5/dlXAbUNGw==
-X-Received: by 2002:a05:6a00:760a:b0:848:2f74:d8da with SMTP id d2e1a72fcca58-8482f74dc6emr1994798b3a.75.1783429193368;
-        Tue, 07 Jul 2026 05:59:53 -0700 (PDT)
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dRG4koxyQiwY5tLrrrfMaCr8tCYmTMxhC2SFHMMXrW4=;
+        b=d31M5GdWKNeAdo0Bb4BgqJwQ54pWamZrKIPw8xsDV3iVFDMIaK0NVyZp+xxklwDSSj
+         he4UdLHTxqO8iOLtkGCPDqf/9NgtX/fNBTUUZTGlulr+HeGrZtvUR8YCCMbu4zIU+ju5
+         VKuAbxj/GTYYA3GN3ofODQOjC8N3lgHWcL1S7QyXDOkH6yWP4uoz+o2VgMrHfODmiI/5
+         R4H9iRzQwdmKwuiHrWCcyF/t4d1OHQwB7r6b2klyqUL3wpvdiiLvzA3UWc4odORFKirq
+         TVdXUCrgNtZTjj6lsGzgq1N95JbgB40Gpja+gWOm2X0t1n/uwyHdg6q2Y+FtRrpk4tKZ
+         0euA==
+X-Forwarded-Encrypted: i=1; AHgh+RruI9n8wByJt/ACblIRHT81c2q8TIQGyLlvxv7obhSzqBxRnL0wuYDt9ShjXfGGgt3kprgwU3c5edpCCqixsXwMBXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTXixm0lA+ORNexoVCzXeeCX3tdC90FTtsBqiCTm7zgAgBS/f5
+	wHrsinc5UIY+33TSFx7RwmjX827+hNo7t3sxhTxCWjkX1C2enZY/sr/s
+X-Gm-Gg: AfdE7ckl0wDDlUqzCTKXO19iiLU5BQpyQwcNRP7iBKU+HXmyO2KqgpiyF+z2ejiOOM+
+	GleNXFDxqBpWv2rsTrs/eMkDXSTUDASnSNpt3M8LhM0UJB465n1ivFJDt0CgC9ThWsy6E4vGHnz
+	NM/sXaCitW014uHc2pDCxfW41fKDbANMiejq2GkPwKNzX6StRIihp1Jzfxtf4X7KQhi4l9uNFnO
+	fk5sHgUBo9jzUcmj/VuT5mdrHVTLwUdRIOjKbWt8X//iilnpu1mzCwBOSxnvI7i9mFBrICeSv6M
+	nS0wgI8zPGoMfgPtrpFGWSQd+4pUDu0ZTOR4aI5it/H0/SkSEzfsmX5WT2ZYT677Ko89C20ml95
+	NF0ji07pz4WRyh1UeQclOnH72F0fGWu/Jijazyc2oIWPYfMpIqqMZSeaKegbKJyrAojiNBOIEzn
+	o/stB587D19xAQVRmXsTn93viT54vyFkzctonx
+X-Received: by 2002:a05:6a00:3d0f:b0:847:6ff4:da97 with SMTP id d2e1a72fcca58-84826e92efbmr4766809b3a.61.1783429205836;
+        Tue, 07 Jul 2026 06:00:05 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6b5e566sm5415983b3a.3.2026.07.07.05.59.42
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6b5e566sm5415983b3a.3.2026.07.07.05.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 05:59:52 -0700 (PDT)
+        Tue, 07 Jul 2026 06:00:05 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 To: vbabka@kernel.org,
 	david@kernel.org,
@@ -92,9 +92,9 @@ Cc: akpm@linux-foundation.org,
 	ying.huang@linux.alibaba.com,
 	apopple@nvidia.com,
 	pfalcato@suse.de
-Subject: [PATCH v2 1/4] mm/migrate: do not migrate folios mapped into VM_LOCKED VMAs under compaction
-Date: Tue,  7 Jul 2026 20:59:22 +0800
-Message-ID: <20260707125925.3725177-2-chenwandun1@gmail.com>
+Subject: [PATCH v2 2/4] mm/mlock: wait for migration to finish when mlocking a folio
+Date: Tue,  7 Jul 2026 20:59:23 +0800
+Message-ID: <20260707125925.3725177-3-chenwandun1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260707125925.3725177-1-chenwandun1@gmail.com>
 References: <20260707125925.3725177-1-chenwandun1@gmail.com>
@@ -108,191 +108,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Wandun Chen <chenwandun@lixiang.com>
 
-When compact_unevictable_allowed=0, unevictable pages should not be
-migrated. However, mlock_folio_batch in the mlock[all] syscall introduces
-a race, mlock_folio() sets PG_mlocked immediately but defers PG_unevictable
-to mlock_folio_batch(), causing pages that are about to become unevictable
-to be migrated, which violates the intent of compact_unevictable_allowed,
-and causes spike latency in RT kernels [1].
+In RT kernels, sysctl_compact_unevictable_allowed is false by default,
+when the mlock/mlockall system call try to lock all the present page,
+the mlock_pte_range function skips non-present entries. If these
+non-present entries are migration entries, and the migration is not
+guaranteed to have completed before the mlock/mlockall, it may result
+in a page fault on subsequent access, which then waits for the
+migration to finish, causing spike latency in RT kernels.
 
-In order to fix this, migration is forbidden for pages mapped into VMAs
-marked with VM_LOCKED. In addition, two early-return paths are introduced,
-filter out mlocked pages, return early to avoid unnecessary operations.
+Fix it by waiting for the migration to complete during the mlock/mlockall
+syscall when sysctl_compact_unevictable_allowed is false.
 
 Fixes: 90d07210ab55 ("mm: mlock: use folios and a folio batch internally")
-Reported-by: Alexander Krabler <Alexander.Krabler@kuka.com>
-Closes: https://lore.kernel.org/all/DU0PR01MB10385345F7153F334100981888259A@DU0PR01MB10385.eurprd01.prod.exchangelabs.com/ [1]
 Suggested-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-Link: https://lore.kernel.org/linux-rt-users/33275585-f2db-4779-89f0-3ae24b455a67@suse.cz/#t
+Link: https://lore.kernel.org/lkml/c8793c0f-7156-4cb7-9e6e-7909397e2fff@kernel.org/#t
 ---
- include/linux/compaction.h |  6 ++++++
- include/linux/rmap.h       |  3 +++
- mm/compaction.c            |  8 +++++++-
- mm/migrate.c               | 23 +++++++++++++++++++----
- mm/rmap.c                  | 12 +++++++++---
- 5 files changed, 44 insertions(+), 8 deletions(-)
+ mm/mlock.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-index f29ef0653546..04e60f65b976 100644
---- a/include/linux/compaction.h
-+++ b/include/linux/compaction.h
-@@ -106,6 +106,7 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
- extern void __meminit kcompactd_run(int nid);
- extern void __meminit kcompactd_stop(int nid);
- extern void wakeup_kcompactd(pg_data_t *pgdat, int order, int highest_zoneidx);
-+extern bool compaction_allow_unevictable(void);
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 97e49038d8d3..ac65de40b22b 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -25,6 +25,7 @@
+ #include <linux/memcontrol.h>
+ #include <linux/mm_inline.h>
+ #include <linux/secretmem.h>
++#include <linux/compaction.h>
  
- #else
- static inline void reset_isolation_suitable(pg_data_t *pgdat)
-@@ -131,6 +132,11 @@ static inline void wakeup_kcompactd(pg_data_t *pgdat,
- {
- }
+ #include "internal.h"
  
-+static inline bool compaction_allow_unevictable(void)
-+{
-+	return true;
-+}
-+
- #endif /* CONFIG_COMPACTION */
+@@ -361,8 +362,17 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
  
- struct node;
-diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-index 8dc0871e5f00..359c7426b6b9 100644
---- a/include/linux/rmap.h
-+++ b/include/linux/rmap.h
-@@ -102,6 +102,9 @@ enum ttu_flags {
- 					 * do a final flush if necessary */
- 	TTU_RMAP_LOCKED		= 0x80,	/* do not grab rmap lock:
- 					 * caller holds it */
-+	TTU_RESPECT_MLOCK	= 0x100,/* leave VM_LOCKED vmas mapped instead
-+					 * of installing a migration entry
-+					 */
- };
- 
- #ifdef CONFIG_MMU
-diff --git a/mm/compaction.c b/mm/compaction.c
-index f08765ade014..5d256930e389 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -1116,7 +1116,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 		is_unevictable = folio_test_unevictable(folio);
- 
- 		/* Compaction might skip unevictable pages but CMA takes them */
--		if (!(mode & ISOLATE_UNEVICTABLE) && is_unevictable)
-+		if (!(mode & ISOLATE_UNEVICTABLE) &&
-+		    (is_unevictable || folio_test_mlocked(folio)))
- 			goto isolate_fail_put;
- 
- 		/*
-@@ -1898,6 +1899,11 @@ typedef enum {
-  * compactable pages.
-  */
- static int sysctl_compact_unevictable_allowed __read_mostly = CONFIG_COMPACT_UNEVICTABLE_DEFAULT;
-+
-+bool compaction_allow_unevictable(void)
-+{
-+	return sysctl_compact_unevictable_allowed;
-+}
- /*
-  * Tunable for proactive compaction. It determines how
-  * aggressively the kernel should compact memory in the
-diff --git a/mm/migrate.c b/mm/migrate.c
-index a786549551e3..3a15eb13e82b 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1202,7 +1202,7 @@ static void migrate_folio_done(struct folio *src,
- static int migrate_folio_unmap(new_folio_t get_new_folio,
- 		free_folio_t put_new_folio, unsigned long private,
- 		struct folio *src, struct folio **dstp, enum migrate_mode mode,
--		struct list_head *ret)
-+		struct list_head *ret, enum migrate_reason reason)
- {
- 	struct folio *dst;
- 	int rc = -EAGAIN;
-@@ -1210,6 +1210,7 @@ static int migrate_folio_unmap(new_folio_t get_new_folio,
- 	struct anon_vma *anon_vma = NULL;
- 	bool locked = false;
- 	bool dst_locked = false;
-+	enum ttu_flags ttu = 0;
- 
- 	dst = get_new_folio(src, private);
- 	if (!dst)
-@@ -1249,9 +1250,15 @@ static int migrate_folio_unmap(new_folio_t get_new_folio,
- 		folio_lock(src);
- 	}
- 	locked = true;
--	if (folio_test_mlocked(src))
-+	if (folio_test_mlocked(src)) {
- 		old_folio_state |= FOLIO_WAS_MLOCKED;
- 
-+		if (reason == MR_COMPACTION && !compaction_allow_unevictable()) {
-+			rc = -EBUSY;
-+			goto out;
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+-		if (!pmd_present(*pmd))
++		if (!pmd_present(*pmd)) {
++			if (unlikely((vma->vm_flags & VM_LOCKED) &&
++			    !compaction_allow_unevictable() &&
++			    softleaf_is_migration(softleaf_from_pmd(*pmd)))) {
++				spin_unlock(ptl);
++				pmd_migration_entry_wait(vma->vm_mm, pmd);
++				walk->action = ACTION_AGAIN;
++				return 0;
++			}
+ 			goto out;
 +		}
-+	}
-+
- 	if (folio_test_writeback(src)) {
- 		/*
- 		 * Only in the case of a full synchronous migration is it
-@@ -1324,7 +1331,14 @@ static int migrate_folio_unmap(new_folio_t get_new_folio,
- 		/* Establish migration ptes */
- 		VM_BUG_ON_FOLIO(folio_test_anon(src) &&
- 			       !folio_test_ksm(src) && !anon_vma, src);
--		try_to_migrate(src, mode == MIGRATE_ASYNC ? TTU_BATCH_FLUSH : 0);
-+
-+		if (mode == MIGRATE_ASYNC)
-+			ttu |= TTU_BATCH_FLUSH;
-+
-+		if (reason == MR_COMPACTION && !compaction_allow_unevictable())
-+			ttu |= TTU_RESPECT_MLOCK;
-+
-+		try_to_migrate(src, ttu);
- 		old_folio_state |= FOLIO_WAS_MAPPED;
- 	}
+ 		if (is_huge_zero_pmd(*pmd))
+ 			goto out;
+ 		folio = pmd_folio(*pmd);
+@@ -383,8 +393,17 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
  
-@@ -1905,7 +1919,8 @@ static int migrate_pages_batch(struct list_head *from,
- 			}
- 
- 			rc = migrate_folio_unmap(get_new_folio, put_new_folio,
--					private, folio, &dst, mode, ret_folios);
-+					private, folio, &dst, mode, ret_folios,
-+					reason);
- 			/*
- 			 * The rules are:
- 			 *	0: folio will be put on unmap_folios list,
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 0fb7a1b82cf3..3cb7f6337d38 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -2420,6 +2420,9 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
- 	unsigned long pfn;
- 	unsigned long hsz = 0;
- 
-+	if ((flags & TTU_RESPECT_MLOCK) && (vma->vm_flags & VM_LOCKED))
-+		return false;
-+
- 	/*
- 	 * When racing against e.g. zap_pte_range() on another cpu,
- 	 * in between its ptep_get_and_clear_full() and folio_remove_rmap_*(),
-@@ -2741,11 +2744,14 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
- 	};
- 
- 	/*
--	 * Migration always ignores mlock and only supports TTU_RMAP_LOCKED and
--	 * TTU_SPLIT_HUGE_PMD, TTU_SYNC, and TTU_BATCH_FLUSH flags.
-+	 * Migration normally ignores mlock, but TTU_RESPECT_MLOCK asks it to
-+	 * leave folios mapped into VM_LOCKED vmas alone.  Only TTU_RMAP_LOCKED,
-+	 * TTU_SPLIT_HUGE_PMD, TTU_SYNC, TTU_BATCH_FLUSH and TTU_RESPECT_MLOCK
-+	 * are supported.
- 	 */
- 	if (WARN_ON_ONCE(flags & ~(TTU_RMAP_LOCKED | TTU_SPLIT_HUGE_PMD |
--					TTU_SYNC | TTU_BATCH_FLUSH)))
-+					TTU_SYNC | TTU_BATCH_FLUSH |
-+					TTU_RESPECT_MLOCK)))
- 		return;
- 
- 	if (folio_is_zone_device(folio) &&
+ 	for (pte = start_pte; addr != end; pte++, addr += PAGE_SIZE) {
+ 		ptent = ptep_get(pte);
+-		if (!pte_present(ptent))
++		if (!pte_present(ptent)) {
++			if (unlikely((vma->vm_flags & VM_LOCKED) &&
++			    !compaction_allow_unevictable() &&
++			    softleaf_is_migration(softleaf_from_pte(ptent)))) {
++				pte_unmap_unlock(start_pte, ptl);
++				migration_entry_wait(vma->vm_mm, pmd, addr);
++				walk->action = ACTION_AGAIN;
++				return 0;
++			}
+ 			continue;
++		}
+ 		folio = vm_normal_folio(vma, addr, ptent);
+ 		if (!folio || folio_is_zone_device(folio))
+ 			continue;
 -- 
 2.43.0
 
