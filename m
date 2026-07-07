@@ -1,72 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34383F1AC8;
-	Tue,  7 Jul 2026 10:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F683EB0EE;
+	Tue,  7 Jul 2026 11:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783421262; cv=none; b=TclHGrPec0fHZ6cX74uAPHfe5JZqnItT9SsbFDNvdnrgM3zPHc/vZOmxjzTXSoURRezGSYwxWAGRZrdJtKqIiYu64joC/dmGHxVMNd04ZtXQx2lO5vmfEjk/Au0drFE+e6OKr+Jp1KqRyP6aff0nc7l/E4ETYdLGcVgRXBp9fds=
+	t=1783423649; cv=none; b=edjuz/RnWkK7dYwXl1YHMyXesI+v/YAPmdV1S9PFw6zmNj2FezxrrM1zJiCoxn1p5HPdtu43QOj71Iq7UvBfOaovItgyHN8DvOPPZEEY2PYOMJbi+gsYpH1BUurjwOfLUTyXFsjHz1ha8ABd9Y1N0e4F41apyxvotDfVQzfaerM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783421262; c=relaxed/simple;
-	bh=K6XhXZvdxeZA7r5A4Qd3KUVGcGcAP3v98yAItEXMLbs=;
+	s=arc-20240116; t=1783423649; c=relaxed/simple;
+	bh=4l1iXQHyZX4KWBSzqmvIdP4JZC7MUT5WaO5EHB7P7oI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3GkjkvKE2epH65fvIw5FZ+E6RFNPL8iz04hICiL7ObezhLBrCNJ2d311ro1qGxVDyKnZ86MlSPVNZKGrziXH8LBC+osOwoOPoslMPJC/WZBMxowro/la17oXWhN+X21tCSP3wMz+3ji3RaAQC0i0lbj7rRVmWESvfCkm9rfQmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAwcbqQZ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=odCD50QOfJsElVdlyemxUXaXpUUvR3omfhj7BVvQN4LQl49lsJqm6MggjLEDoGjbV4C2YZj4EmDsC2927bXLCVpiEITLJfN+sLI2kzRUlOLFQOQ5IMt2sTnttA4PLT4RSLDyU9J9ajGZ8r4yH4ghEzAK1k5NYuwqXYDDf71/pFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcnzsePl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAwcbqQZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BA301F000E9;
-	Tue,  7 Jul 2026 10:47:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcnzsePl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C559E1F00A3A;
+	Tue,  7 Jul 2026 11:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783421260;
-	bh=LLhzkk/JgHcYgAhLZKjLeN62LByel6fmISiRV1ITuB4=;
+	s=k20260515; t=1783423646;
+	bh=aYNExvVjE68Bssuz6Q0Uk1wNO8ENlyByAV7s1CeJs/c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nAwcbqQZ6EYWFhU6Pa79F4DwZWj+s50w7KhSPUgAeSGSsvopOpj4c3CR6Dc4BvSKY
-	 UI/T4Y1V/RDDoyeFB8sXD2vSc8XMgX7PuHapXBY0cr7IWraSANQSAw1tuqycqvya7H
-	 EOLCy/nYmsu9fsBZZUMJw29VxKcXmmkS6wgUhpYDSoopqSIeazhcGwCvu+qGCZzZfm
-	 i6rrFcDrq00hFMpsTT5W6KK6td/K2YCAI1AB22h3luD//ahG1ub28FDnVRKZXh9KJy
-	 yczJHuo2utfhmEijYANtSxrq9T9w4QGeuL41lVe4jp1n6hobidMgbC6xXylCzlyKTK
-	 rSE3IBUcHgXTg==
-Date: Tue, 7 Jul 2026 11:47:16 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 29/30] tools/testing/vma: default VMA flag bits to 64-bit
-Message-ID: <akzZBrZC_ja-R-nJ@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <27cd07f6dd862d92410cf9db03f7c11e5f66854d.1782735110.git.ljs@kernel.org>
- <akZO3xI4Lt1iSbms@pedro-suse.lan>
+	b=GcnzsePlke2sHPVKXFrpmfWgDPaoaXvAGDCsvjpqbfsyvtLlho3fWpXDj/uKbDk36
+	 29MbpRdO6rfO94xIsXtWVBLVNSFu0PRpK+8Q3N5xgWJ0OkZvieybMvgBUqMhb2gQ4l
+	 Ahv8XDpa/3PWbSrFZzHelbxOI04a8OSapHaj/zeLfsMzVDa3n5HsTdyC0YbOpI139d
+	 fBoWckCalPRK9vcu5ifrE9IuraW6MqY6Q5ge3UN3DrPMz67mVJTxLFQXEVChjUNePg
+	 j6GuAFSVjQX9tNj/p8+7XZT6WNDH+X3gTCGkYbSR/BFOoYlGChu7c6d+b+RUXalLPP
+	 aFzzC3Jb5OcTA==
+Date: Tue, 7 Jul 2026 12:27:13 +0100
+From: Will Deacon <will@kernel.org>
+To: Thierry Reding <thierry.reding@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+Message-ID: <akzikTrmhMsvkNVY@willie-the-truck>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck>
+ <akZkuwktaXFTrASP@orome>
+ <akaSJ5D98w2cHqb6@orome>
+ <akftuw9NyRy36fXA@willie-the-truck>
+ <akuvyu1Pq0ZVMZV0@orome>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,49 +94,96 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <akZO3xI4Lt1iSbms@pedro-suse.lan>
+In-Reply-To: <akuvyu1Pq0ZVMZV0@orome>
 
-On Thu, Jul 02, 2026 at 12:44:21PM +0100, Pedro Falcato wrote:
-> On Mon, Jun 29, 2026 at 01:23:40PM +0100, Lorenzo Stoakes wrote:
-> > With all of the sanitisers turned on, setting the VMA flag bits depth to
-> > 128 by default results in overly long build times.
-> >
-> > Reduce this to 64 - we can always manipulate these later for testing of
-> > larger bitmaps as needed.
-> >
->
-> Hmm, what's the problem with the sanitizers? Shouldn't this just result in
-> slightly different codegen?
+On Mon, Jul 06, 2026 at 03:49:24PM +0200, Thierry Reding wrote:
+> On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
+> > On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
+> > > On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+> > > > On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+> > > > > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
+> > > > > > From: Chun Ng <chunn@nvidia.com>
+> > > > > > 
+> > > > > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protection bits
+> > > > > > on a kernel-linear-map range.
+> > > > > 
+> > > > > That sounds like a really terrible idea. Why is this necessary and how
+> > > > > does it interact with things like load_unaligned_zeropad()?
+> > > > 
+> > > > This is necessary because once the memory controller has walled off the
+> > > > new memory region the CPU must not access it under any circumstances or
+> > > > it'll cause the CPU to lock up (I think technically it'll hit an SError
+> > > > but in practice that just means it'll freeze, as far as I can tell).
+> > > > 
+> > > > Probably doesn't interact well at all with load_unaligned_zeropad().
+> > > > 
+> > > > > I think you should unmap the memory from the linear map and memremap()
+> > > > > it instead.
+> > > > 
+> > > > Given that the memory can never be accessed by the CPU after the memory
+> > > > controller locks it down, I don't think we'll even need memremap(). The
+> > > > only thing we really need is the sg_table we hand out via the DMA BUFs
+> > > > so that they can be used by device drivers to program their DMA engines
+> > > > internally.
+> > > > 
+> > > > Looking through some of the architecture code around this, shouldn't we
+> > > > simply be using set_memory_encrypted() and set_memory_decrypted() for
+> > > > this? While they might've been created for slightly other use-cases,
+> > > > they seem to be doing exactly what we want (i.e. remove the page range
+> > > > from the linear mapping and flushing it, or restoring the valid bit and
+> > > > standard permissions, respectively).
+> > > 
+> > > Ah... I guess we can't do it because we're not in a realm world and so
+> > > the early checks in __set_memory_enc_dec() would return early and turn
+> > > it into a no-op.
+> > > 
+> > > How about if I extract a common helper and provide set_memory_p() and
+> > > set_memory_np() in terms of those. Those are available on x86 and
+> > > PowerPC as well, so fairly standard. I suppose at that point we're
+> > > closer to set_memory_valid().
+> > 
+> > Why not just call set_direct_map_invalid_noflush() +
+> > flush_tlb_kernel_range() for each page? We already have APIs for this.
+> 
+> Having a "standard" helper with a fixed and documented purposed seemed
+> like a preferable approach for this particular case. We also may want to
+> make the driver that uses this buildable as a module, in which case we'd
+> need to export these rather low-level APIs. And then there's also the
+> fact that we typically call this on a rather large region of memory
+> (usually something like 512 MiB), so doing it page-by-page is rather
+> suboptimal.
+> 
+> > The big challenge I see with any linear map manipulation, however, is
+> > that it will rely on can_set_direct_map() which likely means you need to
+> > give up some performance and/or security to make this work. Does memory
+> > become inaccesible dynamically at runtime? If not, the best bet would
+> > be to describe it as a carveout in the DT and mark it as "no-map" so
+> > we avoid mapping it in the first place.
+> 
+> VPR exists in two modes: static and resizable. For static VPR we do
+> exactly that: describe it as carveout in DT with no-map and deal with it
+> accordingly in the driver. Resizable VPR is for device that have small
+> amounts of RAM. Content-protected video playback will in the worst case
+> consume around 1.8 GiB of RAM, so we want to be able to reuse for other
+> purposes when VPR is unused on those devices. In that case, the memory
+> is also described as a reserved-memory region in DT, but it is marked as
+> reusable so that it can be managed by CMA.
+> 
+> The resize operation is fairly slow to begin with because we need to
+> stall the GPU and put it into reset before the operation, then take it
+> out of reset and resume it afterwards.
+> 
+> What kind of performance impact do you expect?
 
-I'm not sure but it results in vastly longer build times. It was a fun idea but
-it partly defeats the point of the VMA userland tests.
+You'll need to measure it, but we've seen reports of double-digit
+percentage regressions in performance and power. As I said, the problem
+is that you need to split the linear map to 4k page at runtime to unmap
+the dynamic carveout, but that isn't something that can be done on most
+CPUs. Therefore you end up having to use page-granular mappings for the
+entire thing, similarly to how 'rodata_full' drives can_set_direct_map()
+and the perf/power hit affects everything.
 
-Rather than spend too long investigating I'd rather we move to a sane default.
+It's hard to know what to suggest... I wonder if any of the memory
+hotplug logic could help here?
 
->
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> > ---
-> >  tools/testing/vma/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/testing/vma/Makefile b/tools/testing/vma/Makefile
-> > index e72b45dedda5..ef6cc558afe1 100644
-> > --- a/tools/testing/vma/Makefile
-> > +++ b/tools/testing/vma/Makefile
-> > @@ -10,7 +10,7 @@ OFILES = $(SHARED_OFILES) main.o shared.o maple-shim.o
-> >  TARGETS = vma
-> >
-> >  # These can be varied to test different sizes.
-> > -CFLAGS += -DNUM_VMA_FLAG_BITS=128 -DNUM_MM_FLAG_BITS=128
-> > +CFLAGS += -DNUM_VMA_FLAG_BITS=64 -DNUM_MM_FLAG_BITS=64
-> >
-> >  main.o: main.c shared.c shared.h vma_internal.h tests/merge.c tests/mmap.c tests/vma.c ../../../mm/vma.c ../../../mm/vma_init.c ../../../mm/vma_exec.c ../../../mm/vma.h include/custom.h include/dup.h include/stubs.h
-> >
-> > --
-> > 2.54.0
-> >
->
-> --
-> Pedro
-
-Thanks, Lorenzo
+Will
