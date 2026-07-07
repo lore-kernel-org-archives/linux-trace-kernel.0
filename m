@@ -1,143 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C494252C6
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 07:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783409022; cv=none; b=VFQ15oHbdfYoXABGawayQOlPcolAbISSj6bFbQlFzsB/vYRpLE/bizIpEzKh+Ou95F8SkpDVPB5PNOcKRFG/e8hPCEwpfazFtHMBe1fYDAl7IbR7pwLeIaSo5qjKz3x/S8CYk/ksgaPQ8R46HhJlSqGpaj+uQVs+EbCxxaPfwqs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783409022; c=relaxed/simple;
-	bh=H5uZDARIoPVu0+cgA55LNxyWBPEvQr0/tBGPw/Dmoy8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ppv8OsefPT7DisrDeloB8pV3MgCWR16sKS1EFjEUdG+RzifkGdpz/ANnejLezDHRt0wvYDH3b1OHx3sInEuINd/NYcezn/gaqavpwqr2BrKt2MpNRVuQuZ2axpQWT0VKX7NU6flFv0x1fGO6eHgz4x7hGCuZiEvRaYc2QvrihN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bw8GC0ZO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AB22EA154
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 07:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783410784; cv=pass; b=LnbMvlTiMdyiZexInTYdibbFrjyUU0Jqq8zoTDDSTzESPWENRr1iSTnZ6e0s6/KTIMg3vyCJsw7ZS3/KE3P5gODnCjvKK9JhdiYntfImhi4iUT6aOrbBTdzZGHyiEnzoGhiMI13gZfa6Sa+H27sSjvy67Akc8esJ/yzlH5U+6xs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783410784; c=relaxed/simple;
+	bh=ZQUk0UfnaGyun+ByKFQ6mKbppq2aWwvLE1JvvXQvFow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p/D6SWkoODPGHr2lzlQfLUeYfqI+boMVI8y/up1D5GXhVd4El8mp/7fD9Hkjue/E+kYGRMvNFPtvkpViamDdS5au5BH0P9IVhw0YNusUqaTCCSVwX9ED6srR2TxkVBBrHenw64v6qhVRPr/unoTZ4A7bywApgsfHYrkVexuAdXM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LiRL0IP1; arc=pass smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw8GC0ZO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783409016;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=H5uZDARIoPVu0+cgA55LNxyWBPEvQr0/tBGPw/Dmoy8=;
-	b=Bw8GC0ZOSEL+AuudOFkZbDd8SFkr3g79x8A15OkTpJtPErnBah6bnjCl0u8XiofIpFHhb1
-	uOtsWBGcHMEj5J/sD4bXEULpbKdeS27ztuJK8dh/L9KaICjpZxMm/i7JrYF3c37ykvnMUT
-	sJPD/I95gBlHdEd4UhdGZR/YZknzWM0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-BzXbk8ZeP5CpO25UZcGVvg-1; Tue, 07 Jul 2026 03:23:35 -0400
-X-MC-Unique: BzXbk8ZeP5CpO25UZcGVvg-1
-X-Mimecast-MFC-AGG-ID: BzXbk8ZeP5CpO25UZcGVvg_1783409014
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-475eba52438so2893491f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 00:23:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LiRL0IP1"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-51c16ac21acso18765721cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 00:53:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783410782; cv=none;
+        d=google.com; s=arc-20260327;
+        b=K216EFmHYATSVloMj8S2YOEMhZTqH2aB9W/3GXfOd2u5vY3561O2W+mTJjNZzh6IU4
+         zLOEoP1WsJfmkFRVE3GSDqLSQ/LXPCJB4nEQK1maWVrFE0G9vmi6qjMUwZdoJsesIsr4
+         zt+usGk/Mhe0/7GHuQar8sSP2GbrfwvHPuV9uLjoTVUaVfQpT/sAq8YnOReGl4uhKc9S
+         PbW1hGia715V3w4FyFtBAKlJ9d/9uWZNFjJpybPylP1eHzOkTKwyn9n6Ce157iJUngSJ
+         e7z0DQAkqB1OCfdZVliAt1C09lkDq4dkKWhTESHQ7EePLWWM3/NkGTiXsMAPjJHQKFMm
+         YHUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9y+HGLwWZHe82cGq92fBiAG8Z2PP+p562QyKY550vmc=;
+        fh=gaslhG1FChPSrelZrB8drpUwVmm4gGX5w8ep8EIsFQ8=;
+        b=Cj9Q9GtkPJ+Bu/OVwkOTrkIZzVBUNifIiHkMPCUTPU7qvZuG2LkQ0CL6jGFRIEjQSK
+         JuvpNzLh6QKlHlBa9QiLd/ktGMSHb9dE+tlZQ3itxQcLzDjNmbqp3+P/aAoHH6PNC/I2
+         LK5woUBC4nhYJWRKNBobBqepLvi0FcNqN0doBzPJwKsm5udY8tBnc+RanGb6Wl7du2b2
+         QKBoqb/OcT4rReSx/MvyGpOKpuisVqDf2meB2DQZCqslUPiOOXYiuLIy0HRduw7P+dCl
+         b8SyMABa698bvwz52GLoTaUoa7Er342vREF9EfT0eYtrKNceYhA1QNSvQO0kYt9vGgLH
+         3IPw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783410782; x=1784015582; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=9y+HGLwWZHe82cGq92fBiAG8Z2PP+p562QyKY550vmc=;
+        b=LiRL0IP1syUky/B5GtAB0E/Fg7wrcc0peXRCMgSR9+ldN3sBKPvnc/wudvIuGSQ8R1
+         NF6F24fZovBXGwa50xWQjFMLtY4TLDm1N69UjiWBFRbJk4/wnea1ZOW9F5u9cfiMNMtW
+         R9lfPCqHysggaTomlq/mFobzM57aJYY6axGeLJn2Qpg4zxnnnPD8/yuF+dVMZBTaEPfh
+         XzcsESpMDpV+g/uOrlfg9syEgNfb1TLO6HvvJHfxFyEUdmNINIiH9b4alyyGFKlqxeyC
+         jDt/3RvjZlk/9O1o9tLRsJnR8X2gsVpx7Fh5xABE1Ova2Bgn7jjfCjcixbDu5kh9yMg1
+         3f2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783409014; x=1784013814;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=H5uZDARIoPVu0+cgA55LNxyWBPEvQr0/tBGPw/Dmoy8=;
-        b=AliXEuvpClmt2B/xIFbIAEJpf5ttWnifnKiE6lJoHacsNW410iipz1WUUHmyL5dHri
-         6K5G0aTAnVVB3lWLdoU3pvq55BBls8UfFCcPGK5sKvqN1t1iCGdKOHdf1+Zxn66KSD1J
-         TJHWfTx5t3dh/aHr4us3X4UNdSuUIakktrOuJ512ZXLJ4u4VOnXdAmVfVtiBTnEAh6W/
-         4rJ2cZRoRd1cZecr4K12iobM8qHdDxWZ48MKl0T3V4ZNmd9OGABX2A8EUIpWUJCjz8wg
-         CzwlVxx05CP+ggGfdTgYCczMqgYNJZKHt1R/y2q1X0FFAl/dtWb2SKFUCqjbxhTYo9On
-         CEtQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoUbTsIWYSGySjfDkPZYutOkJb1Bq/gpbyK12Xe6Mm1qxNpRtbV956nG0DSNRA5LyvVArADnqySSXDssSKmcipqzv4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj4OVZaUhpnU8AWa51NpQwD6DV7YPBcMgqkEc7RRnFp5G2mi7q
-	wGmVvV52NBry3lFkO7bcjysN8CoYKvehv3kDVeUFycRuN62suhRXKMA4DL/macQSXDgKJS7LltG
-	gsF0rOZ0WjdgJ4Pkmm6guZWm+2JOb/Uymfb4OO54OOWIU89WKSw82aGfM9FZaPmiK8xs3IiSPOQ
-	==
-X-Gm-Gg: AfdE7clZ3YbmsY7C8ctPtgr72TNowUC+NDcrquTy7lddPVs+h4MvUMDf3y90z2+8wxZ
-	mmdS201rvmfu3yfD5yO1O7FH+bD4qrQnxNIPbmMkZDorNgVtYs5F3hbHfo91ngXKb5JWzP1hWn1
-	SMR4C1WlB8ynHjoC+E84EvRyVh+J8F3HUhrm0c4Ih2gxHdBTOIV58oREOK3KkCb+ChEVDOnbLuB
-	lHB1Dn4Oe6OHWmXqb+UmQJEXULYf8v2zQ0kr5x5fPxk4hY1ncERtocjRBCup/WxLP5+aPc+Bq6h
-	l+IkqxDyiztH1zYOuQI86VJ1dVbg5S3B0nc0HkJsInVnAoqT6pU/waLvQ1KWEFUpniBqCjVbpg4
-	rj3LKj3kFgESmPNNWPDgj5WwEAAtA9D5WDj0Mv3HwhDhloNsC+kEIMS4hY9bcrCWuMciMD0eUFk
-	Im+tc/
-X-Received: by 2002:a5d:54c7:0:b0:470:2fb1:3db5 with SMTP id ffacd0b85a97d-47de66d30fcmr3131795f8f.30.1783409014325;
-        Tue, 07 Jul 2026 00:23:34 -0700 (PDT)
-X-Received: by 2002:a5d:54c7:0:b0:470:2fb1:3db5 with SMTP id ffacd0b85a97d-47de66d30fcmr3131699f8f.30.1783409013195;
-        Tue, 07 Jul 2026 00:23:33 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9e4d780csm32483402f8f.11.2026.07.07.00.23.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 00:23:32 -0700 (PDT)
-Message-ID: <a04e3522b94e1267395a1bc5409c86a8ba49aaeb.camel@redhat.com>
-Subject: Re: [PATCH v3 11/17] rv: Prevent unintentional tracepoints during
- KUnit tests
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar	
- <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang	
- <wen.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu	 <mhiramat@kernel.org>
-Date: Tue, 07 Jul 2026 09:23:31 +0200
-In-Reply-To: <878q7n2six.fsf@yellow.woof>
-References: <20260625121440.116317-1-gmonaco@redhat.com>
-	 <20260625121440.116317-12-gmonaco@redhat.com> <878q7n2six.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        d=1e100.net; s=20251104; t=1783410782; x=1784015582;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9y+HGLwWZHe82cGq92fBiAG8Z2PP+p562QyKY550vmc=;
+        b=BsIuGAj949QEWIXRNVJshbZpEmUGOHUrnn0W/Lf1ddkRlQUgALcLLDYZjuXr527jO4
+         +9WY3+JGGFRWiinq5qRRP70TpZupI2V2u9slc92b3R8hUY3l0a2ESJDhPXNB1J0r16jh
+         hXKkd5QndW91tKF0JFD4SLaLI3HuvKTvfq2Fa+xmkuLArhpiC5JQEA3sLUvL8hHj+1v4
+         9FZAdISIgeZbaEdeApRCNXGqzINzW1ude/d58opx75X38HhG/+WpAE8gGUO9KbM1T0AR
+         CQDg4kkApOrPIYvUM25ftrbPlFH1Kq42GW6jVhCjBR7SsmB1JhkPdxr69XgsZCW1up/5
+         n7kg==
+X-Forwarded-Encrypted: i=1; AHgh+RrFWyH1/evLyXl/v3PunHReASXjDB4I67PKhs//2Ryw9svHx+f8R3PYegmtWwuTUbZUncQw4mT3XPoS7GbTcSBQaqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUIjjSdag9SLGNJegd9VjOn+yr42K+tyWC0cVyNLSvZ66Ja/Tf
+	/FWR0DPYQfNqSy2U3r36aFJUdczC4kHtXb5B4qQs5deVV2NFg/GXFX2LZGCaYQbvY/W31tE6pXq
+	/jXo9bviRNBl7ntbtK+QnPFNHYbKRBCMmG6MDiNEmYPnhSVPlpL7h4A29Ys0=
+X-Gm-Gg: AfdE7ck8tl/teYssBaTe+1rztuzMsuYQeMKVfZHhbTNRBIY0L6LcXFsJm7tSe/etDOc
+	5NjTlyTP1ouO18QJyUZDpEnHlX7qn4J+KgWQWW913Uz2I2A7YEF3OGkDgLIGMIYj3D5Br7GzcHC
+	KFZeqs34vHI8/xOKA86eTV6er37JQmOwDZhRXGuvtwXfuG1Dw6hPvf+LT19lzBcRPBkNRYKjtXK
+	rgvJ09jT2QcP3rSDoFNn+SHHVIRkJ+W1s5eSCOnWeu8WWk1C/JbWGgaK1FiGMZHYqzUdiBqWv4o
+	9qCiEeKhOKljudksrJum7P7fLLhBJC935H3uSqwUd/pwlQCtXm2Yo9W4he+umL5n/W9zR6g+Ex0
+	D8LLeB2jOqg==
+X-Received: by 2002:a05:622a:5a10:b0:51b:f340:d2be with SMTP id
+ d75a77b69052e-51c7487e0cfmr46160941cf.53.1783410781438; Tue, 07 Jul 2026
+ 00:53:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zPutC65IwFFvlYnn3Fzl52eW56y-DClg7HTxPqHt6cA_1783409014
-X-Mimecast-Originator: redhat.com
+References: <20260707010151.43976-1-emil@etsalapatis.com>
+In-Reply-To: <20260707010151.43976-1-emil@etsalapatis.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 7 Jul 2026 00:52:50 -0700
+X-Gm-Features: AVVi8Cc2_RGmZHcnmBvpweCTGkIVDH5IqtiixKASATcFwOxN0G0PE2Ov00rUo4g
+Message-ID: <CANn89iL23Rsu3iGXxhw4pAnCB-JgU7fnrryDLXKj4jHqSs=HOw@mail.gmail.com>
+Subject: Re: [PATCH net-next] net/tcp: Add explicit tracepoint for tcp_syn_ack_timeout()
+To: Emil Tsalapatis <emil@etsalapatis.com>
+Cc: netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	ncardwell@google.com, kuniyu@google.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-07-07 at 09:00 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > Monitor initialisation also called during KUnit tests may register some
-> > tracepoints, this can lead to issues since we don't expect real monitor
-> > events running during KUnit tests.
-> >=20
-> > Prevent tracepoint registration if an RV KUnit test is running.
-> >=20
-> > Reviewed-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
->=20
-> Somehow I have no recollection of seeing this patch.
+On Mon, Jul 6, 2026 at 6:01=E2=80=AFPM Emil Tsalapatis <emil@etsalapatis.co=
+m> wrote:
+>
+> Clang can inline the tcp_syn_ack_timeout() function during compilation,
+> making it impossible to use kprobes for tracing without preventing
+> inlining. Add an explicit tracepoint to it instead.
 
-Well, I'm fairly sure you reviewed it ;)
+So much copy/pasting for a very small issue :/
 
-> But since we already hold rv_interface_lock during the test, is this
-> really necessary?
+>
+> Signed-off-by: Emil Tsalapatis <emil@etsalapatis.com>
+> ---
+>  include/trace/events/tcp.h | 72 ++++++++++++++++++++++++++++++++++++++
+>  net/ipv4/tcp_timer.c       |  3 ++
+>  2 files changed, 75 insertions(+)
+>
 
-This is for things like ltl_monitor_init() that attaches the newtask probe.
-The function is also doing a few other things we may not want to do, to be =
-fair,
-but calling the monitor_init() function as-is was the easiest solution I co=
-uld
-think of. Also ha_monitor_init() may attach a probe.
+tcp_syn_ack_timeout() is hardly a fast path, so you can instead:
 
-I suppose I could also do some more targeted initialisation/destruction, in=
- fact
-right now, the LTL initialisation does a bunch of stuff tests don't need an=
-d
-doesn't do what they do need (initialise the dummy tasks, which aren't part=
- of
-the task list).
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index 322db13333c7..ab2c3de19e46 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -748,7 +748,7 @@ static void tcp_write_timer(struct timer_list *t)
+        sock_put(sk);
+ }
 
-I should probably rethink this a little.
-
-Thanks,
-Gabriele
-
+-void tcp_syn_ack_timeout(const struct request_sock *req)
++noinline_for_tracing void tcp_syn_ack_timeout(const struct request_sock *r=
+eq)
+ {
+        struct net *net =3D read_pnet(&inet_rsk(req)->ireq_net);
