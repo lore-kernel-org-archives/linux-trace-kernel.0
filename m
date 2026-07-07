@@ -1,250 +1,199 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F35C434E50;
-	Mon,  6 Jul 2026 22:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D9B420878
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 01:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783377345; cv=none; b=falLtvaWw1H4raV7TIIFmjUVL1eBelD7yH/822MQWPvL8y6x+VYj7VDvJ49grjIYGb9DzhqE6LDFG9aM9qlGBxPcvTN91crGmXCyrcm81svtnd+4/wsVgZSQ1EhAG0SIDWnNWJY5dfrBeFgHMDSsl4AS6Czc45vJDfpyObaGXcA=
+	t=1783386116; cv=none; b=CTc+VKfmQ9OQi/E03eqQEPjHwL5QFg+L19MPUglwYW1nZIecKy2u3stMyaCpZk8BuTX4FNKI1Yi07mJnPmvPz1kvJUXpP10f2cCuhrI6Ey+DPYyKc4/XZnolT2Fes1K0O1/lBNRECVZdHH2mr8XWSVZnl6P8XjJPRdddSQwGu/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783377345; c=relaxed/simple;
-	bh=5xW0Je1r/s8tU9FKAdzH8VS2dCLUKRAZPS9x3TJeUEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tECa9P3bnYgmVXs7BhDWuoCiAXWUaeQ5i7VhsLtEV70zNHVmLWcdCcij/RxOnHB7bzHfUN/QdI2l+C0iPrw5yi26KWMwQ9K4PNNtUxCH6tYAqFCYasBmxOFnus+EGfvPm+IH4w6R0bnjK6VFEYvsmf6u1JK5R3LrreMfBxwnR5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=iq1mSIOf; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1783386116; c=relaxed/simple;
+	bh=Cl4hxMwrRdfbEdaST7P89yCfniPHJVHCdUtxmwWGDBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IUkNxVv/lLp6q+778KBYcKk0lXU2CJtNJ1Tled8KH8eYkppv+kjCZACAPhbEfR5Dq8zWs7Q6xJvXT1FeJL7rVsINGGnyMYlmuWuYYZjnV8wASGOcHyTyA8xZ4+YG7sx5XqCm0PAu94bBesYqVnOfcRjykyO0lh+AvFsY9PfxuZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etsalapatis.com; spf=pass smtp.mailfrom=etsalapatis.com; dkim=pass (2048-bit key) header.d=etsalapatis-com.20251104.gappssmtp.com header.i=@etsalapatis-com.20251104.gappssmtp.com header.b=HqKoV3ra; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etsalapatis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etsalapatis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="iq1mSIOf"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2FC81C01;
-	Mon,  6 Jul 2026 15:35:36 -0700 (PDT)
-Received: from [10.57.37.79] (unknown [10.57.37.79])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17BE53F905;
-	Mon,  6 Jul 2026 15:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1783377341; bh=5xW0Je1r/s8tU9FKAdzH8VS2dCLUKRAZPS9x3TJeUEs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iq1mSIOfXLG3hXRFL9Kzv3yFJEcMbbMa8QmqTZzQVZz0ukxoYCO9wIEiV1IhNjKF2
-	 JiQVfDNJORA0W4vyoEAG9Nv9JW4K9btsU/AGo0ZlZ8x2kv+Mcd5RWNMOyYQOn4y5fc
-	 wcc/AlC5LPxEhlwBgbOmsH+v7PRJKr3UQqfOja48=
-Message-ID: <6835134e-7f45-4d2c-b825-b45120e53d57@arm.com>
-Date: Mon, 6 Jul 2026 23:35:30 +0100
+	dkim=pass (2048-bit key) header.d=etsalapatis-com.20251104.gappssmtp.com header.i=@etsalapatis-com.20251104.gappssmtp.com header.b="HqKoV3ra"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-385ea3ce80dso1700943a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Jul 2026 18:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=etsalapatis-com.20251104.gappssmtp.com; s=20251104; t=1783386114; x=1783990914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mn7lUDGZ7NP4xadPAgx4FMS5SBwqLelhcDxZx9BPNhU=;
+        b=HqKoV3raJ7kpmysTanWbcn97V7rF8ucR/Y+BaLEIwYMqeozY6njDiwntwi0r4Pu+2F
+         d0yZ9PUgb71PIM89EuGcjIYkRkuLJGnw8qlKfBUZgId2EXo67viDkTxsG9GB93igBghg
+         JCBP8Ngzn+N5I4nDaKedz6s5B+GSN2CJOERMpFw/1wjBnNn6Q0cQ38TISjXQ2i+NsiQt
+         imTZGuQGmdMF9IeaQz87c6i61B1Gq1hOfUoDnL7/MLssV6Q1UXiM7RtT7la4D+7Q18oH
+         1UjtXoejd4PTwdKcMBtgBLYzGOcGDEu7ucVr3zvw/jY7r8UCCR2QnSM2WwnpHRErLzcG
+         UzuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783386114; x=1783990914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mn7lUDGZ7NP4xadPAgx4FMS5SBwqLelhcDxZx9BPNhU=;
+        b=STkDqb45eT+sGxr5zH53CefxpztuEbb49Jlv61MDRaJAnJQ03EU8oFLaYX8OWJ+q7s
+         e2wxgJa9kdUgFUduMpuyoeDal60M2R4oEhkW89ZAb1o09D8UWF+8im03A6YOdQPFZSih
+         Y00VUDO4J5hElckzdO5Cg35Nfnz+wExkN7gRdvQmeDefWXw+IyfbgmUsAQrhdGLrT6pM
+         p4xgGpgmXl8PHlQO6pEKmnRnxNT54lE0KazWITERrB8nBIN4kI6YNmTisAM5xbs6MXKg
+         cWAHX+7W5F2jIzSOkVOBzXPlnRzyfJrB716FC1BG+TIjLbLNj8sXc5Rg+ZvDX2kvLXG5
+         gwXA==
+X-Forwarded-Encrypted: i=1; AHgh+RqDxLZTSm41MrNsqEitqPG4CtGbe6YesuY6QqUawzebZxdVIlptuPHulYgNgEjDj1HjQSw/mmd4MtkP5VwPmI3AuZ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfRn1Kc0ckmlM7WWiQZgucBcJQDdzwynczMdRCgTOTkBr7MAwy
+	XNWzom/qk0mFminDG7OPZZtSAgjou4m5fONeORctmzBJJRGp1e0LtEqG/xC2rqoKJZA=
+X-Gm-Gg: AfdE7cndSPAsThuj1fJ6m+qoaV/T05ioyZL1U2hyLQ5rJkVTfBLmZfje6AuTKcypHny
+	+DPEITYDeupI0YRoC27eaMS2CQgkmXsjAsJjmU5v6PgcALgB/jQx9Rwj90V5T+qW/kP2328Q8JB
+	IyUKFOCy+n716FtaF+b0r+Pkr1r8oz8EVAYsNOuyBjUaP5NiKefSEOH92psMhSMT1v7ztp62wlj
+	5dbIsPBiTnm+uwU47V1+Rr0bDTt9AAesu/9YGC4FK+2a8BzPB/gwDszedWS3C6S1AaTjoWeCFfN
+	oANcFyFt9l/W0qp78iBh1dzroxgkkGyYUsYrB0s9bpsgFggbp1LhjjrYMouKsOsJOSOa8g0+KJA
+	lJHvu0nLVD0tj3O6x1x7fhRNUbR/nvXu0V75rbrY3hDcYiaFAgrHzUxy5lvvQtML9TwZMpfDwdT
+	3oNv5Wb9m3IVgohXw8zpttvEzUr2x7UBoft6hZZzMT7cURKGuFWXhYkPwKvw==
+X-Received: by 2002:a17:90b:2801:b0:380:71eb:4014 with SMTP id 98e67ed59e1d1-3875621eb68mr3220612a91.15.1783386114234;
+        Mon, 06 Jul 2026 18:01:54 -0700 (PDT)
+Received: from krios.ht.home (107-190-31-17.cpe.teksavvy.com. [107.190.31.17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9bdb56fsm2567785ad.15.2026.07.06.18.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 18:01:53 -0700 (PDT)
+From: Emil Tsalapatis <emil@etsalapatis.com>
+To: netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: edumazet@google.com,
+	ncardwell@google.com,
+	kuniyu@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	Emil Tsalapatis <emil@etsalapatis.com>
+Subject: [PATCH net-next] net/tcp: Add explicit tracepoint for tcp_syn_ack_timeout()
+Date: Mon,  6 Jul 2026 21:01:51 -0400
+Message-ID: <20260707010151.43976-1-emil@etsalapatis.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 13/46] KVM: guest_memfd: Add base support for
- KVM_SET_MEMORY_ATTRIBUTES2
-Content-Language: en-GB
-To: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
- jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
- pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
- rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
- tabba@google.com, willy@infradead.org, wyihan@google.com,
- yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
- <20260618-gmem-inplace-conversion-v8-13-9d2959357853@google.com>
- <114e2488-97ed-4740-a8e8-1edd991f26c5@arm.com>
- <CAEvNRgFKbKfTMkqh_XF-igm07qYWfRwYJ5SH7wHcLZnqesCzTw@mail.gmail.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <CAEvNRgFKbKfTMkqh_XF-igm07qYWfRwYJ5SH7wHcLZnqesCzTw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 06/07/2026 19:17, Ackerley Tng wrote:
-> Suzuki K Poulose <suzuki.poulose@arm.com> writes:
-> 
->>
->> [...snip...]
->>
->>> +static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->>> +				     size_t nr_pages, uint64_t attrs)
->>> +{
->>> +	struct address_space *mapping = inode->i_mapping;
->>> +	struct gmem_inode *gi = GMEM_I(inode);
->>> +	pgoff_t end = start + nr_pages;
->>> +	struct maple_tree *mt;
->>> +	struct ma_state mas;
->>> +	int r;
->>> +
->>> +	mt = &gi->attributes;
->>> +
->>> +	filemap_invalidate_lock(mapping);
->>> +
->>> +	mas_init(&mas, mt, start);
->>> +	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
->>> +	if (r)
->>> +		goto out;
->>> +
->>> +	/*
->>> +	 * From this point on guest_memfd has performed necessary
->>> +	 * checks and can proceed to do guest-breaking changes.
->>> +	 */
->>> +
->>> +	kvm_gmem_invalidate_start(inode, start, end);
->>
->> I added support for Arm CCA KVM patches with the inplace conversion and
->> I am hitting the following issue.
->>
->> 1. I am supporting INIT_SHARED + MMAP flags.
->> 2. VMM creates the Gmem_fd with both the flags above.
->> 3. Uses the shared gmem-mmap to load the initial payloads (kernel, dtb).
->> 4. At the VM finalization time, Populate the loaded regions one by one
->>      by
->>       a) copying the images to a temparory buffer - Since CCA can't really
->>          load the contents in-place.
-> 
-> Sounds good :). I see that you blocked this in the kernel by returning
-> -EOPNOTSUPP if (!src_page) [0].
+Clang can inline the tcp_syn_ack_timeout() function during compilation,
+making it impossible to use kprobes for tracing without preventing
+inlining. Add an explicit tracepoint to it instead.
 
-We could do the copy in kernel with src_page == dst_page, but that would
-affect the batching of Granule delegation (and at which point we might
-need a temparory buffer in the kernel as big as the vma_pagesize)
+Signed-off-by: Emil Tsalapatis <emil@etsalapatis.com>
+---
+ include/trace/events/tcp.h | 72 ++++++++++++++++++++++++++++++++++++++
+ net/ipv4/tcp_timer.c       |  3 ++
+ 2 files changed, 75 insertions(+)
 
-> 
->>       b) Set the "region" to Private in the gmem_fd (via
->> SET_MEMORY_ATTRIBUTES2)
->>       c) Invoke CCA backend to populate the private memory via
->>          ioctl(KVM_ARM_RMI_POPULATE,..) [0]
->>
-> 
-> This flow sounds right.
-> 
->> [0]
->> https://lore.kernel.org/all/20260513131757.116630-27-steven.price@arm.com/
->>
->>
->> 5. Additionally, VMM can mark the entire RAM to be private before the VM
->>      starts running, again via SET_MEMORY_ATTRIBUTES2. On CCA, this
->> action is measured and doesn't require the Host to "commit" memory to
->> the VM.
->> Instead the host can lazily donate memory on a fault.
->>
-> 
-> For both TDX and SNP, the host can also lazily donate memory,
-> guest_memfd supports this.
-> 
->> But step (5) triggers the invalidation of both private and shared
->> mappings of the gmem area, from the kvm_gmem_invalidate_start()
->> above.
->>
->> This is because, the entire DRAM now has, some portions PRIVATE (the
->> loaded regions) and the rest are SHARED (from the Gmem_fd creation).
->>    Thus, kvm_gmem_get_invalidate_filter(Dram_start, Dram_end) causes the
->> invalidation of both "PRIVATE" and "SHARED" regions, which results
->> in the destruction of the already loaded data and things go south.
->>
-> 
-> This destruction will happen for TDX as well. I think we managed to get
-> around this because we didn't apply conversion on the already-private
-> ranges.
-> 
-> IIUC on SNP, zapping pages in the stage 2 page tables doesn't destroy
-> the data, so that's probably why it has been fine for SNP.
-
-Additionally, the Guest at boot, will try to mark the entire DRAM
-as Private (RIPAS_RAM in CCA), which would trigger this anyways.
-
-Suzuki
-
-
-> 
->> When we know that the kvm_gmem_invalidate_xx is triggered by a
->> conversion, we don't need to invalidate the existing pages that
->> are in the requested state. i.e., the following patch on top of
->> this series does the trick for me :
->>
->>
->> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> index a97fcac34a0e..62e0427a49f4 100644
->> --- a/virt/kvm/guest_memfd.c
->> +++ b/virt/kvm/guest_memfd.c
->> @@ -250,16 +250,23 @@ static void __kvm_gmem_invalidate_start(struct
->> gmem_file *f, pgoff_t start,
->>                   KVM_MMU_UNLOCK(kvm);
->>    }
->>
->> +static void kvm_gmem_invalidate_start_filter(struct inode *inode,
->> pgoff_t start,
->> +                                            pgoff_t end,
->> +                                            enum kvm_gfn_range_filter
->> attr_filter)
->> +{
->> +       struct gmem_file *f;
->> +
->> +       kvm_gmem_for_each_file(f, inode)
->> +               __kvm_gmem_invalidate_start(f, start, end, attr_filter);
->> +}
->> +
->>    static void kvm_gmem_invalidate_start(struct inode *inode, pgoff_t start,
->>                                         pgoff_t end)
->>    {
->>           enum kvm_gfn_range_filter attr_filter;
->> -       struct gmem_file *f;
->> -
->>           attr_filter = kvm_gmem_get_invalidate_filter(inode, start, end);
->>
->> -       kvm_gmem_for_each_file(f, inode)
->> -               __kvm_gmem_invalidate_start(f, start, end, attr_filter);
->> +       kvm_gmem_invalidate_start_filter(inode, start, end, attr_filter);
->>    }
->>
->>    static void __kvm_gmem_invalidate_end(struct gmem_file *f, pgoff_t start,
->> @@ -724,9 +731,14 @@ static int __kvm_gmem_set_attributes(struct inode
->> *inode, pgoff_t start,
->>           /*
->>            * From this point on guest_memfd has performed necessary
->>            * checks and can proceed to do guest-breaking changes.
->> +        * Also, we don't have to invalidate the regions that
->> +        * may already be in the requested state. Hence, we could
->> +        * explicitly filter the invalidations to the opposite
->> +        * state.
->>            */
->>
->> -       kvm_gmem_invalidate_start(inode, start, end);
->> +       kvm_gmem_invalidate_start_filter(inode, start, end,
->> +                                       to_private ? KVM_FILTER_SHARED :
->> KVM_FILTER_PRIVATE);
->>
-> 
-> I think this makes sense. Thanks for catching this.
-> 
->>           if (!to_private)
->>                   kvm_gmem_invalidate(inode, start, end);
->>
->>
->> Thoughts ?
->>
->> Suzuki
->>
->>
->>>
->>> [...snip...]
->>>
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index f155f95cdb6e..37ffaa50faad 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -332,6 +332,78 @@ TRACE_EVENT(tcp_retransmit_synack,
+ 		  __entry->saddr_v6, __entry->daddr_v6)
+ );
+ 
++TRACE_EVENT(tcp_syn_ack_timeout,
++
++	TP_PROTO(const struct request_sock *req),
++
++	TP_ARGS(req),
++
++	TP_STRUCT__entry(
++		__field(const void *, req)
++		__field(__u16, sport)
++		__field(__u16, dport)
++		__field(__u16, family)
++		__array(__u8, saddr, 4)
++		__array(__u8, daddr, 4)
++		__array(__u8, saddr_v6, 16)
++		__array(__u8, daddr_v6, 16)
++		__field(u8, state)
++		__field(u8, num_timeout)
++		__field(bool, acked)
++	),
++
++
++	TP_fast_assign(
++		const struct inet_request_sock *ireq = inet_rsk(req);
++		__be32 *p32;
++
++		__entry->req = req;
++
++		__entry->sport = ireq->ir_num;
++		__entry->dport = ntohs(ireq->ir_rmt_port);
++		__entry->family = req->__req_common.skc_family;
++
++		p32 = (__be32 *) __entry->saddr;
++		*p32 = ireq->ir_loc_addr;
++
++		p32 = (__be32 *) __entry->daddr;
++		*p32 = ireq->ir_rmt_addr;
++
++#if IS_ENABLED(CONFIG_IPV6)
++		/*
++		 * Cannot use TP_STORE_ADDRS directly because it assumes
++		 * there is an sk available.
++		 */
++		if (__entry->family == AF_INET6) {
++			struct in6_addr *pin6;
++
++			pin6 = (struct in6_addr *)__entry->saddr_v6;
++			*pin6 = ireq->ir_v6_loc_addr;
++			pin6 = (struct in6_addr *)__entry->daddr_v6;
++			*pin6 = ireq->ir_v6_rmt_addr;
++		} else {
++			TP_STORE_V4MAPPED(__entry, ireq->ir_loc_addr, ireq->ir_rmt_addr);
++		}
++#else
++		TP_STORE_V4MAPPED(__entry, ireq->ir_loc_addr, ireq->ir_rmt_addr);
++#endif
++
++		__entry->state		= ireq->ireq_state;
++		__entry->num_timeout	= req->num_timeout;
++		__entry->acked		= ireq->acked;
++	),
++
++	TP_printk("family=%s sport=%hu dport=%hu saddr=%pI4 "
++		"daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c "
++		"ireq_state=%s num_timeout=%u acked=%d",
++		  show_family_name(__entry->family),
++		  __entry->sport, __entry->dport,
++		  __entry->saddr, __entry->daddr,
++		  __entry->saddr_v6, __entry->daddr_v6,
++		  show_tcp_state_name(__entry->state),
++		  __entry->num_timeout, __entry->acked)
++);
++
+ TRACE_EVENT(tcp_sendmsg_locked,
+ 	TP_PROTO(const struct sock *sk, const struct msghdr *msg,
+ 		 const struct sk_buff *skb, int size_goal),
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index bf171b5e1eb3..8f482a6b43e3 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -24,6 +24,7 @@
+ #include <net/tcp.h>
+ #include <net/tcp_ecn.h>
+ #include <net/rstreason.h>
++#include <trace/events/tcp.h>
+ 
+ static u32 tcp_clamp_rto_to_user_timeout(const struct sock *sk)
+ {
+@@ -753,6 +754,8 @@ void tcp_syn_ack_timeout(const struct request_sock *req)
+ 	struct net *net = read_pnet(&inet_rsk(req)->ireq_net);
+ 
+ 	__NET_INC_STATS(net, LINUX_MIB_TCPTIMEOUTS);
++
++	trace_tcp_syn_ack_timeout(req);
+ }
+ 
+ void tcp_reset_keepalive_timer(struct sock *sk, unsigned long len)
+-- 
+2.54.0
 
