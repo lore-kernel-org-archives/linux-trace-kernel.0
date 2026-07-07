@@ -1,75 +1,120 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315073612ED;
-	Tue,  7 Jul 2026 16:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F029F3E5A2F
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 16:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783440049; cv=none; b=C8U0v/aEj74OrbaTXpSovIIdDlKveKMILOQkaRR+d95P41Q9vuFkSPbdymzKvhogHdRDdYU5laB2cXTnl2KOM53Yu+AIGtVLZs1r32mngFuw1Z3PSoDnIGJUAUduI+VkIqG3PmmatnOfWbduiuyAez1cBy0QcN8q98QfleNSwmI=
+	t=1783440527; cv=none; b=nTAteSIJ9gJhOrIZNjpd5RbuDOjhT2jpcplxvUZQm+RX84CnkVVQ4DRA+C5WnBI5WXB+8rOwiQ/SpguRaD/XpCfwVT1BlM9Npr8Cnarwe5lZpJJe4pngS9ukI1OLh2F1f1U9jPVJwOAks/W3eRqCJRCEwVGwhSDg+PWMBoLE58Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783440049; c=relaxed/simple;
-	bh=1iLInY17sRnF1Bnlfy+Ib9X5BvBkkmir9bArxM2d1H4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d/d83HYeP0c4GF0/j+65tQUzXggxl8oUIlvYs5gVYi3sTrJGrizviHfnJCl/5JsgJRPmHVPaGyrE2IR0FNzLaLV41xyH5j8UlgCSaAwf9enB+MAoNgWvTswt7qf3cX8mtrTJk8CnrbPj2hXlqm7xqQcx3J9scKmkkJVfzjnTjZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 1752D1C3A94;
-	Tue,  7 Jul 2026 16:00:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 6EAAF2000E;
-	Tue,  7 Jul 2026 16:00:43 +0000 (UTC)
-Date: Tue, 7 Jul 2026 12:00:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-Cc: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
- daniel@iogearbox.net, kafai@meta.com, kernel-team@meta.com,
- eddyz87@gmail.com, memxor@gmail.com, Mykyta Yatsenko <yatsenko@meta.com>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 0/3] tracing: Expose tracepoint BTF ids via
- tracefs
-Message-ID: <20260707120046.31573548@gandalf.local.home>
-In-Reply-To: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
-References: <20260518-generic_tracepoint-v2-0-b755a5cf67bb@meta.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1783440527; c=relaxed/simple;
+	bh=gYxQlABoejgiGiTs0GRyEyflzw66+wYXuoHMbNI/GrM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=UcoFQh5cUJk2ilLJFPh7uN7PsbwTpMt+erAh2ifo/9oQwIbatKeCryzpcvBSKws9swx5/2vJjBfZZxPbme6BFxPFQ4eu3xnLenToVfPQYYcf35F+RTtZ552RG+nklODzY+OJhiSGkyUY0S6vFAfB2mtLLiDbMsfpkyfIXsuCcX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etsalapatis.com; spf=pass smtp.mailfrom=etsalapatis.com; dkim=pass (2048-bit key) header.d=etsalapatis-com.20251104.gappssmtp.com header.i=@etsalapatis-com.20251104.gappssmtp.com header.b=qglFq+XI; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etsalapatis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etsalapatis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=etsalapatis-com.20251104.gappssmtp.com header.i=@etsalapatis-com.20251104.gappssmtp.com header.b="qglFq+XI"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-845c92bc464so3286791b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 09:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=etsalapatis-com.20251104.gappssmtp.com; s=20251104; t=1783440521; x=1784045321; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=cMBdmbNnt7rGb9jJRQ/x9X78dUBABwOU7eEiSX3Y2u0=;
+        b=qglFq+XIBoKUrYMT9baCl3v1fz4wb0pELGnXGKP7XEigyAUpuSkXsUrGqZKgYziI/1
+         9NTbRYQ3IQdM1Hbu8XKz+972Q3zAAJmOnMFcmr4hk8S8o92QpzkHwXmCV6MyQjA+nk60
+         HZE/5To2G44cRai4C3GSS0PcYl2ge2u7t5YBRUKdAM/h0rj2ymYcRiuQ6I9az0E+p7dt
+         pKhDxPh12FvC6qjVMr6U9O8oh/6duPDb7yJliFroU1AkeBnjEd7VLEHugA968PGqcbRY
+         I7Nd8bNANBMJJn30ZRLtf2kaMIbk64fD7f4Iwpn/vOV/mw1qTrwwQwz24S9/pplZFknA
+         2oMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783440521; x=1784045321;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cMBdmbNnt7rGb9jJRQ/x9X78dUBABwOU7eEiSX3Y2u0=;
+        b=JVMTud6DK41KIQkiWG1iHiguulrEJTvEsAplVsJ49HTbBESn4FtRJM2SXmWtPz9Bvw
+         STHxBWCLt4Ygr+5qGd6kTYjLmk+rYANMvNY+ZmpT9xCnNEf0zAOclkSYna0Z+CjYCbfp
+         4XFrjSbEQzdy9g1T+O4fKfbbrbXjZoesiE3/nAD4noEV0hOC9IjgHaHHGJ+7Jyx9Gn9q
+         VAx1jUrRpBbK76HRIVNyqpXBK/sT0UIA4PY1Xz2zZtZF/atgicIxc7wwKmi3TPJVkV2+
+         1WqDjxwUEo+VH5j9AOKguIFEA2+LqrrnFQy3NHZa8RMIiUfSon+7Rd+2ku48mrYorL4H
+         ie0Q==
+X-Forwarded-Encrypted: i=1; AHgh+RqaovC3JpQ6Wrp5y+i9jacS7w4kclK1S3YxhQbkWRu/TMCNbHFe/fHxf2a7Za9MQa4xDHq5EN5K0hfHHnVQB/VCxHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9W6v1VxqartyrbR8B8KZs3mqws10CWCMe+lzSRRDN8CmNbcGz
+	+hCepBty/QkdgZ9H2ELUeRdJY9R506D8tH9/SRXez4GJ/thJ37KbHqNFPieicbQWtb8=
+X-Gm-Gg: AfdE7ckDU3OFEBuVKRK1PnnjjRKo5afmw7V5QNnmvoilL9DSIEh+Dhbtcv6VyIcHF84
+	Q+7W5G/fW9GSR0yMwFIuPrbmqERc9HvWGlk9OHrqr4ZROye4JUocFduxFy2ic0iL6qJX/ox1WD2
+	WtxtE7gZnthqV/FS1IEvlysB0wmrSZWcBCx+Lr2X9UPjelCk2JiUkOw/vmciDuTaRg7A+d59l4z
+	Dv1yaef9p7IZt9hyPphcnj5xAnTS0E/nguDsYDJnTXyw4FUeSHD5dhFd2nyjhLh7AE1DnwXjxfI
+	2+xx+Mgt16jBzFiT0JM0hAv0FBKBy4Tg1yVzPJnSstr0v/T1u9CdHgNfIcy1XXQ/U5/0L+uDt7X
+	3mSLNv2gI3tyhbdz87k5OIUHLr7V0+i1qvSabU+nBSa3KZc5kLqd3JvK1E9ku0qLsVC2CDOmCfN
+	SH9KnBe0y4NRiB6qv/aqrEDlBNVAUKHXYp0M6x8mhfm8NmXnZrQNix
+X-Received: by 2002:a05:6a00:987:b0:848:2f74:1d59 with SMTP id d2e1a72fcca58-8482f74207emr3285927b3a.63.1783440521110;
+        Tue, 07 Jul 2026 09:08:41 -0700 (PDT)
+Received: from localhost (107-190-31-17.cpe.teksavvy.com. [107.190.31.17])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6bc9f5dsm5702549b3a.27.2026.07.07.09.08.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2026 09:08:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: k87xr15tbwbuz4jtafu5ec3kdmfycrte
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 6EAAF2000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18TssPEFq94GGqlz+p+9aRp8eeLIFlutH4=
-X-HE-Tag: 1783440043-387885
-X-HE-Meta: U2FsdGVkX1/Tx9nyManP9zwP+a3L82cJx81X4QDK9XWbb3e8XlhJm0qXPF1os5W79zy/LIkiAsEW8f27ieUKfLPdreBktAOtFsAg8ZPCAjErgfds4BgoppbOxbCr0+CxP3uiRUALSGhPR0xu72VIJiVuj07x7zpA3cFJ+t5VPzl9MG8PDXKAG+7ykiZu6A9DFgrHhwOFZacggrxph8MUe/IVa5QZHyhXD2TLA7aJgnrH9b6g9jiXy+0FRQHNksiQJl9ISNHjYBLuGtGBk8Cm74mhIeSvEEjG/esQkrh4rep5iAUnASGcIKnlmmDc87IKPa9PxRI0DrGF1/2t/AM5wkyLPPGYTDQ7
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 07 Jul 2026 12:08:38 -0400
+Message-Id: <DJSGWFQ1Z86C.214O720ENTA1D@etsalapatis.com>
+Cc: <netdev@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <ncardwell@google.com>, <kuniyu@google.com>, <rostedt@goodmis.org>,
+ <mhiramat@kernel.org>, <davem@davemloft.net>, <kuba@kernel.org>,
+ <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] net/tcp: Add explicit tracepoint for
+ tcp_syn_ack_timeout()
+From: "Emil Tsalapatis" <emil@etsalapatis.com>
+To: "Eric Dumazet" <edumazet@google.com>, "Emil Tsalapatis"
+ <emil@etsalapatis.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260707010151.43976-1-emil@etsalapatis.com>
+ <CANn89iL23Rsu3iGXxhw4pAnCB-JgU7fnrryDLXKj4jHqSs=HOw@mail.gmail.com>
+In-Reply-To: <CANn89iL23Rsu3iGXxhw4pAnCB-JgU7fnrryDLXKj4jHqSs=HOw@mail.gmail.com>
 
-On Mon, 18 May 2026 08:23:14 -0700
-Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
+On Tue Jul 7, 2026 at 3:52 AM EDT, Eric Dumazet wrote:
+> On Mon, Jul 6, 2026 at 6:01=E2=80=AFPM Emil Tsalapatis <emil@etsalapatis.=
+com> wrote:
+>>
+>> Clang can inline the tcp_syn_ack_timeout() function during compilation,
+>> making it impossible to use kprobes for tracing without preventing
+>> inlining. Add an explicit tracepoint to it instead.
+>
+> So much copy/pasting for a very small issue :/
+>
+>>
+>> Signed-off-by: Emil Tsalapatis <emil@etsalapatis.com>
+>> ---
+>>  include/trace/events/tcp.h | 72 ++++++++++++++++++++++++++++++++++++++
+>>  net/ipv4/tcp_timer.c       |  3 ++
+>>  2 files changed, 75 insertions(+)
+>>
+>
+> tcp_syn_ack_timeout() is hardly a fast path, so you can instead:
+>
+> diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+> index 322db13333c7..ab2c3de19e46 100644
+> --- a/net/ipv4/tcp_timer.c
+> +++ b/net/ipv4/tcp_timer.c
+> @@ -748,7 +748,7 @@ static void tcp_write_timer(struct timer_list *t)
+>         sock_put(sk);
+>  }
+>
+> -void tcp_syn_ack_timeout(const struct request_sock *req)
+> +noinline_for_tracing void tcp_syn_ack_timeout(const struct request_sock =
+*req)
+>  {
+>         struct net *net =3D read_pnet(&inet_rsk(req)->ireq_net);
 
-> BPF and other consumers that want to attach to or decode a generic
-> tracepoint need three pieces of BTF information for it:
-> 
->   - the BTF of the object that owns the tracepoint's types
->   - the FUNC_PROTO describing the tracepoint arguments (with names),
->     consumed by raw_tp / tp_btf BPF programs
->   - the STRUCT id of trace_event_raw_<call>, the ring-buffer record
->     consumed by classic BPF_PROG_TYPE_TRACEPOINT programs
-> 
-> Today none of this is easily discoverable from userspace. The kernel
-> knows the ids - resolve_btfids fills them in at link time - but
-> consumers have to search them by the naming convention
-> ("__bpf_trace_<name>", "trace_event_raw_<name>"), walking BTF for
-> every tracepoint.
-
-I'll pull this in even though it adds 100K to the kernel:
-
-   text    data     bss     dec     hex filename
-40506047        15709518        16661184        72876749        45802cd /tmp/vmlinux.new
-40499064        15615294        16661184        72775542        4567776 /tmp/vmlinux.old
-
--- Steve
+Sounds good, I will respin and just mark it noinline.
