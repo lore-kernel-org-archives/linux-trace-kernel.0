@@ -1,63 +1,63 @@
-Received: from mail-pz2-f1.google.com (mail-pz2-f1.google.com [74.125.228.1])
+Received: from mail-pz2-f0.google.com (mail-pz2-f0.google.com [74.125.228.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9649E22ACEB
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 13:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4082EEE75
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 13:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.0
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783429220; cv=none; b=lXp24z5+rQO0Q3f1m0yXueaGwLjEF46b0bSuB81ZXD2iWE2VaVSuMvq2T6audEY9pHmkYAGvimcJNBFqa/1j72fnAgfEv/uWsWZgHq3gxDMArli/bBYtdilmSMgYyNeK/miyv+mdQJHBOdHZ9LWlpwfO8bxuEy1T2YCfMOdoGHg=
+	t=1783429233; cv=none; b=VrqH5G/KJHO4w2tliUnEnigR3Ge2GKr6pG1TcxXQQ6SSHdS064ojizyixLN2bDECQ+lqLR0Aqk0RbvW9QEhOGnEuK4DXk/SXWt0hm6idxIk3u31ZxJlP/t7sdgBiA1gu3GcNf49MmLmWoIHwKT53/uhR84kaTj9a0JXQh3sr67o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783429220; c=relaxed/simple;
-	bh=bbIuCO06RYRG5+k7n97w09LEogLitBXzNI9yNrxFShE=;
+	s=arc-20240116; t=1783429233; c=relaxed/simple;
+	bh=RvXzUh+Z5rLxburgzcvo+g9ZGozfoPunlEYEQZcFbHU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dif+BzNEvxCGz+/x0VVuBKgdm5yzfyKHh3AVYUcTnsT2trQhzFvcBcYlDtxUI+UzcX1aB6omf/BXRFgBzzPbH/elnmvKogOyly80VJlgHgqBoDfxDEr3+3v6UkquHH3YP1iBoDl8BLDOGy0ksSc6cogwZ7aFKMv9NBtI54c/GSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cy+FPBf6; arc=none smtp.client-ip=74.125.228.1
+	 MIME-Version; b=l1qIgQR2f9xY69x2BYZm8kpx7qbIv6EyfUAZuZo3f68JMcjkU1maRI60DQpgLmafSByswk+YjBLM/SzCae67hqPdbZbFmeIiAvTsWONgvSrOzWO2rfM1J6A3PEhVApblda6gi5o1AHZ8RrDp+9VU36c1xrKMj3gyiU/qCdgXE4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/MXcVGo; arc=none smtp.client-ip=74.125.228.0
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cy+FPBf6"
-Received: by mail-pz2-f1.google.com with SMTP id 41be03b00d2f7-c888c2c5485so19046a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 06:00:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/MXcVGo"
+Received: by mail-pz2-f0.google.com with SMTP id 41be03b00d2f7-c9a20e73d7cso1331036a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 06:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783429219; x=1784034019; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783429232; x=1784034032; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GAK2ceJ1Zq5e1wppikpMizngj/jwkuXHZE5kwSaxgtw=;
-        b=cy+FPBf6lg1SoUpkAw5Uhh3kTtSeZpoJNYBr5W8Rf3aKSIxjizFKQ4hwwmwW4Nie7/
-         jTTfEi4nGwcHVyuPQ/k7S7i0CE4XK/sW96ZrZayCoOMlcLUKbh5vVfDuCVVbe5XbyH6t
-         7TNi+nkOniTkYjlGNlXSqUFuq0XCDM++Sewn4D7ko4y60xeR6pC2DI2Fjj2AfVtSnPqD
-         ZuFRCjqPGlJdi4byE9b05x9CSu3DPccxJau2VuPH0y9Dfr+2Zw30zmQX4zG5J9P3H5XA
-         xxG7eO2jq7Ix+oLCDxAYprJ0n8yKedh6+igXoBCnLr3hOa06O2LMjXSrkeJlUFYCQKz0
-         uRtw==
+        bh=5W5DUkb1JUBfDdw5NFLWUB/50kxa7q0vorvfnztH0I4=;
+        b=R/MXcVGovvHJ1FQtgUZyl77G4rx3dRgmO9eqWDl/DtoFC8heKGDf98n7fhQHF2osIi
+         HcqsTdfIlZg3AmgMW8ou8/IgzOXNvkt8ewSyK1k35MeTxNagjDiSpaqwcUCOVgtedY0E
+         CxF9fFw3FS00ffbnoHKe1c60FIykgWhoHw/ULe7pHGNpOABTO6585dBeyhsMymYJfM8S
+         LL37JlaWYmV7+rjY54AoTuvKqojoP6BEtBptUQBiUp42jIclQPFoOgy2o8AMPBtTYjCB
+         j2RB2XlrxUbqed93AICy33rqn0/bpJ0oVRiSMNKN1lpjaPQRe7KoJuiVOMv8b+ne/vF5
+         k0aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783429219; x=1784034019;
+        d=1e100.net; s=20251104; t=1783429232; x=1784034032;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=GAK2ceJ1Zq5e1wppikpMizngj/jwkuXHZE5kwSaxgtw=;
-        b=Ce1XUmH1fkDF5GEiTEZl41KmcChp5TIgOjF6hwNfmZQhR+OKFqyiBI3AVJfzWcVCn4
-         63WBN59fTurDOvVHfPsADshJ5RDuUp2Q8zRCeiIpR4yK/tCAizF7arT/RSVDcxVSHDFc
-         Sp3ZHmxYD278oMq3rjQEc9mj3k1uZC74o70T8oNCPILXXGgl8/bb48yx0/htNjNjRPhH
-         c/+cTNGERVpVsCLoy8kt4cLaTG+MLK12A2U+Y7SVvjmDkeriW+UFaU1KJ1UF9Xaxo/NF
-         zTySLcbneiKRZimP4zqS/In7q8EhvDXwohgWKSHmki8Sy6/Ilj4bb9oC2/NIahgYISyj
-         fNlQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpDF0JGwtjR5XLdDh8wDrKkA1oVg4+EhciSH5PYtjhFDMs4ZNaNmnAv4y9rrzMKgk4PL/0jr3cEKP1ZEwnYbPbgJjQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv2JLVYgueG4mBrZ/Mo+6UkpQOGi3sJNIWIyF8kmpiTrr63I+6
-	u2YGfByzgL9z5GnwXs+6LBuOlUL8uciQZC9WjGLdUWklWoDeDWy/+1EB
-X-Gm-Gg: AfdE7cnRRUKEg1RRUSfq6Wh7oNw3234NprZzGJfLlVUzAbKIFmXBzN3l/Ulk+kd6+La
-	f7MEBDANmZwksNN0Qokuy1mCefwV9+51H/9eBEBRiCpLQKlPGlHzgNx0kkd8qcVe8IpYq0v9Xfj
-	rpHaEYqGV5Arc2/w2Y21sT4YClmbkCLcpwebpMpCucornW/gZn4gYq4J0LiYT+UMh9itrhzEOYp
-	1CI1LynLZqcDWfZE9FTYVrqBhs71+S+InF+0qO6wE5B8nll+TfmKlz8gAKLo6yNlNyRlwrIBcse
-	leReUFYspjln1pkHPNQLjWhHXgwhkpv/CVZzOr23wjv+6Q7Nv5sATlx444q2xdAfpnGMHUDD8tn
-	6guXNKs1NL/1oO6gku4GOmEkl6yiUIaXdC5uP9zjI6hZ3+x+3L27JvgTi6lHnmJd7LkpckFm48/
-	44xXlhW42sbzBHvbADED5TY2vO+Q==
-X-Received: by 2002:a05:6a00:22c4:b0:842:50fd:4c13 with SMTP id d2e1a72fcca58-8482f2be242mr2571501b3a.4.1783429218979;
-        Tue, 07 Jul 2026 06:00:18 -0700 (PDT)
+        bh=5W5DUkb1JUBfDdw5NFLWUB/50kxa7q0vorvfnztH0I4=;
+        b=ibpJv805VEOqr55L3+nw5Tt2khGGmaCueymm6kQQvpDQhl+GiI4GImhiL2fEFotfCD
+         VDd8F1SX5Pm7t2I73JJaGfICuxqhdR8mrN01hZt/fXBc/FaP7n3gprcUHx0SlRzp1o8v
+         KrCWwPcn0DUg3X99NHPQmNBPV6uk9SeV8qJrm5d9N7IXupuwOMUd+3vcilYbt2DOasob
+         9frYbkSx4l8oGZZc8bYHYzxufGgUhCXMp7Nc3r/sXg1gw73H/b0+xvEdLuhkbqKc2Ds4
+         /b53QE9ZLPA0gXUgwL3KEcVjcsCr8cSp2MFSoNqUFpB39tTbvRRg6wvKsFV7LXxMCdUU
+         r9aA==
+X-Forwarded-Encrypted: i=1; AHgh+RodjnK+bDyqSaQxKTyme8RoGhCYWzRGxPZKwgONIVb3Ss9N6G0Vw+vAwhhneYKFJHE7qfQSN13qsH4l99Nqo32dlQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGgJYiT+DZiwu0+8VTkIvC8eoVu02zeI0NamcmwZdopJI6PtVi
+	Vtq+5oAFUDH9UOBQhjkXxvK26fk1BgvXw6eydjqZDrJG50BlcQh27D1f
+X-Gm-Gg: AfdE7ckuHaDpO+oaIhCPqth1bjExNK84bunMNHMsrCnychQHMKYWwz8oL4nsyawf+HN
+	2c7fv4k9lcqDNznnkoAHuAmf+WRyDdnfIHjvE8wJFD7wK208QWid2S2rSNxxFAfcKDwAXoeptlK
+	469OZ2sSmTKRhSM3Ufplefpx1vAOwYULEaroKNKHcvqOciv2k0YAfodR4ZqSxGp9QOum7PrKRx8
+	XjpQrA9dNlShw/CjhAzCA6UsOYTZBKYMyjS9bVZXX0dVrtf7ca1EoXMqmQJtcLGbM1nm/SLRkj3
+	UsBQphbXRSGI95LDZWvp+a/B/Fy6mipZ6ftjzNHsa06Hmw52A4MU5RrfoIParUNrIrhP4wT2wtU
+	0itxgYJXqM833GWtMg3z0jHvtTG0QC4Gt96Qtt9el9788PjZ0ZzaaElkRxa0jEP/RP0rTij/fPc
+	IM/HN9179YutTN6KHD/Ue4xUyMiA==
+X-Received: by 2002:a05:6a00:1819:b0:847:8b1d:22fe with SMTP id d2e1a72fcca58-84826df12a7mr4541501b3a.50.1783429231350;
+        Tue, 07 Jul 2026 06:00:31 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6b5e566sm5415983b3a.3.2026.07.07.06.00.06
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6b5e566sm5415983b3a.3.2026.07.07.06.00.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 06:00:17 -0700 (PDT)
+        Tue, 07 Jul 2026 06:00:30 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 To: vbabka@kernel.org,
 	david@kernel.org,
@@ -92,9 +92,9 @@ Cc: akpm@linux-foundation.org,
 	ying.huang@linux.alibaba.com,
 	apopple@nvidia.com,
 	pfalcato@suse.de
-Subject: [PATCH v2 3/4] mm/migrate: add tracepoint for folios unmapped during migration
-Date: Tue,  7 Jul 2026 20:59:24 +0800
-Message-ID: <20260707125925.3725177-4-chenwandun1@gmail.com>
+Subject: [PATCH v2 4/4] mm/mlock: migrate folios out of CMA when mlocking a range
+Date: Tue,  7 Jul 2026 20:59:25 +0800
+Message-ID: <20260707125925.3725177-5-chenwandun1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260707125925.3725177-1-chenwandun1@gmail.com>
 References: <20260707125925.3725177-1-chenwandun1@gmail.com>
@@ -108,79 +108,174 @@ Content-Transfer-Encoding: 8bit
 
 From: Wandun Chen <chenwandun@lixiang.com>
 
-Add mm_migrate_unmap_folio tracepoint, fired in try_to_migrate_one()
-after a folio's mapping has been replaced by a migration entry.
-It records the pfn, address, folio flags and vm_flags, making mlocked
-folios under migration easy to observe.
+The region covered by mlock[all] may contain CMA pages. cma_alloc installs
+migration entries in the page table, if a memory access occurs at this
+point, it must wait for the migration to complete, which may cause
+latency spikes on the RT kernels.
 
+Try to move the migration cost into the mlock[all] caller, which is
+typically a setup path. So reduce the chance of latency spikes on RT
+kernels by migrating the currently mapped CMA pages out of CMA region.
+
+Suggested-by: Frank van der Linden <fvdl@google.com>
 Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+Link: https://lore.kernel.org/all/CAPTztWZpnX1j8-7yeppVUsxE=O9hbVeqricDjZt8_pnN7a-kBQ@mail.gmail.com/#t
 ---
- include/trace/events/migrate.h | 29 +++++++++++++++++++++++++++++
- mm/rmap.c                      |  4 ++++
- 2 files changed, 33 insertions(+)
+ mm/mlock.c | 119 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 118 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-index 15ee2ef201b5..1264593ecaee 100644
---- a/include/trace/events/migrate.h
-+++ b/include/trace/events/migrate.h
-@@ -6,6 +6,7 @@
- #define _TRACE_MIGRATE_H
+diff --git a/mm/mlock.c b/mm/mlock.c
+index ac65de40b22b..f56c685533f5 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -25,6 +25,7 @@
+ #include <linux/memcontrol.h>
+ #include <linux/mm_inline.h>
+ #include <linux/secretmem.h>
++#include <linux/migrate.h>
+ #include <linux/compaction.h>
  
- #include <linux/tracepoint.h>
-+#include <trace/events/mmflags.h>
+ #include "internal.h"
+@@ -428,6 +429,119 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
+ 	return 0;
+ }
  
- #define MIGRATE_MODE						\
- 	EM( MIGRATE_ASYNC,	"MIGRATE_ASYNC")		\
-@@ -137,6 +138,34 @@ DEFINE_EVENT(migration_pte, set_migration_pte,
- 	TP_ARGS(addr, pte, order)
- );
++#ifdef CONFIG_CMA
++static int mlock_collect_migratable_pte_range(pmd_t *pmd, unsigned long addr,
++			unsigned long end, struct mm_walk *walk)
++{
++	struct vm_area_struct *vma = walk->vma;
++	struct list_head *folio_list = walk->private;
++	spinlock_t *ptl;
++	pte_t *start_pte, *pte;
++	pte_t ptent;
++	struct folio *folio;
++	unsigned int step = 1;
++
++	if (!(vma->vm_flags & VM_LOCKED))
++		return 0;
++
++	ptl = pmd_trans_huge_lock(pmd, vma);
++	if (ptl) {
++		if (!pmd_present(*pmd)) {
++			if (unlikely(softleaf_is_migration(softleaf_from_pmd(*pmd)))) {
++				spin_unlock(ptl);
++				pmd_migration_entry_wait(vma->vm_mm, pmd);
++				walk->action = ACTION_AGAIN;
++				return 0;
++			}
++			goto out;
++		}
++		if (is_huge_zero_pmd(*pmd))
++			goto out;
++		folio = pmd_folio(*pmd);
++		if (folio_is_zone_device(folio))
++			goto out;
++		if (is_migrate_cma_page(&folio->page))
++			isolate_folio_to_list(folio, folio_list);
++		goto out;
++	}
++
++	start_pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
++	if (!start_pte) {
++		walk->action = ACTION_AGAIN;
++		return 0;
++	}
++
++	for (pte = start_pte; addr != end; pte += step, addr += step * PAGE_SIZE) {
++		step = 1;
++		ptent = ptep_get(pte);
++		if (!pte_present(ptent)) {
++			if (unlikely(softleaf_is_migration(softleaf_from_pte(ptent)))) {
++				pte_unmap_unlock(start_pte, ptl);
++				migration_entry_wait(vma->vm_mm, pmd, addr);
++				walk->action = ACTION_AGAIN;
++				return 0;
++			}
++			continue;
++		}
++		folio = vm_normal_folio(vma, addr, ptent);
++		if (!folio || folio_is_zone_device(folio))
++			continue;
++		step = folio_mlock_step(folio, pte, addr, end);
++		if (is_migrate_cma_page(&folio->page))
++			continue;
++		isolate_folio_to_list(folio, folio_list);
++	}
++	pte_unmap(start_pte);
++out:
++	spin_unlock(ptl);
++	cond_resched();
++	return 0;
++}
++
++static const struct mm_walk_ops mlock_collect_migratable_ops = {
++	.pmd_entry	= mlock_collect_migratable_pte_range,
++	.walk_lock	= PGWALK_RDLOCK,
++};
++
++static void mlock_migrate_cma_range(unsigned long start, unsigned long len)
++{
++	struct mm_struct *mm = current->mm;
++	unsigned long end = start + len;
++	LIST_HEAD(folio_list);
++	struct migration_target_control mtc = {
++		.nid = NUMA_NO_NODE,
++		.gfp_mask = GFP_HIGHUSER | __GFP_NOWARN,
++		.reason = MR_SYSCALL,
++	};
++
++	if (compaction_allow_unevictable())
++		return;
++
++	lru_cache_disable();
++
++	if (mmap_read_lock_killable(mm))
++		goto out;
++
++	walk_page_range(mm, start, end, &mlock_collect_migratable_ops,
++			&folio_list);
++	mmap_read_unlock(mm);
++
++	if (list_empty(&folio_list))
++		goto out;
++
++	if (migrate_pages(&folio_list, alloc_migration_target, NULL,
++			  (unsigned long)&mtc, MIGRATE_SYNC, MR_SYSCALL, NULL))
++		putback_movable_pages(&folio_list);
++out:
++	lru_cache_enable();
++}
++#else
++static inline void mlock_migrate_cma_range(unsigned long start,
++					   unsigned long len)
++{
++}
++#endif /* CONFIG_CMA */
++
+ /*
+  * mlock_vma_pages_range() - mlock any pages already in the range,
+  *                           or munlock all pages in the range.
+@@ -678,6 +792,7 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
+ 	error = __mm_populate(start, len, 0);
+ 	if (error)
+ 		return __mlock_posix_error_return(error);
++	mlock_migrate_cma_range(start, len);
+ 	return 0;
+ }
  
-+TRACE_EVENT(mm_migrate_unmap_folio,
-+
-+	TP_PROTO(unsigned long pfn, unsigned long addr,
-+		 unsigned long page_flags, unsigned long vm_flags),
-+
-+	TP_ARGS(pfn, addr, page_flags, vm_flags),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, pfn)
-+		__field(unsigned long, addr)
-+		__field(unsigned long, page_flags)
-+		__field(unsigned long, vm_flags)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pfn		= pfn;
-+		__entry->addr		= addr;
-+		__entry->page_flags	= page_flags;
-+		__entry->vm_flags	= vm_flags;
-+	),
-+
-+	TP_printk("pfn=0x%lx addr=0x%lx page_flags=%s vm_flags=%s",
-+		__entry->pfn,
-+		__entry->addr,
-+		show_page_flags(__entry->page_flags & PAGEFLAGS_MASK),
-+		show_vma_flags(__entry->vm_flags))
-+);
-+
- DEFINE_EVENT(migration_pte, remove_migration_pte,
- 	TP_PROTO(unsigned long addr, unsigned long pte, int order),
- 	TP_ARGS(addr, pte, order)
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 3cb7f6337d38..b110548bebae 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -2716,6 +2716,10 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
- 			hugetlb_remove_rmap(folio);
- 		else
- 			folio_remove_rmap_pte(folio, subpage, vma);
-+
-+		trace_mm_migrate_unmap_folio(folio_pfn(folio), address,
-+					     folio->flags.f, vma->vm_flags);
-+
- 		if (vma->vm_flags & VM_LOCKED)
- 			mlock_drain_local();
- 		folio_put(folio);
+@@ -790,8 +905,10 @@ SYSCALL_DEFINE1(mlockall, int, flags)
+ 	    capable(CAP_IPC_LOCK))
+ 		ret = apply_mlockall_flags(flags);
+ 	mmap_write_unlock(current->mm);
+-	if (!ret && (flags & MCL_CURRENT))
++	if (!ret && (flags & MCL_CURRENT)) {
+ 		mm_populate(0, TASK_SIZE);
++		mlock_migrate_cma_range(0, TASK_SIZE);
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.43.0
 
