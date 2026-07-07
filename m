@@ -1,85 +1,76 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from mail.thinkmo.de (s3.thinkmo.de [162.55.237.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7BA37A844;
-	Tue,  7 Jul 2026 17:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42171438482
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 17:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.237.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783446083; cv=none; b=k3e0SR2FTYuR7Hv0j+xYDmzazdQCKv7wJ7LYu6sMhlawle2gwqbafehn69RLReqbi4uKbVjCKDp6ABardeY6VhD5puOWCuafFugeORWug8hjPBmPCTWgSgcKWe8BWsaEfQ8IgKKVmw4jyyLFelM2WsXYV7MnSukipyDW1uzYKEs=
+	t=1783446207; cv=none; b=f+Qic22rsQxPO5eo/Sp7fFbqNl1yi5Vd8tuakWckx5B6GsW+SLUUGkQI+aaqISHLjuTTYwOIqu+OXUYN4R7C84mrOt2TLgE4CRFr0WMu5pyY8WYv9171oE/pAqbcRp9vdzSNanzK9yDhk1JDNpevrX0K5Hg7/1TkMkxvvEOiA2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783446083; c=relaxed/simple;
-	bh=1hu2GddcExnoQMdRvB0QkLDfHECk1XQK3Hp1zC0Goa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m+TQL19kFdoa/IkY8HnlbOsu7lDZfjF/NLw4SEcUkVG7cqQFKBBQBLPg+MmuyX7OHfzUu9qhScZ7U2Sf4PfF1fBclztQglfJSYNCy9NL4E6xRPcXncjySsOfwiRQTg8E5HccOPrDTJy2024OtPDGMbz+EBD0QErduivyAU5wQ6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 2B58C4051A;
-	Tue,  7 Jul 2026 17:41:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 271DC40;
-	Tue,  7 Jul 2026 17:41:16 +0000 (UTC)
-Date: Tue, 7 Jul 2026 13:41:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Michael Bommarito <michael.bommarito@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Beau Belgrave
- <beaub@linux.microsoft.com>, XIAO WU <xiaowu.417@qq.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] selftests/user_events: wait for deferred event
- teardown after unregister
-Message-ID: <20260707134119.6a014a88@gandalf.local.home>
-In-Reply-To: <20260707165912.2560537-3-michael.bommarito@gmail.com>
-References: <20260707165912.2560537-1-michael.bommarito@gmail.com>
-	<20260707165912.2560537-3-michael.bommarito@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1783446207; c=relaxed/simple;
+	bh=w/JIzLj9EiwLm1c56OQ3Jlvo9W9At38kii0twBLVLKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ArDczNrHCMzj9HrF9xaGzkowdGIkA/KdHkI9yUTcN+nGoo9WLxDPHGL7q2+46J+iwNDiRqbcRPkzEkDTu2wAAzezSA25ymIF7ulkShQjjKcn8PQeI0bS+5Xtt65RdIWBnEOozlMx7iMMtERLgsxIMk60/FwGQssqAPgrEeAw16M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=fail smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=Eb05+Rga; arc=none smtp.client-ip=162.55.237.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=debian.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="Eb05+Rga"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.thinkmo.de (Postfix) with ESMTP id 4gvpV35WPCzyf1;
+	Tue,  7 Jul 2026 17:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=debian.org; h=
+	in-reply-to:content-disposition:content-type:content-type
+	:mime-version:references:message-id:subject:subject:from:from
+	:date:date:received:received; s=mail202007.waldi.user; t=
+	1783446187; bh=i/x2FvR1u4Pok8o3QQiGB0trDpEqq1SoD7BN0kE1YeE=; b=E
+	b05+RgaCvsEvZNbuwiUC+/3/jJgSWKPZfFziGMT1E4EKaUv7SoXUjaZL+aRS//fw
+	mCOeV/OUxAgP7iyVqliGQH0l8kuZpIlGMQ2vrfTKcswRH3zLhGaqB08GdY5FYfHF
+	ccOYt4/4ET+i7vrmeSxMOJJEh6du7cNlK4pJ2QmbX5e7BJIazEqHtZfMxiREMfVy
+	Q6KPJtqxTXsYpHmNc/hPC1RjQJDDR0/GTXApf0rP69TRltiZcYPxF0UOclZO48Gr
+	zdmvaSRYr53shxq02pb1QSHvkzwDUvAy7C08nIDCu0iOa/DHisRdK4cJybbV9XyM
+	5B/8SyRJJswCpjzqfN4SQ==
+X-Virus-Scanned: Debian amavis at 
+Received: from mail.thinkmo.de ([127.0.0.1])
+ by localhost (mail.thinkmo.de [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id uxCn4NY2d9_G; Tue,  7 Jul 2026 17:43:07 +0000 (UTC)
+Received: from shell.thinkmo.de (shell.thinkmo.de [IPv6:2a01:4f8:271:3f5c:0:22:0:1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.thinkmo.de (Postfix) with ESMTPS id 4gvpV34r8XzyVq;
+	Tue,  7 Jul 2026 17:43:07 +0000 (UTC)
+Date: Tue, 7 Jul 2026 19:43:04 +0200
+From: Bastian Blank <waldi@debian.org>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtla: Also link in ctype.c
+Message-ID: <hkao7qatojfeiv2kytbcfbvbjyb4pagdfv6ghbwq7mvda7gpl2@32lkx662we2r>
+Mail-Followup-To: Bastian Blank <waldi@debian.org>, 
+	Tomas Glozar <tglozar@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org
+References: <ako2S4mzIqWwYuas@steamhammer.waldi.eu.org>
+ <CAP4=nvTH5HhUk19w06aH6-xqWGOUQKesGbKCfvgpwmefLom0VQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5b15rfkr1m8maiciouumtki5xkktqoxe
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 271DC40
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+JSL9ND3W6PTPGmriTdVZk3n4HK7ntelo=
-X-HE-Tag: 1783446076-28099
-X-HE-Meta: U2FsdGVkX192nl4t6NFxv+peeCTGy7UzM20JdGRdJ+OtpVBI6Dus+n+eKO25D/dHsIec5Tl3e7nEYM4VHzLcmPYLPDhFQEQZQO4n4rXsynDsuoMDG4kB1b7wrd18W9LgKqQBLmKmSRtiRSbVPfuDAdIdK3zKxcB/JfrX/LgXRePbZ4YucXcZoaYJnkmOQTjD0diQb7SoVKN3Cp0x0oWjDL4wMKgtZ1CjlSmy4VkI25nGW2iLTJWTXssJRcqDb31dTG7376LTPiZSXpllzjbmzZwhPxto4zV1REzLkyWKOAbr5kfYusQaNA9D/ne1pAyhXfvbdHLTc/gO4/bkOIpBbNzOQaRLs5w86LtJ5VN636IbfeIfX1i/glRWf2yZ0KCtKbkEobZam69oH7JCQP6C7Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAP4=nvTH5HhUk19w06aH6-xqWGOUQKesGbKCfvgpwmefLom0VQ@mail.gmail.com>
 
-On Tue,  7 Jul 2026 12:59:12 -0400
-Michael Bommarito <michael.bommarito@gmail.com> wrote:
+On Tue, Jul 07, 2026 at 12:22:37PM +0200, Tomas Glozar wrote:
+> Thank you. It appears that GCC LTO drops the symbol use of "_ctype",
+> so I didn't see it earlier. With removed -flto=auto from
+> Makefile.rtla, I can reproduce it:
 
->  
-> +/*
-> + * Deleting an event drops its last reference, but an unregister may defer
-> + * that put (and the freeing of the associated enabler) past an RCU grace
-> + * period. The delete can therefore transiently fail with -EBUSY while the
-> + * previous reference is still being dropped. Retry for up to ~10 seconds.
-> + */
-> +static int wait_for_event_delete(void)
-> +{
-> +	int i, ret;
-> +
-> +	for (i = 0; i < 10000; ++i) {
-> +		ret = event_delete();
-> +
-> +		if (ret == 0)
-> +			return 0;
-> +
-> +		usleep(1000);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
+Ah, yes, we override LTO to disabled.
 
-Care to address Sashiko's comment: https://sashiko.dev/#/patchset/20260707165912.2560537-2-michael.bommarito%40gmail.com
+Bastian
 
-I'll pull in patch 1 and start testing it as this one is just the tools
-change, it doesn't need my testing (my tests only tests kernel changes)
-
--- Steve
+-- 
+There are certain things men must do to remain men.
+		-- Kirk, "The Ultimate Computer", stardate 4929.4
