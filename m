@@ -1,53 +1,70 @@
-Received: from mout-y-209.mailbox.org (mout-y-209.mailbox.org [91.198.250.237])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C72A3A1693;
-	Tue,  7 Jul 2026 06:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.250.237
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E886C39EF0B;
+	Tue,  7 Jul 2026 06:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783405482; cv=none; b=Eu355Cxzxs76BhkrsZ2zOcDqU3Q0jFsmOFaGrzQTuwxsBECvs2bHDPPYWxn4jPc4oEXERuk4KMFCVguGzUpyy8fl/movrYkxajkT6EE26qVWyqQ5Z4EJU3vNV1x8ehlmliU7NIbDkLdXBfGWbKPPZjrqlHVNskAgyq9FvOZ2LZk=
+	t=1783407155; cv=none; b=NPwHXWV8mlnRsdXdwwNj6Cbt0lw7M8jHeEMEhYHPpIN/yak0ngy+RFxbpQ+qjOwFA1SypvZcMgHG+iqecc/JXsVGB5PcgUU6kfxCfi0hmQKLJZFIXNquSeY3AkIBqNfnIqaoIutagBtcgbdC32ME6mlHJCad1Rq+c7dCGLVAiwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783405482; c=relaxed/simple;
-	bh=Vdn+mLWmIf3XyYG3gpoC46QIet+K6Ff3AtVmykAvLys=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BGIKVraynBOEBvqJxA1kwaCbknKaf9Tbk+6Cy/zt3ASQ7pCBbDxUIULw1jHTTYAU+cRF2Bi3mlYx2A2Zu/H8FBh7TWkuFZ1X6YyUk8GNdQy0nVHm2qntbVENBnEuPkF1htNlWIQiiyHgNFhKaWqeq1vCOkMXBy/3pzxe3pKYNVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev; spf=pass smtp.mailfrom=mavick.dev; arc=none smtp.client-ip=91.198.250.237
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mavick.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
-	(No client certificate requested)
-	by mout-y-209.mailbox.org (Postfix) with ESMTPS id 4gvWJt5DQQz7vTc;
-	Tue, 07 Jul 2026 08:19:10 +0200 (CEST)
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of m@mavick.dev designates 2001:67c:2050:b231:465::1 as permitted sender) smtp.mailfrom=m@mavick.dev
+	s=arc-20240116; t=1783407155; c=relaxed/simple;
+	bh=iCNfbiR0DHZqiBQ2Va/Z8QjqV+1BwdxMe7HxmvGtC1s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SddewIEbMbFE64URd8wsYBhPlgOAJ/N/DRulP4NH1x/XRg1GIuxnodTX4hIeLNwHLvkXRDf4uzqQFAYcmO126Z8m3OzGYL0ehlJm4zhfoc1Naza5S15VFGI32+JRUhLSU+jTsAR9NOi/J6zPheu2sN1u6K0oIn3fAm8BrvVGEdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QVE1xSZI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H2UXaI5q; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QVE1xSZI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H2UXaI5q"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1783407144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iCNfbiR0DHZqiBQ2Va/Z8QjqV+1BwdxMe7HxmvGtC1s=;
+	b=QVE1xSZIcm1qyFlYMDjr9rdMd2kUjaSB0JzAbZZsgHeZF7t4TVPg50+VZbIz8/b2ph8fPh
+	8hR26IFEPU/uLsUbUFbcgrFsTyALYUsvRCuq/1gVVfLrtepygEmWOC49KrjJ34uz9VBBDP
+	IEDSbEOxZlNLIFO0CSSI06UII+aN0AVtWTNdv1LdSn/5Jd7y1sRNpbkpIj4Q5wCY9mSHqR
+	N3ECYRlSuwHgWDXecMqDeYCdu0HvpeuEON//409Vb/aQj+CijtHdkk2+KABIUm9GG0sMRV
+	FsxDvwDVSyQnOpaG1hoaWJZ7bq6od9lafwPI6zFiDVp8XBGQmHoKi5/1+Y0WRQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1783407144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iCNfbiR0DHZqiBQ2Va/Z8QjqV+1BwdxMe7HxmvGtC1s=;
+	b=H2UXaI5qZb+fLk2eeTXFNKvl4IXvbY27glAdQsTS/BIhl5p+qF+QT1zKtBjBBzu/3n4Cr0
+	sNRvFWUG7ab+0NAA==
+To: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
+ <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
+ <wen.yang@linux.dev>
+Subject: Re: [PATCH v3 09/17] rv: Add KUnit tests for some DA/HA monitors
+In-Reply-To: <20260625121440.116317-10-gmonaco@redhat.com>
+References: <20260625121440.116317-1-gmonaco@redhat.com>
+ <20260625121440.116317-10-gmonaco@redhat.com>
+Date: Tue, 07 Jul 2026 08:52:22 +0200
+Message-ID: <87bjcj2swp.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 Jul 2026 14:18:38 +0800
-Message-Id: <DJS4CP5DU9UH.699SV5JGDXGN@mavick.dev>
-Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>
-Subject: Re: [PATCH 0/4] tracing: add ref_trace_final_put tracing
-From: "Eugene Mavick" <m@mavick.dev>
-To: "Eugene Mavick" <m@mavick.dev>, "Will Deacon" <will@kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, "Boqun Feng" <boqun@kernel.org>, "Mark
- Rutland" <mark.rutland@arm.com>, "Gary Guo" <gary@garyguo.net>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun Heo"
- <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>
-References: <20260705-refcount-final-put-trace-v1-0-cdd0014626a9@mavick.dev>
-In-Reply-To: <20260705-refcount-final-put-trace-v1-0-cdd0014626a9@mavick.dev>
-X-Rspamd-Queue-Id: 4gvWJt5DQQz7vTc
+MIME-Version: 1.0
+Content-Type: text/plain
 
-I apologise for the duplicate patch series submission, I had resent the
-v1 via b4 relay as it did not show up on lore.kernel.org for a
-day, and I assumed the emails were lost.=20
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> + * Automatically generated by rvgen kunit.
+
+I was slightly confused by this, as I wasn't aware that rvgen can
+generate this.
+
+The patch adding generation support into rvgen should be before
+this patch. But oh well, no big deal.
+
+Reviewed-by: Nam Cao <namcao@linutronix.de>
