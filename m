@@ -1,120 +1,145 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F029F3E5A2F
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 16:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F7E3ACA7E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 16:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783440527; cv=none; b=nTAteSIJ9gJhOrIZNjpd5RbuDOjhT2jpcplxvUZQm+RX84CnkVVQ4DRA+C5WnBI5WXB+8rOwiQ/SpguRaD/XpCfwVT1BlM9Npr8Cnarwe5lZpJJe4pngS9ukI1OLh2F1f1U9jPVJwOAks/W3eRqCJRCEwVGwhSDg+PWMBoLE58Y=
+	t=1783441568; cv=none; b=Mzr7skcF+NPcOViK/mMyna4Vh4PJQwjMIqxG+JmLnzHsjjL69OtZKoEIZQkPX47geZ47s+l84rWwLc427viW0k0bPzSiq44XBoqXU6TNvwsZ7UwVnmZ8WgcXJibPwelvaAnaEyS9VmM8vGiEhWNp+x86rd0qvg3av6RmTxRw6yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783440527; c=relaxed/simple;
-	bh=gYxQlABoejgiGiTs0GRyEyflzw66+wYXuoHMbNI/GrM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=UcoFQh5cUJk2ilLJFPh7uN7PsbwTpMt+erAh2ifo/9oQwIbatKeCryzpcvBSKws9swx5/2vJjBfZZxPbme6BFxPFQ4eu3xnLenToVfPQYYcf35F+RTtZ552RG+nklODzY+OJhiSGkyUY0S6vFAfB2mtLLiDbMsfpkyfIXsuCcX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etsalapatis.com; spf=pass smtp.mailfrom=etsalapatis.com; dkim=pass (2048-bit key) header.d=etsalapatis-com.20251104.gappssmtp.com header.i=@etsalapatis-com.20251104.gappssmtp.com header.b=qglFq+XI; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etsalapatis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etsalapatis.com
+	s=arc-20240116; t=1783441568; c=relaxed/simple;
+	bh=lrYSArpP0iVuUgDVG3d1222jafWM2daRLlBprnwN79M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YHpBnTLquCq5pNTSYMuZDra01ZbXuvn1TfK0sMbL3cva1JBzaAb0k5fkO7eQtV2mFL9fpjFm+gpAE+OMTiOnu60KXkAjKNoAeWd+weS8FKIUeYllkaTVqTeMZV5mWC6jQVADX9JONh1ipdVaUxKf62EIbCrxBRqd2jaZsEsX6pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=eDqMHtOO; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsalapatis-com.20251104.gappssmtp.com header.i=@etsalapatis-com.20251104.gappssmtp.com header.b="qglFq+XI"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-845c92bc464so3286791b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 09:08:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="eDqMHtOO"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8efcfdb2b43so33290456d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 09:26:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsalapatis-com.20251104.gappssmtp.com; s=20251104; t=1783440521; x=1784045321; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=cMBdmbNnt7rGb9jJRQ/x9X78dUBABwOU7eEiSX3Y2u0=;
-        b=qglFq+XIBoKUrYMT9baCl3v1fz4wb0pELGnXGKP7XEigyAUpuSkXsUrGqZKgYziI/1
-         9NTbRYQ3IQdM1Hbu8XKz+972Q3zAAJmOnMFcmr4hk8S8o92QpzkHwXmCV6MyQjA+nk60
-         HZE/5To2G44cRai4C3GSS0PcYl2ge2u7t5YBRUKdAM/h0rj2ymYcRiuQ6I9az0E+p7dt
-         pKhDxPh12FvC6qjVMr6U9O8oh/6duPDb7yJliFroU1AkeBnjEd7VLEHugA968PGqcbRY
-         I7Nd8bNANBMJJn30ZRLtf2kaMIbk64fD7f4Iwpn/vOV/mw1qTrwwQwz24S9/pplZFknA
-         2oMw==
+        d=gourry.net; s=google; t=1783441566; x=1784046366; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Abd7yWEQE6Vuyzvr8uj66ic6dsI9yDvEtRp+r0f0v0Y=;
+        b=eDqMHtOOKnZ2WodO1jnQZJ790kEpTIDI8WuU+/mtNr5ibVX299F7ZakW6olp8PyAFO
+         roxmiG7G+NToxYzzQQPwxJRwcqw5Hp4FroxVqvucMZTpqhJreYpmSbr4DME9G0+JNOwk
+         0FqJcGS95j5Lwv+uX7ayJk6W+z04XAe4mAKrxPqnXBU3h3RUJU2V1S6dD6B0mSI9eauU
+         w9hhZfwt46Lf6MzZQRePSEZFnjg+zaMKIww/rAcT6yzuCEGTy9SpoYoM1E0c7DjdlwHZ
+         fk97uJYdOH2dY4c9NVrjW0ueon860oDHARuEQE2SFZoGRDyE4SbsSzEUqKYQ7UvC65uL
+         /XvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783440521; x=1784045321;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cMBdmbNnt7rGb9jJRQ/x9X78dUBABwOU7eEiSX3Y2u0=;
-        b=JVMTud6DK41KIQkiWG1iHiguulrEJTvEsAplVsJ49HTbBESn4FtRJM2SXmWtPz9Bvw
-         STHxBWCLt4Ygr+5qGd6kTYjLmk+rYANMvNY+ZmpT9xCnNEf0zAOclkSYna0Z+CjYCbfp
-         4XFrjSbEQzdy9g1T+O4fKfbbrbXjZoesiE3/nAD4noEV0hOC9IjgHaHHGJ+7Jyx9Gn9q
-         VAx1jUrRpBbK76HRIVNyqpXBK/sT0UIA4PY1Xz2zZtZF/atgicIxc7wwKmi3TPJVkV2+
-         1WqDjxwUEo+VH5j9AOKguIFEA2+LqrrnFQy3NHZa8RMIiUfSon+7Rd+2ku48mrYorL4H
-         ie0Q==
-X-Forwarded-Encrypted: i=1; AHgh+RqaovC3JpQ6Wrp5y+i9jacS7w4kclK1S3YxhQbkWRu/TMCNbHFe/fHxf2a7Za9MQa4xDHq5EN5K0hfHHnVQB/VCxHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9W6v1VxqartyrbR8B8KZs3mqws10CWCMe+lzSRRDN8CmNbcGz
-	+hCepBty/QkdgZ9H2ELUeRdJY9R506D8tH9/SRXez4GJ/thJ37KbHqNFPieicbQWtb8=
-X-Gm-Gg: AfdE7ckDU3OFEBuVKRK1PnnjjRKo5afmw7V5QNnmvoilL9DSIEh+Dhbtcv6VyIcHF84
-	Q+7W5G/fW9GSR0yMwFIuPrbmqERc9HvWGlk9OHrqr4ZROye4JUocFduxFy2ic0iL6qJX/ox1WD2
-	WtxtE7gZnthqV/FS1IEvlysB0wmrSZWcBCx+Lr2X9UPjelCk2JiUkOw/vmciDuTaRg7A+d59l4z
-	Dv1yaef9p7IZt9hyPphcnj5xAnTS0E/nguDsYDJnTXyw4FUeSHD5dhFd2nyjhLh7AE1DnwXjxfI
-	2+xx+Mgt16jBzFiT0JM0hAv0FBKBy4Tg1yVzPJnSstr0v/T1u9CdHgNfIcy1XXQ/U5/0L+uDt7X
-	3mSLNv2gI3tyhbdz87k5OIUHLr7V0+i1qvSabU+nBSa3KZc5kLqd3JvK1E9ku0qLsVC2CDOmCfN
-	SH9KnBe0y4NRiB6qv/aqrEDlBNVAUKHXYp0M6x8mhfm8NmXnZrQNix
-X-Received: by 2002:a05:6a00:987:b0:848:2f74:1d59 with SMTP id d2e1a72fcca58-8482f74207emr3285927b3a.63.1783440521110;
-        Tue, 07 Jul 2026 09:08:41 -0700 (PDT)
-Received: from localhost (107-190-31-17.cpe.teksavvy.com. [107.190.31.17])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6bc9f5dsm5702549b3a.27.2026.07.07.09.08.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2026 09:08:40 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783441566; x=1784046366;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Abd7yWEQE6Vuyzvr8uj66ic6dsI9yDvEtRp+r0f0v0Y=;
+        b=L0dekzJNYCw9xHEXuHG7tGcIWHZYkig28LQd3ejpJuxjjUk2pglYMRUmk+LrFuBiFz
+         1UQx8NcxgeDtQiFkb9UZ13UDlgYceK7+wbHcKNGkZkoR54U+NmaLq8TRk1dd0fadHlbc
+         f4MAmN7KbqmhitiAcudoyiCXOBJdeQS4UAgooaXrlJrPJvmjQbik2ivJi84+SQocbFiF
+         XDTJ/cH2+dTYp54BAJlAnY8BEogfGoSOUIMiB3/tzAdEbK8Z4o/J6Hi9l4zNFrCxaWAo
+         kSY/p3opCPPDGlnlx9Sr7JkGX7Au2koOPX0YCADSOOVOb3ozFqFctHqqSMjzosxiStv2
+         vjVA==
+X-Forwarded-Encrypted: i=1; AHgh+Rp9P3o2IQURmv8p0upot8b6f+HFGEnkixPLdzq5B+t3inKHSepHXH4u368pdNOXVjEEvkJWs12DijaEHub/9vIeDB8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJMGuzUQQoxOx4XFETUSRryC75UqbVCvptuOHSFMAdDx8vRP2Q
+	6PDp+R1uSSkGVQ2NFaNs19EtYSBVjNqKaSjzMJaaytkcJf0GdO2QmWHipHDlEDLW9ks=
+X-Gm-Gg: AfdE7cnyev/08MdvU+DXQIZhRN9LEmiXD9szRIXLtjco1nwMWffrHQdRM+lRGKjzVdf
+	OV4xh6SDYQwzw+Sn9mgXMvHHqz2oAiFLmozO16frP9NVt/pFw2lbm1TSlkz2HE32CZUhUqbd7KR
+	ssh7U8BQwWu2FpiLuxf4rtz3u2yuL20kNhn8NiuEowOrhBvb9TYNF0Q8bmGnev83IRD3DoXeRJP
+	iSskKH+J4T73GO4jH8YHLVp595AzbOOVUBh2h1ukdE1e8F9UeWFL9FxnrrsgJQct5yDqjP4Jh/+
+	dVcbxKuUIhK59cw0olVpDOnVvN/r7pwmToxOMIlw+fWrm2Mo7o2jqc15QdtwyZ/1zdrGApQS4R0
+	Sx0++6tvCIjHDZpUp0A5V3nnfBiuLMnSyip4U5oIG1IzZCllhh8S4t3X5qMw1zABGOXyKPPItGv
+	+h2v0p2zBgXdixtaTkT1qc43H2enE38b/LzKA2+CtL2MZ0qCWylkKuS7EMETXaUM4mxjD2I4Jb+
+	S3VQac=
+X-Received: by 2002:a05:6214:6011:b0:8fd:6de3:bbaa with SMTP id 6a1803df08f44-8fd6de3be6emr28372996d6.64.1783441563961;
+        Tue, 07 Jul 2026 09:26:03 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f46f306123sm181382626d6.20.2026.07.07.09.26.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2026 09:26:03 -0700 (PDT)
+Date: Tue, 7 Jul 2026 12:25:58 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Simon Schuster <schuster.simon@siemens-energy.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Dan Williams <djbw@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Hugh Dickins <hughd@google.com>,
+	Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-mm@kvack.org, iommu@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>,
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+	Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 11/30] mm/vma: introduce and use vmg_pages(), vmg_[start,
+ end]_pgoff()
+Message-ID: <ak0olp9zA6ERCXtO@gourry-fedora-PF4VCD3F>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <f7b4f8a611ab4d36eb3cf2e394610a3744a93895.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 Jul 2026 12:08:38 -0400
-Message-Id: <DJSGWFQ1Z86C.214O720ENTA1D@etsalapatis.com>
-Cc: <netdev@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <ncardwell@google.com>, <kuniyu@google.com>, <rostedt@goodmis.org>,
- <mhiramat@kernel.org>, <davem@davemloft.net>, <kuba@kernel.org>,
- <pabeni@redhat.com>
-Subject: Re: [PATCH net-next] net/tcp: Add explicit tracepoint for
- tcp_syn_ack_timeout()
-From: "Emil Tsalapatis" <emil@etsalapatis.com>
-To: "Eric Dumazet" <edumazet@google.com>, "Emil Tsalapatis"
- <emil@etsalapatis.com>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260707010151.43976-1-emil@etsalapatis.com>
- <CANn89iL23Rsu3iGXxhw4pAnCB-JgU7fnrryDLXKj4jHqSs=HOw@mail.gmail.com>
-In-Reply-To: <CANn89iL23Rsu3iGXxhw4pAnCB-JgU7fnrryDLXKj4jHqSs=HOw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7b4f8a611ab4d36eb3cf2e394610a3744a93895.1782735110.git.ljs@kernel.org>
 
-On Tue Jul 7, 2026 at 3:52 AM EDT, Eric Dumazet wrote:
-> On Mon, Jul 6, 2026 at 6:01=E2=80=AFPM Emil Tsalapatis <emil@etsalapatis.=
-com> wrote:
->>
->> Clang can inline the tcp_syn_ack_timeout() function during compilation,
->> making it impossible to use kprobes for tracing without preventing
->> inlining. Add an explicit tracepoint to it instead.
->
-> So much copy/pasting for a very small issue :/
->
->>
->> Signed-off-by: Emil Tsalapatis <emil@etsalapatis.com>
->> ---
->>  include/trace/events/tcp.h | 72 ++++++++++++++++++++++++++++++++++++++
->>  net/ipv4/tcp_timer.c       |  3 ++
->>  2 files changed, 75 insertions(+)
->>
->
-> tcp_syn_ack_timeout() is hardly a fast path, so you can instead:
->
-> diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
-> index 322db13333c7..ab2c3de19e46 100644
-> --- a/net/ipv4/tcp_timer.c
-> +++ b/net/ipv4/tcp_timer.c
-> @@ -748,7 +748,7 @@ static void tcp_write_timer(struct timer_list *t)
->         sock_put(sk);
->  }
->
-> -void tcp_syn_ack_timeout(const struct request_sock *req)
-> +noinline_for_tracing void tcp_syn_ack_timeout(const struct request_sock =
-*req)
->  {
->         struct net *net =3D read_pnet(&inet_rsk(req)->ireq_net);
+On Mon, Jun 29, 2026 at 01:23:22PM +0100, Lorenzo Stoakes wrote:
+> In the VMA logic we often need to determine the number of pages in the
+> specified merge range, as well as the start and end page offsets of that
+> range.
+> 
+> Introduce and use helpers for these purposes.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-Sounds good, I will respin and just mark it noinline.
+Reviewed-by: Gregory Price <gourry@gourry.net>
