@@ -1,281 +1,185 @@
-Received: from mail-pz2-f0.google.com (mail-pz2-f0.google.com [74.125.228.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4082EEE75
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 13:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.0
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A014D29AB1A;
+	Tue,  7 Jul 2026 13:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783429233; cv=none; b=VrqH5G/KJHO4w2tliUnEnigR3Ge2GKr6pG1TcxXQQ6SSHdS064ojizyixLN2bDECQ+lqLR0Aqk0RbvW9QEhOGnEuK4DXk/SXWt0hm6idxIk3u31ZxJlP/t7sdgBiA1gu3GcNf49MmLmWoIHwKT53/uhR84kaTj9a0JXQh3sr67o=
+	t=1783430262; cv=none; b=vBJbHSafsSBF1/06OXZco9kcRhXPRurW7106xf6cIRS8PzHvDPW8c4rp/9KZIYZ93MWp62+uQHtP595Cc7KJhrVzbVnI6rv4BIQ/l8U8GmCL5SyEs3VL4S5N2q9N+V/Ux4fgH93SV013e2i4l/bcC6PM5XsbfGtI98U0UXvdzsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783429233; c=relaxed/simple;
-	bh=RvXzUh+Z5rLxburgzcvo+g9ZGozfoPunlEYEQZcFbHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l1qIgQR2f9xY69x2BYZm8kpx7qbIv6EyfUAZuZo3f68JMcjkU1maRI60DQpgLmafSByswk+YjBLM/SzCae67hqPdbZbFmeIiAvTsWONgvSrOzWO2rfM1J6A3PEhVApblda6gi5o1AHZ8RrDp+9VU36c1xrKMj3gyiU/qCdgXE4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/MXcVGo; arc=none smtp.client-ip=74.125.228.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783430262; c=relaxed/simple;
+	bh=c4sgJIlp41KnfkxKX5Y8adETb3Yp/G6tgwZ1bFzMLxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cLfdbXVhWlqOg+ARHUd0tHKhI2cuDE17QRalXuNfMa904eauUAtMqR9cdGe8HnnF3rTm3fMcKdILkEA5C2iL0/K1q0tD411lVEm6hp9ew5yWdhLK/GfeXE5UpqO0OueeyN5CbQU2n/pqBhAkqqNvR9CdpbPhBYNFPRm6as6oaag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IDNSpqSx; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/MXcVGo"
-Received: by mail-pz2-f0.google.com with SMTP id 41be03b00d2f7-c9a20e73d7cso1331036a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 06:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783429232; x=1784034032; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5W5DUkb1JUBfDdw5NFLWUB/50kxa7q0vorvfnztH0I4=;
-        b=R/MXcVGovvHJ1FQtgUZyl77G4rx3dRgmO9eqWDl/DtoFC8heKGDf98n7fhQHF2osIi
-         HcqsTdfIlZg3AmgMW8ou8/IgzOXNvkt8ewSyK1k35MeTxNagjDiSpaqwcUCOVgtedY0E
-         CxF9fFw3FS00ffbnoHKe1c60FIykgWhoHw/ULe7pHGNpOABTO6585dBeyhsMymYJfM8S
-         LL37JlaWYmV7+rjY54AoTuvKqojoP6BEtBptUQBiUp42jIclQPFoOgy2o8AMPBtTYjCB
-         j2RB2XlrxUbqed93AICy33rqn0/bpJ0oVRiSMNKN1lpjaPQRe7KoJuiVOMv8b+ne/vF5
-         k0aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783429232; x=1784034032;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5W5DUkb1JUBfDdw5NFLWUB/50kxa7q0vorvfnztH0I4=;
-        b=ibpJv805VEOqr55L3+nw5Tt2khGGmaCueymm6kQQvpDQhl+GiI4GImhiL2fEFotfCD
-         VDd8F1SX5Pm7t2I73JJaGfICuxqhdR8mrN01hZt/fXBc/FaP7n3gprcUHx0SlRzp1o8v
-         KrCWwPcn0DUg3X99NHPQmNBPV6uk9SeV8qJrm5d9N7IXupuwOMUd+3vcilYbt2DOasob
-         9frYbkSx4l8oGZZc8bYHYzxufGgUhCXMp7Nc3r/sXg1gw73H/b0+xvEdLuhkbqKc2Ds4
-         /b53QE9ZLPA0gXUgwL3KEcVjcsCr8cSp2MFSoNqUFpB39tTbvRRg6wvKsFV7LXxMCdUU
-         r9aA==
-X-Forwarded-Encrypted: i=1; AHgh+RodjnK+bDyqSaQxKTyme8RoGhCYWzRGxPZKwgONIVb3Ss9N6G0Vw+vAwhhneYKFJHE7qfQSN13qsH4l99Nqo32dlQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGgJYiT+DZiwu0+8VTkIvC8eoVu02zeI0NamcmwZdopJI6PtVi
-	Vtq+5oAFUDH9UOBQhjkXxvK26fk1BgvXw6eydjqZDrJG50BlcQh27D1f
-X-Gm-Gg: AfdE7ckuHaDpO+oaIhCPqth1bjExNK84bunMNHMsrCnychQHMKYWwz8oL4nsyawf+HN
-	2c7fv4k9lcqDNznnkoAHuAmf+WRyDdnfIHjvE8wJFD7wK208QWid2S2rSNxxFAfcKDwAXoeptlK
-	469OZ2sSmTKRhSM3Ufplefpx1vAOwYULEaroKNKHcvqOciv2k0YAfodR4ZqSxGp9QOum7PrKRx8
-	XjpQrA9dNlShw/CjhAzCA6UsOYTZBKYMyjS9bVZXX0dVrtf7ca1EoXMqmQJtcLGbM1nm/SLRkj3
-	UsBQphbXRSGI95LDZWvp+a/B/Fy6mipZ6ftjzNHsa06Hmw52A4MU5RrfoIParUNrIrhP4wT2wtU
-	0itxgYJXqM833GWtMg3z0jHvtTG0QC4Gt96Qtt9el9788PjZ0ZzaaElkRxa0jEP/RP0rTij/fPc
-	IM/HN9179YutTN6KHD/Ue4xUyMiA==
-X-Received: by 2002:a05:6a00:1819:b0:847:8b1d:22fe with SMTP id d2e1a72fcca58-84826df12a7mr4541501b3a.50.1783429231350;
-        Tue, 07 Jul 2026 06:00:31 -0700 (PDT)
-Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6b5e566sm5415983b3a.3.2026.07.07.06.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 06:00:30 -0700 (PDT)
-From: Wandun Chen <chenwandun1@gmail.com>
-To: vbabka@kernel.org,
-	david@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	Alexander.Krabler@kuka.com,
-	hughd@google.com,
-	fvdl@google.com,
-	bigeasy@linutronix.de,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: akpm@linux-foundation.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	jackmanb@google.com,
-	hannes@cmpxchg.org,
-	ziy@nvidia.com,
-	ljs@kernel.org,
-	riel@surriel.com,
-	liam@infradead.org,
-	harry@kernel.org,
-	jannh@google.com,
-	lance.yang@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	pfalcato@suse.de
-Subject: [PATCH v2 4/4] mm/mlock: migrate folios out of CMA when mlocking a range
-Date: Tue,  7 Jul 2026 20:59:25 +0800
-Message-ID: <20260707125925.3725177-5-chenwandun1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260707125925.3725177-1-chenwandun1@gmail.com>
-References: <20260707125925.3725177-1-chenwandun1@gmail.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IDNSpqSx"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F2AF1BCA;
+	Tue,  7 Jul 2026 06:17:35 -0700 (PDT)
+Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 555EE3F85F;
+	Tue,  7 Jul 2026 06:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783430259; bh=c4sgJIlp41KnfkxKX5Y8adETb3Yp/G6tgwZ1bFzMLxo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IDNSpqSxtFtaWJyxD6ND7bhZDzkCBdR/qNZC+pDBu9MxOTbdwwuRp2qhdJjRMjzk3
+	 YysGDLtP2ZnjwNvmBVMkMDiNbKNdfL4YoCvHcQ3PS8DF8iP9OT/GQsdjdnsUlDzODm
+	 pVxQUIhnCsc/b3A1PQmyYi7EofZIIfYSBk4wEIKQ=
+Message-ID: <b0a1bdd7-46ab-4025-8775-c9273892444e@arm.com>
+Date: Tue, 7 Jul 2026 14:17:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+To: Will Deacon <will@kernel.org>, Thierry Reding <thierry.reding@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Sowjanya Komatineni <skomatineni@nvidia.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Russell King <linux@armlinux.org.uk>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+ linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+ Chun Ng <chunn@nvidia.com>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck> <akZkuwktaXFTrASP@orome>
+ <akaSJ5D98w2cHqb6@orome> <akftuw9NyRy36fXA@willie-the-truck>
+ <akuvyu1Pq0ZVMZV0@orome> <akzikTrmhMsvkNVY@willie-the-truck>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <akzikTrmhMsvkNVY@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Wandun Chen <chenwandun@lixiang.com>
+On 07/07/2026 12:27 pm, Will Deacon wrote:
+> On Mon, Jul 06, 2026 at 03:49:24PM +0200, Thierry Reding wrote:
+>> On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
+>>> On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
+>>>> On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+>>>>> On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+>>>>>> On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
+>>>>>>> From: Chun Ng <chunn@nvidia.com>
+>>>>>>>
+>>>>>>> Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protection bits
+>>>>>>> on a kernel-linear-map range.
+>>>>>>
+>>>>>> That sounds like a really terrible idea. Why is this necessary and how
+>>>>>> does it interact with things like load_unaligned_zeropad()?
+>>>>>
+>>>>> This is necessary because once the memory controller has walled off the
+>>>>> new memory region the CPU must not access it under any circumstances or
+>>>>> it'll cause the CPU to lock up (I think technically it'll hit an SError
+>>>>> but in practice that just means it'll freeze, as far as I can tell).
+>>>>>
+>>>>> Probably doesn't interact well at all with load_unaligned_zeropad().
+>>>>>
+>>>>>> I think you should unmap the memory from the linear map and memremap()
+>>>>>> it instead.
+>>>>>
+>>>>> Given that the memory can never be accessed by the CPU after the memory
+>>>>> controller locks it down, I don't think we'll even need memremap(). The
+>>>>> only thing we really need is the sg_table we hand out via the DMA BUFs
+>>>>> so that they can be used by device drivers to program their DMA engines
+>>>>> internally.
+>>>>>
+>>>>> Looking through some of the architecture code around this, shouldn't we
+>>>>> simply be using set_memory_encrypted() and set_memory_decrypted() for
+>>>>> this? While they might've been created for slightly other use-cases,
+>>>>> they seem to be doing exactly what we want (i.e. remove the page range
+>>>>> from the linear mapping and flushing it, or restoring the valid bit and
+>>>>> standard permissions, respectively).
+>>>>
+>>>> Ah... I guess we can't do it because we're not in a realm world and so
+>>>> the early checks in __set_memory_enc_dec() would return early and turn
+>>>> it into a no-op.
+>>>>
+>>>> How about if I extract a common helper and provide set_memory_p() and
+>>>> set_memory_np() in terms of those. Those are available on x86 and
+>>>> PowerPC as well, so fairly standard. I suppose at that point we're
+>>>> closer to set_memory_valid().
+>>>
+>>> Why not just call set_direct_map_invalid_noflush() +
+>>> flush_tlb_kernel_range() for each page? We already have APIs for this.
+>>
+>> Having a "standard" helper with a fixed and documented purposed seemed
+>> like a preferable approach for this particular case. We also may want to
+>> make the driver that uses this buildable as a module, in which case we'd
+>> need to export these rather low-level APIs. And then there's also the
+>> fact that we typically call this on a rather large region of memory
+>> (usually something like 512 MiB), so doing it page-by-page is rather
+>> suboptimal.
+>>
+>>> The big challenge I see with any linear map manipulation, however, is
+>>> that it will rely on can_set_direct_map() which likely means you need to
+>>> give up some performance and/or security to make this work. Does memory
+>>> become inaccesible dynamically at runtime? If not, the best bet would
+>>> be to describe it as a carveout in the DT and mark it as "no-map" so
+>>> we avoid mapping it in the first place.
+>>
+>> VPR exists in two modes: static and resizable. For static VPR we do
+>> exactly that: describe it as carveout in DT with no-map and deal with it
+>> accordingly in the driver. Resizable VPR is for device that have small
+>> amounts of RAM. Content-protected video playback will in the worst case
+>> consume around 1.8 GiB of RAM, so we want to be able to reuse for other
+>> purposes when VPR is unused on those devices. In that case, the memory
+>> is also described as a reserved-memory region in DT, but it is marked as
+>> reusable so that it can be managed by CMA.
+>>
+>> The resize operation is fairly slow to begin with because we need to
+>> stall the GPU and put it into reset before the operation, then take it
+>> out of reset and resume it afterwards.
+>>
+>> What kind of performance impact do you expect?
+> 
+> You'll need to measure it, but we've seen reports of double-digit
+> percentage regressions in performance and power. As I said, the problem
+> is that you need to split the linear map to 4k page at runtime to unmap
+> the dynamic carveout, but that isn't something that can be done on most
+> CPUs. Therefore you end up having to use page-granular mappings for the
+> entire thing, similarly to how 'rodata_full' drives can_set_direct_map()
+> and the perf/power hit affects everything.
+> 
+> It's hard to know what to suggest... I wonder if any of the memory
+> hotplug logic could help here?
 
-The region covered by mlock[all] may contain CMA pages. cma_alloc installs
-migration entries in the page table, if a memory access occurs at this
-point, it must wait for the migration to complete, which may cause
-latency spikes on the RT kernels.
+Given the precedent of memblock_mark_nomap(), as long as the reusable 
+reserved-memory regions also get split into distinct memblocks, then it 
+seems like in principle we ought to be able to give them a new 
+MEMBLOCK_PTEMAP (or whatever) flag which could then be picked up in 
+map_mem() without needing to override force_pte_mapping() globally?
 
-Try to move the migration cost into the mlock[all] caller, which is
-typically a setup path. So reduce the chance of latency spikes on RT
-kernels by migrating the currently mapped CMA pages out of CMA region.
-
-Suggested-by: Frank van der Linden <fvdl@google.com>
-Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-Link: https://lore.kernel.org/all/CAPTztWZpnX1j8-7yeppVUsxE=O9hbVeqricDjZt8_pnN7a-kBQ@mail.gmail.com/#t
----
- mm/mlock.c | 119 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 118 insertions(+), 1 deletion(-)
-
-diff --git a/mm/mlock.c b/mm/mlock.c
-index ac65de40b22b..f56c685533f5 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -25,6 +25,7 @@
- #include <linux/memcontrol.h>
- #include <linux/mm_inline.h>
- #include <linux/secretmem.h>
-+#include <linux/migrate.h>
- #include <linux/compaction.h>
- 
- #include "internal.h"
-@@ -428,6 +429,119 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
- 	return 0;
- }
- 
-+#ifdef CONFIG_CMA
-+static int mlock_collect_migratable_pte_range(pmd_t *pmd, unsigned long addr,
-+			unsigned long end, struct mm_walk *walk)
-+{
-+	struct vm_area_struct *vma = walk->vma;
-+	struct list_head *folio_list = walk->private;
-+	spinlock_t *ptl;
-+	pte_t *start_pte, *pte;
-+	pte_t ptent;
-+	struct folio *folio;
-+	unsigned int step = 1;
-+
-+	if (!(vma->vm_flags & VM_LOCKED))
-+		return 0;
-+
-+	ptl = pmd_trans_huge_lock(pmd, vma);
-+	if (ptl) {
-+		if (!pmd_present(*pmd)) {
-+			if (unlikely(softleaf_is_migration(softleaf_from_pmd(*pmd)))) {
-+				spin_unlock(ptl);
-+				pmd_migration_entry_wait(vma->vm_mm, pmd);
-+				walk->action = ACTION_AGAIN;
-+				return 0;
-+			}
-+			goto out;
-+		}
-+		if (is_huge_zero_pmd(*pmd))
-+			goto out;
-+		folio = pmd_folio(*pmd);
-+		if (folio_is_zone_device(folio))
-+			goto out;
-+		if (is_migrate_cma_page(&folio->page))
-+			isolate_folio_to_list(folio, folio_list);
-+		goto out;
-+	}
-+
-+	start_pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-+	if (!start_pte) {
-+		walk->action = ACTION_AGAIN;
-+		return 0;
-+	}
-+
-+	for (pte = start_pte; addr != end; pte += step, addr += step * PAGE_SIZE) {
-+		step = 1;
-+		ptent = ptep_get(pte);
-+		if (!pte_present(ptent)) {
-+			if (unlikely(softleaf_is_migration(softleaf_from_pte(ptent)))) {
-+				pte_unmap_unlock(start_pte, ptl);
-+				migration_entry_wait(vma->vm_mm, pmd, addr);
-+				walk->action = ACTION_AGAIN;
-+				return 0;
-+			}
-+			continue;
-+		}
-+		folio = vm_normal_folio(vma, addr, ptent);
-+		if (!folio || folio_is_zone_device(folio))
-+			continue;
-+		step = folio_mlock_step(folio, pte, addr, end);
-+		if (is_migrate_cma_page(&folio->page))
-+			continue;
-+		isolate_folio_to_list(folio, folio_list);
-+	}
-+	pte_unmap(start_pte);
-+out:
-+	spin_unlock(ptl);
-+	cond_resched();
-+	return 0;
-+}
-+
-+static const struct mm_walk_ops mlock_collect_migratable_ops = {
-+	.pmd_entry	= mlock_collect_migratable_pte_range,
-+	.walk_lock	= PGWALK_RDLOCK,
-+};
-+
-+static void mlock_migrate_cma_range(unsigned long start, unsigned long len)
-+{
-+	struct mm_struct *mm = current->mm;
-+	unsigned long end = start + len;
-+	LIST_HEAD(folio_list);
-+	struct migration_target_control mtc = {
-+		.nid = NUMA_NO_NODE,
-+		.gfp_mask = GFP_HIGHUSER | __GFP_NOWARN,
-+		.reason = MR_SYSCALL,
-+	};
-+
-+	if (compaction_allow_unevictable())
-+		return;
-+
-+	lru_cache_disable();
-+
-+	if (mmap_read_lock_killable(mm))
-+		goto out;
-+
-+	walk_page_range(mm, start, end, &mlock_collect_migratable_ops,
-+			&folio_list);
-+	mmap_read_unlock(mm);
-+
-+	if (list_empty(&folio_list))
-+		goto out;
-+
-+	if (migrate_pages(&folio_list, alloc_migration_target, NULL,
-+			  (unsigned long)&mtc, MIGRATE_SYNC, MR_SYSCALL, NULL))
-+		putback_movable_pages(&folio_list);
-+out:
-+	lru_cache_enable();
-+}
-+#else
-+static inline void mlock_migrate_cma_range(unsigned long start,
-+					   unsigned long len)
-+{
-+}
-+#endif /* CONFIG_CMA */
-+
- /*
-  * mlock_vma_pages_range() - mlock any pages already in the range,
-  *                           or munlock all pages in the range.
-@@ -678,6 +792,7 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
- 	error = __mm_populate(start, len, 0);
- 	if (error)
- 		return __mlock_posix_error_return(error);
-+	mlock_migrate_cma_range(start, len);
- 	return 0;
- }
- 
-@@ -790,8 +905,10 @@ SYSCALL_DEFINE1(mlockall, int, flags)
- 	    capable(CAP_IPC_LOCK))
- 		ret = apply_mlockall_flags(flags);
- 	mmap_write_unlock(current->mm);
--	if (!ret && (flags & MCL_CURRENT))
-+	if (!ret && (flags & MCL_CURRENT)) {
- 		mm_populate(0, TASK_SIZE);
-+		mlock_migrate_cma_range(0, TASK_SIZE);
-+	}
- 
- 	return ret;
- }
--- 
-2.43.0
-
+Cheers,
+Robin.
