@@ -1,63 +1,65 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0B31F7569
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 07:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652E33F1ACF
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 07:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783497472; cv=none; b=fIftzFAHwE2OP8QkK9Lpk5BH1R5ElgX+jzHwQeyCt9wYRmRruYfFg9WDFatQbhzLFBpwyUFPPhmi4qLEAT3bn64PJdcY5sW/gQCDTUBROdltCs+sFqs5HsfkI5kx/j9Dy877dJvnHYDv+JZICl+RypYEmgW387nkv2yk/QYVuGk=
+	t=1783497476; cv=none; b=O2QgP734i90ZaXM5Inxe4qE3odUlEp5pRl/Yf/UM4J7rVyrtmvhHe3VQt/WhOlm0vm829Gz9gMSEPVnt2M50IU5H6nyXlYTWtGAtl7N+LqDqCzR2TuEsOa8sm+Z9oL6f478v1eyAM1ymFJ9OC7XjHBbO0UPZTQaeH/U1y2hcSBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783497472; c=relaxed/simple;
-	bh=qlJ//R+zrN2UCFhuVoeh0f8WSwNtkFs3oJAd94Ej3GA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pZF1+lKvMkiMVuTQFlp8s+ssoFL9uOdud5emvNuvnUgKOp5VsIqDTdhH887RacdZnz9APCFE3gDMC+ZmGnEEdStxTyeDw7MrrqD8O0W1MstSaX7ttJ2B+Nmr0RLAC81SJN4KPEjoxz1eg4k7IcOhRKIK/606GR+e9WobXmgImlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UODt6sRO; arc=none smtp.client-ip=209.85.218.74
+	s=arc-20240116; t=1783497476; c=relaxed/simple;
+	bh=VzCYkNa30Geqvz9sJ1QH8BtffPcQxY2xckFaj8QY4L4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ex0nNybeZMqKDR82ZU5mz6ZdCtEmIAGaIEHGW9f1GKd3YHr/unVvESNbFb0ckd1Is97Xym6H2Uci+c71/FXB5ILvN72F4EOIUvdX3QH/ckFUPx+hwYQxmKjkpuYoXvB+PHR/qfc2mc7u1sYXGjx9aMovt9FGCdFj2u3wfNJolPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RBFeY7wy; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UODt6sRO"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-c15d2ae8d2dso21863866b.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Jul 2026 00:57:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RBFeY7wy"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-698addf0a80so513212a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Jul 2026 00:57:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783497463; x=1784102263; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PxL6rMmvaAb+6E9RAHDZ9xlGXg899687R90+P4Nthl4=;
-        b=UODt6sROhR6NxBHKnj4oqMu555zLwDAIA6xHKVOgmMGdKYfTqYYKKk7h1hBo/LmLfR
-         gYxXqOPMllTnI2oORT2GulCjUEjBCKt2db3K59K4vq2eRx850EUC5sNgWv7fckZy0rLY
-         sbxSwm2l3rvbgBbK0vvTYs/plKmc8ATgD4pfWHizT5ME9iWsD4vpkU3XyZsLkfJ6dWLG
-         azifyFuW5+L8SCm2+kJTe0uWGwz1jzyEAmusCUHbGWIFZcOnyP7SZF9LmAXmrPcgDF4q
-         Xett7TpXsBxjNBoJpHg2HeBqkVgxrcAsVMfK/Kn+PIvIMglLu9ZN110kryLRjQbJfzED
-         DBRA==
+        d=google.com; s=20251104; t=1783497466; x=1784102266; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AKUSCNsamYINaoMMk1AY8FuyMTxoIpvfSaBPJ1kllt0=;
+        b=RBFeY7wygWa7NBoQHRLDSPNlLfySQLEfBzDXY0cmYc0R+M0lixdqUobSW4n3bdpHwF
+         nVXLe9X1HIx2BpDJ8RMyNLIvo2KtAIk8gmF7obEFu83T6uCdUz5m9bvih+RXm7NDIUkW
+         0n0S/5WoFPyWuRLECTlOFmCVNz3rd7G+Xvj1RWHYaluk8Ctnh6/0IunpickdmMB43IC0
+         cApiq5SrDsHt943g0oFBeqdDzYgpTrLVUQnpCSuw5vTPYMvwvoAmNZPM7zxfbN9VpvnX
+         jC77aSjlzBqj+/mSv39AtB+EPOpnMUd31eKIW8QDGZZWVNq4Pw0XmMMOjcHTsQrOivm6
+         DnMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783497463; x=1784102263;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PxL6rMmvaAb+6E9RAHDZ9xlGXg899687R90+P4Nthl4=;
-        b=O2rUiLxHEachkrapqevWAono0qhaibpEsLjF6rJFRXBGRLSYnmuBaRewgeEIFKx2dn
-         SAaYbiNyR/QLyzBQoMNxOqFAI9MMM4dFCAj52OQLV7phqg+kBlSs2yLAKSsNqkfOWdi8
-         pFP9L1Uzvfjly2vBPImelMA0INtCPL7ICDTBaqlWpfmGwvveIQNNFPHqVcUSOmF9VNYb
-         Gx2aeCgrENtH7/22BbDkYrsvCa9Fxw2c9ElnxnW1Pd5kkgAszinK8EQxpMZ1bXOdliwQ
-         mKhFzIbVtlLPnNHIEuSKxhLOIWqtHcbBC2MHDxkGKFcGsDfiZbnVBBLIuJjfVAl3B1xH
-         UH4g==
-X-Forwarded-Encrypted: i=1; AHgh+Rp0Rz5H415+RQ1ferp42HXEpC5ROWdGNOdmYrGW029sJXXGj+dFx0VqS/DniN1Ue+4Cqy6fUxai2kueAKLa65T4oTg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMqSUBhHG5vspD64qkhaivfRX6rspmbr4IUfhzxjT2Sk3osiD4
-	Jvr+7zhjahFLBmm5JAnr/W0vAGxuUNfTmXvzRCZkky1HgrD3yacEakmry+SWXYkjiTfJ8cz3b3p
-	tyt1v9HEJNAEYY6TWQX2RJQ==
-X-Received: from ejie9.prod.google.com ([2002:a17:906:2d49:b0:c12:5e2b:a869])
+        d=1e100.net; s=20251104; t=1783497466; x=1784102266;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AKUSCNsamYINaoMMk1AY8FuyMTxoIpvfSaBPJ1kllt0=;
+        b=ASxzQUtTdC6X6b77AhiX5GuEFnVW1srhytn/21NY5Zu58tzn7CXlSR0bsmtq+kJsvB
+         3ZSvClYtGtell99bHe24CMBCGFOdHDdy9BaLw0IK1x9Ux99zh+XYs6Vjvl4fi+0EQJ3C
+         RyctL/biVZKidnrJoZHaIpNkidG7+dk1kgtj1c4DfidCRsjA5K67t9uYyFk43/mv5dfz
+         8j69F9GS9Ep4Vh3TrAXk6kUcGKnvh2uyilACo/eNKCSR53YrBRqcflizlI6/YXryNuQo
+         m1jA4+CNy2kSy/7Slv27u/RB0ihtUlJyo9MYB4CdHObPj1KxbPA6XAAkP6dyeQkdUGWi
+         SGLA==
+X-Forwarded-Encrypted: i=1; AHgh+Rq4iytXSQChyjvWdaIXLVYfa7+/6VJv/bo2LpMl5awOoi1a+owuCM84oIc30XUbEuDq6ZyF8zPP0zwEkhSbij0CPnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU7z8VYJA9Q05ZggDZR97xozzgWuIxXRYAJ4Ei5t7QZGUhyKZj
+	qEJxlWEULOFlHQxIyfO3OKN2pnovX7XeIzUe2W0j1Ok8DkTFRNXrFv+H5TxXgW3bC4VusEFcpaP
+	gc8PaET/jiUNENz74CDmRsA==
+X-Received: from edro11.prod.google.com ([2002:aa7:d3cb:0:b0:698:aaa3:b77d])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:906:1b56:b0:c12:6c2e:ae9 with SMTP id a640c23a62f3a-c15ce014ec3mr43200266b.22.1783497463092;
- Wed, 08 Jul 2026 00:57:43 -0700 (PDT)
-Date: Wed,  8 Jul 2026 08:54:31 +0100
+ 2002:a05:6402:4305:b0:698:585c:f07b with SMTP id 4fb4d7f45d1cf-69ab44634e8mr540676a12.3.1783497466019;
+ Wed, 08 Jul 2026 00:57:46 -0700 (PDT)
+Date: Wed,  8 Jul 2026 08:54:33 +0100
+In-Reply-To: <20260708075435.47419-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260708075435.47419-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260708075435.47419-1-vdonnefort@google.com>
-Subject: [PATCH v2 0/4] trace_hyp_printk() for pKVM/nVHE hypervisor
+Message-ID: <20260708075435.47419-3-vdonnefort@google.com>
+Subject: [PATCH v2 2/4] KVM: arm64: Move kvm_define_hypevents.h to arch/arm64/kvm/
 From: Vincent Donnefort <vdonnefort@google.com>
 To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
 	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
@@ -67,63 +69,33 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	linux-trace-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+kvm_define_hypevents.h is used to define the kernel-side structures for
+hypervisor events. It doesn't need to be used anywhere else than in
+hyp_trace.c.
 
-This series adds a hypervisor event "hyp_printk" which enables
-developers to log pretty much anything into the hypervisor tracing
-buffer, just like the kernel function trace_printk().
+Rename and move it to arch/arm64/kvm/
 
-This enables rich logging from the hypervisor, while leaving all the
-string parsing burden to the kernel. This has been the main way of
-debugging pKVM in Android.
+Reviewed-by: Fuad Tabba <tabba@google.com>
+Tested-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Even though not strictly related to trace_hyp_printk, I have added the
-following two patches:
-
-  * KVM: arm64: Allow early calls to pKVM host_share/unshare_hyp
-
-    This one mainly intends to support one of the new features I have
-    posted here [1], which allows to enable tracing as early as
-    possible. I have added it here to limit cross-posting.
-
-  * KVM: arm64: Move kvm_define_hypevents.h to arch/arm64/kvm/
-
-    This one is just a cleanup.
-
-[1] https://lore.kernel.org/all/20260605163825.1762953-1-vdonnefort@google.com/
-
-Changelog:
-
-v2:
-  - Collect Fuad's tags
-  - Rebase on 7.2-rc2
-  - Warn when trace_hyp_printk callsites are exhausted (Fuad)
-
-v1 (https://lore.kernel.org/all/20260612142245.1015744-1-vdonnefort@google.com/)
-
-Vincent Donnefort (4):
-  KVM: arm64: Allow early calls to pKVM host_share/unshare_hyp
-  KVM: arm64: Move kvm_define_hypevents.h to arch/arm64/kvm/
-  tracing/remotes: Add REMOTE_EVENT_CUSTOM_PRINTK() helper
-  KVM: arm64: Add hyp_printk event to nVHE/pKVM hyp
-
- arch/arm64/include/asm/kvm_asm.h              |  4 +-
- arch/arm64/include/asm/kvm_hypevents.h        | 14 ++++
- arch/arm64/include/asm/kvm_hyptrace.h         |  8 +++
- arch/arm64/kernel/image-vars.h                |  1 +
- arch/arm64/kernel/vmlinux.lds.S               |  4 ++
- .../define_hypevents.h}                       |  0
- .../kvm/hyp/include/nvhe/define_events.h      |  2 -
- arch/arm64/kvm/hyp/include/nvhe/trace.h       | 65 +++++++++++++++++++
- arch/arm64/kvm/hyp/nvhe/events.c              |  6 ++
- arch/arm64/kvm/hyp/nvhe/hyp-main.c            |  2 +-
- arch/arm64/kvm/hyp_trace.c                    | 63 +++++++++++++++++-
- include/trace/define_remote_events.h          | 19 +++++-
- 12 files changed, 179 insertions(+), 9 deletions(-)
- rename arch/arm64/{include/asm/kvm_define_hypevents.h => kvm/define_hypevents.h} (100%)
-
-
-base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+diff --git a/arch/arm64/include/asm/kvm_define_hypevents.h b/arch/arm64/kvm/define_hypevents.h
+similarity index 100%
+rename from arch/arm64/include/asm/kvm_define_hypevents.h
+rename to arch/arm64/kvm/define_hypevents.h
+diff --git a/arch/arm64/kvm/hyp_trace.c b/arch/arm64/kvm/hyp_trace.c
+index 2411b4c32932..0c7349fe006a 100644
+--- a/arch/arm64/kvm/hyp_trace.c
++++ b/arch/arm64/kvm/hyp_trace.c
+@@ -391,7 +391,7 @@ static struct trace_remote_callbacks trace_remote_callbacks = {
+ 
+ static const char *__hyp_enter_exit_reason_str(u8 reason);
+ 
+-#include <asm/kvm_define_hypevents.h>
++#include "define_hypevents.h"
+ 
+ static const char *__hyp_enter_exit_reason_str(u8 reason)
+ {
 -- 
 2.55.0.795.g602f6c329a-goog
 
