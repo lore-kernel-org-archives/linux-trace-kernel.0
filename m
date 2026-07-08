@@ -1,220 +1,276 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022091.outbound.protection.outlook.com [40.107.75.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774C942E00D;
-	Wed,  8 Jul 2026 11:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783511994; cv=none; b=kEpe2214sZoxNBUTY43JUfCK2rUOm8rAqK0oUEj1ltdrYfk+3IGsCO/ngClNEcY8zwkvXdNg2O+RGAOw1r5y4K0y8Yv+ntE3+pMAU3mKhwcKs4fh701yTkJGAw9z+901XRIK7jOWRwaeqIjAFrHjIbf0fgX9v1FVOQqc1JVMV3g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783511994; c=relaxed/simple;
-	bh=a6WG+kQe6kDv68M8SKegLG5uBcuIQ8EBZBXr26WEF9E=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tQ08/4usfympP89yXUpI6lrwa2Fucl3WaGyi4N4AD9fwyBK2Q5gIkfBdhJ9u7iCqyse8Mxo17+yYdZ6CwnaYxGY4ez3Mb+riAMBRcFdcXsO4bQxHcvQHVypJlIlKzvb0Q8WKsD0LWK0cADNTmuXlljSJ9m4fL3Np6Naiqittmn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMUxbtXk; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BEC426EAE;
+	Wed,  8 Jul 2026 12:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783512770; cv=fail; b=A5RGXjHlihUDM3jSnKcfkSasef2z4MrjhO5xbkOrDRdeA3oHDoWGhbOtKqLto55xN+/lq/ahB9qDVBL7kO2SaO148quY3K++EdNMB/EmqbjRcWMk/yF8YbZP/sthdMD2rqP8+Yg0uIk+EuLYtXiGDzSqc+LltVtKFlfmKLfOoqo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783512770; c=relaxed/simple;
+	bh=MsLx+QG2lKDi/n/kr065vNLkVMfEbF7pAESuHMlFfS0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NEp+w6twfiOoX7v7W6WqsoDnZxdx19vQTRxDvwf85dJYKd2dtBW8PvzucUv6q0N2iTL00GKSmwIJE0QVLh5bhKpKf3HiMNyRCCjDc5jl/ChEsTLoTIYRZf2aGfcadikPvzjDSrSqUltJgeqstPTJwQ0KZhRZHQ+eKIEsyvYAWUU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=HV97d2j6; arc=fail smtp.client-ip=40.107.75.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMUxbtXk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8775A1F000E9;
-	Wed,  8 Jul 2026 11:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783511993;
-	bh=SjYX5JDUJ3OuVa6TYMKH9yZVpovHAlUp4/LPh7CQQoI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=jMUxbtXkzuWyjEopqq8rBRhapg+vkMaB+UQ9CWLLzO5JBI+hkHuVMMuirf533S7ES
-	 pL0WBC/DY+E9S3JduF4d8AavabUwq5d1ea72n8q9282RelKY/RSiL4yI7qZ0HeHdX3
-	 dLQ4QhB8bM+qpkR5oIwntdWVMWoTgyTbSDk7TIw+De3FddQyGN6egGsvTHDqUnVV+r
-	 gJwCvT87whNT/V/KjHi/49S5zM1lPhvywv9BlrS9smK/rSTX8T4bJMtQRW5Rman9AU
-	 jYAAS7G6yNYFAWmsMMfyc80j5i4JkcXgaqsxk+SaXWcFWihDTtRCIYhtLpbqhRbw4l
-	 ZORJI1NqTPfSg==
-Date: Wed, 8 Jul 2026 20:59:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Hongyan Xia <hongyan.xia@transsion.com>
-Cc: Pu Hu <hupu@transsion.com>, "ada.coupriediaz@arm.com"
- <ada.coupriediaz@arm.com>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "davem@davemloft.net" <davem@davemloft.net>,
- Jiazi Li <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
- <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
- "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
-Subject: Re: [RFC 1/3] arm64: kprobes: Do not handle non-XOL faults as
- kprobe faults
-Message-Id: <20260708205947.4af54d7638f115e915e9c7ee@kernel.org>
-In-Reply-To: <c33043c2-f931-4687-ad16-2d60ab12faca@transsion.com>
+	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="HV97d2j6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c24cyWUnAQpFsRiKyD/Dm3oE3G5BoiMrWSzETdvv16aeX74QKF1nkleDU/l/gGGzNvjoYjPin5raDM2OhpQfycy//vj4ek1KfE8WAjdhL6YSJqGls4p12D9mznKQsZ/vZMRrB66PzG/WgPxAO8iRzqud/N9/rlOYCDA5Mmd7gYp80M4uJAGGb9dRbsgyxnhsfme8uD95LApgeiK6gcd01N6OHz8ju3SYuuiA13QUfmj2MqlVAwfwj00NTCe82JsEoXY9AG4qZCtJuRGOrM4nWojbN6k8GUnNKcDFWPcR3WzENJNGnVp5uReHqRy6040yb6jRIr+REv2oUigLs3/IbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MsLx+QG2lKDi/n/kr065vNLkVMfEbF7pAESuHMlFfS0=;
+ b=WijTuVWdM7nOS8xoOEGWm8pzOhZvijdRntN/3naiCy/9BoQ/cQ98e01/EN0Uyhis6twcytwB4XdMUzxB5wDPzlmlmmRuCq1o9zPUR0BWXrisui5B1V75qRk56Hw0AjIEBypwtrocv6qgxktFIe/lySU/jKu8pDx7ejdiF05OzmqKWKQwwPAn++32aPBy988H3AQANttocb7Lf7oN5DXEEpT+NrCnY9YlDKjts3CNOyIThpZ49TPL5AoixOLFGcFWJG+gclWM2zlNTKWNO6oC4Rbhz2zNdGPFVSuFmYzn2Y5sJxiJwGEZJs4tr+lGL6bKKDCGOqgHoKlBSeGwYFdJTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=transsion.com; dmarc=pass action=none
+ header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MsLx+QG2lKDi/n/kr065vNLkVMfEbF7pAESuHMlFfS0=;
+ b=HV97d2j63pVqlSBHuUWrVZUX2+rd9PeBBybVgTgdEwSlD1g4N9BMLkWVe/wP//8NewMt6DRXUjKhxqqISaC5XVI82gKtr1nyhyiRBmnmYCwDzDXn1HOOi5JFjlw5M7CWBS/BS/O6pxCuFi8DVlu1KquZlkXBBrV71F/oeOsCJJM=
+Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
+ (2603:1096:820:c7::13) by TY2PPF9E02B10FE.apcprd04.prod.outlook.com
+ (2603:1096:408::ae4) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.13; Wed, 8 Jul
+ 2026 12:12:44 +0000
+Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
+ ([fe80::f2ee:1e28:9022:99f3]) by KL1PR0401MB6196.apcprd04.prod.outlook.com
+ ([fe80::f2ee:1e28:9022:99f3%3]) with mapi id 15.21.0181.010; Wed, 8 Jul 2026
+ 12:12:44 +0000
+From: Hongyan Xia <hongyan.xia@transsion.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+CC: Pu Hu <hupu@transsion.com>, "ada.coupriediaz@arm.com"
+	<ada.coupriediaz@arm.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, Jiazi
+ Li <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+	<linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
+	<naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
+Subject: Re: [RFC 1/3] arm64: kprobes: Do not handle non-XOL faults as kprobe
+ faults
+Thread-Topic: [RFC 1/3] arm64: kprobes: Do not handle non-XOL faults as kprobe
+ faults
+Thread-Index:
+ AQHdDSKWeYDuD+6wREWe1V8CS7jw5rZizCCAgABW2gCAAB1iAIAAFDgAgAAzsoCAAAORgA==
+Date: Wed, 8 Jul 2026 12:12:43 +0000
+Message-ID: <89a5b9a3-0bdf-4781-bfc3-9f6fe88e070d@transsion.com>
 References: <20260704234730.46d51c47d75e7d208e7bec9f@kernel.org>
-	<20260706083636.159883-1-hupu@transsion.com>
-	<20260706083636.159883-2-hupu@transsion.com>
-	<20260708094623.9a1d40bed37bce3c7969ad20@kernel.org>
-	<8cc07468-804e-4ee1-acad-77bc99af74c6@transsion.com>
-	<20260708164224.c080a1e834f02ac953007e5c@kernel.org>
-	<c33043c2-f931-4687-ad16-2d60ab12faca@transsion.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20260706083636.159883-1-hupu@transsion.com>
+ <20260706083636.159883-2-hupu@transsion.com>
+ <20260708094623.9a1d40bed37bce3c7969ad20@kernel.org>
+ <8cc07468-804e-4ee1-acad-77bc99af74c6@transsion.com>
+ <20260708164224.c080a1e834f02ac953007e5c@kernel.org>
+ <c33043c2-f931-4687-ad16-2d60ab12faca@transsion.com>
+ <20260708205947.4af54d7638f115e915e9c7ee@kernel.org>
+In-Reply-To: <20260708205947.4af54d7638f115e915e9c7ee@kernel.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=transsion.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: KL1PR0401MB6196:EE_|TY2PPF9E02B10FE:EE_
+x-ms-office365-filtering-correlation-id: 1707b891-5e87-4817-cd53-08dedcea372a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|23010399003|366016|7416014|376014|38070700021|22082099003|18002099003|4133799003|56012099006|6133799003|3023799007|11063799006|5023799004|4143699003;
+x-microsoft-antispam-message-info:
+ evS1ht7IzYgtySBOF+zm73X+ADE36xySOuwN5MFizddnIHl6x5G92EfqvHtOPf02OuzeMtpk7YFVvt4o7YWQogW9W7TZLxFdy3NiMqkeNSEzzCXHZn3ZXtKctFGIwU+kmWLrwl6I5E7HIKjzr59tpwP68Uz1gVNtcmr/E/1GcPyiyC2ARZL6iWS1UXdfpZ6HgByMZAnHh0ZIyLxGnLeF6rgE60KPN4tYiwJce9gigMNcPGOvjzhKgPg73HCgLoTs3uFrgVW/9bPrTSYEJDe2WgTAr+VdAWzj1aQpeqWA6mXzHt8R93kFA4OMXtcBSiccut6o/ify5tUJUICm5FrbYH6o99KEFkABHQPgQu1aMjjPVIM7uoqG1aOyvt58zKDOISr/ldxf+Y6LhUKnQ++nAOXqzSG0O8UARQt+qeGlhLbDFNYOd0ttlDLzSgYJFTHPuhHX9k235aYThwpFIy0VPaR02APuAzUEVtoibvIE9N0H/aBYD6vya/QOxHlHKYIgS6UB5lFYz6Qf75Lz8b1oaMwCbKBNBseecUo706m20HrG6bzjbzXutPv8qeFENAUJvoz5jNaPXCpgLEzX/Rp7Jsu5pdrrU1y5exIHG1/mbVp5cOCOzZWlN20UjbwPpdpogWL4XT9kl1ydrW0Hn2C8h/LYEUSgID8VtheCkzn4cS8=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0401MB6196.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(7416014)(376014)(38070700021)(22082099003)(18002099003)(4133799003)(56012099006)(6133799003)(3023799007)(11063799006)(5023799004)(4143699003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?VjZFY0F5OTVlTFVZQkMyY01OSi9xVHE3M0VmYWZGa0Z0KzhTbXpOcHc2Y0M4?=
+ =?utf-8?B?R1dreGRlb1R0TXFFWi9TWjZyTWVXS2drS0hrcHQvaVpESUZZTXBCYmVNNHVK?=
+ =?utf-8?B?cWgrajNLY1pwbXIwS016anBmejR1L2Nlcm1oaVFRclBTT0JHcWpsWFBQdDdz?=
+ =?utf-8?B?RFZsMXlWTjFCa1FpQ3BTckhGS1lRZndTMllzQXU0dlJYMjhNU0tuRUhKdlVW?=
+ =?utf-8?B?R3FDaE9qMDdPVEVicmVXdG9LMENUNXNzUmovcFVoQU4rNkw5ZUhraTZNMkIw?=
+ =?utf-8?B?ejgwQzZIVVdwWCtXalhNdUpLUUpHa3RMUUVNcHoyTmp2N3lkbTRXem5ZaDJG?=
+ =?utf-8?B?K0VYQjlRNkNZR1NHN2pWQWY5TUp6bGVXakcyU0tTQmRYZHFRaUsrSE41N2Jh?=
+ =?utf-8?B?Q3lLVkpBbWtKZU9OZDY0dS9qUGVTeXJDVXBJc285bFVyb3o3cFBpMVhuWWtq?=
+ =?utf-8?B?cXdVbzlHL1hJOEtJaG5PUkNueEFEN2tJWVZvSWxVZlE2V1J6OUtwU3ljOHUx?=
+ =?utf-8?B?L1k2aUFaSkRYcHNEcmNJTU82YXYzWnlXRGFvN05xS2owYzlqcnBVcDZSUXJZ?=
+ =?utf-8?B?UHZKK242NWExY0VOVFVYKys1ci90K0tPeGNDZVZKTjdxd0xGY05XSjdFbUJw?=
+ =?utf-8?B?cHp6cStLVHhTck9ZNU5OclQwSEdocDZaNFFEYjBnSnBTaWhKaHlIK0pVVHFt?=
+ =?utf-8?B?NVc3ZWMrOVNacWlZRk5nTE5mcXdmbm9MeHBEY2hQQnkrdDVxVko1VlZ5anEw?=
+ =?utf-8?B?N1ROczBRM3N4N2N1ZU9qQzJDVjFvQmNXdFVncEtXeVlGMS9UbVQyV1d3TzBl?=
+ =?utf-8?B?N0VWdTV6WWpmalZublZSQTNPN1BubytoTzF0YzF2YUUxS1o5OFJ5dVNGcW82?=
+ =?utf-8?B?cGdCQWcvMmJHQzV2Tnl6VkNsMFBGelZOaUVpTWhXUC9OdkdUTGt1aFVVaUxQ?=
+ =?utf-8?B?bmFtVkt0Z0VvSDRZTDRidVFvbXYxOVBQQU05TWJXcmtJYTdJd3VrUVhHOXRz?=
+ =?utf-8?B?VC80c3R2S3hEc1BVSndQS1h2VFpFb0VwNXVFK0o3TXhLVldxTzM2MjlhTFJ4?=
+ =?utf-8?B?c2dLMDkzWkMrcmRDRmdtRVRNZk4xZmthU2gyVHRja01USDRZRkNvdzY0YXZN?=
+ =?utf-8?B?S0JIOXpKLzBGV0FlaDZsTFdXYy9kQVVuQXZ3Um9BeWsyK3V4MUtaek9FaVJE?=
+ =?utf-8?B?NVVCeHAzRFh6R2NjUmQzNlcrT1JmWWd0VXhjemZpRnhWTHhCZkdOTWdYUHQv?=
+ =?utf-8?B?Y0l1R3J5eXV0YW9SMkZuRnRFcW9DUmFPZXBrQnQrcCtHRTQwemJOdzRsM212?=
+ =?utf-8?B?aEhxazlGNW1Hc0dHVUhyNmlpMjJMaGZaelhQdFZIQTYreEJvSUdvV2l3RDRm?=
+ =?utf-8?B?V0hlTml1ZDdzSFpoU0I1WFQ4Z1RNcGJ0UnpTMUhaOUpSNS9sSEtHMXVLaHBh?=
+ =?utf-8?B?RkcxbXlzeTZyckV5LzY1QXJadDJWbTBYOGRPTG1ObWREU0ZWMi9QZi90c2NZ?=
+ =?utf-8?B?dG94a2FSSnNzRC9kbGVrUm9sc3ZLeTJoNG12M1NITU5Ec01wRXFPZzluRFlU?=
+ =?utf-8?B?cUZvWlhiR00reFQzaGljKzNKMHU0SGZ2L0FkV3BJWGdDODBsTk42TmhRU08y?=
+ =?utf-8?B?eHhqTENha2hCUWZuRkpyZnU0NkZVQnl4alRSTVFINW94WERldWg0MzFUWFlQ?=
+ =?utf-8?B?cWtTTm9vUnFyWUxWR0dwOFNaYy9CRWtyV09kVlZ1bHZFTVVmb0VJdDBFSHN1?=
+ =?utf-8?B?YXJjVjU3L1RNcHpPSDJLL1Qydmw1VEl4bnc3ZUc4QTV3VVhQbWUwUUMybWZ4?=
+ =?utf-8?B?cjh0ZjcwRzZHVkJYZERPOE94NC8ybW5zdStQV0Rtc2FSdkdRNWdYeHZ6bDU1?=
+ =?utf-8?B?NEZNWWRyV1FBSmhRdmVoV1h5RG5CV0NVQUhkY1BBY003bGRENk1BSGx6UTRR?=
+ =?utf-8?B?MEpiTzBqTXJnK3BuTExiSGZPS0IyZk4yN0RTZS9FTFRaNTQ2aVhtdGJOeldU?=
+ =?utf-8?B?ZVVpbHFIZEtNQnkrdkY4N3g2dGlxY3BlV3lHZXFMZk1HcERGRUY2SXN2cnFr?=
+ =?utf-8?B?Mm5QNTFvRU1MUW85eU9NVEJ5d2xpT0hROGx3NTkwTkhWQmZmQnJuZDJmandV?=
+ =?utf-8?B?WmN0NW5kMVZMVWwzQWJWTmx3U2doOGR4WFRIUWZIcjE5MG9saFB2MExiUVpt?=
+ =?utf-8?B?cmc3dkFFQnluL3cwYWlVQ1RHU1pNbmtEd1I0cnFtdnBWNDlMRGdRUnNZdFF6?=
+ =?utf-8?B?Y2s5WmMyd2NEY3VKclhVcGNCWTF4ek83dTM1NDFxVHpvdzY2cHJOTWRBcVlM?=
+ =?utf-8?B?T01uRHpkR0crdnlWaUwyTWt6QU80UVl4cW5CeWVqQlVsWUpLOU45bitrZlAw?=
+ =?utf-8?Q?QRv6siWruAGlw4y0=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <50E35FC0C765794E88E5FF4C7A449920@apcprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-OriginatorOrg: transsion.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR0401MB6196.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1707b891-5e87-4817-cd53-08dedcea372a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2026 12:12:43.8636
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CtNfZbI5ngXO5285XaQQR+RNBx/uV3KDad3pzAtMxA01VU5+QTPijuZN5NtldWQvp0QBr0cfxzhkuQneIXfcw3V+7X+H+Z3LkVJR8Y4VpUE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PPF9E02B10FE
 
-On Wed, 8 Jul 2026 08:55:37 +0000
-Hongyan Xia <hongyan.xia@transsion.com> wrote:
-
-> On 7/8/2026 3:42 PM, Masami Hiramatsu wrote:
-> > On Wed, 8 Jul 2026 05:57:24 +0000
-> > Hongyan Xia <hongyan.xia@transsion.com> wrote:
-> >
-> >> Hi Masami,
-> >>
-> >> On 7/8/2026 8:46 AM, Masami Hiramatsu wrote:
-> >>> On Mon, 6 Jul 2026 08:36:48 +0000
-> >>> Pu Hu <hupu@transsion.com> wrote:
-> >>>
-> >>>> From: Pu Hu <hupu@transsion.com>
-> >>>>
-> >>>> kprobe_fault_handler() handles faults taken while kprobes is in
-> >>>> KPROBE_HIT_SS or KPROBE_REENTER state as faults caused by the
-> >>>> single-stepped instruction.
-> >>>>
-> >>>> That assumption is not always true. While a kprobe is preparing or
-> >>>> executing the out-of-line single-step instruction, other code may run
-> >>>> in that window. For example, perf or trace code can be invoked from the
-> >>>> debug exception path and may take a fault of its own. In that case the
-> >>>> fault did not happen on the kprobe XOL instruction, but the kprobe fault
-> >>>> handler may still try to recover it as a kprobe single-step fault.
-> >>>>
-> >>>> This can corrupt the exception recovery flow and leave the real fault to
-> >>>> be handled with a wrong PC. A typical reproducer is running simpleperf
-> >>>> with preemptirq tracepoints and dwarf callchains while a kprobe is
-> >>>> installed on a frequently executed kernel function.
-> >>>>
-> >>>> Fix this by handling faults in KPROBE_HIT_SS/KPROBE_REENTER only when
-> >>>> the faulting PC points at the current kprobe's XOL instruction. Faults
-> >>>> from any other PC are left to the normal fault handling path.
-> >>>>
-> >>>> This follows the same idea as the x86 fix in commit 6381c24cd6d5
-> >>>> ("kprobes/x86: Fix page-fault handling logic").
-> >>>>
-> >>>> Signed-off-by: Pu Hu <hupu@transsion.com>
-> >>>> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> >>>> ---
-> >>>>    arch/arm64/kernel/probes/kprobes.c | 14 ++++++++++++++
-> >>>>    1 file changed, 14 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> >>>> index 43a0361a8bf0..e4d2852ce2fb 100644
-> >>>> --- a/arch/arm64/kernel/probes/kprobes.c
-> >>>> +++ b/arch/arm64/kernel/probes/kprobes.c
-> >>>> @@ -285,6 +285,20 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr)
-> >>>>         switch (kcb->kprobe_status) {
-> >>>>         case KPROBE_HIT_SS:
-> >>>>         case KPROBE_REENTER:
-> >>>> +             /*
-> >>>> +              * A fault taken while a kprobe is single-stepping is not
-> >>>> +              * necessarily caused by the instruction in the XOL slot. For
-> >>>> +              * example, tracing or perf code running in this window may take
-> >>>> +              * an unrelated fault.
-> >>>> +              *
-> >>>> +              * Handle the fault here only when the faulting PC is the XOL
-> >>>> +              * instruction of the current kprobe. Otherwise let the normal
-> >>>> +              * fault handling path deal with it.
-> >>>> +              */
-> >>>> +             if (cur->ainsn.xol_insn &&
-> >>>> +                     instruction_pointer(regs) != (unsigned long)cur->ainsn.xol_insn)
-> >>>> +                     break;
-> >>>
-> >>> Can you check Sashiko's comments[1]?
-> >>>
-> >>> [1] https://sashiko.dev/#/patchset/20260706083636.159883-1-hupu%40transsion.com?part=1
-> >>>
-> >>> It seems that it complains about simulated kprobe's case.
-> >>> In that case, cur->ainsn.xol_insn == NULL. The simulation should be done
-> >>> in the kprobe context (which is a debug trap). I'm not sure the arm64
-> >>> can cause NMI in that context, but if it happens and causes a fault,
-> >>> it may cause a problem.
-> >>>
-> >>> So I think we can just ignore the fault on the simulated kprobes.
-> >>>
-> >>> To ensure that, you can just add:
-> >>>
-> >>>           if (cur && !cur->ainsn.xol_insn)
-> >>>                   return 0;
-> >>>
-> >>> at the entry of this function. (and remove redundant cur->ainsn.xol_insn check)
-> >>
-> >> Right, both cases:
-> >>
-> >> 1. single-step XOL
-> >> 2. simulated
-> >>
-> >> have this problem and this patch fixed 1. 2 remains unchanged.
-> >>
-> >> Ideally we should fix both, but the simulated case seems more
-> >> complicated, and at least we didn't make things worse for 2. So I wonder
-> >> if we can analyze 2 more thoroughly and fix it in a separate patch.
-> >
-> > OK, but basically this fault handler is only for the SS XOL,
-> > not for simulated one (as same as x86). So just skip the
-> > simulated case is enough in this patch.
-> > (Note that x86 also have simulated path, and that is not handled
-> > by the fault handler)
-> 
-> Hmm, what happens if the original PC is a simulated instruction that has
-> a recoverable ex_table entry that handles potential page fault,
-
-That should never happen. BPF trampoline code may populate extable
-entries, but kprobe doesn't. For the simulated instruction, as far
-as I can see, there are 2 operations 
- - simulate_ldr_literal
- - simulate_ldrsw_literal
-will involve the memory access and both are accessing PC-relative
-kernel data, which should be mapped.
-
-load_addr = addr + ldr_displacement(opcode);
-...
-set_x_reg(regs, xn, READ_ONCE(*(u64 *)load_addr));
-
-this directly accessing the memory without using extable.
-
-
-> and this
-> PC also has an attached kprobe?
-
-You meant that putting kprobes in simulate_* functions?
-Those have __kprobes attribute, so kprobe can not probe it.
-(It should use NOKPROBE_SYMBOL...)
-
-> Then the simulated case should be able
-> to enter kprobe_fault_handler()?
-> 
-> .ex_table:
->         insn foo, handler bar
-> 
-> foo:
->         LDR symbol # Load PC-relative. Simulated. Kprobe attached.
->         ret
-> 
-> When foo is called and the kprobe fires, it enters simulated path but
-> then LDR triggers a page fault. It then enters kprobe_fault_handler() to
-> fixup the PC. Then the fixup_exception() of the normal page fault finds
-> the ex_table entry and this case is successfully handled?
-
-To do that, you need to update the simulate_ldr* to use uaccess API
-(_ASM_EXTABLE_UACCESS* macros) AND allow kprobes to probe those functions.
-
-> 
-> Looks like this handler can be entered by simulated instructions? Or
-> this is only theoretical and whoever arrange code like this should be
-> fired immediately?
-
-So the simulated instructions never cause fault, or if it causes a fault
-that means the original code has a bug. (Of course there is room to
-improve the bug message so that it decodes the address probed by kprobe
-when a bug occurs.)
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+T24gNy84LzIwMjYgNzo1OSBQTSwgTWFzYW1pIEhpcmFtYXRzdSB3cm90ZToNCj4gT24gV2VkLCA4
+IEp1bCAyMDI2IDA4OjU1OjM3ICswMDAwDQo+IEhvbmd5YW4gWGlhIDxob25neWFuLnhpYUB0cmFu
+c3Npb24uY29tPiB3cm90ZToNCj4NCj4+IE9uIDcvOC8yMDI2IDM6NDIgUE0sIE1hc2FtaSBIaXJh
+bWF0c3Ugd3JvdGU6DQo+Pj4gT24gV2VkLCA4IEp1bCAyMDI2IDA1OjU3OjI0ICswMDAwDQo+Pj4g
+SG9uZ3lhbiBYaWEgPGhvbmd5YW4ueGlhQHRyYW5zc2lvbi5jb20+IHdyb3RlOg0KPj4+DQo+Pj4+
+IEhpIE1hc2FtaSwNCj4+Pj4NCj4+Pj4gT24gNy84LzIwMjYgODo0NiBBTSwgTWFzYW1pIEhpcmFt
+YXRzdSB3cm90ZToNCj4+Pj4+IE9uIE1vbiwgNiBKdWwgMjAyNiAwODozNjo0OCArMDAwMA0KPj4+
+Pj4gUHUgSHUgPGh1cHVAdHJhbnNzaW9uLmNvbT4gd3JvdGU6DQo+Pj4+Pg0KPj4+Pj4+IEZyb206
+IFB1IEh1IDxodXB1QHRyYW5zc2lvbi5jb20+DQo+Pj4+Pj4NCj4+Pj4+PiBrcHJvYmVfZmF1bHRf
+aGFuZGxlcigpIGhhbmRsZXMgZmF1bHRzIHRha2VuIHdoaWxlIGtwcm9iZXMgaXMgaW4NCj4+Pj4+
+PiBLUFJPQkVfSElUX1NTIG9yIEtQUk9CRV9SRUVOVEVSIHN0YXRlIGFzIGZhdWx0cyBjYXVzZWQg
+YnkgdGhlDQo+Pj4+Pj4gc2luZ2xlLXN0ZXBwZWQgaW5zdHJ1Y3Rpb24uDQo+Pj4+Pj4NCj4+Pj4+
+PiBUaGF0IGFzc3VtcHRpb24gaXMgbm90IGFsd2F5cyB0cnVlLiBXaGlsZSBhIGtwcm9iZSBpcyBw
+cmVwYXJpbmcgb3INCj4+Pj4+PiBleGVjdXRpbmcgdGhlIG91dC1vZi1saW5lIHNpbmdsZS1zdGVw
+IGluc3RydWN0aW9uLCBvdGhlciBjb2RlIG1heSBydW4NCj4+Pj4+PiBpbiB0aGF0IHdpbmRvdy4g
+Rm9yIGV4YW1wbGUsIHBlcmYgb3IgdHJhY2UgY29kZSBjYW4gYmUgaW52b2tlZCBmcm9tIHRoZQ0K
+Pj4+Pj4+IGRlYnVnIGV4Y2VwdGlvbiBwYXRoIGFuZCBtYXkgdGFrZSBhIGZhdWx0IG9mIGl0cyBv
+d24uIEluIHRoYXQgY2FzZSB0aGUNCj4+Pj4+PiBmYXVsdCBkaWQgbm90IGhhcHBlbiBvbiB0aGUg
+a3Byb2JlIFhPTCBpbnN0cnVjdGlvbiwgYnV0IHRoZSBrcHJvYmUgZmF1bHQNCj4+Pj4+PiBoYW5k
+bGVyIG1heSBzdGlsbCB0cnkgdG8gcmVjb3ZlciBpdCBhcyBhIGtwcm9iZSBzaW5nbGUtc3RlcCBm
+YXVsdC4NCj4+Pj4+Pg0KPj4+Pj4+IFRoaXMgY2FuIGNvcnJ1cHQgdGhlIGV4Y2VwdGlvbiByZWNv
+dmVyeSBmbG93IGFuZCBsZWF2ZSB0aGUgcmVhbCBmYXVsdCB0bw0KPj4+Pj4+IGJlIGhhbmRsZWQg
+d2l0aCBhIHdyb25nIFBDLiBBIHR5cGljYWwgcmVwcm9kdWNlciBpcyBydW5uaW5nIHNpbXBsZXBl
+cmYNCj4+Pj4+PiB3aXRoIHByZWVtcHRpcnEgdHJhY2Vwb2ludHMgYW5kIGR3YXJmIGNhbGxjaGFp
+bnMgd2hpbGUgYSBrcHJvYmUgaXMNCj4+Pj4+PiBpbnN0YWxsZWQgb24gYSBmcmVxdWVudGx5IGV4
+ZWN1dGVkIGtlcm5lbCBmdW5jdGlvbi4NCj4+Pj4+Pg0KPj4+Pj4+IEZpeCB0aGlzIGJ5IGhhbmRs
+aW5nIGZhdWx0cyBpbiBLUFJPQkVfSElUX1NTL0tQUk9CRV9SRUVOVEVSIG9ubHkgd2hlbg0KPj4+
+Pj4+IHRoZSBmYXVsdGluZyBQQyBwb2ludHMgYXQgdGhlIGN1cnJlbnQga3Byb2JlJ3MgWE9MIGlu
+c3RydWN0aW9uLiBGYXVsdHMNCj4+Pj4+PiBmcm9tIGFueSBvdGhlciBQQyBhcmUgbGVmdCB0byB0
+aGUgbm9ybWFsIGZhdWx0IGhhbmRsaW5nIHBhdGguDQo+Pj4+Pj4NCj4+Pj4+PiBUaGlzIGZvbGxv
+d3MgdGhlIHNhbWUgaWRlYSBhcyB0aGUgeDg2IGZpeCBpbiBjb21taXQgNjM4MWMyNGNkNmQ1DQo+
+Pj4+Pj4gKCJrcHJvYmVzL3g4NjogRml4IHBhZ2UtZmF1bHQgaGFuZGxpbmcgbG9naWMiKS4NCj4+
+Pj4+Pg0KPj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFB1IEh1IDxodXB1QHRyYW5zc2lvbi5jb20+DQo+
+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogSG9uZ3lhbiBYaWEgPGhvbmd5YW4ueGlhQHRyYW5zc2lvbi5j
+b20+DQo+Pj4+Pj4gLS0tDQo+Pj4+Pj4gICAgIGFyY2gvYXJtNjQva2VybmVsL3Byb2Jlcy9rcHJv
+YmVzLmMgfCAxNCArKysrKysrKysrKysrKw0KPj4+Pj4+ICAgICAxIGZpbGUgY2hhbmdlZCwgMTQg
+aW5zZXJ0aW9ucygrKQ0KPj4+Pj4+DQo+Pj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQva2Vy
+bmVsL3Byb2Jlcy9rcHJvYmVzLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9wcm9iZXMva3Byb2Jlcy5j
+DQo+Pj4+Pj4gaW5kZXggNDNhMDM2MWE4YmYwLi5lNGQyODUyY2UyZmIgMTAwNjQ0DQo+Pj4+Pj4g
+LS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvcHJvYmVzL2twcm9iZXMuYw0KPj4+Pj4+ICsrKyBiL2Fy
+Y2gvYXJtNjQva2VybmVsL3Byb2Jlcy9rcHJvYmVzLmMNCj4+Pj4+PiBAQCAtMjg1LDYgKzI4NSwy
+MCBAQCBpbnQgX19rcHJvYmVzIGtwcm9iZV9mYXVsdF9oYW5kbGVyKHN0cnVjdCBwdF9yZWdzICpy
+ZWdzLCB1bnNpZ25lZCBpbnQgZnNyKQ0KPj4+Pj4+ICAgICAgICAgIHN3aXRjaCAoa2NiLT5rcHJv
+YmVfc3RhdHVzKSB7DQo+Pj4+Pj4gICAgICAgICAgY2FzZSBLUFJPQkVfSElUX1NTOg0KPj4+Pj4+
+ICAgICAgICAgIGNhc2UgS1BST0JFX1JFRU5URVI6DQo+Pj4+Pj4gKyAgICAgICAgICAgICAvKg0K
+Pj4+Pj4+ICsgICAgICAgICAgICAgICogQSBmYXVsdCB0YWtlbiB3aGlsZSBhIGtwcm9iZSBpcyBz
+aW5nbGUtc3RlcHBpbmcgaXMgbm90DQo+Pj4+Pj4gKyAgICAgICAgICAgICAgKiBuZWNlc3Nhcmls
+eSBjYXVzZWQgYnkgdGhlIGluc3RydWN0aW9uIGluIHRoZSBYT0wgc2xvdC4gRm9yDQo+Pj4+Pj4g
+KyAgICAgICAgICAgICAgKiBleGFtcGxlLCB0cmFjaW5nIG9yIHBlcmYgY29kZSBydW5uaW5nIGlu
+IHRoaXMgd2luZG93IG1heSB0YWtlDQo+Pj4+Pj4gKyAgICAgICAgICAgICAgKiBhbiB1bnJlbGF0
+ZWQgZmF1bHQuDQo+Pj4+Pj4gKyAgICAgICAgICAgICAgKg0KPj4+Pj4+ICsgICAgICAgICAgICAg
+ICogSGFuZGxlIHRoZSBmYXVsdCBoZXJlIG9ubHkgd2hlbiB0aGUgZmF1bHRpbmcgUEMgaXMgdGhl
+IFhPTA0KPj4+Pj4+ICsgICAgICAgICAgICAgICogaW5zdHJ1Y3Rpb24gb2YgdGhlIGN1cnJlbnQg
+a3Byb2JlLiBPdGhlcndpc2UgbGV0IHRoZSBub3JtYWwNCj4+Pj4+PiArICAgICAgICAgICAgICAq
+IGZhdWx0IGhhbmRsaW5nIHBhdGggZGVhbCB3aXRoIGl0Lg0KPj4+Pj4+ICsgICAgICAgICAgICAg
+ICovDQo+Pj4+Pj4gKyAgICAgICAgICAgICBpZiAoY3VyLT5haW5zbi54b2xfaW5zbiAmJg0KPj4+
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBpbnN0cnVjdGlvbl9wb2ludGVyKHJlZ3MpICE9ICh1
+bnNpZ25lZCBsb25nKWN1ci0+YWluc24ueG9sX2luc24pDQo+Pj4+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgIGJyZWFrOw0KPj4+Pj4NCj4+Pj4+IENhbiB5b3UgY2hlY2sgU2FzaGlrbydzIGNvbW1l
+bnRzWzFdPw0KPj4+Pj4NCj4+Pj4+IFsxXSBodHRwczovL3Nhc2hpa28uZGV2LyMvcGF0Y2hzZXQv
+MjAyNjA3MDYwODM2MzYuMTU5ODgzLTEtaHVwdSU0MHRyYW5zc2lvbi5jb20/cGFydD0xDQo+Pj4+
+Pg0KPj4+Pj4gSXQgc2VlbXMgdGhhdCBpdCBjb21wbGFpbnMgYWJvdXQgc2ltdWxhdGVkIGtwcm9i
+ZSdzIGNhc2UuDQo+Pj4+PiBJbiB0aGF0IGNhc2UsIGN1ci0+YWluc24ueG9sX2luc24gPT0gTlVM
+TC4gVGhlIHNpbXVsYXRpb24gc2hvdWxkIGJlIGRvbmUNCj4+Pj4+IGluIHRoZSBrcHJvYmUgY29u
+dGV4dCAod2hpY2ggaXMgYSBkZWJ1ZyB0cmFwKS4gSSdtIG5vdCBzdXJlIHRoZSBhcm02NA0KPj4+
+Pj4gY2FuIGNhdXNlIE5NSSBpbiB0aGF0IGNvbnRleHQsIGJ1dCBpZiBpdCBoYXBwZW5zIGFuZCBj
+YXVzZXMgYSBmYXVsdCwNCj4+Pj4+IGl0IG1heSBjYXVzZSBhIHByb2JsZW0uDQo+Pj4+Pg0KPj4+
+Pj4gU28gSSB0aGluayB3ZSBjYW4ganVzdCBpZ25vcmUgdGhlIGZhdWx0IG9uIHRoZSBzaW11bGF0
+ZWQga3Byb2Jlcy4NCj4+Pj4+DQo+Pj4+PiBUbyBlbnN1cmUgdGhhdCwgeW91IGNhbiBqdXN0IGFk
+ZDoNCj4+Pj4+DQo+Pj4+PiAgICAgICAgICAgIGlmIChjdXIgJiYgIWN1ci0+YWluc24ueG9sX2lu
+c24pDQo+Pj4+PiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+Pj4+Pg0KPj4+Pj4gYXQg
+dGhlIGVudHJ5IG9mIHRoaXMgZnVuY3Rpb24uIChhbmQgcmVtb3ZlIHJlZHVuZGFudCBjdXItPmFp
+bnNuLnhvbF9pbnNuIGNoZWNrKQ0KPj4+Pg0KPj4+PiBSaWdodCwgYm90aCBjYXNlczoNCj4+Pj4N
+Cj4+Pj4gMS4gc2luZ2xlLXN0ZXAgWE9MDQo+Pj4+IDIuIHNpbXVsYXRlZA0KPj4+Pg0KPj4+PiBo
+YXZlIHRoaXMgcHJvYmxlbSBhbmQgdGhpcyBwYXRjaCBmaXhlZCAxLiAyIHJlbWFpbnMgdW5jaGFu
+Z2VkLg0KPj4+Pg0KPj4+PiBJZGVhbGx5IHdlIHNob3VsZCBmaXggYm90aCwgYnV0IHRoZSBzaW11
+bGF0ZWQgY2FzZSBzZWVtcyBtb3JlDQo+Pj4+IGNvbXBsaWNhdGVkLCBhbmQgYXQgbGVhc3Qgd2Ug
+ZGlkbid0IG1ha2UgdGhpbmdzIHdvcnNlIGZvciAyLiBTbyBJIHdvbmRlcg0KPj4+PiBpZiB3ZSBj
+YW4gYW5hbHl6ZSAyIG1vcmUgdGhvcm91Z2hseSBhbmQgZml4IGl0IGluIGEgc2VwYXJhdGUgcGF0
+Y2guDQo+Pj4NCj4+PiBPSywgYnV0IGJhc2ljYWxseSB0aGlzIGZhdWx0IGhhbmRsZXIgaXMgb25s
+eSBmb3IgdGhlIFNTIFhPTCwNCj4+PiBub3QgZm9yIHNpbXVsYXRlZCBvbmUgKGFzIHNhbWUgYXMg
+eDg2KS4gU28ganVzdCBza2lwIHRoZQ0KPj4+IHNpbXVsYXRlZCBjYXNlIGlzIGVub3VnaCBpbiB0
+aGlzIHBhdGNoLg0KPj4+IChOb3RlIHRoYXQgeDg2IGFsc28gaGF2ZSBzaW11bGF0ZWQgcGF0aCwg
+YW5kIHRoYXQgaXMgbm90IGhhbmRsZWQNCj4+PiBieSB0aGUgZmF1bHQgaGFuZGxlcikNCj4+DQo+
+PiBIbW0sIHdoYXQgaGFwcGVucyBpZiB0aGUgb3JpZ2luYWwgUEMgaXMgYSBzaW11bGF0ZWQgaW5z
+dHJ1Y3Rpb24gdGhhdCBoYXMNCj4+IGEgcmVjb3ZlcmFibGUgZXhfdGFibGUgZW50cnkgdGhhdCBo
+YW5kbGVzIHBvdGVudGlhbCBwYWdlIGZhdWx0LA0KPg0KPiBUaGF0IHNob3VsZCBuZXZlciBoYXBw
+ZW4uIEJQRiB0cmFtcG9saW5lIGNvZGUgbWF5IHBvcHVsYXRlIGV4dGFibGUNCj4gZW50cmllcywg
+YnV0IGtwcm9iZSBkb2Vzbid0LiBGb3IgdGhlIHNpbXVsYXRlZCBpbnN0cnVjdGlvbiwgYXMgZmFy
+DQo+IGFzIEkgY2FuIHNlZSwgdGhlcmUgYXJlIDIgb3BlcmF0aW9ucw0KPiAgIC0gc2ltdWxhdGVf
+bGRyX2xpdGVyYWwNCj4gICAtIHNpbXVsYXRlX2xkcnN3X2xpdGVyYWwNCj4gd2lsbCBpbnZvbHZl
+IHRoZSBtZW1vcnkgYWNjZXNzIGFuZCBib3RoIGFyZSBhY2Nlc3NpbmcgUEMtcmVsYXRpdmUNCj4g
+a2VybmVsIGRhdGEsIHdoaWNoIHNob3VsZCBiZSBtYXBwZWQuDQo+DQo+IGxvYWRfYWRkciA9IGFk
+ZHIgKyBsZHJfZGlzcGxhY2VtZW50KG9wY29kZSk7DQo+IC4uLg0KPiBzZXRfeF9yZWcocmVncywg
+eG4sIFJFQURfT05DRSgqKHU2NCAqKWxvYWRfYWRkcikpOw0KPg0KPiB0aGlzIGRpcmVjdGx5IGFj
+Y2Vzc2luZyB0aGUgbWVtb3J5IHdpdGhvdXQgdXNpbmcgZXh0YWJsZS4NCj4NCj4NCj4+IGFuZCB0
+aGlzDQo+PiBQQyBhbHNvIGhhcyBhbiBhdHRhY2hlZCBrcHJvYmU/DQo+DQo+IFlvdSBtZWFudCB0
+aGF0IHB1dHRpbmcga3Byb2JlcyBpbiBzaW11bGF0ZV8qIGZ1bmN0aW9ucz8NCj4gVGhvc2UgaGF2
+ZSBfX2twcm9iZXMgYXR0cmlidXRlLCBzbyBrcHJvYmUgY2FuIG5vdCBwcm9iZSBpdC4NCj4gKEl0
+IHNob3VsZCB1c2UgTk9LUFJPQkVfU1lNQk9MLi4uKQ0KPg0KPj4gVGhlbiB0aGUgc2ltdWxhdGVk
+IGNhc2Ugc2hvdWxkIGJlIGFibGUNCj4+IHRvIGVudGVyIGtwcm9iZV9mYXVsdF9oYW5kbGVyKCk/
+DQo+Pg0KPj4gLmV4X3RhYmxlOg0KPj4gICAgICAgICAgaW5zbiBmb28sIGhhbmRsZXIgYmFyDQo+
+Pg0KPj4gZm9vOg0KPj4gICAgICAgICAgTERSIHN5bWJvbCAjIExvYWQgUEMtcmVsYXRpdmUuIFNp
+bXVsYXRlZC4gS3Byb2JlIGF0dGFjaGVkLg0KPj4gICAgICAgICAgcmV0DQo+Pg0KPj4gV2hlbiBm
+b28gaXMgY2FsbGVkIGFuZCB0aGUga3Byb2JlIGZpcmVzLCBpdCBlbnRlcnMgc2ltdWxhdGVkIHBh
+dGggYnV0DQo+PiB0aGVuIExEUiB0cmlnZ2VycyBhIHBhZ2UgZmF1bHQuIEl0IHRoZW4gZW50ZXJz
+IGtwcm9iZV9mYXVsdF9oYW5kbGVyKCkgdG8NCj4+IGZpeHVwIHRoZSBQQy4gVGhlbiB0aGUgZml4
+dXBfZXhjZXB0aW9uKCkgb2YgdGhlIG5vcm1hbCBwYWdlIGZhdWx0IGZpbmRzDQo+PiB0aGUgZXhf
+dGFibGUgZW50cnkgYW5kIHRoaXMgY2FzZSBpcyBzdWNjZXNzZnVsbHkgaGFuZGxlZD8NCj4NCj4g
+VG8gZG8gdGhhdCwgeW91IG5lZWQgdG8gdXBkYXRlIHRoZSBzaW11bGF0ZV9sZHIqIHRvIHVzZSB1
+YWNjZXNzIEFQSQ0KPiAoX0FTTV9FWFRBQkxFX1VBQ0NFU1MqIG1hY3JvcykgQU5EIGFsbG93IGtw
+cm9iZXMgdG8gcHJvYmUgdGhvc2UgZnVuY3Rpb25zLg0KDQpJIHNlZS4gVGhlIGtwcm9iZSBjb2Rl
+IGFjdHVhbGx5IGRvZXMgbm90IGV2ZW4gYWxsb3cgdGhpcyBjb21iaW5hdGlvbi4NClRoZSBhcm02
+NCBhcmNoX3ByZXBhcmVfa3Byb2JlKCkgd2lsbCByZWplY3QgZXh0YWJsZSBQQ3MuIFNvcnJ5IGZv
+ciB0aGUNCm5vaXNlLg0KDQo+Pg0KPj4gTG9va3MgbGlrZSB0aGlzIGhhbmRsZXIgY2FuIGJlIGVu
+dGVyZWQgYnkgc2ltdWxhdGVkIGluc3RydWN0aW9ucz8gT3INCj4+IHRoaXMgaXMgb25seSB0aGVv
+cmV0aWNhbCBhbmQgd2hvZXZlciBhcnJhbmdlIGNvZGUgbGlrZSB0aGlzIHNob3VsZCBiZQ0KPj4g
+ZmlyZWQgaW1tZWRpYXRlbHk/DQo+DQo+IFNvIHRoZSBzaW11bGF0ZWQgaW5zdHJ1Y3Rpb25zIG5l
+dmVyIGNhdXNlIGZhdWx0LCBvciBpZiBpdCBjYXVzZXMgYSBmYXVsdA0KPiB0aGF0IG1lYW5zIHRo
+ZSBvcmlnaW5hbCBjb2RlIGhhcyBhIGJ1Zy4gKE9mIGNvdXJzZSB0aGVyZSBpcyByb29tIHRvDQo+
+IGltcHJvdmUgdGhlIGJ1ZyBtZXNzYWdlIHNvIHRoYXQgaXQgZGVjb2RlcyB0aGUgYWRkcmVzcyBw
+cm9iZWQgYnkga3Byb2JlDQo+IHdoZW4gYSBidWcgb2NjdXJzLikNCg0KSWYgd2UgcnVsZSBvdXQg
+dGhlIGVkZ2UgY2FzZSBJIGNhbWUgdXAgd2l0aCAod2hpY2ggYXJtNjQga3Byb2JlIGRvZXMgbm90
+DQpldmVuIGFsbG93IHRvIGhhcHBlbiksIHRoZW4gb3RoZXIgY2FzZXMgYXJlIGluZGVlZCBrZXJu
+ZWwgYnVncy4NCg0KVGhhbmtzIGZvciB3YWxraW5nIHVzIHRocm91Z2ggc29tZSBvZiB0aGUgbG9n
+aWMuIFdpbGwgZml4IHRoaW5ncyBpbiB2Mi4NCg==
