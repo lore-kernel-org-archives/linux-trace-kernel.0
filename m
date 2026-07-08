@@ -1,41 +1,41 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7575E3F12C8
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 15:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4474D21D00A
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 15:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783525156; cv=none; b=A/x1BtnpBne7efjgfZeATJBY4WhVVLJ9DqgYoMDcryucEpAjT2FmCt1ldKf70YzHMTBHA/J1hM8JF3Kr2lXKye+pq+7yVF1W+Y+KiQedQ81W07D1w8Jk0JXL+6JpbIBtn4qD+WdFhHMMeTNj/z8S4VGufZZmddBCwLQJ4u0J3ss=
+	t=1783525158; cv=none; b=LThpXenUUDLWK0MGmdJezKp8qo/qK6ZGlHqZW+5GE/3PYKd72ykUS9IwJlmqhaEMQ3fe+2R1E+EYbY8f4sGCv5UYhL4YUV85JMQcmtjFfTvqxrrkCHnx4nA9gyEkX3qFKXz4c4H11dimZnJ/a5HVlxFJUFhBHAd/azRoWxfvxlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783525156; c=relaxed/simple;
-	bh=vT28XGtOuxNLckjv4Iugxa7Q/eDOR6dpNoyDJ2d5mgM=;
+	s=arc-20240116; t=1783525158; c=relaxed/simple;
+	bh=g8ytAzCnw6Y+4iv02waxH+DYsyMf1uT7WrsdiDe9HOs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VWGnwv3MqTXuLl+S9xbQMKLrrDXOEcqTEabsM+hD05IZj1fiFFyGMHj+92k/BuW++SyqYKo5wFJeQqGpLzFRVc8UThmdgd0/zu5AAoWF9xe+eBLXqwt/O3+/GgO+f9gPrCXcCzNdlOmG1OE6GkXAcRU3DbsHsANWCSpbDfBJBRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PP4P1aVV; arc=none smtp.client-ip=91.218.175.185
+	 MIME-Version; b=Zn1jxxjd7g8Ex8FepUvYHqzD0hQrFCqUFvi5SG4we3yOsHor8MA+tAIyIfxFbPW8YCmTeWuWQToz7ZPHKZUm4vGN2uXq/IiCqhqsm05zq2iRJZ8Mn4vi7ufFvaeNWjEWobKV/TODvwG5iYvTbr9kqDEKoUfItcK3cEeV7J3GtbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vG7prRM9; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PP4P1aVV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vG7prRM9"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783525151;
+	t=1783525154;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W23cILXEhbaTC3LZPNeIfbFSZCRVq791q8j4d9G1B+8=;
-	b=PP4P1aVVb/GHZc4/FnsOSjRvuNISetbpQGfS9c0Vjj4w//lJMk0KJb11edXdjsrFHzffOv
-	QG0uW06TcPuAaiusGjzRdJEA90gDtQbuNAClOZPlMSmaRKnOAA54+gT7CrhBfCwdJqLxvg
-	4i0TOCLA69tGoRgpElyO0boD0NYKz84=
+	bh=c+eOfnJTdry0uWC1pEFvrTgvF3XCOc5syTxn+ho6Epk=;
+	b=vG7prRM9xaheaGjf+eN0duBMAbwDe1TUzo/L8Xm9/5ro3t9wWXLLz7tjL+kNGeStQg6FoD
+	QDTbGtf4uMPUjyddfG/4T3R5RCM5MwirtPKkABL3BjGd8Oa5S1hoCGhKre+CXxB8C9Yx8c
+	xLTTawnPm08Ib5jit6ljU71UeCMw3xI=
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v4 1/8] rv/da: introduce DA_MON_ALLOCATION_STRATEGY
-Date: Wed,  8 Jul 2026 23:38:27 +0800
-Message-Id: <42cda27998fca0ca2573baac60a01ab9620b91f0.1783524627.git.wen.yang@linux.dev>
+Subject: [PATCH v4 2/8] rv: add generic uprobe infrastructure for RV monitors
+Date: Wed,  8 Jul 2026 23:38:28 +0800
+Message-Id: <31d0438f98e80503370a6fb3932d0ec7df0673c3.1783524627.git.wen.yang@linux.dev>
 In-Reply-To: <cover.1783524627.git.wen.yang@linux.dev>
 References: <cover.1783524627.git.wen.yang@linux.dev>
 Precedence: bulk
@@ -49,395 +49,272 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Wen Yang <wen.yang@linux.dev>
 
-Per-object DA storage allocation is currently limited to kmalloc on
-demand. Add a compile-time selector so monitors can choose among three
-strategies:
+Monitors that instrument user-space function boundaries need to resolve
+paths, register uprobes, and deregister them safely.  Provide a thin
+wrapper so monitors share a single implementation of this boilerplate.
 
-  DA_ALLOC_AUTO   (default) - kmalloc per object on the monitor path
-  DA_ALLOC_POOL             - pre-allocated fixed-size llist pool;
-                              selected by defining DA_MON_POOL_SIZE
-  DA_ALLOC_MANUAL           - caller pre-inserts storage; framework
-                              only links the target field
+struct rv_uprobe embeds struct uprobe_consumer directly, avoiding a
+separate heap allocation per probe.  Embedding is safe after
+rv_uprobe_unregister(): rv_uprobe_sync() calls uprobe_unregister_sync()
+which performs synchronize_rcu_tasks_trace(), waiting for all
+rcu_read_lock_trace() readers (handler_chain()) to complete on all CPUs
+before returning; the caller may then free the containing struct.
 
-The pool strategy uses a lock-free llist (cmpxchg, no spinlock) so
-pool release is safe from RCU callback context without acquiring a
-lock. Moving allocation before the measurement window also prevents
-kmalloc latency.
-
-nomiss is updated to DA_ALLOC_MANUAL.
+The API provides register, synchronous and nosync unregister, a global
+handler barrier (rv_uprobe_sync), and an active-state predicate.
+Handlers receive the uprobe_consumer pointer and recover per-probe state
+via container_of(uc, struct rv_uprobe, uc) or the containing struct.
 
 Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- include/rv/da_monitor.h                  | 247 +++++++++++++++++++----
- include/rv/ha_monitor.h                  |   6 +
- kernel/trace/rv/monitors/nomiss/nomiss.c |   6 +-
- 3 files changed, 221 insertions(+), 38 deletions(-)
+ include/rv/rv_uprobe.h      |  93 ++++++++++++++++++++++++++++++++
+ kernel/trace/rv/Kconfig     |   7 +++
+ kernel/trace/rv/Makefile    |   1 +
+ kernel/trace/rv/rv_uprobe.c | 104 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 205 insertions(+)
+ create mode 100644 include/rv/rv_uprobe.h
+ create mode 100644 kernel/trace/rv/rv_uprobe.c
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 34b8fba9ecd4..9c9acc123e3b 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -14,7 +14,56 @@
- #ifndef _RV_DA_MONITOR_H
- #define _RV_DA_MONITOR_H
- 
+diff --git a/include/rv/rv_uprobe.h b/include/rv/rv_uprobe.h
+new file mode 100644
+index 000000000000..2eab5d193e13
+--- /dev/null
++++ b/include/rv/rv_uprobe.h
+@@ -0,0 +1,93 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Allocation strategies for RV_MON_PER_OBJ monitors.
++ * Generic uprobe infrastructure for RV monitors.
 + *
-+ * Select the strategy with a single define before including this header:
-+ *
-+ *   #define DA_MON_POOL_SIZE N          - pool mode; N pre-allocated slots.
-+ *                                         Implies DA_ALLOC_POOL automatically.
-+ *   #define DA_MON_ALLOCATION_STRATEGY \
-+ *           DA_ALLOC_MANUAL             - manual mode (see below).
-+ *   (neither)                           - auto mode (default).
-+ *
-+ * Do not define both DA_MON_POOL_SIZE and DA_MON_ALLOCATION_STRATEGY.
-+ *
-+ * DA_ALLOC_AUTO   - lock-free kmalloc on the hot path; unbounded capacity.
-+ * DA_ALLOC_POOL   - pre-allocated fixed-size pool; set by defining DA_MON_POOL_SIZE.
-+ * DA_ALLOC_MANUAL - caller inserts storage before da_handle_start_event();
-+ *                   the framework only links the target field.
 + */
-+#define DA_ALLOC_AUTO   0
-+#define DA_ALLOC_POOL   1
-+#define DA_ALLOC_MANUAL 2
 +
-+#ifdef DA_MON_POOL_SIZE
-+#ifdef DA_MON_ALLOCATION_STRATEGY
-+#error "Define only one of DA_MON_POOL_SIZE or DA_MON_ALLOCATION_STRATEGY"
-+#endif
-+#if DA_MON_POOL_SIZE == 0
-+#error "DA_MON_POOL_SIZE must be non-zero"
-+#endif
-+#define DA_MON_ALLOCATION_STRATEGY DA_ALLOC_POOL
-+#endif
++#ifndef _RV_UPROBE_H
++#define _RV_UPROBE_H
 +
-+#ifndef DA_MON_ALLOCATION_STRATEGY
-+#define DA_MON_ALLOCATION_STRATEGY DA_ALLOC_AUTO
-+#endif
++#include <linux/types.h>
++#include <linux/uprobes.h>
 +
++struct pt_regs;
++struct inode;
++
++/**
++ * struct rv_uprobe - embeddable uprobe handle for RV monitors
++ *
++ * Embed via DECLARE_RV_UPROBE() in the caller's struct and pass &name to
++ * rv_uprobe_register().
++ *
++ * Lifetime: after rv_uprobe_unregister() (or rv_uprobe_unregister_nosync()
++ * followed by rv_uprobe_sync()) returns, synchronize_rcu_tasks_trace() has
++ * completed and no handler_chain() iteration can reference this struct.
++ * The caller may free the containing struct immediately after.
++ *
++ * @uc:     embedded uprobe_consumer; set uc.handler / uc.ret_handler before
++ *          calling rv_uprobe_register(); use container_of(uc, rv_uprobe, uc)
++ *          inside handlers to reach this struct or its container
++ * @uprobe: registered uprobe pointer (NULL when not registered)
++ * @inode:  inode of the probed binary (valid while registered)
++ */
++struct rv_uprobe {
++	struct uprobe_consumer	uc;
++	struct uprobe		*uprobe;
++	struct inode		*inode;
++};
++
++/* Embed a named rv_uprobe inside a caller struct */
++#define DECLARE_RV_UPROBE(name)		struct rv_uprobe name
++
++/**
++ * rv_uprobe_is_registered - test whether an uprobe is currently active
++ * @p: probe to test; may be NULL
++ */
++bool rv_uprobe_is_registered(const struct rv_uprobe *p);
++
++/**
++ * rv_uprobe_register - initialise and register an uprobe
++ * @binpath: absolute path to the target binary
++ * @offset:  byte offset within the binary
++ * @p:       caller-provided rv_uprobe (embedded via DECLARE_RV_UPROBE);
++ *           p->uc.handler and/or p->uc.ret_handler must be set before this call
++ *
++ * Resolves the path and registers p->uc with the uprobe subsystem.
++ * No heap allocation is performed.
++ *
++ * Returns 0 on success, negative errno on failure.
++ */
++int rv_uprobe_register(const char *binpath, loff_t offset, struct rv_uprobe *p);
++
++/**
++ * rv_uprobe_unregister - synchronously unregister a uprobe
++ * @p: probe to unregister; may be NULL (no-op)
++ *
++ * Removes the consumer from the uprobe subsystem and waits for all in-flight
++ * handlers to complete (via synchronize_rcu_tasks_trace()).  After this
++ * returns, the containing struct may be safely freed by the caller.
++ * Use rv_uprobe_unregister_nosync() + rv_uprobe_sync() to batch multiple
++ * deregistrations before a single synchronisation.
++ */
++void rv_uprobe_unregister(struct rv_uprobe *p);
++
++/**
++ * rv_uprobe_unregister_nosync - dequeue an uprobe without waiting
++ * @p: probe to dequeue; may be NULL (no-op)
++ *
++ * Removes the consumer without waiting for in-flight handlers.  The caller
++ * must call rv_uprobe_sync() before freeing the containing struct.
++ */
++void rv_uprobe_unregister_nosync(struct rv_uprobe *p);
++
++/**
++ * rv_uprobe_sync - wait for all in-flight uprobe handlers to complete
++ *
++ * Global barrier: calls uprobe_unregister_sync() which performs
++ * synchronize_rcu_tasks_trace() + synchronize_srcu(&uretprobes_srcu).
++ * After this returns, no handler_chain() iteration referencing any
++ * previously deregistered consumer is still in progress.
++ */
++void rv_uprobe_sync(void);
++
++#endif /* _RV_UPROBE_H */
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 3884b14df375..5bad1d63f411 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -59,6 +59,13 @@ config RV_PER_TASK_MONITORS
+ 	  This option configures the maximum number of per-task RV monitors that can run
+ 	  simultaneously.
+ 
++config RV_UPROBE
++	bool
++	depends on RV && UPROBES
++	help
++	  Generic uprobe infrastructure for RV monitors.  Provides path
++	  resolution, registration, and safe synchronous teardown.
++
+ source "kernel/trace/rv/monitors/wip/Kconfig"
+ source "kernel/trace/rv/monitors/wwnr/Kconfig"
+ 
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 94498da35b37..f139b904bea3 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_RV_MON_STALL) += monitors/stall/stall.o
+ obj-$(CONFIG_RV_MON_DEADLINE) += monitors/deadline/deadline.o
+ obj-$(CONFIG_RV_MON_NOMISS) += monitors/nomiss/nomiss.o
+ # Add new monitors here
++obj-$(CONFIG_RV_UPROBE) += rv_uprobe.o
+ obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
+ obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
+diff --git a/kernel/trace/rv/rv_uprobe.c b/kernel/trace/rv/rv_uprobe.c
+new file mode 100644
+index 000000000000..a80bfa64578b
+--- /dev/null
++++ b/kernel/trace/rv/rv_uprobe.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Provide a zero default so da_monitor_init() can reference
-+ * DA_MON_POOL_SIZE in a plain C if() without an #if guard; the
-+ * compiler eliminates the dead branch.
-+ */
-+#ifndef DA_MON_POOL_SIZE
-+#if DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_POOL
-+#error "DA_ALLOC_POOL requires DA_MON_POOL_SIZE to be defined and non-zero"
-+#endif
-+#define DA_MON_POOL_SIZE 0
-+#endif
-+
- #include <rv/automata.h>
-+#include <linux/llist.h>
- #include <linux/rv.h>
- #include <linux/stringify.h>
- #include <linux/bug.h>
-@@ -66,6 +115,16 @@ static struct rv_monitor rv_this;
- #define da_monitor_sync_hook()
- #endif
- 
-+/*
-+ * Per-object teardown hook, called after da_monitor_reset_all() +
-+ * da_monitor_sync_hook() and before hash_del_rcu() for each entry.
-+ * All HA timer callbacks have completed at this point.
-+ * Define before including this header.  Default: no-op.
-+ */
-+#ifndef da_extra_cleanup
-+#define da_extra_cleanup(da_mon)
-+#endif
-+
- /*
-  * Type for the target id, default to int but can be overridden.
-  * A long type can work as hash table key (PER_OBJ) but will be downgraded to
-@@ -404,6 +463,12 @@ struct da_monitor_storage {
- 	union rv_task_monitor rv;
- 	struct hlist_node node;
- 	struct rcu_head rcu;
-+	/*
-+	 * Mutually exclusive with rcu: rcu is live during the RCU callback
-+	 * flight; free_node when the slot is in da_pool_free_list.
-+	 * Present in all monitors to avoid #if-gating the pool helpers.
-+	 */
-+	struct llist_node free_node;
- };
- 
- #ifndef DA_MONITOR_HT_BITS
-@@ -495,18 +560,6 @@ static inline da_id_type da_get_id(struct da_monitor *da_mon)
- 	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->id;
- }
- 
--/*
-- * da_create_or_get - create the per-object storage if not already there
-- *
-- * This needs a lookup so should be guarded by RCU, the condition is checked
-- * directly in da_create_storage()
-- */
--static inline void da_create_or_get(da_id_type id, monitor_target target)
--{
--	guard(rcu)();
--	da_create_storage(id, target, da_get_monitor(id, target));
--}
--
- /*
-  * da_fill_empty_storage - store the target in a pre-allocated storage
-  *
-@@ -537,15 +590,79 @@ static inline monitor_target da_get_target_by_id(da_id_type id)
- 	return mon_storage->target;
- }
- 
-+/*
-+ * Lock-free llist (cmpxchg) rather than kmem_cache/mempool: on
-+ * PREEMPT_RT spinlock_t becomes a sleeping lock, which is forbidden
-+ * in the rcuc kthread context where RCU callbacks run.
++ * Generic uprobe infrastructure for RV monitors.
 + *
-+ * Multiple producers (any context, any CPU) call llist_add; a single
-+ * consumer (llist_del_first, serialised by the monitor's start lock)
-+ * needs no additional synchronisation.
-+ *
-+ * Per-TU statics: each PER_OBJ monitor gets its own pool instance;
-+ * da_pool_storage and da_pool_free_list are NULL/empty and the pool
-+ * paths are dead code for non-pool monitors.
++ * struct rv_uprobe embeds struct uprobe_consumer directly.  This is safe
++ * because rv_uprobe_sync() calls uprobe_unregister_sync(), which calls
++ * synchronize_rcu_tasks_trace().  handler_chain() runs under
++ * rcu_read_lock_trace(), so after synchronize_rcu_tasks_trace() returns,
++ * all in-flight handler_chain() iterations, including any pending
++ * uc->cons_node.next reads, have completed on all CPUs.  The caller may
++ * then free the struct containing rv_uprobe immediately.
 + */
-+static struct da_monitor_storage *da_pool_storage;
-+static LLIST_HEAD(da_pool_free_list);
++#include <linux/dcache.h>
++#include <linux/fs.h>
++#include <linux/namei.h>
++#include <linux/uprobes.h>
++#include <rv/rv_uprobe.h>
 +
-+static void da_pool_return_cb(struct rcu_head *head)
++/**
++ * rv_uprobe_register - initialise and register an uprobe
++ */
++int rv_uprobe_register(const char *binpath, loff_t offset, struct rv_uprobe *p)
 +{
-+	struct da_monitor_storage *ms =
-+		container_of(head, struct da_monitor_storage, rcu);
++	struct inode *inode;
++	struct path path;
++	int ret;
 +
-+	llist_add(&ms->free_node, &da_pool_free_list);
-+}
++	if (!p->uc.handler && !p->uc.ret_handler)
++		return -EINVAL;
 +
-+/*
-+ * da_create_pool_storage - pop a free pool slot and insert it into the hash.
-+ *
-+ * Returns the new da_monitor, or NULL if the pool is exhausted.  Finding
-+ * an existing entry for the same id fires WARN_ON_ONCE (double-start bug).
-+ *
-+ * Caller must hold an RCU read-side CS and the monitor's serialisation lock.
-+ */
-+static inline struct da_monitor *
-+da_create_pool_storage(da_id_type id, monitor_target target,
-+		       struct da_monitor *da_mon)
-+{
-+	struct da_monitor_storage *mon_storage, *existing;
-+	struct llist_node *node;
++	ret = kern_path(binpath, LOOKUP_FOLLOW, &path);
++	if (ret)
++		return ret;
 +
-+	if (da_mon)
-+		return da_mon;
-+
-+	node = llist_del_first(&da_pool_free_list);
-+	if (!node)
-+		return NULL;
-+	mon_storage = llist_entry(node, struct da_monitor_storage, free_node);
-+
-+	mon_storage->id = id;
-+	mon_storage->target = target;
-+
-+	/*
-+	 * The caller's serialization lock ensures llist_del_first() is
-+	 * single-consumer, so no concurrent start for the same id is possible.
-+	 * Reaching here indicates a programming error (double-start for the
-+	 * same pid).
-+	 */
-+	existing = __da_get_mon_storage(id);
-+	if (WARN_ON_ONCE(existing)) {
-+		llist_add(&mon_storage->free_node, &da_pool_free_list);
-+		return NULL;
++	if (!d_is_reg(path.dentry)) {
++		path_put(&path);
++		return -EINVAL;
 +	}
-+	hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
-+	return &mon_storage->rv.da_mon;
-+}
 +
- /*
-  * da_destroy_storage - destroy the per-object storage
-  *
-- * The caller is responsible to synchronise writers, either with locks or
-- * implicitly. For instance, if da_destroy_storage is called at sched_exit and
-- * da_create_storage can never occur after that, it's safe to call this without
-- * locks.
-- * This function includes an RCU read-side critical section to synchronise
-- * against da_monitor_destroy().
-+ * Pool mode: removes from hash and returns the slot via call_rcu().
-+ * Kmalloc mode: removes from hash and frees via kfree_rcu().
-+ *
-+ * Includes an RCU read-side critical section to synchronise against
-+ * da_monitor_destroy().
-  */
- static inline void da_destroy_storage(da_id_type id)
- {
-@@ -558,7 +675,10 @@ static inline void da_destroy_storage(da_id_type id)
- 		return;
- 	da_monitor_reset_hook(&mon_storage->rv.da_mon);
- 	hash_del_rcu(&mon_storage->node);
--	kfree_rcu(mon_storage, rcu);
-+	if (DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_POOL)
-+		call_rcu(&mon_storage->rcu, da_pool_return_cb);
-+	else
-+		kfree_rcu(mon_storage, rcu);
- }
- 
- static void __da_monitor_reset_all(void (*reset)(struct da_monitor *))
-@@ -581,41 +701,98 @@ static inline void da_monitor_reset_state_all(void)
- 	__da_monitor_reset_all(da_monitor_reset_state);
- }
- 
-+/* Not part of the public API; called only by da_monitor_init(). */
-+static inline int __da_monitor_init_pool(unsigned int prealloc_count)
-+{
-+	unsigned int i;
++	inode = d_real_inode(path.dentry);
++	p->inode = inode;
 +
-+	da_pool_storage = kcalloc(prealloc_count, sizeof(*da_pool_storage),
-+				  GFP_KERNEL);
-+	if (!da_pool_storage)
-+		return -ENOMEM;
++	/*
++	 * uprobe_register() requires the inode (and mount) to remain
++	 * referenced across the call.  Keep the path alive until after
++	 * uprobe_register() has stored its own reference, then release it.
++	 */
++	p->uprobe = uprobe_register(inode, offset, 0, &p->uc);
++	path_put(&path);
++	if (IS_ERR(p->uprobe)) {
++		ret = PTR_ERR(p->uprobe);
++		p->uprobe = NULL;
++		p->inode = NULL;
++		return ret;
++	}
 +
-+	for (i = 0; i < prealloc_count; i++)
-+		llist_add(&da_pool_storage[i].free_node, &da_pool_free_list);
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(rv_uprobe_register);
 +
-+/*
-+ * da_monitor_init - initialise the per-object monitor
++/**
++ * rv_uprobe_is_registered - test whether an uprobe is currently active
 + */
- static inline int da_monitor_init(void)
- {
- 	hash_init(da_monitor_ht);
-+	if (DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_POOL)
-+		return __da_monitor_init_pool(DA_MON_POOL_SIZE);
- 	return 0;
- }
- 
-+/*
-+ * da_monitor_destroy - tear down the per-object monitor
-+ *
-+ * tracepoint_synchronize_unregister() flushes all in-flight tracepoint
-+ * handlers and performs synchronize_rcu(), so no RCU reader holds a
-+ * reference to any da_monitor_storage after it returns.
-+ * da_monitor_reset_all() disables monitoring; combined with
-+ * da_monitor_sync_hook() (synchronize_rcu() for HA), no timer callback
-+ * can fire or be re-armed after this sequence.
-+ *
-+ * Pool mode: remaining hash entries are returned to the free list
-+ * directly (no call_rcu needed -- see above).  rcu_barrier() drains any
-+ * da_pool_return_cb() callbacks queued by earlier da_destroy_storage()
-+ * calls before the backing array is freed.
-+ */
- static inline void da_monitor_destroy(void)
- {
--	struct da_monitor_storage *mon_storage;
-+	struct da_monitor_storage *ms;
- 	struct hlist_node *tmp;
- 	int bkt;
- 
- 	tracepoint_synchronize_unregister();
- 	da_monitor_reset_all();
- 	da_monitor_sync_hook();
--	/*
--	 * This function is called after all probes are disabled and no longer
--	 * pending, we can safely assume no concurrent user.
--	 */
--	hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage, node) {
--		hash_del_rcu(&mon_storage->node);
--		kfree(mon_storage);
-+
-+	hash_for_each_safe(da_monitor_ht, bkt, tmp, ms, node) {
-+		da_extra_cleanup(&ms->rv.da_mon);
-+		hash_del_rcu(&ms->node);
-+		/* No RCU readers remain; skip the grace period. */
-+		if (DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_POOL) {
-+			llist_add(&ms->free_node, &da_pool_free_list);
-+		} else {
-+			kfree(ms);
-+		}
-+	}
-+
-+	if (DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_POOL) {
-+		/*
-+		 * Flush any da_pool_return_cb callbacks queued by
-+		 * da_destroy_storage() during normal monitor operation.
-+		 * After rcu_barrier(), no callback can reference pool slots;
-+		 * the backing array is safe to free.
-+		 */
-+		rcu_barrier();
-+		init_llist_head(&da_pool_free_list);
-+		kfree(da_pool_storage);
-+		da_pool_storage = NULL;
- 	}
- }
- 
- /*
-- * Allow the per-object monitors to run allocation manually, necessary if the
-- * start condition is in a context problematic for allocation (e.g. scheduling).
-- * In such case, if the storage was pre-allocated without a target, set it now.
-+ * da_prepare_storage - allocate or retrieve storage for a monitoring session
-+ *
-+ * Dispatches to the strategy selected by DA_MON_ALLOCATION_STRATEGY.
-+ * Caller must hold an RCU read-side CS.
-  */
--#ifdef DA_SKIP_AUTO_ALLOC
--#define da_prepare_storage da_fill_empty_storage
--#else
--#define da_prepare_storage da_create_storage
--#endif /* DA_SKIP_AUTO_ALLOC */
-+static inline struct da_monitor *
-+da_prepare_storage(da_id_type id, monitor_target target,
-+		   struct da_monitor *da_mon)
++bool rv_uprobe_is_registered(const struct rv_uprobe *p)
 +{
-+	if (DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_POOL)
-+		return da_create_pool_storage(id, target, da_mon);
-+	if (DA_MON_ALLOCATION_STRATEGY == DA_ALLOC_MANUAL)
-+		return da_fill_empty_storage(id, target, da_mon);
-+	return da_create_storage(id, target, da_mon);
++	return p && p->uprobe;
 +}
- 
- #endif /* RV_MON_TYPE */
- 
-diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-index 28d3c74cabfc..83199f90afe8 100644
---- a/include/rv/ha_monitor.h
-+++ b/include/rv/ha_monitor.h
-@@ -365,6 +365,12 @@ static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon,
- }
- /*
-  * ha_invariant_passed_ns - prepare the invariant and return the time since reset
-+ *
-+ * If the env has not been initialised yet (first entry into a state with an
-+ * invariant), anchor the guard clock at the current time so that the full
-+ * budget is available from this point.  This preserves the documented
-+ * guard->invariant ordering: ha_set_invariant_ns() is always preceded by a
-+ * valid guard representation in env_store.
-  */
- static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon, enum envs env,
- 				   u64 expire, u64 time_ns)
-diff --git a/kernel/trace/rv/monitors/nomiss/nomiss.c b/kernel/trace/rv/monitors/nomiss/nomiss.c
-index 8ead8783c29f..ac4d334e757f 100644
---- a/kernel/trace/rv/monitors/nomiss/nomiss.c
-+++ b/kernel/trace/rv/monitors/nomiss/nomiss.c
-@@ -17,8 +17,8 @@
- 
- #define RV_MON_TYPE RV_MON_PER_OBJ
- #define HA_TIMER_TYPE HA_TIMER_WHEEL
--/* The start condition is on sched_switch, it's dangerous to allocate there */
--#define DA_SKIP_AUTO_ALLOC
-+/* Allocate storage in sched_setscheduler; sched_switch is too hot to alloc. */
-+#define DA_MON_ALLOCATION_STRATEGY DA_ALLOC_MANUAL
- typedef struct sched_dl_entity *monitor_target;
- #include "nomiss.h"
- #include <rv/ha_monitor.h>
-@@ -214,7 +214,7 @@ static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
- 	if (p->policy == SCHED_DEADLINE)
- 		da_reset(EXPAND_ID_TASK(p));
- 	else if (new_policy == SCHED_DEADLINE)
--		da_create_or_get(EXPAND_ID_TASK(p));
-+		da_create_empty_storage(get_entity_id(&p->dl, task_cpu(p), DL_TASK));
- }
- 
- static void handle_sched_wakeup(void *data, struct task_struct *tsk)
++EXPORT_SYMBOL_GPL(rv_uprobe_is_registered);
++
++/**
++ * rv_uprobe_unregister - synchronously unregister a uprobe
++ */
++void rv_uprobe_unregister(struct rv_uprobe *p)
++{
++	if (!p || !p->uprobe)
++		return;
++
++	rv_uprobe_unregister_nosync(p);
++	rv_uprobe_sync();
++}
++EXPORT_SYMBOL_GPL(rv_uprobe_unregister);
++
++/**
++ * rv_uprobe_unregister_nosync - dequeue an uprobe without waiting
++ */
++void rv_uprobe_unregister_nosync(struct rv_uprobe *p)
++{
++	if (!p || !p->uprobe)
++		return;
++
++	uprobe_unregister_nosync(p->uprobe, &p->uc);
++	p->uprobe = NULL;
++	p->inode = NULL;
++}
++EXPORT_SYMBOL_GPL(rv_uprobe_unregister_nosync);
++
++/**
++ * rv_uprobe_sync - wait for all in-flight uprobe handlers to complete
++ */
++void rv_uprobe_sync(void)
++{
++	uprobe_unregister_sync();
++}
++EXPORT_SYMBOL_GPL(rv_uprobe_sync);
 -- 
 2.25.1
 
