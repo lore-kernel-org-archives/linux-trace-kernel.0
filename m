@@ -1,365 +1,243 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out199-3.us.a.mail.aliyun.com (out199-3.us.a.mail.aliyun.com [47.90.199.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD14A3F86FC
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 07:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57333E7BB0;
+	Wed,  8 Jul 2026 08:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783497480; cv=none; b=MjFyhq1NNNBw5cMB53nhwjPkas7cc2m4O17+o6Q6YggfbEp0AXVMxXkKQbIwzlGzbBOyJaSIt3ZC5WluozBGImlebTkWWg5F/J7SLcfoBlfvzYSnceGu7POMaQY750hI94I7EphU8RCiexRRCRJqWi7GEbrPcRMyHDwx6l5gNw8=
+	t=1783497620; cv=none; b=OQYGGEP8Y2SZyMsHFsRxtT5ApzrfLe+qa5pRn5HyvBbgtLlsjCnGugBz+fpgpYhDupiCf4TZcD4z+EuMryG1kkliYO0NH7/O5qKpeHTdgBkq1c6CrpgfbPym+R6hsf6aoE3HaQVp/cfz+n88UAA5AX/wY7YO8z/oOF8xmHsuGJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783497480; c=relaxed/simple;
-	bh=zYcgXAtFyi7y2ox//UY/MqvXscvFIEFI9Jms7Sc5x4Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=edKuc4a+PpLvTk+v1tYw3v7WRRvb3vij705+xLMenlqLHr85OoSx2+vi1j55bYfsdF/PZAenu8KWUnecnag36zyO1ooIQYLFovbScCB/U/ChcZcioC5ZJo7/lJEDcW4gkCUJw65Ypd+RR3ZW+2YqvKgZ2JrJ+tw8GhFkgM2a0Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K93gWQLN; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1783497620; c=relaxed/simple;
+	bh=LPtC18JyFz+hwS+C9pcHqtJy9phFKLqN3jKlwccUhkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cPQ1lOIgfmYF/oLNTdSsbZ5UeXcwwwfEaLms7G4/iD//tbNRlO+23tzJ4I77ccehXztrnZoYBYoahJUKr/1G9Q4AOxPiV2zfcYOtsjoSR4EX+uxj74/p+carB6XhCuhC30G6qaJMPsFORGmKqtiUkmZ0EKsC5J6C924QJEmCTFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xiBwC+x2; arc=none smtp.client-ip=47.90.199.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K93gWQLN"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-47407691804so322023f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Jul 2026 00:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783497468; x=1784102268; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ccb4pWEq/KNyIZlIKmdo4wf78KzfKUcZlEq/qiAL4MQ=;
-        b=K93gWQLNdpWKucXh7/Hngo/1B/uVr+403lMDhW3JPxPoHLQPCcuE7Lmvop6zC5x7iu
-         piaLjw1L4LoxSB+QKE3nDCM+FaqgcjJdxjLMt+SjxZ33w+oS9GDcoaMdIvVdFoq0VpJW
-         NUZ4n0N+Q17mJqyLNuz84aknc2qo8m6no4NI6V6hl1/bA0Cc7BmgvgWKvfhgyGjlUkeR
-         9xy6h7lV7c6+jaZUrnIaReMEefRpzHO0utVJfivo/viQzx1mCpj6os5b5silKWbpOPnK
-         Q/JbVhHdYC3XWRRG2T9HB7D67Tk5FBHTmKGFdlAtJSPb+U+rXWA1PFE/8Oq4D31ZBNzj
-         M/4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783497468; x=1784102268;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Ccb4pWEq/KNyIZlIKmdo4wf78KzfKUcZlEq/qiAL4MQ=;
-        b=HykpGkkwjk6hx6joAYsBXv6tr18i5hg/r9Q1H+Q1XDjjJTLxOd295vP00B77TCOqkB
-         q7kud1xNJEGTlUcpOJVcNS6ZG8Utw+SGzaty9xecg1sZthuraJvuzUBd+2th2496h/2/
-         CfWUkptYBYkyOezrVlNZIHsyYhaFNTfdybfkFEOiXzhksyaFgL/PBNJzBsM0vn4lkkTg
-         DzkFS796i5R02nUCazRw4mvMgC8M2l2wK4iW/TWggVU4bdBOQl+iNLIpS59v1czwsjo3
-         aVzpCTdgHdi9A4a7VMrERU0igeruExUAZ11AQXXZ0ea7lRtJ1gb6aNgvvhClEVrM25e+
-         HcEg==
-X-Forwarded-Encrypted: i=1; AHgh+RpmT64WBPJouqaXdiVTgZuBgEySrV9Y//zhUvXiH3wJgKV0cscoWi1zPQlDAAMf2S4oIzwMiUsvo02HZcASecgMe2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXM7WPZL8KYrqnx8AGz1AIQ6Yj/GpXCLUWN3wB7eOElNDMzqyf
-	3+R4T5FmTdmHerX50KGxscmqQAP553Ek1S5jy39lhW9mSXfk/bAeLdOGtUnoK+MGXnyMhg7tU7V
-	JI81NNHXLCe693zQ/YGhAUQ==
-X-Received: from wmla8.prod.google.com ([2002:a05:600d:2388:b0:488:9c2a:aec4])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a011:b0:492:5551:19c6 with SMTP id 5b1f17b1804b1-493e6831730mr12782805e9.7.1783497468229;
- Wed, 08 Jul 2026 00:57:48 -0700 (PDT)
-Date: Wed,  8 Jul 2026 08:54:35 +0100
-In-Reply-To: <20260708075435.47419-1-vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xiBwC+x2"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1783497584; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=j079AmEVBbiNXvluQB998ypvPaJY+g6xWti/GsxT9CQ=;
+	b=xiBwC+x2tGu/Pg4lBrkqFZhfi3AzEA1Oz8k1pNHoE1pQkRmcXqoyjnWsVuHQbBtHHZRB1yIEcohvu6RFaplufb7WpbdcvepiMjjuIoF75VWv9PgUzZ1oSSJD8C292z55p2XzDOjG3+BQanBRpTCnMl+YX6tHBUHuzpOe1w0Ce0g=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X6h4Ew7_1783497580;
+Received: from 30.246.161.237(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X6h4Ew7_1783497580 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 08 Jul 2026 15:59:42 +0800
+Message-ID: <aae5efab-a0db-4e69-8d7e-2716c2be4b81@linux.alibaba.com>
+Date: Wed, 8 Jul 2026 15:59:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260708075435.47419-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260708075435.47419-5-vdonnefort@google.com>
-Subject: [PATCH v2 4/4] KVM: arm64: Add hyp_printk event to nVHE/pKVM hyp
-From: Vincent Donnefort <vdonnefort@google.com>
-To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
-	will@kernel.org, rostedt@goodmis.org
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kernel-team@android.com, qperret@google.com, tabba@google.com, 
-	linux-trace-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 1/7] riscv: stacktrace: Add frame record
+ metadata
+To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+ Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+ Marcos Paulo de Souza <mpdesouza@suse.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260629072713.3273743-1-wanghan@linux.alibaba.com>
+ <20260629072713.3273743-2-wanghan@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260629072713.3273743-2-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Create an event to allow developers to log pretty much anything into the
-hypervisor tracing buffer with trace_hyp_printk(), just like the kernel
-tracing has the function trace_printk().
 
-  trace_hyp_printk("foobar");
-  trace_hyp_printk("foo=%d", foo);
-  trace_hyp_printk("foo=%d bar=0x%016llx", foo, bar);
 
-To ensure writing into the tracing buffer is fast, store the string
-format into a kernel-accessible ELF section. The hypervisor only has to
-write into the event the string ID, which is the delta between the
-hyp_string_fmt and the start of the ELF section.
+On 6/29/26 3:27 PM, Wang Han wrote:
+> Reliable frame-pointer unwinding needs an explicit way to identify
+> exception boundaries and the final entry frame. The existing unwinder
+> infers those boundaries from return addresses, which is too loose for a
+> future reliable unwinder.
+> 
+> Add a small metadata frame record to pt_regs and initialize it on
+> exception entry, kernel stack overflow, kernel thread fork, user fork,
+> and early idle task setup. The record uses a zero {fp, ra} sentinel plus
+> a type field so a later unwinder can distinguish a final user-to-kernel
+> boundary from a nested kernel pt_regs boundary.
+> 
+> This follows the arm64 metadata frame-record model, adapted to the
+> RISC-V {fp, ra} frame record convention.
+> 
+> The metadata is established at the RISC-V entry boundaries that need an
+> explicit unwind marker:
+> 
+>    * exception entry clears the metadata {fp, ra} pair and uses SPP
+>      (or MPP in M-mode) to record whether the pt_regs frame is the final
+>      user-to-kernel boundary or a nested kernel boundary;
+>    * the kernel stack overflow path builds a nested pt_regs metadata
+>      record on the overflow stack so an unwinder can resume from the
+>      pre-overflow s0 saved in PT_S0;
+>    * _start_kernel builds the init task's final metadata record, while
+>      the secondary CPU path sets up s0 before smp_callin() so idle-task
+>      unwinding does not inherit an undefined caller frame;
+>    * copy_thread creates matching final metadata records for new kernel
+>      and user tasks, and keeps s0 available for the frame-pointer chain.
+> 
+> Keep the embedded metadata-record field offsets distinct from the
+> s0-relative STACKFRAME_* offsets used by call_on_irq_stack(), because
+> the latter describe a frame record relative to s0 rather than to the
+> record base.
+> 
+> These changes keep s0 reserved for the frame-pointer chain at task and
+> exception boundaries.
 
-The string format is parsed by the kernel. It is therefore not possible
-to dereference hypervisor pointers and the format specifier %s is not
-supported. Also the %p specifiers will fail to find the hypervisor
-function.
 
-To not waste tracing buffer data, use a dynamic size. Each
-argument is 8 bytes and the in-kernel printing function can simply know
-how many of them there are by looking at the event length.
+Overall the patch looks good to me. One nit below:
 
-Reviewed-by: Fuad Tabba <tabba@google.com>
-Tested-by: Fuad Tabba <tabba@google.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+> ---
+>   arch/riscv/include/asm/ptrace.h           |  9 ++++
+>   arch/riscv/include/asm/stacktrace/frame.h | 53 +++++++++++++++++++++++
+>   arch/riscv/kernel/asm-offsets.c           |  6 +++
+>   arch/riscv/kernel/entry.S                 | 39 ++++++++++++++++-
+>   arch/riscv/kernel/head.S                  | 23 ++++++++++
+>   arch/riscv/kernel/process.c               | 33 +++++++++++++-
+>   6 files changed, 159 insertions(+), 4 deletions(-)
+>   create mode 100644 arch/riscv/include/asm/stacktrace/frame.h
+> 
+> diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
+> index addc8188152f..4b9b0f279214 100644
+> --- a/arch/riscv/include/asm/ptrace.h
+> +++ b/arch/riscv/include/asm/ptrace.h
+> @@ -8,6 +8,7 @@
+>   
+>   #include <uapi/asm/ptrace.h>
+>   #include <asm/csr.h>
+> +#include <asm/stacktrace/frame.h>
+>   #include <linux/compiler.h>
+>   
+>   #ifndef __ASSEMBLER__
+> @@ -53,6 +54,14 @@ struct pt_regs {
+>   	unsigned long cause;
+>   	/* a0 value before the syscall */
+>   	unsigned long orig_a0;
+> +
+> +	/*
+> +	 * This frame record is entirely zeroed on exception entry, allowing the
+> +	 * unwinder to identify exception boundaries. The type field encodes
+> +	 * whether the exception was taken from user (FINAL) or kernel (PT_REGS)
+> +	 * mode.
+> +	 */
+> +	struct frame_record_meta stackframe;
+>   };
+>   
+>   #define PTRACE_SYSEMU			0x1f
+> diff --git a/arch/riscv/include/asm/stacktrace/frame.h b/arch/riscv/include/asm/stacktrace/frame.h
+> new file mode 100644
+> index 000000000000..5720a6c65fe8
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/stacktrace/frame.h
+> @@ -0,0 +1,53 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_RISCV_STACKTRACE_FRAME_H
+> +#define __ASM_RISCV_STACKTRACE_FRAME_H
+> +
+> +/*
+> + * See: arch/arm64/include/asm/stacktrace/frame.h for the reference
+> + * implementation.
+> + */
+> +
+> +/*
+> + * - FRAME_META_TYPE_NONE
+> + *
+> + *   This value is reserved.
+> + *
+> + * - FRAME_META_TYPE_FINAL
+> + *
+> + *   The record is the last entry on the stack.
+> + *   Unwinding should terminate successfully.
+> + *
+> + * - FRAME_META_TYPE_PT_REGS
+> + *
+> + *   The record is embedded within a struct pt_regs, recording the registers at
+> + *   an arbitrary point in time.
+> + *   Unwinding should consume pt_regs::epc, followed by pt_regs::ra.
+> + *
+> + * Note: all other values are reserved and should result in unwinding
+> + * terminating with an error.
+> + */
+> +#define FRAME_META_TYPE_NONE		0
+> +#define FRAME_META_TYPE_FINAL		1
+> +#define FRAME_META_TYPE_PT_REGS		2
+> +
+> +#ifndef __ASSEMBLER__
+> +/*
+> + * A standard RISC-V frame record.
+> + */
+> +struct frame_record {
+> +	unsigned long fp;
+> +	unsigned long ra;
+> +};
+> +
+> +/*
+> + * A metadata frame record indicating a special unwind.
+> + * The record::{fp,ra} fields must be zero to indicate the presence of
+> + * metadata.
+> + */
+> +struct frame_record_meta {
+> +	struct frame_record record;
+> +	unsigned long type;
+> +};
+> +#endif /* __ASSEMBLER__ */
+> +
+> +#endif /* __ASM_RISCV_STACKTRACE_FRAME_H */
+> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+> index a75f0cfea1e9..bc8e8cd7130a 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -131,6 +131,9 @@ void asm_offsets(void)
+>   	OFFSET(PT_BADADDR, pt_regs, badaddr);
+>   	OFFSET(PT_CAUSE, pt_regs, cause);
+>   
+> +	DEFINE(S_STACKFRAME,		offsetof(struct pt_regs, stackframe));
+> +	DEFINE(S_STACKFRAME_TYPE,	offsetof(struct pt_regs, stackframe.type));
+> +
+>   	OFFSET(SUSPEND_CONTEXT_REGS, suspend_context, regs);
+>   
+>   	OFFSET(HIBERN_PBE_ADDR, pbe, address);
+> @@ -503,6 +506,9 @@ void asm_offsets(void)
+>   	DEFINE(STACKFRAME_SIZE_ON_STACK, ALIGN(sizeof(struct stackframe), STACK_ALIGN));
+>   	DEFINE(STACKFRAME_FP, offsetof(struct stackframe, fp) - sizeof(struct stackframe));
+>   	DEFINE(STACKFRAME_RA, offsetof(struct stackframe, ra) - sizeof(struct stackframe));
+> +	DEFINE(STACKFRAME_RECORD_SIZE, sizeof(struct stackframe));
 
-diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
-index 743c49bd878f..8465b523cb1d 100644
---- a/arch/arm64/include/asm/kvm_hypevents.h
-+++ b/arch/arm64/include/asm/kvm_hypevents.h
-@@ -57,4 +57,18 @@ HYP_EVENT(selftest,
- 	),
- 	RE_PRINTK("id=%llu", __entry->id)
- );
-+
-+/*
-+ * trace_hyp_printk() has too many specificities to be declared with HYP_EVENT().
-+ * However, we can use a REMOTE_EVENT macro to automatically do the declaration
-+ * for the kernel side.
-+ */
-+REMOTE_EVENT_CUSTOM_PRINTK(hyp_printk,
-+	0, /* id will be overwritten during hyp event init */
-+	RE_STRUCT(
-+		re_field(u16, fmt_id)
-+		re_field(u64, args[])
-+	),
-+	__hyp_trace_printk(evt, seq)
-+);
- #endif
-diff --git a/arch/arm64/include/asm/kvm_hyptrace.h b/arch/arm64/include/asm/kvm_hyptrace.h
-index de133b735f72..46097105fdd8 100644
---- a/arch/arm64/include/asm/kvm_hyptrace.h
-+++ b/arch/arm64/include/asm/kvm_hyptrace.h
-@@ -23,4 +23,12 @@ extern struct remote_event __hyp_events_end[];
- extern struct hyp_event_id __hyp_event_ids_start[];
- extern struct hyp_event_id __hyp_event_ids_end[];
- 
-+#define HYP_STRING_FMT_MAX_SIZE 128
-+
-+struct hyp_string_fmt {
-+	const char	fmt[HYP_STRING_FMT_MAX_SIZE];
-+};
-+
-+extern struct hyp_string_fmt __hyp_string_fmts_start[];
-+extern struct hyp_string_fmt __hyp_string_fmts_end[];
- #endif
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index d4c7d45ae6bc..ec03621d7a81 100644
---- a/arch/arm64/kernel/image-vars.h
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -141,6 +141,7 @@ KVM_NVHE_ALIAS(__hyp_rodata_end);
- #ifdef CONFIG_NVHE_EL2_TRACING
- KVM_NVHE_ALIAS(__hyp_event_ids_start);
- KVM_NVHE_ALIAS(__hyp_event_ids_end);
-+KVM_NVHE_ALIAS(__hyp_string_fmts_start);
- #endif
- 
- /* pKVM static key */
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index af1d72020976..7f9b6c7dfe70 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -324,6 +324,10 @@ SECTIONS
- 		__hyp_events_start = .;
- 		*(SORT(_hyp_events.*))
- 		__hyp_events_end = .;
-+
-+		__hyp_string_fmts_start = .;
-+		*(_hyp_string_fmts)
-+		__hyp_string_fmts_end = .;
- 	}
- #endif
- 	/*
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/define_events.h b/arch/arm64/kvm/hyp/include/nvhe/define_events.h
-index 776d4c6cb702..370e8c2d39fe 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/define_events.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/define_events.h
-@@ -10,5 +10,3 @@
- #define HYP_EVENT_MULTI_READ
- #include <asm/kvm_hypevents.h>
- #undef HYP_EVENT_MULTI_READ
--
--#undef HYP_EVENT
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/trace.h b/arch/arm64/kvm/hyp/include/nvhe/trace.h
-index 8813ff250f8e..3d0b5c634bb3 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/trace.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/trace.h
-@@ -46,6 +46,69 @@ static inline pid_t __tracing_get_vcpu_pid(struct kvm_cpu_context *host_ctxt)
- void *tracing_reserve_entry(unsigned long length);
- void tracing_commit_entry(void);
- 
-+/*
-+ * The trace_hyp_printk boilerplate is too fiddly to be declared with
-+ * HYP_EVENT():
-+ *
-+ * The string format is stored into a kernel-accessible ELF section. The
-+ * hypervisor only writes the format ID.
-+ *
-+ * The function has a variadic prototype. We have no easy way to know each
-+ * argument width so they must all cast to u64.
-+ */
-+#define REMOTE_EVENT_CUSTOM_PRINTK(...)
-+
-+#define __TO_U64_0()
-+#define __TO_U64_1(x)			, (u64)(x)
-+#define __TO_U64_2(x, ...)		, (u64)(x) __TO_U64_1(__VA_ARGS__)
-+#define __TO_U64_3(x, ...)		, (u64)(x) __TO_U64_2(__VA_ARGS__)
-+#define __TO_U64_4(x, ...)		, (u64)(x) __TO_U64_3(__VA_ARGS__)
-+#define __TO_U64_5(x, ...)		, (u64)(x) __TO_U64_4(__VA_ARGS__)
-+#define __TO_U64_6(x, ...)		, (u64)(x) __TO_U64_5(__VA_ARGS__)
-+#define __TO_U64_7(x, ...)		, (u64)(x) __TO_U64_6(__VA_ARGS__)
-+#define __TO_U64_8(x, ...)		, (u64)(x) __TO_U64_7(__VA_ARGS__)
-+
-+#define __TO_U64_X(N, ...)		CONCATENATE(__TO_U64_, N)(__VA_ARGS__)
-+#define __TO_U64(...)			__TO_U64_X(COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
-+
-+REMOTE_EVENT_FORMAT(hyp_printk, HE_STRUCT(he_field(u16, fmt_id) he_field(u64, args[])));
-+extern struct hyp_event_id hyp_event_id_hyp_printk;
-+
-+static __always_inline void __trace_hyp_printk(struct hyp_string_fmt *fmt, int nr_args, ...)
-+{
-+	struct remote_event_format_hyp_printk *entry;
-+	va_list va;
-+	int i;
-+
-+	if (!atomic_read(&hyp_event_id_hyp_printk.enabled))
-+		return;
-+
-+	entry = tracing_reserve_entry(struct_size(entry, args, nr_args));
-+	if (!entry)
-+		return;
-+
-+	entry->hdr.id = hyp_event_id_hyp_printk.id;
-+	entry->fmt_id = fmt - __hyp_string_fmts_start;
-+
-+	va_start(va, nr_args);
-+	for (i = 0; i < nr_args; i++)
-+		entry->args[i] = va_arg(va, u64);
-+	va_end(va);
-+
-+	tracing_commit_entry();
-+}
-+
-+
-+#define trace_hyp_printk(__fmt, __args...)						\
-+do {											\
-+	static struct hyp_string_fmt __used __section("_hyp_string_fmts") fmt = {	\
-+		.fmt = __fmt								\
-+	};										\
-+	BUILD_BUG_ON(sizeof(__fmt) > HYP_STRING_FMT_MAX_SIZE);				\
-+	/* __TO_U64 prepends a comma if there are arguments */				\
-+	__trace_hyp_printk(&fmt, COUNT_ARGS(__args) __TO_U64(__args));			\
-+} while (0)
-+
- int __tracing_load(unsigned long desc_va, size_t desc_size);
- void __tracing_unload(void);
- int __tracing_enable(bool enable);
-@@ -58,6 +121,8 @@ static inline void *tracing_reserve_entry(unsigned long length) { return NULL; }
- static inline void tracing_commit_entry(void) { }
- #define HYP_EVENT(__name, __proto, __struct, __assign, __printk)      \
- 	static inline void trace_##__name(__proto) {}
-+#define REMOTE_EVENT_CUSTOM_PRINTK(...)
-+#define trace_hyp_printk(fmt, args...) do { } while (0)
- 
- static inline int __tracing_load(unsigned long desc_va, size_t desc_size) { return -ENODEV; }
- static inline void __tracing_unload(void) { }
-diff --git a/arch/arm64/kvm/hyp/nvhe/events.c b/arch/arm64/kvm/hyp/nvhe/events.c
-index add9383aadb5..12223d2e3618 100644
---- a/arch/arm64/kvm/hyp/nvhe/events.c
-+++ b/arch/arm64/kvm/hyp/nvhe/events.c
-@@ -9,6 +9,12 @@
- 
- #include <nvhe/define_events.h>
- 
-+/*
-+ * The hyp_printk event is not declared with HYP_EVENT in kvm_hypevents.h,
-+ * so we manually add the boilerplate here.
-+ */
-+HYP_EVENT(hyp_printk, 0, 0, 0, 0);
-+
- int __tracing_enable_event(unsigned short id, bool enable)
- {
- 	struct hyp_event_id *event_id = &__hyp_event_ids_start[id];
-diff --git a/arch/arm64/kvm/hyp_trace.c b/arch/arm64/kvm/hyp_trace.c
-index 0c7349fe006a..f39a2451c1bc 100644
---- a/arch/arm64/kvm/hyp_trace.c
-+++ b/arch/arm64/kvm/hyp_trace.c
-@@ -391,6 +391,9 @@ static struct trace_remote_callbacks trace_remote_callbacks = {
- 
- static const char *__hyp_enter_exit_reason_str(u8 reason);
- 
-+struct remote_event_format_hyp_printk;
-+static void __hyp_trace_printk(struct remote_event_format_hyp_printk *entry, struct trace_seq *seq);
-+
- #include "define_hypevents.h"
- 
- static const char *__hyp_enter_exit_reason_str(u8 reason)
-@@ -409,6 +412,61 @@ static const char *__hyp_enter_exit_reason_str(u8 reason)
- 	return strs[min(reason, HYP_REASON_UNKNOWN)];
- }
- 
-+static void __hyp_trace_printk(struct remote_event_format_hyp_printk *entry, struct trace_seq *seq)
-+{
-+	const char *fmt = (const char *)(&__hyp_string_fmts_start[entry->fmt_id]);
-+	struct ring_buffer_event *evt = (void *)entry - RB_EVNT_HDR_SIZE;
-+	int nr_args;
-+
-+	trace_seq_putc(seq, ' ');
-+
-+	if ((void *)fmt >= (void *)__hyp_string_fmts_end) {
-+		trace_seq_printf(seq, "Unknown hyp_string_fmt ID %d\n", entry->fmt_id);
-+		return;
-+	}
-+
-+	nr_args = (ring_buffer_event_length(evt) -
-+		   offsetof(struct remote_event_format_hyp_printk, args)) / sizeof(entry->args[0]);
-+	switch (nr_args) {
-+	case 0:
-+		trace_seq_printf(seq, fmt);
-+		break;
-+	case 1:
-+		trace_seq_printf(seq, fmt, entry->args[0]);
-+		break;
-+	case 2:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1]);
-+		break;
-+	case 3:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1], entry->args[2]);
-+		break;
-+	case 4:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1], entry->args[2],
-+				 entry->args[3]);
-+		break;
-+	case 5:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1], entry->args[2],
-+				 entry->args[3], entry->args[4]);
-+		break;
-+	case 6:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1], entry->args[2],
-+				 entry->args[3], entry->args[4], entry->args[5]);
-+		break;
-+	case 7:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1], entry->args[2],
-+				 entry->args[3], entry->args[4], entry->args[5], entry->args[6]);
-+		break;
-+	default:
-+		trace_seq_printf(seq, fmt, entry->args[0], entry->args[1],
-+				 entry->args[2], entry->args[3], entry->args[4], entry->args[5],
-+				 entry->args[6], entry->args[7]);
-+		break;
-+	}
-+
-+	if (seq->buffer[trace_seq_used(seq) - 1] != '\n')
-+		trace_seq_putc(seq, '\n');
-+}
-+
- static void __init hyp_trace_init_events(void)
- {
- 	struct hyp_event_id *hyp_event_id = __hyp_event_ids_start;
-@@ -418,6 +476,9 @@ static void __init hyp_trace_init_events(void)
- 	/* Events on both sides hypervisor are sorted */
- 	for (; event < __hyp_events_end; event++, hyp_event_id++, id++)
- 		event->id = hyp_event_id->id = id;
-+
-+	WARN(__hyp_string_fmts_end - __hyp_string_fmts_start > U16_MAX + 1,
-+	     "Too many trace_hyp_printk() callsites\n");
- }
- 
- int __init kvm_hyp_trace_init(void)
--- 
-2.55.0.795.g602f6c329a-goog
+This should be sizeof(struct frame_record) rather than
+sizeof(struct stackframe). STACKFRAME_RECORD_SIZE is used to skip past
+the embedded frame_record_meta.record field:
 
+     addi s0, sp, S_STACKFRAME + STACKFRAME_RECORD_SIZE
+
+The two structs happen to be identical today, but they are independent
+types serving different purposes — struct stackframe is the existing
+unwinder frame record, while struct frame_record is the one embedded
+in struct frame_record_meta introduced by this patch. If struct
+stackframe ever gains an extra field, this offset would silently break.
+
+With that fixed:
+
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+
+Thanks.
+Shuai
