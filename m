@@ -1,35 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F37370AE0;
-	Wed,  8 Jul 2026 16:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C6035959;
+	Wed,  8 Jul 2026 19:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783529952; cv=none; b=Bz6sWnppwHNTAdH3l3SeqHGdzNQdfNVK7okBdBKTyMr0nfXBqizGJPAx+CDc/WpO1Ffz3hKI5l+TkaY63mt3r1yXu9VFhfU9QZP65cgV5Z2hDsMJZKEGaQiZ9iXRUEOMqv8E2Bxa/YYd60TyCe5JzBmMhC+W+fhcid47C+ENnOk=
+	t=1783539166; cv=none; b=ln4Dchf6up7wua2YIhKp/EQMuwrjyBl0a6BAhqSAlrPCM5p8uYz96NLPG0dfergzSqF2seiUQYDjn6ypK98v0vgqE7ZQ3/Tr/XvZkNTSGeFMRUY+nJwg3JvswzE579ZPaCpjeHqky1InyOiIQZ2m2MEAUvz7HyFzrd9GubU79fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783529952; c=relaxed/simple;
-	bh=47cImVGYH5TDfx7lBh9zWDSoE1OzUzv7ktQEK1lT+rs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gWJGZaHGPWLmHm/c1L6MuUtdzoWlQdFHsUUS4posAgmY6jZ+9PJZqvDp1i8lLuKoQPrLF0wBt+NsShwgXPivYRjyvC4wXO9oz3d1GAuJiT/TK7/43TJGXB/nlOQeHuPfVk1GukRgBnB3w5Rqq+eNFU609uX3JZS68S4eX9LnGII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	s=arc-20240116; t=1783539166; c=relaxed/simple;
+	bh=v9hEdK7ccL/Br4fOnWNLLTTEFWkkKvXC2qQt1c7kEYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ns/BxB/x5kxEDxWVCZIc2SxQaftp0CZ6JFTuZ6VbCZyhcEk3kA8g3tOjugjh2+39iw+LKs/edyZyTBlCeRx0pfq9KvQo3JoV/qA1AUWosFVkeuySxa2puj6GvgpqIc5jIm/2Yy4eqe/b0OQQGoq3DorMxgNsAFrTtcvsV3dwGj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 77F2F40242;
-	Wed,  8 Jul 2026 16:59:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 9F22032;
-	Wed,  8 Jul 2026 16:59:01 +0000 (UTC)
-Date: Wed, 8 Jul 2026 12:59:06 -0400
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 571A81A0299;
+	Wed,  8 Jul 2026 19:32:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 865CA6000D;
+	Wed,  8 Jul 2026 19:32:34 +0000 (UTC)
+Date: Wed, 8 Jul 2026 15:32:39 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
-Subject: Re: [PATCH v1] tracing/remotes: Fix leak in
- trace_remote_alloc_buffer() error path
-Message-ID: <20260708125906.746f1def@gandalf.local.home>
-In-Reply-To: <20260708133201.295072-1-vdonnefort@google.com>
-References: <20260708133201.295072-1-vdonnefort@google.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, Shuah Khan
+ <skhan@linuxfoundation.org>
+Subject: [PATCH] selftests/ftrace: Fix reading enabled_functions in
+ add_remove_fprobe_module test
+Message-ID: <20260708153239.055d56dd@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,50 +37,124 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 9F22032
-X-Stat-Signature: j3pea9swafybz7iomj1dnmuemd5p6nd9
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 865CA6000D
+X-Stat-Signature: huzn7b6patbwzkijx4xm84ztdgaom1m3
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX183PKLxK0/c3+9s+c5XqxprE97pZrLUYJc=
-X-HE-Tag: 1783529941-500581
-X-HE-Meta: U2FsdGVkX19+f5j/68swzhoxSHUyk1WJr/oN+zq7MGJopHmNj1jS0A/68P5uF/Ciu92c/0ooKceWmsaBqKy/o7Z0MQfFpYbmS3GXmOVtuCw8IB8M4NvQ47fSmpQP4yD8X0EgmaXm9w0zw4p/XMeFLSk9uN+FRbgxMHNZVyREgsW/Uw+XgF9Bc+7n4CD6i91YmOCxInFYmytqcSYvJxR/e+Ry2vij4SMEnJnDP2CUdi0JOxNZucnUUDZC2K4OUvZjcB8kj5k1R0zzN9mXwQ30/+dgrpGmNTNljfKxbpqyuw69XNRrf3cKr4tNMCi5MndVgrOvb3HgPORxtVUkE1d3rAbHakp1sqBg7sky1gqBmvuwC9x7FJq6GPv24U+m4uxl/c1BQS+XoRbXEsN1R/7NHnAqJir8Foq3dBEuUFGL5e8=
+X-Session-ID: U2FsdGVkX1+n/ySaWf43UDPFEsJ3v98FwEVEIy13QV0=
+X-HE-Tag: 1783539154-577436
+X-HE-Meta: U2FsdGVkX19O2YlSsS4HEzRZGjTMcJxdZEQM3EHEKir5CivE9h7Pw2XA/153+NaQpVWqCCldLovEgUSe9SYLFHuRWCkk7bQPz+wWxyNTHNbgQe/GHHYa1c589M+5aZ4nhltMboj6ZYe2/3/u/Ra8TxTT4aWpES+f7lkVmv7366dl5y/OFNFR+mm6Zj8j3k9WGm9xcuxNGswGqtSPLJbnbkFF2dKtQp4tOcgH+uBnya7evlV4Zj2YDbFkAoxqa4VPSnu1mPC+aagByQYL7dt8lm+cN29Sv4AD3qHSJzc/e5/0mO3ZgdZEdabasgxg9Sw3F8uQQa3XsUJaU1icEfvpEQGwQ8bnngJHCl3jbEnkTj5ajgOAtf5R08EO+sFYxVO/
 
-On Wed,  8 Jul 2026 14:32:01 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> If page allocation fails in trace_remote_alloc_buffer(), desc->nr_cpus
-> is not yet incremented for the current CPU. As a consequence, on error,
-> half-allocated rb_desc will not be freed in trace_remote_free_buffer().
-> 
-> Include the failing CPU in desc->nr_cpus before going to the error path.
-> 
+The add_remove_fprobe_module test checks the number of functions added to
+the enabled_functions file to make sure that the functions added or
+removed is as expected. The issue is that it expects this file to be empty
+on start up.
 
-Looks like Sashiko found other issues you may want to address:
+Now that systemd uses BPF that attaches to functions via ftrace, this file
+is not empty in several systems:
 
-  https://sashiko.dev/#/patchset/20260708133201.295072-1-vdonnefort%40google.com
+ # cat /sys/kernel/tracing/enabled_functions
+ bpf_lsm_file_open (1) R   D   M 	tramp: ftrace_regs_caller+0x0/0x61 (call_direct_funcs+0x0/0x50)
+	direct(jmp)-->bpf_trampoline_6442529439+0x0/0xe9
 
--- Steve
+Change the test to read the number of lines in enabled_functions at the
+start of the test and subtract that from the value of the count for the
+checks within the test.
 
-> Fixes: 96e43537af54 ("tracing: Introduce trace remotes")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index 2a6cc000ec98..62d3d431c309 100644
-> --- a/kernel/trace/trace_remote.c
-> +++ b/kernel/trace/trace_remote.c
-> @@ -1008,8 +1008,10 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
->  
->  		for (id = 0; id < nr_pages; id++) {
->  			rb_desc->page_va[id] = (unsigned long)__get_free_page(GFP_KERNEL);
-> -			if (!rb_desc->page_va[id])
-> +			if (!rb_desc->page_va[id]) {
-> +				desc->nr_cpus++; /* Free this partially-allocated rb_desc */
->  				goto err;
-> +			}
->  
->  			rb_desc->nr_page_va++;
->  		}
-> 
-> base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ .../dynevent/add_remove_fprobe_module.tc      | 27 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
+index 2915206777b6..89660a9adf44 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
+@@ -16,23 +16,32 @@ echo > dynamic_events
+ FUNC1='foo_bar*'
+ FUNC2='vfs_read'
+ 
++:;: "Save enabled functions count" ;:
++ecount=`cat enabled_functions | wc -l`
++
++count_enabled_functions() {
++    count=`cat enabled_functions | wc -l`
++    count=$(($count-$ecount))
++    echo $count
++}
++
+ :;: "Add an event on the test module" ;:
+ echo "f:test1 $FUNC1" >> dynamic_events
+ echo 1 > events/fprobes/test1/enable
+ 
+ :;: "Ensure it is enabled" ;:
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $funcs -ne 0
+ 
+ :;: "Check the enabled_functions is cleared on unloading" ;:
+ rmmod trace-events-sample
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $funcs -eq 0
+ 
+ :;: "Check it is kept clean" ;:
+ modprobe trace-events-sample
+ echo 1 > events/fprobes/test1/enable || echo "OK"
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $funcs -eq 0
+ 
+ :;: "Add another event not on the test module" ;:
+@@ -40,19 +49,19 @@ echo "f:test2 $FUNC2" >> dynamic_events
+ echo 1 > events/fprobes/test2/enable
+ 
+ :;: "Ensure it is enabled" ;:
+-ofuncs=`cat enabled_functions | wc -l`
++ofuncs=`count_enabled_functions`
+ test $ofuncs -ne 0
+ 
+ :;: "Disable and remove the first event"
+ echo 0 > events/fprobes/test1/enable
+ echo "-:fprobes/test1" >> dynamic_events
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $ofuncs -eq $funcs
+ 
+ :;: "Disable and remove other events" ;:
+ echo 0 > events/fprobes/enable
+ echo > dynamic_events
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $funcs -eq 0
+ 
+ rmmod trace-events-sample
+@@ -63,12 +72,12 @@ echo "f:test1 $FUNC1" >> dynamic_events
+ echo 1 > events/fprobes/test1/enable
+ echo "f:test2 $FUNC2" >> dynamic_events
+ echo 1 > events/fprobes/test2/enable
+-ofuncs=`cat enabled_functions | wc -l`
++ofuncs=`count_enabled_functions`
+ test $ofuncs -ne 0
+ 
+ :;: "Unload module (ftrace entry should be removed)" ;:
+ rmmod trace-events-sample
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $funcs -ne 0
+ test $ofuncs -ne $funcs
+ 
+@@ -77,7 +86,7 @@ echo 0 > events/fprobes/test2/enable
+ echo "-:fprobes/test2" >> dynamic_events
+ 
+ :;: "Ensure ftrace is disabled." ;:
+-funcs=`cat enabled_functions | wc -l`
++funcs=`count_enabled_functions`
+ test $funcs -eq 0
+ 
+ echo 0 > events/fprobes/enable
+-- 
+2.53.0
 
