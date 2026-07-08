@@ -1,214 +1,145 @@
-Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B33E37FF53
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Jul 2026 18:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113312D2483;
+	Wed,  8 Jul 2026 00:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783447372; cv=none; b=ZFqELsI+VklVGLrbIu8otAksWUtCMIKWF9TUA4qW4vPj0Yc6cUdpBnpg2hYNUFmHIlmjcOnrbDxpELdoci1iXqYTnwRbIexrWjudzn1w/PGGVbMsyxYV1hPDklaEBabAvhPjQ/znYmYU4wrBZ5JwE3snOwXCbVPFjxIqcD2mmrI=
+	t=1783471590; cv=none; b=Fe3ZCI0rhx3EChDqIhZDVWmCK4M3AeJLanoTpyzv2cjvZydsEiDIjkmu99O5+EOm+qHxBI/L5DleS48LHBMVkvhThWIU32dqajIp5bygc3gjLRfs/SeeLYnHkYmY91SvL21N03SLrY+MEr/xgOxvUNbxyU5T21SGDiY4QGsJuDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783447372; c=relaxed/simple;
-	bh=//cvW4gSOO1r60LHv9TAkyXpGY3vFsGKdM0tUjAHR9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/zlOKj7V1CT3Jqt2hYAzUedDf7qV1WcNCqRfdwBJu/rJ1yhEm1rlE/gAvLPRp9NsHuPquvHwdSrcrT3l/rxJfoBCe7S2mdH4VfLg+IWeuRi9YHz0e0DGL8JZCXiSD7wWG3rBo8Hodh00L9jl80fKDol3vbEEvIaYsZevoqJjbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n6t5I1NR; arc=none smtp.client-ip=74.125.224.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783471590; c=relaxed/simple;
+	bh=Bf9P83x7fUMk5dMzGeq1exjWqLHn/K3DrteWzcxMP2g=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uqyBx8uxmGK0jl856S6igWHh05XCM6YOyPCL/1vmxo3IFT18dB3/4B/088w94zfwNnTzePT/CtG6hXgTkf33P+o5SfZgf2C2GcBHsO4BBJhVX+jjIjGuBLmhoWZpnwJCWlGSSwWEcvYwwPLOZB33Qm5UeeUboQ7+uo3mlf/yYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7Ptf35v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6t5I1NR"
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-667971437d6so471423d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Jul 2026 11:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783447370; x=1784052170; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=70oQwU88o+IMY5KYIKx2if+Hd1u/ko0kAaOQAuxSTHY=;
-        b=n6t5I1NRJkw47+b837qKCHe75XMsE3tZehx5vwvwIDfuHR3DymyGeLKERc8wTuMMAA
-         oSEAnAepSI3k848Y3XsDWenwqfY7J1z/AEJzCXzroCRF3sasztTAQ3t45k92UF6qxazr
-         HALCKr9F+Mr7+TfLHy7uFJACoeSyqb9JjWsk2hz7m07ZTEeskC/W1tyvySiuA+LqxIs1
-         KapRBwgWFjfu7+82XFHud2IFCleKsdWLA7gyOfJYBxzjztAa/0BhJyl04Rd7M2o2Wodx
-         Sx41GQ4BoEfs+/4nAtZMo/RNJBoCZpkOKmErqmdyCvkAd7ix75sIddzFnXsEOpiY/Iwp
-         SZHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783447370; x=1784052170;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=70oQwU88o+IMY5KYIKx2if+Hd1u/ko0kAaOQAuxSTHY=;
-        b=Fn7RtxEtgJY3zv81oArmsJ5dKvXvqyVL5Ny/sF459trZljxKznr5vd5ooCE1tCBkpW
-         I8r8Lc3JdT3vq+zoeZujJKf1R0d8gHW8Lu8dlYgkVjqn2f5CEJ7NS4mgJA3BhcP0hHWo
-         4OHgBTHlKxeAu3QI1d0dfA1URymSWuw1nw0SYnFI1tU0VjoEclsJLqfV38Hi4/RQpdrV
-         jKW+GCS1LJuF94E38YrzEuPXtgt6ONF8u1+Kftlyd6+91FjXfVsKN20kWJS2WLANmFwy
-         OiuMV6nQzJ9CkS8Lresp44yk+946p2iCSbhOsSyIc4Kn0/2CYR7EFWRnlMrXwhTrWA/z
-         UCzQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqsd2v+g5STQIIKh8gMijOJUGRRKdcw37qsqlvB6+VvAbDpMnVGvm9o/bKlKkTArQn3eLguf54pGmsKaMTUdNE6kZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvbRRelAoqM/RojpNaRvI944VgHSWxRNv1YCRGysC944H/OH7A
-	SjJLNcYLWQIMmmEfSMdjOQj5oGM0lYn1QWLseVpLRwonrBw0IYn1mNrKDSzLG9ER1Fc=
-X-Gm-Gg: AfdE7cmSdMIpljYH4xiic6W5JCIX9JTyWZvKePx9xUa8W3Hw2kGrRajWkRUKlDuFYZg
-	soK2KzPl7rL1exkuevpyVJ5FyKZ9CUej+Cl3sc0FWQDZ9TTpZK215+oQOU/98cYGPOHlMmnzDc2
-	M4LQc29Trpc/N4hjkPyLeiK4uBnZyVP8Obqbj/mzbYz9qt+n6y+yxR4cqcl2yTsQ9RXVtz0On3a
-	XkvejwN7EVKAcY6BWhj7juSBz+s1fy2OwOd27DwBA/maC94B105s+jj2bdKdTgzET4F252zvJ1x
-	+6T3HW2F6NRsBWSr1lWi85+FsuGJcY5lb1PnHq+XsH7eLknUcpsX4EIqH+fxR97JnRmGD0ECIjX
-	6IpFLDAzDg3Zx73tbH562FfKAoZn7mCjncP7+q6fqc2/lhaNtE+6pbXZ1dv0jqsTwh+h8nF40We
-	M4S6R2z4G8yTEok+Xt0CkloNwFyVho3vxRByy99OMoY4wpgc/0unZSz+k6BDCyv/9b0vsEadWpI
-	lBHx9ExAgUisYc6m5cfdSrWW45ULJ+9
-X-Received: by 2002:a53:d015:0:b0:664:d786:3321 with SMTP id 956f58d0204a3-6677fc69000mr4400946d50.62.1783447370059;
-        Tue, 07 Jul 2026 11:02:50 -0700 (PDT)
-Received: from server0.tail6e7dd.ts.net (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f46e27d555sm165184196d6.7.2026.07.07.11.02.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 11:02:49 -0700 (PDT)
-From: Michael Bommarito <michael.bommarito@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>,
-	XIAO WU <xiaowu.417@qq.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] selftests/user_events: wait for deferred event teardown after unregister
-Date: Tue,  7 Jul 2026 14:02:40 -0400
-Message-ID: <20260707180240.2887081-1-michael.bommarito@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7Ptf35v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA0441F000E9;
+	Wed,  8 Jul 2026 00:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783471588;
+	bh=keo6DKBVRQlMRYR2cMCSZGrBdCB2jtcmPI/WxsveT7I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=M7Ptf35vHckLNyx0hWFY/ZsncP1KLGIyG0swnIYTD4a1Jwt8HFdo6nn7gYXsCBdNT
+	 7tBtlKDIhYHW6s5cQM6sWUzYjeCcQseHduDGX6LeMR4KvXSlNpOXSO7cZ3NJ8cBjm4
+	 CBirzszAGLXDoGfttKBNqH78NtwjMJfEmR3KnvlZ2gv2u1uscOjnvLgZy8JYzm/Ou1
+	 j0FF//87lWZxy6yaVedBWw0jIVIHjwN3eJDjV+dUJfNQKVfRw7rs3oADI/9BQRXmE0
+	 2nBNkXiSCipzjJOxnxiccCiECEOvQP1/KMIDrszQNr5yxASJKJpo3rMyv+t/mKonD/
+	 HYKJmNIpyEURw==
+Date: Wed, 8 Jul 2026 09:46:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Pu Hu <hupu@transsion.com>
+Cc: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "davem@davemloft.net"
+ <davem@davemloft.net>, Hongyan Xia <hongyan.xia@transsion.com>, Jiazi Li
+ <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
+ <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
+ "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
+Subject: Re: [RFC 1/3] arm64: kprobes: Do not handle non-XOL faults as
+ kprobe faults
+Message-Id: <20260708094623.9a1d40bed37bce3c7969ad20@kernel.org>
+In-Reply-To: <20260706083636.159883-2-hupu@transsion.com>
+References: <20260704234730.46d51c47d75e7d208e7bec9f@kernel.org>
+	<20260706083636.159883-1-hupu@transsion.com>
+	<20260706083636.159883-2-hupu@transsion.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Unregistering a user event now defers the drop of the enabler's event
-reference (and the freeing of the enabler) past an RCU grace period. As a
-result DIAG_IOCSDEL can transiently fail with -EBUSY while that last
-reference is still being dropped, where it previously succeeded
-immediately.
+On Mon, 6 Jul 2026 08:36:48 +0000
+Pu Hu <hupu@transsion.com> wrote:
 
-Two tests assumed the delete takes effect the instant the unregister
-returns:
+> From: Pu Hu <hupu@transsion.com>
+> 
+> kprobe_fault_handler() handles faults taken while kprobes is in
+> KPROBE_HIT_SS or KPROBE_REENTER state as faults caused by the
+> single-stepped instruction.
+> 
+> That assumption is not always true. While a kprobe is preparing or
+> executing the out-of-line single-step instruction, other code may run
+> in that window. For example, perf or trace code can be invoked from the
+> debug exception path and may take a fault of its own. In that case the
+> fault did not happen on the kprobe XOL instruction, but the kprobe fault
+> handler may still try to recover it as a kprobe single-step fault.
+> 
+> This can corrupt the exception recovery flow and leave the real fault to
+> be handled with a wrong PC. A typical reproducer is running simpleperf
+> with preemptirq tracepoints and dwarf callchains while a kprobe is
+> installed on a frequently executed kernel function.
+> 
+> Fix this by handling faults in KPROBE_HIT_SS/KPROBE_REENTER only when
+> the faulting PC points at the current kprobe's XOL instruction. Faults
+> from any other PC are left to the normal fault handling path.
+> 
+> This follows the same idea as the x86 fix in commit 6381c24cd6d5
+> ("kprobes/x86: Fix page-fault handling logic").
+> 
+> Signed-off-by: Pu Hu <hupu@transsion.com>
+> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
+> ---
+>  arch/arm64/kernel/probes/kprobes.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+> index 43a0361a8bf0..e4d2852ce2fb 100644
+> --- a/arch/arm64/kernel/probes/kprobes.c
+> +++ b/arch/arm64/kernel/probes/kprobes.c
+> @@ -285,6 +285,20 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr)
+>  	switch (kcb->kprobe_status) {
+>  	case KPROBE_HIT_SS:
+>  	case KPROBE_REENTER:
+> +		/*
+> +		 * A fault taken while a kprobe is single-stepping is not
+> +		 * necessarily caused by the instruction in the XOL slot. For
+> +		 * example, tracing or perf code running in this window may take
+> +		 * an unrelated fault.
+> +		 *
+> +		 * Handle the fault here only when the faulting PC is the XOL
+> +		 * instruction of the current kprobe. Otherwise let the normal
+> +		 * fault handling path deal with it.
+> +		 */
+> +		if (cur->ainsn.xol_insn &&
+> +			instruction_pointer(regs) != (unsigned long)cur->ainsn.xol_insn)
+> +			break;
 
-  - abi_test "flags" deletes the event right after disabling it.
-  - perf_test's fixture teardown clear() deletes __test_event before the
-    next test registers the same name; a stale event makes the following
-    registration fail with -EADDRINUSE.
+Can you check Sashiko's comments[1]?
 
-Retry the delete until it succeeds (or the event is already gone) with a
-bounded wait, matching the existing wait_for_delete() idiom in the same
-suite, so the tests are robust to the deferred teardown.
+[1] https://sashiko.dev/#/patchset/20260706083636.159883-1-hupu%40transsion.com?part=1
 
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
----
-This resends only the selftest patch; the tracing/user_events fix that
-was patch 1/2 of the v2 series is unchanged and being applied separately.
+It seems that it complains about simulated kprobe's case.
+In that case, cur->ainsn.xol_insn == NULL. The simulation should be done
+in the kprobe context (which is a debug trap). I'm not sure the arm64
+can cause NMI in that context, but if it happens and causes a fault,
+it may cause a problem.
 
-v2 -> v3:
-  - abi_test wait_for_event_delete(): only retry the delete on -EBUSY,
-    treat an already-deleted event (-ENOENT) as success, and return any
-    other error immediately instead of spinning for the full 10s timeout.
-    perf_test's clear() already discriminated on errno this way; the two
-    now match. Reported by Sashiko automated review.
+So I think we can just ignore the fault on the simulated kprobes.
 
- .../testing/selftests/user_events/abi_test.c  | 29 ++++++++++++++++++-
- .../testing/selftests/user_events/perf_test.c | 26 +++++++++++++++--
- 2 files changed, 51 insertions(+), 4 deletions(-)
+To ensure that, you can just add:
 
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index 85892b3b719cc..b71813eaf5c04 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -132,6 +132,33 @@ static int event_delete(void)
- 	return ret;
- }
- 
-+/*
-+ * Deleting an event drops its last reference, but an unregister may defer
-+ * that put (and the freeing of the associated enabler) past an RCU grace
-+ * period. The delete can therefore transiently fail with -EBUSY while the
-+ * previous reference is still being dropped. Retry only on that transient
-+ * failure; treat an already-deleted event (-ENOENT) as success and return
-+ * any other error immediately rather than spinning for the full timeout.
-+ */
-+static int wait_for_event_delete(void)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < 10000; ++i) {
-+		ret = event_delete();
-+
-+		if (ret == 0 || errno == ENOENT)
-+			return 0;
-+
-+		if (errno != EBUSY)
-+			return ret;
-+
-+		usleep(1000);
-+	}
-+
-+	return ret;
-+}
-+
- static int reg_enable_multi(void *enable, int size, int bit, int flags,
- 			    char *args)
- {
-@@ -262,7 +289,7 @@ TEST_F(user, flags) {
- 	ASSERT_TRUE(event_exists());
- 
- 	/* Ensure we can delete it */
--	ASSERT_EQ(0, event_delete());
-+	ASSERT_EQ(0, wait_for_event_delete());
- 
- 	/* USER_EVENT_REG_MAX or above is not allowed */
- 	ASSERT_EQ(-1, reg_enable_flags(&self->check, sizeof(int), 0,
-diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
-index cafec0e52eb31..5727cb5b914cf 100644
---- a/tools/testing/selftests/user_events/perf_test.c
-+++ b/tools/testing/selftests/user_events/perf_test.c
-@@ -85,6 +85,7 @@ static int get_offset(void)
- static int clear(int *check)
- {
- 	struct user_unreg unreg = {0};
-+	int i, ret;
- 
- 	unreg.size = sizeof(unreg);
- 	unreg.disable_bit = 31;
-@@ -99,13 +100,32 @@ static int clear(int *check)
- 		if (errno != ENOENT)
- 			return -1;
- 
--	if (ioctl(fd, DIAG_IOCSDEL, "__test_event") == -1)
--		if (errno != ENOENT)
-+	/*
-+	 * Deleting the event drops its last reference, but the unregister
-+	 * above defers that put (and the freeing of the enabler) past an RCU
-+	 * grace period. The delete can therefore transiently fail with -EBUSY
-+	 * until that reference is dropped. Retry for up to ~10 seconds so the
-+	 * event is actually gone before the next test registers the same name.
-+	 */
-+	for (i = 0; i < 10000; ++i) {
-+		ret = ioctl(fd, DIAG_IOCSDEL, "__test_event");
-+
-+		if (ret == 0 || errno == ENOENT) {
-+			ret = 0;
-+			break;
-+		}
-+
-+		if (errno != EBUSY) {
-+			close(fd);
- 			return -1;
-+		}
-+
-+		usleep(1000);
-+	}
- 
- 	close(fd);
- 
--	return 0;
-+	return ret;
- }
- 
- FIXTURE(user) {
+	if (cur && !cur->ainsn.xol_insn)
+		return 0;
+
+at the entry of this function. (and remove redundant cur->ainsn.xol_insn check)
+
+Thank you,
+
+> +
+>  		/*
+>  		 * We are here because the instruction being single
+>  		 * stepped caused a page fault. We reset the current
+> -- 
+> 2.43.0
+> 
+
+
 -- 
-2.53.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
