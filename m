@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5094F2773CA;
-	Wed,  8 Jul 2026 00:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6073A63FB;
+	Wed,  8 Jul 2026 00:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783472047; cv=none; b=Zm2ebO09G8ETzZcUm5fx1XP12Z+hHg4PZ5KPr2px7FdvV90YpiB4+gUmt93phuXYcNwVh/xvW8vS8psn3wY5aADLmw8I0H4+BCoZUS5Jbq2Mpd3b9CKQotjtwRPduqs8UU+Jm64T9GNpMP22Xq/tx411e/MTT1BEgQ9877Gra2k=
+	t=1783472146; cv=none; b=qRY8hcBBZHXaI4YuPWtNrw8m0FyrUQ649hXV/tWusNdQIBmzuTI/tf0RjMYwIzSbIP+65hOIRhE2dE2w81yRr6IXej6nyQShEZ/dE+uQ72Zvk1c6RkKA+wtpYCvrToy37+1b9OyVRXyCssqkOuyenKUayy8hY0G5a44Qlla92b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783472047; c=relaxed/simple;
-	bh=tUJbjm6u8/OwE0AN2uGJm/jHmgzQ4lzZVHcv+o0WZP8=;
+	s=arc-20240116; t=1783472146; c=relaxed/simple;
+	bh=y5hhRHC7vKyufrVYCl4P8U8W+OF7RqDoVp1egTbeEy8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sM0bnc18r3Q7o5inbh65Es4LO5j+GikzVTF3aUPTh+dJbW5nVtMdULHMYLJLLLDyh+kGKD1ws/Zy1BoT+YLlsm0HvEtxAsn23KV49btPvLCiqTSUkFx3EPgFudLF8YXlN7LFeabk+KWAZ6VqvIYgy/QGU5poIFfUKgqKBNTO6mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2Jx82ND; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=UyPNrRJP/SsJgjk6qsGU26nLDZLp1ToW36rI7zH0tIJh8Z4Ttm97SD2O4BQ3LKXPKwlVePm3dbltERFvnsviTE86JhfozPldXoDoOVrsaVxP8M/rCzDarAapoIGoZXbafXjKI3XsF9BQI5H+gz8jYT/ackLgulc9/fB9dCKhfTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZ/nGzZe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2Jx82ND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24CA91F000E9;
-	Wed,  8 Jul 2026 00:54:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZ/nGzZe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124341F000E9;
+	Wed,  8 Jul 2026 00:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783472046;
-	bh=ZPa4plMMy8iNMbmyGa8gqrqo+2w2vQ9zdj+sw1yvhu4=;
+	s=k20260515; t=1783472145;
+	bh=XRAnSmciVx2Uv4vUT+zMl7S2GSv+W3820dA+59HEuQ8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=N2Jx82NDbi6EzBMJXNZ+eQya5X1w9wWA/Dumuygz7IlwXT7d5gZZcIGhWwpYmv49U
-	 cObt4MJcGrCZpDMIVerxelhPQY3BRpujm7Gx77KwqWJjQJRUoLBr1INMp+x4EYHZWa
-	 5UNPl+F7ChI/S4WckCJCNrJ9TsBSOfbP4tpZ1joBzf1xyia0VcPLzYbVyqsKcA5ENq
-	 1GqQSMvbxl0FoEKTukuqOwz+DwpjEjHkYvbb1FJeEyGAVtctAS8iOO40k6vKB+/Eqm
-	 OaEfG9ICQlsQ24OMyY6SnZJgI8L5e/WWHdUklazZ1NXLmCgHNaq31J1HSqLAW4z48v
-	 8lg3xJJ85tjSQ==
-Date: Wed, 8 Jul 2026 09:54:00 +0900
+	b=oZ/nGzZeYoH2tT49qy0JP7bPImKjYNCoqtGmbMWIGBgeDFbE8SO6DCo58NrcxAN9C
+	 vATmCqgUsIO930R4BTHH5pyVrRwvJE3cr7M+WPLO/9u+C3n/bh8NYmZOVUcUQh8Let
+	 VUFVvI2f4FLqj609hnDneqUzOMRM2WxJ2VujUxQIuIfL/SNghUH0mp3Aa/Z/F1frBk
+	 UVx8xtryZ64qzN+191OYfvfG19bkyM8FiPZfL8W2Hquykb22LHoa5K2nWO7lpPjfDc
+	 WxwIrJWtZ3Ow3AZcvyfZSILzOGb0Frvq8B09eK2qhR8k84fXcIiORHFICg53bIfXIP
+	 VLojfCpZDBDXg==
+Date: Wed, 8 Jul 2026 09:55:40 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Pu Hu <hupu@transsion.com>
 Cc: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
@@ -38,13 +38,12 @@ Cc: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
  <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
  <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
  "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
-Subject: Re: [RFC 2/3] arm64: kprobes: Allow reentering kprobes while
- single-stepping
-Message-Id: <20260708095400.7582bc9589fd9da925aa9c1d@kernel.org>
-In-Reply-To: <20260706083636.159883-3-hupu@transsion.com>
+Subject: Re: [RFC 0/3] arm64: kprobes: Fix single-step fault and reentry
+ handling
+Message-Id: <20260708095540.31c97fcbe9a56f3fd7f0b284@kernel.org>
+In-Reply-To: <20260706083636.159883-1-hupu@transsion.com>
 References: <20260704234730.46d51c47d75e7d208e7bec9f@kernel.org>
 	<20260706083636.159883-1-hupu@transsion.com>
-	<20260706083636.159883-3-hupu@transsion.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,73 +54,81 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 6 Jul 2026 08:36:49 +0000
+Hi, Pu,
+
+Thanks for updating the series. But even if it just update
+the signed-off-by, please update the version.
+
+Also, can you check the Sashiko's comments?
+
+https://sashiko.dev/#/patchset/20260706083636.159883-1-hupu%40transsion.com
+
+Thank you,
+
+On Mon, 6 Jul 2026 08:36:46 +0000
 Pu Hu <hupu@transsion.com> wrote:
 
 > From: Pu Hu <hupu@transsion.com>
 > 
-> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
-> can happen when tracing or perf code runs from the debug exception path
-> while the first kprobe is preparing or executing its out-of-line
-> single-step instruction.
+> This series fixes two arm64 kprobes issues observed when running
+> simpleperf with preemptirq tracepoints and dwarf callchains while a
+> kprobe is active on a frequently executed kernel function.
 > 
-> Currently arm64 treats a kprobe hit in KPROBE_HIT_SS as unrecoverable,
-> the same as a hit in KPROBE_REENTER. This is too strict. A hit in
-> KPROBE_HIT_SS is still a one-level reentry and can be handled by saving
-> the current kprobe state and setting up single-step for the new probe,
-> just like reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
+> The crash happens in the kprobe debug exception path. While a kprobe is
+> preparing or executing its XOL single-step instruction, perf/trace code
+> can run in the same window. That code may either take a fault of its own
+> or hit another kprobe.
 > 
-> The truly unrecoverable case is hitting another kprobe while already in
-> KPROBE_REENTER, because the reentry save area has already been consumed.
+> Patch 1 makes kprobe_fault_handler() handle a fault in
+> KPROBE_HIT_SS/KPROBE_REENTER only when the faulting PC points at the
+> current kprobe's XOL instruction. Otherwise the fault is left to the
+> normal fault handling path.
 > 
-> Move KPROBE_HIT_SS to the recoverable reentry cases and leave
-> KPROBE_REENTER as the unrecoverable nested reentry case.
+> Patch 2 allows a kprobe hit in KPROBE_HIT_SS to be handled as a
+> recoverable one-level reentry. Only a hit while already in
+> KPROBE_REENTER remains unrecoverable.
 > 
-> This mirrors the x86 fix in commit 6a5022a56ac3
-> ("kprobes/x86: Allow to handle reentered kprobe on single-stepping").
-
-Can you also check the Sashiko comment?
-
-https://sashiko.dev/#/patchset/20260706083636.159883-1-hupu%40transsion.com?part=2
-
-This seems indicating potentially brakage of reenter kprobes on arm64.
-But is it possible to hit another kprobe while SS on arm64? It is
-the same question about the previous one, can NMI happens during
-the single stepping? (maybe yes, because it is non-maskable)
-
-Anyway, for making it safer, we need to add saved_irqflags to prev_kprobe.
-
-Thank you,
-
+> Patch 3 adds a kprobes selftest which registers a kprobe on a frequently
+> executed filemap fault path and drives repeated file-backed page faults
+> from userspace. This provides a smaller reproducer for validating the
+> fault handling fix.
 > 
-> Signed-off-by: Pu Hu <hupu@transsion.com>
-> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> ---
->  arch/arm64/kernel/probes/kprobes.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> This follows the same logic as the existing x86 fixes:
+>   6381c24cd6d5 ("kprobes/x86: Fix page-fault handling logic")
+>   6a5022a56ac3 ("kprobes/x86: Allow to handle reentered kprobe on single-stepping")
 > 
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index e4d2852ce2fb..764b2228cca0 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -240,10 +240,16 @@ static int __kprobes reenter_kprobe(struct kprobe *p,
->  	switch (kcb->kprobe_status) {
->  	case KPROBE_HIT_SSDONE:
->  	case KPROBE_HIT_ACTIVE:
-> +	case KPROBE_HIT_SS:
-> +		/*
-> +		 * A probe can be hit while another kprobe is preparing or
-> +		 * executing its XOL single-step instruction. This is still a
-> +		 * recoverable one-level reentry, so handle it in the same way as
-> +		 * reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
-> +		 */
->  		kprobes_inc_nmissed_count(p);
->  		setup_singlestep(p, regs, kcb, 1);
->  		break;
-> -	case KPROBE_HIT_SS:
->  	case KPROBE_REENTER:
->  		pr_warn("Failed to recover from reentered kprobes.\n");
->  		dump_kprobe(p);
+> Reproducer:
+> 
+>   simpleperf record -p <pid> -f 10000 \
+>     -e preemptirq:preempt_disable \
+>     -e preemptirq:preempt_enable \
+>     --duration 9 --call-graph dwarf \
+>     -o /data/local/tmp/perf.data
+> 
+> The new selftest can be built from tools/testing/selftests/kprobe/ and
+> used to exercise the page fault handling path with the test kprobe
+> module loaded.
+> 
+> Before this series, the crash reproduced frequently. With both patches
+> applied, it was no longer reproduced in our testing.
+> 
+> 
+> Pu Hu (3):
+>   arm64: kprobes: Do not handle non-XOL faults as kprobe faults
+>   arm64: kprobes: Allow reentering kprobes while single-stepping
+>   selftests/kprobes: Add kprobe stress test for page fault handling
+> 
+>  arch/arm64/kernel/probes/kprobes.c            |  22 +++-
+>  tools/testing/selftests/kprobe/.gitignore     |   2 +
+>  tools/testing/selftests/kprobe/Makefile       |  75 +++++++++++++
+>  tools/testing/selftests/kprobe/fault_stress.c | 105 ++++++++++++++++++
+>  .../selftests/kprobe/kprobe_folio_stress.c    |  70 ++++++++++++
+>  5 files changed, 273 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/kprobe/.gitignore
+>  create mode 100644 tools/testing/selftests/kprobe/Makefile
+>  create mode 100644 tools/testing/selftests/kprobe/fault_stress.c
+>  create mode 100644 tools/testing/selftests/kprobe/kprobe_folio_stress.c
+> 
 > -- 
 > 2.43.0
 > 
