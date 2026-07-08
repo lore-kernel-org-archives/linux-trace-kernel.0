@@ -1,170 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2413CDBC3;
-	Wed,  8 Jul 2026 06:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531353E6DD8;
+	Wed,  8 Jul 2026 07:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783492610; cv=none; b=f3++WZjYaeaznCF/wAr7tik7PgDWOrpCSHzz6FtPygZIVmFzDv6VQPLYeO1qgVohb34ErM7GC5yL8uzfLu4M/AYJ9IkVd4DxVGm0+GXBnRY0jjNNNAv2D9xptKk8grsmh2KMoOVOKNzOPmqjIHuxNTbIcGRmM08JC4/QkyU3dLg=
+	t=1783494310; cv=none; b=lwWG6HFUgqJDEzA44/9lHNAJ8rMjadZRHvtQjMqC/3P6eCsGazeXq0IK1EReubVaQ+fROxHemPGqso+6xGBS3V79WKkLuH6+LVRVWE6C1b3rjBiIXtZWZPhwZ+2uq48wgXcotKMUZEyctgEa5PNVHvMrYTnbCiIEh402P/ShwfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783492610; c=relaxed/simple;
-	bh=0VAulgCnbgot4cpP8JKj1m59gLCXA5naUEjVGiur4yU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bdq4t8ctTKvPPK8EDrrrPfXhu4vIcvFvEgwleYkwY4COhcOyZ6PbPF6OghrdvZIYI7qKxS1wIUV+o9nRcveLpO7UGlfjdirMtPzrDJxeg9ovvwm84UoqyvdlMb4LEP6C4twIQePf8zCp99V/PahJbIutvBMOgXjnVI9f+Z55n0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxzNfxkA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783494310; c=relaxed/simple;
+	bh=Kfrb3+5tYPOiLtvz4HJtKv6RKCL/qDqvGfR0DV4LxG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rfcs8RGURAXefMa4tLHfhjCfZMvU/USe4Q9FIWx5aykqchHhySf9DH1u5H3wqO8sm/jZ+zybsznFvm9rmGBXy98+XmvhHfgvMPv/AoewzB0wkVYAIBF93zIyMQQXaFJ4yo61wgjo2SQ7v7vBKRKfgEhZEsB98wfX1Xjx0F2opfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ldyH6F58; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxzNfxkA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE831F000E9;
-	Wed,  8 Jul 2026 06:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783492605;
-	bh=s0HJkQVRyCuHBvyWHHR+93fIn2+uXye8kCTNUU3r60I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TxzNfxkAbGy4rqJIqCr89/xbSHEkX+rin+tyCSt7590zWJuMCw8dcQKrSCNVIiWoA
-	 ndOV/GgWovh0WUxdtvgi0EtOpL/TilvEb2DV/Haj7x+l+Y6wUpasj2HUpo6QNlgM2K
-	 FXdGWdWH5cn/DW+KWFvNGyKQiWhHS8hgb6rAvdnbskLQw7CGy/oixnnHzdKAsVfU8i
-	 Ckw1IGQsAI4HAECNOWyM3Pg5nt+m9bUKguiwdqud8b7wpl/lsMWQrtFW3E8+u/b4Vo
-	 qizUfCiYMop6IHGz5Ym885tLg6yCjh+X38Gv1RHOK0ly9wgNDvXOadV5LseTU5F1jP
-	 7eax4QVB5vPgw==
-Date: Wed, 8 Jul 2026 09:36:25 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Thierry Reding <thierry.reding@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-mm@kvack.org,
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>,
-	Shyam Saini <shyamsaini@linux.microsoft.com>
-Subject: Reserving memory on ACPI systems (was: [PATCH v3 04/11] arm64/mm:
- Add set_memory_device() and set_memory_normal())
-Message-ID: <ak3v6dt_VIZTynT8@kernel.org>
-References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
- <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
- <akYs91INHMXMTI-t@willie-the-truck>
- <akZkuwktaXFTrASP@orome>
- <akaSJ5D98w2cHqb6@orome>
- <akftuw9NyRy36fXA@willie-the-truck>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ldyH6F58"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1783494285; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VqOzBHcezIdJbCw9H20f4ApkMFhu+ojhnSlVxGo7tKM=;
+	b=ldyH6F58hjVNhnMeZOfXhTo4aBYq11lEHFs+602BQUdrjf3OxaHRpFCr3mJwm120e22u8mM0r99KRz3T4Zxx4yALrToHw7sbXOdQfyR+AVEPXCUx84dzb/XwDOnj4gnJOkBOBjax/baNiaaKv7NoURMDXsSWTjKRVJ0E3cLHAo0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X6gnBaq_1783493952;
+Received: from 30.246.161.237(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X6gnBaq_1783493952 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 08 Jul 2026 14:59:14 +0800
+Message-ID: <9228c07a-8879-41de-ba87-b9f879648ba8@linux.alibaba.com>
+Date: Wed, 8 Jul 2026 14:59:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akftuw9NyRy36fXA@willie-the-truck>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 4/7] riscv: stacktrace: introduce stack-bound
+ tracking helpers
+To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+ Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+ Marcos Paulo de Souza <mpdesouza@suse.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260629072713.3273743-1-wanghan@linux.alibaba.com>
+ <20260629072713.3273743-5-wanghan@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260629072713.3273743-5-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
-> On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
-> > On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
-> > > On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
-> > > > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
-> > > > > From: Chun Ng <chunn@nvidia.com>
-> > > > > 
-> > > > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protection bits
-> > > > > on a kernel-linear-map range.
-> > > > 
-> > > > That sounds like a really terrible idea. Why is this necessary and how
-> > > > does it interact with things like load_unaligned_zeropad()?
-> > > 
-> > > This is necessary because once the memory controller has walled off the
-> > > new memory region the CPU must not access it under any circumstances or
-> > > it'll cause the CPU to lock up (I think technically it'll hit an SError
-> > > but in practice that just means it'll freeze, as far as I can tell).
-> > > 
-> > > Probably doesn't interact well at all with load_unaligned_zeropad().
-> > > 
-> > > > I think you should unmap the memory from the linear map and memremap()
-> > > > it instead.
-> > > 
-> > > Given that the memory can never be accessed by the CPU after the memory
-> > > controller locks it down, I don't think we'll even need memremap(). The
-> > > only thing we really need is the sg_table we hand out via the DMA BUFs
-> > > so that they can be used by device drivers to program their DMA engines
-> > > internally.
-> > > 
-> > > Looking through some of the architecture code around this, shouldn't we
-> > > simply be using set_memory_encrypted() and set_memory_decrypted() for
-> > > this? While they might've been created for slightly other use-cases,
-> > > they seem to be doing exactly what we want (i.e. remove the page range
-> > > from the linear mapping and flushing it, or restoring the valid bit and
-> > > standard permissions, respectively).
-> > 
-> > Ah... I guess we can't do it because we're not in a realm world and so
-> > the early checks in __set_memory_enc_dec() would return early and turn
-> > it into a no-op.
-> > 
-> > How about if I extract a common helper and provide set_memory_p() and
-> > set_memory_np() in terms of those. Those are available on x86 and
-> > PowerPC as well, so fairly standard. I suppose at that point we're
-> > closer to set_memory_valid().
+
+
+On 6/29/26 3:27 PM, Wang Han wrote:
+> A reliable unwinder needs to validate that every frame record it reads
+> is fully contained in a known kernel stack, and it needs to refuse to
+> walk back into a stack it has already left. Add the building blocks
+> for that:
 > 
-> Why not just call set_direct_map_invalid_noflush() +
-> flush_tlb_kernel_range() for each page? We already have APIs for this.
+>    * struct stack_info / struct unwind_state in a new
+>      asm/stacktrace/common.h, modelled on the arm64 reference
+>      implementation.
+>    * stackinfo_get_irq() / stackinfo_get_task() / stackinfo_get_overflow()
+>      plus the corresponding on_*_stack() predicates in asm/stacktrace.h,
+>      so callers can ask "is this object on stack X?" by stack kind
+>      rather than open-coded address arithmetic.
+>    * unwind_init_common(), unwind_find_stack() and
+>      unwind_consume_stack() helpers that enforce the
+>      forward-progress-only invariant required for reliability.
 > 
-> The big challenge I see with any linear map manipulation, however, is
-> that it will rely on can_set_direct_map() which likely means you need to
-> give up some performance and/or security to make this work. Does memory
-> become inaccesible dynamically at runtime? If not, the best bet would
-> be to describe it as a carveout in the DT and mark it as "no-map" so
-> we avoid mapping it in the first place.
+> No existing user is wired up to these helpers in this commit; the
+> unwinder switch comes in a follow-up. The header changes leave
+> on_thread_stack() with the same semantics as before, just expressed in
+> terms of the new helpers.
+> 
+> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+> ---
+>   arch/riscv/include/asm/stacktrace.h        |  65 ++++++++-
+>   arch/riscv/include/asm/stacktrace/common.h | 159 +++++++++++++++++++++
+>   2 files changed, 222 insertions(+), 2 deletions(-)
+>   create mode 100644 arch/riscv/include/asm/stacktrace/common.h
+> 
+> diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
+> index b1495a7e06ce..bc87c4940379 100644
+> --- a/arch/riscv/include/asm/stacktrace.h
+> +++ b/arch/riscv/include/asm/stacktrace.h
+> @@ -3,8 +3,13 @@
+>   #ifndef _ASM_RISCV_STACKTRACE_H
+>   #define _ASM_RISCV_STACKTRACE_H
+>   
+> +#include <linux/percpu.h>
+>   #include <linux/sched.h>
+> +#include <linux/sched/task_stack.h>
+> +
+> +#include <asm/irq_stack.h>
+>   #include <asm/ptrace.h>
+> +#include <asm/stacktrace/common.h>
+>   
+>   struct stackframe {
+>   	unsigned long fp;
+> @@ -16,14 +21,70 @@ extern void notrace walk_stackframe(struct task_struct *task, struct pt_regs *re
+>   extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
+>   			   const char *loglvl);
+>   
+> -static inline bool on_thread_stack(void)
+> +/*
+> + * IRQ stack accessors
+> + */
+> +static inline struct stack_info stackinfo_get_irq(void)
+> +{
+> +	unsigned long low = (unsigned long)raw_cpu_read(irq_stack_ptr);
 
-While I got your attention a bit off-topic but still related question.
+ From https://sashiko.dev/#/patchset/20260629072713.3273743-1-wanghan%40linux.alibaba.com
 
-AFAIK a lot in arm64 drivers ecosystem relies on that ranges defined as
-"/reserved-memory" in DT are linked to devices that use that memory.
+Will this cause a link error when CONFIG_IRQ_STACKS is disabled?
+Looking at arch/riscv/kernel/irq.c, irq_stack_ptr is defined inside an
+#ifdef CONFIG_IRQ_STACKS block. Since stackinfo_get_irq() unconditionally
+references it here, it seems this might result in an undefined reference
+to irq_stack_ptr during linking.
 
-EFI/ACPI does not have a similar concept.
+Should this accessor be conditionally compiled, or should it provide a
+fallback when CONFIG_IRQ_STACKS is not set?
 
-Given that more and more systems are using EFI/ACPI rather than DT as their
-boot protocol we probably need some way to define such memory carveouts in
-the ACPI world.
- 
-> Will
-
--- 
-Sincerely yours,
-Mike.
+Thanks.
+Shuai
