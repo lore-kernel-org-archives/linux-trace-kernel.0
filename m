@@ -1,155 +1,98 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A06B2264D6;
-	Wed,  8 Jul 2026 13:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E2B3451A9
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 13:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783516686; cv=none; b=fOGplIXwMVjizEclRUqfi2GUZ06fRThqdaeSG/J57QSibPSEnh7hMu+ypFZ2ElbWsOWz7BKMQwAxX8ZKVP9YyvlBRNRE9FF6WWhkt20kwW17lnQmEmGsaKsPHB+60REq7tys3c3iEFenbVedwnY98LLUbbNZ3Wdbll5/I1bMOHU=
+	t=1783517629; cv=none; b=gZRhis9E2+2UOeps3aM5zmNFvNEP0Q5BUBSaKtbbhhlJtuwudeLnQ/Ew2j+VPEk9kr8LqhwhR4DOYBbI0I7jAIK8RcMSwnNOa2vzP0e1AFT8cehMEAG9hn2Lf0WvuBxEsZetcrWe7Wh447L/3SwG5R95GxOB0K9ZSqx7LrHwBMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783516686; c=relaxed/simple;
-	bh=pC5HU+YDjve7MW45Pmb3FmzLWx3e9EB9adYp5W46pH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sE1bRdiSvrdgN8WibEr1xEoo2tiiU5f7itnBzU5MF26BnIMnG9Adr1LocjJvsIvoaztT4Ue9tN8ZxatCeZ58cZm/9UBKXQLxB4rVT2NF8fYUWCaWBhOg/a1fRkgmloIF0lpgKDn23ncTvaY3ib0n1/ni80qTA1dPCJxcTYRXPuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 793D1C0558;
-	Wed,  8 Jul 2026 13:18:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 7821F22;
-	Wed,  8 Jul 2026 13:18:00 +0000 (UTC)
-Date: Wed, 8 Jul 2026 09:18:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeongho Choi <jh1012.choi@samsung.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- mhiramat@kernel.org, ji2yoon.jo@samsung.com, minki.jang@samsung.com,
- hajun.sung@samsung.com
-Subject: Re: [BUG] tracing: Too many tries to read user space
-Message-ID: <20260708091804.584975f9@gandalf.local.home>
-In-Reply-To: <20260708123753.GB1386@KORCO121415.samsungds.net>
-References: <CGME20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7@epcas2p1.samsung.com>
- <20260708123753.GB1386@KORCO121415.samsungds.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1783517629; c=relaxed/simple;
+	bh=ZZxn6+P3naFPWzIiFjXNgs3TajLnL87OM3f6t6i3PXo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EzHthPjflF5mMNUgp9LkXKyvm0ZpDxWpX0fHCrIrpbrkBkBPEn71LNZ+nvvYgbiD8TnjDZvc7ShDDeWGn4McA7S+z5cfp23GRIT/jJMqStpJqirDcIug4cy9e6Bcd67n2ys4kzYK5DpRUcoFKy/7CBSClTKpISdpvCFDpUa8d5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UpewEoaw; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UpewEoaw"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-493bfc3b84aso4491665e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Jul 2026 06:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783517626; x=1784122426; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lt1Cf+iXOwIxUQM7FLy8+/YvKCQ1U+qUcCAKQzo3lMU=;
+        b=UpewEoaw8DbPo3vD8/gkP+ME8FhLM/InQcoPZQnh0swrZNMOTPaFiec85tg9PB8eS9
+         MmHRD6Fc/f6BZbcDeGisHfqRd4in0Z/E4zLRQsDh4i6Q3CeU8nZUWiroXpeWYZA7GIQn
+         Eb3Ol+A/Gx9Xv1E0dQw/IAQ6MOFwx5XD4wacaITQQE2cFsHhb38ZSmhPqzJnnpz45P/S
+         hI6ctEDCS+XqZGVP0MxFZBnSOYEQXcdzBSV67ckf/YjOdMsXlaED37W9fHrWhOnpN2e/
+         a44mzGUA38mmLr43BRZHaMgTHgIG5wU16OBuZfDPkQh+LXY3IvKQEY7mb3jWYvUZ4WSi
+         FcGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783517626; x=1784122426;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lt1Cf+iXOwIxUQM7FLy8+/YvKCQ1U+qUcCAKQzo3lMU=;
+        b=TKooetKA0JEziC2nQvqgd+iEIc5BYEHzKmvoW58NVEtCq6f23gsODqWquOcPMiNSz2
+         uodDEMN09FRHriayOsiydqMlgfxmLNqX/tBoKnJ0UzXxFrE4XIkraDL040OBme33wZU2
+         Nq6A1K98ivP1EuiuihtUHU87uim8HL+ggcvNV2DJHHogCvc24lm6aoB90pC0+PGCSJz8
+         OD6v/CSZiaWinuC1PznWOUxciUm5qi8ONInLxmQZxsdngmyMTpBlDLa3FVpPjJYHmPHV
+         JSmNw5rCy4RK3DrRLiDX36rahwBkHNnn2mpdAqVu4+CHGiPtioU3LB/BSjbKBAHYxWa/
+         7znA==
+X-Forwarded-Encrypted: i=1; AHgh+RqvLKgONVngdyGlSitT75dfyPXl/or+hMbD9ntdtUer4EzKfDhTLhnOEr16UBYWJZasWyIoo0FwSLeIo5J+CuKSrR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJdpLRPjvBb1bMB9nppp/CAgCsqRcJ6q+X78j6vi2WA3reR2to
+	hdCEMOh/kSNmEs5p+SdgDns/WJO2MPkJ3ZEuM4oWpei9yr0zHucSzd/0jmRqdi8GTDArmF/MJMV
+	YbaJ9v+eiykoi7ahMgFBC3Q==
+X-Received: from wmgf17.prod.google.com ([2002:a05:600c:1551:b0:492:31c7:4b3b])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:621b:b0:493:bc31:b2ae with SMTP id 5b1f17b1804b1-493e8dc7c75mr6440095e9.10.1783517625541;
+ Wed, 08 Jul 2026 06:33:45 -0700 (PDT)
+Date: Wed,  8 Jul 2026 14:32:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7821F22
-X-Stat-Signature: ayo6yw5i56okybob9rha8wkzbkimonaq
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/TuME3qHqEM3uPYt8yGPinGG9tNSATsBs=
-X-HE-Tag: 1783516680-258155
-X-HE-Meta: U2FsdGVkX1/YZqOX93pyTqWqk30o9PFjMOTPVpOlMFKaDgcq501Wa6SUmNtWULieM4fZrBXsAOd6iJxTPPieXio/qJHgna+DuBltakxwlflQ0BRDX1EAB3j8syQnu8nz5GEQfO3xpdIU8/PrnlAXuyEepckbsWRjMFIEO1SySY2cx34cSZNJhhgMcPl7ioeCUQlDjxKbtc6QhF2YA1ZeuA0PC00e7GhSKtCA/DxLuNlArJRpLVS2Xmk6ybG91ltW9aZmGvw+/ieRoTsAZO2BL828dfAAsDTGQbZ6iJbxQT3rTvIaXr7gJxGOojls+Yt2xo7YZrz0fpQ4m09i6co7V8muzYSGW7Iz5ZQiuiWG+BOexW6fwdyGqQ==
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
+Message-ID: <20260708133201.295072-1-vdonnefort@google.com>
+Subject: [PATCH v1] tracing/remotes: Fix leak in trace_remote_alloc_buffer()
+ error path
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	Vincent Donnefort <vdonnefort@google.com>, Sashiko <sashiko-bot@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 8 Jul 2026 21:37:53 +0900
-Jeongho Choi <jh1012.choi@samsung.com> wrote:
+If page allocation fails in trace_remote_alloc_buffer(), desc->nr_cpus
+is not yet incremented for the current CPU. As a consequence, on error,
+half-allocated rb_desc will not be freed in trace_remote_free_buffer().
 
-> The code at the WARN location mentioned in the log above is as follows.
-> 
-> 7374                 if (WARN_ONCE(trys++ > 100, "Error: Too many
->   tries to read user space"))
-> 7375                         return NULL;
-> 
+Include the failing CPU in desc->nr_cpus before going to the error path.
 
-This happens when something forces a schedule.
+Fixes: 96e43537af54 ("tracing: Introduce trace remotes")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-> 
-> Our current analysis is as follows:
-> 
-> In the Gmail process, during a low memory situation, LMKD writes strings
-> to /sys/kernel/tracing/trace_marker for systrace recording. At the same
-> time, it broadcasts a sigkill due to low memory, which is causing the
-> LMKD trace marker operation to stall.
-> 
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index 2a6cc000ec98..62d3d431c309 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -1008,8 +1008,10 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+ 
+ 		for (id = 0; id < nr_pages; id++) {
+ 			rb_desc->page_va[id] = (unsigned long)__get_free_page(GFP_KERNEL);
+-			if (!rb_desc->page_va[id])
++			if (!rb_desc->page_va[id]) {
++				desc->nr_cpus++; /* Free this partially-allocated rb_desc */
+ 				goto err;
++			}
+ 
+ 			rb_desc->nr_page_va++;
+ 		}
 
-Can you see what is being scheduled in? Perhaps use the persistent ring
-buffer (if you can) and enable sched_switch tracepoint in it.
+base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+-- 
+2.55.0.795.g602f6c329a-goog
 
-The loop is this:
-
-	do {
-		/*
-		 * It is possible that something is trying to migrate this
-		 * task. What happens then, is when preemption is enabled,
-		 * the migration thread will preempt this task, try to
-		 * migrate it, fail, then let it run again. That will
-		 * cause this to loop again and never succeed.
-		 * On failures, enabled and disable preemption with
-		 * migration enabled, to allow the migration thread to
-		 * migrate this task.
-		 */
-		if (trys) {
-			preempt_enable_notrace();
-			preempt_disable_notrace();
-			cpu = smp_processor_id();
-			buffer = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-		}
-
-		/*
-		 * If for some reason, copy_from_user() always causes a context
-		 * switch, this would then cause an infinite loop.
-		 * If this task is preempted by another user space task, it
-		 * will cause this task to try again. But just in case something
-		 * changes where the copying from user space causes another task
-		 * to run, prevent this from going into an infinite loop.
-		 * 100 tries should be plenty.
-		 */
-		if (WARN_ONCE(trys++ > 100, "Error: Too many tries to read user space"))
-			return NULL;
-
-		/* Read the current CPU context switch counter */
-		cnt = nr_context_switches_cpu(cpu);
-
-		/*
-		 * Preemption is going to be enabled, but this task must
-		 * remain on this CPU.
-		 */
-		migrate_disable();
-
-		/*
-		 * Now preemption is being enabled and another task can come in
-		 * and use the same buffer and corrupt our data.
-		 */
-		preempt_enable_notrace();
-
-		/* Make sure preemption is enabled here */
-		lockdep_assert_preemption_enabled();
-
-		if (copy_func) {
-			ret = copy_func(buffer, ptr, size, data);
-		} else {
-			ret = __copy_from_user(buffer, ptr, size);
-		}
-
-		preempt_disable_notrace();
-		migrate_enable();
-
-		/* if it faulted, no need to test if the buffer was corrupted */
-		if (ret)
-			return NULL;
-
-		/*
-		 * Preemption is disabled again, now check the per CPU context
-		 * switch counter. If it doesn't match, then another user space
-		 * process may have schedule in and corrupted our buffer. In that
-		 * case the copying must be retried.
-		 */
-	} while (nr_context_switches_cpu(cpu) != cnt);
-
-What it does is to write into a per CPU buffer from user space. If it
-schedules out while trying this, it will try again as another task could
-have come in and corrupted the buffer.
-
-For some reason, when preemption is enabled to copy from user, something
-is forcing a schedule of the process. If we can figure out what is doing
-that, perhaps we can fix this. A similar thing happened with the migration
-thread that commit edca33a56297d ("tracing: Fix failure to read user space
-from system call trace events") fixed.
-
--- Steve
