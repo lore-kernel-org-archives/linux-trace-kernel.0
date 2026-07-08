@@ -1,163 +1,244 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A6B43E4BA
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 12:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7906438FFB;
+	Wed,  8 Jul 2026 12:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783514281; cv=none; b=EjNQOVOGwnmpUcZlTIoTOv4V7Ymarz8xFrLDlOCpxpAZL26s/uE2tmuEaHHAsUzIW3xaCsK8RpQv6IJWbrC0qurCXPWodpnX5WGQkCS8yuljZMNeBjH6uXKMQFe2mSXBHcUgFIAzdTIk87fQTzQRF108g4PQa5KRmhQiD4o2Dm4=
+	t=1783515011; cv=none; b=mYF0cgU1dCYkz9S6x3fgoOQBXRVrbuODdd28hCmLJ4+2wT4lKOrbGEjzlf5RrItz4SM1eEyF9gHxPxCViFIv6p9jphF/INqZj+rCmdYr5qj5fR0e9f3I2MtvuEc54jOxK0lCHnic3GlCllY5qViMStLqGcf7QTovv96HPK3oM6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783514281; c=relaxed/simple;
-	bh=F3i8e5c8Pz3nk/LDzq7on6y7fFu51hS94kn2FxNM5tI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 References; b=NhRn/DlfBH8Tejx+JY4zrSDGdRw78DZf7LZr8ullNeC8diGHtKSya6ZwYXCakQlUD4rH0FavpWUjsfG6d9HW0fRLgZNkhmf/tqUbL8Xp9HeQXOcYrZtZCNHesgY94XLWoVZjzGy+6MbrbAabcbYAke4xnBShvhG4jQzO/JoI2i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZzcA4xIO; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1783515011; c=relaxed/simple;
+	bh=IbwF4pMHfyhwOslYT5YnzmrvzgTa5uH5GBgU1nK9uiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNjmFQYyO1Jg6KkQGwSC8CVMXnKm6UPOZCdNq63h8S3FPArP8O8/qbI+dPplRV3suSHb5o5VwXEzSVzPkz8TX06+quh0REhCzpppy9nkYg1E2RY4PiM8Jc5F3M4368mpsrfn4mHbEsn6rXapPnH5XIiV0htv5HVE3w37LuOCyGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jitZrOHB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZzcA4xIO"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260708123756epoutp028bb41cac100a478398102acfc8c18797~AUMj0myNd3172231722epoutp02Z
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 12:37:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260708123756epoutp028bb41cac100a478398102acfc8c18797~AUMj0myNd3172231722epoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1783514276;
-	bh=tQ7iIwXaV/cf5SdO/YJZVhX4eexgB2lkXF21YEhK/bE=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=ZzcA4xIOgwvRU8zkCN/rKhbO0abBCh3hVZhWPFIymAoC0ujQcqSQBBk6OQaPZlD0o
-	 73kNGZDEet3gcC8z5dVOg4PyQ8aZ5elcg7/K6lRUIT3rr3L2GKySaP2zA2nfFKZwi7
-	 6GQ0VfK+Nt1uXgjx+vRLvo9Dg+Bh9+KGLIHLHEHw=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
-	20260708123755epcas2p125f0a0e2cb0d934634253eb3621b8d19~AUMiusE2x0790807908epcas2p1y;
-	Wed,  8 Jul 2026 12:37:55 +0000 (GMT)
-Received: from epcas2p3.samsung.com (unknown [182.195.38.208]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4gwHgQ72B4z6B9m4; Wed,  8 Jul
-	2026 12:37:54 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7~AUMh01tMF0789207892epcas2p18;
-	Wed,  8 Jul 2026 12:37:54 +0000 (GMT)
-Received: from KORCO121415.samsungds.net (unknown [12.80.207.147]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260708123754epsmtip285b80b86d227e9d15485954f7a5fc98d~AUMhxUHC-3186531865epsmtip2k;
-	Wed,  8 Jul 2026 12:37:54 +0000 (GMT)
-Date: Wed, 8 Jul 2026 21:37:53 +0900
-From: Jeongho Choi <jh1012.choi@samsung.com>
-To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org
-Cc: ji2yoon.jo@samsung.com, minki.jang@samsung.com, hajun.sung@samsung.com
-Subject: [BUG] tracing: Too many tries to read user space
-Message-ID: <20260708123753.GB1386@KORCO121415.samsungds.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jitZrOHB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2693F1F000E9;
+	Wed,  8 Jul 2026 12:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783515007;
+	bh=IbwF4pMHfyhwOslYT5YnzmrvzgTa5uH5GBgU1nK9uiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jitZrOHBE9XNJumMdXFVv18tUngtPLdb9x2l4MXb1a4a3audPmwI5ES1+E/p39+fH
+	 HMBtTttJu5WKPwMZpzl5XSMW8IWWsdWOQpWuuuOHUvCzW0Upi/fHIEHKy/XatkKhbs
+	 YIrgECVYDaOyOlaeXFov/nDhiba0x7J/yL1Q67FUZOmQNsefjzpkn/aCjEu0dJ6ZK9
+	 nlap2Fjp+x+P5ahqGT40ffudUAfNKdE4tL3hjqRQjY1+Q8v+zswk6N6KyX0QPm3fqz
+	 Jak61XpK3z4GmnyZVFYWCCa1m5lbXTTe07OjSwKUXfEIRonD9IqEaS2TOTSr62FACC
+	 l7BKByWi/ic2A==
+Date: Wed, 8 Jul 2026 14:50:04 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+Message-ID: <ak5CXzGStC6ZmtwI@orome>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck>
+ <akZkuwktaXFTrASP@orome>
+ <akaSJ5D98w2cHqb6@orome>
+ <akftuw9NyRy36fXA@willie-the-truck>
+ <akuvyu1Pq0ZVMZV0@orome>
+ <akzikTrmhMsvkNVY@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CMS-MailID: 20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----3ueMPXygkF8lCfPZyGi1PuNl7RkiyUtEnKn9EYq-CAibR79o=_19e38f_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7
-References: <CGME20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7@epcas2p1.samsung.com>
-
-------3ueMPXygkF8lCfPZyGi1PuNl7RkiyUtEnKn9EYq-CAibR79o=_19e38f_
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gs6kcdn3aiethnov"
 Content-Disposition: inline
-
-Hello,
-
-We are seeing a reproducible kernel panic related to the tracing code
-when it fails to read user-space memory.
-
-The issue was originally reported through the Android/Google Issue
-Tracker, and we were advised to report it to the upstream trace mailing
-list because the affected code is upstream.
-
-Environment:
-
-Architecture: arm64
-Kernel: Linux 6.18.21
-Base: Android Common Kernel (android17-6.18)
-Affected area: kernel/trace/
-
-The relevant error/panic log is:
-[48916.569148] [9:           lmkd:  536] Error: Too many tries to read
-user space
-[48916.569156] [9:           lmkd:  536] WARNING: CPU: 9 PID: 536 at
-kernel/trace/trace.c:7374 trace_user_fault_read+0x334/0x360
-[48916.569443] [9:           lmkd:  536] CPU: 9 UID: 1069 PID: 536 Comm:
-lmkd Tainted: G           OE       6.18.21-android17-5-ga1a8e8cab9ec-4k
-#1 PREEMPT  25372cd4750dcac3c0fe86b57d47c665f97a6046
-
-[48916.569450] [9:           lmkd:  536] pstate: 63402005 (nZCv daif
-+PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[48916.569452] [9:           lmkd:  536] pc :
-trace_user_fault_read+0x334/0x360
-[48916.569454] [9:           lmkd:  536] lr :
-trace_user_fault_read+0x330/0x360
-[48916.569456] [9:           lmkd:  536] sp : ffffffc096993cc0
-[48916.569457] [9:           lmkd:  536] x29: ffffffc096993cd0 x28:
-0000000000000065 x27: ffffff8817e45200
-[48916.569461] [9:           lmkd:  536] x26: 0000000000000000 x25:
-000000011616c082 x24: 0000000000000000
-[48916.569463] [9:           lmkd:  536] x23: 0000000000000009 x22:
-000000000000002b x21: ffffff880597f740
-[48916.569466] [9:           lmkd:  536] x20: 0000007fc42dd940 x19:
-ffffff8817e45770 x18: ffffffd5947ce240
-[48916.569468] [9:           lmkd:  536] x17: 2073656972742079 x16:
-6e616d206f6f5420 x15: 3a726f727245205d
-[48916.569471] [9:           lmkd:  536] x14: 36333520203a646b x13:
-6563617073207265 x12: 0000000000000001
-[48916.569473] [9:           lmkd:  536] x11: 6f74207365697274 x10:
-0000000000000001 x9 : 4bd9ad4516d75100
-[48916.569476] [9:           lmkd:  536] x8 : 4bd9ad4516d75100 x7 :
-205d383431393635 x6 : 2e36313938345b0a
-[48916.569479] [9:           lmkd:  536] x5 : ffffffc080fa5998 x4 :
-ffffffd591707202 x3 : 0001360a00000000
-[48916.569481] [9:           lmkd:  536] x2 : ffffffc096993af4 x1 :
-00000000000000c0 x0 : 0000000000000028
-[48916.569484] [9:           lmkd:  536] Call trace:
-[48916.569486] [9:           lmkd:  536]
-trace_user_fault_read+0x334/0x360 (P)
-[48916.569488] [9:           lmkd:  536]  tracing_mark_write+0x84/0x174
-[48916.569491] [9:           lmkd:  536]  __arm64_sys_write+0x2a0/0x5c0
-[48916.569494] [9:           lmkd:  536]  invoke_syscall+0x58/0xe4
-[48916.569498] [9:           lmkd:  536]  do_el0_svc+0x48/0xdc
-[48916.569500] [9:           lmkd:  536]  el0_svc+0x3c/0x98
-[48916.569503] [9:           lmkd:  536]
-el0t_64_sync_handler+0x20/0x130
-[48916.569505] [9:           lmkd:  536]  el0t_64_sync+0x1c4/0x1c8
-[48916.569508] [9:           lmkd:  536] Kernel panic - not syncing:
-kernel: panic_on_warn set ...
+In-Reply-To: <akzikTrmhMsvkNVY@willie-the-truck>
 
 
-The code at the WARN location mentioned in the log above is as follows.
+--gs6kcdn3aiethnov
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+MIME-Version: 1.0
 
-7374                 if (WARN_ONCE(trys++ > 100, "Error: Too many
-  tries to read user space"))
-7375                         return NULL;
+On Tue, Jul 07, 2026 at 12:27:13PM +0100, Will Deacon wrote:
+> On Mon, Jul 06, 2026 at 03:49:24PM +0200, Thierry Reding wrote:
+> > On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
+> > > On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
+> > > > On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+> > > > > On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+> > > > > > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
+> > > > > > > From: Chun Ng <chunn@nvidia.com>
+> > > > > > >=20
+> > > > > > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protec=
+tion bits
+> > > > > > > on a kernel-linear-map range.
+> > > > > >=20
+> > > > > > That sounds like a really terrible idea. Why is this necessary =
+and how
+> > > > > > does it interact with things like load_unaligned_zeropad()?
+> > > > >=20
+> > > > > This is necessary because once the memory controller has walled o=
+ff the
+> > > > > new memory region the CPU must not access it under any circumstan=
+ces or
+> > > > > it'll cause the CPU to lock up (I think technically it'll hit an =
+SError
+> > > > > but in practice that just means it'll freeze, as far as I can tel=
+l).
+> > > > >=20
+> > > > > Probably doesn't interact well at all with load_unaligned_zeropad=
+().
+> > > > >=20
+> > > > > > I think you should unmap the memory from the linear map and mem=
+remap()
+> > > > > > it instead.
+> > > > >=20
+> > > > > Given that the memory can never be accessed by the CPU after the =
+memory
+> > > > > controller locks it down, I don't think we'll even need memremap(=
+). The
+> > > > > only thing we really need is the sg_table we hand out via the DMA=
+ BUFs
+> > > > > so that they can be used by device drivers to program their DMA e=
+ngines
+> > > > > internally.
+> > > > >=20
+> > > > > Looking through some of the architecture code around this, should=
+n't we
+> > > > > simply be using set_memory_encrypted() and set_memory_decrypted()=
+ for
+> > > > > this? While they might've been created for slightly other use-cas=
+es,
+> > > > > they seem to be doing exactly what we want (i.e. remove the page =
+range
+> > > > > from the linear mapping and flushing it, or restoring the valid b=
+it and
+> > > > > standard permissions, respectively).
+> > > >=20
+> > > > Ah... I guess we can't do it because we're not in a realm world and=
+ so
+> > > > the early checks in __set_memory_enc_dec() would return early and t=
+urn
+> > > > it into a no-op.
+> > > >=20
+> > > > How about if I extract a common helper and provide set_memory_p() a=
+nd
+> > > > set_memory_np() in terms of those. Those are available on x86 and
+> > > > PowerPC as well, so fairly standard. I suppose at that point we're
+> > > > closer to set_memory_valid().
+> > >=20
+> > > Why not just call set_direct_map_invalid_noflush() +
+> > > flush_tlb_kernel_range() for each page? We already have APIs for this.
+> >=20
+> > Having a "standard" helper with a fixed and documented purposed seemed
+> > like a preferable approach for this particular case. We also may want to
+> > make the driver that uses this buildable as a module, in which case we'd
+> > need to export these rather low-level APIs. And then there's also the
+> > fact that we typically call this on a rather large region of memory
+> > (usually something like 512 MiB), so doing it page-by-page is rather
+> > suboptimal.
+> >=20
+> > > The big challenge I see with any linear map manipulation, however, is
+> > > that it will rely on can_set_direct_map() which likely means you need=
+ to
+> > > give up some performance and/or security to make this work. Does memo=
+ry
+> > > become inaccesible dynamically at runtime? If not, the best bet would
+> > > be to describe it as a carveout in the DT and mark it as "no-map" so
+> > > we avoid mapping it in the first place.
+> >=20
+> > VPR exists in two modes: static and resizable. For static VPR we do
+> > exactly that: describe it as carveout in DT with no-map and deal with it
+> > accordingly in the driver. Resizable VPR is for device that have small
+> > amounts of RAM. Content-protected video playback will in the worst case
+> > consume around 1.8 GiB of RAM, so we want to be able to reuse for other
+> > purposes when VPR is unused on those devices. In that case, the memory
+> > is also described as a reserved-memory region in DT, but it is marked as
+> > reusable so that it can be managed by CMA.
+> >=20
+> > The resize operation is fairly slow to begin with because we need to
+> > stall the GPU and put it into reset before the operation, then take it
+> > out of reset and resume it afterwards.
+> >=20
+> > What kind of performance impact do you expect?
+>=20
+> You'll need to measure it, but we've seen reports of double-digit
+> percentage regressions in performance and power. As I said, the problem
+> is that you need to split the linear map to 4k page at runtime to unmap
+> the dynamic carveout, but that isn't something that can be done on most
+> CPUs. Therefore you end up having to use page-granular mappings for the
+> entire thing, similarly to how 'rodata_full' drives can_set_direct_map()
+> and the perf/power hit affects everything.
+>=20
+> It's hard to know what to suggest... I wonder if any of the memory
+> hotplug logic could help here?
 
+I've read up on memory hotplug a bit and it sounds like it could fit
+this really nicely. Given that we only use CMA (along with the extra
+patches to it) to make sure that any buffers are reclaimed for VPR use,
+we should be able to get rid of the CMA usage altogether and replace it
+with online_pages() and offline_pages() instead. Rather than using a
+fixed set of CMA areas like we currently do, each "chunk" in the VPR
+driver could represent a memory block instead (which looks like it will
+be 128 MiB for 4 KiB pages and 512 MiB for 64 KiB pages). We currently
+use 512 MiB as the chunk size, so it should be relatively similar and
+easy to adjust.
 
-Our current analysis is as follows:
+One issue that we would absolutely need this memory to be ZONE_MOVABLE
+=66rom the start. Using no-map in DT and then online_pages() probably will
+not work because there's no struct page for the memory. So we're left
+with keeping the memory onlined by default, in which case we'd need some
+way for DT to instruct the memory to be put into ZONE_MOVABLE always.
 
-In the Gmail process, during a low memory situation, LMKD writes strings
-to /sys/kernel/tracing/trace_marker for systrace recording. At the same
-time, it broadcasts a sigkill due to low memory, which is causing the
-LMKD trace marker operation to stall.
+There's a "hotpluggable" property for "memory" nodes, maybe that can be
+extended to apply to reserved-memory nodes as well?
 
+Thierry
 
-Please review this issue.
-Thanks,
-Jeongho Choi
+--gs6kcdn3aiethnov
+Content-Type: application/pgp-signature; name="signature.asc"
 
-------3ueMPXygkF8lCfPZyGi1PuNl7RkiyUtEnKn9EYq-CAibR79o=_19e38f_
-Content-Type: text/plain; charset="utf-8"
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpOR3kACgkQ3SOs138+
+s6EbFg/9G04JpY5Cu3AX1K9vtQtrw3D5Gowsl1qT7PXe9AmN9PK2oggEDnsm6JPw
+hyDVKxzpLbktBMB5vNKmr4KGYrIEeW4fs+thwrdNjf5GhX7cTQyL78oHaEVTZAn7
+cpiFfepSy6xW4ZDIpHzj6bUVg06S8VZmLOwKHuDbA4N6PZ95evD1ff3/TQs6Y1E6
+WJhgBPjZbTLh6jiIM1y2hRK3GAChy9nC2g2R1LOySIK9NBCgfKV0p2/hv+vQCLSk
+e5ON2GcP06dR1XChOMnEPkUS4BzptxIzVkM7aRiGPJqxVREXJK4MvRTyjZ+W4FuX
+R/QDhwkxdI8+4pwfVPWB10dEWH5vfIrxU5VwO4Uujp4p14P1/nKkWXTe8S69Qitj
+GU8UxLk76btqwkVS43qOyHXH+yXuQBiaWBVTyo8vQx3zp5i8gq1h1xm04ryI0hWj
+BGqXiOxzDr6lEmXUj6h3gUTP+14whWOW8lTqIL0QTKwC4HDv5KTgfgBME2KkYAwp
+1adJdmJ09vhkKAOK1mKHCJHmhOggmoDpIfH8yYSbHeTe4mZZHq9qKtFjvzA8TtMw
+82H0EfyjYM8eNPNZU1/SfsTnhKpTmnLpDCmmdz6Oe4hWGxZVO16z9VujL/EPa0fa
+mY3dWpM8cSvKCP6jm8jguy5IhhLZkS4ljig1obSEvcH0/Tu1FJk=
+=zFs3
+-----END PGP SIGNATURE-----
 
-------3ueMPXygkF8lCfPZyGi1PuNl7RkiyUtEnKn9EYq-CAibR79o=_19e38f_--
+--gs6kcdn3aiethnov--
