@@ -1,33 +1,36 @@
 Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C6035959;
-	Wed,  8 Jul 2026 19:32:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B678A2E7378;
+	Wed,  8 Jul 2026 20:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783539166; cv=none; b=ln4Dchf6up7wua2YIhKp/EQMuwrjyBl0a6BAhqSAlrPCM5p8uYz96NLPG0dfergzSqF2seiUQYDjn6ypK98v0vgqE7ZQ3/Tr/XvZkNTSGeFMRUY+nJwg3JvswzE579ZPaCpjeHqky1InyOiIQZ2m2MEAUvz7HyFzrd9GubU79fc=
+	t=1783542939; cv=none; b=LVVsyWxNKDA8kzqKXGAmr1i/NXHwNUiUO+ILLjk7YX5WRrKgd0rKs6S08Ifa9D8qV4y+h/i68yZGaGCBKBssgedbrCnTh+WJAISm6F8sOqnSH94rnWWKrp3wr2mdaRvZgOxKxlb5turiHfwefWun/7H7qia8dWXdQZTLLGH8nBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783539166; c=relaxed/simple;
-	bh=v9hEdK7ccL/Br4fOnWNLLTTEFWkkKvXC2qQt1c7kEYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ns/BxB/x5kxEDxWVCZIc2SxQaftp0CZ6JFTuZ6VbCZyhcEk3kA8g3tOjugjh2+39iw+LKs/edyZyTBlCeRx0pfq9KvQo3JoV/qA1AUWosFVkeuySxa2puj6GvgpqIc5jIm/2Yy4eqe/b0OQQGoq3DorMxgNsAFrTtcvsV3dwGj4=
+	s=arc-20240116; t=1783542939; c=relaxed/simple;
+	bh=uJ/al909Jw5KQaOQUGDEhmhbqX9/CNuZenlTkjYA8Q8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nL5C5gxBpG9EWf4Ke11xx7EvexhTVIO5fao1fRjE+JygaIoB+iEpEWg7p+KkPeHxujLB/qq9IckEFCefZb3jZfWM0IF0dJ9tpIKP7rHzm8KcLTQfxtFsLOvG+iatyI/Dg1DGjVsLdfQRCeGjDBvdVlDMWw1HmdttSmfPrZOv3ZU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 571A81A0299;
-	Wed,  8 Jul 2026 19:32:36 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 865CA6000D;
-	Wed,  8 Jul 2026 19:32:34 +0000 (UTC)
-Date: Wed, 8 Jul 2026 15:32:39 -0400
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 1B95E1A02D9;
+	Wed,  8 Jul 2026 20:35:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 18E3D20038;
+	Wed,  8 Jul 2026 20:35:34 +0000 (UTC)
+Date: Wed, 8 Jul 2026 16:35:39 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, Shuah Khan
  <skhan@linuxfoundation.org>
-Subject: [PATCH] selftests/ftrace: Fix reading enabled_functions in
- add_remove_fprobe_module test
-Message-ID: <20260708153239.055d56dd@gandalf.local.home>
+Subject: Re: [PATCH] selftests/tracing: Have trigger-hist-poll.tc use
+ sched_process_exit
+Message-ID: <20260708163539.1e1d845d@gandalf.local.home>
+In-Reply-To: <20260708163436.058cc3df@gandalf.local.home>
+References: <20260708163436.058cc3df@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,124 +40,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 865CA6000D
-X-Stat-Signature: huzn7b6patbwzkijx4xm84ztdgaom1m3
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 18E3D20038
+X-Stat-Signature: xos39t5dr4rttfu48kcu3t5ttzme17ok
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+n/ySaWf43UDPFEsJ3v98FwEVEIy13QV0=
-X-HE-Tag: 1783539154-577436
-X-HE-Meta: U2FsdGVkX19O2YlSsS4HEzRZGjTMcJxdZEQM3EHEKir5CivE9h7Pw2XA/153+NaQpVWqCCldLovEgUSe9SYLFHuRWCkk7bQPz+wWxyNTHNbgQe/GHHYa1c589M+5aZ4nhltMboj6ZYe2/3/u/Ra8TxTT4aWpES+f7lkVmv7366dl5y/OFNFR+mm6Zj8j3k9WGm9xcuxNGswGqtSPLJbnbkFF2dKtQp4tOcgH+uBnya7evlV4Zj2YDbFkAoxqa4VPSnu1mPC+aagByQYL7dt8lm+cN29Sv4AD3qHSJzc/e5/0mO3ZgdZEdabasgxg9Sw3F8uQQa3XsUJaU1icEfvpEQGwQ8bnngJHCl3jbEnkTj5ajgOAtf5R08EO+sFYxVO/
+X-Session-ID: U2FsdGVkX1/SBzRJUUXL9BDUEWPAJ2i5aX/sn2hzb3Y=
+X-HE-Tag: 1783542934-279708
+X-HE-Meta: U2FsdGVkX18bv8rWv1DfqOBVv4ss3CPLvysZcjyqSoL61XPLnkmGyOFlPFrzxharbLSpBIavWYmn+pe02r4xgL0fx6Epd6SNLkfA9NV9lVPQMIHE0zKfXbrMtxXVUUP3DneBb2oQN43hQRRNFENP4ViuMibEGjoQ2I4ZdqxfVVJCBUzXnyJlzy+eS6ueNK99pUA66kUJ1U2F/d/XdTf5okIDYBmeg2Fkc6Leq3EVFwLC+QKJ5XdDBah0YFKwt3nYYWdAVsR0tE9MVCzHfRLQyrk/miKyMJm67DGV97jLxKWhRlz61Q7X6Q/mf4dA0lsjQPMiV/jPC1Or7QevIVh/kS6xTWdKvirCGMLN1+53Bw5v7ZQrMJyb0B2CVTyZGs3R
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, 8 Jul 2026 16:34:36 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The add_remove_fprobe_module test checks the number of functions added to
-the enabled_functions file to make sure that the functions added or
-removed is as expected. The issue is that it expects this file to be empty
-on start up.
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Currently trigger-hist-poll.tc uses sched_process_free to test the polling
+> of the histogram file. The way it does that is to run sleep, then execute
+> the poll.c code that polls on the sched_process_free for up to 4 seconds
+> to test that when sleep triggers the sched_process_free trace event, it
+> will update the histogram and wake the poll.c code up.
+> 
+> The issue is that sched_process_free trace event is called by
+> delayed_put_task_struct() which is called after a RCU grace period has
+> ended. If CONFIG_RCU_LAZY is enabled, RCU callbacks are batched together
+> and do not execute right away. This causes the delayed_put_task_struct()
+> to be called after the poll.c function finishes and it will report an
+> error that it did not wake up on the event. That's because the event
+> didn't trigger during its wait time.
+> 
+> Use sched_process_exit instead, which is called when a process exits and
+> doesn't depend on RCU callbacks that may be delayed.
+> 
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> ---
 
-Now that systemd uses BPF that attaches to functions via ftrace, this file
-is not empty in several systems:
+I forgot to mention that I tested this with and without CONFIG_RCU_LAZY.
+With that config disabled, the test passes. With it enabled, it always
+fails.
 
- # cat /sys/kernel/tracing/enabled_functions
- bpf_lsm_file_open (1) R   D   M 	tramp: ftrace_regs_caller+0x0/0x61 (call_direct_funcs+0x0/0x50)
-	direct(jmp)-->bpf_trampoline_6442529439+0x0/0xe9
-
-Change the test to read the number of lines in enabled_functions at the
-start of the test and subtract that from the value of the count for the
-checks within the test.
-
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- .../dynevent/add_remove_fprobe_module.tc      | 27 ++++++++++++-------
- 1 file changed, 18 insertions(+), 9 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
-index 2915206777b6..89660a9adf44 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_module.tc
-@@ -16,23 +16,32 @@ echo > dynamic_events
- FUNC1='foo_bar*'
- FUNC2='vfs_read'
- 
-+:;: "Save enabled functions count" ;:
-+ecount=`cat enabled_functions | wc -l`
-+
-+count_enabled_functions() {
-+    count=`cat enabled_functions | wc -l`
-+    count=$(($count-$ecount))
-+    echo $count
-+}
-+
- :;: "Add an event on the test module" ;:
- echo "f:test1 $FUNC1" >> dynamic_events
- echo 1 > events/fprobes/test1/enable
- 
- :;: "Ensure it is enabled" ;:
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $funcs -ne 0
- 
- :;: "Check the enabled_functions is cleared on unloading" ;:
- rmmod trace-events-sample
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $funcs -eq 0
- 
- :;: "Check it is kept clean" ;:
- modprobe trace-events-sample
- echo 1 > events/fprobes/test1/enable || echo "OK"
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $funcs -eq 0
- 
- :;: "Add another event not on the test module" ;:
-@@ -40,19 +49,19 @@ echo "f:test2 $FUNC2" >> dynamic_events
- echo 1 > events/fprobes/test2/enable
- 
- :;: "Ensure it is enabled" ;:
--ofuncs=`cat enabled_functions | wc -l`
-+ofuncs=`count_enabled_functions`
- test $ofuncs -ne 0
- 
- :;: "Disable and remove the first event"
- echo 0 > events/fprobes/test1/enable
- echo "-:fprobes/test1" >> dynamic_events
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $ofuncs -eq $funcs
- 
- :;: "Disable and remove other events" ;:
- echo 0 > events/fprobes/enable
- echo > dynamic_events
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $funcs -eq 0
- 
- rmmod trace-events-sample
-@@ -63,12 +72,12 @@ echo "f:test1 $FUNC1" >> dynamic_events
- echo 1 > events/fprobes/test1/enable
- echo "f:test2 $FUNC2" >> dynamic_events
- echo 1 > events/fprobes/test2/enable
--ofuncs=`cat enabled_functions | wc -l`
-+ofuncs=`count_enabled_functions`
- test $ofuncs -ne 0
- 
- :;: "Unload module (ftrace entry should be removed)" ;:
- rmmod trace-events-sample
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $funcs -ne 0
- test $ofuncs -ne $funcs
- 
-@@ -77,7 +86,7 @@ echo 0 > events/fprobes/test2/enable
- echo "-:fprobes/test2" >> dynamic_events
- 
- :;: "Ensure ftrace is disabled." ;:
--funcs=`cat enabled_functions | wc -l`
-+funcs=`count_enabled_functions`
- test $funcs -eq 0
- 
- echo 0 > events/fprobes/enable
--- 
-2.53.0
-
+-- Steve
