@@ -1,177 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526E13ACA49;
-	Wed,  8 Jul 2026 07:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8939B3F8EC2
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Jul 2026 07:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783496559; cv=none; b=pR8lvYGchcmEezSg3kWbeVBdhqrVWAQrn0lfDHI5PLeDeUx2CigLxyhpLBWjhSE/Z7oEVrqEuKAAm9ja6/Y5+OdV1kfxf/xhqxhYk/7dSyf6LelxLQX2t1Srd0l2epjwCObTg9GWLBqJMfTRKSpQDJodXkQVaxdetHrmg6rkw+g=
+	t=1783497472; cv=none; b=AuqXXpbFTzQfnQ7CPgunZWBOxkupV9cpJBWucVZ6dXKKscC74gRPZNtgohj66DKHVmJdcNHqiKoC9mS2cdQZgiCbd/L48nBtb+5ETu+lzQfuQX3KsnAEd2VU2Avri5jv/gxTt64I7mHq50E8UXAaRjjRfh5dX1J/esX8lR2O0fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783496559; c=relaxed/simple;
-	bh=QmOqPzOV2F0vzHC2CvnmC4BoAM05QyMbs+bjwPDANU4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XQLWvebAM8S+q2Gt1pN/Fupy1O6E/ciQOHOCiJrJAZP5DDd9/OoEa3GGz/YFvInuZbjd08ENlS6ZHaapZtcs/yCJJs6V4grNFxlVl0IMcUrvfndHmBhPvcW01Mk8DuVrRJ2j0KZOM5Z63gt5QAKVD9/rwclhmcd80xtad39mpIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRuVsAVs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783497472; c=relaxed/simple;
+	bh=C9lW5FtsNFxHad90kVAIzueR+ooJaPzexhKAr47w/Sk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tnHcYXMBChVgEypk2WKvvzY+6vMBwuv3MEfTBKmP0Ds0b6VUH4JmWesUSj9foGLsuIaiHPieovUPJj/lT2Eulff27jeBq3cD+V7OuZqPwNAH8qzYKcAuwyN7gYCbHYbzrGOateuVZ9cgCnCguhIrxAkPwLPEBuhSUnFegdakoIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eBS0mC55; arc=none smtp.client-ip=209.85.167.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRuVsAVs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B443E1F000E9;
-	Wed,  8 Jul 2026 07:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783496547;
-	bh=Uj+mFAOAsZprBnGJFeUh4asxeFG2wYPwTiHo6+BIk7E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=BRuVsAVsOM5Md3eB/trfw7dSE/yS1iZjrJwVcoAAqYybjEvKuHn9vITRGemgkGS+r
-	 lzmivtHH2tM28Vlflf23nv+oB1V/xpu+00+O6Ux52zkTlb6igCfgwNvpzTAGxNyjDE
-	 oHdeXUHoNtoz4FRnAxBq6jBLqAi+8QwROAGTCyuZ/BK5zEShstgyYkoJ3cUpO3GKT0
-	 o/BdZCni1+5Ss3A7rCAAeDKB+ogD8d9oIKFcVudKZ/IUMxTeGfmA+RpBqLZSaP38I8
-	 z4iuXafH4YdSDB5/D8CmonY6Wkn7bsaZ6llQeET5kq0rB/VvWkGAPfc99w4gemiEgm
-	 MgujiO6VDHqMg==
-Date: Wed, 8 Jul 2026 16:42:24 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Hongyan Xia <hongyan.xia@transsion.com>
-Cc: Pu Hu <hupu@transsion.com>, "ada.coupriediaz@arm.com"
- <ada.coupriediaz@arm.com>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "davem@davemloft.net" <davem@davemloft.net>,
- Jiazi Li <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
- <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
- "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
-Subject: Re: [RFC 1/3] arm64: kprobes: Do not handle non-XOL faults as
- kprobe faults
-Message-Id: <20260708164224.c080a1e834f02ac953007e5c@kernel.org>
-In-Reply-To: <8cc07468-804e-4ee1-acad-77bc99af74c6@transsion.com>
-References: <20260704234730.46d51c47d75e7d208e7bec9f@kernel.org>
-	<20260706083636.159883-1-hupu@transsion.com>
-	<20260706083636.159883-2-hupu@transsion.com>
-	<20260708094623.9a1d40bed37bce3c7969ad20@kernel.org>
-	<8cc07468-804e-4ee1-acad-77bc99af74c6@transsion.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eBS0mC55"
+Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-5aeb9aff688so331300e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Jul 2026 00:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783497465; x=1784102265; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oAzLQ3gzA+KnrCzUsFBoGBhVOWJwQaHovl8NoBHBi/Q=;
+        b=eBS0mC55t5zQqHgA6EdURvmi1uDBcY6PBKv827/q2WlOdv/DKtUuE2iqQfWJ/Q4eM1
+         gCOtmrNnBjpg9/1SQ8+vKUTBcPlTOfpixcvR5ucq1ZoEZR1U5TnpruoaY2g7MsafrGUV
+         z1XlWeovQL1LpmJ80p/eyERT/MKa9yI3rpmwt5PpaCShn9Arqlt71UCSPHXQnpOy9+32
+         6bjB+o33uphiCzTRglT98Jgo76doKe7PSfKw5nEiQaDTs7Ba8kG0vKjUKRcWA9t4HApJ
+         XDaVxSrfaFd50NAy4uE+0boZ3u3MI+kP3ytdZBLsZyxtt2ap0hN2s4Vfi1uLFutLdjzQ
+         UtbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783497465; x=1784102265;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oAzLQ3gzA+KnrCzUsFBoGBhVOWJwQaHovl8NoBHBi/Q=;
+        b=nfFHjToMpFaGPltPg2Et4MsfYs8KoD2zrjvAhEFPciUjpWI3fJIbMT/RI53hOiPBb6
+         bCNGOz2lvh5Kr/1yuVCsrumGJT0x7l2k/NUy3zNuzwK2zI32zbAEJ/DGGfUP/NIs/MWW
+         M23YJLyaegVNK4KiRoa9v69dHT7XyP5MmPGcSsx/W4bR/tzYTF3naDVix1khTTIQBiKn
+         j+vJMObzwwfJV2xBn2vGb3XnO05333833iaxHi4S5qNKXvq0JI7D5av7p1HDh2M/LiBu
+         9ev03bta+QrpUosHWdiPw/5b/2FYR4d9MqjERgaZvAU2J0TcPatGjNJaac2hB0w3VBRE
+         MeYg==
+X-Forwarded-Encrypted: i=1; AHgh+RpZpP/vM0JmJmiN8a7h+E0pZ5keWOsoRgcqhKki2o8aWHdxrWCM3DE1SlWs0ARKMZM+fpKOBYwrsJbiXml1C5Qz8ws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOixgX/RrmhvY/fJSO3aExLCJ96593iHaL2VTn3Q8hESiSC99t
+	czmRRCBrTea4yhb5T/0r2pR8bTKyojsQJ42NMbr9JY/vsXAOvhq/O8HqxuQaeu/OBlD6b8GL9to
+	SK0x5AapoyvLk+ErSUNJZBw==
+X-Received: from ljic3-n1.prod.google.com ([2002:a05:651c:2343:10b0:39a:fb7d:982d])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6512:3b20:b0:5ae:bb35:c956 with SMTP id 2adb3069b0e04-5b011497d66mr431084e87.56.1783497464617;
+ Wed, 08 Jul 2026 00:57:44 -0700 (PDT)
+Date: Wed,  8 Jul 2026 08:54:32 +0100
+In-Reply-To: <20260708075435.47419-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20260708075435.47419-1-vdonnefort@google.com>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
+Message-ID: <20260708075435.47419-2-vdonnefort@google.com>
+Subject: [PATCH v2 1/4] KVM: arm64: Allow early calls to pKVM host_share/unshare_hyp
+From: Vincent Donnefort <vdonnefort@google.com>
+To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
+	will@kernel.org, rostedt@goodmis.org
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kernel-team@android.com, qperret@google.com, tabba@google.com, 
+	linux-trace-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 8 Jul 2026 05:57:24 +0000
-Hongyan Xia <hongyan.xia@transsion.com> wrote:
+The hypervisor tracing for pKVM relies on the __pkvm_host_share_hyp and
+__pkvm_host_unshare_hyp HVCs. In order to start tracing as early as
+possible, allow those two HVCs before the host is deprivileged.
 
-> Hi Masami,
-> 
-> On 7/8/2026 8:46 AM, Masami Hiramatsu wrote:
-> > On Mon, 6 Jul 2026 08:36:48 +0000
-> > Pu Hu <hupu@transsion.com> wrote:
-> >
-> >> From: Pu Hu <hupu@transsion.com>
-> >>
-> >> kprobe_fault_handler() handles faults taken while kprobes is in
-> >> KPROBE_HIT_SS or KPROBE_REENTER state as faults caused by the
-> >> single-stepped instruction.
-> >>
-> >> That assumption is not always true. While a kprobe is preparing or
-> >> executing the out-of-line single-step instruction, other code may run
-> >> in that window. For example, perf or trace code can be invoked from the
-> >> debug exception path and may take a fault of its own. In that case the
-> >> fault did not happen on the kprobe XOL instruction, but the kprobe fault
-> >> handler may still try to recover it as a kprobe single-step fault.
-> >>
-> >> This can corrupt the exception recovery flow and leave the real fault to
-> >> be handled with a wrong PC. A typical reproducer is running simpleperf
-> >> with preemptirq tracepoints and dwarf callchains while a kprobe is
-> >> installed on a frequently executed kernel function.
-> >>
-> >> Fix this by handling faults in KPROBE_HIT_SS/KPROBE_REENTER only when
-> >> the faulting PC points at the current kprobe's XOL instruction. Faults
-> >> from any other PC are left to the normal fault handling path.
-> >>
-> >> This follows the same idea as the x86 fix in commit 6381c24cd6d5
-> >> ("kprobes/x86: Fix page-fault handling logic").
-> >>
-> >> Signed-off-by: Pu Hu <hupu@transsion.com>
-> >> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> >> ---
-> >>   arch/arm64/kernel/probes/kprobes.c | 14 ++++++++++++++
-> >>   1 file changed, 14 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> >> index 43a0361a8bf0..e4d2852ce2fb 100644
-> >> --- a/arch/arm64/kernel/probes/kprobes.c
-> >> +++ b/arch/arm64/kernel/probes/kprobes.c
-> >> @@ -285,6 +285,20 @@ int __kprobes kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr)
-> >>        switch (kcb->kprobe_status) {
-> >>        case KPROBE_HIT_SS:
-> >>        case KPROBE_REENTER:
-> >> +             /*
-> >> +              * A fault taken while a kprobe is single-stepping is not
-> >> +              * necessarily caused by the instruction in the XOL slot. For
-> >> +              * example, tracing or perf code running in this window may take
-> >> +              * an unrelated fault.
-> >> +              *
-> >> +              * Handle the fault here only when the faulting PC is the XOL
-> >> +              * instruction of the current kprobe. Otherwise let the normal
-> >> +              * fault handling path deal with it.
-> >> +              */
-> >> +             if (cur->ainsn.xol_insn &&
-> >> +                     instruction_pointer(regs) != (unsigned long)cur->ainsn.xol_insn)
-> >> +                     break;
-> >
-> > Can you check Sashiko's comments[1]?
-> >
-> > [1] https://sashiko.dev/#/patchset/20260706083636.159883-1-hupu%40transsion.com?part=1
-> >
-> > It seems that it complains about simulated kprobe's case.
-> > In that case, cur->ainsn.xol_insn == NULL. The simulation should be done
-> > in the kprobe context (which is a debug trap). I'm not sure the arm64
-> > can cause NMI in that context, but if it happens and causes a fault,
-> > it may cause a problem.
-> >
-> > So I think we can just ignore the fault on the simulated kprobes.
-> >
-> > To ensure that, you can just add:
-> >
-> >          if (cur && !cur->ainsn.xol_insn)
-> >                  return 0;
-> >
-> > at the entry of this function. (and remove redundant cur->ainsn.xol_insn check)
-> 
-> Right, both cases:
-> 
-> 1. single-step XOL
-> 2. simulated
-> 
-> have this problem and this patch fixed 1. 2 remains unchanged.
-> 
-> Ideally we should fix both, but the simulated case seems more
-> complicated, and at least we didn't make things worse for 2. So I wonder
-> if we can analyze 2 more thoroughly and fix it in a separate patch.
+Reviewed-by: Fuad Tabba <tabba@google.com>
+Tested-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-OK, but basically this fault handler is only for the SS XOL,
-not for simulated one (as same as x86). So just skip the
-simulated case is enough in this patch.
-(Note that x86 also have simulated path, and that is not handled
-by the fault handler)
-
-Thank you,
-
-
-> 
-> > Thank you,
-> >
-> >> +
-> >>                /*
-> >>                 * We are here because the instruction being single
-> >>                 * stepped caused a page fault. We reset the current
-> >> --
-> >> 2.43.0
-> >>
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-
-
+diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+index 043495f7fc78..fb049c40d04f 100644
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -89,12 +89,12 @@ enum __kvm_host_smccc_func {
+ 	__KVM_HOST_SMCCC_FUNC___vgic_v3_restore_vmcr_aprs,
+ 	__KVM_HOST_SMCCC_FUNC___vgic_v5_save_apr,
+ 	__KVM_HOST_SMCCC_FUNC___vgic_v5_restore_vmcr_apr,
++	__KVM_HOST_SMCCC_FUNC___pkvm_host_share_hyp,
++	__KVM_HOST_SMCCC_FUNC___pkvm_host_unshare_hyp,
+ 
+ 	MARKER(__KVM_HOST_SMCCC_FUNC_PKVM_ONLY),
+ 
+ 	/* Hypercalls that are available only when pKVM has finalised. */
+-	__KVM_HOST_SMCCC_FUNC___pkvm_host_share_hyp,
+-	__KVM_HOST_SMCCC_FUNC___pkvm_host_unshare_hyp,
+ 	__KVM_HOST_SMCCC_FUNC___pkvm_host_donate_guest,
+ 	__KVM_HOST_SMCCC_FUNC___pkvm_host_share_guest,
+ 	__KVM_HOST_SMCCC_FUNC___pkvm_host_unshare_guest,
+diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+index d3c69de698f4..361dbfe2e832 100644
+--- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
++++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+@@ -740,9 +740,9 @@ static const hcall_t host_hcall[] = {
+ 	HANDLE_FUNC(__vgic_v3_restore_vmcr_aprs),
+ 	HANDLE_FUNC(__vgic_v5_save_apr),
+ 	HANDLE_FUNC(__vgic_v5_restore_vmcr_apr),
+-
+ 	HANDLE_FUNC(__pkvm_host_share_hyp),
+ 	HANDLE_FUNC(__pkvm_host_unshare_hyp),
++
+ 	HANDLE_FUNC(__pkvm_host_donate_guest),
+ 	HANDLE_FUNC(__pkvm_host_share_guest),
+ 	HANDLE_FUNC(__pkvm_host_unshare_guest),
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.55.0.795.g602f6c329a-goog
+
