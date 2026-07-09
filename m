@@ -1,480 +1,280 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012014.outbound.protection.outlook.com [52.101.43.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1CE271443;
-	Thu,  9 Jul 2026 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783613446; cv=fail; b=i3oazQpuqzzoLwWANni3/O26lDP8ScOwEyvWSjoLtb6N7MRLeJXBChuFV2/sJxE/LRBC8RKEyRB0Z46J6B5XfD8OlzVRjNPSkQg0V/hG9Nq3lp9leByPAlreJ80kw8CpckDQF/JLKBYNqB09R3JPqPVVeKZRYrq5QcgIvlXH4gE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783613446; c=relaxed/simple;
-	bh=kijhuEcFkVIb0Ns4pB2So4K6MjdgrsYXYT8CCmSRzmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=COTdymK+L+Nv8fahV2dkQHkQ+fSXTWS6OkHnNMyXoe7KcSFQ7STRvO+jP2GYiLT9zDPjMLVXeKArjlySXTgrLPAY7SQsjjjeJIpe6rMYkWGnXGpTy1L8noMEjzAhCZcU9zNz+8rV3DRBYTJizApt06zRGdxbde6xaCP3OSs8098=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=L//3hA/+; arc=fail smtp.client-ip=52.101.43.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEAE42DA29;
+	Thu,  9 Jul 2026 16:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783613610; cv=none; b=YW8Xp3/oKKm1BwbS8ESd4uUP6pCwH63LxzMgUCCb3Ilqe0d/C39m2ku/JbDepAi93SIZt21INfuFPHI4Kx0DVBB8+I4zyhBIs4iuT7d7YwXj5RdDn++zaevwgAH3Dn3mFf60YfRvFrdAKriGLqboKNMjXYtWJcNJ/Lszgc/u/Ho=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783613610; c=relaxed/simple;
+	bh=RAelIY3SGJPFiX9W78brt71IyKj6nxt4Jj1gg/NENhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ss88lkAHwbDRcgoINGhkB+p7DbDQ80obacXE6/lciBGO8GtFsKaZC2FkNrefPBkEXtaGy7Pvf87Z9q/QhO+H5JEaH9w8oGvyfq6gGkbTmGyilqgOkxzrCRSchFPf6AKeFDVo0/8gvA1btWpbxnu6q2+ZcyxrONUzeTpIglJeyIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8tKeN5i; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="L//3hA/+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v47XrwGNu+/aeokZoZf976oMjOSIo/AdPmrQJpcwQ+GZrqtpeIehQ50pm+2yELtIdFm7sB2xBqMtVHXc+Awt3IoOKtdBIPLyTLtLs8s1s8frwFqBd4h3oggPg/KBz/PY9dJdr46hpWoHgqhY1qUmsEg93/HX0ZXx5dFnFwk1UNc47l9YEWPdTg4alD+MPL+l4/yhE59bFeXa5FvWNKqrEz4E9oniq+fE961a2dIi+XWNFoWsgBlaNyjq6ZEqBhAllo5yvDY8tSWk/pxjfODcK/IWOUqAsy9R6XsvhDdKqayW6wAgatA0J8qqiaHcPbTpQScjH1FnrJ/WLOo1LILIgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cEz0byVnTDVKIHRVRWwUq5zzqJohCCMBroXqpjwveZk=;
- b=wp7UfJbR8nde+xS9WhMhZbh5Nu3DcEwXxQ9a9J0x6guF7F9nF2UPlD3JjCy0896Xo62/b9VFL0PAUdGlcxRvhF+qcDGgtr8egiwW/HIx0R81uba3gcyGk8Zy2rWJRMv2JspZ8IrSVJxQrPtf6qTbAOKc1hqbAruZrfigY2xKRGjIujLaBU99uGMSze7RYQ6lcYlyBS68ht/NGTR7qwwnojvGkhUJ2XxvZSioC65GEAIGzLNdWaubKYSDbptEKlYwc0hl5ADn8/LWVlv68FMhHSKfEx7XdUbp5FOPMiaIX0a9cfBMN2IJQizlmPH/jSj/onEf3qfsSw/s4WJk3NVdlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cEz0byVnTDVKIHRVRWwUq5zzqJohCCMBroXqpjwveZk=;
- b=L//3hA/+gdEAGxBrQSSLmnpLU+ZGq+G3rKFG7O5LN2vy2BqJAx8tA4rndLbuBjKt04RpwnxmZZ//z4oxR3UCp0cD3UHIooNWwoeXIKmhdn4DJCGbnzeowESv1FpjHv8CJdqJcerdmbxXYEEriwwGkVW5ysYOg3lCuxRe7hJNrOxjEZq92BM2qGWTAaejXELB6oz38X1j2ox05CRCkFQR0VGzHLBTZ+X2w/6vALVZg3DKCVnafZIeu1HmLgaK6eypNaKio1sfWCMg2jaKdD1yLD84p9/WCCrsLTcgByt6cWYO7jBk6NxlejMONBLP+g36E3LMgDSpHEB4iMYNwHC2Qw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by SN7PR12MB6886.namprd12.prod.outlook.com (2603:10b6:806:262::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.16; Thu, 9 Jul
- 2026 16:10:36 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0181.014; Thu, 9 Jul 2026
- 16:10:35 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Wandun <chenwandun1@gmail.com>
-Cc: Lorenzo Stoakes <ljs@kernel.org>, vbabka@kernel.org, david@kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, Alexander.Krabler@kuka.com,
- hughd@google.com, fvdl@google.com, bigeasy@linutronix.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, akpm@linux-foundation.org, surenb@google.com,
- mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, riel@surriel.com,
- liam@infradead.org, harry@kernel.org, jannh@google.com, lance.yang@linux.dev,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
- pfalcato@suse.de
-Subject: Re: [PATCH v2 1/4] mm/migrate: do not migrate folios mapped into
- VM_LOCKED VMAs under compaction
-Date: Thu, 09 Jul 2026 12:10:33 -0400
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <6A08B6C8-E94C-4690-A29E-B9A0DAFE19EF@nvidia.com>
-In-Reply-To: <c372e68f-2bfc-45b6-a431-01bf55717247@gmail.com>
-References: <20260707125925.3725177-1-chenwandun1@gmail.com>
- <20260707125925.3725177-2-chenwandun1@gmail.com> <akz7ythMxfIZeT0d@lucifer>
- <c372e68f-2bfc-45b6-a431-01bf55717247@gmail.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MN2PR07CA0003.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::13) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8tKeN5i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A2C31F00A3A;
+	Thu,  9 Jul 2026 16:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783613608;
+	bh=RAelIY3SGJPFiX9W78brt71IyKj6nxt4Jj1gg/NENhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=e8tKeN5i4m4ACoOIBmSex0OeWH2XVw83XZ/aBvIwAmA4coEeCRkZa20zr/3Llj4QL
+	 6vzg0h1m+yrIbw5jfQXfNEWCibeZaeL4FHjTTGZiP9eAP/lTt3VOP3zXoetxmU0q0/
+	 79FOEwYtkhE9Xmg6wgzbgQmtchuGg/eeL1OjeSNT/5CTp5HwVi9+sU+rSGiOhb85nm
+	 CjX2Wsyt7C4fzG2CQU2FPvrchrTG/FgiPV99mGrgxgNQfmP/+MqQIKgRdf6MPKsoOS
+	 zICm/nvJRVVETdHHU8Emsy3FV9eKl4gAhMMhlVaCEy4/b8Hsbqv4Wy0XMBByorPdci
+	 ErIM9s1QwJm+Q==
+Date: Thu, 9 Jul 2026 18:13:26 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+Message-ID: <ak_F9o4KMMqZAsq3@orome>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck>
+ <akZkuwktaXFTrASP@orome>
+ <akaSJ5D98w2cHqb6@orome>
+ <akftuw9NyRy36fXA@willie-the-truck>
+ <akuvyu1Pq0ZVMZV0@orome>
+ <akzikTrmhMsvkNVY@willie-the-truck>
+ <ak5CXzGStC6ZmtwI@orome>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|SN7PR12MB6886:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a88e174-c265-43db-d824-08deddd49c2a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|366016|1800799024|56012099006|4143699003|5023799004|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	xhDqD7q/Xv1VjlQAFlcfXUFfr3m3lrEkTGITUC9CBd24w6XkuF/+o8SjtKmIfiS0bchI1r3k+YEgaQNTP9QMmAJRaidCjxnFlbK4HQaXqYsbMi8s0CTDDn+iHVgvnGzlmaWRR/0zdA+RFLfELg5wbJrmU/aqkYOHS6TMZVOP5oYXAKVbjrIdvMJwogx74iZkhUSg3Vd9QtcH7ggZMj9iWPIipBnOj/At5ol08qg4nhugroRYV9H+6qoUGDJseCyMA9c/Y5wIsXCuGJZ044JjEVqJq0650DM3N/08Bk+rq7LwsNFVjrzNmCzy3EAA4sl5NouD8nq32v1oyeze058gGPCDqKj7jCt2HUAbQHJbSlxuwU8ysPt+puMCNXgNN4PaP2r35EAeLn8jEYfkmywwHSbnELdsDAHy1LHNAQNTb/TC78z60alrro2sRDSkaKF0VgmQqjLDycHJmIJuzIC5K/2S98OpkWceGVTD2bkxCFN4WvxYFc+Typt7++sGrsHhrUE7vxzcpn2/yNPopr0KNOIL/j7yATpZlALHZV1Dut+pU/QM0Vmv6/XYPE8WWcV8Gkb3VfHV/ctu2cLppULAICfW3NT8R6DF5qlzgsnvkHY1igSWfRnMBdQtUuUz3iy18CzNUo44Juf+RzaDy0sEeI55MuS6Dy3v3dycWiepT48=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(366016)(1800799024)(56012099006)(4143699003)(5023799004)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FlRcC4cU+YneCUO9BF7FR/BuQ0hibb6J6ogwX19EJZIYVqJqMejA+wLV70XB?=
- =?us-ascii?Q?crat7a1FJNhIHKfi9akLYQRSVVQfB0cnE21lkGiqoBiyl2AXYV0+1ugfLvFM?=
- =?us-ascii?Q?psWooYGS4IUnz7xbCJ+RNGKcIRvr+Rn2QdC8AlgBzq47UEy4qCsdz3Au3Ydn?=
- =?us-ascii?Q?DRVrUiYj4v+uhZKKGM2uE2kr51ZDzy4R8bqa53L64Pth3F44ABxO3GpkGNXf?=
- =?us-ascii?Q?m/DPotUM88G7YY+byrCePh7fzMeCgMGLYdCjyzJgn2HMBgLD69FrNfxw/xU8?=
- =?us-ascii?Q?1lQMBKXknNisTtqthkQsEAt5e8ofkb/xrk3VMPm382Gc7ae3y0T2su/Rc/16?=
- =?us-ascii?Q?I7BqpBmbueqwArfxgt9cJNVKSxhexLeWBEpCQ7LrSG1P7Jis655D2sFNJ5Uu?=
- =?us-ascii?Q?FrxMqNwpHtElNkvcDszylri0acGgiifep122Pw6OJgt+qEd15N7CiSMaTGsi?=
- =?us-ascii?Q?buw+6FGCx5tZLDFLrmgPzV7YQBHFXRMOVjeN5jyuZk6ZrEjAf7yjW6nEQLt8?=
- =?us-ascii?Q?OWKzFK1DmyDjBis3HmdR9gGl17+nYLmPWRFiFY0s3xfDJNrujqYKdOu6mKlM?=
- =?us-ascii?Q?brFFNBHmoMT2/uAiM6QnYkota3SCnJCk31i6s+Wfu1oe3z00gsPkrQUXyXBZ?=
- =?us-ascii?Q?z3JMHrdf4AojLNmtCY1KUCwIJyv4sDKJyMHgeb67oxYoOt70b8pAYGTOgxCa?=
- =?us-ascii?Q?+gC9pLLqtHFkS+tQ8NjFnhPFp8xCNw4hems3VldsfH4vopXYYnwXNacPt0os?=
- =?us-ascii?Q?LgUBaCY1b/H2JV6dyp/jAJC6vEDLnE/44dFExPZg7BH1AAXw8uNno9GF+RHD?=
- =?us-ascii?Q?G/skW/lHmhWp/Fr5LoSJWe7WT7ddc8bVtLdL8UaBb5nXOuw7oSQR2rvhbGRL?=
- =?us-ascii?Q?RZaH6WjuRs7K2YtxWJ4+iLvfclXO8prAIWzLJCE9QzRsXmx8+I4UHjWB7n1n?=
- =?us-ascii?Q?F7Wq3agCVa/HN3YBj8JoHdXMN8bYEXb8arYiOcZkg+d/8HeLw7BTKEtVUvI+?=
- =?us-ascii?Q?WUpTuMSgJ6UdHtXh+r3EQ1iz+rZ/Vfet/xF7x5vT4P56O3Xv8hOrEPVZdCi8?=
- =?us-ascii?Q?ShRzsvyjxqVjmlpKrPUKk7eKkl/FYCO6O0G/oMRHIRKPUPXXiAuB5H3g04eT?=
- =?us-ascii?Q?DbP38cgVqkTMzwmPppsO7tQdhh6qxwi8vzMhMZH/Xogipo5mSmy79awdBiSs?=
- =?us-ascii?Q?dDaeqRj8Vujge1ysWIrP7e5OWap7nJE4GsKl2dH1BRuH3vmCQ0063uCEefqj?=
- =?us-ascii?Q?ERgmvZKymz0GoKG7/XISSSWOal9ldekt/tZiflIw05J2wrZ++0dPuVB48/ou?=
- =?us-ascii?Q?9kI5da4D4wEqFTn9GHs7K0j037FljrzNpAw0Tg3bIBYbHs9lYrDXNjnuYsu7?=
- =?us-ascii?Q?Vhb7qBE+Suz3XtfYD1uI+bBKsnw7x8o3Q1aURBmh7h5NFu/ccAEdDRbFAUty?=
- =?us-ascii?Q?KFK00Wt8RN0TmGzneRx2JWWcd9avDw0RP/CmKHzc77z6/1qwg3nPNUVh9iXh?=
- =?us-ascii?Q?ULihkvxoAceYKWuScSewBK2GtqsIVNwTRKqTpPEBAMjVM4FjYqvEqWaEn837?=
- =?us-ascii?Q?ARMdSK0l8SD6JFf4Qpq2s5UvCkQqyOf+jQfCAFEe7zkmmggz4Dt9Dt8K9Lrx?=
- =?us-ascii?Q?KN0LYKNvLq7WTG/pTofaLdTRhCXYxL7N7PnJJpRTD7g18W2K2DFlC/v6hFqA?=
- =?us-ascii?Q?xSCac0ZBIlnkyQISbKEyXcSW3iXdg6g58VcSr+g63a7KBdmD?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a88e174-c265-43db-d824-08deddd49c2a
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 16:10:35.8066
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gSj2KQ278NIixYjXeyEhMQKzdjq5PDKX/UF8hRvDZncHuHZD53JxbIdgXdyqTCYL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6886
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u2l7n4igggpssyeo"
+Content-Disposition: inline
+In-Reply-To: <ak5CXzGStC6ZmtwI@orome>
 
-On 8 Jul 2026, at 23:31, Wandun wrote:
 
-> On 7/7/26 21:44, Lorenzo Stoakes wrote:
->> (Being really nitty, your subject line is too long)
->>
->> Please don't reference legacy VMA flags for newer patches 'do not migr=
-ate
->> folios mapped into mlocked VMAs...' works just as well.
-> Got it.
->>
->> On Tue, Jul 07, 2026 at 08:59:22PM +0800, Wandun Chen wrote:
->>> From: Wandun Chen <chenwandun@lixiang.com>
->>>
->>> When compact_unevictable_allowed=3D0, unevictable pages should not be=
+--u2l7n4igggpssyeo
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+MIME-Version: 1.0
 
->>> migrated. However, mlock_folio_batch in the mlock[all] syscall introd=
-uces
->>> a race, mlock_folio() sets PG_mlocked immediately but defers PG_unevi=
-ctable
->>> to mlock_folio_batch(), causing pages that are about to become unevic=
-table
->>> to be migrated, which violates the intent of compact_unevictable_allo=
-wed,
->>> and causes spike latency in RT kernels [1].
->>>
->>> In order to fix this, migration is forbidden for pages mapped into VM=
-As
->>> marked with VM_LOCKED. In addition, two early-return paths are introd=
-uced,
->>
->> Please don't reference legacy VMA flags. -> VMA_LOCKED_BIT.
-> Got it.
->>
->>> filter out mlocked pages, return early to avoid unnecessary operation=
-s.
->>>
->>> Fixes: 90d07210ab55 ("mm: mlock: use folios and a folio batch interna=
-lly")
->>
->> Hmmmm why do you think my patch caused this? That was just a folio con=
-version?
->
-> Oh, I made a mistake, your patch was just a folio conversion.
->
-> Batching mlocked page was introduced in v5.18 by:
-> 	commit 2fbb0c10d1e8 ("mm/munlock: mlock_page() munlock_page() batch by=
- pagevec")
->
-> Setting sysctl_compact_unevictable_allowed to zero was introduced in v5=
-=2E7 by:
-> 	commit 6923aa0d8c62 ("mm/compaction: Disable compact_unevictable_allow=
-ed on RT")
->
-> So this issue exist after v5.18.
->
->>
->> Also I didn't think we liked having fixes spotted about a series with =
-non-fixes
->> tags?
-> Got it, will split this series in next version.
->>
->>> Reported-by: Alexander Krabler <Alexander.Krabler@kuka.com>
->>> Closes: https://lore.kernel.org/all/DU0PR01MB10385345F7153F3341009818=
-88259A@DU0PR01MB10385.eurprd01.prod.exchangelabs.com/ [1]
->>> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
->>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
->>> Link: https://lore.kernel.org/linux-rt-users/33275585-f2db-4779-89f0-=
-3ae24b455a67@suse.cz/#t
->>> ---
->>>  include/linux/compaction.h |  6 ++++++
->>>  include/linux/rmap.h       |  3 +++
->>>  mm/compaction.c            |  8 +++++++-
->>>  mm/migrate.c               | 23 +++++++++++++++++++----
->>>  mm/rmap.c                  | 12 +++++++++---
->>>  5 files changed, 44 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
->>> index f29ef0653546..04e60f65b976 100644
->>> --- a/include/linux/compaction.h
->>> +++ b/include/linux/compaction.h
->>> @@ -106,6 +106,7 @@ bool compaction_zonelist_suitable(struct alloc_co=
-ntext *ac, int order,
->>>  extern void __meminit kcompactd_run(int nid);
->>>  extern void __meminit kcompactd_stop(int nid);
->>>  extern void wakeup_kcompactd(pg_data_t *pgdat, int order, int highes=
-t_zoneidx);
->>> +extern bool compaction_allow_unevictable(void);
->>
->> Don't use extern. We remove extern as we go it's not needed.
-> Got it.
->>
->>>
->>>  #else
->>>  static inline void reset_isolation_suitable(pg_data_t *pgdat)
->>> @@ -131,6 +132,11 @@ static inline void wakeup_kcompactd(pg_data_t *p=
-gdat,
->>>  {
->>>  }
->>>
->>> +static inline bool compaction_allow_unevictable(void)
->>> +{
->>> +	return true;
->>> +}
->>> +
->>>  #endif /* CONFIG_COMPACTION */
->>>
->>>  struct node;
->>> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
->>> index 8dc0871e5f00..359c7426b6b9 100644
->>> --- a/include/linux/rmap.h
->>> +++ b/include/linux/rmap.h
->>> @@ -102,6 +102,9 @@ enum ttu_flags {
->>>  					 * do a final flush if necessary */
->>>  	TTU_RMAP_LOCKED		=3D 0x80,	/* do not grab rmap lock:
->>>  					 * caller holds it */
->>> +	TTU_RESPECT_MLOCK	=3D 0x100,/* leave VM_LOCKED vmas mapped instead
->>
->> -> VMA_LOCKED_BIT please. Also maybe just say mlock'd?
-> Got it.
->>
->>> +					 * of installing a migration entry
->>> +					 */
->>>  };
->>>
->>>  #ifdef CONFIG_MMU
->>> diff --git a/mm/compaction.c b/mm/compaction.c
->>> index f08765ade014..5d256930e389 100644
->>> --- a/mm/compaction.c
->>> +++ b/mm/compaction.c
->>> @@ -1116,7 +1116,8 @@ isolate_migratepages_block(struct compact_contr=
-ol *cc, unsigned long low_pfn,
->>>  		is_unevictable =3D folio_test_unevictable(folio);
->>>
->>>  		/* Compaction might skip unevictable pages but CMA takes them */
->>> -		if (!(mode & ISOLATE_UNEVICTABLE) && is_unevictable)
->>> +		if (!(mode & ISOLATE_UNEVICTABLE) &&
->>> +		    (is_unevictable || folio_test_mlocked(folio)))
->>
->> Maybe just change is_unevictable to include this check?
->>
->> Like:
->>
->> 	is_unevictable =3D folio_test_unevictable(folio) ||
->> 		folio_test_mlocked(folio);
->>
->> ?
-> Sounds good, I'll fold mlock into is_unevictable so both checks
-> stay consistent.
->>
->> Also later you have:
->>
->> 		if (((mode & ISOLATE_ASYNC_MIGRATE) && is_dirty) ||
->> 		    (mapping && is_unevictable)) {
->> 		    	...
->>
->> Which doesn't account for mlock as-is? Is that correct?
-> IIUC, The is_unevictable check here mainly serves as a cheap pre-filter=
-
-> for inaccessible mappings (which are always unevictable folio).
-> It's unrelated to the mlock.
->
->>
->>
->>
->>>  			goto isolate_fail_put;
->>>
->>>  		/*
->>> @@ -1898,6 +1899,11 @@ typedef enum {
->>>   * compactable pages.
->>>   */
->>>  static int sysctl_compact_unevictable_allowed __read_mostly =3D CONF=
-IG_COMPACT_UNEVICTABLE_DEFAULT;
->>> +
->>> +bool compaction_allow_unevictable(void)
->>> +{
->>> +	return sysctl_compact_unevictable_allowed;
->>> +}
->>
->> You add this helper but isolate_migratepages() still references
->> sysctl_compact_unevictable_allowed directly?
-> I'll route that reference through compaction_allow_unevictable()
-> in next version.
->>
->>>  /*
->>>   * Tunable for proactive compaction. It determines how
->>>   * aggressively the kernel should compact memory in the
->>> diff --git a/mm/migrate.c b/mm/migrate.c
->>> index a786549551e3..3a15eb13e82b 100644
->>> --- a/mm/migrate.c
->>> +++ b/mm/migrate.c
->>> @@ -1202,7 +1202,7 @@ static void migrate_folio_done(struct folio *sr=
-c,
->>>  static int migrate_folio_unmap(new_folio_t get_new_folio,
->>>  		free_folio_t put_new_folio, unsigned long private,
->>>  		struct folio *src, struct folio **dstp, enum migrate_mode mode,
->>> -		struct list_head *ret)
->>> +		struct list_head *ret, enum migrate_reason reason)
->>>  {
->>>  	struct folio *dst;
->>>  	int rc =3D -EAGAIN;
->>> @@ -1210,6 +1210,7 @@ static int migrate_folio_unmap(new_folio_t get_=
-new_folio,
->>>  	struct anon_vma *anon_vma =3D NULL;
->>>  	bool locked =3D false;
->>>  	bool dst_locked =3D false;
->>> +	enum ttu_flags ttu =3D 0;
->>
->> You reference ttu only in an if-block below no? So why are you declari=
-ng
->> this here? Move it to the if-block.
-> Got it. I'll move it to the if-block in next version.
->>
->>>
->>>  	dst =3D get_new_folio(src, private);
->>>  	if (!dst)
->>> @@ -1249,9 +1250,15 @@ static int migrate_folio_unmap(new_folio_t get=
-_new_folio,
->>>  		folio_lock(src);
->>>  	}
->>>  	locked =3D true;
->>> -	if (folio_test_mlocked(src))
->>> +	if (folio_test_mlocked(src)) {
->>>  		old_folio_state |=3D FOLIO_WAS_MLOCKED;
->>>
->>> +		if (reason =3D=3D MR_COMPACTION && !compaction_allow_unevictable()=
-) {
->>
->> This should really be a helper since you repeat yourself and it's not
->> obvious what this is checking.
->>
->> Like:
->>
->> 	static migrate_mlock_allowed(enum migrate_reason reason)
->> 	{
->> 		/* Only compaction is disallowed. */
->> 		if (reason !=3D MR_COMPACTION)
->> 			return true;
->>
->> 		/* If we can compact unevictable folios, we are ok. */
->> 		if (compaction_allow_unevictable())
->> 			return true;
->>
->> 		/* Conservative: if any folio could be mlock()'d, disallow. */
->> 		return false;
->> 	}
->>
->> Then you could self-document what you're checking and avoid code dupli=
-cation below.
-> Got it, it is more clear, thanks.
->>
->>> +			rc =3D -EBUSY;
->>> +			goto out;
->>> +		}
->>> +	}
->>> +
->>>  	if (folio_test_writeback(src)) {
->>>  		/*
->>>  		 * Only in the case of a full synchronous migration is it
->>> @@ -1324,7 +1331,14 @@ static int migrate_folio_unmap(new_folio_t get=
-_new_folio,
->>>  		/* Establish migration ptes */
->>>  		VM_BUG_ON_FOLIO(folio_test_anon(src) &&
->>>  			       !folio_test_ksm(src) && !anon_vma, src);
->>
->> Useful to convert VM_BUG_*() -> VM_WARN_*() (possibly _ONCE() here als=
-o) as we go!
-> Got it.
->>
->>> -		try_to_migrate(src, mode =3D=3D MIGRATE_ASYNC ? TTU_BATCH_FLUSH : =
-0);
->>> +
->>> +		if (mode =3D=3D MIGRATE_ASYNC)
->>> +			ttu |=3D TTU_BATCH_FLUSH;
->>> +
->>> +		if (reason =3D=3D MR_COMPACTION && !compaction_allow_unevictable()=
-)
->>
->> See above about deduplicating.
->>
->>> +			ttu |=3D TTU_RESPECT_MLOCK;
->>
->> Hmm. I don't love 'respect mlock'. I guess we only know about the reas=
-on
->> being compaction here.
-> Right, we only know about the reason.
->>
->> But I'm confused anyway. We have the folio, why aren't we just checkin=
-g for
->> PG_mlocked() here instead of getting the rmap to see if it's mapped
->> anywhere with VMA_LOCKED_BIT?
->
-> There was a race scenario without patch 02, vma may already marked with=
-
-> VMA_LOCKED_BIT but folio has't marked with mlocked, such as below:
->
->
-> CPUA: mlock()                                  		CPUB: compaction / mig=
-ration
->
-> mmap_write_lock()
->     mlock_fixup set VM_CLOKED
->     mlock_pte_range
->     	mlock_folio(page N)
->
->                                              		isolate page N+50 (mlock=
- hasn't reached it)
->                                             		migrate_folio_unmap
->                                        			folio_test_mlocked() --> fals=
-e, but VMA:VM_LOCKED
->                                        			try_to_migrate()
->                                          			rmap_walk(P) [anon_vma rwse=
-m / i_mmap_rwsem, read]
->                                            			try_to_migrate_one -->ins=
-tall migration entry
->         ...reaches page N+50
->         skip migration entry (without patch 02)
-> mmap_write_unlock()
->
->
-> access page N + 50 --> wait for migration complete
-> 							=
-
-> 							migrate_folios_move
-> 							....
->                                              		migrate complete
->
->
->
-> If apply patch 02, mlock itself will wait migration complete, so checki=
-ng
-> VMA_LOCKED_BIT in the rmap path is no longer necessary, but this logic =
+On Wed, Jul 08, 2026 at 02:50:04PM +0200, Thierry Reding wrote:
+> On Tue, Jul 07, 2026 at 12:27:13PM +0100, Will Deacon wrote:
+> > On Mon, Jul 06, 2026 at 03:49:24PM +0200, Thierry Reding wrote:
+> > > On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
+> > > > On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
+> > > > > On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+> > > > > > On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+> > > > > > > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrot=
+e:
+> > > > > > > > From: Chun Ng <chunn@nvidia.com>
+> > > > > > > >=20
+> > > > > > > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE prot=
+ection bits
+> > > > > > > > on a kernel-linear-map range.
+> > > > > > >=20
+> > > > > > > That sounds like a really terrible idea. Why is this necessar=
+y and how
+> > > > > > > does it interact with things like load_unaligned_zeropad()?
+> > > > > >=20
+> > > > > > This is necessary because once the memory controller has walled=
+ off the
+> > > > > > new memory region the CPU must not access it under any circumst=
+ances or
+> > > > > > it'll cause the CPU to lock up (I think technically it'll hit a=
+n SError
+> > > > > > but in practice that just means it'll freeze, as far as I can t=
+ell).
+> > > > > >=20
+> > > > > > Probably doesn't interact well at all with load_unaligned_zerop=
+ad().
+> > > > > >=20
+> > > > > > > I think you should unmap the memory from the linear map and m=
+emremap()
+> > > > > > > it instead.
+> > > > > >=20
+> > > > > > Given that the memory can never be accessed by the CPU after th=
+e memory
+> > > > > > controller locks it down, I don't think we'll even need memrema=
+p(). The
+> > > > > > only thing we really need is the sg_table we hand out via the D=
+MA BUFs
+> > > > > > so that they can be used by device drivers to program their DMA=
+ engines
+> > > > > > internally.
+> > > > > >=20
+> > > > > > Looking through some of the architecture code around this, shou=
+ldn't we
+> > > > > > simply be using set_memory_encrypted() and set_memory_decrypted=
+() for
+> > > > > > this? While they might've been created for slightly other use-c=
+ases,
+> > > > > > they seem to be doing exactly what we want (i.e. remove the pag=
+e range
+> > > > > > from the linear mapping and flushing it, or restoring the valid=
+ bit and
+> > > > > > standard permissions, respectively).
+> > > > >=20
+> > > > > Ah... I guess we can't do it because we're not in a realm world a=
+nd so
+> > > > > the early checks in __set_memory_enc_dec() would return early and=
+ turn
+> > > > > it into a no-op.
+> > > > >=20
+> > > > > How about if I extract a common helper and provide set_memory_p()=
+ and
+> > > > > set_memory_np() in terms of those. Those are available on x86 and
+> > > > > PowerPC as well, so fairly standard. I suppose at that point we're
+> > > > > closer to set_memory_valid().
+> > > >=20
+> > > > Why not just call set_direct_map_invalid_noflush() +
+> > > > flush_tlb_kernel_range() for each page? We already have APIs for th=
+is.
+> > >=20
+> > > Having a "standard" helper with a fixed and documented purposed seemed
+> > > like a preferable approach for this particular case. We also may want=
+ to
+> > > make the driver that uses this buildable as a module, in which case w=
+e'd
+> > > need to export these rather low-level APIs. And then there's also the
+> > > fact that we typically call this on a rather large region of memory
+> > > (usually something like 512 MiB), so doing it page-by-page is rather
+> > > suboptimal.
+> > >=20
+> > > > The big challenge I see with any linear map manipulation, however, =
 is
-> retained to avoid unnecessary migration operations.
->
+> > > > that it will rely on can_set_direct_map() which likely means you ne=
+ed to
+> > > > give up some performance and/or security to make this work. Does me=
+mory
+> > > > become inaccesible dynamically at runtime? If not, the best bet wou=
+ld
+> > > > be to describe it as a carveout in the DT and mark it as "no-map" so
+> > > > we avoid mapping it in the first place.
+> > >=20
+> > > VPR exists in two modes: static and resizable. For static VPR we do
+> > > exactly that: describe it as carveout in DT with no-map and deal with=
+ it
+> > > accordingly in the driver. Resizable VPR is for device that have small
+> > > amounts of RAM. Content-protected video playback will in the worst ca=
+se
+> > > consume around 1.8 GiB of RAM, so we want to be able to reuse for oth=
+er
+> > > purposes when VPR is unused on those devices. In that case, the memory
+> > > is also described as a reserved-memory region in DT, but it is marked=
+ as
+> > > reusable so that it can be managed by CMA.
+> > >=20
+> > > The resize operation is fairly slow to begin with because we need to
+> > > stall the GPU and put it into reset before the operation, then take it
+> > > out of reset and resume it afterwards.
+> > >=20
+> > > What kind of performance impact do you expect?
+> >=20
+> > You'll need to measure it, but we've seen reports of double-digit
+> > percentage regressions in performance and power. As I said, the problem
+> > is that you need to split the linear map to 4k page at runtime to unmap
+> > the dynamic carveout, but that isn't something that can be done on most
+> > CPUs. Therefore you end up having to use page-granular mappings for the
+> > entire thing, similarly to how 'rodata_full' drives can_set_direct_map()
+> > and the perf/power hit affects everything.
+> >=20
+> > It's hard to know what to suggest... I wonder if any of the memory
+> > hotplug logic could help here?
+>=20
+> I've read up on memory hotplug a bit and it sounds like it could fit
+> this really nicely. Given that we only use CMA (along with the extra
+> patches to it) to make sure that any buffers are reclaimed for VPR use,
+> we should be able to get rid of the CMA usage altogether and replace it
+> with online_pages() and offline_pages() instead. Rather than using a
+> fixed set of CMA areas like we currently do, each "chunk" in the VPR
+> driver could represent a memory block instead (which looks like it will
+> be 128 MiB for 4 KiB pages and 512 MiB for 64 KiB pages). We currently
+> use 512 MiB as the chunk size, so it should be relatively similar and
+> easy to adjust.
+>=20
+> One issue that we would absolutely need this memory to be ZONE_MOVABLE
+> from the start. Using no-map in DT and then online_pages() probably will
+> not work because there's no struct page for the memory. So we're left
+> with keeping the memory onlined by default, in which case we'd need some
+> way for DT to instruct the memory to be put into ZONE_MOVABLE always.
+>=20
+> There's a "hotpluggable" property for "memory" nodes, maybe that can be
+> extended to apply to reserved-memory nodes as well?
 
-For this race condition, since VMA has VM_LOCKED_BIT set, maybe you can
-extend rwc->invalid_vma semantics to return 1:SKIP, 0:OK, -1:STOP.
-Then install an invalid_vma function when !compaction_allow_unevictable()=
-=2E
-The invalid_vma function returns -1:STOP for any vma with VM_LOCKED_BIT s=
-et.
-__rmap_walk_file() and rmap_walk_anon() will need to break when -1:STOP
-is returned.
+I haven't been having much success with this. memblock_mark_hotplug()
+doesn't have much of an effect because the kernel clears this flag
+automatically at some point, so by the time the movable zone is created
+there's no memory left that's marked hotpluggable. I don't know if it's
+a good idea to modify the code to keep the flag.
 
-This approach will not require a new TTU flag, although it requires more
-code changes.
+Another thing I briefly tried was to use add_memory_driver_managed()
+together with the no-map flag in an attempt to get the memory explicitly
+added as movable, but that fails because __request_resource() notices
+that the reserved memory is actually part of the system RAM that was
+registered earlier.
 
-Best Regards,
-Yan, Zi
+I think in order for this to work the bindings would probably need to
+change, such that reserved-memory nodes aren't used but it's described
+using the memory nodes instead. That way a piece of system RAM could be
+carved out and added by the VPR driver. I don't know if the kernel would
+like this kind of splicing of the system RAM, though.
+
+It's all very close to what I need for this, but doesn't quite fit. Any
+ideas which of the options is best? Right now it sounds like finding a
+way to make this region explicitly ZONE_MOVABLE would be the best. That
+should allow offline_pages() and online_pages() to be used, which seems
+like the cleanest approach.
+
+Thierry
+
+--u2l7n4igggpssyeo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpPyKMACgkQ3SOs138+
+s6HMyg//VTBl5irgppGTb3EjEccykd6c0o9JZQ0UMSSSA+GHq89TLA0mP06UMEIo
+rhLr7OakIAbbZ1QlsTywvsU9Fm33hcO4AddUn1OAcl4HTvP19JfwNN3Y/AwZtsKw
+CO5/J9sJOO2Ofb3O20BC7RHHfLxHhhwjdcp8+aQ739tG7fKlyA6r/R3ebAOVsQqJ
+VTSFF8Bdej2X/EWVBZRWprUdSgDACyFlhNIRBOt57nRObqO7iqnXEjm84gMXJWxk
+/4OStnkVJL4fVk1ZaDzYjFJzi1MTT20KOEldRWAL3CwxSLYBcP8rYG0YoGLaZIfC
+Hgvo0XBO+RHwufv77wN4Z7vDLAktcNu6PTS1ovemW24iW3DelUv89/7Fh32l31CV
+dTnvNK6sukz82QXd62VFzskpbfxW9ONO5awGKcpxDEoSeUGd/4Cg+nfvXIbhfZgN
+kdjAJXxD5VvDeIpvOVMSQVINE9T/OkGqV8CkCMQfDu3+hSq7iU8OW8TH2eybWcqt
+POCKNDd0dm21w1miNqpi5qvUrUa8zzYfjmQt1dxwPUf36EcoodZaOSNjkKi0amdm
+S5yLHnW6KuFY26nTGPQ54Noup4ZPuKBoqZjg/m6sPx34fr8HKIMSLM6Kp2oYq2K6
+oga7buaPA7sRTHJ9tMFv/G9ACDJo71dmTuDyMAnNFqpv46c1+4c=
+=+7m0
+-----END PGP SIGNATURE-----
+
+--u2l7n4igggpssyeo--
