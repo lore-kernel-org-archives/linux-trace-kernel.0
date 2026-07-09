@@ -1,154 +1,86 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3FA1367
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 00:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783555574; cv=pass; b=ZePc76IyqgTrCyYQQX4GPiNrkLeYtxCWGKKyyJhg5qd3tjun2rJKY5bAipjdm80QcYFlJmJxJcmQSCaSXTQfsHaBDMvQW4zPfJDK4GwHNn1LZ6ZNSW17MzZx+1Q2KcOffHdJW3nRNuGPdMN3x/UDRMg63gw1l5h5hoGOMAiFe0k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783555574; c=relaxed/simple;
-	bh=4EuRdo8+QeN+yDW6A3X+o12IBSIMc42jYmwxuetdwEg=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fMd2yOmStY8nFDasfbUN811LLnxgF1KaoH7huAelGw+MxkHKRIOQoi6xHl2nYaInOJsonI4A4EM7k2TW1/1I6EIfro8A3QxuJB4SVQahNjBQP/GYOHMi74zPstN6R5nBQgM3CHWoAEHLR6meYaHUqwKIq+7OAluDoIvUR0WBeA0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tui2OcZi; arc=pass smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2615732BF5C;
+	Thu,  9 Jul 2026 03:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783567119; cv=none; b=Vfx9GUUTkAL4CYZKwcehDj99YACLVtgq9DHj3jPhvKo15/fPAlDbh8bLPsTTr9Iv2L798nUCaoKJpMegAUL/JVgia7PzlPf6wvL0ZFTZc67qu8Z4pgflW17KUfkxzj1FYtC3UF1DMjUIOmYEp9zN5jZ7VzyMX6eQSE7vO2Vi9po=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783567119; c=relaxed/simple;
+	bh=hMZdu7a46AUXybubTrcKNUagaWm06hd3RYIYs8wjS0M=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZieK+p4hEIGIyiX8WaB8IDqU7wc9b/s8jvu6QN4sCC0UUaIrgcsQ4H4LmE4FVospD0Rik013e+c9OxRhwSEbUVhe9agky6MlSUo4AI2D7w1Acru11I4dSxEX+hzaD9ALSS/4CRfKIpw0SGegdZS2/iGZ2SQRgsqQ3nHEv+bSTv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=JJOuD/rD; arc=none smtp.client-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tui2OcZi"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ccf2360620so9963675ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 Jul 2026 17:06:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783555572; cv=none;
-        d=google.com; s=arc-20260327;
-        b=McQAbSxciR8Ff7Gqu45M2bqEkMQONBMvnFaNMSauEjn6wdLaMkclyXWE8beHOOJz5i
-         VkUEUjN+gSqGD+k9Vbwnvn71cU8Os0pWb3XqD2b+NHH7VJ2CTvTRssQHzC7spPncCcZH
-         m60A5PUIAomCKHQQa86xTXAAQO6fTSk9mjp7DSMYGkTVWsKgQUToecdsqVGqicizQdAT
-         xe7lh+uNuTMpIs9h60Im6M80L9n2PKEKYZLmYnw8nZpBSFBLzMFOqVDjjvh12GI0sISc
-         ktJPRiwaumDqAqCF16MX7CPFd6RAb7CrPkGTGA1jmXcGTY5x/2wXVN2s9fXJVW+nmyNr
-         ow9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=LGyVs/ziq+v8OBPSx6ZOv0f1yGdel9dIe8uNrAG5/8g=;
-        fh=9BGP+1E+QYXa8B7LcncQ4ZDEeYjnNL8foaiCQB2JpiU=;
-        b=ZVUyvzCiA1tqiXWc8VScCCZrzJa1nQ0YAF3JAFevoIFtAePnfUwmOAOcb7/ufCGiW8
-         9UN7f6P7LuGuJ29Is9t26CbB+zV14+raoSqfk3pL4nt5r+/t1s/N6Fjx3x00QJGRfz/m
-         DZjEckUytKL80yGkYBHru5tNFiF+LBSdCzanaMrZm/esv5jyjULFnE6VXRIeJ9TV/5fU
-         ZBpjrwbCaK1EyubgbuTz0ZiGkYTgmfHAwUu+FatjqL3wnBS9WRL//C5zQD6CG0NN1y4l
-         Nu4SGn7ZpLkQVJM/rY0bltWbv3gR4uJP4Niatv9hqQOm3cFEcI3fmKCfjRvv4THTTKjU
-         IpEA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783555572; x=1784160372; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LGyVs/ziq+v8OBPSx6ZOv0f1yGdel9dIe8uNrAG5/8g=;
-        b=Tui2OcZis/oIXOg64/k9In1vUq+guVmxXWVelpwI1011KYfw3Hl1jPM5DNAtnP6dud
-         tNbegsDZz3ZfVCv3LGp5grJaOjpctg70Hd3LmUk7dQI8Vv2jYETpC0sGkT/KvKGM691w
-         BT+XRpKkVjD2SrNiht7Qet9iH3M7c1BU5Bigcy4v8kA+8fmSzuSX066UPuR7CrLlRe5Q
-         CeybiJeWPPdsESYlJxF9n44iu34oqvjy5d7QBDLGRppOZkrJs8UCxKIxMeLGvH74IBhr
-         QssXYAiGebRkpz82B4ZjFbA4HpYTL9wbjKch97ta4LdApRDYqVK52ldJ7qx70kqeApqR
-         Xu2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783555572; x=1784160372;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=LGyVs/ziq+v8OBPSx6ZOv0f1yGdel9dIe8uNrAG5/8g=;
-        b=L+D5fcTTkCb/FEOkI8xqEpMoKV7YuBOO7owTd15r6P1LxMvJFifLSgy7c/hgHykYpH
-         nXWiPcDENkPbcSIWZf2xn0hV5Un0IrPU7kFja7tgqshZH1cDNGT4Vli7vNfeJFsKROUN
-         pV9tsU6+2B4t/LJ8Kkoq0p8hEWTrHbYOF/AYDZ51ooJV2Y/V9bvkHZOtp7CaPtiRwTjA
-         yx00df8GErKQhRFq/PSBMevxBgaAz59R76q5YhwibRgaxyG0fgCpA9+1uHiaekB+02yh
-         84HEHxd9O1dWrgky1Pkcpmf6MVNZ3dQAoLUD0sYJVRH1oiebkvEl+NbCOug+aEyMh5Zg
-         1grw==
-X-Forwarded-Encrypted: i=1; AHgh+Rpu8vqqrebsj8dsnQlBwVO0M2N7aCooS3OytHI3Ld37HQOv1Awj9w6/gRsNi+UYYoBwbsjzve/d+gu+WaPYe2u6w+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnGnm3NxsmDQznzTA0hspbjpGbPJx2xGI4Q7o2tanqjbRNUOpt
-	U7NGEAo6JRyHFfk1KzPeWfH35aTAR8aWllPNVyw9Vnga7easbezOW1Kw4c+m3vH3/iWuWY13h2v
-	fux5gnGMPgLIcKPKFaU+3myshV1xedVY4X6JT6KI4
-X-Gm-Gg: AfdE7cmKFMrPKOW9rVsDuRQCIdhe7Xk3b+M3v/0oHF2c9KG+uGRv9qZp0VCAfrB9YjM
-	PTd2mrP3s5W1F3Mz7uLNLgZ/5PfNYyPhzMU0x7G29oBPWioGC9P/upgHQM8Pbt4D2nkOvZUNmz+
-	NM5EW2SCOnG/dTzXaUOWoqC9i1ScaGHatNnVx2ZEXA4a+A50rDpUSoTzM/RmRAtJ6UOF/1xO2Dl
-	NxNCG5iXvqF1tXFrl1A7wBEO0MJw4IsGm+nUbk/P+vN7daGvlIFzhHslVazsWPp7zt1Ii8be64A
-	LsSU2IHACSKTE0aXlLka+CIh0ntJjuebgBkI+oICAaxeyziuGQITOeP7K4U=
-X-Received: by 2002:a05:6a21:1f88:b0:3c0:9c19:b27b with SMTP id
- adf61e73a8af0-3c0bcce9940mr4979424637.73.1783555571036; Wed, 08 Jul 2026
- 17:06:11 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 17:06:10 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 17:06:09 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <bf56e2e98b512962a2fb88900d535a0e9e6769d8.1782735110.git.ljs@kernel.org>
-References: <cover.1782735110.git.ljs@kernel.org> <bf56e2e98b512962a2fb88900d535a0e9e6769d8.1782735110.git.ljs@kernel.org>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="JJOuD/rD"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=hzrq08S63xNTVU7E8KWRcfGp4/hYHhmDRNHdz9i3UrU=;
+	b=JJOuD/rDeHv2AAUyFTLf3x7iXUtLjFXZYvkTy6Ywb3hltv2TeHbFvQCZpFa+2vvcGpbd8WhCL
+	PGTPywS8IWiUjQHUVPghi3lN4ht0fTpo9Npjihv8XxcU0cuzkzf9+OSoQSDXn4+7YZ9muDOimX+
+	VrJZppqxd2vVRFG0wLRMb5M=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gwg0t5twpzRhv6;
+	Thu,  9 Jul 2026 11:09:18 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0DD554057A;
+	Thu,  9 Jul 2026 11:18:32 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 9 Jul 2026 11:18:31 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 9 Jul 2026 11:18:30 +0800
+Subject: Re: [PATCH v10 5/6] Documentation: document
+ panic_on_unrecoverable_memory_failure sysctl
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <kernel-team@meta.com>, Andrew Morton
+	<akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, "Lorenzo
+ Stoakes" <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, Naoya Horiguchi
+	<nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+	<lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>
+References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
+ <20260630-ecc_panic-v10-5-c6ed5b62eea2@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <30215c3f-c063-e7ca-1499-3d61e359ef80@huawei.com>
+Date: Thu, 9 Jul 2026 11:18:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 8 Jul 2026 17:06:09 -0700
-X-Gm-Features: AVVi8CdcseowPqFId5ObGoqB8gTqCLO4QEXGH1ZjH1-pjTCLGI84NpwTLe_LrAc
-Message-ID: <CAEvNRgEV9VkWHULS4g5hVHu3T6=YZ89HJmkv6rS0+hK=5UFu6Q@mail.gmail.com>
-Subject: Re: [PATCH 19/30] mm: use linear_page_[index, delta]() consistently
-To: Lorenzo Stoakes <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Ian Abbott <abbotti@mev.co.uk>, H Hartley Sweeten <hsweeten@visionengravers.com>, 
-	Lucas Stach <l.stach@pengutronix.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
-	Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, 
-	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-mm@kvack.org, iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20260630-ecc_panic-v10-5-c6ed5b62eea2@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
 
-Lorenzo Stoakes <ljs@kernel.org> writes:
+On 2026/6/30 20:46, Breno Leitao wrote:
+> Add documentation for the new vm.panic_on_unrecoverable_memory_failure
+> sysctl, describing which failures trigger a panic (kernel-owned pages
+> the handler cannot recover) and which are intentionally left out
+> (transient allocator races and unclassified pages).
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index db57c5766ab6..f0e5da490866 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -440,7 +440,7 @@ static int kvm_gmem_set_policy(struct vm_area_struct *vma, struct mempolicy *mpo
->  static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
->  					     unsigned long addr, pgoff_t *ilx)
->  {
-> -	pgoff_t pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
-> +	pgoff_t pgoff = linear_page_index(vma, addr);
->  	struct inode *inode = file_inode(vma->vm_file);
->
->  	*ilx = inode->i_ino;
-> --
-> 2.54.0
+Acked-by: Miaohe Lin <linmiaohe@huawei.com>
 
-For the guest_memfd change:
-
-Reviewed-by: Ackerley Tng <ackerleytng@google.com>
-
-Thank you!
+Thanks.
+.
