@@ -1,129 +1,139 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-pj2-f4.google.com (mail-pj2-f4.google.com [74.125.227.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BE93BBFA3
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 12:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE1A420868
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 12:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783599525; cv=none; b=riboBEuyjQSqLSw96B4oDWd9zCokDNEwAs6n5l3YLFnzJRpgPUQDcs9NV1YaM5taSqWbZjUsB2gLrwcrEm4o/Ne9L33aJhrYESfoQcVLP70tpqSSH1A1EPvxJS5x8d3bjVBF1vjb3gP/6OvnDq5EstpMSDzjIlIjOZMAdEUH1Cc=
+	t=1783599931; cv=none; b=k5aZdSeMJIkO1lgMKSBpj0O8ktvS2gchWrhIvc/x8fxfIBPbsw7qvecb9Qia5dfsjXzCvzq3YjHht3XqOMDU54tHYjjCT9ybLbOh0aHpTDWgzXxYFCUjjNkZMzcKj64lxeGXjfPsT5uCZlrUnQyUZZWq6YRcFMNFkaeJssJ1i+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783599525; c=relaxed/simple;
-	bh=XaaFaOM5GSvaUgQorJfaOxm5VOZhBRgjQkClYXbm02A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a5wMWlg80RNP5UTkym/Fvxwf4NH00wGiRAmyIzYnud08CpCBeCxArmQn6yeARqyYQoO5xrSTnWbh9sJsE/LYhoMqb6DUodjqt1h+OERaF+VmgnwyayaTG38BobeTc4RGFm7/hk2kOvM66RxOYKMq10JIaEGhb2VQv5QJ50Ko3L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kTChlVeE; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1783599931; c=relaxed/simple;
+	bh=2f84/nJZ2VgJabR+1a6ihDF3698u7R6LbS1dCMgWNUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z6oxDQ76ZHPMCHnGKWZ5dv70ETTWmZj3/I8khb+4EsZDe5S0L0NpcAWbnnQUqfPgvActFY/Po3rGFIW/8Mn8VBMQ6aX73e4e+xjWygZGG4Grus4WCJOBwzMvHIMZRSI1rcKUvL/HTr7E9lGwpoCwL2FjBAgJaf18YLtX74bwa5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXZX53Pb; arc=none smtp.client-ip=74.125.227.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kTChlVeE"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-47640541585so931201f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 05:18:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXZX53Pb"
+Received: by mail-pj2-f4.google.com with SMTP id d9443c01a7336-2cabe9335f1so11745385ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 05:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783599522; x=1784204322; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jngqR2jmiogEZ8PxklwH7MWgCBRAFgrXCWBq2O3HcN8=;
-        b=kTChlVeEcgsAApq2ReO34kaP58D2aj79/fhb47WI60JKgDV0wWoseNLEjg4QI3GeoE
-         LbCwQTZHzktOCwIKw3nKbu4r1b/HyjlIDn701FCcTctAIBqI+ywQF9J9iVx0A5/VLnaz
-         rY6dsfhTvJMbEV1kS74p9IVoyhfjHHBo4/i337/CCWNfo1H2st+WYhqHkfEWFZcuR6Fc
-         x+F7kzCJiOTmn+AyhXhwTi/LRlXPsEQTe+Th+3UtK28nn5lf0Afhf8NFH+SeF7HsSyaH
-         qckW5X7NDRhPHEJvNPEDI2h2vMzqkTs4QPvyS3pcw0B3IGhh9GKYt1iISxhFyIFWcF5V
-         7Bpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783599522; x=1784204322;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1783599930; x=1784204730; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jngqR2jmiogEZ8PxklwH7MWgCBRAFgrXCWBq2O3HcN8=;
-        b=EUsh11p4u5xS/41CAXk9pU+onFnlzheFhAk/Qg4YteKc7iE5FbXBhWHMVJjvbZ2c6D
-         BW1b9gIPUGheMOtl+4pXWuLwYWvookOzUNI44+sCgoy7L+/4Y4k7D536PUqfdrQjVaag
-         qBT3HmKPLiFm4QwAPtUM3LhbrZMDJY46GQBjyAVaQV+WslE0lmMKYZ0Y3P+mDX2JexEz
-         loQTplXY4R7zwpYAUIgAAPmcaVfqYgxeYVZsxlgxuOQj/343/uW4DESRiW/Uhym86tpV
-         HhwE2ncybRJ3aLFhEwFFHwLZEcBgUeiGBNgljfqRp7SuD+d9ZC7kCEc9BLs8xkNOWUBm
-         K9eg==
-X-Forwarded-Encrypted: i=1; AHgh+RrsHSz0qbH6wJCPCJZXkgNne7/2Ke8WrzF1A48opLNoDEenGQmM6YsLTNR1ebHB3lwxbaXPiVwEJ7sfpnWLZyO8l38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD0Wrtbj71i2p5tWttRPGIb4EcDWqU2CyDdMTgkO/o6EF2ox7W
-	xw9mdvZTxnWNjRA3N7DDQP00YoxUe2PHp/syD1ICP/W94RfiOaVugK87qT1E+FzRf2XpZWCmqDh
-	pqiTdTg==
-X-Gm-Gg: AfdE7clKGIs9cEX86MoeMR1ifW0AGgQM+UpNQmo0fpuWaZRUYWMzmQlufXsm3HlLQ3q
-	20FI5EMvyTlQe71l/v5AJE3ULwkIOUyEnadYwDb8UZXIOtJ1KCbgf2QFW9uKuk/+FoJM0VNdU+m
-	NWdVDwXMqn+7JCJMe+W1eOpv8iOxjKdZlC7IXFzLq29ewme3RCyIuPLpbj8VaakhzuMlI+8FA0V
-	CcEKPxv56cipLicrT5uUoD1VqG7grrs3aK8PfmPi2beB5mYPYi3jxmJmyn2amIOIO+Zba0HI+Ib
-	JcHnRQLxDF7NHz//nOamZL7f3oPeHnCkSqwUbqnqvvJOAnh/UjIX4uTk/07J4fFK2sH0RBAw1aG
-	5zgT/x50nQUYnl4+w5LRTHQtS1/niDbp1BG+7tdHXBb7qKZcD0QUWd41NTmtii+PchRNEI1vfiY
-	YDT4MBPle3xILBPQBGQyfj4HY7MXl/V5VYbzwcJY3tL8Q9NF8t/wztTJjyMDS8mw==
-X-Received: by 2002:a05:6000:40cc:b0:47d:eddb:c102 with SMTP id ffacd0b85a97d-47df076eb66mr7316781f8f.28.1783599521149;
-        Thu, 09 Jul 2026 05:18:41 -0700 (PDT)
-Received: from google.com (137.69.77.34.bc.googleusercontent.com. [34.77.69.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9de1d910sm49755128f8f.6.2026.07.09.05.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 05:18:40 -0700 (PDT)
-Date: Thu, 9 Jul 2026 13:18:37 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
-Subject: Re: [PATCH v1] tracing/remotes: Fix leak in
- trace_remote_alloc_buffer() error path
-Message-ID: <ak-Rnf6qhbYFxTgC@google.com>
-References: <20260708133201.295072-1-vdonnefort@google.com>
- <20260708125906.746f1def@gandalf.local.home>
+        bh=DjINX5M4wTaoTW4+GDvLh6TXbZ20xVVmAICykKIells=;
+        b=lXZX53PbW+g71BEkCtc9hjBWQb+ppjNYQZl2sKlWr2IrdLHlxtJCFQbf0TsoF8Q8h0
+         76mf+oqV/Za6AxEra5PMf1XzOLU748t5RxQp4QenH0YwnDVdgW/7e1K/PwxFo+3D+6QF
+         Z9OBor8cq7OwWFuYpY7TFgwktSv8fnWHrmw/ZjAwEpjfR98mBVfJVqGjHc3p42H1k/+8
+         fpCiaSoqjw3sSUXhD2Stletw+6ztTih7CxaXV0MrlEJzy4h7/3E4U3xz7W/w7PujlzZI
+         lW3ZTl0cvhpApZYptvlIk1aHY7O0eUlwzm6NFzwoFKO4RsGEjOk7oSPshWNE6Y5zx3r5
+         fpqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783599930; x=1784204730;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=DjINX5M4wTaoTW4+GDvLh6TXbZ20xVVmAICykKIells=;
+        b=UgS7YUXI/GyYGiWHY3cUkZ2u2fnianFAILDzBsH9wUlDWQEI3Zi2Oz2/lK3Viv39a1
+         soHlFmmr8ela0EcLKPPTO3aROPWVCw2HBpScDZIZxzu5wbOOMzEhHo4iyaobIcfNNx9A
+         WVbMFev7Wg6Er+lTUVOuGcImth3qdUE0vIOktJFt16XbSezyDPZspMtqd2nREGoRyrrd
+         aFwM2PjVrEWysCJ2//jUetkfBr8Xhi/AULfLH7X1vevb2Ks1vGJ2gJHZ14Zv0R1WXRhz
+         8hXLNg9whz2a9yjeNu134xi9AWQ4J90e9uJQ22JHmlp46yeV+pfgcsg9MsfzHZTMs2q9
+         Fw8g==
+X-Forwarded-Encrypted: i=1; AHgh+Rqa9FWwkAOh7T/QB75lRfWIR4fA7EcODAysPy56UJPsMg7nNHDXFGAdW5MqjKTdiI7KaCl7XRK21G7MnSxoRo2HAOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTPLUgybWMj9p4WrdHRwOl5acv2wVG///urFnszvQ9E0WtCqBr
+	8SR+Z1Zv1gpAb/X55A7mbB94aqQTiGR2YPNyeykdntTPuhZe5T4fMHp2
+X-Gm-Gg: AfdE7cnppT4+I/i3bJgKLPMMme6Adhkd8ihZJodAPHuCd+0ph4N+SgCU+cXGlFxEhjX
+	knfe2poTtK9H2XwFU64iOT0+bGneOunqMQ+6j3cCSQYxGt6GsaTr56PVr0ihldrmZG2RhnpK8ru
+	BlZr09BEz90fNBNpdzxW81pLu2tfkFMmKl5CRBpPCTbBjBysJVbhL8CznqK6+rqY2CytohkmmiI
+	e8JwiS1SNYe295Gd1lc3iJTOcdZibV2aOcTKdrUptAmeXYHgIarqz+Xy4UNvNslNbDqo0DOYdwk
+	MlJOmdte0tNoZrNGuIEqLEr70flo+Fx+HIPdFFG/+Mx6DVpRydujDTGgfDfAytR5ez5dy6lPNzE
+	zA3+vPZfxJGDHEAyf0LasTsXFhM6vN9VTC69dGYvQIyE+3yEXMmze1v5tQVV9tN+IRmWy4xyCjl
+	icVWsYVedpRdUkI/TzPChJSWQMUDNGK8A=
+X-Received: by 2002:a17:903:1b0d:b0:2c9:97a7:3289 with SMTP id d9443c01a7336-2ccea47c30cmr71676685ad.43.1783599929924;
+        Thu, 09 Jul 2026 05:25:29 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d1e1aesm44089605ad.39.2026.07.09.05.25.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2026 05:25:28 -0700 (PDT)
+Message-ID: <6f2e6fe2-c8c0-450c-bedb-8b4fd68839ab@gmail.com>
+Date: Thu, 9 Jul 2026 20:25:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260708125906.746f1def@gandalf.local.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] mm/mlock: migrate folios out of CMA when mlocking
+ a range
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: vbabka@kernel.org, david@kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, Alexander.Krabler@kuka.com, hughd@google.com,
+ fvdl@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
+ jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, riel@surriel.com,
+ liam@infradead.org, harry@kernel.org, jannh@google.com,
+ lance.yang@linux.dev, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+ byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com,
+ apopple@nvidia.com, pfalcato@suse.de
+References: <20260707125925.3725177-1-chenwandun1@gmail.com>
+ <20260707125925.3725177-5-chenwandun1@gmail.com> <ak0OZKzapUefmA3v@lucifer>
+ <20260709091316.TFgtBZlE@linutronix.de>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <20260709091316.TFgtBZlE@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 08, 2026 at 12:59:06PM -0400, Steven Rostedt wrote:
-> On Wed,  8 Jul 2026 14:32:01 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > If page allocation fails in trace_remote_alloc_buffer(), desc->nr_cpus
-> > is not yet incremented for the current CPU. As a consequence, on error,
-> > half-allocated rb_desc will not be freed in trace_remote_free_buffer().
-> > 
-> > Include the failing CPU in desc->nr_cpus before going to the error path.
-> > 
-> 
-> Looks like Sashiko found other issues you may want to address:
-> 
->   https://sashiko.dev/#/patchset/20260708133201.295072-1-vdonnefort%40google.com
 
-Yeah I saw it, the dreaded "This isn't a bug introduced by this patch" ...
 
-Let me send a follow-up. After looking at the other issue, I think I want to
-slightly modify this one actually!
+On 7/9/26 17:13, Sebastian Andrzej Siewior wrote:
+> On 2026-07-07 15:54:57 [+0100], Lorenzo Stoakes wrote:
+>> On Tue, Jul 07, 2026 at 08:59:25PM +0800, Wandun Chen wrote:
+>>> From: Wandun Chen <chenwandun@lixiang.com>
+>>>
+>>> The region covered by mlock[all] may contain CMA pages. cma_alloc installs
+>>> migration entries in the page table, if a memory access occurs at this
+>>> point, it must wait for the migration to complete, which may cause
+>>> latency spikes on the RT kernels.
+>>>
+>>> Try to move the migration cost into the mlock[all] caller, which is
+>>> typically a setup path. So reduce the chance of latency spikes on RT
+>>> kernels by migrating the currently mapped CMA pages out of CMA region.
+>>
+>> 'reduce the chances of latency' so do you have any data to back this invasive
+>> change or not?
+> 
+> The application gets pages assigned which belong a CMA area. If the
+> pages are in need by the CMA then those pages are replaced with other
+> pages during a migration phase. Since there is no guarantee how long
+> this will take and is also subject to general scheduling in the system
+> it will be measurable and painful once hit.
+> 
+>> And for RT, but nothing in here at all checks for RT? You're using this
+>> compaction sysctl as an RT check somehow? That's gross.
+> 
+> The man-page for mlock says that it guarantees to stay in RAM and/ or
+> preventing to be moved to swap area. I would however argue that
+> replacing physical pages in the background should fall under this since
+> the application can't access them and is blocked while trying. The notes
+> section (in the man-page) lists "real-time applications" and
+> "deterministic timing".  Therefore I think it makes sense to do this
+> unconditionally for mlock areas regardless of the sysctl knob.
+> Security related application probably only care that their memory does
+> not hit the swap area and probably wouldn't mind 10ms delay.
 
+Thanks for helping to explain, that helps a lot, Sebastian.
+Wandun
 > 
-> -- Steve
+>> This doesn't feel like the right solution.
 > 
-> > Fixes: 96e43537af54 ("tracing: Introduce trace remotes")
-> > Reported-by: Sashiko <sashiko-bot@kernel.org>
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> > index 2a6cc000ec98..62d3d431c309 100644
-> > --- a/kernel/trace/trace_remote.c
-> > +++ b/kernel/trace/trace_remote.c
-> > @@ -1008,8 +1008,10 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
-> >  
-> >  		for (id = 0; id < nr_pages; id++) {
-> >  			rb_desc->page_va[id] = (unsigned long)__get_free_page(GFP_KERNEL);
-> > -			if (!rb_desc->page_va[id])
-> > +			if (!rb_desc->page_va[id]) {
-> > +				desc->nr_cpus++; /* Free this partially-allocated rb_desc */
-> >  				goto err;
-> > +			}
-> >  
-> >  			rb_desc->nr_page_va++;
-> >  		}
-> > 
-> > base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
-> 
+> Sebastian
+
