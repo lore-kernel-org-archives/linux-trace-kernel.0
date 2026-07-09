@@ -1,55 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBA73D890C;
-	Thu,  9 Jul 2026 08:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF863D567E;
+	Thu,  9 Jul 2026 08:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783584134; cv=none; b=ndCviXDcRYJyiHAXexwEgxUV/CnVzrSz3pj+R/Mfge6XdsWBNoV71P+G6Iq54A6an2OlEzHA73SiuwIE0JbjGmPrROtzrnBvlu9W7VzqiS7Rr54Mqa6YvDPq+DrNhH006Rvz11eoFzMEPcFSj1emOtDbuypzvCKYD3KF55LEWk8=
+	t=1783584666; cv=none; b=B/ucWocImSuXrNVDoaGndlKJzTVEsVyHuUk7bXSBI8ozW1cs2/4eUJrkLqyKiCdPcG1MveHTRdZv9LdwZWtLwh2qqx/3w0xc5WH9e/kFun3n1LtNIIxQ6f/fWjpIe8MEZCUbY68hDzwOx6d7MrWDLGSyfNqWcm3/dVVc6u5KIJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783584134; c=relaxed/simple;
-	bh=1EmVten3z1ngcG+Z0nW0Vlp7SLtQKVSPU1SE8f/bp40=;
+	s=arc-20240116; t=1783584666; c=relaxed/simple;
+	bh=0HSjuQi/+nlGL92stctZOw9z5eGJ9T15uvENrthWJQA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ARPKYhAIdUwf6yMT+CdWIVzpG34/ItLOJ3ztwg1hcwXvFzCwuSkANZ8vo5GADhZ34VXCvAZXZFaTQ6e5PIk0SK/e5FDAR5rrHLsufut3DyNO7Qqr5osBdTItT0G0IrTNWfsZil6Wc5DEyLJ35JUOP49CDtz4s2oY/sujr79dmsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xpkuRxvK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+/rY1Rh7; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=H8IXrc0fssoC5Rkvhcd7PBJ4RdPjYzs47MmNMNaaofgISIr8vOHZwOH34b0XcrEOB0ZJUGw8UqGKs0+uo1H31b1umfHTwIdJ1M5eY8injCae9dP875OQ3opPCiB82L8MN0wYTcB0oPhyD5WGUI3m7UNE5ehN8SW6CShnCuAg+Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PFgPKpdR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6RmP4Gb/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xpkuRxvK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+/rY1Rh7"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PFgPKpdR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6RmP4Gb/"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783584130;
+	s=2020; t=1783584663;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=i6ZMvUmoi/TLQL5zvdZ3jAX1Nlm+DKcmk9s4D1hMFGs=;
-	b=xpkuRxvKaN/cnp2joWCd7nanZdPwijW/wka76ExIyKebagbkLGyHBjPxLbY1g3eBs4zNKX
-	fqtcm2Mo7rTEU5PZ30O9KMVmABuHjQxMhaiQg1k2XptQt987glUaTF45AT9m06hxuw/SSy
-	0BItvPS2H/HogqWotP5CtGg/FTvj5hV5/Sfjmm6z1pDDrnTJ8Yerq7HraAHHWedsY6x6it
-	5n5kgaLJRM0MC3DyCDcsgu7jplx902rUOArvkcPOtVnDxmHOV06iGki5aanTk6nW1Lrbr/
-	ZiVTcBGPtFLGunrA4ndu/0lLfYkTpr+ybfdJa5f1mKHlgP1BqAWaiBTF4pZ1Ww==
+	bh=0HSjuQi/+nlGL92stctZOw9z5eGJ9T15uvENrthWJQA=;
+	b=PFgPKpdRk9pZkSkULt+2QHx/hCDaZbaGidJEpNdV8XBdWX/ybOIDwv/gJzhe+PVDnaDgwU
+	V1hL2igJn+yMeYHGh+MFVnqzCc4wfuEf0StMB/VltxwUQ1Jc8CTzWY3tZSk+LgBsZVZCUE
+	Wf47beKjFfaswFygxii+aVB4jN5zL684fiNy09UiN/ec0tl2i4nsmImWi2EUY50TDdN5Gf
+	cGgIBcxZjIHTWBEji6+uXAtspr0JR7J4x/s82kCMXjT2zVfNYWEztVYEG+j47Fbg6nTksZ
+	LhevaMPpf1R8SIZKrOzG0XGr6a1+n9iCpWcweVmVyTsa2E9C2o+veJX1useYxw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783584130;
+	s=2020e; t=1783584663;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=i6ZMvUmoi/TLQL5zvdZ3jAX1Nlm+DKcmk9s4D1hMFGs=;
-	b=+/rY1Rh7nUXA+tHfPyH2rSrKzutC7bAC9QZ8jInANsoBpIAmaT6yGSe7K2IwjxiQU1xs/g
-	LeNIsByPjNUzcGCw==
+	bh=0HSjuQi/+nlGL92stctZOw9z5eGJ9T15uvENrthWJQA=;
+	b=6RmP4Gb/UpU4b17vJOe50URhD/a35OsAAlq+I15rAIzIIybUEftqaTBs2vpVj2eeu+gZBq
+	+1amIjTjZBUMVjBQ==
 To: Gabriele Monaco <gmonaco@redhat.com>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
  Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>
 Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
  <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
  <wen.yang@linux.dev>
-Subject: Re: [PATCH v3 13/17] verification/rvgen: Add the rvgen kunit
- subcommand
-In-Reply-To: <20260625121440.116317-14-gmonaco@redhat.com>
+Subject: Re: [PATCH v3 14/17] verification/rvgen: Add selftests for rvgen kunit
+In-Reply-To: <20260625121440.116317-15-gmonaco@redhat.com>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
- <20260625121440.116317-14-gmonaco@redhat.com>
-Date: Thu, 09 Jul 2026 10:02:08 +0200
-Message-ID: <87cxwwfv5r.fsf@yellow.woof>
+ <20260625121440.116317-15-gmonaco@redhat.com>
+Date: Thu, 09 Jul 2026 10:11:02 +0200
+Message-ID: <87a4s0fuqx.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,67 +58,18 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 Gabriele Monaco <gmonaco@redhat.com> writes:
-> +    def print_files(self):
-> +
-> +        handlers = self.__parse_attach_handlers()
-> +
-> +        if not handlers:
-> +            print(f"No handlers found registered with rv_attach_trace_probe in {self.monitor_path}")
-> +            return
+> The rvgen kunit command patches monitor files and adds necessary
+> definitions for kunit tests.
+>
+> Add a test case validating its behaviour on dummy generated files and
+> comparing it against reference files, like it's done for rvgen monitor.
+>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-There is no valid monitor without any handler, right? If so, should we
-throw an exception here?
+I am not entirely sure about this. In the future, when the generation
+output is changed, all the references files also need to be updated. So
+it's not clear to me if this really saves future development effort.
 
-> +
-> +        print("Found tracepoint handler(s):")
-> +        for handler in handlers:
-> +            print(f"  - {handler}")
-> +
-> +        prototypes = []
-> +        assignments = []
-> +        for handler in handlers:
-> +            arguments = self.__extract_function_args(handler)
-> +
-> +            prototypes.append(f"void (*{handler})({arguments});")
-> +            assignments.append(f".{handler} = {handler},")
-> +
-> +        struct_name = f"rv_{self.name}_ops"
-> +
-> +        self.__fill_monitor_handlers(struct_name, assignments)
-> +
-> +        dir_path = os.path.dirname(self.monitor_path)
-> +
-> +        header_file_path = os.path.join(dir_path, f"{self.name}_kunit.h")
-> +        kunit_c_file_path = os.path.join(dir_path, f"{self.name}_kunit.c")
-> +
-> +        use_backup = True
-> +        if os.path.exists(header_file_path) or os.path.exists(kunit_c_file_path):
-> +            try:
-> +                response = input("KUnit file(s) already exist. Overwrite? [y/N]  (N for backup): ")
-> +                if response.strip().lower() in ("y", "yes"):
-> +                    use_backup = False
-> +            except EOFError:
-> +                print("Non-interactive session detected, not overwriting existing files.")
-> +        else:
-> +            use_backup = False
-> +
-> +        if use_backup:
-> +            header_file_path += ".bak"
-> +            kunit_c_file_path += ".bak"
+But well, we will see. For now:
 
-This is the opposite of what other software do. Usually they copy the
-original file to a different name (with a prefix or a suffix), and
-overwrite the original file.
-
-I think it's best to follow the usual practice to avoid confusion, maybe
-something like this:
-
-if os.path.exists(header_file_path) or os.path.exists(kunit_c_file_path):
-    try:
-        response = input("KUnit file(s) already exist. Backup? [Y/n]")
-        if not response.strip().lower() in ("n", "no"):
-            ...rename the file...
-    except EOFError:
-        print("Non-interactive session detected, not overwriting existing files.")
-
-Nam
+Reviewed-by: Nam Cao <namcao@linutronix.de>
