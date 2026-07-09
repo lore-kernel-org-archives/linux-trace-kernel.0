@@ -1,72 +1,81 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C2226ACC
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 17:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EAE399887;
+	Thu,  9 Jul 2026 18:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783617235; cv=none; b=kd1EzH3q+dlLzC9BbTngmSn3e9lj2Q+LErrFvqgx+fGlj8A52H4h1UzQWEQZ6cRT5b2Aa4bNR/1qjIEFbClK9GLiE2718k/yfgR5Dj8aEP22HNYOCGZDABgal3mCsXUW6D5Pd6XTJR5B5GDV4C3okP+DZs56UhcRGw127HZwLh8=
+	t=1783620479; cv=none; b=cOwJ8WdQnlWyyZjjYwPZ90GPZyQfogCbcTL1oz0xil52APJQW+XmGUUsh1+xbDBETrMZKGSPbRM8nEnI+HdOpY0P7GTxPGAbWeN7gQQj8eU7RAVNPNfMYcAqyL35eSYX8w+E85fdv+5Nvslp1m/s8bAACufm55AQ2LywAWsYdcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783617235; c=relaxed/simple;
-	bh=wKdInNGKfd6h05h8yzclStbfyGbbr+QXPI4+u78zO1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FP0lUptY41Tdi+OxiG6C05VsikDibTWqmJ5IKIYxRMq0/X/FiwcfcTgEKflSaPNojxvYUCZ/pUP6Eox7XxfvxhLqmjDwN+0s+ARN8dmAlVv1spl02YKbjeYDfklVWw7odooykhb322DmzpGNffArQ8nL38iehE+bmi4i5jCd+w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qrcOs4vI; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1783620479; c=relaxed/simple;
+	bh=+iXuT+QE/igWEvg/w4bOLbDlAcJfolVVx+Ti6i+b5cI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XpGChy1ZCdEHmvKQ4cJ4eAhlvtenPFrJQnmBwKqWpBU22dDkRWS7fi/f2NYFD5ov5cjaof5yL0XBRG/MIGIeQOym092LbbVCK1f72yAXa9E3AHwGFYyqEPw/Tq6wl2YPkSRjHVCcvOY4DHtmnaEOKXuFj3Lp/E74frYqRMtQ1pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p0hpFXS8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uK5f/z52; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qrcOs4vI"
-Message-ID: <77f7313d-83e5-489e-8c98-6299ff823db0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783617231;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p0hpFXS8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uK5f/z52"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1783620475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EJX8HOT0YS88Vvdu6r5d4zb+qSJWdm8PlYIke5cWYgE=;
-	b=qrcOs4vIojF92VFL/HHluijgYtg8HcR8e+If+9kcboLLF4I8JTCfaUlM7Acr838UXXlzPe
-	IjI3Y6ALXkdORF7MDVD94djVz6TW9YPNRRfsiyCpNQfSwDwhzhdE+94mQUZn6+3Yyb0Jte
-	cCGoaUVVGefiGI6XIy/N29qjBtafQ/Y=
-Date: Fri, 10 Jul 2026 01:13:43 +0800
+	bh=w2gfkAh5be+qkyDwUQtIfdUPwnqDL8OlwgFX3HXbZ+I=;
+	b=p0hpFXS8sV50rUKs7BFn2RW8+iZo/pB49axdxwM7Xvyoqjz9acEJ2DmZQ+PaC+tJBLWHtc
+	cdgujXMFa/KzJyPz3TJ0PwtRZ10R/d8gYYn35WhFpj1F/350tqDELD9Njmr3qLeeD4jUeB
+	ezymLpctBsTmUiAWnmb2I7BNsJl9MZkWe3LzdmGZJeGLwp8I2tB9srW2+DIqqEM3X7tIjn
+	fyPHrRE4PxtcmvXD0rlN0Vbsoka8DSsuLNS0kCI82n9ZmakIqbuOD2KRj/0P4QX2CX6DoK
+	PU9wDaBBlz/hnAuQdeZYv7/SPzu1Q59APsvXqqMnDJqY0mFiAJI/JfNvJvUgQQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1783620475;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w2gfkAh5be+qkyDwUQtIfdUPwnqDL8OlwgFX3HXbZ+I=;
+	b=uK5f/z52fFr3vxDqQ2EYS7gjzMKQm2pDr+iarr1BdJOZgfRY/UYw7xweuzT4Eq4r0dIQ80
+	+wf1ynA8BV/rc4BQ==
+To: Wen Yang <wen.yang@linux.dev>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+ <thomas.weissschuh@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rv/reactors: fix lockdep "Invalid wait context" in
+ rv_react()
+In-Reply-To: <397cea12-e0ba-4cf5-a411-26f44bc17d01@linux.dev>
+References: <cover.1781541556.git.wen.yang@linux.dev>
+ <bc01343ae74acf6bdf142434aeaa4e6b40aa72a9.1781541556.git.wen.yang@linux.dev>
+ <20260623112942-4943fc6a-c1d5-4eed-a91f-66b3a034caa7@linutronix.de>
+ <3c53f741559f834986e976b524c5ded90bbd5627.camel@redhat.com>
+ <20260708174123-e5f98837-3d81-43ca-8ede-bb5f09e8ffba@linutronix.de>
+ <397cea12-e0ba-4cf5-a411-26f44bc17d01@linux.dev>
+Date: Thu, 09 Jul 2026 20:07:54 +0200
+Message-ID: <87y0fkdojp.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 06/17] verification/rvgen: Add selftests
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>,
- Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
- Tomas Glozar <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>
-References: <20260625121440.116317-1-gmonaco@redhat.com>
- <20260625121440.116317-7-gmonaco@redhat.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <20260625121440.116317-7-gmonaco@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Wen Yang <wen.yang@linux.dev> writes:
+> How about a context-sensitive approach, eg:
+>
+>    NMI/hardirq (interrupts masked, scheduler cannot run):
+>      Keep LD_WAIT_FREE.  The false positive cannot arise in this path,
+>      and the original constraint against raw spinlocks is preserved where
+>      it is meaningful.
+>
+>    task/softirq/PREEMPT_RT irq thread (preemptible):
+>      Raise to LD_WAIT_SPIN.  Raw spinlocks become permitted =E2=80=94 as =
+Gabriele
+>      note, this is a necessary consequence of any fix in this path.
 
+I don't get the point. Unless the lock's type is also context-sensitive,
+the reactors still cannot use raw spin locks.
 
-On 6/25/26 20:14, Gabriele Monaco wrote:
-> The rvgen code generator needs validation to ensure it produces correct
-> monitor implementations from input specifications.
-> 
-> Add selftests with golden reference outputs covering all monitor classes
-> (DA, HA, LTL) and types (global, per_cpu, per_task, per_obj), including
-> optional features like descriptions and parent monitors. Container
-> generation and error handling (missing files, invalid specifications,
-> missing arguments) are also validated against expected output.
-> 
-> Acked-by: Nam Cao <namcao@linutronix.de>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-
-Reviewed-by: Wen Yang <wen.yang@linux.dev>
-
---
-Best wishes,
-Wen
+Nam
