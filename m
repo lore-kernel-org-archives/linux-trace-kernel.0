@@ -1,56 +1,56 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D6B42E00A
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 16:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6353F430793
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 16:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783612848; cv=none; b=oiThxxfiWh4sz6YlS0XWMYSDo7jew6WbT2aR6g4RW+NAhv67suBp34o8g/5nnq30x+PF3DMDIzlAuZ5rxnuUUdLYt6gDOOqpvY+rBIPp1HJPh8bAMoDYAXjATBLGY7Ge0oaZEkHoWTGeKpdkdQSSwNKYH5qt0oqXUdYilBCbeEg=
+	t=1783612849; cv=none; b=Oa+HiUnxZAuRcNFCqBOP0G4ZqECYZ+c5yqgS/Zx6r4umpNivSwMRR7UUP1z2dQkx4ho63d93xjMvAbab4sbP9J96Py+wfvuIYunPKJmeVd7XS0BsNQRaXKHoM8E6IkLyoKwfjk1LeL7pwTa2nXHXjXgDdnGNcsxHUCjjpnPqc18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783612848; c=relaxed/simple;
-	bh=rLGcEWQLDsuBOlJtQaU04lVEFpTg/6Zm5TPaRWNb5r0=;
+	s=arc-20240116; t=1783612849; c=relaxed/simple;
+	bh=jdoTWZOvq1yVtF1uSVFl+vDjF8mXL7677VsdIYeRVkI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=klFWDCT4UyJ8q77ZaLkVJZe93qXcteSmxgDa/3TDpq4eSmRdEWwHgd9FkCvLI1fuY1yJmsd3MDCGpJY3Asn8MZssXsSPlLYpKwyf1DdOv2pEYnGYh2Wc38KVVRBltEIIfA/UUqhGkSCLyaTfp3lrIUzU3MAoBCqnwekuSfHQpMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VXNc0LW4; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=e7GCGhW7rLOmfEgwSL7ECynKShzKSPjnrrrvRsiAYo/9AwEtSh4W5a1AiL0EuK5K+nOyvjtSln9t32k3sIXyIwrGAhS2ga7FFMpnOOUTqRE/7S/obs8on3lEpGx8a3v8oc8ouAhEC3ZTYfQGZC3XEftcJ8DAFUkhSjKuQZO9Ef4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E/knK1Vv; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VXNc0LW4"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-476608a9fefso830815f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 09:00:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E/knK1Vv"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-493ce4b7777so14860385e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 09:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783612846; x=1784217646; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1783612847; x=1784217647; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Unj4WErTghUtss2IKhQJXeY0+igl+yHyxF7jgGiRQLQ=;
-        b=VXNc0LW4FUqil+yJPfLaSxM6T1x6RhFjYWrpNqOccDPWIqoBqRFqkGSkLSpFPJqXNf
-         xThvJN8+0PWM/JjqTHhbx6YkxKasy1RVHnV8wvWHoFWcEdNve/jpea9WqSB2LKQM2eAM
-         2nblQwRIFbap5YKsO9cewBT/GJwh3rZ2f/OVEa5Ky/VywfsLugQnc0gYQrPuac2Y9d8j
-         GAqpWLBIY8JuN3GNAuGWh0Cupmu7eEXbU7Q3HJLXkDeNmc9Dzm1Ojrk5ByN3beXsZjZu
-         E+ZcqwO2OBFijND/EWZtMrWIqWkvOeQjfCIkamckOKX+mSa61fXe3jJrX1WrRGdYhK0k
-         1u/w==
+        bh=rXrlbDb1W0LMn5jsqHyz0yKKuiZPXY5VJCQYOGVxTTM=;
+        b=E/knK1VvlUrZqQwso7fQYOXdMQaSR2+KBgl63pRvOraQhi8/7x1vIMpqSr3FTSlsIr
+         nBUdTBf6MslxJxszwiaxdXQfdXqTuvmg9BHt04JJcCtyILnoXKReBMRTU4gHbxe54Lk3
+         VSebySp0t5ZyqwWCBWEAWC1dtnTbMy0+AZ5L6KKdlNxUZcuEltQ175mhEw/+f9w8I5bx
+         Ibbspc9xF6AT0YGRKpjBld3Kzc8+1Yjqbqgj9Bwya7DtxGVjImFghGTZZbs4VaApiQm4
+         TmknCUe5ExT/7B7p0SKp7KE55OoR6+UrJkGXzYCE6LjDqe8GMiV5CG0K6vmBD25sOJoo
+         6dYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783612846; x=1784217646;
+        d=1e100.net; s=20251104; t=1783612847; x=1784217647;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Unj4WErTghUtss2IKhQJXeY0+igl+yHyxF7jgGiRQLQ=;
-        b=GVzSygWJ2n1XdMD7ixJWz8sqzI7ocdJS/uX3Asta46iW1TAOZ3A4Cg9WZ+wZ/tGNs6
-         xajSONC5LbxhiIH56rD1Y3/JVqM068QE22Gxw4t9GFU1T/uqMsA+nFm2Nm0YbLdso39c
-         VSTecXToFQNhqo1fWZHuDJdDaQGq1rotc1sC2Jb3VoKwGxcz1E9wx4EVuLZz6roolJUU
-         B5Puv7zu3aa94XDB7NVpGFSVNF4DiFc0qMAVcszsYhBIWiEtw7Z2DoREwFlHAVI/e+2h
-         nj9dMBoS8ADtbBf9ilKYTg/WLHNWO3Y+WvlKHDreokxItMmLqsbYtA6rR0/Sx02crja+
-         HJ/A==
-X-Forwarded-Encrypted: i=1; AHgh+RrJrzlOisJMc0gv5Ec3cvpuRyVgTIH7Y74CyERpYHdRFjO97QGG0fZq9/Km9FJUaMw/L9yYmOZw32xTsOp+vB5UdF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9+aUHFYoheFQ7mRjuVp3sK7azY6y+/OV+Uvmi18Fq/MI5LX3S
-	Ar0FQIbcggjaAZfuqgJVftIbD4/1nC0VkMtdh7jldCMFdlYH0XzIuPCIJGeMBYKbpxbIzyyylaY
-	uFHGe8+k4N3a0GmZKx+HvXw==
-X-Received: from wrbdl3.prod.google.com ([2002:a05:6000:b83:b0:470:4c2:a55f])
+        bh=rXrlbDb1W0LMn5jsqHyz0yKKuiZPXY5VJCQYOGVxTTM=;
+        b=QKM3Ib4Ira3Kgjz4U3XeXCXo/rYuxTSd+0iePyTeWC3+s09RyGp2zxMILrw6ifzKU6
+         H1kh9HyRJ10rpnq8g/cVpzJFdDVJc7TiRtLZ+a3II0mwfYDKUpTZlOSoPQhd1qwVdUJu
+         /4xsYUSLNp2bI+ewsG29Fj4K93FFFz0XrygUc102NVUTFKIV5SjTOVfsFF3JUmiWnphQ
+         jKSihrtdLboSkPiSAQ+StDSMU+FMc56Xd3rZvvfbNN5esLHkQF9wDTU5NFgtMGbRGIsS
+         tlxyTBLzFyJFSSmKG5yhB57XI+TMFfY+xj/FWddBhX9Q+H5EpHDM+6nDN0WVT84iVR9w
+         4+XQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoKvboaQzfAMsumIySiOX/NC/N24WrRcOiGirpRGcFf6ez2ddY/qfDsQ/rEYPbpGb3cYDw62AaiNfrItya5bELEEJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4gJM/Jz6oUF0YBd8Eqcl7HdWkQhXKD4qsraABPksR/A8nnhFH
+	/sNllD8wvJz+YJzY6LpInqsLR7NZQErFFS37uBlPMPyVlV/7fhk0/FTU8TtfdVJDxFnZQ2WQPMC
+	ev0xx80QGtAJ+UqyRWET2Fg==
+X-Received: from wmbjq16.prod.google.com ([2002:a05:600c:55d0:b0:493:d43c:ae47])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2509:b0:475:da0e:744d with SMTP id ffacd0b85a97d-47df754dbc2mr4056983f8f.8.1783612845468;
- Thu, 09 Jul 2026 09:00:45 -0700 (PDT)
-Date: Thu,  9 Jul 2026 17:00:16 +0100
+ 2002:a05:600d:8496:10b0:490:b2c9:e284 with SMTP id 5b1f17b1804b1-493e689afc1mr58351385e9.30.1783612846698;
+ Thu, 09 Jul 2026 09:00:46 -0700 (PDT)
+Date: Thu,  9 Jul 2026 17:00:17 +0100
 In-Reply-To: <20260709160017.1729517-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260709160017.1729517-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260709160017.1729517-3-vdonnefort@google.com>
-Subject: [PATCH v2 2/3] tracing/remotes: Fix struct_len in trace_remote_alloc_buffer()
+Message-ID: <20260709160017.1729517-4-vdonnefort@google.com>
+Subject: [PATCH v2 3/3] ring-buffer: Allow sparse CPU masks in ring_buffer_desc()
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -70,60 +70,29 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	Sashiko <sashiko-bot@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Pre-calculate desc->struct_len up-front in trace_remote_alloc_buffer()
-with trace_buffer_desc_size() to fix double-counting.
+No user currently relies on sparse CPU masks, but the descriptor logic already
+supports them via linear fallback. Remove the arbitrary limitation.
 
-While at it, use the accessor __first_ring_buffer_desc().
-
-Fixes: 96e43537af54 ("tracing: Introduce trace remotes")
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
 Reported-by: Sashiko <sashiko-bot@kernel.org>
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index d48042239d58..0f6ef5c36d84 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -979,27 +979,22 @@ EXPORT_SYMBOL_GPL(trace_remote_free_buffer);
- int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size, size_t buffer_size,
- 			      const struct cpumask *cpumask)
- {
-+	size_t min_desc_size = trace_buffer_desc_size(buffer_size, cpumask_weight(cpumask));
- 	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
--	void *desc_end = desc + desc_size;
- 	struct ring_buffer_desc *rb_desc;
- 	int cpu, ret = -ENOMEM;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 56a328e94395..4e7b4ce7b8a7 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2329,10 +2329,7 @@ static struct ring_buffer_desc *ring_buffer_desc(struct trace_buffer_desc *trace
+ 	size_t len;
+ 	int i;
  
--	if (desc_size < struct_size(desc, __data, 0))
-+	if (desc_size < min_desc_size)
- 		return -EINVAL;
- 
- 	desc->nr_cpus = 0;
--	desc->struct_len = struct_size(desc, __data, 0);
-+	desc->struct_len = min_desc_size;
- 
--	rb_desc = (struct ring_buffer_desc *)&desc->__data[0];
-+	rb_desc = __first_ring_buffer_desc(desc);
- 
- 	for_each_cpu(cpu, cpumask) {
- 		unsigned int id;
- 
--		if ((void *)rb_desc + struct_size(rb_desc, page_va, nr_pages) > desc_end) {
--			ret = -EINVAL;
--			goto err;
--		}
+-	if (!trace_desc)
+-		return NULL;
 -
- 		rb_desc->cpu = cpu;
- 		rb_desc->nr_page_va = 0;
- 		rb_desc->meta_va = (unsigned long)__get_free_page(GFP_KERNEL);
-@@ -1015,8 +1010,6 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+-	if (cpu >= trace_desc->nr_cpus)
++	if (!trace_desc || !trace_desc->nr_cpus)
+ 		return NULL;
  
- 			rb_desc->nr_page_va++;
- 		}
--		desc->struct_len += offsetof(struct ring_buffer_desc, page_va);
--		desc->struct_len += struct_size(rb_desc, page_va, rb_desc->nr_page_va);
- 		rb_desc = __next_ring_buffer_desc(rb_desc);
- 	}
- 
+ 	end = (struct ring_buffer_desc *)((void *)trace_desc + trace_desc->struct_len);
 -- 
 2.55.0.795.g602f6c329a-goog
 
