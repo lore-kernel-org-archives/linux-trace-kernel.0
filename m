@@ -1,174 +1,129 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB947385D7E
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 12:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BE93BBFA3
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 12:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783598849; cv=none; b=po9vz1moOQOQ2WODlI4yFsHACvtIJmHuT3UHgBsqeF0E5XhHvNP3a0YZjLuR8dYC7GlfdEQhvqF/WSrQmtw4zBvm8MPU56CUcBleUQT/dUmTlshoqhvJrFQdKTVsQ+DJZ/Dlu5JelzD4AVgig4wDw5MfNlZrJgzk+AnjkdqkFrM=
+	t=1783599525; cv=none; b=riboBEuyjQSqLSw96B4oDWd9zCokDNEwAs6n5l3YLFnzJRpgPUQDcs9NV1YaM5taSqWbZjUsB2gLrwcrEm4o/Ne9L33aJhrYESfoQcVLP70tpqSSH1A1EPvxJS5x8d3bjVBF1vjb3gP/6OvnDq5EstpMSDzjIlIjOZMAdEUH1Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783598849; c=relaxed/simple;
-	bh=YnZvKQDIygqYdK3VlnHW84pqUsomarBT0zp/xBX2/0M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QupmbtgKoXJKjHJytK1TDtKCviYT47+sGiV1eJlh+QHsvC4DsS8nVzuSLyRiacixoF/ZkS+dTgw382chzO+hi1da91OB6vjctkEJ8twKdNmKMy46Z3R8QL644qu0zpTobol808yP3UGgURVI3O80deCQ7OWziRolWEP6pf99QcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=YT4MpuwY; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1783599525; c=relaxed/simple;
+	bh=XaaFaOM5GSvaUgQorJfaOxm5VOZhBRgjQkClYXbm02A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5wMWlg80RNP5UTkym/Fvxwf4NH00wGiRAmyIzYnud08CpCBeCxArmQn6yeARqyYQoO5xrSTnWbh9sJsE/LYhoMqb6DUodjqt1h+OERaF+VmgnwyayaTG38BobeTc4RGFm7/hk2kOvM66RxOYKMq10JIaEGhb2VQv5QJ50Ko3L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kTChlVeE; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="YT4MpuwY"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4798bea72f9so387771f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 05:07:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kTChlVeE"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-47640541585so931201f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 05:18:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783598846; x=1784203646; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=YnZvKQDIygqYdK3VlnHW84pqUsomarBT0zp/xBX2/0M=;
-        b=YT4MpuwYTidOxe5D00Uv2LdN4oxJyKwcTLfqJD/H9jyJwjghTjZ3AOrV1LJgiuTt5D
-         K53peFkXU0hKee2Nwe0IPPUuFQM4qdHpl5XCivRQBgHyCafeJkaVRq9zt1Ee9LmgSj/s
-         GINXFVcZ/RiH8sHOBTUqT63u3tdtChAJ61rWv9OwNnEsvBnLvSXKSeQxlRSFW5Ly5887
-         X5ESreeOtWSnSYKR1IThIzQsZcq5/F6glvSq5VazSs6A1msbmLs+W9Vlh2qlndOV3eIX
-         4587i7+6ozJHrmxeFsXBJ9I/zT1cM1P6JuuBn7V7eYKBia0Uc24/sxY77Rorfk+1Mj5u
-         u5Ww==
+        d=google.com; s=20251104; t=1783599522; x=1784204322; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=jngqR2jmiogEZ8PxklwH7MWgCBRAFgrXCWBq2O3HcN8=;
+        b=kTChlVeEcgsAApq2ReO34kaP58D2aj79/fhb47WI60JKgDV0wWoseNLEjg4QI3GeoE
+         LbCwQTZHzktOCwIKw3nKbu4r1b/HyjlIDn701FCcTctAIBqI+ywQF9J9iVx0A5/VLnaz
+         rY6dsfhTvJMbEV1kS74p9IVoyhfjHHBo4/i337/CCWNfo1H2st+WYhqHkfEWFZcuR6Fc
+         x+F7kzCJiOTmn+AyhXhwTi/LRlXPsEQTe+Th+3UtK28nn5lf0Afhf8NFH+SeF7HsSyaH
+         qckW5X7NDRhPHEJvNPEDI2h2vMzqkTs4QPvyS3pcw0B3IGhh9GKYt1iISxhFyIFWcF5V
+         7Bpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783598846; x=1784203646;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=YnZvKQDIygqYdK3VlnHW84pqUsomarBT0zp/xBX2/0M=;
-        b=qJTtL+MBdCzC6/Yn4ZPLcH5eLzLEKvh6N07h6z2edywmjaKDYk8TzOJO6mAV/7KiCV
-         k68g+mfwU7dCcLtbAgNwC9z2YH0vzkF60qGSUjRhgDSU60e/7U+aLNT/t6GeAHFe7M93
-         VDoeaCvxFU95uQb8aDhL63d8vv0S7y5EGpPXj08BPm7dChcZGRhqxaVhPuiAaTwKAsYN
-         c/MdQmEmRsL+RNHRdv5vkSB6lLRHcnCAaDxM1nDH2ytgWDSBaA1Mo1n6S7WfiZxxlt8S
-         AoA+jaxKJpl9d4d5pxEgm9NlYuPz0esHOwJkke5/37GP7Zlbzpw/Yto1OpPZH8rlOhcZ
-         Nq8w==
-X-Forwarded-Encrypted: i=1; AHgh+Rp5wH6fcPA1G/GGRxFwkL6KEbDkTtU9p3wIJhBJdoF8JMpN9Q/pvepabQg06bV3UeYOZ/j+9qSXacY1IL5w/QjJxfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyomK0NilK2xp9hgO8n3H15PJiTKwjsE1JDNCZVed5n/M49ros/
-	azi+YAMy9qvXCXwo5nI5yjtSdVGnAGDVilciyQ8vFdA8OLZAAj60I9j/QUusMkZcq1Q=
-X-Gm-Gg: AfdE7cnUn/JWM0+Iyq/ZYQEqa9ZsSiJva397JDSRiQ6Spc3Oom7DbfW6Yk4H+/Pq8kp
-	asqVW4Q6gPXdshSHM29y36g3ZbIuOQ0AauTzx6gYXFh+7jbIQ9IfL+Xx2gBYTlglB79GmlCpAL7
-	bmkikQH4o79ZQGWiODyESaJNRhRoz9xVfCuKAppKT9+wXUwPnXBJp0Jn0DitlWOFibJDoi9kfWc
-	xbQZhhD0qmt/Zv/OuR6qfAN7KUNo0Wx8c3H9XqUcC2FO60ofArLlTTQln5Uf6rFF/cCIHyuliqW
-	99U1ZV4THH9wZRQmcjgD5iKDDZqL+Q4JY35V3DfD5zyRPb3YWhWq8O5XS2DRzpITfjFcPVdSNwl
-	/Dv1/YJmd6nWoNHRLXisj/67y2VWUOHk1ixl1TPTNTbZtS6Bjm3F8Mr4ZW3oypIGW7CM9ubZd9H
-	3D33t/jMZT
-X-Received: by 2002:a05:6000:4a1c:b0:47d:ef62:cae0 with SMTP id ffacd0b85a97d-47df079123amr7340425f8f.51.1783598846013;
-        Thu, 09 Jul 2026 05:07:26 -0700 (PDT)
-Received: from localhost ([2001:4091:a245:85f5:7368:940f:9e3b:30b1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9de1e785sm50766198f8f.8.2026.07.09.05.07.25
+        d=1e100.net; s=20251104; t=1783599522; x=1784204322;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jngqR2jmiogEZ8PxklwH7MWgCBRAFgrXCWBq2O3HcN8=;
+        b=EUsh11p4u5xS/41CAXk9pU+onFnlzheFhAk/Qg4YteKc7iE5FbXBhWHMVJjvbZ2c6D
+         BW1b9gIPUGheMOtl+4pXWuLwYWvookOzUNI44+sCgoy7L+/4Y4k7D536PUqfdrQjVaag
+         qBT3HmKPLiFm4QwAPtUM3LhbrZMDJY46GQBjyAVaQV+WslE0lmMKYZ0Y3P+mDX2JexEz
+         loQTplXY4R7zwpYAUIgAAPmcaVfqYgxeYVZsxlgxuOQj/343/uW4DESRiW/Uhym86tpV
+         HhwE2ncybRJ3aLFhEwFFHwLZEcBgUeiGBNgljfqRp7SuD+d9ZC7kCEc9BLs8xkNOWUBm
+         K9eg==
+X-Forwarded-Encrypted: i=1; AHgh+RrsHSz0qbH6wJCPCJZXkgNne7/2Ke8WrzF1A48opLNoDEenGQmM6YsLTNR1ebHB3lwxbaXPiVwEJ7sfpnWLZyO8l38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD0Wrtbj71i2p5tWttRPGIb4EcDWqU2CyDdMTgkO/o6EF2ox7W
+	xw9mdvZTxnWNjRA3N7DDQP00YoxUe2PHp/syD1ICP/W94RfiOaVugK87qT1E+FzRf2XpZWCmqDh
+	pqiTdTg==
+X-Gm-Gg: AfdE7clKGIs9cEX86MoeMR1ifW0AGgQM+UpNQmo0fpuWaZRUYWMzmQlufXsm3HlLQ3q
+	20FI5EMvyTlQe71l/v5AJE3ULwkIOUyEnadYwDb8UZXIOtJ1KCbgf2QFW9uKuk/+FoJM0VNdU+m
+	NWdVDwXMqn+7JCJMe+W1eOpv8iOxjKdZlC7IXFzLq29ewme3RCyIuPLpbj8VaakhzuMlI+8FA0V
+	CcEKPxv56cipLicrT5uUoD1VqG7grrs3aK8PfmPi2beB5mYPYi3jxmJmyn2amIOIO+Zba0HI+Ib
+	JcHnRQLxDF7NHz//nOamZL7f3oPeHnCkSqwUbqnqvvJOAnh/UjIX4uTk/07J4fFK2sH0RBAw1aG
+	5zgT/x50nQUYnl4+w5LRTHQtS1/niDbp1BG+7tdHXBb7qKZcD0QUWd41NTmtii+PchRNEI1vfiY
+	YDT4MBPle3xILBPQBGQyfj4HY7MXl/V5VYbzwcJY3tL8Q9NF8t/wztTJjyMDS8mw==
+X-Received: by 2002:a05:6000:40cc:b0:47d:eddb:c102 with SMTP id ffacd0b85a97d-47df076eb66mr7316781f8f.28.1783599521149;
+        Thu, 09 Jul 2026 05:18:41 -0700 (PDT)
+Received: from google.com (137.69.77.34.bc.googleusercontent.com. [34.77.69.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9de1d910sm49755128f8f.6.2026.07.09.05.18.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 05:07:25 -0700 (PDT)
+        Thu, 09 Jul 2026 05:18:40 -0700 (PDT)
+Date: Thu, 9 Jul 2026 13:18:37 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [PATCH v1] tracing/remotes: Fix leak in
+ trace_remote_alloc_buffer() error path
+Message-ID: <ak-Rnf6qhbYFxTgC@google.com>
+References: <20260708133201.295072-1-vdonnefort@google.com>
+ <20260708125906.746f1def@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=7b6316f8522944311de09e5d73742062942bd0c5333c4e262c75ae63769c;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Thu, 09 Jul 2026 14:06:32 +0200
-Message-Id: <DJU105LESLBJ.1O3UZRY325T2M@baylibre.com>
-Cc: "Steven Rostedt" <rostedt@goodmis.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Heiko Carstens" <hca@linux.ibm.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: fprobe: Remove __packed from generic
- __fprobe_header
-From: "Markus Schneider-Pargmann" <msp@baylibre.com>
-To: "Masami Hiramatsu" <mhiramat@kernel.org>, "Markus Schneider-Pargmann"
- <msp@baylibre.com>
-X-Mailer: aerc 0.21.0-146-gb5c16ebe1835
-References: <20260428-topic-fprobe-packed-v7-1-v1-1-9abc9b866b4c@baylibre.com> <20260610171740.c30c43c5faee0beac3ad7546@kernel.org> <DJ59B5LEGPER.3UURGUC8IW7E2@baylibre.com> <20260622135659.ff84ef3b831a464b802d7c33@kernel.org>
-In-Reply-To: <20260622135659.ff84ef3b831a464b802d7c33@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260708125906.746f1def@gandalf.local.home>
 
---7b6316f8522944311de09e5d73742062942bd0c5333c4e262c75ae63769c
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Wed, Jul 08, 2026 at 12:59:06PM -0400, Steven Rostedt wrote:
+> On Wed,  8 Jul 2026 14:32:01 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > If page allocation fails in trace_remote_alloc_buffer(), desc->nr_cpus
+> > is not yet incremented for the current CPU. As a consequence, on error,
+> > half-allocated rb_desc will not be freed in trace_remote_free_buffer().
+> > 
+> > Include the failing CPU in desc->nr_cpus before going to the error path.
+> > 
+> 
+> Looks like Sashiko found other issues you may want to address:
+> 
+>   https://sashiko.dev/#/patchset/20260708133201.295072-1-vdonnefort%40google.com
 
-Hi Masami,
+Yeah I saw it, the dreaded "This isn't a bug introduced by this patch" ...
 
-On Mon Jun 22, 2026 at 6:56 AM CEST, Masami Hiramatsu wrote:
-> On Wed, 10 Jun 2026 11:20:24 +0200
-> "Markus Schneider-Pargmann" <msp@baylibre.com> wrote:
->
->> Hi Masami,
->>=20
->> On Wed Jun 10, 2026 at 10:17 AM CEST, Masami Hiramatsu wrote:
->> > Hi Markus,
->> >
->> > Thanks for ping me.
->> >
->> > On Tue, 28 Apr 2026 10:30:29 +0200
->> > "Markus Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com> wrote=
-:
->> >
->> >> fp pointer and unsigned long have the same size on all relevant
->> >> architectures that build Linux. Furthermore this struct is only used =
-in
->> >> architectures that do not set ARCH_DEFINE_ENCODE_FPROBE_HEADER which =
-is
->> >> set only for 64bit architectures (apart from LoongArch).
->> >>=20
->> >> Both fields are aligned on these architectures so the struct with
->> >> __packed and without it are the same.
->> >>=20
->> >> Remove the __packed as it is unnecessary.
->> >>=20
->> >> Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer=
-")
->> >
->> > NOTE: This is not a Fix, but just cleanup or minor update. Or, you hav=
-e
->> > any problem with this __packed attribute?
->>=20
->> Thanks, yes it is not fixing a bug, I can remove this.
->>=20
->> >
->> > Unless there is no problem (or any concern), I would like to keep this
->> > as it is.
->>=20
->> There is currently no problem with __packed in the upstream kernel. I
->> just thought this would be a good cleanup to remove the unnecessary
->> attribute. I am working on CHERI architectures where pointers have
->> capabilities. __packed breaks these capability tags and therefore
->> doesn't work on CHERI. When looking into why this struct has a __packed
->> attribute I didn't see a reason, so I thought this would be a good patch
->> for upstream as well even though CHERI is not yet relevant for upstream
->> linux.
->
-> Hi Markus,
->
-> Ah, OK. CHERI makes pointers to non-long value. Are you sure
-> removing __packed makes fprobe working with CHERI? If so,
-> please describe it. Then I can pick it.
+Let me send a follow-up. After looking at the other issue, I think I want to
+slightly modify this one actually!
 
-Sorry for the late response.
-
-No, this patch alone doesn't make fprobe work with CHERI. __packed is
-problematic for CHERI because it sets the alignment to 1 which forces
-the compiler to do unaligned access operations even if the
-struct/pointer is aligned. Unaligned operations do not keep the CHERI
-capabilities. Without __packed the compiler knows everything is aligned
-and can use aligned operations and keep the CHERI capabilities. CHERI
-hardware does not support unaligned pointer capability access.
-
-On its own it doesn't help CHERI, there are more patches that are more
-CHERI specific that are needed for fprobe to work on CHERI. I just
-thought it would be a great standalone patch for upstream.
-
-Best
-Markus
-
---7b6316f8522944311de09e5d73742062942bd0c5333c4e262c75ae63769c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKMEABYKAEsWIQSJYVVm/x+5xmOiprOFwVZpkBVKUwUCak+OyBsUgAAAAAAEAA5t
-YW51MiwyLjUrMS4xMiwyLDIRHG1zcEBiYXlsaWJyZS5jb20ACgkQhcFWaZAVSlP8
-cgD+PFHUzLLcRfDxLVcBPU7RyfM5pEeEBxiXn6W3NKuzwAABALAUie9vi/QnT+Tu
-kHG9gqcK3fTnbDtREAVtfYJJFCQH
-=pAwt
------END PGP SIGNATURE-----
-
---7b6316f8522944311de09e5d73742062942bd0c5333c4e262c75ae63769c--
+> 
+> -- Steve
+> 
+> > Fixes: 96e43537af54 ("tracing: Introduce trace remotes")
+> > Reported-by: Sashiko <sashiko-bot@kernel.org>
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > 
+> > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> > index 2a6cc000ec98..62d3d431c309 100644
+> > --- a/kernel/trace/trace_remote.c
+> > +++ b/kernel/trace/trace_remote.c
+> > @@ -1008,8 +1008,10 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+> >  
+> >  		for (id = 0; id < nr_pages; id++) {
+> >  			rb_desc->page_va[id] = (unsigned long)__get_free_page(GFP_KERNEL);
+> > -			if (!rb_desc->page_va[id])
+> > +			if (!rb_desc->page_va[id]) {
+> > +				desc->nr_cpus++; /* Free this partially-allocated rb_desc */
+> >  				goto err;
+> > +			}
+> >  
+> >  			rb_desc->nr_page_va++;
+> >  		}
+> > 
+> > base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+> 
