@@ -1,108 +1,308 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F1F3EB818;
-	Thu,  9 Jul 2026 09:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAD03EDE76
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 09:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783588401; cv=none; b=VpaEKGD7XeFq5KeHQ+SQpqI/xJJnEGbDcGwDBIoagkWXPp9zDPt4u0Z9eAyBirOrjcErVJqUkyoZRjuxwdq44XH/pqDCMm1OvOhUmCKlKTgSrgPH9K91LdaP6+I58Yujzm4AUbt9IU8KhBDW4uJx71P6zyqrd5dvD9tFGbATDTY=
+	t=1783588695; cv=none; b=c6KWRcs/vR8e2zbDXIn5CMgCp0MCwmao+PLns28Yl0yQAe42ScFmmxNSkNVxgfIvqcy30/W/kE86w9osv6kDzU6wmeNEuHZa3OBYfoSmdERT++F+aeTuqP0XHv97Ii5AQG6NTPxnq86hcRJVv5PTIMWeAJ9J4YW3aAgr87m2cwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783588401; c=relaxed/simple;
-	bh=WuaVUSYZ3uOq4v5GKVtHehv5ikq9MRAhRSdd5fVXxdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBcsCxv4NaakaxbHMSmIU6ihZBr5heZhvL0gDWp42HiL5UpdkEmiVHoceTp+xpVL2zBOECE5wP0GdhOHBbR/oUIBLYz+y5JLKjXpcTqlCOUFo9gOXxMwSUGOWLGXbaaA4i63ZpgL53agf9b9cuaTo5K4aAG1VXLlQz7Kkcy8K4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=guIrbCG2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1FqZ4Glp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1783588695; c=relaxed/simple;
+	bh=04ThZUSodpHue9b04L+YG+8tuR+6H9kX7e/IFoeLdmk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=SJ8acxzWZ79MpIkUBVeay1EQ6bEhMly43UnqekbB+Zl6nGb+PYtPt2cnSNnxcCv3TgAE6YspamBeg0K/Ei2FXsHLrTKqCBduI3LeyZEIBE5Lsh9XQTu/XyouRW5lnWy/UtFnoiFGK60EIdIUuDrAlZQM3RZCotGVXVD3wFm9Csk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V0oaVHeF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="guIrbCG2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1FqZ4Glp"
-Date: Thu, 9 Jul 2026 11:13:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783588398;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V0oaVHeF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783588692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oFkhovupFuB+0rzcV3/Rh8Yfa4/ndsw3Kaki+DTqEk0=;
-	b=guIrbCG2tFjNemmIWTWaeYkEEVw96TgbMZ/9sp+L9Zu4pxOJuXjszNyLZk5UCalt1MZeFk
-	J4EUN+jbwE7bJEVdDFjrpygx7YtwM8CDq7w1Z3deoFVIUMCbWioPu8pBqB792z8DmyzX+8
-	eZBeGE80HL4zj+f8UIcazq9FS3G70IvCkWxkoY37YrTX9yl33P0e01MqoGjfcZaoekXiC4
-	4kIGWf9nlf8H5YCgNR66/sUxWEa/c0K2Rp77uYnpMPk71hEcBe3XJVXLPEezX4hSlCHwwA
-	dBJSbO/YG4q/vIKPNsT1gWZFNwqeZD5VfwqUTZtzxi1fTUDVXrrSMTh9v8pRrA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783588398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oFkhovupFuB+0rzcV3/Rh8Yfa4/ndsw3Kaki+DTqEk0=;
-	b=1FqZ4GlpMtrrBtqzEJlHdoI4seB5yz2jzvAcIEnwg8F9aO5ZT07ZTCZyXqq5nTBv7j96/e
-	bB4kfk2g2ag5sACw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Wandun Chen <chenwandun1@gmail.com>, vbabka@kernel.org,
-	david@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	Alexander.Krabler@kuka.com, hughd@google.com, fvdl@google.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
-	jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
-	riel@surriel.com, liam@infradead.org, harry@kernel.org,
-	jannh@google.com, lance.yang@linux.dev,
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	pfalcato@suse.de
-Subject: Re: [PATCH v2 4/4] mm/mlock: migrate folios out of CMA when mlocking
- a range
-Message-ID: <20260709091316.TFgtBZlE@linutronix.de>
-References: <20260707125925.3725177-1-chenwandun1@gmail.com>
- <20260707125925.3725177-5-chenwandun1@gmail.com>
- <ak0OZKzapUefmA3v@lucifer>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vPFEYDWR+/1LQpLZu2YGz7yIBPlLH2kJbi5Hp0+tNpA=;
+	b=V0oaVHeFt7GNW3MQA5mVAdvaYw4193dCPURDTDg95uabzQQEB65C8gQtScu+D5512UOvfO
+	06QnE3elOTXE/NyRe9tqIWo0w5FACIciQ4SG1UTrmWmlMisMv5Llq5uaFWgcyKGta6RajN
+	ffAr4eo/QhsoraeCglC98ieu6ySk/is=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-408-qy8VAWGgNBmwqGJwG8_ZLw-1; Thu,
+ 09 Jul 2026 05:18:09 -0400
+X-MC-Unique: qy8VAWGgNBmwqGJwG8_ZLw-1
+X-Mimecast-MFC-AGG-ID: qy8VAWGgNBmwqGJwG8_ZLw_1783588688
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D5071955DCF;
+	Thu,  9 Jul 2026 09:18:08 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.39])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C87E9180035F;
+	Thu,  9 Jul 2026 09:18:05 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] rtla/tests: Test all tracer options in runtime tests
+Date: Thu,  9 Jul 2026 11:17:55 +0200
+Message-ID: <20260709091755.58265-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ak0OZKzapUefmA3v@lucifer>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: o1vSRolGlWQCsU8L2RXqOplxxGP_Y3BGa2ljrEVIkU8_1783588688
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 2026-07-07 15:54:57 [+0100], Lorenzo Stoakes wrote:
-> On Tue, Jul 07, 2026 at 08:59:25PM +0800, Wandun Chen wrote:
-> > From: Wandun Chen <chenwandun@lixiang.com>
-> >
-> > The region covered by mlock[all] may contain CMA pages. cma_alloc installs
-> > migration entries in the page table, if a memory access occurs at this
-> > point, it must wait for the migration to complete, which may cause
-> > latency spikes on the RT kernels.
-> >
-> > Try to move the migration cost into the mlock[all] caller, which is
-> > typically a setup path. So reduce the chance of latency spikes on RT
-> > kernels by migrating the currently mapped CMA pages out of CMA region.
-> 
-> 'reduce the chances of latency' so do you have any data to back this invasive
-> change or not?
+Currently, runtime tests only test the osnoise period option
+(-p/--period of rtla-osnoise tools, backed by
+/sys/kernel/tracing/osnoise/period_us), using the
+check_with_osnoise_options function together with a hack relying on long
+period (pre-set) timing out if RTLA fails to reset it to the default
+value.
 
-The application gets pages assigned which belong a CMA area. If the
-pages are in need by the CMA then those pages are replaced with other
-pages during a migration phase. Since there is no guarantee how long
-this will take and is also subject to general scheduling in the system
-it will be measurable and painful once hit.
+Extend tracer option testing to all options used by RTLA; test both RTLA
+setting the default option by pre-setting the tracer to a different
+value and user-requested value.
 
-> And for RT, but nothing in here at all checks for RT? You're using this
-> compaction sysctl as an RT check somehow? That's gross.
+The tests are done using a script that reads the tracer values inside an
+--on-threshold action, like existing tests for runtime behavior already
+do. check_with_osnoise_option is modified to support grep filters, so
+that it can be used together with the script pattern.
 
-The man-page for mlock says that it guarantees to stay in RAM and/ or
-preventing to be moved to swap area. I would however argue that
-replacing physical pages in the background should fall under this since
-the application can't access them and is blocked while trying. The notes
-section (in the man-page) lists "real-time applications" and
-"deterministic timing".  Therefore I think it makes sense to do this
-unconditionally for mlock areas regardless of the sysctl knob.
-Security related application probably only care that their memory does
-not hit the swap area and probably wouldn't mind 10ms delay.
+Assisted-by: Claude:claude-opus-4-6
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/tests/engine.sh            | 41 +++++++++++--------
+ tools/tracing/rtla/tests/hwnoise.t            |  3 ++
+ tools/tracing/rtla/tests/osnoise.t            | 37 +++++++++++++++--
+ .../tests/scripts/check-osnoise-option.sh     | 16 ++++++++
+ .../rtla/tests/scripts/check-tracefs-value.sh | 11 +++++
+ tools/tracing/rtla/tests/timerlat.t           | 38 +++++++++++++++++
+ 6 files changed, 125 insertions(+), 21 deletions(-)
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-osnoise-option.sh
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-tracefs-value.sh
 
-> This doesn't feel like the right solution.
+diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+index 5bf8453d354d6..4287cd64ac314 100644
+--- a/tools/tracing/rtla/tests/engine.sh
++++ b/tools/tracing/rtla/tests/engine.sh
+@@ -98,30 +98,37 @@ check() {
+ }
+ 
+ check_with_osnoise_options() {
+-	# Do the same as "check", but with pre-set osnoise options.
+-	# Note: rtla should reset the osnoise options, this is used to test
+-	# if it indeed does so.
+-	# Save original arguments
+-	arg1=$1
+-	arg2=$2
+-	arg3=$3
+-
+-	# Apply osnoise options (if not dry run)
++	# Do the same as "check", but with pre-set tracefs options.
++	# Resets osnoise first, then writes the given tracefs option=value
++	# pairs before running the check with NO_RESET_OSNOISE=1.
++	# Arguments: test_name command exit_code expected_output [path=value ...]
++	# Each path is relative to /sys/kernel/tracing/
++	local arg1=$1
++	local arg2=$2
++	local arg3=$3
++	local arg4=$4
++	local opt option value
++
++	# Apply tracefs options (if not dry run)
+ 	if [ -n "$TEST_COUNT" ]
+ 	then
+ 		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
+-		shift
+-		shift
+-		while shift
++		shift 4
++		for opt in "$@"
+ 		do
+-			[ "$1" == "" ] && continue
+-			option=$(echo $1 | cut -d '=' -f 1)
+-			value=$(echo $1 | cut -d '=' -f 2)
+-			echo "$value" > "/sys/kernel/tracing/osnoise/$option" || return 1
++			[ -z "$opt" ] && continue
++			option="${opt%%=*}"
++			value="${opt#*=}"
++			# Try to apply the option, ignore errors: when pre-setting fails
++			# (e.g. kernel does not know the option), the test itself will likely
++			# also fail.
++			# Throwing an error here would cause the test to be incorrectly
++			# skipped.
++			echo "$value" > "/sys/kernel/tracing/$option"
+ 		done
+ 	fi
+ 
+-	NO_RESET_OSNOISE=1 check "$arg1" "$arg2" "$arg3"
++	NO_RESET_OSNOISE=1 check "$arg1" "$arg2" "$arg3" "$arg4"
+ }
+ 
+ check_top_hist() {
+diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
+index cfe687ff5ee1f..b53d8d440fc50 100644
+--- a/tools/tracing/rtla/tests/hwnoise.t
++++ b/tools/tracing/rtla/tests/hwnoise.t
+@@ -18,5 +18,8 @@ check "stop the trace if a single sample is higher than 1 us" \
+ check "enable a trace event trigger" \
+ 	"hwnoise -t -e osnoise:irq_noise --trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 10s" \
+ 	0 "Saving event osnoise:irq_noise hist to osnoise_irq_noise_hist.txt"
++check "verify OSNOISE_IRQ_DISABLE" \
++	"hwnoise -S 1 --on-threshold shell,command=\"$testdir/scripts/check-osnoise-option.sh OSNOISE_IRQ_DISABLE\"" \
++	2 "^OSNOISE_IRQ_DISABLE=enabled$"
+ 
+ test_end
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+index 346a14a860c82..f773156e758fd 100644
+--- a/tools/tracing/rtla/tests/osnoise.t
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -42,11 +42,40 @@ check "hist with --no-index" \
+ check "hist with --no-summary" \
+ 	"osnoise hist --no-summary -d 1s" 0 "" "^count:"
+ 
+-# Test setting default period by putting an absurdly high period
+-# and stopping on threshold.
+-# If default period is not set, this will time out.
++# Tracer option tests - verify that rtla correctly sets tracefs options
++# Default tests: poison tracefs with wrong values, verify rtla resets to defaults
+ check_with_osnoise_options "apply default period" \
+-	"osnoise hist -s 1" 2 period_us=600000000
++	"osnoise top -q -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/period_us\"" \
++	2 "^osnoise/period_us=1000000$" osnoise/period_us=600000000
++check_with_osnoise_options "apply default runtime" \
++	"osnoise top -q -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/runtime_us\"" \
++	2 "^osnoise/runtime_us=1000000$" osnoise/runtime_us=100
++check_with_osnoise_options "apply default tracing_thresh" \
++	"osnoise top -q -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh tracing_thresh\"" \
++	2 "^tracing_thresh=0$" tracing_thresh=999999
++check_with_osnoise_options "apply default stop_tracing_us" \
++	"osnoise top -q -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_us\"" \
++	2 "^osnoise/stop_tracing_us=0$" osnoise/stop_tracing_us=999999
++check_with_osnoise_options "apply default stop_tracing_total_us" \
++	"osnoise top -q -s 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_total_us\"" \
++	2 "^osnoise/stop_tracing_total_us=0$" osnoise/stop_tracing_total_us=999999
++
++# Non-default tracer option tests: verify CLI options correctly set tracefs values
++check_top_q_hist "verify -p sets period_us" \
++	"osnoise TOOL -p 2000000 -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/period_us\"" \
++	2 "^osnoise/period_us=2000000$"
++check_top_q_hist "verify -r sets runtime_us" \
++	"osnoise TOOL -r 500000 -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/runtime_us\"" \
++	2 "^osnoise/runtime_us=500000$"
++check_top_q_hist "verify -T sets tracing_thresh" \
++	"osnoise TOOL -T 5 -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh tracing_thresh\"" \
++	2 "^tracing_thresh=5$"
++check_top_q_hist "verify -s sets stop_tracing_us" \
++	"osnoise TOOL -s 30 -S 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_us\"" \
++	2 "^osnoise/stop_tracing_us=30$"
++check_top_q_hist "verify -S sets stop_tracing_total_us" \
++	"osnoise TOOL -S 100 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_total_us\"" \
++	2 "^osnoise/stop_tracing_total_us=100$"
+ 
+ # Actions tests
+ check_top_q_hist "trace output through -t with custom filename" \
+diff --git a/tools/tracing/rtla/tests/scripts/check-osnoise-option.sh b/tools/tracing/rtla/tests/scripts/check-osnoise-option.sh
+new file mode 100755
+index 0000000000000..37c62268cc151
+--- /dev/null
++++ b/tools/tracing/rtla/tests/scripts/check-osnoise-option.sh
+@@ -0,0 +1,16 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Check if osnoise options are enabled or disabled.
++# Usage: check-osnoise-option.sh <OPTION1> [<OPTION2> ...]
++# Output: one line per option in the format "OPTION=enabled" or "OPTION=disabled"
++
++options=$(tr ' ' '\n' < /sys/kernel/tracing/osnoise/options)
++for name in "$@"; do
++	if echo "$options" | grep -q "^NO_${name}$"; then
++		echo "$name=disabled"
++	elif echo "$options" | grep -q "^${name}$"; then
++		echo "$name=enabled"
++	else
++		echo "$name=unsupported"
++	fi
++done
+diff --git a/tools/tracing/rtla/tests/scripts/check-tracefs-value.sh b/tools/tracing/rtla/tests/scripts/check-tracefs-value.sh
+new file mode 100755
+index 0000000000000..12d0eacd6a85d
+--- /dev/null
++++ b/tools/tracing/rtla/tests/scripts/check-tracefs-value.sh
+@@ -0,0 +1,11 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Read tracefs values and print them.
++# Usage: check-tracefs-value.sh <relative_path1> [<relative_path2> ...]
++# Each path is relative to /sys/kernel/tracing/
++# Output: one line per file in the format "path=value"
++
++for file in "$@"; do
++	read value < "/sys/kernel/tracing/$file"
++	echo "$file=$value"
++done
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index 8193048e8c8ce..aa5b91d88ca4b 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -55,6 +55,44 @@ check_top_q_hist "verify -k/--kernel-threads" \
+ check_top_q_hist "verify -u/--user-threads" \
+ 	"timerlat TOOL -u -c 0 -d 10s -T 1 --on-threshold shell,command=$testdir/scripts/check-user-kernel-threads.sh" 2 "0 kernel threads, 1 user threads"
+ 
++# Tracer option tests - verify that rtla correctly sets tracefs options
++# Default tests: poison tracefs with wrong values, verify rtla resets to defaults
++check_with_osnoise_options "apply default timerlat_period_us" \
++	"timerlat top -q -T 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/timerlat_period_us\"" \
++	2 "^osnoise/timerlat_period_us=1000$" osnoise/timerlat_period_us=999999
++check_with_osnoise_options "apply default print_stack" \
++	"timerlat top -q -T 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/print_stack\"" \
++	2 "^osnoise/print_stack=0$" osnoise/print_stack=999999
++check_with_osnoise_options "apply default stop_tracing_us" \
++	"timerlat top -q -T 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_us\"" \
++	2 "^osnoise/stop_tracing_us=0$" osnoise/stop_tracing_us=999999
++check_with_osnoise_options "apply default stop_tracing_total_us" \
++	"timerlat top -q -i 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_total_us\"" \
++	2 "^osnoise/stop_tracing_total_us=0$" osnoise/stop_tracing_total_us=999999
++
++# Non-default tracer option tests: verify CLI options correctly set tracefs values
++check_top_q_hist "verify -p sets timerlat_period_us" \
++	"timerlat TOOL -p 2000 -T 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/timerlat_period_us\"" \
++	2 "^osnoise/timerlat_period_us=2000$"
++check_top_q_hist "verify -s sets print_stack" \
++	"timerlat TOOL -s 5 -T 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/print_stack\"" \
++	2 "^osnoise/print_stack=5$"
++check_top_q_hist "verify -i sets stop_tracing_us" \
++	"timerlat TOOL -i 2 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_us\"" \
++	2 "^osnoise/stop_tracing_us=2$"
++check_top_q_hist "verify -T sets stop_tracing_total_us" \
++	"timerlat TOOL -T 2 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/stop_tracing_total_us\"" \
++	2 "^osnoise/stop_tracing_total_us=2$"
++check_with_osnoise_options "apply default TIMERLAT_ALIGN" \
++	"timerlat top -q -T 1 --on-threshold shell,command=\"$testdir/scripts/check-osnoise-option.sh TIMERLAT_ALIGN\"" \
++	2 "^TIMERLAT_ALIGN=disabled$" osnoise/options=TIMERLAT_ALIGN
++check_top_q_hist "verify -A sets TIMERLAT_ALIGN" \
++	"timerlat TOOL -A 100 -T 1 --on-threshold shell,command=\"$testdir/scripts/check-osnoise-option.sh TIMERLAT_ALIGN\"" \
++	2 "^TIMERLAT_ALIGN=enabled$"
++check_top_q_hist "verify -A sets timerlat_align_us" \
++	"timerlat TOOL -A 100 -T 1 --on-threshold shell,command=\"$testdir/scripts/check-tracefs-value.sh osnoise/timerlat_align_us\"" \
++	2 "^osnoise/timerlat_align_us=100$"
++
+ # Histogram tests
+ check "hist with -b/--bucket-size" \
+ 	"timerlat hist -b 1 -d 1s"
+-- 
+2.55.0
 
-Sebastian
