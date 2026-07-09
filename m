@@ -1,148 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9552E332917;
-	Thu,  9 Jul 2026 15:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B292740BCD6
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 16:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783612757; cv=none; b=MdCamrvEElkcAErpZvVRkts9j+uQoPN9C7JuAoUAeLkL5/SQazWw1wNXbqbILvKyt1E9eJa+oySYT/IHIVHG1Jgc7VmtB7UPiGlx/8Phs/mZNW2hoJKTliHyR9D+8jhF2cXA7P412lNySmE6zRIedc3x95xblH/QtDiZxwPUq2c=
+	t=1783612846; cv=none; b=tS8GonJ6poLabRbLYqvCAabvgDViP1TqbFTrZaXSW9HtKydjHuCe42coOAPvLXPQMrzQgOfH9k9rMLc77FIuWagiA1ZYQProwL6WOQ/9aHLouK+Eo3nJqdFN3JBA6hY/OS7L/P9B85mTIB2cJ5hjzgELyFc7DbE/pweGh6vcNfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783612757; c=relaxed/simple;
-	bh=aJbh9LElbrEI7E/P7mvmoKpzdOlw1yDQ59JtSNULaUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OkqPKPu/lg5N2S3ELhLewsEkHXFGWfEttEj1hBfoo8kUpU9FxPEceEwuBfUeOhKMbYXOK7AADlMTFPTvwPBcsCCYMvDgTzpFTDVDnba1Cnuigvcl3Dt6o9RtEyJnZRQ4D7T64UXbikBm4RzMLIH8a4kyGaa8+xijyPPgXvGw7gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RC+SN67W; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783612846; c=relaxed/simple;
+	bh=jO4/QmIN/j3YW9CmJ6GiWepyXK3igV+/JLTRJ0FsvDI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pTtQa8t75rfw+mSjR5rJLD3FGatvuz4FuHy0/mOqTVk2kN8wYgQFq8w8gXzp1z0+QHxIfjlu0rNxwdMFPNDvFqkIsFrxUEv7aqy/6prUr9ezhOlGMWN23mv+35fb79+hsNeJD+TYbGovXb9YnhqDrf5hozJqiCHtlMlOEeitcj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MEUsXmdD; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RC+SN67W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7221E1F000E9;
-	Thu,  9 Jul 2026 15:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783612756;
-	bh=aJbh9LElbrEI7E/P7mvmoKpzdOlw1yDQ59JtSNULaUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RC+SN67Wo1bRPHmk2A3aRNqpRIZs1vt054/wDbMqrDQX+h2TC1c2qOU/P+vZpdlhO
-	 AGbczQTeBS/xYxBRav4immcCdk9NfNEvFoxtcbuJpR+9S08i4HqzmmxUf2mXM8hMj7
-	 lXpkqf096CaOPzHCghkHjTNtD6G/fOZ8q4jHCFjUFlLP5HaCXiv4HJYAS5IZqtiACw
-	 SFUrZULwFBv+H+0ToU32sDdtnyqRsHAorRSMSNXr8y2FRWFng0qncigrrOJt/3zqzq
-	 3H/Ma20+f66D8Hr1nfijRAegJrkTFT+SYpIfq6Gx4gdnn9Z3ulZD77FcSZxNF6fYJs
-	 u62hwfrMdO64Q==
-Date: Thu, 9 Jul 2026 17:59:13 +0200
-From: Thierry Reding <thierry.reding@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-Message-ID: <ak_E4UxfnFJywJa7@orome>
-References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
- <CGME20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c@eucas1p1.samsung.com>
- <20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
- <3f47aeab-33b1-4966-a5ce-5d6d5261e0e2@samsung.com>
- <e212caac-6c30-448a-9e10-32fff8b842f6@kernel.org>
- <83e5e74d-7106-4e14-9d10-56438372f6a3@samsung.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MEUsXmdD"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-493e3ecd385so25560655e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 09:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783612843; x=1784217643; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=BmP8NlFxJ8FVr7DCGqIxDX6layModuuoouK0eFgiUHo=;
+        b=MEUsXmdDkjLRByphmuw6hmDBOzVR3UD6LaNiO3AVq5L9QrXAua9YpsAlivgqeWlA0e
+         hkp9mxSBTdhyw6BJOn3asiW8vZ6ZoTszXdwzrhWIfcKuM+VnZUQowB+b/Du+vgSKhMy9
+         awsky2m5Vo2vVhC4XqsBwh1ujm6jOz6ztSOIUAO75jeLalr1ZYZs3uaKy52dMzXNBRLw
+         BhD2gFVFWuvVtlmSrMFR5smeTT9Cs0yvcM2V/vReAnM3TrVN/XYtXDclAmeLOWrsXuT7
+         aHidO62ukyP8xOGDwmxg4lYi/4xQ1PQdWKhdpPCakByIEBrI5o8coasFfhwnAbSKzrk3
+         qOVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783612843; x=1784217643;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BmP8NlFxJ8FVr7DCGqIxDX6layModuuoouK0eFgiUHo=;
+        b=Zmw2j92lb5dnP/wQ1vbMY9v1m6BVUjzOlZSDcySeD9TXczCHjvVd7PqfqI3OvGOtvu
+         +8khfhx+GhL6n+8bVz2TQ75iZjUqkKnTquqCmtET7fTtudTyoPufL+36xrnM9YAoaEjt
+         j26PvpLetWPpX3lS9zzKdX5OhphEVo40oBn0s83ernspyw3QVV3D99u6ldaRwSZxArX+
+         knyIK4i2WN3ag+We5kNii3wvo+CnGLIUHhoZb6FxtXZkQYvLMK/sF2vDwsYwyMSg5ROB
+         8MPgtBs2nIYsmBr3x+4+1K0amx5KMpGT5j1dG+AvApHIQI5aOUTVdjKsDO83cgbCkzqn
+         LzxA==
+X-Forwarded-Encrypted: i=1; AHgh+RpCro3sdMKoMS9z2W7nq9FUhUgIAO+TSTsqay1ByfT2E41LMIJBiiOQFo/HXq7k9GqjQps4s0NWiSPYuMX+UloXDCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+VnV6sGS6osP5di7TzO4P1t1ePNGOqRK50sogLprgyRxuInyU
+	/0iD04tfE7k+sKNJHsTo8M83XeK/ZR+0+9S8CO2wEfLGbhZk+97CCSqFag+o0H8DXxhlJAjyKaT
+	amJLJtHdy10K+6aZn4lisEg==
+X-Received: from wmwz19-n2.prod.google.com ([2002:a05:600d:6413:20b0:493:c562:3fc6])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:6297:b0:493:ee2b:c8c7 with SMTP id 5b1f17b1804b1-493ee2bcb92mr31248745e9.4.1783612842870;
+ Thu, 09 Jul 2026 09:00:42 -0700 (PDT)
+Date: Thu,  9 Jul 2026 17:00:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="j2boipej3wyu4mib"
-Content-Disposition: inline
-In-Reply-To: <83e5e74d-7106-4e14-9d10-56438372f6a3@samsung.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
+Message-ID: <20260709160017.1729517-1-vdonnefort@google.com>
+Subject: [PATCH v2 0/3] tracing/remotes: Fix leak in trace_remote_alloc_buffer()
+ error path
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+This series addresses a few issues in the trace remote buffers allocation
+and descriptor handling, mostly reported by Sashiko bot on top of v1.
+
+Changelog:
+
+v1 -> v2:
+  - Leak fix: increment nr_cpus early (after meta_va allocation) instead of
+    in the error path.
+  - Added struct_len double-counting fix.
+  - Added sparse CPU masks support in ring_buffer_desc().
+
+v1: https://lore.kernel.org/all/20260708133201.295072-1-vdonnefort@google.com/
+
+Vincent Donnefort (3):
+  tracing/remotes: Fix leak in trace_remote_alloc_buffer() error path
+  tracing/remotes: Fix struct_len in trace_remote_alloc_buffer()
+  ring-buffer: Allow sparse CPU masks in ring_buffer_desc()
+
+ kernel/trace/ring_buffer.c  |  5 +----
+ kernel/trace/trace_remote.c | 18 ++++++------------
+ 2 files changed, 7 insertions(+), 16 deletions(-)
 
 
---j2boipej3wyu4mib
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-MIME-Version: 1.0
+base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+-- 
+2.55.0.795.g602f6c329a-goog
 
-On Thu, Jul 09, 2026 at 07:56:45AM +0200, Marek Szyprowski wrote:
-> On 08.07.2026 10:35, David Hildenbrand (Arm) wrote:
-> > On 7/7/26 12:02, Marek Szyprowski wrote:
-> >> On 01.07.2026 18:08, Thierry Reding wrote:
-> >>> From: Thierry Reding <treding@nvidia.com>
-> >>>
-> >>> There is no technical reason why there should be a limited number of =
-CMA
-> >>> regions, so extract some code into helpers and use them to create ext=
-ra
-> >>> functions (cma_create() and cma_free()) that allow creating and freei=
-ng,
-> >>> respectively, CMA regions dynamically at runtime.
-> >>
-> >> Well, the technical reason for not creating cma regions dynamically at
-> >> runtime is that on some architectures (like 32bit ARM) the early fixup
-> >> for the region is needed to make it functional for DMA.
-> > Can you point me at the code that does that? Thanks!
-> Check dma_contiguous_early_fixup() and dma_contiguous_remap() in=C2=A0
-> arch/arm/mm/dma-mapping.c. Those functions ensures that the CPU mappings =
-for
-> the CMA reserved region in linear map are remapped with 4k pages instead
-> of the 1M sections, so later, it will be=C2=A0possible to alter the mappi=
-ngs and
-> change them to coherent when needed (altering 1M sections is not possible,
-> because each process has it's own level-1 array even for the kernel linear
-> mapping).
->=20
->=20
->=20
-> However, in the use case in this patchset the reserved region is only sha=
-red
-> with buddy allocator by using the CMA infrastructure, not registered to t=
-he
-> regular DMA-mapping API, so it would work fine. I'm not convinced that th=
-is
-> is the right API to use for this though.
-
-Are you saying you're not convinced that CMA is the right API to use for
-this? Or something else?
-
-I certainly don't think we want to get the DMA-mapping API involved for
-this because that always implies that we perform cache operations, which
-we specifically don't want for this memory.
-
-Thierry
-
---j2boipej3wyu4mib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpPxVEACgkQ3SOs138+
-s6Eb0Q/+LDCagsX5c/5bbiHk3kITlOkkdqUCHLmicqkfr4LZXyuHnPZlygaoxrFM
-pWQKdyKOOfpM0U1Z1cuOHjLwTv5iB98Ne5qANisu+FqK6xFJ4ccA5Y2pXRG+2cEG
-YJS9S13i37EoR6iOHndhRxeZyxcx080fd7aAJdY9yKXL4+bAmW9W5/zS5XbLyBbt
-9MEA8Ah3pUnnLdjfeEq0SH2diKgT9OHXRpP4MEEFJbBufctOLZKoBOBBYPuURxCJ
-UxjR6KKyMObW2G6HP7fdgDzj5XYdbMEyHN+Cvom68auUKijpkjfOt5NUTQvxuuni
-YbwzbmHnbB76VYY6E/4i8uUPDxlBxha2COauHTiiJvdhBoJtPWSKLEYRU7BFrqBr
-SJY+OpLNROUP+oZLTyr7jmAoaJI0wLnBLxId6GjF0iID6w1BybeRRDX34o5+mkpE
-TOQ703x0/ZpECHboXKqJgo9CX0XIWtiD+yEbn7/HnR/wvHjksGNrCGxYaR5mrIAv
-N75RHCupJjA918YwITUGC0EtKUWOcwlVvLwS2G8gAUZd6goYWyEd/fV7G4VEj/4+
-+GA2L/CzSK0TbN+Ktayav2Ec5EQy4mKHa47hkWmWGe+Lh22DNNiP2CS3LjnPGs2i
-II6qTao1jGC6L0sqjSQAw8VxP4TpU/XHRW8zs9HCzUaNg0ZSnGs=
-=xmpu
------END PGP SIGNATURE-----
-
---j2boipej3wyu4mib--
