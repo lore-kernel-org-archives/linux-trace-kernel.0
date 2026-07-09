@@ -1,121 +1,171 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9286383C64
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 15:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783611393; cv=pass; b=nf/laXXUNRoQCq+oyaoWYPDSWi58ZxZeqWQLtiEwMEQU37Vki6YUbcv9W+DqftKku1cAdpc9YEkkKqnS76VIZy828meAZGeOyEV8mPtCXvA718V9gz+jc6mSBjrTLGoImBgbSMydLuY6/lwtrLnwhTnTt+LZQUUIbQPxdoOY3u4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783611393; c=relaxed/simple;
-	bh=WJBrs4T066GuaDC4D01bHRQo9ktMEwyu0T91k7Uq63A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J++YGvWHtMgPlCNQ7bF5qGcW+i72tViR/Sj/fLPDwCD/fJibOQS52rMGlFUYJqcH8e6NUHsJdsWOPpw5xwmzewUOagUGIS+41fos2cMvarRJ+gnq1Iy5r7L3P+gQEmUXvwoa54+iC71Z8W0JBfmWAAvDU4g1NLip1KUmpeCD6Aw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XX2FdqUS; arc=pass smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFFE426D17
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 15:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783612170; cv=none; b=fNxyIVTfLVPc08FVdKR+7IONfY3KC1AxC4mRnKEoPBNMzCCiLh8jJc//Uc0G5KH4ZGUQ2n+bKPfHwo/afUJsA3DEbyw5kKzPC6xewffOfzhhe+remj2K3cMP6yaB0Q16wpe4acJfNh7J8lYbv9SwblvzsgUpqHBrvikEbQLyViI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783612170; c=relaxed/simple;
+	bh=0qkqAHRaBHgpB2UR0C6dAMPOVUmsbtzeoEt8MNK67Xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L8O4X58qGY+DfByCyRaE5Rcxh4PRhJBHPGQxLpHJieXs77N97rak6vywoRxUfg0MCwhfdSAfN1rsSLj4TJuRlOAjgM5SdF6lXjZs6of1fJ8mvIJMRA0PqmLEjsaZMo4I0Eyr25OxTysGCdZ6emO9NjgTSWDSDqakk48V8yyeAU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MkQCpSd2; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XX2FdqUS"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-698ae09e356so1485778a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 08:36:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783611390; cv=none;
-        d=google.com; s=arc-20260327;
-        b=J4IY2TlBPLnIOvJH3Jmy/m0bxzp5ozKJDvLwv3uXL4rvsh4sBZBcAaKqGjdVfvcqml
-         oT4vCes0jI80FtNE10Adu5PhyWpghddKe2thxobUH0Fxk1Ucb4ttIwZnYchZq9f3zqrY
-         VfHV8PI3RY5kTdW2uS9gGEHP1p7tpr0MMjokF6xjFh3d/AUC4UYMj5CrfCMhabcsgWWS
-         jsxt54ZjEyWGIYiIOkTg0/yBRjY4ID73XT/YbvFiyU9QaNY2l5TlZcYc9YsLi0qPpZSD
-         hcrsvA5bOrUo8UdeNYKhJiCRlcCc+3KYPSfr4hEzkYGsN+7t4FNoDJ8zLivLfe8tsgQ6
-         uO8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=K3EDMCNVkT8BPRGb277v4lxIK6m6j8prIJdEJ1/EtfM=;
-        fh=3OY+y6UtTtdJRfipTCeWvlnsf5mIZoFETBfpOo40S7A=;
-        b=rM9RBQ6eT7Ah/+KykHKxxMxy7YvPUhEyTqTVNFknIp5BntOHGFkUGpGSdLHMQOc7mK
-         oQe5F/iGRtTf+7EAwkZokKhVw8wMIRW0ObuY7vqp+tSEvn5ONK14r3/jeVnhnAicE7Ml
-         7eXm5bLgJDd5mZjsIAW93SsGRL6AOVd1R1qmGY54JW0EzhI7u9d9cWJPxgngbwB/tkEp
-         0eC31wJXDiSYkQiNud5CuPyUDBNFipwKrp2tyWSqcMKS1j2PIdYfdskpBsFR6sJEjTvv
-         /027MFcxmomVeQLz5Uzoz6JhPqNVkmeFpxqH/4gv//pqObSCD4WtTyZumdRkqJN0dOOk
-         uZig==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MkQCpSd2"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8f1a8e914a9so450426d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 08:49:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783611390; x=1784216190; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+        d=gourry.net; s=google; t=1783612166; x=1784216966; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=K3EDMCNVkT8BPRGb277v4lxIK6m6j8prIJdEJ1/EtfM=;
-        b=XX2FdqUSSnKcboVj1klVklwkW1I+9ZQjF9wqHr36MhNbCM8Dx4rKVNtCCJBN0l+o6Y
-         Wb0gZXzQEYDJRf9h68KkH9VGp9iwqVPGisreu1WSGzRa1j3b92fhMDs5n8giF31DIY7B
-         yFtWwWeEMyqrCouEkLl2t9/VJ4BBGpynDdYcPN0Z7Z94BqoPdD4HAvxsV5oR8iZPR5Ug
-         SVorFbsY//awaAF/jNiQK6xi/+7EI1/AXBExsXjS/d7LY6gxHgpjW2mxksOvMMtO3xv4
-         ssFv8iTEmkxasv57BkxCdN/qMPI0yjlGUHIFqg2FcEIr/akZNObFhKoclNInT2v21RDC
-         Ek6A==
+        bh=hryUWYzOZzjuIh9gJx+Hzg+n+E360+tJZh4R7BZGeLA=;
+        b=MkQCpSd2m04untsXU1nx9KbvtduhWS0cCQoIcza8A3pVIhVf9PRW/CsEN/DZAtCuls
+         p7RoVeKsjloxBKU2AfxnCCAN8lhXWQBNDMfPG7gVZRfQmXhyKackY8MGGcFAEPPVy0Fv
+         SDU2e8AQxkDk3sY44SjU+DAZTvcrqgnaYjF6Y4p8tOSybH+22dFesBK1qZJowyT//dMI
+         6ZToGGs97IuDvRPOGP/+9UTODYx8cfsPo8904OY1zAoe+0Q0w2DVPfcKw8nstjaGRKyi
+         ELgcN2ve0gKuNONy45AfjzXvUlPyOrsp6pJgUy/3Xnn2gf7Puzf5UJmIyCvxOjIpgVPr
+         CZNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783611390; x=1784216190;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20251104; t=1783612166; x=1784216966;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=K3EDMCNVkT8BPRGb277v4lxIK6m6j8prIJdEJ1/EtfM=;
-        b=nNZsSlo4mcUBh/Aqs0pQA/4KV29AfqVptPMrXMNk8WXLpvdlIeACQe5DpC/Hux1c4+
-         /Qrq1zXqo31Pm+iikcDoXShCPRpkTVxP+sSIVdRhEP/vr2b9YP3ZYWttIVU42USczqeI
-         VMvIp8rKEh0hKKnWZHhLTL8+j4XCmtvjkcbjpHBzdTkcGTv0tTyQx8oApaqW/lRknnkU
-         N5CWjfeHfo7Cj/KDmfwSXSH+MeCde3upRITf/CEgCf8rbFSdFPAvz/WjmHxWV6dEXfdf
-         6KhBJAS2COpnIlFe4uLCdaZv2hBIXpLuhv41xaQcsYy5PtTAv4yt1sURmDyLoC2GjjE5
-         j7Yg==
-X-Forwarded-Encrypted: i=1; AHgh+RoQzsaa8VLDfPjtAz7v4C1Ya0jueKiv/kv7czRPRvRwDCkyuinaT6SdmiBRTXBC8CHr1hLyT5Tc9ITlSH8q+YT4gn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxga+I6wtIb7oK7tKiTcrGVNvQEABK+AwE/D0nH21LA6/2tYZlt
-	pi68f+JY4yFRaDeCmIkAbDGhP+szLmGqp5tfET+GRVqL5790+mj9T15ZICZAKZr2xSMRjHjHRVJ
-	7pmbDW4vxxvmKjmI3AgFIjWycx3vmnbg=
-X-Gm-Gg: AfdE7cl/Xa/QgX3VhCSbJuRhGsEOeAmMAQiDvLB5pU0I2qITUeieefbrdUxTtdt9Ua4
-	MPIVQGs4DgkF28kXcQabm+RCGBVkG3DHCmWMkLFQGKlJKsokOcKMjyLEMXagI6UAX4kOx+RQeKW
-	T/x5DwMLRUP6s9D36mt5X9I6B3xyUeDuSHqo0Ud0y4j+cNWtx76awd3xYzHqzR8rqwNZw8IAIkc
-	+XgeGPf2NX/+qmRsj4JRhovD0O8mMnWAxOLngLPbT+kQ2shmI2bwWNT8MczaQnEGkgiTHWvApkz
-	eeYgnMechddKCaBiFFtWaU4=
-X-Received: by 2002:a17:907:fd15:b0:c12:79aa:8286 with SMTP id
- a640c23a62f3a-c15cdffcde6mr383973766b.21.1783611389879; Thu, 09 Jul 2026
- 08:36:29 -0700 (PDT)
+        bh=hryUWYzOZzjuIh9gJx+Hzg+n+E360+tJZh4R7BZGeLA=;
+        b=ofNoDGQ7V05kFuaNvz4zRf0+t+Iwcl9epUTMAFV6IXXe0T/7cBk/p3xWZQWVgzE+E+
+         mqpbBHTNDR2k3hSd+umft6/ZFDh+wQP07NR4V7RkD0RtzL/fj9ShX11rgrowvWmqzFmy
+         I/CmS50/0J+Jlh85zwhwZURoRwYTcriYMpOh3LYReB0HxbIONEpwVrZyzBzHq/PjYM0o
+         dBlzfj2VaXfHITB/5RwgQ8oBdpdPNfzDTqxJKA5x0jVXvGnLL3S+os4JEfqlA3N8Qbxi
+         M3U81RCxXXyw8LfOxffIjyJmeQBPcHk/QWQDeeqziiYrxSm4K9YZdU/hvO9I7aNG++/U
+         RsqQ==
+X-Forwarded-Encrypted: i=1; AHgh+RohZiMvJAHKpVwsKGNQIpWeLAjATR1rjbYY9rkKWqm97P32e1/bxD7126anTFQGnPcZb13G4cYGr4hfut22yoz9bXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVs/mpt3VirpkjbR1uuAHQUAhIvECi2t1pQsuWs+gceY/bpnfT
+	NryUzN9CeASWo+PPzy4dMcfhmyF4xSXZB10ez3qBYv7gutcSrpAE+V8TBTQeRtLuiNw=
+X-Gm-Gg: AfdE7clAO0w0UT1mUeqILOJLJ6aYal3HCavhYqNR6iZBvxUi5JoEj9+cLunC2DN+zfT
+	hHhjlh8DRXcwnsMTaWCEnuQspD3tWtb8OlA8bcSAcQCHo9ipdHICsvtz2iifpdfu2CWtsnnh3gv
+	Yd3PK2csiS0tdaPYhBn3z6zvTs3Z+MmEAvP7uTHz4Nhm48sz140Kc3dCsa8v0aNUUWo1CnMEnhz
+	44HWHAoOhaKg/8NAWTPehx875NmKjCU04Ehex8J272XWm3icalHSWzUSBclKw1XYcKmNo6b0JR2
+	t+hcQ4BqZU8/1a7xIh4ftMjIDAqHkQb1qU5nOkl+CUT55Nf0VIDSSNrtW2IXCXRT1WB8iA1HFuc
+	K8y4ZkA0dRSW+9jBhpeQ1H07adt9yv+TMVa1liTkLr0GftpFMM3Ngu8IggXN5CN+nshp5Jk2RDW
+	HmJecP7QmNk2gsyv+VYZW34lgJGXC14WN00c704c5SLHEsjYAisJHk++vwZvz4O69c/IFk
+X-Received: by 2002:ad4:5c8a:0:b0:8cc:2a92:48e4 with SMTP id 6a1803df08f44-8fec217b8bfmr87997286d6.32.1783612165998;
+        Thu, 09 Jul 2026 08:49:25 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd7c1d9f6sm20164456d6.23.2026.07.09.08.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2026 08:49:24 -0700 (PDT)
+Date: Thu, 9 Jul 2026 11:49:18 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Pedro Falcato <pfalcato@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Simon Schuster <schuster.simon@siemens-energy.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Dan Williams <djbw@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Hugh Dickins <hughd@google.com>,
+	Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-mm@kvack.org, iommu@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	damon@lists.linux.dev, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 17/30] mm: prefer vma_[start,end]_pgoff() to
+ vma->vm_pgoff in kernel/
+Message-ID: <ak_C_o2ehS17Q5HV@gourry-fedora-PF4VCD3F>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <ea87349d63205bf4c26ea79854f179a9bf8cfb0b.1782735110.git.ljs@kernel.org>
+ <akZCg73F-oGzDp1a@pedro-suse.lan>
+ <akZGqclqQ6gS12Vv@lucifer>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260624132356.516959-1-puranjay@kernel.org> <20260624132356.516959-7-puranjay@kernel.org>
- <ak-pI2CefDoz0D0M@localhost.localdomain>
-In-Reply-To: <ak-pI2CefDoz0D0M@localhost.localdomain>
-From: Puranjay Mohan <puranjay12@gmail.com>
-Date: Thu, 9 Jul 2026 16:36:16 +0100
-X-Gm-Features: AUfX_mwX0hxgcbp5_AnxAmomWbwd-9QdoQQfH0D1zAUoHWqOHyVS9SvP447iYb0
-Message-ID: <CANk7y0j=TcK2tYhrmAf9dP0ab=1kzAu=gFasjU76ZFrW5xQ4mA@mail.gmail.com>
-Subject: Re: [PATCH v1 06/11] rcu: Enable RCU callbacks to benefit from
- expedited grace periods
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>, 
-	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang@linux.dev>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Breno Leitao <leitao@debian.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akZGqclqQ6gS12Vv@lucifer>
 
-On Thu, Jul 9, 2026 at 2:59=E2=80=AFPM Frederic Weisbecker <frederic@kernel=
-.org> wrote:
->
-> Le Wed, Jun 24, 2026 at 06:23:48AM -0700, Puranjay Mohan a =C3=A9crit :
-> > Currently, RCU callbacks only track normal grace-period sequence
-> > numbers.  This means callbacks must wait for normal grace periods to
-> > complete even when expedited grace periods have already elapsed.
->
-> The changelog still misses the reason for this change. I had to read
-> the lwn article to understand that this matters under memory pressure
-> in order to release objects faster.
->
+On Thu, Jul 02, 2026 at 12:30:59PM +0100, Lorenzo Stoakes wrote:
+> 
+...
+> static inline unsigned long vma_offset(const struct vm_area_struct *vma,
+> 				       const unsigned long address)
+> {
+> 	/* Retains page offset and tags. */
+> 	return address - vma->vm_start;
+> }
+> 
+...
+> And I'm not sure it's really all that useful. Perhaps retaining vma_offset()
+> would be though.
+> 
 
-I will update the commit message in the next version.
+Silly question:
 
-Thanks for your review.
+   What's the purpose of retaining tags in a non-address value?
+
+That sounds like there's fragility just waiting to be broken.
+
+(I presume you are talking about things like ARM MTE and such, right?)
+
+> This is one that I think makes more sense.
+> 
+> But in general, I'd rather hold off from yet more churn here.
+> 
+> I'm making these changes to establish a basis for virtual page offsets
+> introduced in [0], rather than just cleaning up in general.
+> 
+
+I agree with this.  If the refactors here suddenly have to think about
+corner cases on things like tags, that's better resolved separately.
+
+~Gregory
