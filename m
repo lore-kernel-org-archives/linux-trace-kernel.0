@@ -1,65 +1,65 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E4E3672BE
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 15:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE4136A362
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jul 2026 15:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783610455; cv=none; b=W/3sDKqqyYtL+6VauShLuuwzbQVIR5DFF7lP3rkDjTVVmQYG5K/IZ2aNADEnxVtXHLbmH2g8DDNsCczX7CN/iY+cX7d+c74UoF8LW/aLa8wvrxRhEYhipTMG8o5gAc2cLPZaGJSo6K00RHvIHt8OAl+ASCcKAVyvkdpZ+Z4dgjA=
+	t=1783610577; cv=none; b=HWGCcxK+XoKWcv08CQr2HgxguSl1agEz4wHHv40KcEg8WDcrG69Bdfk9qUXCyyq83UaiHJcVBCNSpBlIMYaZDqPSEcEkZB9vzJnxNMJvsvTmSax+7Yw90RtGwU4HUaj2XcqC2S/Whq6W96Ic1B5VdNqszsrSb/MWM7jLQTcqsO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783610455; c=relaxed/simple;
-	bh=bI1J+cBiMa2SCkpHmKrJG+azHdWZ7mPEOFo5aU/4c1s=;
+	s=arc-20240116; t=1783610577; c=relaxed/simple;
+	bh=WZm0pCIlMCZnYkWqHCv0Ceyplb5Du4QgkvAdE7k9ZdA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpZflH4UuqgbxRsCqStEjWw9ZPCjHjR+5kLHa2EPRP+np4RHScJSys4LcczxCvhQASiJW0X5NMfSWD4Ctf+L4r1rrVs5yL15q2H3e+CN2TTIWzaqCujBJ0x/oUmN4cMZMu9KprZfFeTl2SeEh+8faommwUBUp3FIyF/6l6gX+HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RcHNg+Ts; arc=none smtp.client-ip=209.85.222.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnBAlqI1vShhb10f4sYkBqxNDGujMTWcFKVtL6twgCy/JAKoJgnn3vTIuFtEtu41qqTu9ojMggksCh7+vSPWcj7ndTnAKrKRMspFT2Hdpmz3YYSM4c3o+WWICxthsj26QIyVY8QTz+EIru3V/rP0CNzCYDljk600afSV41ude+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=at0Go6QV; arc=none smtp.client-ip=209.85.219.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RcHNg+Ts"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-92ed19f4d60so67129085a.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 08:20:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="at0Go6QV"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8f18d92172aso201706d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jul 2026 08:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1783610452; x=1784215252; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1783610574; x=1784215374; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=3aG5hxu0JYH7EcM/cq6JX5Yef1RoVI9XARU/q8dKmL4=;
-        b=RcHNg+TswvftK0rg4pdx5hqB/98t8hg3+kCvMaP3Wvj32IUEgQZ9DN6uIqXYkrZSWA
-         1Eu5dZ6dcjNig8HJNvE+HrO3uN3YkcDCXU37P3fJdj3k9VCdvMTFR7yu9VDftTB5iRqA
-         K8SDg1lchFzNdcbcs3f9FNQDV5/hxAjH8ASDXRrDVmRioSlH/e6Cr/Z6a8I4QbteOIIC
-         HvDkHSwlINZylnxe4+hrpcd6PFlecb7POo21Ozhg6IB09pfT0HXX7rLljq1wRn9Pbbcd
-         1U2ZSUGtyb2krIIqADL9WnNTQZIShhSl1bsfu2qXF5pL0rNCLyyOu7Cy0nkMjbppGyxx
-         /9Eg==
+        bh=8MCYdDNt+ln4FYDiI3hqZQpolLcmikZ66uE9gEYE70E=;
+        b=at0Go6QVpsvcs347YVm8e6Uaja9G1IeXCuro3d3GOlXJqHWVvE6PiN0K2GrLyghLIW
+         z3oj6epX/hjLL27IHOykQiyUe/iNRNY1KDATD9vh76zvXQHF5HBTyw9/Aq8HDW7V933u
+         wN+nxswsqSfWTjCdK/+Kl3FBNM0eBchEq7T9PdmZKnesdFjarUfsPj3XxCRJXXvUxwOm
+         p+XWOy5Qk3UREk2XLNSf41ntnAdyKhre7b8Pe4ZuqkS5bQYq1kz/PxDwBk5xWSo96gGz
+         jTdJjrtzSEH51GHs+sq7xrsvUHCZr/q3OKaXfAojoNZfUxOOj9jGmFUbIMVbGezn4Afh
+         G0wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783610452; x=1784215252;
+        d=1e100.net; s=20251104; t=1783610574; x=1784215374;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3aG5hxu0JYH7EcM/cq6JX5Yef1RoVI9XARU/q8dKmL4=;
-        b=lAWNW+gUnaa4aLSFunw5+bwOTdoBsWHVFkgw3yJSDodPGnzv/19kTGcxI31/Wu+YHo
-         vOvw99qQC6YO2gJ6YVYgiEfXgQNgDub6iNqH3r64omMITR4iwRdb+8ZCaDtAeKYFINAr
-         JM36cRROYxHPYhrs9LZmOtxRYnRym+NGPuUlg10qoDr3cRUlE36L594z2yH/5kvXrA3g
-         g3R60hDjM38xt8ZJolAvU8xrUu89BaN/dp7u7bq4yJlK63+T6j5+l3gq82dQFPiXs5xL
-         MjYPO1A6WbLnlF1hM22VwKk1yj4wW4E5R0pMezojUorecvxkMR/F8mVFgFHxptWaSh7O
-         Jusw==
-X-Forwarded-Encrypted: i=1; AHgh+RpYq4ERRpehwv5/6YA8V+pBlhMUg2egH8gSVzXFyPd4wxXaG//eQUM+XMROwGoPeSSPOhgGnZf90rlWrWsgD+NFimI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw1/zq0DgFWeQePsF9AT286VxpeUoqmjx3rmSjcJHgGZ4ZSE/v
-	ZA6GjSvPvpQlbG0Z4wqWEBMq4kHtF6Kf5ELDTyiMb6zdcEv+lyGk88JDeVTgJGd5tCw=
-X-Gm-Gg: AfdE7clphnM4qqbzf2jS3J0r0KIZB/8GtDDOcLL2ouDRKNGdrCik22QCH85EQuah9Ht
-	ymwexlCYkE+Sc4QqsLsM3Io3xH8sKiTXHR/H1ICp9/qNSGwA36MjEl2Bnnzrqmj3qd4Za+dfjqc
-	0m/v9GPmZ002uHdTTbnVoi9ccpnmjjvdK6mCE7H6auZYuzXHH4wIXpxAjPgBqvZSmB2JE7wPLxD
-	Nmyf63rZw18W2VIvbYkOUDCCmhkIczakdNdQEyonZqtEZGsAY/VxoSYjps5psnxm0GPkiCZOjzu
-	F+JjrP4xTqDYbMYuA03UqIYZ4/AirLkM06iVHqy8aP6VTMi13iF4RVIDEwtaDjd21KL1o6t6tey
-	8XSCimG5BzmB58VCXofL/bZTPf1M8Futea+Gn/Vv04+rR5r4C9/lN1yU2juV77FVdLchoFiv/zb
-	ofj0TosZwVF5sz1h0uTLA2Mxbjij9tSpT5ewcMRZpKT7nooHLqHAQVcty32dyKD5HhsgdZ
-X-Received: by 2002:a05:620a:179e:b0:92a:f74f:904 with SMTP id af79cd13be357-92edab23ef2mr337298385a.1.1783610451142;
-        Thu, 09 Jul 2026 08:20:51 -0700 (PDT)
+        bh=8MCYdDNt+ln4FYDiI3hqZQpolLcmikZ66uE9gEYE70E=;
+        b=YO5MQVfnzc1be07LKW26cU3nV/z82FTzBs0lqMhUfrvvkmGC1LdyirTqDThxod08uX
+         WSQ/eTEZer/pauBKS2CI6TdJN80pbbL0CRDAOuksnkEHCzKQUVfL49FxH/7UBVGZWUce
+         oeLQD74fUDpBJQo1fm9UEvEnJlPKurDN5ESXNNAoMjy4T1jwDHm/pRL2dFVdUJE2bRmf
+         8cqk7Npo4tkpEaXEBW/V5AF+ywdZKTU908lHnXdFaZFYSXw3lVPZzATas/fbA8lleiuV
+         5ob4hoOZ5qyripwhy9G93Wa7c3eACxq4LGudonkf4NbEEMgJuN2+DHaPAsifiq7JQOEY
+         aA2Q==
+X-Forwarded-Encrypted: i=1; AHgh+Rr7tLc/M6TKoKvk7NnABsrnyn+YAqm43QbAQku3FyIO0LzbifwyxSUS17B03XKbo0ray1VfyppJyUGC6YGB+zMXj0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1Myu/XcY4OXhy/hzQ3o4vY6mSuePWfA1q3uY0j87YHNktLrUR
+	+fyMK13ZJvnvW6LZ9fCqf8gKe6NwlR75uaBSNam+V8ozX9Ol35oLb7iKy36DCByYjuk=
+X-Gm-Gg: AfdE7ck0HZaowgb8XkmUpyPNCLKoNN8FBkVoRxgxrOVENOqboCBSlpojmp2xfG0LVcN
+	YO7OyVhI3TB01q8belRPlCM9o0oLmJ8OWHn3ikBB+XR13vG/TucNifUcdKYOvi2bZyVavumwzWL
+	77Wgx7HKdZT4N7eErxAD2jzEZ6+t2WPFau1BuQZIHKnPkEtqKiPceTudDLJWdi2LFuvH1K6R9Zl
+	WVETZv0QDYt4co5iWjCbqWeV9vS6D8+kfhojHolpSsZecQg37zxcwXIeYqjWQywbu5tAJ9aSnc4
+	BjImL+L3B5M85olctZ2eE/0bUva+6x9s9ujPlpUo/PD+1fQSPzYzXFuJMA9LiOZTkC7yuY4981R
+	imzMWpzNnlh1kyt7O4GBSDMABvnLk5KNx7EWwYA69PZhlYPVnEaPybwbcslTUAaBdgAa7NoXoQA
+	aHhfJsF+bAbvXTdQ0ZEJU4d78DNP3vn4VJhdHHFGrpWAuXbQaD2dKivwD+Vgozzt8/gKMv
+X-Received: by 2002:a05:620a:28cf:b0:92e:68be:1c5 with SMTP id af79cd13be357-92ecf6165e4mr847751685a.21.1783610574232;
+        Thu, 09 Jul 2026 08:22:54 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e90ca90a5sm1652288685a.32.2026.07.09.08.20.48
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e90b7fc3asm1638936985a.9.2026.07.09.08.22.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 08:20:49 -0700 (PDT)
-Date: Thu, 9 Jul 2026 11:20:44 -0400
+        Thu, 09 Jul 2026 08:22:52 -0700 (PDT)
+Date: Thu, 9 Jul 2026 11:22:47 -0400
 From: Gregory Price <gourry@gourry.net>
 To: Lorenzo Stoakes <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -117,11 +117,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>,
 	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
 	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 14/30] mm/vma: minor cleanup of expand_[upwards,
- downwards]()
-Message-ID: <ak-8TKDC1GBOeMOM@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH 15/30] mm: introduce and use linear_page_delta()
+Message-ID: <ak-8x3TWsuhGzKlJ@gourry-fedora-PF4VCD3F>
 References: <cover.1782735110.git.ljs@kernel.org>
- <b24f70b72f0a9e2a37b904e5b59d80b88bd42e4a.1782735110.git.ljs@kernel.org>
+ <eedf589778aaab33e6df2ad6556dcde536e13460.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -130,17 +129,16 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b24f70b72f0a9e2a37b904e5b59d80b88bd42e4a.1782735110.git.ljs@kernel.org>
+In-Reply-To: <eedf589778aaab33e6df2ad6556dcde536e13460.1782735110.git.ljs@kernel.org>
 
-On Mon, Jun 29, 2026 at 01:23:25PM +0100, Lorenzo Stoakes wrote:
-> Adjust the stack expansion functions expand_upwards() and
-> expand_downwards() such that they are expressed in terms of named constant
-> values, and make use of vma_start_pgoff().
+On Mon, Jun 29, 2026 at 01:23:26PM +0100, Lorenzo Stoakes wrote:
+> It's often useful to obtain the number of pages a given address lies at
+> within a VMA.
 > 
-> This clearly documents that we are referencing the page offset of the start
-> of the VMA.
+> Add linear_page_delta() to determine this and update linear_page_index() to
+> make use of it.
 > 
-> Additionally this cleans up the overflow check in expand_upwards().
+> Add comments to describe both linear_page_delta() and linear_page_index().
 > 
 > No functional change intended.
 > 
