@@ -1,142 +1,153 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D863BB668
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 21:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783718467; cv=none; b=NCKqm/776L0fcl+bWW9DLptWI8GZU23DCcXMoGAu35R0LSzZVizuerfedbBNBDAyFcHaFXuCtTkkwYZBG54D4UwOGKpMNNDCUE/63bwQdiAjM5FoA1j3e0HLEqoY4FwDOS5NOwCraudeleP62wggdvcwnXfJUv3oIOaJqHFiU/s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783718467; c=relaxed/simple;
-	bh=OrArmp546t2joLiGKmZojGNI2jG19j2P4RpxQaXcMQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3wJSMCppR2Emg4ipdPjH1XIKgKZK0O0REVT7M7TfxGfPJUE5xwm2/76zparDSHI8Op2yp6ILgW7Q59qQ9+nDTBYAmcbFYbPKBW6CyqTUGXEfMcLUU65YA6D4Hh1KjPf0/MPoQCn+MC21YPQNd9ufdC5T8KJxh0aS9JW0QnC43U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=WrsZLakZ; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0003B777F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 21:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783718634; cv=pass; b=rZii7FVIlA+MGulPTYkV5tMBN0AeOIQZU0eE1B+48olg6rqPI+uVA2TCdlPg3h23jsrQdVqe6CI/R0slLIOpFqtjxO7HGPuM6JjwP9Z4Wk68wWgjubxUeZnHbZJ/e2mP/5L+Y06KeTF6CvP2GOA1MvRpf+moLol4EDqaj36gzOQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783718634; c=relaxed/simple;
+	bh=ZffsXEKRzy6BPrYFDZBFjLeefjvojwkwyzHgCSgBeJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ByDxLH79LjsL3vZX7sfmQDceWMgt+03FtVceCtYPqMwiozI4pKJM9DRoVyaOt8XFQGYuu3GYfNlXR0DYWwlZ8xOVYFUH1ijWMrCWfnU+UUnno6Dh4dJkf5DBJ7iaK5Q8c6CO0fR4+HPWgyWQIz6wUFht7ma0L1CHqsOR/beeKxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gfiEZkVR; arc=pass smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="WrsZLakZ"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51bfb91795eso9176171cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 14:21:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfiEZkVR"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-38426d04bb4so1093527a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 14:23:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783718632; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ft5+r8Jm7ZjCp9wbJmB9Uoq3TrTL+Bn7wyoHfnB9b6xbzg1jJ3TfwcjupJ87asVpo5
+         E1epoky/55shP0BHWhd7B1lHRqGVN+IfuriKDxxBA2hwBqKIVYo6tXCXSGfuBimVSwW4
+         AromObHVdyYMNKqvbqk2RfSRwcDLpN/ogkgYNpauEOUrDKFimLMU/qJSbs2JZSe1fwxp
+         70fSviyLZBnDKmhyIGEf+7RoTwOVKvOCc42IymktLqe+aY7hez6h9TSR6VKRElSGqwfG
+         iNXFUfGAlvf1OBBIar1EWIMD60HEEK91pPkrq2fumaJaOc7ztfovVPls/BpugCdWGsGV
+         IRyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=X3OYMFo4gk2Qm3Y1GCk0JrLQvP6s+kDSI3H/HQZhhkE=;
+        fh=7tstnQRU/zRaAtD8+oWb3p+0LLqUE+GFGjUxJ+n7QmE=;
+        b=LbQ9zKcJuEkWXt8DSEYhfURCK5m1gfcbgnHQe0gErdwUdT4Gybs6reh7+bBDULwBS3
+         pyRDw+qQFkQGAk+s+f3wUx51P9z8ju/TPI3c4YngvgVP1Mzrvk671LJL9lHTcDHkVFqO
+         6tzJwaz9cL0PO3sUzJPFIrQzAJ39LnM2tfkIkdLr8+kz9ETW3+6FA63YrdIIt3IUK3Bc
+         MHTSGj9PX/SAS9CnSfh5zFe2DmQ0h9FDGevNRVfMqj+5me6PajazNhp7/RrHFLi37wzK
+         L2iOVo8gdqI9uWFm5RxyrUCcXBb3iGDGVIMdTqosXAxcHL54W2lh45zWSm3YCvy7+xMa
+         lblw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1783718463; x=1784323263; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1783718632; x=1784323432; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=kBOMvPUpfjw5N1/s9nVKhxGNiyKZIoN9dPtD8sVM7ho=;
-        b=WrsZLakZJT/5oETG2Se79/v9kdjkpEQDr7Yp+OGw79X3NAKPcDAh1QSIBTgD1APIk9
-         PcNtWnmXjzVyA/ekAuc9J1Ldf1520O+Ezw0w/Ib2rmg9zLzxvlAdRLVhZhEA8PmWUNiK
-         TQNQjHvefwSfVxq1+ZCz986aNPT/4H/tI61eQYAsQJpO4szsu8Cjyex71k+0GpxpujLy
-         wBnlnlMi5HipUbm2ZzOkDOrRTbcr6VJAyIpY72aJ/E32HuOp1s4SJDdzj0BVE5V3xg8/
-         VUpFjW6w8Fy4sl1gdFaDfoPbhesiNrFc9fyD8+l3IKOSNiiupFoFQbmh3CqhrxND/l+7
-         UddQ==
+        bh=X3OYMFo4gk2Qm3Y1GCk0JrLQvP6s+kDSI3H/HQZhhkE=;
+        b=gfiEZkVRkxY3zvcQlPbas/3Cycw47n3fcFyJ5mfu46UrrgcTvkI0356jgCEZcaZafW
+         X6cbSUJanZS0Mo6YOChyU/8CzukJyrdbK3RXgTB3KdWymKLh2qd67PwMA3WpUcZFIW10
+         r6wgLSZ8WUnZACqQ8DlT2qkuqJSTPx1a/HQ0pI4+wbP48h1SofJJoDlHNaEiGr+1iRpp
+         oSALXPlMh62CoSf+dubbQCWTGgAZMRWYEEfE+hs9vLnezx0k6tktUQL31TPkHk/465HC
+         I7VEdO3fKkg/syWpwHvbBCjr2Ykni/j2Zgp9pmCrXJssapi1k2eceXGm5OYVZMRwLIcE
+         ioQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783718463; x=1784323263;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20251104; t=1783718632; x=1784323432;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=kBOMvPUpfjw5N1/s9nVKhxGNiyKZIoN9dPtD8sVM7ho=;
-        b=hHgF8pvEcHU453M+rn6CyAdHYwI3bD7Mm9HaFZgcUtTPVteQFtmvykUrOvOfNj5WsL
-         nw1xd5XXBq/dJs1BmoJaMgH8MNUzVAi9lXYoUgMbZrD6h1D/hhDYiM5HMvmqmKsesHwb
-         n2hdxeIUk6XoRMWgpZdgv59joWImPBfvDaJpZQZn3Ak+/W1zRvYXYlEmo0F4leKWHDvJ
-         EuxYFh+PFyTuL6HErJ+K+dqH3tdBJ7ZoO6b6anGNl0uDT/SRFqsba681+KrLnv5rL90I
-         cMjaaOA1QYOHdxjxbLf8GnVzA66HUrh3NPdXKVey4KbHugq1kQGODGp4BZgcBpCkGhpW
-         uYCg==
-X-Forwarded-Encrypted: i=1; AHgh+RrQ1P8hhHHuQ8fFPlqR+R27SknaXc/VRFxZzVh2/bMNT7ScA1BltBYpxGPmyU6ZXN0AR/DOXy/O4i6M5gFo7M5YrzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxSUatyI9Ch5JYlp6iOksLbwxTStf0dvIoBIVfqo0j/rKJ8MKf
-	jt630rkuXJe/SolLrb4To0a/g6GotdwqnQcIIYe+XUF0GbQvlnxphR8WvNT/0EExe+U=
-X-Gm-Gg: AfdE7cl7i1CUL7Y7ImTh7x9IGDtAfWbE89SWJ3DiYXyYlaRHKkf8hzWPMDqavMVdTxV
-	zmg9flWvpYBvXu7smBOhTQ88h4u9/CAbf20StbT7iRPHTHGC1dnYP2vOzH89rBjIDde9s7yfdeI
-	CRkhWM/el+5FavAIQOami6CD3a/8Y0PYaXh5/aRlU9Q9lEITjnEYq7RhoYAuCesubiZM5pLNBLp
-	87gkryEAB+oBkLjcieMvPii6iTpZNQRGnWD23PItF+jAakQBKZZOeosQgzG56d3zoIUn6amfgeO
-	wrz0VatSbcf0T4BDBkeJj0+pAKFnZAV+ttNSZP5v+HO5UzaZx4Oy7A3Y0Lx0ZMd9IpcPXbiYcw6
-	yU863now0ADGkaNnN+VP4/Ah9ufMiSRbKHGlvDDI+Tp8p4SdILsnpu6Tho7aPfAB5s7zHM1nUhI
-	Rx7C2zKyw6YtJP6egLSIAOBdvUlvf24EgFkbqCGVUhzEJK7iBk/sVf2E+BbRQOMAoFprdO
-X-Received: by 2002:ac8:5ace:0:b0:51c:7b11:41ae with SMTP id d75a77b69052e-51cbf2dffb2mr6287721cf.74.1783718463047;
-        Fri, 10 Jul 2026 14:21:03 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51caaf621e6sm23894971cf.24.2026.07.10.14.21.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 14:21:01 -0700 (PDT)
-Date: Fri, 10 Jul 2026 17:20:56 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>,
-	Lance Yang <lance.yang@linux.dev>, Pedro Falcato <pfalcato@suse.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Simon Schuster <schuster.simon@siemens-energy.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Dan Williams <djbw@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	iommu@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-	kvm@vger.kernel.org, Russell King <linux+etnaviv@armlinux.org.uk>
-Subject: Re: [PATCH v2 26/33] mm/vma: update vma_shrink() to not pass start,
- pgoff parameters
-Message-ID: <alFiODVaGwd_wYl4@gourry-fedora-PF4VCD3F>
-References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
- <20260710-b4-pre-scalable-cow-v2-26-2a5aa403d977@kernel.org>
+        bh=X3OYMFo4gk2Qm3Y1GCk0JrLQvP6s+kDSI3H/HQZhhkE=;
+        b=pbyY1Hl6EykyEpynRZbV7+WcqvSPlQei85CzghK9TSBU/S790BU5C8mx31o5zV7kWf
+         ceuXzQaV+iobnmXZtASH91B2ThjlYDmDZGC0T3Xb9uhmIMsnVEMzOKwvj/cshENJPM3c
+         xEuZrNmq+tCfCJVoLGxNXA68Qi3NojLxOcSFJFMIaU4jEIsU4fz7aWP1DxZLwFmd6RWd
+         WGaJbo1oGKxlzZtY085FyPkPZ9j0YXdwSClZVRZJV7YICdqHeMhcB1M0z6WgvJgr4N4f
+         A8gOGoNlfyhy/ynVQbVCqJX0DJtBnxndco8AYe/3wZYjWhrQoIksY2L8ISRqmBesZdm1
+         nAVg==
+X-Forwarded-Encrypted: i=1; AHgh+RpngFTjsIf3Uw5bJJ481TDP2/WQFOdMAccIAeOdHRGKPhaXMrYu/nEQVjzuMz8rDSGWq4K80w+JzmGTs6Clg8Z4hVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxqSBClVdCmV5/m0pWjhltdRr1qsICk+roXYYYxtoAzSGmRi0X
+	T8l2bQxpzrYFuuUSwRolrbbWy6Vz8hhmbMZv8m/in+JMTzmo+v2AP5MwOF8tC5vRM6dLhImQQLP
+	BjSrXxK9rev8CVXQ0I3QIuv0He2oe2b8=
+X-Gm-Gg: AfdE7ckDadg08FjBGn/1YhfTOSThO/ahsAdwq1eYLQQLCSLZ9Ae6OaDOP0eK6CIkMsQ
+	b8Bzfns6bMwI5phGGaVNBUF+AyqqU+O36UBl76+QjWt4E35FBwRxhASdZJ+JWexnz2L2mTf9nS4
+	aTjurgxyUHjjQKQETENN9jtrpXMl+b3nAh+fDbwullsrPdmXPvygI0H7TqfbTxyDEzRTR0VNaJJ
+	X4R0DBhohXP3vQYmrns8hp1wVBS+bzyBGOPsxp65N4E9h0gG2nx9Z8ExSXEtD8eivpAcyV6q1vJ
+	gFHFaxbWcEz7wDIpFNdEnAggHAu6q8tWau5m8cG5iIVj45UNrPXxWQ==
+X-Received: by 2002:a17:90b:5903:b0:37f:9e21:91d8 with SMTP id
+ 98e67ed59e1d1-38dc834de8fmr359486a91.15.1783718632544; Fri, 10 Jul 2026
+ 14:23:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260710-b4-pre-scalable-cow-v2-26-2a5aa403d977@kernel.org>
+References: <20260706172744.3920417-1-puranjay@kernel.org> <20260706172744.3920417-3-puranjay@kernel.org>
+In-Reply-To: <20260706172744.3920417-3-puranjay@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 10 Jul 2026 14:23:39 -0700
+X-Gm-Features: AVVi8CeESE7KrO4SofyyKXRIq0UuNC-RWDudhRYzrwkmSGZKKMPllM8AreG8cCk
+Message-ID: <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] uprobes: Switch uretprobes_srcu to SRCU-fast-updown
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 10, 2026 at 09:17:07PM +0100, Lorenzo Stoakes wrote:
-> vma_shrink() is only used by relocate_vma_down() to shrink the tail of a
-> VMA. Therefore neither the start nor the pgoff parameters make any sense.
-> 
-> It seemed we were passing the pgoff parameter solely to satisfy
-> vma_set_range()'s requirement for pgoff being specified.
-> 
-> Since vma_set_range() is now isolated to vma.c, we can simply introduce
-> __vma_set_range() which sets only vma->vm_[start, end], and invoke this
-> instead, removing start and pgoff from vma_shrink() altogether.
-> 
-> No functional change intended.
-> 
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+On Mon, Jul 6, 2026 at 10:28=E2=80=AFAM Puranjay Mohan <puranjay@kernel.org=
+> wrote:
+>
+> uretprobes_srcu currently uses normal SRCU, which issues
+> two smp_mb() per read lock/unlock pair. This overhead is
+> paid on every uretprobe hit.
+>
+> Switch to SRCU-fast-updown, which eliminates the per-reader
+> memory barriers by moving the ordering cost to the
+> grace-period side (synchronize_rcu() instead of smp_mb()).
+> This is acceptable because grace periods (uprobe
+> unregistration) are infrequent compared to reader-side
+> uretprobe hits.
+>
+> The updown flavor is required because the SRCU read lock is
+> taken in prepare_uretprobe() when a return instance is
+> created and is held until that return instance is finalized.
+> The traced thread returns to user space in between, so the
+> lock is inherently released in a different context from
+> where it was acquired: on the normal return path via
+> uprobe_handle_trampoline() -> hprobe_finalize(), or from
+> ri_timer() (expiry) or dup_utask() (fork) via
+> hprobe_expire(). srcu_down_read_fast() / srcu_up_read_fast()
+> are designed for this acquire-here / release-elsewhere
+> pattern and, unlike the same-context srcu_read_lock_fast()
+> variant, do not carry the lockdep read-side tracking that
+> would warn on it.
+>
+> The short, same-context SRCU sections in ri_timer() and
+> dup_utask() (which guard the uprobe against reuse across the
+> hprobe_expire() cmpxchg) instead use guard(srcu_fast_updown)
+> for proper lockdep coverage.
+>
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+>  include/linux/uprobes.h |  5 +++--
+>  kernel/events/uprobes.c | 29 +++++++++++++++++------------
+>  2 files changed, 20 insertions(+), 14 deletions(-)
+>
 
-Carry over from v1
+Very straightforward replacement and will improve performance, thanks!
+LGTM. Peter or Mingo, I assume you guys will want to route this
+through your tip tree, right?
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
+[...]
