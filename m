@@ -1,87 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFDB3CAE7F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 08:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4303EFFDB
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 08:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783672311; cv=none; b=gbTjs/RiX9cJG/cyeJpP1QI7lMUivAZkBv45Z6pqSW4lwQI0vaDLgLaTCoKQYPUkSVbYM7b06JStU9H7E6FTBk1QsRikojxp7TrmgTdjKzhGExhPBa1QsWe0CxYcYHs9pGaFbmbcqogftHPXkghJGVE7xvwRNIwKCrgJcrTLwG4=
+	t=1783672895; cv=none; b=nOIIqNWoENKdR/M/r15URttFjvTsSu9n7vbqQ9mqAlyPzzDP72dFt/vfDh1dhT+0rQ9clgvv/4Z9SLqjw1ECa5XIJlKUJDSCq5WOeZB+FOJxYAw1+1D8TfsnneAQH45MRD0qbyxAbveZPkTqSyhnotRRJ7gevD23KFnAIoOVv5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783672311; c=relaxed/simple;
-	bh=JzwffsRWC/hHixOM/9qBiac82iKo8MeCmWEHCxmjwEs=;
+	s=arc-20240116; t=1783672895; c=relaxed/simple;
+	bh=OI6vZMxTu6pN9CeOFlTYwvTpQF8ytBKQzoHYrEpHfxA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZxWR3s8j5Icf1MOn1FeoKzXEqyGE851FNoLYOuISsKzrZy2TPbNNCx+wkHGo4Ahw68eZ6xc1Mw64Bqfdi+Cz2kPwwnD46G0qG1yY/+Bq/B2hWuNmolzyB8XZup7sr2FPPHXrmOb0FNl9Kl715PZieiKq2lj/hmbj7ISTRw8O1FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i02RuJ9u; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=b1or2RxOsw1mPq1j0na0+F2q8MkVyZkNxSPJJRczyC4iPLcrMXb1buboV2iSIVcp2W2TVTC8nKzz1AlooHOezakynQqhz1AdnR0y7eNyE9Aeb71XR5fkFYY25P9dZi/5byaULjuJdBsfruNV1C6HgxVDZhGNy6HpZfBGmokBwj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YBZDBdkT; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i02RuJ9u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YBZDBdkT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783672306;
+	s=mimecast20190719; t=1783672893;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JzwffsRWC/hHixOM/9qBiac82iKo8MeCmWEHCxmjwEs=;
-	b=i02RuJ9uHQ2ERF0TTWHSy6Ifa1qGW6WfT9vnV7y0yG/p6WlEUvs2MS6bw+e90kgEOjz0f/
-	TcL9l5o6lFP7QiFrgpBuiacXg84Ooeo6QFFZ8TpyZlWvVR6ZTL13HwDzFDiYBrjq7AXmuu
-	kmD3jCfaaxqMdRAV3U2//FYwO1V360E=
+	bh=OI6vZMxTu6pN9CeOFlTYwvTpQF8ytBKQzoHYrEpHfxA=;
+	b=YBZDBdkTFnQRyP3NseX4c9Z8qW7I/L48TPPTnBLu3HN4f+xhrMUm1OcDGL+GEZpTgQjgz5
+	xu+HL7H5edsDx5NFED/qdUP4QPLhDzjTOPlA7YPGo4vwC1kgLE5uGUDzT2L6VBNEwyjOSX
+	bHBkZd91PhyUPYF9phNvBpThNLYVaPs=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-108-0dT0KG2NNH2HVlKei1kODQ-1; Fri, 10 Jul 2026 04:31:44 -0400
-X-MC-Unique: 0dT0KG2NNH2HVlKei1kODQ-1
-X-Mimecast-MFC-AGG-ID: 0dT0KG2NNH2HVlKei1kODQ_1783672304
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-493e3ecd385so7077095e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 01:31:44 -0700 (PDT)
+ us-mta-43-oSOcNpb3PImXxD8k6rgnkg-1; Fri, 10 Jul 2026 04:41:32 -0400
+X-MC-Unique: oSOcNpb3PImXxD8k6rgnkg-1
+X-Mimecast-MFC-AGG-ID: oSOcNpb3PImXxD8k6rgnkg_1783672891
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-493bdf90adaso6021355e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 01:41:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783672303; x=1784277103;
+        d=1e100.net; s=20251104; t=1783672891; x=1784277691;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=4kQemOIUwz1M/CXyOgmbczAyLfNUg0B0dvAv2SyUZZs=;
-        b=O50aS4roDEgeTi1xn4TbuOKgMroJ6Z+cf1YazPyQENev2qeVS+FMBl9av/nODktbDl
-         ltxzRqBvgIh6G8aWdJCtcL5b/JnSnzerShV48CIx5AAiQ6tw9Zr/nT7N4PeG+hdoi8xq
-         10vcpPaxi7jpwgdXvNBWLzESBhQPPanh48hMKjQQGAiqCAHkJ6aJuUYkJBA95oBNR+s5
-         hBWoxq6vs1c+zGDNcUWN2kw/oKo/jOD84/tbrVuSy4kfzi1s7DJols3aahwJ1PoBE4eL
-         tFeKhwl/vYj0H5yBdKobYZDiOyTsT2gM9XBeySloE3xQLFzHiVpWU+Bwjhoi+AZgbwl1
-         JaAg==
-X-Forwarded-Encrypted: i=1; AHgh+Ro255mBW2S7b+CpgCxjSNh8t2A6uMypLVb4R146XH7JarD5WMn2Ffe21QfYk+FYuyJcgyp5ZuPRIspQocu7Y4fxA9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrgRUD6wV1JZiz2654ylUZ4iMYBhpnmjg2DOq7ESXOQ6NhdStT
-	SjqPgu/SQtIdax0nOO1NXMB6UuTkoNdu+QYq1zgi0i+A58VVFd/B4d2KpLZt2LJscCikAcDdLL8
-	rmAf6eq/jgbK6euo3RASZUrWMDGu3KRMGAht92ZIlsxo3jK+SGn4cWtzpbTfJLPOw2J9oQx6viq
-	iBR5Krhouu
-X-Gm-Gg: AfdE7cmIazPLIaqnW4vV4FhJhwzz2WVO5r1PYQjjyEbQyVBB2rX5oub89OJqRWTF5nW
-	nOwRCTJI50ligJTgLvExKQB8jahjlCnVb7Pb29jV02TebHlmm6zkQcRiNvHLEr1sQb3+uTmWobf
-	mbVP7xCq/0rgxha+xL1evwtKcW76mSmjx24JebRXyrRCKxmRXWDx4yHawqEW73GeRM+/GAu+zzg
-	t0cdPl6Ft+WC3af2zZEJS2ou8uiAJ9+y+uuoJLdfpryniZPyxHit1w2bp2yY+vcqKW6oo22vOVV
-	Yj8qypLy6yeNNeQPsBKw/PsUq/m30UYOKlAR255Kso/VXyVUdhGqg4O3nC3AdHAySkNFqvvJIJe
-	QcaB1OYYCcWQ/LVsn3Xu4iV6fajxZhBNGhuyOMaJKg37qiVwLGSWtXPaShnDI/zbtdg9YoKYrKS
-	q7XZKP
-X-Received: by 2002:a05:600c:4e0d:b0:493:c14a:a1ca with SMTP id 5b1f17b1804b1-493f3a5de04mr20017225e9.3.1783672303653;
-        Fri, 10 Jul 2026 01:31:43 -0700 (PDT)
-X-Received: by 2002:a05:600c:4e0d:b0:493:c14a:a1ca with SMTP id 5b1f17b1804b1-493f3a5de04mr20016645e9.3.1783672303123;
-        Fri, 10 Jul 2026 01:31:43 -0700 (PDT)
+        bh=OI6vZMxTu6pN9CeOFlTYwvTpQF8ytBKQzoHYrEpHfxA=;
+        b=lQHDg56hSN39KYz6A1ja0PJQa1UDp/dXgnNfcC01seehDHriHUWqu5pgzvDtfDbFb6
+         maISmcib8fhFSHIPfvNABlXghxS6mrIotrnovXamSDyIqAjAHUN1fVJDfd0QM84gIXHN
+         hXLXdtSraP85nAabkM+DKotuJQOCEuhhNVL0KcZgLnrav+oM85cDEwsbTyeimgjMRsb1
+         0UXFjd8V5vtOnlNEhqfs9sheAaByX3YZklQxUntDriACTLDC60PgobowW7jcfMqBszc5
+         9unhmoitojXrINqF8kIGERDz7FWhY6dgRI1NnXO4OOYMwVOzM6Yd1yvO44lgQNbDkPWj
+         WXQw==
+X-Forwarded-Encrypted: i=1; AHgh+Rq/Vti0/oy7MCgKx+6GrNWOEtwTFsk3vlsdsM+uLq5tL6spNU2phOBeKY54n3hieUFEowse5EmpWG/IckNXurFVG3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwesIusZKn3RarFtmO/YdQSSuyFFVPA+DJHSwJ67Cl3C8iqRT4
+	kq/U2WbJKsknqDuKp5F+fx02dwQiS1MyHaqOA0oJhT+YvyQy7O9RonqUGA3pGETp1TjEQyZ/QHz
+	wrzW4WgZdYSiyUjM8CXhjZeZlV7die3S5mmhIqBpBYyEqNtyNa2i3TSEn6metwX/zElCnEHfkSA
+	==
+X-Gm-Gg: AfdE7cm2cu33hTkYmSDrx/NhYDC6d2ud8+jl1Jkk32bQqGvUaSJ4OX1iv2xXZgdrVBu
+	Poqdp/y+bFYMzoWLJLhKe6bmyfABfl8JaGdZ0uojcijFaOT5dR4Up+cADuOE8VGf2E+X445AoHo
+	uQtGH+8G0ZjL3c+/o4donC2iL399Ff1d7ZYiYUdumfZ0OB9sLb9LVuJE0QWZ31/Pyzxome0nvQn
+	neLNA/U6eMNQcJlIzrVQlTT5lNMb0yQKYtDepBD2Drxa4j996i7k/WPSSethA67YREk4nvPJG+n
+	ZVi5TbzG81G+lZY30iS5vSlLTaZCX3j4UTTkSvAfBJ/pg5pU3SEiZRv21quAnWUdmD4xfP7cbVt
+	vejMIoN4hlYDj6VvH5nMdwD268ueEbHzxhkmCZC70BcwZk4GteJ3uz/jn+a6OC4dj6tVDnIIPCK
+	4w81MB
+X-Received: by 2002:a05:600c:828c:b0:493:bed9:b53d with SMTP id 5b1f17b1804b1-493e68ee07cmr92567665e9.31.1783672890908;
+        Fri, 10 Jul 2026 01:41:30 -0700 (PDT)
+X-Received: by 2002:a05:600c:828c:b0:493:bed9:b53d with SMTP id 5b1f17b1804b1-493e68ee07cmr92567485e9.31.1783672890572;
+        Fri, 10 Jul 2026 01:41:30 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47df6a31dd5sm12792241f8f.16.2026.07.10.01.31.41
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493eb6d53absm119685795e9.6.2026.07.10.01.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 01:31:42 -0700 (PDT)
-Message-ID: <b971748dea21a7a6eec3be8b95f4c18aec2d0552.camel@redhat.com>
+        Fri, 10 Jul 2026 01:41:28 -0700 (PDT)
+Message-ID: <dc79a18f0ff50c4715a998c00e249255dae7b7c7.camel@redhat.com>
 Subject: Re: [PATCH v3 16/17] selftests/verification: Rearrange the
  wwnr_printk test
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wen Yang <wen.yang@linux.dev>, linux-trace-kernel@vger.kernel.org, 
+To: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>, Thomas Weissschuh	
- <thomas.weissschuh@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, John
- Kacur <jkacur@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Shuah Khan
- <shuah@kernel.org>, 	linux-kselftest@vger.kernel.org
-Date: Fri, 10 Jul 2026 10:31:40 +0200
-In-Reply-To: <cd0a678b-1eec-42d8-b027-0d27b9c804a3@linux.dev>
+Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
+	 <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
+	 <wen.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, Shuah Khan
+	 <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Date: Fri, 10 Jul 2026 10:41:26 +0200
+In-Reply-To: <87zezzxt9a.fsf@yellow.woof>
 References: <20260625121440.116317-1-gmonaco@redhat.com>
-	 <20260625121440.116317-17-gmonaco@redhat.com>
-	 <cd0a678b-1eec-42d8-b027-0d27b9c804a3@linux.dev>
+	 <20260625121440.116317-17-gmonaco@redhat.com> <87zezzxt9a.fsf@yellow.woof>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -99,62 +98,37 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Prx6yZOQhPwzYSSmd15z6tq3uZiDcQ_c_r-sD4o7Lz4_1783672304
+X-Mimecast-MFC-PROC-ID: l5F2AL5sFwI1YllXqngSAFTH4n3H5LHUNUSbK5YHCz4_1783672891
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2026-07-10 at 01:08 +0800, Wen Yang wrote:
-> > =C2=A0 load() { # returns true if there was a reaction
-> > -=09local lines_before num
-> > +=09local lines_before num load_pid ret
-> > =C2=A0=C2=A0=09num=3D$((($(nproc) + 1) / 2))
-> > =C2=A0=C2=A0=09lines_before=3D$(dmesg | wc -l)
-> > -=09stress-ng --cpu-sched "$num" --timer "$num" -t 5 -q
-> > -=09dmesg | tail -n $((lines_before + 1)) | grep -q "rv: monitor wwnr
-> > does not allow event"
-> > +=09stress-ng --cpu-sched "$num" --timer "$num" -t 5 -q &
-> > +=09load_pid=3D$!
-> > +=09timeout 5 dmesg -w | tail -n +$((lines_before + 1)) | grep -m 1 -q
-> > "rv: monitor wwnr does not allow event"
+On Fri, 2026-07-10 at 08:18 +0200, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+> > Simplify the test and run the steps expecting no reaction before the on=
+e
+> > expecting reactions.
 >=20
+> This requirement is not clear from the code. I fear a new developer who
+> wants to introduce a new test case will easily trip over this, or even
+> us a few months from now.
 >=20
-> Minor nit: could we add a small delay (e.g., sleep 0.1) before dmesg?
+> Instead of this, how about each test case discards or ignores all
+> previous reactions?
 
-I don't get what the benefit would be.
+Fair points, the issue is that we are hammering wwnr, on some systems we ma=
+y
+still see printks for long after the monitor was disabled, I tried that gre=
+p -m1
+trick to mitigate that.
 
-The intent of that line is to run a continuous dmesg (-w) for up to 5s (tim=
-eout)
-but stopping if an occurrence is found (grep -m 1 would close the pipe).
+To ignore all previous reactions reliably we need to wait for the buffers t=
+o
+flush, something like waiting for a full second for nothing new on the
+ringbuffer perhaps. I could think of that or at least make this more clear =
+with
+comments.
 
-Do you see a case in which this wouldn't happen?
-
->=20
-> Reviewed-by: Wen Yang <wen.yang@linux.dev>
->=20
-> > +=09ret=3D$?
-> > +=09kill "$load_pid"
-> > +=09wait "$load_pid"
-> > +=09return $ret
-> > =C2=A0 }
-> > =C2=A0=20
-> > =C2=A0 echo 1 > monitors/wwnr/enable
-> > =C2=A0 echo printk > monitors/wwnr/reactors
-> > =C2=A0=20
-> > -load
-> > -
-> > =C2=A0 echo 0 > monitoring_on
-> > =C2=A0 ! load || false
-> > =C2=A0 echo 1 > monitoring_on
-> > =C2=A0=20
-> > -load
-> > -
-> > =C2=A0 echo 0 > reacting_on
-> > =C2=A0 ! load || false
-> > =C2=A0 echo 1 > reacting_on
-> > =C2=A0=20
-> > +load
-> > +
-> > =C2=A0 echo nop > monitors/wwnr/reactors
-> > =C2=A0 echo 0 > monitors/wwnr/enable
+Thanks,
+Gabriele
 
