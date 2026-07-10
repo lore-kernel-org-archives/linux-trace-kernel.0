@@ -1,184 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27353CC314;
-	Fri, 10 Jul 2026 09:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662AC421896;
+	Fri, 10 Jul 2026 11:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783676343; cv=none; b=OEy98mduPRRMLJE5JEKmNH1tHcPAOzuVxtCsAUoOAjVsCPF8yeIqTznw7Xck5rj8+AZx1a0jcU6jeDjw6cr/vVBjBdHLfmZ0TcBodg5IKbUyiU368GpPqPqZW3pt9l9nD/MKb8t4+xTagXw26D67U7Rn2HFfKCIMU0//RHCP40s=
+	t=1783683980; cv=none; b=b3fv6YtxacJHMu18eVE08xMrU1LJwv9tBFTTLuMh+TsTRC/ehbJU3nlpkBO7v+xM7gaU7MNgLE+h23Klgnx4S/GE4mm9GABa7JWpNGcBamZMQYYzKnBAi+i/rAZ7i6apELoJ0gx7WJ+RfViKT7VjOKLsx0oYjIejl0P4JO1/SZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783676343; c=relaxed/simple;
-	bh=3uptIh4kH4uuhdSTDTQhxoio/E/E4znWTE9Ba/A0eN8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OzlmcbCADA3X2C1YQcBPe4QXqOe9EjXPnufCgmCFjUH2LBGHW25U/PeHuVQlnIITF7dIjY2cWIo5Kp634eQjEDivGD/1plAZwHlTo1W/JsfJrm10IMEMy0fxwF6RcF91aVSrKKEGNX+60czVEHsKLtWsjFMNBlpfdn6tTIkjhOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwqUo2Xw; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwqUo2Xw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F861F000E9;
-	Fri, 10 Jul 2026 09:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783676342;
-	bh=SpPmgVAbTqTg+8Z+cURPU9o5tBpGFPOz/CFMP1thnYA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=nwqUo2XwIK1CUSX4u96yKUmYFTfaY0KNnM2Df1B0jS7IL0HOQK0wh2tAFA3U7f6op
-	 mfYUT/rDSTfCjcvhMA0wmfp3w9PXoCpfO6/xjcfzWnGVByvpnaqY5hdVUld6qilGLh
-	 fe6OMXZD4hBuegBjqKLuGl3xK81IMOVXVgY2jzHL00I13nmrjZZVFYz7KmN9uEftCx
-	 6NOivea/jMhQAexnD4dTnRVb6h4t6VK3YDWNX8xi9B9WErd7F03mXvsGtxU3KxUSNi
-	 rZwnCfNYrcDpb5UEU4l1Hf+FxaWyjf3368m+ru7JpYZer6gVRPEgtImvUFNXF0MbfC
-	 DVt7/ctdmoVWw==
-Date: Fri, 10 Jul 2026 18:38:57 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Pu Hu <hupu@transsion.com>
-Cc: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "davem@davemloft.net"
- <davem@davemloft.net>, Hongyan Xia <hongyan.xia@transsion.com>, Jiazi Li
- <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
- <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
- "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
-Subject: Re: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
- single-stepping
-Message-Id: <20260710183857.176dc60026ea9fcbe4984b1d@kernel.org>
-In-Reply-To: <20260710063242.228714-3-hupu@transsion.com>
-References: <20260710063242.228714-1-hupu@transsion.com>
-	<20260710063242.228714-3-hupu@transsion.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1783683980; c=relaxed/simple;
+	bh=3WUqUT0Tc1HqFjFdKHjGyulKS00jSkZE2th5QVog6is=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j8pwt/16joOVvGLsZ+w+1DAD9e1SHOO5wmYl+sL5jHp7jpdrQoAQt8TJ6jK3P36aYxZ5bDxV0sgoYLR/KbsaCfLB9Cunp+QWVhgXeig3Lh5Dtqp/nr3Wqa++kPDjo9Hw4LEYwdSn7UyOA6xM3EOgTXIHUNHeZDHUxNF6ktx6uy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id ACEEA1A041E;
+	Fri, 10 Jul 2026 11:45:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id AE90D2002C;
+	Fri, 10 Jul 2026 11:45:56 +0000 (UTC)
+Date: Fri, 10 Jul 2026 07:46:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Jeongho Choi <jh1012.choi@samsung.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ji2yoon.jo@samsung.com, minki.jang@samsung.com, hajun.sung@samsung.com
+Subject: Re: [BUG] tracing: Too many tries to read user space
+Message-ID: <20260710074605.33802554@gandalf.local.home>
+In-Reply-To: <20260710122231.9bc9fae3dcfc72215f4a2dcd@kernel.org>
+References: <CGME20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7@epcas2p1.samsung.com>
+	<20260708123753.GB1386@KORCO121415.samsungds.net>
+	<20260710122231.9bc9fae3dcfc72215f4a2dcd@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: h1m6tcty99mtqieb7oxrw8dgjt5m6qis
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: AE90D2002C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/OB/QiX/m42WFK/n0n22+BpqJpdRVs6Kc=
+X-HE-Tag: 1783683956-974702
+X-HE-Meta: U2FsdGVkX1/Ndmau3aHu9iJ0KLxTw1GH5ROgNr/uiJrum1XYFK01qF/IWi1Nl2+7qtQfe6PMuDmCEhPf2HIt4qN0VyeYk48Pud00P1WXOARYVXcWNXKdQQ9cL6ch12I4U1Q/B0zJ8fX3B2/njE7ZWe/PUQqXh2D/tyB0++3yMZWGZWk2eWkIuACTU8ECdMSHJ7O2EE1raWKSksQJN0GcM7Mjv8lorbuHbtXficvGa/igVDzISTD+KtkM4uLAfabRa2fH/M/7Dzk76gei1B6hP+yhMBOnRyL1at9EKwP4Syz5iMQVyUtPkd538P+glSMPpWCpkgt/4lOoJGt3H8JoFkkvhJY9XorwxbwI3Yg9+ufaLTBky8tebZuOPjcNGK0EzEQ47aOSoslzOg7iJBN1o8ctSMCr7N/u
 
-On Fri, 10 Jul 2026 06:32:55 +0000
-Pu Hu <hupu@transsion.com> wrote:
+On Fri, 10 Jul 2026 12:22:31 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> From: Pu Hu <hupu@transsion.com>
-> 
-> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
-> can happen when tracing or perf code runs from the debug exception path
-> while the first kprobe is preparing or executing its out-of-line
-> single-step instruction.
-> 
-> Currently arm64 treats a kprobe hit in KPROBE_HIT_SS as unrecoverable,
-> the same as a hit in KPROBE_REENTER. This is too strict. A hit in
-> KPROBE_HIT_SS is still a one-level reentry and can be handled by saving
-> the current kprobe state and setting up single-step for the new probe,
-> just like reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
-> 
-> The truly unrecoverable case is hitting another kprobe while already in
-> KPROBE_REENTER, because the reentry save area has already been consumed.
-> 
-> Move KPROBE_HIT_SS to the recoverable reentry cases and leave
-> KPROBE_REENTER as the unrecoverable nested reentry case.
-> 
-> This change also requires saving saved_irqflag in struct prev_kprobe.
-> When a nested kprobe calls kprobes_save_local_irqflag(), it overwrites
-> kcb->saved_irqflag with the currently masked DAIF value, losing the
-> outer kprobe's original DAIF state. Without this fix, when the outer
-> kprobe's single-step finishes, kprobes_restore_local_irqflag() applies
-> the wrong DAIF mask and leaves interrupts permanently disabled.
-> 
-> Extend struct prev_kprobe with a saved_irqflag field and save/restore it
-> alongside kp and status. This ensures the outer kprobe's original
-> interrupt state is preserved across reentry.
-> 
-> This mirrors the x86 fix in commit 6a5022a56ac3
-> ("kprobes/x86: Allow to handle reentered kprobe on single-stepping").
-> 
+> However, this seems a bit strange that we only checks the CPU-wide context
+> switching in the loop. Instead, can we introduce a per-cpu sequence counter
+> to per-cpu buffer, and check it? 
 
-OK, this looks good to me.
+I originally tried this but found a situation that it fails:
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+  tbuf->sequence = 0;
 
-for this series.
+	Task 1				Task 2
+	------				------
 
-Will, Catalin, can you pick this series?
+   tbuf->sequence++;
+   seq = tbuf->sequence; (seq = 1)
 
-Thanks!
+   preempt_enable();
 
-> Signed-off-by: Pu Hu <hupu@transsion.com>
-> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> ---
->  arch/arm64/include/asm/kprobes.h   |  6 ++++++
->  arch/arm64/kernel/probes/kprobes.c | 23 ++++++++++++++++++++++-
->  2 files changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
-> index f2782560647b..35ce2c94040e 100644
-> --- a/arch/arm64/include/asm/kprobes.h
-> +++ b/arch/arm64/include/asm/kprobes.h
-> @@ -26,6 +26,12 @@
->  struct prev_kprobe {
->  	struct kprobe *kp;
->  	unsigned int status;
-> +
-> +	/*
-> +	 * The original DAIF state of the outer kprobe, saved here before
-> +	 * a nested kprobe overwrites kcb->saved_irqflag during reentry.
-> +	 */
-> +	unsigned long saved_irqflag;
->  };
->  
->  /* per-cpu kprobe control block */
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index 798e4b091d1a..4e0efad5caf2 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -174,12 +174,27 @@ static void __kprobes save_previous_kprobe(struct kprobe_ctlblk *kcb)
->  {
->  	kcb->prev_kprobe.kp = kprobe_running();
->  	kcb->prev_kprobe.status = kcb->kprobe_status;
-> +
-> +	/*
-> +	 * Save the outer kprobe's original DAIF flags before the nested
-> +	 * kprobe calls kprobes_save_local_irqflag() and overwrites
-> +	 * kcb->saved_irqflag. Without this, the outer kprobe will restore
-> +	 * the wrong DAIF state and leave interrupts permanently masked.
-> +	 */
-> +	kcb->prev_kprobe.saved_irqflag = kcb->saved_irqflag;
->  }
->  
->  static void __kprobes restore_previous_kprobe(struct kprobe_ctlblk *kcb)
->  {
->  	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
->  	kcb->kprobe_status = kcb->prev_kprobe.status;
-> +
-> +	/*
-> +	 * Restore the outer kprobe's saved_irqflag so that when its
-> +	 * single-step completes, kprobes_restore_local_irqflag() uses
-> +	 * the correct original DAIF value.
-> +	 */
-> +	kcb->saved_irqflag = kcb->prev_kprobe.saved_irqflag;
->  }
->  
->  static void __kprobes set_current_kprobe(struct kprobe *p)
-> @@ -240,10 +255,16 @@ static int __kprobes reenter_kprobe(struct kprobe *p,
->  	switch (kcb->kprobe_status) {
->  	case KPROBE_HIT_SSDONE:
->  	case KPROBE_HIT_ACTIVE:
-> +	case KPROBE_HIT_SS:
-> +		/*
-> +		 * A probe can be hit while another kprobe is preparing or
-> +		 * executing its XOL single-step instruction. This is still a
-> +		 * recoverable one-level reentry, so handle it in the same way as
-> +		 * reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
-> +		 */
->  		kprobes_inc_nmissed_count(p);
->  		setup_singlestep(p, regs, kcb, 1);
->  		break;
-> -	case KPROBE_HIT_SS:
->  	case KPROBE_REENTER:
->  		pr_warn("Failed to recover from reentered kprobes.\n");
->  		dump_kprobe(p);
-> -- 
-> 2.43.0
-> 
+   [schedule] ---------------------->
+
+				  tbuf->sequence++;
+				  seq = tbuf->sequence; (seq = 2);
+
+				  preempt_enable();
+
+				  copy_from_user(buffer);
+
+	     <--------------------[schedule]
+
+   copy_from_user(buffer);
+
+   *** BUFFER NOW CORRUPTED ***
+
+   [schedule] ---------------------->
+
+				  preempt_disable();
+
+				} while (tubf->sequence != seq); // tbuf->sequence == seq !!!!
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This is why we use a CPU wide counter.
+
+-- Steve
+  
+
