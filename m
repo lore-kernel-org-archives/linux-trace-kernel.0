@@ -1,124 +1,184 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F89431E50
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 11:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40062423A72;
+	Fri, 10 Jul 2026 12:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783684613; cv=none; b=jg8USdzda0J7KMeFCaTA9xwEgc0YKAQFIcZbqiWV8w2jXqdw6nIQlaDNQKCqVBcanHIO3+f4Ljqszd433JVOQmDIs13j++rsSIn8uqOJC0+quQxsVyWPcqVPNEINNt0XmUQ5sVR6ZCCKIqYSuXRLzzgNqdYEQ/UGoJm2qq4UOlQ=
+	t=1783686841; cv=none; b=qhx9ZmGFesxeO3R6e8IbyrUfPulB5SQkZiS17NJsiyv01aRVnClslR672sLNG7eSTy4apYpZ4fzpkG66wSr2UrklCrEGiN8uv1GUcSVcDmB0oNdl28Sjpq21qFT0G3ABCQxVbEcHZGl62MT74Bsn8ixLz//Q5DCse3sKzjCjHqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783684613; c=relaxed/simple;
-	bh=9TxnLfNYrPWrx2bquvirAzZJUBr6aeku6R42eLdI90k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbYaqMBGsHySrKswiPgP+qxrAi77BeoCblWzQbYjFCQ8qSxC9pmgxP/6Hd0nssGqy9nFYdBx9ZdkKgARnoiJjlYOescizey1Y4+e67XFxvccYiQ7a/vgug5VUgJlA1mOElnYN9jhPIK8nCpsWizdKe5jxjQVVXHc0Sbt8S3OvLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YoEGLZpP; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YoEGLZpP"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-476d8e647e9so980456f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 04:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783684598; x=1784289398; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2Z1QOtUf+44PYKBFhNZsW3TA0rvft+x2B4hitYh+2Yg=;
-        b=YoEGLZpPnGRs1JiNV5e8lo2dZs/yZh0CYvdJz53uvFhAmR4//7obRaYiwW6VHkcTuH
-         pyGQQcu4PbmZoRWn/LwpeWXfyfkEA4Bde1p0J8kfl1V0gle6jLfnZo56zA1oUld/EV35
-         KwpyWxwMQmSl943lQr8pptPzLLB/N4qFRHvWUXlrxQNiapjDwKonR21NDwsddRYNG2zf
-         1wmzVCTV+ZKL/VqkV+XiqsCbCd7qTr5xw3hCHzP33ipmQh3x4lneZxFWgogy1pdUBwyR
-         XNFcfznt3CX7LuEgJzZJC1BYShGaIH202T8sw3KeIz2t/HAuj3dbnvsO3jvopucqN52l
-         s0xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783684598; x=1784289398;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2Z1QOtUf+44PYKBFhNZsW3TA0rvft+x2B4hitYh+2Yg=;
-        b=U3H5IBBmTmAXcqWVx+1jzp4eQajpHpUPQknM7HyDAE5Dso/0tVTgzQ4Rb400Nl9pMD
-         D47D/kqoqjjbedwt1SfjHub4xaxuIZEK0Z3JF66WecZdl0jxfWfStC2uiQp5Pkro07e6
-         s5YlB023qSmQtZcptePja8fm0o3V5jxGDZgXEOf0RCmJ5Aj12a6ixtHmlgiViMbxWJbh
-         JBgj79Ss30t8n5sSVlJMZPA0+6EW/TMf7aFGeVQ2wC7eQykjc85OdH7CBXF4fo0cWJ1r
-         jXqOnbPm88ch8uHzQzCkoI4jRfYGPhusXwjRGYCSe2bbCRuoMnEa1hqvjHvjB2teTDsl
-         vjBg==
-X-Forwarded-Encrypted: i=1; AHgh+RpfMFTqKLoOsMHtJysIFpXQWimJRi5ezFL19ReIw1xCKDoyio76zG4D2Kcod3npWFDAt+qPfms/BhSr1UsshpyMNG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF5cknSZx0+ZpfxCOkUfXpKH+8pQNYuIBAZI+GXa/X8ZBeefTb
-	nrSsJz87s+L1P5rqI5ZWvvkPXLu4VJrIGBOsTfX3IVWDLqKTnB7f00uEZtYRCn+GYQ==
-X-Gm-Gg: AfdE7clJPfz4luhIcwY9ha+wHVI3CsT/Q0yU2q9Vko0K0MEArOT98Ptbf0LDivGJId7
-	/FJ62MiB7HAf/BgJtWZl9Gkio7fTmyLj7pQUAbkAYQN7tZWRPzir6Ac9MjKefTu10v9mvN6B/XD
-	PnvqS3eM04vSuHQMhSrubfy8Dm+qnnWhfi57Hjh2D7lUHQkk9QBItSjp2HaHZlQZCnP+ShTUEnm
-	atyaqQ28NyJzbRVwYCZsIkYwd3srFVxckiFcO4/8Uj4Y+Ptyqfaq/rBwzb/9REK6f/uCoN9kcD1
-	xHQ2fQ5WND7t9p8IC0TJuPn1gsTY9fy+ikcpoREjwjq6QqMSEjT9+tZJg1kUd3gqG//MHzn9kvw
-	fTNQCJE+dKJnPF35VrPj6wPXSOXpQOKOjO9MtllAGvuoyVsyKyJqfv6XA1fQWccab31EmZy+Uh+
-	6aLDom2dZECIxccTq9l7m9gnZZWyl2au4le+QMw2S0TAU8hOqO55E=
-X-Received: by 2002:a5d:59c5:0:b0:474:ad57:1720 with SMTP id ffacd0b85a97d-47df07a561dmr13085174f8f.43.1783684597334;
-        Fri, 10 Jul 2026 04:56:37 -0700 (PDT)
-Received: from google.com (137.69.77.34.bc.googleusercontent.com. [34.77.69.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9de1e6ccsm59612780f8f.5.2026.07.10.04.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 04:56:36 -0700 (PDT)
-Date: Fri, 10 Jul 2026 12:56:32 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
-Subject: Re: [PATCH v2 1/3] tracing/remotes: Fix leak in
- trace_remote_alloc_buffer() error path
-Message-ID: <alDd8OrrcI8vcPDL@google.com>
-References: <20260709160017.1729517-1-vdonnefort@google.com>
- <20260709160017.1729517-2-vdonnefort@google.com>
- <20260709191516.7a7ad6f6@gandalf.local.home>
- <alCmOw8l4e-DS44v@google.com>
- <alCm5fq3UC2JtzZV@google.com>
+	s=arc-20240116; t=1783686841; c=relaxed/simple;
+	bh=/3LFfTSz1Yugn4IIayMnDpcXV2ZYwmDm5Wl1FKx3IBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kT6KDdvzgWFak3uIwuhBbrd0VlR9xXQHD2nYPUoxmR7Cbaa6zw8FV5ToN85JgXGAym4pAjiWujgeniyBZaLWaIWjeEzluoKtRmeJiZV3BNtj3GAtHZAvuwxO5cSfLnAhhaMGmU03bpySaemRw6Sao8sPMFY2AbDPyH9D1GujPmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id A0D8D40410;
+	Fri, 10 Jul 2026 12:33:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id BB0192000E;
+	Fri, 10 Jul 2026 12:33:48 +0000 (UTC)
+Date: Fri, 10 Jul 2026 08:33:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Jeongho Choi <jh1012.choi@samsung.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ji2yoon.jo@samsung.com, minki.jang@samsung.com, hajun.sung@samsung.com
+Subject: Re: [BUG] tracing: Too many tries to read user space
+Message-ID: <20260710083357.49e05ff6@gandalf.local.home>
+In-Reply-To: <20260710122231.9bc9fae3dcfc72215f4a2dcd@kernel.org>
+References: <CGME20260708123754epcas2p1f15cc305ddb09f97164491d750769ef7@epcas2p1.samsung.com>
+	<20260708123753.GB1386@KORCO121415.samsungds.net>
+	<20260710122231.9bc9fae3dcfc72215f4a2dcd@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alCm5fq3UC2JtzZV@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: xjwbczaszc4t3he3xfzi6yazcunkhpiz
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: BB0192000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+zHIeKZhK7mP2nmQsGk+OI/EIv5Ok18wM=
+X-HE-Tag: 1783686828-862018
+X-HE-Meta: U2FsdGVkX1/GGL8uJ/7M/7VxhSll9bXtVPaA451hM9m/77IbAzKC/ihtUjpIGrN0ctZI0F4GzlVU4vXFTZDxLa7oI12LWLcZdfFSsMTOv5mv8dm9aZG233NVNDObpK+Ma2AX7n45OwB8qfJi0vdeC41lpKHRboEAslEIF8TllLvXWTpAet30V80Kms/NM524a/EtEOLRB68lCOR5Hj6B5mLJR3lIBiJo+P933Iks/oSbXI68GKVYGdd62lKJx46OuOGCkXO3b55eEYmTuNcJWH0qiH3livap50JY5Cu3kMl4XdKZY+tTOeWawkhsBtuHKLL2U8FzJJTx8pXnCrkWej/N1K7zqPvmFvCARE7JKgMCKvDyvxepMA==
 
-On Fri, Jul 10, 2026 at 09:01:41AM +0100, Vincent Donnefort wrote:
-> On Fri, Jul 10, 2026 at 08:58:51AM +0100, Vincent Donnefort wrote:
-> > On Thu, Jul 09, 2026 at 07:15:16PM -0400, Steven Rostedt wrote:
-> > > On Thu,  9 Jul 2026 17:00:15 +0100
-> > > Vincent Donnefort <vdonnefort@google.com> wrote:
-> > > 
-> > > > If page allocation fails in trace_remote_alloc_buffer(), desc->nr_cpus
-> > > > is not yet incremented for the current CPU. As a consequence, on error,
-> > > > half-allocated rb_desc will not be freed in trace_remote_free_buffer().
-> > > > 
-> > > > Increment desc->nr_cpus as soon as the first allocation for the current
-> > > > CPU has succeeded.
-> > > > 
-> > > > Fixes: 96e43537af54 ("tracing: Introduce trace remotes")
-> > > > Reported-by: Sashiko <sashiko-bot@kernel.org>
-> > > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > > 
-> > > This patch makes Sashiko find other possible issues with the code :-p
-> > > 
-> > >   https://sashiko.dev/#/patchset/20260709160017.1729517-2-vdonnefort%40google.com
-> > 
-> > So one of them is fixed as part of "tracing/remotes: Add printk, dump_on_panic
-> > and boot parameters" [1]. I can pull those fixes into this series instead.
-> > 
-> > I'll look at the rest.
-> 
-> Ha yes this other one is real too. However this is in arch/arm64/kvm/ so I'll
-> post it separately to kvmarm.
+On Fri, 10 Jul 2026 12:22:31 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Posted here: https://lore.kernel.org/all/20260710114819.2689386-3-vdonnefort@google.com/
+> Hm, in my view, this warning indicates that the circuit breaker has
+> triggered correctly, so that is not a bug. Under the heavy memory
+> pressure and low-memory situation, the page can be reclaimed soon
+> after it is copied.
 
-Let me know if I should fold [1] into this series.
+So you are saying that every time the copy_from_user() is executed, the
+page is reclaimed? And this causes a schedule?
 
-> 
-> > 
-> > [1] https://lore.kernel.org/all/20260605163825.1762953-2-vdonnefort@google.com/ 
-> > 
-> > > 
-> > > -- Steve
+Now, I did have a version that used sched_switch and only incremented the
+counter when a non-kernel thread was scheduled in. Then the test would
+check if the counter increased by 2 or more. As an increase by 1 meant that
+only kernel threads scheduled in which would not corrupt the buffer. The 1
+increment was the current task scheduling back.
+
+This is based on that work (I'm glad I save old versions in my git tree :-)
+
+Funny, the comments were from the original change I did back in August of
+2025, which mentions kernel threads scheduling in to handle the fault.
+
+I also kept this around in case it was needed. Looks like it may be needed.
+
+-- Steve
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 18710c190c92..19354fe2fca1 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -53,6 +53,8 @@
+ #include <linux/io.h> /* vmap_page_range() */
+ #include <linux/fs_context.h>
+ 
++#include <trace/events/sched.h>
++
+ #include <asm/setup.h> /* COMMAND_LINE_SIZE */
+ 
+ #include "trace.h"
+@@ -5984,6 +5986,32 @@ struct trace_user_buf {
+ static DEFINE_MUTEX(trace_user_buffer_mutex);
+ static struct trace_user_buf_info *trace_user_buffer;
+ 
++static DEFINE_PER_CPU(unsigned long, sched_switch_cnt);
++
++/*
++ * The per CPU buffer trace_user_buffer is written to optimstically.
++ * The counter sched_switch_cnt is taken, preemption is enabled,
++ * the copying of the user space memory is placed into the trace_user_buffer,
++ * Preeption is re-enabled and the count is read again. If the count is greater
++ * than one from its previous reading, it means that another user space
++ * task scheduled in and the buffer is unreliable for use.
++ */
++static void
++probe_sched_switch(void *ignore, bool preempt,
++		   struct task_struct *prev, struct task_struct *next,
++		   unsigned int prev_state)
++{
++	/*
++	 * The buffer can only be corrupted by another user space task.
++	 * Ignore kernel tasks that may be scheduled in order to process
++	 * the faulting memory.
++	 */
++	if (!is_user_task(next))
++		return;
++
++	this_cpu_inc(sched_switch_cnt);
++}
++
+ /**
+  * trace_user_fault_destroy - free up allocated memory of a trace user buffer
+  * @tinfo: The descriptor to free up
+@@ -6003,6 +6031,8 @@ void trace_user_fault_destroy(struct trace_user_buf_info *tinfo)
+ 		kfree(buf);
+ 	}
+ 	free_percpu(tinfo->tbuf);
++
++	unregister_trace_sched_switch(probe_sched_switch, NULL);
+ }
+ 
+ static int user_fault_buffer_enable(struct trace_user_buf_info *tinfo, size_t size)
+@@ -6053,11 +6083,17 @@ static int user_buffer_init(struct trace_user_buf_info **tinfo, size_t size)
+ 
+ 	lockdep_assert_held(&trace_user_buffer_mutex);
+ 
++	ret = register_trace_sched_switch(probe_sched_switch, NULL);
++	if (ret < 0)
++		return ret;
++
+ 	if (!*tinfo) {
+ 		alloc = true;
+ 		*tinfo = kzalloc_obj(**tinfo);
+-		if (!*tinfo)
++		if (!*tinfo) {
++			unregister_trace_sched_switch(probe_sched_switch, NULL);
+ 			return -ENOMEM;
++		}
+ 	}
+ 
+ 	ret = user_fault_buffer_enable(*tinfo, size);
+@@ -6241,7 +6277,7 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 			return NULL;
+ 
+ 		/* Read the current CPU context switch counter */
+-		cnt = nr_context_switches_cpu(cpu);
++		cnt = this_cpu_read(sched_switch_cnt);
+ 
+ 		/*
+ 		 * Preemption is going to be enabled, but this task must
+@@ -6272,12 +6308,19 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 			return NULL;
+ 
+ 		/*
+-		 * Preemption is disabled again, now check the per CPU context
+-		 * switch counter. If it doesn't match, then another user space
+-		 * process may have schedule in and corrupted our buffer. In that
+-		 * case the copying must be retried.
++		 * Preemption is disabled again, now check the sched_switch_cnt.
++		 * If it increased by two or more, then another user space process
++		 * may have schedule in and corrupted our buffer. In that case
++		 * the copying must be retried.
++		 *
++		 * Note, if this task was scheduled out and only kernel threads
++		 * were scheduled in (maybe to process the fault), then the
++		 * counter would increment again when this task scheduled in.
++		 * If this task scheduled out and another user task scheduled
++		 * in, this task would still need to be scheduled back in and
++		 * the counter would increment by at least two.
+ 		 */
+-	} while (nr_context_switches_cpu(cpu) != cnt);
++	} while (this_cpu_read(sched_switch_cnt) > cnt + 1);
+ 
+ 	return buffer;
+ }
