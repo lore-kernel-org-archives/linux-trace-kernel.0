@@ -1,131 +1,69 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04401416CF8
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 12:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8924499A4;
+	Fri, 10 Jul 2026 12:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783687007; cv=none; b=UeEGb01krVvmKZTLHRDWROe7/TJRAJ2aQkMCHfUUp9KdUz5/u2zhcgAVfIgpP/raD4O8u2tbYSowFUNgMTrP/13jfkjI8JdJWZRZHnJjXePeAxQq8Tk83+LBGCJS4MJ8Z3fO+GMVAh7qHSBAROleyP4zwtd5iZNYfECD7Z79FZo=
+	t=1783687059; cv=none; b=cLBO+j+VzpH/ESnK9fnvBMPFG+BAtDoBzNGp0TIcAe/AqYlh6sWLpws7WMd6OIfoy+aLWJHXGlpmUJVfF5g9ymOsC60z6RNFHZnX9R7N6KkyKg3wrUUx9PACtmLM6R+eqHxKrzL/46aT6nDfQ2KSelsLl0bwZ6Zm31dn413pw94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783687007; c=relaxed/simple;
-	bh=CLlY0SXqymrwyaHmBW5Ka5IYDtLy2pUM+vFm/Qo1PbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EbxFncm6HdcDQk4RikX0VMDXS5AGNkoMn+5P0WlX/FJLWL7JFqC1zwbGrLzCUmQRy+Kp/UBiAT2rAsdfU4CpcGLAF6XlrWZU3E4gOxSLgpVmPhsO96rgmNt/+m85FJkrlfH0sUBI0TlZLMS4DaSYAgtoykU/xy+ztzWGNnDLV3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vCjO+Fvn; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vCjO+Fvn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vCjO+Fvn";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vCjO+Fvn"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3C68E764DC;
-	Fri, 10 Jul 2026 12:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1783687004; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ywqN271g2PfpMPGQAbdO4P6kzY5wpKAB4xsITaSRfO0=;
-	b=vCjO+FvnfUnKSfzt9WvHTX3zBqDtsCVCcIo2kibUl7zyxh77ZIyfpgrJQY7WvThANoBQkm
-	MSXy9Lm1k82J67ZfXpaEhFIDExxntYi6jHTEt6O+3qqt772riTE3P4ZbYMfD/K6tAKlRnK
-	lTY2GuqIGjYNtgvcEt5uSwbeqjlU9gE=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=vCjO+Fvn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1783687004; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ywqN271g2PfpMPGQAbdO4P6kzY5wpKAB4xsITaSRfO0=;
-	b=vCjO+FvnfUnKSfzt9WvHTX3zBqDtsCVCcIo2kibUl7zyxh77ZIyfpgrJQY7WvThANoBQkm
-	MSXy9Lm1k82J67ZfXpaEhFIDExxntYi6jHTEt6O+3qqt772riTE3P4ZbYMfD/K6tAKlRnK
-	lTY2GuqIGjYNtgvcEt5uSwbeqjlU9gE=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 22F08779BD;
-	Fri, 10 Jul 2026 12:36:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id txkvCFznUGolWAAAD6G6ig
-	(envelope-from <petr.pavlu@suse.com>); Fri, 10 Jul 2026 12:36:44 +0000
-Message-ID: <cfb0cfc8-9cb7-4226-8987-b141c68017de@suse.com>
-Date: Fri, 10 Jul 2026 14:36:43 +0200
+	s=arc-20240116; t=1783687059; c=relaxed/simple;
+	bh=pRFMafwmY/qHVQd6H4XvdQR9GLKSILkO2XVvMJsAVio=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n7U3xSAhJb4lE8wCJE1896bNrhrd5ASyiWsG7EN7RfrEPO0GFDa/IfkEhBXcmGpG12SQz3QYcjhifyI6p1Zr7OOvyNg1EdrCPlzRs7sOP68H6oi6IhWge1tpDY7JRQ89HVZoQyXk8i1vmlFAsPyg83fk71EiZyxkJev7kqot4ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6E0C0120449;
+	Fri, 10 Jul 2026 12:37:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 56ACB2002B;
+	Fri, 10 Jul 2026 12:37:28 +0000 (UTC)
+Date: Fri, 10 Jul 2026 08:37:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [PATCH v2 1/3] tracing/remotes: Fix leak in
+ trace_remote_alloc_buffer() error path
+Message-ID: <20260710083737.7a017771@gandalf.local.home>
+In-Reply-To: <alDd8OrrcI8vcPDL@google.com>
+References: <20260709160017.1729517-1-vdonnefort@google.com>
+	<20260709160017.1729517-2-vdonnefort@google.com>
+	<20260709191516.7a7ad6f6@gandalf.local.home>
+	<alCmOw8l4e-DS44v@google.com>
+	<alCm5fq3UC2JtzZV@google.com>
+	<alDd8OrrcI8vcPDL@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] module/kallsyms: fix nextval for data symbol
- lookup
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
- Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
- Daniel Gomez <da.gomez@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Jordan Rome <linux@jordanrome.com>,
- Viktor Malik <vmalik@redhat.com>
-References: <20260327110005.16499-1-stf_xl@wp.pl>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260327110005.16499-1-stf_xl@wp.pl>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[wp.pl];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FREEMAIL_TO(0.00)[wp.pl];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[wp.pl:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:mid,suse.com:dkim]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 3C68E764DC
-X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 56ACB2002B
+X-Stat-Signature: douxtrj3yyp1ushr4seyfsopyp4rqx3b
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+Jt7icLNStswwg+Pwh3GIJNWJZOiejVeY=
+X-HE-Tag: 1783687048-578449
+X-HE-Meta: U2FsdGVkX18awOFMoFyZG4NS/15VejwLYmOKYA4maRXKZ6QYt2EjvmD3/1zvUE0FnWQzTNtgi/cq2OLTIsGBIkR+d3ToyFhGdyMhH1q29N9QuM7uWSNFtvHsdsSrru86WO6YIX+ExGU4n1YDfmeozSHtMdOvGbIJ2sid41OVZ8REdVbB1MgRUEhNiD24vJdcQfakkGEX66OBqJIQZZ/y65JA1wlCYuSmYYokRLnbPWL0av6bPz8gXNG31MhNXi433LQrJZl5DzyZDCO840LQ95VdzEBFf+G3rf6XDXACK7iA59hGLkLvWGtkAH1wP1q2HHxYO3Y3T+XmyM8eshdP5e3XfNSI7SHLlqtKFW5Zuw1E3mpROFzbfQ==
 
-On 3/27/26 12:00 PM, Stanislaw Gruszka wrote:
-> The symbol lookup code assumes the queried address resides in either
-> MOD_TEXT or MOD_INIT_TEXT. This breaks for addresses in other module
-> memory regions (e.g. rodata or data), resulting in incorrect upper
-> bounds and wrong symbol size.
+On Fri, 10 Jul 2026 12:56:32 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> > Ha yes this other one is real too. However this is in arch/arm64/kvm/ so I'll
+> > post it separately to kvmarm.  
 > 
-> Select the module memory region the address belongs to instead of
-> hardcoding text sections. Also initialize the lower bound to the start
-> of that region, as searching from address 0 is unnecessary.
+> Posted here: https://lore.kernel.org/all/20260710114819.2689386-3-vdonnefort@google.com/
 > 
-> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
+> Let me know if I should fold [1] into this series.
 
-I've queued this first patch on modules-fixes.
+If they are separate, I'll pull this series in now and start testing it.
 
--- 
-Thanks,
-Petr
+I just wanted to know if these would cause you to rethink this series.
+
+-- Steve
