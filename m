@@ -1,132 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B6D377544;
-	Fri, 10 Jul 2026 13:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2644978F26;
+	Fri, 10 Jul 2026 13:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783690767; cv=none; b=q4Sd47eeuC/Pr9rX0DQfdHOq+ljWD1gAYy3StiL2oSaEOSaYd1STgDJohmyWs/BC6rUIYJA3XBkKEl+ntCDuB0bn8l90aJL9lK+xnmAdAoLxCIlCIiHJtdpXhe0Ow1IziWtxrtfTn+kBY6j2Zl4ytPkhl/UxE3GXduUcUb7YU4c=
+	t=1783691944; cv=none; b=HWEQkioptKLzT0El2HHWAfJx49HWwMPdjNHhgic1ykti5ObeMbKQ1PAfpakLn4I1s2GF0FmK2LRQI1ONelkm5Fy1Pk7vEjVPLy/pthKjctByQ1lvC56kckWsyDovZUxzLM9SCs4YgR+Yx3HIAIK8973w32kPEN9Nw07aaYBdeYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783690767; c=relaxed/simple;
-	bh=1zOgBPuUrXPvOJucK7GyHI1L3i2YRBy6YlCIQgSIRNM=;
+	s=arc-20240116; t=1783691944; c=relaxed/simple;
+	bh=j332/j8tKfoxv3fPmO7nfj5mNDas+GvJBd+2IqFSuCY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uCCCam7JJ+bGLls+yV+6sAzqo+QGyEBBt5ltXIDLZCPAIXGa6TP+wguwbhEQ3fsZq8/319Hgp5pkBF/opR2ou+foI1Mph94u6D91xhLpeOoynPWrdTozYYh2E5C/BZaB7Nwu1YgTZ7JgPh5BOsFiDJ43Zc8XAsGXumIWeXU2nWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fydQPaDx; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOLTPQXx9O4D9UkJWImiue9UK2gjOj581FjCq4InKg+8ib8E4JN2JxvvjpwIbYC7LPISOuHhstuMfsCq5dNS+9M6e+5h48tTqzluvSZ+brjIAZIPytvY2KQKodX3tW67mChFCIDq96tLQFaOYNOVj2QG5SBKN66KBJBlFJwtMrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7FGB0Y9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fydQPaDx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F051F000E9;
-	Fri, 10 Jul 2026 13:39:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7FGB0Y9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357411F000E9;
+	Fri, 10 Jul 2026 13:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783690762;
-	bh=hWe5y0XfVr4QQQGo0kaEF8UGbBWB4HZz8UbrXKM7Z28=;
+	s=k20260515; t=1783691942;
+	bh=zWK0Aahhqe+pxV53i0Yr8er3EBs9ds6FiyH9QErpn7g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fydQPaDxS/hHGLVdvf977qUXBNSF6t19lqQW/RqVTS+Xk5pgKo0deA+cWIFhyYRvv
-	 IeSezmg4COMZrohE1QJ6gnvclo/bOnA8j2IrdEmxinGMPa0Cv9pB6NQzVtyWt96x//
-	 6dNWU5GX7waS+2jwE8BVZ3WNZw/wsfy0C0SSKxIKb3QlnIRCNzHVm3c5Ps0q8mrTgW
-	 zsWArKYrCmnfDcrebwcipzmYNQ0mhqZJQQZSGHykLDKtejNlCDmPcno/dc/3rjzGeu
-	 kuxVdLjqHCE3kyZgIMxt9Re36Qo0mzOOVMmO0ZdfPfAx62l26oANlEaaJo1XHJjjzR
-	 MdqLjT6QyxJDg==
-Date: Fri, 10 Jul 2026 14:38:58 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Suren Baghdasaryan <surenb@google.com>, "Liam R . Howlett" <liam@infradead.org>, 
-	Matthew Wilcox <willy@infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 02/30] mm: add kdoc comments for vma_start/last_pgoff()
-Message-ID: <alD1h7kHZdX_0I-0@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <8c618dfd7de419e3b797b8bd1cd921d4c5b8878b.1782735110.git.ljs@kernel.org>
- <03762de9-c695-4cdd-8c25-4fc31335ea15@kernel.org>
+	b=L7FGB0Y9gx5cceVRPkQhH8RGN6CSMLsdg3qQX0uxA+kJU+czojdljZVglkYg3lrXM
+	 3+ZF+pyM9IwUMd3E+W6qr/OCoZzxAKFGi3LCrn4+Do+Xuo/dKvWJMcFdlkzALz1XJG
+	 fqGXREshPQGNxTClx9fLSlebqT2uV6zRArvpHR/0bW1gSx3CIp5oR+sihwJho9ZdD6
+	 gG/7UsWlYyR4B70YCE3DE04qNLbAXRTuSjLeePqW1QHZuXo2cM6F2Fd5Elg7NANI1A
+	 45kea7+e4twVnsBDgoN+LC/xo7xciA2sKeWwOXW/+rwEGKV/PUnjPPHtagbT8ENVYl
+	 Es5E/htdU/NTQ==
+Date: Fri, 10 Jul 2026 15:58:59 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v1 06/11] rcu: Enable RCU callbacks to benefit from
+ expedited grace periods
+Message-ID: <alD6o01ukyliCS37@localhost.localdomain>
+References: <20260624132356.516959-1-puranjay@kernel.org>
+ <20260624132356.516959-7-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <03762de9-c695-4cdd-8c25-4fc31335ea15@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260624132356.516959-7-puranjay@kernel.org>
 
-On Tue, Jul 07, 2026 at 04:46:13PM +0200, David Hildenbrand (Arm) wrote:
-> On 6/29/26 14:23, Lorenzo Stoakes wrote:
-> > Describe what vma_start_pgoff() and vma_last_pgoff() actually provide in
-> > detail.
-> >
-> > This is in order that we can differentiate this between functions that will
-> > be added in a subsequent patch which provide a different page offset.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> > ---
-> >  include/linux/mm.h | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 059144435729..2f00c75e66bd 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -4278,11 +4278,37 @@ static inline unsigned long vma_pages(const struct vm_area_struct *vma)
-> >  	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
-> >  }
-> >
-> > +/**
-> > + * vma_start_pgoff() - Get the page offset of the start of @vma
-> > + * @vma: The VMA whose page offset is required.
-> > + *
-> > + * If the VMA is file-backed, this is the page offset into the file.
-> > + *
-> > + * If the VMA is anonymous, this is the virtual page offset of the start of the
-> > + * VMA - if unfaulted, then vma->vm_start >> PAGE_SHIFT, if faulted then the
-> > + * virtual page offset at the time of first fault.
-> > + *
-> > + * Note that if @vma is a MAP_PRIVATE file-backed mapping, then this returns the
-> > + * file offset.
->
-> There is the ugly case of @vma being a MAP_PRIVATE PFNMAP mapping, where it
-> returns something different.
+Le Wed, Jun 24, 2026 at 06:23:48AM -0700, Puranjay Mohan a écrit :
+> Currently, RCU callbacks only track normal grace-period sequence
+> numbers.  This means callbacks must wait for normal grace periods to
+> complete even when expedited grace periods have already elapsed.
+> 
+> Use the full struct rcu_gp_seq (which tracks both the normal and
+> expedited grace-period sequences) throughout the callback
+> infrastructure.
+> 
+> rcu_segcblist_advance() now checks both normal and expedited GP
+> completion via poll_state_synchronize_rcu_full(), and becomes
+> parameterless since it reads the grace-period state internally.
+> rcu_segcblist_accelerate() stores the full state (both sequences)
+> instead of just the normal one.  rcu_accelerate_cbs() and
+> rcu_accelerate_cbs_unlocked() use get_state_synchronize_rcu_full() to
+> capture both sequences, and the NOCB advance checks use
+> poll_state_synchronize_rcu_full() instead of comparing only the normal
+> sequence.
+> 
+> srcu_segcblist_advance() becomes a standalone implementation because it
+> compares SRCU sequences directly and cannot use
+> poll_state_synchronize_rcu_full(), which reads RCU-specific globals.
+> srcu_segcblist_accelerate() sets the ->exp field to
+> RCU_GET_STATE_NOT_TRACKED so that poll_state_synchronize_rcu_full()
+> compares only ->norm and ignores ->exp.
+> 
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+>  kernel/rcu/rcu_segcblist.c | 30 +++++++++++++++++++++++-------
+>  kernel/rcu/rcu_segcblist.h |  2 +-
+>  kernel/rcu/tree.c          |  9 +++------
+>  kernel/rcu/tree_nocb.h     | 33 +++++++++++++++++++++++----------
+>  4 files changed, 50 insertions(+), 24 deletions(-)
+> 
+> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> index 4e3dfe42bc097..cf8951d33e767 100644
+> --- a/kernel/rcu/rcu_segcblist.c
+> +++ b/kernel/rcu/rcu_segcblist.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/types.h>
+>  
+> +#include "rcu.h"
+>  #include "rcu_segcblist.h"
+>  
+>  /* Initialize simple callback list. */
+> @@ -494,9 +495,9 @@ static void rcu_segcblist_advance_compact(struct rcu_segcblist *rsclp, int i)
+>  
+>  /*
+>   * Advance the callbacks in the specified rcu_segcblist structure based
+> - * on the current value passed in for the grace-period counter.
+> + * on the current value of the grace-period counter.
+>   */
+> -void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gsp)
+> +void rcu_segcblist_advance(struct rcu_segcblist *rsclp)
+>  {
+>  	int i;
+>  
+> @@ -509,7 +510,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gsp)
+>  	 * are ready to invoke, and put them into the RCU_DONE_TAIL segment.
+>  	 */
+>  	for (i = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++) {
+> -		if (ULONG_CMP_LT(gsp->norm, rsclp->gp_seq[i].norm))
+> +		if (!poll_state_synchronize_rcu_full(&rsclp->gp_seq[i]))
 
-Yup, the pfn  I will update doc to mention this abomination too.
+So after more careful review, the smp_mb() at the end of a successful
+poll_state_synchronize_rcu_full() is necessary here because the current locking
+is not enough to make sure we synchronize against the end of the grace period.
 
-The virt pgoff stuff in the RFC fixes this also.
+But what about the smp_mb() at the beginning? Paul what is the point of this one
+already? It advertizes to pair with the smp_mb() on root cleanup but what
+exactly is to be ordered here? Why does gp cleanup need to synchronize with
+failing poll_state_synchronize_rcu_full() ? The smp_mb() before rcu_seq_snap()
+in get_state_synchronize_rcu_full() should already synchronize the accesses
+before that call against the beginning of the grace period.
 
->
-> (remap_pfn_range_prepare_vma() -> vma->vm_pgoff set to PFN)
->
-> --
-> Cheers,
->
-> David
+If we keep all these barriers around and both RCU_WAIT_TAIL and RCU_NEXT_READY
+need to be advanced, that makes 4 smp_mb() calls.
 
-Cheers, Lorenzo
+> @@ -637,14 +638,29 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
+>  
+>  void srcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
+>  {
+> -	struct rcu_gp_seq gs = { .norm = seq };
+> +	int i;
+> +
+> +	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
+> +	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
+> +		return;
+> +
+> +	for (i = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++) {
+> +		if (ULONG_CMP_LT(seq, rsclp->gp_seq[i].norm))
+> +			break;
+
+Why not use the same API here and consolidate the code? ->exp is RCU_GET_STATE_NOT_TRACKED so it's
+harmless?
+
+> @@ -1164,7 +1164,7 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
+>  	 * accelerating callback invocation to an earlier grace-period
+>  	 * number.
+>  	 */
+> -	gs.norm = rcu_seq_snap(&rcu_state.gp_seq);
+> +	get_state_synchronize_rcu_full(&gs);
+
+I have similar concerns about the three smp_mb() in
+get_state_synchronize_rcu_full(). It could be just two (rcu_seq_snap()
+has a barrier that could be just one). Not sure if that matters but,
+just wanted to point that.
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
