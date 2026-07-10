@@ -1,134 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4303EFFDB
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 08:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27353CC314;
+	Fri, 10 Jul 2026 09:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783672895; cv=none; b=nOIIqNWoENKdR/M/r15URttFjvTsSu9n7vbqQ9mqAlyPzzDP72dFt/vfDh1dhT+0rQ9clgvv/4Z9SLqjw1ECa5XIJlKUJDSCq5WOeZB+FOJxYAw1+1D8TfsnneAQH45MRD0qbyxAbveZPkTqSyhnotRRJ7gevD23KFnAIoOVv5k=
+	t=1783676343; cv=none; b=OEy98mduPRRMLJE5JEKmNH1tHcPAOzuVxtCsAUoOAjVsCPF8yeIqTznw7Xck5rj8+AZx1a0jcU6jeDjw6cr/vVBjBdHLfmZ0TcBodg5IKbUyiU368GpPqPqZW3pt9l9nD/MKb8t4+xTagXw26D67U7Rn2HFfKCIMU0//RHCP40s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783672895; c=relaxed/simple;
-	bh=OI6vZMxTu6pN9CeOFlTYwvTpQF8ytBKQzoHYrEpHfxA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b1or2RxOsw1mPq1j0na0+F2q8MkVyZkNxSPJJRczyC4iPLcrMXb1buboV2iSIVcp2W2TVTC8nKzz1AlooHOezakynQqhz1AdnR0y7eNyE9Aeb71XR5fkFYY25P9dZi/5byaULjuJdBsfruNV1C6HgxVDZhGNy6HpZfBGmokBwj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YBZDBdkT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783676343; c=relaxed/simple;
+	bh=3uptIh4kH4uuhdSTDTQhxoio/E/E4znWTE9Ba/A0eN8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=OzlmcbCADA3X2C1YQcBPe4QXqOe9EjXPnufCgmCFjUH2LBGHW25U/PeHuVQlnIITF7dIjY2cWIo5Kp634eQjEDivGD/1plAZwHlTo1W/JsfJrm10IMEMy0fxwF6RcF91aVSrKKEGNX+60czVEHsKLtWsjFMNBlpfdn6tTIkjhOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwqUo2Xw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YBZDBdkT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783672893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OI6vZMxTu6pN9CeOFlTYwvTpQF8ytBKQzoHYrEpHfxA=;
-	b=YBZDBdkTFnQRyP3NseX4c9Z8qW7I/L48TPPTnBLu3HN4f+xhrMUm1OcDGL+GEZpTgQjgz5
-	xu+HL7H5edsDx5NFED/qdUP4QPLhDzjTOPlA7YPGo4vwC1kgLE5uGUDzT2L6VBNEwyjOSX
-	bHBkZd91PhyUPYF9phNvBpThNLYVaPs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-43-oSOcNpb3PImXxD8k6rgnkg-1; Fri, 10 Jul 2026 04:41:32 -0400
-X-MC-Unique: oSOcNpb3PImXxD8k6rgnkg-1
-X-Mimecast-MFC-AGG-ID: oSOcNpb3PImXxD8k6rgnkg_1783672891
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-493bdf90adaso6021355e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 01:41:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783672891; x=1784277691;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=OI6vZMxTu6pN9CeOFlTYwvTpQF8ytBKQzoHYrEpHfxA=;
-        b=lQHDg56hSN39KYz6A1ja0PJQa1UDp/dXgnNfcC01seehDHriHUWqu5pgzvDtfDbFb6
-         maISmcib8fhFSHIPfvNABlXghxS6mrIotrnovXamSDyIqAjAHUN1fVJDfd0QM84gIXHN
-         hXLXdtSraP85nAabkM+DKotuJQOCEuhhNVL0KcZgLnrav+oM85cDEwsbTyeimgjMRsb1
-         0UXFjd8V5vtOnlNEhqfs9sheAaByX3YZklQxUntDriACTLDC60PgobowW7jcfMqBszc5
-         9unhmoitojXrINqF8kIGERDz7FWhY6dgRI1NnXO4OOYMwVOzM6Yd1yvO44lgQNbDkPWj
-         WXQw==
-X-Forwarded-Encrypted: i=1; AHgh+Rq/Vti0/oy7MCgKx+6GrNWOEtwTFsk3vlsdsM+uLq5tL6spNU2phOBeKY54n3hieUFEowse5EmpWG/IckNXurFVG3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwesIusZKn3RarFtmO/YdQSSuyFFVPA+DJHSwJ67Cl3C8iqRT4
-	kq/U2WbJKsknqDuKp5F+fx02dwQiS1MyHaqOA0oJhT+YvyQy7O9RonqUGA3pGETp1TjEQyZ/QHz
-	wrzW4WgZdYSiyUjM8CXhjZeZlV7die3S5mmhIqBpBYyEqNtyNa2i3TSEn6metwX/zElCnEHfkSA
-	==
-X-Gm-Gg: AfdE7cm2cu33hTkYmSDrx/NhYDC6d2ud8+jl1Jkk32bQqGvUaSJ4OX1iv2xXZgdrVBu
-	Poqdp/y+bFYMzoWLJLhKe6bmyfABfl8JaGdZ0uojcijFaOT5dR4Up+cADuOE8VGf2E+X445AoHo
-	uQtGH+8G0ZjL3c+/o4donC2iL399Ff1d7ZYiYUdumfZ0OB9sLb9LVuJE0QWZ31/Pyzxome0nvQn
-	neLNA/U6eMNQcJlIzrVQlTT5lNMb0yQKYtDepBD2Drxa4j996i7k/WPSSethA67YREk4nvPJG+n
-	ZVi5TbzG81G+lZY30iS5vSlLTaZCX3j4UTTkSvAfBJ/pg5pU3SEiZRv21quAnWUdmD4xfP7cbVt
-	vejMIoN4hlYDj6VvH5nMdwD268ueEbHzxhkmCZC70BcwZk4GteJ3uz/jn+a6OC4dj6tVDnIIPCK
-	4w81MB
-X-Received: by 2002:a05:600c:828c:b0:493:bed9:b53d with SMTP id 5b1f17b1804b1-493e68ee07cmr92567665e9.31.1783672890908;
-        Fri, 10 Jul 2026 01:41:30 -0700 (PDT)
-X-Received: by 2002:a05:600c:828c:b0:493:bed9:b53d with SMTP id 5b1f17b1804b1-493e68ee07cmr92567485e9.31.1783672890572;
-        Fri, 10 Jul 2026 01:41:30 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493eb6d53absm119685795e9.6.2026.07.10.01.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 01:41:28 -0700 (PDT)
-Message-ID: <dc79a18f0ff50c4715a998c00e249255dae7b7c7.camel@redhat.com>
-Subject: Re: [PATCH v3 16/17] selftests/verification: Rearrange the
- wwnr_printk test
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Thomas Weissschuh <thomas.weissschuh@linutronix.de>, Tomas Glozar
-	 <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
-	 <wen.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, Shuah Khan
-	 <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Date: Fri, 10 Jul 2026 10:41:26 +0200
-In-Reply-To: <87zezzxt9a.fsf@yellow.woof>
-References: <20260625121440.116317-1-gmonaco@redhat.com>
-	 <20260625121440.116317-17-gmonaco@redhat.com> <87zezzxt9a.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwqUo2Xw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F861F000E9;
+	Fri, 10 Jul 2026 09:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783676342;
+	bh=SpPmgVAbTqTg+8Z+cURPU9o5tBpGFPOz/CFMP1thnYA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=nwqUo2XwIK1CUSX4u96yKUmYFTfaY0KNnM2Df1B0jS7IL0HOQK0wh2tAFA3U7f6op
+	 mfYUT/rDSTfCjcvhMA0wmfp3w9PXoCpfO6/xjcfzWnGVByvpnaqY5hdVUld6qilGLh
+	 fe6OMXZD4hBuegBjqKLuGl3xK81IMOVXVgY2jzHL00I13nmrjZZVFYz7KmN9uEftCx
+	 6NOivea/jMhQAexnD4dTnRVb6h4t6VK3YDWNX8xi9B9WErd7F03mXvsGtxU3KxUSNi
+	 rZwnCfNYrcDpb5UEU4l1Hf+FxaWyjf3368m+ru7JpYZer6gVRPEgtImvUFNXF0MbfC
+	 DVt7/ctdmoVWw==
+Date: Fri, 10 Jul 2026 18:38:57 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Pu Hu <hupu@transsion.com>
+Cc: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "davem@davemloft.net"
+ <davem@davemloft.net>, Hongyan Xia <hongyan.xia@transsion.com>, Jiazi Li
+ <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
+ <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
+ "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
+Subject: Re: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
+ single-stepping
+Message-Id: <20260710183857.176dc60026ea9fcbe4984b1d@kernel.org>
+In-Reply-To: <20260710063242.228714-3-hupu@transsion.com>
+References: <20260710063242.228714-1-hupu@transsion.com>
+	<20260710063242.228714-3-hupu@transsion.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: l5F2AL5sFwI1YllXqngSAFTH4n3H5LHUNUSbK5YHCz4_1783672891
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2026-07-10 at 08:18 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > Simplify the test and run the steps expecting no reaction before the on=
-e
-> > expecting reactions.
->=20
-> This requirement is not clear from the code. I fear a new developer who
-> wants to introduce a new test case will easily trip over this, or even
-> us a few months from now.
->=20
-> Instead of this, how about each test case discards or ignores all
-> previous reactions?
+On Fri, 10 Jul 2026 06:32:55 +0000
+Pu Hu <hupu@transsion.com> wrote:
 
-Fair points, the issue is that we are hammering wwnr, on some systems we ma=
-y
-still see printks for long after the monitor was disabled, I tried that gre=
-p -m1
-trick to mitigate that.
+> From: Pu Hu <hupu@transsion.com>
+> 
+> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
+> can happen when tracing or perf code runs from the debug exception path
+> while the first kprobe is preparing or executing its out-of-line
+> single-step instruction.
+> 
+> Currently arm64 treats a kprobe hit in KPROBE_HIT_SS as unrecoverable,
+> the same as a hit in KPROBE_REENTER. This is too strict. A hit in
+> KPROBE_HIT_SS is still a one-level reentry and can be handled by saving
+> the current kprobe state and setting up single-step for the new probe,
+> just like reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
+> 
+> The truly unrecoverable case is hitting another kprobe while already in
+> KPROBE_REENTER, because the reentry save area has already been consumed.
+> 
+> Move KPROBE_HIT_SS to the recoverable reentry cases and leave
+> KPROBE_REENTER as the unrecoverable nested reentry case.
+> 
+> This change also requires saving saved_irqflag in struct prev_kprobe.
+> When a nested kprobe calls kprobes_save_local_irqflag(), it overwrites
+> kcb->saved_irqflag with the currently masked DAIF value, losing the
+> outer kprobe's original DAIF state. Without this fix, when the outer
+> kprobe's single-step finishes, kprobes_restore_local_irqflag() applies
+> the wrong DAIF mask and leaves interrupts permanently disabled.
+> 
+> Extend struct prev_kprobe with a saved_irqflag field and save/restore it
+> alongside kp and status. This ensures the outer kprobe's original
+> interrupt state is preserved across reentry.
+> 
+> This mirrors the x86 fix in commit 6a5022a56ac3
+> ("kprobes/x86: Allow to handle reentered kprobe on single-stepping").
+> 
 
-To ignore all previous reactions reliably we need to wait for the buffers t=
-o
-flush, something like waiting for a full second for nothing new on the
-ringbuffer perhaps. I could think of that or at least make this more clear =
-with
-comments.
+OK, this looks good to me.
 
-Thanks,
-Gabriele
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+for this series.
+
+Will, Catalin, can you pick this series?
+
+Thanks!
+
+> Signed-off-by: Pu Hu <hupu@transsion.com>
+> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
+> ---
+>  arch/arm64/include/asm/kprobes.h   |  6 ++++++
+>  arch/arm64/kernel/probes/kprobes.c | 23 ++++++++++++++++++++++-
+>  2 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
+> index f2782560647b..35ce2c94040e 100644
+> --- a/arch/arm64/include/asm/kprobes.h
+> +++ b/arch/arm64/include/asm/kprobes.h
+> @@ -26,6 +26,12 @@
+>  struct prev_kprobe {
+>  	struct kprobe *kp;
+>  	unsigned int status;
+> +
+> +	/*
+> +	 * The original DAIF state of the outer kprobe, saved here before
+> +	 * a nested kprobe overwrites kcb->saved_irqflag during reentry.
+> +	 */
+> +	unsigned long saved_irqflag;
+>  };
+>  
+>  /* per-cpu kprobe control block */
+> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+> index 798e4b091d1a..4e0efad5caf2 100644
+> --- a/arch/arm64/kernel/probes/kprobes.c
+> +++ b/arch/arm64/kernel/probes/kprobes.c
+> @@ -174,12 +174,27 @@ static void __kprobes save_previous_kprobe(struct kprobe_ctlblk *kcb)
+>  {
+>  	kcb->prev_kprobe.kp = kprobe_running();
+>  	kcb->prev_kprobe.status = kcb->kprobe_status;
+> +
+> +	/*
+> +	 * Save the outer kprobe's original DAIF flags before the nested
+> +	 * kprobe calls kprobes_save_local_irqflag() and overwrites
+> +	 * kcb->saved_irqflag. Without this, the outer kprobe will restore
+> +	 * the wrong DAIF state and leave interrupts permanently masked.
+> +	 */
+> +	kcb->prev_kprobe.saved_irqflag = kcb->saved_irqflag;
+>  }
+>  
+>  static void __kprobes restore_previous_kprobe(struct kprobe_ctlblk *kcb)
+>  {
+>  	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
+>  	kcb->kprobe_status = kcb->prev_kprobe.status;
+> +
+> +	/*
+> +	 * Restore the outer kprobe's saved_irqflag so that when its
+> +	 * single-step completes, kprobes_restore_local_irqflag() uses
+> +	 * the correct original DAIF value.
+> +	 */
+> +	kcb->saved_irqflag = kcb->prev_kprobe.saved_irqflag;
+>  }
+>  
+>  static void __kprobes set_current_kprobe(struct kprobe *p)
+> @@ -240,10 +255,16 @@ static int __kprobes reenter_kprobe(struct kprobe *p,
+>  	switch (kcb->kprobe_status) {
+>  	case KPROBE_HIT_SSDONE:
+>  	case KPROBE_HIT_ACTIVE:
+> +	case KPROBE_HIT_SS:
+> +		/*
+> +		 * A probe can be hit while another kprobe is preparing or
+> +		 * executing its XOL single-step instruction. This is still a
+> +		 * recoverable one-level reentry, so handle it in the same way as
+> +		 * reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
+> +		 */
+>  		kprobes_inc_nmissed_count(p);
+>  		setup_singlestep(p, regs, kcb, 1);
+>  		break;
+> -	case KPROBE_HIT_SS:
+>  	case KPROBE_REENTER:
+>  		pr_warn("Failed to recover from reentered kprobes.\n");
+>  		dump_kprobe(p);
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
