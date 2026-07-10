@@ -1,124 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C867826A1C4;
-	Fri, 10 Jul 2026 05:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A87B379C29;
+	Fri, 10 Jul 2026 05:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783660182; cv=none; b=MTJrWNBHaKPAVCWPvagh62+vKscI83rEg81d6WDGLNQMRbLklH27u0TIGLST5xH1oWwizrqazAftsYTyIl9+ad0/NRsWGhQ3VxnmSzIeVmp0jctMnH1t91ruzke8gF4Kj1Ul8bfJkl8Jpv4fXjD7wQDdQQ0NNsHCgDDL4MbQ6xM=
+	t=1783661476; cv=none; b=u02sS28iPwlbetITheuUI4O1TRGe57qhWaPwrx/f2P7A71ijNyIcyzsM0sbS7Vm2Qm5+Betrqg+xM4wLxDFhE7PJSHdfAcqoE8UVJHoiX46OEuqSY0p6+6Hwv7yf1yWTM6HOgl0d6W+ZLtFwyXkot7Ba7XKuJbpp5C3J/Hlz1yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783660182; c=relaxed/simple;
-	bh=0oASfdtSkBx2RepbUZpcih1U7xj0IUPhyZ9OhgcqHzc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZY2puBteVHjwWb0PJB2G7l9dzYcjehekyXgQ4x30XC24E+uApmVMWVe2jG4BV2m5JcpznOLSG7ItrzTDCCt/mq74BmeO47njy8BuVWZ1YBzo8scfMypWwYauMGftKILYkR1Z43/G68EKcVKmjFLxQdkm1xReclTVw0Z0396N3us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RV6c1iXa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783661476; c=relaxed/simple;
+	bh=F+56U6C6KuvEh/81ka3tRtqh4dyvZl3JiYsBpnaflyE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZXRkB7Xs34VkoXHIHvsRe9JKrDWC/M2GkF1J8R/xDCUmmH/GUKNRt5oeDOg0HYfpnS7rYQ1dUVhv6d/ihyO3IMSfpLkLPhFfvrVhhdSFJ1SoRmyh7rPJnv7z9O9kGadgmCHKaAnoLZLbWKno1HX3yaQBe733LSdo6dbFDcvKnIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPTbVu8q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RV6c1iXa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFD641F000E9;
-	Fri, 10 Jul 2026 05:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783660181;
-	bh=/gvB5qwbT78hXA6WigUj4DzknIHPDynctPCi9ezZArQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=RV6c1iXakob2plSYioZq0ZlQFxbU0si4E0zbzqFMhpsnIOL/qW84hVY3I/rBp5KA6
-	 8jpgSJr3mGUxqYb/QpBzEOqPCMAm4KDqMvOFIY4umfyT/9gwFRbUIhZ1HWTJ3Dx5Ok
-	 s2KJUJqmWTd3MvL7/D5HJXiOseK9GWy8mtpjqoRhSXe1KQemCk3LuPvymovPU+SsIz
-	 7l+sQk1Hg9fW2P4OvWMqa1I8el+LjzM0gEX2DAr0ZPhfWrVhdntU0er+Z1FYce0wRg
-	 m4EREBILvvVmtbsc4BdUA+1gmoBfAYJeTeHhFBq9sHZjQFKw7Xr/oNgEhcLmJsQ9GR
-	 IrpcOLcYdb/1A==
-Date: Fri, 10 Jul 2026 14:09:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Pu Hu <hupu@transsion.com>
-Cc: "ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "davem@davemloft.net"
- <davem@davemloft.net>, Hongyan Xia <hongyan.xia@transsion.com>, Jiazi Li
- <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
- <naveen@kernel.org>, "will@kernel.org" <will@kernel.org>,
- "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
-Subject: Re: [RFC v2 2/3] arm64: kprobes: Allow reentering kprobes while
- single-stepping
-Message-Id: <20260710140936.8788416564452e490c71634c@kernel.org>
-In-Reply-To: <20260709142215.226872-3-hupu@transsion.com>
-References: <20260709142215.226872-1-hupu@transsion.com>
-	<20260709142215.226872-3-hupu@transsion.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPTbVu8q"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07B20C2BCB9;
+	Fri, 10 Jul 2026 05:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1783661476;
+	bh=F+56U6C6KuvEh/81ka3tRtqh4dyvZl3JiYsBpnaflyE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=PPTbVu8qHE0mx5v9UcIPNs5BFLXPzwWihcTILO098QXtbkkne0slwGtCOSVDwFIMx
+	 h/j3/ekIbQuu5FOvd1F2vdGF6mPUfTKycmNhLU8F5VeL3LlP8UZ06HTMEY+5Wx9du9
+	 f6QU7UioNEIsp9vQj6QmzC8LTGy55WYvGFNvSEGsc3vMH64fZOfqFMNXpE0AyvQR+h
+	 OPaOS+2EyjLnmAWQ8nUuVAY19FRgk5CLMsGcOPuCPl9+xWGu2oQd25rDbqqg45yA+0
+	 Xd6xqVaA/WNeYTAXF7MeaAskfRnNbCV0UkGj8WcHPPok5maNJupRFfXGwuuDStR9GT
+	 UT00LMnl7AVhA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F49C43458;
+	Fri, 10 Jul 2026 05:31:15 +0000 (UTC)
+From: Eugene Mavick via B4 Relay <devnull+m.mavick.dev@kernel.org>
+Subject: [PATCH v2 0/5] tracing: add ref_trace_final_put tracing
+Date: Fri, 10 Jul 2026 13:30:38 +0800
+Message-Id: <20260710-refcount-final-put-trace-v2-0-557cfce860a2@mavick.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH6DUGoC/53NPQ7CMAwF4KugzAQ5aZpQJu6BGNzYhQhoq7REI
+ NS7E34GJpBYLD3L/t5NDBwDD2I1u4nIKQyha3PQ85nwe2x3LAPlLDRoC1YbGbnx3bkdZRNaPMr
+ +PMoxomdpqpqcL/IsUeT3Pl+Gy5PebHPeh2Hs4vXZlNRj+0IdfEGTkiBrs3TGEqpGu/UJU/CHB
+ XF6lLyF8ofgiQCUsdpi9Z+ARlHREPDS/ikAclVYptqV8Clsp2m6A/C+Nx2HAQAA
+X-Change-ID: 20260624-refcount-final-put-trace-49bd7c39bd5a
+To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Boqun Feng <boqun@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Gary Guo <gary@garyguo.net>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, 
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Eugene Mavick <m@mavick.dev>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2130; i=m@mavick.dev;
+ h=from:subject:message-id;
+ bh=F+56U6C6KuvEh/81ka3tRtqh4dyvZl3JiYsBpnaflyE=;
+ b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFkBzT2nTffvL220YFjqU5G9671GPtP7pTwnHPj665sea
+ V+MthXqKGVhEONikBVTZKnJSnDPWDkr0fjopB6YOaxMIEMYuDgFYCKc+xn+qQh1Rf5p+KvZv67d
+ RjgjT/Hwv0U3T1fafTyl9LhojQvrNkaGB9U7Lx3R8z05//qev8/ZJ76TZp7dJnnJ4vNylqXXXls
+ HcwAA
+X-Developer-Key: i=m@mavick.dev; a=openpgp;
+ fpr=7C6A604768A99A6133C5928C9D1FCA7EDB7D344F
+X-Endpoint-Received: by B4 Relay for m@mavick.dev/default with auth_id=850
+X-Original-From: Eugene Mavick <m@mavick.dev>
+Reply-To: m@mavick.dev
 
-On Thu, 9 Jul 2026 14:22:25 +0000
-Pu Hu <hupu@transsion.com> wrote:
+When debugging use-after-free(UAF) bugs, knowing when the object reaches
+0 references and enters final release can significantly aid the
+debugging process.
 
-> From: Pu Hu <hupu@transsion.com>
-> 
-> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
-> can happen when tracing or perf code runs from the debug exception path
-> while the first kprobe is preparing or executing its out-of-line
-> single-step instruction.
-> 
-> Currently arm64 treats a kprobe hit in KPROBE_HIT_SS as unrecoverable,
-> the same as a hit in KPROBE_REENTER. This is too strict. A hit in
-> KPROBE_HIT_SS is still a one-level reentry and can be handled by saving
-> the current kprobe state and setting up single-step for the new probe,
-> just like reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
-> 
-> The truly unrecoverable case is hitting another kprobe while already in
-> KPROBE_REENTER, because the reentry save area has already been consumed.
-> 
-> Move KPROBE_HIT_SS to the recoverable reentry cases and leave
-> KPROBE_REENTER as the unrecoverable nested reentry case.
-> 
-> This mirrors the x86 fix in commit 6a5022a56ac3
-> ("kprobes/x86: Allow to handle reentered kprobe on single-stepping").
-> 
+There is currently no universal way to trace this information.
 
-Hi, as Sashiko commented, we have to save the saved_irqflag to
-prev_kprobbe.
+This patch series implements tracing of the final puts in the
+most widely used refcounting implementations,
+refcount_t(and thus kref which uses it), and percpu-ref.
 
-https://sashiko.dev/#/patchset/20260709142215.226872-1-hupu%40transsion.com?part=2
+The tracepoint records three fields:
+- caller: function that called the refcounting
+  function(refcount_sub_and_test, percpu_ref_put_many)
+- fn: refcounting function(eg refcount_sub_and_test)
+- obj: refcount object(struct percpu_ref, refcount_t) 
 
-Thank you,
+Signed-off-by: Eugene Mavick <m@mavick.dev>
+---
+Changes in v2:
+-include/linux/ref_trace.h: change macro name, use direct tracepoint
+ call in macro to avoid double check
+-add tracepoint to refcount_dec_if_one
+-kunit: make significant improvements to design, fix critical bug, add test case for
+ refcount_dec_if_one()
+-Link to v1: https://lore.kernel.org/r/20260705-refcount-final-put-trace-v1-0-0ae936edb750@mavick.dev
 
-> Signed-off-by: Pu Hu <hupu@transsion.com>
-> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> ---
->  arch/arm64/kernel/probes/kprobes.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index 798e4b091d1a..2ca5916eca2f 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -240,10 +240,16 @@ static int __kprobes reenter_kprobe(struct kprobe *p,
->  	switch (kcb->kprobe_status) {
->  	case KPROBE_HIT_SSDONE:
->  	case KPROBE_HIT_ACTIVE:
-> +	case KPROBE_HIT_SS:
-> +		/*
-> +		 * A probe can be hit while another kprobe is preparing or
-> +		 * executing its XOL single-step instruction. This is still a
-> +		 * recoverable one-level reentry, so handle it in the same way as
-> +		 * reentry from KPROBE_HIT_ACTIVE or KPROBE_HIT_SSDONE.
-> +		 */
->  		kprobes_inc_nmissed_count(p);
->  		setup_singlestep(p, regs, kcb, 1);
->  		break;
-> -	case KPROBE_HIT_SS:
->  	case KPROBE_REENTER:
->  		pr_warn("Failed to recover from reentered kprobes.\n");
->  		dump_kprobe(p);
-> -- 
-> 2.43.0
-> 
+---
+Eugene Mavick (5):
+      tracing: add ref_trace_final_put tracepoint
+      refcount: add ref_trace_final_put tracepoint
+      percpu-refcount: add ref_trace_final_put trace
+      kunit: add test for ref_trace_final_put
+      MAINTAINERS: add entries for ref_trace_final_put
 
+ MAINTAINERS                      |   3 +
+ include/linux/percpu-refcount.h  |   5 +-
+ include/linux/ref_trace.h        |  26 ++++++++
+ include/linux/refcount.h         |   2 +
+ include/trace/events/ref_trace.h |  46 +++++++++++++
+ lib/Kconfig                      |  10 +++
+ lib/Makefile                     |   2 +
+ lib/ref_trace.c                  |  12 ++++
+ lib/refcount.c                   |   8 ++-
+ lib/tests/Makefile               |   1 +
+ lib/tests/ref_trace_kunit.c      | 136 +++++++++++++++++++++++++++++++++++++++
+ 11 files changed, 249 insertions(+), 2 deletions(-)
+---
+base-commit: df685633c3dbc67441cc86f1c3fee58de4652ba2
+change-id: 20260624-refcount-final-put-trace-49bd7c39bd5a
 
+Best regards,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Eugene Mavick <m@mavick.dev>
+
+
