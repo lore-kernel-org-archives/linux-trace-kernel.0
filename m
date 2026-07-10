@@ -1,70 +1,954 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CF441F7E9;
-	Fri, 10 Jul 2026 12:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4791C3F823E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jul 2026 13:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783687291; cv=none; b=AiDsmGLBu2cMh0jI6Wm8E8O0GuyMO9+tvrJaVnq7t7/p6l+cZpfpgfb1hlaTYV0Wd7wj6v0RNOFKzfyQBtpgAc3rqxbRCN3zChKXpIEeTspAMj1rmokVveE0tmLZQKgjN/2CzmrEwjkRbCrwygz8XFMdVQc0RiEXEbzCMFNPGR4=
+	t=1783689486; cv=none; b=JhfVosAjPdNW8+W3iQebfqe8tn2GdNpz+PPh7JlFCI51SVbeQ2RXjnTkEVFAMkfKZJhUYna7gBdgmmw1OAAHTLsEbTDznpAohK0TJqekU+IDAPlC5yNoyOsP0qUrmTdRwyFfH2h90buHaPqiD4S9kn2OQTu3yYvq66AAuPA4M14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783687291; c=relaxed/simple;
-	bh=EE3TjfG5eBu9Kd/+X8PmMovB9kNi9gsUzWBASrpUxJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZCzk2O0JMKJD++b3poocO5HslT63b5/iz6Qq/iG8G8DlFLXrUymUsvdATjfnBeFX31SZ5L3BaYgyNxSfngohU2dpu1D0qKgOE063sCRUnahyXMey7UV7i+e3hwsSHnNKUtS9WiKksY4+YmjxzsRBn6A9mpk9lE3i4uI5ZhwpDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wiaptpKI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783689486; c=relaxed/simple;
+	bh=69zgaFVrg1ebRb3y1/RM/KbmvrKyk7dFwiH9gsVZme8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=t4RLKwEFcY3WlTlibegT6gVkpkexD+x+usVJhqN6a1R0EaN1KxaaOtdLhkI+TXM3cCWU7YND9asaVLFNKADBAjCWV+WueRmtq+1ttGsVL0uzbPCaPli9P3Xgd0b0ItREgp5eRPTk3j5rcSpGggWWku173iCpzEDqNgVTEvaAXW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DWB1PIhb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wiaptpKI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7A61F000E9;
-	Fri, 10 Jul 2026 12:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1783687289;
-	bh=hDRYjbEaGoQ0tWoMPUac6jeuxz0p0lipsR0FrMDOr4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=wiaptpKIaT2vKbCT97Xw1lAzPN97jTJ7LbV6tqRp67jzEMDgFgq30g/xXN7ILSxyy
-	 Rg79dR3+x86n6Ikq3v85BLbHXFwdzzK68+Y5U52/KhKzspCYBSa/OI0w69KsCbJFOg
-	 4mtV7UUdjdoZ36eI2aZaQEtKh5KhS0xygKPCyjVM=
-Date: Fri, 10 Jul 2026 14:41:25 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jiri Slaby <jirislaby@kernel.org>, konrad.dybcio@oss.qualcomm.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-	mukesh.savaliya@oss.qualcomm.com, aniket.randive@oss.qualcomm.com,
-	chandana.chiluveru@oss.qualcomm.com
-Subject: Re: [PATCH v5 2/2] serial: qcom-geni: Add tracepoints for Qualcomm
- GENI serial driver
-Message-ID: <2026071015-empower-sandpit-97a8@gregkh>
-References: <20260615-add-tracepoints-for-qcom-geni-serial-v5-0-2efa4c97e0e2@oss.qualcomm.com>
- <20260615-add-tracepoints-for-qcom-geni-serial-v5-2-2efa4c97e0e2@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DWB1PIhb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783689483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=idwv3cV4NKcOdI3OITy0f7XlKFFFOZEfK14RaALfhOE=;
+	b=DWB1PIhbyXnMpQTYrdtCtOKKeegutS8QYQy+EW+uy7N+gR/vpu9A2vIAnN8uSIZt/50Ood
+	Ju2BuUY15uC4o1MyPGPkCp9veJM6rfa9F0Hu1EIQ/NHQP+f/Nrk94IUxzddex3Rl6CdAZ0
+	CbC9QWu53NHGh9Oaswq68INXry0q068=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-Lb_bng-VPgqIJwgstSXx0Q-1; Fri,
+ 10 Jul 2026 09:16:06 -0400
+X-MC-Unique: Lb_bng-VPgqIJwgstSXx0Q-1
+X-Mimecast-MFC-AGG-ID: Lb_bng-VPgqIJwgstSXx0Q_1783689365
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4001818001E6;
+	Fri, 10 Jul 2026 13:16:05 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.48.128])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 34390414;
+	Fri, 10 Jul 2026 13:16:01 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] rtla/cli: Unify and improve range validation logic
+Date: Fri, 10 Jul 2026 15:15:54 +0200
+Message-ID: <20260710131554.338335-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260615-add-tracepoints-for-qcom-geni-serial-v5-2-2efa4c97e0e2@oss.qualcomm.com>
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: NhIqmqoPxBu7kMmq5QcEesBoKdPZdzAVLIknW4F0bCQ_1783689365
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Mon, Jun 15, 2026 at 07:46:53PM +0530, Praveen Talari wrote:
-> Add tracing to the Qualcomm GENI serial driver to improve runtime
-> observability.
-> 
-> Trace hooks are added at key points including termios and clock
-> configuration, manual control get/set, interrupt handling, and data
-> TX/RX paths.
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
-> ---
-> v2->v3:
-> - Updated commit text(removed example as it was available on cover
->   letter).
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 27 +++++++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
+Several RTLA options do range validation inside the CLI parser layer
+(e.g. -p/--period). When RTLA migrated CLI parsing to libsubcmd, this
+logic was moved unchanged inside opt_*() callbacks.
 
-Does not apply to my tty-next branch :(
+Unify range validation so that all options use two newly added
+functions, check_llong_range() and check_int_range(), to validate the
+range.
+
+The new range validation returns -1 from opt_*() callbacks rather than
+hard-exit with fatal(), allowing the help message for the specific
+option to be automatically displayed by libsubcmd logic.
+
+Many options no longer need a custom callback, as they use the unified
+range validation of opt_llong_callback() and opt_int_callback().
+Validation for several other options is improved:
+
+- timerlat -p/--period: lower bound raised from 1 to 100 us to match
+  the kernel's timerlat_min_period in trace_osnoise.c.
+- timerlat -A/--aligned: reject negative values.
+- timerlat --deepest-idle-state: add range [-1, INT_MAX]; previously,
+  values <= -2 were read as "option not set".
+- timerlat -p/--period, -A/--aligned, -b/--bucket-size: properly reject
+  negative values instead of passing them to the tracer.
+
+Remove unit tests for removed callbacks and test the new range
+validation functionality of opt_llong_callback() and opt_int_callback().
+
+Update runtime tests for histogram options to account for the new error
+messages and exit value.
+
+Assisted-by: Claude:claude-opus-4-6
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+Dependencies:
+- "rtla: Allow unsetting non-list custom-callback CLI options" patchset
+  Link: https://lore.kernel.org/linux-trace-kernel/20260629083654.1548925-1-tglozar@redhat.com/T/#u
+
+ tools/tracing/rtla/src/cli_p.h                | 234 +++++-------
+ tools/tracing/rtla/tests/osnoise.t            |   2 +-
+ tools/tracing/rtla/tests/timerlat.t           |   2 +-
+ .../rtla/tests/unit/cli_opt_callback.c        | 353 ++++++------------
+ 4 files changed, 215 insertions(+), 376 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
+index 3a93dba60215b..b7688559ca53d 100644
+--- a/tools/tracing/rtla/src/cli_p.h
++++ b/tools/tracing/rtla/src/cli_p.h
+@@ -5,6 +5,7 @@
+ #error "Private header file included outside of cli.c module"
+ #endif
+ 
++#include <limits.h>
+ #include <linux/kernel.h>
+ #include <subcmd/parse-options.h>
+ 
+@@ -32,9 +33,73 @@ static const int default_bucket_size = 1;
+ static const int default_entries = 256;
+ static const enum stack_format default_stack_format = STACK_FORMAT_TRUNCATE;
+ 
++/*
++ * Range checking for long long and int option callbacks.
++ *
++ * Pass a pointer to a const struct as opt->data to enable range checking.
++ * If opt->data is NULL, no range check is performed.
++ */
++struct llong_range {
++	long long min;
++	long long max;
++};
++
++struct int_range {
++	int min;
++	int max;
++};
++
++#define LLONG_RANGE(lo, hi) \
++	(&(const struct llong_range){ .min = (lo), .max = (hi) })
++
++#define INT_RANGE(lo, hi) \
++	(&(const struct int_range){ .min = (lo), .max = (hi) })
++
++static int check_llong_range(const struct option *opt, long long value)
++{
++	const struct llong_range *range = opt->data;
++
++	if (!range)
++		return 0;
++	if (value < range->min || value > range->max) {
++		fprintf(stderr, " Error: --%s value %lld is out of range [%lld, %lld]\n",
++			opt->long_name, value, range->min, range->max);
++		return -1;
++	}
++	return 0;
++}
++
++static int check_int_range(const struct option *opt, int value)
++{
++	const struct int_range *range = opt->data;
++
++	if (!range)
++		return 0;
++	if (value < range->min || value > range->max) {
++		fprintf(stderr, " Error: --%s value %d is out of range [%d, %d]\n",
++			opt->long_name, value, range->min, range->max);
++		return -1;
++	}
++	return 0;
++}
++
++/*
++ * OPT_CALLBACK variant that populates .data (for range checking).
++ */
++#define RTLA_OPT_CALLBACK_DATA(s, l, v, a, h, f, d) \
++	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), \
++	  .value = (v), .argh = (a), .help = (h), .callback = (f), \
++	  .data = (void *)(d) }
++
++#define RTLA_OPT_CALLBACK_DATA_DEFVAL(s, l, v, a, h, f, d, dv) \
++	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), \
++	  .value = (v), .argh = (a), .help = (h), .callback = (f), \
++	  .data = (void *)(d), .defval = (intptr_t)(dv) }
++
+ /*
+  * Shorthand macros for integer/long long command line options using
+- * opt_int_callback/opt_llong_callback, with variants that set defval.
++ * opt_int_callback/opt_llong_callback, with variants that set defval
++ * and/or data (for range checking).
+  *
+  * Note: defval's type is intptr_t. opt_int_callback interprets it directly as
+  * an int, opt_llong_callback interprets it as a pointer to a long long, as
+@@ -47,6 +112,10 @@ static const enum stack_format default_stack_format = STACK_FORMAT_TRUNCATE;
+ 	.short_name = (s), .long_name = (l), .value = (v), .argh = (a), \
+ 	.help = (h), .callback = opt_llong_callback, .defval = (intptr_t)(d) }
+ 
++#define RTLA_OPT_LLONG_DATA(s, l, v, a, h, d) { .type = OPTION_CALLBACK, \
++	.short_name = (s), .long_name = (l), .value = (v), .argh = (a), \
++	.help = (h), .callback = opt_llong_callback, .data = (void *)(d) }
++
+ #define RTLA_OPT_INT(s, l, v, a, h) \
+ 	OPT_CALLBACK(s, l, v, a, h, opt_int_callback)
+ 
+@@ -54,6 +123,11 @@ static const enum stack_format default_stack_format = STACK_FORMAT_TRUNCATE;
+ 	.short_name = (s), .long_name = (l), .value = (v), .argh = (a), \
+ 	.help = (h), .callback = opt_int_callback, .defval = (intptr_t)(d) }
+ 
++#define RTLA_OPT_INT_DATA_DEFVAL(s, l, v, a, h, d, dv) { .type = OPTION_CALLBACK, \
++	.short_name = (s), .long_name = (l), .value = (v), .argh = (a), \
++	.help = (h), .callback = opt_int_callback, \
++	.data = (void *)(d), .defval = (intptr_t)(dv) }
++
+ /*
+  * Macros for command line options common to all tools
+  *
+@@ -182,6 +256,8 @@ static int opt_llong_callback(const struct option *opt, const char *arg, int uns
+ 		return -1;
+ 
+ 	*value = get_llong_from_str((char *)arg);
++	if (check_llong_range(opt, *value))
++		return -1;
+ 	return 0;
+ }
+ 
+@@ -199,6 +275,8 @@ static int opt_int_callback(const struct option *opt, const char *arg, int unset
+ 
+ 	if (strtoi(arg, value))
+ 		return -1;
++	if (check_int_range(opt, *value))
++		return -1;
+ 
+ 	return 0;
+ }
+@@ -359,13 +437,13 @@ static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
+ /*
+  * Macros for command line options specific to osnoise
+  */
+-#define OSNOISE_OPT_PERIOD OPT_CALLBACK('p', "period", &params->period, "us", \
++#define OSNOISE_OPT_PERIOD RTLA_OPT_LLONG_DATA('p', "period", &params->period, "us", \
+ 	"osnoise period in us", \
+-	opt_osnoise_period_cb)
++	LLONG_RANGE(1, 10000000))
+ 
+-#define OSNOISE_OPT_RUNTIME OPT_CALLBACK('r', "runtime", &params->runtime, "us", \
++#define OSNOISE_OPT_RUNTIME RTLA_OPT_LLONG_DATA('r', "runtime", &params->runtime, "us", \
+ 	"osnoise runtime in us", \
+-	opt_osnoise_runtime_cb)
++	LLONG_RANGE(100, LLONG_MAX))
+ 
+ #define OSNOISE_OPT_THRESHOLD RTLA_OPT_LLONG('T', "threshold", &params->threshold, "us", \
+ 	"the minimum delta to be considered a noise")
+@@ -400,44 +478,6 @@ static int opt_osnoise_auto_cb(const struct option *opt, const char *arg, int un
+ 	return 0;
+ }
+ 
+-static int opt_osnoise_period_cb(const struct option *opt, const char *arg, int unset)
+-{
+-	unsigned long long *period = opt->value;
+-
+-	if (unset) {
+-		*period = 0;
+-		return 0;
+-	}
+-
+-	if (!arg)
+-		return -1;
+-
+-	*period = get_llong_from_str((char *)arg);
+-	if (*period > 10000000)
+-		fatal("Period longer than 10 s");
+-
+-	return 0;
+-}
+-
+-static int opt_osnoise_runtime_cb(const struct option *opt, const char *arg, int unset)
+-{
+-	unsigned long long *runtime = opt->value;
+-
+-	if (unset) {
+-		*runtime = 0;
+-		return 0;
+-	}
+-
+-	if (!arg)
+-		return -1;
+-
+-	*runtime = get_llong_from_str((char *)arg);
+-	if (*runtime < 100)
+-		fatal("Runtime shorter than 100 us");
+-
+-	return 0;
+-}
+-
+ static int opt_osnoise_trace_output_cb(const struct option *opt, const char *arg, int unset)
+ {
+ 	const char **trace_output = opt->value;
+@@ -492,9 +532,9 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
+ /*
+  * Macros for command line options specific to timerlat
+  */
+-#define TIMERLAT_OPT_PERIOD OPT_CALLBACK('p', "period", &params->timerlat_period_us, "us", \
++#define TIMERLAT_OPT_PERIOD RTLA_OPT_LLONG_DATA('p', "period", &params->timerlat_period_us, "us", \
+ 	"timerlat period in us", \
+-	opt_timerlat_period_cb)
++	LLONG_RANGE(100, 1000000))
+ 
+ #define TIMERLAT_OPT_STACK RTLA_OPT_LLONG('s', "stack", &params->print_stack, "us", \
+ 	"save the stack trace at the IRQ if a thread latency is higher than the argument in us")
+@@ -503,14 +543,15 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
+ 	"display data in nanoseconds", \
+ 	opt_nano_cb)
+ 
+-#define TIMERLAT_OPT_DMA_LATENCY OPT_CALLBACK(0, "dma-latency", &params->dma_latency, "us", \
++#define TIMERLAT_OPT_DMA_LATENCY RTLA_OPT_INT_DATA_DEFVAL(0, "dma-latency", \
++	&params->dma_latency, "us", \
+ 	"set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency", \
+-	opt_dma_latency_cb)
++	INT_RANGE(0, 10000), default_dma_latency)
+ 
+-#define TIMERLAT_OPT_DEEPEST_IDLE_STATE RTLA_OPT_INT_DEFVAL(0, "deepest-idle-state", \
++#define TIMERLAT_OPT_DEEPEST_IDLE_STATE RTLA_OPT_INT_DATA_DEFVAL(0, "deepest-idle-state", \
+ 	&params->deepest_idle_state, "n", \
+ 	"only go down to idle state n on cpus used by timerlat to reduce exit from idle latency", \
+-	default_deepest_idle_state)
++	INT_RANGE(-1, INT_MAX), default_deepest_idle_state)
+ 
+ #define TIMERLAT_OPT_AA_ONLY OPT_CALLBACK(0, "aa-only", params, "us", \
+ 	"stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)", \
+@@ -530,33 +571,14 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
+ 	"set the stack format (truncate, skip, full)", \
+ 	opt_stack_format_cb)
+ 
+-#define TIMERLAT_OPT_ALIGNED OPT_CALLBACK('A', "aligned", params, "us", \
++#define TIMERLAT_OPT_ALIGNED RTLA_OPT_CALLBACK_DATA('A', "aligned", params, "us", \
+ 	"align thread wakeups to a specific offset", \
+-	opt_timerlat_align_cb)
++	opt_timerlat_align_cb, LLONG_RANGE(0, LLONG_MAX))
+ 
+ /*
+  * Callback functions for command line options for timerlat tools
+  */
+ 
+-static int opt_timerlat_period_cb(const struct option *opt, const char *arg, int unset)
+-{
+-	long long *period = opt->value;
+-
+-	if (unset) {
+-		*period = 0;
+-		return 0;
+-	}
+-
+-	if (!arg)
+-		return -1;
+-
+-	*period = get_llong_from_str((char *)arg);
+-	if (*period > 1000000)
+-		fatal("Period longer than 1 s");
+-
+-	return 0;
+-}
+-
+ static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int unset)
+ {
+ 	struct timerlat_cb_data *cb_data = opt->value;
+@@ -585,28 +607,6 @@ static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int u
+ 	return 0;
+ }
+ 
+-static int opt_dma_latency_cb(const struct option *opt, const char *arg, int unset)
+-{
+-	int *dma_latency = opt->value;
+-	int retval;
+-
+-	if (unset) {
+-		*dma_latency = default_dma_latency;
+-		return 0;
+-	}
+-
+-	if (!arg)
+-		return -1;
+-
+-	retval = strtoi((char *)arg, dma_latency);
+-	if (retval)
+-		fatal("Invalid -dma-latency %s", arg);
+-	if (*dma_latency < 0 || *dma_latency > 10000)
+-		fatal("--dma-latency needs to be >= 0 and <= 10000");
+-
+-	return 0;
+-}
+-
+ static int opt_aa_only_cb(const struct option *opt, const char *arg, int unset)
+ {
+ 	struct timerlat_params *params = opt->value;
+@@ -748,6 +748,8 @@ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int
+ 
+ 	params->timerlat_align = true;
+ 	params->timerlat_align_us = get_llong_from_str((char *)arg);
++	if (check_llong_range(opt, params->timerlat_align_us))
++		return -1;
+ 
+ 	return 0;
+ }
+@@ -756,14 +758,15 @@ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int
+  * Macros for command line options specific to histogram-based tools
+  */
+ 
+-#define HIST_OPT_BUCKET_SIZE OPT_CALLBACK('b', "bucket-size", \
++#define HIST_OPT_BUCKET_SIZE RTLA_OPT_INT_DATA_DEFVAL('b', "bucket-size", \
+ 	&params->common.hist.bucket_size, "N", \
+ 	"set the histogram bucket size (default 1)", \
+-	opt_bucket_size_cb)
++	INT_RANGE(1, 999999), default_bucket_size)
+ 
+-#define HIST_OPT_ENTRIES OPT_CALLBACK('E', "entries", &params->common.hist.entries, "N", \
++#define HIST_OPT_ENTRIES RTLA_OPT_INT_DATA_DEFVAL('E', "entries", \
++	&params->common.hist.entries, "N", \
+ 	"set the number of entries of the histogram (default 256)", \
+-	opt_entries_cb)
++	INT_RANGE(10, 9999999), default_entries)
+ 
+ #define HIST_OPT_NO_IRQ OPT_BOOLEAN_FLAG(0, "no-irq", &params->common.hist.no_irq, \
+ 	"ignore IRQ latencies", PARSE_OPT_NOAUTONEG)
+@@ -783,42 +786,3 @@ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int
+ #define HIST_OPT_WITH_ZEROS OPT_BOOLEAN(0, "with-zeros", &params->common.hist.with_zeros, \
+ 	"print zero only entries")
+ 
+-/* Histogram-specific callbacks */
+-
+-static int opt_bucket_size_cb(const struct option *opt, const char *arg, int unset)
+-{
+-	int *bucket_size = opt->value;
+-
+-	if (unset) {
+-		*bucket_size = default_bucket_size;
+-		return 0;
+-	}
+-
+-	if (!arg)
+-		return -1;
+-
+-	*bucket_size = get_llong_from_str((char *)arg);
+-	if (*bucket_size == 0 || *bucket_size >= 1000000)
+-		fatal("Bucket size needs to be > 0 and <= 1000000");
+-
+-	return 0;
+-}
+-
+-static int opt_entries_cb(const struct option *opt, const char *arg, int unset)
+-{
+-	int *entries = opt->value;
+-
+-	if (unset) {
+-		*entries = default_entries;
+-		return 0;
+-	}
+-
+-	if (!arg)
+-		return -1;
+-
+-	*entries = get_llong_from_str((char *)arg);
+-	if (*entries < 10 || *entries > 9999999)
+-		fatal("Entries must be > 10 and < 10000000");
+-
+-	return 0;
+-}
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+index 346a14a860c82..cd9769bb5a9f7 100644
+--- a/tools/tracing/rtla/tests/osnoise.t
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -32,7 +32,7 @@ check "hist with -b/--bucket-size" \
+ check "hist with -E/--entries" \
+ 	"osnoise hist -E 10 -d 1s"
+ check "hist with -E/--entries out of range" \
+-	"osnoise hist -E 1 -d 1s" 1 "^Entries must be > 10 and < 10000000$"
++	"osnoise hist -E 1 -d 1s" 129 "out of range \[10, 9999999\]"
+ check "hist with --no-header" \
+ 	"osnoise hist --no-header -d 1s" 0 "" "RTLA osnoise histogram"
+ check "hist with --with-zeros" \
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index 8193048e8c8ce..57bada5b20631 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -61,7 +61,7 @@ check "hist with -b/--bucket-size" \
+ check "hist with -E/--entries" \
+ 	"timerlat hist -E 10 -d 1s"
+ check "hist with -E/--entries out of range" \
+-	"timerlat hist -E 1 -d 1s" 1 "^Entries must be > 10 and < 10000000$"
++	"timerlat hist -E 1 -d 1s" 129 "out of range \[10, 9999999\]"
+ check "hist with --no-header" \
+ 	"timerlat hist --no-header -d 1s" 0 "" "RTLA timerlat histogram"
+ check "hist with --with-zeros" \
+diff --git a/tools/tracing/rtla/tests/unit/cli_opt_callback.c b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
+index 413a04f898fbb..8439fb5c6f0b3 100644
+--- a/tools/tracing/rtla/tests/unit/cli_opt_callback.c
++++ b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
+@@ -9,6 +9,12 @@
+ #include "cli_params_assert.h"
+ 
+ #define TEST_CALLBACK(value, cb) OPT_CALLBACK('t', "test", value, "test value", "test help", cb)
++#define TEST_LLONG_RANGE(value, lo, hi) \
++	RTLA_OPT_CALLBACK_DATA('t', "test", value, "test value", "test help", \
++	opt_llong_callback, LLONG_RANGE(lo, hi))
++#define TEST_INT_RANGE(value, lo, hi) \
++	RTLA_OPT_CALLBACK_DATA('t', "test", value, "test value", "test help", \
++	opt_int_callback, INT_RANGE(lo, hi))
+ 
+ START_TEST(test_opt_llong_callback_simple)
+ {
+@@ -137,6 +143,90 @@ START_TEST(test_opt_int_callback_unset_defval)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_llong_callback_range_in)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_LLONG_RANGE(&test_value, 10, 100);
++
++	ck_assert_int_eq(opt_llong_callback(&opt, "50", 0), 0);
++	ck_assert_int_eq(test_value, 50);
++}
++END_TEST
++
++START_TEST(test_opt_llong_callback_range_below)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_LLONG_RANGE(&test_value, 10, 100);
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_llong_callback(&opt, "9", 0), -1);
++}
++END_TEST
++
++START_TEST(test_opt_llong_callback_range_above)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_LLONG_RANGE(&test_value, 10, 100);
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_llong_callback(&opt, "101", 0), -1);
++}
++END_TEST
++
++START_TEST(test_opt_llong_callback_range_boundary)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_LLONG_RANGE(&test_value, 10, 100);
++
++	ck_assert_int_eq(opt_llong_callback(&opt, "10", 0), 0);
++	ck_assert_int_eq(test_value, 10);
++	ck_assert_int_eq(opt_llong_callback(&opt, "100", 0), 0);
++	ck_assert_int_eq(test_value, 100);
++}
++END_TEST
++
++START_TEST(test_opt_int_callback_range_in)
++{
++	int test_value = 0;
++	const struct option opt = TEST_INT_RANGE(&test_value, 0, 10000);
++
++	ck_assert_int_eq(opt_int_callback(&opt, "5000", 0), 0);
++	ck_assert_int_eq(test_value, 5000);
++}
++END_TEST
++
++START_TEST(test_opt_int_callback_range_below)
++{
++	int test_value = 0;
++	const struct option opt = TEST_INT_RANGE(&test_value, 0, 10000);
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_int_callback(&opt, "-1", 0), -1);
++}
++END_TEST
++
++START_TEST(test_opt_int_callback_range_above)
++{
++	int test_value = 0;
++	const struct option opt = TEST_INT_RANGE(&test_value, 0, 10000);
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_int_callback(&opt, "10001", 0), -1);
++}
++END_TEST
++
++START_TEST(test_opt_int_callback_range_boundary)
++{
++	int test_value = 0;
++	const struct option opt = TEST_INT_RANGE(&test_value, 0, 10000);
++
++	ck_assert_int_eq(opt_int_callback(&opt, "0", 0), 0);
++	ck_assert_int_eq(test_value, 0);
++	ck_assert_int_eq(opt_int_callback(&opt, "10000", 0), 0);
++	ck_assert_int_eq(test_value, 10000);
++}
++END_TEST
++
+ START_TEST(test_opt_cpus_cb)
+ {
+ 	struct common_params params = {0};
+@@ -388,67 +478,6 @@ START_TEST(test_opt_osnoise_auto_cb_unset)
+ }
+ END_TEST
+ 
+-START_TEST(test_opt_osnoise_period_cb)
+-{
+-	unsigned long long period = 0;
+-	const struct option opt = TEST_CALLBACK(&period, opt_osnoise_period_cb);
+-
+-	ck_assert_int_eq(opt_osnoise_period_cb(&opt, "1000000", 0), 0);
+-	ck_assert_int_eq(period, 1000000);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_osnoise_period_cb_invalid)
+-{
+-	unsigned long long period = 0;
+-	const struct option opt = TEST_CALLBACK(&period, opt_osnoise_period_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_osnoise_period_cb(&opt, "10000001", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_osnoise_period_cb_unset)
+-{
+-	unsigned long long period = 0;
+-	const struct option opt = TEST_CALLBACK(&period, opt_osnoise_period_cb);
+-
+-	ck_assert_int_eq(opt_osnoise_period_cb(&opt, "1000000", 0), 0);
+-	ck_assert_int_eq(opt_osnoise_period_cb(&opt, NULL, 1), 0);
+-	ck_assert_int_eq(period, 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_osnoise_runtime_cb)
+-{
+-	unsigned long long runtime = 0;
+-	const struct option opt = TEST_CALLBACK(&runtime, opt_osnoise_runtime_cb);
+-
+-	ck_assert_int_eq(opt_osnoise_runtime_cb(&opt, "900000", 0), 0);
+-	ck_assert_int_eq(runtime, 900000);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_osnoise_runtime_cb_invalid)
+-{
+-	unsigned long long runtime = 0;
+-	const struct option opt = TEST_CALLBACK(&runtime, opt_osnoise_runtime_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_osnoise_runtime_cb(&opt, "99", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_osnoise_runtime_cb_unset)
+-{
+-	unsigned long long runtime = 0;
+-	const struct option opt = TEST_CALLBACK(&runtime, opt_osnoise_runtime_cb);
+-
+-	ck_assert_int_eq(opt_osnoise_runtime_cb(&opt, "900000", 0), 0);
+-	ck_assert_int_eq(opt_osnoise_runtime_cb(&opt, NULL, 1), 0);
+-	ck_assert_int_eq(runtime, 0);
+-}
+-END_TEST
+ 
+ START_TEST(test_opt_osnoise_trace_output_cb)
+ {
+@@ -525,37 +554,6 @@ START_TEST(test_opt_osnoise_on_end_cb_invalid)
+ }
+ END_TEST
+ 
+-START_TEST(test_opt_timerlat_period_cb)
+-{
+-	long long period = 0;
+-	const struct option opt = TEST_CALLBACK(&period, opt_timerlat_period_cb);
+-
+-	ck_assert_int_eq(opt_timerlat_period_cb(&opt, "1000", 0), 0);
+-	ck_assert_int_eq(period, 1000);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_timerlat_period_cb_invalid)
+-{
+-	long long period = 0;
+-	const struct option opt = TEST_CALLBACK(&period, opt_timerlat_period_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_timerlat_period_cb(&opt, "1000001", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_timerlat_period_cb_unset)
+-{
+-	long long period = 0;
+-	const struct option opt = TEST_CALLBACK(&period, opt_timerlat_period_cb);
+-
+-	ck_assert_int_eq(opt_timerlat_period_cb(&opt, "1000", 0), 0);
+-	ck_assert_int_eq(opt_timerlat_period_cb(&opt, NULL, 1), 0);
+-	ck_assert_int_eq(period, 0);
+-}
+-END_TEST
+-
+ START_TEST(test_opt_timerlat_auto_cb)
+ {
+ 	struct timerlat_params params = {0};
+@@ -585,46 +583,6 @@ START_TEST(test_opt_timerlat_auto_cb_unset)
+ }
+ END_TEST
+ 
+-START_TEST(test_opt_dma_latency_cb)
+-{
+-	int dma_latency = 0;
+-	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
+-
+-	ck_assert_int_eq(opt_dma_latency_cb(&opt, "1000", 0), 0);
+-	ck_assert_int_eq(dma_latency, 1000);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_dma_latency_cb_min)
+-{
+-	int dma_latency = 0;
+-	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_dma_latency_cb(&opt, "-1", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_dma_latency_cb_max)
+-{
+-	int dma_latency = 0;
+-	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_dma_latency_cb(&opt, "10001", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_dma_latency_cb_unset)
+-{
+-	int dma_latency = 0;
+-	const struct option opt = TEST_CALLBACK(&dma_latency, opt_dma_latency_cb);
+-
+-	ck_assert_int_eq(opt_dma_latency_cb(&opt, "1000", 0), 0);
+-	ck_assert_int_eq(opt_dma_latency_cb(&opt, NULL, 1), 0);
+-	ck_assert_int_eq(dma_latency, default_dma_latency);
+-}
+-END_TEST
+ 
+ START_TEST(test_opt_aa_only_cb)
+ {
+@@ -775,7 +733,8 @@ END_TEST
+ START_TEST(test_opt_timerlat_align_cb)
+ {
+ 	struct timerlat_params params = {0};
+-	const struct option opt = TEST_CALLBACK(&params, opt_timerlat_align_cb);
++	const struct option opt = RTLA_OPT_CALLBACK_DATA('A', "aligned", &params, "us",
++		"test", opt_timerlat_align_cb, LLONG_RANGE(0, LLONG_MAX));
+ 
+ 	ck_assert_int_eq(opt_timerlat_align_cb(&opt, "500", 0), 0);
+ 	ck_assert(params.timerlat_align);
+@@ -783,10 +742,22 @@ START_TEST(test_opt_timerlat_align_cb)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_timerlat_align_cb_invalid)
++{
++	struct timerlat_params params = {0};
++	const struct option opt = RTLA_OPT_CALLBACK_DATA('A', "aligned", &params, "us",
++		"test", opt_timerlat_align_cb, LLONG_RANGE(0, LLONG_MAX));
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_timerlat_align_cb(&opt, "-1", 0), -1);
++}
++END_TEST
++
+ START_TEST(test_opt_timerlat_align_cb_unset)
+ {
+ 	struct timerlat_params params = {0};
+-	const struct option opt = TEST_CALLBACK(&params, opt_timerlat_align_cb);
++	const struct option opt = RTLA_OPT_CALLBACK_DATA('A', "aligned", &params, "us",
++		"test", opt_timerlat_align_cb, LLONG_RANGE(0, LLONG_MAX));
+ 
+ 	ck_assert_int_eq(opt_timerlat_align_cb(&opt, "500", 0), 0);
+ 	ck_assert_int_eq(opt_timerlat_align_cb(&opt, NULL, 1), 0);
+@@ -826,87 +797,6 @@ START_TEST(test_opt_stack_format_cb_unset)
+ }
+ END_TEST
+ 
+-START_TEST(test_opt_bucket_size_cb)
+-{
+-	int bucket_size = 0;
+-	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
+-
+-	ck_assert_int_eq(opt_bucket_size_cb(&opt, "100", 0), 0);
+-	ck_assert_int_eq(bucket_size, 100);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_bucket_size_min)
+-{
+-	int bucket_size = 0;
+-	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_bucket_size_cb(&opt, "0", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_bucket_size_max)
+-{
+-	int bucket_size = 0;
+-	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_bucket_size_cb(&opt, "1000001", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_bucket_size_cb_unset)
+-{
+-	int bucket_size = 0;
+-	const struct option opt = TEST_CALLBACK(&bucket_size, opt_bucket_size_cb);
+-
+-	ck_assert_int_eq(opt_bucket_size_cb(&opt, "100", 0), 0);
+-	ck_assert_int_eq(opt_bucket_size_cb(&opt, NULL, 1), 0);
+-	ck_assert_int_eq(bucket_size, default_bucket_size);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_entries_cb)
+-{
+-	int entries = 0;
+-	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
+-
+-	ck_assert_int_eq(opt_entries_cb(&opt, "100", 0), 0);
+-	ck_assert_int_eq(entries, 100);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_entries_min)
+-{
+-	int entries = 0;
+-	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_entries_cb(&opt, "9", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_entries_max)
+-{
+-	int entries = 0;
+-	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
+-
+-	assert(freopen("/dev/null", "w", stderr));
+-	opt_entries_cb(&opt, "10000000", 0);
+-}
+-END_TEST
+-
+-START_TEST(test_opt_entries_cb_unset)
+-{
+-	int entries = 0;
+-	const struct option opt = TEST_CALLBACK(&entries, opt_entries_cb);
+-
+-	ck_assert_int_eq(opt_entries_cb(&opt, "100", 0), 0);
+-	ck_assert_int_eq(opt_entries_cb(&opt, NULL, 1), 0);
+-	ck_assert_int_eq(entries, default_entries);
+-}
+-END_TEST
+ 
+ Suite *cli_opt_callback_suite(void)
+ {
+@@ -919,6 +809,10 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_llong_callback_min);
+ 	tcase_add_test(tc, test_opt_llong_callback_unset);
+ 	tcase_add_test(tc, test_opt_llong_callback_unset_defval);
++	tcase_add_test(tc, test_opt_llong_callback_range_in);
++	tcase_add_test(tc, test_opt_llong_callback_range_below);
++	tcase_add_test(tc, test_opt_llong_callback_range_above);
++	tcase_add_test(tc, test_opt_llong_callback_range_boundary);
+ 	tcase_add_test(tc, test_opt_int_callback_simple);
+ 	tcase_add_test(tc, test_opt_int_callback_max);
+ 	tcase_add_test(tc, test_opt_int_callback_min);
+@@ -926,6 +820,10 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_int_callback_non_numeric_suffix);
+ 	tcase_add_test(tc, test_opt_int_callback_unset);
+ 	tcase_add_test(tc, test_opt_int_callback_unset_defval);
++	tcase_add_test(tc, test_opt_int_callback_range_in);
++	tcase_add_test(tc, test_opt_int_callback_range_below);
++	tcase_add_test(tc, test_opt_int_callback_range_above);
++	tcase_add_test(tc, test_opt_int_callback_range_boundary);
+ 	tcase_add_test(tc, test_opt_cpus_cb);
+ 	tcase_add_exit_test(tc, test_opt_cpus_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_cgroup_cb);
+@@ -951,12 +849,6 @@ Suite *cli_opt_callback_suite(void)
+ 	tc = tcase_create("osnoise");
+ 	tcase_add_test(tc, test_opt_osnoise_auto_cb);
+ 	tcase_add_test(tc, test_opt_osnoise_auto_cb_unset);
+-	tcase_add_test(tc, test_opt_osnoise_period_cb);
+-	tcase_add_test(tc, test_opt_osnoise_period_cb_unset);
+-	tcase_add_exit_test(tc, test_opt_osnoise_period_cb_invalid, EXIT_FAILURE);
+-	tcase_add_test(tc, test_opt_osnoise_runtime_cb);
+-	tcase_add_exit_test(tc, test_opt_osnoise_runtime_cb_invalid, EXIT_FAILURE);
+-	tcase_add_test(tc, test_opt_osnoise_runtime_cb_unset);
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb);
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_noarg);
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_unset);
+@@ -967,15 +859,8 @@ Suite *cli_opt_callback_suite(void)
+ 	suite_add_tcase(s, tc);
+ 
+ 	tc = tcase_create("timerlat");
+-	tcase_add_test(tc, test_opt_timerlat_period_cb);
+-	tcase_add_exit_test(tc, test_opt_timerlat_period_cb_invalid, EXIT_FAILURE);
+-	tcase_add_test(tc, test_opt_timerlat_period_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_auto_cb);
+ 	tcase_add_test(tc, test_opt_timerlat_auto_cb_unset);
+-	tcase_add_test(tc, test_opt_dma_latency_cb);
+-	tcase_add_exit_test(tc, test_opt_dma_latency_cb_min, EXIT_FAILURE);
+-	tcase_add_exit_test(tc, test_opt_dma_latency_cb_max, EXIT_FAILURE);
+-	tcase_add_test(tc, test_opt_dma_latency_cb_unset);
+ 	tcase_add_test(tc, test_opt_aa_only_cb);
+ 	tcase_add_test(tc, test_opt_aa_only_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb);
+@@ -993,19 +878,9 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_exit_test(tc, test_opt_stack_format_cb_invalid, EXIT_FAILURE);
+ 	tcase_add_test(tc, test_opt_stack_format_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_align_cb);
++	tcase_add_test(tc, test_opt_timerlat_align_cb_invalid);
+ 	tcase_add_test(tc, test_opt_timerlat_align_cb_unset);
+ 	suite_add_tcase(s, tc);
+ 
+-	tc = tcase_create("histogram");
+-	tcase_add_test(tc, test_opt_bucket_size_cb);
+-	tcase_add_exit_test(tc, test_opt_bucket_size_min, EXIT_FAILURE);
+-	tcase_add_exit_test(tc, test_opt_bucket_size_max, EXIT_FAILURE);
+-	tcase_add_test(tc, test_opt_bucket_size_cb_unset);
+-	tcase_add_test(tc, test_opt_entries_cb);
+-	tcase_add_exit_test(tc, test_opt_entries_min, EXIT_FAILURE);
+-	tcase_add_exit_test(tc, test_opt_entries_max, EXIT_FAILURE);
+-	tcase_add_test(tc, test_opt_entries_cb_unset);
+-	suite_add_tcase(s, tc);
+-
+ 	return s;
+ }
+-- 
+2.55.0
+
