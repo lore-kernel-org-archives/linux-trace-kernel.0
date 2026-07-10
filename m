@@ -1,69 +1,70 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8924499A4;
-	Fri, 10 Jul 2026 12:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CF441F7E9;
+	Fri, 10 Jul 2026 12:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783687059; cv=none; b=cLBO+j+VzpH/ESnK9fnvBMPFG+BAtDoBzNGp0TIcAe/AqYlh6sWLpws7WMd6OIfoy+aLWJHXGlpmUJVfF5g9ymOsC60z6RNFHZnX9R7N6KkyKg3wrUUx9PACtmLM6R+eqHxKrzL/46aT6nDfQ2KSelsLl0bwZ6Zm31dn413pw94=
+	t=1783687291; cv=none; b=AiDsmGLBu2cMh0jI6Wm8E8O0GuyMO9+tvrJaVnq7t7/p6l+cZpfpgfb1hlaTYV0Wd7wj6v0RNOFKzfyQBtpgAc3rqxbRCN3zChKXpIEeTspAMj1rmokVveE0tmLZQKgjN/2CzmrEwjkRbCrwygz8XFMdVQc0RiEXEbzCMFNPGR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783687059; c=relaxed/simple;
-	bh=pRFMafwmY/qHVQd6H4XvdQR9GLKSILkO2XVvMJsAVio=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n7U3xSAhJb4lE8wCJE1896bNrhrd5ASyiWsG7EN7RfrEPO0GFDa/IfkEhBXcmGpG12SQz3QYcjhifyI6p1Zr7OOvyNg1EdrCPlzRs7sOP68H6oi6IhWge1tpDY7JRQ89HVZoQyXk8i1vmlFAsPyg83fk71EiZyxkJev7kqot4ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6E0C0120449;
-	Fri, 10 Jul 2026 12:37:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 56ACB2002B;
-	Fri, 10 Jul 2026 12:37:28 +0000 (UTC)
-Date: Fri, 10 Jul 2026 08:37:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
-Subject: Re: [PATCH v2 1/3] tracing/remotes: Fix leak in
- trace_remote_alloc_buffer() error path
-Message-ID: <20260710083737.7a017771@gandalf.local.home>
-In-Reply-To: <alDd8OrrcI8vcPDL@google.com>
-References: <20260709160017.1729517-1-vdonnefort@google.com>
-	<20260709160017.1729517-2-vdonnefort@google.com>
-	<20260709191516.7a7ad6f6@gandalf.local.home>
-	<alCmOw8l4e-DS44v@google.com>
-	<alCm5fq3UC2JtzZV@google.com>
-	<alDd8OrrcI8vcPDL@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1783687291; c=relaxed/simple;
+	bh=EE3TjfG5eBu9Kd/+X8PmMovB9kNi9gsUzWBASrpUxJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZCzk2O0JMKJD++b3poocO5HslT63b5/iz6Qq/iG8G8DlFLXrUymUsvdATjfnBeFX31SZ5L3BaYgyNxSfngohU2dpu1D0qKgOE063sCRUnahyXMey7UV7i+e3hwsSHnNKUtS9WiKksY4+YmjxzsRBn6A9mpk9lE3i4uI5ZhwpDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wiaptpKI; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wiaptpKI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7A61F000E9;
+	Fri, 10 Jul 2026 12:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1783687289;
+	bh=hDRYjbEaGoQ0tWoMPUac6jeuxz0p0lipsR0FrMDOr4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=wiaptpKIaT2vKbCT97Xw1lAzPN97jTJ7LbV6tqRp67jzEMDgFgq30g/xXN7ILSxyy
+	 Rg79dR3+x86n6Ikq3v85BLbHXFwdzzK68+Y5U52/KhKzspCYBSa/OI0w69KsCbJFOg
+	 4mtV7UUdjdoZ36eI2aZaQEtKh5KhS0xygKPCyjVM=
+Date: Fri, 10 Jul 2026 14:41:25 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jiri Slaby <jirislaby@kernel.org>, konrad.dybcio@oss.qualcomm.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+	mukesh.savaliya@oss.qualcomm.com, aniket.randive@oss.qualcomm.com,
+	chandana.chiluveru@oss.qualcomm.com
+Subject: Re: [PATCH v5 2/2] serial: qcom-geni: Add tracepoints for Qualcomm
+ GENI serial driver
+Message-ID: <2026071015-empower-sandpit-97a8@gregkh>
+References: <20260615-add-tracepoints-for-qcom-geni-serial-v5-0-2efa4c97e0e2@oss.qualcomm.com>
+ <20260615-add-tracepoints-for-qcom-geni-serial-v5-2-2efa4c97e0e2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 56ACB2002B
-X-Stat-Signature: douxtrj3yyp1ushr4seyfsopyp4rqx3b
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+Jt7icLNStswwg+Pwh3GIJNWJZOiejVeY=
-X-HE-Tag: 1783687048-578449
-X-HE-Meta: U2FsdGVkX18awOFMoFyZG4NS/15VejwLYmOKYA4maRXKZ6QYt2EjvmD3/1zvUE0FnWQzTNtgi/cq2OLTIsGBIkR+d3ToyFhGdyMhH1q29N9QuM7uWSNFtvHsdsSrru86WO6YIX+ExGU4n1YDfmeozSHtMdOvGbIJ2sid41OVZ8REdVbB1MgRUEhNiD24vJdcQfakkGEX66OBqJIQZZ/y65JA1wlCYuSmYYokRLnbPWL0av6bPz8gXNG31MhNXi433LQrJZl5DzyZDCO840LQ95VdzEBFf+G3rf6XDXACK7iA59hGLkLvWGtkAH1wP1q2HHxYO3Y3T+XmyM8eshdP5e3XfNSI7SHLlqtKFW5Zuw1E3mpROFzbfQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260615-add-tracepoints-for-qcom-geni-serial-v5-2-2efa4c97e0e2@oss.qualcomm.com>
 
-On Fri, 10 Jul 2026 12:56:32 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> > Ha yes this other one is real too. However this is in arch/arm64/kvm/ so I'll
-> > post it separately to kvmarm.  
+On Mon, Jun 15, 2026 at 07:46:53PM +0530, Praveen Talari wrote:
+> Add tracing to the Qualcomm GENI serial driver to improve runtime
+> observability.
 > 
-> Posted here: https://lore.kernel.org/all/20260710114819.2689386-3-vdonnefort@google.com/
+> Trace hooks are added at key points including termios and clock
+> configuration, manual control get/set, interrupt handling, and data
+> TX/RX paths.
 > 
-> Let me know if I should fold [1] into this series.
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+> ---
+> v2->v3:
+> - Updated commit text(removed example as it was available on cover
+>   letter).
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 27 +++++++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
 
-If they are separate, I'll pull this series in now and start testing it.
-
-I just wanted to know if these would cause you to rethink this series.
-
--- Steve
+Does not apply to my tty-next branch :(
