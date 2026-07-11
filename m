@@ -1,94 +1,101 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E3B2D7D2E;
-	Sat, 11 Jul 2026 04:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B301BEEC0;
+	Sat, 11 Jul 2026 06:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783744900; cv=none; b=gCp1otWMtjnFpgh2msIHIsjxu6AAyBTwyKYWVFNiIGx89/L1TxxTp/23W2svb6qX6/aF2Y84N/t7ODf+C+GJW0VnNtlyngsVz7Z0wDFFBYs1Rzuv9m1a/H+/1Xw8ZmmLL+507XIxr4uikhhZI0H9ZdQ2HV7gbdaqic71UaVEFF4=
+	t=1783750929; cv=none; b=DtNKPFWpqxCdYqmVqMfK6OLWlrqUcjlI8O+4aqEyt7K1EvIdqgICLw5WcPrkO5uNxMpogGmxEALRC7aXKVYuMcv9/t2+zM3yS/2DfJxxjwPQzb8BWKRitoIAg+qowIfZ24VfX8PEb86/eLwad1xGXddJY8qSXv1yoRbkNB3dbco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783744900; c=relaxed/simple;
-	bh=h+1tyznbFEOyuRy4iHAT3B3e7gGvTqt1Z3Rotq3NoN4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cOLCbXVWGG4bDhA/yog5+54dtR48YUht3ycEvq/MM+61LCg/z3oYW6B493v4FByXvNWVzxQI1TyxNjOPELDpUwGdw/llQn+L379Ut74H1nIwIBgentfQs9+sgPG53PwUU6wQ7xFb5Wz+hb4546sqosTrwcidFjOImWIf3edaJWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev; spf=pass smtp.mailfrom=mavick.dev; dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b=YKPgpTkN; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mavick.dev
+	s=arc-20240116; t=1783750929; c=relaxed/simple;
+	bh=WbIgITf+aHGNMFdZM2hnYV5tmAqGANAREaGRZ4MOOuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iZP3YoTGP7NrVFDSlaGYgCGFgprRK90nxnmdfmiANs3wTe0zh4nDZ3igLEn7sbhIdPnT2PM7j/eFb3x2iswzCzso6ta+gjVBxkh2SBQhXbPxFwvbnqhnSTzmXTdeBentzKPmyFAleJmvfHDKxeMi5lLgrf58i+Yr9l5gOQdOfXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coo0niBU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b="YKPgpTkN"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4gxwyR0NHYz8tyn;
-	Sat, 11 Jul 2026 06:41:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mavick.dev; s=MBO0001;
-	t=1783744895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X2tAcnncj6o0PHFFxyod2DNFn1o5vZ+4t+GMElLi3co=;
-	b=YKPgpTkNGHTkTmCpFJvuS4tmvjFHHnLcQnpxSY0fG3To+T2mWazjnSrVml1aTmPMLJatDv
-	+KYB5awsHiUUOoOPgSNKwCAB8HgkMZCPiyvP6ZszW+J2BDYF6GEMjdoOaSI1QclRAtaU+b
-	VnDUyd9idDjkuYGleHKVxXWpxjN53O00xtUOVNjBq8+pLFUayKd9xOC0iz6lCONcQMbxuY
-	CZMp/DRgOiqSFrWexUbOLasDOnIi6I16CqFxBiqrGoPbPkabvJpHD9t6FcCC5QS3LCb4+M
-	81c5XFlGW61FpcPANvkVzhuBZ6Z9sJm46WCVC//IyLYqk/3eNs+hSHB4dbfqgA==
-From: Eugene Mavick <m@mavick.dev>
-Date: Sat, 11 Jul 2026 12:40:23 +0800
-Subject: [PATCH v3 5/5] MAINTAINERS: add entries for ref_trace_final_put
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coo0niBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D88FC1F00A3A;
+	Sat, 11 Jul 2026 06:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783750928;
+	bh=WbIgITf+aHGNMFdZM2hnYV5tmAqGANAREaGRZ4MOOuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=coo0niBUkp/gUkbRSatT5EJ6NfiQ7ezfzQNFFEka9gd//4UjxtBzc7RBi4OLd8CJp
+	 zhITxjhwTqPhMy21VbSNO5jlWP62czybhR05pJZTJTb3iv0IdJ+TlpfkpIyIm/4CeK
+	 +n6PGnXcW/v4qnadjp5ztDaRzxkkltVfID9+KdWba4BSS6I4vpCR+8z1NGu7pVTOYK
+	 3SWYJRt3520w13mZ0szu/3x63YnNWVCUI7AtJTClfOv5gpw/pdE0wkv/FwletvuCgz
+	 VSb31m3ojblPokIyzlMhDyaw755+CWsZBp7wZoYS2xjQCz/QLSkvrDwTE0v7OEpi+A
+	 fef8MnSSiqRUg==
+Date: Sat, 11 Jul 2026 07:21:43 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
+	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
+	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 27/30] mm/vma: correct incorrect vma.h inclusion
+Message-ID: <alHgvYH3F9FkObri@lucifer>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <22d0f4e3fe11f6fd1312734e242d008267ad142c.1782735110.git.ljs@kernel.org>
+ <alFHR3fg8K1-SITK@gourry-fedora-PF4VCD3F>
+ <alFJUfaGHVnKd-Nb@lucifer>
+ <alFePgFUR52GgBS7@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260711-refcount-final-put-trace-v3-5-674c8f03d9f9@mavick.dev>
-References: <20260711-refcount-final-put-trace-v3-0-674c8f03d9f9@mavick.dev>
-In-Reply-To: <20260711-refcount-final-put-trace-v3-0-674c8f03d9f9@mavick.dev>
-To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Boqun Feng <boqun@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Gary Guo <gary@garyguo.net>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, 
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-mm@kvack.org, Eugene Mavick <m@mavick.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=627; i=m@mavick.dev;
- h=from:subject:message-id; bh=h+1tyznbFEOyuRy4iHAT3B3e7gGvTqt1Z3Rotq3NoN4=;
- b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFmBJ21v2yzi+zRlaZGezLG5JizShe9a81LsYvQ/nV1kc
- muu64IvHaUsDGJcDLJiiiw1WQnuGStnJRofndQDM4eVCWQIAxenAEwk5zgjw6YdTc9mn0rWMTs2
- x5ljwrekf347GjOX7hLiMXs1WVH1WjIjw5pCnp3mIY8Wzpjy/JSF97mX+otcX1xIZtBkFpYJqpv
- UyAUA
-X-Developer-Key: i=m@mavick.dev; a=openpgp;
- fpr=7C6A604768A99A6133C5928C9D1FCA7EDB7D344F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alFePgFUR52GgBS7@gourry-fedora-PF4VCD3F>
 
-Add new files added in the patch series to MAINTAINERS
+On Fri, Jul 10, 2026 at 05:03:58PM -0400, Gregory Price wrote:
+> On Fri, Jul 10, 2026 at 08:35:43PM +0100, Lorenzo Stoakes wrote:
+> > >
+> > > Do you actually need 3 copies of this comment or just one copy in
+> > > vma_internal.h?
+> >
+> > I'd rather have it at a glance, it's a bit silly but C headers are silly :P
+> >
+> > BTW you're kinda racing against time here as I'm on the verge of sending v2
+> > :P
+>
+> :[ i don't refresh my inbox when i get hyperfocused and now i am sad
 
-Signed-off-by: Eugene Mavick <m@mavick.dev>
----
- MAINTAINERS | 3 +++
- 1 file changed, 3 insertions(+)
+Oh no! But that hyperfocus sounds familiar ;)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 10e8253181d3..2dbb7441906e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4210,7 +4210,10 @@ S:	Maintained
- F:	Documentation/atomic_*.txt
- F:	arch/*/include/asm/atomic*.h
- F:	include/*/atomic*.h
-+F:	include/linux/ref_trace.h
- F:	include/linux/refcount.h
-+F:	lib/ref_trace.c
-+F:	lib/tests/ref_trace_kunit.c
- F:	scripts/atomic/
- F:	rust/kernel/sync/atomic.rs
- F:	rust/kernel/sync/atomic/
+Apologies for that, I did hold off some hours. But you can at least see that I
+did all you asked in v1 :)
 
--- 
-2.51.2
-
+Cheers, Lorenzo
