@@ -1,637 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9931FC101;
-	Sun, 12 Jul 2026 15:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAF0338936
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Jul 2026 16:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783868816; cv=none; b=Mpjd2ZwbsmB7HXeSu34jxUSw2TtHpyw90A+OxZhjZrctBtYSngRprXhEIWSrU+526uOtLfjYPGxYNf5zH3rBIqVcFpokpRxxhRxQ+xgDNiZoGxSbK9H8wVRK+4ji5SF98j/8WDJpljDCOSNKYCUst+Er1rVdiTAHUe44MeTWNp8=
+	t=1783872615; cv=none; b=it97F/siz58P5ldZHIVFcA3Krr3a+mrTCueRalwUH3ZgxepYkM5BNAmXZnMe/wWuOZDIIfWRNHZVOVWuyhObonGZqOJaqU5pwJVh3qkpxyGeUNln1vtmLs7r2MGsqeGiM1UcmeCZVeqVq2ls7VzD+n+NuqXVlq/NxeyZGdwJYFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783868816; c=relaxed/simple;
-	bh=Je/KH3ai9xXsgloFt0LVPFbzAgc6Uwe1M1+FyRC5b5Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y5EK6VRKdxdf6bntFnqFrGR8x+V5ASMZ6PVOzRZSkbFyHoX5A+YVoGyOsRXYzssqM6pV4kfjzbaU3zdR7EJZgjTCgUr4b+ECO7zXAEa2F1PNxwkTEszRYlfuqsUm4b8l8o4y3PtPXRu3hR1CYnQG3g6Z9CZZOyGTGD7PRnvGNkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osngyvHM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783872615; c=relaxed/simple;
+	bh=cmR63zo++/1JJh1mNXua3yo0W3Li3j8K3N2m7BoskS8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iDYS/kdhAEZP3hPvqNbXLkBOGVuF1L3zlJoKJ5GnY0AmIBysKDHfLDtJjlca2/kPuWlqAh4GnXCs/am5ad8MM05XXxJS2APytY+gBiJNRmvj0wZP53oyPbleuKMi+4k8hL29XrtYqw0hN1bYFA6PwClu7PfgTOHP20ZweSWUjzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxp1mf9c; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osngyvHM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB9C1F000E9;
-	Sun, 12 Jul 2026 15:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783868814;
-	bh=RltBTbj3781JqaBaSrdKJpcYWo+bhrdgC24nlsWOY94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=osngyvHMYzxr7CWKOUmxRTWOlfqVDbWPYMy2s5F41rl79VBg02TZr07NmtERu4a+o
-	 pC1PIMN6gkXZw2pNzWyiq+JTFQZYIOZ6nIrLl4JLVXn4hu6WL3jg0i5lWkvpuJn4XA
-	 soxv7OCeIMHOt+17FZSYPBQEkY8oBEO3p1Z9XEOjwlHoVc+lVjKMWvtnH2Q1h8/Ooy
-	 nbCqwYmjCmMmutRhG1vxWogWNhy4teKe0CnAGMWu4zjQeT75mBvlhwJQMjY2GIVU2A
-	 Spn42kGkx+YlGFVEoWrhckAzcrfhRb4/vnngjQ+YTmrUCurIr0VyW+Ez3aBxkCeH3f
-	 VWUb6Tikr5bcg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxp1mf9c"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-47ddf7b09e5so2050960f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Jul 2026 09:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783872612; x=1784477412; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2Dve8ecSIRmLBwhzI6AhAHAcMIIILWkYrU59Bey7/dI=;
+        b=dxp1mf9c9cC4MOUk+KkorxVAnWyL8A2xyDo7GC2p9EJPRGGbominNjlwnT+gLxGqJd
+         z+Bw8ZmNsffvWOuYsaW/ICtAPD35NxDtYM1/6dE4iaVhUidQZ6+iuElbU9fI3bj286T1
+         0UJKDqgvKp7LbuEYDHLH/8W8hevJfkRyi0D6VP8UYc9G4JD7fcWUvpco6lUVTCc0V9Xh
+         IfdbOcc7plhrMvaU31lgPV5fDWq3HmCWHInk2cYMSJYYsrA0/T8wKw1lfO00OCHz4z56
+         X3EBHRcs4nfZN6EYYeLvQS/RXDO2/up0ebGcD3MHOejr7SoQn4HMhB0hWTyGOIjHrlYd
+         Gocw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783872612; x=1784477412;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=2Dve8ecSIRmLBwhzI6AhAHAcMIIILWkYrU59Bey7/dI=;
+        b=NDp3InEOWYTqac2Kclhl+x29bWUYgxkF/VC8S+fPz3/LXobZGB1HBVQnsi1AQyksUF
+         WrgJHvsUzMDEpESQhrU1S9k2c5DXtcP1QIsldDgGrBFl2T9bWaDOYd7jgk6r7lclVcYt
+         2uqw5G8JWKRePAXZZzKhD6qBl8UeFNSxUg/y4W9eqDmKxa04NFqsW3fzNlhVLPsMq1hm
+         CB9PbMX571QDqvVktnETlvFRhVtUIOAafE9zforuM6+6O4xj/aIZFpvAgAD6A39+Lybp
+         tmvsPqflZWlEPgMEN0NG/985cUVo8hIShaHfp+y53ntJgg3T4lAQgZD79YZXSN0lUEEQ
+         hzdA==
+X-Forwarded-Encrypted: i=1; AHgh+RpIp64UApHZl5U3//evZmR40fRwVCq8k9htM8F5CYuEygYWJRzIlVU6TZE9gT2xMSIgBvOVLVDEYFyjb006CvLC2JY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVaQ+r4eHiNTDoBVLXxVC+av4HnB0dUF2tnxRgQPSTKtQNURvv
+	funXPRNiIVFh0LqsodFnIJXpa/i/gj2XRxv1dOoTRijOe+WcQ3Nrmruz
+X-Gm-Gg: AfdE7clus90WrjX3iaclusnrRky5N04QVBI3Dowp9+Mv+OFrSjx4vArIl8pnYESYWCy
+	fy6VmWLIVeD+7XaWd4hRCd7d9r/7fjf5Jsazmsd9N6OOrBbAlaQ43nh7Bk62T/cMlo3cdhFVzqu
+	RjxnT4oDiu+hC7tqwSu8e7dxl7nUdxCVI5bG6HWsDKxTb6/dNO8UILdBYkIN134GY4MFZns6VI9
+	iI3Xc21KFl2I1+L+6vtOIlzYH2PsPATtRNJzCGjTguWF13gDw2pdM2EngYVFtXMr2Mcs1YOzOCm
+	dzv38nBfuR3Z2c+bw0ya//5jDgIpCGThJv1UWObNmucB8EspHnBqXS2M3O3PQ2S+BmsAtKpbWIV
+	aItxGZCwwsUWvJzoltIWsUjDSzL/3bZOgEcGnsvN6pRTcTxtbDfLigaSPBY1JNQ6llKHdUoHClX
+	4ULW8RQ/W0L2iwUZM8B0zUJttW5ZaYRAzpNG7gslPLbRIU77HQrowZHuEEBV22AkY2cYaN2pwH
+X-Received: by 2002:a05:6000:26c8:b0:46f:558:a43f with SMTP id ffacd0b85a97d-47f2dcd1a60mr6872772f8f.4.1783872612237;
+        Sun, 12 Jul 2026 09:10:12 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47aa0f21543sm72331539f8f.35.2026.07.12.09.10.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2026 09:10:10 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
+	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 5/5] tracing/probes: Eliminate recursion in parse_probe_arg()
-Date: Mon, 13 Jul 2026 00:06:51 +0900
-Message-ID: <178386881106.3174487.4517613868901251001.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178386876526.3174487.5142283230157728964.stgit@devnote2>
-References: <178386876526.3174487.5142283230157728964.stgit@devnote2>
-User-Agent: StGit/0.19
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH] tracing: Defer trigger private data frees past the grace period
+Date: Sun, 12 Jul 2026 17:10:06 +0100
+Message-ID: <20260712161006.242797-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Commit 61d445af0a7c ("tracing: Add bulk garbage collection of freeing
+event_trigger_data") made trigger_data_free() defer the kfree() of the
+event_trigger_data to a kthread that runs tracepoint_synchronize_unregister()
+before freeing. The .free callbacks that own satellite data kept freeing it
+synchronously right after calling trigger_data_free(), relying on the
+synchronize that used to run inline.
 
-To avoid potential stack overflows on limited kernel stacks, convert
-parse_probe_arg() from a recursive function into a loop-based
-implementation with a tiny local state stack.
+With that synchronize now deferred, event_hist_trigger_free(),
+event_enable_trigger_free() and event_hist_trigger_named_free() free
+hist_data, enable_data and cmd_ops while a concurrent tracepoint handler can
+still dereference them through the list_del_rcu()'d trigger, causing a
+use-after-free.
 
-Define struct parse_state to hold the parsing contexts for nested
-dereference and typecast operations. Modify parse_probe_arg_deref(),
-parse_this_cpu(), and handle_typecast() to return parsing state details
-rather than calling parse_probe_arg() recursively. parse_probe_arg()
-then processes nested nodes by pushing onto the parse_state array,
-parsing the leaf node, and unwinding/evaluating the array entries
-in LIFO order.
+Add an optional free_private() callback to event_trigger_data, invoked by
+the free kthread after the grace period, and move the satellite frees into
+it. The event_mutex-requiring bookkeeping (remove_hist_vars(),
+unregister_field_var_hists()) stays synchronous; only the handler-visible
+memory free is deferred.
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Fixes: 61d445af0a7c ("tracing: Add bulk garbage collection of freeing event_trigger_data")
+Signed-off-by: David Carlier <devnexen@gmail.com>
 ---
- kernel/trace/trace_probe.c                         |  337 ++++++++++++--------
- kernel/trace/trace_probe.h                         |   33 ++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
- .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |    2 
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 
- 5 files changed, 243 insertions(+), 137 deletions(-)
+ kernel/trace/trace.h                |  1 +
+ kernel/trace/trace_events_hist.c    | 19 +++++++++++++------
+ kernel/trace/trace_events_trigger.c | 18 +++++++++++++++---
+ 3 files changed, 29 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 2b8cc4cf5109..345fa06f6980 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -356,61 +356,11 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		struct fetch_insn **pcode, struct fetch_insn *end,
- 		struct traceprobe_parse_context *ctx);
- 
--/* handle dereference nested call */
--static inline int handle_dereference(char *arg, struct fetch_insn **pcode,
--	struct fetch_insn *end, struct traceprobe_parse_context *ctx,
--	int deref, long offset)
-+static int parse_this_cpu(char *arg, struct traceprobe_parse_context *ctx)
- {
--	const struct fetch_type *type = find_fetch_type(NULL, ctx->flags);
--	struct fetch_insn *code = *pcode;
--	int cur_offs = ctx->offset;
--	char *tmp;
--	int ret;
--
--	tmp = strrchr(arg, ')');
--	if (!tmp) {
--		trace_probe_log_err(ctx->offset + strlen(arg),
--					DEREF_OPEN_BRACE);
--		return -EINVAL;
--	}
--
--	*tmp = '\0';
--	ret = parse_probe_arg(arg, type, &code, end, ctx);
--	if (ret)
--		return ret;
--	ctx->offset = cur_offs;
--	if (code->op == FETCH_OP_COMM || code->op == FETCH_OP_IMMSTR) {
--		trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
--		return -EINVAL;
--	}
--
--	/*
--	 * this_cpu_ptr(@SYM) does not use SYM value, but use SYM address.
--	 * So we overwrite the last FETCH_OP_DEREF with FETCH_OP_CPU_PTR.
--	 */
--	if (!(deref == FETCH_OP_CPU_PTR && *arg == '@')) {
--		code++;
--		if (code == end) {
--			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
--			return -EINVAL;
--		}
--	}
--	*pcode = code;
--
--	code->op = deref;
--	code->offset = offset;
--	/* Reset the last type if used */
--	ctx->last_type = NULL;
--	return 0;
--}
--
--static int parse_this_cpu(char *arg, struct fetch_insn **pcode,
--			  struct fetch_insn *end,
--			  struct traceprobe_parse_context *ctx)
--{
--	struct fetch_insn *code;
- 	bool is_ptr = false;
--	int ret;
-+	bool is_read = false;
-+	char *tmp;
- 
- 	/*
- 	 * This is only for kernel probes, excluding eprobe, because per-cpu
-@@ -428,23 +378,24 @@ static int parse_this_cpu(char *arg, struct fetch_insn **pcode,
- 	} else if (str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
- 		arg += THIS_CPU_READ_LEN;
- 		ctx->offset += THIS_CPU_READ_LEN;
-+		is_read = true;
- 	} else
- 		return -EINVAL;
- 
--	ret = handle_dereference(arg, pcode, end, ctx, FETCH_OP_CPU_PTR, 0);
--	if (ret || is_ptr)
--		return ret;
--
--	/* this_cpu_read(VAR) -> +0(this_cpu_ptr(VAR)) */
--	code = *pcode;
--	code++;
--	if (code == end) {
--		trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+	tmp = strrchr(arg, ')');
-+	if (!tmp) {
-+		trace_probe_log_err(ctx->offset + strlen(arg),
-+					DEREF_OPEN_BRACE);
- 		return -EINVAL;
- 	}
--	code->op = FETCH_OP_DEREF;
--	code->offset = 0;
--	*pcode = code;
-+	*tmp = '\0';
-+
-+	ctx->stack[ctx->depth].type = STATE_DEREF;
-+	ctx->stack[ctx->depth].deref.deref = FETCH_OP_CPU_PTR;
-+	ctx->stack[ctx->depth].deref.offset = 0;
-+	ctx->stack[ctx->depth].deref.cur_offs = ctx->offset;
-+	ctx->stack[ctx->depth].deref.inner_arg = arg;
-+	ctx->stack[ctx->depth].deref.is_cpu_read = is_read;
- 	return 0;
- }
- 
-@@ -1007,14 +958,12 @@ static char *find_matched_close_paren(char *s)
- 	return NULL;
- }
- 
--static int handle_typecast(char *arg, struct fetch_insn **pcode,
--			   struct fetch_insn *end,
--			   struct traceprobe_parse_context *ctx)
-+static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
- {
- 	int orig_offset = ctx->offset;
- 	char *close;
- 	char *tmp;
--	int ret;
-+	char *fieldname;
- 
- 	if (!(tparg_is_event_probe(ctx->flags) ||
- 	      tparg_is_function_entry(ctx->flags) ||
-@@ -1028,12 +977,6 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 	 * For example: (STRUCT)VAR->FIELD and (STRUCT)(VAR)->FIELD are same.
- 	 * VAR is solved in the nested call.
- 	 */
--	ctx->nested_level++;
--	if (ctx->nested_level > TRACEPROBE_MAX_NESTED_LEVEL) {
--		trace_probe_log_err(ctx->offset, TOO_MANY_NESTED);
--		return -E2BIG;
--	}
--
- 	tmp = strchr(arg, ')');
- 	if (!tmp) {
- 		trace_probe_log_err(ctx->offset + strlen(arg),
-@@ -1103,30 +1046,19 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 	}
- 	*close = '\0';
- 
--	/* We need to parse the nested one */
--	ret = parse_probe_arg(tmp, find_fetch_type(NULL, ctx->flags),
--			      pcode, end, ctx);
--	if (ret < 0)
--		return ret;
--	ctx->nested_level--;
--	clear_struct_btf(ctx);
--
--	/* Let tmp point the field name. */
-+	/* Let fieldname point the field name. */
- 	if (close[1] == '-')
--		tmp = close + 3; /* Skip "->" after closing parenthesis */
-+		fieldname = close + 3; /* Skip "->" after closing parenthesis */
- 	else
--		tmp = close + 2; /* Skip ">" after inner variable name */
--
--	/* resolve the typecast struct name */
--	ctx->offset = orig_offset + 1; /* for the '(' */
--	ret = parse_btf_casttype(arg + 1, ctx);
--	if (ret < 0)
--		return ret;
--
--	ctx->offset = orig_offset + tmp - arg;
--	ret = parse_btf_field(tmp, ctx->last_struct, pcode, end, ctx);
--	ctx->prefix_byteoffs = 0;
--	return ret;
-+		fieldname = close + 2; /* Skip ">" after inner variable name */
-+
-+	ctx->stack[ctx->depth].type = STATE_TYPECAST;
-+	ctx->stack[ctx->depth].typecast.casttype = arg + 1;
-+	ctx->stack[ctx->depth].typecast.fieldname = fieldname;
-+	ctx->stack[ctx->depth].typecast.orig_offset = orig_offset;
-+	ctx->stack[ctx->depth].typecast.field_offset_diff = fieldname - arg;
-+	ctx->stack[ctx->depth].typecast.inner_arg = tmp;
-+	return 0;
- }
- 
- #else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
-@@ -1171,9 +1103,20 @@ static int check_prepare_btf_string_fetch(char *typename,
- 	return 0;
- }
- 
--static int handle_typecast(char *arg, struct fetch_insn **pcode,
--			   struct fetch_insn *end,
-+static int parse_btf_casttype(char *casttype,
-+			      struct traceprobe_parse_context *ctx)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int parse_btf_field(char *fieldname, const struct btf_type *type,
-+			   struct fetch_insn **pcode, struct fetch_insn *end,
- 			   struct traceprobe_parse_context *ctx)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
- {
- 	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
- 	return -EOPNOTSUPP;
-@@ -1609,9 +1552,7 @@ static int parse_probe_arg_mem_symbol(char *arg, struct fetch_insn **pcode,
- 	return 0;
- }
- 
--static int parse_probe_arg_deref(char *arg, struct fetch_insn **pcode,
--				 struct fetch_insn *end,
--				 struct traceprobe_parse_context *ctx)
-+static int parse_probe_arg_deref(char *arg, struct traceprobe_parse_context *ctx)
- {
- 	int deref = FETCH_OP_DEREF;
- 	long offset = 0;
-@@ -1638,7 +1579,22 @@ static int parse_probe_arg_deref(char *arg, struct fetch_insn **pcode,
- 	}
- 	ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
- 	arg = tmp + 1;
--	return handle_dereference(arg, pcode, end, ctx, deref, offset);
-+
-+	tmp = strrchr(arg, ')');
-+	if (!tmp) {
-+		trace_probe_log_err(ctx->offset + strlen(arg),
-+					DEREF_OPEN_BRACE);
-+		return -EINVAL;
-+	}
-+	*tmp = '\0';
-+
-+	ctx->stack[ctx->depth].type = STATE_DEREF;
-+	ctx->stack[ctx->depth].deref.deref = deref;
-+	ctx->stack[ctx->depth].deref.offset = offset;
-+	ctx->stack[ctx->depth].deref.cur_offs = ctx->offset;
-+	ctx->stack[ctx->depth].deref.inner_arg = arg;
-+	ctx->stack[ctx->depth].deref.is_cpu_read = false;
-+	return 0;
- }
- 
- static int parse_probe_arg_imm(char *arg, struct fetch_insn *code,
-@@ -1670,11 +1626,6 @@ static int parse_probe_arg_default(char *arg, struct fetch_insn **pcode,
- {
- 	int ret;
- 
--	if (str_has_prefix(arg, THIS_CPU_PTR_PREFIX) ||
--	    str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
--		return parse_this_cpu(arg, pcode, end, ctx);
--	}
--
- 	if (isalpha(arg[0]) || arg[0] == '_') {
- 		/* BTF variable or event field */
- 		if (ctx->flags & TPARG_FL_TEVENT) {
-@@ -1696,11 +1647,59 @@ static int parse_probe_arg_default(char *arg, struct fetch_insn **pcode,
- 	return 0;
- }
- 
--/* Recursive argument parser */
--static int
--parse_probe_arg(char *arg, const struct fetch_type *type,
--		struct fetch_insn **pcode, struct fetch_insn *end,
--		struct traceprobe_parse_context *ctx)
-+static int parse_probe_arg_nested(char **parg, struct traceprobe_parse_context *ctx)
-+{
-+	char *arg = *parg;
-+	int ret;
-+
-+	while (true) {
-+		/* Determine if this is a nested argument */
-+		if (arg[0] != '+' && arg[0] != '-' && arg[0] != '(' &&
-+		    !str_has_prefix(arg, THIS_CPU_PTR_PREFIX) &&
-+		    !str_has_prefix(arg, THIS_CPU_READ_PREFIX))
-+			break;
-+
-+		/* If nested, check the maximum depth limit */
-+		if (ctx->depth >= TRACEPROBE_MAX_NESTED_LEVEL) {
-+			if (arg[0] == '(')
-+				trace_probe_log_err(ctx->offset, TOO_MANY_NESTED);
-+			else
-+				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+			return -E2BIG;
-+		}
-+
-+		/* Perform the actual parsing subroutine calls */
-+		switch (arg[0]) {
-+		case '+':
-+		case '-':
-+			ret = parse_probe_arg_deref(arg, ctx);
-+			if (ret)
-+				return ret;
-+			arg = ctx->stack[ctx->depth].deref.inner_arg;
-+			break;
-+		case '(':
-+			ret = handle_typecast(arg, ctx);
-+			if (ret)
-+				return ret;
-+			arg = ctx->stack[ctx->depth].typecast.inner_arg;
-+			break;
-+		default:
-+			ret = parse_this_cpu(arg, ctx);
-+			if (ret)
-+				return ret;
-+			arg = ctx->stack[ctx->depth].deref.inner_arg;
-+			break;
-+		}
-+		ctx->depth++;
-+	}
-+
-+	*parg = arg;
-+	return 0;
-+}
-+
-+static int parse_probe_arg_leaf(char *arg, const struct fetch_type *type,
-+				struct fetch_insn **pcode, struct fetch_insn *end,
-+				struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code = *pcode;
- 	int ret;
-@@ -1715,26 +1714,112 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 	case '@':	/* memory, file-offset or symbol */
- 		ret = parse_probe_arg_mem_symbol(arg, pcode, end, ctx);
- 		break;
--	case '+':	/* deref memory */
--	case '-':
--		ret = parse_probe_arg_deref(arg, pcode, end, ctx);
--		break;
- 	case '\\':	/* Immediate value */
- 		ret = parse_probe_arg_imm(arg, code, ctx);
- 		break;
--	case '(':
--		ret = handle_typecast(arg, pcode, end, ctx);
--		break;
- 	default:
- 		ret = parse_probe_arg_default(arg, pcode, end, ctx);
- 		break;
- 	}
--	if (!ret && code->op == FETCH_OP_NOP) {
-+
-+	if (ret)
-+		return ret;
-+
-+	if (code->op == FETCH_OP_NOP) {
- 		/* Parsed, but do not find fetch method */
- 		trace_probe_log_err(ctx->offset, BAD_FETCH_ARG);
--		ret = -EINVAL;
-+		return -EINVAL;
- 	}
--	return ret;
-+
-+	return 0;
-+}
-+
-+static int unwind_parse_states(struct fetch_insn **pcode, struct fetch_insn *end,
-+			       struct traceprobe_parse_context *ctx)
-+{
-+	struct parse_state *state;
-+	struct fetch_insn *code;
-+	int ret;
-+
-+	while (ctx->depth > 0) {
-+		ctx->depth--;
-+		state = &ctx->stack[ctx->depth];
-+
-+		if (state->type == STATE_DEREF) {
-+			code = *pcode;
-+			ctx->offset = state->deref.cur_offs;
-+			if (code->op == FETCH_OP_COMM || code->op == FETCH_OP_IMMSTR) {
-+				trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
-+				return -EINVAL;
-+			}
-+
-+			if (!(state->deref.deref == FETCH_OP_CPU_PTR &&
-+			      *state->deref.inner_arg == '@')) {
-+				code++;
-+				if (code == end) {
-+					trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+					return -EINVAL;
-+				}
-+			}
-+			*pcode = code;
-+
-+			code->op = state->deref.deref;
-+			code->offset = state->deref.offset;
-+			ctx->last_type = NULL;
-+
-+			if (state->deref.is_cpu_read) {
-+				code = *pcode;
-+				code++;
-+				if (code == end) {
-+					trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+					return -EINVAL;
-+				}
-+				code->op = FETCH_OP_DEREF;
-+				code->offset = 0;
-+				*pcode = code;
-+			}
-+		} else if (state->type == STATE_TYPECAST) {
-+			clear_struct_btf(ctx);
-+
-+			/* resolve the typecast struct name */
-+			ctx->offset = state->typecast.orig_offset + 1; /* for the '(' */
-+			ret = parse_btf_casttype(state->typecast.casttype, ctx);
-+			if (ret < 0)
-+				return ret;
-+
-+			ctx->offset = state->typecast.orig_offset +
-+				      state->typecast.field_offset_diff;
-+			ret = parse_btf_field(state->typecast.fieldname,
-+					      ctx->last_struct, pcode,
-+					      end, ctx);
-+			ctx->prefix_byteoffs = 0;
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/* Loop-based (non-recursive) argument parser */
-+static int
-+parse_probe_arg(char *arg, const struct fetch_type *type,
-+		struct fetch_insn **pcode, struct fetch_insn *end,
-+		struct traceprobe_parse_context *ctx)
-+{
-+	int ret;
-+
-+	ctx->depth = 0;
-+
-+	ret = parse_probe_arg_nested(&arg, ctx);
-+	if (ret)
-+		return ret;
-+
-+	ret = parse_probe_arg_leaf(arg, type, pcode, end, ctx);
-+	if (ret)
-+		return ret;
-+
-+	return unwind_parse_states(pcode, end, ctx);
- }
- 
- /* Bitfield type needs to be parsed into a fetch function */
-@@ -1995,12 +2080,6 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 			      ctx);
- 	if (ret < 0)
- 		goto fail;
--	/* nested_level must be 0 here, otherwise there is a bug. */
--	if (WARN_ON_ONCE(ctx->nested_level)) {
--		ret = -EINVAL;
--		goto fail;
--	}
--
- 	/* Update storing type if BTF is available */
- 	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
- 	    ctx->last_type) {
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index e6aee800a7d9..f0958707db8e 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -437,6 +437,34 @@ static inline bool tparg_is_event_probe(unsigned int flags)
- 	return !!(flags & TPARG_FL_TEVENT);
- }
- 
-+/* Each typecast consumes nested level. So the max number of typecast is 4. */
-+#define TRACEPROBE_MAX_NESTED_LEVEL 4
-+
-+enum parse_state_type {
-+	STATE_DEREF,
-+	STATE_TYPECAST,
-+};
-+
-+struct parse_state {
-+	int type;
-+	union {
-+		struct {
-+			int deref;
-+			long offset;
-+			int cur_offs;
-+			char *inner_arg;
-+			bool is_cpu_read;
-+		} deref;
-+		struct {
-+			char *casttype;
-+			char *fieldname;
-+			int orig_offset;
-+			int field_offset_diff;
-+			char *inner_arg;
-+		} typecast;
-+	};
-+};
-+
- struct traceprobe_parse_context {
- 	struct trace_event_call *event;
- 	/* BTF related parameters */
-@@ -453,12 +481,11 @@ struct traceprobe_parse_context {
- 	struct trace_probe *tp;
- 	unsigned int flags;
- 	int offset;
--	int nested_level;
- 	int prefix_byteoffs;	/* The byte offset of the prefix field of typecast */
-+	struct parse_state stack[TRACEPROBE_MAX_NESTED_LEVEL + 1];
-+	int depth;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 80fe152af1dd..f04598337060 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1941,6 +1941,7 @@ struct event_trigger_data {
+ 	struct list_head		named_list;
+ 	struct event_trigger_data	*named_data;
+ 	struct llist_node		llist;
++	void				(*free_private)(struct event_trigger_data *data);
  };
  
--/* Each typecast consumes nested level. So the max number of typecast is 3. */
--#define TRACEPROBE_MAX_NESTED_LEVEL 3
+ /* Avoid typos */
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 82ce492ab268..bc696e4bd695 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6335,6 +6335,16 @@ static void unregister_field_var_hists(struct hist_trigger_data *hist_data)
+ 	}
+ }
  
- extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
- 				      const char *argv,
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-index 984ab94df213..a48ad751b615 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-@@ -60,7 +60,7 @@ check_error 'f vfs_read ^&1'		# BAD_FETCH_ARG
++static void hist_trigger_free_private(struct event_trigger_data *data)
++{
++	destroy_hist_data(data->private_data);
++}
++
++static void hist_trigger_named_free_private(struct event_trigger_data *data)
++{
++	kfree(data->cmd_ops);
++}
++
+ static void event_hist_trigger_free(struct event_trigger_data *data)
+ {
+ 	struct hist_trigger_data *hist_data = data->private_data;
+@@ -6347,13 +6357,12 @@ static void event_hist_trigger_free(struct event_trigger_data *data)
+ 		if (data->name)
+ 			del_named_trigger(data);
  
- # We've introduced this limitation with array support
- if grep -q ' <type>\\\[<array-size>\\\]' README; then
--check_error 'f vfs_read +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 'f vfs_read +0(+0(+0(+0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
- check_error 'f vfs_read +0(@11):u8[10^'		# ARRAY_NO_CLOSE
- check_error 'f vfs_read +0(@11):u8[10]^a'	# BAD_ARRAY_SUFFIX
- check_error 'f vfs_read +0(@11):u8[^10a]'	# BAD_ARRAY_NUM
-@@ -114,7 +114,7 @@ check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
- check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
- if grep -qF "[(structname" README ; then
- check_error 'f vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
--check_error 'f vfs_read arg1=(a)((b)((c)(^(d)file->d)->c)->b)->a'	# TOO_MANY_NESTED
-+check_error 'f vfs_read arg1=(a)((b)((c)((d)(^(e)file->e)->d)->c)->b)->a'	# TOO_MANY_NESTED
- check_error 'f vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
- check_error 'f vfs_read arg1=(task_struct,^foo_bar)file->pid'	# NO_BTF_FIELD
- check_error 'f vfs_read arg1=(^task_struct1234)file->pid'	# NO_PTR_STRCT
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-index 2d0905b2c8b7..d871ba0b7110 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-@@ -46,7 +46,7 @@ check_error 't kfree ^&1'		# BAD_FETCH_ARG
+-		trigger_data_free(data);
+-
+ 		remove_hist_vars(hist_data);
  
- # We've introduced this limitation with array support
- if grep -q ' <type>\\\[<array-size>\\\]' README; then
--check_error 't kfree +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 't kfree +0(+0(+0(+0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
- check_error 't kfree +0(@11):u8[10^'		# ARRAY_NO_CLOSE
- check_error 't kfree +0(@11):u8[10]^a'		# BAD_ARRAY_SUFFIX
- check_error 't kfree +0(@11):u8[^10a]'		# BAD_ARRAY_NUM
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index d28f63b7e8a9..c93d5f2612fd 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -56,7 +56,7 @@ check_error 'p vfs_read ^&1'		# BAD_FETCH_ARG
+ 		unregister_field_var_hists(hist_data);
  
- # We've introduced this limitation with array support
- if grep -q ' <type>\\\[<array-size>\\\]' README; then
--check_error 'p vfs_read +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 'p vfs_read +0(+0(+0(+0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
- check_error 'p vfs_read +0(@11):u8[10^'		# ARRAY_NO_CLOSE
- check_error 'p vfs_read +0(@11):u8[10]^a'	# BAD_ARRAY_SUFFIX
- check_error 'p vfs_read +0(@11):u8[^10a]'	# BAD_ARRAY_NUM
-@@ -117,7 +117,7 @@ check_error 'p kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
- check_error 'r kfree ^$retval'			# NO_RETVAL
- if grep -qF "[(structname" README ; then
- check_error 'p vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
--check_error 'p vfs_read arg1=(a)((b)((c)(^(d)file->d)->c)->b)->a'	# TOO_MANY_NESTED
-+check_error 'p vfs_read arg1=(a)((b)((c)((d)(^(e)file->e)->d)->c)->b)->a'	# TOO_MANY_NESTED
- check_error 'p vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
- check_error 'p vfs_read arg1=(task_struct,^foo_bar)file->pid'	# NO_BTF_FIELD
- check_error 'p vfs_read arg1=(^task_struct1234)file->pid'		# NO_PTR_STRCT
+-		destroy_hist_data(hist_data);
++		data->free_private = hist_trigger_free_private;
++		trigger_data_free(data);
+ 	}
+ 	free_hist_pad();
+ }
+@@ -6384,11 +6393,9 @@ static void event_hist_trigger_named_free(struct event_trigger_data *data)
+ 
+ 	data->ref--;
+ 	if (!data->ref) {
+-		struct event_command *cmd_ops = data->cmd_ops;
+-
+ 		del_named_trigger(data);
++		data->free_private = hist_trigger_named_free_private;
+ 		trigger_data_free(data);
+-		kfree(cmd_ops);
+ 	}
+ }
+ 
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 655db2e82513..27c54da041b7 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -38,6 +38,13 @@ static void trigger_create_kthread_locked(void)
+ 	}
+ }
+ 
++static void trigger_data_free_one(struct event_trigger_data * data)
++{
++	if (data->free_private)
++		data->free_private(data);
++	kfree(data);
++}
++
+ static void trigger_data_free_queued_locked(void)
+ {
+ 	struct event_trigger_data *data, *tmp;
+@@ -52,7 +59,7 @@ static void trigger_data_free_queued_locked(void)
+ 	tracepoint_synchronize_unregister();
+ 
+ 	llist_for_each_entry_safe(data, tmp, llnodes, llist)
+-		kfree(data);
++		trigger_data_free_one(data);
+ }
+ 
+ /* Bulk garbage collection of event_trigger_data elements */
+@@ -75,7 +82,7 @@ static int trigger_kthread_fn(void *ignore)
+ 		tracepoint_synchronize_unregister();
+ 
+ 		llist_for_each_entry_safe(data, tmp, llnodes, llist)
+-			kfree(data);
++			trigger_data_free_one(data);
+ 	}
+ 
+ 	return 0;
+@@ -1717,6 +1724,11 @@ int event_enable_trigger_print(struct seq_file *m,
+ 	return 0;
+ }
+ 
++static void enable_trigger_free_private(struct event_trigger_data *data)
++{
++	kfree(data->private_data);
++}
++
+ void event_enable_trigger_free(struct event_trigger_data *data)
+ {
+ 	struct enable_trigger_data *enable_data = data->private_data;
+@@ -1729,8 +1741,8 @@ void event_enable_trigger_free(struct event_trigger_data *data)
+ 		/* Remove the SOFT_MODE flag */
+ 		trace_event_enable_disable(enable_data->file, 0, 1);
+ 		trace_event_put_ref(enable_data->file->event_call);
++		data->free_private = enable_trigger_free_private;
+ 		trigger_data_free(data);
+-		kfree(enable_data);
+ 	}
+ }
+ 
+-- 
+2.53.0
 
