@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B4D36AB54;
-	Mon, 13 Jul 2026 07:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDA636F8F1;
+	Mon, 13 Jul 2026 07:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783927694; cv=none; b=oQmecMq4IvG3LZr8679A5khdQpIXppdnSAf6BfaHUypEEkqOVFNbX+uWSe1Cy3NA2RVBAbZyYI/PApHGzcZKntIFmL8/HNbHDcIqvYPoAQQlNlZNk4j96t5fnLKJX3N3nbDrtQRzmfV6jj+3r3KlGq4mFl7cU5CFc+ucJV2+T5U=
+	t=1783927704; cv=none; b=NMbvrBCV1UiSPEfz4LizAA4rmU7AwLfY78+eImyzm5MTRWVCBtYeWm5RxiZn0v3hmY952kdB0G2G8Hx+u+eEtjCS7TxqBsU2l/oNfwwD+rrAt1rN3Fu10mLtc93UfBg4l7g6C38VLygtraebhtq27UWAdg0ePQcqRO3JKzMTz34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783927694; c=relaxed/simple;
-	bh=hqELA/fl1LAqzz8E8IRdPGy8XOdMNte2Dui+FJdM+aA=;
+	s=arc-20240116; t=1783927704; c=relaxed/simple;
+	bh=ANvE8llAdzDP9c8mDycRInCbne15+pbtq+cxKv+VHMc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bhBDINw4ZARr+4dftBVnsRJi/QXnfZk52VVFmUQKBNwQrBQFfvB+T/aYt91CxbP7P3SBMPMBPK2S1lyYOTgWZCp5/xmNHxEBUsyUDyTX8lMKGGz96VpJFnowhKZWQiNVBtlks/P0UTCcL0fHNuarNVbcZjEBBHVTH/3I00++qiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc7W0pAy; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=oW7jnUCJPs3Ys0804BvkfVAZZN897WzjCMSHCAmRU1cy+xQDWfcgQ8+7q2QPeP91xZrvBuYShxdC+PeZlCwKp9yix9FNxHsWj1VngH2bUmjO+4ndcKxdR3bSxNMfl8DDYRBuhBjnc87MTWA2W/rbMrNcs4MbN+w7YbcjDhl9Rfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihr1HkRW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc7W0pAy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3F11F000E9;
-	Mon, 13 Jul 2026 07:28:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihr1HkRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC041F000E9;
+	Mon, 13 Jul 2026 07:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783927692;
-	bh=ykkygFjoUseT4cJdY6LDUUSLsLeCSFMWe0Bi0JBfXDY=;
+	s=k20260515; t=1783927702;
+	bh=Egqhsjf9ud4/qwjC3GdkEb3I7uHVjH2JTBx2h3IYAic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gc7W0pAydY9mmF3+VVCGiQKgC+hXebSrk1ZkNMxh4nfP1zNQaPW1slLhO8tXzut55
-	 789xHqzvxSB/vRGcnGVYC76oHbSPUHOCUfEm9or2EEowpxyw7KCqWEKnaAt+VPw9+O
-	 6ZEx6fhChNvqM0wnZXmNWX+9e/qz9P2PV9Sm9nSo83a4Oti2dbnnwMlOWNs8FNtCnP
-	 kYcx9fRtO9OuX7ICx6ukrkvZYNzDAFNCh0/n12MTGySoSAXI/mZsYkYBS9g9T7zX+2
-	 o1x8CvLNsc/Uj7VA1PLeuBv3SnBoqKJnZQwakHaf4S52Bj67X4zac/ZldTdHaEYCDl
-	 yVSh7e5ULaMzQ==
+	b=ihr1HkRWQaznu2lFTvbokk9NjvktuK36TaFjrJatHCzAp+gW1dWXxQLGOiTyEOodU
+	 ttSLIy3NqPCbB5QDqVUiC/fPRBEtdOujDR4ixDdrPy8/lg4XbSCGQGKpZMOwCCxghT
+	 TthTG+zeKdyJnsIqNhnrXNRCITqn4LmwO9Yg6t5ywOIs83jWRZcghaaFUFxwHLs2wX
+	 WgDrURg+W+p0KPgxsd5sbEBuwgK1K1fhVSSAiOIncHWoNlbQ8d/6I8ePo19abXdZAt
+	 /066QnjrtQfQC0DEJfX3PoKZyOMmqU9Hisnqx04pRUsWLflNLZuayhwyU+361T1yJd
+	 7quLSiM6L3+tw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 3/5] tracing/probes: Sort ERRORS list in trace_probe.h alphabetically
-Date: Mon, 13 Jul 2026 16:28:08 +0900
-Message-ID: <178392768847.3229912.3433098868259193723.stgit@devnote2>
+Subject: [PATCH 4/5] tracing/probes: Extend max length of argument string
+Date: Mon, 13 Jul 2026 16:28:18 +0900
+Message-ID: <178392769822.3229912.2100340337736317320.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178392766002.3229912.15711868107734330750.stgit@devnote2>
 References: <178392766002.3229912.15711868107734330750.stgit@devnote2>
@@ -52,193 +52,120 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Sort the C-macro ERRORS list alphabetically in trace_probe.h to make
-it easier to find and maintain error entries.
+To support BTF argument parsing (such as accessing fields within nested
+structures via typecasting), the maximum argument string length needs
+to be extended. Extend MAX_ARGSTR_LEN from 63 to 255.
+
+Since MAX_ARGSTR_LEN was previously reused to format command heads in
+trace_*probe_match_command_head() functions, introduce a dedicated
+MAX_COMMON_HEAD_LEN (63) macro for matching command heads and switch
+these functions to use the new macro.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.h |  160 ++++++++++++++++++++++----------------------
- 1 file changed, 80 insertions(+), 80 deletions(-)
+ Changes in v2:
+ - Make the MAX_ARGSTR_LEN to 255 instead of 256.
+---
+ kernel/trace/trace_fprobe.c                        |    2 +-
+ kernel/trace/trace_kprobe.c                        |    2 +-
+ kernel/trace/trace_probe.h                         |    3 ++-
+ kernel/trace/trace_uprobe.c                        |    2 +-
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    2 +-
+ .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |    2 +-
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    2 +-
+ 7 files changed, 8 insertions(+), 7 deletions(-)
 
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index 536781cd4c47..5638a90e61cc 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -238,7 +238,7 @@ static bool trace_fprobe_is_busy(struct dyn_event *ev)
+ static bool trace_fprobe_match_command_head(struct trace_fprobe *tf,
+ 					    int argc, const char **argv)
+ {
+-	char buf[MAX_ARGSTR_LEN + 1];
++	char buf[MAX_COMMON_HEAD_LEN + 1];
+ 
+ 	if (!argc)
+ 		return true;
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index cfa807d8e760..cc24e992732c 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -149,7 +149,7 @@ static bool trace_kprobe_is_busy(struct dyn_event *ev)
+ static bool trace_kprobe_match_command_head(struct trace_kprobe *tk,
+ 					    int argc, const char **argv)
+ {
+-	char buf[MAX_ARGSTR_LEN + 1];
++	char buf[MAX_COMMON_HEAD_LEN + 1];
+ 
+ 	if (!argc)
+ 		return true;
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index e6268a8dc378..e64e323244a5 100644
+index e64e323244a5..e6d427910c4f 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -512,95 +512,95 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+@@ -32,7 +32,8 @@
+ #include "trace_output.h"
  
- #undef ERRORS
- #define ERRORS	\
--	C(FILE_NOT_FOUND,	"Failed to find the given file"),	\
--	C(NO_REGULAR_FILE,	"Not a regular file"),			\
--	C(BAD_REFCNT,		"Invalid reference counter offset"),	\
--	C(REFCNT_OPEN_BRACE,	"Reference counter brace is not closed"), \
--	C(BAD_REFCNT_SUFFIX,	"Reference counter has wrong suffix"),	\
--	C(BAD_UPROBE_OFFS,	"Invalid uprobe offset"),		\
--	C(BAD_MAXACT_TYPE,	"Maxactive is only for function exit"),	\
--	C(BAD_MAXACT,		"Invalid maxactive number"),		\
--	C(MAXACT_TOO_BIG,	"Maxactive is too big"),		\
--	C(BAD_PROBE_ADDR,	"Invalid probed address or symbol"),	\
--	C(NON_UNIQ_SYMBOL,	"The symbol is not unique"),		\
--	C(BAD_RETPROBE,		"Retprobe address must be an function entry"), \
--	C(NO_TRACEPOINT,	"Tracepoint is not found"),		\
--	C(BAD_TP_NAME,		"Invalid character in tracepoint name"),\
--	C(BAD_ADDR_SUFFIX,	"Invalid probed address suffix"), \
--	C(NO_GROUP_NAME,	"Group name is not specified"),		\
--	C(GROUP_TOO_LONG,	"Group name is too long"),		\
--	C(BAD_GROUP_NAME,	"Group name must follow the same rules as C identifiers"), \
--	C(NO_EVENT_NAME,	"Event name is not specified"),		\
--	C(EVENT_TOO_LONG,	"Event name is too long"),		\
--	C(BAD_EVENT_NAME,	"Event name must follow the same rules as C identifiers"), \
--	C(EVENT_EXIST,		"Given group/event name is already used by another event"), \
--	C(RETVAL_ON_PROBE,	"$retval is not available on probe"),	\
--	C(NO_RETVAL,		"This function returns 'void' type"),	\
--	C(BAD_STACK_NUM,	"Invalid stack number"),		\
-+	C(ARGIDX_2BIG,		"$argN index is too big"),		\
-+	C(ARGS_2LONG,		"$arg* failed because the argument list is too long"),	\
-+	C(ARG_NAME_TOO_LONG,	"Argument name is too long"),		\
-+	C(ARG_TOO_LONG,		"Argument expression is too long"),		\
-+	C(ARRAY_NO_CLOSE,	"Array is not closed"),		\
-+	C(ARRAY_TOO_BIG,	"Array number is too big"),		\
-+	C(BAD_ADDR_SUFFIX,	"Invalid probed address suffix"),		\
-+	C(BAD_ARG_NAME,		"Argument name must follow the same rules as C identifiers"),	\
- 	C(BAD_ARG_NUM,		"Invalid argument number"),		\
--	C(BAD_VAR,		"Invalid $-variable specified"),	\
--	C(BAD_REG_NAME,		"Invalid register name"),		\
--	C(BAD_MEM_ADDR,		"Invalid memory address"),		\
--	C(BAD_IMM,		"Invalid immediate value"),		\
--	C(IMMSTR_NO_CLOSE,	"String is not closed with '\"'"),	\
--	C(FILE_ON_KPROBE,	"File offset is not available for kernel probes"), \
--	C(BAD_FILE_OFFS,	"Invalid file offset value"),		\
--	C(SYM_ON_UPROBE,	"Symbol is not available with uprobe"),	\
--	C(TOO_MANY_OPS,		"Dereference is too much nested"), 	\
--	C(DEREF_NEED_BRACE,	"Dereference needs a brace"),		\
-+	C(BAD_ARRAY_NUM,	"Invalid array size"),		\
-+	C(BAD_ARRAY_SUFFIX,	"Array has wrong suffix"),		\
-+	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),	\
-+	C(BAD_ATTACH_EVENT,	"Attached event does not exist"),		\
-+	C(BAD_BITFIELD,		"Invalid bitfield"),		\
-+	C(BAD_BTF_TID,		"Failed to get BTF type info."),		\
- 	C(BAD_DEREF_OFFS,	"Invalid dereference offset"),		\
--	C(DEREF_OPEN_BRACE,	"Dereference brace is not closed"),	\
--	C(COMM_CANT_DEREF,	"$comm can not be dereferenced"),	\
-+	C(BAD_EVENT_NAME,	"Event name must follow the same rules as C identifiers"),	\
- 	C(BAD_FETCH_ARG,	"Invalid fetch argument"),		\
--	C(ARRAY_NO_CLOSE,	"Array is not closed"),			\
--	C(BAD_ARRAY_SUFFIX,	"Array has wrong suffix"),		\
--	C(BAD_ARRAY_NUM,	"Invalid array size"),			\
--	C(ARRAY_TOO_BIG,	"Array number is too big"),		\
--	C(BAD_TYPE,		"Unknown type is specified"),		\
--	C(BAD_STRING,		"String accepts only memory argument"),	\
-+	C(BAD_FILE_OFFS,	"Invalid file offset value"),		\
-+	C(BAD_GROUP_NAME,	"Group name must follow the same rules as C identifiers"),	\
-+	C(BAD_HYPHEN,		"Failed to parse single hyphen. Forgot '>'?"),	\
-+	C(BAD_IMM,		"Invalid immediate value"),		\
-+	C(BAD_INSN_BNDRY,	"Probe point is not an instruction boundary"),	\
-+	C(BAD_MAXACT,		"Invalid maxactive number"),		\
-+	C(BAD_MAXACT_TYPE,	"Maxactive is only for function exit"),	\
-+	C(BAD_MEM_ADDR,		"Invalid memory address"),		\
-+	C(BAD_PROBE_ADDR,	"Invalid probed address or symbol"),		\
-+	C(BAD_REFCNT,		"Invalid reference counter offset"),		\
-+	C(BAD_REFCNT_SUFFIX,	"Reference counter has wrong suffix"),	\
-+	C(BAD_REG_NAME,		"Invalid register name"),		\
-+	C(BAD_RETPROBE,		"Retprobe address must be an function entry"),	\
-+	C(BAD_STACK_NUM,	"Invalid stack number"),		\
-+	C(BAD_STRING,		"String accepts only memory argument"),		\
- 	C(BAD_SYMSTRING,	"Symbol String doesn't accept data/userdata"),	\
--	C(BAD_BITFIELD,		"Invalid bitfield"),			\
--	C(ARG_NAME_TOO_LONG,	"Argument name is too long"),		\
--	C(NO_ARG_NAME,		"Argument name is not specified"),	\
--	C(BAD_ARG_NAME,		"Argument name must follow the same rules as C identifiers"), \
--	C(USED_ARG_NAME,	"This argument name is already used"),	\
--	C(ARG_TOO_LONG,		"Argument expression is too long"),	\
-+	C(BAD_TP_NAME,		"Invalid character in tracepoint name"),	\
-+	C(BAD_TYPE,		"Unknown type is specified"),		\
-+	C(BAD_TYPE4STR,		"This type does not fit for string."),	\
-+	C(BAD_UPROBE_OFFS,	"Invalid uprobe offset"),		\
-+	C(BAD_VAR,		"Invalid $-variable specified"),		\
-+	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),	\
-+	C(COMM_CANT_DEREF,	"$comm can not be dereferenced"),		\
-+	C(DEREF_NEED_BRACE,	"Dereference needs a brace"),		\
-+	C(DEREF_OPEN_BRACE,	"Dereference brace is not closed"),	\
-+	C(DIFF_ARG_TYPE,	"Argument type or name is different from existing probe"),	\
-+	C(DIFF_PROBE_TYPE,	"Probe type is different from existing probe"),	\
-+	C(DOUBLE_ARGS,		"$arg* can be used only once in the parameters"),	\
-+	C(EVENT_EXIST,		"Given group/event name is already used by another event"),	\
-+	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),		\
-+	C(EVENT_TOO_LONG,	"Event name is too long"),		\
-+	C(FAIL_REG_PROBE,	"Failed to register probe event"),		\
-+	C(FILE_NOT_FOUND,	"Failed to find the given file"),		\
-+	C(FILE_ON_KPROBE,	"File offset is not available for kernel probes"),	\
-+	C(GROUP_TOO_LONG,	"Group name is too long"),		\
-+	C(IMMSTR_NO_CLOSE,	"String is not closed with '\"'"),		\
-+	C(MAXACT_TOO_BIG,	"Maxactive is too big"),		\
-+	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),	\
-+	C(NOFENTRY_ARGS,	"$arg* can be used only on function entry or exit"),	\
-+	C(NON_UNIQ_SYMBOL,	"The symbol is not unique"),		\
-+	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
-+	C(NOSUP_DAT_ARG,	"Non pointer structure/union argument is not supported."),	\
-+	C(NOSUP_PERCPU,		"Per-cpu variable access is only for kernel probes"),	\
- 	C(NO_ARG_BODY,		"No argument expression"),		\
--	C(BAD_INSN_BNDRY,	"Probe point is not an instruction boundary"),\
--	C(FAIL_REG_PROBE,	"Failed to register probe event"),\
--	C(DIFF_PROBE_TYPE,	"Probe type is different from existing probe"),\
--	C(DIFF_ARG_TYPE,	"Argument type or name is different from existing probe"),\
--	C(SAME_PROBE,		"There is already the exact same probe event"),\
--	C(NO_EVENT_INFO,	"This requires both group and event name to attach"),\
--	C(BAD_ATTACH_EVENT,	"Attached event does not exist"),\
--	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),\
-+	C(NO_ARG_NAME,		"Argument name is not specified"),		\
-+	C(NO_BTFARG,		"This variable is not found at this probe point"),	\
-+	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),		\
-+	C(NO_BTF_FIELD,		"This field is not found."),		\
- 	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
--	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
--	C(NO_BTFARG,		"This variable is not found at this probe point"),\
--	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),	\
--	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),\
--	C(NOFENTRY_ARGS,	"$arg* can be used only on function entry or exit"),	\
--	C(DOUBLE_ARGS,		"$arg* can be used only once in the parameters"),	\
--	C(ARGS_2LONG,		"$arg* failed because the argument list is too long"),	\
--	C(ARGIDX_2BIG,		"$argN index is too big"),		\
-+	C(NO_EVENT_FIELD,	"This event field is not found."),		\
-+	C(NO_EVENT_INFO,	"This requires both group and event name to attach"),	\
-+	C(NO_EVENT_NAME,	"Event name is not specified"),		\
-+	C(NO_GROUP_NAME,	"Group name is not specified"),		\
- 	C(NO_PTR_STRCT,		"This is not a pointer to union/structure."),	\
--	C(NOSUP_DAT_ARG,	"Non pointer structure/union argument is not supported."),\
--	C(BAD_HYPHEN,		"Failed to parse single hyphen. Forgot '>'?"),	\
--	C(NO_EVENT_FIELD,	"This event field is not found."),	\
--	C(NO_BTF_FIELD,		"This field is not found."),	\
--	C(BAD_BTF_TID,		"Failed to get BTF type info."),\
--	C(BAD_TYPE4STR,		"This type does not fit for string."),\
--	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
--	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
-+	C(NO_REGULAR_FILE,	"Not a regular file"),		\
-+	C(NO_RETVAL,		"This function returns 'void' type"),		\
-+	C(NO_TRACEPOINT,	"Tracepoint is not found"),		\
-+	C(REFCNT_OPEN_BRACE,	"Reference counter brace is not closed"),	\
-+	C(RETVAL_ON_PROBE,	"$retval is not available on probe"),	\
-+	C(SAME_PROBE,		"There is already the exact same probe event"),	\
-+	C(SYM_ON_UPROBE,	"Symbol is not available with uprobe"),	\
-+	C(TOO_MANY_ARGS,	"Too many arguments are specified"),		\
- 	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
--	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
--	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"), \
-+	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"),	\
-+	C(TOO_MANY_OPS,		"Dereference is too much nested"),		\
-+	C(TYPECAST_BAD_ARROW,	"Typecast field option does not support -> operator"),	\
-+	C(TYPECAST_NOT_ALIGNED,	"Typecast field option is not byte-aligned"),	\
-+	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),	\
- 	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
--	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"), \
--	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"), \
--	C(TYPECAST_NOT_ALIGNED,	"Typecast field option is not byte-aligned"), \
--	C(TYPECAST_BAD_ARROW,	"Typecast field option does not support -> operator"), \
--	C(NOSUP_PERCPU,		"Per-cpu variable access is only for kernel probes"),
-+	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"),	\
-+	C(USED_ARG_NAME,	"This argument name is already used"),
+ #define MAX_TRACE_ARGS		128
+-#define MAX_ARGSTR_LEN		63
++#define MAX_ARGSTR_LEN		255
++#define MAX_COMMON_HEAD_LEN	63
+ #define MAX_ARRAY_LEN		64
+ #define MAX_ARG_NAME_LEN	32
+ #define MAX_BTF_ARGS_LEN	128
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index b2e264a4b96c..67bd8fd91e3e 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -281,7 +281,7 @@ static bool trace_uprobe_is_busy(struct dyn_event *ev)
+ static bool trace_uprobe_match_command_head(struct trace_uprobe *tu,
+ 					    int argc, const char **argv)
+ {
+-	char buf[MAX_ARGSTR_LEN + 1];
++	char buf[MAX_COMMON_HEAD_LEN + 1];
+ 	int len;
  
- #undef C
- #define C(a, b)		TP_ERR_##a
+ 	if (!argc)
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+index e9d7e6919c7f..984ab94df213 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+@@ -75,7 +75,7 @@ check_error 'f vfs_read ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_L
+ check_error 'f vfs_read ^=@11'			# NO_ARG_NAME
+ check_error 'f vfs_read ^var.1=@11'		# BAD_ARG_NAME
+ check_error 'f vfs_read var1=@11 ^var1=@12'	# USED_ARG_NAME
+-check_error 'f vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
++check_error 'f vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))))))))))))))))))))))'	# ARG_TOO_LONG
+ check_error 'f vfs_read arg1=^'			# NO_ARG_BODY
+ 
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
+index ffe8ffef4027..2d0905b2c8b7 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
+@@ -61,7 +61,7 @@ check_error 't kfree ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_LOG
+ check_error 't kfree ^=@11'			# NO_ARG_NAME
+ check_error 't kfree ^var.1=@11'		# BAD_ARG_NAME
+ check_error 't kfree var1=@11 ^var1=@12'	# USED_ARG_NAME
+-check_error 't kfree ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
++check_error 't kfree ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))))))))))))))))))))))'	# ARG_TOO_LONG
+ check_error 't kfree arg1=^'			# NO_ARG_BODY
+ 
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index 21ce8414459f..d28f63b7e8a9 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -71,7 +71,7 @@ check_error 'p vfs_read ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_L
+ check_error 'p vfs_read ^=@11'			# NO_ARG_NAME
+ check_error 'p vfs_read ^var.1=@11'		# BAD_ARG_NAME
+ check_error 'p vfs_read var1=@11 ^var1=@12'	# USED_ARG_NAME
+-check_error 'p vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
++check_error 'p vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))))))))))))))))))))))'	# ARG_TOO_LONG
+ check_error 'p vfs_read arg1=^'			# NO_ARG_BODY
+ 
+ # instruction boundary check is valid on x86 (at this moment)
 
