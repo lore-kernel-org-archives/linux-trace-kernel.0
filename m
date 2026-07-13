@@ -1,646 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209C13750D5;
-	Mon, 13 Jul 2026 07:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EAE3AD524
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jul 2026 08:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783927715; cv=none; b=HY64nJy7eGeIe5pW5t308BZZYq5Sg2w8/VLfHx32JowwB30x9fW+QZVHvfQah8hrxBBWjI1UXyqCXI9dlciIND0HHes7cyieGvc42Z3Elfa3CD2Uh2ZSYdtxOMFQd+hLkWJ1Pp1On4+NJvTVfvpHG7HGFM/gwOfGjPtgTe+w31s=
+	t=1783930888; cv=none; b=Mhb0PK+7C+rvUPzhjUG+0IGu56mCAWm0oHqI5g2NXtNJU0fGO0KJ8bUJ1zovQRnojJDi07G58vCgWDIpXC2PIggyDOoCrkqi5TA8mV3v8l6AA+DCLVcKiorKI9mmrYQzUTVxvUD+GCUdKTfjVOZO0/tpy98p4apnCeNJcH4S164=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783927715; c=relaxed/simple;
-	bh=wpG2Txe350WT3pSjx17oQjjmUG7hI/ZgU3NcK7lw8QI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gNvQByuhbhrcGFmr7heDmBP4D3jMiClhUiMZQMc9XGbNx2AbaKw4WYrtimiRh15aFCQY9V9OZJLTgsENl1ocr42Jdmht6msqQ9zF/IgYS/mOjzUlwXp3OtuPkXkJbhPOVjdpoqOkd1tt3EQfSfcrAAuCmlJkBNyZEiCUxr9zEJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flhHkoC3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783930888; c=relaxed/simple;
+	bh=Yy0Rum6OX/7GHOu3/FJbCVc981c5QVNECD1+87yPWl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ln4rnZHZ+VwDYpQGFVeM6okN5nvgkQEuCV9cbAGmRKTl94UkEpIhXP0bUZ+J84DhZ5TWBPUKVMtIKDpbtFLtBox+t3blRABqWdxi1kAD9Lwo0MtI0wwd5rTrdgbHC/ep3enKsIEIiRJW03vc/E6L8pfFL+B4oqIaRZkl20DFPtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e9YcDzZJ; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flhHkoC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D3321F000E9;
-	Mon, 13 Jul 2026 07:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783927713;
-	bh=zre5CElPzR2062l+YRM/mgnDa4vb1YPbUNCvqj0DWtM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=flhHkoC3t2v/F+uw1TTI8o47es+ACCduQtwKlALHUdm2X5bzznYku19Yu+kjY6S0X
-	 VPbBZzm79o0W4MqFXjz94xj4UShhE9YYKkre3IOJBfJP/V1m5MtGBtvK/O/Nf24Rra
-	 TAnQu/xz3MQgEqqr24tXJ0FxJcNTlty12FhOul1OfPRpnS0oz9pxHnICspyullrUmF
-	 y/TU+utmKuOl+qrfUupxAO9lvg+dKFruxJegERsj4uGJF7Xy4xll+9v6TV8CWIMvSc
-	 sIxvt1A11VgjU33nLCqb0tltstcjYLzohlhVr2gh/2kPvs4uT6lLiVShEHjGXzQOEC
-	 aBwIKF8klQaVg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 5/5] tracing/probes: Eliminate recursion in parse_probe_arg()
-Date: Mon, 13 Jul 2026 16:28:28 +0900
-Message-ID: <178392770793.3229912.9062655429606187449.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178392766002.3229912.15711868107734330750.stgit@devnote2>
-References: <178392766002.3229912.15711868107734330750.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e9YcDzZJ"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-493bb510ce4so19712185e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jul 2026 01:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783930884; x=1784535684; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=YrAkZsSUgpZbjxzvPdeiOWzj9u/doeixQHc02MlsfrU=;
+        b=e9YcDzZJghi5jXJVYT0my42/vYXRQbpJdQ+LQMitnRl0YczcPIIfGJVk2Y4s2zBclt
+         iD1iQZB3N+6ZencgHVDZbbMiszOAF370/yp6ehSbClzHhdfHUHq2peDjM5OWpmMxKvgI
+         oJwXVWGg5JLp/LH+nG/OcdqGL8NEEvTUl+Jn7PhnK5IS7ZXkj+P5/SqOzPDu8F+2pivg
+         9YJxI6Nl7Vkl2DlLKX/8PBg6SW6q4S5XnZdddBCDIZJck18MvvEhpUcotEXqhu2SLOY0
+         MgGW7X2wF/V7kJcnQMsQgLp4opnktGjcYgx57MS7bkQruY4qGrX7l/F9ccCt9qr4aON7
+         0rDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783930884; x=1784535684;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YrAkZsSUgpZbjxzvPdeiOWzj9u/doeixQHc02MlsfrU=;
+        b=RUBakfRNMDnJefC8KBnhc3qUr+jyZEeCk32wwBCySLWUx/MNW3FMmyrGP5JI5M9BCi
+         p6lTUKwTYKJsFhWwF0kAY1KgYMseHzcPLAk9D4lLQL/AldWJKmaWaugydADdaj2PH2Lp
+         Tuhi6sOc/kx/KXllhPLGqkfR/L/x/Q75r8HsvUrk+Lu/hS7FrhxjdmKgZPNiCa5Qu7KJ
+         uQ06Pbzg1CiCMJ0xSUHp3Jhxsp15+sbkqZ5HtMdD1DaWQlcvHOvuTaWB2eZnOTQ0jIVE
+         1oi7TBfEmFoB7jfjl0rXq2+MKrif8Ytg2abeCTH9/nZPeZik5z/bhbBl1SO4Jnynghl/
+         iNVQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrhQkzptWShdPYJ7cw1Mzg9k26G2iYPmHzgvdO9edMzx4uVFINZthIcOpkzXCaH7IDh4MVEtJ5SMIczoqIbbbCkzOs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCocvQSrWhwlDciby/thzTl0XL8xgwEuLJiQi69Ub7oxRWz0jq
+	4ghC6lrgZu4Cp1bhWFGBSUv/u0kWhvkmzbFdwP8S8/hCCkKu5RFdzqTI/vDCxGa63Q==
+X-Gm-Gg: AfdE7clTv1lStctXe+fWi7HJYK63R4BgIMP5EAkVASLPi6S9xt1NGbT5+EOwH0YuhS7
+	jXfiZLbqWMDukOhBfUoraFysod8p8an2cLQKN6HBCXrjQf1BhiriP2/XibLA6RRpKgRZogtM3eC
+	5xfUnGPQNIf+L4l9Oi3pK9ZLFlVP3WiHEFEXOkoMyeglgJFrf8Gtn5xbYDm1wEBLaHTLOG+iv0q
+	7kfuaETPZiQ1S11IBfekHcYQtlw3uvvXhQwsAbbGkM8y20uRUrdwXIfUh6B0bvJfb1gnDDcyjdM
+	OHh1mnHQLMgm6UInNzwtnP/9Fmc9IO2+kpG/ZuDA4dg3HOzaubOgFGWm9NKp57YSxYU01fsjeHK
+	2t17flTXZML2L3Bgk2RnUCzeVZpMpZK8vbiIWIJpuxOEUOuj4wmAyHZ2aK8HDS2tvAaG9T3jKGN
+	DMswFXbT4daMeEmgk6JsdUq3SiNad3vnZUdMJTqgKD+zn4Hajh7Xk=
+X-Received: by 2002:a05:600c:34d1:b0:492:58d6:2565 with SMTP id 5b1f17b1804b1-493fd45f58bmr58666575e9.25.1783930883028;
+        Mon, 13 Jul 2026 01:21:23 -0700 (PDT)
+Received: from google.com (137.69.77.34.bc.googleusercontent.com. [34.77.69.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493f4f09f89sm521553025e9.10.2026.07.13.01.21.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 01:21:22 -0700 (PDT)
+Date: Mon, 13 Jul 2026 09:21:18 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Fuad Tabba <fuad.tabba@linux.dev>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	will@kernel.org, tabba@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tracing/remotes: Fix page_va[] access before counter
+ update in trace_remote_alloc_buffer()
+Message-ID: <alSf_uhS2Gjt14ZO@google.com>
+References: <20260713072823.2668323-1-fuad.tabba@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260713072823.2668323-1-fuad.tabba@linux.dev>
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Mon, Jul 13, 2026 at 08:28:23AM +0100, Fuad Tabba wrote:
+> page_va[] is annotated __counted_by(nr_page_va), so nr_page_va must
+> cover an index before that element is accessed. The allocation loop
+> writes page_va[id] while nr_page_va is still id and increments it only
+> afterwards, so every write is one element past the declared count.
+> 
+> The store is out of bounds with respect to the annotation: a build with
+> CONFIG_UBSAN_BOUNDS on a toolchain that honours __counted_by
+> (clang >= 20.1, gcc >= 15.1) flags it as an array-index overflow.
+> 
+> Increment nr_page_va before writing the element it now covers. A failed
+> allocation then leaves the slot counted but NULL; the error path frees
+> it with free_page(0), which is a no-op.
+> 
+> Fixes: 96e43537af546 ("tracing: Introduce trace remotes")
+> Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 
-To avoid potential stack overflows on limited kernel stacks, convert
-parse_probe_arg() from a recursive function into a loop-based
-implementation with a simple local state stack.
+Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
+Tested-by: Vincent Donnefort <vdonnefort@google.com>
 
-Since recursion is eliminated using a loop with a fixed-size
-stack in the context, this restricts the dereference nesting
-depth. The maximum nesting depth of dereferences is now restricted
-to the same limit as typecasts (TRACEPROBE_MAX_NESTED_LEVEL, which
-is 8) and reports the same TOO_MANY_NESTED error. Update ftrace
-selftests to reflect this restriction and simplify the checks.
-
-Note that this change slightly alters the behavior of nested
-dereferencing in fetcharg. Previously, dereferencing without BTF
-allowed for up to 14 levels of nesting, whereas dereferencing
-with BTF was limited to 3 levels. With this change, the nesting
-depth is now limited to 8 levels in both cases.
-
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
- - Clearly state that both derefernce nest and typecast nest are
-   limited by the same TRACEPROBE_MAX_NESTED_LEVEL.
- - Extend TRACEPROBE_MAX_NESTED_LEVEL to 8.
- - Fix testcase to check TOO_MANY_NESTED instead of TOO_MANY_OPS
-   (that should not be hit anymore)
----
- kernel/trace/trace_probe.c                         |  334 ++++++++++++--------
- kernel/trace/trace_probe.h                         |   33 ++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
- .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |    2 
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 
- 5 files changed, 240 insertions(+), 137 deletions(-)
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index eb9f7bd13c19..05e9bff16648 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -356,61 +356,11 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		struct fetch_insn **pcode, struct fetch_insn *end,
- 		struct traceprobe_parse_context *ctx);
- 
--/* handle dereference nested call */
--static inline int handle_dereference(char *arg, struct fetch_insn **pcode,
--	struct fetch_insn *end, struct traceprobe_parse_context *ctx,
--	int deref, long offset)
-+static int parse_this_cpu(char *arg, struct traceprobe_parse_context *ctx)
- {
--	const struct fetch_type *type = find_fetch_type(NULL, ctx->flags);
--	struct fetch_insn *code = *pcode;
--	int cur_offs = ctx->offset;
--	char *tmp;
--	int ret;
--
--	tmp = strrchr(arg, ')');
--	if (!tmp) {
--		trace_probe_log_err(ctx->offset + strlen(arg),
--					DEREF_OPEN_BRACE);
--		return -EINVAL;
--	}
--
--	*tmp = '\0';
--	ret = parse_probe_arg(arg, type, &code, end, ctx);
--	if (ret)
--		return ret;
--	ctx->offset = cur_offs;
--	if (code->op == FETCH_OP_COMM || code->op == FETCH_OP_IMMSTR) {
--		trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
--		return -EINVAL;
--	}
--
--	/*
--	 * this_cpu_ptr(@SYM) does not use SYM value, but use SYM address.
--	 * So we overwrite the last FETCH_OP_DEREF with FETCH_OP_CPU_PTR.
--	 */
--	if (!(deref == FETCH_OP_CPU_PTR && *arg == '@')) {
--		code++;
--		if (code == end) {
--			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
--			return -EINVAL;
--		}
--	}
--	*pcode = code;
--
--	code->op = deref;
--	code->offset = offset;
--	/* Reset the last type if used */
--	ctx->last_type = NULL;
--	return 0;
--}
--
--static int parse_this_cpu(char *arg, struct fetch_insn **pcode,
--			  struct fetch_insn *end,
--			  struct traceprobe_parse_context *ctx)
--{
--	struct fetch_insn *code;
- 	bool is_ptr = false;
--	int ret;
-+	bool is_read = false;
-+	char *tmp;
- 
- 	/*
- 	 * This is only for kernel probes, excluding eprobe, because per-cpu
-@@ -428,23 +378,24 @@ static int parse_this_cpu(char *arg, struct fetch_insn **pcode,
- 	} else if (str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
- 		arg += THIS_CPU_READ_LEN;
- 		ctx->offset += THIS_CPU_READ_LEN;
-+		is_read = true;
- 	} else
- 		return -EINVAL;
- 
--	ret = handle_dereference(arg, pcode, end, ctx, FETCH_OP_CPU_PTR, 0);
--	if (ret || is_ptr)
--		return ret;
--
--	/* this_cpu_read(VAR) -> +0(this_cpu_ptr(VAR)) */
--	code = *pcode;
--	code++;
--	if (code == end) {
--		trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+	tmp = strrchr(arg, ')');
-+	if (!tmp) {
-+		trace_probe_log_err(ctx->offset + strlen(arg),
-+					DEREF_OPEN_BRACE);
- 		return -EINVAL;
- 	}
--	code->op = FETCH_OP_DEREF;
--	code->offset = 0;
--	*pcode = code;
-+	*tmp = '\0';
-+
-+	ctx->stack[ctx->depth].type = STATE_DEREF;
-+	ctx->stack[ctx->depth].deref.deref = FETCH_OP_CPU_PTR;
-+	ctx->stack[ctx->depth].deref.offset = 0;
-+	ctx->stack[ctx->depth].deref.cur_offs = ctx->offset;
-+	ctx->stack[ctx->depth].deref.inner_arg = arg;
-+	ctx->stack[ctx->depth].deref.is_cpu_read = is_read;
- 	return 0;
- }
- 
-@@ -1007,14 +958,12 @@ static char *find_matched_close_paren(char *s)
- 	return NULL;
- }
- 
--static int handle_typecast(char *arg, struct fetch_insn **pcode,
--			   struct fetch_insn *end,
--			   struct traceprobe_parse_context *ctx)
-+static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
- {
- 	int orig_offset = ctx->offset;
- 	char *close;
- 	char *tmp;
--	int ret;
-+	char *fieldname;
- 
- 	if (!(tparg_is_event_probe(ctx->flags) ||
- 	      tparg_is_function_entry(ctx->flags) ||
-@@ -1028,12 +977,6 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 	 * For example: (STRUCT)VAR->FIELD and (STRUCT)(VAR)->FIELD are same.
- 	 * VAR is solved in the nested call.
- 	 */
--	ctx->nested_level++;
--	if (ctx->nested_level > TRACEPROBE_MAX_NESTED_LEVEL) {
--		trace_probe_log_err(ctx->offset, TOO_MANY_NESTED);
--		return -E2BIG;
--	}
--
- 	tmp = strchr(arg, ')');
- 	if (!tmp) {
- 		trace_probe_log_err(ctx->offset + strlen(arg),
-@@ -1103,30 +1046,19 @@ static int handle_typecast(char *arg, struct fetch_insn **pcode,
- 	}
- 	*close = '\0';
- 
--	/* We need to parse the nested one */
--	ret = parse_probe_arg(tmp, find_fetch_type(NULL, ctx->flags),
--			      pcode, end, ctx);
--	if (ret < 0)
--		return ret;
--	ctx->nested_level--;
--	clear_struct_btf(ctx);
--
--	/* Let tmp point the field name. */
-+	/* Let fieldname point the field name. */
- 	if (close[1] == '-')
--		tmp = close + 3; /* Skip "->" after closing parenthesis */
-+		fieldname = close + 3; /* Skip "->" after closing parenthesis */
- 	else
--		tmp = close + 2; /* Skip ">" after inner variable name */
--
--	/* resolve the typecast struct name */
--	ctx->offset = orig_offset + 1; /* for the '(' */
--	ret = parse_btf_casttype(arg + 1, ctx);
--	if (ret < 0)
--		return ret;
--
--	ctx->offset = orig_offset + tmp - arg;
--	ret = parse_btf_field(tmp, ctx->last_struct, pcode, end, ctx);
--	ctx->prefix_byteoffs = 0;
--	return ret;
-+		fieldname = close + 2; /* Skip ">" after inner variable name */
-+
-+	ctx->stack[ctx->depth].type = STATE_TYPECAST;
-+	ctx->stack[ctx->depth].typecast.casttype = arg + 1;
-+	ctx->stack[ctx->depth].typecast.fieldname = fieldname;
-+	ctx->stack[ctx->depth].typecast.orig_offset = orig_offset;
-+	ctx->stack[ctx->depth].typecast.field_offset_diff = fieldname - arg;
-+	ctx->stack[ctx->depth].typecast.inner_arg = tmp;
-+	return 0;
- }
- 
- #else /* !CONFIG_PROBE_EVENTS_BTF_ARGS */
-@@ -1171,9 +1103,20 @@ static int check_prepare_btf_string_fetch(char *typename,
- 	return 0;
- }
- 
--static int handle_typecast(char *arg, struct fetch_insn **pcode,
--			   struct fetch_insn *end,
-+static int parse_btf_casttype(char *casttype,
-+			      struct traceprobe_parse_context *ctx)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int parse_btf_field(char *fieldname, const struct btf_type *type,
-+			   struct fetch_insn **pcode, struct fetch_insn *end,
- 			   struct traceprobe_parse_context *ctx)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
- {
- 	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
- 	return -EOPNOTSUPP;
-@@ -1598,9 +1541,7 @@ static int parse_probe_arg_mem_symbol(char *arg, struct fetch_insn **pcode,
- 	return 0;
- }
- 
--static int parse_probe_arg_deref(char *arg, struct fetch_insn **pcode,
--				 struct fetch_insn *end,
--				 struct traceprobe_parse_context *ctx)
-+static int parse_probe_arg_deref(char *arg, struct traceprobe_parse_context *ctx)
- {
- 	int deref = FETCH_OP_DEREF;
- 	long offset = 0;
-@@ -1627,7 +1568,22 @@ static int parse_probe_arg_deref(char *arg, struct fetch_insn **pcode,
- 	}
- 	ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
- 	arg = tmp + 1;
--	return handle_dereference(arg, pcode, end, ctx, deref, offset);
-+
-+	tmp = strrchr(arg, ')');
-+	if (!tmp) {
-+		trace_probe_log_err(ctx->offset + strlen(arg),
-+					DEREF_OPEN_BRACE);
-+		return -EINVAL;
-+	}
-+	*tmp = '\0';
-+
-+	ctx->stack[ctx->depth].type = STATE_DEREF;
-+	ctx->stack[ctx->depth].deref.deref = deref;
-+	ctx->stack[ctx->depth].deref.offset = offset;
-+	ctx->stack[ctx->depth].deref.cur_offs = ctx->offset;
-+	ctx->stack[ctx->depth].deref.inner_arg = arg;
-+	ctx->stack[ctx->depth].deref.is_cpu_read = false;
-+	return 0;
- }
- 
- static int parse_probe_arg_imm(char *arg, struct fetch_insn *code,
-@@ -1659,11 +1615,6 @@ static int parse_probe_arg_default(char *arg, struct fetch_insn **pcode,
- {
- 	int ret;
- 
--	if (str_has_prefix(arg, THIS_CPU_PTR_PREFIX) ||
--	    str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
--		return parse_this_cpu(arg, pcode, end, ctx);
--	}
--
- 	if (isalpha(arg[0]) || arg[0] == '_') {
- 		/* BTF variable or event field */
- 		if (ctx->flags & TPARG_FL_TEVENT) {
-@@ -1685,11 +1636,56 @@ static int parse_probe_arg_default(char *arg, struct fetch_insn **pcode,
- 	return 0;
- }
- 
--/* Recursive argument parser */
--static int
--parse_probe_arg(char *arg, const struct fetch_type *type,
--		struct fetch_insn **pcode, struct fetch_insn *end,
--		struct traceprobe_parse_context *ctx)
-+static int parse_probe_arg_nested(char **parg, struct traceprobe_parse_context *ctx)
-+{
-+	char *arg = *parg;
-+	int ret;
-+
-+	while (true) {
-+		/* Determine if this is a nested argument */
-+		if (arg[0] != '+' && arg[0] != '-' && arg[0] != '(' &&
-+		    !str_has_prefix(arg, THIS_CPU_PTR_PREFIX) &&
-+		    !str_has_prefix(arg, THIS_CPU_READ_PREFIX))
-+			break;
-+
-+		/* If nested, check the maximum depth limit */
-+		if (ctx->depth >= TRACEPROBE_MAX_NESTED_LEVEL) {
-+			trace_probe_log_err(ctx->offset, TOO_MANY_NESTED);
-+			return -E2BIG;
-+		}
-+
-+		/* Perform the actual parsing subroutine calls */
-+		switch (arg[0]) {
-+		case '+':
-+		case '-':
-+			ret = parse_probe_arg_deref(arg, ctx);
-+			if (ret)
-+				return ret;
-+			arg = ctx->stack[ctx->depth].deref.inner_arg;
-+			break;
-+		case '(':
-+			ret = handle_typecast(arg, ctx);
-+			if (ret)
-+				return ret;
-+			arg = ctx->stack[ctx->depth].typecast.inner_arg;
-+			break;
-+		default:
-+			ret = parse_this_cpu(arg, ctx);
-+			if (ret)
-+				return ret;
-+			arg = ctx->stack[ctx->depth].deref.inner_arg;
-+			break;
-+		}
-+		ctx->depth++;
-+	}
-+
-+	*parg = arg;
-+	return 0;
-+}
-+
-+static int parse_probe_arg_leaf(char *arg, const struct fetch_type *type,
-+				struct fetch_insn **pcode, struct fetch_insn *end,
-+				struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code = *pcode;
- 	int ret;
-@@ -1704,26 +1700,112 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 	case '@':	/* memory, file-offset or symbol */
- 		ret = parse_probe_arg_mem_symbol(arg, pcode, end, ctx);
- 		break;
--	case '+':	/* deref memory */
--	case '-':
--		ret = parse_probe_arg_deref(arg, pcode, end, ctx);
--		break;
- 	case '\\':	/* Immediate value */
- 		ret = parse_probe_arg_imm(arg, code, ctx);
- 		break;
--	case '(':
--		ret = handle_typecast(arg, pcode, end, ctx);
--		break;
- 	default:
- 		ret = parse_probe_arg_default(arg, pcode, end, ctx);
- 		break;
- 	}
--	if (!ret && code->op == FETCH_OP_NOP) {
-+
-+	if (ret)
-+		return ret;
-+
-+	if (code->op == FETCH_OP_NOP) {
- 		/* Parsed, but do not find fetch method */
- 		trace_probe_log_err(ctx->offset, BAD_FETCH_ARG);
--		ret = -EINVAL;
-+		return -EINVAL;
- 	}
--	return ret;
-+
-+	return 0;
-+}
-+
-+static int unwind_parse_states(struct fetch_insn **pcode, struct fetch_insn *end,
-+			       struct traceprobe_parse_context *ctx)
-+{
-+	struct parse_state *state;
-+	struct fetch_insn *code;
-+	int ret;
-+
-+	while (ctx->depth > 0) {
-+		ctx->depth--;
-+		state = &ctx->stack[ctx->depth];
-+
-+		if (state->type == STATE_DEREF) {
-+			code = *pcode;
-+			ctx->offset = state->deref.cur_offs;
-+			if (code->op == FETCH_OP_COMM || code->op == FETCH_OP_IMMSTR) {
-+				trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
-+				return -EINVAL;
-+			}
-+
-+			if (!(state->deref.deref == FETCH_OP_CPU_PTR &&
-+			      *state->deref.inner_arg == '@')) {
-+				code++;
-+				if (code == end) {
-+					trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+					return -EINVAL;
-+				}
-+			}
-+			*pcode = code;
-+
-+			code->op = state->deref.deref;
-+			code->offset = state->deref.offset;
-+			ctx->last_type = NULL;
-+
-+			if (state->deref.is_cpu_read) {
-+				code = *pcode;
-+				code++;
-+				if (code == end) {
-+					trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+					return -EINVAL;
-+				}
-+				code->op = FETCH_OP_DEREF;
-+				code->offset = 0;
-+				*pcode = code;
-+			}
-+		} else if (state->type == STATE_TYPECAST) {
-+			clear_struct_btf(ctx);
-+
-+			/* resolve the typecast struct name */
-+			ctx->offset = state->typecast.orig_offset + 1; /* for the '(' */
-+			ret = parse_btf_casttype(state->typecast.casttype, ctx);
-+			if (ret < 0)
-+				return ret;
-+
-+			ctx->offset = state->typecast.orig_offset +
-+				      state->typecast.field_offset_diff;
-+			ret = parse_btf_field(state->typecast.fieldname,
-+					      ctx->last_struct, pcode,
-+					      end, ctx);
-+			ctx->prefix_byteoffs = 0;
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/* Loop-based (non-recursive) argument parser */
-+static int
-+parse_probe_arg(char *arg, const struct fetch_type *type,
-+		struct fetch_insn **pcode, struct fetch_insn *end,
-+		struct traceprobe_parse_context *ctx)
-+{
-+	int ret;
-+
-+	ctx->depth = 0;
-+
-+	ret = parse_probe_arg_nested(&arg, ctx);
-+	if (ret)
-+		return ret;
-+
-+	ret = parse_probe_arg_leaf(arg, type, pcode, end, ctx);
-+	if (ret)
-+		return ret;
-+
-+	return unwind_parse_states(pcode, end, ctx);
- }
- 
- /* Bitfield type needs to be parsed into a fetch function */
-@@ -1984,12 +2066,6 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 			      ctx);
- 	if (ret < 0)
- 		goto fail;
--	/* nested_level must be 0 here, otherwise there is a bug. */
--	if (WARN_ON_ONCE(ctx->nested_level)) {
--		ret = -EINVAL;
--		goto fail;
--	}
--
- 	/* Update storing type if BTF is available */
- 	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
- 	    ctx->last_type) {
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index e6d427910c4f..ebdc706e7cb6 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -437,6 +437,34 @@ static inline bool tparg_is_event_probe(unsigned int flags)
- 	return !!(flags & TPARG_FL_TEVENT);
- }
- 
-+/* Each typecast consumes nested level. So the max number of typecast is 8. */
-+#define TRACEPROBE_MAX_NESTED_LEVEL 8
-+
-+enum parse_state_type {
-+	STATE_DEREF,
-+	STATE_TYPECAST,
-+};
-+
-+struct parse_state {
-+	int type;
-+	union {
-+		struct {
-+			int deref;
-+			long offset;
-+			int cur_offs;
-+			char *inner_arg;
-+			bool is_cpu_read;
-+		} deref;
-+		struct {
-+			char *casttype;
-+			char *fieldname;
-+			int orig_offset;
-+			int field_offset_diff;
-+			char *inner_arg;
-+		} typecast;
-+	};
-+};
-+
- struct traceprobe_parse_context {
- 	struct trace_event_call *event;
- 	/* BTF related parameters */
-@@ -453,12 +481,11 @@ struct traceprobe_parse_context {
- 	struct trace_probe *tp;
- 	unsigned int flags;
- 	int offset;
--	int nested_level;
- 	int prefix_byteoffs;	/* The byte offset of the prefix field of typecast */
-+	struct parse_state stack[TRACEPROBE_MAX_NESTED_LEVEL + 1];
-+	int depth;
- };
- 
--/* Each typecast consumes nested level. So the max number of typecast is 3. */
--#define TRACEPROBE_MAX_NESTED_LEVEL 3
- 
- extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
- 				      const char *argv,
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-index 984ab94df213..384209968325 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-@@ -60,7 +60,7 @@ check_error 'f vfs_read ^&1'		# BAD_FETCH_ARG
- 
- # We've introduced this limitation with array support
- if grep -q ' <type>\\\[<array-size>\\\]' README; then
--check_error 'f vfs_read +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 'f vfs_read +0(+0(+0(+0(+0(+0(+0(+0(^+0(@0)))))))))'	# TOO_MANY_NESTED
- check_error 'f vfs_read +0(@11):u8[10^'		# ARRAY_NO_CLOSE
- check_error 'f vfs_read +0(@11):u8[10]^a'	# BAD_ARRAY_SUFFIX
- check_error 'f vfs_read +0(@11):u8[^10a]'	# BAD_ARRAY_NUM
-@@ -114,7 +114,7 @@ check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
- check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
- if grep -qF "[(structname" README ; then
- check_error 'f vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
--check_error 'f vfs_read arg1=(a)((b)((c)(^(d)file->d)->c)->b)->a'	# TOO_MANY_NESTED
-+check_error 'f vfs_read arg1=(a)((b)((c)((d)((e)((f)((g)((h)(^(i)file->i)->h)->g)->f)->e)->d)->c)->b)->a'	# TOO_MANY_NESTED
- check_error 'f vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
- check_error 'f vfs_read arg1=(task_struct,^foo_bar)file->pid'	# NO_BTF_FIELD
- check_error 'f vfs_read arg1=(^task_struct1234)file->pid'	# NO_PTR_STRCT
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-index 2d0905b2c8b7..72b8652df9ba 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-@@ -46,7 +46,7 @@ check_error 't kfree ^&1'		# BAD_FETCH_ARG
- 
- # We've introduced this limitation with array support
- if grep -q ' <type>\\\[<array-size>\\\]' README; then
--check_error 't kfree +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 't kfree +0(+0(+0(+0(+0(+0(+0(+0(^+0(@0)))))))))'	# TOO_MANY_NESTED
- check_error 't kfree +0(@11):u8[10^'		# ARRAY_NO_CLOSE
- check_error 't kfree +0(@11):u8[10]^a'		# BAD_ARRAY_SUFFIX
- check_error 't kfree +0(@11):u8[^10a]'		# BAD_ARRAY_NUM
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index d28f63b7e8a9..b0e6b80ccb01 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -56,7 +56,7 @@ check_error 'p vfs_read ^&1'		# BAD_FETCH_ARG
- 
- # We've introduced this limitation with array support
- if grep -q ' <type>\\\[<array-size>\\\]' README; then
--check_error 'p vfs_read +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 'p vfs_read +0(+0(+0(+0(+0(+0(+0(+0(^+0(@0)))))))))'	# TOO_MANY_NESTED
- check_error 'p vfs_read +0(@11):u8[10^'		# ARRAY_NO_CLOSE
- check_error 'p vfs_read +0(@11):u8[10]^a'	# BAD_ARRAY_SUFFIX
- check_error 'p vfs_read +0(@11):u8[^10a]'	# BAD_ARRAY_NUM
-@@ -117,7 +117,7 @@ check_error 'p kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
- check_error 'r kfree ^$retval'			# NO_RETVAL
- if grep -qF "[(structname" README ; then
- check_error 'p vfs_read arg1=(task_struct)file^'		# TYPECAST_REQ_FIELD
--check_error 'p vfs_read arg1=(a)((b)((c)(^(d)file->d)->c)->b)->a'	# TOO_MANY_NESTED
-+check_error 'p vfs_read arg1=(a)((b)((c)((d)((e)((f)((g)((h)(^(i)file->i)->h)->g)->f)->e)->d)->c)->b)->a'	# TOO_MANY_NESTED
- check_error 'p vfs_read arg1=(task_struct,^in_execve)file->comm'	# TYPECAST_NOT_ALIGNED
- check_error 'p vfs_read arg1=(task_struct,^foo_bar)file->pid'	# NO_BTF_FIELD
- check_error 'p vfs_read arg1=(^task_struct1234)file->pid'		# NO_PTR_STRCT
-
+> ---
+> I found this while reviewing Vincent's series [1].
+> 
+> Applies on top of Vincent's "[PATCH v2 0/3] tracing/remotes: Fix leak in
+> trace_remote_alloc_buffer() error path" [2], which fixes the other
+> issues in this function.
+> 
+> [1] https://lore.kernel.org/all/20260710114819.2689386-1-vdonnefort@google.com/
+> [2] https://lore.kernel.org/all/20260709160017.1729517-1-vdonnefort@google.com/
+> 
+>  kernel/trace/trace_remote.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index 0f6ef5c36d84e..ef42d9c38b374 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+> @@ -1004,11 +1004,10 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+>  		desc->nr_cpus++;
+>  
+>  		for (id = 0; id < nr_pages; id++) {
+> +			rb_desc->nr_page_va++;
+>  			rb_desc->page_va[id] = (unsigned long)__get_free_page(GFP_KERNEL);
+>  			if (!rb_desc->page_va[id])
+>  				goto err;
+> -
+> -			rb_desc->nr_page_va++;
+>  		}
+>  		rb_desc = __next_ring_buffer_desc(rb_desc);
+>  	}
+> 
+> base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+> prerequisite-patch-id: 8bdd7b28f09e97cff4f5995196b83b377c961d8b
+> prerequisite-patch-id: 6781b7ce5156d229fd21a757ef0cd66dd76130cc
+> prerequisite-patch-id: 56bcbbdceddf4533770d48d1835d5b7e11f47d56
+> -- 
+> 2.39.5
+> 
