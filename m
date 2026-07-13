@@ -1,166 +1,104 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E262E34E763
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jul 2026 04:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2AA36DA03;
+	Mon, 13 Jul 2026 07:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783918679; cv=none; b=l2oix9IVNtvfipHfqxXYaHEkt1GJTq1zRdxw5AklLNXYVZCukg30Rpxn7Pn1DMOAtbpBpl99fM//L3tmNDBbUx6EJaAEmK1hyUCBtzMrwRTpkqu1oB59WJyuZ1bSOj3sqV1fhMM2tWJqq9EUXpNYEJacMqDtehwxsL2ztqJhUHw=
+	t=1783927665; cv=none; b=myZIwzf3SCezMt08uCzducS9qxOw2p0zeoDCQvdrpg/2pCefpI9O5Q2ni1Rv7wbabDSnT1wobLc3jGlewqJ6qMs3JEqdjHNxHIKpqo5gzztdGCLo5bP3OlClXkSaRsEMlfGawpiqDS/wN+2Jb/Jue7ueWp0fNt1bNAM+x/bJ7Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783918679; c=relaxed/simple;
-	bh=LflzoFEAZCGohBe6+8suK5icx8InddD6Nep0mFpxNEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RkAdDUNcFJAp+rAGCUVKurQT7Fca1VInrSl+X2LlJAwyI8MxF06EUPplD0S6rl5cv2WqXSCAvr2W3ok6Q2j0vAHjwCjvBVhgG4liEveBQmQK7tFu+vvIVLkmip5ixir1YYuWRJakpirkMOx4jAnjUqnTN1rT55kkwfWzP/4uqEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtlCqUGP; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783927665; c=relaxed/simple;
+	bh=7Ze6QWJxbeYzeMk2di8RFP6bK54oUY/EI5wHAnDQJw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OP9Q0EgS/v8fc9Utuasgl36r4nfOtP/6b1oSDQRf5k04j8DRzIyBG09PDyOOadxyJWvAHl0rKifcDSZ7H/FM927pmiO0+ODULSrAb1CrxgoGAq9NQnOkorm07i6J5VJr6OgYy3euwHFDL/Ws/7JWjCSNHErCCIjVAJDipzxKA3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbZVZ++I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtlCqUGP"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2cca0c5799eso27348915ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Jul 2026 21:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783918677; x=1784523477; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=I2Wy8lwvqhiTKT55Dm2cNnX9AvjqZigx9HgdgElZQis=;
-        b=GtlCqUGPSo1dD7lcdBJPovpyrDvaFv/SbTgD+LXsaMLMeibe/KTPMpm4lWVw7pnRTm
-         +yS7LczwVYtLoy7tMmzK0ROUg6/T9Ft+9JL9bpjWNcVJ1Oy1PdwRWqcDxStLaZ3BGAQT
-         zNKV/Z4TpcsK+jCgUAh90EWBUnbMt2d2YJbAcYnU+RgnSJZQ1Z1V+wep1MdXY3RgK/jl
-         PGFtC1s2iogUozlGxGmiIZaSZCapAoAGM6+100Eff6Mj3xIdfTPiJaS7LmyqzRRz8y/Q
-         fOJPt5AXvEF/Tm8FV2fLBnRsoxdE4oCFNljQ0rHZ4Q0iOucXJe6w0izOjNxT8p5wIAhX
-         oU1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783918677; x=1784523477;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=I2Wy8lwvqhiTKT55Dm2cNnX9AvjqZigx9HgdgElZQis=;
-        b=L+bdQEoXdYny98Q3SBZV4fzgqg1yNqoXZylqEen5IIZrgoew78DYbHhPi8zfcs5hF4
-         Ps2X3Xo2kynP2gOb/qCLWfl4vZyv5SAtRD9GOcCJkgm+ur3Ml5iplMOc6gYiS61aZxHA
-         mOUrbsnZWT/fbY3i7pcZvLbQw2fFYr06bMxkTTg5d/dXVHXLqEVWnZAMb3AgTUDjb5ed
-         l8EugNewhCqJJOEgdEOKc7Rb729UD8mY7Nl1RsNmzyogLAchQkvqG8yjZifFKwTBmIxG
-         lxVlQpGgoH6yGTzK+2GB5mmKeB0lT6G+kFuntMG75gqdn0/w8cAe1lIx9CfU24CFaYzh
-         r7RA==
-X-Forwarded-Encrypted: i=1; AHgh+Rpc5eoL0EFHa+Su/RtoGqrmHmJSt++W+3ZUJ9FRvsz4D5w/lhat+NDHsDLZfkO7618xweA+6o0wc/GKGUW8dVCLySU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwwwlpm/nXo6bdE6NLAVCTzk3W7WCWlJpVv2ePKTE94AkuZzKW
-	qq0v0ccA08fkXVR1YxjUl2fEqdaAzuZ0MXHos7JVUHnwIu3BkzqgkSjW
-X-Gm-Gg: AfdE7clikDCbWXJun622nlgPmIuR3ncMMh9DqDc3ZCgQdO50lyFYsjxT2lIW7WBLaB7
-	K2XlD5uIA1G1ARBib/hV2xWNZuINjBRguZYQvCNxO3mIUJMPchxFOesdmsRV1VNANyxVgnqeN4z
-	PcM9gXqDdWyT0pXCq2gLvhWAEMT1k6mIh/ROTbiZK/VIg963jNIDNinn/MWXoqZ/JoZtvfnZEmt
-	97Y+n3EgxJ8LoZuC7yrKYvYDQcqAYAoO49/L2h5PJHu9w9cTghm+xWgD8d/FxTEDV8bcWSBPIHC
-	fPER+uNKZoiEW8a7HUKWOWAoNdn9npRldON9tJEfo4sZGztNQjKD9AbZPXaqyh7t+5uUl0Xp+xv
-	GtGOybhvCkc6coxsoy9aYafQrFDdj7XkI5xOT3kcsYpcS2P0yR2MRXmtvoKoTGQkJv+Rsfm29wT
-	37BnCMj8ro2fclbE3K5O0gKyy/lUWnMjmb70szojUFMiBMCtJqsEvFJQ5DSOS1G2F8JWqWjOin2
-	ggC6fFelvyvDLk=
-X-Received: by 2002:a05:6a21:4d8f:b0:3c0:9c1a:894f with SMTP id adf61e73a8af0-3c110b33403mr8347974637.71.1783918677163;
-        Sun, 12 Jul 2026 21:57:57 -0700 (PDT)
-Received: from ?IPV6:2001:fb1:db:5c33:7066:708a:3018:7aec? ([2001:fb1:db:5c33:7066:708a:3018:7aec])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cabc7b2aa4bsm2033582a12.10.2026.07.12.21.57.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2026 21:57:53 -0700 (PDT)
-Message-ID: <79f36674-5a35-4aaf-b5b1-bc6189c222ad@gmail.com>
-Date: Mon, 13 Jul 2026 11:57:46 +0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbZVZ++I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A817C1F000E9;
+	Mon, 13 Jul 2026 07:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783927663;
+	bh=cbBWZOX1wArkZKBGbX+gZQrzhCButI2m7s/E49Kj+Is=;
+	h=From:To:Cc:Subject:Date;
+	b=TbZVZ++IYS6CIvD4opJTfBkmebbznXqCTNgi3UlWDAxUhUU8/q99E428kK732PFJf
+	 bkKk5aD5Jq2s598OI1RfMAUaqMVtpHoaJkSVhUCRBczR1M25U6kKY0pv5hUlep7T/G
+	 EpIaunvqwWCuHtccxBGrwM3/w/Nhdji8PQ+0amll3/itluxgBtjaJkSxZtpb66KM0K
+	 hMc+VUpVBObWfoKlbk1NUsSSCxIrrb3+qrRa5ZP6emz/9Ale5tBm9nc8uEB0MZ7enu
+	 JIRgBHRbxoqyV/LtmuNDjZsw6DetW/LLvMaPejAaHivUDNr0nPdupLYa7Q90rWL+Ve
+	 Q/7wSAU1uy5eA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/5] tracing/probes: Clean up and refactor argument parser
+Date: Mon, 13 Jul 2026 16:27:40 +0900
+Message-ID: <178392766002.3229912.15711868107734330750.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tracing: Use seq_buf for string concatenation
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- shuah@kernel.org, skhan@linuxfoundation.org, me@brighamcampbell.com,
- jkoolstra@xs4all.nl
-References: <20260622094623.18469-1-woradorn.laon@gmail.com>
- <20260629143947.2216574e@robin>
-Content-Language: en-US
-From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
-In-Reply-To: <20260629143947.2216574e@robin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 30/6/2569 BE 01:39, Steven Rostedt wrote:
-> On Mon, 22 Jun 2026 16:46:23 +0700
-> Woradorn Laodhanadhaworn <woradorn.laon@gmail.com> wrote:
-> 
->>  
->>  #include <trace/events/sched.h>
->>  #include <trace/syscall.h>
->> @@ -4500,14 +4501,20 @@ static void __add_event_to_tracers(struct trace_event_call *call)
->>  extern struct trace_event_call *__start_ftrace_events[];
->>  extern struct trace_event_call *__stop_ftrace_events[];
->>  
->> -static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
-> 
-> Keep the above string and just assign it.
-> 
->> +static struct seq_buf bootup_event_buf __initdata = {
->> +	.buffer = (char[COMMAND_LINE_SIZE]) {},
->> +	.size = COMMAND_LINE_SIZE,
->> +};
-> 
-> static struct seq_buf bootup_event_seq __initdata = {
-> 	.buffer = bootup_event_buf;
-> 	.size = sizeof(bootup_event_buf);
-> };
-> 
->>  
->>  static __init int setup_trace_event(char *str)
->>  {
->> -	if (bootup_event_buf[0] != '\0')
->> -		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
->> +	if (seq_buf_used(&bootup_event_buf) > 0)
->> +		seq_buf_puts(&bootup_event_buf, ",");
->> +
->> +	seq_buf_puts(&bootup_event_buf, str);
->>  
->> -	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
->> +	if (seq_buf_has_overflowed(&bootup_event_buf))
->> +		return -ENOMEM;
->>  
->>  	trace_set_ring_buffer_expanded(NULL);
->>  	disable_tracing_selftest("running event tracing");
->> @@ -4766,7 +4773,7 @@ static __init int event_trace_enable(void)
->>  	 */
->>  	__trace_early_add_events(tr);
->>  
->> -	early_enable_events(tr, bootup_event_buf, false);
->> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_buf), false);
-> 
-> The above then would be:
-> 
-> 	seq_buf_str(&bootup_event_seq);
-> 	early_enable_events(tr, bootup_event_buf, false);
-> 
-> Don't typecast a const char* to non const.
-> 
->>  
->>  	trace_printk_start_comm();
->>  
->> @@ -4794,7 +4801,7 @@ static __init int event_trace_enable_again(void)
->>  	if (!tr)
->>  		return -ENODEV;
->>  
->> -	early_enable_events(tr, bootup_event_buf, true);
->> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_buf), true);
-> 
-> Same here.
-> 
-> -- Steve
-> 
->>  
->>  	return 0;
->>  }
-> 
+Hi,
 
-Thank you, Steven, for your review. I've sent v4:
-https://lore.kernel.org/all/20260713045249.69942-1-woradorn.laon@gmail.com
+This is the 2nd version of the series which refactors and cleans up
+the fetcharg parser in the trace_probe. The previous version is here:
+
+  https://lore.kernel.org/all/178386876526.3174487.5142283230157728964.stgit@devnote2/
+
+The main goals are to improve code readability, prevent kernel stack
+overflow by eliminating recursive function calls, and extend the
+argument string length limit to support complex BTF typecast
+expressions.
+
+In this version, I fixed the double error log issue in [1/5], make
+MAX_ARGSTR_LEN to 255 [4/5] and update patch description for clarify
+this change updates the behavior (not a cleanup) and
+make TRACEPROBE_MAX_NESTED_LEVEL to 8 (also update testcases)[5/5].
+
+Patches:
+- Patch 1: Decomposes parse_probe_vars() into smaller, dedicated helper 
+  functions for parsing specific variable types ($retval, $stack, etc.).
+- Patch 2: Decomposes parse_probe_arg() into static helper subroutines for 
+  handling registers, memory/symbols, and immediates.
+- Patch 3: Alphabetizes the ERRORS macros list in trace_probe.h to improve 
+  readability.
+- Patch 4: Extends MAX_ARGSTR_LEN from 63 to 255 for long BTF cast/dereference
+  arguments, and introduces MAX_COMMON_HEAD_LEN to prevent regression on match
+  head commands.
+- Patch 5: Eliminates recursion in parse_probe_arg() using a loop and a parse 
+  state stack integrated into traceprobe_parse_context. It also raises the
+  nesting limit to 8 and updates the selftest scripts.
 
 Thanks,
-Woradorn
+
+---
+
+Masami Hiramatsu (5):
+      tracing/probes: Refactor parse_probe_vars()
+      tracing/probes: Refactor parse_probe_arg()
+      tracing/probes: Sort ERRORS list in trace_probe.h alphabetically
+      tracing/probes: Extend max length of argument string
+      tracing/probes: Eliminate recursion in parse_probe_arg()
+
+
+ kernel/trace/trace_fprobe.c                        |    2 
+ kernel/trace/trace_kprobe.c                        |    2 
+ kernel/trace/trace_probe.c                         |  829 ++++++++++++--------
+ kernel/trace/trace_probe.h                         |  196 +++--
+ kernel/trace/trace_uprobe.c                        |    2 
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    6 
+ .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |    4 
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    6 
+ 8 files changed, 621 insertions(+), 426 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
