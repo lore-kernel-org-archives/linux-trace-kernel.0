@@ -1,248 +1,166 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011016.outbound.protection.outlook.com [52.101.62.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C333002D8;
-	Mon, 13 Jul 2026 03:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783912641; cv=fail; b=Sm7xqzfgJN/Ic6aRLHskEWneCjQN7QU5JsP4QgVqLe0koIwQfuZucWKiZUV6oiRo6g/NjNFt0TT2S+IX0cYENpZWfun0HNlcwcvLjV/0UwumNfZ2eZt9QJl0zQXweiRdsaW5C4fklVsmhJd/aVEVJcSrDzgOVah0V2kK3cYUPSw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783912641; c=relaxed/simple;
-	bh=+uTTrvbHnOnnk968ZE34spHXbfFtiZfFXCSUfUA1TMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OR0DQzuOHs7ct2KCKmhPKOc5F4KxHqhsSyt5Tr7blRa1Lo2gVIDoDepGGSI9Mv7b35ZOVzkTRhLVle4nMCGAPnBQtpLZKk1OQ4ONg2PbXQIX+++WdGj/uA2ugORdVINgC3F00WbNuyKlP1D36DUGiC0Eq5aJXhwHTJQik5bpEfw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qs2VcFMZ; arc=fail smtp.client-ip=52.101.62.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394AB34CFDE
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jul 2026 04:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783918451; cv=none; b=Cq6qHvGihQUiqnzsJ0zIhMUL7P4gqmit/vlOsIMsiHepQZrz4jBmHig9UDQJVON0ggjiUrkd02A77qG1gc86zpSz2OBCHY/eb6/D/yzn7GdnNLZT5O1NNfJ4hDo2u72QpL7qdMr3nmETVN2ArjOFWhyUSniCygQs855a5aGJHKs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783918451; c=relaxed/simple;
+	bh=aWyuivC0uBr2raUrYrGhB6xX3JmGBmcCaiXVvYEGVQ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YJf56hqkthRigcfzpbM1zu6b3FZ9DVZmBAn3MZ6irW0a9jbW+OFFP0EaX0/Pagc+Mvm9L1/B3U7Z32H8JKgbwscjhxbxfoC+9HwGxxfW70uEKH7MmZTUHzJFAzCCpFHXcWtZqE7XjM/QvMx9ISIADZXBIBZ9m1FBDsXbcnvu664=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVFZFK3V; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qs2VcFMZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AkcUyDI2UG4a8PfkJl3r4/1xlylblk9p3zcYhtspf08oVF9lJLr44RPjQ6CXYnTvrtVJ9ogzDlWBtaZ0sSMBsV+nsNuYBU/3t0XqNR0JkbuGh8DcuyvedZzK64Y6UNSnMWQf9F6O1KkKidEHxPpvcTF19k1KbSj/stLDNBwup9XhtI6FL8kwVS6Utrru9zyqPkhsJnuP1xXH9s+IXjhuL2IixiEt+XyyN5BgE7Pf/U2bTMo9Y/N+kFibD3LjeZdmKS2B/5LqX/ImwfvpJREn5FQ+4RJeG3+LQjSRYwGZvIh2vRGu2xpq+xpnD1ASptRkuhU7a11pAcXS3qlCSDzTKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T9er/aTlFNFiou1kZ6VAVAPgbFCV6rdNEPv9DFl4EqQ=;
- b=RljYA28vugHoDOXh5nBzZ6B/gpztGGm5t/KewpI69+6/G9Mlxn3hIgTeIIzx1PK0Q4DWTHEBc7dNsn/srPm0tbLhf232YMpflm+5P5R+4yLgvSxZJu5gfmygRRf6R+Fi3uujQGVsP3cEzQZZ/PFx8nOuXXHnIyrnW2OnWTKrfwLSAnJRU1E3yMf0ns0ugdxblKGV+XPoN9FvNHfEjAJ9DM8p/XUCV5ey0AtJL+EsZcBbAhyPiYUVgeXHXFqiXTM/jEiElkPd3kuKgDePLHBQHs+nFG9Yvb9/sNJij9ZRFed+P1LCD7qgYfQ3tiT7X2IoZsTc3ep1iTcT3yN4BD6zYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=oss.qualcomm.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T9er/aTlFNFiou1kZ6VAVAPgbFCV6rdNEPv9DFl4EqQ=;
- b=qs2VcFMZDcqRfw4T4mr2j6GY/ha/bZ5fn1VWfP6+0e44xq3HoU+ZZ0uGlBaZNByTHxq4hTA+ovWZ7/IAYYN8FEecKWir1ID/o6OP1IkikcQB1PkOtNixkBWR3twMC+/HlbKhuFrLPNy65pqDI3CtR4KKYinV76oqS+GowTXPrig=
-Received: from DS7PR03CA0259.namprd03.prod.outlook.com (2603:10b6:5:3b3::24)
- by LV8PR12MB9405.namprd12.prod.outlook.com (2603:10b6:408:1fa::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.22; Mon, 13 Jul
- 2026 03:17:12 +0000
-Received: from CY4PEPF0000E9D8.namprd05.prod.outlook.com
- (2603:10b6:5:3b3:cafe::14) by DS7PR03CA0259.outlook.office365.com
- (2603:10b6:5:3b3::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.19 via Frontend Transport; Mon,
- 13 Jul 2026 03:17:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- CY4PEPF0000E9D8.mail.protection.outlook.com (10.167.241.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.223.9 via Frontend Transport; Mon, 13 Jul 2026 03:17:12 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Sun, 12 Jul
- 2026 22:17:12 -0500
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Sun, 12 Jul
- 2026 22:17:11 -0500
-Received: from [10.136.35.249] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
- Transport; Sun, 12 Jul 2026 22:17:04 -0500
-Message-ID: <b2f1a4e1-d640-4e96-9898-ea126dccbfe7@amd.com>
-Date: Mon, 13 Jul 2026 08:46:58 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVFZFK3V"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ceb096e675so13602975ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Jul 2026 21:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783918449; x=1784523249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sFT84HfE6g23Y0JSEsGGMWs+C5GZdiRx3RFEfHBMGN4=;
+        b=TVFZFK3VZffAe1yuSIkedDFa3KTAXLhI/6j7UIyHz1n/fUko7w9Aitw2+qYxV+i6yz
+         fDGaKoD9D0pg6l/b752JMBlS/15cbk0fngiH3B1ectkCsfRC8ZCc3erik8yifqdbGEEn
+         uXFW42hgVapJqCdY8A8wMKS89eSnQEWTpYHJ5wsmQ8qMInOR85b2FiPmAtNhbvcenERE
+         YA7IsDaSNQLt55ggtafDHYACH/H7Jy8Nt5TtPbhjmRy6ivcwnRJP8jCKYnqgXUjCimiL
+         znr4eeTtpx403DOfQV6RrduRxmMOtucMoJw8e09xPY4ljHe6vEYQJ+5lRB53oSynyzfy
+         efhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783918449; x=1784523249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sFT84HfE6g23Y0JSEsGGMWs+C5GZdiRx3RFEfHBMGN4=;
+        b=l6WqysqTLnPy5siE2lUdQbZgEeE3Ng8oz6gh3J57Zyh+5WagwnuWamytN4PqTlNls8
+         XRRANhe3eRj6gUhycM4XKX2XHvJGNJfT76KUsyAeXgtQc9JkqTjbx5gir7ePdNGjWrDS
+         QL+ddISH8M9h8YHDUW6YjJ7jlMYPOVlFbbiEAx2vUSJv+TFZh9SrrQsy1n3A0QWIBVu4
+         /vPc4h3b1Lcq43x5M/rtt8rwWi5Cp5/gKhDSaPyRDMBrlC4zgwjy3aw9Zd5ALosxfiFW
+         LnPt6CClk3RptAJsI5pkwOVqmWgRJ8F/XCDfevcSCkoEcn47SxSKmxXnL6QspL6UJcMe
+         IaxA==
+X-Forwarded-Encrypted: i=1; AHgh+RoDPKToN/EPIsBTcVLXRWrjnB1G73QBRkrC0K0N7vplYcZnPS5fSm1zH/xMlrXSBrMxru/LTPmpoL5ehMM7mayNP9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/5AaqETGj2DJGdkkHDGHztiDvVPIzdiWFhDY0S7tnSt3hmHSz
+	C268FcElqL+fovs3uF3TNOuB782ipii5Gs6zfO5FslbR73KmM5PzSEDz
+X-Gm-Gg: AfdE7cnvfBn+X71j7WcfQoWx9vcYvx10Rj4Y7EgsI6f7mJZ+FmQuFV2p0k/nysL8iYu
+	iaNS6F1gLHSD4meCPnxGDTaBOpEsXClIggDqV7Mg/XyRUY6SdbfaOg+gRJiPKq9mvaT8dQWpYZU
+	9hDcNqBfoBDg3sOzCnWDVWTrhe0AW3y2PlFrLpZWm6qSEO2+7zkMalmvMgvepN2LjO8PLcFNO4E
+	JHExXLS/mjyxKIdl0/4QSPdDviE6AAu/syrkP6hUo2Wl1o9SWWLnnrtik9m6ecAo/0Nfo6Qypn2
+	MF77RVzqR2XeIA8Ey3ziHmP9o3ucub0xi2GTXJrDZMsDYxrYuA2b502+a1UOMQIHHXFJ2m4Ou/Y
+	VRMJafRn4r5txkuEQ1kuhCl/2apQ7DeK/i+10TjBx+oJp+Q8rQB9V6VwTNtzm92YSC8lbG4n0Bg
+	hnALPOOkH+6Vxw2LqpDXWXz2bVLwk=
+X-Received: by 2002:a17:903:b07:b0:2c9:ff29:3f91 with SMTP id d9443c01a7336-2ce9e7a5613mr78426635ad.6.1783918449548;
+        Sun, 12 Jul 2026 21:54:09 -0700 (PDT)
+Received: from mo-Inspiron-5559.. ([2001:fb1:db:5c33:ea21:9586:4d37:987d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d3bbaesm92010215ad.57.2026.07.12.21.54.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2026 21:54:08 -0700 (PDT)
+From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	woradorn.laon@gmail.com
+Subject: [PATCH v4] tracing: Use seq_buf for string concatenation
+Date: Mon, 13 Jul 2026 11:52:49 +0700
+Message-ID: <20260713045249.69942-1-woradorn.laon@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] psi: Introduce in-kernel PSI auto monitor feature
-To: <pintu.k@oss.qualcomm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<hannes@cmpxchg.org>, <surenb@google.com>, <rostedt@goodmis.org>,
-	<mhiramat@kernel.org>, <peterz@infradead.org>,
-	<mathieu.desnoyers@efficios.com>, <mingo@redhat.com>,
-	<juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-	<dietmar.eggemann@arm.com>, <bsegall@google.com>, <mgorman@suse.de>,
-	<vschneid@redhat.com>, <pintu.ping@gmail.com>, <nathan@kernel.org>,
-	<ojeda@kernel.org>, <nsc@kernel.org>, <gary@garyguo.net>, <tglx@kernel.org>,
-	<thomas.weissschuh@linutronix.de>, <aliceryhl@google.com>,
-	<dianders@chromium.org>, <linux.amoon@gmail.com>, <rdunlap@infradead.org>,
-	<akpm@linux-foundation.org>, <shuah@kernel.org>
-References: <20260702171606.527077-1-pintu.agarwal@oss.qualcomm.com>
- <20260702171606.527077-2-pintu.agarwal@oss.qualcomm.com>
- <6c190305-4137-411f-ba25-e0a2d8484db7@amd.com>
- <CANqwyPjEAvxtupQK1YyhYE-2h=0==+FumCj48F4FDKCpCvWZWw@mail.gmail.com>
- <CANqwyPiE1vtoGH6Zu==VxBkkwGq_E7-Zswi57msy_G97Rz2xSw@mail.gmail.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <CANqwyPiE1vtoGH6Zu==VxBkkwGq_E7-Zswi57msy_G97Rz2xSw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D8:EE_|LV8PR12MB9405:EE_
-X-MS-Office365-Filtering-Correlation-Id: 935afc98-bffc-4e7c-78b8-08dee08d3b7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|23010399003|1800799024|36860700016|22082099003|13003099007|56012099006|11063799006|4143699003|5023799004|6133799003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	po2pj86q4XAO41JnVVrrF2L0Gph29RjM5Uv3WA5eeOsiBiEB3/3ZscqozTdw6fINVsANInPYSyG4TWswiM0fE6T5s4lSxDYx6xJe5hUSgnqNuX5QJhWunIgkj5iaWpcr0xQVYlyOWSWNjq4McCD+2B2fqvl+KDcv2sF/1AzgIIqYWedPOEok9RKOjfBrGDcsj76KJ67RAhCEleDWCmL+hSyt7uyoiH1qedHyc/zFy1H8uAX/A0qfLtpSpPNcBkY5kNvaBbzR33COAdbvlkw8AAlBti2pK9JEdQs7eOjrWtLKWZ0OdBwj/uw0xCY5+xoaYdnnSpR4zssFZFQyM6J1BuhNn4ltzwgtHtWWmuk4iHUt18alFxdR8GbjbJHKI75ZMQhY0jsa7lcqMLv8BZEpeCloJQXR8ydsXde8JzBPuUkKtL21jEleWD64AIQQdFQ8+WDUFkzKpe4j/SsynUM7IiBvTM1QqPm85X/NL0b3sroUxrh2Bou/bbDbepsNXiZd0gfPD9E3nw255kO5UqIDOTHtlCJQWC1lZdQKprImmMl3aPcBIDkTHFQaCG8YocFOI5RPcdsj5SIpvquQA4pZAl/Bg9TCKknAVyABFyuLdgC7DxGfoMPXdbyoZQhArPgpAHthMaeehHsMkwKGRiRnohVqgdvGNezKJkdizwi5dpY=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(23010399003)(1800799024)(36860700016)(22082099003)(13003099007)(56012099006)(11063799006)(4143699003)(5023799004)(6133799003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	NyFUbmQlik+CmiotoWmYFbVYObl3Tho9brBa4NRb2q/LWkUiJAvUOaf5C0JkkU/QdKLcoOWHeMLAEokeWulTSlxhuU7raj3+N/lIuSevKKam9yOUyMlXAdXRc7hWWDjEZvvBOeD0LzPsweESSVZFROXRO1+G+hjeJr50BUhRaqvuW1b8WO0v9driI8Yyb+gOSfsbAFW9yhaCgwSHxvS4P8uN2Z8BzVEITy+dNM09j3BDCATRTfAGwUK6XvijILmM+b/3JupzKcu5keD4i7JTzLvfsq8dt6kX6iCFH/wmfJ1Me88rhARaf2OpwIGjwGypN+kixUqP7LNXWbDfqrOj4vfH5xlJTQ/o1iY73bFV+ayhFgBvvR4jCmAyqhNv3V03jqeA6ENavpFtVBz/RT7H+pBZrJSmjus5Vk8gyfLaC+DCYdXkWI8YUUNEGf88fHvO
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 03:17:12.5404
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 935afc98-bffc-4e7c-78b8-08dee08d3b7d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D8.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9405
+Content-Transfer-Encoding: 8bit
 
-Hello Pintu,
+In preparation for removing the strlcat API[1],
+replace the string concatenation logic with a struct seq_buf,
+which tracks the current position and the remaining space internally.
 
-On 7/10/2026 9:31 PM, Pintu Kumar Agarwal wrote:
->>> There is nothing here that warrants putting this in kernel/sched.
->> The feature depends on sched/psi so I decided to keep it close.
->> But I am open for any location.
->>
->>> Also this gets included by default when config is enabled and starts
->>> dumping a bunch of stats to dmesg without anyone asking. No?
->>>
->> This is included as a dependent feature of PSI.
->> If someone enables this CONFIG as part of PSI this indicates that they
->> are interested in getting auto-monitor stats.
->> Also, the dump will happen only if threshold is breached with high
->> default values.
->> However, for RFC stage I wanted to keep things simple.
->> Later, we can add an enable/disable flag in cmdline just like PSI.
->>
->>> Afaict, almost all of the detail used here is also available from
->>> procfs and people can easily put together a userspace tool if they
->>> need it. Why do we need an in-kernel module?
->>>
->> This is the most fundamental aspect of this auto-monitor feature.
->> This point is already described in the cover letter.
->> Let me put it again:
->> - Get kernel stats early during boot_time before userspace comes up.
+Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
 
-People care about PSI signals at boot, and even before the userspace
-is up? Why?
+Link: https://github.com/KSPP/linux/issues/370 [1]
 
->>    -> Set slightly lower threshold and boot stats (helps in analysing boot time)
->> - No user intervention or continuous polling or daemons needed
->>   (Just enable config and start auto monitoring)
+Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+---
+v1 -> v2: 
+	- Fixed WARN_ON when booting with empty trace_event.
+v2 -> v3: 
+	- Addressed Sashiko's concern about the compound literal backing buffer.
+	- Replaced the compund literal with an explicit declared buffer and pointed
+	seq_buf.buffer to it. This guarantees the backing storage is placed in 
+	`.init.data` and reclaimed after boot.
+v3 -> v4:
+	- Removed typecast a const char* to non const.
 
-So overehead for everyone?
+v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
+v2: https://lore.kernel.org/all/20260622094623.18469-1-woradorn.laon@gmail.com
+v3: https://lore.kernel.org/all/20260623145147.12145-1-woradorn.laon@gmail.com
+Sashiko: https://sashiko.dev/#/patchset/20260622094623.18469-1-woradorn.laon%40gmail.com
 
->> - userspace scheduling delays under high pressure
+ kernel/trace/trace_events.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Even workqueues need scheduling. They don't just automagically run
-at the end of the set timer.
-
->> - risk of missing short-lived spikes
->> - capturing details as soon as pressure hits and at same timestamp
-
-But your data is sampled. So these will still be missed.
-
->> - useful for analysing real-time latency workload.
-
-How often is PSI enabled there. I know for a fact there are certain
-locking overheads associated with PSI (like ttwu trying to grab the
-rq_lock to migrate PSI signals) and wouldn't most RT be better off
-running without those overheads?
-
->> - useful for minimal environment like initramfs or busybox
-
-Who is doing PSI analysis in these environments?
-
->>
->> The motivation is not to replace existing PSI interfaces or the ability
->> to build userspace monitoring tools.
->> The goal is attribution at the moment pressure thresholds are crossed.
->> A userspace implementation observes the system after being scheduled,
-
-Workqueue threads still need scheduling. Just because it is a
-kernel thread doesn't mean it gets any privilege.
-
->> whereas the in-kernel implementation captures contributors at the point
->> where pressure is detected.
-
-Again, your implementation is based on sampling so signals can still
-get missed.
-
->> During LPC-2024 I have done significant changes to core psi module
->> to implement the similar logic.
->> But the feedback was not to disturb the core psi interface, instead
->> develop a separate interface and make it configurable.
->> So, I came up with this auto-monitor idea.
-
-I'll defer to Johannes on this since he knows these bits best.
-
->>
->> For more details please have a look at my OSS paper with data.
->> https://hosted-files.sched.co/ossindia2026/19/OSS-IND-26-PSI-Auto-Monitor.pdf
->> And also the reference data here:
->> https://github.com/pintuk/KERNEL/tree/master/PSI_WORK
->>
->> I am also looking out for someone who can test this on a larger
->> workload and capture data.
->> This will help us to gather insights, how the feature behaves.
-
-I still think periodically walking the entire task tree on a large
-server is a very bad idea,especially when people have tens of
-thousands of task running.
-
->>
->>>> +
->>>> +MODULE_LICENSE("GPL");
->>>> +MODULE_AUTHOR("Pintu Kumar Agarwal");
->>>> +MODULE_DESCRIPTION("In-kernel PSI automatic monitor with sysfs, weighted scoring and tracepoints");
->>>> --
-> 
-> Any other feedback before I post v2 ?
-
-It is the European holiday season so the response might be slow.
-
-I suggest iterating on this only after checking with Johannes.
-> Another thing that I wanted feedback is, whether to keep under
-> kernel/sched/ or move under tools/sched/ ?
-
-I think the only dependency here is the "psi_system" which is why you've
-kept this in kernel/sched but if you can have an wrapper with an
-EXPORT_SYMBOL_GPL(), you should be able to place it in tools/sched.
-
-Again, I would check with Johannes on whether it is acceptable to expose
-the PSI internals to modules.
-
-I still think most of this is already visible via sysfs and that might
-be a better way to get this information. OOMD is able to use PSI signals
-and act on it without needing to be in kernel. What warrants an
-in-kernel monitor?
-
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..4f5a0e73a89b 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -22,6 +22,7 @@
+ #include <linux/sort.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/seq_buf.h>
+ 
+ #include <trace/events/sched.h>
+ #include <trace/syscall.h>
+@@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_events[];
+ extern struct trace_event_call *__stop_ftrace_events[];
+ 
+ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
++static struct seq_buf bootup_event_seq __initdata = {
++	.buffer = bootup_event_buf,
++	.size = sizeof(bootup_event_buf),
++};
+ 
+ static __init int setup_trace_event(char *str)
+ {
+-	if (bootup_event_buf[0] != '\0')
+-		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
++	if (seq_buf_used(&bootup_event_seq) > 0)
++		seq_buf_puts(&bootup_event_seq, ",");
++
++	seq_buf_puts(&bootup_event_seq, str);
+ 
+-	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
++	if (seq_buf_has_overflowed(&bootup_event_seq))
++		return -ENOMEM;
+ 
+ 	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event tracing");
+@@ -4766,6 +4774,7 @@ static __init int event_trace_enable(void)
+ 	 */
+ 	__trace_early_add_events(tr);
+ 
++	seq_buf_str(&bootup_event_seq);
+ 	early_enable_events(tr, bootup_event_buf, false);
+ 
+ 	trace_printk_start_comm();
+@@ -4794,6 +4803,7 @@ static __init int event_trace_enable_again(void)
+ 	if (!tr)
+ 		return -ENODEV;
+ 
++	seq_buf_str(&bootup_event_seq);
+ 	early_enable_events(tr, bootup_event_buf, true);
+ 
+ 	return 0;
 -- 
-Thanks and Regards,
-Prateek
+2.43.0
 
