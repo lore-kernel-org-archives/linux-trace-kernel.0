@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B4C78F3A;
-	Mon, 13 Jul 2026 07:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B4D36AB54;
+	Mon, 13 Jul 2026 07:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783927684; cv=none; b=e090AcSh/+5w8ao4xM93k60tGfUpI0FuhWj8mxpjJ872WhNgugjWC2Dc18bSwb8j2TsH5/2rwe6jaFnoAE7aE6K3oYdn08qH1P0rbJj2Oy+JMHDMg/QrEwRgnvX3vqkACyW6jlhBU5qagS1JncHoVL91/h23R2/ao03cQrq/4CE=
+	t=1783927694; cv=none; b=oQmecMq4IvG3LZr8679A5khdQpIXppdnSAf6BfaHUypEEkqOVFNbX+uWSe1Cy3NA2RVBAbZyYI/PApHGzcZKntIFmL8/HNbHDcIqvYPoAQQlNlZNk4j96t5fnLKJX3N3nbDrtQRzmfV6jj+3r3KlGq4mFl7cU5CFc+ucJV2+T5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783927684; c=relaxed/simple;
-	bh=LE+AnQ24huGg63zUmwQarBgmLBHfJWh6PywE7q6APls=;
+	s=arc-20240116; t=1783927694; c=relaxed/simple;
+	bh=hqELA/fl1LAqzz8E8IRdPGy8XOdMNte2Dui+FJdM+aA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=biJ6mrIdTjX3p6CqT5J3ZDk/hBK5W8BSRrpvAvCysKWs4l9W40dUk8XDoj75+FTQKB6ErZfPIk2b1swLLkZRW8IPZtZeTViyxxxmCx5EJYmMKCW5DHkNcJzWgpPVN1oozfJTMINC7p+uo6Dy6Q0+iBTJbA6u7LnF3uTVEV+jtd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdRAPihZ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=bhBDINw4ZARr+4dftBVnsRJi/QXnfZk52VVFmUQKBNwQrBQFfvB+T/aYt91CxbP7P3SBMPMBPK2S1lyYOTgWZCp5/xmNHxEBUsyUDyTX8lMKGGz96VpJFnowhKZWQiNVBtlks/P0UTCcL0fHNuarNVbcZjEBBHVTH/3I00++qiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc7W0pAy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdRAPihZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C2D91F000E9;
-	Mon, 13 Jul 2026 07:28:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc7W0pAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3F11F000E9;
+	Mon, 13 Jul 2026 07:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783927683;
-	bh=6/heml6maRPFbbnCNFYbo/qzvnxE/Beejn0YYEkdEd0=;
+	s=k20260515; t=1783927692;
+	bh=ykkygFjoUseT4cJdY6LDUUSLsLeCSFMWe0Bi0JBfXDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JdRAPihZy7uulKgR9twTj0ZOHqfEwubj/ku7c2/RgMkngvadBKXlgGHqGJtR3xjiO
-	 nN7qL2hMPN973ay3A9CD/TXMckRRxtyiH7CavQA98n6VDAfHM1GSyfPk26RvgLwbtj
-	 JWNQ7FxzCd/lXBkLVEu2YG3p8NFL3XrHKYSAw0itrc23R0mNHCL0gMFGlwnLeSxNQA
-	 4L868BlVi/7SDHRFk1oeC4NWIh77x4QO/iAF4iTiUHrX3V2EcDBZHNp8NlTnXtLy3v
-	 xgp3huFSCtOTMbh5199wVL2b9ltYEAj0aB97R5cvl9cpDUVLbuOjRWzTZScp7JixMp
-	 FpaSxT+40rVmg==
+	b=gc7W0pAydY9mmF3+VVCGiQKgC+hXebSrk1ZkNMxh4nfP1zNQaPW1slLhO8tXzut55
+	 789xHqzvxSB/vRGcnGVYC76oHbSPUHOCUfEm9or2EEowpxyw7KCqWEKnaAt+VPw9+O
+	 6ZEx6fhChNvqM0wnZXmNWX+9e/qz9P2PV9Sm9nSo83a4Oti2dbnnwMlOWNs8FNtCnP
+	 kYcx9fRtO9OuX7ICx6ukrkvZYNzDAFNCh0/n12MTGySoSAXI/mZsYkYBS9g9T7zX+2
+	 o1x8CvLNsc/Uj7VA1PLeuBv3SnBoqKJnZQwakHaf4S52Bj67X4zac/ZldTdHaEYCDl
+	 yVSh7e5ULaMzQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 2/5] tracing/probes: Refactor parse_probe_arg()
-Date: Mon, 13 Jul 2026 16:27:58 +0900
-Message-ID: <178392767869.3229912.15569496973769350593.stgit@devnote2>
+Subject: [PATCH 3/5] tracing/probes: Sort ERRORS list in trace_probe.h alphabetically
+Date: Mon, 13 Jul 2026 16:28:08 +0900
+Message-ID: <178392768847.3229912.3433098868259193723.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178392766002.3229912.15711868107734330750.stgit@devnote2>
 References: <178392766002.3229912.15711868107734330750.stgit@devnote2>
@@ -52,354 +52,193 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Decompose parse_probe_arg() by extracting register, memory/symbol,
-dereference, immediate, and default BTF/CPU parsing handlers into
-dedicated static helper functions (parse_probe_arg_register,
-parse_probe_arg_mem_symbol, parse_probe_arg_deref, parse_probe_arg_imm,
-and parse_probe_arg_default). This modularizes the recursive argument
-parser and improves readability.
+Sort the C-macro ERRORS list alphabetically in trace_probe.h to make
+it easier to find and maintain error entries.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.c |  300 ++++++++++++++++++++++++++------------------
- 1 file changed, 174 insertions(+), 126 deletions(-)
+ kernel/trace/trace_probe.h |  160 ++++++++++++++++++++++----------------------
+ 1 file changed, 80 insertions(+), 80 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 8af97e29f096..eb9f7bd13c19 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1516,158 +1516,206 @@ static int __parse_imm_string(char *str, char **pbuf, int offs)
- 	return 0;
- }
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index e6268a8dc378..e64e323244a5 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -512,95 +512,95 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
  
--/* Recursive argument parser */
--static int
--parse_probe_arg(char *arg, const struct fetch_type *type,
--		struct fetch_insn **pcode, struct fetch_insn *end,
--		struct traceprobe_parse_context *ctx)
-+static int parse_probe_arg_register(char *arg, struct fetch_insn *code,
-+				    struct traceprobe_parse_context *ctx)
-+{
-+	int ret;
-+
-+	if (ctx->flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE)) {
-+		/* eprobe and fprobe do not handle registers */
-+		trace_probe_log_err(ctx->offset, BAD_VAR);
-+		return -EINVAL;
-+	}
-+	ret = regs_query_register_offset(arg + 1);
-+	if (ret >= 0) {
-+		code->op = FETCH_OP_REG;
-+		code->param = (unsigned int)ret;
-+		return 0;
-+	}
-+	trace_probe_log_err(ctx->offset, BAD_REG_NAME);
-+	return -EINVAL;
-+}
-+
-+static int parse_probe_arg_mem_symbol(char *arg, struct fetch_insn **pcode,
-+				      struct fetch_insn *end,
-+				      struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code = *pcode;
- 	unsigned long param;
-+	long offset = 0;
-+	int ret;
-+
-+	if (isdigit(arg[1])) {
-+		ret = kstrtoul(arg + 1, 0, &param);
-+		if (ret) {
-+			trace_probe_log_err(ctx->offset, BAD_MEM_ADDR);
-+			return ret;
-+		}
-+		/* load address */
-+		code->op = FETCH_OP_IMM;
-+		code->immediate = param;
-+	} else if (arg[1] == '+') {
-+		/* Kernel probes do not support file offsets */
-+		if (ctx->flags & TPARG_FL_KERNEL) {
-+			trace_probe_log_err(ctx->offset, FILE_ON_KPROBE);
-+			return -EINVAL;
-+		}
-+		ret = kstrtol(arg + 2, 0, &offset);
-+		if (ret) {
-+			trace_probe_log_err(ctx->offset, BAD_FILE_OFFS);
-+			return ret;
-+		}
-+
-+		code->op = FETCH_OP_FOFFS;
-+		code->immediate = (unsigned long)offset;
-+		offset = 0;
-+	} else {
-+		/* uprobes don't support symbols */
-+		if (!(ctx->flags & TPARG_FL_KERNEL)) {
-+			trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
-+			return -EINVAL;
-+		}
-+		/* Preserve symbol for updating */
-+		code->op = FETCH_NOP_SYMBOL;
-+		code->data = kstrdup(arg + 1, GFP_KERNEL);
-+		if (!code->data)
-+			return -ENOMEM;
-+		if (++code == end) {
-+			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+			return -EINVAL;
-+		}
-+		code->op = FETCH_OP_IMM;
-+		code->immediate = 0;
-+	}
-+	/* These are fetching from memory */
-+	if (++code == end) {
-+		trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+		return -EINVAL;
-+	}
-+	*pcode = code;
-+	code->op = FETCH_OP_DEREF;
-+	code->offset = offset;
-+	return 0;
-+}
-+
-+static int parse_probe_arg_deref(char *arg, struct fetch_insn **pcode,
-+				 struct fetch_insn *end,
-+				 struct traceprobe_parse_context *ctx)
-+{
- 	int deref = FETCH_OP_DEREF;
- 	long offset = 0;
- 	char *tmp;
--	int ret = 0;
-+	int ret;
+ #undef ERRORS
+ #define ERRORS	\
+-	C(FILE_NOT_FOUND,	"Failed to find the given file"),	\
+-	C(NO_REGULAR_FILE,	"Not a regular file"),			\
+-	C(BAD_REFCNT,		"Invalid reference counter offset"),	\
+-	C(REFCNT_OPEN_BRACE,	"Reference counter brace is not closed"), \
+-	C(BAD_REFCNT_SUFFIX,	"Reference counter has wrong suffix"),	\
+-	C(BAD_UPROBE_OFFS,	"Invalid uprobe offset"),		\
+-	C(BAD_MAXACT_TYPE,	"Maxactive is only for function exit"),	\
+-	C(BAD_MAXACT,		"Invalid maxactive number"),		\
+-	C(MAXACT_TOO_BIG,	"Maxactive is too big"),		\
+-	C(BAD_PROBE_ADDR,	"Invalid probed address or symbol"),	\
+-	C(NON_UNIQ_SYMBOL,	"The symbol is not unique"),		\
+-	C(BAD_RETPROBE,		"Retprobe address must be an function entry"), \
+-	C(NO_TRACEPOINT,	"Tracepoint is not found"),		\
+-	C(BAD_TP_NAME,		"Invalid character in tracepoint name"),\
+-	C(BAD_ADDR_SUFFIX,	"Invalid probed address suffix"), \
+-	C(NO_GROUP_NAME,	"Group name is not specified"),		\
+-	C(GROUP_TOO_LONG,	"Group name is too long"),		\
+-	C(BAD_GROUP_NAME,	"Group name must follow the same rules as C identifiers"), \
+-	C(NO_EVENT_NAME,	"Event name is not specified"),		\
+-	C(EVENT_TOO_LONG,	"Event name is too long"),		\
+-	C(BAD_EVENT_NAME,	"Event name must follow the same rules as C identifiers"), \
+-	C(EVENT_EXIST,		"Given group/event name is already used by another event"), \
+-	C(RETVAL_ON_PROBE,	"$retval is not available on probe"),	\
+-	C(NO_RETVAL,		"This function returns 'void' type"),	\
+-	C(BAD_STACK_NUM,	"Invalid stack number"),		\
++	C(ARGIDX_2BIG,		"$argN index is too big"),		\
++	C(ARGS_2LONG,		"$arg* failed because the argument list is too long"),	\
++	C(ARG_NAME_TOO_LONG,	"Argument name is too long"),		\
++	C(ARG_TOO_LONG,		"Argument expression is too long"),		\
++	C(ARRAY_NO_CLOSE,	"Array is not closed"),		\
++	C(ARRAY_TOO_BIG,	"Array number is too big"),		\
++	C(BAD_ADDR_SUFFIX,	"Invalid probed address suffix"),		\
++	C(BAD_ARG_NAME,		"Argument name must follow the same rules as C identifiers"),	\
+ 	C(BAD_ARG_NUM,		"Invalid argument number"),		\
+-	C(BAD_VAR,		"Invalid $-variable specified"),	\
+-	C(BAD_REG_NAME,		"Invalid register name"),		\
+-	C(BAD_MEM_ADDR,		"Invalid memory address"),		\
+-	C(BAD_IMM,		"Invalid immediate value"),		\
+-	C(IMMSTR_NO_CLOSE,	"String is not closed with '\"'"),	\
+-	C(FILE_ON_KPROBE,	"File offset is not available for kernel probes"), \
+-	C(BAD_FILE_OFFS,	"Invalid file offset value"),		\
+-	C(SYM_ON_UPROBE,	"Symbol is not available with uprobe"),	\
+-	C(TOO_MANY_OPS,		"Dereference is too much nested"), 	\
+-	C(DEREF_NEED_BRACE,	"Dereference needs a brace"),		\
++	C(BAD_ARRAY_NUM,	"Invalid array size"),		\
++	C(BAD_ARRAY_SUFFIX,	"Array has wrong suffix"),		\
++	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),	\
++	C(BAD_ATTACH_EVENT,	"Attached event does not exist"),		\
++	C(BAD_BITFIELD,		"Invalid bitfield"),		\
++	C(BAD_BTF_TID,		"Failed to get BTF type info."),		\
+ 	C(BAD_DEREF_OFFS,	"Invalid dereference offset"),		\
+-	C(DEREF_OPEN_BRACE,	"Dereference brace is not closed"),	\
+-	C(COMM_CANT_DEREF,	"$comm can not be dereferenced"),	\
++	C(BAD_EVENT_NAME,	"Event name must follow the same rules as C identifiers"),	\
+ 	C(BAD_FETCH_ARG,	"Invalid fetch argument"),		\
+-	C(ARRAY_NO_CLOSE,	"Array is not closed"),			\
+-	C(BAD_ARRAY_SUFFIX,	"Array has wrong suffix"),		\
+-	C(BAD_ARRAY_NUM,	"Invalid array size"),			\
+-	C(ARRAY_TOO_BIG,	"Array number is too big"),		\
+-	C(BAD_TYPE,		"Unknown type is specified"),		\
+-	C(BAD_STRING,		"String accepts only memory argument"),	\
++	C(BAD_FILE_OFFS,	"Invalid file offset value"),		\
++	C(BAD_GROUP_NAME,	"Group name must follow the same rules as C identifiers"),	\
++	C(BAD_HYPHEN,		"Failed to parse single hyphen. Forgot '>'?"),	\
++	C(BAD_IMM,		"Invalid immediate value"),		\
++	C(BAD_INSN_BNDRY,	"Probe point is not an instruction boundary"),	\
++	C(BAD_MAXACT,		"Invalid maxactive number"),		\
++	C(BAD_MAXACT_TYPE,	"Maxactive is only for function exit"),	\
++	C(BAD_MEM_ADDR,		"Invalid memory address"),		\
++	C(BAD_PROBE_ADDR,	"Invalid probed address or symbol"),		\
++	C(BAD_REFCNT,		"Invalid reference counter offset"),		\
++	C(BAD_REFCNT_SUFFIX,	"Reference counter has wrong suffix"),	\
++	C(BAD_REG_NAME,		"Invalid register name"),		\
++	C(BAD_RETPROBE,		"Retprobe address must be an function entry"),	\
++	C(BAD_STACK_NUM,	"Invalid stack number"),		\
++	C(BAD_STRING,		"String accepts only memory argument"),		\
+ 	C(BAD_SYMSTRING,	"Symbol String doesn't accept data/userdata"),	\
+-	C(BAD_BITFIELD,		"Invalid bitfield"),			\
+-	C(ARG_NAME_TOO_LONG,	"Argument name is too long"),		\
+-	C(NO_ARG_NAME,		"Argument name is not specified"),	\
+-	C(BAD_ARG_NAME,		"Argument name must follow the same rules as C identifiers"), \
+-	C(USED_ARG_NAME,	"This argument name is already used"),	\
+-	C(ARG_TOO_LONG,		"Argument expression is too long"),	\
++	C(BAD_TP_NAME,		"Invalid character in tracepoint name"),	\
++	C(BAD_TYPE,		"Unknown type is specified"),		\
++	C(BAD_TYPE4STR,		"This type does not fit for string."),	\
++	C(BAD_UPROBE_OFFS,	"Invalid uprobe offset"),		\
++	C(BAD_VAR,		"Invalid $-variable specified"),		\
++	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),	\
++	C(COMM_CANT_DEREF,	"$comm can not be dereferenced"),		\
++	C(DEREF_NEED_BRACE,	"Dereference needs a brace"),		\
++	C(DEREF_OPEN_BRACE,	"Dereference brace is not closed"),	\
++	C(DIFF_ARG_TYPE,	"Argument type or name is different from existing probe"),	\
++	C(DIFF_PROBE_TYPE,	"Probe type is different from existing probe"),	\
++	C(DOUBLE_ARGS,		"$arg* can be used only once in the parameters"),	\
++	C(EVENT_EXIST,		"Given group/event name is already used by another event"),	\
++	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),		\
++	C(EVENT_TOO_LONG,	"Event name is too long"),		\
++	C(FAIL_REG_PROBE,	"Failed to register probe event"),		\
++	C(FILE_NOT_FOUND,	"Failed to find the given file"),		\
++	C(FILE_ON_KPROBE,	"File offset is not available for kernel probes"),	\
++	C(GROUP_TOO_LONG,	"Group name is too long"),		\
++	C(IMMSTR_NO_CLOSE,	"String is not closed with '\"'"),		\
++	C(MAXACT_TOO_BIG,	"Maxactive is too big"),		\
++	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),	\
++	C(NOFENTRY_ARGS,	"$arg* can be used only on function entry or exit"),	\
++	C(NON_UNIQ_SYMBOL,	"The symbol is not unique"),		\
++	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
++	C(NOSUP_DAT_ARG,	"Non pointer structure/union argument is not supported."),	\
++	C(NOSUP_PERCPU,		"Per-cpu variable access is only for kernel probes"),	\
+ 	C(NO_ARG_BODY,		"No argument expression"),		\
+-	C(BAD_INSN_BNDRY,	"Probe point is not an instruction boundary"),\
+-	C(FAIL_REG_PROBE,	"Failed to register probe event"),\
+-	C(DIFF_PROBE_TYPE,	"Probe type is different from existing probe"),\
+-	C(DIFF_ARG_TYPE,	"Argument type or name is different from existing probe"),\
+-	C(SAME_PROBE,		"There is already the exact same probe event"),\
+-	C(NO_EVENT_INFO,	"This requires both group and event name to attach"),\
+-	C(BAD_ATTACH_EVENT,	"Attached event does not exist"),\
+-	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),\
++	C(NO_ARG_NAME,		"Argument name is not specified"),		\
++	C(NO_BTFARG,		"This variable is not found at this probe point"),	\
++	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),		\
++	C(NO_BTF_FIELD,		"This field is not found."),		\
+ 	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
+-	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
+-	C(NO_BTFARG,		"This variable is not found at this probe point"),\
+-	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),	\
+-	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),\
+-	C(NOFENTRY_ARGS,	"$arg* can be used only on function entry or exit"),	\
+-	C(DOUBLE_ARGS,		"$arg* can be used only once in the parameters"),	\
+-	C(ARGS_2LONG,		"$arg* failed because the argument list is too long"),	\
+-	C(ARGIDX_2BIG,		"$argN index is too big"),		\
++	C(NO_EVENT_FIELD,	"This event field is not found."),		\
++	C(NO_EVENT_INFO,	"This requires both group and event name to attach"),	\
++	C(NO_EVENT_NAME,	"Event name is not specified"),		\
++	C(NO_GROUP_NAME,	"Group name is not specified"),		\
+ 	C(NO_PTR_STRCT,		"This is not a pointer to union/structure."),	\
+-	C(NOSUP_DAT_ARG,	"Non pointer structure/union argument is not supported."),\
+-	C(BAD_HYPHEN,		"Failed to parse single hyphen. Forgot '>'?"),	\
+-	C(NO_EVENT_FIELD,	"This event field is not found."),	\
+-	C(NO_BTF_FIELD,		"This field is not found."),	\
+-	C(BAD_BTF_TID,		"Failed to get BTF type info."),\
+-	C(BAD_TYPE4STR,		"This type does not fit for string."),\
+-	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
+-	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
++	C(NO_REGULAR_FILE,	"Not a regular file"),		\
++	C(NO_RETVAL,		"This function returns 'void' type"),		\
++	C(NO_TRACEPOINT,	"Tracepoint is not found"),		\
++	C(REFCNT_OPEN_BRACE,	"Reference counter brace is not closed"),	\
++	C(RETVAL_ON_PROBE,	"$retval is not available on probe"),	\
++	C(SAME_PROBE,		"There is already the exact same probe event"),	\
++	C(SYM_ON_UPROBE,	"Symbol is not available with uprobe"),	\
++	C(TOO_MANY_ARGS,	"Too many arguments are specified"),		\
+ 	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),	\
+-	C(EVENT_TOO_BIG,	"Event too big (too many fields?)"),  \
+-	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"), \
++	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"),	\
++	C(TOO_MANY_OPS,		"Dereference is too much nested"),		\
++	C(TYPECAST_BAD_ARROW,	"Typecast field option does not support -> operator"),	\
++	C(TYPECAST_NOT_ALIGNED,	"Typecast field option is not byte-aligned"),	\
++	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),	\
+ 	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
+-	C(TOO_MANY_NESTED,	"Too many nested typecasts/dereferences"), \
+-	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"), \
+-	C(TYPECAST_NOT_ALIGNED,	"Typecast field option is not byte-aligned"), \
+-	C(TYPECAST_BAD_ARROW,	"Typecast field option does not support -> operator"), \
+-	C(NOSUP_PERCPU,		"Per-cpu variable access is only for kernel probes"),
++	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"),	\
++	C(USED_ARG_NAME,	"This argument name is already used"),
  
--	switch (arg[0]) {
--	case '$':
--		ret = parse_probe_vars(arg, type, pcode, end, ctx);
--		break;
-+	if (arg[1] == 'u') {
-+		deref = FETCH_OP_UDEREF;
-+		arg[1] = arg[0];
-+		arg++;
-+	}
-+	if (arg[0] == '+')
-+		arg++;	/* Skip '+', because kstrtol() rejects it. */
-+	tmp = strchr(arg, '(');
-+	if (!tmp) {
-+		trace_probe_log_err(ctx->offset, DEREF_NEED_BRACE);
-+		return -EINVAL;
-+	}
-+	*tmp = '\0';
-+	ret = kstrtol(arg, 0, &offset);
-+	if (ret) {
-+		trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
-+		return ret;
-+	}
-+	ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
-+	arg = tmp + 1;
-+	return handle_dereference(arg, pcode, end, ctx, deref, offset);
-+}
- 
--	case '%':	/* named register */
--		if (ctx->flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE)) {
--			/* eprobe and fprobe do not handle registers */
--			trace_probe_log_err(ctx->offset, BAD_VAR);
--			break;
-+static int parse_probe_arg_imm(char *arg, struct fetch_insn *code,
-+			       struct traceprobe_parse_context *ctx)
-+{
-+	char *tmp;
-+	int ret;
-+
-+	if (arg[1] == '"') {	/* Immediate string */
-+		ret = __parse_imm_string(arg + 2, &tmp, ctx->offset + 2);
-+		if (ret)
-+			return ret;
-+		code->op = FETCH_OP_IMMSTR;
-+		code->data = tmp;
-+	} else {
-+		ret = str_to_immediate(arg + 1, &code->immediate);
-+		if (ret) {
-+			trace_probe_log_err(ctx->offset + 1, BAD_IMM);
-+			return ret;
- 		}
--		ret = regs_query_register_offset(arg + 1);
--		if (ret >= 0) {
--			code->op = FETCH_OP_REG;
--			code->param = (unsigned int)ret;
--			ret = 0;
--		} else
--			trace_probe_log_err(ctx->offset, BAD_REG_NAME);
--		break;
-+		code->op = FETCH_OP_IMM;
-+	}
-+	return 0;
-+}
- 
--	case '@':	/* memory, file-offset or symbol */
--		if (isdigit(arg[1])) {
--			ret = kstrtoul(arg + 1, 0, &param);
--			if (ret) {
--				trace_probe_log_err(ctx->offset, BAD_MEM_ADDR);
--				break;
--			}
--			/* load address */
--			code->op = FETCH_OP_IMM;
--			code->immediate = param;
--		} else if (arg[1] == '+') {
--			/* Kernel probes do not support file offsets */
--			if (ctx->flags & TPARG_FL_KERNEL) {
--				trace_probe_log_err(ctx->offset, FILE_ON_KPROBE);
--				return -EINVAL;
--			}
--			ret = kstrtol(arg + 2, 0, &offset);
--			if (ret) {
--				trace_probe_log_err(ctx->offset, BAD_FILE_OFFS);
--				break;
--			}
-+static int parse_probe_arg_default(char *arg, struct fetch_insn **pcode,
-+				   struct fetch_insn *end,
-+				   struct traceprobe_parse_context *ctx)
-+{
-+	int ret;
- 
--			code->op = FETCH_OP_FOFFS;
--			code->immediate = (unsigned long)offset;  // imm64?
--			offset = 0;
--		} else {
--			/* uprobes don't support symbols */
--			if (!(ctx->flags & TPARG_FL_KERNEL)) {
--				trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
--				return -EINVAL;
--			}
--			/* Preserve symbol for updating */
--			code->op = FETCH_NOP_SYMBOL;
--			code->data = kstrdup(arg + 1, GFP_KERNEL);
--			if (!code->data)
--				return -ENOMEM;
--			if (++code == end) {
--				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+	if (str_has_prefix(arg, THIS_CPU_PTR_PREFIX) ||
-+	    str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
-+		return parse_this_cpu(arg, pcode, end, ctx);
-+	}
-+
-+	if (isalpha(arg[0]) || arg[0] == '_') {
-+		/* BTF variable or event field */
-+		if (ctx->flags & TPARG_FL_TEVENT) {
-+			ret = parse_trace_event(arg, *pcode, ctx);
-+			if (ret < 0) {
-+				trace_probe_log_err(ctx->offset, NO_EVENT_FIELD);
- 				return -EINVAL;
- 			}
--			code->op = FETCH_OP_IMM;
--			code->immediate = 0;
-+			return 0;
- 		}
--		/* These are fetching from memory */
--		if (++code == end) {
--			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-+		if (!tparg_is_function_entry(ctx->flags) &&
-+		    !tparg_is_function_return(ctx->flags)) {
-+			trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
- 			return -EINVAL;
- 		}
--		*pcode = code;
--		code->op = FETCH_OP_DEREF;
--		code->offset = offset;
--		break;
-+		return parse_btf_arg(arg, pcode, end, ctx);
-+	}
- 
-+	return 0;
-+}
-+
-+/* Recursive argument parser */
-+static int
-+parse_probe_arg(char *arg, const struct fetch_type *type,
-+		struct fetch_insn **pcode, struct fetch_insn *end,
-+		struct traceprobe_parse_context *ctx)
-+{
-+	struct fetch_insn *code = *pcode;
-+	int ret;
-+
-+	switch (arg[0]) {
-+	case '$':
-+		ret = parse_probe_vars(arg, type, pcode, end, ctx);
-+		break;
-+	case '%':	/* named register */
-+		ret = parse_probe_arg_register(arg, code, ctx);
-+		break;
-+	case '@':	/* memory, file-offset or symbol */
-+		ret = parse_probe_arg_mem_symbol(arg, pcode, end, ctx);
-+		break;
- 	case '+':	/* deref memory */
- 	case '-':
--		if (arg[1] == 'u') {
--			deref = FETCH_OP_UDEREF;
--			arg[1] = arg[0];
--			arg++;
--		}
--		if (arg[0] == '+')
--			arg++;	/* Skip '+', because kstrtol() rejects it. */
--		tmp = strchr(arg, '(');
--		if (!tmp) {
--			trace_probe_log_err(ctx->offset, DEREF_NEED_BRACE);
--			return -EINVAL;
--		}
--		*tmp = '\0';
--		ret = kstrtol(arg, 0, &offset);
--		if (ret) {
--			trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
--			break;
--		}
--		ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
--		arg = tmp + 1;
--		ret = handle_dereference(arg, pcode, end, ctx, deref, offset);
--		if (ret < 0)
--			return ret;
-+		ret = parse_probe_arg_deref(arg, pcode, end, ctx);
- 		break;
- 	case '\\':	/* Immediate value */
--		if (arg[1] == '"') {	/* Immediate string */
--			ret = __parse_imm_string(arg + 2, &tmp, ctx->offset + 2);
--			if (ret)
--				break;
--			code->op = FETCH_OP_IMMSTR;
--			code->data = tmp;
--		} else {
--			ret = str_to_immediate(arg + 1, &code->immediate);
--			if (ret)
--				trace_probe_log_err(ctx->offset + 1, BAD_IMM);
--			else
--				code->op = FETCH_OP_IMM;
--		}
-+		ret = parse_probe_arg_imm(arg, code, ctx);
- 		break;
- 	case '(':
- 		ret = handle_typecast(arg, pcode, end, ctx);
- 		break;
- 	default:
--		if (str_has_prefix(arg, THIS_CPU_PTR_PREFIX) ||
--		    str_has_prefix(arg, THIS_CPU_READ_PREFIX)) {
--			ret = parse_this_cpu(arg, pcode, end, ctx);
--		} else if (isalpha(arg[0]) || arg[0] == '_') {
--			/* BTF variable or event field*/
--			if (ctx->flags & TPARG_FL_TEVENT) {
--				ret = parse_trace_event(arg, *pcode, ctx);
--				if (ret < 0) {
--					trace_probe_log_err(ctx->offset,
--							    NO_EVENT_FIELD);
--					return -EINVAL;
--				}
--				break;
--			}
--			if (!tparg_is_function_entry(ctx->flags) &&
--			    !tparg_is_function_return(ctx->flags)) {
--				trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
--				return -EINVAL;
--			}
--			ret = parse_btf_arg(arg, pcode, end, ctx);
--		}
-+		ret = parse_probe_arg_default(arg, pcode, end, ctx);
- 		break;
- 	}
- 	if (!ret && code->op == FETCH_OP_NOP) {
+ #undef C
+ #define C(a, b)		TP_ERR_##a
 
