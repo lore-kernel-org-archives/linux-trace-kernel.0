@@ -1,175 +1,118 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0181F429827;
-	Mon, 13 Jul 2026 13:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2D113D8B1
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jul 2026 14:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783950413; cv=none; b=lMZHmpMbYwSdJ7rxdrzq5LGckccgUEIhYGKi+VjgqvyRdv2AdujupfjqZWMb32xOuqI1mOEtYRDj2iPSBCo6J0xwGmRiMSlyP2lTGSVMUgsO68QN6ZOZPsrHyF0CJW++R5weqeFaQjq6LtE3VzR6m5PoZ41o7rc3vw6ECfqriLA=
+	t=1783951866; cv=none; b=aRgkKkX4HecUrhv8FpUUeRZCQfGQx/P/RfEYNJTn17Omv8nECWljWwZn+gUggKCA6YfpDTWQg344hHf5uSUpkFF8HnNanbI/VWBbbGXhZtu1m6EK2Ds0YgD6r5BQrcoBlvAJXLqINk6TQux0p8gO9yHUix9RbxBZgO++oelUMuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783950413; c=relaxed/simple;
-	bh=l+Pf02dk04mwVmN5/wE94fWDU98qCHOFoLEQZxZsNKo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=goFi+Ogkv7OYJZddqFUC6e2HV4k118xmIUU+LJGMjrRyuSsStzpk5HnaiIkgUIR8oxpAgmXVDOjkEYBFg1xm4ykTn9d+dSb1jifTs47cCcueTRSujqG68WK1OkBn8mC2T9m9MePDsitfnigvLpzjYXtUdzwsWzbGAArk2Jy3+mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gzNyK2S8BzYQthf;
-	Mon, 13 Jul 2026 21:46:33 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 076864058D;
-	Mon, 13 Jul 2026 21:46:47 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDHrSlB7FRq0KpfBA--.16358S2;
-	Mon, 13 Jul 2026 21:46:46 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
+	s=arc-20240116; t=1783951866; c=relaxed/simple;
+	bh=+GT4GEimZN6BsXH0kV+jWdh++F8o7fRLAVmYJM+PxW4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=ftfhx7/LZW6t24uHNo6NvNkyjqpZdpsH4a/K+mT1QazSoFSWoOs6BlFtIoLFp5l0609S/ipHPPh3Ho4WShiIF43QD5QAQyxhr4YbFW/bEX2BoieQt3JnbLz30QIuY/dCw+bCRJb5B8EbyNxM0FM8kfkg/O8NlLdPrbve9tnu/7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YrP1NX8U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YrP1NX8U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783951864;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LiKxkmmrwlHgOmnYzkquHoAVOmvSL6iPKoX+bXiuwgA=;
+	b=YrP1NX8UQWtxxOFrV07AYjzocerf3MnOY4ZckNOaRDD+59812FjRNenhty6R7yMTcjtY7Z
+	FqzxPeirbpH8VhRwOLnTDbH4sq0cJz9cw9FzA/MM0ulsM0oaXLNNgTWaGlP5SumCWQ5zZq
+	tMGpiU/ROvanYQXIxQDEhWB6Lp9v62Q=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-252-qOePKv5WMuWu5uveJ_EUSA-1; Mon,
+ 13 Jul 2026 10:11:00 -0400
+X-MC-Unique: qOePKv5WMuWu5uveJ_EUSA-1
+X-Mimecast-MFC-AGG-ID: qOePKv5WMuWu5uveJ_EUSA_1783951859
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AE76A18052F9;
+	Mon, 13 Jul 2026 14:10:59 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.32.150])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C45A3000B4C;
+	Mon, 13 Jul 2026 14:10:55 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH] tracing: Add mutex to trace_parser to fix concurrent write races
-Date: Mon, 13 Jul 2026 13:46:40 +0000
-Message-Id: <20260713134640.708323-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Attila Fazekas <afazekas@redhat.com>
+Subject: [PATCH] rtla/timerlat_top: Fix on-threshold actions firing on signal
+Date: Mon, 13 Jul 2026 16:10:47 +0200
+Message-ID: <20260713141047.687877-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: v6iwYijMira-9IvCmQo2FGtZINzZC7GaPgkiZCucpHM_1783951859
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgDHrSlB7FRq0KpfBA--.16358S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF48Zw4UJrWUXFW3ur4DJwb_yoWrGF4rpF
-	y3Krs7Jr47tF4Iyr4kur48uF48Xw15JryUG3Z5J3yftF9rJF17Wr9ruF9xuw1rtryxJrZI
-	yF4Y9r4UKr17Zw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
-	UUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The trace_parser structure is allocated and initialized when a trace
-file is opened, and is subsequently used in the write handler to parse
-user input. If userspace opens a trace file descriptor and shares it
-across multiple threads, concurrent write calls will race on the
-parser's internal state, specifically the idx, cont, and buffer fields,
-leading to corrupted input or undefined behavior.
+A bug was reported when rtla-timerlat-top tool performs on-threshold
+actions, even though no threshold was hit. This is reproduced even if no
+threshold is set at all:
 
-Fix this by embedding a mutex directly in struct trace_parser. The mutex
-is initialized in trace_parser_get_init() and destroyed in
-trace_parser_put(). All write-side users that access parser state
-(trace_get_user() followed by checking trace_parser_loaded() /
-trace_parser_cont() against the buffer) now hold the mutex across the
-full critical section, avoiding any TOCTOU gap between the parse and the
-subsequent consumption of parser->buffer.
+$ rtla timerlat top -q -c 0 --on-threshold shell,command='echo BAD'
+BAD
+                                     Timer Latency
+...
 
-Affected write paths:
-  - ftrace_graph_write / ftrace_graph_release
-  - ftrace_regex_write / ftrace_regex_release
+The bug is due to incorrect logic in timerlat_top_bpf_main_loop().
+The loop uses timerlat_bpf_wait(), the return values of which are:
 
-Fixes: e704eff3ff51 ("ftrace: Have set_graph_function handle multiple functions in one write")
-Fixes: 689fd8b65d66 ("tracing: trace parser support for function and graph")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+- > 0 (number of ringbuffer entries): at least 1 CPU hit threshold
+- = 0: time out
+- < 0: wait was interrupted by a signal
+
+Commit 3138df6f0cd0 ("rtla/timerlat: Exit top main loop on any non-zero
+wait_retval") changed the condition for "threshold hit" from
+"wait_reval == 1" (exactly 1 CPU hit threshold) to "wait_retval != 0",
+to fix a race where multiple CPUs hit the threshold at the same time.
+
+That also made it incorrectly include a signal (< 0), coming from either
+duration expired (SIGALRM) or user interrupt (SIGINT).
+
+Check for wait_retval greater than zero in the if condition to cover all
+return values correctly.
+
+Fixes: 3138df6f0cd0 ("rtla/timerlat: Exit top main loop on any non-zero wait_retval")
+Reported-by: Attila Fazekas <afazekas@redhat.com>
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- kernel/trace/ftrace.c | 7 +++++++
- kernel/trace/trace.c  | 2 ++
- kernel/trace/trace.h  | 1 +
- 3 files changed, 10 insertions(+)
+ tools/tracing/rtla/src/timerlat_top.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f93e34dd2328..ef47e5659283 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5842,6 +5842,8 @@ ftrace_regex_write(struct file *file, const char __user *ubuf,
- 	/* iter->hash is a local copy, so we don't need regex_lock */
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 18e1071a2e242..6206a0a565ad3 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -536,7 +536,7 @@ timerlat_top_bpf_main_loop(struct osnoise_tool *tool)
+ 		if (!params->quiet)
+ 			timerlat_print_stats(tool);
  
- 	parser = &iter->parser;
-+
-+	guard(mutex)(&parser->lock);
- 	read = trace_get_user(parser, ubuf, cnt, ppos);
- 
- 	if (read >= 0 && trace_parser_loaded(parser) &&
-@@ -6984,12 +6986,14 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
- 		iter = file->private_data;
- 
- 	parser = &iter->parser;
-+	mutex_lock(&parser->lock);
- 	if (trace_parser_loaded(parser)) {
- 		int enable = !(iter->flags & FTRACE_ITER_NOTRACE);
- 
- 		ftrace_process_regex(iter, parser->buffer,
- 				     parser->idx, enable);
- 	}
-+	mutex_unlock(&parser->lock);
- 
- 	trace_parser_put(parser);
- 
-@@ -7321,10 +7325,12 @@ ftrace_graph_release(struct inode *inode, struct file *file)
- 
- 		parser = &fgd->parser;
- 
-+		mutex_lock(&parser->lock);
- 		if (trace_parser_loaded((parser))) {
- 			ret = ftrace_graph_set_hash(fgd->new_hash,
- 						    parser->buffer);
- 		}
-+		mutex_unlock(&parser->lock);
- 
- 		trace_parser_put(parser);
- 
-@@ -7437,6 +7443,7 @@ ftrace_graph_write(struct file *file, const char __user *ubuf,
- 
- 	parser = &fgd->parser;
- 
-+	guard(mutex)(&parser->lock);
- 	read = trace_get_user(parser, ubuf, cnt, ppos);
- 
- 	if (read >= 0 && trace_parser_loaded(parser) &&
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1146b83b711a..fbf5f220d580 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1100,6 +1100,7 @@ int trace_parser_get_init(struct trace_parser *parser, int size)
- 		return 1;
- 
- 	parser->size = size;
-+	mutex_init(&parser->lock);
- 	return 0;
- }
- 
-@@ -1108,6 +1109,7 @@ int trace_parser_get_init(struct trace_parser *parser, int size)
-  */
- void trace_parser_put(struct trace_parser *parser)
- {
-+	mutex_destroy(&parser->lock);
- 	kfree(parser->buffer);
- 	parser->buffer = NULL;
- }
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 2537c33ddd49..f643842d2ffd 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1387,6 +1387,7 @@ struct trace_parser {
- 	char		*buffer;
- 	unsigned	idx;
- 	unsigned	size;
-+	struct mutex	lock;
- };
- 
- static inline bool trace_parser_loaded(struct trace_parser *parser)
+-		if (wait_retval != 0) {
++		if (wait_retval > 0) {
+ 			/* Stopping requested by tracer */
+ 			retval = common_threshold_handler(tool);
+ 			if (retval)
 -- 
-2.34.1
+2.55.0
 
