@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC4E7262B;
-	Mon, 13 Jul 2026 02:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84532DCBFA;
+	Mon, 13 Jul 2026 02:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783908989; cv=none; b=jWSxvvr7p2MIkFBo3AmyRSsxkOhn/9s/zJVJrmKS4JzXEfrqvSvIByPuXjgCvA+6M3o0CLkNrWTkGnwajSAJsgRZsgjhkZzskhoraO7MttyVqm5hB6jsYbt2mssV487GpwHB+bzsheulnGMue38L5DcBLDloer+fXodN/PEqnqw=
+	t=1783909424; cv=none; b=riPUApzjGEqYWkaez07aT+3XryezAZqK/AiuC9+0UQ9Om5J0KSOjtfEEghUIW2ZySHmphr3b1Gj7uqBKEwaBnNIjQ6YEg515LrWbm994WaTvK4ViKVGeubeZfl7iqo9EuCvGrncZ/GCuKDd032RuBfyGw4+bhyRdxTpmm2OdF9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783908989; c=relaxed/simple;
-	bh=dGF7xPfKvWbgXDdOai1l5M80C/P3hvIHfMKdaVHUE6c=;
+	s=arc-20240116; t=1783909424; c=relaxed/simple;
+	bh=0Kgf1jJcIt508dtCuvpigFXWV6I0l7lB10NjWYghx1g=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NNQjgslskxFOKFzRQwB5iQ1WNp1JyueAdVAsgmnfTif16yIi+u65Unkvj4ldmAqPC0IhkNaHyXFqEpmbrtQch4ktrPm77zKrRbCP2wFENE/9H/ZRz/Wp0xs6aH5bVxNObCR2+gR+ng2CUA0oEAQZynQ/odfO3tZ+R2DK/odImbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jR3FcJwl; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=mlggSTx3d+GRihhY/84EIKNXxz7FxLj65io4WKkA5YPmiXWBq3ceDWu5o5sSnFdViUji8BjPNUiu+wi0swYX4ykYdNr/hm4yzuajOM+1IDbtttkywcsJe5bsx45lTAze12H9HRah6tXHIdsAGukBaoX3wniiUuJhwt0goT34wK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRw8BHsn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jR3FcJwl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F3D1F000E9;
-	Mon, 13 Jul 2026 02:16:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRw8BHsn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF641F000E9;
+	Mon, 13 Jul 2026 02:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783908987;
-	bh=br9FhVYJuPRVoM9lVCAAChWOr0wLAcBU1znUuGfC0yc=;
+	s=k20260515; t=1783909423;
+	bh=BGhG09SfW0RSxk7AO+LhxlfLYlMpwaSEDKb7395tk9w=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=jR3FcJwlDRti3QVIqRaiPv4Zm+2+TGc1dcjjVxG/8zGXzm0KoYX90rnA4ZmX2GyEn
-	 adYWCj22e+XxSrBbiZlHg+V38A5Zbj3u3MW8oPoR7uXoO57O1UxHdc8j+y8a1/NCbP
-	 RzqvCKk7nyX3XMBMnjc8rrd9+YXJxju7a0C/HP4yYBSYOPxg5gI1BdfDONQsLvTplu
-	 +1hIfghtwvt7gpOMqS1RVUknFeYTcVKOJfxXasS9iC/lrFhKL0jqxIB4ikSatdxpuT
-	 QaGjuZAEQVwpOWv0EeqLd32dl6VKTHAtkdbV+vFpXLgPM5mhd4eMpc3KZkou5GTwGC
-	 QDIoT+tjgUDfA==
-Date: Mon, 13 Jul 2026 11:16:23 +0900
+	b=SRw8BHsnxh0e9hm/A3ie7slBxUMVyxdscpfY9/XOYWjmG5R480v9tm0KEL4tYUJ3s
+	 y7wbn18yntmzE1KupuHl+PeGozb9aqPyablN8GAx5+SnEZScqNsGPTBlmVHAmje69a
+	 6UVLmCsPpCgRiUiH78fS3NC36wsQ0Pgs7e/bSTRm1Tn8TpKohmKk+nCQYbk6vkB0By
+	 ornZvpnSK+2tMaJ2JJZKNvPX3QWgP1n9eNmwuoq7AVpOF5pZFLcTuv/nYcr17OinPs
+	 Qj4ZXqWfFAGs7Xue39PRCgXRHrMMo05j4xRyKh3NvZasoiDP9rgiPuuovqZcty6NRP
+	 cBkacJL3nXhAA==
+Date: Mon, 13 Jul 2026 11:23:39 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 4/5] tracing/probes: Extend max length of argument
- string
-Message-Id: <20260713111623.bae8f26476740a0467b03521@kernel.org>
-In-Reply-To: <178386880215.3174487.982264935084717241.stgit@devnote2>
-References: <178386876526.3174487.5142283230157728964.stgit@devnote2>
-	<178386880215.3174487.982264935084717241.stgit@devnote2>
+To: "Markus Schneider-Pargmann" <msp@baylibre.com>
+Cc: "Steven Rostedt" <rostedt@goodmis.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "Heiko Carstens" <hca@linux.ibm.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: fprobe: Remove __packed from generic
+ __fprobe_header
+Message-Id: <20260713112339.53ed390e1c6f18b2fb1cd901@kernel.org>
+In-Reply-To: <DJU105LESLBJ.1O3UZRY325T2M@baylibre.com>
+References: <20260428-topic-fprobe-packed-v7-1-v1-1-9abc9b866b4c@baylibre.com>
+	<20260610171740.c30c43c5faee0beac3ad7546@kernel.org>
+	<DJ59B5LEGPER.3UURGUC8IW7E2@baylibre.com>
+	<20260622135659.ff84ef3b831a464b802d7c33@kernel.org>
+	<DJU105LESLBJ.1O3UZRY325T2M@baylibre.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,141 +51,84 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 13 Jul 2026 00:06:42 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Thu, 09 Jul 2026 14:06:32 +0200
+"Markus Schneider-Pargmann" <msp@baylibre.com> wrote:
 
-> From: Masami Hiramatsu <mhiramat@kernel.org>
+> Hi Masami,
 > 
-> To support BTF argument parsing (such as accessing fields within nested
-> structures via typecasting), the maximum argument string length needs
-> to be extended. Extend MAX_ARGSTR_LEN from 63 to 256.
+> On Mon Jun 22, 2026 at 6:56 AM CEST, Masami Hiramatsu wrote:
+> > On Wed, 10 Jun 2026 11:20:24 +0200
+> > "Markus Schneider-Pargmann" <msp@baylibre.com> wrote:
+> >
+> >> Hi Masami,
+> >> 
+> >> On Wed Jun 10, 2026 at 10:17 AM CEST, Masami Hiramatsu wrote:
+> >> > Hi Markus,
+> >> >
+> >> > Thanks for ping me.
+> >> >
+> >> > On Tue, 28 Apr 2026 10:30:29 +0200
+> >> > "Markus Schneider-Pargmann (The Capable Hub)" <msp@baylibre.com> wrote:
+> >> >
+> >> >> fp pointer and unsigned long have the same size on all relevant
+> >> >> architectures that build Linux. Furthermore this struct is only used in
+> >> >> architectures that do not set ARCH_DEFINE_ENCODE_FPROBE_HEADER which is
+> >> >> set only for 64bit architectures (apart from LoongArch).
+> >> >> 
+> >> >> Both fields are aligned on these architectures so the struct with
+> >> >> __packed and without it are the same.
+> >> >> 
+> >> >> Remove the __packed as it is unnecessary.
+> >> >> 
+> >> >> Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
+> >> >
+> >> > NOTE: This is not a Fix, but just cleanup or minor update. Or, you have
+> >> > any problem with this __packed attribute?
+> >> 
+> >> Thanks, yes it is not fixing a bug, I can remove this.
+> >> 
+> >> >
+> >> > Unless there is no problem (or any concern), I would like to keep this
+> >> > as it is.
+> >> 
+> >> There is currently no problem with __packed in the upstream kernel. I
+> >> just thought this would be a good cleanup to remove the unnecessary
+> >> attribute. I am working on CHERI architectures where pointers have
+> >> capabilities. __packed breaks these capability tags and therefore
+> >> doesn't work on CHERI. When looking into why this struct has a __packed
+> >> attribute I didn't see a reason, so I thought this would be a good patch
+> >> for upstream as well even though CHERI is not yet relevant for upstream
+> >> linux.
+> >
+> > Hi Markus,
+> >
+> > Ah, OK. CHERI makes pointers to non-long value. Are you sure
+> > removing __packed makes fprobe working with CHERI? If so,
+> > please describe it. Then I can pick it.
 > 
-> Since MAX_ARGSTR_LEN was previously reused to format command heads in
-> trace_*probe_match_command_head() functions, introduce a dedicated
-> MAX_COMMON_HEAD_LEN (63) macro for matching command heads and switch
-> these functions to use the new macro.
+> Sorry for the late response.
 > 
-> Assisted-by: Antigravity:gemini-3.5-flash
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> No, this patch alone doesn't make fprobe work with CHERI. __packed is
+> problematic for CHERI because it sets the alignment to 1 which forces
+> the compiler to do unaligned access operations even if the
+> struct/pointer is aligned. Unaligned operations do not keep the CHERI
+> capabilities. Without __packed the compiler knows everything is aligned
+> and can use aligned operations and keep the CHERI capabilities. CHERI
+> hardware does not support unaligned pointer capability access.
+> 
+> On its own it doesn't help CHERI, there are more patches that are more
+> CHERI specific that are needed for fprobe to work on CHERI. I just
+> thought it would be a great standalone patch for upstream.
 
-Sashiko asked to extend other macros, 
-> Does this code also need to increase MAX_BTF_ARGS_LEN and MAX_DENTRY_ARGS_LEN?
-
-I don't agree this. MAX_BTF_ARGS_LEN is only for expanding "$args" into
-each parameter names. The other arguments are kept on the same memory.
-
-MAX_DENTRY_ARGS_LEN is already 256, so I think if that is too long,
-it should be rejected.
-(But MAX_ARGSTR_LEN should be 255.)
-
-BTW, both macro names are a bit complicated because those are just
-buffer size, not max length of something.
+OK, anyway, I would like to pick your patch but without fixes tag.
+It may make no differences, so should be treated as a cleanup patch.
+Let me pick it to probes/for-next.
 
 Thank you,
 
-> ---
->  kernel/trace/trace_fprobe.c                        |    2 +-
->  kernel/trace/trace_kprobe.c                        |    2 +-
->  kernel/trace/trace_probe.h                         |    3 ++-
->  kernel/trace/trace_uprobe.c                        |    2 +-
->  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    2 +-
->  .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |    2 +-
->  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    2 +-
->  7 files changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 536781cd4c47..5638a90e61cc 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -238,7 +238,7 @@ static bool trace_fprobe_is_busy(struct dyn_event *ev)
->  static bool trace_fprobe_match_command_head(struct trace_fprobe *tf,
->  					    int argc, const char **argv)
->  {
-> -	char buf[MAX_ARGSTR_LEN + 1];
-> +	char buf[MAX_COMMON_HEAD_LEN + 1];
->  
->  	if (!argc)
->  		return true;
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index cfa807d8e760..cc24e992732c 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -149,7 +149,7 @@ static bool trace_kprobe_is_busy(struct dyn_event *ev)
->  static bool trace_kprobe_match_command_head(struct trace_kprobe *tk,
->  					    int argc, const char **argv)
->  {
-> -	char buf[MAX_ARGSTR_LEN + 1];
-> +	char buf[MAX_COMMON_HEAD_LEN + 1];
->  
->  	if (!argc)
->  		return true;
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index e64e323244a5..e6aee800a7d9 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -32,7 +32,8 @@
->  #include "trace_output.h"
->  
->  #define MAX_TRACE_ARGS		128
-> -#define MAX_ARGSTR_LEN		63
-> +#define MAX_ARGSTR_LEN		256
-> +#define MAX_COMMON_HEAD_LEN	63
->  #define MAX_ARRAY_LEN		64
->  #define MAX_ARG_NAME_LEN	32
->  #define MAX_BTF_ARGS_LEN	128
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index b2e264a4b96c..67bd8fd91e3e 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -281,7 +281,7 @@ static bool trace_uprobe_is_busy(struct dyn_event *ev)
->  static bool trace_uprobe_match_command_head(struct trace_uprobe *tu,
->  					    int argc, const char **argv)
->  {
-> -	char buf[MAX_ARGSTR_LEN + 1];
-> +	char buf[MAX_COMMON_HEAD_LEN + 1];
->  	int len;
->  
->  	if (!argc)
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-> index e9d7e6919c7f..984ab94df213 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-> @@ -75,7 +75,7 @@ check_error 'f vfs_read ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_L
->  check_error 'f vfs_read ^=@11'			# NO_ARG_NAME
->  check_error 'f vfs_read ^var.1=@11'		# BAD_ARG_NAME
->  check_error 'f vfs_read var1=@11 ^var1=@12'	# USED_ARG_NAME
-> -check_error 'f vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
-> +check_error 'f vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))))))))))))))))))))))'	# ARG_TOO_LONG
->  check_error 'f vfs_read arg1=^'			# NO_ARG_BODY
->  
->  
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-> index ffe8ffef4027..2d0905b2c8b7 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-> @@ -61,7 +61,7 @@ check_error 't kfree ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_LOG
->  check_error 't kfree ^=@11'			# NO_ARG_NAME
->  check_error 't kfree ^var.1=@11'		# BAD_ARG_NAME
->  check_error 't kfree var1=@11 ^var1=@12'	# USED_ARG_NAME
-> -check_error 't kfree ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
-> +check_error 't kfree ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))))))))))))))))))))))'	# ARG_TOO_LONG
->  check_error 't kfree arg1=^'			# NO_ARG_BODY
->  
->  
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> index 21ce8414459f..d28f63b7e8a9 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> @@ -71,7 +71,7 @@ check_error 'p vfs_read ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_L
->  check_error 'p vfs_read ^=@11'			# NO_ARG_NAME
->  check_error 'p vfs_read ^var.1=@11'		# BAD_ARG_NAME
->  check_error 'p vfs_read var1=@11 ^var1=@12'	# USED_ARG_NAME
-> -check_error 'p vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
-> +check_error 'p vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))))))))))))))))))))))'	# ARG_TOO_LONG
->  check_error 'p vfs_read arg1=^'			# NO_ARG_BODY
->  
->  # instruction boundary check is valid on x86 (at this moment)
-> 
+> Best
+> Markus
 
 
 -- 
