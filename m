@@ -1,101 +1,103 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671C1353A84;
-	Mon, 13 Jul 2026 19:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCA1280035;
+	Tue, 14 Jul 2026 01:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783971397; cv=none; b=AwRHwkxf8JFMGojbUvcYx1A7xpBdjQj9s7qzaCfcMcxQeEfMKc/6R/oJszHEv3WFBOSvG687/2H5a6iPHrG85I9GHO1oJeFwnmHBloZP5Xg+Ns8cgaJZJJSVJHV1f1VGPTb3VmXO787rZtD+dITu4pKKVU7Lb4GLPNu76qhxv58=
+	t=1783991372; cv=none; b=nKx2uAtMJs14UQoOWIdwIB8F5paGcfdvCNTsLDIjQhRqe3qbZsBSEKsViiW72JX8vwRxNKssdv75eF/5b50afE0t0iDgEa4Do6JzuOOW3+fUjgzGoLWbgyqqlXlCW2qxSbTt8o7JvqDuLLbbA4do7NcIcy4V8FHtSZKALGv3NRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783971397; c=relaxed/simple;
-	bh=MKxzhcRbqf0CzYJHw0h06Hayxkh/4d/3VgKHnMOEJUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UzvL42t6szPNFL02GO4GVmvS3OFbpSbphXW7w0ZenHRnQLMvqYkeuSTTaslAI5n+ALm3DoYa+CurtmVyfBhJQ6P0SdoJKU3GY1D3j5vySBMXNG455phTveb4gth7kk2Nx1iRmrxfu7OkH4zOLl2kP5wwKv7nQIh4i60tkBFO5r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id A7A5916013C;
-	Mon, 13 Jul 2026 19:36:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id BF09E20014;
-	Mon, 13 Jul 2026 19:36:25 +0000 (UTC)
-Date: Mon, 13 Jul 2026 15:36:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Add mutex to trace_parser to fix concurrent
- write races
-Message-ID: <20260713153624.48fc4be4@robin>
-In-Reply-To: <20260713134640.708323-1-wutengda@huaweicloud.com>
-References: <20260713134640.708323-1-wutengda@huaweicloud.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1783991372; c=relaxed/simple;
+	bh=ttWPChlhws4gGGPouKuFBLWaeK+iNDH7aJZXI3Y90Zg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X8Dvg9IkLjKAXW99ZA0Shkq6LzehvcFHtRxaDI/ZtVk1bUKfUwLvWhUIFLkT9x6XgTEBZQmYFF8+WGnUaJS+Swv5KusPU9gq2l4Bo5as8+VphDSOgI51GnQE9YrFSBcDxt1bQCrX7bJBXSL6nXbiVDj5/3KgTxnfHXC3BkdNXDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/2rjAQQ; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/2rjAQQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E061F000E9;
+	Tue, 14 Jul 2026 01:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783991370;
+	bh=YcmcItxkcAWfEjWLVWpTGSQYqpjCQLZGmT/fADwoFXU=;
+	h=From:To:Cc:Subject:Date;
+	b=G/2rjAQQ0eJtxu3BJNGrTz/ISAU/SyfcJVGIJuehZNY1LLM87lIRi8iEBMnuNpSny
+	 M9lt1C/GF9khWEOAXU9/cjcHnvwj69CcfR/nPon69Kpbnzww4YNJmq6DyA0QtmTD1O
+	 aFqoVrGOn+WmPV3+kgq7EuzF/KSUc0ps1OSStKu1UsVxy4ro9XAYEc3O8O9zcF3Vx/
+	 I3iGztJIJQTYgqLPUu52foHFTkz3B/eXGcivVqoeQYfKW2BHebNo2vQNjJ0UmX4tXV
+	 RT7BQZ9Sggus7jYG/3H6KSNmW1+xsVqM/IEMdB/mLS6oQ1ij4KOnQlvjtI68aFPbmz
+	 40RPLygydG1zQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 0/5] tracing/probes: Clean up and refactor argument parser
+Date: Tue, 14 Jul 2026 10:09:26 +0900
+Message-ID: <178399136606.27810.4469135881050354189.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: BF09E20014
-X-Stat-Signature: h4dezhr6a3a1z6wmiiqru7p6c99xtha3
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19BEx2XOzfKBi47hNiYhp8Y0jQy951kWls=
-X-HE-Tag: 1783971385-36165
-X-HE-Meta: U2FsdGVkX1+ZXTx38Fu9M9bLcae2fY0NfEyIlbkSn/FeovjJk9MY7Ann1lQkU7dBdvE2VZeSOl/cim/NrH1oNSY+ZIXeyiqRk7G1DdFJ1oRV1R5UsbWrYdQjZNSLxxlAbBQv9NLcoVEWSqb24/1sRRB8mZRJyfv/CsxkLImEbmVtnzUmFjhe5HNTswP9qgSLQJnEaC5ZTybPQa9L5/41lJm7zzZo0hX1Iv1C5NwPOOu2jhbMqtRb67d3LKe2sslJJo1WT9ZVBSS0ZA1BbDTBD60v/bwlTea8rTfm3OfZhtKqtCJAqX5LFU/mOvVZuafoy8f84+6Dv9piagra/kxa20Wr8eFjcO9BS+r40xtfm9D1gw7TRkJefg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 13 Jul 2026 13:46:40 +0000
-Tengda Wu <wutengda@huaweicloud.com> wrote:
+Hi,
 
-> The trace_parser structure is allocated and initialized when a trace
-> file is opened, and is subsequently used in the write handler to parse
-> user input. If userspace opens a trace file descriptor and shares it
-> across multiple threads, concurrent write calls will race on the
-> parser's internal state, specifically the idx, cont, and buffer fields,
-> leading to corrupted input or undefined behavior.
-> 
-> Fix this by embedding a mutex directly in struct trace_parser. The mutex
-> is initialized in trace_parser_get_init() and destroyed in
-> trace_parser_put(). All write-side users that access parser state
-> (trace_get_user() followed by checking trace_parser_loaded() /
-> trace_parser_cont() against the buffer) now hold the mutex across the
-> full critical section, avoiding any TOCTOU gap between the parse and the
-> subsequent consumption of parser->buffer.
-> 
-> Affected write paths:
->   - ftrace_graph_write / ftrace_graph_release
->   - ftrace_regex_write / ftrace_regex_release
-> 
-> Fixes: e704eff3ff51 ("ftrace: Have set_graph_function handle multiple functions in one write")
-> Fixes: 689fd8b65d66 ("tracing: trace parser support for function and graph")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  kernel/trace/ftrace.c | 7 +++++++
->  kernel/trace/trace.c  | 2 ++
->  kernel/trace/trace.h  | 1 +
->  3 files changed, 10 insertions(+)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index f93e34dd2328..ef47e5659283 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5842,6 +5842,8 @@ ftrace_regex_write(struct file *file, const char __user *ubuf,
->  	/* iter->hash is a local copy, so we don't need regex_lock */
->  
->  	parser = &iter->parser;
-> +
-> +	guard(mutex)(&parser->lock);
->  	read = trace_get_user(parser, ubuf, cnt, ppos);
+This is the 3rd version of the series which refactors and cleans up
+the fetcharg parser in the trace_probe. The previous version is here:
 
-Why are the other users of trace_get_user() not a problem? If
-anything, trace_get_user() should have a lockdep assert to make sure
-the lock is held.
+  https://lore.kernel.org/all/178392766002.3229912.15711868107734330750.stgit@devnote2/
 
-I think we need to add a lockdep assertion in all the callers that use
-the parser and we need to make sure it's taken by every user.
+The main goals are to improve code readability, prevent kernel stack
+overflow by eliminating recursive function calls, and extend the
+argument string length limit to support complex BTF typecast
+expressions.
 
--- Steve
+In this version, I fixed to remove unused variable and add a
+error log in parse_this_cpu() [5/5].
+
+
+Patches:
+- Patch 1: Decomposes parse_probe_vars() into smaller, dedicated helper 
+  functions for parsing specific variable types ($retval, $stack, etc.).
+- Patch 2: Decomposes parse_probe_arg() into static helper subroutines for 
+  handling registers, memory/symbols, and immediates.
+- Patch 3: Alphabetizes the ERRORS macros list in trace_probe.h to improve 
+  readability.
+- Patch 4: Extends MAX_ARGSTR_LEN from 63 to 255 for long BTF cast/dereference
+  arguments, and introduces MAX_COMMON_HEAD_LEN to prevent regression on match
+  head commands.
+- Patch 5: Eliminates recursion in parse_probe_arg() using a loop and a parse 
+  state stack integrated into traceprobe_parse_context. It also raises the
+  nesting limit to 8 and updates the selftest scripts.
+
+Thanks,
+
+---
+
+Masami Hiramatsu (5):
+      tracing/probes: Refactor parse_probe_vars()
+      tracing/probes: Refactor parse_probe_arg()
+      tracing/probes: Sort ERRORS list in trace_probe.h alphabetically
+      tracing/probes: Extend max length of argument string
+      tracing/probes: Eliminate recursion in parse_probe_arg()
+
+
+ kernel/trace/trace_fprobe.c                        |    2 
+ kernel/trace/trace_kprobe.c                        |    2 
+ kernel/trace/trace_probe.c                         |  833 ++++++++++++--------
+ kernel/trace/trace_probe.h                         |  196 +++--
+ kernel/trace/trace_uprobe.c                        |    2 
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    6 
+ .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |    4 
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    6 
+ 8 files changed, 623 insertions(+), 428 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
