@@ -1,564 +1,114 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31E9331EA9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 18:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E963CF207
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 18:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784053942; cv=none; b=NnBqrpMQLb9hJfX0lVyU02vQfCot5T69bBrLmZL6Um6QNZR1/gPUk88xDkvPeRw0V+fnlr7qhqEEvNTgh/ey7jqh8IjOPY9MH8yNbbpfc7KEHgtiH6Pv5BPlx38a10CfsU87pWM16jaOJstL9u6UcqU/fsOZ5lYHGZ4cI3ynh6o=
+	t=1784053945; cv=none; b=Qb5NIuZh1VN8mtDRJ1iPsSWJrRQwyJEmusXoy+zsGd3elBoQqSOKpIz+P/G9FOU5WyBWVvPTkT0Jnzf8UKPp0rB2vYdXzh0klMNBVb7lxhf2BpHatQm+GnxfenqN00SUYObxLYiFvF1QV4Ef3JmHwB7px9/KrRoUOo+2XhJyfls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784053942; c=relaxed/simple;
-	bh=qwHJQSkHR9FiX9eLZJcFQ7+CaEXGbJDg7NFSWEISO8A=;
+	s=arc-20240116; t=1784053945; c=relaxed/simple;
+	bh=w6Sp86eHEMVoVOxdFnIDhhVPOr3sGlq3VH2c/w0u1E8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WiMWhpfRI2p5mNDtANxi+cESpb3S6K3pJaURGnXogacjHHLjZsSDcmWttM+FgjjCHtrh4d0d8q1fj6GZ992MqIQKpYDEZgz9y08tLsGhaaZsCx4exkNfLGyxBGpYbN/BwPIjyXyU3h1yS0yfXvajSwEpsskLZh1SC6zDwU8D8LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnPa9xbu; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:content-type; b=KVqNM3t+kcOlxF/Seu6f13elhhbJCRei/N6HpVLFVeGCuxek93D2pugGPuDLgV3/0p3amtJQ9wLjpUYdyYUHJq0xPZj0y3xkAIhilMqeG5zGJnS7O1mhK+q39DitJvZk+6AFhlJsnJY3V6AdX9scuFxCguFFje83N6oIt2fBp+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vfb2prnb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnPa9xbu"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-92e7632b193so139896985a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 11:32:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784053939; x=1784658739; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=2DejjWbYnVcQ4XXUkfoVFnqVdAcjxTlD3K8bB22eXeE=;
-        b=RnPa9xbuls1QpCNB8wPSIG46xMbL0IuXquMY5ZzlF7HORy8c1PfGbLBFvsGu+zo/p9
-         K8+Jmbl0GZXmY9Ktz0UM10FCgbIbF30Pmuu9ptlMau1PwUHFggO73fpGlsbrNDGou1hT
-         lVfWl9NmvRMKD/oCctu6onxWGAJ612i+A4GNd7OXoULIZ7Ow9VNudh4FcGSME4G2y0es
-         HgwwIdLZhL5fKw2qiwYbqnFVckKCYzczy177wAT/kxetJyaZVuo9pkrkJyOpcI6Dydq+
-         ep9KKkpSyWa3H1VktpFsNqmL+IE8uEgDnzx0i2/1XPWjUFg2qjjxrljEjXsGvOErEhQs
-         1+LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784053939; x=1784658739;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=2DejjWbYnVcQ4XXUkfoVFnqVdAcjxTlD3K8bB22eXeE=;
-        b=MWJ7K2gQuG6HN8J4WPSg2xZR4PtdoFmOPDXJKnqMfjFz7uNroHszMK7dsnp+pmzE19
-         zB8zz+eDmeRX4pm/PI+Lf9Mk5fALxBk6/oHaOeQVRqgOXNlZLW0h7TWssOyWGLWStTci
-         iXu2HMrkBTuUBn3pjH44+norUyZF6BwCsJ4jmYG/6M1Pp5KJPn7tqk8AT/gHTkq+B7Lv
-         5OLrkw8m6W/2eiy2A+KJO+G43hOE88NVqATdhZAAHZhLCwVhoHUZxxW3TLBZbmoYQW21
-         /cyUPjYIKvWBf7u6UWKll04Xg2S/FMX2+229krD3VTBpZG4iNoy+7eyZEgArTwQSmacB
-         cJiA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq84mVvr6ykNBIqKU17PICl5BvgJhYQOXyb8TyS10Ox1pOXuSUr9GRJZhnNacht9FlfaZWXG+TkpQ51z/9sFnqKIWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRFd7JDeznshRp30+9V8gY4Al1+KO1IGca76fj1EoewqXRsHfd
-	nAQpguc6yVw6upbG6gk7ihMP3av0hp5+fj/wZ+Iu6Hc1WrrAyLHv20Iw
-X-Gm-Gg: AfdE7cnrJeJ0/+f7nGblXPnty5b2EQ8/Sp4E1ZLsIfnV2Rn4m+M7X46KQI5TjBQcjQJ
-	t6VRLw3BweBPQZejQxhgLLPTwCzH8HypPXO5JBK/dtYlbx4KBsd87WWeTb71qOe6nhZnnGlWaMR
-	aldI2O8FbgU1M9qivdXEjGNUX37wyDcxZ60LQ3XjZjMYzWE/zB4VV6eMC9UCGIGKpbD5ZttEHkb
-	m+VWNQRQmt78TaEieM/Y4w27yVQVzMGT9z8aRBC+DBBKs5MM7e+sPGgBUZbpM11MjJ5FTUEW+Bp
-	Rkk+4SGl7Q3zOUIUr+CnijLyAW5GeUQzHKzYt7iQh2mFx9xzkOrK/LA20jcPZA1jljsj63LkNLJ
-	WbaByieMOwVHearqkhDAFag2VTNSOlDDi9UvUSCoRxcVLc+y1clwbyXzhtDxOqSw1tO2v6Wr1wN
-	CV5wFK5+xXeRdBFOu+9dNsDVWdNzW02Q/APUg39gCmD/bKZ0vbZ1A=
-X-Received: by 2002:a05:620a:460c:b0:92e:6637:d98 with SMTP id af79cd13be357-92ef2b35181mr1396308185a.18.1784053938726;
-        Tue, 14 Jul 2026 11:32:18 -0700 (PDT)
-Received: from localhost ([48.45.163.146])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5bab293sm1547341685a.18.2026.07.14.11.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 11:32:17 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vfb2prnb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784053942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hwk64BpXBFsCzUAEimbym6phg6u2yD1wC5895sqxBoY=;
+	b=Vfb2prnbapzRwcQlqajMfUcv3V02R9o2194JnQtHCLI0hlfSeGy4bqajAXEpoqUpyxLauF
+	YStse7cW6SZajoi/gfwH6H491RtN36TUesnJt9HYvESirqRuLSWEjFOqhWaQXgVx7/sNi6
+	oJs4O3fX2qX6ESKR57dJX6hg3k+Z6K8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-oLcVr0dXOfy6SdYCw-tc-g-1; Tue,
+ 14 Jul 2026 14:32:21 -0400
+X-MC-Unique: oLcVr0dXOfy6SdYCw-tc-g-1
+X-Mimecast-MFC-AGG-ID: oLcVr0dXOfy6SdYCw-tc-g_1784053940
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA31B1956070;
+	Tue, 14 Jul 2026 18:32:19 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.65.227])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B61361800593;
+	Tue, 14 Jul 2026 18:32:18 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Hildenbrand <david@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Matthew Wilcox <willy@infradead.org>,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH 08/13] mm/kwatch: add hardware breakpoint backend
-Date: Wed, 15 Jul 2026 02:32:06 +0800
-Message-ID: <20260714183206.12688-1-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260714182243.10687-1-wangjinchao600@gmail.com>
-References: <20260714182243.10687-1-wangjinchao600@gmail.com>
+	linux-trace-kernel@vger.kernel.org
+Cc: Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH v5 1/5] eventfs: define event fields before directory creation
+Date: Tue, 14 Jul 2026 14:31:41 -0400
+Message-ID: <20260714183150.292861-3-ashelat@redhat.com>
+In-Reply-To: <20260714183150.292861-2-ashelat@redhat.com>
+References: <20260714183150.292861-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: lLGgLWsou-BNfBxdEUp1UsWXMOA-FldgHfh8q7lSgYk_1784053940
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Manage a preallocated pool of wide (per-CPU) perf hardware
-breakpoints. All breakpoints are registered up front against a dummy
-address; arming a watchpoint only re-points an already-registered
-event, so the arm path can run from a kprobe handler.
+Move the event_define_fields() call in event_create_dir() before the
+eventfs directory creation. Previously, a failure after directory
+creation wouldn't clean up eventfs_inode because the error path didn't
+call eventfs_remove_dir(). This eliminates the need to clean up the
+eventfs directories if event_define_fields() fails.
 
-- kwatch_hwbp_get()/put() claim and release pool entries with
-  per-slot cmpxchg, safe for concurrent consumers on any CPU.
-- kwatch_hwbp_arm() updates the local CPU synchronously via
-  modify_wide_hw_breakpoint_local() and broadcasts asynchronous IPIs
-  to the other CPUs. Arm-side IPIs are rate-limited per CPU; disarm
-  IPIs are refcounted so an entry is only recycled once every CPU
-  has dropped it.
-- Hits are reported through the kwatch:kwatch_hit tracepoint with a
-  short stack trace: the ftrace ring buffer is usable from NMI-like
-  context and survives a subsequent crash, unlike printk.
-- A CPU hotplug callback creates/destroys the per-CPU events as CPUs
-  come and go.
-
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
 ---
- include/trace/events/kwatch.h |  57 ++++++
- mm/kwatch/Makefile            |   2 +-
- mm/kwatch/hwbp.c              | 358 ++++++++++++++++++++++++++++++++++
- 3 files changed, 416 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/kwatch.h
- create mode 100644 mm/kwatch/hwbp.c
+ kernel/trace/trace_events.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/include/trace/events/kwatch.h b/include/trace/events/kwatch.h
-new file mode 100644
-index 000000000000..edb95405c386
---- /dev/null
-+++ b/include/trace/events/kwatch.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM kwatch
-+
-+#if !defined(_TRACE_KWATCH_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_KWATCH_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/ptrace.h>
-+
-+#define KWATCH_STACK_DEPTH 8
-+
-+struct trace_seq;
-+const char *kwatch_trace_print_stack(struct trace_seq *p,
-+				     const unsigned long *stack,
-+				     unsigned int nr);
-+
-+TRACE_EVENT(kwatch_hit,
-+	TP_PROTO(unsigned long ip, unsigned long sp, unsigned long addr,
-+		 u64 time_ns,
-+		 unsigned long *stack_entries, unsigned int stack_nr),
-+	TP_ARGS(ip, sp, addr, time_ns, stack_entries, stack_nr),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, ip)
-+		__field(unsigned long, sp)
-+		__field(unsigned long, addr)
-+		__field(u64, time_ns)
-+		__field(unsigned int, stack_nr)
-+		__array(unsigned long, stack, KWATCH_STACK_DEPTH)
-+	),
-+
-+	TP_fast_assign(
-+		unsigned int i;
-+
-+		__entry->ip = ip;
-+		__entry->sp = sp;
-+		__entry->addr = addr;
-+		__entry->time_ns = time_ns;
-+		__entry->stack_nr = min_t(unsigned int, stack_nr,
-+					  KWATCH_STACK_DEPTH);
-+		for (i = 0; i < __entry->stack_nr; i++)
-+			__entry->stack[i] = stack_entries[i];
-+	),
-+
-+	TP_printk("KWatch HIT: time=%llu.%06lu ip=%pS addr=0x%lx%s",
-+		  __entry->time_ns / 1000000000ULL,
-+		  (unsigned long)((__entry->time_ns / 1000ULL) % 1000000ULL),
-+		  (void *)__entry->ip, __entry->addr,
-+		  kwatch_trace_print_stack(p, __entry->stack,
-+					   __entry->stack_nr))
-+);
-+
-+#endif /* _TRACE_KWATCH_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/kwatch/Makefile b/mm/kwatch/Makefile
-index cc6574df0d68..b2bc3003c89b 100644
---- a/mm/kwatch/Makefile
-+++ b/mm/kwatch/Makefile
-@@ -1,3 +1,3 @@
- obj-$(CONFIG_KWATCH) += kwatch.o
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..ddb6932a3ee7 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3190,6 +3190,13 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 	if (WARN_ON_ONCE(strcmp(call->class->system, TRACE_SYSTEM) == 0))
+ 		return -ENODEV;
  
--kwatch-y := deref.o task_ctx.o
-+kwatch-y := deref.o task_ctx.o hwbp.o
-diff --git a/mm/kwatch/hwbp.c b/mm/kwatch/hwbp.c
-new file mode 100644
-index 000000000000..19498ba03826
---- /dev/null
-+++ b/mm/kwatch/hwbp.c
-@@ -0,0 +1,358 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/ftrace.h>
-+#include <linux/hw_breakpoint.h>
-+#include <linux/sched/clock.h>
-+#include <linux/irqflags.h>
-+#include <linux/kallsyms.h>
-+#include <linux/mutex.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
-+#include <linux/stacktrace.h>
-+#include <linux/trace_seq.h>
-+#include <linux/workqueue.h>
-+
-+#include "kwatch.h"
-+
-+static LIST_HEAD(kwatch_all_wp_list);
-+static struct kwatch_watchpoint **kwatch_wp_slots;
-+static u16 kwatch_wp_nr;
-+static DEFINE_MUTEX(kwatch_all_wp_mutex);
-+static unsigned long kwatch_dummy_holder __aligned(8);
-+static int kwatch_hwbp_cpuhp_state = CPUHP_INVALID;
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/kwatch.h>
-+
-+/*
-+ * Render the saved stack like the ftrace built-in stacktrace / dump_stack()
-+ * style. Symbol resolution runs at trace read time, not in the hit path.
-+ */
-+const char *kwatch_trace_print_stack(struct trace_seq *p,
-+				     const unsigned long *stack,
-+				     unsigned int nr)
-+{
-+	const char *ret = trace_seq_buffer_ptr(p);
-+	unsigned int i;
-+
-+	for (i = 0; i < nr; i++)
-+		trace_seq_printf(p, "\n => %pS", (void *)stack[i]);
-+	trace_seq_putc(p, 0);
-+	return ret;
-+}
-+
-+static void kwatch_hwbp_handler(struct perf_event *bp,
-+				struct perf_sample_data *data,
-+				struct pt_regs *regs)
-+{
-+	struct kwatch_watchpoint *wp = bp->overflow_handler_context;
-+	unsigned long stack_entries[KWATCH_STACK_DEPTH];
-+	unsigned int stack_nr;
-+
-+	if (!kwatch_probe_validate_hit(regs, wp->arm_tsk))
-+		return;
-+
-+	stack_nr = stack_trace_save_regs(regs, stack_entries, KWATCH_STACK_DEPTH, 2);
-+	trace_kwatch_hit(instruction_pointer(regs), kernel_stack_pointer(regs),
-+			 wp->attr.bp_addr, local_clock(),
-+			 stack_entries, stack_nr);
-+}
-+
-+static void kwatch_hwbp_arm_local(void *info)
-+{
-+	struct kwatch_watchpoint *wp = info;
-+	struct perf_event *bp;
-+	unsigned long flags;
-+	int cpu, err;
-+
-+	local_irq_save(flags);
-+
-+	cpu = smp_processor_id();
-+	bp = per_cpu(*wp->event, cpu);
-+
-+	if (unlikely(!bp))
-+		goto out;
-+
-+	kwatch_probe_mute(true);
-+	barrier();
-+
-+	err = modify_wide_hw_breakpoint_local(bp, &wp->attr);
-+	if (unlikely(err)) {
-+		WARN_ONCE(1,
-+			  "KWatch: HWBP reinstall failed on CPU%d (err=%d, addr=0x%llx, len=%llu)\n",
-+			  cpu, err, wp->attr.bp_addr, wp->attr.bp_len);
-+	}
-+
-+	barrier();
-+	kwatch_probe_mute(false);
-+
-+out:
-+	local_irq_restore(flags);
-+}
-+
-+static inline void kwatch_hwbp_try_recycle(struct kwatch_watchpoint *wp)
-+{
-+	if (atomic_dec_and_test(&wp->pending_ipis)) {
-+		if (!READ_ONCE(wp->teardown))
-+			atomic_set_release(&wp->in_use, 0);
-+
-+		atomic_dec(&wp->refcount);
-+	}
-+}
-+
-+static void kwatch_hwbp_disarm_local(void *info)
-+{
-+	struct kwatch_watchpoint *wp = info;
-+
-+	kwatch_hwbp_arm_local(info);
-+	kwatch_hwbp_try_recycle(wp);
-+}
-+
-+static int kwatch_hwbp_cpu_online(unsigned int cpu)
-+{
-+	struct perf_event_attr attr;
-+	struct kwatch_watchpoint *wp;
-+	struct perf_event *bp;
-+
-+	mutex_lock(&kwatch_all_wp_mutex);
-+	list_for_each_entry(wp, &kwatch_all_wp_list, list) {
-+		attr = wp->attr;
-+		attr.bp_addr = (unsigned long)&kwatch_dummy_holder;
-+		bp = perf_event_create_kernel_counter(&attr, cpu, NULL,
-+						      kwatch_hwbp_handler, wp);
-+		if (IS_ERR(bp)) {
-+			pr_warn("%s failed to create watch on CPU %d: %ld\n",
-+				__func__, cpu, PTR_ERR(bp));
-+			continue;
-+		}
-+		per_cpu(*wp->event, cpu) = bp;
-+	}
-+	mutex_unlock(&kwatch_all_wp_mutex);
-+	return 0;
-+}
-+
-+static int kwatch_hwbp_cpu_offline(unsigned int cpu)
-+{
-+	struct kwatch_watchpoint *wp;
-+	struct perf_event *bp;
-+
-+	mutex_lock(&kwatch_all_wp_mutex);
-+	list_for_each_entry(wp, &kwatch_all_wp_list, list) {
-+		bp = per_cpu(*wp->event, cpu);
-+		if (bp) {
-+			unregister_hw_breakpoint(bp);
-+			per_cpu(*wp->event, cpu) = NULL;
-+		}
-+	}
-+	mutex_unlock(&kwatch_all_wp_mutex);
-+	return 0;
-+}
-+
-+int kwatch_hwbp_get(struct kwatch_watchpoint **out_wp)
-+{
-+	struct kwatch_watchpoint *wp;
-+	int i;
-+
-+	/*
-+	 * Per-slot cmpxchg claim: safe for concurrent consumers on any CPU,
-+	 * unlike llist_del_first() which requires a single consumer.
-+	 */
-+	for (i = 0; i < kwatch_wp_nr; i++) {
-+		wp = kwatch_wp_slots[i];
-+		if (atomic_read(&wp->in_use))
-+			continue;
-+		if (atomic_cmpxchg(&wp->in_use, 0, 1) == 0) {
-+			atomic_inc(&wp->refcount);
-+			*out_wp = wp;
-+			return 0;
-+		}
-+	}
-+	return -EBUSY;
-+}
-+
-+void kwatch_hwbp_arm(struct kwatch_watchpoint *wp, unsigned long addr, u16 len)
-+{
-+	static DEFINE_PER_CPU(u64, last_ipi_time);
-+	int cur_cpu;
-+	call_single_data_t *csd;
-+	int cpu;
-+	bool is_disarm = (addr == (unsigned long)&kwatch_dummy_holder);
-+
-+	wp->attr.bp_addr = addr;
-+	wp->attr.bp_len = len;
-+
-+	if (!is_disarm)
-+		wp->arm_tsk = current;
-+
-+	/* ensure attr update visible to other cpu before sending IPI */
-+	smp_wmb();
-+
-+	atomic_set(&wp->pending_ipis, 1);
-+	cur_cpu = get_cpu();
-+
-+	if (!is_disarm) {
-+		u64 now = local_clock();
-+		u64 last = this_cpu_read(last_ipi_time);
-+
-+		if (now - last < 1000000ULL) {
-+			put_cpu();
-+			return;
-+		}
-+		this_cpu_write(last_ipi_time, now);
-+	}
-+	for_each_online_cpu(cpu) {
-+		if (cpu == cur_cpu)
-+			continue;
-+
-+		if (is_disarm)
-+			atomic_inc(&wp->pending_ipis);
-+
-+		csd = per_cpu_ptr(is_disarm ? wp->csd_disarm : wp->csd_arm,
-+				  cpu);
-+		if (smp_call_function_single_async(cpu, csd) && is_disarm)
-+			kwatch_hwbp_try_recycle(wp);
-+	}
-+	put_cpu();
-+
-+	if (is_disarm)
-+		kwatch_hwbp_disarm_local(wp);
-+	else
-+		kwatch_hwbp_arm_local(wp);
-+}
-+
-+int kwatch_hwbp_put(struct kwatch_watchpoint *wp)
-+{
-+	kwatch_hwbp_arm(wp, (unsigned long)&kwatch_dummy_holder,
-+			sizeof(unsigned long));
-+
-+	return 0;
-+}
-+
-+void kwatch_hwbp_free(void)
-+{
-+	struct kwatch_watchpoint *wp, *tmp;
-+
-+	kwatch_wp_nr = 0;
-+	kfree(kwatch_wp_slots);
-+	kwatch_wp_slots = NULL;
-+
-+	if (kwatch_hwbp_cpuhp_state != CPUHP_INVALID) {
-+		cpuhp_remove_state_nocalls(kwatch_hwbp_cpuhp_state);
-+		kwatch_hwbp_cpuhp_state = CPUHP_INVALID;
-+	}
-+
-+	mutex_lock(&kwatch_all_wp_mutex);
-+	list_for_each_entry_safe(wp, tmp, &kwatch_all_wp_list, list) {
-+		list_del(&wp->list);
-+
-+		WRITE_ONCE(wp->teardown, true);
-+		atomic_dec(&wp->refcount);
-+
-+		/* Wait for all async IPIs to finish */
-+		while (atomic_read(&wp->refcount) > 0)
-+			cpu_relax();
-+
-+		unregister_wide_hw_breakpoint(wp->event);
-+		free_percpu(wp->csd_arm);
-+		free_percpu(wp->csd_disarm);
-+		kfree(wp);
-+	}
-+	mutex_unlock(&kwatch_all_wp_mutex);
-+}
-+
-+int kwatch_hwbp_prealloc(u16 max_watch, enum kwatch_access_type access_type)
-+{
-+	struct kwatch_watchpoint *wp;
-+	int success = 0, cpu;
-+	u32 bp_type;
-+	int ret;
-+
-+	switch (access_type) {
-+	case KWATCH_ACCESS_X:
-+		bp_type = HW_BREAKPOINT_X;
-+		break;
-+	case KWATCH_ACCESS_R:
-+		bp_type = HW_BREAKPOINT_R;
-+		break;
-+	case KWATCH_ACCESS_RW:
-+		bp_type = HW_BREAKPOINT_RW;
-+		break;
-+	case KWATCH_ACCESS_W:
-+	default:
-+		bp_type = HW_BREAKPOINT_W;
-+		break;
-+	}
-+
-+	while (!max_watch || success < max_watch) {
-+		wp = kzalloc_obj(*wp);
-+		if (!wp)
-+			break;
-+
-+		wp->csd_arm = alloc_percpu(call_single_data_t);
-+		wp->csd_disarm = alloc_percpu(call_single_data_t);
-+		if (!wp->csd_arm || !wp->csd_disarm) {
-+			free_percpu(wp->csd_arm);
-+			free_percpu(wp->csd_disarm);
-+			kfree(wp);
-+			break;
-+		}
-+
-+		for_each_possible_cpu(cpu) {
-+			INIT_CSD(per_cpu_ptr(wp->csd_arm, cpu),
-+				 kwatch_hwbp_arm_local, wp);
-+			INIT_CSD(per_cpu_ptr(wp->csd_disarm, cpu),
-+				 kwatch_hwbp_disarm_local, wp);
-+		}
-+
-+		wp->teardown = false;
-+
-+		hw_breakpoint_init(&wp->attr);
-+		wp->attr.bp_addr = (unsigned long)&kwatch_dummy_holder;
-+		wp->attr.bp_len = sizeof(unsigned long);
-+		wp->attr.bp_type = bp_type;
-+
-+		wp->event = register_wide_hw_breakpoint(&wp->attr,
-+							kwatch_hwbp_handler,
-+							wp);
-+		if (IS_ERR((void *)wp->event)) {
-+			free_percpu(wp->csd_arm);
-+			free_percpu(wp->csd_disarm);
-+			kfree(wp);
-+			break;
-+		}
-+
-+		atomic_set(&wp->refcount, 1);
-+
-+		mutex_lock(&kwatch_all_wp_mutex);
-+		list_add(&wp->list, &kwatch_all_wp_list);
-+		mutex_unlock(&kwatch_all_wp_mutex);
-+		success++;
-+	}
-+
-+	if (!success)
-+		return -EBUSY;
-+
-+	kwatch_wp_slots = kcalloc(success, sizeof(*kwatch_wp_slots),
-+				  GFP_KERNEL);
-+	if (!kwatch_wp_slots) {
-+		kwatch_hwbp_free();
-+		return -ENOMEM;
-+	}
-+	mutex_lock(&kwatch_all_wp_mutex);
-+	list_for_each_entry(wp, &kwatch_all_wp_list, list)
-+		kwatch_wp_slots[kwatch_wp_nr++] = wp;
-+	mutex_unlock(&kwatch_all_wp_mutex);
-+
-+	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "kwatch:online",
-+					kwatch_hwbp_cpu_online,
-+					kwatch_hwbp_cpu_offline);
++	ret = event_define_fields(call);
 +	if (ret < 0) {
-+		kwatch_hwbp_free();
++		pr_warn("Could not initialize trace point events/%s\n",
++			trace_event_name(call));
 +		return ret;
 +	}
 +
-+	kwatch_hwbp_cpuhp_state = ret;
-+	return 0;
-+}
+ 	e_events = event_subsystem_dir(tr, call->class->system, file, parent);
+ 	if (!e_events)
+ 		return -ENOMEM;
+@@ -3208,12 +3215,6 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 
+ 	file->ei = ei;
+ 
+-	ret = event_define_fields(call);
+-	if (ret < 0) {
+-		pr_warn("Could not initialize trace point events/%s\n", name);
+-		return ret;
+-	}
+-
+ 	/* Gets decremented on freeing of the "enable" file */
+ 	event_file_get(file);
+ 
 -- 
-2.53.0
+2.54.0
 
