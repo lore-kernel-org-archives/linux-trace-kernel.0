@@ -1,200 +1,208 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D29D2FF147;
-	Tue, 14 Jul 2026 10:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3EA3644CF;
+	Tue, 14 Jul 2026 10:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784024194; cv=none; b=eeIXaMf4LaaYfmNlX97etdjLsr7uPpwqRTMvpfTEYM9PBfwAaSJYxYkdmCIfUomDxIIef//K4qzkajcwKC5+7e+uuPzERxFCk5A7mSt84oPe+tNjNoKb6GPonGHfBk5/5u9CEBeELGmScEQEJzcXF5hGwfs5nRAhIt+z8XonEOw=
+	t=1784024268; cv=none; b=KoARJtzUTnXChmf2Ufmh6BWVO6FMgt/WqrkkainQ9/6YkXo72jB14UASOGPznSGKiNKf08VcP09hEZCQXvPVuTF5gZQKaIYMWMn0Fd2fmP63+SPTkE+54Rg5bmIWrpKrjKMLQTR5FfOtdrPgVhhJkLvWSOpUIxWQMiM/y2seVFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784024194; c=relaxed/simple;
-	bh=jjf+ggSgfRLi2weKyGR6wKofMt7Nt5pS9u3fmkkVlKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MUJna8zjeg/KYFJ2BwOqiYgOLOJyYrxELdWiQ2qyZSH+/GtshWQW7+5xf/XYqwAzwppgwFUWHoHm7MxxKu0JXWY9zMxOW9Gny3Mb5y+pA20RXl4CQRMPWDkyroU6/bOmHzDRvaMqwk8QpNQu0EorW8Eo2zfh762It9EAu8T+gao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gzwF85FCCzYQtt4;
-	Tue, 14 Jul 2026 18:16:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id D298840590;
-	Tue, 14 Jul 2026 18:16:27 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDnyyd6DFZqS2nHBA--.49254S2;
-	Tue, 14 Jul 2026 18:16:27 +0800 (CST)
-Message-ID: <059bee5e-6852-4afb-a993-dd5ddcd86d3e@huaweicloud.com>
-Date: Tue, 14 Jul 2026 18:16:26 +0800
+	s=arc-20240116; t=1784024268; c=relaxed/simple;
+	bh=4DH5a6ve/auP/7V1bjyB0V4QG2dck0UzPWpYqC6/K2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gLcLeuk+BDUCgI/Utnn9318eE4ks4juatKBtAsY3GwsxdDJJIB9hXvBcw29WAMPdf0cMeZ/V9I45Joos8rwZ9/pQiT2fRKXgox9poFtuzrL+1YB0g85Pt/QWBmivN9agjPbS8XPa+vaIaW6HuPUPUfJgVdQaKE/EsD0EEfaOEmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fy6x3ScG; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fy6x3ScG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4FE1F00A3A;
+	Tue, 14 Jul 2026 10:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784024267;
+	bh=m1KwIxFOjH59vMqkPqvNJy2V0MLfN207LfncRH5TxDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Fy6x3ScGp4SvjcLCb2EYasEF7Bg+N3JfXA1S2rYhDdGa8fr4+6eT9Z5sUIb80sT2r
+	 12V6KN+91XeSPeyZyRfBCNnMtsE0Z3zX1AfM0d9+BaPvnE/m8+pkUwQTaWwez7DEAX
+	 40QuoDzKqfzY1GCwuoG58CjBJE29XwBLRxM4TLNdmwQj8Blhck0AkxR92okiojzvMx
+	 WvMiVcF3zrA3KFpoksv9rfWx4gssKNluZWhtd5duC3QeTgeKUloBSHGktJzF0RJITM
+	 VrXH2ihLGQi0Xivwew6+5RuBX85r1ZYghiUkt5mTAu6e5JRNfb657XTWVfzpRGcHfX
+	 762G6nWtq/nvw==
+Date: Tue, 14 Jul 2026 11:17:11 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	Russell King <linux+etnaviv@armlinux.org.uk>
+Subject: Re: [PATCH v2 13/33] mm/vma: introduce and use vmg_pages(),
+ vmg_[start, end]_pgoff()
+Message-ID: <alYMZkJKJABhPsa6@lucifer>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+ <20260710-b4-pre-scalable-cow-v2-13-2a5aa403d977@kernel.org>
+ <508301c5-5460-40e8-bc34-6410be5be40a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Add mutex to trace_parser to fix concurrent
- write races
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260713134640.708323-1-wutengda@huaweicloud.com>
- <20260713153624.48fc4be4@robin>
- <ae69656e-fc50-4049-94f9-d460c2e1d5b8@huaweicloud.com>
- <20260713221318.63f741ad@gandalf.local.home>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260713221318.63f741ad@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDnyyd6DFZqS2nHBA--.49254S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFW5Cw1kJw4kXry3tF1kXwb_yoW7XFykp3
-	yrKF97tF4DtF409r1Ig3W8ur10g345JryUGFn5KryYy3Z8ZF129FyakFs8uF17C3s7J34a
-	vr4Y9345KrWDZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU80fO7UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <508301c5-5460-40e8-bc34-6410be5be40a@kernel.org>
 
+On Mon, Jul 13, 2026 at 08:12:24PM +0200, Vlastimil Babka (SUSE) wrote:
+> On 7/10/26 22:16, Lorenzo Stoakes wrote:
+> > In the VMA logic we often need to determine the number of pages in the
+> > specified merge range, as well as the start and end page offsets of that
+> > range.
+> >
+> > Introduce and use helpers for these purposes.
+> >
+> > No functional change intended.
+> >
+> > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> > Reviewed-by: Gregory Price <gourry@gourry.net>
+> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+>
+> Uh, the PHYS_PFN() usage here was quite an abuse. Good riddance.
 
+Yeah and mine :)) but absolutely agree it was wrong and glad to fix my own
+mistake in using that ;)
 
-On 2026/7/14 10:13, Steven Rostedt wrote:
-> On Tue, 14 Jul 2026 09:50:55 +0800
-> Tengda Wu <wutengda@huaweicloud.com> wrote:
-> 
->>>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->>>> index f93e34dd2328..ef47e5659283 100644
->>>> --- a/kernel/trace/ftrace.c
->>>> +++ b/kernel/trace/ftrace.c
->>>> @@ -5842,6 +5842,8 @@ ftrace_regex_write(struct file *file, const char __user *ubuf,
->>>>  	/* iter->hash is a local copy, so we don't need regex_lock */
->>>>  
->>>>  	parser = &iter->parser;
->>>> +
->>>> +	guard(mutex)(&parser->lock);
->>>>  	read = trace_get_user(parser, ubuf, cnt, ppos);  
->>>
->>> Why are the other users of trace_get_user() not a problem? If
->>> anything, trace_get_user() should have a lockdep assert to make sure
->>> the lock is held.
->>>
->>> I think we need to add a lockdep assertion in all the callers that use
->>> the parser and we need to make sure it's taken by every user.
->>>
->>> -- Steve  
->>
->> Other places that use trace_get_user():
->>
->> ftrace_event_write
->>     trace_parser_get_init
->>     trace_get_user
->>
->> trace_pid_write
->>     trace_parser_get_init
->>     trace_get_user
->>
->> In both of these cases, the parser is allocated via trace_parser_get_init()
->> before use and freed immediately after, with no multi-threaded sharing.
->>
->> However, ftrace_graph_write() and ftrace_regex_write() are different.
->> The parser used by these two functions is allocated at open() time and
->> retrieved from struct file at write() time. Userspace can have multiple
->> threads invoking write() concurrently, e.g.:
->>
->>     r0 = openat(AT_FDCWD, path, O_WRONLY | O_CREAT | O_TRUNC |
->>                 O_NOCTTY | O_NONBLOCK, 0);
->>     r1 = dup(r0);
->>     write(r1, data1, len1);        /* thread 1 */
->>     pwrite64(r1, data2, len2, offset); /* thread 2 */
->>
->> Without proper synchronization in trace_get_user(), the parser state
->> becomes undefined.
->>
->> We have locally reproduced a slab-out-of-bounds issue with syzkaller [1],
->> which appears to be caused by this race.
->>
->> Regarding the fix, adding a lockdep assertion to trace_get_user() does
->> not seem necessary. As mentioned above, ftrace_event_write() and
->> trace_pid_write() do not involve concurrency, so they do not require
->> locking, and thus do not need a lockdep assertion.
-> 
-> So basically you want to add this inherit coupling between a user of
-> "parser" and the "parser" itself? That is just bad design. You created a
-> lock within the trace_parser struct to be used by a single instance but not
-> all instances.
-> 
+> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-You're right. That coupling is indeed bad.
+Thanks!
 
-> It is either added for all users or this is fixed by something else. Yeah,
-> for now the other users of trace_get_user() do not need locking, but what
-> happens the usage changes where it adds concurrency? Then it becomes a bug
-> again. Right?
-> 
-> If one place needs to hold the parser->lock when calling trace_get_user()
-> and trace_parser_loaded(), then all places should hold that lock. Or we
-> just need to redesign it better.
-> 
-> Yes, this fixes a race condition when user space does something stupid (and
-> this is something that requires admin privileges). But if we are going to
-> fix it, might as well do it properly.
-> 
-> If the issue is only with ftrace, then make the lock part of ftrace and not
-> the parser. Don't create a lock in parser that is determined by how one
-> uses it whether the user needs to take the lock or not.
-> 
+>
+> > ---
+> >  mm/vma.c | 11 ++++-------
+> >  mm/vma.h | 17 +++++++++++++++++
+> >  2 files changed, 21 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/mm/vma.c b/mm/vma.c
+> > index 35ba3475128f..995de8198fbb 100644
+> > --- a/mm/vma.c
+> > +++ b/mm/vma.c
+> > @@ -197,11 +197,9 @@ static void init_multi_vma_prep(struct vma_prepare *vp,
+> >   */
+> >  static bool can_vma_merge_before(struct vma_merge_struct *vmg)
+> >  {
+> > -	pgoff_t pglen = PHYS_PFN(vmg->end - vmg->start);
+> > -
+> >  	if (is_mergeable_vma(vmg, /* merge_next = */ true) &&
+> >  	    is_mergeable_anon_vma(vmg, /* merge_next = */ true)) {
+> > -		if (vmg->next->vm_pgoff == vmg->pgoff + pglen)
+> > +		if (vmg_end_pgoff(vmg) == vma_start_pgoff(vmg->next))
+> >  			return true;
+> >  	}
+> >
+> > @@ -221,7 +219,7 @@ static bool can_vma_merge_after(struct vma_merge_struct *vmg)
+> >  {
+> >  	if (is_mergeable_vma(vmg, /* merge_next = */ false) &&
+> >  	    is_mergeable_anon_vma(vmg, /* merge_next = */ false)) {
+> > -		if (vmg->prev->vm_pgoff + vma_pages(vmg->prev) == vmg->pgoff)
+> > +		if (vma_end_pgoff(vmg->prev) == vmg_start_pgoff(vmg))
+> >  			return true;
+> >  	}
+> >  	return false;
+> > @@ -759,7 +757,7 @@ static int commit_merge(struct vma_merge_struct *vmg)
+> >  	 */
+> >  	vma_adjust_trans_huge(vma, vmg->start, vmg->end,
+> >  			      vmg->__adjust_middle_start ? vmg->middle : NULL);
+> > -	vma_set_range(vma, vmg->start, vmg->end, vmg->pgoff);
+> > +	vma_set_range(vma, vmg->start, vmg->end, vmg_start_pgoff(vmg));
+> >  	vmg_adjust_set_range(vmg);
+> >  	vma_iter_store_overwrite(vmg->vmi, vmg->target);
+> >
+> > @@ -962,8 +960,7 @@ static __must_check struct vm_area_struct *vma_merge_existing_range(
+> >  		 *    middle     next
+> >  		 * shrink/delete extend
+> >  		 */
+> > -
+> > -		pgoff_t pglen = PHYS_PFN(vmg->end - vmg->start);
+> > +		const pgoff_t pglen = vmg_pages(vmg);
+> >
+> >  		VM_WARN_ON_VMG(!merge_right, vmg);
+> >  		/* If we are offset into a VMA, then prev must be middle. */
+> > diff --git a/mm/vma.h b/mm/vma.h
+> > index 8e4b61a7304c..527716c8739d 100644
+> > --- a/mm/vma.h
+> > +++ b/mm/vma.h
+> > @@ -230,6 +230,23 @@ static inline bool vmg_nomem(struct vma_merge_struct *vmg)
+> >  	return vmg->state == VMA_MERGE_ERROR_NOMEM;
+> >  }
+> >
+> > +static inline pgoff_t vmg_start_pgoff(const struct vma_merge_struct *vmg)
+> > +{
+> > +	return vmg->pgoff;
+> > +}
+> > +
+> > +static inline pgoff_t vmg_pages(const struct vma_merge_struct *vmg)
+> > +{
+> > +	const unsigned long size = vmg->end - vmg->start;
+> > +
+> > +	return size >> PAGE_SHIFT;
+> > +}
+> > +
+> > +static inline pgoff_t vmg_end_pgoff(const struct vma_merge_struct *vmg)
+> > +{
+> > +	return vmg_start_pgoff(vmg) + vmg_pages(vmg);
+> > +}
+> > +
+> >  /* Assumes addr >= vma->vm_start. */
+> >  static inline pgoff_t vma_pgoff_offset(struct vm_area_struct *vma,
+> >  				       unsigned long addr)
+> >
+>
 
-Yes, the issue at hand is currently limited to ftrace internals,
-specifically in ftrace_graph_write() and ftrace_regex_write(). I did
-consider moving the lock out of the parser and confining it within
-ftrace.c, but the approaches I came up with so far all seem less than
-ideal. Let me outline them below.
-
-_Approach 1_: Add a global lock at the ftrace.c file level, and hold it
-in the relevant write entry points for mutual exclusion.
-
-The obvious downside here is that both of the aforementioned functions are
-called by multiple tracefs file write hooks. A single global mutex would
-cause unnecessary blocking between writes to different files. On the other
-hand, introducing multiple global mutexes (one per file) would scatter the
-lock definitions and make maintenance harder.
-
-  ftrace_graph_write() is used by:
-    - set_graph_function
-    - set_graph_notrace
-
-  ftrace_regex_write() is used by:
-    - set_ftrace_filter
-    - set_ftrace_notrace
-
-_Approach 2_: Move the lock into structures such as ftrace_graph_data
-or ftrace_iterator, both of which already embed a trace_parser.
-
-While this does fix the problem, it feels somewhat redundant. We would be
-defining essentially the same lock in multiple places just to serialize
-access to the parser. Right now that would mean two definitions, but in the
-future, depending on how many parser users need concurrency control, it
-could grow further.
-
-_Approach 3_: As you suggested earlier, build on v1 but add proper lockdep
-assertions to enforce that the parser lock is held by all callers,
-regardless of how the parser is used.
-
-Approach 3 seems cleaner and more straightforward.
-
-Do you happen to have a better suggestion in mind? I'm open to other
-approaches if we can keep the design clean and maintainable.
-
-Thanks,
-Tengda
-
+Cheers, Lorenzo
