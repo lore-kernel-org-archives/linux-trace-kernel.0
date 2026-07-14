@@ -1,165 +1,416 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDD03644C9;
-	Tue, 14 Jul 2026 13:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672A4353A73;
+	Tue, 14 Jul 2026 14:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784036991; cv=none; b=YWqTXbj/hFLXsqe/sJ4S+4F63At+Eofb1Ug/Olicx/xdz9Pi+DeURb8pfvz0+ijmqIoP3T41deEJD9Hq3lIa4o61TIipHJhLlbiVN1V92iA/7yz0TakE8W2p43lbJjdQPfEcdrVm2cy+CxElwQ0P6CdnIapFoormYFprgfiy6Ok=
+	t=1784039644; cv=none; b=DIYPuxzTCq+TRAz2o6++LmWG/0JeGTMY9u17s8NqqazPLNJtFT+HsbxnKTvFWYQq4+1vuALswfJX+3mMLziXf5OspXpWmfB37t2ISkFktcjHf3Wz0GKX3p7/h3iWsVoJyGeJ9nslL9Fs4RYULGVlxqjUtLxtzFovSAsGJtvnG30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784036991; c=relaxed/simple;
-	bh=f6Nec8CKDiGMXJFpjcEItr58uTPnarEFc3TKwpnHlLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OSq4XNFIK9+ySFK8YS3JloYdGL6dhs7C2nhHGte1ibz/IvAYTRbAvv7YCxsUScMbdGRJY/F5OvVhr4anAeizKgMctT+dx6lFodLVwQKftqYLSuRvwNEmKyPo5/Op/sc6dWYmisUOIgdy/r3MWOMuIQJYJZV1QAYRTRU6zCTSoH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4PbeOtQ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4PbeOtQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 280611F00A3A;
-	Tue, 14 Jul 2026 13:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784036990;
-	bh=zZcTORujompaplDyQL8DLK9FixDtbpWYdR9xZHiIUSs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Y4PbeOtQ6T9kcGn2WNX5NU3bYbWGjubtLAryhI1a97mUtMRvBKrXcP+ufE3gthBw0
-	 lWfUpJBuv47ULm+5pWLXbcLFizQ9KTB/5zI7fsCuGkETxxwicrJROsb2bqdigGfznj
-	 3O1935P5U13fAv9EvVtOICVgFSHngx1NtSvNVAncjcBCHDKAoa9ysu4SM7Q+61gIgu
-	 wlNlAakVTF/LTAdL3/2osSMG86sPuVSRlyi2HI5uR8/JZIrigilsxPHBc6MBN36bnX
-	 p3kwmLsaOyayaGCNXyaHol0Da2PDJCbdpDmSPBLDhMEhCyI13uVHWAkcOoKtlFXUJb
-	 Y1jTXCFfFtX4w==
-Message-ID: <2911979b-193c-4cbc-85ed-f1d04a9977f0@kernel.org>
-Date: Tue, 14 Jul 2026 15:49:44 +0200
+	s=arc-20240116; t=1784039644; c=relaxed/simple;
+	bh=X5ztSWMjePQFGZjEvEDsK/QjLyP33u5TMJpusjp1GVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p4jTUL2tD3Rnx3pyEfycy9EgWaGFbSgbscXypDAWq5TboMJ1LUc/2ws9Gs/1LKogCitypm13dWDYev5UA5ThaI+CeuvMXRgnYXgknriKplVy1iEow/F7AiitqoNanqNnVBC7GYZjqU9a7ARnGXfWzdDYg9Cyk5Xl9O+8J6FYf9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id C9848A045B;
+	Tue, 14 Jul 2026 14:34:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id EA9AF20010;
+	Tue, 14 Jul 2026 14:33:58 +0000 (UTC)
+Date: Tue, 14 Jul 2026 10:34:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov
+ <ast@kernel.org>, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf/btf: Move tracing BTF APIs to the BTF library
+Message-ID: <20260714103401.0aa3f9e0@gandalf.local.home>
+In-Reply-To: <169694605862.516358.5321950027838863987.stgit@devnote2>
+References: <169694605862.516358.5321950027838863987.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/9] mm/page_owner: add MR_NEVER to enum migrate_reason
- and use it for last_migrate_reason
-Content-Language: en-US
-To: "David Hildenbrand (Arm)" <david@kernel.org>, Ye Liu <ye.liu@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>
-Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260714015117.78351-1-ye.liu@linux.dev>
- <20260714015117.78351-3-ye.liu@linux.dev>
- <9e0db1c2-06ca-4dba-8fb1-552fab91cb02@kernel.org>
- <037d58c6-de55-4b69-bb71-905e03985657@kernel.org>
- <9e9345c8-30a4-4f78-ba55-d7fa073b82d5@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <9e9345c8-30a4-4f78-ba55-d7fa073b82d5@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 49ccaco5mz6w8gu1wecm83m7wzc9s9yw
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: EA9AF20010
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+NaW1Sp9N32DaC8Ji2XcPk7afPij0uh/o=
+X-HE-Tag: 1784039638-118508
+X-HE-Meta: U2FsdGVkX19FyipWq02+z2EKE6K3zQIRcQ5BsGqqBKzKtuIuKCtHzZXKG7pmdiTW/WfPsi943BztNPdpiQCuWnmES0au54Mbfty3xk+fopx7EBwrmt3NiFeidm1ASNmaeRKITSFedcWsADrnTZ79i9hCLCpttrobT8GKNqvDFnKR/ftHwjw/cT2liVNG3I/C7esWsKTY8kBI+eGEN1Wg+0I7/j6k1O3byFE1esVcpL1QfJlVNfkYQJqc+ys663QIT+Fv+G67Vh2FyVUszyp0VsQcAKoJhbcW48l+fB6dAZrHtR07TvZGt2gnZVKJoXBheobFGg86Xyvxjcrtw2n5kdEKZH2RLtol
 
-On 7/14/26 15:22, David Hildenbrand (Arm) wrote:
-> On 7/14/26 15:09, Vlastimil Babka (SUSE) wrote:
->> On 7/14/26 15:05, David Hildenbrand (Arm) wrote:
->>> On 7/14/26 03:51, Ye Liu wrote:
->>>> The last_migrate_reason field uses -1 as a sentinel value to mean "no
->>>> migration has happened".  Replace the four bare -1 occurrences by
->>>> adding a proper MR_NEVER member to enum migrate_reason, defining a
->>>> corresponding "never_migrated" string in the MIGRATE_REASON trace
->>>> macro, and updating the GDB page_owner script to use MR_NEVER instead
->>>> of the hardcoded -1 so that lx-dump-page-owner does not incorrectly
->>>> report unmigrated pages as migrated.
->>>>
->>>> No functional change.
->>>>
->>>> Signed-off-by: Ye Liu <ye.liu@linux.dev>
->>>> Reviewed-by: Zi Yan <ziy@nvidia.com>
->>>> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
->>>> ---
->>>>  include/linux/migrate_mode.h    | 1 +
->>>>  include/trace/events/migrate.h  | 3 ++-
->>>>  mm/page_owner.c                 | 8 ++++----
->>>>  scripts/gdb/linux/page_owner.py | 4 +++-
->>>>  4 files changed, 10 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
->>>> index 265c4328b36a..05102d4d2490 100644
->>>> --- a/include/linux/migrate_mode.h
->>>> +++ b/include/linux/migrate_mode.h
->>>> @@ -25,6 +25,7 @@ enum migrate_reason {
->>>>  	MR_LONGTERM_PIN,
->>>>  	MR_DEMOTION,
->>>>  	MR_DAMON,
->>>> +	MR_NEVER,		/* page has never been migrated */
->>>
->>> Shouldn't this be more like
->>>
->>> "MR_NONE" ?
->>>
->>> As "never" is not really a "reason" ?
->> 
->> It's not used ever as a reason that would be actually passed to migration.
+
+Whatever happened to this patch?
+
+-- Steve
+
+
+On Tue, 10 Oct 2023 22:54:19 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Right, it's a placeholder for "there is no migrate reason because it is unset"
+> Move the BTF APIs used in tracing to the BTF library code for sharing it
+> with others.
+> Previously, to avoid complex dependency in a series I made it on the
+> tracing tree, but now it is a good time to move it to BPF tree because
+> these functions are pure BTF functions.
 > 
->> So I think the name is more descriptive this way.
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  include/linux/btf.h        |   24 +++++++++
+>  kernel/bpf/btf.c           |  115 +++++++++++++++++++++++++++++++++++++++++
+>  kernel/trace/Makefile      |    1 
+>  kernel/trace/trace_btf.c   |  122 --------------------------------------------
+>  kernel/trace/trace_btf.h   |   11 ----
+>  kernel/trace/trace_probe.c |    2 -
+>  6 files changed, 140 insertions(+), 135 deletions(-)
+>  delete mode 100644 kernel/trace/trace_btf.c
+>  delete mode 100644 kernel/trace/trace_btf.h
 > 
-> Not sure I agree. The usual translation of -1 -> unset is NONE or UNSET.
+> diff --git a/include/linux/btf.h b/include/linux/btf.h
+> index 928113a80a95..8372d93ea402 100644
+> --- a/include/linux/btf.h
+> +++ b/include/linux/btf.h
+> @@ -507,6 +507,14 @@ btf_get_prog_ctx_type(struct bpf_verifier_log *log, const struct btf *btf,
+>  int get_kern_ctx_btf_id(struct bpf_verifier_log *log, enum bpf_prog_type prog_type);
+>  bool btf_types_are_same(const struct btf *btf1, u32 id1,
+>  			const struct btf *btf2, u32 id2);
+> +const struct btf_type *btf_find_func_proto(const char *func_name,
+> +					   struct btf **btf_p);
+> +const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
+> +					   s32 *nr);
+> +const struct btf_member *btf_find_struct_member(struct btf *btf,
+> +						const struct btf_type *type,
+> +						const char *member_name,
+> +						u32 *anon_offset);
+>  #else
+>  static inline const struct btf_type *btf_type_by_id(const struct btf *btf,
+>  						    u32 type_id)
+> @@ -559,6 +567,22 @@ static inline bool btf_types_are_same(const struct btf *btf1, u32 id1,
+>  {
+>  	return false;
+>  }
+> +static inline const struct btf_type *btf_find_func_proto(const char *func_name,
+> +							 struct btf **btf_p)
+> +{
+> +	return NULL;
+> +}
+> +static inline const struct btf_param *
+> +btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
+> +{
+> +	return NULL;
+> +}
+> +static inline const struct btf_member *
+> +btf_find_struct_member(struct btf *btf, const struct btf_type *type,
+> +		       const char *member_name, u32 *anon_offset)
+> +{
+> +	return NULL;
+> +}
+>  #endif
+>  
+>  static inline bool btf_type_is_struct_ptr(struct btf *btf, const struct btf_type *t)
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 8090d7fb11ef..e5cbf3b31b78 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -912,6 +912,121 @@ static const struct btf_type *btf_type_skip_qualifiers(const struct btf *btf,
+>  	return t;
+>  }
+>  
+> +/*
+> + * Find a function proto type by name, and return the btf_type with its btf
+> + * in *@btf_p. Return NULL if not found.
+> + * Note that caller has to call btf_put(*@btf_p) after using the btf_type.
+> + */
+> +const struct btf_type *btf_find_func_proto(const char *func_name, struct btf **btf_p)
+> +{
+> +	const struct btf_type *t;
+> +	s32 id;
+> +
+> +	id = bpf_find_btf_id(func_name, BTF_KIND_FUNC, btf_p);
+> +	if (id < 0)
+> +		return NULL;
+> +
+> +	/* Get BTF_KIND_FUNC type */
+> +	t = btf_type_by_id(*btf_p, id);
+> +	if (!t || !btf_type_is_func(t))
+> +		goto err;
+> +
+> +	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
+> +	t = btf_type_by_id(*btf_p, t->type);
+> +	if (!t || !btf_type_is_func_proto(t))
+> +		goto err;
+> +
+> +	return t;
+> +err:
+> +	btf_put(*btf_p);
+> +	return NULL;
+> +}
+> +
+> +/*
+> + * Get function parameter with the number of parameters.
+> + * This can return NULL if the function has no parameters.
+> + * It can return -EINVAL if the @func_proto is not a function proto type.
+> + */
+> +const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
+> +{
+> +	if (!btf_type_is_func_proto(func_proto))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	*nr = btf_type_vlen(func_proto);
+> +	if (*nr > 0)
+> +		return (const struct btf_param *)(func_proto + 1);
+> +	else
+> +		return NULL;
+> +}
+> +
+> +#define BTF_ANON_STACK_MAX	16
+> +
+> +struct btf_anon_stack {
+> +	u32 tid;
+> +	u32 offset;
+> +};
+> +
+> +/*
+> + * Find a member of data structure/union by name and return it.
+> + * Return NULL if not found, or -EINVAL if parameter is invalid.
+> + * If the member is an member of anonymous union/structure, the offset
+> + * of that anonymous union/structure is stored into @anon_offset. Caller
+> + * can calculate the correct offset from the root data structure by
+> + * adding anon_offset to the member's offset.
+> + */
+> +const struct btf_member *btf_find_struct_member(struct btf *btf,
+> +						const struct btf_type *type,
+> +						const char *member_name,
+> +						u32 *anon_offset)
+> +{
+> +	struct btf_anon_stack *anon_stack;
+> +	const struct btf_member *member;
+> +	u32 tid, cur_offset = 0;
+> +	const char *name;
+> +	int i, top = 0;
+> +
+> +	anon_stack = kcalloc(BTF_ANON_STACK_MAX, sizeof(*anon_stack), GFP_KERNEL);
+> +	if (!anon_stack)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +retry:
+> +	if (!btf_type_is_struct(type)) {
+> +		member = ERR_PTR(-EINVAL);
+> +		goto out;
+> +	}
+> +
+> +	for_each_member(i, type, member) {
+> +		if (!member->name_off) {
+> +			/* Anonymous union/struct: push it for later use */
+> +			type = btf_type_skip_modifiers(btf, member->type, &tid);
+> +			if (type && top < BTF_ANON_STACK_MAX) {
+> +				anon_stack[top].tid = tid;
+> +				anon_stack[top++].offset =
+> +					cur_offset + member->offset;
+> +			}
+> +		} else {
+> +			name = btf_name_by_offset(btf, member->name_off);
+> +			if (name && !strcmp(member_name, name)) {
+> +				if (anon_offset)
+> +					*anon_offset = cur_offset;
+> +				goto out;
+> +			}
+> +		}
+> +	}
+> +	if (top > 0) {
+> +		/* Pop from the anonymous stack and retry */
+> +		tid = anon_stack[--top].tid;
+> +		cur_offset = anon_stack[top].offset;
+> +		type = btf_type_by_id(btf, tid);
+> +		goto retry;
+> +	}
+> +	member = NULL;
+> +
+> +out:
+> +	kfree(anon_stack);
+> +	return member;
+> +}
+> +
+>  #define BTF_SHOW_MAX_ITER	10
+>  
+>  #define BTF_KIND_BIT(kind)	(1ULL << kind)
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index 057cd975d014..64b61f67a403 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -99,7 +99,6 @@ obj-$(CONFIG_KGDB_KDB) += trace_kdb.o
+>  endif
+>  obj-$(CONFIG_DYNAMIC_EVENTS) += trace_dynevent.o
+>  obj-$(CONFIG_PROBE_EVENTS) += trace_probe.o
+> -obj-$(CONFIG_PROBE_EVENTS_BTF_ARGS) += trace_btf.o
+>  obj-$(CONFIG_UPROBE_EVENTS) += trace_uprobe.o
+>  obj-$(CONFIG_BOOTTIME_TRACING) += trace_boot.o
+>  obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
+> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+> deleted file mode 100644
+> index ca224d53bfdc..000000000000
+> --- a/kernel/trace/trace_btf.c
+> +++ /dev/null
+> @@ -1,122 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <linux/btf.h>
+> -#include <linux/kernel.h>
+> -#include <linux/slab.h>
+> -
+> -#include "trace_btf.h"
+> -
+> -/*
+> - * Find a function proto type by name, and return the btf_type with its btf
+> - * in *@btf_p. Return NULL if not found.
+> - * Note that caller has to call btf_put(*@btf_p) after using the btf_type.
+> - */
+> -const struct btf_type *btf_find_func_proto(const char *func_name, struct btf **btf_p)
+> -{
+> -	const struct btf_type *t;
+> -	s32 id;
+> -
+> -	id = bpf_find_btf_id(func_name, BTF_KIND_FUNC, btf_p);
+> -	if (id < 0)
+> -		return NULL;
+> -
+> -	/* Get BTF_KIND_FUNC type */
+> -	t = btf_type_by_id(*btf_p, id);
+> -	if (!t || !btf_type_is_func(t))
+> -		goto err;
+> -
+> -	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
+> -	t = btf_type_by_id(*btf_p, t->type);
+> -	if (!t || !btf_type_is_func_proto(t))
+> -		goto err;
+> -
+> -	return t;
+> -err:
+> -	btf_put(*btf_p);
+> -	return NULL;
+> -}
+> -
+> -/*
+> - * Get function parameter with the number of parameters.
+> - * This can return NULL if the function has no parameters.
+> - * It can return -EINVAL if the @func_proto is not a function proto type.
+> - */
+> -const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
+> -{
+> -	if (!btf_type_is_func_proto(func_proto))
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	*nr = btf_type_vlen(func_proto);
+> -	if (*nr > 0)
+> -		return (const struct btf_param *)(func_proto + 1);
+> -	else
+> -		return NULL;
+> -}
+> -
+> -#define BTF_ANON_STACK_MAX	16
+> -
+> -struct btf_anon_stack {
+> -	u32 tid;
+> -	u32 offset;
+> -};
+> -
+> -/*
+> - * Find a member of data structure/union by name and return it.
+> - * Return NULL if not found, or -EINVAL if parameter is invalid.
+> - * If the member is an member of anonymous union/structure, the offset
+> - * of that anonymous union/structure is stored into @anon_offset. Caller
+> - * can calculate the correct offset from the root data structure by
+> - * adding anon_offset to the member's offset.
+> - */
+> -const struct btf_member *btf_find_struct_member(struct btf *btf,
+> -						const struct btf_type *type,
+> -						const char *member_name,
+> -						u32 *anon_offset)
+> -{
+> -	struct btf_anon_stack *anon_stack;
+> -	const struct btf_member *member;
+> -	u32 tid, cur_offset = 0;
+> -	const char *name;
+> -	int i, top = 0;
+> -
+> -	anon_stack = kcalloc(BTF_ANON_STACK_MAX, sizeof(*anon_stack), GFP_KERNEL);
+> -	if (!anon_stack)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -retry:
+> -	if (!btf_type_is_struct(type)) {
+> -		member = ERR_PTR(-EINVAL);
+> -		goto out;
+> -	}
+> -
+> -	for_each_member(i, type, member) {
+> -		if (!member->name_off) {
+> -			/* Anonymous union/struct: push it for later use */
+> -			type = btf_type_skip_modifiers(btf, member->type, &tid);
+> -			if (type && top < BTF_ANON_STACK_MAX) {
+> -				anon_stack[top].tid = tid;
+> -				anon_stack[top++].offset =
+> -					cur_offset + member->offset;
+> -			}
+> -		} else {
+> -			name = btf_name_by_offset(btf, member->name_off);
+> -			if (name && !strcmp(member_name, name)) {
+> -				if (anon_offset)
+> -					*anon_offset = cur_offset;
+> -				goto out;
+> -			}
+> -		}
+> -	}
+> -	if (top > 0) {
+> -		/* Pop from the anonymous stack and retry */
+> -		tid = anon_stack[--top].tid;
+> -		cur_offset = anon_stack[top].offset;
+> -		type = btf_type_by_id(btf, tid);
+> -		goto retry;
+> -	}
+> -	member = NULL;
+> -
+> -out:
+> -	kfree(anon_stack);
+> -	return member;
+> -}
+> -
+> diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+> deleted file mode 100644
+> index 4bc44bc261e6..000000000000
+> --- a/kernel/trace/trace_btf.h
+> +++ /dev/null
+> @@ -1,11 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#include <linux/btf.h>
+> -
+> -const struct btf_type *btf_find_func_proto(const char *func_name,
+> -					   struct btf **btf_p);
+> -const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
+> -					   s32 *nr);
+> -const struct btf_member *btf_find_struct_member(struct btf *btf,
+> -						const struct btf_type *type,
+> -						const char *member_name,
+> -						u32 *anon_offset);
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 4dc74d73fc1d..b33c424b8ee0 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -12,7 +12,7 @@
+>  #define pr_fmt(fmt)	"trace_probe: " fmt
+>  
+>  #include <linux/bpf.h>
+> -#include "trace_btf.h"
+> +#include <linux/btf.h>
+>  
+>  #include "trace_probe.h"
+>  
 
-(note it's no longer -1 after the patch.)
-
-> At least I was confused by "NEVER".
-
-I won't bikeshed this, so whatever.
-
-Just to avoid another extra respin, please also say how the following line
-should change, as if we only rename MR_NEVER to MR_NONE, it will be:
-
-+	EMe(MR_NONE,		"never_migrated")
-
-Is that ok? Note it should never be actually printed anywhere per the
-current code.
