@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1BA46AF0F;
-	Tue, 14 Jul 2026 13:05:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3310146AF0F;
+	Tue, 14 Jul 2026 13:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784034351; cv=none; b=oQOQZKkFDUU/IoaeHHlI3+tzqYu7iXXTfOWD+y294VtNXqBM9CMyPVT+Ub4FU2jgKQUK0sUtcJIWDwJCg4ycfy6tZeAU0c/c+mBAsOtCS7hoiOtVVt0zx4s7ZGDnz0eAFD6W2T0nXPbQ96U9V+ozWe5lDqLfiwhvhLBcW1Au7tA=
+	t=1784034449; cv=none; b=WKEvoQnl7m2FhgCVJGuSDkmoTaNfXUbcIhPg3Q4mfqK5F6ZdFSLz519/cBK7jjn1wfx8RAog0d31R7s54ygTmbVYN+2SKQjC6gvIi749AYXPIzHnJptac33UF1xDSuFN1Lke8M1sJNsIPhI8gLT0JCIGXUFaPTpNjcpV63JrS4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784034351; c=relaxed/simple;
-	bh=l+oxZUVldmaoSMftLI/fn8ijL5iaCMvuTIy9knXQuww=;
+	s=arc-20240116; t=1784034449; c=relaxed/simple;
+	bh=6FJpgcq9cbV/qPjqbzEfNyeFk4AASUegyiUeY+5kEug=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OY86m/3aZTTEXvHGq+RRCqYYZf9/n+HM+ql5HShoNL0BXITN9om+0zW7lXtUrqsMWNaoelJP8buFU03lwI8Yw/W3iAFE3cpIbEM+uCWYREk2CT66rEj/54S2EaF0UiGVFXk84tC3o4ISWnQXTqH4ciSjaw8TGBckYEumkqHUm2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIvkcNKG; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Aevsz6d2dpxlaoL98QE7G+yUalt9FB7cpFvCfSPvM8S/wcGJIgrT4H2fO3BqghMhrpGL6XZRty57l4+b+36Ge33Ec6F4bplkBJbg2hYb1iaC5bPnUPnNblnh0YeKEt9TnhQSXXjYGiGcg2jrPts+H1aPLVNQqFwBC8R8tJd89Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6MJtEwI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIvkcNKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A6C31F000E9;
-	Tue, 14 Jul 2026 13:05:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6MJtEwI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B418F1F000E9;
+	Tue, 14 Jul 2026 13:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784034350;
-	bh=s5H03+CpfRIUyjXLbOlyOr5XkjFBA2v9Q+EuJBH0CT8=;
+	s=k20260515; t=1784034447;
+	bh=EsVxz/W6sGxLsQuzAI42WMd1nMcUj94TONJ6LOFJRiY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gIvkcNKGPYOQyg0OoD2EcOKk6jp3QCaEszxn/eNJkK3mNudKcg/pidi834G2XiUhf
-	 LqcEJL5Rslc+z1j38FLMnR7WMUHvHlpnnie3RSHtwiXdylxDT24D/IDesR+4SrwZlc
-	 oKwwNKJp+/E0LX71X5TdNHw7sogC18f8/N1mXjWrrYNRqwmlsOTKIVELQW7HCWPO0k
-	 BB7IuhXe8LPagBA5crVQEsT5n1EAu9ASwq3xtpSwRb8qLOpRjjj2LM45l3wjX0zuiS
-	 pwg4tg2Yx7bamy9RkUEGbMcP4cea4OvI78w5EA0IDIMSxRknaOkIguhF1b9Tfse9pO
-	 TayF4gJAajBIg==
-Message-ID: <9e0db1c2-06ca-4dba-8fb1-552fab91cb02@kernel.org>
-Date: Tue, 14 Jul 2026 15:05:45 +0200
+	b=K6MJtEwIr80Vjjfi32H5DQ31sRLKgQosXD1UrxyuZO+SDKO/RhiT/VC7UX+MU8AxR
+	 lwgtzDgRd40mzR/RL4Z8eooQuLa05SSfBzUeIAzV4sm/M63zqJxKg4Wvw4NB0Y3G6u
+	 HMb/8jYYdcqK7RTOgPIgz5bXoodHytI+8YEFF9V3RZr7jlbKU2rUb5ifin/nl32jK/
+	 bTSK9HurDgqm0M6CjmLowA/m5DhS+R0cTJHcGQzYVu8lazBPAK7qkWJX9nb32WgFeD
+	 LJ9RNljwbDEXG6khInQe4BoU44os+kkARioKRuaLhMT+YzIw5i6i1Q5L2h5EKVmJ7a
+	 /gKp1ESYlOTOg==
+Message-ID: <4f36c923-fe3e-43da-b635-b7b752748958@kernel.org>
+Date: Tue, 14 Jul 2026 15:07:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,24 +35,26 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/9] mm/page_owner: add MR_NEVER to enum migrate_reason
- and use it for last_migrate_reason
-To: Ye Liu <ye.liu@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>
-Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+Subject: Re: [PATCH v6 3/9] mm: use enum migrate_reason instead of int for
+ migration reason parameters
+To: Ye Liu <ye.liu@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, Andrew Morton
+ <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Vlastimil Babka <vbabka@kernel.org>
+Cc: Zi Yan <ziy@nvidia.com>, Lorenzo Stoakes <ljs@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>,
  Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
  Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
  Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alistair Popple <apopple@nvidia.com>, "Liam R. Howlett"
+ <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
  Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
  linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 References: <20260714015117.78351-1-ye.liu@linux.dev>
- <20260714015117.78351-3-ye.liu@linux.dev>
+ <20260714015117.78351-4-ye.liu@linux.dev>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,46 +101,37 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260714015117.78351-3-ye.liu@linux.dev>
+In-Reply-To: <20260714015117.78351-4-ye.liu@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 7/14/26 03:51, Ye Liu wrote:
-> The last_migrate_reason field uses -1 as a sentinel value to mean "no
-> migration has happened".  Replace the four bare -1 occurrences by
-> adding a proper MR_NEVER member to enum migrate_reason, defining a
-> corresponding "never_migrated" string in the MIGRATE_REASON trace
-> macro, and updating the GDB page_owner script to use MR_NEVER instead
-> of the hardcoded -1 so that lx-dump-page-owner does not incorrectly
-> report unmigrated pages as migrated.
+> Replace all 'int reason' function parameters that carry migrate_reason
+> values with the proper 'enum migrate_reason' type.  This makes the
+> intent explicit and leverages compiler type checking.  The affected
+> subsystems are:
+> 
+>   - page_owner: __folio_set_owner_migrate_reason(),
+>                 folio_set_owner_migrate_reason()
+>   - migrate: migrate_pages(), migrate_pages_sync(),
+>              migrate_pages_batch(), migrate_folios_move(),
+>              migrate_hugetlbs(), unmap_and_move_huge_page()
+>   - hugetlb: move_hugetlb_state(), htlb_allow_alloc_fallback()
+>   - trace: mm_migrate_pages and mm_migrate_pages_start events
+> 
+> The 'short last_migrate_reason' struct field and internal helper
+> parameter in page_owner are intentionally left as 'short' since they
+> store per-page metadata where size matters.
 > 
 > No functional change.
 > 
 > Signed-off-by: Ye Liu <ye.liu@linux.dev>
 > Reviewed-by: Zi Yan <ziy@nvidia.com>
 > Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
 > ---
->  include/linux/migrate_mode.h    | 1 +
->  include/trace/events/migrate.h  | 3 ++-
->  mm/page_owner.c                 | 8 ++++----
->  scripts/gdb/linux/page_owner.py | 4 +++-
->  4 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-> index 265c4328b36a..05102d4d2490 100644
-> --- a/include/linux/migrate_mode.h
-> +++ b/include/linux/migrate_mode.h
-> @@ -25,6 +25,7 @@ enum migrate_reason {
->  	MR_LONGTERM_PIN,
->  	MR_DEMOTION,
->  	MR_DAMON,
-> +	MR_NEVER,		/* page has never been migrated */
 
-Shouldn't this be more like
-
-"MR_NONE" ?
-
-As "never" is not really a "reason" ?
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
