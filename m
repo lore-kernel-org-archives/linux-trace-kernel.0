@@ -1,63 +1,63 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4B3331EA9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 18:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E834156DA
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 18:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784053884; cv=none; b=ZbOZuslDYEdhHcFw53eIeBsIxzr//ELHYLRfutGCEXdWP0+8cE4xe8WqSvPbaSX8YU6Xs+XBWPrfeFO7pPQt51g/PrytxZHYytXmvIhWl4i0SyqIraEQot2EiKLkGUh59GjfartoLdhYIaLqPstNeKb530pneK9hOKRX47aBU0s=
+	t=1784053901; cv=none; b=Z9kqH6Fsc87rVxrF0a4aHDz9xbbiJKpqmmAaUXZDirJsZtJHZLjYHbxgGOaV3qFYOfhpnJwxTvI2VHLUtvQmqhn61zZTBcRTWAWlotaHermvOZvRyOQHA1ZppRloae1FwDbLUbwmOyebey/VLGmrem7FryucX1xI0IW4H2M3JIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784053884; c=relaxed/simple;
-	bh=fDbK7c6+B4xWjTfmF+IPyJhunYFzAjMQ8Y6rqVfMvII=;
+	s=arc-20240116; t=1784053901; c=relaxed/simple;
+	bh=OAAD1xnXyhFbGaKlMDMrY7iHeLmxhSqKZFy2RD64VyQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZY8ONC12hY+/gF7PgB/xullCnHxk5ofQlB0Hp8PwTeJQiZl0Lv7vJoCwj7YD0rNGavhOtD5h5KDP24MIzmGyDApCGrnBjttA9/9zwCJiBeg+yFFad/F5nMpWsgGqt9xcdw7hctQKHZKehiFMD/rZuFY+jOFgkSgIY6tDcMx9lCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dg5MGjBl; arc=none smtp.client-ip=209.85.160.181
+	 MIME-Version; b=APJUjYFw7wkrpdUxHWqcMwvKN875+y+WGZRo7To4ZVQt8d61B8pA7PpwK2y5lcalWyQ2dEESOfpMl3DMkPQMvOAOmrUtm7Up6mKZBEZZhivM2wNA3020BdDEYeYXtytZRLDKtaBCycfYuh3ZYevBNVan8+L8LC9bSRaOoJHFqgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SqL6QUJM; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dg5MGjBl"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c149c5722so10786801cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 11:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqL6QUJM"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-92f03daaa97so252848485a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 11:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784053881; x=1784658681; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784053898; x=1784658698; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0sIaGf5EzkbjI19/agb6agMi3UfIlX+gCu5QJjKxqwU=;
-        b=Dg5MGjBl2B7ggqi+x72dw/x92mZHUvAd33U8llzS12W3vblEwMVN0ER95oXPaaN2nP
-         LO/lGOyJLj43ohBYRLYt4EskZ8szGdO4Eui56ZxlV6+WE72mvuW939aLk4mi7vX+HaPz
-         5fTp5c4FJSG9LmlikMSRStEEWDykJkF7l38/36Pdc4gwiRMpPjaHL1YwJ7fWTRsIPOIp
-         S51RhZimapd/ESUDDU949OUIGBIqsiUrMYkExp/A8FWm0IPicEAtRqMrHsVW5wSiLP72
-         L31tOFwz8+8SnIrSBOKlbx/n/99bJwgieFOfO7dqV/jAyvf1++MFLeqd14dGK1XdRyKC
-         5w2w==
+        bh=gexNtD7XQMYc5ZpBXX88c2pnTg9Mi5LE1qEYRrtsHvs=;
+        b=SqL6QUJMJKTccqNHgRN9cLBKaFiqXeB0EegkLpkwwn9vAplf9GLFJSaxKR2YR1hHzj
+         oZSdhR4F4hCCPrUhUcSi4gj5VUcj1+RQK47VXVCvUtJycZCfMHqcI9rLoHMA1fKunS4E
+         RF+aAibmDQpVRwCSHN4VBzqVMBmm0E9s/Z+5NkPC7q+cZcAvBQ6A2AArW4e3lelA6O0m
+         SFzTIi/VIgqB6GuE/DX8S+KyARCnH0IooSluBovU//iS/ixot0A9sbXcgEQm/OyUuTEB
+         SaFt7bPBGIi3EycNJtYTpwsFZmG6NngWZ4eBg+K8B0Yqupse/wx/nU2tFuzoswAE30Q7
+         mgGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784053881; x=1784658681;
+        d=1e100.net; s=20251104; t=1784053898; x=1784658698;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0sIaGf5EzkbjI19/agb6agMi3UfIlX+gCu5QJjKxqwU=;
-        b=LAYr5UDdK6YTUy1reEiK02V7ZApCJpqrYEH4I3yHDuPIi08K55brFnM0LgPBMbdIv2
-         TNOqrEbHXFDAY9+rTUxWFmpmYqi9vERftvY0u55OsiXKr+cM3HZbVTYrHBOXQEhMTENR
-         oy65X2HR6tfUNuSFmrYF5z8LZ6BP8HaNrMdrzdhBoVht6xD3gspyMOulhNQi8c7xU2Ca
-         Rq37oeEa8VgcpB0wFfNFncFYaqd8wCo9AH+pChWpdvep0eozumzFXGth03/1c4SDVPH+
-         0ZDhQY+Mmkegdq6D2bnpowJ0Px+tzs60lrvYD1rj5Bw/EQMU4LWkzPQd0K9Fw35okRKO
-         10RA==
-X-Forwarded-Encrypted: i=1; AHgh+RpE4U/sBvUbDBwq/dKlJlW8Yhl4yuqcGoOnTbtraSytWjnMntA5y1uy8k1emKdOir638SbC7NmJ9Ymq0rBAEoVWdxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlbhUQSDtD0w6DdCYlF9ss07ilIWpy2F+yeEMuJATYe4ae/48k
-	Rb0wd8n79qKY8HkySVY7A+RGWxc1uSBXvxmZNpWID5FGzne8QBYKC5Ij
-X-Gm-Gg: AfdE7clvlsnLfUzRi3zvgzmLeUHQxXmi75KfnmHsMlDoArNLGA3L3z0Alf7E5p1MkHU
-	uLx+cwYj2r5E+DW9d880zvRRZ63ElyE5kLHGMZljod3kLsb9UtfBqsnE6tNkKNp5xLUMFG3+SAR
-	wBm0BUU0kQhIILC+Sb+dgrD5YHEfzoIALoqaKAYt0+Tj5iVeeq/up/FSBETcStEqYav1PTzeYmP
-	GUEgp2S7h3Ty4zXDnowEZuBsJXmQv9DhRCzXvPnDOYFeYjr4KyoLDKNQ6+qgdc76UoQSgw8TS6I
-	FRcTEtHWYOZZhRJXWsh/jmn8ute7pKUORsgi4+XS6hw8RkXxAaOlS3m5XIglg6GrT8s2GgdEu98
-	eM9DxA7ef52T5ohrFTIcYcTfk6wjkhNtUfOcfQPUCYnWis7bSbKiKytkG6mO73o0S4cvl0XHtjh
-	PYvIq+LkhmLyt7vnfb2Rx/c5gIxC2S5aMnZ0WmWI3eM5LYReNvrls=
-X-Received: by 2002:a05:622a:306:b0:51c:f64:bc39 with SMTP id d75a77b69052e-51cbf741118mr134331951cf.3.1784053880463;
-        Tue, 14 Jul 2026 11:31:20 -0700 (PDT)
+        bh=gexNtD7XQMYc5ZpBXX88c2pnTg9Mi5LE1qEYRrtsHvs=;
+        b=jJ2pGoM6+8Rj+por6lHpI3NMuDFQpiK3C0oEVNodK2nOdUNjDt7KFj0ioIZFW7Dr6S
+         mZQjbp5Rm/ncXedXWWESHxTyr+EfXwzBTbv+yMwCK1da7kEu5OrxhzgLNbv7iLV+x/cl
+         R/Mi6JoIL2uP/q+ixhCCtDDH0fYetMFNRoJZNWQTmn4iFjmSrq5H562XvgSAtw7HauAf
+         HgT270DRHFPxvenl22bXKiSCqVORy8+fPge1TgN5DuUiXWS+VX7GgYcXzqgRXJArmeAv
+         bRejoGr8VUAcaMUygbeG3iXK7CytXdNtOk00tuOiGQdX1O540PYYYIYkOlwiwI0czZor
+         3OUA==
+X-Forwarded-Encrypted: i=1; AHgh+RrAF7qwFdeYNiM5GwiYpp9iSNx96XS2RpnRv3kw6Lg0sESkPfTB8klBmI3wZ6qSXqGlP1s/PLLdDWIbikv9uzQyUQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0Z3dh9Rcod/ZIqUZU2n6pqwSN2HLvieiIpQ+NjDdKuGrWRxn9
+	JInWtHRHQldZWmD3eecXErmWfWI0dFPaIL3NQzP603ayB4Oz0LQjgiGu
+X-Gm-Gg: AfdE7cnNXYa1H+REclN//J74KsE7dVftW/Ng2AZlAzLBmQnoU0J5cL2lUcRhyGp84Le
+	Jboqi2/FRkGUttcfJuQ0KqoqDYYujnltWKgrLYWB8jtlIeJwRCI3JzN/h0/j8DS9RFE42PjtWm7
+	xbHSoASV9KGW7NBmaSnfu3G7IZUbHuWz02b0wHxCHLt+Y4pje1JCbtKj66ALDDkwnYTocEVf6qO
+	eKlrNplaF0rRhK98mCebksc1FzCAQip9Fl5Buzluig3tfFDXbcujsGVPmYiSK57n0L1oSJDUl2B
+	h3/TMfdy3IDsJpizjCIm0GNoHaxaOb+h8KmxJpYutCJBG/SFdqjgKx7est4oPWc5nKv3EWhr9km
+	z9f8lXKQeB6K1JVAT83V/rzbYEiZp28xvkEp+g+5EtF0dD/kvojj7Veeqyq/q5trT5PWGbJMxkz
+	iK4D/Yu8Z1M4EkSpL+5MVU+d1Bm+P2nRYA01mFgOZ141pY3Bqa6HQ9LLR5TxTcBw==
+X-Received: by 2002:a05:620a:40d6:b0:930:927f:f81f with SMTP id af79cd13be357-930927ff9b4mr130636785a.91.1784053897781;
+        Tue, 14 Jul 2026 11:31:37 -0700 (PDT)
 Received: from localhost ([48.45.163.146])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51caae24d04sm117196081cf.18.2026.07.14.11.31.17
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5bb3542sm1473718285a.20.2026.07.14.11.31.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 11:31:19 -0700 (PDT)
+        Tue, 14 Jul 2026 11:31:37 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -82,9 +82,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH 05/13] mm/kwatch: add watch expression parser and dereference engine
-Date: Wed, 15 Jul 2026 02:31:07 +0800
-Message-ID: <20260714183107.12463-1-wangjinchao600@gmail.com>
+Subject: [RFC PATCH 06/13] mm/kwatch: add lockless per-task context pool
+Date: Wed, 15 Jul 2026 02:31:29 +0800
+Message-ID: <20260714183129.12542-1-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260714182243.10687-1-wangjinchao600@gmail.com>
 References: <20260714182243.10687-1-wangjinchao600@gmail.com>
@@ -96,335 +96,144 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-KWatch watches a memory address that is only known once the target
-function runs, e.g. "argument 1, plus 8, dereferenced once". Add the
-two halves of that mechanism:
+A task that enters the watched function needs somewhere to keep its
+window state (nesting depth, owned watchpoint, config epoch). The
+lookup runs in kprobe and NMI-like contexts, so it must not allocate
+or take locks.
 
-- kwatch_deref_parse() turns a textual watch expression
-  {base}[+-off][->[+-]off]... into a kwatch_config: a base anchor
-  (arg1..arg6, stack, an absolute address or - for built-in KWatch -
-  a symbol name) plus a static offset chain.
-
-- kwatch_deref_resolve() replays the chain at probe time against
-  pt_regs. Every pointer load goes through get_kernel_nofault() and
-  the final address must be a kernel address.
-
-Also add the internal kwatch.h header shared by the rest of the
-series. Nothing is built yet; the Kconfig entry comes with the
-control plane.
+Use a preallocated open-addressing array hashed by task_struct
+pointer. Slots are claimed with cmpxchg() and released with
+smp_store_release(); lookup is a read-only probe sequence. The pool
+size (max_concurrency) bounds how many tasks can be inside watch
+windows concurrently; excess tasks are simply not tracked.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kwatch/Makefile |   3 +
- mm/kwatch/deref.c  | 174 +++++++++++++++++++++++++++++++++++++++++++++
- mm/kwatch/kwatch.h | 107 ++++++++++++++++++++++++++++
- 3 files changed, 284 insertions(+)
- create mode 100644 mm/kwatch/Makefile
- create mode 100644 mm/kwatch/deref.c
- create mode 100644 mm/kwatch/kwatch.h
+ mm/kwatch/Makefile   |   2 +-
+ mm/kwatch/task_ctx.c | 105 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 1 deletion(-)
+ create mode 100644 mm/kwatch/task_ctx.c
 
 diff --git a/mm/kwatch/Makefile b/mm/kwatch/Makefile
-new file mode 100644
-index 000000000000..69c21ae62123
---- /dev/null
+index 69c21ae62123..cc6574df0d68 100644
+--- a/mm/kwatch/Makefile
 +++ b/mm/kwatch/Makefile
-@@ -0,0 +1,3 @@
-+obj-$(CONFIG_KWATCH) += kwatch.o
-+
-+kwatch-y := deref.o
-diff --git a/mm/kwatch/deref.c b/mm/kwatch/deref.c
+@@ -1,3 +1,3 @@
+ obj-$(CONFIG_KWATCH) += kwatch.o
+ 
+-kwatch-y := deref.o
++kwatch-y := deref.o task_ctx.o
+diff --git a/mm/kwatch/task_ctx.c b/mm/kwatch/task_ctx.c
 new file mode 100644
-index 000000000000..a93c76139e7c
+index 000000000000..f8e582f0dcfe
 --- /dev/null
-+++ b/mm/kwatch/deref.c
-@@ -0,0 +1,174 @@
++++ b/mm/kwatch/task_ctx.c
+@@ -0,0 +1,105 @@
 +// SPDX-License-Identifier: GPL-2.0
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/ptrace.h>
-+#include <linux/sched.h>
-+#include <linux/uaccess.h>
-+#include <linux/kallsyms.h>
-+#include <linux/string.h>
 +#include <linux/slab.h>
-+
++#include <linux/hash.h>
++#include <linux/sched.h>
++#include <linux/log2.h>
 +#include "kwatch.h"
 +
-+int kwatch_deref_resolve(const struct kwatch_config *cfg, struct pt_regs *regs,
-+			 unsigned long *out_addr, u16 *out_len)
++static u16 kwatch_ctx_pool_size;
++static u16 kwatch_ctx_pool_mask;
++
++static struct kwatch_tsk_ctx *kwatch_ctx_pool;
++
++int kwatch_tsk_ctx_prealloc(u16 max_concurrency)
 +{
-+	unsigned long addr = 0;
-+	int i;
++	if (!max_concurrency)
++		max_concurrency = 256;
 +
-+	/* 1. Resolve the Base Anchor */
-+	if (cfg->base == KWATCH_BASE_STACK) {
-+		addr = kernel_stack_pointer(regs);
-+		if (unlikely(!addr))
-+			return -EINVAL;
-+	} else if (cfg->base >= KWATCH_BASE_ARG1 &&
-+		   cfg->base <= KWATCH_BASE_ARG6) {
-+		int arg_idx = cfg->base - KWATCH_BASE_ARG1;
++	kwatch_ctx_pool_size = roundup_pow_of_two(max_concurrency);
++	kwatch_ctx_pool_mask = kwatch_ctx_pool_size - 1;
 +
-+		addr = regs_get_kernel_argument(regs, arg_idx);
-+	} else if (cfg->base == KWATCH_BASE_ABS_ADDR ||
-+		   cfg->base == KWATCH_BASE_GLOBAL_SYM) {
-+		/* Zero-latency load of the static symbol location */
-+		addr = cfg->sym_addr;
-+	} else {
-+		return -EINVAL;
++	if (unlikely(!kwatch_ctx_pool)) {
++		kwatch_ctx_pool = kcalloc(kwatch_ctx_pool_size,
++					  sizeof(struct kwatch_tsk_ctx),
++					  GFP_KERNEL);
++		if (!kwatch_ctx_pool)
++			return -ENOMEM;
 +	}
-+
-+	/* 2. The Pointer-Chasing FSM */
-+	for (i = 0; i < cfg->offset_count; i++) {
-+		addr += cfg->offsets[i];
-+
-+		if (i < cfg->offset_count - 1) {
-+			unsigned long next_addr;
-+
-+			/* Dynamically read the pointer contents at runtime */
-+			if (get_kernel_nofault(next_addr, (unsigned long *)addr))
-+				return -EFAULT;
-+
-+			addr = next_addr;
-+		}
-+	}
-+
-+	/* Enforce strict Kernel-Space boundary */
-+	if (unlikely(addr < TASK_SIZE_MAX))
-+		return -EINVAL;
-+
-+	*out_addr = addr;
-+	*out_len = cfg->watch_len;
 +	return 0;
 +}
 +
-+int kwatch_deref_parse(struct kwatch_config *cfg, const char *watch_expr)
++struct kwatch_tsk_ctx *kwatch_tsk_ctx_get(bool can_alloc)
 +{
-+	char *p, *sep, *dup_expr;
-+	char type = '\0';
-+	bool is_deref = false;
-+	int ret = 0;
++	int start_idx, i, idx;
++	struct task_struct *t;
 +
-+	dup_expr = kstrdup(watch_expr, GFP_KERNEL);
-+	if (!dup_expr)
-+		return -ENOMEM;
++	if (unlikely(!kwatch_ctx_pool))
++		return NULL;
 +
-+	cfg->offset_count = 1;
-+	cfg->offsets[0] = 0;
++	start_idx = hash_ptr(current, ilog2(kwatch_ctx_pool_size));
 +
-+	/* 1. Isolate and Resolve Base Anchor */
-+	p = dup_expr;
-+	sep = NULL;
-+	while (*p) {
-+		if (*p == '+') {
-+			sep = p;
-+			type = '+';
-+			break;
-+		}
-+		if (*p == '-') {
-+			sep = p;
-+			type = '-';
-+			if (p[1] == '>')
-+				is_deref = true;
-+			break;
-+		}
-+		p++;
++	for (i = 0; i < kwatch_ctx_pool_size; i++) {
++		idx = (start_idx + i) & kwatch_ctx_pool_mask;
++		t = READ_ONCE(kwatch_ctx_pool[idx].task);
++		if (t == current)
++			return &kwatch_ctx_pool[idx];
 +	}
 +
-+	if (type)
-+		*sep = '\0';
++	if (!can_alloc)
++		return NULL;
 +
-+	if (!strcmp(dup_expr, "stack")) {
-+		cfg->base = KWATCH_BASE_STACK;
-+	} else if (!strncmp(dup_expr, "arg", 3) && strlen(dup_expr) == 4) {
-+		int arg_num;
-+
-+		if (kstrtoint(dup_expr + 3, 10, &arg_num) || arg_num < 1 ||
-+		    arg_num > 6) {
-+			ret = -EINVAL;
-+			goto out;
++	for (i = 0; i < kwatch_ctx_pool_size; i++) {
++		idx = (start_idx + i) & kwatch_ctx_pool_mask;
++		t = READ_ONCE(kwatch_ctx_pool[idx].task);
++		if (!t) {
++			if (!cmpxchg(&kwatch_ctx_pool[idx].task, NULL, current))
++				return &kwatch_ctx_pool[idx];
 +		}
-+		cfg->base = KWATCH_BASE_ARG1 + (arg_num - 1);
-+	} else if (kstrtoul(dup_expr, 0, &cfg->sym_addr) == 0) {
-+		cfg->base = KWATCH_BASE_ABS_ADDR;
-+	} else {
-+#if IS_BUILTIN(CONFIG_KWATCH)
-+		cfg->sym_addr = kallsyms_lookup_name(dup_expr);
-+		if (!cfg->sym_addr) {
-+			pr_err("Failed to resolve symbol name: %s\n", dup_expr);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+		cfg->base = KWATCH_BASE_GLOBAL_SYM;
-+#else
-+		pr_err("cannot resolve symbol %s when built as a module, use a hex address\n",
-+		       dup_expr);
-+		ret = -EINVAL;
-+		goto out;
-+#endif
 +	}
 +
-+	if (!type)
-+		goto out;
-+
-+	/* 2. Resolve Base Offset (if + or - exists) */
-+	if (!is_deref) {
-+		char *next;
-+
-+		*sep = type; /* Restore the '+' or '-' for kstrtol */
-+		next = strstr(sep, "->");
-+		if (next)
-+			*next = '\0';
-+
-+		if (kstrtol(sep, 0, &cfg->offsets[0])) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		p = next ? next + 2 : NULL;
-+	} else {
-+		/* Jump directly to the first dereference after '->' */
-+		p = sep + 2;
-+	}
-+
-+	/* 3. Resolve Dereference Chain */
-+	while (p) {
-+		char *next;
-+
-+		if (cfg->offset_count >= MAX_DEREF_CHAIN) {
-+			ret = -E2BIG;
-+			goto out;
-+		}
-+
-+		next = strstr(p, "->");
-+		if (next)
-+			*next = '\0';
-+
-+		if (kstrtol(p, 0, &cfg->offsets[cfg->offset_count++])) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		p = next ? next + 2 : NULL;
-+	}
-+
-+out:
-+	kfree(dup_expr);
-+	return ret;
++	return NULL;
 +}
-diff --git a/mm/kwatch/kwatch.h b/mm/kwatch/kwatch.h
-new file mode 100644
-index 000000000000..e1ac8ae312f6
---- /dev/null
-+++ b/mm/kwatch/kwatch.h
-@@ -0,0 +1,107 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _MM_KWATCH_H
-+#define _MM_KWATCH_H
 +
-+#include <linux/fprobe.h>
-+#include <linux/kprobes.h>
-+#include <linux/perf_event.h>
-+#include <linux/sched.h>
-+#include <linux/types.h>
-+#include <linux/compiler.h>
-+#include <linux/atomic.h>
++void kwatch_tsk_ctx_reset(struct kwatch_tsk_ctx *ctx, u32 new_epoch)
++{
++	struct kwatch_watchpoint *wp = xchg(&ctx->wp, NULL);
 +
-+#define MAX_CONFIG_STR_LEN 512
-+#define MAX_DEREF_CHAIN 4
++	if (wp)
++		kwatch_hwbp_put(wp);
++	ctx->depth = 0;
++	ctx->epoch = new_epoch;
++}
 +
-+struct kwatch_watchpoint;
++void kwatch_tsk_ctx_put(void)
++{
++	struct kwatch_tsk_ctx *ctx = kwatch_tsk_ctx_get(false);
 +
-+struct kwatch_tsk_ctx {
-+	struct task_struct *task;
-+	struct kwatch_watchpoint *wp;
-+	u16 depth;
-+	u32 epoch;
-+};
++	if (unlikely(!ctx))
++		return;
 +
-+struct kwatch_watchpoint {
-+	struct perf_event *__percpu *event;
-+	call_single_data_t __percpu *csd_arm;
-+	call_single_data_t __percpu *csd_disarm;
-+	struct perf_event_attr attr;
-+	atomic_t in_use; // multi-consumer safe get/put
-+	struct list_head list; // for cpu online and offline
++	kwatch_tsk_ctx_reset(ctx, 0);
 +
-+	struct task_struct *arm_tsk;
-+	atomic_t pending_ipis;
-+	atomic_t refcount;
-+	bool teardown;
-+};
++	/* Pairs with READ_ONCE() in kwatch_tsk_ctx_get() */
++	smp_store_release(&ctx->task, NULL);
++}
 +
-+enum kwatch_access_type {
-+	KWATCH_ACCESS_W,
-+	KWATCH_ACCESS_R,
-+	KWATCH_ACCESS_RW,
-+	KWATCH_ACCESS_X,
-+};
++void kwatch_tsk_ctx_release_wps(void)
++{
++	int i;
 +
-+enum kwatch_base_type {
-+	KWATCH_BASE_STACK,
-+	KWATCH_BASE_ABS_ADDR,
-+	KWATCH_BASE_GLOBAL_SYM,
-+	KWATCH_BASE_ARG1,
-+	KWATCH_BASE_ARG2,
-+	KWATCH_BASE_ARG3,
-+	KWATCH_BASE_ARG4,
-+	KWATCH_BASE_ARG5,
-+	KWATCH_BASE_ARG6,
-+};
++	if (!kwatch_ctx_pool)
++		return;
 +
-+struct kwatch_config {
-+	u16 max_watch;
-+	char func_name[KSYM_NAME_LEN];
-+	u16 func_offset;
-+	u16 depth;
-+	u16 duration;
-+	enum kwatch_access_type access_type;
-+	u16 watch_len;
++	for (i = 0; i < kwatch_ctx_pool_size; i++) {
++		struct kwatch_watchpoint *wp = xchg(&kwatch_ctx_pool[i].wp,
++						    NULL);
++		if (wp)
++			kwatch_hwbp_put(wp);
++	}
++}
 +
-+	/* Unified Deref Engine State */
-+	enum kwatch_base_type base;
-+	char watch_expr[MAX_CONFIG_STR_LEN];
-+	unsigned long sym_addr;
-+	long offsets[MAX_DEREF_CHAIN];
-+	u8 offset_count;
-+	u16 max_concurrency;
-+};
-+
-+int kwatch_hwbp_prealloc(u16 max_watch, enum kwatch_access_type access_type);
-+void kwatch_hwbp_free(void);
-+int kwatch_hwbp_get(struct kwatch_watchpoint **out_wp);
-+void kwatch_hwbp_arm(struct kwatch_watchpoint *wp, unsigned long addr, u16 len);
-+int kwatch_hwbp_put(struct kwatch_watchpoint *wp);
-+
-+int kwatch_probe_start(struct kwatch_config *cfg);
-+void kwatch_probe_stop(void);
-+void kwatch_probe_mute(bool mute);
-+bool kwatch_probe_validate_hit(struct pt_regs *regs, struct task_struct *arm_tsk);
-+unsigned long kwatch_probe_nmi_rejected(void);
-+
-+int kwatch_tsk_ctx_prealloc(u16 max_concurrency);
-+struct kwatch_tsk_ctx *kwatch_tsk_ctx_get(bool can_alloc);
-+void kwatch_tsk_ctx_put(void);
-+void kwatch_tsk_ctx_reset(struct kwatch_tsk_ctx *ctx, u32 new_epoch);
-+void kwatch_tsk_ctx_release_wps(void);
-+void kwatch_tsk_ctx_free(void);
-+
-+void kwatch_global_anchor(unsigned long duration_sec);
-+int kwatch_anchor_start(u16 duration);
-+void kwatch_anchor_stop(void);
-+void kwatch_anchor_cancel_work(void);
-+bool kwatch_anchor_has_expired(void);
-+void kwatch_anchor_clear_expired(void);
-+void kwatch_auto_stop(void);
-+
-+int kwatch_deref_resolve(const struct kwatch_config *cfg, struct pt_regs *regs,
-+			 unsigned long *out_addr, u16 *out_len);
-+int kwatch_deref_parse(struct kwatch_config *cfg, const char *watch_expr);
-+
-+#endif /* _MM_KWATCH_H */
++void kwatch_tsk_ctx_free(void)
++{
++	kfree(kwatch_ctx_pool);
++	kwatch_ctx_pool = NULL;
++}
 -- 
 2.53.0
 
