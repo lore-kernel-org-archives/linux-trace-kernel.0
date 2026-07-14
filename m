@@ -1,30 +1,33 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F81379EC6;
-	Tue, 14 Jul 2026 11:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1BA46AF0F;
+	Tue, 14 Jul 2026 13:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784030247; cv=none; b=MgJUy1sev0oWGy7Ah8E5RdJIwZ90Lz+QAaKNXgQAtXeZ1EMxtJhYQxdRsFezB+1zoMnk6sayhpmRFx8c9dXh00m/YjFPs3PY8zJAEBCQiksflE9FILVxGuuMbNr9YHWOSAqlcArbTStvIvwMWx4qcpKlZxXj62cUwoz8GKtVxks=
+	t=1784034351; cv=none; b=oQOQZKkFDUU/IoaeHHlI3+tzqYu7iXXTfOWD+y294VtNXqBM9CMyPVT+Ub4FU2jgKQUK0sUtcJIWDwJCg4ycfy6tZeAU0c/c+mBAsOtCS7hoiOtVVt0zx4s7ZGDnz0eAFD6W2T0nXPbQ96U9V+ozWe5lDqLfiwhvhLBcW1Au7tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784030247; c=relaxed/simple;
-	bh=oFKBju0M5pJzSC+zTDI6PbjVmc0ZLrZJ8dP7jCO3SeQ=;
+	s=arc-20240116; t=1784034351; c=relaxed/simple;
+	bh=l+oxZUVldmaoSMftLI/fn8ijL5iaCMvuTIy9knXQuww=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TB1q+UAdB7LMWFzDV5QMMxf08WLJbePqmTt6qT6bpj7lAAAP0/gFn9M/CnI2FN4iBV5JLRRV0ep4HomJm2+k76UJAIBz48tGuGUQNGmWPS8rU5vJKZ1kT4wS8hmZlFuMTcLgQ1dS+UhRf0RHrjQTbpyBJL+oZQpjNksTNgwPVWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gzyTH0wjDzKHMRg;
-	Tue, 14 Jul 2026 19:56:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id BEB6C4057F;
-	Tue, 14 Jul 2026 19:57:21 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgAn8aEgJFZqn3HFBA--.16095S2;
-	Tue, 14 Jul 2026 19:57:21 +0800 (CST)
-Message-ID: <12298259-cca6-4244-bacb-ea07958e19b7@huaweicloud.com>
-Date: Tue, 14 Jul 2026 19:57:20 +0800
+	 In-Reply-To:Content-Type; b=OY86m/3aZTTEXvHGq+RRCqYYZf9/n+HM+ql5HShoNL0BXITN9om+0zW7lXtUrqsMWNaoelJP8buFU03lwI8Yw/W3iAFE3cpIbEM+uCWYREk2CT66rEj/54S2EaF0UiGVFXk84tC3o4ISWnQXTqH4ciSjaw8TGBckYEumkqHUm2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIvkcNKG; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIvkcNKG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A6C31F000E9;
+	Tue, 14 Jul 2026 13:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784034350;
+	bh=s5H03+CpfRIUyjXLbOlyOr5XkjFBA2v9Q+EuJBH0CT8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=gIvkcNKGPYOQyg0OoD2EcOKk6jp3QCaEszxn/eNJkK3mNudKcg/pidi834G2XiUhf
+	 LqcEJL5Rslc+z1j38FLMnR7WMUHvHlpnnie3RSHtwiXdylxDT24D/IDesR+4SrwZlc
+	 oKwwNKJp+/E0LX71X5TdNHw7sogC18f8/N1mXjWrrYNRqwmlsOTKIVELQW7HCWPO0k
+	 BB7IuhXe8LPagBA5crVQEsT5n1EAu9ASwq3xtpSwRb8qLOpRjjj2LM45l3wjX0zuiS
+	 pwg4tg2Yx7bamy9RkUEGbMcP4cea4OvI78w5EA0IDIMSxRknaOkIguhF1b9Tfse9pO
+	 TayF4gJAajBIg==
+Message-ID: <9e0db1c2-06ca-4dba-8fb1-552fab91cb02@kernel.org>
+Date: Tue, 14 Jul 2026 15:05:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -32,64 +35,112 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Add mutex to trace_parser to fix concurrent
- write races
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH v6 2/9] mm/page_owner: add MR_NEVER to enum migrate_reason
+ and use it for last_migrate_reason
+To: Ye Liu <ye.liu@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>
+Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260713134640.708323-1-wutengda@huaweicloud.com>
- <20260713153624.48fc4be4@robin>
- <ae69656e-fc50-4049-94f9-d460c2e1d5b8@huaweicloud.com>
- <20260713221318.63f741ad@gandalf.local.home>
- <059bee5e-6852-4afb-a993-dd5ddcd86d3e@huaweicloud.com>
- <20260714072440.4ff92b33@gandalf.local.home>
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260714015117.78351-1-ye.liu@linux.dev>
+ <20260714015117.78351-3-ye.liu@linux.dev>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260714072440.4ff92b33@gandalf.local.home>
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260714015117.78351-3-ye.liu@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgAn8aEgJFZqn3HFBA--.16095S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrXry5CF1xAF45tr45uryDWrg_yoWxXwc_uw
-	4F9a97G3WkCr45AFsxtr17XrZ8J3yDWrWUu3sYgrZIya43K345KF1kCrn3Aa1xtrZ0kr9a
-	gryjvr15J34xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbz8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-
-
-On 2026/7/14 19:24, Steven Rostedt wrote:
-> On Tue, 14 Jul 2026 18:16:26 +0800
-> Tengda Wu <wutengda@huaweicloud.com> wrote:
+On 7/14/26 03:51, Ye Liu wrote:
+> The last_migrate_reason field uses -1 as a sentinel value to mean "no
+> migration has happened".  Replace the four bare -1 occurrences by
+> adding a proper MR_NEVER member to enum migrate_reason, defining a
+> corresponding "never_migrated" string in the MIGRATE_REASON trace
+> macro, and updating the GDB page_owner script to use MR_NEVER instead
+> of the hardcoded -1 so that lx-dump-page-owner does not incorrectly
+> report unmigrated pages as migrated.
 > 
->> _Approach 3_: As you suggested earlier, build on v1 but add proper lockdep
->> assertions to enforce that the parser lock is held by all callers,
->> regardless of how the parser is used.
->>
->> Approach 3 seems cleaner and more straightforward.
+> No functional change.
 > 
-> I thought about having a global lock as writes to tracefs are very much a
-> slow path, but I think Approach 3 is probably the most "correct" fix.
+> Signed-off-by: Ye Liu <ye.liu@linux.dev>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+> ---
+>  include/linux/migrate_mode.h    | 1 +
+>  include/trace/events/migrate.h  | 3 ++-
+>  mm/page_owner.c                 | 8 ++++----
+>  scripts/gdb/linux/page_owner.py | 4 +++-
+>  4 files changed, 10 insertions(+), 6 deletions(-)
 > 
-> Yeah, let's go with that.
-> 
-> Thanks,
-> 
-> -- Steve
+> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
+> index 265c4328b36a..05102d4d2490 100644
+> --- a/include/linux/migrate_mode.h
+> +++ b/include/linux/migrate_mode.h
+> @@ -25,6 +25,7 @@ enum migrate_reason {
+>  	MR_LONGTERM_PIN,
+>  	MR_DEMOTION,
+>  	MR_DAMON,
+> +	MR_NEVER,		/* page has never been migrated */
 
-Thanks, Steve. I'll spin a v2 with the lockdep assertions added.
+Shouldn't this be more like
 
-Tengda
+"MR_NONE" ?
 
+As "never" is not really a "reason" ?
+
+-- 
+Cheers,
+
+David
