@@ -1,43 +1,39 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53EB40D587;
-	Tue, 14 Jul 2026 21:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB123377A97;
+	Tue, 14 Jul 2026 21:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784063693; cv=none; b=AKJG34vgbXjGTz+Dz1oBXd5ETYpxegnOnIYRzRMaF/miAmp+zG0ueK6lzfVBRWY5dSrF8TJ/Vr0TNJwFYJnqbV+Ul47PDXCV/GWFo26f/iXC03qh4d5xb3ufLGe3HKO5QhBopYuqpZZIoMxrAnKBjxaYabM9SYKSGKh0vvrtEhs=
+	t=1784066037; cv=none; b=joPZZ0jPMRl6IN2KB6ZQttYHObl+txs9In7KpidwMuGZX8GOgPY38lr85/mIgj/J84M3kgvjoy2SzHLIwjvmTQJ5/faQg7rn3NCrgd77a5wIyx/eqCrXQzTZdLJbtsivg677gXNUzASpmSb+eoTIlVcGt4+7vOUpxKoCVlIfn6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784063693; c=relaxed/simple;
-	bh=YpFOvdHNbooxq1qa2KJjA9MM8vmvHHa1fIOhAJ9X2D4=;
+	s=arc-20240116; t=1784066037; c=relaxed/simple;
+	bh=x2Gh8QmklIM9C4aWufS1h0NEo7ZJy5Y4fu+SOBaQUzE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KDEniRvONO5jKyOIoPAC1xhegMSqpUG/plTLVI8W5hNkLvAeXiQuABvcwWORSKbz7vilTtPYq1mJFC7spTs+dV91oPOcH4ArYRiDXsuwU4OhBPnFhQ65QXJu61+EyoWlMddVSMgslycjkrFslulVNH3ZSew7Jjb32CVEaumKM7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=AByN9mLMf9AwHAYmtElo9siopRPsxRvVB5R9RP+f2GutLATG7GBjahPHlnNCuCmMW70vvs+ZwKRQ55FmVb/C0DVQwinATqDwnDODfVdEtcIWLJonN5iEeppO+mvf+nsoAwCBb+FAAoVFztgKOT+xUWZww8oJVYSBRK47LBR0GVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 5AA0440522;
-	Tue, 14 Jul 2026 21:14:39 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 15C226000D;
-	Tue, 14 Jul 2026 21:14:35 +0000 (UTC)
-Date: Tue, 14 Jul 2026 17:14:38 -0400
+Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 22BA1C02B1;
+	Tue, 14 Jul 2026 21:53:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 50B3B8000E;
+	Tue, 14 Jul 2026 21:53:51 +0000 (UTC)
+Date: Tue, 14 Jul 2026 17:53:55 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
- <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter
- Anvin" <hpa@zytor.com>, x86@kernel.org, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [RFC PATCH 08/13] mm/kwatch: add hardware breakpoint backend
-Message-ID: <20260714171438.226faf7b@gandalf.local.home>
-In-Reply-To: <20260714183206.12688-1-wangjinchao600@gmail.com>
-References: <20260714182243.10687-1-wangjinchao600@gmail.com>
-	<20260714183206.12688-1-wangjinchao600@gmail.com>
+To: Li Pengfei <ljdlns1987@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ lipengfei28@xiaomi.com, zhangbo56@xiaomi.com
+Subject: Re: [RFC PATCH v4 2/3] trace: integrate stackmap into ftrace stack
+ recording path
+Message-ID: <20260714175355.1951b317@gandalf.local.home>
+In-Reply-To: <20260616064119.438063-3-lipengfei28@xiaomi.com>
+References: <20260616064119.438063-1-lipengfei28@xiaomi.com>
+	<20260616064119.438063-3-lipengfei28@xiaomi.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,94 +43,139 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 15C226000D
-X-Stat-Signature: ofukrydpoaufx6f8q8s6anx3wj8ecikd
-X-Rspamd-Server: rspamout07
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 50B3B8000E
+X-Stat-Signature: bw3tchexy4hy9p6wtxur8cyu9p5w985i
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/+jUG/wma6bXPaXNDDF4uPI966CzmydeA=
-X-HE-Tag: 1784063675-113700
-X-HE-Meta: U2FsdGVkX1+BwHjks+RcUuzIPHfbSeUChRislj0v1kLLaY98NAKF6cdZylAtqcI59w4fbE1UaMDFXzng8xvt0r2W54B6xPwD9aR33+AJde3xxYHmB3Xqy97uhwKNAjrEFHbwMYr8N+8lsjMIeaRezBQgyf4EPvq0NQyxCRRifw46VeA3PQuB85l2wH4sIawolc51TlXnBbIf/t6zg2PpDxpQ0xONaCpVs5SuoR/zHifYoqD66Sr0/ekUURTsxJf3+xmOBWatOhJM00GlJgkk1ANhdqTl8Jgjzp1LQGeDovN3/JPet+YhwAnTHMWlMR4NDTHuDFZrVnyepQjaQfBPmFF0Dc8n1a0i
+X-Session-ID: U2FsdGVkX1/5R3tem202lJ/8uS3/VH8+Yl0L4TJiYuY=
+X-HE-Tag: 1784066031-212943
+X-HE-Meta: U2FsdGVkX1+y8UQMoheRgHjVtTaIzkHJqlOnFcEhwu8Xdu6uo3Z4DRZg53S996Q1b1m5Kcv5eHW8XL3iP6BwL1ne96U4hB4CDGtA6JotS0eSqCRUyfe8z+7rBH/ObcuaVvj+nxx1IDHwqvT2TFQsv9qW1LhnGSY6LvpfCceNDVq2rtlICWB2opAc6Qsp3ZKU5KG543vtzECxuOMo9hGj5f25k9n6w2zl11jpu+o/DqIhCdLvQY1AgTdRHx5vgoXe6NMNWWVyZIxygHaR+ctL2/0qmsMRFPQKAfM9cNZRJWGrd7l6HnfTIcIngsL+l37DOBL7zqMQNW/ajVY3rpOLN3LRhLJ5Uj2m
 
-On Wed, 15 Jul 2026 02:32:06 +0800
-Jinchao Wang <wangjinchao600@gmail.com> wrote:
+On Tue, 16 Jun 2026 14:41:18 +0800
+Li Pengfei <ljdlns1987@gmail.com> wrote:
 
-> --- /dev/null
-> +++ b/include/trace/events/kwatch.h
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM kwatch
+>  int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
+>  {
+>  	switch (mask) {
+> @@ -3993,6 +4091,33 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
+>  	if (!!(tr->trace_flags & mask) == !!enabled)
+>  		return 0;
+>  
+> +#ifdef CONFIG_FTRACE_STACKMAP
+> +	/*
+> +	 * STACKMAP is intentionally global-instance-only: the dedup map,
+> +	 * its tracefs files (stack_map / stack_map_stat / stack_map_bin)
+> +	 * and the lifetime/reset semantics are tied to the global trace
+> +	 * array. options/stackmap is hidden on secondary instances via
+> +	 * TOP_LEVEL_TRACE_FLAGS, but writes still reach set_tracer_flag()
+> +	 * through the aggregate trace_options file. Reject the enable on
+> +	 * a secondary instance so it cannot be silently accepted and then
+> +	 * become a no-op in the hot path (where tr->stackmap is NULL and
+> +	 * the code falls back to a full stack trace).
+> +	 *
+> +	 * On the global instance, allow the enable while init is still
+> +	 * pending (boot-time trace_options=stackmap is applied before the
+> +	 * tracefs init work creates the map; the hot path falls back
+> +	 * until the map is published). Only reject once init has
+> +	 * permanently failed, so options/stackmap never reports an
+> +	 * enabled no-op. READ_ONCE() suffices: this only inspects the
+> +	 * init state, it does not dereference the map (the hot path uses
+> +	 * smp_load_acquire(&tr->stackmap) for that).
+> +	 */
+> +	if (mask == TRACE_ITER(STACKMAP) && enabled &&
+> +	    (tr != &global_trace ||
+> +	     READ_ONCE(stackmap_init_state) == STACKMAP_INIT_FAILED))
+> +		return -EINVAL;
+> +#endif
 > +
-> +#if !defined(_TRACE_KWATCH_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_KWATCH_H
+>  	/* Give the tracer a chance to approve the change */
+>  	if (tr->current_trace->flag_changed)
+>  		if (tr->current_trace->flag_changed(tr, mask, !!enabled))
+> @@ -9222,6 +9347,91 @@ static __init void tracer_init_tracefs_work_func(struct work_struct *work)
+>  			NULL, &tracing_dyn_info_fops);
+>  #endif
+>  
+> +#ifdef CONFIG_FTRACE_STACKMAP
+> +	{
+> +		struct ftrace_stackmap *smap;
+> +		struct dentry *map_file;
 > +
-> +#include <linux/tracepoint.h>
-> +#include <linux/ptrace.h>
-> +
-> +#define KWATCH_STACK_DEPTH 8
-> +
-> +struct trace_seq;
-> +const char *kwatch_trace_print_stack(struct trace_seq *p,
-> +				     const unsigned long *stack,
-> +				     unsigned int nr);
-> +
-> +TRACE_EVENT(kwatch_hit,
-> +	TP_PROTO(unsigned long ip, unsigned long sp, unsigned long addr,
-> +		 u64 time_ns,
-> +		 unsigned long *stack_entries, unsigned int stack_nr),
-> +	TP_ARGS(ip, sp, addr, time_ns, stack_entries, stack_nr),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned long, ip)
-> +		__field(unsigned long, sp)
-> +		__field(unsigned long, addr)
-> +		__field(u64, time_ns)
+> +		smap = ftrace_stackmap_create(&global_trace);
+> +		if (!IS_ERR(smap)) {
+> +			/*
+> +			 * Failure-atomic init: stack_map is the single
+> +			 * required tracefs file (it doubles as the reset
+> +			 * interface and the human-readable resolver). If
+> +			 * we cannot create it, the hot path must not be
+> +			 * able to emit <stack_id N> events that no one can
+> +			 * resolve or clear, so refuse to publish the map
+> +			 * and tear it down.
+> +			 *
+> +			 * Create stack_map BEFORE smp_store_release() so an
+> +			 * observed non-NULL global_trace.stackmap implies
+> +			 * its resolver/reset file exists.
+> +			 */
+> +			map_file = trace_create_file("stack_map",
+> +						     TRACE_MODE_WRITE, NULL,
+> +						     smap,
+> +						     &ftrace_stackmap_fops);
+> +			if (!map_file) {
+> +				pr_warn("ftrace stackmap init: stack_map create failed, dedup disabled\n");
+> +				ftrace_stackmap_destroy(smap);
+> +				/*
+> +				 * Permanent failure. Record it and clear a
+> +				 * STACKMAP flag that a boot-time
+> +				 * trace_options=stackmap may have set, so
+> +				 * options/stackmap does not report an
+> +				 * enabled no-op and later userspace enables
+> +				 * return -EINVAL.
+> +				 */
+> +				WRITE_ONCE(stackmap_init_state,
+> +					   STACKMAP_INIT_FAILED);
+> +				global_trace.trace_flags &=
+> +					~TRACE_ITER(STACKMAP);
 
-Move the time_ns to the first field, as unsigned long on 32 bit
-architectures is 4 bytes, and this will make 4 byte "hole" in the event.
+80 columns is no longer a hard requirement. 100 is more the default, so the
+above should be:
+
+				WRITE_ONCE(stackmap_init_state, STACKMAP_INIT_FAILED);
+				global_trace.trace_flags &= ~TRACE_ITER(STACKMAP);
 
 
-> +		__field(unsigned int, stack_nr)
 
-Make stack_nr the last element for the same reason.
+> +			} else {
+> +				/*
+> +				 * smp_store_release pairs with the
+> +				 * smp_load_acquire() in
+> +				 * __ftrace_trace_stack(). Publishing only
+> +				 * after the required file exists keeps
+> +				 * "smap visible" => "resolver/reset
+> +				 * available".
+> +				 */
 
-> +		__array(unsigned long, stack, KWATCH_STACK_DEPTH)
+> +				smp_store_release(&global_trace.stackmap,
+> +						  smap);
+> +				WRITE_ONCE(stackmap_init_state,
+> +					   STACKMAP_INIT_DONE);
 
-Make the above a dynamic array based on stack entries.
+Same with the above two.
 
-		__dynamic_array(unsigned long, stack, min_t(unsigned int, stack_nr,
-			  KWATCH_STACK_DEPTH);
-
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		unsigned int i;
-		unsigned long *stack = __get_dynamic_array(stack);
-> +
-> +		__entry->ip = ip;
-> +		__entry->sp = sp;
-> +		__entry->addr = addr;
-> +		__entry->time_ns = time_ns;
-> +		__entry->stack_nr = min_t(unsigned int, stack_nr,
-> +					  KWATCH_STACK_DEPTH);
-> +		for (i = 0; i < __entry->stack_nr; i++)
-> +			__entry->stack[i] = stack_entries[i];
-
-			stack[i] = stack_entries[i];
-
-> +	),
-> +
-> +	TP_printk("KWatch HIT: time=%llu.%06lu ip=%pS addr=0x%lx%s",
-> +		  __entry->time_ns / 1000000000ULL,
-> +		  (unsigned long)((__entry->time_ns / 1000ULL) % 1000000ULL),
-> +		  (void *)__entry->ip, __entry->addr,
-> +		  kwatch_trace_print_stack(p, __entry->stack,
-
-		  kwatch_trace_print_stack(p, __get_dynamic_array(stack),
-
-> +					   __entry->stack_nr))
-> +);
-> +
+> +				/*
+> +				 * stat and bin are auxiliary observability
+> +				 * surfaces. If they fail to be created we
+> +				 * keep dedup enabled (the kernel side still
+> +				 * works, and stack_map alone is enough to
+> +				 * resolve and reset); trace_create_file()
+> +				 * already pr_warn()s on failure.
+> +				 */
+> +				trace_create_file("stack_map_stat",
+> +						  TRACE_MODE_READ, NULL,
+> +						  smap,
+> +						  &ftrace_stackmap_stat_fops);
+> +				trace_create_file("stack_map_bin",
+> +						  TRACE_MODE_READ, NULL,
+> +						  smap,
+> +						  &ftrace_stackmap_bin_fops);
+> +			}
 
 -- Steve
