@@ -1,138 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B663F9F50
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 09:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24CB323417
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 09:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784107524; cv=none; b=YXBADAp7mW6AchgGne6iYd06BuzRT6xSzcSf76ipAdiGjNZ/MIqlxYc9P/d924KE7gly/uTFA2g7aLyz29aYdqu6GbHwnJFrmynthKU2Ngl1B5Ott/Jp1zGc6tfyaZJwCe2BobmCROOsUzyD4oJuR5jT4SIZ4iN3cnlnfYNshmY=
+	t=1784108035; cv=none; b=ek25A5IV0h99HhMhsTfmUw/u6f2i8KtXWPWp0bIpaSXUVfkUpQOoLv901Uh+VPDRJc+WiH/UDcptxIFrR+VxDoN/YfcA9Dx9scxhMGqY0lq1Ri9C7SmkBpJTev+mrqDnSTYYPeSKR1Hc3gYK373o+nCzDBtYb145OhBHFGpR4Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784107524; c=relaxed/simple;
-	bh=u4v43/Sd36brNlwbrbJ/ls1718vshZGyGcvjaF/4pqo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TDX3FESseoQOxhXahOUl6GaK2eyATGEYPwdlZIOgdTy4bb8AmmjSQKsmQbVJ55e5S0XqayI0w0tU3bm3Yq+wIs9BDzXdU+yosCMzdqNB/WbYCMgT/tRmoQDYUrt66V1m6iBzrT44F0cHEKBv388IE5nYLKlplkdcEfMzECSGoiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CnmPJe9P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784108035; c=relaxed/simple;
+	bh=DkUd9WMv6Z0/ARAoJlg5ZMyQSsbrBKdwmf/ZiTVF6B4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jdv9jBM5voPc1WcvuqnKDfjhiVkEHCxjoJBZ5H85IVo8abdDfptKAtDtQV1MwVt4/nrmEeWhIL5S/5/+4quo/VQ07TuiSQthvaBxbiyHZe3Zxvs314pHWqQfkg6v6iXKsem1H65azToZckJtoZpKwQWTv7XvHxtp3o6EwEOQWLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d7s5VUTb; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CnmPJe9P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784107521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=u4v43/Sd36brNlwbrbJ/ls1718vshZGyGcvjaF/4pqo=;
-	b=CnmPJe9PSlOVBULiaR95cDgpeBqWW6ApljAqwzuQ/k5dtnulAccBpamvQ/AM7AjuTHSB9a
-	5bYiZ4kX41P3ErxjUWgC+LPITGyUez5xjPi9AS5i9yBj11oseSLEkiMkMALSJh7LO2lfA7
-	LvYpk0D4AzSqh0LmZd+wdeWpRR1bNHo=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-ONrSiPMoNc6Yy7e1V8us5g-1; Wed, 15 Jul 2026 05:25:10 -0400
-X-MC-Unique: ONrSiPMoNc6Yy7e1V8us5g-1
-X-Mimecast-MFC-AGG-ID: ONrSiPMoNc6Yy7e1V8us5g_1784107509
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c15f0aea084so305147066b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 02:25:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d7s5VUTb"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4758b2a9e2aso3221508f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 02:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784108030; x=1784712830; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=dR8FQVRK4e2PYVhniAW9kJV4qFNJvXjE3bHzenXKKAc=;
+        b=d7s5VUTbs7bkC5OdlvuCkfJizNOE9SUsgeqa31zOIQx8R3xwohZewWR4VTLtIESHfS
+         9ZShroqubMG7rTx3DWk5Kdz3BwZ4TQMMrnoHY+Iw+5Rcd5S5r+pWksZoXyFN7hePSNSl
+         +BmXF/H9gE0mQHMdmNI+RCR0LYfavpCo9568YQ0/Rvs596iHNOwHF/6xhPiV5ZKdmKCS
+         Bhx3Hj3WvquFKDg0GuDS52BHXhPTGy/mqmr8GjT/EbZ/zmylBm204NbV8rZ7ej1yf9Rd
+         9hhKT6Huk7ziKbKS3lzlvsTMpaejUi753t9N9zDO9bnqIOy8UG+uROJHyFqY/QGHyEbb
+         T6pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784107509; x=1784712309;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=u4v43/Sd36brNlwbrbJ/ls1718vshZGyGcvjaF/4pqo=;
-        b=Vd9H+B4cqAm520CMP8Xt6K+6gjJL78mF0KRAfHJFt6tTJrXN37mwv0AuEmlanVaPY1
-         6+RMfhyTPAEmKBsBuaw9V+YnYNS5Z4la1/CmRGGMpj47dEU573q7lx+JMZH7d6l+/TJt
-         B/px6qhUoNPBjwzVqUPtRwGglBjNaRmW+p/hCoBUAXkLWlKrii0+nyQ9DqyZKdfvyIqD
-         b3AYRfWNsgojSel4UOrZN1XPkb3iVpYmFZlWY51Pp9vUDrdRGUmdaLhbfndIZ/Wk4zaj
-         utu47a22G3oyv76dbuXkO9nktQeMGQX+3E5zJsNUYE92a4843wn6r7HyoSPk6RLE5srP
-         DDug==
-X-Forwarded-Encrypted: i=1; AHgh+Ro5Vlvp0tFj1Yh5NHUKPGCBYARryzmATKjeKWtg7qDePBmJWqLvaMK9CPcJWo+p7bmJdyEUWYBmL7UB8VafjdxiM6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFNauCtMeq3YeQdMzArYUWJfWzkOWEGbpv5GGnUL6yzoLUQB2M
-	jNiySlck2UxCgEpNMMwMiBGM3yM/LxhsYGS86UDB6uSpdnmb+KT8oPbwEn5fysktI4SfZekng/p
-	gCuEsQoXcGOr2cjfIx+GqX0uddEWtyzoGBZw1F1uphfv4V4EyC8LkyrJePtFFz5ZFWr34P15lMV
-	K0KqfX/QcC
-X-Gm-Gg: AfdE7cncyJO0l4dT6U9iqUafU1xp39WZHpUWlHmTPfZ3q5rtMx+ADTe6DKxg49jYWlL
-	HNyzKDNOqf5nAHM1ncIM1crobN6SFo2UVGwktr6uzP76k4IBEZwCn3fEk4+DDjnUsX+8jcL+qYV
-	hLuTG0tSWRuF+GCNva6uuBzUIB1ITeDDT04dw6bCB1VQzTsft2nep8txDEBV1CCsRVoXlpiyGBO
-	GA5d6BeQvVVlvFL3FK4seyiCS3ju1Ob5tx1F9Vid36Ms5LimeiTSjR8MypOMu7jJJkeb849oqfM
-	UowpllPXc9CF1H2zKDVMBJHudC4t5dKooYBqLNMt7yTUGxqJsYlOK+nCymfpdxO8mmMMeGIJ0yd
-	Bs4ae5OyLrl1obLfYIAmHRcfStvBrz3GJlnFCvUV/hX8Xzd9j8nxPq3NATOj3E1TQqnXGR7vSvO
-	0fNf1/
-X-Received: by 2002:a17:907:3e95:b0:c16:55e0:adaa with SMTP id a640c23a62f3a-c16794b68c9mr127733666b.58.1784107508935;
-        Wed, 15 Jul 2026 02:25:08 -0700 (PDT)
-X-Received: by 2002:a17:907:3e95:b0:c16:55e0:adaa with SMTP id a640c23a62f3a-c16794b68c9mr127730866b.58.1784107508348;
-        Wed, 15 Jul 2026 02:25:08 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-69cd293be91sm2643190a12.23.2026.07.15.02.25.06
+        d=1e100.net; s=20251104; t=1784108030; x=1784712830;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=dR8FQVRK4e2PYVhniAW9kJV4qFNJvXjE3bHzenXKKAc=;
+        b=c9kUD+DyySSoZ7BFGldh7VNUO8+mV3DAbvoiaReIaDZRnwLR/feH/vDCTP2s12a+nd
+         3aAnL6moKf/P7ST34oqYHS+Sv/YGFt4TYSgaJJ6pbHjPW02TvzCTWf9lZAceXMgvC1l1
+         C5QrvP634ITAGM40GsUh5d6xvYDFKuEjpeHqkcp1amgmZoW6V2hUHGqi84Hf2dDxgGCv
+         fAg83PBre6ep8dabe2SUr8H4XxiSH2aR+xBUDimFgjjTP3lWrSli2bIkM/PezxIwPBUJ
+         KauGwXruVriCsXolTHw6Dn1qkeud5KGruX8fmdGpMnKSChCZ7N2N3t/42lVFzby1IwVj
+         qMOA==
+X-Forwarded-Encrypted: i=1; AHgh+RqqRuw5yFeK7n6DJs5pxpAGFXomWHD9Hk4TanvRiw0Hi/wHKhkrBIGvsdsqLZodFHGjUMIVlDPLrxl0DSawYPJ4jiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX51J8zg7oKKjfq92/h2clCq4+UCK11kUcNmtJvhI0CSvXjT8l
+	UOfYk1gHWr+Dd2qK66Z/5JuXdCzzyjxq90VxH3mFDok0jmDELWPsWQA2e1d9IDSn3g==
+X-Gm-Gg: AfdE7cmiJ1dpBdnK79BsAaxEI6Ndulc9uiX5GjGPb9y9Qld4zku7LLB2wsvpXxMbEdj
+	DBcM+TCyrBdh7KaaKlKxyf/lXW++DPOBAQ45Zt3TIU1sqr3UKyDE9ImuyYkZmD10Xmns9DyoPXe
+	fqA2prqVBUUd36boOmuYqDl4FBqoYAYWDzoMAiqdSYryZQkYTZYEzWc7cUdTiQEvSBpjJT6yMWp
+	HPL3JNS2U38TSwvsPPwepW5daK92PTF9fNn6N+UixNWXe3yn++xZGLBdjF2zcPtgZ6ddA2Tqzbq
+	hSvnJW8LBbDpTHOT2zufGfQhufei9BFsIv8kOBDRbGr6ZjW+11ZJI6R37WHwiRRvV364AJxJzHz
+	zxYYmGD04oYIHrtjyqZD71Nog1cQjFTOs6yj4Y1q3yPY3+XpkVmXQ+FtmM1EWoaLdtQgaYwAIBm
+	wDTkCeaPqUxGbTGtN14xaTSqI4ZJ/Yg9FVccQ2+j8zfwxL8j1iQ8Vf20D2JDHz3Q==
+X-Received: by 2002:a05:6000:1788:b0:47f:2bce:6f38 with SMTP id ffacd0b85a97d-47f488b281emr7046816f8f.28.1784108029674;
+        Wed, 15 Jul 2026 02:33:49 -0700 (PDT)
+Received: from google.com (137.69.77.34.bc.googleusercontent.com. [34.77.69.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f4635a63esm15613182f8f.9.2026.07.15.02.33.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2026 02:25:07 -0700 (PDT)
-Message-ID: <4885b2132ca1e8ed0fd6010ef9506d6e99e58fdb.camel@redhat.com>
-Subject: Re: [PATCH v3 14/17] verification/rvgen: Add selftests for rvgen
- kunit
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wen Yang <wen.yang@linux.dev>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Thomas Weissschuh
-	 <thomas.weissschuh@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, John
- Kacur <jkacur@redhat.com>
-Date: Wed, 15 Jul 2026 11:25:06 +0200
-In-Reply-To: <a20ddbab-aebe-4f2c-9d07-ec8dee588eab@linux.dev>
-References: <20260625121440.116317-1-gmonaco@redhat.com>
-	 <20260625121440.116317-15-gmonaco@redhat.com>
-	 <53f2d13c-cc1d-48fd-95f0-2c1ff1edfc88@linux.dev>
-	 <ed538f5f3a0976ea8a0be66b20a446442f7260c1.camel@redhat.com>
-	 <a20ddbab-aebe-4f2c-9d07-ec8dee588eab@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        Wed, 15 Jul 2026 02:33:49 -0700 (PDT)
+Date: Wed, 15 Jul 2026 10:33:45 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Jackie Liu <liu.yun@linux.dev>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Propagate errors from remote event bulk
+ updates
+Message-ID: <aldT-RpkeVQI3Uza@google.com>
+References: <20260715074455.3897-1-liu.yun@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: O16PeoPmrKJWf-Ef9eSYGQzOa9v5FVeZldVvxlQfOvs_1784107509
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260715074455.3897-1-liu.yun@linux.dev>
 
-On Wed, 2026-07-15 at 01:49 +0800, Wen Yang wrote:
->=20
-> Note that the same typo (handle_sample_event) appears in the other two
-> LTL golden files added in patch 05/17 as well: ltl_pertask.c and
-> test_ltl.c. The root is likely in the rvgen LTL template itself, so
-> the fix there would regenerate all three consistently.
+On Wed, Jul 15, 2026 at 03:44:55PM +0800, Jackie Liu wrote:
+> From: Jackie Liu <liuyun01@kylinos.cn>
+> 
+> remote_events_dir_enable_write() ignores the return value from
+> trace_remote_enable_event(). If a remote rejects an event state change,
+> the write therefore reports success even though the affected event remains
+> in its previous state.
+> 
+> Keep trying all events, but retain and return the first error. This matches
+> __ftrace_set_clr_event_nolock(), which permits partial updates while
+> notifying userspace when an operation fails.
+> 
+> Fixes: 775cb093bc50 ("tracing: Add events/ root files to trace remotes")
+> Assisted-by: Codex:gpt-5.6-sol
+> Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
 
-Yeah that's trivial to fix.
+Thanks!
 
-> Understood on the intent. One small concern:=C2=A0 MODULE_AUTHOR(/* TODO =
-*/)
-> is subtly different from an XXX comment =E2=80=94 a C preprocessor strips=
- the
-> comment before macro expansion, leaving=C2=A0 MODULE_AUTHOR() with an emp=
-ty
-> argument. When the user does go to compile, they get a cryptic error
-> rather than a clear "fill this in" hint.
+Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
 
-Well, I believe a compiler failure was indeed the original intent (that's k=
-inda
-what we do in rv_attach_trace_probe), to avoid unauthored monitors.
-
-Anyway an unauthored monitor isn't as bad as a missing tracepoint, so proba=
-bly I
-could make the LTL template consistent with the others.
-
-Unless Nam has concerns with that.
-
-Thanks,
-Gabriele
-
+> ---
+>  Changes in v2:
+> - Move the eret declaration after evt to follow reverse Christmas tree
+>   ordering.
+> 
+>  kernel/trace/trace_remote.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index 0f6ef5c36d84..daeaf1d3eb1c 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+> @@ -1150,10 +1150,21 @@ static ssize_t remote_events_dir_enable_write(struct file *filp, const char __us
+>  
+>  	for (i = 0; i < remote->nr_events; i++) {
+>  		struct remote_event *evt = &remote->events[i];
+> +		int eret;
+>  
+> -		trace_remote_enable_event(remote, evt, enable);
+> +		eret = trace_remote_enable_event(remote, evt, enable);
+> +		/*
+> +		 * Save the first error and return that. Some events
+> +		 * may still have been enabled, but let the user
+> +		 * know that something went wrong.
+> +		 */
+> +		if (!ret && eret)
+> +			ret = eret;
+>  	}
+>  
+> +	if (ret)
+> +		return ret;
+> +
+>  	return count;
+>  }
+>  
+> -- 
+> 2.54.0
+> 
