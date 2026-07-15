@@ -1,142 +1,176 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5A943F0B5;
-	Wed, 15 Jul 2026 19:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5935512D1F1;
+	Wed, 15 Jul 2026 19:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784142695; cv=none; b=K3kbzyc+RpkIPHJw9ZxiDVs0Gt6G+9ZrWsCWvNwubGDCUR7LM0dwAO6U1CiiHTeS89dWWhPMvmgZAEyIJCpqhoBfVaHk+2MHCdH/OJB3x5zz06tPFUgPHlnmFL/+NwVmfo5gpYcF7UvCA1oWNqxl40NPap7EmeH36d+Ux/qH67I=
+	t=1784145119; cv=none; b=gliM8ZRWgsDRTyeU4eOWG35l6qmG64tP01eLvdMpdSjr1c4z+5/LtNfw/G7JyFM+AgvuH0cg+4EbAYlBsyZlgztJlFcq1QnOjxS/1fdeHr811Bg4pQB1SXaQ2TxnEgPcm0F6zTfqTy0AFCAW3aXOoM9eWHZ0wet3J/vR+I6Jl78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784142695; c=relaxed/simple;
-	bh=cNpSgjkpuyvMyDH66LekXDtYgdfnHCR8St6fvC+3uPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bVj5wiOgfdWk1/tCbC95Sr7tHSd5GFb/T22OnDCFx3O+6PxoPtiqJb/m33ipRNaVq6JkQcHP3NlOgrTrQXlsXbC1kBopAHrQD3IkKbrNCy8M71EcYU5fa2iIBQ5WBOK1++LrQxhswBkqApdQuFdYIn2OUIRo7/FV0weix/sD/Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id CD473A0158;
-	Wed, 15 Jul 2026 19:11:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id E7FC530;
-	Wed, 15 Jul 2026 19:11:14 +0000 (UTC)
-Date: Wed, 15 Jul 2026 15:11:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Usama Arif <usama.arif@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org, leitao@debian.org
-Subject: Re: [RFC] tracing: Try user copies with page faults disabled first
-Message-ID: <20260715151120.0c7b80cb@gandalf.local.home>
-In-Reply-To: <20260715155454.4127988-1-usama.arif@linux.dev>
-References: <20260715155454.4127988-1-usama.arif@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784145119; c=relaxed/simple;
+	bh=3uP8bgU1we/Dtxq3O0dFdAVY4cBPySZLkiqm4nKQMWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3S/vuozI5wi3UaLPPcGT6kxPi1/EYGPaOjSL5Lwf+0LDRoN/e6VbE90pCvXmhYFQR0w4vixUMQv3qQDDivlPprQT0Z51i/aTwm0ScCeFmdR3U4cA7oiDt6DkB2qA2XjVKAk/+SU0FiuD3LFV0Dr68N9Fn2pkkzuXBR+Ef5Ri1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lJgKKfhl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lJgKKfhl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qECPUV5KWvny4esgaF2Vf7PlyZR+bR1BGzMVUFeolqU=; b=lJgKKfhlIrhdAC1jyT5Hf3uPxE
+	l7vnGovceMuPLVWPqgV9wNKl/gQuYIaCna2P59iOxwIjz8TgnSZxKIXp5GeAqkWZQaTeT3+cubzjK
+	HGiNQpMygZIeOjVTO50mffhkjlNpKQVqpAAM1eEVW8Hs3fCuJZ+uAhYmyDBNCwh9jTJS9/Q5Y3LVu
+	ywLG36QvrGrHdJQUhM57vSlVQ7DI/PmUKWzLTbToYJXiR4beiet5xPyeJKLkIRtK7Wmpn2r5twtYX
+	SVWE+upv4jajftjr+NcrbxoQcLUUOncC03VumZY0PwcxCLxWxWB2Ce3O/uWL9GgzwaAmWuf5JkTOn
+	i46gZwWQ==;
+Received: from [38.23.173.23] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wk5dP-0000000Fp73-3ueX;
+	Wed, 15 Jul 2026 19:51:12 +0000
+Date: Wed, 15 Jul 2026 15:51:01 -0400
+From: "Liam R. Howlett" <liam@infradead.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	Russell King <linux+etnaviv@armlinux.org.uk>
+Subject: Re: [PATCH v2 02/33] mm: add kdoc comments for vma_start/last_pgoff()
+Message-ID: <jwtocg3yekest4xrda4fhzck5tcrcib2mmzjztvi3jk6i4oin7@xcvem5gdkwa7>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+ <20260710-b4-pre-scalable-cow-v2-2-2a5aa403d977@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: nx6se5171zhxahkfcdsiqnk63m5n6zpz
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: E7FC530
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/vbsQ/v95LPZxg20/6Ks2gOuGBrDe146E=
-X-HE-Tag: 1784142674-298897
-X-HE-Meta: U2FsdGVkX18qrRDCzVzZD9/nM6pH7KHQl7X7VQcYsuTKUdp7u7VquJwkghPMA115k5RzxUCZNKsRvQtdsm1LkLxXT+pEHU6G6wwR0Yk61oB758/m0Jaqib8ul/40d7Y/yLah9+KLQ0ZfiVCuVo9rte4nd82LsYoiueXYO1WqyAkMWZFAs8keAzXvzaQg4cokjrmoBu42dG60fakjXMJeQriefwsATjXGcBRRt7qzhOPmQ3NVSRswuWPSeL7KrEGSdAYuDkfvpQFEx3a/x2iquY/6sXEhAYs0/se0lrHp6dl9YSypvmk7mSt2ih0g88YgunOBNuUPt5uJgSr0hyOghtiSC+IWgyj3C6JWhwX5/Zzp9VUFTqq41A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260710-b4-pre-scalable-cow-v2-2-2a5aa403d977@kernel.org>
 
-On Wed, 15 Jul 2026 08:54:54 -0700
-Usama Arif <usama.arif@linux.dev> wrote:
-
-> trace_user_fault_read() is called with preemption disabled to copy user
-> memory into a per-cpu scratch buffer. The existing implementation enables
-> preemption around the copy because faulting user memory can sleep. That
-> opens a window where another task can run on the same CPU and clobber the
-> per-cpu buffer, so the copy is wrapped in a retry loop: sample
-> nr_context_switches_cpu(), do the preempt-enabled copy, and retry if the
-> counter changed. If this fails to complete 100 times, the function gives up
-> with a warning.
+On 26/07/10 09:16PM, Lorenzo Stoakes wrote:
+> Describe what vma_start_pgoff() and vma_last_pgoff() actually provide in
+> detail.
 > 
-> nr_context_switches_cpu() reads rq->nr_switches. That counter increments
-> for every context switch on the CPU, not only for switches to tasks that
-> use this tracing scratch buffer. On a heavily loaded system, unrelated
-> scheduler activity can move the counter during every preempt-enabled copy
-> attempt, exhaust the retry guard, and trigger the warning.
+> This is in order that we can differentiate this between functions that will
+> be added in a subsequent patch which provide a different page offset.
 > 
-> This is showing up across the Meta fleet around 100 times a day since the
-> kernel began upgrading to 7.1, mostly on arm servers:
+> We go to lengths to describe the edge cases that can be run into here.
 > 
->   Error: Too many tries to read user space
->   WARNING: kernel/trace/trace.c:6244 at trace_user_fault_read+0x284/0x2c8, CPU#28: Collection-18/677527
->   CPU: 28 UID: 0 PID: 677527 Comm: Collection-18 Kdump: loaded Not tainted 7.1.0-.... #1 PREEMPTLAZY
->   Hardware name: Quanta Java Island MP 29F0EMA08CH/Java Island, BIOS F0EJ3A16 03/12/2026
->   Call trace:
->    trace_user_fault_read+0x284/0x2c8 (P)
->    syscall_get_data+0x144/0x2c0
->    perf_syscall_enter+0xc0/0x2d8
->    syscall_trace_enter+0x1a0/0x270
->    do_el0_svc+0x54/0xb8
->    el0_svc+0x44/0x268
->    el0t_64_sync_handler+0x7c/0x120
->    el0t_64_sync+0x17c/0x180
->   ---[ end trace 0000000000000000 ]---
+> No functional change intended.
 > 
-> The retry loop is only needed when preemption must be enabled for the user
-> copy. If the user pages are already resident, the copy can complete without
-> fault handling that sleeps, and preemption can stay disabled throughout.
-> 
-> Add a fast path that first tries the copy with page faults disabled. For
-> the plain copy_from_user case, use __copy_from_user_inatomic(). If the
-> probe faults, the architecture exception-table fixup returns a non-zero
-> not-copied count and trace_user_fault_read() falls back to the existing
-> preempt-enabled slow path.
-> 
-> Custom copy callbacks need the same behavior. Update the syscall argument
-> copy callbacks to report a non-zero return only when the pagefault-disabled
-> probe faults. With page faults enabled, keep their previous behavior:
-> record the syscall event and omit only the individual user argument that
-> still cannot be copied.
-> 
-> The slow path remains in place for nonresident pages and permanent copy
-> failures. nr_context_switches_cpu() still overcounts, but the retry loop is
-> now avoided for the common resident-page case that does not need fault
-> handling.
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-This was reported also under memory load.
+Reviewed-by: Liam R. Howlett (Oracle) <liam@infradead.org>
 
-I have a patch that will only do a retry if another *user* task schedules
-in, and will not be bothered by kernel tasks (which may be scheduled in due
-to the copy from user to begin with).
-
-Can you see if that works too?
-
-  https://lore.kernel.org/all/20260710083357.49e05ff6@gandalf.local.home/
-
-I'm also thinking it may be backwards to try with page_fault disabled
-first. Because if the text is not present in memory (which is the case for
-a lot of syscalls), it will fail there and then go into the "slow path" to
-try with enabling preemption. If you bug hits then, it could cause the
-warning to show up.
-
-If you first try with preemption disabled, it will likely pull the page
-into memory, so if it does schedule, doing it with pagefault_disabled() a
-second time is more likely to succeed (the page has been pulled in via the
-first attempt). That is, the first attempt pulls in the page but fails due
-to being scheduled out, the second attempt with pagefault_disabled() may be
-more likely to succeed. Thus, on option is to simply alternate between
-re-enabling preemption, and calling with page_fault() disabled.
-
--- Steve
-
-
-> 
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Usama Arif <usama.arif@linux.dev>
 > ---
-> This warning is very likely occuring when the fleetwide profiler runs
-> and something else seems to load the server. (As we have perf_syscall_enter()
-> in the stack and I see the profiler process active when the warning prints).
-> It can occur several days after boot, so its a bit difficult to verify
-> if the warning will go away with this patch deployed.
-> If the patch looks good, we can deploy it in the fleet and report back.
-> ---
+>  include/linux/mm.h | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 09b06d8fea74..abac72785277 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4307,11 +4307,41 @@ static inline unsigned long vma_pages(const struct vm_area_struct *vma)
+>  	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+>  }
+>  
+> +/**
+> + * vma_start_pgoff() - Get the page offset of the start of @vma
+> + * @vma: The VMA whose page offset is required.
+> + *
+> + * If the VMA is file-backed, this is the page offset into the file.
+> + *
+> + * If @vma is anonymous, this is the virtual page offset of the start of the
+> + * VMA - if unfaulted, then vma->vm_start >> PAGE_SHIFT, if faulted then the
+> + * virtual page offset at the time of first fault.
+> + *
+> + * If @vma is a MAP_PRIVATE file-backed mapping, then this returns the
+> + * page offset within the file.
+> + *
+> + * Edge cases: nommu does not abide by these, MAP_PRIVATE-/dev/zero satisfies
+> + * vma_is_anonymous() but has file-backed page offset, and MAP_PRIVATE-pfnmap
+> + * regions have their page offset set to the first PFN in the range.
+> + *
+> + * Returns: The page offset of the start of @vma.
+> + */
+>  static inline pgoff_t vma_start_pgoff(const struct vm_area_struct *vma)
+>  {
+>  	return vma->vm_pgoff;
+>  }
+>  
+> +/**
+> + * vma_last_pgoff() - Get the page offset of the last page in @vma
+> + * @vma: The VMA whose last page offset is required.
+> + *
+> + * This returns the last page offset contained within @vma.
+> + *
+> + * See the description of vma_start_pgoff() for a description of VMA page
+> + * offsets.
+> + *
+> + * Returns: The last page offset of @vma.
+> + */
+>  static inline pgoff_t vma_last_pgoff(const struct vm_area_struct *vma)
+>  {
+>  	return vma_start_pgoff(vma) + vma_pages(vma) - 1;
+> 
+> -- 
+> 2.55.0
+> 
