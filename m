@@ -1,271 +1,239 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AAE3B5304
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 05:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F8D37E5FE;
+	Wed, 15 Jul 2026 06:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784092874; cv=none; b=DJ3NnRL4N8PipivIfCcKur3ivKAxclMnRDkw4AcwW/jIwYxy63dSrZpxF7kUirFkeq2ZKYAELTG4OPDlA5l7/gHoRR6mmbtQElJobwdp6z5uADxVE9DkF7H3QEsgnMdcIEJSUbyc/2y/i9K3EbAbQVlmTNZTgj685BtjASmmsRo=
+	t=1784095254; cv=none; b=G7MrKnLdltEKB3CvOl+V+/7PNPMD0/uas6ZZO+Z9c9hrSuPMR/tc1wCUvjdozVityNV39MXXd6+q4MJU639fAQqDAlepmltDWBkGQOMQReMrE4MoE7K+V3B/b9Tqw9Abmz3psTQsyXfBt0BdsXJaRTNqzEicGLfy98ojRHFc0CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784092874; c=relaxed/simple;
-	bh=NW9OfWcn7zy6+5dpNWHitm6R6TnMYmxPjElKxMspfvA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=opNSkvd4APeoXY3rRmPuqkc0YmLCx+TZw91tozfAiKLWmrrPOLFjc0sdlxTBiySLQgBI7o4pfuJhfbUPsuVc1sWruaPNLZI45WsCU/VDcoEx7HPdgbJmHHbQrCBi8w1o8H4S/1MHswWG0m7w/z++tu1vAz5yR9qTBtzpkpZCd1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jJjjQ7yV; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=dFgUPsjo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jJjjQ7yV";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="dFgUPsjo"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66F3lCbd2405996
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 05:21:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sITuVOmRTLgtM0SYU13wJSBTuqa5KGwf+255oDtx3hc=; b=jJjjQ7yVkooBgrGu
-	SIKD9gMjwaiYl3OqX4QE25Ok0y65w2GqSp5PM9wijClPfYFb6iXrOjDh2NQfkold
-	YOJhBvBraUDlT7MON0wXW6Vw9ktkOwZg8WZtcLyPHNCCgm7kX1BnK2g2XS9jAXMK
-	2dA2rSf6UBlt7XN/1HG75AFGeqe0dkYisyVT1+9V/bZV/+ZQT+WeBoLFjmWQA9K9
-	W0nwo7vxqd0EqoR+/WgsIsBWUn9OmDIxA/5s2nizI7ELTJ9E6Qrgko/1K5Sa1spY
-	PLLlo3hZzzcj5XRojjr3Oyg2uV6Ca7GEsns4ll1douuI+sxbipKr6E2pEgOQKV7N
-	/1Xbvw==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fds9g21kk-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 05:21:11 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-381250979d5so2315983a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 22:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1784092871; x=1784697671; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sITuVOmRTLgtM0SYU13wJSBTuqa5KGwf+255oDtx3hc=;
-        b=dFgUPsjo3Ie8zzV59c0d2OVXremZoXNoSua1uIqvPlNIkRkRACODxgN7YIiI6AyhDq
-         45MAVhWs7hxQWXCwwgLEdvj1/bbr4sV/d9qJEa3xX5Hdpf3fpE49efFQfiUHRGSuPo0W
-         Gyg5Q0q2GllXDKcBoALsT02uDyr5jmQPct/WOms+3xFfWtX1yqvU3S638VnVQ38BCeDN
-         h3rs5i/r0i6eE8pWbeBmoAEy2eWKmrDATOgiWHGrmNgfG07I9asd+tmHsYgMr9fHLhbx
-         8QKE6fFIytow121OZPCN1Eiy28fItsXqBRAdBpovk8KiOeHECsYdNvGjCc/s/LedlskI
-         CbEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784092871; x=1784697671;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sITuVOmRTLgtM0SYU13wJSBTuqa5KGwf+255oDtx3hc=;
-        b=UuyI873GGaZg2/+7WnizC6qNbLyx/HduT4BuWxSGxKoPqS8YG+rm0DlGqA9o78daM1
-         cxjohxDQLg4MXMuk54aazmFp1ynOKHaZXi+5uReI/LW4Ab6Yo0tGb1T6KtdUOm7rrlWm
-         KAShUA85XHcgixUxh7VBGrpEtD81BGArLeCLxaPwLHoxzTd3iIT34LXtqi4G5TE7WtEp
-         UBytPctK9NcekvdwGamsTocvhcaMpRg7hGhnt1fhLvLQvncUEn8Wqnb5QbORBnmyex5U
-         N2+2RkYfffDWCrB4GA2H4As4dL6J3iqT7C6gNrLpgJJdzqH0jPAHdQ7GMWH8sFyn3tpb
-         hHcg==
-X-Forwarded-Encrypted: i=1; AHgh+RpraQUw2a961pDepYMdV7pjmv1RAUx9KwhFWAFZgt8ZBcDzkuHO3M8JwVvOE0CxO1XuvjO6N3PddL/0pl8dLqAPiAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdRi7ufthSdgtRiyY7W+/QzS6ra5XFmEFByj9/we4zfw961Uac
-	1n9IUqbHZnEV/Ab26/ZjIIJXMAfdFYWFn4TJ4T2f2oD3dPcv6ovqPl39euDsi0sfG9deQzpfOYX
-	OIUcovuKRG3L6x0gkvKAOoVMktmBrAd8BC6PEKnlx3ETyMlAW2AVIyv1GlhSH7j8yb8lsKt4m2E
-	M=
-X-Gm-Gg: AfdE7cmLHj1gRv927vAWr2uYTja7oQaL0LjecvmU81XbSO/RlFD+6bVearRLhGYejAC
-	bLq8NsLHN5ieABU/0Bo0Empzz7POM/A/rVr1fc458DTHnBMPSs2dYbHrcKdgLbsCOf0TGxtpDD9
-	oGAw0SwoVhYzLNNR8gUckadfDE7NjNeT7eI43ZewOGm2UPYmq9AX/hNpS3eLsPhhsfvfmoUb0bP
-	Ry29YINE4ONNfy5OQX2tEx6CaNfusyzH3Z4xs/nCt3jHRrpNsuF09fXP9K9SvCpByyaY6FrXBvH
-	9Sz3h1Apmy3T6kyDdaNDzkgBrHeWNxCKc/IKdn4CX+/PD8SUZbGGu2AzYRDJ1OD1rs9CReWJ/Pi
-	lNg6GiXsqu3FGSA72HMnIzTkKIOIyBkxvGqbS1MY2EZXo
-X-Received: by 2002:a17:90b:1dcf:b0:38e:673:5d18 with SMTP id 98e67ed59e1d1-38e06735ef7mr8097335a91.36.1784092870701;
-        Tue, 14 Jul 2026 22:21:10 -0700 (PDT)
-X-Received: by 2002:a17:90b:1dcf:b0:38e:673:5d18 with SMTP id 98e67ed59e1d1-38e06735ef7mr8097285a91.36.1784092870078;
-        Tue, 14 Jul 2026 22:21:10 -0700 (PDT)
-Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38e172e46basm2526092a91.9.2026.07.14.22.21.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 22:21:09 -0700 (PDT)
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Date: Wed, 15 Jul 2026 10:50:48 +0530
-Subject: [PATCH v3 2/2] spi: qcom-geni: add GENI SE registers trace event
- on error paths
+	s=arc-20240116; t=1784095254; c=relaxed/simple;
+	bh=uYuISGijpe5v8UVU380HvFx8XEMmrMXgbFwTDI9qVqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lop3fGpPOtUlLDh7gSUPPojPMYHdlW97ze7+Nvj6oJ+CroNQkHoWEA227HiSCopbZKiOgt09Y7eXb8sMij0LSNZAICwA6ABVTcal7L9HTegXArjY/mU8T/n1/7OToojnkXt/e4tnvuErwdP/nGjsqo2vxEl269sopawpyiCip+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 80d4bcd6801211f1aa26b74ffac11d73-20260715
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR
+	SRC_UNFAMILIAR, DN_TRUSTED, SRC_TRUSTED, SA_UNTRUSTED, SA_LOWREP
+	SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:a714e744-9dad-4bf7-b1c6-5f6dfe6b3e29,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:35
+X-CID-INFO: VERSION:1.3.12,REQID:a714e744-9dad-4bf7-b1c6-5f6dfe6b3e29,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:35
+X-CID-META: VersionHash:e7bac3a,CLOUDID:b6411998ebed8982ee805c46c4ba91a8,BulkI
+	D:260715140042EOEY1A8W,BulkQuantity:0,Recheck:0,SF:10|66|78|85|102|127|865
+	|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:
+	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
+	C:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 80d4bcd6801211f1aa26b74ffac11d73-20260715
+X-User: liqiang01@kylinos.cn
+Received: from cvdaxia.localdomain [(94.177.131.67)] by mailgw.kylinos.cn
+	(envelope-from <liqiang01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1938403519; Wed, 15 Jul 2026 14:00:38 +0800
+From: Li Qiang <liqiang01@kylinos.cn>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	gmonaco@redhat.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	namcao@linutronix.de,
+	juri.lelli@redhat.com,
+	wen.yang@linux.dev,
+	Li Qiang <liqiang01@kylinos.cn>
+Subject: [PATCH 1/2] rv/nomiss: fix task storage lifetime
+Date: Wed, 15 Jul 2026 14:00:22 +0800
+Message-ID: <20260715060023.1502983-1-liqiang01@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260715-add-tracepoints-for-se-reg-dump-v3-2-0f787f93badd@oss.qualcomm.com>
-References: <20260715-add-tracepoints-for-se-reg-dump-v3-0-0f787f93badd@oss.qualcomm.com>
-In-Reply-To: <20260715-add-tracepoints-for-se-reg-dump-v3-0-0f787f93badd@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Brown <broonie@kernel.org>
-Cc: Praveen Talari <praveen.talari@oss.qualcomm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784092857; l=4641;
- i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
- bh=NW9OfWcn7zy6+5dpNWHitm6R6TnMYmxPjElKxMspfvA=;
- b=aCXYBaUg68cF17oSv8bFBL9qAZkATJSAom/UstP3l669diTKt9Ywq4QeK23VXjuGUwuVRlOsH
- SxshQmmdKPvAqNRgUg+eVEhWBbV86Z/HeF/xobIJETvEJYH0SEd0vLE
-X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
- pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDA0NyBTYWx0ZWRfX7pMtEFSE2c/k
- ZxbfkY1HeeC/nFW4pcm8PzdFMrKZoTDJEclXelbbF3Az9s9NARJGMLJ07poKvu1BrDTNs/oMKUP
- SancG6H1O1/nv3nkg9QeO1pO8zUyv+Q=
-X-Proofpoint-ORIG-GUID: LXMnD0xMZhgyi21iQzX7TfW8CQUwF8uj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDA0NyBTYWx0ZWRfXy0APg3GGG3Kg
- 2IAMHaACaMb4n2nV7mEGEKbj6412LSF3YnctIz/ScxswvdZye500lyNSz5yvQwrxFuMkmiH3YLS
- s+7uk7HY+Bnh7GoaxvGUXrqRCdak1Vi5yVdS8lOkaTBOWSAVWjaWEbC+GsNCbb2JjvA5DSXREem
- XZ4a73ejiCW8B7s0ujGOo4wNnAWQRDcANZgrLfa7nmFih3K9CuN4Z5TXlaTkxDu9f9zHXsVoG7w
- u/aVgtWkVJfpAO1gsivpDOaYQbha1YYQchcdC9hx1QmvgMpSV16cvC4iT/eGgzuw/AWZ8WyzDBE
- JTm0fOLVApbov7J9FeWwXaktYl92JZXqNI0l6VkL/EmAp+YzCBhBJfgTlPpO9Za76Fjs/ntYB6M
- iFeHJ5ivqYPNLNvs3hdGYL84fPFzwdwXNWEcV8PwcnYrFuG0xOILESv1l94k2H8yg0sAaguKF2j
- uVg97GCyTbXiLglTpzQ==
-X-Proofpoint-GUID: LXMnD0xMZhgyi21iQzX7TfW8CQUwF8uj
-X-Authority-Analysis: v=2.4 cv=VoATxe2n c=1 sm=1 tr=0 ts=6a5718c7 cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
- a=EUspDBNiAAAA:8 a=SuVZUjzzKY3ZPv7-dKMA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
- a=uKXjsCUrEbL0IQVhDsJ9:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-15_02,2026-07-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150047
+Content-Transfer-Encoding: 8bit
 
-The GENI SPI driver reports various transfer failures such as command
-timeouts, DMA reset timeouts, DMA transaction errors, and unexpected
-interrupt conditions. However, diagnosing the root cause of these
-failures is difficult as the hardware state is not captured when the
-error occurs.
+The nomiss monitor stores a pointer to a task's embedded deadline entity
+in per-PID object storage. The exit handler only removed that storage when
+the task was still SCHED_DEADLINE. A task that changed to another policy
+before exiting left its entry behind. Once the PID was reused, the new task
+could reuse the old entry and dereference the freed deadline entity.
 
-Add trace_geni_se_regs() calls at critical SPI error handling paths to
-automatically capture GENI serial engine debug registers when failures
-are detected. This includes:
+Remove storage unconditionally at sched_process_exit. Serialize creation
+and destruction with locks sharded by PID, and do not create storage once
+PF_EXITING is set. Each shard tracks both stored entries and in-flight
+creators, allowing exits for shards without storage to avoid locking and
+hash lookups while preserving the create/exit ordering.
 
-- M_CMD abort/cancel timeout
-- DMA TX/RX FSM reset timeout
-- DMA transaction failures and pending residue conditions
-- Unexpected interrupt error status
-- Premature transfer completion with pending TX/RX data
-
-Dumping the SE debug registers at the time of failure provides
-additional hardware context and significantly improves post-mortem
-analysis of SPI transfer issues without affecting normal operation.
-
-Acked-by: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Fixes: b133207deb72 ("rv: Add nomiss deadline monitor")
+Signed-off-by: Li Qiang <liqiang01@kylinos.cn>
 ---
- drivers/spi/spi-geni-qcom.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ kernel/trace/rv/monitors/deadline/deadline.h | 86 +++++++++++++++++++-
+ kernel/trace/rv/monitors/nomiss/nomiss.c     |  2 +-
+ 2 files changed, 84 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 2914d781dbf5..8528f9b80f03 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
+diff --git a/kernel/trace/rv/monitors/deadline/deadline.h b/kernel/trace/rv/monitors/deadline/deadline.h
+index 78fca873d61e..b92480e79807 100644
+--- a/kernel/trace/rv/monitors/deadline/deadline.h
++++ b/kernel/trace/rv/monitors/deadline/deadline.h
 @@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
+ /* SPDX-License-Identifier: GPL-2.0 */
  
-+#include <trace/events/qcom_geni_se.h>
+ #include <linux/kernel.h>
++#include <linux/hash.h>
++#include <linux/spinlock.h>
+ #include <linux/uaccess.h>
+ #include <linux/sched/deadline.h>
+ #include <asm/syscall.h>
+@@ -148,6 +150,37 @@ static inline struct sched_dl_entity *get_server(struct task_struct *tsk, u8 typ
+ 	return NULL;
+ }
+ 
++#define DEADLINE_STORAGE_LOCK_BITS	6
++#define DEADLINE_STORAGE_LOCKS		BIT(DEADLINE_STORAGE_LOCK_BITS)
 +
- #define CREATE_TRACE_POINTS
- #include <trace/events/qcom_geni_spi.h>
- 
-@@ -192,6 +194,7 @@ static void handle_se_timeout(struct spi_controller *spi)
- 	time_left = wait_for_completion_timeout(&mas->abort_done, HZ);
- 	if (!time_left) {
- 		dev_err(mas->dev, "Failed to cancel/abort m_cmd\n");
-+		trace_geni_se_regs(se);
- 
- 		/*
- 		 * No need for a lock since SPI core has a lock and we never
-@@ -209,8 +212,10 @@ static void handle_se_timeout(struct spi_controller *spi)
- 				writel(1, se->base + SE_DMA_TX_FSM_RST);
- 				spin_unlock_irq(&mas->lock);
- 				time_left = wait_for_completion_timeout(&mas->tx_reset_done, HZ);
--				if (!time_left)
-+				if (!time_left) {
- 					dev_err(mas->dev, "DMA TX RESET failed\n");
-+					trace_geni_se_regs(se);
-+				}
- 			}
- 			if (xfer->rx_buf) {
- 				spin_lock_irq(&mas->lock);
-@@ -218,8 +223,10 @@ static void handle_se_timeout(struct spi_controller *spi)
- 				writel(1, se->base + SE_DMA_RX_FSM_RST);
- 				spin_unlock_irq(&mas->lock);
- 				time_left = wait_for_completion_timeout(&mas->rx_reset_done, HZ);
--				if (!time_left)
-+				if (!time_left) {
- 					dev_err(mas->dev, "DMA RX RESET failed\n");
-+					trace_geni_se_regs(se);
-+				}
- 			}
- 		} else {
- 			/*
-@@ -391,10 +398,12 @@ static void
- spi_gsi_callback_result(void *cb, const struct dmaengine_result *result)
- {
- 	struct spi_controller *spi = cb;
-+	struct spi_geni_master *mas = spi_controller_get_devdata(spi);
- 
- 	spi->cur_msg->status = -EIO;
- 	if (result->result != DMA_TRANS_NOERROR) {
- 		dev_err(&spi->dev, "DMA txn failed: %d\n", result->result);
-+		trace_geni_se_regs(&mas->se);
- 		spi_finalize_current_transfer(spi);
- 		return;
- 	}
-@@ -404,6 +413,7 @@ spi_gsi_callback_result(void *cb, const struct dmaengine_result *result)
- 		dev_dbg(&spi->dev, "DMA txn completed\n");
- 	} else {
- 		dev_err(&spi->dev, "DMA xfer has pending: %d\n", result->residue);
-+		trace_geni_se_regs(&mas->se);
- 	}
- 
- 	spi_finalize_current_transfer(spi);
-@@ -953,8 +963,10 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 
- 	if (m_irq & (M_CMD_OVERRUN_EN | M_ILLEGAL_CMD_EN | M_CMD_FAILURE_EN |
- 		     M_RX_FIFO_RD_ERR_EN | M_RX_FIFO_WR_ERR_EN |
--		     M_TX_FIFO_RD_ERR_EN | M_TX_FIFO_WR_ERR_EN))
-+		     M_TX_FIFO_RD_ERR_EN | M_TX_FIFO_WR_ERR_EN)) {
- 		dev_warn(mas->dev, "Unexpected IRQ err status %#010x\n", m_irq);
-+		trace_geni_se_regs(se);
++/*
++ * A shard tracks both entries and creators which have not yet checked
++ * PF_EXITING. This lets unrelated exits avoid taking a storage lock while
++ * preserving the create/exit ordering.
++ */
++struct deadline_storage_shard {
++	raw_spinlock_t lock;
++	atomic_t users;
++} ____cacheline_aligned_in_smp;
++
++static struct deadline_storage_shard
++	deadline_storage_shards[DEADLINE_STORAGE_LOCKS];
++
++static inline struct deadline_storage_shard *deadline_storage_shard(int pid)
++{
++	return &deadline_storage_shards[hash_32(pid, DEADLINE_STORAGE_LOCK_BITS)];
++}
++
++static void deadline_storage_init(void)
++{
++	int i;
++
++	for (i = 0; i < DEADLINE_STORAGE_LOCKS; i++) {
++		raw_spin_lock_init(&deadline_storage_shards[i].lock);
++		atomic_set(&deadline_storage_shards[i].users, 0);
 +	}
++}
++
+ /*
+  * Initialise monitors for all tasks and pre-allocate the storage for servers.
+  * This is necessary since we don't have access to the servers here and
+@@ -159,6 +192,8 @@ static inline int init_storage(bool skip_tasks)
+ 	struct task_struct *g, *p;
+ 	int cpu;
  
- 	spin_lock(&mas->lock);
- 
-@@ -983,13 +995,16 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 				 * weren't written correctly.
- 				 */
- 				if (mas->tx_rem_bytes) {
-+					trace_geni_se_regs(se);
- 					writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
- 					dev_err(mas->dev, "Premature done. tx_rem = %d bpw%d\n",
- 						mas->tx_rem_bytes, mas->cur_bits_per_word);
- 				}
--				if (mas->rx_rem_bytes)
-+				if (mas->rx_rem_bytes) {
- 					dev_err(mas->dev, "Premature done. rx_rem = %d bpw%d\n",
- 						mas->rx_rem_bytes, mas->cur_bits_per_word);
-+					trace_geni_se_regs(se);
-+				}
- 			} else {
- 				complete(&mas->cs_done);
++	deadline_storage_init();
++
+ 	for_each_possible_cpu(cpu) {
+ 		if (!da_create_empty_storage(fair_server_id(cpu)))
+ 			goto fail;
+@@ -177,6 +212,7 @@ static inline int init_storage(bool skip_tasks)
+ 				read_unlock(&tasklist_lock);
+ 				goto fail;
  			}
-
++			atomic_inc(&deadline_storage_shard(p->pid)->users);
+ 		}
+ 	}
+ 	read_unlock(&tasklist_lock);
+@@ -187,17 +223,61 @@ static inline int init_storage(bool skip_tasks)
+ 	return -ENOMEM;
+ }
+ 
++static void deadline_create_task_storage(struct task_struct *task)
++{
++	struct deadline_storage_shard *shard = deadline_storage_shard(task->pid);
++	bool created = false;
++
++	/*
++	 * The temporary reference makes an in-flight creator visible to exit.
++	 * If storage is created, it becomes the reference owned by that entry.
++	 */
++	atomic_inc(&shard->users);
++	/* Pair with exit before it tests users without taking the shard lock. */
++	smp_mb__after_atomic();
++
++	raw_spin_lock(&shard->lock);
++	if (!(READ_ONCE(task->flags) & PF_EXITING)) {
++		guard(rcu)();
++		if (!da_get_monitor(EXPAND_ID_TASK(task)) &&
++		    da_create_storage(EXPAND_ID_TASK(task), NULL))
++			created = true;
++	}
++	raw_spin_unlock(&shard->lock);
++
++	if (!created)
++		atomic_dec(&shard->users);
++}
++
++static void deadline_destroy_task_storage(struct task_struct *task)
++{
++	struct deadline_storage_shard *shard = deadline_storage_shard(task->pid);
++
++	/* Pair with the creator barrier before taking the no-storage fast path. */
++	smp_mb();
++	if (!atomic_read(&shard->users))
++		return;
++
++	raw_spin_lock(&shard->lock);
++	guard(rcu)();
++	if (da_get_monitor(task->pid, NULL)) {
++		/* A task may leave SCHED_DEADLINE before exiting. */
++		da_destroy_storage(task->pid);
++		atomic_dec(&shard->users);
++	}
++	raw_spin_unlock(&shard->lock);
++}
++
+ static void __maybe_unused handle_newtask(void *data, struct task_struct *task, u64 flags)
+ {
+ 	/* Might be superfluous as tasks are not started with this policy.. */
+ 	if (task->policy == SCHED_DEADLINE)
+-		da_create_storage(EXPAND_ID_TASK(task), NULL);
++		deadline_create_task_storage(task);
+ }
+ 
+ static void __maybe_unused handle_exit(void *data, struct task_struct *p, bool group_dead)
+ {
+-	if (p->policy == SCHED_DEADLINE)
+-		da_destroy_storage(get_entity_id(&p->dl, DL_TASK, DL_TASK));
++	deadline_destroy_task_storage(p);
+ }
+ 
+ #endif
+diff --git a/kernel/trace/rv/monitors/nomiss/nomiss.c b/kernel/trace/rv/monitors/nomiss/nomiss.c
+index 8ead8783c29f..2e5ee681505b 100644
+--- a/kernel/trace/rv/monitors/nomiss/nomiss.c
++++ b/kernel/trace/rv/monitors/nomiss/nomiss.c
+@@ -214,7 +214,7 @@ static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
+ 	if (p->policy == SCHED_DEADLINE)
+ 		da_reset(EXPAND_ID_TASK(p));
+ 	else if (new_policy == SCHED_DEADLINE)
+-		da_create_or_get(EXPAND_ID_TASK(p));
++		deadline_create_task_storage(p);
+ }
+ 
+ static void handle_sched_wakeup(void *data, struct task_struct *tsk)
 -- 
-2.34.1
+2.50.1
 
