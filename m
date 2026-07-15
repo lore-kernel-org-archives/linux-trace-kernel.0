@@ -1,282 +1,244 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E2148C8AF
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 15:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2313948B389
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 15:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784130432; cv=none; b=mnveVRvZdetyprWOtP2EBhPA4KDv/3ZN4H7y+kWetFg0rGkmfn7MFTmdkw49uKFT7g0iCtcIUv0mabJIiTA+jE/Y3NBvQpqC1XW5deNE6zQ1eOTE/N+6LqD+uGmbnGECc7OCh6eRJKh7i2x5ylka9nDKdDkDI1PzVkU/g6GC0A4=
+	t=1784130942; cv=none; b=EMND977hz2BHAuHPzOQVnc6AJVTgwUM32xm+qOwVGR2NjH/jkrltIKQQ87ByF2DyaJiThGLPf+DbzeRXqVSO5e9YfOW6F7cklE8fqagBL18ol8rytDc1qNV8cMMnmzBE7t4+XL/Re4nI2T8oGyAFytDOwuHWhpyXUdXrxckQ/rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784130432; c=relaxed/simple;
-	bh=9NcPnTXsdZ8RvpB1dyL2Xv3ITs7uDVh7WEThip/MWWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=n84bmtKKj8PhNl6dE6xjovzm+IdnP9jgIRwSA35aYsJwyjtAMGpiCKxIsw0dxC9qmKyMv++z0bn01lgszRooCZozyZUiGJppP/xwg5+PEZkG2BfyudQMUIc0c64w932Q4vSFmeW867dzTjWPJmu0k31PBoxgCIl15Kz4sZhgvF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H45J6fAK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784130942; c=relaxed/simple;
+	bh=STBY0G6DHixqQwGxRMWKbAx2MYp06qcCDkil70SZmqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=murM1OZz1qXgw++ULABlKR4blnMdlMydXG1xgxikAOEIzCgxKo18DGCpP+PZxcUg4MqxZeKUbnLBBvShk0Vhny7N0YLhf6xyZ9riijrbCLbcKMZw4hk8MrwikEZ/mBfB+DHXLqpIPN6ZI9/woEPaj52xK2kyXP/+I6IgItNXAjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VnLKYN/S; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H45J6fAK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784130427;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VnLKYN/S"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784130922;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9S45MFUtOE7ctpW9HaHMKFKg1ANHfRP1oIVMuko7qnU=;
-	b=H45J6fAKw00IAHChhmoyRPkkfo/HfKl/0st3ic+bjKT2DcvDL12Ps28FYybxOULAScRb52
-	4AT3/0W3usFokfISVLCu2bZh+/YosywXh/rppBFqBxirwNMM0+YLt4gZ8XNWNDeuUwwxj3
-	TKaL0iEX/BreRGoQypgFNj5nV+cqBnA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-443-EZPWzez9ORaKPQRQqBWmbg-1; Wed,
- 15 Jul 2026 11:47:03 -0400
-X-MC-Unique: EZPWzez9ORaKPQRQqBWmbg-1
-X-Mimecast-MFC-AGG-ID: EZPWzez9ORaKPQRQqBWmbg_1784130422
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 459321955F18;
-	Wed, 15 Jul 2026 15:47:01 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.44.32.112])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DCB8E1800286;
-	Wed, 15 Jul 2026 15:46:55 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XBs/iZ6MmTQu7DoOoSSI8RIx1fXFg8s0vEoeX9y13WI=;
+	b=VnLKYN/SYTW4IPxxXxdh7OLwjdnR3rtVKdIbx5URLlSipoausZmcXswKRQjmUa1zwXjWg/
+	9IGwqKrYmXLy1jNFGciWCcKTJgotZ0iyR/UiSCu8xYpQPrp2Bj5XZMI+7VAC3OnxbOn/jU
+	mmvgl8NVEgLDhE3d6RO1SnJfENnsEpg=
+From: Usama Arif <usama.arif@linux.dev>
 To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v3 6/6] rtla/osnoise: Trace IPI events when recording a trace file
-Date: Wed, 15 Jul 2026 17:45:51 +0200
-Message-ID: <20260715154553.2020891-7-vschneid@redhat.com>
-In-Reply-To: <20260715154553.2020891-1-vschneid@redhat.com>
-References: <20260715154553.2020891-1-vschneid@redhat.com>
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	leitao@debian.org
+Cc: Usama Arif <usama.arif@linux.dev>
+Subject: [RFC] tracing: Try user copies with page faults disabled first
+Date: Wed, 15 Jul 2026 08:54:54 -0700
+Message-ID: <20260715155454.4127988-1-usama.arif@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: VhaVlFkSgy-3YXhDon9hbkjWScgHGuDhECFG1nCFpjY_1784130422
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-Migadu-Flow: FLOW_OUT
 
-IPIs can now be monitored and accounted by osnoise top. When that is
-the case, also record them when saving a trace file.
+trace_user_fault_read() is called with preemption disabled to copy user
+memory into a per-cpu scratch buffer. The existing implementation enables
+preemption around the copy because faulting user memory can sleep. That
+opens a window where another task can run on the same CPU and clobber the
+per-cpu buffer, so the copy is wrapped in a retry loop: sample
+nr_context_switches_cpu(), do the preempt-enabled copy, and retry if the
+counter changed. If this fails to complete 100 times, the function gives up
+with a warning.
 
-To match what is being recorded by the tool for its own analysis, event
-filters are applied to the events recorded to the trace output.
+nr_context_switches_cpu() reads rq->nr_switches. That counter increments
+for every context switch on the CPU, not only for switches to tasks that
+use this tracing scratch buffer. On a heavily loaded system, unrelated
+scheduler activity can move the counter during every preempt-enabled copy
+attempt, exhaust the retry guard, and trigger the warning.
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+This is showing up across the Meta fleet around 100 times a day since the
+kernel began upgrading to 7.1, mostly on arm servers:
+
+  Error: Too many tries to read user space
+  WARNING: kernel/trace/trace.c:6244 at trace_user_fault_read+0x284/0x2c8, CPU#28: Collection-18/677527
+  CPU: 28 UID: 0 PID: 677527 Comm: Collection-18 Kdump: loaded Not tainted 7.1.0-.... #1 PREEMPTLAZY
+  Hardware name: Quanta Java Island MP 29F0EMA08CH/Java Island, BIOS F0EJ3A16 03/12/2026
+  Call trace:
+   trace_user_fault_read+0x284/0x2c8 (P)
+   syscall_get_data+0x144/0x2c0
+   perf_syscall_enter+0xc0/0x2d8
+   syscall_trace_enter+0x1a0/0x270
+   do_el0_svc+0x54/0xb8
+   el0_svc+0x44/0x268
+   el0t_64_sync_handler+0x7c/0x120
+   el0t_64_sync+0x17c/0x180
+  ---[ end trace 0000000000000000 ]---
+
+The retry loop is only needed when preemption must be enabled for the user
+copy. If the user pages are already resident, the copy can complete without
+fault handling that sleeps, and preemption can stay disabled throughout.
+
+Add a fast path that first tries the copy with page faults disabled. For
+the plain copy_from_user case, use __copy_from_user_inatomic(). If the
+probe faults, the architecture exception-table fixup returns a non-zero
+not-copied count and trace_user_fault_read() falls back to the existing
+preempt-enabled slow path.
+
+Custom copy callbacks need the same behavior. Update the syscall argument
+copy callbacks to report a non-zero return only when the pagefault-disabled
+probe faults. With page faults enabled, keep their previous behavior:
+record the syscall event and omit only the individual user argument that
+still cannot be copied.
+
+The slow path remains in place for nonresident pages and permanent copy
+failures. nr_context_switches_cpu() still overcounts, but the retry loop is
+now avoided for the common resident-page case that does not need fault
+handling.
+
+Reported-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Usama Arif <usama.arif@linux.dev>
 ---
- tools/tracing/rtla/src/common.c      |  2 +-
- tools/tracing/rtla/src/common.h      |  2 +-
- tools/tracing/rtla/src/osnoise.c     | 72 +++++++++++++++++++++++++++-
- tools/tracing/rtla/src/osnoise.h     |  4 ++
- tools/tracing/rtla/src/osnoise_top.c | 36 ++------------
- 5 files changed, 80 insertions(+), 36 deletions(-)
+This warning is very likely occuring when the fleetwide profiler runs
+and something else seems to load the server. (As we have perf_syscall_enter()
+in the stack and I see the profiler process active when the warning prints).
+It can occur several days after boot, so its a bit difficult to verify
+if the warning will go away with this patch deployed.
+If the patch looks good, we can deploy it in the fleet and report back.
+---
+ kernel/trace/trace.c          | 22 +++++++++++++++--
+ kernel/trace/trace_syscalls.c | 45 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 62 insertions(+), 5 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index d0a8a6edbf0cb..dd302427557ca 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -204,7 +204,7 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1146b83b711a..fe1637afac84 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6173,8 +6173,10 @@ int trace_user_fault_put(struct trace_user_buf_info *tinfo)
+  *   size: The @size of the ptr to read
+  *   data: The @data parameter
+  *
+- * It is expected that @copy_func will return 0 on success and non zero
+- * if there was a fault.
++ * @copy_func may be called with page faults disabled first. It is
++ * expected that @copy_func will return 0 on success and non zero if the
++ * copy needs to be retried with page faults enabled or if there was a
++ * fault.
+  *
+  * Returns a pointer to the buffer with the content read from @ptr.
+  *   Preemption must remain disabled while the caller accesses the
+@@ -6201,6 +6203,22 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 	if (size > tinfo->size)
+ 		return NULL;
  
- 	if (params->threshold_actions.present[ACTION_TRACE_OUTPUT] ||
- 	    params->end_actions.present[ACTION_TRACE_OUTPUT]) {
--		tool->record = osnoise_init_trace_tool(ops->tracer);
-+		tool->record = osnoise_init_trace_tool(params, ops->tracer);
- 		if (!tool->record) {
- 			err_msg("Failed to enable the trace instance\n");
- 			goto out_free;
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 045253230fcf2..421e06e10f3f1 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -178,7 +178,7 @@ int osnoise_set_workload(struct osnoise_context *context, bool onoff);
++	/*
++	 * Fastpath: try the copy with page faults disabled. Preemption is
++	 * already disabled by the caller, so no other task can run on this
++	 * CPU to corrupt the per-CPU buffer, and the seqcount-style retry
++	 * loop below is unnecessary. This succeeds whenever the user pages
++	 * are already present.
++	 */
++	pagefault_disable();
++	if (copy_func)
++		ret = copy_func(buffer, ptr, size, data);
++	else
++		ret = __copy_from_user_inatomic(buffer, ptr, size);
++	pagefault_enable();
++	if (!ret)
++		return buffer;
++
+ 	/*
+ 	 * This acts similar to a seqcount. The per CPU context switches are
+ 	 * recorded, migration is disabled and preemption is enabled. The
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index e98ee7e1e66f..bc9d0134f7c1 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>	/* for MODULE_NAME_LEN via KSYM_SYMBOL_LEN */
+ #include <linux/ftrace.h>
+ #include <linux/perf_event.h>
++#include <linux/uaccess.h>
+ #include <linux/xarray.h>
+ #include <asm/syscall.h>
  
- void osnoise_destroy_tool(struct osnoise_tool *top);
- struct osnoise_tool *osnoise_init_tool(char *tool_name);
--struct osnoise_tool *osnoise_init_trace_tool(const char *tracer);
-+struct osnoise_tool *osnoise_init_trace_tool(struct common_params *params, const char *tracer);
- bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record);
- int osnoise_set_stop_us(struct osnoise_context *context, long long stop_us);
- int osnoise_set_stop_total_us(struct osnoise_context *context,
-diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-index 4ff5dad013b10..ae6e5f03e828f 100644
---- a/tools/tracing/rtla/src/osnoise.c
-+++ b/tools/tracing/rtla/src/osnoise.c
-@@ -1178,10 +1178,56 @@ struct osnoise_tool *osnoise_init_tool(char *tool_name)
- 	return top;
+@@ -660,32 +661,70 @@ struct syscall_args {
+ 	int		uargs;
+ };
+ 
++/*
++ * The callback return value is consumed by trace_user_fault_read() as a
++ * whole-buffer status: 0 means the per-CPU scratch buffer can be used,
++ * non-zero means retry with page faults enabled or fail the read.
++ *
++ * Syscall tracing also needs per-argument status, because one bad user
++ * pointer should omit only that appended argument, not the syscall event
++ * itself. Store that per-argument result in args->read[].
++ *
++ * When called by the pagefault-disabled fast path, a fault may just mean the
++ * user page needs to be faulted in, so report it to trace_user_fault_read().
++ * When called by the pagefault-enabled slow path, record the per-argument
++ * failure in args->read[] and return 0 so the syscall event can still be emitted.
++ */
+ static int syscall_copy_user(char *buf, const char __user *ptr,
+ 			     size_t size, void *data)
+ {
+ 	struct syscall_args *args = data;
++	bool inatomic = pagefault_disabled();
++	bool faulted = false;
+ 	int ret;
+ 
+ 	for (int i = 0; i < args->uargs; i++, buf += SYSCALL_FAULT_ARG_SZ) {
+ 		ptr = (char __user *)args->ptr_array[i];
+ 		ret = strncpy_from_user(buf, ptr, size);
+ 		args->read[i] = ret;
++		if (inatomic && ret < 0)
++			faulted = true;
+ 	}
+-	return 0;
++
++	return faulted ? -EFAULT : 0;
  }
  
 +/*
-+ * osnoise_init_ipi_filters - Initialize event filtering for IPI events
++ * Copy explicitly sized user arguments into the per-CPU scratch buffer.
++ * The callback return value is whole-buffer status for trace_user_fault_read():
++ * return non-zero from the pagefault-disabled fast path so it can retry with
++ * faults enabled. Per-argument status is stored in args->read[].
++ *
++ * The __copy_from_user*() helpers return bytes not copied. Store @size for a
++ * fully copied argument and -1 for a copy fault. When the pagefault-enabled
++ * slow path still faults, return 0 so the syscall event can be emitted and
++ * only that appended user argument is omitted.
 + */
-+int osnoise_init_ipi_filters(struct osnoise_tool *tool,
-+				    struct common_params *params,
-+				    bool *filters_enabled)
-+{
-+	char filter[MAX_PATH];
-+	int retval;
-+	/*
-+	 * If tracing on a subset of possible CPUs, leverage the kernel filtering
-+	 * infrastructure to only generate events on traced CPUs.
-+	 * Older kernels (pre v6.6) may have the IPI events but not the ability
-+	 * to filter them, so allow that to fail gracefully.
-+	 */
-+
-+	snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n", params->cpus);
-+	retval = tracefs_event_file_write(tool->trace.inst,
-+					  "ipi", "ipi_send_cpu", "filter",
-+					  filter);
-+	if (retval < 0) {
-+		debug_msg("Could not set ipi_send_cpu CPU filter\n");
-+		*filters_enabled = false;
-+		return 0;
-+	}
-+
-+
-+	snprintf(filter, ARRAY_SIZE(filter), "cpumask & CPUS{%s}\n", params->cpus);
-+	retval = tracefs_event_file_write(tool->trace.inst,
-+					  "ipi", "ipi_send_cpumask", "filter",
-+					  filter);
-+	if (retval < 0) {
-+		/*
-+		 * If we managed to set up the previous filter but not
-+		 * this one, something's really wrong
-+		 */
-+		err_msg("Could not set ipi_send_cpumask CPU filter\n");
-+		*filters_enabled = false;
-+		return -1;
-+	}
-+
-+	*filters_enabled = true;
-+	return 0;
-+}
-+
- /*
-  * osnoise_init_trace_tool - init a tracer instance to trace osnoise events
-  */
--struct osnoise_tool *osnoise_init_trace_tool(const char *tracer)
-+struct osnoise_tool *osnoise_init_trace_tool(struct common_params *params,
-+					     const char *tracer)
+ static int syscall_copy_user_array(char *buf, const char __user *ptr,
+ 				   size_t size, void *data)
  {
- 	struct osnoise_tool *trace;
- 	int retval;
-@@ -1196,6 +1242,30 @@ struct osnoise_tool *osnoise_init_trace_tool(const char *tracer)
- 		goto out_err;
+ 	struct syscall_args *args = data;
++	bool inatomic = pagefault_disabled();
++	bool faulted = false;
+ 	int ret;
+ 
+ 	for (int i = 0; i < args->uargs; i++, buf += SYSCALL_FAULT_ARG_SZ) {
+ 		ptr = (char __user *)args->ptr_array[i];
+-		ret = __copy_from_user(buf, ptr, size);
++		if (inatomic)
++			ret = __copy_from_user_inatomic(buf, ptr, size);
++		else
++			ret = __copy_from_user(buf, ptr, size);
+ 		args->read[i] = ret ? -1 : size;
++		if (inatomic && ret)
++			faulted = true;
  	}
- 
-+	if (!params->ipi)
-+		goto done;
+-	return 0;
 +
-+	retval = tracefs_event_enable(trace->trace.inst, "ipi", "ipi_send_cpu");
-+	if (retval < 0 && !errno) {
-+		err_msg("Could not find ipi_send_cpu event\n");
-+		goto out_err;
-+	}
-+
-+	retval = tracefs_event_enable(trace->trace.inst, "ipi", "ipi_send_cpumask");
-+	if (retval < 0 && !errno) {
-+		err_msg("Could not find ipi_send_cpumask event\n");
-+		goto out_err;
-+	}
-+
-+	if (params->cpus) {
-+		bool unused;
-+
-+		retval = osnoise_init_ipi_filters(trace, params, &unused);
-+		if (retval < 0)
-+			goto out_err;
-+	}
-+
-+done:
- 	retval = enable_tracer_by_name(trace->trace.inst, tracer);
- 	if (retval) {
- 		err_msg("Could not enable %s tracer for tracing\n", tracer);
-diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
-index 340ff5a64e6e4..81a704c361ec0 100644
---- a/tools/tracing/rtla/src/osnoise.h
-+++ b/tools/tracing/rtla/src/osnoise.h
-@@ -63,6 +63,10 @@ int osnoise_enable(struct osnoise_tool *tool);
- int osnoise_main(int argc, char **argv);
- int hwnoise_main(int argc, char **argv);
++	return faulted ? -EFAULT : 0;
+ }
  
-+int osnoise_init_ipi_filters(struct osnoise_tool *tool,
-+			     struct common_params *params,
-+			     bool *filters_enabled);
-+
- extern struct tool_ops timerlat_top_ops, timerlat_hist_ops;
- extern struct tool_ops osnoise_top_ops, osnoise_hist_ops;
- 
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index afab2f341a1e9..87d28865515b5 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -392,7 +392,7 @@ osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *record,
-  */
- struct osnoise_tool *osnoise_init_top(struct common_params *params)
- {
--	bool ipi_filters_enabled = false;
-+	bool ipi_filters_enabled;
- 	struct osnoise_tool *tool;
- 	int retval;
- 
-@@ -424,41 +424,11 @@ struct osnoise_tool *osnoise_init_top(struct common_params *params)
- 		goto out_err;
- 	}
- 
--	/*
--	 * If tracing on a subset of possible CPUs, leverage the kernel filtering
--	 * infrastructure to only generate events on traced CPUs.
--	 * Older kernels (pre v6.6) may have the IPI events but not the ability
--	 * to filter them, so allow that to fail gracefully.
--	 */
- 	if (params->cpus) {
--		char filter[MAX_PATH];
--
--		snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n", params->cpus);
--		retval = tracefs_event_file_write(tool->trace.inst,
--						  "ipi", "ipi_send_cpu", "filter",
--						  filter);
--		if (retval < 0) {
--			debug_msg("Could not set ipi_send_cpu CPU filter\n");
--			goto no_filter;
--		}
--
--
--		snprintf(filter, ARRAY_SIZE(filter), "cpumask & CPUS{%s}\n", params->cpus);
--		retval = tracefs_event_file_write(tool->trace.inst,
--						  "ipi", "ipi_send_cpumask", "filter",
--						  filter);
--		if (retval < 0) {
--			/*
--			 * If we managed to set up the previous filter but not
--			 * this one, something's really wrong
--			 */
--			err_msg("Could not set ipi_send_cpumask CPU filter\n");
-+		retval = osnoise_init_ipi_filters(tool, params, &ipi_filters_enabled);
-+		if (retval < 0)
- 			goto out_err;
--		}
--
--		ipi_filters_enabled = true;
- 	}
--no_filter:
- 
- 	/*
- 	 * If no filtering is available and we're tracing all CPUs, we can still
+ static char *sys_fault_user(unsigned int buf_size,
 -- 
-2.55.0
+2.53.0-Meta
 
