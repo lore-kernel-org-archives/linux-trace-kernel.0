@@ -1,192 +1,137 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68819299A87
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 06:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A3D314D13
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 06:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784095794; cv=none; b=kjsB+RvpPPmcfC3QD+T5KRyGFtrRs0KyEbGdt6zvLTiM7hGmiURH1zVi4d3hsmaIW7rUyozAlB3fp7v7NirITWSkrUoU0tHLwy/H7m0ZPd2WY1kk8g728HJ1sEhnTZUPXrpcqnxK9n2R3+UMPgN5Pif2x0uTHZ7b0Wuncw/2Ws0=
+	t=1784097851; cv=none; b=YQwkp7GOFiGXlDkvQUi4agrh8IcQgWp1fMW5sGTxz/VQCBOgwW+F7YksMs60jQXXm02TqyfTS/XdhymeawSUcFT8zk2tPCEXtnNlEc96xWCC/O1pDOm5+mW/XIqwwZ11PR9vVfFTz489ykJmQRyBSL2b8bBt0awSi7b7BfldNv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784095794; c=relaxed/simple;
-	bh=7OxzrEp3Uph1BCupSIr8N9UDD4zAcSCrSYHlYWLoJOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P6sT7PnXhx2MgpKdhuhPLo+yPWElm9of4zZpEZtlkKWtta0x8KiKr67yaNZeUlR2IfCxSHWBa7gUygiJlqb55TtbAQ9spyZINah0ese3UF5CWgmn7wL1F3jjAdjZ/Nnsn939jPp1+crlQRY5nI+HNpZ/uLZIR8OHcNw+Jp8+uk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=otMDBys/; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784097851; c=relaxed/simple;
+	bh=JnRbtAqdkQCRSWgMj/IV63VrjsPLGJXuE0DkppoZBT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TATYUfiQVp3ox2/MPLkbc6lp1OGswX+Sw0mTwcPgWzjYWELM68yMQKhwYjVMhcrQLXnGDKy2P4Wz4YzrSxYeotthrZPrd+Ko81W1PXaGUqjfaiAMy0RytfvK53SXvCbfJ56v3f+3ITjPakDXM09TdsBHs3txRiuGx6iDLfUEqLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uOe7h4J8; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otMDBys/"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-9034b6b7674so37062546d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 23:09:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uOe7h4J8"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4798bea72f9so2747593f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jul 2026 23:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784095792; x=1784700592; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ap/ZWoF+KZdLbcGYr44YI42fQGqxWw5khi4hfnBFVEw=;
-        b=otMDBys/Bks0jEHGsAvXZpXaFz7hbccWpIXkNDKbiNDxe5suMy8ygPnUWjY0YHAFjC
-         t86drEEk9lclnKWtwEzvcuM9lWattRFJgT9NpBH/JlFs6Nn0/OPcp8jDMFpU7RvL5Yv2
-         hRVluy+Y+FTr7vqRFWpPX6v6/zJsx7zYOnJVxViqsEVeHyDyNEcc0Ao9MB1TSTC0dYVT
-         k+P+7PZdiFfWOslzE+ckIIZCBdRKkz/zRFn3NOHUPTAAqBraFsuptJeQ5Nd52P87rGj6
-         co3gnTekgAUrZkLrctvt0db1J+pbbaP0trsfj2fJWKlW4eGM1ZwFf03SYivu+23J45sa
-         1Gww==
+        d=google.com; s=20251104; t=1784097848; x=1784702648; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=reWpCNU6/x7BF2W+S+DROQRBvzRQCIh7CY1H85aUcy4=;
+        b=uOe7h4J8A1uH2geUe8oRNZD789XF2vyxjv7BWfkwsQaLR81iOKecr6Ts2/ss+obgot
+         rQIVDpBBXWnoV0elLORkGPn03ixT+51qQjuVYFzABDKWWkTrftsHXxAk3+JcAZgpK0kX
+         kW7rhKzrXJ/UjQDitxYNDLnx0lSz0ks/YaM0bUDfBVNqn7IymPem+Evlhw0lPHamRs6C
+         faSrR6/OM/G/xbX2TgLolM7HJ/UlqrMrhJIOEC4Fuo+2pEwNhn7m3xi6TeAORNC+j8K/
+         2k/4ADZzeYSMejBTfaEtB9kI8dVU7RU6gKqXuuKuVIr3I9MiPDHAf7jEe27zen5N07lk
+         JRpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784095792; x=1784700592;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ap/ZWoF+KZdLbcGYr44YI42fQGqxWw5khi4hfnBFVEw=;
-        b=iqWqg2jn2PX0w1OTSl9gGgYXgUKmLC48epsUaSirTP0taXjO3y5NGJD/PVg++mFBw6
-         3PF88ZorkjDBU3LJ21IggR8Hmj9WUIPJsAC+l4aR4jS1fZHbgJbBnyA2Sn4Iwh5pAYp2
-         nGZdZNZF8IopJUSNowUzcFzHPtsifUIQ++kPfvhD4E1t81dP/lcr3ZHmdS6MrePAhLeo
-         1mVO42+D/vzFDm252LrXuI4AnOTHp8rdJut0J8dXAIDIWmJVhf/XO1Gik27XvooQQVyZ
-         LvFSVBglq6dWsp376P7FDNs63gwZJ9KW65aQG8RBp673Lgs3zfaE/icLG2ApqrYMGULG
-         yS6Q==
-X-Forwarded-Encrypted: i=1; AHgh+Rrmdv/1avegN5aS+SGLZcJL7vA+RmlENkZDB4MmovQi7ujgEiMTjQmmOZZesUO/0/h3LPXERU/FgtVo56qweOUkYEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFEDfbvNpoO3pD6N0bvprKouFzqnO6hz4eGYSy3ccTtsSmVU2y
-	dHjcXMuy7YZAJjIztDK2NQaFi1Id05SAKl+hl/jgEbtlS4eLbBSCCU9D
-X-Gm-Gg: AfdE7cnRK/Ks/0WWIXwypDlDdFVOIotJjwVPPqC0xEc/r814VCBiPD/rDAh+B86JtKA
-	ZrCIUX7g6upa/J9JTUtzikM0f/V0dRFVz2fh/C9qK37n6rVQzllDN8SbSm1Vv9MzUuQ5babH6AJ
-	48jTSeKcwh28HHdBGN9uoiqzZJGBiAhwYJp50j9BY9y6FCt3TBSyxjjszW/bBsj5fl1HkrZ+zca
-	UrXhodsJN6nQkwX83uvDUCWMyEg7QPdxqOQtnUO+rqrJPcMSKV4BaELEohIpBuzZNX1ExSAOVPI
-	szGiba0dQjWwvUFIq7ZcEl6xt98035tHzcgM7b5kqC+YExcOB1TgyzvJY2B+FWPClSFuBPu46o6
-	vNr9JfUmxcYeDRAt02moBt6W63o3BFkYpqMZ50+58Q+AbYZIkKgsytbODGWCJ6p+9jsEWEAST7d
-	JYCzbxPacjAnHFXBsFMdmNaOp3ADHhGnW8OlegLEZGLePNUde50yAH3FvcB8nbDHSvIg==
-X-Received: by 2002:a05:620a:7083:b0:914:b9a2:f29d with SMTP id af79cd13be357-93083c95a80mr670626385a.37.1784095792251;
-        Tue, 14 Jul 2026 23:09:52 -0700 (PDT)
-Received: from [198.18.0.1] ([48.45.163.146])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930759c63fbsm589045485a.22.2026.07.14.23.09.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2026 23:09:51 -0700 (PDT)
-Message-ID: <bc580a14-bd65-4ec4-a27c-fb81d800dccd@gmail.com>
-Date: Wed, 15 Jul 2026 02:09:39 -0400
+        d=1e100.net; s=20251104; t=1784097848; x=1784702648;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=reWpCNU6/x7BF2W+S+DROQRBvzRQCIh7CY1H85aUcy4=;
+        b=qtU0yWo8dbjUCrI/Mt6LtFVn4FPbrqvOi60Kn9CXWmap+3s9DiR3AfKCmDhRxOFeoM
+         pTQL18tBfkBYO+H0BvrGco8NRI2alrEfhh1jgISUiRbAX6j0N286uy1xk0NgK4Dk3AQI
+         bDE2CrFjljeYaccYQcJZ/Hy3wZ6Z/h8ftUbwY3TFWxmAOJZrOALveL4H2Eq+CvzD4Ziv
+         tOgkNL8un+nzRpJOFMh0qrwdg3lPW3hwCc1ygCPcmaCLoBMxnKlMfEEU7i6FzDQQlvYk
+         qn1/OFYpQMu/2nZvJFaj/ke6YcWElr1296Hvw5DhyyuKga5sAPi8P6DlKYP+WuXQzEEe
+         MLPw==
+X-Forwarded-Encrypted: i=1; AHgh+RqMz/L9RaBRbkSkxdI+2eleT/PkDhhQ4egQk4g+b2lkw88EbWSKrsiYCQx7lrFx5zZzyJgXK+AaesIA6fOxYFcvXcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl6dZ6+FmwU364C47c/uy2DprN/sih9X+keC3tG/ey8R1EcbC/
+	l5x/Jc9LTC7kmKI9LcutuPXgzOgP6JwqZ76xn+NuSxtsK3XFcCd4oYssTv/eKeK0bJD1NHAF4Hy
+	jK1B84A==
+X-Gm-Gg: AfdE7ckF1djQCjzVz3sqyIy87pwUJUkj9vjfM1sJN1wGYaU9jXxYKNDQsBskK3kaQAB
+	tPRUzRbdfjFYMfdXGXFPChK3FXMJ4iP1Gqdfn3OL87+ZjRrJR2dVw6lNkmuU0My9A/j5aOEEKTl
+	FhScnbL3oos6gY+bfOciWK3rdctcWLRwDjXDwYjE3A9aRPqlR3LO/whuKvWiqTiGl6ex2aFj6jS
+	jTtrA3W97J4VxGDLw0DozyZVHTXABkxPye2FZ8bV0vt+lEIOuMIcQKQgxvzDvzhwvb9c+vhcuuT
+	TnFYDcvQaiuJKC9Vuqwf+MPzvirW8Xr3i+WS/RcwLj4h/9l+oBhW70bxUk4ihzVEtmepLjuzsWD
+	Qc6ierwgS11J7Gm1G35YhslErVVtA3lznC64KJiSjoXOzawvPWe7jQtg+Bz1RVtyn4JK8xddFBN
+	ZprppPICjsjI1CeN62DS4/ZGRQPNqHQzOxGrqD06ckAERd2xnQ4Pk=
+X-Received: by 2002:a5d:5f87:0:b0:475:f0c2:5b00 with SMTP id ffacd0b85a97d-47f488dea53mr6135067f8f.54.1784097848123;
+        Tue, 14 Jul 2026 23:44:08 -0700 (PDT)
+Received: from google.com (137.69.77.34.bc.googleusercontent.com. [34.77.69.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f464c4320sm13412585f8f.32.2026.07.14.23.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 23:44:07 -0700 (PDT)
+Date: Wed, 15 Jul 2026 07:44:04 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Jackie Liu <liu.yun@linux.dev>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Propagate errors from remote event bulk updates
+Message-ID: <alcsNLVLhWOH3KbJ@google.com>
+References: <20260715060448.17674-1-liu.yun@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 08/13] mm/kwatch: add hardware breakpoint backend
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20260714182243.10687-1-wangjinchao600@gmail.com>
- <20260714183206.12688-1-wangjinchao600@gmail.com>
- <20260714171438.226faf7b@gandalf.local.home>
-Content-Language: en-US
-From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <20260714171438.226faf7b@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260715060448.17674-1-liu.yun@linux.dev>
 
-On 7/14/2026 5:14 PM, Steven Rostedt wrote:
-> On Wed, 15 Jul 2026 02:32:06 +0800
-> Jinchao Wang <wangjinchao600@gmail.com> wrote:
+On Wed, Jul 15, 2026 at 02:04:48PM +0800, Jackie Liu wrote:
+> From: Jackie Liu <liuyun01@kylinos.cn>
 > 
->> --- /dev/null
->> +++ b/include/trace/events/kwatch.h
->> @@ -0,0 +1,57 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM kwatch
->> +
->> +#if !defined(_TRACE_KWATCH_H) || defined(TRACE_HEADER_MULTI_READ)
->> +#define _TRACE_KWATCH_H
->> +
->> +#include <linux/tracepoint.h>
->> +#include <linux/ptrace.h>
->> +
->> +#define KWATCH_STACK_DEPTH 8
->> +
->> +struct trace_seq;
->> +const char *kwatch_trace_print_stack(struct trace_seq *p,
->> +				     const unsigned long *stack,
->> +				     unsigned int nr);
->> +
->> +TRACE_EVENT(kwatch_hit,
->> +	TP_PROTO(unsigned long ip, unsigned long sp, unsigned long addr,
->> +		 u64 time_ns,
->> +		 unsigned long *stack_entries, unsigned int stack_nr),
->> +	TP_ARGS(ip, sp, addr, time_ns, stack_entries, stack_nr),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(unsigned long, ip)
->> +		__field(unsigned long, sp)
->> +		__field(unsigned long, addr)
->> +		__field(u64, time_ns)
+> remote_events_dir_enable_write() ignores the return value from
+> trace_remote_enable_event(). If a remote rejects an event state change,
+> the write therefore reports success even though the affected event remains
+> in its previous state.
 > 
-> Move the time_ns to the first field, as unsigned long on 32 bit
-> architectures is 4 bytes, and this will make 4 byte "hole" in the event.
-Will fix in v2.> 
+> Keep trying all events, but retain and return the first error. This matches
+> __ftrace_set_clr_event_nolock(), which permits partial updates while
+> notifying userspace when an operation fails.
 > 
->> +		__field(unsigned int, stack_nr)
-> 
-> Make stack_nr the last element for the same reason.
+> Fixes: 775cb093bc50 ("tracing: Add events/ root files to trace remotes")
+> Assisted-by: Codex:gpt-5.6-sol
+> Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
 
-Will fix in v2.
+I have sent a related improvement for that here [1]
 
-> 
->> +		__array(unsigned long, stack, KWATCH_STACK_DEPTH)
-> 
-> Make the above a dynamic array based on stack entries.
-> 
-> 		__dynamic_array(unsigned long, stack, min_t(unsigned int, stack_nr,
-> 			  KWATCH_STACK_DEPTH);
+[1] https://lore.kernel.org/all/20260605163825.1762953-3-vdonnefort@google.com/
 
-Much better than always paying for the full depth - will convert to
-__dynamic_array (and use __get_dynamic_array() in TP_fast_assign and
-TP_printk as you showed) in v2.
 
-Thank you for the review!
-
-Thanks,
-Jinchao
-
+> ---
+>  kernel/trace/trace_remote.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index 0f6ef5c36d84..5212e685f0a3 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+> @@ -1149,11 +1149,22 @@ static ssize_t remote_events_dir_enable_write(struct file *filp, const char __us
+>  	guard(mutex)(&remote->lock);
+>  
+>  	for (i = 0; i < remote->nr_events; i++) {
+> +		int eret;
+>  		struct remote_event *evt = &remote->events[i];
+>  
+> -		trace_remote_enable_event(remote, evt, enable);
+> +		eret = trace_remote_enable_event(remote, evt, enable);
+> +		/*
+> +		 * Save the first error and return that. Some events
+> +		 * may still have been enabled, but let the user
+> +		 * know that something went wrong.
+> +		 */
+> +		if (!ret && eret)
+> +			ret = eret;
+>  	}
+>  
+> +	if (ret)
+> +		return ret;
+> +
+>  	return count;
+>  }
+>  
+> -- 
+> 2.54.0
 > 
 > 
->> +	),
->> +
->> +	TP_fast_assign(
->> +		unsigned int i;
-> 		unsigned long *stack = __get_dynamic_array(stack);
->> +
->> +		__entry->ip = ip;
->> +		__entry->sp = sp;
->> +		__entry->addr = addr;
->> +		__entry->time_ns = time_ns;
->> +		__entry->stack_nr = min_t(unsigned int, stack_nr,
->> +					  KWATCH_STACK_DEPTH);
->> +		for (i = 0; i < __entry->stack_nr; i++)
->> +			__entry->stack[i] = stack_entries[i];
-> 
-> 			stack[i] = stack_entries[i];
-> 
->> +	),
->> +
->> +	TP_printk("KWatch HIT: time=%llu.%06lu ip=%pS addr=0x%lx%s",
->> +		  __entry->time_ns / 1000000000ULL,
->> +		  (unsigned long)((__entry->time_ns / 1000ULL) % 1000000ULL),
->> +		  (void *)__entry->ip, __entry->addr,
->> +		  kwatch_trace_print_stack(p, __entry->stack,
-> 
-> 		  kwatch_trace_print_stack(p, __get_dynamic_array(stack),
-> 
->> +					   __entry->stack_nr))
->> +);
->> +
-> 
-> -- Steve
-
