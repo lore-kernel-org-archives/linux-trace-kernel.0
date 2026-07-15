@@ -1,286 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFB840EBA9;
-	Wed, 15 Jul 2026 15:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C9E420460
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jul 2026 15:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784129015; cv=none; b=TFN+bKZjvz00aq1X+GcCrPdWiTitVGmPD7/mig7wgFepy6DUvO/YcOPky9lTS7Q2ESfIcibCXl4Uc+YFo0DIX7xejCOqGtTHLlA3MWSezX14qeGHnfq3OluZVyAW6DLT3lWfyb27yiOhlFtK/glexQLlMtRaQeytJH54U0NjPk8=
+	t=1784130402; cv=none; b=u5Apvn5VwDfhTB8WV3KCWlt+JeQDh2qS2ES0ByERiGn0tF6cuTYyqe+ztuodYMjsX/NqpANdaZp0CKB/LGMjOitAUc1moHvyikqptllTB1VwLCsV/HhElKSEXc9pl5tPZfExsOWPNhfVdNNavQQpi2j2peGBO+ge+l9YGNlUe6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784129015; c=relaxed/simple;
-	bh=9qP5LTAAk44gQZWTOXHoo7e15j4FHHXFk9sg8XT9+0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u03MzYz3xa6h66jCcaIBK9vHWA9H6o0xbd/kAtalWra2u7LemVbnTirWdid7nFS1XTcmsOlVrnfI3W6JxRF5m9ZRMtKvzmG12/3ni2gYR+KmTFtk/PoENoruO1cdNaOczfrjfSur2Q1b3zvx00M27orqs83+Zdwl5EoU6TfuW2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHFyZ3/E; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784130402; c=relaxed/simple;
+	bh=5I9JXTfCoOjJWD27NxtoK7xV86pWgSn2StdgF8ycldg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TBdQ2t4Heq47as0nwzbYg83PtBpwYvuEv2vnvvpWiHJDVAiBJCY8wM0CrwN5JvAgOumADVfIgufzVyzTM4dFShljij2XRuDuc5nitIMLQG/RuzvZYEirtD0lfefdXyvw2hnEzRZSGV/PtWHiKvAesn9/zTY4Kp3oc7Vf3jDiwu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=icxzpZ7Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHFyZ3/E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75C0D1F000E9;
-	Wed, 15 Jul 2026 15:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784129013;
-	bh=gADdUqFqdyogeafk3zRAASxcmVNA8sWMqOF6K7MzJug=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ZHFyZ3/ESAlbGMLodf52X6TrDO35Fk0c445fZjc/iDIOmZR8ceLOBcpqvIoraEE/T
-	 zeZLVqqi8htF9IPg8x+JFm/Ztq0YO7W22l91dvkihGZ/j+CaDbNRZ39M+h2IRRAPJn
-	 gOwM6i12c2CphR2jeaPmOSZdn2QRqByY6vZbMn4L22uOeN5KpZu94g9LE+GSWDYy6a
-	 desBFAJqgZSmmDqsf6sL7guf2TNq50pwPkhffsRmu0Wzj0YQUUSEp7cTuNMhMWtN9x
-	 FtkNO+2bfvmhwRnIK4YG/8FPR+l9FBnCEYqbL8I9dQIXx97pCo7on9ZfnrfGoOLbdP
-	 TCsIyKOC40Lgg==
-Message-ID: <e98110da-f26a-46ca-8360-fc84fc159bd8@kernel.org>
-Date: Wed, 15 Jul 2026 17:23:09 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icxzpZ7Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784130399;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8igb6RUYV3TWkz5S52S+3lpVMd+LuALGSZc7HI4jsoo=;
+	b=icxzpZ7QyX/JIBnmU0qWEYlnBenD0EyNXTGVbjKlR/A4O2SqCxdRFZMOog85UxLfsgtZRf
+	kmSFcZ7h0jArkael24WYCgIG5MtCUlb8WrvUzpISW/hlUEHIuco+fp4DDseTAAd90pP3Up
+	lNJ/bZX7k3n0H6e6QUH+yujtpmfcEvc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-112-dqrzOX2LMFmbzC7hlr0bLw-1; Wed,
+ 15 Jul 2026 11:46:37 -0400
+X-MC-Unique: dqrzOX2LMFmbzC7hlr0bLw-1
+X-Mimecast-MFC-AGG-ID: dqrzOX2LMFmbzC7hlr0bLw_1784130396
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40F5F180065B;
+	Wed, 15 Jul 2026 15:46:36 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.44.32.112])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 882C41800361;
+	Wed, 15 Jul 2026 15:46:32 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v3 0/6] tracing/osnoise: Track IPIs
+Date: Wed, 15 Jul 2026 17:45:45 +0200
+Message-ID: <20260715154553.2020891-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 18/33] mm/vma: use vma_start_pgoff(),
- linear_page_index() in mm code
-Content-Language: en-US
-To: Lorenzo Stoakes <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>,
- Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>,
- Dinh Nguyen <dinguyen@kernel.org>,
- Simon Schuster <schuster.simon@siemens-energy.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, SJ Park <sj@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>,
- Peter Xu <peterx@redhat.com>, Kees Cook <kees@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov
- <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>,
- Dmitry Vyukov <dvyukov@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner
- <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>,
- H Hartley Sweeten <hsweeten@visionengravers.com>,
- Lucas Stach <l.stach@pengutronix.de>,
- Christian Gmeiner <christian.gmeiner@gmail.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov
- <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>,
- Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Thierry Reding <thierry.reding@kernel.org>,
- Mikko Perttunen <mperttunen@nvidia.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
- Matthew Auld <matthew.auld@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yishai Hadas <yishaih@nvidia.com>, Shameer Kolothum
- <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>,
- Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Usama Arif <usama.arif@linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- damon@lists.linux.dev, iommu@lists.linux.dev, kasan-dev@googlegroups.com,
- linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- kvm@vger.kernel.org, Russell King <linux+etnaviv@armlinux.org.uk>
-References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
- <20260710-b4-pre-scalable-cow-v2-18-2a5aa403d977@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260710-b4-pre-scalable-cow-v2-18-2a5aa403d977@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: _vjBSk3H9ChnlsdOSg76jhvbWNqu9gxmpIhSz-xpVes_1784130396
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/10/26 22:16, Lorenzo Stoakes wrote:
-> There are many instances in which linear_page_index() (as well as
-> linear_page_delta()) is open-coded, which is confusing and inconsistent.
-> 
-> Additionally, vma->vm_pgoff doesn't necessarily make it clear that this is
-> the page offset of the start of the VMA range.
-> 
-> Doing so also aids greppability.
-> 
-> So use vma_start_pgoff() in favour of directly accessing vma->vm_pgoff, and
-> linear_page_index() where we can.
-> 
-> This also lays the ground for future changes which will add an anonymous
-> page offset in order to be able to index MAP_PRIVATE-file backed anon
-> folios in terms of their virtual page offset.
-> 
-> No functional change intended.
-> 
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: SJ Park <sj@kernel.org>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+Hi folks,
 
-Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+So I've seen a few times now reports of latency spikes caused by IPIs, usually
+because of isolation misconfiguration, but only detected at the tail of end
+e.g. a 24h timerlat run.
 
-Nit:
+It's not because those IPIs are rare, but rather that they don't by themselves
+cause a monitered CPU to reach the latency threshold, it's usually a combined
+interference that gets us there.
 
-> diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
-> index 2058db9c01d5..d10b8042adb5 100644
-> --- a/mm/damon/vaddr.c
-> +++ b/mm/damon/vaddr.c
-> @@ -10,6 +10,7 @@
->  #include <linux/mman.h>
->  #include <linux/mmu_notifier.h>
->  #include <linux/page_idle.h>
-> +#include <linux/pagemap.h>
->  #include <linux/pagewalk.h>
->  #include <linux/sched/mm.h>
->  
-> @@ -623,8 +624,8 @@ static void damos_va_migrate_dests_add(struct folio *folio,
->  	}
->  
->  	order = folio_order(folio);
-> -	ilx = vma->vm_pgoff >> order;
-> -	ilx += (addr - vma->vm_start) >> (PAGE_SHIFT + order);
-> +	ilx = vma_start_pgoff(vma) >> order;
-> +	ilx += linear_page_delta(vma, addr) >> order;
+I'd like to make it easier to detect such misconfigurations and thus IPIs
+hitting supposedly-isolated CPUs. I initially kludged a timerlat option to stop
+tracing as soon as an IPI was sent to a monitored CPU, regardless of the latency
+threshold. It sort of did the trick, but Tomáš convinced me timerlat wasn't
+really the place for that.
 
-Could these be combined to linear_page_index(vma, addr) >> order?
+So here's IPI tracking added to osnoise. This time around fully in userspace, as
+Tomáš pointed out to me that this will make it a lot easier to deploy to older
+kernels.
 
->  
->  	for (i = 0; i < dests->nr_dests; i++)
->  		weight_total += dests->weight_arr[i];
+Based on top of linux/next at 'next-20260710' to have the latest libsubcmd
+changes. 
+  
+Cheers,
+Valentin
 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index b39111abdc4b..1dbb4c6f824e 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3411,8 +3411,8 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  		 * of memory.
->  		 */
->  		struct vm_area_struct *vma = vmf->vma;
-> -		unsigned long start = vma->vm_pgoff;
-> -		unsigned long end = start + vma_pages(vma);
-> +		const unsigned long start = vma_start_pgoff(vma);
-> +		const unsigned long end = vma_end_pgoff(vma);
->  		unsigned long ra_end;
->  
->  		ra->order = exec_folio_order();
-> @@ -3930,7 +3930,8 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
->  		goto out;
->  	}
->  
-> -	addr = vma->vm_start + ((start_pgoff - vma->vm_pgoff) << PAGE_SHIFT);
-> +	addr = vma->vm_start +
-> +		((start_pgoff - vma_start_pgoff(vma)) << PAGE_SHIFT);
+Revisions
+=========
 
-This could be linear_page_index(vma, start_pgoff) <<
+v2 -> v3
+++++++++
 
->  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, addr, &vmf->ptl);
->  	if (!vmf->pte) {
->  		folio_unlock(folio);
+o Dropped the short-form -i option to leave it free 
+o Re-arranged top header printing 
+o Fixed tracefs_event_file_write() return value handling
 
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -2049,8 +2049,8 @@ struct mempolicy *get_vma_policy(struct vm_area_struct *vma,
->  		pol = get_task_policy(current);
->  	if (pol->mode == MPOL_INTERLEAVE ||
->  	    pol->mode == MPOL_WEIGHTED_INTERLEAVE) {
-> -		*ilx += vma->vm_pgoff >> order;
-> -		*ilx += (addr - vma->vm_start) >> (PAGE_SHIFT + order);
-> +		*ilx += vma_start_pgoff(vma) >> order;
-> +		*ilx += linear_page_delta(vma, addr) >> order;
+o Changed IPI filtering to allow it to gracefully fail on older kernels
+o Added filter clearing for -e events to ensure a known state
 
-Also?
 
->  	}
->  	return pol;
->  }
+v1 -> v2
+++++++++
 
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -975,7 +975,7 @@ static int do_mmap_private(struct vm_area_struct *vma,
->  		/* read the contents of a file into the copy */
->  		loff_t fpos;
->  
-> -		fpos = vma->vm_pgoff;
-> +		fpos = vma_start_pgoff(vma);
->  		fpos <<= PAGE_SHIFT;
->  
->  		ret = kernel_read(vma->vm_file, base, len, &fpos);
-> @@ -1378,7 +1378,8 @@ static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
->  	delete_nommu_region(vma->vm_region);
->  	if (new_below) {
->  		vma->vm_region->vm_start = vma->vm_start = addr;
-> -		vma->vm_region->vm_pgoff = vma->vm_pgoff += npages;
+o Dropped the in-kernel osnoise_sample changes and made it all userspace
 
-yuck, good to remove that ugly construct
-it's not the only occurence in this function
-oh well
+Valentin Schneider (6):
+  rtla/osnoise: Add IPI tracking cmdline option
+  rtla/osnoise: Record IPI count in osnoise top
+  rtla/osnoise: Leverage IPI event filters when tracing a subset of CPUs
+  rtla/osnoise: Allow IPI filters to gracefully fail
+  rtla: Unconditionally clean any pre-existing filters for user-provided
+    events
+  rtla/osnoise: Trace IPI events when recording a trace file
 
-> +		vma->vm_pgoff += npages;
-> +		vma->vm_region->vm_pgoff = vma_start_pgoff(vma);
->  	} else {
->  		vma->vm_region->vm_end = vma->vm_end = addr;
->  		vma->vm_region->vm_top = addr;
+ Documentation/tools/rtla/rtla-osnoise-top.rst |   4 +
+ tools/tracing/rtla/src/cli.c                  |   1 +
+ tools/tracing/rtla/src/cli_p.h                |   3 +
+ tools/tracing/rtla/src/common.c               |   2 +-
+ tools/tracing/rtla/src/common.h               |   3 +-
+ tools/tracing/rtla/src/osnoise.c              |  72 +++++++-
+ tools/tracing/rtla/src/osnoise.h              |   4 +
+ tools/tracing/rtla/src/osnoise_top.c          | 155 +++++++++++++++++-
+ tools/tracing/rtla/src/trace.c                |   4 +
+ 9 files changed, 244 insertions(+), 4 deletions(-)
+
+--
+2.55.0
+
