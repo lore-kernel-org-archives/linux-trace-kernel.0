@@ -1,103 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A440A381B1F;
-	Wed, 15 Jul 2026 01:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D89038F25A;
+	Wed, 15 Jul 2026 01:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784080730; cv=none; b=HqI0WHuIE/kn7VHgdu72P/1Bhfs16A28BYK2I00f1etUvyzxc4AWPXnU4DEVo36oxzh0QmRDnSdAspsOcEKMPTzku7KKZwlDHz+d7vD7Y0ScOIAnc0UAg5n44HnLKYi8lhz3UnqDXlBNU5GMbN9F0AtcLRVj/ENCHIeideqPEnA=
+	t=1784080742; cv=none; b=kL49NXYi7hb6BxWBeT8uDmxSZm18J4WENkNaj0MgdOi0M52pjRQuJmqrCbn2iosMMR11reS6uHY4Ch7X2i3zFfqCD4NhGK2vweIm56y9NzxYu+M3Xbys3XV4i4bdXcSool5O4Uo3tKWcDZ1Fi2JM94B/0aK/TVrRuWmx50ZNtIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784080730; c=relaxed/simple;
-	bh=YOtyiO7OxqSb0TGMBpRd4dRXDtEOFcTT312kAmCw42w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=C5yKx7fbnN82xeVbUqthtD8LiVEtz6XMbhVbBFIuYKFjP1BiTr85jjcZQOCveBHswHi22gOtrsIsgzgpP+gOjuiOCRaPCUOXGlWWml9TUgzCyhCljkoTqblj7YgAHoAEMxZeS/8JR8dJ0nLs+40jH2j4TrUaE9eIT/erYAUCb10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nO76q4Ff; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nO76q4Ff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 377A21F000E9;
-	Wed, 15 Jul 2026 01:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784080729;
-	bh=cSLs5Kao3oKAx4FSyWlx7rK0pyi01ywYmA2Ww4Xd+3w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=nO76q4FfwycF46nmYRsH0+ctIgJp6gJ5icL/o8z3+HLSmp03/u9OA1vCLEHvHkhQv
-	 CKZLgU7haefv8mxy9tZPqdoMd22kHJBDaquZTjQR6TxJug9dpT3M/GDNphv0UXUq9v
-	 fjtacTX3NfGgdAs22kwHBjN8i8ecRDHFaeRarHPUOSnPGinj44PKjmVTBD8kYImof8
-	 sDcYgYiAgIj8706pgVYC/bIGIJojvHxR+2g9Agbpi9mBk1ur7b0WL008L1egp4mQ8a
-	 z1sGKwhVko2jKPdwoqav4OlofSdZZr4V7LzNoHVItG35fCfGg8/VBm5SGmd4puFSag
-	 GtKjtdlIhqgwg==
-Date: Wed, 15 Jul 2026 10:58:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, Andrii Nakryiko
- <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Francis Laniel <flaniel@linux.microsoft.com>,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Add test case for a symbol in a
- module without module name
-Message-Id: <20260715105844.9d2e139ece02aa86468b47c2@kernel.org>
-In-Reply-To: <20260714104210.28cc4c59@gandalf.local.home>
-References: <169846405196.88147.17766692778800222203.stgit@devnote2>
-	<20260714104210.28cc4c59@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784080742; c=relaxed/simple;
+	bh=dw86fQDZND8V/5JbBKAZqP8c9B/SUasG9k3q8JOidD8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g7S1ZbOydAf11W8Uu4gY98wIqKhofrmptcdK/WYt7WBGJHLKig4ThQw6tvRHaM6d3og3r13a+FAyTk1S3J2oVOSVsAsBQpIKKSHDX16phr7mq6wqMcNzJzCCaSlexjnxypEKUNoAdGdD4JoBuqmkuhYjCqG+H2/pThGBq2qhynA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b7a146a27ff011f1aa26b74ffac11d73-20260715
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:7b7fc6a1-8e3a-4701-8add-b2ec0ecd71f6,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:15
+X-CID-INFO: VERSION:1.3.12,REQID:7b7fc6a1-8e3a-4701-8add-b2ec0ecd71f6,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:15
+X-CID-META: VersionHash:e7bac3a,CLOUDID:59a5d877acc2152a1f4d5a4c70db0dea,BulkI
+	D:2607150958490UUN1SJ6,BulkQuantity:0,Recheck:0,SF:10|66|78|81|82|102|127|
+	865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: b7a146a27ff011f1aa26b74ffac11d73-20260715
+X-User: liqiang01@kylinos.cn
+Received: from cvdaxia.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <liqiang01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1919117022; Wed, 15 Jul 2026 09:58:47 +0800
+From: Li Qiang <liqiang01@kylinos.cn>
+To: linux-trace-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	gmonaco@redhat.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] rv: Simplify task monitor slot management
+Date: Wed, 15 Jul 2026 09:58:24 +0800
+Message-ID: <20260715015825.1413822-1-liqiang01@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <3ea6ffdd144ce4b38d4a198550afed9516777f85.camel@redhat.com>
+References: <3ea6ffdd144ce4b38d4a198550afed9516777f85.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-OK, this seems good to me, and tested. Let me pick it to probes/for-next.
+The slot array already tracks allocation and task_monitor_count
+duplicates that state. On an invalid second release, the old code
+warns but still decrements the counter, corrupting later allocations.
 
-Thanks!
+Use the slot array as the sole source of truth. Return after warning
+about an unused slot, and return -EBUSY when no slot is free.
 
-On Tue, 14 Jul 2026 10:42:10 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Li Qiang <liqiang01@kylinos.cn>
+---
+ kernel/trace/rv/rv.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
-> 
-> Is this still a think, or can we remove it from patchwork?
-> 
->   https://patchwork.kernel.org/project/linux-trace-kernel/patch/169846405196.88147.17766692778800222203.stgit@devnote2/
-> 
-> -- Steve
-> 
-> 
-> On Sat, 28 Oct 2023 12:34:12 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add a test case for probing on a symbol in a module without module name.
-> > When probing on a symbol in a module, ftrace accepts both the syntax that
-> > <MODNAME>:<SYMBOL> and <SYMBOL>. Current test case only checks the former
-> > syntax. This adds a test for the latter one.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  .../ftrace/test.d/kprobe/kprobe_module.tc          |    6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> > index 7e74ee11edf9..4b32e1b9a8d3 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> > @@ -13,6 +13,12 @@ fi
-> >  MOD=trace_printk
-> >  FUNC=trace_printk_irq_work
-> >  
-> > +:;: "Add an event on a module function without module name" ;:
-> > +
-> > +echo "p:event0 $FUNC" > kprobe_events
-> > +test -d events/kprobes/event0 || exit_failure
-> > +echo "-:kprobes/event0" >> kprobe_events
-> > +
-> >  :;: "Add an event on a module function without specifying event name" ;:
-> >  
-> >  echo "p $MOD:$FUNC" > kprobe_events
-> 
-
-
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index ee4e68102f17..187d87d5991c 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -164,7 +164,6 @@ struct dentry *get_monitors_root(void)
+  */
+ LIST_HEAD(rv_monitors_list);
+ 
+-static int task_monitor_count;
+ static bool task_monitor_slots[CONFIG_RV_PER_TASK_MONITORS];
+ 
+ int rv_get_task_monitor_slot(void)
+@@ -173,21 +172,14 @@ int rv_get_task_monitor_slot(void)
+ 
+ 	lockdep_assert_held(&rv_interface_lock);
+ 
+-	if (task_monitor_count == CONFIG_RV_PER_TASK_MONITORS)
+-		return -EBUSY;
+-
+-	task_monitor_count++;
+-
+ 	for (i = 0; i < CONFIG_RV_PER_TASK_MONITORS; i++) {
+-		if (task_monitor_slots[i] == false) {
++		if (!task_monitor_slots[i]) {
+ 			task_monitor_slots[i] = true;
+ 			return i;
+ 		}
+ 	}
+ 
+-	WARN_ONCE(1, "RV task_monitor_count and slots are out of sync\n");
+-
+-	return -EINVAL;
++	return -EBUSY;
+ }
+ 
+ void rv_put_task_monitor_slot(int slot)
+@@ -199,10 +191,10 @@ void rv_put_task_monitor_slot(int slot)
+ 		return;
+ 	}
+ 
+-	WARN_ONCE(!task_monitor_slots[slot], "RV releasing unused task_monitor_slots: %d\n",
+-		  slot);
++	if (WARN_ONCE(!task_monitor_slots[slot],
++		      "RV releasing unused task monitor slot: %d\n", slot))
++		return;
+ 
+-	task_monitor_count--;
+ 	task_monitor_slots[slot] = false;
+ }
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
