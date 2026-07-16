@@ -1,117 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163D5377A91;
-	Wed, 15 Jul 2026 23:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A5B279907;
+	Thu, 16 Jul 2026 00:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784158812; cv=none; b=lDWLokrB+3xBMMQlgwySvqPo7bQm7Z1K/fN8P7OtCti5Pz7POo1o9nTGoLdkYTmCfphtz3CyyhrNQRdVZ1a5C2Afq8HEDsN5QtBI8MZTdFRkK6oCD8kv0EnHwahBrOoi2JVYY6jz3/HEeNEK+rRy34steJ4u7G26OX8RQ8u4eiM=
+	t=1784161500; cv=none; b=YhvhfBqS4UkDOxRdf/7bhMMqNPb+JCQpdOBGsgnQMbWeI1mfVrf6prMrs0ukOgY5XqfxD21HUZC/7WJiRtGFCY/vYPaXbEKumorFU1Yw4OqxfHNW/q3nZ3XOkkoTSoojxXAy+ca1Btie/yNcUm8pbE4mo4m3YaQ8ALU66Jc552E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784158812; c=relaxed/simple;
-	bh=Dxpqj/8dKgrWFkpgccpFkentl0kmdJsj6682or5SiHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRMs2A7+DrYvSVHQlOJeykokYS4fb7rqvNwz5UMlXiFhcQyR0xxvJw2MsPGKJBKzdOUNAH1Hn1Ummtirb0pSFiEIrvRZncFK1OU3iyLIl97+xLrOWcMW1wkW8f7HS25JH8U2omobH3Ngp59+h51Njxa+nOdC+q7tfYpKsM2UPd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAN1zj0G; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784161500; c=relaxed/simple;
+	bh=vFhzWOa8IwJMFMWct1x4naiw61ngcZA5BK6SlAuLKio=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UY9MUpczS3GXzYj27ZeOJnX5sL7IBz0EUr8DM3aqqjF2pT6QHfDE690R/OxufMm0Hf+dq0bW9mA//o04g7l8zWVEzm7UZBzTKbGMNaYCFSp2MCiIoFxyCO7B/UHeHRHhDUyJTlbO3QH3ff9N+XxawqxfDBHO6h4mki5lZv5UvVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwXt+3kH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAN1zj0G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2941F000E9;
-	Wed, 15 Jul 2026 23:40:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwXt+3kH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9161F000E9;
+	Thu, 16 Jul 2026 00:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784158810;
-	bh=+h/jDmZfTpzINdBC677m6zUdXppV6mEd0tUSUbjimu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mAN1zj0GBNk9ttnLGDXv7p0eGbtYs6/yuTPLXZOU6yianhwzSYFIsZsGVioZpB/Ag
-	 hX8BYlH00DoViJpPiQA71vKICH8r9F61ULtB5z17IEq8exP+Bn44qRc5FI79f4jWMv
-	 ci0CByyS4KdsWArDayHVQJkMw+ELOoVROhn5CfXw6XIU8SzDUeIduuuZbFWtLZle3i
-	 7bAIbko4VZgJEKA0xQXGJyiArVYJSWkhCWKyUxdns4d+BV7LkZAOjfwsSY4sF/OaDP
-	 mdunccaTEXVhuhZzm0m2jTARlncIr7qPNkJdGcFRxcyJmtONGf06C+6F4MJzR4yhme
-	 7sWxF12dWZQgA==
-Date: Wed, 15 Jul 2026 19:40:05 -0400
-From: Nathan Chancellor <nathan@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] tracing: ring-buffer: allowlist clang-generated symbols
-Message-ID: <20260715234005.GB3672352@ax162>
-References: <20260616164211.3733326-1-arnd@kernel.org>
- <ajKgjNuHUlteSziZ@google.com>
- <20260714175617.319a6ec7@gandalf.local.home>
- <cc1232f7-fa15-4e1b-ba24-3d77dcb813c9@app.fastmail.com>
+	s=k20260515; t=1784161498;
+	bh=OJu0HhHU10rHHooJBRLXkyxM4deBEcJfoZDMqS4tCi0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=WwXt+3kHqgUO8MMxSPTEibi1OYrssxLNgUMSPdsl/pWIsESaIydWxT0k6LHratWaf
+	 HNzGSlNNFV/8nHfopXJLODXPAFFcFYBc4ONZxOceitE/UbhXScrDMY+HInPsM+cQ8S
+	 oKWKFxUE3PefSWT+nNEPS6dYf9v/4EyUDtvF//0TDoEhS1VrTIByRhcIcrAWdflLVC
+	 4NwaMS636hlHBcELSq13OG1gZhx6G/f3CsIFU2/CYhYTUlc6V5OsTjb6oGYyQOWTEe
+	 F+MadzwHymlV+/ycbd+Gyo5tNpOCnPkIaHfDElxuPS/IVbG4MftJtvj5WrWZxQrvbA
+	 vv7bsC+f5GoLQ==
+Date: Thu, 16 Jul 2026 09:24:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 05/10] tracing: wprobe: Use a new
+ seq_print_ip_sym_offset() wrapper
+Message-Id: <20260716092452.e46ebf990962138e3b4c58f7@kernel.org>
+In-Reply-To: <178407989708.95826.17630423823637072384.stgit@devnote2>
+References: <178407983818.95826.12714571928538799781.stgit@devnote2>
+	<178407989708.95826.17630423823637072384.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc1232f7-fa15-4e1b-ba24-3d77dcb813c9@app.fastmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 15, 2026 at 09:38:21AM +0200, Arnd Bergmann wrote:
-> On Tue, Jul 14, 2026, at 23:56, Steven Rostedt wrote:
-> > On Wed, 17 Jun 2026 14:26:36 +0100 Vincent Donnefort <vdonnefort@google.com> wrote:
-> >
-> >> On Tue, Jun 16, 2026 at 06:42:03PM +0200, Arnd Bergmann wrote:
-> >> > From: Arnd Bergmann <arnd@arndb.de>
-> >> > 
-> >> > In randconfig build testing using clang-22, I came across two
-> >> > sets of extra symbols in the ring buffer code that may get
-> >> > inserted by the compiler:
-> >> > 
-> >> > Unexpected symbols in kernel/trace/simple_ring_buffer.o:
-> >> >          U memset
-> >> > 
-> >> > Unexpected symbols in kernel/trace/simple_ring_buffer.o:
-> >> >                  U llvm_gcda_emit_arcs
-> >> >                  U llvm_gcda_emit_function
-> >> >                  U llvm_gcda_end_file
-> >> >                  U llvm_gcda_start_file
-> >> >                  U llvm_gcda_summary_info
-> >> >                  U llvm_gcov_init
-> >> > 
-> >> > Add all of these to the allowlist.
-> >> > 
-> >> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >> > ---
-> >> >  kernel/trace/Makefile | 1 +
-> >> >  1 file changed, 1 insertion(+)
-> >> > 
-> >> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> >> > index f934ff586bd4..aa8564fb8ff4 100644
-> >> > --- a/kernel/trace/Makefile
-> >> > +++ b/kernel/trace/Makefile
-> >> > @@ -146,6 +146,7 @@ KASAN_SANITIZE_undefsyms_base.o := y  
-> >> 
-> >> Would "GCOV_PROFILE_undefsyms_base.o := y" work?
-> >
-> > Arnd?
+Oops, I missed to fold this in the 1st patch...
+(the seq_print_ip_sym_offset() part is already folded)
+
+Thanks,
+
+On Wed, 15 Jul 2026 10:44:57 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Yes, turning off gcov for this file should avoid the llvm_gcda and
-> llvm_gcov symbols, but not the memset() symbol.
+> Use a new seq_print_ip_sym_offset() wrapper function instead of
+> using TRACE_ITER(SYM_OFFSET) mask directly.
+> 
+> Link: https://lore.kernel.org/all/176226550596.59499.18020648957674458755.stgit@devnote2/
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_wprobe.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> index b52f3eac719f..dd310a87b333 100644
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/ptrace.h>
+>  
+>  #include "trace_dynevent.h"
+> +#include "trace_output.h"
+>  #include "trace_probe.h"
+>  #include "trace_probe_kernel.h"
+>  #include "trace_probe_tmpl.h"
+> 
 
-This would actually turn on GCOV for this translation unit and cause the
-llvm_gcda and llvm_gcov symbols to be included in UNDEFINED_ALLOWLIST
-via the $(NM) call.
-
-> All the other features that leave annotations are handled by
-> listing the symbol names (__asan __gcov __kasan __kcsan __hwasan
-> __sancov __sanitizer __tsan __ubsan __msan), so I think for
-> consistency it makes sense to treat llvm gcov the same way
-> we handle gcc gcov and the rest.
-
-I do tend to agree with this though, as opposed to using
-GCOV_PROFILE_... or ..._SANTIZE variables.
 
 -- 
-Cheers,
-Nathan
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
