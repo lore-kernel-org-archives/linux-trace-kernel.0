@@ -1,610 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D221919ADA4
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Jul 2026 14:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056B33254BB;
+	Thu, 16 Jul 2026 15:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784213360; cv=none; b=NVRdrIqTRmxofC6uhaUwx8udgye235LPxs5cpxHO7F1nkJg0sTvFp+XebgsMYU3Q7E3ypihdjssqYwMGA86V1L4Qqb+NzpFZD2LQplrp30Nl40DvVELjTtSc3FmY699iGBwn/6YTJodspb5uiM9foqJvPm6kGZDfPkVZH1NxvFo=
+	t=1784215235; cv=none; b=cgIqX/xr/iKWvfHNnVgIvpBVkYNYFhEuZh9UQFEeUPD0J+RtKXOG0gT8BHP+Moh7jJwpnwbCshas82fP4xrYYVzbFBDTKZYjrJggfFnv+R9tlUtpin+I0gbqoubELw+juVZsIJmtJ724x4hAEinRDY4+wM1Rlk5H+0MgCTOvO8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784213360; c=relaxed/simple;
-	bh=3V5S1wi9g6S/firHqk/MxOLKkyhF5YAeVyhgPJs+vWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=I3+55FvqHIN7U7FA1DQ/DpoaE8WG3EwpYiRgiNj59pIesXoLyXgUrYF6Qw7yFLxV8C2KnblLytbVtVew22goi6aCxoYYDp0jgswT5Je6nyrgt73z8/ljuauIL54pU6toRMMcqsQHW9knWMtI4S7iUuO162jz2g8j/uS3XuHqwhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ci+f2W2Z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784215235; c=relaxed/simple;
+	bh=EPSxuApcE14Q4WaQWZeXV1RFVQTrSnA/vpymhi8Kvdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRihOI6K5zvWVqaQnB9Tk4aU8p7ZKD6l++bnuyF9YHRbVs9JQEBDk05DcR8zu4zeYs53/Y/271XE5CQ/aejgxz/NygCx07pUdzHS7DC7JPyRmic+/s4hQ6bnBiThi3npXB3CZTHCadinrcR/FlvfsfuGZNKIrMOqVZ3yfQfmU2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxWAbXAf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ci+f2W2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784213356;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Nb+XX7mUMKzK2mIvhWHMxyjXcN5PvR914bKCom3/+p8=;
-	b=Ci+f2W2ZhMeFzuEKnLs2CfPwAcKiqPT5jKWLdiR9T740izeODeBelVyj60OyafrfTp2Cca
-	MFwRSJOAZ0RYPgk6rik+DL+jhsmrdoQOF8Cb5inDZh4iiiOcCnaFD55JGtoGEF+lDmD56i
-	hp0m3OytoRQYuLGjgOjx0jmkXKNNBIE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-_WQvjCG5M3qEYvaEPihu0Q-1; Thu,
- 16 Jul 2026 10:49:14 -0400
-X-MC-Unique: _WQvjCG5M3qEYvaEPihu0Q-1
-X-Mimecast-MFC-AGG-ID: _WQvjCG5M3qEYvaEPihu0Q_1784213353
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A965E1955E90;
-	Thu, 16 Jul 2026 14:49:12 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.39])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0577D3004081;
-	Thu, 16 Jul 2026 14:49:09 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH] rtla/cli: Unify and improve handling of invalid option arguments
-Date: Thu, 16 Jul 2026 16:49:01 +0200
-Message-ID: <20260716144901.1187474-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxWAbXAf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440B71F000E9;
+	Thu, 16 Jul 2026 15:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784215233;
+	bh=xqEkOfqemOuBq7MfK7NLzkx6aModADt/bX/v6BBIpLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NxWAbXAfxER1bDsr9+Ry25MKcWs9G8aOuDSXUXXyyWEJhIVKOXhlhYe8L3E1790PK
+	 tlz3IoqgzPulnjUjJlJZmJEIM8+PDVMAuKWrlJ80ZsNa0hg9RD6m/UQwFUOM9vTIPD
+	 PsXIoumb7pNF+9G2N+JjYBfD5CU+OsQ+apSRBW0jvEfXcocsiXp+AVNwAfmRL/RJ6+
+	 oASNnepTWd6neQb47wlJUENGA5sLnSs51kSAT2vPwaLw1wANe0N2e25/JK/YdsCfIl
+	 zChHic5ALc47Ql0oWQgpHO8eeSNpTx/wZ9YqIdo5qbVhXyJvGxSH2Tu4Z+NQsQIMIx
+	 c6OjcT39f6LEQ==
+Date: Thu, 16 Jul 2026 16:20:27 +0100
+From: Will Deacon <will@kernel.org>
+To: Pu Hu <hupu@transsion.com>
+Cc: "mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	Hongyan Xia <hongyan.xia@transsion.com>,
+	Jiazi Li <jiazi.li@transsion.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"naveen@kernel.org" <naveen@kernel.org>,
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
+Subject: Re: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
+ single-stepping
+Message-ID: <alj2uxE1M8mcMBhA@willie-the-truck>
+References: <20260710063242.228714-1-hupu@transsion.com>
+ <20260710063242.228714-3-hupu@transsion.com>
+ <aljbf_RmOd9U2KDT@willie-the-truck>
+ <0f049d38-b7f6-47f0-a410-95ad2aee7fd4@transsion.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: sWRrH02Y-jX_IOptJ-cLIKGX4gSAs17nIoyNFcdW7Tk_1784213353
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f049d38-b7f6-47f0-a410-95ad2aee7fd4@transsion.com>
 
-The current handling of invalid command line option arguments is
-inconsistent:
+On Thu, Jul 16, 2026 at 02:38:58PM +0000, Pu Hu wrote:
+> On 7/16/2026 9:24 PM, Will Deacon wrote:
+> > On Fri, Jul 10, 2026 at 06:32:55AM +0000, Pu Hu wrote:
+> >> From: Pu Hu <hupu@transsion.com>
+> >>
+> >> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
+> >> can happen when tracing or perf code runs from the debug exception path
+> >> while the first kprobe is preparing or executing its out-of-line
+> >> single-step instruction.
+> > 
+> > I don't understand this part. The single-step runs with debug exceptions
+> > disabled (kprobes_save_local_irqflag() sets PSTATE.D) so how do we end
+> > up taking one?
+>
+> You are right that the single-step runs with debug exceptions disabled.
+> However, the case I was referring to is not a hardware breakpoint or a
+> software-step exception, but another Breakpoint Instruction exception
+> generated by executing a BRK instruction. A BRK instruction exception is 
+> not masked by PSTATE.D, so it can still be taken while handling a kprobe.
+> 
+> As far as I understand the architecture, there are two different cases here:
+> 
+>    - Breakpoint Instruction exceptions, generated by executing a BRK
+>      instruction.
+>    - Breakpoint exceptions, generated by the debug logic, for example by
+>      programmed breakpoint registers.
+> 
+> PSTATE.D masks debug exceptions such as hardware breakpoints, 
+> watchpoints and software-step exceptions, but it does not mask 
+> Breakpoint Instruction exceptions generated by BRK. This also seems 
+> consistent with the pseudocode for BRK, 
+> Arch64.SoftwareBreakpoint(imm16), which does not appear to check 
+> PSTATE.D before taking the exception.
+> 
+> Therefore, even if kprobes_save_local_irqflag() sets PSTATE.D while 
+> handling the first kprobe, if the code executed from that path reaches 
+> another instruction patched with BRK, it can still take a Breakpoint 
+> Instruction exception. In other words, the nested case I mentioned is 
+> another kprobe BRK being hit, not a hardware debug exception or a 
+> software-step exception.
 
-- opt_llong_callback() treats non-numerical input the same as "-1",
-  which might or might not be rejected later.
-- opt_int_callback() returns -1 on non-numerical input without an error
-  message, which makes parsing fail silently (libsubcmd will
-  automatically print the usage of the option only, no error message).
-- custom callbacks abort command line parsing using fatal(), which
-  displays an error message and exits, without libsubcmd printing the
-  usage.
+Yes, that's correct, but if we're doing the out-of-line step, how do we
+end up executing a BRK? Or are you saying that it's the kprobes
+BRK64_OPCODE_KPROBES_SS instruction that we use to implement the
+single-step that is the problem? If so, how does taking that exception
+result in us executing tracing or perf code?
 
-Unify this such that all invalid options, regardless of the format,
-print an error message similar to the out of range case:
+Sorry for all the questions, I just haven't understood what's going on
+here from the commit message.
 
-Error: --opt: 'value' is not a valid XY
-
-followed by the usage of the option, e.g.:
-
-$ rtla timerlat hist --period=1us
- Error: --period: '1us' is not a valid number
-
- Usage: rtla timerlat hist [<options>] [-h|--help]
-
-    -p, --period <us>     timerlat period in us
-
-As this is a libsubcmd help path, all option parsing failures now return
-the exit code of 129 (help).
-
-The unified handling is implemented using a new error message helper,
-opt_err(), which is called from two new CLI-specific parsing functions,
-strtoll_safe() and strtoi_safe(), as well as from custom helpers.
-
-Option callback tests are updated to cover the new behavior.
-
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
-Dependencies:
-- "rtla/cli: Unify and improve range validation logic" patch
-  Link: https://lore.kernel.org/linux-trace-kernel/20260710131554.338335-1-tglozar@redhat.com/
-- "rtla: Allow unsetting non-list custom-callback CLI options" patchset
-  Link: https://lore.kernel.org/linux-trace-kernel/20260629083654.1548925-1-tglozar@redhat.com/T/#u
-  (transitive dependency through the above patch)
-
- tools/tracing/rtla/src/cli_p.h                | 126 +++++++++++++-----
- .../rtla/tests/unit/cli_opt_callback.c        |  70 +++++++---
- 2 files changed, 144 insertions(+), 52 deletions(-)
-
-diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
-index b7688559ca53d..661240d44ad9a 100644
---- a/tools/tracing/rtla/src/cli_p.h
-+++ b/tools/tracing/rtla/src/cli_p.h
-@@ -5,6 +5,7 @@
- #error "Private header file included outside of cli.c module"
- #endif
- 
-+#include <errno.h>
- #include <limits.h>
- #include <linux/kernel.h>
- #include <subcmd/parse-options.h>
-@@ -239,6 +240,41 @@ static int check_int_range(const struct option *opt, int value)
- #define RTLA_OPT_DEBUG OPT_BOOLEAN('D', "debug", &config_debug, \
- 	"print debug info")
- 
-+/*
-+ * Helper functions for parsing numeric option arguments.
-+ */
-+static void opt_err(const struct option *opt, const char *arg, const char *msg)
-+{
-+	fprintf(stderr, " Error: --%s: '%s' %s\n", opt->long_name, arg, msg);
-+}
-+
-+static int strtoll_safe(const struct option *opt, const char *arg, long long *value)
-+{
-+	long long tmp;
-+	char *end;
-+
-+	errno = 0;
-+	tmp = strtoll(arg, &end, 10);
-+	if (errno || *end || end == arg) {
-+		opt_err(opt, arg, "is not a valid number");
-+		return -1;
-+	}
-+	*value = tmp;
-+	return 0;
-+}
-+
-+static int strtoi_safe(const struct option *opt, const char *arg, int *value)
-+{
-+	int tmp;
-+
-+	if (strtoi(arg, &tmp)) {
-+		opt_err(opt, arg, "is not a valid number");
-+		return -1;
-+	}
-+	*value = tmp;
-+	return 0;
-+}
-+
- /*
-  * Common callback functions for command line options
-  */
-@@ -255,7 +291,8 @@ static int opt_llong_callback(const struct option *opt, const char *arg, int uns
- 	if (!arg)
- 		return -1;
- 
--	*value = get_llong_from_str((char *)arg);
-+	if (strtoll_safe(opt, arg, value))
-+		return -1;
- 	if (check_llong_range(opt, *value))
- 		return -1;
- 	return 0;
-@@ -273,7 +310,7 @@ static int opt_int_callback(const struct option *opt, const char *arg, int unset
- 	if (!arg)
- 		return -1;
- 
--	if (strtoi(arg, value))
-+	if (strtoi_safe(opt, arg, value))
- 		return -1;
- 	if (check_int_range(opt, *value))
- 		return -1;
-@@ -296,8 +333,10 @@ static int opt_cpus_cb(const struct option *opt, const char *arg, int unset)
- 		return -1;
- 
- 	retval = parse_cpu_set((char *)arg, &params->monitored_cpus);
--	if (retval)
--		fatal("Invalid -c cpu list");
-+	if (retval) {
-+		opt_err(opt, arg, "is not a valid cpu set");
-+		return -1;
-+	}
- 	params->cpus = (char *)arg;
- 
- 	return 0;
-@@ -335,8 +374,10 @@ static int opt_duration_cb(const struct option *opt, const char *arg, int unset)
- 		return -1;
- 
- 	params->duration = parse_seconds_duration((char *)arg);
--	if (!params->duration)
--		fatal("Invalid -d duration");
-+	if (!params->duration) {
-+		opt_err(opt, arg, "is not a valid duration");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -376,8 +417,10 @@ static int opt_housekeeping_cb(const struct option *opt, const char *arg, int un
- 
- 	params->hk_cpus = 1;
- 	retval = parse_cpu_set((char *)arg, &params->hk_cpu_set);
--	if (retval)
--		fatal("Error parsing house keeping CPUs");
-+	if (retval) {
-+		opt_err(opt, arg, "is not a valid cpu set");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -397,8 +440,10 @@ static int opt_priority_cb(const struct option *opt, const char *arg, int unset)
- 		return -1;
- 
- 	retval = parse_prio((char *)arg, &params->sched_param);
--	if (retval == -1)
--		fatal("Invalid -P priority");
-+	if (retval == -1) {
-+		opt_err(opt, arg, "is not a valid priority");
-+		return -1;
-+	}
- 	params->set_sched = 1;
- 
- 	return 0;
-@@ -411,8 +456,10 @@ static int opt_trigger_cb(const struct option *opt, const char *arg, int unset)
- 	if (unset || !arg)
- 		return -1;
- 
--	if (!*events)
--		fatal("--trigger requires a previous -e");
-+	if (!*events) {
-+		opt_err(opt, arg, "has no previous event to apply to");
-+		return -1;
-+	}
- 
- 	trace_event_add_trigger(*events, (char *)arg);
- 
-@@ -426,8 +473,10 @@ static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
- 	if (unset || !arg)
- 		return -1;
- 
--	if (!*events)
--		fatal("--filter requires a previous -e");
-+	if (!*events) {
-+		opt_err(opt, arg, "has no previous event to apply to");
-+		return -1;
-+	}
- 
- 	trace_event_add_filter(*events, (char *)arg);
- 
-@@ -468,7 +517,8 @@ static int opt_osnoise_auto_cb(const struct option *opt, const char *arg, int un
- 	if (!arg)
- 		return -1;
- 
--	auto_thresh = get_llong_from_str((char *)arg);
-+	if (strtoll_safe(opt, arg, &auto_thresh))
-+		return -1;
- 	params->common.stop_us = auto_thresh;
- 	params->threshold = 1;
- 
-@@ -508,8 +558,10 @@ static int opt_osnoise_on_threshold_cb(const struct option *opt, const char *arg
- 		return -1;
- 
- 	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
--	if (retval)
--		fatal("Invalid action %s", arg);
-+	if (retval) {
-+		opt_err(opt, arg, "is not a valid action");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -523,8 +575,10 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
- 		return -1;
- 
- 	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
--	if (retval)
--		fatal("Invalid action %s", arg);
-+	if (retval) {
-+		opt_err(opt, arg, "is not a valid action");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -596,7 +650,8 @@ static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int u
- 	if (!arg)
- 		return -1;
- 
--	auto_thresh = get_llong_from_str((char *)arg);
-+	if (strtoll_safe(opt, arg, &auto_thresh))
-+		return -1;
- 	params->common.stop_total_us = auto_thresh;
- 	params->common.stop_us = auto_thresh;
- 	params->print_stack = auto_thresh;
-@@ -623,7 +678,8 @@ static int opt_aa_only_cb(const struct option *opt, const char *arg, int unset)
- 	if (!arg)
- 		return -1;
- 
--	auto_thresh = get_llong_from_str((char *)arg);
-+	if (strtoll_safe(opt, arg, &auto_thresh))
-+		return -1;
- 	params->common.stop_total_us = auto_thresh;
- 	params->common.stop_us = auto_thresh;
- 	params->print_stack = auto_thresh;
-@@ -662,8 +718,10 @@ static int opt_timerlat_on_threshold_cb(const struct option *opt, const char *ar
- 		return -1;
- 
- 	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
--	if (retval)
--		fatal("Invalid action %s", arg);
-+	if (retval) {
-+		opt_err(opt, arg, "is not a valid action");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -677,8 +735,10 @@ static int opt_timerlat_on_end_cb(const struct option *opt, const char *arg, int
- 		return -1;
- 
- 	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
--	if (retval)
--		fatal("Invalid action %s", arg);
-+	if (retval) {
-+		opt_err(opt, arg, "is not a valid action");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -727,8 +787,10 @@ static int opt_stack_format_cb(const struct option *opt, const char *arg, int un
- 
- 	*format = parse_stack_format((char *)arg);
- 
--	if (*format == -1)
--		fatal("Invalid --stack-format option");
-+	if (*format == -1) {
-+		opt_err(opt, arg, "is not a valid stack format");
-+		return -1;
-+	}
- 
- 	return 0;
- }
-@@ -736,6 +798,7 @@ static int opt_stack_format_cb(const struct option *opt, const char *arg, int un
- static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int unset)
- {
- 	struct timerlat_params *params = opt->value;
-+	long long val;
- 
- 	if (unset) {
- 		params->timerlat_align = false;
-@@ -746,10 +809,13 @@ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int
- 	if (!arg)
- 		return -1;
- 
--	params->timerlat_align = true;
--	params->timerlat_align_us = get_llong_from_str((char *)arg);
--	if (check_llong_range(opt, params->timerlat_align_us))
-+	if (strtoll_safe(opt, arg, &val))
- 		return -1;
-+	if (check_llong_range(opt, val))
-+		return -1;
-+
-+	params->timerlat_align = true;
-+	params->timerlat_align_us = val;
- 
- 	return 0;
- }
-diff --git a/tools/tracing/rtla/tests/unit/cli_opt_callback.c b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
-index 8439fb5c6f0b3..70e2576b1336f 100644
---- a/tools/tracing/rtla/tests/unit/cli_opt_callback.c
-+++ b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
-@@ -46,6 +46,28 @@ START_TEST(test_opt_llong_callback_min)
- }
- END_TEST
- 
-+START_TEST(test_opt_llong_callback_non_numeric)
-+{
-+	long long test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	ck_assert_int_eq(opt_llong_callback(&opt, "abc", 0), -1);
-+	ck_assert_int_eq(test_value, 0);
-+}
-+END_TEST
-+
-+START_TEST(test_opt_llong_callback_non_numeric_suffix)
-+{
-+	long long test_value = 0;
-+	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
-+
-+	assert(freopen("/dev/null", "w", stderr));
-+	ck_assert_int_eq(opt_llong_callback(&opt, "1234567890abc", 0), -1);
-+	ck_assert_int_eq(test_value, 0);
-+}
-+END_TEST
-+
- START_TEST(test_opt_llong_callback_unset)
- {
- 	long long test_value = 0;
-@@ -105,6 +127,7 @@ START_TEST(test_opt_int_callback_non_numeric)
- 	int test_value = 0;
- 	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
- 
-+	assert(freopen("/dev/null", "w", stderr));
- 	ck_assert_int_eq(opt_int_callback(&opt, "abc", 0), -1);
- 	ck_assert_int_eq(test_value, 0);
- }
-@@ -115,6 +138,7 @@ START_TEST(test_opt_int_callback_non_numeric_suffix)
- 	int test_value = 0;
- 	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
- 
-+	assert(freopen("/dev/null", "w", stderr));
- 	ck_assert_int_eq(opt_int_callback(&opt, "1234567890abc", 0), -1);
- 	ck_assert_int_eq(test_value, 0);
- }
-@@ -245,7 +269,7 @@ START_TEST(test_opt_cpus_cb_invalid)
- 
- 	nr_cpus = 4;
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_cpus_cb(&opt, "0-3,5", 0);
-+	ck_assert_int_eq(opt_cpus_cb(&opt, "0-3,5", 0), -1);
- }
- END_TEST
- 
-@@ -299,7 +323,7 @@ START_TEST(test_opt_duration_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&params, opt_duration_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_duration_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_duration_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -361,7 +385,7 @@ START_TEST(test_opt_housekeeping_cb_invalid)
- 
- 	nr_cpus = 4;
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_housekeeping_cb(&opt, "0-3,5", 0);
-+	ck_assert_int_eq(opt_housekeeping_cb(&opt, "0-3,5", 0), -1);
- }
- END_TEST
- 
-@@ -395,7 +419,7 @@ START_TEST(test_opt_priority_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&params, opt_priority_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_priority_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_priority_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -427,7 +451,7 @@ START_TEST(test_opt_trigger_cb_no_event)
- 	const struct option opt = TEST_CALLBACK(&events, opt_trigger_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_trigger_cb(&opt, "stacktrace", 0);
-+	ck_assert_int_eq(opt_trigger_cb(&opt, "stacktrace", 0), -1);
- }
- END_TEST
- 
-@@ -447,7 +471,7 @@ START_TEST(test_opt_filter_cb_no_event)
- 	const struct option opt = TEST_CALLBACK(&events, opt_filter_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_filter_cb(&opt, "comm ~ \"rtla\"", 0);
-+	ck_assert_int_eq(opt_filter_cb(&opt, "comm ~ \"rtla\"", 0), -1);
- }
- END_TEST
- 
-@@ -528,7 +552,7 @@ START_TEST(test_opt_osnoise_on_threshold_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_threshold_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_osnoise_on_threshold_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_osnoise_on_threshold_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -550,7 +574,7 @@ START_TEST(test_opt_osnoise_on_end_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_end_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_osnoise_on_end_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_osnoise_on_end_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -660,7 +684,7 @@ START_TEST(test_opt_timerlat_on_threshold_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_threshold_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_timerlat_on_threshold_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_timerlat_on_threshold_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -682,7 +706,7 @@ START_TEST(test_opt_timerlat_on_end_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_end_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_timerlat_on_end_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_timerlat_on_end_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -782,7 +806,7 @@ START_TEST(test_opt_stack_format_cb_invalid)
- 	const struct option opt = TEST_CALLBACK(&stack_format, opt_stack_format_cb);
- 
- 	assert(freopen("/dev/null", "w", stderr));
--	opt_stack_format_cb(&opt, "abc", 0);
-+	ck_assert_int_eq(opt_stack_format_cb(&opt, "abc", 0), -1);
- }
- END_TEST
- 
-@@ -807,6 +831,8 @@ Suite *cli_opt_callback_suite(void)
- 	tcase_add_test(tc, test_opt_llong_callback_simple);
- 	tcase_add_test(tc, test_opt_llong_callback_max);
- 	tcase_add_test(tc, test_opt_llong_callback_min);
-+	tcase_add_test(tc, test_opt_llong_callback_non_numeric);
-+	tcase_add_test(tc, test_opt_llong_callback_non_numeric_suffix);
- 	tcase_add_test(tc, test_opt_llong_callback_unset);
- 	tcase_add_test(tc, test_opt_llong_callback_unset_defval);
- 	tcase_add_test(tc, test_opt_llong_callback_range_in);
-@@ -825,25 +851,25 @@ Suite *cli_opt_callback_suite(void)
- 	tcase_add_test(tc, test_opt_int_callback_range_above);
- 	tcase_add_test(tc, test_opt_int_callback_range_boundary);
- 	tcase_add_test(tc, test_opt_cpus_cb);
--	tcase_add_exit_test(tc, test_opt_cpus_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_cpus_cb_invalid);
- 	tcase_add_test(tc, test_opt_cgroup_cb);
- 	tcase_add_test(tc, test_opt_cgroup_cb_equals);
- 	tcase_add_test(tc, test_opt_cgroup_cb_unset);
- 	tcase_add_test(tc, test_opt_duration_cb);
- 	tcase_add_test(tc, test_opt_duration_cb_unset);
--	tcase_add_exit_test(tc, test_opt_duration_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_duration_cb_invalid);
- 	tcase_add_test(tc, test_opt_event_cb);
- 	tcase_add_test(tc, test_opt_event_cb_multiple);
- 	tcase_add_test(tc, test_opt_housekeeping_cb);
--	tcase_add_exit_test(tc, test_opt_housekeeping_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_housekeeping_cb_invalid);
- 	tcase_add_test(tc, test_opt_housekeeping_cb_unset);
- 	tcase_add_test(tc, test_opt_priority_cb);
--	tcase_add_exit_test(tc, test_opt_priority_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_priority_cb_invalid);
- 	tcase_add_test(tc, test_opt_priority_cb_unset);
- 	tcase_add_test(tc, test_opt_trigger_cb);
--	tcase_add_exit_test(tc, test_opt_trigger_cb_no_event, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_trigger_cb_no_event);
- 	tcase_add_test(tc, test_opt_filter_cb);
--	tcase_add_exit_test(tc, test_opt_filter_cb_no_event, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_filter_cb_no_event);
- 	suite_add_tcase(s, tc);
- 
- 	tc = tcase_create("osnoise");
-@@ -853,9 +879,9 @@ Suite *cli_opt_callback_suite(void)
- 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_noarg);
- 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_unset);
- 	tcase_add_test(tc, test_opt_osnoise_on_threshold_cb);
--	tcase_add_exit_test(tc, test_opt_osnoise_on_threshold_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_osnoise_on_threshold_cb_invalid);
- 	tcase_add_test(tc, test_opt_osnoise_on_end_cb);
--	tcase_add_exit_test(tc, test_opt_osnoise_on_end_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_osnoise_on_end_cb_invalid);
- 	suite_add_tcase(s, tc);
- 
- 	tc = tcase_create("timerlat");
-@@ -867,15 +893,15 @@ Suite *cli_opt_callback_suite(void)
- 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_noarg);
- 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_unset);
- 	tcase_add_test(tc, test_opt_timerlat_on_threshold_cb);
--	tcase_add_exit_test(tc, test_opt_timerlat_on_threshold_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_timerlat_on_threshold_cb_invalid);
- 	tcase_add_test(tc, test_opt_timerlat_on_end_cb);
--	tcase_add_exit_test(tc, test_opt_timerlat_on_end_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_timerlat_on_end_cb_invalid);
- 	tcase_add_test(tc, test_opt_user_threads_cb);
- 	tcase_add_test(tc, test_opt_user_threads_cb_unset);
- 	tcase_add_test(tc, test_opt_nano_cb);
- 	tcase_add_test(tc, test_opt_nano_cb_unset);
- 	tcase_add_test(tc, test_opt_stack_format_cb);
--	tcase_add_exit_test(tc, test_opt_stack_format_cb_invalid, EXIT_FAILURE);
-+	tcase_add_test(tc, test_opt_stack_format_cb_invalid);
- 	tcase_add_test(tc, test_opt_stack_format_cb_unset);
- 	tcase_add_test(tc, test_opt_timerlat_align_cb);
- 	tcase_add_test(tc, test_opt_timerlat_align_cb_invalid);
--- 
-2.55.0
-
+Will
