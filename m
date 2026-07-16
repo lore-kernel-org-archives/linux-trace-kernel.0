@@ -1,147 +1,122 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E652640A92C;
-	Thu, 16 Jul 2026 10:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852682E7368
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Jul 2026 12:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784198653; cv=none; b=sUL/SEkz/5vWrgpGpqjO3W1b/8m15/AroQBQBEm3NvcthM0WcyeqzWnz43SrO2Jqyt7l9f2I8b6hpzTvR8gUe3QcdwFt3yg7mXhjZjXiemZvcTN6cL/JKpCrxy9kxvoonHa6M4FHhmXLOr9irYvYA2164XvFF1UfyDEFCZQfuRY=
+	t=1784203542; cv=none; b=uXRa0VpSSsoR8ofy3UTsB41YauWKuYC0wZtupiN0MCc2XSwvhj15W/d47UMennfNYw6J1FABMExmzcyQYZ0/ztkDMJErVjRPLyq7r8sK7NHFedX8VWA7dvhDsS7fjxKZ/M9MgHnZJPjWkqybW6axypAxUVJ3G2XJ/rK8s9h7SHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784198653; c=relaxed/simple;
-	bh=/wwJ8YIkXCpBwSVVTMrGXqVGLZdZXp1TX5uW8ri0eyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=KXyrN65aklRqiD0LUKjyHfGB5MMo2dxEK4MZmqF25apPdiq6tEbSVWG0dbZGavAlgS8hwLUW4/jIOA7jkp0d0DltqnBKZlKmIxQRTmVczG0J8hbkOM0lLBCA/bOc1SWJlIHle7pCNtxs2pCuqhTupIewdE4YKHIbXxo+/IYyP1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MSTbwqnb; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1784203542; c=relaxed/simple;
+	bh=SrZ9st9APpqmT6tqf8ajrLfTTDJ+9dl+XoXuc6Hk2Y0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c2G5C95/YmJ8/uiAhWocnughHyPAhX0D8db+RXR42MvLBcPqZ0bDOoro0rZvBn89h3F+771zohNfyv2i5p5SttLP9N8+S8SAioS7BnXyyDfoqIdgtBPvtLK2/OvmqVLTXKuHxoY5hAW4dq+gDg5MeXeYmCTVOnuJyaMNTUEsRl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fWdU3XR2; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MSTbwqnb"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260716104401euoutp0162896187b46659a20abee1581481c5cc~CvzYh7gBq1199711997euoutp01Z;
-	Thu, 16 Jul 2026 10:44:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260716104401euoutp0162896187b46659a20abee1581481c5cc~CvzYh7gBq1199711997euoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1784198641;
-	bh=4NOe5ksl2vlSwjo56KjbWsmML1a42hyFiwBD/c9eZDU=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=MSTbwqnbrDKyLKGraNwvsA+y4j51U4MbSsUqWrLD7zYBuseQk2jHYvQzKWIBHlqF3
-	 POTrMf4g8ZRPRjBC3B//DjIkSnL2hCqPkA9P1ECuexq2YdaXf+5B3xWtrCF/91gL8O
-	 xIohKEswRPMt4SaVihbMOLSt8JqgZ1C22LyTuDUo=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260716104401eucas1p1f2c155f5f3a4655c82e831bffdeeece7~CvzYOfJRQ0283202832eucas1p1K;
-	Thu, 16 Jul 2026 10:44:01 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260716104357eusmtip2cc624be619bcd0856727825883ac67e0~CvzVIUrCg2851928519eusmtip2d;
-	Thu, 16 Jul 2026 10:43:57 +0000 (GMT)
-Message-ID: <1eec88e6-1ea8-4525-bb17-e41444d715dc@samsung.com>
-Date: Thu, 16 Jul 2026 12:43:56 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fWdU3XR2"
+Message-ID: <dd3e12c2-e5fa-4ed7-8de7-a24a40fb9959@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784203525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ECiSHVYcdqBHAwN+3AeE9F+29i7Cb5kboeGaslbuWEU=;
+	b=fWdU3XR2I7/m3pSlUzqJi2Wd2PLhYEcfsS9OffvChtQkx1YP0/l3zV38obIyKNI6xw2tL9
+	OOEbdVJi9fudBzG6Rf2+mHARoKNlI1JntvnHYs1ya9RLVNtCIsjj90y6jWadqovSwwHB+i
+	KAnM64+BVoP92Rh9N1lqq7aBKO8O/uk=
+Date: Thu, 16 Jul 2026 13:05:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-To: Thierry Reding <thierry.reding@kernel.org>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko
-	Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, Rasmus
-	Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>,
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
-	<gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
-	Gorbik <gor@linux.ibm.com>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Andrew
-	Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam
- R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
-	Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
-	Hocko <mhocko@suse.com>, Robin Murphy <robin.murphy@arm.com>, Sumit Semwal
-	<sumit.semwal@linaro.org>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>,
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
-	Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux.dev,
-	linaro-mm-sig@lists.linaro.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC] tracing: Try user copies with page faults disabled first
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, leitao@debian.org
+References: <20260715155454.4127988-1-usama.arif@linux.dev>
+ <20260715151120.0c7b80cb@gandalf.local.home>
 Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <ak_E4UxfnFJywJa7@orome>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260716104401eucas1p1f2c155f5f3a4655c82e831bffdeeece7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c
-X-EPHeader: CA
-X-CMS-RootMailID: 20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c
-References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
-	<CGME20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c@eucas1p1.samsung.com>
-	<20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
-	<3f47aeab-33b1-4966-a5ce-5d6d5261e0e2@samsung.com>
-	<e212caac-6c30-448a-9e10-32fff8b842f6@kernel.org>
-	<83e5e74d-7106-4e14-9d10-56438372f6a3@samsung.com> <ak_E4UxfnFJywJa7@orome>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Usama Arif <usama.arif@linux.dev>
+In-Reply-To: <20260715151120.0c7b80cb@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 09.07.2026 17:59, Thierry Reding wrote:
-> On Thu, Jul 09, 2026 at 07:56:45AM +0200, Marek Szyprowski wrote:
->> On 08.07.2026 10:35, David Hildenbrand (Arm) wrote:
->>> On 7/7/26 12:02, Marek Szyprowski wrote:
->>>> On 01.07.2026 18:08, Thierry Reding wrote:
->>>>> From: Thierry Reding <treding@nvidia.com>
->>>>>
->>>>> There is no technical reason why there should be a limited number of CMA
->>>>> regions, so extract some code into helpers and use them to create extra
->>>>> functions (cma_create() and cma_free()) that allow creating and freeing,
->>>>> respectively, CMA regions dynamically at runtime.
->>>> Well, the technical reason for not creating cma regions dynamically at
->>>> runtime is that on some architectures (like 32bit ARM) the early fixup
->>>> for the region is needed to make it functional for DMA.
->>> Can you point me at the code that does that? Thanks!
->> Check dma_contiguous_early_fixup() and dma_contiguous_remap() in 
->> arch/arm/mm/dma-mapping.c. Those functions ensures that the CPU mappings for
->> the CMA reserved region in linear map are remapped with 4k pages instead
->> of the 1M sections, so later, it will be possible to alter the mappings and
->> change them to coherent when needed (altering 1M sections is not possible,
->> because each process has it's own level-1 array even for the kernel linear
->> mapping).
+
+
+On 15/07/2026 20:11, Steven Rostedt wrote:
+> On Wed, 15 Jul 2026 08:54:54 -0700
+> Usama Arif <usama.arif@linux.dev> wrote:
+> 
+>> trace_user_fault_read() is called with preemption disabled to copy user
+>> memory into a per-cpu scratch buffer. The existing implementation enables
+>> preemption around the copy because faulting user memory can sleep. That
+>> opens a window where another task can run on the same CPU and clobber the
+>> per-cpu buffer, so the copy is wrapped in a retry loop: sample
+>> nr_context_switches_cpu(), do the preempt-enabled copy, and retry if the
+>> counter changed. If this fails to complete 100 times, the function gives up
+>> with a warning.
 >>
+>> nr_context_switches_cpu() reads rq->nr_switches. That counter increments
+>> for every context switch on the CPU, not only for switches to tasks that
+>> use this tracing scratch buffer. On a heavily loaded system, unrelated
+>> scheduler activity can move the counter during every preempt-enabled copy
+>> attempt, exhaust the retry guard, and trigger the warning.
 >>
+>> This is showing up across the Meta fleet around 100 times a day since the
+>> kernel began upgrading to 7.1, mostly on arm servers:
 >>
->> However, in the use case in this patchset the reserved region is only shared
->> with buddy allocator by using the CMA infrastructure, not registered to the
->> regular DMA-mapping API, so it would work fine. I'm not convinced that this
->> is the right API to use for this though.
-> Are you saying you're not convinced that CMA is the right API to use for
-> this? Or something else?
-I read this again and indeed CMA seems to be right solution. I only wonder
-why do You want to create the CMA areas dynamically? Imho it would work if
-You just create large enough CMA area on boot, what would automatically
-share the memory with buddy allocator and then allocate dynamic VPR regions
-with cma_alloc(), potentially unmapping or marking the allocated region as
-reserved in linear kernel mapping to avoid any potential speculative access
-to the protected memory.
-
-In both cases You will probably won't need the DMA-mapping API on top of
-it, although it might be even possible to partially use with by
-registering custom dma_ops for the devices using the protected region
-(assuming that it would support only DMA_ATTR_NO_KERNEL_MAPPING
-allocations).
-
-
-> I certainly don't think we want to get the DMA-mapping API involved for
-> this because that always implies that we perform cache operations, which
-> we specifically don't want for this memory.
->
-> Thierry
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+>>   Error: Too many tries to read user space
+>>   WARNING: kernel/trace/trace.c:6244 at trace_user_fault_read+0x284/0x2c8, CPU#28: Collection-18/677527
+>>   CPU: 28 UID: 0 PID: 677527 Comm: Collection-18 Kdump: loaded Not tainted 7.1.0-.... #1 PREEMPTLAZY
+>>   Hardware name: Quanta Java Island MP 29F0EMA08CH/Java Island, BIOS F0EJ3A16 03/12/2026
+>>   Call trace:
+>>    trace_user_fault_read+0x284/0x2c8 (P)
+>>    syscall_get_data+0x144/0x2c0
+>>    perf_syscall_enter+0xc0/0x2d8
+>>    syscall_trace_enter+0x1a0/0x270
+>>    do_el0_svc+0x54/0xb8
+>>    el0_svc+0x44/0x268
+>>    el0t_64_sync_handler+0x7c/0x120
+>>    el0t_64_sync+0x17c/0x180
+>>   ---[ end trace 0000000000000000 ]---
+>>
+>> The retry loop is only needed when preemption must be enabled for the user
+>> copy. If the user pages are already resident, the copy can complete without
+>> fault handling that sleeps, and preemption can stay disabled throughout.
+>>
+>> Add a fast path that first tries the copy with page faults disabled. For
+>> the plain copy_from_user case, use __copy_from_user_inatomic(). If the
+>> probe faults, the architecture exception-table fixup returns a non-zero
+>> not-copied count and trace_user_fault_read() falls back to the existing
+>> preempt-enabled slow path.
+>>
+>> Custom copy callbacks need the same behavior. Update the syscall argument
+>> copy callbacks to report a non-zero return only when the pagefault-disabled
+>> probe faults. With page faults enabled, keep their previous behavior:
+>> record the syscall event and omit only the individual user argument that
+>> still cannot be copied.
+>>
+>> The slow path remains in place for nonresident pages and permanent copy
+>> failures. nr_context_switches_cpu() still overcounts, but the retry loop is
+>> now avoided for the common resident-page case that does not need fault
+>> handling.
+> 
+> This was reported also under memory load.
+> 
+> I have a patch that will only do a retry if another *user* task schedules
+> in, and will not be bothered by kernel tasks (which may be scheduled in due
+> to the copy from user to begin with).
+> 
+> Can you see if that works too?
+> 
+>   https://lore.kernel.org/all/20260710083357.49e05ff6@gandalf.local.home/
+> 
+Thanks, I will try and put this in the next kernel, although it will take sometime
+for the new kernel to roll in the fleet and to see if the warnings disappear.
