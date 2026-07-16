@@ -1,183 +1,610 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022089.outbound.protection.outlook.com [40.107.75.89])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517A942F70D;
-	Thu, 16 Jul 2026 14:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784212748; cv=fail; b=AtMhl2ncPxIHrFqMotFZY/SKzLRuWtrVto2z6oK6fMetXF5ZKQybO+94O/xs5qhpSZmqwmPL2mpB9Fa0JvzkVCF6fwMydw7xOQwHoqUTWG6t7yIxiXciMtEwfHdBhpNXRJsxTEthrHgwAXxS7qrkGd7KgFp3ShCY8vj/zQaO9rw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784212748; c=relaxed/simple;
-	bh=bkwSRsDvujGZagf6TIQ1S6Q0gP+73z8/IM3j4OHKmm0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=B+QGOK2vJc86ogz6cYXaOpZWKRAqwJrV0uW1ml/UmCm/V4nHnjDj++D9j0Spt+FjILUCU5RqxMNG9AIwOfxyCve9v2KErNVItfy+WJ6td9QrWlpr3VOJiQmJyNL9noA7Oweehx9X/PtW373BW+5wBka/y1GIBxWZQi2CxrA4eOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=DtiaBDjY; arc=fail smtp.client-ip=40.107.75.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D221919ADA4
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Jul 2026 14:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784213360; cv=none; b=NVRdrIqTRmxofC6uhaUwx8udgye235LPxs5cpxHO7F1nkJg0sTvFp+XebgsMYU3Q7E3ypihdjssqYwMGA86V1L4Qqb+NzpFZD2LQplrp30Nl40DvVELjTtSc3FmY699iGBwn/6YTJodspb5uiM9foqJvPm6kGZDfPkVZH1NxvFo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784213360; c=relaxed/simple;
+	bh=3V5S1wi9g6S/firHqk/MxOLKkyhF5YAeVyhgPJs+vWc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=I3+55FvqHIN7U7FA1DQ/DpoaE8WG3EwpYiRgiNj59pIesXoLyXgUrYF6Qw7yFLxV8C2KnblLytbVtVew22goi6aCxoYYDp0jgswT5Je6nyrgt73z8/ljuauIL54pU6toRMMcqsQHW9knWMtI4S7iUuO162jz2g8j/uS3XuHqwhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ci+f2W2Z; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="DtiaBDjY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ypZx/4UH8ohMmOhgbVld6+MT9dmS2tfCdo1gx04J4Okz5qrdQKDQjRFqRV+Bc4iIE3bAXKmNaWhxdhkzqusBSFRMRPB0VtEwgB1EQGOW0Cw5MFlSkSOX3BZx+TBQxkV66mIBhhm0m2WGXKcblh65ByPSTF94et9r+rHpzsVeiVwsfvwlUMPmd+lw3qwfegNU8nebfjYDOI4KjaYVrYrKg/HB+zwg+JL4HdThV9nKg5shkyUETIYuilcsaDznkKih/DTbIcFmhFBkuCre8QIlFfKMsZZxb7uLkT4MeH/oFgCrtF8uAq0J7XFrYWIKKcFQIOGEiWZnlmIv7wBb4GBpRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bkwSRsDvujGZagf6TIQ1S6Q0gP+73z8/IM3j4OHKmm0=;
- b=V+CcgpFe4stLCPxgUki9kCXyL5WBwyG2td4l4bicofZVy58d/YWUetEkYmw9sit5GRwYLdC3efud7qmn+4RQ0blQPavdiyBVp2SSB+HLuc3JdYVLb6p8r1XGeQgtg9s6Fa8YFbF65kvNYcqkYReOYh6zzFAuwVuA3Xsd2LNSQt6NlMJ60C/XaEITLPxapHfyaCJgInbOin127NKn24cdsvX8VrkMHr1Cl1hJKSqtLWqQucNhMwhDqbV4fBw3RUjMbmt3hB53XX03wEUXIB6Uo577xp0hmK+c7o08wHKfxJs5wQmKRoo5K2lD4Q1iVXRkAfiq5ZwSSo7Bv8FKSfJ1Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=transsion.com; dmarc=pass action=none
- header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bkwSRsDvujGZagf6TIQ1S6Q0gP+73z8/IM3j4OHKmm0=;
- b=DtiaBDjYCZdbJKUBWObCEkLsXTFQ1vTJEQLZPHREexbrFv5p3GvLEcKLmRP3ntwiJPm6Zwx76WIqpT3ST9Uul8YzJPVpz55HqaUoDc+fQ8Auq3WG+iycRLeVWIeYzafWyIo+29lJUXKEyegfyvMEiMYHYpAZbZr48DCJXS6wJ9Y=
-Received: from SI2PR04MB5648.apcprd04.prod.outlook.com (2603:1096:4:1a4::11)
- by SEYPR04MB6632.apcprd04.prod.outlook.com (2603:1096:101:d1::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.5; Thu, 16 Jul
- 2026 14:38:59 +0000
-Received: from SI2PR04MB5648.apcprd04.prod.outlook.com
- ([fe80::8ce1:b82b:3b19:f79d]) by SI2PR04MB5648.apcprd04.prod.outlook.com
- ([fe80::8ce1:b82b:3b19:f79d%5]) with mapi id 15.21.0181.008; Thu, 16 Jul 2026
- 14:38:59 +0000
-From: Pu Hu <hupu@transsion.com>
-To: Will Deacon <will@kernel.org>
-CC: "mhiramat@kernel.org" <mhiramat@kernel.org>, "ada.coupriediaz@arm.com"
-	<ada.coupriediaz@arm.com>, "catalin.marinas@arm.com"
-	<catalin.marinas@arm.com>, "davem@davemloft.net" <davem@davemloft.net>,
-	Hongyan Xia <hongyan.xia@transsion.com>, Jiazi Li <jiazi.li@transsion.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
-	<linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
-	<naveen@kernel.org>, "yang@os.amperecomputing.com"
-	<yang@os.amperecomputing.com>
-Subject: Re: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
- single-stepping
-Thread-Topic: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
- single-stepping
-Thread-Index: AQHdEDXw7507o/wC2EuRGyt7eMVEu7ZwLF+AgAAUiAA=
-Date: Thu, 16 Jul 2026 14:38:58 +0000
-Message-ID: <0f049d38-b7f6-47f0-a410-95ad2aee7fd4@transsion.com>
-References: <20260710063242.228714-1-hupu@transsion.com>
- <20260710063242.228714-3-hupu@transsion.com>
- <aljbf_RmOd9U2KDT@willie-the-truck>
-In-Reply-To: <aljbf_RmOd9U2KDT@willie-the-truck>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=transsion.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2PR04MB5648:EE_|SEYPR04MB6632:EE_
-x-ms-office365-filtering-correlation-id: d08fd68a-60ba-42fc-5eb0-08dee347f8b3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|366016|10067099003|56012099006|11063799006|4143699003|6133799003|3023799007|22082099003|18002099003|38070700021;
-x-microsoft-antispam-message-info:
- xHPddy8n6oq/K4XXChzTA/LvDI1S+Mwl2Gc91IPQ/bd/zSJCSAGPKiG9nOFC/uyCTg6C++4KDp/icgF5EmuPvbGxQ9EBBWpAvvPyYsBG3hzakT1YorhlB5gNZZ3QCMy7ZdPbUu8XfQO/KgxkceAgKcdHGbXtLf6WySaGLWhAmfkrJgS7Ox93L6hQMSAfX/ZSceNr6ImTuu6rEit4YFMUJPN9uIoJU0JdAzc3Cve5W+CCXkuHxhOomuXfpOjh7cS/0vTTs6lcMeU88W+Dy/mn5mMB3WZF8KTSCQr6csdSIdH8RWndD7Q6gCe8y/1td31z2i9dxZKxc68FuGppHNtq7tYnGKG/q9coV0uSdvdt/g7s+gUou7IczCXoXcpExqjswOMr0BUPxZyQ8y8XBsM333VGYFD8L/nuYPrGMiEXo9v0D74DIdw7YSM0hwFR8Ux5fVyLTdABcybr1kRMhWSLXcvL24EfruKINJdb9+viOioFf0B4ZmYzgKsQ6lB3RxSJagY1W3oY+HR0ALelex32UWszVyjKDF6HPC7OOZ7AvB5bO7P5BYHMLBHs9dYlB3ltUsyRG9Ge8ubJ+KpnCBBwsZQfaagltc9+y5UHqCI5XL5pG3CpYzO38Vhm2rI+PNF41h0tuzsfs9Wqctg78Gcs0kL5ok7vd/XiX9gYMu7+s38toMzr7w3nQgdt4zJUGblahTamfEWmRsfr/YJtQz81JA==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR04MB5648.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(366016)(10067099003)(56012099006)(11063799006)(4143699003)(6133799003)(3023799007)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?L3hHWnRmdC9DYzJobnVJUmRuZ0MvWndSOEllTmhwNjhxMGoyZmdSM0VCOTJX?=
- =?utf-8?B?ajMxaDRmT0tLVndnRGhueThLL3dudjU4dVF4aXlVWXllYi8xU0pTRStWdmJP?=
- =?utf-8?B?QWh1czdXdkt5b1ZtOHcwM2RkbkFlakduRm5vWXVtcVNLNTlmaWNSbFBsZ2hZ?=
- =?utf-8?B?Y1lZNDlJc1V1clovNVM4eTJKdG9ZM0F3S1ZHYU02enpUNCt0TFJXYUxlZlJT?=
- =?utf-8?B?R0toUzZZaEN1cHdSdXQza1JZMU1hWC9xdllQNG5QZHJlUlFpM3NkbGI4TGVQ?=
- =?utf-8?B?N0lFMkdXaDUrMGhKL3o0dnFqeFZlcDBWNCtmTUoraGRPSXF0cm1zOTFJNUdR?=
- =?utf-8?B?b283SWZaSXplN0ZjajQvckhKR29Yc25rOXN3aERYZCs5WUhMZnJnTTlsTnIx?=
- =?utf-8?B?aTdGOEJoUURvNFlnMzdPaVJoZVp2Zmo2TVNFdVJmMVhCU2NWRHora0MrKzJI?=
- =?utf-8?B?RXIzWmUvS3RiaGlheUNDSDAxdG5LRzAxVjYzR1BWMkQ2ZjNEcmFBZVBJYUNs?=
- =?utf-8?B?bDVCamwwNitUdVNYeERIOU5Ja3NpZ28vdUg4a1p4ZTFnUUVJYTlhRlA5Q2RV?=
- =?utf-8?B?MHNiVlRuY0gwQkZ0QUZodTdBR2xLNUV3V1dZTDhMZ2xPakxyeGFFRU1yelor?=
- =?utf-8?B?R2RNdVdqK1UwL3hyT0tmYlVrOStZWWlvditmL0Z5dWdQRDZNSFN2a3RoU3Fy?=
- =?utf-8?B?ZGlJVkx2SmVnNjVReE0waGVGajc0ckQ5KzY5c1JvWThNYnY0VVVFTUltczNx?=
- =?utf-8?B?SXZ3YXFkNS9SOXc5RDE3ejM1dExlaUZ3Y0p5aE1VTjNJQ21aRm9peUNmMUNz?=
- =?utf-8?B?bktsNkR1NVNOQ0NuYzhXYnNDWjJhYk1WZ0JXS0Y2aXdmNWdsdXlKeWFkZDFD?=
- =?utf-8?B?YTUxck1aOWNNY05BVWVJVVBBeU1YUDhoZ0ZMaHcwbnJCY0xpa1J0OTZMY01W?=
- =?utf-8?B?VDBaMm1zbFZhY014U3BjRHZCcmtWbFJmZG1zWXlaelhaak1WZnpHR2RwTlMy?=
- =?utf-8?B?VWhRWVE5QzBRVmc4Y1hSOFB1TTZRZUVhRU1RZG45S1RGalZuWlFDcUFiMHZi?=
- =?utf-8?B?eW9Wa2FUVTFjQzVtS01idWI0Q3NwL3JTYmk5SDRkUlRrWHhyUG5sWHhlN0Z0?=
- =?utf-8?B?dEIrWEM2VWk0V2ZNTHMrTlN1OHRnVFg3UDdZbEZvQWEweWJxMlFKRDVqSzE4?=
- =?utf-8?B?cTVldTVSdzMydUNNV3hHMUlYeDhteE1reVBnZ0tYRGJvWTZKSUlYam1CbmVO?=
- =?utf-8?B?YzVjeXhSTTNWUEl4UjNSd1BMV3hwUGd0c1ZwODluQnVMRTJoajIwVVlWQnVw?=
- =?utf-8?B?Zkx0SUZWakpNL016OWFtTktGbWhwQy9zd1l1N3BkZmQzdk9zaThoaHJGYmVG?=
- =?utf-8?B?bTNqbysyTTFvWTJLUU5tdHZIREU1VDM3N29HMHdmc3BDL001b1pjNG1GRWNk?=
- =?utf-8?B?VGV3UWk4WVlFQ0tCTXVIWGZ1Sm1laFJrV09FQm03c3pCeWhxS0plN1RIcEZ6?=
- =?utf-8?B?eUswM0tSUEZpRkd4cWVNL3JKUHhkMjIrZ1EvMXZHNFlJVnZFcXNwK2djaHRR?=
- =?utf-8?B?Vm9HMis0ZVBicWZOWkEzN2RkdkVhdUZ1SHBtWnhDNjFwVG9yeDIrOTRBT3BD?=
- =?utf-8?B?dVFnRWxJeTU3ZGlaZTNHbzg1S1o3aXFZd25JZTdGaHNSdTFqWTNOOWF2bmMv?=
- =?utf-8?B?OUI0aVZhVzF6UWhRblZkc2t2cmMybFhnMThvR1Eydk11OWUxdk04RkVva2lQ?=
- =?utf-8?B?ekFGcE1kS2NHVi9XZ3ZDb056NmdCQmJOekVuRVV1NFRnTUN0UVNmUm10NUl5?=
- =?utf-8?B?YlNSUlE2ZmlSanRsb3l0cGE1cnhhSE5veFFKV3BUU2orMjM5NVI0WThvRTlN?=
- =?utf-8?B?RjZKMXl6ZUxrdWNwZHU2emJPUzgvbWQ3Q3lZMGxVQmZ4dEhmS2tXN2RWR2RV?=
- =?utf-8?B?M1U1MHF6d3d0WTlaWWd3L3dnenYrR256SllwYTNKZEFjYzBJUkYvaTdzdi8z?=
- =?utf-8?B?T2VWQUtwVW5wTjB1UzBjZ0VoNlljNkZSMXROUlpmaGtLUlU2eVZDaEFJR1R0?=
- =?utf-8?B?dkZHd3h1VWRsakg3TmNMejBEU1hQL2tJMWtNejdMYTRRRDJPNWFIOHJVT3Uw?=
- =?utf-8?B?M0hoandadzlkVmRJQlNrR0VRT1pmVWsrM2dOSC9lZ2JtUnZMcjJ2cC80VEp2?=
- =?utf-8?B?aTNHVVJIUXJBQ2s3djdNYzBueStoUFFHYVQ3ZjFaeXFVT1RiRUY2NDE2dHdP?=
- =?utf-8?B?ejBROWcwTnE4U2QwWTdOL0RXMXluWU80YUUxSFF2aE9zVEY2NDJLZGRqSFlO?=
- =?utf-8?B?WUt6S2ROUzdTM1I2WmtLemZBQlFLbytvNHlmZDM2TjR2RHdaMHIxUT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E38EEAE1A0819C48932A4CA2800434FA@apcprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ci+f2W2Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784213356;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Nb+XX7mUMKzK2mIvhWHMxyjXcN5PvR914bKCom3/+p8=;
+	b=Ci+f2W2ZhMeFzuEKnLs2CfPwAcKiqPT5jKWLdiR9T740izeODeBelVyj60OyafrfTp2Cca
+	MFwRSJOAZ0RYPgk6rik+DL+jhsmrdoQOF8Cb5inDZh4iiiOcCnaFD55JGtoGEF+lDmD56i
+	hp0m3OytoRQYuLGjgOjx0jmkXKNNBIE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-_WQvjCG5M3qEYvaEPihu0Q-1; Thu,
+ 16 Jul 2026 10:49:14 -0400
+X-MC-Unique: _WQvjCG5M3qEYvaEPihu0Q-1
+X-Mimecast-MFC-AGG-ID: _WQvjCG5M3qEYvaEPihu0Q_1784213353
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A965E1955E90;
+	Thu, 16 Jul 2026 14:49:12 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.39])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0577D3004081;
+	Thu, 16 Jul 2026 14:49:09 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] rtla/cli: Unify and improve handling of invalid option arguments
+Date: Thu, 16 Jul 2026 16:49:01 +0200
+Message-ID: <20260716144901.1187474-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: transsion.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR04MB5648.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d08fd68a-60ba-42fc-5eb0-08dee347f8b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2026 14:38:58.7625
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cgmrzXH4iOBRQQhFOl9o9XWn1gQn1JaMwqu87yfvtxtiWUVu0xFTYErbgmQHE5vclUb/i2QO+DpLBD3CkCNcrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR04MB6632
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: sWRrH02Y-jX_IOptJ-cLIKGX4gSAs17nIoyNFcdW7Tk_1784213353
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-T24gNy8xNi8yMDI2IDk6MjQgUE0sIFdpbGwgRGVhY29uIHdyb3RlOg0KPiBPbiBGcmksIEp1bCAx
-MCwgMjAyNiBhdCAwNjozMjo1NUFNICswMDAwLCBQdSBIdSB3cm90ZToNCj4+IEZyb206IFB1IEh1
-IDxodXB1QHRyYW5zc2lvbi5jb20+DQo+Pg0KPj4gQSBrcHJvYmUgY2FuIGJlIGhpdCB3aGlsZSBh
-bm90aGVyIGtwcm9iZSBpcyBpbiBLUFJPQkVfSElUX1NTIHN0YXRlLiBUaGlzDQo+PiBjYW4gaGFw
-cGVuIHdoZW4gdHJhY2luZyBvciBwZXJmIGNvZGUgcnVucyBmcm9tIHRoZSBkZWJ1ZyBleGNlcHRp
-b24gcGF0aA0KPj4gd2hpbGUgdGhlIGZpcnN0IGtwcm9iZSBpcyBwcmVwYXJpbmcgb3IgZXhlY3V0
-aW5nIGl0cyBvdXQtb2YtbGluZQ0KPj4gc2luZ2xlLXN0ZXAgaW5zdHJ1Y3Rpb24uDQo+IA0KPiBJ
-IGRvbid0IHVuZGVyc3RhbmQgdGhpcyBwYXJ0LiBUaGUgc2luZ2xlLXN0ZXAgcnVucyB3aXRoIGRl
-YnVnIGV4Y2VwdGlvbnMNCj4gZGlzYWJsZWQgKGtwcm9iZXNfc2F2ZV9sb2NhbF9pcnFmbGFnKCkg
-c2V0cyBQU1RBVEUuRCkgc28gaG93IGRvIHdlIGVuZA0KPiB1cCB0YWtpbmcgb25lPw0KPiANCj4g
-V2lsbA0KDQpIaSBXaWxsLA0KDQpUaGFua3MgZm9yIGxvb2tpbmcgYXQgdGhpcy4NCg0KWW91IGFy
-ZSByaWdodCB0aGF0IHRoZSBzaW5nbGUtc3RlcCBydW5zIHdpdGggZGVidWcgZXhjZXB0aW9ucyBk
-aXNhYmxlZC4NCkhvd2V2ZXIsIHRoZSBjYXNlIEkgd2FzIHJlZmVycmluZyB0byBpcyBub3QgYSBo
-YXJkd2FyZSBicmVha3BvaW50IG9yIGENCnNvZnR3YXJlLXN0ZXAgZXhjZXB0aW9uLCBidXQgYW5v
-dGhlciBCcmVha3BvaW50IEluc3RydWN0aW9uIGV4Y2VwdGlvbg0KZ2VuZXJhdGVkIGJ5IGV4ZWN1
-dGluZyBhIEJSSyBpbnN0cnVjdGlvbi4gQSBCUksgaW5zdHJ1Y3Rpb24gZXhjZXB0aW9uIGlzIA0K
-bm90IG1hc2tlZCBieSBQU1RBVEUuRCwgc28gaXQgY2FuIHN0aWxsIGJlIHRha2VuIHdoaWxlIGhh
-bmRsaW5nIGEga3Byb2JlLg0KDQpBcyBmYXIgYXMgSSB1bmRlcnN0YW5kIHRoZSBhcmNoaXRlY3R1
-cmUsIHRoZXJlIGFyZSB0d28gZGlmZmVyZW50IGNhc2VzIGhlcmU6DQoNCiAgIC0gQnJlYWtwb2lu
-dCBJbnN0cnVjdGlvbiBleGNlcHRpb25zLCBnZW5lcmF0ZWQgYnkgZXhlY3V0aW5nIGEgQlJLDQog
-ICAgIGluc3RydWN0aW9uLg0KICAgLSBCcmVha3BvaW50IGV4Y2VwdGlvbnMsIGdlbmVyYXRlZCBi
-eSB0aGUgZGVidWcgbG9naWMsIGZvciBleGFtcGxlIGJ5DQogICAgIHByb2dyYW1tZWQgYnJlYWtw
-b2ludCByZWdpc3RlcnMuDQoNClBTVEFURS5EIG1hc2tzIGRlYnVnIGV4Y2VwdGlvbnMgc3VjaCBh
-cyBoYXJkd2FyZSBicmVha3BvaW50cywgDQp3YXRjaHBvaW50cyBhbmQgc29mdHdhcmUtc3RlcCBl
-eGNlcHRpb25zLCBidXQgaXQgZG9lcyBub3QgbWFzayANCkJyZWFrcG9pbnQgSW5zdHJ1Y3Rpb24g
-ZXhjZXB0aW9ucyBnZW5lcmF0ZWQgYnkgQlJLLiBUaGlzIGFsc28gc2VlbXMgDQpjb25zaXN0ZW50
-IHdpdGggdGhlIHBzZXVkb2NvZGUgZm9yIEJSSywgDQpBcmNoNjQuU29mdHdhcmVCcmVha3BvaW50
-KGltbTE2KSwgd2hpY2ggZG9lcyBub3QgYXBwZWFyIHRvIGNoZWNrIA0KUFNUQVRFLkQgYmVmb3Jl
-IHRha2luZyB0aGUgZXhjZXB0aW9uLg0KDQpUaGVyZWZvcmUsIGV2ZW4gaWYga3Byb2Jlc19zYXZl
-X2xvY2FsX2lycWZsYWcoKSBzZXRzIFBTVEFURS5EIHdoaWxlIA0KaGFuZGxpbmcgdGhlIGZpcnN0
-IGtwcm9iZSwgaWYgdGhlIGNvZGUgZXhlY3V0ZWQgZnJvbSB0aGF0IHBhdGggcmVhY2hlcyANCmFu
-b3RoZXIgaW5zdHJ1Y3Rpb24gcGF0Y2hlZCB3aXRoIEJSSywgaXQgY2FuIHN0aWxsIHRha2UgYSBC
-cmVha3BvaW50IA0KSW5zdHJ1Y3Rpb24gZXhjZXB0aW9uLiBJbiBvdGhlciB3b3JkcywgdGhlIG5l
-c3RlZCBjYXNlIEkgbWVudGlvbmVkIGlzIA0KYW5vdGhlciBrcHJvYmUgQlJLIGJlaW5nIGhpdCwg
-bm90IGEgaGFyZHdhcmUgZGVidWcgZXhjZXB0aW9uIG9yIGEgDQpzb2Z0d2FyZS1zdGVwIGV4Y2Vw
-dGlvbi4NCg0KVGhlIGFib3ZlIGFuYWx5c2lzIGlzIGJhc2VkIG9uIHRoZSBBcm0gQXJjaGl0ZWN0
-dXJlIFJlZmVyZW5jZSBNYW51YWwsDQppbmNsdWRpbmcgdGhlIGRlc2NyaXB0aW9ucyBvZiBCUkss
-IEJyZWFrcG9pbnQgSW5zdHJ1Y3Rpb24gZXhjZXB0aW9ucyBhbmQNCkJyZWFrcG9pbnQgZXhjZXB0
-aW9ucy4NCg0KVGhhbmtzLA0KUHUgSHUNCg==
+The current handling of invalid command line option arguments is
+inconsistent:
+
+- opt_llong_callback() treats non-numerical input the same as "-1",
+  which might or might not be rejected later.
+- opt_int_callback() returns -1 on non-numerical input without an error
+  message, which makes parsing fail silently (libsubcmd will
+  automatically print the usage of the option only, no error message).
+- custom callbacks abort command line parsing using fatal(), which
+  displays an error message and exits, without libsubcmd printing the
+  usage.
+
+Unify this such that all invalid options, regardless of the format,
+print an error message similar to the out of range case:
+
+Error: --opt: 'value' is not a valid XY
+
+followed by the usage of the option, e.g.:
+
+$ rtla timerlat hist --period=1us
+ Error: --period: '1us' is not a valid number
+
+ Usage: rtla timerlat hist [<options>] [-h|--help]
+
+    -p, --period <us>     timerlat period in us
+
+As this is a libsubcmd help path, all option parsing failures now return
+the exit code of 129 (help).
+
+The unified handling is implemented using a new error message helper,
+opt_err(), which is called from two new CLI-specific parsing functions,
+strtoll_safe() and strtoi_safe(), as well as from custom helpers.
+
+Option callback tests are updated to cover the new behavior.
+
+Assisted-by: Claude:claude-opus-4-6
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+Dependencies:
+- "rtla/cli: Unify and improve range validation logic" patch
+  Link: https://lore.kernel.org/linux-trace-kernel/20260710131554.338335-1-tglozar@redhat.com/
+- "rtla: Allow unsetting non-list custom-callback CLI options" patchset
+  Link: https://lore.kernel.org/linux-trace-kernel/20260629083654.1548925-1-tglozar@redhat.com/T/#u
+  (transitive dependency through the above patch)
+
+ tools/tracing/rtla/src/cli_p.h                | 126 +++++++++++++-----
+ .../rtla/tests/unit/cli_opt_callback.c        |  70 +++++++---
+ 2 files changed, 144 insertions(+), 52 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
+index b7688559ca53d..661240d44ad9a 100644
+--- a/tools/tracing/rtla/src/cli_p.h
++++ b/tools/tracing/rtla/src/cli_p.h
+@@ -5,6 +5,7 @@
+ #error "Private header file included outside of cli.c module"
+ #endif
+ 
++#include <errno.h>
+ #include <limits.h>
+ #include <linux/kernel.h>
+ #include <subcmd/parse-options.h>
+@@ -239,6 +240,41 @@ static int check_int_range(const struct option *opt, int value)
+ #define RTLA_OPT_DEBUG OPT_BOOLEAN('D', "debug", &config_debug, \
+ 	"print debug info")
+ 
++/*
++ * Helper functions for parsing numeric option arguments.
++ */
++static void opt_err(const struct option *opt, const char *arg, const char *msg)
++{
++	fprintf(stderr, " Error: --%s: '%s' %s\n", opt->long_name, arg, msg);
++}
++
++static int strtoll_safe(const struct option *opt, const char *arg, long long *value)
++{
++	long long tmp;
++	char *end;
++
++	errno = 0;
++	tmp = strtoll(arg, &end, 10);
++	if (errno || *end || end == arg) {
++		opt_err(opt, arg, "is not a valid number");
++		return -1;
++	}
++	*value = tmp;
++	return 0;
++}
++
++static int strtoi_safe(const struct option *opt, const char *arg, int *value)
++{
++	int tmp;
++
++	if (strtoi(arg, &tmp)) {
++		opt_err(opt, arg, "is not a valid number");
++		return -1;
++	}
++	*value = tmp;
++	return 0;
++}
++
+ /*
+  * Common callback functions for command line options
+  */
+@@ -255,7 +291,8 @@ static int opt_llong_callback(const struct option *opt, const char *arg, int uns
+ 	if (!arg)
+ 		return -1;
+ 
+-	*value = get_llong_from_str((char *)arg);
++	if (strtoll_safe(opt, arg, value))
++		return -1;
+ 	if (check_llong_range(opt, *value))
+ 		return -1;
+ 	return 0;
+@@ -273,7 +310,7 @@ static int opt_int_callback(const struct option *opt, const char *arg, int unset
+ 	if (!arg)
+ 		return -1;
+ 
+-	if (strtoi(arg, value))
++	if (strtoi_safe(opt, arg, value))
+ 		return -1;
+ 	if (check_int_range(opt, *value))
+ 		return -1;
+@@ -296,8 +333,10 @@ static int opt_cpus_cb(const struct option *opt, const char *arg, int unset)
+ 		return -1;
+ 
+ 	retval = parse_cpu_set((char *)arg, &params->monitored_cpus);
+-	if (retval)
+-		fatal("Invalid -c cpu list");
++	if (retval) {
++		opt_err(opt, arg, "is not a valid cpu set");
++		return -1;
++	}
+ 	params->cpus = (char *)arg;
+ 
+ 	return 0;
+@@ -335,8 +374,10 @@ static int opt_duration_cb(const struct option *opt, const char *arg, int unset)
+ 		return -1;
+ 
+ 	params->duration = parse_seconds_duration((char *)arg);
+-	if (!params->duration)
+-		fatal("Invalid -d duration");
++	if (!params->duration) {
++		opt_err(opt, arg, "is not a valid duration");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -376,8 +417,10 @@ static int opt_housekeeping_cb(const struct option *opt, const char *arg, int un
+ 
+ 	params->hk_cpus = 1;
+ 	retval = parse_cpu_set((char *)arg, &params->hk_cpu_set);
+-	if (retval)
+-		fatal("Error parsing house keeping CPUs");
++	if (retval) {
++		opt_err(opt, arg, "is not a valid cpu set");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -397,8 +440,10 @@ static int opt_priority_cb(const struct option *opt, const char *arg, int unset)
+ 		return -1;
+ 
+ 	retval = parse_prio((char *)arg, &params->sched_param);
+-	if (retval == -1)
+-		fatal("Invalid -P priority");
++	if (retval == -1) {
++		opt_err(opt, arg, "is not a valid priority");
++		return -1;
++	}
+ 	params->set_sched = 1;
+ 
+ 	return 0;
+@@ -411,8 +456,10 @@ static int opt_trigger_cb(const struct option *opt, const char *arg, int unset)
+ 	if (unset || !arg)
+ 		return -1;
+ 
+-	if (!*events)
+-		fatal("--trigger requires a previous -e");
++	if (!*events) {
++		opt_err(opt, arg, "has no previous event to apply to");
++		return -1;
++	}
+ 
+ 	trace_event_add_trigger(*events, (char *)arg);
+ 
+@@ -426,8 +473,10 @@ static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
+ 	if (unset || !arg)
+ 		return -1;
+ 
+-	if (!*events)
+-		fatal("--filter requires a previous -e");
++	if (!*events) {
++		opt_err(opt, arg, "has no previous event to apply to");
++		return -1;
++	}
+ 
+ 	trace_event_add_filter(*events, (char *)arg);
+ 
+@@ -468,7 +517,8 @@ static int opt_osnoise_auto_cb(const struct option *opt, const char *arg, int un
+ 	if (!arg)
+ 		return -1;
+ 
+-	auto_thresh = get_llong_from_str((char *)arg);
++	if (strtoll_safe(opt, arg, &auto_thresh))
++		return -1;
+ 	params->common.stop_us = auto_thresh;
+ 	params->threshold = 1;
+ 
+@@ -508,8 +558,10 @@ static int opt_osnoise_on_threshold_cb(const struct option *opt, const char *arg
+ 		return -1;
+ 
+ 	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
+-	if (retval)
+-		fatal("Invalid action %s", arg);
++	if (retval) {
++		opt_err(opt, arg, "is not a valid action");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -523,8 +575,10 @@ static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int
+ 		return -1;
+ 
+ 	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
+-	if (retval)
+-		fatal("Invalid action %s", arg);
++	if (retval) {
++		opt_err(opt, arg, "is not a valid action");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -596,7 +650,8 @@ static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int u
+ 	if (!arg)
+ 		return -1;
+ 
+-	auto_thresh = get_llong_from_str((char *)arg);
++	if (strtoll_safe(opt, arg, &auto_thresh))
++		return -1;
+ 	params->common.stop_total_us = auto_thresh;
+ 	params->common.stop_us = auto_thresh;
+ 	params->print_stack = auto_thresh;
+@@ -623,7 +678,8 @@ static int opt_aa_only_cb(const struct option *opt, const char *arg, int unset)
+ 	if (!arg)
+ 		return -1;
+ 
+-	auto_thresh = get_llong_from_str((char *)arg);
++	if (strtoll_safe(opt, arg, &auto_thresh))
++		return -1;
+ 	params->common.stop_total_us = auto_thresh;
+ 	params->common.stop_us = auto_thresh;
+ 	params->print_stack = auto_thresh;
+@@ -662,8 +718,10 @@ static int opt_timerlat_on_threshold_cb(const struct option *opt, const char *ar
+ 		return -1;
+ 
+ 	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
+-	if (retval)
+-		fatal("Invalid action %s", arg);
++	if (retval) {
++		opt_err(opt, arg, "is not a valid action");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -677,8 +735,10 @@ static int opt_timerlat_on_end_cb(const struct option *opt, const char *arg, int
+ 		return -1;
+ 
+ 	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
+-	if (retval)
+-		fatal("Invalid action %s", arg);
++	if (retval) {
++		opt_err(opt, arg, "is not a valid action");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -727,8 +787,10 @@ static int opt_stack_format_cb(const struct option *opt, const char *arg, int un
+ 
+ 	*format = parse_stack_format((char *)arg);
+ 
+-	if (*format == -1)
+-		fatal("Invalid --stack-format option");
++	if (*format == -1) {
++		opt_err(opt, arg, "is not a valid stack format");
++		return -1;
++	}
+ 
+ 	return 0;
+ }
+@@ -736,6 +798,7 @@ static int opt_stack_format_cb(const struct option *opt, const char *arg, int un
+ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int unset)
+ {
+ 	struct timerlat_params *params = opt->value;
++	long long val;
+ 
+ 	if (unset) {
+ 		params->timerlat_align = false;
+@@ -746,10 +809,13 @@ static int opt_timerlat_align_cb(const struct option *opt, const char *arg, int
+ 	if (!arg)
+ 		return -1;
+ 
+-	params->timerlat_align = true;
+-	params->timerlat_align_us = get_llong_from_str((char *)arg);
+-	if (check_llong_range(opt, params->timerlat_align_us))
++	if (strtoll_safe(opt, arg, &val))
+ 		return -1;
++	if (check_llong_range(opt, val))
++		return -1;
++
++	params->timerlat_align = true;
++	params->timerlat_align_us = val;
+ 
+ 	return 0;
+ }
+diff --git a/tools/tracing/rtla/tests/unit/cli_opt_callback.c b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
+index 8439fb5c6f0b3..70e2576b1336f 100644
+--- a/tools/tracing/rtla/tests/unit/cli_opt_callback.c
++++ b/tools/tracing/rtla/tests/unit/cli_opt_callback.c
+@@ -46,6 +46,28 @@ START_TEST(test_opt_llong_callback_min)
+ }
+ END_TEST
+ 
++START_TEST(test_opt_llong_callback_non_numeric)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_llong_callback(&opt, "abc", 0), -1);
++	ck_assert_int_eq(test_value, 0);
++}
++END_TEST
++
++START_TEST(test_opt_llong_callback_non_numeric_suffix)
++{
++	long long test_value = 0;
++	const struct option opt = TEST_CALLBACK(&test_value, opt_llong_callback);
++
++	assert(freopen("/dev/null", "w", stderr));
++	ck_assert_int_eq(opt_llong_callback(&opt, "1234567890abc", 0), -1);
++	ck_assert_int_eq(test_value, 0);
++}
++END_TEST
++
+ START_TEST(test_opt_llong_callback_unset)
+ {
+ 	long long test_value = 0;
+@@ -105,6 +127,7 @@ START_TEST(test_opt_int_callback_non_numeric)
+ 	int test_value = 0;
+ 	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
+ 
++	assert(freopen("/dev/null", "w", stderr));
+ 	ck_assert_int_eq(opt_int_callback(&opt, "abc", 0), -1);
+ 	ck_assert_int_eq(test_value, 0);
+ }
+@@ -115,6 +138,7 @@ START_TEST(test_opt_int_callback_non_numeric_suffix)
+ 	int test_value = 0;
+ 	const struct option opt = TEST_CALLBACK(&test_value, opt_int_callback);
+ 
++	assert(freopen("/dev/null", "w", stderr));
+ 	ck_assert_int_eq(opt_int_callback(&opt, "1234567890abc", 0), -1);
+ 	ck_assert_int_eq(test_value, 0);
+ }
+@@ -245,7 +269,7 @@ START_TEST(test_opt_cpus_cb_invalid)
+ 
+ 	nr_cpus = 4;
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_cpus_cb(&opt, "0-3,5", 0);
++	ck_assert_int_eq(opt_cpus_cb(&opt, "0-3,5", 0), -1);
+ }
+ END_TEST
+ 
+@@ -299,7 +323,7 @@ START_TEST(test_opt_duration_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&params, opt_duration_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_duration_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_duration_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -361,7 +385,7 @@ START_TEST(test_opt_housekeeping_cb_invalid)
+ 
+ 	nr_cpus = 4;
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_housekeeping_cb(&opt, "0-3,5", 0);
++	ck_assert_int_eq(opt_housekeeping_cb(&opt, "0-3,5", 0), -1);
+ }
+ END_TEST
+ 
+@@ -395,7 +419,7 @@ START_TEST(test_opt_priority_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&params, opt_priority_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_priority_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_priority_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -427,7 +451,7 @@ START_TEST(test_opt_trigger_cb_no_event)
+ 	const struct option opt = TEST_CALLBACK(&events, opt_trigger_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_trigger_cb(&opt, "stacktrace", 0);
++	ck_assert_int_eq(opt_trigger_cb(&opt, "stacktrace", 0), -1);
+ }
+ END_TEST
+ 
+@@ -447,7 +471,7 @@ START_TEST(test_opt_filter_cb_no_event)
+ 	const struct option opt = TEST_CALLBACK(&events, opt_filter_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_filter_cb(&opt, "comm ~ \"rtla\"", 0);
++	ck_assert_int_eq(opt_filter_cb(&opt, "comm ~ \"rtla\"", 0), -1);
+ }
+ END_TEST
+ 
+@@ -528,7 +552,7 @@ START_TEST(test_opt_osnoise_on_threshold_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_threshold_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_osnoise_on_threshold_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_osnoise_on_threshold_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -550,7 +574,7 @@ START_TEST(test_opt_osnoise_on_end_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&actions, opt_osnoise_on_end_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_osnoise_on_end_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_osnoise_on_end_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -660,7 +684,7 @@ START_TEST(test_opt_timerlat_on_threshold_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_threshold_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_timerlat_on_threshold_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_timerlat_on_threshold_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -682,7 +706,7 @@ START_TEST(test_opt_timerlat_on_end_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&actions, opt_timerlat_on_end_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_timerlat_on_end_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_timerlat_on_end_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -782,7 +806,7 @@ START_TEST(test_opt_stack_format_cb_invalid)
+ 	const struct option opt = TEST_CALLBACK(&stack_format, opt_stack_format_cb);
+ 
+ 	assert(freopen("/dev/null", "w", stderr));
+-	opt_stack_format_cb(&opt, "abc", 0);
++	ck_assert_int_eq(opt_stack_format_cb(&opt, "abc", 0), -1);
+ }
+ END_TEST
+ 
+@@ -807,6 +831,8 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_llong_callback_simple);
+ 	tcase_add_test(tc, test_opt_llong_callback_max);
+ 	tcase_add_test(tc, test_opt_llong_callback_min);
++	tcase_add_test(tc, test_opt_llong_callback_non_numeric);
++	tcase_add_test(tc, test_opt_llong_callback_non_numeric_suffix);
+ 	tcase_add_test(tc, test_opt_llong_callback_unset);
+ 	tcase_add_test(tc, test_opt_llong_callback_unset_defval);
+ 	tcase_add_test(tc, test_opt_llong_callback_range_in);
+@@ -825,25 +851,25 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_int_callback_range_above);
+ 	tcase_add_test(tc, test_opt_int_callback_range_boundary);
+ 	tcase_add_test(tc, test_opt_cpus_cb);
+-	tcase_add_exit_test(tc, test_opt_cpus_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_cpus_cb_invalid);
+ 	tcase_add_test(tc, test_opt_cgroup_cb);
+ 	tcase_add_test(tc, test_opt_cgroup_cb_equals);
+ 	tcase_add_test(tc, test_opt_cgroup_cb_unset);
+ 	tcase_add_test(tc, test_opt_duration_cb);
+ 	tcase_add_test(tc, test_opt_duration_cb_unset);
+-	tcase_add_exit_test(tc, test_opt_duration_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_duration_cb_invalid);
+ 	tcase_add_test(tc, test_opt_event_cb);
+ 	tcase_add_test(tc, test_opt_event_cb_multiple);
+ 	tcase_add_test(tc, test_opt_housekeeping_cb);
+-	tcase_add_exit_test(tc, test_opt_housekeeping_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_housekeeping_cb_invalid);
+ 	tcase_add_test(tc, test_opt_housekeeping_cb_unset);
+ 	tcase_add_test(tc, test_opt_priority_cb);
+-	tcase_add_exit_test(tc, test_opt_priority_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_priority_cb_invalid);
+ 	tcase_add_test(tc, test_opt_priority_cb_unset);
+ 	tcase_add_test(tc, test_opt_trigger_cb);
+-	tcase_add_exit_test(tc, test_opt_trigger_cb_no_event, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_trigger_cb_no_event);
+ 	tcase_add_test(tc, test_opt_filter_cb);
+-	tcase_add_exit_test(tc, test_opt_filter_cb_no_event, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_filter_cb_no_event);
+ 	suite_add_tcase(s, tc);
+ 
+ 	tc = tcase_create("osnoise");
+@@ -853,9 +879,9 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_noarg);
+ 	tcase_add_test(tc, test_opt_osnoise_trace_output_cb_unset);
+ 	tcase_add_test(tc, test_opt_osnoise_on_threshold_cb);
+-	tcase_add_exit_test(tc, test_opt_osnoise_on_threshold_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_osnoise_on_threshold_cb_invalid);
+ 	tcase_add_test(tc, test_opt_osnoise_on_end_cb);
+-	tcase_add_exit_test(tc, test_opt_osnoise_on_end_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_osnoise_on_end_cb_invalid);
+ 	suite_add_tcase(s, tc);
+ 
+ 	tc = tcase_create("timerlat");
+@@ -867,15 +893,15 @@ Suite *cli_opt_callback_suite(void)
+ 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_noarg);
+ 	tcase_add_test(tc, test_opt_timerlat_trace_output_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_on_threshold_cb);
+-	tcase_add_exit_test(tc, test_opt_timerlat_on_threshold_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_timerlat_on_threshold_cb_invalid);
+ 	tcase_add_test(tc, test_opt_timerlat_on_end_cb);
+-	tcase_add_exit_test(tc, test_opt_timerlat_on_end_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_timerlat_on_end_cb_invalid);
+ 	tcase_add_test(tc, test_opt_user_threads_cb);
+ 	tcase_add_test(tc, test_opt_user_threads_cb_unset);
+ 	tcase_add_test(tc, test_opt_nano_cb);
+ 	tcase_add_test(tc, test_opt_nano_cb_unset);
+ 	tcase_add_test(tc, test_opt_stack_format_cb);
+-	tcase_add_exit_test(tc, test_opt_stack_format_cb_invalid, EXIT_FAILURE);
++	tcase_add_test(tc, test_opt_stack_format_cb_invalid);
+ 	tcase_add_test(tc, test_opt_stack_format_cb_unset);
+ 	tcase_add_test(tc, test_opt_timerlat_align_cb);
+ 	tcase_add_test(tc, test_opt_timerlat_align_cb_invalid);
+-- 
+2.55.0
+
