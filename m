@@ -1,195 +1,271 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB3C2E739A;
-	Thu, 16 Jul 2026 02:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B642877E8;
+	Thu, 16 Jul 2026 02:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784169442; cv=none; b=aTWU5psAaCRb3rm4TIgl8CQm97kj4WczG48lqAMkf+DjP0S+DYfcpdKtLpdN7n7MbIPkrsRFODrFGoF34agqObHF1z9FthJqk/Y4cOa7K7L6DixDiQrnz/NCtdTlwxmCUCH/XSdWo73CV7L4sXXXwwktTeyIKqN8nHCA6RHucQ4=
+	t=1784170339; cv=none; b=NjvQCN7Gk7mene7cSpWPmyW+TwPMzGehlfXX0jQQd3c4yxEowd/9xgWhY6mSezSLYQvjrJJRLp7ymVxHcmbzmOuzkwgOOrERNt2ZRrLLV8BbbCIbWE94ClyjU8c6hMqiuAFIe9/V8eX2V0xYocftSJ9ttog4JscPYMpSzWHjgMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784169442; c=relaxed/simple;
-	bh=qh3MXJ4zX+PzAH+IjADYpiOM1VCNO89t+VDqgXX5oQ8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GzDgPW/09PJe800bQIW0FUur3PJOhiotAF5uJF8TOauZ18RzdgzyXW/dqAJ4Y4nbRxVyxGtDKM3Hqplx2uD79n6aX3vVrWbmpjPj43bKbCeUI3/Lq2MTNBEXtnhqU3Y9tNPUEzK1WzCqtPgFV4K3su04Y7YqiF+97wecrEhp8WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bd/IIAU5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784170339; c=relaxed/simple;
+	bh=GjRFiX3h6ozN+OW3UKhRLTSpJbOCkjI3PxavdmVV2lM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TsnS0U12XhQA+Mkrd1jKYOTZubEMo0kwkCv+kl6yLxseuHh/Ntzn0tDbwN5bfIJcpxnjJcQ10MaxbYqHobntloJWqa/36JTdzhQEDPjmpKlUwUrFo7u2Vgi3bNSDRe8hzKv2ehIKqgJuH/wa+X/Ixd11geS3C+dX6xhMCOB9Wz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S95YESOr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bd/IIAU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3ED1F000E9;
-	Thu, 16 Jul 2026 02:37:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S95YESOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09FC11F000E9;
+	Thu, 16 Jul 2026 02:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784169440;
-	bh=WmoFwcuL/Sj1/kJRhDt+nVyg5ufKUIzE4A2ZN4dKudc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Bd/IIAU5oAGXnSiWQvC68ALSpH2NxX2ZbSJsLmeecD2Awu+WOvrffJCc4nwq1v9sv
-	 znclPfoAkgvq9HNjZ+Lg4/Ev1u2FbFx/FG0Hrjw730YO9VF1TXVXLhyJ7znxytd/zi
-	 UlwtOkdztHtR7QzBVamsAqpjx0VJj7qah1EUGfD/CSmnSt2h63kpy5C2zIX1c8GAKp
-	 LkOgplTcim5e4xAZWymLNfNlmvazIWZ/s5Zy6RNfxbi2mG3vJdxfoO0eH4egsig27M
-	 b0ViEHYmUu5Pdk6fKALqxxjVg9uf75SQvqIuPQG35W9SSa0C1rVfbd7jsxJybRXFBD
-	 O28hzGgrg/OPQ==
-Date: Thu, 16 Jul 2026 11:37:16 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, sashiko-bot@kernel.org,
- linux-perf-users@vger.kernel.org, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v7 10/10] selftests: ftrace: Add wprobe trigger testcase
-Message-Id: <20260716113716.55cfcd374d78f94620209ae5@kernel.org>
-In-Reply-To: <20260716105913.e04dd8dfa271a263f959d847@kernel.org>
-References: <178407983818.95826.12714571928538799781.stgit@devnote2>
-	<178407995495.95826.11582585035165074036.stgit@devnote2>
-	<20260715021641.B3D691F000E9@smtp.kernel.org>
-	<20260716105913.e04dd8dfa271a263f959d847@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20260515; t=1784170337;
+	bh=TSrkEP7LUnpAbCqC55sU5ke43SY/aziNihnBLjbFOrQ=;
+	h=From:To:Cc:Subject:Date;
+	b=S95YESOrLm1LSahvYa3tTHt8v+LH2O/Beg+sezqbFM6SUpKZM78F0dgG+qAuTKrwM
+	 fFXS4aPYHdU/4PSQH8QTTVRxZVcSI/cQeH/kvsPJoZ8VGv+xjJSkghgTt8wPLl30hD
+	 D20+3+5muyYszPkBYdimlt5kcosafyliAATO3DMICbMJaxETMggSsINmqrLMxzIlTE
+	 Y/VuyOr2Iszg6jGTDYO2yjd2Fbxds3r3xTzycj5z92AAh9Y8AOkY2I/9EzOFBKVRG6
+	 MVmlDMM1QU1SQpy+VapD+ke5lp35yhIaQFOqGGhrLLpJaRnVvCdyx/lfQgTgQ+ZXMb
+	 HQq9I/Z7YvoTQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v8 0/9] tracing: wprobe: x86: Add wprobe for watchpoint
+Date: Thu, 16 Jul 2026 11:52:11 +0900
+Message-ID: <178417033089.209165.16717079876036408877.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Oops, sorry for confusion, this is for [9/10].
+Hi,
 
-Thanks,
+Here is the 8th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
+The previous version is here:
 
-On Thu, 16 Jul 2026 10:59:13 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+  https://lore.kernel.org/all/178407983818.95826.12714571928538799781.stgit@devnote2/
 
-> On Wed, 15 Jul 2026 02:05:55 +0000
-> sashiko-bot@kernel.org wrote:
-> 
-> > Thank you for your contribution! Sashiko AI review found 8 potential issue(s) to consider:
-> > - [Critical] Deadlocks due to NMI-unsafe operations (schedule_work and raw_spin_lock_irqsave) in tracepoint context.
-> > - [High] Missing cancel_work_sync() causes a Use-After-Free of wprobe_trigger_data via the workqueue.
-> > - [High] Synchronous free of wprobe_data violates RCU removal ordering, risking concurrent use-after-free.
-> > - [High] Missing trace_event_try_get_ref() and imbalanced trace_event_put_ref() cause module refcount underflow.
-> > - [High] on_each_cpu is called with wait=false for an IPI that references wprobe_data.
-> > - [High] Immediate kfree() of RCU-protected trigger_data and wprobe_data on the error path.
-> > - [Medium] Permanent memory leak of wprobe trigger objects on successful registration.
-> > - [Medium] tw->addr is read and written concurrently by different triggers without a shared lock.
-> > --
-> > 
-> 
-> Thanks for the review comments.
-> BTW, why this only to linux-perf-users? (Maybe I need to modify Sashiko setting)
-> 
-> > --- Patch [9]: [PATCH v7 09/10] tracing: wprobe: Add wprobe event trigger ---
-> > The format of this report is altered due to recitation restrictions.
-> > I am providing a free-form summary of the findings rather than inline
-> > quoting the patch.
-> > 
-> > Commit: 4087513c82b11b98d27cfc4452df9a1a8e41ddd5
-> > Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Subject: tracing: wprobe: Add wprobe event trigger
-> > 
-> > This patch adds a wprobe event trigger to set and clear watch events
-> > dynamically, allowing watchpoints on local variables and slab objects.
-> > 
-> > [Severity: Critical]
-> > Is it safe to call raw_spin_lock_irqsave() and schedule_work() directly
-> > from wprobe_trigger()? Tracepoints can execute in arbitrary contexts,
-> > including NMI or with scheduler locks held. Calling schedule_work() is
-> > unsafe in these contexts. Additionally, acquiring wprobe_data->lock here
-> > can cause a hard deadlock if the tracepoint interrupts wprobe_smp_update_func()
-> > while it is holding the exact same lock in IPI context.
-> 
-> Hmm, good catch!
-> OK, use a pair of irq_work and work to call on_each_cpu() for some
-> interrupt context.
-> For NMI context, I think wprobe_trigger should check the original state
-> is in_nmi(). This can work for normal trace events or fprobe, but not
-> for kprobes, because kprobe handler itself is working inside NMI context.
-> Hmm, let me check how can I fix this. Until solving this problem, this
-> wprobe trigger may not work with kprobes.
-> Also, I found the lock should protect the wprobe itself, not data.
-> Let me move the irq_work and lock to trace_wprobe.
-> 
-> Hmm, we may need to pass to original context (calculated by preempt_count)
-> to trigger event so that it can evaluate the original context.
-> (BTW, )
-> 
-> > [Severity: High]
-> > Does free_wprobe_trigger_data() safely handle the embedded work struct?
-> > When a trigger is unregistered, this function frees wprobe_data via kfree().
-> > If wprobe_trigger() recently scheduled wprobe_data->work, the workqueue
-> > could execute wprobe_work_func() on the freed memory since there is no
-> > cancel_work_sync() before freeing.
-> 
-> OK, so move the worker to wprobe because anyway the worker will update
-> the wprobe itself.
-> 
-> > 
-> > [Severity: High]
-> > Is an RCU grace period needed in wprobe_trigger_free()?
-> > wprobe_unregister_trigger() unlinks the trigger and calls
-> > wprobe_trigger_free(), which synchronously frees wprobe_data. Since
-> > tracepoints execute under RCU, could a concurrent tracepoint execution
-> > still be accessing wprobe_data when it gets freed?
-> 
-> Indeed, let's use call_rcu().
-> 
-> > 
-> > [Severity: High]
-> > Can the error path in wprobe_trigger_cmd_parse() cause a use-after-free?
-> > If event_trigger_register() successfully exposes the trigger to RCU
-> > readers but a subsequent step fails, returning an error causes the
-> > __free(kfree) cleanup to immediately free trigger_data and wprobe_data.
-> > This bypasses any RCU grace period for objects that were just briefly
-> > exposed to concurrent tracepoint readers.
-> 
-> Ah, good catch. OK, let me call synchronize_rcu() before returning.
-> 
-> > 
-> > [Severity: High]
-> > Is it intentional that on_each_cpu() is called with wait=false in
-> > wprobe_work_func()? Because it doesn't wait, the work function completes
-> > immediately while IPIs are still pending on other CPUs. If the trigger
-> > is unregistered and freed right after, wprobe_smp_update_func() will
-> > access freed wprobe_data.
-> 
-> Ah, indeed. I will use a combination of irq_worker and worker and use
-> on_each_cpu() with wait=true for safety.
-> 
-> > 
-> > [Severity: High]
-> > Does wprobe_trigger_cmd_parse() acquire the target event's module
-> > reference? The code calls trace_event_enable_disable() directly without
-> > first calling trace_event_try_get_ref(). However, wprobe_trigger_free()
-> > unconditionally calls trace_event_put_ref(), which could lead to a module
-> > refcount underflow.
-> 
-> OK, let me fix it.
-> 
-> > 
-> > [Severity: Medium]
-> > Is there a memory leak on the success path of wprobe_trigger_cmd_parse()?
-> > The function increments the refcount via event_trigger_init(), and then
-> > event_trigger_register() increments it again. On success, trigger_data
-> > is set to NULL to bypass the cleanup macro, but the initial refcount is
-> > never dropped. When the trigger is later unregistered, the refcount only
-> > drops to 1, permanently leaking the objects.
-> 
-> OK, call trace_event_put_ref directly in wprobe_trigger_cmd_parse().
-> 
-> 
-> > 
-> > [Severity: Medium]
-> > How is concurrent access to tw->addr synchronized between different
-> > triggers? If a user attaches multiple triggers (e.g., set_wprobe and
-> > clear_wprobe) targeting the same wprobe event, they allocate separate
-> > wprobe_data instances with independent locks. When wprobe_trigger()
-> > executes, they will read and write the shared tw->addr simultaneously
-> > without a common lock, potentially corrupting the hardware breakpoint state.
-> 
-> I decided to use a lock in trace_wprobe side and use READ_ONCE/WRITE_ONCE()
-> which may be enough.
-> 
-> Thank you,
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This version fixes many issues commented by Sashiko. Let me list it up.
+
+[PATCH 1/9] 
+      - Include required header files.
+      - Use READ_ONCE(tw->addr) in trace handler to safely check dynamically
+        updated addresses.
+      - Prohibit unsafe perf support by returning -EOPNOTSUPP in
+        wprobe_register().
+      - Add rollback logic to unregister already-enabled sibling probes if
+        registration fails mid-loop.
+      - Resolve symbol offsets dynamically in trace_wprobe_show() using
+        kallsyms_lookup_name().
+      - Fix memory leak of parse_address_spec()'s symbol output in
+        __trace_wprobe_create().
+      - Print "rw" instead of "x" for read-write type breakpoints in
+        trace_wprobe_show().
+      - Document the $value fetcharg in wprobetrace.rst.
+[PATCH 3/9]
+      - Fixed silently test failure path.
+[PATCH 5/9]
+      - Add missing barrier() on the disable path of setup_hwbp() to prevent
+        the compiler from reordering this_cpu_write(cpu_dr7, ...) before
+        set_debugreg(dr7, 7).
+      - Clear existing slot control and enable bits in cpu_dr7 inside
+        setup_hwbp() using __encode_dr7() before setting new ones to prevent
+        register state corruption on update/reinstall.
+[PATCH 7/9]
+      - Parse new attributes into a temporary struct arch_hw_breakpoint
+        copy to prevent in-place mutation and corruption on parse error paths.
+      - Synchronize logical perf_event attributes by updating
+       bp->attr.bp_type and bp->attr.bp_len in modify_wide_hw_breakpoint_local().
+[PATCH 8/9]
+      - Redesign wprobe_trigger() to be safe in NMI/hardirq contexts by
+        deferring register updates to a workqueue via irq_work.
+      - Skip trigger execution and increment an atomic missed count
+        (tw->missed) if the tracepoint runs in NMI context to prevent
+        recursive spinlock deadlocks. (this is currently hidden counter)
+      - Prohibit attaching wprobe triggers to kprobe_events by checking
+        TRACE_EVENT_FL_KPROBE in wprobe_trigger_cmd_parse().
+      - Use call_rcu() in trigger deactivation path and add
+        synchronize_rcu() in parse failure path to ensure safe RCU
+        lifetime cleanup.
+      - Acquire the target tracepoint's module reference via
+       trace_event_try_get_ref() to prevent module refcount underflows.
+      - Fix event_trigger_data memory leak by properly freeing the
+        initial refcount in wprobe_trigger_cmd_parse() on success.
+      - Call on_each_cpu() with wait=true in wprobe_work_func() to
+        prevent use-after-free during trigger unregistration.
+      - Synchronize concurrent wprobe triggers on the same event by
+        using a shared raw spinlock (tw->lock).
+      - Drop the support of kprobe events (that should be done later).
+[PATCH 9/9]
+      - Use TMPDIR for making a test file.
+      - Ensure the fprobe and target functions exists, if not, exit
+        with UNRESOLVED (== skip).
+
+To support kprobe events, we need to check the previous NMI context
+or need to use an atomic refcount etc. But that should be another
+patch for review.
+
+To support arm64, we need to avoid major pagefault on single-stepping
+issue. I think we can solve it with checking whether the address is the
+kernel (which must not cause a major page fault), or not.
+
+Usage
+-----
+
+The basic usage of this wprobe is similar to other probes;
+
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
+
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
+
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 32/32   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+
+Thank you,
+
+---
+
+Jinchao Wang (2):
+      x86/hw_breakpoint: Unify breakpoint install/uninstall
+      x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+
+Masami Hiramatsu (Google) (7):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: ftrace: Add wprobe trigger testcase
 
 
--- 
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  163 +++
+ arch/Kconfig                                       |   20 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/include/asm/hw_breakpoint.h               |    8 
+ arch/x86/kernel/hw_breakpoint.c                    |  151 ++-
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   43 +
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    6 
+ kernel/trace/trace_probe.c                         |   22 
+ kernel/trace/trace_probe.h                         |    8 
+ kernel/trace/trace_wprobe.c                        | 1146 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    2 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   69 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   65 +
+ 20 files changed, 1703 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+--
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
