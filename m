@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3759369D6D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 15:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB4A372691
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 15:48:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784303303; cv=none; b=Fjncuocrtg6BMxSyzTKGehJbcAWzJdCwFht19eAtGll9siEq0VGGjZTviZWh39Rkazyg5/3zPIX37AxYCbRSKf4qN+VmB7bocbi1UXVPJ5LwJfLpWCqfaFTCWIYQo3EhO6gZ5dKrOTbUs2o1xKVolrwOUexkFeO7g5QKoq/HH2I=
+	t=1784303310; cv=none; b=BL214FooVen1M99av2Wg0735olpx/Kk5AZ5gasIzd+/NS35pua3JQnFOCIYdGFpFzTbW3cKN8JwZAh1XBn77N5Pewe7Pab69NrTzwiZVIKiFyrgGm4rm+DMxsFIizuc437vatWSfq2m6zfLgaYpT2qH/CNYBjv+K+rEMLDPYScg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784303303; c=relaxed/simple;
-	bh=U8U3a3v3F8NwIdgw3//lQjhRBQoMyJvoxRK+Fvu2LVw=;
+	s=arc-20240116; t=1784303310; c=relaxed/simple;
+	bh=RbgjxZzRci4P23jN/e+i3HVh1EqY/cn9fsrxYHva6Ug=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=KDaxbKfUby+8ztHI88X3MTAzx6AdWknjlE33RkVL/grKx39UR+j/DtaByOP01KrzHL6fwpjUtaSJIxNK05iQJcZW+bSUgJSt0+5dCSB6n+WBm4ipKsx3M8LtKboPDbk3MSHU31Ey3LOTnLE+RIWmubrCCvZSbh4UWBPatTqlMww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F5GCEPER; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=TBUraU5YuuagbonrnctHRmyCE3XaUIVAFIHp9RqL6Ql6OCdldI0YIpONGPyCjxX8VtjHPIFuuKthSi2I1lDNqNFjgtUW/rNDHxiLQhItNQwpqLiEDCfDpPuPf1tqQmkWqRzoajkIdetl1QSp4oLd6/2CDsbgodESOCoFvHmNhRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hJw99YD/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F5GCEPER"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJw99YD/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784303300;
+	s=mimecast20190719; t=1784303308;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ihpwXyKGoA2nxfW86F/WAPNMcYi76304ip/r0Djtq4c=;
-	b=F5GCEPERF0PptX5r7Aqbh+RymcAyT1QayKWUwfS9fwzpofJIsO42LlSq+/RfGrf5sy0/QM
-	SzlTTsS4tkCfVgn1/js6H0ib8w51V+cjYR7mnMPEpA2v1zNVd3NMD8brygeAfHxW826CJp
-	hRlMTa1F2sf1IXtqTGdKyD10kRKhSBU=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Dabf22GIJ/35zUYoOAx5gme/Kxwkbp4WSYaZPLwriTs=;
+	b=hJw99YD/zqmLIUhVkVeLrFAsxLUue0tjwmE6xSO7g1Ax8n55ex8ApKNgX++1JNBYLzzt0q
+	YC8XMot3YbqtC6w6pyWSlP351XcZZNcrpErHJnjP3ZSyNddIeAW3iyWwYyP+2G9PFv4OC9
+	lmlpLH0r8ikTRRCcwVujsePg2gqYrtE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-ehzmyQekOtOv9UnxtHUKkA-1; Fri,
- 17 Jul 2026 11:48:19 -0400
-X-MC-Unique: ehzmyQekOtOv9UnxtHUKkA-1
-X-Mimecast-MFC-AGG-ID: ehzmyQekOtOv9UnxtHUKkA_1784303298
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-OmfReWv1OHKB6BLMEn32Ig-1; Fri,
+ 17 Jul 2026 11:48:24 -0400
+X-MC-Unique: OmfReWv1OHKB6BLMEn32Ig-1
+X-Mimecast-MFC-AGG-ID: OmfReWv1OHKB6BLMEn32Ig_1784303303
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 132DE1955DE2;
-	Fri, 17 Jul 2026 15:48:18 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 43570195D026;
+	Fri, 17 Jul 2026 15:48:23 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.local (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EC5CE30040BF;
-	Fri, 17 Jul 2026 15:48:12 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3953C30040BF;
+	Fri, 17 Jul 2026 15:48:19 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v4 13/17] rv: Add KUnit stub for current
-Date: Fri, 17 Jul 2026 17:46:34 +0200
-Message-ID: <20260717154638.220789-14-gmonaco@redhat.com>
+Subject: [PATCH v4 14/17] rv: Add KUnit tests for some LTL monitors
+Date: Fri, 17 Jul 2026 17:46:35 +0200
+Message-ID: <20260717154638.220789-15-gmonaco@redhat.com>
 In-Reply-To: <20260717154638.220789-1-gmonaco@redhat.com>
 References: <20260717154638.220789-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -65,274 +65,286 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: CLQ-aeJrbCih0vYp5kyqS8EbDklJe3U3akXMW097CeY_1784303298
+X-Mimecast-MFC-PROC-ID: hbM8Q9dgMXrHF7fgChGdVEo-H7TvUA03RjYApYu3t7I_1784303303
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Some monitors do not only rely on tracepoint arguments but also on the
-currently executing task.
-This makes it more challenging to mock events in KUnit.
-
-Define wrapper functions around current, the functionality is stubbed
-only during KUnit, however the additional function call is necessary
-whenever the KUnit tests are built in.
+Validate the functionality of LTL monitors by injecting events in a
+controlled environment (KUnit) and expecting reactions, just like it is
+done in DA monitors.
 
 Reviewed-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/rv/da_monitor.h                       |  1 +
- include/rv/kunit.h                            | 13 +++++++++-
- include/rv/ltl_monitor.h                      |  1 +
- kernel/trace/rv/Kconfig                       |  3 +++
- .../trace/rv/monitors/pagefault/pagefault.c   |  2 +-
- kernel/trace/rv/monitors/sleep/sleep.c        | 24 +++++++++----------
- kernel/trace/rv/rv.c                          |  8 +++++++
- kernel/trace/rv/rv_monitors_test.c            |  9 +++++++
- 8 files changed, 47 insertions(+), 14 deletions(-)
+ include/rv/ltl_monitor.h                      |  8 +++
+ .../trace/rv/monitors/pagefault/pagefault.c   | 12 ++++
+ .../rv/monitors/pagefault/pagefault_kunit.c   | 34 +++++++++++
+ .../rv/monitors/pagefault/pagefault_kunit.h   | 24 ++++++++
+ kernel/trace/rv/monitors/sleep/sleep.c        | 19 ++++++
+ kernel/trace/rv/monitors/sleep/sleep_kunit.c  | 58 +++++++++++++++++++
+ kernel/trace/rv/monitors/sleep/sleep_kunit.h  | 30 ++++++++++
+ kernel/trace/rv/rv_monitors_test.c            |  4 ++
+ 8 files changed, 189 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_kunit.c
+ create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_kunit.h
+ create mode 100644 kernel/trace/rv/monitors/sleep/sleep_kunit.c
+ create mode 100644 kernel/trace/rv/monitors/sleep/sleep_kunit.h
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 773564720ba1..9f7ba443d777 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -16,6 +16,7 @@
- 
- #include <rv/automata.h>
- #include <linux/rv.h>
-+#include <rv/kunit.h>
- #include <linux/stringify.h>
- #include <linux/bug.h>
- #include <linux/sched.h>
-diff --git a/include/rv/kunit.h b/include/rv/kunit.h
-index ff98b5137285..6d16a422a80c 100644
---- a/include/rv/kunit.h
-+++ b/include/rv/kunit.h
-@@ -2,7 +2,10 @@
- /*
-  * Copyright (C) 2026-2029 Red Hat, Inc. Gabriele Monaco <gmonaco@redhat.com>
-  *
-- * Declaration of utilities to run KUnit tests.
-+ * Declaration of wrappers to allow stubbing core functionality, like current,
-+ * and other testing utilities.
-+ * Necessary only when mocking may be needed. If the RV KUnit test is
-+ * enabled, the wrappers incur an additional function call overhead.
-  */
- 
- #ifndef _RV_KUNIT_H
-@@ -16,6 +19,7 @@
- 
- int rv_set_testing(struct kunit_suite *suite);
- void rv_clear_testing(struct kunit_suite *suite);
-+struct task_struct *rv_get_current(void);
- 
- #define RV_KUNIT_MAX_MOCK_TASKS 8
- 
-@@ -23,6 +27,7 @@ struct rv_kunit_ctx {
- 	int reactions, expected;
- 	int mock_task_count;
- 	struct task_struct *mock_tasks[RV_KUNIT_MAX_MOCK_TASKS];
-+	struct task_struct *curr;
- };
- 
- #define RV_KUNIT_EXPECT_REACTION(test, ctx)                             \
-@@ -57,5 +62,11 @@ void prepare_test(struct kunit *test, const struct rv_kunit_mon *mon);
- void teardown_test(void *arg);
- struct task_struct *rv_kunit_alloc_mock_task(struct kunit *test);
- 
-+#define rv_mock_current(ctx, task) (ctx->curr = task)
-+
-+#else /* !CONFIG_RV_MONITORS_KUNIT_TEST */
-+
-+#define rv_get_current() current
-+
- #endif /* CONFIG_RV_MONITORS_KUNIT_TEST */
- #endif /* _RV_KUNIT_H */
 diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
-index 56e83edcf0c4..d7dc01db4dd9 100644
+index d7dc01db4dd9..e9fd8265a3da 100644
 --- a/include/rv/ltl_monitor.h
 +++ b/include/rv/ltl_monitor.h
-@@ -9,6 +9,7 @@
- #include <linux/stringify.h>
- #include <linux/seq_buf.h>
- #include <rv/instrumentation.h>
-+#include <rv/kunit.h>
- #include <trace/events/task.h>
- #include <trace/events/sched.h>
- 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 34c1feb35a9b..7bae9723cdbf 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -121,4 +121,7 @@ config RV_MONITORS_KUNIT_TEST
- 	  These tests verify that monitors correctly detect violations by
- 	  triggering fake events and validating the expected reactions.
- 
-+	  Enabling this may slightly increase overhead of some monitors even
-+	  when the KUnit test is not running.
+@@ -172,3 +172,11 @@ static void __maybe_unused ltl_atom_pulse(struct task_struct *task, enum ltl_ato
+ 	ltl_atom_set(mon, atom, !value);
+ 	ltl_validate(task, mon);
+ }
 +
- 	  If unsure, say N.
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++#define RV_MON_OPS_INIT() {               \
++	.rv_this = &rv_this,              \
++	.is_per_task = true,              \
++	.task_slot = &ltl_monitor_slot,   \
++}
++#endif /* CONFIG_RV_MONITORS_KUNIT_TEST */
 diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/rv/monitors/pagefault/pagefault.c
-index 5e1a2a606783..e52500fd2de0 100644
+index e52500fd2de0..c599fc19fc88 100644
 --- a/kernel/trace/rv/monitors/pagefault/pagefault.c
 +++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
-@@ -38,7 +38,7 @@ static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bo
- static void handle_page_fault(void *data, unsigned long address, struct pt_regs *regs,
- 			      unsigned long error_code)
- {
--	ltl_atom_pulse(current, LTL_PAGEFAULT, true);
-+	ltl_atom_pulse(rv_get_current(), LTL_PAGEFAULT, true);
- }
- 
- static int enable_pagefault(void)
+@@ -86,3 +86,15 @@ module_exit(unregister_pagefault);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
+ MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page faults");
++
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++#include <kunit/visibility.h>
++#include "pagefault_kunit.h"
++
++const struct rv_pagefault_ops rv_pagefault_ops = {
++	.mon = RV_MON_OPS_INIT(),
++	.handle_page_fault = handle_page_fault,
++	.handle_task_newtask = handle_task_newtask,
++};
++EXPORT_SYMBOL_IF_KUNIT(rv_pagefault_ops);
++#endif
+diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_kunit.c b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.c
+new file mode 100644
+index 000000000000..98ac7d4ec014
+--- /dev/null
++++ b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/rv.h>
++#include <rv/kunit.h>
++#include <linux/sched/deadline.h>
++#include <linux/sched/rt.h>
++#include "pagefault_kunit.h"
++
++#if IS_REACHABLE(CONFIG_RV_MON_PAGEFAULT)
++
++static void rv_test_pagefault(struct kunit *test)
++{
++	struct task_struct *target = rv_kunit_alloc_mock_task(test);
++	struct rv_kunit_ctx *ctx = test->priv;
++
++	prepare_test(test, &rv_pagefault_ops.mon);
++
++	/* Initial pagefault when non-RT to start the model without failure */
++	target->policy = SCHED_NORMAL;
++	target->prio = MAX_RT_PRIO + 20;
++	rv_pagefault_ops.handle_task_newtask(NULL, target, 0);
++	rv_mock_current(ctx, target);
++	rv_pagefault_ops.handle_page_fault(NULL, 0, NULL, 0);
++
++	/* RT task has a page fault */
++	target->policy = SCHED_FIFO;
++	target->prio = MAX_RT_PRIO - 1;
++	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
++		rv_pagefault_ops.handle_page_fault(NULL, 0, NULL, 0);
++}
++
++#else
++#define rv_test_pagefault rv_test_stub
++#endif
+diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_kunit.h b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.h
+new file mode 100644
+index 000000000000..2f9652f08b3f
+--- /dev/null
++++ b/kernel/trace/rv/monitors/pagefault/pagefault_kunit.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Automatically generated by rvgen kunit.
++ * May need manual intervention for function prototypes that couldn't be
++ * found (e.g. are in another file) or variables to be exported.
++ */
++
++#ifndef __PAGEFAULT_KUNIT_H
++#define __PAGEFAULT_KUNIT_H
++
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++
++#include <linux/rv.h>
++#include <rv/kunit.h>
++
++extern const struct rv_pagefault_ops {
++	struct rv_kunit_mon mon;
++	void (*handle_page_fault)(void *data, unsigned long address, struct pt_regs *regs,
++			      unsigned long error_code);
++	void (*handle_task_newtask)(void *data, struct task_struct *task, u64 flags);
++} rv_pagefault_ops;
++#endif
++
++#endif /* __PAGEFAULT_KUNIT_H */
 diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monitors/sleep/sleep.c
-index 12328ce663f5..71d2005ce520 100644
+index 71d2005ce520..f84a61a21825 100644
 --- a/kernel/trace/rv/monitors/sleep/sleep.c
 +++ b/kernel/trace/rv/monitors/sleep/sleep.c
-@@ -102,7 +102,7 @@ static void handle_sched_waking(void *data, struct task_struct *task)
- 	if (this_cpu_read(hardirq_context)) {
- 		ltl_atom_pulse(task, LTL_WOKEN_BY_HARDIRQ, true);
- 	} else if (in_task()) {
--		if (current->prio <= task->prio)
-+		if (rv_get_current()->prio <= task->prio)
- 			ltl_atom_pulse(task, LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO, true);
- 	} else if (in_nmi()) {
- 		ltl_atom_pulse(task, LTL_WOKEN_BY_NMI, true);
-@@ -112,12 +112,12 @@ static void handle_sched_waking(void *data, struct task_struct *task)
- static void handle_contention_begin(void *data, void *lock, unsigned int flags)
- {
- 	if (flags & LCB_F_RT)
--		ltl_atom_update(current, LTL_BLOCK_ON_RT_MUTEX, true);
-+		ltl_atom_update(rv_get_current(), LTL_BLOCK_ON_RT_MUTEX, true);
- }
- 
- static void handle_contention_end(void *data, void *lock, int ret)
- {
--	ltl_atom_update(current, LTL_BLOCK_ON_RT_MUTEX, false);
-+	ltl_atom_update(rv_get_current(), LTL_BLOCK_ON_RT_MUTEX, false);
- }
- 
- static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
-@@ -126,7 +126,7 @@ static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
- 	unsigned long args[6];
- 	int op, cmd;
- 
--	mon = ltl_get_monitor(current);
-+	mon = ltl_get_monitor(rv_get_current());
- 
- 	switch (id) {
- #ifdef __NR_clock_nanosleep
-@@ -135,11 +135,11 @@ static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
- #ifdef __NR_clock_nanosleep_time64
- 	case __NR_clock_nanosleep_time64:
- #endif
--		syscall_get_arguments(current, regs, args);
-+		syscall_get_arguments(rv_get_current(), regs, args);
- 		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, args[0] == CLOCK_MONOTONIC);
- 		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, args[0] == CLOCK_TAI);
- 		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, args[1] == TIMER_ABSTIME);
--		ltl_atom_update(current, LTL_CLOCK_NANOSLEEP, true);
-+		ltl_atom_update(rv_get_current(), LTL_CLOCK_NANOSLEEP, true);
- 		break;
- 
- #ifdef __NR_futex
-@@ -148,25 +148,25 @@ static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
- #ifdef __NR_futex_time64
- 	case __NR_futex_time64:
- #endif
--		syscall_get_arguments(current, regs, args);
-+		syscall_get_arguments(rv_get_current(), regs, args);
- 		op = args[1];
- 		cmd = op & FUTEX_CMD_MASK;
- 
- 		switch (cmd) {
- 		case FUTEX_LOCK_PI:
- 		case FUTEX_LOCK_PI2:
--			ltl_atom_update(current, LTL_FUTEX_LOCK_PI, true);
-+			ltl_atom_update(rv_get_current(), LTL_FUTEX_LOCK_PI, true);
- 			break;
- 		case FUTEX_WAIT:
- 		case FUTEX_WAIT_BITSET:
- 		case FUTEX_WAIT_REQUEUE_PI:
--			ltl_atom_update(current, LTL_FUTEX_WAIT, true);
-+			ltl_atom_update(rv_get_current(), LTL_FUTEX_WAIT, true);
- 			break;
- 		}
- 		break;
- #ifdef __NR_epoll_wait
- 	case __NR_epoll_wait:
--		ltl_atom_update(current, LTL_EPOLL_WAIT, true);
-+		ltl_atom_update(rv_get_current(), LTL_EPOLL_WAIT, true);
- 		break;
- #endif
- 	}
-@@ -174,7 +174,7 @@ static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
- 
- static void handle_sys_exit(void *data, struct pt_regs *regs, long ret)
- {
--	struct ltl_monitor *mon = ltl_get_monitor(current);
-+	struct ltl_monitor *mon = ltl_get_monitor(rv_get_current());
- 
- 	ltl_atom_set(mon, LTL_FUTEX_LOCK_PI, false);
- 	ltl_atom_set(mon, LTL_FUTEX_WAIT, false);
-@@ -182,7 +182,7 @@ static void handle_sys_exit(void *data, struct pt_regs *regs, long ret)
- 	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
- 	ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
- 	ltl_atom_set(mon, LTL_EPOLL_WAIT, false);
--	ltl_atom_update(current, LTL_CLOCK_NANOSLEEP, false);
-+	ltl_atom_update(rv_get_current(), LTL_CLOCK_NANOSLEEP, false);
- }
- 
- static void handle_kthread_stop(void *data, struct task_struct *task)
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index cfe950fef3b4..edb10812f296 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -142,6 +142,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <kunit/static_stub.h>
- 
- #ifdef CONFIG_RV_MON_EVENTS
- #define CREATE_TRACE_POINTS
-@@ -893,4 +894,11 @@ void rv_clear_testing(struct kunit_suite *suite)
- 	mutex_unlock(&rv_interface_lock);
- }
- EXPORT_SYMBOL_IF_KUNIT(rv_clear_testing);
+@@ -247,3 +247,22 @@ module_exit(unregister_sleep);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
+ MODULE_DESCRIPTION("sleep: Monitor that RT tasks do not undesirably sleep");
 +
-+struct task_struct *rv_get_current(void)
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++#include <kunit/visibility.h>
++#include "sleep_kunit.h"
++
++const struct rv_sleep_ops rv_sleep_ops = {
++	.mon = RV_MON_OPS_INIT(),
++	.handle_sched_waking = handle_sched_waking,
++	.handle_sched_wakeup = handle_sched_wakeup,
++	.handle_sched_set_state = handle_sched_set_state,
++	.handle_contention_begin = handle_contention_begin,
++	.handle_contention_end = handle_contention_end,
++	.handle_kthread_stop = handle_kthread_stop,
++	.handle_sys_enter = handle_sys_enter,
++	.handle_sys_exit = handle_sys_exit,
++	.handle_task_newtask = handle_task_newtask,
++};
++EXPORT_SYMBOL_IF_KUNIT(rv_sleep_ops);
++#endif
+diff --git a/kernel/trace/rv/monitors/sleep/sleep_kunit.c b/kernel/trace/rv/monitors/sleep/sleep_kunit.c
+new file mode 100644
+index 000000000000..9bbe3822a76d
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sleep/sleep_kunit.c
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/rv.h>
++#include <rv/kunit.h>
++#include <trace/events/syscalls.h>
++#include <trace/events/sched.h>
++#include <uapi/linux/futex.h>
++#include "sleep_kunit.h"
++
++#if IS_REACHABLE(CONFIG_RV_MON_SLEEP)
++
++static void rv_test_sleep(struct kunit *test)
 +{
-+	KUNIT_STATIC_STUB_REDIRECT(rv_get_current);
-+	return current;
++	struct task_struct *target = rv_kunit_alloc_mock_task(test);
++	struct task_struct *other = rv_kunit_alloc_mock_task(test);
++	struct rv_kunit_ctx *ctx = test->priv;
++	unsigned long args[6] = {0};
++	struct pt_regs regs = {0};
++
++	prepare_test(test, &rv_sleep_ops.mon);
++	target->policy = SCHED_FIFO;
++	target->prio = MAX_RT_PRIO - 2;
++	other->policy = SCHED_FIFO;
++	other->prio = MAX_RT_PRIO - 1;
++	rv_sleep_ops.handle_task_newtask(NULL, target, 0);
++
++	/* RT task sleeps on a non RT-friendly nanosleep */
++	rv_mock_current(ctx, target);
++	args[0] = CLOCK_REALTIME;
++	syscall_set_arguments(target, &regs, args);
++#ifdef __NR_clock_nanosleep
++	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_clock_nanosleep);
++#elif defined(__NR_clock_nanosleep_time64)
++	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_clock_nanosleep_time64);
++#endif
++	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
++		rv_sleep_ops.handle_sched_set_state(NULL, target, TASK_INTERRUPTIBLE);
++	rv_sleep_ops.handle_sys_exit(NULL, NULL, 0);
++
++	/* RT task woken up by lower priority task */
++	args[1] = FUTEX_WAIT;
++	syscall_set_arguments(target, &regs, args);
++	rv_mock_current(ctx, target);
++#ifdef __NR_futex
++	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_futex);
++#elif defined(__NR_futex_time64)
++	rv_sleep_ops.handle_sys_enter(NULL, &regs, __NR_futex_time64);
++#endif
++	rv_sleep_ops.handle_sched_set_state(NULL, target, TASK_INTERRUPTIBLE);
++	rv_mock_current(ctx, other);
++	rv_sleep_ops.handle_sched_waking(NULL, target);
++	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
++		rv_sleep_ops.handle_sched_wakeup(NULL, target);
 +}
-+EXPORT_SYMBOL_GPL(rv_get_current);
- #endif
++
++#else
++#define rv_test_sleep rv_test_stub
++#endif
+diff --git a/kernel/trace/rv/monitors/sleep/sleep_kunit.h b/kernel/trace/rv/monitors/sleep/sleep_kunit.h
+new file mode 100644
+index 000000000000..2cd61e31a6af
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sleep/sleep_kunit.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Automatically generated by rvgen kunit.
++ * May need manual intervention for function prototypes that couldn't be
++ * found (e.g. are in another file) or variables to be exported.
++ */
++
++#ifndef __SLEEP_KUNIT_H
++#define __SLEEP_KUNIT_H
++
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++
++#include <linux/rv.h>
++#include <rv/kunit.h>
++
++extern const struct rv_sleep_ops {
++	struct rv_kunit_mon mon;
++	void (*handle_sched_waking)(void *data, struct task_struct *task);
++	void (*handle_sched_wakeup)(void *data, struct task_struct *task);
++	void (*handle_sched_set_state)(void *data, struct task_struct *task, int state);
++	void (*handle_contention_begin)(void *data, void *lock, unsigned int flags);
++	void (*handle_contention_end)(void *data, void *lock, int ret);
++	void (*handle_kthread_stop)(void *data, struct task_struct *task);
++	void (*handle_sys_enter)(void *data, struct pt_regs *regs, long id);
++	void (*handle_sys_exit)(void *data, struct pt_regs *regs, long ret);
++	void (*handle_task_newtask)(void *data, struct task_struct *task, u64 flags);
++} rv_sleep_ops;
++#endif
++
++#endif /* __SLEEP_KUNIT_H */
 diff --git a/kernel/trace/rv/rv_monitors_test.c b/kernel/trace/rv/rv_monitors_test.c
-index 2145c85d4c9a..2108973383b2 100644
+index 2108973383b2..c565bca2b4ae 100644
 --- a/kernel/trace/rv/rv_monitors_test.c
 +++ b/kernel/trace/rv/rv_monitors_test.c
-@@ -106,6 +106,13 @@ struct task_struct *rv_kunit_alloc_mock_task(struct kunit *test)
- 	return tsk;
- }
+@@ -157,6 +157,8 @@ static void rv_test_dummy(struct kunit *test)
+ #include "monitors/sts/sts_kunit.c"
+ #include "monitors/opid/opid_kunit.c"
+ #include "monitors/nomiss/nomiss_kunit.c"
++#include "monitors/pagefault/pagefault_kunit.c"
++#include "monitors/sleep/sleep_kunit.c"
  
-+static struct task_struct *stub_rv_get_current(void)
-+{
-+	if (active_ctx && active_ctx->curr)
-+		return active_ctx->curr;
-+	return current;
-+}
-+
- static int rv_mon_test_init(struct kunit *test)
- {
- 	struct rv_kunit_ctx *ctx;
-@@ -115,6 +122,8 @@ static int rv_mon_test_init(struct kunit *test)
- 
- 	test->priv = ctx;
- 
-+	kunit_activate_static_stub(test, rv_get_current, stub_rv_get_current);
-+
- 	return 0;
- }
+ static struct kunit_case rv_mon_test_cases[] = {
+ 	KUNIT_CASE(rv_test_dummy),
+@@ -165,6 +167,8 @@ static struct kunit_case rv_mon_test_cases[] = {
+ 	KUNIT_CASE(rv_test_sts),
+ 	KUNIT_CASE(rv_test_opid),
+ 	KUNIT_CASE(rv_test_nomiss),
++	KUNIT_CASE(rv_test_pagefault),
++	KUNIT_CASE(rv_test_sleep),
+ 	{}
+ };
  
 -- 
 2.55.0
