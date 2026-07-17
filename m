@@ -1,146 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF04367B8C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 15:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5056F245012;
+	Fri, 17 Jul 2026 16:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784303364; cv=none; b=I8Ptic++Vf+IFH2+iQX7yeIlDPMLFoF5LHrenqlwIHSBXianHneID2Qceeoa1x435V3DrkSZwJKfkWGUX0ksTLPF23Zm6tfXgXOHuNHW5wDuWI/G8T+rK4P9XE4uc5v0FLZ4hIt2Sxsu5kOo0piixutYP/45doeYxwiBGffkeyc=
+	t=1784305786; cv=none; b=mvHbsISkFigfQeviGEscDbpfzazT2C9xejh6jQ8YUlOb3raZQx/gGolCLq+g5nvwB2fWPz015sqHYZdIM1mJH7Hg6W7nVbOiZ7tVVRb7dyRWwnpEmmEv/BW7mtKuhqjLUCXX93tg/TksfJFxMsHa9ZgU2HVJgTHK6NLfhRwg5qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784303364; c=relaxed/simple;
-	bh=5mZjwLR92JiFfHeXEC0KRUFmzTs/lN+oUYBXLWRqzGU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=DsspLXLe7LzUg5tXRBDhCtuWfVODFTowhpjy4gJx+xqd+qgsLLI6C0sF+DSnESSTYPO3ZjaOQF3kAjfixz4dyICPi/UmC2mCSrkr8DesXbVyTMiXyzNvC3O3FixSYreMYUt49F4q2O54b5q4jLF9pv+JgIItkw2rxoIa6ucq75A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TY/GIO7h; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784305786; c=relaxed/simple;
+	bh=+lHYXOMpYR2CjVPrlOEYR9B2IEXORBCms1hig+6Q1ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dK4zruNbqCDocJwftAu4dd5ghZOdo2LQypoaXhH9DcGMBcv+UzplpBZyFk/qM8/pSZhiNCG9N7vJU9mY/412lZT3rIdH7Ymyzo/bVE4Kvxi4YcYW+pL53uJj4JlodaZKRmebGkyL4GBv4jVYBdRa0KdXrq4DQQQ5JWknqm6TonY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=g3y2dkvY; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TY/GIO7h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784303361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ffO9XxsfjYQtotnpHJWX40bTrTSixy4ttiScoP34Oa0=;
-	b=TY/GIO7hU1dFvO0a/6A5o3lecvm0trdevYgPflkshcn4MdFCqy3MybcmXvRunCi3+lA6Ps
-	kzwdnrmAgHWuKLYycfwxEh57v9RndUBaMlXnGF61bEuU4OZaqxlK249kbOJwughTK8cplH
-	vNUSCplyTuhVDIkXpTUXAtJX96ZTjPs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-Jv2lIa1zO6CJpLA_0Lrqsg-1; Fri,
- 17 Jul 2026 11:48:33 -0400
-X-MC-Unique: Jv2lIa1zO6CJpLA_0Lrqsg-1
-X-Mimecast-MFC-AGG-ID: Jv2lIa1zO6CJpLA_0Lrqsg_1784303311
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="g3y2dkvY"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B2E7B40E02B1;
+	Fri, 17 Jul 2026 16:29:33 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 1Y60ZtmddiTi; Fri, 17 Jul 2026 16:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1784305763; bh=Nz7TtCuvujd6DyFmLHCmqcD86HKnSIHjpAW+JTeQYUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g3y2dkvY6g+abAmwgItNF01PKbGFYkIATv791xbmF8hejFEWf8jNeNJSMOBQUQ8xb
+	 D1UFMXpzd4FODiPCzb/bN3LQYNZlCsfk+gcXn0a5yaG9G5SxBc4ryvLVQA5oF0tAdI
+	 vQrkveKZvczYYZjez4tb3X+fSDXHa2XyuJFH6peeV1vt1i9UK49vLTk2ZlRfZxO0/v
+	 AcFuwQcoAxVwk1s9egwvABIGhIf0HtNPoo9NrVNtRYMGa1PY2sUJoOmijf7uxTp5Go
+	 Qmg7VgJKNwDMZgyu1vFmLvdNm7m4+fUW6tbF+4OO0wNyBp109k9wKuXPpQM4Jkga1Y
+	 7KIq4w7hV/aSTfXedaAhqK4ZHCY37Bzq3nlqLBkTdvHJtCbDww9vWgb2ADix3B/LlP
+	 mzY8ZFl4d2EbeMbo0dsQe4T2seltZcnrrC7uvqYV03lKoigX8zifuEvV5cmIx2OTX4
+	 zhIaQV5YAtRuAGtju14hM8lI3iVs6Bfe/YT0KygzBFT+slLnTSGxBL9C2ZXjEE2gbw
+	 Id8EAxO2wJEKJnPgY0rROLnp1paMQIfFf5S65qqQTWjlb9aD2jPrTNgMvdTnFj2Kba
+	 WP9Criiut2XIajQoQWAvYLvhLI7y7l/CeYsFsifiOC/rRqnMxjkcTKexHL0GCNuE9z
+	 wFpnNeAJxxBMuSuaPldO+U9c=
+Received: from stx.tnic (unknown [165.204.77.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C87281955E75;
-	Fri, 17 Jul 2026 15:48:31 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.local (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 80FF53004181;
-	Fri, 17 Jul 2026 15:48:28 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org
-Cc: Wen Yang <wen.yang@linux.dev>,
-	Nam Cao <namcao@linutronix.de>,
-	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
-	Tomas Glozar <tglozar@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v4 16/17] selftests/verification: Rearrange the wwnr_printk test
-Date: Fri, 17 Jul 2026 17:46:37 +0200
-Message-ID: <20260717154638.220789-17-gmonaco@redhat.com>
-In-Reply-To: <20260717154638.220789-1-gmonaco@redhat.com>
-References: <20260717154638.220789-1-gmonaco@redhat.com>
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3247F40E02B0;
+	Fri, 17 Jul 2026 16:29:07 +0000 (UTC)
+Date: Fri, 17 Jul 2026 09:28:57 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 00/10] tracing: wprobe: x86: Add wprobe for watchpoint
+Message-ID: <20260717162857.GAalpYSaZ_emTMUEEW@fat_crate.local>
+References: <178429796992.157981.3393977217853767915.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: WQTnYv4nCGprfBdoeWJrQN5C8fz5KCrZBfb8Vvv0K1k_1784303311
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <178429796992.157981.3393977217853767915.stgit@devnote2>
 
-The wwnr_printk test expects no reactions in some situations, after
-fixing the bash assertion, the test is failing because expecting no
-reaction after a previous step had reactions is flaky without making
-sure all buffers are flushed.
+Hi,
 
-Wait for reactions to be over when expected by polling dmesg for an
-interval without any rv message.
-Also simplify the load function to stop loads as soon as a reaction
-occurs, this limits the number of lines to flush and makes tests overall
-faster and more stable.
+On Fri, Jul 17, 2026 at 11:19:30PM +0900, Masami Hiramatsu (Google) wrote:
+> Here is the 9th version of the series for adding new wprobe (watch probe)
 
-Reviewed-by: Wen Yang <wen.yang@linux.dev>
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
+any chance you won't blast out your patchset every day?
 
-Notes:
-    V4:
-    * Wait for dmesg to flush all messages after reactions
+Thx.
 
- .../verification/test.d/rv_wwnr_printk.tc     | 23 ++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc b/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
-index 96de95edb530..37d96e1ae93b 100644
---- a/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
-+++ b/tools/testing/selftests/verification/test.d/rv_wwnr_printk.tc
-@@ -4,23 +4,40 @@
- # requires: available_reactors wwnr:monitor printk:reactor stress-ng:program
- 
- load() { # returns true if there was a reaction
--	local lines_before num
-+	local lines_before num load_pid ret
- 	num=$((($(nproc) + 1) / 2))
- 	lines_before=$(dmesg | wc -l)
--	stress-ng --cpu-sched "$num" --timer "$num" -t 5 -q
--	dmesg | tail -n $((lines_before + 1)) | grep -q "rv: monitor wwnr does not allow event"
-+	stress-ng --cpu-sched "$num" --timer "$num" -t 5 -q &
-+	load_pid=$!
-+	timeout 5 dmesg -w | tail -n +$((lines_before + 1)) | grep -m 1 -q "rv: monitor wwnr does not allow event"
-+	ret=$?
-+	kill "$load_pid" || true
-+	wait "$load_pid" || true
-+	return $ret
-+}
-+
-+# loads may flood the ringbuffer, wait for all pending printks
-+wait_dmesg_flush() {
-+	local last_before last_after=$(dmesg | grep "rv:" | tail -n 1 || true)
-+	while [ "$last_before" != "$last_after" ]; do
-+		last_before=$last_after
-+		sleep .3
-+		last_after=$(dmesg | grep "rv:" | tail -n 1 || true)
-+	done
- }
- 
- echo 1 > monitors/wwnr/enable
- echo printk > monitors/wwnr/reactors
- 
- load
-+wait_dmesg_flush
- 
- echo 0 > monitoring_on
- ! load || false
- echo 1 > monitoring_on
- 
- load
-+wait_dmesg_flush
- 
- echo 0 > reacting_on
- ! load || false
 -- 
-2.55.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
