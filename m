@@ -1,60 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E37175A83
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 15:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18610369D5E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 15:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784303267; cv=none; b=JxPoX4UqryO/PkqF18lDqKU/U2hChl/2cRfvwJ0D9sfrYDH7KOYhl9QJ+fcyUEMyb1YHXMUTVQLNX4pAXN8tpp7kI4pxrWs7/lfj6kgQqu0ReGRpD6X1pXvcrLsK7cf9ZKeZ52/b/CoME/YcD3TcV2p4VSSf81Nv8D6I0gIMzHo=
+	t=1784303269; cv=none; b=UN1IY0U/RO+X7cTxxBvfAGj1QfO5WmwjCpyxgz0IcKDhlNTJWGyEmkTq4rlnecQWp4YG7WJiWR3hUum/ELKywmMvCdDXDFA+jTrYyvKe7KNQqTBBqZV3opy6XwUgAstyUHjEIttmvy2UfiPChaVGM6+vrW4L7wioLtr7qIh8fWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784303267; c=relaxed/simple;
-	bh=9sPLdkum2kWCCtOLzcn0klZI0PoIJRU8ohLPxFOoEbc=;
+	s=arc-20240116; t=1784303269; c=relaxed/simple;
+	bh=iCjA7yUCDpXTP4um66nusdk0NXLQnKcHqhnn+jJcK1s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=hdPnjOo6rWA71ZU++BxzQbDKhG+SEjou/TSt0Jje9odImFnaiSDnO8d+atUFBfqEaNPWpM0dm0YDVMR81p3gSowQqFHp+9UoU53h2+ylzlz5cpNPmm6P9keDtWKlzjdhnMPQdLSbUAzqBXTcfuNnwWuhMXarSnA8nHTOAOVt7NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cQGvvXgp; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=BMRRLiE7WrGfb0OHWApp4Z1Z5tH0tdOfWI9yaVU5a33Fj7F7c++XaIgu94lX1WFQpTB2FAD18sJNOfjBQL/IolxI8USnsmETI/4IveQ+lEBSwr3r5xUlRAfJcrqT0Ux545s0adWEm1M+YNAdxEgWC3AWAWNzhGn3fWCdn4qNvgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jDDebyNu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cQGvvXgp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDDebyNu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784303264;
+	s=mimecast20190719; t=1784303267;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ICw0LxmziCf43DdT2yVS8sQfUszLZeUuGlgWCzPqF6U=;
-	b=cQGvvXgpvsX7DwroqZtlgKjEAoE/tBDIyQHqn2ju9H1Mb1FeMrKjXP1qeZXutbaO2lao/D
-	wFdzU5iLlV07bkp/b2hQMF/0hgYKDFepuflN0eCdyJjRSdtGp/TV/iFtZOLADRUelU16mY
-	oGpKjNkc0GWlrP3v6mNpKLGdHpNw1+0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=hPDQSpKe5FAoYlEb2zvHwqNGq0geDnpG6Cyn6hZmSPw=;
+	b=jDDebyNuTBuud+6TNcD1mCnTuE1yhyn/oaOVViTxtufJd2DxWIlQYqUtm0hizpIgyWRRjI
+	9Pk1WLlcS8TWg6d/aXycsbaOyjn3lQoqjFvRFvJ3cLq4J4PHMt3pTdE7WRV9Edu+3ktjQR
+	HcotyBiUIdiEE8Ks+SEWY9itIJZ6MoY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-534-E83G0U3XNL2CDJXwXWKvJg-1; Fri,
- 17 Jul 2026 11:47:41 -0400
-X-MC-Unique: E83G0U3XNL2CDJXwXWKvJg-1
-X-Mimecast-MFC-AGG-ID: E83G0U3XNL2CDJXwXWKvJg_1784303259
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-290-mofu6tT0M2-KuSpUlIcUow-1; Fri,
+ 17 Jul 2026 11:47:45 -0400
+X-MC-Unique: mofu6tT0M2-KuSpUlIcUow-1
+X-Mimecast-MFC-AGG-ID: mofu6tT0M2-KuSpUlIcUow_1784303264
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B87F31945112;
-	Fri, 17 Jul 2026 15:47:39 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50CA2180074B;
+	Fri, 17 Jul 2026 15:47:44 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.local (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC26D30040BF;
-	Fri, 17 Jul 2026 15:47:36 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6E9BA30040BF;
+	Fri, 17 Jul 2026 15:47:41 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
-	Wen Yang <wen.yang@linux.dev>,
 	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v4 08/17] verification/rvgen: Add selftests
-Date: Fri, 17 Jul 2026 17:46:29 +0200
-Message-ID: <20260717154638.220789-9-gmonaco@redhat.com>
+	John Kacur <jkacur@redhat.com>,
+	Wen Yang <wen.yang@linux.dev>
+Subject: [PATCH v4 09/17] verification/rvgen: Add the rvgen kunit subcommand
+Date: Fri, 17 Jul 2026 17:46:30 +0200
+Message-ID: <20260717154638.220789-10-gmonaco@redhat.com>
 In-Reply-To: <20260717154638.220789-1-gmonaco@redhat.com>
 References: <20260717154638.220789-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,218 +64,342 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: ku8_qAJwRHqzSfGgKoievEiOrn9bsGnxigUbgzJdv9g_1784303259
+X-Mimecast-MFC-PROC-ID: pJ_TeI97ioX6YNq7WqFFoejpMmPoJSkGkNHfjmnjS6s_1784303264
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The rvgen code generator needs validation to ensure it produces correct
-monitor implementations from input specifications.
+Add the rvgen kunit subcommand to patch an already generated monitor for
+kunit support. It parses the handlers and create the necessary structs
+and initialisations.
 
-Add selftests with golden reference outputs covering all monitor classes
-(DA, HA, LTL) and types (global, per_cpu, per_task, per_obj), including
-optional features like descriptions and parent monitors. Container
-generation and error handling (missing files, invalid specifications,
-missing arguments) are also validated against expected output.
+The only remaining manual steps are importing the test in the runner
+and writing the test itself.
 
-Acked-by: Nam Cao <namcao@linutronix.de>
-Reviewed-by: Wen Yang <wen.yang@linux.dev>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rvgen/Makefile             |  4 +
- .../rvgen/tests/rvgen_container.t             | 20 +++++
- .../verification/rvgen/tests/rvgen_monitor.t  | 87 +++++++++++++++++++
- tools/verification/tests/engine.sh            | 34 ++++++++
- 4 files changed, 145 insertions(+)
- create mode 100644 tools/verification/rvgen/tests/rvgen_container.t
- create mode 100644 tools/verification/rvgen/tests/rvgen_monitor.t
+
+Notes:
+    V4:
+    * Use pathlib instead of os.path
+    * Rename files to backup instead of writing to backup
+
+ tools/verification/rvgen/Makefile             |   1 +
+ tools/verification/rvgen/__main__.py          |  15 +-
+ tools/verification/rvgen/rvgen/generator.py   |   4 +-
+ tools/verification/rvgen/rvgen/kunit.py       | 194 ++++++++++++++++++
+ .../rvgen/rvgen/templates/kunit.c             |  29 +++
+ 5 files changed, 240 insertions(+), 3 deletions(-)
+ create mode 100644 tools/verification/rvgen/rvgen/kunit.py
+ create mode 100644 tools/verification/rvgen/rvgen/templates/kunit.c
 
 diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/Makefile
-index cfc4056c1e87..2a2b9e64ea42 100644
+index 2a2b9e64ea42..48d0376a5cc4 100644
 --- a/tools/verification/rvgen/Makefile
 +++ b/tools/verification/rvgen/Makefile
-@@ -13,6 +13,10 @@ all:
- .PHONY: clean
- clean:
+@@ -23,6 +23,7 @@ install:
+ 	$(INSTALL) rvgen/dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
+ 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+ 	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
++	$(INSTALL) rvgen/kunit.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/kunit.py
+ 	$(INSTALL) rvgen/container.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/container.py
+ 	$(INSTALL) rvgen/generator.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/generator.py
+ 	$(INSTALL) rvgen/ltl2ba.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/ltl2ba.py
+diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvgen/__main__.py
+index 5c923dc10d0f..e0ac562fbddd 100644
+--- a/tools/verification/rvgen/__main__.py
++++ b/tools/verification/rvgen/__main__.py
+@@ -13,6 +13,7 @@ if __name__ == '__main__':
+     from rvgen.generator import Monitor
+     from rvgen.container import Container
+     from rvgen.ltl2k import ltl2k
++    from rvgen.kunit import KUnit, KUnitError
+     from rvgen.automata import AutomataError
+     import argparse
+     import sys
+@@ -41,6 +42,11 @@ if __name__ == '__main__':
+     container_parser = subparsers.add_parser("container", parents=[parent_parser])
+     container_parser.add_argument('-n', "--model_name", dest="model_name", required=True)
  
-+.PHONY: check
-+check:
-+	prove -o --directives -f tests/
++    kunit_parser = subparsers.add_parser("kunit", parents=[parent_parser])
++    kunit_parser.add_argument('-n', "--model_name", dest="model_name", required=True)
++    kunit_parser.add_argument('-l', "--local", dest="local", action="store_true", required=False,
++                               help="Force looking for the monitor in the current directory only")
 +
- .PHONY: install
- install:
- 	$(INSTALL) rvgen/automata.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/automata.py
-diff --git a/tools/verification/rvgen/tests/rvgen_container.t b/tools/verification/rvgen/tests/rvgen_container.t
+     params = parser.parse_args()
+ 
+     try:
+@@ -55,11 +61,18 @@ if __name__ == '__main__':
+             else:
+                 print("Unknown monitor class:", params.monitor_class)
+                 sys.exit(1)
+-        else:
++        elif params.subcmd == "container":
+             monitor = Container(vars(params))
++        elif params.subcmd == "kunit":
++            monitor = KUnit(vars(params))
++            monitor.print_files()
++            sys.exit(0)
+     except AutomataError as e:
+         print(f"There was an error processing {params.spec}: {e}", file=sys.stderr)
+         sys.exit(1)
++    except KUnitError as e:
++        print(f"There was an error generating KUnit files: {e}", file=sys.stderr)
++        sys.exit(1)
+ 
+     print(f"Writing the monitor into the directory {monitor.name}")
+     monitor.print_files()
+diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
+index f1b37d34b1e9..45e2bab26cb5 100644
+--- a/tools/verification/rvgen/rvgen/generator.py
++++ b/tools/verification/rvgen/rvgen/generator.py
+@@ -22,9 +22,9 @@ class RVGenerator:
+         self.description = extra_params.get("description", self.name) or "auto-generated"
+         self.auto_patch = extra_params.get("auto_patch")
+         if self.auto_patch:
+-            self.__fill_rv_kernel_dir()
++            self._fill_rv_kernel_dir()
+ 
+-    def __fill_rv_kernel_dir(self):
++    def _fill_rv_kernel_dir(self):
+         # find the kernel tree root relative to this file's location
+         resolved_path = Path(__file__).resolve()
+         if len(resolved_path.parents) > 4:
+diff --git a/tools/verification/rvgen/rvgen/kunit.py b/tools/verification/rvgen/rvgen/kunit.py
 new file mode 100644
-index 000000000000..fa4fb3db8288
+index 000000000000..ed2082d7d3bc
 --- /dev/null
-+++ b/tools/verification/rvgen/tests/rvgen_container.t
-@@ -0,0 +1,20 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+source ../tests/engine.sh
-+test_begin
++++ b/tools/verification/rvgen/rvgen/kunit.py
+@@ -0,0 +1,194 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Copyright (C) 2026-2029 Red Hat, Inc. Gabriele Monaco <gmonaco@redhat.com>
++#
++# Generator for runtime verification kunit files
 +
-+set_timeout 30s
++import re
++from pathlib import Path
++from . import generator
 +
-+# Help tests
-+check "verify container subcommand help" \
-+	"$RVGEN container -h" 0 "model_name" "class"
 +
-+check_and_compare_folder "container with description" \
-+	"$RVGEN container -n test_container -D 'Test container for grouping monitors'" \
-+	"test_container" "Writing the monitor into the directory test_container"
++class KUnitError(Exception):
++    """Exception raised for errors in KUnit generation and file handling."""
 +
-+# Error handling tests
-+check "missing required model_name" \
-+	"$RVGEN container" 2 "the following arguments are required: -n/--model_name"
 +
-+test_end
-diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t b/tools/verification/rvgen/tests/rvgen_monitor.t
++class KUnit(generator.RVGenerator):
++    template_dir = ""
++
++    def __init__(self, extra_params={}):
++        super().__init__(extra_params)
++        self.local = extra_params.get("local", False)
++        self.kunit_c = self._read_template_file("kunit.c")
++        if not self.local:
++            self._fill_rv_kernel_dir()
++        try:
++            self.monitor_path = self.__find_monitor_c_file()
++            with open(self.monitor_path, 'r') as f:
++                self.content = f.read()
++        except OSError as e:
++            raise KUnitError(e) from e
++        self.monitor_class = self.__detect_monitor_class()
++
++    def _read_template_file(self, file):
++        if file in ("main.c", "Kconfig"):
++            return ""
++        return super()._read_template_file(file)
++
++    def __find_monitor_c_file(self) -> str:
++        """Look for the monitor file in the kernel tree or in the current folder."""
++        if not self.local:
++            path = Path(self.rv_dir) / "monitors" / self.name / f"{self.name}.c"
++            if path.exists():
++                return str(path)
++
++        path = Path(self.name) / f"{self.name}.c"
++        if path.exists():
++            return str(path)
++
++        raise FileNotFoundError(f"Could not find monitor C file for '{self.name}'")
++
++    def __extract_function_args(self, handler_name: str) -> str:
++        pattern = re.compile(
++            r'^\s*(.*?)\b' + re.escape(handler_name) + r'\(([^)]*)\)',
++            re.MULTILINE | re.DOTALL
++        )
++        match = pattern.search(self.content)
++        if not match:
++            return "/* XXX: fill handlers argument. */"
++
++        return match.group(2).strip()
++
++    def __parse_attach_handlers(self) -> list[str]:
++        """Find handlers by parsing when they are attached to tracepoints."""
++        probe_pattern = re.compile(
++            r'rv_attach_trace_probe\(.*, ([a-zA-Z0-9_]+)\)'
++        )
++        handlers = []
++        for match in probe_pattern.finditer(self.content):
++            handler = match.group(1)
++            if handler not in handlers:
++                handlers.append(handler)
++        return handlers
++
++    def __detect_monitor_class(self) -> str:
++        for c in ("da", "ha", "ltl"):
++            if f"{c}_monitor.h" in self.content:
++                return c
++        return "da"
++
++    def __fill_kunit_c(self, struct_name: str) -> str:
++        kunit_c = self.kunit_c
++        kunit_c = kunit_c.replace("%%MODEL_NAME%%", self.name)
++        kunit_c = kunit_c.replace("%%MODEL_NAME_UP%%", self.name.upper())
++        kunit_c = kunit_c.replace("%%MONITOR_CLASS%%", self.monitor_class)
++        kunit_c = kunit_c.replace("%%STRUCT_NAME%%", struct_name)
++        return kunit_c
++
++    def __fill_kunit_h(self, struct_name, prototypes) -> str:
++        return f"""/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Automatically generated by rvgen kunit.
++ * May need manual intervention for function prototypes that couldn't be
++ * found (e.g. are in another file) or variables to be exported.
++ */
++
++#ifndef __{self.name.upper()}_KUNIT_H
++#define __{self.name.upper()}_KUNIT_H
++
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++
++#include <linux/rv.h>
++#include <rv/kunit.h>
++
++extern const struct {struct_name} {{
++\tstruct rv_kunit_mon mon;
++\t{"\n\t".join(prototypes)}
++}} {struct_name};
++#endif
++
++#endif /* __{self.name.upper()}_KUNIT_H */
++"""
++
++    def __fill_monitor_handlers(self, struct_name, assignments):
++        struct_definition = f"""#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++#include <kunit/visibility.h>
++#include "{self.name}_kunit.h"
++
++const struct {struct_name} {struct_name} = {{
++\t.mon = RV_MON_OPS_INIT(),
++\t{"\n\t".join(assignments)}
++}};
++EXPORT_SYMBOL_IF_KUNIT({struct_name});
++#endif"""
++
++        if self.auto_patch:
++            try:
++                with open(self.monitor_path, 'w') as f:
++                    f.write(f"{self.content}\n{struct_definition}\n")
++            except OSError as e:
++                raise KUnitError(f"Error patching monitor file {self.monitor_path}: {e}") from e
++        else:
++            print(f"Append the following to {self.name}.c:\n")
++            print(struct_definition)
++        print("Now complete the test and add it to rv_monitors_test.c")
++
++    def print_files(self):
++
++        handlers = self.__parse_attach_handlers()
++
++        if not handlers:
++            raise KUnitError(f"No handlers found in {self.monitor_path}")
++
++        prototypes = []
++        assignments = []
++        for handler in handlers:
++            arguments = self.__extract_function_args(handler)
++
++            prototypes.append(f"void (*{handler})({arguments});")
++            assignments.append(f".{handler} = {handler},")
++
++        struct_name = f"rv_{self.name}_ops"
++
++        self.__fill_monitor_handlers(struct_name, assignments)
++
++        dir_path = Path(self.monitor_path).parent
++
++        header_file_path = dir_path / f"{self.name}_kunit.h"
++        kunit_c_file_path = dir_path / f"{self.name}_kunit.c"
++
++        use_backup = True
++        if header_file_path.exists() or kunit_c_file_path.exists():
++            try:
++                response = input("KUnit file(s) already exist. Backup? [Y/n] ")
++                if response.strip().lower() in ("n", "no"):
++                    use_backup = False
++            except EOFError:
++                print("Non-interactive session detected, backing up existing files.")
++        else:
++            use_backup = False
++
++        if use_backup:
++            for path in (header_file_path, kunit_c_file_path):
++                if path.exists():
++                    try:
++                        path.rename(path.with_suffix(path.suffix + ".bak"))
++                    except OSError as e:
++                        raise KUnitError(f"Error backing up file {path}: {e}") from e
++
++        header_content = self.__fill_kunit_h(struct_name, prototypes)
++        try:
++            with open(header_file_path, 'w') as f:
++                f.write(header_content)
++            print(f"Successfully created KUnit header file: {header_file_path}")
++        except OSError as e:
++            raise KUnitError(f"Error writing to file {header_file_path}: {e}") from e
++
++        kunit_c_content = self.__fill_kunit_c(struct_name)
++        try:
++            with open(kunit_c_file_path, 'w') as f:
++                f.write(kunit_c_content)
++            print(f"Successfully created KUnit C file: {kunit_c_file_path}")
++        except OSError as e:
++            raise KUnitError(f"Error writing to file {kunit_c_file_path}: {e}") from e
+diff --git a/tools/verification/rvgen/rvgen/templates/kunit.c b/tools/verification/rvgen/rvgen/templates/kunit.c
 new file mode 100644
-index 000000000000..261476504eee
+index 000000000000..d29bbf2ea5c6
 --- /dev/null
-+++ b/tools/verification/rvgen/tests/rvgen_monitor.t
-@@ -0,0 +1,87 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+source ../tests/engine.sh
-+test_begin
++++ b/tools/verification/rvgen/rvgen/templates/kunit.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/rv.h>
++#include <rv/kunit.h>
++/*
++ * XXX: include required headers, e.g.,
++ * #include <linux/sched.h>
++ */
++#include "%%MODEL_NAME%%_kunit.h"
 +
-+set_timeout 30s
++#if IS_ENABLED(CONFIG_RV_MON_%%MODEL_NAME_UP%%)
 +
-+# Help and basic tests
-+check "verify help page" \
-+	"$RVGEN --help" 0 "Generate kernel rv monitor"
++static void rv_test_%%MODEL_NAME%%(struct kunit *test)
++{
++	struct rv_kunit_ctx *ctx = test->priv;
 +
-+check "verify monitor subcommand help" \
-+	"$RVGEN monitor --help" 0 "Monitor class"
++	prepare_test(test, &%%STRUCT_NAME%%.mon);
 +
-+# DA monitor tests - test all monitor types
-+check_and_compare_folder "DA per_cpu (default name)" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t per_cpu" \
-+	"test_da" "obj-\$(CONFIG_RV_MON_TEST_DA) += monitors/test_da/test_da.o"
-+
-+check_and_compare_folder "DA global type" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t global -n da_global" \
-+	"da_global" "DA_MON_EVENTS_IMPLICIT"
-+
-+check_and_compare_folder "DA per_task with description" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da2.dot -t per_task -n da_pertask_desc -D 'Custom description for testing'" \
-+	"da_pertask_desc" "#include <monitors/da_pertask_desc/da_pertask_desc_trace.h>"
-+
-+check_and_compare_folder "DA per_obj with parent" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da2.dot -t per_obj -n da_perobj_parent -p parent_mon" \
-+	"da_perobj_parent" "DA_MON_EVENTS_ID"
-+
-+# HA monitor tests
-+check_and_compare_folder "HA per_task (default name)" \
-+	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_task" \
-+	"test_ha" "HA_MON_EVENTS_ID"
-+
-+check_and_compare_folder "HA per_cpu type" \
-+	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_cpu -n ha_percpu" \
-+	"ha_percpu" "HA_MON_EVENTS_IMPLICIT"
-+
-+# LTL monitor test
-+check_and_compare_folder "LTL per_task" \
-+	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -n ltl_pertask" \
-+	"ltl_pertask" "source \"kernel/trace/rv/monitors/ltl_pertask/Kconfig\""
-+
-+check_and_compare_folder "LTL per_task with parent and description (default name)" \
-+	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -p ltl_parent -D 'Simple description'" \
-+	"test_ltl" "LTL_MON_EVENTS_ID"
-+
-+# Error handling tests
-+check "missing required spec argument" \
-+	"$RVGEN monitor -c da -t per_cpu" 2 \
-+	"the following arguments are required: -s/--spec" "Traceback (most recent call last)"
-+
-+check "missing required monitor type" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da.dot" 2 \
-+	"the following arguments are required: -t/--monitor_type" "Traceback (most recent call last)"
-+
-+check "missing required monitor class" \
-+	"$RVGEN monitor -s tests/specs/test_da.dot -t per_cpu" 2 \
-+	"the following arguments are required: -c/--class" "Traceback (most recent call last)"
-+
-+check "invalid monitor class" \
-+	"$RVGEN monitor -c invalid -s tests/specs/test_da.dot -t per_cpu" 1 \
-+	"Unknown monitor class" "Traceback (most recent call last)"
-+
-+check "missing dot file" \
-+	"$RVGEN monitor -c da -s tests/specs/nonexistent.dot -t per_cpu" 1 \
-+	"No such file or directory" "Traceback (most recent call last)"
-+
-+check "missing ltl file" \
-+	"$RVGEN monitor -c ltl -s tests/specs/nonexistent.ltl -t per_task" 1 \
-+	"No such file or directory" "Traceback (most recent call last)"
-+
-+check "invalid dot file syntax" \
-+	"$RVGEN monitor -c da -s tests/specs/test_invalid.dot -t per_cpu" 1 \
-+	"Not a valid .dot format" "Traceback (most recent call last)"
-+
-+check "invalid ha file syntax" \
-+	"$RVGEN monitor -c ha -s tests/specs/test_invalid_ha.dot -t per_obj" 1 \
-+	"Unrecognised event constraint" "Traceback (most recent call last)"
-+
-+check "invalid ltl file syntax" \
-+	"$RVGEN monitor -c ltl -s tests/specs/test_invalid.ltl -t per_task" 1 \
-+	"Illegal character 'i'" "Traceback (most recent call last)"
-+
-+test_end
-diff --git a/tools/verification/tests/engine.sh b/tools/verification/tests/engine.sh
-index 57e16dc980b1..cfdf2180aad8 100644
---- a/tools/verification/tests/engine.sh
-+++ b/tools/verification/tests/engine.sh
-@@ -5,6 +5,8 @@ test_begin() {
- 	# included correctly.
- 	ctr=0
- 	[ -z "$RV" ] && RV="../rv/rv"
-+	[ -z "$RVGEN" ] && RVGEN="python3 ../rvgen"
-+	[ -z "$GOLDEN_DIR" ] && GOLDEN_DIR="tests/golden"
- 	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
- }
- 
-@@ -118,6 +120,38 @@ check_if_exists() {
- 	fi
- }
- 
-+check_and_compare_folder() {
-+	# Run command, compare generated folder to golden, and cleanup
-+	local desc=$1
-+	local command=$2
-+	local generated_dir=$3
-+	local expected_output=$4
-+	local unexpected_output=$5
-+	local golden_dir="$GOLDEN_DIR/$generated_dir"
-+
-+	ctr=$((ctr + 1))
-+	if [ -n "$TEST_COUNT" ]; then
-+		rm -rf "$generated_dir"
-+		_check "$desc" "$command" 0 "$expected_output" "$unexpected_output"
-+
-+		if [ "$fail" -eq 0 ] && [ ! -d "$generated_dir" ]; then
-+			failure "# Generated directory not found: $generated_dir"
-+		fi
-+
-+		if [ "$fail" -ne 0 ]; then
-+			:
-+		elif ! diff -r "$generated_dir" "$golden_dir" &> /dev/null; then
-+			failure "# Directories differ:"
-+			failbuf+=$(diff -r "$generated_dir" "$golden_dir" 2>&1 | sed 's/^/#   /')
-+			failbuf+=$'\n'
-+		fi
-+
-+		report "$1"
-+
-+		rm -rf "$generated_dir"
-+	fi
++	/*
++	 * XXX: write the test here
++	 * e.g.
++	 * RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
++	 *	%%STRUCT_NAME%%.handle_event(args);
++	 */
 +}
 +
- set_timeout() {
- 	TIMEOUT="timeout -v -k 30s $1"
- }
++#else
++#define rv_test_%%MODEL_NAME%% rv_test_stub
++#endif
 -- 
 2.55.0
 
