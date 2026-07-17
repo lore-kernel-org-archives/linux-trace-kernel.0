@@ -1,89 +1,172 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5056F245012;
-	Fri, 17 Jul 2026 16:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668421D435F;
+	Fri, 17 Jul 2026 17:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784305786; cv=none; b=mvHbsISkFigfQeviGEscDbpfzazT2C9xejh6jQ8YUlOb3raZQx/gGolCLq+g5nvwB2fWPz015sqHYZdIM1mJH7Hg6W7nVbOiZ7tVVRb7dyRWwnpEmmEv/BW7mtKuhqjLUCXX93tg/TksfJFxMsHa9ZgU2HVJgTHK6NLfhRwg5qE=
+	t=1784307643; cv=none; b=Lx53yOGRp3u4vR6eqht+rTvk6EZdFoKxwZ84VlHZBNmMzb37SNpaRB4eqgPBnp5DY5kRF9Cweri2tP4NZcrY8L8W7xJP0U/Iy29qyU37MoOWkatx23Z4orfcqstdgbBZtb6IB+MwisHmM0KGCFmg+TWkCMbONIzmT/Pdi2zf0J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784305786; c=relaxed/simple;
-	bh=+lHYXOMpYR2CjVPrlOEYR9B2IEXORBCms1hig+6Q1ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dK4zruNbqCDocJwftAu4dd5ghZOdo2LQypoaXhH9DcGMBcv+UzplpBZyFk/qM8/pSZhiNCG9N7vJU9mY/412lZT3rIdH7Ymyzo/bVE4Kvxi4YcYW+pL53uJj4JlodaZKRmebGkyL4GBv4jVYBdRa0KdXrq4DQQQ5JWknqm6TonY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=g3y2dkvY; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1784307643; c=relaxed/simple;
+	bh=GNgX9wolfe+brhy74f1BsQ+WcZi2EoM54o2AjEWGLtY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uqbG2N2XGLf6yLFtNrPYDNCFC/NFLaJ+o569XTJHOX0GRl3vEVUfbnDuCSgdXsuGWIqQPDBZD19nyi3eMSYdOMj/dnOlKp/GDqsf46S6BbZXYISpStPr5ViQR4wQx3Fj1sPITKaKY8jUQJo725jIibaPHyFWoXIZSWnopPZQNIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=eg8ad3Ri; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="g3y2dkvY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B2E7B40E02B1;
-	Fri, 17 Jul 2026 16:29:33 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1Y60ZtmddiTi; Fri, 17 Jul 2026 16:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1784305763; bh=Nz7TtCuvujd6DyFmLHCmqcD86HKnSIHjpAW+JTeQYUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3y2dkvY6g+abAmwgItNF01PKbGFYkIATv791xbmF8hejFEWf8jNeNJSMOBQUQ8xb
-	 D1UFMXpzd4FODiPCzb/bN3LQYNZlCsfk+gcXn0a5yaG9G5SxBc4ryvLVQA5oF0tAdI
-	 vQrkveKZvczYYZjez4tb3X+fSDXHa2XyuJFH6peeV1vt1i9UK49vLTk2ZlRfZxO0/v
-	 AcFuwQcoAxVwk1s9egwvABIGhIf0HtNPoo9NrVNtRYMGa1PY2sUJoOmijf7uxTp5Go
-	 Qmg7VgJKNwDMZgyu1vFmLvdNm7m4+fUW6tbF+4OO0wNyBp109k9wKuXPpQM4Jkga1Y
-	 7KIq4w7hV/aSTfXedaAhqK4ZHCY37Bzq3nlqLBkTdvHJtCbDww9vWgb2ADix3B/LlP
-	 mzY8ZFl4d2EbeMbo0dsQe4T2seltZcnrrC7uvqYV03lKoigX8zifuEvV5cmIx2OTX4
-	 zhIaQV5YAtRuAGtju14hM8lI3iVs6Bfe/YT0KygzBFT+slLnTSGxBL9C2ZXjEE2gbw
-	 Id8EAxO2wJEKJnPgY0rROLnp1paMQIfFf5S65qqQTWjlb9aD2jPrTNgMvdTnFj2Kba
-	 WP9Criiut2XIajQoQWAvYLvhLI7y7l/CeYsFsifiOC/rRqnMxjkcTKexHL0GCNuE9z
-	 wFpnNeAJxxBMuSuaPldO+U9c=
-Received: from stx.tnic (unknown [165.204.77.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3247F40E02B0;
-	Fri, 17 Jul 2026 16:29:07 +0000 (UTC)
-Date: Fri, 17 Jul 2026 09:28:57 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="eg8ad3Ri"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=PpNZRbQ47/WqGdrrUHhpvYqGIuM8bItP00+DgG6LDXo=; b=eg8ad3RiFa8lAL5pChcMMgF1Si
+	LEbP5CZ1dBogtdyeKd+q0TUhTbit02LiVOpp6m6hBnGvr3J9MKzB6Gabf/w1RkeB/xjPyNSXCmw5n
+	9x33pv/WFy+Cz5on5MbJSN3T/Z45sBaO10W/t8w9GivVYQG03zc6Xa/DNv1fDl/uDl2quDe+ASJIr
+	08PV+2sy2+JnkIATDRgGx/E0LfZjXBGhUyOBCM4nxowH0d9AumHwwizfilLbnOyXaZdXf/Rwm9Mkf
+	puhrOFc1ywQuSWaJpvYYHdbml9Y+yFXm6E4fQBHczEfQ91zkLtR2xjQlUqzJwkLH0P84hz83lyxP/
+	etyWm5xg==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1wklvS-000000001w4-0RAd;
+	Fri, 17 Jul 2026 13:00:38 -0400
+From: Rik van Riel <riel@surriel.com>
+To: linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: kernel-team@meta.com,
+	Rik van Riel <riel@surriel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	linux-mm@kvack.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 00/10] tracing: wprobe: x86: Add wprobe for watchpoint
-Message-ID: <20260717162857.GAalpYSaZ_emTMUEEW@fat_crate.local>
-References: <178429796992.157981.3393977217853767915.stgit@devnote2>
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Harry Yoo <harry@kernel.org>,
+	Jann Horn <jannh@google.com>,
+	Lance Yang <lance.yang@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC v3 3/6] mm: rename get_user_page_vma_remote() to get_user_page_lookup_vma()
+Date: Fri, 17 Jul 2026 13:00:33 -0400
+Message-ID: <20260717170036.743149-4-riel@surriel.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260717170036.743149-1-riel@surriel.com>
+References: <20260717170036.743149-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <178429796992.157981.3393977217853767915.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+get_user_page_vma_remote() faults in the page at @addr in a remote mm and
+also looks up the VMA that covers it, handing both back to the caller.
 
-On Fri, Jul 17, 2026 at 11:19:30PM +0900, Masami Hiramatsu (Google) wrote:
-> Here is the 9th version of the series for adding new wprobe (watch probe)
+This cleans up the name space for adding a get_user_page_vma() variant
+where the caller already has the vma.
 
-any chance you won't blast out your patchset every day?
+Assisted-by: Claude:claude-opus-4.8
+Signed-off-by: Rik van Riel <riel@surriel.com>
+---
+ arch/arm64/kernel/mte.c   | 2 +-
+ arch/x86/kernel/uprobes.c | 2 +-
+ include/linux/mm.h        | 2 +-
+ mm/memory.c               | 4 ++--
+ mm/rmap.c                 | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-Thx.
-
+diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+index 1a9aad6ef22a..7a6ecc3d9294 100644
+--- a/arch/arm64/kernel/mte.c
++++ b/arch/arm64/kernel/mte.c
+@@ -459,7 +459,7 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
+ 		struct vm_area_struct *vma;
+ 		unsigned long tags, offset;
+ 		void *maddr;
+-		struct page *page = get_user_page_vma_remote(mm, addr,
++		struct page *page = get_user_page_lookup_vma(mm, addr,
+ 							     gup_flags, &vma);
+ 		struct folio *folio;
+ 
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 3af979fb41d3..329efac0cfb3 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1036,7 +1036,7 @@ static int copy_from_vaddr(struct mm_struct *mm, unsigned long vaddr, void *dst,
+ 	struct vm_area_struct *vma;
+ 	struct page *page;
+ 
+-	page = get_user_page_vma_remote(mm, vaddr, gup_flags, &vma);
++	page = get_user_page_lookup_vma(mm, vaddr, gup_flags, &vma);
+ 	if (IS_ERR(page))
+ 		return PTR_ERR(page);
+ 	uprobe_copy_from_page(page, vaddr, dst, len);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 485df9c2dbdd..24ead14b4790 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3238,7 +3238,7 @@ long pin_user_pages_remote(struct mm_struct *mm,
+ /*
+  * Retrieves a single page alongside its VMA. Does not support FOLL_NOWAIT.
+  */
+-static inline struct page *get_user_page_vma_remote(struct mm_struct *mm,
++static inline struct page *get_user_page_lookup_vma(struct mm_struct *mm,
+ 						    unsigned long addr,
+ 						    int gup_flags,
+ 						    struct vm_area_struct **vmap)
+diff --git a/mm/memory.c b/mm/memory.c
+index ff338c2abe92..3b86eeaf084f 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -7039,7 +7039,7 @@ static int __access_remote_vm(struct mm_struct *mm, unsigned long addr,
+ 		void *maddr;
+ 		struct folio *folio;
+ 		struct vm_area_struct *vma = NULL;
+-		struct page *page = get_user_page_vma_remote(mm, addr,
++		struct page *page = get_user_page_lookup_vma(mm, addr,
+ 							     gup_flags, &vma);
+ 
+ 		if (IS_ERR(page)) {
+@@ -7167,7 +7167,7 @@ static int __copy_remote_vm_str(struct mm_struct *mm, unsigned long addr,
+ 		struct page *page;
+ 		struct vm_area_struct *vma = NULL;
+ 
+-		page = get_user_page_vma_remote(mm, addr, gup_flags, &vma);
++		page = get_user_page_lookup_vma(mm, addr, gup_flags, &vma);
+ 		if (IS_ERR(page)) {
+ 			/*
+ 			 * Treat as a total failure for now until we decide how
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 1c77d5dc06e9..b36f2e219b8f 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -2838,7 +2838,7 @@ struct page *make_device_exclusive(struct mm_struct *mm, unsigned long addr,
+ 	 * (non-device-exclusive) PTE and issue a MMU_NOTIFY_EXCLUSIVE.
+ 	 */
+ retry:
+-	page = get_user_page_vma_remote(mm, addr,
++	page = get_user_page_lookup_vma(mm, addr,
+ 					FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
+ 					&vma);
+ 	if (IS_ERR(page))
 -- 
-Regards/Gruss,
-    Boris.
+2.53.0-Meta
 
-https://people.kernel.org/tglx/notes-about-netiquette
