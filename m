@@ -1,115 +1,84 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBD9330B15;
-	Fri, 17 Jul 2026 18:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F295727587D;
+	Fri, 17 Jul 2026 18:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784311869; cv=none; b=YNkwtDye8lolujF0jsZQylfLRv6P3SeiwGiIuTPQNla2ZpXPqlsSMmyCzItbEgeq6ZEPrIHa5dWGsCohtEZVHLvYGqeWQwabphxWfwW7K+yyfeIB5zVK7Rz9jmeUx/+peRaEbNVBKoTdwyq21tWj264tV5RkM2qDbmFt+DLR5OM=
+	t=1784312599; cv=none; b=Y/AWob62JJAZOE+CQiuUlMgy+LUiecPQCydtGMa5g1jGeARQ4t2SME3O9e+Hjyg3LULGQTq8cXBQQWPs9sRDpm/qee8Iok83kYuM6/r/nyiEh6HbzvleZareYO2Px0QjCnPFbyQtKqnAyZAgZTQ9M4hHrZ6+2knEb/QcHBiLhtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784311869; c=relaxed/simple;
-	bh=UC9qmsDtmii2DsHOAv1oqYnGcnNidJDZ2oeL6cbUyOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pTU7Z/KWpmA/6CoBeAYHNhENLwsCtupKa4BMwZHFHEatJoylkLDTR+Jbi48F/8TsbGJPPSnaUNnfCSfr8Wqw4uR88hfQcSevv2+L0PSAGMOzkeee/QjMx5ARk7J1nBfSaxbPZgAjc3MOCNv4/XrcEwu8msqo0HpwEealN+n8dAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IqJrUL7c; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1784312599; c=relaxed/simple;
+	bh=gU8u1Xm4GBedXzE/bToT04xl8es95mzWgcKHUtTbTVA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hQFVq4hpUsv9cYBbQQ1s9yMWX8klwu8vKCyS2t7QVPxZlpcn6l3R0Veyol++5ocFKKxQRUT3tTHOXLFrVnaGzGkWfefTQWHXQtNt0amPhK+cs9QrmIvAu4vFTaYmbLEgOJNbDUzT0JJG5Yf0jxIauc3VZxSyd9aPLh3V7hmLhjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTvyY7ex; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IqJrUL7c"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5AA9440E019E;
-	Fri, 17 Jul 2026 18:11:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id u8fFbPN4AXBQ; Fri, 17 Jul 2026 18:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1784311852; bh=bPmbqf9uyCcKnQQHBZ8qJ6WEarZSzlfc3+zUiESAp+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IqJrUL7cP7mIgpNONmTCu4WcE4TxmRVaFAl4dPpyzG+oV0TNzjMUDTrgieox7AbQ0
-	 BERvJrvSZK0HWtYOEbcvaH96YVV6j2mVMSozgcdwxNMWH1a39vphGkb98//AXYO3+y
-	 zu4Vc1XbDz2CiMLluP0tFABdFhidZpw99WP95WYs67lGgY8Xya+spL7kw4h8KNIDQ7
-	 Z8iGse3DNUXlVOj4b61XN+YhlR+gs5Qw1G2f9cSgHRnAou0MJoCEI6C2AoJtBzmaKw
-	 nkH+4fv8UqOInOt9toWCHKhYSLC0+58MScyBC3ITb42SMkHykE8oDYd/34I5e0wJbd
-	 ZUetXFu9XjWMYtpojw3F1B5xEjX4Rb+asflz6f+Jvizt2fRNotw3Dt8CYOc7TT/kxu
-	 uHQCnKviymZrUS+U/L478dk9CKDXl2jzEKgszWaY9y4TF79jDoFt+P1dovW3C1ZEWm
-	 i8X6BfckPOqBmKWq4o+B8Ihv6fsAfGhsFqwGAQ4U0Hlg53LJDFoDfGOvjMvIlikhoG
-	 mxdbxTqK8+IoL9FbzcA+p8KLtVvMX1LYhF9HgSD/u5t2bIZVEmjzDB0qUzJCXs0kCY
-	 qoEpjNMo7X3+jlCLAnsJKndoPJXOHKA3fSgpSgF+DdRZ0nIaTUI7M6ItOwneKTfCDP
-	 /3zT5ryLd6YHw269x00DqZc0=
-Received: from stx.tnic (unknown [165.204.77.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8ABD040E02B0;
-	Fri, 17 Jul 2026 18:10:23 +0000 (UTC)
-Date: Fri, 17 Jul 2026 11:10:04 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Jinchao Wang <wangjinchao600@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Hildenbrand <david@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Matthew Wilcox <willy@infradead.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTvyY7ex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EBC1F000E9;
+	Fri, 17 Jul 2026 18:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784312595;
+	bh=uT+bu1nR22jG3svg0QpVCjdccwM9QhJkJ6q8Ga7Koes=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=fTvyY7exskBBJ3sUMf7tkQM0dXLp4Dh0gFJeCZ2keVBp63ziyBOWMRgcJeb6B9SyN
+	 do2nre2RWPxsnPr3MebejaKtdWGRYlNTDpR9gNr/HH1UjilUShzt1D6EtGiT00uCDM
+	 RVswumwHYRggaXROvnppkQYDkTzJgfHUqwInlWm3oZzWjedQ/WvgEX12dgVAqhE1f1
+	 txw1yYJhxsqBmGZqJLsx4IMP9Zs44hlusOa5YtPvuMvLCXwJ/cz31wgXpT+KWOIcb4
+	 AkCC54qvbKqgf9HfRwM+p79ys/3c9VcEamZIluViubR0pygNmx/ghpDG2ad7/0orer
+	 qr3Er2wpG8syg==
+From: Will Deacon <will@kernel.org>
+To: mhiramat@kernel.org,
+	Pu Hu <hupu@transsion.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	ada.coupriediaz@arm.com,
+	davem@davemloft.net,
+	Hongyan Xia <hongyan.xia@transsion.com>,
+	Jiazi Li <jiazi.li@transsion.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints for
- hunting memory corruption
-Message-ID: <20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
-References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
- <91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+	naveen@kernel.org,
+	yang@os.amperecomputing.com
+Subject: Re: [RFC v3 0/2] rm64: kprobes: Fix single-step fault and reentry handling
+Date: Fri, 17 Jul 2026 19:23:06 +0100
+Message-ID: <178431138979.1463087.7670145018336150916.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260710063242.228714-1-hupu@transsion.com>
+References: <20260710063242.228714-1-hupu@transsion.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 17, 2026 at 06:41:49AM -0700, Dave Hansen wrote:
-> On 7/17/26 05:50, Jinchao Wang wrote:
-> >  24 files changed, 2115 insertions(+), 63 deletions(-)
-> Reading this, I wonder how many kernel debugging features we need. I
-> don't even think we have a centralized list of them. They all just live
-> in their own silos.
+On Fri, 10 Jul 2026 06:32:52 +0000, Pu Hu wrote:
+> This series fixes two arm64 kprobes issues observed when running
+> simpleperf with preemptirq tracepoints and dwarf callchains while a
+> kprobe is active on a frequently executed kernel function.
 > 
-> This one really seems like a super specialized tool. It has to be
-> enabled at compile time and specifically aimed at a specific function.
+> The crash happens in the kprobe debug exception path. While a kprobe is
+> preparing or executing its XOL single-step instruction, perf/trace code
+> can run in the same window. That code may either take a fault of its own
+> or hit another kprobe.
 > 
-> Maybe this should live off on the side for a while. If folks end up
-> actually needing it, they can point their friendly LLM over to its tree.
+> [...]
 
-Right, and in my mbox right under this mail thread there's a
+Applied to arm64 (for-next/fixes), thanks!
 
-https://lore.kernel.org/all/178429796992.157981.3393977217853767915.stgit@devnote2/
+[1/2] arm64: kprobes: Only handle faults originating from XOL slot
+      https://git.kernel.org/arm64/c/879a6754d3d1
+[2/2] arm64: kprobes: Allow reentering kprobes while single-stepping
+      https://git.kernel.org/arm64/c/23f851ac0078
 
-which Masami has been blasting almost every day this week which contains two
-of the patches from this set here...
-
-Looks to me like folks need to sit down and agree on strategy first.
-
+Cheers,
 -- 
-Regards/Gruss,
-    Boris.
+Will
 
-https://people.kernel.org/tglx/notes-about-netiquette
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
