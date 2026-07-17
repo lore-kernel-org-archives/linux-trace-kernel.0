@@ -1,343 +1,133 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646743F65EE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 13:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C2E3BFAE8;
+	Fri, 17 Jul 2026 13:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784293667; cv=none; b=VPUMxkdrBIVM6VoIOLUD8A0j1oOD6xOa90VKLuBxKxE9oZJOpoyQv3PaLQE4aavO4Khp50ReUtqVaw1yNVCNQc09OfLzQSGDZuIFwEJ2NWxkpG/tTbQdZHE4Yi3wFxN/oQkeCJwUp+hYi/GlP1cKAFTA1pwqaHbnXo8wIpVLjE8=
+	t=1784295715; cv=none; b=Dn9YdjZouRDkc7tw4LyOFhiz+EqU8I+LrLvsbxerYMIzYHurqi7eb4lAY29psI5amRDqmw1bz2lE5VICLPC8nrrgktGeKzN3PQhCPJKtdR3YHDBLUx/DgAR8r2z9KXSn3rvBtvvqg5geMMxdGjsybgHicqo6EOtOV13vfE1Y9VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784293667; c=relaxed/simple;
-	bh=PBhnT9R86+Lgrugmh2xVUA0skBZMR4Bzkwn46FP4ujY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lgBxJJ1eTtzCSIk3XFgp0IIABe3s6jldVWXU1YMr4+IpaO2SoX9I10YWYw6YDqfiFENqlh+P0nFfq51BdN45SxFisX83aDk77Dm6nZAPPzyO26Ay6+cEage36xIqS5Hb1Dq7Wh8hDSIYxG01EtKLM7hicePMacexmuxtJGe/4P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ojrEWIK6; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784295715; c=relaxed/simple;
+	bh=fvevDhSjCFC8kOKsqBUeK57DQVf+jkuNY18oFfhjsC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fjcyDJAfrOMaoA848Fpep70yE7soQVUNLhP+93WL5gl3mIlsEV1YOAgSsHqK9EEmCCpnSZYty3DliB/597VfC+qB9qCe35+9yj6g1oA/u6kMzgejWfG+qKVq/4bxyciYO7cAzyBjKiRrRpyfU9/bBOhkKzo44Vssh8Fymnopa80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H3aKC7Ag; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ojrEWIK6"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-38de840f2f0so4418509a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 06:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784293664; x=1784898464; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=YAVyRkTkPaWk8kIYvBYAepg/O4FB7G2KaVbrN0SgkUc=;
-        b=ojrEWIK6hQwJGiq4eK8Dloh1pfU5NKHC6nc1v/8eWlLpuQueOENXZIwDFAeTH6tkbb
-         TlCbFCAZLea17qbN9TyF1JSEcj7unHzZIgBIJZlMX4Yp5B/+Z0+Tuc2WxJDPFb6S07Fv
-         /jv2K2G9OR7lRkdBW7bqTsrBjJgaQ5wdmvqdoI2EEMGACOgqdaLmNItumKF7d/gSbDPq
-         Ch/PNjYpqzPGFMiZWlSkO5RwUQAA6XR5Y+hKKbIGjkbfkoJLFzxtmuKXWJWwKMu+3NRQ
-         J+ndyPXHmuivQTGwdaeZZAnDn3O1hY790VWF3IGUqZ9prcaT/s54dSr4Pbz7DGgQCeYr
-         S/Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784293664; x=1784898464;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=YAVyRkTkPaWk8kIYvBYAepg/O4FB7G2KaVbrN0SgkUc=;
-        b=QX021qWNg2cGo7ZkkJYs6grnZWeipDRRHXhYfCqNgSHZGMp2R1sQqWN7gETovXHIA+
-         83FAacIHJGghwQ+i291L99719DmTOwMt/oUBkh+wufydK2EyuMhXP6ry6IDz/Ai+dsbZ
-         VQjzlE3614xAOJH6/EgoagqMribgSMEx2tlR5SQJKT8UzpcDLrQVvWBQEpd6C/TeQT+w
-         H05Cc/0ukvuxrfw1rM1ezn24Wr+K3Ml7jpimQROQCQ0f3gPw6gjnOHcU2VxWwAAHNLPq
-         Z3OjQKX+PT/0NcybIDk51P6LWztjahvc1gKr5wB70pBWUsiamdccYv9pLadBrXa8KJtH
-         rfYw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp8qqiyetya5NSJJvoliPXu0K0DFvFIUs9M4GlrF2Aaf1mWQAMuDnnipe1SOi5rogXVLAe1d9kI/3/ELGJA0Mv7j1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzksFtqb3qYZfOM6J3k/CK7Ho/B9dx//PmIQ5wCaWzHKGOr05XI
-	BxVXUfb5fLIYrW4tOqEQft6JiRynOcWHWomCXPGKhpZG1e7/fc4j4S4r
-X-Gm-Gg: AfdE7cnLqPQpaX7wVMfGjjN3Kr7U2z0vuRDCffeW7SSR9/mLrli/dCZ3w7LQwqJ65aT
-	aiSObW3ZRDhg+9LIJAB9YCbbQwQsZ9F+t7QCWzSa/HH1QxnfOGIXrZoqzZcHYeH6ApQAf4bcwof
-	4+JXfMdcGX94rtTj9jfAEWFD6VYRbLmDuVx0wOUgqzae6L05Gq7pyv8NH6JRdayqV2d8ot+clnH
-	wSTgFEQxd3ZGasx0p9dX9cfBxxW+GWIPzM/f+pc2chtwueDrCYom9BDtxEecGmLXOnzJZ/18KZB
-	vOM/xH8Kl1GrcP6YQeWpVbzcT0eev/vMnP5CJkEO0yMMglUGjeRNwZGyzXZNF5x9iFFY/I08zWU
-	MALfEVWVwUNVMeeRkwvhoB/oePdgrkNA7EATXaUZ+Ye4IAfc/sA9qWW9OrqezRTKUbNaGriX6J1
-	E/stzVpMpyKSG8
-X-Received: by 2002:a17:90b:3904:b0:387:e0db:bc34 with SMTP id 98e67ed59e1d1-38e4b5793d2mr2622266a91.42.1784293663521;
-        Fri, 17 Jul 2026 06:07:43 -0700 (PDT)
-Received: from localhost ([144.24.58.22])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13ce29e340esm5521158c88.5.2026.07.17.06.07.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2026 06:07:42 -0700 (PDT)
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Hildenbrand <david@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Matthew Wilcox <willy@infradead.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH v2 13/13] Documentation/dev-tools: document KWatch
-Date: Fri, 17 Jul 2026 09:07:26 -0400
-Message-ID: <20260717130726.1904101-1-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260717125023.1895892-1-wangjinchao600@gmail.com>
-References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H3aKC7Ag"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784295713; x=1815831713;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fvevDhSjCFC8kOKsqBUeK57DQVf+jkuNY18oFfhjsC0=;
+  b=H3aKC7AgxeKX8aZMcSKUGe/9/ojmKywxPTQBFnI8wblqDf94gfDHtlWN
+   qtC6mrRX93DwNZ/54TXKEiGGARJpE1pIUYDeW7VGN22I+ZcvxR/fjuOZR
+   ZkFgbNjyZmaKxfaSmkgjbNNfLbuf4ji2TBtgVFCD8eGl4ZppSFitYTj1Z
+   IfjGzSLkLdHkcd+oP98tuuYe3fgwI50ylyqCkITG1YXHyp7U8j7EHcErN
+   Oa3Dzt2HYaDTBD16yTDrQgnFWMlISTpcpIYnLO7JvPPsodQmKZ843j/vH
+   X+0DBe36aSD2YvRbGpbyCKxUnaRe3WovqXEw/BKI/RYj+7Gz8lJjqIefZ
+   w==;
+X-CSE-ConnectionGUID: vw49ux4DRia7JiT/CRDqgw==
+X-CSE-MsgGUID: amg/arRuR4q7s+KRdA1CIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="96331102"
+X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
+   d="scan'208";a="96331102"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 06:41:51 -0700
+X-CSE-ConnectionGUID: zmsr/XXlSMiHB3gpsQltYA==
+X-CSE-MsgGUID: uZivZiVFRHejmuDfy07QKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
+   d="scan'208";a="260602622"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.66]) ([10.125.109.66])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 06:41:51 -0700
+Message-ID: <91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+Date: Fri, 17 Jul 2026 06:41:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints for
+ hunting memory corruption
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Matthew Wilcox <willy@infradead.org>, Alan Stern
+ <stern@rowland.harvard.edu>, Randy Dunlap <rdunlap@infradead.org>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Describe what KWatch is for, how it compares with KASAN and KFENCE,
-the debugfs configuration interface, the watch expression syntax,
-how to read hits from the trace buffer (including after a crash),
-and the current limitations.
+On 7/17/26 05:50, Jinchao Wang wrote:
+>  24 files changed, 2115 insertions(+), 63 deletions(-)
+Reading this, I wonder how many kernel debugging features we need. I
+don't even think we have a centralized list of them. They all just live
+in their own silos.
 
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
----
- Documentation/dev-tools/index.rst  |   1 +
- Documentation/dev-tools/kwatch.rst | 207 +++++++++++++++++++++++++++++
- 2 files changed, 208 insertions(+)
- create mode 100644 Documentation/dev-tools/kwatch.rst
+This one really seems like a super specialized tool. It has to be
+enabled at compile time and specifically aimed at a specific function.
 
-diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/index.rst
-index 59cbb77b33ff..f4c748da63db 100644
---- a/Documentation/dev-tools/index.rst
-+++ b/Documentation/dev-tools/index.rst
-@@ -30,6 +30,7 @@ Documentation/process/debugging/index.rst
-    ubsan
-    kmemleak
-    kcsan
-+   kwatch
-    lkmm/index
-    kfence
-    kselftest
-diff --git a/Documentation/dev-tools/kwatch.rst b/Documentation/dev-tools/kwatch.rst
-new file mode 100644
-index 000000000000..e58f3185ebbd
---- /dev/null
-+++ b/Documentation/dev-tools/kwatch.rst
-@@ -0,0 +1,207 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+KWatch - Kernel Memory Watchpoint Tool
-+======================================
-+
-+Overview
-+========
-+
-+KWatch is a runtime-configurable debugging tool for locating kernel memory
-+corruption. It arms hardware breakpoints (watchpoints) on a target address
-+while a chosen function is executing, and reports the exact instruction that
-+touches the watched memory, together with a stack trace, through a
-+tracepoint.
-+
-+Unlike shadow-memory sanitizers, KWatch does not detect invalid accesses in
-+general; it answers a narrower but common question during corruption hunts:
-+"who writes to this address?". This includes in-bounds logical overwrites
-+that KASAN cannot see, because the rogue writer modifies valid memory
-+through a valid pointer, just at the wrong time or with the wrong data.
-+
-+Comparison with other tools:
-+
-+* KASAN detects out-of-bounds and use-after-free accesses, but reports the
-+  symptom (the invalid access), not the writer that corrupted the data
-+  earlier. It requires a rebuild and has significant CPU and memory
-+  overhead, and its redzones perturb memory layout, which can hide
-+  timing-sensitive bugs.
-+* KFENCE is a low-overhead sampling detector for slab objects; it cannot be
-+  pointed at one specific address.
-+* Hardware breakpoints via kgdb or perf can watch an address, but only a
-+  fixed one, system-wide, for the whole run. KWatch resolves the address
-+  dynamically at function entry (for example "argument 2 of this function,
-+  plus offset 8, dereferenced once") and disarms it again at function exit,
-+  so short-lived and per-invocation objects can be watched too.
-+
-+KWatch has near-zero overhead while armed: the watched function pays for
-+one kprobe/kretprobe pair plus programming of the debug registers; the rest
-+of the system runs at full speed.
-+
-+Requirements
-+============
-+
-+* ``CONFIG_KWATCH=y`` or ``m``. The Kconfig symbol depends on
-+  ``CONFIG_PERF_EVENTS``, ``CONFIG_DEBUG_FS`` and an architecture that
-+  provides ``HAVE_REINSTALL_HW_BREAKPOINT`` (currently x86 only).
-+* Resolving symbol names in watch expressions requires ``CONFIG_KWATCH=y``
-+  (built-in); a module can only watch absolute hexadecimal addresses.
-+
-+Usage
-+=====
-+
-+KWatch is configured through a single debugfs file::
-+
-+    /sys/kernel/debug/kwatch/config
-+
-+Writing a configuration string starts a watch session (stopping any previous
-+one); reading the file shows the active configuration and hit-rejection
-+counters. The configuration is a whitespace-separated list of ``key=value``
-+tokens:
-+
-+=================== ==========================================================
-+Key                 Meaning
-+=================== ==========================================================
-+``func_name``       Function whose execution opens the watch window.
-+``func_offset``     Instruction offset inside ``func_name`` at which the
-+                    watchpoint is armed (default 0 = function entry).
-+``watch_expr``      Expression describing the address to watch (see below).
-+``watch_len``       Watched length in bytes: 1, 2, 4 or 8 (default 8).
-+``depth``           Recursion depth at which the window opens (default 0).
-+``max_watch``       Number of hardware watchpoints to preallocate
-+                    (default 4).
-+``max_concurrency`` Maximum number of tasks concurrently inside the watch
-+                    window (default 256).
-+``duration``        For global watches: seconds until automatic stop.
-+=================== ==========================================================
-+
-+Watch expressions
-+-----------------
-+
-+The address to watch is computed at function entry from::
-+
-+    watch_expr={base}[+-offset][->[+-]offset]...
-+
-+* ``base`` is one of:
-+
-+  - ``arg1`` ... ``arg6``: a function argument (register calling
-+    convention). These are only meaningful at function entry, i.e. with
-+    ``func_offset`` unset; combining ``argN`` with ``func_offset`` reads
-+    the argument registers mid-function, where they no longer hold the
-+    original arguments,
-+  - ``stack``: the kernel stack pointer at the probe point,
-+  - an absolute hexadecimal address, e.g. ``0xffffffff81234567``,
-+  - a global symbol name (built-in KWatch only).
-+
-+* ``+offset`` / ``-offset`` adjusts the current address.
-+* ``->offset`` loads the pointer stored at the current address (via
-+  ``get_kernel_nofault()``) and then applies the offset. Up to four chain
-+  elements are supported; offsets must be explicit (``->`` alone is
-+  rejected).
-+
-+Given::
-+
-+    struct some_struct {
-+        struct some_struct *ptr;    /* offset 0 */
-+        int num;                    /* offset 8 */
-+    };
-+
-+    void target_function(struct some_struct *arg1);
-+
-+typical expressions are:
-+
-+=========================== ==============================================
-+Expression                  Watches
-+=========================== ==============================================
-+``watch_expr=arg1``         ``&arg1->ptr`` (the pointer field itself)
-+``watch_expr=arg1+8``       ``&arg1->num``
-+``watch_expr=arg1->0``      ``&arg1->ptr->ptr`` (one dereference)
-+``watch_expr=arg1->8``      ``&arg1->ptr->num``
-+``watch_expr=0xffff...+8``  absolute address plus 8
-+=========================== ==============================================
-+
-+Example: catch whoever overwrites ``arg1->num`` of a function while that
-+function runs::
-+
-+    echo "func_name=target_function watch_expr=arg1+8 watch_len=4" \
-+        > /sys/kernel/debug/kwatch/config
-+
-+Watching global variables
-+-------------------------
-+
-+A global variable has no natural function window. When ``duration`` is
-+given without ``func_name``, KWatch starts an internal anchor kernel thread
-+that sleeps inside a dummy function, and uses that function as the window::
-+
-+    echo "watch_expr=jiffies_wobble duration=60 watch_len=8" \
-+        > /sys/kernel/debug/kwatch/config
-+
-+The session tears itself down when the duration expires.
-+
-+Reading hits
-+------------
-+
-+Hits are emitted as the ``kwatch:kwatch_hit`` tracepoint, which is safe in
-+NMI-like contexts where printk is not. Each event carries the timestamp,
-+the instruction pointer, the watched address and a short stack trace::
-+
-+    echo 1 > /sys/kernel/debug/tracing/events/kwatch/kwatch_hit/enable
-+    cat /sys/kernel/debug/tracing/trace_pipe
-+
-+If the corruption crashes the machine, the ring buffer can still be
-+recovered:
-+
-+* ``echo 1 > /proc/sys/kernel/ftrace_dump_on_oops`` (or the
-+  ``ftrace_dump_on_oops`` boot parameter) dumps the buffer to the console
-+  on an oops.
-+* With kdump, the buffer is present in the vmcore and can be read with
-+  ``crash> trace``.
-+* ``CONFIG_PSTORE_FTRACE`` persists it across reboots on supported
-+  platforms.
-+
-+Limitations
-+===========
-+
-+* Functions that run in a genuine NMI(-like) context are rejected at
-+  function entry; rejected invocations never open a watch window and are
-+  counted in the ``nmi_rejected`` field of the config file. Watching
-+  functions reachable from NMI handlers is out of scope.
-+* The number of concurrent watchpoints is bounded by the CPU's debug
-+  registers (typically 4).
-+* Cross-CPU re-arming of a watchpoint is rate-limited per CPU: the local
-+  CPU is always re-pointed, but the broadcast to other CPUs is throttled
-+  so a very hot watched function cannot storm the system with IPIs. While
-+  a broadcast is suppressed the other CPUs keep watching the previous
-+  address, so a writer that runs on another CPU during that window can be
-+  missed; the number of suppressed broadcasts is reported in the
-+  ``arm_ipi_suppressed`` field of the config file. KWatch therefore
-+  targets functions that are entered at a moderate rate.
-+* If the target address cannot be resolved at arming time (for example a
-+  ``get_kernel_nofault()`` failure on a swapped or unmapped page), the
-+  watchpoint is not armed for that invocation.
-+* Offsets in watch expressions are static; dynamic indexing such as
-+  ``arg1->ptr[arg2]`` is not supported.
-+* If a task is torn down while still inside the watched function without
-+  the function returning (an oops or BUG in the window, which abandons the
-+  stack), its watch window is not closed until the session stops. This is
-+  the same best-effort cleanup that applies to every resource a task holds
-+  when it dies abnormally. Do not target the task-exit path itself.
-+* arm64 is not yet supported: stepping over a hit that has a custom
-+  overflow handler needs a generic mechanism in the arch code, which is
-+  planned as a follow-up series.
-+
-+Implementation notes
-+====================
-+
-+The implementation lives in ``mm/kwatch/`` and is split into a control
-+plane (``core.c``, the debugfs interface), an execution plane (``probe.c``
-+and ``deref.c``: kprobe/kretprobe window management and address
-+resolution), and a resource plane (``hwbp.c`` and ``task_ctx.c``).
-+
-+Hardware watchpoints are preallocated as perf events on every CPU and
-+re-pointed at hit time with ``modify_wide_hw_breakpoint_local()``, a new
-+hw_breakpoint API that updates the breakpoint on the local CPU without
-+releasing its slot; other CPUs are updated by asynchronous IPIs. Per-task
-+window state is kept in a fixed-size, lockless open-addressing array
-+claimed with ``cmpxchg()``, so the hit path performs no allocation and
-+takes no locks, which keeps it safe in atomic and NMI-like contexts.
--- 
-2.53.0
-
+Maybe this should live off on the side for a while. If folks end up
+actually needing it, they can point their friendly LLM over to its tree.
