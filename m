@@ -1,133 +1,132 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2934C38C42E;
-	Fri, 17 Jul 2026 08:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508123B5DE9;
+	Fri, 17 Jul 2026 11:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784276637; cv=none; b=KEeZepiRapMji0erI7unh8oot4ekxWJ8ta4uBkkMPbCFMnmgNHDvHPW24WGArrkAHFwkGoJCOYa6gwScYXW41szgODJO4MWi163raidmAeS9ud9XL84hBAulX50PAu1Ut1umPcGIDxm9b3oaoSqUOsttVhVcSYghZMYr+SeJCwo=
+	t=1784286084; cv=none; b=Cb+x+1Z2qXs4IZ/4tcL1yqXAGKke3Kotv2TsDoE4zwmoxWjIvky/7AQl1ocqWPhFRkRcsv8oyA9TNyvLERoOAiqDSdoMXJSVYL+wyqTJ+F684FZIAPu8Of5opsS4WIRG4KpQ6trn9xSFYJUAbw526DRHBSYCwmqUSZw89t8nt60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784276637; c=relaxed/simple;
-	bh=FiD7KOxtxNQEb4hekzdtNvTXxxDbtyOvfqp1zyIhqto=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JDCR2NtnpCLEHmwfY/ZsJP3ZdY0QcVWX0l/Wdb3WQhIPh95usZq8ANhmqBo4VhyFMCPlJaq4qnAHGQG86T5jYK+5PHEenzN+CzjpYzGIAhJ1bVbOVMqcKpiUj48jadCuGMjZIWAifyb+rZMXEocGzkcX/BYSkAXMFu9QQmtZ7II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [180.111.28.80])
-	by APP-03 (Coremail) with SMTP id rQCowADn8T+M5llq49QfAA--.30915S2;
-	Fri, 17 Jul 2026 16:23:41 +0800 (CST)
-From: daichengrong <daichengrong@iscas.ac.cn>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	daichengrong <daichengrong@iscas.ac.cn>
-Subject: [PATCH] uprobes: Restore original return address in uretprobe context
-Date: Fri, 17 Jul 2026 16:23:31 +0800
-Message-Id: <20260717082331.27058-1-daichengrong@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1784286084; c=relaxed/simple;
+	bh=T5G+iHDXgUCImSHNoRtwWDcAlYylc5W0/XGtaZ9aAuE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VrKh/681VDWFh++mqY4xca4XHg6O2CWC9hMQEI75jlRmm5lH14fOxk2q8+vUMNyrnUdWgnz1jutjlbQJDroWk3LlFFsZiMbK4A3rbnGXn3gxDoiI0BVpQ2KKBxuA79Z06VC0OlscruN/cgpdnLsfHc1L16rgfoRPYTebprN578Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKm+fA9B; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKm+fA9B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790D41F00A3A;
+	Fri, 17 Jul 2026 11:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784286069;
+	bh=sy+3CQp5uMIEjT1xFCDDjV/XqRXnSP0C+Ski+YXq6Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jKm+fA9Btt2zwJNSK7aZF5mI4KNi2XmQjJiBVzsQvzda44O/cV0gCxm7lMHLkjqHa
+	 AAKsPeOeNs0bBOZmByzA3mvEkJnSHWE/Z7Fc2k+evvgGBTWkgApggPPlx3i5upSKDG
+	 fHb5FSMpwhaqGR2CQZorLurTTm4Jmod2DPRwm82YVX2DcxS3j/tB7kVL+OiRPGk8wo
+	 QZC0aPUBjqQiXvxNNiBeqzj24b4Y/CukxCa3twj8xYlTS2TpM4zkr6DSYsbzDGmykG
+	 oodfOswcQKjj6RAhTyQc6X51E0V1I5+r4OmuXlIVa85Vu2DMHLQRnxIuM/o9iIXgez
+	 G5py+HnHlPsuw==
+Date: Fri, 17 Jul 2026 12:01:03 +0100
+From: Will Deacon <will@kernel.org>
+To: Hongyan Xia <hongyan.xia@transsion.com>
+Cc: Pu Hu <hupu@transsion.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"ada.coupriediaz@arm.com" <ada.coupriediaz@arm.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	Jiazi Li <jiazi.li@transsion.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"naveen@kernel.org" <naveen@kernel.org>,
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>
+Subject: Re: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
+ single-stepping
+Message-ID: <aloLb0j8sg0usmAF@willie-the-truck>
+References: <20260710063242.228714-1-hupu@transsion.com>
+ <20260710063242.228714-3-hupu@transsion.com>
+ <aljbf_RmOd9U2KDT@willie-the-truck>
+ <0f049d38-b7f6-47f0-a410-95ad2aee7fd4@transsion.com>
+ <alj2uxE1M8mcMBhA@willie-the-truck>
+ <e0e800f5-a6f8-48ae-b55c-5c3d928bf234@transsion.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADn8T+M5llq49QfAA--.30915S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF1fJFW5tFykXr1UCFWUtwb_yoW5uw4rpa
-	1vk343KFWkG3yUuF9rXrW8Zw1FvrZ5J3y2kr17G34akw15tryftF1I9rW7ZF1rtrZagF17
-	Ar4UKrWjvFZxJrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjJ73PUUUU
-	U==
-X-CM-SenderInfo: pgdluxxhqj201qj6x2xfdvhtffof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e0e800f5-a6f8-48ae-b55c-5c3d928bf234@transsion.com>
 
-uretprobe replaces the original return address of a probed function with
-a trampoline address to capture function return events.
+On Fri, Jul 17, 2026 at 01:51:12AM +0000, Hongyan Xia wrote:
+> On 7/16/2026 11:20 PM, Will Deacon wrote:
+> > On Thu, Jul 16, 2026 at 02:38:58PM +0000, Pu Hu wrote:
+> >> On 7/16/2026 9:24 PM, Will Deacon wrote:
+> >>> On Fri, Jul 10, 2026 at 06:32:55AM +0000, Pu Hu wrote:
+> >>>> From: Pu Hu <hupu@transsion.com>
+> >>>>
+> >>>> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
+> >>>> can happen when tracing or perf code runs from the debug exception path
+> >>>> while the first kprobe is preparing or executing its out-of-line
+> >>>> single-step instruction.
+> >>>
+> >>> I don't understand this part. The single-step runs with debug exceptions
+> >>> disabled (kprobes_save_local_irqflag() sets PSTATE.D) so how do we end
+> >>> up taking one?
+> >>
+> >> You are right that the single-step runs with debug exceptions disabled.
+> >> However, the case I was referring to is not a hardware breakpoint or a
+> >> software-step exception, but another Breakpoint Instruction exception
+> >> generated by executing a BRK instruction. A BRK instruction exception is
+> >> not masked by PSTATE.D, so it can still be taken while handling a kprobe.
+> >>
+> >> As far as I understand the architecture, there are two different cases here:
+> >>
+> >>     - Breakpoint Instruction exceptions, generated by executing a BRK
+> >>       instruction.
+> >>     - Breakpoint exceptions, generated by the debug logic, for example by
+> >>       programmed breakpoint registers.
+> >>
+> >> PSTATE.D masks debug exceptions such as hardware breakpoints,
+> >> watchpoints and software-step exceptions, but it does not mask
+> >> Breakpoint Instruction exceptions generated by BRK. This also seems
+> >> consistent with the pseudocode for BRK,
+> >> Arch64.SoftwareBreakpoint(imm16), which does not appear to check
+> >> PSTATE.D before taking the exception.
+> >>
+> >> Therefore, even if kprobes_save_local_irqflag() sets PSTATE.D while
+> >> handling the first kprobe, if the code executed from that path reaches
+> >> another instruction patched with BRK, it can still take a Breakpoint
+> >> Instruction exception. In other words, the nested case I mentioned is
+> >> another kprobe BRK being hit, not a hardware debug exception or a
+> >> software-step exception.
+> > 
+> > Yes, that's correct, but if we're doing the out-of-line step, how do we
+> > end up executing a BRK? Or are you saying that it's the kprobes
+> > BRK64_OPCODE_KPROBES_SS instruction that we use to implement the
+> > single-step that is the problem? If so, how does taking that exception
+> > result in us executing tracing or perf code?
+> > 
+> > Sorry for all the questions, I just haven't understood what's going on
+> > here from the commit message.
+> 
+> The key is that, when you use 'perf --call-graph dwarf' to sample 
+> certain events, kernel perf code will sample a piece of user stack each 
+> time those events are hit, and copy_to/from_user() triggers page faults. 
+> Say you are profiling preempt_enable events:
+> 
+> 1st BRK -> preempt_disable() -> debug_exception() -> set SS state -> 
+> preempt_enable() -> triggers perf -> perf_sample() -> sample user stack 
+> using copy_to/from_user() -> page fault or 2nd BRK on the page fault path.
+> 
+> The key is perf sampling the user stack while the 1st BRK is still 
+> running. When a page fault is hit, a can of worms is released, including 
+> a possible 2nd BRK.
 
-After the trampoline is entered and the uretprobe handler completes, the
-original return address needs to be restored in the user register context
-to keep the register state consistent with the state before probing.
+Thanks. So perf is run synchronously from the debug exception entry path,
+rather than because of a second exception taking place. Got it. But then
+it sounds like we should really make the debug exception handling path (at
+least, the part that runs for handling the kprobe step) noinstr to avoid
+getting into this state to begin with. Is that practical?
 
-Add an architecture-specific hook for restoring the original return
-address during uretprobe handling.
-
-The initial implementation adds support for RISC-V. Other architectures
-keep the default empty implementation until their corresponding restore
-logic is implemented.
-
-Signed-off-by: daichengrong <daichengrong@iscas.ac.cn>
----
- arch/riscv/kernel/probes/uprobes.c | 7 +++++++
- include/linux/uprobes.h            | 1 +
- kernel/events/uprobes.c            | 5 +++++
- 3 files changed, 13 insertions(+)
-
-diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
-index eb177d0ce8ab..0b1b94d9683e 100644
---- a/arch/riscv/kernel/probes/uprobes.c
-+++ b/arch/riscv/kernel/probes/uprobes.c
-@@ -139,6 +139,13 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
- 	return ra;
- }
- 
-+void
-+arch_uretprobe_hijack_set_addr(unsigned long orig_ret_vaddr,
-+				  struct pt_regs *regs)
-+{
-+	regs->ra = orig_ret_vaddr;
-+}
-+
- int arch_uprobe_exception_notify(struct notifier_block *self,
- 				 unsigned long val, void *data)
- {
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f548fea2adec..2d0dc919845d 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -230,6 +230,7 @@ extern bool arch_uprobe_xol_was_trapped(struct task_struct *tsk);
- extern int  arch_uprobe_exception_notify(struct notifier_block *self, unsigned long val, void *data);
- extern void arch_uprobe_abort_xol(struct arch_uprobe *aup, struct pt_regs *regs);
- extern unsigned long arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs);
-+extern void arch_uretprobe_hijack_set_addr(unsigned long orig_ret_vaddr, struct pt_regs *regs);
- extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx, struct pt_regs *regs);
- extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
- extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4084e926e284..deecaae01ab7 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1748,6 +1748,10 @@ void * __weak arch_uretprobe_trampoline(unsigned long *psize)
- 	return &insn;
- }
- 
-+void __weak arch_uretprobe_hijack_set_addr(unsigned long orig_ret_vaddr, struct pt_regs *regs)
-+{
-+}
-+
- static struct xol_area *__create_xol_area(unsigned long vaddr)
- {
- 	struct mm_struct *mm = current->mm;
-@@ -2659,6 +2663,7 @@ void uprobe_handle_trampoline(struct pt_regs *regs)
- 		valid = !next_chain || arch_uretprobe_is_alive(next_chain, RP_CHECK_RET, regs);
- 
- 		instruction_pointer_set(regs, ri->orig_ret_vaddr);
-+		arch_uretprobe_hijack_set_addr(ri->orig_ret_vaddr, regs);
- 		do {
- 			/* pop current instance from the stack of pending return instances,
- 			 * as it's not pending anymore: we just fixed up original
--- 
-2.25.1
-
+Will
