@@ -1,89 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D502E1F0E;
-	Fri, 17 Jul 2026 02:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504B437A843;
+	Fri, 17 Jul 2026 03:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784256723; cv=none; b=jSx8Bprdk1U43BQ/lxNTqm0i7Me9F1007EhtXdw//eTMUkiuAz52tYTaFFf5BUEu8dzoPdcZu3pNh7OUzwP/ZKof1lMgW3U/G8Duph4r2bG63bUQTBMANzHmvY6bysrFiX9Nrvp6AeXIoN5AzT4NEErqK9rx49Ra5rsZlLI2xGg=
+	t=1784258630; cv=none; b=UOPpY2aH+Bo33ViPMvaTJiJuSo3iD/u23ZIuCG4wJLTCIObBLXGT9dcyzp5/QwDjTb7GIpeqRtWy25MbhUm9iT5edkmA4GGY8N//uNiNigz2CPRn1eU16YZaRdNWweCsozdUq3IfJ2G/Gqn93M1zonLMuNBpXlNGoUvgOLTW90k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784256723; c=relaxed/simple;
-	bh=YO5PRynN+n2gXmSUbrQBjzg51iau9e13HreIUwsu9sA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pbSWcccBudhNgaKiKlVAQQUbRJKz0DzpM+HqjNCn4rKz5xCs71ybgBHt/eqOvoNunSvT+lRi85tkEQjnfnwniANV96kK4uSIzqw60QOL7emXOL+9mMNv9hTORr6MGqFNfiTPtZ6nP+mJ1UxtkvNuTSN9rkUY5rYf7DkbAbBZuTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzzFqyJY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784258630; c=relaxed/simple;
+	bh=2q2m6lDuCmbOkMpQrTT+db5Hq3Szmb6X5pI1yh9CGho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T2rgCl4imkQvTnazSH6/7r3kstDDqN7BiQ53m3w0QBZTEm0KuOsQ6VjQFr+hO2eQuUbc/YakJtHct0zvpDrfHYvYKbNfQORHaa+hhRkGzgazU9KAFTTy79C0xpvCnyEEaTPOGAR9Vqx5QlqrPc+JsZGP6mEFBUIZdi3t6DeQVaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=V70OySeQ; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzzFqyJY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2031F00A3A;
-	Fri, 17 Jul 2026 02:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784256722;
-	bh=ntXphgozdJeqFblQjefKL19i8eFFCrjgVXvVUBFdhaA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mzzFqyJYn9GiTsveD+SMs/8EVUeR0yihIIwDHocnQkDrFD6/WaZnxIlGqTokKh8IL
-	 iy6wtY7NM0JtjvXh2pT/wNIOHjO0W+fEjAx6K3fnoUZhCXd0SbdAOnrSbzHgL3j4ZW
-	 Imb0l8Z7mbL0NTVxIYdBD3y70q9Ztkpn/MdPKWePtLn5zQRNCJetysERjNOUkt0IXb
-	 IC+bp32bOS4MKEXgUGSAL6cpXN0HJPRIYc8WjZgDqg1iXG7uUzLuAxKZrqrhTTVAh+
-	 1UHs5zKY2SET9P+6wPb7GFDAkEVkVB2/7gWWzWVENQnzriiNxR0+cX+V5AuCbMeZPt
-	 GUD144QrFpQjw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="V70OySeQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=NS
+	IXhiOnJyOGnQ7yeu5uYFXAW46RVEcfs5asLTqNgIs=; b=V70OySeQ7l68ooZluO
+	JMiQlorjwYDoJB6TOUxNl84AyErhCtwgZ3z5XXQ8UsDMd2TUfK5VsuzXHep1yFqF
+	4pPeJZw8RAGQUKJrwmgUbZ8uvWiCi7q4lOdPGREJ3YjeyTvGOaDV0i7hRnD39LkI
+	CvWS9kVXEiUim1CrtAmzk+oFU=
+Received: from liubaolin-ThinkPad-E15-Gen-2 (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3twcPoFlqvNaLJg--.4501S2;
+	Fri, 17 Jul 2026 11:22:58 +0800 (CST)
+From: Baolin Liu <liubaolin12138@163.com>
+To: almaz.alexandrovich@paragon-software.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 2/2] selftests/ftrace: Reset triggers at top level before instance loop
-Date: Fri, 17 Jul 2026 11:51:59 +0900
-Message-ID: <178425671889.84440.9477850701738666404.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178425669965.84440.3214667180548169854.stgit@devnote2>
-References: <178425669965.84440.3214667180548169854.stgit@devnote2>
-User-Agent: StGit/0.19
+	liubaolin12138@163.com,
+	liubaolin12138@gmail.com,
+	Baolin Liu <liubaolin@kylinos.cn>
+Subject: [PATCH v1 0/7] ntfs3: add tracepoints for core filesystem paths
+Date: Fri, 17 Jul 2026 11:22:41 +0800
+Message-ID: <20260717032248.3318208-1-liubaolin12138@163.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3twcPoFlqvNaLJg--.4501S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JrW8Kw13Zr17XF48Cr4fAFb_yoWftrX_Ga
+	4xWayktryUWFnFga9xCw17JrZa9r4Sgr1DJFyftF17XFZ8XF4rJF1vqr43Jr4Igw1YqFn8
+	AryxJF18Zr1fZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRM189JUUUUU==
+X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbC6hId52pZoBJHkgAA3W
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Baolin Liu <liubaolin@kylinos.cn>
 
-When running instance tests, 'ftracetest' creates a new ftrace instance
-and runs the tests inside it. Before starting each test, it executes
-'initialize_system()' to reset the ftrace state to initial-state.
+This series adds an initial set of tracepoints for ntfs3 core paths.
 
-However, since 'initialize_system()' is executed in the context of the
-instance directory, it only cleans up triggers and filters of that
-instance.
-Any triggers or dynamic events left behind in the top-level instance by
-previous failed top-level tests, are left completely untouched. These
-top-level leftovers can cause subsequent instance-based tests to fail
-or even crash the kernel.
+The tracepoints cover:
+  - mount and log replay
+  - namei operations
+  - directory index operations
+  - allocation and block mapping
+  - iomap operations
+  - file I/O entry points
 
-Fix this by executing 'initialize_system()' in the top-level tracing
-directory once before entering the instance loop.
+Baolin Liu (7):
+  ntfs3: add mount and log replay tracepoints
+  ntfs3: add namei tracepoints
+  ntfs3: add create inode tracepoint
+  ntfs3: add directory index tracepoints
+  ntfs3: add allocation tracepoints
+  ntfs3: add iomap tracepoints
+  ntfs3: add file I/O tracepoints
 
-Fixes: b5b77be812de ("selftests: ftrace: Allow some tests to be run in a tracing instance")
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- tools/testing/selftests/ftrace/ftracetest |    1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS                  |   1 +
+ fs/ntfs3/attrib.c            |   9 +
+ fs/ntfs3/dir.c               |   3 +
+ fs/ntfs3/file.c              |   5 +
+ fs/ntfs3/fslog.c             |   3 +
+ fs/ntfs3/index.c             |   8 +
+ fs/ntfs3/inode.c             |   7 +
+ fs/ntfs3/namei.c             |   5 +
+ fs/ntfs3/super.c             |  11 +-
+ include/trace/events/ntfs3.h | 395 +++++++++++++++++++++++++++++++++++
+ 10 files changed, 446 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/ntfs3.h
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 0a56bf209f6c..8ad2c385407e 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -503,6 +503,7 @@ for t in $TEST_CASES; do
- done
- 
- # Test on instance loop
-+(cd $TRACING_DIR; initialize_system)
- INSTANCE=" (instance) "
- for t in $TEST_CASES; do
-   test_on_instance $t || continue
+-- 
+2.51.0
 
