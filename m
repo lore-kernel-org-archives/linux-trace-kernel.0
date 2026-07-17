@@ -1,84 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F295727587D;
-	Fri, 17 Jul 2026 18:23:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AC1380FD4;
+	Fri, 17 Jul 2026 23:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784312599; cv=none; b=Y/AWob62JJAZOE+CQiuUlMgy+LUiecPQCydtGMa5g1jGeARQ4t2SME3O9e+Hjyg3LULGQTq8cXBQQWPs9sRDpm/qee8Iok83kYuM6/r/nyiEh6HbzvleZareYO2Px0QjCnPFbyQtKqnAyZAgZTQ9M4hHrZ6+2knEb/QcHBiLhtY=
+	t=1784331931; cv=none; b=kQEiE4BlXd00m1elJiT7Gvffs0ntL29gzO49EZSoYXclWr5uVu8FEfjgLCvaJsECkIVh5Zb2ax3DTMxMAStDPDHe90D2aOJbBbpuPL+Ivewsk7lti4RbSYkiPCPyoKgySNbKH/gbqqseDImbPZZx2lj4EJzok5c22g9OJAl/GF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784312599; c=relaxed/simple;
-	bh=gU8u1Xm4GBedXzE/bToT04xl8es95mzWgcKHUtTbTVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hQFVq4hpUsv9cYBbQQ1s9yMWX8klwu8vKCyS2t7QVPxZlpcn6l3R0Veyol++5ocFKKxQRUT3tTHOXLFrVnaGzGkWfefTQWHXQtNt0amPhK+cs9QrmIvAu4vFTaYmbLEgOJNbDUzT0JJG5Yf0jxIauc3VZxSyd9aPLh3V7hmLhjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTvyY7ex; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784331931; c=relaxed/simple;
+	bh=GRt7KkB88gPFQXlQ9xP34WSMD6x47Jtchmy4QAp+0O0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pZegBprEEh43+zJ8AUNN5VuKM2kTDOoVaZetghd7WC/APcYc6coTRN0fwfuugRsWFTNH3pY4zdz6O4fbLGwmdSqRs7pSIJLr7dxLPiJ0oAW0E9ktZO+Ckon0/Ab+iNxyXq3J9IBdh4VvNjNORRqeR3qZ8dNXnrPQNrrPKChDOKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3+n9W4a; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTvyY7ex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EBC1F000E9;
-	Fri, 17 Jul 2026 18:23:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3+n9W4a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5231F000E9;
+	Fri, 17 Jul 2026 23:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784312595;
-	bh=uT+bu1nR22jG3svg0QpVCjdccwM9QhJkJ6q8Ga7Koes=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fTvyY7exskBBJ3sUMf7tkQM0dXLp4Dh0gFJeCZ2keVBp63ziyBOWMRgcJeb6B9SyN
-	 do2nre2RWPxsnPr3MebejaKtdWGRYlNTDpR9gNr/HH1UjilUShzt1D6EtGiT00uCDM
-	 RVswumwHYRggaXROvnppkQYDkTzJgfHUqwInlWm3oZzWjedQ/WvgEX12dgVAqhE1f1
-	 txw1yYJhxsqBmGZqJLsx4IMP9Zs44hlusOa5YtPvuMvLCXwJ/cz31wgXpT+KWOIcb4
-	 AkCC54qvbKqgf9HfRwM+p79ys/3c9VcEamZIluViubR0pygNmx/ghpDG2ad7/0orer
-	 qr3Er2wpG8syg==
-From: Will Deacon <will@kernel.org>
-To: mhiramat@kernel.org,
-	Pu Hu <hupu@transsion.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	ada.coupriediaz@arm.com,
-	davem@davemloft.net,
-	Hongyan Xia <hongyan.xia@transsion.com>,
-	Jiazi Li <jiazi.li@transsion.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	naveen@kernel.org,
-	yang@os.amperecomputing.com
-Subject: Re: [RFC v3 0/2] rm64: kprobes: Fix single-step fault and reentry handling
-Date: Fri, 17 Jul 2026 19:23:06 +0100
-Message-ID: <178431138979.1463087.7670145018336150916.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260710063242.228714-1-hupu@transsion.com>
-References: <20260710063242.228714-1-hupu@transsion.com>
+	s=k20260515; t=1784331926;
+	bh=t92nG5HOJRBg9LyAAWTooX92pMDv7O5FeBYwyZhCWZs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=m3+n9W4aL1bfen8MiaRECrI/KDcOlfLylLc9IGFlVquEnaS4muHalDMO4Ia3rbMPr
+	 7JsGZ5sNIYkQl6oY3v9L04i8QA5Enn6tRSMtvQw2+Wu/sRJruletC49VYQ5FGPZDCk
+	 aGS+K5giY78qjodaympjeYubnt/T4ZOOdwHaFfNlsz9+L86RrfWiue2g2ee3tKERFJ
+	 q0YnvjCjdWJf5Z4gFWbSW+YDrTdsrd+7Z9HRKC0Qy78LX1GkQz/7S6FKrPLNqnY/LW
+	 Bnmbrwo06Arf0caSbZ17Hha2yGuGOPIIg68kNRHc/SoUI0sb0cTcApw/3Iu7K3kpkH
+	 fklHdEoWUhc5g==
+Date: Sat, 18 Jul 2026 08:45:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Usama Arif <usama.arif@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, rostedt@goodmis.org, leitao@debian.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix context switch counter truncation
+Message-Id: <20260718084522.055fc8a671eaf2d2cd927fc2@kernel.org>
+In-Reply-To: <20260717173252.3431565-1-usama.arif@linux.dev>
+References: <20260717173252.3431565-1-usama.arif@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 10 Jul 2026 06:32:52 +0000, Pu Hu wrote:
-> This series fixes two arm64 kprobes issues observed when running
-> simpleperf with preemptirq tracepoints and dwarf callchains while a
-> kprobe is active on a frequently executed kernel function.
+On Fri, 17 Jul 2026 10:32:52 -0700
+Usama Arif <usama.arif@linux.dev> wrote:
+
+> trace_user_fault_read() samples nr_context_switches_cpu() before enabling
+> preemption and retries the user copy if the counter changes. The helper
+> returns unsigned long long because rq->nr_switches is u64, but the saved
+> value is unsigned int.
 > 
-> The crash happens in the kprobe debug exception path. While a kprobe is
-> preparing or executing its XOL single-step instruction, perf/trace code
-> can run in the same window. That code may either take a fault of its own
-> or hit another kprobe.
+> Once a CPU has performed 2^32 context switches, assigning the counter to
+> cnt discards its upper bits. The comparison after the copy promotes cnt
+> back to unsigned long long, but the lost bits remain zero, so it reports a
+> change even when the task was never scheduled out. Every retry then fails
+> the same way until the 100-try guard warns and the user copy is abandoned.
 > 
-> [...]
+> This affects long-running systems and workloads with high context-switch
+> rates. A CPU switching 1,000 times per second takes about 50 days.
+> 
+> Store the sampled count in unsigned long long so the full value is
+> preserved.
 
-Applied to arm64 (for-next/fixes), thanks!
+Looks good to me.
 
-[1/2] arm64: kprobes: Only handle faults originating from XOL slot
-      https://git.kernel.org/arm64/c/879a6754d3d1
-[2/2] arm64: kprobes: Allow reentering kprobes while single-stepping
-      https://git.kernel.org/arm64/c/23f851ac0078
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Cheers,
+Thanks!
+
+> 
+> Fixes: 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read user space")
+> Cc: stable@vger.kernel.org
+> Reported-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Usama Arif <usama.arif@linux.dev>
+> ---
+>  kernel/trace/trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 1146b83b711a..412a8daf2162 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -6188,7 +6188,7 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+>  {
+>  	int cpu = smp_processor_id();
+>  	char *buffer = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
+> -	unsigned int cnt;
+> +	unsigned long long cnt;
+>  	int trys = 0;
+>  	int ret;
+>  
+> -- 
+> 2.53.0-Meta
+> 
+
+
 -- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
