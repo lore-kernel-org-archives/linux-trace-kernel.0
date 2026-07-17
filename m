@@ -1,63 +1,63 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1F83FBEBC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 13:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646743F65EE
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 13:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784293641; cv=none; b=as4YmRaLpHMrCuyAQzqSUr6WSy4xGrI+6oK74FVuHZqwA8Lq5HdAnCrmo+//1x/l1/w5FnobdAg/0j2rv9K4o+HMJPq4i11CgE2yAhOqv4akKF7VEKXWShQ0T8ZPghXaXwnbLNqFm1Htsdzhz99yS6ikgicUNtohI7IhuoPa8jQ=
+	t=1784293667; cv=none; b=VPUMxkdrBIVM6VoIOLUD8A0j1oOD6xOa90VKLuBxKxE9oZJOpoyQv3PaLQE4aavO4Khp50ReUtqVaw1yNVCNQc09OfLzQSGDZuIFwEJ2NWxkpG/tTbQdZHE4Yi3wFxN/oQkeCJwUp+hYi/GlP1cKAFTA1pwqaHbnXo8wIpVLjE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784293641; c=relaxed/simple;
-	bh=1TWFwrqLLPhi4hOF+lQYiAR8gfx3VWRwxzpCtpmYYnQ=;
+	s=arc-20240116; t=1784293667; c=relaxed/simple;
+	bh=PBhnT9R86+Lgrugmh2xVUA0skBZMR4Bzkwn46FP4ujY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LQ4321db1n7ZvI95f1YTm1I1vGctHBXuruXoDDWQ94t+YpochtRD81b36kDzgw23QnvOSdZuwUmYC6+fCr3i7o6j5t7R16HNU3pm/HYw7euV3MiBIa9Am2/osr1qyMWqTEHCku6VB7fG0FP3Pu8ubtUeE/TGDA3gw5HWtEMwJLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CginYwjn; arc=none smtp.client-ip=209.85.216.53
+	 MIME-Version; b=lgBxJJ1eTtzCSIk3XFgp0IIABe3s6jldVWXU1YMr4+IpaO2SoX9I10YWYw6YDqfiFENqlh+P0nFfq51BdN45SxFisX83aDk77Dm6nZAPPzyO26Ay6+cEage36xIqS5Hb1Dq7Wh8hDSIYxG01EtKLM7hicePMacexmuxtJGe/4P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ojrEWIK6; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CginYwjn"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-38dc4553f62so6238422a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 06:07:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ojrEWIK6"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-38de840f2f0so4418509a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jul 2026 06:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784293640; x=1784898440; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784293664; x=1784898464; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GlWa8mIQcYhfASTlpT5AvSeo0bnNLaBVHf432AwkEfc=;
-        b=CginYwjn34ITNmcQnAuTKlrIxoc+eFRpVQEKNnynWaFvrgPt6LJ2+N2D6oOF4i6tXS
-         8Q66nvEBWkifMoBgkbBprsAXDF3vh3Ecfrk+CvR8IqZd5rfsMEZok+uwsh5BnqSxpq9M
-         COpQnWnSC/vpMsDjiTw0pCoMwDmcXoNgsOVf08gRfL4KTTVHTBDh2OXEwX6QNy7xhcp5
-         /RvJs0dICzmQaF6oes1IQN6Jb/fmcYDClFTiVtPXbyB0JX1xEuHCfwiJRpwNja8/bwhJ
-         gUqgEPSKrnTFQXnxo6/T3vAAY99CkZ43SqnNyXHjaP4p9Cy68C52yASkK1Z4ufQ0D/MG
-         DSjQ==
+        bh=YAVyRkTkPaWk8kIYvBYAepg/O4FB7G2KaVbrN0SgkUc=;
+        b=ojrEWIK6hQwJGiq4eK8Dloh1pfU5NKHC6nc1v/8eWlLpuQueOENXZIwDFAeTH6tkbb
+         TlCbFCAZLea17qbN9TyF1JSEcj7unHzZIgBIJZlMX4Yp5B/+Z0+Tuc2WxJDPFb6S07Fv
+         /jv2K2G9OR7lRkdBW7bqTsrBjJgaQ5wdmvqdoI2EEMGACOgqdaLmNItumKF7d/gSbDPq
+         Ch/PNjYpqzPGFMiZWlSkO5RwUQAA6XR5Y+hKKbIGjkbfkoJLFzxtmuKXWJWwKMu+3NRQ
+         J+ndyPXHmuivQTGwdaeZZAnDn3O1hY790VWF3IGUqZ9prcaT/s54dSr4Pbz7DGgQCeYr
+         S/Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784293640; x=1784898440;
+        d=1e100.net; s=20251104; t=1784293664; x=1784898464;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=GlWa8mIQcYhfASTlpT5AvSeo0bnNLaBVHf432AwkEfc=;
-        b=ZHUSDac8dlWuXZI+d0IsiYqsx5u1lQdZGQXO9PzC5iLOwY8ALDdO2j+mvpEodsx2Rv
-         iJkz8NFGJdV4X80gFWBIGz1auDMZJYrp+AzYUDWIO4v8we9pELPURkhS4qrmXXxmY+Es
-         7bmAmNYxmdE9/hHP/y63DdQh6liZxABGbzZBO5XpFgW7u2ZfNjDSnpPK03/gw/4HmWQB
-         dLPOuOhAsGk8KP5+lX/Ya10rJAEwB7KbfA8Z0r72yWmKwbIMgpSlAUuhIEvx6P4FZZiA
-         Lx7JyLXlfWV2uAh/i9th1eoSBvuD0t0CB1V0hJfV5VLLFqq3d4yWty5jSSJ0TriCW7Go
-         aEYg==
-X-Forwarded-Encrypted: i=1; AHgh+Rqxwt07IoxeUmveXTS7E0k2yujuglQisIXiUxBkOdT322VhswnKzitCkeru7rQreit20q5yZez2pR4kGSq5NYDYOrg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu6fcppkK9kqSIuIvOOOfjZNF7Znstf3Cz9Ve5TaYFsGFfuzFM
-	RkG9wRcOizM84pzTOtqH0XI0Hzgo4l81wzzD4bWv0fXy0KrOu7ndY6bE
-X-Gm-Gg: AfdE7ckys8I8bk5HOMQf7rDVUZyPTos7CiO8rDjtQJUkbuI1u9qFdAltEzkN584hpOZ
-	rB+BBUCBwwATekMsq/Oac0BqQ2JmJS2y4MFTdrD0FjoWTv6Rg8732KoQjeDjSfaD4H7RNdVYVfj
-	AV3Om5RXJMzdiTBD3HjJSxilore4wQ7MMUD77cHKRXyfJMZGA3m33YphpfdecHSwnwdeVdAUJAu
-	wFZQ4hXeiMuMVg6FgDTTQqVQ4VpquBllywj8yPX2MhRG3I0AV68pgsqg2QJrkZdoSXrK7S2usNe
-	SgXTIH4SfBsU+y83CnxPQ9RbD8LGiGOuenT/tI1ePgKiutt9KZY7KCIz49HNY/3IAUf/XYhtq+A
-	g3jvMWyLk+dZ6wL9rA7NjkJr6+iZrYg56qDcDBCfb0BUu4eRjYI+QCACA1VsgpU4/dSs5IgiZPO
-	mo0X+M9DAB88WJ
-X-Received: by 2002:a17:90b:2dc1:b0:37f:c97a:939f with SMTP id 98e67ed59e1d1-38e4b3e11a5mr2543730a91.7.1784293639476;
-        Fri, 17 Jul 2026 06:07:19 -0700 (PDT)
+        bh=YAVyRkTkPaWk8kIYvBYAepg/O4FB7G2KaVbrN0SgkUc=;
+        b=QX021qWNg2cGo7ZkkJYs6grnZWeipDRRHXhYfCqNgSHZGMp2R1sQqWN7gETovXHIA+
+         83FAacIHJGghwQ+i291L99719DmTOwMt/oUBkh+wufydK2EyuMhXP6ry6IDz/Ai+dsbZ
+         VQjzlE3614xAOJH6/EgoagqMribgSMEx2tlR5SQJKT8UzpcDLrQVvWBQEpd6C/TeQT+w
+         H05Cc/0ukvuxrfw1rM1ezn24Wr+K3Ml7jpimQROQCQ0f3gPw6gjnOHcU2VxWwAAHNLPq
+         Z3OjQKX+PT/0NcybIDk51P6LWztjahvc1gKr5wB70pBWUsiamdccYv9pLadBrXa8KJtH
+         rfYw==
+X-Forwarded-Encrypted: i=1; AHgh+Rp8qqiyetya5NSJJvoliPXu0K0DFvFIUs9M4GlrF2Aaf1mWQAMuDnnipe1SOi5rogXVLAe1d9kI/3/ELGJA0Mv7j1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzksFtqb3qYZfOM6J3k/CK7Ho/B9dx//PmIQ5wCaWzHKGOr05XI
+	BxVXUfb5fLIYrW4tOqEQft6JiRynOcWHWomCXPGKhpZG1e7/fc4j4S4r
+X-Gm-Gg: AfdE7cnLqPQpaX7wVMfGjjN3Kr7U2z0vuRDCffeW7SSR9/mLrli/dCZ3w7LQwqJ65aT
+	aiSObW3ZRDhg+9LIJAB9YCbbQwQsZ9F+t7QCWzSa/HH1QxnfOGIXrZoqzZcHYeH6ApQAf4bcwof
+	4+JXfMdcGX94rtTj9jfAEWFD6VYRbLmDuVx0wOUgqzae6L05Gq7pyv8NH6JRdayqV2d8ot+clnH
+	wSTgFEQxd3ZGasx0p9dX9cfBxxW+GWIPzM/f+pc2chtwueDrCYom9BDtxEecGmLXOnzJZ/18KZB
+	vOM/xH8Kl1GrcP6YQeWpVbzcT0eev/vMnP5CJkEO0yMMglUGjeRNwZGyzXZNF5x9iFFY/I08zWU
+	MALfEVWVwUNVMeeRkwvhoB/oePdgrkNA7EATXaUZ+Ye4IAfc/sA9qWW9OrqezRTKUbNaGriX6J1
+	E/stzVpMpyKSG8
+X-Received: by 2002:a17:90b:3904:b0:387:e0db:bc34 with SMTP id 98e67ed59e1d1-38e4b5793d2mr2622266a91.42.1784293663521;
+        Fri, 17 Jul 2026 06:07:43 -0700 (PDT)
 Received: from localhost ([144.24.58.22])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31429cf22b3sm7709544eec.0.2026.07.17.06.07.17
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13ce29e340esm5521158c88.5.2026.07.17.06.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2026 06:07:18 -0700 (PDT)
+        Fri, 17 Jul 2026 06:07:42 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -87,9 +87,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH v2 12/13] mm/kwatch: add KUnit tests for the watch expression parser
-Date: Fri, 17 Jul 2026 09:07:02 -0400
-Message-ID: <20260717130702.1903917-1-wangjinchao600@gmail.com>
+Subject: [RFC PATCH v2 13/13] Documentation/dev-tools: document KWatch
+Date: Fri, 17 Jul 2026 09:07:26 -0400
+Message-ID: <20260717130726.1904101-1-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260717125023.1895892-1-wangjinchao600@gmail.com>
 References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
@@ -101,216 +101,243 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cover base anchors (stack, argN, absolute address), positive and
-negative offsets, dereference chains, and rejection of malformed
-expressions (missing offsets, bad argument index, junk offsets).
+Describe what KWatch is for, how it compares with KASAN and KFENCE,
+the debugfs configuration interface, the watch expression syntax,
+how to read hits from the trace buffer (including after a crash),
+and the current limitations.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kwatch/.kunitconfig |   9 +++
- mm/kwatch/Kconfig      |  12 ++++
- mm/kwatch/Makefile     |   1 +
- mm/kwatch/deref_test.c | 146 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 168 insertions(+)
- create mode 100644 mm/kwatch/.kunitconfig
- create mode 100644 mm/kwatch/deref_test.c
+ Documentation/dev-tools/index.rst  |   1 +
+ Documentation/dev-tools/kwatch.rst | 207 +++++++++++++++++++++++++++++
+ 2 files changed, 208 insertions(+)
+ create mode 100644 Documentation/dev-tools/kwatch.rst
 
-diff --git a/mm/kwatch/.kunitconfig b/mm/kwatch/.kunitconfig
+diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/index.rst
+index 59cbb77b33ff..f4c748da63db 100644
+--- a/Documentation/dev-tools/index.rst
++++ b/Documentation/dev-tools/index.rst
+@@ -30,6 +30,7 @@ Documentation/process/debugging/index.rst
+    ubsan
+    kmemleak
+    kcsan
++   kwatch
+    lkmm/index
+    kfence
+    kselftest
+diff --git a/Documentation/dev-tools/kwatch.rst b/Documentation/dev-tools/kwatch.rst
 new file mode 100644
-index 000000000000..7e977ddf0da1
+index 000000000000..e58f3185ebbd
 --- /dev/null
-+++ b/mm/kwatch/.kunitconfig
-@@ -0,0 +1,9 @@
-+CONFIG_KUNIT=y
-+CONFIG_KWATCH=y
-+CONFIG_KWATCH_KUNIT_TEST=y
-+CONFIG_PERF_EVENTS=y
-+CONFIG_HAVE_HW_BREAKPOINT=y
-+CONFIG_HAVE_REINSTALL_HW_BREAKPOINT=y
-+CONFIG_KPROBES=y
-+CONFIG_KRETPROBES=y
-+CONFIG_PRINTK=y
-diff --git a/mm/kwatch/Kconfig b/mm/kwatch/Kconfig
-index 9daf6d4463ef..6ec9aa448ece 100644
---- a/mm/kwatch/Kconfig
-+++ b/mm/kwatch/Kconfig
-@@ -14,3 +14,15 @@ config KWATCH
- 	  exact instruction causing the illegal access.
- 
- 	  If unsure, say N.
++++ b/Documentation/dev-tools/kwatch.rst
+@@ -0,0 +1,207 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+config KWATCH_KUNIT_TEST
-+	bool "KUnit tests for KWatch" if !KUNIT_ALL_TESTS
-+	# Built into the kwatch module, so it must be y; a bool cannot be
-+	# enabled when KWATCH is a module (KWATCH=m would force it off).
-+	depends on KWATCH=y && KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable KUnit tests for the KWatch kernel module.
-+	  This suite tests the core parsing logic, the pointer-chasing
-+	  finite state machine, and edge cases involving complex watchpoint
-+	  expressions. If unsure, say N.
-diff --git a/mm/kwatch/Makefile b/mm/kwatch/Makefile
-index 02d7917602f1..1d223d73b461 100644
---- a/mm/kwatch/Makefile
-+++ b/mm/kwatch/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_KWATCH) += kwatch.o
- 
- kwatch-y := core.o deref.o task_ctx.o hwbp.o probe.o anchor.o
-+kwatch-$(CONFIG_KWATCH_KUNIT_TEST) += deref_test.o
-diff --git a/mm/kwatch/deref_test.c b/mm/kwatch/deref_test.c
-new file mode 100644
-index 000000000000..35919dd24d92
---- /dev/null
-+++ b/mm/kwatch/deref_test.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <kunit/test.h>
-+#include "kwatch.h"
-+#include <linux/string.h>
++======================================
++KWatch - Kernel Memory Watchpoint Tool
++======================================
 +
-+static void kwatch_test_parse_deref_chain(struct kunit *test)
-+{
-+	struct kwatch_config cfg;
-+	int ret;
++Overview
++========
 +
-+	// Test 1: stack
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "stack");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_STACK);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 1);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 0);
++KWatch is a runtime-configurable debugging tool for locating kernel memory
++corruption. It arms hardware breakpoints (watchpoints) on a target address
++while a chosen function is executing, and reports the exact instruction that
++touches the watched memory, together with a stack trace, through a
++tracepoint.
 +
-+	// Test 2: arg1
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg1");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG1);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 1);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 0);
++Unlike shadow-memory sanitizers, KWatch does not detect invalid accesses in
++general; it answers a narrower but common question during corruption hunts:
++"who writes to this address?". This includes in-bounds logical overwrites
++that KASAN cannot see, because the rogue writer modifies valid memory
++through a valid pointer, just at the wrong time or with the wrong data.
 +
-+	// Test 3: arg6+8
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg6+8");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG6);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 1);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 8);
++Comparison with other tools:
 +
-+	// Test 4: arg2-16
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg2-16");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG2);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 1);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], -16);
++* KASAN detects out-of-bounds and use-after-free accesses, but reports the
++  symptom (the invalid access), not the writer that corrupted the data
++  earlier. It requires a rebuild and has significant CPU and memory
++  overhead, and its redzones perturb memory layout, which can hide
++  timing-sensitive bugs.
++* KFENCE is a low-overhead sampling detector for slab objects; it cannot be
++  pointed at one specific address.
++* Hardware breakpoints via kgdb or perf can watch an address, but only a
++  fixed one, system-wide, for the whole run. KWatch resolves the address
++  dynamically at function entry (for example "argument 2 of this function,
++  plus offset 8, dereferenced once") and disarms it again at function exit,
++  so short-lived and per-invocation objects can be watched too.
 +
-+	// Test 5: arg3->8
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg3->8");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG3);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 2);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 0);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[1], 8);
++KWatch has near-zero overhead while armed: the watched function pays for
++one kprobe/kretprobe pair plus programming of the debug registers; the rest
++of the system runs at full speed.
 +
-+	// Test 6: arg4+8->16
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg4+8->16");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG4);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 2);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 8);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[1], 16);
++Requirements
++============
 +
-+	// Test 7: arg5-8->-16
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg5-8->-16");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG5);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 2);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], -8);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[1], -16);
++* ``CONFIG_KWATCH=y`` or ``m``. The Kconfig symbol depends on
++  ``CONFIG_PERF_EVENTS``, ``CONFIG_DEBUG_FS`` and an architecture that
++  provides ``HAVE_REINSTALL_HW_BREAKPOINT`` (currently x86 only).
++* Resolving symbol names in watch expressions requires ``CONFIG_KWATCH=y``
++  (built-in); a module can only watch absolute hexadecimal addresses.
 +
-+	// Test 8: stack->0->8
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "stack->0->8");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_STACK);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 3);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 0);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[1], 0);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[2], 8);
++Usage
++=====
 +
-+	// Test 9: arg1->+8
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg1->+8");
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ARG1);
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 2);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 0);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[1], 8);
++KWatch is configured through a single debugfs file::
 +
-+	// Test 9.1: arg1-> (implicit 0 should fail)
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg1->");
-+	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++    /sys/kernel/debug/kwatch/config
 +
-+	// Test 9.2: stack->->8 (implicit 0 should fail)
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "stack->->8");
-+	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++Writing a configuration string starts a watch session (stopping any previous
++one); reading the file shows the active configuration and hit-rejection
++counters. The configuration is a whitespace-separated list of ``key=value``
++tokens:
 +
-+	// Test 10: Invalid base
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "invalid_base");
-+	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++=================== ==========================================================
++Key                 Meaning
++=================== ==========================================================
++``func_name``       Function whose execution opens the watch window.
++``func_offset``     Instruction offset inside ``func_name`` at which the
++                    watchpoint is armed (default 0 = function entry).
++``watch_expr``      Expression describing the address to watch (see below).
++``watch_len``       Watched length in bytes: 1, 2, 4 or 8 (default 8).
++``depth``           Recursion depth at which the window opens (default 0).
++``max_watch``       Number of hardware watchpoints to preallocate
++                    (default 4).
++``max_concurrency`` Maximum number of tasks concurrently inside the watch
++                    window (default 256).
++``duration``        For global watches: seconds until automatic stop.
++=================== ==========================================================
 +
-+	// Test 11: Invalid offset
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg1+abc");
-+	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++Watch expressions
++-----------------
 +
-+	// Test 12: Invalid arg
-+	memset(&cfg, 0, sizeof(cfg));
-+	ret = kwatch_deref_parse(&cfg, "arg7");
-+	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++The address to watch is computed at function entry from::
 +
-+	// Test 13: Absolute address. Use a width-appropriate literal: a 64-bit
-+	// address would overflow unsigned long and fail kstrtoul() on 32-bit.
-+	memset(&cfg, 0, sizeof(cfg));
-+#if BITS_PER_LONG == 64
-+	ret = kwatch_deref_parse(&cfg, "0xffffffff81000000+8");
-+#else
-+	ret = kwatch_deref_parse(&cfg, "0xc1000000+8");
-+#endif
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, cfg.base, KWATCH_BASE_ABS_ADDR);
-+#if BITS_PER_LONG == 64
-+	KUNIT_EXPECT_EQ(test, cfg.sym_addr, 0xffffffff81000000UL);
-+#else
-+	KUNIT_EXPECT_EQ(test, cfg.sym_addr, 0xc1000000UL);
-+#endif
-+	KUNIT_EXPECT_EQ(test, cfg.offset_count, 1);
-+	KUNIT_EXPECT_EQ(test, cfg.offsets[0], 8);
-+}
++    watch_expr={base}[+-offset][->[+-]offset]...
 +
-+static struct kunit_case kwatch_deref_test_cases[] = {
-+	KUNIT_CASE(kwatch_test_parse_deref_chain),
-+	{}
-+};
++* ``base`` is one of:
 +
-+static struct kunit_suite kwatch_deref_test_suite = {
-+	.name = "kwatch_deref",
-+	.test_cases = kwatch_deref_test_cases,
-+};
++  - ``arg1`` ... ``arg6``: a function argument (register calling
++    convention). These are only meaningful at function entry, i.e. with
++    ``func_offset`` unset; combining ``argN`` with ``func_offset`` reads
++    the argument registers mid-function, where they no longer hold the
++    original arguments,
++  - ``stack``: the kernel stack pointer at the probe point,
++  - an absolute hexadecimal address, e.g. ``0xffffffff81234567``,
++  - a global symbol name (built-in KWatch only).
 +
-+kunit_test_suite(kwatch_deref_test_suite);
++* ``+offset`` / ``-offset`` adjusts the current address.
++* ``->offset`` loads the pointer stored at the current address (via
++  ``get_kernel_nofault()``) and then applies the offset. Up to four chain
++  elements are supported; offsets must be explicit (``->`` alone is
++  rejected).
 +
-+MODULE_DESCRIPTION("KUnit tests for the KWatch watch expression parser");
-+MODULE_LICENSE("GPL");
++Given::
++
++    struct some_struct {
++        struct some_struct *ptr;    /* offset 0 */
++        int num;                    /* offset 8 */
++    };
++
++    void target_function(struct some_struct *arg1);
++
++typical expressions are:
++
++=========================== ==============================================
++Expression                  Watches
++=========================== ==============================================
++``watch_expr=arg1``         ``&arg1->ptr`` (the pointer field itself)
++``watch_expr=arg1+8``       ``&arg1->num``
++``watch_expr=arg1->0``      ``&arg1->ptr->ptr`` (one dereference)
++``watch_expr=arg1->8``      ``&arg1->ptr->num``
++``watch_expr=0xffff...+8``  absolute address plus 8
++=========================== ==============================================
++
++Example: catch whoever overwrites ``arg1->num`` of a function while that
++function runs::
++
++    echo "func_name=target_function watch_expr=arg1+8 watch_len=4" \
++        > /sys/kernel/debug/kwatch/config
++
++Watching global variables
++-------------------------
++
++A global variable has no natural function window. When ``duration`` is
++given without ``func_name``, KWatch starts an internal anchor kernel thread
++that sleeps inside a dummy function, and uses that function as the window::
++
++    echo "watch_expr=jiffies_wobble duration=60 watch_len=8" \
++        > /sys/kernel/debug/kwatch/config
++
++The session tears itself down when the duration expires.
++
++Reading hits
++------------
++
++Hits are emitted as the ``kwatch:kwatch_hit`` tracepoint, which is safe in
++NMI-like contexts where printk is not. Each event carries the timestamp,
++the instruction pointer, the watched address and a short stack trace::
++
++    echo 1 > /sys/kernel/debug/tracing/events/kwatch/kwatch_hit/enable
++    cat /sys/kernel/debug/tracing/trace_pipe
++
++If the corruption crashes the machine, the ring buffer can still be
++recovered:
++
++* ``echo 1 > /proc/sys/kernel/ftrace_dump_on_oops`` (or the
++  ``ftrace_dump_on_oops`` boot parameter) dumps the buffer to the console
++  on an oops.
++* With kdump, the buffer is present in the vmcore and can be read with
++  ``crash> trace``.
++* ``CONFIG_PSTORE_FTRACE`` persists it across reboots on supported
++  platforms.
++
++Limitations
++===========
++
++* Functions that run in a genuine NMI(-like) context are rejected at
++  function entry; rejected invocations never open a watch window and are
++  counted in the ``nmi_rejected`` field of the config file. Watching
++  functions reachable from NMI handlers is out of scope.
++* The number of concurrent watchpoints is bounded by the CPU's debug
++  registers (typically 4).
++* Cross-CPU re-arming of a watchpoint is rate-limited per CPU: the local
++  CPU is always re-pointed, but the broadcast to other CPUs is throttled
++  so a very hot watched function cannot storm the system with IPIs. While
++  a broadcast is suppressed the other CPUs keep watching the previous
++  address, so a writer that runs on another CPU during that window can be
++  missed; the number of suppressed broadcasts is reported in the
++  ``arm_ipi_suppressed`` field of the config file. KWatch therefore
++  targets functions that are entered at a moderate rate.
++* If the target address cannot be resolved at arming time (for example a
++  ``get_kernel_nofault()`` failure on a swapped or unmapped page), the
++  watchpoint is not armed for that invocation.
++* Offsets in watch expressions are static; dynamic indexing such as
++  ``arg1->ptr[arg2]`` is not supported.
++* If a task is torn down while still inside the watched function without
++  the function returning (an oops or BUG in the window, which abandons the
++  stack), its watch window is not closed until the session stops. This is
++  the same best-effort cleanup that applies to every resource a task holds
++  when it dies abnormally. Do not target the task-exit path itself.
++* arm64 is not yet supported: stepping over a hit that has a custom
++  overflow handler needs a generic mechanism in the arch code, which is
++  planned as a follow-up series.
++
++Implementation notes
++====================
++
++The implementation lives in ``mm/kwatch/`` and is split into a control
++plane (``core.c``, the debugfs interface), an execution plane (``probe.c``
++and ``deref.c``: kprobe/kretprobe window management and address
++resolution), and a resource plane (``hwbp.c`` and ``task_ctx.c``).
++
++Hardware watchpoints are preallocated as perf events on every CPU and
++re-pointed at hit time with ``modify_wide_hw_breakpoint_local()``, a new
++hw_breakpoint API that updates the breakpoint on the local CPU without
++releasing its slot; other CPUs are updated by asynchronous IPIs. Per-task
++window state is kept in a fixed-size, lockless open-addressing array
++claimed with ``cmpxchg()``, so the hit path performs no allocation and
++takes no locks, which keeps it safe in atomic and NMI-like contexts.
 -- 
 2.53.0
 
