@@ -1,41 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AC1380FD4;
-	Fri, 17 Jul 2026 23:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30AA285072;
+	Fri, 17 Jul 2026 23:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784331931; cv=none; b=kQEiE4BlXd00m1elJiT7Gvffs0ntL29gzO49EZSoYXclWr5uVu8FEfjgLCvaJsECkIVh5Zb2ax3DTMxMAStDPDHe90D2aOJbBbpuPL+Ivewsk7lti4RbSYkiPCPyoKgySNbKH/gbqqseDImbPZZx2lj4EJzok5c22g9OJAl/GF4=
+	t=1784332068; cv=none; b=UtDdkzokRpzhoQIi38hEwLAJdaX6MmWp5degy1jVyJvNNEAFwuebTV4jvGHazTPUAiERIGpe0T9EvjoPcXBaCXuh0MIqM7IIW68WkSDXfSd/bkhxDVg44tszWPwokuvwb/AmuOufJA46793tmKHo5SfMjX3howHai5d9SE5f/zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784331931; c=relaxed/simple;
-	bh=GRt7KkB88gPFQXlQ9xP34WSMD6x47Jtchmy4QAp+0O0=;
+	s=arc-20240116; t=1784332068; c=relaxed/simple;
+	bh=6+iLXcukO9kKo93gmI/NEwqNvTXl/93g9fGAf+hyOBQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pZegBprEEh43+zJ8AUNN5VuKM2kTDOoVaZetghd7WC/APcYc6coTRN0fwfuugRsWFTNH3pY4zdz6O4fbLGwmdSqRs7pSIJLr7dxLPiJ0oAW0E9ktZO+Ckon0/Ab+iNxyXq3J9IBdh4VvNjNORRqeR3qZ8dNXnrPQNrrPKChDOKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3+n9W4a; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=qaceQWfG8c3Sa1qtrrUbfh9vqVbuxOBQr02QD4GYuqHAiemG5setwzBFWlTmSN+3YeIcVDUvF8UAHYupZykqlSSeyLUcl56xU9Ck8jzQ5QyH2OTsL6YJPvVMfsHfO8psj4RxW4xzv8Sw1GgqKQd7jTlAaXcKgRfQBzD1oUKqqPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDZ5XqSS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3+n9W4a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5231F000E9;
-	Fri, 17 Jul 2026 23:45:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDZ5XqSS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB6D1F000E9;
+	Fri, 17 Jul 2026 23:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784331926;
-	bh=t92nG5HOJRBg9LyAAWTooX92pMDv7O5FeBYwyZhCWZs=;
+	s=k20260515; t=1784332067;
+	bh=7SggbiWRchPG09jtp9thpfg+zNw5Jym2Nljf2aMAvd4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=m3+n9W4aL1bfen8MiaRECrI/KDcOlfLylLc9IGFlVquEnaS4muHalDMO4Ia3rbMPr
-	 7JsGZ5sNIYkQl6oY3v9L04i8QA5Enn6tRSMtvQw2+Wu/sRJruletC49VYQ5FGPZDCk
-	 aGS+K5giY78qjodaympjeYubnt/T4ZOOdwHaFfNlsz9+L86RrfWiue2g2ee3tKERFJ
-	 q0YnvjCjdWJf5Z4gFWbSW+YDrTdsrd+7Z9HRKC0Qy78LX1GkQz/7S6FKrPLNqnY/LW
-	 Bnmbrwo06Arf0caSbZ17Hha2yGuGOPIIg68kNRHc/SoUI0sb0cTcApw/3Iu7K3kpkH
-	 fklHdEoWUhc5g==
-Date: Sat, 18 Jul 2026 08:45:22 +0900
+	b=IDZ5XqSSafOEbGFdCxhLODkiS/IY2t6WA5yubO6QRIfwAsPsWsy8h8decOJTBNRSa
+	 mRmZnn6cHG4dnm/ApMq0DPjkk3EmIUKZ+bYD1KCM4+1m0ZzOPgwxs+/vQILwE/Ba+x
+	 MK0IMNIeXKiPkhu3BA7MA0DOgjI2hrtM68n42CaaqH5QD4ch9EXk3NASoEH+Q5tT+3
+	 PjTrEtEpFccQLs9fgwAAkGCH6pi/YuR/hCW56RYsHy2Ir35UkGOUXLCPmrylxPaZG7
+	 GgSX22DtMdayBHPu9Q1qJOSjgCAo375shZ0lFB4i8wW+j8Q1UdxLgLzjCWhQrUWdSA
+	 BdWdtJigbUTBw==
+Date: Sat, 18 Jul 2026 08:47:41 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Usama Arif <usama.arif@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, rostedt@goodmis.org, leitao@debian.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix context switch counter truncation
-Message-Id: <20260718084522.055fc8a671eaf2d2cd927fc2@kernel.org>
-In-Reply-To: <20260717173252.3431565-1-usama.arif@linux.dev>
-References: <20260717173252.3431565-1-usama.arif@linux.dev>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 00/10] tracing: wprobe: x86: Add wprobe for
+ watchpoint
+Message-Id: <20260718084741.c2ae6e41f2a1510ffa06d12e@kernel.org>
+In-Reply-To: <20260717162857.GAalpYSaZ_emTMUEEW@fat_crate.local>
+References: <178429796992.157981.3393977217853767915.stgit@devnote2>
+	<20260717162857.GAalpYSaZ_emTMUEEW@fat_crate.local>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,57 +54,29 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 17 Jul 2026 10:32:52 -0700
-Usama Arif <usama.arif@linux.dev> wrote:
+On Fri, 17 Jul 2026 09:28:57 -0700
+Borislav Petkov <bp@alien8.de> wrote:
 
-> trace_user_fault_read() samples nr_context_switches_cpu() before enabling
-> preemption and retries the user copy if the counter changes. The helper
-> returns unsigned long long because rq->nr_switches is u64, but the saved
-> value is unsigned int.
+> Hi,
 > 
-> Once a CPU has performed 2^32 context switches, assigning the counter to
-> cnt discards its upper bits. The comparison after the copy promotes cnt
-> back to unsigned long long, but the lost bits remain zero, so it reports a
-> change even when the task was never scheduled out. Every retry then fails
-> the same way until the 100-try guard warns and the user copy is abandoned.
+> On Fri, Jul 17, 2026 at 11:19:30PM +0900, Masami Hiramatsu (Google) wrote:
+> > Here is the 9th version of the series for adding new wprobe (watch probe)
 > 
-> This affects long-running systems and workloads with high context-switch
-> rates. A CPU switching 1,000 times per second takes about 50 days.
-> 
-> Store the sampled count in unsigned long long so the full value is
-> preserved.
+> any chance you won't blast out your patchset every day?
 
-Looks good to me.
+Ah, sorry about that. I'll rate limit myself this weekend on this series.
+(I hope I have fixed most of major issues...)
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
+Thanks, 
 
 > 
-> Fixes: 64cf7d058a00 ("tracing: Have trace_marker use per-cpu data to read user space")
-> Cc: stable@vger.kernel.org
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Usama Arif <usama.arif@linux.dev>
-> ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Thx.
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 1146b83b711a..412a8daf2162 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6188,7 +6188,7 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
->  {
->  	int cpu = smp_processor_id();
->  	char *buffer = per_cpu_ptr(tinfo->tbuf, cpu)->buf;
-> -	unsigned int cnt;
-> +	unsigned long long cnt;
->  	int trys = 0;
->  	int ret;
->  
 > -- 
-> 2.53.0-Meta
+> Regards/Gruss,
+>     Boris.
 > 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
 
 -- 
