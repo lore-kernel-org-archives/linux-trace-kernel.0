@@ -1,56 +1,98 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8222D2495;
-	Sun, 19 Jul 2026 22:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F6A2580CF;
+	Sun, 19 Jul 2026 23:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784500142; cv=none; b=Nem34/sZ7mgqKQr2w3NvNBFfRwlKsdCtpUSCjBjT2QTYMwpgi/peamYVbGKc7JViZ1rQ/O0X+8sKz8dGnIixyFhnZrhPunn2PEF+LTHbg5SFV0g8Dmna7Cjz2aCL8NCI2r1nftIW/xypReVGse2iDVbtEHtapBlNQAtdD7hpQFA=
+	t=1784503691; cv=none; b=jmU3UQzqtLpkKfA6f7tAKCG7nyG8En9srw/YniQFIu2TICID4QM0D9UkNUffSYSbyTYZMtaq15ONaQSRSwsYYNO76QY0ONWciBqujCl/v1ocC07mOjRaoJe9wtXLzxETPgWK0qc1SD8YzlpnNpKe7IE45XMTG8L9rge8GuAlhGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784500142; c=relaxed/simple;
-	bh=ykqzF0nvitTCkIm8153hEK37Ld0yW+OhAozGCCqRH0U=;
+	s=arc-20240116; t=1784503691; c=relaxed/simple;
+	bh=tvRw4FgNwEe59GkD6K3eZOXpHIF+vR4UMiaPy2zLTvQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KwvqJOm+AOoEF8nCwfJup3GLAOwM6ggR2h6XGip9Ox8xitkW3o3vMEhf7h2SvKIEWs9lZJKtT3DZ+H9HcdoNBCg5fZm4CqmCL+/rNgAktibASAnEnyJMDFzKCX2Zr8h24ynJ6hHZx+abdoySH8BnUNboTsx93aHXjSDOH/KYs7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T+KZpNyy; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9698Lb76zCT827q4dFmb/lDjOO/97kisL98p1jTm9qy2MYheIYFyGUjSwLk310o353EUtkz1lg3fwQRQSJlIbtMuJKO3GkOC/8V2+hmcVgbNK5qIKJOov6AF7j69Pod2t0TnoSn/onMpWRbgltuY49AIXi74hF+nLlCtrXl5Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M7RZagub; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T+KZpNyy"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M7RZagub"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=s14CEhiEMvrJ+CO4bAEdF7C+l4zLaNcCXOHRTCm4syg=; b=T+KZpNyyRL4Q1eb+oGSpiTb4jp
-	rH+h1D7JowafhWq4UOavSyi5cIj7dAan32/dV2iRMPJX+6JBik2MZZLHtTHYsEChsZje4qUCXymtB
-	AxPcwv+aly50ZBIusRTNz/w6td1s7IkujvS64EUrIt9gy5xnMreSR5l4YkKG2aZYp7fm49WWYE1nY
-	B2jYztCFHvGhU3D7Ayd02UKO/s4iHMlV4OAsAV7GlX3tlDY31em7rWZfb9XTiKmPi0UkGhjHygRpF
-	3zPdhz8GZvmQJDUIKou4K6dprbprNnuqgjg7rF5hlvqar9hX4EDls11KyCvd81akFrkwsYTWni0/u
-	FvJAf5YQ==;
+	bh=cfmxZTRHizk/vTuU52QMn9mhqbO5m9+SAMKuRmAvyaA=; b=M7RZagubyQWneyf8CpO11T6zkH
+	oSEX2sg4tYx/HH+bDKBj2UwtwOIoy4Qcp5uZ6nYeyaoyXQrEH3V895vr6Au+G2qgO/l5eF2l7U3FP
+	/HcFv01XhCQqu4dxKCI9BQklKawGn1zJjFozWAp3kHOy0jiELXl/9/3sCrJOOAsVuXUqU/mU8h0+y
+	tIMU4RSp02Rrr/jnRMoh8E9A1nLnOw/ykVqRYP7ZG3wfp0woLPMwwX9EC2linQM6EQvkNisSHtB9x
+	ERx+rUXNT8fypC7kYytE99HPdXm/gE/9CaGr+ws6gYgC9JIuXcXrWKUClClmNzVJeFsVur36mWSCU
+	LrGYScvA==;
 Received: from [12.151.47.154] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wla09-00000005RFR-15QJ;
-	Sun, 19 Jul 2026 22:28:49 +0000
-Date: Sun, 19 Jul 2026 18:28:47 -0400
-From: "Liam R . Howlett" <liam@infradead.org>
-To: Aditya Sharma <adi.sharma@zohomail.in>
+	id 1wlaur-00000005WHA-1D0p;
+	Sun, 19 Jul 2026 23:27:25 +0000
+Date: Sun, 19 Jul 2026 19:27:23 -0400
+From: "Liam R. Howlett" <liam@infradead.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imbrenda@linux.ibm.com
-Subject: Re: [RFC PATCH 0/7] mm: defer address-space teardown of large
- exiting processes to a kthread
-Message-ID: <ljr2jkxomq4ccgzq2ip3c66mjdryomhl2gxkswv4wzry5ye2ax@xaehxzjkkk3m>
-References: <20260719185409.409685-1-adi.sharma@zohomail.in>
+	David Hildenbrand <david@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	Russell King <linux+etnaviv@armlinux.org.uk>
+Subject: Re: [PATCH v2 12/33] MAINTAINERS: Move mm/interval_tree.c to rmap
+ section
+Message-ID: <qkzthzitcsa3ckb2c75t374ceggewbdzmrzmuq75p4c5qugq3v@6jodi5cilthv>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+ <20260710-b4-pre-scalable-cow-v2-12-2a5aa403d977@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,52 +101,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260719185409.409685-1-adi.sharma@zohomail.in>
+In-Reply-To: <20260710-b4-pre-scalable-cow-v2-12-2a5aa403d977@kernel.org>
 
-On 26/07/20 12:24AM, Aditya Sharma wrote:
-> Address-space teardown on process exit runs synchronously in the dying
-> task's context: exit_mm() -> mmput() -> __mmput() -> exit_mmap() walks
-> page tables, updates rmap, frees the RSS and drops file references, all
-> on the exiting CPU. For a multi-GB process that is hundreds of
-> milliseconds of exit-path latency, paid by whoever is waiting on the
-> death: a supervisor's kill-and-respawn cycle, a shell's waitpid(), an
-> orchestrator reaping a fleet of workers. On the test box below, killing
-> a 16GB process costs ~280ms before the parent's waitpid() returns.
+On 26/07/10 09:16PM, Lorenzo Stoakes wrote:
+> This file implements code for the interval trees used by the file and anon
+> rmap implementation, so belongs in the rmap section.
 > 
-> This series adds CONFIG_ASYNC_MM_TEARDOWN: an opt-in, default-off path
-> that defers __mmput() of large exiting processes to a dedicated kernel
-> thread (mm_reaper), so the exiting CPU is released as soon as the task
-> is reaped and the teardown runs off to the side.
+> Acked-by: Pedro Falcato <pfalcato@suse.de>
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-This reads like it was written by an AI, but there is no assisted-by
-tags.  Which AI did you use to generate these patches and/or cover
-letter?
+Acked-by:  Liam R. Howlett (Oracle) <liam@infradead.org>
 
-I do not see a benefit to running the task cleanup 'off the side'.  In
-modern computers, that may mean switching core types that run at
-different speeds.
-
-Regardless of speed, the CPU that will be doing the work is remote to
-the workload by design, (or may be, depending on the scheduling?).  That
-is, you are tasking another CPU to do cleanup of local CPU-aware
-information.. The ideal CPU to do a task exit is the one that's doing it
-already.
-
-There are hidden costs to your approach and I don't really understand
-how this could possibly speed things up - even parallelized tasks will
-take more CPU time in total, even if locking issues are avoided.
-
-Sure, the task waiting for cleanup to complete may think it's done and
-continue to do the Next Thing - but if it really needs the cleanup to be
-completed then you've just made it impossible to know when it has
-happened.
-
-Also, you've just made this extremely hard to debug if something is
-missed.
-
-The work that is done in teardown is necessary.  Your time (and tokens?)
-would be better spent trying to improve what we have to do instead of
-shifting the work around.
-
-Thanks,
-Liam
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c3e535ca4bef..ef168b583325 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17208,6 +17208,7 @@ R:	Lance Yang <lance.yang@linux.dev>
+>  L:	linux-mm@kvack.org
+>  S:	Maintained
+>  F:	include/linux/rmap.h
+> +F:	mm/interval_tree.c
+>  F:	mm/page_vma_mapped.c
+>  F:	mm/rmap.c
+>  F:	tools/testing/selftests/mm/rmap.c
+> @@ -17313,7 +17314,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>  F:	include/trace/events/mmap.h
+>  F:	fs/proc/task_mmu.c
+>  F:	fs/proc/task_nommu.c
+> -F:	mm/interval_tree.c
+>  F:	mm/mincore.c
+>  F:	mm/mlock.c
+>  F:	mm/mmap.c
+> 
+> -- 
+> 2.55.0
+> 
