@@ -1,41 +1,41 @@
 Received: from sender-pp-o91.zoho.in (sender-pp-o91.zoho.in [103.117.158.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFD020C00C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587C3248F64
 	for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Jul 2026 18:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.117.158.91
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784487388; cv=pass; b=S1zeYRLTZZDui5TzRrVAAfa3V/J0LCHV3f+Bn3+2Y5atREwh7zBOFCBmxfRZXWuL4cK5H2qwVLACS6xGNsviPNCYOtr/QHyz2LsZ0qguZxNGSx/7Pon06HXj6/feAAQZf8JMHy21PyPorQI39Oa9qk0ecULxboNWhyb9nhCP/tk=
+	t=1784487388; cv=pass; b=Cr+eeyiMbcSvxjykt7/gRo1L1rldTC/roZHs+rFZnxr4oIv0N4X2vx+V+7+WxOFng2y6qStV5grfwzViGtqPu01k4imDNLmRdwCP3iJ2EZc0xlKQrF54iOgLPw+BxYURWPqa/DCxeHhSDwQPBVqloFhCp8yY/hYX23tT8WvpJzQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784487388; c=relaxed/simple;
-	bh=NXR8Pc4xTaselcNDKYjw6CmxtOIzVpM9iH+zR8NlLpQ=;
+	bh=vx3OPMUUoe68Q/4cGI8bVpPqsREryBia9lB9xO54sCU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VRwHa7oRsfvgVkKYB533fmmUM6qrjwST2BFwfjXLGH6/11So3dsss9ty64MDMzhM94Xahgp6uhm3Cs3mD3qgGlBAS2G9yYv4klu3F4pqfiQQ73LGIXuYhR7XSM2S5wOuzY6Uf8YbiJXIpeUKzL8oJ06zimYQXVtPsgB0slmpkA8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=C05pp2fR; arc=pass smtp.client-ip=103.117.158.91
+	 MIME-Version; b=aS3CAX5bImJAkSGvrh9/pJxcr/RR+BtLkLowQ0BPIEHVO/yBZ2wzMymgzjSn/j/Scf5eqjfM2tZ3+uLr26M3rIX0Vl/khjxS3vHOLPEUvuDAA1rxN6AhnFZp/LnKny6UKxeecWUDExFQF47FO4X/5OXfkSBbSvo2Kpfxf2SS1iE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=ti12zkcG; arc=pass smtp.client-ip=103.117.158.91
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="C05pp2fR"
-ARC-Seal: i=1; a=rsa-sha256; t=1784487286; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="ti12zkcG"
+ARC-Seal: i=1; a=rsa-sha256; t=1784487285; cv=none; 
 	d=zohomail.in; s=zohoarc; 
-	b=eoZkNbwBdZ3sAgobW/+MD+mXYVUfuXZoh0PW0dkgph8ontDVOymnyy1uza09p8k77a70nNrVW96Qn+v20s7gIEdyp2cENVyM1hAe5gVkW1GJ8Wkf7+xzOjnVW756s8T8BDOt102znL4MIw1E64+K/vwgxKTx6+pp2Dg5zGYvwAU=
+	b=QGfoxSY0NHJRFFFk4MJ9D1OB/xRzPDpysy3mZGzokE97/lbhUbLF77gCFtqzOuZSBiXQteNIsxbM3iIM5hrSSi0Yp0ymhI9sv4scTaXI8I1vvW0kv0BZkRwg4ZAxVWVMa7AOccAPmy6z8T1FRCWBPBkHYOkbbRpxdd8LFO0Lvo4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1784487286; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=qa4YjEBQvZIx5KKQpuyATR3R1yqVaUF8NDQIptYbS9w=; 
-	b=RumEku92gkeZHIU445cPHdCm6F2NbcdDI8sOZqYysLMAXLb1ia2xJVM1sWdPbMOZCavKkoFq4gHjFPycY/l2woYI0GaTPtS8798o7u69arMuhea2EZK4BqlA6OGC0kkVfg7mmd07XdZxF2OvqnuPD71ytNVE+Whco2F8m61JEoc=
+	t=1784487285; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=FgZdTLPY7PuLb4yQ+exzFKyeCVLnL9WHdNDZ74r1sCI=; 
+	b=A6yGeJKs8Gq7QoiYlYdtWwmum4OJEXYscvDJLkgU6br3+fb6XS2Tkkwc4aJWn+7pUvWuleZp+1nXKqn1ufZfHfncrHmToUEqJam4vyKAKxMIFR57LVa/ObVcYQVHvrzrHFzIa7JkfqiPRWfPR+5LeK7NafClE8e5NxM7TB14thE=
 ARC-Authentication-Results: i=1; mx.zohomail.in;
 	dkim=pass  header.i=zohomail.in;
 	spf=pass  smtp.mailfrom=adi.sharma@zohomail.in;
 	dmarc=pass header.from=<adi.sharma@zohomail.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784487286;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784487285;
 	s=zoho; d=zohomail.in; i=adi.sharma@zohomail.in;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=qa4YjEBQvZIx5KKQpuyATR3R1yqVaUF8NDQIptYbS9w=;
-	b=C05pp2fRMkzVr8EPumtScLZSIAxiwWdUw5nGAZ6j0AL9hOYugDThqSgbodVFyuVJ
-	A1Y2esHcmBZrPnoeJjnr1gPKNpdfV00uui6p8qfuO2jb3SBK4h7a0P2GXYiStBTMM2e
-	p5ydWfmf3m05+2byNLHwxHVe1msEDc+gV6JSpuXQ=
-Received: by mx.zoho.in with SMTPS id 1784487285082857.0950681993331;
-	Mon, 20 Jul 2026 00:24:45 +0530 (IST)
+	bh=FgZdTLPY7PuLb4yQ+exzFKyeCVLnL9WHdNDZ74r1sCI=;
+	b=ti12zkcGnBfLTBw9fHFNt9PB2IhRRcjLzCwdqRQEYBhvAlUGAO71teK3pE48YoGT
+	qIfK5gTDP/uPH/+O9mqXHPD0yPt7ZL4KfWQ/syFSmtMUfHc5ZEWp8W5hHTE/DU07xAl
+	ybvePEbyoPFa6kwl3iFBOoTaVc6PbMNrHZccOmy0=
+Received: by mx.zoho.in with SMTPS id 1784487283605355.28475880973383;
+	Mon, 20 Jul 2026 00:24:43 +0530 (IST)
 From: Aditya Sharma <adi.sharma@zohomail.in>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -68,9 +68,9 @@ Cc: David Rientjes <rientjes@google.com>,
 	linux-kernel@vger.kernel.org,
 	imbrenda@linux.ibm.com,
 	Aditya Sharma <adi.sharma@zohomail.in>
-Subject: [RFC PATCH 5/7] mm: add runtime toggle and sysctls for async teardown
-Date: Mon, 20 Jul 2026 00:24:07 +0530
-Message-Id: <20260719185409.409685-6-adi.sharma@zohomail.in>
+Subject: [RFC PATCH 4/7] mm: gate async teardown on RSS with pending-pages backpressure
+Date: Mon, 20 Jul 2026 00:24:06 +0530
+Message-Id: <20260719185409.409685-5-adi.sharma@zohomail.in>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260719185409.409685-1-adi.sharma@zohomail.in>
 References: <20260719185409.409685-1-adi.sharma@zohomail.in>
@@ -83,246 +83,226 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Add the userspace interface that arms and tunes off-CPU exit teardown,
-and the static key that gates it.
+Deferring every exit would churn small processes for no benefit and let
+unreaped memory grow without bound. Split the defer decision into a
+pure predicate and a budget reservation:
 
-Introduce async_mm_teardown_key (static key, default false) and gate the
-deferral path in mmput_exit() on it via static_branch_unlikely(); when
-off, mmput_exit() runs __mmput() inline. The get_mm_rss() read moves
-inside the static_branch_unlikely() block, alongside eligibility and
-exit_aio(), so the default (key off) path costs nothing beyond the
-branch itself -- no RSS scan for every exiting process on kernels or
-boots that never enable the feature. Under CONFIG_SYSCTL, register
-three knobs under vm. with register_sysctl_init():
+  - async_mm_teardown_eligible() (side-effect free): defer only when
+    RSS >= async_mm_teardown_thresh_pages and both MMF_OOM_SKIP and
+    MMF_OOM_TARGETED are clear:
+      * MMF_OOM_SKIP -- the mm is hidden from the OOM killer and
+        reaper. Usually that means it has already been reaped or run
+        through exit_mmap() and has no RSS left worth deferring; in the
+        mm-pinned-by-init case (__oom_kill_process()) the flag is set at
+        kill time with RSS intact, and keeping such an mm synchronous is
+        equally what we want;
+      * MMF_OOM_TARGETED -- the mm is the target of an in-flight OOM
+        kill (added in the preceding patch). Such a victim is torn
+        down synchronously so its memory is released promptly rather
+        than queued behind the low-priority, housekeeping-confined
+        mm_reaper, which would work against the oom_reaper during the
+        exact pressure that triggered the kill. The flag is set while
+        some task still holds a live reference to the mm, and this
+        check is reached only after mm_users has dropped to 0 -- which
+        requires that task's own exit_mm() (or exec_mmap(), the other
+        path that sheds ->mm) to have already cleared ->mm under that
+        same task_lock() -- so marking and checking can never overlap in
+        time. Whichever thread performs the final decrement is therefore
+        guaranteed to observe the flag already set, per the preceding
+        patch.
 
-  - async_mm_teardown: write 1/0 to enable/disable. A custom handler
-    flips the static key, serialized by a mutex so the key state always
-    matches the last value written.
-  - async_mm_teardown_thresh_pages: RSS threshold (default ~64MB).
-  - async_mm_teardown_max_pending_pages: backpressure cap.
+  - async_mm_teardown_reserve(): charge RSS against a pending-pages
+    budget with atomic_long_add_return(); if the result exceeds
+    async_mm_teardown_max_pending_pages it subtracts back and returns
+    false, so the caller falls back to synchronous __mmput().
 
-The threshold defaults are set in the initcall outside any CONFIG_SYSCTL
-guard, since eligible()/reserve() read them whenever the key is on; only
-the toggle variable, its lock, the handler and the table depend on
-CONFIG_SYSCTL. With CONFIG_SYSCTL=n there is no path to enable the key,
-so the feature stays off and the thresholds are inert.
+mmput_exit() reads RSS once and checks eligibility before reservation,
+so the budget is only touched for processes that pass the cheap
+checks. On success it stores the charged amount in mm->async_reap_node's
+companion field async_reap_rss before enqueueing, and the reaper
+releases exactly that stored charge after __mmput(). The charge cannot
+be re-derived at reap time: RSS keeps shrinking after mm_users reaches
+zero -- rmap-based reclaim can still swap out anon pages and truncation
+can still unmap file pages, neither of which requires mm_users -- and
+get_mm_rss() is an approximate per-CPU counter read besides. Two
+independent reads at enqueue and reap would systematically
+under-release, drifting the pending counter upward until the cap
+permanently forces synchronous fallback.
 
-This patch is still dormant: nothing calls mmput_exit() yet, so flipping
-async_mm_teardown on has no observable effect. exit_mm() is routed
-through mmput_exit() later in the series; only then does enabling the key
-defer teardown. The toggle and gate are introduced here so that, once
-routing lands, the feature defaults off and an explicit opt-in is
-required.
+An eligible mm would otherwise have its entire __mmput() -- including
+exit_aio() -- deferred onto the single mm_reaper kthread.
+exit_aio() can block indefinitely waiting for in-flight AIO to drain,
+so mmput_exit() calls it eagerly, on the exiting task's own context,
+before reservation: a stuck AIO context then only stalls this task,
+same as a synchronous mmput() would, instead of blocking mm_reaper and
+stranding every other mm already queued behind it. exit_aio() is
+idempotent -- it is a no-op once mm->ioctx_table has been torn down --
+so __mmput() calling it again unconditionally is harmless, whether that
+second call lands on the reaper or -- when the reservation fails --
+back on the exiting task itself.
+
+Because reservation is add-then-check rather than read-then-add,
+committed pending never stays above the cap: an exit that would exceed
+it tears down synchronously instead. Under concurrent exits a failing
+reservation can transiently inflate the counter between its add and
+roll-back, which may cause another exiter to fall back to sync
+conservatively -- it can over-reject but never over-admit.
+
+The cap is a coarse safety bound on unreaped memory, not a reclaim
+mechanism: pages queued here are invisible to reclaim until the reaper
+frees them. Integrating the queue with reclaim (unmap-first draining,
+a shrinker) is future work; see the cover letter.
+
+The RSS threshold defaults to a fixed 64MB at init; the pending cap
+defaults to totalram_pages() / 4 as a placeholder pending tuning. Both
+are static module variables here and not yet user-tunable. The static
+key that gates the whole path, and sysctl registration, follow in the
+next patch.
+
+This patch is dormant: nothing calls mmput_exit() yet (exit_mm() is
+routed to it later in the series), so no teardown is deferred.
 
 Signed-off-by: Aditya Sharma <adi.sharma@zohomail.in>
 ---
- Documentation/admin-guide/sysctl/vm.rst | 38 +++++++++++
- kernel/fork.c                           | 90 ++++++++++++++++++++-----
- mm/Kconfig                              |  3 +-
- 3 files changed, 114 insertions(+), 17 deletions(-)
+ include/linux/mm_types.h |  1 +
+ kernel/fork.c            | 79 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 79 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-index 5b318d17a..ccda6c75f 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -22,6 +22,9 @@ the writeout of dirty data to disk.
- Currently, these files are in /proc/sys/vm:
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 3240c029f..ee6c0ac84 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1370,6 +1370,7 @@ struct mm_struct {
+ 		struct work_struct async_put_work;
+ #ifdef CONFIG_ASYNC_MM_TEARDOWN
+ 		struct llist_node async_reap_node;
++		unsigned long async_reap_rss;
+ #endif /* CONFIG_ASYNC_MM_TEARDOWN */
  
- - admin_reserve_kbytes
-+- async_mm_teardown
-+- async_mm_teardown_max_pending_pages
-+- async_mm_teardown_thresh_pages
- - compact_memory
- - compaction_proactiveness
- - compact_unevictable_allowed
-@@ -108,6 +111,41 @@ On x86_64 this is about 128MB.
- Changing this takes effect whenever an application requests memory.
- 
- 
-+async_mm_teardown
-+=================
-+
-+Available only when CONFIG_ASYNC_MM_TEARDOWN is set. Controls whether the
-+address-space teardown (exit_mmap()) of large exiting processes is deferred
-+to the mm_reaper kernel thread instead of running on the exiting CPU.
-+
-+Writing 1 enables deferral, 0 disables it. Disabling makes mmput_exit() tear
-+down inline again; it does not drain mms already queued. Defaults to 0.
-+
-+Deferred teardown consumes CPU in the mm_reaper kernel thread, which runs in
-+the root cgroup: the teardown work of a task in a CPU-limited cgroup is not
-+charged to that cgroup, similar to kswapd and the oom_reaper. Consider this
-+before enabling the feature on systems that rely on strict per-cgroup CPU
-+accounting.
-+
-+
-+async_mm_teardown_max_pending_pages
-+===================================
-+
-+Available only when CONFIG_ASYNC_MM_TEARDOWN is set. Backpressure cap, in
-+pages, on the total RSS of mms queued for the mm_reaper but not yet torn
-+down. An exit that would push the total over this cap tears down
-+synchronously instead of queuing. Defaults to totalram_pages() / 4.
-+
-+
-+async_mm_teardown_thresh_pages
-+==============================
-+
-+Available only when CONFIG_ASYNC_MM_TEARDOWN is set. Minimum RSS, in pages,
-+for an exiting mm to be eligible for deferral to the mm_reaper. Exiting mms
-+below this threshold are always torn down synchronously. Defaults to 64MB
-+worth of pages.
-+
-+
- compact_memory
- ==============
- 
+ #ifdef CONFIG_IOMMU_MM_DATA
 diff --git a/kernel/fork.c b/kernel/fork.c
-index d45418e66..0976770db 100644
+index 884e4e767..d45418e66 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -3414,8 +3414,13 @@ subsys_initcall(init_fork_sysctl);
+@@ -113,6 +113,7 @@
+ #include <linux/pgalloc.h>
+ #include <linux/uaccess.h>
+ #include <linux/sched/isolation.h>
++#include <linux/sizes.h>
+ 
+ #include <asm/mmu_context.h>
+ #include <asm/cacheflush.h>
+@@ -3412,6 +3413,48 @@ subsys_initcall(init_fork_sysctl);
+ #ifdef CONFIG_ASYNC_MM_TEARDOWN
  static LLIST_HEAD(mm_reaper_list);
  static DECLARE_WAIT_QUEUE_HEAD(mm_reaper_wait);
- static atomic_long_t mm_reaper_pending_pages;
-+static DEFINE_STATIC_KEY_FALSE(async_mm_teardown_key);
- static unsigned long sysctl_async_mm_teardown_thresh_pages;
- static unsigned long sysctl_async_mm_teardown_max_pending_pages;
-+#ifdef CONFIG_SYSCTL
-+static u8 sysctl_async_mm_teardown_enabled;
-+static DEFINE_MUTEX(async_mm_teardown_lock);
-+#endif
++static atomic_long_t mm_reaper_pending_pages;
++static unsigned long sysctl_async_mm_teardown_thresh_pages;
++static unsigned long sysctl_async_mm_teardown_max_pending_pages;
++
++static bool async_mm_teardown_eligible(struct mm_struct *mm, unsigned long rss)
++{
++	if (rss < READ_ONCE(sysctl_async_mm_teardown_thresh_pages))
++		return false;
++	if (mm_flags_test(MMF_OOM_SKIP, mm))	/* reaped, or hidden from the reaper */
++		return false;
++	/*
++	 * MMF_OOM_TARGETED is set by the OOM killer while some task still
++	 * holds a live reference to this mm (see mark_oom_victim() and
++	 * __oom_kill_process()), and this eligibility check is reached only
++	 * from mmput_exit(), after mm_users has dropped to 0 -- so marking
++	 * and this check can never overlap in time. Whichever thread
++	 * performs the final decrement is therefore guaranteed to observe
++	 * the flag already set, regardless of whether that thread was
++	 * itself ever passed to mark_oom_victim() (a CLONE_VM-sharing
++	 * process in another thread group never is, but still observes
++	 * this flag on the shared mm).
++	 */
++	if (mm_flags_test(MMF_OOM_TARGETED, mm))
++		return false;
++	return true;
++}
++
++/*
++ * Charge rss against the pending-teardown budget.  Returns true if it fits
++ * under the cap, in which case the caller enqueues and the reaper releases
++ * the same rss after __mmput().  On overshoot nothing stays charged and the
++ * caller must tear down synchronously.
++ */
++static bool async_mm_teardown_reserve(unsigned long rss)
++{
++	if (atomic_long_add_return(rss, &mm_reaper_pending_pages) >
++	    READ_ONCE(sysctl_async_mm_teardown_max_pending_pages)) {
++		atomic_long_sub(rss, &mm_reaper_pending_pages);
++		return false;
++	}
++	return true;
++}
  
- static bool async_mm_teardown_eligible(struct mm_struct *mm, unsigned long rss)
+ static void async_mm_teardown_queue(struct mm_struct *mm)
  {
-@@ -3485,8 +3490,6 @@ static int mm_reaper(void *unused)
+@@ -3429,7 +3472,10 @@ static int mm_reaper(void *unused)
+ 		wait_event_freezable(mm_reaper_wait, !llist_empty(&mm_reaper_list));
+ 		batch = llist_del_all(&mm_reaper_list);
+ 		llist_for_each_entry_safe(mm, n, batch, async_reap_node) {
++			unsigned long pages = mm->async_reap_rss;
++
+ 			__mmput(mm); /* may free mm via mmdrop */
++			atomic_long_sub(pages, &mm_reaper_pending_pages);
+ 			cond_resched();
+ 			try_to_freeze();
+ 		}
+@@ -3439,10 +3485,38 @@ static int mm_reaper(void *unused)
  
  void mmput_exit(struct mm_struct *mm)
  {
--	unsigned long rss;
--
++	unsigned long rss;
++
  	might_sleep();
- 	/*
- 	 * Fully ordered RMW: combined with exit_mm() (or exec_mmap(), the
-@@ -3498,27 +3501,80 @@ void mmput_exit(struct mm_struct *mm)
++	/*
++	 * Fully ordered RMW: combined with exit_mm() (or exec_mmap(), the
++	 * other path that sheds ->mm) clearing ->mm under task_lock() before
++	 * this call, it guarantees MMF_OOM_TARGETED set at any mark site is
++	 * visible here -- see mark_oom_victim(). Any new caller of
++	 * mmput_exit() outside exit_mm() must re-verify that argument.
++	 */
  	if (!atomic_dec_and_test(&mm->mm_users))
  		return;
- 
--	rss = get_mm_rss(mm);
-+	if (static_branch_unlikely(&async_mm_teardown_key)) {
-+		unsigned long rss = get_mm_rss(mm);
- 
--	if (async_mm_teardown_eligible(mm, rss)) {
--		/*
--		 * exit_aio() can block indefinitely. Run it here so a stuck
--		 * AIO only hangs this task (same as how it would happen in
--		 * case of synchronous mmput()) instead of stranding every
--		 * teardown queued behind this mm
--		 */
--		exit_aio(mm);
-+		if (async_mm_teardown_eligible(mm, rss)) {
-+			/*
-+			 * exit_aio() can block indefinitely. Run it here so a stuck
-+			 * AIO only hangs this task (same as how it would happen in
-+			 * case of synchronous mmput()) instead of stranding every
-+			 * teardown queued behind this mm
-+			 */
-+			exit_aio(mm);
- 
--		if (async_mm_teardown_reserve(rss)) {
--			mm->async_reap_rss = rss;
--			async_mm_teardown_queue(mm);
--			return;
-+			if (async_mm_teardown_reserve(rss)) {
-+				mm->async_reap_rss = rss;
-+				async_mm_teardown_queue(mm);
-+				return;
-+			}
- 		}
- 	}
- 
- 	__mmput(mm);
+-	async_mm_teardown_queue(mm);
++
++	rss = get_mm_rss(mm);
++
++	if (async_mm_teardown_eligible(mm, rss)) {
++		/*
++		 * exit_aio() can block indefinitely. Run it here so a stuck
++		 * AIO only hangs this task (same as how it would happen in
++		 * case of synchronous mmput()) instead of stranding every
++		 * teardown queued behind this mm
++		 */
++		exit_aio(mm);
++
++		if (async_mm_teardown_reserve(rss)) {
++			mm->async_reap_rss = rss;
++			async_mm_teardown_queue(mm);
++			return;
++		}
++	}
++
++	__mmput(mm);
  }
  
-+#ifdef CONFIG_SYSCTL
-+static int async_mm_teardown_enabled_handler(const struct ctl_table *table,
-+					     int write, void *buffer,
-+					     size_t *lenp, loff_t *ppos)
-+{
-+	int ret;
-+
-+	/*
-+	 * Serialize concurrent writers so the static key state always matches
-+	 * the last value written to the variable.
-+	 */
-+	guard(mutex)(&async_mm_teardown_lock);
-+
-+	ret = proc_dou8vec_minmax(table, write, buffer, lenp, ppos);
-+	if (ret || !write)
-+		return ret;
-+
-+	if (sysctl_async_mm_teardown_enabled)
-+		static_branch_enable(&async_mm_teardown_key);
-+	else
-+		static_branch_disable(&async_mm_teardown_key);
-+	return 0;
-+}
-+
-+static const struct ctl_table async_mm_teardown_table[] = {
-+	{
-+		.procname	= "async_mm_teardown",
-+		.data		= &sysctl_async_mm_teardown_enabled,
-+		.maxlen		= sizeof(u8),
-+		.mode		= 0644,
-+		.proc_handler	= async_mm_teardown_enabled_handler,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "async_mm_teardown_thresh_pages",
-+		.data		= &sysctl_async_mm_teardown_thresh_pages,
-+		.maxlen		= sizeof(unsigned long),
-+		.mode		= 0644,
-+		.proc_handler	= proc_doulongvec_minmax,
-+	},
-+	{
-+		.procname	= "async_mm_teardown_max_pending_pages",
-+		.data		= &sysctl_async_mm_teardown_max_pending_pages,
-+		.maxlen		= sizeof(unsigned long),
-+		.mode		= 0644,
-+		.proc_handler	= proc_doulongvec_minmax,
-+	},
-+};
-+#endif /* CONFIG_SYSCTL */
-+
  static int __init mm_reaper_init(void)
- {
- 	struct task_struct *th;
-@@ -3533,7 +3589,9 @@ static int __init mm_reaper_init(void)
- 	sysctl_async_mm_teardown_thresh_pages      = SZ_64M >> PAGE_SHIFT;
- 	sysctl_async_mm_teardown_max_pending_pages = totalram_pages() / 4;  /* TODO: placeholder */
+@@ -3456,7 +3530,10 @@ static int __init mm_reaper_init(void)
+ 	}
+ 	set_user_nice(th, 19); /* minimize competition with other fair class tasks */
+ 	kthread_affine_preferred(th, housekeeping_cpumask(HK_TYPE_KTHREAD));
++	sysctl_async_mm_teardown_thresh_pages      = SZ_64M >> PAGE_SHIFT;
++	sysctl_async_mm_teardown_max_pending_pages = totalram_pages() / 4;  /* TODO: placeholder */
  	wake_up_process(th);
--
-+#ifdef CONFIG_SYSCTL
-+	register_sysctl_init("vm", async_mm_teardown_table);
-+#endif
++
  	return 0;
  }
  subsys_initcall(mm_reaper_init);
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 296b16ad4..a9d925406 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1507,7 +1507,8 @@ config ASYNC_MM_TEARDOWN
- 	help
- 	  Defer the address space teardown (exit_mmap()) of large exiting processes
- 	  to a kernel thread instead of running it on the exiting CPU. The feature
--	  is off by default.
-+	  is off by default and is enabled at runtime via the vm.async_mm_teardown
-+	  sysctl.
- 
- 	  If unsure, say N.
- 
 -- 
 2.34.1
 
