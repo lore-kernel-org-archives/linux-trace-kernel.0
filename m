@@ -1,159 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F8F1A5B9E;
-	Sun, 19 Jul 2026 05:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466B92DA75A;
+	Sun, 19 Jul 2026 10:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784440310; cv=none; b=dNXIKFFLHivbSXr7VP3yrP6IPxjguVoXbpycwuHVIui+P2oHEU4NQN6JvpxqeDh4nUAQTppyRW3WK4D8nIu4ERjfU5K62hIjVBIbCHaWKH92+Y/L9zKYSXYwdW/ITUTjIoOgrxJXkP7p9PE4OZqmLTO06i3XOz4PobiJWonC7DQ=
+	t=1784455467; cv=none; b=FqvroJHS/tlsXJWsGY3ApYTmakrwwh552iA2u6MsHbQIBGb27leQ123Rs3k2r/MhbYYS0bPW1lCeAPN4QLA5vsHpqE5q2gNmD1paWX3Qjf5RyKAdZGFM5DFaHtQ4xO+ZxFDLIRpHocINiME27abaH/ZibfQi/kaRiwPVKxcoscc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784440310; c=relaxed/simple;
-	bh=Wh8YPDl4O//a45oi0oi3nXHtKHeFrCwqRXHBMj5Hd9M=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JhmrNEekwz+uYIRHUbdQVRNgSp0ClO6dbTSAMoIkQMIhY5SUCUEYTPql57EnMkvAwmOhZKxZtvTD98N2tBBJ0oq4AfxzRPvlMiPfMZ/n68XHMnLwZLOKN7FPZ52jFIbhRMiVKBc7BvyjhjuX+6iTTMl7uBxQn9aJTPrWZ12Uji0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9ZueUne; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9ZueUne"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144311F000E9;
-	Sun, 19 Jul 2026 05:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784440309;
-	bh=BaUeI3qNp2QRpOOJEQpyY+Xbckyb97iqqtxaVt1svzE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=n9ZueUneYX4xhMusRkJGUDPB6+QxxLyPm1giQYPf07Kzu04p+N9LjDasWd0/tOfNB
-	 lXeDkClJCu37tIk6F34XbMC3KQkIcw+hrCnuHeTudkfuBcBT311N+DlvSuY0m8wG7I
-	 7Lk2qsTzEb2J2NY9ABGF7kxQXQ49yyY7djuPwdsAoIyZANDxmbRoxjdVK1BlOt9jnU
-	 xbwJ37iVlmjU6Iq92hahEdtWUyP1jVeekgQj+IoamUVfOnCDdDd2rkZQtWKD2XQNZA
-	 ORfCCeEodldqP9IggZHjEJp+OHVJsK6Lt0uNbq37C4Qcl3MZnqI7YJaSKKhQRBR9d2
-	 FAKH+1s1omjCQ==
-Date: Sun, 19 Jul 2026 14:51:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Hongyan Xia <hongyan.xia@transsion.com>
-Cc: Will Deacon <will@kernel.org>, Pu Hu <hupu@transsion.com>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>, "ada.coupriediaz@arm.com"
- <ada.coupriediaz@arm.com>, "catalin.marinas@arm.com"
- <catalin.marinas@arm.com>, "davem@davemloft.net" <davem@davemloft.net>,
- Jiazi Li <jiazi.li@transsion.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, "naveen@kernel.org"
- <naveen@kernel.org>, "yang@os.amperecomputing.com"
- <yang@os.amperecomputing.com>
-Subject: Re: [RFC v3 2/2] arm64: kprobes: Allow reentering kprobes while
- single-stepping
-Message-Id: <20260719145143.78fdbc359174e1180a5646be@kernel.org>
-In-Reply-To: <be182a18-4cea-445d-a319-1ed3a6c17598@transsion.com>
-References: <20260710063242.228714-1-hupu@transsion.com>
-	<20260710063242.228714-3-hupu@transsion.com>
-	<aljbf_RmOd9U2KDT@willie-the-truck>
-	<0f049d38-b7f6-47f0-a410-95ad2aee7fd4@transsion.com>
-	<alj2uxE1M8mcMBhA@willie-the-truck>
-	<e0e800f5-a6f8-48ae-b55c-5c3d928bf234@transsion.com>
-	<aloLb0j8sg0usmAF@willie-the-truck>
-	<be182a18-4cea-445d-a319-1ed3a6c17598@transsion.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784455467; c=relaxed/simple;
+	bh=80Iv1r7mNqJ5Y06dstMEqMA0r1l2WeRNNAMkzFtfKvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jZR+OnYN4IjfvVEOImSXdauvciEEVsPERayt8AJuP6G0o9/kCfcnuK2VmNshnBepxjH1EKfRNhhf86bvNazW6d43ZsQWe4C6qvdAOuBzO1LYrYXP02+W95lZOamkOwgLdc/dF+NwwImN8z/vhZUEE/CHuS/HNG/IZ+OudAiqSog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1wlONg-00000001eoI-2yeJ;
+	Sun, 19 Jul 2026 12:04:20 +0200
+Date: Sun, 19 Jul 2026 12:04:20 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [tracing]  206b25c090:
+ kselftests-bpf.ftrace.ftracetest-ktap.Generic_dynamic_event_-_add/remove_eprobe_events.fail
+Message-ID: <alyhJP3w_cZCmLLu@akranes.kaiser.cx>
+References: <202607151010.b68428e1-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202607151010.b68428e1-lkp@intel.com>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-On Fri, 17 Jul 2026 11:31:31 +0000
-Hongyan Xia <hongyan.xia@transsion.com> wrote:
+Hi,
 
-> On 7/17/2026 7:01 PM, Will Deacon wrote:
-> > On Fri, Jul 17, 2026 at 01:51:12AM +0000, Hongyan Xia wrote:
-> >> On 7/16/2026 11:20 PM, Will Deacon wrote:
-> >>> On Thu, Jul 16, 2026 at 02:38:58PM +0000, Pu Hu wrote:
-> >>>> On 7/16/2026 9:24 PM, Will Deacon wrote:
-> >>>>> On Fri, Jul 10, 2026 at 06:32:55AM +0000, Pu Hu wrote:
-> >>>>>> From: Pu Hu <hupu@transsion.com>
-> >>>>>>
-> >>>>>> A kprobe can be hit while another kprobe is in KPROBE_HIT_SS state. This
-> >>>>>> can happen when tracing or perf code runs from the debug exception path
-> >>>>>> while the first kprobe is preparing or executing its out-of-line
-> >>>>>> single-step instruction.
-> >>>>>
-> >>>>> I don't understand this part. The single-step runs with debug exceptions
-> >>>>> disabled (kprobes_save_local_irqflag() sets PSTATE.D) so how do we end
-> >>>>> up taking one?
-> >>>>
-> >>>> You are right that the single-step runs with debug exceptions disabled.
-> >>>> However, the case I was referring to is not a hardware breakpoint or a
-> >>>> software-step exception, but another Breakpoint Instruction exception
-> >>>> generated by executing a BRK instruction. A BRK instruction exception is
-> >>>> not masked by PSTATE.D, so it can still be taken while handling a kprobe.
-> >>>>
-> >>>> As far as I understand the architecture, there are two different cases here:
-> >>>>
-> >>>>      - Breakpoint Instruction exceptions, generated by executing a BRK
-> >>>>        instruction.
-> >>>>      - Breakpoint exceptions, generated by the debug logic, for example by
-> >>>>        programmed breakpoint registers.
-> >>>>
-> >>>> PSTATE.D masks debug exceptions such as hardware breakpoints,
-> >>>> watchpoints and software-step exceptions, but it does not mask
-> >>>> Breakpoint Instruction exceptions generated by BRK. This also seems
-> >>>> consistent with the pseudocode for BRK,
-> >>>> Arch64.SoftwareBreakpoint(imm16), which does not appear to check
-> >>>> PSTATE.D before taking the exception.
-> >>>>
-> >>>> Therefore, even if kprobes_save_local_irqflag() sets PSTATE.D while
-> >>>> handling the first kprobe, if the code executed from that path reaches
-> >>>> another instruction patched with BRK, it can still take a Breakpoint
-> >>>> Instruction exception. In other words, the nested case I mentioned is
-> >>>> another kprobe BRK being hit, not a hardware debug exception or a
-> >>>> software-step exception.
-> >>>
-> >>> Yes, that's correct, but if we're doing the out-of-line step, how do we
-> >>> end up executing a BRK? Or are you saying that it's the kprobes
-> >>> BRK64_OPCODE_KPROBES_SS instruction that we use to implement the
-> >>> single-step that is the problem? If so, how does taking that exception
-> >>> result in us executing tracing or perf code?
-> >>>
-> >>> Sorry for all the questions, I just haven't understood what's going on
-> >>> here from the commit message.
-> >>
-> >> The key is that, when you use 'perf --call-graph dwarf' to sample
-> >> certain events, kernel perf code will sample a piece of user stack each
-> >> time those events are hit, and copy_to/from_user() triggers page faults.
-> >> Say you are profiling preempt_enable events:
-> >>
-> >> 1st BRK -> preempt_disable() -> debug_exception() -> set SS state ->
-> >> preempt_enable() -> triggers perf -> perf_sample() -> sample user stack
-> >> using copy_to/from_user() -> page fault or 2nd BRK on the page fault path.
-> >>
-> >> The key is perf sampling the user stack while the 1st BRK is still
-> >> running. When a page fault is hit, a can of worms is released, including
-> >> a possible 2nd BRK.
-> > 
-> > Thanks. So perf is run synchronously from the debug exception entry path,
-> 
-> Yes, exactly.
-> 
-> > rather than because of a second exception taking place. Got it. But then
-> > it sounds like we should really make the debug exception handling path (at
-> > least, the part that runs for handling the kprobe step) noinstr to avoid
-> > getting into this state to begin with. Is that practical?
-> 
-> Not sure about making the whole path noinstr (@Masami might have a 
-> better opinion on this than me). Personally I don't mind either 
-> disallowing it or making it correct.
+Thus wrote kernel test robot (oliver.sang@intel.com):
 
-Yeah I agree with making it noinstr. 
+> kernel test robot noticed "kselftests-bpf.ftrace.ftracetest-ktap.Generic_dynamic_event_-_add/remove_eprobe_events.fail" on:
 
-> 
-> But it might be a good idea not to diverge too much between ISAs. This 
-> patch is pretty much mirroring what the x86 side handles this situation.
+> commit: 206b25c09080cc20fd4c2bea12d59df4b7ba2121 ("tracing: eprobe: read the complete FILTER_PTR_STRING pointer")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
-I don't mind modifying how it is handled in each architecture, since
-this part is too much depending on the ISA.
+> [test failed on linus/master      3b029c035b34bbc693405ddf759f0e9b920c27f1]
+> [test failed on linux-next/master 49362394dad7df66c274c867a271394c10ca2bb8]
+
+> in testcase: kselftests-bpf
+> version: 
+> with following parameters:
+
+> 	group: ftrace
+
+> config: x86_64-rhel-9.4-bpf
+> compiler: gcc-14
+> test machine: 16 threads Intel(R) Core(TM) i7-13620H (Raptor Lake) with 32G memory
+
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+
+[...]
+
+> # # ++ echo 0
+> # # +++ grep '^ *ls-' trace
+> # # +++ grep file=
+> # # ++ content='              ls-5520    [006] ...1.   335.361454: eprobe_open: (syscalls.sys_enter_openat) file="/usr/libexec/coreutils/libstdbuf.so"
+> # # ls-5520    [006] ...1.   335.361620: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v3/libselinux.so.1"
+> # # ls-5520    [006] ...1.   335.361649: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v2/libselinux.so.1"
+[...]
+> # # ls-5520    [006] ...1.   335.364212: eprobe_open: (syscalls.sys_enter_openat) file="/usr/lib/locale/C.UTF-8/LC_NUMERIC"
+> # # ls-5520    [006] ...1.   335.364239: eprobe_open: (syscalls.sys_enter_openat) file="/usr/lib/locale/C.utf8/LC_NUMERIC"
+> # # ls-5520    [006] ...1.   335.364265: eprobe_open: (syscalls.sys_enter_openat) file="/usr/lib/locale/C.UTF-8/LC_CTYPE"
+> # # ls-5520    [006] ...1.   335.364292: eprobe_open: (syscalls.sys_enter_openat) file="/usr/lib/locale/C.utf8/LC_CTYPE"
+> # # ls-5520    [006] ...1.   335.364341: eprobe_open: (syscalls.sys_enter_openat) file="."'
+> # # +++ grep '^ *ls-' trace
+> # # +++ grep file=
+> # # +++ grep -v -e '"/' -e '"."' -e '(fault)'
+> # # ++ nocontent='              ls-5520    [006] ...1.   335.361620: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v3/libselinux.so.1"
+> # # ls-5520    [006] ...1.   335.361649: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v2/libselinux.so.1"
+> # # ls-5520    [006] ...1.   335.361676: eprobe_open: (syscalls.sys_enter_openat) file="libselinux.so.1"
+> # # ls-5520    [006] ...1.   335.362051: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v3/libcap.so.2"
+> # # ls-5520    [006] ...1.   335.362080: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v2/libcap.so.2"
+> # # ls-5520    [006] ...1.   335.362107: eprobe_open: (syscalls.sys_enter_openat) file="libcap.so.2"
+> # # ls-5520    [006] ...1.   335.362288: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v3/libc.so.6"
+> # # ls-5520    [006] ...1.   335.362314: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v2/libc.so.6"
+> # # ls-5520    [006] ...1.   335.362340: eprobe_open: (syscalls.sys_enter_openat) file="libc.so.6"
+> # # ls-5520    [006] ...1.   335.362552: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v3/libpcre2-8.so.0"
+> # # ls-5520    [006] ...1.   335.362581: eprobe_open: (syscalls.sys_enter_openat) file="glibc-hwcaps/x86-64-v2/libpcre2-8.so.0"
+> # # ls-5520    [006] ...1.   335.362607: eprobe_open: (syscalls.sys_enter_openat) file="libpcre2-8.so.0"'
+
+This list must be empty for the test to pass. Files with absolute paths and
+pointers that can't be dereferenced "(fault)" are filtered.
+
+My patch fixed the dereferencing, some of the faults are now readable
+filenames. And for some of those, openat used a relative path.
+
+IMHO, the test is not correct, relative paths should be allowed. (In fact, any
+name of an existing file should be ok.)
+
+I'll think about this a bit more and submit a patch to fix the test.
 
 Thanks,
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Martin
