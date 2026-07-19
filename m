@@ -1,41 +1,41 @@
-Received: from sender-pp-o91.zoho.in (sender-pp-o91.zoho.in [103.117.158.91])
+Received: from sender-pp-o93.zoho.in (sender-pp-o93.zoho.in [103.117.158.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE59175A6D
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Jul 2026 18:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.117.158.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E21C1A6817
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Jul 2026 18:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.117.158.93
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784487386; cv=pass; b=UXTy3Xi7UzcUVsAu/6aN29MJjy10LXR4HHA3RVGn7Uaix7I6jNFNKPJij3X7DltEBF/wnX5Wdaf5DGSWuabmYAgrNlS+awmWHF2edq20CSjuw2n/+Y3ku5cNWuBG0A4XimdrSauqo8DBaFrDtN4KXe6/RNRwOtNfxqGtjVrmrjY=
+	t=1784487386; cv=pass; b=TqWW1cSb+3Z8lXbjsv2mZ8qiY6fHIowm+5scG63HdNGODQMusPKmyGe5uWtOq0GBpksrfTk1FRo1wybpltffem0iY2Mis0nGBP/uNa+kcatxlR8NNnzSJqU10clDEkKw6dxP4dsX5GVVpx+c/1uAW4wB/F8HEU/eHpAx80+dPPs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784487386; c=relaxed/simple;
-	bh=N+21rkpaZHsE/JH8ThNMpu23yT81kMKbJpy7npclSVA=;
+	bh=DWqpV7HV35H5sSmmuvc8SHajZmC2s/uaGRbQuy3Z+NA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ec6cxkUYe4qgNhj4yTOaW4QerTdHnyArN4hgnfHnVlYMJrKC7NZdpq5sBrePPTkuAl9boAiKirQLBzn02jUjHQbiJSjhuvmMm54ATZsP8C+UmRCNbhVZxCTZwhRbckLHxfuu5RLq/xcM4UPgLIQ43Lax7yI6xH4hpHDLzLsJIxo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=oSDCqezK; arc=pass smtp.client-ip=103.117.158.91
+	 MIME-Version; b=mhaEUTqd/4gjBmkBzHfl3j9qQ3fPd0/T4p10Ky+ZhkNMXnCDfvXwRArrWHDdEvicq08XDuQJfTdoGBOraEiHVMXvUY/MHc0kepWKoJKdypODeXSKN+zgqdPCv1q8nZf6s+8yeEFtYRNcv561nfb768Q7cSqudpYYLb/smQMw+6U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=KxhcUFcb; arc=pass smtp.client-ip=103.117.158.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="oSDCqezK"
-ARC-Seal: i=1; a=rsa-sha256; t=1784487289; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="KxhcUFcb"
+ARC-Seal: i=1; a=rsa-sha256; t=1784487280; cv=none; 
 	d=zohomail.in; s=zohoarc; 
-	b=McJqNokg8RJLtID0rDpHo9dZHGTcCImBNyjNUYGUNKx7Hy6zqpz3HtC81y5rc0sfXObKBS4Y+e3lTVp572kZ92nL9WRYPvz//dOHQDIeg+gxOl+WN+PHsSnsz52S5WD4bEC9Z53LbdghM0M9Ze7kQ74LRQEBinvoaEWzn3KnLUU=
+	b=XEiIyIz5mE0Bp26X0wV6jXA/VaVEDP0Vsd8y+wtWApSpa0QnNb1QflaNTLWFhUnGhhhtxzfJCuzo0fiHM9keOIa6/HZdzmITOPROxQGgPC+KqksvGbqDzNUa3EBFq+euvnUukms+YSB2J5UPUhW16rYMvfndG0EowDoBNKl6VhE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1784487289; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XAzpNKpcNCtyrAHnItiN1RWU6bwJlMRMpPXgZD5jnVo=; 
-	b=Cj+k8yjMZlLPaVGvfAwb5N7TWBlR2uu0H1Y0tQi/gckdCPxFbiix3Cp0dsDTOk46SEZrU85QatitPy3wLhs10Y95LVTBNhmKcpn50pPxVFVfZJZJSJtjy7hcCFYBaZdsTEQt2QM4cCTszi4dKGTXQw5qoLu+mtPUxiEs+BoIrF4=
+	t=1784487280; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2WFeeZ7KFA8P2LraO+LyQSTzhNZOCYdC5G9o/v637Mc=; 
+	b=N/saLD1un8BAWR2AyHmL00UBCNQGgS9/mzsoMKFPls2nqPvcQd+TE66HlrKt8RGiL89qVR9M5f6W4l12uUOC2nvBrukr1+OWVMMtyIRcFb7CXatipTkE8sSZF+7gU4erUjorKMdKAeU6W7rF8Y7xqAnl9zXd6GUjmF2aCGtfdpU=
 ARC-Authentication-Results: i=1; mx.zohomail.in;
 	dkim=pass  header.i=zohomail.in;
 	spf=pass  smtp.mailfrom=adi.sharma@zohomail.in;
 	dmarc=pass header.from=<adi.sharma@zohomail.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784487289;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784487280;
 	s=zoho; d=zohomail.in; i=adi.sharma@zohomail.in;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=XAzpNKpcNCtyrAHnItiN1RWU6bwJlMRMpPXgZD5jnVo=;
-	b=oSDCqezKKsi/qJYD/MBrcfiWX378g9IN6DcHLRiXs7+RN7K7Vq+gHxkoR4s4DpBV
-	L2JKMZvU1ciBmMO3VARq/OG04R6t+GbSS0nZ1/VSTzyqv/lZKKlM6vvNI9KpBKFEJV8
-	3guQw0Ax2RZ/tTah8w+9X8Z8wsJJ+ouXl2Xy2unc=
-Received: by mx.zoho.in with SMTPS id 178448728809969.40393444362564;
-	Mon, 20 Jul 2026 00:24:48 +0530 (IST)
+	bh=2WFeeZ7KFA8P2LraO+LyQSTzhNZOCYdC5G9o/v637Mc=;
+	b=KxhcUFcbC6fZlSEYws8W0Ligew3B89Dy34756H9Y+FnvLbM3HTHSHcq86uuSw8oE
+	n0Ztxv6GW1uqGFGw83uoBxi03Di1KvQYhCIeLO3m80kIr5Uz1H/Sh6dVKWRaGyqsAVD
+	lbsjcFg5UpRN2pbF/Is6Fg7wpUjH+nwu2Tyjw80g=
+Received: by mx.zoho.in with SMTPS id 1784487278994775.8847779555358;
+	Mon, 20 Jul 2026 00:24:38 +0530 (IST)
 From: Aditya Sharma <adi.sharma@zohomail.in>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -68,9 +68,9 @@ Cc: David Rientjes <rientjes@google.com>,
 	linux-kernel@vger.kernel.org,
 	imbrenda@linux.ibm.com,
 	Aditya Sharma <adi.sharma@zohomail.in>
-Subject: [RFC PATCH 7/7] exit: route exit_mm()'s final mmput() through mmput_exit()
-Date: Mon, 20 Jul 2026 00:24:09 +0530
-Message-Id: <20260719185409.409685-8-adi.sharma@zohomail.in>
+Subject: [RFC PATCH 1/7] mm: add CONFIG_ASYNC_MM_TEARDOWN scaffolding for off-CPU exit teardown
+Date: Mon, 20 Jul 2026 00:24:03 +0530
+Message-Id: <20260719185409.409685-2-adi.sharma@zohomail.in>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260719185409.409685-1-adi.sharma@zohomail.in>
 References: <20260719185409.409685-1-adi.sharma@zohomail.in>
@@ -83,83 +83,91 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-This makes the series operative. So far, nothing called mmput_exit().
-Switch exit_mm() from mmput() to mmput_exit(), so the exiting task's final
-reference drop can defer the address-space teardown to mm_reaper
-instead of running exit_mmap() on the exiting CPU.
+Address-space teardown on process exit runs synchronously in the dying
+task's context: exit_mm() -> mmput() -> __mmput() -> exit_mmap() walks
+page tables, updates rmap, frees the RSS and drops file refs, all on the
+exiting CPU.
 
-Only the exit path is routed. Every other mmput() caller (get_task_mm()
-users like ptrace and /proc, kthread_unuse_mm(), etc.) still tears down
-inline, and if one of those ends up holding the actual last reference,
-behavior is unchanged -- the deferral applies only when the exiting
-task's own drop is the final one.
+Add the scaffolding to later move __mmput() off-CPU for large exiting
+address spaces, with no functional change in this patch:
+  - new config ASYNC_MM_TEARDOWN (bool, depends on MMU, default n)
+  - struct mm_struct::async_reap_node (llist_node), CONFIG-gated, with
+    an explicit <linux/llist.h> include (it was only ever available
+    transitively via spinlock.h)
+  - mmput_exit() declaration, with a static inline fallback that is a
+    plain mmput
 
-The deferral triggers only when all of the following hold, and falls
-back to inline __mmput() otherwise:
-
-- vm.async_mm_teardown=1 (static key, default off)
-- RSS >= vm.async_mm_teardown_thresh_pages (default 64MB)
-- the mm is not an OOM target (MMF_OOM_TARGETED) and has not already
-been reaped (MMF_OOM_SKIP)
-- charging the RSS to the pending budget stays under
-vm.async_mm_teardown_max_pending_pages
-
-Results, bare metal, 32 CPUs / 32GB RAM (31 GiB usable), single
-NUMA node, performance governor, medians of 10 reps, THP off unless noted,
-vm.async_mm_teardown_max_pending_pages raised to 3/4 of RAM for the
-async runs (the RAM/4 default would reject a single 16GB mm on this
-box; see the cover letter's open question on the cap default):
-
-reap latency (SIGKILL -> waitpid() returns), async off -> on:
-1GB    18.01 ms  ->  0.14 ms
-4GB    73.71 ms  ->  0.14 ms
-16GB  282.16 ms  ->  0.15 ms
-16GB   27.68 ms  ->  0.13 ms   (THP on)
-
-voluntary exit (_exit() -> reap) matches within noise:
-16GB  271.27 ms  ->  0.12 ms
-
-redis-server with a 16GB populated dataset (real heap, VmRSS ~16.2GB):
-      292.97 ms  ->  0.24 ms
-
-32 simultaneous 0.5GB exits, tail until all reaped:
-      157.42 ms  ->  0.32 ms
-
-below-threshold 30MB process with the feature enabled:
-        0.56 ms  ->  0.60 ms   (sync path, within noise)
-
-A CONFIG_ASYNC_MM_TEARDOWN=n build of the same tree reproduces the
-async-off column within noise (18.01 vs 18.01 ms at 1GB, 282.14 vs
-282.16 ms at 16GB), so the config itself costs nothing when dark.
-
-The work is moved, not eliminated: with async on, the 16GB region is
-fully back in the buddy allocator ~240 ms after the kill (vs ~283 ms
-when torn down inline), and the reaper spends ~1.18x the inline CPU on
-the same teardowns (nice-19 kthread, cache-cold on another CPU). The
-cover letter carries the full matrix: freeing-latency checks,
-backpressure fallback, OOM-killer interaction (an OOM victim is never
-queued, tracepoint-verified, including the CLONE_VM-sharer case),
-tmpfs inode eviction in reaper context, sysctl toggling under load,
-and a freezer cycle with a queued backlog.
+When the config is disabled mmput_exit() compiles to mmput() with zero
+delta, so nothing changes until the kthread and dispatch land.
 
 Signed-off-by: Aditya Sharma <adi.sharma@zohomail.in>
 ---
- kernel/exit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/mm_types.h |  4 ++++
+ include/linux/sched/mm.h |  6 ++++++
+ mm/Kconfig               | 11 +++++++++++
+ 3 files changed, 21 insertions(+)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 1056422bc..6f97d204f 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -607,7 +607,7 @@ static void exit_mm(void)
- 	task_unlock(current);
- 	mmap_read_unlock(mm);
- 	mm_update_next_owner(mm);
--	mmput(mm);
-+	mmput_exit(mm);
- 	if (test_thread_flag(TIF_MEMDIE))
- 		exit_oom_victim();
- }
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 939b5ea8c..fffa285ef 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -7,6 +7,7 @@
+ #include <linux/auxvec.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
++#include <linux/llist.h>
+ #include <linux/spinlock.h>
+ #include <linux/rbtree.h>
+ #include <linux/maple_tree.h>
+@@ -1367,6 +1368,9 @@ struct mm_struct {
+ 		atomic_long_t hugetlb_usage;
+ #endif
+ 		struct work_struct async_put_work;
++#ifdef CONFIG_ASYNC_MM_TEARDOWN
++		struct llist_node async_reap_node;
++#endif /* CONFIG_ASYNC_MM_TEARDOWN */
+ 
+ #ifdef CONFIG_IOMMU_MM_DATA
+ 		struct iommu_mm_data *iommu_mm;
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 10be8a54b..20aeb1d7e 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -147,6 +147,12 @@ extern void mmput(struct mm_struct *);
+ void mmput_async(struct mm_struct *);
+ #endif
+ 
++#ifdef CONFIG_ASYNC_MM_TEARDOWN
++void mmput_exit(struct mm_struct *);
++#else
++static inline void mmput_exit(struct mm_struct *mm) { mmput(mm); }
++#endif
++
+ /* Grab a reference to a task's mm, if it is not already going away */
+ extern struct mm_struct *get_task_mm(struct task_struct *task);
+ /*
+diff --git a/mm/Kconfig b/mm/Kconfig
+index c52ab6afc..296b16ad4 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1500,6 +1500,17 @@ config LAZY_MMU_MODE_KUNIT_TEST
+ 
+ 	  If unsure, say N.
+ 
++config ASYNC_MM_TEARDOWN
++	bool "Async off-CPU address space teardown on exit"
++	depends on MMU
++	default n
++	help
++	  Defer the address space teardown (exit_mmap()) of large exiting processes
++	  to a kernel thread instead of running it on the exiting CPU. The feature
++	  is off by default.
++
++	  If unsure, say N.
++
+ source "mm/damon/Kconfig"
+ 
+ endmenu
 -- 
 2.34.1
 
