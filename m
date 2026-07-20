@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2063AD505;
-	Mon, 20 Jul 2026 10:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8092B3DBD47;
+	Mon, 20 Jul 2026 10:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784544227; cv=none; b=dksH+77EYmUQu4FmWFpRx3v8qt/belDK3u1uBtsPAUrE9U1t1EU1Ov6OnDHWFqo0LuVbhUL4u0zKrSy67LiR4hkVAJCrAlkE9Mb9jsBQjlaFHIMiJWjksvSZGm3dgkRHHqz0MQi9vc91NZSKYxgeAptlFRGDn7F1HF0wQLVDI9M=
+	t=1784544241; cv=none; b=jt32TNabSzppiOnGd1H7XA4zA40VRwoJJ4cVMsygA2Or90buJLkQd+1LOynndahrR4iQmp724QC8UXpGPyaO4IH7jhyR6J0CF/ySyBP5BZ5uBZac8z48wPw/zUJLcP9bqyx8S3J76zU7SMPpzOdxydeF3BmRStlqkg1q2Nzdqa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784544227; c=relaxed/simple;
-	bh=2mZXoIzvSAZokoGoDXcnNZuL3xYCxPOTGwEJnRO533o=;
+	s=arc-20240116; t=1784544241; c=relaxed/simple;
+	bh=7iwhT+OMjeqlBnHKCtI3TLdB7erI40oggHs3AYxmGNg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mqOfbjMj2jDhWSyHs9K7Da4KBBuwAxTa2vtgP6zOppQLzpxife5rXhwa+6OfaXR4yyrSPcb+X7+swt8PC3f7gQ+efxSNCjGkAs/Y0jXkDH9Y7MOMqeV9fSyeGjsK4QeNyRDoDvXUzUYMXwSX45QUYz/PYsZL2PpHAE+HAE+sACM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJvR+K8N; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=G8n5rQVL0GEJMQxZ9DJEUD6UNagSjJ/rMTc4AnkT9Ez4uI1pCZqOzASObex25GbhtEPkOjyq67QUt25Vp0pSP95QWXPPYoXg+1Qf5ZTkAj3cMhvgsWHej7uQLaaime7VK/ySmaVxzh4mPfYblYXegM9QkOAIZhpcSLKji0eG2Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWhjOrCE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJvR+K8N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837EA1F000E9;
-	Mon, 20 Jul 2026 10:43:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWhjOrCE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBDDA1F000E9;
+	Mon, 20 Jul 2026 10:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784544222;
-	bh=9ThXQ25nS188ePU8Js7Kwou012mg2AJOuu/gKi5oCfc=;
+	s=k20260515; t=1784544232;
+	bh=r54JjzfEk9czsuC0MJryDnII5W8oRT9GKoRXZth4XIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DJvR+K8N+t+jY87ADBshiqzfUTMzSe7XvmDtAZa8iCqzRM2cqJVgICtya28xQfIED
-	 2pDQUbqpWXjL9+vm00INBlgoZSKiIEqELjvDam/lwbhY1HIEgdkcG9PMi+WmYTtj7H
-	 mLrrwZc+kNz89uIZtYeeaK1QW3mk76VMTrcKx2GS7STCQpgUCBRfo6J0mmyeMhQkqC
-	 o3on7iSC9CuXVYdEDWOQA/VlQDjhsdeyBobOXBkK1ktX2qAKkCuw/rQDTuPBoicYiw
-	 yHez9bhdhm+C8JQhet3AUAF3I3SoTeS3ZhGwjFrPv/rdKA/B4muwS+N6EjkBOEHaxR
-	 P1JVdOtRHC8WQ==
+	b=kWhjOrCEyXZHKrqN1a5C2G/c0EgUL4T1hNiiumxcpdkUKMhNu5fxnfl/rTgS6pZEQ
+	 brQsUL99Kx48b6bWhJKLZNkfzoWbRJtr31iPwWh6PJr9fQ+v9iOEQ78EF8GdJeb5V/
+	 o1tFU9c4KllytmYJLUZC1Yf8tbq4t2S4OABjEZsNsuZbmcEt6VZUlXAKPa9V27tite
+	 LYBQ6IDBR60LcJ319CLdlbSGa1B9lXdQV+HiL1O1Rwrkvlq6hv4/Vr7y4bCHzH3VTT
+	 YCuOYFLqMPq2ifNvNlFicsxsGTt331ljzlPCD3uQ2BWiLasd1tQ1DAUPNCuJ21QQZ6
+	 +wtbOg9qpbzGQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 01/10] tracing/probes: Remove duplicate MAX_ARRAY_LEN macro definition
-Date: Mon, 20 Jul 2026 19:43:39 +0900
-Message-ID: <178454421926.296567.6649983666070787570.stgit@devnote2>
+Subject: [PATCH 02/10] tracing/probes: Remove redundant boolean conversion in trace_probe_has_single_file()
+Date: Mon, 20 Jul 2026 19:43:48 +0900
+Message-ID: <178454422826.296567.4382363406595169533.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178454420994.296567.10239174745865301350.stgit@devnote2>
 References: <178454420994.296567.10239174745865301350.stgit@devnote2>
@@ -50,25 +50,26 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-MAX_ARRAY_LEN is defined twice in trace_probe.h. Remove the redundant
-definition.
+list_is_singular() returns a boolean value, so the double negation (!!)
+in trace_probe_has_single_file() is redundant. Remove it.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.h |    1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/trace_probe.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index ebdc706e7cb6..b3571c85abb1 100644
+index b3571c85abb1..c0f05763811c 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -220,7 +220,6 @@ DECLARE_BASIC_PRINT_TYPE_FUNC(symbol);
- 	_ASSIGN_FETCH_TYPE(#ptype, ptype, ftype, sizeof(ftype), sign, atype)
+@@ -360,7 +360,7 @@ static inline int trace_probe_unregister_event_call(struct trace_probe *tp)
  
- #define ASSIGN_FETCH_TYPE_END {}
--#define MAX_ARRAY_LEN	64
+ static inline bool trace_probe_has_single_file(struct trace_probe *tp)
+ {
+-	return !!list_is_singular(&tp->event->files);
++	return list_is_singular(&tp->event->files);
+ }
  
- #ifdef CONFIG_KPROBE_EVENTS
- bool trace_kprobe_on_func_entry(struct trace_event_call *call);
+ int trace_probe_init(struct trace_probe *tp, const char *event,
 
