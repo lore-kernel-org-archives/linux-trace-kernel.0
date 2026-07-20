@@ -1,57 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F2842B311;
-	Mon, 20 Jul 2026 14:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AD842CAE9;
+	Mon, 20 Jul 2026 14:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784557493; cv=none; b=Lo0jOvNtZq4iTYzYb6rdWmJm/B5NGWdMK1+7p8YpXkrFjpk47p8yluxMHJ9zPCf6wzEzHA0MSeSLfLSnW4MiHcs3L+fQKyd1mek51g1GAv8TLefhScuKB7b33axUdFZ7TflCHkBMiwRYYQwFuhop9Fvm2IGrdayC58QDx3jRfPk=
+	t=1784557798; cv=none; b=JVTeInLXNQOULvGYEaXdzrizylX6QzRd7VX8PRnlel/vIUe5hC4bgpwsrNF0KjJcw8QVnWiBGplc/SmlVILYlwxT7ef0L4Mg8KmGt5miRYAxJcR6ttS8rniaKXBJgufvqbDhLgDgWYIFZGQLsi8XQ2ULVi0NYc+DlRkcQHn5VdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784557493; c=relaxed/simple;
-	bh=nJHwqodpka2gGhMWW0JBRL/YXJ6Yzeqj2mf9Le3yEYY=;
+	s=arc-20240116; t=1784557798; c=relaxed/simple;
+	bh=X61gKfZ16dz/eDfGeWsjCbEbo9rrjhHhVgQrQ3f1zdE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LneOMYgXgciO2h2/WB2bnOGUYSBqY98dyJvb3exYwAII4MMHkkQiEqGay7hXQp9ErgueqN4Mc/C1rIcdJXpczcfJi+UDcqEc3yUbtsv6zmyAM8D2N6n2z5ShOT+3alkL4W4jtTuhyBHtJFTr8MBHpIX598FFAjNxLbk4qBJSWis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsSNjfz8; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=IBbCUNrYMkB3bHKWOllML9NXwg1Fb7GwOoLwapyAm5HbOIFt+FTxhyXkxVpudxRGGoUOpB8qF/7ne9cGpfu4CSW1XN57Gmnad1AN/lSEyjcaouPu8DqNU3ra3gx3BsjQlNwMUyyCjKWb76pq+oHnyy4HPipN+LtJnQTPvGSEYVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJOupfKs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsSNjfz8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E511F000E9;
-	Mon, 20 Jul 2026 14:24:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJOupfKs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 043AC1F000E9;
+	Mon, 20 Jul 2026 14:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784557491;
-	bh=+lLIgvF7isoDrIHYELuREN+HQBBazSvKwi4llieRlTQ=;
+	s=k20260515; t=1784557797;
+	bh=IBoDz8X8lKlcSxY2Wrt7FDQtjKk9jl7QKKFHHmDBqPQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=MsSNjfz8CPauPsBrPPnzqyS1VH+0A9UWJqD7L1iF6tyvhzIb/jz0baKBESIVJBGAD
-	 yptYErPNFkTEiv0NdMvO6OcIg7IJ8kzHiPKuGQMRkehMENptSLMNpYMTmpBCkRuAXZ
-	 9ASr0FigbTdA1CfMWNObYA/kf94fLgIzufv+lYB0EoAGQKwtXGbEXBCn0ugYp2Nt7G
-	 kukqroRNQPge15mi5ncw1pgZeRWzNZ04jQrEQlAVNxKM5niBfG/6oLIFIJXZSEoSyI
-	 KlNCqryhTp0XO/qH+/ZRt50xw0Lo9EBzpFREwzl+X+lRolgr8XacgXrs+csUvxZvUh
-	 pwiNxH60a3Q8w==
-Date: Mon, 20 Jul 2026 23:24:42 +0900
+	b=ZJOupfKssRpZbOVVDc2bH6py6VCJLbcwIP+8UMIzyWsdaMBIAbq0c2t2O/QVU1RsA
+	 RYIqllRmvXRVEAsIiLH/f0x6MRil4ZqMrS3ME7ppJiMuBwjGn9OLJ9iLTLuoqFwyig
+	 3hNJsO3riynkME2ftgqTbMgTxUb0p1vSPF6h3hQuJXVQvnYiTR3B2j6bXSQ8Lcsy68
+	 4IbvHXNIhIFT88m/3Gn+57HLH3+jHXEI8rYuDzAvBusinEglKXtAYcOzQ/cDYfwymX
+	 77VRWdhqs5XEAjxOyRL9mSHIx/fMThTC0ZOs+aydAyp89esG2OIjW4GAzaoHOhCrG8
+	 3MDT8Rx+UInzw==
+Date: Mon, 20 Jul 2026 23:29:52 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Borislav Petkov <bp@alien8.de>, Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Jinchao Wang
- <wangjinchao600@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, David Hildenbrand
- <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox
- <willy@infradead.org>, Alan Stern <stern@rowland.harvard.edu>, Randy Dunlap
- <rdunlap@infradead.org>, Alexander Potapenko <glider@google.com>, Marco
- Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints
- for hunting memory corruption
-Message-Id: <20260720232442.3e6b0e70c6939541b8362e05@kernel.org>
-In-Reply-To: <20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
-References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
-	<91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
-	<20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, <oe-lkp@lists.linux.dev>,
+ <lkp@intel.com>, <linux-kernel@vger.kernel.org>, Shuah Khan
+ <skhan@linuxfoundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [linus:master] [selftests/tracing]  c5c413534d:
+ kselftests-bpf.ftrace.ftracetest-ktap._instance_event_trigger_-_test_poll_wait_on_histogram.fail
+Message-Id: <20260720232952.94b33d59eddb69cf6457ded4@kernel.org>
+In-Reply-To: <202607161651.ab0a5bf6-lkp@intel.com>
+References: <202607161651.ab0a5bf6-lkp@intel.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,49 +48,41 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 17 Jul 2026 11:10:04 -0700
-Borislav Petkov <bp@alien8.de> wrote:
-
-> On Fri, Jul 17, 2026 at 06:41:49AM -0700, Dave Hansen wrote:
-> > On 7/17/26 05:50, Jinchao Wang wrote:
-> > >  24 files changed, 2115 insertions(+), 63 deletions(-)
-> > Reading this, I wonder how many kernel debugging features we need. I
-> > don't even think we have a centralized list of them. They all just live
-> > in their own silos.
-> > 
-> > This one really seems like a super specialized tool. It has to be
-> > enabled at compile time and specifically aimed at a specific function.
-> > 
-> > Maybe this should live off on the side for a while. If folks end up
-> > actually needing it, they can point their friendly LLM over to its tree.
-> 
-> Right, and in my mbox right under this mail thread there's a
-> 
-> https://lore.kernel.org/all/178429796992.157981.3393977217853767915.stgit@devnote2/
-> 
-> which Masami has been blasting almost every day this week which contains two
-> of the patches from this set here...
-
-Sorry about that. I tried to fix the reviewed comment from Sashiko,
-but I should wait for someone's comment.
+On Thu, 16 Jul 2026 22:30:11 +0800
+kernel test robot <oliver.sang@intel.com> wrote:
 
 > 
-> Looks to me like folks need to sit down and agree on strategy first.
+> 
+> 
+> Hello,
+> 
+> in fact, we found below two test cases randomly failed upon c5c413534d, while
+> keep succeed on parent:
+> 
+> =========================================================================================
+> tbox_group/testcase/rootfs/kconfig/compiler/group:
+>   igk-rpl-d04/kselftests-bpf/debian-13-x86_64-20250902.cgz/x86_64-rhel-9.4-bpf/gcc-14/ftrace
+> 
+> 22a78be4123dce81 c5c413534d40eb4c982f1794e62
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :31          52%          16:32    kselftests-bpf.ftrace.ftracetest-ktap._instance_event_trigger_-_test_poll_wait_on_histogram.fail
+>            :31          29%           9:32    kselftests-bpf.ftrace.ftracetest-ktap.event_trigger_-_test_poll_wait_on_histogram.fail
+> 
+> 
+> 
+> kernel test robot noticed "kselftests-bpf.ftrace.ftracetest-ktap._instance_event_trigger_-_test_poll_wait_on_histogram.fail" on:
+> 
+> commit: c5c413534d40eb4c982f1794e62813f926aba747 ("selftests/tracing: Have trigger-hist-poll.tc use sched_process_exit")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linux-next/master 49362394dad7df66c274c867a271394c10ca2bb8]
 
-Yeah, I need to talk with Jinchao.
+Hmm, this seems like a scheduler (event) behavior is different from what
+the test expected.
 
-Like kprobe, wprobe itself integrates watchpoint functionality into
-the tracing subsystem. Jinchao, I would like to ask you to redesign
-the kwatch tool based on fprobe and wprobe events in user space?
-I think that could reduce redundant efforts on the similar feature.
-
-Using fprobe entry and exit event trigger, we can make a Function-
-scoped watch window. Also, since fprobe and wprobe are having BTF
-typecast support, you can access to the members of data structures
-more naturally.
-
-If you are interested, I would be open to having you handle the
-development of the necessary features for wprobe.
+Steve, I think we should use another deterministic events.
 
 Thank you,
 
