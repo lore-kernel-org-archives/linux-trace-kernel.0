@@ -1,97 +1,91 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D1A426EB3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jul 2026 13:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA3A1A4F3C;
+	Mon, 20 Jul 2026 14:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784554627; cv=none; b=vGfX+WFyf05JeLlWBa28sxvVNBWONPxcVkzSuaPOP6wcQIC1m1OBzfplzIZyXPhQ8th010NhxzqcLaxk6MuFGziTazsio/5HCvbiIObijY8MC6b5AhFuaTkdItoOSsAME3YV+l8pPpNbe+p2Hkxfk4tmr9ajPACSLmYxyiDLBps=
+	t=1784557357; cv=none; b=p8YkH1UJeyT2mPWVXZLOpfG3TcK6FVQI4xiD8utWasYdRG1R1Vh6cYb1JbfErfogPytWM0nQiNQRNbj/tSiyr/COTQLew0ispxdI7aTmUpdXVPNTauFi2KR6bVOTKnmtQ2SeNdVWEUYzQRaldhZhMUGj8B06lmUmreds9JoFB24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784554627; c=relaxed/simple;
-	bh=d5LA9IC8FOlvaz/ryVsIcPWf6hxrSBYkEaNdcLnam5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=idzUFFD6fml4d+Cd86x7egxNJ9x+BxoKiCiwtfA0sMz1+uzARToHG7+NfquyGCJE3YhFVjRcOCTl6yR0lJeNk1XHEILN515M8YNHJ0/bvaiwwdTHclqMH00y5/OzBVO4qd8fz06gvSI6cN5VoKrel5qger+RYGjz2JAk89bYuvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 2FAAD160190;
-	Mon, 20 Jul 2026 13:36:59 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 8B94F2002A;
-	Mon, 20 Jul 2026 13:36:57 +0000 (UTC)
-Date: Mon, 20 Jul 2026 09:36:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: Linking Patchwork with Sashiko?
-Message-ID: <20260720093655.4da2224d@robin>
-In-Reply-To: <7ia4wluvvlq4.fsf@castle.c.googlers.com>
-References: <20260715005909.GF1656185@killaraus.ideasonboard.com>
-	<4928C919-7999-4E76-ADCB-F8643FED105B@linux.dev>
-	<20260715162816.GF1778116@killaraus.ideasonboard.com>
-	<7ia47bmw0xls.fsf@castle.c.googlers.com>
-	<20260715192042.4052411a@robin>
-	<7ia4wluvvlq4.fsf@castle.c.googlers.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1784557357; c=relaxed/simple;
+	bh=e4ShkY0fOjmYMLTXJuuDIB0nO1MlwzHCy3DlP6ePVY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMNfb1S7ywJWjbHqL3PuIP4ymcPZJu03GCxdmkUlT/NOzIc97ll4ZmYzhlqU2tPKo/zlLGgBAJeMA/w3LiEtGk8zF8U0apeyIshUq7VWxsi3o5RiB7FfjxJeV8PiueztDsG5M7oefvvDlJpJ8pid5JFEWQwj20ICJqqr6p4Nz5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcySVioV; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcySVioV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E331F00A3A;
+	Mon, 20 Jul 2026 14:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784557356;
+	bh=Pg4VEI11tL6cZaF+rCWtAkKHA9kf+Lq96Oz8E8WHg1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZcySVioVpe1Hs66nBttwzLNP4f6A985e0K3kGxWzMCqjM2ajt5M4OVaIfHIic+Pzs
+	 iE6H09BZYvKAE1d9A7uYvrFDyEvBcX5DyAl3JOpkLHCVBQ6g+nVEq5jO4ammP2S7XS
+	 LIKjt80PE0+Jw1xyEt0tHlv/2d5pjL64y8RHgrqEYtMqP64HsvlsH4LMORVTjyiemJ
+	 IlRl85jhV9AG2YzDe9LkzzLZZNUXXw/uKORmN2p2YPAXJvPRH1hJNIPLNg7raXTL6r
+	 rAHc2DXLvD97Rl9AD/DeiWidWCPz+8RVckfY8z477Qk9FoLTTJb0k6uW9ffstTGQJq
+	 mneM0a5s9w+YA==
+Date: Mon, 20 Jul 2026 16:22:33 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v1 06/11] rcu: Enable RCU callbacks to benefit from
+ expedited grace periods
+Message-ID: <al4vKQ02tBYyYANk@localhost.localdomain>
+References: <20260624132356.516959-1-puranjay@kernel.org>
+ <20260624132356.516959-7-puranjay@kernel.org>
+ <alD6o01ukyliCS37@localhost.localdomain>
+ <6c683413-8e8b-4888-ba01-9d79c3867432@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 8B94F2002A
-X-Stat-Signature: iuwtipa73ez5jy5zhppn9ubuzyczon8n
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/yznEYJNgk4+SSJwhLyTIoOuy8VROnuT0=
-X-HE-Tag: 1784554617-626527
-X-HE-Meta: U2FsdGVkX19BS5wZmVVeuic6GNBcurrrrnN7mlvfbZDUTrfRq3OKdpH7ki1p2EKe/hfPm7dn3D+xwHoF/8PIod36WdPKXPT+7qIlHRsuFkshlpVtpLvnx/HvJLqfQsKrdbCDjm4R0hygqXI6cXLP8WTZIyfj0+aeJijnYFsc19a8MaAz54C1fMJhkQlysTL3vA9Nwc1yrbD+Gkd897nFX3JZT57X3z3Vz4aslifCamLzAugFI7AuP1O0Z4BKNj1mWQSSLb5DD0zeHxcYqdv8mPE+21UObI3OM3IpSrJWkhdgkFhl0Z7q7YVD06tBwE9MCAWKDEtYNIGUTpOQOT6YR4Hc/uOBNUog1VMyVOL31b2yhITxT9UHtUiknoIxrnYV
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c683413-8e8b-4888-ba01-9d79c3867432@paulmck-laptop>
 
-
-[ Removed all Cc's. Added Masami and linux-trace-kernel mailing list ]
-
-On Thu, 16 Jul 2026 00:09:39 +0000
-Roman Gushchin <roman.gushchin@linux.dev> wrote:
-
-> Steven Rostedt <rostedt@goodmis.org> writes:
+Le Tue, Jul 14, 2026 at 11:48:08AM -0700, Paul E. McKenney a écrit :
+> > I have similar concerns about the three smp_mb() in
+> > get_state_synchronize_rcu_full(). It could be just two (rcu_seq_snap()
+> > has a barrier that could be just one). Not sure if that matters but,
+> > just wanted to point that.
 > 
-> > On Wed, 15 Jul 2026 21:08:47 +0000
-> > Roman Gushchin <roman.gushchin@linux.dev> wrote:
-> >  
-> >> At this moment there are 36 mailing lists who opted in for delivering email
-> >> reviews over email (without counting linux-media@). In every single case
-> >> it was based on maintainers requests in all cases of a disagreement
-> >> between maintainers I took the conservative side.  
-> >
-> > Oh, I think I missed this opt-in. Can you add replies to patches sent
-> > to linux-trace-kernel. Currently, I've been manually looking to see if
-> > a patch had a Sashiko review and sending the author a link to the
-> > review and told them to please reply to the comments.
-> >
-> > Note, I have not had anyone tell me the are against doing so.  
-> 
-> May I ask you to raise this question with other linux-trace-kernel
-> maintainers and cc me on the thread? Just to make sure everyone is
-> onboard.
+> We need the one at the beginning of get_state_synchronize_rcu_full(),
+> but from what I can see, not the ones in the calls to rcu_seq_snap().
+> I blame laziness.  We could make an rcu_seq_snap_no_ordering() that
+> didn't have the smp_mb(), but I didn't believe that the overhead would
+> be visible at the system level.
 
-Masami,
+It isn't so much about performance than being clear about ordering
+expectations. Though we could argue that grace period polling can be
+about performance.
 
-Are you OK with having Sashiko send an email on what it finds to the
-author and the mailing list?
+But in general rcu_seq_snap() advertizes:
 
-> 
-> Also, please, let me know if sashiko should reply to the author and
-> also if it should send an email if there are no issues found.
+   READ seq
+   smp_mb() /* Above access must not bleed into critical section. */
 
-I think if it finds no issues it should still send the email, as it
-adds to the confidence of the patch. It also lets us know that the
-email wasn't just dropped.
+This doesn't tell much. Which critical section? That's not used on
+read side.
 
-Oh, I would think that "Failed to apply" results should *not* be sent.
+Thanks.
 
-Thanks,
-
--- Steve
+-- 
+Frederic Weisbecker
+SUSE Labs
