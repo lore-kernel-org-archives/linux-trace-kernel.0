@@ -1,160 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender-pp-o91.zoho.in (sender-pp-o91.zoho.in [103.117.158.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A06A433BC2;
-	Mon, 20 Jul 2026 18:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784570559; cv=none; b=GGnzxEdns/AMyT5mUGUPuLHzZMeZ2VwtWsjWPpauZxEHkWUGU84aL9Hx3ZiCZboWWeJCYNz+nayhGHk4iNsOczllRjd5fH615rG5tueXgvMA9tcKFeUDAA0VhBvQePnM1WTBELZwuaipxZajqTACa+y0MSipvVHN1Sl6C+/cSts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784570559; c=relaxed/simple;
-	bh=8fbSoafJSGiRFZ4DytBcIiZaqu9xMyQfx/A2tr+kHvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppUEXrd0vyVj+UGQqJFVVvT5hBcyWQg7ZX14SLl4BF1drrL5ISfhSZvgticM7tPnS0SRDNEv+lHn9lF80i2ZMeCygTrVUY98LGh++KDFA1B33Ww7in3/FV8DJnY6xRM4epItC7BhdrLhIT8TM5Mws6ag+AdoLuPPTAMIBp4pmkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEhd9HMD; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE253BB10D;
+	Mon, 20 Jul 2026 18:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.117.158.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784572304; cv=pass; b=atQ0KcfUsHH/VtZrpHT6p8keYOoOJINELQOf2bU/oiysglZJKgxo5iVihHAq52EQbx+rnYzBAeketSSFZ8H0PZesP6/n91IUFJx4stkxNvfUq93GyzFXYq54Awpb/HoW/C4m/8u9kNl//fYSjqoDNwPCRaVc3q4bU/8GLBBmCUE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784572304; c=relaxed/simple;
+	bh=tJLYFP8WkToo6Lzk/HG0GCiA3d9z2jl2PrOIp1mskxI=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=NbRAu5hHwaEPxVVWgqc/aYc0o4Rpq8MQ8KhR3nvQFl4+8W5akw8cVQFS3ppCTzgPI1GR5FrbhMAIaRNoFBFdBh2+9vG+TlHTJz2eQrjOQE9byC5s86T/JXkLafoCJzo1TCO7W+hC41KtNgtnaF5TQ9r5DJPXgnm/uweQ38CrH/k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=kKnTBaQx; arc=pass smtp.client-ip=103.117.158.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEhd9HMD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 424321F00A3A;
-	Mon, 20 Jul 2026 18:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784570558;
-	bh=DGrmLNF+95XaOSZs2mjtaOUyUATmvdR0fxA/D636Nk0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=UEhd9HMD5fQGcUhG5JsAgvAhJiFwiHxTveZ3OhuXcqWQjURPs9qZpTftjeWjZPE3K
-	 AgcZcw0wJHsQdUnA3N7VCiZEzLz3iDPSZTta07Q0yuLzB5sN6bg3fZY8t0O3Q8mAb2
-	 9mURjz3jT5Ph/Xl0fFdTfo5gmHEKh649qfEwDOV+IjdXm5tq+mSZ/AwFi0IgHno7hr
-	 YGvZhbA63N31Fd0WchM25x/Cg+I9wqIJdicXX6FFbb0/55+0Z4PeiilSLnEPrqwnz8
-	 VADD7BHnXevKtLbmTLBrxqZDDXpNScYdyxXZKzSDq0+YOxB81mcMrI9p5Vpwm0PIbQ
-	 DoX7P1fz6ChFA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id F1C79CE0F20; Mon, 20 Jul 2026 11:02:37 -0700 (PDT)
-Date: Mon, 20 Jul 2026 11:02:37 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v1 00/11] RCU: Enable callbacks to benefit from expedited
- grace periods
-Message-ID: <a7a86621-2aeb-46bf-b797-33ec91960791@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260624132356.516959-1-puranjay@kernel.org>
+	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="kKnTBaQx"
+ARC-Seal: i=1; a=rsa-sha256; t=1784572224; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=aQ0WFfaj+RRG5KYT7uo4r4S+tzBtUUAnScyIeeDChof3v/5+jCIBtA0KRtLZZ/bLoJkKj7aIXSoJPnHWLqkbHCjVy4xitSLw88BjLrRlMtCz27hC+K7L3cJY2MVJvbs9aRNM83WVJGzamwYLP3W352CihZ1crlUqLqkE2iWbS3g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1784572224; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=64nKL4t7ZOMJQeMJXoupi8lChMlperoUGSuRJb+kKxs=; 
+	b=gJ2MPLsspdyw//XfJWZkwlydjoflMbpvM7VZZlMX/eRLpYJCcopp9N0XU7g6KWnX88zgf9+vDGp3bvTRU/+HyEJJsz5vCKjAhePMpxTztT1KtatTRR8OpcTy/PkismFR1jAZ1P5PTCDGHCDWEzjhbGZsm0pIgiqTE5/uP2/TRNw=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=zohomail.in;
+	spf=pass  smtp.mailfrom=adi.sharma@zohomail.in;
+	dmarc=pass header.from=<adi.sharma@zohomail.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784572224;
+	s=zoho; d=zohomail.in; i=adi.sharma@zohomail.in;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=64nKL4t7ZOMJQeMJXoupi8lChMlperoUGSuRJb+kKxs=;
+	b=kKnTBaQx1r72oiZf0DMEoii58d21jADdLQk24tPRe+kQL/zQ9iL+nTcmUlukaarG
+	/2cRMOkJLd25O0bv0X/DSBTXyNLpq2YTocjessecMpHpBZrfEtdXtDyPfZPO49aVGbk
+	a8kqVtKV7IXXDapjlDIAsxrF6bxalRDQNkbAg0JY=
+Received: from mail.zoho.in by mx.zoho.in
+	with SMTP id 1784572223203771.9033389679731; Tue, 21 Jul 2026 00:00:23 +0530 (IST)
+Received: from  [14.139.128.24] by mail.zoho.in
+	with HTTP;Tue, 21 Jul 2026 00:00:23 +0530 (IST)
+Date: Tue, 21 Jul 2026 00:00:23 +0530
+From: Aditya Sharma <adi.sharma@zohomail.in>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>,
+	"Lorenzo Stoakes" <ljs@kernel.org>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	"Vlastimil Babka" <vbabka@kernel.org>,
+	"Mike Rapoport" <rppt@kernel.org>,
+	"Suren Baghdasaryan" <surenb@google.com>,
+	"Michal Hocko" <mhocko@suse.com>,
+	"David Rientjes" <rientjes@google.com>,
+	"Shakeel Butt" <shakeel.butt@linux.dev>,
+	"Jonathan Corbet" <corbet@lwn.net>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	"Steven Rostedt" <rostedt@goodmis.org>,
+	"Masami Hiramatsu" <mhiramat@kernel.org>,
+	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+	"Kees Cook" <kees@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+	"Peter Zijlstra" <peterz@infradead.org>,
+	"Juri Lelli" <juri.lelli@redhat.com>,
+	"Vincent Guittot" <vincent.guittot@linaro.org>,
+	"Dietmar Eggemann" <dietmar.eggemann@arm.com>,
+	"Ben Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>,
+	"Valentin Schneider" <vschneid@redhat.com>,
+	"K Prateek Nayak" <kprateek.nayak@amd.com>,
+	"linux-mm" <linux-mm@kvack.org>,
+	"linux-doc" <linux-doc@vger.kernel.org>,
+	"linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"imbrenda" <imbrenda@linux.ibm.com>
+Message-ID: <19f80cb1ed8.13fd666243425.2308143427066829733@zohomail.in>
+In-Reply-To: <d1180a70-f4b4-4c22-9ce5-881cb0e2370d@kernel.org>
+References: <20260719185409.409685-1-adi.sharma@zohomail.in> <d1180a70-f4b4-4c22-9ce5-881cb0e2370d@kernel.org>
+Subject: Re: [RFC PATCH 0/7] mm: defer address-space teardown of large
+ exiting processes to a kthread
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260624132356.516959-1-puranjay@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Wed, Jun 24, 2026 at 06:23:42AM -0700, Puranjay Mohan wrote:
-> This series lets call_rcu() callbacks be reclaimed as soon as either a
-> normal or an expedited grace period that covers them has elapsed, rather
-> than always waiting for a normal grace period.
-> 
-> Motivation
-> ==========
-> Today there is an asymmetry: synchronize_rcu_expedited() callers get fast
-> reclaim, but call_rcu() callers never benefit from those same expedited
-> grace periods, even though an expedited GP proves exactly the same thing
-> as a normal one -- all pre-existing readers are done.  When expedited GPs
-> are running on the system (driven by other subsystems), call_rcu()
-> callbacks that could already be freed instead sit in RCU_WAIT_TAIL until
-> the next normal GP.  This series treats a grace period as a grace period
-> regardless of how it was driven, so memory is reclaimed sooner.
-> 
-> Design
-> ======
-> Callback segments now record both the normal and expedited grace-period
-> sequence in struct rcu_gp_seq, and rcu_segcblist_advance() releases a
-> segment as soon as poll_state_synchronize_rcu_full() reports that either
-> has completed.  Three notification paths are taught about expedited
-> completion so the advance actually happens: the NOCB rcuog kthreads,
-> the rcu_pending() tick gate, and rcu_core().
-> 
-> Changelog:
-> RFC: https://lore.kernel.org/all/20260417231203.785172-1-puranjay@kernel.org/
-> Changes in v1:
->  - New prep patch 1 renames struct rcu_gp_oldstate to struct rcu_gp_seq
->    and its fields rgos_norm/rgos_exp to norm/exp tree-wide (Frederic).
->  - The rcu_segcblist segment field stays named gp_seq; only its type
->    changes (Frederic).
->  - Patch 8 (NOCB wake) is reworked.  v1 woke the wrong waitqueue
->    (rdp_gp->nocb_gp_wq via wake_nocb_gp() rather than the leaf
->    rnp->nocb_gp_wq[] that an rcuog kthread waiting for a GP sleeps on),
->    and the wait condition only checked the normal ->gp_seq.  The rcuog
->    grace-period wait now tracks a struct rcu_gp_seq and is released via
->    poll_state_synchronize_rcu_full(); rcu_exp_wait_wake() wakes the leaf
->    node through the new rcu_nocb_exp_cleanup() (Frederic).
->  - rcu_pending() uses a new memory-ordering-free
->    poll_state_synchronize_rcu_full_unordered() to avoid memory barriers
->    on every tick, leaving the ordering duty to rcu_core() (Frederic).
-> 
-> Still open: Frederic asked whether the first smp_mb() in
-> poll_state_synchronize_rcu_full() is needed on the callback-advance path
-> (patch 6).  That path still uses the fully ordered helper; only
-> rcu_pending() was switched to the unordered variant.  Happy to revisit.
 
-And these all have reviews, other than 9/11, which is mine to review.
-So I have pulled them in for further review and testing, thank you
-very much!!!
 
-If everything goes well, there is some chance that these will make the
-next merge window.
+Sent using Zoho Mail
 
-							Thanx, Paul
 
-> Puranjay Mohan (11):
->   rcu: Rename struct rcu_gp_oldstate to rcu_gp_seq
->   rcu/segcblist: Add SRCU and Tasks RCU wrapper functions
->   rcu/segcblist: Factor out rcu_segcblist_advance_compact() helper
->   rcu/segcblist: Track segment grace periods with struct rcu_gp_seq
->   rcu: Add RCU_GET_STATE_NOT_TRACKED for subsystems without expedited
->     GPs
->   rcu: Enable RCU callbacks to benefit from expedited grace periods
->   rcu: Update comments for gp_seq and expedited GP tracking
->   rcu: Wake NOCB rcuog kthreads on expedited grace period completion
->   rcu: Detect expedited grace period completion in rcu_pending()
->   rcu: Advance callbacks for expedited GP completion in rcu_core()
->   rcuscale: Add concurrent expedited GP threads for callback scaling
->     tests
-> 
->  include/linux/rcu_segcblist.h |  16 ++--
->  include/linux/rcupdate.h      |  13 ++-
->  include/linux/rcupdate_wait.h |   2 +-
->  include/linux/rcutiny.h       |  36 ++++-----
->  include/linux/rcutree.h       |  29 +++----
->  include/trace/events/rcu.h    |   5 +-
->  kernel/rcu/rcu.h              |  13 ++-
->  kernel/rcu/rcu_segcblist.c    | 139 ++++++++++++++++++++++----------
->  kernel/rcu/rcu_segcblist.h    |   8 +-
->  kernel/rcu/rcuscale.c         |  84 ++++++++++++++++++-
->  kernel/rcu/rcutorture.c       |  30 +++----
->  kernel/rcu/srcutree.c         |  14 ++--
->  kernel/rcu/tasks.h            |   8 +-
->  kernel/rcu/tiny.c             |   4 +-
->  kernel/rcu/tree.c             | 147 ++++++++++++++++++++++------------
->  kernel/rcu/tree.h             |   3 +-
->  kernel/rcu/tree_exp.h         |  20 ++---
->  kernel/rcu/tree_nocb.h        | 131 ++++++++++++++++++++++++------
->  mm/slab_common.c              |   6 +-
->  19 files changed, 496 insertions(+), 212 deletions(-)
-> 
-> 
-> base-commit: 709d17a22bfac78765f6cbaec42e15bcd4aa4f08
-> -- 
-> 2.53.0-Meta
-> 
+From: David Hildenbrand (Arm) <david@kernel.org>
+To: "Aditya Sharma"<adi.sharma@zohomail.in>, "Andrew Morton"<akpm@linux-foundation.org>, "Lorenzo Stoakes"<ljs@kernel.org>, "Liam R . Howlett"<liam@infradead.org>, "Vlastimil Babka"<vbabka@kernel.org>, "Mike Rapoport"<rppt@kernel.org>, "Suren Baghdasaryan"<surenb@google.com>, "Michal Hocko"<mhocko@suse.com>
+Cc: "David Rientjes"<rientjes@google.com>, "Shakeel Butt"<shakeel.butt@linux.dev>, "Jonathan Corbet"<corbet@lwn.net>, "Shuah Khan"<skhan@linuxfoundation.org>, "Steven Rostedt"<rostedt@goodmis.org>, "Masami Hiramatsu"<mhiramat@kernel.org>, "Mathieu Desnoyers"<mathieu.desnoyers@efficios.com>, "Kees Cook"<kees@kernel.org>, "Ingo Molnar"<mingo@redhat.com>, "Peter Zijlstra"<peterz@infradead.org>, "Juri Lelli"<juri.lelli@redhat.com>, "Vincent Guittot"<vincent.guittot@linaro.org>, "Dietmar Eggemann"<dietmar.eggemann@arm.com>, "Ben Segall"<bsegall@google.com>, "Mel Gorman"<mgorman@suse.de>, "Valentin Schneider"<vschneid@redhat.com>, "K Prateek Nayak"<kprateek.nayak@amd.com>, <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <imbrenda@linux.ibm.com>
+Date: Mon, 20 Jul 2026 13:43:34 +0530
+Subject: Re: [RFC PATCH 0/7] mm: defer address-space teardown of large exiting processes to a kthread
+
+
+ > QEMU has an rather short implementation for async teardown using
+ > clone(CLONE_VM), which is IIRC essentially the result of Claudios previous
+ > kernel work you note below.
+ > 
+ > So nothing got merged because the problem was solvable in userspace.
+
+Thanks for this. My related works paragraph is wrong on this then. It
+says that the s390 case was addressed with KVM specific async destruction,
+but what you point to is QEMU's shadow process. I will correct that in v2.
+
+Yeah, that CLONE_VM trick works, so I would measure and compare them
+and get back.
+
+I plan to measure:
+
+- Memory return latency
+- N concurrent shadow teardowns on N cpus vs the reaper.
+
+One difference between CLONE_VM approach and CONFIG_ASYNC_MM_TEARDOWN
+is that the shadow process has to be created by the process that would
+be torn down itself. If that same behaviour is wanted on a workload
+where we dont own the source, CONFIG_ASYNC_MM_TEARDOWN enables it here
+as well. Also, in the QEMU case, it also means that the deferred teardown
+decision was made without knowing how large the process might become.
+CONFIG_ASYNC_MM_TEARDOWN adds a gate where for the exiting process,
+RSS is evaluated againsts the current backlog before queuing it for
+async teardown.
+
+I will drop a follow up with numbers
+
+Aditya
+
