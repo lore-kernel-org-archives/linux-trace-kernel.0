@@ -1,91 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA3A1A4F3C;
-	Mon, 20 Jul 2026 14:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F2842B311;
+	Mon, 20 Jul 2026 14:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784557357; cv=none; b=p8YkH1UJeyT2mPWVXZLOpfG3TcK6FVQI4xiD8utWasYdRG1R1Vh6cYb1JbfErfogPytWM0nQiNQRNbj/tSiyr/COTQLew0ispxdI7aTmUpdXVPNTauFi2KR6bVOTKnmtQ2SeNdVWEUYzQRaldhZhMUGj8B06lmUmreds9JoFB24=
+	t=1784557493; cv=none; b=Lo0jOvNtZq4iTYzYb6rdWmJm/B5NGWdMK1+7p8YpXkrFjpk47p8yluxMHJ9zPCf6wzEzHA0MSeSLfLSnW4MiHcs3L+fQKyd1mek51g1GAv8TLefhScuKB7b33axUdFZ7TflCHkBMiwRYYQwFuhop9Fvm2IGrdayC58QDx3jRfPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784557357; c=relaxed/simple;
-	bh=e4ShkY0fOjmYMLTXJuuDIB0nO1MlwzHCy3DlP6ePVY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMNfb1S7ywJWjbHqL3PuIP4ymcPZJu03GCxdmkUlT/NOzIc97ll4ZmYzhlqU2tPKo/zlLGgBAJeMA/w3LiEtGk8zF8U0apeyIshUq7VWxsi3o5RiB7FfjxJeV8PiueztDsG5M7oefvvDlJpJ8pid5JFEWQwj20ICJqqr6p4Nz5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcySVioV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784557493; c=relaxed/simple;
+	bh=nJHwqodpka2gGhMWW0JBRL/YXJ6Yzeqj2mf9Le3yEYY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LneOMYgXgciO2h2/WB2bnOGUYSBqY98dyJvb3exYwAII4MMHkkQiEqGay7hXQp9ErgueqN4Mc/C1rIcdJXpczcfJi+UDcqEc3yUbtsv6zmyAM8D2N6n2z5ShOT+3alkL4W4jtTuhyBHtJFTr8MBHpIX598FFAjNxLbk4qBJSWis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsSNjfz8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcySVioV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E331F00A3A;
-	Mon, 20 Jul 2026 14:22:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsSNjfz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E511F000E9;
+	Mon, 20 Jul 2026 14:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784557356;
-	bh=Pg4VEI11tL6cZaF+rCWtAkKHA9kf+Lq96Oz8E8WHg1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZcySVioVpe1Hs66nBttwzLNP4f6A985e0K3kGxWzMCqjM2ajt5M4OVaIfHIic+Pzs
-	 iE6H09BZYvKAE1d9A7uYvrFDyEvBcX5DyAl3JOpkLHCVBQ6g+nVEq5jO4ammP2S7XS
-	 LIKjt80PE0+Jw1xyEt0tHlv/2d5pjL64y8RHgrqEYtMqP64HsvlsH4LMORVTjyiemJ
-	 IlRl85jhV9AG2YzDe9LkzzLZZNUXXw/uKORmN2p2YPAXJvPRH1hJNIPLNg7raXTL6r
-	 rAHc2DXLvD97Rl9AD/DeiWidWCPz+8RVckfY8z477Qk9FoLTTJb0k6uW9ffstTGQJq
-	 mneM0a5s9w+YA==
-Date: Mon, 20 Jul 2026 16:22:33 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Puranjay Mohan <puranjay@kernel.org>, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v1 06/11] rcu: Enable RCU callbacks to benefit from
- expedited grace periods
-Message-ID: <al4vKQ02tBYyYANk@localhost.localdomain>
-References: <20260624132356.516959-1-puranjay@kernel.org>
- <20260624132356.516959-7-puranjay@kernel.org>
- <alD6o01ukyliCS37@localhost.localdomain>
- <6c683413-8e8b-4888-ba01-9d79c3867432@paulmck-laptop>
+	s=k20260515; t=1784557491;
+	bh=+lLIgvF7isoDrIHYELuREN+HQBBazSvKwi4llieRlTQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=MsSNjfz8CPauPsBrPPnzqyS1VH+0A9UWJqD7L1iF6tyvhzIb/jz0baKBESIVJBGAD
+	 yptYErPNFkTEiv0NdMvO6OcIg7IJ8kzHiPKuGQMRkehMENptSLMNpYMTmpBCkRuAXZ
+	 9ASr0FigbTdA1CfMWNObYA/kf94fLgIzufv+lYB0EoAGQKwtXGbEXBCn0ugYp2Nt7G
+	 kukqroRNQPge15mi5ncw1pgZeRWzNZ04jQrEQlAVNxKM5niBfG/6oLIFIJXZSEoSyI
+	 KlNCqryhTp0XO/qH+/ZRt50xw0Lo9EBzpFREwzl+X+lRolgr8XacgXrs+csUvxZvUh
+	 pwiNxH60a3Q8w==
+Date: Mon, 20 Jul 2026 23:24:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Borislav Petkov <bp@alien8.de>, Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Jinchao Wang
+ <wangjinchao600@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, David Hildenbrand
+ <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox
+ <willy@infradead.org>, Alan Stern <stern@rowland.harvard.edu>, Randy Dunlap
+ <rdunlap@infradead.org>, Alexander Potapenko <glider@google.com>, Marco
+ Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints
+ for hunting memory corruption
+Message-Id: <20260720232442.3e6b0e70c6939541b8362e05@kernel.org>
+In-Reply-To: <20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
+References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+	<91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+	<20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6c683413-8e8b-4888-ba01-9d79c3867432@paulmck-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Le Tue, Jul 14, 2026 at 11:48:08AM -0700, Paul E. McKenney a écrit :
-> > I have similar concerns about the three smp_mb() in
-> > get_state_synchronize_rcu_full(). It could be just two (rcu_seq_snap()
-> > has a barrier that could be just one). Not sure if that matters but,
-> > just wanted to point that.
+On Fri, 17 Jul 2026 11:10:04 -0700
+Borislav Petkov <bp@alien8.de> wrote:
+
+> On Fri, Jul 17, 2026 at 06:41:49AM -0700, Dave Hansen wrote:
+> > On 7/17/26 05:50, Jinchao Wang wrote:
+> > >  24 files changed, 2115 insertions(+), 63 deletions(-)
+> > Reading this, I wonder how many kernel debugging features we need. I
+> > don't even think we have a centralized list of them. They all just live
+> > in their own silos.
+> > 
+> > This one really seems like a super specialized tool. It has to be
+> > enabled at compile time and specifically aimed at a specific function.
+> > 
+> > Maybe this should live off on the side for a while. If folks end up
+> > actually needing it, they can point their friendly LLM over to its tree.
 > 
-> We need the one at the beginning of get_state_synchronize_rcu_full(),
-> but from what I can see, not the ones in the calls to rcu_seq_snap().
-> I blame laziness.  We could make an rcu_seq_snap_no_ordering() that
-> didn't have the smp_mb(), but I didn't believe that the overhead would
-> be visible at the system level.
+> Right, and in my mbox right under this mail thread there's a
+> 
+> https://lore.kernel.org/all/178429796992.157981.3393977217853767915.stgit@devnote2/
+> 
+> which Masami has been blasting almost every day this week which contains two
+> of the patches from this set here...
 
-It isn't so much about performance than being clear about ordering
-expectations. Though we could argue that grace period polling can be
-about performance.
+Sorry about that. I tried to fix the reviewed comment from Sashiko,
+but I should wait for someone's comment.
 
-But in general rcu_seq_snap() advertizes:
+> 
+> Looks to me like folks need to sit down and agree on strategy first.
 
-   READ seq
-   smp_mb() /* Above access must not bleed into critical section. */
+Yeah, I need to talk with Jinchao.
 
-This doesn't tell much. Which critical section? That's not used on
-read side.
+Like kprobe, wprobe itself integrates watchpoint functionality into
+the tracing subsystem. Jinchao, I would like to ask you to redesign
+the kwatch tool based on fprobe and wprobe events in user space?
+I think that could reduce redundant efforts on the similar feature.
 
-Thanks.
+Using fprobe entry and exit event trigger, we can make a Function-
+scoped watch window. Also, since fprobe and wprobe are having BTF
+typecast support, you can access to the members of data structures
+more naturally.
+
+If you are interested, I would be open to having you handle the
+development of the necessary features for wprobe.
+
+Thank you,
 
 -- 
-Frederic Weisbecker
-SUSE Labs
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
