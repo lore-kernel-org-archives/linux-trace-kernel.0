@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8092B3DBD47;
-	Mon, 20 Jul 2026 10:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8723DCDAB;
+	Mon, 20 Jul 2026 10:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784544241; cv=none; b=jt32TNabSzppiOnGd1H7XA4zA40VRwoJJ4cVMsygA2Or90buJLkQd+1LOynndahrR4iQmp724QC8UXpGPyaO4IH7jhyR6J0CF/ySyBP5BZ5uBZac8z48wPw/zUJLcP9bqyx8S3J76zU7SMPpzOdxydeF3BmRStlqkg1q2Nzdqa4=
+	t=1784544255; cv=none; b=PdzbxaFMdrOva/wh3HoPbJP8+M3zqNpvZlOVT++jNK7TFbmnrDs+I4Cx5GVu2+p2OAoY1FhE8fYeIR50rOllmqZ0CjDUqvr1bkIeSvxUuBK+uNtWN0GdygeZ9G3RMKG/Vz6di1kKetVZjE5sCIjUh1mLdG6XqEMoifzCPlQ23oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784544241; c=relaxed/simple;
-	bh=7iwhT+OMjeqlBnHKCtI3TLdB7erI40oggHs3AYxmGNg=;
+	s=arc-20240116; t=1784544255; c=relaxed/simple;
+	bh=1PMfcfVNo+EYFmcwkHRrP8vXKS9gzrg1aqxHd+IOfNw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G8n5rQVL0GEJMQxZ9DJEUD6UNagSjJ/rMTc4AnkT9Ez4uI1pCZqOzASObex25GbhtEPkOjyq67QUt25Vp0pSP95QWXPPYoXg+1Qf5ZTkAj3cMhvgsWHej7uQLaaime7VK/ySmaVxzh4mPfYblYXegM9QkOAIZhpcSLKji0eG2Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWhjOrCE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=YyN3MsVMdWDzsvQH0f+cR/PxbLlMiLlwOB0WvEWOd0dXp/22IIOhEaXPLnPxvWBtMUAjE7y49XlpUMdyXhg27yE5Vp/6cq3XPM7W3Er9OTXNQkfjx5nxKPMLQHbg9CZ5Ny0U3IZYTlCr49+1GoWb+iNgsFGDMu/0vmwZGpLz284=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpO0lpr+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWhjOrCE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBDDA1F000E9;
-	Mon, 20 Jul 2026 10:43:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpO0lpr+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 257C31F00A3D;
+	Mon, 20 Jul 2026 10:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784544232;
-	bh=r54JjzfEk9czsuC0MJryDnII5W8oRT9GKoRXZth4XIM=;
+	s=k20260515; t=1784544241;
+	bh=yaNa94Ge2NX6/wJoRd+5oweC6fVIPAVHk59DVlRbaaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kWhjOrCEyXZHKrqN1a5C2G/c0EgUL4T1hNiiumxcpdkUKMhNu5fxnfl/rTgS6pZEQ
-	 brQsUL99Kx48b6bWhJKLZNkfzoWbRJtr31iPwWh6PJr9fQ+v9iOEQ78EF8GdJeb5V/
-	 o1tFU9c4KllytmYJLUZC1Yf8tbq4t2S4OABjEZsNsuZbmcEt6VZUlXAKPa9V27tite
-	 LYBQ6IDBR60LcJ319CLdlbSGa1B9lXdQV+HiL1O1Rwrkvlq6hv4/Vr7y4bCHzH3VTT
-	 YCuOYFLqMPq2ifNvNlFicsxsGTt331ljzlPCD3uQ2BWiLasd1tQ1DAUPNCuJ21QQZ6
-	 +wtbOg9qpbzGQ==
+	b=QpO0lpr+5hEYYTdCvTGl6RF46SlEQN+Mm5ZIDGAW9I8y94wYlfFOOPGL9cfcqI7JP
+	 eiIQsgRf32RlmexGVjuwNQrGhJsswkgShuBNjlCUn03Ddi/UCr7H36zscKaQdQ86yS
+	 AgGFaJ2L4zo/VD6OLkv/PLvmMSC+KJwOkI6rKWg9sC3ruCwt2y+YuC4pWNmlWY4zND
+	 A3attoZkqWKuuze1snZj7Ux7Y1RulE7Kt1Sm8xA47Vd9khOTuawzpDvLMzCx2FvcCa
+	 3N7Sp0nB+ItHyPAhmJmHQonmnSJqaQsuC4fsjwLG2aZgdR98UHf22j71hFozPvNnyv
+	 kJGw21SDC18Rg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 02/10] tracing/probes: Remove redundant boolean conversion in trace_probe_has_single_file()
-Date: Mon, 20 Jul 2026 19:43:48 +0900
-Message-ID: <178454422826.296567.4382363406595169533.stgit@devnote2>
+Subject: [PATCH 03/10] tracing/probes: Remove redundant bounds check in trace_probe_compare_arg_type()
+Date: Mon, 20 Jul 2026 19:43:57 +0900
+Message-ID: <178454423769.296567.6694636865644203423.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178454420994.296567.10239174745865301350.stgit@devnote2>
 References: <178454420994.296567.10239174745865301350.stgit@devnote2>
@@ -50,26 +50,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-list_is_singular() returns a boolean value, so the double negation (!!)
-in trace_probe_has_single_file() is redundant. Remove it.
+In trace_probe_compare_arg_type(), prior to entering the comparison loop,
+a->nr_args and b->nr_args are checked for equality. Since the loop
+condition is i < a->nr_args, i is guaranteed to be less than b->nr_args
+inside the loop.
+
+Remove the redundant (b->nr_args <= i) check.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_probe.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index b3571c85abb1..c0f05763811c 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -360,7 +360,7 @@ static inline int trace_probe_unregister_event_call(struct trace_probe *tp)
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 7568f5e68de7..91ba4490937b 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -2770,10 +2770,9 @@ int trace_probe_compare_arg_type(struct trace_probe *a, struct trace_probe *b)
+ 		return b->nr_args + 1;
  
- static inline bool trace_probe_has_single_file(struct trace_probe *tp)
- {
--	return !!list_is_singular(&tp->event->files);
-+	return list_is_singular(&tp->event->files);
- }
+ 	for (i = 0; i < a->nr_args; i++) {
+-		if ((b->nr_args <= i) ||
+-		    ((a->args[i].type != b->args[i].type) ||
+-		     (a->args[i].count != b->args[i].count) ||
+-		     strcmp(a->args[i].name, b->args[i].name)))
++		if ((a->args[i].type != b->args[i].type) ||
++		    (a->args[i].count != b->args[i].count) ||
++		    strcmp(a->args[i].name, b->args[i].name))
+ 			return i + 1;
+ 	}
  
- int trace_probe_init(struct trace_probe *tp, const char *event,
 
