@@ -1,151 +1,80 @@
-Received: from mail-wm2-f10.google.com (mail-wm2-f10.google.com [74.125.225.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C10B46C4BD
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 19:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0592D471265;
+	Tue, 21 Jul 2026 20:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784663067; cv=none; b=lU9VNmLa2vtBEQplvkeMKm52tGWyGzKi/usSiDIsspHalBY189geog8jwKVmetGS2Emu39TDAxEwKNVlKWgjwBU6teieurycNCOXL55iq758V56SBG6LotqwtSU5kit3OIQMqhikkHjHpcn64L7dMfw1eEz02qPmRxsZ9llkNI4=
+	t=1784664419; cv=none; b=prDyLWt5I/WvDzd5P4s0CFr+rOhx76V5eEQMwrhnC+qfrCOOTdYnfLID3i9NxJZSN/lUtWa+YAhTgON+VQ7qbAVGjUPG1E7rl3BJZZqU4uzv0qbN18fOow0q/hQ5qKCUnNf3GBRU0nruzbIDfFXZxgUmhR9jfH7wX1vuuPZMgFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784663067; c=relaxed/simple;
-	bh=wNB9eaLGichIrF407lXC91sdLTgFfNTxKaTb73FP9AU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BrivCsrxYQkGXsKC/fuothZORF2LK4A7koAYCfEIBp7ZuIQUFLzUFXMSBrawTltBQBP0m+Mziq8j6Esf32Vj2/gKkRJgZYIohqcYKOhJ8eooQT10vPfn58AlHHdSvoRIVJB84Y+h6PZWNySO0aBvaDLAcm6xJwd1G2CfkAdN8ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvhwsCHP; arc=none smtp.client-ip=74.125.225.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvhwsCHP"
-Received: by mail-wm2-f10.google.com with SMTP id 5b1f17b1804b1-495473da596so1679915e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 12:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784663062; x=1785267862; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=4TfZyNSsFF/kFGOiqlXhDm8eBgtcovpMS9Ai/8/zxBo=;
-        b=DvhwsCHPJnpbbsS0TKN57PTPoDiYfSH+g3blUtA2zH2/1uGoMNzg/ghnjQ7JVULr6v
-         FtrghUcG6Q1tXWje80K3IKw1sScp/iJsbPczYE/vd0uEwvimN5TjBaCOqz3M1NJUeleC
-         mSeZY2LCqOu6TqV2fGYmIflPJUd45LTNt/0w7frozY3pHonq6y3fHSNfmLoioUCCvrqN
-         0JVEckkbpU3JgXeCjqOTQaHAyyEtuK35wm/6u3idrkdHJv0xFT7puhspGIZVg8vJNNEy
-         ff0a1MYfAYfN7AQ4acd5JA6X6vEi4iuxEOJyKs07jHG1F37rJFNddvIQ8FB7Hr4WiOCg
-         QuvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784663062; x=1785267862;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=4TfZyNSsFF/kFGOiqlXhDm8eBgtcovpMS9Ai/8/zxBo=;
-        b=No6KCGUNGO7U7bGRdrv6wmoLSKw+sv29kbRooJ6SAH4C9JTg5EBiXCicNoNDghWFo1
-         okb+SNo5kYWPaCUK7QaTn5dHqcbGnr4zi06gB6g1JLKHIEtQPBZyHuxYrLF7p+UhNEOq
-         4obfNb0auXYpXwnIYMrzP5x0qaJB6gjhhTuY2jfNhe0MaRPFObSlGvR/XJuttgUEc6Ny
-         4xKD/xPBXuaSzYAcU4f731FCdbY0Nij2U8cq0/Y4TwJeuLWd/4UxajHU5TgJmXOIoqgz
-         kS7pr8hF+l5+JlKKa1jsdI002x/ZRXww7p/26XDDLUHpzPtD/DwI9AgywEwA8I19DKoB
-         SGIA==
-X-Forwarded-Encrypted: i=1; AHgh+RoOlCOKxb5nHwWrHVcKuPSCisfggzvHPy6ExJvO56CAG9iYdU6BP+pKjs8eSW1bdmwl6A8uaKIVDtL8tjFB9Z6ngOI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0t9ZDzM1jITf+XpV3nRP7MoxN75KWS0OZgEugQDfU6h4mWgtZ
-	HKXCuhZDOUKdIT7wzX8FnjveeaPVButnHKfNh/7p1RlRq5PpcncK7G4E
-X-Gm-Gg: AfdE7clz3nA4vCmHEEPx4+EE9hu3Jld5LWGnd0hGcgRGane/dapEi1J7d7K6TQG7+dT
-	2Ej0LFtpCFpB+Ffp8B721yRoonbfySJDHezeJAZUcWHUVEkFySU3S5cuNT2tvQu9/joxUq3x+Zo
-	SEg6DN+tMi8ElEKysHks0UQMcCtRgNnZBOp6FLROEiRka1tavjoXT1FxjHlwt4z5QQD/zfqa47k
-	slPqzVF6xrsbvRko2jGuB1Z5DGZL/DbKbdEsDSFtnRJ776o33TFvdGSFU/wEQuyxh3ahMKlCQwp
-	xP29IcA7rI+odxVIgTNFzSEAnaJKT0R1iy0D3qylvb6R3yuFSLeqKdvbqJ/lZ6sbmtTcJloU0GI
-	Gltdo+sm3wwNXXQf5hz83tvj+SPLmHfg9nR2jTa3Cpct8GgV1UUaJGypkx6z3wTa2cWzYTgHYO9
-	vk3btteeELfwREwIDNUmKVoDPoeEtY82tiLbYxnJbwU8JntYF8kJxYm6rvPG2oSz34jumFsuO/D
-	GVIGOQK7uAqrESVkEmSN1KRoF/dflwquR3ZHTtlOfyC
-X-Received: by 2002:a05:600d:8449:b0:495:6022:5a23 with SMTP id 5b1f17b1804b1-4956a51d5c4mr13525275e9.19.1784663061533;
-        Tue, 21 Jul 2026 12:44:21 -0700 (PDT)
-Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49565373200sm85700775e9.5.2026.07.21.12.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2026 12:44:21 -0700 (PDT)
+	s=arc-20240116; t=1784664419; c=relaxed/simple;
+	bh=4vtiVO6EBJ14VnSGK6Xjq0LKSP7NwzXM5F9gL2KrXL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p7bgTUOo4M1mkx16zE2WloDXRBTU1GmcLFdX6GABYkZy8j+iACOz1vSfrLe6zFwI3QGx1aF1WxWc/RSI63bIZK+yXjb3fuYuA0LWd5/NUz87rqwUAo1RGRh+b+qdYcYrYxTJhsH5ZNWlqcdEYaqva3JmyTlFF8qgeugr59c6+Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from ipservice-092-209-184-216.092.209.pools.vodafone-ip.de ([92.209.184.216] helo=nb282.user.codasip.com)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <martin@kaiser.cx>)
+	id 1wmGjl-000000023vq-1qeh;
+	Tue, 21 Jul 2026 22:06:45 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	oe-lkp@lists.linux.dev,
+	lkp@intel.com,
+	Martin Kaiser <martin@kaiser.cx>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH] selftests/ftrace: allow relative paths in eprobe test
+Date: Tue, 21 Jul 2026 22:05:59 +0200
+Message-ID: <20260721200612.1749777-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 21 Jul 2026 21:44:20 +0200
-Message-Id: <DK4I97UIL347.3P2KEBO828JK8@gmail.com>
-Cc: "Lai Jiangshan" <jiangshanlai@gmail.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, "Josh Triplett" <josh@joshtriplett.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Oleg Nesterov" <oleg@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung Kim"
- <namhyung@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Andrii
- Nakryiko" <andrii@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Mark Rutland"
- <mark.rutland@arm.com>, "Alexander Shishkin"
- <alexander.shishkin@linux.intel.com>, "Jiri Olsa" <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, "Adrian Hunter" <adrian.hunter@intel.com>,
- "James Clark" <james.clark@linaro.org>, <rcu@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 2/2] uprobes: Switch uretprobes_srcu to
- SRCU-fast-updown
-From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
-To: "Andrii Nakryiko" <andrii.nakryiko@gmail.com>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Ingo
- Molnar" <mingo@redhat.com>
-X-Mailer: aerc 0.21.0
-References: <20260706172744.3920417-1-puranjay@kernel.org>
- <20260706172744.3920417-3-puranjay@kernel.org>
- <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
-In-Reply-To: <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri Jul 10, 2026 at 11:23 PM CEST, Andrii Nakryiko wrote:
-> On Mon, Jul 6, 2026 at 10:28=E2=80=AFAM Puranjay Mohan <puranjay@kernel.o=
-rg> wrote:
->>
->> uretprobes_srcu currently uses normal SRCU, which issues
->> two smp_mb() per read lock/unlock pair. This overhead is
->> paid on every uretprobe hit.
->>
->> Switch to SRCU-fast-updown, which eliminates the per-reader
->> memory barriers by moving the ordering cost to the
->> grace-period side (synchronize_rcu() instead of smp_mb()).
->> This is acceptable because grace periods (uprobe
->> unregistration) are infrequent compared to reader-side
->> uretprobe hits.
->>
->> The updown flavor is required because the SRCU read lock is
->> taken in prepare_uretprobe() when a return instance is
->> created and is held until that return instance is finalized.
->> The traced thread returns to user space in between, so the
->> lock is inherently released in a different context from
->> where it was acquired: on the normal return path via
->> uprobe_handle_trampoline() -> hprobe_finalize(), or from
->> ri_timer() (expiry) or dup_utask() (fork) via
->> hprobe_expire(). srcu_down_read_fast() / srcu_up_read_fast()
->> are designed for this acquire-here / release-elsewhere
->> pattern and, unlike the same-context srcu_read_lock_fast()
->> variant, do not carry the lockdep read-side tracking that
->> would warn on it.
->>
->> The short, same-context SRCU sections in ri_timer() and
->> dup_utask() (which guard the uprobe against reuse across the
->> hprobe_expire() cmpxchg) instead use guard(srcu_fast_updown)
->> for proper lockdep coverage.
->>
->> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
->> ---
->>  include/linux/uprobes.h |  5 +++--
->>  kernel/events/uprobes.c | 29 +++++++++++++++++------------
->>  2 files changed, 20 insertions(+), 14 deletions(-)
->>
->
-> Very straightforward replacement and will improve performance, thanks!
-> LGTM. Peter or Mingo, I assume you guys will want to route this
-> through your tip tree, right?
->
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
->
+The add/remove eprobe test installs an eprobe for the openat syscall,
+runs ls and checks the filenames that were opened.
 
-Hi Peter, Ingo,
+Commit 206b25c09080 ("tracing: eprobe: read the complete FILTER_PTR_STRING
+pointer") fixed access to some string fields in eprobes. This allows for
+dereferencing more filenames. In some cases, the log now shows a file
+with a relative path instead of "(fault)". A relative path makes the
+test fail.
 
-Gentle ping for this.
+Relax the filename checks to fix the test. Allow shared libraries and
+locale configs that use a relative path.
 
-> [...]
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202607151010.b68428e1-lkp@intel.com
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+ .../selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc      | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+index c300eb020262..baceeca7ccdf 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+@@ -22,7 +22,8 @@ ls
+ echo 0 > events/eprobes/$EPROBE/enable
+ 
+ content=`grep '^ *ls-' trace | grep 'file='`
+-nocontent=`grep '^ *ls-' trace | grep 'file=' | grep -v -e '"/' -e '"."' -e '(fault)' ` || true
++nocontent=`grep '^ *ls-' trace | grep 'file=' | \
++	   grep -v -e '"/' -e '.so' -e 'locale' -e '"."' -e '(fault)'` || true
+ 
+ if [ -z "$content" ]; then
+ 	exit_fail
+-- 
+2.43.7
 
