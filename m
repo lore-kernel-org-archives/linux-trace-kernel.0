@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF4510F1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 00:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F833659E8;
+	Tue, 21 Jul 2026 00:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784594094; cv=none; b=UcKhqD+IcdUnnYbF2xXORMAav3r5jyJMFRgtzQGcmftKGlqnD1vcWINHyQx35Tubfpkfn9JIvTBKz77uGlaspUKDCO9p7EMxhL8GcZ8hxG4ujCgAFDzxpM8YxCJEosIMIUR/QipZrCJu9cGKX+YNeJrbGrd0mhuTvJtQVL2WzlI=
+	t=1784594316; cv=none; b=L1u7j2d0wWO6NoWeLehkHOOuvn1ReeDZFR942+3Vb0W/IQScWw6WZTHPZKedy+zpL3CP6LO5jllyq33Il+YmL8GrPI+4XUxJOKZRygh56VH+ENO2lyJk6Y/bQW0TMlJclUimJlteybeGwNXygqha2R4hbt2tuCugwrkCSYZxXZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784594094; c=relaxed/simple;
-	bh=xhqg1g5OBm/TnQtbW3vs2+u2oy2JMbyJhqjHe5lSmYM=;
+	s=arc-20240116; t=1784594316; c=relaxed/simple;
+	bh=jBddrH4ZJlWSqb48y2KqI+9vkGOcIvkKn1uFlDMLDN0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FdN9pvnLP1AUcCyVjPX1HADR1LA/58gYYQseN2kuEOXjmHF1llK9K2m94452B+Y9G7IQ2yWtvmqBMZz1bQkgOAptvq+dxUG1vI+zShXylctct9+1OrmST2ABfGra/0rkQUtlIpichVdbaOlVnGMGWbiNlnUYp+GIcQ2ogfNbdGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asagOxcO; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=MYa4BLhWTgO79EBdvWI7VHepwDVL8/0GkRZKi94IJ9xcEaaqlFzNWdxWSuEbX9DSAXWGGu7LmYviIaSrBzAfFX69WrKyG+PawMdXGQreoYvmmaQzxoZukNc1iiRICglw25pswmI4Gc2m1okxz6YySlaG9LyMzZqb5x3RpTkYcDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=heTHd6jQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asagOxcO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9C81F000E9;
-	Tue, 21 Jul 2026 00:34:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="heTHd6jQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664151F000E9;
+	Tue, 21 Jul 2026 00:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784594093;
-	bh=pVwFeDICgQW8/HCnQHrqeF7MB10O8acebp2MSPE4hus=;
+	s=k20260515; t=1784594314;
+	bh=HWYzSSvEdfLM5OpyP97q8ZolkKLSQ8fjHRgAnnAJoWQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=asagOxcO3JvUz3Y2IQnF1Ds+taFlOTGde/5HB26EaL0mxWDGmIZ7jZcesT1IUoeAm
-	 HKV1vOQ/K8GQPsf8zy5A0xFwSBRt8z9xNQGNCUgNcIJcIW0w4+BtoniR7/6YiGtPWq
-	 nCH7mMRUFoy3MXk/1ljZoNngxDrgewHIR7iewho39Na+R+hLsdchBuPtpKKe0OhCHP
-	 h61W5yzPnVK23i0fJELkohWeaFMVQAnidOvFW41wWDt0ugxCk+3BSmr3Y3nnrgsBNl
-	 Lbw0FWhKr8mZjt6zjNFJy+1ry4M2Bc8p7kzmCpKkuUzBG45/8Ss0SMHF8j3P+Sesgz
-	 zE6ynwN5TIaNQ==
-Date: Tue, 21 Jul 2026 09:34:49 +0900
+	b=heTHd6jQTTuFpcKXP+VjDTuE4fp3Om4KiJr37BEVSYbptxVxJn2rQAdpOdgGFOovX
+	 h5XTY7gbuOMsw68Y7tf/b5/5ORDbncvRydX2XMJ7lU2x32N7h/Nubd4Vuim3GwnvGs
+	 u6CocT9OQsLyoEd9xp0/Cfvojx7Amfu/MyuxPUxDzRq/u40ph34v1m8Y7vmJl2wQdl
+	 L0qjA+oXRwnOjpQpNfaEnWpVxNb3S3JCUzrnnx6PxC1Pnn5YhbSiNTMIetdLnSJAJk
+	 M2h3ImEbFpA6oV40TggXhZ0FwPbutrOr+TtKmPMXDjeBJgI9xwM24+oXAbyVny2GAd
+	 jaIo125zrRnvQ==
+Date: Tue, 21 Jul 2026 09:38:30 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, Masami Hiramatsu
- <mhiramat@kernel.org>, Linux trace kernel
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: kernel test robot <oliver.sang@intel.com>, Steven Rostedt
+ <rostedt@goodmis.org>, <oe-lkp@lists.linux.dev>, <lkp@intel.com>,
+ <linux-kernel@vger.kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  <linux-trace-kernel@vger.kernel.org>
-Subject: Re: Linking Patchwork with Sashiko?
-Message-Id: <20260721093449.968265216a1201101383b443@kernel.org>
-In-Reply-To: <20260720093655.4da2224d@robin>
-References: <20260715005909.GF1656185@killaraus.ideasonboard.com>
-	<4928C919-7999-4E76-ADCB-F8643FED105B@linux.dev>
-	<20260715162816.GF1778116@killaraus.ideasonboard.com>
-	<7ia47bmw0xls.fsf@castle.c.googlers.com>
-	<20260715192042.4052411a@robin>
-	<7ia4wluvvlq4.fsf@castle.c.googlers.com>
-	<20260720093655.4da2224d@robin>
+Subject: Re: [linus:master] [selftests/tracing]  c5c413534d:
+ kselftests-bpf.ftrace.ftracetest-ktap._instance_event_trigger_-_test_poll_wait_on_histogram.fail
+Message-Id: <20260721093830.bb1d57a6a6d30c3f8651a292@kernel.org>
+In-Reply-To: <20260720232952.94b33d59eddb69cf6457ded4@kernel.org>
+References: <202607161651.ab0a5bf6-lkp@intel.com>
+	<20260720232952.94b33d59eddb69cf6457ded4@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,69 +49,61 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 20 Jul 2026 09:36:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 20 Jul 2026 23:29:52 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
+> On Thu, 16 Jul 2026 22:30:11 +0800
+> kernel test robot <oliver.sang@intel.com> wrote:
 > 
-> [ Removed all Cc's. Added Masami and linux-trace-kernel mailing list ]
-> 
-> On Thu, 16 Jul 2026 00:09:39 +0000
-> Roman Gushchin <roman.gushchin@linux.dev> wrote:
-> 
-> > Steven Rostedt <rostedt@goodmis.org> writes:
 > > 
-> > > On Wed, 15 Jul 2026 21:08:47 +0000
-> > > Roman Gushchin <roman.gushchin@linux.dev> wrote:
-> > >  
-> > >> At this moment there are 36 mailing lists who opted in for delivering email
-> > >> reviews over email (without counting linux-media@). In every single case
-> > >> it was based on maintainers requests in all cases of a disagreement
-> > >> between maintainers I took the conservative side.  
-> > >
-> > > Oh, I think I missed this opt-in. Can you add replies to patches sent
-> > > to linux-trace-kernel. Currently, I've been manually looking to see if
-> > > a patch had a Sashiko review and sending the author a link to the
-> > > review and told them to please reply to the comments.
-> > >
-> > > Note, I have not had anyone tell me the are against doing so.  
 > > 
-> > May I ask you to raise this question with other linux-trace-kernel
-> > maintainers and cc me on the thread? Just to make sure everyone is
-> > onboard.
-> 
-> Masami,
-> 
-> Are you OK with having Sashiko send an email on what it finds to the
-> author and the mailing list?
-
-Yeah, I hope that is good to make a discussion on ML about reviewed
-result.
-Mostly those are reasonable now, so maybe we need to decide a standard
-format for "all-Ack".
-
-Current problem is that the Sashiko does not look back the previous
-discussion, so the commit or code comment should clearly state
-"this code is intensionally do something."
-
-A current issue is that, since Sashiko does not reflect the content
-of past discussions, we must explicitly state within commits or code
-comments, (where you have determined that a past review comment was
-incorrect) that the code is intentionally doing this operation and why.
-
 > > 
-> > Also, please, let me know if sashiko should reply to the author and
-> > also if it should send an email if there are no issues found.
+> > Hello,
+> > 
+> > in fact, we found below two test cases randomly failed upon c5c413534d, while
+> > keep succeed on parent:
+> > 
+> > =========================================================================================
+> > tbox_group/testcase/rootfs/kconfig/compiler/group:
+> >   igk-rpl-d04/kselftests-bpf/debian-13-x86_64-20250902.cgz/x86_64-rhel-9.4-bpf/gcc-14/ftrace
+> > 
+> > 22a78be4123dce81 c5c413534d40eb4c982f1794e62
+> > ---------------- ---------------------------
+> >        fail:runs  %reproduction    fail:runs
+> >            |             |             |
+> >            :31          52%          16:32    kselftests-bpf.ftrace.ftracetest-ktap._instance_event_trigger_-_test_poll_wait_on_histogram.fail
+> >            :31          29%           9:32    kselftests-bpf.ftrace.ftracetest-ktap.event_trigger_-_test_poll_wait_on_histogram.fail
+> > 
+> > 
+> > 
+> > kernel test robot noticed "kselftests-bpf.ftrace.ftracetest-ktap._instance_event_trigger_-_test_poll_wait_on_histogram.fail" on:
+> > 
+> > commit: c5c413534d40eb4c982f1794e62813f926aba747 ("selftests/tracing: Have trigger-hist-poll.tc use sched_process_exit")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > 
+> > [test failed on linux-next/master 49362394dad7df66c274c867a271394c10ca2bb8]
 > 
-> I think if it finds no issues it should still send the email, as it
-> adds to the confidence of the patch. It also lets us know that the
-> email wasn't just dropped.
+> Hmm, this seems like a scheduler (event) behavior is different from what
+> the test expected.
 > 
-> Oh, I would think that "Failed to apply" results should *not* be sent.
+> Steve, I think we should use another deterministic events.
 
-Yes, the fact that there is no response from Sashiko implies that
-the application failed.
+I've sent a fix.
 
-Thank you,
+https://lore.kernel.org/all/178459323652.354837.10711230683477156733.stgit@devnote2/
+
+But this drops 2 checkpoints. I think we need to use another deterministic
+event, like trace_marker (but trace_marker does not support histogram trigger)
+
+Thanks,
+
+
+> 
+> Thank you,
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
