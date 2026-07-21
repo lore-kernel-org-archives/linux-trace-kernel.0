@@ -1,56 +1,56 @@
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADED4DA539
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 10:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545FB4B8DE9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 10:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784630200; cv=none; b=Tlj7qPpcmiTwRYpVm7x667uAy2RkTJQPK/I5JSvOCZ+7sbfHThBzneI1Ouva3Tk5s9Eh7SVAblOaM96TN4gn+Fb7H+cpoIbUb3qzbc0zggQOPUaYXVEie24kKsjVQJHVh4zyAH7SjH4d+vnlTsBu8iUJh5cPcN0+DQ1pnsVqIbo=
+	t=1784630203; cv=none; b=rIHzCLeIdMFRJDZ5h2NwjtTL6NWoJC4lcAaylV8JAXgU5eUdIz0mteofbxjxnrrlcmrut7oZuWk6P61SXlkTmEXPfc+4/eX+hyxLGnzdggoqCF9lqL19acSt6Af5SYHsvEvPKAKv5RGemFGVSp4V0mAD6cmDt6dNzBl2rXu5Q8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784630200; c=relaxed/simple;
-	bh=SJGMeMo7vdlJj4KTIcysWz2tTR5MAgYq2iGHZXVnUss=;
+	s=arc-20240116; t=1784630203; c=relaxed/simple;
+	bh=CCHqNFrfoKD9S3EhUlmwlsh16yuxS55DmnG3E5pBcR8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RsT28BiqQ7XITezBgbsh2iOePJElHd9YKoKFlnzRdt6k8LP3N4dPLlMapE3fFQpnw0l3TiPX3H1MMUEeiZq1lgqn6ZWnHYDDrB5MmFNHZBMrYrwrNmLUOgLSKqrTuIYupOUJOUwIWR8KTA7ItHmKKGUqGPfHj7GZXFA9Xfmxo54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rmsyw+Ra; arc=none smtp.client-ip=209.85.128.70
+	 To:Cc:Content-Type; b=XJMTRHKfjMiia2y8F2KS3xgZTxiE/2NzxdvsVmudLNzMbCgczT7pF9fcOoh2NgX0vtxlBjr9vILTtMd7TQol84jyhX/P5RH7Sw29Jr3rL2vdN+VD7P6d2Howd79E7dCchVUGy/VAn4ogKmt06LZpLGg9Hq5TZUC1imRmOQ2V8bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LdENdLp7; arc=none smtp.client-ip=209.85.221.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rmsyw+Ra"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49559af7b97so17660765e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 03:36:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LdENdLp7"
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-476608a9fefso4533616f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jul 2026 03:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784630197; x=1785234997; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784630199; x=1785234999; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=MUV8gsS7qAbohm6KrsxERDLgclwo/eDof24HSs0KbKY=;
-        b=rmsyw+Ra50aTL1ElxAIQDe2XFblRTK9MStr2XxbMvWZwuTln+YKJafPy1fGHdIYh/I
-         JP1sKTu+/ad2yHz0M77/uJ27e/QhTmChPRlhK0N6iF7aOyNmSgAX89DsUdKzW+lX6C1i
-         GkzLk5aDg4UXl+OL+BUbuz0QeBmm5kgTskR1rGSdRmJ0YO9AA0TbgNb6goy8kq0UKWei
-         rcpIQPmt5lAisU+vIPfs/6tAsVa5W+xPCpEL7RUWQ+pPN0FBIMLaeLm3W3hAjbTAOnfA
-         7uuAFi+LFDtN4f+VdH+8y6Z26oPRVIZnfsUzbUmpjIT63EgSmz81LmJvvI/yF2rcR5jn
-         T5hQ==
+        bh=SMLl/a7gRFykORVWd8FeSzrxPvAhfDrK5t+wUDhmWz4=;
+        b=LdENdLp7m/NO9CrC5Sc2CPL059wyI5JyftV/HR32DitRVU7vq/3zVKdpwUdt+W1PfH
+         iv8OKG48hbuaZSTO0XNa7v0RSo9ijQcSqis7eUqmgmYsG0oSXukNt9tBAzMxK0qpg+Gr
+         1N4+mmPTHjPt6LWzeAt5Xi8W9UaCDLiYGaAX7Yl/Nzo75KD1ani8oHmoCWQi9vd7BOSK
+         nexB+dxphU7ZPR62BhX2Ri08d/SD0Ihf1kRt+dl9MmeeJj7mgXiQN/7pAIz2N7iJPILA
+         dZrJvdJgbh3+7OPRjKYf0Nft5Dt+k1RjizT+pQk7JMDTswngYx2CIXvZQWd6z1e/RugS
+         7+WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784630197; x=1785234997;
+        d=1e100.net; s=20251104; t=1784630199; x=1785234999;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=MUV8gsS7qAbohm6KrsxERDLgclwo/eDof24HSs0KbKY=;
-        b=FkdUy37rHESESKOW4qavjZ8yiUyGAMJKCHyyu6TcdFxZolMIz8ZYRcJv/NZP5vmGnR
-         QkrGC18NJ8dJ9UuNji+yZTX6N+8LcjyiTAPDh3ODA/p/UucD3ewFatFj/0z972TD82Z0
-         3bySQkslEH2WTNM+MoZjsLYTk9cmWzsH/hu+6kv3k8iuJNme+rNer9YPaXyAYbPSHbW8
-         sBs6eAOt/2m/or/w+2cKH9RXX2g6uRegJNFBVbn66G6ZplxH6DAkTRBh5rf/C8eZQHhG
-         Q4eQ9DxgM4FRCRKfWBswiLmoeG9+CBcUMgUQBngeMMQqYqivLZ5qFi2sywoZUjd+hzon
-         D96A==
-X-Forwarded-Encrypted: i=1; AHgh+RoNxwszH+A6ndlvboFYCAi5RJk7gU+nSHhrZ3aqjlfVxE0B++XAa/H6tdYBlhg1Xl6pCAwaoRnRRTYsHXXuZhilmnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMOMGxttbxgIld6EKqZPIRuaCmcYQKvgNIHCR+abTCIuKL6B94
-	vkj8j8lXOMq39/bGJpuwfZ+DEAeJyv8q5C6FTyK7Lu2bmWUYgnVkUHmgLzI/IQ1RwvvDfMxL5K4
-	zSJvArI0TO3/KLbA4Qy9XyQ==
-X-Received: from wmbdx13.prod.google.com ([2002:a05:600c:63cd:b0:495:5bab:557])
+        bh=SMLl/a7gRFykORVWd8FeSzrxPvAhfDrK5t+wUDhmWz4=;
+        b=hHg+I88QTOC9Ldhya4y5ZdmOVw+amURg4Dfm4X2B/68s4kV094LNmxv8nfS4xMRWFI
+         TdsubApGsRnCeu0cBxFmw+di9UT6Nc21yIDCLghoiHlc7moHRMbzvklEJRKARMYLfOC0
+         W3oMF65zlFGLZdxy0IYm4Swxs8+Jz0dyDMu1gSFeAaGfd8Nzj8ryhesvWHHHI2WB9eHZ
+         h5OjpNdJQEgdeEMxn20HRHlrNug4rD28SsIssUNDBY5EdV2vzgVTatKKbHCnt6IGYxSK
+         iJdfbrCcjx0T5oD5LDhS6GYHHp1lQkVCUizV1xzjnen84oLk5kQLIMe9Jr3os2aR/GF0
+         W0Sg==
+X-Forwarded-Encrypted: i=1; AHgh+RorjeaOF1ic54ubnNm3WZXHTOjRt8c5zlkyP4YkNH7PcUxaVAxQcIuTjctuTVa1AlVQ+wtM3PAlHjkjDw8trQGlLaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2K/KVzF78zypE0l4r2LTj223uhfec7GSk0lJC/D6KTD82lbtb
+	vB9HiO9mtu3is+7LFzZRhlfRmKGYrfRl4T+JJ020wJJAtvM3mu2VkO9hfHNuwlFFtYcIxvOB1Pu
+	hVeZKTIUagW4J9DhyweG5IQ==
+X-Received: from wrtj6.prod.google.com ([2002:a5d:6046:0:b0:47f:6b80:dd8e])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3b24:b0:493:e79e:da6b with SMTP id 5b1f17b1804b1-4954a41148amr211833505e9.21.1784630197264;
- Tue, 21 Jul 2026 03:36:37 -0700 (PDT)
-Date: Tue, 21 Jul 2026 11:36:00 +0100
+ 2002:a5d:5f91:0:b0:474:a0a3:df0c with SMTP id ffacd0b85a97d-47f623b5517mr21447270f8f.10.1784630199054;
+ Tue, 21 Jul 2026 03:36:39 -0700 (PDT)
+Date: Tue, 21 Jul 2026 11:36:02 +0100
 In-Reply-To: <20260721103603.342266-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260721103603.342266-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260721103603.342266-16-vdonnefort@google.com>
-Subject: [PATCH v3 15/18] tracing/remotes: Add poll_ms tracefs file
+Message-ID: <20260721103603.342266-18-vdonnefort@google.com>
+Subject: [PATCH v3 17/18] Documentation: tracing/remotes: Add detailed tracefs layout
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -69,67 +69,95 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a tracefs file to configure the trace remote polling period. Keep
-the default value to 100ms.
+Add a description for each tracefs file available in a trace remote
+instance.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index d109b2503db9..33dd3333b90a 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -1135,6 +1135,40 @@ static int dump_on_panic_show(struct seq_file *s, void *unused)
- }
- DEFINE_TRACE_REMOTE_ATTRIBUTE(dump_on_panic);
+diff --git a/Documentation/trace/remotes.rst b/Documentation/trace/remotes.rst
+index 1f9d764f69aa..b02ebed4a03f 100644
+--- a/Documentation/trace/remotes.rst
++++ b/Documentation/trace/remotes.rst
+@@ -19,8 +19,8 @@ for which the host kernel can see and expose to user space.
  
-+static ssize_t poll_ms_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct seq_file *seq = filp->private_data;
-+	struct trace_remote *remote = seq->private;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = kstrtouint_from_user(ubuf, cnt, 10, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (!val)
-+		return -EINVAL;
-+
-+	guard(mutex)(&remote->lock);
-+
-+	if (val < remote->poll_ms && remote->poll_cnt)
-+		mod_delayed_work(system_percpu_wq, &remote->poll_work, msecs_to_jiffies(val));
-+
-+	remote->poll_ms = val;
-+
-+	return cnt;
-+}
-+
-+static int poll_ms_show(struct seq_file *s, void *unused)
-+{
-+	struct trace_remote *remote = s->private;
-+
-+	seq_printf(s, "%u\n", remote->poll_ms);
-+
-+	return 0;
-+}
-+DEFINE_TRACE_REMOTE_ATTRIBUTE(poll_ms);
-+
- static int trace_remote_init_tracefs(const char *name, struct trace_remote *remote)
- {
- 	struct dentry *remote_d, *percpu_d, *d;
-@@ -1167,6 +1201,10 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
- 	if (!d)
- 		goto err;
+ Register a remote
+ =================
+-A remote must provide a set of callbacks `struct trace_remote_callbacks` whom
+-description can be found below. Those callbacks allows Tracefs to enable and
++A remote must provide a set of callbacks `struct trace_remote_callbacks` whose
++description can be found below. Those callbacks allow Tracefs to enable and
+ disable tracing and events, to load and unload a tracing buffer (a set of
+ ring-buffers) and to swap a reader page with the head page, which enables
+ consuming reading.
+@@ -28,8 +28,66 @@ consuming reading.
+ .. kernel-doc:: include/linux/trace_remote.h
  
-+	d = trace_create_file("poll_ms", TRACEFS_MODE_WRITE, remote_d, remote, &poll_ms_fops);
-+	if (!d)
-+		goto err;
+ Once registered, an instance will appear for this remote in the Tracefs
+-directory **remotes/**. Buffers can then be read using the usual Tracefs files
+-**trace_pipe** and **trace**.
++directory **remotes/**. The files within this directory allow configuring
++and reading the remote buffer (see `The File System` below).
 +
- 	d = trace_create_file("buffer_size_kb", TRACEFS_MODE_WRITE, remote_d, remote,
- 			      &buffer_size_kb_fops);
- 	if (!d)
++The File System
++===============
++A remote tracing instance is represented by a directory in Tracefs under
++**remotes/**. The layout and files within it are very similar to standard ftrace
++instances. Inside the remote directory, the following files and directories are
++available:
++
++  tracing_on
++	This file allows enabling or disabling the remote tracing.
++
++  buffer_size_kb
++	This file displays and allows changing the size of the per-CPU ring
++	buffers used by the remote. It also shows if the buffer is **loaded** or
++	**unloaded**. To change the size, the remote buffers must be unloaded
++	first. Remote buffers are automatically unloaded when **tracing_on** is
++	off, no one is reading the buffer (either by accessing **trace_pipe** or
++	when **dmesg** is on) and no events remain in the buffer.
++
++  trace
++	Display the human-readable content of the remote buffers. Reading this
++	file is non-consuming. Writing to this file clears the ring buffers.
++
++  trace_pipe
++	Similar to **trace** but reading it consumes the events from the ring
++	buffers (consuming read). It blocks if there are no new events.
++
++  dmesg
++	When enabled, all events from the remote are redirected to the kernel
++	dmesg. This is similar to the **tp_printk** option for in-kernel events.
++	It counts as a reader of the remote buffers and prevents unloading.
++
++  dump_on_panic
++	When enabled, the remote tracing buffer is dumped to the console when a
++	kernel panic occurs.
++
++  poll_ms
++	Modifies the polling interval for the trace_remote.
++
++  per_cpu/
++	This directory contains subdirectories for each possible CPU (e.g.,
++	**cpu0/**, **cpu1/** ...)
++
++  per_cpu/cpuX/trace
++	This is similar to the **trace** file, but it will only display the data
++	specific for the CPU. If written to, it only clears the specific CPU
++	buffer.
++
++  per_cpu/cpuX/trace_pipe
++	This is similar to the **trace_pipe** file, and is a consuming read, but
++	it will only display (and consume) the data specific to the CPU.
++
++  events/
++	This directory contains remote events that can be enabled or disabled.
++
++  events/enable
++	Allows enabling or disabling all the remote events.
++
+ 
+ Declare a remote event
+ ======================
 -- 
 2.55.0.229.g6434b31f56-goog
 
