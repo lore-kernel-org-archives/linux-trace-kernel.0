@@ -1,49 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B744AB99;
-	Tue, 21 Jul 2026 21:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267272E7657;
+	Wed, 22 Jul 2026 00:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784668648; cv=none; b=fAg0nQ94+z3B007aR9bceN3qC+Va0bZK+OhrMGkfyjaAPOj/MlZ+Jh6fN0gKmUmI0l5lRA3XaDEEAZMCj/sN30eS47+7uKApqbNBQiCiW/Ifxa/bCuRM49dQnKmk2jawEzcyO3iSmvQevy6tfQF0p0w1BAWxx2nPZ3/gpOATIGg=
+	t=1784680710; cv=none; b=YnYhTTiVyv2ptkFRklMXmu47deuFSG4g7a/g9/2PD/czdx+37St2rgZpqu1wlmYEgYck9zEubYOAjJN8ZSopBtwEZWjitqTDCfUSCIvmzYd6D0KT2H+xvLXZE2rOWnffss2+p/K2/UKJFv2ugpf/tBHs/PGl5uuc3Ib97him0Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784668648; c=relaxed/simple;
-	bh=h30UGIZK08XsmJvolZCHLVOqPJztOVef21mXHYnzCEg=;
+	s=arc-20240116; t=1784680710; c=relaxed/simple;
+	bh=fmsCm0zbXlV99y01YVhqqI2OO2lG34WJO2ByvwJo5To=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PXTvZqR4RJUZa0e2HwzAkxa7K9nFXwVQ/JM842WJggMq4dtxDXfoVutbgiVRDlEk4BSeiOJUIydHXgYlgX9i713h7fWZ4Am/6Tk+dT5Yo4tiQqjuWWT5zWIV1KVYf6hI2bTHI+PHYUgsdopPLcUjYO8nHvYRHAuX8W9Gw49avKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=IFoJQM9b66tXWpuLgRPXXetCDY5YVc9hsu0mPky/yayaKhcLZFAv1rM9dMEj7dpUA7ZPOFDBlz5rRRX2+uWML03seuwPI/+uDYeFp7cuf99m8y9WPvk6PbggoQQgWR2P+qP9jT/7+m8rPnV76KlyfIoCJ6b+Mp5UM9Az9L6XO4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 204EA1C03FB;
-	Tue, 21 Jul 2026 21:17:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id DF8AF35;
-	Tue, 21 Jul 2026 21:17:05 +0000 (UTC)
-Date: Tue, 21 Jul 2026 17:17:24 -0400
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id AE4E2C0210;
+	Wed, 22 Jul 2026 00:38:26 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id CF0432000F;
+	Wed, 22 Jul 2026 00:38:24 +0000 (UTC)
+Date: Tue, 21 Jul 2026 20:38:43 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Aditya Sharma <adi.sharma@zohomail.in>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
- <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett"
- <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, David Rientjes <rientjes@google.com>, Shakeel Butt
- <shakeel.butt@linux.dev>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Kees Cook
- <kees@kernel.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
- Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- imbrenda@linux.ibm.com
-Subject: Re: [RFC PATCH 6/7] mm: add tracepoints and vmstat counters for
- async teardown
-Message-ID: <20260721171724.56f1aad5@gandalf.local.home>
-In-Reply-To: <20260719185409.409685-7-adi.sharma@zohomail.in>
-References: <20260719185409.409685-1-adi.sharma@zohomail.in>
-	<20260719185409.409685-7-adi.sharma@zohomail.in>
+To: deepakraog <gaikwad.dcg@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Pekka Paalanen
+ <ppaalanen@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/mmiotrace: fix resource leak on trace_pipe
+ close
+Message-ID: <20260721203843.65d06a69@gandalf.local.home>
+In-Reply-To: <20260715143604.14481-1-gaikwad.dcg@gmail.com>
+References: <20260715143604.14481-1-gaikwad.dcg@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,83 +40,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: DF8AF35
-X-Stat-Signature: pq97feacsw775doex8t9efs7h5zba3oi
-X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: CF0432000F
+X-Stat-Signature: tzgaoodpiywcy7suk3oj5zh1pomkugd6
+X-Rspamd-Server: rspamout03
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+/ste/MyujSSeKSM6VrsZlDhaJTmhqqpE=
-X-HE-Tag: 1784668625-226901
-X-HE-Meta: U2FsdGVkX1+37sIM9lG4/zgdYQ9Eq4DMj9ICc9L+iKjZogAd1/mA/GA6amAuJMJbN3PsQ0qohHAMZGj7vbCevm3bBwwvOmY6AED/Ow+q6CVegC+1eRe/+akgpMaHk8PjPnmNUoI4uuFKKl0KtKxmQjpsEY2ZI6It5d4pD4hjUp32ge0UDoqIeflNRvXHurGfgaR7L3E2gvANNnVQHz9S7/W2oVTnBzRtJ9VSIWGY1MNdPtUYoVNOAdFVxrRfp1tBRzlUFFpGImYwryMsrmMRQ17caaZHPwu2aKixNJIhwzWZe+NLXb/GcPA6ab5mtk+t
+X-Session-ID: U2FsdGVkX18LevLbhgbI1GVSjSGxOxREKAy8FfMl4jc=
+X-HE-Tag: 1784680704-557893
+X-HE-Meta: U2FsdGVkX18qsG8OY0Cam/g13cNxjAGZ/TUK9+JgEp4sXRiL2RRe2CfSwsA+jXxVHGQ/y/+jh1LwhW7PeRQySgY2Xjjc933ToFli1SCA5bHuBgUzU4iZdcRxMG6iOtMNCwt+NNQ1ibMG8rJFkb/yu9WK5ty2OFsJN38Op8tCNJd1niqqonUGoEAMchOcoR5Csv/8E2lsq8IrdlcbGt7HH3kWykvzUV4MGWYWNaHfa0OhnzTtOAVpAtlioDdcM4ZQ+E/vSRtfNWnpjvS/MU+mlU58mRcwn3SCcK5BE0gB2L92KKs4ZGAFjl2wf1+/INvwjekBqnUu1/GW5enrpnHL6QaBXQpHDKGs
 
-On Mon, 20 Jul 2026 00:24:08 +0530
-Aditya Sharma <adi.sharma@zohomail.in> wrote:
+On Wed, 15 Jul 2026 20:06:04 +0530
+deepakraog <gaikwad.dcg@gmail.com> wrote:
 
-> diff --git a/include/trace/events/mm_reaper.h b/include/trace/events/mm_reaper.h
-> new file mode 100644
-> index 000000000..315bced7c
-> --- /dev/null
-> +++ b/include/trace/events/mm_reaper.h
-> @@ -0,0 +1,73 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM mm_reaper
-> +
-> +#if !defined(_TRACE_MM_REAPER_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_MM_REAPER_H
-> +
-> +#include <linux/tracepoint.h>
-> +#include <linux/sched.h>
-> +#include <linux/topology.h>
-> +
-> +TRACE_EVENT(mm_async_teardown_queue,
-> +
-> +	TP_PROTO(struct mm_struct *mm, unsigned long rss),
-> +
-> +	TP_ARGS(mm, rss),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(struct mm_struct *, mm)
-> +		__field(int, pid)
-> +		__array(char, comm, TASK_COMM_LEN)
+> mmio_pipe_open() allocates a header_iter and takes a pci_dev reference
+> when trace_pipe is opened. mmio_close() frees them, but it was only
+> wired to the tracer's .close callback.
 
-There's an effort to make comm size more dynamic and we want to prevent more
-memcpy of the comm based on TASK_COMM_LEN. Please change the above to:
+Were you able to trigger a kmemleak?
 
-		__string(comm, comm);
+> 
+> tracing_release_pipe() invokes .pipe_close, not .close, when the
+> trace_pipe file is released. As a result, closing trace_pipe with the
+> mmiotrace tracer active leaked the header_iter allocation and left a
+> stale pci_dev reference.
+
+It would be good if you showed how a leak can happen, as the mmio_read()
+does clean up the descriptor, making the above statement incorrect.
+
+> 
+> Set .pipe_close to mmio_close, matching how function_graph wires both
+> callbacks to the same handler.
+> 
 
 
-> +		__field(unsigned long, rss)
-> +		__field(int, node)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->mm = mm;
-> +		__entry->pid = current->pid;
-> +		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
+The mmio_read() will free up the descriptor if you read the trace_pipe file
+until it blocks. But reading part of it may trigger the leak. Such as:
 
-And this to:
+  # head -n 1 /sys/kernel/tracing/trace_pipe 
+ head: /sys/kernel/tracing/trace_pipe: cannot seek to relative offset 0: Illegal seek
+ VERSION 20070824
 
-		__assign_str(comm);
+and running that over and over again will produce a leak caught by kmemleak.
 
-> +		__entry->rss = rss;
-> +		__entry->node = numa_node_id();
-> +	),
-> +
-> +	TP_printk("mm=%p pid=%d comm=%s rss=%lukB node=%d",
-> +		__entry->mm,
-> +		__entry->pid,
-> +		__entry->comm,
-
-and this to:
-
-		__get_str(comm),
-
-Thanks,
+I'll update the change log.
 
 -- Steve
-
-> +		__entry->rss << (PAGE_SHIFT - 10),
-> +		__entry->node
-> +	)
-> +);
-> +
