@@ -1,34 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F44F470E88;
-	Wed, 22 Jul 2026 19:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4572A3E8351;
+	Wed, 22 Jul 2026 19:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784749491; cv=none; b=JSrSFUmDKLc3zLwKztLmyY2681t4qjf1FsBXjaRxblG1VTVPTCe4o0VX62CpmOsfLA2aZvqgZjwWe+k9LGs4VdhRBeGCpafPDIHslg3cCPgJlSPe1pGEcXz+JBoCJrv24Z6pctBkXJ5GVfiyOYjehXyL/zflWD5w2s2iPtIKYwc=
+	t=1784749891; cv=none; b=clVkC5FD+sWtvPFc0JrpFq3l7uSMkW4NtaQaObDGNJDfonknVv9uvEHfI3QivAFIvmDmPMEIzE7Q842PS/YugOJ87ZDuzYr/t0QyW2IcBMQBiUxn9OBUzlOwBEJ9iPJmiaclQ7vCQ1O90bmJeSt1RlQbEWE3XUjRxAnb/7Y1kgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784749491; c=relaxed/simple;
-	bh=ovp2DkAQxSFtGdrZt3qt+dwHwhZRCL38L+KRrmFji+8=;
+	s=arc-20240116; t=1784749891; c=relaxed/simple;
+	bh=Adgb0Rm/h5UzV14Sn8e1t9krNZy52QWnE3NJBniU3cU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qtqiTEmwBhhM2rPWzLOElB8PMufMAHL80+M5wSh+ZVI2V6OZlnk46oSXP6u7jEzb+47AuTDoe+32ICAUT4xTzHCPbyr1mdCdKUT7R6nqF3mQ0lttAj/k0SQVODG4zaasL6mxVvLIJHauXEVWFWpEaDJPpmR7czaJX3b7V0BC55Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=acWWINpQLm0UMo55dmPYXhAoqcbtalAbRNDU1Iq1CLCP2aMLlq3Hd4gkJ7JDgLhsWiwZYIEoHHz4AhpDHg5UiVi98wd2oEmQ3Re+dgz2juaoh5LN1uxX2UQ00Q6imPp27zPPYc2QPanBQdRzfwdDY1yjcS5Xij6dcyYFjgtZJ5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 4CBECC02E5;
-	Wed, 22 Jul 2026 19:44:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 7718C2000F;
-	Wed, 22 Jul 2026 19:44:46 +0000 (UTC)
-Date: Wed, 22 Jul 2026 15:45:07 -0400
+Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 7A21A40280;
+	Wed, 22 Jul 2026 19:51:20 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id BA33220026;
+	Wed, 22 Jul 2026 19:51:18 +0000 (UTC)
+Date: Wed, 22 Jul 2026 15:51:39 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Li Qiang <liqiang01@kylinos.cn>
 Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 3/4] tracing/inject: Validate entry allocation size
-Message-ID: <20260722154507.12e91c34@gandalf.local.home>
-In-Reply-To: <20260722061040.112747-4-liqiang01@kylinos.cn>
+Subject: Re: [PATCH 4/4] tracing/inject: Prevent overflow growing string
+ fields
+Message-ID: <20260722155139.1449664a@gandalf.local.home>
+In-Reply-To: <20260722061040.112747-5-liqiang01@kylinos.cn>
 References: <20260722061040.112747-1-liqiang01@kylinos.cn>
-	<20260722061040.112747-4-liqiang01@kylinos.cn>
+	<20260722061040.112747-5-liqiang01@kylinos.cn>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,135 +39,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: schffwjy3mdgybjkqo3ke53sh836cime
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 7718C2000F
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: BA33220026
+X-Stat-Signature: fjgw9yzrat9krit7bfu84qjbgs3o78p3
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+7N008mxetN1tp9Jjs/q4tEwuClT3Tb9Y=
-X-HE-Tag: 1784749486-677547
-X-HE-Meta: U2FsdGVkX1+PUd+tprx4fpwv/ypOcQtkw5pEQkbc+8z472Wzyz9YEPw2UwG32Uo6E9pdW4sqfhiDxhRU6ufihP06O1HYdmd1uYiJ44SNV+gMO/t5/nUnZN/WeiZA3pq9L2wvfxiC274tl7bV0oLo4bpMLscZisYxSlagwyYCsXeGpePmh8JQXyMfqghH8cUHU7nxA1qhQUqz4h+V/JzaXzwGesPM1961maI1jFhNkVBKY4qBrf9f3STQFjNwNdVZdowrq7Al3t/QPPS8bFp3gzlOFuBPiV7AiiiGwp5/RYdi+f5phpCGogG5wkXAry3XA+qY413mWx6x/0gFRZlY4ssiZ2A2IhVp/Ui1YYIaAIpysBGyoA1a38dXu/BqNRLR
+X-Session-ID: U2FsdGVkX1/pb7i+yGAfUb1DHKiw1e/kAiNkk/inguM=
+X-HE-Tag: 1784749878-249051
+X-HE-Meta: U2FsdGVkX1+bT60etHhnF8qOZ9la854ui/4pHyyg991voFj8qE4/VNJ1SjJUplOkerrmW/NnqnXkXKfJJHtwbMO2nc9LqfkNoI0rqwGArSnKgF/Je6phMwA3Y8wvwvfx2qLko2F//YZxD5nHJ7zK4lrna1hsnZxyNtvyncq1k2QfAjAn+2f4hLHgiHZCDtn9GgFrW0iTmga4cazdl+G5CfNV2ZmBY2utz/raJPQ44IQunlUxdXylmD+DJbUYBVUsI/354kBslSNSrkrPM+iynpwvrIKhW2jkBoCBGGVbIjhmJuc6adD8zl7UaFVMpdX6hDxI4YKjd0LCArmHy/driCFOX2kZql5H
 
-On Wed, 22 Jul 2026 14:10:39 +0800
+On Wed, 22 Jul 2026 14:10:40 +0800
 Li Qiang <liqiang01@kylinos.cn> wrote:
 
-> trace_get_entry_size() calculated the allocation from signed field offsets
-> and sizes without validating their sum. A malformed event could use a
-
-What type of malformed event are you talking about?
-
-> negative range or overflow the calculation, allocate too little memory, and
-> then write past it while initializing or populating the entry. Events with
-> no fields also allocated less than a trace_entry.
-
-What event has no fields?
-
-Note, trace event injection is only for debugging tools that read trace
-events. It is in no-way something that should *ever* be used by a
-production machine.
-
-Is this being found by AI? If it is, you must specify that.
-
+> parse_entry() appends dynamic string data by adding its length to the
+> current entry size. An oversized input can overflow this signed addition,
+> cause krealloc() to receive too small a length, and then write beyond it.
 > 
-> Start at sizeof(struct trace_entry), validate each field range, and reserve
-> room for the trailing NUL. Propagate sizing errors to parse_entry() before
-> it initializes the allocation.
-
-Was an AI agent used to create this?
-
+> Reject a string length that cannot be added to entry_size before growing
+> the allocation.
 > 
 > Fixes: 6c3edaf9fd6a ("tracing: Introduce trace event injection")
 > Cc: stable@vger.kernel.org
-
-No need for the stable Cc. This is not something anyone should care about.
-If you want to inject a bad event, by all means, crash your machine!
-As I stated, it would be a bug to have this enabled on a production machine.
-
-That said, I'm all for making this more robust.
-
 > Signed-off-by: Li Qiang <liqiang01@kylinos.cn>
 > ---
->  kernel/trace/trace_events_inject.c | 31 ++++++++++++++++++++++++------
->  1 file changed, 25 insertions(+), 6 deletions(-)
+>  kernel/trace/trace_events_inject.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 > diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-> index a8f076809db4..b8b141c00d5c 100644
+> index b8b141c00d5c..5c551def44f6 100644
 > --- a/kernel/trace/trace_events_inject.c
 > +++ b/kernel/trace/trace_events_inject.c
-> @@ -135,27 +135,43 @@ parse_field(char *str, struct trace_event_call *call,
->  	return -EINVAL;
->  }
+> @@ -243,6 +243,9 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
+>  				int str_loc = entry_size & 0xffff;
+>  				u32 *str_item;
 >  
-> -static int trace_get_entry_size(struct trace_event_call *call)
-> +static int trace_get_entry_size(struct trace_event_call *call, int *entry_size)
+> +				if (str_len > INT_MAX - entry_size)
+> +					return -E2BIG;
 
-Why does entry_size need to be a separate parameter? Just return it, and
-have a negative be an error.
-
->  {
->  	struct ftrace_event_field *field;
->  	struct list_head *head;
-> -	int size = 0;
-> +	int field_size;
-> +	int size = sizeof(struct trace_entry);
-
-Keep the upside-down declarations please.
-
->  
->  	head = trace_get_fields(call);
->  	list_for_each_entry(field, head, link) {
-> -		if (field->size + field->offset > size)
-> -			size = field->size + field->offset;
-> +		if (field->offset < 0 || field->size < 0 ||
-
-Explain to me how the field->offset or field->size can be less than zero?
-
-> +		    field->size > INT_MAX - field->offset)
-> +			return -E2BIG;
-> +
-> +		field_size = field->size + field->offset;
-> +		if (field_size > size)
-> +			size = field_size;
->  	}
->  
-> -	return size;
-> +	/* trace_alloc_entry() reserves an extra NUL byte. */
-> +	if (size == INT_MAX)
-> +		return -E2BIG;
-> +
-> +	*entry_size = size;
-> +	return 0;
->  }
->  
->  static void *trace_alloc_entry(struct trace_event_call *call, int *size)
->  {
-> -	int entry_size = trace_get_entry_size(call);
-> +	int entry_size;
->  	struct ftrace_event_field *field;
->  	struct list_head *head;
->  	void *entry = NULL;
-> +	int ret;
-> +
-> +	ret = trace_get_entry_size(call, &entry_size);
-> +	if (ret)
-> +		return ERR_PTR(ret);
->  
->  	/* We need an extra '\0' at the end. */
->  	entry = kzalloc(entry_size + 1, GFP_KERNEL);
-> @@ -202,6 +218,9 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
->  	int len;
->  
->  	entry = trace_alloc_entry(call, &entry_size);
-> +	if (IS_ERR(entry))
-> +		return PTR_ERR(entry);
-
-Why this change? trace_alloc_entry() returns NULL on error. The above chunk
-broken.
+This is just wrong in so many ways that it shows that you don't understand
+the code.
 
 -- Steve
 
-
 > +
->  	*pentry = entry;
->  	if (!entry)
->  		return -ENOMEM;
+>  				entry_size += str_len;
+>  				*pentry = krealloc(entry, entry_size, GFP_KERNEL);
+>  				if (!*pentry) {
 
