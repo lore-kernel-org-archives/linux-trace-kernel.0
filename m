@@ -1,87 +1,110 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4572A3E8351;
-	Wed, 22 Jul 2026 19:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED103D6CD7
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 21:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784749891; cv=none; b=clVkC5FD+sWtvPFc0JrpFq3l7uSMkW4NtaQaObDGNJDfonknVv9uvEHfI3QivAFIvmDmPMEIzE7Q842PS/YugOJ87ZDuzYr/t0QyW2IcBMQBiUxn9OBUzlOwBEJ9iPJmiaclQ7vCQ1O90bmJeSt1RlQbEWE3XUjRxAnb/7Y1kgM=
+	t=1784754742; cv=none; b=uJTA+JnW9ekt97HBXWaM+1hiWzqsCvw+sXiIqTXFQYmQtSfQPXfGzcZhiWrcLyMSYqCc5wWQ7ysmWHTPay7pmLWW+SoD64gVg+Fk9F4MI8Uf55gKPuK7w5h8ob4w293XJWarBzXWOQKGaycqekpDUlPDVMhoNqLiIybAdSQkIxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784749891; c=relaxed/simple;
-	bh=Adgb0Rm/h5UzV14Sn8e1t9krNZy52QWnE3NJBniU3cU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=acWWINpQLm0UMo55dmPYXhAoqcbtalAbRNDU1Iq1CLCP2aMLlq3Hd4gkJ7JDgLhsWiwZYIEoHHz4AhpDHg5UiVi98wd2oEmQ3Re+dgz2juaoh5LN1uxX2UQ00Q6imPp27zPPYc2QPanBQdRzfwdDY1yjcS5Xij6dcyYFjgtZJ5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 7A21A40280;
-	Wed, 22 Jul 2026 19:51:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id BA33220026;
-	Wed, 22 Jul 2026 19:51:18 +0000 (UTC)
-Date: Wed, 22 Jul 2026 15:51:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Li Qiang <liqiang01@kylinos.cn>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4/4] tracing/inject: Prevent overflow growing string
- fields
-Message-ID: <20260722155139.1449664a@gandalf.local.home>
-In-Reply-To: <20260722061040.112747-5-liqiang01@kylinos.cn>
-References: <20260722061040.112747-1-liqiang01@kylinos.cn>
-	<20260722061040.112747-5-liqiang01@kylinos.cn>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784754742; c=relaxed/simple;
+	bh=1v6byf3doib7lXScxa29tBKEg951i25yQTkCyjE1yPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gEJYedpijB5m8IWLeUM/grWfV0Ca5RNbihkiWWlStl/bBlk3TR1ATaWpZyoYPua9fe0RL3z8mQ+Oo1pr+rikevfhrEk8DHHU9KxvhUfhCavSjnXzGjy1F5SBsmFbCuN7CTNDOG/rp7ePzPPM9IDaXgF+3++Sul2oEmqetGXW+gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQuLZ68g; arc=none smtp.client-ip=74.125.224.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQuLZ68g"
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-6688dfaed31so1635777d50.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 14:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784754740; x=1785359540; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=P2hAbTXYH7pOCgQd3BSSUl5pvihpdrNJ4HnSdNTSi5I=;
+        b=kQuLZ68gyxWKJQ2gs/HgMp+PJit3Cr0HMKMogYgF5qHjH0nKQvjSAlqLEX4LvFy/AM
+         MQ+L8xJmxIebXpPDA8rqHPtJxb8o3C27zYkxaF+I5DRxTVibotKKia6OB4zFjV5gaEQx
+         zQTBb5VPnhwcFJmR6LG4MzgdFW6yaqLekmlJaqqigcwgvWWn63FX6HnLxxvyyPe3Yp4b
+         tUyptGNNnWgyXuVtl0oOwmihcS4hv/3QPi0Lbkfyl5Mfq7hb9bkEvrN8ewJpd5a+He+8
+         XAZpQHTiY0d+OmlaZT5Hm+21ae6If4I7Upt8wk4kK2VrbrPiXkMzvDMZ1J5qwymIk8YQ
+         4CUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784754740; x=1785359540;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=P2hAbTXYH7pOCgQd3BSSUl5pvihpdrNJ4HnSdNTSi5I=;
+        b=MbMlvRiLE2pu7lehGZqCo5H2ft/Mfpgby7cZuOf8ulc1iOgBD9OwXQPXYRMXOcbktF
+         XSC/EYlVjAHu28/YrSwdJ4qGyn/HjhPPchbXMon0xtShqQXh/ntvwA3f8W5g7MHPicj2
+         wRSXicQe+W/RDRmDD7B842A7ddnO7UsX6Oo4SYbDHH0l+cRoNl/V+z/V7mhCdz6lURte
+         sVS9r9mR9aLZV1EOD9n9U2gLssqbwb6eeCnxCfB+h1zXktSarSi6lXpn6ePSxJvc2Br9
+         tfeeyIYv4WVnuSjcdKdgROKgIQstPj6rs5/kIoBjQwV5pfq6IG0JcmHRE/AnxheiQqY0
+         KBlA==
+X-Forwarded-Encrypted: i=1; AHgh+RqSjDqDoPb7jmEa1lrH3+jIOUp/ImuEx8ebpyPjmuWyAoQSlQ5UBRQTbmgDWfzzF2605NVPFtE11RTcilqNOnDgZSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh9w6JTEuGCPuiqKgBLRKUdKxgdqgNdctpo3IMsQZUrbiVyQqv
+	n9IzknKAbFHJ+UN0Ek1r8UNZJ1u/CDwYnQjicspuS6oEY1cJkXjBzffQ
+X-Gm-Gg: AR+sD10ZHbSm2KYXmwjkmum4CcbYy68Mav1w89zw4jqnycFaCxCB/uO+3/tQ95/ZsHg
+	hPMXstE0LEFNmYlnnKKYmA4GRc88LQw4r7U8KZrcxHZbn8WxrmSauB5qYG5KvK+TwArs0kUrkIn
+	IBsPMpcCvIcM032i39uufdlhnHpCGQ9xURYyS5L+W9YhwHOwVXk57YKyh/fidleBkHiPMBEd2I4
+	Fk2kpU35wKJFOIadQTmPjHjlz1aJTWQ2KCCWuLeZ4s322DY3MAdEv7Gn850ZLln3Kysu+se6UoU
+	jkq1noVUuBd4LPRh1vM4ec6wabRGo/aUFFs7jV6pdb1j9YloPB1UiXwjdhaM/48vf0AoWXym+lT
+	+eNfvNf6xKrbaG18kUQrFH0xsqC2IN7teck3OFmo/UsZ/viu2jE4FuA0mUwxXIaSiXnp8kbHPzB
+	SbLVREETKAPOFeF/vWOLbJ1AWqRwdzPsfQZj6a
+X-Received: by 2002:a05:690c:2784:b0:7e8:a091:6c4b with SMTP id 00721157ae682-81f4c1c1d2dmr953507b3.24.1784754739786;
+        Wed, 22 Jul 2026 14:12:19 -0700 (PDT)
+Received: from zenbox ([2600:1700:18fb:6011:4392:41cd:1ce2:e391])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-81f3dc4422dsm12662287b3.13.2026.07.22.14.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2026 14:12:19 -0700 (PDT)
+Date: Wed, 22 Jul 2026 17:12:18 -0400
+From: Justin Suess <utilityemal77@gmail.com>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Christian Brauner <brauner@kernel.org>, 
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/20] landlock: Split struct landlock_domain from
+ struct landlock_ruleset
+Message-ID: <amEwEUKyCPNUxITb@zenbox>
+References: <20260722171159.2776765-1-mic@digikod.net>
+ <20260722171159.2776765-4-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: BA33220026
-X-Stat-Signature: fjgw9yzrat9krit7bfu84qjbgs3o78p3
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/pb7i+yGAfUb1DHKiw1e/kAiNkk/inguM=
-X-HE-Tag: 1784749878-249051
-X-HE-Meta: U2FsdGVkX1+bT60etHhnF8qOZ9la854ui/4pHyyg991voFj8qE4/VNJ1SjJUplOkerrmW/NnqnXkXKfJJHtwbMO2nc9LqfkNoI0rqwGArSnKgF/Je6phMwA3Y8wvwvfx2qLko2F//YZxD5nHJ7zK4lrna1hsnZxyNtvyncq1k2QfAjAn+2f4hLHgiHZCDtn9GgFrW0iTmga4cazdl+G5CfNV2ZmBY2utz/raJPQ44IQunlUxdXylmD+DJbUYBVUsI/354kBslSNSrkrPM+iynpwvrIKhW2jkBoCBGGVbIjhmJuc6adD8zl7UaFVMpdX6hDxI4YKjd0LCArmHy/driCFOX2kZql5H
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260722171159.2776765-4-mic@digikod.net>
 
-On Wed, 22 Jul 2026 14:10:40 +0800
-Li Qiang <liqiang01@kylinos.cn> wrote:
-
-> parse_entry() appends dynamic string data by adding its length to the
-> current entry size. An oversized input can overflow this signed addition,
-> cause krealloc() to receive too small a length, and then write beyond it.
+On Wed, Jul 22, 2026 at 07:11:35PM +0200, Mickaël Salaün wrote:
+> Switch all domain users to the new struct landlock_domain type
+> introduced by a previous commit, eliminating the conflation between
+> mutable rulesets and immutable domains. landlock_merge_ruleset() now
+> returns and allocates a struct landlock_domain, and the merge and
+> inherit helpers move next to it; the former static insert_rule() is
+> exported as landlock_rule_insert() for its new caller across the
+> translation-unit boundary.
 > 
-> Reject a string length that cannot be added to entry_size before growing
-> the allocation.
-> 
-> Fixes: 6c3edaf9fd6a ("tracing: Introduce trace event injection")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Li Qiang <liqiang01@kylinos.cn>
-> ---
->  kernel/trace/trace_events_inject.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-> index b8b141c00d5c..5c551def44f6 100644
-> --- a/kernel/trace/trace_events_inject.c
-> +++ b/kernel/trace/trace_events_inject.c
-> @@ -243,6 +243,9 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
->  				int str_loc = entry_size & 0xffff;
->  				u32 *str_item;
->  
-> +				if (str_len > INT_MAX - entry_size)
-> +					return -E2BIG;
+Seems a little confusing that we have
 
-This is just wrong in so many ways that it shows that you don't understand
-the code.
+landlock_rule_insert()
 
--- Steve
+and
 
-> +
->  				entry_size += str_len;
->  				*pentry = krealloc(entry, entry_size, GFP_KERNEL);
->  				if (!*pentry) {
+landlock_insert_rule()
 
+Maybe a rename of one these would be appropriate?
+
+Otherwise looks good :)
+
+Justin
+> [...]
