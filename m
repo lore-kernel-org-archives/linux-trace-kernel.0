@@ -1,149 +1,97 @@
-Received: from mail-pz2-f1.google.com (mail-pz2-f1.google.com [74.125.228.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED3C49550B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 09:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092B3478870
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 11:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784714298; cv=none; b=S7gthnx5aNXTh9feNpnoWOF/eSP1twM9k9Ud+cVvhuzOm3oTM7hyU/ptp5R8TmJLyKbB+M/bNNSmd5Tth/WALoDXwcq3mOowI/jwZ9ViHL1HDEq2nx9MT+a+bil0f7aUn/Law3y3gW3jCDqIQyzG/L9aWBFPvclwW1DpUny4wjc=
+	t=1784718117; cv=none; b=N/B5f/dL8aEBxUsjCn1Qo0shK+aZ1U0FmevxqZ4avQSriJyvOgAcz7diKVAopZSUhYbnR/coM3wJG6wUsQllGfJcTeRP+yUfkbB1EpeOgqLhplXyKS/epYj2vXTD0KVK80OSwx8RO3ySGmtGVk28skVzC0bcxb7i7rYLKFRmYEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784714298; c=relaxed/simple;
-	bh=akDU7xYh0IgyGRFadM1zLtDJvjoGFRPfM3elobo9fME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jlFwYlJpicvFvUmorSilA4uzEwd5759xpb0uBpbK/4g5lP6ZmxTAoskLNoR12r3vCOwsbu1L/z77W0t1/U9vdrgAq3DerdZB9pIFAh7RN8PsojZPQgsIYNnzt+8j7qa6y627C2dS/m1PxrY72YNV2EnZ1vbuv1AkG8kSxVRXHi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JeUtFaBI; arc=none smtp.client-ip=74.125.228.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784718117; c=relaxed/simple;
+	bh=jxDugtjpdugmhjjIFWXHowAGdQRSO0je0GiHBkfyyOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=I2q8o4iyPGZ8Q3LAndbD1v0V6lqfySSw0MvOK7Nq9qllyxOeutPvwwrb20Tm3Nzjdlyd292ANlPnWndZHhkfjWMlg6F7pNnySV/7Y/Dz5s3vGooRZRTeYSeEYZe9VhIqyge+g3hybH/BA6unTEZAb/4Q4SBmi8WCBxkFyKDf9e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fik/v2ng; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeUtFaBI"
-Received: by mail-pz2-f1.google.com with SMTP id 41be03b00d2f7-cbb818e57c9so897331a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 02:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784714296; x=1785319096; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ijy/gLpb1NwFXbgR00G1evfvLl/4vAA++YOqxk207ZE=;
-        b=JeUtFaBIjK/Zxm7YniW0ZoW4x/1vuNH26eGK15X0gw8M3j/Atr2xx8FKpwsUqGOLE1
-         CbUbgG+Vfx3j9w4jwtZz7eOKcQ41lxd/j3vlmttq6zVwb5er8bPwxqgnWZ5VJUQWHDs2
-         cH/70vzh510NKbVKuKrnRrgnkaTzLCOBacaP7ZPymrU5kHeqnj4Vhl8eoUCD/SJpHKM7
-         wduAQVXvAj/3erZsoKvltTV07OR4L0kUzFhFKr1Km3tHcMMd/O3caqs9otR9Xv0+rq7s
-         n6ct89b1zPhnX5AW2H/gxgsE+o1srorr+1FQbzp18IfkDiNG+ZcmJa1JGozRQrG9LoY4
-         samQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784714296; x=1785319096;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Ijy/gLpb1NwFXbgR00G1evfvLl/4vAA++YOqxk207ZE=;
-        b=VkdCZv91B1uPnsX4YmmMrw+s7/Sb0e2kgQcUFLBsvlPvcz4rXC1cPByQMQd7DtOcrl
-         jvdyKhYyxKWHsFXlJg5b9YcnSHGkP7CLtyHkKxN8T7vOK99ChYSCWWiM3wCzZfw2TNrW
-         9g7wEVaIKcX5AwIsYQKTUQ6fTLuPy8KYEmFPjy8uWveMCk0aYGiY8dDXoS9ns9bAGq8P
-         zDx6+KNfdXVmuaVbcoxqpi+U9YA0nxXvoE1RNDNbaESgqFLCmwWGdy3A780mBGM61/4V
-         84O/mo/nEhOxhb8Cvos6vV0UL23RWQYmIr29mKMdWmw843tDfU8Tw4/wZG9GXx3xJu/3
-         1IIg==
-X-Forwarded-Encrypted: i=1; AHgh+Ro2hX/WuF1yNPuoOdBjf1gH5v1z6DQGqDF4u9EDioCRur8q357LOE5hMDfJ8Iqobd66cv0D7D/rFSHskOEx0fYagis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvJ4hVgXXvz5LdXS2nVb2AUgw4k0D7rDxLe0QO6ZBphd+/j9TG
-	uaZAz0+/zUiySs2xGoLeeVQRU24YLga/0QQf+/KS919nXLz6wkEbBxxX
-X-Gm-Gg: AR+sD128Pp9r0/e1kw4iWWVVDAFEiOzOOTHSNBdy9OXf0X80I9W+DK6ZfPOLhrhE7Nl
-	YypKKJF9OpF1ZdtT41KClax4DTPh/iKSeaBD+beA8B22RMBL6Go98UJnOm5oslzBouH5MzPHQYb
-	xBfPEy7u8T+QPiBbxDAQVA43kslcN2q5xfoZmarfxoI9o7CyK8q+i3maGa2wZSv2G52m2cpsLyc
-	5CgrfujA8VVvNKPZS7kfJCdr4c/DrySsOb1lu6LaClcJtk26ZtAxGnn36aTLZOMkGONPsMpvb2g
-	AOSG3z6J3wHebiOx4NrtUnPNZmeQFtjx+YlWgEiGVhu3yS5Y7zl7qXfE2+G6itJFpt2JRVoLh8n
-	1d/ToKV+pFrd5CQrs6zWaqpP8G8XNQfw/ZA19QgddUUXNNuE7l7aiSP43g6sf/2qFfTEGxGwW7U
-	3ENMc+RoUPuw==
-X-Received: by 2002:a05:6a00:23d5:b0:848:4754:28e5 with SMTP id d2e1a72fcca58-84c292393e8mr21888359b3a.16.1784714296477;
-        Wed, 22 Jul 2026 02:58:16 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84e172862d3sm1045545b3a.22.2026.07.22.02.58.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2026 02:58:15 -0700 (PDT)
-Message-ID: <2e9902e7-3f40-49d5-afb0-e710fb01ab39@gmail.com>
-Date: Wed, 22 Jul 2026 17:58:00 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fik/v2ng"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784718114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SjLl8zJrsgDdtiYlURa+MEU0ZY5wN5KxSsAz5xQcSG0=;
+	b=Fik/v2ngeL+5JSM05seShhgns3VIb0s7V5MgN0k1Ae7GLVz3ey1Rs+iSuFisqN5vjNphPv
+	6RUBB6/6eu2fU8t6Baq1pLWME2bWHFPB46zM3sQZrVSFzuEpqb16/I5ifVtCVFVEQz2Pux
+	X7YpZujy63vg00p58BXE6lU70e6qHaI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-dMphl5PJMNO-2VpS8RcTCg-1; Wed,
+ 22 Jul 2026 07:01:53 -0400
+X-MC-Unique: dMphl5PJMNO-2VpS8RcTCg-1
+X-Mimecast-MFC-AGG-ID: dMphl5PJMNO-2VpS8RcTCg_1784718112
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5349A196DFC3;
+	Wed, 22 Jul 2026 11:01:46 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.39])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E06BF3004A51;
+	Wed, 22 Jul 2026 11:01:44 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [GIT PULL] RTLA fixes for v7.2-rc5
+Date: Wed, 22 Jul 2026 13:01:16 +0200
+Message-ID: <20260722110116.1387495-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] mm/mlock: migrate folios out of CMA when mlocking
- a range
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: vbabka@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
- Alexander.Krabler@kuka.com, hughd@google.com, fvdl@google.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
- jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, ljs@kernel.org,
- riel@surriel.com, liam@infradead.org, harry@kernel.org, jannh@google.com,
- lance.yang@linux.dev, mathieu.desnoyers@efficios.com,
- matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
- byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com,
- apopple@nvidia.com, pfalcato@suse.de
-References: <20260707125925.3725177-1-chenwandun1@gmail.com>
- <20260707125925.3725177-5-chenwandun1@gmail.com>
- <9b227263-56d9-41d5-ba8e-c969d8d68785@kernel.org>
- <20260709131509.iIPP2VBh@linutronix.de>
-Content-Language: en-US
-From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <20260709131509.iIPP2VBh@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: _jraMr0XzOk9UtrNfyOArC6Vbms-8TtWT5mgsClz9bQ_1784718112
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Sebastian, David,
+Steven,
 
-Sorry for the long delay in getting back to this, and thanks a lot for
-the review.
+One more RTLA fix, this time a one-liner fixing an older bug found just after
+the previous pull request.
 
+The following changes since commit 1590cf0329716306e948a8fc29f1d3ee87d3989f:
 
-On 7/9/26 21:15, Sebastian Andrzej Siewior wrote:
-> On 2026-07-09 12:04:33 [+0200], David Hildenbrand (Arm) wrote:
->> On 7/7/26 14:59, Wandun Chen wrote:
->>> From: Wandun Chen <chenwandun@lixiang.com>
->>>
->>> The region covered by mlock[all] may contain CMA pages. cma_alloc installs
->>
->> What about ZONE_MOVABLE where memory is supposed to be migratable?
-> 
-> Would it be bad if the pages would not be movable anymore? Does this
-> effect just memory-hotplug or something else, too?
+  Linux 7.2-rc4 (2026-07-19 13:54:41 -0700)
 
-ZONE_MOVABLE does not need the same treatment as CMA.
-1. On RT compact_unevictable_allowed is 0 by default, pages in ZONE_MOVABLE are
-   never migrated by compaction, so no latency spike, no problem.
+are available in the Git repository at:
 
-2. For the scenario of memory offlining within ZONE_MOVABLE, because of offline
-   is an explicit administrator action. Any jitter/latency is expected and
-   acceptable, the operator chose to offline memory and would not do so
-   during an RT-critical phase.
+  https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git tags/rtla-fixes-v7.2-rc5
 
-3. cma_alloc() runs at runtime, triggered by drivers as part of normal operation,
-   and isolation path hardcodes ISOLATE_UNEVICTABLE, so it migrates the mlocked
-   pages and installs migration entries. The fault-and-wait latency hits the RT
-   task unpredictably during normal operation, which is not expected, and is
-   exactly the spike this patch targets.
+for you to fetch changes up to fafb66e5903c2bcfc7b7e259042a8282f18a6faa:
 
-> 
->> Also, what about drivers that mmap() CMA memory to user space, and
->> __mm_populate()->populate_vma_page_range() would actually try mlocking them, and
->> they actually must remain on CMA areas?
-> 
-> It should be safe to skip those. They belong to device and they
-> shouldn't be affected by anything including getting swapped out.
+  rtla/timerlat_top: Fix on-threshold actions firing on signal (2026-07-21 15:42:08 +0200)
 
-Agreed. Only LRU folios are ever isolated for migration here
-(isolate_folio_to_list() -> folio_isolate_lru()), and device-owned CMA
-buffers are not on the LRU, so they are left in place. I'll double-check
-the mmap paths and make sure this holds, and state it explicitly in v3.
+----------------------------------------------------------------
+RTLA fixes for v7.2-rc5
 
+- Fix timerlat top actions triggering on signal
 
-Best regards,
-Wandun
+Fix a bug in RTLA's timerlat top actions feature where on-threshold
+actions are triggered on any signal, regardless of whether a latency
+spike had actually occured during the measurement.
 
-> 
-> Sebastian
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+
+----------------------------------------------------------------
+Tomas Glozar (1):
+      rtla/timerlat_top: Fix on-threshold actions firing on signal
+
+ tools/tracing/rtla/src/timerlat_top.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
