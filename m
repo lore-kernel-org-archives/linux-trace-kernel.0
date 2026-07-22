@@ -1,257 +1,238 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B45A3128D9;
-	Wed, 22 Jul 2026 21:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45D82741A0;
+	Wed, 22 Jul 2026 23:02:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784757051; cv=none; b=JH6EOyA4AIF4w+Z+MC6Q6cywNg4eZJC0vQbQoMTLc5s7T+brVE8ataWqwa7vVllCfywWlZ3fCcOQZ5HDcLPHdkAvT4buS3+jn2EZ5mm/lnU1mxtlziQeNtELFlfSRoBR21w4PvtnbbM8ENQXZJI11MhbluQn2iBXRz6lCLPC4uU=
+	t=1784761356; cv=none; b=Hr03h/Irtm8A3bnvEyIMNb7mlsAHbDRSKO472aZ89019L7HS6N5030QGluG1NsjkueCaCqD21u+JobufQIEhHdfbR7RCuj9oOlH29fv0VcHodGIY/paiNaQvhUov5RBkk97P0wJc0jm38NYXEgmxyeZ6Wv4ALzD/at0O8kWcwvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784757051; c=relaxed/simple;
-	bh=X9z5jIcVh2xYJtzQAxIAX0uVAgpduatEV3qAMrYAiJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/KObIMjmD68c03xRN6+z8jFYJ52qtX2O/V4mRVNoAH78RXrVFf59t2eySx5yeNFLTE2bhqnMHPttBhsNSaZRaOHF4o2P3+NN/z+jvv6Y+iTVCE4pxYaXCoQtNXeIcyMPSePjkuaLUfedRro1gI288u5q2eyG3A5SeN2Crn+5CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUOavaUh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784761356; c=relaxed/simple;
+	bh=bvLB011Sm5dmD8Mz/zmUcWFCnSA1Y8VC0VUGPtd6eMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ToZtHRu4WnyptocTDCo7PCzgpwQq7NFV9WVPMD3jfG3Z2bSapDWsvROOrzx0FD7GYKUcLDrQXEdRlQrzbEdCkAPX3aQNcv06+ICY149L0i9HF15d1vuWcS29T9rwfNpg7PqiaTEQxtR1t1hzuUkMdJQtikVcZljSczSzGfvmTWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbzLblx4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUOavaUh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F471F000E9;
-	Wed, 22 Jul 2026 21:50:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbzLblx4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD021F000E9;
+	Wed, 22 Jul 2026 23:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784757049;
-	bh=vWyeqR5EJevSny2LNjkMl6biR5eqQBYBu/dG5yw/Yz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bUOavaUh5bWItvPAQ6sPacdt1bOiF0iyXIE9IRX6rRC9OMDHlHdBPQuiJW1Mi+l39
-	 HOSsZ2UDRI28OIqoa0BrxX6hf2F9LCtQmXkzJW9yEtCTgsCoFUEp1oyLsPNFGAexOH
-	 iOX41FMZxpjl9GjUGQKv7nq6TDD8RHbwGUoxNj3fP1/1fBncw85kLxHKT8xuKoiixF
-	 7sEnD7UEti185QpkO24p/r6TgzyH1y5/QuW35gjyxz7TKM9YGD2L5apbpyn68BnsRN
-	 UgJdde9jw7pq4w94xy2l6cx4NWTRobdKG4/VgQMKy2NzKXWj0X3P8Z+MpIu4aG09qM
-	 tMUg/hWHlAZpQ==
-Date: Wed, 22 Jul 2026 23:50:46 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Puranjay Mohan <puranjay12@gmail.com>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	s=k20260515; t=1784761354;
+	bh=uig3pVN/J3FMcxzYiz9PSoJw+bQoCVuUExLZ2b5dx14=;
+	h=From:To:Cc:Subject:Date;
+	b=HbzLblx4TBJsKHQEfxYjDi66yN1C7+GGxCtbg9hmL14GM71ya+1u0Kpnjy1/9OqML
+	 TWTT3SfhH3hMQItVZXNOtKuekELt+IoqoZsyRXJCqh+xb7p2xk7I2MljPqOjWhHi1M
+	 5aekzB8uyTJjVDUibfW/tA5QRxz3FzKsLn2OPqrhmJ7oW4Yhxc4em3lttAaV9cn8jo
+	 QTtRnL+qylrPZ4XPQwfGcL8f+NNOrbW0J8IXolPNEBe2JCoiRrilYJculKrTv25uqy
+	 brUDGTkBEUNg1qTZJEPSGg8EAH8o7wNfewPs6WYqCfgmJpEcHcUzTa2IBtkm9lV2K2
+	 ohnWkKaiA2lvg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v1 10/11] rcu: Advance callbacks for expedited GP
- completion in rcu_core()
-Message-ID: <amE7NrJRm0YDYroX@pavilion.home>
-References: <20260624132356.516959-1-puranjay@kernel.org>
- <20260624132356.516959-11-puranjay@kernel.org>
- <al-DopVEIe2FvLnv@localhost.localdomain>
- <CANk7y0hado1yb9Gaeg0FVX45E96E3U_8d6gJTF0=s-pjwcQEpQ@mail.gmail.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v10 00/11] tracing: wprobe: x86: Add wprobe for watchpoint
+Date: Thu, 23 Jul 2026 08:02:28 +0900
+Message-ID: <178476134787.26117.10094977293012760490.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANk7y0hado1yb9Gaeg0FVX45E96E3U_8d6gJTF0=s-pjwcQEpQ@mail.gmail.com>
 
-Le Tue, Jul 21, 2026 at 04:06:24PM +0100, Puranjay Mohan a écrit :
-> On Tue, Jul 21, 2026 at 3:35 PM Frederic Weisbecker <frederic@kernel.org> wrote:
-> >
-> > Le Wed, Jun 24, 2026 at 06:23:52AM -0700, Puranjay Mohan a écrit :
-> > > Even when rcu_pending() triggers rcu_core(), the normal callback
-> > > advancement path through note_gp_changes() -> __note_gp_changes() bails
-> > > out when rdp->gp_seq == rnp->gp_seq (no normal GP change). Since
-> > > expedited GPs do not update rnp->gp_seq, rcu_advance_cbs() is never
-> > > called and callbacks remain stuck in RCU_WAIT_TAIL.
-> > >
-> > > Add a direct callback advancement block in rcu_core() that checks for GP
-> > > completion via rcu_segcblist_nextgp() combined with
-> > > poll_state_synchronize_rcu_full(). When detected, trylock rnp and call
-> > > rcu_advance_cbs() to move completed callbacks to RCU_DONE_TAIL. Wake the
-> > > GP kthread if rcu_advance_cbs() requests a new grace period.
-> > >
-> > > Uses trylock to avoid adding contention on rnp->lock. If the lock is
-> > > contended, callbacks will be advanced on the next tick.
-> > >
-> > > Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> > > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> > > ---
-> > >  kernel/rcu/tree.c | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
-> > >
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index b01d7bf6b57b1..f42e01ef479c4 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -2891,6 +2891,23 @@ static __latent_entropy void rcu_core(void)
-> > >       /* Update RCU state based on any recent quiescent states. */
-> > >       rcu_check_quiescent_state(rdp);
-> > >
-> > > +     /* Advance callbacks if an expedited GP has completed. */
-> > > +     if (!rcu_rdp_is_offloaded(rdp) && rcu_segcblist_is_enabled(&rdp->cblist)) {
-> > > +             struct rcu_gp_seq gp_state;
-> > > +
-> > > +             if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
-> > > +                 poll_state_synchronize_rcu_full(&gp_state)) {
-> > > +                     guard(irqsave)();
-> > > +                     if (raw_spin_trylock_rcu_node(rnp)) {
-> > > +                             bool needwake = rcu_advance_cbs(rnp, rdp);
-> > > +
-> > > +                             raw_spin_unlock_rcu_node(rnp);
-> > > +                             if (needwake)
-> > > +                                     rcu_gp_kthread_wake();
-> > > +                     }
-> > > +             }
-> > > +     }
-> >
-> > Should that go as an improvement to note_gp_changes() instead?
-> 
-> note_gp_changes() only reconciles rdp->gp_seq against rnp->gp_seq, and
-> the expedited path never advances rnp->gp_seq. So the gap this closes
-> is exactly rdp->gp_seq == rnp->gp_seq, where note_gp_changes() and
-> __note_gp_changes() both short-circuit, the expedited completion isn't
-> visible there at all. It's detected from the cblist's stored gp_seq
-> (rcu_segcblist_nextgp()) confirmed with
-> poll_state_synchronize_rcu_full(), so hosting it in note_gp_changes()
-> would mean running that in the lockless preamble for every caller,
-> including the off-tick call_rcu_core() path. In rcu_core() it's
-> already gated by rcu_pending(), which does the barrier-free detection.
+Hi,
 
-Let's take a step back. note_gp_changes() is for the CPU to ackowledge
-a grace period change, either start or completion, and react upon with:
+Here is the 10th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
+The previous version is here:
 
-_ Making the callback progress through the state machine if a grace period
-  has changed.
+  https://lore.kernel.org/all/178429796992.157981.3393977217853767915.stgit@devnote2/
 
-_ Starting to chase quiescent states.
+This version add BTF support in wprobe trigger command[11/11]. With this
+feature, user do not need to decode the offset of structure fields.
+(Since the previous version lacked base-commit tag, Sashiko failed to
+ apply it for review. Thus this is just add a BTF support.)
 
-And now callback advancing/acceleration don't even refer anymore to the
-leaf node state but to the global one. So why not proceed with that
-logic?
+To support kprobe events, we need to check the previous NMI context
+or need to use an atomic refcount etc. But that should be another
+patch for review.
 
-Also other callers of note_gp_changes() may want to benefit from expedited
-grace periods as well.
+To support arm64, we need to avoid major pagefault on single-stepping
+issue. I think we can solve it with checking whether the address is the
+kernel (which must not cause a major page fault), or not.
 
-Would the following (untested) work?
+Public branch
+-------------
+I will push this branch as topic/wprobe-v2 to my tree so that it
+can be easily tested.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ff6601411a89..96bf7fe03be8 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1271,27 +1271,29 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
- {
- 	bool ret = false;
- 	bool need_qs;
-+	struct rcu_gp_seq gp_state;
- 	const bool offloaded = rcu_rdp_is_offloaded(rdp);
- 
- 	raw_lockdep_assert_held_rcu_node(rnp);
- 
--	if (rdp->gp_seq == rnp->gp_seq)
--		return false; /* Nothing to do. */
--
- 	/* Handle the ends of any preceding grace periods first. */
--	if (rcu_seq_completed_gp(rdp->gp_seq, rnp->gp_seq) ||
-+	if ((rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
-+	    poll_state_synchronize_rcu_full_unordered(&gp_state)) ||
- 	    unlikely(rdp->gpwrap)) {
- 		if (!offloaded)
- 			ret = rcu_advance_cbs(rnp, rdp); /* Advance CBs. */
- 		rdp->core_needs_qs = false;
- 		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuend"));
--	} else {
-+	} else if (rdp->gp_seq != rnp->gp_seq) {
- 		if (!offloaded)
- 			ret = rcu_accelerate_cbs(rnp, rdp); /* Recent CBs. */
- 		if (rdp->core_needs_qs)
- 			rdp->core_needs_qs = !!(rnp->qsmask & rdp->grpmask);
- 	}
- 
-+	if (rdp->gp_seq == rnp->gp_seq)
-+		return ret; /* Nothing else to do. */
-+
- 	/* Now handle the beginnings of any new-to-this-CPU grace periods. */
- 	if (rcu_seq_new_gp(rdp->gp_seq, rnp->gp_seq) ||
- 	    unlikely(rdp->gpwrap)) {
-@@ -1316,6 +1318,27 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
- 	return ret;
- }
- 
-+static bool need_note_gp_changes(struct rcu_data *rdp)
-+{
-+	struct rcu_gp_seq gp_state;
-+	struct rcu_node *rnp = rdp->mynode;
-+
-+	/* Need to chase QS or accelerate? */
-+	if (rdp->gp_seq != rcu_seq_current(&rnp->gp_seq))
-+		return true;
-+
-+	/* Waited upon GP has ended, need to advance CBs ? */
-+	if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
-+	    poll_state_synchronize_rcu_full_unordered(&gp_state))
-+		return true;
-+
-+	/* Wrapped? */
-+	if (unlikely(READ_ONCE(rdp->gpwrap)))
-+		return true;
-+
-+	return false;
-+}
-+
- static void note_gp_changes(struct rcu_data *rdp)
- {
- 	unsigned long flags;
-@@ -1324,8 +1347,7 @@ static void note_gp_changes(struct rcu_data *rdp)
- 
- 	local_irq_save(flags);
- 	rnp = rdp->mynode;
--	if ((rdp->gp_seq == rcu_seq_current(&rnp->gp_seq) &&
--	     !unlikely(READ_ONCE(rdp->gpwrap))) || /* w/out lock. */
-+	if (!need_note_gp_changes(rdp) || /* w/out lock. */
- 	    !raw_spin_trylock_rcu_node(rnp)) { /* irqs already off, so later. */
- 		local_irq_restore(flags);
- 		return;
-@@ -2888,23 +2910,6 @@ static __latent_entropy void rcu_core(void)
- 	/* Update RCU state based on any recent quiescent states. */
- 	rcu_check_quiescent_state(rdp);
- 
--	/* Advance callbacks if an expedited GP has completed. */
--	if (!rcu_rdp_is_offloaded(rdp) && rcu_segcblist_is_enabled(&rdp->cblist)) {
--		struct rcu_gp_seq gp_state;
--
--		if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
--		    poll_state_synchronize_rcu_full(&gp_state)) {
--			guard(irqsave)();
--			if (raw_spin_trylock_rcu_node(rnp)) {
--				bool needwake = rcu_advance_cbs(rnp, rdp);
--
--				raw_spin_unlock_rcu_node(rnp);
--				if (needwake)
--					rcu_gp_kthread_wake();
--			}
--		}
--	}
--
- 	/* No grace period and unregistered callbacks? */
- 	if (!rcu_gp_in_progress() &&
- 	    rcu_segcblist_is_enabled(&rdp->cblist) && !rcu_rdp_is_offloaded(rdp)) {
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 01a1b2985abd..6b9b058d138e 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -517,6 +517,7 @@ static void rcu_nocb_unlock(struct rcu_data *rdp);
- static void rcu_nocb_unlock_irqrestore(struct rcu_data *rdp,
- 				       unsigned long flags);
- static void rcu_lockdep_assert_cblist_protected(struct rcu_data *rdp);
-+static bool poll_state_synchronize_rcu_full_unordered(struct rcu_gp_seq *gsp);
- #ifdef CONFIG_RCU_NOCB_CPU
- static void __init rcu_organize_nocb_kthreads(void);
- 
- 
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2 
+
+This is based on linux-trace tree's probes/for-next.
+
+Usage
+-----
+
+The basic usage of this wprobe is similar to other probes;
+
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
+
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
+
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 32/32   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+
+
+Thank you,
+
+---
+base-commit: 1a416ae446afa42d2d8500ce25bd61c564508721
+
+Jinchao Wang (2):
+      x86/hw_breakpoint: Unify breakpoint install/uninstall
+      x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+
+Masami Hiramatsu (Google) (9):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: ftrace: Add wprobe trigger testcase
+      tracing/wprobe: Support BTF typecast in fetchargs
+      tracing/wprobe: Support BTF typecast in wprobe trigger command
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  163 +++
+ arch/Kconfig                                       |   20 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/include/asm/hw_breakpoint.h               |    8 
+ arch/x86/kernel/hw_breakpoint.c                    |  164 ++-
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   61 +
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    7 
+ kernel/trace/trace_events_trigger.c                |   12 
+ kernel/trace/trace_probe.c                         |   24 
+ kernel/trace/trace_probe.h                         |   14 
+ kernel/trace/trace_wprobe.c                        | 1300 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    2 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   73 +
+ .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   80 +
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   70 +
+ 23 files changed, 2056 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
