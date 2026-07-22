@@ -1,135 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f1.google.com (mail-pz2-f1.google.com [74.125.228.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8085B3E2AD3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 09:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED3C49550B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 09:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784712980; cv=none; b=U14xcK9+COBSmDQYTnu8kD7JKkAoCxpWZT2YeC9DQRF5BEEI6cjo/xvsg9PnVJa7IB9HXVCXYE18uOjDeT/vHBZ7B6LeWndTrtkjRTRTV9OgfNbBfHnVd9zR7YPZoF5byBxuQEEAuZXGfjpq9+H+8WFVCsYuU5xHCo8byCvfqhw=
+	t=1784714298; cv=none; b=S7gthnx5aNXTh9feNpnoWOF/eSP1twM9k9Ud+cVvhuzOm3oTM7hyU/ptp5R8TmJLyKbB+M/bNNSmd5Tth/WALoDXwcq3mOowI/jwZ9ViHL1HDEq2nx9MT+a+bil0f7aUn/Law3y3gW3jCDqIQyzG/L9aWBFPvclwW1DpUny4wjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784712980; c=relaxed/simple;
-	bh=4JXHTbQj9vbjgLrakjSFGraU6K3+W2n+uavTJuYhxoY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jMWrj9/krcxneovhtGbCnVVCYEbZStxNH64o9RVjqApzsU+k+ii4HdK3x9r6kU+kNgz65cUhpsn/9bGKhKEF68aQLKSuqpNSowTuyuyk71UYJU+QgGZgxh53XXLx3ipEak1yXnlDJtHEaGjamg9Vm2B5V62po3LIOQLJmnoslTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FXr22I8I; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784714298; c=relaxed/simple;
+	bh=akDU7xYh0IgyGRFadM1zLtDJvjoGFRPfM3elobo9fME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jlFwYlJpicvFvUmorSilA4uzEwd5759xpb0uBpbK/4g5lP6ZmxTAoskLNoR12r3vCOwsbu1L/z77W0t1/U9vdrgAq3DerdZB9pIFAh7RN8PsojZPQgsIYNnzt+8j7qa6y627C2dS/m1PxrY72YNV2EnZ1vbuv1AkG8kSxVRXHi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JeUtFaBI; arc=none smtp.client-ip=74.125.228.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FXr22I8I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784712975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4JXHTbQj9vbjgLrakjSFGraU6K3+W2n+uavTJuYhxoY=;
-	b=FXr22I8IERrMoNCz2iPqDosIrN0cj+R4deFxhhEZFAHRlskwobY+LrxuA36P/MQm3g1qUg
-	ufOkmNrAotE9i3/iY/k5uqI6fyYpn8EzNQhiOz001vRgM49NmCJnx+Eqt2aTdxy3bRqdJK
-	nHoW/pn9LKZvksblONAZ07IYn0w0bkE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-500-tXBPU2pRNEmXMUW_nC2z4w-1; Wed, 22 Jul 2026 05:36:14 -0400
-X-MC-Unique: tXBPU2pRNEmXMUW_nC2z4w-1
-X-Mimecast-MFC-AGG-ID: tXBPU2pRNEmXMUW_nC2z4w_1784712973
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-493a7fa8481so34103155e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 02:36:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeUtFaBI"
+Received: by mail-pz2-f1.google.com with SMTP id 41be03b00d2f7-cbb818e57c9so897331a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 02:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784714296; x=1785319096; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ijy/gLpb1NwFXbgR00G1evfvLl/4vAA++YOqxk207ZE=;
+        b=JeUtFaBIjK/Zxm7YniW0ZoW4x/1vuNH26eGK15X0gw8M3j/Atr2xx8FKpwsUqGOLE1
+         CbUbgG+Vfx3j9w4jwtZz7eOKcQ41lxd/j3vlmttq6zVwb5er8bPwxqgnWZ5VJUQWHDs2
+         cH/70vzh510NKbVKuKrnRrgnkaTzLCOBacaP7ZPymrU5kHeqnj4Vhl8eoUCD/SJpHKM7
+         wduAQVXvAj/3erZsoKvltTV07OR4L0kUzFhFKr1Km3tHcMMd/O3caqs9otR9Xv0+rq7s
+         n6ct89b1zPhnX5AW2H/gxgsE+o1srorr+1FQbzp18IfkDiNG+ZcmJa1JGozRQrG9LoY4
+         samQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784712973; x=1785317773;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=887G4FpM8v6xJwAY2TuX6vrvJZdHf0fmrax/gsZiZnE=;
-        b=A+WyOKZ4b6T+yJCoz2m2KjOrosRuke/uhy+5tdBHc/I3OtXTdJCR+P8qqhtq3ORr5i
-         W6D/ntjHAozh6IWr32drx1kPvBY1O5y4we00OFaueJXpkFcAiaNhM1gsNRwyJW5se0Wa
-         /xP0JymUbfBDVEaP1Pv6TjYptAXb+QSdMO/roisGuXSAi/QFqc+/qlzEN8KYeGBKK8mm
-         gGaKe5tFTq8q84/FOHmOpctQj/tdFNWT0+BRLg9dP6ds/rWtTpMvQ7hrDP180LR97Ya8
-         Ev1duV9ybXQMGtWx9jHI06dimQFS1Wkq/r6wn4GAQHJ/Yk3j58bmAs4jo+NHA6amMUZ6
-         NEBg==
-X-Forwarded-Encrypted: i=1; AHgh+RoOxkt33LPGetnb7D1oJThcYrtr16DagFQi4pfgXoutoFfY7JKgAXgAq8BbHAL0FQ9z5TfGk+yxREZgpCIfXsR2MD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxXl1Zwq8Syx7/s4xqBoKRPSmwIuCJ9xJriDVIotI0vdwy2dXw
-	Vnef2YOOc8a5nzgjDGQs9mk0VNhk2f2TnV2EB4KggVZkYO54dIWA2f9VnwpWhNrNa9KLTtjHVM5
-	Copnq9snZZrZA+Yex/WH9OOUPTGHLymWwQOyugGgbmIrplHfXyzGY82Q0kAncux4c+iSgH0WkpQ
-	==
-X-Gm-Gg: AR+sD12CeKBiwJOX6CKos0Ynb2whVWaYwjPSMQ8/81q6i3YZkOWWCcRHw8CGPvB4Xwc
-	ZifHdLyxX7dYTqXq+a0/A4reE1Zn+bx2hQlqm2eJk+q4pLhR5x9XrS6/tPaCzSJ4eMsb/zmQ1Id
-	kDigC/oahgFOuFZD9sxyBZ0njEsF/hjYqsmg6/LrjOdvvSG3j0peczBT9dxUCOcZG9VBRckxpZP
-	PK9Vkb3tXSsBE+ni+hWw56DACqnEFVUl9M0zpTXdx62RnL5OuEAherTx06BrsJT2SFUwlAAFpaC
-	Gtty6tnvmsU6CpbGEYNiiArnzNCL0f9eg9UuGJ8Zs4sNSjvD2Z+HSVHdKJgRVI4WBnAqmsrVAA9
-	i74iyH/eUNu20QyT/GR3Ci7JRfyoo
-X-Received: by 2002:a05:6000:26c6:b0:47a:b6a0:b024 with SMTP id ffacd0b85a97d-47f840a020dmr4085315f8f.4.1784712973081;
-        Wed, 22 Jul 2026 02:36:13 -0700 (PDT)
-X-Received: by 2002:a05:6000:26c6:b0:47a:b6a0:b024 with SMTP id ffacd0b85a97d-47f840a020dmr4085256f8f.4.1784712972611;
-        Wed, 22 Jul 2026 02:36:12 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.132.53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f85c67339sm4537989f8f.31.2026.07.22.02.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 02:36:12 -0700 (PDT)
-Message-ID: <1fe191ba66ae668b4635e2dd18b3e6c3b3c0090d.camel@redhat.com>
-Subject: Re: [PATCH v2 4/4] rv/rtapp: Add wakeup monitor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Chao Liu <chao.liu@processmission.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, 	linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Wed, 22 Jul 2026 11:36:10 +0200
-In-Reply-To: <87y0f3wjuk.fsf@yellow.woof>
-References: <cover.1781852967.git.namcao@linutronix.de>
-	 <ba5658fa13e49ada466b84a2c211f233037180b5.1781852967.git.namcao@linutronix.de>
-	 <amBHR4JTr2InJDk8@ChaodeMacBook-Pro.local> <87y0f3wjuk.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        d=1e100.net; s=20251104; t=1784714296; x=1785319096;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ijy/gLpb1NwFXbgR00G1evfvLl/4vAA++YOqxk207ZE=;
+        b=VkdCZv91B1uPnsX4YmmMrw+s7/Sb0e2kgQcUFLBsvlPvcz4rXC1cPByQMQd7DtOcrl
+         jvdyKhYyxKWHsFXlJg5b9YcnSHGkP7CLtyHkKxN8T7vOK99ChYSCWWiM3wCzZfw2TNrW
+         9g7wEVaIKcX5AwIsYQKTUQ6fTLuPy8KYEmFPjy8uWveMCk0aYGiY8dDXoS9ns9bAGq8P
+         zDx6+KNfdXVmuaVbcoxqpi+U9YA0nxXvoE1RNDNbaESgqFLCmwWGdy3A780mBGM61/4V
+         84O/mo/nEhOxhb8Cvos6vV0UL23RWQYmIr29mKMdWmw843tDfU8Tw4/wZG9GXx3xJu/3
+         1IIg==
+X-Forwarded-Encrypted: i=1; AHgh+Ro2hX/WuF1yNPuoOdBjf1gH5v1z6DQGqDF4u9EDioCRur8q357LOE5hMDfJ8Iqobd66cv0D7D/rFSHskOEx0fYagis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvJ4hVgXXvz5LdXS2nVb2AUgw4k0D7rDxLe0QO6ZBphd+/j9TG
+	uaZAz0+/zUiySs2xGoLeeVQRU24YLga/0QQf+/KS919nXLz6wkEbBxxX
+X-Gm-Gg: AR+sD128Pp9r0/e1kw4iWWVVDAFEiOzOOTHSNBdy9OXf0X80I9W+DK6ZfPOLhrhE7Nl
+	YypKKJF9OpF1ZdtT41KClax4DTPh/iKSeaBD+beA8B22RMBL6Go98UJnOm5oslzBouH5MzPHQYb
+	xBfPEy7u8T+QPiBbxDAQVA43kslcN2q5xfoZmarfxoI9o7CyK8q+i3maGa2wZSv2G52m2cpsLyc
+	5CgrfujA8VVvNKPZS7kfJCdr4c/DrySsOb1lu6LaClcJtk26ZtAxGnn36aTLZOMkGONPsMpvb2g
+	AOSG3z6J3wHebiOx4NrtUnPNZmeQFtjx+YlWgEiGVhu3yS5Y7zl7qXfE2+G6itJFpt2JRVoLh8n
+	1d/ToKV+pFrd5CQrs6zWaqpP8G8XNQfw/ZA19QgddUUXNNuE7l7aiSP43g6sf/2qFfTEGxGwW7U
+	3ENMc+RoUPuw==
+X-Received: by 2002:a05:6a00:23d5:b0:848:4754:28e5 with SMTP id d2e1a72fcca58-84c292393e8mr21888359b3a.16.1784714296477;
+        Wed, 22 Jul 2026 02:58:16 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84e172862d3sm1045545b3a.22.2026.07.22.02.58.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2026 02:58:15 -0700 (PDT)
+Message-ID: <2e9902e7-3f40-49d5-afb0-e710fb01ab39@gmail.com>
+Date: Wed, 22 Jul 2026 17:58:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hNo89Mvn7kcD3m2WaBf8gEvYokWuv4kdBvSas_MfIME_1784712973
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] mm/mlock: migrate folios out of CMA when mlocking
+ a range
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: vbabka@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ Alexander.Krabler@kuka.com, hughd@google.com, fvdl@google.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
+ jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, ljs@kernel.org,
+ riel@surriel.com, liam@infradead.org, harry@kernel.org, jannh@google.com,
+ lance.yang@linux.dev, mathieu.desnoyers@efficios.com,
+ matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
+ byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com,
+ apopple@nvidia.com, pfalcato@suse.de
+References: <20260707125925.3725177-1-chenwandun1@gmail.com>
+ <20260707125925.3725177-5-chenwandun1@gmail.com>
+ <9b227263-56d9-41d5-ba8e-c969d8d68785@kernel.org>
+ <20260709131509.iIPP2VBh@linutronix.de>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <20260709131509.iIPP2VBh@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2026-07-22 at 09:42 +0200, Nam Cao wrote:
-> Chao Liu <chao.liu@processmission.com> writes:
-> > > +static void handle_sched_waking(void *data, struct task_struct *task=
-)
-> > > +{
-> > > +=09if (in_task()) {
-> > > +=09=09if (current->prio > task->prio)
-> > > +=09=09=09ltl_atom_pulse(task, LTL_WOKEN_BY_LOWER_PRIO,
-> > > true);
-> >=20
-> > The implementation also reports wakeups from softirq context through
-> > WOKEN_BY_SOFTIRQ:
-> >=20
-> > > +=09} else if (in_serving_softirq()) {
-> > > +=09=09ltl_atom_pulse(task, LTL_WOKEN_BY_SOFTIRQ, true);
-> > > +=09}
-> >=20
-> > Should this description mention softirq wakeups as well?
->=20
-> Technically, on RT kernel, softirq is a SCHED_OTHER task. On !RT kernel,
-> softirq can also be executed as a SCHED_OTHER task, which is the cause
-> for concern.
->=20
-> But explicitly mentioning softirq does not hurt, I wouldn't oppose that.
+Hi Sebastian, David,
 
-Sounds good to me. So as far as I understand, this change is going to go th=
-rough
-a separate patch right?
-I'm considering this series final.
+Sorry for the long delay in getting back to this, and thanks a lot for
+the review.
 
-Thanks,
-Gabriele
+
+On 7/9/26 21:15, Sebastian Andrzej Siewior wrote:
+> On 2026-07-09 12:04:33 [+0200], David Hildenbrand (Arm) wrote:
+>> On 7/7/26 14:59, Wandun Chen wrote:
+>>> From: Wandun Chen <chenwandun@lixiang.com>
+>>>
+>>> The region covered by mlock[all] may contain CMA pages. cma_alloc installs
+>>
+>> What about ZONE_MOVABLE where memory is supposed to be migratable?
+> 
+> Would it be bad if the pages would not be movable anymore? Does this
+> effect just memory-hotplug or something else, too?
+
+ZONE_MOVABLE does not need the same treatment as CMA.
+1. On RT compact_unevictable_allowed is 0 by default, pages in ZONE_MOVABLE are
+   never migrated by compaction, so no latency spike, no problem.
+
+2. For the scenario of memory offlining within ZONE_MOVABLE, because of offline
+   is an explicit administrator action. Any jitter/latency is expected and
+   acceptable, the operator chose to offline memory and would not do so
+   during an RT-critical phase.
+
+3. cma_alloc() runs at runtime, triggered by drivers as part of normal operation,
+   and isolation path hardcodes ISOLATE_UNEVICTABLE, so it migrates the mlocked
+   pages and installs migration entries. The fault-and-wait latency hits the RT
+   task unpredictably during normal operation, which is not expected, and is
+   exactly the spike this patch targets.
+
+> 
+>> Also, what about drivers that mmap() CMA memory to user space, and
+>> __mm_populate()->populate_vma_page_range() would actually try mlocking them, and
+>> they actually must remain on CMA areas?
+> 
+> It should be safe to skip those. They belong to device and they
+> shouldn't be affected by anything including getting swapped out.
+
+Agreed. Only LRU folios are ever isolated for migration here
+(isolate_folio_to_list() -> folio_isolate_lru()), and device-owned CMA
+buffers are not on the LRU, so they are left in place. I'll double-check
+the mmap paths and make sure this holds, and state it explicitly in v3.
+
+
+Best regards,
+Wandun
+
+> 
+> Sebastian
 
