@@ -1,33 +1,33 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC2E43CE7A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 17:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9424D43CE58
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jul 2026 17:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784740353; cv=none; b=PkkshU4bVEtfygm20rvGwFIFee6quD5u4ZEmgac4OOQ84ghI6Bf//ujvSshG8DX7/nXZ03EjSz0+40Ew0EehlniwNyueQmeUfuLDWwLQQ8vfNxtDSG2e3wEuwgQks4ORy/DdjPp6FY8bvMBRSIInvO52xV5HFgLK3QKU7O0vjKI=
+	t=1784740358; cv=none; b=WKukxhry5vlFe3I+Nwv1v8WmvUeaFcbZ2yuWzFLBNYj71INwiY+IqM+NWX3SNba5T9wfW7buM9nLwD/Pk+D+utaXqzaLmWfkEsxSezs7FhrBi2StnnnmGwvJM1EcV3sjJ6VAoaL1FvPzsaQ61do0HfQttO7Pq1cXqsZJMZwXsHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784740353; c=relaxed/simple;
-	bh=8yc/5SsSBS/4ACOUrVK3C5QVdRmIE5+8fPVIv87GgG8=;
+	s=arc-20240116; t=1784740358; c=relaxed/simple;
+	bh=V/UXZ21XuPsHxeG8IjEZ4eCv4wV9TpKP0N3UB08vHI0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AhA7OcR93FK2IP9N/zikwy4IAH5tAgpXsxHUxSKkzJkbe6Poa6LC3Z+CPYZpbe8u51vh5NRgi5/pvFSuWTjWTVVVNS6U0MW/vq+s88fWP1pv4uklXvXJiwUleNqJpwvuux1597Xx+Egtpbj5+G/78rzFPNeMS5PepVVcgY5cu4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=I8bQ6MDw; arc=none smtp.client-ip=185.125.25.15
+	 MIME-Version:Content-Type; b=oO1yOSPt+ZGAEAcq9KkrbJOLTks8tMEvN1GuEkz/znu4MfamYrtAz6Q+P+ujPIbny8icGm5MHo8qarGr0PRw8KOGtLzYcmw45QD2hpSz9ebhzcRQzCdeg10eZPASQWvFTZJ9wPLUl6KdNBepc7YXEwmEV3AcKK/Vd5Crz+qJ+Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=1t0V+lj9; arc=none smtp.client-ip=84.16.66.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="I8bQ6MDw"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4h515b5YFBzrFy;
-	Wed, 22 Jul 2026 19:12:19 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="1t0V+lj9"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4h515d2nJmzrmY;
+	Wed, 22 Jul 2026 19:12:21 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1784740339;
-	bh=dFsgLq31B1yEwTnAe5VXn0vjAC6/oGGCigNK+SNeDYo=;
+	s=20191114; t=1784740341;
+	bh=si9RCEY7YwAuaD50RCv61SBQjKAj2oGLNMu4ja/OP64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I8bQ6MDw2FPAtJwpANeeHnIeTRS+TKXOWMbo7J7Hl831kk99A9R68RiWml/jreYbo
-	 iENuzX2hvYQnifm0wD8T6gHVIubrzfWrkdJWm3aPtRySPQkmbYoD5QawdSIUyyaRtl
-	 qqIM9LP9NA9uJ1YforjfS6trXrvuIbcsf2z/tIAI=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4h515Z4FQnzmqC;
-	Wed, 22 Jul 2026 19:12:18 +0200 (CEST)
+	b=1t0V+lj9V6iajRpP6tNEhNo4dJ4BRrpr2/zeqCmHTXgbT6oEkKCTSyz76FYecg3fR
+	 lDNymEZtpwvyVP+7Y5KIu8Ish8/UutRkA7opUmt+bfNLaDKJUkHObG5Lc5AseovMZh
+	 gSh14VQG5njDx5PpCMMSI/C+NsoZPzn77DDv4GDw=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4h515c1QMrz21n;
+	Wed, 22 Jul 2026 19:12:20 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>
@@ -45,9 +45,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	kernel-team@cloudflare.com,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 05/20] landlock: Decouple the per-denial logging decision from CONFIG_AUDIT
-Date: Wed, 22 Jul 2026 19:11:37 +0200
-Message-ID: <20260722171159.2776765-6-mic@digikod.net>
+Subject: [PATCH v3 06/20] landlock: Consolidate access-right and scope names in a shared header
+Date: Wed, 22 Jul 2026 19:11:38 +0200
+Message-ID: <20260722171159.2776765-7-mic@digikod.net>
 In-Reply-To: <20260722171159.2776765-1-mic@digikod.net>
 References: <20260722171159.2776765-1-mic@digikod.net>
 Precedence: bulk
@@ -60,33 +60,26 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Until now, whether a denial is logged was decided inside
-landlock_audit_denial(): a per-execution flag check (log_same_exec or
-log_new_exec, selected by the credential's domain_exec bitmask),
-preceded by a LANDLOCK_LOG_DISABLED early return in
-landlock_log_denial() for domains an ancestor fully quieted.
+Audit formats denial records with per-right name strings.  A following
+commit adds trace events that print the same access and scope masks with
+__print_flags() and need the same names, but a trace event header cannot
+include Landlock-internal headers, so the names cannot be shared from
+the logging unit.
 
-Factor that decision into a single is_denial_logged() helper called once
-by landlock_log_denial(), and pass its result to landlock_audit_denial()
-as a "logged" boolean.  A following commit passes the same boolean to
-the deny tracepoints, so audit and tracing share one decision that stays
-correct as new log state is added, and a tracepoints-only build
-(CONFIG_AUDIT=n) computes it identically.  Computing the logged verdict
-once in the shared helper makes audit and tracing apply identical
-filtering, so they cannot report different logged= values for the same
-denial as log controls grow.
+Define the filesystem, network, and scope names once, as the
+_LANDLOCK_ACCESS_FS_NAMES, _LANDLOCK_ACCESS_NET_NAMES, and
+_LANDLOCK_SCOPE_NAMES lists in the public Landlock header.  Each entry
+is a _LANDLOCK_NAME_ENTRY() the consumer expands: audit maps it to a
+"[bit] = name" array slot for an O(1) lookup, the trace events map it to
+a __print_flags() { mask, name } pair.  The bit value comes only from
+the LANDLOCK_* UAPI constant each entry references, so every bit-to-name
+mapping has a single source and does not depend on entry order.
 
-Move the LANDLOCK_LOG_DISABLED gate out of landlock_log_denial() into
-the decision so num_denials counts every denial, including those a
-domain quiets.  This was previously masked: the only reader of
-num_denials is the audit "domain deallocated" record, emitted only for
-domains that reached LANDLOCK_LOG_RECORDED; a fully quieted domain never
-records, so its undercount was never observable.  A following commit
-adds a free_domain tracepoint that reports num_denials, which needs the
-full count.
+The shared names are unprefixed; blocker_prefix() prepends the
+fs./net./scope. category for audit records, so the scope names move from
+inline literals to the shared table too.  Audit records are unchanged.
 
-This is not a functional change for audit: the logged decision and the
-audit_enabled gate are preserved, so the emitted records are identical.
+No functional change.
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Tingmao Wang <m@maowtm.org>
@@ -96,281 +89,229 @@ Signed-off-by: Mickaël Salaün <mic@digikod.net>
 Changes since v2:
 - New patch.
 ---
- security/landlock/audit.c | 90 ++++-----------------------------------
- security/landlock/audit.h | 14 ++----
- security/landlock/log.c   | 88 ++++++++++++++++++++++++++++++++++++--
- 3 files changed, 97 insertions(+), 95 deletions(-)
+ MAINTAINERS               |  1 +
+ include/linux/landlock.h  | 55 +++++++++++++++++++++++++
+ security/landlock/audit.c | 84 ++++++++++++++++++++++++---------------
+ 3 files changed, 109 insertions(+), 31 deletions(-)
+ create mode 100644 include/linux/landlock.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a674e36529f7..91de7e3c2836 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14598,6 +14598,7 @@ F:	Documentation/admin-guide/LSM/landlock.rst
+ F:	Documentation/security/landlock.rst
+ F:	Documentation/userspace-api/landlock.rst
+ F:	fs/ioctl.c
++F:	include/linux/landlock.h
+ F:	include/uapi/linux/landlock.h
+ F:	samples/landlock/
+ F:	security/landlock/
+diff --git a/include/linux/landlock.h b/include/linux/landlock.h
+new file mode 100644
+index 000000000000..cabe6c784833
+--- /dev/null
++++ b/include/linux/landlock.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Landlock - Public types and definitions
++ *
++ * Copyright © 2016-2026 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2026 Cloudflare, Inc.
++ */
++
++#ifndef _LINUX_LANDLOCK_H
++#define _LINUX_LANDLOCK_H
++
++#include <uapi/linux/landlock.h>
++
++/*
++ * Access-right and scope names, shared between the audit records (get_blocker()
++ * in security/landlock/audit.c) and the trace events
++ * (include/trace/events/landlock.h).  A consumer defines
++ * _LANDLOCK_NAME_ENTRY(mask, name) before expanding a list and undefines it
++ * afterwards: audit maps each entry to a "[bit] = name" slot for O(1) lookup,
++ * the trace events map it to a __print_flags() { mask, name } pair.  The bit
++ * value lives only in the LANDLOCK_* UAPI constant each entry references.
++ * Names are unprefixed; audit prepends the "fs."/"net."/"scope." category.
++ */
++#define _LANDLOCK_ACCESS_FS_NAMES \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_EXECUTE, "execute"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_WRITE_FILE, "write_file"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_READ_FILE, "read_file"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_READ_DIR, "read_dir"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_REMOVE_DIR, "remove_dir"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_REMOVE_FILE, "remove_file"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_CHAR, "make_char"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_DIR, "make_dir"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_REG, "make_reg"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_SOCK, "make_sock"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_FIFO, "make_fifo"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_BLOCK, "make_block"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_MAKE_SYM, "make_sym"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_REFER, "refer"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_TRUNCATE, "truncate"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_IOCTL_DEV, "ioctl_dev"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_FS_RESOLVE_UNIX, "resolve_unix")
++
++#define _LANDLOCK_ACCESS_NET_NAMES \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_BIND_TCP, "bind_tcp"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_CONNECT_TCP, "connect_tcp"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_BIND_UDP, "bind_udp"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_ACCESS_NET_CONNECT_SEND_UDP, \
++			     "connect_send_udp")
++
++#define _LANDLOCK_SCOPE_NAMES \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET, \
++			     "abstract_unix_socket"), \
++	_LANDLOCK_NAME_ENTRY(LANDLOCK_SCOPE_SIGNAL, "signal")
++
++#endif /* _LINUX_LANDLOCK_H */
 diff --git a/security/landlock/audit.c b/security/landlock/audit.c
-index dfa1e5a64aac..32260e7cbfe9 100644
+index 32260e7cbfe9..e02963834e48 100644
 --- a/security/landlock/audit.c
 +++ b/security/landlock/audit.c
-@@ -136,104 +136,32 @@ static void log_domain(struct landlock_hierarchy *const hierarchy)
- 	WRITE_ONCE(hierarchy->log_status, LANDLOCK_LOG_RECORDED);
- }
+@@ -7,6 +7,7 @@
  
--static access_mask_t
--pick_access_mask_for_request_type(const enum landlock_request_type type,
--				  const struct access_masks access_masks)
--{
--	switch (type) {
--	case LANDLOCK_REQUEST_FS_ACCESS:
--		return access_masks.fs;
--	case LANDLOCK_REQUEST_NET_ACCESS:
--		return access_masks.net;
--	default:
--		WARN_ONCE(1, "Invalid request type %d passed to %s", type,
--			  __func__);
--		return 0;
--	}
--}
--
- /**
-  * landlock_audit_denial - Create an audit record for a denied access request
-  *
-- * @subject: The Landlock subject's credential denying an action.
-  * @request: Detail of the user space request.
-  * @youngest_denied: The youngest hierarchy node that denied the access.
-- * @youngest_layer: The layer index of @youngest_denied.
-  * @missing: The set of denied access rights.
-- * @object_quiet_flag: Whether the object denied by @youngest_denied is
-- *                     covered by a quiet rule in that layer.
-+ * @logged: Whether the denial is selected for logging, as computed by
-+ *          landlock_log_denial() (domain policy and quiet rules).
-  *
-- * Called from landlock_log_denial() with the same arguments.
-+ * Emits the record when audit is enabled and the denial is selected for
-+ * logging.
-  */
--void landlock_audit_denial(const struct landlock_cred_security *const subject,
--			   const struct landlock_request *const request,
-+void landlock_audit_denial(const struct landlock_request *const request,
- 			   struct landlock_hierarchy *const youngest_denied,
--			   const size_t youngest_layer,
--			   const access_mask_t missing,
--			   const bool object_quiet_flag)
-+			   const access_mask_t missing, const bool logged)
- {
- 	struct audit_buffer *ab;
--	bool quiet_applicable_to_access = false;
+ #include <linux/audit.h>
+ #include <linux/bitops.h>
++#include <linux/landlock.h>
+ #include <linux/lsm_audit.h>
+ #include <linux/pid.h>
+ #include <uapi/linux/landlock.h>
+@@ -19,38 +20,28 @@
+ #include "limits.h"
+ #include "log.h"
  
- 	if (!audit_enabled)
- 		return;
- 
--	/* Checks if the current exec was restricting itself. */
--	if (subject->domain_exec & BIT(youngest_layer)) {
--		/* Ignores denials for the same execution. */
--		if (!youngest_denied->log_same_exec)
--			return;
--	} else {
--		/* Ignores denials after a new execution. */
--		if (!youngest_denied->log_new_exec)
--			return;
--	}
--
- 	/*
--	 * Checks if the object is marked quiet by the layer that denied the
--	 * request.  If it's a different layer that marked it as quiet, but that
--	 * layer is not the one that denied the request, we should still audit
--	 * log the denial.
-+	 * Skips denials the domain's policy or a quiet rule excludes from
-+	 * logging (folded into @logged by landlock_log_denial()).
- 	 */
--	if (object_quiet_flag) {
--		/*
--		 * We now check if the denied requests are all covered by the
--		 * layer's quiet access bits.
--		 */
--		const access_mask_t quiet_mask =
--			pick_access_mask_for_request_type(
--				request->type, youngest_denied->quiet_masks);
--
--		quiet_applicable_to_access = (quiet_mask & missing) == missing;
--	} else {
--		/*
--		 * Either the object is not quiet, or this is a scope request.
--		 * We check request->type to distinguish between the two cases.
--		 */
--		const access_mask_t quiet_mask =
--			youngest_denied->quiet_masks.scope;
--
--		switch (request->type) {
--		case LANDLOCK_REQUEST_SCOPE_SIGNAL:
--			quiet_applicable_to_access =
--				!!(quiet_mask & LANDLOCK_SCOPE_SIGNAL);
--			break;
--		case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
--			quiet_applicable_to_access =
--				!!(quiet_mask &
--				   LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
--			break;
--		/*
--		 * Leave LANDLOCK_REQUEST_PTRACE and
--		 * LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY unhandled for now - they
--		 * are never quiet.
--		 */
--		default:
--			break;
--		}
--	}
--
--	if (quiet_applicable_to_access)
-+	if (!logged)
- 		return;
- 
- 	/* Uses consistent allocation flags wrt common_lsm_audit(). */
-diff --git a/security/landlock/audit.h b/security/landlock/audit.h
-index 1b36bb3c6cfd..14a514065e08 100644
---- a/security/landlock/audit.h
-+++ b/security/landlock/audit.h
-@@ -12,18 +12,14 @@
- 
- #include "access.h"
- 
--struct landlock_cred_security;
- struct landlock_hierarchy;
- struct landlock_request;
- 
- #ifdef CONFIG_AUDIT
- 
--void landlock_audit_denial(const struct landlock_cred_security *const subject,
--			   const struct landlock_request *const request,
-+void landlock_audit_denial(const struct landlock_request *const request,
- 			   struct landlock_hierarchy *const youngest_denied,
--			   const size_t youngest_layer,
--			   const access_mask_t missing,
--			   const bool object_quiet_flag);
-+			   const access_mask_t missing, const bool logged);
- 
- void landlock_audit_free_domain(
- 	const struct landlock_hierarchy *const hierarchy);
-@@ -31,11 +27,9 @@ void landlock_audit_free_domain(
- #else /* CONFIG_AUDIT */
- 
- static inline void
--landlock_audit_denial(const struct landlock_cred_security *const subject,
--		      const struct landlock_request *const request,
-+landlock_audit_denial(const struct landlock_request *const request,
- 		      struct landlock_hierarchy *const youngest_denied,
--		      const size_t youngest_layer, const access_mask_t missing,
--		      const bool object_quiet_flag)
-+		      const access_mask_t missing, const bool logged)
- {
- }
- 
-diff --git a/security/landlock/log.c b/security/landlock/log.c
-index 6dd3373c4ba4..f42e6dc4de5c 100644
---- a/security/landlock/log.c
-+++ b/security/landlock/log.c
-@@ -405,6 +405,86 @@ static bool is_valid_request(const struct landlock_request *const request)
- 	return true;
- }
- 
-+static access_mask_t
-+pick_access_mask_for_request_type(const enum landlock_request_type type,
-+				  const struct access_masks access_masks)
-+{
-+	switch (type) {
-+	case LANDLOCK_REQUEST_FS_ACCESS:
-+		return access_masks.fs;
-+	case LANDLOCK_REQUEST_NET_ACCESS:
-+		return access_masks.net;
-+	default:
-+		WARN_ONCE(1, "Invalid request type %d passed to %s", type,
-+			  __func__);
-+		return 0;
-+	}
-+}
-+
+-static const char *const fs_access_strings[] = {
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_EXECUTE)] = "fs.execute",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_WRITE_FILE)] = "fs.write_file",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_READ_FILE)] = "fs.read_file",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_READ_DIR)] = "fs.read_dir",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_REMOVE_DIR)] = "fs.remove_dir",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_REMOVE_FILE)] = "fs.remove_file",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_CHAR)] = "fs.make_char",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_DIR)] = "fs.make_dir",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_REG)] = "fs.make_reg",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_SOCK)] = "fs.make_sock",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_FIFO)] = "fs.make_fifo",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_BLOCK)] = "fs.make_block",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_MAKE_SYM)] = "fs.make_sym",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_REFER)] = "fs.refer",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_TRUNCATE)] = "fs.truncate",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_IOCTL_DEV)] = "fs.ioctl_dev",
+-	[BIT_INDEX(LANDLOCK_ACCESS_FS_RESOLVE_UNIX)] = "fs.resolve_unix",
+-};
 +/*
-+ * Whether a quiet rule silences the denial: the rule must cover the whole
-+ * denied access in the layer that denied it (a quiet rule in a non-denying
-+ * layer does not suppress the denial).
++ * Access-right and scope names are built from the lists shared with the trace
++ * events (see <linux/landlock.h>).  The designated initializer places each name
++ * at its bit index, so the lookup stays O(1) and does not depend on the entry
++ * order.  log_blockers() adds the "fs."/"net."/"scope." category prefix.
 + */
-+static bool
-+is_denial_quieted(const struct landlock_request *const request,
-+		  const struct landlock_hierarchy *const youngest_denied,
-+		  const access_mask_t missing, const bool object_quiet_flag)
-+{
-+	if (object_quiet_flag) {
-+		const access_mask_t quiet_mask =
-+			pick_access_mask_for_request_type(
-+				request->type, youngest_denied->quiet_masks);
++#define _LANDLOCK_NAME_ENTRY(mask, name) [BIT_INDEX(mask)] = name
 +
-+		return (quiet_mask & missing) == missing;
-+	}
++static const char *const fs_access_strings[] = { _LANDLOCK_ACCESS_FS_NAMES };
+ 
+ static_assert(ARRAY_SIZE(fs_access_strings) == LANDLOCK_NUM_ACCESS_FS);
+ 
+-static const char *const net_access_strings[] = {
+-	[BIT_INDEX(LANDLOCK_ACCESS_NET_BIND_TCP)] = "net.bind_tcp",
+-	[BIT_INDEX(LANDLOCK_ACCESS_NET_CONNECT_TCP)] = "net.connect_tcp",
+-	[BIT_INDEX(LANDLOCK_ACCESS_NET_BIND_UDP)] = "net.bind_udp",
+-	[BIT_INDEX(LANDLOCK_ACCESS_NET_CONNECT_SEND_UDP)] =
+-		"net.connect_send_udp",
+-};
++static const char *const net_access_strings[] = { _LANDLOCK_ACCESS_NET_NAMES };
+ 
+ static_assert(ARRAY_SIZE(net_access_strings) == LANDLOCK_NUM_ACCESS_NET);
+ 
++static const char *const scope_strings[] = { _LANDLOCK_SCOPE_NAMES };
 +
-+	/*
-+	 * Either the object is not quiet, or this is a scope request.  We check
-+	 * request->type to distinguish between the two cases.
-+	 */
-+	switch (request->type) {
-+	case LANDLOCK_REQUEST_SCOPE_SIGNAL:
-+		return !!(youngest_denied->quiet_masks.scope &
-+			  LANDLOCK_SCOPE_SIGNAL);
-+	case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
-+		return !!(youngest_denied->quiet_masks.scope &
-+			  LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
-+	/*
-+	 * Leave LANDLOCK_REQUEST_PTRACE and LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY
-+	 * unhandled for now - they are never quiet.
-+	 */
-+	default:
-+		return false;
-+	}
-+}
++static_assert(ARRAY_SIZE(scope_strings) == LANDLOCK_NUM_SCOPE);
 +
-+/*
-+ * Computes whether a denial from youngest_denied is selected for logging by the
-+ * domain's policy: its logging must not be disabled (by both per-execution
-+ * flags being off, or by an ancestor's
-+ * LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF), the per-execution flag matching
-+ * same_exec must be set, and no quiet rule may cover the denied access.
-+ * landlock_log_denial() computes this once and passes it to
-+ * landlock_audit_denial(), which additionally requires audit_enabled.
-+ */
-+static bool
-+is_denial_logged(const struct landlock_request *const request,
-+		 const struct landlock_hierarchy *const youngest_denied,
-+		 const access_mask_t missing, const bool same_exec,
-+		 const bool object_quiet_flag)
-+{
-+	if (READ_ONCE(youngest_denied->log_status) == LANDLOCK_LOG_DISABLED)
-+		return false;
++#undef _LANDLOCK_NAME_ENTRY
 +
-+	if (!(same_exec ? youngest_denied->log_same_exec :
-+			  youngest_denied->log_new_exec))
-+		return false;
-+
-+	return !is_denial_quieted(request, youngest_denied, missing,
-+				  object_quiet_flag);
-+}
-+
- /**
-  * landlock_log_denial - Log a denied access
-  *
-@@ -451,8 +531,9 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
- 			get_hierarchy(subject->domain, youngest_layer);
+ static __attribute_const__ const char *
+ get_blocker(const enum landlock_request_type type,
+ 	    const unsigned long access_bit)
+@@ -62,7 +53,7 @@ get_blocker(const enum landlock_request_type type,
+ 
+ 	case LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY:
+ 		WARN_ON_ONCE(access_bit != -1);
+-		return "fs.change_topology";
++		return "change_topology";
+ 
+ 	case LANDLOCK_REQUEST_FS_ACCESS:
+ 		if (WARN_ON_ONCE(access_bit >= ARRAY_SIZE(fs_access_strings)))
+@@ -76,32 +67,63 @@ get_blocker(const enum landlock_request_type type,
+ 
+ 	case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
+ 		WARN_ON_ONCE(access_bit != -1);
+-		return "scope.abstract_unix_socket";
++		return scope_strings[BIT_INDEX(
++			LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET)];
+ 
+ 	case LANDLOCK_REQUEST_SCOPE_SIGNAL:
+ 		WARN_ON_ONCE(access_bit != -1);
+-		return "scope.signal";
++		return scope_strings[BIT_INDEX(LANDLOCK_SCOPE_SIGNAL)];
  	}
  
--	if (READ_ONCE(youngest_denied->log_status) == LANDLOCK_LOG_DISABLED)
--		return;
-+	const bool same_exec = !!(subject->domain_exec & BIT(youngest_layer));
-+	const bool logged = is_denial_logged(request, youngest_denied, missing,
-+					     same_exec, object_quiet_flag);
- 
- 	/*
- 	 * Consistently keeps track of the number of denied access requests even
-@@ -461,8 +542,7 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
- 	 */
- 	atomic64_inc(&youngest_denied->num_denials);
- 
--	landlock_audit_denial(subject, request, youngest_denied, youngest_layer,
--			      missing, object_quiet_flag);
-+	landlock_audit_denial(request, youngest_denied, missing, logged);
+ 	WARN_ON_ONCE(1);
+ 	return "unknown";
  }
  
- /**
++/*
++ * Returns the audit category prefix prepended to the unprefixed blocker name
++ * returned by get_blocker() (filesystem and network access rights,
++ * change_topology, and scopes).  The ptrace blocker is standalone and carries
++ * its full name in get_blocker(), so it uses no prefix.
++ */
++static __attribute_const__ const char *
++blocker_prefix(const enum landlock_request_type type)
++{
++	switch (type) {
++	case LANDLOCK_REQUEST_PTRACE:
++		return "";
++
++	case LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY:
++	case LANDLOCK_REQUEST_FS_ACCESS:
++		return "fs.";
++
++	case LANDLOCK_REQUEST_NET_ACCESS:
++		return "net.";
++
++	case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
++	case LANDLOCK_REQUEST_SCOPE_SIGNAL:
++		return "scope.";
++	}
++
++	WARN_ON_ONCE(1);
++	return "";
++}
++
+ static void log_blockers(struct audit_buffer *const ab,
+ 			 const enum landlock_request_type type,
+ 			 const access_mask_t access)
+ {
+ 	const unsigned long access_mask = access;
++	const char *const prefix = blocker_prefix(type);
+ 	unsigned long access_bit;
+ 	bool is_first = true;
+ 
+ 	for_each_set_bit(access_bit, &access_mask, BITS_PER_TYPE(access)) {
+-		audit_log_format(ab, "%s%s", is_first ? "" : ",",
++		audit_log_format(ab, "%s%s%s", is_first ? "" : ",", prefix,
+ 				 get_blocker(type, access_bit));
+ 		is_first = false;
+ 	}
+ 	if (is_first)
+-		audit_log_format(ab, "%s", get_blocker(type, -1));
++		audit_log_format(ab, "%s%s", prefix, get_blocker(type, -1));
+ }
+ 
+ static void log_domain(struct landlock_hierarchy *const hierarchy)
 -- 
 2.54.0
 
