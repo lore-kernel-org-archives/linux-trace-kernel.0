@@ -1,58 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6BC29408;
-	Thu, 23 Jul 2026 00:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E1C1C69D;
+	Thu, 23 Jul 2026 00:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784765121; cv=none; b=PYEv9QYXvZ21AMAOZ6OLDzBDsK51w/JUk4OCC+yIXNfTLNfZwCdPY10oUW/DtnFCNzOYrckvVwG4Z9kHWEmCj13WFFzYoSqRM6gYwGQ1rvT8lbbt3boCyXJXSMXJ+uMjcXNLbqVqrsAwI+H0Tym0rxEZ1Mz7oZNkNv4Lrt14+cA=
+	t=1784766419; cv=none; b=Cd7AxQbb4Ot2io571P1sO6vG7150P8VS3cN9pSRj3AGQvDO3VZBEwCys2xaAVrTfo6ezUkA08rZWM/3iNi4kF7IU6ePT685FfCmWbVq/Du/ETlfCL1l6GYdfNwSdWIApnvxA/TTGw0E0DGU90KbSDyz0NzsIpN3lCtCt+YwandI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784765121; c=relaxed/simple;
-	bh=ODmOs3ql59doMX2LLbQGHzR/0R/3iWA9I+z34aQiHZA=;
+	s=arc-20240116; t=1784766419; c=relaxed/simple;
+	bh=ug5pEVgZ2P9TqU2q41E0/En1cj1e3gcoxjRCVCz2jRs=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XU3M3EkWnWRg14fe33g7Qy151R2fXRcUFFuo6cgBxzl60o+9IUKlCbS4j/xlrGYd/8pgBxzncpbCcgKM7npzIOvzvOU58ePUe4mC/b5GInEVmhGxjnvARVL8KTVRx005xk7yRx4THLT0ncaT3sDcZrGQZ6UeBriiYoX8KorXk/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QttpmbDm; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=tg+jsfKGXSv3EZFw8Wczev/jqSyrIYZbwSIBnJY3zFZs/dPaDxlihZuO6fAcDZAH+YTi9KTf5zP7cwpOuiKgyOCTWg0LXGLR82A8XiwytSPnDIBW33tHRr3CE7U08QDa9aV2ZOkD6D1WMQLA2IHHM2N9UpK4exHzxA8Tiy+/eUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXYE9iI3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QttpmbDm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE6B1F000E9;
-	Thu, 23 Jul 2026 00:05:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXYE9iI3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C2641F000E9;
+	Thu, 23 Jul 2026 00:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784765120;
-	bh=cERcVi3l194vR2K7MPvUZ59VryqFLMg43o/10bMmISM=;
+	s=k20260515; t=1784766418;
+	bh=nd75fgepznXQYIh/RosfLKtPne7ezYEigCutRJYcNPU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=QttpmbDmFm3XT7advN73O+eWorj1Ah46zEsaAUHvor3l+aSKENGVnf8JVCdfRJMoC
-	 UtILpVt6UfIYIJXf/mi8iq+Geg1cQwTn7RAO82o10FnFichBdWbjjPcQu/nuEYnDw3
-	 J9nPPAZuGX9RDBc4b/IjDypVrNUKXfd/dbOugDl50C/rH+2ey51sYFijTgfyPqp1EF
-	 J5i/WT8GDkNXkeZxffEoCJiV19FVq+XBCrTfmMPuRYUSdWm2J4uStkirxgsmga1tmE
-	 sY7TbKMmaarKpQLKirwlyrmklQal0pzhh7tj4avo7ifK5m9QezOMgb/JWh+fB+G02a
-	 wOisoMdBcnkYQ==
-Date: Thu, 23 Jul 2026 09:05:11 +0900
+	b=WXYE9iI3gWSFjH2b8404arOxg699D/ocATPRnuMyr83zggTv0xIS8eYdcyKE10/nS
+	 wJBpjKkGGMYAmjF53AvXHGcGSfUAGqVI3VvTKvthhx1/RkBYsiMVgwCatYZ5o3NCXP
+	 NgmpHvX4ZKxV4ZUwF858VvTaIcX8T2Jc6N4+Zh7XuFizXTgRtruDuoDDzwUcP1eq+6
+	 T/6RiRLRfyiZ9RSrkpxDjtZIWKdJiqIv6PjbvV4ufhuFtmzIbSkXqlFGgpTpu2tzO2
+	 i2aFYjeWtlCYk96yYzS6b5fo3lJ3fz/RpiIINdokadKlZ7iqHpf/GQm3udgyPCkeUa
+	 Z3iXodcxrPMoQ==
+Date: Thu, 23 Jul 2026 09:26:54 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
- <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, David Hildenbrand
- <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox
- <willy@infradead.org>, Alan Stern <stern@rowland.harvard.edu>, Randy Dunlap
- <rdunlap@infradead.org>, Alexander Potapenko <glider@google.com>, Marco
- Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints
- for hunting memory corruption
-Message-Id: <20260723090511.bd1547ef01b8702a0449c887@kernel.org>
-In-Reply-To: <0565e7d4-fb0f-4b84-a20c-0c73ac964b51@gmail.com>
-References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
-	<91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
-	<20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
-	<20260720232442.3e6b0e70c6939541b8362e05@kernel.org>
-	<0565e7d4-fb0f-4b84-a20c-0c73ac964b51@gmail.com>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, oe-lkp@lists.linux.dev, lkp@intel.com,
+ kernel test robot <oliver.sang@intel.com>
+Subject: Re: [PATCH] selftests/ftrace: allow relative paths in eprobe test
+Message-Id: <20260723092654.12f7be2910e3e16259c61125@kernel.org>
+In-Reply-To: <20260721200612.1749777-1-martin@kaiser.cx>
+References: <20260721200612.1749777-1-martin@kaiser.cx>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -63,64 +47,53 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 21 Jul 2026 08:36:01 -0400
-Jinchao Wang <wangjinchao600@gmail.com> wrote:
+On Tue, 21 Jul 2026 22:05:59 +0200
+Martin Kaiser <martin@kaiser.cx> wrote:
 
-> On 7/20/2026 10:24 AM, Masami Hiramatsu (Google) wrote:
-> > On Fri, 17 Jul 2026 11:10:04 -0700
-> > Borislav Petkov <bp@alien8.de> wrote:
+> The add/remove eprobe test installs an eprobe for the openat syscall,
+> runs ls and checks the filenames that were opened.
 > 
-> >> Looks to me like folks need to sit down and agree on strategy first.
-> > 
-> > Yeah, I need to talk with Jinchao.
-> > 
-> > Like kprobe, wprobe itself integrates watchpoint functionality into
-> > the tracing subsystem. Jinchao, I would like to ask you to redesign
-> > the kwatch tool based on fprobe and wprobe events in user space?
-> > I think that could reduce redundant efforts on the similar feature.
-> > 
-> > Using fprobe entry and exit event trigger, we can make a Function-
-> > scoped watch window. Also, since fprobe and wprobe are having BTF
-> > typecast support, you can access to the members of data structures
-> > more naturally.
-> > 
-> > If you are interested, I would be open to having you handle the
-> > development of the necessary features for wprobe.
-> > 
-> > Thank you,
-> > 
-> Thank you, Boris and Masami.
+> Commit 206b25c09080 ("tracing: eprobe: read the complete FILTER_PTR_STRING
+> pointer") fixed access to some string fields in eprobes. This allows for
+> dereferencing more filenames. In some cases, the log now shows a file
+> with a relative path instead of "(fault)". A relative path makes the
+> test fail.
 > 
-> Boris is right that we should agree on the overall strategy before
-> moving either series forward, especially since they share the low-level
-> HWBP work. Masami is also right that fprobe and wprobe provide a more
-> appropriate foundation than introducing KWatch as another standalone
-> debugging tool.
+> Relax the filename checks to fix the test. Allow shared libraries and
+> locale configs that use a relative path.
 
-Agreed. I just sent v10 because v9 lacked base-commit and Sashiko did
-not reviewed. (so it just add a trigger-side BTF support which was
-dropped in v9).
-Think of v10 as the complete set of ideas we wanted to implement
-with this wprobe.
-
-> 
-> After reconsidering the design, I will stop the standalone KWatch
-> series. Instead, I would like to work with Masami on extending wprobe
-> to support the function-scoped dynamic-watchpoint use cases that
-> motivated KWatch.
-
-Thanks Jinchao, I appreciate to work with you on this project.
-
-> 
-> Masami, thank you for being open to having me develop the necessary
-> wprobe features. I am interested in taking that direction.
-
-OK, please share your thoughts on watchpoint usage in the kernel.
-
-Basically, I will fix the points raised in the review, but please
-let me know if you have any other suggestions.
+Hmm, should we check this "nocontent" ? This change seems a bit fragile.
+I think we should use another syscall to make sure getting filename
+correctly. At least this point, removing nocontent check will be better.
 
 Thank you,
+
+> 
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202607151010.b68428e1-lkp@intel.com
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+>  .../selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc      | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+> index c300eb020262..baceeca7ccdf 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+> @@ -22,7 +22,8 @@ ls
+>  echo 0 > events/eprobes/$EPROBE/enable
+>  
+>  content=`grep '^ *ls-' trace | grep 'file='`
+> -nocontent=`grep '^ *ls-' trace | grep 'file=' | grep -v -e '"/' -e '"."' -e '(fault)' ` || true
+> +nocontent=`grep '^ *ls-' trace | grep 'file=' | \
+> +	   grep -v -e '"/' -e '.so' -e 'locale' -e '"."' -e '(fault)'` || true
+>  
+>  if [ -z "$content" ]; then
+>  	exit_fail
+> -- 
+> 2.43.7
+> 
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
