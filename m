@@ -1,161 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010413DB338
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 07:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9D741E6A7
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 09:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784792855; cv=none; b=VDgKZHx4INBFARtB6rCg+5yR1hDoRe4+2tipnvAg6Y4fnMh2x4DY6sqSECkEwmvrGYrh+fb0wvL2S4UBw64XAZbbv1ypSH0gCEpFAmTS4l/IgqEW5UW1XxZ+qFiBAJuk59pyooC3jWUT6L/FHyOnl9lJSqrQNPKZX+xx7V8hRSs=
+	t=1784798963; cv=none; b=SSWEIhgMnRSKPTGIksFxhTuU+ykCBdOKcCiaT2BMwZlqIYzTsCI4m+jKDvrgObI8hhYyLXPi/92gZ13OQIUupiOYTllj5OEj8M32N/KpmSeFIQI411oySlwZL3+2wUiFqVwJKVojEarxkUDmWZi5DCI8DQG+5evND7SkmEaZSlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784792855; c=relaxed/simple;
-	bh=T2lbyT/yM7x1H71zHyiVIbknJvhnpix0X4z2hlwzwLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=m0WBNGo/f8Y3hnV5lgPxZ8nNs2wS74rk+X/RBSOXdzCNbUZGaI++smITAz0HAxyA+su6FN3J/qLXieVn9Lg80LqwG6mTy3F1fWkmlphSJgSUnTkou6Hzc2blU383M9s42BFZUOArNtZinIrHbBAUjXyVgK1dsJdmHisVFvTVgUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G7j4Ms9a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784798963; c=relaxed/simple;
+	bh=tA6m9s5zReGUdsGIW22NnvqTyJx9+4d2lqkc4NI1fns=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=adrf2zKeRI9/gUpzKVJeYrPkWFcaMe/yLmwnQuD9FSpEwAIhDCYxo1/+HE5VRq9izbWIfFyXArM+NE+i7J4wD9nwzzHLo64ru1O2g6RukdhUW3iBIlU8KXGK03hwmmRgIQkkmE9GuRFl6aRHc1tJRvtrsvV9mYX1z1aMsvjuSeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAOoOeUi; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G7j4Ms9a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784792853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=izA3D0CqoZEPLiW5dd3Cu7GNT4gzd8+KLF5CAaXCB1E=;
-	b=G7j4Ms9arhGe+7BeRQkRZB3/SNA9kION5ws5rUqunr8jK6ougkYa9qhqVOe0sBRoyciNV8
-	craHG4aJC3BREvZ3wL5WJwQ/UpQT86CtG+xYbn6Rd6OvGr76D9UdpbsgaaP9ul1np3X1/s
-	wbxFkcL6CcR2id6QC5oYgU4+br07nS8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-43-NFarALcyPWOja-sJBvn8tQ-1; Thu,
- 23 Jul 2026 03:47:29 -0400
-X-MC-Unique: NFarALcyPWOja-sJBvn8tQ-1
-X-Mimecast-MFC-AGG-ID: NFarALcyPWOja-sJBvn8tQ_1784792848
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2656F197753F;
-	Thu, 23 Jul 2026 07:47:28 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.local (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 84600180029A;
-	Thu, 23 Jul 2026 07:47:24 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAOoOeUi"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2cab973140bso5631375ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 02:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784798954; x=1785403754; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=PZrPBqYijdzfKMBuONSSs1WTwIYrhiqirWSevn+t5ro=;
+        b=EAOoOeUiNxjvHVzJ89m/YMBT32UODpK6b7zKFFv8EDErb+j/sGkvkP8+kUkMk0sBYB
+         Oc1pfYJqWDWz9v6l6kGppVfvWKPwoR+rn63C8KAcaNI7pkm4JlgDmb4TTpDHw40Y4sc7
+         C2hkD4Srvij21TRW2JB50LHYXFFgLWW6OMx9M9mIDZbyLoaf3gVrSxo4XVx0zTEwES8w
+         w7tuqllqY/qqj2rR6BkdPvItLy/nmXDs44RyUkWikWsg/aYUc3Qw9NPBVxF5P/lpC9Zf
+         /gFyxomHPnSiIiAjiyEizpJY+zJ8zMkSzEGpmYfFuoWZT/cZIvaNee05WowdvTWR6680
+         zdEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784798954; x=1785403754;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=PZrPBqYijdzfKMBuONSSs1WTwIYrhiqirWSevn+t5ro=;
+        b=Rs3dgwvWLGBRCElVZ9HgdHRcLF/Osw6jGrRRbaQE5kaBDlR2yx7ZZxHDQxQYRxM7dj
+         C8uAoxIXDsOeUO/vsHyoovICSYUNvark0P0ZRR8me1KxEQ/YiDCL6tyO8XmfQ9TYu0dj
+         d10qoVEhWtrb/tSYf+7p+yfp89JlTYpv/cxqLWgz5WTPBaZsrejJ/DlH4YotAx4Uj9V0
+         6n0U4NkH7C3YgfF/A5L2P9dOGOIeePToIfpHtO90nRHSNUxx+fu4zJ8XnXpv6EurtuHz
+         uCxREdlUmEhQh0w0qDxPUwWaPlijbo5oE5d1xKC6dQTMHW++z6Gk9Z3D2kdIgD/pV+iX
+         smSQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqH/XLv/ITltqIVWJmWWQgQtd45JmEmdk3JoOGmX7LjqbaY0Ob5UNT1MYmf8f0j+VXAcIGmWqbS5PNNrJhrunIvYjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf4MkDdZ0lseHzSSV+UBLpT/i0ZOdwcjaQ1qSrbmO9QH61c2Wi
+	PWs+XrLJUVyiWzQI/Bm7xTq9lE6w9Uxw8zdv91FQAhWsdA/rdx2eREqi3TXswNfJkpNOpA==
+X-Gm-Gg: AR+sD11QzMPqOTY5gDdzJeNdKPasx0JOZoMVCDlFK15bitj+avjuKHLAWSmM2sUTqYD
+	jXJuT/cbn5K/NHvBEcivFCPYpnQIkvn2hTRWY6tOe69YK5739srNpE2rU6FElLp4baBklSTrec/
+	+6p86ItwCpYKowk7bA733YzccvJiIvtdgUYPhGK1roQa7EOjJ7sQ7YNRqNvbUqU1RTyGweWv3B3
+	xNyqtJaqDd18+GSvX7vgCNEzq7MdnzIXfabaIYmNOnGoq0IZuQil5Lrf3yhgSyw+HAIkhHjuR8M
+	x5JROKSiCDF+x2+wLJhENc68Nl9xKVAK38/TRgTvlIXM63OR8BDGW8huEFuMgDw0+TzoRbNrgRv
+	wKsCQazKEnZjx/3Hsx9dupVwg8iaUTbhbfOjrwswSSSaCXIOnIp7qjuPdaiVWkMchx6kf13Bl9l
+	hZhqQ4h059Oqm6gmlOCg==
+X-Received: by 2002:a17:902:ebc7:b0:2ca:ce91:f027 with SMTP id d9443c01a7336-2cfa6c875ccmr27647445ad.36.1784798954032;
+        Thu, 23 Jul 2026 02:29:14 -0700 (PDT)
+Received: from PC-2B0BA31200898.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cf8efa388fsm30298125ad.12.2026.07.23.02.29.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2026 02:29:13 -0700 (PDT)
+From: Meijing Zhao <zhaomeijing100@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
-	Tomas Glozar <tglozar@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v5 17/17] selftests/verification: Add selftests for deadline and stall monitors
-Date: Thu, 23 Jul 2026 09:45:34 +0200
-Message-ID: <20260723074534.43521-18-gmonaco@redhat.com>
-In-Reply-To: <20260723074534.43521-1-gmonaco@redhat.com>
-References: <20260723074534.43521-1-gmonaco@redhat.com>
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Meijing Zhao <zhaomeijing@lixiang.com>
+Subject: [PATCH RESEND 0/3] mm: trace: decode architecture-specific VMA flags
+Date: Thu, 23 Jul 2026 17:29:02 +0800
+Message-Id: <20260723092905.761037-1-zhaomeijing100@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: D_z0nyFMhtO2drwGgFyL5biYzuuJxSHTnu6AW50K2dk_1784792848
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Add selftests to verify deadline monitors don't fail under expected
-conditions and the stall monitor report violations only when expected.
+From: Meijing Zhao <zhaomeijing@lixiang.com>
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
+show_vma_flags(), which is used by VMA tracepoints and %pGv, names
+generic VM_* bits but does not fully decode architecture-specific flag
+positions.  As a result, trace output and VMA dumps can show a generic
+"arch_1" name or a raw hexadecimal value instead of the meaning assigned
+by the target architecture.
 
-Notes:
-    V4:
-    * Restore original stall threshold after selftest
+This series adds symbolic names for the arm64 and sparc64 meanings of
+VM_ARCH_1, arm64 MTE flags, user shadow stack flags, and protection-key
+encoding bits under their corresponding configuration guards.
 
- .../verification/test.d/rv_deadline.tc        | 23 +++++++++++++
- .../selftests/verification/test.d/rv_stall.tc | 33 +++++++++++++++++++
- 2 files changed, 56 insertions(+)
- create mode 100644 tools/testing/selftests/verification/test.d/rv_deadline.tc
- create mode 100644 tools/testing/selftests/verification/test.d/rv_stall.tc
+The original submission was rewritten by the mail gateway as a
+multipart HTML message and had a disclaimer appended, causing the vger
+mailing lists to reject it.  This resend uses a mail transport that
+preserves plain-text messages.  There are no code changes.
 
-diff --git a/tools/testing/selftests/verification/test.d/rv_deadline.tc b/tools/testing/selftests/verification/test.d/rv_deadline.tc
-new file mode 100644
-index 000000000000..fc95267dbb82
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_deadline.tc
-@@ -0,0 +1,23 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test deadline monitors trigger no reaction
-+# requires: available_reactors deadline:monitor printk:reactor stress-ng:program
-+
-+load() { # returns true if there was a reaction
-+	local lines_before
-+	lines_before=$(dmesg | wc -l)
-+	stress-ng --cpu 2 --sched deadline --sched-period 100000000 \
-+		--sched-deadline 100000000 --sched-runtime 20000000 -t 5 &
-+	stress-ng --cpu 2 --sched rr --sched-prio 50 --cyclic 1 \
-+		--cyclic-policy rr --cyclic-prio 50 -t 5 &
-+	wait
-+	dmesg | tail -n +$((lines_before + 1)) | grep -q "rv: monitor [a-z]\+ does not allow event"
-+}
-+
-+echo 1 > monitors/deadline/enable
-+echo printk > monitors/deadline/reactors
-+
-+! load || false
-+
-+echo nop > monitors/deadline/reactors
-+echo 0 > monitors/deadline/enable
-diff --git a/tools/testing/selftests/verification/test.d/rv_stall.tc b/tools/testing/selftests/verification/test.d/rv_stall.tc
-new file mode 100644
-index 000000000000..515a10263ca1
---- /dev/null
-+++ b/tools/testing/selftests/verification/test.d/rv_stall.tc
-@@ -0,0 +1,33 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# description: Test stall monitor
-+# requires: available_reactors stall:monitor printk:reactor stress-ng:program
-+
-+THRESHOLD=/sys/module/stall/parameters/threshold_jiffies
-+ORIG_THRESHOLD=$(cat $THRESHOLD)
-+trap 'echo $ORIG_THRESHOLD > $THRESHOLD' EXIT
-+
-+load() { # returns true if there was a reaction
-+	local lines_before cpu
-+	cpu=$(($(nproc) - 1))
-+	lines_before=$(dmesg | wc -l)
-+	stress-ng --cpu 1 --taskset "$cpu" --sched rr --sched-prio 1 -t 3 &
-+	stress-ng --cpu 5 --taskset "$cpu" -t 3 &
-+	wait
-+	dmesg | tail -n +$((lines_before + 1)) | grep -q "rv: monitor stall does not allow event"
-+}
-+
-+echo 5000 > $THRESHOLD
-+echo 1 > monitors/stall/enable
-+echo printk > monitors/stall/reactors
-+
-+! load || false
-+
-+echo 0 > monitors/stall/enable
-+echo 70 > $THRESHOLD
-+echo 1 > monitors/stall/enable
-+
-+load
-+
-+echo nop > monitors/stall/reactors
-+echo 0 > monitors/stall/enable
+Meijing Zhao (3):
+  mm: trace: decode arm64 and sparc64 VM_ARCH_1 flags
+  mm: trace: decode MTE and shadow stack VMA flags
+  mm: trace: name protection key encoding bits
+
+ include/trace/events/mmflags.h | 43 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
 -- 
-2.55.0
-
+2.25.1
