@@ -1,220 +1,252 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012065.outbound.protection.outlook.com [52.101.48.65])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDE934B1AD;
-	Thu, 23 Jul 2026 02:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784774581; cv=fail; b=mxB7pQbPYtMhZ5yNaEfmVYon4Rhu4DeKOUesScTRIYFfX6DY0olh7mtKNf6kssOFI1q8+gqOJEUrVhz1+E7SOHy8ql7xh6jHXcLZgp67skjORPfgA9AwclR6jj++OexPHSoMNM+lzJwOcCovft6E/mJnmeA5s6kjGUMpzuk4FwI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784774581; c=relaxed/simple;
-	bh=S06faMQOytOdxeyFxL/FSyK0WslLfWpgtdJD3M406NA=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:To:From:References:
-	 In-Reply-To:MIME-Version; b=KW6Fm+l3ZcU5aPcSE6l4QbyTBPS5XIkKGhiYKPOKRRqbIgbqDcHq4xS2X+lg8uVKDZ30D1ztIxCq73fz/OO/EXdpURa1vnf1THtxG9zkZaBUQEIV8hK3/tPU91RJq0OaekK8eaiMBbpoOQe84Kk0odwajjThJ2YfihBh4mPQzi4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TN5L9sqi; arc=fail smtp.client-ip=52.101.48.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TN5L9sqi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=okjNe04FzwSJsmlJU8eYVMRxQCKjNPMhLHdYbJrjEnsRIZZgbaQNWXWmeTwPkq/xK2XE4UYWNjXpqHZEQY//oDx10XtYZEgqpunxoXaD6VQyfXA7juoRAalOq2zhWPkCKfZ0S4zfO+4s904Ayk7nAWQU/T9GRhLfdSUB5CkD9sI7CcRQI6OlLJvxm9j8AGrKQFiv9Q1EWqVONYJSjxQ4vBWDwZkHDiXlCVUTyuD+4IDYdIZjyeZ3LXWDkLJU2iT/+cSxonPkfUjPvTeQNL8DG4IJ4ywc7RaQn8v2uHjxEz91kEWbpF9xqR0+uVleq1ACqhILcwHWg6PAzln65rQXzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LrSNJGuuQtfY7rvM/DphjdryLbbblJmoZVn1f30CWBI=;
- b=KEZZXXQK7IKnHchsiVrbtFX2Xt7nlyysWKGnKOrkBTT0Ruo61MnSG2tYkjyFFx+hXsiDOrXY3cn1NDf1js8SmkYhUgYACaNYoxvcQgER6KOm65LYj4/PuH6fRjyPnbWkqEvOHJXoODDUwQwkWXbED62H9DLpQJcEf19nmnyxk/ZPPWPorq3e+tmRsMIBAWfsttRkPpCMu5cGw+pz1cFjtf+bSwVp33GlJLXilmJnrcIMAT+IbEADGA3zIc4eLJgSCGTqWvXDCYEDaqPy8Cv3/O4ae+GdX1BXFPA1BiwlYngXLWZpXZivzynWWmwRJbYE9fP+IoriLQDS7sfPMCpkwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LrSNJGuuQtfY7rvM/DphjdryLbbblJmoZVn1f30CWBI=;
- b=TN5L9sqih88HiiWnof5z/0kY4QKLeSGn+lhzrk6ZlGfg/XLJLM9lmHDggIB+BqHORRAOJ9dzuhfcHbBi1VUTt55kNI1PGEgW4CKp5xPLfUb2ZaqYP8i0WwfNd3TxYpxXB8DJei1OQN1fixzDXEChW4TJvSKgQAJSrDcDqpraqOlR6IDwKVCiPqVs0vKcrAnXjGxqvWxZXOxmxRgU5iZLudh7y1d1CHbXdYcukuRViAzTVqe23XW0RyuAH8q2KwDxfNaTHUF5Qnl6SRYBg1HNPzN4vDl7rNsKglPkrOiJzVDtT7A5om3RDvWZoFzjo6O9JhT899LJ8uvbXG9vgVARfg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by SA3PR12MB8022.namprd12.prod.outlook.com (2603:10b6:806:307::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Thu, 23 Jul
- 2026 02:42:47 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0245.009; Thu, 23 Jul 2026
- 02:42:47 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 22 Jul 2026 22:42:45 -0400
-Message-Id: <DK5LS45DW6UF.109DVMKA2G8YE@nvidia.com>
-Subject: Re: [PATCH v2 14/33] mm/vma: clean up anon_vma_compatible()
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-parisc@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
- <linux-perf-users@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <damon@lists.linux.dev>, <iommu@lists.linux.dev>,
- <kasan-dev@googlegroups.com>, <linux-sgx@vger.kernel.org>,
- <etnaviv@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
- <linux-tegra@vger.kernel.org>, <kvm@vger.kernel.org>, "Russell King"
- <linux+etnaviv@armlinux.org.uk>
-To: "Lorenzo Stoakes" <ljs@kernel.org>, "Andrew Morton"
- <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>, "Liam
- R. Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>,
- "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
- <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Rik van Riel"
- <riel@surriel.com>, "Harry Yoo" <harry@kernel.org>, "Jann Horn"
- <jannh@google.com>, "Lance Yang" <lance.yang@linux.dev>, "Pedro Falcato"
- <pfalcato@suse.de>, "Russell King" <linux@armlinux.org.uk>, "Dinh Nguyen"
- <dinguyen@kernel.org>, "Simon Schuster"
- <schuster.simon@siemens-energy.com>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Helge Deller" <deller@gmx.de>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, "Christian Brauner"
- <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>, "Dan Williams"
- <djbw@kernel.org>, "Matthew Wilcox" <willy@infradead.org>, "Muchun Song"
- <muchun.song@linux.dev>, "Oscar Salvador" <osalvador@suse.de>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Oleg Nesterov" <oleg@redhat.com>, "Peter
- Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung Kim"
- <namhyung@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Adrian Hunter"
- <adrian.hunter@intel.com>, "James Clark" <james.clark@linaro.org>, "Baolin
- Wang" <baolin.wang@linux.alibaba.com>, "Nico Pache" <npache@redhat.com>,
- "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>,
- "Barry Song" <baohua@kernel.org>, "Miaohe Lin" <linmiaohe@huawei.com>,
- "Naoya Horiguchi" <nao.horiguchi@gmail.com>, "Xu Xin"
- <xu.xin16@zte.com.cn>, "Chengming Zhou" <chengming.zhou@linux.dev>, "SJ
- Park" <sj@kernel.org>, "Matthew Brost" <matthew.brost@intel.com>, "Joshua
- Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Byungchul
- Park" <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>, "Ying Huang"
- <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
- "Hugh Dickins" <hughd@google.com>, "Peter Xu" <peterx@redhat.com>, "Kees
- Cook" <kees@kernel.org>, "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Robin Murphy" <robin.murphy@arm.com>, "Andrey Konovalov"
- <andreyknvl@gmail.com>, "Alexander Potapenko" <glider@google.com>, "Dmitry
- Vyukov" <dvyukov@google.com>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Jarkko Sakkinen"
- <jarkko@kernel.org>, "Dave Hansen" <dave.hansen@linux.intel.com>, "Thomas
- Gleixner" <tglx@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Ian Abbott"
- <abbotti@mev.co.uk>, "H Hartley Sweeten" <hsweeten@visionengravers.com>,
- "Lucas Stach" <l.stach@pengutronix.de>, "Christian Gmeiner"
- <christian.gmeiner@gmail.com>, "David Airlie" <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>, "Patrik Jakobsson"
- <patrik.r.jakobsson@gmail.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "Rob Clark"
- <robin.clark@oss.qualcomm.com>, "Dmitry Baryshkov" <lumag@kernel.org>,
- "Abhinav Kumar" <abhinav.kumar@linux.dev>, "Jessica Zhang"
- <jesszhan0024@gmail.com>, "Sean Paul" <sean@poorly.run>, "Marijn Suijten"
- <marijn.suijten@somainline.org>, "Tomi Valkeinen"
- <tomi.valkeinen@ideasonboard.com>, "Thierry Reding"
- <thierry.reding@kernel.org>, "Mikko Perttunen" <mperttunen@nvidia.com>,
- "Jonathan Hunter" <jonathanh@nvidia.com>, "Christian Koenig"
- <christian.koenig@amd.com>, "Huang Rui" <ray.huang@amd.com>, "Matthew Auld"
- <matthew.auld@intel.com>, "Jason Gunthorpe" <jgg@ziepe.ca>, "Yishai Hadas"
- <yishaih@nvidia.com>, "Shameer Kolothum" <skolothumtho@nvidia.com>, "Kevin
- Tian" <kevin.tian@intel.com>, "Ankit Agrawal" <ankita@nvidia.com>, "Alex
- Williamson" <alex@shazbot.org>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Shakeel Butt" <shakeel.butt@linux.dev>, "Usama Arif"
- <usama.arif@linux.dev>
-From: "Zi Yan" <ziy@nvidia.com>
-X-Mailer: aerc 0.21.0
-References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
- <20260710-b4-pre-scalable-cow-v2-14-2a5aa403d977@kernel.org>
-In-Reply-To: <20260710-b4-pre-scalable-cow-v2-14-2a5aa403d977@kernel.org>
-X-ClientProxiedBy: BL1PR13CA0229.namprd13.prod.outlook.com
- (2603:10b6:208:2bf::24) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D076470EAB;
+	Thu, 23 Jul 2026 02:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784775340; cv=none; b=e8VO5DiCUa97pUZAHWks+A7q3SEiwxJjdHaA2/GcWo1ma1E6q5HOaBxv54kLrN14zfPlW1vIV1O1WOFZ9MflSQcInwOtZgIBENgNIT3jgU6Xc2VE0pc+KsxVz5HBEilPmNQpEagOEJam/6PxmbeA05OKzJ2XwsCPsPylcSZX/j0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784775340; c=relaxed/simple;
+	bh=DZ1fdYPmkKN90lv4JGmwsYSIcom/GdkaZpDtENIrWWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KOwBTaYkPyZVmuqkh/SPevJsbyGp4MBja5r9aKAB87QHRAJq6mDm1e9qYbMAfP2gNp6amRvA2RSMKKpWWhyU1JJnEQMVJRtNkuKMnRvT+K4+zYsKFekvBfCUI64i5p1Gi/Q8DaZJlsaUS632EsdmrexeUCzsoL5N5D/lFg1T6JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4h5G200Mp8zYQtqW;
+	Thu, 23 Jul 2026 10:55:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 104B84058D;
+	Thu, 23 Jul 2026 10:55:34 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgBnTSmkgmFqc+HlCA--.11211S2;
+	Thu, 23 Jul 2026 10:55:33 +0800 (CST)
+Message-ID: <d59887c1-fe25-490d-9166-eebc758ab463@huaweicloud.com>
+Date: Thu, 23 Jul 2026 10:55:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|SA3PR12MB8022:EE_
-X-MS-Office365-Filtering-Correlation-Id: 263a0403-15da-44c7-e34c-08dee86414cd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|23010399003|366016|921020|22082099003|18002099003|11063799006|56012099006|4143699003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	c52IFaKO/V4DkeKhX0N3qQqmPMRzFzOjfcpxTonrqMOuubjzoWbmUyAcjAXML8pS6/fx0pPpPnSZApGoSWe8XR6uCmdCL3AzsSXMlHyxr5gWBllLj4umpBApibBz4a1+Gol2jsY+mM4dBsgR0GI5/5VHygUVorNbDD77WQEvvfeiTzZZck/7qsfd1rJRRbsMGZvaiZFLbA8Q7d5geMWBlFuhh9nQ+X5ukzoKYbxjBO0XaxvqTi1ZwPT/2Br+uMG9bjhCAs7+VVjQdDykR0h+Tgsk647w7bYDu2EDlXoT8gWs8E61vqOqaNDdlbAkYurZtqcWYjWrb91/Dda6GRXUD6IMxgBfVE8ZL/ZfQGQAtgOYHq8QXSX1D/xan07LRzhHgHcHE7uQQiQApAbkChcBDFzrMNgddiVU2QH7mDL9VUO+fWAeaEvHRLDmbKqSFQb9J2/LiSglgeTuHYJ1r9X2Bj3ttTeAqgyyaZtIMsMFGd+0AG2FynWqomeLZTPefzXsmO79rd4AcApywAAOLOh6FQckq26g/8M0p9wKZ45MHPvL9P7mpj49Z9dtmDrN+WHz4Dku5p34ghFzbXhqCDS7c8sxd7VC59rsHliiMZhBJYaWXO67KpDF0WbK/TjgQN0BSZ5bU+LzOfDs+E7nmWa50kGJ2qC4dcDOhJni/FVw6c8thWsCHcpmrN70pj9CvewiTfVKpPKWHZbjUEytNsMB6A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(23010399003)(366016)(921020)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eEUwUUoyaUg3ai92T2ZPcUdMS0RBNFRvaFJ3Ym5CVkxsMmpYMGlNVFVjeU5P?=
- =?utf-8?B?U3RKaThUVGFGdGtaUmUrUlcrdW50OUVMUzgxNTcvd2hyVFdnWEpYc2tsYXM3?=
- =?utf-8?B?aVQ4MCtpWFFSd3QxU3BsTnhIenJwT1ZhZ2NUa0ZMa050djIyYklmWjN0VTRm?=
- =?utf-8?B?d0FMcTRQYTRhU2tGQkhaUk44VEY5eWx2VlNGdUNZa2JUVFlDMW9mZWduYlpj?=
- =?utf-8?B?b3VnaXdUWUowQ1FnVVYrcVA0R2xuTk9XTVJ4QVk2T1E5RnpLMDA4Z2RVaHlS?=
- =?utf-8?B?VUM2Z0p0M01Kc1ZqM0hONkcyd1V5dUJBaW8xbHVCMGRVNWYxeE9XRzVjKzBZ?=
- =?utf-8?B?djdDZmpzNjd4M1ZLaE9VdXBxbjlNU05ESVJtcjg3ZmQ2Tit4R0RKbExKc2pt?=
- =?utf-8?B?Z3BVRmtzQXlhL1phaGJqNXlHSUZEZUhSNjR6YkNLMWpXSk9oQjZDVWgwcG1z?=
- =?utf-8?B?UGR3WnU0M01rYUxSdHBMN0pDa2txdklCaUN3bWNTN2tabmlwdjRQVVVPV3FG?=
- =?utf-8?B?cndJMDRDOUhiY0xTQk5lTko2aU1SN2tabFBJN2FyS1JIalZXYUlZREQ3Z056?=
- =?utf-8?B?ZHMzMEJYRmtwUjBMVFVIbVdSeFlXZ2hHc21HYUhVaEpheU9qOUxBM3lMQTBy?=
- =?utf-8?B?VXQ5c0tGSDFhR3k4cVRVOWNaSDBSR1dBaWxlOGQvSjdHQWNCR2pIVVdDZ3Jx?=
- =?utf-8?B?VU1iRU02S0R5Vks5VFc1OGRRMUY2Z1A0YVhWU1AwTExBZ29ER2oxaG0vTjVm?=
- =?utf-8?B?dEkwZjQ5Ris5SWFFRnZSV3NWYUFwd1BiWTNER0EvTS93dm4wK1dYTHphU05D?=
- =?utf-8?B?U0s4VFN6YWlqcms5c21ISU1yeGtta2ZGMTFqLytQOWJFMmhtVlpST0E3ZUJL?=
- =?utf-8?B?T2d4QURaVFdTaGhHT2tYb1hZankwa0F4VXJzQzdIMXpmeUU1dzg3aE45QVo0?=
- =?utf-8?B?S0lKVlRWa1QxN3pvYjZQV1JvQ0ZLa2U4TXBMTUluL3NmWGlEWkFJd2l2RDBl?=
- =?utf-8?B?dTZiQk44NHh4YzZSbTBLU3BLaEQyVi82cHJZNnJoRnZTWTVMZEdqODh2cDYr?=
- =?utf-8?B?V0NXbVFxUFcrbk5KZVMrbHJIS3VyRDBOMzBsT1o0WTFhbVBvSUtkSS9zRksy?=
- =?utf-8?B?UGFPWnJKYTh4RjRiVm9YWSthN29qZHhIcjFaV01rNm5uS2VSa2ZwRVJCcGJE?=
- =?utf-8?B?RXIwMndMYWtXWDVUVzllWElmRGt2OFJRQ3lzdzcwV29uWS9jbnVBL0VVY1hF?=
- =?utf-8?B?K0ozSXp0TGFKUTJyNzJOWm9TYkVBMjdBVkk0bVNDb2ZYUU9QQUhwSzlVclB5?=
- =?utf-8?B?ZVNYVUJsWFJvYUhPQVRIVFlnbjgzWjh2d0ZKSWR6UFAydDZleFUwT0UvaXFG?=
- =?utf-8?B?bkdoVndabHNiU0FTd1pIdFlYaDExSG9VeWxkZzBqeUtMNE9jeXlTV0lneUdX?=
- =?utf-8?B?ME1idzZBb0pORUNrdVNCWUpaNDQxajNVU1d2Qi9pbmVYN3oyL3lrUkZ5NmdC?=
- =?utf-8?B?Z0ZrUk5lRUJZd3l3aHBDL21HdXM1MWI1eHlXOWdyNW04aEQybWUwa2NKT05i?=
- =?utf-8?B?UkMzZE9lWDlpc2xtZ2ROQVhPUld3YmlDZko5dEJyblBJM2RSbDRCazlnYWJO?=
- =?utf-8?B?bS9HdElqMWRnT1p3ZXBZNGgzL04wSlYxSVNHNGx4U0ZxSXRlcUJTY0dzdnJk?=
- =?utf-8?B?VmRRM0VvUzBpaVJOZmd1TjU3VXcrSWo4RlpjRVJPMEJJTk1qQ0dBSVFUOHhL?=
- =?utf-8?B?c3pPUzJpWlJZTXpxbFhpTUh4cVl2eTZVVWdNRjBuYzBTR0JwQ0NjVXdsWGc0?=
- =?utf-8?B?c3d1S0syTTNDazBpS0dWRzZOR2JSNWlBMks0VkpERUJBUXlObGMzUmlQVHBl?=
- =?utf-8?B?eEc3cldVMWwvZzl6REltcG0rbGhicmhiR3lzazkwZ0JpSmR2Wlo4QnN2MWZm?=
- =?utf-8?B?Nkl0Q2xTdlNzYVQ2UEtOUDRZcUZUcTBhWW9aeVE5SyszTG9BMUZubVhwY1lQ?=
- =?utf-8?B?Qk55VUJIRjR3cjFkenZaT0pUNGE1dVpTYTZubzExZXRPa2p0VXQvaXNvU1FK?=
- =?utf-8?B?ZXFkZDF0ZERoWUxVRXAvekoyejFnTlIxQUN3WFZOL0NzOU9WcGs3SHdtd0k5?=
- =?utf-8?B?ZDRhaTlVdEJXOURtdWRiVnhtckhlbTBWZ3dwUktWR0tuYkpVc3hQR1N4SFRW?=
- =?utf-8?B?b2NLRUxxUkVSVkd5SEpodXRRaWVRdEdmY3dia1p2aXA3OHpjR3FiRGxnd1Bw?=
- =?utf-8?B?amF6UEFwZXJZMGpYSnRGWHd1RTZLbVY5UmY5QVhtNk8zRlZYT2dGb1gzcXdy?=
- =?utf-8?Q?e6Fb1PLeKmj8zp0Jw4?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 263a0403-15da-44c7-e34c-08dee86414cd
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2026 02:42:47.7950
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rOlCtWU8S5A2dxIjS9/Te5UcdluJM/L7mLCbEO3LtnCdHilWGOSHfIOSnZq4WWP3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8022
-
-On Fri Jul 10, 2026 at 4:16 PM EDT, Lorenzo Stoakes wrote:
-> Break up the existing very large conditional, add comments and use
-> vma_[start/end]_pgoff() to make clearer what we're doing here.
->
-> No functional change intended.
->
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> ---
->  mm/vma.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
->
-LGTM.
-
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tracing: Add mutex to trace_parser to fix concurrent
+ write races
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260715081937.1469757-1-wutengda@huaweicloud.com>
+ <20260722205207.58a6009b@robin>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20260722205207.58a6009b@robin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgBnTSmkgmFqc+HlCA--.11211S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WryfCw1rKryfAw4xGrW7urg_yoWfXFWxp3
+	s0grs2kw40qr9Fyrs3uw1DXr48J3yUuFy8Jrn7JryrAFn5ur1aqr17Ar17Kr98G347CFW3
+	JF1q9r4vgr15Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
+	F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
+	kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
+	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjVbkUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
---=20
-Best Regards,
-Yan, Zi
+
+On 2026/7/23 8:52, Steven Rostedt wrote:
+> On Wed, 15 Jul 2026 08:19:37 +0000
+> Tengda Wu <wutengda@huaweicloud.com> wrote:
+> 
+>> The trace_parser structure is allocated and initialized when a trace
+>> file is opened, and is subsequently used in the write handler to parse
+>> user input. If userspace opens a trace file descriptor and shares it
+>> across multiple threads, concurrent write calls will race on the
+>> parser's internal state, specifically the idx, cont, and buffer fields,
+>> leading to corrupted input or undefined behavior.
+>>
+>> Fix this by embedding a mutex directly in struct trace_parser. The mutex
+>> is initialized in trace_parser_get_init() and destroyed in
+>> trace_parser_put(). All write-side users that access parser state
+>> (trace_get_user() followed by checking trace_parser_loaded() /
+>> trace_parser_cont() against the buffer) now hold the mutex across the
+>> full critical section, avoiding any TOCTOU gap between the parse and the
+>> subsequent consumption of parser->buffer.
+>>
+>> Fixes: e704eff3ff51 ("ftrace: Have set_graph_function handle multiple functions in one write")
+>> Fixes: 689fd8b65d66 ("tracing: trace parser support for function and graph")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> ---
+>> v2: Add proper lockdep assertions to enforce that the parser lock is
+>>     held by all callers (Steven).
+>> v1: https://lore.kernel.org/all/20260713134640.708323-1-wutengda@huaweicloud.com/
+> 
+> This triggered a lockdep splat:
+> 
+> [  214.921782] ======================================================
+> [  214.924654] WARNING: possible circular locking dependency detected
+> [  214.927502] 7.2.0-rc4-test-00009-gdf004e09835f-dirty #25 Not tainted
+> [  214.930417] ------------------------------------------------------
+> [  214.933274] ftrace-test-mco/3440 is trying to acquire lock:
+> [  214.935879] ffffffff9c3f3a00 (ftrace_lock){+.+.}-{4:4}, at: register_ftrace_function_probe+0x46/0x580
+> [  214.939970] 
+> [  214.939970] but task is already holding lock:
+> [  214.942531] ffffffff9c3f3440 (ftrace_cmd_mutex){+.+.}-{4:4}, at: ftrace_process_regex.isra.0+0x68/0x120
+> [  214.946327] 
+> [  214.946327] which lock already depends on the new lock.
+> [  214.946327] 
+> [  214.949491] 
+> [  214.949491] the existing dependency chain (in reverse order) is:
+> [  214.952351] 
+> [  214.952351] -> #2 (ftrace_cmd_mutex){+.+.}-{4:4}:
+> [  214.954682]        __mutex_lock+0xdb/0x10a0
+> [  214.956466]        ftrace_process_regex.isra.0+0x68/0x120
+> [  214.958555]        ftrace_regex_write.part.0.isra.0+0xc5/0x150
+> [  214.960767]        vfs_write+0xd0/0x5a0
+> [  214.962311]        ksys_write+0x79/0xf0
+> [  214.963871]        do_syscall_64+0x7e/0x7d0
+> [  214.965444]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  214.967425] 
+> [  214.967425] -> #1 (&parser->lock){+.+.}-{4:4}:
+> [  214.969537]        __mutex_lock+0xdb/0x10a0
+> [  214.971054]        trace_pid_write+0x105/0x2d0
+> [  214.972666]        pid_write.isra.0+0xc0/0x360
+> [  214.974263]        vfs_write+0xd0/0x5a0
+> [  214.975699]        ksys_write+0x79/0xf0
+> [  214.977119]        do_syscall_64+0x7e/0x7d0
+> [  214.978633]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  214.980544] 
+> [  214.980544] -> #0 (ftrace_lock){+.+.}-{4:4}:
+> [  214.982584]        __lock_acquire+0x1496/0x23b0
+> [  214.984211]        lock_acquire+0xdb/0x310
+> [  214.985702]        __mutex_lock+0xdb/0x10a0
+> [  214.987220]        register_ftrace_function_probe+0x46/0x580
+> [  214.989169]        ftrace_trace_probe_callback.isra.0+0x76/0xe0
+> [  214.991168]        ftrace_process_regex.isra.0+0xb2/0x120
+> [  214.993036]        ftrace_regex_write.part.0.isra.0+0xc5/0x150
+> [  214.995018]        vfs_write+0xd0/0x5a0
+> [  214.996448]        ksys_write+0x79/0xf0
+> [  214.997873]        do_syscall_64+0x7e/0x7d0
+> [  214.999399]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  215.001301] 
+> [  215.001301] other info that might help us debug this:
+> [  215.001301] 
+> [  215.004055] Chain exists of:
+> [  215.004055]   ftrace_lock --> &parser->lock --> ftrace_cmd_mutex
+> [  215.004055] 
+> [  215.007461]  Possible unsafe locking scenario:
+> [  215.007461] 
+> [  215.009549]        CPU0                    CPU1
+> [  215.011160]        ----                    ----
+> [  215.012790]   lock(ftrace_cmd_mutex);
+> [  215.014161]                                lock(&parser->lock);
+> [  215.016174]                                lock(ftrace_cmd_mutex);
+> [  215.018247]   lock(ftrace_lock);
+> [  215.019513] 
+> [  215.019513]  *** DEADLOCK ***
+> [  215.019513] 
+> [  215.021679] 3 locks held by ftrace-test-mco/3440:
+> [  215.023342]  #0: ffff8bf9c16d5450 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x79/0xf0
+> [  215.026030]  #1: ffff8bf9c44108b0 (&parser->lock){+.+.}-{4:4}, at: ftrace_regex_write.part.0.isra.0+0x47/0x150
+> [  215.029259]  #2: ffffffff9c3f3440 (ftrace_cmd_mutex){+.+.}-{4:4}, at: ftrace_process_regex.isra.0+0x68/0x120
+> [  215.032448] 
+> [  215.032448] stack backtrace:
+> [  215.034100] CPU: 1 UID: 0 PID: 3440 Comm: ftrace-test-mco Not tainted 7.2.0-rc4-test-00009-gdf004e09835f-dirty #25 PREEMPT(lazy) 
+> [  215.034104] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+> [  215.034105] Call Trace:
+> [  215.034107]  <TASK>
+> [  215.034109]  dump_stack_lvl+0x6e/0xa0
+> [  215.034118]  print_circular_bug.cold+0x185/0x1d0
+> [  215.034125]  check_noncircular+0x148/0x170
+> [  215.034130]  __lock_acquire+0x1496/0x23b0
+> [  215.034133]  ? save_trace+0x53/0x360
+> [  215.034140]  lock_acquire+0xdb/0x310
+> [  215.034142]  ? register_ftrace_function_probe+0x46/0x580
+> [  215.034149]  __mutex_lock+0xdb/0x10a0
+> [  215.034153]  ? register_ftrace_function_probe+0x46/0x580
+> [  215.034156]  ? ftrace_process_regex.isra.0+0x68/0x120
+> [  215.034159]  ? register_ftrace_function_probe+0x46/0x580
+> [  215.034162]  ? lock_acquire+0xeb/0x310
+> [  215.034167]  ? register_ftrace_function_probe+0x46/0x580
+> [  215.034170]  register_ftrace_function_probe+0x46/0x580
+> [  215.034174]  ? ftrace_process_regex.isra.0+0x68/0x120
+> [  215.034176]  ? __might_fault+0x44/0xa0
+> [  215.034182]  ftrace_trace_probe_callback.isra.0+0x76/0xe0
+> [  215.034187]  ftrace_process_regex.isra.0+0xb2/0x120
+> [  215.034191]  ftrace_regex_write.part.0.isra.0+0xc5/0x150
+> [  215.034195]  vfs_write+0xd0/0x5a0
+> [  215.034200]  ? rcu_is_watching+0x11/0x50
+> [  215.034206]  ? fput_close_sync+0x79/0xe0
+> [  215.034211]  ksys_write+0x79/0xf0
+> [  215.034214]  do_syscall_64+0x7e/0x7d0
+> [  215.034218]  ? trace_hardirqs_off+0xd/0x30
+> [  215.034222]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  215.034224] RIP: 0033:0x7feefb1a17d2
+> [  215.034228] Code: 18 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 1a 83 e2 39 83 fa 08 75 12 e8 2b ff ff ff 0f 1f 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 10 ff 74 24 18
+> [  215.034230] RSP: 002b:00007ffe0dae2bc0 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+> [  215.034233] RAX: ffffffffffffffda RBX: 00007feefb2f95c0 RCX: 00007feefb1a17d2
+> [  215.034235] RDX: 0000000000000014 RSI: 000055d4f7f6d5d0 RDI: 0000000000000001
+> [  215.034237] RBP: 0000000000000014 R08: 0000000000000000 R09: 0000000000000000
+> [  215.034238] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000014
+> [  215.034240] R13: 000055d4f7f6d5d0 R14: 000055d4f7f6f3f0 R15: 0000000000000008
+> [  215.034245]  </TASK>
+> 
+> Your original patch doesn't have this issue. But I still hate the fact
+> that the lock is part of the parser. I would say let's make a global
+> mutex for the parsing in the ftrace code (parser_lock) and replace all
+> the mutex_lock(&parser->lock) with mutex_lock(&parser_lock).
+> 
+> Also add a comment to explain what the lock is protecting by the
+> declaration of the lock.
+> 
+> Thanks,
+> 
+> -- Steve
+
+I took a closer look at the lockdep report and confirmed the deadlock
+indeed exists:
+
+Path 1 (write to set_ftrace_pid):
+ftrace_pid_write
+        pid_write
+                guard(mutex)(&ftrace_lock);
+                trace_pid_write
+                        mutex_lock(&parser.lock);
+
+Path 2 (write to set_ftrace_filter):
+ftrace_regex_write
+        guard(mutex)(&parser->lock);
+        ftrace_process_regex
+                p->func
+                        register_ftrace_function_probe
+                                mutex_lock(&ftrace_lock);
+
+So Path 1 takes ftrace_lock then parser->lock, while Path 2 takes
+parser->lock then ftrace_lock. Classic AB-BA deadlock.
+
+The original v1 patch did not have this issue because it did not add
+parser->lock in the trace_pid_write path.
+
+OK, I will revert to the v1 approach and rework it based on your
+suggestion: introduce a global parser_lock for the ftrace parsing code,
+replace all mutex_lock(&parser->lock) with mutex_lock(&parser_lock),
+and add a comment explaining what the lock protects.
+
+Will send v2 shortly.
+
+Thanks,
+Tengda
 
