@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6FD2571A0;
-	Thu, 23 Jul 2026 16:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD963E717C;
+	Thu, 23 Jul 2026 16:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784822545; cv=none; b=SJPx1MWJWQge5NhxxEfFEm9+HfQVYK0dkyZOMZrc2wyn44uUbek6qEbLZeYMeh7I6nsi6QuuNx6A14KKyKaeXiccSgVFicPx8I1CQYinfGz4oNPg/+hy6f9AQNTdTCFUM/iGBk1H3ENN7MvuC+wMjanWZsE5C7wE7YDc3XS3dd8=
+	t=1784824881; cv=none; b=PhcGt5DnV09PnOW4ghM/J8imBu6kxlvIFtHttOvvNmmRrsZ//QFx5y+gDZ6cUQsqYs3mJWfWHSnvycELRlKOC6PVCw/di4ctbFXEuyiGHgCsoFfHViOc8OmL9opwsuw2Du8QzLd9py6Dkx//bzO1GSIwNhsY105w9/jEdZvdlWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784822545; c=relaxed/simple;
-	bh=v14QlQzxVxtOQXjyOGfUdwYKlKkXH0ECUwdzKMwXl2Y=;
+	s=arc-20240116; t=1784824881; c=relaxed/simple;
+	bh=j2Un96XyC2DIDOUwpQXHcR72uRN8/damCrZZjuD7Dus=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sCGSgxXObSLgX3X8H9HGey4aJhMId9uiD3+PZON/wXzwWCzeOnrso4FoQYXi+e1rWav3orNxVvfv9ucq6Wmmbm3p5j8IwVylIhCqM+uXdUOrs2/eELSNA+kotYRwFVoZe1yxALAMVw6upRL58BFp5edx+ZIBUmvYpZbIrhQfm18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=nq3+El6sXJo+4SBsmYj1kUgOJhoFLQtAm9O6YETiwa329JPQlFq6QmM1neBGlTUxem5vWdaHlJ2KH7K4R4JKU1+SAEdE4vLpwDcZJwpDG2gqq2oW/xVV9VqUmycmppjeWqcI1QtzuFnfn3hd90DlYy3uAzrqrceVA9l33VxJ078=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 51FF11A0593;
-	Thu, 23 Jul 2026 16:02:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 66BCF18;
-	Thu, 23 Jul 2026 16:02:20 +0000 (UTC)
-Date: Thu, 23 Jul 2026 12:02:42 -0400
+Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 5F918A04F2;
+	Thu, 23 Jul 2026 16:41:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 8C4ED17;
+	Thu, 23 Jul 2026 16:41:10 +0000 (UTC)
+Date: Thu, 23 Jul 2026 12:41:33 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: David Carlier <devnexen@gmail.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
@@ -27,7 +27,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: Defer trigger private data frees past the
  grace period
-Message-ID: <20260723120242.5c21d818@gandalf.local.home>
+Message-ID: <20260723124133.2c905b49@gandalf.local.home>
 In-Reply-To: <20260712161006.242797-1-devnexen@gmail.com>
 References: <20260712161006.242797-1-devnexen@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
@@ -39,90 +39,101 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 9zntudatcrag3bnkdthe9xsxokn8wd65
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 66BCF18
+X-Stat-Signature: q7dwspnrd9fjpbqwfrnc76t8cdnnyta6
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 8C4ED17
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19s9oV5iPQ117zR0A0VCU0/aR3UIk/+nvg=
-X-HE-Tag: 1784822540-464244
-X-HE-Meta: U2FsdGVkX1+ZCpGdbPmTtf8tZR7GKXIzUsMbIetnH51z09pMV+mDUhb8QKRyjhDGVGu9bjHXlIRLjkJ94lKR6FGPKPe07lz9bQlNm9hIBa9Fk3Lfq0IeOTOY1gDvPMXBgSFTkomiaO+AZxzn/KcyxurHPsT9m2egiHNQeJMOtefzbhNrurNTJrb45uzNPXLrPZk4HF+22mp5+y5vne9Mn1HEy1d7exTjPG3TFRHTKO+EowPU6942jCAVPmRiIOq3NMR5AghqtfL6SvxHcYbmkCwZlRYKq6tfhbDAqNZbqVBx6B/iEtk1PX+2qYUAEoqoUPiVnxXXm9OGm4mq0gFO848FUY+lLVOEwGKz81PpD9wxHdSBheWUFWtZvtZeO/sR
+X-Session-ID: U2FsdGVkX18uYJrSzypzwDyoen7UF9aQcwtOp8MOhlE=
+X-HE-Tag: 1784824870-335631
+X-HE-Meta: U2FsdGVkX18ZYeRLJOsJMM60+ajrA6m/Q4yHydY2cHDvy2NhU+tWu1ikd04wzM4oK6SBTuIveqE6x/oTSM+kX7hKAcW9qOn4MKPX+vU6ECgJHHMKcAM1PlOUXNIewHQEmm7iGg6IAQUmqknu8RFHU+dG0P/9C0o9bZ1X16Xox720Bblwton5vfv1HEmu/NkP6O3ZBhRtzYTyfv1qYQtVNvMGw1VMcYtELdXuuhd5y/XfGXswfvANyX1A+KN4Wv+es9fRytETIgNYMZ1EC8UWtIzFH8m5uTG81PbrXQzlECnI1dF9bZC0W7MVqQd/tWcse9XnFwZOc4uT7eZeOQxTKheMQXQ0vNRv
 
 On Sun, 12 Jul 2026 17:10:06 +0100
 David Carlier <devnexen@gmail.com> wrote:
 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 82ce492ab268..bc696e4bd695 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -6335,6 +6335,16 @@ static void unregister_field_var_hists(struct hist_trigger_data *hist_data)
->  	}
->  }
->  
-> +static void hist_trigger_free_private(struct event_trigger_data *data)
-> +{
-> +	destroy_hist_data(data->private_data);
-> +}
-> +
-> +static void hist_trigger_named_free_private(struct event_trigger_data *data)
-> +{
-> +	kfree(data->cmd_ops);
-> +}
-> +
+> Commit 61d445af0a7c ("tracing: Add bulk garbage collection of freeing
+> event_trigger_data") made trigger_data_free() defer the kfree() of the
+> event_trigger_data to a kthread that runs tracepoint_synchronize_unregister()
+> before freeing. The .free callbacks that own satellite data kept freeing it
+> synchronously right after calling trigger_data_free(), relying on the
+> synchronize that used to run inline.
+> 
+> With that synchronize now deferred, event_hist_trigger_free(),
+> event_enable_trigger_free() and event_hist_trigger_named_free() free
+> hist_data, enable_data and cmd_ops while a concurrent tracepoint handler can
+> still dereference them through the list_del_rcu()'d trigger, causing a
+> use-after-free.
+> 
+> Add an optional free_private() callback to event_trigger_data, invoked by
+> the free kthread after the grace period, and move the satellite frees into
+> it. The event_mutex-requiring bookkeeping (remove_hist_vars(),
+> unregister_field_var_hists()) stays synchronous; only the handler-visible
+> memory free is deferred.
+> 
+> Fixes: 61d445af0a7c ("tracing: Add bulk garbage collection of freeing event_trigger_data")
+> Signed-off-by: David Carlier <devnexen@gmail.com>
 
-This triggered lockdep:
+OK, so this makes one of the self tests fail:
 
-[  785.093618] ------------[ cut here ]------------
-[  785.097043] WARNING: kernel/trace/trace_events_hist.c:3597 at action_data_des
-troy+0x74/0x80, CPU#3: trigger_data_fr/10557
-[  785.104157] Modules linked in: [last unloaded: trace_printk]
-[  785.108151] CPU: 3 UID: 0 PID: 10557 Comm: trigger_data_fr Tainted: G        
-W           7.2.0-rc4-ftest-00009-g22f7a9d07cb0 #174 PREEMPT(lazy) 
-[  785.116393] Tainted: [W]=WARN
-[  785.118863] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
-[  785.127417] RIP: 0010:action_data_destroy+0x74/0x80
-[  785.130947] Code: 8b bd 30 03 00 00 e8 bb f2 1d 00 48 89 ef 5b 5d e9 b1 f2 1d 00 be ff ff ff ff 48 c7 c7 60 75 7f 83 e8 d0 4d e9 00 85 c0 75 a0 <0f> 0b eb 9c 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
-[  785.142648] RSP: 0018:ffffc90002803e78 EFLAGS: 00010246
-[  785.146271] RAX: 0000000000000000 RBX: ffff88811837e800 RCX: 0000000000000000
-[  785.150595] RDX: 0000000000000000 RSI: ffffffff82d24bb2 RDI: ffffffff82d5aacb
-[  785.156356] RBP: ffff88812bc8d400 R08: 0000000000000001 R09: 0000000000000000
-[  785.160229] R10: 0000000000000003 R11: ffff88811e290f60 R12: ffff88812bc8d400
-[  785.164090] R13: ffff88811e290000 R14: ffffffff815f1630 R15: 0000000000000000
-[  785.167949] FS:  0000000000000000(0000) GS:ffff8882f9727000(0000) knlGS:0000000000000000
-[  785.172381] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  785.175483] CR2: 00007f02ef65341c CR3: 000000000366a001 CR4: 0000000000172ef0
-[  785.179019] Call Trace:
-[  785.180523]  <TASK>
-[  785.181881]  destroy_hist_data+0x24f/0x260
-[  785.185686]  trigger_kthread_fn+0x87/0xc0
-[  785.187762]  ? __pfx_trigger_kthread_fn+0x10/0x10
-[  785.190099]  kthread+0xf5/0x130
-[  785.191807]  ? __pfx_kthread+0x10/0x10
-[  785.193752]  ret_from_fork+0x336/0x470
-[  785.195716]  ? __pfx_kthread+0x10/0x10
-[  785.197654]  ret_from_fork_asm+0x1a/0x30
-[  785.199694]  </TASK>
-[  785.201037] irq event stamp: 3815
-[  785.202762] hardirqs last  enabled at (3827): [<ffffffff814be4ee>] __up_console_sem+0x5e/0x70
-[  785.206442] hardirqs last disabled at (3838): [<ffffffff814be4d3>] __up_console_sem+0x43/0x70
-[  785.209954] softirqs last  enabled at (3476): [<ffffffff8141115d>] handle_softirqs+0x35d/0x430
-[  785.213524] softirqs last disabled at (3471): [<ffffffff81411346>] __irq_exit_rcu+0x106/0x1a0
-[  785.218790] ---[ end trace 0000000000000000 ]---
+  tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-synthetic-eprobe.tc
 
+Which has at the end:
 
-Can you fold this into your patch:
+ echo "-:$EPROBE" >> dynamic_events
+ echo '!'"hist:keys=common_pid:filename=\$__arg__1,ret=ret:onmatch($SYSTEM.$START).trace($SYNTH,\$filename,\$ret)" > events/$SYSTEM/$END/trigger
+ echo '!'"hist:keys=common_pid:__arg__1=$FIELD" > events/$SYSTEM/$START/trigger
+ echo '!'"$SYNTH u64 filename; s64 ret;" >> synthetic_events
+
+The issue is that now the command that removes the onmatch() trigger has
+its cleanup delayed, it returns before the synthetic event is actually
+removed from the histogram. This allows the last command to execute before
+it is removed and the removal of the synthetic event fails with -EBUSY
+because the synthetic event is still attached to the histogram when it is
+executed. The synthetic event *must* be removed from the histogram before
+that operation returns.
+
+Thus, I don't think adding a free_private() is appropriate. As you state in
+the change log, the code that freed it was relying on the implicit
+synchronize_rcu() from the trigger code. Now I think it just needs to call
+it directly.
+
+Hence, something like this:
 
 diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index bc696e4bd695..1f438de90d09 100644
+index 82ce492ab268..ddd2f70dac4f 100644
 --- a/kernel/trace/trace_events_hist.c
 +++ b/kernel/trace/trace_events_hist.c
-@@ -6337,6 +6337,7 @@ static void unregister_field_var_hists(struct hist_trigger_data *hist_data)
+@@ -6349,6 +6349,8 @@ static void event_hist_trigger_free(struct event_trigger_data *data)
  
- static void hist_trigger_free_private(struct event_trigger_data *data)
- {
-+	guard(mutex)(&event_mutex);
- 	destroy_hist_data(data->private_data);
+ 		trigger_data_free(data);
+ 
++		synchronize_rcu();
++
+ 		remove_hist_vars(hist_data);
+ 
+ 		unregister_field_var_hists(hist_data);
+@@ -6388,6 +6390,7 @@ static void event_hist_trigger_named_free(struct event_trigger_data *data)
+ 
+ 		del_named_trigger(data);
+ 		trigger_data_free(data);
++		synchronize_rcu();
+ 		kfree(cmd_ops);
+ 	}
  }
- 
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 655db2e82513..c3f54f2540b6 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1730,6 +1730,7 @@ void event_enable_trigger_free(struct event_trigger_data *data)
+ 		trace_event_enable_disable(enable_data->file, 0, 1);
+ 		trace_event_put_ref(enable_data->file->event_call);
+ 		trigger_data_free(data);
++		synchronize_rcu();
+ 		kfree(enable_data);
+ 	}
+ }
 
+The above makes the test pass again and I believe it fixes the problem you
+found. Feel free to resend this change as v2.
 
 -- Steve
+
