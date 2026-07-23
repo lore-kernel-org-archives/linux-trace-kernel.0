@@ -1,110 +1,113 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from sender-pp-o91.zoho.in (sender-pp-o91.zoho.in [103.117.158.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C1237CD32;
-	Thu, 23 Jul 2026 17:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784828260; cv=none; b=U7RSZOXxCTUDgU2MzkBmIUb4vetM91wCNxoo3uhM5QQBaKTF8+3ERVyI9KmQ6sKWHbXSetrBPHI8nXKXq/6PuhEsLETM9EQDrqo54zgbU4meLqOh/BWRyKEBC8reyY15/6SjiE5/n3SnVamJq0p0YVGijpyRsfZoQjji/j3FR5g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784828260; c=relaxed/simple;
-	bh=UL+Ay/seoUORWXpwCrqzq9E29lYZh9pZ/K/qBmJAMzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dVReIm9aOZo2ov8HpU0qA2lM+Pci8OX09ihfkp4wGogeBMSJ2DFtEKMGzlxlvO/k/REaOClijgQZ/bvqISGDLVBhwatHUJOXJtPiX0uISN45RSQTlT8PNA1+dbLEJwtrXSu9b8EpsmHbeOKfP3QQDe0IicYEtIUKBmEKaqCGL9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id A1999A0036;
-	Thu, 23 Jul 2026 17:37:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id E7BA720025;
-	Thu, 23 Jul 2026 17:37:29 +0000 (UTC)
-Date: Thu, 23 Jul 2026 13:37:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Carlier <devnexen@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Restore synchronize_rcu() before freeing
- trigger private data
-Message-ID: <20260723133752.7d384996@gandalf.local.home>
-In-Reply-To: <20260723170212.55325-1-devnexen@gmail.com>
-References: <20260723170212.55325-1-devnexen@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13353C1F54;
+	Thu, 23 Jul 2026 18:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.117.158.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784830950; cv=pass; b=ThVbYNFcg3DIfNJdBJDd5+4LC2/1NCSMI8quWu1OxSMhVODy3C2xNhrSQ077SSfr181VLWnA0X7BV3t/IpPmtQCE1F/RZWgpZc3i0EC2yku5NofbiWnunT6RjagpVgq++9YVKdL5NUG+LKZwXsAwSGm6rf00kA3CfFVh9PsbFTQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784830950; c=relaxed/simple;
+	bh=54BfALxmwVON3rTyEXchRklWjBnoIvHmx/wKfGySEeM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=nxmQ/Zi/KCtB/SaLTwGrLnVYoQrChwvbCxvv4k6u3CFMQgbFXF+B/rlwTo42FeLZ0cKNKM9oVGYUVv1uV1IJqhektAB1E+ALJWJqRD/gc5rJCN7rGyiLKWuwYVhv2u1wqMNZZXxjFL3waqCWSNOozcIugHrcytwo3dTIU2eLZc4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=xFbhv7mg; arc=pass smtp.client-ip=103.117.158.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.in
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="xFbhv7mg"
+ARC-Seal: i=1; a=rsa-sha256; t=1784830836; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=DhTCt/0+nbXkNrT16r/mYqwaIRGTbMZ2tJRdYDK5WwZpUIEEeJfZUR1W8jfmfNoMMYsi5G+xb0qoVG87YDr13cjS99F4mDYQEDHrcj7JVaJOKxPRHHOnG3J7xdlvZpsL9SCgT0rbN8ZCgY7x4hsBF62uyMsPvu+G5eB20yYGS7U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1784830836; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=pfQDPqw11mCJJji2f0Nti4HsEvZmmxB/+DvabiWGe4o=; 
+	b=bPYqK4TEtuGlf1Iv7tE1PiEybXOUGlCAEw7gRZ/ZLlxLhPVmtiOrDRuoEOxPP4lQNBxSRmmQ8+yQwkLR5WXBe6zAqgWajaQ7EZK3lPTbbFChZ1e8Sd0megUTWMr/Bh86mPSic74axVVNcWs3QEzfwEx3bu7jKTRange6P9Ey/EQ=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=zohomail.in;
+	spf=pass  smtp.mailfrom=adi.sharma@zohomail.in;
+	dmarc=pass header.from=<adi.sharma@zohomail.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784830836;
+	s=zoho; d=zohomail.in; i=adi.sharma@zohomail.in;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=pfQDPqw11mCJJji2f0Nti4HsEvZmmxB/+DvabiWGe4o=;
+	b=xFbhv7mgSE7zUFuoNZQrs81/lHXApMTmweZPcKCYwIOBAXqXUm6t+CFpPOy/2oco
+	OQM8TDoLXmcxXoWM71ua/6HiyPvdT2BsNPin5Zh+xtkyM9VEOLNNBO3qzIYpGriqC93
+	o2iv/A/Flgm2LP5+bHEg0TmCDbDQ+4QqI2T6x4vc=
+Received: from mail.zoho.in by mx.zoho.in
+	with SMTP id 1784830836074875.803576409499; Thu, 23 Jul 2026 23:50:36 +0530 (IST)
+Received: from  [14.139.128.54] by mail.zoho.in
+	with HTTP;Thu, 23 Jul 2026 23:50:36 +0530 (IST)
+Date: Thu, 23 Jul 2026 23:50:36 +0530
+From: Aditya Sharma <adi.sharma@zohomail.in>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>,
+	"Lorenzo Stoakes" <ljs@kernel.org>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	"Vlastimil Babka" <vbabka@kernel.org>,
+	"Mike Rapoport" <rppt@kernel.org>,
+	"Suren Baghdasaryan" <surenb@google.com>,
+	"Michal Hocko" <mhocko@suse.com>,
+	"David Rientjes" <rientjes@google.com>,
+	"Shakeel Butt" <shakeel.butt@linux.dev>,
+	"Jonathan Corbet" <corbet@lwn.net>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	"Steven Rostedt" <rostedt@goodmis.org>,
+	"Masami Hiramatsu" <mhiramat@kernel.org>,
+	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+	"Kees Cook" <kees@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+	"Peter Zijlstra" <peterz@infradead.org>,
+	"Juri Lelli" <juri.lelli@redhat.com>,
+	"Vincent Guittot" <vincent.guittot@linaro.org>,
+	"Dietmar Eggemann" <dietmar.eggemann@arm.com>,
+	"Ben Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>,
+	"Valentin Schneider" <vschneid@redhat.com>,
+	"K Prateek Nayak" <kprateek.nayak@amd.com>,
+	"linux-mm" <linux-mm@kvack.org>,
+	"linux-doc" <linux-doc@vger.kernel.org>,
+	"linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"imbrenda" <imbrenda@linux.ibm.com>
+Message-ID: <19f90353d61.105539924624.2933593927158737842@zohomail.in>
+In-Reply-To: <d6c3eba3-c596-4903-b298-ac6f424d639c@kernel.org>
+References: <20260719185409.409685-1-adi.sharma@zohomail.in> <d1180a70-f4b4-4c22-9ce5-881cb0e2370d@kernel.org> <19f80cb1ed8.13fd666243425.2308143427066829733@zohomail.in> <d6c3eba3-c596-4903-b298-ac6f424d639c@kernel.org>
+Subject: Re: [RFC PATCH 0/7] mm: defer address-space teardown of large
+ exiting processes to a kthread
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 3b977byuzbdex11mbyxkfw1pjdfma8tz
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: E7BA720025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+LiWOkogkUIiemfi+XgvAMR6pnYQ1yNqU=
-X-HE-Tag: 1784828249-523947
-X-HE-Meta: U2FsdGVkX18Ewjbaf29kjoHUzZqA4e0W/cV1HhrEmpRvTVejBg+ARpaXqJw2o/TVRgcWtrAK2fxmK6gA1uQn/As1oQeXbtRBTXs0l4ZvfTE4plxWJQvDfU2Typ/GKKpKdXSZ8aSChhcsaDNHaWx4iKIo9SzhjCdY9kdHzDzEXyKrS8r09aAVZ28JX8rptR5BcAcnHg24eX/VR+hssZZ7gYLGVt9gtf16VSU/6ssedt0z0Z43b4YxGZVwId5HmbTYDf0hgV/5l6oUbDfX0v4j5kN0n/uBm8CA6g96igR/QAEqkdJ2cRJJQ+qr0VpM8srOrZml7LwmVd2bPeJYpivA8lQKJsqJfkNh2KrwfHZxvpm/X5RUCW5pRUnOiHK6tZBUvrsu7xqetcgruvt8BOKZLQ==
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Thu, 23 Jul 2026 18:02:12 +0100
-David Carlier <devnexen@gmail.com> wrote:
 
-> ---
->  kernel/trace/trace_events_hist.c    | 3 +++
->  kernel/trace/trace_events_trigger.c | 1 +
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 82ce492ab268..ddd2f70dac4f 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -6349,6 +6349,8 @@ static void event_hist_trigger_free(struct event_trigger_data *data)
->  
->  		trigger_data_free(data);
->  
-> +		synchronize_rcu();
 
-According to Sashiko[1], it appears we actually need tracepoint_synchronize_unregister().
-And I believe Sashiko is actually correct.
 
-> +
->  		remove_hist_vars(hist_data);
->  
->  		unregister_field_var_hists(hist_data);
-> @@ -6388,6 +6390,7 @@ static void event_hist_trigger_named_free(struct
-> event_trigger_data *data) 
->  		del_named_trigger(data);
->  		trigger_data_free(data);
-> +		synchronize_rcu();
+ > CLONE_VM seems to work for the use cases you had in mind.
+ > 
+ > There would have to be a *pretty* convincing story why we would want more
+ > complexity in the kernel to handle this.
+ > 
+ > Some smaller performance improvements are not worth it.
+ 
+Having thought about it more, I agree. I have a workload of my own, 
+which as you say, I can simply fix using the CLONE_VM way.
 
-This needs to be changed too.
+The only kind of user which the shadow process thing does not cover
+is someone who does not have control over the source of task over
+which they want such a behaviour. Here, the only case I can think
+of is operators who cannot modify or wrap the processes they're managing.
+I dont have that user.
 
->  		kfree(cmd_ops);
->  	}
->  }
-> diff --git a/kernel/trace/trace_events_trigger.c
-> b/kernel/trace/trace_events_trigger.c index 655db2e82513..c3f54f2540b6
-> 100644 --- a/kernel/trace/trace_events_trigger.c
-> +++ b/kernel/trace/trace_events_trigger.c
-> @@ -1730,6 +1730,7 @@ void event_enable_trigger_free(struct
-> event_trigger_data *data) trace_event_enable_disable(enable_data->file,
-> 0, 1); trace_event_put_ref(enable_data->file->event_call);
->  		trigger_data_free(data);
-> +		synchronize_rcu();
+So, instead of further argument or sending benchmarks that would
+show a performance delta, does anyone on the list have such a
+use case? If not, I would consider my questions as answered.
 
-According to Sashiko, this one basically causes a revert of the original
-delay. 
+Thanks
 
-OK, let's bring back a partial part of your original patch. Have the
-"free_private()" again, but only apply it to this trigger, and switch the
-above other to synchronize_rcu() into the tracepoint_synchronize_unregister().
-
-Thanks,
-
--- Steve
-
->  		kfree(enable_data);
->  	}
-
-[1] https://sashiko.dev/#/patchset/20260723170212.55325-1-devnexen%40gmail.com
+Aditya
