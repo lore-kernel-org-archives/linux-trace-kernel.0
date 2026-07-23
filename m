@@ -1,60 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0454D379EE4
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 07:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72779339392
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 07:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784792791; cv=none; b=brSm42hD0XW5kD+UL0pHZDBJICNv9JhaOyG/I41hrH2+9dxT2wXVr21mLnmtxGesHpiGBjFNaUiu3AS6No0r8lXkEbpgdEkBCZZ25/YfMRmGgvitTK/F9kkf9vi+KUgkRLP3CuyAmkWSlXbA3YzQ1y+TWssgKavNdbL7JBoYYOI=
+	t=1784792805; cv=none; b=POAyRxiVfn1AljbQqeql21dXcaUwFTOujB850vIHOEtZqawgCg32vMTWSg9WklobVG/3MWJzQYk03ayQE+v9RED1bd9TbtbiKIkbYffa+D8mwrCOeJHEqGtjM15OmwiK2U9AoyMO+iDe2G5nSs7wuNSV7D4+583BDwa4zZKMBUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784792791; c=relaxed/simple;
-	bh=XEo6Lcn87SsNgKeheHvv9+LkhsVblcmjrvZtzauIzeQ=;
+	s=arc-20240116; t=1784792805; c=relaxed/simple;
+	bh=9sPLdkum2kWCCtOLzcn0klZI0PoIJRU8ohLPxFOoEbc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=lUY2DlUQ41pZtEM055npjlJud+QHXr4g+AGI4JLanBzWJNypLzaBkTTEn+ijWJHD/V/Sxn3mPPBpObUaafMBXhP0Zd/OUsPLFLtbK8cFe/Tivyv1VOPH9maX46uETFJuyzsAqfCeDIRXmWt8twmBkF+Zb340PNcRCIRj+pPL63E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HBQX419E; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=t/cltn7u90gHQzkYX22Jw5d+cxAdpAB6OhhIUxnDcJlyTdiO83CS+v1348PgQV+IY1W+9tZToCzzLJYe9cqKNjW2LZmi1GhYhynimAePaMtzhQL0OVtf6hC9YVkwPhp0nuCx4tjuydlBIeLnqc8BdwNbSuBp/YnDL1+dtnLRGNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OOZdSXCt; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HBQX419E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OOZdSXCt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784792789;
+	s=mimecast20190719; t=1784792802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z7aNTglJykimQQOXOH133gOSR7LNkwiArg7Dhg4y2F8=;
-	b=HBQX419ED0chSI36q4mQt7IL0znTfk4mYD9ZwORuVyN59vOK8fPaoKYJSDuBcU4wxZRhdL
-	GvC7hYBbBfaOgp3b589tg9gSVwpTi/M1AM9Bjjj6vAexxt10z17aiqN6H4qcAGBcxz6IOH
-	hquH9AHWiyk6TiGqm4UCNMQ2W3HssEo=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ICw0LxmziCf43DdT2yVS8sQfUszLZeUuGlgWCzPqF6U=;
+	b=OOZdSXCt4xLIxCv2ldGCDS6sXdrzZSkG2KNCaw005m3GhdwJCMmCLA+VDM/KVHPgQ3Yvpn
+	b0WBCfUTVhtEMqc29cxCQkFvH0zD6lXMyhwvaeccSuGW4bVCHK/pYDMWhKaIAdEYoHMuJF
+	CAPOXPG1jbxdslMRX7X/aSze/b6ao8A=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-GP91sBfYOiq4aIsjRHYNVQ-1; Thu,
- 23 Jul 2026 03:46:25 -0400
-X-MC-Unique: GP91sBfYOiq4aIsjRHYNVQ-1
-X-Mimecast-MFC-AGG-ID: GP91sBfYOiq4aIsjRHYNVQ_1784792784
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-107-ELwuCGnEOOWvHUO1SxRvMA-1; Thu,
+ 23 Jul 2026 03:46:41 -0400
+X-MC-Unique: ELwuCGnEOOWvHUO1SxRvMA-1
+X-Mimecast-MFC-AGG-ID: ELwuCGnEOOWvHUO1SxRvMA_1784792799
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A77D195FDF4;
-	Thu, 23 Jul 2026 07:46:24 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B408119540CE;
+	Thu, 23 Jul 2026 07:46:39 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.local (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 25E4F180029A;
-	Thu, 23 Jul 2026 07:46:20 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB761180029D;
+	Thu, 23 Jul 2026 07:46:36 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
+	Wen Yang <wen.yang@linux.dev>,
 	Thomas Weissschuh <thomas.weissschuh@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v5 06/17] tools/rv: Add selftests
-Date: Thu, 23 Jul 2026 09:45:23 +0200
-Message-ID: <20260723074534.43521-7-gmonaco@redhat.com>
+	John Kacur <jkacur@redhat.com>
+Subject: [PATCH v5 08/17] verification/rvgen: Add selftests
+Date: Thu, 23 Jul 2026 09:45:25 +0200
+Message-ID: <20260723074534.43521-9-gmonaco@redhat.com>
 In-Reply-To: <20260723074534.43521-1-gmonaco@redhat.com>
 References: <20260723074534.43521-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,56 +64,53 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: jTpQ7GqplO8ZAYAdZUhHWpMypJlnA7-t6dE-y0eN9S0_1784792784
+X-Mimecast-MFC-PROC-ID: QYzTlezm9K3nVFmhbrr8d8ws3FdEPvlGSmqU_boHkoY_1784792799
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The rv tool needs automated testing to catch regressions and verify
-correct functionality across different usage scenarios.
+The rvgen code generator needs validation to ensure it produces correct
+monitor implementations from input specifications.
 
-Add selftests that validate monitor listing (including containers and
-nested monitors), monitor execution with different configurations
-(reactors, verbose output, tracing), and trace output format for both
-per-task and per-cpu monitors. Error handling paths are also tested.
-Tests use a shared engine for common patterns.
+Add selftests with golden reference outputs covering all monitor classes
+(DA, HA, LTL) and types (global, per_cpu, per_task, per_obj), including
+optional features like descriptions and parent monitors. Container
+generation and error handling (missing files, invalid specifications,
+missing arguments) are also validated against expected output.
 
 Acked-by: Nam Cao <namcao@linutronix.de>
+Reviewed-by: Wen Yang <wen.yang@linux.dev>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
+ tools/verification/rvgen/Makefile             |  4 +
+ .../rvgen/tests/rvgen_container.t             | 20 +++++
+ .../verification/rvgen/tests/rvgen_monitor.t  | 87 +++++++++++++++++++
+ tools/verification/tests/engine.sh            | 34 ++++++++
+ 4 files changed, 145 insertions(+)
+ create mode 100644 tools/verification/rvgen/tests/rvgen_container.t
+ create mode 100644 tools/verification/rvgen/tests/rvgen_monitor.t
 
-Notes:
-    V4:
-    * Retry multiple times when getting the pid to avoid races
-
- tools/verification/rv/Makefile        |   5 +-
- tools/verification/rv/tests/rv_list.t |  48 +++++++++
- tools/verification/rv/tests/rv_mon.t  |  95 +++++++++++++++++
- tools/verification/tests/engine.sh    | 141 ++++++++++++++++++++++++++
- 4 files changed, 288 insertions(+), 1 deletion(-)
- create mode 100644 tools/verification/rv/tests/rv_list.t
- create mode 100644 tools/verification/rv/tests/rv_mon.t
- create mode 100644 tools/verification/tests/engine.sh
-
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 5b898360ba48..8ae5fc0d1d17 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -78,4 +78,7 @@ clean: doc_clean fixdep-clean
- 	$(Q)rm -f rv rv-static fixdep FEATURE-DUMP rv-*
- 	$(Q)rm -rf feature
+diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/Makefile
+index cfc4056c1e87..2a2b9e64ea42 100644
+--- a/tools/verification/rvgen/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -13,6 +13,10 @@ all:
+ .PHONY: clean
+ clean:
  
--.PHONY: FORCE clean
-+check: $(RV)
-+	RV=$(RV) prove -o --directives -f tests/
++.PHONY: check
++check:
++	prove -o --directives -f tests/
 +
-+.PHONY: FORCE clean check
-diff --git a/tools/verification/rv/tests/rv_list.t b/tools/verification/rv/tests/rv_list.t
+ .PHONY: install
+ install:
+ 	$(INSTALL) rvgen/automata.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/automata.py
+diff --git a/tools/verification/rvgen/tests/rvgen_container.t b/tools/verification/rvgen/tests/rvgen_container.t
 new file mode 100644
-index 000000000000..201af33a52cc
+index 000000000000..fa4fb3db8288
 --- /dev/null
-+++ b/tools/verification/rv/tests/rv_list.t
-@@ -0,0 +1,48 @@
++++ b/tools/verification/rvgen/tests/rvgen_container.t
+@@ -0,0 +1,20 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +source ../tests/engine.sh
@@ -121,295 +118,164 @@ index 000000000000..201af33a52cc
 +
 +set_timeout 30s
 +
-+RVDIR=/sys/kernel/tracing/rv/
++# Help tests
++check "verify container subcommand help" \
++	"$RVGEN container -h" 0 "model_name" "class"
++
++check_and_compare_folder "container with description" \
++	"$RVGEN container -n test_container -D 'Test container for grouping monitors'" \
++	"test_container" "Writing the monitor into the directory test_container"
++
++# Error handling tests
++check "missing required model_name" \
++	"$RVGEN container" 2 "the following arguments are required: -n/--model_name"
++
++test_end
+diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t b/tools/verification/rvgen/tests/rvgen_monitor.t
+new file mode 100644
+index 000000000000..261476504eee
+--- /dev/null
++++ b/tools/verification/rvgen/tests/rvgen_monitor.t
+@@ -0,0 +1,87 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++source ../tests/engine.sh
++test_begin
++
++set_timeout 30s
 +
 +# Help and basic tests
 +check "verify help page" \
-+	"$RV --help" 0 "usage: rv command"
++	"$RVGEN --help" 0 "Generate kernel rv monitor"
 +
-+check "verify list subcommand help" \
-+	"$RV list --help" 0 "list all available monitors"
++check "verify monitor subcommand help" \
++	"$RVGEN monitor --help" 0 "Monitor class"
 +
-+all_nested=$(grep : $RVDIR/available_monitors | cut -d: -f2 | paste -s | sed 's/\t/\\|/g')
-+all_non_nested=$(grep -v : $RVDIR/available_monitors | cut -d: -f2 | paste -s | sed 's/\t/\\|/g')
-+sched_monitors=$(grep sched: $RVDIR/available_monitors | cut -d: -f2 | paste -s | sed 's/\t/\\|/g')
-+description_state="[[:space:]]\+[[:print:]]\+\[\(OFF\|ON\)\]"
-+line_nested=" - \($all_nested\)${description_state}"
-+line_non_nested="\($all_non_nested\)${description_state}"
++# DA monitor tests - test all monitor types
++check_and_compare_folder "DA per_cpu (default name)" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t per_cpu" \
++	"test_da" "obj-\$(CONFIG_RV_MON_TEST_DA) += monitors/test_da/test_da.o"
 +
-+# List monitors and containers
-+check "list all monitors" \
-+	"$RV list" 0 "" "" "^\($line_nested\|$line_non_nested\)$"
++check_and_compare_folder "DA global type" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t global -n da_global" \
++	"da_global" "DA_MON_EVENTS_IMPLICIT"
 +
-+check_if_exists "list container" \
-+	"$RV list sched" "$RVDIR/monitors/sched" \
-+	"" "-- No monitor found in container sched --" \
-+	"^\($sched_monitors\)${description_state}$"
++check_and_compare_folder "DA per_task with description" \
++	"$RVGEN monitor -c da -s tests/specs/test_da2.dot -t per_task -n da_pertask_desc -D 'Custom description for testing'" \
++	"da_pertask_desc" "#include <monitors/da_pertask_desc/da_pertask_desc_trace.h>"
 +
-+check_if_exists "list non-container" \
-+	"$RV list wwnr" "$RVDIR/monitors/wwnr" \
-+	"-- No monitor found in container wwnr --" \
-+	"^\( - \)\?[[:alnum:]]\+${description_state}$"
++check_and_compare_folder "DA per_obj with parent" \
++	"$RVGEN monitor -c da -s tests/specs/test_da2.dot -t per_obj -n da_perobj_parent -p parent_mon" \
++	"da_perobj_parent" "DA_MON_EVENTS_ID"
 +
-+check "list incomplete container name" \
-+	"$RV list s" 0 "-- No monitor found in container s --"
++# HA monitor tests
++check_and_compare_folder "HA per_task (default name)" \
++	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_task" \
++	"test_ha" "HA_MON_EVENTS_ID"
 +
-+# Error handling tests
-+check "no command" \
-+	"$RV" 1 "rv requires a command"
++check_and_compare_folder "HA per_cpu type" \
++	"$RVGEN monitor -c ha -s tests/specs/test_ha.dot -t per_cpu -n ha_percpu" \
++	"ha_percpu" "HA_MON_EVENTS_IMPLICIT"
 +
-+check "invalid command" \
-+	"$RV invalid" 1 "rv does not know the invalid command"
++# LTL monitor test
++check_and_compare_folder "LTL per_task" \
++	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -n ltl_pertask" \
++	"ltl_pertask" "source \"kernel/trace/rv/monitors/ltl_pertask/Kconfig\""
 +
-+test_end
-diff --git a/tools/verification/rv/tests/rv_mon.t b/tools/verification/rv/tests/rv_mon.t
-new file mode 100644
-index 000000000000..cbc346c74c71
---- /dev/null
-+++ b/tools/verification/rv/tests/rv_mon.t
-@@ -0,0 +1,95 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+source ../tests/engine.sh
-+test_begin
-+
-+set_timeout 30s
-+
-+RVDIR=/sys/kernel/tracing/rv/
-+
-+# Help and basic tests
-+check "verify mon subcommand help" \
-+	"$RV mon --help" 0 "run a monitor"
++check_and_compare_folder "LTL per_task with parent and description (default name)" \
++	"$RVGEN monitor -c ltl -s tests/specs/test_ltl.ltl -t per_task -p ltl_parent -D 'Simple description'" \
++	"test_ltl" "LTL_MON_EVENTS_ID"
 +
 +# Error handling tests
-+check "mon without monitor name" \
-+	"$RV mon" 1 "usage: rv mon"
++check "missing required spec argument" \
++	"$RVGEN monitor -c da -t per_cpu" 2 \
++	"the following arguments are required: -s/--spec" "Traceback (most recent call last)"
 +
-+check "invalid monitor name" \
-+	"$RV mon invalid" 1 "monitor invalid does not exist"
++check "missing required monitor type" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot" 2 \
++	"the following arguments are required: -t/--monitor_type" "Traceback (most recent call last)"
 +
-+if [ -d $RVDIR/monitors/wwnr ]; then
++check "missing required monitor class" \
++	"$RVGEN monitor -s tests/specs/test_da.dot -t per_cpu" 2 \
++	"the following arguments are required: -c/--class" "Traceback (most recent call last)"
 +
-+check "invalid reactor name" \
-+	"$RV mon wwnr -r invalid" 1 "failed to set invalid reactor, is it available?"
++check "invalid monitor class" \
++	"$RVGEN monitor -c invalid -s tests/specs/test_da.dot -t per_cpu" 1 \
++	"Unknown monitor class" "Traceback (most recent call last)"
 +
-+check "monitor name is substring of another monitor" \
-+	"$RV mon nr" 1 "monitor nr does not exist"
++check "missing dot file" \
++	"$RVGEN monitor -c da -s tests/specs/nonexistent.dot -t per_cpu" 1 \
++	"No such file or directory" "Traceback (most recent call last)"
 +
-+check "already enabled monitor returns error" \
-+	"echo 1 > $RVDIR/monitors/wwnr/enable; $RV mon wwnr" 1 \
-+	"monitor wwnr (in-kernel) is already enabled"
-+echo 0 > $RVDIR/monitors/wwnr/enable
++check "missing ltl file" \
++	"$RVGEN monitor -c ltl -s tests/specs/nonexistent.ltl -t per_task" 1 \
++	"No such file or directory" "Traceback (most recent call last)"
 +
-+fi
++check "invalid dot file syntax" \
++	"$RVGEN monitor -c da -s tests/specs/test_invalid.dot -t per_cpu" 1 \
++	"Not a valid .dot format" "Traceback (most recent call last)"
 +
-+# rv mon runs until terminated
-+set_expected_timeout 2s
++check "invalid ha file syntax" \
++	"$RVGEN monitor -c ha -s tests/specs/test_invalid_ha.dot -t per_obj" 1 \
++	"Unrecognised event constraint" "Traceback (most recent call last)"
 +
-+# Run monitors with different configurations
-+check_if_exists "run the monitor without parameters" \
-+	"$RV mon wwnr" "$RVDIR/monitors/wwnr" "" "."
-+
-+check_if_exists "run the monitor as verbose" \
-+	"$RV mon wwnr -v" "$RVDIR/monitors/wwnr" \
-+	"my pid is \$pid" "\(event\|error\)"
-+
-+check_if_exists "run the monitor with a reactor" \
-+	"$RV mon wwnr -r printk & sleep .5 && cat $RVDIR/monitors/wwnr/reactors && wait" \
-+	"$RVDIR/monitors/wwnr/reactors" "\[printk\]"
-+
-+check_if_exists "reactor is restored after exit" \
-+	"cat $RVDIR/monitors/wwnr/reactors" \
-+	"$RVDIR/monitors/wwnr/reactors" "\[nop\]"
-+
-+check_if_exists "run a nested monitor with a reactor" \
-+	"$RV mon snroc -r printk & sleep .5 && cat $RVDIR/monitors/sched/snroc/reactors && wait" \
-+	"$RVDIR/monitors/sched/snroc/reactors" "\[printk\]"
-+
-+check_if_exists "run an explicitly nested monitor with a reactor" \
-+	"$RV mon sched:sssw -r printk & sleep .5 && cat $RVDIR/monitors/sched/sssw/reactors && wait" \
-+	"$RVDIR/monitors/sched/sssw/reactors" "\[printk\]"
-+
-+check_if_exists "run container monitor" \
-+	"$RV mon sched & sleep .5 && cat $RVDIR/monitors/sched/{sssw,sco}/enable && wait" \
-+	"$RVDIR/monitors/sched" "1" "0" "^1$"
-+
-+# Regexes for the trace
-+header="^[[:space:]]\+\(\([][A-Z_x<>-]\+\||\)[[:space:]]*\)\+$"
-+type="\(event\|error\)[[:space:]]\+"
-+genpid="[0-9]\+[[:space:]]\+"
-+selfpid="\$pid[[:space:]]\+"
-+cpu="\[[0-9]\{3\}\][[:space:]]\+"
-+state="[a-z_]\+ "
-+trace_task="${genpid}${cpu}${type}${genpid}${state}"
-+trace_task_self="${genpid}${cpu}${type}${selfpid}${state}"
-+trace_cpu="${genpid}${cpu}${type}${state}"
-+trace_cpu_self="${selfpid}${cpu}${type}${state}"
-+
-+check_if_exists "run per-task monitor with tracing" \
-+	"$RV mon sssw -t" "$RVDIR/monitors/sched/sssw" \
-+	"$header" "$trace_task_self" "\($header\|$trace_task\)"
-+
-+check_if_exists "run per-task monitor tracing also self" \
-+	"$RV mon sched:sssw -t -s" "$RVDIR/monitors/sched/sssw" \
-+	"$trace_task_self" "" "\($header\|$trace_task\)"
-+
-+check_if_exists "run per-cpu monitor with tracing" \
-+	"$RV mon sched:sco -t" "$RVDIR/monitors/sched/sco" \
-+	"$header" "$trace_cpu_self" "\($header\|$trace_cpu\)"
-+
-+check_if_exists "run per-cpu monitor tracing also self" \
-+	"$RV mon sco -t -s" "$RVDIR/monitors/sched/sco" \
-+	"$trace_cpu_self" "" "\($header\|$trace_cpu\)"
++check "invalid ltl file syntax" \
++	"$RVGEN monitor -c ltl -s tests/specs/test_invalid.ltl -t per_task" 1 \
++	"Illegal character 'i'" "Traceback (most recent call last)"
 +
 +test_end
 diff --git a/tools/verification/tests/engine.sh b/tools/verification/tests/engine.sh
-new file mode 100644
-index 000000000000..57e16dc980b1
---- /dev/null
+index 57e16dc980b1..cfdf2180aad8 100644
+--- a/tools/verification/tests/engine.sh
 +++ b/tools/verification/tests/engine.sh
-@@ -0,0 +1,141 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+test_begin() {
-+	# Count tests to allow the test harness to double-check if all were
-+	# included correctly.
-+	ctr=0
-+	[ -z "$RV" ] && RV="../rv/rv"
-+	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
-+}
-+
-+failure() {
-+	fail=1
-+	if [ $# -gt 0 ]; then
-+		failbuf+="$1"
-+		failbuf+=$'\n'
-+	fi
-+}
-+
-+report() {
-+	local desc="$1"
-+
-+	if [ "$fail" -eq 0 ]; then
-+		echo "ok $ctr - $desc"
-+	else
-+		# Add output and exit code as comments in case of failure
-+		echo "not ok $ctr - $desc"
-+		echo -n "$failbuf"
-+		echo "$result" | col -b | while read -r line; do echo "# $line"; done
-+		printf "#\n# exit code %s\n" "$exitcode"
-+	fi
-+}
-+
-+_check() {
-+	local command=$2
-+	local expected_exitcode=${3:-0}
-+	local expected_output=$4
-+	local unexpected_output=$5
-+	local all_lines_pattern=$6
-+	local patterns="$expected_output $unexpected_output $all_lines_pattern"
-+	local bgpid pid
-+
-+	eval "$TIMEOUT" "$command" &> check_output.$$ &
-+	bgpid=$!
-+
-+	if grep -q "\$pid" <<< "$patterns"; then
-+		for _ in {1..30}; do
-+			pid=$(pgrep -f "${command%%[|;&>]*}" | tail -n1)
-+			[ -n "$pid" ] && break
-+			sleep 0.1
-+		done
-+	fi
-+
-+	wait $bgpid
-+	exitcode=$?
-+	result=$(tr -d '\0' < check_output.$$)
-+	rm -f check_output.$$
-+
-+	failbuf=''
-+	fail=0
-+
-+	# Suppress any other error if a needed pid is empty
-+	if [ -z "$pid" ] && grep -q "\$pid" <<< "$patterns"; then
-+		result=''
-+		failure "# Empty pid for $command"
-+		return 1
-+	fi
-+
-+	expected_output="${expected_output//\$pid/$pid}"
-+	unexpected_output="${unexpected_output//\$pid/$pid}"
-+	all_lines_pattern="${all_lines_pattern//\$pid/$pid}"
-+
-+	# Test if the results matches if requested
-+	if [ -n "$expected_output" ] && ! grep -qe "$expected_output" <<< "$result"; then
-+		failure "# Output match failed: \"$expected_output\""
-+	fi
-+
-+	if [ -n "$unexpected_output" ] && grep -qe "$unexpected_output" <<< "$result"; then
-+		failure "# Output non-match failed: \"$unexpected_output\""
-+	fi
-+
-+	if [ -n "$all_lines_pattern" ] && grep -vqe "$all_lines_pattern" <<< "$result"; then
-+		failure "# All-lines pattern failed: \"$all_lines_pattern\""
-+	fi
-+
-+	if [ $exitcode -ne "$expected_exitcode" ]; then
-+		failure "# Expected exit code $expected_exitcode"
-+	fi
-+}
-+
-+check() {
-+	# Simple check: run the command with given arguments and test exit code.
-+	# If TEST_COUNT is set, run the test. Otherwise, just count.
-+	ctr=$((ctr + 1))
-+	if [ -n "$TEST_COUNT" ]; then
-+		_check "$@"
-+		report "$1"
-+	fi
-+}
-+
-+check_if_exists() {
-+	# Conditional check that skips if a file or folder doesn't exist
+@@ -5,6 +5,8 @@ test_begin() {
+ 	# included correctly.
+ 	ctr=0
+ 	[ -z "$RV" ] && RV="../rv/rv"
++	[ -z "$RVGEN" ] && RVGEN="python3 ../rvgen"
++	[ -z "$GOLDEN_DIR" ] && GOLDEN_DIR="tests/golden"
+ 	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
+ }
+ 
+@@ -118,6 +120,38 @@ check_if_exists() {
+ 	fi
+ }
+ 
++check_and_compare_folder() {
++	# Run command, compare generated folder to golden, and cleanup
 +	local desc=$1
 +	local command=$2
-+	local file=$3
++	local generated_dir=$3
 +	local expected_output=$4
 +	local unexpected_output=$5
-+	local all_lines_pattern=$6
++	local golden_dir="$GOLDEN_DIR/$generated_dir"
 +
 +	ctr=$((ctr + 1))
 +	if [ -n "$TEST_COUNT" ]; then
-+		if [ ! -e "$file" ]; then
-+			echo "ok $ctr - $desc # SKIP file not found: $file"
-+		else
-+			_check "$desc" "$command" 0 "$expected_output" \
-+				"$unexpected_output" "$all_lines_pattern"
-+			report "$desc"
++		rm -rf "$generated_dir"
++		_check "$desc" "$command" 0 "$expected_output" "$unexpected_output"
++
++		if [ "$fail" -eq 0 ] && [ ! -d "$generated_dir" ]; then
++			failure "# Generated directory not found: $generated_dir"
 +		fi
++
++		if [ "$fail" -ne 0 ]; then
++			:
++		elif ! diff -r "$generated_dir" "$golden_dir" &> /dev/null; then
++			failure "# Directories differ:"
++			failbuf+=$(diff -r "$generated_dir" "$golden_dir" 2>&1 | sed 's/^/#   /')
++			failbuf+=$'\n'
++		fi
++
++		report "$1"
++
++		rm -rf "$generated_dir"
 +	fi
 +}
 +
-+set_timeout() {
-+	TIMEOUT="timeout -v -k 30s $1"
-+}
-+
-+set_expected_timeout() {
-+	TIMEOUT="timeout --preserve-status -k 30s $1"
-+}
-+
-+unset_timeout() {
-+	unset TIMEOUT
-+}
-+
-+test_end() {
-+	# If running without TEST_COUNT, tests are not actually run, just
-+	# counted. In that case, re-run the test with the correct count.
-+	[ -z "$TEST_COUNT" ] && TEST_COUNT=$ctr exec bash "$0" || true
-+}
-+
-+# Avoid any environmental discrepancies
-+export LC_ALL=C
-+unset_timeout
+ set_timeout() {
+ 	TIMEOUT="timeout -v -k 30s $1"
+ }
 -- 
 2.55.0
 
