@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E1C1C69D;
-	Thu, 23 Jul 2026 00:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C33F1C860C;
+	Thu, 23 Jul 2026 00:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784766419; cv=none; b=Cd7AxQbb4Ot2io571P1sO6vG7150P8VS3cN9pSRj3AGQvDO3VZBEwCys2xaAVrTfo6ezUkA08rZWM/3iNi4kF7IU6ePT685FfCmWbVq/Du/ETlfCL1l6GYdfNwSdWIApnvxA/TTGw0E0DGU90KbSDyz0NzsIpN3lCtCt+YwandI=
+	t=1784766698; cv=none; b=etoAh0LIxWxexAAD6oFl8IrIS1XwD/QpMiHZhoZsR4zAPoQa4Au6uMdJpjSMPXgbYuiJX2d0qI+Cdq87CLe0L6xqc2+5TcbL1Qp99pQkaTWYHr8L/VBQ6rfkcT1yvL7lt5LaUYRWmrgvknkPwTfr/Ks7vGB+6dB4nSgEM/MR87Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784766419; c=relaxed/simple;
-	bh=ug5pEVgZ2P9TqU2q41E0/En1cj1e3gcoxjRCVCz2jRs=;
+	s=arc-20240116; t=1784766698; c=relaxed/simple;
+	bh=dJRdYF0QoOmGyfEmK/zHujedH9tQaiO60kDqBOSKWXc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tg+jsfKGXSv3EZFw8Wczev/jqSyrIYZbwSIBnJY3zFZs/dPaDxlihZuO6fAcDZAH+YTi9KTf5zP7cwpOuiKgyOCTWg0LXGLR82A8XiwytSPnDIBW33tHRr3CE7U08QDa9aV2ZOkD6D1WMQLA2IHHM2N9UpK4exHzxA8Tiy+/eUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXYE9iI3; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=X0UKWEerjPfgk+ZPQnnSttdH8Ygh5FMfwaiFv+Yl+c/MobSoUfJOWDhQ9QgDq6q6rli6JZ5uLps7HN9zm2kjzy3yJQzyX3H4+qAZM0k16UWdA2YduMNk137BRq/UQSqTrqIbhY2XGbmeTd/zK9QRsDwfWD3N4OTUacBoEd7NkIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdxhDzXP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXYE9iI3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C2641F000E9;
-	Thu, 23 Jul 2026 00:26:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdxhDzXP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE0EB1F00A3A;
+	Thu, 23 Jul 2026 00:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784766418;
-	bh=nd75fgepznXQYIh/RosfLKtPne7ezYEigCutRJYcNPU=;
+	s=k20260515; t=1784766696;
+	bh=M1FmOCddcFLRYUEHwII6l1JmdAnN/d2b9APCQ1/D8wk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=WXYE9iI3gWSFjH2b8404arOxg699D/ocATPRnuMyr83zggTv0xIS8eYdcyKE10/nS
-	 wJBpjKkGGMYAmjF53AvXHGcGSfUAGqVI3VvTKvthhx1/RkBYsiMVgwCatYZ5o3NCXP
-	 NgmpHvX4ZKxV4ZUwF858VvTaIcX8T2Jc6N4+Zh7XuFizXTgRtruDuoDDzwUcP1eq+6
-	 T/6RiRLRfyiZ9RSrkpxDjtZIWKdJiqIv6PjbvV4ufhuFtmzIbSkXqlFGgpTpu2tzO2
-	 i2aFYjeWtlCYk96yYzS6b5fo3lJ3fz/RpiIINdokadKlZ7iqHpf/GQm3udgyPCkeUa
-	 Z3iXodcxrPMoQ==
-Date: Thu, 23 Jul 2026 09:26:54 +0900
+	b=cdxhDzXPXieA/13FUHaHPEbXmK3kX5VhN1UC+vRAxoVs4nae8Yw2tf+6NPkgm9xdk
+	 WwcIqCerDkEYLxCJJbW/aTFUeGua6yLpKPxJGGqFMaxmvCyDEzdVuXMiRwlDCHbTb0
+	 wLY2WfAtmoCRHslcNay+K0FYrhBk/Xn0AvGjvZXQOW3Gz0n/BnVAq2ZASfikNFuX3d
+	 /fXyVSJzm0bvnzd8t4GbbhyG0volOiFv3GkyrWLK7IYOrEXTru1mWRNIe7aJqBmfX1
+	 vYQFQbALpxInBWNx1/4VKLs1OMgfL08JI5K0ESSINJO6Ua8Jv1pzDYZtEkX7XJ8nhG
+	 wDJbUMlKGvFjw==
+Date: Thu, 23 Jul 2026 09:31:32 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, oe-lkp@lists.linux.dev, lkp@intel.com,
- kernel test robot <oliver.sang@intel.com>
-Subject: Re: [PATCH] selftests/ftrace: allow relative paths in eprobe test
-Message-Id: <20260723092654.12f7be2910e3e16259c61125@kernel.org>
-In-Reply-To: <20260721200612.1749777-1-martin@kaiser.cx>
-References: <20260721200612.1749777-1-martin@kaiser.cx>
+To: daichengrong <daichengrong@iscas.ac.cn>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Restore original return address in uretprobe
+ context
+Message-Id: <20260723093132.4f0e5b22e81aa688f86cb9de@kernel.org>
+In-Reply-To: <20260717082331.27058-1-daichengrong@iscas.ac.cn>
+References: <20260717082331.27058-1-daichengrong@iscas.ac.cn>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,51 +47,94 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 21 Jul 2026 22:05:59 +0200
-Martin Kaiser <martin@kaiser.cx> wrote:
+On Fri, 17 Jul 2026 16:23:31 +0800
+daichengrong <daichengrong@iscas.ac.cn> wrote:
 
-> The add/remove eprobe test installs an eprobe for the openat syscall,
-> runs ls and checks the filenames that were opened.
+> uretprobe replaces the original return address of a probed function with
+> a trampoline address to capture function return events.
 > 
-> Commit 206b25c09080 ("tracing: eprobe: read the complete FILTER_PTR_STRING
-> pointer") fixed access to some string fields in eprobes. This allows for
-> dereferencing more filenames. In some cases, the log now shows a file
-> with a relative path instead of "(fault)". A relative path makes the
-> test fail.
+> After the trampoline is entered and the uretprobe handler completes, the
+> original return address needs to be restored in the user register context
+> to keep the register state consistent with the state before probing.
 > 
-> Relax the filename checks to fix the test. Allow shared libraries and
-> locale configs that use a relative path.
+> Add an architecture-specific hook for restoring the original return
+> address during uretprobe handling.
+> 
+> The initial implementation adds support for RISC-V. Other architectures
+> keep the default empty implementation until their corresponding restore
+> logic is implemented.
+> 
+> Signed-off-by: daichengrong <daichengrong@iscas.ac.cn>
+> ---
+>  arch/riscv/kernel/probes/uprobes.c | 7 +++++++
+>  include/linux/uprobes.h            | 1 +
+>  kernel/events/uprobes.c            | 5 +++++
+>  3 files changed, 13 insertions(+)
+> 
+> diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
+> index eb177d0ce8ab..0b1b94d9683e 100644
+> --- a/arch/riscv/kernel/probes/uprobes.c
+> +++ b/arch/riscv/kernel/probes/uprobes.c
+> @@ -139,6 +139,13 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
+>  	return ra;
+>  }
+>  
+> +void
+> +arch_uretprobe_hijack_set_addr(unsigned long orig_ret_vaddr,
+> +				  struct pt_regs *regs)
 
-Hmm, should we check this "nocontent" ? This change seems a bit fragile.
-I think we should use another syscall to make sure getting filename
-correctly. At least this point, removing nocontent check will be better.
+OK, but hijack may not be a good naming, what about
+"arch_uretprobe_restore_return_address()"?
+
+And I need RISC-V maintainer's review.
 
 Thank you,
 
-> 
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202607151010.b68428e1-lkp@intel.com
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  .../selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc      | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
-> index c300eb020262..baceeca7ccdf 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
-> @@ -22,7 +22,8 @@ ls
->  echo 0 > events/eprobes/$EPROBE/enable
+> +{
+> +	regs->ra = orig_ret_vaddr;
+> +}
+> +
+>  int arch_uprobe_exception_notify(struct notifier_block *self,
+>  				 unsigned long val, void *data)
+>  {
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index f548fea2adec..2d0dc919845d 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -230,6 +230,7 @@ extern bool arch_uprobe_xol_was_trapped(struct task_struct *tsk);
+>  extern int  arch_uprobe_exception_notify(struct notifier_block *self, unsigned long val, void *data);
+>  extern void arch_uprobe_abort_xol(struct arch_uprobe *aup, struct pt_regs *regs);
+>  extern unsigned long arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs);
+> +extern void arch_uretprobe_hijack_set_addr(unsigned long orig_ret_vaddr, struct pt_regs *regs);
+>  extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx, struct pt_regs *regs);
+>  extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
+>  extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4084e926e284..deecaae01ab7 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1748,6 +1748,10 @@ void * __weak arch_uretprobe_trampoline(unsigned long *psize)
+>  	return &insn;
+>  }
 >  
->  content=`grep '^ *ls-' trace | grep 'file='`
-> -nocontent=`grep '^ *ls-' trace | grep 'file=' | grep -v -e '"/' -e '"."' -e '(fault)' ` || true
-> +nocontent=`grep '^ *ls-' trace | grep 'file=' | \
-> +	   grep -v -e '"/' -e '.so' -e 'locale' -e '"."' -e '(fault)'` || true
+> +void __weak arch_uretprobe_hijack_set_addr(unsigned long orig_ret_vaddr, struct pt_regs *regs)
+> +{
+> +}
+> +
+>  static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  {
+>  	struct mm_struct *mm = current->mm;
+> @@ -2659,6 +2663,7 @@ void uprobe_handle_trampoline(struct pt_regs *regs)
+>  		valid = !next_chain || arch_uretprobe_is_alive(next_chain, RP_CHECK_RET, regs);
 >  
->  if [ -z "$content" ]; then
->  	exit_fail
+>  		instruction_pointer_set(regs, ri->orig_ret_vaddr);
+> +		arch_uretprobe_hijack_set_addr(ri->orig_ret_vaddr, regs);
+>  		do {
+>  			/* pop current instance from the stack of pending return instances,
+>  			 * as it's not pending anymore: we just fixed up original
 > -- 
-> 2.43.7
+> 2.25.1
+> 
 > 
 
 
