@@ -1,130 +1,79 @@
-Received: from sender-pp-o91.zoho.in (sender-pp-o91.zoho.in [103.117.158.91])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B72F396D28;
-	Thu, 23 Jul 2026 18:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.117.158.91
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784831022; cv=pass; b=CCG/kBnjwIy99RIblrybR9ieIeDIcYoPfhCo+A27RTVTyew2gCEvZm/TUew7WL1NDvKQxMfuQA4ivU1NUgCUGpHeP+IPnQT79cBqAXIym3c3xKqWVlUnZtuv5RBUrAkJ1uwq6vh/j4x5GMWuOaKFAijeGV7EYHINeA4LXmXikm4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784831022; c=relaxed/simple;
-	bh=3uNhk8Gqcqp+3jBTlAy7Jda+kQOTFmW/SAR5QS/3qxo=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=WEoHyRU83V99/VQHa9c2BaDoAaeEdvDG1Kw/O67DEQvd0OuVUQhgPLm3mji5RApgHJMIaVkfYVBRvlqJUPVCW8QEPiX+p2/nv3NuALt4by8o3yi4suJsY2417lmFL+gpkAEWuM17soVhNi9tpUP8JzDbIOR9+bFY0VJdc9TCCCE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in; spf=pass smtp.mailfrom=zohomail.in; dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b=iM9vBO6d; arc=pass smtp.client-ip=103.117.158.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.in
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.in header.i=adi.sharma@zohomail.in header.b="iM9vBO6d"
-ARC-Seal: i=1; a=rsa-sha256; t=1784830944; cv=none; 
-	d=zohomail.in; s=zohoarc; 
-	b=ZgRGsO1vp6I1TA9lbR1q6pJfXbhHuLjaFrYZd8qa+XXlXa80NrxDt7Cqc5/Yt5Z7UTLtKiLJ+hgvsbwP4zywt3gpGimYObhfJyu3/YMjIzfOA6AaGo9MJXYP11iSrZUs7tSrhR7122sbkBhG/1EiH1DwJSom7/1Okx/ee30NJi8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1784830944; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FA4mBsQKWU8EQ2CYmvf4S68ZIMYsAwryF0Kpl/acuZg=; 
-	b=MP2bNNy8+PQBX7WOQxriWaQLWkosAV0VtpMatnrve8Dbo29zb/lvcoKEr4xMTgaX5+tLVAwpT9vVbQXg/MzTo5E8A3chDfi/2kPKZ8uBAS83cH/J+rdUwuDzj3mHNRqkPT5CF4pLZTiU5HX3+tasGEKC05DKcpdWrVxBRfEU67s=
-ARC-Authentication-Results: i=1; mx.zohomail.in;
-	dkim=pass  header.i=zohomail.in;
-	spf=pass  smtp.mailfrom=adi.sharma@zohomail.in;
-	dmarc=pass header.from=<adi.sharma@zohomail.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784830944;
-	s=zoho; d=zohomail.in; i=adi.sharma@zohomail.in;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=FA4mBsQKWU8EQ2CYmvf4S68ZIMYsAwryF0Kpl/acuZg=;
-	b=iM9vBO6dIzMfZnoQW8s4KKgA/LgKEm6GHomoRfr8+/P46orAUQ775dRIJKK7tATu
-	xJTCJLZnGs2a7VoSXHV8I8WGK9MD/fqSboFx/9n7GPSgY5ESzFBXSdT2D3LIIua4mex
-	YalR7HXYecgJlrwIgxEzJLuUCRPeHjLS3GEHsxUU=
-Received: from mail.zoho.in by mx.zoho.in
-	with SMTP id 1784830943510389.2736694427938; Thu, 23 Jul 2026 23:52:23 +0530 (IST)
-Received: from  [14.139.128.54] by mail.zoho.in
-	with HTTP;Thu, 23 Jul 2026 23:52:23 +0530 (IST)
-Date: Thu, 23 Jul 2026 23:52:23 +0530
-From: Aditya Sharma <adi.sharma@zohomail.in>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>,
-	"David Hildenbrand" <david@kernel.org>,
-	"Lorenzo Stoakes" <ljs@kernel.org>,
-	"Liam R . Howlett" <liam@infradead.org>,
-	"Vlastimil Babka" <vbabka@kernel.org>,
-	"Mike Rapoport" <rppt@kernel.org>,
-	"Suren Baghdasaryan" <surenb@google.com>,
-	"Michal Hocko" <mhocko@suse.com>,
-	"David Rientjes" <rientjes@google.com>,
-	"Shakeel Butt" <shakeel.butt@linux.dev>,
-	"Jonathan Corbet" <corbet@lwn.net>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	"Masami Hiramatsu" <mhiramat@kernel.org>,
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-	"Kees Cook" <kees@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
-	"Peter Zijlstra" <peterz@infradead.org>,
-	"Juri Lelli" <juri.lelli@redhat.com>,
-	"Vincent Guittot" <vincent.guittot@linaro.org>,
-	"Dietmar Eggemann" <dietmar.eggemann@arm.com>,
-	"Ben Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>,
-	"Valentin Schneider" <vschneid@redhat.com>,
-	"K Prateek Nayak" <kprateek.nayak@amd.com>,
-	"linux-mm" <linux-mm@kvack.org>,
-	"linux-doc" <linux-doc@vger.kernel.org>,
-	"linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	"imbrenda" <imbrenda@linux.ibm.com>
-Message-ID: <19f9036e10d.333785164640.2738459517257915395@zohomail.in>
-In-Reply-To: <20260721171724.56f1aad5@gandalf.local.home>
-References: <20260719185409.409685-1-adi.sharma@zohomail.in> <20260719185409.409685-7-adi.sharma@zohomail.in> <20260721171724.56f1aad5@gandalf.local.home>
-Subject: Re: [RFC PATCH 6/7] mm: add tracepoints and vmstat counters for
- async teardown
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFA1399360;
+	Thu, 23 Jul 2026 18:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784831674; cv=none; b=HNQZ5+UqZwRe1Vp7yj1bUnblScTKjAbhSBG2z90dX9iH1GxeB9KOk35DdrDhhys14ttl51chwqvCKPYsI9E9CUHirNyp6to0kHSQIEXvRg8+S06SjIS2cBLBx5VeGIoDJTrNDA2oEjzIdR03AOJarDv/rxrnwhoMqoNCEDF7+ik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784831674; c=relaxed/simple;
+	bh=L8rxxAoyzpo5rDtnuFxZSy622jwcI3Gd8MoKcvqqayo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VamRbftD/lEYrveWw44ffSH6mOkL9nJXJHbYCx01bgnhjIygmpHUZjRYZAjWcJKqewirmD1HvC+YUZQsY3QnZFA+Yn/2aymdNYyLs/XpQlG69NmYUaR6xI52d/aJmgczPcf76cql56Fv9jQmBqAxRqf10SaT4rJ1h5VHzELACBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id A24511A0155;
+	Thu, 23 Jul 2026 18:34:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 5936E20026;
+	Thu, 23 Jul 2026 18:34:24 +0000 (UTC)
+Date: Thu, 23 Jul 2026 14:34:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v10 02/11] x86: hw_breakpoint: Add a kconfig to clarify
+ when a breakpoint fires
+Message-ID: <20260723143447.0f4c765a@gandalf.local.home>
+In-Reply-To: <178476137184.26117.2239692963036759209.stgit@devnote2>
+References: <178476134787.26117.10094977293012760490.stgit@devnote2>
+	<178476137184.26117.2239692963036759209.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+X-Stat-Signature: s71tn6hwen31oog911q4zk3r49kk348s
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 5936E20026
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+TXBPlhzXPwil3xxef2eVFP9RiAzl8Da0=
+X-HE-Tag: 1784831664-507099
+X-HE-Meta: U2FsdGVkX1+oAkzTWu3SNLn9lwimicljXyBTSeRQzDEmpgUxvtTLNJdGxXMIsrZv4ufG56N0sG+W3Y/dtsUZWFKUsTxcqtOths+gXx3gmq123HdubgGS4JjBMdGFWXBiRbDM9M7kzY0zuTvIsmVpFbOjzOvKliUpnosRxngJjicYOOiRROuLIyZH1XDkNN6SFWyTFqSCR4P6qyyfnPQjJumdcSD22NoyE3e4BuqLKAaKUavUJaYXb87T3/WlhfH5oRqf1MF/LFGVmW4rM3Pu0IJnYobr2xk6hdkTUscXeGAo0Iboc5EsSfaNV2DX9znKF3tQXD2vk08+HZSKE87vsQ39Zeq+4/lo
 
- > > +    TP_STRUCT__entry(
- > > +        __field(struct mm_struct *, mm)
- > > +        __field(int, pid)
- > > +        __array(char, comm, TASK_COMM_LEN)
- > 
- > There's an effort to make comm size more dynamic and we want to prevent more
- > memcpy of the comm based on TASK_COMM_LEN. Please change the above to:
- > 
- >         __string(comm, comm);
- > 
- > 
- > > +        __field(unsigned long, rss)
- > > +        __field(int, node)
- > > +    ),
- > > +
- > > +    TP_fast_assign(
- > > +        __entry->mm = mm;
- > > +        __entry->pid = current->pid;
- > > +        memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- > 
- > And this to:
- > 
- >         __assign_str(comm);
- > 
- > > +        __entry->rss = rss;
- > > +        __entry->node = numa_node_id();
- > > +    ),
- > > +
- > > +    TP_printk("mm=%p pid=%d comm=%s rss=%lukB node=%d",
- > > +        __entry->mm,
- > > +        __entry->pid,
- > > +        __entry->comm,
- > 
- > and this to:
- > 
- >         __get_str(comm),
- > 
+On Thu, 23 Jul 2026 08:02:51 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Noted.
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index b58c2565024f..d9b6fa5c35d9 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -866,6 +866,7 @@ config WPROBE_EVENTS
+>  	bool "Enable wprobe-based dynamic events"
+>  	depends on TRACING
+>  	depends on HAVE_HW_BREAKPOINT
+> +	depends on HAVE_POST_BREAKPOINT_HOOK
+>  	select PROBE_EVENTS
+>  	select DYNAMIC_EVENTS
+>  	help
 
-Thanks
+Is this really needed as a hard dependency?
 
-Aditya
+Is it just because you want to guarantee it happens after the breakpoint?
+What's wrong if it happens just before it changes? We should probably have
+a way to note it's before. But isn't it still useful to know *where* it was
+changed?
+
+-- Steve
