@@ -1,42 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52E135C183;
-	Wed, 22 Jul 2026 23:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6BC29408;
+	Thu, 23 Jul 2026 00:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784762680; cv=none; b=YRRIBvSrPfZMqR7N28fHVtvSZ8WvYnAYE8g4qVLwvYa624NCa9e5xCoUAVfewVM2QdBWzdQmG/0N534Qsi9jYNNHYQ/2QBS83jmr57hBqlxjF8C+YvET/Q+Qru/Ju8rIvEgA6BUzIIVAPM603YAtJ5sDXt2OJdIXN68sYZa9tHE=
+	t=1784765121; cv=none; b=PYEv9QYXvZ21AMAOZ6OLDzBDsK51w/JUk4OCC+yIXNfTLNfZwCdPY10oUW/DtnFCNzOYrckvVwG4Z9kHWEmCj13WFFzYoSqRM6gYwGQ1rvT8lbbt3boCyXJXSMXJ+uMjcXNLbqVqrsAwI+H0Tym0rxEZ1Mz7oZNkNv4Lrt14+cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784762680; c=relaxed/simple;
-	bh=MSlgPFqtjZxFtWbiRP6zZUAfpxsx8Gz2wDngTMxfujw=;
+	s=arc-20240116; t=1784765121; c=relaxed/simple;
+	bh=ODmOs3ql59doMX2LLbQGHzR/0R/3iWA9I+z34aQiHZA=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qGC69qN2kPKnzFYEMEoxAj4t4qPC9MC4eB6WRASw93cZLgY2BBxsSpbZ9J3hddYhydh/ycjFYLGR1C1puB71ep5q0GDnRxGOz4zed437ujmFPBtbzwXqsw2Sec72cDIvqHLHXq5hvYCY1wjQ/r9Gf7d22okXCL+qRMq/z8gtAoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddm4xlkw; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=XU3M3EkWnWRg14fe33g7Qy151R2fXRcUFFuo6cgBxzl60o+9IUKlCbS4j/xlrGYd/8pgBxzncpbCcgKM7npzIOvzvOU58ePUe4mC/b5GInEVmhGxjnvARVL8KTVRx005xk7yRx4THLT0ncaT3sDcZrGQZ6UeBriiYoX8KorXk/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QttpmbDm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddm4xlkw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B8571F000E9;
-	Wed, 22 Jul 2026 23:24:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QttpmbDm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE6B1F000E9;
+	Thu, 23 Jul 2026 00:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784762679;
-	bh=hXRM7rbaN2a23lghqxnP+ConCgxPQL62G/x17rkHHlI=;
+	s=k20260515; t=1784765120;
+	bh=cERcVi3l194vR2K7MPvUZ59VryqFLMg43o/10bMmISM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ddm4xlkw+SGfnRysQxppXh0p4Taw7kOGlQc6te6NfkmCTMeaitSUBbFTrjdqUIxcw
-	 8C55P2gy6cSsD8BXfouweALBi1XDVdHTmMYFqmPF08fFCSo3XpF/Qns3MVmaXaOCTW
-	 bep+gSiiggxdyRJSdKMTs/oZXw1VZBEAvum7H9NyOOKzP8u60vTVJ9GeJp3sC/Q22t
-	 bZQESHwvhOve9mq+Yp9upumYDwoFwg4H5deAoaO+RkGbQptewzUHgStqA+qaw8ygt/
-	 64eg6zD2guJKoBnjUtXI2mC3vsmxFlh/eqPvH4MUInDiocQLJB2WIAHhcGt9iZ4bOb
-	 llKlSuN3w7lMw==
-Date: Thu, 23 Jul 2026 08:24:35 +0900
+	b=QttpmbDmFm3XT7advN73O+eWorj1Ah46zEsaAUHvor3l+aSKENGVnf8JVCdfRJMoC
+	 UtILpVt6UfIYIJXf/mi8iq+Geg1cQwTn7RAO82o10FnFichBdWbjjPcQu/nuEYnDw3
+	 J9nPPAZuGX9RDBc4b/IjDypVrNUKXfd/dbOugDl50C/rH+2ey51sYFijTgfyPqp1EF
+	 J5i/WT8GDkNXkeZxffEoCJiV19FVq+XBCrTfmMPuRYUSdWm2J4uStkirxgsmga1tmE
+	 sY7TbKMmaarKpQLKirwlyrmklQal0pzhh7tj4avo7ifK5m9QezOMgb/JWh+fB+G02a
+	 wOisoMdBcnkYQ==
+Date: Thu, 23 Jul 2026 09:05:11 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Do not clean up hiter in mmiotrace read
- function
-Message-Id: <20260723082435.3dcdef7b52fe661d6ff506c9@kernel.org>
-In-Reply-To: <20260721212010.76e9ed61@gandalf.local.home>
-References: <20260721212010.76e9ed61@gandalf.local.home>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, David Hildenbrand
+ <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox
+ <willy@infradead.org>, Alan Stern <stern@rowland.harvard.edu>, Randy Dunlap
+ <rdunlap@infradead.org>, Alexander Potapenko <glider@google.com>, Marco
+ Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints
+ for hunting memory corruption
+Message-Id: <20260723090511.bd1547ef01b8702a0449c887@kernel.org>
+In-Reply-To: <0565e7d4-fb0f-4b84-a20c-0c73ac964b51@gmail.com>
+References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+	<91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+	<20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
+	<20260720232442.3e6b0e70c6939541b8362e05@kernel.org>
+	<0565e7d4-fb0f-4b84-a20c-0c73ac964b51@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,71 +63,64 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 21 Jul 2026 21:20:10 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 21 Jul 2026 08:36:01 -0400
+Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
+> On 7/20/2026 10:24 AM, Masami Hiramatsu (Google) wrote:
+> > On Fri, 17 Jul 2026 11:10:04 -0700
+> > Borislav Petkov <bp@alien8.de> wrote:
 > 
-> When the mmiotrace trace was first created, it allocated a descriptor in
-> its pipe_open() method. Since there was no pipe_close() method when it was
-> created (in May of 2008, and pipe_close() was added in December of 2009),
-> it cleaned up the allocated descriptors in the read.
+> >> Looks to me like folks need to sit down and agree on strategy first.
+> > 
+> > Yeah, I need to talk with Jinchao.
+> > 
+> > Like kprobe, wprobe itself integrates watchpoint functionality into
+> > the tracing subsystem. Jinchao, I would like to ask you to redesign
+> > the kwatch tool based on fprobe and wprobe events in user space?
+> > I think that could reduce redundant efforts on the similar feature.
+> > 
+> > Using fprobe entry and exit event trigger, we can make a Function-
+> > scoped watch window. Also, since fprobe and wprobe are having BTF
+> > typecast support, you can access to the members of data structures
+> > more naturally.
+> > 
+> > If you are interested, I would be open to having you handle the
+> > development of the necessary features for wprobe.
+> > 
+> > Thank you,
+> > 
+> Thank you, Boris and Masami.
 > 
-> Now that the clean up is in the pipe_close() method that now exists,
-> remove the clean up from the read as it is no longer needed.
-> 
-> Also simplify the code by inverting the early exit conditional into a
-> conditional to perform the logic and get rid of the goto.
-> 
-> Link: https://lore.kernel.org/all/20260715143604.14481-1-gaikwad.dcg@gmail.com/
-> Link: https://lore.kernel.org/all/20260721211143.36dbd559@gandalf.local.home/
-> 
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_mmiotrace.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_mmiotrace.c b/kernel/trace/trace_mmiotrace.c
-> index b88b8d9923ad..ba604c22d2d2 100644
-> --- a/kernel/trace/trace_mmiotrace.c
-> +++ b/kernel/trace/trace_mmiotrace.c
-> @@ -142,21 +142,13 @@ static ssize_t mmio_read(struct trace_iterator *iter, struct file *filp,
->  		if (!overrun_detected)
->  			pr_warn("mmiotrace has lost events\n");
->  		overrun_detected = true;
-> -		goto print_out;
+> Boris is right that we should agree on the overall strategy before
+> moving either series forward, especially since they share the low-level
+> HWBP work. Masami is also right that fprobe and wprobe provide a more
+> appropriate foundation than introducing KWatch as another standalone
+> debugging tool.
 
-Is this intentional change? Removing this goto means we will change
-the hiter->dev even if overrun happens. Previously we can resume
-output in the next read for current hiter->dev, but this will skip
-the current hiter->dev?
+Agreed. I just sent v10 because v9 lacked base-commit and Sashiko did
+not reviewed. (so it just add a trigger-side BTF support which was
+dropped in v9).
+Think of v10 as the complete set of ideas we wanted to implement
+with this wprobe.
 
-Thanks,
-
->  	}
->  
-> -	if (!hiter || !hiter->dev)
-> -		return 0;
-> -
-> -	mmio_print_pcidev(s, hiter->dev);
-> -	hiter->dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, hiter->dev);
-> -
-> -	if (!hiter->dev) {
-> -		destroy_header_iter(hiter);
-> -		iter->private = NULL;
-> +	if (hiter && hiter->dev) {
-> +		mmio_print_pcidev(s, hiter->dev);
-> +		hiter->dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, hiter->dev);
->  	}
->  
-> -print_out:
->  	ret = trace_seq_to_user(s, ubuf, cnt);
->  	return (ret == -EBUSY) ? 0 : ret;
->  }
-> -- 
-> 2.53.0
 > 
+> After reconsidering the design, I will stop the standalone KWatch
+> series. Instead, I would like to work with Masami on extending wprobe
+> to support the function-scoped dynamic-watchpoint use cases that
+> motivated KWatch.
 
+Thanks Jinchao, I appreciate to work with you on this project.
+
+> 
+> Masami, thank you for being open to having me develop the necessary
+> wprobe features. I am interested in taking that direction.
+
+OK, please share your thoughts on watchpoint usage in the kernel.
+
+Basically, I will fix the points raised in the review, but please
+let me know if you have any other suggestions.
+
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
