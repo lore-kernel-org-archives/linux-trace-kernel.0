@@ -1,157 +1,166 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D5B4D90AD;
-	Thu, 23 Jul 2026 13:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8053630AF;
+	Thu, 23 Jul 2026 13:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784813660; cv=none; b=VUYC+AIKOdWO4klDShqipN/T6bEudvbbSL8ABE8Lz7m3bk27500RVk2vgbC3aJVHl9nBSzKUm/rSbeL5xc/Sqb0KK4phB/h4sBYaH3JJwivnl7PvKyCPJmR/5qyp8K50wKjiM/RLnGlq1c19J+EBq+JA2a4S3d2YBqaoHWHY6+0=
+	t=1784814435; cv=none; b=j8fwBink/SMblObeBVmGyImrhBzs9nHZNzng3EB2E8bOXV+f3qISI5Nkqo1Ix6B+v2+1n5vH539wc5Es/wnd3I/nR3hRfXQpTE6cj4AFSJiDVz5e7x35hyBf/D3cpuVsz5D47/2mWXKTirFACsE0rhF8inPh1C7o3XcA3CHte5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784813660; c=relaxed/simple;
-	bh=B/Bko4FQsTUgYfQhKDeCyNcSjkPOM1OI6RxHX7o0T0Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cXFV2uWeb8zrcKBL1WKqrkv2YVGf+WwVKrDQOyqGL1ejlgR77NCJGySEgjOgup8ScUQc5X33EmALZKt/9Dchnv5uTM2S5Bog2ldADd3hPn+6rYmmkDZa1Y1GSlLFSufiOadI2epQdiE+7mIQk5BKNOQpt7PMIESTK+glNNwSZ88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4h5XBZ2pzfzKHMMS;
-	Thu, 23 Jul 2026 21:33:26 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BA8FE406C2;
-	Thu, 23 Jul 2026 21:34:11 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP1 (Coremail) with UTF8SMTPA id cCh0CgAnOHRNGGJqZdoXCQ--.17802S2;
-	Thu, 23 Jul 2026 21:34:11 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v3] ftrace: Add global mutex to serialize trace_parser access
-Date: Thu, 23 Jul 2026 13:34:04 +0000
-Message-Id: <20260723133404.1926732-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1784814435; c=relaxed/simple;
+	bh=TTOiuNpKd3ZCkUsJNnXQtcBfFIarUNgpz9bYK41z5To=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=joh7u196R+FLRvMD3K1Q9hPCGzyINAyfDmU6S/WWcL2t8h4A6G8t1XHGKm5iuPDRTgg4jklSojskmsZp4Gl6uvEJjp/RPnt6bHvZEIVMR1gBHoO1FIPumi1WsAKNs/p6G5+D37+8A6QjFSEuTx8R2wpZiaYyA/4BS2Pmrorym8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QJfmqszm; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJfmqszm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784814433; x=1816350433;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=TTOiuNpKd3ZCkUsJNnXQtcBfFIarUNgpz9bYK41z5To=;
+  b=QJfmqszmoazUO4TQ/refWGwArlf6IJPRlRFK0xkl/SMmu/MyHpA1fZLZ
+   J6KPIMvKuZJnjTMRZLVYWn3jOKQ5pK+TMOYIwxcIdc6S9dx5KzUcF3jnB
+   wqi5GC2CTUQ3beFpsJRBvV4bWjww1EEzeJrKT1DJSfc3S8xjd8kGqPvpp
+   IRn7RJdwsNvCh/8IFDIHm0ALH9bw8Bm5K/BxscfpLH4n2C4PnUL5qtSEn
+   XNjaixnWuz22MwRdkgxhYbbn8u11KGwm7URWqPJgsnPiDPk+a6ae+ycYP
+   Z9X3jmZPOIlyVMItHNX/wwNl0sic+1pqbp1V9DvU1AbBYPRG2gvXH+KpY
+   A==;
+X-CSE-ConnectionGUID: hiYwjM9US0GVdBYAznH/3A==
+X-CSE-MsgGUID: +qWTSrdSR2Oep9xtgrq7uw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="88008518"
+X-IronPort-AV: E=Sophos;i="6.25,180,1779174000"; 
+   d="scan'208";a="88008518"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2026 06:47:07 -0700
+X-CSE-ConnectionGUID: 5I8g06L0RzW2DP7JqA5g0A==
+X-CSE-MsgGUID: b1+2gPZ+TkuUBaWrc2aoow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,180,1779174000"; 
+   d="scan'208";a="261962172"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2026 06:47:07 -0700
+Date: Thu, 23 Jul 2026 06:47:00 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: acpica-devel@lists.linux.dev, bpf@vger.kernel.org,
+	coresight@lists.linaro.org, kvm@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mptcp@lists.linux.dev,
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Bobby Eshleman <bobbyeshleman@meta.com>,
+	Christian =?iso-8859-1?Q?Borntr=E4ger?= <borntraeger@linux.ibm.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	David Matlack <dmatlack@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Geliang Tang <geliang@kernel.org>, Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Joe Damato <joe@dama.to>,
+	John Garry <john.g.garry@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Kaushlendra Kumar <kaushlendra.kumar@intel.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Len Brown <lenb@kernel.org>, Leo Yan <leo.yan@linux.dev>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Leach <mike.leach@arm.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Mykyta Yatsenko <yatsenko@meta.com>, Nam Cao <namcao@linutronix.de>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pawel Chmielewski <pawel.chmielewski@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Saket Dumbre <saket.dumbre@intel.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	Song Liu <song@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Willy Tarreau <w@1wt.eu>, Yonghong Song <yonghong.song@linux.dev>,
+	Zhang Chujun <zhangchujun@cmss.chinamobile.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] tools: Use fputc() calls in some functions
+Message-ID: <amIbVOIsOeZgcBZF@tassilo>
+References: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAnOHRNGGJqZdoXCQ--.17802S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXF45Zw4DWr45JFykCrykZrb_yoW5uF45pF
-	y5Krs2kr47tFs2krsF9a18XF18X345Kry5GF95J34ftFnrJF129ry29FZxuF15tr17JrW3
-	tr4F9r1UKr4UZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
-	UU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+In-Reply-To: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
 
-In ftrace, the trace_parser structure is allocated and initialized when
-a trace file is opened, and is subsequently used across write and release
-handlers to parse user input.
+On Thu, Jul 23, 2026 at 12:25:25PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 23 Jul 2026 11:13:30 +0200
+> Subject: [PATCH] tools: Use fputc() calls in some functions
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
+> 
+> Single characters should occasionally be transferred into the output.
+> Thus use the corresponding function “fputc” (or even “putchar”).
+> 
+> The source code was transformed by using the Coccinelle software.
 
-The affected handler paths and their specific functions are:
-  - Open paths: ftrace_regex_open(), ftrace_graph_open()
-  - Write paths: ftrace_regex_write(), ftrace_graph_write()
-  - Release paths: ftrace_regex_release(), ftrace_graph_release()
-
-If userspace opens a trace file descriptor and shares it across multiple
-threads, concurrent write calls will race on the parser's internal state,
-specifically the 'idx', 'cont', and 'buffer' fields, leading to corrupted
-input or undefined behavior.
-
-Fix this by adding a global mutex, parser_lock, to serialize all access
-to trace_parser across write and release paths, preventing concurrent
-corruption of parser state.
-
-Fixes: e704eff3ff51 ("ftrace: Have set_graph_function handle multiple functions in one write")
-Fixes: 689fd8b65d66 ("tracing: trace parser support for function and graph")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
----
-v3: Switch from per-parser lock to global parser_lock (v1 approach).
-v2: https://lore.kernel.org/all/20260715081937.1469757-1-wutengda@huaweicloud.com/
-v1: https://lore.kernel.org/all/20260713134640.708323-1-wutengda@huaweicloud.com/
-
- kernel/trace/ftrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f93e34dd2328..ba27f31c6ff4 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1097,6 +1097,12 @@ struct ftrace_ops global_ops = {
- 					  FTRACE_OPS_FL_PID,
- };
- 
-+/*
-+ * parser_lock - Protects trace_parser state against concurrent operations.
-+ * Held across trace_get_user() and subsequent buffer parsing to prevent races.
-+ */
-+DEFINE_MUTEX(parser_lock);
-+
- /*
-  * Used by the stack unwinder to know about dynamic ftrace trampolines.
-  */
-@@ -5842,6 +5848,8 @@ ftrace_regex_write(struct file *file, const char __user *ubuf,
- 	/* iter->hash is a local copy, so we don't need regex_lock */
- 
- 	parser = &iter->parser;
-+
-+	guard(mutex)(&parser_lock);
- 	read = trace_get_user(parser, ubuf, cnt, ppos);
- 
- 	if (read >= 0 && trace_parser_loaded(parser) &&
-@@ -6984,12 +6992,14 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
- 		iter = file->private_data;
- 
- 	parser = &iter->parser;
-+	mutex_lock(&parser_lock);
- 	if (trace_parser_loaded(parser)) {
- 		int enable = !(iter->flags & FTRACE_ITER_NOTRACE);
- 
- 		ftrace_process_regex(iter, parser->buffer,
- 				     parser->idx, enable);
- 	}
-+	mutex_unlock(&parser_lock);
- 
- 	trace_parser_put(parser);
- 
-@@ -7321,10 +7331,12 @@ ftrace_graph_release(struct inode *inode, struct file *file)
- 
- 		parser = &fgd->parser;
- 
-+		mutex_lock(&parser_lock);
- 		if (trace_parser_loaded((parser))) {
- 			ret = ftrace_graph_set_hash(fgd->new_hash,
- 						    parser->buffer);
- 		}
-+		mutex_unlock(&parser_lock);
- 
- 		trace_parser_put(parser);
- 
-@@ -7437,6 +7449,7 @@ ftrace_graph_write(struct file *file, const char __user *ubuf,
- 
- 	parser = &fgd->parser;
- 
-+	guard(mutex)(&parser_lock);
- 	read = trace_get_user(parser, ubuf, cnt, ppos);
- 
- 	if (read >= 0 && trace_parser_loaded(parser) &&
--- 
-2.34.1
-
+gcc already does this transformation automatically.
