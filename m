@@ -1,228 +1,527 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F58380FD1;
-	Fri, 24 Jul 2026 14:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784902005; cv=none; b=qKIFs8DiLKDoiR0UgMOJGtFoQgpJ83Xx3PvNhrOoX+2El4CtJaHL91LdCCp9xBIqVqS2QjEv7241/sQnOccd4lLrhkR1tX/ku3ILm3/KveiNOCgd7cpyS+oltwywlZhszHxU8gySfG6MT6tsf+ayTEtE3976JV8KaoY+s8Be5L4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784902005; c=relaxed/simple;
-	bh=NfIi70k8Nmz57C6mcDFEQDtlRP7cawus6Q13j07KKS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVJJU4vNPikcOcTnAqfCuvTWH1zkAhYZwGn1ecJ0g85SUspR2bTOK13QTXes2IiAh7R7Y/uoWDTJecgxMa764fhu4GIoeunb+TFp+lxpXaxnHngkTTcKdrdpasieojzSE+OlwqeWQL/5F8J08Jd1XfV2f2gD9Mtje+DQm3axdiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPrGT33d; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A9C32861F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 14:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784904884; cv=pass; b=Fohxvjm7fNCghkMyIfZI53AfJO1nDF/t7LDPY8VRn7miYzH3mdURiJIZ93mGDuVD1cAvTCfwavgswtE5Ztl8ELtvIhcl5XiYGp/Gw9A+2ke5v/oSPwDdLpvdA4jaaQTR3xTkn4bIdinDVOHDpK9uDV6C9iXu0mSEen0FA7U1QiY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784904884; c=relaxed/simple;
+	bh=GdBX5HBWHNdELzkCCNAlBoJl+FVAZi4vpTXJd4Yd/XY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XULDZJmS4ZXwhTLHo4spfqE9AcYuLsF6pOn4s3V0tkVrCXMnh8uGTfr3z/yTd+Yga0yiruBclr1UipBv28RLHa2/TgUgO8r/3vSR8RZmFJNDytVaAaFLLqaVv02CfgtORMRYKBu856AQGOXTU4NaakM9IXxfrLdfYNSVgZtftno=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvYChsSL; arc=pass smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPrGT33d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A081F000E9;
-	Fri, 24 Jul 2026 14:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784902002;
-	bh=4Wq+CIgiO6/RNmUJ2Ls/3PcV+zADtxIH+URIcPHTVy8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=TPrGT33dZzTcR7Lc59Utyg1nVH8xo4EDWHjM9/Id1Q3haFRac8SEtb81JlGR7+0jF
-	 amDCMICj/tmnRLawVuu3v4CpZXbVZulCVVNkZqg4CR3CxTihbwerZfofX1/QyAVbzx
-	 gSUwgCngzlVzoVk4qGEl9olNug8n8XV0sqQfEYgSQIXrU+YZTy3WU7uN9xJorndBRc
-	 LrcZ5f7RXEK4NSO5ALKnVrDlRltozlHYWlhgs2QNIIDjOkPp4KMnJvNvdegmF5YZ9n
-	 Y//cf5HPiRwHoQvb/y3xP8JcJ/fIQF6F4/aa8WICggHnnJH7KUD1+qBeq08YAk/eT5
-	 w2w1GsfTJjajg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 7DE76CE08DF; Fri, 24 Jul 2026 07:06:42 -0700 (PDT)
-Date: Fri, 24 Jul 2026 07:06:42 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Puranjay Mohan <puranjay12@gmail.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH v1 00/11] RCU: Enable callbacks to benefit from expedited
- grace periods
-Message-ID: <88e5e2e4-8043-4d23-a362-cd864f9d4145@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260624132356.516959-1-puranjay@kernel.org>
- <062ddbcd-dac1-4ee1-9d3f-ef115a667d6a@paulmck-laptop>
- <amNeS_ahHPLqXIGT@localhost.localdomain>
- <CANk7y0hQQ3oDKt+_8oh4t=8NfMRSa80a9jGr+DG+zbrcuUskTA@mail.gmail.com>
- <CANk7y0isSWC0mARzqhn_4OWb+oHkrAt9k_83j_V3eDzKGbsxjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvYChsSL"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c1c50c1e29bso80653866b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 07:54:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784904875; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ESJ33KDNR4xWBsRpfe5XCPxBD0KTnvqervg3M+FZWPnePLQTsgDq5QYLPm4OmD14EV
+         vL+F28O82D1qG3r7Lh1DAMOb1bPmiiLVKLe5/yBBjM66m50BFLK3NtzQHqzbMqRfbz4y
+         Pu41U8ezb5CZLi82YUTG381WRXQ4jC9e4on0hxc+KNM0shdOhCHg2m6xMiqQ1/oJ2hFD
+         3tz9eA5kLX4BsqPEUXeQtKgNj1TI5oIG+odH8wufQwQoRo/YWRnbvqQeURVjC898uwek
+         zI6pk61Ybnk5NHN1GTVHpfh9dg0yCMSq4KqWsHK+IycYiEJqxr/8GRL/j5ovPwzIVdzD
+         rAmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=qtyT3zOEPZ/csodJ+SE+HkdqXNL9WhosxFizDs5p1Q8=;
+        fh=otrmZWm0pYr8nbsmgzIPH0hTXdyJRmqWK+B78OsJjDs=;
+        b=nJvIe+97Dtg0jWtumOWIHN5hwiOYCkX+Tp5CGWWo8iZwOH+vogrUJS8t8Hu2ye+SkO
+         3/7Wa8vAhkac3176SCA2nBsV9ENcLCIb1/YFQtjD8iRKYmrYTZdChfVefw5br7CwG4c1
+         K6oFPYe+rhkMFwo8lWfzt+ZWECzHH7cvdC6KDDmH4gXepJJG+6qd1/eChqxvvZiEHr7+
+         xophwtYJG1PK9oTOwNC+vHZWsosQmw1+JBj2pvkUMt+tV/JEs+Gti8qLvP6k3KhfE2HR
+         vNWDSGdrahL3DvSa6awImKtrIMk2iBxEuvTr6dkwSXga6BolDvWieKbtqdfqid7qWi9r
+         wfbw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784904875; x=1785509675; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=qtyT3zOEPZ/csodJ+SE+HkdqXNL9WhosxFizDs5p1Q8=;
+        b=hvYChsSLfQhsIG15sY/HeIgkxe+DpUfLxaajV+3RLC8yJuXqhglZkFNSwco4zjaz2/
+         kn7sHio4psC6QmwWD+t2xvPfUavqC1LSmVXh4rCnmKi/Qs4PJJ3sucMLmmndqr87C01A
+         XM9bM3k/+8Rg+Mdsa+uEdqoP5RNIwnkyonYI/fpiBuaDxf4gcutMiwlHuMi8IWnZ5e6v
+         ag1ZZ9WLrIWnJoenfY+DdktEZfPITmr7w4d7KxZzx2zlcvMOysV9RH9XB3TG8UGytQHZ
+         ysJ1OfllifXzlyGj2YdiZJdwReMHsmZqAXX8mcGRcJc9mOcFPKrs6AvoXRL3+Jegdjlb
+         q0sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784904875; x=1785509675;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=qtyT3zOEPZ/csodJ+SE+HkdqXNL9WhosxFizDs5p1Q8=;
+        b=d/FBsNtG11cFYFYb+PrCLQ8S9q8XHVxi/BumuCTKLEf3SBj+RzMUVsfWmdrFIQ+s1w
+         9XiDAluPpLwvXor4KNLwWpOz16XtEBx1u1AflaIHNRK4DNVUl8YEOmorYLJgU3cj9hEJ
+         p52y7oZtam3WujxXBnNL3nX3L0gyLssQK5X/6FpHv0DuBxr5iD4YxjJIBUQ5B1WtDWBL
+         CBk2hEuSWvpHPdUrJse+2vx93LHLit1BbJkDd6KujBKrvbO0WfNaduGWUDBw6d1f46LP
+         Rmws4YppDTsjNFTorhFmp+9QQMGigm14RI2CVHdYN7qUbmOVymiw1s+DN+lLckXZVOaW
+         8Q5w==
+X-Forwarded-Encrypted: i=1; AHgh+RoGUsr9DrnB95YcNx8AxkPLmqb8Bv7we9HeVaQI/XpFzNMLOj1806eVytUwCmCr4Zy3UI/minrZHhh6h0BtWhMltyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdvhN6groPqtkVTBgOD7UGaF+GYoZk+c0GMsj4A/OQVgmZ1MxA
+	2pBZCN9CsFpqe45J+2RwnH644tHGnsrkPwtFqxv/Y9zSY4vBXsR72dGRZUrkmU2eKkjUluaZN98
+	SJD/uwTxCa5UEeryI6Baz51gLgVkmQfg=
+X-Gm-Gg: AR+sD11uRh1xiWX6MtHIxqKxG0J74X4pBZTndmm63X9LYoyLBTUOLnTImX30u13gjCd
+	3fVzHZdMjdsY/Tow4a3RnKqvEfWzus6HHtxXj2f7OjRV001I05yhUJcOZRasg1p6ret4nP4meln
+	HKfrM++JWUTI5zw0v2bXtAVReOgD6fUJT+JgqQ4MvgaSoYoe6zxfK8+oKMdk+o/OM2iT8caK2aF
+	uqPn41WMDF9KyaNsyZDGouKfrmMqbHjKP8bS7UkYxuiBfJsAUKoijnPAZQ1KpmtA1AFdqeiSLnz
+	tUFrPxgo5HA/
+X-Received: by 2002:a17:907:a682:b0:c16:5dbd:820c with SMTP id
+ a640c23a62f3a-c1c508f5f39mr321380666b.33.1784904874785; Fri, 24 Jul 2026
+ 07:54:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANk7y0isSWC0mARzqhn_4OWb+oHkrAt9k_83j_V3eDzKGbsxjA@mail.gmail.com>
+References: <20260624132356.516959-1-puranjay@kernel.org> <20260624132356.516959-11-puranjay@kernel.org>
+ <al-DopVEIe2FvLnv@localhost.localdomain> <CANk7y0hado1yb9Gaeg0FVX45E96E3U_8d6gJTF0=s-pjwcQEpQ@mail.gmail.com>
+ <amE7NrJRm0YDYroX@pavilion.home>
+In-Reply-To: <amE7NrJRm0YDYroX@pavilion.home>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Fri, 24 Jul 2026 15:54:20 +0100
+X-Gm-Features: AUfX_mzr_adsLjWyFMlsS6xiXyVAsee9rcQh-ohbnzJZHXe86Q3JwIlhIl98FE4
+Message-ID: <CANk7y0g24_wj+PUKSRdkrCqY2P1tQ=5JxbWYZbWsbTLhR0M9Lw@mail.gmail.com>
+Subject: Re: [PATCH v1 10/11] rcu: Advance callbacks for expedited GP
+ completion in rcu_core()
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang@linux.dev>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Breno Leitao <leitao@debian.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2026 at 02:47:22PM +0100, Puranjay Mohan wrote:
-> On Fri, Jul 24, 2026 at 1:52 PM Puranjay Mohan <puranjay12@gmail.com> wrote:
+On Wed, Jul 22, 2026 at 10:50=E2=80=AFPM Frederic Weisbecker
+<frederic@kernel.org> wrote:
+>
+> Le Tue, Jul 21, 2026 at 04:06:24PM +0100, Puranjay Mohan a =C3=A9crit :
+> > On Tue, Jul 21, 2026 at 3:35=E2=80=AFPM Frederic Weisbecker <frederic@k=
+ernel.org> wrote:
+> > >
+> > > Le Wed, Jun 24, 2026 at 06:23:52AM -0700, Puranjay Mohan a =C3=A9crit=
+ :
+> > > > Even when rcu_pending() triggers rcu_core(), the normal callback
+> > > > advancement path through note_gp_changes() -> __note_gp_changes() b=
+ails
+> > > > out when rdp->gp_seq =3D=3D rnp->gp_seq (no normal GP change). Sinc=
+e
+> > > > expedited GPs do not update rnp->gp_seq, rcu_advance_cbs() is never
+> > > > called and callbacks remain stuck in RCU_WAIT_TAIL.
+> > > >
+> > > > Add a direct callback advancement block in rcu_core() that checks f=
+or GP
+> > > > completion via rcu_segcblist_nextgp() combined with
+> > > > poll_state_synchronize_rcu_full(). When detected, trylock rnp and c=
+all
+> > > > rcu_advance_cbs() to move completed callbacks to RCU_DONE_TAIL. Wak=
+e the
+> > > > GP kthread if rcu_advance_cbs() requests a new grace period.
+> > > >
+> > > > Uses trylock to avoid adding contention on rnp->lock. If the lock i=
+s
+> > > > contended, callbacks will be advanced on the next tick.
+> > > >
+> > > > Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> > > > ---
+> > > >  kernel/rcu/tree.c | 17 +++++++++++++++++
+> > > >  1 file changed, 17 insertions(+)
+> > > >
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index b01d7bf6b57b1..f42e01ef479c4 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -2891,6 +2891,23 @@ static __latent_entropy void rcu_core(void)
+> > > >       /* Update RCU state based on any recent quiescent states. */
+> > > >       rcu_check_quiescent_state(rdp);
+> > > >
+> > > > +     /* Advance callbacks if an expedited GP has completed. */
+> > > > +     if (!rcu_rdp_is_offloaded(rdp) && rcu_segcblist_is_enabled(&r=
+dp->cblist)) {
+> > > > +             struct rcu_gp_seq gp_state;
+> > > > +
+> > > > +             if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
+> > > > +                 poll_state_synchronize_rcu_full(&gp_state)) {
+> > > > +                     guard(irqsave)();
+> > > > +                     if (raw_spin_trylock_rcu_node(rnp)) {
+> > > > +                             bool needwake =3D rcu_advance_cbs(rnp=
+, rdp);
+> > > > +
+> > > > +                             raw_spin_unlock_rcu_node(rnp);
+> > > > +                             if (needwake)
+> > > > +                                     rcu_gp_kthread_wake();
+> > > > +                     }
+> > > > +             }
+> > > > +     }
+> > >
+> > > Should that go as an improvement to note_gp_changes() instead?
 > >
-> > On Fri, Jul 24, 2026 at 1:45 PM Frederic Weisbecker <frederic@kernel.org> wrote:
-> > >
-> > > Le Thu, Jul 23, 2026 at 05:31:17PM -0700, Paul E. McKenney a écrit :
-> > > > On Wed, Jun 24, 2026 at 06:23:42AM -0700, Puranjay Mohan wrote:
-> > > > > This series lets call_rcu() callbacks be reclaimed as soon as either a
-> > > > > normal or an expedited grace period that covers them has elapsed, rather
-> > > > > than always waiting for a normal grace period.
-> > > > >
-> > > > > Motivation
-> > > > > ==========
-> > > > > Today there is an asymmetry: synchronize_rcu_expedited() callers get fast
-> > > > > reclaim, but call_rcu() callers never benefit from those same expedited
-> > > > > grace periods, even though an expedited GP proves exactly the same thing
-> > > > > as a normal one -- all pre-existing readers are done.  When expedited GPs
-> > > > > are running on the system (driven by other subsystems), call_rcu()
-> > > > > callbacks that could already be freed instead sit in RCU_WAIT_TAIL until
-> > > > > the next normal GP.  This series treats a grace period as a grace period
-> > > > > regardless of how it was driven, so memory is reclaimed sooner.
-> > > > >
-> > > > > Design
-> > > > > ======
-> > > > > Callback segments now record both the normal and expedited grace-period
-> > > > > sequence in struct rcu_gp_seq, and rcu_segcblist_advance() releases a
-> > > > > segment as soon as poll_state_synchronize_rcu_full() reports that either
-> > > > > has completed.  Three notification paths are taught about expedited
-> > > > > completion so the advance actually happens: the NOCB rcuog kthreads,
-> > > > > the rcu_pending() tick gate, and rcu_core().
-> > > > >
-> > > > > Changelog:
-> > > > > RFC: https://lore.kernel.org/all/20260417231203.785172-1-puranjay@kernel.org/
-> > > > > Changes in v1:
-> > > > >  - New prep patch 1 renames struct rcu_gp_oldstate to struct rcu_gp_seq
-> > > > >    and its fields rgos_norm/rgos_exp to norm/exp tree-wide (Frederic).
-> > > > >  - The rcu_segcblist segment field stays named gp_seq; only its type
-> > > > >    changes (Frederic).
-> > > > >  - Patch 8 (NOCB wake) is reworked.  v1 woke the wrong waitqueue
-> > > > >    (rdp_gp->nocb_gp_wq via wake_nocb_gp() rather than the leaf
-> > > > >    rnp->nocb_gp_wq[] that an rcuog kthread waiting for a GP sleeps on),
-> > > > >    and the wait condition only checked the normal ->gp_seq.  The rcuog
-> > > > >    grace-period wait now tracks a struct rcu_gp_seq and is released via
-> > > > >    poll_state_synchronize_rcu_full(); rcu_exp_wait_wake() wakes the leaf
-> > > > >    node through the new rcu_nocb_exp_cleanup() (Frederic).
-> > > > >  - rcu_pending() uses a new memory-ordering-free
-> > > > >    poll_state_synchronize_rcu_full_unordered() to avoid memory barriers
-> > > > >    on every tick, leaving the ordering duty to rcu_core() (Frederic).
-> > > > >
-> > > > > Still open: Frederic asked whether the first smp_mb() in
-> > > > > poll_state_synchronize_rcu_full() is needed on the callback-advance path
-> > > > > (patch 6).  That path still uses the fully ordered helper; only
-> > > > > rcu_pending() was switched to the unordered variant.  Happy to revisit.
-> > > > >
-> > > > > Puranjay Mohan (11):
-> > > > >   rcu: Rename struct rcu_gp_oldstate to rcu_gp_seq
-> > > > >   rcu/segcblist: Add SRCU and Tasks RCU wrapper functions
-> > > > >   rcu/segcblist: Factor out rcu_segcblist_advance_compact() helper
-> > > > >   rcu/segcblist: Track segment grace periods with struct rcu_gp_seq
-> > > > >   rcu: Add RCU_GET_STATE_NOT_TRACKED for subsystems without expedited
-> > > > >     GPs
-> > > > >   rcu: Enable RCU callbacks to benefit from expedited grace periods
-> > > > >   rcu: Update comments for gp_seq and expedited GP tracking
-> > > > >   rcu: Wake NOCB rcuog kthreads on expedited grace period completion
-> > > > >   rcu: Detect expedited grace period completion in rcu_pending()
-> > > > >   rcu: Advance callbacks for expedited GP completion in rcu_core()
-> > > > >   rcuscale: Add concurrent expedited GP threads for callback scaling
-> > > > >     tests
-> > > >
-> > > > I do see the occasional failure when running TREE01, as in a failure or
-> > > > four every couple hundred hours of testing.  This is the only rcutorture
-> > > > scenario that exercises callback (de)offloading, which might (or might
-> > > > not) be a clue.
-> > > >
-> > > > The console log of a failing run is attached, or you can find it here:
-> > > >
-> > > > https://drive.google.com/file/d/1EH2P4SDy2a-SJndkN3GbCTGAXxI2xevm/view?usp=sharing
-> > > >
-> > > > This is a "??? Writer stall state" failure, where rcutorture never learns
-> > > > of grace-period completion.  Possibly because no grace period completed.
-> > > > But there are no RCU CPU stall warnings.  In addition, these two lines
-> > > >
-> > > > [  631.032657] ??? Writer stall state RTWS_EXP_SYNC(4) g152813 f0x0 ->state D cpu 1
-> > > > . . .
-> > > > [ 3610.863114] ??? Writer stall state RTWS_EXP_SYNC(4) g736160 f0x0 ->state D cpu 1
-> > > >
-> > > > show that the grace-period sequence number advanced from 152813 to
-> > > > 736160 in about 50 minutes.  So grace periods really are completing,
-> > > > lots of them.
-> > > >
-> > > > This rcutorture scenario has rcu_nocbs CPUs, and CPU 5 is in trouble:
-> > > >
-> > > > [  631.066109] rcu:    CB 5^4->4 KblSW F21044 L21044 C116 .W120(148380/168068).N295B101 q516 S CPU 16
-> > > > . . .
-> > > > [ 3610.869914] rcu:    CB 5^4->4 KblSW F3000848 L3000848 C116 .W120(148380/168068).N295B101 q516 S CPU 16
-> > > >
-> > > > There are 120 callbacks on the WAIT segment, which are waiting on
-> > > > grace-period sequence number 148380, which was long gone even back at
-> > > > 631.032657 seconds in (g152813).  There are 295 more callbacks in the NEXT
-> > > > segment, which long ago should have been assigned a grace period and moved
-> > > > into the currently empty NEXT_READY segment (which is the "." right before
-> > > > the "N295").  There are yet another 101 callbacks on the bypass list.
-> > > >
-> > > > This suggests that the rcuog kthread isn't being awakened when it
-> > > > should be.  And that something is failing to advance callbacks out of
-> > > > NEXT in a timely fashion.
-> > > >
-> > > > Thoughts?
-> > >
-> > > If a grace period has elapsed while in the middle of nocb_gp_wait(),
-> > > after the call to rcu_advance_cbs() and before the following polling which
-> > > determines if we a grace period must be waited upon, then the kthread
-> > > will wait for new callbacks only (and will ignore waiting callbacks that
-> > > can now be advanced).
-> > >
-> > > Does the following help?
-> > >
-> > > diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> > > index 6da1b8f52476..96d76eb6259d 100644
-> > > --- a/kernel/rcu/tree_nocb.h
-> > > +++ b/kernel/rcu/tree_nocb.h
-> > > @@ -792,22 +792,12 @@ static noinline_for_stack void nocb_gp_wait(struct rcu_data *my_rdp)
-> > >                                                            RCU_NEXT_READY_TAIL);
-> > >                         raw_spin_unlock_rcu_node(rnp); /* irqs disabled. */
-> > >                 }
-> > > -               // Need to wait on some grace period?
-> > > +
-> > >                 WARN_ON_ONCE(wasempty &&
-> > >                              !rcu_segcblist_restempty(&rdp->cblist,
-> > >                                                       RCU_NEXT_READY_TAIL));
-> > > -               /*
-> > > -                * Only request a GP wait if the next pending callback's
-> > > -                * GP has not already completed (normal or expedited).
-> > > -                * If poll_state_synchronize_rcu_full() says it completed,
-> > > -                * then rcu_advance_cbs() above already moved those
-> > > -                * callbacks to RCU_DONE_TAIL, so there is no GP to wait
-> > > -                * for.  Any remaining callbacks got new (future) GP
-> > > -                * numbers from rcu_accelerate_cbs() inside
-> > > -                * rcu_advance_cbs() and will be handled on the next pass.
-> > > -                */
-> > > -               if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
-> > > -                   !poll_state_synchronize_rcu_full(&cur_gp_seq)) {
-> > > +               // Need to wait on some grace period?
-> > > +               if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq)) {
-> > >                         /*
-> > >                          * Track the earliest pending normal and expedited GP
-> > >                          * across the group so the wait below can be released by
-> >
-> >
-> > This looks correct to me, this optimization with
-> > !poll_state_synchronize_rcu_full(&cur_gp_seq) opened up this race as
-> > you correctly explained.
-> 
-> My local reproducer says that the problem is gone, but let's see what
-> Paul's 100s of hours of testing says.
+> > note_gp_changes() only reconciles rdp->gp_seq against rnp->gp_seq, and
+> > the expedited path never advances rnp->gp_seq. So the gap this closes
+> > is exactly rdp->gp_seq =3D=3D rnp->gp_seq, where note_gp_changes() and
+> > __note_gp_changes() both short-circuit, the expedited completion isn't
+> > visible there at all. It's detected from the cblist's stored gp_seq
+> > (rcu_segcblist_nextgp()) confirmed with
+> > poll_state_synchronize_rcu_full(), so hosting it in note_gp_changes()
+> > would mean running that in the lockless preamble for every caller,
+> > including the off-tick call_rcu_core() path. In rcu_core() it's
+> > already gated by rcu_pending(), which does the barrier-free detection.
+>
+> Let's take a step back. note_gp_changes() is for the CPU to ackowledge
+> a grace period change, either start or completion, and react upon with:
+>
+> _ Making the callback progress through the state machine if a grace perio=
+d
+>   has changed.
+>
+> _ Starting to chase quiescent states.
+>
+> And now callback advancing/acceleration don't even refer anymore to the
+> leaf node state but to the global one. So why not proceed with that
+> logic?
+>
+> Also other callers of note_gp_changes() may want to benefit from expedite=
+d
+> grace periods as well.
+>
+> Would the following (untested) work?
+>
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index ff6601411a89..96bf7fe03be8 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -1271,27 +1271,29 @@ static bool __note_gp_changes(struct rcu_node *rn=
+p, struct rcu_data *rdp)
+>  {
+>         bool ret =3D false;
+>         bool need_qs;
+> +       struct rcu_gp_seq gp_state;
+>         const bool offloaded =3D rcu_rdp_is_offloaded(rdp);
+>
+>         raw_lockdep_assert_held_rcu_node(rnp);
+>
+> -       if (rdp->gp_seq =3D=3D rnp->gp_seq)
+> -               return false; /* Nothing to do. */
+> -
+>         /* Handle the ends of any preceding grace periods first. */
+> -       if (rcu_seq_completed_gp(rdp->gp_seq, rnp->gp_seq) ||
+> +       if ((rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
+> +           poll_state_synchronize_rcu_full_unordered(&gp_state)) ||
+>             unlikely(rdp->gpwrap)) {
+>                 if (!offloaded)
+>                         ret =3D rcu_advance_cbs(rnp, rdp); /* Advance CBs=
+. */
+>                 rdp->core_needs_qs =3D false;
+>                 trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("=
+cpuend"));
+> -       } else {
+> +       } else if (rdp->gp_seq !=3D rnp->gp_seq) {
+>                 if (!offloaded)
+>                         ret =3D rcu_accelerate_cbs(rnp, rdp); /* Recent C=
+Bs. */
+>                 if (rdp->core_needs_qs)
+>                         rdp->core_needs_qs =3D !!(rnp->qsmask & rdp->grpm=
+ask);
+>         }
+>
+> +       if (rdp->gp_seq =3D=3D rnp->gp_seq)
+> +               return ret; /* Nothing else to do. */
+> +
+>         /* Now handle the beginnings of any new-to-this-CPU grace periods=
+. */
+>         if (rcu_seq_new_gp(rdp->gp_seq, rnp->gp_seq) ||
+>             unlikely(rdp->gpwrap)) {
+> @@ -1316,6 +1318,27 @@ static bool __note_gp_changes(struct rcu_node *rnp=
+, struct rcu_data *rdp)
+>         return ret;
+>  }
+>
+> +static bool need_note_gp_changes(struct rcu_data *rdp)
+> +{
+> +       struct rcu_gp_seq gp_state;
+> +       struct rcu_node *rnp =3D rdp->mynode;
+> +
+> +       /* Need to chase QS or accelerate? */
+> +       if (rdp->gp_seq !=3D rcu_seq_current(&rnp->gp_seq))
+> +               return true;
+> +
+> +       /* Waited upon GP has ended, need to advance CBs ? */
+> +       if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
+> +           poll_state_synchronize_rcu_full_unordered(&gp_state))
+> +               return true;
+> +
+> +       /* Wrapped? */
+> +       if (unlikely(READ_ONCE(rdp->gpwrap)))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+>  static void note_gp_changes(struct rcu_data *rdp)
+>  {
+>         unsigned long flags;
+> @@ -1324,8 +1347,7 @@ static void note_gp_changes(struct rcu_data *rdp)
+>
+>         local_irq_save(flags);
+>         rnp =3D rdp->mynode;
+> -       if ((rdp->gp_seq =3D=3D rcu_seq_current(&rnp->gp_seq) &&
+> -            !unlikely(READ_ONCE(rdp->gpwrap))) || /* w/out lock. */
+> +       if (!need_note_gp_changes(rdp) || /* w/out lock. */
+>             !raw_spin_trylock_rcu_node(rnp)) { /* irqs already off, so la=
+ter. */
+>                 local_irq_restore(flags);
+>                 return;
+> @@ -2888,23 +2910,6 @@ static __latent_entropy void rcu_core(void)
+>         /* Update RCU state based on any recent quiescent states. */
+>         rcu_check_quiescent_state(rdp);
+>
+> -       /* Advance callbacks if an expedited GP has completed. */
+> -       if (!rcu_rdp_is_offloaded(rdp) && rcu_segcblist_is_enabled(&rdp->=
+cblist)) {
+> -               struct rcu_gp_seq gp_state;
+> -
+> -               if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
+> -                   poll_state_synchronize_rcu_full(&gp_state)) {
+> -                       guard(irqsave)();
+> -                       if (raw_spin_trylock_rcu_node(rnp)) {
+> -                               bool needwake =3D rcu_advance_cbs(rnp, rd=
+p);
+> -
+> -                               raw_spin_unlock_rcu_node(rnp);
+> -                               if (needwake)
+> -                                       rcu_gp_kthread_wake();
+> -                       }
+> -               }
+> -       }
+> -
+>         /* No grace period and unregistered callbacks? */
+>         if (!rcu_gp_in_progress() &&
+>             rcu_segcblist_is_enabled(&rdp->cblist) && !rcu_rdp_is_offload=
+ed(rdp)) {
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index 01a1b2985abd..6b9b058d138e 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -517,6 +517,7 @@ static void rcu_nocb_unlock(struct rcu_data *rdp);
+>  static void rcu_nocb_unlock_irqrestore(struct rcu_data *rdp,
+>                                        unsigned long flags);
+>  static void rcu_lockdep_assert_cblist_protected(struct rcu_data *rdp);
+> +static bool poll_state_synchronize_rcu_full_unordered(struct rcu_gp_seq =
+*gsp);
+>  #ifdef CONFIG_RCU_NOCB_CPU
+>  static void __init rcu_organize_nocb_kthreads(void);
+>
+>
 
-I will fire it up, and thank you both!!!
 
-And if it passes the 100s of hours (about 600), it will get 1000s of
-hours over the weekend.  ;-)
+Hi Frederic.
 
-							Thanx, Paul
+I took your approach and created this commit with minor changes to your dif=
+f:
+
+A few points I'd like a second opinion on. I kept the unordered
+poll_state_synchronize_rcu_full_unordered() for the advance check (the
+old rcu_core() block used the ordered variant): this looks safe
+because rcu_segcblist_advance() re-checks each segment with the
+ordered poll_state_synchronize_rcu_full() before moving callbacks to
+RCU_DONE_TAIL, so the check here is only a gate and the barriers still
+apply where callbacks are actually advanced, please confirm that
+reasoning. need_note_gp_changes() runs the callback-list poll on the
+lockless preamble for both callers, including offloaded rdps where
+__note_gp_changes() won't advance anything; I left it ungated since it
+only leads to a trylock, but it could take a
+!rcu_rdp_is_offloaded(rdp) guard. I also dropped the
+rcu_segcblist_is_enabled() guard the rcu_core() block had, relying on
+__note_gp_changes() already operating on the cblist unconditionally
+for non-offloaded rdps.
+
+-- >8 --
+
+From c38c5f599d699e2c40d3459fdf3ef383a99c0097 Mon Sep 17 00:00:00 2001
+From: Puranjay Mohan <puranjay@kernel.org>
+Date: Fri, 24 Jul 2026 07:26:25 -0700
+Subject: [PATCH] rcu: Advance callbacks for expedited GP completion in
+ note_gp_changes()
+
+When rcu_pending() triggers rcu_core(), the callback advancement path
+through note_gp_changes() -> __note_gp_changes() bails out when
+rdp->gp_seq =3D=3D rnp->gp_seq (no normal GP change). Since expedited GPs d=
+o
+not update rnp->gp_seq, rcu_advance_cbs() is never reached from there and
+callbacks satisfied by an expedited GP would otherwise remain stuck in
+RCU_WAIT_TAIL until the next normal GP.
+
+This is currently handled by a dedicated advancement block in rcu_core()
+that polls the callback list and advances under a trylock. But callback
+advancement no longer depends on the leaf-node grace-period delta; it is
+driven by the grace-period state stored in the callback list, which
+tracks both normal and expedited GPs. __note_gp_changes() is the natural
+home for it, and hosting it there lets every note_gp_changes() caller
+benefit from expedited completions rather than just rcu_core().
+
+Move the advancement into __note_gp_changes(): trigger rcu_advance_cbs()
+whenever rcu_segcblist_nextgp() confirmed with
+poll_state_synchronize_rcu_full_unordered() reports a completed grace
+period, and add need_note_gp_changes() so the lockless preamble takes the
+lock for an expedited-only completion instead of short-circuiting on
+rdp->gp_seq =3D=3D rnp->gp_seq. Remove the now-redundant rcu_core() block.
+
+The quiescent-state bookkeeping stays keyed to an actual rnp->gp_seq
+change, so an expedited completion never clears a still-pending
+core_needs_qs and stalls the normal grace period.
+
+Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+---
+ kernel/rcu/tree.c | 56 ++++++++++++++++++++++++-----------------------
+ kernel/rcu/tree.h |  1 +
+ 2 files changed, 30 insertions(+), 27 deletions(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 21b6ce1dffb63..0e700d0ecf27e 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1270,27 +1270,33 @@ static bool __note_gp_changes(struct rcu_node
+*rnp, struct rcu_data *rdp)
+ {
+        bool ret =3D false;
+        bool need_qs;
++       struct rcu_gp_seq gp_state;
+        const bool offloaded =3D rcu_rdp_is_offloaded(rdp);
++       bool completed =3D rcu_seq_completed_gp(rdp->gp_seq, rnp->gp_seq) |=
+|
++                        unlikely(rdp->gpwrap);
+
+        raw_lockdep_assert_held_rcu_node(rnp);
+
+-       if (rdp->gp_seq =3D=3D rnp->gp_seq)
+-               return false; /* Nothing to do. */
+-
+        /* Handle the ends of any preceding grace periods first. */
+-       if (rcu_seq_completed_gp(rdp->gp_seq, rnp->gp_seq) ||
+-           unlikely(rdp->gpwrap)) {
++       if (completed ||
++           (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
++            poll_state_synchronize_rcu_full_unordered(&gp_state))) {
+                if (!offloaded)
+                        ret =3D rcu_advance_cbs(rnp, rdp); /* Advance CBs. =
+*/
+-               rdp->core_needs_qs =3D false;
+-               trace_rcu_grace_period(rcu_state.name, rdp->gp_seq,
+TPS("cpuend"));
+-       } else {
++               if (completed) {
++                       rdp->core_needs_qs =3D false;
++                       trace_rcu_grace_period(rcu_state.name,
+rdp->gp_seq, TPS("cpuend"));
++               }
++       } else if (rdp->gp_seq !=3D rnp->gp_seq) {
+                if (!offloaded)
+                        ret =3D rcu_accelerate_cbs(rnp, rdp); /* Recent CBs=
+. */
+                if (rdp->core_needs_qs)
+                        rdp->core_needs_qs =3D !!(rnp->qsmask & rdp->grpmas=
+k);
+        }
+
++       if (rdp->gp_seq =3D=3D rnp->gp_seq)
++               return ret; /* Nothing else to do. */
++
+        /* Now handle the beginnings of any new-to-this-CPU grace periods. =
+*/
+        if (rcu_seq_new_gp(rdp->gp_seq, rnp->gp_seq) ||
+            unlikely(rdp->gpwrap)) {
+@@ -1315,6 +1321,20 @@ static bool __note_gp_changes(struct rcu_node
+*rnp, struct rcu_data *rdp)
+        return ret;
+ }
+
++static bool need_note_gp_changes(struct rcu_data *rdp)
++{
++       struct rcu_gp_seq gp_state;
++       struct rcu_node *rnp =3D rdp->mynode;
++
++       if (rdp->gp_seq !=3D rcu_seq_current(&rnp->gp_seq) ||
++           unlikely(READ_ONCE(rdp->gpwrap)))
++               return true;
++
++       /* Has a grace period a callback is waiting on completed? */
++       return rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
++              poll_state_synchronize_rcu_full_unordered(&gp_state);
++}
++
+ static void note_gp_changes(struct rcu_data *rdp)
+ {
+        unsigned long flags;
+@@ -1323,8 +1343,7 @@ static void note_gp_changes(struct rcu_data *rdp)
+
+        local_irq_save(flags);
+        rnp =3D rdp->mynode;
+-       if ((rdp->gp_seq =3D=3D rcu_seq_current(&rnp->gp_seq) &&
+-            !unlikely(READ_ONCE(rdp->gpwrap))) || /* w/out lock. */
++       if (!need_note_gp_changes(rdp) || /* w/out lock. */
+            !raw_spin_trylock_rcu_node(rnp)) { /* irqs already off, so late=
+r. */
+                local_irq_restore(flags);
+                return;
+@@ -2886,23 +2905,6 @@ static __latent_entropy void rcu_core(void)
+        /* Update RCU state based on any recent quiescent states. */
+        rcu_check_quiescent_state(rdp);
+
+-       /* Advance callbacks if an expedited GP has completed. */
+-       if (!rcu_rdp_is_offloaded(rdp) &&
+rcu_segcblist_is_enabled(&rdp->cblist)) {
+-               struct rcu_gp_seq gp_state;
+-
+-               if (rcu_segcblist_nextgp(&rdp->cblist, &gp_state) &&
+-                   poll_state_synchronize_rcu_full(&gp_state)) {
+-                       guard(irqsave)();
+-                       if (raw_spin_trylock_rcu_node(rnp)) {
+-                               bool needwake =3D rcu_advance_cbs(rnp, rdp)=
+;
+-
+-                               raw_spin_unlock_rcu_node(rnp);
+-                               if (needwake)
+-                                       rcu_gp_kthread_wake();
+-                       }
+-               }
+-       }
+-
+        /* No grace period and unregistered callbacks? */
+        if (!rcu_gp_in_progress() &&
+            rcu_segcblist_is_enabled(&rdp->cblist) &&
+!rcu_rdp_is_offloaded(rdp)) {
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index eedfa43059e80..962f86afc3c9a 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -521,6 +521,7 @@ static void rcu_nocb_unlock(struct rcu_data *rdp);
+ static void rcu_nocb_unlock_irqrestore(struct rcu_data *rdp,
+                                       unsigned long flags);
+ static void rcu_lockdep_assert_cblist_protected(struct rcu_data *rdp);
++static bool poll_state_synchronize_rcu_full_unordered(struct rcu_gp_seq *g=
+sp);
+ #ifdef CONFIG_RCU_NOCB_CPU
+ static void __init rcu_organize_nocb_kthreads(void);
+
+
+base-commit: dc597bcabf31a58f8c1aca01677a6af0b3307398
+--
+2.53.0-Meta
+
+-- 8< --
+
+Thanks,
+Puranjay
