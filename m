@@ -1,304 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA0944E665;
-	Fri, 24 Jul 2026 18:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784917903; cv=none; b=eUPh3wes6urlR67A4rS162L2qEyFojLFChAEM9tdsqtg+WT/kG4gejOoDAga8KQPnm6Ne8WHC+IvSDM6+y+vaZZ/oStcDpdc5cp1hKRhx2sFKCBtwduFmQcmMNPG5YeN3GsL9wkbHgr2P4EPKdt2/G/Sbr2IEjHLzD3H6rJScDA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784917903; c=relaxed/simple;
-	bh=w3HIgxpxdcezSe4tmw6xtnstaZxL8MLGuxujNFCudJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EFO3PTxnvTOJ1GWaBTWNcuEYieIJAfJDhas/pCW2StmTORz80BCYJc18cc+UsboM1psAcY14+uMX2M5kZNUg8TWRa6WtRhgX85NQTR1EWI3WYbgMyLpVa/5J4HnrBWSDA2mLFh+Q5QoGLz0XVUWS7D34Ktm5iATqcO5rQsVwBeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mm+GWFq7; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09313AEF59
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 20:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784924804; cv=pass; b=q/cw7BLCY4tG+2Aep0JNjydUP8/Rwq1aCd1R+pYf/OskjzZhr3Z04uXR5i5MHZH7sDbVEKpK2+kofAdTDUQy3Upbmog5cH2irUOwSbLiaOrJa2MfGTDe9vvxU0o1FfDN0VUHsPa0jZ7ZdG1Kiy0VEOMe9nycryr87XIZARe3acE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784924804; c=relaxed/simple;
+	bh=3bPaFfkcLVVehjWoKc7uXp9Krk+zpZKVatRaC5BCI3o=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HNDFPEr2C4f3Jm7yQjCNDhMPXKOymyl2F1FHtqWTgc+vSEr6YY6b686kjg5GuZ1gnl0LOCzROx4YedqkgUTIO3G9KG28XPgtErEgZ9DBk6YFh8CDkLvkC9ebw+ULjP2yGpWGJpOeQflAvglkgxtTOnHcp486WL7jgWuwRz9dy/c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X+22ytPV; arc=pass smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mm+GWFq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5BB1F000E9;
-	Fri, 24 Jul 2026 18:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784917898;
-	bh=Qy/LRN/B1QWzGPGEXcqfk0UJQ7PX/5WIAF5iAvdYdIU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Mm+GWFq7qVh7NG0j4btp1ZCeTxF8v4PTWrtApJfmq9wh/l5dMhVlArgEZkz0ql2iI
-	 ppneQDocpwvkPu5YuxhA27PMf1uRNFNEeunrLzO1jVaBBUbYDZOp8ByRqQhpJFaXYx
-	 WQVCjcm5jhlyyWsxzz6RD6jwmSITnXuY3ZNchEVYeiOOhElzks5WNO8ORJ7M6MT3Zb
-	 l8FAOlim0aalcHexW4SrAB2kDSNz7neXNZLjfhRgwKHEzOvlZlDwnyfCogJ25C2pnR
-	 2W5oLq5ZbStO7r8sJlf6dhmnjK6FWM8EeGKcG1untuWpYYFt8XD4B1mgh9RxItC+/q
-	 34aGm2FcZPLFQ==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Breno Leitao <leitao@debian.org>,
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: [PATCH v2 6/11] rcu: Enable RCU callbacks to benefit from expedited grace periods
-Date: Fri, 24 Jul 2026 11:31:23 -0700
-Message-ID: <20260724183123.160051-1-puranjay@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260624132356.516959-7-puranjay@kernel.org>
-References: <20260624132356.516959-7-puranjay@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+22ytPV"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-38e347638adso771194a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 13:26:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784924802; cv=none;
+        d=google.com; s=arc-20260327;
+        b=N11IIjrJbdb4Qlohe1EBiA5h44O4tiRO/+ZObm/Uv2NN7Vmrb2d/0lDzIpv7kWQmcz
+         J0y8GnD75uVZIZwYg+O/ixBglmOH5hu7w8Vr/PPIl6KFiXjBzB978jEbxAKu0oSFS0AL
+         0eO/56FDY1jNSi9o3nIXzTDVColV7UF8maSbQaccH9bMNIr1wRQx5CghSxikEzy4+BCs
+         H2lCGAZb/sDj8yruTTXHbqXmeapKZC0SRP2DYRJs/3vZAAO+JO5bruLV10kP8fUIT5/t
+         7Rc3p8eko3EBGlkjXHN21QBqMIwyrTz6x4wF7wxnSggZ0T7i9AdT3VBm/tu7qxnirA/+
+         Oupw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=j6WRuRiOGlrBru4rjgXozk6E1Vpz9Ly8EIjgzHznenQ=;
+        fh=NuSaHfBlD3j0AbFKnnv1mT5+e7xe9QAxAU6y0vPBgf0=;
+        b=PHuX2KZDxLE+tzA8fCYq8Q7Km/N6O+Q9pR78GFYQXTyWN5qoO/BqIfFd/LuvTjvKKb
+         +8lHlyiUPXzlvwh8oD6YTaGqLFrNnjXwAWtmAdR/0XtglIWDf43+5VTZima7eixU1bqi
+         GFLbTnwfEcDppOLUfRFq6D2Uc0U1qrfCPYC2gG8al7kSlvO2H3egYOIf41vweJMFtk8I
+         e5OW/FpIJ1lmA97rUSZfN2dr8DkwIimSpSAZBmpi9pqUmIvwGc2HcAhXf70HWDGre2GI
+         GzswWNfUs5O9/VLkg2evcF58c0bAlY0e8GeKV5KKB/yiZ8QathSt4ZgpkkzFPKaybvKS
+         OETQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784924802; x=1785529602; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=j6WRuRiOGlrBru4rjgXozk6E1Vpz9Ly8EIjgzHznenQ=;
+        b=X+22ytPVowtvdD7H6oAjAZ6dFwEHXHU3JHtOooAKf/4Rt/T6msrmpVN9yapaJuPCXF
+         BQgztoqjDqxKNUHrk3zrFXjUxFbKWrfrz8lbDrMAWHinAAAB8ufFNA+lK8gYKjqlrNym
+         nCMleNTnPIVIUC0Cxzqk6t7U+1ZMYES61Afdnwqh6y11P2qbfCubhE1TG1yz9YN9JAnT
+         IJU9Op2jnp5XnD18dnSNzVhOIISoNbvoTWl5o29uKwaLWAbqeaOaIylQW4ptJX5WQSZD
+         FxQgxEYU2QZcoUGSWWBdvaVpiQzGU7AxpH00Zw54jehpPXR+QugrnjlzcktqsCmk/6fa
+         NAlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784924802; x=1785529602;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=j6WRuRiOGlrBru4rjgXozk6E1Vpz9Ly8EIjgzHznenQ=;
+        b=HJim0y8lWz0d0H5+p04KtVuDbZLez1F4iQo0+w0WKVhzLbaKQf6ZjRdPjmdLwGzHtE
+         s4dZgMPET3+BU8sAh21H+0LL7dTefyswmIiG9vvzcFMoCcvcKbgNurIPxibET2mks80l
+         JSf+f4DNRzHdNJT8zz+R5FGFDMJQTYc58jLQ/JHGES4T2tmGF5EeYOZ2ZaGcrq4Iv52K
+         2kecixA0i2xd7nOSAYX1JRjiFzJsWf/FRr6Wz2Cqx7We8wepz7Skw4SwIsSesuwnEJaY
+         /e64UaPXDuer6e1+MrdtTy+GbVv3pI2WFAhF7mNJep1cxwSOWMlfdd8voZHmfBa5YW8W
+         wpDw==
+X-Forwarded-Encrypted: i=1; AHgh+Royjkg+gnqmmyn6eTOync+nNE8acy07Ud2QG+cZi/x1UJ9JJrSHUxnQYHbKPbKJ/jCnnn1kDd4AqcBwQHECr4MB7fY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyB75MrwhiFW2s3WP66NSbdRJA56hrtXTPfB76rSMwYw4GyVnJ
+	89LWkrEeJjnvHT+x4ShTiDr+q/SNPoz8aLswxgXKacJ6y0niVDQPakvkSIoz/Wx7zTgCKta2Q/a
+	7gSNbXgp2IDyzZozoGUd/FlVQ8WBvi7aM67Q1vxGU
+X-Gm-Gg: AR+sD13KQtMKHXb1GN7yl4yIh/Bb1bQZHpbMZIirTiZ0OEtpS+M7eOvnsb6/fc4/qYh
+	HQzU9R6RuKWdwdO+Bv2/R7U2QKv1Yt8FPDV0CFyVWCHGHFS940CZA7D7TOj1RQl+wBcncy5iSyL
+	MkOG8IJTLAtznHmV0XTQi40caHi4CRYYWxhJZMLiowiebqKlRsrIRVqPXTTNNfNCaCFrU5QC0B1
+	JW8fD59xWL4qV0HHToLhG1Q0xpHc9Yd5x4brhtm0EnH5DeH8I5+s8+tFbXRalQ+JDOSI7el4vAE
+	2HzipoVgF5FEZpFIs/+im1MkZ9a7PJTyEyGjddv5vm1AExR3
+X-Received: by 2002:a17:90b:38c8:b0:38e:b400:a860 with SMTP id
+ 98e67ed59e1d1-38ec642bd98mr9249020a91.13.1784924801177; Fri, 24 Jul 2026
+ 13:26:41 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 24 Jul 2026 13:26:39 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 24 Jul 2026 13:26:38 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <c0e2df0a-19b2-4234-b0f7-41e010452b06@intel.com>
+References: <20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com>
+ <20260618-gmem-inplace-conversion-v8-17-9d2959357853@google.com>
+ <584a8f9a-1538-4f8b-b576-75ef0fa961c7@intel.com> <akU7uAKb5E_Tklx-@google.com>
+ <c0e2df0a-19b2-4234-b0f7-41e010452b06@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Fri, 24 Jul 2026 13:26:38 -0700
+X-Gm-Features: AUfX_mza0pn9bFWoM_88BD1HVQ8VVpLGhsBYWrYX7-3MlRMmF5M63UsjEJ6b88s
+Message-ID: <CAEvNRgHmhpP=Re-RzojAp7E3E-TsdoUPhtZ6eSW4bf+5RVbzew@mail.gmail.com>
+Subject: Re: [PATCH v8 17/46] KVM: guest_memfd: Advertise KVM_SET_MEMORY_ATTRIBUTES2
+ ioctl
+To: Xiaoyao Li <xiaoyao.li@intel.com>, Sean Christopherson <seanjc@google.com>
+Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
+	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Currently, RCU callbacks only track normal grace-period sequence
-numbers.  This means callbacks must wait for normal grace periods to
-complete even when expedited grace periods have already elapsed.
+Xiaoyao Li <xiaoyao.li@intel.com> writes:
 
-Use the full struct rcu_gp_seq (which tracks both the normal and
-expedited grace-period sequences) throughout the callback
-infrastructure.
+> On 7/2/2026 12:09 AM, Sean Christopherson wrote:
+>> On Wed, Jul 01, 2026, Xiaoyao Li wrote:
+>>> On 6/19/2026 8:31 AM, Ackerley Tng via B4 Relay wrote:
+>>>> @@ -4969,6 +4973,11 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+>>>>    		return 1;
+>>>>    	case KVM_CAP_GUEST_MEMFD_FLAGS:
+>>>>    		return kvm_gmem_get_supported_flags(kvm);
+>>>> +	case KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES:
+>>>> +		if (!gmem_in_place_conversion || !kvm_supports_private_mem(kvm))
+>>>> +			return 0;
+>>>> +
+>>>> +		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+>>>>    #endif
+>>>>    	default:
+>>>>    		break;
+>>>
+>>> this looks inconsistent with the
+>>>
+>>> 	case KVM_SET_MEMORY_ATTRIBUTES2:
+>>> 		if (!gmem_in_place_conversion)
+>>> 			return -ENOTTY;
+>>>
+>>> Well, the check of
+>>>
+>>> 	if (!kvm_arch_has_private_mem(f->kvm))
+>>> 		return -EINVAL;
+>>>
+>>> is buried in the following kvm_gmem_set_attributes(). How about moving of
+>>> kvm_arch_has_private_mem() check to put it along with
+>>> gmem_in_place_conversion check in kvm_gmem_ioctl() in Patch 13?
+>>
+>> Me confused, patch 13 already adds the kvm_arch_has_private_mem() in
+>> kvm_gmem_set_attributes().
+>
+> I wanted to make the check in KVM_SET_MEMORY_ATTRIBUTES2 in Patch 13
+> like something below:
+>
+> 	case KVM_SET_MEMORY_ATTRIBUTES2:
+> 		if (!gmem_in_place_conversion || !kvm_arch_has_private_mem(f->kvm))
+> 		return -EXXX;
+>
+> and finally, with the introduction of kvm_supports_private_mem() in this
+> patch, it becomes:
+>
+> 	case KVM_SET_MEMORY_ATTRIBUTES2:
+> 		if (!gmem_in_place_conversion || !kvm_supports_private_mem(f->kvm))
+> 		return -EXXX;
+>
 
-rcu_segcblist_advance() now checks both normal and expedited GP
-completion via poll_state_synchronize_rcu_full(), and becomes
-parameterless since it reads the grace-period state internally.
-rcu_segcblist_accelerate() stores the full state (both sequences)
-instead of just the normal one.  rcu_accelerate_cbs() and
-rcu_accelerate_cbs_unlocked() use get_state_synchronize_rcu_full() to
-capture both sequences, and the NOCB advance checks use
-poll_state_synchronize_rcu_full() instead of comparing only the normal
-sequence.
+Is the request here to make KVM_SET_MEMORY_ATTRIBUTES2 return -ENOTTY
+instead of -EINVAL? kvm_gmem_set_attributes() also checks for
+!kvm_arch_has_private_mem() and returns -EINVAL.
 
-srcu_segcblist_advance() becomes a standalone implementation because it
-compares SRCU sequences directly and cannot use
-poll_state_synchronize_rcu_full(), which reads RCU-specific globals.
-srcu_segcblist_accelerate() sets the ->exp field to
-RCU_GET_STATE_NOT_TRACKED so that poll_state_synchronize_rcu_full()
-compares only ->norm and ignores ->exp.
+I'm about to post v9, which squashes the patches as Sean
+suggested. Please review v9 instead to see if this concern is already
+addressed :)
 
-Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
----
-Paul, please take this in place of the original 6/11.  The only change
-from v1 is dropping the premature !poll_state_synchronize_rcu_full() gate
-in nocb_gp_wait(): if a grace period completed between rcu_advance_cbs()
-and that poll, the rcuog slept grace-period-deaf in nocb_gp_sleep() with
-advanceable callbacks still queued -- the lost wakeup Frederic diagnosed.
-Verified by widening that window with a delay: the original reproduced the
-writer stall within ~75s, this version stayed clean.
-
- kernel/rcu/rcu_segcblist.c | 30 +++++++++++++++++++++++-------
- kernel/rcu/rcu_segcblist.h |  2 +-
- kernel/rcu/tree.c          |  9 +++------
- kernel/rcu/tree_nocb.h     | 22 ++++++++++++----------
- 4 files changed, 39 insertions(+), 24 deletions(-)
-
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 4e3dfe42bc097..cf8951d33e767 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -12,6 +12,7 @@
- #include <linux/kernel.h>
- #include <linux/types.h>
- 
-+#include "rcu.h"
- #include "rcu_segcblist.h"
- 
- /* Initialize simple callback list. */
-@@ -494,9 +495,9 @@ static void rcu_segcblist_advance_compact(struct rcu_segcblist *rsclp, int i)
- 
- /*
-  * Advance the callbacks in the specified rcu_segcblist structure based
-- * on the current value passed in for the grace-period counter.
-+ * on the current value of the grace-period counter.
-  */
--void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gsp)
-+void rcu_segcblist_advance(struct rcu_segcblist *rsclp)
- {
- 	int i;
- 
-@@ -509,7 +510,7 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gsp)
- 	 * are ready to invoke, and put them into the RCU_DONE_TAIL segment.
- 	 */
- 	for (i = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++) {
--		if (ULONG_CMP_LT(gsp->norm, rsclp->gp_seq[i].norm))
-+		if (!poll_state_synchronize_rcu_full(&rsclp->gp_seq[i]))
- 			break;
- 		WRITE_ONCE(rsclp->tails[RCU_DONE_TAIL], rsclp->tails[i]);
- 		rcu_segcblist_move_seglen(rsclp, i, RCU_DONE_TAIL);
-@@ -595,7 +596,7 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gs
- 	 */
- 	for (; i < RCU_NEXT_TAIL; i++) {
- 		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_NEXT_TAIL]);
--		rsclp->gp_seq[i].norm = gsp->norm;
-+		rsclp->gp_seq[i] = *gsp;
- 	}
- 	return true;
- }
-@@ -637,14 +638,29 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
- 
- void srcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
- {
--	struct rcu_gp_seq gs = { .norm = seq };
-+	int i;
-+
-+	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
-+	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
-+		return;
-+
-+	for (i = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++) {
-+		if (ULONG_CMP_LT(seq, rsclp->gp_seq[i].norm))
-+			break;
-+		WRITE_ONCE(rsclp->tails[RCU_DONE_TAIL], rsclp->tails[i]);
-+		rcu_segcblist_move_seglen(rsclp, i, RCU_DONE_TAIL);
-+	}
-+
-+	/* If no callbacks moved, nothing more need be done. */
-+	if (i == RCU_WAIT_TAIL)
-+		return;
- 
--	rcu_segcblist_advance(rsclp, &gs);
-+	rcu_segcblist_advance_compact(rsclp, i);
- }
- 
- bool srcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
- {
--	struct rcu_gp_seq gs = { .norm = seq };
-+	struct rcu_gp_seq gs = { .norm = seq, .exp = RCU_GET_STATE_NOT_TRACKED };
- 
- 	return rcu_segcblist_accelerate(rsclp, &gs);
- }
-diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
-index 16b0cb6b32507..431c4466b8898 100644
---- a/kernel/rcu/rcu_segcblist.h
-+++ b/kernel/rcu/rcu_segcblist.h
-@@ -139,7 +139,7 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
- 				   struct rcu_cblist *rclp);
- void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
- 				   struct rcu_cblist *rclp);
--void rcu_segcblist_advance(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gsp);
-+void rcu_segcblist_advance(struct rcu_segcblist *rsclp);
- bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, struct rcu_gp_seq *gsp);
- void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
- 			 struct rcu_segcblist *src_rsclp);
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 640ebe055a246..f63ce75c5b4f5 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1159,7 +1159,7 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
- 	 * accelerating callback invocation to an earlier grace-period
- 	 * number.
- 	 */
--	gs.norm = rcu_seq_snap(&rcu_state.gp_seq);
-+	get_state_synchronize_rcu_full(&gs);
- 	if (rcu_segcblist_accelerate(&rdp->cblist, &gs))
- 		ret = rcu_start_this_gp(rnp, rdp, gs.norm);
- 
-@@ -1188,7 +1188,7 @@ static void rcu_accelerate_cbs_unlocked(struct rcu_node *rnp,
- 	bool needwake;
- 
- 	rcu_lockdep_assert_cblist_protected(rdp);
--	gs.norm = rcu_seq_snap(&rcu_state.gp_seq);
-+	get_state_synchronize_rcu_full(&gs);
- 	if (!READ_ONCE(rdp->gpwrap) && ULONG_CMP_GE(rdp->gp_seq_needed, gs.norm)) {
- 		/* Old request still live, so mark recent callbacks. */
- 		(void)rcu_segcblist_accelerate(&rdp->cblist, &gs);
-@@ -1213,8 +1213,6 @@ static void rcu_accelerate_cbs_unlocked(struct rcu_node *rnp,
-  */
- static bool rcu_advance_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
- {
--	struct rcu_gp_seq gs;
--
- 	rcu_lockdep_assert_cblist_protected(rdp);
- 	raw_lockdep_assert_held_rcu_node(rnp);
- 
-@@ -1226,8 +1224,7 @@ static bool rcu_advance_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
- 	 * Find all callbacks whose ->gp_seq numbers indicate that they
- 	 * are ready to invoke, and put them into the RCU_DONE_TAIL sublist.
- 	 */
--	gs.norm = rnp->gp_seq;
--	rcu_segcblist_advance(&rdp->cblist, &gs);
-+	rcu_segcblist_advance(&rdp->cblist);
- 
- 	/* Classify any remaining callbacks. */
- 	return rcu_accelerate_cbs(rnp, rdp);
-diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-index eaa1ad5297e29..876dd897f18be 100644
---- a/kernel/rcu/tree_nocb.h
-+++ b/kernel/rcu/tree_nocb.h
-@@ -502,7 +502,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
- 		}
- 		if (j != rdp->nocb_gp_adv_time &&
- 		    rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
--		    rcu_seq_done(&rdp->mynode->gp_seq, cur_gp_seq.norm)) {
-+		    poll_state_synchronize_rcu_full(&cur_gp_seq)) {
- 			rcu_advance_cbs_nowake(rdp->mynode, rdp);
- 			rdp->nocb_gp_adv_time = j;
- 		}
-@@ -731,17 +731,17 @@ static noinline_for_stack void nocb_gp_wait(struct rcu_data *my_rdp)
- 		if (!rcu_segcblist_restempty(&rdp->cblist,
- 					     RCU_NEXT_READY_TAIL) ||
- 		    (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
--		     rcu_seq_done(&rnp->gp_seq, cur_gp_seq.norm))) {
-+		     poll_state_synchronize_rcu_full(&cur_gp_seq))) {
- 			raw_spin_lock_rcu_node(rnp); /* irqs disabled. */
- 			needwake_gp = rcu_advance_cbs(rnp, rdp);
- 			wasempty = rcu_segcblist_restempty(&rdp->cblist,
- 							   RCU_NEXT_READY_TAIL);
- 			raw_spin_unlock_rcu_node(rnp); /* irqs disabled. */
- 		}
--		// Need to wait on some grace period?
- 		WARN_ON_ONCE(wasempty &&
- 			     !rcu_segcblist_restempty(&rdp->cblist,
- 						      RCU_NEXT_READY_TAIL));
-+		// Need to wait on some grace period?
- 		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq)) {
- 			if (!needwait_gp ||
- 			    ULONG_CMP_LT(cur_gp_seq.norm, wait_gp_seq))
-@@ -919,7 +919,7 @@ static void nocb_cb_wait(struct rcu_data *rdp)
- 	lockdep_assert_irqs_enabled();
- 	rcu_nocb_lock_irqsave(rdp, flags);
- 	if (rcu_segcblist_nextgp(cblist, &cur_gp_seq) &&
--	    rcu_seq_done(&rnp->gp_seq, cur_gp_seq.norm) &&
-+	    poll_state_synchronize_rcu_full(&cur_gp_seq) &&
- 	    raw_spin_trylock_rcu_node(rnp)) { /* irqs already disabled. */
- 		needwake_gp = rcu_advance_cbs(rdp->mynode, rdp);
- 		raw_spin_unlock_rcu_node(rnp); /* irqs remain disabled. */
-@@ -1548,8 +1548,8 @@ static void show_rcu_nocb_gp_state(struct rcu_data *rdp)
- static void show_rcu_nocb_state(struct rcu_data *rdp)
- {
- 	char bufd[22];
--	char bufw[45];
--	char bufr[45];
-+	char bufw[64];
-+	char bufr[64];
- 	char bufn[22];
- 	char bufb[22];
- 	struct rcu_data *nocb_next_rdp;
-@@ -1569,10 +1569,12 @@ static void show_rcu_nocb_state(struct rcu_data *rdp)
- 					      nocb_entry_rdp);
- 
- 	sprintf(bufd, "%ld", rsclp->seglen[RCU_DONE_TAIL]);
--	sprintf(bufw, "%ld(%ld)", rsclp->seglen[RCU_WAIT_TAIL],
--		rsclp->gp_seq[RCU_WAIT_TAIL].norm);
--	sprintf(bufr, "%ld(%ld)", rsclp->seglen[RCU_NEXT_READY_TAIL],
--		rsclp->gp_seq[RCU_NEXT_READY_TAIL].norm);
-+	sprintf(bufw, "%ld(%ld/%ld)", rsclp->seglen[RCU_WAIT_TAIL],
-+		rsclp->gp_seq[RCU_WAIT_TAIL].norm,
-+		rsclp->gp_seq[RCU_WAIT_TAIL].exp);
-+	sprintf(bufr, "%ld(%ld/%ld)", rsclp->seglen[RCU_NEXT_READY_TAIL],
-+		rsclp->gp_seq[RCU_NEXT_READY_TAIL].norm,
-+		rsclp->gp_seq[RCU_NEXT_READY_TAIL].exp);
- 	sprintf(bufn, "%ld", rsclp->seglen[RCU_NEXT_TAIL]);
- 	sprintf(bufb, "%ld", rcu_cblist_n_cbs(&rdp->nocb_bypass));
- 	pr_info("   CB %d^%d->%d %c%c%c%c%c F%ld L%ld C%d %c%s%c%s%c%s%c%s%c%s q%ld %c CPU %d%s\n",
--- 
-2.53.0-Meta
-
+> So that the guard for KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES and
+> KVM_SET_MEMORY_ATTRIBUTES2 is consistent.
+>
+>> That said, the ordering here is wonky and misleading.  A cursory read of the series
+>> would make one think that waiting to advertise KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES
+>> makes it safe/ok for KVM to plumb in support for KVM_SET_MEMORY_ATTRIBUTES2 over
+>> multiple patches.  But that's not actually true, because the ioctl becomes live
+>> the instant the code exists, userspace doesn't need to wait for KVM to formally
+>> advertise support.
+>>
+>> To further confuse matters, it is actually safe/ok to iteratively add support,
+>> because it's all effectively dead code until "Let userspace disable per-VM mem
+>> attributes, enable per-gmem attributes".
+>
+> yeah, before patch 24, gmem_in_place_conversion is always false. So
+> KVM_SET_MEMORY_ATTRIBUTES2 on gmem fd always return -ENOTTY.
+>
+>> So, I think we should go a step further than what I think Xiaoyao is suggesting,
+>> and fully squash patch 17 into patch 13.  That way the reader doesn't have to jump
+>> through as many mental hoops to piece together what is happening.  It'll obviously
+>> be a bigger patch, but should be easier to review/understand overall.
+>>
+>> Oh, and that combined patch should carve out error_offset straightaway, so that
+>> the full uAPI can be reviewed in a single patch.
+>
+> It sounds good.
