@@ -1,184 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E643938A29A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 07:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311363E8C56;
+	Fri, 24 Jul 2026 12:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784877652; cv=none; b=XMJuU33HYnDYR3kS9S0lwEkba7EjxEbQ00p9eW/4omA9840dB2tOPnUAlWxIW6DMkcPQl97dMXQ3XRz3sx3IFqc9mkbjJzyQnJLcDNJTyMBvmb7nTOe5QWH4e9DYakHmsm7plcqePetg+6yxTrJZcNyclMWoYiQCcMIwJEst05s=
+	t=1784897104; cv=none; b=VTKyBlxQlYLy+dxtGl8wfxe+Cv4OkTWE30ojkZ75SDd8M1icFX7QGdy2BNuHk6s5kWYaKw7jpST9rYCYyUv++WLgLEzAu9nPwqIoSY2fA7IEZ0ow3iQFXgoHfjYSEXtaFr5zinGaelZRGKrq0DERcilcTKz2rW3kaGi+MdKWKFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784877652; c=relaxed/simple;
-	bh=aOiahXnkJLxeXT2PiJPVq12iZVqQpAlIz++UX1OKaMU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qsbv8D/DXDmXMuQrt7+z7jy2d+uELPFoDH0OCX7g53MVSAYerZUrfrLj8p9m/qNWaqY8xYhNfggeoqvYHi/pZCRASYetksWyYcRHz6b3AtCM6hLkDOV6CEh6eEyv1WI4IfrOMj1cZDVqw6otlftLGC/iFvuw4zwnY4MmDoN+8SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JZQQFJN5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784897104; c=relaxed/simple;
+	bh=vWPwSvsdT17Urm91jl+jXUVkqm+nO/vYEWXE4JDjWiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eV3lS1Wg/vHFlwievIZP/pLl1vKlkWb/+UGd1BSzsFhOwoX+JoiqvGf4Ap61D1Ysp5xra2Z86Cdo0XIlMz98GNiYUVCpiYdUhR6RkTzSBvu10XkpmUYe5fti/Ycv7WE3JjFdLvh9vPSy0e+vQq/zeRgemBY8NiwB5odhBe/nThM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiVcvi7L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JZQQFJN5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784877649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=aOiahXnkJLxeXT2PiJPVq12iZVqQpAlIz++UX1OKaMU=;
-	b=JZQQFJN5OWbBf1nhDJdhEku78CGW16JwCsvDzj6XV1H3bLT3xD4T4D8HVK5TPp+BQTxGvB
-	ct0azTgQT2cV9pD3MKIK7f6C75uaKuZ7wvzHJdVVElReKlpK9MQ+J2e3g74x6Y1zFxW5GV
-	mjC0UUgt+h0ukbITzi6pCkOfn78Ww+s=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462--GniF-WyMN2HC94bx9CvtA-1; Fri, 24 Jul 2026 03:20:48 -0400
-X-MC-Unique: -GniF-WyMN2HC94bx9CvtA-1
-X-Mimecast-MFC-AGG-ID: -GniF-WyMN2HC94bx9CvtA_1784877647
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c15d4224f9dso12746266b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 00:20:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784877647; x=1785482447;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=aOiahXnkJLxeXT2PiJPVq12iZVqQpAlIz++UX1OKaMU=;
-        b=ebv0B3N4CuQ+vDKZRgztvuuxukdHy32I49SBpboArG6W0aMMYRAH3c5jz/JwbyU8DS
-         7i1+NfThbHkeyLY+06qQBavUFroEmCD3mnfegV9bROZW5xMPaOrgyBv0/EBX+DufFUV1
-         ZNKXxMB/2YIuNuvFy7B/QIzW2AkcM0aTscQQ4YygcG6r+XXDmIYd/413kegmcBIbEoad
-         77fItOemWuraIDBl0HYUMm1sQfAhMlWQLs9Pg6vxht9WMSt3ZM98nSC9cP9Z+a/rTWmG
-         bATO6U+g22qMStFKt9BYQLnZpjLVmNkKlcvMkniAhr3W1rpyvFY9teq71Pkz6E7G/ACA
-         4NEw==
-X-Forwarded-Encrypted: i=1; AHgh+RrONNeQFRzt5LFhgd7t7A0WONx/sOsqlnctEfJWsr6zZQlbz8nyd2bcirm8hjnaw8xPldfIUEkozQV0M5N8ThRB1pQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygHcmnpJynsuiyLlTI3MA/w4BHYPTMT6rKwEWvl1TYNDoVSDiU
-	LJ8fRhD0Jm17rJnvoDtbPXVXFeGysqNUHfFpQ31V7i6nydJEe+TtcgF1Fqeukjv6VSvyiI3hDPo
-	IezfsBDX1hyr1jiA2D9gWdZOC4z3aEr4AneE6u2yeaufpvNZskRlYmHVKy5HgSlvwmx7yJtYsqg
-	==
-X-Gm-Gg: AR+sD10Th8oiOzT4YadvISAY4Cv4UwWNkQgwsiOSGAj/Ob7NuOzyG51jV6RWyosdQ0l
-	cM2rMdjxdLZDyItU1YFD5aKSmSN18p3qQbq110mDntzEw5N8tdQRKAl01hXGpVAAqRyAHsPXGuo
-	+bdajij/d64u+oWhLSsPHyJxvj3NCnEQ+VEKdv+IaNXAW8KEvmgPa0hanC0k3+66vZ/9Q3XnU1D
-	ZPPLBnYLb0hil2F2kjoelxsduyUvmFVo9XJLkSJb8T85TKFoIL8d8UtMja2rnpwA4pUuM4w6rDZ
-	Tpuuc6QAp2Ui89Xhf/Fqc89B/vCLGK6kmXTqqKb2xbPqd285R8VvPo2LlK0UA9dmS2Y04or6Zhx
-	/E1dz0ExmOBRarUEzhIyha2rIS/TyeO2XGzEuIAEmUeZYf8Ra3359M7FZxu1lyURkGecQ+Q==
-X-Received: by 2002:a17:907:3ea0:b0:c1c:4858:c1a5 with SMTP id a640c23a62f3a-c1c50904a51mr330801066b.14.1784877647179;
-        Fri, 24 Jul 2026 00:20:47 -0700 (PDT)
-X-Received: by 2002:a17:907:3ea0:b0:c1c:4858:c1a5 with SMTP id a640c23a62f3a-c1c50904a51mr330799466b.14.1784877646796;
-        Fri, 24 Jul 2026 00:20:46 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1c32a7986bsm315726666b.7.2026.07.24.00.20.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2026 00:20:46 -0700 (PDT)
-Message-ID: <f2679e058fa3904db3534a5f75d1339a4065018f.camel@redhat.com>
-Subject: Re: [RFC PATCH] Documentation/rv: Explain epoll and aborted sleeps
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Chao Liu <chao.liu@processmission.com>, Nam Cao <namcao@linutronix.de>, 
- Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: lianux.mm@gmail.com, lianux.wang@processmission.com, Shuah Khan
-	 <skhan@linuxfoundation.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 24 Jul 2026 09:20:44 +0200
-In-Reply-To: <20260722045706.85633-1-chao.liu@processmission.com>
-References: <20260722045706.85633-1-chao.liu@processmission.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiVcvi7L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3114D1F000E9;
+	Fri, 24 Jul 2026 12:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784897102;
+	bh=eQ4BP8W1ilNnE6Ctl0tyNalTkyqMAXBJozyWn6u9LGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WiVcvi7LbZa+mkgRzWI2ADJWiicPQaoa/RbW7Q4pJY8wxIf4w4oe1zH0IB3HfqqR5
+	 YxsKi/v3fD3y55VJ/jXsYO7OVxC79j4DMVVySkOk2UpSQK8QmVkGR3dxzaqkzlaNy/
+	 mClN0vCR3kPX6k5BsM9TKDjJ1RBNLCX04ciXYFRFpTC3tCxIVXVDx6kePcSK9lVB1Z
+	 fbvCFkI4sYpiaZKC+7gG7scBCRDw49i/z8c63mcuKx4vojvdU13PfXpNJWBZgn/TIQ
+	 dLGwbBxkjJre5dKqCUCQVUmnrNvpDBQ4XE3IoGzv7ZQXvXWSJpfJObPp0u4zCa7iMi
+	 /stD7pt3YOLUw==
+Date: Fri, 24 Jul 2026 14:44:59 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v1 00/11] RCU: Enable callbacks to benefit from expedited
+ grace periods
+Message-ID: <amNeS_ahHPLqXIGT@localhost.localdomain>
+References: <20260624132356.516959-1-puranjay@kernel.org>
+ <062ddbcd-dac1-4ee1-9d3f-ef115a667d6a@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: A7HDBj7x3isUgEzs7zg28rgCY63doylDK2cm4Z7ea7o_1784877647
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <062ddbcd-dac1-4ee1-9d3f-ef115a667d6a@paulmck-laptop>
 
-On Wed, 2026-07-22 at 12:57 +0800, Chao Liu wrote:
-> The rtapp sleep monitor accepts epoll_wait() as a valid sleeping
-> reason, but the prose only discusses clock_nanosleep and futexes. Add
-> epoll_wait to the list of valid sleeping reasons.
->=20
-> ABORT_SLEEP represents a task restoring TASK_RUNNING before entering
-> the scheduler, but its meaning is not described. Explain why the
-> aborted sleep attempt is valid.
->=20
-> This RFC is based on Nam Cao's pending "rv: rtapp monitor update" v2
-> series:
->=20
-> https://lore.kernel.org/r/cover.1781852967.git.namcao@linutronix.de
->=20
-> Signed-off-by: Chao Liu <chao.liu@processmission.com>
-> ---
+Le Thu, Jul 23, 2026 at 05:31:17PM -0700, Paul E. McKenney a écrit :
+> On Wed, Jun 24, 2026 at 06:23:42AM -0700, Puranjay Mohan wrote:
+> > This series lets call_rcu() callbacks be reclaimed as soon as either a
+> > normal or an expedited grace period that covers them has elapsed, rather
+> > than always waiting for a normal grace period.
+> > 
+> > Motivation
+> > ==========
+> > Today there is an asymmetry: synchronize_rcu_expedited() callers get fast
+> > reclaim, but call_rcu() callers never benefit from those same expedited
+> > grace periods, even though an expedited GP proves exactly the same thing
+> > as a normal one -- all pre-existing readers are done.  When expedited GPs
+> > are running on the system (driven by other subsystems), call_rcu()
+> > callbacks that could already be freed instead sit in RCU_WAIT_TAIL until
+> > the next normal GP.  This series treats a grace period as a grace period
+> > regardless of how it was driven, so memory is reclaimed sooner.
+> > 
+> > Design
+> > ======
+> > Callback segments now record both the normal and expedited grace-period
+> > sequence in struct rcu_gp_seq, and rcu_segcblist_advance() releases a
+> > segment as soon as poll_state_synchronize_rcu_full() reports that either
+> > has completed.  Three notification paths are taught about expedited
+> > completion so the advance actually happens: the NOCB rcuog kthreads,
+> > the rcu_pending() tick gate, and rcu_core().
+> > 
+> > Changelog:
+> > RFC: https://lore.kernel.org/all/20260417231203.785172-1-puranjay@kernel.org/
+> > Changes in v1:
+> >  - New prep patch 1 renames struct rcu_gp_oldstate to struct rcu_gp_seq
+> >    and its fields rgos_norm/rgos_exp to norm/exp tree-wide (Frederic).
+> >  - The rcu_segcblist segment field stays named gp_seq; only its type
+> >    changes (Frederic).
+> >  - Patch 8 (NOCB wake) is reworked.  v1 woke the wrong waitqueue
+> >    (rdp_gp->nocb_gp_wq via wake_nocb_gp() rather than the leaf
+> >    rnp->nocb_gp_wq[] that an rcuog kthread waiting for a GP sleeps on),
+> >    and the wait condition only checked the normal ->gp_seq.  The rcuog
+> >    grace-period wait now tracks a struct rcu_gp_seq and is released via
+> >    poll_state_synchronize_rcu_full(); rcu_exp_wait_wake() wakes the leaf
+> >    node through the new rcu_nocb_exp_cleanup() (Frederic).
+> >  - rcu_pending() uses a new memory-ordering-free
+> >    poll_state_synchronize_rcu_full_unordered() to avoid memory barriers
+> >    on every tick, leaving the ordering duty to rcu_core() (Frederic).
+> > 
+> > Still open: Frederic asked whether the first smp_mb() in
+> > poll_state_synchronize_rcu_full() is needed on the callback-advance path
+> > (patch 6).  That path still uses the fully ordered helper; only
+> > rcu_pending() was switched to the unordered variant.  Happy to revisit.
+> > 
+> > Puranjay Mohan (11):
+> >   rcu: Rename struct rcu_gp_oldstate to rcu_gp_seq
+> >   rcu/segcblist: Add SRCU and Tasks RCU wrapper functions
+> >   rcu/segcblist: Factor out rcu_segcblist_advance_compact() helper
+> >   rcu/segcblist: Track segment grace periods with struct rcu_gp_seq
+> >   rcu: Add RCU_GET_STATE_NOT_TRACKED for subsystems without expedited
+> >     GPs
+> >   rcu: Enable RCU callbacks to benefit from expedited grace periods
+> >   rcu: Update comments for gp_seq and expedited GP tracking
+> >   rcu: Wake NOCB rcuog kthreads on expedited grace period completion
+> >   rcu: Detect expedited grace period completion in rcu_pending()
+> >   rcu: Advance callbacks for expedited GP completion in rcu_core()
+> >   rcuscale: Add concurrent expedited GP threads for callback scaling
+> >     tests
+> 
+> I do see the occasional failure when running TREE01, as in a failure or
+> four every couple hundred hours of testing.  This is the only rcutorture
+> scenario that exercises callback (de)offloading, which might (or might
+> not) be a clue.
+> 
+> The console log of a failing run is attached, or you can find it here:
+> 
+> https://drive.google.com/file/d/1EH2P4SDy2a-SJndkN3GbCTGAXxI2xevm/view?usp=sharing
+> 
+> This is a "??? Writer stall state" failure, where rcutorture never learns
+> of grace-period completion.  Possibly because no grace period completed.
+> But there are no RCU CPU stall warnings.  In addition, these two lines
+> 
+> [  631.032657] ??? Writer stall state RTWS_EXP_SYNC(4) g152813 f0x0 ->state D cpu 1
+> . . .
+> [ 3610.863114] ??? Writer stall state RTWS_EXP_SYNC(4) g736160 f0x0 ->state D cpu 1
+> 
+> show that the grace-period sequence number advanced from 152813 to
+> 736160 in about 50 minutes.  So grace periods really are completing,
+> lots of them.
+> 
+> This rcutorture scenario has rcu_nocbs CPUs, and CPU 5 is in trouble:
+> 
+> [  631.066109] rcu:    CB 5^4->4 KblSW F21044 L21044 C116 .W120(148380/168068).N295B101 q516 S CPU 16
+> . . .
+> [ 3610.869914] rcu:    CB 5^4->4 KblSW F3000848 L3000848 C116 .W120(148380/168068).N295B101 q516 S CPU 16
+> 
+> There are 120 callbacks on the WAIT segment, which are waiting on
+> grace-period sequence number 148380, which was long gone even back at
+> 631.032657 seconds in (g152813).  There are 295 more callbacks in the NEXT
+> segment, which long ago should have been assigned a grace period and moved
+> into the currently empty NEXT_READY segment (which is the "." right before
+> the "N295").  There are yet another 101 callbacks on the bypass list.
+> 
+> This suggests that the rcuog kthread isn't being awakened when it
+> should be.  And that something is failing to advance callbacks out of
+> NEXT in a timely fashion.
+> 
+> Thoughts?
 
-Thanks for the contribution! I have a couple of comments, we want to be
-assertive in this docs: in general, let's not say something like "this is v=
-alid
-because the monitor thinks it's valid" but "this is valid because it is rt-=
-safe
-for reason X".
+If a grace period has elapsed while in the middle of nocb_gp_wait(),
+after the call to rcu_advance_cbs() and before the following polling which
+determines if we a grace period must be waited upon, then the kthread
+will wait for new callbacks only (and will ignore waiting callbacks that
+can now be advanced).
 
-> =C2=A0Documentation/trace/rv/monitor_rtapp.rst | 6 ++++++
-> =C2=A01 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/trace/rv/monitor_rtapp.rst
-> b/Documentation/trace/rv/monitor_rtapp.rst
-> index 238b59395ff5..234ed4d581ac 100644
-> --- a/Documentation/trace/rv/monitor_rtapp.rst
-> +++ b/Documentation/trace/rv/monitor_rtapp.rst
-> @@ -67,6 +67,8 @@ thread to sleep for one of the following reasons:
-> =C2=A0=C2=A0=C2=A0=C2=A0 variables as safe for real-time. As an alternati=
-ve, the librtpi library
-> =C2=A0=C2=A0=C2=A0=C2=A0 exists to provide a conditional variable impleme=
-ntation that is correct
-> for
-> =C2=A0=C2=A0=C2=A0=C2=A0 real-time applications in Linux.
-> +=C2=A0 - Real-time thread waiting for events using `epoll_wait`,
+Does the following help?
 
-> + which the monitor accepts as a valid sleeping reason for real-time task=
-s.
-
-Not adding much value, try:
-
- which is a real-time-safe syscall for sleeping as it uses PI-aware locking=
-.
-
-> =C2=A0
-> =C2=A0Beside the reason for sleeping, the eventual waker should also be
-> =C2=A0real-time-safe. Namely, one of:
-> @@ -114,6 +116,10 @@ The monitor's specification is::
-> =C2=A0=C2=A0 ALLOWLIST =3D BLOCK_ON_RT_MUTEX
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or FUT=
-EX_LOCK_PI
-> =C2=A0
-> +`ABORT_SLEEP` represents a task restoring its state to `TASK_RUNNING` be=
-fore
-> +entering the scheduler. In this case, the task does not actually block,
-
-
-> + so the monitor treats the aborted sleep attempt as valid.
-
-This sentence is a bit vague. Indeed an /aborted/ sleep is a valid wakeup, =
-as if
-the task woke up itself without even sleeping, saying "the monitor treats t=
-he
-attempt as valid" adds no value.
-
-You could rephrase it to (full paragraph for clarity):
-
-`ABORT_SLEEP` represents a task restoring its state to `TASK_RUNNING` befor=
-e
-entering the scheduler. In this case, the task does not actually block, so =
-it is
-back to runnable without any wakeup sequence unsafe for real-time.
-
-What do you think?
-
-Thanks,
-Gabriele
-
+diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+index 6da1b8f52476..96d76eb6259d 100644
+--- a/kernel/rcu/tree_nocb.h
++++ b/kernel/rcu/tree_nocb.h
+@@ -792,22 +792,12 @@ static noinline_for_stack void nocb_gp_wait(struct rcu_data *my_rdp)
+ 							   RCU_NEXT_READY_TAIL);
+ 			raw_spin_unlock_rcu_node(rnp); /* irqs disabled. */
+ 		}
+-		// Need to wait on some grace period?
++
+ 		WARN_ON_ONCE(wasempty &&
+ 			     !rcu_segcblist_restempty(&rdp->cblist,
+ 						      RCU_NEXT_READY_TAIL));
+-		/*
+-		 * Only request a GP wait if the next pending callback's
+-		 * GP has not already completed (normal or expedited).
+-		 * If poll_state_synchronize_rcu_full() says it completed,
+-		 * then rcu_advance_cbs() above already moved those
+-		 * callbacks to RCU_DONE_TAIL, so there is no GP to wait
+-		 * for.  Any remaining callbacks got new (future) GP
+-		 * numbers from rcu_accelerate_cbs() inside
+-		 * rcu_advance_cbs() and will be handled on the next pass.
+-		 */
+-		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
+-		    !poll_state_synchronize_rcu_full(&cur_gp_seq)) {
++		// Need to wait on some grace period?
++		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq)) {
+ 			/*
+ 			 * Track the earliest pending normal and expedited GP
+ 			 * across the group so the wait below can be released by
