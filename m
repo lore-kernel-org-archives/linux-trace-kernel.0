@@ -1,78 +1,72 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1A82F7F14
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 02:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA84632E6B4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jul 2026 03:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784860405; cv=none; b=ccf1eHuyQtd9vM4ExjjweXYIKcy5gNQPzovQe6mEGfAhRIazWOGpYqyd9kLOZDGmTjlrh5hSB1kJRE+XK5uv5V7y1fkEmFl817xNUeCHPsPaHITwdyJhXyQZe2Kq9hDX02chLQCjmSOjyZiZUiK+MChw+5rxyQ7xlfkvr+Mf2MA=
+	t=1784862330; cv=none; b=YeJicEHYuU/IGthWd9Si5RvCfqFq8Eq1SjYmV6BVj+9rh63jPV2/ZzyhhUo2c2OUhWGhHMP7YaPaGg5O1dGb5QQSLsfVuO5IuyxrCu4pTAs9ke28F+zDUn3Vs+jF19v8QTT5abghwjOvofxiS1sPOmtoG8+P5K4nWMYHiTPZsVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784860405; c=relaxed/simple;
-	bh=nuRw+6p67qaHazyhijHeIaFQfYRohH4J45oaItgPOiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K97517qwDIA96f8CNLLfzLxCaUV0Zo0srTZf9ChUau3fXqprwJo0n33UsL3sfvakjLzdkSxMdETVFFBhEG5/O7OMlPGYTA2/E/MSB6vIGJUuS3pdJXPqEBw4TGpG1/xNeucfdkGebJk+otm/P0StTKRauid3XMKG5fxGX5Q72Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8n8J0HM; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1784862330; c=relaxed/simple;
+	bh=gWtTBUfQ079blUxszBgnicGvuf0vMoPOa2nISSnwh4I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W7e/rxJuK9FwU7BFcilhrrB2aF8lLrrH9R1EHQ45WhsxANkZDi0sqqfNXf2Q1i2Fm9iLCWHj4ajMqFjCQlcSOHCU2mNQMyj+tR09Ocow+XDLpLUPqQ4240xOPG+YwmzizoeUvbckafDe/tScgrWFjMks1lYjOzTzXix1PbNi6AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sKGMppB1; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8n8J0HM"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cc73e322dbso14428175ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 19:33:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sKGMppB1"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47db714766aso557943f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jul 2026 20:05:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784860404; x=1785465204; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=uRpZaMx5e+nGKMC8zc7uMAUN5qp/LA2gF83ppDblymU=;
-        b=a8n8J0HM9Zy6oat7WvZ60201RtAjbz9f5A3n/9iz/qgVXZysY5xOiE8I1GaCYSqqHo
-         LebkMdsUYP9/+dzDoLwCvE2LsjVpWsSqmpVzFXkfyW5/4voOoD6VgTmlNGJYnHZgwtox
-         WC256pCSexpYAp9AdCGWxxijmSEZJ6M+n2mEPjptkUE/yOWeioSBul6Xgxhcj8PQqN2I
-         l3RqHYKWcQwR1KOwbTIqBfT0BEhAfc5NCbp4albLBQaqKmDprXFFmf7DY9aEWHUPfaYJ
-         LM0K/4O+2c5WYF+MP5YtAgQRNoD90ZFzRKsKIKeARfsl6njp+CXYf0OEf90qtQ+czcD3
-         sDHw==
+        d=gmail.com; s=20251104; t=1784862327; x=1785467127; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=/SNsZTXwCXf/3KWca6mZAHrbZy6nzp6GZVhlgsJbqGo=;
+        b=sKGMppB1sz/IdANJKNLLJtFziiWHhPoKde8jinZts0knJuMn2cyle3OlOBTlgYM1n8
+         N72+YJGBQVrGybRb9bwJZYQM/erUVO9dPh8SdDHJ2i62lJjWyG/g5y795yGSeW9ZKNtU
+         ms/0cXN7sCoFrBkawIhKIR3kdlrtGieYIA0Ao/NearwfL2AAF04r0dk30aNJtb56VSA2
+         fF7py42SH8eJLmOak2f7R5AhlxPKU/Ogh2I4L84jO5cz2mI4a8rvdursL/EPKc/sJw7x
+         bJsuJ/RmHXYWyj/5prHCthZptKHZrs8XkYwhEPIh1pB3Qnvl26pN1udZp7yyiPus65bu
+         TQaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784860404; x=1785465204;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=uRpZaMx5e+nGKMC8zc7uMAUN5qp/LA2gF83ppDblymU=;
-        b=o0zmvJcLEoO4YvVK8QFbCrzPFM6bv5TLhEiN4mKYvyLLEz7I3A6nXdnvyL6GrXph+Y
-         opTENKrReaXFbbiEODzEz1HQPywh410r8EuEucFVLIKr4lFMrrsuv+futT92XfKZX5mZ
-         f5ZaotRLkqiZAR46aqw5GSo+Q9sIbIHvv+N7GRgSWuoWXW3mI+vaEZ8Ms+sP/N1E+EWx
-         WJLkR+WCXaXIoR0FfQOcVljcHp+5ssoU7DOixOJ1eXTq45ntVHDx0qF6kPnRIo6iZNQ5
-         fC3ytTeKd+ae0A8tzHulRaqa6yDG6zv+wyKokTA24FHUETEiQ4uwpQiSJojYkgvlK59j
-         RCoA==
-X-Forwarded-Encrypted: i=1; AHgh+RpiS80IuZzlAoTN49d6jBQ0BX9qCObKZEMpXcDa2jqVUwzvBQ1LOCKVBoyW3+pMRJMAvwXx6jUURdw7txL5/QUQ3y4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy35Ak9vz3kZDd6lqcxlF4pGlWCKQrKfo5f9Iu7iUBDqECrES8c
-	aI+KyVpQiLuyo40Mt21WrQwiJvUXnKK97NeglqMaREPBMc/kSb2oSzxn
-X-Gm-Gg: AR+sD1354qQ5wItm8HakhSu764Gzs2T8TRlOOxxBdQdkikde506xceqWZLJpBrHTnWk
-	mSbxC51h9UqEoRRhw9awIoG7KHrzwLDJz2EwsBQLCe0Wyu3eyB91VrEwqjAHFEZa1tGJXMZ6GsT
-	QxH4lQevE+ehNch7W+TKE/oklyMb3Cp2Jdz64MUSAZh1s4t3SaJSMjtnIhBQPgPPmN8isMv8OKJ
-	vGnnuPn5UyJJ0Kuooh+vW/fBNxO+EDpBeh/nrdSjSvsQbC/pAbw2n+POFJQmDF85PONjwZ3CIxh
-	L7M+pEKb8kzn2C44/rQ+w2wdZ13dgrL/prQgPttgZ5L81HD7gBlX1ZQNEmvytaG/eTfAPuF9qp0
-	/cLvZU7DQYHZbgGfQJWq7OW76KM9WF6iHm++mbdnvGK4ZalxTwlTrdd75vXRLgkxK7/au//iikp
-	u7o5xQkP13zzP1YA==
-X-Received: by 2002:a17:903:2341:b0:2ca:d975:5bbd with SMTP id d9443c01a7336-2cfa6b995b6mr65133375ad.20.1784860403839;
-        Thu, 23 Jul 2026 19:33:23 -0700 (PDT)
-Received: from osman.mioffice.cn ([43.224.245.178])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cf8f350560sm43044905ad.68.2026.07.23.19.33.21
+        d=1e100.net; s=20251104; t=1784862327; x=1785467127;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=/SNsZTXwCXf/3KWca6mZAHrbZy6nzp6GZVhlgsJbqGo=;
+        b=Qw3IG0l4fC77PoAVWAp2TeFBYmeFYE95WcteUfyROSF761jfjreO7pfJqw7r6zDMYZ
+         MSPeaZ9mnz2rP/GUYLRMQIfprnhGvJsYtaI+rUamo3OVlW8hNIbKtQuciQH50YxV6HWo
+         db7kGRBv0uGfn+l9P93yayL50MINIhojatkbPQAatbOt8mD9Wg/LAnVWC0e06nxcl/yK
+         rTjf4uOKOJI2ICKvwq81JCvFltpHh4TESsqUromMLSeFccrlLLpl2KUx1EtxqDgGD2qT
+         gp4wiERrWHum/I5p7WE8s4xFGhPSFqcfgXCKpW1hEHwmb4s11K71bySq9oC6wsX2BCUx
+         gVzw==
+X-Forwarded-Encrypted: i=1; AHgh+RqxeedZOFZXHylQmOauAOtk5qg34Omyn5lx1dgAFSkfWu7wFeMGRwZ0UjvdaG6gMAhfZVQOqtuZ7tpqrSOjwvvI0B4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNZgc+AHSAd93GRMUVgzgJi8qNDLPTU5eR9gokE9kbkKrP0oyd
+	YVf6N07rBkRJkfPOMz/LwqdhulvbCJYpreUfbzkNn7qcsEI5ZZBHHjgR
+X-Gm-Gg: AR+sD12rofmJNZnOffo/Ms1r4LSXzCUs8ipimsQ2m93IcTTNJ/wCw/LlsDC7B6Lf4hU
+	Tp4QU61nC6D2zy0AhkMSyJA8gVy6xbEHKPKW/sze7uUwCiNh0Zv6IbSjhmbGWN+HRZAfYht8qh+
+	AZjx5RVKEM2YJ2d9LPvTN4IKj3yEaKZ3DRRBJt9XGTHgh7g8Pc0x3Pbs+LzQLtCKNs0JIg1doq6
+	sd9cGenKxmygWw8QgdkI58cO0iDMCCTsYXKmbwx9Hob7xbL/0kEbIVYflJjVnXkbU/yYEn/X80E
+	UDcQ+U9e6QPatgmpVaF8kTWB5nqjyWBeOZduLK80DTRWIFHqMW6EztMtkW7x9L64HI6EwIxbbDc
+	7StiO2vD3NsddQNNiMp5rYsw6bona4srtrokl9pH+ja/spXojlVRe1dnPux8l6qTMpGKfyWgKfg
+	uTwe0mLA2A/dOOAHhu2/XDTqMHVvG/wBktfYTXF0UBVWN18pU1OO3kAlLegk9IKg==
+X-Received: by 2002:a05:6000:220e:b0:47f:924a:655b with SMTP id ffacd0b85a97d-47f924a659dmr5140052f8f.26.1784862326858;
+        Thu, 23 Jul 2026 20:05:26 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f85c531basm20280576f8f.19.2026.07.23.20.05.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2026 19:33:23 -0700 (PDT)
-From: Zhan Xusheng <zhanxusheng1024@gmail.com>
-X-Google-Original-From: Zhan Xusheng <zhanxusheng@xiaomi.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Shuah Khan <shuah@kernel.org>
+        Thu, 23 Jul 2026 20:05:26 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] tracing/probes: Extend max length of argument string
-Date: Fri, 24 Jul 2026 10:33:17 +0800
-Message-ID: <20260724023317.624074-1-zhanxusheng@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178399140457.27810.11387684872148824707.stgit@devnote2>
-References: <178399140457.27810.11387684872148824707.stgit@devnote2>
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH v4] tracing: Fix use-after-free freeing trigger private data
+Date: Fri, 24 Jul 2026 04:05:17 +0100
+Message-ID: <20260724030523.19081-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,35 +75,133 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 14, 2026 at 10:10:04AM +0900, Masami Hiramatsu (Google) wrote:
-> -	char buf[MAX_ARGSTR_LEN + 1];
-> +	char buf[MAX_COMMON_HEAD_LEN + 1];
-> ...
-> +#define MAX_ARGSTR_LEN		255
-> +#define MAX_COMMON_HEAD_LEN	63
+Commit 61d445af0a7c ("tracing: Add bulk garbage collection of freeing
+event_trigger_data") moved the kfree() of event_trigger_data to a kthread
+that runs tracepoint_synchronize_unregister() before freeing. That removed
+the synchronization the trigger .free callbacks used to get implicitly and
+inline from trigger_data_free().
 
-Keeping the head buffer at 63 avoids growing it to 256, but it also
-preserves a pre-existing truncation of the kprobe/fprobe head: both
-trace_kprobe_match_command_head() and trace_fprobe_match_command_head()
-snprintf() the symbol / function name into this buffer ("%s" or "%s+%u").
-Kernel symbols can be far longer than 63 -- Rust-mangled names are
-routinely 150-200+ chars (KSYM_NAME_LEN is 512); I see 199-char symbols
-in /proc/kallsyms here.
+event_hist_trigger_free(), event_hist_trigger_named_free() and
+event_enable_trigger_free() free their satellite data (hist_data, cmd_ops,
+enable_data) right after trigger_data_free() returns. With the
+synchronization now deferred to the kthread, a concurrent tracepoint
+handler can still reach that data through the list_del_rcu()'d trigger,
+causing a use-after-free.
 
-This is the same delete-/match-by-command path you just fixed for the
-args matcher in commit 15f197856d68 ("tracing/probes: Avoid temporary
-buffer truncation in trace_probe_match_command_args()"):
-dyn_event_release() passes the symbol as argv[0] to
-*_match_command_head(), which then calls trace_probe_match_command_args().
-The head runs first, so for a probe on a long symbol the head strcmp()
-already fails and the probe cannot be matched/deleted by full command --
-before the args fix is even reached.
+The histogram teardown must stay synchronous: remove_hist_vars() and
+unregister_field_var_hists() have to detach a synthetic event from the
+histogram before the trigger-removal write returns, otherwise a following
+command races in and the synthetic-event removal fails with -EBUSY, as the
+trigger-synthetic-eprobe.tc selftest catches. Make those callbacks wait
+with the correct barrier - tracepoint_synchronize_unregister(), matching
+the free kthread - before freeing.
 
-Would it make sense to give the head matchers the same direct-comparison
-treatment instead of a fixed buffer -- compare the symbol (and optional
-"+offset") against argv[0] directly? uprobe already compares its filename
-directly, so mainly kprobe and fprobe would need it, and
-MAX_COMMON_HEAD_LEN could then be dropped.
+The enable trigger has no such synchronous requirement, and a blocking
+synchronize there would re-serialize the path that commit deliberately
+deferred. Give it an optional private_data_free() callback that the free
+kthread runs after its grace period, and free enable_data from there.
 
-Thanks,
-Xusheng
+Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Fixes: 61d445af0a7c ("tracing: Add bulk garbage collection of freeing event_trigger_data")
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+ kernel/trace/trace.h                |  1 +
+ kernel/trace/trace_events_hist.c    |  2 ++
+ kernel/trace/trace_events_trigger.c | 18 +++++++++++++++---
+ 3 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 80fe152af1dd..bf77331f56a4 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1941,6 +1941,7 @@ struct event_trigger_data {
+ 	struct list_head		named_list;
+ 	struct event_trigger_data	*named_data;
+ 	struct llist_node		llist;
++	void				(*private_data_free)(struct event_trigger_data *data);
+ };
+ 
+ /* Avoid typos */
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 82ce492ab268..58d28cd1afa3 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6349,6 +6349,7 @@ static void event_hist_trigger_free(struct event_trigger_data *data)
+ 
+ 		trigger_data_free(data);
+ 
++		tracepoint_synchronize_unregister();
+ 		remove_hist_vars(hist_data);
+ 
+ 		unregister_field_var_hists(hist_data);
+@@ -6388,6 +6389,7 @@ static void event_hist_trigger_named_free(struct event_trigger_data *data)
+ 
+ 		del_named_trigger(data);
+ 		trigger_data_free(data);
++		tracepoint_synchronize_unregister();
+ 		kfree(cmd_ops);
+ 	}
+ }
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 655db2e82513..46e60b70a4bb 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -38,6 +38,13 @@ static void trigger_create_kthread_locked(void)
+ 	}
+ }
+ 
++static void trigger_data_free_one(struct event_trigger_data *data)
++{
++	if (data->private_data_free)
++		data->private_data_free(data);
++	kfree(data);
++}
++
+ static void trigger_data_free_queued_locked(void)
+ {
+ 	struct event_trigger_data *data, *tmp;
+@@ -52,7 +59,7 @@ static void trigger_data_free_queued_locked(void)
+ 	tracepoint_synchronize_unregister();
+ 
+ 	llist_for_each_entry_safe(data, tmp, llnodes, llist)
+-		kfree(data);
++		trigger_data_free_one(data);
+ }
+ 
+ /* Bulk garbage collection of event_trigger_data elements */
+@@ -75,7 +82,7 @@ static int trigger_kthread_fn(void *ignore)
+ 		tracepoint_synchronize_unregister();
+ 
+ 		llist_for_each_entry_safe(data, tmp, llnodes, llist)
+-			kfree(data);
++			trigger_data_free_one(data);
+ 	}
+ 
+ 	return 0;
+@@ -1717,6 +1724,11 @@ int event_enable_trigger_print(struct seq_file *m,
+ 	return 0;
+ }
+ 
++static void enable_trigger_private_data_free(struct event_trigger_data *data)
++{
++	kfree(data->private_data);
++}
++
+ void event_enable_trigger_free(struct event_trigger_data *data)
+ {
+ 	struct enable_trigger_data *enable_data = data->private_data;
+@@ -1728,9 +1740,9 @@ void event_enable_trigger_free(struct event_trigger_data *data)
+ 	if (!data->ref) {
+ 		/* Remove the SOFT_MODE flag */
+ 		trace_event_enable_disable(enable_data->file, 0, 1);
++		data->private_data_free = enable_trigger_private_data_free;
+ 		trace_event_put_ref(enable_data->file->event_call);
+ 		trigger_data_free(data);
+-		kfree(enable_data);
+ 	}
+ }
+ 
+-- 
+2.53.0
+
