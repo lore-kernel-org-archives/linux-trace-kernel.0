@@ -1,95 +1,239 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED61543CEE7;
-	Fri, 24 Jul 2026 17:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00393195F9;
+	Fri, 24 Jul 2026 17:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784913836; cv=none; b=ZP76FkI6yeJ2O1QOlCGg1KSR0+W/UVlDknOlassyQ/oz/ZxwkTNbjKW8YYudEBql5pPVr3pNSbOS+qN6v6l4iQKDzuo0hLmbFGXJp2DGdl24l8lyCCaYAN6hwqCcf53929WcQAnLJctUxrhExV/H4bhPf4VXFTV1xbyxmAnHRNs=
+	t=1784914921; cv=none; b=KUhu/Si/lHzOmmhG7w9Xyt42OmjuJk/gxJSsQxC8W0pJ6OyqZUTH5pwJQuf8x9qfhDbgX5en6os2+B6BsJEZU96bMw5Up2iMxCzsT8WQQoXJJh5mfuNsRquDicpa7zNuQspzNLHajdoZj9e2NCV+ox8bAL1Rq0/M0iPBcpxU9s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784913836; c=relaxed/simple;
-	bh=kFTB3zM2liSxnFOeyMCY9Avdx8ZrP0mW0fYyZEZ1K9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Yb299Heegsk4eHABFP0Pvu/i5ChYagldnsYUgT0443VTPiw8Ni11DSjkgrnpjZgo2AYWM20pdPU8fNqUNbJrCzilsVgVbRUPHRHCqh3xzt6h+RDeJx+24tY1ceqaOUR+LjM98Szrt+zrdbWrFq0FlWd730R7a+jJG3gmGsdRT8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 88615402FE;
-	Fri, 24 Jul 2026 17:23:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 0642A2000E;
-	Fri, 24 Jul 2026 17:23:50 +0000 (UTC)
-Date: Fri, 24 Jul 2026 13:24:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Delay module ref count for "enable_event" trigger
-Message-ID: <20260724132415.1b5005db@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784914921; c=relaxed/simple;
+	bh=1a9Hh1jT3b4k5SONLqdJ8REc8xZYBUjrsYaX7P6SCbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RczfUE6o+Kh4e5R+SmaYcDm9EIg6V9ZLRHTJZ13VLEHLvhmRhU/DHrba35poBulg6G2vx8MIHfuxDMu9/w6Q4EjDmDSKxt2rYIqpGznP7LZFtFkppj5hIWuC9KFLfLAFDi+o/pix64bl7da5YXX050v1XLf/i2bsyzn4Y1qW3Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqniMlSh; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqniMlSh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F2981F000E9;
+	Fri, 24 Jul 2026 17:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784914919;
+	bh=xOSaWZVH02E9YfDlmNefkyXnGSbPwYzyGR61iRtNArQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
+	b=oqniMlShAOEHnDpS2SKjDRbAhbGXLaZcYMQY4xt/vK7kc0oxb+s9pTTjPlx4RVlgZ
+	 6Kq2zoWVPsBryztOziexe7coS4/Sz2+3HmY9KPg3M75C05MSXPHcgXwOI6ii2vfXOC
+	 3VEHOpliXqf/hUj+9GpxZKozw+BTQpgMcqLJuwbYZ1XSW/pEBrLwvfO8j3F71sxd4V
+	 uuEEcNXX9XSeEox/0P1VG1/m7ZkFRGGoXTN+lg+CQ8f+3GTwGQ/5oDgG7vvPyRlVMI
+	 nWbOoFJ5XHera4kgj5IoOYpiIhRSw9qBQmA3s5qGnDcFQdhnmOqKgn6lcR2IVzllsW
+	 DkCoBXrfXoR/Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 12BBCCE08DF; Fri, 24 Jul 2026 10:41:59 -0700 (PDT)
+Date: Fri, 24 Jul 2026 10:41:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Puranjay Mohan <puranjay12@gmail.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v1 00/11] RCU: Enable callbacks to benefit from expedited
+ grace periods
+Message-ID: <f80f22ea-81f3-49d1-afdf-b82b2b7158bc@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20260624132356.516959-1-puranjay@kernel.org>
+ <062ddbcd-dac1-4ee1-9d3f-ef115a667d6a@paulmck-laptop>
+ <amNeS_ahHPLqXIGT@localhost.localdomain>
+ <CANk7y0hQQ3oDKt+_8oh4t=8NfMRSa80a9jGr+DG+zbrcuUskTA@mail.gmail.com>
+ <CANk7y0isSWC0mARzqhn_4OWb+oHkrAt9k_83j_V3eDzKGbsxjA@mail.gmail.com>
+ <88e5e2e4-8043-4d23-a362-cd864f9d4145@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 0642A2000E
-X-Stat-Signature: i7ybatrkwx3codoa4cja3zja165bo994
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+lJLUje1q5HJrwQa6NG1hROELO+yXUFBQ=
-X-HE-Tag: 1784913830-132034
-X-HE-Meta: U2FsdGVkX1/KchazAR5R6yhpXVB1Zboe+M2Z8eXYPETqG2m4pZmLm5tA8s1O+Op02P/Gq9BQitj7dS7ZDU0XWIaD98IodgA1XY/Wt+xULNTCpDBZqt4X9icIZ2MvwTdTQFEbyHkII8hQXO5AeIvhZ5/YZgTFlOD62J5QMc6pEote+8u4YYXosRIfAZG+TQUDHDA1vPW02Mx1imGiCFTDrD0en4Lt82eAsbBzEZQIfRZ/l+eVOkwgCerx4EUoqAJYOE3ste4LvJfg8CCkEwZxMe3g0Qq1TYWzhFoWhCG3XGcFW04LuNa2Pq7paeT42Z4V6AB7NQaB6YdHvM0iszrbHFj4RGWJ2CL3QMA7YjGBAudAqqvDcfF8jW2AN76wYStd+dboH8Z+uCKuWeVlljUVO9K5KbIW4ihLKyNjYeSqkNev7TN7hvdoT2RdGbrYXs3JJ/2QttnT66EjV4oMN/qetGUJZhz+6MDXdL2YZ2apOzg=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88e5e2e4-8043-4d23-a362-cd864f9d4145@paulmck-laptop>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, Jul 24, 2026 at 07:06:42AM -0700, Paul E. McKenney wrote:
+> On Fri, Jul 24, 2026 at 02:47:22PM +0100, Puranjay Mohan wrote:
+> > On Fri, Jul 24, 2026 at 1:52 PM Puranjay Mohan <puranjay12@gmail.com> wrote:
+> > >
+> > > On Fri, Jul 24, 2026 at 1:45 PM Frederic Weisbecker <frederic@kernel.org> wrote:
+> > > >
+> > > > Le Thu, Jul 23, 2026 at 05:31:17PM -0700, Paul E. McKenney a écrit :
+> > > > > On Wed, Jun 24, 2026 at 06:23:42AM -0700, Puranjay Mohan wrote:
+> > > > > > This series lets call_rcu() callbacks be reclaimed as soon as either a
+> > > > > > normal or an expedited grace period that covers them has elapsed, rather
+> > > > > > than always waiting for a normal grace period.
+> > > > > >
+> > > > > > Motivation
+> > > > > > ==========
+> > > > > > Today there is an asymmetry: synchronize_rcu_expedited() callers get fast
+> > > > > > reclaim, but call_rcu() callers never benefit from those same expedited
+> > > > > > grace periods, even though an expedited GP proves exactly the same thing
+> > > > > > as a normal one -- all pre-existing readers are done.  When expedited GPs
+> > > > > > are running on the system (driven by other subsystems), call_rcu()
+> > > > > > callbacks that could already be freed instead sit in RCU_WAIT_TAIL until
+> > > > > > the next normal GP.  This series treats a grace period as a grace period
+> > > > > > regardless of how it was driven, so memory is reclaimed sooner.
+> > > > > >
+> > > > > > Design
+> > > > > > ======
+> > > > > > Callback segments now record both the normal and expedited grace-period
+> > > > > > sequence in struct rcu_gp_seq, and rcu_segcblist_advance() releases a
+> > > > > > segment as soon as poll_state_synchronize_rcu_full() reports that either
+> > > > > > has completed.  Three notification paths are taught about expedited
+> > > > > > completion so the advance actually happens: the NOCB rcuog kthreads,
+> > > > > > the rcu_pending() tick gate, and rcu_core().
+> > > > > >
+> > > > > > Changelog:
+> > > > > > RFC: https://lore.kernel.org/all/20260417231203.785172-1-puranjay@kernel.org/
+> > > > > > Changes in v1:
+> > > > > >  - New prep patch 1 renames struct rcu_gp_oldstate to struct rcu_gp_seq
+> > > > > >    and its fields rgos_norm/rgos_exp to norm/exp tree-wide (Frederic).
+> > > > > >  - The rcu_segcblist segment field stays named gp_seq; only its type
+> > > > > >    changes (Frederic).
+> > > > > >  - Patch 8 (NOCB wake) is reworked.  v1 woke the wrong waitqueue
+> > > > > >    (rdp_gp->nocb_gp_wq via wake_nocb_gp() rather than the leaf
+> > > > > >    rnp->nocb_gp_wq[] that an rcuog kthread waiting for a GP sleeps on),
+> > > > > >    and the wait condition only checked the normal ->gp_seq.  The rcuog
+> > > > > >    grace-period wait now tracks a struct rcu_gp_seq and is released via
+> > > > > >    poll_state_synchronize_rcu_full(); rcu_exp_wait_wake() wakes the leaf
+> > > > > >    node through the new rcu_nocb_exp_cleanup() (Frederic).
+> > > > > >  - rcu_pending() uses a new memory-ordering-free
+> > > > > >    poll_state_synchronize_rcu_full_unordered() to avoid memory barriers
+> > > > > >    on every tick, leaving the ordering duty to rcu_core() (Frederic).
+> > > > > >
+> > > > > > Still open: Frederic asked whether the first smp_mb() in
+> > > > > > poll_state_synchronize_rcu_full() is needed on the callback-advance path
+> > > > > > (patch 6).  That path still uses the fully ordered helper; only
+> > > > > > rcu_pending() was switched to the unordered variant.  Happy to revisit.
+> > > > > >
+> > > > > > Puranjay Mohan (11):
+> > > > > >   rcu: Rename struct rcu_gp_oldstate to rcu_gp_seq
+> > > > > >   rcu/segcblist: Add SRCU and Tasks RCU wrapper functions
+> > > > > >   rcu/segcblist: Factor out rcu_segcblist_advance_compact() helper
+> > > > > >   rcu/segcblist: Track segment grace periods with struct rcu_gp_seq
+> > > > > >   rcu: Add RCU_GET_STATE_NOT_TRACKED for subsystems without expedited
+> > > > > >     GPs
+> > > > > >   rcu: Enable RCU callbacks to benefit from expedited grace periods
+> > > > > >   rcu: Update comments for gp_seq and expedited GP tracking
+> > > > > >   rcu: Wake NOCB rcuog kthreads on expedited grace period completion
+> > > > > >   rcu: Detect expedited grace period completion in rcu_pending()
+> > > > > >   rcu: Advance callbacks for expedited GP completion in rcu_core()
+> > > > > >   rcuscale: Add concurrent expedited GP threads for callback scaling
+> > > > > >     tests
+> > > > >
+> > > > > I do see the occasional failure when running TREE01, as in a failure or
+> > > > > four every couple hundred hours of testing.  This is the only rcutorture
+> > > > > scenario that exercises callback (de)offloading, which might (or might
+> > > > > not) be a clue.
+> > > > >
+> > > > > The console log of a failing run is attached, or you can find it here:
+> > > > >
+> > > > > https://drive.google.com/file/d/1EH2P4SDy2a-SJndkN3GbCTGAXxI2xevm/view?usp=sharing
+> > > > >
+> > > > > This is a "??? Writer stall state" failure, where rcutorture never learns
+> > > > > of grace-period completion.  Possibly because no grace period completed.
+> > > > > But there are no RCU CPU stall warnings.  In addition, these two lines
+> > > > >
+> > > > > [  631.032657] ??? Writer stall state RTWS_EXP_SYNC(4) g152813 f0x0 ->state D cpu 1
+> > > > > . . .
+> > > > > [ 3610.863114] ??? Writer stall state RTWS_EXP_SYNC(4) g736160 f0x0 ->state D cpu 1
+> > > > >
+> > > > > show that the grace-period sequence number advanced from 152813 to
+> > > > > 736160 in about 50 minutes.  So grace periods really are completing,
+> > > > > lots of them.
+> > > > >
+> > > > > This rcutorture scenario has rcu_nocbs CPUs, and CPU 5 is in trouble:
+> > > > >
+> > > > > [  631.066109] rcu:    CB 5^4->4 KblSW F21044 L21044 C116 .W120(148380/168068).N295B101 q516 S CPU 16
+> > > > > . . .
+> > > > > [ 3610.869914] rcu:    CB 5^4->4 KblSW F3000848 L3000848 C116 .W120(148380/168068).N295B101 q516 S CPU 16
+> > > > >
+> > > > > There are 120 callbacks on the WAIT segment, which are waiting on
+> > > > > grace-period sequence number 148380, which was long gone even back at
+> > > > > 631.032657 seconds in (g152813).  There are 295 more callbacks in the NEXT
+> > > > > segment, which long ago should have been assigned a grace period and moved
+> > > > > into the currently empty NEXT_READY segment (which is the "." right before
+> > > > > the "N295").  There are yet another 101 callbacks on the bypass list.
+> > > > >
+> > > > > This suggests that the rcuog kthread isn't being awakened when it
+> > > > > should be.  And that something is failing to advance callbacks out of
+> > > > > NEXT in a timely fashion.
+> > > > >
+> > > > > Thoughts?
+> > > >
+> > > > If a grace period has elapsed while in the middle of nocb_gp_wait(),
+> > > > after the call to rcu_advance_cbs() and before the following polling which
+> > > > determines if we a grace period must be waited upon, then the kthread
+> > > > will wait for new callbacks only (and will ignore waiting callbacks that
+> > > > can now be advanced).
+> > > >
+> > > > Does the following help?
+> > > >
+> > > > diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+> > > > index 6da1b8f52476..96d76eb6259d 100644
+> > > > --- a/kernel/rcu/tree_nocb.h
+> > > > +++ b/kernel/rcu/tree_nocb.h
+> > > > @@ -792,22 +792,12 @@ static noinline_for_stack void nocb_gp_wait(struct rcu_data *my_rdp)
+> > > >                                                            RCU_NEXT_READY_TAIL);
+> > > >                         raw_spin_unlock_rcu_node(rnp); /* irqs disabled. */
+> > > >                 }
+> > > > -               // Need to wait on some grace period?
+> > > > +
+> > > >                 WARN_ON_ONCE(wasempty &&
+> > > >                              !rcu_segcblist_restempty(&rdp->cblist,
+> > > >                                                       RCU_NEXT_READY_TAIL));
+> > > > -               /*
+> > > > -                * Only request a GP wait if the next pending callback's
+> > > > -                * GP has not already completed (normal or expedited).
+> > > > -                * If poll_state_synchronize_rcu_full() says it completed,
+> > > > -                * then rcu_advance_cbs() above already moved those
+> > > > -                * callbacks to RCU_DONE_TAIL, so there is no GP to wait
+> > > > -                * for.  Any remaining callbacks got new (future) GP
+> > > > -                * numbers from rcu_accelerate_cbs() inside
+> > > > -                * rcu_advance_cbs() and will be handled on the next pass.
+> > > > -                */
+> > > > -               if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
+> > > > -                   !poll_state_synchronize_rcu_full(&cur_gp_seq)) {
+> > > > +               // Need to wait on some grace period?
+> > > > +               if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq)) {
+> > > >                         /*
+> > > >                          * Track the earliest pending normal and expedited GP
+> > > >                          * across the group so the wait below can be released by
+> > >
+> > >
+> > > This looks correct to me, this optimization with
+> > > !poll_state_synchronize_rcu_full(&cur_gp_seq) opened up this race as
+> > > you correctly explained.
+> > 
+> > My local reproducer says that the problem is gone, but let's see what
+> > Paul's 100s of hours of testing says.
+> 
+> I will fire it up, and thank you both!!!
+> 
+> And if it passes the 100s of hours (about 600), it will get 1000s of
+> hours over the weekend.  ;-)
 
-Triggers are now delayed from freeing, but can still be triggered until
-after the RCU grace period has ended. The freeing of the enable_event data
-is put into the private_data_free() callback, but the put of the module
-refcount is done immediately.
+And error-free!!!  (Must be some mistake?)
 
-It is possible that if a module is removed that has an event that would
-enable (or disable) it is still active, it can read the data of the module
-after it is removed causing a use-after-free bug.
+I am starting an eight-hour run for 1600 hours of TREE01-only test time.
+Puranjay is also experimenting with ways of reproducing this faster,
+which just might find their way into the normal rcutorture testing.  ;-)
 
-Move the trace_event_put_ref() that releases the module into the delayed
-callback so that the module can not be removed until any reference to its
-events are finished.
+I will be running a few longer runs of the full set of scenarios over
+the weekend.
 
-Cc: stable@vger.kernel.org
-Reported-by: sashiko-bot@kernel.org
-Link: https://sashiko.dev/#/patchset/20260724030523.19081-1-devnexen%40gmail.com
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- kernel/trace/trace_events_trigger.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 46e60b70a4bb..ad83419cb420 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1726,7 +1726,10 @@ int event_enable_trigger_print(struct seq_file *m,
- 
- static void enable_trigger_private_data_free(struct event_trigger_data *data)
- {
--	kfree(data->private_data);
-+	struct enable_trigger_data *enable_data = data->private_data;
-+
-+	trace_event_put_ref(enable_data->file->event_call);
-+	kfree(enable_data);
- }
- 
- void event_enable_trigger_free(struct event_trigger_data *data)
-@@ -1741,7 +1744,6 @@ void event_enable_trigger_free(struct event_trigger_data *data)
- 		/* Remove the SOFT_MODE flag */
- 		trace_event_enable_disable(enable_data->file, 0, 1);
- 		data->private_data_free = enable_trigger_private_data_free;
--		trace_event_put_ref(enable_data->file->event_call);
- 		trigger_data_free(data);
- 	}
- }
--- 
-2.53.0
-
+							Thanx, Paul
