@@ -1,101 +1,158 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C26EAC7;
-	Sat, 25 Jul 2026 00:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DE62264A8;
+	Sat, 25 Jul 2026 02:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784940661; cv=none; b=GS4Zk2cxZR10Xut5n2fnevpOv5k/+zwuA1mqtGb8SscWXMaAmlsWzK79WV1oF05KcB5YDGDAPJm4zZwqhRa6e1kLmNmpir4uxthTR/odu080gO4btVgQIp1SPxWhwmgItmBrgAoy0pqtO/pemTt80RMviAHqOLFOBRPbTMInGbA=
+	t=1784947663; cv=none; b=WCtVBwJEzph/Hs/dI/kwrzrSma7lgG1Y+9ajPYOns1+T8o+4Zyh5pXFarb/HBDHay4xhNAlPztyFI+hCNHgwhCbggw/BE9jmg/yRJ6SYF2LQDs1sEf8zjgh27JilDVfCbFoBMzagAK6+0Srg2HGPJrNMn6l7wmE96IQYE1SWPlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784940661; c=relaxed/simple;
-	bh=fBMvNGQuZ1spqyye1A8wtwkXMfhAaWM8KWn6kKaImjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wq0SUa4MjKHFzm6fAto5Z3vBuCBhYuy5tq5ZCZPdV1yrHxOHMYdtZr6W0XA+V2BJya9bpDAkDgkczczH4Xt+GXJhTyFecOSbaQ3Zdb4YCkExeEydEotzc2vM+Q6topz7i8tGRDsAMM7MA1JFNRFMazUjwlCnNnpOVvoyHRAqyxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1784947663; c=relaxed/simple;
+	bh=XIIdNws047J/ip0u66j9QMG6eMCHgPn5azaVs+PNon0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=by7s5bcaIdjHC7nUsDcCXE3zVkEJWzOd0kZojNeUOg9NOE+qxbQ4xdMpRXCdfUur2VV2JBnerN0Y0KYFsH4byIwR/y5rkCy3onrEzxvR2r/NCTH3SdtpREyc393VC2eQTIJYRHbjX1AEKIW2pyxVSWjAwmaxHdpzP+4u/zCiY5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4h6R8r39dMzKHMW0;
-	Sat, 25 Jul 2026 08:50:04 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 340364087C;
-	Sat, 25 Jul 2026 08:50:52 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with UTF8SMTPA id cCh0CgCXpXFqCGRqyIbKCQ--.19518S2;
-	Sat, 25 Jul 2026 08:50:52 +0800 (CST)
-Message-ID: <3efb6324-18fc-48d0-a62e-7bce889eb4e7@huaweicloud.com>
-Date: Sat, 25 Jul 2026 08:50:50 +0800
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4h6Tlp07tVzYQtr4;
+	Sat, 25 Jul 2026 10:47:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 77CCB40592;
+	Sat, 25 Jul 2026 10:47:35 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgAH7SjDI2RqhLbYCQ--.3539S2;
+	Sat, 25 Jul 2026 10:47:35 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH v4] ftrace: Add global mutex to serialize trace_parser access
+Date: Sat, 25 Jul 2026 02:47:21 +0000
+Message-Id: <20260725024721.1983675-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ftrace: Add global mutex to serialize trace_parser
- access
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260723133404.1926732-1-wutengda@huaweicloud.com>
- <20260724184757.502183d4@gandalf.local.home>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260724184757.502183d4@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCXpXFqCGRqyIbKCQ--.19518S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtF1kXrykXFy8XryUur4xCrg_yoWfWrX_W3
-	4q9F4DGan2krnIvanYyFy8tFn8GFWDXr40v3yUtFZrAasFqF97Za10gFn5KFs7Xry0gF9x
-	G3s3Xwn5KryavjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbz8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgAH7SjDI2RqhLbYCQ--.3539S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF45Zw4DWr45JFykCrykZrb_yoW5try5pF
+	y5Krs2kr47tF40krsF9a18ZF10q345try5GFn5J34ftFsrJF129ry29FWa9F1Utry7JrW3
+	tr4F9r1UKr47Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	W0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVb
+	kUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
+In ftrace, the trace_parser structure is allocated and initialized when
+a trace file is opened, and is subsequently used across write and release
+handlers to parse user input.
 
+The affected handler paths and their specific functions are:
+  - Open paths: ftrace_regex_open(), ftrace_graph_open()
+  - Write paths: ftrace_regex_write(), ftrace_graph_write()
+  - Release paths: ftrace_regex_release(), ftrace_graph_release()
 
-On 2026/7/25 6:47, Steven Rostedt wrote:
-> On Thu, 23 Jul 2026 13:34:04 +0000
-> Tengda Wu <wutengda@huaweicloud.com> wrote:
-> 
->> --- a/kernel/trace/ftrace.c
->> +++ b/kernel/trace/ftrace.c
->> @@ -1097,6 +1097,12 @@ struct ftrace_ops global_ops = {
->>  					  FTRACE_OPS_FL_PID,
->>  };
->>  
->> +/*
->> + * parser_lock - Protects trace_parser state against concurrent operations.
->> + * Held across trace_get_user() and subsequent buffer parsing to prevent races.
->> + */
->> +DEFINE_MUTEX(parser_lock);
->> +
-> 
-> Sashiko pointed out[1] that this should be static. And it should. Could you
-> send a v4?
-> 
-> static DEFINE_MUTEX(parser_lock);
-> 
-> Note, you can ignore the other Sashiko comments.
-> 
-> -- Steve
-> 
-> [1] https://sashiko.dev/#/patchset/20260723133404.1926732-1-wutengda%40huaweicloud.com
+If userspace opens a trace file descriptor and shares it across multiple
+threads, concurrent write calls will race on the parser's internal state,
+specifically the 'idx', 'cont', and 'buffer' fields, leading to corrupted
+input or undefined behavior.
 
-Sorry, I overlooked that. Will add static and send v4 right away.
+Fix this by adding a global mutex, parser_lock, to serialize all access
+to trace_parser across write and release paths, preventing concurrent
+corruption of parser state.
 
-Thanks,
-Tengda
+Fixes: e704eff3ff51 ("ftrace: Have set_graph_function handle multiple functions in one write")
+Fixes: 689fd8b65d66 ("tracing: trace parser support for function and graph")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+---
+v4: Add static modifier to parser_lock. (Steven)
+v3: https://lore.kernel.org/all/20260723133404.1926732-1-wutengda@huaweicloud.com/
+v2: https://lore.kernel.org/all/20260715081937.1469757-1-wutengda@huaweicloud.com/
+v1: https://lore.kernel.org/all/20260713134640.708323-1-wutengda@huaweicloud.com/
+
+ kernel/trace/ftrace.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index f93e34dd2328..6c47a94f5924 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1097,6 +1097,12 @@ struct ftrace_ops global_ops = {
+ 					  FTRACE_OPS_FL_PID,
+ };
+ 
++/*
++ * parser_lock - Protects trace_parser state against concurrent operations.
++ * Held across trace_get_user() and subsequent buffer parsing to prevent races.
++ */
++static DEFINE_MUTEX(parser_lock);
++
+ /*
+  * Used by the stack unwinder to know about dynamic ftrace trampolines.
+  */
+@@ -5842,6 +5848,8 @@ ftrace_regex_write(struct file *file, const char __user *ubuf,
+ 	/* iter->hash is a local copy, so we don't need regex_lock */
+ 
+ 	parser = &iter->parser;
++
++	guard(mutex)(&parser_lock);
+ 	read = trace_get_user(parser, ubuf, cnt, ppos);
+ 
+ 	if (read >= 0 && trace_parser_loaded(parser) &&
+@@ -6984,12 +6992,14 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
+ 		iter = file->private_data;
+ 
+ 	parser = &iter->parser;
++	mutex_lock(&parser_lock);
+ 	if (trace_parser_loaded(parser)) {
+ 		int enable = !(iter->flags & FTRACE_ITER_NOTRACE);
+ 
+ 		ftrace_process_regex(iter, parser->buffer,
+ 				     parser->idx, enable);
+ 	}
++	mutex_unlock(&parser_lock);
+ 
+ 	trace_parser_put(parser);
+ 
+@@ -7321,10 +7331,12 @@ ftrace_graph_release(struct inode *inode, struct file *file)
+ 
+ 		parser = &fgd->parser;
+ 
++		mutex_lock(&parser_lock);
+ 		if (trace_parser_loaded((parser))) {
+ 			ret = ftrace_graph_set_hash(fgd->new_hash,
+ 						    parser->buffer);
+ 		}
++		mutex_unlock(&parser_lock);
+ 
+ 		trace_parser_put(parser);
+ 
+@@ -7437,6 +7449,7 @@ ftrace_graph_write(struct file *file, const char __user *ubuf,
+ 
+ 	parser = &fgd->parser;
+ 
++	guard(mutex)(&parser_lock);
+ 	read = trace_get_user(parser, ubuf, cnt, ppos);
+ 
+ 	if (read >= 0 && trace_parser_loaded(parser) &&
+-- 
+2.34.1
 
