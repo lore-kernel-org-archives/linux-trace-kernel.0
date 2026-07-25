@@ -1,158 +1,157 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DE62264A8;
-	Sat, 25 Jul 2026 02:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784947663; cv=none; b=WCtVBwJEzph/Hs/dI/kwrzrSma7lgG1Y+9ajPYOns1+T8o+4Zyh5pXFarb/HBDHay4xhNAlPztyFI+hCNHgwhCbggw/BE9jmg/yRJ6SYF2LQDs1sEf8zjgh27JilDVfCbFoBMzagAK6+0Srg2HGPJrNMn6l7wmE96IQYE1SWPlU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784947663; c=relaxed/simple;
-	bh=XIIdNws047J/ip0u66j9QMG6eMCHgPn5azaVs+PNon0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=by7s5bcaIdjHC7nUsDcCXE3zVkEJWzOd0kZojNeUOg9NOE+qxbQ4xdMpRXCdfUur2VV2JBnerN0Y0KYFsH4byIwR/y5rkCy3onrEzxvR2r/NCTH3SdtpREyc393VC2eQTIJYRHbjX1AEKIW2pyxVSWjAwmaxHdpzP+4u/zCiY5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4h6Tlp07tVzYQtr4;
-	Sat, 25 Jul 2026 10:47:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 77CCB40592;
-	Sat, 25 Jul 2026 10:47:35 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgAH7SjDI2RqhLbYCQ--.3539S2;
-	Sat, 25 Jul 2026 10:47:35 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v4] ftrace: Add global mutex to serialize trace_parser access
-Date: Sat, 25 Jul 2026 02:47:21 +0000
-Message-Id: <20260725024721.1983675-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F4F26CE2C
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Jul 2026 12:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784981077; cv=pass; b=t4V1eXsQW3puVmDgYoc23q9YQWUOp1CJp0Bc9xc1oZZIRUyahaEcDzrdnChUrdYkdFfoJQMO6bAe1SnxbpFd0lG2GHbINlzNsI2f1TB0BbBBAar3+2CRwbcSbrx44+woMnjm0etleoKCndIy28e0EwwvAMIXTyuDjAXLgTIYJDA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784981077; c=relaxed/simple;
+	bh=GCRHgUN5OrDS3h6TXUSztQQGkBJEns8zn1TosahCLFs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TdlidVvkBXg1wPX1ZnwY9DCcXje7mUlSwlR0WIlUr7FcbRdZEHaD/ywnEPa2WEBSPNqMw2bthAMeoEBUnIWSkP7XQsCskJvYa5J+AtNVvTDeOZqZNbrUv8DJwySAGE/rvHslZ6MapSpdYeB2NMlW3829VEdaCKQVnIU/UfptdAY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2bKQRDX; arc=pass smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2bKQRDX"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c12614b81c9so209138666b.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Jul 2026 05:04:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784981075; cv=none;
+        d=google.com; s=arc-20260327;
+        b=CMoaJARyvL7D0NMV5XIASsYsrLOAl29yNUb7mlEqSKwUsp6wNDV6He+500rTNoQWBk
+         5hkH3itScmqs4TNgDD4AjSzS9YzSP9bW86zT3fyy3VWtoH0kw7sMw50oIigFlQjs9iop
+         aqMDCBxfzBGXgGolPk2yGp8WWyOAi1qI38wlSInqneQ2rTT4WylN8rngmXdO0Hf6vgZg
+         zfJ0Y9OuswX+iMRQlgn39bkU5ofTgy2tAnntN94yTt59wmi9bOMbWtFIza0CCbcxFCL7
+         Pm3TXNus4sr8R7Si/Jlt+wxGYhaawLXdFZbWQWaZY2Edq/VT+UC1c+/3vrSjZ9xv63qh
+         wOmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Tq198tQF1IsV+MyvQWn4ns+avHzmhK6z4MHxI2nb1Oo=;
+        fh=rxkTA6oXKgiynGl5OyhgOShdx/UNdbyltTHqBsaUE88=;
+        b=gF84jRBzVs3yftzNiVoqR04Uw48+tp4KR0CKgf+dJO+HaZoB8KpvzI2dpMNMi/5mWb
+         WqhGM0QhPb2dT1/h/JVyfz9Sl3Kzeu8omshiPfX1at8JsDQtRIUsmMFWtxvod2/mnUjW
+         RnConxfhfbypUF2O/Nf79tTpiep8egpwH/Mp8UlmTNhxenn6IhJMqic6RsX3/7z2UVLd
+         Mcqq19Sbi6gWoH9f4/Y2BylHwLvNoAOB+31WnTJ/bf0w77Iap0vovvuNywC9krew0PX0
+         l0rktvJl2RpXkvDyyRtwB0ZF/uvmwaQJTpCF6yrQn4wsSSYCqrmpIN9JY4NZDjGLDpF2
+         iL5g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784981075; x=1785585875; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Tq198tQF1IsV+MyvQWn4ns+avHzmhK6z4MHxI2nb1Oo=;
+        b=W2bKQRDXaiKxUlFM9puuh6benUuuvBUbyJFHV/eRLetklJyoiyz72bNHOsi3lKM229
+         WNh5cT09R3d/d1KW8vOZWOGvfWUgGifN+TioFzWe81FkMMmSFISM6c3TGgZqm2CVmAG3
+         7zihTVssdSFpRbOyp9Q6FppwVbxe8I7WlVpF21GrvW5QWZkfEk2w/fqVRF4/vPqEE6IX
+         xjQKmnjvrY7vCZuop7V4zCLUMyPYqfGwbW3IyYY/jZKWXOJZj0t1lGS3EhKCiwBVEoD1
+         1bWLiCrrBkEG01CUGuToi4fO1vZ68i4/CKGLxDQy1xc5yAGEW2chkQ0CMfu/1DGGZhtX
+         jJiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784981075; x=1785585875;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Tq198tQF1IsV+MyvQWn4ns+avHzmhK6z4MHxI2nb1Oo=;
+        b=LfjcqteFVp57FqgVakb1azXhMkXZTwZDpOwp61KmdqnwCeCB4i1Voc6k2r87GLCdoa
+         OMB2DvFsMPwBjAj2wtPes43LRElPKH7xw32Jh3o2tobACocQAgpHohgPFjcZJZ9DsVtK
+         GmDme6/JQSMY4Zuys1/6Nn1G0tAdUMUX8++bjAXbmFqgt4DxXxGlRV5Wqyd5xxVwrL+O
+         WCIU+Tl1Zn9qxa87Wg+Bfkke5VPrUSWXSP4UnFbLQZiQQUs1SorDLOlhFHvsUpHax9iP
+         ujG7ghfzihoyMpwbrHfko58ZVRR8UIlriuvv+1emGHTBZkTA8tVXCPbgba9MmFlkRX+K
+         mudw==
+X-Forwarded-Encrypted: i=1; AHgh+RprAks6y+Pzr3u4rTnsJiEHsBeX2d0ApKHrpbdUDkn+A+KxoT3EumDTn7Wq57xykzfovdGp9IISgQYVRjcQaogX1yM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm+AqRMU/EGGVf7o0z49kKjN75zCP/9khCX0iynQE/RJ+muimT
+	gHJJEGKHC3hWiFaRs9SEVkacO/IIp4LmcOlo2D69YzhtlEuLvxt+5Kgb5sK8O2AY9pVI3V7G3I8
+	CThtwcdbpD9DYlg50fYG7sG/x28G7njk=
+X-Gm-Gg: AR+sD10Hejo6hmkfwMCK5Rd1f5VkNUFQT1HIXUndITkydDzpd/Kvcz5DhHvnQ+zz87T
+	2eog0/0D81jr7pmrjxGQhEWUS2VGo2aWPU3rlhyXK8xcZ/D6Wul6gUvlSsoLDQ+M2GLshZY0RvS
+	kzJH8Tmyo3mg8cUZKr3+uCh4xPYZLg/ivNjZk1m3R6NwrIVTWJM9++Bz6Sm28TegUDEbuvtR81v
+	N3lAaz/Vb3QjvzCw1QQK9rZlRnNP9pZzVbzv3Z2fdIm2XFrYlR/CuT1RDTksLjSbfl89ZOsLWU1
+	eQRo3btwARwLop495jhYaAe8J6LbwA==
+X-Received: by 2002:a17:907:97cc:b0:c15:f6b6:18f4 with SMTP id
+ a640c23a62f3a-c1f1ed40564mr75174166b.24.1784981074298; Sat, 25 Jul 2026
+ 05:04:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgAH7SjDI2RqhLbYCQ--.3539S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXF45Zw4DWr45JFykCrykZrb_yoW5try5pF
-	y5Krs2kr47tF40krsF9a18ZF10q345try5GFn5J34ftFsrJF129ry29FWa9F1Utry7JrW3
-	tr4F9r1UKr47Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	W0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVb
-	kUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+References: <20260624132356.516959-7-puranjay@kernel.org> <20260724183123.160051-1-puranjay@kernel.org>
+ <5a87e5f1-7cbf-45c0-a6e2-88320db628bc@paulmck-laptop>
+In-Reply-To: <5a87e5f1-7cbf-45c0-a6e2-88320db628bc@paulmck-laptop>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Sat, 25 Jul 2026 13:04:21 +0100
+X-Gm-Features: AUfX_mxztUek5QzrvnuWv513tANm2vUvNcHIsu0rIcLDMCQdR_8_cVOv82niJL4
+Message-ID: <CANk7y0jZ7JuR6MoNKZZU3R=+kfe0pELRUWYomtxHKQwsBan3Bw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/11] rcu: Enable RCU callbacks to benefit from
+ expedited grace periods
+To: paulmck@kernel.org
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang@linux.dev>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Breno Leitao <leitao@debian.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In ftrace, the trace_parser structure is allocated and initialized when
-a trace file is opened, and is subsequently used across write and release
-handlers to parse user input.
+On Sat, Jul 25, 2026 at 1:23=E2=80=AFAM Paul E. McKenney <paulmck@kernel.or=
+g> wrote:
+>
+> On Fri, Jul 24, 2026 at 11:31:23AM -0700, Puranjay Mohan wrote:
+> > Currently, RCU callbacks only track normal grace-period sequence
+> > numbers.  This means callbacks must wait for normal grace periods to
+> > complete even when expedited grace periods have already elapsed.
+> >
+> > Use the full struct rcu_gp_seq (which tracks both the normal and
+> > expedited grace-period sequences) throughout the callback
+> > infrastructure.
+> >
+> > rcu_segcblist_advance() now checks both normal and expedited GP
+> > completion via poll_state_synchronize_rcu_full(), and becomes
+> > parameterless since it reads the grace-period state internally.
+> > rcu_segcblist_accelerate() stores the full state (both sequences)
+> > instead of just the normal one.  rcu_accelerate_cbs() and
+> > rcu_accelerate_cbs_unlocked() use get_state_synchronize_rcu_full() to
+> > capture both sequences, and the NOCB advance checks use
+> > poll_state_synchronize_rcu_full() instead of comparing only the normal
+> > sequence.
+> >
+> > srcu_segcblist_advance() becomes a standalone implementation because it
+> > compares SRCU sequences directly and cannot use
+> > poll_state_synchronize_rcu_full(), which reads RCU-specific globals.
+> > srcu_segcblist_accelerate() sets the ->exp field to
+> > RCU_GET_STATE_NOT_TRACKED so that poll_state_synchronize_rcu_full()
+> > compares only ->norm and ignores ->exp.
+> >
+> > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> > ---
+> > Paul, please take this in place of the original 6/11.  The only change
+> > from v1 is dropping the premature !poll_state_synchronize_rcu_full() ga=
+te
+> > in nocb_gp_wait(): if a grace period completed between rcu_advance_cbs(=
+)
+> > and that poll, the rcuog slept grace-period-deaf in nocb_gp_sleep() wit=
+h
+> > advanceable callbacks still queued -- the lost wakeup Frederic diagnose=
+d.
+> > Verified by widening that window with a delay: the original reproduced =
+the
+> > writer stall within ~75s, this version stayed clean.
+>
+> Done, and will test during the weekend, thank you!
+>
+> There were some conflicts, so could you please double-check?
 
-The affected handler paths and their specific functions are:
-  - Open paths: ftrace_regex_open(), ftrace_graph_open()
-  - Write paths: ftrace_regex_write(), ftrace_graph_write()
-  - Release paths: ftrace_regex_release(), ftrace_graph_release()
+I have looked at your latest dev branch and everything looks good to me.
 
-If userspace opens a trace file descriptor and shares it across multiple
-threads, concurrent write calls will race on the parser's internal state,
-specifically the 'idx', 'cont', and 'buffer' fields, leading to corrupted
-input or undefined behavior.
-
-Fix this by adding a global mutex, parser_lock, to serialize all access
-to trace_parser across write and release paths, preventing concurrent
-corruption of parser state.
-
-Fixes: e704eff3ff51 ("ftrace: Have set_graph_function handle multiple functions in one write")
-Fixes: 689fd8b65d66 ("tracing: trace parser support for function and graph")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
----
-v4: Add static modifier to parser_lock. (Steven)
-v3: https://lore.kernel.org/all/20260723133404.1926732-1-wutengda@huaweicloud.com/
-v2: https://lore.kernel.org/all/20260715081937.1469757-1-wutengda@huaweicloud.com/
-v1: https://lore.kernel.org/all/20260713134640.708323-1-wutengda@huaweicloud.com/
-
- kernel/trace/ftrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f93e34dd2328..6c47a94f5924 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1097,6 +1097,12 @@ struct ftrace_ops global_ops = {
- 					  FTRACE_OPS_FL_PID,
- };
- 
-+/*
-+ * parser_lock - Protects trace_parser state against concurrent operations.
-+ * Held across trace_get_user() and subsequent buffer parsing to prevent races.
-+ */
-+static DEFINE_MUTEX(parser_lock);
-+
- /*
-  * Used by the stack unwinder to know about dynamic ftrace trampolines.
-  */
-@@ -5842,6 +5848,8 @@ ftrace_regex_write(struct file *file, const char __user *ubuf,
- 	/* iter->hash is a local copy, so we don't need regex_lock */
- 
- 	parser = &iter->parser;
-+
-+	guard(mutex)(&parser_lock);
- 	read = trace_get_user(parser, ubuf, cnt, ppos);
- 
- 	if (read >= 0 && trace_parser_loaded(parser) &&
-@@ -6984,12 +6992,14 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
- 		iter = file->private_data;
- 
- 	parser = &iter->parser;
-+	mutex_lock(&parser_lock);
- 	if (trace_parser_loaded(parser)) {
- 		int enable = !(iter->flags & FTRACE_ITER_NOTRACE);
- 
- 		ftrace_process_regex(iter, parser->buffer,
- 				     parser->idx, enable);
- 	}
-+	mutex_unlock(&parser_lock);
- 
- 	trace_parser_put(parser);
- 
-@@ -7321,10 +7331,12 @@ ftrace_graph_release(struct inode *inode, struct file *file)
- 
- 		parser = &fgd->parser;
- 
-+		mutex_lock(&parser_lock);
- 		if (trace_parser_loaded((parser))) {
- 			ret = ftrace_graph_set_hash(fgd->new_hash,
- 						    parser->buffer);
- 		}
-+		mutex_unlock(&parser_lock);
- 
- 		trace_parser_put(parser);
- 
-@@ -7437,6 +7449,7 @@ ftrace_graph_write(struct file *file, const char __user *ubuf,
- 
- 	parser = &fgd->parser;
- 
-+	guard(mutex)(&parser_lock);
- 	read = trace_get_user(parser, ubuf, cnt, ppos);
- 
- 	if (read >= 0 && trace_parser_loaded(parser) &&
--- 
-2.34.1
-
+Thanks,
+Puranjay
