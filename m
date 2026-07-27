@@ -1,80 +1,40 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D38D3D9534;
-	Mon, 27 Jul 2026 19:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C38242BC30;
+	Mon, 27 Jul 2026 20:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785182075; cv=none; b=VkcrmgUvZ9LbN7i7a6kC8iF+EeHvG8wsoiEDY6zejcoMzUaL/ef2ErQhVd2P9/987i/+jlh4axzh2LFyPy/J2Ywj8hUrtdRMzj8RK0von5qi6Sl/8XU30iRemOgalc6JievkBZLKcB9cyzOC6/uFRT2CHp3+5qgpCqwmu6dkEFM=
+	t=1785183670; cv=none; b=REIACYdk4bBuHUM+ZZ9ToNDygJIjKQsAsCnsWancje6D26dFPkq1fMS2CdUti7kpxyR4sAXBJz2asaHYHbbeBN4ZO8/UMl2+WZMBudT9XpGMwDP50Gu3fb0FAMX5/kBcz7i2st/41qps6Kiau9NqlssZapjX5I2XbEj9uSd2Xeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785182075; c=relaxed/simple;
-	bh=7+ivClIKGDZD3UDjMhQpIwQ9FdKhSqZ1MsXdjZ7DeZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cE9ejKJXXu01puOLu72iWbrMqGc1eilAC+hWtrvuZHNUYK9c4nxDs9Df0xXHOMTCXHmepkRopgMz5KUG3SzTv+90Ao3cSrVc5GCZlfoCyf6XkmkDnOwrEmYxw0NDldf3TfGJ68D7UKhZB0KGjDmFXlYV1JYIzRQShaFE8KXbFHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=ZixCw2bv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=evUXozVU; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="ZixCw2bv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="evUXozVU"
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 210451D002DD;
-	Mon, 27 Jul 2026 15:54:28 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Mon, 27 Jul 2026 15:54:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm3; t=1785182067; x=1785268467; bh=Vi
-	Z7hF+J0S+/i/VNfq5Y+4QpoUxFg8hbRMmMfWUKn9A=; b=ZixCw2bvf+hPeakB+q
-	SUUj80lzk7SF10E96JSX6YUbNGvJSTCtD1g58paoMPIUsj3NpkXwGJVddVvJcKx6
-	XevzmlYNixpjkjunMpdtMBhGPm6A8iTJR5jlSlNEvimMLPmX36boGJyb4qBvArB9
-	kzg5+Eg8qncdguDvrULOJ3ai3+eS/wY3mmaPIYGL7JfjPiqFck8lBuoL1oqH/q6I
-	UtCc2s4QgBG0yUt/kPHiRj3Ix9R1mA8gkPP/aePMR9eFcsfdpax1Azbs/2z05tUI
-	VvUhXEKyBq4CLf78qSVt4czTjTOQ4WT29rYcES3jjPnQqvzyw08ynhTQhnNPlIO0
-	PMDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1785182067; x=1785268467; bh=ViZ7hF+J0S+/i/VNfq5Y+4QpoUxF
-	g8hbRMmMfWUKn9A=; b=evUXozVUpNfepBBOWS3W6i6EvRpvqgFDHKaLst7p9UNQ
-	BIhpFpigRYbOp/BxkyxSbrQgKBr9M2yYVtxpbIoArtDjawCm3yUP8uV1SKSJ8YVo
-	pWMDJs0x54HBAvZxpFQIuWDoM6JIwOKIX7VpfvRXsBZbP1H/K3HeRwaL9R/LA0bM
-	cV1vXaAz/Wk7JBthfP7lEKesnehvW6uVLD4/FyOY0kqBvLA5bP7VHL8skJphBGjO
-	UghJJND+TvVLital/VotSx4pmLTQadlUU+5H2s14UkrHJATD4z8CaT/3c/hz4ovD
-	sI36GlgLMdBACOl9kye/82x4ew17swAeSLG95yj2ag==
-X-ME-Sender: <xms:c7dnaiKtk5mpy6xODw38bRvwPwf2WjK5eEJ2qUUQjKI2xJVm13T9ww>
-    <xme:c7dnan9R5QEUKdz-Mu6xoGGZP0OEDE77fiRE3lzABsBywhdZFF8QyjBB4TH8DHtXN
-    uoe9KtIXgdJ_siKT4ZbxmjFNqUnW-EZveOVYBVZC39pVCNKe_G0W9rr>
-X-ME-Received: <xmr:c7dnatICMcYWaxzMbd381_hhxkmnxu9v5fpyIWeVXXlwsud4o56l7y_SK89T2i7h89if4TKI>
-X-ME-Proxy-Cause: dmFkZTFRd2UFN2XbznV21RZ1qL+5rrwM/oVk5um0UlOnbYEpXd44R0XX4Xscv6Aa9dLCTq
-    z6TkgMaXoQmWCakvfHHTy4ASx2D8wdGWyRhP3pyp+bvyXoi7iV7jQVBrS5ZvsXpN6MSFPH
-    Zw5Q1NesAVWMiJHYChJXxo8L1sJ7FfKA0JmVSvcFdihY99Cz4keLWJKQDNPFvJc2GaO+dB
-    uC30LsMw094TiGCWoARsWDoszSjmKGJcqnkshqxaQOiu4u/YaD2Bh6UxnxCw4wKUOB83Ba
-    zH+pDw55MmbMt+unVg8A34OLJGEBsPDpX/iLezd66i7yl3TpBoO4juuIfNv8tR/aRXO3iq
-    oGbmmQfwoX4GebaAMdWIdXcilw6lIXVCEXByxKtRtIYaluLoZ15T4xDvpJHAhVL9gyEx0M
-    AzfdDO+MaTbDNXruw23Z1cvnIATPawP9I/L540YSWtz9uHOwqcWiq5IXV6A3tduoxDUeRH
-    3sMb4zMAU9n50NQZkPFUokFue8i/SHUU8cc/Jsa/yx72eUVgcMzyZKYxfXUBsAqAgFv4qr
-    HwXCUMefc7ekSJmaQPJlVYuN3R9sY4v1encSdxh558phE0C85L9EaCZ/DKeNd00M8sjeOa
-    ndYxwvOyIpVum9X8S5oFYlTE3EGvZo0aSa7OHjX9raKuhZJCCealmgzxqTAg
-X-ME-Proxy: <xmx:c7dnakktlW9sDTJt2WCHmWlCxQYC3NfVrc_Zug2V7S2LwvlJ9gHc3Q>
-    <xmx:c7dnapPxah45M67FNTh6j7uZGzlgF9Gxb-zPTWLC5eGTMEuqiC6a_Q>
-    <xmx:c7dnai3UQ1FUSixSZfXB4imm4DWWq8sF_GXqKCfSDEse_CM8lvvG7g>
-    <xmx:c7dnaglYEM3Yt5GUfkKrjob5bqRMnYJc61z9uSErpEluIPuHeopy5g>
-    <xmx:c7dnahausX_jO_LMJApFXFMMYJPNcrm_gUXOnUa-xbUh7bh0Sj_ynGlI>
-Feedback-ID: id06e481b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Jul 2026 15:54:27 -0400 (EDT)
-Date: Mon, 27 Jul 2026 15:54:59 -0400
-From: Steven Rostedt <steven@rostedt.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Cleanup event_enable_trigger_parse() by using
- __free()
-Message-ID: <20260727155459.202af38d@gandalf.local.home>
+	s=arc-20240116; t=1785183670; c=relaxed/simple;
+	bh=Ycss83zuq3aSxDrgKovPC45PXkQ6YNSZo8S6VnfTW5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fTlH9Zxa+WJVXzStobOwYlctDGgrQiTKYhOy3+FX7iaPRaRnvDPHcA25A5Wy1QJT/KLcKEEvXjMRqMB5YabJMpAChNxqpoHvHzMtN98Dw8kpttrH+IF1Or9Wu2Axz07E5IBl209gV8GNtW43EQb3y3MUSh7ttHvQGmqvcL+70Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 699471401ED;
+	Mon, 27 Jul 2026 20:20:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 644302000F;
+	Mon, 27 Jul 2026 20:20:50 +0000 (UTC)
+Date: Mon, 27 Jul 2026 16:21:22 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Eugene Mavick <m@mavick.dev>
+Cc: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Boqun Feng <boqun@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gary
+ Guo <gary@garyguo.net>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
+ <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [PATCH v3 1/5] tracing: add ref_trace_final_put tracepoint
+Message-ID: <20260727162122.39f292fe@gandalf.local.home>
+In-Reply-To: <20260711-refcount-final-put-trace-v3-1-674c8f03d9f9@mavick.dev>
+References: <20260711-refcount-final-put-trace-v3-0-674c8f03d9f9@mavick.dev>
+	<20260711-refcount-final-put-trace-v3-1-674c8f03d9f9@mavick.dev>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -84,86 +44,189 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: fgcfqqm13143u3ims6rkybjnkfsaj7qa
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 644302000F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+U+kKjBbPFD54KqmqnnY4FS5W9hOMdd5g=
+X-HE-Tag: 1785183650-206634
+X-HE-Meta: U2FsdGVkX19FO7mRN3KFTDvCHJwoCxA+GKzV5oe1wAT+Fjd5iIGO8q/9zt375ZLf4Ob80IvMvlnJGLG/tCdIh7OhHlhDp2W0SrUYescMSrcsCWVZ+JGZxAhwb9MqKSoU6YXSLi+R9qwmL2wdFt9vLAyeD1JY+iai+6uPt5Qwj7ztXOTUSVN2F4fhMQTT+mVjzWxIocKOOTzF71pXyLJPaauqDBCOAw3gbEUYZJMk1HoBZD5Y07/cmp94BTidwr0ft2PIuSmhbywuqLfRkdwWpzsz4VRotMPAcsdf5u3qcuOVYzN6nCVtkwAnVqPfFpMda5z6R0q8sr0WJ1L9isOap/EvRPTWfIBB
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Sat, 11 Jul 2026 12:40:19 +0800
+Eugene Mavick <m@mavick.dev> wrote:
 
-The enable_data variable gets freed on most error paths in
-event_enable_trigger_parse(). Use free() to free it and just before
-returning normally, call retain_and_null_ptr(enable_data) just before a
-successful exit to keep it from being freed. On success, the enable_data
-is assigned to the trigger_data->private_data field.
+> Add ref_trace_final_put tracepoint and related core infrastructure
+> 
+> ref_trace_final_put fires when a reference
+> count reaches zero and the object enters its final release path.
+> 
+> The tracepoint records three fields:
+> - caller: function that called the refcounting
+>   function(refcount_sub_and_test, percpu_ref_put_many)
+> - fn: refcounting function(eg refcount_sub_and_test)
 
-Also add a comment to why event_trigger_free(trigger_data) is being called
-before a successful exit.
+Why save the string just to figure out which function is used. It's quite
+expensive in both recording the string and saving the name all over the
+place.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20260701174829.67ab8a33@gandalf.local.home
+> - obj: refcount object(struct percpu_ref, refcount_t)
+> 
+> Signed-off-by: Eugene Mavick <m@mavick.dev>
+> ---
+>  include/linux/ref_trace.h        | 26 +++++++++++++++++++++++
+>  include/trace/events/ref_trace.h | 46 ++++++++++++++++++++++++++++++++++++++++
+>  lib/Makefile                     |  2 ++
+>  lib/ref_trace.c                  | 13 ++++++++++++
+>  4 files changed, 87 insertions(+)
+> 
+> diff --git a/include/linux/ref_trace.h b/include/linux/ref_trace.h
+> new file mode 100644
+> index 000000000000..6c6600938a47
+> --- /dev/null
+> +++ b/include/linux/ref_trace.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_REF_TRACE_H
+> +#define _LINUX_REF_TRACE_H
+> +
+> +#include <linux/tracepoint-defs.h>
+> +#include <linux/instruction_pointer.h>
+> +
+> +/* Declare the tracepoint so tracepoint_enabled() can be used */
+> +DECLARE_TRACEPOINT(ref_trace_final_put);
+> +
+> +#ifdef CONFIG_TRACEPOINTS
+> +/* Wrapper function implemented in lib/ref_trace.c */
+> +extern void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj);
+> +
+> +#define do_trace_ref_final_put(obj)						\
+> +	do {									\
+> +		if (tracepoint_enabled(ref_trace_final_put))			\
+> +			do_ref_trace_final_put(_RET_IP_, __func__, obj);	\
 
-- s/no_return_ptr/retain_and_null_ptr/ as no_return_ptr() has __must_check
-  (Sashiko)
+Why save __func__ and and not just __THIS_IP__?
 
-- Added a comment to explain the last event_trigger_free() before a successful
-  exit.
+The name is quite expensive to save and even to store in memory, as it will
+*always* be there.
 
- kernel/trace/trace_events_trigger.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> +	} while (0)
+> +
+> +#else /* !CONFIG_TRACEPOINTS */
+> +static inline void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj) { }
+> +#define do_trace_ref_final_put(obj) do { } while (0)
+> +#endif
+> +
+> +#endif /* _LINUX_REF_TRACE_H */
+> diff --git a/include/trace/events/ref_trace.h b/include/trace/events/ref_trace.h
+> new file mode 100644
+> index 000000000000..3bf1b1d390b8
+> --- /dev/null
+> +++ b/include/trace/events/ref_trace.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM ref_trace
+> +
+> +#if !defined(_TRACE_REF_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_REF_TRACE_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +/**
+> + * ref_trace_final_put - trace when a reference count reaches zero
+> + * @caller: return address of refcount
+> + * function(refcount_sub_and_test, percpu_ref_put_many)
+> + * @fn: refcounting function(eg refcount_sub_and_test)
+> + * @obj: refcount object(struct percpu_ref, refcount_t)
+> + *
+> + * Tracepoint instrumentation can be added using the do_ref_trace_final_put
+> + * macro defined in include/linux/ref_trace.h
+> + * which uses _RET_IP_ and __func__ for caller and fn arguments respectively,
+> + * thus only requiring obj arg to be supplied
+> + */
+> +TRACE_EVENT(ref_trace_final_put,
+> +
+> +	TP_PROTO(unsigned long caller, const char *fn, const void *obj),
+> +
+> +	TP_ARGS(caller, fn, obj),
+> +
+> +	TP_STRUCT__entry(
+> +	__field(unsigned long, caller)
+> +	__string(fn, fn)
+> +	__field(const void *, obj)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 655db2e82513..87601c2560d0 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1739,7 +1739,7 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
- 			       char *glob, char *cmd, char *param_and_filter)
- {
- 	struct trace_event_file *event_enable_file;
--	struct enable_trigger_data *enable_data;
-+	struct enable_trigger_data *enable_data __free(kfree) = NULL;
- 	struct event_trigger_data *trigger_data;
- 	struct trace_array *tr = file->tr;
- 	char *param, *filter;
-@@ -1789,17 +1789,13 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
- 	enable_data->file = event_enable_file;
- 
- 	trigger_data = trigger_data_alloc(cmd_ops, cmd, param, enable_data);
--	if (!trigger_data) {
--		kfree(enable_data);
-+	if (!trigger_data)
- 		return ret;
--	}
- 
- 	if (remove) {
- 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
- 		kfree(trigger_data);
--		kfree(enable_data);
--		ret = 0;
--		return ret;
-+		return 0;
- 	}
- 
- 	/* Up the trigger_data count to make sure nothing frees it on failure */
-@@ -1828,7 +1824,12 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
- 	if (ret)
- 		goto out_disable;
- 
-+	/* Release the above reference taken for modules */
- 	event_trigger_free(trigger_data);
-+
-+	/* The enabled_data is assigned to trigger_data->private_data */
-+	retain_and_null_ptr(enable_data);
-+
- 	return ret;
-  out_disable:
- 	trace_event_enable_disable(event_enable_file, 0, 1);
-@@ -1837,7 +1838,6 @@ int event_enable_trigger_parse(struct event_command *cmd_ops,
-  out_free:
- 	event_trigger_reset_filter(cmd_ops, trigger_data);
- 	event_trigger_free(trigger_data);
--	kfree(enable_data);
- 
- 	return ret;
- }
--- 
-2.53.0
+The TP_STRUCT__entry is to be in structure format:
+
+	TP_STRUCT__entry(
+		__field(	unsigned long,		caller	)
+		__field(	unsigned long,		ip	)
+		__field(	const void *,		obj	)
+> +	),
+
+See how much better that looks and easier to read. Just like writing:
+
+struct entry {
+	unsigned long	caller;
+	unsigned long	ip;
+	const void	*obj;
+};
+
+	
+> +
+> +	TP_fast_assign(
+> +	__entry->caller = caller;
+> +	__assign_str(fn);
+> +	__entry->obj = obj;
+
+The code should be indented:
+
+	TP_fast_assign(
+		__entry->caller = caller;
+		__entry->ip = ip;
+		__entry->obj = obj;
+> +	),
+
+> +
+> +	TP_printk("caller=%pS fn=%s obj=%p", (void *)__entry->caller, __get_str(fn), __entry->obj)
+
+	TP_printk("caller=%pS fn=%pS obj=%p", ...
+
+-- Steve
+
+> +);
+> +
+> +#endif /* _TRACE_REF_TRACE_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/lib/Makefile b/lib/Makefile
+> index f33a24bf1c19..41737090a95d 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -335,3 +335,5 @@ CONTEXT_ANALYSIS_test_context-analysis.o := y
+>  obj-$(CONFIG_CONTEXT_ANALYSIS_TEST) += test_context-analysis.o
+>  
+>  subdir-$(CONFIG_FORTIFY_SOURCE) += test_fortify
+> +
+> +obj-$(CONFIG_TRACEPOINTS) += ref_trace.o
+> diff --git a/lib/ref_trace.c b/lib/ref_trace.c
+> new file mode 100644
+> index 000000000000..466647772ce1
+> --- /dev/null
+> +++ b/lib/ref_trace.c
+> @@ -0,0 +1,13 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/ref_trace.h>
+> +#include <linux/ref_trace.h>
+> +
+> +//Wrapper function for functions defined entirely in header files
+> +void do_ref_trace_final_put(unsigned long caller, const char *fn, const void *obj)
+> +{
+> +	trace_call__ref_trace_final_put(caller, fn, obj);
+> +}
+> +EXPORT_SYMBOL_GPL(do_ref_trace_final_put);
+> +
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(ref_trace_final_put);
+> 
 
