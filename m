@@ -1,131 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAFE2D249B;
-	Mon, 27 Jul 2026 12:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A46376465
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Jul 2026 14:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785155803; cv=none; b=d1H1d+duTXm+NSGoHkLdPnYLqSUC7WfXTaui7BLGlfVpeROWFAWYJYID8gTzqbn04HwzmJdXWJCpb4giOQvzpKt9IuLbuIb2OSVXpJY4VpN8Rzp5I9y9qgsGnc3+oqDKuhpR3A8Neio5U+fNfbCqHssg+R4LASE6ZxchzXxT3TA=
+	t=1785162586; cv=none; b=QzGxOeOAuJg9vQs78yf2kSh+TIBNuWbbRaFUM7Ui478BbzbnrT0kvI4+3dDy8geOxeoyxJ07d6fcp4DzYiSHEZIovM//TpP/cOqAQmXp0npijLenYan+QfaxJ7hfH780ibfR5jWV5TFQEuxjv/GuwAv3lOe8kA3WvRAusOvaU4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785155803; c=relaxed/simple;
-	bh=TlfOgGUjWpT7PngCpfcuSImForFETaHdkIlQoJibbCw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DUp1YNXyDS8KfjrvY2kuQUZgafWbjeNZu28g9AEIJ/e134jNIz+tLZDB1f/mUmoYanoqlENoCIu0o9v7Tw7PCI9pvTqK1x/A4kuAK4ii3YcgHecnhqLBshn03djf364Oy11LONAU4vsVIxL03SjUHZWQXE5OXC5DhDrf4MqlCCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Koh8xlep; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785162586; c=relaxed/simple;
+	bh=rnLaruOSRQ5uDK5ZU7HDhI+DpzKpD8VvDeOSpc/EcEY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BmLEZuXAOs6HDA/vFTsQaty409LyGyPrA3tMS+hlVS7lgsJm4XmKuO5gA0WWXoau8OAWVx5O6J/h+3ZsFKs5cukYKiRlmELz02rU0nJa2fuN+zqlVYntM6YQUuE0iPjAOxBow7wOTWjnWkUZ5iCFyzgKrux9S2+B1p12duSMdS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g3M+DqJk; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Koh8xlep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110501F000E9;
-	Mon, 27 Jul 2026 12:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785155802;
-	bh=1nv1S5hEpBMVAguEKnHI+47lbGEypcaxvcdcKDztF5w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Koh8xleplA+pyua6Yi4m2itBZfUeVSuhkH4fobBPXR4F5+YX1LNH1GWTf3I1lGMS3
-	 bgl9u0/+0bZPnY/ryHSEM0zKvKZPD3/R8i+vIQTaKiNQiZNPNVxYIPfYupsJ6HuiPS
-	 56AqPkjfDbfOAVJdMcqpEoHh8qEiPl7h7De1hN9xVv5F00/ZNj1Jkpbel5lWojwpdu
-	 JlfLoi6FeGlVWGHKPGDODUmiX00U8IaHGOo+3JFLhrh4tv4iR49kYxjKmqsd845G3V
-	 4UOImZq+tk5rGUv7S5jGImBIRX/LpI98LA8vNOAOGfJjdYv/flz+eiCTmHWEsDi8Kt
-	 KGbJMqBzQT84A==
-Date: Mon, 27 Jul 2026 21:36:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Tony Luck
- <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-edac@vger.kernel.org
-Subject: Re: [PATCH 0/3] hw_breakpoint: Fix and simplify local address
- updates for wprobe
-Message-Id: <20260727213634.72581cb0d2923269a940a87c@kernel.org>
-In-Reply-To: <cover.1785067572.git.wangjinchao600@gmail.com>
-References: <178476143000.26117.9810509272687580410.stgit@devnote2>
-	<cover.1785067572.git.wangjinchao600@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g3M+DqJk"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785162579;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7tHghUuh4abL0fwwnOGlOayUFDXuWG+n5PvNG2j5QBw=;
+	b=g3M+DqJkQz7oVE7zYcnCb3KUfo0PuPSR/Dp6zubbXXsm8bnX9toxZx/W8oEBBSpY8cvZdP
+	Zkf0hJ/aJ/hY+gSQS39O/06Y3kgBfy3kLsFuLTSuVMyoRmnweLX7hJfdqk0ScnsFARuor1
+	croZ7gE4Yzs+dCd/ZRysqs8/yibw01o=
+From: Leon Hwang <leon.hwang@linux.dev>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Leon Hwang <leon.hwang@linux.dev>
+Cc: bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/2] arm64: ftrace: enable single ftrace_ops for direct calls
+Date: Mon, 27 Jul 2026 22:28:42 +0800
+Message-ID: <20260727142844.21212-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 26 Jul 2026 20:22:29 +0800
-Jinchao Wang <wangjinchao600@gmail.com> wrote:
+Beyond the DIRECT_CALLS support on arm64 [1], select
+HAVE_SINGLE_FTRACE_DIRECT_OPS for arm64, which enables the BPF
+tracing_multi link on arm64 [2].
 
-> Hi Masami,
-> 
-> While reviewing wprobe v10, I prepared three patches to fix and simplify
-> the HWBP support required by wprobe.
+All tracing_multi link selftests are passed on arm64.
 
-Hi Jinchao,
+ cd tools/testing/selftests/bpf
+ ./test_progs -a 'tracing_multi_*'
+ #545/1   tracing_multi_attach_rollback/put:OK
+ #545/2   tracing_multi_attach_rollback/unlink:OK
+ #545     tracing_multi_attach_rollback:OK
+ #546     tracing_multi_bench_attach:OK
+ #547/1   tracing_multi_test/skel_api:OK
+ #547/2   tracing_multi_test/link_api_pattern:OK
+ #547/3   tracing_multi_test/link_api_ids:OK
+ #547/4   tracing_multi_test/module_skel_api:OK
+ #547/5   tracing_multi_test/module_link_api_pattern:OK
+ #547/6   tracing_multi_test/module_link_api_ids:OK
+ #547/7   tracing_multi_test/intersect:OK
+ #547/8   tracing_multi_test/cookies:OK
+ #547/9   tracing_multi_test/session:OK
+ #547/10  tracing_multi_test/attach_api_fails:OK
+ #547/11  tracing_multi_test/fentry_direct_access:OK
+ #547/12  tracing_multi_test/fexit_direct_access:OK
+ #547/13  tracing_multi_test/fsession_direct_access:OK
+ #547/14  tracing_multi_test/fentry_after_multi:OK
+ #547     tracing_multi_test:OK
+ Summary: 3/16 PASSED, 0 SKIPPED, 0 FAILED
 
-Thanks for the series!
+ ./test_progs -a 'fill_link_info/tracing_multi_*'
+ #132/11  fill_link_info/tracing_multi_link_info:OK
+ #132/12  fill_link_info/tracing_multi_invalid_ubuff:OK
+ #132     fill_link_info:OK
+ Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
 
-> 
-> This series is based on linux-trace/probes/for-next, the same base used by
-> wprobe v10. It is intended to replace patches 5-7 in v10, so it should not
-> be applied on top of topic/wprobe-v2.
+Links:
+[1] https://lore.kernel.org/all/20260609-arm64-ftrace-direct-calls-v1-0-4a46f266697f@linux.dev/
+[2] https://github.com/kernel-patches/bpf/pull/12986
 
-OK, let me replace it with this series.
-I'll also update wprobe side and make it v11.
+Leon Hwang (2):
+  arm64: ftrace: enable single ftrace_ops for direct calls
+  selftests/bpf: Enable tracing_multi tests on arm64
 
-> 
-> Patch 1 fixes the x86 HWBP slot and DR7 races when an operation is
-> interrupted by an NMI.
-> 
-> Patch 2 adds arch_modify_local_hw_breakpoint_addr(), which updates only
-> the watched address of an installed breakpoint on the local CPU.
-> 
-> Patch 3 adds the matching generic modify_local_hw_breakpoint_addr() API.
-> It keeps the original patch structure and Masami's authorship, while
-> removing attribute parsing, type/length updates and rollback.
-> 
-> With the address-only interface, the install/uninstall refactoring in the
-> old patch 5 is no longer needed.
-
-OK.
-
-> 
-> I can take care of follow-up maintenance related to fast local HWBP
-> watched-address updates.
-> 
-> The patches passed checkpatch and the relevant x86_32 and x86_64 object
-> builds.
-
-Thanks!
-
-> 
-> Jinchao Wang (2):
->   x86/hw_breakpoints: Make DR7 updates NMI safe
->   x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
-> 
-> Masami Hiramatsu (Google) (1):
->   HWBP: Add modify_local_hw_breakpoint_addr() API
-> 
->  arch/Kconfig                         |   8 ++
->  arch/x86/Kconfig                     |   1 +
->  arch/x86/include/asm/debugreg.h      |  36 ++++++---
->  arch/x86/include/asm/hw_breakpoint.h |   2 +
->  arch/x86/kernel/cpu/mce/core.c       |  20 +++--
->  arch/x86/kernel/hw_breakpoint.c      | 114 ++++++++++++++++-----------
->  arch/x86/kernel/nmi.c                |  10 ++-
->  arch/x86/kernel/traps.c              |  10 ++-
->  include/linux/hw_breakpoint.h        |   6 ++
->  kernel/events/hw_breakpoint.c        |  30 +++++++
->  10 files changed, 166 insertions(+), 71 deletions(-)
-> 
-> 
-> base-commit: 1a416ae446afa42d2d8500ce25bd61c564508721
-> -- 
-> 2.53.0
-
+ arch/arm64/Kconfig                                     | 2 ++
+ arch/arm64/kernel/ftrace.c                             | 3 +--
+ tools/testing/selftests/bpf/prog_tests/tracing_multi.c | 9 +++++++--
+ tools/testing/selftests/bpf/test_progs.h               | 6 ++++++
+ 4 files changed, 16 insertions(+), 4 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.55.0
+
