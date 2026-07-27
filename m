@@ -1,80 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A1F37FF7A;
-	Mon, 27 Jul 2026 21:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DE63C4B79;
+	Mon, 27 Jul 2026 23:58:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785189001; cv=none; b=CRfiR3CwAW9uNLF7K1+fiUUJWG4Bop1QASblSwj8odnm08S1mNTjAJaADOBtTNMaUZdvxhtFzQG0rH9+0MukhZQdSmbIHOlhpS91y5ssnDRY2DBt7CtRPSxjy43vkjtyOXGUy8JiL1gmXf94Wvm4TRiq+gGQHOfakuOeFk2p0As=
+	t=1785196688; cv=none; b=RTBlt5dnjng/9msRVvmauY3N8C3tI3c4kzLfc/VMnA5kD5RU3dlASeFKvj69ZUVmZdIE/3odgMdaufnELU1dEl26OLeUuvHJpgnbAjLn2c/kt4vu2MW9zVzn/oPUHrIw/5Ua1vB7uei7PHUO3pZ6g/5vpYTHfh5u3sxUOEZB5Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785189001; c=relaxed/simple;
-	bh=ZdnYkiMELaWqD42Ovbdv3F3kuvZwORX5M1d0YI894i0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euFsEH9qlOs/4KPVC0zh3blBrpbkePf5vLptadh7OjPFGfZrbacsJzvEZ7RKArjnVX/HaMRx/Kp2wP9Uaj/Ai+wl7whk1oZtFM9Av1YskXJ1xt7t0Nw3wAUntVO/ucQgNoNI9Mb0lJD5F1thLR5njYOtGeOE0JZGQtzlxS4W6LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVWTMr2c; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785196688; c=relaxed/simple;
+	bh=hVMN677+O6uQNNKVHkBX1eahrZKJbrbsynbQfKoV9ak=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=daGQYVcdlww4247QUTM8bNNIuXrokmLR+HckNb8aam3wwWrKG2zQuwv6lPyzdCIouNAJRbNMbejyNYsx6mnJzYmwcvof8Hi5cXTe7o7JEJrhfr01GMSo3Pv7nw+UmMF7/sZWDaBdoMV3lPyfO3AwHYisOLDkbSbPycKvcPuIAVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvZyDnCi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVWTMr2c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7541F000E9;
-	Mon, 27 Jul 2026 21:49:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvZyDnCi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558C61F000E9;
+	Mon, 27 Jul 2026 23:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785189000;
-	bh=rMfeYsP5GdnuDCfgJKEm3wwcc5Ecr2dv1YHRl9juiCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YVWTMr2cX4ewrBWHXUcAbrlt/cYMv2t1rAY6OmzwAk0jxEusNqzHhIvI+IFi8gusK
-	 jeVo2x71CzuTqqbU9a+WJJEvzb73ShnQO3gqhTrXt7a2TPzCUTVkNh3hhVBylazW4/
-	 4CeRyCI/IFRdnNyAJZiu6XWl0fPPuPV/CAOpVXlO5mgkBjqTvlCxPdL58ayHHdjWJ5
-	 RjdQn+7QE6cmJ2wIBqxj7yx5OPwo/Ife3L3H08yQxcj+ptQNRXXCFsaXSPJmOUv/8M
-	 z+lqEfGJ6x5P9pMufpzSSTCyZsvQVy0wiah9b9n0VGDo1ovNXxn8YJv2O47SoUwgEy
-	 X3/tWKU4SI1CQ==
-Date: Mon, 27 Jul 2026 22:49:52 +0100
-From: Will Deacon <will@kernel.org>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Hongyan Xia <hongyan.xia@transsion.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>, Oleg Nesterov <oleg@redhat.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jiazi Li <jiazi.li@transsion.com>, Pu Hu <hupu@transsion.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [RFC PATCH 9/9] arm64/debug: Mark debug exception helpers
- __always_inline
-Message-ID: <amfSgECpzET7JHTr@willie-the-truck>
-References: <cover.1785153469.git.hongyan.xia@transsion.com>
- <eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
- <CAKwvOd=HeG=z1j2qB-SX3NQ=62ERr=KpQNZyqqp2Qy4kZ54RLw@mail.gmail.com>
+	s=k20260515; t=1785196687;
+	bh=GSUEwA8DxGTVwWrWOajToAHEB/JTqlNiZjDNq8cDJYw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=XvZyDnCiKiXqW9gM+BrcSj1Z/j69DU1exIRIzmYL54LXRrQB/s1/UIUePIVHMkaFR
+	 EfJUZOdg8OqjKWrcbMiJmOlxJoBC5R9sKBuq1vL+a+e1lH7fZRtnQtUVkQfnwdjC1n
+	 8TBKhrtCCzI9j+1DvUmzWdq0QB9JGga1iQ/cz2sEYXw5EzMXzjGxavQsBMOr8l2sk9
+	 hUYbfSIZ0O0e0NX9+sT1hbE5HHi+TMS/ylu5aPBPHrNaloy3i3HcnoEVkTXM0ZKJ7A
+	 nQ6Iez2ijjpH1bM/VU9UTaUS3SQ9Kl6j1NLF2X33pUHMEq8u16rDWIIfOZwbt2lnLP
+	 A57/EMk7WeM8g==
+Date: Tue, 28 Jul 2026 08:58:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Zhan Xusheng <zhanxusheng1024@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] tracing/probes: Extend max length of argument
+ string
+Message-Id: <20260728085802.9882193694a680809f888800@kernel.org>
+In-Reply-To: <20260724023317.624074-1-zhanxusheng@xiaomi.com>
+References: <178399140457.27810.11387684872148824707.stgit@devnote2>
+	<20260724023317.624074-1-zhanxusheng@xiaomi.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOd=HeG=z1j2qB-SX3NQ=62ERr=KpQNZyqqp2Qy4kZ54RLw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 27, 2026 at 12:22:32PM -0700, Nick Desaulniers wrote:
-> On Mon, Jul 27, 2026 at 5:25 AM Hongyan Xia <hongyan.xia@transsion.com> wrote:
-> >  arch/arm64/include/asm/esr.h       | 2 +-
-> >  arch/arm64/include/asm/percpu.h    | 2 +-
-> >  arch/arm64/include/asm/preempt.h   | 4 ++--
-> >  arch/arm64/include/asm/ptrace.h    | 4 ++--
-> >  arch/arm64/kernel/debug-monitors.c | 2 +-
-> >  include/linux/kprobes.h            | 8 ++++----
+On Fri, 24 Jul 2026 10:33:17 +0800
+Zhan Xusheng <zhanxusheng1024@gmail.com> wrote:
+
+> On Tue, Jul 14, 2026 at 10:10:04AM +0900, Masami Hiramatsu (Google) wrote:
+> > -	char buf[MAX_ARGSTR_LEN + 1];
+> > +	char buf[MAX_COMMON_HEAD_LEN + 1];
+> > ...
+> > +#define MAX_ARGSTR_LEN		255
+> > +#define MAX_COMMON_HEAD_LEN	63
 > 
-> It might not be appropriate for the changes to kprobes.h to go through
-> the arm64 tree, but maybe it is?
+> Keeping the head buffer at 63 avoids growing it to 256, but it also
+> preserves a pre-existing truncation of the kprobe/fprobe head: both
+> trace_kprobe_match_command_head() and trace_fprobe_match_command_head()
+> snprintf() the symbol / function name into this buffer ("%s" or "%s+%u").
+> Kernel symbols can be far longer than 63 -- Rust-mangled names are
+> routinely 150-200+ chars (KSYM_NAME_LEN is 512); I see 199-char symbols
+> in /proc/kallsyms here.
 
-They look pretty trivial, so we can take 'em with Masami's Ack once the
-rest of the series has been reviewed.
+Hmm, good catch! OK, it seems trace_*probe_match_command_head() need
+to be updated. Let me fix it!
 
-Will
+> 
+> This is the same delete-/match-by-command path you just fixed for the
+> args matcher in commit 15f197856d68 ("tracing/probes: Avoid temporary
+> buffer truncation in trace_probe_match_command_args()"):
+> dyn_event_release() passes the symbol as argv[0] to
+> *_match_command_head(), which then calls trace_probe_match_command_args().
+> The head runs first, so for a probe on a long symbol the head strcmp()
+> already fails and the probe cannot be matched/deleted by full command --
+> before the args fix is even reached.
+> 
+> Would it make sense to give the head matchers the same direct-comparison
+> treatment instead of a fixed buffer -- compare the symbol (and optional
+> "+offset") against argv[0] directly? uprobe already compares its filename
+> directly, so mainly kprobe and fprobe would need it, and
+> MAX_COMMON_HEAD_LEN could then be dropped.
+
+Yeah, that is the best way to solve this issue.
+
+Thanks for pointing it out!
+
+> 
+> Thanks,
+> Xusheng
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
