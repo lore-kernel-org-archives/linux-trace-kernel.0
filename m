@@ -1,135 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D54F2F8EBC;
-	Tue, 28 Jul 2026 09:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0518435C6BA;
+	Tue, 28 Jul 2026 09:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785231312; cv=none; b=pQIDimgis0lcnGlq/BeTn/4dllvwCoYx7jwjCsYo8+U0PZbQ2wJGA5Oei/CllwzEXsxFq1yzPoAjwdTZ3/XnSrj6KCvbDCKSd+kJm/Tag/Fu8+6YKqn07FIJVyDUvVOuKyA3ddjlw6CRaCARaYiyLj+IMUyXgJ9rRSE8JNmtY2Y=
+	t=1785231959; cv=none; b=eBM9orDgIiQndBR0SNj4s8OcwUGqerFcy1/ftrZJeVIlb4aUShBn7pyHHs6UATKBQFo95JCPnFiLkFTtls5bqrMDNYwnDGKu0ggu1Y2LANZ0El86T8x8ftf8sdoY5XtNtTWv4vIY7p+O93lW+WALWuJkgDFxSqGSFZ8dz0fRZ+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785231312; c=relaxed/simple;
-	bh=oZfT9e2FSgjlwC8oHFP5PyqSe1Ccu889Om79UdWooVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mi2f2RwGc8QQstrEF3/VjEw6vnX8mCLuxyrPRw6TfeYfroa6mtBkkRkt5NDl0KCwD6awx7fCq4pgQlzGzO3EHMrYBistw2Y2fUscGqVa0ogx2oR4cfFQ6uKlorQF5hDZyGn80O7qfXIlTKSvz9aBQIIPuDMB7uEHBb6HWlss7pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcOVQ+En; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785231959; c=relaxed/simple;
+	bh=8IjNPX3b9oDtA7ccWW/FuqBcdCMi6fZbSFVSS8ClaG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=B2zBfkS5bEFOq5S/sFYA/raZFant+ssUnp62e8//n1nw+QILqTtgJApldZ95brRs46+ar45M6/P3J3+lfzwCLEatiFJlhNwpE2xIGOBv2jI+Fg6Oij+C7rYQW/icio/Rmv7dgKwFVoODlFDO9w1mUWnjwUlkoBr89hrrSscvYu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=j2axcgzL; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcOVQ+En"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A5E1F000E9;
-	Tue, 28 Jul 2026 09:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785231311;
-	bh=GYVJ658TmEPomu3zIByvcAej3yYIJZ34wXSqsRSLkJw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=XcOVQ+EnYR9klrC7g4BgM59+H5wtMYUtvqM+B7NUXGW3+vWPlKUb2HFy9DN7Yxk3s
-	 elbuulsbOYImOAEPqtRICkC8btLirhRECHXd3LmQvob4Uw1w84mcYyGSL8eoishzmG
-	 9RQFoNJMlYZyfGdvRalPHW5uZd/sTBqzGMHVPJOg/l8+a+PBlZf85J7lerXmkPNO7x
-	 MpNWzrQO8EUZmoLkK94kyJ0fg97QZKC516h17mlVAgMESN0p5W8+PEath2SsXWeeYQ
-	 MqwtX4RcMj+FDkpL9Fr6GmlRqaTwSf1thik9Nunvy6zF4Ecyj0WUuk6stCRGQNFKIb
-	 NnOTUE+tSJkdA==
-Message-ID: <72c235f1-e707-426d-97f7-be520d6eab66@kernel.org>
-Date: Tue, 28 Jul 2026 11:35:02 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="j2axcgzL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=V2
+	K8udpr/JM17a3K/bdp2bYKyLJGsmIq/DwkSIsPTHc=; b=j2axcgzLqEJYbNbCfa
+	y/MNwpM/7BrmTu5NlVophV8NSKyUBZ/DucBIcpn11yM5C9A0JLy4quMznfs0d7JC
+	ljirRiUwRPeMnkzXjKzOyP6eGCR2M7sDpukLzCHnTiJqBy/MARK6/WRBu9mjclpY
+	DH4dgPQoQBDt6nndLCYMBLeSE=
+Received: from liubaolin-ThinkPad-E15-Gen-2 (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDXFzUiemhq86rAJQ--.13303S3;
+	Tue, 28 Jul 2026 17:45:14 +0800 (CST)
+From: Baolin Liu <liubaolin12138@163.com>
+To: almaz.alexandrovich@paragon-software.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	liubaolin12138@163.com,
+	liubaolin12138@gmail.com,
+	Baolin Liu <liubaolin@kylinos.cn>
+Subject: [PATCH v2 v2 1/7] ntfs3: add mount and log replay tracepoints
+Date: Tue, 28 Jul 2026 17:44:20 +0800
+Message-ID: <20260728094426.749482-2-liubaolin12138@163.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260728094426.749482-1-liubaolin12138@163.com>
+References: <20260728094426.749482-1-liubaolin12138@163.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
-To: Andrew Morton <akpm@linux-foundation.org>,
- Miaohe Lin <linmiaohe@huawei.com>
-Cc: Breno Leitao <leitao@debian.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com, Lorenzo Stoakes <ljs@kernel.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Shuah Khan <shuah@kernel.org>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
- <20260630-ecc_panic-v10-6-c6ed5b62eea2@debian.org>
- <ee4982bf-ff45-8f0b-3b76-7ca19228f12b@huawei.com>
- <20260727212402.09baa9381ca426273fad4719@linux-foundation.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260727212402.09baa9381ca426273fad4719@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgDXFzUiemhq86rAJQ--.13303S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GF4xAF4ktw4fury7ur4DJwb_yoWxJryrpF
+	nrAFs3G3yktrWj9ws3tw1Sqr4rZa48uF4Utry3W347Ars7tr1kJr4DtrW8CFZ5ArZ0k3sa
+	q3Z0v390kw15Wr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zNhFcUUUUUU=
+X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbC6QtdKGpoeivXlQAA3G
 
-On 7/28/26 06:24, Andrew Morton wrote:
-> On Thu, 9 Jul 2026 11:34:05 +0800 Miaohe Lin <linmiaohe@huawei.com> wrote:
-> 
->>> The script is intentionally NOT wired into run_vmtests.sh: every
->>> successful run panics the kernel, which is incompatible with the
->>> sequential "run each category in the same VM" model that
->>> run_vmtests.sh assumes.  It is also not registered as a TEST_PROGS /
->>> ksft_* wrapper so a default kselftest run does not opt itself into
->>> a panic.  The script is meant to be executed manually inside a
->>> disposable VM (e.g. virtme-ng), one variant per VM boot, and
->>> requires RUN_DESTRUCTIVE=1 in the environment as a safety net.
->>>
->>> Signed-off-by: Breno Leitao <leitao@debian.org>
->>
->> With Mike's comment addressed:
->>
->> Acked-by: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> As I understand it, Breno would prefer not to rewrite the selftest in C
-> at this time.  IOW, we stick with the bash version for now and add
-> "convert this to C" to the todo list, OK?
-> 
+From: Baolin Liu <liubaolin@kylinos.cn>
 
-No, seriously, this is code we have to maintain. Better to not have this test
-than have it.
+Add ntfs3 tracepoints for mount and log replay paths.
 
+This adds trace events for ntfs_fill_super(), ntfs_init_from_boot(),
+and log_replay() to help observe mount setup, boot sector parsing,
+and $LogFile replay results.
+
+Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
+---
+ MAINTAINERS                  |  1 +
+ fs/ntfs3/fslog.c             |  3 ++
+ fs/ntfs3/super.c             | 11 ++++-
+ include/trace/events/ntfs3.h | 85 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 99 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/ntfs3.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 15011f5752a9..05d815243cb8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19293,6 +19293,7 @@ W:	http://www.paragon-software.com/
+ T:	git https://github.com/Paragon-Software-Group/linux-ntfs3.git
+ F:	Documentation/filesystems/ntfs3.rst
+ F:	fs/ntfs3/
++F:	include/trace/events/ntfs3.h
+ 
+ NTSYNC SYNCHRONIZATION PRIMITIVE DRIVER
+ M:	Elizabeth Figura <zfigura@codeweavers.com>
+diff --git a/fs/ntfs3/fslog.c b/fs/ntfs3/fslog.c
+index f038c799e7ac..5020da7e72f1 100644
+--- a/fs/ntfs3/fslog.c
++++ b/fs/ntfs3/fslog.c
+@@ -13,6 +13,7 @@
+ #include "debug.h"
+ #include "ntfs.h"
+ #include "ntfs_fs.h"
++#include <trace/events/ntfs3.h>
+ 
+ /*
+  * LOG FILE structs
+@@ -5362,6 +5363,8 @@ int log_replay(struct ntfs_inode *ni, bool *initialized)
+ 	else if (log->set_dirty)
+ 		ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
+ 
++	trace_ntfs3_log_replay(&ni->vfs_inode, *initialized, err);
++
+ 	kfree(log);
+ 
+ 	return err;
+diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+index 3305fe406cb2..7034ef257452 100644
+--- a/fs/ntfs3/super.c
++++ b/fs/ntfs3/super.c
+@@ -76,6 +76,9 @@
+ #include "lib/lib.h"
+ #endif
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/ntfs3.h>
++
+ #ifdef CONFIG_PRINTK
+ /*
+  * ntfs_printk - Trace warnings/notices/errors.
+@@ -956,7 +959,7 @@ static int ntfs_init_from_boot(struct super_block *sb, u32 sector_size,
+ {
+ 	struct ntfs_sb_info *sbi = sb->s_fs_info;
+ 	int err;
+-	u32 mb, gb, boot_sector_size, sct_per_clst, record_size;
++	u32 mb, gb, boot_sector_size = 0, sct_per_clst, record_size;
+ 	u64 sectors, clusters, mlcn, mlcn2, dev_size0;
+ 	struct NTFS_BOOT *boot;
+ 	struct buffer_head *bh;
+@@ -1216,6 +1219,8 @@ static int ntfs_init_from_boot(struct super_block *sb, u32 sector_size,
+ 	}
+ 
+ out:
++	trace_ntfs3_init_from_boot(sb, sector_size, boot_sector_size,
++				 !!boot_block, err);
+ 	brelse(bh);
+ 
+ 	if (err == -EINVAL && !boot_block && dev_size0 > PAGE_SHIFT) {
+@@ -1731,12 +1736,16 @@ static int ntfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	}
+ 
+ 	ntfs_create_procdir(sb);
++	trace_ntfs3_fill_super(sb, ro, sbi->cluster_size, sbi->record_size,
++			      sbi->index_size, 0);
+ 
+ 	return 0;
+ 
+ put_inode_out:
+ 	iput(inode);
+ out:
++	trace_ntfs3_fill_super(sb, ro, sbi->cluster_size, sbi->record_size,
++			      sbi->index_size, err);
+ 	/* sbi->options == options */
+ 	if (options) {
+ 		put_mount_options(sbi->options);
+diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
+new file mode 100644
+index 000000000000..d00f66e42ba8
+--- /dev/null
++++ b/include/trace/events/ntfs3.h
+@@ -0,0 +1,85 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM ntfs3
++
++#if !defined(_TRACE_NTFS3_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_NTFS3_H
++
++#include <linux/fs.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(ntfs3_fill_super,
++	TP_PROTO(struct super_block *sb, bool ro, u32 cluster_size,
++		 u32 record_size, u32 index_size, int err),
++	TP_ARGS(sb, ro, cluster_size, record_size, index_size, err),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(bool, ro)
++		__field(u32, cluster_size)
++		__field(u32, record_size)
++		__field(u32, index_size)
++		__field(int, err)
++	),
++	TP_fast_assign(
++		__entry->dev = sb->s_bdev->bd_dev;
++		__entry->ro = ro;
++		__entry->cluster_size = cluster_size;
++		__entry->record_size = record_size;
++		__entry->index_size = index_size;
++		__entry->err = err;
++	),
++	TP_printk("dev=(%d,%d) ro=%d cluster=%u record=%u index=%u err=%d",
++		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ro,
++		  __entry->cluster_size, __entry->record_size,
++		  __entry->index_size, __entry->err)
++);
++
++TRACE_EVENT(ntfs3_init_from_boot,
++	TP_PROTO(struct super_block *sb, u32 media_sector_size,
++		 u32 boot_sector_size, bool used_alt_boot, int err),
++	TP_ARGS(sb, media_sector_size, boot_sector_size, used_alt_boot, err),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(u32, media_sector_size)
++		__field(u32, boot_sector_size)
++		__field(bool, used_alt_boot)
++		__field(int, err)
++	),
++	TP_fast_assign(
++		__entry->dev = sb->s_bdev->bd_dev;
++		__entry->media_sector_size = media_sector_size;
++		__entry->boot_sector_size = boot_sector_size;
++		__entry->used_alt_boot = used_alt_boot;
++		__entry->err = err;
++	),
++	TP_printk("dev=(%d,%d) media_sector=%u boot_sector=%u alt_boot=%d err=%d",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->media_sector_size, __entry->boot_sector_size,
++		  __entry->used_alt_boot, __entry->err)
++);
++
++TRACE_EVENT(ntfs3_log_replay,
++	TP_PROTO(struct inode *inode, bool initialized, int err),
++	TP_ARGS(inode, initialized, err),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(unsigned long, ino)
++		__field(loff_t, size)
++		__field(bool, initialized)
++		__field(int, err)
++	),
++	TP_fast_assign(
++		__entry->dev = inode->i_sb->s_dev;
++		__entry->ino = inode->i_ino;
++		__entry->size = i_size_read(inode);
++		__entry->initialized = initialized;
++		__entry->err = err;
++	),
++	TP_printk("dev=(%d,%d) ino=%lu size=%lld initialized=%d err=%d",
++		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
++		  __entry->size, __entry->initialized, __entry->err)
++);
++
++#endif /* _TRACE_NTFS3_H */
++
++#include <trace/define_trace.h>
 -- 
-Cheers,
+2.51.0
 
-David
