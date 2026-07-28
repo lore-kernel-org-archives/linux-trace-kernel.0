@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAE53F0A96;
-	Tue, 28 Jul 2026 12:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242E43DE45C;
+	Tue, 28 Jul 2026 12:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785243002; cv=none; b=XrC86fXzyIbjnkP2EUau8kmrRF3mdGpmpjtqActZyXiqVVoJbupZNuKJFI/1NsBxJ1Pz+cNEz/zdxBC20H+d25PXiROxK6LH4jdS1sOFIjf/eni/XRBLJdcRawPcpHvoiTDWrVnVPy/Nhw20CuoMRZLoerSwW00wT4en5hpgbQ0=
+	t=1785243012; cv=none; b=Xn5A8+I+GAgQIzvCP7ymHigR3I6x/5Z+6tQIxsHHQDLOsjqJL4MxewN3IK1Q60KVd/qMyle7xlLBsaSJBiAs8pxgKeR9p+qxqYbBXoClGZpTRh6Ni1Ml713FJuQR3glPQZjFTm2xE8HgGJi+at4qSkMVhn/lQgGGS5mlGs6bjTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785243002; c=relaxed/simple;
-	bh=2SwRgdQ0V1SjrXbSJJ6Dqk/2FBtQZ75F8VZePlgbyyE=;
+	s=arc-20240116; t=1785243012; c=relaxed/simple;
+	bh=7tFzBYGxtPyTEMNfVdoVrIcozUcGIBfaryyGKr/PGNY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CNBlk+Kp25ThNi/IAikNFZdz0YEaS5sdGITmvFmqEpO90+jCdIn9BS6BhRGCYwADWLqWyojqNAtsUxb2l0xiIdqxJ8Yecb6zT1hMbxHnPVnoMMgWSJLdN1StEXfHd+pNu2s7oT5x11jDgvK4IYFJOAt7SO1TJsbxdgHNvMnN8Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNxlql1E; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=nhd1vZOvwdvsieFD6QvVmkjMfmrF6VC31/v4WKeM3lJ/2Zca5JeAD/N9xOGpbI7ybyeQrGXARijyT228q9LITqCfxKSwhDJzM0XunIg02qO8/+4J6KFxwCPxkM1dUu9laPAxeSbrIGIZA/q8YGxxPUMpR7NZAGEXwfKUZ60jpN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkr474Ek; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNxlql1E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EE91F00A3A;
-	Tue, 28 Jul 2026 12:49:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkr474Ek"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7471F000E9;
+	Tue, 28 Jul 2026 12:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785242995;
-	bh=B+SkAkO+DZpWHcOFED85ZibUv6VMCkE6Esgv84zpzV8=;
+	s=k20260515; t=1785243004;
+	bh=LaLFimEMmBrvMfMMx5gNeso5rpc7AUxMwn+69atIkjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=BNxlql1ELMjCLY4whD2NKFfCbGuDKemzT62mPnVi5XEqXNas5wz1utgRcGawRGH9f
-	 IS67grzadIMGA8QGyHR5vbgGOJ0ABa8HHBUUQ66T4DdyK/66RZ0BhRd6vbDiPlJiNk
-	 6B0UTXgPTpyhojhJdyp1bY2eESwIxRx5nu5TLz8sTYOXo3KUlrk1W9wPsubn+XIQKc
-	 RXHKKUzJ5ZxqPkenxNO4SnLrd48GN/pdExaasXADgCl+LdKTXfW/8YESvt18nuMO7g
-	 goi64TgtY8KiTnBqRYDWG29PbLfapmW19LM8jn76veAr/5TsRtxLL4PjN042wrZEJ/
-	 whkFYOpgUx1Rw==
+	b=gkr474EkHDB2SsGE3JK1XRV2U+kQhMJ+j6uJKSXjjICdD5W19rNtzEwMhimnf9e0L
+	 bqFanGzGoGZZGLVA5HG/FObd/ne+erYbSJlR9DiA/8WQDHWlxkh9GBTW8YF8l4AZie
+	 70Q8fYTJwsLkGDZrxBHtzCWOvAim6Q75QdLyfhyrr0IQ/CuBqIXdxTZj2aNKaGhw7w
+	 4WcHYm/zaoHd9oeWxD9nwj8cAmEw+VKDcz43nRH59srqxktoXvrmVYgCtLbpd5CwPg
+	 OSq9IckLjMD8VdusbOYGB5mZwmBUPha8yj9nCBxwitaDHdDMVSXU+dJD/AD/MhUnVL
+	 +fNKNBYxi2COA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -34,9 +34,9 @@ Cc: Pekka Paalanen <ppaalanen@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	nouveau@lists.freedesktop.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 1/4] tracing/mmiotrace: Reset dropped_count in mmio_reset_data()
-Date: Tue, 28 Jul 2026 21:49:51 +0900
-Message-ID: <178524299122.56416.16277704230639425172.stgit@devnote2>
+Subject: [PATCH 2/4] tracing/mmiotrace: Add NULL check for mmio_trace_array in logging functions
+Date: Tue, 28 Jul 2026 21:50:00 +0900
+Message-ID: <178524300062.56416.8362487250709962380.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178524298182.56416.7520852015178187644.stgit@devnote2>
 References: <178524298182.56416.7520852015178187644.stgit@devnote2>
@@ -52,32 +52,58 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-mmio_reset_data() is called during tracer initialization, reset, and
-start. While it resets overrun_detected and prev_overruns, it neglects
-to reset dropped_count. Consequently, dropped event counts from prior
-tracing sessions persist in dropped_count and corrupt overrun reports
-in subsequent runs.
+mmio_trace_rw() and mmio_trace_mapping() retrieve mmio_trace_array into
+tr and pass it to __trace_mmiotrace_rw() and __trace_mmiotrace_map().
+If these functions are invoked while mmio_trace_array is NULL (e.g. before
+initialization or after disabled), accessing tr->array_buffer.buffer will
+result in a NULL pointer dereference crash.
 
-Fix this by explicitly calling atomic_set(&dropped_count, 0) in
-mmio_reset_data().
+Fix this by adding an explicit NULL check for tr at the beginning of
+__trace_mmiotrace_rw() and __trace_mmiotrace_map().
 
-Fixes: 173ed24ee2d6 ("mmiotrace: count events lost due to not recording")
+Fixes: f984b51e0779 ("ftrace: add mmiotrace plugin")
 Assisted-by: Antigravity:gemini-3.6-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_mmiotrace.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/trace_mmiotrace.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/trace/trace_mmiotrace.c b/kernel/trace/trace_mmiotrace.c
-index b88b8d9923ad..e064ba3f28cb 100644
+index e064ba3f28cb..df8692c2dea8 100644
 --- a/kernel/trace/trace_mmiotrace.c
 +++ b/kernel/trace/trace_mmiotrace.c
-@@ -29,6 +29,7 @@ static void mmio_reset_data(struct trace_array *tr)
+@@ -294,11 +294,15 @@ device_initcall(init_mmio_trace);
+ static void __trace_mmiotrace_rw(struct trace_array *tr,
+ 				struct mmiotrace_rw *rw)
  {
- 	overrun_detected = false;
- 	prev_overruns = 0;
-+	atomic_set(&dropped_count, 0);
+-	struct trace_buffer *buffer = tr->array_buffer.buffer;
++	struct trace_buffer *buffer;
+ 	struct ring_buffer_event *event;
+ 	struct trace_mmiotrace_rw *entry;
+ 	unsigned int trace_ctx;
  
- 	tracing_reset_online_cpus(&tr->array_buffer);
- }
++	if (!tr)
++		return;
++
++	buffer = tr->array_buffer.buffer;
+ 	trace_ctx = tracing_gen_ctx_flags(0);
+ 	event = trace_buffer_lock_reserve(buffer, TRACE_MMIO_RW,
+ 					  sizeof(*entry), trace_ctx);
+@@ -321,11 +325,15 @@ void mmio_trace_rw(struct mmiotrace_rw *rw)
+ static void __trace_mmiotrace_map(struct trace_array *tr,
+ 				struct mmiotrace_map *map)
+ {
+-	struct trace_buffer *buffer = tr->array_buffer.buffer;
++	struct trace_buffer *buffer;
+ 	struct ring_buffer_event *event;
+ 	struct trace_mmiotrace_map *entry;
+ 	unsigned int trace_ctx;
+ 
++	if (!tr)
++		return;
++
++	buffer = tr->array_buffer.buffer;
+ 	trace_ctx = tracing_gen_ctx_flags(0);
+ 	event = trace_buffer_lock_reserve(buffer, TRACE_MMIO_MAP,
+ 					  sizeof(*entry), trace_ctx);
 
