@@ -1,93 +1,357 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3A73B583B;
-	Tue, 28 Jul 2026 22:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2FD32AAAB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jul 2026 22:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785276474; cv=none; b=ezUJqmyyKji5Fj+5KI9BRb4vWz0aYdASp0OriOcT7weJrt0lH+pnFEhHwlFZTWoqEj+bu5R6vvn3Kxcj6+Eigh4O5bvYhZZDuxomRfyy+7Hokayi3zBzWxn6cgzizkbSPVjbtHCR291CmAoA9PZ3HkP6dvM3rZlFUWQe8UH6SVM=
+	t=1785279143; cv=none; b=dhO9sDIrKFTh891Psz0pulJrNyPqhFpzWfMdVfl+hrfJwvQR2oozEB6Onu7ilrsd5PaYBWSGidYFfX4bQXn0S7aR6dty0KVTOEO2cAE2RYzdszeHZN0c889unKgS+dw9fsJEUEX7IWpQZN2+Q7eiZmlPXHCc91FRrOxPCzbPOu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785276474; c=relaxed/simple;
-	bh=UolEMvehXsDCGXhOGT+PQ60dtlXW5Fj3xlabNsXIbZk=;
+	s=arc-20240116; t=1785279143; c=relaxed/simple;
+	bh=vbG/afS2jM+6Mi8MVhFOFthV7zYwQoqpXdlIshgOJS8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tULlbw3EkQV3SMH4lRgw3vLU1Wzs5D6tHDIIwl44sGMBV4lxLjEz3ujmIxbw2pS84oxXx/1I4tFQ9mFOMl7nVdWSIveIDnkwju6266YzhI9mnmidEOFUhQU3AWnyx6Olqvw9FfSJ5ZkbzF27HmAULlg+ssLx62kE9nvpJjupQbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=LNPOGY2E; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RofiurF/EdU4Eu7LA5jmLZVMeE4rf1OxuVaSkctOp7vWYAe+EX6j5Ya7Iv5QYt7LQegy33HJkn5mir0ImnBmI+IicaEIIW/MEDeXsGtHO+Him8+csf46+TdzJvitpDKNo4w4Pk11PAFUKZ/G0TEo83yZNApDiiRR8AnVeLQ0Bq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFooTWbc; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="LNPOGY2E"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=W4Dy3XC6qV1NBDVHSm+NbhvnKY5yieX/MYpP17k22sI=; b=LNPOGY2EtqaZoCfhvpiM1Z9mVM
-	R47JO4wkihzNcB0yiiZcpYy9lpohbIafNUZ3l2vHDkbSbGhdvC4gRNeckQrQswUlR5ccBYvJ/MT7T
-	30w9YM7x5pbW+UBQvlt4cR/zgunFQN2huxclA4gwk7WAA1qFsLtwB8QpCR8TaLJyBB+5ajZAhFziX
-	Em0SlWdrnF812sHKXQcLyJkjU+YE2XW9vv3Vxn5beDDTppE5uxrj+l+2aDH+ie+/J91Rt5Lx3njkl
-	9XQiyF2OD4EmnrQzcvhvdz7E5Lr5JR8fjDHfhOAvdyCipuZ/5hpEGKGTd8UDF8VSPVlnpQAyDsDGC
-	SKT30P5g==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wopxV-007zAH-0m;
-	Tue, 28 Jul 2026 22:07:33 +0000
-Date: Tue, 28 Jul 2026 15:07:26 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Miaohe Lin <linmiaohe@huawei.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Lorenzo Stoakes <ljs@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
-Message-ID: <amkn21ftNme48Vbl@gmail.com>
-References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
- <20260630-ecc_panic-v10-6-c6ed5b62eea2@debian.org>
- <ee4982bf-ff45-8f0b-3b76-7ca19228f12b@huawei.com>
- <20260727212402.09baa9381ca426273fad4719@linux-foundation.org>
- <de29c5cc-3637-cd18-354d-55ceb3d60afd@huawei.com>
- <amh1nZVVaaZSGD3M@gmail.com>
- <20260728122016.30752d36c3b3c3af231efa9d@linux-foundation.org>
- <44f81bea-d64a-4f73-8665-46652a928c83@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFooTWbc"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-80cebd41372so5908767b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jul 2026 15:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785279141; x=1785883941; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=uPumpig1LSNZCbOMr/7Ory4bimOiAIYjHcwSmavCl04=;
+        b=LFooTWbcr9tTqj3gu2w9AhREGksMnPD0QtAmln2MLvCzvKJXePL5G7MzanSihNIxCK
+         1Wk6Qu2NOvL6qxRPwehq/tzV9mkCd00hxw8OuvEFOS4KuOOMdNqerb3u5qDIHeNR99CK
+         ZPU6LoZxVDdmHOINZSJKn+ANHUEXBMYIfqVB1DXdxqheW7gyYY8SScjFseUmJKpQHiRb
+         16++fr/HCzOO0dSBDsV62kGB/7AZoiZdfr0hbmT0pIehzn76HH8fzBmiabMsW+tO5Gs8
+         I2mLlXT5Xu2uYQeymgje4N7EVRg0iH6aBYBBS+WmT9k16VGE1W3IskcfREgXs/DKNPwb
+         0QTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785279141; x=1785883941;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=uPumpig1LSNZCbOMr/7Ory4bimOiAIYjHcwSmavCl04=;
+        b=VtO9tOqseNnWle7GPY4kLmeclUZ5j8ZXB0exQcRjk/8hCIxdbIGtD+x1NG2+nv/Peh
+         hlV1+rvKHelIXUyDsy6YuPAVKxokpL9oSnsSCo0e8XKf3vy3UA42Okb0uOE1itr+rCyr
+         2iCnGieOoxSymUphdp3PQlR1i7rD0TxWl5Q4qNOV8IPCGx0Pyu9/EpeaSgnAMlL7A32M
+         FIQZB8w39jnAK06nE3pSOuTZHIRZhpHl+2tDseTgna//1z+eXSuL99GuhiOj/pBuzCQ9
+         E8b3PGDOeO4fTrdUUl3uEtDN0szFFoHz+PmYozMhGntpLD3cI1ko3xFFBfB531bFIoDu
+         74Dg==
+X-Forwarded-Encrypted: i=1; AHgh+Rq3y+s6Q6DgAwXVoODMiLwsjpmWCsE8Srmyv9PxkXNfu8IRdPfgtUY30MEfu3Se+kXfm5xwzifeUIaSDODp4UNVIoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze492TagO9gtLwtQveaaOv69LVzEXdrOoXc6KOKk2Ub9FP3qmx
+	PPKLWB4WuHD6RL2EeIkuaosDU3BwIE1ePSHs+H+biPhsNcXYpT7zBNl4
+X-Gm-Gg: AR+sD11va+OIKz8ZqQOxpsBYonvbKox/e8Y9xllAf9w2bzUr132II7OierZNacuQaA+
+	a4jbuKCBeDrg+/2faqX4fQzlb4yDauTfZvgRl4/EWm21yHqs/owB33WM45yTHHybNXDrXNRvpjx
+	eJ3/6wwA+DbadNXU2YKMBHNQOQFSbHLuEsCIBpLZomhsV9KHXKT9FsDVvoWS11iAkfQz00Qr1Ha
+	Dn6hpLY7StvIbgBrvAgX5hkXbD93BtP3ddckiern33W56aaJjGIZ+KKBTGIBBBuM9Lv/A7jMg6R
+	jCh24U1Rm6NmbszYV/yEDEsMN3otJoM9cZ3QepWve2ZAsL8HUMTTJZr3TsFH55jMjEjseMptLQi
+	DEar95i8yRznAzGeTKTCKBvFO86m9DhftX4bKV4Vn9oICIZIJie7PkhoosLKfOXtwBP+alVk+Ht
+	DZE5zo4caNHbDsL+NuhC62u506CtedceJUL2WsXbvuHhUfquteraVM6+iXysxlgxtlmjOVlpEqW
+	BcGCXsNF7pvWJ+XGa2Cfkg=
+X-Received: by 2002:a05:690c:7205:b0:80c:85c6:898f with SMTP id 00721157ae682-81f99260de1mr18995407b3.62.1785279140753;
+        Tue, 28 Jul 2026 15:52:20 -0700 (PDT)
+Received: from zenbox ([2600:1700:18fb:6011:722a:22a9:308b:2c35])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-81fa29aeba6sm7138657b3.47.2026.07.28.15.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2026 15:52:20 -0700 (PDT)
+Date: Tue, 28 Jul 2026 18:52:19 -0400
+From: Justin Suess <utilityemal77@gmail.com>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/17] landlock: Add create_ruleset and free_ruleset
+ tracepoints
+Message-ID: <amkx1TBWk6AieKuw@zenbox>
+References: <20260406143717.1815792-1-mic@digikod.net>
+ <20260406143717.1815792-7-mic@digikod.net>
+ <ahYOJwpiEI-gGx1Z@suesslenovo>
+ <20260728.nohNgei7Nei9@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <44f81bea-d64a-4f73-8665-46652a928c83@kernel.org>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260728.nohNgei7Nei9@digikod.net>
 
-On Tue, Jul 28, 2026 at 09:21:40PM +0200, David Hildenbrand (Arm) wrote:
-> On 7/28/26 21:20, Andrew Morton wrote:
-> > On Tue, 28 Jul 2026 02:29:39 -0700 Breno Leitao <leitao@debian.org> wrote:
+On Tue, Jul 28, 2026 at 10:56:16PM +0200, Mickaël Salaün wrote:
+> On Tue, May 26, 2026 at 05:34:59PM -0400, Justin Suess wrote:
+> > On Mon, Apr 06, 2026 at 04:37:04PM +0200, Mickaël Salaün wrote:
+> > > Add tracepoints for ruleset lifecycle events: landlock_create_ruleset
+> > > fires from the landlock_create_ruleset() syscall handler, logging the
+> > > ruleset Landlock ID and handled access masks; landlock_free_ruleset
+> > > fires in free_ruleset() before the ruleset is freed, so eBPF programs
+> > > can access the full ruleset state via BTF.
+> > > 
+> > > The create_ruleset TP_PROTO takes only the ruleset pointer.  The handled
+> > > access masks are read from the ruleset in TP_fast_assign rather than
+> > > passed as scalar arguments, so eBPF programs can access the full ruleset
+> > > state (rules, access masks) via BTF on a single pointer.  No lock is
+> > > needed because the ruleset is not yet shared (the file descriptor has
+> > > not been installed).
+> > > 
+> > > Create the trace header with a DOC comment documenting the consistency
+> > > guarantees, locking conventions, TP_PROTO safety, and security
+> > > considerations shared by all Landlock tracepoints.  Add
+> > > CREATE_TRACE_POINTS in log.c to generate the tracepoint implementations.
+> > > 
+> > > Add an id field to struct landlock_ruleset, assigned from
+> > > landlock_get_id_range() at creation time.  Extend the CONFIG guard on
+> > > landlock_get_id_range() from CONFIG_AUDIT to
+> > > CONFIG_SECURITY_LANDLOCK_LOG so that IDs are available for tracing even
+> > > without audit support.
+> > > 
+> > > The deallocation events use the "free_" prefix (rather than "drop_")
+> > > because they fire when the object is actually freed.  There is no need
+> > > for allocated/deallocated symmetry because ruleset creation happens with
+> > > the landlock_create_ruleset tracepoint.
+> > > 
+> > > landlock_create_ruleset tracepoint.
+> > > 
+> > > Unlike audit records which share a record type and need a "status="
+> > > field to distinguish allocation from deallocation, tracepoints provide
+> > > one event type per lifecycle transition, each with a type-safe TP_PROTO
+> > > matching the specific transition.  This enables type-safe eBPF BTF
+> > > access and precise ftrace filtering by event name.
+> > > 
+> > > Cc: Günther Noack <gnoack@google.com>
+> > > Cc: Justin Suess <utilityemal77@gmail.com>
+> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > Cc: Tingmao Wang <m@maowtm.org>
+> > > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > > ---
+> > > 
+> > > Changes since v1:
+> > > - New patch (split from the v1 add_rule_fs tracepoint patch).
+> > > ---
+> > >  MAINTAINERS                     |  1 +
+> > >  include/trace/events/landlock.h | 94 +++++++++++++++++++++++++++++++++
+> > >  security/landlock/id.h          |  6 +--
+> > >  security/landlock/log.c         |  5 ++
+> > >  security/landlock/ruleset.c     |  8 +++
+> > >  security/landlock/ruleset.h     |  9 ++++
+> > >  security/landlock/syscalls.c    |  5 ++
+> > >  7 files changed, 125 insertions(+), 3 deletions(-)
+> > >  create mode 100644 include/trace/events/landlock.h
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index c3fe46d7c4bc..51104faa3951 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -14389,6 +14389,7 @@ F:	Documentation/admin-guide/LSM/landlock.rst
+> > >  F:	Documentation/security/landlock.rst
+> > >  F:	Documentation/userspace-api/landlock.rst
+> > >  F:	fs/ioctl.c
+> > > +F:	include/trace/events/landlock.h
+> > >  F:	include/uapi/linux/landlock.h
+> > >  F:	samples/landlock/
+> > >  F:	security/landlock/
+> > > diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+> > > new file mode 100644
+> > > index 000000000000..5e847844fbf7
+> > > --- /dev/null
+> > > +++ b/include/trace/events/landlock.h
+> > > @@ -0,0 +1,94 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * Copyright © 2025 Microsoft Corporation
+> > > + * Copyright © 2026 Cloudflare
+> > > + */
+> > > +
+> > > +#undef TRACE_SYSTEM
+> > > +#define TRACE_SYSTEM landlock
+> > > +
+> > > +#if !defined(_TRACE_LANDLOCK_H) || defined(TRACE_HEADER_MULTI_READ)
+> > > +#define _TRACE_LANDLOCK_H
+> > > +
+> > > +#include <linux/tracepoint.h>
+> > > +
+> > > +struct landlock_ruleset;
+> > > +
+> > > +/**
+> > > + * DOC: Landlock trace events
+> > > + *
+> > > + * Consistency guarantee: every trace event corresponds to an operation
+> > > + * that has irrevocably succeeded.  Lifecycle events fire only after
+> > > + * the point of no return; denial events fire only for denials that
+> > > + * actually happen.  This guarantees that eBPF programs observing the
+> > > + * trace stream can build a faithful model of Landlock state without
+> > > + * reconciliation logic.
+> > > + *
+> > > + * Mutable object pointers in TP_PROTO (e.g., struct landlock_ruleset
+> > > + * for add_rule events) are passed while the caller holds the object's
+> > > + * lock, so that TP_fast_assign and eBPF programs reading via BTF see a
+> > > + * consistent snapshot.  For objects that are immutable at the emission
+> > > + * site (e.g., a domain after creation), no lock is needed.
+> > > + *
+> > > + * All pointer arguments in TP_PROTO are guaranteed non-NULL by the
+> > > + * caller.  eBPF programs can access these pointers via BTF for richer
+> > > + * introspection than the TP_STRUCT__entry fields provide.
+> > > + *
+> > > + * TP_STRUCT__entry fields serve TP_printk display only.  eBPF programs
+> > > + * access the raw TP_PROTO arguments directly.
+> > > + *
+> > > + * Security: as for audit, Landlock trace events may expose sensitive
+> > > + * information about all sandboxed processes on the system.  See
+> > > + * Documentation/admin-guide/LSM/landlock.rst for security considerations
+> > > + * and privilege requirements.
+> > > + */
+> > > +
+> > > +/**
+> > > + * landlock_create_ruleset - new ruleset created
+> > > + * @ruleset: Newly created ruleset (never NULL); not yet shared via an fd,
+> > > + *           so no lock is needed.  eBPF programs can read the full ruleset
+> > > + *           state via BTF.
+> > > + */
+> > > +TRACE_EVENT(
+> > > +	landlock_create_ruleset,
+> > > +
+> > > +	TP_PROTO(const struct landlock_ruleset *ruleset),
+> > > +
+> > > +	TP_ARGS(ruleset),
+> > > +
+> > > +	TP_STRUCT__entry(__field(__u64, ruleset_id) __field(access_mask_t,
+> > > +							    handled_fs)
+> > > +				 __field(access_mask_t, handled_net)
+> > > +					 __field(access_mask_t, scoped)),
+> > > +
+> > > +	TP_fast_assign(__entry->ruleset_id = ruleset->id;
+> > > +		       __entry->handled_fs = ruleset->layer.fs;
+> > > +		       __entry->handled_net = ruleset->layer.net;
+> > > +		       __entry->scoped = ruleset->layer.scope;),
+> > > +
+> > > +	TP_printk("ruleset=%llx handled_fs=0x%x handled_net=0x%x scoped=0x%x",
+> > > +		  __entry->ruleset_id, __entry->handled_fs,
+> > > +		  __entry->handled_net, __entry->scoped));
+> > > +
+> > > +/**
+> > > + * landlock_free_ruleset - Ruleset freed
+> > > + *
+> > > + * Emitted when a ruleset's last reference is dropped (typically when
+> > > + * the creating process closes the ruleset file descriptor).
+> > > + */
+> > > +TRACE_EVENT(landlock_free_ruleset,
+> > > +
+> > > +	    TP_PROTO(const struct landlock_ruleset *ruleset),
+> > > +
+> > > +	    TP_ARGS(ruleset),
+> > > +
+> > > +	    TP_STRUCT__entry(__field(__u64, ruleset_id)),
+> > > +
+> > > +	    TP_fast_assign(__entry->ruleset_id = ruleset->id;),
+> > > +
+> > > +	    TP_printk("ruleset=%llx", __entry->ruleset_id));
+> > > +
+> > > +#endif /* _TRACE_LANDLOCK_H */
+> > > +
+> > > +/* This part must be outside protection */
+> > > +#include <trace/define_trace.h>
+> > > diff --git a/security/landlock/id.h b/security/landlock/id.h
+> > > index 45dcfb9e9a8b..2a43c2b523a8 100644
+> > > --- a/security/landlock/id.h
+> > > +++ b/security/landlock/id.h
+> > > @@ -8,18 +8,18 @@
+> > >  #ifndef _SECURITY_LANDLOCK_ID_H
+> > >  #define _SECURITY_LANDLOCK_ID_H
+> > >  
+> > > -#ifdef CONFIG_AUDIT
+> > > +#ifdef CONFIG_SECURITY_LANDLOCK_LOG
+> > >  
+> > >  void __init landlock_init_id(void);
+> > >  
+> > >  u64 landlock_get_id_range(size_t number_of_ids);
+> > >  
+> > > -#else /* CONFIG_AUDIT */
+> > > +#else /* CONFIG_SECURITY_LANDLOCK_LOG */
+> > >  
+> > >  static inline void __init landlock_init_id(void)
+> > >  {
+> > >  }
+> > >  
+> > > -#endif /* CONFIG_AUDIT */
+> > > +#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
+> > >  
+> > >  #endif /* _SECURITY_LANDLOCK_ID_H */
+> > > diff --git a/security/landlock/log.c b/security/landlock/log.c
+> > > index c9b506707af0..ef79e4ed0037 100644
+> > > --- a/security/landlock/log.c
+> > > +++ b/security/landlock/log.c
+> > > @@ -174,6 +174,11 @@ static void audit_denial(const struct landlock_cred_security *const subject,
+> > >  
+> > >  #endif /* CONFIG_AUDIT */
+> > >  
+> > > +#ifdef CONFIG_TRACEPOINTS
+> > > +#define CREATE_TRACE_POINTS
+> > > +#include <trace/events/landlock.h>
+> > > +#endif /* CONFIG_TRACEPOINTS */
+> > > +
+> > >  static struct landlock_hierarchy *
+> > >  get_hierarchy(const struct landlock_domain *const domain, const size_t layer)
+> > >  {
+> > > diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
+> > > index c220e0f9cf5f..0d1e3dadb318 100644
+> > > --- a/security/landlock/ruleset.c
+> > > +++ b/security/landlock/ruleset.c
+> > > @@ -22,10 +22,13 @@
+> > >  #include <linux/spinlock.h>
+> > >  
+> > >  #include "access.h"
+> > > +#include "id.h"
+> > >  #include "limits.h"
+> > >  #include "object.h"
+> > >  #include "ruleset.h"
+> > >  
+> > > +#include <trace/events/landlock.h>
+> > > +
+> > >  struct landlock_ruleset *
+> > >  landlock_create_ruleset(const access_mask_t fs_access_mask,
+> > >  			const access_mask_t net_access_mask,
+> > > @@ -49,6 +52,10 @@ landlock_create_ruleset(const access_mask_t fs_access_mask,
+> > >  	new_ruleset->rules.root_net_port = RB_ROOT;
+> > >  #endif /* IS_ENABLED(CONFIG_INET) */
+> > >  
+> > > +#ifdef CONFIG_SECURITY_LANDLOCK_LOG
+> > > +	new_ruleset->id = landlock_get_id_range(1);
+> > > +#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
+> > The addition of IDs to rulesets for logging makes sense.
 > > 
-> >> On Tue, Jul 28, 2026 at 04:57:13PM +0800, Miaohe Lin wrote:
-> >>>
-> >>> Sure. Should I make this change or should we wait until Breno has time to do it?
-> >>
-> >> Apologies for the delay. This is on my TODO list, and I'll prioritize it.
-> >>
-> >> Just to confirm: the feature is already in mm-next without the selftest, so I
-> >> only need to submit the C version of the test, correct?
-> > 
-> > The bash script is still there, no known issues.
-> > 
-> > We have the thing and tests are useful.  I'd say retain it until the
-> > rewrite-in-C happens?
+> > But it is limited in usefulness without some form of introspection to be
+> > able to correlate it to a specific userspace ruleset.
 > 
-> Nacked-by: David Hildenbrand <david@kernel.org>
+> The main goal for tracepoints is to correlate the created rule with all
+> the related updates with rule addition, and then the domain creation
+> from this ruleset.
+> 
+> > 
+> > If a program creates multiple Landlock rulesets, and wishes to trace and
+> > correlate which ruleset FD corresponds to the log/tracepoint, it is
+> > difficult when no form of introspection exists.
+> 
+> That's correct, and that's the same thing for the domain IDs, for now...
+> 
+> These IDs are designed to be available to unprivileged processes, so
+> we'll need a proper interface.  Tracepoints is the first interface to
+> use ruleset IDs.
+>
+Makes sense. It need not be a part of this series, just something
+to consider later on.
 
-I have a draft of the selftest in C already and I will give it more bake
-time, and I will submit it until EOW.
+Justin
 
-Sorry for the noise,
---breno
+> > [...]
