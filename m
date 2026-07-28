@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CFE3B6370;
-	Tue, 28 Jul 2026 19:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D132471D03;
+	Tue, 28 Jul 2026 19:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785266510; cv=none; b=gq6pyIWyVXtyvNL9jb+Xv8t+3fkJRXbo2SvP7Nly3Tv4LFgzbQtK9Tyf3+OgBsHj/UZqjWY004REX++i3OAZD1d/C//izFHQK8N21aoIMVa/GW222tTJW1Vv3KOClfNh7Zn6k8OQmvoVS4BwASmWiUfaIObDN5HQRYL64WRu/OQ=
+	t=1785266787; cv=none; b=k/l/K15MwyBG97NqiANRB/AA+5iXvUEiqsklsunXDdg4613ifvRe9KJ8U785IRSFCt5SuzmZmOJnVRiBT+TaKTKydrTRUCTEttyUPw4JfFOYRJmLfqlelpuw0Hh5CLqK96BA4LD7ieKAHsI3RbFnc6vhnAjrPMyGwC3Jtxjtyis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785266510; c=relaxed/simple;
-	bh=P+d+2oIB2KjRZL36VeXUQCsEH2PVPW5HL1R6wj7cWko=;
+	s=arc-20240116; t=1785266787; c=relaxed/simple;
+	bh=t3PUtazpRGqw1bmR2BviNtX9wa1tr+1RO8d6vzdFsRY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTVZya3XYA8f8M9WXR37ulQTiZIXtznBwT19g2RFQ8F87LayuLrUDeSLY10sb/xVnnbMUSH6GrIBrSuDY4cnrxC2Er6Qnm4WTcEzE/deXTfEtLe/RJdQ1zOzpDLCb9UEt+uqOQPJPWV4ZpVOqpRzNk2G9YN0yAo+osYbb2ZOUsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vh8cfK/W; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=aSu0jOW4MO6kOYP7i9BiHtEgZSFteDZDPS2EALGv1SecwCnlr49L/2rtusW6rbdy8V9xMkE5ZY9Whcpgtprvf3vgyxm93uUVyozMgCcDohPN6cTLyyV4rctuja44MFcJAdE+3pVjm7AW3s22zx5FJzJcHL/V8U9s8lht+LqcMNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk+Dy2Ld; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vh8cfK/W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0C21F000E9;
-	Tue, 28 Jul 2026 19:21:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk+Dy2Ld"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FCD1F000E9;
+	Tue, 28 Jul 2026 19:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785266508;
-	bh=VGWijSDtWk+fhGO38JmsrrEiRaeSqUZbV8BWwZgDlUQ=;
+	s=k20260515; t=1785266786;
+	bh=B9zPErIOkKOvWU4JJG+dspgkrLmx8WSjgAIhjf1cHOk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Vh8cfK/WbsuEuEqm5kKXePuRsF7HldqGGeMwCc6tysdn6iqjPxeGymZA3GA++fqkX
-	 VxoyTgbqgUxRJfYY5wQqB+npy7agacFIRHmwo0XO36VlGn36Bc+3CA5jQNbpVdMjLg
-	 3L/zLdRRMs4m9vef1gt5SiqqHl8JaFk6TC+7S9q6IOJ/VqSVMV4hrl2OUdo+AtNe2W
-	 2P9vdFRucWBF0JnvvzqGRXXx43Y+FKSLq3J3wbD8whX4AGHcdtBMfUoPiRAHYi4/rz
-	 niF4sE4GFgIpLBbcmj+AWCTJ0+Yq9ZwMy+fOUa4vj050x206qdNz5lAM9rUwNwex30
-	 8/rM9T7g3NKVg==
-Message-ID: <44f81bea-d64a-4f73-8665-46652a928c83@kernel.org>
-Date: Tue, 28 Jul 2026 21:21:40 +0200
+	b=Wk+Dy2LdjSS++FUG8ogDF9T7pT+EAMTNcB05WeR4hXNaXglCVPisWY+LtMICE7Ccn
+	 wg89k4Kvgy+wj1Z+MYeBAhF/fpDBT5QBmapIlx+G9nPNFi+PtoCZcgFGdFDnLbAXt0
+	 xB9tb7u8wQORuyWEL/5BRGQ2JQ2k9CqZ2ZVyyUj8/EZCr1Qepptpcml/7TGdY1D8nm
+	 GSTIcvePc1fP69qF+FthXNV/zsYPQIg7psEdREpgXn9BbFwQhb7/ZitQjH5BdGIeL5
+	 10/HbxBCKZnA9MQ0tzrL6PXNOGh1zI0y/tMqhlx3SWm/HNYuS05o09qLSvFYiNKTIz
+	 dUsn/WiERIxzg==
+Message-ID: <2c19247e-bee6-45f4-a353-2fcc60db26e6@kernel.org>
+Date: Tue, 28 Jul 2026 21:26:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,27 +35,48 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
-To: Andrew Morton <akpm@linux-foundation.org>,
- Breno Leitao <leitao@debian.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com, Lorenzo Stoakes <ljs@kernel.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Shuah Khan <shuah@kernel.org>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev,
+Subject: Re: [PATCH RFC 00/11] mm: distinguish PTE table storage from PTE
+ values
+To: Muhammad Usama Anjum <usama.anjum@arm.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
  Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
- <20260630-ecc_panic-v10-6-c6ed5b62eea2@debian.org>
- <ee4982bf-ff45-8f0b-3b76-7ca19228f12b@huawei.com>
- <20260727212402.09baa9381ca426273fad4719@linux-foundation.org>
- <de29c5cc-3637-cd18-354d-55ceb3d60afd@huawei.com>
- <amh1nZVVaaZSGD3M@gmail.com>
- <20260728122016.30752d36c3b3c3af231efa9d@linux-foundation.org>
+ <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ ziy@nvidia.com, pfalcato@suse.de, agordeev@linux.ibm.com,
+ ryan.roberts@arm.com
+Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -102,28 +123,54 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260728122016.30752d36c3b3c3af231efa9d@linux-foundation.org>
+In-Reply-To: <20260727164715.2866609-1-usama.anjum@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/28/26 21:20, Andrew Morton wrote:
-> On Tue, 28 Jul 2026 02:29:39 -0700 Breno Leitao <leitao@debian.org> wrote:
+On 7/27/26 18:46, Muhammad Usama Anjum wrote:
+> Hi,
 > 
->> On Tue, Jul 28, 2026 at 04:57:13PM +0800, Miaohe Lin wrote:
->>>
->>> Sure. Should I make this change or should we wait until Breno has time to do it?
->>
->> Apologies for the delay. This is on my TODO list, and I'll prioritize it.
->>
->> Just to confirm: the feature is already in mm-next without the selftest, so I
->> only need to submit the C version of the test, correct?
+> pte_t currently describes both a logical PTE value and an element stored in
+> a PTE table. Consequently, pte_t * can point either to a standalone value,
+> often a stack copy, or to a PTE-table slot. The compiler cannot distinguish
+> these cases. A value pointer can therefore be passed to an interface that
+> expects table storage, while table storage can be read by direct
+> dereference instead of the architecture accessor.
 > 
-> The bash script is still there, no known issues.
+> This series begins a staged conversion at the PTE level. It introduces
+> hw_pte_t as the element type for PTE-table storage and converts generic MM
+> to use hw_pte_t *. Logical PTE values remain pte_t. Interfaces that
+> intentionally return a value through pte_t *, such as install_pte, remain
+> value interfaces; the relevant parameters are named ptentp to make that
+> distinction explicit.
 > 
-> We have the thing and tests are useful.  I'd say retain it until the
-> rewrite-in-C happens?
+> The generic definition aliases hw_pte_t to pte_t, so this series preserves
+> the representation and behaviour of every architecture. ptep_get() keeps
+> its existing READ_ONCE() semantics and converts the stored element through
+> __pte_from_hw(). An architecture can later define a distinct hw_pte_t and
+> convert its PTE interfaces to make the distinction compiler-enforced.
+> Architecture PTE implementations and most architecture code are
+> deliberately left for those later opt-in conversions.
+> 
+> Here, hw_pte_t identifies PTE-table storage rather than table lifetime:
+> complete PTE tables use hw_pte_t whether or not they are currently linked
+> into a page-table hierarchy, while standalone copied values use pte_t. The
+> distinction between complete but unlinked tables and hardware-reachable
+> tables was raised during discussion and remains an important point for
+> review.
+> 
+> PMD, PUD, P4D and PGD storage are deliberately out of scope. They can be
+> converted in later series after the PTE boundary is agreed, avoiding the
+> PMD-specific cases that made an all-level conversion difficult to review.
+> 
+> Most mechanical pointer conversions were generated with the Coccinelle
+> script included below, then audited and fixed by hand.
+> 
+> This series does not add a second ptep_get_once() accessor and does not
+> remove or replace STRICT_MM_TYPECHECKS.
 
-Nacked-by: David Hildenbrand <david@kernel.org>
+Do you have a pointer at the arm64 part, so people can get a feeling for how an
+actual hw_pte_t implementation can look like.
 
 -- 
 Cheers,
