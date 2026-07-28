@@ -1,335 +1,84 @@
-Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D422F3859FD
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jul 2026 20:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236AE4772A9;
+	Tue, 28 Jul 2026 22:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785272194; cv=none; b=jgRmahh1EpMSI8wSDA1o0Ght7obczFJ5JlqdQsNIaS5mN8Xq3ZWjGQNiCMvj/32m8GN5hRthsyDnzpQQQcPeSHP/cjOf6ZKsW8LgqtUUyBJ9Rq/3uxccP2af6+ayPaHDHCHCp1bXah4HQEHeGanmDWLNRUVJwyOpyr/9krpt6AM=
+	t=1785276118; cv=none; b=aRm6H6++2wJP9P0YGEnNT2Xu1dTGEbMYBbS9xBj7CbLgGbNic0SOlEj0qcywskb24DLe+u2X0rUq8B2TkN1jC0bqIEhZi3S1aKvor7VtH6oVKxLk4JPLJz6z1P3OVHicCsXe/TCJNEj+wOMX6rRhCpuu3Jjah1Yq4p/iYysFSXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785272194; c=relaxed/simple;
-	bh=6iUZmm6qrKgFsq2bi4hOFtwAJAGI4cvL/vsBYFJyss4=;
+	s=arc-20240116; t=1785276118; c=relaxed/simple;
+	bh=DrVylEHDiKI8qzs6jTHO0H+61k/y3iJnY6UeYSu4YXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPQXFTXobxW+0J1NP779Zdxnm9mzuhdbWZ2r1gF+EQVqr1GWubvrTSCRXqYRwYU+3ukb84HX0UVGMLv4PEYGiM/ZysRPuNKS3uW8G3ngpiNlOIV3khMJddbN1l+OXE2pZ5b3JOD6pZZHV6G37sGf69fit30s0kTslYtGUyb0nLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=HznXHuiZ; arc=none smtp.client-ip=185.125.25.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=iaYQSSBIGp8MBEtWg1HqyVCuICkQT3VXvbtw4HidoRiSTlLHYxN1VnIp0CF/jr3+8OffArAt18NZsIdMQnN6D/uX9Ly2kcMF5ShxaKFVX+oqV0/T4bQazhXXxtFtVCFcSoptJYcmBMqvdPkfvqlM4WJWVFntrJzntuLRpOtSPxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfuEoGnu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="HznXHuiZ"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4h8nnM0y6TznP0;
-	Tue, 28 Jul 2026 22:56:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1785272182;
-	bh=QSt3sW7Q/4VKylm31kmU2O4xQ5UTDoyVkDceL/gh9D4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HznXHuiZ6lmBnTC0LJsBbJnufcMK/GE42xn3h4XPJwGGs8n3jL5coRmOElKXcXpj7
-	 ctVN+IyEPpInJ/suAFeYX98q+wWwMVedzd9xZe9ZN+f+aJ8wL8YIU2nRVnKwgdmEEY
-	 QoiZj7JokeGGFTJlFIbC7Avsr6Qt0uNZylyA1ROE=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4h8nnK2LxSzYBL;
-	Tue, 28 Jul 2026 22:56:21 +0200 (CEST)
-Date: Tue, 28 Jul 2026 22:56:16 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Justin Suess <utilityemal77@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>, 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfuEoGnu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9623A1F000E9;
+	Tue, 28 Jul 2026 22:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785276099;
+	bh=ecznKoyZ52idkaym97OS10IGOQbXzYxh928piO1MWRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nfuEoGnukdvfU2BRIzn9ZvNzfrpUefGZwSSmdUgYq6ri8ouiSR23blUoQ4sjdRby0
+	 MbUJQH3dn9gUtnX+8l3Zqs7kKcVnaO1FkhqMf3kWzoVb1Gith2D2YfTrNtTNJWcir1
+	 TqPoY5uvGZZQjr6zTViuNwdoIUPWveukS7NYoWmWmx6CDLoNej93KUUs5V/JSr7TXv
+	 s7pwxR0s/s3cbiekcLjXuICMXc2ndCswNHCrQMwfXrxyMnzMqU7jGgc159IDhQAQo4
+	 4PF5eNxSv/CRliIpnJcTZPqEAg1/4lKJkTiLLCUJ6ZWhIplrxw/2+Yj7e4FfbHvST/
+	 8jVzFG98wio3w==
+Date: Wed, 29 Jul 2026 00:01:35 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
-	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/17] landlock: Add create_ruleset and free_ruleset
- tracepoints
-Message-ID: <20260728.nohNgei7Nei9@digikod.net>
-References: <20260406143717.1815792-1-mic@digikod.net>
- <20260406143717.1815792-7-mic@digikod.net>
- <ahYOJwpiEI-gGx1Z@suesslenovo>
+	Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>, Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org, aniket.randive@oss.qualcomm.com, 
+	chandana.chiluveru@oss.qualcomm.com, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/2] Add trace events for Qualcomm GENI I2C drivers
+Message-ID: <amkmqdFyxlYsNfuS@zenone.zhora.eu>
+References: <20260703-add-tracepoints-for-qcom-geni-i2c-v2-0-e8bf8b178290@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ahYOJwpiEI-gGx1Z@suesslenovo>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20260703-add-tracepoints-for-qcom-geni-i2c-v2-0-e8bf8b178290@oss.qualcomm.com>
 
-On Tue, May 26, 2026 at 05:34:59PM -0400, Justin Suess wrote:
-> On Mon, Apr 06, 2026 at 04:37:04PM +0200, Mickaël Salaün wrote:
-> > Add tracepoints for ruleset lifecycle events: landlock_create_ruleset
-> > fires from the landlock_create_ruleset() syscall handler, logging the
-> > ruleset Landlock ID and handled access masks; landlock_free_ruleset
-> > fires in free_ruleset() before the ruleset is freed, so eBPF programs
-> > can access the full ruleset state via BTF.
-> > 
-> > The create_ruleset TP_PROTO takes only the ruleset pointer.  The handled
-> > access masks are read from the ruleset in TP_fast_assign rather than
-> > passed as scalar arguments, so eBPF programs can access the full ruleset
-> > state (rules, access masks) via BTF on a single pointer.  No lock is
-> > needed because the ruleset is not yet shared (the file descriptor has
-> > not been installed).
-> > 
-> > Create the trace header with a DOC comment documenting the consistency
-> > guarantees, locking conventions, TP_PROTO safety, and security
-> > considerations shared by all Landlock tracepoints.  Add
-> > CREATE_TRACE_POINTS in log.c to generate the tracepoint implementations.
-> > 
-> > Add an id field to struct landlock_ruleset, assigned from
-> > landlock_get_id_range() at creation time.  Extend the CONFIG guard on
-> > landlock_get_id_range() from CONFIG_AUDIT to
-> > CONFIG_SECURITY_LANDLOCK_LOG so that IDs are available for tracing even
-> > without audit support.
-> > 
-> > The deallocation events use the "free_" prefix (rather than "drop_")
-> > because they fire when the object is actually freed.  There is no need
-> > for allocated/deallocated symmetry because ruleset creation happens with
-> > the landlock_create_ruleset tracepoint.
-> > 
-> > landlock_create_ruleset tracepoint.
-> > 
-> > Unlike audit records which share a record type and need a "status="
-> > field to distinguish allocation from deallocation, tracepoints provide
-> > one event type per lifecycle transition, each with a type-safe TP_PROTO
-> > matching the specific transition.  This enables type-safe eBPF BTF
-> > access and precise ftrace filtering by event name.
-> > 
-> > Cc: Günther Noack <gnoack@google.com>
-> > Cc: Justin Suess <utilityemal77@gmail.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Tingmao Wang <m@maowtm.org>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > ---
-> > 
-> > Changes since v1:
-> > - New patch (split from the v1 add_rule_fs tracepoint patch).
-> > ---
-> >  MAINTAINERS                     |  1 +
-> >  include/trace/events/landlock.h | 94 +++++++++++++++++++++++++++++++++
-> >  security/landlock/id.h          |  6 +--
-> >  security/landlock/log.c         |  5 ++
-> >  security/landlock/ruleset.c     |  8 +++
-> >  security/landlock/ruleset.h     |  9 ++++
-> >  security/landlock/syscalls.c    |  5 ++
-> >  7 files changed, 125 insertions(+), 3 deletions(-)
-> >  create mode 100644 include/trace/events/landlock.h
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index c3fe46d7c4bc..51104faa3951 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14389,6 +14389,7 @@ F:	Documentation/admin-guide/LSM/landlock.rst
-> >  F:	Documentation/security/landlock.rst
-> >  F:	Documentation/userspace-api/landlock.rst
-> >  F:	fs/ioctl.c
-> > +F:	include/trace/events/landlock.h
-> >  F:	include/uapi/linux/landlock.h
-> >  F:	samples/landlock/
-> >  F:	security/landlock/
-> > diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
-> > new file mode 100644
-> > index 000000000000..5e847844fbf7
-> > --- /dev/null
-> > +++ b/include/trace/events/landlock.h
-> > @@ -0,0 +1,94 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright © 2025 Microsoft Corporation
-> > + * Copyright © 2026 Cloudflare
-> > + */
-> > +
-> > +#undef TRACE_SYSTEM
-> > +#define TRACE_SYSTEM landlock
-> > +
-> > +#if !defined(_TRACE_LANDLOCK_H) || defined(TRACE_HEADER_MULTI_READ)
-> > +#define _TRACE_LANDLOCK_H
-> > +
-> > +#include <linux/tracepoint.h>
-> > +
-> > +struct landlock_ruleset;
-> > +
-> > +/**
-> > + * DOC: Landlock trace events
-> > + *
-> > + * Consistency guarantee: every trace event corresponds to an operation
-> > + * that has irrevocably succeeded.  Lifecycle events fire only after
-> > + * the point of no return; denial events fire only for denials that
-> > + * actually happen.  This guarantees that eBPF programs observing the
-> > + * trace stream can build a faithful model of Landlock state without
-> > + * reconciliation logic.
-> > + *
-> > + * Mutable object pointers in TP_PROTO (e.g., struct landlock_ruleset
-> > + * for add_rule events) are passed while the caller holds the object's
-> > + * lock, so that TP_fast_assign and eBPF programs reading via BTF see a
-> > + * consistent snapshot.  For objects that are immutable at the emission
-> > + * site (e.g., a domain after creation), no lock is needed.
-> > + *
-> > + * All pointer arguments in TP_PROTO are guaranteed non-NULL by the
-> > + * caller.  eBPF programs can access these pointers via BTF for richer
-> > + * introspection than the TP_STRUCT__entry fields provide.
-> > + *
-> > + * TP_STRUCT__entry fields serve TP_printk display only.  eBPF programs
-> > + * access the raw TP_PROTO arguments directly.
-> > + *
-> > + * Security: as for audit, Landlock trace events may expose sensitive
-> > + * information about all sandboxed processes on the system.  See
-> > + * Documentation/admin-guide/LSM/landlock.rst for security considerations
-> > + * and privilege requirements.
-> > + */
-> > +
-> > +/**
-> > + * landlock_create_ruleset - new ruleset created
-> > + * @ruleset: Newly created ruleset (never NULL); not yet shared via an fd,
-> > + *           so no lock is needed.  eBPF programs can read the full ruleset
-> > + *           state via BTF.
-> > + */
-> > +TRACE_EVENT(
-> > +	landlock_create_ruleset,
-> > +
-> > +	TP_PROTO(const struct landlock_ruleset *ruleset),
-> > +
-> > +	TP_ARGS(ruleset),
-> > +
-> > +	TP_STRUCT__entry(__field(__u64, ruleset_id) __field(access_mask_t,
-> > +							    handled_fs)
-> > +				 __field(access_mask_t, handled_net)
-> > +					 __field(access_mask_t, scoped)),
-> > +
-> > +	TP_fast_assign(__entry->ruleset_id = ruleset->id;
-> > +		       __entry->handled_fs = ruleset->layer.fs;
-> > +		       __entry->handled_net = ruleset->layer.net;
-> > +		       __entry->scoped = ruleset->layer.scope;),
-> > +
-> > +	TP_printk("ruleset=%llx handled_fs=0x%x handled_net=0x%x scoped=0x%x",
-> > +		  __entry->ruleset_id, __entry->handled_fs,
-> > +		  __entry->handled_net, __entry->scoped));
-> > +
-> > +/**
-> > + * landlock_free_ruleset - Ruleset freed
-> > + *
-> > + * Emitted when a ruleset's last reference is dropped (typically when
-> > + * the creating process closes the ruleset file descriptor).
-> > + */
-> > +TRACE_EVENT(landlock_free_ruleset,
-> > +
-> > +	    TP_PROTO(const struct landlock_ruleset *ruleset),
-> > +
-> > +	    TP_ARGS(ruleset),
-> > +
-> > +	    TP_STRUCT__entry(__field(__u64, ruleset_id)),
-> > +
-> > +	    TP_fast_assign(__entry->ruleset_id = ruleset->id;),
-> > +
-> > +	    TP_printk("ruleset=%llx", __entry->ruleset_id));
-> > +
-> > +#endif /* _TRACE_LANDLOCK_H */
-> > +
-> > +/* This part must be outside protection */
-> > +#include <trace/define_trace.h>
-> > diff --git a/security/landlock/id.h b/security/landlock/id.h
-> > index 45dcfb9e9a8b..2a43c2b523a8 100644
-> > --- a/security/landlock/id.h
-> > +++ b/security/landlock/id.h
-> > @@ -8,18 +8,18 @@
-> >  #ifndef _SECURITY_LANDLOCK_ID_H
-> >  #define _SECURITY_LANDLOCK_ID_H
-> >  
-> > -#ifdef CONFIG_AUDIT
-> > +#ifdef CONFIG_SECURITY_LANDLOCK_LOG
-> >  
-> >  void __init landlock_init_id(void);
-> >  
-> >  u64 landlock_get_id_range(size_t number_of_ids);
-> >  
-> > -#else /* CONFIG_AUDIT */
-> > +#else /* CONFIG_SECURITY_LANDLOCK_LOG */
-> >  
-> >  static inline void __init landlock_init_id(void)
-> >  {
-> >  }
-> >  
-> > -#endif /* CONFIG_AUDIT */
-> > +#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
-> >  
-> >  #endif /* _SECURITY_LANDLOCK_ID_H */
-> > diff --git a/security/landlock/log.c b/security/landlock/log.c
-> > index c9b506707af0..ef79e4ed0037 100644
-> > --- a/security/landlock/log.c
-> > +++ b/security/landlock/log.c
-> > @@ -174,6 +174,11 @@ static void audit_denial(const struct landlock_cred_security *const subject,
-> >  
-> >  #endif /* CONFIG_AUDIT */
-> >  
-> > +#ifdef CONFIG_TRACEPOINTS
-> > +#define CREATE_TRACE_POINTS
-> > +#include <trace/events/landlock.h>
-> > +#endif /* CONFIG_TRACEPOINTS */
-> > +
-> >  static struct landlock_hierarchy *
-> >  get_hierarchy(const struct landlock_domain *const domain, const size_t layer)
-> >  {
-> > diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
-> > index c220e0f9cf5f..0d1e3dadb318 100644
-> > --- a/security/landlock/ruleset.c
-> > +++ b/security/landlock/ruleset.c
-> > @@ -22,10 +22,13 @@
-> >  #include <linux/spinlock.h>
-> >  
-> >  #include "access.h"
-> > +#include "id.h"
-> >  #include "limits.h"
-> >  #include "object.h"
-> >  #include "ruleset.h"
-> >  
-> > +#include <trace/events/landlock.h>
-> > +
-> >  struct landlock_ruleset *
-> >  landlock_create_ruleset(const access_mask_t fs_access_mask,
-> >  			const access_mask_t net_access_mask,
-> > @@ -49,6 +52,10 @@ landlock_create_ruleset(const access_mask_t fs_access_mask,
-> >  	new_ruleset->rules.root_net_port = RB_ROOT;
-> >  #endif /* IS_ENABLED(CONFIG_INET) */
-> >  
-> > +#ifdef CONFIG_SECURITY_LANDLOCK_LOG
-> > +	new_ruleset->id = landlock_get_id_range(1);
-> > +#endif /* CONFIG_SECURITY_LANDLOCK_LOG */
-> The addition of IDs to rulesets for logging makes sense.
+Hi Praveen,
+
+On Fri, Jul 03, 2026 at 08:38:08PM +0530, Praveen Talari wrote:
+> Add a new trace event header providing tracepoints for the Qualcomm
+> GENI I2C controller.
 > 
-> But it is limited in usefulness without some form of introspection to be
-> able to correlate it to a specific userspace ruleset.
-
-The main goal for tracepoints is to correlate the created rule with all
-the related updates with rule addition, and then the domain creation
-from this ruleset.
-
+> The trace events cover controller bus setup, interrupt status and 
+> error reporting. These events enable structured debugging and performance
+> analysis using ftrace.
 > 
-> If a program creates multiple Landlock rulesets, and wishes to trace and
-> correlate which ruleset FD corresponds to the log/tracepoint, it is
-> difficult when no form of introspection exists.
-
-That's correct, and that's the same thing for the domain IDs, for now...
-
-These IDs are designed to be available to unprivileged processes, so
-we'll need a proper interface.  Tracepoints is the first interface to
-use ruleset IDs.
-
+> Usage examples:
 > 
-> Maybe a syscall flag or ioctl to retrieve the identifier for correlation
-> would be useful?
-
-An IOCTL is a good idea for rulesets.  Also, see
-https://github.com/landlock-lsm/linux/issues/26 (I'll get back to it).
-
+> Enable all I2C traces:
+> echo 1 > /sys/kernel/tracing/events/i2c/enable
+> echo 1 > /sys/kernel/tracing/events/qcom_geni_i2c/enable
 > 
-> Justin
-> > +
-> >  	/* Should already be checked in sys_landlock_create_ruleset(). */
-> >  	if (fs_access_mask) {
-> >  		WARN_ON_ONCE(fs_access_mask !=
-> > @@ -312,6 +319,7 @@ void landlock_free_rules(struct landlock_rules *const rules)
-> >  static void free_ruleset(struct landlock_ruleset *const ruleset)
-> > [...]
+> cat /sys/kernel/debug/tracing/trace_pipe
 > 
+> Example trace output:
+> 79.737075: i2c_write: i2c-11 #0 a=057 f=0200 l=3 [00-00-3f]
+> 79.737075: geni_i2c_bus_setup: a90000.i2c: clk_freq=400000 clk_div=2
+>    t_high=5 t_low=11 t_cycle=22
+> 79.737084: geni_i2c_irq: a90000.i2c: m_stat=0x40000000 rx_st=0x00000000
+>    dm_tx=0x00000000 dm_rx=0x00000000
+> 79.737201: geni_i2c_irq: a90000.i2c: m_stat=0x00000001 rx_st=0x00000000
+>    dm_tx=0x00000000 dm_rx=0x00000000
+> 79.737211: i2c_result: i2c-11 n=1 ret=1
+> 
+> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+
+merged to i2c/i2c.
+
+Thanks,
+Andi
