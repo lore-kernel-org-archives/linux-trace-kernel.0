@@ -1,126 +1,174 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F0F4D8DA8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5EE3C1D78;
+	Wed, 29 Jul 2026 15:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785338416; cv=none; b=bpvqNH5lla3WJwtJFc1OQRfIa8IL/0+mOfjEt96e3pPCBPOsP/dnXc9g/lQeFX7gHaGQN7RYpK382EvnFQj+WDoKlCa1I4m6mmweyBovvbd9+FJ8X93MMhLs2rYBgF8o7mpnPIyNrJPrDBVtarIlLXPbzIZondRBlms3KaR7qFM=
+	t=1785339075; cv=none; b=t7t73cQXl/vGWsrE/8x0kJhrE0DZvLuc7ve7VGZSOq2sXT/KoiVWBnK69fwbnQwGp6ac3gSEnrDPSbJhPQZuVkD4bA0MZ9Sv33kfYo7rI3k1wVE5oo3KiXVVC0EKqflFO9ENlDLUoNs3F2U5m/MiGdYKUb+55vQr01zXwSOWVno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785338416; c=relaxed/simple;
-	bh=Q6sBthUihfALMVsGkLGR5ZzbAeYn7uW3Hj529CcHdig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jHla8NJDyRwf7yWMdJTsKuT4Su7EO9y8J2ghnWqJk50vrDv4vbGfPl4ayd4WGLRbl5y7mMUcnrHi2Vt+eBgCmCvhXAHrS3lSEt0rxCeqkvmxjFrkOJqW5SHH8NTz4+9bh6NmyYlqiFjlkkPJAQHmwWHk7OLX4FaLxNgRcdHxBOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhuV60IL; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhuV60IL"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5218927884fso10533811cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785338414; x=1785943214; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=zcRpeRPBTfk7ClMYXLvexss7+DxkZQ7yLWlVxi0mrIE=;
-        b=OhuV60IL+DAfqS++Aua2Z8vFvQ2oTYprYGT0iIEDBTMtZCybDIQZ0p0hHx0j8ShRAo
-         dDmXoO3x+gT2QpoLb5HbVb5j5ShN8pjk9ZtNmW/DBU0D1hFdNesWewVTHV6+uAW8KTIk
-         mYZOSfI5jj40eXm9mB1dgOZaVaAO8ZmMLwvA6lQLZ/z3pB3AjBX1Wf9pi3Lzt976TZSB
-         a10boQ6VvSBkpukvBmyoWeQYPrG45sFQNXHZYYQ3/1kKwEsjG45XbpZZRuc7vkj/qSL2
-         FajSt6nWj2PwvUN1DyBa69iVInbail31SrcmLfZilgaQNvuiF2z+4RJV03frip6PWo+j
-         sobA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785338414; x=1785943214;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=zcRpeRPBTfk7ClMYXLvexss7+DxkZQ7yLWlVxi0mrIE=;
-        b=ccpRorvEny5iJ78L8YchlmLWKXZ3icz95aV676re9HQDRYDjzukgNJ9jgJFlcdlJxv
-         lO+gspf60aNeZYdjVvr9AiJmNXFqfu2P9iuWPgrO7a0KqFz5jgSBtNfZgzdBuRO5Qsaw
-         a+Nn0UhWHSnBgLt7mqpJUhb5SAV21xEzn4/NDmOWJXJmE13VAOnzL2Dnpv7L+mFhdM0m
-         4TVK9xYxY6Ouu0jmW7TmnnM5uHhWJKKolOefzWHUcGn5ewUJCxDnPWGvzZgkqowrf/fc
-         DVGLudmBcZZUokS9RJ7d8BJAsGXypxatB7R8ip/Z76nXl4yyihEifg4jzx1enKP+aIzM
-         jhuQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoukNS2YNM+hzPYjZVuV8PunrumnvCla/eC8zGRI3imJAyqvfFpGKwMPjwDSLsZLMsQN410BNVtkRUVOkgPBm5tk8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx461FcOwlSF+y5McOyjPpeP5kcsdYtKfyv8wfCb9AF0rT7cgDu
-	P4nlrezkDkLrWnQLCxGqCEnD2IKwqVzzkKZkDc9zTLjtVF0Rm5BARiBbMmLlgXLDq3o=
-X-Gm-Gg: AR+sD13F7F4JtQodml9N5ztJ4kXd9sxvaOf8eHEWDkNpRKLE2XPqaV+KmzxZ0z4biee
-	RW9/5VXQFQ+KIJUZxZvKcH/cIf1rRFYrN9Z1aQUfo+f+XybHnvIvCt0BkE22gblglLoTCsVmh4Z
-	epNAWElR8QaIM1NbPQ+OG8UuR+3++Sx23mwWFQZUMLdR4ChmK6pn+LNPjZ244cyfPo6Sx3Rao1S
-	nesl4isci11EghtVCL8PYVrItH3//TgPJ6TeU5LOXhWMP4UFFyec1bV+Fpcx3WoZpnnrj7F0jmr
-	JeRD+grMXHmc1GYgETLxiH+L7H2TKHHdD+VtT7SlhqjJv20G/DxKloF6Wr2l1ZfIgmyllru264i
-	7RjVFUxpuh/bvoRkrKJL29WSnTuXbCYcoysp712FOdH6PpxcuxxjyFwo5HBVYzaiujUxmyBJ7rq
-	6s8FSgLY0mYFoGYNuHwbGs9gLYaew6oYhXAXJkDShQYUpWgM6fCXe/jKXibkjDuBLrUy9/6drNA
-	hTS
-X-Received: by 2002:a05:622a:1f94:b0:527:69ec:9725 with SMTP id d75a77b69052e-529d717663fmr68563171cf.74.1785338413953;
-        Wed, 29 Jul 2026 08:20:13 -0700 (PDT)
-Received: from enjou-Legion-Y7000P-2019 ([165.232.167.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9081dc4286dsm26812166d6.7.2026.07.29.08.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 08:20:13 -0700 (PDT)
-From: Ren Wei <enjou1224z@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	vega@nebusec.ai,
-	rakukuip@gmail.com,
-	enjou1224z@gmail.com
-Subject: [PATCH 1/1] tracing/uprobes: Reject unregistering enabled trace_uprobe to prevent UAF
-Date: Wed, 29 Jul 2026 23:19:59 +0800
-Message-ID: <4ac73dd24e3123cdcdb3e938dc7bd74be66a3f77.1785227724.git.rakukuip@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1785227724.git.rakukuip@gmail.com>
-References: <cover.1785227724.git.rakukuip@gmail.com>
+	s=arc-20240116; t=1785339075; c=relaxed/simple;
+	bh=mCrppwFzqJJ3wA+pXsNCVDraYaxnPzZ7fkcGZbHDj0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZydRpSG/Jkc/GySjeXHANHewqxgXkDcW4ZN4s+H4ckU/eP/o+sDGk3XNiI4CvPYRsbvvjuEQSB91h4x4D81cJLRLU2NlOkb/HDwbe9shaDK/iibhxJiMKD2CJXMJVylC5iJaiV4w1q9sqtTYMZe6BiQWHuVB7jFLP66PPzFkNvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 881C0A0702;
+	Wed, 29 Jul 2026 15:31:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 187762000E;
+	Wed, 29 Jul 2026 15:31:01 +0000 (UTC)
+Date: Wed, 29 Jul 2026 11:31:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, song@kernel.org, jolsa@kernel.org, naveen@kernel.org,
+ davem@davemloft.net, mhiramat@kernel.org, stable@vger.kernel.org,
+ linux-open-source@crowdstrike.com, mbenes@suse.cz, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark
+ trampoline/kprobe ftrace_ops permanent
+Message-ID: <20260729113136.32af2a4d@gandalf.local.home>
+In-Reply-To: <CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
+References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
+	<20260729104114.04298a48@gandalf.local.home>
+	<CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: fi7kd9udmk8fragx7joh8yamexgf4j44
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 187762000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19TYrfKJHtehk40lCha/ZA9AhcvzQlaqVE=
+X-HE-Tag: 1785339060-4129
+X-HE-Meta: U2FsdGVkX1/nZ9MxXgktekmcCky5uR/3BC1TA3nmiHmC+yuqKFVTke/NdY7s8PcjAZtNIp5ezjyQCHtLutnOHPayYSaJ2QvGkJYCgtEdSki3mKRx+DjQD8LpoeeFIKzKqsjGBQvW+QXgEFz1LP+ILBP5ElNrlZoxjb8yeMf7B/TyFgdLtvAPVg1IzjinRa6Unwnlmww2cw3pgcMYDuzu12R/TWi0Gci2/Hsu5JBi8PcSfSLxNa4JdxIhNXYTDNY3/Dmp21dVagWyVZ/q6jkkeAYzbIwzihsctnolT1qkGdKzkH6uDVW0UBz84GE4j03JDRpBqXoZgvLavngGIL/WmU3F4CDTwtn5iQ+kg5Uvwx4czWp3GZ42PA2jc1H0aMBeYEyRKG6ULYPO+4rqNb1up0gZS5worSRnGI9/aaJgKQU=
 
-From: Luxiao Xu <rakukuip@gmail.com>
 
-When unregistering a trace_uprobe, if the probe has a sibling
-(i.e. trace_probe_has_sibling() is true), unregister_trace_uprobe()
-jumps directly to unreg, bypassing event busy checks and
-unregister_uprobe_event().
+[ Adding Linus in case he cares ]
 
-However, if the trace_uprobe is currently enabled, freeing it without
-disabling it allows uprobe callbacks (such as uprobe_dispatcher()) to
-continue accessing the freed trace_uprobe structure. This leads to a
-use-after-free (UAF) condition.
+On Wed, 29 Jul 2026 11:00:31 -0400
+Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
 
-Fix this by checking trace_probe_is_enabled() at the entry of
-unregister_trace_uprobe(). If the probe is enabled, return -EBUSY
-immediately to prevent unregistering and freeing an active probe.
+> ,
+>=20
+> On Wed, Jul 29, 2026 at 10:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
+org> wrote:
+> >
+> > On Tue, 28 Jul 2026 20:59:56 -0400
+> > Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
+> > =20
+> > > This fixes a long-standing issue: kernel.ftrace_enabled=3D0 silently
+> > > disables BPF trampolines (fentry/fexit) and ftrace-based
+> > > kprobes/kretprobes. The write succeeds, the hook stops firing with no
+> > > error, and re-enabling silently restores it. Livepatch already solved
+> > > this for itself via FTRACE_OPS_FL_PERMANENT, which refuses to disable
+> > > ftrace while a permanent ops is registered and refuses to register
+> > > one while ftrace is disabled[1]. =20
+> >
+> > The /proc/sys/kernel/ftrace_enabled was added as a "safety kill switch"
+> > back when ftrace was first added to the kernel. It's addition was namely
+> > there because live runtime modification of kernel code was new and we w=
+ere
+> > worried about how stable it could be.
+> >
+> > Honestly, I would love to get rid of it as today ftrace has proven to be
+> > rather stable. But as it is a user space ABI, I'm not sure what will br=
+eak
+> > if we do. I wonder if we just make it a nop, and print a message to dme=
+sg
+> > saying:
+> >
+> >   "ftrace_enabled no longer does anything. Please report if you need it=
+ to."
+> >
+> > ? =20
+>=20
+> Thanks Steven, if you and/or other community members would approve such
+> approach I would happily do this instead for a few reasons -
 
-Fixes: 41af3cf587f4 ("tracing/uprobe: Add multi-probe per uprobe event support")
-Cc: <stable@vger.kernel.org>
-Reported-by: Vega <vega@nebusec.ai>
-Assisted-by: Codex:gpt-5.4
-Signed-off-by: Luxiao Xu <rakukuip@gmail.com>
-Signed-off-by: Ren Wei <enjou1224z@gmail.com>
----
- kernel/trace/trace_uprobe.c | 3 +++
- 1 file changed, 3 insertions(+)
+It's actually if Linus is OK with this approach.
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index c274346853d1..a514a82c4ae0 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -396,6 +396,9 @@ static int unregister_trace_uprobe(struct trace_uprobe *tu)
- {
- 	int ret;
- 
-+	if (trace_probe_is_enabled(&tu->tp))
-+		return -EBUSY;
-+
- 	if (trace_probe_has_sibling(&tu->tp))
- 		goto unreg;
- 
--- 
-2.43.0
+>=20
+> 1) Seems like the more correct course of action if idneed this switch
+> effectively became obsolete in usage instead of piling extra logic to work
+> around it.
+>=20
+> 2) As I mentioned in the end of the cover letter, I believe for some cases
+> such as fsessions/ksessions and multi opts retprobes, this patchset is
+> not effective and the issue will persist, requiring a more complicated so=
+lution
+> for them anyway if we want watertight resilience.
+>=20
+> If you approve this - I can try what you suggested, this would include
+> making the
+> knob a NOP with a message, dropping the FTRACE_OPS_FL_PERMANENT
+> flag and reverting/cleaning what's possible from the original livepatch p=
+atchset
+> that dealt with this issue [1]
+>=20
+> One question is what the correct set of tests to run in such a case
+> would be to verify
+> we didn't break anything. For this patchset I ran BPF and livepatch
+
+Hah! That's the key question isn't it? It's a user space visible knob. I
+don't have anything that uses it, but I have no idea of there's a tool out
+there that does. Linus's rule is to not break user space. If nothing uses
+it, then it's OK to get rid of (as getting rid of it will not break user
+space). But, if something uses it for a good reason, then we are stuck with
+it. We really will not know until we disable it and somebody complains.
+
+-- Steve
+
+
+
+> selftest suites, but
+> I wonder what else would need to be run.
+>=20
+> CC Miroslav for Livepatch.
+>=20
+> Thanks,
+> Andrey
+>=20
+> [1] - https://lore.kernel.org/all/20191016113316.13415-1-mbenes@suse.cz/T=
+/#u
+>=20
+> > =20
+> > >
+> > > For trampolines this restores a historical property: from 2019-2022
+> > > they shared one global direct_ops, marked permanent the same
+> > > way[2].It was later lost as a side effect of the 2022
+> > > per-trampoline-ops split (patch 1's Fixes tag) and never
+> > > restored.[3][4] Kprobes never carried this protection at all, so
+> > > for them that is long-standing issue rather than a regression.
+> > >
+> > > Patch 1: trampolines. Patch 2: classic kprobes/kretprobes. Patch 3:
+> > > a selftest covering both directions for all four hook types.
+> > >
+> > > P.S
+> > > I initially implemented a per-record opt-in flag[5], but dropped it
+> > > as over-engineering once I saw the original blanket restriction.
+> > >
+> > > P.P.S
+> > > Open question: kprobe.multi/kretprobe.multi/kprobe.session
+> > > (fprobe-backed) aren't covered -- return-capturing fprobes share the
+> > > function-graph tracer's subops manager with unrelated tracers, so
+> > > marking it permanent needs a different, per-record approach. Perhaps
+> > > something along the lines of [5]. =20
+> >
+> > Honestly, I would like to start deprecating that kill switch.
+> >
+> > For the series:
+> >
+> > Acked-by: Steven Rostedt <rostedt@goodmis.org>
+> >
+> > -- Steve =20
+
