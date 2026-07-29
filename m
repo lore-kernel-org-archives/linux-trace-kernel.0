@@ -1,174 +1,147 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej2-f3.google.com (mail-ej2-f3.google.com [74.125.228.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5EE3C1D78;
-	Wed, 29 Jul 2026 15:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31363AAF7F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785339075; cv=none; b=t7t73cQXl/vGWsrE/8x0kJhrE0DZvLuc7ve7VGZSOq2sXT/KoiVWBnK69fwbnQwGp6ac3gSEnrDPSbJhPQZuVkD4bA0MZ9Sv33kfYo7rI3k1wVE5oo3KiXVVC0EKqflFO9ENlDLUoNs3F2U5m/MiGdYKUb+55vQr01zXwSOWVno=
+	t=1785340075; cv=none; b=i8hRaTRZDvJs3BqIbyFEEVobr8FPMDDnrqPTK0uWO6VbZ9vIWVRbNQ1sZhf0Fl0DyW5EFFTcnS9aPqUb4dHkTk7OyncwVrQRHJ7c1Szgq+Ab43dVdBiNHM64ylgmTSUTcR7z/nlNehYyr1MnHZYIfw9YyTfvEID5VhZHQZxIDUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785339075; c=relaxed/simple;
-	bh=mCrppwFzqJJ3wA+pXsNCVDraYaxnPzZ7fkcGZbHDj0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZydRpSG/Jkc/GySjeXHANHewqxgXkDcW4ZN4s+H4ckU/eP/o+sDGk3XNiI4CvPYRsbvvjuEQSB91h4x4D81cJLRLU2NlOkb/HDwbe9shaDK/iibhxJiMKD2CJXMJVylC5iJaiV4w1q9sqtTYMZe6BiQWHuVB7jFLP66PPzFkNvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 881C0A0702;
-	Wed, 29 Jul 2026 15:31:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 187762000E;
-	Wed, 29 Jul 2026 15:31:01 +0000 (UTC)
-Date: Wed, 29 Jul 2026 11:31:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, song@kernel.org, jolsa@kernel.org, naveen@kernel.org,
- davem@davemloft.net, mhiramat@kernel.org, stable@vger.kernel.org,
- linux-open-source@crowdstrike.com, mbenes@suse.cz, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark
- trampoline/kprobe ftrace_ops permanent
-Message-ID: <20260729113136.32af2a4d@gandalf.local.home>
-In-Reply-To: <CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
-References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
-	<20260729104114.04298a48@gandalf.local.home>
-	<CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1785340075; c=relaxed/simple;
+	bh=EXhgVMS0NxlxE5f0pFtmC2iT2ieedzhRX+u7Ni9PIk8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dZ3tfrPuoihESsdzG17nmSg5soLi9Uc42nNwMwxMnjcxuzJpm8PTfLlC55P1pmIMuD7xAsgktwwTPU2G6fDIJYHs+HJ2zXF6J4ZcLd7Z7n4hxG55Nl2+5YUxwGllcV6Pg23KO+i8SBKWTvbYDMhZJdBAAf+o09fWrWY6/VZ4L1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=F2XQ1UHL; arc=none smtp.client-ip=74.125.228.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="F2XQ1UHL"
+Received: by mail-ej2-f3.google.com with SMTP id a640c23a62f3a-c160e831693so43773566b.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1785340072; x=1785944872; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8fldeuHlUZsSgbof6A4RukHGxb8EkbZ80+aaj64d3jk=;
+        b=F2XQ1UHLgEDa/cL4YxnQlkbJaaz2I3QYZQnNdUzegHvjYgMJP5HQfmByr68wGfmXpX
+         3IR4Lsuk+MBQt9ox4IIVyBYJZodAaXZBknBTHglm8ufGpvpce+WSFptknU7TueIasRMe
+         axv5j58WYmzzQbGmy/j1//GEz/0/52fyb4VTI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785340072; x=1785944872;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=8fldeuHlUZsSgbof6A4RukHGxb8EkbZ80+aaj64d3jk=;
+        b=PqeTvMiY0WfEOdbXSTbnzcMYLvi5huPEnp/qd27RTLVQW2sHSC9RFfmGDAksSLjgOg
+         u0MZ8Aw4OSt26kfbLAq8KtI2MZswEboFuz4zRLZqyhuyNJZKMsbLbwLe0JcNhjoLjaSt
+         duWb/2a+F1boFStbBydHiFaBPT9CvkRUL13jziTucb9XGq+2m16KSDYXf5w998jUorkA
+         abyn07SP2/F8Hmr24pGzvEz7Ao+n1BT7RDQEdZZOAnCQwxR3dqXamlY7OvM20NQdwAxB
+         /47H6ZhDzyF+K+fM1KKxGolFAycHNbzVZILjcCtC2UNFOqKxCD/z+5KkqqaDgPkJF+OI
+         7i0A==
+X-Forwarded-Encrypted: i=1; AHgh+Rr2R8Gja4+7wEIYKO2ki2BdlSNB0H6/5fiyVQRbvJN0qgBxVHD32onEVQYXha/KUkm68vi/XdxEgIMpq8clE4kHZHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmrKs3oaQME9NF/oWfnFATb2zYJPk2bpvqNeM0JO53bPhe+/Aa
+	ubpJyYH8Fj4epiHCHnMGt0jXseE+8ULbwjXyWTgEXx2+FGsLoZudtNo6nu0AW0a25t5BGFiD7Mj
+	0qxqTqwTFnw==
+X-Gm-Gg: AR+sD10VEjZGSuk+B+y1FQFTK3bGBg2jhWkB1BQgyhQDL8enby6GijMnmlvpSFAm5nK
+	P8krY20bfwnOpngl4RmzClCEvq1wjHOiDA1n5zvbJTYYyP3339gromQbHczjUgMiKfXcILvtk+3
+	cIVDaQxwxBLAKcKyWILcR0WtZtK2Tf6L1pEE1zLRr4Es8VYCMxYnkCHXEZTlnZI8xakfw5sos5e
+	98vq6EuVqP2+eS6adIpb7PqCgB2G7hyd53+mhRL4Lv+y3hWROe9tjqsodjMW16oiwvVdvlxhwnw
+	2mvcbYC9tSMjh+dOepwTF3lVqHHAE0AQnb9xSXJIe3fIvfVrBLpBqhfzPMyRNeVl/o7KAIVczfd
+	mApeivFI0jojavuu8pABgb6HgIyjcqDqyKnlwxZzX+FjEKPE17sIk+2xNsvc5NqhhgINXiUhgGg
+	jeyy/aoLkdvM/aEF462vOb+CF9sCbRF/9cAvhukd4sOmOQE4faRElKQ3bciZk9T/W9sN4FKFHgf
+	VY8YPjxvXCW61SYsd0EMWOjgxXJaBqWARXzdw==
+X-Received: by 2002:a17:907:180a:b0:bed:6e53:bb1a with SMTP id a640c23a62f3a-c1f7276621amr419568966b.48.1785340071916;
+        Wed, 29 Jul 2026 08:47:51 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1f83fab5ebsm129748966b.51.2026.07.29.08.47.51
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2026 08:47:51 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c1c52d920b8so160247866b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:47:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpF8xmMSLfey7yLp5TJomDIXN1qQbkJ1BEmGav5LGyc97ROhE/US/7YWJF8L4KLzrziavbY2TrrTuEsqi+YTrgxfCk=@vger.kernel.org
+X-Received: by 2002:a17:906:fe47:b0:c15:bea2:d209 with SMTP id
+ a640c23a62f3a-c1f7215dee1mr360497966b.4.1785340071289; Wed, 29 Jul 2026
+ 08:47:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: fi7kd9udmk8fragx7joh8yamexgf4j44
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 187762000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19TYrfKJHtehk40lCha/ZA9AhcvzQlaqVE=
-X-HE-Tag: 1785339060-4129
-X-HE-Meta: U2FsdGVkX1/nZ9MxXgktekmcCky5uR/3BC1TA3nmiHmC+yuqKFVTke/NdY7s8PcjAZtNIp5ezjyQCHtLutnOHPayYSaJ2QvGkJYCgtEdSki3mKRx+DjQD8LpoeeFIKzKqsjGBQvW+QXgEFz1LP+ILBP5ElNrlZoxjb8yeMf7B/TyFgdLtvAPVg1IzjinRa6Unwnlmww2cw3pgcMYDuzu12R/TWi0Gci2/Hsu5JBi8PcSfSLxNa4JdxIhNXYTDNY3/Dmp21dVagWyVZ/q6jkkeAYzbIwzihsctnolT1qkGdKzkH6uDVW0UBz84GE4j03JDRpBqXoZgvLavngGIL/WmU3F4CDTwtn5iQ+kg5Uvwx4czWp3GZ42PA2jc1H0aMBeYEyRKG6ULYPO+4rqNb1up0gZS5worSRnGI9/aaJgKQU=
+References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
+ <20260729104114.04298a48@gandalf.local.home> <CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
+ <20260729113136.32af2a4d@gandalf.local.home>
+In-Reply-To: <20260729113136.32af2a4d@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 29 Jul 2026 08:47:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjzHTuomhTegkD69veDVRxprX8NB=i7A+BEB2-v6v5n+g@mail.gmail.com>
+X-Gm-Features: AUfX_mzh3d70XkZOQ8mPTBmYgVx50lGXSyciETgOqHmLrGk5Ua4q2GHqtff665s
+Message-ID: <CAHk-=wjzHTuomhTegkD69veDVRxprX8NB=i7A+BEB2-v6v5n+g@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark
+ trampoline/kprobe ftrace_ops permanent
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, song@kernel.org, 
+	jolsa@kernel.org, naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org, 
+	stable@vger.kernel.org, linux-open-source@crowdstrike.com, mbenes@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 
-
-[ Adding Linus in case he cares ]
-
-On Wed, 29 Jul 2026 11:00:31 -0400
-Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
-
-> ,
->=20
-> On Wed, Jul 29, 2026 at 10:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
-> >
-> > On Tue, 28 Jul 2026 20:59:56 -0400
-> > Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
-> > =20
-> > > This fixes a long-standing issue: kernel.ftrace_enabled=3D0 silently
-> > > disables BPF trampolines (fentry/fexit) and ftrace-based
-> > > kprobes/kretprobes. The write succeeds, the hook stops firing with no
-> > > error, and re-enabling silently restores it. Livepatch already solved
-> > > this for itself via FTRACE_OPS_FL_PERMANENT, which refuses to disable
-> > > ftrace while a permanent ops is registered and refuses to register
-> > > one while ftrace is disabled[1]. =20
-> >
-> > The /proc/sys/kernel/ftrace_enabled was added as a "safety kill switch"
-> > back when ftrace was first added to the kernel. It's addition was namely
-> > there because live runtime modification of kernel code was new and we w=
-ere
-> > worried about how stable it could be.
-> >
-> > Honestly, I would love to get rid of it as today ftrace has proven to be
-> > rather stable. But as it is a user space ABI, I'm not sure what will br=
-eak
-> > if we do. I wonder if we just make it a nop, and print a message to dme=
-sg
-> > saying:
-> >
-> >   "ftrace_enabled no longer does anything. Please report if you need it=
- to."
-> >
-> > ? =20
->=20
-> Thanks Steven, if you and/or other community members would approve such
-> approach I would happily do this instead for a few reasons -
-
-It's actually if Linus is OK with this approach.
-
->=20
-> 1) Seems like the more correct course of action if idneed this switch
-> effectively became obsolete in usage instead of piling extra logic to work
-> around it.
->=20
-> 2) As I mentioned in the end of the cover letter, I believe for some cases
-> such as fsessions/ksessions and multi opts retprobes, this patchset is
-> not effective and the issue will persist, requiring a more complicated so=
-lution
-> for them anyway if we want watertight resilience.
->=20
-> If you approve this - I can try what you suggested, this would include
-> making the
-> knob a NOP with a message, dropping the FTRACE_OPS_FL_PERMANENT
-> flag and reverting/cleaning what's possible from the original livepatch p=
-atchset
-> that dealt with this issue [1]
->=20
-> One question is what the correct set of tests to run in such a case
-> would be to verify
-> we didn't break anything. For this patchset I ran BPF and livepatch
-
-Hah! That's the key question isn't it? It's a user space visible knob. I
-don't have anything that uses it, but I have no idea of there's a tool out
-there that does. Linus's rule is to not break user space. If nothing uses
-it, then it's OK to get rid of (as getting rid of it will not break user
-space). But, if something uses it for a good reason, then we are stuck with
-it. We really will not know until we disable it and somebody complains.
-
--- Steve
-
-
-
-> selftest suites, but
-> I wonder what else would need to be run.
->=20
-> CC Miroslav for Livepatch.
->=20
-> Thanks,
-> Andrey
->=20
-> [1] - https://lore.kernel.org/all/20191016113316.13415-1-mbenes@suse.cz/T=
-/#u
->=20
-> > =20
+On Wed, 29 Jul 2026 at 08:31, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > > Honestly, I would love to get rid of it as today ftrace has proven to be
+> > > rather stable. But as it is a user space ABI, I'm not sure what will break
+> > > if we do. I wonder if we just make it a nop, and print a message to dmesg
+> > > saying:
 > > >
-> > > For trampolines this restores a historical property: from 2019-2022
-> > > they shared one global direct_ops, marked permanent the same
-> > > way[2].It was later lost as a side effect of the 2022
-> > > per-trampoline-ops split (patch 1's Fixes tag) and never
-> > > restored.[3][4] Kprobes never carried this protection at all, so
-> > > for them that is long-standing issue rather than a regression.
+> > >   "ftrace_enabled no longer does anything. Please report if you need it to."
 > > >
-> > > Patch 1: trampolines. Patch 2: classic kprobes/kretprobes. Patch 3:
-> > > a selftest covering both directions for all four hook types.
-> > >
-> > > P.S
-> > > I initially implemented a per-record opt-in flag[5], but dropped it
-> > > as over-engineering once I saw the original blanket restriction.
-> > >
-> > > P.P.S
-> > > Open question: kprobe.multi/kretprobe.multi/kprobe.session
-> > > (fprobe-backed) aren't covered -- return-capturing fprobes share the
-> > > function-graph tracer's subops manager with unrelated tracers, so
-> > > marking it permanent needs a different, per-record approach. Perhaps
-> > > something along the lines of [5]. =20
+> > > ?
 > >
-> > Honestly, I would like to start deprecating that kill switch.
-> >
-> > For the series:
-> >
-> > Acked-by: Steven Rostedt <rostedt@goodmis.org>
-> >
-> > -- Steve =20
+> > Thanks Steven, if you and/or other community members would approve such
+> > approach I would happily do this instead for a few reasons -
+>
+> It's actually if Linus is OK with this approach.
 
+The rule is always the same, and I don't understand why there's any
+discussion about it because it's been stated a million times: we can
+try to make any ABI changes at all, and what matters is whether it
+breaks somebodys setup.
+
+If people rely on old behavior, it can't change. And if people don't,
+nobody cares. It really is that simple. That is literally the
+DEFINITION of "don't break user space".
+
+Whether something is user-*VISIBLE* in theory is entirely immaterial
+except in the sense of "be careful, this needs testing and may have to
+be reverted". So user-visibility isn't a "don't do it", it's a "do it
+carefully, and knowing that you may have to revert immediately if
+somebody complains".
+
+So changing user-visible things is potentially a lot of wasted effort,
+and needs loving care and follow-up.
+
+So everybody should typically avoid changing user-visible things
+because it's potentially painful and developer-intensive, but not
+because it can't be done.
+
+All that matters is whether real user workloads regress.
+
+And please make sure that any changed behaviour is really obvious, so
+that people don't spend lots of time chasing down *why* something
+broke. A kernel printk is generally way too subtle - and no, the
+tracing "make the printk extra ugly with crazy ASCII barfics" model is
+not an improvement.
+
+It might be better to actually return an error to user space so that
+users can see that setting ftrace_enabled to zero failed and it would
+show up in user logs. kernel developers may think that kernel logs are
+important, but users seldom even think about them. Of course, that can
+then cause even worse regressions, so there's a balance here.
+
+End result: don't do user visible changes unless you really really
+care. And then you spend the extra effort.
+
+               Linus
