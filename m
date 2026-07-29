@@ -1,185 +1,117 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023100.outbound.protection.outlook.com [40.107.44.100])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40CB39CCFC;
-	Wed, 29 Jul 2026 08:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785312688; cv=fail; b=dsRsVwqqOndz0YDhcMLxgXvtGnfwpS1hrAIh/z5jsSgLCUUYbRR0oe0+V9QNRKi9+GwD6Z0vdLa9wICRHP3yMvF1+9dAN2iPutMcCFHTdbxWnJDMOmz8/r3uyTtIrjjgBQostwPgXQyxHqtfboS77b5LBPHqZz3l1P/uEIoz1Ag=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785312688; c=relaxed/simple;
-	bh=0zbJqKOuO8pqVxwH/ksG2GomkHHbmDld0LcP1vG6Ibk=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Te/hg/IHJfKdDQpYqDHTpPaEI4bqubu7aGUj5cVC+E/WdZumHmkczITCd1PiYmHOd4lmNsPVl6f1Pz6juNnH8cohKAN4WhsBTq2Ky+It2CinOq1cQ2p16vb4TZenV/M8vni1bLDfJVMu9GDVa6QAiUbRyOhYjW+l8hlsOHBYc/M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=processmission.com; spf=pass smtp.mailfrom=processmission.com; dkim=pass (2048-bit key) header.d=processmission.com header.i=@processmission.com header.b=l6ytPsMC; arc=fail smtp.client-ip=40.107.44.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=processmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=processmission.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0953CF208;
+	Wed, 29 Jul 2026 08:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785315206; cv=none; b=CtSI1qsWDV+sg/lO8xd/FU1xkRtMDac9F62cKUBIifNq8gVZ/KL5fgvs2xFF4TW42UQr7oZiikWCTinSERD/y82vcQwjPc01t3BjibRFqT0AgMVlnYBJW9XeO9zN/I3btxNcDY7e7P2+aXT3JZrdQXeOXfaPfenmivizVquhgHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785315206; c=relaxed/simple;
+	bh=Ss/DaoJYNqjgpN1lAskphAlKNITya8LLU2vIUgnSPIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O4P1aGQ/GTqpddK/tdc6yS1MKnybCNPONsuMWl0DOmh3/fN+VfHqtgzll2zYDLiEaz5Xd8gkXq3SgfXBB477ZvE3+PtdotcBkUvZliLpfSX7HgBWFkfOuSj38Yjom6jJZDctOs7hj3LEwodLHkw5K/9fnLcO4rtMgxMaA4mnSgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=kKo2A1BQ; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=processmission.com header.i=@processmission.com header.b="l6ytPsMC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XHLjCoyOuK/dwwUby8NCjTfYps2SRgRcLavz7wcTcm+9HQ/lHxjCMqN8+5YmsTXc9oKliuFFDavxAwWE/D5OTmqh1mJGET/6G0I9SkPMTkCwU1TWBsLr3T4PJ886318ZQI6KPBIRPKK6KohQlc7bHodXIRSIrTNDNzrKmqS94EmrE+8SWTz/XbOjbZDrzbnOSxUEN4XAORW2dX5WEDsDcOCVYs6PV3mGEtDvlucZ6/Mw7SbFSMWjG0dHSO7jjuuFSlrcRx5mJATdTJlxdMltmBoBeLgoEJZ81fpanxoUYATeQHKNIq6DoSURYhoBQJpHid9pIPPXlj1rbdGrd2fuoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nvX5iOIRz29ihp3mVd0KyixpDhT2ndQZeY8YdOoVs/U=;
- b=LQ2AOTApXETvnblaXEKMHgkCJsiZPkim7Wt6D6l9RNQ37ItmbTDbVuGQnVXQLGuoFAcUtxMmGHUUO0U4i/dZf/uwAlFP4ib+zWMH1v0gFyN2LTpA4NwU8b4XTNoa51lDoluEshioDyqdIP+tv5qsmOzHMfE90ZnZkCaur74exd3Zqw+w3XrH8e9wo6/jOJY+zvTzxo5lW5q+W5zQe3Oz+D9xZNFADTLpl81x0dCO3R7Nji+nIm5bo2clFQFIS4l0rAXDJZ8q182ahb/pSgOJsx0Dl/lNOCs5kWd97ef0JUSlEbdIU7DzivQMtNXQdnYFrPdJP25uCljqu8aF/z+W6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=processmission.com; dmarc=pass action=none
- header.from=processmission.com; dkim=pass header.d=processmission.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=processmission.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nvX5iOIRz29ihp3mVd0KyixpDhT2ndQZeY8YdOoVs/U=;
- b=l6ytPsMCaZJQ34+vfiV+Sky3ec0mAdq6qAGPCc6EIRdkiSViIoHxFG2j4CcSxlIZjNmMmSvOC8iIW8KNS47kzAqSwBWWHrzoWc2KXX8MfmZ4oyeMKNav09bgMWGUxjXY5AV38vDEYirXvB24Qu2uVy3kBWwZflwYQMSLBpIlC4pvUT2+H51qduJ4WO+CLBrD5jhRiMETAyIxG/oSz0d5jVq5CaloV2wCJ9WXJ1mwxDkF8KshQgRly7zYEsBqJh6Nrwruc3JGCfgSWWLiPfkyWyYjNx3Gqqlu2rx8SY9r8sVoFC+WGdKn/5kzsNvR1fY5kmyL+BNx6GnBAj9N9Mhrag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=processmission.com;
-Received: from TYNPR02MB9351.apcprd02.prod.outlook.com (2603:1096:405:3d0::15)
- by SEYPR02MB5701.apcprd02.prod.outlook.com (2603:1096:101:59::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.12; Wed, 29 Jul
- 2026 08:11:22 +0000
-Received: from TYNPR02MB9351.apcprd02.prod.outlook.com
- ([fe80::e5f3:5fb7:3d29:5934]) by TYNPR02MB9351.apcprd02.prod.outlook.com
- ([fe80::e5f3:5fb7:3d29:5934%4]) with mapi id 15.21.0245.012; Wed, 29 Jul 2026
- 08:11:22 +0000
-From: Chao Liu <chao.liu@processmission.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: zhouzhouyi@gmail.com,
-	lianux.mm@gmail.com,
-	lianux.wang@processmission.com,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chao Liu <chao.liu@processmission.com>
-Subject: [RFC PATCH v2] Documentation/rv: Explain epoll and aborted sleeps
-Date: Wed, 29 Jul 2026 16:11:02 +0800
-Message-ID: <20260729081102.73138-1-chao.liu@processmission.com>
-X-Mailer: git-send-email 2.54.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0021.namprd05.prod.outlook.com
- (2603:10b6:a03:254::26) To TYNPR02MB9351.apcprd02.prod.outlook.com
- (2603:1096:405:3d0::15)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="kKo2A1BQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ss/DaoJYNqjgpN1lAskphAlKNITya8LLU2vIUgnSPIA=; b=kKo2A1BQR3Y09foW8g7qBwUPmX
+	NYROK6U4J0bpmZKOyfm1oFEXpv3CNR7vfCuRy+FO0mbwp84eXe/JU9LFMYD1ge1BkKqbwxKSdae2K
+	4KqnPzg5sQt3KaFOUT+/Qrql0v/KSWTs/CgLao7wTcgECQR7c1SU6cLiV/gtktS9ZhLLmN4GgWr2O
+	4ki88TRZvcEBBLW+SutP4Up07yWZHIh4rfIlySxODkjQaFtKxlBp0dlXMiRmcx1UyuRLTtaUU1YqS
+	/p7TeB9eHR2ldVifgdc8dOspz1w740YC97n3B9wlxbYGxnj8yYlC1HwuqWePIDeQM51EBozdKJoZv
+	akJNbqqw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wp02F-008KmC-2v;
+	Wed, 29 Jul 2026 08:53:08 +0000
+Date: Wed, 29 Jul 2026 01:53:01 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Lorenzo Stoakes <ljs@kernel.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
+Message-ID: <amm72Bu9qmWLI-9b@gmail.com>
+References: <20260630-ecc_panic-v10-0-c6ed5b62eea2@debian.org>
+ <20260630-ecc_panic-v10-6-c6ed5b62eea2@debian.org>
+ <ee4982bf-ff45-8f0b-3b76-7ca19228f12b@huawei.com>
+ <20260727212402.09baa9381ca426273fad4719@linux-foundation.org>
+ <de29c5cc-3637-cd18-354d-55ceb3d60afd@huawei.com>
+ <amh1nZVVaaZSGD3M@gmail.com>
+ <20260728122016.30752d36c3b3c3af231efa9d@linux-foundation.org>
+ <44f81bea-d64a-4f73-8665-46652a928c83@kernel.org>
+ <amkn21ftNme48Vbl@gmail.com>
+ <f83d5b26-b369-489b-a305-1eb5ec6fccfb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYNPR02MB9351:EE_|SEYPR02MB5701:EE_
-X-MS-Office365-Filtering-Correlation-Id: 974ae310-ae9e-437b-29fa-08deed48f9e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|34096008|366016|1800799024|23010399003|376014|5023799004|56012099006|10067099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	85v25ivZ9RoGSQV8w4pMz6l8FEv4rHCAsqafIatY8ZqmH7qDJf9ZxLvrijLCaWxONt3dLwLn9dXMMO3lu2sSPQLfY+5h26yupoDekJ4gCDmJ/bTymkbZPbJt9kYT+Fr4R2PT/Zr3aPtBKvLxikjCRgPMgtjRU2kDWBPsjp3xnP9IA5Emldi1NnCh65A0Yt+t9VGV8wtNCqHJU/OIi452HD3akBlcqYQT/T3flJlNv+Z2xHPv8s/00BwsTstFU6hB+WLpiebCEFfwA7H7p6bKJo6I6BbckytoH05aD1csHxN05JM9jx7J+g7xdZEgFy/LYJ4GmU6MwuISbG0OmpDLdXgg52EJ2fCfW7f6I8cmdu5rLHuum+4hd4PHREw8wNB7UCGPtJjW6r2F71evUlCRMgb9/JY9QGRdmFrluUQf+3rv59P7csaU+fuIfibBiAt2QlNTgiwGrUzxyvCY+2CU5K3RZfByKoys5ImPSLYwmx5volHNBBZOjZhQJB5ZAwHPWXQcifAxX6/WZayggeOOo4dU8u4k4p4iFg2Wfx1Cm4WNoCJxdoDayRlX/FqCDvo30k9vNJP0yId4QUifaEN8Oyq62dXznLaPWaMYQrtM2mKc6VNo42ABC8+FHceAPvCQ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYNPR02MB9351.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(34096008)(366016)(1800799024)(23010399003)(376014)(5023799004)(56012099006)(10067099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eHdfJBB59vCRaF90D6SjFtECDBexLugBb0SqxR1J/Ly1GDOPGm+VSbKKEVpq?=
- =?us-ascii?Q?f8BlRKHQ/VhWBFUqTQCtHHi4Hz9nYrqiUaGwCzLFvJ2uWdd97zK+OTB3sTWV?=
- =?us-ascii?Q?0nuY1i/Ef5qHgF2JtM76Rck7DLL8kpGehLBIC39hk6xcHC24BuWAGkIe//vk?=
- =?us-ascii?Q?37ZyCpHUfaAklHkAJiXVNvMui0ICtZJQ5imaRBpXCr0qovCTpSaWeGte+mrs?=
- =?us-ascii?Q?t12+fuQXflojaHhsUHP0uvynw44tFl0IPxvAMAnyGzWuGGa1X9O9KSUESPpK?=
- =?us-ascii?Q?bYjfK+YbMckMRSnMSlAubf7/Xqzymk8/HidOTJNIqxbRoOcSXEdQIJws+vlg?=
- =?us-ascii?Q?pQhECDvNYRifVtbx5drYxIsJUA/e0c9k1jgXG9hB6J0VpSeae0W+2jvNGSKo?=
- =?us-ascii?Q?gG1wf448yT6tterjam9IJ5LTkOiffshVTc0HgfAemNxq/9xBlNgXpSlgWdBd?=
- =?us-ascii?Q?aIlspRiZ+GYALgsIcrQnb6o9wNbHwkymbb4+0lYwRcmx/4bXhr7SirUM/oz+?=
- =?us-ascii?Q?mmVfwam2YcMNGJ/ZIY6DRfFKMP2ClLztR1XeBEWbVzu5K39y8p1gRXxYV+Q4?=
- =?us-ascii?Q?TXZ9N+pyj3S5oWYETQER8ltX+o/tTgPISElxeS6GtlJYgo/N6dyo44EQNOyK?=
- =?us-ascii?Q?wQq9tCxdwr8+uCE5pmuq6pmJpzKezx3zngoZCQROL2vrTW1Hma9XHMYYlKHK?=
- =?us-ascii?Q?ogwNtSX2O10oKpXW85ykH83e74Mo8arhiWFV9mI0eyiljuwgRs3APUfLUoA0?=
- =?us-ascii?Q?PygTLtTM+Zgog+JN8JVTHwpog7ObYmMNVabBWLmRxfe9Ky2SRb0ffsrnPc2m?=
- =?us-ascii?Q?OMKh1bjv9KviESOTS9zMF3jRA2gjM8Y+tWs7vDXEHNn1AWBhCX4Nrfflin9S?=
- =?us-ascii?Q?pbR0z7YNBmrjusAgogKwRuQZCe0b1Tqyf6OwGhWawI7NXjot79cd0r2rDTHl?=
- =?us-ascii?Q?Tkd+O6kjDYKlZDR9oEI9JdksbTkgB6lm5i9E6RAjYInnDkbZL+4fEUo2h9hl?=
- =?us-ascii?Q?B1nc8Ldz5peS2pSRf5MxD+nv2TvL+rpzHWB5OozosabxMpYEt4IvkEeSR2oU?=
- =?us-ascii?Q?Qb5Y03+qYxgQRn0j41QjLrAtxRLbXqW8/haoq4n3YmrRrPTz5wOjBtwYNjlZ?=
- =?us-ascii?Q?COXw31gtEHTLDMGrhUw4VT9TddMFtg/kR7htFqLLEdaBg9Z4iAnM59AWIdMo?=
- =?us-ascii?Q?RZhG8aos/xkWrMNcmeG2TDDAiK1ChKMMRoc+p6ElAl92NMFdNtoCzMFplGIN?=
- =?us-ascii?Q?4Ru1Bi/pAr1UAbtiOH/3jm3x2URzEC7LmV9AC9dOEjX6UBJ92D6sYxS43cS0?=
- =?us-ascii?Q?mvJ+cxcLox6YydptrULFK5EpiiNdkOx9U8c5lAWBUP42yPVe23avgckcVBKs?=
- =?us-ascii?Q?lK1+D4H9NF2ozMhxncmmKOTnbVsnmxw26ujGG02JapIYqUyOAGPpzjcuYsLO?=
- =?us-ascii?Q?disMW619C2RlUXIUNGS35jvOFLYDh+3muFMsiFci0/GhWU+I2bI438ZYmG7i?=
- =?us-ascii?Q?jenuaxFuD0V+6spt3mZsYsgkKl/NVzzCwkMgbyhucMJ5OXwv3Kl4+okSRJej?=
- =?us-ascii?Q?0Si91NTDZRGwl55RgwpL/yamybIefNdPhG+cPsQpQtple2XY9aniWnNJfkXH?=
- =?us-ascii?Q?SRy4vGfyt6eUaawiRXvNOIMFJGtOKmdjWQ7FA9MB94w4s0uR1nOuCc6Tf+mJ?=
- =?us-ascii?Q?xyfBxboZv+HQ2u4ECKoW1TLER26pow8gOvMgkTmmSru9n8j/fJf2ED7vgN+U?=
- =?us-ascii?Q?4IAEzc/cx+cz4at3J9sdn9S0hG+p+Lo=3D?=
-X-OriginatorOrg: processmission.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 974ae310-ae9e-437b-29fa-08deed48f9e1
-X-MS-Exchange-CrossTenant-AuthSource: TYNPR02MB9351.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 08:11:22.0689
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e0544bf7-9765-4630-ab69-0b266dc2169c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TJw8Gd80BuGt1xj3LvylqqrzBcyGV8qGeQwW7J3Y4IWNuq1lUaWlre0YGFOMVMZI8eiDh6oBi6upTCJGbYMkiHIvLus7//5zgRztF7pEKCI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR02MB5701
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f83d5b26-b369-489b-a305-1eb5ec6fccfb@kernel.org>
+X-Debian-User: leitao
 
-epoll_wait() is a valid sleeping reason for real-time tasks because it
-uses PI-aware locking, but the rtapp sleep monitor documentation only
-discusses clock_nanosleep() and futexes. Document it.
+On Wed, Jul 29, 2026 at 09:25:16AM +0200, David Hildenbrand (Arm) wrote:
+> On 7/29/26 00:07, Breno Leitao wrote:
+> > I have a draft of the selftest in C already and I will give it more bake
+> > time, and I will submit it until EOW.
+>
+> IMHO there is no need to rush this test here, we could merge it after the main work.
+>
+> We neglected our selftests quite a bit in the past, and that is biting us now.
+>
+> That's why I push back hard now (sorry) against stuff that is different than the
+> rest and not easy to maintain.
+>
+> I know, hwpoison-panic is a destructive test, but I really don't think we should
+> just merge mostly unreviewed bash tests that will just bitrot.
+>
+> Which makes me wonder now: should this actually be a selftest? It's nothing one
+> would just want to run in a CI. It will crash your machine.
+>
+> Maybe this should just be a tool in tools/mm? I really think so. So having a
+> nice C-level hwpoison-panic.c in tools/mm might be the way to go.
 
-ABORT_SLEEP represents a task restoring TASK_RUNNING before entering
-the scheduler. Since the task does not actually block, it becomes
-runnable again without a wakeup sequence unsafe for real-time. Document
-this behavior.
+Agreed. In v6 [0] I actually removed the selftest entirely, since the value
+wasn't clear and it seemed like an ugly duckling.
 
-This RFC is based on Nam Cao's pending "rv: rtapp monitor update" v2
-series:
+It seems tools/mm would be a good fit, and make a better home for this
+type of "test".
 
-https://lore.kernel.org/r/cover.1781852967.git.namcao@linutronix.de
+Given more changes coming in memory failure (at least from my side
+[1][2]), I think it would be a good idea to create a subdirectory
+(tools/mm/memory-failure) and keep these semi-destructive tools in there. Is
+this the right direction?
 
-Signed-off-by: Chao Liu <chao.liu@processmission.com>
----
-Changes in v2:
-- Explain why epoll_wait() is RT-safe in terms of PI-aware locking.
-- Explain that ABORT_SLEEP does not require an RT-unsafe wakeup sequence.
-- Update the commit message accordingly.
+> So let's rather make this test well maintainable and have it properly reviewed
+> than rushing something suboptimal.
 
-Link to v1:
-https://lore.kernel.org/linux-trace-kernel/20260722045706.85633-1-chao.liu@processmission.com/
+Sounds good. I'll move this to tools/mm and resubmit. Given Andrew has
+removed the selftest from mm-unstable while keeping the rest of the
+series (which is fully reviewed and frictionless), so I'll focus on the
+test tool now and send it separately.
 
- Documentation/trace/rv/monitor_rtapp.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thanks for the discussion,
+--breno
 
-diff --git a/Documentation/trace/rv/monitor_rtapp.rst b/Documentation/trace/rv/monitor_rtapp.rst
-index 238b59395ff5..b95994ade14a 100644
---- a/Documentation/trace/rv/monitor_rtapp.rst
-+++ b/Documentation/trace/rv/monitor_rtapp.rst
-@@ -67,6 +67,8 @@ thread to sleep for one of the following reasons:
-     variables as safe for real-time. As an alternative, the librtpi library
-     exists to provide a conditional variable implementation that is correct for
-     real-time applications in Linux.
-+  - Real-time thread waiting for events using `epoll_wait`, which is a
-+    real-time-safe syscall for sleeping as it uses PI-aware locking.
- 
- Beside the reason for sleeping, the eventual waker should also be
- real-time-safe. Namely, one of:
-@@ -114,6 +116,10 @@ The monitor's specification is::
-   ALLOWLIST = BLOCK_ON_RT_MUTEX
-            or FUTEX_LOCK_PI
- 
-+`ABORT_SLEEP` represents a task restoring its state to `TASK_RUNNING` before
-+entering the scheduler. In this case, the task does not actually block, so the
-+task is back to runnable without any wakeup sequence unsafe for real-time.
-+
- Beside the scenarios described above, this specification also defines an allow list
- to handle some special cases:
- 
+Link: https://lore.kernel.org/all/20260511-ecc_panic-v6-0-183012ba7d4b@debian.org/ [0]
+Link: https://lore.kernel.org/all/20260728-kexec_posioned-v1-1-160c81d180fe@debian.org/ [1]
+Link: https://lore.kernel.org/all/20260717-hwpoison-kho-v1-0-9c5eda551998@debian.org/ [2]
 
-base-commit: 248951ddc14de84de3910f9b13f51491a8cd91df
-prerequisite-patch-id: d8b6c952a954662852e6b0684e0a3386eaab7f41
-prerequisite-patch-id: 940f7637aeabe4ba15a09c048c6f48138406f332
-prerequisite-patch-id: b99812692691f76d825778e01a2e771e058febd6
-prerequisite-patch-id: 512c300dce2cb74ac9cc007f9234aa507ef5c008
--- 
-2.54.0
