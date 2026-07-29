@@ -1,43 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9513A1693;
-	Wed, 29 Jul 2026 17:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0E938D6A8;
+	Wed, 29 Jul 2026 18:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785347593; cv=none; b=pJ3U0lU2vrcM4QwNUr7gz82UBtZ9xO1n5FR2t/LQZHMOoRq2NNMGcX4tPd0EkA0dWbkgk0ALUkE0FZTJNwd2qJ6gdZUfqGs8bhYFeMAnyhTn2XL0Xg+O+id59zFzwSJtl5Gs0PMduMImSY6rAiLiB02GkwF8E56Dre3YhLfZsDQ=
+	t=1785348496; cv=none; b=aAjbhY8YQXKPJ5QMrYFGkHIqUlX/texm+OB6cy4sZMiVh9S0yvq8oLx70mQNzetl2U41Ft6NBI1/mGLRg4ONmSG7N1MdFi8u1mZvg10f7jXw17X4TLHTdAXOAo6Dz3qLP2QybtYxQ3QqYOCFFY0E2fTOOuEeZCa7FwxW+/2xR7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785347593; c=relaxed/simple;
-	bh=X2qFcRsHCwHj1YWVPTJBxLn0VgM/uHUBg2zmLMndN5k=;
+	s=arc-20240116; t=1785348496; c=relaxed/simple;
+	bh=Hm6PGFaiPPS83t1EGaQig5GY2imSX3sSXllvUW8uUYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h9qB5nS0mRlxCCyOdKvXmIlZubDDWza8pmZ9Aae2NkF9ktN+QIYlS5THsWwsI4bWk4S1tpKSU6qBsYeRRh2QAPipG6WFr5fJ9fj4bzq/4hAe0lrbEL7l6Ms44P+Sf/J2uzMmya8141DKWeka5JhAqGpo/fcJqOdARhHuU6gzehY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 1A51EC06C2;
-	Wed, 29 Jul 2026 17:53:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id CA86F8000F;
-	Wed, 29 Jul 2026 17:52:59 +0000 (UTC)
-Date: Wed, 29 Jul 2026 13:53:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>,
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, song@kernel.org, jolsa@kernel.org, naveen@kernel.org,
- davem@davemloft.net, mhiramat@kernel.org, stable@vger.kernel.org,
- linux-open-source@crowdstrike.com, mbenes@suse.cz
-Subject: Re: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark
- trampoline/kprobe ftrace_ops permanent
-Message-ID: <20260729135335.2583c8f5@gandalf.local.home>
-In-Reply-To: <20260729133232.1e6c79eb@gandalf.local.home>
-References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
-	<20260729104114.04298a48@gandalf.local.home>
-	<CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
-	<20260729113136.32af2a4d@gandalf.local.home>
-	<CAHk-=wjzHTuomhTegkD69veDVRxprX8NB=i7A+BEB2-v6v5n+g@mail.gmail.com>
-	<20260729133232.1e6c79eb@gandalf.local.home>
+	 MIME-Version:Content-Type; b=bths/spEsxN+6CxChlm6Ego6qhuxAMk9v9I/ad4gWHh011xJQFtfQHuxQZ2Tr0wAVPe4SDZ3dnj2D5DaeRlzyTPeXI+8k6DfDBaP6dv4K9lVkkqgChKGi1fIpnbLUb06NBFAfMDKL/hrMpUpB0fuz/8f8ZvjKRRItIzEHqRwrzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=JRdh59Gv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=b+GMsB8B; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="JRdh59Gv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b+GMsB8B"
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D8C4014002E6;
+	Wed, 29 Jul 2026 14:08:11 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Wed, 29 Jul 2026 14:08:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1785348491;
+	 x=1785434891; bh=NwF6WahzMHm2895PJCZr64azvFZo3rJf0ZJJcnJOyTI=; b=
+	JRdh59GvEw2YJjNl4b0sb2XXDN/Wb2PCc/JW2F/OV/a7kRmZ1FITXfoI7p0tHTaa
+	PQfszlVejq3AKOGIYMQOVDwUGQBfYl9XxtIiJpAMGDFPb19lvoltUVFNTztlks+m
+	Om3B8fS/cHK/74JHMylRgDm0kSQ/X/s2bPIacOm35jJTKdriFb5QGfpQJrY9FMp9
+	loU7WNOFAV1hd+pI6vt6xPrgbEzy/j9+0r++VSFSWVmBJrcYasOnQHuDBamNUDP+
+	Pj9vL0+thOKtr2e3HD437RT4jjVTaIqyy65XLoJKhVDrTKwWbImbXZejxFV5TPZj
+	FC4mTzZlGLCfuGEtRglsfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1785348491; x=
+	1785434891; bh=NwF6WahzMHm2895PJCZr64azvFZo3rJf0ZJJcnJOyTI=; b=b
+	+GMsB8BaZzp9S8uTtN2iW19GRLMCZGSp3VyhrRheqXMvJBLUaMENric23PgprnJD
+	nHSxBtYmlEnhyGrwozhx+cQ/0W5yS1t6L3oP2Dld7mD+CLhv+BShND6GcBiRYBaP
+	8Iy2MSEp9eAT+Q8oT76faaJF7Mh87fdOBkEJ1GnPYlvTL2Bf4GQIzP3uZfrHxaTe
+	dogakftHkBPHR29e/nmeBME5RrgL7UndR6O031XBs9L1Sf6iF+ws0WLch4hGsprZ
+	NEYtQI5v2663sQ4i5x6upgzj0Izl+uevzcFEWIYWJ3qRAimaR4lShiX0FQf/hoRD
+	aSINvusbC8nowItbuWp/w==
+X-ME-Sender: <xms:i0FqahhvI6KHKauYf_IyzQZIy7_zl0CAr-6dWfkCngQGSu2O6gNWxg>
+    <xme:i0FqamaRFOOyx-jGTE4cRmB_MMTOoDuv7vtzGXnUCgoMptFFHi9YOOIbrq7BpeUIk
+    Mb3edO6KE5cq8dGtjqfMOsqO4BNirUMEl8Z_g_DXmPx-39El-yG26o>
+X-ME-Received: <xmr:i0FqaiOaJSdwHME7YRhRV89o6RnwAiqdny4zwCKU1urScVh8w3DltkhOEzMcVLnU3tJxM4eN>
+X-ME-Proxy-Cause: dmFkZTERBjXApnrZrwfYcYubtd8IizaaJqU0kamfvzZdOJhvnPPUf06TI5DFPDTIcatc28
+    2an4NFY/41OsegM7YIizOcF3moFF5tPsTqvOEWMQ49m/J9ujLJLevMme8PQF2WUY5QmBm6
+    nz5aape8gfrzo7xjNg52J0NJs/H4wY2qB2dO5GSMsEmMJIUk/rcHiWJhe20Z6NwiObz3Zq
+    WST4S9B1DwsDaGGoeQe7/o/DEIO98FM6f2Pi93sG4xJiOjE4RmWz9v5f/bX5w5JPRan3cw
+    07qPOtAsZ2FWnKk+GUM3y2FQotAisp7eo1YGmOF5z85KHeLwJts5U1vJy5sA5C2K8HGZOk
+    3Bjp6FkzfsKLiass48861fo/4E0zzIvGq6ByRJTsHEwMciPmcsNZktiMu5OhwEmv57UMXo
+    ZKc/YcbrEZqakZat4X2VOMt1S71EUwUqpjXyCW4MoE7F5GSFUp8vdZEFBwwXM/ghCGugAU
+    BOZyy/vjfXooose5kT6eg2PhaoNf62OTrq2Cy55Rp22J22kjvzvz/vMBQW0s8QS5+IvJ9z
+    m7rnUc8W0NlQn7g+fUcB7JlG/CT+z6MrN7Aqy8BEP5cx0sxrtyVKUChNUFRs3CeFp0UnHO
+    7pl2URwtEkDfDgPeNdo14bH/g924Y+OGcIPl2hCq/P/K4kryJG6+lvlEz+OA
+X-ME-Proxy: <xmx:i0FqaiTEk4Px3IqRWyOkYSyoiqXYfXwwX1WvdWljVc7YUMXKh5-unQ>
+    <xmx:i0Fqat7fgWxLdBgGJXISIihWXY6hiTMv6aNJjTAN7jmgXHhrHMb6yw>
+    <xmx:i0FqalZt0XGFuASztUrqxEPNuEGH_xf577Ar7ulgqgxf4GO_06xlag>
+    <xmx:i0FqahZv1EOEd6ncLcch_4PePD-5cJpSomOqh2vqcgvENPJRFiuY9w>
+    <xmx:i0FqatanVUSGSY54zh1guP6xSXN33irC96kRL2jFnJmgAxSp2N8YF8xV>
+Feedback-ID: id06e481b:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 29 Jul 2026 14:08:10 -0400 (EDT)
+Date: Wed, 29 Jul 2026 14:08:46 -0400
+From: Steven Rostedt <steven@rostedt.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Hongyan Xia <hongyan.xia@transsion.com>, Will Deacon <will@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Oleg Nesterov
+ <oleg@redhat.com>, Naveen N Rao <naveen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jiazi Li <jiazi.li@transsion.com>,
+ Pu Hu <hupu@transsion.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-mm@kvack.org"
+ <linux-mm@kvack.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, "llvm@lists.linux.dev"
+ <llvm@lists.linux.dev>
+Subject: Re: [RFC PATCH 9/9] arm64/debug: Mark debug exception helpers
+ __always_inline
+Message-ID: <20260729140846.3c18f437@gandalf.local.home>
+In-Reply-To: <eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
+References: <cover.1785153469.git.hongyan.xia@transsion.com>
+	<eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,35 +99,73 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: CA86F8000F
-X-Stat-Signature: jme8cjmcjbqwka1jqn8yzo9dui3bnjyi
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18YRGlSju6UgRQMOFXLkhBxRNtuOpp1Uu8=
-X-HE-Tag: 1785347579-571022
-X-HE-Meta: U2FsdGVkX1+Ry7N3Tw+/M+8AbEpuRvf5J2IQfeBkjs9Pp3DoI6xiRsBkunmZUaGoNONmSIG219k6fwVREQzL+7a0qti7jjI7VQQvXm42UstXkJ8/kYhqPjALnDzpiH5z3NzcAsXqy/O7SfYmASOsUxvCX300CGO9vqI6SXhDlFzfVfSsMoqYXsHJq0l2n55KDLtd1iYgvkKhaGFWfg9Y4c4Mm432C1rVspFI8H/OJBRyzxruGKeXCpQk6w+7JmaoKSiz3mmbGViLiq+bnTsBAHZsMUaqaN1ICTFvAfLBX2mWAHfI/OMuRf0Xk+mmMMgkhRHuFBMjbETvC07yWnGLse05Mff72d88uto501E4zlUbK4bCU7YJt5gZ33qN9c7i
 
-On Wed, 29 Jul 2026 13:32:32 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Honestly, I don't know of any tooling that would use this kill-switch or
-> any reason to do so. For live kernel patching and for BPF, it doesn't even
-> work. Hasn't for some time. It's now a "kill some ftrace but not all".
+Masami,
+
+
+On Mon, 27 Jul 2026 12:25:48 +0000
+Hongyan Xia <hongyan.xia@transsion.com> wrote:
+
+> From: Hongyan Xia <hongyan.xia@transsion.com>
 > 
-> Hence, again, the switch itself is rather useless.
+> Static inline should be enough to actually inline functions for most
+> compilers, but my Clang-19 somehow thinks it's better to outline them.
+> These tiny helpers then live in normal .text sections instead of
+> .noinstr sections, violating noinstr.
+> 
+> Mark them __always_inline so the compiler can never outline them.
+> 
+> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
+> ---
+>  arch/arm64/include/asm/esr.h       | 2 +-
+>  arch/arm64/include/asm/percpu.h    | 2 +-
+>  arch/arm64/include/asm/preempt.h   | 4 ++--
+>  arch/arm64/include/asm/ptrace.h    | 4 ++--
+>  arch/arm64/kernel/debug-monitors.c | 2 +-
+>  include/linux/kprobes.h            | 8 ++++----
 
-Also, since the BPF direct trampolines originally had the PERMANENT flag
-set, but due to some code updates lost the flag, and if someone were to
-turn off ftrace, it would cause bugs with the BPF programs that were using
-it, it makes me feel more confident that nothing is using that file to
-disable ftrace.
-
-The bug causing BPF programs being disabled by it has been around since 6.0
-and there hasn't been any complaints about those BPF programs breaking. It
-makes me think there hasn't been tooling that set ftrace_disabled to zero!
-
-[ Distros now use BPF with ftrace
- cat /sys/kernel/tracing/enabled_functions to see if yours is too
-]
+Are you OK with this patch? If so, can you ack it?
 
 -- Steve
+
+>  6 files changed, 11 insertions(+), 11 deletions(-)
+> 
+
+[..]
+
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 8c4f3bb24429..5880445ed0f0 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -384,17 +384,17 @@ static inline void kprobe_ftrace_kill(void) {}
+>  struct kprobe *get_kprobe(void *addr);
+>  
+>  /* kprobe_running() will just return the current_kprobe on this CPU */
+> -static inline struct kprobe *kprobe_running(void)
+> +static __always_inline struct kprobe *kprobe_running(void)
+>  {
+>  	return __this_cpu_read(current_kprobe);
+>  }
+>  
+> -static inline void reset_current_kprobe(void)
+> +static __always_inline void reset_current_kprobe(void)
+>  {
+>  	__this_cpu_write(current_kprobe, NULL);
+>  }
+>  
+> -static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
+> +static __always_inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
+>  {
+>  	return this_cpu_ptr(&kprobe_ctlblk);
+>  }
+> @@ -449,7 +449,7 @@ static inline struct kprobe *get_kprobe(void *addr)
+>  {
+>  	return NULL;
+>  }
+> -static inline struct kprobe *kprobe_running(void)
+> +static __always_inline struct kprobe *kprobe_running(void)
+>  {
+>  	return NULL;
+>  }
+
