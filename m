@@ -1,181 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F8938399E;
-	Wed, 29 Jul 2026 00:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D9D26F47C;
+	Wed, 29 Jul 2026 01:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785285311; cv=none; b=E12fq19j74J6K2xik6h9sYRj+GJC8vwT8f6bll/rDvKIxSrGR+LfhD/IUqErnWQhxF1YRbsdGV3TAqTvzud4dsTden8Ytdoaf1sKzJnDthhhNT7xliYLIpUvO9ziLS3MSDbySbHxke68zishcBVcP5Hm8TaK9i5GuGrBe9guyj4=
+	t=1785287477; cv=none; b=bOkVPuPBDL//vDJvKWAD3c+se5MeEDYpULJzyW+Ra1OCkhl2WKwkldKRK9b5IPtz9ZD8DoKCuGcyrs7XEINpo+SaZenxM5fqPcwv+CKCvHQpAYp75Z58RTpG5mGATTbu6ENKVpDU7+QRaLSJE616IB+/I76EDXOcDcIlFioepCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785285311; c=relaxed/simple;
-	bh=C5eRUocXw/GNePSjynQl43Hme2TTs/8p6qo//nMsiik=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tue27i78u1j+2k8AC321FT9fdfptnM/2hWu6+f6em+4rj6Qh8cfeGcEL6KaT0Kj6AW6Tm8qrE5GFc8duUkKJnt0JI+pq10AwjGxd+FN0kDwzT/sgg/AQXfUcBLacGiMCEBT68TnOqfiuE2Ek8Grk64W29ujD0Az30tidf909cZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwINtLt2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1785287477; c=relaxed/simple;
+	bh=9oOMuIJ+d6N8pYm7ylqaiSOalGuNAnlDpfDS/8Zxs6I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y78tNCpg4nMKKU9frEZzS8jH/1hwMtCNf/ZNwtlwbpARpg28LkTxiLgbYwpAKC2wb1fPMQCLK6XL4b8lZCTuRO+nWOPOs+pB6auLn8Q3ClVp0hgTudGuom71GvgvK29ewUlPeWQRPxffRifNg2oN1QtbDTArQK0fQNxVqwTgdtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=g4cWis5Y; arc=none smtp.client-ip=148.163.148.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwINtLt2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 43DF1C2BCC9;
-	Wed, 29 Jul 2026 00:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785285311;
-	bh=C5eRUocXw/GNePSjynQl43Hme2TTs/8p6qo//nMsiik=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=QwINtLt2IIPsFVO5GFtY8QDDskGKycJ/6P5DMyq+nEo2CdheZyXl9FJuAJNFC0sig
-	 dTcJxW3Q7MKTt51fgijIBqnDIx4pV5bG74nTgDkVBGh01MreuTVCT011Zo0Q7uVsjS
-	 jeh/wfyFstIaS7VGRGtsRqc2+lca7ZXeAeHbTgq2ftAqzLc83F8vQv7Cq82zAlZT/W
-	 eZ2w4IlK35SFGvCGy6R3xyydJtMgJBHu03VzJD4nZ02xQD58koJ+hgt7OAaTa8WEIC
-	 Ovs+BrXmi90GjWlpQ9CFuIkbvP2aa0TFM7wNzp3h7cvSZjjofoX/4RWF8qwEFrk1v4
-	 GycR7DQT+6BDQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7B9C53219;
-	Wed, 29 Jul 2026 00:35:11 +0000 (UTC)
-From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Jul 2026 17:35:40 -0700
-Subject: [PATCH v9 41/41] KVM: selftests: Update private memory exits test
- to work with per-gmem attributes
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="g4cWis5Y"
+Received: from pps.filterd (m0354651.ppops.net [127.0.0.1])
+	by mx0a-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66SNBKbf3568894;
+	Wed, 29 Jul 2026 01:00:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=default; bh=MLDpUT3Ig5dVy
+	1KC0ADOUItrHAe2qJm3V5QInWkrGGQ=; b=g4cWis5YKmjBELVxkUNFr+U+O8j2h
+	N7X+v2o51CjvpdyUXRwfMSUGr9QIeuYOqfonKP0pQwZa3glnDjzLejbMvHyN/p5s
+	I7FRgwrpzL5J6JMxzBPw1wIoDf32eVP+6vkHmf++eh79MXvWZa9sXqmtuTmrunPY
+	hAZZsqkK2riFcSg/IUmXL+18gM8RNVzjP/zpMUqfYRnLHXN53+ng4IDSaFM06Yky
+	MsbEB4muu8r4ITeE0PytZ5bs4omRuVv3routWcFShiLsJBD13ujLsSpuj1F1rQ5r
+	1F0wpF2jgvH+valHWQvUcBKbB66Mowaa7uOYgLvbi9iIAog/OLbpT8CrA==
+Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
+	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 4fq308s015-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jul 2026 01:00:02 +0000 (GMT)
+Received: from LL-DJCZ134.crowdstrike.sys (10.100.11.122) by
+ 04WPEXCH006.crowdstrike.sys (10.100.11.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Wed, 29 Jul 2026 01:00:00 +0000
+From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+To: <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+CC: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
+        <song@kernel.org>, <jolsa@kernel.org>, <rostedt@goodmis.org>,
+        <naveen@kernel.org>, <davem@davemloft.net>, <mhiramat@kernel.org>,
+        <stable@vger.kernel.org>, <linux-open-source@crowdstrike.com>
+Subject: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark trampoline/kprobe ftrace_ops permanent
+Date: Tue, 28 Jul 2026 20:59:56 -0400
+Message-ID: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260728-gmem-inplace-conversion-v9-41-35f9aec2aed2@google.com>
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
-In-Reply-To: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
-To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
- brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
- jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
- oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
- rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
- steven.price@arm.com, tabba@google.com, willy@infradead.org, 
- wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
- pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
- liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, 
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
- Vlastimil Babka <vbabka@kernel.org>, Baoquan He <baoquan.he@linux.dev>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
- linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=3860;
- i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=OXbxJklB527/baH7YroleLhSK6jGYFBASgJI72afKmQ=;
- b=1EaVGZNxPXcWvFQRM0UerprMYCydw3MFwdosN66H2gElr9s7pSEokltDzvvyRtDiOn6seSpSL
- qw4SjyTOQilBMNqMJhrbpwgjEZ1s8XTs+XJ3E5zC4njCXnoq7W3vK91
-X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
- pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
- auth_id=649
-X-Original-From: Ackerley Tng <ackerleytng@google.com>
-Reply-To: ackerleytng@google.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: 04WPEXCH006.crowdstrike.sys (10.100.11.70) To
+ 04WPEXCH006.crowdstrike.sys (10.100.11.70)
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDAwNSBTYWx0ZWRfX0yxALDA0FYl8
+ VzWtGYFDuc1Ux63fn4GMX2O188agIwvQPf1s3IBW/YYaLzSF0G0q003VqxUKcwZuSGXrwkHI735
+ yoLydCFvcdLSZZLf5JAzb6Bx/OM27Orbqx1O1oy9claBDcTdd6uv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDAwNSBTYWx0ZWRfX/4nOwqQWkz2C
+ DbiNwaOUTniSP1Pz0HpC2DfazUPkIEby4SVtCiJECytDo2iwd+GZnPzPhTOZJhwhYIIyxH6wvAV
+ gUGdE9bh0ywjrl/k1U1NkKV3pqepzNuAtpqHKJgy7lGfn7ghP6GlnMfA7Sbdu43tM+Pn99zuyfV
+ d6g4kRf1Jfz2IqO1Gy8ub6g026qOmyv4hJbALE+5rzpnHzMJkr36qjW4juaIF3d4wYasAbh0bdH
+ gnmgQiIAEPs5cW04+CWBslkdpFSy6gTB17lqcUoHPeBwC2vaRvkfMI0viD1SEQf9H5d/ka1N7Yf
+ hD3U1f2IyeE5l8ihG0Ynatl0XQHCX/NSBEmnmcVFGiSdTNmzO6K8aoTbC5maNa8M9bKUC3+U9Y1
+ IGD5h55XClmiuii+1tmXtz+zTYJjo8y0V7uKCTCli768KW/+3K5pbX8Twx1uGufxEI5BlAT4Y23
+ 53ajYoe6bjRS2fv31yQ==
+X-Proofpoint-GUID: EcNe9mDSq8C8ID9iOLzODzQaMAaV2BlB
+X-Authority-Analysis: v=2.4 cv=fOAJG5ae c=1 sm=1 tr=0 ts=6a695093 cx=c_pps
+ a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
+ a=EjBHVkixTFsA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=T2KQ53IYiC3MXPrxx8bB:22 a=b3B37AjAgz0HnGB3MuNd:22 a=VwQbUJbxAAAA:8
+ a=meVymXHHAAAA:8 a=NEAV23lmAAAA:8 a=lO_3BM9siXdlfk_5vd8A:9
+ a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-ORIG-GUID: EcNe9mDSq8C8ID9iOLzODzQaMAaV2BlB
+X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11859
+ signatures=596817
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1011 spamscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607290005
 
-From: Sean Christopherson <seanjc@google.com>
+This fixes a long-standing issue: kernel.ftrace_enabled=0 silently
+disables BPF trampolines (fentry/fexit) and ftrace-based
+kprobes/kretprobes. The write succeeds, the hook stops firing with no
+error, and re-enabling silently restores it. Livepatch already solved
+this for itself via FTRACE_OPS_FL_PERMANENT, which refuses to disable
+ftrace while a permanent ops is registered and refuses to register
+one while ftrace is disabled[1].
 
-Skip setting memory to private in the private memory exits test when using
-per-gmem memory attributes, as memory is initialized to private by default
-for guest_memfd, and using vm_mem_set_private() on a guest_memfd instance
-requires creating guest_memfd with GUEST_MEMFD_FLAG_MMAP (which is totally
-doable, but would need to be conditional and is ultimately unnecessary).
+For trampolines this restores a historical property: from 2019-2022
+they shared one global direct_ops, marked permanent the same
+way[2].It was later lost as a side effect of the 2022
+per-trampoline-ops split (patch 1's Fixes tag) and never
+restored.[3][4] Kprobes never carried this protection at all, so
+for them that is long-standing issue rather than a regression.
 
-Expect an emulated MMIO instead of a memory fault exit when attributes are
-per-gmem, as deleting the memslot effectively drops the private status,
-i.e. the GPA becomes shared and thus supports emulated MMIO.
+Patch 1: trampolines. Patch 2: classic kprobes/kretprobes. Patch 3:
+a selftest covering both directions for all four hook types.
 
-Skip the "memslot not private" test entirely, as private vs. shared state
-for x86 software-protected VMs comes from the memory attributes themselves,
-and so when doing in-place conversions there can never be a disconnect
-between the expected and actual states.
+P.S
+I initially implemented a per-record opt-in flag[5], but dropped it
+as over-engineering once I saw the original blanket restriction.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Fuad Tabba <tabba@google.com>
-Tested-by: Shivank Garg <shivankg@amd.com>
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
----
- .../selftests/kvm/x86/private_mem_kvm_exits_test.c | 36 ++++++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
+P.P.S
+Open question: kprobe.multi/kretprobe.multi/kprobe.session
+(fprobe-backed) aren't covered -- return-capturing fprobes share the
+function-graph tracer's subops manager with unrelated tracers, so
+marking it permanent needs a different, per-record approach. Perhaps
+something along the lines of [5].
 
-diff --git a/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c b/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
-index 10db9fe6d9063..70ed16066c63e 100644
---- a/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
-+++ b/tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
-@@ -62,8 +62,9 @@ static void test_private_access_memslot_deleted(void)
- 
- 	virt_map(vm, EXITS_TEST_GVA, EXITS_TEST_GPA, EXITS_TEST_NPAGES);
- 
--	/* Request to access page privately */
--	vm_mem_set_private(vm, EXITS_TEST_GPA, EXITS_TEST_SIZE);
-+	/* Request to access page privately. */
-+	if (!kvm_has_gmem_attributes)
-+		vm_mem_set_private(vm, EXITS_TEST_GPA, EXITS_TEST_SIZE);
- 
- 	pthread_create(&vm_thread, NULL,
- 		       (void *(*)(void *))run_vcpu_get_exit_reason,
-@@ -74,10 +75,26 @@ static void test_private_access_memslot_deleted(void)
- 	pthread_join(vm_thread, &thread_return);
- 	exit_reason = (u32)(u64)thread_return;
- 
--	TEST_ASSERT_EQ(exit_reason, KVM_EXIT_MEMORY_FAULT);
--	TEST_ASSERT_EQ(vcpu->run->memory_fault.flags, KVM_MEMORY_EXIT_FLAG_PRIVATE);
--	TEST_ASSERT_EQ(vcpu->run->memory_fault.gpa, EXITS_TEST_GPA);
--	TEST_ASSERT_EQ(vcpu->run->memory_fault.size, EXITS_TEST_SIZE);
-+	/*
-+	 * If attributes are tracked per-gmem, deleting the memslot that points
-+	 * at the gmem instance effectively makes the memory shared, and so the
-+	 * read should trigger emulated MMIO.
-+	 *
-+	 * If attributes are tracked per-VM, deleting the memslot shouldn't
-+	 * affect the private attribute, and so KVM should generate a memory
-+	 * fault exit (emulated MMIO on private GPAs is disallowed).
-+	 */
-+	if (kvm_has_gmem_attributes) {
-+		TEST_ASSERT_EQ(exit_reason, KVM_EXIT_MMIO);
-+		TEST_ASSERT_EQ(vcpu->run->mmio.phys_addr, EXITS_TEST_GPA);
-+		TEST_ASSERT_EQ(vcpu->run->mmio.len, sizeof(u64));
-+		TEST_ASSERT_EQ(vcpu->run->mmio.is_write, false);
-+	} else {
-+		TEST_ASSERT_EQ(exit_reason, KVM_EXIT_MEMORY_FAULT);
-+		TEST_ASSERT_EQ(vcpu->run->memory_fault.flags, KVM_MEMORY_EXIT_FLAG_PRIVATE);
-+		TEST_ASSERT_EQ(vcpu->run->memory_fault.gpa, EXITS_TEST_GPA);
-+		TEST_ASSERT_EQ(vcpu->run->memory_fault.size, EXITS_TEST_SIZE);
-+	}
- 
- 	kvm_vm_free(vm);
- }
-@@ -88,6 +105,13 @@ static void test_private_access_memslot_not_private(void)
- 	struct kvm_vcpu *vcpu;
- 	u32 exit_reason;
- 
-+	/*
-+	 * Accessing non-private memory as private with a software-protected VM
-+	 * isn't possible when doing in-place conversions.
-+	 */
-+	if (kvm_has_gmem_attributes)
-+		return;
-+
- 	vm = vm_create_shape_with_one_vcpu(protected_vm_shape, &vcpu,
- 					   guest_repeatedly_read);
- 
+[1] - https://lore.kernel.org/all/20191016113316.13415-1-mbenes@suse.cz/T/#u
+[2] - https://lore.kernel.org/all/20191108213450.032003836@goodmis.org/
+[3] - https://lore.kernel.org/all/20220602193706.2607681-1-song@kernel.org/
+[4] - https://lore.kernel.org/bpf/20251230145010.103439-1-jolsa@kernel.org/
+[5] - https://github.com/kernel-patches/bpf/compare/bpf-next_base...andrey-grodzovsky:bpf:ftrace-permanent-per-record
+
+Andrey Grodzovsky (3):
+  bpf: mark trampoline ftrace_ops permanent
+  kprobes: mark ftrace-based kprobe ops permanent
+  selftests/bpf: add ftrace_permanent test
+
+ kernel/bpf/trampoline.c                       |   4 +
+ kernel/kprobes.c                              |   5 +-
+ .../bpf/prog_tests/ftrace_permanent.c         | 144 ++++++++++++++++++
+ .../selftests/bpf/progs/ftrace_permanent.c    |  43 ++++++
+ 4 files changed, 194 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/ftrace_permanent.c
+ create mode 100644 tools/testing/selftests/bpf/progs/ftrace_permanent.c
 
 -- 
-2.55.0.508.g3f0d502094-goog
-
+2.34.1
 
