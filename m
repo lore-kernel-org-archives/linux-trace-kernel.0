@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA3B25F99F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DD226158B;
 	Wed, 29 Jul 2026 00:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785285308; cv=none; b=cl+XUalnbNX4ye66wes2MJjZgpurfVldImiS3NrnZ7AwS4mlvMl6jmPE+WiGENnim/UZ1EjuxRps/xiTVVCHm2nNqlxrXY0lpZeXuAtNfjX+u8YDxBigUUFiCNCInvcKdrsWCDaJID4akj4q/bbv6BqRRr4aInaUEnNoQvhj9sQ=
+	t=1785285308; cv=none; b=MCy8Ln5KLXdWNl+f7gyZf9IYy4bu9dFszHkWgS3Ur/6JVI9o2OsmgPm2fgFeMCLIb7vovc9jl/zQMbv0g4XfaRluIlK0V97ycYp5GdoRPtOoWQuZ1GjHa8jlM4ewNZHnJru4jd5J7lsZQj+mm0HeKjAYaza7xXgDrKjBYQWdLuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785285308; c=relaxed/simple;
-	bh=Rr+fXnWaxGybs+AWEondw/0B6Nh+LgNpDLrKdIyfAHw=;
+	bh=6aM2ssaYqN42jru008dQMv0DvAC3ygeFS/sYOj9rJRc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vs1WjnPRGxfzPUfJl/Xp0srySTMn+SMEzG2a/S6FYiKTq5iRU7QB8rCUhrAw5onJcCWmukOtWsBx1oJ2R2VEqL0Hu5uyB2eLvhO0NmLNRdHQgD1nCMA406VR/bf6o/Vhz7N76u09zugig0JUuX2WsicnUJqpVsD/MA707A1wYeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKKpH51S; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FGDqkyCNRFmaW/my/CCNssqWpILyzZBAZxRZiWO0mgsbnI/d2wQv0JJKJh/xyp7dlHHUk0gru3oGBD3IaoWauExNf6BCjNHX5t8vMtpWJqgG0TR3nOLQt05mUSE7UB5nJJ0+VAU/CxhWv6XsWg5yRkqA+Y9HJhx/CYxoibHsEAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDxtVZSZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKKpH51S"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CE08C4AF1D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDxtVZSZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 14E9CC4AF10;
 	Wed, 29 Jul 2026 00:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1785285308;
-	bh=Rr+fXnWaxGybs+AWEondw/0B6Nh+LgNpDLrKdIyfAHw=;
+	bh=6aM2ssaYqN42jru008dQMv0DvAC3ygeFS/sYOj9rJRc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gKKpH51SjITRNdhUTuh3G3X0yqQwxAESgR7Ikwou3Nq7PBNWDsKLPHed1YxLUdXWi
-	 P5MsMkyClfkKfWFTpvxx+LewIEDMs5dwu+d421k1yGpJzE2tInf/gH79bQaZ3y1aFj
-	 uR5fLuKOB6Y7UOlTY20dZFfVnhrmHxPs6+u+QnNoeSBByz3Pkmdgg+21Bq1guMDs04
-	 JKM4OAeVpxEgd14B3Xtw/K1ivPTstInsfubXTjMicqPx8vzQYaG/sPVaL4dou1twut
-	 90gD1Dwl01f+Xo1YQL0YCu8K7Wma/xDg1n9m24N80dbpjvyD860nuwZPtzWB69cfhI
-	 E7j05/xWvUUcw==
+	b=qDxtVZSZNyod0D2S8x9b53St2cXGFrSpYstdBKy0VB1Ge97lAO58+5BrajUTxUYr+
+	 V2K9Z7tgBqYaBL8iVEnbpeWK4iND92pNRTR9QzI11dGKTWFRSSOrYRxhmfMAvRrnBL
+	 rMISw9vPu/XVkeiAngUbaoLoKMRAiMNg8BfXhPIljitpgUuoyUlCQvA06UJ/FmZGDa
+	 hMlfBuxl+bT1mUqh8x0LKtd2byAT4/0im+TSRlypsh9ud5QzVnhwm6Hz7n66Crb0D0
+	 ShhalPrNA5U3oBEBGYbRUSwBQvCoj1UVMi7DZjHM56drJr/dOEULKzbMyBoJS3B+yt
+	 2IJYPe3U0MYwQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059CDC53219;
-	Wed, 29 Jul 2026 00:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36F4C54F52;
+	Wed, 29 Jul 2026 00:35:07 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Jul 2026 17:35:04 -0700
-Subject: [PATCH v9 05/41] KVM: Provide generic interface for checking
- memory private/shared status
+Date: Tue, 28 Jul 2026 17:35:02 -0700
+Subject: [PATCH v9 03/41] KVM: Enumerate support for PRIVATE memory iff
+ kvm_arch_has_private_mem is defined
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260728-gmem-inplace-conversion-v9-5-35f9aec2aed2@google.com>
+Message-Id: <20260728-gmem-inplace-conversion-v9-3-35f9aec2aed2@google.com>
 References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
 In-Reply-To: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -74,14 +74,13 @@ To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
- linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
- Xiaoyao Li <xiaoyao.li@intel.com>
+ linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=3207;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=1931;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=lo4Gzy+LZN1Xb6HGgda47M2L38FFpVZSB/P8dGlPKnM=;
- b=iEl0F2TmAh0HZuon0fRMIFG6VBy/MiktRfz/Bj49faa9Dv9LwvJU/ac1q5NU5RtzUbPED6Mom
- CuTa53vGcDmDExd5Ne/IVQgruY+UWXcUTv6MotbNwwAV+nSViIoAe0o
+ bh=O7sxLpn2R0quc46LYFMUDbXF8+uTQ8KrVzojQDeT1HA=;
+ b=DEnJly7jd1lfYKOrGzxeTHui0t87YpwfLT3ObP2JeuDTi+GFwbNee//TP89KNdFUt4ooSk15D
+ SDFtlyD0SfXDiyPVNMHvt/yrw6tHTDxC6Y9DXI0oJcoE6erVJWktz2n
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -91,91 +90,53 @@ Reply-To: ackerleytng@google.com
 
 From: Sean Christopherson <seanjc@google.com>
 
-Introduce a generic kvm_mem_is_private() interface using a static call to
-determine if a GFN is private. This allows the implementation for checking
-a GFN's private/shared status to be set at runtime.
-
-In preparation for choosing implementations between a guest_memfd lookup
-and the existing VM attribute lookup, rename the existing
-VM-attribute-based check to kvm_vm_mem_is_private to emphasize that it
-looks up VM attributes.
+Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
+on kvm_arch_has_private_mem being #defined in anticipation of decoupling
+kvm_supported_mem_attributes() from CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
+guest_memfd support for memory attributes will be unconditional to avoid
+yet more macros (all architectures that support guest_memfd are expected to
+use per-gmem attributes at some point), at which point enumerating support
+KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory attributes being
+supported _somewhere_ would result in KVM over-reporting support on arm64.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- include/linux/kvm_host.h | 14 ++++++++++++--
- virt/kvm/kvm_main.c      | 15 +++++++++++++++
- 2 files changed, 27 insertions(+), 2 deletions(-)
+ include/linux/kvm_host.h | 2 +-
+ virt/kvm/kvm_main.c      | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 297cb06302223..438567e3fa6a1 100644
+index 9f78a466c6f3e..c125d2e8155a7 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -2572,16 +2572,26 @@ bool kvm_arch_pre_set_vm_memory_attributes(struct kvm *kvm,
- bool kvm_arch_post_set_vm_memory_attributes(struct kvm *kvm,
- 					    struct kvm_gfn_range *range);
- 
--static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
-+static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
- {
- 	return kvm_get_vm_memory_attributes(kvm, gfn) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+@@ -722,7 +722,7 @@ static inline int kvm_arch_vcpu_memslots_id(struct kvm_vcpu *vcpu)
  }
-+#endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
-+
-+#ifdef kvm_arch_has_private_mem
-+typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
-+DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
-+
-+static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
-+{
-+	return static_call(__kvm_mem_is_private)(kvm, gfn);
-+}
- #else
- static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+ #endif
+ 
+-#ifndef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
++#ifndef kvm_arch_has_private_mem
+ static inline bool kvm_arch_has_private_mem(struct kvm *kvm)
  {
  	return false;
- }
--#endif /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
-+#endif /* kvm_arch_has_private_mem */
- 
- #ifdef CONFIG_KVM_GUEST_MEMFD
- int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 6f0bcab7a0ebc..80317d2c15d07 100644
+index 902aa166c9c0c..9501dd8d015d1 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2627,6 +2627,20 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
- }
- #endif /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
- 
-+#ifdef kvm_arch_has_private_mem
-+DEFINE_STATIC_CALL_RET0(__kvm_mem_is_private, kvm_mem_is_private_t);
-+EXPORT_STATIC_CALL_GPL(__kvm_mem_is_private);
-+
-+static void kvm_init_memory_attributes(void)
-+{
-+#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-+	static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
-+#endif
-+}
-+#else
-+static void kvm_init_memory_attributes(void) { }
-+#endif
-+
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn)
+@@ -2421,8 +2421,10 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+ #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+ static u64 kvm_supported_mem_attributes(struct kvm *kvm)
  {
- 	return __gfn_to_memslot(kvm_memslots(kvm), gfn);
-@@ -6539,6 +6553,7 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
- 	kvm_preempt_ops.sched_in = kvm_sched_in;
- 	kvm_preempt_ops.sched_out = kvm_sched_out;
++#ifdef kvm_arch_has_private_mem
+ 	if (!kvm || kvm_arch_has_private_mem(kvm))
+ 		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
++#endif
  
-+	kvm_init_memory_attributes();
- 	kvm_init_debug();
- 
- 	r = kvm_vfio_ops_init();
+ 	return 0;
+ }
 
 -- 
 2.55.0.508.g3f0d502094-goog
