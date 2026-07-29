@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D9C34AB03;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB89314A73;
 	Wed, 29 Jul 2026 00:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785285310; cv=none; b=G02a5GR7+vZIXwZYErdXrwyhX+WMrzJtYa/WQQkoAh79txIr4MpuADq9D7h01q5/JzgFhwT2JO404Qsgwjm+7Rx/lL7ECOV7G+11PpGJigFdCCZaIvTGjvhoUHYtw2JFLwPzFEH6/IP4ydnEJMtR7bhaPqQDkL5I4yajymlOc3E=
+	t=1785285310; cv=none; b=b5sl/fWBOEbaa+zl12U5e6MMlE1PlzjMg3oG4V9psBsBFzpATdTsYOD3AApWyZ73VM53fqK6ElfaP0TRYhlmJp4u9z4vm05ZCLjdC8x9FNO+F41n+tK1HM+FFxFhVvZ43t5Wurls/jUqeYZtsMCd8jIIT/ssjt2NCzEQLS7C0bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785285310; c=relaxed/simple;
-	bh=JUBKSBNY0asBXOcUHeemdwv9Kb0rDdRYpRD3KVdZSaU=;
+	bh=9b4OkH1UVPXahUABlJXnZw6CG9OK9HzlpLr58d+35cg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fK8p9lS8oOYKa41O/t5UlG4BIgPszr5fQP6nbAPWfmvSVlcIPaec0CLygOOknb+7P0vQhPETQ/UhDMV0jrvytWdf9zvw+CbHMbHJUd9QABUtrTKAg92jr5+hid9Q5Qde8BEv1eUQmUmx2W+jM8OqL8AamsWG2RXwcWqsdt/ja1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvPbfGEc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=YeOsMu/fAnMOaHg8P9aZESM+ltJ57dTZK9VVamjz1oHmQ+biSIy7x778EuOJitGDtx7PqvvhhdM31vWtPUpB53FDhsxSC4kHX8CQR73IcHwTfqOhAR+RPA3uAc7JlWniX5+jeKLZBmw8egbSZsl5kGzVANtLDTwBXXokbnqlkvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clq2aBWx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvPbfGEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A018BC4DDEA;
-	Wed, 29 Jul 2026 00:35:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clq2aBWx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E65FDC4AF60;
+	Wed, 29 Jul 2026 00:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785285310;
-	bh=JUBKSBNY0asBXOcUHeemdwv9Kb0rDdRYpRD3KVdZSaU=;
+	s=k20201202; t=1785285309;
+	bh=9b4OkH1UVPXahUABlJXnZw6CG9OK9HzlpLr58d+35cg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=cvPbfGEcYSuzcjEha4wkPkxauZIQR7ipFcXo8UDa7RKDNIot2CQp0V4bRGn90EZmj
-	 zacX+YK7O6fsj319HyI6rjZkOmRTz9ibfrgpDeaOJh3x/2KUevf/RNCakA6ly44SJ+
-	 7aKZDzZXEMWi9XT3W2lrIvJPPMpNAWF9z7JH5zuvPGsws+7jrv0KYdBsSSexjw9cBo
-	 gQnmhpYI/mWCCGXa6cMZc/ROgnI4wJuK1jq3GUYXiv678qvxL8BHOdd6Gvsc24hIBA
-	 EM4Jky6CWr5+aLd6kiCHmCz84mG/n5C28lbWGpGytzbZ7MtJXIi42U2hrw7u/xNzcG
-	 XXE7qQqfVVLAg==
+	b=clq2aBWx9Alot0pv7M7s8qZTr8yTK8zJdJe+MBJvc8slSqjhb8hdwqzTWL3M8+JhD
+	 LLqMuhobL9gEBQM6/ot7aSCOKnTvVzf7x/pkBQWVANsLg18GTvXNJyCx7YBakclDEd
+	 tqAh5clVuRbrHCxSog2Ri8gwEbMac4xFOK2nrg6ZQ+BdLFshdX3b5bJixnKfWsWVLQ
+	 N1W1R6uvp2zyP36ZAMw1KFbBFSkdFlt3MtUXiLMqZBw/7AkOeQG1YsrOPzKQZMn5uq
+	 iBTXZZJNYf9Egd3Xt/GvD70egQLDO8KzExlV3obPqCPrLiVxcJJDFTlvcpVf10KquK
+	 OIZ+sRvDuhBJg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86618C54F5E;
-	Wed, 29 Jul 2026 00:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC686C54F57;
+	Wed, 29 Jul 2026 00:35:09 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Jul 2026 17:35:32 -0700
-Subject: [PATCH v9 33/41] KVM: selftests: Test that shared/private status
- is consistent across processes
+Date: Tue, 28 Jul 2026 17:35:25 -0700
+Subject: [PATCH v9 26/41] KVM: selftests: Add helpers for calling ioctls on
+ guest_memfd
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260728-gmem-inplace-conversion-v9-33-35f9aec2aed2@google.com>
+Message-Id: <20260728-gmem-inplace-conversion-v9-26-35f9aec2aed2@google.com>
 References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
 In-Reply-To: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -76,11 +76,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=5042;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=5371;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=21iOJMVcQPitKBzuo1HKMiAFQrUFJN2+cKgzecsY62g=;
- b=tHDPY8J1cFtlQLOYUntiefQusJyIo3csQ28P+VybeeHixpeOEIqCerIUJtU/FCOCTcxnk5tid
- FS8z4mbUmr9BwzqsJ6dEHNQyVvPFlOXgcWlDFqEEnAIRXSuvMxr3UyY
+ bh=SztH8ywp+zsWQWj3F1zxcBTjt+wFMDPSUxmq9Oc2LcE=;
+ b=ibfbjTjCAV9TI7MZlzIl0m2kX9XyXJtAMLcr/jr3yXI8Xnea+IR2gMEEugravqAlY3FTzz9z5
+ NZkhNU9wgjxAH4PsjDYJUKzobhKtXyPSEl4cNa4WvDVdm+f4XRF293O
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -90,163 +90,163 @@ Reply-To: ackerleytng@google.com
 
 From: Sean Christopherson <seanjc@google.com>
 
-Add a test to verify that a guest_memfd's shared/private status is
-consistent across processes, and that any shared pages previously mapped in
-any process are unmapped from all processes.
+Add helper functions to kvm_util.h to support calling ioctls, specifically
+KVM_SET_MEMORY_ATTRIBUTES2, on a guest_memfd file descriptor.
 
-The test forks a child process after creating the shared guest_memfd
-region so that the second process exists alongside the main process for the
-entire test.
+Introduce gmem_ioctl() and __gmem_ioctl() macros, modeled after the
+existing vm_ioctl() helpers, to provide a standard way to call ioctls
+on a guest_memfd.
 
-The processes then take turns to access memory to check that the
-shared/private status is consistent across processes.
+Add gmem_set_memory_attributes() and its derivatives (gmem_set_private(),
+gmem_set_shared()) to set memory attributes on a guest_memfd region.
+Also provide "__" variants that return the ioctl error code instead of
+aborting the test. These helpers will be used by upcoming guest_memfd
+tests.
+
+To avoid code duplication, factor out the check for supported memory
+attributes into a new macro, TEST_ASSERT_SUPPORTED_ATTRIBUTES, and use
+it in both the existing vm_set_memory_attributes() and the new
+gmem_set_memory_attributes() helpers.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
-Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../kvm/x86/guest_memfd_conversions_test.c         | 118 +++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ tools/testing/selftests/kvm/include/kvm_util.h | 94 +++++++++++++++++++++++---
+ 1 file changed, 86 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-index f03af2c46426f..e681dac14e865 100644
---- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-+++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-@@ -2,7 +2,9 @@
- /*
-  * Copyright (c) 2024, Google LLC.
-  */
-+#include <pthread.h>
- #include <sys/mman.h>
-+#include <time.h>
- #include <unistd.h>
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 2186e98583969..626c960b4bb82 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -392,6 +392,16 @@ static __always_inline void static_assert_is_vcpu(struct kvm_vcpu *vcpu) { }
+ 	__TEST_ASSERT_VM_VCPU_IOCTL(!ret, #cmd, ret, (vcpu)->vm);	\
+ })
  
- #include <linux/align.h>
-@@ -323,6 +325,122 @@ GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
- 	test_private(t, 0, 0, 'A');
++#define __gmem_ioctl(gmem_fd, cmd, arg)				\
++	kvm_do_ioctl(gmem_fd, cmd, arg)
++
++#define gmem_ioctl(gmem_fd, cmd, arg)				\
++({								\
++	int ret = __gmem_ioctl(gmem_fd, cmd, arg);		\
++								\
++	TEST_ASSERT(!ret, __KVM_IOCTL_ERROR(#cmd, ret));	\
++})
++
+ /*
+  * Looks up and returns the value corresponding to the capability
+  * (KVM_CAP_*) given by cap.
+@@ -418,8 +428,16 @@ static inline void vm_enable_cap(struct kvm_vm *vm, u32 cap, u64 arg0)
+ 	vm_ioctl(vm, KVM_ENABLE_CAP, &enable_cap);
  }
  
-+/* Test that shared/private memory protections work and are seen from any process. */
-+GMEM_CONVERSION_TEST_INIT_SHARED(forked_accesses)
++/*
++ * KVM_SET_MEMORY_ATTRIBUTES{,2} overwrites _all_ attributes.  These
++ * flows need significant enhancements to support multiple attributes.
++ */
++#define TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes)				\
++	TEST_ASSERT(!(attributes) || (attributes) == KVM_MEMORY_ATTRIBUTE_PRIVATE,	\
++		    "Update me to support multiple attributes!")
++
+ static inline void vm_set_memory_attributes(struct kvm_vm *vm, gpa_t gpa,
+-					    u64 size, u64 attributes)
++					    size_t size, u64 attributes)
+ {
+ 	struct kvm_memory_attributes attr = {
+ 		.attributes = attributes,
+@@ -428,17 +446,11 @@ static inline void vm_set_memory_attributes(struct kvm_vm *vm, gpa_t gpa,
+ 		.flags = 0,
+ 	};
+ 
+-	/*
+-	 * KVM_SET_MEMORY_ATTRIBUTES overwrites _all_ attributes.  These flows
+-	 * need significant enhancements to support multiple attributes.
+-	 */
+-	TEST_ASSERT(!attributes || attributes == KVM_MEMORY_ATTRIBUTE_PRIVATE,
+-		    "Update me to support multiple attributes!");
++	TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes);
+ 
+ 	vm_ioctl(vm, KVM_SET_MEMORY_ATTRIBUTES, &attr);
+ }
+ 
+-
+ static inline void vm_mem_set_private(struct kvm_vm *vm, gpa_t gpa,
+ 				      u64 size)
+ {
+@@ -451,6 +463,72 @@ static inline void vm_mem_set_shared(struct kvm_vm *vm, gpa_t gpa,
+ 	vm_set_memory_attributes(vm, gpa, size, 0);
+ }
+ 
++static inline int __gmem_set_memory_attributes(int fd, u64 offset,
++					       size_t size, u64 attributes,
++					       u64 *error_offset)
 +{
-+	enum test_state {
-+		STATE_INIT,
-+		STATE_CHECK_SHARED,
-+		STATE_DONE_CHECKING_SHARED,
-+		STATE_CHECK_PRIVATE,
-+		STATE_DONE_CHECKING_PRIVATE,
++	struct kvm_memory_attributes2 attr = {
++		.attributes = attributes,
++		.offset = offset,
++		.size = size,
++		.flags = 0,
++		.error_offset = 0,
 +	};
++	int r;
 +
-+	struct sync_state {
-+		pthread_mutex_t mutex;
-+		pthread_cond_t cond;
-+		enum test_state step;
-+	} *sync;
++	r = __gmem_ioctl(fd, KVM_SET_MEMORY_ATTRIBUTES2, &attr);
 +
-+	pthread_mutexattr_t mattr;
-+	pthread_condattr_t cattr;
-+	pid_t child_pid, parent_pid;
-+	int status;
++	/* Copy error_offset regardless of r so caller can check. */
++	if (error_offset)
++		*error_offset = attr.error_offset;
 +
-+	sync = kvm_mmap(sizeof(*sync), PROT_READ | PROT_WRITE,
-+			MAP_SHARED | MAP_ANONYMOUS, -1);
-+
-+	pthread_mutexattr_init(&mattr);
-+	pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED);
-+	pthread_mutex_init(&sync->mutex, &mattr);
-+	pthread_mutexattr_destroy(&mattr);
-+
-+	pthread_condattr_init(&cattr);
-+	pthread_condattr_setpshared(&cattr, PTHREAD_PROCESS_SHARED);
-+	pthread_cond_init(&sync->cond, &cattr);
-+	pthread_condattr_destroy(&cattr);
-+
-+	sync->step = STATE_INIT;
-+
-+#define TEST_STATE_AWAIT(__state)						\
-+	do {									\
-+		pthread_mutex_lock(&sync->mutex);				\
-+		while (sync->step != (__state)) {				\
-+			struct timespec ts, stop;				\
-+			int ret;						\
-+										\
-+			clock_gettime(CLOCK_REALTIME, &ts);			\
-+			stop = timespec_add_ns(ts, 100 * 1000000UL);		\
-+										\
-+			ret = pthread_cond_timedwait(&sync->cond, &sync->mutex, &stop); \
-+			if (ret == ETIMEDOUT) {					\
-+				bool alive = (child_pid == 0) ?			\
-+					     (getppid() == parent_pid) :		\
-+					     (waitpid(child_pid, NULL, WNOHANG) == 0); \
-+				TEST_ASSERT(alive, "Other process exited prematurely"); \
-+			} else {						\
-+				TEST_ASSERT(!ret, "pthread_cond_timedwait failed"); \
-+			}							\
-+		}								\
-+		pthread_mutex_unlock(&sync->mutex);				\
-+	} while (0)
-+
-+#define TEST_STATE_SET(__state)							\
-+	do {									\
-+		pthread_mutex_lock(&sync->mutex);				\
-+		sync->step = (__state);						\
-+		pthread_cond_broadcast(&sync->cond);				\
-+		pthread_mutex_unlock(&sync->mutex);				\
-+	} while (0)
-+
-+	parent_pid = getpid();
-+	child_pid = fork();
-+	TEST_ASSERT(child_pid != -1, "fork failed");
-+
-+	if (child_pid == 0) {
-+		const char inconsequential = 0xdd;
-+
-+		TEST_STATE_AWAIT(STATE_CHECK_SHARED);
-+
-+		/*
-+		 * This maps the pages into the child process as well, and tests
-+		 * that the conversion process will unmap the guest_memfd memory
-+		 * from all processes.
-+		 */
-+		host_do_rmw(t->mem, 0, 0xB, 0xC);
-+
-+		TEST_STATE_SET(STATE_DONE_CHECKING_SHARED);
-+		TEST_STATE_AWAIT(STATE_CHECK_PRIVATE);
-+
-+		TEST_EXPECT_SIGBUS(READ_ONCE(t->mem[0]));
-+		TEST_EXPECT_SIGBUS(WRITE_ONCE(t->mem[0], inconsequential));
-+
-+		TEST_STATE_SET(STATE_DONE_CHECKING_PRIVATE);
-+		exit(0);
-+	}
-+
-+	test_shared(t, 0, 0, 0xA, 0xB);
-+
-+	TEST_STATE_SET(STATE_CHECK_SHARED);
-+	TEST_STATE_AWAIT(STATE_DONE_CHECKING_SHARED);
-+
-+	test_convert_to_private(t, 0, 0xC, 0xD);
-+
-+	TEST_STATE_SET(STATE_CHECK_PRIVATE);
-+	TEST_STATE_AWAIT(STATE_DONE_CHECKING_PRIVATE);
-+
-+	TEST_ASSERT_EQ(waitpid(child_pid, &status, 0), child_pid);
-+	TEST_ASSERT(WIFEXITED(status) && WEXITSTATUS(status) == 0,
-+		    "Child exited with unexpected status");
-+
-+	pthread_mutex_destroy(&sync->mutex);
-+	pthread_cond_destroy(&sync->cond);
-+	kvm_munmap(sync, sizeof(*sync));
-+
-+#undef TEST_STATE_SET
-+#undef TEST_STATE_AWAIT
++	return r;
 +}
 +
- int main(int argc, char *argv[])
- {
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
++static inline int __gmem_set_private(int fd, u64 offset, size_t size,
++				     u64 *error_offset)
++{
++	return __gmem_set_memory_attributes(fd, offset, size,
++					    KVM_MEMORY_ATTRIBUTE_PRIVATE,
++					    error_offset);
++}
++
++static inline int __gmem_set_shared(int fd, u64 offset, size_t size,
++				    u64 *error_offset)
++{
++	return __gmem_set_memory_attributes(fd, offset, size, 0,
++					    error_offset);
++}
++
++static inline void gmem_set_memory_attributes(int fd, u64 offset,
++					      size_t size, u64 attributes)
++{
++	struct kvm_memory_attributes2 attr = {
++		.attributes = attributes,
++		.offset = offset,
++		.size = size,
++		.flags = 0,
++	};
++
++	TEST_ASSERT_SUPPORTED_ATTRIBUTES(attributes);
++
++	__TEST_REQUIRE(kvm_check_cap(KVM_CAP_GUEST_MEMFD_MEMORY_ATTRIBUTES) > 0,
++		       "No valid attributes for guest_memfd ioctl!");
++
++	gmem_ioctl(fd, KVM_SET_MEMORY_ATTRIBUTES2, &attr);
++}
++
++static inline void gmem_set_private(int fd, u64 offset, size_t size)
++{
++	gmem_set_memory_attributes(fd, offset, size,
++				   KVM_MEMORY_ATTRIBUTE_PRIVATE);
++}
++
++static inline void gmem_set_shared(int fd, u64 offset, size_t size)
++{
++	gmem_set_memory_attributes(fd, offset, size, 0);
++}
++
+ void vm_guest_mem_fallocate(struct kvm_vm *vm, gpa_t gpa, u64 size,
+ 			    bool punch_hole);
+ 
 
 -- 
 2.55.0.508.g3f0d502094-goog
