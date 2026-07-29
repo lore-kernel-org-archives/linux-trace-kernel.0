@@ -1,244 +1,236 @@
-Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3D13EC80E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=148.163.148.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785337249; cv=pass; b=lTSkhz+jB2PZuk35YfRv/LBYIr5ZC9KVPx60IfOmK/71dgh7ELpg0grTLs8JpJLZ8W4BK7R7HoZTRB4OM3d6zNzceNptSrQFo6YEzGEOkEtZZUlGRA4pABvJNrRrveywiLH9oPhA6gokDTERZ0gDkmDrMZeItjcxfbOP9BgWpLc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785337249; c=relaxed/simple;
-	bh=WoRDoEi0VL1vigksALz/83dPkS3F5vPYjkl8rzXgfkg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wh3L4teOu4MyQi0L56yKF4p3P5NdRBwjgSFKomoeRAbePV/LfU6T1nLvINBHMdAeS9ETsqmYnQEqr+qV5qCDkB01E44ZOLsBooECSzGlL8Q+sdbBcPhSkLe25ntru+TaV8UuYE1SVW/Wtg68Pet64DMDcf3GSSVof8E2A9a/KfA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=McQ1nMx8; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=Qu6l3/39; arc=pass smtp.client-ip=148.163.148.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A8B3B0584
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785338016; cv=none; b=bwSpvzrXpK0fzV6APVjvGxXJIKLDGa2NzrQIDS/slu5mcHDe/tLlO2wIdlhO1K69yxg5hPkVk5egCYdcfgi7DDPI5Ut1e/pcCIh6qPQ6OVuZMT961R/G0OFVQfElBm18EdxQUsER07tBPDuJL1wjdTqzg7i18WV1YWS53pCDFM0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785338016; c=relaxed/simple;
+	bh=BoZ2iQRgXeenL07kE4at2D1QGKWFWQM+Ut3SXTtCoTc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XaXCsl79ZnhSTgY3Q+lBty5X5vbCUrvh2eZyMPiX5NtQIU5/txE0R1Fuf5dC5eLmpNvfkvrMfcWqWJf6tjLaObUDCHAPdRWHj4NoP8rUFBcg341+M91oDNhzRVt/NYjgvbu225iyn9hUznNu0Ehsu8a2sODa8xADx/BV1Yls3Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k8sFQVhS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=fwlhv1ad; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="McQ1nMx8";
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="Qu6l3/39"
-Received: from pps.filterd (m0354652.ppops.net [127.0.0.1])
-	by mx0a-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TDU5lu669727
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:00:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	default; bh=KNsIs+LJSh7r0iAi+d65HQSOE09/M+m4FY1F+mUNWXY=; b=McQ1
-	nMx8M7wPOjuOLAkLDA6WuHxFcrcAStnEaL9XPowHaB61V31/WItQ/KdjBYstRpwK
-	P+O5TLQc91sUMJSjuMaWZyc8qd1Aeg3A7MrBzuKtAkVZ9D2TEjrYp75iz3jQDOja
-	WFnbMcZOrkrsE4DyxHhfuFuY6UhCfcM9qYgnJBF5r88ZTN1MSo+1YXmC8nwwX6ud
-	fyvDRcg+iKR2WyvT8SjElYxyjfR9i80ynYuEp4yEzjRI44b5nuM3wy6zlupaiH5Y
-	eslsUCM8lDphmgvIYrnuVGF0Jb4CsfC8FFNXl8wPmf/x5yjgfL3pdJtA2FWBQRUG
-	vw9r71nevvUHAXnFvw==
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
-	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 4fq6mctrwx-1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k8sFQVhS";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="fwlhv1ad"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TF2uXY2328107
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:13:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=vH9yOHhfULnixC4HsnGBRn
+	v7zbCi2gW7q7pMT5OKVwU=; b=k8sFQVhSGvS43qLh3bIxikjfdkFnyZZBvQAg6U
+	gDgP5rZRH/6yAGRd1jlJP4s1CStgns6//Qj9yc9iBAvrPMam3p6W/oqandRRFHyu
+	hNSuyXiLbpCg35zTh8KrphAAhUzi7nxYb2dEkL9jBWufFElFVM7Ng8WIGSlAMM2N
+	dlRyzZxIzbl0Qt9oYOuICoSZHCDSWPNKkDgGo/S3FE1onEbOS/n0iewV+mp6uuRq
+	IG7OeBse6v96yzzguQzpvVWBDbBXpLZFYiNZUFhquu3Y/lzcTdn9AdvjAfSzGNVB
+	mHhBVprb0DtUclHEHfMc+fM8oYbmpTcax4s50UJyN8Vf6x+g==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fqgrch081-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:00:45 +0000 (GMT)
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-7f582244e9eso19897397b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:00:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785337245; cv=none;
-        d=google.com; s=arc-20260327;
-        b=AhJAXyrDjN3JCYx1vRlOaqFExx3tDJHY6zUG+GjqbPNEROqeHGfHfZBUB2CGAxUhYJ
-         TUS2lOx4xHOJ/Lk3tmyDQ8viaOmtWLDOqDnbZBKTVtOvVoo9diL9/jhLLKQENpdTXBMB
-         G/LIhpiIveMSnz9957B0rTuLQYAiAlsl1VZNpxly/UNeh+dDi+cMPRC8qoKe4nitiahe
-         4/3al6XT5TFdCxlMX3YLPhfwnurJct+4pI+ssS4JlGHjMGFPjRaj71hCIbPvRKDheIIw
-         jKwwtvbGrQl/O3Wy6aSkgO3H+Vpussya71Q93+ZdSClrozIY8C/mLo/gBaFgcda2PQpD
-         ya1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=KNsIs+LJSh7r0iAi+d65HQSOE09/M+m4FY1F+mUNWXY=;
-        fh=mVpSVkLHWMYPVgBoHbU+EN+m1orWDD1HNGRDYEOZTUw=;
-        b=OADwo1DHsW05epnIMRC5d2ZPhZy2PKq1Fps6Z/0PRFrrw6/do/AB24ufenk6bMMpWv
-         eQn9kZepk09Qpbjm1Rpk8QKd9q/ImXjG9VU9k/OTERJmzFQ45MkY+KJ2JGptajZJkXZ1
-         hoC5UjGAxlIDa8na6gsltbykKXen3TP7YQe/YXLQLshShuUFVXmkXR284vyNE5/VEhHb
-         48816bBGG/dpo4LcXS/ORpjSJm7C2zOVVgs+bZ6XYsfNFHl9bRDZW0jTEnpUniWLLavb
-         lQm48m7G0KFvBJMD+yK9S8jynnzL8NVgFGD77Mig980z4BukbWOldfl8OQddzKZClp6f
-         ztvQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:13:34 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-8482b95574dso1336946b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=crowdstrike.com; s=google; t=1785337245; x=1785942045; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=KNsIs+LJSh7r0iAi+d65HQSOE09/M+m4FY1F+mUNWXY=;
-        b=Qu6l3/39lMzxJJwhCPtNM7+PJrnRNx9fGchVjQ8CO1nXJ8xU0GTdoX2eEqLrH1jhKX
-         HsLF7/xYVtIhsfDcEj+BRLLzyTYnSdQ7gQFUdCmm1Ej8WiX71HjOL0aQeRrUOFHGQGVc
-         VRnPqgbHsU8YLgDA5lE+B0ws1GWGDQxK9qHRUCczMtBltukfh4RMHuUqt/JCYka559nU
-         AH2efMfwSTik167uU4KvhBoTLhtDkZq8k9TWfUreYDKe6QeCKIDsqfoS/7PTEdeKz2qV
-         +BfOPLza6P92ZD/ecn1znUfqKYMMSmlja18J7XMzOHGjC8pVdo0BGOvnctbLSfOpr8Eh
-         5AhQ==
+        d=oss.qualcomm.com; s=google; t=1785338013; x=1785942813; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=vH9yOHhfULnixC4HsnGBRnv7zbCi2gW7q7pMT5OKVwU=;
+        b=fwlhv1adR+HS1BNuPXedSkSuX+O98I8EY9Ss7z7GrpAiKjuRKrTOq/d0lt1w4F3eiQ
+         shi9hQyVhvdj0tO5N3iMOBJpDQoChapHRKR3ZHYIvqSZWGOXb5WL8f6bYSTNHhpxd1mq
+         MCfHw3et9I0GYiJRNr1BjMH7RwMQcuaEX6S0Lzd1XyglHDlD1DSlPLY1k8Oa3fkcQGdU
+         iSruNaiHelg/CzIhnWs3CMIB7WJTB+h16w5UZr/WXqQxV7QDqCvGSveZ0TiJmcMI2fxD
+         j9IvS+wjvIg0NI7Z7QeEVTHeRiklMrFLhT/r3pVEpJ0ytFmS1l/3TJHoeATW5x5WmTpu
+         ODEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785337245; x=1785942045;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=KNsIs+LJSh7r0iAi+d65HQSOE09/M+m4FY1F+mUNWXY=;
-        b=UuKBWgL+ZEM04fbNNi7ZNj2zIN+/+JclacuHxpagm4Rkoyk01Az0EAPVvwyixkbS95
-         qDzG+IamSK6zawqTUpAaYBeogW3E8QocHVOqoYdOEabRCebm0JRsjYtbRmE4ss0bObLZ
-         lZ9fMS9K5+glBbRf+gbpFUPz1qZSM3hG3WIoPvXDTgZNIVFYQeTU7KMb9AInW072Tlc3
-         MRPxxuhDkHWpJ6w8e83VohCiFDpIy6iPTbd9N8XW6cj7iwD0iVlFRAOxEFb5PJsiDCn0
-         OV4I0FxHlVL+aJrGe29VA4dE1wTMNMh6k/sRFE2UpMCDElDQnxqzcgORed2/5gbn1pmb
-         REDg==
-X-Forwarded-Encrypted: i=1; AHgh+Rrwq6V8NfsSnHnmyL5t3xz0hHBoGRWG+SiyabPzxiMkxPDbFJNN+xGual9AnyHU8vunFqTf30L8kXV+fdWHH7ERFxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/sPGe9ATwIJMXvYBc8hMZNpPyzQDnAHOAvqtE77TQ08PxQOxM
-	ThZtxS6H3vTlKrOm1pUb6n3T/6MKGpqY8SQoSVMDW01xkvjeeaqnVIo0AdYuUtbGUUYjqGrusHw
-	gBdY4VdcLGqzeOchu6fb2k+i25ncIWjqCkauat+Edlg9VJxi/YCtAiltXM8jIXKKMXvW5pnW6RA
-	80DKkrieMdndBSxPYKqVB3mLDPPy9LHvox1sWEgpzTym489Mwd
-X-Gm-Gg: AR+sD13tSwF+beb1dGoeTkwIWoaFApajC76uu4XtbqJBRF0TtRuZ84b0+oZR5GiRFW3
-	ja40rjvaVeCcpUfX7X0t9qA9eWKIYg6u72qxPKjUSjUg6PX38jFV5lHIG8/55LvyKwSeYqnzm4x
-	ICCLAag0xoEagtu/6g08BhH+drl9Y9fAAidY06PUokt6lzzbW4J/dJ+hBB
-X-Received: by 2002:a05:690c:6a85:b0:7fe:1413:f6b7 with SMTP id 00721157ae682-81f993340e2mr37632847b3.48.1785337244847;
-        Wed, 29 Jul 2026 08:00:44 -0700 (PDT)
-X-Received: by 2002:a05:690c:6a85:b0:7fe:1413:f6b7 with SMTP id
- 00721157ae682-81f993340e2mr37631177b3.48.1785337242714; Wed, 29 Jul 2026
- 08:00:42 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1785338013; x=1785942813;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=vH9yOHhfULnixC4HsnGBRnv7zbCi2gW7q7pMT5OKVwU=;
+        b=pVE7rj86rOtbt7x/9l51r/axlsiM6PxrgGbl8X+jILkvGoi7k74Bag2Eh7/I7e7GyQ
+         M37hQWb0tr9foEG/p15Y3LRLAEu7qsZx96BS8PnmkmtBe5CW5EtEaDL4TglQ3lY/m834
+         9Q7HJ/zjZT3KgAT4OF4G5SV5TtF4yVgA55Mzt2d+8SpQo1m+pjoPQJImhxg4VdlS2RgQ
+         1bNhAmg6ow5odejLIkRKRjljZbWESSXwf+KvAW3M4Z/s2J/Mx8gn/2NXqtTFzSDkkcjm
+         vxOnv7oDlDxzxEhP41U2q7YvuzpMa7QpLGojL3Dgb2FXL2bVcG9vRDhs4isHgtsC1Cf1
+         vYNw==
+X-Forwarded-Encrypted: i=1; AHgh+RoQLQf7hfLg1CbHD9755Lwl8xXvaOYvojftxCBFERPwjsAWS1IGWy0KQtxqHM5ChU9EtEyMwfBxwNb5phOaGZMLpAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFo5mX1n9pcH7ekL7hsSMLsCfam3r1QGB/Cs2bLDJamcabV2IP
+	d+LZzQRsRjeB69at8cXopQVLBDIn1MKsUhQhLLeFdq4Mk2K/ubAaClz4/aCQd1YM7cT93O4psL4
+	irQ9U7A35IT9MD79+shuwrwWAsQGi/hp94/gVefwe8GaaEnJ7D0Grw9uUm1/fgx0JJjm0Sxdi15
+	M=
+X-Gm-Gg: AR+sD12NfbsJW6XBdgQf7Yy7GjxzuGIHY/8jH7dliFHprYTChWosaccWAwPpDhpq6q4
+	Eak/6uqYPzT1WIRPVrkk+jH3gqxOF/89syV8pUxJg8OlnmJVEMrQQLR/5qpgAecvmqUmBXloJew
+	ssK8ThH+PcqiGAJ4VNAk/5wlRqPq1fKUyJ05Y1eNwdZzH1Jdh/WJEdOM3Gw7SA3Uh8HdYT3LMDP
+	GcsFN8a8FBMpgpMi9ZnvkrAUO8ycDYlqK5i7m79+j6rejlKQ19+SdIH7vDUf9we6LV3ihK1OL1C
+	6ByAVEY4uYtTxn1qtkkmisi/xblLvQW0DGohrKJ7m8o7I8ogNZ0RERO61VCjV/jC8DNWzhKd6g/
+	Y5XBpIvt01K83IFECWC/SNQEvMm2ct7Lpqg==
+X-Received: by 2002:a05:6a00:17aa:b0:84e:88dd:5942 with SMTP id d2e1a72fcca58-84e9332ea08mr6854385b3a.41.1785338013050;
+        Wed, 29 Jul 2026 08:13:33 -0700 (PDT)
+X-Received: by 2002:a05:6a00:17aa:b0:84e:88dd:5942 with SMTP id d2e1a72fcca58-84e9332ea08mr6854339b3a.41.1785338012497;
+        Wed, 29 Jul 2026 08:13:32 -0700 (PDT)
+Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84e9fe238ffsm1617920b3a.12.2026.07.29.08.13.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2026 08:13:32 -0700 (PDT)
+From: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Subject: [PATCH v4 0/2] Add trace event support for GENI SE registers dump
+Date: Wed, 29 Jul 2026 20:43:24 +0530
+Message-Id: <20260729-add-tracepoints-for-se-reg-dump-v4-0-08bbd63b0ed2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com> <20260729104114.04298a48@gandalf.local.home>
-In-Reply-To: <20260729104114.04298a48@gandalf.local.home>
-From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Date: Wed, 29 Jul 2026 11:00:31 -0400
-X-Gm-Features: AUfX_mxePSJcFU2kU3VYl-YapXlBxTsM8pdNfueUNu8RCOjDR26LSYERFFJr5l8
-Message-ID: <CAOu3gNgc0XHScgEf+yWF5Kr8sAm8Fsa4RBuwL0YE2EscSiBPrA@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark
- trampoline/kprobe ftrace_ops permanent
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, song@kernel.org, jolsa@kernel.org,
-        naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org,
-        stable@vger.kernel.org, linux-open-source@crowdstrike.com,
-        mbenes@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEyMSBTYWx0ZWRfX57LlskDuSgrI
- o/ob2Ea+79PO9m66F6RwT5cwVYUYPwS1J+YhpnwshB/THlNVCTf0+nq2GAJxGZWUCK/stBeSg8Q
- oqc3hph8UKV3IJlRHztpEDYhJJ0Ax4cjdAudsDQ234kwZRXCUHK4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEyMSBTYWx0ZWRfXyjx9sB6BRjhr
- M1fDevPVHuqr9ZcLoYpfmp456FKEVkGECFg+AZDShhdABCML6rsY7Ui/nF48Njty2Xgxv+Wxlgx
- 7JAzIbDmNMd9EWFrVz8T8XSjuU4EE9r70Wj/U2kNqFNi5bYSr0cz4VbuOIsdatIg6VCFQHQ7TPQ
- 8bm4Lo9EGh2YMKHSBvKDsKheo+uKEIPWMYIn+NP/yublCw80JlG/ilcmyO55l1VHzguJbJRnwDr
- eeEnh27DrO+2pDYb7OTacXCv9yH4ies+6H3fSnI+uZkqtWwr961LgKNrP1JEGal3ZKlk5doM5Ho
- +GWR1zdQu9U+VTwirEeZPpniXoCnwj/FRLvy39gQCdjZRfFpd7H9eV6rpzrVKRugRdB7kDrBWoM
- /tfWRM7XxdQtq3tQKm306JlX8SwmHiRufZ1d90+IXx+QIMyg1AO2yDL/MGnvn7TtxJ3C8QESWvp
- L/DgutUvsqVN3X1yB2A==
-X-Proofpoint-GUID: VzNseC6UWavzr0d00gpmwRljlzLr3rnb
-X-Authority-Analysis: v=2.4 cv=UOPt2ify c=1 sm=1 tr=0 ts=6a6a159e cx=c_pps
- a=g1v0Z557R90hA0UpD/5Yag==:117 a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10
- a=KZhmPCYDdY0A:10 a=VkNPw1HP01LnGYTKEx00:22 a=T2KQ53IYiC3MXPrxx8bB:22
- a=2KvRFfd_T_-xjmS8C1aD:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=pl6vuDidAAAA:8
- a=FNDBzpQLrQZLHPu8S4MA:9 a=QEXdDO2ut3YA:10 a=MFSWADHSvvjO3QEy5MdX:22
- a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-ORIG-GUID: VzNseC6UWavzr0d00gpmwRljlzLr3rnb
-X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11859
- signatures=596817
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJQYamoC/4WOzQ6CMBAGX4X07JqW3+rJ9zAeSrvVGqHYBaIxv
+ LsFLh5MuGwyyZeZ/TDC4JDYMfmwgKMj59sI+S5h+qbaK4IzkVnK05KXGQdlDPRBaey8a3sC6wM
+ QQsArmKHpQKda1lpWRVlIFi1dQOteS+F8WZmG+o66n7Xz4uao9+G9vDCKebfWKl5u1kYBHAzPj
+ RW6lkrkJ0+0fw7qoX3T7ONhc3TMfrSi2NZmUcttJSt7yOq4/qOdpukL83+90z4BAAA=
+X-Change-ID: 20260630-add-tracepoints-for-se-reg-dump-c2c8bc875658
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mark Brown <broonie@kernel.org>, konrad.dybcio@oss.qualcomm.com
+Cc: Praveen Talari <praveen.talari@oss.qualcomm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785338008; l=4199;
+ i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
+ bh=BoZ2iQRgXeenL07kE4at2D1QGKWFWQM+Ut3SXTtCoTc=;
+ b=D0Rm74DmLyPTGh1zy1ieO0AmFq53gz3l+txlx8XpPoUG3t09FvT3OUBVyPLcS765ALAgdiOPq
+ W+zc8/QIG9xAwpFvgt7Tc0gU6YVd3dZuEPA7jX9ZTehFWp8SeTPyMoG
+X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
+ pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
+X-Proofpoint-GUID: BW5hk1oyVQvPsWegJdgrmxPI4UGAg3t9
+X-Authority-Analysis: v=2.4 cv=Id+3n2qa c=1 sm=1 tr=0 ts=6a6a189e cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
+ a=bC-a23v3AAAA:8 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8
+ a=7d_E57ReAAAA:8 a=kZ60qkYGOAwhCc6MxdMA:9 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22 a=FO4_E8m0qiDe52t0p3_H:22 a=2JgSa4NbpEOStq-L5dxp:22
+ a=jhqOcbufqs7Y1TYCrUUU:22
+X-Proofpoint-ORIG-GUID: BW5hk1oyVQvPsWegJdgrmxPI4UGAg3t9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEyMyBTYWx0ZWRfX5ASnEzCAjjch
+ xMIxRbnkmfJ5VuNU6GByswpJh8hVzloR+fk7wIAmOVeoyZMaJAjN4EQsQRiMe0UUGNvlg1sv7fd
+ Xj8Me0ZKdXjy/DfoJTpCEiEtCOqxnac=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEyMyBTYWx0ZWRfX0ncayXDBTpZM
+ SF5e9pVDmZaL2oZ/xjIkmIYui/24HQivMcH1Es3MJuBmJBaDkB7Hut0hpWQxQ3Jss+/O0xOOrrF
+ jn2fzywfQ+WH1OQBAN32ycCm/0ZxlxQ0ZWi4HC9f2+QV13+N5YYjj1TzcoNWjdyPPJHhQtCY4lr
+ yP7n/bMlZ4BNiaYzBGYJaI0qHRbZ82IuS/JYxgsf9aw5EJUDNb49YChVmX6vSskjqZ4Wp5CHX32
+ BXLTsR7fYkoh4s7HufpdpMay/viit8FfPlLRjPXffttoBvlJcCKaIYAKAZyKbALZMCeKP3ByB4A
+ cTpnb7HQOXYFhNTtpiQ8wYoHxrd/vDqfx1Pz9wC3VUmv+EnFVTlZ31v+fdpJyRhG9EOeFj7Q/A2
+ WF/wBQni1q7h33JzFpVWzRIEN0Ng0FCoICndW5UprMRXnysQLLdUFKCiY+wqT/mgOrsWBVsXc87
+ 9GV8APoNgls/xZ4XQQg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-29_06,2026-07-29_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 clxscore=1015 suspectscore=0 phishscore=0
+ phishscore=0 priorityscore=1501 impostorscore=0 suspectscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290121
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290123
 
-,
+The GENI framework is used by multiple drivers including UART, I2C, and
+SPI. When hardware-related failures occur, each driver typically relies
+on local logging, which often lacks sufficient information to determine
+the exact controller state.
 
-On Wed, Jul 29, 2026 at 10:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Tue, 28 Jul 2026 20:59:56 -0400
-> Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
->
-> > This fixes a long-standing issue: kernel.ftrace_enabled=3D0 silently
-> > disables BPF trampolines (fentry/fexit) and ftrace-based
-> > kprobes/kretprobes. The write succeeds, the hook stops firing with no
-> > error, and re-enabling silently restores it. Livepatch already solved
-> > this for itself via FTRACE_OPS_FL_PERMANENT, which refuses to disable
-> > ftrace while a permanent ops is registered and refuses to register
-> > one while ftrace is disabled[1].
->
-> The /proc/sys/kernel/ftrace_enabled was added as a "safety kill switch"
-> back when ftrace was first added to the kernel. It's addition was namely
-> there because live runtime modification of kernel code was new and we wer=
-e
-> worried about how stable it could be.
->
-> Honestly, I would love to get rid of it as today ftrace has proven to be
-> rather stable. But as it is a user space ABI, I'm not sure what will brea=
-k
-> if we do. I wonder if we just make it a nop, and print a message to dmesg
-> saying:
->
->   "ftrace_enabled no longer does anything. Please report if you need it t=
-o."
->
-> ?
+This series introduces a common tracing mechanism for GENI Serial Engine
+debug registers and demonstrates its use in the SPI driver.
 
-Thanks Steven, if you and/or other community members would approve such
-approach I would happily do this instead for a few reasons -
+Patch 1 adds a new tracepoint that captures an extensive set of GENI SE
+registers, including command state, interrupt status, FIFO state, DMA
+configuration, and clock-related information.
 
-1) Seems like the more correct course of action if idneed this switch
-effectively became obsolete in usage instead of piling extra logic to work
-around it.
+Patch 2 hooks the tracepoint into SPI error paths so that register
+snapshots are automatically generated when timeouts or transfer-related
+failures occur.
 
-2) As I mentioned in the end of the cover letter, I believe for some cases
-such as fsessions/ksessions and multi opts retprobes, this patchset is
-not effective and the issue will persist, requiring a more complicated solu=
-tion
-for them anyway if we want watertight resilience.
+Usage examples:
 
-If you approve this - I can try what you suggested, this would include
-making the
-knob a NOP with a message, dropping the FTRACE_OPS_FL_PERMANENT
-flag and reverting/cleaning what's possible from the original livepatch pat=
-chset
-that dealt with this issue [1]
+Enable all I2C traces:
+echo 1 > /sys/kernel/tracing/events/qcom_geni_se/enable
 
-One question is what the correct set of tests to run in such a case
-would be to verify
-we didn't break anything. For this patchset I ran BPF and livepatch
-selftest suites, but
-I wonder what else would need to be run.
+cat /sys/kernel/debug/tracing/trace_pipe
 
-CC Miroslav for Livepatch.
+Example trace output:
+114.291299: geni_se_regs: 888000.spi: m_cmd0=0x18000000
+    m_irq_status=0x00000080 s_cmd0=0x00000000 s_irq_status=0x08000000
+geni_status=0x00000000 geni_ios=0x00000000 m_cmd_ctrl=0x00000000
+m_cmd_err=0x00000000 m_fw_err=0x00000000 tx_fifo_sts=0x00000000
+rx_fifo_sts=0x00000000 tx_watermark=0x00000000 rx_watermark=0x0000000d
+rx_watermark_rfr=0x0000000e m_gp_length=0x00000004 s_gp_length=0x00000000
+dma_tx_irq=0x00000000 dma_rx_irq=0x00000000 dma_tx_irq_en=0x0000000f
+dma_rx_irq_en=0x0000001f dma_rx_len=0x00001400 dma_rx_len_in=0x00001400
+dma_tx_len=0x00001400 dma_tx_len_in=0x00001400 dma_tx_ptr_l=0xffffc000
+dma_tx_ptr_h=0x00000000 dma_rx_ptr_l=0xffffa000 dma_rx_ptr_h=0x00000000
+dma_tx_attr=0x00000001 dma_tx_max_burst=0x00000002 dma_rx_attr=0x00000000
+dma_rx_max_burst=0x00000002 dma_if_en=0x00000009 dma_if_en_ro=0x00000001
+dma_general_cfg=0x0000000f dma_qsb_trans_cfg=0x00000000 dma_dbg=0x00000000
+m_irq_en=0x7fc0007f s_irq_en=0x03003e3e gsi_event_en=0x00000000
+se_irq_en=0x0000000f ser_m_clk_cfg=0x000000a1 ser_s_clk_cfg=0x00000000
+general_cfg=0x00000048 output_ctrl=0x0000007f clk_ctrl_ro=0x00000001
+fifo_if_dis=0x00000000 fw_multilock_msa=0x00000000 clk_sel=0x00000005
 
-Thanks,
-Andrey
+Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+---
+Changes in v4:
+- Export the geni_se_regs tracepoint with EXPORT_TRACEPOINT_SYMBOL_GPL()
+  in drivers/soc/qcom/qcom-geni-se.c, right after the
+  CREATE_TRACE_POINTS include. Fixes modpost "undefined!" errors for
+  __tracepoint_geni_se_regs / __traceiter_geni_se_regs when
+  spi-geni-qcom.ko (a separate module) calls trace_geni_se_regs().  
+- Link to v3: https://patch.msgid.link/20260715-add-tracepoints-for-se-reg-dump-v3-0-0f787f93badd@oss.qualcomm.com
 
-[1] - https://lore.kernel.org/all/20191016113316.13415-1-mbenes@suse.cz/T/#=
-u
+Changes in v3:
+- Trace se registers before clearing tx watermark reg.
+- Updated commit text.
+- Link to v2: https://lore.kernel.org/all/20260711-add-tracepoints-for-se-reg-dump-v2-0-ca1e9ba62359@oss.qualcomm.com
 
->
-> >
-> > For trampolines this restores a historical property: from 2019-2022
-> > they shared one global direct_ops, marked permanent the same
-> > way[2].It was later lost as a side effect of the 2022
-> > per-trampoline-ops split (patch 1's Fixes tag) and never
-> > restored.[3][4] Kprobes never carried this protection at all, so
-> > for them that is long-standing issue rather than a regression.
-> >
-> > Patch 1: trampolines. Patch 2: classic kprobes/kretprobes. Patch 3:
-> > a selftest covering both directions for all four hook types.
-> >
-> > P.S
-> > I initially implemented a per-record opt-in flag[5], but dropped it
-> > as over-engineering once I saw the original blanket restriction.
-> >
-> > P.P.S
-> > Open question: kprobe.multi/kretprobe.multi/kprobe.session
-> > (fprobe-backed) aren't covered -- return-capturing fprobes share the
-> > function-graph tracer's subops manager with unrelated tracers, so
-> > marking it permanent needs a different, per-record approach. Perhaps
-> > something along the lines of [5].
->
-> Honestly, I would like to start deprecating that kill switch.
->
-> For the series:
->
-> Acked-by: Steven Rostedt <rostedt@goodmis.org>
->
-> -- Steve
+Changes in v2:
+- Updated SE_DMA_IF_EN to correct value.
+- Sorted hearders.
+- Link to v1: https://lore.kernel.org/all/20260706-add-tracepoints-for-se-reg-dump-v1-0-48bd08e28cf2@oss.qualcomm.com
+
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-spi@vger.kernel.org
+Cc: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+
+---
+Praveen Talari (2):
+      soc: qcom: geni-se: trace: Add trace event support for GENI SE registers dump
+      spi: qcom-geni: add GENI SE registers trace event on error paths
+
+ drivers/soc/qcom/qcom-geni-se.c     |   5 ++
+ drivers/spi/spi-geni-qcom.c         |  23 +++++-
+ include/linux/soc/qcom/geni-se.h    |  38 +++++++++
+ include/trace/events/qcom_geni_se.h | 157 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 219 insertions(+), 4 deletions(-)
+---
+base-commit: bee763d5f341b99cf472afeb508d4988f62a6ca1
+change-id: 20260630-add-tracepoints-for-se-reg-dump-c2c8bc875658
+
+Best regards,
+--  
+Praveen Talari <praveen.talari@oss.qualcomm.com>
+
