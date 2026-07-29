@@ -1,147 +1,92 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9181148CD5F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 13:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5228470EAA
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 13:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785331780; cv=none; b=tdd/eVNdhLet4kYTIlim+Uac1zjxqU48JPUI+LQfXZsaOWzo4YFoLDKLAQefqL+GYBSdHJKqJyWBcytR2AqIg4c3YzztBK36i0qBlU44ZM5xux++dIxwsiY42UFMHN/WFzDnmeqLTzwSEsb4yXQk+n2dyMtirLxYHqmbUu30uGY=
+	t=1785332181; cv=none; b=BGvSROGt7fzCbeHeIJY4PLRU/aauyRrpxeXsGjqFz7+ZrZN6Qx1QT8y1UmN4r9U6FaGKjsJ/Yj+Qsmz8/OusO7fX5HZfAZf9o+DsWSc8QhzMlLCG++NgzzoTiV/kE0fG1KODzPMel+ZYbprVFhwb/557mFTW7AfijT3icK6l6ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785331780; c=relaxed/simple;
-	bh=PHt+aRmkFWbvB8uR6W5QXVfMRltRQJ9Is6QfG2qzQ2A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=phheWt0FISy9W1VnScJ/7XXmj6D9nXB6Iv59BdhUzUXtBwJhI9Ea4sdLpdkpS38s+2wtAHu++qMwEkH98EyB+8bNrsDKgx36XDzmQW7upMTiiLGdRSXl6WXd0Swh65K2FNPqwy+QPeN/EjgDUtpi6HarpuWLjsHLRlKSLkkz/Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHnG/e1q; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785332181; c=relaxed/simple;
+	bh=V8KkWNEIL1EtblHKb3pRj3mDqxpGnxcUY2YFdefRDZ8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fm9ZvQw9IwMxp8ZkzJJs9VkA88aEgaoQEEciEzrN07AGJqVbDtJFjzOL3P+rXGcF2iR1j+8hbuIonp+j3r/372XBdsQtAviKVj47q/ylLPsrBHJkBRQzDdPyFk+TSsRp9oWvWacdMKZm1XB2xsFqqRQ/SdpyLVvzk+7sEVikF24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nG9FNmDW; arc=none smtp.client-ip=209.85.218.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHnG/e1q"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-495590dde14so9934265e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 06:29:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nG9FNmDW"
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-c158e733fd6so113393966b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 06:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785331773; x=1785936573; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DK37VB3qMOhbD5yb9Im3WBPoq9gsNNuMseW5SbMeCGk=;
-        b=LHnG/e1qy+rsALO7v0Ccj8HwqpildvCNBXCZr1nm2WojnRGD67GKCIVpoFWPtVl7jq
-         xVN73dmX/fwjmjx6ekQEDm2betmAOuV/QxiXhFz/Kz+X5YW8N4j0fuVxxNbEPBq9UZZj
-         wpn9f7dTv+3HqWnT/VkDAWkMg7DyXujnsPkVO3UbWcQEkQCV6pnyA4ToGCd5ILZngKz7
-         UlZR4lfFTjKNayXfrzsbduZYnZ1cPdWfDDMZlGyr4FH4HJcrgzBPFnWJnFiwj6TkCqax
-         bhqsoh5HV2QigIOzBX0HT9LyxKjoeUv3rQVB24RrVXSv3ELzHlNtDvvqyFmNrhWiohUS
-         Pe2g==
+        d=google.com; s=20251104; t=1785332175; x=1785936975; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=DqKEjFTGm7dqnB3Iuy8Yez/XkakkUBzOCNyU+fjpBRU=;
+        b=nG9FNmDWSIdmkusARNQu0qExVNRo0PVo7xoci3dOMZah81RcENLfI0HhRIHJnaZagB
+         6GAdh//ednJTa1JX92aEYGLsOcNRmPlXkq34DBFK/fR1rc4R/kjhxwk/2x6LE4iGMwhC
+         yN0y6WBup2tsko6eISV+7BKat0WY/3D1OUKGpwSsknyyby20L4G8cU0StMyPANMboWWv
+         nSetJUaZqCykiynQAqjSOXBEk92kg/S3h2casDme8j+swiDHCNPc7IV+8PSbrQsBU5Da
+         XKZk7t4Mm7dRjMoZYxBLj3pS0tgs7RUFf6mbvDwypjipUV/iQ1KBGCd1J4+rC5Omz7Ga
+         k2TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785331773; x=1785936573;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
+        d=1e100.net; s=20251104; t=1785332175; x=1785936975;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DK37VB3qMOhbD5yb9Im3WBPoq9gsNNuMseW5SbMeCGk=;
-        b=suRh6sgOaOaa6R/cVMM6cXmNudCHjqMjj1rFhW0cxU0F7BJH8zcwC8CbC+2/CRK6yU
-         FeJ2HVN9yWGAxpOM42UYP2fmhE+7OzK43TNJcZ86UENHptTff73b8DXkB2iU1rTY0ADQ
-         snBRYE/bxh153nHlEy/dcuA4jeFNE0WoJqodr7M7Lb+y/b/uOfvs5rwUfliHmHFMmKud
-         6H9+3Kp77nT8vsBoWVbOxIvKClXYcuB8K1dnwL1FUEsHIccxer5N4jSealcSZAeMttne
-         SHuqlIf+Jpan9KXzE+diiscC/cyZkxo0eDJbwjsBKSo9KrajBSG9p1tKd3tp3jXR0ghE
-         6opA==
-X-Forwarded-Encrypted: i=1; AHgh+RqfJTRsyz6hgeDciRMKXSDQboFp0EmJyp9TLaWylvIW1zD616QTPT679Q9ZOye8c/3qJrX1WptTGOHshJo52ygGFvM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaXUZZtTAkkfLKMQ8+9zyEZEZSrE/b9qDt0pmGKHCf1WDSY1Ay
-	eF2juY7WnGdn99PYtNDb8oq6jbixZQJK3ePwQanrxwacCRddDIHMKgl3
-X-Gm-Gg: AR+sD12Gg2sBuwjVaBq9+ll+LrQW3B/8HODfVS2H0OZX4yOZfSpXKtGJvppFay3+Q92
-	rk+kM9N2jD8LOMceR2+Bu/KgL5nTO0qNECnSbJ07l5GBbfvggR2AZYWWgh0GQqRxF0dFV1fvi+q
-	rQrVuImBcqMz9vbR+/uDOnFrVL7qjWKtbRIDgszkHdGvn7yqJIGOoGl0QfDoru0TdVc1omnvTXm
-	0k2qufylNFj1QA14wRC+tJ5HqHUhyiyysOR/qjnVjH+fbFp1FVyuztDPKmAqgcdB+Ulf0IlxD+f
-	+HjS2dXZQuQgFIK2yQ3Tbb7BGA/sesO2HpOXTxgQ/c+Mh5sxBmqmaQl4RBOyNx4xN5cegBMxL8p
-	yRLTfz4jisDsjg/pVmAL781ZS9/3SVNunNgxiTmzcLe2pDk9ZcT7VjgeXHWp2Lk3/dd3DzXT8vt
-	BbE8CQbMEOjNIJrqMPpq/WiGn/hueAKi5Drg==
-X-Received: by 2002:a05:600c:b85:b0:495:6934:414c with SMTP id 5b1f17b1804b1-496c656e6d8mr85293065e9.19.1785331772970;
-        Wed, 29 Jul 2026 06:29:32 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200::dd7e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-496c4615681sm158139025e9.11.2026.07.29.06.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 06:29:32 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 29 Jul 2026 15:29:30 +0200
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, song@kernel.org,
-	rostedt@goodmis.org, naveen@kernel.org, davem@davemloft.net,
-	mhiramat@kernel.org, stable@vger.kernel.org,
-	linux-open-source@crowdstrike.com
-Subject: Re: [RFC PATCH bpf-next 1/3] bpf: mark trampoline ftrace_ops
- permanent
-Message-ID: <amoAOqd0MdO04bM5@krava>
-References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
- <20260729005959.3853865-2-andrey.grodzovsky@crowdstrike.com>
+        bh=DqKEjFTGm7dqnB3Iuy8Yez/XkakkUBzOCNyU+fjpBRU=;
+        b=gXHgrfTIisQzUjAF4HCfTQaUsv8UK3YLV8tJ2fcpgop3FtGK+GIVDy3DmnF4Or7q1S
+         C8U2n2JFuhD69DhdX5eYPiMXsvHN5CBAt+IqJvlDwGlpeRlFN6Kc0nrF0nCnp5JDkA2M
+         cxpsRTfQpBue8VboCZn88u/iOk0u21inWABMlENCMRDoH7S52qhR0avH0teWyG7R5v99
+         ogyj0EAWjrRdBVdT2t+0Pvyro2gZu6ud7HOd95WPc/MjzQz0KCd5rdrHUOUzRGgyRd8e
+         kjFTCUxDtzJ/9G/2zEbLz9to67/l+3kFGUmCcPItknyeaB3lwpvcqIhmRzk41VkN6jgt
+         edtA==
+X-Forwarded-Encrypted: i=1; AHgh+Ro1bUBCapKzz77WroGlTwl33M6/BlIh/1K+TLFkztsOh0ZYSmcRP6odqfr7dey1tMPm5EczOFzZs42u38IUuLhoFRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrV4UpVp7mSZSt1NAFhZzlWWqmzcfluGiugdikAI24/UvNtaD0
+	BfvWz7Qb/tWA7M1evjxwxA3Yr5TqFbKo39rWbTUprttYApCT4FZztOzitxaEoqPzCrPGdSZy30O
+	i8GGOg9tbVJ6wACixZAnwXg==
+X-Received: from ejcjv3.prod.google.com ([2002:a17:907:7683:b0:c1e:eadb:2ec])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:e00c:10b0:c19:5d7c:ae72 with SMTP id a640c23a62f3a-c1f720ef123mr268508066b.32.1785332175379;
+ Wed, 29 Jul 2026 06:36:15 -0700 (PDT)
+Date: Wed, 29 Jul 2026 14:36:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260729005959.3853865-2-andrey.grodzovsky@crowdstrike.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.487.gaf234c4eb3-goog
+Message-ID: <20260729133609.4022734-1-vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Fix reader page read offset for remote buffers
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, keirf@google.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 28, 2026 at 08:59:57PM -0400, Andrey Grodzovsky wrote:
-> kernel.ftrace_enabled=0 silently kills BPF trampolines (fentry/fexit):
-> attach still succeeds, the hook stops firing with no error, and
-> re-enabling silently restores it with no indication anything happened.
-> 
-> This is a regression, not a new gap: BPF trampolines were already
-> protected against this the same way livepatch protects itself, via
-> FTRACE_OPS_FL_PERMANENT on the shared trampoline ftrace_ops. That
-> protection was silently dropped during a later refactoring and never
-> restored, so this has been broken for years.
-> 
-> Both the shared direct_ops (CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-> arches) and the per-trampoline ops allocated on other arches (arm64,
-> s390) are BPF-trampoline-private, not shared with any unrelated
-> subsystem, so restoring the same unconditional flag is safe and needs
-> no kernel/trace/ftrace.c changes -- its existing generic sysctl gate
-> and attach-time refusal already scan the ops list and pick this up
-> for free.
-> 
-> Fixes: 00963a2e75a8 ("bpf: Support bpf_trampoline on functions with IPMODIFY (e.g. livepatch)")
+A page swapped in by __rb_get_reader_page_from_remote() retains its
+stale read offset, causing subsequent reads to skip events or read
+past valid data. Fix it.
 
-hum, we did use it before this commit, I completely missed that, thanks
+Fixes: fbd1743ecba1 ("ring-buffer: Add non-consuming read for ring-buffer remotes")
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 804ccae694d2..78d3875a47a5 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5783,6 +5783,7 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
+ 
+ 	cpu_buffer->head_page = new_head;
+ 	cpu_buffer->reader_page = new_reader;
++	cpu_buffer->reader_page->read = 0;
+ 	cpu_buffer->pages = &new_head->list;
+ 	cpu_buffer->read_stamp = new_reader->page->time_stamp;
+ 	cpu_buffer->lost_events = cpu_buffer->meta_page->reader.lost_events;
 
-jirka
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.55.0.487.gaf234c4eb3-goog
 
-
-> Cc: stable@vger.kernel.org
-> Assisted-by: Claude:claude-sonnet-5
-> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-
-> ---
->  kernel/bpf/trampoline.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index 129d07db117e..3d5069091db7 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -224,6 +224,8 @@ void bpf_image_ksym_del(struct bpf_ksym *ksym)
->   */
->  struct ftrace_ops direct_ops = {
->  	.ops_func = bpf_tramp_ftrace_ops_func,
-> +	/* Same protection livepatch gives its own ftrace_ops. */
-> +	.flags = FTRACE_OPS_FL_PERMANENT,
->  };
->  
->  static int direct_ops_alloc(struct bpf_trampoline *tr)
-> @@ -303,6 +305,8 @@ static int direct_ops_alloc(struct bpf_trampoline *tr)
->  		return -ENOMEM;
->  	tr->fops->private = tr;
->  	tr->fops->ops_func = bpf_tramp_ftrace_ops_func;
-> +	/* See the direct_ops initializer above for why. */
-> +	tr->fops->flags |= FTRACE_OPS_FL_PERMANENT;
->  	return 0;
->  }
->  
-> -- 
-> 2.34.1
-> 
