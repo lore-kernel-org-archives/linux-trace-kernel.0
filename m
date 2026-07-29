@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C244212B;
-	Wed, 29 Jul 2026 11:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8F26A08F;
+	Wed, 29 Jul 2026 11:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785323149; cv=none; b=k9AkK9Teb8tIsLGD1JrCwJG6w0q2hXpQMYfBMLwcTHT7vEGmEnmlu+j6kII/kjsBxAsRFMek0F6hV4wa5SkaOhrOkCVTSx5Kbf/HHuA1gaz+xALMtW3BjZ8YQCKjvGqCo7chOZAg3yG0PRIebT4/zvmSYADSUVFjQ31K0B6zsCs=
+	t=1785323503; cv=none; b=CD2hOWck2k9bRQF6Sc6D9OQqBwRNotkWFwRjC/nS5fHNfQO0HwafLplSvGY47KwonC7CXHxGIjLfikmKHSm2QDIfrwgoyaNVsjI0Xpj6JL4syApXiohSxpEyR9wz0RasB09hhsCSMMWTrqQZdPaDUn01snRDSzQQq8vwhoDMt3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785323149; c=relaxed/simple;
-	bh=3hA+Z/GFqg1WJ97ZA7rquKKA6G+3V0bNHBuVdvl1ErM=;
+	s=arc-20240116; t=1785323503; c=relaxed/simple;
+	bh=MWwXYM5DKdM1e7UxmDjVXLgrs9f5m7CYpcUenZf7Cww=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hpLDHsvXTWZOghst/7Db6/jyxf7tYkq6rTU27j2M/XMm0uq+y5Of1+lWI963Fr2Ewo7rutwKGpnaSOh/7Mb0/C94PFnmLAaT+UZ1qgcEdz25+Akm4etL2fyGlZMiQjxr/In5cgR4khoqfeF9jKlkSkIanGSuCtRb7OgsYHDCC2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b48irzvs; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=g1dQbBajpbHHGVZI3M7aGD38sjIMvAxFD6T0oD6CW4jo4vY5FMlYurJYlQsghN2PcKhpZoflxUC1ZTUhe81IF1mHeUmjPjkDXeWuQgxQEdCfaqUTf1RzmxzmFlcWbhhY631YMrH8m766ssOIndeAQ0Qyu2WQ4fbWdBfnZ8HEvxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7kc6Smo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b48irzvs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E6C1F000E9;
-	Wed, 29 Jul 2026 11:05:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7kc6Smo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 284B21F00A3A;
+	Wed, 29 Jul 2026 11:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785323147;
-	bh=36vCc8VcM+L87TfsrGnoD5hR3X1siACB/VnlnYWIbd4=;
+	s=k20260515; t=1785323502;
+	bh=izNHY96+KpUz6H88SX9UDBXo3sdRLH0ZWjvtcVBF0tQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=b48irzvsg0Rb9HPmpRz1cRt988CITLctIsdsmAzYoCGHcqqDXZ2gNYuTnHHIrJbj7
-	 4H2B2eH12UqMFJgYMLsCy1KZ8q4b7/HtBh+ESujT8zNC3k4hQqfRfj+yc+rkURzE4h
-	 70Dn1hj1howXlSwenX2dUF2/DWVG876GsmhZQP8m1Dia942tWYnyC3PKB5EAolTNmB
-	 CONyTksT7fwOidO2ekfK6pe1uDUU/xaLuhg3IVs/5z07rdUbVvn8YGTImADEAyTk9V
-	 +kH3OunfyfncZZV5MjIcpVdG3+JC+QgBBibA6vztnHMkc1m9JC4YLICz4dpEmla0Jm
-	 pExAKbv9xiF0g==
-Message-ID: <6db0a8c0-b500-4364-be3d-d3a537c61258@kernel.org>
-Date: Wed, 29 Jul 2026 13:05:35 +0200
+	b=N7kc6SmoQxTdwsupiqADaxwodrc2rq1MDeww1UbcoZDBdifUpBgdJOffX837km3pO
+	 HnZHBR/5BOQjjOFHVzL9Lo1Yk3z5e4AUmbSr/wIyTr+YVIsJiThzs6zKW7k+dd5Jgt
+	 ILRnw0zbhzVk2C5bgWB1sf+pgKEyJUd+usU4A+e/43D1Zeu69ADhaPDkRAItCDz3u8
+	 XwCSWtk076Pp3y01nryN5PaqpqMSlFplmTLb61o+dMyAPYibwV+AJoRSMde4KZWax6
+	 zlpcBIahqsY3Ivs9vnB5+MHQbfjH+B5VAZ6c56o2Zich/EbaKJ34i0ATj2cfyO1pxY
+	 qPUc7lx0i5TWw==
+Message-ID: <2e1ca7be-ce73-4146-95fe-d8cff4da9494@kernel.org>
+Date: Wed, 29 Jul 2026 13:11:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,50 +35,31 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 00/11] mm: distinguish PTE table storage from PTE
- values
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Muhammad Usama Anjum <usama.anjum@arm.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
+Subject: Re: [PATCH v10 6/6] selftests/mm: add hwpoison-panic destructive test
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com, Lorenzo Stoakes <ljs@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Shuah Khan <shuah@kernel.org>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, lance.yang@linux.dev,
  Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-References: <20260727164715.2866609-1-usama.anjum@arm.com>
- <2c19247e-bee6-45f4-a353-2fcc60db26e6@kernel.org>
- <7813b5fe-e767-442c-a356-afc1a5c567ad-agordeev@linux.ibm.com>
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <ee4982bf-ff45-8f0b-3b76-7ca19228f12b@huawei.com>
+ <20260727212402.09baa9381ca426273fad4719@linux-foundation.org>
+ <de29c5cc-3637-cd18-354d-55ceb3d60afd@huawei.com>
+ <amh1nZVVaaZSGD3M@gmail.com>
+ <20260728122016.30752d36c3b3c3af231efa9d@linux-foundation.org>
+ <44f81bea-d64a-4f73-8665-46652a928c83@kernel.org>
+ <amkn21ftNme48Vbl@gmail.com>
+ <f83d5b26-b369-489b-a305-1eb5ec6fccfb@kernel.org>
+ <amm72Bu9qmWLI-9b@gmail.com>
+ <d0d62d7d-8701-4692-89b9-84dff71a7cf0@kernel.org>
+ <amnTfwagJQpEY_21@gmail.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -125,42 +106,31 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <7813b5fe-e767-442c-a356-afc1a5c567ad-agordeev@linux.ibm.com>
+In-Reply-To: <amnTfwagJQpEY_21@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/29/26 12:13, Alexander Gordeev wrote:
-> On Tue, Jul 28, 2026 at 09:26:06PM +0200, David Hildenbrand (Arm) wrote:
->>> The generic definition aliases hw_pte_t to pte_t, so this series preserves
->>> the representation and behaviour of every architecture. ptep_get() keeps
->>> its existing READ_ONCE() semantics and converts the stored element through
->>> __pte_from_hw(). An architecture can later define a distinct hw_pte_t and
->>> convert its PTE interfaces to make the distinction compiler-enforced.
->>> Architecture PTE implementations and most architecture code are
->>> deliberately left for those later opt-in conversions.
-> ...
->> Do you have a pointer at the arm64 part, so people can get a feeling for how an
->> actual hw_pte_t implementation can look like.
+On 7/29/26 12:21, Breno Leitao wrote:
+> On Wed, Jul 29, 2026 at 11:09:11AM +0200, David Hildenbrand (Arm) wrote:
+>> Avoid bash scripts, please :)
 > 
-> May be we need the generic hw_pte_t implementation as { pte_t pte; }
-> right away?
-
-Indeed, that makes sense. We just need a way for the architecture to opt-in that
-it did the conversion.
-
+> Sorry, I will try to control my fingers next time.
 > 
-> Also, can you envision a case when sizeof(pte_t) != sizeof(hw_pte_t)?
-> If not, the compile-time check is worth adding.
+> Jokes aside, all the selftests I maintain
+> (tools/testing/selftests/drivers/net/netconsole) were done in bash, so,
+> I got totally biased.
 
-That wouldn't work as is. We'd have to intercept ptep++ and instead have a
-helper to advance the ptep pointer.
+Ah, I see. The MM folks are not known to be bash experts, which is why we limit
+our bash scripts to a bare minimum (and focus on C tests).
 
-One idea for that would be to let the compiler catch that by marking hw_pte_t an
-undefined struct (unknown size), such that the compiler would indicate any usage
-of ptep++ properly.
+We do have some rather simple bash tests that are mostly used to load special
+test kernel modules, where the real test logic resides.
 
-That can be done when it would actually required, so as a first step having a
-generic hw_pte_t would just work.
+For smaller things, I wouldn't mind a bash script in tools/mm. But the parsing
+of pageflags is a bit ... advanced :)
+
+Note that we already have some kpageflags processing in tools/mm/page-types.c,
+not sure whether some of that could just easily be reused.
 
 -- 
 Cheers,
