@@ -1,164 +1,106 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DCD4ADD99
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 14:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170503E763F;
+	Wed, 29 Jul 2026 14:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785333796; cv=none; b=lCjNdLnAuc/ciVTARodOqmqTqOmiNMw4BVBi2an5gNpI/C2a7A1NiL3XaK61HoBNahVIdswsNgYwQxL6qJQYst1wNAuZSaGwhSSi6qO093UTPCcylJLRadVD8vUodc5582w0VP5B8FpEiMtPw3gZfM6roL/PWZPK9k2dh5VMUJU=
+	t=1785336046; cv=none; b=GxwBNrWjy4DRZ1Whl9AQwaEP8437PNbU71mjnlzGlPUCLT25ZJ+qMdfZ5HFb5qfcLWDUKK7bLjHOJiFLbFV5wKMmsJnlE0sS/KJuW0Ar9yc1M9dWBvpMmPUgI2qk+mrDTWiraMGLVTYHQVrVFQj3UywAhFIp2rW0/mlDXyYkeqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785333796; c=relaxed/simple;
-	bh=BZpQ7IVdFrwHA2ABPj+zHZ3Ft4jyy4tFRzJRCl6Ezmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lg9Xp/aRgrOWHV/gOM7xIju57r/NEj1XfC1LDrLZLFJaiFRgDyzT+EVgarg6wlXKoz5imqKFoLHLDzY8E/pxAb1opLVeROvuPK35ivU/OcYSdk3AGhf5WmL5oOKZyWs/Tc6RNbNeXIlSk+bGg7Y/gNto1xuS7V6hVtCpERvomB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LrgSg9yR; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LrgSg9yR"
-Date: Wed, 29 Jul 2026 14:02:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785333781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LE0auUINu/x6r3MKpGL6ong08p31tBcJtb4U+bAewvE=;
-	b=LrgSg9yRhS5W6xpkWx9r9+eDJkKcDzCNDS9+j6/SbnNx7o1wA6fzFR1r67s/mndVmEfaim
-	RZtbpkihgWk1BnX65qwR4pDAyWvKTUhW+0X24ftnH+8hmcZUDkFCO9B7z9WHutNEx2YbwM
-	pefAngwFnMiQOtvHGUzT0YMZIBj5fKk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev, bpf@vger.kernel.org, 
-	Florent Revest <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huawei.com>
-Subject: Re: [PATCH 0/2] arm64: ftrace: support DIRECT_CALLS without CALL_OPS
-Message-ID: <amn7cBQ-cqs2XlKV@linux.dev>
-References: <20260609-arm64-ftrace-direct-calls-v1-0-4a46f266697f@linux.dev>
- <amjnf5gz0xP5PTSB@J2N7QTR9R3>
+	s=arc-20240116; t=1785336046; c=relaxed/simple;
+	bh=iC7LSdLV7T1od8xnAA41YHNWP9QOdGmvAAxgkXtGQOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=og1A/tJRLE5DZnqCAoP5LdP/Jiv+kDtvIRmypVX3cAhkdnqaJE/xljJFo0F0QPTi19g0R24xLrvynyKcXRytZ8D/duMMYb8I3jTYq6KO9jJaV2PCbbBewU572RiGh+XYXs7j2ClBiX4+0u58OxIenGeoiCyChbUD5+TKX9URSfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 8F4121A0672;
+	Wed, 29 Jul 2026 14:40:41 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id A1A2A1B;
+	Wed, 29 Jul 2026 14:40:38 +0000 (UTC)
+Date: Wed, 29 Jul 2026 10:41:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Cc: <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <ast@kernel.org>,
+ <daniel@iogearbox.net>, <andrii@kernel.org>, <song@kernel.org>,
+ <jolsa@kernel.org>, <naveen@kernel.org>, <davem@davemloft.net>,
+ <mhiramat@kernel.org>, <stable@vger.kernel.org>,
+ <linux-open-source@crowdstrike.com>
+Subject: Re: [RFC PATCH bpf-next 0/3] ftrace, kprobes, bpf: mark
+ trampoline/kprobe ftrace_ops permanent
+Message-ID: <20260729104114.04298a48@gandalf.local.home>
+In-Reply-To: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
+References: <20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <amjnf5gz0xP5PTSB@J2N7QTR9R3>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: A1A2A1B
+X-Stat-Signature: 499kyhgzpha8ede91uyypk9psck4c73c
+X-Rspamd-Server: rspamout03
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18XandzLXTa8+ciNlokeOIqor1xPSfBmv0=
+X-HE-Tag: 1785336038-944796
+X-HE-Meta: U2FsdGVkX1/Q1VMD5PBWVVztUmDRsGyKdjgXyyq8UOEsrvQ4x8MkzXVv1XagktdXZg1hMtLPMbF3NG+14pqvCAulEmETwfclWLYJIdRiZak9IoPT5g5AQigCoGedHitSSmWGanL4HrTJm0lErfH81v8KlhDAZmQZYsgdMsWkNMjy2IJQaC0A2sTvtDwwcdQYm02RzAZu7L41x4P9CEfsnp2T/VfPCN7BNLGDi5y7JeOOHekGj3ZQtSALsU2etuRHhnP5z+yJvx5GFf6Lnxb0tf9dDXZBBVEtiwbg1f1L/hod8IXDzvan3OO3eICs4HYii9aKRI/C0D+DmjpPM54ck9EkdhXVEMsBhzpc5DpAerz3LLWIyijKPpCZ7gXcxIDld4fwbILHnK9sVTCBl1mtdQ==
 
-Hi Mark,
+On Tue, 28 Jul 2026 20:59:56 -0400
+Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
 
-Thanks for the review, answers inline.
+> This fixes a long-standing issue: kernel.ftrace_enabled=0 silently
+> disables BPF trampolines (fentry/fexit) and ftrace-based
+> kprobes/kretprobes. The write succeeds, the hook stops firing with no
+> error, and re-enabling silently restores it. Livepatch already solved
+> this for itself via FTRACE_OPS_FL_PERMANENT, which refuses to disable
+> ftrace while a permanent ops is registered and refuses to register
+> one while ftrace is disabled[1].
 
-On Tue, Jul 28, 2026 at 06:31:43PM +0100, Mark Rutland wrote:
-> So the big questions are:
->
-> (1) How often is a direct call being made?
+The /proc/sys/kernel/ftrace_enabled was added as a "safety kill switch"
+back when ftrace was first added to the kernel. It's addition was namely
+there because live runtime modification of kernel code was new and we were
+worried about how stable it could be.
 
-The workloads that want this are always-on. In our case a BPF LSM
-security monitor covers file, exec and socket hooks, so it sits on
-syscall-rate paths on busy machines, and fentry-based observability
-behaves the same way. That is why we measured per-call dispatch cost
-below.
+Honestly, I would love to get rid of it as today ftrace has proven to be
+rather stable. But as it is a user space ABI, I'm not sure what will break
+if we do. I wonder if we just make it a nop, and print a message to dmesg
+saying:
 
-> (2) Where does BPF allocate its direct call trampolines?
->
-> From a skim of arch/arm64/mm/init.c, EXECMEM_BPF covers
-> VMALLOC_START..VMALLOC_END, the vast majority of which is out-of-range
-> for a BL from the core kernel or a module. So if EXECMEM_BPF is used,
-> that's likely to be problematic.  Hopefully I'm missing something such
-> that BPF trampolines are almost always allocated in-range of a BL?
+  "ftrace_enabled no longer does anything. Please report if you need it to."
 
-You're not missing anything. BPF trampolines come from bpf_prog_pack,
-which allocates via EXECMEM_BPF, and we confirmed the consequence at
-runtime. Across every boot and attach in the measurements below, the
-trampoline landed in the same execmem slot while the kernel text moved
-with KASLR, 50-90 TB out of BL range. Only a handful of boots, but
-EXECMEM_BPF spans all of vmalloc and has no reason to land near
-kernel text, so I would expect out-of-range to be the common case
-here rather than the exception.
+?
 
-> When we originally implemented CALL_OPS and DIRECT_CALLS for arm64, the
-> understanding was that we'd have many ops with direct calls. We believed
-> that the ftrace_ops_list_func() penalty was so substantial that it
-> wasn't worthwhile supporting direct calls in a configuration where
-> bouncing through that would be common.
->
-> If we need to support this configuration, then I strongly suspect we
-> need to make other changes too in order for it to be worthwhile.
+> 
+> For trampolines this restores a historical property: from 2019-2022
+> they shared one global direct_ops, marked permanent the same
+> way[2].It was later lost as a side effect of the 2022
+> per-trampoline-ops split (patch 1's Fixes tag) and never
+> restored.[3][4] Kprobes never carried this protection at all, so
+> for them that is long-standing issue rather than a regression.
+> 
+> Patch 1: trampolines. Patch 2: classic kprobes/kretprobes. Patch 3:
+> a selftest covering both directions for all four hook types.
+> 
+> P.S
+> I initially implemented a per-record opt-in flag[5], but dropped it
+> as over-engineering once I saw the original blanket restriction.
+> 
+> P.P.S
+> Open question: kprobe.multi/kretprobe.multi/kprobe.session
+> (fprobe-backed) aren't covered -- return-capturing fprobes share the
+> function-graph tracer's subops manager with unrelated tracers, so
+> marking it permanent needs a different, per-record approach. Perhaps
+> something along the lines of [5].
 
-Agreed. One idea I would like your opinion on is an in-range
-allocation preference for BPF trampolines, since execmem seems to
-have the shape for it on arm64 already. EXECMEM_DEFAULT prefers the
-module_direct_base window ("prefer to allocate within direct branch
-range of the kernel") and falls back when that neighborhood is full,
-while EXECMEM_BPF spans all of vmalloc with no preference. Giving
-trampolines the same preference would need no new dispatch machinery,
-and the measurements below suggest it recovers 93% of the gap to the
-CALL_OPS baseline. Does that direction sound right to you, or is
-there something in the CALL_OPS design that argues against it? If it
-holds up I am happy to write it as a follow-up to this series.
+Honestly, I would like to start deprecating that kill switch.
 
-> Following from the comment regarding EXECMEM_BPF above, it looks like
-> both s390 and loongarch don't define EXECMEM_BPF, and only define
-> EXECMEM_DEFAULT with a subsstantially limited range, which I suspect
-> keeps their direct calls within range.
+For the series:
 
-That matches our reading. Their limited EXECMEM_DEFAULT ranges keep
-direct calls in range by construction, same idea as the above.
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 
-> Can you comment on how you've tested in-range vs out-of-range
-> attachements here?
-
-Reachability is decided per attach at patch time.
-ftrace_find_callable_addr() picks the direct BL when the target is in
-range and ftrace_caller when it is not. In our runs we read the live
-trampoline and patch-site addresses from /proc/kallsyms and computed
-the BL-range verdict for every attach, and every attach came out
-out-of-range. So all of the original series validation was
-out-of-range too, per the allocation behavior above.
-
-To get numbers for the in-range side we forced it on a test rig
-instead of writing the real change. A small bench-only patch (six
-lines) makes arch_alloc_bpf_trampoline() allocate from
-execmem_alloc(EXECMEM_MODULE_TEXT, ...) instead of bpf_prog_pack, and
-the guest boots with nokaslr so the module window is always within
-reach. From there the existing reach check does the rest and patches
-the direct BL by itself. So the rig only tells us what in-range is
-worth, the allocator preference above is what I would actually
-implement.
-
-> Have you made any performance measurements, or was this just functional
-> enablement?
-
-The original posting was functional enablement, so after your review
-we measured the per-call cost. The rig is a KVM guest with 8 vcpus on
-an arm64 Graviton metal host, 6.18.36 with this series, fentry on
-__arm64_sys_getpid, 20M calls per run, per-call overhead taken as
-traced minus untraced. Six passes across three fresh boots per
-configuration, ranges below are min to max over those six passes.
-
-  CALL_OPS baseline (CFI off):              17.8-18.3 ns
-  series path, out-of-range, no other ops:  34.5-35.6 ns  (~2.0x)
-  same, plus N unrelated ftrace_ops
-  (function tracer on vfs_read):
-    N=1                                     41 ns
-    N=4                                     53 ns
-    N=8                                     68 ns
-    N=16                                    98 ns
-  in-range trampoline (rig above):          18.7-19.4 ns  (~1.2 ns more)
-
-The extra-ops rows are the ftrace_ops_list_func() cost you were
-worried about, a straight 3.9 ns per registered op, and paid
-everywhere since the traced callsite never matches their filter. The
-in-range trampoline closes 93% of the gap to baseline, though the
-passes still sit a bit above, so not quite identical.
-
-Thanks,
-Jose
+-- Steve
