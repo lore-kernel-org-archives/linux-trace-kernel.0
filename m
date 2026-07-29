@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D532DE70D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5782D258CE5;
 	Wed, 29 Jul 2026 00:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785285309; cv=none; b=tDA5c8vSeULN9bMnwBjXKk7HK3mTqkCRnMGTdU/lxA3ckwk73U+NNfnYhgLeBoEEqLkKNwE7FATiejraWEvElw6RrYHKqBJxAi030RYqr+hAE/t7sfFxd/+Y2Twa34tNfaHHAbtO0LI/okAOztoeJsyminQZRk6rKGODopNnQcY=
+	t=1785285309; cv=none; b=LVOl406ooIb4y9bo6gxaMYLD34aLKkymV6PEDBFdD2nCH02J0j8wCFDupq9WgATWBfpFTHLvkjM8oGQv349QjmCDDeiTb/8EJ2/uUgNJ111c6F46CCgYuCk7RdRF8/nqt50Hkla+gec25QexynRoEMDdPLAhwHb1K+hmsDaXlyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785285309; c=relaxed/simple;
-	bh=tLm2sExVUSHllXBvt40VdvuFXPpT1kf/TFtQbm5kn1s=;
+	bh=8P2+/T9m6/t7l+sEVyKZYHunwUno4+zhgzh3aLZIyqs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jtrUqIErEYCThNR+pdR9XJLaVA2ZTcQsbYIFBVk/nkrrJ91XZdkM+NnCtL+WDWe7Poy2ZKZ4XgNkBzn51EeWhTEMuocYl2aOMmJVB6mTVm45k35gapxzrxMGTmwIwMjClO1QhiBNKNeKNi2gp026BguA9ZAIlQwRrCk9sbMgYqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cn9xtmoa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=NIuE6p1CxbYhtIKctcQ+Q4d+w9y9SMayBqQJoYeGh9RS4UrvUXIuN5D1NVT3LzMCaLyUTVWSFcfxUr63+aXC0TSr2i4PTjj/x86I5e5ZhTG1IajJt7pEVzvgmRejEkpvALPHJbUQkwx7me8cWEb5KTZnIpPxdMzuS30FALThDmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLKM2SaM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cn9xtmoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 28100C4AF0E;
-	Wed, 29 Jul 2026 00:35:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLKM2SaM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EC0D4C4DDE6;
+	Wed, 29 Jul 2026 00:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1785285309;
-	bh=tLm2sExVUSHllXBvt40VdvuFXPpT1kf/TFtQbm5kn1s=;
+	bh=8P2+/T9m6/t7l+sEVyKZYHunwUno4+zhgzh3aLZIyqs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Cn9xtmoaz38gK0Gsv/+vV+vvKnmTsjzhJDGYsIOaYyMPziTPwFq9DCQECJlnHSqXr
-	 MrZaXhSRW1FygiRxlCsszE9BkV64yTuHjy1B1JOsAT4RV90pC7LZrwNTPhVqc75BZT
-	 5TIHW0J0wuLxxlkElMxAkjipqxM+KMB8PH8E0Rl6Ss0PTQJz8ov+eJFCCVCuNB2vJG
-	 7zSRQB+VfvY1baAXOhdY095ScrQsi0t9/vndtqs0wBoRGvWwZYuz8CDShc3FSch4rp
-	 YniiSjv0nnO9COWGAgELOZGBmBnut9VxzOlEgbQc3mqASdvZxlXXSCIepm0sG/wW6S
-	 GTFU8KKS4w3Pg==
+	b=uLKM2SaM4YHqF7GDIZnsMF5pflobvR0FKZyyDy06tLX/TSP3Ir/RAvWE5utou3yd3
+	 JNjIYUjdPJoh28psi//w39BHjSz9z1QhZWKJ5A64mPC591AFVFxgw+iVecKbki9iSV
+	 zVbUmUjWTbiD1vLi4p+Xo0yjNL5PDYcdZtKSjbZaTSZ9E5pp6gwTVv6wsgijC0q2ca
+	 WTF3wCiBku5/H3TcoVyjL0QpY3LeshoEZVvnh2XeL2i75eLYaslXhEj/2PmlrhvqZ7
+	 T82Rhif2b39dnxUYCbkhrSttS6gIM8PTiAeCMvlxtMOXpm1rcKJCHoAY0jaEekh3dW
+	 PWcmrsz39hTCA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805AC54F57;
-	Wed, 29 Jul 2026 00:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B34C54F5B;
+	Wed, 29 Jul 2026 00:35:08 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Tue, 28 Jul 2026 17:35:15 -0700
-Subject: [PATCH v9 16/41] KVM: guest_memfd: Zero page while getting pfn
+Date: Tue, 28 Jul 2026 17:35:13 -0700
+Subject: [PATCH v9 14/41] mm: swap: Introduce lru_add_drain_progressive()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260728-gmem-inplace-conversion-v9-16-35f9aec2aed2@google.com>
+Message-Id: <20260728-gmem-inplace-conversion-v9-14-35f9aec2aed2@google.com>
 References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
 In-Reply-To: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -75,11 +75,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=2515;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785285305; l=2983;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=DnfgdOILwJaXU85D1SeMtvWbci6InAPagvN5EQKjyoc=;
- b=5QNKwwgi+Uzc6y0HVwMEajeW/iXXi/Id2T0nEnh8Gqp8MociKfCV8TPimFMrQ037jMYqJdw0f
- 5CAGysKM1R5Bqf0l51NuoBE9tO2EEQ5+z2zgB4+bfVerbepvHMNlpEE
+ bh=z1k7bYULkqVrzF37fMOsSzxA45ibiL0mHnNKZDzJmd4=;
+ b=TM3b/13YyGrFO85K9kaTUS8mgpgnU4Y/aXT5M33Ug87O/Lo9F++1+AEIN2PUps1BAHuyg7UuP
+ 9q+hhwykKs8C0S2KklFGsxHRwALYYGPR3CNE+OCsczlAkk2peNgz2fe
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -89,75 +89,104 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Move the folio initialization logic from kvm_gmem_get_pfn() into
-__kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-kvm_gmem_populate().
+Extract the progressive LRU drain retry logic from
+collect_longterm_unpinnable_folios() into a reusable helper,
+lru_add_drain_progressive().
 
-With in-place conversion, the existing data in a guest_memfd page can be
-populated into guest memory through platform-specific ioctls.
+When attempting to isolate folios that may still reside in per-CPU folio
+batches, draining is escalated progressively:
 
-Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-might contain uninitialized host memory, which would leak to the guest if
-the populate completes.
+1. State 0: Call lru_add_drain() to flush local CPU batches.
+2. State 1: Call lru_add_drain_all() to flush all CPU batches.
+3. State >= 2: Return false to stop retrying.
 
-guest_memfd pages are zeroed at most once in the page's entire lifetime
-with guest_memfd, and that is tracked using the uptodate flag.
+Refactor collect_longterm_unpinnable_folios() to use this new helper.
 
-Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-can get a page, write to the page and then set page uptodate without
-zeroing.
+The helper will be used by KVM's guest_memfd in a later patch.
 
-This aligns with the concept of zeroing before first use - the other place
-where zeroing happens is in kvm_gmem_fault_user_mapping().
-
-Don't mark the page uptodate again after populating, since the page would
-already be marked uptodate before the post_populate() call.
-
-Reviewed-by: Fuad Tabba <tabba@google.com>
-Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- virt/kvm/guest_memfd.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ include/linux/swap.h |  2 ++
+ mm/gup.c             | 19 ++++++-------------
+ mm/swap.c            | 15 +++++++++++++++
+ 3 files changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 505bb6747620b..ea2752989f8bd 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -1078,6 +1078,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
- 		return ERR_PTR(-EHWPOISON);
- 	}
- 
-+	if (!folio_test_uptodate(folio)) {
-+		clear_highpage(folio_page(folio, 0));
-+		folio_mark_uptodate(folio);
-+	}
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 8f0f68e245baa..cd54f73f34f39 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -344,6 +344,8 @@ extern void lru_add_drain(void);
+ extern void lru_add_drain_cpu(int cpu);
+ extern void lru_add_drain_cpu_zone(struct zone *zone);
+ extern void lru_add_drain_all(void);
++bool lru_add_drain_progressive(int *drain_state);
 +
- 	*pfn = folio_file_pfn(folio, index);
- 	if (max_order)
- 		*max_order = 0;
-@@ -1107,11 +1112,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		goto out;
- 	}
+ void folio_deactivate(struct folio *folio);
+ void folio_mark_lazyfree(struct folio *folio);
+ extern void swap_setup(void);
+diff --git a/mm/gup.c b/mm/gup.c
+index 0692119b79043..5f00435e2c635 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2268,7 +2268,7 @@ static unsigned long collect_longterm_unpinnable_folios(
+ {
+ 	unsigned long collected = 0;
+ 	struct folio *folio;
+-	int drained = 0;
++	int drain_state = 0;
+ 	long i = 0;
  
--	if (!folio_test_uptodate(folio)) {
--		clear_highpage(folio_page(folio, 0));
--		folio_mark_uptodate(folio);
--	}
--
- #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
- 	if (kvm_gmem_is_private_mem(file_inode(file), index))
- 		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
-@@ -1171,8 +1171,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	}
+ 	for (folio = pofs_get_folio(pofs, i); folio;
+@@ -2287,18 +2287,11 @@ static unsigned long collect_longterm_unpinnable_folios(
+ 			continue;
+ 		}
  
- 	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
--	if (!ret)
--		folio_mark_uptodate(folio);
+-		if (drained == 0 && folio_may_be_lru_cached(folio) &&
+-				folio_ref_count(folio) !=
+-				folio_expected_ref_count(folio) + 1) {
+-			lru_add_drain();
+-			drained = 1;
+-		}
+-		if (drained == 1 && folio_may_be_lru_cached(folio) &&
+-				folio_ref_count(folio) !=
+-				folio_expected_ref_count(folio) + 1) {
+-			lru_add_drain_all();
+-			drained = 2;
+-		}
++		while (folio_may_be_lru_cached(folio) &&
++		       folio_ref_count(folio) !=
++		       folio_expected_ref_count(folio) + 1 &&
++		       lru_add_drain_progressive(&drain_state))
++			;
  
- out_put_folio:
- 	folio_put(folio);
+ 		if (!folio_isolate_lru(folio))
+ 			continue;
+diff --git a/mm/swap.c b/mm/swap.c
+index 588f50d8f1a8c..0f9465d31fe52 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -950,6 +950,21 @@ void lru_add_drain_all(void)
+ }
+ #endif /* CONFIG_SMP */
+ 
++bool lru_add_drain_progressive(int *drain_state)
++{
++	if (*drain_state == 0) {
++		lru_add_drain();
++		*drain_state = 1;
++		return true;
++	}
++	if (*drain_state == 1) {
++		lru_add_drain_all();
++		*drain_state = 2;
++		return true;
++	}
++	return false;
++}
++
+ atomic_t lru_disable_count = ATOMIC_INIT(0);
+ 
+ /*
 
 -- 
 2.55.0.508.g3f0d502094-goog
