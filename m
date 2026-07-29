@@ -1,147 +1,139 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9C74C8FE3;
-	Wed, 29 Jul 2026 18:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785349554; cv=none; b=Gmgg/Gz27YA6PUPPIKYWbzL/LRjbmu/owIDASYDJm9emmL57UCTJlDFlsUEdj2NIbz6PEvUYsAIV5AX8o2sPV0ShSVWq5gEKF4VjItqNxIxoRi1v71bEcAc7oQmma9feo0pkqUrrjlej62kYQxmo9ZF2rP7m1IJZYEERX9siACg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785349554; c=relaxed/simple;
-	bh=gZn8M6iN6qVLvcFu0jl/ynWIAVW1eVZ8xMa8AGW0qgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D+VZDarXqUveTXdjwCE2XPfKglk0IHa/Dmv/iOd/TXmpJoFNm24x+CgFmXO+PRif5oNJ8BVTevxbhjXPo2JbXWcMzuV/ttblsDeM6C7wpLlfLXwGqxApbwBiMuS1ghS/ic9Of7WIbSdY0h7NVekHe2tUcqNI4QcjVGB9lXc1fMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 02DD01C0AE2;
-	Wed, 29 Jul 2026 18:25:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 02BFA20025;
-	Wed, 29 Jul 2026 18:25:46 +0000 (UTC)
-Date: Wed, 29 Jul 2026 14:26:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Baolin Liu <liubaolin12138@163.com>
-Cc: almaz.alexandrovich@paragon-software.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- ntfs3@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
- liubaolin12138@gmail.com, Baolin Liu <liubaolin@kylinos.cn>
-Subject: Re: [PATCH v2 v2 2/7] ntfs3: add namei tracepoints
-Message-ID: <20260729142622.73d7ef18@gandalf.local.home>
-In-Reply-To: <20260728094426.749482-3-liubaolin12138@163.com>
-References: <20260728094426.749482-1-liubaolin12138@163.com>
-	<20260728094426.749482-3-liubaolin12138@163.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF1E48988B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 19:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785353486; cv=pass; b=o8csj+E4RyX4dE0L5yjCbHI9XXpucBmPnIcD0dxhUWCMR61R9bPioIx8VBm9AwY9dDsKhA81q1BrtxSXTUK2aciG/wniFqM6Njj7/iX4Axeds6VzKDiqZOqwOcMJXvD5grIJHNODnRGni0bI9aqugcJNEvOkNP6et8TCn9x2G8o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785353486; c=relaxed/simple;
+	bh=AW+2NReGvoch2mVxj+60oV42GoQXvVY/28NZ+o3sxTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VQRQglShC4/eMvTz2bkbpVhcXEvNzY7onUKS2QIdPDau79Z61H1mYQOOw5WkJuXVqBGwQsSaCAC8E9r7oSktx0rI+Xxbgr1jRYy0dAqI+G4JNkjF8gpgYUCRJH4toUJaSrLo4WBRQd1HYXh2pC6HglqONTYqPoyejLqK7KAbswY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OsCuZjvw; arc=pass smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsCuZjvw"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-8487214ad2bso2033448b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 12:31:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785353481; cv=none;
+        d=google.com; s=arc-20260327;
+        b=noCD+M/w81bghimakT28zTDtaJLdd3EgMCmm5sVSjm05XX2yoIAp/RbQGkbr3lxcc1
+         AShdi9rectF7aBQ11Ga/16ob8fDZjOUOPxb6V+2EVw0u0/pwCQSousnBBG0HL9wUMjlm
+         fnuU95F1+pRKkq+nwXZh+Ns9mGM+Rj1Ve/Z5VvaJ8o4TrxbQ2OJTz7JlYATDr5VvMo9o
+         q2Wkg5aYv8tLMIL4gMEhA1UQ1qEXIxJameGszNvK9qJ1ecF5ZO4wn5wNmnPMCfF9xjFO
+         Yd9D0UEbqs5CtwaM7XhfQi0YPqkkCXsniS+JzSAR4tX9nL0JxoohAT1uT0fu53+eQuHG
+         wFdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZEPCjaM0A4Cy5/l9buwk6OfkCA8SEBnX/nbFrur6xxY=;
+        fh=/0foZBnWioIB2+knzw3iwbuYXSp3B/x/MivQ4LBLIbs=;
+        b=N0QWyL0BJN+n0MDMMCzvFxT0TfhoSnvbw9JhheRGuMiqVwaTv/DV39GTqem8JrcDVL
+         EBszMZ+CIgCkgn4fFawTx6pjEHxCyUwoN3BTXnG3Z3yACOORw7uXCjrJNgFT3xm53B2D
+         9CHpa/XGXBGri777dkBlGArSO1AiveNZWU4khbpYqQTYeYYi15pIUzhcS9NcOKZcveS+
+         Hvp8qfuJ+arh+GEWHhVC26L7TvDSMJdzB+7GTCUulMKWyRCErCn11HM6rIZISSnH4PZF
+         qi04NvfD+9dZd6p5IRB0OJHieleVM6N0PlgDorf2B62K0f/7Nbgp6Vz0U6FHpEmERw7g
+         D0PA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785353481; x=1785958281; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZEPCjaM0A4Cy5/l9buwk6OfkCA8SEBnX/nbFrur6xxY=;
+        b=OsCuZjvwu53Bt5xqrwiBNeckfkSjiWJzvvxKY6fbPq4G9COH7Ao7fQV0AZfz58z/1k
+         GIZ0BpmtujRkYBugLG2dR+6rnEbekKdfRwMITuWdJ8AovWlwsl79XJXZ5Y0ApsTWtZgQ
+         Nwq1xEj6eWtYpteKMtKivHRPP0cXIzm+bijLcsOZNaHcXMIqDgkiRng3pDo4lNxhPxdC
+         F/nexB2rV7cfx0Z3y8j/Z5yx+8U2YR1MBMfuizTq7qRQsbLhZ/rsbm+u8zL8A2nNqO3r
+         d5HSRi2bbkmlizmKOvTi+lj8k8U+pyQNgWfRLduHxsxFKU8VZvg9B1GSRrPNyI1u8+jq
+         3zMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785353481; x=1785958281;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZEPCjaM0A4Cy5/l9buwk6OfkCA8SEBnX/nbFrur6xxY=;
+        b=igdTKKraFU6RDUE4O7Z3w98XET5anpaec3X5hY5Lbw5LSRCIT/RT8pOa4KLBaQWxcK
+         S9FItsOkiS3WouuHeDR9xZrW5ettLpWjrlHFeSg8D6Y8ETNqlDv6ZchbgH5SiL2imSVP
+         1zzJYkqycGUTtf9jOvJfyQretffU9VQiLUjL6Gz5u0ykCjFRDR0nsy1ILvuzQUhsTNqo
+         /kOqDABvwkf0M1cNwZwm1M9lcN1ekAfcUjIXd7hpHLEEKGMfXGyHW0aV5koU1cafrxUX
+         +kkJ+pCIGAc631iGzBPTWvMLFfqhrtbAeodoal4YaocwUHfKNrrgHnAlg91Nit7NxxYK
+         awcg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr5e21fqZqs13gYaywvItnr2GPfUzY5KxMhck/EC20y2ll4VGCge4eRvNuaSKTBUBVGzPOXCIXd2cri9DXXogzeKVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1BeTFyDwaxOVs3Np6sO5SquBrQw8SMYR8dO25IVhrZB3KXv27
+	lY/2hT+Kg9XLXD7dpoXccbFBwG34LvNFeawAuimefcslPbRhOH6pQHnwOIGVn+GEUfw5sbb6G0L
+	INewP+favq+wB3Pj99pT1NTUfXw8Oi8A=
+X-Gm-Gg: AR+sD1042zgX9Gr6H+xVugtuRc4VmBkVgn9bskUoXZ+ZEBIaSNsaz6jwZfh6HPvkwZw
+	IJRDgpaYkzQP6sITXew4eDkKPiXzC6co1GVc8lCe2Nnm/aFQ5MGe/PX2X1P9/iozNmbMMc/aj7H
+	1r0uoW5B5rHVlcvR9t5xfICFFbQVQIpaqLAlKHmqZULVFwmgU1c9RuBAxaBUCHa4L/4MtZhXl3J
+	Y3qyC56mQPNACE28rQeaHSJWD+SWPMCPu5FhqymEk+qtyOrjZFRg+xwF0BG+v/GTSu9WuXK1R/o
+	pml2/e5OjCnnGRXPKk4OLhrYCFf62TRNPB797VPWaJwIwQ04VhR1FYifLyGB1eRVrBwmrW5XzOx
+	3OUIIRlHc/oqFhMnSoFTrbCT1ggkyXWRQW6Ib
+X-Received: by 2002:a05:6a00:2d28:b0:847:8250:2b2b with SMTP id
+ d2e1a72fcca58-84eba209c22mr58219b3a.52.1785353480816; Wed, 29 Jul 2026
+ 12:31:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 02BFA20025
-X-Stat-Signature: njo39d879d3ik3y5s57zorda9h9rjm5j
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18gcG7z8+xe5CuRgGFrOaYPY1PVKe37xwY=
-X-HE-Tag: 1785349546-384304
-X-HE-Meta: U2FsdGVkX18AnuatEIIupAkEe65+nsGYSVe80nIsYwDv0eFlMvWG2VbM8gZmqo6RBi4cDGTSJVhjgKmfNQxHSAflr0yAfzDNrYIYLshzXtawPhj0EdPZEWiW5BV1rLbUSsZpbWlZpf+XsB78ZeIi2EQIaXzPllNfsLxiIJgbykUmsAug/tDV/LOLUCpACyqRyf1BmW7Q86BCm7HL+xSz9QD3UcKZvK7x5vjK8qLXk4S/qJvXRimuvM7041qjTQ+AKrkynL1h19Nbd29x48PmQiK2FTIOTuWqKxr4FFIe5hNrwyYHVU82yXkdaz0sLkWP3BbAzg+xrKwUp6vkVT4KeOX+QLGsRNIq
+References: <20260729-uprobe-v1-1-61896b87c867@debian.org> <amokG13tEnA7VVVf@redhat.com>
+In-Reply-To: <amokG13tEnA7VVVf@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 29 Jul 2026 12:31:08 -0700
+X-Gm-Features: AUfX_mwlnvUi1r-ku73ZCSAcs_YOxNgVJkyNNO_0D-3nnjYBTZf7rGtYqZPK430
+Message-ID: <CAEf4BzYON57L_HD71qUOdRdni_=1S-Xomz27PeDBxbbXDy0Jug@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: Fix NULL pointer dereference in hprobe_expire()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	kernel-team@meta.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 28 Jul 2026 17:44:21 +0800
-Baolin Liu <liubaolin12138@163.com> wrote:
+On Wed, Jul 29, 2026 at 9:02=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 07/29, Breno Leitao wrote:
+> >
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -832,7 +832,7 @@ static struct uprobe *hprobe_expire(struct hprobe *=
+hprobe, bool get)
+> >               if (try_cmpxchg(&hprobe->state, &hstate, uprobe ? HPROBE_=
+STABLE : HPROBE_GONE)) {
+> >                       /* We won the race, we are the ones to unlock SRC=
+U */
+> >                       __srcu_read_unlock(&uretprobes_srcu, hprobe->srcu=
+_idx);
+> > -                     return get ? get_uprobe(uprobe) : uprobe;
+> > +                     return get && uprobe ? get_uprobe(uprobe) : uprob=
+e;
+>
+> Well, looks "obviously correct". At least the current code is obviously
+> wrong, it even checks uprobe !=3D NULL 3 lines above.
+>
+> Andrii ?
+>
 
-> diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
-> index d00f66e42ba8..041455edec76 100644
-> --- a/include/trace/events/ntfs3.h
-> +++ b/include/trace/events/ntfs3.h
-> @@ -80,6 +80,50 @@ TRACE_EVENT(ntfs3_log_replay,
->  		  __entry->size, __entry->initialized, __entry->err)
->  );
->  
-> +TRACE_EVENT(ntfs3_lookup,
-> +	TP_PROTO(struct inode *dir, struct dentry *dentry),
-> +	TP_ARGS(dir, dentry),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
+Yes, indeed, I'm more surprised this didn't come up much earlier
+(probably it's rare enough to have uretprobe with refcnt at zero
+during fork). The fix looks good, thanks!
 
-dev_t is 4 bytes, you should move it after parent_ino as on 64 bit
-machines, it will waste 4 bytes of space here.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-> +		__field(unsigned long, parent_ino)
-> +		__string(name, dentry->d_name.name)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = dir->i_sb->s_dev;
-> +		__entry->parent_ino = dir->i_ino;
-> +		__assign_str(name);
-> +	),
-> +	TP_printk("dev=(%d,%d) parent=%lu name=%s",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->parent_ino, __get_str(name))
-> +);
-> +
-> +TRACE_EVENT(ntfs3_rename,
-> +	TP_PROTO(struct inode *dir, struct dentry *dentry,
-> +		 struct inode *new_dir, struct dentry *new_dentry),
-> +	TP_ARGS(dir, dentry, new_dir, new_dentry),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-
-Same here.
-
-In fact, you should audit the rest of your tracepoints to see where you can
-make the sizes more condensed.
-
-~# cat /sys/kernel/tracing/events/ntfs3/ntfs3_rename/format 
-name: ntfs3_rename
-ID: 1923
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-
-        field:dev_t dev;        offset:8;       size:4; signed:0;
-        field:unsigned long dir_ino;    offset:16;      size:8; signed:0;
-        field:unsigned long new_dir_ino;        offset:24;      size:8; signed:0;
-        field:unsigned long ino;        offset:32;      size:8; signed:0;
-        field:__data_loc char[] old_name;       offset:40;      size:4; signed:0;
-        field:__data_loc char[] new_name;       offset:44;      size:4; signed:0;
-
-
-Notice that dev is at offset 8 and size 4, where as dir_ino is at offset
-16. That means there's 4 bytes between dev and dir_ino.
-
-Please look at your other trace events and see if there are other gaps you
-can close. I'm not going to audit all your tracepoints.
-
-Note that __string() is a 4 byte meta data, so have them act like 4 byte
-fields.
-
--- Steve
-
-
-
-> +		__field(unsigned long, dir_ino)
-> +		__field(unsigned long, new_dir_ino)
-> +		__field(unsigned long, ino)
-> +		__string(old_name, dentry->d_name.name)
-> +		__string(new_name, new_dentry->d_name.name)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = dir->i_sb->s_dev;
-> +		__entry->dir_ino = dir->i_ino;
-> +		__entry->new_dir_ino = new_dir->i_ino;
-> +		__entry->ino = d_inode(dentry)->i_ino;
-> +		__assign_str(old_name);
-> +		__assign_str(new_name);
-> +	),
-> +	TP_printk("dev=(%d,%d) dir=%lu new_dir=%lu ino=%lu old=%s new=%s",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->dir_ino, __entry->new_dir_ino, __entry->ino,
-> +		  __get_str(old_name), __get_str(new_name))
-> +);
-> +
->  #endif /* _TRACE_NTFS3_H */
->  
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+>
+>
