@@ -1,32 +1,32 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22D7442120
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 15:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D6E442FDA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 15:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785423897; cv=none; b=geBxbrPnTDkW1NJ3UvBBMb31Ew2g35PkhVEBKyvQagJcpdJze3+i2gc5VBd6Ijcpd0yCD/VoweWgmeSQjQbZJVd3IUdqOWoF5G3fLp+c3jmqJqjTTIvnMAFG0cF19yWYYLTavEASMuzZue363FL42JZjr8nabbH9VNsA3nrWni4=
+	t=1785423900; cv=none; b=kK6yWEAvbYSVUGPDM8kVAmS2XF5Kv7nzENxpu4ZdwzwG9yrP3SuckINUItgOrLO19VxBqKTltgitLdp44Oxz9YXvjOOCyvIyWHDIg9UIBiy5OnUvF8OWd4bdeO3W8wFQnwHbH+WjRhUAnynXr8vgZpSiZji69A1dA3ovR7EaMvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785423897; c=relaxed/simple;
-	bh=l9GKUxKdOGLl997Z4ceudW7mPtJe4JfdjMvSi3Qz3pg=;
+	s=arc-20240116; t=1785423900; c=relaxed/simple;
+	bh=Ka3tWGe7/t12bG1gqNIwjEg/vnPD1h7rJek7NKjk9QE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nw4rHJ6pAB8LxMZlZZUex5H4h+5D9cqhQmZv0yA0B6Tqj4KQHGUaJsD7w3piwhXzsuthQJXZ25VPhEL7KzMDU6K2AdStNqmOGpaXe7OzfOnM/j+43sOpDv9V0yU1sWeSjhZCSQoIA0xhG/oWPwQD6eQjsp6jBoT7dlWt6cczQrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cx2pFC/X; arc=none smtp.client-ip=91.218.175.174
+	 MIME-Version; b=NGw92lJ6wH947OZUW3jaJcIFIdePc1IFmwzsGbtRaRB69/TV/Zk0EtlistazPy2J7ulnbE1OoFVn736Zz8FDgGfTIORUWQbHirRAEEhQttN0oQeJkbbttOqOyqaRj/nI+mcT1z+Pr1jrtsL1HEcP7yzYZbIZ2WAivAyLazDMRyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M1e68+8k; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cx2pFC/X"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M1e68+8k"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785423892;
+	t=1785423896;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tXP3sLnFW2SJsbuz9cs4gqLjv3d7L92yQ0oDBHkkR9s=;
-	b=cx2pFC/XKbg6FG7I014UOGNrlasGWHzlDcEXyW4lmFnIed6W2aaZcE1eWSB/t82ss4H4fu
-	NkX3VqjzPBktWOMmdanWkV+/pfbLchf34NI0O2m6PxV3G2smG6cxGdssDIKjkTg02N4AhV
-	jmCjHydEqgZfHFw/vOC4V/LOGfF6PSc=
+	bh=ioH8697VNO9CDWA8v8GIsw5lesb+EpXFdUst6lhYL0o=;
+	b=M1e68+8k2tKwJD+1U/hYuh7YDdx8fCAd7rzEplFSJtjrkO6oyOQBLdq1BSZxhLwgVg0J2w
+	w/d7YCSvndoG+E0JjM26AVxVBKepwXKPQDNWwTMit9DjVP8Rn1DofiNF+R2VX+wGc0zWHS
+	VmcKDa7eITRrW9pqP4kj1S6cSVXsiyw=
 From: Leon Hwang <leon.hwang@linux.dev>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Leon Hwang <leon.hwang@linux.dev>,
 	stable@vger.kernel.org
-Subject: [PATCH 1/4] ftrace: Protect direct_functions in ftrace_find_rec_direct
-Date: Thu, 30 Jul 2026 23:04:08 +0800
-Message-ID: <20260730150411.88667-2-leon.hwang@linux.dev>
+Subject: [PATCH 2/4] ftrace: Protect direct_functions in update_ftrace_direct_del
+Date: Thu, 30 Jul 2026 23:04:09 +0800
+Message-ID: <20260730150411.88667-3-leon.hwang@linux.dev>
 In-Reply-To: <20260730150411.88667-1-leon.hwang@linux.dev>
 References: <20260730150411.88667-1-leon.hwang@linux.dev>
 Precedence: bulk
@@ -55,26 +55,66 @@ X-Migadu-Flow: FLOW_OUT
 Fix accessing the __rcu pointer direct_functions with RCU protection.
 
 Cc: stable@vger.kernel.org
-Fixes: d05cb470663a ("ftrace: Fix modification of direct_function hash while in use")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Fixes: 8d2c1233f371 ("ftrace: Add update_ftrace_direct_del function")
 Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
 ---
- kernel/trace/ftrace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 6c47a94f5924..c5d1d0d42ccc 100644
+index c5d1d0d42ccc..9ea39110927f 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -2645,7 +2645,8 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
- {
+@@ -6512,6 +6512,7 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+ 	struct ftrace_hash *new_direct_functions;
+ 	struct ftrace_hash *new_filter_hash = NULL;
+ 	struct ftrace_hash *old_filter_hash;
++	struct ftrace_hash *direct_hash;
  	struct ftrace_func_entry *entry;
+ 	struct ftrace_func_entry *del;
+ 	unsigned long size;
+@@ -6523,11 +6524,13 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+ 		return -EINVAL;
+ 	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
+ 		return -EINVAL;
+-	if (direct_functions == EMPTY_HASH)
+-		return -EINVAL;
  
--	entry = __ftrace_lookup_ip(direct_functions, ip);
-+	guard(preempt_notrace)();
-+	entry = __ftrace_lookup_ip(rcu_dereference_sched(direct_functions), ip);
- 	if (!entry)
- 		return 0;
+ 	mutex_lock(&direct_mutex);
+ 
++	direct_hash = rcu_dereference_protected(direct_functions, lockdep_is_held(&direct_mutex));
++	if (direct_hash == EMPTY_HASH)
++		goto out_unlock;
++
+ 	old_filter_hash = ops->func_hash ? ops->func_hash->filter_hash : NULL;
+ 
+ 	if (!hash_count(old_filter_hash))
+@@ -6537,7 +6540,7 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+ 	size = 1 << hash->size_bits;
+ 	for (int i = 0; i < size; i++) {
+ 		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+-			del = __ftrace_lookup_ip(direct_functions, entry->ip);
++			del = __ftrace_lookup_ip(direct_hash, entry->ip);
+ 			if (!del || del->direct != entry->direct)
+ 				goto out_unlock;
+ 		}
+@@ -6548,7 +6551,7 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+ 	if (!new_filter_hash)
+ 		goto out_unlock;
+ 
+-	new_direct_functions = hash_sub(direct_functions, hash);
++	new_direct_functions = hash_sub(direct_hash, hash);
+ 	if (!new_direct_functions)
+ 		goto out_unlock;
+ 
+@@ -6575,7 +6578,7 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+ 		/* free the new_direct_functions */
+ 		old_direct_functions = new_direct_functions;
+ 	} else {
+-		old_direct_functions = direct_functions;
++		old_direct_functions = direct_hash;
+ 		rcu_assign_pointer(direct_functions, new_direct_functions);
+ 	}
  
 -- 
 2.55.0
