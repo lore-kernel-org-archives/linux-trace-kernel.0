@@ -1,183 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E60479872;
-	Thu, 30 Jul 2026 23:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785455362; cv=none; b=FtGNtwwrM+XGT/T8pkKZ4HNO6hBifeNf/vhdives8ZSYGdpcJjoa7lg24iEgOGvh1JTG4nnq3UXbX9zpb6t7ceJhK+e3Fh2ztflLynRtyBESrVEzZ9l1R04sjLt9pO/pWz5XzSu7CrDph4n1bLu2iDHKfaX2q9I2QfaBRnO1TJo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785455362; c=relaxed/simple;
-	bh=EBqRt2FUcludAcZTS+/lEH3JghanKhXyWdirr2aKXZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FU1omGwusrMH6XktfeL8S3cuFABvwNIW+f7sTMmAoFjXKFK/9f1E5LIokAvMWOzsIhWgjuU45eU3u1JazUBM70YqaOVStbdUGFVbnWnlwvXuyRkiwS0u8aPZghkYTi23hgwmOfoerY7DqBeS8qPLYcSNe6DQj+0RvgwHAWbH/Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=auUUHpuF; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4E73B7746
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 23:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785455739; cv=pass; b=HrGDfG9/rFnmZb/YZYuDptPNL7Y8Ru33vFAmxVinWOnxhuF3HZOhsnZOBjGQa10ig7CSdV2vfLmwX7qh8M0+LCEX6eNg+xwnN6hbnjgRsojlo0beL7AQZt1A6oxKmKeRybQt+VUQ3P1ZxZ1T5Suq4VZ+jP9Ey58kEJlt5jP/qSQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785455739; c=relaxed/simple;
+	bh=hV5KLaAmEHz7Ic3f8xOxjqxj04qxIB9m3dv29dZ9WV4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=msnuSCXHQB1kSMSt8l3ldJtZvuzCc0WqsvODyTQI9PLbiUvBDCIukuZ57JoXmzLH80SaS4ZnaZedaZKbZxKYhleKXu2EPMP3KNYuk+PjXQteiwEJEaAhGmQhPhbM1TutUUVaSveK/OuroB87hc3Lv9TPmBL+XML21e/uOknSULs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QlGabdku; arc=pass smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="auUUHpuF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785455359; x=1816991359;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EBqRt2FUcludAcZTS+/lEH3JghanKhXyWdirr2aKXZk=;
-  b=auUUHpuFzGeVZ72PwoolN8CdqpZPj99EaEsw+S1+P3OVDrVlFGaw58FC
-   qZnzBvE30kFzlDms4X1X/YKjHTmc55l7aDMNagvp3TCvCE4B3gQkJVo1a
-   XoT4f5BswG+9T8TbF8Cb3XBlfSD7MDYZXUU+vKzmy/DtgoXoTVI7WmC2K
-   ggctskMDemlPjr12IVNctzbKjjXX6f3rIQvMyO1oKBU6vPfU/eFtx/doo
-   iPvPE19T3b09NC2bjXsZ0kJrlof32EJQU5HBPtl67DV52vD+6i2NMGx57
-   89X5Xw9A0oNSV8iQ3kEdoymBDnO5xAySwvGEwfe8xZyu2FVCpmNzA5Q5d
-   A==;
-X-CSE-ConnectionGUID: pHjIpe0nRyGUdgZw/+Rt5g==
-X-CSE-MsgGUID: 2k0BMBAIRaehF6zOXqAVRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96670035"
-X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="96670035"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 16:49:18 -0700
-X-CSE-ConnectionGUID: 3hvv/sojQLGAat42r0fN/g==
-X-CSE-MsgGUID: 6mgkoACnRjCJhd9evfHvNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="298631756"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.248]) ([10.124.240.248])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 16:49:03 -0700
-Message-ID: <dd4201f2-3660-46ad-958f-c70feb1ab1c3@intel.com>
-Date: Fri, 31 Jul 2026 07:49:00 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlGabdku"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-84861fc51f5so337801b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 16:55:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785455737; cv=none;
+        d=google.com; s=arc-20260327;
+        b=JFSnThkJh7ojcRsysK4W5Tla0pxe1yrrJTI2WM0B8Wc7NAfo1thi7meXZwVPsuIsy4
+         iIhoMUkzZbR0VCDob2SDvwDAZWyRMO8ATOdtYHKDRtX0XFiPwH2jlPy3rqFFVT82f1hc
+         SjMZY4QnAm3QAH9YY/bsmlCPuY+0dYlBSfm1LdxJEGkKxk9v8mKeUGW55UQmZMIIcrbV
+         YRxiGt8r0XbC/WIXk8HbXcqH56dQYz9x6dnNqDWWrT5ghEEa0ZhW9P4a+q2H+2Fi329z
+         /4nOGjIRlr5K2xTT7Sjkv1Cn9F0YP28EZaB8n3FEacI6nFmjoY7vbgAKfZI2yWYBv2IG
+         Cabg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=CCRaa9xG8Lu3CwSdJQLZiNXOhmRsZ3XnJvX/nF5Nkg0=;
+        fh=idSXoReA8/PnNo5Rlk/f4ym3AJAX/rgdTZgU7eL2Rc4=;
+        b=BI95vpT+6qVdxwgcMaqQv2Eqhc4I6mNhcoNfy3hs0Sb8lBG12FI8xelgo3FY9ipwDW
+         p/JAArFV/ttIAFSALpDrlCG56myLwKxeyVhU+aLqhbx9rosBfv4Iu9tkHwUuK7mVe0E2
+         l5UhFqch4HeryOgCt8YPm10jXQC2A6oMKMo8fBUtC/qBUICE5AxpE8JTwva5deucTTKc
+         tvV7dkKW2r8JCGB3YVRolpNUAVY0x+LCa5O23tbXyxMqI+4GVapJevrYI3QHamBj6D23
+         n49VeLI43upncIMJ4kGAr7nMVJGWww7HHiSHfg7poGriy37O+tIYGqyUy5fh4aokdJzv
+         XxXQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785455737; x=1786060537; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=CCRaa9xG8Lu3CwSdJQLZiNXOhmRsZ3XnJvX/nF5Nkg0=;
+        b=QlGabdku0Tis2lK4OWjEHuAAYzLt5MjAmJv+VTLvMrizha141ZO7yF1h9JI0lff6tj
+         +RuzrwXFAJVnhw/EydgI1F90qWzEC2WCGMhg9YaSFls4tMYM82jiTDDVP6ykMnnVDUJf
+         4cxo2I8OA1E0t8JYZw43QMgeUa03svKz1ykf1gCO41Phw6szNf9JzUrC88VNMn3ExdBe
+         ILqNKZfNEomBfgkRqqywfenbajbOi5O3MGQkvOJn+P3jUq1t08xH+z4Offq3nvZMoyge
+         bSlvmxLmBFAd3mkPgoXBmoh+ohPXrSqSMfSXOOPOFqrwH5ltT3dSy34lXvxHU1GsztQL
+         W1XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785455737; x=1786060537;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CCRaa9xG8Lu3CwSdJQLZiNXOhmRsZ3XnJvX/nF5Nkg0=;
+        b=sKIQ1jtzYh3FJwaiGyvX5JdvbzIlBhhUwewFWdybw+T4ILtpTgE66q5z1bOlZH7DvR
+         aD0Xby/ItAZcUiHMoqQqtgrpU00Xm0kklO4iJtEfHbyPqYti2bnIDXhylkREao2FotEx
+         og6CbPJcPSymwW7ldzb3fGIeZ3Xu94puYZOOtRO6ySgi06T0ZmuNsPmDXPbqoV+dad3b
+         lNfhOsZhZNa/EBF413qTMPK76GJgs31VTKuYVV1HbijmkQFCBrzRK3PuoLGeYqaA9tcD
+         5CK/KgZ2cdC7OTkuGwYMJXM6fHNNriBkDXYM4IsV2q9fBJkJOg+oHwpo3oUdOwyc3COM
+         H+sQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrmaMIt7IQxUHHkX5HZwU8KZKjTX26+yUpbnlbM3KsrGvwzh/vf+ELfgJ/fBr9+M6kzvAIXVvpZbse1ckBbvl90vis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXAuOnWQEUfY+DQMKh5HcZDZjkBa1GXeNVRFc2Ss002HB1PHlN
+	AiAN+f66TwhPHfYf2dCKMWPGJkEBnvTIS1F9hnGegMwAjqC4kr2M05jG3w3M8XLmfrRXJYyEO6v
+	fVt9X9K5NSZiVWgy5OazW69Ybub4x1vs=
+X-Gm-Gg: AR+sD13cA8yyGJ7ZvPmcvy8NDR476SIRAwc/k6jvwUORpbWHlWwBMisin8dyvMQLqDC
+	cwPlms8wNLh9R9JUUVZOK2sq/0sVW2jB3asnbOYGBrRtE9oKyn/OwX8Lik+SUHu48YwwG27SQIi
+	WtSafvuJmYqqNV2nVol2v30qsKhRC4C8g3Z/HVGy/AFE2TOVVslxkqExtHOSncTUAKSBSAZQtk5
+	/vzskg7Xbhm3l8ueDSQjt/pjS2XQnfBbENmk9PGb0xuOq5jKAcK1mlILQyh30XvJj6DE5xjfiGH
+	boTImUUWdw8rsimsFDKT5UF/nP1nlJw1HTY85Sz8B2tFi9aj5VWPVEwytOo3qq8IcdFn721btsJ
+	ksO1yuaIN2pFZv3pdekCGiAXdaHzkybAzd4iZy/LhgA==
+X-Received: by 2002:a05:6a00:cce:b0:847:8e98:9a4b with SMTP id
+ d2e1a72fcca58-84ebc2422a4mr4253539b3a.34.1785455737231; Thu, 30 Jul 2026
+ 16:55:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 07/41] KVM: guest_memfd: Wire up core private/shared
- attribute interfaces
-To: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
- jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
- pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
- rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
- tabba@google.com, willy@infradead.org, wyihan@google.com,
- yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
- suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-7-35f9aec2aed2@google.com>
- <60d19013-d6d7-4eec-827a-2622e22cec98@intel.com>
- <CAEvNRgF0SxmoMtqq69tUih54A9K7j_wcMFRrq=r9w6TnAGAUQQ@mail.gmail.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <CAEvNRgF0SxmoMtqq69tUih54A9K7j_wcMFRrq=r9w6TnAGAUQQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260730-b4-fix_btf_tracefs-v1-1-5f10b728f51e@meta.com>
+In-Reply-To: <20260730-b4-fix_btf_tracefs-v1-1-5f10b728f51e@meta.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 30 Jul 2026 16:55:22 -0700
+X-Gm-Features: AUfX_mz01KsvC0dTQTZpCMew9O6d6Q6PCq2A8CWuLf7bfi4pR2EqEu-Q6tBwvaU
+Message-ID: <CAEf4BzZXu=E-E+_DXukwuzdGAH6LwxhFuWkX5j6Os1YAn3Vtcg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] tracing: Make per-template BTF id lists file-local
+To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, rostedt@goodmis.org
+Cc: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org, 
+	daniel@iogearbox.net, kafai@meta.com, kernel-team@meta.com, eddyz87@gmail.com, 
+	memxor@gmail.com, linux-trace-kernel@vger.kernel.org, 
+	linux-next@vger.kernel.org, broonie@kernel.org, 
+	Mykyta Yatsenko <yatsenko@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/31/2026 4:42 AM, Ackerley Tng wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> 
->> On 7/29/2026 8:35 AM, Ackerley Tng via B4 Relay wrote:
->>> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->>> index 33c9830190e2e..89cf922232920 100644
->>> --- a/virt/kvm/guest_memfd.c
->>> +++ b/virt/kvm/guest_memfd.c
->>> @@ -893,6 +893,27 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->>>    EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_pfn);
->>>
->>>    #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_POPULATE
->>> +static bool kvm_range_is_private(struct file *file, pgoff_t index,
->>> +				 size_t nr_pages, struct kvm *kvm, gfn_t gfn)
->>> +{
->>> +	struct inode *inode = file_inode(file);
->>> +	pgoff_t last = index + nr_pages - 1;
->>> +	struct maple_tree *mt;
->>> +	void *entry;
->>> +
->>> +	if (!gmem_in_place_conversion)
->>> +		return kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + nr_pages,
->>> +							  KVM_MEMORY_ATTRIBUTE_PRIVATE,
->>> +							  KVM_MEMORY_ATTRIBUTE_PRIVATE);
->>> +
->>> +	mt = &GMEM_I(inode)->attributes;
->>> +	mt_for_each(mt, entry, index, last) {
->>> +		if (kvm_gmem_interpret_entry(inode, entry) !=
->>> +		    KVM_MEMORY_ATTRIBUTE_PRIVATE)
->>> +			return false;
->>> +	}
->>> +	return true;
->>> +}
->>>
->>>    static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
->>>    				struct file *file, gfn_t gfn, struct page *src_page,
->>> @@ -913,9 +934,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
->>>
->>>    	folio_unlock(folio);
->>>
->>> -	if (!kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + 1,
->>> -						KVM_MEMORY_ATTRIBUTE_PRIVATE,
->>> -						KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
->>> +	if (!kvm_range_is_private(file, index, 1, kvm, gfn)) {
->>
->> It's checking if a single gfn is private.
->>
-> 
-> But with huge page support we'd need to check a range of gfns... I guess
-> there's the argument of not keeping complexity for the future, but in
-> this case it's undoing functionality for this series and probably adding
-> it back later.
+On Thu, Jul 30, 2026 at 5:52=E2=80=AFAM Mykyta Yatsenko
+<mykyta.yatsenko5@gmail.com> wrote:
+>
+> From: Mykyta Yatsenko <yatsenko@meta.com>
+>
+> DECLARE_EVENT_CLASS emitted __bpf_trace_btf_ids_<call> through
+> BTF_ID_LIST_GLOBAL, i.e. a global symbol named after the event class.
+> The class name is not unique across the kernel, so the symbol
+> multiply-defines whenever two translation units instantiate the same
+> class.
+>
+> Switch to the file-local BTF_ID_LIST: the list is reached
+> only through the event_class_<call>.btf_ids pointer, initialised in the
+> same unit, so tracefs readers never reference the symbol by name and
+> resolve_btfids still fills the now-local .BTF_ids entries.
+>
+> The handcrafted syscall classes are the one cross-unit consumer: give
+> them their own local BTF_ID_LIST rather than importing the generated
+> sys_{enter,exit} lists, which are now file-local.
+>
+> Fixes: eadc0725ab8d3 ("tracing: Expose tracepoint BTF ids via tracefs")
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/all/ff58b01c-3f5e-4d55-be82-609d2faaf12e@=
+sirena.org.uk/
+> Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
+> ---
+>  include/trace/trace_events.h  |  6 ++++--
+>  kernel/trace/trace_syscalls.c | 22 ++++++++++++++--------
+>  2 files changed, 18 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
+> index 09ad57ac4b73..45ffbe04b580 100644
+> --- a/include/trace/trace_events.h
+> +++ b/include/trace/trace_events.h
+> @@ -404,10 +404,12 @@ static inline notrace int trace_event_get_offsets_#=
+#call(         \
+>   *   [0] FUNC   __bpf_trace_<call>     (the BPF dispatcher)
+>   *   [1] STRUCT trace_event_raw_<call> (the ring-buffer record)
+>   * Exposed via the events/<sys>/<name>/btf_ids tracefs file.
+> + *
+> + * File-local: the class name is not unique, so a global symbol would
+> + * clash across translation units.
 
-let's leave the work for huge page support in the future.
+drop this comment? not super useful and file-local is default behavior
+for BTF_ID_LIST anyways
 
->> We can just use kvm_mem_is_private()? And it seems can be a separate patch.
->>
-> 
-> Do you mean that this refactoring could be a separate patch? I could
-> refactor out kvm_range_is_private() in a separate patch, then put in the
-> mt_for_each() check in this patch together as part of all the rest of
-> the "wiring".
-> 
-> I considered that but it seemed like the refactoring was too small to
-> separate out into another patch when the mt_for_each() part is going to
-> be in this patch anyway.
-> 
-> Or, I could add an earlier patch to first replace the call to
-> kvm_range_has_vm_memory_attributes() with a call to check just 1 gfn,
-> then this wiring patch would be simpler.
+>   */
+>  #define _TRACE_BTF_IDS_DECLARE(call)                                   \
+> -       extern u32 __bpf_trace_btf_ids_##call[];                        \
+> -       BTF_ID_LIST_GLOBAL(__bpf_trace_btf_ids_##call, 2)               \
+> +       BTF_ID_LIST(__bpf_trace_btf_ids_##call)                         \
+>         BTF_ID(func,   __bpf_trace_##call)                              \
+>         BTF_ID(struct, trace_event_raw_##call)
 >
 
-This is what I meant. An earlier patch to just replace 
-kvm_range_has_vm_memory_attributes() with kvm_mem_is_private(). Then we 
-can drop this 'big' diff in this patch.
+This should go into Steven's tree, not bpf-next, right?
 
-If kvm_range_is_private() is useful/required by huge page support, then 
-let the huge page series to introduce it. It has nothing to do with the 
-in-place conversion series.
+> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.=
+c
+> index 48ef1a93e576..9b5931f2f280 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/ftrace.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/xarray.h>
+> +#include <linux/btf_ids.h>
+>  #include <asm/syscall.h>
+>
+>  #include "trace_output.h"
+> @@ -1305,13 +1306,18 @@ struct trace_event_functions exit_syscall_print_f=
+uncs =3D {
+>
+>  #ifdef CONFIG_BPF_EVENTS
+>  /*
+> - * BTF id lists generated by DECLARE_EVENT_CLASS for the sys_enter and
+> - * sys_exit tracepoints. The auto-generated event_class_sys_{enter,exit}
+> - * is unused (per-syscall events share the handcrafted classes below),
+> - * but the id lists themselves are global and reusable.
+> + * BTF id lists for the shared sys_enter/sys_exit dispatcher tracepoints=
+,
+> + * resolved by resolve_btfids. Defined locally rather than importing the
+> + * DECLARE_EVENT_CLASS-generated lists, which are now file-local to the
+> + * translation unit that instantiates the tracepoint.
 
-> Let me know what y'all think is best. Thanks!
-> 
->>>    		ret = -EINVAL;
->>>    		goto out_put_folio;
->>>    	}
+drop "resolved by resolve_btfids", and drop the part about defined
+locally because file-local, too much Claude style
 
+>   */
+> -extern u32 __bpf_trace_btf_ids_sys_enter[];
+> -extern u32 __bpf_trace_btf_ids_sys_exit[];
+> +BTF_ID_LIST(syscall_enter_btf_ids)
+> +BTF_ID(func,   __bpf_trace_sys_enter)
+> +BTF_ID(struct, trace_event_raw_sys_enter)
+> +
+> +BTF_ID_LIST(syscall_exit_btf_ids)
+> +BTF_ID(func,   __bpf_trace_sys_exit)
+> +BTF_ID(struct, trace_event_raw_sys_exit)
+>  #endif
+>
+>  struct trace_event_class __refdata event_class_syscall_enter =3D {
+> @@ -1321,7 +1327,7 @@ struct trace_event_class __refdata event_class_sysc=
+all_enter =3D {
+>         .get_fields     =3D syscall_get_enter_fields,
+>         .raw_init       =3D init_syscall_trace,
+>  #ifdef CONFIG_BPF_EVENTS
+> -       .btf_ids        =3D __bpf_trace_btf_ids_sys_enter,
+> +       .btf_ids        =3D syscall_enter_btf_ids,
+>  #endif
+>  };
+>
+> @@ -1336,7 +1342,7 @@ struct trace_event_class __refdata event_class_sysc=
+all_exit =3D {
+>         .fields         =3D LIST_HEAD_INIT(event_class_syscall_exit.field=
+s),
+>         .raw_init       =3D init_syscall_trace,
+>  #ifdef CONFIG_BPF_EVENTS
+> -       .btf_ids        =3D __bpf_trace_btf_ids_sys_exit,
+> +       .btf_ids        =3D syscall_exit_btf_ids,
+>  #endif
+>  };
+>
+>
+> ---
+> base-commit: eadc0725ab8d38c05148fce49f8d5c6a0e01f062
+> change-id: 20260730-b4-fix_btf_tracefs-fdafda5fdb5b
+>
+> Best regards,
+> --
+> Mykyta Yatsenko <yatsenko@meta.com>
+>
