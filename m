@@ -1,155 +1,136 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42FE37E5D9
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 23:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E91476CDC;
+	Thu, 30 Jul 2026 23:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785452647; cv=none; b=Ddd50ZHlSaezcC8TRpbAGethHcPkwNb8Fw08Hbo23ck032rzLcizH1CvafN26M+bp4sh2IbGtUsQA7qTW+gQLk1bnuwAvbCacP9S4fPLi9D9LngXLD1tWki7+P4JudX8K1HLE534SRPSxp5HwrZnnkwCSe6/cdN3gDx+ZkuYlVo=
+	t=1785454655; cv=none; b=tO/hoHmOAzalU7Zr9o8r4ZiHUTDOCRqYbsNXURfaqWZnDAQYq32vwaSnIfMeHDQIWnYNx9xKcdvAUU81/irmW1YQfnp+lhmQaXzuAKzYEIFK7XbriYePyB77Vx8HxCucVarUorWXIekuPvMsI4WGrZd/F/86boL5NC9G+7RSJ7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785452647; c=relaxed/simple;
-	bh=d4woD7hqYoPXEohXiOL20f0tSRpzoG5kZLjT/jPNQFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XrJueTe0Durg2C7vNABv5T24dYpfc3+rxHrSBC4tiiybPmBWuBuSOkzaiXODgyG+2j8wyH+SbuSw2YFKBh/oRXDKy9aJbBnSAGg5dAp9w2DvNs+9p2A9DF2oAryBxFctda9iZ6SfYIahvPiL8XDmXy7oYe+GitKW6x6Fk+/3LE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ByXJ6MS1; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785454655; c=relaxed/simple;
+	bh=CHae/PQNyGnK+cAwdETrjX+TvDIGQh4fuLvoP+AlPlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRsHMQViD+kPIlNeplGog035/ihNjM4dow6xHMckzLtUW57rEh6nPgkOKyNLeRvBb5MILicHt8nhu+DB/SZMal9acyE33ys3PimjFKu55erSp1i4nuzLVlcTfTH+X0T9HVFe+iZvxBhzWRDsm5RhYBjyXQVp115NJ0yQarBJW6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gLAtWP2Z; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ByXJ6MS1"
-Message-ID: <77edc25d-a521-4f65-84ed-dbb016593902@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785452631;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OAzNMKmzxCFzEOWAiEeFQaer1iebyg6cnDmy70dSSVc=;
-	b=ByXJ6MS1MhKl0IZKznqW2J5nDrksOfD/dwgBIHmiEQXINrWpU3ijNcB6h40pP7yFC5i1vM
-	gUD57GI4yWuIFnk56E1motluBATL65JoyAMundcpQ2zA2vs6bjJIR14Nd3A/OfA2iTBfTn
-	CMAjhXxMsRAxvi87UlEJeKSsQFE83ms=
-Date: Thu, 30 Jul 2026 16:03:33 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gLAtWP2Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=CAtKSI6m+4Gh/IO7Lr6iBocpHFoEfkL6KKgxA4beTgg=; b=gLAtWP2ZiiTF5jaWCra5e/pq8h
+	0CXiMcbEcrBaokrjOC9e5/zFgU2ADom77GKb7KUNm/ayEyf9H0gIsg5aFPAd1lIloek+6RDMIQkDu
+	jFM+EeGiHejlCeIGaZFwj+GTB/sQHGzDneDBnSWQjJS8eREfWFpjPLNy4SIAXCbIKfEjP49br+DmF
+	tpnBD+HYhX2tx8OT/k4I9sWUfRrw3kmo8jHKJAafKTyGGk0rhpzWcYDL2mnKsyE2HAxxpYox3/L2d
+	qdl+w6Kk9vSNumwm2ldLTxQ27yPjw/PDMlNoqGkmWGbUYcPKIXsv1/5AC6QaJeTUMzSPPsPfh+7uu
+	bt1ADutg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wpaJW-00000004bEg-1els;
+	Thu, 30 Jul 2026 23:37:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EF7BF3004C9; Fri, 31 Jul 2026 01:37:20 +0200 (CEST)
+Date: Fri, 31 Jul 2026 01:37:20 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH bpf-next 2/2] uprobes: Switch uretprobes_srcu to
+ SRCU-fast-updown
+Message-ID: <20260730233720.GC776954@noisy.programming.kicks-ass.net>
+References: <20260706172744.3920417-1-puranjay@kernel.org>
+ <20260706172744.3920417-3-puranjay@kernel.org>
+ <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
+ <DK4I97UIL347.3P2KEBO828JK8@gmail.com>
+ <CAEf4Bza3LeVB-z3jwMdnBGLdjpPr9tZFhGHt5pUwui64ZX66Lw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] arm64: ftrace: enable single ftrace_ops for direct
- calls
-To: Leon Hwang <leon.hwang@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>, Shuah Khan <shuah@kernel.org>,
- "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20260727142844.21212-1-leon.hwang@linux.dev>
- <20260727142844.21212-2-leon.hwang@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ihor Solodrai <ihor.solodrai@linux.dev>
-In-Reply-To: <20260727142844.21212-2-leon.hwang@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bza3LeVB-z3jwMdnBGLdjpPr9tZFhGHt5pUwui64ZX66Lw@mail.gmail.com>
 
-On 7/27/26 7:28 AM, Leon Hwang wrote:
-> The BPF tracing multi link updates several direct-call sites through one
-> ftrace_ops. Its implementation is therefore gated by
-> HAVE_SINGLE_FTRACE_DIRECT_OPS in addition to
-> DYNAMIC_FTRACE_WITH_DIRECT_CALLS.
+On Thu, Jul 30, 2026 at 03:27:27PM -0700, Andrii Nakryiko wrote:
+> On Tue, Jul 21, 2026 at 12:44 PM Kumar Kartikeya Dwivedi
+> <memxor@gmail.com> wrote:
+> >
+> > On Fri Jul 10, 2026 at 11:23 PM CEST, Andrii Nakryiko wrote:
+> > > On Mon, Jul 6, 2026 at 10:28 AM Puranjay Mohan <puranjay@kernel.org> wrote:
+> > >>
+> > >> uretprobes_srcu currently uses normal SRCU, which issues
+> > >> two smp_mb() per read lock/unlock pair. This overhead is
+> > >> paid on every uretprobe hit.
+> > >>
+> > >> Switch to SRCU-fast-updown, which eliminates the per-reader
+> > >> memory barriers by moving the ordering cost to the
+> > >> grace-period side (synchronize_rcu() instead of smp_mb()).
+> > >> This is acceptable because grace periods (uprobe
+> > >> unregistration) are infrequent compared to reader-side
+> > >> uretprobe hits.
+> > >>
+> > >> The updown flavor is required because the SRCU read lock is
+> > >> taken in prepare_uretprobe() when a return instance is
+> > >> created and is held until that return instance is finalized.
+> > >> The traced thread returns to user space in between, so the
+> > >> lock is inherently released in a different context from
+> > >> where it was acquired: on the normal return path via
+> > >> uprobe_handle_trampoline() -> hprobe_finalize(), or from
+> > >> ri_timer() (expiry) or dup_utask() (fork) via
+> > >> hprobe_expire(). srcu_down_read_fast() / srcu_up_read_fast()
+> > >> are designed for this acquire-here / release-elsewhere
+> > >> pattern and, unlike the same-context srcu_read_lock_fast()
+> > >> variant, do not carry the lockdep read-side tracking that
+> > >> would warn on it.
+> > >>
+> > >> The short, same-context SRCU sections in ri_timer() and
+> > >> dup_utask() (which guard the uprobe against reuse across the
+> > >> hprobe_expire() cmpxchg) instead use guard(srcu_fast_updown)
+> > >> for proper lockdep coverage.
+> > >>
+> > >> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> > >> ---
+> > >>  include/linux/uprobes.h |  5 +++--
+> > >>  kernel/events/uprobes.c | 29 +++++++++++++++++------------
+> > >>  2 files changed, 20 insertions(+), 14 deletions(-)
+> > >>
+> > >
+> > > Very straightforward replacement and will improve performance, thanks!
+> > > LGTM. Peter or Mingo, I assume you guys will want to route this
+> > > through your tip tree, right?
+> > >
+> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > >
+> >
+> > Hi Peter, Ingo,
+> >
+> > Gentle ping for this.
+> >
 > 
-> Select HAVE_SINGLE_FTRACE_DIRECT_OPS whenever arm64 enables dynamic ftrace
-> direct calls. This enables BPF tracing multi links on arm64. Also
-> generalize the unreachable-trampoline comment because the single-ops path
-> does not use ops->direct_call.
+> Another ping, please consider applying, thanks!
 
-Hi Leon,
-
-I don't think this change can land as is yet. The series doesn't even
-apply cleanly to bpf-next, but that's minor.
-
-More importantly, it depends on Jose's series [1], which is not in the
-mainline yet. And there Mark has raised performance concerns [2] and
-the discussion still seems to be open.
-
-[1] https://lore.kernel.org/all/20260609-arm64-ftrace-direct-calls-v1-0-4a46f266697f@linux.dev/
-[2] https://lore.kernel.org/all/amjnf5gz0xP5PTSB@J2N7QTR9R3/
-
-> 
-> Assisted-by: Codex:gpt-5.6-sol
-> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
-> ---
->  arch/arm64/Kconfig         | 2 ++
->  arch/arm64/kernel/ftrace.c | 3 +--
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 0de419ed780f..c98dca76859b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -188,6 +188,8 @@ config ARM64
->  		    CLANG_SUPPORTS_DYNAMIC_FTRACE_WITH_ARGS)
->  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS \
->  		if DYNAMIC_FTRACE_WITH_ARGS
-> +	select HAVE_SINGLE_FTRACE_DIRECT_OPS \
-> +		if DYNAMIC_FTRACE_WITH_DIRECT_CALLS\
-
-The select is only conditional on DYNAMIC_FTRACE_WITH_DIRECT_CALLS, so
-it can be set along with HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS. And AFAIU
-this would make the fast path effectively dead: every BPF direct call
-routed through ftrace_caller now goes through the slow path.
-
-As Mark noted in the other thread, on arm64 trampolines come from
-EXECMEM_BPF, so they always land out of BL range (chance of landing in
-range is 256M/terabytes).
-
-I vibe-slop-coded a benchmark and ran it on a Neoverse V2 machine, and
-toggling your config change seems to be causing a 1.3x regression in
-the tracing overhead:
-
-  do-nothing fentry (r0=0; exit) on __arm64_sys_getpid, 20 M calls, min-of-N, several boots. Results:
-
-              untraced (base)   traced        overhead
-  Kernel A    ~128 ns/call      ~145.5 ns     ~17.6 ns   (fast path: br x17)
-  Kernel B    ~127 ns/call      ~150.4 ns     ~23.4 ns   (slow path: save regs + call_direct_funcs + hash)
-
-This confirms Jiri's suspicion.
-
-However my understanding is the regression should mostly disappear in
-case some version of in-range trampoline allocation on arm64 lands.
-
-So, I think the landing sequence should be something like follows:
-  * in-range BPF-trampoline allocation that Jose proposed [3]
-  * then HAVE_SINGLE_FTRACE_DIRECT_OPS selection
-
-After all of that reaches mainline, then a selftest patch can go
-through the bpf-next.
-
-[3] https://lore.kernel.org/all/amn7cBQ-cqs2XlKV@linux.dev/
-
->  	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
->  		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI && \
->  		    (CC_IS_CLANG || !CC_OPTIMIZE_FOR_SIZE))
-> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-> index e1a3c0b3a051..56ba72a87dfa 100644
-> --- a/arch/arm64/kernel/ftrace.c
-> +++ b/arch/arm64/kernel/ftrace.c
-> @@ -301,8 +301,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
->  
->  	/*
->  	 * If a custom trampoline is unreachable, rely on the ftrace_caller
-> -	 * trampoline which knows how to indirectly reach that trampoline
-> -	 * through ops->direct_call.
-> +	 * trampoline which knows how to indirectly reach that trampoline.
->  	 */
->  	if (*addr != FTRACE_ADDR && !reachable_by_bl(*addr, pc))
->  		*addr = FTRACE_ADDR;
-
+Got them, thanks!
