@@ -1,128 +1,83 @@
-Received: from out28-100.mail.aliyun.com (out28-100.mail.aliyun.com [115.124.28.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8904633ADB1;
-	Thu, 30 Jul 2026 05:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD383B4E9B;
+	Thu, 30 Jul 2026 07:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785390215; cv=none; b=VFElupLh96e5o5rS/kDXxifa2uFU4rrveLvBNBVViiiHoMHEc44VVZJriwuG6fW2iuiK+0ymBzn0opE7Q/eAlcG9eqnihynEqr9DgERpMDBsoAzZsdf8Uy48Su9chfA9P8BZvlvkHg5Lk9oaCa91raNOJcn3yxuz5x1Siprf4oo=
+	t=1785394918; cv=none; b=qk5a/1LCXNTlM/VMMdD25gEppws0AfRWqxhxTs0gdGbO1jZSpIDgrgFnKA/wSoLQGGQxTap8zHmoRSGqKmzV8m0/P7X3s+6WeKmcB+hnt73QnnwsP/Amd6ddO716Cs7tPQhOJSGFX4f+XhKBvD8KLaxW47r2E9Mpx/pRT1yrgpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785390215; c=relaxed/simple;
-	bh=3yh2x2SbQ0wTxMlakw/cJNBlV4v/tjGctSmFacwz3cg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=UF/y9WmNNyuWLGsAsIVWqw0tbT2R+FzgKMjTGg+tLV+eE1cQVMOnelu5ybrBTH2Ea+cNhiyNDYZLFUycx7khJRQnKhHVx4j+lZ7ogKBlEeyot7jNBG58a4mGMCpgaI8DzEt2GuJGAzoKlG9V6T46RTLiUyQ5tuMSDjp5xS3zpZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07455114|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.101034-0.264635-0.634331;FP=13256837106311415166|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037028158;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.iZ8Efy3_1785389880;
-Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.iZ8Efy3_1785389880 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Thu, 30 Jul 2026 13:38:01 +0800
-Message-ID: <8147bb04-b890-f18a-9cab-48b712f54856@allwinnertech.com>
-Date: Thu, 30 Jul 2026 13:37:59 +0800
+	s=arc-20240116; t=1785394918; c=relaxed/simple;
+	bh=4/lmGNk8KUkikIFUgEX/Hp8fI47njE1M+n3gwumQzPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dI0My7bi0RhJlNyicrzxuifFw82DFx4ciEnRS5xwfE/+4HNLLSndbeb8hRheuW2NuX+5J34+9xlllhckduiR4ehFt1VUOyIp/RgTBnJOrZz7UImN6BTZGVews1PdPDA3pog+7xNQB7fjYbMUGosJp8oreV1nk/i0yN7DTbIlCRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjI7l9rb; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjI7l9rb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B4531F000E9;
+	Thu, 30 Jul 2026 07:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785394915;
+	bh=G5ONB7WMx9hZFRFJLm6QgDyDI8LmZzbowiLf/94qXwg=;
+	h=From:To:Cc:Subject:Date;
+	b=hjI7l9rbGjfKTnwUzVmQZA6y50kHzgti3tZxKNayuUwq19HgnKqEY7MJIgULa+bJA
+	 IXlHw7nBMG5GgkCB3MsUtfQK5gizAUR7HZaE7ZQbKfOsxhpKVqJhoNCKbOctN5b69O
+	 HcWh/UNPVt0WNI0QID/+jJZpEW8qK1vaFqZNwuSGKfaP/v9HYWLd+mJy8Gc59UWTjC
+	 Yix/5o28iMCInVhn7Oy63+NgqVg45Zn6lSbHKb8uCzSYptsXdbUCsRdSoBOi2WuBBt
+	 IR2xjqPBmoEFipwNOybSMvuNDrRA/Dy3eoIbcGz5+QtMXX4/Qy1S05VHyt+DNHK+wi
+	 SOaJqVNwYfnyA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Fix subbuf_ids memory leak in rb_allocate_cpu_buffer() error path
+Date: Thu, 30 Jul 2026 16:01:51 +0900
+Message-ID: <178539491147.180138.1181424244288838594.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
-From: Michael Wu <michael@allwinnertech.com>
-Subject: [PATCH] tracing: Fix race between update_event_fields and
- event_define_fields
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Kernel: Linux version 6.18.21
-Platform: Android
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-event_define_fields() (pri=1 MODULE_STATE_COMING notifier, locked by
-event_mutex) populates class->fields via list_add(), while
-update_event_fields() (called from the pri=0 notifier path via
-trace_event_update_all) traverses class->fields protected only by
-trace_event_sem.  These are two different locks guarding the same
-data structure, so during cross-module loading a reader on one CPU can
-observe partially initialized list nodes being concurrently added by a
-writer on another CPU.
+In rb_allocate_cpu_buffer(), cpu_buffer->subbuf_ids is allocated using
+kcalloc() when buffer->remote is non-NULL. If a subsequent page allocation
+fails (e.g., ring_buffer_desc_page() returns NULL or rb_allocate_pages()
+fails), execution jumps to fail_free_reader.
 
-On arm64 with weak memory ordering, __list_add() writes to two
-different cache lines:
+While __free(kfree) automatically frees the outer cpu_buffer structure
+at scope exit, kfree(cpu_buffer) does not recursively free nested heap
+pointers such as cpu_buffer->subbuf_ids, resulting in a memory leak.
 
-         next->prev = new;                // (1) ordinary store
-         new->next = next;                // (2) ordinary store — 
-field's cache line
-         new->prev = prev;                // (3) ordinary store
-         WRITE_ONCE(prev->next, new);    // (4) release store — head's 
-cache line
+Fix this by explicitly freeing cpu_buffer->subbuf_ids in the
+fail_free_reader error unwinding path when cpu_buffer->remote is set.
 
-The store buffer can drain (2) and (4) independently since they target
-different cache lines.  A remote CPU may observe (4) before (2): it
-sees prev->next pointing to the new node, but the new node's link.next
-is still zero (kmem_cache_alloc zero-initialized via KMEM_CACHE with
-SLAB_PANIC).  Since offsetof(struct ftrace_event_field, link) == 0,
-list_for_each_entry() derives field == NULL from link.next == 0 and
-crashes at field->type (offset 0x18):
-
-   Unable to handle kernel access ... at virtual address 0000000000000018
-   pc : update_event_fields+0xf8/0x368
-   Call trace:
-    update_event_fields+0xf8/0x368
-    trace_event_update_all+0x7c/0x2b4
-    trace_module_notify+0x4c/0x1dc
-    notifier_call_chain+0x84/0x168
-    blocking_notifier_call_chain_robust+0x64/0xd4
-    load_module+0x10c8/0x123c
-    __arm64_sys_finit_module+0x230/0x31c
-
-Fix by holding event_mutex in trace_event_update_all() before
-down_write(&trace_event_sem).  This serializes the reader against
-event_define_fields() which takes event_mutex for the entire
-write-side critical section.  The lock ordering event_mutex ->
-trace_event_sem is already established at three other sites
-(trace_remove_event_call, event_trace_add_tracer,
-event_trace_del_tracer), so this introduces no ordering conflict.
-
-An alternative of placing mutex_lock inside update_event_fields() was
-considered but rejected — it would invert the established lock
-ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
-
-Signed-off-by:  Michael Wu <michael@allwinnertech.com>
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+Assisted-by: Antigravity:gemini-3.6-flash
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-  kernel/trace/trace_events.c | 2 ++
-  1 file changed, 2 insertions(+)
+ kernel/trace/ring_buffer.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 956692856fa8..9632788da5af 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map 
-**map, int len)
-  	int last_i;
-  	int i;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 78d3875a47a5..03f6baf6a5f5 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2599,6 +2599,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	return_ptr(cpu_buffer);
+ 
+  fail_free_reader:
++	if (cpu_buffer->remote)
++		kfree(cpu_buffer->subbuf_ids);
+ 	free_buffer_page(cpu_buffer->reader_page);
+ 
+ 	return NULL;
 
-+	mutex_lock(&event_mutex);
-  	down_write(&trace_event_sem);
-  	list_for_each_entry_safe(call, p, &ftrace_events, list) {
-  		/* events are usually grouped together with systems */
-@@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map 
-**map, int len)
-  		cond_resched();
-  	}
-  	up_write(&trace_event_sem);
-+	mutex_unlock(&event_mutex);
-  }
-
-  static bool event_in_systems(struct trace_event_call *call,
--- 
-2.29.0
-
-
--- 
-Regards,
-Michael Wu
