@@ -1,131 +1,211 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1EF43B3DD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 13:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ECB4302F6
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 15:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785419320; cv=none; b=Z7XAhWq4AerM8MYxAn6rh//XY3QntXCSRBcLJVB5hIslDkPoD/HSYxmQkEn2OQ3STLBlVXezv5L/9a6r24UwDnm6M3JqsqXYsfUHy+eKo/H1XirH1Du7d/B+lrVw+qN3vgDEyPpxyngQfEcl1opw1Gip4DYV0rbsc1lMKhalpks=
+	t=1785423806; cv=none; b=UFYl/fyDbF0ellJHsXfQ2ZDRw0Ky9uWmgJNdQ56687RAVFGIqUWr1w5Rw57qDNiuBRjnzD2G/L7OgNBUa0aRip0hA9zgVO7WT9avZYvv8zV2kQDTCufdRKTgaoqnLlbJfsQfXUC9cKIP/Frd4kCM2xFPN0V+D9LQQOx2ip3otss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785419320; c=relaxed/simple;
-	bh=VfMZ6NMtQ/ZEGuLShhpxeERJUadr0O85JZ12jMZAvXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fp7tGt73SEgSEDiJP5WsdxIG0UOd3+GfyO24corkrVc8F5KHBhmfSEeUW9Uuinygf29+vd9cczmczMsJlu+LkN/zHXLklCIlUMapl8D7RD6zitKYblS+5vkVaImsMABY1u7IbNrzHI0AUlUoosTsZJ7uyCxwKkFpFJaG2sdQnMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=r+85ldr/; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785423806; c=relaxed/simple;
+	bh=sl+QWHjFtbNBqIyf/rEVDoZRiqifr1hht5vwSu7//gI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pWf4CLsvqA3q0bn8uvQtz9nWxIKCdBG56iqR+YXKuNpA3MYO93XXulwimD12yyPXzBBvB+bajYj42sAJP7c9gR+7Nq2CIa5y/wl8iWEC2/4qyXbXMhgFYk4vx3C11aYdG9BfGbPKQL81hmhKTJF7/V9+fP9sCw9grrVenNtu/ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EggsKX2y; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="r+85ldr/"
-X-Forwarded-Encrypted: i=1; AHgh+RqoAOW1/ooPcnyDyXKxEpHg+NP4cFgMMb+C81ehDT78ds02flskiZVPH6zAp/ymZ7AL/53MHTFEmhqxA1JIhczc09I=@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785419316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iPMt+aR9T4Y+jxBcYLYdMo+Qb3zQCW13YSvAT1bAsYk=;
-	b=r+85ldr/AjvWKjaqa9HO7glLVa9ifvbQnXYzklAJmi4aj/TR0zbG5bluCLkl40DmG2U++h
-	5bx8r5i8QRFqGS3w6m8eAdy1iv/G2eWqrk3lxDWafIiR0eOObnBvr2mVSZW/juIaMOmuiU
-	oDqh3LVQiIZ5yA8DY6dC9fmASScmKpc=
-X-Gm-Message-State: AOJu0Yw7bqlgQv8FKwLNVaplsgSezxiVQaYzy3oDrX/kWYhnHJ59Cmw1
-	qX1je9jrF2tFhWjbLk1o7f+LnPu0KdXrI88zLzRJK6znIidYRk23xMsr5PH06jYJGfcCgeHBOnj
-	Tm6YWmTY1ac6HfWuPbG4yUY4svOzvMXAX5JJmkAtZ
-X-Received: by 2002:a05:622a:5506:b0:517:5e32:2d14 with SMTP id
- d75a77b69052e-52b42890329mr1575781cf.10.1785419298935; Thu, 30 Jul 2026
- 06:48:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EggsKX2y"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-698acd36d67so3986663a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 08:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785423801; x=1786028601; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=9UdmMkwBkbwHpnQxJHOFAJgHRQBiC2eogIeFtsGPq2M=;
+        b=EggsKX2ywbsLYpbhN6cPLUBQ/GX+YTh94tU4rgRs89PdQdEqkxhZXWxTuBvdpSq44y
+         JcQ0p0YwAr5Xw1mXaVeWME4vezJUEgMhf3ZIyYgfiugQhpHuMNbgvviPHoP1WPuDRMzh
+         I7S/Zvt5HBVCYXsIddoVwkiKDrXzdFHtLC0UJXq1JbWkqrDBsuYfngG/gjT26wOvVi7U
+         qAgBOhFRPNTH2W8rzFWIgS7K5S1Na/jriGMiRdYjTx/LkQ70+hKKvCVtB0MHXvbdUajY
+         4JSo15GYKsvfv7zD7Si7zbTuqrdm+aU9RH5mJXDPKMymehUvzcunfFaaTOgjQdVfvgNy
+         8ZQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785423801; x=1786028601;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=9UdmMkwBkbwHpnQxJHOFAJgHRQBiC2eogIeFtsGPq2M=;
+        b=npLUpMEpvXvebDPTqbRTkJ7L+OxsYlX8OeC4IdMRuF0TYHi2gUYWupz7rcwNado6Zn
+         JeP9frQMBHA48DqxGhnIft5gdfd/Qv1KtWdfNPZ6VmlSfo9jSsWYeh2uL2Y4junM89PQ
+         bWu92QvpZLrWnBDhwOHMYmJmHXITaTL38bHkfxWJy5530o2Ig6Kmx5yt5VR9ccC8QfX0
+         xVpqP3mDkXVmS43FvRQFRml/wfqT9isvff/5j21laJK5dI09Ff6UVWu0MQNC5A70XrKL
+         ryMchJI+4+a9uSteDXd1MvheQCiva4cznQR4uiBndYDD4cXEFlnWvWlqznIgBUCAs692
+         alSg==
+X-Forwarded-Encrypted: i=1; AHgh+RovxsvWR0aNktO4gQBSaC2HjDvEiXNVNL5lzQYnPWHZEpEQflztwfNFqG2WIq9wAJfNXXxtLaMTSO375Epg8N0cMmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIaQKlwpATsjtCEXGqFEqyKUO22fJ/dYsK4gXzapU75Q2npADL
+	yki+CLv5WVnoobEqTmLiFhXYr+hkXqvOeRsxDrrSuu7ZRCpeZqyk9y7M
+X-Gm-Gg: AR+sD125KxtXhHgr3Lm0i6ToYCr2K7Os2coRc1rLAPM9Lu6tKJhNw+khM4q53Bz6Lgm
+	oLHm0GFhS+8WpSe9Xe3ChG8OZecu7LeEsoFw/6Mm9qYiZ6HzDO7zXqI+5NpdOvbC2d35qTIRQxr
+	307GEvCTL0ymQuCGU0WS1Wk2CTSbY5JHV06huV9GfLq7KAwMu+4yZ0SnihTvWiNr3VtYXqyBWdY
+	Gq+k+AdVFAZIAZlvpcIvROpBVjaLdEqwsnN6Qu/CYl/SAvsc9BJDWsR7QndoE/QEiHTWb7UM4cB
+	RdeFYvdRKnVJqiVFQh5okkmYfTXQLBmudqphdLqTgBKEDu1hhz/3nfYmQ/jp5S+M8VXVBE65ac1
+	4z6Od509szplpNut/p8pu2FF8wd0EDAgkklSQXBwi1Phb2qVqiJgyKhbY0nQMR5iFqyLnMIN937
+	q6xGtGpwU8/2xRmhjZqcLcVjQ1fgxWcig4Cfoc9yV6krpdxIJjb6/jtI0FvGHgN6JB+IaiHwKfr
+	CyB/2KaYcoUOIYlxI9n9WV7TOm8i5KNr1ZJLobTeMVVXw==
+X-Received: by 2002:a05:6402:3604:b0:6a0:32ec:511e with SMTP id 4fb4d7f45d1cf-6a090d3ef16mr386314a12.11.1785423800678;
+        Thu, 30 Jul 2026 08:03:20 -0700 (PDT)
+Received: from [127.0.1.1] (h-62-63-197-109.NA.cust.bahnhof.se. [62.63.197.109])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a07bf18ff8sm729116a12.0.2026.07.30.08.03.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2026 08:03:19 -0700 (PDT)
+From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+Subject: [PATCH RFC v2 0/3] Demote to lower tier using non-temporal stores
+Date: Thu, 30 Jul 2026 17:02:56 +0200
+Message-Id: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260720161343.1367007-1-fuad.tabba@linux.dev>
- <20260720161343.1367007-10-fuad.tabba@linux.dev> <86jyqcd55u.wl-maz@kernel.org>
-In-Reply-To: <86jyqcd55u.wl-maz@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Thu, 30 Jul 2026 14:47:42 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTwT38rV0DQKW7R0=ZVHvQU0jnvJbjDBqnpmNgu34biuMA@mail.gmail.com>
-X-Gm-Features: AUfX_mx9CQmsqra9xcBkaqo79ZBW6DENHL3Zuxa95e-ym6s_uC8W9VwDyVSlgQo
-Message-ID: <CA+EHjTwT38rV0DQKW7R0=ZVHvQU0jnvJbjDBqnpmNgu34biuMA@mail.gmail.com>
-Subject: Re: [PATCH v1 09/11] KVM: arm64: Type-check hypercall arguments at
- the caller
-To: Marc Zyngier <maz@kernel.org>
-Cc: oupton@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, alexandru.elisei@arm.com, 
-	vdonnefort@google.com, joey.gouly@arm.com, seiden@linux.ibm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, qperret@google.com, 
-	ardb@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKFna2oC/3WNwQrCMBBEf6Xs2ZU0aKGeBKEf4FV6SJONjdAmb
+ GJQS//dtp49zvDmzQSR2FGEUzEBU3bR+XEJcleA7tV4J3RmySCFrMRRVshW45jQ0OATobDKKmO
+ NEaKCZROYrHttvhtcmwu0vzI+uwfptJpWrHcxeX5vr7nc4D8HuUSB1NW6PkhpFNnzJyTtOey1H
+ 6Cd5/kLyuwjvMMAAAA=
+X-Change-ID: 20260526-rfc-nt-demote-0fafadfdd006
+To: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>
+Cc: David Rientjes <rientjes@google.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <nifan.cxl@gmail.com>, 
+ Frank van der Linden <fvdl@google.com>, Jonathan Cameron <jic23@kernel.org>, 
+ Raghavendra K T <rkodsara@amd.com>, 
+ "Rao, Bharata Bhasker" <bharata@amd.com>, SeongJae Park <sj@kernel.org>, 
+ Wei Xu <weixugc@google.com>, Xuezheng Chu <xuezhengchu@huawei.com>, 
+ Yiannis Nikolakopoulos <yiannis@zptcorp.com>, dimitrios@palyvos.net, 
+ Ryan Roberts <ryan.roberts@arm.com>, Huan Nguyen <nhuhuan@google.com>, 
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>, 
+ Alirad Malek <alirad.malek@zptcorp.com>
+X-Mailer: b4 0.15.2
 
-Hi Marc,
+In most memory tiering scenarios, the memory to be demoted is expected
+to be cold and most likely out of the node's last-level cache (as well
+as target pages in the target node). Using non-temporal stores instead
+of a standard memcpy path can reduce the cache pollution in the local
+node and the bandwidth overhead to the target node. Furthermore, for
+certain types of CXL devices that support in-line memory compression,
+the last-level cache eviction patterns can negatively affect the
+bandwidth of the device. Non-temporal stores can mitigate this.
 
-On Thu, 30 Jul 2026 at 13:37, Marc Zyngier <maz@kernel.org> wrote:
-...
-> > +/*
-> > + * Generate a typed stub for each declared hypercall. kvm_call_hyp_nvhe()
-> > + * resolves to the stub, so a call with the wrong argument count or types
-> > + * fails to compile instead of being silently truncated to an SMCCC function
-> > + * number and a pile of registers. The stub inlines to the same SMCCC call
-> > + * the untyped macro used to make.
-> > + */
-> > +#define DECLARE_KVM_HOST_HCALL(ret, name, x, ...)                    \
-> > +     static __always_inline                                          \
-> > +     ret nvhe_hvc_##name(__KVM_HCALL_MAP(x, __KVM_HCALL_DECL, __VA_ARGS__)) \
-> > +     {                                                               \
-> > +             return (ret)__kvm_call_hyp_nvhe(name,                   \
-> > +                     __KVM_HCALL_MAP(x, __KVM_HCALL_ARGS, __VA_ARGS__)); \
-> > +     }
->
-> One thing I find absolutely horrible is to have to specify the number
-> of parameters here. It is already bad to have to comma-separate
-> everything, but having to count them is too hard for me ;-).
->
-> We already have facilities to count the number of parameters to a
-> macro (see the COUNT_ARGS macro). You could make use of it all over
-> the place.
+This patch-set introduces a new migrate_mode flag for using non-temporal
+stores that is used only in the demotion path. Patch 1 adds some helpers in
+x86 and mm to bring non-temporal stores support to a respective folio_copy
+function. Patch 2 adds the new flag and necessary changes for compatibility
+with the existing behavior. Patch 3 uses the new flag for demotions.
 
-Will Deacon mentioned the same thing yesterday (offline). I'll drop it
-in v2. The count was only there because the macro that walks the pair
-list is a copy of __MAP() in <linux/syscalls.h>, which gets its arity
-from the SYSCALL_DEFINEn name. No better reason than that.
+Experimental data: in a CXL system with 1 memory expander, a microbenchmark
+that allocates N=64 GB memory in the local node and then triggers demotion
+using memory.reclaim, shows a practically complete elimination of read
+traffic on the device, i.e. write traffic is N GB with and without the
+patch, while read traffic drops from N to almost 0 with the patch.
 
-COUNT_ARGS() does work here. The list is (type, name) pairs, so it
-counts twice the arguments, which the ladder absorbs by being indexed
-on list entries:
+Opens:
+1. There is some "duplication" in the x86 tree and a bit in mm. Can we do
+   something better there? As it is now in copy_mc_to_kernel_nt we
+duplicate the machine check functionality, which if available will override
+the non-temporal. We were not sure how to prioritize these two and what's
+the best approach here. Can we completely skip the machine checked for this
+path? Huan Nguyen has some ideas here that we will align for the next
+version.
+2. I am not sure how this should be structured so that it is easily
+adopted in other architecture trees (e.g. aarch64). We rely on
+memcpy_flushcache for x86_64 but this does not use non temporal stores
+in ARM. ARM support is currently out of our scope but any input is
+appreciated.
 
-#define __KVM_HCALL_MAP2(m, t, a, ...) m(t, a)
-#define __KVM_HCALL_MAP4(m, t, a, ...) m(t, a), __KVM_HCALL_MAP2(m, __VA_ARGS__)
-[...]
-#define __KVM_HCALL_MAP12(m, t, a, ...) m(t, a), __KVM_HCALL_MAP10(m,
-__VA_ARGS__)
-#define __KVM_HCALL_MAP_N(n, m, ...) CONCATENATE(__KVM_HCALL_MAP,
-n)(m, __VA_ARGS__)
-#define __KVM_HCALL_MAP(m, ...)
-__KVM_HCALL_MAP_N(COUNT_ARGS(__VA_ARGS__), m, __VA_ARGS__)
+Signed-off-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+---
+Changes in v2:
+- Remove the KConfig option that was guarding this feature (patch 3) and
+  use it always in x86_64 and memcpy_flushcache (non-temporal stores
+should be there).
+- Link to v1: https://patch.msgid.link/20260526-rfc-nt-demote-v1-0-eb9c9422daef@zptcorp.com
 
-DECLARE_KVM_HOST_HCALL(int, __pkvm_init,
-      phys_addr_t, phys, unsigned long, size,
-      unsigned long *, per_cpu_base, u32, hyp_va_bits)
+To: Thomas Gleixner <tglx@kernel.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+To: x86@kernel.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Vlastimil Babka <vbabka@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+To: Michal Hocko <mhocko@suse.com>
+To: Trond Myklebust <trondmy@kernel.org>
+To: Anna Schumaker <anna@kernel.org>
+To: Zi Yan <ziy@nvidia.com>
+To: Matthew Brost <matthew.brost@intel.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Rakie Kim <rakie.kim@sk.com>
+To: Byungchul Park <byungchul@sk.com>
+To: Gregory Price <gourry@gourry.net>
+To: Ying Huang <ying.huang@linux.alibaba.com>
+To: Alistair Popple <apopple@nvidia.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Brendan Jackman <jackmanb@google.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
 
-That drops 40 hand-written counts from the declarations and 40 from
-the handler definitions. __KVM_HCALL_MAP_N() is for the handler side,
-which truncates a fixed list of six argument registers, and takes its
-count from COUNT_ARGS() as well.
+---
+Alirad Malek (3):
+      mm, x86: support copying a folio using non-temporal stores
+      mm: new migrate_mode flag for async using non-temporal stores
+      mm: use non-temporal stores for demotion
 
-I diffed the preprocessed output before and after: token-identical
-apart from the __LINE__ values that shift with the declarations.
+ arch/x86/include/asm/uaccess.h |  4 ++++
+ arch/x86/lib/copy_mc.c         | 26 ++++++++++++++++++++++++++
+ fs/nfs/write.c                 |  2 +-
+ include/linux/highmem.h        | 32 ++++++++++++++++++++++++++++++++
+ include/linux/migrate_mode.h   |  9 +++++++++
+ include/linux/mm.h             |  1 +
+ include/trace/events/migrate.h |  1 +
+ mm/compaction.c                | 18 +++++++++---------
+ mm/migrate.c                   | 22 +++++++++++++++-------
+ mm/util.c                      | 17 +++++++++++++++++
+ 10 files changed, 115 insertions(+), 17 deletions(-)
+---
+base-commit: 1f318b96cc84d7c2ab792fcc0bfd42a7ca890681
+change-id: 20260526-rfc-nt-demote-0fafadfdd006
 
-Cheers,
-/fuad
+Best regards,
+--  
+Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
 
-
->
-> Thanks,
->
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
