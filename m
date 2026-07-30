@@ -1,128 +1,406 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFD13BCD36
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 20:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785444569; cv=none; b=bSbuPB0Uf7jvJf641kIBNt9tYe82wTNrwE3CE0m+uok8NpYHVt05oEPnkiZJBvqX5kiA61VLoc4Y/uiqIyTO2RjFgkQW0+svazL1qDVLBFpCIp2MhZ9rABTBA4Get/HY2jp/rPC6QHbtk5PMjkA0sTKS0thSUdoOv08MKNVBQfM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785444569; c=relaxed/simple;
-	bh=AHj5iKPxjLBOIXTL2+StTfzdgS6fKwysuaXV1Ino2qM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRhsiQMVPUplmH00runkWM1U1xHcMrVgU/e8f/n0RNl/yFlGVUWoj6uCkPO6guRi/5A610lAwxyDndvDrtdfoDCTOXCFSGjb/ypUloma/kR/VbFgkXf5XeeqW69ZRG8knDVP1NtN38OikdmquO4gyoXERv46Ilz3O/iff6ipzSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HRGK3Dhp; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D4E3E16A8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 22:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785450035; cv=pass; b=hzmmChJhgxnCPNJ61SwG7z+Z0XzqjZ0xLASQmW8g06bnB5BJhv1m8+SCUtgYkWH12IySqYIr30MGSiRtycSL8dZxiMJ83FOF1oGczK9QbEwFa0RElBE/gb8yVLs3ZAK+2mAp5qv0Dph5boRbg11D0EX5G/2Bb5bITG10Icbb3jA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785450035; c=relaxed/simple;
+	bh=M6XA29EFp31CUqlzBnb1hBdVXpILX/0ncZmHh8uL1BA=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gwRl9qaVuYJgwV4lABTYKEg/9cq325WpcAa0xzt9DD3r08jPSxcIjFpoQJEjjfwDrklz5YyRC/YukjyNl1Pf0kYhBlNuRt1UB2WirA43G9xq7XWRIVu1VzGOL9rb4XAKduAKFgqn6NaHAsYNAMwhgJ/RZCxdVTq30msrP0tthY0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rP8h2oj2; arc=pass smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HRGK3Dhp"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-934944f2d22so86485a.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 13:49:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rP8h2oj2"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-383b4a3755fso385460a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 15:20:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785450031; cv=none;
+        d=google.com; s=arc-20260327;
+        b=plHw23NLIUztTFuzf+RO1FLVXfOLlmlOgF8dXCaxRLaKeD/YmlB3pv+isvfBMzUMi6
+         HmXzDy7Ih3pjN/e0UDvAebFagDVnNdm4ubTzqsW2PX8f4Z9hRM/X33XT2k2/hJDbqtgV
+         mTElE+u2988Ig4rqAWJn0tUWfOMXlS5n1+KE14k3jIbInNCZX04skSLCcVIq2D9RuaRg
+         Wa3xc2gEukTd6XBmpqb2OiWqtGLUoFy/bNDzBbBlUDrNzP0JDQruP//mxWhlsbXs27m5
+         TkB/Mew1f2NS1FUNgdRbQKimetRe7GeC2LenEAMK/S5BK391x844pxl6n6/pqZFqlSMA
+         8dEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=lof6e1ot4kuBZAi+0NXUHy3Yo358hLoUkT/iaCauSXA=;
+        fh=JV9Oh2I0Z3iWTceU1NbpwUW0KCvAle3GRUFnrJTzkM8=;
+        b=GmPs6CT7c4lMuvOt++sM3A5vVTbVeOY4e8m2BaT26zQnodNbz9HUH8JdGpfk7SEick
+         FfqF4BtriwSFj4jWclGmdIMVmIwgMofj0zYT4WEWBCUDB7dOsrJ0QanmsZFjUXGkxYrN
+         CBvBQl2q8QTAd2hacSc4CH9cInXMIhVJmymGtx1U4I6EN7auti8D7yO/TRJB04JF51o9
+         m2BwLkeO4FKT60DyPA9fYV7cHHsV+FwmgYZlpTJ6eC49Bo+OKGqDyaZ0cNWK0YMAUv0F
+         X+VRMNgkZuSdiMyhzxM8gYN03K9zlWSGt4sDxsnbSLsHvDH8384OA9SIfUzmh5Rx+DHz
+         Hcnw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1785444567; x=1786049367; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=azR+hkvo8cQmu5EseR5wH9M0hM5NW4S4o7e4N9bgAu0=;
-        b=HRGK3Dhpp9s7eljVPHut9/mFKj4q3/pakwVOHfvmS+dLydi7z2SjGBBHZ3bZkoWlxf
-         3nD4kyYDUfQq4DKExbVG4jOd8WLyIR2gV2KRx+wnRoxk/r0fUURyBTUDgcGMxrs4Whqu
-         TiogT5YPHsRSlkBVc9Wo3+7UNSSdXE3C8Mzyy90uzUFlDD1H3/GdlXejcnXh4FNRXmSa
-         mwd4k30/HVj2ogScZkT2MFjomWyYe7FruVCbPB4n2M70AvgkZZ9x4m39FZr3drdMedPm
-         +OqFvnwN7xHkTDLV8lPnb/pHGpZ6W6AyBnXJ5z51FeWKQLcdhtzeod0UB1QbW0Tx9JBv
-         wfqg==
+        d=google.com; s=20251104; t=1785450031; x=1786054831; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lof6e1ot4kuBZAi+0NXUHy3Yo358hLoUkT/iaCauSXA=;
+        b=rP8h2oj2MlRvfiI0KFER705bYKmB54BVjPlIdWbTEWPUvfNVfjOoruxxnRV5lI6oEL
+         waGliUo3rLE4Fje6PeaXaTONRDdIA8o9DrgfY1WfsNGwsZWbMihhewVuylo8QykAw7Et
+         pbXkFnkjW3n31veayk73+CpopbIGFbH3BW1zG9ngYg3m4d3iHRAQCqCZSPPceHXRMsLn
+         P5x98tdaBwWHhayCn5A8ZdzAP01g0pRC3YyTEXc2nLjfxLuIXIipd6pRfNmmVMXOFBDe
+         dkLl9csIR0BqsM54CezdhEnWYDwWM/bA4sP6dHg1JT2nektPj1aDUzx9+om0CgP8Qufw
+         Xcbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785444567; x=1786049367;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=azR+hkvo8cQmu5EseR5wH9M0hM5NW4S4o7e4N9bgAu0=;
-        b=i3akkFUBNbEnpggCsEy2X4ci5T/8/320SzO7871XIVRvkhxcectdBhfncahM3hvmOj
-         uZIrtigkZcsPrqZp9GZyhTNa1Z5FZmkA4zjRNFz48iZ/f4oEDYYs53fMDm7mq2rh5cm+
-         +vwR7uEoz1WTzrLfmgcQIrleAUuafKuS8lC7Y0t34e4HuAgDbaHwfuqt3kKyVCol/K0U
-         VWVMmANhCe7sRviQt5/fM25jWdSzfztb/AW30ydS7VlWHtyBrOdYWcDabHwf+nBUJcB6
-         W0ZE8e5L5poJtWd5O8fgid6amyz5CqPA3R+9ahd2vl06V+jvhYja/tndQ5xl/Njx4lUT
-         WIxg==
-X-Forwarded-Encrypted: i=1; AHgh+RoF0HlNNAAoAaimQlLg2+3xWPXdkCJwLEtuABsXQhMMdNVdB+uvkiCNLtevfLwOE5Mmu6k7z+ccokFlWpcO7Wusrh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY0gi8olfUHPC/frdcG+tqxGKaW2yHUJCMRGF7RWket2ZsYCCK
-	8kOXXEcmMQgNVqckR+QnKc4sG7YYVAhROKgNHEKvodqzgHppRRoL/zl+t7L9JqzyZw4=
-X-Gm-Gg: AR+sD10/t8XkwR+YD0gJQ0kYZDzEyGWaCO6f//nyue1x4llTlSoQGq4K/DacotKdzNU
-	SRMgsnTbgw+b1C3EslITmj8+nI6LQrzYTANsZqp2X/m75vwG5u6pNUMdKULdBby9Dko8Ep9Nx5M
-	lLUPDKZmMg9XhF9tJDjubEZWpUMdY7zAvrn4+JBIYqtvFKOJkCN2vPRXHcEvKnt11vPNzTP247N
-	JcsvxRuL/qg9osNU+5lWDt5DpJUne0A0f/oY/7TcerUox1kEDf+HvzncSO80xJpDfshoEXoPr5o
-	IsQZInPE6NW1WFm9fcjhP/9MGinWdHhtnj9PmJXJIOXozzA1uv/gBV2zqbWMXVNps8XRbvYqVfI
-	+Suzg7P2a5XjM3V5caE4ihFRDP6tG0jh6yk+ZvZ0d5ou2byLk07RNC1OyKDtOGQQEloNa+Kz+fQ
-	dDcsdmKkqCfYGFRBTDDAj2aXysncAe9NaBapnduRhslmJfh2XLBsB+IiH4B27nZBVf6/eBQb1/f
-	H28JWDCajm/iJGGtIs60NqfdG5T4zJf9xcmj+AiPMTW
-X-Received: by 2002:a05:620a:6088:b0:92e:c118:18e2 with SMTP id af79cd13be357-9348dc4ea66mr225698085a.89.1785444567383;
-        Thu, 30 Jul 2026 13:49:27 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-933d325ade8sm489716185a.12.2026.07.30.13.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 13:49:26 -0700 (PDT)
-Date: Thu, 30 Jul 2026 16:49:24 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Frank van der Linden <fvdl@google.com>, 
-	Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman <jackmanb@google.com>, 
-	David Rientjes <rientjes@google.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Fan Ni <nifan.cxl@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Raghavendra K T <rkodsara@amd.com>, "Rao, Bharata Bhasker" <bharata@amd.com>, 
-	SeongJae Park <sj@kernel.org>, Wei Xu <weixugc@google.com>, 
-	Xuezheng Chu <xuezhengchu@huawei.com>, Yiannis Nikolakopoulos <yiannis@zptcorp.com>, 
-	dimitrios@palyvos.net, Ryan Roberts <ryan.roberts@arm.com>, 
-	Huan Nguyen <nhuhuan@google.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-nfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Alirad Malek <alirad.malek@zptcorp.com>
-Subject: Re: [PATCH RFC v2 0/3] Demote to lower tier using non-temporal stores
-Message-ID: <amu4cfko8YY9awfF@gourry-fedora-PF4VCD3F>
-References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
- <amuJbBrTW9W6_sx8@gourry-fedora-PF4VCD3F>
- <CAPTztWatWbsF4KQwD-_nib-vrZ6uvrhMYcOc1mkWu-7DzN95AQ@mail.gmail.com>
- <amuTOC7qxWHVyZcO@cmpxchg.org>
+        d=1e100.net; s=20251104; t=1785450031; x=1786054831;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lof6e1ot4kuBZAi+0NXUHy3Yo358hLoUkT/iaCauSXA=;
+        b=DFd/6uMZxKJ4eExPk1UqGhXBSTeTZsV+iRpOeaiu6XV+aPq8I0bpu39t4f4/alkd4D
+         k0cwPFt1h4RAehtbHBjN2KLhegJfKww3aBgi/eEWcRtS1T5YHDNw3hcKyvHTUPk6uiG3
+         2kIVRMDrmCleLqDPptOediCOUhJXUg/1HbwX7gQFHsZYPwhaLSP5DxaWHs73gpZnMgBy
+         AC6tDQwSAio/vzlJurB5NaERhadzx70jCQEY3S6aXFW50An3rCBwS9FdeyDe0P0wS5TR
+         0ZiogYoGPxZ+fVTL7JkLV1crlu7/ESxZQcKvPSR/vTTtVaX6YvgR8izQyH0+RT/CBClR
+         EIYw==
+X-Forwarded-Encrypted: i=1; AHgh+Rq9WFGKAs2zm3ScIpDSk6K878aTP99lXtc10B3lfmJ+IHI3vlzRNpz3DbWFxEQSpZaW5f7+VcBSeDla2e+s81M7EFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8i2zlVddREuMKieb/uKpxWz1i3N4XEN+EBeg0gfxX+muo6yS3
+	a9Tbref74bLABaOwvt06oefwz/nLXt0hlcRwDDtGbyLuAxXMjdpQQ2sJDISGhxGBXQF6V59vX8u
+	fV4PWdFIWr1HZi30+gJQyAggplcRiU6mlkGxc6/Kc
+X-Gm-Gg: AR+sD13NCYwuNJOfWRh23pH76XCx0rGOd595JTT/OFboWnXkgpSYCADQaajCdbZH1nG
+	PkOhfpM+5HGUMyY4lxxgv89PVMxWFHSC2u8jExZ5DlhTO+X65ebLmqBPtUI6Tt7S8Y81kd1gMqq
+	YFrgi5pQ15WEP0tadIgJolmRiaXgLKWuKukjHWA6Uc72ugO7O18ewvsgEI/mBqw+kjytWu1EY3/
+	0oJq3uS4eMU5//xKjuCX/j5WGpccURIiIQ8LZ2TdQmimgu5pwwkDNlJWIwvOw7SszQuJtTOZRfA
+	RFGk85NaNBLWOTtnRTynP/h9fQgAtsoe+yLAEnN2zjxCrm/9JarJKg3eB6dOWTWmn4Dt1HcTf/2
+	SH+PKtv4NEyxDhzUL9dvhfZpYhjKJ6wBOckg=
+X-Received: by 2002:a17:90b:442f:b0:38e:70d5:b12d with SMTP id
+ 98e67ed59e1d1-38f9bd74015mr2426440a91.6.1785450030314; Thu, 30 Jul 2026
+ 15:20:30 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 30 Jul 2026 15:20:29 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 30 Jul 2026 15:20:29 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <4460e252-b6de-4df3-bea8-0368a9d0f4ff@kernel.org>
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-14-35f9aec2aed2@google.com> <4460e252-b6de-4df3-bea8-0368a9d0f4ff@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <amuTOC7qxWHVyZcO@cmpxchg.org>
+Date: Thu, 30 Jul 2026 15:20:29 -0700
+X-Gm-Features: AUfX_mzZQIbuyAIVKKa3Fs3idyVFYyPQCyW2ArgeeJkIMtuFBmetts4tKaZtmNo
+Message-ID: <CAEvNRgEUQSju2tW_1zMk2=QmveZNtmkjjCZdqVBgBD2JPh0k4Q@mail.gmail.com>
+Subject: Re: [PATCH v9 14/41] mm: swap: Introduce lru_add_drain_progressive()
+To: "David Hildenbrand (Arm)" <david@kernel.org>, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
+	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, "hughd@google.com" <hughd@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 30, 2026 at 02:08:56PM -0400, Johannes Weiner wrote:
-> On Thu, Jul 30, 2026 at 10:40:32AM -0700, Frank van der Linden wrote:
-> > On Thu, Jul 30, 2026 at 10:30 AM Gregory Price <gourry@gourry.net> wrote:
-> 
-> > arm64 already seems to use stores with NT hints by default.
-> > 
-> > In general, though, I agree that for ASYNC requests, just always using
-> > NT seems fine.
-> > 
-> > Maybe the mode and reason should be folded in to one variable, so
-> > that, further down the stack, a decision can be made as to what type
-> > of copy to use? E.g. if the mode is !MIGRATE_ASYNC and the reason is
-> > MR_DEMOTION, then non-temporal is still a good choice. If the mode is
-> > MIGRATE_ASYNC, NT is still a good idea. If you wanted to get fancy,
-> > any mode with folio_test_waiters(folio) == true should not use NT,
-> > since a task is waiting to use the data, so caching it is better.
-> > Maybe that's overthinking it.
-> 
-> Agree. `reason' seems like a much stronger signal.
+"David Hildenbrand (Arm)" <david@kernel.org> writes:
 
-I think this ends up cleaner as well, it would be a nice improvement.
+> On 7/29/26 02:35, Ackerley Tng via B4 Relay wrote:
+>> From: Ackerley Tng <ackerleytng@google.com>
+>>
+>> Extract the progressive LRU drain retry logic from
+>> collect_longterm_unpinnable_folios() into a reusable helper,
+>> lru_add_drain_progressive().
+>>
+>> When attempting to isolate folios that may still reside in per-CPU folio
+>> batches, draining is escalated progressively:
+>>
+>> 1. State 0: Call lru_add_drain() to flush local CPU batches.
+>> 2. State 1: Call lru_add_drain_all() to flush all CPU batches.
+>> 3. State >= 2: Return false to stop retrying.
+>>
+>> Refactor collect_longterm_unpinnable_folios() to use this new helper.
+>>
+>> The helper will be used by KVM's guest_memfd in a later patch.
+>>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> ---
+>>  include/linux/swap.h |  2 ++
+>>  mm/gup.c             | 19 ++++++-------------
+>>  mm/swap.c            | 15 +++++++++++++++
+>>  3 files changed, 23 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/include/linux/swap.h b/include/linux/swap.h
+>> index 8f0f68e245baa..cd54f73f34f39 100644
+>> --- a/include/linux/swap.h
+>> +++ b/include/linux/swap.h
+>> @@ -344,6 +344,8 @@ extern void lru_add_drain(void);
+>>  extern void lru_add_drain_cpu(int cpu);
+>>  extern void lru_add_drain_cpu_zone(struct zone *zone);
+>>  extern void lru_add_drain_all(void);
+>> +bool lru_add_drain_progressive(int *drain_state);
+>> +
+>>  void folio_deactivate(struct folio *folio);
+>>  void folio_mark_lazyfree(struct folio *folio);
+>>  extern void swap_setup(void);
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index 0692119b79043..5f00435e2c635 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -2268,7 +2268,7 @@ static unsigned long collect_longterm_unpinnable_folios(
+>>  {
+>>  	unsigned long collected = 0;
+>>  	struct folio *folio;
+>> -	int drained = 0;
+>> +	int drain_state = 0;
+>>  	long i = 0;
+>>
+>>  	for (folio = pofs_get_folio(pofs, i); folio;
+>> @@ -2287,18 +2287,11 @@ static unsigned long collect_longterm_unpinnable_folios(
+>>  			continue;
+>>  		}
+>>
+>> -		if (drained == 0 && folio_may_be_lru_cached(folio) &&
+>> -				folio_ref_count(folio) !=
+>> -				folio_expected_ref_count(folio) + 1) {
+>> -			lru_add_drain();
+>> -			drained = 1;
+>> -		}
+>> -		if (drained == 1 && folio_may_be_lru_cached(folio) &&
+>> -				folio_ref_count(folio) !=
+>> -				folio_expected_ref_count(folio) + 1) {
+>> -			lru_add_drain_all();
+>> -			drained = 2;
+>> -		}
+>> +		while (folio_may_be_lru_cached(folio) &&
+>> +		       folio_ref_count(folio) !=
+>> +		       folio_expected_ref_count(folio) + 1 &&
+>> +		       lru_add_drain_progressive(&drain_state))
+>> +			;
+>
+> That's rather nasty.
+>
 
-~Gregory
+I didn't really like this either, the drain_state thing is really
+awkward, but in both usages (collect_longterm_unpinnable_folios() and
+guest_memfd), there's an outer loop where if the draining happened on
+the local CPU before it should skip straight to just draining on all the
+other CPUs.
+
+> I was hoping that we could embed more logic in a helper. The history [1] of the
+> refcount check is rather sad:
+>
+> https://lore.kernel.org/all/c5bac539-fd8a-4db7-c21c-cd3e457eee91@google.com/
+>
+> ... primarily because of mlock() handling.
+>
+
+In the original code in collect_longterm_unpinnable_folios(), I couldn't
+find anything that handles folio_test_mlock(), so I was lost for a while
+until I realized mlock() doesn't add a refcount to the folio.
+
+Are you kind of proposing an optimization to
+collect_longterm_unpinnable_folios() by adding a check for
+!folio_test_mlock()? I hope we can put that in a separate patch series,
+I'm still hoping to get this series in for 7.3!!
+
+> For guest_memfd(), would mlock() ever apply on a path where you need that check?
+>
+
+For guest_memfd, if a folio were mlocked, unmapping it would fail, and
+so the refcount on the folio would be elevated. The
+kvm_gmem_is_safe_for_conversion() check in the patch after this one
+would fail, correctly.
+
+I really wanted the caller of the lru_add_drain_progressive() function
+to control whether to do the drain (see below), which would solve the
+mlock problem by not assuming the use of folio_expected_ref_count() to
+determine whether to do draining.
+
+> Conceptually, I wonder whether we can do the following, and rely on the refcount
+> check only on the mlock path.
+>
+>
+> From ae30f7594692b0c47b44922c26b6480dd9584872 Mon Sep 17 00:00:00 2001
+> From: "David Hildenbrand (Arm)" <david@kernel.org>
+> Date: Thu, 30 Jul 2026 12:20:14 +0200
+> Subject: [PATCH] tmp
+>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  mm/gup.c | 66 ++++++++++++++++++++++++++++++++++++++++++++------------
+>  1 file changed, 52 insertions(+), 14 deletions(-)
+>
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 99902c15703b0..ec43071bd035a 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2259,6 +2259,56 @@ static struct folio *pofs_next_folio(struct folio *folio,
+>  	return pofs_get_folio(pofs, i);
+>  }
+>
+> +enum lru_cache_drained {
+> +	LRU_CACHE_NOT_DRAINED,
+> +	LRU_CACHE_DRAINED,
+> +	LRU_CACHE_DRAINED_ALL,
+> +};
+> +
+> +static inline void folio_likely_lru_cached(const struct folio *folio)
+> +{
+> +	if (!folio_may_be_lru_cached(folio))
+> +		return false;
+> +	/*
+> +	 * Having the LRU flag clear either indicates LRU cache references
+> +	 * or LRU isolation.
+> +	 */
+> +	if (!folio_test_lru(folio))
+> +		return true;
+> +	/*
+> +	 * For mlocked folios, we don't have a real indication: we can only
+> +	 * take a guess based on the refcount.
+> +	 */
+> +	if (!folio_test_mlock(folio))
+> +		return false;
+> +	return folio_expected_ref_count(folio) == folio_ref_count(folio) = 1;
+> +}
+> +
+> +/**
+> + * lru_cache_drain_for_folio() - progressively try draining the lru cache
+> + * @folio: The folio.
+> + * @drained: Status initialized to LRU_CACHE_NOT_DRAINED by the caller.
+> + *
+> + * TODO
+> + */
+> +static void lru_cache_drain_for_folio(const struct folio *folio,
+> +		enum lru_cache_drained *drained)
+
+The main thing I wanted in the proposed version
+(lru_add_drain_progressive()), was to let the caller determine whether
+to try or to continue draining.
+
+I wanted the caller to have full control over whether to drain or not,
+so I didn't want to pass folio into the function. I thought the caller
+should first determine whether to drain, then call the function.
+
+This version assumes that the caller wants to continue draining based on
+something to do with a folio, and the folio may or may not be on the
+lru_add fbatch at all, which is a little strange to me.
+
+Also, this version enforces a certain definition of "expected" number of
+refcounts on the folio. I guess in this case this definition works with
+guest_memfd, but guest_memfd doesn't support swap so the swapcache check
+in folio_expected_ref_count() isn't necessary. Also, if the definition
+folio_expected_ref_count() changes, then guest_memfd is implicitly
+affected. Not sure if the "expected" definition is the same for all
+callers?
+
+I guess if there was a function named
+folio_ref_counts_indicate_presence_only_in_the_filemap() instead of
+folio_expected_ref_count(), then it'd be the perfect function for
+guest_memfd to use. The current definition of folio_expected_ref_count()
+also includes page table mappings, but in this check guest_memfd really
+wants to make sure that there are no page table mappings.
+
+This version folds folio_likely_lru_cached() into the check, and I
+adopted the check for guest_memfd because it'd help with huge pages,
+though technically guest_memfd is always 4K now so the check is also
+pointless.
+
+I tried a macro version of this where the macro caller can pass in a
+full condition, which would look like this:
+
+  lru_add_drain_while(folio_may_be_lru_cached(folio) &&
+                      folio_ref_count(folio) != expected_refcount,
+                      drain_state);
+
+but I thought that just created something people have to jump to, to
+first understand how the macro works, so I left it as an explicit while
+loop instead.
+
+> +{
+> +	if (!folio_likely_lru_cached(folio))
+> +		return false;
+> +
+> +	/* Try local draining first, if not already done previously. */
+> +	if (*drained == LRU_CACHE_NOT_DRAINED) {
+> +		lru_add_drain();
+> +		*drained = LRU_CACHE_DRAINED;
+> +	}
+> +	/* Try draining all CPUs next if still not an LRU folio. */
+> +	if (folio_likely_lru_cached(folio) && *drained == LRU_CACHE_DRAINED) {
+> +		lru_add_drain_all();
+> +		*drained = LRU_CACHE_DRAINED_ALL;
+> +	}
+> +}
+> +
+>  /*
+>   * Returns the number of collected folios. Return value is always >= 0.
+>   */
+> @@ -2266,9 +2316,9 @@ static unsigned long collect_longterm_unpinnable_folios(
+>  		struct list_head *movable_folio_list,
+>  		struct pages_or_folios *pofs)
+>  {
+> +	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
+
+I also considered an enum, but it would be another thing to export. I
+was thinking to have drain_state just be opaque to the caller and the
+only thing the caller needs to know is to initialize it to 0.
+
+Perhaps there's a better way to "make it opaque"?
+
+>  	unsigned long collected = 0;
+>  	struct folio *folio;
+> -	int drained = 0;
+>  	long i = 0;
+>
+>  	for (folio = pofs_get_folio(pofs, i); folio;
+> @@ -2287,19 +2337,7 @@ static unsigned long collect_longterm_unpinnable_folios(
+>  			continue;
+>  		}
+>
+> -		if (drained == 0 && folio_may_be_lru_cached(folio) &&
+> -				folio_ref_count(folio) !=
+> -				folio_expected_ref_count(folio) + 1) {
+> -			lru_add_drain();
+> -			drained = 1;
+> -		}
+> -		if (drained == 1 && folio_may_be_lru_cached(folio) &&
+> -				folio_ref_count(folio) !=
+> -				folio_expected_ref_count(folio) + 1) {
+> -			lru_add_drain_all();
+> -			drained = 2;
+> -		}
+> -
+> +		lru_cache_drain_for_folio(folio, &drained);
+>  		if (!folio_isolate_lru(folio))
+>  			continue;
+>
+> --
+> 2.43.0
+>
+>
+> --
+> Cheers,
+>
+> David
