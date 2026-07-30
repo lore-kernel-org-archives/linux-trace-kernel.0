@@ -1,226 +1,203 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010027.outbound.protection.outlook.com [52.101.84.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7210842DA30;
-	Thu, 30 Jul 2026 13:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.27
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785416439; cv=fail; b=rbDBFL+loE+fSs63mjc7nKFYfhh49AWEWLofEsha4Vz0tHKatcQZ7R66lZzETYsSwczw3hugpWIoqdhl8HG3BiMTHD3I7i1I4uww3NztzarW/tvEhBbt5mPj/IfKpPvCxB8OKWhoRnVzBFhVsZpEGSlGG4H751jFbUJHZHy8ZPE=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785416439; c=relaxed/simple;
-	bh=pKaANjAeuNqDrUj/BFvU/C6QV4mgQsIYMQTl/5Fiutw=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iOJiXncemIRy75/GMlX2mZCfNwJox0Wftd8L8ZjRZTZaQBHDkyDioZYUPFUMdSQ8xbHMJKfLVSQ9AFkafYDtZgrt1VEtNcsHQ9Dc8n/B1NYxmWtlAzhp7/yPsoEOUPY67O1Wp2mhlWd4nP93YU+7yl/6MpRlZshUQVKn5+NpSIk=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ehFlbI73; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ehFlbI73; arc=fail smtp.client-ip=52.101.84.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76A042F707
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 13:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785417115; cv=pass; b=ofoFG4WuWl9TVe4ZOy7bThsueB0uXVTP2mVdD9ImPmQz1h4DmJFosxfZMOHfSXQAb5RRC+OJBz4bgb2gf2StyTFSaRhfVdCEWZApKJrSKwFS5NYbZ4ztKCgnIMbBqYFDzcU92xjMHbgBM2XuRHR4Vx+YJIGK1WQbOIBv1xPDkfs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785417115; c=relaxed/simple;
+	bh=XHgYqQdbd6UXYLAfCM4eLJgkL7Zop9dsJ7MDxabavq8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EMOSVW2/kmR14Q7XAQs8qkMoVIcetp2KTXzkxwMoLNPqg9iqmMJVv0yu+ofuHWyIH3bV2C5mqtiHs+3NSa0///c+cauuNYzdqo7Gfi9IxwZLei7Zsg4e9i+4H20tabiXoX0xC7/uq6VZXBQiR+XW1gLYtgXQPPGMYyID40mBMxw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=loUHIMtl; arc=pass smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ehFlbI73";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ehFlbI73"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=brhowPZaixhmItoK63D6dRP2HdCj5SxXd89zLkHVw7pOcFVeXeRa6dsm8MDQH2QdjHHroEFd6Vy44UqOzVenBzRaPsvq2w0EKl4/IUBXwYzmU5FD5qK98zkuVHmMIddytylp7fEVQEld1svrp9/gpgB0caXUxONBqz1/LErICzn4gwYGnJsc2+Ui0OSVwjry+j4F6v4JP23HSx/RTzA3YyUr19kWue54mZA4bYjLI4JtNd6PCkBYE8kJv5fNgQkVHSUF7DU8DJg2hcoyi/4JyMN/cq8S6/kq5jWAIfuLSDbG0lV2pE89qdy98lEN93IhPQHsGpZjPMIkgE+4LHtuHQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TGN+4FAAC8jIvrpXYh0SLEvL/4I+/62MbZ2lH29z+TY=;
- b=ld77FhXLKU8yRLcwuOJoBUXZowlHzw/KREmKaaKSNP4IboVn1/jT58no8kAbEK6CO7RiQ3p4rix/RkSc9V/9IDg45FUXT8q/DlphJbEYrV4PfD8jZXRgsWDWJMygGRuNeMbioQzSFFGYKFVVCl68TCsTTNZvnv2YGt/BxhdGB3WppribI5+hiH7pCMPEnErfjlebi7ZNwbSJ0KaFmFQ1Fgu0OiackJx4pHAYbXNXv22/TQ/kaXfhMZi/2H7eRZacVj8ZTjeEEZYZGVHsgt6HSgxqEJ5CwmKUZpLR4FO4z6UIGzXJ1PXVATOciDArVN7cGHl4zvT358xsO5m2ssZlpw==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TGN+4FAAC8jIvrpXYh0SLEvL/4I+/62MbZ2lH29z+TY=;
- b=ehFlbI73LoxtbByzSNijQF7loKC3ZeZkxXqfibb33CjVmDNBoYQoepnyr1q1+I1wvvtby/Q9VRDpUKgcH09WljEJj8R5a76S1CKxrdWBk6bf1e/WMFtGccv8XgrF/uT+BZ9ZnJ9h1+A9xjW4ASKIJeakwn8760yq3o5hOm8kHDw=
-Received: from AM8P190CA0002.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:219::7)
- by PR3PR08MB5609.eurprd08.prod.outlook.com (2603:10a6:102:81::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.14; Thu, 30 Jul
- 2026 13:00:32 +0000
-Received: from AMS1EPF00000049.eurprd04.prod.outlook.com
- (2603:10a6:20b:219:cafe::9d) by AM8P190CA0002.outlook.office365.com
- (2603:10a6:20b:219::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.14 via Frontend Transport; Thu,
- 30 Jul 2026 13:00:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AMS1EPF00000049.mail.protection.outlook.com (10.167.16.133) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.292.8
- via Frontend Transport; Thu, 30 Jul 2026 13:00:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yyx+ToOaEnOvliHo5S5zNq7kYBNmgVSRSL0orMykREc9hqSqjsYxQs6C+lu7IYnDXiqlAhPCkdvWBpA4SH3qEK3mFGCnmqynn1L1wHgf/2D1/REgmU4jA1bZUfu4FJEoB4cUaInXCuzbVMHLc0/hyx9184MDrGAS4+YSQsaH2F8L4/e0zrFC6u2XZRkGkB+IRw+ipGNzOdlsNWrP94fZj8M5j1frcD0vHU01l0imGM/TFij8bUMMESJ4CqovmhZr4gEwzrh75Y7b9jhjgHkFozLm3Ik0uwrs9XixxlPemeJLSTjwELPeh+384IKVCn7ncub1OMEh+EfEplfh0oYX4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TGN+4FAAC8jIvrpXYh0SLEvL/4I+/62MbZ2lH29z+TY=;
- b=OPOKjo3Rvy1I4POMIdhajtkJh+RtxKtxGV3xKvUK1yETsg6IzZIMYDDo2cAhLp1PGVZjKFQ6h+aM6JDuMdFWgOTq5x44s+3uUK1oEUbjJLJnVvcq8Ey7XHaO5Lp90rsOH65dFFx0AEyuzASd8q1VpHZVGCp1IHM+Njtzh7zFI5BkKadZCXEjFo2WWCmTIzp3QTVC7Wvb0frWM/amTwik2w880RYlT68zBtZ0gsz6n0kvCxcgn6eF0mUG3KquYfe6ExEhGkpWanzhMxR/C3/ueWLSOH7blAEAxexih86vrVpfwxsrr+Zx77zveIZpbP7Ato2fWzoLhPG2gG6HjGGhVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TGN+4FAAC8jIvrpXYh0SLEvL/4I+/62MbZ2lH29z+TY=;
- b=ehFlbI73LoxtbByzSNijQF7loKC3ZeZkxXqfibb33CjVmDNBoYQoepnyr1q1+I1wvvtby/Q9VRDpUKgcH09WljEJj8R5a76S1CKxrdWBk6bf1e/WMFtGccv8XgrF/uT+BZ9ZnJ9h1+A9xjW4ASKIJeakwn8760yq3o5hOm8kHDw=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from VI1PR08MB3421.eurprd08.prod.outlook.com (2603:10a6:803:80::16)
- by AM8PR08MB6499.eurprd08.prod.outlook.com (2603:10a6:20b:317::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.15; Thu, 30 Jul
- 2026 12:59:27 +0000
-Received: from VI1PR08MB3421.eurprd08.prod.outlook.com
- ([fe80::e079:6bd:fbe0:89b4]) by VI1PR08MB3421.eurprd08.prod.outlook.com
- ([fe80::e079:6bd:fbe0:89b4%3]) with mapi id 15.21.0270.009; Thu, 30 Jul 2026
- 12:59:27 +0000
-Message-ID: <fe1b4098-6ab7-4cf1-ad6b-ffadabbd587a@arm.com>
-Date: Thu, 30 Jul 2026 13:59:24 +0100
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@arm.com, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- David Hildenbrand <david@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH RFC 07/11] mm/mremap: use ptep_get() for the destination
- PTE
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-References: <20260727164715.2866609-1-usama.anjum@arm.com>
- <20260727164715.2866609-8-usama.anjum@arm.com>
- <50dd77c0-b6cc-43e2-abd5-6d44a29b5597-agordeev@linux.ibm.com>
-From: Muhammad Usama Anjum <usama.anjum@arm.com>
-Content-Language: en-US
-In-Reply-To: <50dd77c0-b6cc-43e2-abd5-6d44a29b5597-agordeev@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0022.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ae::14) To VI1PR08MB3421.eurprd08.prod.outlook.com
- (2603:10a6:803:80::16)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loUHIMtl"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-496bb7cdf51so20299005e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 06:11:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785417112; cv=none;
+        d=google.com; s=arc-20260327;
+        b=k2rcUvdq/QpTI1zmMOeekgAzgQrc64zFUXuSuZqwKDpQXZNiUQ+mUMJO1HwEXxJgy0
+         9a1J6+DLjlpna/HDCI2NbsS55CpbvjvlWkCmPXSUIB+mqXEjwuVoYC/PiPMZxEfxg6nY
+         uRbEQyA4UJkqbxMAtPifB4JOoThWFOk6vQttY3ZYC0o1u4V4HNMSrCYdzysu0OUWD5Ql
+         Wc128dbqYVIq1NkWuppfE5n8AAh3zY+jdfFpYbCv+REl+k7GIKy4cajJbBSOS1VzsNRz
+         BUtETQ27W1jHy9O0kPMUNReb9jpgsW1eH62iJV07SAEz9Ub1CrKcBG5avLQQj7RZ7Goz
+         OAsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=JZxWQFrq5yQB1yLfY/DlKbs1Vg/HpnWd2qZlXhsqsB4=;
+        fh=XlyUx89AgnSqghEci0aHidtsXSekm5CGLVi4h1iZ9bs=;
+        b=chjl+J8el4zKo5Pt97otmJ/06OYZdhq67qwz6agbjvosaFWMSvEUNRcd0oofCNsz4U
+         o092paxenovEOW/w0w+bwKIEsbnaCV2mpPrJywm5ZKocaPoFDXpIsp1acQM5m9VQ27Jj
+         ibKM87s/LeFaCARja2rqRC+hzAmSXb6TJkyfuNyQ9EfYryZqZi6IR7vdNtlqa4dRC5IF
+         MFUaoWWPETHJ3AypKbJ28/Qb7n6svbe2jupdviFRrPbaf7xLGQVzutWDOKjsUt5adgvX
+         EbZguZwKq3Nuk9brv+ZdE7GVEi1ish9GUggc++xd6x9Qg2qI6aYB6yw2y6Nxgl/TPdkZ
+         eMgw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785417112; x=1786021912; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JZxWQFrq5yQB1yLfY/DlKbs1Vg/HpnWd2qZlXhsqsB4=;
+        b=loUHIMtl+zQI1xPUlk7eEZeGWKbzEBToj3bbihMtFfaZijsztsPEXcVo/SCxH8VSkC
+         3nzdrgBq2PuKAr9/+IJjBjRDG7B58pxYe0JuRKh5EjK/DblzLvZZ3wzLHZjtQGEiBFVj
+         4FEoN6FRNE6xKg7WAJM8RyTx6CFc/LKlaaHpjl1kqgqQDy3Si+5W05w9QTrtVZZTBApx
+         jZt7l6Z1U7/U1Kqmvj17RdiSBmY4ctECm91m01sSy2hmGsZTRWuiosrqO7uK8j4pfCdH
+         wirMkfvQl0bUZOUpCW5ZIbFAqL7gpPoC8MmVtsE8cUrK+3miJlM3mYl6sGOKBJsJQ+ln
+         0yuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785417112; x=1786021912;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JZxWQFrq5yQB1yLfY/DlKbs1Vg/HpnWd2qZlXhsqsB4=;
+        b=W2/94e/DnuJ0HZ6WSKJ3Q6fq+pyJpdjCOpwUXC8JxIOdV/UW+jQjUUwuRxEdtGkca1
+         0hPjJagkExzVyYwJYZ2LBv5nKssGZ5h7bkA/jvyLA//XjmNnjgm9aE1wEMIfoLCrFn01
+         d9ts42qGUCnNPdXWZ5jXOvijW1gYXXknRLSGiMOOXp0n49mD6JV/7GRMGhwrxu6+HuFQ
+         h+eAD0cSS/ZgKXcnsD/e/i6xdAbpRbgQAEosuNdV8pfhHbKHXhVqhIktgMtkV9dStq7i
+         5VaGoXxtXBlWDJPLXCbKQG8MlwR7toQYxdx+hLy6tCjPd5jhkrGBg47KfhcXL+pyL2/F
+         bjUA==
+X-Forwarded-Encrypted: i=1; AHgh+Rq7rK1ShkbQ06gmi3Z+w1+T1V0IZd8gvq8wwJR6yXy7+LSvOGFRvvvqGMg5radjYt1otbkN93lforLUq62aJ4/mtBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGf1iuV7vIPbEG3M99ZXFzw5KMIsF9X/uJ/kJADiGvanSAILnI
+	neS4ZGZh73bsMP0GIRjUG9Mn323+quaYE9ECoFMac0CiMGZWMZ8DUqA0JhlmRFXuKNUeSKzKpIS
+	pQQcB4uZXYoGs56s6TvQUOjfNNMRKpOM=
+X-Gm-Gg: AR+sD11B7qMhC5qX3l5aK4KkTL7lLwz+xLuU7ACaOQTMUmcCXcX+bW3nzL0IHPQ9VGR
+	b7Nk5YzhBw7pBMlcQFE0Fh9jFN8a96VNYIDuBm68y8+xJJC6kCU/fYVlaqxRz9tFHbUyiVIMceZ
+	JwGPI5LnT5N9sCeOc5wq6ZtsLDzY6cvkssUYiSbcQiorIDiYoePl9ycN32DhNmCMzmqMOBRQLt5
+	iUoAt8tT9OjGpMbtFKTaZWChZbWtBRP6S3SyZAZdUbppGh8sN5I+PegsuWdRrL1eHhc2Fv72bkD
+	DzJIdXBLbuCK1BiOiaAbsUwEBZkL/J/1JepEjZoFq2/0
+X-Received: by 2002:a05:600c:8707:b0:493:c182:6b08 with SMTP id
+ 5b1f17b1804b1-49800ed12f2mr35808775e9.36.1785417111834; Thu, 30 Jul 2026
+ 06:11:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	VI1PR08MB3421:EE_|AM8PR08MB6499:EE_|AMS1EPF00000049:EE_|PR3PR08MB5609:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2422e5ee-63ab-47d4-de99-08deee3a8993
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|10067099003|4143699003|11063799006|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info-Original:
- FC2/f3uqOPNNy96aL5tW8wkHImrCfVxh6gQab1ZKH0Q8V9H1vUmueEs6OtDiI8UtXir4rhhqasBx4ap8cYLSYxigO/kvUNlrkbD2UFdd/IpSC7NMQ5r2AdxEt7Dil8zElmXunvRoE5Tlg5sGnVdcymp/0GRd7uQDnxPOWfgMmzW1CCGhDM3v+DfMPVFosD2QLovucjpI0mdWXiiv3LhVLTTiqh85ygjUz5tiRxrntpo8otSPv4PIgvvvuRnm2hI0to5Mdar/A16FWVJK++gzpBzWDlclVVy9ObW6E9YNTB5AcXTLB2BRmht6C+LJ73SIGkvhND+munjpvjnCNX4GM+dv+iNc2yrnOKf3hduUdhhmqBZMJfBiFIXH6AC6j8q89bevK/2qXILNDQRfolUrwjbzI9gX0tiwMteCnIQTjkYrfh1NWlAMJBqRmVgkez0L1229MzW0FFHciClGqnCrHNlhG9+3JkyI/D1HQnoUBzVW2hMioefk3Nl3IAFu1t0UCQ9ab0zh4eIjPXw+czTd5wh5/3SUeVS2L3txx6cDHO6mWTMfg1iPlJNryIjRZOG4tQgZcfzHN0355IoQ1BJo9CIYMiBMGUUM/pO+t0/1P/UVaidrsdU8W1nwX5nKncAJfTqvDhCcwLQvvX6sZpr1j3KIOss8CU0HxU3z0QangmQ=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3421.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(10067099003)(4143699003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked:
- PJVqIA2lDgDWhewu7hYynL9BtEIPBvddMwyA6Osilo+gjydcsIvk19XXBZt97+CSHOBCcSG1lF5ESd//62FEcnuW0Op041L9mUSopM9qIiRcFzs6jxJ5UjR3ygaJFlN1jkDri8tj2JilMkEJV/f+jXbciV8JLgAAjrVUK1FCu8cKe10e2R3XzHtcJB0d0wf+6uvadBsnplj1Vi9ZrgFvKbcSQ3nWsFAKAwekW3nE4LknTIXxlkyGUKh4agwsjc5N6hK6U9AG4+8fxKtOCwiJW0F14FybdRB0nEtZgFHfgnVXGE59pb5a47YhLFojq6ZdSXR/ked5yu0EJrH2ID3F1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6499
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS1EPF00000049.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	4668f8d0-8f81-4de8-943a-08deee3a6347
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|14060799003|7416014|376014|36860700016|35042699022|23010399003|22082099003|18002099003|4143699003|11063799006|56012099006|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	O10KOqaXNNUMGR3ls13Np733WLe/+mOUvsHHZK/1xvrOwAaQ3gFyBxD+l4l/yBYETpIfea/UPYyKQXoQWiI0DSf1odiOCn6popV8LeIpeABO8yxkDTap5/ruOMVRfjZLI+0dyHD2AhwqvqDKwora12Uzpxg5urIAPa4gB4EupFRX2Hn9n44kVOaLGJvtbo8AwcybPdx/0cJa2AJXutypzyXOBgYu01V+1NdEtnTlnYyeIniUXiAnZO49zzm2SNvplb2ENgqH6kDZY6eds91aQiTx482FiXo7rQjGer9COEf14KfzsCpgPlo1fLcsJHpS0AhX+6OMTsFA8hsTeu15rGfNPkZrHHJ26Ckw3dA+BOJgVzXOj23My+cRSUZNShklge4arjFOhFMdufo1oPFS8qTpz2tmePAKyDSH7nPAGbR9xQbXnhP39MsUvAYKW9rqMxOtkcT0WsbMA10oUDQ75qNh/i9wl7+THUtbY6fK2MtIFC1s36xsX/Ic+6MccQazOuyXmxWpeY2nLID1Otx4XZpVckuFKv3PMeX4Jz/TThbno8qKIDdQQ82uFvW1ZyzaBwGQdGB3vQ/wX3zoRXr+FkEefBgM9O9xHiFWaZuexJKpGcJY0/ICp7lY2aJEmvGBR/wlK5Irpmo3gcy4rrPqBVgZzL8WivKrJwxuvXgYKM6AzbyC5XB5RWoaraT+RnB+bvHE26VpYqRqh7ejd3XkzA==
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(14060799003)(7416014)(376014)(36860700016)(35042699022)(23010399003)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	O0tk75Jwa84mlQCh/jghGzah7Zx4wyBrsFKWBapww83B2Rc5zJP6DKPrz2Uug6JPaPNE+9z2QJlnOBHI5eVJvoivlaP5RB0CDEgLDuDWcRD+uFLUl7J24b6Fh42l/El51riqiL/qx8KLaCiZ3QEA+zMCBEPyTCyleaxfiFROcNsSg7Y0+OwvImkIDS3t6ybum1bYLPDeEvQ/niHon1ljqZi8pGpTndyPvy9tSEgttv7Cwu5YZ0FINdmLMPGMOdm4dq6a5pPvgR0KIEK4XtfwADa29iGw+N9A5AaE3kjZpOuY2T60KxAgD44ofaWhiDmg/gIpQeLlQgG0eGkeGaAhv8dZj8ZlgZmaMiccf1N7/RZyq3/dv3uUyldCsqo3IFF21Ksrf85EBWTicCY/fo8/58SOakbPyIkgIp44+9WMgCZzxrQeA0gufUQ9J4l3XfkD
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2026 13:00:31.6304
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2422e5ee-63ab-47d4-de99-08deee3a8993
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS1EPF00000049.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR08MB5609
+References: <20260526-rfc-nt-demote-v1-0-eb9c9422daef@zptcorp.com>
+ <20260526-rfc-nt-demote-v1-3-eb9c9422daef@zptcorp.com> <ahW7gwgaF0zIPTAz@gourry-fedora-PF4VCD3F>
+In-Reply-To: <ahW7gwgaF0zIPTAz@gourry-fedora-PF4VCD3F>
+From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+Date: Thu, 30 Jul 2026 16:11:38 +0300
+X-Gm-Features: AUfX_mwGq9AjTR5NxgyxAqgBeEwNx--Sq9pL4ych9I9IxB6UA5FR819gtzB2mWI
+Message-ID: <CAOi6=wQ7CxHf8QMFXm5oyHZFc9n6BQecL45rBud=hMubmayCnA@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/3] mm: use non-temporal stores for demotion
+To: Gregory Price <gourry@gourry.net>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman <jackmanb@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, David Rientjes <rientjes@google.com>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <nifan.cxl@gmail.com>, 
+	Frank van der Linden <fvdl@google.com>, Jonathan Cameron <jic23@kernel.org>, Raghavendra K T <rkodsara@amd.com>, 
+	"Rao, Bharata Bhasker" <bharata@amd.com>, SeongJae Park <sj@kernel.org>, Wei Xu <weixugc@google.com>, 
+	Xuezheng Chu <xuezhengchu@huawei.com>, Yiannis Nikolakopoulos <yiannis@zptcorp.com>, dimitrios@palyvos.net, 
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Alirad Malek <alirad.malek@zptcorp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/07/2026 12:29 pm, Alexander Gordeev wrote:
-> On Mon, Jul 27, 2026 at 05:46:58PM +0100, Muhammad Usama Anjum wrote:
->> move_ptes() directly dereferences new_ptep when checking that the
->> destination slot is empty. new_ptep now points to hw_pte_t table storage,
->> while pte_none() consumes a logical pte_t value.
->>
->> Read the destination entry through the standard ptep_get() accessor before
->> passing the logical value to pte_none().
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->> ---
->>  mm/mremap.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/mremap.c b/mm/mremap.c
->> index d966ee8248b6b..ecb90ccee6fdd 100644
->> --- a/mm/mremap.c
->> +++ b/mm/mremap.c
->> @@ -264,7 +264,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>  
->>  	for (; old_addr < old_end; old_ptep += nr_ptes, old_addr += nr_ptes * PAGE_SIZE,
->>  		new_ptep += nr_ptes, new_addr += nr_ptes * PAGE_SIZE) {
->> -		VM_WARN_ON_ONCE(!pte_none(*new_ptep));
->> +		VM_WARN_ON_ONCE(!pte_none(ptep_get(new_ptep)));
-> 
-> Same as the previous patch, except that I did it already:
-> https://lore.kernel.org/linux-mm/20260720141633.501799-1-agordeev@linux.ibm.com/
-I'll drop this patch.
+On Tue, May 26, 2026 at 6:25=E2=80=AFPM Gregory Price <gourry@gourry.net> w=
+rote:
+>
+> On Tue, May 26, 2026 at 01:37:04PM +0200, Yiannis Nikolakopoulos wrote:
+> > From: Alirad Malek <alirad.malek@zptcorp.com>
+> >
+> > Memory demoted to a lower tier is assumed to be cold and most likely ou=
+t of
+> > the CPU's last level cache. Additionally, in certain demotion targets (=
+e.g.
+> > CXL devices with compressed memory) the bandwidth can be negatively
+> > impacted by the eviction patterns of the last level cache when standard
+> > memcpy is used. When the feature is enabled, use the
+> > MIGRATE_ASYNC_NON_TEMPORAL_STORES flag in demotions to trigger the foli=
+o
+> > copy path using non-temporal stores.
+> >
+> > Signed-off-by: Alirad Malek <alirad.malek@zptcorp.com>
+> > Co-developed-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+> > Signed-off-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+> > ---
+> >  mm/Kconfig   | 8 ++++++++
+> >  mm/migrate.c | 9 ++++++++-
+> >  2 files changed, 16 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index ebd8ea353687..4b7a75b57f6e 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -645,6 +645,14 @@ config MIGRATION
+> >         pages as migration can relocate pages to satisfy a huge page
+> >         allocation instead of reclaiming.
+> >
+> > +config DEMOTION_WITH_NON_TEMPORAL_STORES
+> > +     bool "Use non-temporal stores for demotion"
+> > +     default n
+> > +     depends on MIGRATION
+> > +     help
+> > +       Enable non-temporal stores when migrating pages due to demotion=
+.
+> > +       If disabled, demotion uses regular migration copy paths.
+> > +
+>
+> Do we actually need this config flag or should we just default to this
+> (if the arch supports NT stores)?
+As discussed in the sync call, I was just being defensive :).
+In fact the non-temporal instructions should be in all x86_64 afaict.
+So I've removed this in the next version (landing soon).
 
-> 
->>  
->>  		nr_ptes = 1;
->>  		max_nr_ptes = (old_end - old_addr) >> PAGE_SHIFT;
->> -- 
->> 2.47.3
->>
-
--- 
-Thanks,
-Usama
-
+/Yiannis
+>
+> >  config DEVICE_MIGRATION
+> >       def_bool MIGRATION && ZONE_DEVICE
+> >
+> > diff --git a/mm/migrate.c b/mm/migrate.c
+> > index ff6cf50e7b0b..368d40dc8772 100644
+> > --- a/mm/migrate.c
+> > +++ b/mm/migrate.c
+> > @@ -862,7 +862,10 @@ static int __migrate_folio(struct address_space *m=
+apping, struct folio *dst,
+> >       if (folio_ref_count(src) !=3D expected_count)
+> >               return -EAGAIN;
+> >
+> > -     rc =3D folio_mc_copy(dst, src);
+> > +     if (mode =3D=3D MIGRATE_ASYNC_NON_TEMPORAL_STORES)
+> > +             rc =3D folio_mc_copy_nt(dst, src);
+> > +     else
+> > +             rc =3D folio_mc_copy(dst, src);
+> >       if (unlikely(rc))
+> >               return rc;
+> >
+> > @@ -2081,6 +2084,10 @@ int migrate_pages(struct list_head *from, new_fo=
+lio_t get_new_folio,
+> >       LIST_HEAD(split_folios);
+> >       struct migrate_pages_stats stats;
+> >
+> > +     if (IS_ENABLED(CONFIG_DEMOTION_WITH_NON_TEMPORAL_STORES) &&
+> > +             reason =3D=3D MR_DEMOTION && mode =3D=3D MIGRATE_ASYNC)
+> > +             mode =3D MIGRATE_ASYNC_NON_TEMPORAL_STORES;
+> > +
+> >       trace_mm_migrate_pages_start(mode, reason);
+> >
+> >       memset(&stats, 0, sizeof(stats));
+> >
+> > --
+> > 2.43.0
+> >
