@@ -1,125 +1,117 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459DD3803EF
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 08:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736593AA504;
+	Thu, 30 Jul 2026 08:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785399198; cv=none; b=fOA+AZgvwAFUURWB2I39UpNuBGfe909mkc36gNJbdw86LaEGZKTF/bfGBOA0ZdfNuJbrvgZkBayMA8q4oX7k0flJBobQH9imLt4bcfrldHLZdCJS8fuLcXoQMDCgM2Rm7MC1GZHA2ff6Svc+BNFwtIpuwTJgZLt0wt1jEmN8GAs=
+	t=1785399590; cv=none; b=oBogsAilI/P80feSow/1mwzh0+4VGDElZq/Cdjt0xUlByrPkHXoNtMOJAmfG2EDLljB46zhDLlmsLyuNeYFcfZEP0gU64FrNwVpmtFlF3Ug7Qy0/Lnpv/q/5AmUG84abOz3c1X2tlUyD53FtsR8eaDYRDu0sYq7eyAt+5CiG04Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785399198; c=relaxed/simple;
-	bh=4UjqegiqqkwQLGcObgsAsaBlVRRZB81Kadcu/mnixzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTNFz7rVYfJ9/FxNsIGhS1bqijycLRsy9oDQT+m8CHOtpbNs1JIwTWH85KGQ2bc3AllWtbZNdRj/y2uFie7mZtLjmlU6fOX95oi0ZDTIlI9TIl6p/kLER1MEbfjiezfJuR6eShNlUlGoR7/yszjIiZtfGq0nZKfPQfFzwrLVOdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=POypOINP; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1785399590; c=relaxed/simple;
+	bh=wpfIrMcHN8QikkXCKITCLw0AA407+GAAoFiif3VfJc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e1RILAYFplIkkbfRa009Xugi9dW+FFNA7OjN45E6BLxVtXIeJC5DptMKy9PdC8WpwrfMe1LrLRs7OWYU0IM83XzM0HQviCeb+v4vhFYXYs0mIz/AAiQQUA83z/AZ64DFpzCho9ILsGNsIDUg1U4di6xUHA7DXul5ZsFFyRcS+kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3QOOEV7; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="POypOINP"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c15d47266baso229094466b.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 01:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785399193; x=1786003993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=t1c3TMYJPV/i4q6IntYhww97ey3M9wPjCcBpkAHl8jU=;
-        b=POypOINPvPHviSPNB7B9JfNECnfv0Vp8HmtJp99Yz2bExxNqZ1lH/a1WzA7NFJDe13
-         4kYPqUDM1y/MRFh33wDsv3XK9LH+gtFoBG6l6RoJV7AiOSUw8vkSUgMIi6Huc056+PMv
-         RWHNghMckIl7S+qprUt8pd7T44q7B1YmDJ0LeQyIqa56VaExLPKW4iua+F/jtCl/Y5Xz
-         guFEY3kDSxCenPaq0Q3R7JX0GEN9XYewTIXq8+mFQcID3l75RoJpoJk69RzrW38TY+5T
-         Gao9Ruy1ET2YfoxHteQCjpQ3mb4spTgciNZWoliUcKEelPNExhbIJUO4VXA+EblTwXy7
-         MafQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785399193; x=1786003993;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=t1c3TMYJPV/i4q6IntYhww97ey3M9wPjCcBpkAHl8jU=;
-        b=ps5ew/R1rqkKRaKiEX+MP7KkOEhNqo7I2QxqtSVg30kUAVqQvVlhRokwTu8DPr5P5m
-         JHa9qSUVmyINpFPTCi39yg1ZLL2IZdXPnxcY0I0WvC1jVc0lLuJsxqLNFyLLsnKuzkwv
-         j0yNOJGjR+Jn9ZfNSFUD+ozsf/YmMxxIAFn7ydylNQ4ipWcqSCg/bYhPQq/PtVQFf5aq
-         1gsX0i7wRXLOSaq6uz+ckYcX7BX/3+E5vBoe1w1s3l13YV8NwN1+K0l32MhBEYJEOKxG
-         hgUk2+k4clQB8x+ILyXc9/7t3LluQFnvpcR8+zQQJy9935u2SVEsrc+3Z0fkLCDkuAQT
-         mD4w==
-X-Forwarded-Encrypted: i=1; AHgh+RoWuUkFQ8LxKWM1vGUG+Ut5wsK0Qfxh6EzamQzDqI6nocYhBS9dAXzTx1LjGZ1Y5Yj/LaxEqxMFrJwsT0v8KjYE1Mc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWglDuNpdMnML+A3SRZ+WwxJZN/+GY+/omNTiR7ISpBUqCfAKm
-	CZWrUGadwvFZK9qQ1qZqet0Jkgfq/yW+1gQwEQnRLc4LZbcF2bAfuTqwu5qhwPgyUg==
-X-Gm-Gg: AR+sD11NhYZdQRZIUU7xtl87Q1mg6IVfJoLkH7nrNLcGO5CYixG7qrazfouWfYLjeKD
-	XAA98QygLzBt2E+bSudC4YScHNHw5i7Jp9dYeRlJgrsqQtfS2FZNaGZtDLWRgcr+qRcqgc+pbBY
-	PP1fPCAmQQTyUuAcYgaZ8+VLLgFbPummO827N1Pyigc7eDTUIRnKr0XZhBbwhQs8W8/kIEHoIrr
-	JcWN9FGS0a+5FclFgjaPFYKby9iD9W+pEOA7lWQbNBCUyi9vT9/n+9K5bYIEHNEapfQUolZ6gMV
-	lfUCqKN5iR33oCNefV6fBD2+gdQ1BhaUE1p5YTn0V38zuzUD9jl7OkYLZrcMwEUWG69BdmTe3Sq
-	l+3JtdT+KvEt4UfCCs+qBhMCjTRQG7yp576z4CUTuf3ejCTVsn6OaB+XYMO6KE240V2FPSmYrf7
-	4Y2fSLiL6zLhqtgHk8zsL5I9dsScKgqqcANlckzJugqmNYxr2nTSh4oC20DSERvPhmLOKa8ttnD
-	7bcCxhBn8hg/3a7nZ27G7dsylyitCzK
-X-Received: by 2002:a17:906:9f92:b0:c16:9ca5:e551 with SMTP id a640c23a62f3a-c1fa55d53c2mr81676266b.14.1785399193003;
-        Thu, 30 Jul 2026 01:13:13 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1fa8577e6dsm37228166b.22.2026.07.30.01.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 01:13:12 -0700 (PDT)
-Date: Thu, 30 Jul 2026 09:13:08 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: Fix subbuf_ids memory leak in
- rb_allocate_cpu_buffer() error path
-Message-ID: <amsHlMCNHV9JWA0l@google.com>
-References: <178539491147.180138.1181424244288838594.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3QOOEV7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785399588; x=1816935588;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wpfIrMcHN8QikkXCKITCLw0AA407+GAAoFiif3VfJc0=;
+  b=I3QOOEV73HGlKGqseDzRPfT+U48RxhP3u55EfFdnWEbRukk4HefA1bR8
+   393wDOdrfKAgeJ8AP36M058z1p11k7c9Z5uifGckATHmmcG5Xiq7kbLCL
+   Vy49AgiNj/uHKaNFt2f328Paopfr3EZnZBLeE9y12xEWLI0olqFJrY6Ew
+   qFrsU1jS1A4S/ik6SoHuoC6V+r44BQj6mNJFZDqu08l1MEN1+XF62SxTC
+   gnuBq+L77D9WEnyEuhlvxV6zaveszOtChlwmvMajRWWkdOpWcn4xnnZ/A
+   0FuaZwfUOexmpLddbk34iAWz1e03sNBAuSWHi5IbTnsc3H0NK9Ha4oa4V
+   g==;
+X-CSE-ConnectionGUID: mqBI/tinTl6nf1kg+8s5Vg==
+X-CSE-MsgGUID: Z6Vbqc7vT1+QLc+N48VI9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="86091135"
+X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
+   d="scan'208";a="86091135"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 01:19:45 -0700
+X-CSE-ConnectionGUID: 0mKvQIstRByDOckKXDh64w==
+X-CSE-MsgGUID: iicRvDLaTO+wZke7z8GHMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
+   d="scan'208";a="259664017"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.238.208.132]) ([10.238.208.132])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 01:19:34 -0700
+Message-ID: <df06e0ec-9462-4072-a0c7-054f1978bf89@intel.com>
+Date: Thu, 30 Jul 2026 16:19:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <178539491147.180138.1181424244288838594.stgit@devnote2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 04/41] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-4-35f9aec2aed2@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20260728-gmem-inplace-conversion-v9-4-35f9aec2aed2@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 30, 2026 at 04:01:51PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 7/29/2026 8:35 AM, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson<seanjc@google.com>
 > 
-> In rb_allocate_cpu_buffer(), cpu_buffer->subbuf_ids is allocated using
-> kcalloc() when buffer->remote is non-NULL. If a subsequent page allocation
-> fails (e.g., ring_buffer_desc_page() returns NULL or rb_allocate_pages()
-> fails), execution jumps to fail_free_reader.
+> Rename memory attribute APIs to add a "vm_" in the name in anticipation of
+> moving PRIVATE tracking into guest_memfd, to allow in-place conversion
+> between SHARED and PRIVATE.  At that point, there will effectively be two
+> (potential) sources of memory attributes: the VM and guest_memfd.
 > 
-> While __free(kfree) automatically frees the outer cpu_buffer structure
-> at scope exit, kfree(cpu_buffer) does not recursively free nested heap
-> pointers such as cpu_buffer->subbuf_ids, resulting in a memory leak.
+> kvm_vm_set_mem_attributes() already has "vm" in the name to indicate that
+> it is a VM ioctl. Rename it to kvm_set_vm_mem_attributes() to show that it
+> is setting the VM's memory attributes. (Drop the VM-ioctl scoping since it
+> is a helper local to the file.) Update the accompanying trace function to
+> match.
 > 
-> Fix this by explicitly freeing cpu_buffer->subbuf_ids in the
-> fail_free_reader error unwinding path when cpu_buffer->remote is set.
+> No functional change intended.
 > 
-> Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
-> Assisted-by: Antigravity:gemini-3.6-flash
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/ring_buffer.c |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 78d3875a47a5..03f6baf6a5f5 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -2599,6 +2599,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->  	return_ptr(cpu_buffer);
->  
->   fail_free_reader:
-> +	if (cpu_buffer->remote)
-> +		kfree(cpu_buffer->subbuf_ids);
+> Signed-off-by: Sean Christopherson<seanjc@google.com>
+> Reviewed-by: Fuad Tabba<tabba@google.com>
+> Tested-by: Shivank Garg<shivankg@amd.com>
+> Signed-off-by: Ackerley Tng<ackerleytng@google.com>
 
-alloc_cpu_buffer() being kzalloc, I suppose here we could just unconditionally
-call kfree(cpu_buffer->subbuf_ids) ?
-
->  	free_buffer_page(cpu_buffer->reader_page);
->  
->  	return NULL;
-> 
-
--- 
-Vincent
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
