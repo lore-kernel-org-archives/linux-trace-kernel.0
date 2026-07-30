@@ -1,199 +1,138 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DE93B3C06
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 18:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F23D3A544C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 19:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785434945; cv=none; b=lJxy7t7o/OqhNwk8tBTaJNR2pUeYLN+GFGS5jC9ZNWjV571JIOoPktQJJh0CKJolZPpbFZRftcP/C2pkmRb28x0nX9gQcH6mIeY1s2fci6AKcEpXHobJGm0jPhcauKrejp2GkEcqiy/JEIMGbweTL4F0fvG/8xtWTGpV+MhfXXM=
+	t=1785439956; cv=none; b=q0abyhi7gLZC11G/xcTFBEyKTihOQu7J2F5qePWLysN0+5+OrQ+Kh9KanhU1yddbMO+HA6WRtlMhs4mDu43g6bN6eT6Cct2o9AnWNzVQaD6ANJv4GMjZzZefGtoXbwVkKdnq8mHz7bkh6oIyLei4Y7UXdETfsLn3wxPHLxMolaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785434945; c=relaxed/simple;
-	bh=e5djwQ5M46poH9vcs1lwIEd6WdMkFZI64agxZMyi4TU=;
+	s=arc-20240116; t=1785439956; c=relaxed/simple;
+	bh=FVAkC+7LmP1MK7FCjI0hOZYPokCItuic/3GUX2deHnc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rG8R+i+h0MEOgr6c2wv7TEQDvegb0gp/cr5av0a8stzKLSyebKUsHvIa7uxOSJImDCRgi+x1Dq+4rLwK/iLXElq1ssvG+HM4d5f4HW2QnO+euNjrvAI6NJqYCtsa7oQ2SxZmRQPWzVRLtXg/PCyI1WfEumdwTZ8kbwEDZTZjJFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg.org header.i=@cmpxchg.org header.b=NF2Miw8j; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5dzES3zl8U1dkEy0ej1/qX2P6wtFmoWq7QeosarhkcgnwvB+FLwqem5mBAWlvGwIb/uWseqV0WbDvPAcPgSZZLJWZt0h0CDHcnxAJQuiKH2uzXWCcVUD3Ry0cehqSAKCYhJW67zX8iK0IjLeS/7nxtnPhMcw7Os6aSkXXRGfZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTpPxLKO; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg.org header.i=@cmpxchg.org header.b="NF2Miw8j"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-92edb12cdf2so10585685a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 11:09:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTpPxLKO"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-84e0688b859so183497b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 12:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg.org; s=google; t=1785434941; x=1786039741; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0g23j5vj8+Bp2V9fp4RzYHbi9Ap6ZcD0KhlvvGNkHEE=;
-        b=NF2Miw8jFt+c5I3urIG/d54i9D3WBotb1TscEJGz5Nwfs7f2vQ/ehi1oFaus+ra+DD
-         rFLPYNTeig3R+E9cnCa9qtQlVgyCxhAYiNRcxV0u+PJ/OaVfHFo6OD3RbeeJ1sNuXqFT
-         iIZI+2jOjl5Jd+kDpN5K59pKM2XOl3B7d83v5Rx0LvELad1K/PtUfmhO4JvcEV2DTMIv
-         gZmEAr9KALOU7A8aneqgASjgFCeQmQf2b7Jgw2X5ak33btSNdDbUyglwtzkDKKHlXU9c
-         yIuRwVcb8gLqN8Ce3XFrBMXBMhcmQ19xlKyuB50V1I01Y3aaoQRNkuNVz0ZimHFZ35BU
-         itBA==
+        d=gmail.com; s=20251104; t=1785439955; x=1786044755; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=OaufhRrPIIlGU9PSko9eDMbVVZpm59g+vXiWTKqYEnk=;
+        b=hTpPxLKOmjxEBxZIbXlISDB67vb3LXTvkaiLrFf3Qdw5GgCI+YBZrQJhwiqNGv5NLO
+         DRNe30lgtdmBiQDx/Ckpm61JAtewMTB1IbkdCiaoNvERqpzhtjbkBKYugO9w45Th6Vi4
+         Ckj6aqh/UhfWmIaosgYk/OqPzVv7XFlub/1LMVhicr/u0Fz8F78eAaFDb3IK+rYi0mZY
+         P62T26yX5WfhG6OjdDj5pLPrdM8DuR3dlo8Kk2Mjy5c1JQbOp6C344rVYjm8pllFqjgI
+         wiC47WrgWLSkZRY+RvRTCMWcyUViDAQAZOJXB1ifyZdoCdmRVe/jRYHT0/JVJgtI4cC+
+         VN1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785434941; x=1786039741;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=0g23j5vj8+Bp2V9fp4RzYHbi9Ap6ZcD0KhlvvGNkHEE=;
-        b=Ai4jodtbl2OXdEUGilhtyuannU1a8JZhyI25STscndhqcaMNnDt16OH2KgJK2iNTOy
-         KKtS33yEbhGw+xMpej/JvK0uibSA4vxPNtHfJlOzToTRG0heNjdjRwKCWknkZDXFd3DB
-         u03JoT3nkwceVfkISq5rGYdKiO47gfj5oEOjmaovPAe/tTHrgrQ1t0qX1qf9qZ6xr9T/
-         ErWIhdss7veB7i/DTpoWNM9oNFr/y6TsOze3WZ0Id2wqEUiyAP8CeBAHxlaiPevdbB7d
-         kZWC3VJBtBLUyKAkxNEYXMPJKVBvgYvTWvUtcmYwWhIUWK6uo4TlXfx6qty40FKbaIle
-         lp3g==
-X-Forwarded-Encrypted: i=1; AHgh+RoUiMvip9ZpFZ3G9BOX7UusHZCaE64Y5WC4/f3DJAx3IR/nEdPgc3GLhAQT04Pze/pj6ZpfM7C1ix95juSzflhTYYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9xJKgysQLFlBA7yTgm0fZlASetrQ8+ykDx7ZKsnRjvvL+ydn/
-	ZhfCu+Dw+SyCCOm1/rYhy4CM0Ss/I+tJYIiX9y5/owhrkGNje81G3SO6cG9okVKRTmk=
-X-Gm-Gg: AR+sD13mn/KEvNdsXOu4wTucjnFNDjvZB8djvY3dNRrpgHoZrb8kyiGUiwFdKsF/Y8k
-	gnAJLLfx3ZuB/HYdVFkI2cblkbm74CJncgAZ+W3ZIemOz5bREE9F7anlxNks76GrUhSJ9q6mzDX
-	eAKA0N1BhhCoY+k83d51XgpFDxDVaPqcuG8zw4zbjIYs6gx8+ye8X5DzlcJUKwZ0tDNOgybIfoy
-	AUFedQkDc6AquxXqDBWjR2Dp9KlAyDikfd0ddrBfLD6G8MkIZtUDK/sTd/BiUqSVfNgZreKQ6Sw
-	awR0te2A1vDqOZxpyriwb3gDtnnptdW4jLxFtEUI8CMYNIrYH560Ok5RA1W01c3MerLN3BoO5aO
-	Tw3Hr2WJIlODY2wEmRmhxNiTT/gQXNwQoLGst/LYsHeh6O0WlPbh7hPY08f27RGvBM4FeZ6rhLO
-	yFid4com+6mTb4O1rR9d+ykHbVGLiCHw35gXbyRhfoz1By038q2b1PF968KXI=
-X-Received: by 2002:a05:620a:260f:b0:92a:1b20:fe0c with SMTP id af79cd13be357-93485fa518dmr413028985a.17.1785434940796;
-        Thu, 30 Jul 2026 11:09:00 -0700 (PDT)
-Received: from localhost ([2603:7001:f100:500:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-933d3264577sm464848585a.17.2026.07.30.11.08.59
+        d=1e100.net; s=20251104; t=1785439955; x=1786044755;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=OaufhRrPIIlGU9PSko9eDMbVVZpm59g+vXiWTKqYEnk=;
+        b=TVmuMJWkaBZwK0W9ASh2vG25PGlp35XYn5zRWqZFvoIYgeMf1b/KyN3Ogbb2xFTEOz
+         F/ehN6pW0gRiOAgHs9y1NY76kX+hIYxhR2GCTRztu03Yj5fS1EgQef/nhV5+Nl8egHUo
+         FcCrKOD97VTrSGXUw5/VJrtkhIQ4H4Pk8aTNGYF3EW/5X8BCYXJj7FHgwEBKa+++egs7
+         lHgAFMccL8TM2+qGD2B1D/O8xC1m3tZx8bo5XEAsXcGd5efgC96XH5IQPK+HhW+nNfv7
+         4zNYXWP7P1Q3cJLzgqDMPHLKzGKmoRg5TyyNS2eHFKVZo/etMTTu8bUwdGrVLpEtQook
+         tsSQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rpi9K3uHjtkQZRRWNEudMaqyMRWsctDL3V7C4XeGBqDd0GuU2BWjlEdo11B6GiBpPHJkFakASBwm51mLyd8XASgwzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvzdQdxYauaUr1K0N9bUUyILkO1m+xv/+GNFJoTHtRZJykWGnt
+	UiopcbHPXoQEfGgR53EagjS6wJvl2jq0kmVvyZ9dwCE0gni/VqSmRuwo
+X-Gm-Gg: AR+sD10pFjLPlknXunCi+J9mdsza+OeDFPkQrtk4a4Poa8PtsOhe3mGpro4Az3s+Iae
+	URMb8u7XV159XqyIuIcQI+pl2JbqLjqGWZg9PfLnh1uCZHacjzktxEMHCaeWDuiaXuwnd3CwjZD
+	a7muQ44oEvkpW9id0j85Hrx6IUjZS8qWIqJMJjuqpXW3oFqV2BSwxGrxSlHjCFFZrGtel/2GQlL
+	Du2X6rD1GW6VA7hOwl4Npf7XMeqPnigZsxbIEOr6XpWDjEMVKhsW+L/TYA6c0pPrKHP4BiAk9YE
+	iUGr4Hw0geIihPprc1ZqDYZDl6gUX3nx5VFeWXsjG8BsSxrIDmIDFDN9YiEV4UCd81quD7g0i31
+	77JBJ2NGYMZV4G7LWPSHz/otPs1MqFRL5h3nLqCmnEi6CrppROlkFf4aZod3vUbGYlkcx7sqkHH
+	DXT+oZTtGi64ReifoR3cb3BmeSatAh4eW+U+APwd1nCXU5+TFFjk8HtKaSAjXK
+X-Received: by 2002:a05:6a00:c82:b0:84c:518b:d915 with SMTP id d2e1a72fcca58-84ebc4022b4mr3494498b3a.65.1785439954744;
+        Thu, 30 Jul 2026 12:32:34 -0700 (PDT)
+Received: from google.com ([118.150.148.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84e9fe240acsm3526682b3a.7.2026.07.30.12.32.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 11:09:00 -0700 (PDT)
-Date: Thu, 30 Jul 2026 14:08:56 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Frank van der Linden <fvdl@google.com>
-Cc: Gregory Price <gourry@gourry.net>,
-	Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <nifan.cxl@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Raghavendra K T <rkodsara@amd.com>,
-	"Rao, Bharata Bhasker" <bharata@amd.com>,
-	SeongJae Park <sj@kernel.org>, Wei Xu <weixugc@google.com>,
-	Xuezheng Chu <xuezhengchu@huawei.com>,
-	Yiannis Nikolakopoulos <yiannis@zptcorp.com>, dimitrios@palyvos.net,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Huan Nguyen <nhuhuan@google.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Alirad Malek <alirad.malek@zptcorp.com>
-Subject: Re: [PATCH RFC v2 0/3] Demote to lower tier using non-temporal stores
-Message-ID: <amuTOC7qxWHVyZcO@cmpxchg.org>
-References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
- <amuJbBrTW9W6_sx8@gourry-fedora-PF4VCD3F>
- <CAPTztWatWbsF4KQwD-_nib-vrZ6uvrhMYcOc1mkWu-7DzN95AQ@mail.gmail.com>
+        Thu, 30 Jul 2026 12:32:34 -0700 (PDT)
+Date: Fri, 31 Jul 2026 03:32:26 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: will@kernel.org, joro@8bytes.org, akpm@linux-foundation.org
+Cc: robin.murphy@arm.com, nicolinc@nvidia.com, cychu@google.com,
+	hhchung@google.com, amitamishra@google.com, marscheng@google.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	eleanor15x@gmail.com, kpsingh@kernel.org, mattbobrowski@google.com,
+	song@kernel.org, jolsa@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
+	memxor@gmail.com, martin.lau@linux.dev, yonghong.song@linux.dev,
+	emil@etsalapatis.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] lib/sort: Clean up sort_nonatomic() and
+ sort_r_nonatomic()
+Message-ID: <amumyk_cHcffv9CC@google.com>
+References: <20260730181216.2709088-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPTztWatWbsF4KQwD-_nib-vrZ6uvrhMYcOc1mkWu-7DzN95AQ@mail.gmail.com>
+In-Reply-To: <20260730181216.2709088-1-visitorckw@gmail.com>
 
-On Thu, Jul 30, 2026 at 10:40:32AM -0700, Frank van der Linden wrote:
-> On Thu, Jul 30, 2026 at 10:30 AM Gregory Price <gourry@gourry.net> wrote:
-> >
-> > On Thu, Jul 30, 2026 at 05:02:56PM +0200, Yiannis Nikolakopoulos wrote:
-> > > In most memory tiering scenarios, the memory to be demoted is expected
-> > > to be cold and most likely out of the node's last-level cache (as well
-> > > as target pages in the target node). Using non-temporal stores instead
-> > > of a standard memcpy path can reduce the cache pollution in the local
-> > > node and the bandwidth overhead to the target node. Furthermore, for
-> > > certain types of CXL devices that support in-line memory compression,
-> > > the last-level cache eviction patterns can negatively affect the
-> > > bandwidth of the device. Non-temporal stores can mitigate this.
-> > >
-> > > This patch-set introduces a new migrate_mode flag for using non-temporal
-> > > stores that is used only in the demotion path. Patch 1 adds some helpers in
-> > > x86 and mm to bring non-temporal stores support to a respective folio_copy
-> > > function. Patch 2 adds the new flag and necessary changes for compatibility
-> > > with the existing behavior. Patch 3 uses the new flag for demotions.
-> > >
-> > > Experimental data: in a CXL system with 1 memory expander, a microbenchmark
-> > > that allocates N=64 GB memory in the local node and then triggers demotion
-> > > using memory.reclaim, shows a practically complete elimination of read
-> > > traffic on the device, i.e. write traffic is N GB with and without the
-> > > patch, while read traffic drops from N to almost 0 with the patch.
-> > >
-> > > Opens:
-> > > 1. There is some "duplication" in the x86 tree and a bit in mm. Can we do
-> > >    something better there? As it is now in copy_mc_to_kernel_nt we
-> > > duplicate the machine check functionality, which if available will override
-> > > the non-temporal. We were not sure how to prioritize these two and what's
-> > > the best approach here. Can we completely skip the machine checked for this
-> > > path? Huan Nguyen has some ideas here that we will align for the next
-> > > version.
-> > > 2. I am not sure how this should be structured so that it is easily
-> > > adopted in other architecture trees (e.g. aarch64). We rely on
-> > > memcpy_flushcache for x86_64 but this does not use non temporal stores
-> > > in ARM. ARM support is currently out of our scope but any input is
-> > > appreciated.
-> > >
-> >
-> > I'm still a bit confused why using NT Stores needs to be an explicit
-> > option - rather than the default behavior if NT Store is available.
-> >
-> > Lets assume we did this for all ASYNC requests, is there a negative
-> > effect? A positive effect? Why the new ASYNC type? Is there a
-> > correctness issue?
-> >
-> > ~Gregory
++Cc maintainers/reviewers of kernel/trace/bpf_trace.c
+
+On Thu, Jul 30, 2026 at 06:12:14PM +0000, Kuan-Wei Chiu wrote:
+> Remove the sort_nonatomic() and sort_r_nonatomic() APIs from the kernel
+> library.
 > 
-> Yes, this is a good discussion to have. I believe that the initial
-> reason for using a separate mode here was to be non-invasive, e.g.
-> "don't break anything else".
+> Currently, the arm-smmu-v3 driver is the sole in-tree user of 
+> sort_nonatomic(). Because the array size being sorted is small in
+
+I just realized that I missed another in-tree user: sort_r_nonatomic()
+is actually being used in kernel/trace/bpf_trace.c.
+
+Looking at the bpf code, the array size there is bounded by
+MAX_TRACING_MULTI_CNT, which is set to (1u << 20). I guess sorting an
+array of this size in a single go could potentially cause scheduling
+latency spikes on certain configurations if we don't yield the cpu.
+
+Because of this, it seems my proposal to completely remove
+sort_r_nonatomic() and sort_nonatomic() from the core library was
+premature.
+
+Please let me know if you think otherwise, or if there is any
+alternative approach for check_dup_ids() that would allow us to safely
+drop sort_r_nonatomic(). Otherwise, please disregard this series.
+
+Regards,
+Kuan-Wei
+
+> practice, there is no real risk of triggering a soft lockup. Therefore,
+> the periodic cond_resched() calls provided by the _nonatomic variant
+> are unnecessary.
 > 
-> But why not use non-temporal stores for everything? I don't know. I
-> suppose one argument might be that if you know that the destination
-> will be used immediately, NT stores might be a slight performance hit.
-
-do_numa_page() -> migrate_misplaced_folio() is such a case. It happens
-literally in the access path to that data. MIGRATE_ASYNC just means
-don't block, fail fast, because waiting for an IO-bound lock to avoid
-a remote NUMA access would be a bad idea.
-
-Compaction on the other hand does use MIGRATE_SYNC* and it's touching
-data in PFN order, completely out of execution sequence. That could be
-a good candidate for NT stores.
-
-> arm64 already seems to use stores with NT hints by default.
+> With the only in-tree user updated, the _nonatomic APIs are no longer
+> needed anywhere in the kernel. Removing them effectively drops the
+> wrapper function and eliminates the may_schedule branch from the
+> innermost loop of the core sorting logic, slightly simplifying the code.
 > 
-> In general, though, I agree that for ASYNC requests, just always using
-> NT seems fine.
+> Kuan-Wei Chiu (2):
+>   iommu/arm-smmu-v3: Replace sort_nonatomic() with sort()
+>   Revert "lib/sort.c: add _nonatomic() variants with cond_resched()"
 > 
-> Maybe the mode and reason should be folded in to one variable, so
-> that, further down the stack, a decision can be made as to what type
-> of copy to use? E.g. if the mode is !MIGRATE_ASYNC and the reason is
-> MR_DEMOTION, then non-temporal is still a good choice. If the mode is
-> MIGRATE_ASYNC, NT is still a good idea. If you wanted to get fancy,
-> any mode with folio_test_waiters(folio) == true should not use NT,
-> since a task is waiting to use the data, so caching it is better.
-> Maybe that's overthinking it.
-
-Agree. `reason' seems like a much stronger signal.
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |   6 +-
+>  include/linux/sort.h                        |  11 --
+>  lib/sort.c                                  | 110 ++++++--------------
+>  3 files changed, 34 insertions(+), 93 deletions(-)
+> 
+> -- 
+> 2.55.0.508.g3f0d502094-goog
+> 
