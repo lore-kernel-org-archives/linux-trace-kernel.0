@@ -1,121 +1,139 @@
-Received: from out28-145.mail.aliyun.com (out28-145.mail.aliyun.com [115.124.28.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD6735202D;
-	Fri, 31 Jul 2026 03:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.145
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C2602C21DD;
+	Fri, 31 Jul 2026 05:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785469280; cv=none; b=qVgVjaQEdh+gCj39xRD0MHJQc21uyGnRZ1F2niQByaIRC3gViHmRENMIb0CmA3fbDw3763QIFstJH1dJ42PFjlsc2Q7Ycc075vPf+JBY2zp++EHHbqI6rFGb3U0iVNqP2dwnnbwjC3GkmK20avmtzN5yBcSOpFxotTmF2qvTXh8=
+	t=1785476979; cv=none; b=Xg+QyafKMnpc1YjFOGfiCoCv9e0xBfeGbdCevtqOWH0HUfLLRCC0EmttvSCUQTTJqhAHCuI5kTAxSmeDo1cx3ncknWztVSvk4vcTlGfEto3XpdrnnbGjYk8nj8gDe9eQ8Gis0umbqvA4s6VpFz8Vp0C5FNhCRhHvONMP9WFz6Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785469280; c=relaxed/simple;
-	bh=GMm38GKEjnO5dC72lOIrJCG32s63nxBjJVzXHk8POmA=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=CZBzE5uMJAI5Dyw3zVc6YYzYmcKwsbdD76Btjw01wqGL9HlhwNf7FbliK0bUJna3VudPogjr5iSR/Om43dV9xDEFqE4FRPsy1pNoFfl/e40KtYjxR9px3GF/9vVtWOPP+YDIkY0ma0AY/RO/l9tWvgAIIivm3BMeNnrKNOJnwfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07486481|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.112722-0.162999-0.724279;FP=13175772313018746238|11|2|10|0|-1|-1|-1;HT=maildocker-contentspam033032062159;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.iZvVUEO_1785469262;
-Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.iZvVUEO_1785469262 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 31 Jul 2026 11:41:03 +0800
-Message-ID: <95efe185-35dd-18be-f08c-af4d0965b013@allwinnertech.com>
-Date: Fri, 31 Jul 2026 11:41:02 +0800
+	s=arc-20240116; t=1785476979; c=relaxed/simple;
+	bh=cp77iJVRWq97XcYYpGanGjI9nrMi/T9XyEKlGtEm3F4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEoIFqcsui2dMdfKLk8ia+N44qJ0+oy/jwYNEbOPknMgbD0HHOkpH1Rtz0rN9N3Dzuu8zkR1wIhwcIQCVzIf9pLIEI1P3xMtJCDs0C0B0TBWc4p5T6POun9SZe7L0RwHNbhTSe/l+gty+3o88IuOYV0p8dSRZbh4Un4wgp1bcNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lm4Y9AxI; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lm4Y9AxI"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 465B520E3;
+	Thu, 30 Jul 2026 22:49:31 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A18D93F7B4;
+	Thu, 30 Jul 2026 22:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1785476975; bh=cp77iJVRWq97XcYYpGanGjI9nrMi/T9XyEKlGtEm3F4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lm4Y9AxItuwNS2mYWEbr3jeJY8GANTkzrsF3Zc1UhcaT3R88O+XiEF6xuLUzbJgMf
+	 FuLzKLdX/kUlFIkefo4NK3Qi11BbQwnmzc6Nw1Vo8+JrLjJC2+mL2OLu9EqmXtZRR3
+	 PZUd6bbH8SNkQ4gsNj8M2Hcw3mNZqsBDiFwuMLbY=
+Date: Fri, 31 Jul 2026 11:19:32 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	David Hildenbrand <david@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
+	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, 
+	pfalcato@suse.de, agordeev@linux.ibm.com, ryan.roberts@arm.com, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	damon@lists.linux.dev
+Subject: Re: [PATCH RFC 01/11] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+ <20260727164715.2866609-2-usama.anjum@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-From: Michael Wu <michael@allwinnertech.com>
-Subject: [PATCH v3] tracing: Fix race between update_event_fields and
- event_define_fields
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260727164715.2866609-2-usama.anjum@arm.com>
 
-event_define_fields() (pri=1 MODULE_STATE_COMING notifier, locked by
-event_mutex) populates class->fields via list_add(), while
-update_event_fields() (called from the pri=0 notifier path via
-trace_event_update_all) traverses class->fields protected only by
-trace_event_sem.  These are two different locks guarding the same
-data structure, so during cross-module loading a reader on one CPU can
-observe partially initialized list nodes being concurrently added by a
-writer on another CPU.
+On Mon, Jul 27, 2026 at 05:46:52PM +0100, Muhammad Usama Anjum wrote:
+> pte_t is used both for logical PTE values and for entries stored in a PTE
+> table, so pte_t * does not distinguish a pointer to a copied value from a
+> pointer to table storage.
 
-On arm64 with weak memory ordering, __list_add() writes to two
-different cache lines:
+Should we rather call them as "Linux PTE" and "HW PTE" instead ?
 
-         next->prev = new;                // (1) ordinary store
-         new->next = next;                // (2) ordinary store
-         new->prev = prev;                // (3) ordinary store
-         WRITE_ONCE(prev->next, new);    // (4) release store
+Some like "Logical PTE" does not really sound very clear on what it represents.
 
-The store buffer can drain (2) and (4) independently since they target
-different cache lines.  A remote CPU may observe (4) before (2): it
-sees prev->next pointing to the new node, but the new node's link.next
-is still zero (kmem_cache_alloc zero-initialized via KMEM_CACHE with
-SLAB_PANIC).  Since offsetof(struct ftrace_event_field, link) == 0,
-list_for_each_entry() derives field == NULL from link.next == 0 and
-crashes at field->type (offset 0x18):
+> 
+> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+> as an alias of pte_t by default so architectures retain their existing
+> representation and behavior until they opt in to a distinct storage type.
 
-   Unable to handle kernel access ... at virtual address 0000000000000018
-   pc : update_event_fields+0xf8/0x368
-   Call trace:
-    update_event_fields+0xf8/0x368
-    trace_event_update_all+0x7c/0x2b4
-    trace_module_notify+0x4c/0x1dc
-    notifier_call_chain+0x84/0x168
-    blocking_notifier_call_chain_robust+0x64/0xd4
-    load_module+0x10c8/0x123c
-    __arm64_sys_finit_module+0x230/0x31c
+Makes sense.
 
-Fix by holding event_mutex in trace_event_update_all() before
-down_write(&trace_event_sem).  This serializes the reader against
-event_define_fields() which takes event_mutex for the entire
-write-side critical section.  The lock ordering event_mutex ->
-trace_event_sem is already established at three other sites
-(trace_remove_event_call, event_trace_add_tracer,
-event_trace_del_tracer), so this introduces no ordering conflict.
+> 
+> Include asm/page.h so pte_t is defined before the generic alias.
+> 
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> ---
+>  MAINTAINERS                   |  1 +
+>  include/linux/pgtable_types.h | 11 +++++++++++
+>  2 files changed, 12 insertions(+)
+>  create mode 100644 include/linux/pgtable_types.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 15dd00c7ffec5..78aac05949829 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16981,6 +16981,7 @@ F:	include/linux/mmu_notifier.h
+>  F:	include/linux/pagewalk.h
+>  F:	include/linux/pgalloc.h
+>  F:	include/linux/pgtable.h
+> +F:	include/linux/pgtable_types.h
 
-An alternative of placing mutex_lock inside update_event_fields() was
-considered but rejected -- it would invert the established lock
-ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
+s/pgtable_types.h/pgtable_hw_types.h ?
 
-Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event 
-types as well")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Wu <michael@allwinnertech.com>
----
-  kernel/trace/trace_events.c | 2 ++
-  1 file changed, 2 insertions(+)
+>  F:	include/linux/ptdump.h
+>  F:	include/linux/vmpressure.h
+>  F:	include/linux/vmstat.h
+> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+> new file mode 100644
+> index 0000000000000..ed5dba42a4f8c
+> --- /dev/null
+> +++ b/include/linux/pgtable_types.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PGTABLE_TYPES_H
+> +#define _LINUX_PGTABLE_TYPES_H
+> +
+> +#include <asm/page.h>
+> +
+> +#ifndef __HAVE_ARCH_HW_PTE_T
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 956692856fa8..9632788da5af 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map 
-**map, int len)
-         int last_i;
-         int i;
+__HAVE_ARCH_HW_PTE_T macro is a better approach here or a config ARCH_HAS_HW_PTE_T
+based selective platform subscription should be introduced instead ?
 
-+       mutex_lock(&event_mutex);
-         down_write(&trace_event_sem);
-         list_for_each_entry_safe(call, p, &ftrace_events, list) {
-                 /* events are usually grouped together with systems */
-@@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map 
-**map, int len)
-                 cond_resched();
-         }
-         up_write(&trace_event_sem);
-+       mutex_unlock(&event_mutex);
-  }
-
-  static bool event_in_systems(struct trace_event_call *call,
---
-2.29.0
-
+> +#define hw_pte_t pte_t
+> +#endif
+> +
+> +#endif /* _LINUX_PGTABLE_TYPES_H */
+> -- 
+> 2.47.3
+> 
