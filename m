@@ -1,178 +1,204 @@
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0755A31B80D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 16:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1934344606C;
+	Fri, 31 Jul 2026 16:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785514310; cv=none; b=KsSjUEFIVmQ1uFl3QAmb0gvSbBLS+c+wPo3y20g8xPZMJD4XePyJFux4S4gikDTPrYjM1xoSSiUqctvee6eB/ZeynfBXe9XjII7YUXv/YZZ4Deb4ME+dgOb1Kp6yEijukf5Y9sYKL2n2yR78vRGagSLDt2pW0KJ+J3q/2YfYa6Y=
+	t=1785514538; cv=none; b=cAInZvTOQRGKvlvXge96Ibd1kz5p5qMLqp7vxGNS4+dFVuhUux8TdsPrLvXVPkwloI465SCiRbTFabG/MByD15lZmN6VH7R6kbqn86RbHkOLjq+OzuDhIZxdhMzct5ml+f14nE/DejR7ZZwfOd9XIfmolVXvH23nEgzl9H4jMm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785514310; c=relaxed/simple;
-	bh=ZHuGxhrJ3MrlsbogF2sbcHpAeby7swdSHdnCo3MZvUM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tqI923bdVrmoB/mInRCOGTusi35zbN7bc5cK9khZxFlbzd9rZ89iZfCmrLqWN3L1TDcTevtzZ895RallqMAaFwhe8rgZ5m4XeUDQJIxfM6p0XPxhGWc0K61XLWK+xdMx7ya4XbBsBOKepX6XHLlKi+7b7Vypqhh2ddd836uDVt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FNsquI40; arc=none smtp.client-ip=209.85.210.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1785514538; c=relaxed/simple;
+	bh=EC4Qldz0I8//eu8X9qUqICG1s0ODDvI3gx2a299M5Cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aEkdGWQHZGfvC5/MQp14CHHkl3dwr/vQdTr0h3wus82Vos8c1Ai64xXvknkAdExpx06s8ZWIlEIbhr6mfmU6VJUnGP1j2qXNlSI06sWW3DJhGXpUlvrEYg9iKheqjF+oJg2hXbwMRua5mCJsrSZ6iJD9apQeWVkGJm6vJSJvBws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=D5ysb3m8; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNsquI40"
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-84e04598adeso1036530b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 09:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785514308; x=1786119108; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bm06E1ea+m3fCfij6trKrrVxSCnF5pTP6S2pONTnQSo=;
-        b=FNsquI405OAyDg3DfoezRZ/2NOz2pxC1lHjzZaU63iXcJW+W49WaLVw6IKEmg+Lgo+
-         MKkI4Cq9XkJhOMZl7ChRNuqVl4c3cga8aHB9KiSFS40wy073Kvnv/tbXDzpjkog7Z6WS
-         vo57B5jwjoRpVUtlq31kvm00NdWVjZd0dT7t/vQ4l8sy6lG6SNE7nVwo8R7K7d9tpwd4
-         IsDr5vGeGreZvPtNOAZVkvkTh2He3GkPVNbkoaxFfERVsEgUrzwEQpkpbDDaKDv4RHw2
-         bF0ZNtK+bSkN5ATX/2hymbT5f2izZg29iMuT5pfHXTEP3i5MjGkoUlAwB+foOtwSO7Ne
-         gMoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785514308; x=1786119108;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=bm06E1ea+m3fCfij6trKrrVxSCnF5pTP6S2pONTnQSo=;
-        b=Wum6qv32hTmSrrmn7ZlEkz8KW+ajf+a/CyXFPC/6smkAQCMBH6PxQqVK8j3KQZph8z
-         A3q91qPCz2fvZudKu4Rp0MYXEZQNTb0RJ7NPz73flpQsHBW1T5oWu3PGv2hSFj9EEP2L
-         fy1SEelaCOUewQb6PAMim1c6rUWqWjQ44aq94/ZORSnQea5AfnZ2rSWqD9GePzttYYWU
-         /MDX3ySXABn/g2RVEyLLHy6VZwpVrxN//u6obv17DrahY37ELlaBHrkJ2h7yhjCILgBT
-         qIvfWMBu7TVVzaaNRLw8JGk71kVF17D4vEQWScx5CfAT+3c73S1UennMl/+7R8aSVsYB
-         newQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rrsz/pceCHOJNTUEyXBVQM7zQgQVKM2CjZ3TlLbMT7WrprWausmiXboN3rxlpxGxlqvu3vjK9Tq6F62lky97vMi7Bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIFkYOue8jSW/UWnq4TZvWKbIBuLNfIBH1mqawKVnkCsQ8Sjkv
-	e3rtZzqUOUqpYK8sAHB0T9LwoThqAPEPQe95urG2mCrNL3CgCaeMa7VqlymQ3xuTaudz1wyLLyk
-	XB3tKWw==
-X-Received: from pgl1.prod.google.com ([2002:a63:b01:0:b0:c99:7baf:125f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4091:b0:84e:4d6:78fe
- with SMTP id d2e1a72fcca58-84ee47dc3aemr250368b3a.3.1785514308039; Fri, 31
- Jul 2026 09:11:48 -0700 (PDT)
-Date: Fri, 31 Jul 2026 09:11:47 -0700
-In-Reply-To: <d3fef015-0546-4993-b354-a8464d79e48c@intel.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="D5ysb3m8"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FC70204C;
+	Fri, 31 Jul 2026 09:15:27 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 419BA3F86F;
+	Fri, 31 Jul 2026 09:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1785514531; bh=EC4Qldz0I8//eu8X9qUqICG1s0ODDvI3gx2a299M5Cs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D5ysb3m8w0oV0jAuBPN2EE+x7/QiB3HmzsLsl9Of48PCq8y3Avccb+Y8RjUcWjGAw
+	 rOgeZKxweIvJrVq0r88o419dcChgko7LZGWsupv8c7SKqE0dJYqqxK/kbRxbJNaEn6
+	 KdEEXCxRq4MU5tuCGf1pHIl25TaKJf1Xf9FZlbJ8=
+Date: Fri, 31 Jul 2026 17:15:25 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Hongyan Xia <hongyan.xia@transsion.com>
+Cc: Will Deacon <will@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>, Oleg Nesterov <oleg@redhat.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jiazi Li <jiazi.li@transsion.com>, Pu Hu <hupu@transsion.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: Re: [RFC PATCH 9/9] arm64/debug: Mark debug exception helpers
+ __always_inline
+Message-ID: <amzKHV5fBeRFhwlJ@J2N7QTR9R3>
+References: <cover.1785153469.git.hongyan.xia@transsion.com>
+ <eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-18-35f9aec2aed2@google.com> <d3fef015-0546-4993-b354-a8464d79e48c@intel.com>
-Message-ID: <amzJQ8u8I18B4Gdm@google.com>
-Subject: Re: [PATCH v9 18/41] KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
-From: Sean Christopherson <seanjc@google.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
 
-On Fri, Jul 31, 2026, Xiaoyao Li wrote:
-> On 7/29/2026 8:35 AM, Ackerley Tng via B4 Relay wrote:
-> > From: Ackerley Tng <ackerleytng@google.com>
-> > 
-> > Update tdx_gmem_post_populate() to handle cases where userspace requests
-> > "no source page". To handle "no source page", populate (perform
-> > TDH.MEM.PAGE.ADD) using memory in-place at the target PFN.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > Tested-by: Shivank Garg <shivankg@amd.com>
-> > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> > ---
-> >   Documentation/virt/kvm/x86/intel-tdx.rst | 4 ++++
-> >   arch/x86/kvm/vmx/tdx.c                   | 8 +++++---
-> >   2 files changed, 9 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
-> > index 6a222e9d09541..d8d9409120e61 100644
-> > --- a/Documentation/virt/kvm/x86/intel-tdx.rst
-> > +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
-> > @@ -158,6 +158,10 @@ KVM_TDX_INIT_MEM_REGION
-> >   Initialize @nr_pages TDX guest private memory starting from @gpa with userspace
-> >   provided data from @source_addr. @source_addr must be PAGE_SIZE-aligned.
-> > +If guest_memfd in-place conversion is enabled, pass 0 for @source_addr
-> > +to represent "no source page". A source page is required if in-place
-> > +conversion is not enabled or not supported.
-> > +
-> >   Note, before calling this sub command, memory attribute of the range
-> >   [gpa, gpa + nr_pages] needs to be private.  Userspace can use
-> >   KVM_SET_MEMORY_ATTRIBUTES to set the attribute.
-> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> > index d1af0a752e97e..e890da5f18aed 100644
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-> > @@ -3192,7 +3192,7 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
-> >   	if (KVM_BUG_ON(kvm_tdx->page_add_src, kvm))
-> >   		return -EIO;
-> > -	kvm_tdx->page_add_src = src_page;
-> > +	kvm_tdx->page_add_src = src_page ?: pfn_to_page(pfn);
-> >   	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
-> >   	kvm_tdx->page_add_src = NULL;
-> > @@ -3238,7 +3238,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
-> >   	if (copy_from_user(&region, u64_to_user_ptr(cmd->data), sizeof(region)))
-> >   		return -EFAULT;
-> > -	if (!PAGE_ALIGNED(region.source_addr) || !region.source_addr ||
-> > +	if (!PAGE_ALIGNED(region.source_addr) ||
-> > +	    (!gmem_in_place_conversion && !region.source_addr) ||
+On Mon, Jul 27, 2026 at 12:25:48PM +0000, Hongyan Xia wrote:
+> From: Hongyan Xia <hongyan.xia@transsion.com>
 > 
-> Sorry, I still want to discuss why we only allow in-place PAGE.ADD for
-> gmem_in_place_conversion only. Though Yan raised this opinion[1] in previous
-> v8, I'm not quite following her argument. So let me try again.
+> Static inline should be enough to actually inline functions for most
+> compilers, but my Clang-19 somehow thinks it's better to outline them.
+> These tiny helpers then live in normal .text sections instead of
+> .noinstr sections, violating noinstr.
 > 
-> I think in-place PAGE.ADD of TDX doesn't need to depend on
-> gmem_in_place_conversion. There are two use cases actually.
+> Mark them __always_inline so the compiler can never outline them.
 > 
-> 1). Userspace sets the gmem page as private, and invokes the in-place
-> PAGE.ADD by passing a 0 source_addr. Due to patch 16, the target PFN will be
-> ADD'ed to TD as a all-0 page.
-> 
-> 2). Userspace sets the gmem page as shared, and writes the desired content
-> to it. Then converts the page to private, and invokes the in-place PAGE.ADD
-> by passing a 0 source_addr. The target PFN will be ADD'ed to TD with desired
-> content.
-> 
-> For gmem_in_place_conversion == false, only case 1) is possible.
-> For gmem_in_place_conversion == true, both case 1) and 2) are possible.
-> 
-> Basically, this patch is changing the behavior of KVM_TDX_INIT_MEM_REGION.
-> Before, it returns -EINVAL when region.source_addr == 0. Now it wants to
-> allow the "region.source_addr == 0" case. If we can allow it
-> unconditionally, why bother adding the restriction to allow it only when
-> gmem_in_place_conversion == true?
+> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
+> ---
+>  arch/arm64/include/asm/esr.h       | 2 +-
+>  arch/arm64/include/asm/percpu.h    | 2 +-
+>  arch/arm64/include/asm/preempt.h   | 4 ++--
+>  arch/arm64/include/asm/ptrace.h    | 4 ++--
+>  arch/arm64/kernel/debug-monitors.c | 2 +-
+>  include/linux/kprobes.h            | 8 ++++----
+>  6 files changed, 11 insertions(+), 11 deletions(-)
 
-As I said[*] in that thread:
+I think this should be split into separate patches. In particular, the
+preempt count helpers are used in mane other places than debug
+exceptions, and if those are used in noinstr code today, we need to
+backport those as fixes.
 
- : Because retroactively adding support for out-of-place conversion is pointless
- : (requires a userspace update for a feature that's being deprecated), KVM can't
- : generally support using the source for out-of-place conversion (it's effectively
- : an obscure zero-page optimization), and IMO rejecting the out-of-place conversion
- : scenario is valuable for KVM developers, e.g. to help newcomers understand what
- : exactly is and isn't possible.
+Mark.
 
-[*] https://lore.kernel.org/all/akMPZePBdwQlD74H@google.com
+> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+> index f816f5d77f1a..a75bfdb7e5fe 100644
+> --- a/arch/arm64/include/asm/esr.h
+> +++ b/arch/arm64/include/asm/esr.h
+> @@ -437,7 +437,7 @@
+>  #ifndef __ASSEMBLER__
+>  #include <asm/types.h>
+>  
+> -static inline unsigned long esr_brk_comment(unsigned long esr)
+> +static __always_inline unsigned long esr_brk_comment(unsigned long esr)
+>  {
+>  	return esr & ESR_ELx_BRK64_ISS_COMMENT_MASK;
+>  }
+> diff --git a/arch/arm64/include/asm/percpu.h b/arch/arm64/include/asm/percpu.h
+> index b57b2bb00967..d4cae47fde8c 100644
+> --- a/arch/arm64/include/asm/percpu.h
+> +++ b/arch/arm64/include/asm/percpu.h
+> @@ -29,7 +29,7 @@ static inline unsigned long __hyp_my_cpu_offset(void)
+>  	return read_sysreg(tpidr_el2);
+>  }
+>  
+> -static inline unsigned long __kern_my_cpu_offset(void)
+> +static __always_inline unsigned long __kern_my_cpu_offset(void)
+>  {
+>  	unsigned long off;
+>  
+> diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
+> index 932ea4b62042..326f221c3f56 100644
+> --- a/arch/arm64/include/asm/preempt.h
+> +++ b/arch/arm64/include/asm/preempt.h
+> @@ -41,14 +41,14 @@ static inline bool test_preempt_need_resched(void)
+>  	return !current_thread_info()->preempt.need_resched;
+>  }
+>  
+> -static inline void __preempt_count_add(int val)
+> +static __always_inline void __preempt_count_add(int val)
+>  {
+>  	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
+>  	pc += val;
+>  	WRITE_ONCE(current_thread_info()->preempt.count, pc);
+>  }
+>  
+> -static inline void __preempt_count_sub(int val)
+> +static __always_inline void __preempt_count_sub(int val)
+>  {
+>  	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
+>  	pc -= val;
+> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+> index 39582511ad72..460726224299 100644
+> --- a/arch/arm64/include/asm/ptrace.h
+> +++ b/arch/arm64/include/asm/ptrace.h
+> @@ -336,11 +336,11 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
+>  struct task_struct;
+>  int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task);
+>  
+> -static inline unsigned long instruction_pointer(struct pt_regs *regs)
+> +static __always_inline unsigned long instruction_pointer(struct pt_regs *regs)
+>  {
+>  	return regs->pc;
+>  }
+> -static inline void instruction_pointer_set(struct pt_regs *regs,
+> +static __always_inline void instruction_pointer_set(struct pt_regs *regs,
+>  		unsigned long val)
+>  {
+>  	regs->pc = val;
+> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+> index a970ab6327cd..66cb8151f5df 100644
+> --- a/arch/arm64/kernel/debug-monitors.c
+> +++ b/arch/arm64/kernel/debug-monitors.c
+> @@ -146,7 +146,7 @@ postcore_initcall(debug_monitors_init);
+>  /*
+>   * Single step API and exception handling.
+>   */
+> -static void set_user_regs_spsr_ss(struct user_pt_regs *regs)
+> +static __always_inline void set_user_regs_spsr_ss(struct user_pt_regs *regs)
+>  {
+>  	regs->pstate |= DBG_SPSR_SS;
+>  }
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 8c4f3bb24429..5880445ed0f0 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -384,17 +384,17 @@ static inline void kprobe_ftrace_kill(void) {}
+>  struct kprobe *get_kprobe(void *addr);
+>  
+>  /* kprobe_running() will just return the current_kprobe on this CPU */
+> -static inline struct kprobe *kprobe_running(void)
+> +static __always_inline struct kprobe *kprobe_running(void)
+>  {
+>  	return __this_cpu_read(current_kprobe);
+>  }
+>  
+> -static inline void reset_current_kprobe(void)
+> +static __always_inline void reset_current_kprobe(void)
+>  {
+>  	__this_cpu_write(current_kprobe, NULL);
+>  }
+>  
+> -static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
+> +static __always_inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
+>  {
+>  	return this_cpu_ptr(&kprobe_ctlblk);
+>  }
+> @@ -449,7 +449,7 @@ static inline struct kprobe *get_kprobe(void *addr)
+>  {
+>  	return NULL;
+>  }
+> -static inline struct kprobe *kprobe_running(void)
+> +static __always_inline struct kprobe *kprobe_running(void)
+>  {
+>  	return NULL;
+>  }
+> -- 
+> 2.47.3
+> 
