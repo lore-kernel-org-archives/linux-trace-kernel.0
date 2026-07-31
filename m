@@ -1,35 +1,70 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B713D954C;
-	Fri, 31 Jul 2026 13:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1F8416856;
+	Fri, 31 Jul 2026 13:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785504126; cv=none; b=ExE5+Ap/wE2WDLU5FznEosWTzq3grUJwkSXJUjAq4Mofs7keI9s7+hFghqFG2a+WxHxLxdjlachYmqDYyNgpsf5E+UiYl9Ww/AkcCh0CSxMaUh/fCYDPVT9QAS7J2wSF6unchI+cnafGUYS79nQnIEmachYE5XIdaAmzWbNViYI=
+	t=1785504495; cv=none; b=heEe8IWfQiXytHMwfsRKhezK1n7HQyfCfmctVopHVPgp856Ib1fF9k6pZIZNID+1mHblSedk/+TTQ7w0otsjoiQr7tfp1UcYdw43uAyrgcAeFRwv/0FLAO0J0oIzHQmYEM/Ahp5Z7i61abboppjPcqpoMdifYx+CI2PN8jQzhNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785504126; c=relaxed/simple;
-	bh=iGnvQQ2S7+ezc2CSoRdmU5disoF67aKOATob0Ym9JR8=;
+	s=arc-20240116; t=1785504495; c=relaxed/simple;
+	bh=oi6aO5YdOOjB5Yvtjg8wrDX+VBEC3DBUvOL+gFJ43PE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HXNR8Px37Fy+M02ekBU8+5dxlUXkvya4XnzStUfBCY0MWEj/RdP28kzgqa+6iERBQC/aQ4SvTN3LitEvb4QqGZw54fRNNCX/VS9dVACJKI1hqcX48VuJNa3Eub6eqLLtd58aS3Xo7PQ+YDMOk8gdS3/6WXcYHEOzFL+0o6OqL9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=Udb1XHJQn8c95Z46Q3mczcoHJcIKNv9Ri8EarnXnx/CzfJbd/lIepE4SebbBJl3KgvUSD/QwGAc9WCCbcLkrPHH8yGjtIufwijQ1qSIw6ex40yTm92LMEGtg40SCDZTtYqSzFNewOnnqqKCwyz+3gl4qWeNa3ow3d3alF2cE3UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 05551160428;
-	Fri, 31 Jul 2026 13:21:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 5C8C320028;
-	Fri, 31 Jul 2026 13:21:55 +0000 (UTC)
-Date: Fri, 31 Jul 2026 09:22:35 -0400
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id F1D761A0431;
+	Fri, 31 Jul 2026 13:28:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id E384117;
+	Fri, 31 Jul 2026 13:27:45 +0000 (UTC)
+Date: Fri, 31 Jul 2026 09:28:25 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Michael Wu <michael@allwinnertech.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing: Fix race between update_event_fields and
- event_define_fields
-Message-ID: <20260731092235.4edd9dbd@gandalf.local.home>
-In-Reply-To: <95efe185-35dd-18be-f08c-af4d0965b013@allwinnertech.com>
-References: <95efe185-35dd-18be-f08c-af4d0965b013@allwinnertech.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, =?UTF-8?B?SsO8cmdlbiBH?=
+ =?UTF-8?B?cm/Dnw==?= <jgross@suse.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+ Stefano Stabellini <sstabellini@kernel.org>, Muchun Song
+ <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, "Aneesh
+ Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, David Hildenbrand <david@kernel.org>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>, Kairui
+ Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya
+ Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, SJ
+ Park <sj@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky
+ <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou
+ <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter
+ <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>, Johannes Weiner
+ <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
+ agordeev@linux.ibm.com, ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH RFC 01/11] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <20260731092825.36992dc9@gandalf.local.home>
+In-Reply-To: <9ac33752-b587-4901-b5f2-473e573d7ede@arm.com>
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+	<20260727164715.2866609-2-usama.anjum@arm.com>
+	<6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
+	<9ac33752-b587-4901-b5f2-473e573d7ede@arm.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,54 +74,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 5C8C320028
-X-Stat-Signature: pzmm9pyyyoxcsbiphjrt3s8d18dk7q4g
-X-Rspamd-Server: rspamout03
+X-Stat-Signature: bk4wphtnyr8oskxq6ok6poi7ogrp6zg4
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: E384117
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19b2OYxEYIrF8jtmut4+jQ7WKKOxG5jbPQ=
-X-HE-Tag: 1785504115-613702
-X-HE-Meta: U2FsdGVkX18VTcTV+UQi4CJ0GvR/FTydZ08wQhAAJ0rg3GGLUHShK9nBp7PzCnjbiw/nwj0xflmwQj+rst69gssFrJLslcghCQ9vGHxK07HLBknlF1EBKWRo4W7hRTw2RCbuTM6GmSZOy8ijudNwg6jDkRlMVStGy5akPqHclaGcvQT0z7JEBp3ZBP0Ddw7t7NZ+4GcLGrlgMY+c1g9yXv9/peDWIrobwX6tl2tmllSZEadEYAS5sgzUythv0PDcbldRZZEnz1PzZHA6W5QCdLIjBMT48F+dLhRwPKACd+Qh7LFSwd+pRWWlExd9l5wRoad09nR03C4nJUKuh1MC98oDc4R/13W9iwn1uLGkOet9pONs+rf08/4V2aIPU8eMr49MvkrRjy0F5dIz6dGb0A==
+X-Session-ID: U2FsdGVkX188VTzKisaRifdK5JzAhtUj+tNTYkibFXo=
+X-HE-Tag: 1785504465-704596
+X-HE-Meta: U2FsdGVkX1+okbaURBZ2Qkn+l9IgiK40Gqe8ZThpseNdxUoxO6+yJtshZ3puroffdGsnNQX9lyVqqMfMDNqtsaiMVrZRSqd7CxcOf+tlTFcxBWBx10qhJ57MkLj8ndzBOYoA/OODEfAwWEkK0Ynym/vN8RHly0+jRGqqJSDy6cHg7VOGub/UmsJX6TfoBSOwr0+39CvO+c3eZRPTPuO9wuZjY0AitKZFKa26poYwhlLhVPb0FYC1FMbtcEIPwcv0BUAY4FqESIdzLvKNozpw1fVotcfhrX1NJojLWeahTii05xgjJv7utljWLfUJzJrqYVN7s4pCcDgRjK7TriyixEP+/JmhkJIq3qIe3n8mNyiV8HHld6EP1z7IlvkGJKR3
 
-On Fri, 31 Jul 2026 11:41:02 +0800
-Michael Wu <michael@allwinnertech.com> wrote:
+On Fri, 31 Jul 2026 11:19:32 +0100
+Muhammad Usama Anjum <usama.anjum@arm.com> wrote:
 
-> An alternative of placing mutex_lock inside update_event_fields() was
-> considered but rejected -- it would invert the established lock
-> ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
-> 
-> Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event 
-> types as well")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael Wu <michael@allwinnertech.com>
-> ---
->   kernel/trace/trace_events.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 956692856fa8..9632788da5af 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map 
-> **map, int len)
->          int last_i;
->          int i;
-> 
-> +       mutex_lock(&event_mutex);
->          down_write(&trace_event_sem);
->          list_for_each_entry_safe(call, p, &ftrace_events, list) {
->                  /* events are usually grouped together with systems */
-> @@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map 
-> **map, int len)
->                  cond_resched();
->          }
->          up_write(&trace_event_sem);
-> +       mutex_unlock(&event_mutex);
->   }
-> 
->   static bool event_in_systems(struct trace_event_call *call,
+> On 31/07/2026 6:49 am, Anshuman Khandual wrote:
+> > On Mon, Jul 27, 2026 at 05:46:52PM +0100, Muhammad Usama Anjum wrote:  
+> >> pte_t is used both for logical PTE values and for entries stored in a PTE
+> >> table, so pte_t * does not distinguish a pointer to a copied value from a
+> >> pointer to table storage.  
+> > 
+> > Should we rather call them as "Linux PTE" and "HW PTE" instead ?
+> > 
+> > Some like "Logical PTE" does not really sound very clear on what it represents.  
+> Yeah, I should make distinction more visible in the cover letter.
 
-You need to fix your email client to not mangle the output. It replaced
-tabs with spaces and wrapped text, making it so I can not apply the patch.
+Just as an outside observer, so take this with a grain of salt and feel
+free to totally ignore it, the term "Logical" and "Physical" to me would be
+that the Logical one is created by software and is not mapped to hardware,
+whereas the "Physical" one would be backed by hardware.
+
+Just using the terminology from LVM where there are Logical volumes and
+Physical volumes.
+
+But if that doesn't represent what you are trying to accomplish here, then
+it is indeed not the appropriate terminology.
+
+Again, feel free to ignore this comment, but I just wanted to give an
+outside perspective of the terminology that I see.
+
+Cheers,
 
 -- Steve
-
