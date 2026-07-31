@@ -1,109 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B28F53E0B;
-	Fri, 31 Jul 2026 00:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFCE2D661C;
+	Fri, 31 Jul 2026 01:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785459420; cv=none; b=nv/N22rb51xZG2ud8kSHEhipUrIzwd1NaEvIVim1rqNPBiFLI4PpzpPjylZJran5vZqDe/WmP9dxQ0hKyaLxjjH+njpXcdfzxXnRKcgCMYeixGUIdgBjQj2GIHngx1NT52+4CjBCJ4KWNcX0MfAOlYcE98oBNMAxM6EKrgqapRA=
+	t=1785460516; cv=none; b=b+4VM+KDwpev2Xl+JJXI7HGK2irRafyReUEC8XvIo5Kv9bsOEvH/ZXrsk4wqPzclaog+38fLk6zIYjGq3OyRTgHkktTvD1prvdAvtfn1y9k/fmRR+OfTSsaoTS9JyMmsxB16RDh7770GrFhRMH53LgoVeayvBSafWjNa/cu3YhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785459420; c=relaxed/simple;
-	bh=J4zkCbF/opIrfT2Xlo+xcCVkiLqELexaZkw6vNHb21U=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hsFJqm6uV+Z+oU1vdGjZm3e5PRvdDVpUZie0m7DnyplsSZgYwVmn3Fxgh0g2ETyUKDQF/iLhw5iQA4cSMXAjWKCYGrjCU7j5pfqlV4tNLt9JedvYMtESJAK8Ac7Ez4VBxES+/44UpkPm16mst9AhdbZd1iV+8Im4aeeG/MCvGIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rv7nVM+7; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rv7nVM+7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5C21F000E9;
-	Fri, 31 Jul 2026 00:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785459418;
-	bh=XXzYaJCuzR0JHm+z1MoU23mGFZW9sah3kBLppL7JY9A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Rv7nVM+711hTMnCqTBK488muy//tXFiaPJI/9sEkcZP2yfddtSsaR42oHxLcPpVUR
-	 r18XYmFbkofZtgC5zzzMwBcgQekdYfN/f4xYJxcgrsSm0WkCt3ltIoCjR6dc0OzVe/
-	 OcTDBYdBd+RmJYNCWJeshq1tt1IG0GEJnuqYO7emnw6UQs3QFGlc4EDAtvaJiWtEam
-	 42GE8Vy3c5u0oMYTMoNY5mT2SkTXcBc0PsGJylb7d3+FBaEyi7jk7VaeT0NURPuGKY
-	 fOxEAEvITqmFR9kXNzdnkAOl8ZaEbAkxKWqo1MKo7M+sKU1U29Qnj5opkG8Qzi6q98
-	 vn64X5XfhWAtQ==
-Date: Fri, 31 Jul 2026 09:56:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Oleg Nesterov
- <oleg@redhat.com>, Breno Leitao <leitao@debian.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Andrii
- Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com, stable@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Fix NULL pointer dereference in
- hprobe_expire()
-Message-Id: <20260731095652.fc5d64f8c122d7dc6ddd89be@kernel.org>
-In-Reply-To: <20260730103824.GD751831@noisy.programming.kicks-ass.net>
-References: <20260729-uprobe-v1-1-61896b87c867@debian.org>
-	<amokG13tEnA7VVVf@redhat.com>
-	<CAEf4BzYON57L_HD71qUOdRdni_=1S-Xomz27PeDBxbbXDy0Jug@mail.gmail.com>
-	<20260730085421.d455361164695270bd764a4b@kernel.org>
-	<20260730103824.GD751831@noisy.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1785460516; c=relaxed/simple;
+	bh=TmAXvMlwEgoeOfk6Jm5v7mGFMAITvIAxdqX7eJyOnqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iCFklBsns+GaVEDdPFprQpNei8OdFUe993ZgixuKoN3O+1eMiLU0+0bQb3FqgV7Rzg4qXC3igcvHgyzYIRmEOtImZHWqVHrj77SCS197xXRZ4+veZUaTVqJEiVNjxbSWHJp26FKKrfQQ2kgHZcCVv5zroDuW1ywW+H92hhk2q6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hB7Q45DR4zYQtrg;
+	Fri, 31 Jul 2026 09:14:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 5E2C34058D;
+	Fri, 31 Jul 2026 09:15:04 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCHwUAV92tqNIA4Ag--.42847S2;
+	Fri, 31 Jul 2026 09:15:02 +0800 (CST)
+Message-ID: <88a7e239-7136-4880-a980-e9c12422312e@huaweicloud.com>
+Date: Fri, 31 Jul 2026 09:15:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing/snapshot: Avoid CPU buffer swap during
+ reserve/commit
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260730011912.2325121-1-wutengda@huaweicloud.com>
+ <20260729220448.13d19821@robin>
+ <4812557d-3718-4bf5-8be1-c12d6da614ad@huaweicloud.com>
+ <20260730071132.623c425c@gandalf.local.home>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20260730071132.623c425c@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgCHwUAV92tqNIA4Ag--.42847S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF48XFWUWrykKrWUWFWDXFb_yoW3urWxpr
+	W5KF4Ykw4kXrWxJ34Ivr4UAFyUtrsrAF47Wr1xGr9Yya1UWrn7W347Kw43Cry7Crsav347
+	tF4jg3s7K3Wjkw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
+	x4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6x
+	CaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Thu, 30 Jul 2026 12:38:24 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Thu, Jul 30, 2026 at 08:54:21AM +0900, Masami Hiramatsu wrote:
-> > On Wed, 29 Jul 2026 12:31:08 -0700
-> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> > 
-> > > On Wed, Jul 29, 2026 at 9:02 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > >
-> > > > On 07/29, Breno Leitao wrote:
-> > > > >
-> > > > > --- a/kernel/events/uprobes.c
-> > > > > +++ b/kernel/events/uprobes.c
-> > > > > @@ -832,7 +832,7 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
-> > > > >               if (try_cmpxchg(&hprobe->state, &hstate, uprobe ? HPROBE_STABLE : HPROBE_GONE)) {
-> > > > >                       /* We won the race, we are the ones to unlock SRCU */
-> > > > >                       __srcu_read_unlock(&uretprobes_srcu, hprobe->srcu_idx);
-> > > > > -                     return get ? get_uprobe(uprobe) : uprobe;
-> > > > > +                     return get && uprobe ? get_uprobe(uprobe) : uprobe;
-> > > >
-> > > > Well, looks "obviously correct". At least the current code is obviously
-> > > > wrong, it even checks uprobe != NULL 3 lines above.
-> > > >
-> > > > Andrii ?
-> > > >
-> > > 
-> > > Yes, indeed, I'm more surprised this didn't come up much earlier
-> > > (probably it's rare enough to have uretprobe with refcnt at zero
-> > > during fork). The fix looks good, thanks!
-> > > 
-> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > > 
-> > > > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> > > >
-> > 
-> > Thanks, this seems good to me. (uprobe is NULL checked in try_cmpxchg(),
-> > so it could be NULL.)
-> > 
-> > Can I pick this to probes/fixes branch?
+
+On 2026/7/30 19:11, Steven Rostedt wrote:
+> On Thu, 30 Jul 2026 12:10:18 +0800
+> Tengda Wu <wutengda@huaweicloud.com> wrote:
 > 
-> tip/perf/urgent ?
+>> On 2026/7/30 10:04, Steven Rostedt wrote:
+>>> On Thu, 30 Jul 2026 01:19:12 +0000
+>>> Tengda Wu <wutengda@huaweicloud.com> wrote:
+>>>   
+>>>> Commit 3163f635b20e ("tracing: Fix race issue between cpu buffer write
+>>>> and swap") fixed most of the race conditions between snapshot's
+>>>> ring_buffer_swap_cpu and ring_buffer_lock_{reserve, commit}. It achieved
+>>>> this by replacing the asynchronous swap with smp_call_function_single to
+>>>> trigger an interrupt on the target CPU to handle the swap.  
+>>>
+>>> I'm curious. How did you discover this race?
+>>>   
+>>
+>> Just run the POC provided in commit 3163f635b20e [1] day after day, and
+>> the issue occurs. The call trace points out that the problem happens when
+>> tracing the function:
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3163f635b20e9e1fb4659e74f47918c9dddfe64e
+>>
+>> [   55.864661] ------------[ cut here ]------------
+>> [   55.865536] WARNING: CPU: 0 PID: 1451 at kernel/trace/ring_buffer.c:3096 rb_commit.constprop.0+0x367/0x820
+>> [   55.866993] Modules linked in: binfmt_misc rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd auth_rpcgss nfs_acl lockd grace sunrpc
+>> [   55.869583] CPU: 0 PID: 1451 Comm: DTS202602110403 Not tainted 5.10.0+ #1
+>> [   55.871729] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+>> [   55.874671] RIP: 0010:rb_commit.constprop.0+0x367/0x820
+>> [   55.871729] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/0
+>> 1/2014
+>> [   55.874671] RIP: 0010:rb_commit.constprop.0+0x367/0x820
+>> [   55.875637] Code: 8d 7f 10 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 af 03 00 00 49 8b 5f 10 be 04 00 00 00 48 8d 7b 08 e8 dd a0 41 00 f0 ff 43 08 <0f> 0b 48 83 c4 60 5b 5d 41 5c 41 5d 41 5e 41 5f e9 54 58 2e 02 be
+>> [   55.878367] RSP: 0018:ffffc90000b57a30 EFLAGS: 00010202
+>> [   55.879227] RAX: 0000000000000001 RBX: ffff88800105ec00 RCX: ffffffff9e11db33
+>> [   55.880366] RDX: ffffed100020bd82 RSI: 0000000000000004 RDI: ffff88800105ec08
+>> [   55.881470] RBP: ffff88800105ec00 R08: 0000000000000001 R09: ffff88800105ec0b
+>> [   55.882563] R10: ffffed100020bd81 R11: 0000000000000001 R12: ffff8880010520a0
+>> [   55.883681] R13: ffff88800105ec40 R14: 0000000000000000 R15: ffff888001052000
+>> [   55.884761] FS:  00007f6be3c5d740(0000) GS:ffff888065200000(0000) knlGS:0000000000000000
+>> [   55.885980] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   55.886876] CR2: 000055d8257879e0 CR3: 0000000005c78003 CR4: 0000000000770ef0
+>> [   55.887994] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [   55.889113] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> [   55.890232] PKRU: 55555554
+>> [   55.890740] Call Trace:
+>> [   55.891221]  ? s_show+0x2f0/0x2f0
+>> [   55.891815]  ? kallsyms_lookup_size_offset+0x130/0x130
+>> [   55.892684]  ring_buffer_unlock_commit+0x68/0x510
+>> [   55.893490]  ? kallsyms_lookup_size_offset+0x130/0x130
+>> [   55.894341]  ? seq_print_sym+0x13d/0x1a0
+>> [   55.895024]  function_trace_call+0x266/0x370
+>> [   55.895754]  ? ring_buffer_iter_advance+0x2f/0x80
+>> [   55.896584]  0xffffffffc037406a
+>> [   55.897180]  ? ring_buffer_iter_advance+0x2f/0x80
+>> [   55.897966]  ? kallsyms_lookup+0x5/0x260
+>> [   55.898640]  ? _raw_write_unlock_irqrestore+0x60/0x60
+>> [   55.899481]  kallsyms_lookup+0x5/0x260
+>>
+>> The vmcore indicates that the buffer in CPU 0 was swapped:
+>>
+>> * array_buffer->buffers:
+>>
+>>   cpu 0, ffff888001052000, committing = 0, entries = 10010687, commits = 10010686
+>>   cpu 1, ffff888001fa4400, committing = 0, entries = 18780536, commits = 18780536
+>>   cpu 2, ffff888100110400, committing = 0, entries = 20905896, commits = 20905896
+>>   cpu 3, ffff888100111c00, committing = 0, entries = 20825484, commits = 20825484
+>>
+>> * max_buffer->buffers:
+>>
+>>   cpu 0, ffff888001052400, committing = 1, entries = 9768877, commits = 9768878
+>>   cpu 1, ffff888001fa6400, committing = 0, entries = 0, commits = 0
+>>   cpu 2, ffff888100112400, committing = 0, entries = 0, commits = 0
+>>   cpu 3, ffff888100112800, committing = 0, entries = 0, commits = 0
+>>
+>> We first checked if the problem could occur before rb_start_commit, but we
+>> just couldn't get past the 'READ_ONCE(cpu_buffer->buffer) != buffer' check.
+>> So we turned our attention to what happens after rb_start_commit, to see
+>> if the committing counter might drop to 0 and then get incremented again.
+>> In the end, we found that only rb_move_tail could cause this.
+>>
+>> Honestly, it was a pretty tough journey.
+> 
+> I bet. Thanks for doing that work.
+> 
+>> The work_on_cpu approach does not fix the issue inside the ring buffer
+>> itself. However, as far as the current codebase is concerned, the
+>> snapshot operation is the only path that triggers a CPU buffer swap.
+>> This fix has minimal impact and does not expose users to the internal
+>> intermediate state of the ring buffer when they echo to snapshot, thus
+>> avoiding the confusion of hitting an -EBUSY error.
+> 
+> I admit it is a way to avoid the -EBUSY, which is a separate issue and one
+> that always existed. Your patch can be added to solve that for this
+> specific use case. But then it would not be a fix, just an enhancement.
+> 
+>>
+>> If we were to fix this from within the ring buffer, we might need to
+>> introduce a new flag (e.g., a local_t variable similar to committing)
+>> to detect such race windows. Based on the current analysis, this race
+>> only occurs during a very brief window in rb_move_tail. Adding a new
+>> flag for this seems unnecessary.
+>>
+>> Alternatively, we could simply remove both rb_end_commit(cpu_buffer)
+>> and local_inc(&cpu_buffer->committing) inside rb_move_tail, thereby
+>> eliminating the 1-0-1 transition of committing and preventing such a
+>> race window from existing in the first place. In principle, committing
+>> should remain non-zero from the moment rb_start_commit is called until
+>> the commit is finished.
+> 
+> Actually there already exists something that can be used:
+> 
+>   cpu_buffer->current_context
+> 
+> It is set to prevent recursion in the ring buffer when the commit starts,
+> and is cleared after the commit is finished. If it is anything other than
+> 0, it means a commit is in progress and the swap should return -EBUSY.
+> 
+> This is not affected by the move to next page.
+> 
+> Something like this should fix it:
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 804ccae694d2..ce195bc4136a 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -6850,7 +6850,7 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+>  {
+>  	struct ring_buffer_per_cpu *cpu_buffer_a;
+>  	struct ring_buffer_per_cpu *cpu_buffer_b;
+> -	int ret = -EINVAL;
+> +	int ret = -EBUSY;
+>  
+>  	if (!cpumask_test_cpu(cpu, buffer_a->cpumask) ||
+>  	    !cpumask_test_cpu(cpu, buffer_b->cpumask))
+> @@ -6891,10 +6891,10 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+>  	atomic_inc(&cpu_buffer_a->record_disabled);
+>  	atomic_inc(&cpu_buffer_b->record_disabled);
+>  
+> -	ret = -EBUSY;
+> -	if (local_read(&cpu_buffer_a->committing))
+> +	/* Do not swap if either buffer is in the process of writing */
+> +	if (cpu_buffer_a->current_context)
+>  		goto out_dec;
+> -	if (local_read(&cpu_buffer_b->committing))
+> +	if (cpu_buffer_b->current_context)
+>  		goto out_dec;
+>  
+>  	/*
+> 
+> Care to send both patches? One with the above to fix the problem, and this
+> current patch to make the swap not return -EBUSY. The first would go to
+> stable, the latter would go in the next merge window.
+> 
+> -- Steve
 
-Either way works. Can we update MAINTAINERS file if you will maintain
-uprobe in tip tree?
+Certainly, I'd be happy to send both patches.
 
-Thank you,
+Thank you very much for the detailed analysis and for providing a concrete fix.
+I really appreciate the guidance.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I'll make sure to include proper commit messages and tags. I'll send them out shortly.
+
+Thanks,
+Tengda
+
