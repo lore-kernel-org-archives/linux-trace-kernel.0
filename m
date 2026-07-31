@@ -1,256 +1,320 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011049.outbound.protection.outlook.com [40.107.130.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F063E49F2;
-	Fri, 31 Jul 2026 10:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.49
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785493257; cv=fail; b=aPa/maGNfBXYfPc78yFIswlSBCbb17b5Q63AqmEl6qpnWT9v711B0CDVSZEtJltdUbC2knN6uUFNusEr516olmASCWoZiaxOb2PVBdu2qXff3kWriY4m+OlHUoU7koHvnuub8M5Z4qZ4CpMVUXb8W7bUccKfp3Hm/HzsaQps8vE=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785493257; c=relaxed/simple;
-	bh=G3Eh3IC8JdoxA1wfLL1nnEp0F/oOArq7XJw0erj29AE=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=h/OjlypPYgvSARCV1fXQzKxyH2P6znM/4pVWeT8xlpC75w2y5U2RXMGC6GBU6i6vRIJSImRYEc72eYBdl5IJrsgNVSAx7Y52zAuJoPQiTk9HAX/lBHgYcd3GTDnKnC1HtMeAmMcc68p9UguqAGYGXIXwo4UR8QS16JGHg3gZ9fU=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cB5r1Whn; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cB5r1Whn; arc=fail smtp.client-ip=40.107.130.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E853E3DAF;
+	Fri, 31 Jul 2026 10:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785493408; cv=none; b=r9caM8vd3XjJz+PlAZSsrMFidjD6LSz1L+D1sj+2J9Y5mmYOp1pdIQs6SCjh1IEjFwbXKeHKaH02G4pf6nc/TL6mBSV1V9h7V9UW4Or0em8wgtz20lb3K12S8o5qcLUjbQAfgP8BPwmcQEvzNZzdgaruLZsmW0O9PAYOYoSUDBw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785493408; c=relaxed/simple;
+	bh=6cB9O7pUciB6KuC2E18tng862YvUebMYrIRP9pUKy0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ClIr/40ntbfOWSxgc176kTqWVxt9fYhqw+aAq6wEy1euv2Kk1CtEg53osGC9QyVRVpRv7bn8nwiT140l4EIh0iPEjkpVtcU/tvGL9oWl7kwUXQVmopnhFEFWeemeu7bYkBi18uKZv+GgarEMEU9RmqgaDYDXFmL0ZHWZ9+wdPU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3fgrGBs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cB5r1Whn";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cB5r1Whn"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=tfvxCysufYP2/Aj3rVfYlV7QM0IRfSDedX6Nae2AXjuVqubo/fX49ecMAZMlOqYh6nAqbPlpyWFYfJ6Xe/wr2IQBQ4t18+oiY2ak5dVmQCr7CGcHYr7gpW8pMpps5C1itk+U84qnS3ZVx3dBnkkTHTPi6PzVxv8fwY4n51ZFZm1SzGNmUChbia3+AbT6aZwe8o/3fHUVFk47H/40wPo8BopKtw807TAEp2z2wKVP2JKL3Yy18UBT4oh2HbB59Ak7qufDzfCAS0QEwbh8KLm1cNh3yBrXoQaQuxocVrTmacM7RayClBb2TLPBqt39M4dGRsu6HPkIiDQEXsObcrjsWw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/9bGte8eqdxuMMzc6Sl3gDguhLqQI6GBUeVCbvVeu8A=;
- b=mNVZB9SyaxZ6Xj3wn+Uvbe34FtEqty4UzniTgmvDHVr9e45fZgqPwaAFPghqIw14E3asWrQiCwDRS+BBwXiGVYYh0qmh2cuXkIUy3oFKPbeQ6+OIpVJbUdGj6kOth9oftC+QcdGgOD4Br4SwQCoAReXhRmyhDqHHszC2ySV7Wv7GMwtkwVbzAbLX/p5hHn0Gsg0/7Qctu2XiVyKYXf8X65hTZ4+k+cWUFnN3H+W2aB+PWkI5YxQaUw007litHRpBC9qT+02G9Up2v0Kryz5Rir3ei0bym9uVKBkM4XQHkJGPdaLBw6YAro1ya6MC+FhBsWw28QTKhKcwzKPmV373+w==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=suse.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/9bGte8eqdxuMMzc6Sl3gDguhLqQI6GBUeVCbvVeu8A=;
- b=cB5r1Whn7zm4IjrU8ljCV0Q7/8waXW+Snz5qDVSFDT6iJQDf0Zs6ZV0KTsHR/rkcn4OBTHXCurcfBr79XtPVWA0L5Wdq7yzDThpWX+1uv0kvDXKB+/ZRMO+e2OcLAUCpFyIKwzCRYSTg/RxY/sHXEpuGqUrl+r5LTCe6RAf2ans=
-Received: from DU2PR04CA0220.eurprd04.prod.outlook.com (2603:10a6:10:2b1::15)
- by DU4PR08MB11717.eurprd08.prod.outlook.com (2603:10a6:10:643::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.15; Fri, 31 Jul
- 2026 10:20:42 +0000
-Received: from DU2PEPF00028D04.eurprd03.prod.outlook.com
- (2603:10a6:10:2b1:cafe::62) by DU2PR04CA0220.outlook.office365.com
- (2603:10a6:10:2b1::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.15 via Frontend Transport; Fri,
- 31 Jul 2026 10:20:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF00028D04.mail.protection.outlook.com (10.167.242.164) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.5
- via Frontend Transport; Fri, 31 Jul 2026 10:20:41 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RA36WTR3u3SMRbdo4Q+GY9qftlofBtyl26SpHhVA1QL3wPiNHvi7neI8BbiGFjcNhz1+h1QDKcE0ZH29no90uYmqtrLrQnwRJD280YKRU7/gqA0+0tIUTJFKURvMSdpBS7eVPTouH84B16YiKeL88sietYvZ7XOa71dlK+ScH4hQhGonkDNwW4F/HaN4Nyh4duISMR/oBfVW6+GEH+aluV/FbgSsThnzenNYe2xxWAHtZIGyfkN7TPij1BBo+UJtNXsts1wyxh1TmDRLjnx5oc+i/7JjfOgPTZwDIaMTQt6vUTHSC5NoadpfnbkxWOFTla/gP6QR0jbh50pkYvcHGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/9bGte8eqdxuMMzc6Sl3gDguhLqQI6GBUeVCbvVeu8A=;
- b=g05P1/GLRVOKiLbD7Hb/VMYlyYCDfmaEF5OIYvGINkGPWcIpqHcFwbqMc0/AWM6+ODDDSdiJpDyVHnpd0FgL5QoOLa4CXqhA66pWz1YIkKejm8m0xccvKH5Uf2JK2DOaHrqRyEuyXM/tSe6/2ajwLwYxrWeEAzDI60Z1jX6CtU0kSJzN1NDxpWBMqJfRS4KJG6uG36/NayfVcXgpDfQZ0uiyJynnKgLdvaqB8OMJbDhMLUfxgeKSCY1pf/MDs5FtIpO0SH5u3N668OxAR5xp4xyyRMpEpZ+kXYeUJ1kqePf0+jMbrTuI7OlNQsxC6CaqVaoszEtJ6wUT2nO3X0+cmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/9bGte8eqdxuMMzc6Sl3gDguhLqQI6GBUeVCbvVeu8A=;
- b=cB5r1Whn7zm4IjrU8ljCV0Q7/8waXW+Snz5qDVSFDT6iJQDf0Zs6ZV0KTsHR/rkcn4OBTHXCurcfBr79XtPVWA0L5Wdq7yzDThpWX+1uv0kvDXKB+/ZRMO+e2OcLAUCpFyIKwzCRYSTg/RxY/sHXEpuGqUrl+r5LTCe6RAf2ans=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM0PR08MB3410.eurprd08.prod.outlook.com (2603:10a6:208:df::33)
- by GV2PR08MB11278.eurprd08.prod.outlook.com (2603:10a6:150:2f9::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.15; Fri, 31 Jul
- 2026 10:19:34 +0000
-Received: from AM0PR08MB3410.eurprd08.prod.outlook.com
- ([fe80::b6cc:973e:a807:c3d3]) by AM0PR08MB3410.eurprd08.prod.outlook.com
- ([fe80::b6cc:973e:a807:c3d3%6]) with mapi id 15.21.0270.009; Fri, 31 Jul 2026
- 10:19:33 +0000
-Message-ID: <9ac33752-b587-4901-b5f2-473e573d7ede@arm.com>
-Date: Fri, 31 Jul 2026 11:19:32 +0100
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@arm.com, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- David Hildenbrand <david@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- ziy@nvidia.com, pfalcato@suse.de, agordeev@linux.ibm.com,
- ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH RFC 01/11] mm: introduce hw_pte_t for PTE table storage
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-References: <20260727164715.2866609-1-usama.anjum@arm.com>
- <20260727164715.2866609-2-usama.anjum@arm.com>
- <6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
-From: Muhammad Usama Anjum <usama.anjum@arm.com>
-Content-Language: en-US
-In-Reply-To: <6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0321.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:390::12) To AM0PR08MB3410.eurprd08.prod.outlook.com
- (2603:10a6:208:df::33)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3fgrGBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED52B1F000E9;
+	Fri, 31 Jul 2026 10:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785493388;
+	bh=Q8cP4hl7RfSW63WGPZpgq/c4DIBfBJqZy2Uq+yIleFw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=D3fgrGBsKDY+4ezUBNeQ3HbZD0+SRskvYbfBCSn55QFfjEKu3mXnn9ezjHcPYPsca
+	 vieqV97queleJctDqLYqOu5ArnigpCdJSIHo1SVnyQjQe9v7iSLk7gBLYcWZzWLzS/
+	 +e2yLTVrXYmakGoB9q5F6x03TBD50ADg7ADbheXFK4r2o2zjpun5qEDb5KC+Ye1lRj
+	 eiba8rMZDJL23cBBTxXbPi3ZuLn69+njNw6cVVLV6VrLfxaPBtLQhxVKqya1Gb4+Yl
+	 StjLCY7cSLCGSug3ybfEG2qsbRCl5MiHOHNIapj0MF4ap12EGohcpWjs9J5SsZQPHo
+	 9g0e1bokGxFtg==
+Message-ID: <a823e3d2-8acf-49d9-a812-ac1bb2136d7f@kernel.org>
+Date: Fri, 31 Jul 2026 12:22:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM0PR08MB3410:EE_|GV2PR08MB11278:EE_|DU2PEPF00028D04:EE_|DU4PR08MB11717:EE_
-X-MS-Office365-Filtering-Correlation-Id: b9a6f79d-2568-4a69-150e-08deeeed5fa6
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|18002099003|22082099003|4143699003|11063799006|10067099003|56012099006|6133799003;
-X-Microsoft-Antispam-Message-Info-Original:
- N2wlK7+ZRozJGmK0N2Kg0R4yJ5wOgZ0BD8bcmN9ckzK3UKJ2F4czXbrv7jZaWgvVUj2tZLGIy6TXZHVj8n7cCBGjmutqs1o22knL3OyEpVQm205U7W840n0BzB93Ls3ya0MZ3n6q0MiN1ZCHJEdhHH4FmcCqbn8amDqXdOS2JFy534KAR6w8Hode3mZKdiNOi4XHA4EMm4R4NmgNqv8BTHU1o1mrdwRGbDcLLTL/Uhcr5Zj2H23tyNGUWdzcb9/6Z+9bMpCyFaPdcHduC8sbRRNlTmKgEgaDWxAsRtFcZniZDxYHOO0wMLuvu/FIbZEpfc9mggB79qJPf78hwUaK6sCBMcFbFO1lIgj/xFLfWAMPLe5iSzSFLg+eGHiNLL7zlhllC5XRJ7sba3tAP1A5lpnMKQQ5InaimxmgfYr2EcWK5+6aNVUYhSXkZdPq7CHlTQ18QsDrrhmDdOi8MKesiDc4vc9VxGb/uuv4aw5rgyKAM7jO0sO/zN+AdxTpB9Vtc10PElC4ddyBnsaMt+zoJSiIhtu0ZzbyjOzgxOvSTZh9hr8fCJVH9BN7z4kFR0HmSW0uqGKEUsWoW1c6OA7FbV3EauzK0vM4jQZyqMS9znmYSKnSFtSl9lnT1Aih3rkG/pMOiNT7X9Xk05Vfb8Gxfo07Avde+ZzbUlyDqgQmWys=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3410.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(18002099003)(22082099003)(4143699003)(11063799006)(10067099003)(56012099006)(6133799003);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked:
- jppYn+MrAjPlJcJEzGfQ1jvETR90CuL564Cvd3s5pQpSXb3FjdEezsTcu1l7Aw7vpXIhIhpPA4Fvjw06egzld5SxxNDODfBO3WGFQpssEDJnL8PWJRIWECUYo7TnCKu253Ngg+5ToeXKLgfCk4brktdsgrj7zk4W1crtnbpBsYC4BT30W2CElHRbMGQdk/8tVzUPeMqdRQtqQ59xKrgLxPMc3xsyjg/9StkRA3HpzyMoGJG+NEI4gVuZt6ij1C/0H9fj2NUUWGDqXiOrjsESkwvO2Ls29lOKFjcW8bSAMO3Y/NNJVoKjg8ty9x9AJ/wLhzWBu8NL0DMS7x6LKw8FeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB11278
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028D04.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	8eb83e79-85e5-447e-8f2c-08deeeed372f
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|36860700016|35042699022|376014|23010399003|14060799003|82310400026|1800799024|13003099007|6133799003|56012099006|10067099003|11063799006|4143699003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	+cxUqkDAVXwJfo0/J+Unmn/UU7Qxuv/kG8jo/E6OUUholiIyLeeBG1dyUMGC+JTI9/jnKsgcOlSVUIBuMMp3/3ikCCv2hJ/V2g5yI1OLgpVuMK+GMlXGoJtSKO1RMevMxcrfaMZou7AdqgeW2JMX0/XGmyl0uMrkiB9oKgwkc3A63dlnJXUhvlQVXVNxDZt6eywKtDPuF8dUfhX0VF+bXa6O9rbSBVEymm+otUnW1knYJyYfyibDgoQMKcfmIdMEqSoJLQ11wplggq5TvNEDSxz7teq6AUCxWxMBBZVFyaP8PVD/04Yh2ME91ljkkyWMpDlxBIUY8opxOs0RLDbXZ/Ja2cbme9xQ6tbxbWQTrGqorky5G2ImsDl1F6GCBMknxiouThBH4HDrLiPURJtdyNY6JOepeeZyOQHOBLfmJQRMsh1O5L+y5ZUFHC50EF1Z54PU4auvrz9v3uu+cShBKToUDud39c30jHhrAI6XYaXolrZLzMmJtESd9+1DR1bQfg+V5fekbrMwodajnxapLGRksztZgQPm2BJ76/syx7w3iVWoZLJ8ARJhmzWnsmgyCPKnMtkFO67yBs+G2E2F5gRyAouK63Bt/OYPIAx8k+XFNslT0pGZeinwIQ0zoPsizMRGODBD4XgLp8hD2elCKAETHGbAIZ/Zq8dWJhpohwnTgqc8vFEGqKUnXtJIV7qEN5eKWDEvXQBX6SXujBOsug==
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700016)(35042699022)(376014)(23010399003)(14060799003)(82310400026)(1800799024)(13003099007)(6133799003)(56012099006)(10067099003)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	RBLROo5LiXS9uRgF34qTjim0wy19yK/eljpxXW0xvMggAoapFBz7lMXDw5Mwvqv2Fs3OGn1gD5anpvnhGf58NYa1Tk+IDYCnJ5kwjQkQ/koCnaFQp4JHJ9KgOIXnbj5bHJd+BEzgzzkuKX7a/5n9xPS7GbQDLZN62PaLbQxFVXUgYRkJR9ggJeHL3xiLcIJ5MzT62aKAKva3MI16Rc6y9uurr7Hsm9UGFdmC+GR9lCISR21RBLN+na/snbZrYb57C6grujG9yUHTbBopj+KIB10zX8OWI0IunkHd2NFpteTKd8WUZ0arTedwGYlI5/dETTMvtV+hj+hCWxB8C2Xb4PMbgL5u7ZD4CkT12KrJecNDeC0MEdggInAVlZv2peDghr0BwJQEFld88znFQL2v8a1OF8pRuyTqfhrvVZTPQUIL4KlUpwX8uk7u5PiNHSSD
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2026 10:20:41.1870
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9a6f79d-2568-4a69-150e-08deeeed5fa6
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D04.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR08MB11717
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 14/41] mm: swap: Introduce lru_add_drain_progressive()
+To: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
+ andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
+ "hughd@google.com" <hughd@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-14-35f9aec2aed2@google.com>
+ <4460e252-b6de-4df3-bea8-0368a9d0f4ff@kernel.org>
+ <CAEvNRgEUQSju2tW_1zMk2=QmveZNtmkjjCZdqVBgBD2JPh0k4Q@mail.gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <CAEvNRgEUQSju2tW_1zMk2=QmveZNtmkjjCZdqVBgBD2JPh0k4Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 31/07/2026 6:49 am, Anshuman Khandual wrote:
-> On Mon, Jul 27, 2026 at 05:46:52PM +0100, Muhammad Usama Anjum wrote:
->> pte_t is used both for logical PTE values and for entries stored in a PTE
->> table, so pte_t * does not distinguish a pointer to a copied value from a
->> pointer to table storage.
 > 
-> Should we rather call them as "Linux PTE" and "HW PTE" instead ?
-> 
-> Some like "Logical PTE" does not really sound very clear on what it represents.
-Yeah, I should make distinction more visible in the cover letter.
+> I didn't really like this either, the drain_state thing is really
+> awkward, but in both usages (collect_longterm_unpinnable_folios() and
+> guest_memfd), there's an outer loop where if the draining happened on
+> the local CPU before it should skip straight to just draining on all the
+> other CPUs.
+
+Just nasty :)
 
 > 
+>> I was hoping that we could embed more logic in a helper. The history [1] of the
+>> refcount check is rather sad:
 >>
->> Introduce hw_pte_t as the generic name for a PTE table element. Define it
->> as an alias of pte_t by default so architectures retain their existing
->> representation and behavior until they opt in to a distinct storage type.
+>> https://lore.kernel.org/all/c5bac539-fd8a-4db7-c21c-cd3e457eee91@google.com/
+>>
+>> ... primarily because of mlock() handling.
+>>
 > 
-> Makes sense.
-> 
->>
->> Include asm/page.h so pte_t is defined before the generic alias.
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->> ---
->>  MAINTAINERS                   |  1 +
->>  include/linux/pgtable_types.h | 11 +++++++++++
->>  2 files changed, 12 insertions(+)
->>  create mode 100644 include/linux/pgtable_types.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 15dd00c7ffec5..78aac05949829 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -16981,6 +16981,7 @@ F:	include/linux/mmu_notifier.h
->>  F:	include/linux/pagewalk.h
->>  F:	include/linux/pgalloc.h
->>  F:	include/linux/pgtable.h
->> +F:	include/linux/pgtable_types.h
-> 
-> s/pgtable_types.h/pgtable_hw_types.h ?
-I prefer shorter file names.
+> In the original code in collect_longterm_unpinnable_folios(), I couldn't
+> find anything that handles folio_test_mlock(), so I was lost for a while
+> until I realized mlock() doesn't add a refcount to the folio.
+
+mlocked folios in the mlock cache hold a reference as well.
 
 > 
->>  F:	include/linux/ptdump.h
->>  F:	include/linux/vmpressure.h
->>  F:	include/linux/vmstat.h
->> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
->> new file mode 100644
->> index 0000000000000..ed5dba42a4f8c
->> --- /dev/null
->> +++ b/include/linux/pgtable_types.h
->> @@ -0,0 +1,11 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef _LINUX_PGTABLE_TYPES_H
->> +#define _LINUX_PGTABLE_TYPES_H
+> Are you kind of proposing an optimization to
+> collect_longterm_unpinnable_folios() by adding a check for
+> !folio_test_mlock()? I hope we can put that in a separate patch series,
+> I'm still hoping to get this series in for 7.3!!
+
+I was trying to avoid messing with the refcount for ordinary LRU cache pages.
+mlock() should be a corner case for guest_memfd.
+
+Relying on the refcount just means that one unconditionally performs a lot of LRU
+cache draining even though it doesn't make any sense.
+
+> 
+>> For guest_memfd(), would mlock() ever apply on a path where you need that check?
+>>
+> 
+> For guest_memfd, if a folio were mlocked, unmapping it would fail, and
+> so the refcount on the folio would be elevated. The
+> kvm_gmem_is_safe_for_conversion() check in the patch after this one
+> would fail, correctly.
+> 
+> I really wanted the caller of the lru_add_drain_progressive() function
+> to control whether to do the drain (see below), which would solve the
+> mlock problem by not assuming the use of folio_expected_ref_count() to
+> determine whether to do draining.
+
+Again, the problem is that on *any* raised reference you would drain. I
+was trying to limit the harm.
+
+[...]
+
+>> + */
+>> +static void lru_cache_drain_for_folio(const struct folio *folio,
+>> +		enum lru_cache_drained *drained)
+> 
+> The main thing I wanted in the proposed version
+> (lru_add_drain_progressive()), was to let the caller determine whether
+> to try or to continue draining.
+
+Why?
+
+> 
+> I wanted the caller to have full control over whether to drain or not,
+> so I didn't want to pass folio into the function. I thought the caller
+> should first determine whether to drain, then call the function.
+
+Why?
+
+That's literally what the existing refcount check tries to do: figure out if
+there are LRU caches.
+
+> 
+> This version assumes that the caller wants to continue draining based on
+> something to do with a folio, and the folio may or may not be on the
+> lru_add fbatch at all, which is a little strange to me.
+
+I really don't understand what you are trying to say.
+
+Draining only makes sense if something is on the LRU cache. And there are
+better ways of checking that than relying only on even less precise refcounts.
+
+If someone wants to do an early refcount check to abort the overall
+operation, that's fine.
+
+> 
+> Also, this version enforces a certain definition of "expected" number of
+> refcounts on the folio. I guess in this case this definition works with
+> guest_memfd, but guest_memfd doesn't support swap so the swapcache check
+> in folio_expected_ref_count() isn't necessary.
+
+?!
+
+That's why we have the universal definition of expected references and the
+common helper.
+
+Because pagecache pages commonly don't support the swapcache.
+
+> Also, if the definition
+> folio_expected_ref_count() changes, then guest_memfd is implicitly
+> affected. Not sure if the "expected" definition is the same for all
+> callers?
+
+It must, because that is used all over the place. The only thing it
+cannot deal with is references held by the caller (which could be supplied
+through and "additional references" parameter like we do elsewhere).
+
+> 
+> I guess if there was a function named
+> folio_ref_counts_indicate_presence_only_in_the_filemap() instead of
+> folio_expected_ref_count(), then it'd be the perfect function for
+
+You're not seriously proposing such an abomination I hope?
+
+> guest_memfd to use. The current definition of folio_expected_ref_count()
+> also includes page table mappings, but in this check guest_memfd really
+> wants to make sure that there are no page table mappings.
+
+You can just check early for mappings.
+
+Remember: this is about LRU draining, *not* about your final
+"unexpected references" check.
+
+> 
+> This version folds folio_likely_lru_cached() into the check, and I
+> adopted the check for guest_memfd because it'd help with huge pages,
+> though technically guest_memfd is always 4K now so the check is also
+> pointless.
+
+Who cares if we end up with a common usable helper? We have usless
+checks *all over the place* in common helpers.
+
+> 
+> I tried a macro version of this where the macro caller can pass in a
+> full condition, which would look like this:
+> 
+>   lru_add_drain_while(folio_may_be_lru_cached(folio) &&
+>                       folio_ref_count(folio) != expected_refcount,
+>                       drain_state);
+
+Yuk.
+
+> 
+> but I thought that just created something people have to jump to, to
+> first understand how the macro works, so I left it as an explicit while
+> loop instead.
+> 
+>> +{
+>> +	if (!folio_likely_lru_cached(folio))
+>> +		return false;
 >> +
->> +#include <asm/page.h>
+>> +	/* Try local draining first, if not already done previously. */
+>> +	if (*drained == LRU_CACHE_NOT_DRAINED) {
+>> +		lru_add_drain();
+>> +		*drained = LRU_CACHE_DRAINED;
+>> +	}
+>> +	/* Try draining all CPUs next if still not an LRU folio. */
+>> +	if (folio_likely_lru_cached(folio) && *drained == LRU_CACHE_DRAINED) {
+>> +		lru_add_drain_all();
+>> +		*drained = LRU_CACHE_DRAINED_ALL;
+>> +	}
+>> +}
 >> +
->> +#ifndef __HAVE_ARCH_HW_PTE_T
+>>  /*
+>>   * Returns the number of collected folios. Return value is always >= 0.
+>>   */
+>> @@ -2266,9 +2316,9 @@ static unsigned long collect_longterm_unpinnable_folios(
+>>  		struct list_head *movable_folio_list,
+>>  		struct pages_or_folios *pofs)
+>>  {
+>> +	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
 > 
-> __HAVE_ARCH_HW_PTE_T macro is a better approach here or a config ARCH_HAS_HW_PTE_T
-> based selective platform subscription should be introduced instead ?
-Moving to CONFIG_ARCH_HAS_PTE_T from the next version as suggested here [1].
+> I also considered an enum, but it would be another thing to export. I
+> was thinking to have drain_state just be opaque to the caller and the
+> only thing the caller needs to know is to initialize it to 0.
+> 
+> Perhaps there's a better way to "make it opaque"?
 
-[1] https://lore.kernel.org/all/78a0402d-5436-4aab-a704-90fab56eec50@kernel.org 
+Putting an enum into a header is a problem in which universe? :)
+
+Ackerley, please stop making up stuff. Having generic helper is not a problem. Doing
+checks in common helpers is not a problem. Putting enums in headers is not a problem.
+
+Your version is just bad.
+
+I can later try something that keeps the questionable refcount checks in place,
+maybe that could do as a temporary solution until Hugh possibly finds a way to
+remove the need for draining entirely.
 
 -- 
-Thanks,
-Usama
+Cheers,
 
+David
