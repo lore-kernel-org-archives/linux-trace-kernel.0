@@ -1,145 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F07F390C85;
-	Fri, 31 Jul 2026 08:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A383E33A032
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 09:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785488255; cv=none; b=cEmhsWqKkZOEKqntFGlPe9zgEuwef+470vnngmR17Ieh4XRsHPwRlr1PSO0zD6BZSp0tlKn7U9Vfvw7BI2S/u4oMp/meEETRWh35wPRVpGXdxOUag25+prD8oiwbWzyU85ngO8nSBn2S1jswBN3fkCz15m1HFwV499GmD++QZsQ=
+	t=1785488709; cv=none; b=YYIoVA1uEb9a+wnyanNKCYDySpj2gQryNZNYwfu1Dd/ULHVw9dwqhR9hfyHhUsps7o7QhKaOQ9eRZPqTbpbWF3YloOGVLJeUmoQrK4gK3gXRtAad6l6n7VqXRKB3MxSMygPF9cY2x0SZv+1tgup2TUcTgBXLf/reRmaGsfOWze8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785488255; c=relaxed/simple;
-	bh=1b87pWmuiWigK1wPtNTyW7rMpkhrK9XpARbjh2u7/PY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QBe0LWZnLM+E9Ous+PeShv/qDSPPgDLze6wVzY1swli55eDSIIoNkr9abtwsbICdHBeV496AvgbXxurckkPTPGc8STWItCo0QHjGdjjK9pmXz5+kEC9g3oyWjdkkDmT4VYP4/L+SpZpueTrnYYsCp/lWCIXubqB+H7GyQZkBeBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aw5s8MJG; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785488709; c=relaxed/simple;
+	bh=Rgvp+VDe50RFmnt3GDcvFMv2kutgcrdQ+nvZuRjgL4s=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hojDBIMSTnI/QKFk9f2Lg66zGcQBWJfJQW7oTWVDmPuDWLL4QEV4KwPsa3pGid/0b5gFpLMeP6XYfvuyRdp1EIXnCu4K0Ru4uWHHmyAs7AgvnPpZw9EbqcCDrXZSiZVYD5ETeRvBo2PGOsqYd3Adw60XwGe2vwmzuHse0dyEgNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TUXBFs5V; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+OoQnUju; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hQ+MEyAl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ygQvoYlP; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aw5s8MJG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785488255; x=1817024255;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1b87pWmuiWigK1wPtNTyW7rMpkhrK9XpARbjh2u7/PY=;
-  b=aw5s8MJGfXsoP382n7VNNcFxiZvjRJWrs3xRExx00XFzPhbf7BCJwu79
-   M6rEukLPssyoel8BxlsZnyk+FKYAnmxddLw1cppDuFBz+OgZwiFu53fWY
-   i5IWE+D280Xr1pYcu0/JFqgpZjFAySWWZnwNuLsoZAT893UBbE1vozNLi
-   g0FKGKnnriK0MF1+1nkI2tsGFQFvMnFgXtp40onuArblKYgaomnClE2fl
-   xEGAwZtHWbI7lni7ac+3sLS8f1gqCFzo2j5Moh/yW3inY70Qzhh8pFjOH
-   9p3NuhkmBPLi9n6zyvpH3A6KXt1ek36mgmBpIOpmyWj+ytg2jlWDqzTVH
-   A==;
-X-CSE-ConnectionGUID: I/Umm3QLQH+Z/QKKVbGJ7g==
-X-CSE-MsgGUID: dfjyr33qS/CR4RWtwfPpOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="86063906"
-X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
-   d="scan'208";a="86063906"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 01:57:34 -0700
-X-CSE-ConnectionGUID: w/eqajcFTA22UWQ2rzow+g==
-X-CSE-MsgGUID: HP5ylDh8QcWlI7vAtQHsxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
-   d="scan'208";a="283856796"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.248]) ([10.124.240.248])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 01:57:18 -0700
-Message-ID: <b78bfee9-29f3-4044-8ac7-f294b3cd0ad8@intel.com>
-Date: Fri, 31 Jul 2026 16:57:15 +0800
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TUXBFs5V";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+OoQnUju";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hQ+MEyAl";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ygQvoYlP"
+Received: from pobox.suse.cz (unknown [10.128.32.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6BE037DE66;
+	Fri, 31 Jul 2026 09:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1785488700; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJQ4tixhl8ptjgMIavI7XAafyovWW2/pjPwbVKZ9qCs=;
+	b=TUXBFs5VU4QTjJ+ld+ZEO+/kbccW6Xfo9yJzPfmjqQXN7kS2TBcqB9mcEn4RkkrVyXylZG
+	DhYhywXSLPn4MqMQ43Sn2jiVzWX1N8eCGoKCm2kI3KU+B+9BigZ2BD0mt7tMf+SYrMExom
+	zNEByG513PJJFgJ8jEvkYjzhmQSDAZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1785488700;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJQ4tixhl8ptjgMIavI7XAafyovWW2/pjPwbVKZ9qCs=;
+	b=+OoQnUju4OO0pobXcUva5FKg1kkdWogjmFncP+88WfSsFhsBMQMAzKThEv9VIH2LdoxlcS
+	Rvq6SSbvr/0W2qBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1785488696; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJQ4tixhl8ptjgMIavI7XAafyovWW2/pjPwbVKZ9qCs=;
+	b=hQ+MEyAldBM3OnOxkZvz0PXovu0b5pRHrWcxgPegN3SUgZaZQPQ7f2CKWCLs5Pnq+G+H53
+	JuZcmDScHAPtmeF+E6G2Uuw4G1ku0Fvk/vYStYnu35YG3COZmHrUp25VFB/eUMRo0zNhRx
+	WzAWY0AUtpAxxSllkPNiwLcKL8akwQI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1785488696;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJQ4tixhl8ptjgMIavI7XAafyovWW2/pjPwbVKZ9qCs=;
+	b=ygQvoYlPBIn2DiLAe2c2Epc/QF3L6r5f6dFatvmbq+efUxC8NvNidn8c6thYfMJLIy/d9f
+	erPub4HH5gDlCnCg==
+Date: Fri, 31 Jul 2026 11:04:56 +0200 (CEST)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Steven Rostedt <rostedt@goodmis.org>
+cc: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>, bpf@vger.kernel.org, 
+    linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+    linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net, 
+    jpoimboe@kernel.org, shuah@kernel.org, jolsa@kernel.org, 
+    mhiramat@kernel.org, stable@vger.kernel.org, 
+    linux-open-source@crowdstrike.com
+Subject: Re: [RFC PATCH bpf-next 2/2] selftests/livepatch: update test-ftrace.sh
+ for deprecated ftrace_enabled
+In-Reply-To: <20260730200913.59a541db@gandalf.local.home>
+Message-ID: <alpine.LSU.2.21.2607311104390.25165@pobox.suse.cz>
+References: <20260730163544.2042327-1-andrey.grodzovsky@crowdstrike.com> <20260730163544.2042327-3-andrey.grodzovsky@crowdstrike.com> <20260730200913.59a541db@gandalf.local.home>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 01/41] KVM: guest_memfd: Introduce per-gmem attributes,
- use to guard user mappings
-To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-1-35f9aec2aed2@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260728-gmem-inplace-conversion-v9-1-35f9aec2aed2@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.976];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pobox.suse.cz:helo,pobox.suse.cz:mid,crowdstrike.com:email]
 
-On 7/29/2026 8:35 AM, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson<seanjc@google.com>
+On Thu, 30 Jul 2026, Steven Rostedt wrote:
+
+> On Thu, 30 Jul 2026 12:35:44 -0400
+> Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
 > 
-> Start plumbing in guest_memfd support for in-place private<=>shared
-> conversions by tracking attributes via a maple tree.  KVM currently tracks
-> private vs. shared attributes on a per-VM basis, which made sense when a
-> guest_memfd_only_ supported private memory, but tracking per-VM simply
-> can't work for in-place conversions as the shared/private status of a given
-> page needs to be per-gmem_inode, not per-VM.
+> > kernel.ftrace_enabled=0 is now always refused, so the old scenario
+> > (disable, fail to load a livepatch, re-enable, load) no longer applies.
+> > Replace it with a single check that the write is refused with the new
+> > error, and drop the now-stale disable/reload flow.
+> > 
+> > Assisted-by: Claude:claude-sonnet-5
+> > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> > ---
+> >  .../selftests/livepatch/test-ftrace.sh        | 49 ++-----------------
+> >  1 file changed, 3 insertions(+), 46 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+> > index d2c3dea63104..c88f4d13a134 100755
+> > --- a/tools/testing/selftests/livepatch/test-ftrace.sh
+> > +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
+> > @@ -9,56 +9,13 @@ MOD_LIVEPATCH=test_klp_livepatch
+> >  setup_config
+> >  
+> >  
+> > -# - turn ftrace_enabled OFF and verify livepatches can't load
+> > -# - turn ftrace_enabled ON and verify livepatch can load
+> > -# - verify that ftrace_enabled can't be turned OFF while a livepatch is loaded
+> > +# - verify that kernel.ftrace_enabled=0 is refused (deprecated knob)
+> >  
+> > -start_test "livepatch interaction with ftrace_enabled sysctl"
+> > +start_test "ftrace_enabled sysctl write is refused (deprecated)"
+> >  
+> > -set_ftrace_enabled 0
+> > -load_failing_mod $MOD_LIVEPATCH
+> > -
+> > -set_ftrace_enabled 1
+> > -load_lp $MOD_LIVEPATCH
+> > -if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
+> > -	echo -e "FAIL\n\n"
+> > -	die "livepatch kselftest(s) failed"
+> > -fi
+> > -
 > 
-> Use the filemap invalidation lock to protect the maple tree, as taking the
-> lock for read when faulting in memory (for userspace or the guest) isn't
-> expected to result in meaningful contention, and using a separate lock
-> would add significant complexity (avoiding deadlock is quite difficult).
-> 
-> Co-developed-by: Vishal Annapurve<vannapurve@google.com>
-> Signed-off-by: Vishal Annapurve<vannapurve@google.com>
-> Co-developed-by: Fuad Tabba<tabba@google.com>
-> Signed-off-by: Fuad Tabba<tabba@google.com>
-> Signed-off-by: Sean Christopherson<seanjc@google.com>
-> Tested-by: Shivank Garg<shivankg@amd.com>
-> Co-developed-by: Ackerley Tng<ackerleytng@google.com>
-> Signed-off-by: Ackerley Tng<ackerleytng@google.com>
+> This test should work for both old and new kernels. I would have it still
+> do everything here but if setting ftrace_enabled returns -EOPNOTSUPP then
+> do the simple path.
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Yes, please. It would be ideal.
 
-<...>
-
->   static __always_inline struct gmem_inode *GMEM_I(struct inode *inode)
-> @@ -60,9 +68,25 @@ static pgoff_t kvm_gmem_get_index(struct kvm_memory_slot *slot, gfn_t gfn)
->   	return gfn - slot->base_gfn + slot->gmem.pgoff;
->   }
->   
-> +static u64 kvm_gmem_interpret_entry(struct inode *inode, void *entry)
-
-Ummm, I'm not sure on the name. It doesn't look like KVM's style?
-
-Maybe, just kvm_gmem_get_attributes()?
-
-> +{
-> +	if (WARN_ON_ONCE(!entry)) {
-> +		bool initially_shared = GMEM_I(inode)->flags &
-> +					GUEST_MEMFD_FLAG_INIT_SHARED;
-> +
-> +		return initially_shared ? 0 : KVM_MEMORY_ATTRIBUTE_PRIVATE;
-> +	}
-> +
-> +	return xa_to_value(entry);
-> +}
-
+Miroslav
