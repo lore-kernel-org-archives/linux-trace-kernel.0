@@ -1,231 +1,245 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622D77081A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 00:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78082230BD5;
+	Fri, 31 Jul 2026 00:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785457101; cv=none; b=fdfslBy5urUpYb19eWJMLoU9U35YuHZvyX8AVtGpQOHbfzXDZQhhpruoHUPV/U9NkRA6xxZm/Y+NTXhOm+rMRazyOifwO58z+ljJxjEt2OUgot0Yesbrd6KH3Xq/b7SwrUnY7GN39KrLzjDgyftyarEKGiH8K9P4Do7FMaXAO+Y=
+	t=1785457625; cv=none; b=meNdwDB66uSsL25MgCHlpNiqehOmnSXnMe6lH/9PbjMibwGkkAuPQ8FwELngYGyHtdyfcDcRapF4gel3ltMUH+AfEH0mDEPsL8i7lTK60Gprxak/H3mSY9y98sGhVSmzsaC9FYPq2kCpj41oDczPaiHm3VsztjeF2Bg5ayvqh50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785457101; c=relaxed/simple;
-	bh=d71qq8IeroOX81lWUMlvZ1oPsNcK1R28/HBOYSVyITg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K9kdpJDasQzp1Bx79aY8n3k75r3Kk1HEfl+SrNEF2JeTQgeCpAGv4k5bE0QBg7cPFLu684VNUNlWIUtR+4h1gUA+R3Ijv75nlDKghz0x7nEeJ0/Hkb9CJ7OzEPdCbM8PeLjsTtea8F6slWhcQgNH1rSGdEWRjSUiaD8zcuMEaoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DqJ7RSC3; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785457625; c=relaxed/simple;
+	bh=GsAeSXPb/i0tQwsqsCLE+eQ0ByBWcYcY6nJsp270jLE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=d1mawDMGJu/mtlj07L9wi5c2z4uEel5ZIfbmMjU/RZFlrwbbAxhkfMaMH3aXTNuzWNy3ib1VfPlq5X00tyJArHJZ58GNYcceQwgHy31uPlHE86rXohdnOyeL6ilNfMafQr4oOL9bdvlg50GjB4ByfKWXEMmYAZHkyV415puxG+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeKocfuk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqJ7RSC3"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-6acc74fef22so106447eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 17:18:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785457098; x=1786061898; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=pgfjfo9Gag5kWKb0bLxwyUihgIZfRY7YyhtakKFQe0M=;
-        b=DqJ7RSC3BvBdxHU4KFiOMByCqPOKjRMq5BkFdfihot3h6VILPlLrAAy17Vj9Pzw7tr
-         ML+iSsULjXMuiiphnX1PcQ6xQHuaPeNbRc0rYCe6n20ROZ2Z8iMPnGs7Wt4TQOUkDo+C
-         pMzhbKy4KKxwJ9GAbyW9llkRKg1ogLJoLlc6MOQ8XSgdX2TNFBlcZUPN2TNtJA935CJ6
-         5QrUX63jf6uMJaWzziZeVscD0HKhjVVh3xdM5AkWcK9IsL6ikkjCy+aZzyIySjQTVH72
-         xxFKsJiTpI9NKTRQ5emlyxYpBLbKnq7bPbfYXJxKriWWI746GAn737anMFKTVLn3YdiK
-         PTyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785457098; x=1786061898;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=pgfjfo9Gag5kWKb0bLxwyUihgIZfRY7YyhtakKFQe0M=;
-        b=p4UHWrssKrM2Sw3cGer44dic6Y92Kdx1G1VBsRH6+6a62QhpRi22meTD8iYI3rpVPa
-         GQEcNkduNwL8x2bSHkbmA+6A87eEbV5S3LVJCvUsYa5q4CSJdLU3GeyAJOPTAs2Q0frc
-         hFF4kU7SvdGvDBHcWWqwBSEKzYpwtonmbhKtHpvmAtSo4m1yo585DGJYUdRR/8xLcdhr
-         PwguBv45kO/yI8I5+5RJUDSrhzJLkUE/xrrtm2/GxYTETXvE0UoPBbRUTdyHFEFFSNhh
-         LnNnUHnUDCdQyOxQB/5iPqGQsB6B3I8AznYQMbxGi3xxg2xUzxD2Ub8cNNOtDfv6aAiX
-         e9NA==
-X-Forwarded-Encrypted: i=1; AHgh+RrW37Gh8xtQEeHd7sOKTVaWo7u8w7X+gdcRnWX40B3KPSh+TACCz9sV7jDQOqDIwMFqtLlEj5/REZ8DHhqqLKKL3oM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfcNTmgZ/CrP2NkKSs86pHUlPa5EeOcoxR5DeaDT633seTJ4tY
-	Flp1rkF25Dm4bZM8fKmn0DrxNKSI9I7qKqMWfQ/ybyyYcFMreLD1j9Nz+A6mGiAdrhI=
-X-Gm-Gg: AR+sD13fnIVAQYVciYsqgRJp7uNVYKUMgkqRcJXTrdi6l8FTgPQvVwfKf3h2AQDB7f3
-	mj/R4FrZ5EjiSSuALzYrtFfqHW/DfGmQBVG3aMRlUTv8WZDiSi78wn3IePy2+kgRmsDMuSY+qMx
-	gTWRNkTVcZD+x8n+HX2bwSfdKcgae2rI05+rOBOg7psk+CovJmosHP9iBQtcl4iLamKStIfLACT
-	UO8rosAQr5fYsFjE3TuUqIexbUTzUkrrCBtlzw4VU5wKnOnjFvVLnrk6LHO58RVVkiB3U1us6oD
-	3DpJ2Ot2tjWpGIy0ykxmSQ6Z6x1jPv5cfmilcMqTA+LQtnW8Z9sRDrwxcru5PKVau/MLqUfoTgR
-	CaC7hyMyAhH8bcqpuDJtsWqrgL9YBmBo7Egu2Qs4xdpzFvW7cKUyKj4+zaJ/5hPyKHiMyAYYRkJ
-	MEZAo+nP1ZBWniBN8cK8x8T9LwCodmMbhuIJsDCMSkT0+2Daho1yw=
-X-Received: by 2002:a05:6820:1523:b0:6aa:e844:fb2c with SMTP id 006d021491bc7-6acbbcfa05bmr3160087eaf.7.1785457097970;
-        Thu, 30 Jul 2026 17:18:17 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:75::])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-458c29d51f9sm3579066fac.16.2026.07.30.17.18.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 17:18:17 -0700 (PDT)
-From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-Date: Thu, 30 Jul 2026 17:17:39 -0700
-Subject: [PATCH v2] tracing: Make per-template BTF id lists file-local
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeKocfuk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 806471F000E9;
+	Fri, 31 Jul 2026 00:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785457624;
+	bh=gl1PAht9zZ/yejPkp7VZqU/MURfNgRRuRRye82hpQOI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=SeKocfukZKCk6+kvVnAs5b9RkfWRqOQ1kvNeHvel/Jv9eQydDwSrG5QxuB5bia8Xz
+	 oJ2Af33/xG//+xbdyYWsyau7G/E4oqF1k5aCy5zv8UZu3Oh/gLiiKL4uaw9i+ktj/b
+	 Ut1S5RZeAlqiiBJc4Qd1mrAlcS/HGiwpwJD4AcFR0QhFl0JcVseedxnixHNKUJU6nf
+	 x02FaAZyf0XGHrfrEsxymCsi3SRS+RdoQzqz7YwXjTQH3Zbm3BNp6LG6UeAsZ1WMWp
+	 kg/fezIasZtItT9koTn24s4SFKN2mfpkt0lY+OE/9cMTIeOqTCEwh9wvt7D//7GWpo
+	 3q8/G/2bmShPA==
+Date: Fri, 31 Jul 2026 09:26:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Michael Wu <michael@allwinnertech.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Namhyung Kim <namhyung@kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] tracing: Fix race between update_event_fields and
+ event_define_fields
+Message-Id: <20260731092659.af05c03f86e827d3ab45672f@kernel.org>
+In-Reply-To: <08216429-43ba-efc2-f6b1-459210d07b02@allwinnertech.com>
+References: <8147bb04-b890-f18a-9cab-48b712f54856@allwinnertech.com>
+	<20260730173157.e756d8a021d827b7aa9686cf@kernel.org>
+	<9613182c-6299-3c68-5afb-2bf8d9f90f03@allwinnertech.com>
+	<08216429-43ba-efc2-f6b1-459210d07b02@allwinnertech.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260730-b4-fix_btf_tracefs-v2-1-6b66da8dc103@meta.com>
-X-B4-Tracking: v=1; b=H4sIAKLpa2oC/33NQQ6DIBBA0auQWUsDtNSGVe/RGAMyU2ehGCDGx
- nj3ph6g2794f4eCmbGAEztkXLlwmsEJ0wgYRj+/UXIEJ8Aoc1ftVclwk8RbHyr1NfsBqUiKnqK
- 3FIMN0AhYMhJvJ/rqGgEjl5ry53ys+lf/cquWWlrSKrTmQVbjc8LqL0OaoDuO4wu4ngrAswAAA
- A==
-X-Change-ID: 20260730-b4-fix_btf_tracefs-fdafda5fdb5b
-To: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org, 
- daniel@iogearbox.net, kafai@meta.com, kernel-team@meta.com, 
- eddyz87@gmail.com, memxor@gmail.com, rostedt@goodmis.org, 
- linux-trace-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, broonie@kernel.org, 
- Mykyta Yatsenko <yatsenko@meta.com>
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785457095; l=5490;
- i=yatsenko@meta.com; s=20260324; h=from:subject:message-id;
- bh=hmaukBcIfLOTdQ4K7uDmftM8WKS7YD5n5UlweCXdDHA=;
- b=fVM3/kxj79XdSqH8qx+eMR/f7HOKUIFDiHVoL+xBuLTybZOgRdF1P2TPVOY1vX7O/gHQfHFUr
- vEcDxPBp1iWD7LLCR9VEiKsuoy75N8lKZUUuYzQztWx6g8gpRSWPu++
-X-Developer-Key: i=yatsenko@meta.com; a=ed25519;
- pk=1zCUBXUa66KmzfjNsG8YNlMj2ckPdqBPvFq2ww3/YaA=
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Mykyta Yatsenko <yatsenko@meta.com>
+On Thu, 30 Jul 2026 19:13:28 +0800
+Michael Wu <michael@allwinnertech.com> wrote:
 
-DECLARE_EVENT_CLASS emitted __bpf_trace_btf_ids_<call> through
-BTF_ID_LIST_GLOBAL, i.e. a global symbol named after the event class.
-The class name is not unique across the kernel, so the symbol
-multiply-defines whenever two translation units instantiate the same
-class.
+> Hi Masami,
+>    Thanks for the review. I've rebased the patch. The new version is below.
 
-Switch to the file-local BTF_ID_LIST: the list is reached
-only through the event_class_<call>.btf_ids pointer, initialised in the
-same unit, so tracefs readers never reference the symbol by name and
-resolve_btfids still fills the now-local .BTF_ids entries.
+As Steve said, please send a clean patch mail (as a new thread) instead
+of embedding it in the mail. Embedding patch is just for testing, not
+for merging.
 
-The handcrafted syscall classes are the one cross-unit consumer: give
-them their own local BTF_ID_LIST rather than importing the generated
-sys_{enter,exit} lists.
+Thank you,
 
-Fixes: eadc0725ab8d3 ("tracing: Expose tracepoint BTF ids via tracefs")
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/ff58b01c-3f5e-4d55-be82-609d2faaf12e@sirena.org.uk/
-Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
----
-Changes in v2:
-- Emit the per-class BTF id list only under CONFIG_DEBUG_INFO_BTF;
-  without BTF the ids are unresolved and BTF_ID_LIST falls back to a
-  128-entry (512-byte) per-class stub, adding hundreds of KB of BSS
-  across the ~1000 event classes (reported in review of v1).
-- Link to v1: https://patch.msgid.link/20260730-b4-fix_btf_tracefs-v1-1-5f10b728f51e@meta.com
----
-Changes in v2:
-- Emit the per-class BTF id list only under CONFIG_DEBUG_INFO_BTF;
-without BTF the ids are unresolved and BTF_ID_LIST falls back to a
-128-entry stub.
-- Remove verbose comments (Andrii)
-- Link to v1: https://patch.msgid.link/20260730-b4-fix_btf_tracefs-v1-1-5f10b728f51e@meta.com
----
- include/trace/trace_events.h  |  7 +++----
- kernel/trace/trace_syscalls.c | 27 ++++++++++++++-------------
- 2 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> ---
+>  From ec00b31c58b56f4cbbe6dd67c9f88a1d87d8d5ac Mon Sep 17 00:00:00 2001
+> From: Michael Wu <michael@allwinnertech.com>
+> Date: Wed, 29 Jul 2026 17:34:09 +0800
+> Subject: [PATCH v2] tracing: Fix race between update_event_fields and
+>   event_define_fields
+> 
+> event_define_fields() (pri=1 MODULE_STATE_COMING notifier, locked by
+> event_mutex) populates class->fields via list_add(), while
+> update_event_fields() (called from the pri=0 notifier path via
+> trace_event_update_all) traverses class->fields protected only by
+> trace_event_sem.  These are two different locks guarding the same
+> data structure, so during cross-module loading a reader on one CPU can
+> observe partially initialized list nodes being concurrently added by a
+> writer on another CPU.
+> 
+> On arm64 with weak memory ordering, __list_add() writes to two
+> different cache lines:
+> 
+>          next->prev = new;                // (1) ordinary store
+>          new->next = next;                // (2) ordinary store — 
+> field's cache line
+>          new->prev = prev;                // (3) ordinary store
+>          WRITE_ONCE(prev->next, new);    // (4) release store — head's 
+> cache line
+> 
+> The store buffer can drain (2) and (4) independently since they target
+> different cache lines.  A remote CPU may observe (4) before (2): it
+> sees prev->next pointing to the new node, but the new node's link.next
+> is still zero (kmem_cache_alloc zero-initialized via KMEM_CACHE with
+> SLAB_PANIC).  Since offsetof(struct ftrace_event_field, link) == 0,
+> list_for_each_entry() derives field == NULL from link.next == 0 and
+> crashes at field->type (offset 0x18):
+> 
+>    Unable to handle kernel access ... at virtual address 0000000000000018
+>    pc : update_event_fields+0xf8/0x368
+>    Call trace:
+>     update_event_fields+0xf8/0x368
+>     trace_event_update_all+0x7c/0x2b4
+>     trace_module_notify+0x4c/0x1dc
+>     notifier_call_chain+0x84/0x168
+>     blocking_notifier_call_chain_robust+0x64/0xd4
+>     load_module+0x10c8/0x123c
+>     __arm64_sys_finit_module+0x230/0x31c
+> 
+> Fix by holding event_mutex in trace_event_update_all() before
+> down_write(&trace_event_sem).  This serializes the reader against
+> event_define_fields() which takes event_mutex for the entire
+> write-side critical section.  The lock ordering event_mutex ->
+> trace_event_sem is already established at three other sites
+> (trace_remove_event_call, event_trace_add_tracer,
+> event_trace_del_tracer), so this introduces no ordering conflict.
+> 
+> An alternative of placing mutex_lock inside update_event_fields() was
+> considered but rejected — it would invert the established lock
+> ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
+> 
+> Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event 
+> types as well")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael Wu <michael@allwinnertech.com>
+> ---
+>   kernel/trace/trace_events.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 956692856fa8..9632788da5af 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map 
+> **map, int len)
+>   	int last_i;
+>   	int i;
+> 
+> +	mutex_lock(&event_mutex);
+>   	down_write(&trace_event_sem);
+>   	list_for_each_entry_safe(call, p, &ftrace_events, list) {
+>   		/* events are usually grouped together with systems */
+> @@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map 
+> **map, int len)
+>   		cond_resched();
+>   	}
+>   	up_write(&trace_event_sem);
+> +	mutex_unlock(&event_mutex);
+>   }
+> 
+>   static bool event_in_systems(struct trace_event_call *call,
+> -- 
+> 2.29.0
+> 
+> On 7/30/2026 6:54 PM, Michael Wu wrote:
+> > event_define_fields() (pri=1 MODULE_STATE_COMING notifier, locked by
+> > event_mutex) populates class->fields via list_add(), while
+> > update_event_fields() (called from the pri=0 notifier path via
+> > trace_event_update_all) traverses class->fields protected only by
+> > trace_event_sem.  These are two different locks guarding the same
+> > data structure, so during cross-module loading a reader on one CPU can
+> > observe partially initialized list nodes being concurrently added by a
+> > writer on another CPU.
+> > 
+> > On arm64 with weak memory ordering, __list_add() writes to two
+> > different cache lines:
+> > 
+> >          next->prev = new;                // (1) ordinary store
+> >          new->next = next;                // (2) ordinary store — 
+> > field's cache line
+> >          new->prev = prev;                // (3) ordinary store
+> >          WRITE_ONCE(prev->next, new);    // (4) release store — head's 
+> > cache line
+> > 
+> > The store buffer can drain (2) and (4) independently since they target
+> > different cache lines.  A remote CPU may observe (4) before (2): it
+> > sees prev->next pointing to the new node, but the new node's link.next
+> > is still zero (kmem_cache_alloc zero-initialized via KMEM_CACHE with
+> > SLAB_PANIC).  Since offsetof(struct ftrace_event_field, link) == 0,
+> > list_for_each_entry() derives field == NULL from link.next == 0 and
+> > crashes at field->type (offset 0x18):
+> > 
+> >    Unable to handle kernel access ... at virtual address 0000000000000018
+> >    pc : update_event_fields+0xf8/0x368
+> >    Call trace:
+> >     update_event_fields+0xf8/0x368
+> >     trace_event_update_all+0x7c/0x2b4
+> >     trace_module_notify+0x4c/0x1dc
+> >     notifier_call_chain+0x84/0x168
+> >     blocking_notifier_call_chain_robust+0x64/0xd4
+> >     load_module+0x10c8/0x123c
+> >     __arm64_sys_finit_module+0x230/0x31c
+> > 
+> > Fix by holding event_mutex in trace_event_update_all() before
+> > down_write(&trace_event_sem).  This serializes the reader against
+> > event_define_fields() which takes event_mutex for the entire
+> > write-side critical section.  The lock ordering event_mutex ->
+> > trace_event_sem is already established at three other sites
+> > (trace_remove_event_call, event_trace_add_tracer,
+> > event_trace_del_tracer), so this introduces no ordering conflict.
+> > 
+> > An alternative of placing mutex_lock inside update_event_fields() was
+> > considered but rejected — it would invert the established lock
+> > ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
+> > 
+> > Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event 
+> > types as well")
+> > Cc: stable@vger.kernel.org
+> > ---
+> >   kernel/trace/trace_events.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> > index 956692856fa8..9632788da5af 100644
+> > --- a/kernel/trace/trace_events.c
+> > +++ b/kernel/trace/trace_events.c
+> > @@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map 
+> > **map, int len)
+> >       int last_i;
+> >       int i;
+> > 
+> > +    mutex_lock(&event_mutex);
+> >       down_write(&trace_event_sem);
+> >       list_for_each_entry_safe(call, p, &ftrace_events, list) {
+> >           /* events are usually grouped together with systems */
+> > @@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map 
+> > **map, int len)
+> >           cond_resched();
+> >       }
+> >       up_write(&trace_event_sem);
+> > +    mutex_unlock(&event_mutex);
+> >   }
+> > 
+> >   static bool event_in_systems(struct trace_event_call *call,
+> 
+> 
+> -- 
+> Regards,
+> Michael Wu
 
-diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-index 09ad57ac4b73..93011f800d0f 100644
---- a/include/trace/trace_events.h
-+++ b/include/trace/trace_events.h
-@@ -398,7 +398,7 @@ static inline notrace int trace_event_get_offsets_##call(		\
- #define _TRACE_PERF_INIT(call)
- #endif /* CONFIG_PERF_EVENTS */
- 
--#ifdef CONFIG_BPF_EVENTS
-+#if defined(CONFIG_BPF_EVENTS) && defined(CONFIG_DEBUG_INFO_BTF)
- /*
-  * Per-template BTF id list, populated at link time by resolve_btfids:
-  *   [0] FUNC   __bpf_trace_<call>     (the BPF dispatcher)
-@@ -406,8 +406,7 @@ static inline notrace int trace_event_get_offsets_##call(		\
-  * Exposed via the events/<sys>/<name>/btf_ids tracefs file.
-  */
- #define _TRACE_BTF_IDS_DECLARE(call)					\
--	extern u32 __bpf_trace_btf_ids_##call[];			\
--	BTF_ID_LIST_GLOBAL(__bpf_trace_btf_ids_##call, 2)		\
-+	BTF_ID_LIST(__bpf_trace_btf_ids_##call)				\
- 	BTF_ID(func,   __bpf_trace_##call)				\
- 	BTF_ID(struct, trace_event_raw_##call)
- 
-@@ -417,7 +416,7 @@ static inline notrace int trace_event_get_offsets_##call(		\
- #else
- #define _TRACE_BTF_IDS_DECLARE(call)
- #define _TRACE_BTF_IDS_INIT(call)
--#endif /* CONFIG_BPF_EVENTS */
-+#endif /* CONFIG_BPF_EVENTS && CONFIG_DEBUG_INFO_BTF */
- 
- #include "stages/stage6_event_callback.h"
- 
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index 48ef1a93e576..e35744049e3f 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -9,6 +9,7 @@
- #include <linux/ftrace.h>
- #include <linux/perf_event.h>
- #include <linux/xarray.h>
-+#include <linux/btf_ids.h>
- #include <asm/syscall.h>
- 
- #include "trace_output.h"
-@@ -1303,15 +1304,15 @@ struct trace_event_functions exit_syscall_print_funcs = {
- 	.trace		= print_syscall_exit,
- };
- 
--#ifdef CONFIG_BPF_EVENTS
--/*
-- * BTF id lists generated by DECLARE_EVENT_CLASS for the sys_enter and
-- * sys_exit tracepoints. The auto-generated event_class_sys_{enter,exit}
-- * is unused (per-syscall events share the handcrafted classes below),
-- * but the id lists themselves are global and reusable.
-- */
--extern u32 __bpf_trace_btf_ids_sys_enter[];
--extern u32 __bpf_trace_btf_ids_sys_exit[];
-+#if defined(CONFIG_BPF_EVENTS) && defined(CONFIG_DEBUG_INFO_BTF)
-+/* BTF id lists for the shared sys_enter/sys_exit dispatcher tracepoints. */
-+BTF_ID_LIST(syscall_enter_btf_ids)
-+BTF_ID(func,   __bpf_trace_sys_enter)
-+BTF_ID(struct, trace_event_raw_sys_enter)
-+
-+BTF_ID_LIST(syscall_exit_btf_ids)
-+BTF_ID(func,   __bpf_trace_sys_exit)
-+BTF_ID(struct, trace_event_raw_sys_exit)
- #endif
- 
- struct trace_event_class __refdata event_class_syscall_enter = {
-@@ -1320,8 +1321,8 @@ struct trace_event_class __refdata event_class_syscall_enter = {
- 	.fields_array	= syscall_enter_fields_array,
- 	.get_fields	= syscall_get_enter_fields,
- 	.raw_init	= init_syscall_trace,
--#ifdef CONFIG_BPF_EVENTS
--	.btf_ids	= __bpf_trace_btf_ids_sys_enter,
-+#if defined(CONFIG_BPF_EVENTS) && defined(CONFIG_DEBUG_INFO_BTF)
-+	.btf_ids	= syscall_enter_btf_ids,
- #endif
- };
- 
-@@ -1335,8 +1336,8 @@ struct trace_event_class __refdata event_class_syscall_exit = {
- 	},
- 	.fields		= LIST_HEAD_INIT(event_class_syscall_exit.fields),
- 	.raw_init	= init_syscall_trace,
--#ifdef CONFIG_BPF_EVENTS
--	.btf_ids	= __bpf_trace_btf_ids_sys_exit,
-+#if defined(CONFIG_BPF_EVENTS) && defined(CONFIG_DEBUG_INFO_BTF)
-+	.btf_ids	= syscall_exit_btf_ids,
- #endif
- };
- 
 
----
-base-commit: eadc0725ab8d38c05148fce49f8d5c6a0e01f062
-change-id: 20260730-b4-fix_btf_tracefs-fdafda5fdb5b
-
-Best regards,
---  
-Mykyta Yatsenko <yatsenko@meta.com>
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
