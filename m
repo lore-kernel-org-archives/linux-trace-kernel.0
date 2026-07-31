@@ -1,204 +1,189 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1934344606C;
-	Fri, 31 Jul 2026 16:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A6045D197
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 16:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785514538; cv=none; b=cAInZvTOQRGKvlvXge96Ibd1kz5p5qMLqp7vxGNS4+dFVuhUux8TdsPrLvXVPkwloI465SCiRbTFabG/MByD15lZmN6VH7R6kbqn86RbHkOLjq+OzuDhIZxdhMzct5ml+f14nE/DejR7ZZwfOd9XIfmolVXvH23nEgzl9H4jMm4=
+	t=1785515195; cv=none; b=YGkGl7p+OWA6TkfabRQdyp6UNqvoUBo2pINXFy3qkmNUnijlnH8SeAE6M24TUI+z0uRatWNVztegIwEDnlskVqX0k/uMHazeVcOF6gMO4vNJ7nBfyxGWcfpJDrsp/NYK/AajNtEEcsA+5B0wVOHH8VZjM1ghpaUKg2O0aJuPjPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785514538; c=relaxed/simple;
-	bh=EC4Qldz0I8//eu8X9qUqICG1s0ODDvI3gx2a299M5Cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aEkdGWQHZGfvC5/MQp14CHHkl3dwr/vQdTr0h3wus82Vos8c1Ai64xXvknkAdExpx06s8ZWIlEIbhr6mfmU6VJUnGP1j2qXNlSI06sWW3DJhGXpUlvrEYg9iKheqjF+oJg2hXbwMRua5mCJsrSZ6iJD9apQeWVkGJm6vJSJvBws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=D5ysb3m8; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1785515195; c=relaxed/simple;
+	bh=tmfdgsRNGmMoH53JWSNejad3XkKOScNgIyXixI/ReSE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=d9xSO2uRS+A0YH1OOjAqC8xhyHQKI7myEoVzMM7JDmf338mWF6Yd5WmUjTeu3+XKUrHFoxHGZjbEdK7qwKIq7JG11HCQIsrFrjXqjgIJXIFlyW3Dw3tIhkF/IpISsq5fvIb3J0YAwIxZaPpNWg+urKIPtAYYXD+4QTj2hnaqU7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cQq0Hcdr; arc=none smtp.client-ip=209.85.214.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="D5ysb3m8"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FC70204C;
-	Fri, 31 Jul 2026 09:15:27 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 419BA3F86F;
-	Fri, 31 Jul 2026 09:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785514531; bh=EC4Qldz0I8//eu8X9qUqICG1s0ODDvI3gx2a299M5Cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D5ysb3m8w0oV0jAuBPN2EE+x7/QiB3HmzsLsl9Of48PCq8y3Avccb+Y8RjUcWjGAw
-	 rOgeZKxweIvJrVq0r88o419dcChgko7LZGWsupv8c7SKqE0dJYqqxK/kbRxbJNaEn6
-	 KdEEXCxRq4MU5tuCGf1pHIl25TaKJf1Xf9FZlbJ8=
-Date: Fri, 31 Jul 2026 17:15:25 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Hongyan Xia <hongyan.xia@transsion.com>
-Cc: Will Deacon <will@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>, Oleg Nesterov <oleg@redhat.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jiazi Li <jiazi.li@transsion.com>, Pu Hu <hupu@transsion.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [RFC PATCH 9/9] arm64/debug: Mark debug exception helpers
- __always_inline
-Message-ID: <amzKHV5fBeRFhwlJ@J2N7QTR9R3>
-References: <cover.1785153469.git.hongyan.xia@transsion.com>
- <eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cQq0Hcdr"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d004f13426so14223995ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 09:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785515191; x=1786119991; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ICGNWuPesT/hzVX75ShCk7Kt8oQvWLyQi/M5mp0efms=;
+        b=cQq0Hcdr0r3PJQFHe2++OWFB2+NTTTKzwLXHp9sbf5CcOqxPuvOYOPEo4Wk79d0Euu
+         En+Nz+SPNupRZZN+Bjxfw1HzaZPWxH6hSR+eNa1auWZq7vYaa2V0jua9Rmp8sq+c3Fjl
+         ylycm5nS1nEyd/xdhWdVk5LWtelb/hjCVHT9Rr304ltdSLPRIJey1PW7OphyVGN9GZr9
+         nNMpL0NeJtgBz2p3vi123hL5sjSSBeNkpbRI5yqm2IHfQPwo9KpfC9vTllKXY3RJpPBS
+         nsZNJW+qtQBGpMrEG+QlUFREEbDvaRQGAJ9nfJRiU32eTXL2wC6u8kD2FuOToSEMR+2H
+         Gs/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785515191; x=1786119991;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ICGNWuPesT/hzVX75ShCk7Kt8oQvWLyQi/M5mp0efms=;
+        b=KlBs5BxXNZFSuNDzUdKnxGfkFRjdjzWedW7MgHR6AHLRJc9/lwuRb80r4QdZio9F5d
+         2Jzl20Zbd8duNzfP3U1+vtM+eHYj/A1kRVIFHUZvWJAMJ2Vtfiv+eLJu5ZgXtJ5NgIXq
+         1m0zdEAqPPeCDg2Qppj2ZXSWoH638emdYj3eEecWP+c8/UXNVEu8nGAxNYE0MmGqKcU5
+         tNaI/sP3nBCVaiMMaFRutxq2aWAkxJ9Jc9Sx1+k6NyXbVLs0cKpHVRpoXIWhRV2MP3nM
+         xVkjjuMtisOVOL2BeMlWJcTZHbWrP38lLR7r7dy4yyr1G1LH9hmvB/koOgC2mB1VdDFr
+         wvlg==
+X-Forwarded-Encrypted: i=1; AHgh+RoIH8ntf/QZSOVupZVNJtKBxooqz9vT2XDZRXuu0i8emXdijpb+FMO5Oo4j2yHrH08jRC9d9jgcVeuzYVJ0svD+Hd4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwuXT6eh+xj12cAlsGwMlTRgl4aeB7W/sgoVbAhiQAkbaRTepX
+	yMy+oSZzHl4QsOw1gBBdE1CmUnUZpOzNNcdbnDJUw3JGJg10o84z/1mvz9ydQ5nuKfXFMx/FJlb
+	MZym6yg==
+X-Received: from plhi11.prod.google.com ([2002:a17:903:2ecb:b0:2cc:5fd1:2d93])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3b8e:b0:2ce:b096:e517
+ with SMTP id d9443c01a7336-2d0521cda4dmr6567475ad.5.1785515190881; Fri, 31
+ Jul 2026 09:26:30 -0700 (PDT)
+Date: Fri, 31 Jul 2026 09:26:30 -0700
+In-Reply-To: <dd4201f2-3660-46ad-958f-c70feb1ab1c3@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb38b41ae1b3216ec69fb45555ef5df57efd7b8d.1785153469.git.hongyan.xia@transsion.com>
+Mime-Version: 1.0
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-7-35f9aec2aed2@google.com>
+ <60d19013-d6d7-4eec-827a-2622e22cec98@intel.com> <CAEvNRgF0SxmoMtqq69tUih54A9K7j_wcMFRrq=r9w6TnAGAUQQ@mail.gmail.com>
+ <dd4201f2-3660-46ad-958f-c70feb1ab1c3@intel.com>
+Message-ID: <amzMtg4K6qEEsudx@google.com>
+Subject: Re: [PATCH v9 07/41] KVM: guest_memfd: Wire up core private/shared
+ attribute interfaces
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jul 27, 2026 at 12:25:48PM +0000, Hongyan Xia wrote:
-> From: Hongyan Xia <hongyan.xia@transsion.com>
+On Fri, Jul 31, 2026, Xiaoyao Li wrote:
+> On 7/31/2026 4:42 AM, Ackerley Tng wrote:
+> > Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> > 
+> > > On 7/29/2026 8:35 AM, Ackerley Tng via B4 Relay wrote:
+> > > > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> > > > index 33c9830190e2e..89cf922232920 100644
+> > > > --- a/virt/kvm/guest_memfd.c
+> > > > +++ b/virt/kvm/guest_memfd.c
+> > > > @@ -893,6 +893,27 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+> > > >    EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_get_pfn);
+> > > > 
+> > > >    #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_POPULATE
+> > > > +static bool kvm_range_is_private(struct file *file, pgoff_t index,
+> > > > +				 size_t nr_pages, struct kvm *kvm, gfn_t gfn)
+> > > > +{
+> > > > +	struct inode *inode = file_inode(file);
+> > > > +	pgoff_t last = index + nr_pages - 1;
+> > > > +	struct maple_tree *mt;
+> > > > +	void *entry;
+> > > > +
+> > > > +	if (!gmem_in_place_conversion)
+> > > > +		return kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + nr_pages,
+> > > > +							  KVM_MEMORY_ATTRIBUTE_PRIVATE,
+> > > > +							  KVM_MEMORY_ATTRIBUTE_PRIVATE);
+> > > > +
+> > > > +	mt = &GMEM_I(inode)->attributes;
+> > > > +	mt_for_each(mt, entry, index, last) {
+> > > > +		if (kvm_gmem_interpret_entry(inode, entry) !=
+> > > > +		    KVM_MEMORY_ATTRIBUTE_PRIVATE)
+> > > > +			return false;
+> > > > +	}
+> > > > +	return true;
+> > > > +}
+> > > > 
+> > > >    static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
+> > > >    				struct file *file, gfn_t gfn, struct page *src_page,
+> > > > @@ -913,9 +934,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
+> > > > 
+> > > >    	folio_unlock(folio);
+> > > > 
+> > > > -	if (!kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + 1,
+> > > > -						KVM_MEMORY_ATTRIBUTE_PRIVATE,
+> > > > -						KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
+> > > > +	if (!kvm_range_is_private(file, index, 1, kvm, gfn)) {
+> > > 
+> > > It's checking if a single gfn is private.
+> > > 
+> > 
+> > But with huge page support we'd need to check a range of gfns... I guess
+> > there's the argument of not keeping complexity for the future, but in
+> > this case it's undoing functionality for this series and probably adding
+> > it back later.
 > 
-> Static inline should be enough to actually inline functions for most
-> compilers, but my Clang-19 somehow thinks it's better to outline them.
-> These tiny helpers then live in normal .text sections instead of
-> .noinstr sections, violating noinstr.
-> 
-> Mark them __always_inline so the compiler can never outline them.
-> 
-> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> ---
->  arch/arm64/include/asm/esr.h       | 2 +-
->  arch/arm64/include/asm/percpu.h    | 2 +-
->  arch/arm64/include/asm/preempt.h   | 4 ++--
->  arch/arm64/include/asm/ptrace.h    | 4 ++--
->  arch/arm64/kernel/debug-monitors.c | 2 +-
->  include/linux/kprobes.h            | 8 ++++----
->  6 files changed, 11 insertions(+), 11 deletions(-)
+> let's leave the work for huge page support in the future.
 
-I think this should be split into separate patches. In particular, the
-preempt count helpers are used in mane other places than debug
-exceptions, and if those are used in noinstr code today, we need to
-backport those as fixes.
+It's not just for hugepage support, the core functionality is used in this series
+by __kvm_gmem_set_attributes() in:
 
-Mark.
+  KVM: guest_memfd: Return early if range already has requested attributes
 
-> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-> index f816f5d77f1a..a75bfdb7e5fe 100644
-> --- a/arch/arm64/include/asm/esr.h
-> +++ b/arch/arm64/include/asm/esr.h
-> @@ -437,7 +437,7 @@
->  #ifndef __ASSEMBLER__
->  #include <asm/types.h>
->  
-> -static inline unsigned long esr_brk_comment(unsigned long esr)
-> +static __always_inline unsigned long esr_brk_comment(unsigned long esr)
->  {
->  	return esr & ESR_ELx_BRK64_ISS_COMMENT_MASK;
->  }
-> diff --git a/arch/arm64/include/asm/percpu.h b/arch/arm64/include/asm/percpu.h
-> index b57b2bb00967..d4cae47fde8c 100644
-> --- a/arch/arm64/include/asm/percpu.h
-> +++ b/arch/arm64/include/asm/percpu.h
-> @@ -29,7 +29,7 @@ static inline unsigned long __hyp_my_cpu_offset(void)
->  	return read_sysreg(tpidr_el2);
->  }
->  
-> -static inline unsigned long __kern_my_cpu_offset(void)
-> +static __always_inline unsigned long __kern_my_cpu_offset(void)
->  {
->  	unsigned long off;
->  
-> diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
-> index 932ea4b62042..326f221c3f56 100644
-> --- a/arch/arm64/include/asm/preempt.h
-> +++ b/arch/arm64/include/asm/preempt.h
-> @@ -41,14 +41,14 @@ static inline bool test_preempt_need_resched(void)
->  	return !current_thread_info()->preempt.need_resched;
->  }
->  
-> -static inline void __preempt_count_add(int val)
-> +static __always_inline void __preempt_count_add(int val)
->  {
->  	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
->  	pc += val;
->  	WRITE_ONCE(current_thread_info()->preempt.count, pc);
->  }
->  
-> -static inline void __preempt_count_sub(int val)
-> +static __always_inline void __preempt_count_sub(int val)
->  {
->  	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
->  	pc -= val;
-> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-> index 39582511ad72..460726224299 100644
-> --- a/arch/arm64/include/asm/ptrace.h
-> +++ b/arch/arm64/include/asm/ptrace.h
-> @@ -336,11 +336,11 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
->  struct task_struct;
->  int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task);
->  
-> -static inline unsigned long instruction_pointer(struct pt_regs *regs)
-> +static __always_inline unsigned long instruction_pointer(struct pt_regs *regs)
->  {
->  	return regs->pc;
->  }
-> -static inline void instruction_pointer_set(struct pt_regs *regs,
-> +static __always_inline void instruction_pointer_set(struct pt_regs *regs,
->  		unsigned long val)
->  {
->  	regs->pc = val;
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> index a970ab6327cd..66cb8151f5df 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -146,7 +146,7 @@ postcore_initcall(debug_monitors_init);
->  /*
->   * Single step API and exception handling.
->   */
-> -static void set_user_regs_spsr_ss(struct user_pt_regs *regs)
-> +static __always_inline void set_user_regs_spsr_ss(struct user_pt_regs *regs)
->  {
->  	regs->pstate |= DBG_SPSR_SS;
->  }
-> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-> index 8c4f3bb24429..5880445ed0f0 100644
-> --- a/include/linux/kprobes.h
-> +++ b/include/linux/kprobes.h
-> @@ -384,17 +384,17 @@ static inline void kprobe_ftrace_kill(void) {}
->  struct kprobe *get_kprobe(void *addr);
->  
->  /* kprobe_running() will just return the current_kprobe on this CPU */
-> -static inline struct kprobe *kprobe_running(void)
-> +static __always_inline struct kprobe *kprobe_running(void)
->  {
->  	return __this_cpu_read(current_kprobe);
->  }
->  
-> -static inline void reset_current_kprobe(void)
-> +static __always_inline void reset_current_kprobe(void)
->  {
->  	__this_cpu_write(current_kprobe, NULL);
->  }
->  
-> -static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
-> +static __always_inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
->  {
->  	return this_cpu_ptr(&kprobe_ctlblk);
->  }
-> @@ -449,7 +449,7 @@ static inline struct kprobe *get_kprobe(void *addr)
->  {
->  	return NULL;
->  }
-> -static inline struct kprobe *kprobe_running(void)
-> +static __always_inline struct kprobe *kprobe_running(void)
->  {
->  	return NULL;
->  }
-> -- 
-> 2.47.3
+> > > We can just use kvm_mem_is_private()? And it seems can be a separate patch.
+> > > 
+> > 
+> > Do you mean that this refactoring could be a separate patch? I could
+> > refactor out kvm_range_is_private() in a separate patch, then put in the
+> > mt_for_each() check in this patch together as part of all the rest of
+> > the "wiring".
+> > 
+> > I considered that but it seemed like the refactoring was too small to
+> > separate out into another patch when the mt_for_each() part is going to
+> > be in this patch anyway.
+> > 
+> > Or, I could add an earlier patch to first replace the call to
+> > kvm_range_has_vm_memory_attributes() with a call to check just 1 gfn,
+> > then this wiring patch would be simpler.
+> > 
 > 
+> This is what I meant. An earlier patch to just replace
+> kvm_range_has_vm_memory_attributes() with kvm_mem_is_private(). Then we can
+> drop this 'big' diff in this patch.
+> 
+> If kvm_range_is_private() is useful/required by huge page support, then let
+> the huge page series to introduce it. It has nothing to do with the in-place
+> conversion series.
+
+If it weren't for the fact that the range-based search is used later in this
+series, I would 100% agree with Xiaoyao.  But since the core logic is used and
+needed elsewhere, and because kvm_range_has_vm_memory_attributes() takes a range,
+my vote is to provide the plumbing now, even though a small portion of it isn't
+strictly necessary.
