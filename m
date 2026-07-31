@@ -1,235 +1,178 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFCE2D661C;
-	Fri, 31 Jul 2026 01:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EAF314A98
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 02:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785460516; cv=none; b=b+4VM+KDwpev2Xl+JJXI7HGK2irRafyReUEC8XvIo5Kv9bsOEvH/ZXrsk4wqPzclaog+38fLk6zIYjGq3OyRTgHkktTvD1prvdAvtfn1y9k/fmRR+OfTSsaoTS9JyMmsxB16RDh7770GrFhRMH53LgoVeayvBSafWjNa/cu3YhA=
+	t=1785464533; cv=none; b=cSsXysP97ItbjP7Uql/+JFr6bRxRGMLTJuE7LoB9Hr9tmakh0tjgek+s2eTVUkCFyV5gMkTlOdxqwfmhy71CkFJvS1eAMh4zM4MAXZ1zs6I2BVcSq7zUuibpmY3pz4TROXcdXavfx0mK01Tglf6GyD+o2D4VoB3SyHrcwZOqqFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785460516; c=relaxed/simple;
-	bh=TmAXvMlwEgoeOfk6Jm5v7mGFMAITvIAxdqX7eJyOnqs=;
+	s=arc-20240116; t=1785464533; c=relaxed/simple;
+	bh=3ds8w1yZdDY6SnmL5w25+/boYExqVHlnd/fcLD3jbuc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iCFklBsns+GaVEDdPFprQpNei8OdFUe993ZgixuKoN3O+1eMiLU0+0bQb3FqgV7Rzg4qXC3igcvHgyzYIRmEOtImZHWqVHrj77SCS197xXRZ4+veZUaTVqJEiVNjxbSWHJp26FKKrfQQ2kgHZcCVv5zroDuW1ywW+H92hhk2q6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hB7Q45DR4zYQtrg;
-	Fri, 31 Jul 2026 09:14:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 5E2C34058D;
-	Fri, 31 Jul 2026 09:15:04 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCHwUAV92tqNIA4Ag--.42847S2;
-	Fri, 31 Jul 2026 09:15:02 +0800 (CST)
-Message-ID: <88a7e239-7136-4880-a980-e9c12422312e@huaweicloud.com>
-Date: Fri, 31 Jul 2026 09:15:01 +0800
+	 In-Reply-To:Content-Type; b=rdTFYpTe0vYUPA738sYZigfF+Uj7l0HLrHm2GYPfwU6bex2DTNdWCkQZ4zjWNjn2SanuVRPz0urRIkAF5pKOuKzAFylNlZCuuJvLj5hSJDY+J9DDFGIZQuipN0OWFx9t1zQxVfu+RANlbDrViDvASwyaO/udC1AwegKfXGhhQFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l1ZbtrjK; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l1ZbtrjK"
+Message-ID: <93b6496e-8f52-4983-95e1-01db68609bc0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785464519;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s6dMstA3s1q3jz7gMCf0YyeW1NWmEDHVWbTYZcaJQdY=;
+	b=l1ZbtrjKAzRkvs24cBTwpKonWTyd14o0F7EvbfY9RMtZNkyM6mNCdhteXhYFZn5SoA5r+N
+	FHyWJR7YEFRe3GkWTgUCgWID775ogz3/PPAm7Uv9qslKbxqVY2lO/PBxHajRosk6aQVe+m
+	lSgONwJ/8oDN3jEppAMDdVl1XfKJ3Lc=
+Date: Fri, 31 Jul 2026 10:21:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/snapshot: Avoid CPU buffer swap during
- reserve/commit
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260730011912.2325121-1-wutengda@huaweicloud.com>
- <20260729220448.13d19821@robin>
- <4812557d-3718-4bf5-8be1-c12d6da614ad@huaweicloud.com>
- <20260730071132.623c425c@gandalf.local.home>
+Subject: Re: [PATCH 1/2] arm64: ftrace: enable single ftrace_ops for direct
+ calls
+To: Ihor Solodrai <ihor.solodrai@linux.dev>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>, Shuah Khan <shuah@kernel.org>,
+ "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
+Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20260727142844.21212-1-leon.hwang@linux.dev>
+ <20260727142844.21212-2-leon.hwang@linux.dev>
+ <77edc25d-a521-4f65-84ed-dbb016593902@linux.dev>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260730071132.623c425c@gandalf.local.home>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <77edc25d-a521-4f65-84ed-dbb016593902@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgCHwUAV92tqNIA4Ag--.42847S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AF48XFWUWrykKrWUWFWDXFb_yoW3urWxpr
-	W5KF4Ykw4kXrWxJ34Ivr4UAFyUtrsrAF47Wr1xGr9Yya1UWrn7W347Kw43Cry7Crsav347
-	tF4jg3s7K3Wjkw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
-	x4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6x
-	CaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-Migadu-Flow: FLOW_OUT
+
+On 31/7/26 07:03, Ihor Solodrai wrote:
+> On 7/27/26 7:28 AM, Leon Hwang wrote:
+>> The BPF tracing multi link updates several direct-call sites through one
+>> ftrace_ops. Its implementation is therefore gated by
+>> HAVE_SINGLE_FTRACE_DIRECT_OPS in addition to
+>> DYNAMIC_FTRACE_WITH_DIRECT_CALLS.
+>>
+>> Select HAVE_SINGLE_FTRACE_DIRECT_OPS whenever arm64 enables dynamic ftrace
+>> direct calls. This enables BPF tracing multi links on arm64. Also
+>> generalize the unreachable-trampoline comment because the single-ops path
+>> does not use ops->direct_call.
+> 
+> Hi Leon,
+> 
+> I don't think this change can land as is yet. The series doesn't even
+> apply cleanly to bpf-next, but that's minor.
+> 
+> More importantly, it depends on Jose's series [1], which is not in the
+> mainline yet. And there Mark has raised performance concerns [2] and
+> the discussion still seems to be open.
+> 
+> [1] https://lore.kernel.org/all/20260609-arm64-ftrace-direct-calls-v1-0-4a46f266697f@linux.dev/
+> [2] https://lore.kernel.org/all/amjnf5gz0xP5PTSB@J2N7QTR9R3/
+> 
+>>
+>> Assisted-by: Codex:gpt-5.6-sol
+>> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+>> ---
+>>  arch/arm64/Kconfig         | 2 ++
+>>  arch/arm64/kernel/ftrace.c | 3 +--
+>>  2 files changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 0de419ed780f..c98dca76859b 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -188,6 +188,8 @@ config ARM64
+>>  		    CLANG_SUPPORTS_DYNAMIC_FTRACE_WITH_ARGS)
+>>  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS \
+>>  		if DYNAMIC_FTRACE_WITH_ARGS
+>> +	select HAVE_SINGLE_FTRACE_DIRECT_OPS \
+>> +		if DYNAMIC_FTRACE_WITH_DIRECT_CALLS\
+> 
+> The select is only conditional on DYNAMIC_FTRACE_WITH_DIRECT_CALLS, so
+> it can be set along with HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS. And AFAIU
+> this would make the fast path effectively dead: every BPF direct call
+> routed through ftrace_caller now goes through the slow path.
+> 
+> As Mark noted in the other thread, on arm64 trampolines come from
+> EXECMEM_BPF, so they always land out of BL range (chance of landing in
+> range is 256M/terabytes).
+> 
+> I vibe-slop-coded a benchmark and ran it on a Neoverse V2 machine, and
+> toggling your config change seems to be causing a 1.3x regression in
+> the tracing overhead:
+> 
+>   do-nothing fentry (r0=0; exit) on __arm64_sys_getpid, 20 M calls, min-of-N, several boots. Results:
+> 
+>               untraced (base)   traced        overhead
+>   Kernel A    ~128 ns/call      ~145.5 ns     ~17.6 ns   (fast path: br x17)
+>   Kernel B    ~127 ns/call      ~150.4 ns     ~23.4 ns   (slow path: save regs + call_direct_funcs + hash)
 
 
+Thanks for your testing.
 
-On 2026/7/30 19:11, Steven Rostedt wrote:
-> On Thu, 30 Jul 2026 12:10:18 +0800
-> Tengda Wu <wutengda@huaweicloud.com> wrote:
 > 
->> On 2026/7/30 10:04, Steven Rostedt wrote:
->>> On Thu, 30 Jul 2026 01:19:12 +0000
->>> Tengda Wu <wutengda@huaweicloud.com> wrote:
->>>   
->>>> Commit 3163f635b20e ("tracing: Fix race issue between cpu buffer write
->>>> and swap") fixed most of the race conditions between snapshot's
->>>> ring_buffer_swap_cpu and ring_buffer_lock_{reserve, commit}. It achieved
->>>> this by replacing the asynchronous swap with smp_call_function_single to
->>>> trigger an interrupt on the target CPU to handle the swap.  
->>>
->>> I'm curious. How did you discover this race?
->>>   
->>
->> Just run the POC provided in commit 3163f635b20e [1] day after day, and
->> the issue occurs. The call trace points out that the problem happens when
->> tracing the function:
->>
->> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3163f635b20e9e1fb4659e74f47918c9dddfe64e
->>
->> [   55.864661] ------------[ cut here ]------------
->> [   55.865536] WARNING: CPU: 0 PID: 1451 at kernel/trace/ring_buffer.c:3096 rb_commit.constprop.0+0x367/0x820
->> [   55.866993] Modules linked in: binfmt_misc rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd auth_rpcgss nfs_acl lockd grace sunrpc
->> [   55.869583] CPU: 0 PID: 1451 Comm: DTS202602110403 Not tainted 5.10.0+ #1
->> [   55.871729] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->> [   55.874671] RIP: 0010:rb_commit.constprop.0+0x367/0x820
->> [   55.871729] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/0
->> 1/2014
->> [   55.874671] RIP: 0010:rb_commit.constprop.0+0x367/0x820
->> [   55.875637] Code: 8d 7f 10 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 af 03 00 00 49 8b 5f 10 be 04 00 00 00 48 8d 7b 08 e8 dd a0 41 00 f0 ff 43 08 <0f> 0b 48 83 c4 60 5b 5d 41 5c 41 5d 41 5e 41 5f e9 54 58 2e 02 be
->> [   55.878367] RSP: 0018:ffffc90000b57a30 EFLAGS: 00010202
->> [   55.879227] RAX: 0000000000000001 RBX: ffff88800105ec00 RCX: ffffffff9e11db33
->> [   55.880366] RDX: ffffed100020bd82 RSI: 0000000000000004 RDI: ffff88800105ec08
->> [   55.881470] RBP: ffff88800105ec00 R08: 0000000000000001 R09: ffff88800105ec0b
->> [   55.882563] R10: ffffed100020bd81 R11: 0000000000000001 R12: ffff8880010520a0
->> [   55.883681] R13: ffff88800105ec40 R14: 0000000000000000 R15: ffff888001052000
->> [   55.884761] FS:  00007f6be3c5d740(0000) GS:ffff888065200000(0000) knlGS:0000000000000000
->> [   55.885980] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   55.886876] CR2: 000055d8257879e0 CR3: 0000000005c78003 CR4: 0000000000770ef0
->> [   55.887994] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [   55.889113] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [   55.890232] PKRU: 55555554
->> [   55.890740] Call Trace:
->> [   55.891221]  ? s_show+0x2f0/0x2f0
->> [   55.891815]  ? kallsyms_lookup_size_offset+0x130/0x130
->> [   55.892684]  ring_buffer_unlock_commit+0x68/0x510
->> [   55.893490]  ? kallsyms_lookup_size_offset+0x130/0x130
->> [   55.894341]  ? seq_print_sym+0x13d/0x1a0
->> [   55.895024]  function_trace_call+0x266/0x370
->> [   55.895754]  ? ring_buffer_iter_advance+0x2f/0x80
->> [   55.896584]  0xffffffffc037406a
->> [   55.897180]  ? ring_buffer_iter_advance+0x2f/0x80
->> [   55.897966]  ? kallsyms_lookup+0x5/0x260
->> [   55.898640]  ? _raw_write_unlock_irqrestore+0x60/0x60
->> [   55.899481]  kallsyms_lookup+0x5/0x260
->>
->> The vmcore indicates that the buffer in CPU 0 was swapped:
->>
->> * array_buffer->buffers:
->>
->>   cpu 0, ffff888001052000, committing = 0, entries = 10010687, commits = 10010686
->>   cpu 1, ffff888001fa4400, committing = 0, entries = 18780536, commits = 18780536
->>   cpu 2, ffff888100110400, committing = 0, entries = 20905896, commits = 20905896
->>   cpu 3, ffff888100111c00, committing = 0, entries = 20825484, commits = 20825484
->>
->> * max_buffer->buffers:
->>
->>   cpu 0, ffff888001052400, committing = 1, entries = 9768877, commits = 9768878
->>   cpu 1, ffff888001fa6400, committing = 0, entries = 0, commits = 0
->>   cpu 2, ffff888100112400, committing = 0, entries = 0, commits = 0
->>   cpu 3, ffff888100112800, committing = 0, entries = 0, commits = 0
->>
->> We first checked if the problem could occur before rb_start_commit, but we
->> just couldn't get past the 'READ_ONCE(cpu_buffer->buffer) != buffer' check.
->> So we turned our attention to what happens after rb_start_commit, to see
->> if the committing counter might drop to 0 and then get incremented again.
->> In the end, we found that only rb_move_tail could cause this.
->>
->> Honestly, it was a pretty tough journey.
-> 
-> I bet. Thanks for doing that work.
-> 
->> The work_on_cpu approach does not fix the issue inside the ring buffer
->> itself. However, as far as the current codebase is concerned, the
->> snapshot operation is the only path that triggers a CPU buffer swap.
->> This fix has minimal impact and does not expose users to the internal
->> intermediate state of the ring buffer when they echo to snapshot, thus
->> avoiding the confusion of hitting an -EBUSY error.
-> 
-> I admit it is a way to avoid the -EBUSY, which is a separate issue and one
-> that always existed. Your patch can be added to solve that for this
-> specific use case. But then it would not be a fix, just an enhancement.
-> 
->>
->> If we were to fix this from within the ring buffer, we might need to
->> introduce a new flag (e.g., a local_t variable similar to committing)
->> to detect such race windows. Based on the current analysis, this race
->> only occurs during a very brief window in rb_move_tail. Adding a new
->> flag for this seems unnecessary.
->>
->> Alternatively, we could simply remove both rb_end_commit(cpu_buffer)
->> and local_inc(&cpu_buffer->committing) inside rb_move_tail, thereby
->> eliminating the 1-0-1 transition of committing and preventing such a
->> race window from existing in the first place. In principle, committing
->> should remain non-zero from the moment rb_start_commit is called until
->> the commit is finished.
-> 
-> Actually there already exists something that can be used:
-> 
->   cpu_buffer->current_context
-> 
-> It is set to prevent recursion in the ring buffer when the commit starts,
-> and is cleared after the commit is finished. If it is anything other than
-> 0, it means a commit is in progress and the swap should return -EBUSY.
-> 
-> This is not affected by the move to next page.
-> 
-> Something like this should fix it:
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 804ccae694d2..ce195bc4136a 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -6850,7 +6850,7 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer_a;
->  	struct ring_buffer_per_cpu *cpu_buffer_b;
-> -	int ret = -EINVAL;
-> +	int ret = -EBUSY;
->  
->  	if (!cpumask_test_cpu(cpu, buffer_a->cpumask) ||
->  	    !cpumask_test_cpu(cpu, buffer_b->cpumask))
-> @@ -6891,10 +6891,10 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
->  	atomic_inc(&cpu_buffer_a->record_disabled);
->  	atomic_inc(&cpu_buffer_b->record_disabled);
->  
-> -	ret = -EBUSY;
-> -	if (local_read(&cpu_buffer_a->committing))
-> +	/* Do not swap if either buffer is in the process of writing */
-> +	if (cpu_buffer_a->current_context)
->  		goto out_dec;
-> -	if (local_read(&cpu_buffer_b->committing))
-> +	if (cpu_buffer_b->current_context)
->  		goto out_dec;
->  
->  	/*
-> 
-> Care to send both patches? One with the above to fix the problem, and this
-> current patch to make the swap not return -EBUSY. The first would go to
-> stable, the latter would go in the next merge window.
-> 
-> -- Steve
+> This confirms Jiri's suspicion.
 
-Certainly, I'd be happy to send both patches.
+True.
 
-Thank you very much for the detailed analysis and for providing a concrete fix.
-I really appreciate the guidance.
+> 
+> However my understanding is the regression should mostly disappear in
+> case some version of in-range trampoline allocation on arm64 lands.
+> 
+> So, I think the landing sequence should be something like follows:
+>   * in-range BPF-trampoline allocation that Jose proposed [3]
+>   * then HAVE_SINGLE_FTRACE_DIRECT_OPS selection
+> 
+> After all of that reaches mainline, then a selftest patch can go
+> through the bpf-next.
 
-I'll make sure to include proper commit messages and tags. I'll send them out shortly.
+Sounds reasonable.
+
+This series is based on Jose's series and is intended for the arm64
+tree, rather than bpf-next. Like Jose's series, this series aims to
+enable BPF tracing_multi link on arm64. And yes, with in-range
+BPF-trampoline allocation, the regression should mostly disappear.
+
+I'll follow the sequence and repost the patches afterward.
 
 Thanks,
-Tengda
+Leon
+
+> 
+> [3] https://lore.kernel.org/all/amn7cBQ-cqs2XlKV@linux.dev/
+> 
+>>  	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
+>>  		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI && \
+>>  		    (CC_IS_CLANG || !CC_OPTIMIZE_FOR_SIZE))
+>> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+>> index e1a3c0b3a051..56ba72a87dfa 100644
+>> --- a/arch/arm64/kernel/ftrace.c
+>> +++ b/arch/arm64/kernel/ftrace.c
+>> @@ -301,8 +301,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
+>>  
+>>  	/*
+>>  	 * If a custom trampoline is unreachable, rely on the ftrace_caller
+>> -	 * trampoline which knows how to indirectly reach that trampoline
+>> -	 * through ops->direct_call.
+>> +	 * trampoline which knows how to indirectly reach that trampoline.
+>>  	 */
+>>  	if (*addr != FTRACE_ADDR && !reachable_by_bl(*addr, pc))
+>>  		*addr = FTRACE_ADDR;
+> 
 
