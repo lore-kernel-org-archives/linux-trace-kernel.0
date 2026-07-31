@@ -1,118 +1,121 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out28-145.mail.aliyun.com (out28-145.mail.aliyun.com [115.124.28.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3457D3242BD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 02:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD6735202D;
+	Fri, 31 Jul 2026 03:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785465087; cv=none; b=Rw+PtibmzKfAWjUhNQrjjA3HGFHB/xVhWwFsdwwT4HP+N6UZInry4LFgvX036kRlUOEi4gh6BiRKZdWc0LPumNWDBenj2zmJ8eK/rZpiIMbchgLHgIKEXQQtiTPwaqOHYV2WMakRJhKa5GW9tuj42ZtjxqvjmbXYMhWEJ7xiAuY=
+	t=1785469280; cv=none; b=qVgVjaQEdh+gCj39xRD0MHJQc21uyGnRZ1F2niQByaIRC3gViHmRENMIb0CmA3fbDw3763QIFstJH1dJ42PFjlsc2Q7Ycc075vPf+JBY2zp++EHHbqI6rFGb3U0iVNqP2dwnnbwjC3GkmK20avmtzN5yBcSOpFxotTmF2qvTXh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785465087; c=relaxed/simple;
-	bh=0DgxL8B455K7k+RhedyR+qazvps3OmmxNNo2GvFJZrc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JSnwRSWM4AgWxkva1D5k2OA3ETUeopQJgnXJ9898fm5RYohG5W2hVGYZDh3lOrguz/5R52E+hXe0y3TL89eHcTyd9PTuSeF6HxX3h+mBJSdt14jUO47Vwe5vrqKqEgl/hWtqDUq5HtEZJJ94EXBf1Zozyz7bx+Us2KJ7hzpy5fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YpGoNeNN; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YpGoNeNN"
-Message-ID: <3f8e64b4-e60a-4eba-afb6-5af668ac1f85@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785465071;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=go9e1FTWLKxTTOfTi113qwmgUMtPejwq61+ADMUh6Dc=;
-	b=YpGoNeNNwTqx9ibJwMxEeOMg0AK9brZQjsfrgeSAz/B/G1V0kjp7YOAKgCHRHgVPRYkT5w
-	tVsin+P46wlmcpajdK6uJO1VSehLEpOLnGg+ktVcOKNXSVWF46rE68ku1et81odaYsHCeJ
-	o0D7L0eOMgHQ8go3cYwoCLXYxleh/lU=
-Date: Fri, 31 Jul 2026 10:30:37 +0800
+	s=arc-20240116; t=1785469280; c=relaxed/simple;
+	bh=GMm38GKEjnO5dC72lOIrJCG32s63nxBjJVzXHk8POmA=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=CZBzE5uMJAI5Dyw3zVc6YYzYmcKwsbdD76Btjw01wqGL9HlhwNf7FbliK0bUJna3VudPogjr5iSR/Om43dV9xDEFqE4FRPsy1pNoFfl/e40KtYjxR9px3GF/9vVtWOPP+YDIkY0ma0AY/RO/l9tWvgAIIivm3BMeNnrKNOJnwfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07486481|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.112722-0.162999-0.724279;FP=13175772313018746238|11|2|10|0|-1|-1|-1;HT=maildocker-contentspam033032062159;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.iZvVUEO_1785469262;
+Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.iZvVUEO_1785469262 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 31 Jul 2026 11:41:03 +0800
+Message-ID: <95efe185-35dd-18be-f08c-af4d0965b013@allwinnertech.com>
+Date: Fri, 31 Jul 2026 11:41:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] arm64: ftrace: enable single ftrace_ops for direct
- calls
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- Emil Tsalapatis <emil@etsalapatis.com>, Shuah Khan <shuah@kernel.org>,
- bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20260727142844.21212-1-leon.hwang@linux.dev>
- <20260727142844.21212-2-leon.hwang@linux.dev> <amnqXeC6D4mjcAe_@krava>
- <d745ca80-6516-4c61-8107-88c6a2d9cea4@linux.dev> <amsuU7eXuoziObdh@krava>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <amsuU7eXuoziObdh@krava>
-Content-Type: text/plain; charset=UTF-8
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+From: Michael Wu <michael@allwinnertech.com>
+Subject: [PATCH v3] tracing: Fix race between update_event_fields and
+ event_define_fields
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 30/7/26 18:58, Jiri Olsa wrote:
-> On Thu, Jul 30, 2026 at 11:05:42AM +0800, Leon Hwang wrote:
->> On 29/7/26 19:56, Jiri Olsa wrote:
->>> On Mon, Jul 27, 2026 at 10:28:43PM +0800, Leon Hwang wrote:
->>>> The BPF tracing multi link updates several direct-call sites through one
->>>> ftrace_ops. Its implementation is therefore gated by
->>>> HAVE_SINGLE_FTRACE_DIRECT_OPS in addition to
->>>> DYNAMIC_FTRACE_WITH_DIRECT_CALLS.
->>>>
->>>> Select HAVE_SINGLE_FTRACE_DIRECT_OPS whenever arm64 enables dynamic ftrace
->>>> direct calls. This enables BPF tracing multi links on arm64. Also
->>>> generalize the unreachable-trampoline comment because the single-ops path
->>>> does not use ops->direct_call.
->>>
->>> hi,
->>> iirc arm needs ops->direct_call for trampolines to work properly,
->>> that's the reason we enabled single ftrace_ops on x86 only:
->>>
->>>   424f6a361096 bpf,x86: Use single ftrace_ops for direct calls
->>>
->>> I don't understand the arm usage of op->direct_call, but it looks like
->>> (codex thinks) that the fast path won't always work without op->direct_call
->>> being set
->>
->>
->> In theory, op->direct_call is the fallback for the case:
->> HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS=y, out-of-range target, and non-BPF
->> direct ops. This is what Codex thinks about.
->>
->> However, after searching the call sites of
->> register_ftrace_direct()/__modify_ftrace_direct() in kernel, which would
->> set ops->direct_call, the actual callers are in bpf/trampoline.c, which
->> have been gated with HAVE_SINGLE_FTRACE_DIRECT_OPS. That said, for
->> normal usage of HAVE_SINGLE_FTRACE_DIRECT_OPS=y, op->direct_call is unused.
->>
->> If someone uses register_ftrace_direct() or
->> modify_ftrace_direct/_nolock() outside BPF in the future,
->> op->direct_call will be used.
-> 
-> so any 2nd user on the same function triggers the slow path,
-> and that's fine, the single_ops handles slow path correctly
-> 
-> but IIUC the out-of-range target will now always go through slow path,
-> which in current code it doesn't, right?
-> 
+event_define_fields() (pri=1 MODULE_STATE_COMING notifier, locked by
+event_mutex) populates class->fields via list_add(), while
+update_event_fields() (called from the pri=0 notifier path via
+trace_event_update_all) traverses class->fields protected only by
+trace_event_sem.  These are two different locks guarding the same
+data structure, so during cross-module loading a reader on one CPU can
+observe partially initialized list nodes being concurrently added by a
+writer on another CPU.
 
-Right.
+On arm64 with weak memory ordering, __list_add() writes to two
+different cache lines:
 
-Pls see the sibling thread with Ihor. With in-range BPF trampoline
-allocation, the slow-path regression should mostly disappear.
+         next->prev = new;                // (1) ordinary store
+         new->next = next;                // (2) ordinary store
+         new->prev = prev;                // (3) ordinary store
+         WRITE_ONCE(prev->next, new);    // (4) release store
 
-Let's continue the discussion in that thread.
+The store buffer can drain (2) and (4) independently since they target
+different cache lines.  A remote CPU may observe (4) before (2): it
+sees prev->next pointing to the new node, but the new node's link.next
+is still zero (kmem_cache_alloc zero-initialized via KMEM_CACHE with
+SLAB_PANIC).  Since offsetof(struct ftrace_event_field, link) == 0,
+list_for_each_entry() derives field == NULL from link.next == 0 and
+crashes at field->type (offset 0x18):
 
-Thanks,
-Leon
+   Unable to handle kernel access ... at virtual address 0000000000000018
+   pc : update_event_fields+0xf8/0x368
+   Call trace:
+    update_event_fields+0xf8/0x368
+    trace_event_update_all+0x7c/0x2b4
+    trace_module_notify+0x4c/0x1dc
+    notifier_call_chain+0x84/0x168
+    blocking_notifier_call_chain_robust+0x64/0xd4
+    load_module+0x10c8/0x123c
+    __arm64_sys_finit_module+0x230/0x31c
+
+Fix by holding event_mutex in trace_event_update_all() before
+down_write(&trace_event_sem).  This serializes the reader against
+event_define_fields() which takes event_mutex for the entire
+write-side critical section.  The lock ordering event_mutex ->
+trace_event_sem is already established at three other sites
+(trace_remove_event_call, event_trace_add_tracer,
+event_trace_del_tracer), so this introduces no ordering conflict.
+
+An alternative of placing mutex_lock inside update_event_fields() was
+considered but rejected -- it would invert the established lock
+ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
+
+Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event 
+types as well")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Wu <michael@allwinnertech.com>
+---
+  kernel/trace/trace_events.c | 2 ++
+  1 file changed, 2 insertions(+)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 956692856fa8..9632788da5af 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map 
+**map, int len)
+         int last_i;
+         int i;
+
++       mutex_lock(&event_mutex);
+         down_write(&trace_event_sem);
+         list_for_each_entry_safe(call, p, &ftrace_events, list) {
+                 /* events are usually grouped together with systems */
+@@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map 
+**map, int len)
+                 cond_resched();
+         }
+         up_write(&trace_event_sem);
++       mutex_unlock(&event_mutex);
+  }
+
+  static bool event_in_systems(struct trace_event_call *call,
+--
+2.29.0
 
