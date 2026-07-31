@@ -1,189 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDDD39C006;
-	Fri, 31 Jul 2026 08:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770D53E168A;
+	Fri, 31 Jul 2026 08:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785486412; cv=none; b=lsUBRYXsrhjeD158wU54IDuvBXUzx1ax82Hm5jPEY/gWouwvFN4t78phUj8rO99oaB+fJiFid/WGFUb78rbTolNXgvbndYEZivTnj42h2RMLwBAPJe371ZO/UaPl+hytNH4BYFFUQ7aR08Yx6WphazCkDupkuaOrtlmzj6qvpgE=
+	t=1785486662; cv=none; b=tjIVMgNhPtHgPZAIkr/0u144lJIxJttgoNeXH7owWqIiJ4arRpkg0t9vavjWbVPtl+c+gOMQSnmF/H15/M/9mGOrpkRKSzOIfamjBdTH5VyAXJhTKUs6fde7sRnl7n6nSW//Aj8/s2tO76Ggs7/GD444rkuHrNtZY1GdGcaunp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785486412; c=relaxed/simple;
-	bh=5dNmxu5/DKV/iLc1cxX1Ef3+PAoXGe1Aq8VEZB3JYrg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UCBTsoNegyP4RIUwdovUOwXnRBfFCi8qCRlg9raWrGdkPMSmqjCFMIlc4sxyQnH/MkWb4A/rsoxJsyZbp0H6fgeMoLTs3NUy7/dT2kE6M5BdzL77QTrFqsUsJD1o6ERvintNdKfeKWALLy9gNzsb+2MJF3f2j9S5vQ05qT5m1LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gdg2fqhM; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785486662; c=relaxed/simple;
+	bh=JjNN6BxF4vtlMCrHL466xVF05FtqP5IsvEMIqlWRVS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMB4+htgZKLBZWVLBlwf7NR2IsovdIvaMxSVfQJ1yvMEiu6CuZ91M0MYNRHL371Q44B+Yjv7XHFqVofA/ifNvRrnHyuvWb7nSZ5KUbe+M6hJ4c0XQ5UlSScEfEA1ZMT4xHFfPX3GZbqVFRWJ+fUjkdeG06vjznVJ7DDHj6cI/BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=akgvz90x; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gdg2fqhM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785486410; x=1817022410;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5dNmxu5/DKV/iLc1cxX1Ef3+PAoXGe1Aq8VEZB3JYrg=;
-  b=Gdg2fqhMtLlqtXxM4xLVfTOddYFQDcvosHiDDMT+snUBaMVJZakq+b8B
-   52LNo5Kqq6uifBNjDrncn6PLuw0hoApytt2qyE8G8QII0KQaLfwK5jMIY
-   jnT+/T15UKMKMYrYT507FrMAw4PHjkxPT8y9QgobtOzKXxwwyFdScokv3
-   JUF72F+rY6Wusmx7FzBSHydPK+5J3glfHIc3bAquIindtbjR8k+FTc+bp
-   L2IlYn+Kw7vCX4YFnoxHH8C5S9jlrQmnVvHwT7JP2UkhVTFOtYhS6EJ8K
-   zqXQMLwjUIMriC65363djFj34MfIUuWd5g2kCd7q+S2b5DbVVoCxCgD5h
-   w==;
-X-CSE-ConnectionGUID: DrJGb3BqSfuiA+wHrDz02w==
-X-CSE-MsgGUID: orpSC3qvQKG9TIDv0WO5Cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="86126073"
-X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
-   d="scan'208";a="86126073"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 01:26:48 -0700
-X-CSE-ConnectionGUID: KbSyPLdZQD6xu1UMvfTcHw==
-X-CSE-MsgGUID: g90yMGrGQQeZJeLvX6Oqmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
-   d="scan'208";a="265591573"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.248]) ([10.124.240.248])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 01:26:34 -0700
-Message-ID: <d3fef015-0546-4993-b354-a8464d79e48c@intel.com>
-Date: Fri, 31 Jul 2026 16:26:30 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="akgvz90x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=glPHHyLWHvT59QdWBb+WFz+JpQ0V0Df4ETLiY4e26Jg=; b=akgvz90xykLehE3Vfv2ItTQLKi
+	8/wBRXonZ8o7IqmL/lofSYsRM603yodoqOQ61D/8/7+kHOsg431Nz6CPo09bPSoN8sxiHzuWZfALt
+	4KDVhWMTw0BbxL5w356y2mkDrjN3VXfrpGfMsUc+Uq4kTP0HpFQBxnu3AhLBn4VgckQUcOC+L3GRs
+	2OSTryh2TriCVlyiAD9E2zZCoKY4glBUVSo9Dl59/s3d30vBNZMrsMm818cpqmBrNpVZuT0YcT2EN
+	wBoK1rZ+5Baj1abEtsTAwtQXpriH/VlaQ4QlBYn/0Qw5KkdEl3uBDraHnF8k3+pZOSXO05i3/N/ta
+	k0rTv8wQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wpidc-0000000F9Yk-48Py;
+	Fri, 31 Jul 2026 08:30:41 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CC5113004AB; Fri, 31 Jul 2026 10:30:39 +0200 (CEST)
+Date: Fri, 31 Jul 2026 10:30:39 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Oleg Nesterov <oleg@redhat.com>, Breno Leitao <leitao@debian.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Fix NULL pointer dereference in hprobe_expire()
+Message-ID: <20260731083039.GD776954@noisy.programming.kicks-ass.net>
+References: <20260729-uprobe-v1-1-61896b87c867@debian.org>
+ <amokG13tEnA7VVVf@redhat.com>
+ <CAEf4BzYON57L_HD71qUOdRdni_=1S-Xomz27PeDBxbbXDy0Jug@mail.gmail.com>
+ <20260730085421.d455361164695270bd764a4b@kernel.org>
+ <20260730103824.GD751831@noisy.programming.kicks-ass.net>
+ <20260731095652.fc5d64f8c122d7dc6ddd89be@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 18/41] KVM: TDX: Make source page optional for
- KVM_TDX_INIT_MEM_REGION
-To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-18-35f9aec2aed2@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260728-gmem-inplace-conversion-v9-18-35f9aec2aed2@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260731095652.fc5d64f8c122d7dc6ddd89be@kernel.org>
 
-On 7/29/2026 8:35 AM, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+On Fri, Jul 31, 2026 at 09:56:52AM +0900, Masami Hiramatsu wrote:
+> On Thu, 30 Jul 2026 12:38:24 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Update tdx_gmem_post_populate() to handle cases where userspace requests
-> "no source page". To handle "no source page", populate (perform
-> TDH.MEM.PAGE.ADD) using memory in-place at the target PFN.
+> > On Thu, Jul 30, 2026 at 08:54:21AM +0900, Masami Hiramatsu wrote:
+> > > On Wed, 29 Jul 2026 12:31:08 -0700
+> > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > 
+> > > > On Wed, Jul 29, 2026 at 9:02 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> > > > >
+> > > > > On 07/29, Breno Leitao wrote:
+> > > > > >
+> > > > > > --- a/kernel/events/uprobes.c
+> > > > > > +++ b/kernel/events/uprobes.c
+> > > > > > @@ -832,7 +832,7 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
+> > > > > >               if (try_cmpxchg(&hprobe->state, &hstate, uprobe ? HPROBE_STABLE : HPROBE_GONE)) {
+> > > > > >                       /* We won the race, we are the ones to unlock SRCU */
+> > > > > >                       __srcu_read_unlock(&uretprobes_srcu, hprobe->srcu_idx);
+> > > > > > -                     return get ? get_uprobe(uprobe) : uprobe;
+> > > > > > +                     return get && uprobe ? get_uprobe(uprobe) : uprobe;
+> > > > >
+> > > > > Well, looks "obviously correct". At least the current code is obviously
+> > > > > wrong, it even checks uprobe != NULL 3 lines above.
+> > > > >
+> > > > > Andrii ?
+> > > > >
+> > > > 
+> > > > Yes, indeed, I'm more surprised this didn't come up much earlier
+> > > > (probably it's rare enough to have uretprobe with refcnt at zero
+> > > > during fork). The fix looks good, thanks!
+> > > > 
+> > > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > > > 
+> > > > > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > > > >
+> > > 
+> > > Thanks, this seems good to me. (uprobe is NULL checked in try_cmpxchg(),
+> > > so it could be NULL.)
+> > > 
+> > > Can I pick this to probes/fixes branch?
+> > 
+> > tip/perf/urgent ?
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
->   Documentation/virt/kvm/x86/intel-tdx.rst | 4 ++++
->   arch/x86/kvm/vmx/tdx.c                   | 8 +++++---
->   2 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
-> index 6a222e9d09541..d8d9409120e61 100644
-> --- a/Documentation/virt/kvm/x86/intel-tdx.rst
-> +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
-> @@ -158,6 +158,10 @@ KVM_TDX_INIT_MEM_REGION
->   Initialize @nr_pages TDX guest private memory starting from @gpa with userspace
->   provided data from @source_addr. @source_addr must be PAGE_SIZE-aligned.
->   
-> +If guest_memfd in-place conversion is enabled, pass 0 for @source_addr
-> +to represent "no source page". A source page is required if in-place
-> +conversion is not enabled or not supported.
-> +
->   Note, before calling this sub command, memory attribute of the range
->   [gpa, gpa + nr_pages] needs to be private.  Userspace can use
->   KVM_SET_MEMORY_ATTRIBUTES to set the attribute.
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index d1af0a752e97e..e890da5f18aed 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -3192,7 +3192,7 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
->   	if (KVM_BUG_ON(kvm_tdx->page_add_src, kvm))
->   		return -EIO;
->   
-> -	kvm_tdx->page_add_src = src_page;
-> +	kvm_tdx->page_add_src = src_page ?: pfn_to_page(pfn);
->   	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
->   	kvm_tdx->page_add_src = NULL;
->   
-> @@ -3238,7 +3238,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
->   	if (copy_from_user(&region, u64_to_user_ptr(cmd->data), sizeof(region)))
->   		return -EFAULT;
->   
-> -	if (!PAGE_ALIGNED(region.source_addr) || !region.source_addr ||
-> +	if (!PAGE_ALIGNED(region.source_addr) ||
-> +	    (!gmem_in_place_conversion && !region.source_addr) ||
+> Either way works. Can we update MAINTAINERS file if you will maintain
+> uprobe in tip tree?
 
-Sorry, I still want to discuss why we only allow in-place PAGE.ADD for 
-gmem_in_place_conversion only. Though Yan raised this opinion[1] in 
-previous v8, I'm not quite following her argument. So let me try again.
-
-I think in-place PAGE.ADD of TDX doesn't need to depend on 
-gmem_in_place_conversion. There are two use cases actually.
-
-1). Userspace sets the gmem page as private, and invokes the in-place 
-PAGE.ADD by passing a 0 source_addr. Due to patch 16, the target PFN 
-will be ADD'ed to TD as a all-0 page.
-
-2). Userspace sets the gmem page as shared, and writes the desired 
-content to it. Then converts the page to private, and invokes the 
-in-place PAGE.ADD by passing a 0 source_addr. The target PFN will be 
-ADD'ed to TD with desired content.
-
-For gmem_in_place_conversion == false, only case 1) is possible.
-For gmem_in_place_conversion == true, both case 1) and 2) are possible.
-
-Basically, this patch is changing the behavior of 
-KVM_TDX_INIT_MEM_REGION. Before, it returns -EINVAL when 
-region.source_addr == 0. Now it wants to allow the "region.source_addr 
-== 0" case. If we can allow it unconditionally, why bother adding the 
-restriction to allow it only when gmem_in_place_conversion == true?
-
-
-[1] https://lore.kernel.org/all/akI9m02jgKAdi4gX@yzhao56-desk.sh.intel.com/
-
->   	    !PAGE_ALIGNED(region.gpa) || !region.nr_pages ||
->   	    region.gpa + (region.nr_pages << PAGE_SHIFT) <= region.gpa ||
->   	    !vt_is_tdx_private_gpa(kvm, region.gpa) ||
-> @@ -3269,7 +3270,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
->   			break;
->   		}
->   
-> -		region.source_addr += PAGE_SIZE;
-> +		if (region.source_addr)
-> +			region.source_addr += PAGE_SIZE;
->   		region.gpa += PAGE_SIZE;
->   		region.nr_pages--;
->   
-> 
-
+Well it is in kernel/events/ which MAINTAINERS should already assign to
+me, no?
