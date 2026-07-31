@@ -1,217 +1,140 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD08F2B9BA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 00:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA21288AD;
+	Fri, 31 Jul 2026 00:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785456357; cv=none; b=GzdOd0oajPJSOiDxqGBqpUrZxaDRsnxK25kituCjYSHJ0uQC0t4a4QfIERzYj7baO0/MK1nd5xjSkQoOySxbNQQzgHnEW0PubsIQZB2pQ4bRnjdu/4c4PYGKz7XW0N3j0hM5oJkbltqr/hv8RMCfXUCP4ZCAkxdDfoeEle0QlGI=
+	t=1785456523; cv=none; b=MD3MD4XSqP+JQUTFmNPO8bt/QEeu0x8+ufMD7fF8tFc+PKYYen8X/8DpZMtcMC9Pt5C/j1vrOIHCNifXkylSmAdkBMDbvvnfAR8QGuogcdh/OD1A7zKKG5dF2rpysTgfw3wDs+KTH0BX5tzSmHIjXOoro2slcOfRq479CylU7yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785456357; c=relaxed/simple;
-	bh=QPDiUGvjFW0vZTG42ytTCKU24mANKY9MiXrQ0vmnRzc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QLNEDdD5peqnl0PMg9DDctWEhPgFtYL3pcEhimuYJ064lDpLkMJf92I7DpQ0fAAe2iJeP8TFI9REo6UjR9AZxEloRGm4t2HySjiY7ld2qovNy3bIjJd0yBM/BZqHGn+UFQZGZ/4RKZNDKpEa/vOzVAjTg12lL+S+C7t4OiujoDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mHkAOamg; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHkAOamg"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c15e592da74so38186566b.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jul 2026 17:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785456354; x=1786061154; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NUUJ+vbNcFU2fR4e/S5zRq2y6etr3MLWwvcK10d7QwI=;
-        b=mHkAOamg9USPZzCbfVH81qf5f6GQ6IIXq/rmANGifGTBAWyIzZowz0WKXrlR5vpF8E
-         co81J9F821fZ2Afs4wTcXcnkHSHD/wtriF/rkWtRsK7oaPNxoMlmo+BWhE7Ps2xOcFxY
-         9u/ktnZjhbSjl58yr6NLnozftBtBC3iJHT0kNQn2v8Fsif7j4/sh4FwqmVYReLJTHnzg
-         ICOeI083dfKzObP5tunNVEl5lEvNOVSrYdYVdt3o/KWH5gJffiamO65ZqvCzxtRqA/X7
-         4CHg9M2qJmgQp/u0F55KjiAuT5ptGjxJ+QkFlwG5UbeVqu42eKYvQ5rVcmVRR61Z03uP
-         9Q9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785456354; x=1786061154;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NUUJ+vbNcFU2fR4e/S5zRq2y6etr3MLWwvcK10d7QwI=;
-        b=hK/560Q3OCGQF1o9SWDaWGpa+UUGHULcxfC5j4Dpi8EbWp/nZeIcElXUkIdrV/n9HQ
-         644GY0cVoB2ZcwDzDih5qxpR7l7ZLqOarYY0Ag5cQsj+Iq22vc6MYAsmY9MGN640kzc9
-         eZ8eQE8zj/jk27pdk0uYsJsxCU5Ee2u+F7SWjxnnjoJsnS+fA4MDCzylnDEaCylOTxmK
-         1y8p0TGjbSNPICBbenewfl0fYls5pJ2eIGW+LLz78h55dKYVFBElwYhdi8MDBSaSn0YG
-         SR0VqG5X2zy1LXMF/QbfK2T8HHIL9kJ1NGmH3nb2vJMe57Keh+w52bkauC1So1iUzRrT
-         pPeA==
-X-Forwarded-Encrypted: i=1; AHgh+RqaeC1lqnw3wrKWGZlgFP9/WnozmjjiwG76VGK1ygpLm5Aw5QFOqwBkLXPWYBRu0eOM/SlgrUsRQluNSSczrQVHM7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9qPzYp8HTq+EWp2mDwkFqFqAlaN9nuBCsyY3ncIbQUeVhYdHU
-	s5vn98bq5w3k943FnChP36pnWzACbYs7ycaB8ygCBc0BeY8vKsOTO37n
-X-Gm-Gg: AR+sD11sfKgpIemH9tZHYcmRuJe3foNVYEFvpcCbHQW6IUUCsApSv7XVFcr7fO2MYDv
-	v/nYdRpPjB4eogvtvKij4wNpylpVf74vNI/KLywEo4UweTmmFlxKmO6QZXYAubD21U2jloqxN6q
-	51crMsIZuANlbtDg//e7FWD3bjy2O324UZDtOuDcoh5Y08V8NdA/zQFl+wDXGreQ1ok46DLanKt
-	dGkUr8ttBqDRkxmAzgG/kNtuNr/hZyIkTaX9lQEK+Bd5mSiM3csMrPHjoDwqvmPwGX5eoNcv5Xw
-	lpnHT7LWCliniijekHeL1H+XnDYxeud4xXStvMqjxdInjJaBd8GzeZOde7MiAu02YsDqTdztZVV
-	HS1kN0xZ3unyE+6bKV+2+MFGkoayriBi3uIOYm2MGRwYHNPeZC8e2vwZ/z73VjQYnurBcEWIJTi
-	KUAlWy61UnIRfhpBSmPZm4LBgGZJoJ1zUcOF/rKKOj5j/UHnZZROCC96s8HHq95iFJV5NelqelF
-	8D5uUmIxX+X5kHk/WxlaHujV9D9eUBQCq8n5/QO7buH8ajM
-X-Received: by 2002:a17:907:97d4:b0:c15:edb7:a74d with SMTP id a640c23a62f3a-c1fa53ed69cmr244126866b.12.1785456353766;
-        Thu, 30 Jul 2026 17:05:53 -0700 (PDT)
-Received: from ?IPV6:2a02:8109:a307:d900:76a7:371c:6808:eaed? ([2a02:8109:a307:d900:76a7:371c:6808:eaed])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1fa8b6ca74sm115278966b.31.2026.07.30.17.05.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2026 17:05:53 -0700 (PDT)
-Message-ID: <f04757f1-c4ed-4c18-9095-43706f316ff7@gmail.com>
-Date: Fri, 31 Jul 2026 01:05:50 +0100
+	s=arc-20240116; t=1785456523; c=relaxed/simple;
+	bh=lV4Y4nf5AeHDdQZbAkGFS1iUqCawwFfne4/QCeMicwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=krPu7f+Top8XxtRoZk8jm5vouBriX20zuGJTCaXecRn2tEIE47RpGEnOfkvRkf619r2lngy1d+Y6R7hedgOkKOukvOtrd9WasKa9Yqc8t0aDlgJSEJ0srwaNrRTbdNQ1x3SbF6wRHZsCO3K6XKOexhugEola+HjiNKxZS7L83sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id CC3A71A0329;
+	Fri, 31 Jul 2026 00:08:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 0CC7D60010;
+	Fri, 31 Jul 2026 00:08:34 +0000 (UTC)
+Date: Thu, 30 Jul 2026 20:09:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Cc: <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <live-patching@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <corbet@lwn.net>, <jpoimboe@kernel.org>,
+ <shuah@kernel.org>, <jolsa@kernel.org>, <mbenes@suse.cz>,
+ <mhiramat@kernel.org>, <stable@vger.kernel.org>,
+ <linux-open-source@crowdstrike.com>
+Subject: Re: [RFC PATCH bpf-next 2/2] selftests/livepatch: update
+ test-ftrace.sh for deprecated ftrace_enabled
+Message-ID: <20260730200913.59a541db@gandalf.local.home>
+In-Reply-To: <20260730163544.2042327-3-andrey.grodzovsky@crowdstrike.com>
+References: <20260730163544.2042327-1-andrey.grodzovsky@crowdstrike.com>
+	<20260730163544.2042327-3-andrey.grodzovsky@crowdstrike.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next] tracing: Make per-template BTF id lists
- file-local
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, rostedt@goodmis.org
-Cc: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
- daniel@iogearbox.net, kafai@meta.com, kernel-team@meta.com,
- eddyz87@gmail.com, memxor@gmail.com, linux-trace-kernel@vger.kernel.org,
- linux-next@vger.kernel.org, broonie@kernel.org,
- Mykyta Yatsenko <yatsenko@meta.com>
-References: <20260730-b4-fix_btf_tracefs-v1-1-5f10b728f51e@meta.com>
- <CAEf4BzZXu=E-E+_DXukwuzdGAH6LwxhFuWkX5j6Os1YAn3Vtcg@mail.gmail.com>
-Content-Language: en-US
-From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-In-Reply-To: <CAEf4BzZXu=E-E+_DXukwuzdGAH6LwxhFuWkX5j6Os1YAn3Vtcg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 0CC7D60010
+X-Stat-Signature: dary9efr8fa175tbga7ng7rcqoyinkxm
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18OUhYxQpcApacRfZUnO8zlNndNAgZBitI=
+X-HE-Tag: 1785456514-63941
+X-HE-Meta: U2FsdGVkX18kfK7tNELfjIWCMK1BpCKR7uHnwmI96UwuVZdrw77nEqub+9YRLdQ+gGofUnBkclMbECoYWg6XA9j17jHgeIklcgRslgDlRNvM3SZOLnysNysD0hqx5V6n0no5cc91Zl5vLwI6PdZ+TCfg1nDWOZNOTvl0jx+A2gvNMBZDQKdDzvs6LriK8C2ku0sGSJpZKb0jpdM7eJVsD0Fzz3ubMLDBWRby0e5KUwWRTjjIPrkF+GBMj/5CnlZxr4s5suf5J8+6T3gYa3WsYu7FQvedpBYQa13ao74T9dqpXLtRYtKp33Toy9A9rT7bWetuIYcLWwhm5tk/5u2eUlSVFka/AiXt
+
+On Thu, 30 Jul 2026 12:35:44 -0400
+Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
+
+> kernel.ftrace_enabled=0 is now always refused, so the old scenario
+> (disable, fail to load a livepatch, re-enable, load) no longer applies.
+> Replace it with a single check that the write is refused with the new
+> error, and drop the now-stale disable/reload flow.
+> 
+> Assisted-by: Claude:claude-sonnet-5
+> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> ---
+>  .../selftests/livepatch/test-ftrace.sh        | 49 ++-----------------
+>  1 file changed, 3 insertions(+), 46 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+> index d2c3dea63104..c88f4d13a134 100755
+> --- a/tools/testing/selftests/livepatch/test-ftrace.sh
+> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
+> @@ -9,56 +9,13 @@ MOD_LIVEPATCH=test_klp_livepatch
+>  setup_config
+>  
+>  
+> -# - turn ftrace_enabled OFF and verify livepatches can't load
+> -# - turn ftrace_enabled ON and verify livepatch can load
+> -# - verify that ftrace_enabled can't be turned OFF while a livepatch is loaded
+> +# - verify that kernel.ftrace_enabled=0 is refused (deprecated knob)
+>  
+> -start_test "livepatch interaction with ftrace_enabled sysctl"
+> +start_test "ftrace_enabled sysctl write is refused (deprecated)"
+>  
+> -set_ftrace_enabled 0
+> -load_failing_mod $MOD_LIVEPATCH
+> -
+> -set_ftrace_enabled 1
+> -load_lp $MOD_LIVEPATCH
+> -if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
+> -	echo -e "FAIL\n\n"
+> -	die "livepatch kselftest(s) failed"
+> -fi
+> -
+
+This test should work for both old and new kernels. I would have it still
+do everything here but if setting ftrace_enabled returns -EOPNOTSUPP then
+do the simple path.
+
+-- Steve
 
 
-
-On 7/31/26 12:55 AM, Andrii Nakryiko wrote:
-> On Thu, Jul 30, 2026 at 5:52 AM Mykyta Yatsenko
-> <mykyta.yatsenko5@gmail.com> wrote:
->>
->> From: Mykyta Yatsenko <yatsenko@meta.com>
->>
->> DECLARE_EVENT_CLASS emitted __bpf_trace_btf_ids_<call> through
->> BTF_ID_LIST_GLOBAL, i.e. a global symbol named after the event class.
->> The class name is not unique across the kernel, so the symbol
->> multiply-defines whenever two translation units instantiate the same
->> class.
->>
->> Switch to the file-local BTF_ID_LIST: the list is reached
->> only through the event_class_<call>.btf_ids pointer, initialised in the
->> same unit, so tracefs readers never reference the symbol by name and
->> resolve_btfids still fills the now-local .BTF_ids entries.
->>
->> The handcrafted syscall classes are the one cross-unit consumer: give
->> them their own local BTF_ID_LIST rather than importing the generated
->> sys_{enter,exit} lists, which are now file-local.
->>
->> Fixes: eadc0725ab8d3 ("tracing: Expose tracepoint BTF ids via tracefs")
->> Reported-by: Mark Brown <broonie@kernel.org>
->> Closes: https://lore.kernel.org/all/ff58b01c-3f5e-4d55-be82-609d2faaf12e@sirena.org.uk/
->> Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
->> ---
->>  include/trace/trace_events.h  |  6 ++++--
->>  kernel/trace/trace_syscalls.c | 22 ++++++++++++++--------
->>  2 files changed, 18 insertions(+), 10 deletions(-)
->>
->> diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
->> index 09ad57ac4b73..45ffbe04b580 100644
->> --- a/include/trace/trace_events.h
->> +++ b/include/trace/trace_events.h
->> @@ -404,10 +404,12 @@ static inline notrace int trace_event_get_offsets_##call(         \
->>   *   [0] FUNC   __bpf_trace_<call>     (the BPF dispatcher)
->>   *   [1] STRUCT trace_event_raw_<call> (the ring-buffer record)
->>   * Exposed via the events/<sys>/<name>/btf_ids tracefs file.
->> + *
->> + * File-local: the class name is not unique, so a global symbol would
->> + * clash across translation units.
-> 
-> drop this comment? not super useful and file-local is default behavior
-> for BTF_ID_LIST anyways
-> 
->>   */
->>  #define _TRACE_BTF_IDS_DECLARE(call)                                   \
->> -       extern u32 __bpf_trace_btf_ids_##call[];                        \
->> -       BTF_ID_LIST_GLOBAL(__bpf_trace_btf_ids_##call, 2)               \
->> +       BTF_ID_LIST(__bpf_trace_btf_ids_##call)                         \
->>         BTF_ID(func,   __bpf_trace_##call)                              \
->>         BTF_ID(struct, trace_event_raw_##call)
->>
-> 
-> This should go into Steven's tree, not bpf-next, right?
-
-yes, thanks for the review!
-> 
->> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
->> index 48ef1a93e576..9b5931f2f280 100644
->> --- a/kernel/trace/trace_syscalls.c
->> +++ b/kernel/trace/trace_syscalls.c
->> @@ -9,6 +9,7 @@
->>  #include <linux/ftrace.h>
->>  #include <linux/perf_event.h>
->>  #include <linux/xarray.h>
->> +#include <linux/btf_ids.h>
->>  #include <asm/syscall.h>
->>
->>  #include "trace_output.h"
->> @@ -1305,13 +1306,18 @@ struct trace_event_functions exit_syscall_print_funcs = {
->>
->>  #ifdef CONFIG_BPF_EVENTS
->>  /*
->> - * BTF id lists generated by DECLARE_EVENT_CLASS for the sys_enter and
->> - * sys_exit tracepoints. The auto-generated event_class_sys_{enter,exit}
->> - * is unused (per-syscall events share the handcrafted classes below),
->> - * but the id lists themselves are global and reusable.
->> + * BTF id lists for the shared sys_enter/sys_exit dispatcher tracepoints,
->> + * resolved by resolve_btfids. Defined locally rather than importing the
->> + * DECLARE_EVENT_CLASS-generated lists, which are now file-local to the
->> + * translation unit that instantiates the tracepoint.
-> 
-> drop "resolved by resolve_btfids", and drop the part about defined
-> locally because file-local, too much Claude style
-> 
->>   */
->> -extern u32 __bpf_trace_btf_ids_sys_enter[];
->> -extern u32 __bpf_trace_btf_ids_sys_exit[];
->> +BTF_ID_LIST(syscall_enter_btf_ids)
->> +BTF_ID(func,   __bpf_trace_sys_enter)
->> +BTF_ID(struct, trace_event_raw_sys_enter)
->> +
->> +BTF_ID_LIST(syscall_exit_btf_ids)
->> +BTF_ID(func,   __bpf_trace_sys_exit)
->> +BTF_ID(struct, trace_event_raw_sys_exit)
->>  #endif
->>
->>  struct trace_event_class __refdata event_class_syscall_enter = {
->> @@ -1321,7 +1327,7 @@ struct trace_event_class __refdata event_class_syscall_enter = {
->>         .get_fields     = syscall_get_enter_fields,
->>         .raw_init       = init_syscall_trace,
->>  #ifdef CONFIG_BPF_EVENTS
->> -       .btf_ids        = __bpf_trace_btf_ids_sys_enter,
->> +       .btf_ids        = syscall_enter_btf_ids,
->>  #endif
->>  };
->>
->> @@ -1336,7 +1342,7 @@ struct trace_event_class __refdata event_class_syscall_exit = {
->>         .fields         = LIST_HEAD_INIT(event_class_syscall_exit.fields),
->>         .raw_init       = init_syscall_trace,
->>  #ifdef CONFIG_BPF_EVENTS
->> -       .btf_ids        = __bpf_trace_btf_ids_sys_exit,
->> +       .btf_ids        = syscall_exit_btf_ids,
->>  #endif
->>  };
->>
->>
->> ---
->> base-commit: eadc0725ab8d38c05148fce49f8d5c6a0e01f062
->> change-id: 20260730-b4-fix_btf_tracefs-fdafda5fdb5b
->>
->> Best regards,
->> --
->> Mykyta Yatsenko <yatsenko@meta.com>
->>
+> -# Check that ftrace could not get disabled when a livepatch is enabled
+>  set_ftrace_enabled --fail 0
+> -if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
+> -	echo -e "FAIL\n\n"
+> -	die "livepatch kselftest(s) failed"
+> -fi
+> -disable_lp $MOD_LIVEPATCH
+> -unload_lp $MOD_LIVEPATCH
+>  
+> -check_result "livepatch: kernel.ftrace_enabled = 0
+> -% insmod test_modules/$MOD_LIVEPATCH.ko
+> -livepatch: enabling patch '$MOD_LIVEPATCH'
+> -livepatch: '$MOD_LIVEPATCH': initializing patching transition
+> -livepatch: failed to register ftrace handler for function 'cmdline_proc_show' (-16)
+> -livepatch: failed to patch object 'vmlinux'
+> -livepatch: failed to enable patch '$MOD_LIVEPATCH'
+> -livepatch: '$MOD_LIVEPATCH': canceling patching transition, going to unpatch
+> -livepatch: '$MOD_LIVEPATCH': completing unpatching transition
+> -livepatch: '$MOD_LIVEPATCH': unpatching complete
+> -insmod: ERROR: could not insert module test_modules/$MOD_LIVEPATCH.ko: Device or resource busy
+> -livepatch: kernel.ftrace_enabled = 1
+> -% insmod test_modules/$MOD_LIVEPATCH.ko
+> -livepatch: enabling patch '$MOD_LIVEPATCH'
+> -livepatch: '$MOD_LIVEPATCH': initializing patching transition
+> -livepatch: '$MOD_LIVEPATCH': starting patching transition
+> -livepatch: '$MOD_LIVEPATCH': completing patching transition
+> -livepatch: '$MOD_LIVEPATCH': patching complete
+> -livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
+> -% echo 0 > $SYSFS_KLP_DIR/$MOD_LIVEPATCH/enabled
+> -livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
+> -livepatch: '$MOD_LIVEPATCH': starting unpatching transition
+> -livepatch: '$MOD_LIVEPATCH': completing unpatching transition
+> -livepatch: '$MOD_LIVEPATCH': unpatching complete
+> -% rmmod $MOD_LIVEPATCH"
+> +check_result "livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Operation not supported"
+>  
+>  
+>  # - verify livepatch can load
 
