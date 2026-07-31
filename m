@@ -1,373 +1,334 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA74357739;
-	Fri, 31 Jul 2026 21:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785531910; cv=none; b=OmSaSxvU+IHjIl1w/FYX6SRvx1o/G8s4KcJf/se/9zy9GOfIeO1mFzoP8ALoQ2pnqDvJZeNt7zv/xbGW6DUjpboDc1GFT/Ii9pjCuASktHQQdsxIfGcILVmxraQ5qGrpjmrNFOH/ya3GY2/eEsjvML3gpSL31L+15m6QnL+cE5Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785531910; c=relaxed/simple;
-	bh=IB7cjfq/Ti2hStzu97EPkSkIGPTtJMKm6DfaV9MngTk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bi/iIx7IMJkfxFGdvNWqNV2Z7uXgFj+m8Jb7kCcFePLAewkx/QedIKo8j871ellIVf4k1rk7o16+KJZ4n9URkYwLMGKLhIv5ipdiDDwJ8qvfb5p6Q/Rs+QNS8UW0t9R8pUhUKPqc6cqwqDXo0FaXjot+YmSAXovY2klsXgmhoIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASz5lEyW; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041F2D5408
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 21:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785534852; cv=pass; b=RStme065kYIbdXahUPkx2twvrLhgoGAHpMFfikOPpBiRcBK5G+o5+zSww+aMLz5NMZAv2No/A1tUT+ZDFqyCyOsnrnb6Y/s63N6SYfS+ETHcpV4ezoQ5khptpVgLnVHC20nkHbEvV8RIHbbh/giGF17PHXs6LhgbeXirHEONdWE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785534852; c=relaxed/simple;
+	bh=Pnq7zcb7OBStwmFk/cMGV9jIpASQJAMtNs9n3iP/UR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bQlDdAPeS8SSxKHAL3yWP6yTiv0I+kWcvlVOCtq26UB5wHhx1EpvcSAymVbCfzr+rFE6vvEpVZd685V5bgudEMuoCDOmz+dv7yN5ueessf3aJRbtxMJ+JTZ3CU5AeMzGiK3P2ecT/pjEo0cL+EjIwZ9r8wWZISsF3R+gTylBVbU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WPw5QrVl; arc=pass smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASz5lEyW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B010E1F00ACF;
-	Fri, 31 Jul 2026 21:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785531908;
-	bh=JtMKNzJTI+uCVgkjTRgphz8WNm4MH4HgItmshCKTVcc=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=ASz5lEyWHccui+JC+tz6SUDwa73tWQP3GgCUMoUZt9S0I6PqoePYURwjR2ETqakcn
-	 zc8QOlgVoUfgwLJw0LEk7syZL+DuCwtMJyMHFgVPP2qmx30Uvs6RhY+/aZPdKj4QLT
-	 PfYNMk8CvWJLxUx4SRtDCU71GaiO2qyxGvhEk8HXWdxZRi0OwMFin2/xP5zeExRvip
-	 fjpd6s7z5cQXaFfAE8AcN4+4CBMFc1i8QX50Frh1LdbD6/yMerdN3raQft+ND6WivP
-	 OGMWSXicej38Ppez7fVhPQTIpp9nMCY0xbfUx+htQbbJPIpEo0d0hcCFMgQ9dNqz4V
-	 rdFuHlbk3Rh3w==
-Message-ID: <be77c2cb-6e41-4382-9d2f-cd299f634196@kernel.org>
-Date: Fri, 31 Jul 2026 23:04:50 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WPw5QrVl"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c01c79467so76891cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jul 2026 14:54:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785534849; cv=none;
+        d=google.com; s=arc-20260327;
+        b=eKlKZxPfGbfYr3VW2aLYX3bIe9dgMKXdWcRXtby5x8VH6gfeLCfGTH+hHoCl1Aip9p
+         hAJ4Lrs5tNNmXM2N1Kl9qcVEuuiB7uuDYI+fOLkEJLYv/o2CzxCdhb4qxFDVpkOywdD7
+         ZP4Y3ugp58ufQNrFXnBf+5UWW2/c/cTj+Tbp5oXRJAs+4V0V8k3rXI8dCWjA3us2VnTC
+         NVr2sVXJ0jlvbrxzeX9sDS3ee6eT9qj5euNPUBm4MGbXA8uEPb4nwMCzWygGtSxGnTwQ
+         dIsLQaU/uLQBNsrTgz6wo/Li6Hqbk75PjgiAxoF+UfQwt0AcCiyKOYU2Cylcd9e5umd1
+         VQVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=8gIfdsfjbn1z2tePFkfGVAXUb4NElj5vr2DMSWId60A=;
+        fh=zDZaW0+w6DiZeJZ7e7YHxJfj5ufMH18f0wWXPrgVY2Q=;
+        b=ia7A3J7SAocaC5IGBbgI8k31YiHXCdsNaJhyKZX+KuIilrLPmgIIr+RaAfq3dbFvLq
+         ZkyaLJwKsAVSL3nz/LA+NLamdWd3CG/NxsQxyWJdRWXhpCTCUBPwAWTG6AcmtVfJpdRW
+         fgFGiAQ5NKg/jYqbwy0J5PRc1jn9dVbHH6CFXIF0RTqLIZHMpeNVSWOgc/sAKBH+aRtI
+         XFOgmGwryb4ZcEjyq1dg0x0XpMdE00pdNZefdXsD1Mh8e4my56e8IvJjh8ou3c7cwOci
+         5tE7X4MeEaWA5eyf+NQUxzwIAQYqntWOu8TgrbJn0h4oYh2gF9ZRcv++rO3Ks3ZbCXkY
+         a/pQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785534849; x=1786139649; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=8gIfdsfjbn1z2tePFkfGVAXUb4NElj5vr2DMSWId60A=;
+        b=WPw5QrVl7wHiUNdO+wBqIIEWBieujcatT2sfJbBqWtYP3xOu4FbZ0lBZ+GF7UDpayT
+         zuJtPDoW8JLrijBwY9lL9lKYvbEwUSaLeaI5tPUIXSowpkEyKh4nQkPZbVcEMYVAJJQp
+         FHdFOWH2Xm1s+/dNnBe7P5/Vnwppfu+Fm9wlQEj7yH6cwKO1WZ17KknlGr/a5ONi+hT6
+         5gmykv4B8quSjIvQe3SISP1xgMufD47BRuwpTr2gZtzAncOQWaHCNzejcWKHE/xkL86c
+         vs7G/bi8DEod4D2MFlHYWw2B6guzsJDKwjbnNVWYZNHi/nsU4V5BgCKAFYqOwL3vf+yc
+         axVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785534849; x=1786139649;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8gIfdsfjbn1z2tePFkfGVAXUb4NElj5vr2DMSWId60A=;
+        b=dRumnuUV6jST72B7b8thTUBCgXykv4bkf4Vm/mZ68c40qZYlicUXloEt32FEKDu6ZI
+         ZONL5HI+AfzZI7r5coXu1tGFX1HR9jiJAhLkPOUwL6W5IYYcd35iFjRME5YDntYJS+gY
+         /Wj2L8v9MS5iOsgqK7wZssNFdmrcwkAWW3ynQiyGUfrWdtkyIFw6wv78v7MpaLQ+L/rc
+         UyfgxZYE6Zq22nGqrV+9POL/ErdLnyk5d6c8SNRueqERj56/8dMjX/dQOZV7z/2DpJII
+         YZQrsWumRW2IMkQyhEQV7D5NC7OP2lKHWkonZVi1xFs7BOjsymiuFLCno4pgzt5zopDd
+         KGwA==
+X-Forwarded-Encrypted: i=1; AHgh+RpghTDQZYLLCulKRLPpf5GRJGc5S4lKNXLBXmXLy75FOVOjeVE4dqH2EfCTHIF3iIjOWOOpOc+Y05oYjA03j1e8vBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDeRv5NdtjqRGRq0gsBjm3mh+plQ0/PmlmQsESqYsbzrW0JPQg
+	gqEwkJ0b50q+EhCe5Y/AOctPL46xVtFGkktih5/xlmLPxi00hM2ejce2dQXIFWtvmrgLuKK570x
+	vwHGl9Ima+2vgI4jdic0/4kyVQU03c8FOnrMf7OWz
+X-Gm-Gg: AR+sD10NlYNahRiRHrA5qapM4DI7kvFn/WulJ96oCTpQaUSoyby8AN9n8dwjlchaYm9
+	4aT2bw4KnkZ9F0Y9RLAmSKStgOAI3TKA0FhW2kUtUAh040v1koETY+3iijtviDZsqfW13UtFmB7
+	tK55CjoA3RRXgqj6dZsDnNTOTrPH3mVJYA9c8Pl9Gi4mIwvI7kWdnboSZ2Sb68Ystfxf8YJnaB8
+	+dUwN+9OuUHOG5PvAPtaK2NcpN6+KO3rY2y3jrrOwnToewTv50ng1Op8b5yjQ9HE4kunrRXUluA
+	UA6M6+P3ko2ben+W8/NSWs/UgR4LKRfdqyDos1lj3P9GyNjesGW4XV8COHzE7diZ+YL4bYZzCnU
+	=
+X-Received: by 2002:a05:622a:134f:b0:517:5e32:2d14 with SMTP id
+ d75a77b69052e-52b59a19ea6mr5408341cf.10.1785534848971; Fri, 31 Jul 2026
+ 14:54:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 14/41] mm: swap: Introduce lru_add_drain_progressive()
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-To: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
- "hughd@google.com" <hughd@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-14-35f9aec2aed2@google.com>
- <4460e252-b6de-4df3-bea8-0368a9d0f4ff@kernel.org>
- <CAEvNRgEUQSju2tW_1zMk2=QmveZNtmkjjCZdqVBgBD2JPh0k4Q@mail.gmail.com>
- <a823e3d2-8acf-49d9-a812-ac1bb2136d7f@kernel.org>
- <edc3566b-370c-41a0-a71d-2e4a0e1a94f7@kernel.org>
- <CAEvNRgEas_9BEV-cNxXu4_wQx8sR2M4_OaW6DEd4=fszALMV0w@mail.gmail.com>
- <60552bee-3326-4917-b00f-5fb7ba3b8adb@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <60552bee-3326-4917-b00f-5fb7ba3b8adb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com> <20260730-rfc-nt-demote-v2-1-452dbe3b5073@zptcorp.com>
+In-Reply-To: <20260730-rfc-nt-demote-v2-1-452dbe3b5073@zptcorp.com>
+From: Huan Nguyen <nhuhuan@google.com>
+Date: Fri, 31 Jul 2026 14:53:31 -0700
+X-Gm-Features: AUfX_mydSrv99P-U14w6L8Rc9PDoTTKUxRYzjtIKVF_wWri1fRV1Nci3jK142jQ
+Message-ID: <CALwWd5usu+e=MgX95zGPUeqRjEu_SARLoiMPQpyMYBoUVQkk_g@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 1/3] mm, x86: support copying a folio using
+ non-temporal stores
+To: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman <jackmanb@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, David Rientjes <rientjes@google.com>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <nifan.cxl@gmail.com>, 
+	Frank van der Linden <fvdl@google.com>, Jonathan Cameron <jic23@kernel.org>, Raghavendra K T <rkodsara@amd.com>, 
+	"Rao, Bharata Bhasker" <bharata@amd.com>, SeongJae Park <sj@kernel.org>, Wei Xu <weixugc@google.com>, 
+	Xuezheng Chu <xuezhengchu@huawei.com>, Yiannis Nikolakopoulos <yiannis@zptcorp.com>, dimitrios@palyvos.net, 
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Alirad Malek <alirad.malek@zptcorp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/31/26 16:09, David Hildenbrand (Arm) wrote:
-> On 7/31/26 15:03, Ackerley Tng wrote:
->> "David Hildenbrand (Arm)" <david@kernel.org> writes:
->>
->>>
->>> And looking at it, the current folio_ref_count() in GUP is entirely wrong
->>> and always makes us drain local+all.
->>>
->>> Let me fix that first, which will also modify this code.
->>>
->>> I'd say, to unblock gmem we could have something minimal that I would clean
->>> up later, but I think the problem is that lru_add_drain() / lru_add_drain_all()
->>> is not exported, right?
->>>
->>
->> My bad, I totally mixed up refcounting to drain with refcounting for the
->> safe conversion and didn't have a complete understanding of mlock().
->>
->> The problem for gmem was that if there was an elevated refcount on some
->> folio in the range, it might be because the folio was in the lru_add
->> fbatch.
-> 
-> Right.
-> 
->>
->> If it were in the lru_add fbatch, it would be fine to just drain the
->> lru_add fbatch and proceed with the conversion.
->>
->> lru_add_drain() isn't sufficient since the conversion might be handled
->> on one CPU when the folio is on another CPU's fbatch, so I had to do
->> lru_add_drain_all(), but lru_add_drain_all() causes IPIs which are
->> expensive.
-> 
-> Yes.
-> 
-> You should probably do an early
-> 
-> folio_maybe_dma_pinned() || folio_mapped() check and just return -- don't drain.
-> 
->>
->> In an earlier revision I exported lru_add_drain_all(). My understanding
->> of the discussion at guest_memfd biweekly was that Sean didn't want us
->> to export lru_add_drain_all() now, and then end up exporting some other
->> function and unexporting lru_add_drain_all(). To avoid exporting and
->> unexporting, we then said we should refactor now.
->>
->> Happy to go with your proposal too.
-> Yeah, I have to look into this more closely. I'm now convinced that we really
-> have to use the refcount for now, but hopefully we can limit it on
-> folio_expected_refcount() internally + additional references
-> from the caller.
-> 
-> I'm quite busy today, but let me flesh something out that actually works.
-> 
+Hi Yiannis,
 
-Sorry for being rather grumpy previously, I know you only mean good :)
+Although copy_mc_to_kernel_nt() asserts both "mc" (machine check exception)
+and "nt" (non-temporal store), the implementation fails to deliver both:
+1. copy_mc_fragile() is MCE-safe, but it does not use movnti.
+2. memcpy_flushcache() uses movnti, but it is not MCE-safe.
 
+Additionally, according to the Intel manual, since movnti uses the WC proto=
+col
+(a weakly-ordered memory model), a fencing operation is required. Because
+memcpy_flushcache() lacks an sfence, it can result in reading stale or corr=
+upted
+data after folio_unlock().
 
-I sent a fix for the GUP code that always makes us drain right now:
+Furthermore, copy_mc_highpage() is unoptimized for page migration operation=
+s
+because it reuses copy_mc_to_kernel(), built to handle
+variable-length, unaligned
+memory. As copy_mc_highpage_nt() follows copy_mc_highpage(), it inherits th=
+is
+flaw. In contrast, copy_highpage() is optimized for page migration by lever=
+aging
+copy_page(), dedicated to 4KiB-aligned memory.
 
-https://lore.kernel.org/r/20260731-check_and_migrate_movable_folios-v1-1-e0002d7b791e@kernel.org
+Therefore, copy_mc_highpage_nt() should call a dedicated page-copy assembly
+routine that provides MCE safety, movnti stores, and an sfence, rather than=
+ the
+generic copy_mc_to_kernel_nt(). We can name it copy_mc_page_nt(), following
+the naming convention of copy_page().
 
-Would the following (agains mm-unstable + fix) work for you?
+What are your thoughts on this direction? Any feedback or suggestions would=
+ be
+greatly appreciated.
 
+Huan Nguyen
 
-I assume that you'd have to call it as
-
-	lru_cache_drain_for_folio(folio, 0, NULL);
-
-But maybe there are indeed extra references that are not reflected in
-folio_expected_ref_count() that you would have to consider? I doubt it, but please check if
-there would be a problem.
-
-There is a small problem for merging:
-
-(1) The patch depends on the fix.
-
-(2) mm/swap.c was moved to mm/folio.c in the mm tree.
-
-We could write what I have below against Linus' tree and have the conflict be resolved
-when merging. Topic branches are unfortunately not yet a thing in MM land.
-
-
-From 9e8d49ca4e77b1f843cc0113af1cc92274193399 Mon Sep 17 00:00:00 2001
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Fri, 31 Jul 2026 12:08:13 +0200
-Subject: [PATCH] mm/gup: factor out LRU cache draining for folio into
- lru_cache_drain_for_folio()
-
-KVM with guest_memfd wants to remove any folio references due to LRU
-caches, as it really must only allow to convert folios from shared to
-private when there are no unexpected folio references (e.g., from GUP
-references).
-
-So, to drive the refcount down, it needs a way to flush the LRU caches.
-Let's factor out what we have in lru_cache_drain_for_folio(),
-
-Maybe there is a chance to avoid the draining entirely in the future,
-by avoiding extra references from the LRU cache: Hugh thinks there might
-be a way. But for the time being, this handling is unfortunately
-required.
-
-Make folio_may_be_lru_cached() accept a const pointer so
-lru_cache_drain_for_folio() can accept a const pointer as well.
-
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- include/linux/swap.h |  8 ++++++++
- mm/folio.c           | 46 ++++++++++++++++++++++++++++++++++++++++++++
- mm/gup.c             | 15 ++-------------
- mm/internal.h        |  2 +-
- 4 files changed, 57 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 0544b2ec4c565..733b84e0bce43 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -298,6 +298,14 @@ void folio_add_lru(struct folio *folio);
- void folio_mark_accessed(struct folio *folio);
- void lru_add_drain_all(void);
-
-+enum lru_cache_drained {
-+	LRU_CACHE_NOT_DRAINED,
-+	LRU_CACHE_DRAINED,
-+	LRU_CACHE_DRAINED_ALL,
-+};
-+void lru_cache_drain_for_folio(const struct folio *folio,
-+		unsigned int extra_refs, enum lru_cache_drained *drained);
-+
- /* linux/mm/folio-compat.c */
- void mark_page_accessed(struct page *page);
-
-diff --git a/mm/folio.c b/mm/folio.c
-index d2937600cf726..a41d107b8b28a 100644
---- a/mm/folio.c
-+++ b/mm/folio.c
-@@ -948,6 +948,52 @@ void lru_add_drain_all(void)
- }
- #endif /* CONFIG_SMP */
-
-+/**
-+ * lru_cache_drain_for_folio() - drain LRU caches if the folio might have
-+ *				 references from the caches
-+ * @folio: The folio.
-+ * @extra_refs: Extra folio references held by the caller.
-+ * @drained: Drain status for batch folio processing.
-+ *
-+ * Drain LRU caches if the folio might be referenced by these caches, such
-+ * that e.g., later page migration will not fail due to them. Start with a
-+ * local LRU cache drain, to then drain LRU caches on all CPUs if local
-+ * draining was insufficient.
-+ *
-+ * This function detects LRU cache references by comparing the folio refcount
-+ * with the sum of the expected folio refcount + extra references held by the
-+ * caller. Note that we cannot rely on PG_lru to reliably detect all LRU
-+ * cache references.
-+ *
-+ * If @drained is not NULL, the function will avoid re-draining LRU caches
-+ * when processing multiple folios in a row. In that case, the value
-+ * @drained points to must be initialized to LRU_CACHE_NOT_DRAINED before
-+ * the first invocation, to keep passing @drained to successive invocations.
-+ */
-+void lru_cache_drain_for_folio(const struct folio *folio,
-+		unsigned int extra_refs, enum lru_cache_drained *drained)
-+{
-+	const int expected_refs = folio_expected_ref_count(folio) + extra_refs;
-+
-+	if (!folio_may_be_lru_cached(folio))
-+		return;
-+
-+	if (!drained || *drained == LRU_CACHE_NOT_DRAINED) {
-+		if (folio_ref_count(folio) == expected_refs)
-+			return;
-+		lru_add_drain();
-+		if (drained)
-+			*drained = LRU_CACHE_DRAINED;
-+	}
-+	if (!drained || *drained == LRU_CACHE_DRAINED) {
-+		if (folio_ref_count(folio) == expected_refs)
-+			return;
-+		lru_add_drain_all();
-+		if (drained)
-+			*drained = LRU_CACHE_DRAINED_ALL;
-+	}
-+}
-+
- atomic_t lru_disable_count = ATOMIC_INIT(0);
-
- /*
-diff --git a/mm/gup.c b/mm/gup.c
-index 41c3317e0f0f4..297e7de81c374 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2266,9 +2266,9 @@ static unsigned long collect_longterm_unpinnable_folios(
- 		struct list_head *movable_folio_list,
- 		struct pages_or_folios *pofs)
- {
-+	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
- 	unsigned long collected = 0;
- 	struct folio *folio;
--	int drained = 0;
- 	long i = 0;
-
- 	for (folio = pofs_get_folio(pofs, i); folio;
-@@ -2293,18 +2293,7 @@ static unsigned long collect_longterm_unpinnable_folios(
- 		 * but also to remove any other folio references from LRU
- 		 * caches.
- 		 */
--		if (drained == 0 && folio_may_be_lru_cached(folio) &&
--				folio_ref_count(folio) !=
--				folio_expected_ref_count(folio) + pin_refs) {
--			lru_add_drain();
--			drained = 1;
--		}
--		if (drained == 1 && folio_may_be_lru_cached(folio) &&
--				folio_ref_count(folio) !=
--				folio_expected_ref_count(folio) + pin_refs) {
--			lru_add_drain_all();
--			drained = 2;
--		}
-+		lru_cache_drain_for_folio(folio, pin_refs, &drained);
-
- 		if (!folio_isolate_lru(folio))
- 			continue;
-diff --git a/mm/internal.h b/mm/internal.h
-index f26423de4ca28..7aa787768353a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -46,7 +46,7 @@ void lru_note_cost_unlock_irq(struct lruvec *lruvec, bool file,
- void lru_note_cost_refault(struct folio *folio);
- void folio_add_lru_vma(struct folio *folio, struct vm_area_struct *vma);
-
--static inline bool folio_may_be_lru_cached(struct folio *folio)
-+static inline bool folio_may_be_lru_cached(const struct folio *folio)
- {
- 	/*
- 	 * Holding PMD-sized folios in per-CPU LRU cache unbalances accounting.
--- 
-2.43.0
-
-
--- 
-Cheers,
-
-David
+On Thu, Jul 30, 2026 at 8:03=E2=80=AFAM Yiannis Nikolakopoulos
+<yiannis.nikolakop@gmail.com> wrote:
+>
+> From: Alirad Malek <alirad.malek@zptcorp.com>
+>
+> In x86, use memcpy_flushcache (that uses non-temporal store
+> instructions) to copy a folio. To achieve that, starting from folio_mc_co=
+py
+> down to copy_mc_to_kernel, create a series of helpers (named with an _nt
+> suffix) that have similar behavior to the original counterparts.
+>
+> Signed-off-by: Alirad Malek <alirad.malek@zptcorp.com>
+> Co-developed-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+> Signed-off-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+> ---
+>  arch/x86/include/asm/uaccess.h |  4 ++++
+>  arch/x86/lib/copy_mc.c         | 26 ++++++++++++++++++++++++++
+>  include/linux/highmem.h        | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/mm.h             |  1 +
+>  mm/util.c                      | 17 +++++++++++++++++
+>  5 files changed, 80 insertions(+)
+>
+> diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uacces=
+s.h
+> index 367297b188c3..2d0938d3e372 100644
+> --- a/arch/x86/include/asm/uaccess.h
+> +++ b/arch/x86/include/asm/uaccess.h
+> @@ -494,6 +494,10 @@ unsigned long __must_check
+>  copy_mc_to_kernel(void *to, const void *from, unsigned len);
+>  #define copy_mc_to_kernel copy_mc_to_kernel
+>
+> +unsigned long __must_check
+> +copy_mc_to_kernel_nt(void *to, const void *from, unsigned len);
+> +#define copy_mc_to_kernel_nt copy_mc_to_kernel_nt
+> +
+>  unsigned long __must_check
+>  copy_mc_to_user(void __user *to, const void *from, unsigned len);
+>  #endif
+> diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
+> index 97e88e58567b..5a2ee5c2211e 100644
+> --- a/arch/x86/lib/copy_mc.c
+> +++ b/arch/x86/lib/copy_mc.c
+> @@ -81,6 +81,32 @@ unsigned long __must_check copy_mc_to_kernel(void *dst=
+, const void *src, unsigne
+>  }
+>  EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
+>
+> +/**
+> + * copy_mc_to_kernel_nt - memory copy that handles source exceptions
+> + * if enabled, otherwise uses non-temporal stores
+> + * @dst: destination address
+> + * @src: source address
+> + * @len: number of bytes to copy
+> + *
+> + * Return 0 for success, or number of bytes not copied if there was an
+> + * exception.
+> + */
+> +unsigned long __must_check copy_mc_to_kernel_nt(void *dst, const void *s=
+rc, unsigned len)
+> +{
+> +       unsigned long ret;
+> +
+> +       if (copy_mc_fragile_enabled) {
+> +               instrument_memcpy_before(dst, src, len);
+> +               ret =3D copy_mc_fragile(dst, src, len);
+> +               instrument_memcpy_after(dst, src, len, ret);
+> +               return ret;
+> +       }
+> +
+> +       memcpy_flushcache(dst, src, len);
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(copy_mc_to_kernel_nt);
+> +
+>  unsigned long __must_check copy_mc_to_user(void __user *dst, const void =
+*src, unsigned len)
+>  {
+>         unsigned long ret;
+> diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+> index af03db851a1d..a5cb435b9ffe 100644
+> --- a/include/linux/highmem.h
+> +++ b/include/linux/highmem.h
+> @@ -468,6 +468,32 @@ static inline int copy_mc_highpage(struct page *to, =
+struct page *from)
+>
+>         return ret;
+>  }
+> +
+> +#ifdef copy_mc_to_kernel_nt
+> +static inline int copy_mc_highpage_nt(struct page *to, struct page *from=
+)
+> +{
+> +       unsigned long ret;
+> +       char *vfrom, *vto;
+> +
+> +       vfrom =3D kmap_local_page(from);
+> +       vto =3D kmap_local_page(to);
+> +       ret =3D copy_mc_to_kernel_nt(vto, vfrom, PAGE_SIZE);
+> +       if (!ret)
+> +               kmsan_copy_page_meta(to, from);
+> +       kunmap_local(vto);
+> +       kunmap_local(vfrom);
+> +
+> +       if (ret)
+> +               memory_failure_queue(page_to_pfn(from), 0);
+> +
+> +       return ret;
+> +}
+> +#else
+> +static inline int copy_mc_highpage_nt(struct page *to, struct page *from=
+)
+> +{
+> +       return copy_mc_highpage(to, from);
+> +}
+> +#endif
+>  #else
+>  static inline int copy_mc_user_highpage(struct page *to, struct page *fr=
+om,
+>                                         unsigned long vaddr, struct vm_ar=
+ea_struct *vma)
+> @@ -481,6 +507,12 @@ static inline int copy_mc_highpage(struct page *to, =
+struct page *from)
+>         copy_highpage(to, from);
+>         return 0;
+>  }
+> +
+> +static inline int copy_mc_highpage_nt(struct page *to, struct page *from=
+)
+> +{
+> +       copy_highpage(to, from);
+> +       return 0;
+> +}
+>  #endif
+>
+>  static inline void memcpy_page(struct page *dst_page, size_t dst_off,
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 5be3d8a8f806..d07ce478582d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1644,6 +1644,7 @@ void __folio_put(struct folio *folio);
+>  void split_page(struct page *page, unsigned int order);
+>  void folio_copy(struct folio *dst, struct folio *src);
+>  int folio_mc_copy(struct folio *dst, struct folio *src);
+> +int folio_mc_copy_nt(struct folio *dst, struct folio *src);
+>
+>  unsigned long nr_free_buffer_pages(void);
+>
+> diff --git a/mm/util.c b/mm/util.c
+> index b05ab6f97e11..e09e9b5f8eee 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -749,6 +749,23 @@ int folio_mc_copy(struct folio *dst, struct folio *s=
+rc)
+>  }
+>  EXPORT_SYMBOL(folio_mc_copy);
+>
+> +int folio_mc_copy_nt(struct folio *dst, struct folio *src)
+> +{
+> +       long nr =3D folio_nr_pages(src);
+> +       long i =3D 0;
+> +
+> +       for (;;) {
+> +               if (copy_mc_highpage_nt(folio_page(dst, i), folio_page(sr=
+c, i)))
+> +                       return -EHWPOISON;
+> +               if (++i =3D=3D nr)
+> +                       break;
+> +               cond_resched();
+> +       }
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(folio_mc_copy_nt);
+> +
+>  int sysctl_overcommit_memory __read_mostly =3D OVERCOMMIT_GUESS;
+>  static int sysctl_overcommit_ratio __read_mostly =3D 50;
+>  static unsigned long sysctl_overcommit_kbytes __read_mostly;
+>
+> --
+> 2.43.0
+>
