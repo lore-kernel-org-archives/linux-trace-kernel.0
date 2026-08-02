@@ -1,39 +1,44 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DD0321457
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  2 Aug 2026 18:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814FC3264EF
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  2 Aug 2026 18:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785696212; cv=none; b=ojHGzgOV2JSo8jUr5bIKcn2LYfkzjl8Tr/xtr1wuTC3f609DMSFGHk73j7Z5BlFLN70QDTOkJy/QMK/v9TXtWBaxPZ2A912AklGaCnQtrs6wwB27HTs+XD1SgY69iIfyTkM4eiUiaU6/7Sb8c1Kjv+S9/kKUbD30D/xw0gD2s18=
+	t=1785696214; cv=none; b=n1ifCoCLZoNTNnxg7b+KgZjHHz2H1YW7U8NW141mx7rojwjFz6+/w1Ans15r90iTpfVKq4XCL214kRkKclAM2L6J1FfEZokMX7RV42CcDgxwPlwvDkO/rYeeErotKey+vP+bQarBKxd+pPONeBZlRXEkPblSEu/dREVuIXGkGoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785696212; c=relaxed/simple;
-	bh=YEyzjMeS8js33AEl9GjtVkwpQHSkGLvkcMotlrnmauM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XlJm9/gauGzicOPdGpHsvki+Pp8HcQ6cLDk1xTChGnZtNMrafGft0LXftlWx+ptVtVUo2xBwiDPiYpaCMdLYL7KD7N9D8wVSCnIXWQlBAl3B/s22UyBGLmHOy1o+bMD5gd+7lHv7EaSs1FAhXzlOUgbhIInQ+ZUjpHLBheomKV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RX3smoIP; arc=none smtp.client-ip=91.218.175.185
+	s=arc-20240116; t=1785696214; c=relaxed/simple;
+	bh=TxRBgbTF3yjk8RfdptAdirInkEmw8cmqXAbU2gNLvSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oova4aJxPZjP8NJ4PN/bFmy/zAlFlrKR0Z8Qp7ZtRZJsSUEUolDO5U6OYEw0Vw2fdHdeMI8jzd6BNwH6glNhciBnk6q5//Pj7mQWNx5Ii2j5fuSUzoYnej7gMgarnNDl7KFC2ebiOR8Q3+BtE8GCdkEvQLV26M1ORIqVOhxWdcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=chipe/nk; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RX3smoIP"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="chipe/nk"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785696206;
+	t=1785696210;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4p2L5iN6WpUtpBEvtUH8ZiYDXcD2XCF9Z9RPFykDAFg=;
-	b=RX3smoIPKucsT2OzTuNM1Zcv2miup9DMPODirtl8N2ha7OxADpVHYIjA6bNeeb5/8H4ync
-	c8TQjHx20WWujSSDAX/zOu3YoOHYlgAsCTlg3moJQfPrnFE8MI+V+UvXpOTfkaShnmb26r
-	EqMAvwEtTv7HGLtVy72yg0O6KqgDKh4=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xfGZ5mxxGbASPb597QUgHIhYoVOQiaIlYyKMsccGqd4=;
+	b=chipe/nkubhALK+0VxDuFC/AmMUifQNxMB9sj4VcIlaDoqiiBEqTYRc+D9hCATpRdAJMyO
+	ama+D0FOwIyAaK3FXF9ac8QzkeneGJsegTc/UawI3KmAhzAiZEl2nXhv1fuQxO0Wq0pETw
+	6eRX3niEtaZQjdLG4833uuhg/b9WI1Q=
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v2 0/4] rv/reactors: fix lockdep warning and add KUnit tests
-Date: Mon,  3 Aug 2026 02:43:01 +0800
-Message-Id: <cover.1785695669.git.wen.yang@linux.dev>
+	Wen Yang <wen.yang@linux.dev>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Subject: [PATCH v2 1/4] rv/reactors: use context-sensitive lockdep wait type in rv_react()
+Date: Mon,  3 Aug 2026 02:43:02 +0800
+Message-Id: <fb4c2c0ab10e32bb02cd7da747a00ef988eaf276.1785695669.git.wen.yang@linux.dev>
+In-Reply-To: <cover.1785695669.git.wen.yang@linux.dev>
+References: <cover.1785695669.git.wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -46,60 +51,75 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Wen Yang <wen.yang@linux.dev>
 
-We occasionally hit a lockdep "Invalid wait context" warning in
-production when a reactor callback is preempted by a timer interrupt.
-On interrupt exit the scheduler takes rq->__lock (LD_WAIT_SPIN) while
-rv_react() still holds its wait-type-override map, which declared
-LD_WAIT_FREE.  On a preemptible kernel (e.g. CONFIG_PREEMPT_RT) this
-triggers a spurious lockdep report:
+The single DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_FREE) in
+rv_react() declares wait_type_inner = LD_WAIT_FREE for every execution
+context.  In a preemptible context (e.g. CONFIG_PREEMPT_RT or a KUnit
+test running on a task), a timer interrupt can fire during a reactor
+callback; the interrupt exit path then schedules and acquires rq->__lock
+(LD_WAIT_SPIN) while the override map is still held.  Since the map
+declares the context to be wait-free, lockdep reports a spurious
+"Invalid wait context" warning:
 
     [ BUG: Invalid wait context ]
+    context-{5:5}
     1 lock held by kunit_try_catch/209:
      #0: (rv_react_map-wait-type-override){+.+.}-{1:1}
     kunit_try_catch/209 is trying to lock:
     ffff8a743ed3e8a0 (&rq->__lock){-...}-{2:2}
 
-Changes in v2:
-- Use a context-sensitive override map: LD_WAIT_SPIN in preemptible
-  contexts, LD_WAIT_FREE in NMI/hardirq where the scheduler cannot run
-  (patch 1).
-- Merge the v1 printk/panic test files into one generic rv_reactors_kunit
-  covering registration and dispatch, as the v1 tests were mostly not
-  reactor-specific (patches 2-4).
-- Export rv_register_reactor()/rv_unregister_reactor() so the tristate
-  KUnit module can link against them (patch 3).
-- Propagate rv_register_reactor() errors from the built-in reactor init
-  functions instead of silently ignoring them (patch 2).
-- KUnit tests are tristate (usable with CONFIG_KUNIT=m) and verify the
-  callback is actually invoked (atomic counter), the exact -EINVAL on
-  duplicate registration, and use mdelay(5) to exercise the lockdep
-  context under load.  A teardown action unregisters the test reactor
-  even if a test aborts.
+Use two lockdep override maps, selected by execution context:
 
-Patch 1 fixes the lockdep warning.  Patches 2-3 make the registration
-API usable by the test module and propagate its errors.  Patch 4 adds
-the KUnit tests.
+  - Preemptible context (task, softirq, PREEMPT_RT irq thread): the
+    scheduler may preempt, so use LD_WAIT_SPIN, the tightest wait type
+    the scheduler itself uses, to suppress the spurious warning.
 
-Tested with CONFIG_PROVE_LOCKING=y and CONFIG_KUNIT=y.
+  - NMI/hardirq context: preemption is disabled and the scheduler cannot
+    run, so the false positive cannot arise.  Keep LD_WAIT_FREE here to
+    preserve the original constraint that reactors must not take raw
+    spinlocks in atomic context.
 
+Fixes: 69d8895cb9a9 ("rv: Add explicit lockdep context for reactors")
+Signed-off-by: Wen Yang <wen.yang@linux.dev>
+Cc: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ kernel/trace/rv/rv_reactors.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-
-Wen Yang (4):
-  rv/reactors: use context-sensitive lockdep wait type in rv_react()
-  rv/reactors: propagate rv_register_reactor() error from reactor init
-  rv/reactors: export rv_register_reactor() and rv_unregister_reactor()
-  rv/reactors: add KUnit tests for reactor registration and dispatch
-
- kernel/trace/rv/Kconfig             |  12 +++
- kernel/trace/rv/Makefile            |   1 +
- kernel/trace/rv/reactor_panic.c     |   3 +-
- kernel/trace/rv/reactor_printk.c    |   3 +-
- kernel/trace/rv/rv_reactors.c       |  19 +++-
- kernel/trace/rv/rv_reactors_kunit.c | 143 ++++++++++++++++++++++++++++
- 6 files changed, 172 insertions(+), 9 deletions(-)
- create mode 100644 kernel/trace/rv/rv_reactors_kunit.c
-
-base-commit: 984b5a36fd12d1849511a45fda32036fe2b0d004
+diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
+index 2f5fc8d18dea..cd571b1649f5 100644
+--- a/kernel/trace/rv/rv_reactors.c
++++ b/kernel/trace/rv/rv_reactors.c
+@@ -465,18 +465,25 @@ int init_rv_reactors(struct dentry *root_dir)
+ 
+ void rv_react(struct rv_monitor *monitor, const char *msg, ...)
+ {
+-	static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_FREE);
++	/*
++	 * A reactor callback can be preempted; the scheduler then takes
++	 * rq->__lock (LD_WAIT_SPIN).  Advertise that in preemptible contexts
++	 * to avoid a spurious lockdep report, and keep LD_WAIT_FREE in atomic
++	 * ones where the scheduler cannot run.
++	 */
++	static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map,        LD_WAIT_SPIN);
++	static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map_atomic, LD_WAIT_FREE);
++	struct lockdep_map * __maybe_unused map;
+ 	va_list args;
+ 
+ 	if (!rv_reacting_on() || !monitor->react)
+ 		return;
+ 
++	map = (in_nmi() || in_hardirq()) ? &rv_react_map_atomic : &rv_react_map;
+ 	va_start(args, msg);
+-
+-	lock_map_acquire_try(&rv_react_map);
++	lock_map_acquire_try(map);
+ 	monitor->react(msg, args);
+-	lock_map_release(&rv_react_map);
+-
++	lock_map_release(map);
+ 	va_end(args);
+ }
+ EXPORT_SYMBOL_GPL(rv_react);
 -- 
 2.25.1
 
