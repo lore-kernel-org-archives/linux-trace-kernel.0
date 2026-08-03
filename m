@@ -1,117 +1,124 @@
-Received: from out28-74.mail.aliyun.com (out28-74.mail.aliyun.com [115.124.28.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDF235F179;
-	Mon,  3 Aug 2026 09:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410B4376A00
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 10:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785750069; cv=none; b=Nq/AHbcZKUPZJam7O7r+o39+GCb3jHcGrNsRS3NL1AkCei2qBifO7q9omDbhCxPZbpyOGcA2mS874SqgM2Ul4+ta2djhKtYnKlKM8DH1GyPVKUz6fT6UU01CCvqi30Da+ywiwjCH7q0/LNAcn++wl9N1Fi9jGv/SVH7pNda1oUk=
+	t=1785753199; cv=none; b=SPo6gyJWpAZdMCHfgFxwWaarPByxbLgRNqGWIOPQFZVAmZdk6lS7CiRJkXaJNZGuAK97ROGGZuYYA/7UDyqgatkq4aRHh3pelHE6OZllmE8KtDyUQr92gfoalOHSgP2lS7wBPIdSxHEkt+CcQ/PMSSUb9h+sJVtUi+0zJXOwWog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785750069; c=relaxed/simple;
-	bh=nAMFZTHCttgJCNHYFXGQb+9h1FTNbn4pBwLZITTZOvg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=iGHxIkLC0K89aDjoD8AMjLvFwEZJd4YSz/Y6aM1JBrz5Bxf+Le/z0OWnQGfiY20GoFL6g9VVEDBNoWP8xnShGTzj0BYb3T9CNTUrpmFIX3yBWZjT2fuw2iDXiA+LiWjoUaqPlGwmMk+aLToBrtycDJO1ZC0suJjVfUoW3GMQgR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07509217|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0118639-0.030535-0.957601;FP=13175772313018746238|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037028158;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.icYKc3I_1785750055;
-Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.icYKc3I_1785750055 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Mon, 03 Aug 2026 17:40:56 +0800
-Message-ID: <6c515e5f-66f4-0dc7-00f2-69f319c8ad87@allwinnertech.com>
-Date: Mon, 3 Aug 2026 17:40:55 +0800
+	s=arc-20240116; t=1785753199; c=relaxed/simple;
+	bh=mQbaH5tI+IruZWucS8AJeU4qoJiDpkOvFU79qqUCJGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2FYomL1eBAFuk/0m1yW70BDHbq2/XMtXu/1dswS+rpMRmtSmfMX6A8Xfs4FLt9dP48Bs08c61AdCzcMDgBSIjCwW3ZwoHVvNC9FdT/U1JqAWjJQElffacbYI5d+YrVM4TXboTPN1w4itPEl/ZsiZ+W+D4QcvBpPGIGpjTjE8lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eUNLPHTy; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eUNLPHTy"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-47fdb6f7d72so633126f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 03:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785753196; x=1786357996; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kW6C1+4rNhE+0PMn+ucH4K3CUSEGpMH1odrzmczVGFM=;
+        b=eUNLPHTyle+K1jy6YnXFv/hWDuBZ3SXmPt6m2LD0zF+9vQf64wwU4KPvn+O7IQ61Tl
+         8ed/F9ueqZM3OliXxw7Xefun2aPnjR3NpVXeapvFjrOHuclosOS9r7aQHAtrA/QMOig6
+         COyzHH50HolnbSSQbJT1eYT2Z8yOne6J/3fw97UoazsEQGxMbO6XJPI29SKR0EuCVyuq
+         KDUN2ur/rla8J4DaxEyqleuycs9lBRYzACYrmVVLWHz1kZrmdxLBSHxXtE/AGXEtYiY5
+         ZMf0LFoWcep8X7t5FcNONuI/5wtak+Soox8Iy1300hM99iWSyndQyq56QnZAEnUHdeo1
+         bZFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785753196; x=1786357996;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kW6C1+4rNhE+0PMn+ucH4K3CUSEGpMH1odrzmczVGFM=;
+        b=sZON4j4xpNwHEC2Ye3ElspeQJpIrwi90U8MxtPxzLdcDFQbQz+RRSANiZnQK4sAYlm
+         LRik2dr4JafKaFc58lpuRIc4edqBvl9GVDZ5lalq7k2dHWnThDgVUWjopWF6EXfksnNe
+         KsTWm/vvrC3Z/myOHPf3uLuAe+YOFGLzFOTY40RM+27pQ5FP3IfkFdmWKAcVmGhrxA2R
+         iE42R1wRk9LK42NJTjhA0JkFHIdBiFZ84fOKs0n6KQsV6jF4Y26YIQOq3xbmrvQCJ6gc
+         SA4dUGE8ySsElf438UtnHoZ/uQnAThmIP4GYg/Zcvwa5UJ0DzICDM4cA9b29wc73h3xl
+         HK5w==
+X-Forwarded-Encrypted: i=1; AHgh+Rq1uWCsl6uV/gnAYZ3TM/KcvGTonXOx/JvNSDAyOOLacUMfu4VPwIcehpPiedDbfi3D3yPyBvixjFq+tFqzqrqjPQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPcd3Xb0L0rJurB1UfMmJ302qWawTnmR4rYP9Ws00JkmOfGLMY
+	wFX/G+aPqXZb7Y+f8VyIfRpLZ0iBIkw99Ay3+5zPZT1qTAxAyftJXZEwKd4Vs95lHQ==
+X-Gm-Gg: AR+sD11+5tcz8zQU5gbACmQj+HOfGncTqeE6+wI4bAyPW3BXrTXTuAtatOdAcAR1bI1
+	NzK5yT6qa61gTQnBHh1TKEoxng22qUKyLo8ko8AmI+IEgBSNYJZNJVbrDhrIpKGd63b3bVKc/Rg
+	r9gWwzRq+qZKdVtUCFBLt9o1kFTiUUvORjOQ6iVV1OA8pIWeuAC2ou8yOJsAkbMEL41rtzb0Lnm
+	yBE+SvT27ngNG+aY0g9oWaovvcA8VG8E7hkEPxf7/P5LLg8CCOiebgfb2D4L4Dpm9W+4Vj4Rh65
+	49SW0kack+91ejmnA3MRGhfgnU5uaWkIEZ/5rumIsxT1EcZ58pG07kxRt1I6yvpuSenQuAyMxpm
+	i9rqEMBnaPhXAcdJut+kOgXERFGAqFcPK+pTBle3lfZ2+83HC3IELGXxsp7m31pE8f60iZzzU/X
+	L0cmbACTueMKXv7nA7aaIfi0bVXeb3jQVn2Vdiz86V/imSDvkWLSTijwO6pE8h7C/7paaaFLNHi
+	+A2ZoW128Ule68RARDqux9AJI3kyQJFxVZv4KPu3mVh
+X-Received: by 2002:a05:600c:8711:b0:495:52a5:8829 with SMTP id 5b1f17b1804b1-4980c652515mr253557695e9.11.1785753195960;
+        Mon, 03 Aug 2026 03:33:15 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b5f007sm209718545e9.6.2026.08.03.03.33.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2026 03:33:15 -0700 (PDT)
+Date: Mon, 3 Aug 2026 11:33:11 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Fuad Tabba <fuad.tabba@linux.dev>
+Cc: maz@kernel.org, oupton@kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, alexandru.elisei@arm.com,
+	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, qperret@google.com, ardb@kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	tabba@google.com
+Subject: Re: [PATCH v1 03/11] KVM: arm64: nVHE: Declare the hyp event IDs
+ before defining them
+Message-ID: <anBuZwkjDQKRKVlr@google.com>
+References: <20260720161343.1367007-1-fuad.tabba@linux.dev>
+ <20260720161343.1367007-4-fuad.tabba@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Content-Language: en-US
-From: Michael Wu <michael@allwinnertech.com>
-Subject: [PATCH v4] tracing: Fix race between update_event_fields and,
- event_define_fields
-To: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260720161343.1367007-4-fuad.tabba@linux.dev>
 
-event_define_fields() (pri=1 MODULE_STATE_COMING notifier, locked by
-event_mutex) populates class->fields via list_add(), while
-update_event_fields() (called from the pri=0 notifier path via
-trace_event_update_all) traverses class->fields protected only by
-trace_event_sem.  These are two different locks guarding the same
-data structure, so during cross-module loading a reader on one CPU can
-observe partially initialized list nodes being concurrently added by a
-writer on another CPU.
+On Mon, Jul 20, 2026 at 05:13:35PM +0100, Fuad Tabba wrote:
+> The defining expansion of HYP_EVENT() in events.c is the first time
+> its translation unit meets hyp_event_id_<name>, so sparse suggests
+> making the symbols static. Include kvm_hypevents.h ahead of
+> define_events.h so the extern declarations come first, as with the
+> tracepoint headers.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 
-On arm64 with weak memory ordering, __list_add() writes to two
-different cache lines:
+Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
+Tested-by: Vincent Donnefort <vdonnefort@google.com>
 
-        next->prev = new;                // (1) ordinary store
-        new->next = next;                // (2) ordinary store
-        new->prev = prev;                // (3) ordinary store
-        WRITE_ONCE(prev->next, new);    // (4) release store
+> ---
+>  arch/arm64/kvm/hyp/nvhe/events.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/events.c b/arch/arm64/kvm/hyp/nvhe/events.c
+> index add9383aadb5a..b845be0acd117 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/events.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/events.c
+> @@ -7,6 +7,8 @@
+>  #include <nvhe/mm.h>
+>  #include <nvhe/trace.h>
+>  
+> +#include <asm/kvm_hypevents.h>
+> +
+>  #include <nvhe/define_events.h>
+>  
+>  int __tracing_enable_event(unsigned short id, bool enable)
+> -- 
+> 2.39.5
+> 
 
-The store buffer can drain (2) and (4) independently since they target
-different cache lines.  A remote CPU may observe (4) before (2): it
-sees prev->next pointing to the new node, but the new node's link.next
-is still zero (kmem_cache_alloc zero-initialized via KMEM_CACHE with
-SLAB_PANIC).  Since offsetof(struct ftrace_event_field, link) == 0,
-list_for_each_entry() derives field == NULL from link.next == 0 and
-crashes at field->type (offset 0x18):
-
-  Unable to handle kernel access ... at virtual address 0000000000000018
-  pc : update_event_fields+0xf8/0x368
-  Call trace:
-   update_event_fields+0xf8/0x368
-   trace_event_update_all+0x7c/0x2b4
-   trace_module_notify+0x4c/0x1dc
-   notifier_call_chain+0x84/0x168
-   blocking_notifier_call_chain_robust+0x64/0xd4
-   load_module+0x10c8/0x123c
-   __arm64_sys_finit_module+0x230/0x31c
-
-Fix by holding event_mutex in trace_event_update_all() before
-down_write(&trace_event_sem).  This serializes the reader against
-event_define_fields() which takes event_mutex for the entire
-write-side critical section.  The lock ordering event_mutex ->
-trace_event_sem is already established at three other sites
-(trace_remove_event_call, event_trace_add_tracer,
-event_trace_del_tracer), so this introduces no ordering conflict.
-
-An alternative of placing mutex_lock inside update_event_fields() was
-considered but rejected -- it would invert the established lock
-ordering (trace_event_sem -> event_mutex) and risk ABBA deadlock.
-
-Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Wu <michael@allwinnertech.com>
----
- kernel/trace/trace_events.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 956692856fa8..9632788da5af 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
- 	int last_i;
- 	int i;
- 
-+	mutex_lock(&event_mutex);
- 	down_write(&trace_event_sem);
- 	list_for_each_entry_safe(call, p, &ftrace_events, list) {
- 		/* events are usually grouped together with systems */
-@@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
- 		cond_resched();
- 	}
- 	up_write(&trace_event_sem);
-+	mutex_unlock(&event_mutex);
- }
- 
- static bool event_in_systems(struct trace_event_call *call,
 -- 
-2.29.0
+Vincent
