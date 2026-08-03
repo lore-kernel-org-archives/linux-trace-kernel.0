@@ -1,134 +1,98 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0AB40FDB9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 15:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1C440BCBC
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 15:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785769424; cv=none; b=KFQeBNRnAGhwBngqmV9Y3y8Nz6l/+eYEULvHhnWmWTTpk5UcMUonb0Tjaio6pEmqbjCbeQhfcy40lfwk4CqHPIZutxQHutJZj4C+GBHYYMZXSpDQD/R5Wl0vnXkzKTEg3upEpE141pxsEu4PGrI3v2mVh+/3t1++6DCHfs4UMcI=
+	t=1785769614; cv=none; b=ldAQeCBX2GmZfekIGptRQvTE+CTD9at0f4JgavC5LQi+Yi9lKwU6K3QiagAQ1qHt3fX9wrtuJvPb+L/yz7U8+72o3RvUmKyhdUu/7Y0Plr3Oac5PQr5JmwCZLfOSOBbQIX4i0PhX5aKrn3rwvB59g8xSQZ88Q5DQou4rk0d4vkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785769424; c=relaxed/simple;
-	bh=xpuun2FpwKl9xPy2b0ojl3YaE6k3z96AypSR1+LJ1mM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=e5w3PursMrkp31KTM/Nks0VCX0VRG7ir7kklUDaAt9EtFGfpdqNoDixmtN0brbpAtUcOwOOdMk/tfWsQwiFKMhnSGeoyM4JRMihjVKq9uNHxDTlVtJDmTKyWMoFwXBc//QmuYAGDhepbaF9H6SSROOvdTgsQnHVCFhfPOp0tV6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NwgDxCAO; arc=none smtp.client-ip=209.85.210.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1785769614; c=relaxed/simple;
+	bh=MpO+pp2HiIWUjhzqCv/Lq5OWy9Yjn3b8JJ6qtSY7O9g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=EWkr71v3HOZ6HN/U1jMGZFcJNzUa3D94hfC3zSYHDQ5wJOL/tw6yW7hQElYuGDWRGhp6dx0bAjKOig+sKpuJZRFZVBncs0NBgGKNd1At/XxFnXABaDL7ycivzEgF0oVTwybd7vPSEEFBOW+43Mbfek+WGTcttmPyVRfKGtdATV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BEtikFkL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NwgDxCAO"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-84857446424so6671396b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 08:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785769422; x=1786374222; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kpmlhPaZ29dFNT38yqO3kihwGUlr59oo46zK4tKVuxM=;
-        b=NwgDxCAOP/Xtj8kYIjHtm6DbddQCtB92rxY3XZFV546upM9mp6NbsBf/OhR0+ElIny
-         F+2Zt9cfHVO5hVNYxXdXfA53A3ZkIr+BBjkSbBSt1dfLuLhXm9JsOiOpGGhbypYcS1nU
-         gxf6DtDemW0fLSSRPCtYHtFRbViRbT/DJ/tWusGe1eeILGOqWrmbe3aGO4Ri+pnd7O/N
-         TiNu3TUQZP78ygRPv3CkdOYfJ4URivnbfsPBpsUHbYoquTwi6AyQV13iBlUcFnCqykcN
-         6m5IfnXtHqnJgo9UZnFH3MFMAavHS+RUUeCzSCjV7fY/qurLk3V/Vo+L4UE2gOTGBfqu
-         5FHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785769422; x=1786374222;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kpmlhPaZ29dFNT38yqO3kihwGUlr59oo46zK4tKVuxM=;
-        b=HGp/VMA/266Nt8IMs8I/7ST0gWj67nyRqPFSEWkH5Lm3vTjturAH9ES1hnDRKcRfuI
-         fuTO8SUK8sV0gBboMA2LL0flJ2COXPs0Y5vXKpLO3pIyjjM2daeS2z5ggMGznANgCCBP
-         +zkAVm1DZ0XOzO9DCClYxqOeRqAwf/6UQk2UQ2V+D+2QDXjY0YFBLkrQNakJVngvQvcR
-         PCh3lA5OgrQxEHXPWXDx7EVXNtGWpAaEXgYcGtnGHwGFXls1alynFum0EQjeCK3gt+Ue
-         ekiO8HIYDtBkCKaevCajaLIpChoxpKvjj+5qNnL4EcZtpvcc9/blh1qRj3foB8kV+Wi2
-         dOhg==
-X-Forwarded-Encrypted: i=1; AHgh+RoCK3RLMMfi9KgLBw+GPvBSjuAkELmGx954iT+dWBH++1JH+xNb4/QlLA+I7bXBZbyPFSNdFVz1wDs+jyv3tXyuKmU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeVPld+f+pCEYQSuyNjCdpHEU9CJ9Ig5XsPL0xvdcZoR+zDebu
-	UfWyN2MoQlXR92Xi3Anz2KlFI7VGPhUS636h/ZWTfY1SDv9mdZdofViixi/9KSfM9DssGAQjLzI
-	r4HEfpw==
-X-Received: from pfbki10.prod.google.com ([2002:a05:6a00:948a:b0:847:7765:a4c3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1f08:b0:84e:d51d:86c9
- with SMTP id d2e1a72fcca58-84ee490ac84mr9200662b3a.44.1785769421725; Mon, 03
- Aug 2026 08:03:41 -0700 (PDT)
-Date: Mon, 3 Aug 2026 08:03:41 -0700
-In-Reply-To: <be77c2cb-6e41-4382-9d2f-cd299f634196@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BEtikFkL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785769612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ACvWihxYy/ul4bcXakvZISOJgaz8YCKLC49bix6yqKs=;
+	b=BEtikFkLoGcSb49k6VKiBMFtVRyOvVGifRSEGuyqrjFTs2WvoGdjDsNlict49TAm28+qTi
+	NJkySf+U1ZOI36WtPRUgzVyBBCbBIc5FTyoAgMSHA0H+G6ANfTkBwk9z+TGKAfs+HjfjOD
+	hHtQ64gnUMJ9hegqX1HgzxwqxB6kNJ0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-163-OHSNcvpAOUmmzSagtCEN_Q-1; Mon,
+ 03 Aug 2026 11:06:49 -0400
+X-MC-Unique: OHSNcvpAOUmmzSagtCEN_Q-1
+X-Mimecast-MFC-AGG-ID: OHSNcvpAOUmmzSagtCEN_Q_1785769606
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9AC361800358;
+	Mon,  3 Aug 2026 15:06:46 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3F40F180036E;
+	Mon,  3 Aug 2026 15:06:44 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Nam Cao <namcao@linutronix.de>,
+	linux-trace-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>
+Subject: [PATCH] rv: Fix 32-bit build of nomiss KUnit test
+Date: Mon,  3 Aug 2026 17:06:22 +0200
+Message-ID: <20260803150622.322806-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-14-35f9aec2aed2@google.com>
- <4460e252-b6de-4df3-bea8-0368a9d0f4ff@kernel.org> <CAEvNRgEUQSju2tW_1zMk2=QmveZNtmkjjCZdqVBgBD2JPh0k4Q@mail.gmail.com>
- <a823e3d2-8acf-49d9-a812-ac1bb2136d7f@kernel.org> <edc3566b-370c-41a0-a71d-2e4a0e1a94f7@kernel.org>
- <CAEvNRgEas_9BEV-cNxXu4_wQx8sR2M4_OaW6DEd4=fszALMV0w@mail.gmail.com>
- <60552bee-3326-4917-b00f-5fb7ba3b8adb@kernel.org> <be77c2cb-6e41-4382-9d2f-cd299f634196@kernel.org>
-Message-ID: <anCtzQrUkFSSq8De@google.com>
-Subject: Re: [PATCH v9 14/41] mm: swap: Introduce lru_add_drain_progressive()
-From: Sean Christopherson <seanjc@google.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, "hughd@google.com" <hughd@google.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: fygnxHOW3E3q1Sc1NiVq72XEbsPkb6iVL5s5TSBRJVQ_1785769606
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Fri, Jul 31, 2026, David Hildenbrand (Arm) wrote:
-> I sent a fix for the GUP code that always makes us drain right now:
-> 
-> https://lore.kernel.org/r/20260731-check_and_migrate_movable_folios-v1-1-e0002d7b791e@kernel.org
-> 
-> Would the following (agains mm-unstable + fix) work for you?
-> 
-> 
-> I assume that you'd have to call it as
-> 
-> 	lru_cache_drain_for_folio(folio, 0, NULL);
-> 
-> But maybe there are indeed extra references that are not reflected in
-> folio_expected_ref_count() that you would have to consider? I doubt it, but please check if
-> there would be a problem.
-> 
-> There is a small problem for merging:
-> 
-> (1) The patch depends on the fix.
-> 
-> (2) mm/swap.c was moved to mm/folio.c in the mm tree.
-> 
-> We could write what I have below against Linus' tree and have the conflict be
-> resolved when merging. Topic branches are unfortunately not yet a thing in MM
-> land.
+Commit 8da2a8838365 ("rv: Add KUnit tests for some DA/HA monitors")
+introduced a division of a 64-bit value by 1000 in the nomiss KUnit
+test. This does not compile on 32-bit systems, as standard division of
+64-bit values leads to an undefined reference to __udivdi3.
 
-Are you expecting the aforementioned fix to land in 7.2, 7.3, or 7.4?  If it's
-7.2 or 7.3, then I would strongly prefer to base v10 on linux-next (where the fix
-will presumably land soonish), and target 7.4 for in-place conversion.  Then v10
-can be applied against an early 7.3-rcN and we don't need to juggle branches
-(assuming Andrew is ok taking the proposed patch through the KVM tree).
+Fix the build on 32-bit systems by using div_u64().
 
-Irrespective of this small mm issue, it's getting a bit too late in the 7.3 cycle
-to land the in-place series, and we need to address Xiaoyao's comments, i.e. v10
-is going to be necessary no matter what.
+Fixes: 8da2a8838365 ("rv: Add KUnit tests for some DA/HA monitors")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202608020311.hYjqOG5k-lkp@intel.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ kernel/trace/rv/monitors/nomiss/nomiss_kunit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/rv/monitors/nomiss/nomiss_kunit.c b/kernel/trace/rv/monitors/nomiss/nomiss_kunit.c
+index 1f64249dfcce..763129e2a990 100644
+--- a/kernel/trace/rv/monitors/nomiss/nomiss_kunit.c
++++ b/kernel/trace/rv/monitors/nomiss/nomiss_kunit.c
+@@ -28,7 +28,7 @@ static void rv_test_nomiss(struct kunit *test)
+ 	udelay(10);
+ 	rv_nomiss_ops.handle_sched_switch(NULL, 0, target, other, TASK_RUNNING);
+ 	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx) {
+-		udelay(15 + *rv_nomiss_ops.deadline_thresh / 1000);
++		udelay(15 + div_u64(*rv_nomiss_ops.deadline_thresh, 1000));
+ 		rv_nomiss_ops.handle_sched_switch(NULL, 0, other, target, TASK_RUNNING);
+ 	}
+ }
+
+base-commit: 984b5a36fd12d1849511a45fda32036fe2b0d004
+-- 
+2.55.0
+
