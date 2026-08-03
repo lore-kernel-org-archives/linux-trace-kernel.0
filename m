@@ -1,92 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779E521D591;
-	Mon,  3 Aug 2026 03:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740FB126C17;
+	Mon,  3 Aug 2026 05:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785726527; cv=none; b=Ks6UyYT23PFxX/EAlGqRqTq1QpsFyZUBpte/YSiKIs5V4ue51wRRju7PhSDG0zGsKFeR4iKCPCl+OyVZKdcBIUliYtifDsN+SiE4r5aofaImtnhR9czhFRF8j7P1Z0NnhK+mkuAmmUbN3WFhLgT5Bk+znRfzkIuYp86ULwZ7kL4=
+	t=1785733969; cv=none; b=QS2RIyYNJF8TUw1t9QuIJ1cI2zVmbbFAfc6fmBrv2qyKWHwPrAB609EZKjToerwdITzM7eJLNcCPGOiNWp8A81Kv4ivhSgsRLbhkdU2AdWQninckTAruGSJ8tGGgGwlr3yyNOV3rJbARyr2AAULkRz2X+unt2TkKQJ+XvYG694U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785726527; c=relaxed/simple;
-	bh=0fC2HwCRIFcCrs3ltNep+FsM4xnYbnLKqqnXNQeaXhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cEIY/4OJhglbQ3fipw9CWzhU1IGY4+zJbww2SilL2aLNgbTMQ8xCj8lhasiSJKRwUevFfbSipvrQn/jO5ym6vdKfT6ujQwt3QMLgb09VCBFzl+ThMnsrn4gp9p72LX6CwP3MqQlhJ+P7bUkXI+ZxgxA28PWT47zEs4EnolsBRjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0nnGk3z; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785733969; c=relaxed/simple;
+	bh=U50cXcdFuF39Z4ZCHe1T+gw7F2DWBx1+dW/YRpu+Sqc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MlUbI95mHyeKYbo2cx/WmQMZlYfYl7J51y53OHJPdxaub9bTv5GgJbIzuZ949JsIGvpC3Xi6X8t9XwKaKLTTmfX6W11rb9XQmCuWbwdxJ2HqNIsXe/7KpEJw7jrqXsQLQG/MFCNhplDUGSCA/j17JMvNl28L3iZX5KY1haEEm4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QecewONo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0nnGk3z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D8D1F000E9;
-	Mon,  3 Aug 2026 03:08:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QecewONo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3439E1F00A3A;
+	Mon,  3 Aug 2026 05:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785726526;
-	bh=h4jzrK0qB2ii5BU47guq1FVmhiViYIRCb7dp2eL6bLI=;
-	h=From:To:Cc:Subject:Date;
-	b=M0nnGk3zkUSWA2driyZJueYnP8vbEf2Ey0+FaxRYKLnFMFxqzaCSpPiMl9zNsRutO
-	 S3hlpjlz/ZpUPyJw/1nTsKBXtrA4E31sofnxuq7VwNoNGmUwA7HvhRFdwzVSLYpiI7
-	 xnVITMU8BWdwrVoPUzIz3r8oEG/+6xvJ205RB6oH16nxJGZi9mEeYBFeBI58O5qWnp
-	 xb+kXnxpYqw7p8KH2mwWJiejWLrHbKfRteRZhTBKCTf1x5PhAewwsAp0INGT6kEP/s
-	 uQPTLPMYdox7sS5MQe0zSx8uaUMRUQueUu7LI2u02C00EBmM0+NUdxkrr5Zyj23nHR
-	 FsDDO3JSilvZw==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] ftrace: Fix off-by-one fentry site disable in ftrace_free_mem()
-Date: Sun,  2 Aug 2026 20:08:35 -0700
-Message-ID: <d0a6a1deda9836c614a11c458fef2c8cf321333a.1785726456.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	s=k20260515; t=1785733968;
+	bh=YcXLau01/GxQVKV99V9hUJQODNODcrjR2nX17z9N6Rk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=QecewONopJldKm+bs2zPCARR+17DsQ2rDSGrVRIsMNGWU/lZ7OAnXMEfuEv1Gldf+
+	 K6EXRGttv1k6YChMpbP/IzhWb9Uiz2NHHnKYAeoa82ph1waTj+i6cxMQ4eb7V0qqY4
+	 U+sVFTGbkKGi4ZziGIe3LZAEXxrjcxDxhpbd8ecCtmPSylUBSw8Vhk+yaNezW6bH+g
+	 kkS2Sdg4+H8CF8+8pae6voY6Oy4RgWhsk6Mr1WoA4gEcIYAGYU7RvPpVxv5TYki0pd
+	 dI33NWxrWTjrkdkerDHTOiRl0LrR+TptG3o1pcnSOeVqO1wYclo9F7gysPCXOcXEud
+	 7H/kdyDaMQWPw==
+Date: Mon, 3 Aug 2026 14:12:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Julia Lawall <Julia.Lawall@inria.fr>
+Cc: Steven Rostedt <rostedt@goodmis.org>, kernel-janitors@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: drop unneeded semicolon
+Message-Id: <20260803141243.26f277cde804b03f37f2f126@kernel.org>
+In-Reply-To: <20260801191002.1383835-6-Julia.Lawall@inria.fr>
+References: <20260801191002.1383835-6-Julia.Lawall@inria.fr>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When a module's init text is freed, do_init_module() calls
-ftrace_free_mem() with a half-open [start, end) range.  However the
-ftrace_cmp_recs() comparator treats the upper bound as inclusive, as all
-its other users do, passing 'ip + size - 1'.  So ftrace_free_mem() can
-delete a record sitting exactly at 'end', which is outside the freed
-range.
+On Sat,  1 Aug 2026 21:09:52 +0200
+Julia Lawall <Julia.Lawall@inria.fr> wrote:
 
-For a kernel without CFI or IBT, the first record of a function is at
-the function start, which for the first function in a module is also the
-base of its text allocation.  As the module allocator packs its regions,
-that address is often the 'end' passed by a neighboring module's
-do_init_module(), causing the first function's ftrace location to get
-disabled, preventing an attempt to livepatch it:
+> When a function-like macro expands to an expression, that expression
+> doesn't need a semicolon after it.  All uses have been verified to
+> have their own semicolons.
+> 
+> This was found using the following Coccinelle semantic patch:
+> 
+> @r@
+> identifier i : script:ocaml() { String.lowercase_ascii i = i };
+> expression e;
+> @@
+> 
+> *#define i(...) e;
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> 
 
-  livepatch: failed to find location for function 'pcspkr_probe'
+Looks good to me.
 
-Convert the exclusive end to the inclusive 'end - 1' the comparator
-expects, and return early for an empty range to avoid the subtraction
-from underflowing when the init text size is zero.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fixes: 42c269c88dc1 ("ftrace: Allow for function tracing to record init functions on boot up")
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- kernel/trace/ftrace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> ---
+>  kernel/trace/ring_buffer.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 8e2485bb3..7749dd2ac 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -405,11 +405,11 @@ static void free_buffer_page(struct buffer_page *bpage)
+>   */
+>  #define alloc_cpu_buffer(cpu) (struct ring_buffer_per_cpu *)		\
+>  	kzalloc_node(ALIGN(sizeof(struct ring_buffer_per_cpu),		\
+> -			   cache_line_size()), GFP_KERNEL, cpu_to_node(cpu));
+> +			   cache_line_size()), GFP_KERNEL, cpu_to_node(cpu))
+>  
+>  #define alloc_cpu_page(cpu) (struct buffer_page *)			\
+>  	kzalloc_node(ALIGN(sizeof(struct buffer_page),			\
+> -			   cache_line_size()), GFP_KERNEL, cpu_to_node(cpu));
+> +			   cache_line_size()), GFP_KERNEL, cpu_to_node(cpu))
+>  
+>  static struct buffer_data_page *alloc_cpu_data(int cpu, int order)
+>  {
+> 
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f93e34dd2328..7d8b736f0d86 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -8293,8 +8293,11 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 	struct ftrace_init_func *func, *func_next;
- 	LIST_HEAD(clear_hash);
- 
-+	if (start >= end)
-+		return;
-+
- 	key.ip = start;
--	key.flags = end;	/* overload flags, as it is unsigned long */
-+	key.flags = end - 1;	/* overload flags, as it is unsigned long */
- 
- 	mutex_lock(&ftrace_lock);
- 
+
 -- 
-2.54.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
