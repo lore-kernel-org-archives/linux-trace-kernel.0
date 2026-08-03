@@ -1,479 +1,367 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4940369D47
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 12:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424FB411660
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 12:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785761021; cv=none; b=mi6zRZLzwRzcjicaqtsgU0RdoTziWx0mcQT1/WKbjDopIVnedw+0WWhy6ysahsxV1Tniqd7Vh+OZwZL0dwI5PxdRnUQutxM0WTYz0Ns0CPPVsRsQkb3HN3ZpYCXc/v1hASRlQXNosgPQ4GAHjhyWV9F+/JUDG8WCPowhfHAU0h8=
+	t=1785761354; cv=none; b=qYe0exQ1v0n6ZUAMVK7tASv6vrJh7QUdlZQcKejY8RKyJGHhmkBNUP8dSiNH/ZnF43vouty3jb+HEgtb7ajx9O+lMrWuehLWCTepUmeK92aWLvSHEaWtchmWHCpHNEROdkc1VUVs9vyjqLDuKZJP7m/RlxVUsjvH3sx3fsFn/60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785761021; c=relaxed/simple;
-	bh=7ILijJdXtqQa2Kbu9QgR1NHjUSeKgId76bWfAeZB5R8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=th3RZIv2ftYIn4DoccA1aQvuZ63hZo6JqnU5pTnxbT9jSr5ACLm7r2F30+Qqfq+f1LQKNHt1Pghww0K6eVHVjLGgFa1JFiF1AI2pHxel+N86eA2JjLlVy9cQSDgU0SrhMG1wE0FrJspe3BZu0I2IiPc0zvs7fJw48h3WKJX/RMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IM2bJR3K; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785761354; c=relaxed/simple;
+	bh=wj7NUe9x08lEh1Fo3mn5CmlzMZefOM2QSdmrgIFx4pQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IXxiUL9ROuq/MmHM+1kVNslgikRC9wkAQwgjcIn4A3jmwfemDBqGiQb8gAkTnu2GTYmHf2bgYtVkyX2s8uiS2R0lL3Pnq4YMi41u9IdokPrKbUipWIEKhGuEQ1oiRCmz4n+l9iHAO4SmuspzeOHil2XTgKrjzQDRJHi22WctFv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AyMBo00m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IM2bJR3K"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785761016;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AyMBo00m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785761352;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q0rqVXntntPGNtRhW7boCS4de5223r2PVD+Op+TiuUo=;
-	b=IM2bJR3K2lCEgntYhrvI/GFbu+ZxQcmX8fQUb5XVT2+OfYOPwLzvaCtmnvyLCA+aPIekpy
-	m5w0llo4isyLaffnxmvFVhoIF+C+ydsEG8X/BnK59E9Y1oE9ssoT0qaZQDtGonQm8jNIHQ
-	X4ZvozcfaRmjHdA1CBUPj7+RrX/icH0=
-From: Fuad Tabba <fuad.tabba@linux.dev>
-To: maz@kernel.org,
-	oupton@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	alexandru.elisei@arm.com,
-	vdonnefort@google.com,
-	joey.gouly@arm.com,
-	seiden@linux.ibm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	qperret@google.com,
-	ardb@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	tabba@google.com,
-	fuad.tabba@linux.dev
-Subject: [PATCH v2 11/11] KVM: arm64: Tag host-VA hypercall parameters __kern
-Date: Mon,  3 Aug 2026 13:42:20 +0100
-Message-Id: <20260803124220.332248-12-fuad.tabba@linux.dev>
-In-Reply-To: <20260803124220.332248-1-fuad.tabba@linux.dev>
-References: <20260803124220.332248-1-fuad.tabba@linux.dev>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8mSVLtH2u+KHDyfKn+Lr3+etOAnoe77d21/Ch96qtAE=;
+	b=AyMBo00mu44BV2/8fQxQPnO2V4qbRQiwdQE52Hgt0bzEwuA9/YNYfcYUN4m0wuygwvRO7z
+	uVNsIVM1KvUH+0D5EyKWSuyiHYY+/I1Vzq+enO200rElpk7IcYCShMztZDqs5G6+7/OzJ+
+	O1JrwAVHMkWgxuL7gG75QG1Y8v/KKGY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-303-ZtwXIIyLNCm5OAAUwyinNw-1; Mon, 03 Aug 2026 08:49:11 -0400
+X-MC-Unique: ZtwXIIyLNCm5OAAUwyinNw-1
+X-Mimecast-MFC-AGG-ID: ZtwXIIyLNCm5OAAUwyinNw_1785761350
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-49545071724so21754705e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 05:49:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785761350; x=1786366150;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Wy0Vs4Ln8sXF3zFU/v51FDbJv/h2bqSlAWl9ZiAyaTI=;
+        b=nRqKoq6PFJ6JktRPayRljlVkYCk+FM/FCa5FEZpyMKFp0mnu8b83mI0LQZKgk/aQ63
+         iSzuMcPUO0vdMYYGcIZYq2XNEWvzY6txT4XbLHgnyHj0aPHRt/0rz2IYOxyc9pnehxn9
+         9ohm/GkIAuT+g6iw92wF1TDKn3ZtupD71rAA9UIxOEMvaGR5wS2RChkvZEdbGja4crdq
+         zhEnGrPwYPbNmdrPJSIZpuY1CJ2f+tYDdE3LUgRrKwJXwqkVvUxMMSNWdNWQunw2gUQN
+         +g3RyyQutGEMcnwko0e61GboRHkb3wyQW05wW0k6jwmpltDWq2Hp/u69fIkeT1ihqfGH
+         Ghyg==
+X-Forwarded-Encrypted: i=1; AHgh+RoLi1g2E+NpEXFpO+z+G74fbFCQKtVZSTMw0tbz0AJ/gxkwgmXMuEnoBxKJE+qzjG/8a4jMKpGzdRs3OI0SaT87qhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQCp5FB47Hd41vvuZICBJuwLTKqF1DT2/5dc4lZxgcJ/XNte7+
+	3DaviSDwg300M14btwk9qbct6KP50WrinhLvsWCA5QoI4Z64zkgLuGNlu/TPMt54Skl8xrNx9Ij
+	43aOsLavhr/zvTEXpO18cxXirYIgdbebK8+zpHe0ekYtQZDKvj+L/wjq/KEbdh7+l994pfjzNRg
+	==
+X-Gm-Gg: AR+sD12d5kIQt+GrjrW7la0ESvlHPEv0fqqjeeGRu/UVvY6x953HIR8w4wKz9oxFD5G
+	kYEu0Y5/DJH87ohe26W6Aa0NGdaPGgYxi039NER9llzJbOlv3nC5ADivY/k+1sKQ/hIUthl1tzk
+	5q+pGOFTkCmEitQWF+sRFK1DvN7Upr4qgBofEv6HgN5Zi9iPyqY1MJnHJ8YrGZkOoENozW0CnO1
+	0/c1zVTp7qOvcIxuOP3EoUCTH1ZVXJhe8NoZzY7mzypIXmDMXdRcKevf0owGsoLiXttWivxqfOa
+	9XmONflSMqxvYga+vKb2Ug35GAomcgZI2N+TFhgCCaNMu88MNtTsWxSA6nW9MUERIgAhF2REiru
+	WcvnMvpGsEMuwXG6hRY/IGXDNP3As
+X-Received: by 2002:a05:600c:c490:b0:495:7538:d4ea with SMTP id 5b1f17b1804b1-4980c5fd773mr194744815e9.0.1785761349667;
+        Mon, 03 Aug 2026 05:49:09 -0700 (PDT)
+X-Received: by 2002:a05:600c:c490:b0:495:7538:d4ea with SMTP id 5b1f17b1804b1-4980c5fd773mr194743855e9.0.1785761349018;
+        Mon, 03 Aug 2026 05:49:09 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49808191ef9sm254878215e9.1.2026.08.03.05.49.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2026 05:49:08 -0700 (PDT)
+Message-ID: <d2bbe352facbd02de931305d23bcc2115d14fba5.camel@redhat.com>
+Subject: Re: [PATCH v2 4/4] rv/reactors: add KUnit tests for reactor
+ registration and dispatch
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 03 Aug 2026 14:49:07 +0200
+In-Reply-To: <55a167aacaf1497fafbbe9fd578ffe14cbee368f.1785695669.git.wen.yang@linux.dev>
+References: <cover.1785695669.git.wen.yang@linux.dev>
+	 <55a167aacaf1497fafbbe9fd578ffe14cbee368f.1785695669.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tBriX28shaXSxB2F4MdF7mcxMdQ35qQasUcVgx5bHz8_1785761350
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The nVHE hypervisor takes host virtual addresses as hypercall arguments
-and translates each with kern_hyp_va() before use. Nothing marks them as
-host-owned, so dereferencing one untranslated at EL2 - a recurring bug
-class - is invisible to the compiler.
+On Mon, 2026-08-03 at 02:43 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> Add KUnit tests covering the reactor register/unregister lifecycle
+> (including duplicate and name-length rejection) and rv_react() dispatch
+> (a no-op without a callback, exactly one invocation with one; the mdelay
+> callback keeps the CPU busy so a timer interrupt exercises the LD_WAIT_SP=
+IN
+> lockdep context).=C2=A0 The Kconfig entry is tristate so the tests can be=
+ built
+> as a module when CONFIG_KUNIT=3Dm; only RV_REACTORS is required.
+>=20
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> ---
+> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 12 +++
+> =C2=A0kernel/trace/rv/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0kernel/trace/rv/rv_reactors_kunit.c | 143 +++++++++++++++++++++++++=
++++
+> =C2=A03 files changed, 156 insertions(+)
+> =C2=A0create mode 100644 kernel/trace/rv/rv_reactors_kunit.c
+>=20
+> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+> index efa930f94ea4..9bfd429ffdea 100644
+> --- a/kernel/trace/rv/Kconfig
+> +++ b/kernel/trace/rv/Kconfig
+> @@ -113,6 +113,18 @@ config RV_REACT_PANIC
+> =C2=A0=09=C2=A0 Enables the panic reactor. The panic reactor emits a prin=
+tk()
+> =C2=A0=09=C2=A0 message if an exception is found and panic()s the system.
+> =C2=A0
+> +config RV_REACTORS_KUNIT
+> +=09tristate "KUnit tests for RV reactors" if !KUNIT_ALL_TESTS
+> +=09depends on KUNIT
+> +=09depends on RV_REACTORS
+> +=09default KUNIT_ALL_TESTS
+> +=09help
+> +=09=C2=A0 Enable KUnit tests for RV reactor registration and dispatch.
+> +=09=C2=A0 These tests verify the register/unregister lifecycle, duplicat=
+e
+> +=09=C2=A0 rejection, and that rv_react() correctly invokes callbacks.
+> +
+> +=09=C2=A0 If unsure, say N.
+> +
+> =C2=A0config RV_MONITORS_KUNIT_TEST
+> =C2=A0=09tristate "KUnit tests for RV monitors" if !KUNIT_ALL_TESTS
+> =C2=A0=09depends on KUNIT && RV && RV_REACTORS
+> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+> index cdbf68c84f5a..c895d81dfdad 100644
+> --- a/kernel/trace/rv/Makefile
+> +++ b/kernel/trace/rv/Makefile
+> @@ -25,4 +25,5 @@ obj-$(CONFIG_RV_MON_WAKEUP) +=3D monitors/wakeup/wakeup=
+.o
+> =C2=A0obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+> =C2=A0obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+> =C2=A0obj-$(CONFIG_RV_REACT_PANIC) +=3D reactor_panic.o
+> +obj-$(CONFIG_RV_REACTORS_KUNIT) +=3D rv_reactors_kunit.o
+> =C2=A0obj-$(CONFIG_RV_MONITORS_KUNIT_TEST) +=3D rv_monitors_test.o
+> diff --git a/kernel/trace/rv/rv_reactors_kunit.c
+> b/kernel/trace/rv/rv_reactors_kunit.c
+> new file mode 100644
+> index 000000000000..32c25dcf0cb6
+> --- /dev/null
+> +++ b/kernel/trace/rv/rv_reactors_kunit.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * KUnit tests for RV reactor registration and dispatch.
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <linux/rv.h>
+> +#include <linux/delay.h>
+> +#include <linux/atomic.h>
+> +#include "rv.h"
+> +
+> +static struct rv_reactor test_reactor =3D {
+> +=09.name=09=09=3D "kunit_test_reactor",
+> +=09.description=09=3D "KUnit test reactor",
+> +};
+> +
+> +/*
+> + * rv_unregister_reactor() on a reactor that was never registered would
+> + * list_del() an uninitialized list_head, so track registration and only
+> + * unregister in the teardown if it is still on the list.
+> + */
+> +static bool test_reactor_registered;
 
-Add a __kern sparse address space, active only for EL2 code, and tag the
-host-VA parameters in the hypercall declarations. kern_hyp_va_host() is
-the only sanctioned unwrap: it translates the address, preserves the
-pointee type (stripped of qualifiers, as with the percpu accessors) and
-drops the tag with a __force cast, so an untranslated host VA fails
-sparse. The tag flows from the shared declaration into the generated
-handler and on into the donated-memory and tracing-descriptor helpers,
-so a handler cannot extract a host VA without it. Host code sees plain
-pointers, and the tag is checker-only: no code is generated.
+I'm not too fond of adding more logic than necessary in the test, but if yo=
+u
+really want to keep the dynamic teardown cannot this variable stay somehow =
+in
+test-specific memory (test->priv)?
 
-Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
----
- arch/arm64/include/asm/kvm_hcall.h      | 43 ++++++++++++-------
- arch/arm64/include/asm/kvm_mmu.h        | 10 +++++
- arch/arm64/kvm/hyp/include/nvhe/pkvm.h  |  6 ++-
- arch/arm64/kvm/hyp/include/nvhe/trace.h |  5 ++-
- arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 57 +++++++++++++------------
- arch/arm64/kvm/hyp/nvhe/pkvm.c          | 11 ++---
- arch/arm64/kvm/hyp/nvhe/trace.c         |  4 +-
- 7 files changed, 82 insertions(+), 54 deletions(-)
+That feels to me a bit cleaner, although the reactor and obviously the reac=
+tors
+list are still static, so we probably wouldn't gain a huge deal.
 
-diff --git a/arch/arm64/include/asm/kvm_hcall.h b/arch/arm64/include/asm/kvm_hcall.h
-index 39374bae4bea4..3958396a83345 100644
---- a/arch/arm64/include/asm/kvm_hcall.h
-+++ b/arch/arm64/include/asm/kvm_hcall.h
-@@ -28,6 +28,18 @@ struct kvm_vcpu;
- struct vgic_v3_cpu_if;
- struct vgic_v5_cpu_if;
- 
-+/*
-+ * A host VA carried by a hypercall argument. At EL2 such a pointer must not
-+ * be dereferenced until it is translated with kern_hyp_va_host(); sparse
-+ * flags any use that skips the translation. The tag describes the EL2 view
-+ * only: the host dereferences its own VAs freely.
-+ */
-+#if defined(__KVM_NVHE_HYPERVISOR__) && defined(__CHECKER__)
-+#define __kern	__attribute__((noderef, address_space(__kern)))
-+#else
-+#define __kern
-+#endif
-+
- /*
-  * Hypercall signatures are declared as (type, name) argument pairs.
-  * __KVM_HCALL_MAP() applies a macro to each pair, in the mold of __MAP()
-@@ -160,24 +172,24 @@ DECLARE_KVM_HOST_HCALL0(int, __pkvm_prot_finalize)
- 
- /* Hypercalls that are always available and common to [nh]VHE/pKVM. */
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_adjust_pc,
--	struct kvm_vcpu *, vcpu)
-+	struct kvm_vcpu __kern *, vcpu)
- DECLARE_KVM_HOST_HCALL(int, __kvm_vcpu_run,
--	struct kvm_vcpu *, vcpu)
-+	struct kvm_vcpu __kern *, vcpu)
- DECLARE_KVM_HOST_HCALL0_VOID(__kvm_flush_vm_context)
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa,
--	struct kvm_s2_mmu *, mmu, phys_addr_t, ipa, int, level)
-+	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa_nsh,
--	struct kvm_s2_mmu *, mmu, phys_addr_t, ipa, int, level)
-+	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid,
--	struct kvm_s2_mmu *, mmu)
-+	struct kvm_s2_mmu __kern *, mmu)
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_range,
--	struct kvm_s2_mmu *, mmu, phys_addr_t, start, unsigned long, pages)
-+	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, start, unsigned long, pages)
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_flush_cpu_context,
--	struct kvm_s2_mmu *, mmu)
-+	struct kvm_s2_mmu __kern *, mmu)
- DECLARE_KVM_HOST_HCALL_VOID(__kvm_timer_set_cntvoff,
- 	u64, cntvoff)
- DECLARE_KVM_HOST_HCALL(int, __tracing_load,
--	void *, desc_hva, size_t, desc_size)
-+	void __kern *, desc_hva, size_t, desc_size)
- DECLARE_KVM_HOST_HCALL0_VOID(__tracing_unload)
- DECLARE_KVM_HOST_HCALL(int, __tracing_enable,
- 	bool, enable)
-@@ -192,13 +204,13 @@ DECLARE_KVM_HOST_HCALL(int, __tracing_enable_event,
- DECLARE_KVM_HOST_HCALL_VOID(__tracing_write_event,
- 	u64, id)
- DECLARE_KVM_HOST_HCALL_VOID(__vgic_v3_save_aprs,
--	struct vgic_v3_cpu_if *, cpu_if)
-+	struct vgic_v3_cpu_if __kern *, cpu_if)
- DECLARE_KVM_HOST_HCALL_VOID(__vgic_v3_restore_vmcr_aprs,
--	struct vgic_v3_cpu_if *, cpu_if)
-+	struct vgic_v3_cpu_if __kern *, cpu_if)
- DECLARE_KVM_HOST_HCALL_VOID(__vgic_v5_save_apr,
--	struct vgic_v5_cpu_if *, cpu_if)
-+	struct vgic_v5_cpu_if __kern *, cpu_if)
- DECLARE_KVM_HOST_HCALL_VOID(__vgic_v5_restore_vmcr_apr,
--	struct vgic_v5_cpu_if *, cpu_if)
-+	struct vgic_v5_cpu_if __kern *, cpu_if)
- 
- /* Hypercalls that are available only when pKVM has finalised. */
- DECLARE_KVM_HOST_HCALL(int, __pkvm_host_share_hyp,
-@@ -223,10 +235,11 @@ DECLARE_KVM_HOST_HCALL0(int, __pkvm_reserve_vm)
- DECLARE_KVM_HOST_HCALL_VOID(__pkvm_unreserve_vm,
- 	pkvm_handle_t, handle)
- DECLARE_KVM_HOST_HCALL(int, __pkvm_init_vm,
--	struct kvm *, host_kvm, void *, vm_hva, void *, pgd_hva)
-+	struct kvm __kern *, host_kvm, void __kern *, vm_hva,
-+	void __kern *, pgd_hva)
- DECLARE_KVM_HOST_HCALL(int, __pkvm_init_vcpu,
--	pkvm_handle_t, handle, struct kvm_vcpu *, host_vcpu,
--	void *, vcpu_hva)
-+	pkvm_handle_t, handle, struct kvm_vcpu __kern *, host_vcpu,
-+	void __kern *, vcpu_hva)
- DECLARE_KVM_HOST_HCALL0(int, __pkvm_vcpu_in_poison_fault)
- DECLARE_KVM_HOST_HCALL(int, __pkvm_force_reclaim_guest_page,
- 	phys_addr_t, phys)
-diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-index 6eae7e7e2a684..57f65257bb56d 100644
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -7,6 +7,8 @@
- #ifndef __ARM64_KVM_MMU_H__
- #define __ARM64_KVM_MMU_H__
- 
-+#include <linux/compiler.h>
-+
- #include <asm/page.h>
- #include <asm/memory.h>
- #include <asm/mmu.h>
-@@ -140,6 +142,14 @@ static __always_inline unsigned long __kern_hyp_va(unsigned long v)
- 
- #define kern_hyp_va(v) 	((typeof(v))(__kern_hyp_va((unsigned long)(v))))
- 
-+/*
-+ * Translate a __kern-tagged host VA, dropping the tag: the only sanctioned
-+ * unwrap. Translation only, no ownership or bounds validation; the result
-+ * carries the pointee type stripped of the tag and of any cv-qualifiers.
-+ */
-+#define kern_hyp_va_host(v)						\
-+	((TYPEOF_UNQUAL(*(v)) *)__kern_hyp_va((unsigned long)(__force void *)(v)))
-+
- extern u32 __hyp_va_bits;
- 
- /*
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/pkvm.h b/arch/arm64/kvm/hyp/include/nvhe/pkvm.h
-index 2643a1a819668..c1171451e1be7 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/pkvm.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/pkvm.h
-@@ -7,6 +7,7 @@
- #ifndef __ARM64_KVM_NVHE_PKVM_H__
- #define __ARM64_KVM_NVHE_PKVM_H__
- 
-+#include <asm/kvm_hcall.h>
- #include <asm/kvm_pkvm.h>
- 
- #include <nvhe/gfp.h>
-@@ -69,9 +70,10 @@ void pkvm_hyp_vm_table_init(void *tbl);
- 
- int __pkvm_reserve_vm(void);
- void __pkvm_unreserve_vm(pkvm_handle_t handle);
--int __pkvm_init_vm(struct kvm *host_kvm, void *vm_hva, void *pgd_hva);
-+int __pkvm_init_vm(struct kvm *host_kvm, void __kern *vm_hva,
-+		   void __kern *pgd_hva);
- int __pkvm_init_vcpu(pkvm_handle_t handle, struct kvm_vcpu *host_vcpu,
--		     void *vcpu_hva);
-+		     void __kern *vcpu_hva);
- 
- int __pkvm_reclaim_dying_guest_page(pkvm_handle_t handle, u64 gfn);
- int __pkvm_start_teardown_vm(pkvm_handle_t handle);
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/trace.h b/arch/arm64/kvm/hyp/include/nvhe/trace.h
-index 4aa36fd76b9e2..c2db9f70ea265 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/trace.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/trace.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/trace_remote_event.h>
- 
-+#include <asm/kvm_hcall.h>
- #include <asm/kvm_hyptrace.h>
- 
- static inline pid_t __tracing_get_vcpu_pid(struct kvm_cpu_context *host_ctxt)
-@@ -46,7 +47,7 @@ static inline pid_t __tracing_get_vcpu_pid(struct kvm_cpu_context *host_ctxt)
- void *tracing_reserve_entry(unsigned long length);
- void tracing_commit_entry(void);
- 
--int __tracing_load(void *desc_va, size_t desc_size);
-+int __tracing_load(void __kern *desc_va, size_t desc_size);
- void __tracing_unload(void);
- int __tracing_enable(bool enable);
- int __tracing_swap_reader(unsigned int cpu);
-@@ -59,7 +60,7 @@ static inline void tracing_commit_entry(void) { }
- #define HYP_EVENT(__name, __proto, __struct, __assign, __printk)      \
- 	static inline void trace_##__name(__proto) {}
- 
--static inline int __tracing_load(void *desc_va, size_t desc_size) { return -ENODEV; }
-+static inline int __tracing_load(void __kern *desc_va, size_t desc_size) { return -ENODEV; }
- static inline void __tracing_unload(void) { }
- static inline int __tracing_enable(bool enable) { return -ENODEV; }
- static inline int __tracing_swap_reader(unsigned int cpu) { return -ENODEV; }
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index 6986ce55fd9ef..f8ea1661b3166 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -270,7 +270,7 @@ DEFINE_KVM_HOST_HCALL0_VOID(__pkvm_vcpu_put)
- }
- 
- DEFINE_KVM_HOST_HCALL(int, __kvm_vcpu_run,
--	struct kvm_vcpu *, host_vcpu)
-+	struct kvm_vcpu __kern *, host_vcpu)
- {
- 	int ret;
- 
-@@ -295,7 +295,7 @@ DEFINE_KVM_HOST_HCALL(int, __kvm_vcpu_run,
- 
- 		sync_hyp_vcpu(hyp_vcpu);
- 	} else {
--		struct kvm_vcpu *vcpu = kern_hyp_va(host_vcpu);
-+		struct kvm_vcpu *vcpu = kern_hyp_va_host(host_vcpu);
- 
- 		/* The host is fully trusted, run its vCPU directly. */
- 		fpsimd_lazy_switch_to_guest(vcpu);
-@@ -422,9 +422,9 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_mkyoung_guest,
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_adjust_pc,
--	struct kvm_vcpu *, vcpu)
-+	struct kvm_vcpu __kern *, vcpu)
- {
--	__kvm_adjust_pc(kern_hyp_va(vcpu));
-+	__kvm_adjust_pc(kern_hyp_va_host(vcpu));
- }
- 
- DEFINE_KVM_HOST_HCALL0_VOID(__kvm_flush_vm_context)
-@@ -433,27 +433,27 @@ DEFINE_KVM_HOST_HCALL0_VOID(__kvm_flush_vm_context)
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa,
--	struct kvm_s2_mmu *, mmu, phys_addr_t, ipa, int, level)
-+	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
- {
--	__kvm_tlb_flush_vmid_ipa(kern_hyp_va(mmu), ipa, level);
-+	__kvm_tlb_flush_vmid_ipa(kern_hyp_va_host(mmu), ipa, level);
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa_nsh,
--	struct kvm_s2_mmu *, mmu, phys_addr_t, ipa, int, level)
-+	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
- {
--	__kvm_tlb_flush_vmid_ipa_nsh(kern_hyp_va(mmu), ipa, level);
-+	__kvm_tlb_flush_vmid_ipa_nsh(kern_hyp_va_host(mmu), ipa, level);
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_range,
--	struct kvm_s2_mmu *, mmu, phys_addr_t, start, unsigned long, pages)
-+	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, start, unsigned long, pages)
- {
--	__kvm_tlb_flush_vmid_range(kern_hyp_va(mmu), start, pages);
-+	__kvm_tlb_flush_vmid_range(kern_hyp_va_host(mmu), start, pages);
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid,
--	struct kvm_s2_mmu *, mmu)
-+	struct kvm_s2_mmu __kern *, mmu)
- {
--	__kvm_tlb_flush_vmid(kern_hyp_va(mmu));
-+	__kvm_tlb_flush_vmid(kern_hyp_va_host(mmu));
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
-@@ -469,9 +469,9 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_flush_cpu_context,
--	struct kvm_s2_mmu *, mmu)
-+	struct kvm_s2_mmu __kern *, mmu)
- {
--	__kvm_flush_cpu_context(kern_hyp_va(mmu));
-+	__kvm_flush_cpu_context(kern_hyp_va_host(mmu));
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__kvm_timer_set_cntvoff,
-@@ -500,15 +500,15 @@ DEFINE_KVM_HOST_HCALL0_VOID(__vgic_v3_init_lrs)
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_save_aprs,
--	struct vgic_v3_cpu_if *, cpu_if)
-+	struct vgic_v3_cpu_if __kern *, cpu_if)
- {
--	__vgic_v3_save_aprs(kern_hyp_va(cpu_if));
-+	__vgic_v3_save_aprs(kern_hyp_va_host(cpu_if));
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_restore_vmcr_aprs,
--	struct vgic_v3_cpu_if *, cpu_if)
-+	struct vgic_v3_cpu_if __kern *, cpu_if)
- {
--	__vgic_v3_restore_vmcr_aprs(kern_hyp_va(cpu_if));
-+	__vgic_v3_restore_vmcr_aprs(kern_hyp_va_host(cpu_if));
- }
- 
- DEFINE_KVM_HOST_HCALL(int, __pkvm_init,
-@@ -580,16 +580,17 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_unreserve_vm,
- }
- 
- DEFINE_KVM_HOST_HCALL(int, __pkvm_init_vm,
--	struct kvm *, host_kvm, void *, vm_hva, void *, pgd_hva)
-+	struct kvm __kern *, host_kvm, void __kern *, vm_hva,
-+	void __kern *, pgd_hva)
- {
--	return __pkvm_init_vm(kern_hyp_va(host_kvm), vm_hva, pgd_hva);
-+	return __pkvm_init_vm(kern_hyp_va_host(host_kvm), vm_hva, pgd_hva);
- }
- 
- DEFINE_KVM_HOST_HCALL(int, __pkvm_init_vcpu,
--	pkvm_handle_t, handle, struct kvm_vcpu *, host_vcpu,
--	void *, vcpu_hva)
-+	pkvm_handle_t, handle, struct kvm_vcpu __kern *, host_vcpu,
-+	void __kern *, vcpu_hva)
- {
--	return __pkvm_init_vcpu(handle, kern_hyp_va(host_vcpu), vcpu_hva);
-+	return __pkvm_init_vcpu(handle, kern_hyp_va_host(host_vcpu), vcpu_hva);
- }
- 
- DEFINE_KVM_HOST_HCALL0(int, __pkvm_vcpu_in_poison_fault)
-@@ -624,7 +625,7 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_finalize_teardown_vm,
- }
- 
- DEFINE_KVM_HOST_HCALL(int, __tracing_load,
--	void *, desc_hva, size_t, desc_size)
-+	void __kern *, desc_hva, size_t, desc_size)
- {
- 	return __tracing_load(desc_hva, desc_size);
- }
-@@ -671,15 +672,15 @@ DEFINE_KVM_HOST_HCALL_VOID(__tracing_write_event,
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_save_apr,
--	struct vgic_v5_cpu_if *, cpu_if)
-+	struct vgic_v5_cpu_if __kern *, cpu_if)
- {
--	__vgic_v5_save_apr(kern_hyp_va(cpu_if));
-+	__vgic_v5_save_apr(kern_hyp_va_host(cpu_if));
- }
- 
- DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_restore_vmcr_apr,
--	struct vgic_v5_cpu_if *, cpu_if)
-+	struct vgic_v5_cpu_if __kern *, cpu_if)
- {
--	__vgic_v5_restore_vmcr_apr(kern_hyp_va(cpu_if));
-+	__vgic_v5_restore_vmcr_apr(kern_hyp_va_host(cpu_if));
- }
- 
- typedef void (*hcall_t)(struct kvm_cpu_context *);
-diff --git a/arch/arm64/kvm/hyp/nvhe/pkvm.c b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-index 205c52535c887..9c33d983058a3 100644
---- a/arch/arm64/kvm/hyp/nvhe/pkvm.c
-+++ b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-@@ -644,9 +644,9 @@ static size_t pkvm_get_hyp_vm_size(unsigned int nr_vcpus)
- 		size_mul(sizeof(struct pkvm_hyp_vcpu *), nr_vcpus));
- }
- 
--static void *map_donated_memory_noclear(void *host_va, size_t size)
-+static void *map_donated_memory_noclear(void __kern *host_va, size_t size)
- {
--	void *va = kern_hyp_va(host_va);
-+	void *va = kern_hyp_va_host(host_va);
- 
- 	if (!PAGE_ALIGNED(va))
- 		return NULL;
-@@ -658,7 +658,7 @@ static void *map_donated_memory_noclear(void *host_va, size_t size)
- 	return va;
- }
- 
--static void *map_donated_memory(void *host_va, size_t size)
-+static void *map_donated_memory(void __kern *host_va, size_t size)
- {
- 	void *va = map_donated_memory_noclear(host_va, size);
- 
-@@ -805,7 +805,8 @@ void teardown_selftest_vm(void)
-  *
-  * Return 0 success, negative error code on failure.
-  */
--int __pkvm_init_vm(struct kvm *host_kvm, void *vm_hva, void *pgd_hva)
-+int __pkvm_init_vm(struct kvm *host_kvm, void __kern *vm_hva,
-+		   void __kern *pgd_hva)
- {
- 	struct pkvm_hyp_vm *hyp_vm = NULL;
- 	size_t vm_size, pgd_size;
-@@ -896,7 +897,7 @@ static int register_hyp_vcpu(struct pkvm_hyp_vm *hyp_vm,
- }
- 
- int __pkvm_init_vcpu(pkvm_handle_t handle, struct kvm_vcpu *host_vcpu,
--		     void *vcpu_hva)
-+		     void __kern *vcpu_hva)
- {
- 	struct pkvm_hyp_vcpu *hyp_vcpu;
- 	struct pkvm_hyp_vm *hyp_vm;
-diff --git a/arch/arm64/kvm/hyp/nvhe/trace.c b/arch/arm64/kvm/hyp/nvhe/trace.c
-index 97203ddd3cf45..4410006321a99 100644
---- a/arch/arm64/kvm/hyp/nvhe/trace.c
-+++ b/arch/arm64/kvm/hyp/nvhe/trace.c
-@@ -206,9 +206,9 @@ static bool hyp_trace_desc_is_valid(struct hyp_trace_desc *desc, size_t desc_siz
- 	return true;
- }
- 
--int __tracing_load(void *desc_hva, size_t desc_size)
-+int __tracing_load(void __kern *desc_hva, size_t desc_size)
- {
--	struct hyp_trace_desc *desc = kern_hyp_va(desc_hva);
-+	struct hyp_trace_desc *desc = kern_hyp_va_host(desc_hva);
- 	int ret;
- 
- 	ret = __admit_host_mem(desc, desc_size);
--- 
-2.39.5
+What do you think?
+
+> +
+> +static int unregister_test_reactor(void)
+> +{
+> +=09int ret =3D 0;
+> +
+> +=09if (test_reactor_registered) {
+> +=09=09ret =3D rv_unregister_reactor(&test_reactor);
+> +=09=09test_reactor_registered =3D false;
+
+rv_unregister_reactor() cannot fail and probably never will (I'm not quite =
+sure
+it should return int).
+But setting test_reactor_registered to false here is assuming it didn't fai=
+l
+while the rest of the test doesn't make this assumption.
+
+Maybe let's make it void and stop tracking a result that can never change (=
+and
+that real reactors already have to ignore).
+
+If we do that you may even stop unregistering manually and rely only on the
+teardown, and perhaps get rid of test_reactor_registered. Even
+test_register_unregister() would be mostly already covered by the next one.
+Just throwing in the idea.
+
+> +=09}
+> +
+> +=09return ret;
+> +}
+> +
+> +/*
+> + * The teardown action guarantees the reactor is unregistered even if a
+> + * test fails mid-way, so a leftover entry cannot corrupt later tests.
+> + */
+> +static void reactor_teardown(void *arg)
+> +{
+> +=09unregister_test_reactor();
+> +}
+> +
+> +static void register_test_reactor(struct kunit *test)
+> +{
+> +=09KUNIT_ASSERT_EQ(test, rv_register_reactor(&test_reactor), 0);
+> +=09test_reactor_registered =3D true;
+> +=09KUNIT_ASSERT_EQ(test,
+> +=09=09=09kunit_add_action_or_reset(test, reactor_teardown,
+> NULL), 0);
+> +}
+> +
+> +static void test_register_unregister(struct kunit *test)
+> +{
+> +=09register_test_reactor(test);
+> +
+> +=09KUNIT_EXPECT_EQ(test, unregister_test_reactor(), 0);
+> +}
+> +
+> +static void test_double_register(struct kunit *test)
+> +{
+> +=09register_test_reactor(test);
+> +
+> +=09KUNIT_EXPECT_EQ(test, rv_register_reactor(&test_reactor), -EINVAL);
+> +
+> +=09KUNIT_EXPECT_EQ(test, unregister_test_reactor(), 0);
+> +}
+> +
+> +static void test_name_too_long(struct kunit *test)
+> +{
+> +=09/* Name length of MAX_RV_REACTOR_NAME_SIZE (32) must be rejected. */
+> +=09static struct rv_reactor long_reactor =3D {
+> +=09=09.name =3D "kunit_reactor_name_too_long_xxx_",
+> +=09};
+> +
+> +=09KUNIT_ASSERT_EQ(test, (int)strlen(long_reactor.name),
+> +=09=09=09MAX_RV_REACTOR_NAME_SIZE);
+
+You probably want KUNIT_ASSERT_GE, or even better
+_Static_assert(sizeof(long_name) - 1 >=3D MAX_RV_REACTOR_NAME_SIZE)
+
+(you'd need to save the name to a static array first for sizeof() to work a=
+s
+expected)
+
+> +=09KUNIT_EXPECT_EQ(test, rv_register_reactor(&long_reactor), -EINVAL);
+> +}
+> +
+> +static struct kunit_case rv_reactor_registration_cases[] =3D {
+> +=09KUNIT_CASE(test_register_unregister),
+> +=09KUNIT_CASE(test_double_register),
+> +=09KUNIT_CASE(test_name_too_long),
+> +=09{}
+> +};
+> +
+> +static struct kunit_suite rv_reactor_registration_suite =3D {
+> +=09.name=09=09=3D "rv_reactor_registration",
+> +=09.test_cases=09=3D rv_reactor_registration_cases,
+> +};
+> +
+> +static atomic_t react_call_count;
+> +
+> +__printf(1, 0) static void mock_react(const char *msg, va_list args)
+> +{
+> +=09atomic_inc(&react_call_count);
+> +=09/*
+> +=09 * Hold the CPU for 5 ms so a timer interrupt is likely to fire
+> +=09 * inside rv_react()'s lockdep context, exercising the LD_WAIT_SPIN
+> +=09 * constraint.=C2=A0 mdelay() is a calibrated busy-wait with no sched=
+uler
+> +=09 * interaction.
+> +=09 */
+> +=09mdelay(5);
+> +}
+> +
+> +static void test_react_no_callback(struct kunit *test)
+> +{
+> +=09struct rv_monitor monitor =3D {
+> +=09=09.name =3D "kunit_null_react",
+> +=09};
+> +
+> +=09/* rv_react() must silently return when monitor->react is NULL. */
+> +=09rv_react(&monitor, "no callback");
+
+So what are we testing here? That the kernel doesn't panic? It's fair to ex=
+pect
+a silent return, but we cannot really validate that.
+
+If that's your intent, maybe specify it better, since, in fact, KUnit canno=
+t
+validate this. Something like:
+
+  "The only possible failure in this test case is a kernel panic"
+
+Thanks,
+Gabriele
+
+> +}
+> +
+> +static void test_react_callback_invoked(struct kunit *test)
+> +{
+> +=09struct rv_monitor monitor =3D {
+> +=09=09.name=09=3D "kunit_dispatch_monitor",
+> +=09=09.react=09=3D mock_react,
+> +=09};
+> +
+> +=09atomic_set(&react_call_count, 0);
+> +=09rv_react(&monitor, "callback invocation test");
+> +=09KUNIT_EXPECT_EQ(test, atomic_read(&react_call_count), 1);
+> +}
+> +
+> +static struct kunit_case rv_react_dispatch_cases[] =3D {
+> +=09KUNIT_CASE(test_react_no_callback),
+> +=09KUNIT_CASE(test_react_callback_invoked),
+> +=09{}
+> +};
+> +
+> +static struct kunit_suite rv_react_dispatch_suite =3D {
+> +=09.name=09=09=3D "rv_react_dispatch",
+> +=09.test_cases=09=3D rv_react_dispatch_cases,
+> +};
+> +
+> +kunit_test_suites(&rv_reactor_registration_suite, &rv_react_dispatch_sui=
+te);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("KUnit tests for RV reactor registration and dispatch=
+");
 
