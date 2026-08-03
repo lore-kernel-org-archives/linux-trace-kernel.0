@@ -1,155 +1,333 @@
-Received: from mail-ot1-f78.google.com (mail-ot1-f78.google.com [209.85.210.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7973515EE
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 02:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E142D2F87B
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 04:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785811834; cv=none; b=uW6GyB0XBnSAVmW+xuv5Dh9KSjHrs/do29fHpMOJ5ErnyaYLXdOMkFmXjn6LYOP63jrKElbBLHpiZWt/anouS3Wn0U7p/HT7scc5MfLqbrErJBj5T82SyjrvX7zql4Ddi9hec36LhgK4ntgbGOrJsFU5H83zDhMREvTEGVzO7pw=
+	t=1785817325; cv=none; b=LWZV2YXXmAS2KROalEqGmQGwyRS4k93Yqlty6n1HX/Jbcu8T8S34KwDx5iWq9Y6xIoa395vSnFmg2nEg1nX42Cgnvr9WPf7sfTsIhODm00XaHecKF3lhKioi1jP5OUcTx5VVwlFRvkNJY4xK5qoNmgZJoB7N/k08iWRvkFbFtok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785811834; c=relaxed/simple;
-	bh=X06aGt5TcD0ybUe4qxjs1/MvCceDrQgf7Pwby/2x9lU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HLiWlpPrcpPKhvHumg47E3o+mmTNbcFpWo6axMFmjSSk7DIP01tGsfUNfcyiFXy/Qq/XMagrcA9s6lLr/a3wCMD+iay78kULDq142LpZLk3m9bRoHiUpJgJvT1wgLu9D1xduIY7qeQCjZoFasy809pJVGhfmWVyZHj5VjexX2h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f78.google.com with SMTP id 46e09a7af769-7e9fdc2870fso2568618a34.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 19:50:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785811831; x=1786416631;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=u4iu+m/OXgvK2cVLedf453MP76zfqaed/KskxWW5eNw=;
-        b=GyBkeM2RbMnQV5jKrekA7xl1hT3R68j+nHgnujf/Z6W6xnsTa8uXZ4PQ3aARXI/VQK
-         4nHuKLmxedz2vSK4AwZh9DARmuj3b1AAUKMMHK0nsXw/lvspAhL49m72aP3i8KZrELZM
-         SQkuQ+TU1QQmXiL4c4skvPJGp/QVikWVeyJpvqdxgcTOPaAy5rW2b5fGmnD3TCtcBixX
-         NtH3nRl29h2os36JOfBIMApgR41QE4ui+ewbHjyJ9ObpJ9sTpBBtlw1lu71gwN5b/C2O
-         5fumuzjCH0z8p2SjAEsINBkmsEXi5TT1QmlUZ+HVl/w6HWGYfvnTblFLi9N3rtdAcymw
-         tMpw==
-X-Forwarded-Encrypted: i=1; AHgh+RrSINcnESlNUlOTDoSlXnGB/ETQ2j28UJWU2W90ioI2Whm5mvVEcVpjplcMrNX/LGkRM0FWKGyF2ZTjXwYXCYdetJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxddO4c6owHflmp/eK6uc8pTV0PNnybF8fdFotVXjErGPcA6jZU
-	EYqjiOzPNiM9QBiVnQPJ8C0/TPGml8JhDECQWRvU9uUbovhVNOQK1rfw/HJ+YN+nkkAOj314/IN
-	ZUEfpQGQkgv2c92cmujyjaeqFtjTXF3WDRbQs8FYG/nAeFkIqC4u3iVa8qto=
+	s=arc-20240116; t=1785817325; c=relaxed/simple;
+	bh=NTcBDqSOqZyDofNkPrY+Dk7jMKpsJG+qzzXqSRDINI8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TAtWgP9RQdxPI779+6R9iYKId6PkrRSnVGOTwsQjVZ/C2krC6IwZ0EMktBWjdXXOIjRJfKxDfMMfy23y1hr9Q9I8jIKE41qWBgFay+YtARncs9B/iRl5VOcD6S84J116dKBNXbYwt5nXKJTj3gb2gEp9FkOZbm2uMO+iBiVSbxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KX/voH+h; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KX/voH+h"
+X-Forwarded-Encrypted: i=1; AHgh+RoD0EF3QMo/4y/lmmO4gvFGQu8JoU/1YtLxA2crFNr6+SjnGgbxk2askF7mz1y0dV4zYkpxAEZePt0u8MxcjNYJAqc=@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785782133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TverFBSwY7MtpYT35sNPQk4g4Kr+oiSA90dPP0U4w/M=;
+	b=KX/voH+hwaibo58fM7Nh2zOdHTP+yJ6yqymnfQgZ90qT6MxnAYnldVm2xKeykrN4C7euQ1
+	kEPa+b/aFv3cQPd8kwS6Ijj3qfKGbX2g54Zjrs1+vrJ0QYT3TO1qiZqCI1vRc/0B/4sbtL
+	OXRWDLKH21mVJ4S4rVh0DIpvVUPbV/A=
+X-Gm-Message-State: AOJu0YwRdtTUNpOc8lCNBm3py7q3M8IyU86EzZ6lOiDFNZ8p9lMyKcbk
+	ktd9u1p0rdLb7gI7dwOVEVPO7LD6uXVvFbewgNH2n114QGBEwmMeK5l2ERihYlj5t5oPG+Clmaf
+	0aYFYoloP6i8smVXFdOg79prwMH84dzGBn8jc/RJQ
+X-Received: by 2002:a05:622a:5914:b0:517:5e32:2d14 with SMTP id
+ d75a77b69052e-52cd4fbbf92mr1330831cf.10.1785782130203; Mon, 03 Aug 2026
+ 11:35:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6808:c1e8:b0:497:d371:21c8 with SMTP id
- 5614622812f47-4af5e2cd936mr19260946b6e.19.1785811831365; Mon, 03 Aug 2026
- 19:50:31 -0700 (PDT)
-Date: Mon, 03 Aug 2026 19:50:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a715377.d35e88fd.de8b.000a.GAE@google.com>
-Subject: [syzbot] [trace?] KCSAN: data-race in ring_buffer_unlock_commit / ring_buffer_unlock_commit
-From: syzbot <syzbot+0168fe25f9e5d46bd5fe@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20260803124220.332248-1-fuad.tabba@linux.dev> <20260803124220.332248-11-fuad.tabba@linux.dev>
+ <86qzkfaxp9.wl-maz@kernel.org>
+In-Reply-To: <86qzkfaxp9.wl-maz@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Fuad Tabba <fuad.tabba@linux.dev>
+Date: Mon, 3 Aug 2026 19:34:52 +0100
+X-Gmail-Original-Message-ID: <CA+EHjTw1=xCPugZrmQ3nj1ddvCZ=vcZT3=KO_FMHB1USUTu7kA@mail.gmail.com>
+X-Gm-Features: AUfX_mzt1I-nWoB71I22HAPLuIRo3_4lIfQ2cr-FZF11IecwevWTzcB4PKY0l4U
+Message-ID: <CA+EHjTw1=xCPugZrmQ3nj1ddvCZ=vcZT3=KO_FMHB1USUTu7kA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] KVM: arm64: nVHE: Check hypercall handlers
+ against the declared ABI
+To: Marc Zyngier <maz@kernel.org>
+Cc: oupton@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, alexandru.elisei@arm.com, 
+	vdonnefort@google.com, joey.gouly@arm.com, seiden@linux.ibm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, qperret@google.com, 
+	ardb@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On Mon, 3 Aug 2026 at 19:03, Marc Zyngier <maz@kernel.org> wrote:
+...
+>
+> I've also dropped this with the following hacks. The set_cpu_reg()
+> stuff isn't brilliant, and requires a single word type. But I find the
+> overall scheme less invasive.
+>
+> WDYT?
 
-syzbot found the following issue on:
+Works, and hyp-main.nvhe.o comes out byte identical. I did look for a
+way to dispatch on void without the type table, but _Generic doesn't
+take an incomplete type and __builtin_choose_expr type-checks both
+arms on gcc and clang, so I don't think there's a better option.
 
-HEAD commit:    848acc8ffe1b Merge tag 'fsverity-for-linus' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13731649580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84b3039e8461eef5
-dashboard link: https://syzkaller.appspot.com/bug?extid=0168fe25f9e5d46bd5fe
-compiler:       Debian clang version 22.1.8 (++20260613092233+e80beda6e255-1~exp1~20260613092250.77), Debian LLD 22.1.8
+One nit: the declaration in kvm_hcall.h still says "unsigned long"
+while the definition now says "ulong". Could we make both ulong?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I'm happy to respin with both of these, or would you like to fold them in?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d1a0ae21bd78/disk-848acc8f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9be505d18eb6/vmlinux-848acc8f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8ab6a3838bc0/bzImage-848acc8f.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0168fe25f9e5d46bd5fe@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in ring_buffer_unlock_commit / ring_buffer_unlock_commit
-
-write to 0xffff888100074cb4 of 1 bytes by task 8271 on cpu 1:
- rb_wakeups kernel/trace/ring_buffer.c:4295 [inline]
- ring_buffer_unlock_commit+0x6a/0x440 kernel/trace/ring_buffer.c:4495
- __buffer_unlock_commit kernel/trace/trace.h:1697 [inline]
- trace_buffer_unlock_commit_regs+0x43/0x310 kernel/trace/trace.c:2049
- trace_event_buffer_commit+0x149/0x590 kernel/trace/trace.c:2024
- do_trace_event_raw_event_hrtimer_setup include/trace/events/timer.h:193 [inline]
- trace_event_raw_event_hrtimer_setup+0xc9/0x170 include/trace/events/timer.h:193
- __do_trace_hrtimer_setup include/trace/events/timer.h:193 [inline]
- trace_hrtimer_setup include/trace/events/timer.h:193 [inline]
- debug_setup_on_stack kernel/time/hrtimer.c:523 [inline]
- hrtimer_setup_sleeper_on_stack+0xd1/0xf0 kernel/time/hrtimer.c:2366
- schedule_hrtimeout_range_clock+0x71/0x1a0 kernel/time/sleep_timeout.c:211
- schedule_hrtimeout_range+0x28/0x40 kernel/time/sleep_timeout.c:263
- poll_schedule_timeout fs/select.c:241 [inline]
- do_select+0xed3/0xfa0 fs/select.c:603
- core_sys_select+0x453/0x730 fs/select.c:677
- do_pselect fs/select.c:770 [inline]
- __do_sys_pselect6 fs/select.c:809 [inline]
- __se_sys_pselect6+0x23f/0x2a0 fs/select.c:800
- __x64_sys_pselect6+0x78/0x90 fs/select.c:800
- x64_sys_call+0x8d5/0x3020 arch/x86/include/generated/asm/syscalls_64.h:271
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x136/0x3c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff888100074cb4 of 1 bytes by task 8264 on cpu 0:
- rb_wakeups kernel/trace/ring_buffer.c:4294 [inline]
- ring_buffer_unlock_commit+0x54/0x440 kernel/trace/ring_buffer.c:4495
- __buffer_unlock_commit kernel/trace/trace.h:1697 [inline]
- trace_buffer_unlock_commit_regs+0x43/0x310 kernel/trace/trace.c:2049
- trace_event_buffer_commit+0x149/0x590 kernel/trace/trace.c:2024
- do_trace_event_raw_event_sock_msg_length include/trace/events/sock.h:267 [inline]
- trace_event_raw_event_sock_msg_length+0x10f/0x1c0 include/trace/events/sock.h:267
- __do_trace_sock_recv_length include/trace/events/sock.h:304 [inline]
- trace_sock_recv_length include/trace/events/sock.h:304 [inline]
- call_trace_sock_recv_length+0xa2/0xc0 net/socket.c:1120
- sock_recvmsg_nosec+0xdf/0xf0 net/socket.c:1131
- ____sys_recvmsg+0x26f/0x280 net/socket.c:2902
- ___sys_recvmsg+0x11f/0x3a0 net/socket.c:2946
- do_recvmmsg+0x1e5/0x560 net/socket.c:3041
- __sys_recvmmsg net/socket.c:3115 [inline]
- __do_sys_recvmmsg net/socket.c:3138 [inline]
- __se_sys_recvmmsg net/socket.c:3131 [inline]
- __x64_sys_recvmmsg+0xe5/0x170 net/socket.c:3131
- x64_sys_call+0x80f/0x3020 arch/x86/include/generated/asm/syscalls_64.h:300
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x136/0x3c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x01 -> 0x00
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 8264 Comm: syz.5.1654 Not tainted syzkaller #0 PREEMPT(lazy) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/24/2026
-==================================================================
+Cheers,
+/fuad
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>
+>         M.
+>
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> index f8ea1661b3166..0d5fa6432461d 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -39,6 +39,12 @@ DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
+>                 ,, cpu_reg(host_ctxt, 3),, cpu_reg(host_ctxt, 4)        \
+>                 ,, cpu_reg(host_ctxt, 5),, cpu_reg(host_ctxt, 6))
+>
+> +#define set_cpu_reg_ulong(ctxt, r, v)  { cpu_reg(ctxt, r) = v; }
+> +#define set_cpu_reg_u64(ctxt, r, v)    { cpu_reg(ctxt, r) = v; }
+> +#define set_cpu_reg_int(ctxt, r, v)    { cpu_reg(ctxt, r) = v; }
+> +#define set_cpu_reg_void(ctxt, r, v)   { v; }
+> +#define set_cpu_reg(ctxt, r, t, v)     set_cpu_reg_##t(ctxt, r, v)
+> +
+>  #define DEFINE_KVM_HOST_HCALL(ret, name, ...)                          \
+>         static kvm_host_hcall_sig_##name __do_##name;                   \
+>         static __always_inline                                          \
+> @@ -48,39 +54,18 @@ DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
+>         }                                                               \
+>         static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
+>         {                                                               \
+> -               cpu_reg(host_ctxt, 1) = __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__)); \
+> +               set_cpu_reg(host_ctxt, 1, ret, __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__))); \
+>         }                                                               \
+>         static ret __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
+>
+> -#define DEFINE_KVM_HOST_HCALL_VOID(name, ...)                          \
+> -       static kvm_host_hcall_sig_##name __do_##name;                   \
+> -       static __always_inline                                          \
+> -       void __se_##name(__KVM_HCALL_MAP(__KVM_HCALL_LONG, __VA_ARGS__)) \
+> -       {                                                               \
+> -               __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_CAST, __VA_ARGS__)); \
+> -       }                                                               \
+> -       static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
+> -       {                                                               \
+> -               __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__));          \
+> -       }                                                               \
+> -       static void __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
+> -
+>  #define DEFINE_KVM_HOST_HCALL0(ret, name)                              \
+>         static kvm_host_hcall_sig_##name __do_##name;                   \
+>         static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
+>         {                                                               \
+> -               cpu_reg(host_ctxt, 1) = __do_##name();                  \
+> +               set_cpu_reg(host_ctxt, 1, ret, __do_##name());          \
+>         }                                                               \
+>         static ret __do_##name(void)
+>
+> -#define DEFINE_KVM_HOST_HCALL0_VOID(name)                              \
+> -       static kvm_host_hcall_sig_##name __do_##name;                   \
+> -       static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
+> -       {                                                               \
+> -               __do_##name();                                          \
+> -       }                                                               \
+> -       static void __do_##name(void)
+> -
+>  /* Number of implemented GICv3 LRs. Used by flush_hyp_vcpu(). */
+>  unsigned int hyp_gicv3_nr_lr;
+>
+> @@ -242,7 +227,7 @@ static void sync_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu)
+>                 host_cpu_if->vgic_lr[i] = hyp_cpu_if->vgic_lr[i];
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__pkvm_vcpu_load,
+> +DEFINE_KVM_HOST_HCALL(void, __pkvm_vcpu_load,
+>         pkvm_handle_t, handle, unsigned int, vcpu_idx, u64, hcr_el2)
+>  {
+>         struct pkvm_hyp_vcpu *hyp_vcpu;
+> @@ -261,7 +246,7 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_vcpu_load,
+>         }
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL0_VOID(__pkvm_vcpu_put)
+> +DEFINE_KVM_HOST_HCALL0(void, __pkvm_vcpu_put)
+>  {
+>         struct pkvm_hyp_vcpu *hyp_vcpu = pkvm_get_loaded_hyp_vcpu();
+>
+> @@ -421,42 +406,42 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_mkyoung_guest,
+>         return __pkvm_host_mkyoung_guest(gfn, hyp_vcpu);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_adjust_pc,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_adjust_pc,
+>         struct kvm_vcpu __kern *, vcpu)
+>  {
+>         __kvm_adjust_pc(kern_hyp_va_host(vcpu));
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL0_VOID(__kvm_flush_vm_context)
+> +DEFINE_KVM_HOST_HCALL0(void, __kvm_flush_vm_context)
+>  {
+>         __kvm_flush_vm_context();
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_ipa,
+>         struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
+>  {
+>         __kvm_tlb_flush_vmid_ipa(kern_hyp_va_host(mmu), ipa, level);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa_nsh,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_ipa_nsh,
+>         struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
+>  {
+>         __kvm_tlb_flush_vmid_ipa_nsh(kern_hyp_va_host(mmu), ipa, level);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_range,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_range,
+>         struct kvm_s2_mmu __kern *, mmu, phys_addr_t, start, unsigned long, pages)
+>  {
+>         __kvm_tlb_flush_vmid_range(kern_hyp_va_host(mmu), start, pages);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid,
+>         struct kvm_s2_mmu __kern *, mmu)
+>  {
+>         __kvm_tlb_flush_vmid(kern_hyp_va_host(mmu));
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
+> +DEFINE_KVM_HOST_HCALL(void, __pkvm_tlb_flush_vmid,
+>         pkvm_handle_t, handle)
+>  {
+>         struct pkvm_hyp_vm *hyp_vm = get_np_pkvm_hyp_vm(handle);
+> @@ -468,19 +453,19 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
+>         put_pkvm_hyp_vm(hyp_vm);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_flush_cpu_context,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_flush_cpu_context,
+>         struct kvm_s2_mmu __kern *, mmu)
+>  {
+>         __kvm_flush_cpu_context(kern_hyp_va_host(mmu));
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_timer_set_cntvoff,
+> +DEFINE_KVM_HOST_HCALL(void, __kvm_timer_set_cntvoff,
+>         u64, cntvoff)
+>  {
+>         __kvm_timer_set_cntvoff(cntvoff);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL0_VOID(__kvm_enable_ssbs)
+> +DEFINE_KVM_HOST_HCALL0(void, __kvm_enable_ssbs)
+>  {
+>         u64 tmp;
+>
+> @@ -494,18 +479,18 @@ DEFINE_KVM_HOST_HCALL0(u64, __vgic_v3_get_gic_config)
+>         return __vgic_v3_get_gic_config();
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL0_VOID(__vgic_v3_init_lrs)
+> +DEFINE_KVM_HOST_HCALL0(void, __vgic_v3_init_lrs)
+>  {
+>         __vgic_v3_init_lrs();
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_save_aprs,
+> +DEFINE_KVM_HOST_HCALL(void, __vgic_v3_save_aprs,
+>         struct vgic_v3_cpu_if __kern *, cpu_if)
+>  {
+>         __vgic_v3_save_aprs(kern_hyp_va_host(cpu_if));
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_restore_vmcr_aprs,
+> +DEFINE_KVM_HOST_HCALL(void, __vgic_v3_restore_vmcr_aprs,
+>         struct vgic_v3_cpu_if __kern *, cpu_if)
+>  {
+>         __vgic_v3_restore_vmcr_aprs(kern_hyp_va_host(cpu_if));
+> @@ -541,7 +526,7 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_unshare_hyp,
+>         return __pkvm_host_unshare_hyp(pfn);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL(unsigned long, __pkvm_create_private_mapping,
+> +DEFINE_KVM_HOST_HCALL(ulong, __pkvm_create_private_mapping,
+>         phys_addr_t, phys, size_t, size, u64, prot)
+>  {
+>         /*
+> @@ -554,7 +539,7 @@ DEFINE_KVM_HOST_HCALL(unsigned long, __pkvm_create_private_mapping,
+>          * Instead pass the allocation address as the return value (or return
+>          * ERR_PTR() on failure).
+>          */
+> -       unsigned long haddr;
+> +       ulong haddr;
+>         int err = __pkvm_create_private_mapping(phys, size, prot, &haddr);
+>
+>         if (err)
+> @@ -573,7 +558,7 @@ DEFINE_KVM_HOST_HCALL0(int, __pkvm_reserve_vm)
+>         return __pkvm_reserve_vm();
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__pkvm_unreserve_vm,
+> +DEFINE_KVM_HOST_HCALL(void, __pkvm_unreserve_vm,
+>         pkvm_handle_t, handle)
+>  {
+>         __pkvm_unreserve_vm(handle);
+> @@ -630,7 +615,7 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_load,
+>         return __tracing_load(desc_hva, desc_size);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL0_VOID(__tracing_unload)
+> +DEFINE_KVM_HOST_HCALL0(void, __tracing_unload)
+>  {
+>         __tracing_unload();
+>  }
+> @@ -647,7 +632,7 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_swap_reader,
+>         return __tracing_swap_reader(cpu);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__tracing_update_clock,
+> +DEFINE_KVM_HOST_HCALL(void, __tracing_update_clock,
+>         u32, mult, u32, shift, u64, epoch_ns, u64, epoch_cyc)
+>  {
+>         __tracing_update_clock(mult, shift, epoch_ns, epoch_cyc);
+> @@ -665,19 +650,19 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_enable_event,
+>         return __tracing_enable_event(id, enable);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__tracing_write_event,
+> +DEFINE_KVM_HOST_HCALL(void, __tracing_write_event,
+>         u64, id)
+>  {
+>         trace_selftest(id);
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_save_apr,
+> +DEFINE_KVM_HOST_HCALL(void, __vgic_v5_save_apr,
+>         struct vgic_v5_cpu_if __kern *, cpu_if)
+>  {
+>         __vgic_v5_save_apr(kern_hyp_va_host(cpu_if));
+>  }
+>
+> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_restore_vmcr_apr,
+> +DEFINE_KVM_HOST_HCALL(void, __vgic_v5_restore_vmcr_apr,
+>         struct vgic_v5_cpu_if __kern *, cpu_if)
+>  {
+>         __vgic_v5_restore_vmcr_apr(kern_hyp_va_host(cpu_if));
+>
+> --
+> Without deviation from the norm, progress is not possible.
