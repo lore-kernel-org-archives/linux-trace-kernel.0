@@ -1,334 +1,225 @@
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C804B31E828
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564DF1DDC33
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 15:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785771201; cv=none; b=hfXhSvhYyFRtgAO8HwKzvkMbS8ad+oPyPeuhl+fZLNXOmfsP78nXz+5+qW+P/qO/ExVwloEDtjn63BubEJjt9EAj2Uzvd0+sUpDn6RZAeVst6Z/v4Ob9MEFk6SU7aBTqnR387cPL0D/RgAP7AMDQM0aG08Plw4QSrM8f5BNLjEQ=
+	t=1785771550; cv=none; b=WdPgD+5buOFPpV/Kd1ndX2ULwu8JGDYMJU5W28CVxOTh+D46iFJ8CZYorFSF+6tRjlu1+sX9173yepcKJ1aUJRP/btCSctuQ55o6D0JkIo37WxNeLC2cW3Y1KGEkoyj/sHRKrSGCH6zhSLV+FCAJqKvaKsOwSIjR2bm/pTyycyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785771201; c=relaxed/simple;
-	bh=C/XKI47pVb+/uzP4EF5dInlZPLt+EXLYsPrxDNx6SJ8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=W+HSv/BM4cTEe3wnKCpRYIa10PM9fbC8qrv0bhIrguF68TCTnSkbQQYEq/rfIBO4W+OccTV8G1QahGKvzutCF+jZfOYz76/nn4ZRSDo+eJPoLyqTemxhnana3CGcH6xTZScqk8TxBT2aVamA2nVz9G9iDYSZZ8aqHUjH7arhqsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OUlEvZhK; arc=none smtp.client-ip=209.85.210.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1785771550; c=relaxed/simple;
+	bh=xPgmW54m7MwqDEBpyR6KrE8rfplrHmQ0KSDtz5AO7as=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EV4zvS4LcH2Fx3gYNwk+lUX3+Ak1OAw65VnHsPbNrplQJ24tHX+LUzUF/iZpvTcP0k0NqxxLGYmfY8Ogf/OMId63M+/o/yQJqGIooXa/aSaEDspcSkXiwGpc/eBrhqc0HMORDvQGJT3WTC3A7AAwqRiaHCqlqmmPfqV79kyHp3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iw19dbvC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OUlEvZhK"
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-84e375d9736so5356631b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 08:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785771196; x=1786375996; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gtEGWO1V/3oKubYEJFYO8Yg77TA8PdsLMD6iXufqvFE=;
-        b=OUlEvZhK0wxaPbr/ci7nJY7xUSwtInD/Wm6f1WlpDCfY58SLOmRmdku0eybpR4ihAC
-         HvGNBZoBp3oZOSNRmRpOqcknfDq4+QmnXE33/+u2tIEy/pJnPVjAQSbmDQMmrdu+Vt61
-         zfNh21rhFsKMnH4d3vkluue7Mh3a4sQx/Jqe7TXkMyJzRqzQIkqNYZYiePvViSEltZ0Z
-         50VKQCY/6W4tpo67NCXnU0xdvxZ1KtP4JqWZNJjq4Eiay2puCTE85zh22i7IYkuedd8r
-         G0SFWC2KMEWBoB4Np/hKWNHsLf9sGdj/Zf7DB1vWBUNus388fOsL5muS1aGil7sxnjvr
-         mSsQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iw19dbvC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785771548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E+UzXX7/IK3/mh9WH7z29C8ALI2O0q7JcWSEkUcxU90=;
+	b=iw19dbvCuBWDGRXyekVJBF/AViNUA0gj/8HgtGmZR9cUnqulewIx6mcLVp4hE1LbXu9Rlc
+	nroY+YJ2F/spIKWN9FsI+7lCPVJwKlzZeBYQlv7U2+F5HXTIu54diMPk44/pIYC58vJ+Jd
+	nSfa7D57htDgBQdDE1F+Lphz0EYzPMg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-255-K-l1BIROPWST5356iqK_TQ-1; Mon, 03 Aug 2026 11:39:07 -0400
+X-MC-Unique: K-l1BIROPWST5356iqK_TQ-1
+X-Mimecast-MFC-AGG-ID: K-l1BIROPWST5356iqK_TQ_1785771546
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-496b61bd846so19055045e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 08:39:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785771196; x=1786375996;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gtEGWO1V/3oKubYEJFYO8Yg77TA8PdsLMD6iXufqvFE=;
-        b=NWG8t7WtahmmSW7SEAKmBr50Hq/hqM1Mi0zCUjWKbmaV5Cu36MyoAE0KSjIz5X2Kck
-         EtStz07br1m9MIHmGZTjgqo8Hw5Ek7QrbVXWW4vZh0zCzmnmKxnrQntG656CYcsCUY6V
-         i4sQBXb2W9rBQU9PFSMy37wSsjig3xyyKDiPdRg/ZlO4wddVONrGEkB2YnX5h1nJEc9f
-         jCo5mTEwn7v9oZ3F4DB9lp6WyXl0sycywjhcHXa9oFZmSyIIm4eYQNIHhll/s3WuMusU
-         DGBvBBcEylG0OyFQ+C9bzF+1Y4K1uk0B0CDXFbe8a+A2RPVH/AS8W6Pw/9Af/PyiZjzI
-         J4Bw==
-X-Forwarded-Encrypted: i=1; AHgh+Rqz7Wx1YOaWjVCzRY7plOLpUKv5VYcu8pxduSMq1ErM3Gs7Hf/ScaCTgxR3jSlDLdAg2mELIAlF+u8bpQ+UvB1DB0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmgAIs6dVsoc6YUUrar8MxELn/+r8KmeN5a0vlFFaUSEQBbZYO
-	QcWhOZ0+MAlwieU20ZnX43o9IIkxUc8H7c/yMYCEBiECv9GqEKdQwhVmeDew0Am0EUvlSV8hhtC
-	AsYWzpg==
-X-Received: from pfbhw1.prod.google.com ([2002:a05:6a00:8901:b0:848:46e6:1aac])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4613:b0:848:3fe2:c88b
- with SMTP id d2e1a72fcca58-84ee477539amr8885723b3a.6.1785771194900; Mon, 03
- Aug 2026 08:33:14 -0700 (PDT)
-Date: Mon, 3 Aug 2026 08:33:14 -0700
-In-Reply-To: <25ab36cf-888a-4547-b3f7-5bd4e057c1d0@intel.com>
+        d=1e100.net; s=20251104; t=1785771546; x=1786376346;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=ltzx3yDXOigUS6OFQK0hTJ5dTVg0Ee/FgqBIdijjhVA=;
+        b=eBLhhgg6IirpjLf54YaeTmKk2cn1I3mNDH5MM8zw0SzDKQHWZrfsGba00Tx19rStzP
+         GtxEN8jjlNqNJrJCWjIJW+TplRtUmh9GrraCnRrPsCDK8fA5RwGdWO/Z8NSnn2ptjJXe
+         gZnOYtCSCuIjFiZt4ySELuuKJHpzPh7Rd478JywOS3R2wO4p3mdIZtI5ESCRG43ygEWv
+         l68wBFM0DI0yY1advnIDn/vCbLBRxrdkM0D2YwMLZkQJCi1YpTnAf6lKvIgMfkU9771X
+         7j7SBITtrYLrRnsZyKlDRrspXTjuBuEXR5n7f/nXOZpb+0SjohYzPnAwvTvqIxd0JXFX
+         wupg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr9eiDfY/Hodbu6ogoc3JR46yzCliHCdmV0miv9kl156ri9FLk6WuutB/edn+u/Du+ZfoiXIzEECFRy5sm1iMS/H6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmIAyaaMysCScdnyuJxzwZcDongSvrYyoilb2OSokRA7NmZOLH
+	9CGWVssHHQoTzGJforLyJPbkFwtfeKESKq/HrCP9OBSVDf5Q2vkKg1txKVjy1q4n0+SmNLdsjuw
+	EpfpsBcsglyLKIShOjTUNFmA6ugl04W73XjCBQUCtrUoOur7wnaJa8hci70l9XB9TQGhbatb02A
+	==
+X-Gm-Gg: AR+sD120Cn7MQsF2nWVNGnxCYoITsfnH2NvXP7qo7g0shaV6x9+52DjeJ/m4bANkBNy
+	5qDV2QyJjGy2kyoyGANRGsNhAJnGx4F5Yv1Vx+K8r5T2f/JLUQ2PpWGH+jQcZBFxRLiQNpOvhfG
+	qykbbuQlBERj9Kr4TN8J3Y+3q7E7ndgksznonkk6QAcjNld1bvevR9gwbRpR4bPUOlK0axaBuJt
+	jCDKDlCUFAL3buI/Ztk0sLXomDU63hpSOGnhCfc730sRIknSSzpGnOH6vkfnLU0+UKiFrckfvT3
+	0dHM03DOYU9NvGjWjWVEHG/qbqVuKGtDrXTzkNn59rq2tCk64n/SsJsrkx2vmwvsrqIBpI8XCSc
+	bTBnvJi23cEwybeb/rBzD0qnmEFR1
+X-Received: by 2002:a05:600c:19cf:b0:496:bbce:fd with SMTP id 5b1f17b1804b1-4980c66c73amr243660075e9.6.1785771546109;
+        Mon, 03 Aug 2026 08:39:06 -0700 (PDT)
+X-Received: by 2002:a05:600c:19cf:b0:496:bbce:fd with SMTP id 5b1f17b1804b1-4980c66c73amr243659225e9.6.1785771545526;
+        Mon, 03 Aug 2026 08:39:05 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49949fc2ff6sm992035e9.1.2026.08.03.08.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2026 08:39:05 -0700 (PDT)
+Message-ID: <fa933b780eb63da7b194f9ca076d0d22f827c511.camel@redhat.com>
+Subject: Re: [PATCH v2 1/4] rv/reactors: use context-sensitive lockdep wait
+ type in rv_react()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	 <thomas.weissschuh@linutronix.de>
+Date: Mon, 03 Aug 2026 17:39:04 +0200
+In-Reply-To: <fb4c2c0ab10e32bb02cd7da747a00ef988eaf276.1785695669.git.wen.yang@linux.dev>
+References: <cover.1785695669.git.wen.yang@linux.dev>
+	 <fb4c2c0ab10e32bb02cd7da747a00ef988eaf276.1785695669.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-7-35f9aec2aed2@google.com>
- <60d19013-d6d7-4eec-827a-2622e22cec98@intel.com> <CAEvNRgF0SxmoMtqq69tUih54A9K7j_wcMFRrq=r9w6TnAGAUQQ@mail.gmail.com>
- <dd4201f2-3660-46ad-958f-c70feb1ab1c3@intel.com> <amzMtg4K6qEEsudx@google.com>
- <25ab36cf-888a-4547-b3f7-5bd4e057c1d0@intel.com>
-Message-ID: <anC0uuZIrbxlGubN@google.com>
-Subject: Re: [PATCH v9 07/41] KVM: guest_memfd: Wire up core private/shared
- attribute interfaces
-From: Sean Christopherson <seanjc@google.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: multipart/mixed; charset="UTF-8"; boundary="t+KByEqIRolqunqf"
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: k6rY1DbBMgwszyNqWRQAthZvGCiw9oIMjZtTvVNQ3iU_1785771546
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2026-08-03 at 02:43 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> The single DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_FREE) in
+> rv_react() declares wait_type_inner =3D LD_WAIT_FREE for every execution
+> context.=C2=A0 In a preemptible context (e.g. CONFIG_PREEMPT_RT or a KUni=
+t
+> test running on a task), a timer interrupt can fire during a reactor
 
---t+KByEqIRolqunqf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+We are obviously not doing this for KUnit tests, but aren't tracepoint hand=
+lers
+also running with preemption enabled on non-PREEMPT_RT kernels now?
+So technically this is a problem with any configuration if events don't run=
+ with
+preemption disabled for other reasons.
 
-On Mon, Aug 03, 2026, Xiaoyao Li wrote:
-> On 8/1/2026 12:26 AM, Sean Christopherson wrote:
-> > On Fri, Jul 31, 2026, Xiaoyao Li wrote:
-> > > On 7/31/2026 4:42 AM, Ackerley Tng wrote:
-> > > If kvm_range_is_private() is useful/required by huge page support, then let
-> > > the huge page series to introduce it. It has nothing to do with the in-place
-> > > conversion series.
-> > 
-> > If it weren't for the fact that the range-based search is used later in this
-> > series, I would 100% agree with Xiaoyao.
-> > But since the core logic is used and needed elsewhere,
-> 
-> I don't see it a problem. Without introducing kvm_range_is_private() in this
-> patch, the core logic of range-based search on gmem can still be introduced
-> as kvm_gmem_range_has_attributes() directly in patch 10 or in a separate
-> patch.
-> 
-> > and because kvm_range_has_vm_memory_attributes() takes a range, my vote is
-> > to provide the plumbing now, even though a small portion of it isn't
-> > strictly necessary.
-> 
-> So my initial feedback was "we can just use kvm_mem_is_private(kvm, gfn)".
-> It makes code simpler.
+Or is the issue with spinlocks only popping out on PREEMPT_RT because they
+become sleeping locks?
+Is lockdep really happy to allow an interrupt/schedule taking spinlocks und=
+er
+LD_WAIT_FREE on non-PREEMPT_RT?
 
-My apologies, I hadn't actually applied v9 to look at the full context.  I agree,
-providing kvm_range_is_private() is completely unnecessary.  It's not even really
-a problem with this patch, it's a pre-existing issue that can and should be
-addressed with a prep patch.
+> callback; the interrupt exit path then schedules and acquires rq->__lock
+> (LD_WAIT_SPIN) while the override map is still held.=C2=A0 Since the map
+> declares the context to be wait-free, lockdep reports a spurious
+> "Invalid wait context" warning:
+>=20
+> =C2=A0=C2=A0=C2=A0 [ BUG: Invalid wait context ]
+> =C2=A0=C2=A0=C2=A0 context-{5:5}
+> =C2=A0=C2=A0=C2=A0 1 lock held by kunit_try_catch/209:
+> =C2=A0=C2=A0=C2=A0=C2=A0 #0: (rv_react_map-wait-type-override){+.+.}-{1:1=
+}
+> =C2=A0=C2=A0=C2=A0 kunit_try_catch/209 is trying to lock:
+> =C2=A0=C2=A0=C2=A0 ffff8a743ed3e8a0 (&rq->__lock){-...}-{2:2}
+>=20
+> Use two lockdep override maps, selected by execution context:
+>=20
+> =C2=A0 - Preemptible context (task, softirq, PREEMPT_RT irq thread): the
+> =C2=A0=C2=A0=C2=A0 scheduler may preempt, so use LD_WAIT_SPIN, the tighte=
+st wait type
+> =C2=A0=C2=A0=C2=A0 the scheduler itself uses, to suppress the spurious wa=
+rning.
+>=20
+> =C2=A0 - NMI/hardirq context: preemption is disabled and the scheduler ca=
+nnot
+> =C2=A0=C2=A0=C2=A0 run, so the false positive cannot arise.=C2=A0 Keep LD=
+_WAIT_FREE here to
+> =C2=A0=C2=A0=C2=A0 preserve the original constraint that reactors must no=
+t take raw
+> =C2=A0=C2=A0=C2=A0 spinlocks in atomic context.
 
-> And as a bonus, the logic to choose between gmem-based attribute query and
-> vm-based attribute query is hidden from the static call.
+So here you're describing at length the solution but not really why you're =
+doing
+that. A reader that didn't follow the discussion might think the requiremen=
+t is
+indeed context-dependant, it isn't.
 
-I don't follow.  What do you mean by "hidden from the static call?"  The whole
-point of using a static call is to select between gmem-based and vm-based private
-memory.  Or are you saying the populate() flow doesn't need to manually check
-gmem_in_place_conversion?
+I'd write very bluntly something like:
 
-> The second bonus of dropping kvm_range_is_private() is that we can eliminate
-> one more chunk in patch 20.
+  "Reactors are not supposed to explicitly take locks, reactor code must co=
+mply
+with LD_WAIT_FREE. However reactors may run with interrupts and preemption
+enabled, so the interrupting code may not satisfy this constraint. Relax it=
+ if
+we are running from a context that cannot be interrupted to avoid false
+positives."
 
-Ya.
+I would write something like that also in the comment, to make clear that
+reactors really should be LD_WAIT_FREE, but we are asserting that as best
+effort.
 
-Untested, but unless I'm missing something, patches 6 and 7 of this series can
-be replaced with the attached patches (6 and 7 should be squashed together no
-matter what).
+What do you think?
+Thanks,
+Gabriele
 
---t+KByEqIRolqunqf
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename=0001-KVM-guest_memfd-Use-kvm_mem_is_private-when-populati.patch
+> Fixes: 69d8895cb9a9 ("rv: Add explicit lockdep context for reactors")
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> Cc: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+> =C2=A0kernel/trace/rv/rv_reactors.c | 17 ++++++++++++-----
+> =C2=A01 file changed, 12 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
+c
+> index 2f5fc8d18dea..cd571b1649f5 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -465,18 +465,25 @@ int init_rv_reactors(struct dentry *root_dir)
+> =C2=A0
+> =C2=A0void rv_react(struct rv_monitor *monitor, const char *msg, ...)
+> =C2=A0{
+> -=09static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_FREE);
+> +=09/*
+> +=09 * A reactor callback can be preempted; the scheduler then takes
+> +=09 * rq->__lock (LD_WAIT_SPIN).=C2=A0 Advertise that in preemptible con=
+texts
+> +=09 * to avoid a spurious lockdep report, and keep LD_WAIT_FREE in
+> atomic
+> +=09 * ones where the scheduler cannot run.
+> +=09 */
+> +=09static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map,=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 LD_WAIT_SPIN);
+> +=09static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map_atomic, LD_WAIT_FREE);
+> +=09struct lockdep_map * __maybe_unused map;
+> =C2=A0=09va_list args;
+> =C2=A0
+> =C2=A0=09if (!rv_reacting_on() || !monitor->react)
+> =C2=A0=09=09return;
+> =C2=A0
+> +=09map =3D (in_nmi() || in_hardirq()) ? &rv_react_map_atomic :
+> &rv_react_map;
+> =C2=A0=09va_start(args, msg);
+> -
+> -=09lock_map_acquire_try(&rv_react_map);
+> +=09lock_map_acquire_try(map);
+> =C2=A0=09monitor->react(msg, args);
+> -=09lock_map_release(&rv_react_map);
+> -
+> +=09lock_map_release(map);
+> =C2=A0=09va_end(args);
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(rv_react);
 
-From 77bd0524535d65d7c6beb4a0cc70a65fbacc9f81 Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 3 Aug 2026 08:10:09 -0700
-Subject: [PATCH 1/2] KVM: guest_memfd: Use kvm_mem_is_private() when
- populating guest_memfd memory
-
-Using kvm_mem_is_private() when populating guest_memfd instead of using an
-open coded equivalent.  In addition to simplifying the populate code *now*,
-this avoids the need to provide a range-based gmem lookup API in the future
-as well.
-
-No functional change intended.
-
-Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- virt/kvm/guest_memfd.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 8c7709a352cc..48c13d18af15 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -881,9 +881,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
- 
- 	folio_unlock(folio);
- 
--	if (!kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + 1,
--						KVM_MEMORY_ATTRIBUTE_PRIVATE,
--						KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
-+	if (!kvm_mem_is_private(kvm, gfn)) {
- 		ret = -EINVAL;
- 		goto out_put_folio;
- 	}
-
-base-commit: 17548ee538ef4f476e16fb5dd3ca8adfd8a852ed
--- 
-2.55.0.508.g3f0d502094-goog
-
-
---t+KByEqIRolqunqf
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename=0002-KVM-guest_memfd-Stub-in-ability-to-enable-in-place-s.patch
-
-From 02db86dc193d969085bbc0c98c6117e59d469cb5 Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 3 Aug 2026 08:17:34 -0700
-Subject: [PATCH 2/2] KVM: guest_memfd: Stub in ability to enable in-place
- shared<=>private conversion
-
-Stub in global variable to enable in-place guest_memfd private<=>shared
-memory conversion, which will eventually be exposed to userspace via a
-module param, and wire up the __kvm_mem_is_private() static call to the
-guest_memfd version when in-place conversion is enabled, i.e. when gmem is
-the sole authority on private vs. shared memory.
-
-Cc: Fuad Tabba <tabba@google.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Co-developed-by: Ackerley Tng <ackerleytng@google.com>
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- include/linux/kvm_host.h |  6 ++++++
- virt/kvm/guest_memfd.c   | 26 ++++++++++++++++++++++++++
- virt/kvm/kvm_main.c      | 12 +++++++++++-
- 3 files changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 65fbce46b63f..9477ecebbbce 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2580,6 +2580,8 @@ static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
- #endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
- 
- #ifdef kvm_arch_has_private_mem
-+extern bool gmem_in_place_conversion;
-+
- typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
- DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
- 
-@@ -2588,6 +2590,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
- 	return static_call(__kvm_mem_is_private)(kvm, gfn);
- }
- #else
-+#define gmem_in_place_conversion false
-+
- static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
- {
- 	return false;
-@@ -2595,6 +2599,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
- #endif /* kvm_arch_has_private_mem */
- 
- #ifdef CONFIG_KVM_GUEST_MEMFD
-+bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn);
-+
- int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		     gfn_t gfn, kvm_pfn_t *pfn, struct page **page,
- 		     int *max_order);
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 48c13d18af15..e21c7122539a 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -474,6 +474,32 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn)
-+{
-+	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
-+	struct inode *inode;
-+
-+	if (!slot)
-+		return 0;
-+
-+	CLASS(gmem_get_file, file)(slot);
-+	if (!file)
-+		return 0;
-+
-+	inode = file_inode(file);
-+
-+	/*
-+	 * Rely on the maple tree's internal RCU lock to ensure a stable result.
-+	 * This result can become stale as soon as the lock is dropped, so the
-+	 * caller _must_ protect consumption of private vs. shared either by
-+	 * holding guest_memfd's invalidate lock for the entire duration, or by
-+	 * checking mmu_invalidate_retry_gfn() under mmu_lock to serialize
-+	 * against concurrent attribute updates.
-+	 */
-+	return kvm_gmem_is_private_mem(inode, kvm_gmem_get_index(slot, gfn));
-+}
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_is_private);
-+
- static struct file_operations kvm_gmem_fops = {
- 	.mmap		= kvm_gmem_mmap,
- 	.open		= generic_file_open,
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 081e3309359d..e5654baa8895 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -101,6 +101,10 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(halt_poll_ns_shrink);
- static bool __ro_after_init allow_unsafe_mappings;
- module_param(allow_unsafe_mappings, bool, 0444);
- 
-+#ifdef kvm_arch_has_private_mem
-+bool __ro_after_init gmem_in_place_conversion = false;
-+#endif
-+
- /*
-  * Ordering of locks:
-  *
-@@ -2422,6 +2426,9 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
- static u64 kvm_supported_vm_mem_attributes(struct kvm *kvm)
- {
- #ifdef kvm_arch_has_private_mem
-+	if (gmem_in_place_conversion)
-+		return 0;
-+
- 	if (!kvm || kvm_arch_has_private_mem(kvm))
- 		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
- #endif
-@@ -2633,8 +2640,11 @@ EXPORT_STATIC_CALL_GPL(__kvm_mem_is_private);
- 
- static void kvm_init_memory_attributes(void)
- {
-+	if (gmem_in_place_conversion)
-+		static_call_update(__kvm_mem_is_private, kvm_gmem_is_private);
- #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
--	static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
-+	else
-+		static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
- #endif
- }
- #else
--- 
-2.55.0.508.g3f0d502094-goog
-
-
---t+KByEqIRolqunqf--
