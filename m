@@ -1,153 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF583A1685
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 06:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347A139CD18;
+	Mon,  3 Aug 2026 06:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785738972; cv=none; b=tZtdgmWXswWXk2QG2wLmHcEmeSRx244rtPstsSoWn9FNTVUHRhzFdpeQGctKycA0pSn+k0dRpEi4sKdcDTB3HziRrkeDf4HGC09zCqK3y2nlO4SoSx+DBXgtVKrkYtntpvZiYyg8Q6XQa3u6OegiIHElUbhQb9lILDSX9rqYruQ=
+	t=1785740276; cv=none; b=XOVDccuOt7AdabT7SH1fUQYF5QHqsilycf+9iMe2w121w23abwPaPhrg396hWy4Q1V4hbc5NM7JRVU5m9dzu2gDpL5l0mqdXFtF+algpyXWPpt9qGOsvgvWWGd42/nce6Qsr7qLcLqRonXquPAHQmHmBgIrShrOSjcD24w7Gj1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785738972; c=relaxed/simple;
-	bh=qe58jRsFT9ppS/jPsQYvFZw6SjfEwMQiBXUmYFmiVzg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lhi5YruW2O3qSeQMppGj/qldkT0ih4IQxcktxb9gWcGVj4GBtoWjNaJiqRkRud26vEhNv/NNuk5tnIps98rk+jN9dHAjKiSxfiLpn8/ICJ9CUOXGhjjPXIVUkbsBCMN7TQ4mRZKH0bGnol+xbfFueX2UWMtxGzHoP1VtN+sKvSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LVFqZ98T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1785740276; c=relaxed/simple;
+	bh=+Mv1NMXsr7rE6/f60LNjBlSpEQTm2YKOFDckKAG175k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TRKODPE+NZXgjAdYm0372+AZ8eswKOLgd/Og+1kz0MQ9UIZ795XfamB9Ud6AJisRLIUuh59RTle9gszTlz4FBsdZ0X8Lj5+nnXR/HxMP4hFZqhZKeAfwZpQg1QJE9j7AL3QdHJx9lpu46Q2RlHXq/PBJEIsF5yLDR9eiLdolVuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LONXz4zM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LVFqZ98T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785738969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qe58jRsFT9ppS/jPsQYvFZw6SjfEwMQiBXUmYFmiVzg=;
-	b=LVFqZ98TpS0TlpBtJFyFCUX3j97u1fJSTkYUkj1TQI/wl4KqVJVIoVpeT9ZMMZBEcGzTFJ
-	pwrg/zvLMvGq+YqJhQCgNUfu1oY7GiJK1mMJydUppteYj2S2UUZj/ft5813PkTkWHa3gsB
-	y3n8OcYHLgleXShV+wQhYv02uJ+tROQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-kJvqunQJMW2q9q2M-TVpGQ-1; Mon, 03 Aug 2026 02:35:56 -0400
-X-MC-Unique: kJvqunQJMW2q9q2M-TVpGQ-1
-X-Mimecast-MFC-AGG-ID: kJvqunQJMW2q9q2M-TVpGQ_1785738955
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47407691804so2283067f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Aug 2026 23:35:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785738955; x=1786343755;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=j97nUM679ILSO2OJT5uVm1JNmnswxH5ehx4we/pp/9A=;
-        b=WBD+FOdewTyb0XLfgRAiKSoO/d0Gt+Ox7E/a3eBmj7dfla6fT2CEK0WkPwRWEyzoaS
-         UhQazcA32j0aJy8XEqrNjzri9kAVwR5M9tgf4aqbcd6fS8pq3kO/4WSW0Ym9cl3vnyno
-         hhUu7X6gNN+j7gPT1rCpXGawgJ61dLKjcZwcjkLJNoGVROp0eQaJL7dvALFV3wgEHLXb
-         4m7jIyJXPrA3V8q7py+NGPFPoXCwmVMf3pQb9aEOpWVW+haBUFNWLz2NDcrPm0CCJf8w
-         Uq3QUVJW9qcvqwnFvSa2Gcmqa0ktqXUlM4OjREHudXWbA8hLU9vVVQi2G9O4uT/rtd1K
-         4Luw==
-X-Forwarded-Encrypted: i=1; AHgh+RrqxRAoP4qHzvHxcNSpqWX5qaRJDwXX9XGk5AgPzBQHSZstT0wtL+/Ayje36utIC36e79Cvuj24MyPdHipcCRZIxrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw194VEcO6NKXtmhnetjHVrGko+7FGVHWLKp4MieexK7rEhIqYW
-	1NorB25HMTVSk8yx1782U6lgRXFTm9OhrKVGcRSpOaWDhuVp4Yfq8ntY9JQkl4wlWSLAw1zf9or
-	qFsGdN5+uDn5ZwUbVnSBNq+k4xMOQh6mLcRcnRAqC89tt9tDk42gu1iv+r+SMnJBNNkD1uj3gK1
-	WtgQJmVA==
-X-Gm-Gg: AR+sD13p6hiftFRLzFIqqFfN+c/y6UWNBY+WADG8/n6zubBQD9dDurrNQV1KwP+TFwk
-	LZDqIZQCCx5pxSQyWzIdOx/r3xXah9DCaXEAvAxqYD2rIbH3xMbRMBqND2xFaMSyDaNri1YyXD/
-	nXXpxmtwjGAMsxhfFJny86WfuBpUiobPHCvh1kL0JQy0299LbIuDITBClXJfxVeHPjfZ+MbHdgm
-	pPzwgnD9gkv4DvykEPDCNAKiBaKHLHgAHs59jPgH0ltfvSlXn/E3ElfJmp7+G0fEfOKk+0wi3+6
-	7gNZwtcOxtap2lWP2qRJgRt3Ssohp334zjcQp/Yo0Dbs97kbRVuflH2LGGXef4PdXwoga0qfPTi
-	yslK80E2pd7OkbiUF3gV57xxmkQIO
-X-Received: by 2002:a5d:46c1:0:b0:47f:8b9e:f457 with SMTP id ffacd0b85a97d-47fd72b0552mr15007962f8f.17.1785738955068;
-        Sun, 02 Aug 2026 23:35:55 -0700 (PDT)
-X-Received: by 2002:a5d:46c1:0:b0:47f:8b9e:f457 with SMTP id ffacd0b85a97d-47fd72b0552mr15007927f8f.17.1785738954669;
-        Sun, 02 Aug 2026 23:35:54 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd41cf404sm29281638f8f.1.2026.08.02.23.35.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2026 23:35:54 -0700 (PDT)
-Message-ID: <489b764f5add05c08a468dca02b6c0f0d8197a90.camel@redhat.com>
-Subject: Re: [PATCH v2 2/4] rv/reactors: propagate rv_register_reactor()
- error from reactor init
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: wen.yang@linux.dev
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 03 Aug 2026 08:35:53 +0200
-In-Reply-To: <76b672af7c3eed78582ae90fcbf4736a76783df5.1785695669.git.wen.yang@linux.dev>
-References: <cover.1785695669.git.wen.yang@linux.dev>
-	 <76b672af7c3eed78582ae90fcbf4736a76783df5.1785695669.git.wen.yang@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LONXz4zM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gzp2V4d1Na4g1k1ABobiI65PmcOtyi96M8gvnAKH0bc=; b=LONXz4zMkEgieSL4FnSzrIDart
+	JLwzm1ClwikORF7xnwuh8mkvAIdAt6vKfjt0Z/M1/WiF5J9R/5oB7GkbcnVK3Vd5ycuKYG53RSXpm
+	r6sN9VRa9pbFbnG+JsggcQK+HdY+ISgWhDrDLfBMl6jT8fhRqyzkCJjR1AU07/qBPedNhnyaht3GU
+	AfhRCo1+ai/txL3609mMPDrWhTyOAlEdp9rwpGAGoSWF/owoalrkccccp8VLAnrbpmrRkFCRNqUtP
+	jYym1UtCgge7m+6K7LaIMEAsKzAbwUpMBCJE2woiprzEL3NWrtrg584St0cEelND4x+t6/F7+HtXr
+	d0Rojuag==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wqmcK-00000008Ksq-49x4;
+	Mon, 03 Aug 2026 06:57:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 127A630045A; Mon, 03 Aug 2026 08:57:44 +0200 (CEST)
+Date: Mon, 3 Aug 2026 08:57:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v11 01/11] x86/hw_breakpoints: Make DR7 updates NMI safe
+Message-ID: <20260803065744.GU49951@noisy.programming.kicks-ass.net>
+References: <178565870538.714490.11309825813968306287.stgit@devnote2>
+ <178565871750.714490.5506415865016304088.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ABNl6-b0xifPHgZgTE2Av_BO62DbFHsHmkHKZRB2h1A_1785738955
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <178565871750.714490.5506415865016304088.stgit@devnote2>
 
-On Mon, 2026-08-03 at 02:43 +0800, wen.yang@linux.dev wrote:
-> From: Wen Yang <wen.yang@linux.dev>
->=20
-> Both register_react_printk() and register_react_panic() ignore the
-> return value of rv_register_reactor() and always return 0.=C2=A0 If the
-> registration fails (e.g. a duplicate reactor name), the init functions
-> silently report success even though the reactor was not registered.
->=20
-> Propagate the error from rv_register_reactor() so a failed registration
-> is reported instead of being silently ignored.
+On Sun, Aug 02, 2026 at 05:18:37PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Jinchao Wang <wangjinchao600@gmail.com>
+> 
+> Hardware breakpoint installation and removal run with IRQs disabled, but
+> an NMI can still enter the same code through KGDB. The interrupted
+> operation and the NMI can consequently claim the same slot or overwrite
+> each other's DR7 state.
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Is KGDB really the only way to trip this? Mostly I think we let KGDB
+have the pieces if it does something 'funny'.
 
->=20
-> Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Wen Yang <wen.yang@linux.dev>
-> ---
-> =C2=A0kernel/trace/rv/reactor_panic.c=C2=A0 | 3 +--
-> =C2=A0kernel/trace/rv/reactor_printk.c | 3 +--
-> =C2=A02 files changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/kernel/trace/rv/reactor_panic.c b/kernel/trace/rv/reactor_pa=
-nic.c
-> index 76537b8a4343..db7116ceafff 100644
-> --- a/kernel/trace/rv/reactor_panic.c
-> +++ b/kernel/trace/rv/reactor_panic.c
-> @@ -26,8 +26,7 @@ static struct rv_reactor rv_panic =3D {
-> =C2=A0
-> =C2=A0static int __init register_react_panic(void)
-> =C2=A0{
-> -=09rv_register_reactor(&rv_panic);
-> -=09return 0;
-> +=09return rv_register_reactor(&rv_panic);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void __exit unregister_react_panic(void)
-> diff --git a/kernel/trace/rv/reactor_printk.c
-> b/kernel/trace/rv/reactor_printk.c
-> index 48c934e315b3..002a10f6aa7b 100644
-> --- a/kernel/trace/rv/reactor_printk.c
-> +++ b/kernel/trace/rv/reactor_printk.c
-> @@ -25,8 +25,7 @@ static struct rv_reactor rv_printk =3D {
-> =C2=A0
-> =C2=A0static int __init register_react_printk(void)
-> =C2=A0{
-> -=09rv_register_reactor(&rv_printk);
-> -=09return 0;
-> +=09return rv_register_reactor(&rv_printk);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void __exit unregister_react_printk(void)
+> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+> index f846c15f21ca..9ef24b55737f 100644
+> --- a/arch/x86/kernel/hw_breakpoint.c
+> +++ b/arch/x86/kernel/hw_breakpoint.c
+> @@ -40,6 +40,9 @@
+>  DEFINE_PER_CPU(unsigned long, cpu_dr7);
+>  EXPORT_PER_CPU_SYMBOL(cpu_dr7);
+>  
+> +/* Sequence number of the per-CPU DR7 state. */
+> +DEFINE_PER_CPU(unsigned int, cpu_dr7_seq);
 
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 3c9f60d6ca5a..f55a0cbd5927 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -532,10 +532,13 @@ enum nmi_states {
+>  static DEFINE_PER_CPU(enum nmi_states, nmi_state);
+>  static DEFINE_PER_CPU(unsigned long, nmi_cr2);
+>  static DEFINE_PER_CPU(unsigned long, nmi_dr7);
+> +static DEFINE_PER_CPU(unsigned int, nmi_dr7_seq);
+
+This is weird, why have two distinct sequence numbers for dr7?
