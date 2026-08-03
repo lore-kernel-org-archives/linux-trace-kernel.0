@@ -1,82 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5F2305662
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 06:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF583A1685
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 06:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785738781; cv=none; b=Mz0WBt8w8vK/o30CpmP2klTDL0tw8kHG1BXRG6gpu7jQ47yZXAp4+7Y+N+ZnCMu5rrF6G6IHJgfDZ38dU2F/7biu0Dxh6lqZkJYd9tlH+F0oFHSRn1xgbKFWFMfbvIn49Wv6XTzgMcDjeCPmL/Nw+MnRl4moxZjEPSPDwp6elTE=
+	t=1785738972; cv=none; b=tZtdgmWXswWXk2QG2wLmHcEmeSRx244rtPstsSoWn9FNTVUHRhzFdpeQGctKycA0pSn+k0dRpEi4sKdcDTB3HziRrkeDf4HGC09zCqK3y2nlO4SoSx+DBXgtVKrkYtntpvZiYyg8Q6XQa3u6OegiIHElUbhQb9lILDSX9rqYruQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785738781; c=relaxed/simple;
-	bh=gRkNjiKNe9yC3jkn/521WzZV93WLyNreu/A5vhhHU84=;
+	s=arc-20240116; t=1785738972; c=relaxed/simple;
+	bh=qe58jRsFT9ppS/jPsQYvFZw6SjfEwMQiBXUmYFmiVzg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S5Xy81h4I+CINq6oBrHTmQlzKswZ+R7EQapC4RJQxf/96NQTJjFE69hTL68NwwyKjV14y8/jOIey9pR9oF9GTnmTQTQmP+DXtf2xAz4XT9Fdwc4K7zHCCxKeSdDouWFCM+iq7n/CHZPiT4MUHxgq+k7S2S+/x/3Qkn5F2AL+HgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iSShIzUn; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=lhi5YruW2O3qSeQMppGj/qldkT0ih4IQxcktxb9gWcGVj4GBtoWjNaJiqRkRud26vEhNv/NNuk5tnIps98rk+jN9dHAjKiSxfiLpn8/ICJ9CUOXGhjjPXIVUkbsBCMN7TQ4mRZKH0bGnol+xbfFueX2UWMtxGzHoP1VtN+sKvSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LVFqZ98T; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSShIzUn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LVFqZ98T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785738778;
+	s=mimecast20190719; t=1785738969;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gRkNjiKNe9yC3jkn/521WzZV93WLyNreu/A5vhhHU84=;
-	b=iSShIzUnFkLT2lHl6nR0WrzqaxrEC74mgp5OJU/MAgaf/K50oRTHxrFdvXp0+uqZMXvcRM
-	hoorVk5Q5QoOJEDEvLspzTQutNSIA3+S+t21ZyidQi5lY1/KfhSz17+IKbQPYZ5fdsE/h2
-	n6BItXkYvFyjVtGDGXk5QXCyj/7cXYA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=qe58jRsFT9ppS/jPsQYvFZw6SjfEwMQiBXUmYFmiVzg=;
+	b=LVFqZ98TpS0TlpBtJFyFCUX3j97u1fJSTkYUkj1TQI/wl4KqVJVIoVpeT9ZMMZBEcGzTFJ
+	pwrg/zvLMvGq+YqJhQCgNUfu1oY7GiJK1mMJydUppteYj2S2UUZj/ft5813PkTkWHa3gsB
+	y3n8OcYHLgleXShV+wQhYv02uJ+tROQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-466-6fzCae7pN4K7cKh0HSPdQQ-1; Mon, 03 Aug 2026 02:32:52 -0400
-X-MC-Unique: 6fzCae7pN4K7cKh0HSPdQQ-1
-X-Mimecast-MFC-AGG-ID: 6fzCae7pN4K7cKh0HSPdQQ_1785738771
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-490a767b782so10824535e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Aug 2026 23:32:52 -0700 (PDT)
+ us-mta-7-kJvqunQJMW2q9q2M-TVpGQ-1; Mon, 03 Aug 2026 02:35:56 -0400
+X-MC-Unique: kJvqunQJMW2q9q2M-TVpGQ-1
+X-Mimecast-MFC-AGG-ID: kJvqunQJMW2q9q2M-TVpGQ_1785738955
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47407691804so2283067f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Aug 2026 23:35:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785738771; x=1786343571;
+        d=1e100.net; s=20251104; t=1785738955; x=1786343755;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=kGAtNj6fbec9IRK9NgGILxfD8V3oY03sKYmcAfJ90+4=;
-        b=ZmRacAwYVrncq4CLW+maenSUHVUTPIf1/uFyefo/HsQ3spMGizZpsKmpTiUqnh99/U
-         nQnkJwheo/vL7X2dFGuv8vp00Ahntrxw9eOZNm4Oeg2a+Z3LKr62TieHZjFeInAIPQWe
-         Ndmbn6JY75vRYqR4DHYmj+CVKbw1cBE/ikwbj4McSL5stCHBY5ONo9ecXd5fZdWJHPoJ
-         /irOXIP3Eb0uaH8wfZHstzEu+LCt7GeIJkFvs8r4gtK3yUuEZG0CGOqCJeb+xnCL1sRH
-         GHs+ACk+zfMhiVRXoml1v16fs/irGNhnf2JuR2JLcjf3SQcMG8yYFgREI6b0Vz9FwZeM
-         wEeA==
-X-Forwarded-Encrypted: i=1; AHgh+RrVDvA2/thVhSo9Mq+MK5uYoh4EzovGRN2Z7k1ohaVu/KuW27naE8NMGfV8/N55zTMJ7fAG6zuFojl+AbUAoXA9A1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqp6hLMxczRGb1ub7mrKE3azcg8yudTh3dETqoXKvcUjwvzeJN
-	JXTrN1ELCpB0+QFoJxiF+Fy2aE2+2UkzjN5Raqfb5LYQqGg8iRdc1wYIn98e+5K19KG+s0+0pn8
-	mB8LrgokpxD7XUW4hJWYOvmvmgW8XaEP6iWaFitJTTKPUJzo7asD6TOBOEUTj2Q8tC54PDkRjMz
-	RhudwkLA==
-X-Gm-Gg: AR+sD12LMBwIKxBLS4rgW7jMuluKJsEK4IjQumZKSQfrGxt8SSNhjn8njD4mPIJb7Bj
-	pyCz/UIJAG0YmMpztFWy9HmKbkH2ISwU/Vr+yHs/4Z/NkPhv+2S9vQ/up3gtYwGJJJYmI9I2n1I
-	pw4oXG/UrQDTIsDrAoY1eUEWrrAfsF3rNMgPyHn5BhT4kzOqrjsQXKD/dk61Ix8rBSJqBz32Elp
-	rCLNpW1JcHJeXEh7cajYzXyneH7hZQvS7oge3BbNWErz+0BQdYbeeLdRS9pEOCahnUIErkqxwpU
-	WrWKb45UcA0HMQKH4QJQAs7Mv6wm2xl11vTYFmfrJ3IGGWG09yEAwUtfgcBX5nDJsQX3jzrAEwB
-	2CL1QYZKl4tgf2a86WlggzIpbzG0f
-X-Received: by 2002:a05:600c:e557:10b0:495:5890:8f6c with SMTP id 5b1f17b1804b1-4980c64b824mr121981085e9.7.1785738771200;
-        Sun, 02 Aug 2026 23:32:51 -0700 (PDT)
-X-Received: by 2002:a05:600c:e557:10b0:495:5890:8f6c with SMTP id 5b1f17b1804b1-4980c64b824mr121980495e9.7.1785738770716;
-        Sun, 02 Aug 2026 23:32:50 -0700 (PDT)
+        bh=j97nUM679ILSO2OJT5uVm1JNmnswxH5ehx4we/pp/9A=;
+        b=WBD+FOdewTyb0XLfgRAiKSoO/d0Gt+Ox7E/a3eBmj7dfla6fT2CEK0WkPwRWEyzoaS
+         UhQazcA32j0aJy8XEqrNjzri9kAVwR5M9tgf4aqbcd6fS8pq3kO/4WSW0Ym9cl3vnyno
+         hhUu7X6gNN+j7gPT1rCpXGawgJ61dLKjcZwcjkLJNoGVROp0eQaJL7dvALFV3wgEHLXb
+         4m7jIyJXPrA3V8q7py+NGPFPoXCwmVMf3pQb9aEOpWVW+haBUFNWLz2NDcrPm0CCJf8w
+         Uq3QUVJW9qcvqwnFvSa2Gcmqa0ktqXUlM4OjREHudXWbA8hLU9vVVQi2G9O4uT/rtd1K
+         4Luw==
+X-Forwarded-Encrypted: i=1; AHgh+RrqxRAoP4qHzvHxcNSpqWX5qaRJDwXX9XGk5AgPzBQHSZstT0wtL+/Ayje36utIC36e79Cvuj24MyPdHipcCRZIxrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw194VEcO6NKXtmhnetjHVrGko+7FGVHWLKp4MieexK7rEhIqYW
+	1NorB25HMTVSk8yx1782U6lgRXFTm9OhrKVGcRSpOaWDhuVp4Yfq8ntY9JQkl4wlWSLAw1zf9or
+	qFsGdN5+uDn5ZwUbVnSBNq+k4xMOQh6mLcRcnRAqC89tt9tDk42gu1iv+r+SMnJBNNkD1uj3gK1
+	WtgQJmVA==
+X-Gm-Gg: AR+sD13p6hiftFRLzFIqqFfN+c/y6UWNBY+WADG8/n6zubBQD9dDurrNQV1KwP+TFwk
+	LZDqIZQCCx5pxSQyWzIdOx/r3xXah9DCaXEAvAxqYD2rIbH3xMbRMBqND2xFaMSyDaNri1YyXD/
+	nXXpxmtwjGAMsxhfFJny86WfuBpUiobPHCvh1kL0JQy0299LbIuDITBClXJfxVeHPjfZ+MbHdgm
+	pPzwgnD9gkv4DvykEPDCNAKiBaKHLHgAHs59jPgH0ltfvSlXn/E3ElfJmp7+G0fEfOKk+0wi3+6
+	7gNZwtcOxtap2lWP2qRJgRt3Ssohp334zjcQp/Yo0Dbs97kbRVuflH2LGGXef4PdXwoga0qfPTi
+	yslK80E2pd7OkbiUF3gV57xxmkQIO
+X-Received: by 2002:a5d:46c1:0:b0:47f:8b9e:f457 with SMTP id ffacd0b85a97d-47fd72b0552mr15007962f8f.17.1785738955068;
+        Sun, 02 Aug 2026 23:35:55 -0700 (PDT)
+X-Received: by 2002:a5d:46c1:0:b0:47f:8b9e:f457 with SMTP id ffacd0b85a97d-47fd72b0552mr15007927f8f.17.1785738954669;
+        Sun, 02 Aug 2026 23:35:54 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49808191ccbsm202690735e9.3.2026.08.02.23.32.49
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd41cf404sm29281638f8f.1.2026.08.02.23.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2026 23:32:50 -0700 (PDT)
-Message-ID: <6943bc6d81388939512772b602f0c920ef0e5b01.camel@redhat.com>
-Subject: Re: [PATCH v2 3/4] rv/reactors: export rv_register_reactor() and
- rv_unregister_reactor()
+        Sun, 02 Aug 2026 23:35:54 -0700 (PDT)
+Message-ID: <489b764f5add05c08a468dca02b6c0f0d8197a90.camel@redhat.com>
+Subject: Re: [PATCH v2 2/4] rv/reactors: propagate rv_register_reactor()
+ error from reactor init
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: wen.yang@linux.dev
 Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Date: Mon, 03 Aug 2026 08:32:49 +0200
-In-Reply-To: <d228eefa5ae3616f3d96640583cc2be771a83c82.1785695669.git.wen.yang@linux.dev>
+Date: Mon, 03 Aug 2026 08:35:53 +0200
+In-Reply-To: <76b672af7c3eed78582ae90fcbf4736a76783df5.1785695669.git.wen.yang@linux.dev>
 References: <cover.1785695669.git.wen.yang@linux.dev>
-	 <d228eefa5ae3616f3d96640583cc2be771a83c82.1785695669.git.wen.yang@linux.dev>
+	 <76b672af7c3eed78582ae90fcbf4736a76783df5.1785695669.git.wen.yang@linux.dev>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -94,7 +94,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: EqPXWEoGlsGeLMg6wyEzthlgz91kgtueqapu9O6i1JM_1785738771
+X-Mimecast-MFC-PROC-ID: ABNl6-b0xifPHgZgTE2Av_BO62DbFHsHmkHKZRB2h1A_1785738955
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -102,48 +102,52 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, 2026-08-03 at 02:43 +0800, wen.yang@linux.dev wrote:
 > From: Wen Yang <wen.yang@linux.dev>
 >=20
-> rv_react() is exported to modules, but the reactor registration helpers
-> are not.=C2=A0 Export them with EXPORT_SYMBOL_GPL() so reactor modules an=
-d
-> the tristate KUnit test module can register and unregister reactors
-> without hitting undefined symbol errors at load time.
-
-Nit, but I believe you meant /link/ time (modpost). Linking phase would fai=
-l at
-the end of the build and you wouldn't have anything (.ko) to load.
-
-Anyway patch looks good:
+> Both register_react_printk() and register_react_panic() ignore the
+> return value of rv_register_reactor() and always return 0.=C2=A0 If the
+> registration fails (e.g. a duplicate reactor name), the init functions
+> silently report success even though the reactor was not registered.
+>=20
+> Propagate the error from rv_register_reactor() so a failed registration
+> is reported instead of being silently ignored.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Thanks,
-Gabriele
-
 >=20
+> Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
 > Signed-off-by: Wen Yang <wen.yang@linux.dev>
 > ---
-> =C2=A0kernel/trace/rv/rv_reactors.c | 2 ++
-> =C2=A01 file changed, 2 insertions(+)
+> =C2=A0kernel/trace/rv/reactor_panic.c=C2=A0 | 3 +--
+> =C2=A0kernel/trace/rv/reactor_printk.c | 3 +--
+> =C2=A02 files changed, 2 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
-c
-> index cd571b1649f5..228ed043bd73 100644
-> --- a/kernel/trace/rv/rv_reactors.c
-> +++ b/kernel/trace/rv/rv_reactors.c
-> @@ -314,6 +314,7 @@ int rv_register_reactor(struct rv_reactor *reactor)
-> =C2=A0=09guard(mutex)(&rv_interface_lock);
-> =C2=A0=09return __rv_register_reactor(reactor);
-> =C2=A0}
-> +EXPORT_SYMBOL_GPL(rv_register_reactor);
+> diff --git a/kernel/trace/rv/reactor_panic.c b/kernel/trace/rv/reactor_pa=
+nic.c
+> index 76537b8a4343..db7116ceafff 100644
+> --- a/kernel/trace/rv/reactor_panic.c
+> +++ b/kernel/trace/rv/reactor_panic.c
+> @@ -26,8 +26,7 @@ static struct rv_reactor rv_panic =3D {
 > =C2=A0
-> =C2=A0/**
-> =C2=A0 * rv_unregister_reactor - unregister a rv reactor.
-> @@ -327,6 +328,7 @@ int rv_unregister_reactor(struct rv_reactor *reactor)
-> =C2=A0=09list_del(&reactor->list);
-> =C2=A0=09return 0;
+> =C2=A0static int __init register_react_panic(void)
+> =C2=A0{
+> -=09rv_register_reactor(&rv_panic);
+> -=09return 0;
+> +=09return rv_register_reactor(&rv_panic);
 > =C2=A0}
-> +EXPORT_SYMBOL_GPL(rv_unregister_reactor);
 > =C2=A0
-> =C2=A0/*
-> =C2=A0 * reacting_on interface.
+> =C2=A0static void __exit unregister_react_panic(void)
+> diff --git a/kernel/trace/rv/reactor_printk.c
+> b/kernel/trace/rv/reactor_printk.c
+> index 48c934e315b3..002a10f6aa7b 100644
+> --- a/kernel/trace/rv/reactor_printk.c
+> +++ b/kernel/trace/rv/reactor_printk.c
+> @@ -25,8 +25,7 @@ static struct rv_reactor rv_printk =3D {
+> =C2=A0
+> =C2=A0static int __init register_react_printk(void)
+> =C2=A0{
+> -=09rv_register_reactor(&rv_printk);
+> -=09return 0;
+> +=09return rv_register_reactor(&rv_printk);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static void __exit unregister_react_printk(void)
 
