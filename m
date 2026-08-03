@@ -1,165 +1,100 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56D72E717B;
-	Mon,  3 Aug 2026 01:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F6119DF62
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 02:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785721896; cv=none; b=pvb3SB1o1z5lxfX0wRdL4MIhHRHo0dOeSHVWINjJj3w//FLNsJ69eqS+fdgiwBOUS2wcxYKDWiNZWSswfNYiNVALgnfJQsGm9NALRKZlSlj9pWsnTScDBrf3cU28TxR2vDd5KalbCT31mjzONACrS2ILxnb14MAEmWEhwTUYRac=
+	t=1785723687; cv=none; b=It5tB9WNEHrLAPzUGpMRj1SWVrT7QqbCkNqyKPB71WFzWwlaPZ2Y4cYvCVdPQUFCEpNLKBn1o5wnvhlx92OV8zv+vGQwBLFikMNhDK3Ao967sX5fHmXKCKPZ8akSIrDNhcgf9l7f6ddfDNyLXSruATVZnUkNyWBXVGc4KKmAmfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785721896; c=relaxed/simple;
-	bh=9KRSe9v2lM5ZfdnJllQn1tQtTy50IrZNYP0cqrpTbV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JoO2WbDeLQE68pXQrIg7VqbpvaAwfrfSDdRyw99dLxhMJ3PwKGWKZobAXIzgyx3eIUetrQHhzefMUR7tjldG3AhakMr6iHa2VeyQRdsYqaIsH6mg0gOtkDvh8aoFJNqnNHhb442gtfZpZ59qRxvelFvfOqgFHi9iSMWO/zMX+Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MYaYIczQ; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1785723687; c=relaxed/simple;
+	bh=ppeOoJOjepa7JurMfBcaDrgM/rYfmShdvP1k92tGKsg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OVIbip1oYPWXTQ45eOvpDJ1KdJ3LY/NAkQyBvwYp4/irBSO5hFnHmdWpmzbmyKIlUyROyBb/GqV6B+ysp2dGPEOqAq1FU6Drtfn2GBG5N1pftddct7xo1oFgwv7Aq8DWvPjUfyCZGiTUt+OaGPYDfXgrVmWLf9upj+Yugp0JK5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RpOBdzfh; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MYaYIczQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=PbJC3Px+DglQjkUzry32ufdSX8YSNA4WkwOYuIElaYQ=;
-	b=MYaYIczQS3sLTcJJOIkH8MCY8tmgZJaF68S+OYd2s2ZtuV1Ux7tV/0/MEuHbMk
-	5Y0N+bN1EKQgco1rM/KTl8x0H0weku+esz5LigWyVhqnQvB0YLgPA9URTvlSGdgv
-	Im+DNJVYL7i5uSBxSr/P+c+wzMHfQr0sDpSONCemTi85A=
-Received: from [IPV6:2409:8900:1fc4:92f1:96e3:5113:7872:40a8] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDXRPPn829qOps5Jg--.34710S2;
-	Mon, 03 Aug 2026 09:50:33 +0800 (CST)
-Message-ID: <52e968d3-b691-44de-b860-6431e2001c11@163.com>
-Date: Mon, 3 Aug 2026 09:50:30 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpOBdzfh"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-383b4a3755fso2843886a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Aug 2026 19:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785723686; x=1786328486; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ppeOoJOjepa7JurMfBcaDrgM/rYfmShdvP1k92tGKsg=;
+        b=RpOBdzfhIygWmuEiXZfMALfU3p0mhZVg7+lMtF67kiKLJFM8ggdY7MAhYhxVfdV/Rl
+         ybkzk/X8fjS1vCPL7X6inHvAQT6TNaLbB8/eiiwjGOXZvWqu6zFYyBXEzaXDP1O4IJFg
+         mMtjNoesz6XBxTktwstv/DDuRGxYuxjUCF8dKAPuZ7uOGd8G6lpOr3w1sEfRUh0KkVEb
+         O9Dgq5KLzqgfynr33mbufXKN/CbXCsG7i8v4WDFL4f5dEmpB4RGR5+LQ+3BnueWA2gL9
+         lr5yCx66CZPCM2xFIrMZrRr3KxA9kTSZAYVlv5AjqWkQfPIcblRAQ4j7QjFwxGWJFMz/
+         UwzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785723686; x=1786328486;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ppeOoJOjepa7JurMfBcaDrgM/rYfmShdvP1k92tGKsg=;
+        b=bRClqMrSRZ+73lja+GyHSbO9gP6SnbFH+MqdaYdTRi/6jhqxQYFH57Jm2Ri/9uwUtD
+         XGSwWOxXi3nHI+Bogb2eHERd/oRjfxc1JezHKiqg57/eJmteVO9P/FeLmQNXxSfky4en
+         W0QZIS2ixrs2DyudU+3ZVmjYpzL812DJAhEKOYO7lDz6FlVjx/geIHZJUqxTUIyBwbHF
+         V+Y5+hh81ecCzwCIlqPrR108A4H4tGHOZECE0Bdbgc/3PUuaGImbj20ICjq5DP7uTrTA
+         FnXN4PbPH6F2sdqstN5RLmoUW541+pB4g+CmDo6QZCCXXhGCdEc+ZLRNIM9uCRd4y2em
+         BVPA==
+X-Gm-Message-State: AOJu0YzR278E0PomqmoSqHmI8ZSpJT1IRFN2ZsEGB3HA4VANrdViIdfE
+	xx4wVcVzATtlV9cXB9MMsPTFvVu0Qzp4VU/UfswP4k9YGOYYwn5o4JsY
+X-Gm-Gg: AR+sD13GlwzV/9XUx2MOU4k8Zo1kM8MGOkRi0+GTSSU8cmmXLZvQmdLnERaGje/LQ0S
+	x2vMfOGXkWimlH+PON3s82czuPyfPSPQi1r7lGXGAuEFIhVz3WVvW+Ayef8KSHKJHWqAhaTBJJp
+	cdd3vCZMDgO2Vti5Gja2Qwi2s8MaAQaatGhzdPVxcjKB5qqEN8YX/eFrClbzs3Likhad6+KxM+p
+	oUgZyHEWW2zcy7NzeX78A4vvV+Or40YjUCwBwB3p8IGLNnkqs0vCCvXJUJYLHaFkttviXZIcQxM
+	I+sc7Dfnb9ZH+Ntm51dvF+aswacePUm05auR1xsaPOy9AFTLI26rrx1ISicbcd9TtsxY+cm8bX3
+	CchNUrawOu4aQ397UNzYp3nkIzrAVuuKk3lObHvL6rID+u3mdAFMp7i4WluDLp1mSEYXanwB0l/
+	w9nIaMAWCXYcvK2Byz51jiJ++meal/HVXNCRJBpmxzLpsHQFXxLfwyoU2BHAK8weGRZhGBBNNyi
+	eOSH1NaDOFHrOC10mb27V31pZVMqw==
+X-Received: by 2002:a05:6a21:2e14:b0:3c4:1916:9d40 with SMTP id adf61e73a8af0-3c92a51def8mr8956941637.12.1785723686000;
+        Sun, 02 Aug 2026 19:21:26 -0700 (PDT)
+Received: from lipengfei28-ThinkStation-P368.mioffice.cn ([2408:8607:1b00:8:c22e:5c9d:65ca:13ce])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe3963e2aasm2935631a12.2.2026.08.02.19.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2026 19:21:25 -0700 (PDT)
+From: Li Pengfei <ljdlns1987@gmail.com>
+X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengfei Li <lipengfei28@xiaomi.com>
+Subject: Re: [RFC PATCH v4 1/3] trace: add lock-free stackmap for stack trace deduplication
+Date: Mon,  3 Aug 2026 10:20:42 +0800
+Message-Id: <20260803022042.1272075-1-lipengfei28@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260715031245.2571869-1-lipengfei28@xiaomi.com>
+References: <20260616064119.438063-1-lipengfei28@xiaomi.com> <20260616064119.438063-2-lipengfei28@xiaomi.com> <20260714171144.4537f163@gandalf.local.home> <20260715031245.2571869-1-lipengfei28@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 v2 2/7] ntfs3: add namei tracepoints
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: almaz.alexandrovich@paragon-software.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- ntfs3@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
- liubaolin12138@gmail.com, Baolin Liu <liubaolin@kylinos.cn>,
- liubaolin12138@163.com
-References: <20260728094426.749482-1-liubaolin12138@163.com>
- <20260728094426.749482-3-liubaolin12138@163.com>
- <20260729142622.73d7ef18@gandalf.local.home>
-Content-Language: en-US
-From: liubaolin <liubaolin12138@163.com>
-In-Reply-To: <20260729142622.73d7ef18@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgDXRPPn829qOps5Jg--.34710S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCF4DArWDXw1Dtry8ur48WFg_yoWrJr47pF
-	4jy3W09a97Jr1UKwn5Z3Z3XF4rZr4v9r1UKFWa9342yrn2qFn7trZFgw1qva4UArsY9wnF
-	qayav398uF45XFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JU_8n8UUUUU=
-X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbC6gmteGpv8+n9xwAA3T
 
-Dear Steve,
-    Thank you for your review. I will carefully recheck and modify all 
-patches according to your feedback, and submit the v3 version patch as 
-soon as possible. Thank you again for your feedback.
+From: Pengfei Li <lipengfei28@xiaomi.com>
 
-Best regards,
-Baolin
+Hi Steve,
 
-在 2026/7/30 02:26, Steven Rostedt 写道:
-> On Tue, 28 Jul 2026 17:44:21 +0800
-> Baolin Liu <liubaolin12138@163.com> wrote:
-> 
->> diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
->> index d00f66e42ba8..041455edec76 100644
->> --- a/include/trace/events/ntfs3.h
->> +++ b/include/trace/events/ntfs3.h
->> @@ -80,6 +80,50 @@ TRACE_EVENT(ntfs3_log_replay,
->>   		  __entry->size, __entry->initialized, __entry->err)
->>   );
->>   
->> +TRACE_EVENT(ntfs3_lookup,
->> +	TP_PROTO(struct inode *dir, struct dentry *dentry),
->> +	TP_ARGS(dir, dentry),
->> +	TP_STRUCT__entry(
->> +		__field(dev_t, dev)
-> 
-> dev_t is 4 bytes, you should move it after parent_ino as on 64 bit
-> machines, it will waste 4 bytes of space here.
-> 
->> +		__field(unsigned long, parent_ino)
->> +		__string(name, dentry->d_name.name)
->> +	),
->> +	TP_fast_assign(
->> +		__entry->dev = dir->i_sb->s_dev;
->> +		__entry->parent_ino = dir->i_ino;
->> +		__assign_str(name);
->> +	),
->> +	TP_printk("dev=(%d,%d) parent=%lu name=%s",
->> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
->> +		  __entry->parent_ino, __get_str(name))
->> +);
->> +
->> +TRACE_EVENT(ntfs3_rename,
->> +	TP_PROTO(struct inode *dir, struct dentry *dentry,
->> +		 struct inode *new_dir, struct dentry *new_dentry),
->> +	TP_ARGS(dir, dentry, new_dir, new_dentry),
->> +	TP_STRUCT__entry(
->> +		__field(dev_t, dev)
-> 
-> Same here.
-> 
-> In fact, you should audit the rest of your tracepoints to see where you can
-> make the sizes more condensed.
-> 
-> ~# cat /sys/kernel/tracing/events/ntfs3/ntfs3_rename/format
-> name: ntfs3_rename
-> ID: 1923
-> format:
->          field:unsigned short common_type;       offset:0;       size:2; signed:0;
->          field:unsigned char common_flags;       offset:2;       size:1; signed:0;
->          field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
->          field:int common_pid;   offset:4;       size:4; signed:1;
-> 
->          field:dev_t dev;        offset:8;       size:4; signed:0;
->          field:unsigned long dir_ino;    offset:16;      size:8; signed:0;
->          field:unsigned long new_dir_ino;        offset:24;      size:8; signed:0;
->          field:unsigned long ino;        offset:32;      size:8; signed:0;
->          field:__data_loc char[] old_name;       offset:40;      size:4; signed:0;
->          field:__data_loc char[] new_name;       offset:44;      size:4; signed:0;
-> 
-> 
-> Notice that dev is at offset 8 and size 4, where as dir_ino is at offset
-> 16. That means there's 4 bytes between dev and dir_ino.
-> 
-> Please look at your other trace events and see if there are other gaps you
-> can close. I'm not going to audit all your tracepoints.
-> 
-> Note that __string() is a 4 byte meta data, so have them act like 4 byte
-> fields.
-> 
-> -- Steve
-> 
-> 
-> 
->> +		__field(unsigned long, dir_ino)
->> +		__field(unsigned long, new_dir_ino)
->> +		__field(unsigned long, ino)
->> +		__string(old_name, dentry->d_name.name)
->> +		__string(new_name, new_dentry->d_name.name)
->> +	),
->> +	TP_fast_assign(
->> +		__entry->dev = dir->i_sb->s_dev;
->> +		__entry->dir_ino = dir->i_ino;
->> +		__entry->new_dir_ino = new_dir->i_ino;
->> +		__entry->ino = d_inode(dentry)->i_ino;
->> +		__assign_str(old_name);
->> +		__assign_str(new_name);
->> +	),
->> +	TP_printk("dev=(%d,%d) dir=%lu new_dir=%lu ino=%lu old=%s new=%s",
->> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
->> +		  __entry->dir_ino, __entry->new_dir_ino, __entry->ino,
->> +		  __get_str(old_name), __get_str(new_name))
->> +);
->> +
->>   #endif /* _TRACE_NTFS3_H */
->>   
+Just a gentle follow-up on the reset question below when you have a
+chance.
 
+I've addressed the review comments locally, but have held off on
+respinning because this choice affects the reset semantics. Would you
+prefer that the traceon race be documented as a best-effort limitation,
+or that reset explicitly prevent or recheck tracing being re-enabled
+during the clear phase?
+
+I'm happy to implement either approach.
+
+Thanks,
+Pengfei
