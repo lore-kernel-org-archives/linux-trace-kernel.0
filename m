@@ -1,437 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012037.outbound.protection.outlook.com [40.93.195.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318BD2F7445;
-	Mon,  3 Aug 2026 18:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785780198; cv=none; b=FOWTiCn3zZFpLGL1AXJ+R/aLlVROuwg9LuDsPhdQATyGH7SOMfznuLSO2oUunukwAmXjXDkCTscGhEBnRXMefDOdYz0/u2LeWJNqKGpGmF+ORLFzbr9minZuwpciHTxS+Kh7JcCJLEViqilyRcn4DKLEfyh6wMNTBHN2jequFxE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785780198; c=relaxed/simple;
-	bh=fGMhgLdMza8QD5V86psKeo7oCRoK3dv3qPayDKM8EeM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lc7fIL6UMCoc6yIVlpspVt5LmuEgtwJJKONq16ddbgFSw86hr6rAaAdA41J19p3GGmminNORwl7sfyksEdXFlDogXKnSwj5gnfZkkaPUX2fVXPPDEkyX5VBtffwSSFUj8aaierkQrG2+ag5K2lbBpOTjHB1h+k3sTTlGoTk0D+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHbHZ8KA; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B16C430CE3;
+	Mon,  3 Aug 2026 18:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785780809; cv=fail; b=temLxC3Qs23jPo0/WYSmqGwBOWX/PXIf1+xbTx+iLjRpMVg0i0HZo58zZAC4Nue8I3DiWtVg7vU2ZYmPDmfW9MJOV93aLQazAvfUfO6Z0+ZHari85j24ACAUnfZMZyoH1em4XPjr61A9Xld8frh2nhPEqMgaLDUkQrjIaA5vUJA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785780809; c=relaxed/simple;
+	bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:To:From:References:
+	 In-Reply-To:MIME-Version; b=ELbzSwJwMlhuzzCs7sirtAJRx+tcMwY+5QtcHNleyoRRhxSJq1Hg8rAUgHsqva6U9FhJLwPsWlbkaML4rEw0VkXDkvl7QAURFNnQ7PtrZrJjpx8ZFNVn3hShRRA26AVh5VUfsWyBXl5tlrV5fumQO2KkAWweyMhp9tyqS5DSOkM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gxRy5BNS; arc=fail smtp.client-ip=40.93.195.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHbHZ8KA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C19291F000E9;
-	Mon,  3 Aug 2026 18:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785780196;
-	bh=auRTw6RLORXhqHXVOdZsj882K3OZZ0jnAxvpPpmCgRc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=gHbHZ8KAUz+rKIyu3Hv3VlrZUa5S/HSzmIHuVJHiExAcyeUsWho+Qi68Zdt+6/Lo3
-	 q7aMFpll0AHbBuN34pWxTq5HOMy6kvD6tstKU+CFWSWN3JMiE7FevJfkPwGUenvtX6
-	 bMAl9JJ7MghWocrO2y/MyxOgXHx0CAzy8tKLhNB8L3RcuUPDUuJAwoClkyAcY+uBGv
-	 yVx8M6UMH87MjOLIVxEELAPI/BJ2poShgo0LLp1bTcvfQuI0QRClfGxr8BSplsGTfU
-	 Ujd9phAIuFNs+NNk+R0InZR1ZAUwa7M/UWERbxWgC5IfeEGxH9v0y7MeA43WV9/YvF
-	 I5GqyZOTACKJw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1wqx0M-0000000BtkC-34on;
-	Mon, 03 Aug 2026 18:03:14 +0000
-Date: Mon, 03 Aug 2026 19:03:14 +0100
-Message-ID: <86qzkfaxp9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Fuad Tabba <fuad.tabba@linux.dev>
-Cc: oupton@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	alexandru.elisei@arm.com,
-	vdonnefort@google.com,
-	joey.gouly@arm.com,
-	seiden@linux.ibm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	qperret@google.com,
-	ardb@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	tabba@google.com
-Subject: Re: [PATCH v2 10/11] KVM: arm64: nVHE: Check hypercall handlers against the declared ABI
-In-Reply-To: <20260803124220.332248-11-fuad.tabba@linux.dev>
-References: <20260803124220.332248-1-fuad.tabba@linux.dev>
-	<20260803124220.332248-11-fuad.tabba@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gxRy5BNS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WD6ZOUp+WnBpKUL/Z/T7kHJS3gdbMiHPaDWLnG+FW2Ughc5kivpbHAl9m7v4kZtUlwne3dtTcxUKM7WrJyBjIzNunVwJE8YCw5xf460FYDTOx6lI06pdu9THT47XqNLtDLCdzux8qTLf/nbRDsOOv/8gNbNU4E2T2QAuULs2fA5qQHbM4xHgZv2o0OOWsIgB9IrcShazm0DicLCB2r0EQKH4D6YFHM6X6V09ySI5OEc6n7D3GLeeZQVOXqxWW+VbyMV7HL3rN70ZTujV0k0q4aAXFKUkqMGPn1t6bGDJN5lRp550zxCce4yQxpsqpaiJjD8UiJnfV95Vbq8C+ISS6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
+ b=axI4QwD0gDNm37sbZwPepJqFwCIiAQLsRb16JqMJC18kzIbTrEGCymZhb+s+VT3do6EhX/NunZoNzoqNMzdrVPiKGAHzZxXxgE3R9xuo+1Gti7a03F9fRjGK5P50Lt8AxaBXztxd5r9zFCY/UqUcakRm4oUcNJdIAnG/3xc01xoOvlR1WiMD7tpFinSy/n/j8hqvWefCeMnzCgHYzYcPJ8uU/jJoPnMGHd/+YZPkn0JJ2U3O95hflOwGfyepG+2jZsgsMfbSa132CavPOtTL6zLMDpd6I+fzR/hlKcTK94MwK5Xl/bUCYD9mr9kjrEYXGsa4Ph7cigPFSjEaaRhp/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
+ b=gxRy5BNSr6u+YqAfadGamez0ES69ulGmVjdQ7wL80choytSsnxQAlwikJcKnY7d7Uw564V87JyMSSqEMqm6I3eyQ8hHwQgGFREoi4hLHlGzS9JCT9FEDSrgt5yoHWS9vKZEID6DWzvgO/uM68mWZ19n7kvMB+gzmij0pdwS5RPmRbSJIRi0JMJdUya8s9PYMz1a0gliFwwRvb7ymFruUVGm7IrQhIxbKxZt2k3pI13FRQ2A68aYiDbfeVVWpfh3Mmt76rm/50mIM4i03A/9AFOI/h98bANBM9Ic5xWGJvoXq7pwmi/JlRG0WcTtM7QctGHIP3ZNoYVG8sNcqXB0SMA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by PH7PR12MB6935.namprd12.prod.outlook.com (2603:10b6:510:1b9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Mon, 3 Aug
+ 2026 18:13:18 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0270.017; Mon, 3 Aug 2026
+ 18:13:18 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Aug 2026 14:13:13 -0400
+Message-Id: <DKFIGJBRSDB1.O204NIB7HZMR@nvidia.com>
+Subject: Re: [PATCH RFC 00/14] Remove PG_private by using
+ page/folio->private checks instead
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, "Minchan Kim"
+ <minchan@kernel.org>, "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung Kim"
+ <namhyung@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>, "Borislav
+ Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Adrian Hunter"
+ <adrian.hunter@intel.com>, "James Clark" <james.clark@linaro.org>, "H.
+ Peter Anvin" <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>, "Stefano
+ Stabellini" <sstabellini@kernel.org>, "Oleksandr Tyshchenko"
+ <oleksandr_tyshchenko@epam.com>, <xen-devel@lists.xenproject.org>, "Eric
+ Biggers" <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>, <linux-fscrypt@vger.kernel.org>, "Oscar
+ Salvador" <osalvador@suse.de>, "Chao Yu" <chao@kernel.org>,
+ <linux-f2fs-devel@lists.sourceforge.net>, "Gao Xiang" <xiang@kernel.org>,
+ "Jan Kara" <jack@suse.cz>, "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu"
+ <jefflexu@linux.alibaba.com>, "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <hongbohbli@tencent.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ <linux-erofs@lists.ozlabs.org>, <linux-fsdevel@vger.kernel.org>, "Steven
+ Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Matthew Brost"
+ <matthew.brost@intel.com>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie
+ Kim" <rakie.kim@sk.com>, "Byungchul Park" <byungchul@sk.com>, "Axel
+ Rasmussen" <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>,
+ "Wei Xu" <weixugc@google.com>, <linux-trace-kernel@vger.kernel.org>, "Trond
+ Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ <linux-nfs@vger.kernel.org>, "Song Liu" <song@kernel.org>, "Yu Kuai"
+ <yukuai@fygo.io>, "Ilya Dryomov" <idryomov@gmail.com>, "Alex Markuze"
+ <amarkuze@redhat.com>, "Viacheslav Dubeyko" <slava@dubeyko.com>, "Li Nan"
+ <magiclinan@didiglobal.com>, "Xiao Ni" <xiao@kernel.org>,
+ <linux-raid@vger.kernel.org>, <ceph-devel@vger.kernel.org>, "Richard
+ Weinberger" <richard@nod.at>, "Zhihao Cheng" <chengzhihao1@huawei.com>,
+ <linux-mtd@lists.infradead.org>, "Baoquan He" <baoquan.he@linux.dev>,
+ "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush Yadav"
+ <pratyush@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Dave Young"
+ <ruirui.yang@linux.dev>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
+To: =?utf-8?q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>, "David Hildenbrand"
+ <david@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>, "Muchun Song"
+ <muchun.song@linux.dev>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R.
+ Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Barry
+ Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
+ Arif" <usama.arif@linux.dev>, "Gregory Price" <gourry@gourry.net>, "Ying
+ Huang" <ying.huang@linux.alibaba.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng"
+ <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Kairui
+ Song" <kasong@tencent.com>
+From: "Zi Yan" <ziy@nvidia.com>
+X-Mailer: aerc 0.21.0
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+ <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
+In-Reply-To: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
+X-ClientProxiedBy: BN1PR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:408:e2::13) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: fuad.tabba@linux.dev, oupton@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, alexandru.elisei@arm.com, vdonnefort@google.com, joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, qperret@google.com, ardb@kernel.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, tabba@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|PH7PR12MB6935:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22480e3c-b594-45b3-2d38-08def18ae4af
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|56012099006|10067099003|11063799006|4143699003|22082099003|18002099003|921020;
+X-Microsoft-Antispam-Message-Info:
+	FGtzsi0Ff3pxghP3lc/P1ddrXZKj3w8+yJGJxor6kKDLvhXg+qE0BqULU2Yo4OHklIfrWOBiiWaCcUZnd8ysXvfpjMQVyqBTVvH/b0Q17IDGUvQ8gt4J4mT1pT8nL+gY1FWLJGaajKiB9bLXL2OjTnlzpUnhjYKRFUTTC7RGTKyqFnabJILfF0z8AU4m783vOuMWi1tH6BS67AbjJ4dVCwGPtnKldp5SDaCm2TxXxeP2ZK6wfMDiS18Gr47k19fmlmm0ZUGj0jp67G22umHBdhIuM/sszkroYKwIza/1o1owYO9aVUG8Kv5LLxa3I2WUu8Ak6QcEoCd3A2d3jHYGJW/+RNZgWm8LAjH1uSwDiuMBOFm3gYnB13ZB1YWOVqPwQNKUBqw2XePEUHqKE4fOH9Olf52EBU/o/jip+pXcqLAnmKr38c1u8C6/5d3be9P/UcA7qVZ6LQVHh1HhK+V2a0F4TWz2ERZK7VcaT0nO+9jiux83RgoLv9ibtvBSCrNZX0SkURZ0XZaQ0oYH8g5uGiBx9GzWnhS4/uZIqjBS3kSthtIogVRo5UtaDQmHcm2QBw0H8x81CRrgqFRLK1h46fKWbpTQB7QQyeITnN19I+9mhcOVt1PKHVji0hhO+J6TgRKcsFzS5/DlUr/Fqyiazhpd1b+TgYpo1iieuX06GMveH1pyl1ECk5P3tuqWv1WNYZcGmnoPQLT79hKI5uGaSg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(56012099006)(10067099003)(11063799006)(4143699003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TXNoMVUva1pWRkd1aHNpSk54cGxMMXZJTnFmUUFPbkhLbnlRdVFGRC9Ueks3?=
+ =?utf-8?B?aUZnZGZMSDNWdS96ZWJFRUNiQzRtejhxdjRJKzRyaGxHUVcwMy82UDRMWUhm?=
+ =?utf-8?B?Q1VCeGJNT1YrbjFDa3pMRFp3WE9VekNKMG5TbXBaejhIK05pbXZwcEVjZjdr?=
+ =?utf-8?B?TlRyV2JuRFZ6QVlaSm9iRWlPUjBTN1ZsTkwrcVcvdURjSXFlcXVHdm5rYVBy?=
+ =?utf-8?B?cTYxazVUcVFFR3NvZU5jQUdjUEhHWVoyQzFvUTRUZDZJdjhRL0hPQ0llVnoy?=
+ =?utf-8?B?ZXRCMzBQbWNteVRPemNMQ3hyTDNzN3UxU3ZkM3h3Rk9BQ1N3TTl1Zzl3NzE5?=
+ =?utf-8?B?SHNIcDZ2S0RVRzNjVENoUVdWZzVXUDJpNzRockZoZjhzT1ROWXhxQjJtc0Nj?=
+ =?utf-8?B?QTRHTTh4a1E5eGJuMWpwLzY3cko0bSs2WUlTQklTekE1Tm9qRVA3dFRmbmRS?=
+ =?utf-8?B?d1Z1eUtZNmJ6aWlJbDBGNVVOb0JNMXdqbEg5eVZlYmJyakxzenB6cEt1OVA5?=
+ =?utf-8?B?SFVBYTllZkhOQXlwU3JZend2NjNLVGxVWmt6b3FlandDdHJrZ3R1Y3N4RVNt?=
+ =?utf-8?B?MHdCTmpsNTc3b3lLYnkySXlhZDVaQVZZQmZFTElscUdhakFGd2xibS9NajVV?=
+ =?utf-8?B?TmxCYzk2bmIwLzZXWnF6NFhsMUFHTUZMMGN0R25vaFllczhkVXFaSVdtZyt3?=
+ =?utf-8?B?MlJ4NXA4VFVaWUw5c1FvMXg0UWdLUkxKUk8vMWlBeUJ1M2k2NjlFcGc2RDc3?=
+ =?utf-8?B?aGk1em1DbnFlSUN4b3Z0S2p0UlQ2dEdhRXJaZ0FhLzVkN2MxQS9tekRKS1ZR?=
+ =?utf-8?B?Vy9tRkpMWmdaZ3hUcGtDL2lPTHN5YUFpa1JJY0N1Q2RCWVUvSXlCRFJpOEEy?=
+ =?utf-8?B?YVFkb1RHaVVCcm9oNU1wTmp0ZHZDazQ3QkRoTDRwR2gvT1gwUW1VUzd1MTR3?=
+ =?utf-8?B?dHBzZXdWOTkrck81QXRjUDVHOFo2ZUUvazRpc0xYSDd3MUg3V1FGZjV6dVA2?=
+ =?utf-8?B?VlhRUHRaOGJ5SnlTT1d6WUV2TG5VdHA2R296TW5KZ2pnWGtxbFpqSTZDeC9p?=
+ =?utf-8?B?TDE4TFRzMkwrMmhrR2h6dTZwb3hXYkxTMkl0Z0dtRmE1RFNtZDZ3eHpGdDVG?=
+ =?utf-8?B?N1Q1SWRvQlZEQzhlUHhzSFMvc3JkaVliZG5OZlZySGkrYXl2UVlJZENtR2NX?=
+ =?utf-8?B?dUc1cWNRYjhidlNzN0VOTFBwYUpwMytFRmJQejc4MXUxNnNWaTA0MytrYm1W?=
+ =?utf-8?B?U0NCM0gxSlNZd0tiTnJoeTIzZGlxYmdVajdqeTFOYVdKcEYxQXhqdU9aVVVK?=
+ =?utf-8?B?NDM0U0xSaTdBT3NrTWpxdTFldTdJblVLbGFvanBSTW92cVhBYmhINnFlNDY2?=
+ =?utf-8?B?WWRPSGIrVUh6Mm5sY1RBS2huYkwxZlJnMkNmQ3pFUitwYUg5K2drOGhMZEJH?=
+ =?utf-8?B?VFpldlFLdzN3NXJYNDVWa0hSaGxiaHpQWjJlTFcwNTVxbG1uWXdlcm1HS3dj?=
+ =?utf-8?B?RXhNdkRSTGNxdUVhSENVeHB4eGZZeWFRbnZFczdZbFNNMkl6b3pjT2tiK01u?=
+ =?utf-8?B?TGtwQXlxN3lIWitmTUpiL3Vyckw5cHdHQTZwT3NrR0t5ZEYxRERQZVZqd0hX?=
+ =?utf-8?B?MlFiUTFCNkJ1UTJPTTl5MEkrS1d3U2hTQnN0TExUdUxodVVvelJ2VFFDb1ZH?=
+ =?utf-8?B?cEJ2YnhIZGtRSVVSZjRoWFU3V1o3NytYOW5COXJ2dVR2aUNQMmVoaHg4ZEFy?=
+ =?utf-8?B?TDhGTXpYUEZTVUM3dHA4SzhKYjR0ZVVVbEROa3BrR3VHYmRVRlVHYS9yU0xl?=
+ =?utf-8?B?dzc5bUlPWjM2R0Yvdm4rc0xLRnZZd3hYbnFDVG9BeEN6b2dqa3dQVDlHV3g1?=
+ =?utf-8?B?dTBhWGpyVStjODlOYmJlUkJjVVM3WS8yaUtpaGhDN2M5UjhlR01qZGdVdmRZ?=
+ =?utf-8?B?RHVuZHB2K2FFQ0tPSXFLdW10cVZsQ3ljSGNIbm9GaGlzb0lETi9WcmZ0ZHZC?=
+ =?utf-8?B?cGJpQnpFUmpLc3UrRDNMVi9kaHloUUVhdjhTb2I5dUNWVFc3MlZkbmk0Z012?=
+ =?utf-8?B?MmtxVUJOSnRBTElMVGNQeUJaOXhDbGNrSElrdFQ5VnAycDRrS1c5QVZ3VXF2?=
+ =?utf-8?B?NGd2TXhnK25kNFhtdUwzU3RoWE1BaHpnNzYwVW9nek93dXJNaHhNMEo1QlFz?=
+ =?utf-8?B?Q3haWDFpZkhkL0FXRlpsQzFLUzZiSHRYYTlvUWRXbmRVY0tpRDFORG9CaDBj?=
+ =?utf-8?B?OE9CVlZrcFRhWDhTQlZ6c0Fnc3BRdmRZeHZQcWhDbFJaZlFrcUxFZTRtVVJl?=
+ =?utf-8?Q?vOMDLuS+uZ6B+uZb7U?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22480e3c-b594-45b3-2d38-08def18ae4af
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 18:13:17.9727
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P4jLnqIwTNmEW1LtTpM+2MhjKsFG8QpvIYdQ6DM5UZU3RRUlEMTS746tqky9GXuA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6935
 
-On Mon, 03 Aug 2026 13:42:19 +0100,
-Fuad Tabba <fuad.tabba@linux.dev> wrote:
-> 
-> Each hypercall handler unmarshals its arguments from the host context
-> with hand-written DECLARE_REG() casts that nothing ties to what the
-> caller passed: a handler can disagree with its caller in argument type,
-> count or register index without a diagnostic.
-> 
-> Generate the unmarshalling instead. DEFINE_KVM_HOST_HCALL() expands to
-> the handle_<name>() glue, modelled on the syscall wrappers, and checks
-> the handler's parameter list against the signature declared in
-> kvm_hcall.h, so both ends of every hypercall are now compiled against
-> the same declaration. Handler bodies keep their logic and lose the
-> DECLARE_REG() and return-register boilerplate. The compiled handlers
-> are instruction-for-instruction identical, apart from flush_hyp_vcpu()
-> and sync_hyp_vcpu() now being inlined into their only caller.
-> 
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
-> ---
->  arch/arm64/include/asm/kvm_hcall.h |  19 +-
->  arch/arm64/kvm/hyp/nvhe/hyp-main.c | 421 ++++++++++++++---------------
->  2 files changed, 214 insertions(+), 226 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_hcall.h b/arch/arm64/include/asm/kvm_hcall.h
-> index 1c9c182ddcd1b..39374bae4bea4 100644
-> --- a/arch/arm64/include/asm/kvm_hcall.h
-> +++ b/arch/arm64/include/asm/kvm_hcall.h
-> @@ -44,6 +44,8 @@ struct vgic_v5_cpu_if;
->  #define __KVM_HCALL_MAP(m, ...) __KVM_HCALL_MAP_N(COUNT_ARGS(__VA_ARGS__), m, __VA_ARGS__)
->  
->  #define __KVM_HCALL_DECL(t, a)	t a
-> +#define __KVM_HCALL_LONG(t, a)	unsigned long a
-> +#define __KVM_HCALL_CAST(t, a)	(__force t) a
->  #define __KVM_HCALL_ARGS(t, a)	a
->  
->  #ifndef __KVM_NVHE_HYPERVISOR__
-> @@ -127,10 +129,19 @@ struct vgic_v5_cpu_if;
->  #define kvm_call_hyp_ret(f, ...) f(__VA_ARGS__)
->  #define kvm_call_hyp_nvhe(f, ...) f(__VA_ARGS__)
->  
-> -#define DECLARE_KVM_HOST_HCALL(ret, name, ...)
-> -#define DECLARE_KVM_HOST_HCALL_VOID(name, ...)
-> -#define DECLARE_KVM_HOST_HCALL0(ret, name)
-> -#define DECLARE_KVM_HOST_HCALL0_VOID(name)
-> +/*
-> + * At EL2 each declaration emits the canonical signature of the hypercall,
-> + * which DEFINE_KVM_HOST_HCALL() in hyp-main.c checks the handler
-> + * definition against.
-> + */
-> +#define DECLARE_KVM_HOST_HCALL(ret, name, ...)				\
-> +	typedef ret kvm_host_hcall_sig_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__));
-> +#define DECLARE_KVM_HOST_HCALL_VOID(name, ...)				\
-> +	typedef void kvm_host_hcall_sig_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__));
-> +#define DECLARE_KVM_HOST_HCALL0(ret, name)				\
-> +	typedef ret kvm_host_hcall_sig_##name(void);
-> +#define DECLARE_KVM_HOST_HCALL0_VOID(name)				\
-> +	typedef void kvm_host_hcall_sig_##name(void);
->  #endif /* __KVM_NVHE_HYPERVISOR__ */
->  
->  /* Hypercalls that are unavailable once pKVM has finalised. */
-> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> index 23cb4313c60a2..6986ce55fd9ef 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> @@ -24,6 +24,63 @@
->  
->  DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
->  
-> +/*
-> + * Define a hypercall handler: handle_<name> unmarshals the arguments from
-> + * the host context and hands them, correctly typed, to the body that
-> + * follows the macro. The parameter list is type-checked against the
-> + * signature declared in <asm/kvm_hcall.h>, so the handler cannot drift
-> + * from what the typed caller stubs marshal in. Modelled on the syscall
-> + * wrappers.
-> + */
-> +/* Truncate the fixed list of argument registers to the declared signature. */
-> +#define KVM_HOST_HCALL_REGS(...)					\
-> +	__KVM_HCALL_MAP_N(COUNT_ARGS(__VA_ARGS__), __KVM_HCALL_ARGS	\
-> +		,, cpu_reg(host_ctxt, 1),, cpu_reg(host_ctxt, 2)	\
-> +		,, cpu_reg(host_ctxt, 3),, cpu_reg(host_ctxt, 4)	\
-> +		,, cpu_reg(host_ctxt, 5),, cpu_reg(host_ctxt, 6))
-> +
-> +#define DEFINE_KVM_HOST_HCALL(ret, name, ...)				\
-> +	static kvm_host_hcall_sig_##name __do_##name;			\
-> +	static __always_inline						\
-> +	ret __se_##name(__KVM_HCALL_MAP(__KVM_HCALL_LONG, __VA_ARGS__))	\
-> +	{								\
-> +		return __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_CAST, __VA_ARGS__)); \
-> +	}								\
-> +	static void handle_##name(struct kvm_cpu_context *host_ctxt)	\
-> +	{								\
-> +		cpu_reg(host_ctxt, 1) = __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__)); \
-> +	}								\
-> +	static ret __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
-> +
-> +#define DEFINE_KVM_HOST_HCALL_VOID(name, ...)				\
-> +	static kvm_host_hcall_sig_##name __do_##name;			\
-> +	static __always_inline						\
-> +	void __se_##name(__KVM_HCALL_MAP(__KVM_HCALL_LONG, __VA_ARGS__)) \
-> +	{								\
-> +		__do_##name(__KVM_HCALL_MAP(__KVM_HCALL_CAST, __VA_ARGS__)); \
-> +	}								\
-> +	static void handle_##name(struct kvm_cpu_context *host_ctxt)	\
-> +	{								\
-> +		__se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__));		\
-> +	}								\
-> +	static void __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
-> +
+On Mon Aug 3, 2026 at 5:07 AM EDT, J=C3=BCrgen Gro=C3=9F wrote:
+> On 01.08.26 04:13, Zi Yan wrote:
+>> Hi all,
+>>=20
+>> This patchset removes PG_private to make space for upcoming PG_folio
+>> (reserved as __PG_folio) for identifying pages from a folio (more detail=
+s
+>> in Note below). Instead of checking PG_private, all code is changed to
+>> check page/folio->private !=3D NULL instead.
+>
+> I'm a little bit worried that page/folio->private is in a union, so today
+> it could (in theory) be !=3D NULL while PG_private isn't set.
+>
+> Is it really not possible to enter a path where PG_private is tested whil=
+e
+> page/folio->private !=3D NULL due to the union being used otherwise (PG_p=
+rivate
+> not set)?
 
-I've also dropped this with the following hacks. The set_cpu_reg()
-stuff isn't brilliant, and requires a single word type. But I find the
-overall scheme less invasive.
+Yes, it is possible. See: #5 in the exceptional users: erofs uses
+->private for reverse linked list and in-flight counters without setting
+PG_private. I get rid of the first one and converted the second one to
+use folio_attach/detach/get_private() to follow the general ->private
+use pattern..
 
-WDYT?
+For non file system folios, anon swapcache puts swap_entry_t in
+->private and hugetlb puts its flags in ->private. I added
+folio_test_fs_private() to exclude them, but this helper is planned to
+be used by core MM, since filesystem code should not encounter these
+two.
 
-	M.
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index f8ea1661b3166..0d5fa6432461d 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -39,6 +39,12 @@ DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
- 		,, cpu_reg(host_ctxt, 3),, cpu_reg(host_ctxt, 4)	\
- 		,, cpu_reg(host_ctxt, 5),, cpu_reg(host_ctxt, 6))
- 
-+#define set_cpu_reg_ulong(ctxt, r, v)	{ cpu_reg(ctxt, r) = v; }
-+#define set_cpu_reg_u64(ctxt, r, v)	{ cpu_reg(ctxt, r) = v; }
-+#define set_cpu_reg_int(ctxt, r, v)	{ cpu_reg(ctxt, r) = v; }
-+#define set_cpu_reg_void(ctxt, r, v)	{ v; }
-+#define set_cpu_reg(ctxt, r, t, v)	set_cpu_reg_##t(ctxt, r, v)
-+
- #define DEFINE_KVM_HOST_HCALL(ret, name, ...)				\
- 	static kvm_host_hcall_sig_##name __do_##name;			\
- 	static __always_inline						\
-@@ -48,39 +54,18 @@ DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
- 	}								\
- 	static void handle_##name(struct kvm_cpu_context *host_ctxt)	\
- 	{								\
--		cpu_reg(host_ctxt, 1) = __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__)); \
-+		set_cpu_reg(host_ctxt, 1, ret, __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__))); \
- 	}								\
- 	static ret __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
- 
--#define DEFINE_KVM_HOST_HCALL_VOID(name, ...)				\
--	static kvm_host_hcall_sig_##name __do_##name;			\
--	static __always_inline						\
--	void __se_##name(__KVM_HCALL_MAP(__KVM_HCALL_LONG, __VA_ARGS__)) \
--	{								\
--		__do_##name(__KVM_HCALL_MAP(__KVM_HCALL_CAST, __VA_ARGS__)); \
--	}								\
--	static void handle_##name(struct kvm_cpu_context *host_ctxt)	\
--	{								\
--		__se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__));		\
--	}								\
--	static void __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
--
- #define DEFINE_KVM_HOST_HCALL0(ret, name)				\
- 	static kvm_host_hcall_sig_##name __do_##name;			\
- 	static void handle_##name(struct kvm_cpu_context *host_ctxt)	\
- 	{								\
--		cpu_reg(host_ctxt, 1) = __do_##name();			\
-+		set_cpu_reg(host_ctxt, 1, ret, __do_##name());		\
- 	}								\
- 	static ret __do_##name(void)
- 
--#define DEFINE_KVM_HOST_HCALL0_VOID(name)				\
--	static kvm_host_hcall_sig_##name __do_##name;			\
--	static void handle_##name(struct kvm_cpu_context *host_ctxt)	\
--	{								\
--		__do_##name();						\
--	}								\
--	static void __do_##name(void)
--
- /* Number of implemented GICv3 LRs. Used by flush_hyp_vcpu(). */
- unsigned int hyp_gicv3_nr_lr;
- 
-@@ -242,7 +227,7 @@ static void sync_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu)
- 		host_cpu_if->vgic_lr[i] = hyp_cpu_if->vgic_lr[i];
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__pkvm_vcpu_load,
-+DEFINE_KVM_HOST_HCALL(void, __pkvm_vcpu_load,
- 	pkvm_handle_t, handle, unsigned int, vcpu_idx, u64, hcr_el2)
- {
- 	struct pkvm_hyp_vcpu *hyp_vcpu;
-@@ -261,7 +246,7 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_vcpu_load,
- 	}
- }
- 
--DEFINE_KVM_HOST_HCALL0_VOID(__pkvm_vcpu_put)
-+DEFINE_KVM_HOST_HCALL0(void, __pkvm_vcpu_put)
- {
- 	struct pkvm_hyp_vcpu *hyp_vcpu = pkvm_get_loaded_hyp_vcpu();
- 
-@@ -421,42 +406,42 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_mkyoung_guest,
- 	return __pkvm_host_mkyoung_guest(gfn, hyp_vcpu);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_adjust_pc,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_adjust_pc,
- 	struct kvm_vcpu __kern *, vcpu)
- {
- 	__kvm_adjust_pc(kern_hyp_va_host(vcpu));
- }
- 
--DEFINE_KVM_HOST_HCALL0_VOID(__kvm_flush_vm_context)
-+DEFINE_KVM_HOST_HCALL0(void, __kvm_flush_vm_context)
- {
- 	__kvm_flush_vm_context();
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_ipa,
- 	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
- {
- 	__kvm_tlb_flush_vmid_ipa(kern_hyp_va_host(mmu), ipa, level);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa_nsh,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_ipa_nsh,
- 	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
- {
- 	__kvm_tlb_flush_vmid_ipa_nsh(kern_hyp_va_host(mmu), ipa, level);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_range,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_range,
- 	struct kvm_s2_mmu __kern *, mmu, phys_addr_t, start, unsigned long, pages)
- {
- 	__kvm_tlb_flush_vmid_range(kern_hyp_va_host(mmu), start, pages);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid,
- 	struct kvm_s2_mmu __kern *, mmu)
- {
- 	__kvm_tlb_flush_vmid(kern_hyp_va_host(mmu));
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
-+DEFINE_KVM_HOST_HCALL(void, __pkvm_tlb_flush_vmid,
- 	pkvm_handle_t, handle)
- {
- 	struct pkvm_hyp_vm *hyp_vm = get_np_pkvm_hyp_vm(handle);
-@@ -468,19 +453,19 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
- 	put_pkvm_hyp_vm(hyp_vm);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_flush_cpu_context,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_flush_cpu_context,
- 	struct kvm_s2_mmu __kern *, mmu)
- {
- 	__kvm_flush_cpu_context(kern_hyp_va_host(mmu));
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__kvm_timer_set_cntvoff,
-+DEFINE_KVM_HOST_HCALL(void, __kvm_timer_set_cntvoff,
- 	u64, cntvoff)
- {
- 	__kvm_timer_set_cntvoff(cntvoff);
- }
- 
--DEFINE_KVM_HOST_HCALL0_VOID(__kvm_enable_ssbs)
-+DEFINE_KVM_HOST_HCALL0(void, __kvm_enable_ssbs)
- {
- 	u64 tmp;
- 
-@@ -494,18 +479,18 @@ DEFINE_KVM_HOST_HCALL0(u64, __vgic_v3_get_gic_config)
- 	return __vgic_v3_get_gic_config();
- }
- 
--DEFINE_KVM_HOST_HCALL0_VOID(__vgic_v3_init_lrs)
-+DEFINE_KVM_HOST_HCALL0(void, __vgic_v3_init_lrs)
- {
- 	__vgic_v3_init_lrs();
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_save_aprs,
-+DEFINE_KVM_HOST_HCALL(void, __vgic_v3_save_aprs,
- 	struct vgic_v3_cpu_if __kern *, cpu_if)
- {
- 	__vgic_v3_save_aprs(kern_hyp_va_host(cpu_if));
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_restore_vmcr_aprs,
-+DEFINE_KVM_HOST_HCALL(void, __vgic_v3_restore_vmcr_aprs,
- 	struct vgic_v3_cpu_if __kern *, cpu_if)
- {
- 	__vgic_v3_restore_vmcr_aprs(kern_hyp_va_host(cpu_if));
-@@ -541,7 +526,7 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_unshare_hyp,
- 	return __pkvm_host_unshare_hyp(pfn);
- }
- 
--DEFINE_KVM_HOST_HCALL(unsigned long, __pkvm_create_private_mapping,
-+DEFINE_KVM_HOST_HCALL(ulong, __pkvm_create_private_mapping,
- 	phys_addr_t, phys, size_t, size, u64, prot)
- {
- 	/*
-@@ -554,7 +539,7 @@ DEFINE_KVM_HOST_HCALL(unsigned long, __pkvm_create_private_mapping,
- 	 * Instead pass the allocation address as the return value (or return
- 	 * ERR_PTR() on failure).
- 	 */
--	unsigned long haddr;
-+	ulong haddr;
- 	int err = __pkvm_create_private_mapping(phys, size, prot, &haddr);
- 
- 	if (err)
-@@ -573,7 +558,7 @@ DEFINE_KVM_HOST_HCALL0(int, __pkvm_reserve_vm)
- 	return __pkvm_reserve_vm();
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__pkvm_unreserve_vm,
-+DEFINE_KVM_HOST_HCALL(void, __pkvm_unreserve_vm,
- 	pkvm_handle_t, handle)
- {
- 	__pkvm_unreserve_vm(handle);
-@@ -630,7 +615,7 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_load,
- 	return __tracing_load(desc_hva, desc_size);
- }
- 
--DEFINE_KVM_HOST_HCALL0_VOID(__tracing_unload)
-+DEFINE_KVM_HOST_HCALL0(void, __tracing_unload)
- {
- 	__tracing_unload();
- }
-@@ -647,7 +632,7 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_swap_reader,
- 	return __tracing_swap_reader(cpu);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__tracing_update_clock,
-+DEFINE_KVM_HOST_HCALL(void, __tracing_update_clock,
- 	u32, mult, u32, shift, u64, epoch_ns, u64, epoch_cyc)
- {
- 	__tracing_update_clock(mult, shift, epoch_ns, epoch_cyc);
-@@ -665,19 +650,19 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_enable_event,
- 	return __tracing_enable_event(id, enable);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__tracing_write_event,
-+DEFINE_KVM_HOST_HCALL(void, __tracing_write_event,
- 	u64, id)
- {
- 	trace_selftest(id);
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_save_apr,
-+DEFINE_KVM_HOST_HCALL(void, __vgic_v5_save_apr,
- 	struct vgic_v5_cpu_if __kern *, cpu_if)
- {
- 	__vgic_v5_save_apr(kern_hyp_va_host(cpu_if));
- }
- 
--DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_restore_vmcr_apr,
-+DEFINE_KVM_HOST_HCALL(void, __vgic_v5_restore_vmcr_apr,
- 	struct vgic_v5_cpu_if __kern *, cpu_if)
- {
- 	__vgic_v5_restore_vmcr_apr(kern_hyp_va_host(cpu_if));
+--=20
+Best Regards,
+Yan, Zi
 
--- 
-Without deviation from the norm, progress is not possible.
