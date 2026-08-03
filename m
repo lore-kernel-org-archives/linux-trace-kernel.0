@@ -1,167 +1,269 @@
-Received: from mail-oi1-f205.google.com (mail-oi1-f205.google.com [209.85.167.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F78401A3B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Aug 2026 11:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41949408031;
+	Mon,  3 Aug 2026 12:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785756754; cv=none; b=d7NwV4GtmbzLoDZHnvqowYwviN2BvnFCYuXrxWNP+H3H1dsOToI7UhJGQuTh2GM8B15WGufwmUcPH6htYC3Mn7DQcoHi2ATZ14F8U1CPO38bQAfyDdPGKRj4ms/8qX6vTlyt8ZkRlO6NSea4WGCMD1WjcZ3tp68AIcQCI4mUaWQ=
+	t=1785760396; cv=none; b=HIO7BOSaX1ll+Qz3uNNLaPyNXzOmwGHhWHvL3t6XUwTF8OQ128sTwWVW5Hm5XEg/bVDv0lHzNOEeBnqwPr2uDFD209P2a3TdEUI3w62PDwS3R7tU/jSFd0g6NG4zi9vgNtJGgrd6uhz1u4gNpHE96gStHfx2UV5N3Dur/37VyeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785756754; c=relaxed/simple;
-	bh=wvsK9N0UmIbkgF+IBy5AfLwmnohWsI2UFWAf+9tbGtM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pMQL8Zt2pSLU0DaMrRrLn5+NdKh33j8ntgkrgB2lBcfCAC87+KDyiLIVawzLmPVWMK5WbcxSb/Iegl49ylwZXj/UqTWXxvD1k3QQdX+VokBHdbQfqptxLuq5PnZ/ND0G4tzkQNGLkgq90JRmqExB6yUNnFtNyVUTOCJ6CFByJK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oi1-f205.google.com with SMTP id 5614622812f47-4ab4dd46ddeso2221116b6e.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Aug 2026 04:32:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785756751; x=1786361551;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yAmPlani0w11bT73o0o9jtqvfkuLtfrRZrJ0cVAPF7U=;
-        b=fbKw8X3N/FLvXTbX042PWsv8kebOvuqBm4A0vuq6QGa90VtT1fJ/Lmrz7PxuO9/r1x
-         z+U3JTHG+nYe+9Z5JnZQytxw5COly7RsHwda/7mYuO8s/29OPDIaAfTDB31p/BbIpO3L
-         1hX0c0NBd/533r/d8MO1C3xBCsUCwLjbHJAKRy/zMzhqK4CxKVzbfE+5Y7+b93kaiFfR
-         FnkeEF2R1SWFKBzXa89ICUIUjX3jRBYqqez4GS/9AKnRBaH5mQaBbSLy4+Ney+WCI7ru
-         AZwYSjvX+byIWdQ1NOtW/ukbruBLWPsDElO9GDs2Og35WgE9tzUVwYxb7ObyhQ6mCFua
-         Vp+A==
-X-Forwarded-Encrypted: i=1; AHgh+RpzQFX3lY0bZdnA9WVkDo5UoBHlccQVRDtckdcTJFL0ZYMC+3mQyX0olMWCH0zrW+/3ifDj7VVU/GAfHzK1hxq26dY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyph5QUMOyQGTj1PVOVDqJ9DPHjPr3uyyrny1caTC0aApUMnacC
-	mUc8BE7/+ymCGwMO8sTdff//ZnhPajz8BDN8XuJ+KfSSmBq96Ra5vc4XFCXo0KE1z8N1NUi/im9
-	XpxEu3fqw/uG772QHStHvT/DhHDmzihkxh6c0kKOKt1CB9x5VvVU1c4wx5HQ=
+	s=arc-20240116; t=1785760396; c=relaxed/simple;
+	bh=Zdqe5rG8MMuCQFdj8MvgN1UdO43dVP+caQNL2i6/NT4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bHglgTc50dat5lqfAGtY0hSoZJkZQVLgz4CpexMf+yDf/BVv183lxfG0CE/EYjbPQPnPF0dK1JST+CRnafE0DoXpB263dS4FmhmcKgKVz1zuNlaBLfIuVFH4ThlJs2QNHywmvUuvujrdNyb48lPlE7dL1i5YvIj0M1d/hCAidx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqpC3mkm; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqpC3mkm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB4D1F00A3D;
+	Mon,  3 Aug 2026 12:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785760393;
+	bh=TjxtLTr1Ur/B7tyQMM0xK2Ieoel5FexyFCt+au7L/aM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=GqpC3mkmK3tkBfUSIBW+dB0NNppm2NcmuIsJBa2YquxYTL3W88ewjDOvwnJWsyArz
+	 O9s0GZaUsgRT8D3Rau9RXFuTEb1nAJ1YQlNYnRi2DpqlfpR/iP4iUNDs7AmsjvO3qB
+	 7VlYeB0UzW/oh1jDiblEQ2PIntEtk/zX6yhExyTQrdchyF99LIH2BQWOlj0wwNFHSZ
+	 +n9eRLxgVrPFQNlwyDNHBJM7sdDvq6rjdQa+NTAZ0+0XqsYdKMbMeAIFDzocoYgAB2
+	 BoNr3MCVm8/g9XNKzuD5hX98w89RddCLoBzUSeTUFrYz6SupOIRh3444KD1oVVZiET
+	 n00bpffnTDskQ==
+Date: Mon, 3 Aug 2026 21:33:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v11 00/11] tracing: wprobe: x86: Add wprobe for
+ watchpoint
+Message-Id: <20260803213307.60116859f73bdeba3b72dbba@kernel.org>
+In-Reply-To: <178565870538.714490.11309825813968306287.stgit@devnote2>
+References: <178565870538.714490.11309825813968306287.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6808:124e:b0:495:f67c:d96a with SMTP id
- 5614622812f47-4af5e1c80efmr13990585b6e.12.1785756751624; Mon, 03 Aug 2026
- 04:32:31 -0700 (PDT)
-Date: Mon, 03 Aug 2026 04:32:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a707c4f.13bfb6d0.1ecdd5.027e.GAE@google.com>
-Subject: [syzbot] [trace?] WARNING in trace_rb_cpu_prepare
-From: syzbot <syzbot+fbe07bcf949966f3c00f@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Sun,  2 Aug 2026 17:18:25 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-syzbot found the following issue on:
+> Hi,
+> 
+> Here is the 11th version of the series for adding new wprobe (watch probe)
+> which provides memory access tracing event. Moreover, this can be used
+> via event trigger. Thus it can trace memory access on dynamically
+> allocated objects too.
+> The previous version is here:
+> 
+>   https://lore.kernel.org/all/178476134787.26117.10094977293012760490.stgit@devnote2/
+> 
+> The major changes in this version is to use Jinchao's new
+> modify_local_hw_breakpoint_addr() API, add count option support to
+> wprobe trigger, skip wprobe trigger during another wprobe trigger is
+> working and rewrite selftests for wprobe trigger with
+> trace-events-sample module.
+> 
+> Changes in v11:
+>  - Updated hardware breakpoint modification API:
+>    - Replaced arch_reinstall_hw_breakpoint() with
+>      arch_modify_local_hw_breakpoint_addr() and
+>      modify_local_hw_breakpoint_addr() API.
+>    - Made DR7 updates NMI safe by using atomic cmpxchg for slot management
+>      and per-CPU sequence number (cpu_dr7_seq) to detect concurrent NMI
+>      updates.
+>  - Refactored wprobe trigger implementation:
+>    - Updated set_wprobe/clear_wprobe trigger to use
+>      modify_local_hw_breakpoint_addr().
+>    - Added tracepoint_synchronize_unregister() in wprobe_unregister_trigger()
+>      and parse error path.
+>    - Added NULL check for tw->bp_event in trace_wprobe_update_local() to
+>      prevent race conditions.
+>    - Switched trigger data freeing to use event_trigger_data::private_data_free.
+>    - Added count option support (count=N) for wprobe triggers.
+>    - Fixed trigger address calculation (cast rec to char *).
+>    - Added work_pending flag to avoid update conflicts between CPUs.
+>    - Fixed wprobe_trigger_find_same() to check wprobe_data->clear flag.
+>    - Update trigger-wprobe*.tc to use trace-events-sample kernel module.
+>  - Fixed selftest:
+>    - Updated trigger-wprobe.tc assertion logic for clear_wprobe trigger
+>      test to check trace log instead of sysfs enable file (which remains 1
+>      under soft-disable).
+> 
+> Public branch
+> -------------
+> I will push this branch as topic/wprobe-v2 to my tree so that it
+> can be easily tested.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2 
+> 
+> This is based on linux-trace tree's probes/for-next.
+> 
+> Usage
+> -----
+> 
+> The basic usage of this wprobe is similar to other probes;
+> 
+>   w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
+> 
+> This defines a new wprobe event. For example, to trace jiffies update,
+> you can do;
+> 
+>  echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+>  echo 1 > events/wprobes/my_jiffies/enable
+> 
+> Moreover, this can be combined with event trigger to trace the memory
+> access on slab objects. The trigger syntax is;
+> 
+>   set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
+>   clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
+> 
+> set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
+> clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+> FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
+> when trigger event is hit.
+> 
+> For example, trace the first 8 byte of the dentry data structure passed
+> to do_truncate() until it is deleted by dentry_kill().
+> (Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+> 
+>   # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+> 
+>   # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+>   # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+> 
+>   # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+>   # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+> 
+>   # echo 1 >> events/fprobes/truncate/enable
+>   # echo 1 >> events/fprobes/dentry_kill/enable
+> 
+>   # echo aaa > /tmp/hoge
+>   # echo bbb > /tmp/hoge
+>   # echo ccc > /tmp/hoge
+>   # rm /tmp/hoge
+> 
+> Then, the trace data will show;
+> 
+>  # tracer: nop
+>  #
+>  # entries-in-buffer/entries-written: 32/32   #P:8
+>  #
+>  #                                _-----=> irqs-off/BH-disabled
+>  #                               / _----=> need-resched
+>  #                              | / _---=> hardirq/softirq
+>  #                              || / _--=> preempt-depth
+>  #                              ||| / _-=> migrate-disable
+>  #                              |||| /     delay
+>  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>  #              | |         |   |||||     |         |
+>                sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+>                sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+>                sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+>                sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+>                sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+>                sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+>                sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+>                sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+>                sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+>                rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+>                rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+>                rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+>                sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+>                sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+>                sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+>                sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+>                sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+>                sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+> 
+> 
+> Thank you,
+> 
+> ---
 
-HEAD commit:    075b74841bd0 Linux 7.2-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16368cc6580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb17729fb04b1e3a
-dashboard link: https://syzkaller.appspot.com/bug?extid=fbe07bcf949966f3c00f
-compiler:       Debian clang version 22.1.8 (++20260613092233+e80beda6e255-1~exp1~20260613092250.77), Debian LLD 22.1.8
+Oops, I found I missed base-commit: tag here...
+I'll update my tool to add it automatically.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/678e77cc37b9/disk-075b7484.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cc9f771e7069/vmlinux-075b7484.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/71a5d4620b85/bzImage-075b7484.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fbe07bcf949966f3c00f@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-failed to allocate ring buffer on CPU 0
-WARNING: kernel/trace/ring_buffer.c:7977 at trace_rb_cpu_prepare+0x330/0x3c0 kernel/trace/ring_buffer.c:7976, CPU#0: syz.5.14324/5698
-Modules linked in:
-CPU: 0 UID: 0 PID: 5698 Comm: syz.5.14324 Tainted: G             L      syzkaller #0 PREEMPT_{RT,(full)} 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/24/2026
-RIP: 0010:trace_rb_cpu_prepare+0x332/0x3c0 kernel/trace/ring_buffer.c:7976
-Code: 08 f0 48 0f ab 03 31 c0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d e9 bd 2f 7e 09 cc e8 17 3b fc ff 48 8d 3d 70 05 ea 0d 89 ee <67> 48 0f b9 3a b8 f4 ff ff ff eb d2 e8 fd 3a fc ff e9 ef fe ff ff
-RSP: 0018:ffffc90003ddf7e0 EFLAGS: 00010283
-RAX: ffffffff81c9a0a9 RBX: dffffc0000000000 RCX: 0000000000080000
-RDX: ffffc900125d3000 RSI: 0000000000000000 RDI: ffffffff8fb3a620
-RBP: 0000000000000000 R08: ffffffff8fafa337 R09: 1ffffffff1f5f466
-R10: dffffc0000000000 R11: fffffbfff1f5f467 R12: 0000000000000000
-R13: ffff888025cfb380 R14: ffff88803896c0a0 R15: 0000000000000000
-FS:  00007f467e1856c0(0000) GS:ffff888125c3e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f582bc58658 CR3: 0000000075292000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- cpuhp_invoke_callback+0x498/0x810 kernel/cpu.c:204
- cpuhp_issue_call+0x3f0/0x750 kernel/cpu.c:-1
- __cpuhp_state_add_instance_cpuslocked+0x225/0x560 kernel/cpu.c:2423
- __cpuhp_state_add_instance+0x25/0x40 kernel/cpu.c:2444
- cpuhp_state_add_instance include/linux/cpuhotplug.h:384 [inline]
- alloc_buffer+0x18aa/0x1d50 kernel/trace/ring_buffer.c:2830
- __ring_buffer_alloc+0x2c/0x40 kernel/trace/ring_buffer.c:2872
- allocate_trace_buffer+0x1d2/0x950 kernel/trace/trace.c:8412
- allocate_trace_buffers kernel/trace/trace.c:8445 [inline]
- trace_array_create_systems+0x590/0xe60 kernel/trace/trace.c:8623
- trace_array_create kernel/trace/trace.c:8666 [inline]
- instance_mkdir+0xd5/0x140 kernel/trace/trace.c:8681
- tracefs_syscall_mkdir+0x11a/0x190 fs/tracefs/inode.c:121
- vfs_mkdir+0x402/0x620 fs/namei.c:5276
- filename_mkdirat+0x289/0x520 fs/namei.c:5309
- __do_sys_mkdirat fs/namei.c:5330 [inline]
- __se_sys_mkdirat+0x35/0x150 fs/namei.c:5327
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x174/0x580 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f467ff4e019
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f467e185028 EFLAGS: 00000246 ORIG_RAX: 0000000000000102
-RAX: ffffffffffffffda RBX: 00007f46801d6090 RCX: 00007f467ff4e019
-RDX: 00000000000001ff RSI: 0000200000000200 RDI: ffffffffffffff9c
-RBP: 00007f467ffe500c R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f46801d6128 R14: 00007f46801d6090 R15: 00007fffce30c118
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	08 f0                	or     %dh,%al
-   2:	48 0f ab 03          	bts    %rax,(%rbx)
-   6:	31 c0                	xor    %eax,%eax
-   8:	48 83 c4 30          	add    $0x30,%rsp
-   c:	5b                   	pop    %rbx
-   d:	41 5c                	pop    %r12
-   f:	41 5d                	pop    %r13
-  11:	41 5e                	pop    %r14
-  13:	41 5f                	pop    %r15
-  15:	5d                   	pop    %rbp
-  16:	e9 bd 2f 7e 09       	jmp    0x97e2fd8
-  1b:	cc                   	int3
-  1c:	e8 17 3b fc ff       	call   0xfffc3b38
-  21:	48 8d 3d 70 05 ea 0d 	lea    0xdea0570(%rip),%rdi        # 0xdea0598
-  28:	89 ee                	mov    %ebp,%esi
-* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
-  2f:	b8 f4 ff ff ff       	mov    $0xfffffff4,%eax
-  34:	eb d2                	jmp    0x8
-  36:	e8 fd 3a fc ff       	call   0xfffc3b38
-  3b:	e9 ef fe ff ff       	jmp    0xffffff2f
+> 
+> Jinchao Wang (2):
+>       x86/hw_breakpoints: Make DR7 updates NMI safe
+>       x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+> 
+> Masami Hiramatsu (Google) (9):
+>       HWBP: Add modify_local_hw_breakpoint_addr() API
+>       tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+>       x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+>       selftests: tracing: Add a basic testcase for wprobe
+>       selftests: tracing: Add syntax testcase for wprobe
+>       tracing: wprobe: Add wprobe event trigger
+>       selftests: ftrace: Add wprobe trigger testcase
+>       tracing/wprobe: Support BTF typecast in fetchargs
+>       tracing/wprobe: Support BTF typecast in wprobe trigger command
+> 
+> 
+>  Documentation/trace/index.rst                      |    1 
+>  Documentation/trace/wprobetrace.rst                |  163 ++
+>  arch/Kconfig                                       |   18 
+>  arch/x86/Kconfig                                   |    2 
+>  arch/x86/include/asm/debugreg.h                    |   36 -
+>  arch/x86/include/asm/hw_breakpoint.h               |    2 
+>  arch/x86/kernel/cpu/mce/core.c                     |   20 
+>  arch/x86/kernel/hw_breakpoint.c                    |  125 +-
+>  arch/x86/kernel/nmi.c                              |   10 
+>  arch/x86/kernel/traps.c                            |   10 
+>  include/linux/hw_breakpoint.h                      |    6 
+>  include/linux/trace_events.h                       |    3 
+>  kernel/events/hw_breakpoint.c                      |   35 +
+>  kernel/trace/Kconfig                               |   24 
+>  kernel/trace/Makefile                              |    1 
+>  kernel/trace/trace.c                               |    9 
+>  kernel/trace/trace.h                               |    6 
+>  kernel/trace/trace_events_trigger.c                |    2 
+>  kernel/trace/trace_probe.c                         |   34 
+>  kernel/trace/trace_probe.h                         |   15 
+>  kernel/trace/trace_wprobe.c                        | 1392 ++++++++++++++++++++
+>  tools/testing/selftests/ftrace/config              |    3 
+>  .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
+>  .../test.d/dynevent/wprobes_syntax_errors.tc       |   21 
+>  .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   74 +
+>  .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 +
+>  .../ftrace/test.d/trigger/trigger-wprobe.tc        |   85 +
+>  27 files changed, 2156 insertions(+), 76 deletions(-)
+>  create mode 100644 Documentation/trace/wprobetrace.rst
+>  create mode 100644 kernel/trace/trace_wprobe.c
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
