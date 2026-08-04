@@ -1,194 +1,221 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-169.mta1.migadu.com (out-169.mta1.migadu.com [95.215.58.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364DE4483A2
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 10:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781283F4858
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 11:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785840331; cv=none; b=QlfvEZOh4/L917T+tXNbJjciYFrJSz58Udorhjwo4M9DYPS1uwUT9b5y8IL/xk6dKw23wttaKcAtJNqWNSzFyw0XuzybNzy0v07n3rLASgrjlnyWrGyl3gPxfaOvvPdcFMHi5HXEAygJ2M1zW695zHCRb7TIM9muZObbqQYMmVw=
+	t=1785842633; cv=none; b=osFXCRGkLiqGWseilZ0XOCC/JQoJpwNRUc+Kg/qsww44f4P5uJW++EKdKFauMHiTKpR7Lv9RgmaD4owcN4xfYODx8qzlh4jEQ32zInj/LIvoAmJbt4OWS48e1r54Ru9eJjo/wrelBcJLChubHiufC3xqeXMhAv6WC4+E99RzZDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785840331; c=relaxed/simple;
-	bh=wLrvAGZ7jOnunflkcxAE6oQVsM5m+51uOLvAKd26H/0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GC+DMiDtBSrAqOxtwSVTOeL8EDgCf8bvP4vXUalfNRdF5N7filimKVFyKbfUeWrUn+Nhn0auTucmZ0Eafx4jM4iTktNNgt5cVrcbEOOeBtM52HcHafpAdgr8coz7vK6nsgI5Xi7SxvNBVKh3xtVTE0YBk2N/5eKnaXfrukR17Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQQSp/fr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1785842633; c=relaxed/simple;
+	bh=lJJoVSRiLEjz2YAZEXncou1nmQy1T2SeJUG69m++C2Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KzsmY9/PX74JIFX9LdRg3VOACLk59Mlf1kfcPvfRz2dRnzYUhf9aX5QxoC6rt78b+D+m/c3n1/ekxI3A4S4pBEJY0aVmm0wqj/2HQKud2kPzZARKkHFodG7WEgrT7ZqwL0UGynLO3mxq8jx6XNwk5G8+AI+qmdmDc3humk8DQv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mFaN+4Jv; arc=none smtp.client-ip=95.215.58.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQQSp/fr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785840328;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mFaN+4Jv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785842628;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wLrvAGZ7jOnunflkcxAE6oQVsM5m+51uOLvAKd26H/0=;
-	b=UQQSp/fre+mguEDuO4aMmCe/UftL/UrvqsSSRgISMNVs44fubPwF7BKN3a2P78EQZmer1Z
-	8FvAo25D3BgId/hBIOOiK5MNlZIB9JnZsi7p5YCGG0u3bphDhYY5Qlv//YDOU3PnpTgsrF
-	JGetn5vNGwXayMg/Oc186g0jSZE4S6k=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-UMwtvD7ZOryMp8p5i1nN6g-1; Tue, 04 Aug 2026 06:45:19 -0400
-X-MC-Unique: UMwtvD7ZOryMp8p5i1nN6g-1
-X-Mimecast-MFC-AGG-ID: UMwtvD7ZOryMp8p5i1nN6g_1785840318
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47f8580ed9eso4221849f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 03:45:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785840318; x=1786445118;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=wLrvAGZ7jOnunflkcxAE6oQVsM5m+51uOLvAKd26H/0=;
-        b=e0tppaDLZF6473EWmmNzJCnu+JfeL61jrY8NSD2SSrkibtaXJbAr5haAdgSENf2rGl
-         7wlzAHJvowwAe9x3edQRDwqCsgcb0UyejhA7P48fKv1UfPIfSVbrTqINEM/SwGGP91pR
-         rmSpf89cWmR+xPq24Axy4i6N8yul+kRh63nr4jCdkb+eCKrKaWVCh4VGUq7nsKXy0N2s
-         79D8/UeOMrerUI+27i8B526bT+28V7vkKbZE6/Mldxfxv3QEhSFgXbglOmuVtnPv/TbA
-         BoJ9UJF+yxX6V9Md1y5ZQCfJouYb6BKh62IbaO03TmX3fl+vpHHW+DRA4mZPVwLyq9jE
-         C1lg==
-X-Forwarded-Encrypted: i=1; AHgh+Rrh2vm3K52jCP4GFEZAOpvCC/rGGi80nbiztvCMoKor+iL43nXn1u6c6bdSCsoWFsdoXSZjw8TXgLTlPVLdUP0cjz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdlhnktJdV64cE4y1dD5azTajbtm3st1tVLznScZG7xUREWbVW
-	TMjw/rv1Asnw8urw5wi7Dz3WXsaBVIdDg4r4N+HW4biInFJ8Z6+cb6EjLP8SsgmyehjvsarWucZ
-	nwCl92fEwsNaPMk0Z3BMAujLLD3sGjRVvTjhB2Ag3soTNS4klcdbdR6AmEigDvrGgsVH4kMPIrg
-	==
-X-Gm-Gg: AR+sD118nf5Q8cBNY2d3XZhXU71Gk91ILPNWKjnjD0oh2csgMafOGFgMAd6to6tZWr1
-	0e2gXiDmoaSDqFlmHTY6c8XD5g4Udw6GpxmBZW0a3UIdqO5woM+cCkBuxer3wT0oC2X7dxYfpRH
-	bJ5vfkFUov0Ri+WbWUEGQj0Cm1oOw98bOZymg23kqd1LRmE5QXwrS5BCd/XEWKhyyLP8tfa4cbl
-	0P4hZ9EXhAQrB7RYN7JVBNBtFFaPhQed28YAnoWko1yIpFmAzTclh5wYsV++OEtXHyXqtTSYvfV
-	oKqeYbRoQ6mBWCcQtExAafuwUDLgraU4KrQBxjqZGALYPbqtvTbUAqHHTvtSzN4OeqZlytyQ8An
-	Cgg2VmsE1I67si2DjiQ7IGVI5pRua
-X-Received: by 2002:a05:600c:3b01:b0:493:f0f5:f2d7 with SMTP id 5b1f17b1804b1-4980c66c90fmr254160035e9.7.1785840318413;
-        Tue, 04 Aug 2026 03:45:18 -0700 (PDT)
-X-Received: by 2002:a05:600c:3b01:b0:493:f0f5:f2d7 with SMTP id 5b1f17b1804b1-4980c66c90fmr254159185e9.7.1785840317938;
-        Tue, 04 Aug 2026 03:45:17 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd456a6cbsm38107677f8f.23.2026.08.04.03.45.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2026 03:45:17 -0700 (PDT)
-Message-ID: <c9fbfea2eeb6603f275365e61bef0bbfb355d963.camel@redhat.com>
-Subject: Re: [RFC PATCH v2] Documentation/rv: Explain epoll and aborted
- sleeps
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Chao Liu <chao.liu@processmission.com>, Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, 
-	zhouzhouyi@gmail.com, lianux.mm@gmail.com, lianux.wang@processmission.com, 
- Shuah Khan <skhan@linuxfoundation.org>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Tue, 04 Aug 2026 12:45:16 +0200
-In-Reply-To: <20260729081102.73138-1-chao.liu@processmission.com>
-References: <20260729081102.73138-1-chao.liu@processmission.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A6MV3T54jpp6pfa17f4P4YF6liSBRRpPBO9a2ATS4OQ=;
+	b=mFaN+4JvKjSt50Gd0rfBo+esdoDIOyEYlLsi+PNeHONIvBKPQHIMQEZX2xPNt0TYq6OJ7u
+	3zBf1TflXe2CYA3dpI71hfmyZxCZGAFxK71fNlh02VpYindYZkQxJf0zIbiGQyrbBNPCu0
+	VD44g+xuaumHr2y8Q3bOAYmsbXtSbpw=
+From: Fuad Tabba <fuad.tabba@linux.dev>
+To: maz@kernel.org,
+	oupton@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	alexandru.elisei@arm.com,
+	vdonnefort@google.com,
+	joey.gouly@arm.com,
+	seiden@linux.ibm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	qperret@google.com,
+	ardb@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	tabba@google.com,
+	fuad.tabba@linux.dev
+Subject: [PATCH v3 00/11] KVM: arm64: Restore type-checking across the host/hyp hypercall boundary
+Date: Tue,  4 Aug 2026 12:23:06 +0100
+Message-Id: <20260804112317.1937387-1-fuad.tabba@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: e7O_F4ZxibxOwMR2MllKwvK0TcOhEpYIJu9OX_oGv_0_1785840318
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 2026-07-29 at 16:11 +0800, Chao Liu wrote:
-> epoll_wait() is a valid sleeping reason for real-time tasks because it
-> uses PI-aware locking, but the rtapp sleep monitor documentation only
-> discusses clock_nanosleep() and futexes. Document it.
->=20
-> ABORT_SLEEP represents a task restoring TASK_RUNNING before entering
-> the scheduler. Since the task does not actually block, it becomes
-> runnable again without a wakeup sequence unsafe for real-time. Document
-> this behavior.
->=20
+Hi folks,
 
-Looks good, thanks! Please next time you send a patch, even if it's an RFC,=
- put
-the extra comments after the --- . This way I can pull it directly without
-changing the commit message because git am ignores everything after the ---=
- .
-Also, no big deal, but for simple patches like this one, and even after get=
-ting
-comments, there's no need to mark as RFC.
+This is based on rc6, but in case it is easier to take on kvmarm/next
+(320840b34af2a), the same series applied there is at [1]. It passes the
+same checks: bisectable, sparse clean, npVM and pVM boot.
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Patches 1-8 are identical. pkvm-7.3 reworked three of the handlers the
+series converts, so 9-11 deviate. Patch 9 also declares
+__pkvm_vcpu_sync_state, without which its caller has no generated stub.
+Patch 10 converts that handler too, and folds the two
+get_host_hyp_vcpus() macros into one function. Patch 11 moves the
+kern_hyp_va_host() unwrap out of __get_host_hyp_vcpus() to its callers,
+since container_of() casts through void * and drops the address space.
 
-I'd appreciate an ack from Nam, then I might be able to squeeze this before=
- the
-merge window together with the last fixes.
+Changes since v2 [2]:
+  - Dropped the *_VOID() macro variants. void is spelled as the return
+    type in the declaration and the definition, and the handler's
+    return-register store dispatches on a per-type table instead. The
+    table entry is pasted from the return type, so it has to be a
+    single word: __pkvm_create_private_mapping is spelled ulong on
+    both sides of the boundary. (Marc)
 
-Thanks,
-Gabriele
+The SMCCC conversion of the host/hyp interface reduced every hypercall
+to a function number and a pile of registers: kvm_call_hyp_nvhe() never
+shows the compiler a callable, so the caller's arguments and the
+handler's DECLARE_REG() casts can disagree in type, count or order
+without a diagnostic. Reviewing a fix for exactly that class of bug,
+Marc wrote [3]:
 
-> This RFC is based on Nam Cao's pending "rv: rtapp monitor update" v2
-> series:
->=20
-> https://lore.kernel.org/r/cover.1781852967.git.namcao@linutronix.de
->=20
-> Signed-off-by: Chao Liu <chao.liu@processmission.com>
-> ---
-> Changes in v2:
-> - Explain why epoll_wait() is RT-safe in terms of PI-aware locking.
-> - Explain that ABORT_SLEEP does not require an RT-unsafe wakeup sequence.
-> - Update the commit message accordingly.
->=20
-> Link to v1:
-> https://lore.kernel.org/linux-trace-kernel/20260722045706.85633-1-chao.li=
-u@processmission.com/
->=20
-> =C2=A0Documentation/trace/rv/monitor_rtapp.rst | 6 ++++++
-> =C2=A01 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/trace/rv/monitor_rtapp.rst
-> b/Documentation/trace/rv/monitor_rtapp.rst
-> index 238b59395ff5..b95994ade14a 100644
-> --- a/Documentation/trace/rv/monitor_rtapp.rst
-> +++ b/Documentation/trace/rv/monitor_rtapp.rst
-> @@ -67,6 +67,8 @@ thread to sleep for one of the following reasons:
-> =C2=A0=C2=A0=C2=A0=C2=A0 variables as safe for real-time. As an alternati=
-ve, the librtpi library
-> =C2=A0=C2=A0=C2=A0=C2=A0 exists to provide a conditional variable impleme=
-ntation that is correct
-> for
-> =C2=A0=C2=A0=C2=A0=C2=A0 real-time applications in Linux.
-> +=C2=A0 - Real-time thread waiting for events using `epoll_wait`, which i=
-s a
-> +=C2=A0=C2=A0=C2=A0 real-time-safe syscall for sleeping as it uses PI-awa=
-re locking.
-> =C2=A0
-> =C2=A0Beside the reason for sleeping, the eventual waker should also be
-> =C2=A0real-time-safe. Namely, one of:
-> @@ -114,6 +116,10 @@ The monitor's specification is::
-> =C2=A0=C2=A0 ALLOWLIST =3D BLOCK_ON_RT_MUTEX
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or FUT=
-EX_LOCK_PI
-> =C2=A0
-> +`ABORT_SLEEP` represents a task restoring its state to `TASK_RUNNING` be=
-fore
-> +entering the scheduler. In this case, the task does not actually block, =
-so
-> the
-> +task is back to runnable without any wakeup sequence unsafe for real-tim=
-e.
-> +
-> =C2=A0Beside the scenarios described above, this specification also defin=
-es an
-> allow list
-> =C2=A0to handle some special cases:
-> =C2=A0
->=20
-> base-commit: 248951ddc14de84de3910f9b13f51491a8cd91df
-> prerequisite-patch-id: d8b6c952a954662852e6b0684e0a3386eaab7f41
-> prerequisite-patch-id: 940f7637aeabe4ba15a09c048c6f48138406f332
-> prerequisite-patch-id: b99812692691f76d825778e01a2e771e058febd6
-> prerequisite-patch-id: 512c300dce2cb74ac9cc007f9234aa507ef5c008
+  "we lost all form of type-checking when everything was hastily
+   converted to SMCCC to avoid function pointers. Somehow, I feel that
+   the cure was worse than the disease.
+
+   I wish we'd reintroduce some form of compile-time checks, maybe by
+   having generated stubs?"
+
+and sketched the shape he preferred [4]: a generated nvhe_hvc_##f()
+stub that does the type-checking, driven by "some form of declarative
+IDL", with "both the caller and callee stubs ... totally generated".
+
+This series implements that, in plain preprocessor macros rather
+than an external generator, in the mold of the syscall wrappers.
+Each hypercall's signature is declared once, in kvm_hcall.h:
+kvm_call_hyp_nvhe() resolves to a typed nvhe_hvc_##f() stub
+generated from the declaration, and the hyp-main.c handlers
+unmarshal their arguments through glue that is type-checked
+against the same declaration. A mistyped or stale call, or a
+handler that drifts from its caller, now fails to compile. On top
+of that shared declaration, host-VA parameters gain a __kern
+sparse address space, so dereferencing one at EL2 without
+kern_hyp_va_host() translation is flagged by sparse. The address
+space is KVM-private and lives with the interface it annotates
+rather than in compiler_types.h, like x86's __seg_gs in asm/percpu.h.
+The deeper instances of that bug class, host VAs reached through
+struct fields after the boundary, are follow-up work.
+
+The declarations do not also generate the function-number enum or the
+dispatch table. The enum carries the availability-band markers that
+decide when each hypercall becomes reachable, and its base entry is
+consumed from assembly, so generating it would hide the banding. The
+remaining duplication cannot drift silently: a name mismatch between
+declaration, caller and handler fails to compile, and a missing
+dispatch-table entry is rejected at run time as
+SMCCC_RET_NOT_SUPPORTED.
+
+Along the way it turned out "make C=2" has never checked the nVHE
+objects at all: the custom %.nvhe.o rule reuses rule_cc_o_c, which
+only hooks the checker for C=1, and that only on a rebuild. Patches
+2-5 fix the hook and the handful of pre-existing sparse warnings it
+flushes out, so the checker lands clean. The libfdt objects under
+arch/arm64/kernel/pi/ have the same gap through the same rule, so
+patch 6 gives them the same one-line fix; it touches arm64 core
+rather than KVM, so it can go through either tree. Patch 1 is
+adjacent: trace_remote_event.h is not self-contained (it uses bool
+without including linux/types.h), which the nVHE include order had
+been silently working around; it can go through the tracing tree
+instead if preferred.
+
+The first six patches do not depend on the type-checking work (the
+tracing-header fix, the sparse cleanups, and the two C=2 hook fixes),
+so they could be taken on their own, ahead of the rest of the series
+if that is easier.
+
+The series is structured as follows:
+
+  01:     Make trace_remote_event.h self-contained.
+  02-04:  Fix the pre-existing sparse warnings in the nVHE code.
+  05:     Run the source checker on nVHE objects under C=2.
+  06:     Same for the libfdt objects under arch/arm64/kernel/pi/.
+  07:     Pass the host-VA hypercall arguments as pointers at EL2.
+  08:     Move the dispatch macros to a new kvm_hcall.h.
+  09:     Declare the hypercall signatures, type-check the callers.
+  10:     Generate the handler unmarshalling, type-check the handlers.
+  11:     Tag host-VA parameters __kern for sparse.
+
+The generated code is unchanged, checked by comparing the disassembly
+of every KVM object, function by function, against the base: the
+callers are identical apart from hypercall returns now being tested at
+their declared width and the stage-2 TLB-flush level argument now
+being sign-extended as it is loaded (an s8 passed as an int), and the
+handlers are instruction-for-instruction identical apart from
+flush_hyp_vcpu()/sync_hyp_vcpu() being inlined into their only
+caller. The extra argument that prompted the thread, a
+mistyped or reordered argument, and a handler that disagrees with its
+declaration all now fail to compile. checkpatch complains about the
+__KVM_HCALL_MAP() machinery, the (type, name) pair syntax and the
+generated signature typedefs, as it does about __MAP() in the syscall
+wrappers; the idiom cannot be parenthesized, and the typedef is what
+checks the handler against the declaration. Enforcing the
+__kern tag needs sparse v0.6.5-rc1 or later for __typeof_unqual__,
+as all sparse checking on current kernels does; no stable sparse
+release has it yet, so build from sparse.git (checker-valid.sh skips
+the check, with a warning, on anything older).
+
+Based on Linux 7.2-rc6 (075b74841bd00).
+
+Cheers,
+/fuad
+
+[1] https://android-kvm.googlesource.com/linux/+/refs/heads/tabba/pkvm-hostva-kvmarm-next
+[2] https://lore.kernel.org/all/20260803124220.332248-1-fuad.tabba@linux.dev/
+[3] https://lore.kernel.org/all/86zf7po2n3.wl-maz@kernel.org/
+[4] https://lore.kernel.org/all/86wm2tnsd8.wl-maz@kernel.org/
+
+Fuad Tabba (11):
+  tracing: Include linux/types.h in trace_remote_event.h
+  KVM: arm64: nVHE: Share the stacktrace per-CPU declarations with EL2
+  KVM: arm64: nVHE: Declare the hyp event IDs before defining them
+  KVM: arm64: nVHE: Use NULL to reset the trace buffer backing pointer
+  KVM: arm64: nVHE: Run the source checker under C=2
+  arm64: pi: Run the source checker on the libfdt objects under C=2
+  KVM: arm64: nVHE: Pass host VA arguments as pointers
+  KVM: arm64: Move the host hypercall interface to its own header
+  KVM: arm64: Type-check hypercall arguments at the caller
+  KVM: arm64: nVHE: Check hypercall handlers against the declared ABI
+  KVM: arm64: Tag host-VA hypercall parameters __kern
+
+ arch/arm64/include/asm/kvm_hcall.h       | 240 +++++++++++++
+ arch/arm64/include/asm/kvm_host.h        |  48 +--
+ arch/arm64/include/asm/kvm_mmu.h         |  10 +
+ arch/arm64/include/asm/stacktrace/nvhe.h |  10 +-
+ arch/arm64/kernel/pi/Makefile            |   1 +
+ arch/arm64/kvm/hyp/include/nvhe/pkvm.h   |   7 +-
+ arch/arm64/kvm/hyp/include/nvhe/trace.h  |   5 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile         |   1 +
+ arch/arm64/kvm/hyp/nvhe/events.c         |   2 +
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c       | 433 +++++++++++------------
+ arch/arm64/kvm/hyp/nvhe/pkvm.c           |  12 +-
+ arch/arm64/kvm/hyp/nvhe/stacktrace.c     |   3 +-
+ arch/arm64/kvm/hyp/nvhe/trace.c          |   6 +-
+ arch/arm64/kvm/hyp_trace.c               |   2 +-
+ arch/arm64/kvm/stacktrace.c              |   3 -
+ include/linux/trace_remote_event.h       |   2 +
+ 16 files changed, 481 insertions(+), 304 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_hcall.h
+
+
+base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+-- 
+2.39.5
 
