@@ -1,163 +1,140 @@
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+Received: from mail-pj2-f10.google.com (mail-pj2-f10.google.com [74.125.227.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9D346EF75
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 14:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785852259; cv=none; b=EpHp/xnRN6+2nIUhVbfa2VK0F/opOl9XIldw1h41HE2aidqkJVo0MM35gfkz2rj2INmJwVtaesfW7oRh9Ax5sCwlotleCj4AAypasu9+ecew3RG94/XeR0KRfn00x0Ny0GXOm9ofgauiXtRnwzW3kD2gmhnfY5XpFKQQ5RYQjjQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785852259; c=relaxed/simple;
-	bh=+waWS+LuGlQv0fRPmL/LtW30MnQtW2cBAI87X2O7Jrk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bmV3UE0x54U2lPm6ighPw8ksxGsjRbEIEajGxtTcaOhoMX1xpanAh604jHZoe7kM8WZwBAVMq+qHUYxUUeH4u7lFIW1eq8t7bqS2tmrIXXeXIgUxzahuJcrPDc0wYlZDjV9SFVgNAO9O+OJ4c/H4xh/q7aNUlEZGgz56h2oZN3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FSF7ZuVN; arc=none smtp.client-ip=209.85.128.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342FF40D590
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 14:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785854758; cv=pass; b=YXXCs549p/v6Yz1UA/SIk1SZetk3YBukDUeKAauR4ufqkyjpFHloGbraQhgDrTr9Ln3Luo/fGSZ8tmBWFHFc37tL+BfIIBErbAOKwWOWs1/fZugQkPWCvv4AWWcBa3WoRwHlpeghZx9WK84IB9Yh/VejA65zJQWab4sFMcZm3oM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785854758; c=relaxed/simple;
+	bh=ztSaoUfMVezUsDwkDcA8OfphYl9+J8Z12iVlxPqy/tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HeX/4pxncdbrdjRByak+EjTX3eS2oOEoxN1yMd8IahUCCkeWkLzzymSJEf9yOC8ufZvfCQexXyGlXlAslgXwWWotJrL/3B5ycXswW3qsuFAUSr9zrN0nYnorn5XKM8bsVvgYXd3lutiKKC5dD4TxVqvhFHgLlPG34Gal1KQwWqQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TB+N/y3z; arc=pass smtp.client-ip=74.125.227.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FSF7ZuVN"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-495474a5fbcso29514885e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 07:04:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TB+N/y3z"
+Received: by mail-pj2-f10.google.com with SMTP id 98e67ed59e1d1-38dc4f9462cso1390597a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 07:45:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785854756; cv=none;
+        d=google.com; s=arc-20260327;
+        b=q+PNrElwV95Y7YGSqxTfL66ySRHmxtSZQlmeZvxWhOdDh+YLN4YQkWf1mQw9hh7WRh
+         go+f7x8uHUzjruxKps+NGe2Qtmlpu0LQFNZRHP/ahiwRcuDBePSEDY++W7JA7WTPFG3j
+         etoexTbkDYEG5ektPvAj/YCMVIZMttP+xL76filS3kyjsEOf/vxs5lVJ5cZ+3J282A1z
+         pOb4ac/Z6wU0XJrlzgK6zo8VLWAhz66vqTuTNCIHUNvJ4t7qgcM7c+IBvj8xsDy/XvWh
+         xJr7NNSHXcSAHNY/41u2spH5SYiMv2Xm8R/H7FoMYzqGqvFmw/PjKtqiZveP3/JmXhb7
+         tPJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ztSaoUfMVezUsDwkDcA8OfphYl9+J8Z12iVlxPqy/tc=;
+        fh=db3NWuZ9utT8kr+OyMGcKa67X2gK6x+pks0YB7MUIHA=;
+        b=WvwoGbz0gY2EDufGNNNpSlILmzTGDQWd8ey2i4ZFS5/QVMU25c3uVxme0HCDJnXIPN
+         By5RVQCS/BoXkGESdMURC37eigpIyi4B2sJeazJzUvaSC+mpLqkF55cwuuC3lv1+djhA
+         PEJx3j1iFR/aR6+2sMlGeZxjAjBpCMe+pAdljUmZRj7U2QnsOFUaXs0r8koZbQmPu0TV
+         VFSqz5zs7iZO6wO8WbYC/sP9YsRD07i+D1VD0u57ypQgq0cLDyID4CwKZjn5GRvHdkeh
+         8z3pyU4kmaNpQOO2BcWj570BSXXwwNi1N9KJosXZdtUtq/zRameHt1CQtwyof/0zlt8O
+         nMSg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785852256; x=1786457056; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tsOIk6tEri1zvwh86V3qrpHjZW7o/k3J5WhzY5duLPE=;
-        b=FSF7ZuVN0YFsg0bCMEI8bMfFwTk9R6PTlMBikU8oFMpD8b0dVl5h615BwhLMiuu0xX
-         2JUNooHUzT1kEpz6ie2J1xeQHW1iP8t2+oDlUOcG3lrpq6snyfjlGdRL3hyER9ZjjOmV
-         7QC9d24zWqgu3lGEX4y31SjHF4ev6MPizZjLnRwYRBQ09okM6949a2qSgDFTNEAyUar4
-         x6sjDwrWyHs3S0i7YE/3xzqb+26Guhrjfa8fhvtuHP6I+L6QfTU0bI2cioedzHe2foMD
-         tB3aszqVi3KAQD2++aeAQWol8KMgHwM485ukvZoKAefoOKoGKssUxa2ehsS6INhjBWw8
-         nLrQ==
+        d=gmail.com; s=20251104; t=1785854756; x=1786459556; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ztSaoUfMVezUsDwkDcA8OfphYl9+J8Z12iVlxPqy/tc=;
+        b=TB+N/y3zKPWzhMOqzKFMBTA5TTJ+jE3XxywU0NuIrh21A7EPUwkMiCjLKniUTvY4DG
+         J03gc/31Pq7uai+EhZV41j8NoMZeD42XAOZhijrYks9+mXHICii51clDQbGZ1ayBQnFD
+         tk1bHsW99rqzgh/2eo/yzVXAgF2GPBAQRZAwpyoncBFKxMU/e/m33aiAyhb5wlT/tmoC
+         B2Ah5CY9VHTW/yhFjKuKOrk28uE/961J7Q7EAvXDdGk1y1i9eRBhZWkFf2OwbePmmyvB
+         XSv1N1OJfWfXX2bzaEwjhY4aIkFxqOpVPPazY0qzJIi/+NsFIdZT5ir+ctJdgNq8iHxV
+         TI0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785852256; x=1786457056;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=tsOIk6tEri1zvwh86V3qrpHjZW7o/k3J5WhzY5duLPE=;
-        b=L/5SfxyB+/mXnI38DpPOZXsezmjAGQOXKAx1uuAzTCEv+U02kzP0NCYNAL1Xm/SPG2
-         78JzMyNWIaOVcP6dHmDHehZgyYciF+fXmWRnzCXC5EksctzS+zuVdW1Uq0nVeV6I1S5B
-         Te3XfGLJfCDdM+Vh6O71cNJckSvaDUe52AWtUDcv28XBq0l8LuUIKgEDA/aYpK88WBhQ
-         bOgcwVpgYHZdjfp67sneeLr5R8BGNmqrG2y5yB51BbI7MwIytLZhNECJUZb1Z/r3KdVl
-         z3j5bTenLwvFkpwXdqA5qRb1dcX0xEzNamyyAeT+jqcAB6DC6jsabokJu05GAmo0+J2O
-         7VMg==
-X-Forwarded-Encrypted: i=1; AHgh+RqmSk+DBScVHpS3lvb9qXc+n9JITyvRnv0bBE3SWdrCK4kWK518pISQ6UB5cbFtUXoovArvngZbhq5s49AsF5iHJzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8MZ9t6rlCHApSCLxHnXaxjtjU29dLE0PLtb9bAzBBCzhf8Tw1
-	p05VnOwhEA2w4Ii9dHHydmHIZPWj2Hu1Fzo/R0b3vSTaluhGeYFAcreC3I2lDPDL5h7fB09WFfP
-	1zqb3jejWWYvrOWj3BOQmNw==
-X-Received: from wmrk16.prod.google.com ([2002:a05:600c:b50:b0:493:f7d7:4b2d])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:470d:b0:498:490:3bbe with SMTP id 5b1f17b1804b1-4980c679d1fmr352883565e9.16.1785852252115;
- Tue, 04 Aug 2026 07:04:12 -0700 (PDT)
-Date: Tue,  4 Aug 2026 15:03:32 +0100
-In-Reply-To: <20260804140333.797210-1-vdonnefort@google.com>
+        d=1e100.net; s=20251104; t=1785854756; x=1786459556;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ztSaoUfMVezUsDwkDcA8OfphYl9+J8Z12iVlxPqy/tc=;
+        b=mUUDmB2d2EJ+/XZzwjS5T9b2GvGt2DZpTVSXYVAY4+d0ARULnqKm2D0ym/n0OpqSrD
+         9akuSmEnK6ithKYqiwhhJ9PmyLbg/9SyRrkHE4qRUtpumta59WY+XC0wpUDK+AwHKMa0
+         1P45cQD1f7Rlt9oyU2oUdpYSRKtq4KcWYuTStgmrMnY6+NYkWC6y8pGPa+vWUn5zv9IF
+         +RpPr7426V5pR6OVd4ck6n9AexHlAMXHBRA8g8Xo6BbSMr4v7ywiAAt1/IjR4AaSv/ae
+         rF5/jA6HR3E74Sm4uZJ7U2eMg8WeHCIw3axR/5jgjobxSOJPN34ELuCh2wJ8U1/ZDyg9
+         Xmhw==
+X-Forwarded-Encrypted: i=1; AHgh+RoztR9EcumkW8j8/Juu+5/J9lyahsXBKJ5T44gMNcqwspQAyJQwP+XhZUpsD2kIix45zO2M9sSG7B8lcCOYqIef06E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG1P2ocKwGKLXrKSjYaL1dBMLQgvoCudnIfKxSPv2ZcdFgQXw7
+	ADRdtKmWjrJKJb6eup7DWQioB0NMRstyOngYW7Pmn2U7/ypVKd72vAQjMERU5U2LjpbwCqYTrp5
+	chXFrZxbT4bIJchKE82Z3bQMCNaIL96Q=
+X-Gm-Gg: AR+sD13CBp2c+lVOxPUmNMr1rw3dcdbUGpv6ceRFDYkjMNlhqxsgDwqhlZ9i73pZDl2
+	fZUkjd0qaQJtf9j/80ni8rJ3K23/6hLoZSy+eXTYvV5YoxDu268W0CEoEoyU8mZb5VdmwOjhpnq
+	i1rqF/vpw1K6F8Gx/fKt6SHlxf3gE5zcb024YNg84CelcUSDzKPObfIkONm4NIxyB1YTNz2TJn5
+	jplHfHJ676Mslp8tKRV0mV9P8WumYvWssFIQ2PD7BaO7/0QGdNacBcCwztU09nq8cF21qEdP7Eo
+	85dz8WIWtSd+Yio9VX/wjzuFp4uAlWPMjApbmCTiBTaE2w==
+X-Received: by 2002:a05:6a20:6a10:b0:3c6:3c5b:f2e3 with SMTP id
+ adf61e73a8af0-3c92a62d94cmr15620433637.33.1785854756552; Tue, 04 Aug 2026
+ 07:45:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260804140333.797210-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
-Message-ID: <20260804140333.797210-18-vdonnefort@google.com>
-Subject: [PATCH v4 17/18] Documentation: tracing/remotes: Add detailed tracefs layout
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+MIME-Version: 1.0
+References: <20260803-fix-lock-tracepoint-bpf-lockdep-v1-1-91fb7afb526a@gmail.com>
+ <anEuaSqiCVsQ6I4P@zenbox> <178583246611.3252194.4318729338489544399@noble.neil.brown.name>
+In-Reply-To: <178583246611.3252194.4318729338489544399@noble.neil.brown.name>
+From: Quanye Yang <quanyemostima@gmail.com>
+Date: Tue, 4 Aug 2026 22:45:44 +0800
+X-Gm-Features: AUfX_myq83VVn48ShEyGmTjvf-TWPUcuekz03-F_pf7Av6LHmdejBcY2Ac2RQiU
+Message-ID: <CABcBDJuznu=BgDhevsD6PybX8+6fcaO1xyTcuGuv8F_+MfeZoQ@mail.gmail.com>
+Subject: Re: [PATCH] bpf: disable lockdep while running BPF on lock_release
+To: NeilBrown <neil@brown.name>
+Cc: Justin Suess <utilityemal77@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Yonghong Song <yonghong.song@linux.dev>, 
+	Emil Tsalapatis <emil@etsalapatis.com>, "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	syzbot+ef8d17bae14efb960935@syzkaller.appspotmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a description for each tracefs file available in a trace remote
-instance.
+On Tue, Aug 4, 2026 at 4:34=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrote:
+> I know close enough to nothing about BPF or trace points...
+>
+> Can BPF programs ever block waiting for a lock that is held across a
+> tracepoint?
+I investigate this and I think the answer could splits in two:
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Mutex (sleeping locks): no, this is prevented at verification time. A
+BPF program attached to a tracepoint is non-sleepable --
+can_be_sleepable() returns false for BPF_PROG_TYPE_TRACEPOINT, so the
+verifier rejects any sleeping helper; and at runtime it runs under
+rcu_read_lock() with cant_sleep(). It cannot block on a mutex held
+across the tracepoint.
 
-diff --git a/Documentation/trace/remotes.rst b/Documentation/trace/remotes.rst
-index 1f9d764f69aa..b02ebed4a03f 100644
---- a/Documentation/trace/remotes.rst
-+++ b/Documentation/trace/remotes.rst
-@@ -19,8 +19,8 @@ for which the host kernel can see and expose to user space.
- 
- Register a remote
- =================
--A remote must provide a set of callbacks `struct trace_remote_callbacks` whom
--description can be found below. Those callbacks allows Tracefs to enable and
-+A remote must provide a set of callbacks `struct trace_remote_callbacks` whose
-+description can be found below. Those callbacks allow Tracefs to enable and
- disable tracing and events, to load and unload a tracing buffer (a set of
- ring-buffers) and to swap a reader page with the head page, which enables
- consuming reading.
-@@ -28,8 +28,66 @@ consuming reading.
- .. kernel-doc:: include/linux/trace_remote.h
- 
- Once registered, an instance will appear for this remote in the Tracefs
--directory **remotes/**. Buffers can then be read using the usual Tracefs files
--**trace_pipe** and **trace**.
-+directory **remotes/**. The files within this directory allow configuring
-+and reading the remote buffer (see `The File System` below).
-+
-+The File System
-+===============
-+A remote tracing instance is represented by a directory in Tracefs under
-+**remotes/**. The layout and files within it are very similar to standard ftrace
-+instances. Inside the remote directory, the following files and directories are
-+available:
-+
-+  tracing_on
-+	This file allows enabling or disabling the remote tracing.
-+
-+  buffer_size_kb
-+	This file displays and allows changing the size of the per-CPU ring
-+	buffers used by the remote. It also shows if the buffer is **loaded** or
-+	**unloaded**. To change the size, the remote buffers must be unloaded
-+	first. Remote buffers are automatically unloaded when **tracing_on** is
-+	off, no one is reading the buffer (either by accessing **trace_pipe** or
-+	when **dmesg** is on) and no events remain in the buffer.
-+
-+  trace
-+	Display the human-readable content of the remote buffers. Reading this
-+	file is non-consuming. Writing to this file clears the ring buffers.
-+
-+  trace_pipe
-+	Similar to **trace** but reading it consumes the events from the ring
-+	buffers (consuming read). It blocks if there are no new events.
-+
-+  dmesg
-+	When enabled, all events from the remote are redirected to the kernel
-+	dmesg. This is similar to the **tp_printk** option for in-kernel events.
-+	It counts as a reader of the remote buffers and prevents unloading.
-+
-+  dump_on_panic
-+	When enabled, the remote tracing buffer is dumped to the console when a
-+	kernel panic occurs.
-+
-+  poll_ms
-+	Modifies the polling interval for the trace_remote.
-+
-+  per_cpu/
-+	This directory contains subdirectories for each possible CPU (e.g.,
-+	**cpu0/**, **cpu1/** ...)
-+
-+  per_cpu/cpuX/trace
-+	This is similar to the **trace** file, but it will only display the data
-+	specific for the CPU. If written to, it only clears the specific CPU
-+	buffer.
-+
-+  per_cpu/cpuX/trace_pipe
-+	This is similar to the **trace_pipe** file, and is a consuming read, but
-+	it will only display (and consume) the data specific to the CPU.
-+
-+  events/
-+	This directory contains remote events that can be enabled or disabled.
-+
-+  events/enable
-+	Allows enabling or disabling all the remote events.
-+
- 
- Declare a remote event
- ======================
--- 
-2.55.0.571.g244d577d93-goog
+Spinlock: yes, in principle. Spinlocks busy-wait rather than sleep, so
+the mutex protection does not apply. BPF programs do take spinlocks --
+each map lookup/update/delete takes the map's bucket lock, and
+bpf_spin_lock is a spinlock -- so a program attached to a tracepoint
+held across a spinlock can spin on another spinlock, and if those form a
+cycle (or are the same lock) it is a real deadlock.
 
+That is exactly the hazard BPF already hardened its own locks against:
+the hashtab bucket lock and bpf_spin_lock detect recursive acquisition
+and return an error instead of deadlocking (rqspinlock, succeeding the
+map_locked approach in 20b6cc34ea74). The rhashtable bucket bitlock has
+no such protection -- which is the gap I think.
+
+quanyeyang
+> If so, then attaching a BPF program to that trace point could
+> trivially cause a deadlock.
+> If not - then how is that ensured?
+>
+> Thanks,
+> NeilBrown
