@@ -1,56 +1,56 @@
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4901F46D08D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 14:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1B746D0AB
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 14:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785852244; cv=none; b=lca76Gnadl3D2xodgOxUkAmwgsL2kM795EA5d4aAcQLmbe+JcdC8g3aS1mscAy8dGhEDNUQbLYQ2WpnBOTIGg3kyiQmRcDmjWPxuE3XUytwazjWiEFTJe97uSgM2sD18Lw2sewOsn0dYgflr4A+67B3tF2Ix6XH+3aCeoNLlr3M=
+	t=1785852246; cv=none; b=rEeyOIVqVtq+QiEYf0cE/JVYbYMOd/kXQBasiDFR7IuaRpYnl8z3rHIqqcFfoopu5YIUUapHMa60s56C8uCIIASriW7/thBiLAOG4JGnaJOCqv0zy9wymCwz5W1a8Pg2c+zMXNRAZgxphrWFGuzeokkXb6uBmyQEVPVLBO2BZtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785852244; c=relaxed/simple;
-	bh=DCg18c08fS5yAw1n3O4p1XTPBktSW08PAzLu6waC2Mc=;
+	s=arc-20240116; t=1785852246; c=relaxed/simple;
+	bh=PgyjPKv89cYDWxRVDBZ9T8EjQ7eNrYSfpNnidX9ObWg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oQ8xQXu8SD4AtLCezzp8nheIWHall74PgjDo0B2nNpUmq/B3V0/A5m3QZgecT7mgOVMXa93vHJS93QcUlrBMUT6ZxeXAFo3RtkrU6lNRw007j2vymr1BqxRGyJlR2o+7PXnno++skAU53mykJhPadeLeBX7Ri/fs61CMDRp2hBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tDetKq2X; arc=none smtp.client-ip=209.85.128.72
+	 To:Cc:Content-Type; b=de4Rb21sdMTMDOUoMufX/YgMbrZ8KsVIIGlDh3yo+8hCGJVaA2IsgAP+7w6YCwkBzeAg6g15PXBPT4Wnogy2hHZwiqL3N40kpabSusEFvCp6WLT+NzPfISXcftiiaaViYIeCY4qnQkLWYIaJ7JPlm3L6O+fhH+3TCHqa+Gyl0ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ara7NA2L; arc=none smtp.client-ip=209.85.128.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tDetKq2X"
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4954a93c565so19511605e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 07:04:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ara7NA2L"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49554715277so30341935e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 07:04:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785852241; x=1786457041; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1785852242; x=1786457042; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vW7zq9+GEo1dZSsriJr+LxVExvoRkhkfdWEBDccvs8M=;
-        b=tDetKq2XV5F0VtUFHoIJJIAk1giWko1xQ1cF4PVG7LZ68FeCWYDrxDYNSviZsDZQJr
-         kOsSVPTto2bpt5LltGqv2GbJf5Q9xHtl+M0wD/QFCfpH5s9CB1KbVH/PcApjbty4B1zQ
-         ffDBa71rcP4TRnqf6vlxsRciaa+VigP6U79CMKK/RkmNOnogXcty7UwzBx5MY9LyRJct
-         OaV8hjLbRpx18X1NIPFXPeUFfL7NSr44+ye4feB4jI0tziso5jHrLCVrJP3uEi+VbOIb
-         uEPYsbWcIdTd6Rg+eaGVi/7rv6rx5zXZnPAPmgwde4eYKFuLzasKzaq+b9GQeQo6g3Bd
-         tA6g==
+        bh=tZ8hbfpKYL0TXNWWVnEYWRS4CSMgmdh3mY5rGkVM9ow=;
+        b=ara7NA2LXXDBSTOsYbshfwE8H8O0Nd1ZqWvoODQa7XPtQuxDTtyUHAhyP164x1oGeu
+         nlz8a87z0ZT3tUT3pcoEhnqpmkTJYefWJh0gsIyhmV1lGj0LOW7nEsD5mJcsrztC2ZIZ
+         J0fQGifKgKzaNaCxGB0V3kkeMblW4XPWXsSKntFT1Wr4/25UqfgDt+Wh1DXIoGsVI5uN
+         jB0baIk8UmhIf3l3jeNXEjtBN4KlVIilm26FNxaiE0PLCCgkgprjYBBHbgVbqesxIWOe
+         SyEUzlCgcA1OnUEnoWvoTQJ/kwmtpBl0EyyYBlcQ6BN07nBMA+OpRNztmFlJisY0A53i
+         EcHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785852241; x=1786457041;
+        d=1e100.net; s=20251104; t=1785852242; x=1786457042;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vW7zq9+GEo1dZSsriJr+LxVExvoRkhkfdWEBDccvs8M=;
-        b=Ve9Ti2YbXo2UwUN4X1s/34iMSLrW1ac5HeD/OPqGPre2K/7x/cPVlM5UHTzmbDsR1k
-         KYuo4yzXjShit2ODghhq1+zwUJBXnqnPc8u1WWekXFHHjTEKXWYFeDRHIpKZEJpNVQ48
-         Lk4PenxwnWo6XhCdv5rY+ijb4gSzjH+HCU9LDrw+ZCyEGew0+xTBq6fvugtRCcTsfDdS
-         +0hx9QGOlIHLkXOvvnugPCc6R7U1GjITRvLrOdbVNgKtTq1oSy/k0lhRk+ay2watyx9F
-         UDzpd2vbZlobFQ2JcHsnKl993POUv3fIv5ZcGw3RIdE+PJZwqpRkxpEBPhQXeeq8Nk/7
-         HpOw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp2LsOWJnvgmZ1DVkP5NZifgpOhzK4QHpgHdaHdHttudks5Rq74MSKPcCKixptF548zw8bUbJ4+gtdzF+dGJluFgL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysSb0ppgD/CU+K4CGVuYp/MUnKPPZ2FMG06j+FuG0gKiKWRDnw
-	7qrNGf75NrjMgz6L4e1tjLFpJlmN6CYbkA0p52259tCM0uunAoan95dTqiHx7w4WpB3JgD/7PE2
-	iUEOXFd3Y4Hck77kxc5jjTQ==
-X-Received: from wmbje5.prod.google.com ([2002:a05:600c:1f85:b0:495:48e2:3e83])
+        bh=tZ8hbfpKYL0TXNWWVnEYWRS4CSMgmdh3mY5rGkVM9ow=;
+        b=ofNxA7jQsYmx4EwT+NfL7WJHw/Dvxfxwy8+o/Cx8syR+VA5TDhRPoFTeHhtcoOZh8k
+         Vdf3111gOJDulY3psfdIj7EHk729UyaW8+gcxJJCSLg+ROj9aoKTg3MEYtFkhANJJjf6
+         6fVBQ7FyvRSdGA0ofpT/lgp7YYEB+NYTJao3+tKhc+Fatdp4gFS8yf8v+8wUCN/DApzl
+         FTTLuPHU+s73/pPRd7MGzX+UlEECTGfr6hJJdfgNmtFq92Yjc0AMp5OgT75hBVKXLWjy
+         VofIdIZk/JKbDfdVXD0aUAzDuVtctPtiuykPUuh4upulMpPKJyJO/FMK7SvkxaF+P1WX
+         4E1A==
+X-Forwarded-Encrypted: i=1; AHgh+RqOBoiqBTbKd4E92ShYEpVG8BfMmxwVfYPl18bDrK80zZGQOhphC0cXVbBH3tJYRIcWWe34O3FJDN63/Tt2WSHW7qI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTncVct5GnwB8Nvc95gJ9DEfn+5g3ngXWh1Bh+aO3PBxupbvzJ
+	a6JQWEWqYnzI8ydHiL3wWv1kW8F8cfHvjYyuDVsHu4yddwu8xdLTcjzSEITf6EBU3bEYm3oQuC5
+	iESatDdK7BBo/D7Yjh4MZcA==
+X-Received: from wmbez14.prod.google.com ([2002:a05:600c:83ce:b0:495:5b59:7a9c])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:628d:b0:490:e5c1:b8bf with SMTP id 5b1f17b1804b1-4980c64e4c8mr370772335e9.13.1785852240750;
- Tue, 04 Aug 2026 07:04:00 -0700 (PDT)
-Date: Tue,  4 Aug 2026 15:03:23 +0100
+ 2002:a05:600c:4689:b0:498:162a:dbda with SMTP id 5b1f17b1804b1-498162adbdfmr218128225e9.5.1785852241815;
+ Tue, 04 Aug 2026 07:04:01 -0700 (PDT)
+Date: Tue,  4 Aug 2026 15:03:24 +0100
 In-Reply-To: <20260804140333.797210-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,49 +60,63 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260804140333.797210-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
-Message-ID: <20260804140333.797210-9-vdonnefort@google.com>
-Subject: [PATCH v4 08/18] tracing/remotes: selftests: Prefix hypervisor folder
+Message-ID: <20260804140333.797210-10-vdonnefort@google.com>
+Subject: [PATCH v4 09/18] ring-buffer: Use irqsave for the reader lock in ring_buffer_poll_remote
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
 Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
+	Sashiko <sashiko-bot@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Rename the hypervisor tests directory to "00hypervisor" to ensure they
-run first. This prevents the hypervisor tests from being interleaved
-with other remote tests which is confusing.
+Calling rb_wakeups with the reader lock held but interrupts enabled can
+lead to a deadlock: the irq_work might run on the same CPU, but will
+block when acquiring that very same reader spinlock.
 
+First, rb_wakeups does not even need to be called under the reader lock.
+Move the function outside of the reader lock scope.
+
+Second, the reader lock must be acquired with IRQs disabled anyway. Use
+the irqsave variant of the spinlock.
+
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/buffer_size.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/buffer_size.tc
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/hotplug.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/hotplug.tc
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/reset.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/reset.tc
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace.tc
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace_pipe.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace_pipe.tc
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/unloading.tc
-similarity index 100%
-rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
-rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/unloading.tc
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 8e2485bb3aa8..9cb72694bfda 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6800,13 +6800,17 @@ int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 
+ 	if (cpu != RING_BUFFER_ALL_CPUS) {
++		bool wakeup;
++
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 			return -EINVAL;
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+-		guard(raw_spinlock)(&cpu_buffer->reader_lock);
+-		if (rb_read_remote_meta_page(cpu_buffer))
++		scoped_guard(raw_spinlock_irqsave, &cpu_buffer->reader_lock)
++			wakeup = rb_read_remote_meta_page(cpu_buffer);
++
++		if (wakeup)
+ 			rb_wakeups(buffer, cpu_buffer);
+ 
+ 		return 0;
+@@ -6821,7 +6825,7 @@ int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
+ 	for_each_buffer_cpu(buffer, cpu) {
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+-		guard(raw_spinlock)(&cpu_buffer->reader_lock);
++		guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+ 		rb_read_remote_meta_page(cpu_buffer);
+ 	}
+ 
 -- 
 2.55.0.571.g244d577d93-goog
 
