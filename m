@@ -1,345 +1,310 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0433742980C
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 07:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3009D3ACF1B;
+	Tue,  4 Aug 2026 08:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785830248; cv=none; b=VMou//8ExQY6oeVDWh9E7yA8GnC0xrnNjptwXCPucTuIGYeC+4OcK4734Wm99ciXsxl58b/Ki++YO1KEfqXbHQnRTE+yy/I1An/HsDQAXqilJvpKhK0DmG/CYiKnrk1mft5Ra+Vh0Ugnu13euGbbplzjEEMD4z89fLEvFwQsUAc=
+	t=1785832483; cv=none; b=SS7toyfY2fHaXutkvsFNoaRPat0V4RW4oXpcujHmWt/5ZETVqouEc4WWHh61uBBs3ylUGBthykIDJrY/c2zLcklhBssHQ6EuIeBts7S/mcmB2OMcKkk1xRvvdZwqZCwAUMs6LXXokePjMhEEDChSxrKQO3D5kcYDp0x1f6sdPwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785830248; c=relaxed/simple;
-	bh=qVb1MOqU1bZoDcbi0BZfBIW2AUDTbUQ2MWUzyPm0KVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsXjlkOxu2phS+PVEpBy+PHoFjN/jFqN04Dl8clOAtpYhZCUMEne6/AMjxyC/pOSqSROQ03yC9OSYsUwYpg7/ho1Yk5jnQhc8nDLid7++ZRW1yLfwNGn7mmu8nEdIi84A9iy5dxvJKFRr1aRebAB050Z3a3nWNvNKMSYbNkjABo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ExQYqZPh; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1785832483; c=relaxed/simple;
+	bh=DdbThYyZ2i6JH1+5AIH3mKL2IbrXS7NtuPr41q3PA54=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=JR43lMub9DRU4q1HZHqOXK5DiJoucZ9sWuVdolOHbF+qa6wdYNjI4Ac8KEpY7IY4DaPwT50jgiLumtpHnzDPEU35IJkmJUOFEtBvF0UmKQ+rqJh7NvKUp3jB6/5nMGTA87LIoofCrrz3Vx/sbj2jvmUX/sPwvVe5V3Wocn+Pf7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Tr3rnLkJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WBFEQjMN; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ExQYqZPh"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-49558ce01afso22742965e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 00:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1785830245; x=1786435045; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=qVb1MOqU1bZoDcbi0BZfBIW2AUDTbUQ2MWUzyPm0KVs=;
-        b=ExQYqZPhyAKvRyHOTNi0qi+av770W39qLcKr00wXv/F1FzW9uAfqwoVfis/xSt+Nkl
-         CZx8z39fjmw/o//i3jxyYcIQz6/dHHF1OHnVT98O8ROh7KJwdpjRFHppuuLFw0dvm4e+
-         RRl9z8PVD0cPqmFOAXYaMKqoJjR5+rQam8UXq5/vFOUky3fQgfxQ9BUSxYgKawsqKNeR
-         rwMe9M0ZSNNxxlgsuUai2G2iWXI0h9wGWF0oVQ5gyhtqsy6MSqHuJrCG2STaaeuf+4e2
-         vegrXUjfyKhe8ja2u505J4J6TDOJfttzZd7CzFXA1qBJ/YzQt++eTMPX/bHunVqm05td
-         OtjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785830245; x=1786435045;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qVb1MOqU1bZoDcbi0BZfBIW2AUDTbUQ2MWUzyPm0KVs=;
-        b=m+3tASWqwNVjjuvqf5HCC1go+lowZYqz1uXg+h62uYxgqqf5DwmYiOIyHDVFqIzsTt
-         dpZHFSQ7UhuaRM8C5sQ3k1bfWlD02mBz5SYwFbHwKQrJG+6hC+AEpg+b4VAHsKQWxc6S
-         VjSlqSr51im2MeJDdwoRyg0hpLi0H2Q0qEDcM8zdII1kVKjEQAuEPZRQlWpwsCcYBWCQ
-         fpSU+IV2zo0IWHT/BgPwUp+YXpwA4QFLwXb8Ns570ZZc+nTGVhGY0rLieixc+Xm6V2eL
-         t3rXxoiw442L17/HgU6MLYJrOvZv5b5uW2kcsebnGHpXJkkfsMsajV9uR7+xQIYON2HB
-         06kw==
-X-Forwarded-Encrypted: i=1; AHgh+RoozoEU5cX3AN5xqEnqkVn+0C6Kli/vV84d8DJG5gzRI6YLHmYQVi4sCsgZxp+LMPs1YvQVgj2NvhKXya5FeZFqRK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHbs8siJZrn5FEFw/vzG7pHuczVU1KJiVeN3EEYa1ARNMJZD1q
-	7ALRkrdnKQxjv1MoYFtHjxcsJHNtnXDpSaRmYFMtebz1o6sdyDXjGBfd5C15zkWHCeA=
-X-Gm-Gg: AR+sD11+7IRpK8CW5KXb5+k0MUl145+OG9LHpG1aIXRMjeAUav2CuGVXfxoOGi7gqjS
-	X2omTeWUUM2QxxCWWU8+PyqkVODYH7f4s7Vr1uPGCE3Bh+Ea8UnS+5etJ9f7x9pi1a2aYDld0i1
-	nDk1GnWFcf4GXuhscDw/EXelmY/bUPmK90JKdnDp4sGEHZ+loafhYmssX8UiCxVSWGlUdT6qn20
-	j6yEenbVARFg3t9lymMHfs2xLsE5aZICjATjxU2H/TyYykKLb+6G0+Qm2ioP08dDpUGV7GIPhPF
-	FQPi4D1uv9F2IV38asWK2fofwnUCCRGyBsSWdDTKltB2wH9aYD18BHvWzj7Wc1CY3eF6wrDNCGD
-	u+P0tYPh3TllkCq5TMos8JcafYb4xIH1zoDrnDpc5kWcfYTVBpFj64Ro7wauY5hXFUh2a97hqaf
-	dG709fXiuU+ZneogJR35TruvnE2o0LODfG12T3LCYWgfHQKpAPE4H+tSWmscp897r1XRVGWWxTO
-	a3QBtdlFfvywWuV0WEUM1bcPgQ5V3ue7SFQTNsKApiLWw7Vn5bD4Ysf4tht4LgTL7Nw1XtDE18g
-	yxpqLZKs/FwZZyE=
-X-Received: by 2002:a05:600c:8b54:b0:495:4859:8f9b with SMTP id 5b1f17b1804b1-4980c674f25mr345983915e9.9.1785830245215;
-        Tue, 04 Aug 2026 00:57:25 -0700 (PDT)
-Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4994a0f7b86sm64048765e9.10.2026.08.04.00.57.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2026 00:57:24 -0700 (PDT)
-Message-ID: <627c59ee-54b1-4f37-b849-c331a9d01618@suse.com>
-Date: Tue, 4 Aug 2026 09:57:23 +0200
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Tr3rnLkJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WBFEQjMN"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 12FBA14000E7;
+	Tue,  4 Aug 2026 04:34:40 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Tue, 04 Aug 2026 04:34:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1785832480; x=1785918880; bh=7BxvSjhMK85+4Xb9r01RGNTOzA3NYt3+/ae
+	bNQUgKmM=; b=Tr3rnLkJcZUpGf/fdbCjyVeUNkH07umSQhhXUYuVv1fQdgkGCId
+	wvaCnxdTMnfh/P/5vvYQkpye419tCYHjTp/FsW6+aGENy1xV6eq/7ACCh3JIEOTv
+	uisi42rvtO1M3D1tKDubzmr74DXFnIzm7wnJObHdBovbFK3lZJibE5s9JnKwsnsZ
+	8+6WFSceGKQa6Y8Qlb++aM06HaxBN4JR2yKelHS9RpT23y26TkiYwp6tRQxzHkzz
+	oxilPCpBbWYBOpO3CytpSZEWBSJTcXJYXk6nVgBTz5i6CUdKJGVVquTA8nHuoKeo
+	0/uNImakdeVmuRkGAAewcvuI9EmMmxc+/rA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1785832480; x=
+	1785918880; bh=7BxvSjhMK85+4Xb9r01RGNTOzA3NYt3+/aebNQUgKmM=; b=W
+	BFEQjMN1IqjfRwK46833kw27tzNTcL+P/19qiKZSr1UMGVOlXhg5gOKxFJQH9bxO
+	XLSf3JPSd8/izBvQtFrfu1Z2gAIi1x9ktf8LUJu1nKDYVb5cFvaLCws/oJXga1Fk
+	pwzB5u8ptD2OARAPn1nQEx8tP64WzUt9pLTdhYMAEQ+8nuEXzDzea0JghF3Azswj
+	C0M0OwdZEs1wkoG+WCvyuqsdq3LXx/LT007m0oDzTmNIsAbAsgwST52/ETn2Gglr
+	A0g1nhyhSz2rXQ2lLF8+cG8bIhJCy2zVmCqRsquSVN5WMlAHL87kqukjlT8N+NGR
+	fIIffz4aXH/3aCaR1Iylg==
+X-ME-Sender: <xms:H6Rxai6TTBFaPKfUm9u8Gd8vKpqwpuA6uwEUpyF3-TGZn-K4UUv_6w>
+    <xme:H6RxasXFqtdxj3rnn4-swspVe7FWbxuTfuZmxxUsDmAuLDI_gdyYD90fkWOU32qYD
+    LPqjdHlqEDfJqj5SFKaEBypxIJll2VBkiQVJO5FdUgw7mG0vek>
+X-ME-Received: <xmr:H6Rxam52vz2IF13J5HWnLSHaBJyKyicO3Yd8Wa1FZ9oFQQyQ-f-ijVPJtqUGHNsNUTefQ3Z-v15dcUwhszCjRM9Gwm630-g>
+X-ME-Proxy-Cause: dmFkZTGI1g8LdolwyzY6xjC2vOf+x7wIUGotHkjulajyJ8r8e+2Io6Ax3XKf6Sa/RG/Ign
+    bIUZuicoy7Ypld/mWUMhJg5DpOjYm0A9h2sth9m4IJD67P21ve3rlWFDcBqksUGCRcbO1a
+    KYWiqv68HYNfSnnXxBiTo28K4GofBlk8bA2liPUcn2KhhoQXGDJsnEdo0XJuuvRns1EiDI
+    KjK7sBvsOG/cLbqYznIw5wQhvmyH3COQ/+q+dtT9vDosuF3QrUuuy2hLfI4vcHAz0K53zw
+    VFd+1Gsv5jb7enttyfgZ6i72UAVHc2B0evDGqo4/F0KTFW5L0UhqLx35G0fVdG2f01DGgU
+    CxATUaaNOo8oDdjG9v0lp+ZSYPUMPv1VVqk9vMgUpISUaWC1sGBzlThsxTmqzuTPty9Zpv
+    h33bajXGe6u8d+OadQlC3ntWuxmrNKCtTq/7XyEHkj5y8wwwdD48xzXcFoo2D4oRJ3U5Fy
+    32dt9QXaZLe7T6/Q43VIOqxxHCHalUR7FRXCwobf4eW0ocxhF4gXpi+V0ZQw1OJSUwj+Jg
+    Jry7SpyuPln8bQlnSmrZJQys/gYVnW+zejB3j+y7bKeBABlVcROA3GsIp1ir2KlCrQ+WhX
+    ACl5PliDwQwcEdnSpYtln1CLVIBc0DdQmdLSL4SkowWhTj/q3eWkWbGMISiQ
+X-ME-Proxy: <xmx:H6RxatGXjPbQA7HRQvTEIgWBUDP9NbO08wteuW7ZDQ0C9BBUT3ULCA>
+    <xmx:H6Rxap_ipXSPX-ZvV4trK4i3YoTtrazQ4B7Of7oR0JwV0FLpI3uOGg>
+    <xmx:H6RxavVemZZG0YzMWG5fZT1DFo_OjH9vKEO9gNpAuCioJ3McNKTCTw>
+    <xmx:H6RxarFxO1GQhzHisxjuSw_n2jn8Fl0e4ikjPHaRyESZApkih5VmUQ>
+    <xmx:IKRxaqC3coV78FYJIz9UFaBN720ujdpasTHMdOw3jGS6JVWU5y1bwyiD>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Aug 2026 04:34:31 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] locking/qspinlock: Add contended_release tracepoint
-To: Dmitry Ilvokhin <d@ilvokhin.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
- Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-References: <cover.1785778551.git.d@ilvokhin.com>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <cover.1785778551.git.d@ilvokhin.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------AEfGGk6p5V0hCBAWv3tcK3FA"
+From: NeilBrown <neilb@ownmail.net>
+To: "Justin Suess" <utilityemal77@gmail.com>
+Cc: quanyemostima@gmail.com, "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Song Liu" <song@kernel.org>, "Jiri Olsa" <jolsa@kernel.org>,
+ "KP Singh" <kpsingh@kernel.org>, "Matt Bobrowski" <mattbobrowski@google.com>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "Andrii Nakryiko" <andrii@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>,
+ "Kumar Kartikeya Dwivedi" <memxor@gmail.com>,
+ "Martin KaFai Lau" <martin.lau@linux.dev>,
+ "Yonghong Song" <yonghong.song@linux.dev>,
+ "Emil Tsalapatis" <emil@etsalapatis.com>,
+ "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ syzbot+ef8d17bae14efb960935@syzkaller.appspotmail.com
+Subject: Re: [PATCH] bpf: disable lockdep while running BPF on lock_release
+In-reply-to: <anEuaSqiCVsQ6I4P@zenbox>
+References:
+ <20260803-fix-lock-tracepoint-bpf-lockdep-v1-1-91fb7afb526a@gmail.com>
+  <anEuaSqiCVsQ6I4P@zenbox>
+Date: Tue, 04 Aug 2026 18:34:26 +1000
+Message-id: <178583246611.3252194.4318729338489544399@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------AEfGGk6p5V0hCBAWv3tcK3FA
-Content-Type: multipart/mixed; boundary="------------HRWVg0V4yc1LTGims01Et589";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Dmitry Ilvokhin <d@ilvokhin.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
- Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-Message-ID: <627c59ee-54b1-4f37-b849-c331a9d01618@suse.com>
-Subject: Re: [PATCH 0/5] locking/qspinlock: Add contended_release tracepoint
-References: <cover.1785778551.git.d@ilvokhin.com>
-In-Reply-To: <cover.1785778551.git.d@ilvokhin.com>
+On Tue, 04 Aug 2026, Justin Suess wrote:
+> On Mon, Aug 03, 2026 at 06:37:45PM +0800, quanyeyang via B4 Relay wrote:
+> > From: quanyeyang <quanyemostima@gmail.com>
+> >=20
+> > trace_lock_release() runs before __lock_release(), so the lock is
+> > still on the held stack when attached BPF programs execute.  If those
+> > programs take another lock of the same class, lockdep reports a false
+> > recursive locking warning.
+> >=20
+> > Mark lock_release with TRACE_EVENT_FL_BPF_NO_LOCKDEP and temporarily
+> > disable lockdep around bpf_prog_run_array() for that event.
+> >=20
+> > Fixes: 149212f07856 ("rhashtable: add lockdep tracking to bucket bit-spin=
+-locks.")
+> > Reported-by: syzbot+ef8d17bae14efb960935@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=3Def8d17bae14efb960935
+> > Assisted-by: Cursor:GPT-5.6 Sol
+> > Signed-off-by: quanyeyang <quanyemostima@gmail.com>
+> > ---
+> > Hi,
+> >=20
+> > Small RFC to align on the approach before widening scope. This is the
+> > alternative to the rhashtable per-init-site lock-class patch [1], taking
+> > the direction NeilBrown floated in that thread [2].
+> >=20
+> > The problem: trace_lock_release() runs before __lock_release(), so the
+> > lock is still on lockdep's held stack when an attached BPF program runs.
+> > If that program takes another lock whose class collides with a held
+> > lock, lockdep reports a false "possible recursive locking".
+> >=20
+> > syzbot hits this via pidfs + a BPF hash map, because all rhashtable
+> > bucket locks share one lock_class:
+> >=20
+> >   copy_process -> alloc_pid -> pidfs_add_pid   [pidfs bucket bitlock held]
+> >     lock_release tracepoint
+> >       trace_call_bpf -> bpf_prog_run_array
+> >         rhtab_map_delete_elem -> rhashtable_remove_fast -> rht_lock
+> >           [same "rhashtable_bucket" class -> false recursion]
+> >=20
+> > Why I pivoted from the per-class rhashtable fix: NeilBrown argued (a)
+> > sharing one lock_class across instances is common practice (d_lock,
+> > bd_holder_lock, kobject list_lock), and (b) BPF on lock_release() can
+> > perturb lockdep for *any* lock the program takes, not only rhashtable
+> > [2]. Disabling lockdep around the BPF handler addresses that broader
+> > surface, not just rhashtable.
+> >=20
+> > On the concern that this hides real lock-order bugs: BPF programs are
+> > user-supplied, sandboxed code; their internal lock ordering is not part
+> > of the kernel's lock contract, and lockdep cannot validate it
+>=20
+> BPF programs are not sandboxed. If a BPF program is able to break the
+> kernels locking semantics and trigger a true, non-recoverable deadlock
+> like this, that's a bug in the kernel.
 
---------------HRWVg0V4yc1LTGims01Et589
-Content-Type: multipart/mixed; boundary="------------33sYuJhXGYzE04xG2wTAikO4"
+I know close enough to nothing about BPF or trace points...
 
---------------33sYuJhXGYzE04xG2wTAikO4
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Can BPF programs ever block waiting for a lock that is held across a
+tracepoint?
+If so, then attaching a BPF program to that trace point could
+trivially cause a deadlock.
+If not - then how is that ensured?
 
-T24gMDQuMDguMjYgMDk6MTUsIERtaXRyeSBJbHZva2hpbiB3cm90ZToNCj4gVGhlIGNvbnRl
-bmRlZF9yZWxlYXNlIHRyYWNlcG9pbnQgbGFuZGVkIGluIHY3LjItcmMyIGZvciBzbGVlcGlu
-ZyBsb2Nrcw0KPiAoNGYwNzBjY2I0ZGM0ICJsb2NraW5nOiBBZGQgY29udGVuZGVkX3JlbGVh
-c2UgdHJhY2Vwb2ludCB0byBzbGVlcGFibGUNCj4gbG9ja3MiKS4gU3BpbmxvY2sgc3VwcG9y
-dCB3YXMgZHJvcHBlZCBmcm9tIHRoYXQgc2VyaWVzLiBUaGlzIG9uZSBhZGRzIGl0DQo+IGZv
-ciBxdWV1ZWQgc3BpbmxvY2tzLg0KPiANCj4gVGhlIGV4aXN0aW5nIGNvbnRlbnRpb25fYmVn
-aW4vY29udGVudGlvbl9lbmQgdHJhY2Vwb2ludHMgZmlyZSBvbiB0aGUNCj4gd2FpdGVyIHNp
-ZGUuIFRoZSBob2xkZXIncyBpZGVudGl0eSBhbmQgc3RhY2sgY2FuIGJlIGNhcHR1cmVkIGF0
-DQo+IGNvbnRlbnRpb25fYmVnaW4gdGltZSAoZS5nLiBwZXJmIGxvY2sgY29udGVudGlvbiAt
-LWxvY2stb3duZXIpLCBidXQgb25seQ0KPiBmb3IgbG9ja3Mgd2l0aCBhbiBvd25lciBmaWVs
-ZCB0byByZWFkOiBtdXRleCBhbmQgcndzZW0uIHFzcGlubG9jayBoYXMNCj4gbm9uZSwgc28g
-YSBjb250ZW5kZWQgc3BpbmxvY2sgY2Fubm90IGJlIGF0dHJpYnV0ZWQgdG8gaXRzIGhvbGRl
-ciBhdCBhbGwuDQo+IEV2ZW4gd2hlcmUgdGhlIG93bmVyIGNhbiBiZSByZWFkLCBpdCByZWZs
-ZWN0cyB0aGUgaG9sZGVyJ3Mgc3RhdGUgd2hlbiBhDQo+IHdhaXRlciBhcnJpdmVzLCBub3Qg
-d2hlbiB0aGUgbG9jayBpcyByZWxlYXNlZC4NCj4gDQo+IFRoaXMgc2VyaWVzIGFkZHMgYSBj
-b250ZW5kZWRfcmVsZWFzZSB0cmFjZXBvaW50IHRvIHFzcGlubG9jayB0aGF0IGZpcmVzDQo+
-IG9uIHRoZSBob2xkZXIgc2lkZSB3aGVuIGEgbG9jayB3aXRoIHdhaXRlcnMgaXMgcmVsZWFz
-ZWQuIFRoaXMgcHJvdmlkZXM6DQo+IA0KPiAtIEhvbGQgdGltZSBlc3RpbWF0aW9uOiB3aGVu
-IHRoZSBob2xkZXIncyBvd24gYWNxdWlzaXRpb24gd2FzDQo+ICAgIGNvbnRlbmRlZCwgaXRz
-IGNvbnRlbnRpb25fZW5kIChhY3F1aXNpdGlvbikgYW5kIGNvbnRlbmRlZF9yZWxlYXNlDQo+
-ICAgIGNhbiBiZSBjb3JyZWxhdGVkIHRvIG1lYXN1cmUgaG93IGxvbmcgdGhlIGxvY2sgd2Fz
-IGhlbGQgdW5kZXINCj4gICAgY29udGVudGlvbi4NCj4gDQo+IC0gVGhlIGhvbGRlcidzIHN0
-YWNrIGF0IHJlbGVhc2UgdGltZSwgd2hpY2ggZm9yIHNwaW5sb2NrcyBpcyBub3QNCj4gICAg
-YXZhaWxhYmxlIGJ5IGFueSBvdGhlciBtZWFucy4NCj4gDQo+IFRoZSB1bmxvY2sgcGF0aCBt
-aWdodCBiZSBxdWl0ZSBob3QsIHNvIHRoZSB0cmFjZXBvaW50IGlzIG1hZGUgYXMgY2hlYXAN
-Cj4gYXMgcG9zc2libGUsIHRvIGtlZXAgaXQgdXNhYmxlIGluIHByb2R1Y3Rpb246DQo+IA0K
-PiAtIHg4NiB3aXRoIFBBUkFWSVJUX1NQSU5MT0NLUz15LCB3aGljaCBpcyB3aGF0IGRpc3Ry
-aWJ1dGlvbnMgc2hpcCwgc3dhcHMNCj4gICAgdGhlIHVubG9jayBpbXBsZW1lbnRhdGlvbiB2
-aWEgc3RhdGljX2NhbGwoKSB3aGVuIHRoZSB0cmFjZXBvaW50IGlzDQo+ICAgIGVuYWJsZWQu
-IFRoZSBkaXNhYmxlZCBwYXRoIGlzIGJ5dGUtaWRlbnRpY2FsIHRvIHRvZGF5J3M6IHRoZSBz
-YW1lDQo+ICAgIGlubGluZSBtb3ZiLCBubyBOT1AgYW5kIG5vIGNhbGwuDQo+IA0KPiAtIEV2
-ZXJ5d2hlcmUgZWxzZSBhIHN0YXRpYy1icmFuY2ggY2hlY2sgaXMgY29tcGlsZWQgaW50bw0K
-PiAgICBxdWV1ZWRfc3Bpbl91bmxvY2soKS4gT24geDg2XzY0IHRoYXQgaXMgYSBzaW5nbGUg
-Tk9QIG9uIHRoZSBleGVjdXRlZA0KPiAgICBwYXRoLCB3aXRoIHRoZSBjYWxsIHRvIHRoZSB0
-cmFjZWQgaGVscGVyIGVtaXR0ZWQgb3V0IG9mIGxpbmUgYW5kDQo+ICAgIHVucmVhY2hhYmxl
-IHdoaWxlIHRoZSB0cmFjZXBvaW50IGlzIG9mZi4gT24gb3RoZXIgYXJjaGl0ZWN0dXJlcyBh
-IGZldw0KPiAgICBtb3JlIGluc3RydWN0aW9ucyB0byBtYW5hZ2UgYSBzdGFjayBmcmFtZSBs
-YW5kIG9uIHRoZSBleGVjdXRlZCBwYXRoDQo+ICAgIHRvbywgc28gdGhlIGdlbmVyaWMgcGF0
-aCBzaXRzIGJlaGluZA0KPiAgICBDT05GSUdfUVVFVUVEX1NQSU5MT0NLU19UUkFDRV9DT05U
-RU5ERURfUkVMRUFTRSAoZGVmYXVsdCBuKS4NCj4gDQo+IENvc3RzIGFuZCBtZWFzdXJlbWVu
-dHMgYXJlIGluIHRoZSBpbmRpdmlkdWFsIGNoYW5nZWxvZ3MuIEJyaWVmbHksIG5vDQo+IHRo
-cm91Z2hwdXQgb3IgbGF0ZW5jeSBjaGFuZ2UgaXMgbWVhc3VyYWJsZSBvbiBlaXRoZXIgeDg2
-XzY0IG9yIGFybTY0DQo+IHdpdGggUVVFVUVEX1NQSU5MT0NLU19UUkFDRV9DT05URU5ERURf
-UkVMRUFTRT15Lg0KPiANCj4gVGVzdGVkOiB4ODZfNjQgd2l0aCBQQVJBVklSVF9TUElOTE9D
-S1M9eSBhbmQgPW4sIGFybTY0LCB0cmFjZXBvaW50IG9uDQo+IGFuZCBvZmYsIGRpc2Fzc2Vt
-Ymx5IGNoZWNrZWQgaW4gYm90aCBzdGF0ZXMsIGxvY2t0b3J0dXJlIHdpdGggdHJhY2Vwb2lu
-dA0KPiBvbiBhbmQgb2ZmLg0KPiANCj4gTm90IGNvdmVyZWQ6IHFyd2xvY2ssIGFuZCBhcmNo
-aXRlY3R1cmVzIHdpdGggZnVsbHkgY3VzdG9tIHFzcGlubG9jaw0KPiBpbXBsZW1lbnRhdGlv
-bnMgKGUuZy4gUG93ZXJQQykuIFRoZSBzdGFjayBmcmFtZSBtYW5hZ2luZyBpbnN0cnVjdGlv
-bnMgb24NCj4gYXJtNjQgc2hvdWxkIGJlIGF2b2lkYWJsZSwgYnV0IHRoYXQgaXMgbm90IGRv
-bmUgaW4gdGhpcyBwYXRjaHNldC4NCj4gDQo+IFBhdGNoIDEgaXMgUGV0ZXIncyBkcmFmdCBm
-cm9tIFsxXSBhbmQgaXMgbWlzc2luZyBoaXMgU2lnbmVkLW9mZi1ieS4NCj4gUGV0ZXIsIHBs
-ZWFzZSBhZGQgaXQgaWYgeW91IGFyZSBoYXBweSB3aXRoIHRoZSBwYXRjaC4NCj4gDQo+IFsx
-XTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjYwNjAzMTIwODExLkdXMzQ5MzA5
-MEBub2lzeS5wcm9ncmFtbWluZy5raWNrcy1hc3MubmV0Lw0KPiANCj4gRG1pdHJ5IElsdm9r
-aGluICg0KToNCj4gICAgbG9ja2luZzogRmFjdG9yIG91dCBxdWV1ZWRfc3Bpbl9yZWxlYXNl
-KCkNCj4gICAgbG9ja2luZy9xc3BpbmxvY2s6IEFkZCBjb250ZW5kZWRfcmVsZWFzZSB0cmFj
-ZXBvaW50DQo+ICAgIHRyYWNpbmcvbG9jazogVXNlIFRSQUNFX0VWRU5UX0ZOKCkgZm9yIGNv
-bnRlbmRlZF9yZWxlYXNlDQo+ICAgIHg4Ni9wYXJhdmlydDogVHJhY2UgY29udGVuZGVkX3Jl
-bGVhc2Ugb24gdW5sb2NrDQo+IA0KPiBQZXRlciBaaWpsc3RyYSAoMSk6DQo+ICAgIHg4Ni9w
-YXJhdmlydDogVXNlIHN0YXRpY19jYWxsKCkgZm9yIHRoZSBwYXJhdmlydCBzcGlubG9jayBv
-cHMNCj4gDQo+ICAgYXJjaC9taXBzL2luY2x1ZGUvYXNtL3NwaW5sb2NrLmggICAgICAgICB8
-ICA2ICstLQ0KPiAgIGFyY2gveDg2L2h5cGVydi9odl9zcGlubG9jay5jICAgICAgICAgICAg
-fCAgNCArLQ0KPiAgIGFyY2gveDg2L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmggICAgICAg
-fCAgMSAtDQo+ICAgYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnQtc3BpbmxvY2suaCB8
-IDIxICsrKysrLS0tDQo+ICAgYXJjaC94ODYva2VybmVsL2t2bS5jICAgICAgICAgICAgICAg
-ICAgICB8ICA1ICstDQo+ICAgYXJjaC94ODYva2VybmVsL3BhcmF2aXJ0LXNwaW5sb2Nrcy5j
-ICAgICB8IDYzICsrKysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgIGFyY2gveDg2L2tlcm5l
-bC9zdGF0aWNfY2FsbC5jICAgICAgICAgICAgfCAyNyArKysrKysrKysrDQo+ICAgYXJjaC94
-ODYveGVuL3NwaW5sb2NrLmMgICAgICAgICAgICAgICAgICB8ICA1ICstDQo+ICAgaW5jbHVk
-ZS9hc20tZ2VuZXJpYy9xc3BpbmxvY2suaCAgICAgICAgICB8IDM4ICsrKysrKysrKysrKy0t
-DQo+ICAgaW5jbHVkZS90cmFjZS9ldmVudHMvbG9jay5oICAgICAgICAgICAgICB8IDEwICsr
-Ky0NCj4gICBrZXJuZWwvS2NvbmZpZy5sb2NrcyAgICAgICAgICAgICAgICAgICAgIHwgMjAg
-KysrKysrKysNCj4gICBrZXJuZWwvbG9ja2luZy9tdXRleC5jICAgICAgICAgICAgICAgICAg
-IHwgIDQgKysNCj4gICBrZXJuZWwvbG9ja2luZy9xc3BpbmxvY2suYyAgICAgICAgICAgICAg
-IHwgMjIgKysrKysrKysrDQo+ICAgdG9vbHMvYXJjaC94ODYvaW5jbHVkZS9hc20vY3B1ZmVh
-dHVyZXMuaCB8ICAxIC0NCj4gICAxNCBmaWxlcyBjaGFuZ2VkLCAxOTUgaW5zZXJ0aW9ucygr
-KSwgMzIgZGVsZXRpb25zKC0pDQo+IA0KPiANCj4gYmFzZS1jb21taXQ6IDVlNjAxYWIzNjE1
-Yzg2YmU3YzQwNjhjZTk5MmY5NDY1NDY5M2EwMzINCg0KRm9yIHRoZSB3aG9sZSBzZXJpZXM6
-DQoNCkFja2VkLWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQoNCkknbSBj
-b25zaWRlcmluZyBzb21lIGZvbGxvd3VwIHBhdGNoZXMgcmVwbGFjaW5nIHRoZSByZW1haW5p
-bmcgcGFyYXZpcnQNCmNhc2VzIG5vdCBjb3ZlcmVkIGJ5IENPTkZJR19QQVJBVklSVF9YWEwg
-d2l0aCBzdGF0aWNfY2FsbCgpLCB0b28uDQoNClRoaXMgd2lsbCBhbGxvdyB0byBkcm9wIHRo
-ZSAzMi1iaXQgcGFyYXZpcnQgcGF0Y2hpbmcgY29tcGxldGVseS4gOi0pDQoNClRoZSBxdWV1
-ZWRfc3Bpbl91bmxvY2soKSBob29rIHdhcyB0aGUgbWFpbiByZWFzb24gSSBkaWRuJ3QgZG8g
-dGhhdCB5ZXQuDQoNCg0KSnVlcmdlbg0K
---------------33sYuJhXGYzE04xG2wTAikO4
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+NeilBrown
 
------BEGIN PGP PUBLIC KEY BLOCK-----
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+>=20
+> > meaningfully -- here it only produces a false positive.
+> >
+> This doesn't seem like the correct fix. And I'd argue it's a true
+> positive.
+>=20
+> What happens if the cpu gets interrupted while lockdep is disabled?
+>=20
+> Then we become blind to any other locking issues happening in whatever
+> NMI context we got plopped into because we disabled lockdep here.
+>=20
+> It seems more prudent to fix this in rhashtable.
+>=20
+> Like what 20b6cc34ea74 ("bpf: Avoid hashtab deadlock with map_locked") did
+> for hashtab and the subsequent move to rqspinlock did. Basically make
+> the implementation tolerant to temporary recursive deadlocks like this
+> by detecting it and returning an error.
+>=20
+> Which is going to be a bit more of an endevour than is done in this
+> patch.
+>=20
+> Justin
+> > Scope of this patch (deliberately minimal):
+> >   - only lock_release is tagged;
+> >   - only the perf-event attach path (trace_call_bpf) is covered.
+> >=20
+> > Open questions I'd like to align on before doing more:
+> >   - lock_acquire can produce a (different, ABBA-shaped) false positive
+> >     by the same mechanism -- tag it too?
+> >   - raw_tracepoint attaches go through __bpf_trace_run and are not
+> >     covered -- extend there too?
+> >   - flag vs always-off: should trace_call_bpf disable lockdep for all
+> >     BPF programs? The flag keeps blast radius small, but the rationale
+> >     applies generally.
+> >=20
+> > This fixes the reported syzbot path (perf-event attach to lock_release).
+> >=20
+> > [1]  https://lore.kernel.org/all/20260801-fix-rhashtable-bucket-lockdep-v=
+1-1-15a0f8ae094c@gmail.com/
+> > [2]  https://lore.kernel.org/r/178572243204.3252194.4367547703856027885@n=
+oble.neil.brown.name
+> > ---
+> >  include/linux/trace_events.h | 3 +++
+> >  include/trace/events/lock.h  | 2 ++
+> >  kernel/trace/bpf_trace.c     | 6 ++++++
+> >  3 files changed, 11 insertions(+)
+> >=20
+> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> > index 308c76b57d13..6f67b5e9e38d 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -330,6 +330,7 @@ enum {
+> >  	TRACE_EVENT_FL_FPROBE_BIT,
+> >  	TRACE_EVENT_FL_CUSTOM_BIT,
+> >  	TRACE_EVENT_FL_TEST_STR_BIT,
+> > +	TRACE_EVENT_FL_BPF_NO_LOCKDEP_BIT,
+> >  };
+> > =20
+> >  /*
+> > @@ -347,6 +348,7 @@ enum {
+> >   *                   This is set when the custom event has not been atta=
+ched
+> >   *                   to a tracepoint yet, then it is cleared when it is.
+> >   *  TEST_STR      - The event has a "%s" that points to a string outside=
+ the event
+> > + *  BPF_NO_LOCKDEP - Disable lockdep while running attached BPF programs
+> >   */
+> >  enum {
+> >  	TRACE_EVENT_FL_CAP_ANY		=3D (1 << TRACE_EVENT_FL_CAP_ANY_BIT),
+> > @@ -360,6 +362,7 @@ enum {
+> >  	TRACE_EVENT_FL_FPROBE		=3D (1 << TRACE_EVENT_FL_FPROBE_BIT),
+> >  	TRACE_EVENT_FL_CUSTOM		=3D (1 << TRACE_EVENT_FL_CUSTOM_BIT),
+> >  	TRACE_EVENT_FL_TEST_STR		=3D (1 << TRACE_EVENT_FL_TEST_STR_BIT),
+> > +	TRACE_EVENT_FL_BPF_NO_LOCKDEP	=3D (1 << TRACE_EVENT_FL_BPF_NO_LOCKDEP_B=
+IT),
+> >  };
+> > =20
+> >  #define TRACE_EVENT_FL_UKPROBE (TRACE_EVENT_FL_KPROBE | TRACE_EVENT_FL_U=
+PROBE)
+> > diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
+> > index 1ded869cd619..5ccf5c54e3d2 100644
+> > --- a/include/trace/events/lock.h
+> > +++ b/include/trace/events/lock.h
+> > @@ -72,6 +72,8 @@ DEFINE_EVENT(lock, lock_release,
+> >  	TP_ARGS(lock, ip)
+> >  );
+> > =20
+> > +TRACE_EVENT_FLAGS(lock_release, TRACE_EVENT_FL_BPF_NO_LOCKDEP);
+> > +
+> >  #ifdef CONFIG_LOCK_STAT
+> > =20
+> >  DEFINE_EVENT(lock, lock_contended,
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 75495a5c3507..f2460f3c860e 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/key.h>
+> >  #include <linux/namei.h>
+> >  #include <linux/file.h>
+> > +#include <linux/lockdep.h>
+> > =20
+> >  #include <net/bpf_sk_storage.h>
+> > =20
+> > @@ -110,6 +111,7 @@ static u64 bpf_uprobe_multi_entry_ip(struct bpf_run_c=
+tx *ctx);
+> >   */
+> >  unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
+> >  {
+> > +	bool no_lockdep =3D call->flags & TRACE_EVENT_FL_BPF_NO_LOCKDEP;
+> >  	unsigned int ret;
+> > =20
+> >  	cant_sleep();
+> > @@ -144,8 +146,12 @@ unsigned int trace_call_bpf(struct trace_event_call =
+*call, void *ctx)
+> >  	 * rcu_dereference() which is accepted risk.
+> >  	 */
+> >  	rcu_read_lock();
+> > +	if (no_lockdep)
+> > +		lockdep_off();
+> >  	ret =3D bpf_prog_run_array(rcu_dereference(call->prog_array),
+> >  				 ctx, bpf_prog_run);
+> > +	if (no_lockdep)
+> > +		lockdep_on();
+> >  	rcu_read_unlock();
+> > =20
+> >   out:
+> >=20
+> > ---
+> > base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+> > change-id: 20260803-fix-lock-tracepoint-bpf-lockdep-f93e32ea6346
+> >=20
+> > Best regards,
+> > -- =20
+> > quanyeyang <quanyemostima@gmail.com>
+> >=20
+> >=20
+>=20
+>=20
 
---------------33sYuJhXGYzE04xG2wTAikO4--
-
---------------HRWVg0V4yc1LTGims01Et589--
-
---------------AEfGGk6p5V0hCBAWv3tcK3FA
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpxm2MFAwAAAAAACgkQsN6d1ii/Ey+9
-Agf+IWx5eXJ7mO6oP+n4rxGw46J5o8kxhJQXckuPe4UqJ4KZp2eDhMwkS/QfmUPt+V4ojeOdZa1V
-t5qalPRfTCjVf4ZjarkTErmzJEGtvM5UFOPA1nJBFIGlV8VkDzRzYXof0c0ySuzecPKbh7pY3vUz
-VAUq0Q4EI6/WZY9jlKSQPoVjFFnIaWF5MoA2mGETIaZNXIBKSb/JmKfyRKxoY+u6IIeXrzl3wnIp
-VRnKsfQY36idWLXCtgq72WaTEl8HBUfpg0cTNGX0Fs6DZ4wH41e/KenwyCtV/RoC9vMyVKhvshqA
-JQOnAn0AVEbRYSsu6FmlqT/H4mCv6HrNanDhE76nUA==
-=gT7a
------END PGP SIGNATURE-----
-
---------------AEfGGk6p5V0hCBAWv3tcK3FA--
