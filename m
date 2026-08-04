@@ -1,32 +1,32 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E1145FFBB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EE44611C2
 	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 11:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785842694; cv=none; b=uGnuTKiuF4dBH2mE7J5lLJ2kB0BtkS8JPOSu8CRblaC8Zao8UYo51ZBTQUj2tkycAdvh17UcKlA+h/ZXXzTqsqw+4nTH02DjZdTeyNh75C+j3EQ58qbC/B82iFtKzdG/lv+kM2Kt3yti/T4E1YQResVWSXVY2I7qx1Ly7qlPxzM=
+	t=1785842695; cv=none; b=fCfwLnD2jh6YRe84hGldVV+wMJKmhDdXmCGehFp3rD7+svDhY9MxIfmf6v+pup0S+a6KIr7jiEokxxU6yD5Gp7rwnDsIJzKxSjN5GzNNucdx8ZRBkd+isTg+g2mwpZfpclhIcSuNfn6cdmZTr16hvOKmox+VkeRzQFNKJVoabas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785842694; c=relaxed/simple;
-	bh=BwXfUSI8RZ5WlNlvsW4Dg8xPJP7duOd+6j4GH2NB7KQ=;
+	s=arc-20240116; t=1785842695; c=relaxed/simple;
+	bh=eWPvosX4xmUOLdHLHklwkbWwVFF7a9X4ZRTfU1WpQp0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=haBoj1D89u4uHZz19Z5Hva8iuVth1yyDEGcKW1jDPO3Z16rGpKE4dd91wwJbEqRKX7t6b5Wg6rPaRNb37BH+Y4yK6VUuAXVN7qC1ofEsH9DURBmybGO9bGqalJ+w2u//gg7tPFUWRxfAnyXG//7p1TBHaf7k1rf36evkJi3BMAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PwhdSacw; arc=none smtp.client-ip=91.218.175.179
+	 MIME-Version; b=VmgM9eARtLvC6k8xlCPbonWw33YLSejpqMlwpy+1u9ADaxyjSNZCWZ91KoKBkmPKepNpF6fxsyoYwEvNRVJDJc4BZedvYvd5TFEYXf6p8NHPSmxMAkY9z216fTizKFAjt2WkzSRdkZgA9f6Mjr7qCPqwStXouq3iSPmhVfv2DBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dUm5dGT7; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PwhdSacw"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dUm5dGT7"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785842679;
+	t=1785842687;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/0h+UWlinGdaNRWQ3ePtD6vflPt+g0iOPa3K/aYZ+gU=;
-	b=PwhdSacwEzCVjTWcbfzwkeIWM3lcgwtaHNu7bEjkh74w49DgAE276SCQ64FC6xJTMOZtB4
-	y2RQ00Zb9UuGd8cwgF35tELy4pYQwjzW2p+tAjoEuFdPHFi2utx3VbVBBxe9TFHZV2FT7u
-	UHo2o27d+en1XEGIA5D3Z40uWOrljio=
+	bh=8449deZzWWvUrdWZNQWJEv7MjXt9tctoupcrsbbFYlI=;
+	b=dUm5dGT7h7mdyEXIrZxpTMDso4kLOxaXcVYAxe6STHpItV/bTJGMkcs+WLo3LTyl8ab7Ux
+	CTHJROw8Vw7Aixv0Xd8KZ3b/fxIlvdHhYYZ5XWXzKmrmrWjpaEOGpnE4iGlF0fYNFgZtw/
+	Nxm9HZI8thBeXPemgLLVl/iDJdk810M=
 From: Fuad Tabba <fuad.tabba@linux.dev>
 To: maz@kernel.org,
 	oupton@kernel.org,
@@ -48,9 +48,9 @@ Cc: catalin.marinas@arm.com,
 	linux-trace-kernel@vger.kernel.org,
 	tabba@google.com,
 	fuad.tabba@linux.dev
-Subject: [PATCH v3 05/11] KVM: arm64: nVHE: Run the source checker under C=2
-Date: Tue,  4 Aug 2026 12:23:11 +0100
-Message-Id: <20260804112317.1937387-6-fuad.tabba@linux.dev>
+Subject: [PATCH v3 08/11] KVM: arm64: Move the host hypercall interface to its own header
+Date: Tue,  4 Aug 2026 12:23:14 +0100
+Message-Id: <20260804112317.1937387-9-fuad.tabba@linux.dev>
 In-Reply-To: <20260804112317.1937387-1-fuad.tabba@linux.dev>
 References: <20260804112317.1937387-1-fuad.tabba@linux.dev>
 Precedence: bulk
@@ -62,32 +62,167 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The custom %.nvhe.o rule reuses rule_cc_o_c, which hooks the source
-checker only for C=1, and that only when the object is rebuilt. The
-C=2 hook, cmd_force_checksrc, hangs off the standard %.o rule that
-nVHE objects do not use, so "make C=2" silently skips every nVHE
-source file. Call cmd_force_checksrc after the compile rule, as the
-standard rule does.
+Move the kvm_call_hyp() dispatch macros and pkvm_handle_t out of
+kvm_host.h into a new kvm_hcall.h, giving the host<->hyp hypercall
+interface a single home that subsequent patches build on to restore
+type-checking across the boundary. The only adjustment to the moved
+code is the checkpatch-mandated space in "while (0)".
 
-Fixes: 7621712918ad4 ("KVM: arm64: Add build rules for separate VHE/nVHE object files")
-Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
-Tested-by: Vincent Donnefort <vdonnefort@google.com>
+No functional change intended.
+
 Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 ---
- arch/arm64/kvm/hyp/nvhe/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/kvm_hcall.h | 68 ++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/kvm_host.h  | 48 +--------------------
+ 2 files changed, 69 insertions(+), 47 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_hcall.h
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index f57450ebcb498..ccc1fe8394094 100644
---- a/arch/arm64/kvm/hyp/nvhe/Makefile
-+++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-@@ -49,6 +49,7 @@ targets += $(hyp-obj) kvm_nvhe.tmp.o kvm_nvhe.rel.o hyp.lds hyp-reloc.S hyp-relo
- #    avoids file name clashes for files shared with VHE.
- $(obj)/%.nvhe.o: $(src)/%.c FORCE
- 	$(call if_changed_rule,cc_o_c)
-+	$(call cmd,force_checksrc)
- $(obj)/%.nvhe.o: $(src)/%.S FORCE
- 	$(call if_changed_rule,as_o_S)
+diff --git a/arch/arm64/include/asm/kvm_hcall.h b/arch/arm64/include/asm/kvm_hcall.h
+new file mode 100644
+index 0000000000000..d925b2c28a3d8
+--- /dev/null
++++ b/arch/arm64/include/asm/kvm_hcall.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * The host<->hyp hypercall interface.
++ *
++ * Copyright (C) 2026 Google LLC
++ * Author: Fuad Tabba <fuad.tabba@linux.dev>
++ */
++
++#ifndef __ARM64_KVM_HCALL_H__
++#define __ARM64_KVM_HCALL_H__
++
++#include <linux/arm-smccc.h>
++#include <linux/bug.h>
++#include <linux/errno.h>
++#include <linux/types.h>
++
++#include <asm/barrier.h>
++#include <asm/kvm_asm.h>
++#include <asm/virt.h>
++
++typedef u16 pkvm_handle_t;
++
++#ifndef __KVM_NVHE_HYPERVISOR__
++#define kvm_call_hyp_nvhe(f, ...)					\
++	({								\
++		struct arm_smccc_res res;				\
++									\
++		arm_smccc_1_1_hvc(KVM_HOST_SMCCC_FUNC(f),		\
++				  ##__VA_ARGS__, &res);			\
++		if (WARN_ON(res.a0 != SMCCC_RET_SUCCESS))		\
++			res.a1 = -EOPNOTSUPP;				\
++									\
++		res.a1;							\
++	})
++
++/*
++ * The isb() below is there to guarantee the same behaviour on VHE as on !VHE,
++ * where the eret to EL1 acts as a context synchronization event.
++ */
++#define kvm_call_hyp(f, ...)						\
++	do {								\
++		if (has_vhe()) {					\
++			f(__VA_ARGS__);					\
++			isb();						\
++		} else {						\
++			kvm_call_hyp_nvhe(f, ##__VA_ARGS__);		\
++		}							\
++	} while (0)
++
++#define kvm_call_hyp_ret(f, ...)					\
++	({								\
++		typeof(f(__VA_ARGS__)) ret;				\
++									\
++		if (has_vhe()) {					\
++			ret = f(__VA_ARGS__);				\
++		} else {						\
++			ret = kvm_call_hyp_nvhe(f, ##__VA_ARGS__);	\
++		}							\
++									\
++		ret;							\
++	})
++#else /* __KVM_NVHE_HYPERVISOR__ */
++#define kvm_call_hyp(f, ...) f(__VA_ARGS__)
++#define kvm_call_hyp_ret(f, ...) f(__VA_ARGS__)
++#define kvm_call_hyp_nvhe(f, ...) f(__VA_ARGS__)
++#endif /* __KVM_NVHE_HYPERVISOR__ */
++
++#endif /* __ARM64_KVM_HCALL_H__ */
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index bae2c4f92ef5c..81d359ac7af14 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -27,6 +27,7 @@
+ #include <asm/fpsimd.h>
+ #include <asm/kvm.h>
+ #include <asm/kvm_asm.h>
++#include <asm/kvm_hcall.h>
+ #include <asm/vncr_mapping.h>
+ 
+ #define __KVM_HAVE_ARCH_INTC_INITIALIZED
+@@ -251,8 +252,6 @@ struct kvm_smccc_features {
+ 	unsigned long vendor_hyp_bmap_2; /* Function numbers 64-127 */
+ };
+ 
+-typedef u16 pkvm_handle_t;
+-
+ struct kvm_protected_vm {
+ 	pkvm_handle_t handle;
+ 	struct kvm_hyp_memcache teardown_mc;
+@@ -1252,51 +1251,6 @@ void kvm_arm_resume_guest(struct kvm *kvm);
+ 
+ #define vcpu_has_run_once(vcpu)	(!!READ_ONCE((vcpu)->pid))
+ 
+-#ifndef __KVM_NVHE_HYPERVISOR__
+-#define kvm_call_hyp_nvhe(f, ...)					\
+-	({								\
+-		struct arm_smccc_res res;				\
+-									\
+-		arm_smccc_1_1_hvc(KVM_HOST_SMCCC_FUNC(f),		\
+-				  ##__VA_ARGS__, &res);			\
+-		if (WARN_ON(res.a0 != SMCCC_RET_SUCCESS))		\
+-			res.a1 = -EOPNOTSUPP;				\
+-									\
+-		res.a1;							\
+-	})
+-
+-/*
+- * The isb() below is there to guarantee the same behaviour on VHE as on !VHE,
+- * where the eret to EL1 acts as a context synchronization event.
+- */
+-#define kvm_call_hyp(f, ...)						\
+-	do {								\
+-		if (has_vhe()) {					\
+-			f(__VA_ARGS__);					\
+-			isb();						\
+-		} else {						\
+-			kvm_call_hyp_nvhe(f, ##__VA_ARGS__);		\
+-		}							\
+-	} while(0)
+-
+-#define kvm_call_hyp_ret(f, ...)					\
+-	({								\
+-		typeof(f(__VA_ARGS__)) ret;				\
+-									\
+-		if (has_vhe()) {					\
+-			ret = f(__VA_ARGS__);				\
+-		} else {						\
+-			ret = kvm_call_hyp_nvhe(f, ##__VA_ARGS__);	\
+-		}							\
+-									\
+-		ret;							\
+-	})
+-#else /* __KVM_NVHE_HYPERVISOR__ */
+-#define kvm_call_hyp(f, ...) f(__VA_ARGS__)
+-#define kvm_call_hyp_ret(f, ...) f(__VA_ARGS__)
+-#define kvm_call_hyp_nvhe(f, ...) f(__VA_ARGS__)
+-#endif /* __KVM_NVHE_HYPERVISOR__ */
+-
+ int handle_exit(struct kvm_vcpu *vcpu, int exception_index);
+ void handle_exit_early(struct kvm_vcpu *vcpu, int exception_index);
  
 -- 
 2.39.5
