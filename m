@@ -1,157 +1,117 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5939F40FDB9;
-	Tue,  4 Aug 2026 19:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411654BC001;
+	Tue,  4 Aug 2026 20:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785873274; cv=none; b=OtoU/VgOtPyWoW0K64zWqev6vh1dGkh5S/OCZp9r2XYDfQSRB460ofZTOCGo49OgcC5gHTYpvANCm3aAA417LeAv9FJionag5bnsQEt+LY40bhLEKdzmFn57r5g5LV8NEOKN9fgKTTGguxXeersXW4JfH6z5H7lH+b8qaLE4Oc4=
+	t=1785874380; cv=none; b=ftsfe5w98B3j1alLeLJVw3r1MI8/Kn1+01hRJ7QQowqX4BDujsKzjXk8u+zCZi4eRTgdhYlC3JpSv0QaUELMFAUW5M6rA0lu20L/wiK4pKI1trX8zLdP2YG2o8IXSbjATIRu8AGTzxBW7eiUxn3iZGGep4sOJq0qeH6EWOJKhqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785873274; c=relaxed/simple;
-	bh=rhMwPmtYKuwEVpK+0x3TQhxjvW94aYrV7QgAj5I4QPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZhJeomJkWqLADayw/q+R6sTQGVZ+TaVHEQb95j7GBRAftPJFumu8UfwUkiGqej/lfMVMr07m1iuyH51ygX2LLyXN80ic7pX09Akaaw6O83RQUVtHtuGcUGrOSFFDEK6dAnGMlXUQHv0D7HvwZnnQDa3md0Hm/04uQgI1a2uJyc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cgc/4q5X; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cgc/4q5X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+IzxgHirXh8bANHLHHneykwXTiWqinCHzwnsN/D+w1g=; b=cgc/4q5XWxb+9KHledOTiCkjCj
-	qq0/2fvaHG7Qp83Vg+3/fUN0X2kukF2LFGusGOYQrH0obYRDUEtgSeWR3tr+4dGHM1+rpu/rLQ1Tk
-	0IRno6TRcPM9AAut3SiFQbVeIH55/1SLk/L57s2QIePicpmXv8BSEr/7MiSgs+DW6OKfkUVq4xyWW
-	f/Bg3OJHFn/zCKQb5ODfDBLhY5WYJ9QRUlrhLWFVC+XuxtxkMtKKJouvX0pcB5x+VcFKNyhAxS7MJ
-	mm2BbOwBUTRRIZYT5+BtfzMIOia+PY04wvaF7AiNa2bNuOBjcNm1RZO5LghLrrQ4rMN1nlxylF5zK
-	0KLtQp6A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wrLDN-00000004dyG-3Yfn;
-	Tue, 04 Aug 2026 19:54:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0A184300B40; Tue, 04 Aug 2026 21:54:17 +0200 (CEST)
-Date: Tue, 4 Aug 2026 21:54:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+	s=arc-20240116; t=1785874380; c=relaxed/simple;
+	bh=ILTxbn6W9ncTqjaTwX6iGT/E5SWnftK1Ol2UONTgAxc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bfhVpVNlh6jK11OoWx6YOxusPg6ccz6c5VUG+OERIFU63n67qk9VW37uqY8W9IWvdHP0A2jCfQbHwQksH22hXYI9fU52siV0PAnnKsoCCerGxkNEgjSkEcmNrHc3geXQPzPHZ+I9fi28m1wQU/wsXky68PBf4GYNXFPX/ENeQog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from ipservice-092-209-185-035.092.209.pools.vodafone-ip.de ([92.209.185.35] helo=nb282.user.codasip.com)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <martin@kaiser.cx>)
+	id 1wrL6j-00000000HBk-3ikW;
+	Tue, 04 Aug 2026 21:47:25 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 1/5] x86/paravirt: Use static_call() for the paravirt
- spinlock ops
-Message-ID: <20260804195416.GJ776954@noisy.programming.kicks-ass.net>
-References: <cover.1785778551.git.d@ilvokhin.com>
- <9a32ae399eb804a02a31af04dcabe7e7ee4f3fdf.1785778551.git.d@ilvokhin.com>
- <20260804190048.GCanI24Hb5P8qAyVZs@fat_crate.local>
+	Shuah Khan <shuah@kernel.org>
+Cc: Martin Kaiser <martin@kaiser.cx>,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: refactor eprobes test to fix argument checks
+Date: Tue,  4 Aug 2026 21:46:35 +0200
+Message-ID: <20260804194705.760893-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260804190048.GCanI24Hb5P8qAyVZs@fat_crate.local>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 04, 2026 at 12:00:48PM -0700, Borislav Petkov wrote:
-> On Tue, Aug 04, 2026 at 07:15:41AM +0000, Dmitry Ilvokhin wrote:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > queued_spin_lock_slowpath() and queued_spin_unlock() are dispatched
-> > through pv_ops_lock via the paravirt-ops ALTERNATIVE machinery, which
-> > picks the target (native inline store / hypervisor call) once at boot
-> > and cannot change at runtime.
-> > 
-> > Convert both to static_call(). The site becomes a direct call patched in
-> > place (one byte smaller), and on native the unlock still collapses to
-> > the inline "movb $0, (%rdi)" store, so the fast path is unchanged.
-> > 
-> > Unlike the ALTERNATIVE mechanism, a static_call() target can also be
-> > updated at runtime via static_call_update(). This is a prerequisite for
-> > the contended_release tracepoint, which has to swap in a traced unlock
-> > while the system is running.
-> > 
-> > [ ilvokhin: commit message; fix PARAVIRT_SPINLOCKS=n build; teach
-> >   __static_call_validate() about the inline unlock insn; make the
-> >   slowpath site module-safe: static_call_mod() +
-> >   EXPORT_STATIC_CALL_TRAMP(); pass @lock to the callee-save unlock,
-> >   fixing a boot hang under CALL_DEPTH_TRACKING. Boot tested native + KVM
-> >   PV guest. ]
-> > 
-> > Link: https://lore.kernel.org/all/20260603120811.GW3493090@noisy.programming.kicks-ass.net/
-> > Co-developed-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> 
-> This needs Peter's SOB.
+The add/remove eprobe test installs an eprobe for the openat syscall and
+runs ls. It checks the filenames that were opened by ls against a
+whitelist and a blacklist.
 
-Yeah, that got fixed when I applied it ;-)
+Commit 206b25c09080 ("tracing: eprobe: read the complete FILTER_PTR_STRING
+pointer") fixed access to some string fields in eprobes. This triggers
+test failures as the blacklist does not allow relative paths for the
+openat parameters.
 
-> > ---
-> >  arch/x86/hyperv/hv_spinlock.c            |  4 ++--
-> >  arch/x86/include/asm/cpufeatures.h       |  1 -
-> >  arch/x86/include/asm/paravirt-spinlock.h | 19 +++++++++++------
-> >  arch/x86/kernel/kvm.c                    |  5 ++---
-> >  arch/x86/kernel/paravirt-spinlocks.c     | 12 +++++------
-> >  arch/x86/kernel/static_call.c            | 27 ++++++++++++++++++++++++
-> >  arch/x86/xen/spinlock.c                  |  5 ++---
-> >  tools/arch/x86/include/asm/cpufeatures.h |  1 -
-> >  8 files changed, 51 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-> > index 210b494e4de0..6b4bdea18218 100644
-> > --- a/arch/x86/hyperv/hv_spinlock.c
-> > +++ b/arch/x86/hyperv/hv_spinlock.c
-> > @@ -78,8 +78,8 @@ void __init hv_init_spinlocks(void)
-> >  	pr_info("PV spinlocks enabled\n");
-> >  
-> >  	__pv_init_lock_hash();
-> > -	pv_ops_lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
-> > -	pv_ops_lock.queued_spin_unlock = PV_CALLEE_SAVE(__pv_queued_spin_unlock);
-> > +	static_call_update(queued_spin_lock_slowpath, __pv_queued_spin_lock_slowpath);
-> > +	static_call_update(queued_spin_unlock, __raw_callee_save___pv_queued_spin_unlock);
-> >  	pv_ops_lock.wait = hv_qlock_wait;
-> >  	pv_ops_lock.kick = hv_qlock_kick;
-> >  	pv_ops_lock.vcpu_is_preempted = PV_CALLEE_SAVE(hv_vcpu_is_preempted);
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index 1b4a48bff18f..e41fe5c24841 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -225,7 +225,6 @@
-> >  #define X86_FEATURE_EPT_AD		( 8*32+17) /* "ept_ad" Intel Extended Page Table access-dirty bit */
-> >  #define X86_FEATURE_VMCALL		( 8*32+18) /* Hypervisor supports the VMCALL instruction */
-> >  #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* VMware prefers VMMCALL hypercall instruction */
-> > -#define X86_FEATURE_PVUNLOCK		( 8*32+20) /* PV unlock function */
-> 
-> No, do:
-> 
-> /* free: was #define X86_FEATURE_PVUNLOCK		( 8*32+20) /* PV unlock function */
-> 
-> so that we can reuse it by finding it easier.
+What makes this test unstable is the fact that the openat calls vary a
+lot between different systems.
 
-Sure, I can do that.
+Refactor the test to make it more robust. "cd <directory>" will issue a
+chdir syscall with the target directory as parameter. Set an eprobe on
+the sys_enter_chdir event and filter for the exact directory name. Allow
+(fault) as fallback.
+
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202607151010.b68428e1-lkp@intel.com
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+ .../ftrace/test.d/dynevent/add_remove_eprobe.tc  | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+index c300eb020262..e2322693d0c3 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
+@@ -1,16 +1,16 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Generic dynamic event - add/remove eprobe events
+-# requires: dynamic_events events/syscalls/sys_enter_openat "<attached-group>.<attached-event> [<args>]":README
++# requires: dynamic_events events/syscalls/sys_enter_chdir "<attached-group>.<attached-event> [<args>]":README
+ 
+ echo 0 > events/enable
+ 
+ clear_dynamic_events
+ 
+ SYSTEM="syscalls"
+-EVENT="sys_enter_openat"
++EVENT="sys_enter_chdir"
+ FIELD="filename"
+-EPROBE="eprobe_open"
++EPROBE="eprobe_chdir"
+ OPTIONS="file=+0(\$filename):ustring"
+ echo "e:$EPROBE $SYSTEM/$EVENT $OPTIONS" >> dynamic_events
+ 
+@@ -18,20 +18,14 @@ grep -q "$EPROBE" dynamic_events
+ test -d events/eprobes/$EPROBE
+ 
+ echo 1 > events/eprobes/$EPROBE/enable
+-ls
++cd /sys/kernel/tracing
+ echo 0 > events/eprobes/$EPROBE/enable
+ 
+-content=`grep '^ *ls-' trace | grep 'file='`
+-nocontent=`grep '^ *ls-' trace | grep 'file=' | grep -v -e '"/' -e '"."' -e '(fault)' ` || true
+-
++content=`grep -e 'file="/sys/kernel/tracing"\|(fault)' trace`
+ if [ -z "$content" ]; then
+ 	exit_fail
+ fi
+ 
+-if [ ! -z "$nocontent" ]; then
+-	exit_fail
+-fi
+-
+ echo "-:$EPROBE" >> dynamic_events
+ 
+ ! grep -q "$EPROBE" dynamic_events
+-- 
+2.43.7
+
