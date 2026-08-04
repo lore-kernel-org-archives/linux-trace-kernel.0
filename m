@@ -1,62 +1,62 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E00F485CE3
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 17:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D3949550A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 17:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785865404; cv=none; b=e4lFv5QH6HATet9njXwwpWG3chrpFAiNTEexofL5Dv9zwC8kkpbn1xQ4XOXrviH2oZcOC6OlE6yZAD7VMM6ZCgRgLBXiioF01LqE4pcOI/LTb0vekp35hG6YevfO+pCmBPIwwWGJHsKHu8YwCMEREgApkMxMUQ7GuGLv0oQal0s=
+	t=1785865406; cv=none; b=OPznlI8/x/qmEAzb4PsHSLqT2UupvjJVeRYW4NDeK3A7ozxw23NqL8cSysQ9KemxdKtlxk6yiScD/Fn8I6XwE6vVdxkmRVyNmNCiZm9vrMtWqPhydM6QNFOoE5YfHtnCPiTlE5qFRf4UyiulltH2bYdAAJ9u8kWYlFnBF2WfdSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785865404; c=relaxed/simple;
-	bh=dQafBnijouqMjy3pJ+JGvQ3Lx38g2EjDegrTCOoR974=;
+	s=arc-20240116; t=1785865406; c=relaxed/simple;
+	bh=fDxH/Te0cQFp5ShQesuIMkvuRo5iX/+PNojmEZYHOvE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=ukxMmkm8xDMbDyvCfAgHPCy4yalwtNGs4t95IL0IsHr2KPglXeqvGipSLEnRkp1b7M/7Ev5uNxyYkcrC8RqkRKl0xMfLq1s4d/oDhBhvwZEId2pj1y5Hpq/idAW7tjqU/wbIy3vRx85pwICwBhdpIoczdz6y4Xw0dDEpztocx6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fmz2fEuR; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=NtvFVBMgysyzfnK9urGIlFz2Z2cBnO0BpvSKF/NgMpwSWWV/cyriPebZTbRGZNEOkA4k/naezB5YX4EDxppS3c0tcQBcg59Fo6RlUKpVOlEWQH4zNYXB3X0zslW+kURX5pCMkB+Nk+LiBUSCEEqY1+Z8a9GiY3oUn1IUyTr3q0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IukcUXOU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fmz2fEuR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IukcUXOU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785865402;
+	s=mimecast20190719; t=1785865403;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qqt3NijuaP9d9I1bY77shy06Tx7yDwPkFM7B3C4MGt4=;
-	b=Fmz2fEuRj8Ac/CnoOnvVImmJq1O0jKdV1ZQyDsMbKG+Bpn83n21KkwMQb3jKGodLYGezVM
-	WjpLRtQuKCDslHsttJc/a7KiuTss99v5DI3j5GNIIMMlpzOGrqG/W6uHHB8O76mo7OY3pg
-	BqxmU9ML9zllLi6R3H/cL04gl0zlB8g=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=POtjo3MS/3gDN7qLigZ6UysW0mOjgCNLxkaaquz7gMg=;
+	b=IukcUXOUauUOMxunYGYfHh5bZiV41zTJIEQhmdog27fveNoqbtpxVo0dS67niwFSjVIgu7
+	4lCmnmgbBGymBaD/Hd17/dwvEAmpgTqZv5btI3fqVIUMAmB5zC7Q4DVA4qPx9LtYf0qMRd
+	nhbr1/Dnh8F6wx6hPlUIsPusPYrDAQI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-9Ppxk5l_NDe8_Fv-F5qU6Q-1; Tue,
- 04 Aug 2026 13:43:19 -0400
-X-MC-Unique: 9Ppxk5l_NDe8_Fv-F5qU6Q-1
-X-Mimecast-MFC-AGG-ID: 9Ppxk5l_NDe8_Fv-F5qU6Q_1785865396
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-RRTCfGMTOoeTRwfTLI3gnw-1; Tue,
+ 04 Aug 2026 13:43:21 -0400
+X-MC-Unique: RRTCfGMTOoeTRwfTLI3gnw-1
+X-Mimecast-MFC-AGG-ID: RRTCfGMTOoeTRwfTLI3gnw_1785865400
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FBA31955DAF;
-	Tue,  4 Aug 2026 17:43:16 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F08E19560B7;
+	Tue,  4 Aug 2026 17:43:20 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.44.34.30])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3EC4D195608E;
-	Tue,  4 Aug 2026 17:43:12 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22C97195608E;
+	Tue,  4 Aug 2026 17:43:16 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tomas Glozar <tglozar@redhat.com>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	Crystal Wood <crwood@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Ivan Pravdin <ipravdin.official@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v4 1/6] rtla/osnoise: Add IPI tracking cmdline option
-Date: Tue,  4 Aug 2026 19:42:33 +0200
-Message-ID: <20260804174242.2288433-2-vschneid@redhat.com>
+Subject: [PATCH v4 2/6] rtla/osnoise: Record IPI count in osnoise top
+Date: Tue,  4 Aug 2026 19:42:34 +0200
+Message-ID: <20260804174242.2288433-3-vschneid@redhat.com>
 In-Reply-To: <20260804174242.2288433-1-vschneid@redhat.com>
 References: <20260804174242.2288433-1-vschneid@redhat.com>
 Precedence: bulk
@@ -66,76 +66,191 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: -pXOy_6en_LfnpxAGDZSgiSQSDKbU7Ma9I1E4VZxczc_1785865396
+X-Mimecast-MFC-PROC-ID: fYrMpl6wh5r27ijuCasPkgALK-jvgk7LLdMn3Af4ROg_1785865400
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Later commits will add IPI tracking to osnoise top. To avoid breaking
-existing scripts, this new feature will be gated behind a new --ipi option.
+Leverage the ipi_send_cpu and ipi_send_cpumask trace events to record the
+count of IPIs sent to monitored CPUs. These interferences are already
+accounted by the IRQ count, but this split gives a better overall picture.
 
-Suggested-by: Tomas Glozar <tglozar@redhat.com>
+This uses the newly added --ipi cmdline option.
+
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- Documentation/tools/rtla/rtla-osnoise-top.rst | 4 ++++
- tools/tracing/rtla/src/cli.c                  | 1 +
- tools/tracing/rtla/src/cli_p.h                | 3 +++
- tools/tracing/rtla/src/common.h               | 1 +
- 4 files changed, 9 insertions(+)
+ tools/tracing/rtla/src/osnoise_top.c | 116 ++++++++++++++++++++++++++-
+ 1 file changed, 115 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/tools/rtla/rtla-osnoise-top.rst b/Documentation/tools/rtla/rtla-osnoise-top.rst
-index b91c02ac2bbe1..b948a813d45cb 100644
---- a/Documentation/tools/rtla/rtla-osnoise-top.rst
-+++ b/Documentation/tools/rtla/rtla-osnoise-top.rst
-@@ -28,6 +28,10 @@ OPTIONS
- =======
- .. include:: common_osnoise_options.txt
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 512a6299cb018..7b5ae5336cf08 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -8,6 +8,7 @@
+ #include <string.h>
+ #include <signal.h>
+ #include <unistd.h>
++#include <errno.h>
+ #include <stdio.h>
+ #include <time.h>
  
-+**--ipi**
+@@ -25,6 +26,7 @@ struct osnoise_top_cpu {
+ 	unsigned long long	irq_count;
+ 	unsigned long long	softirq_count;
+ 	unsigned long long	thread_count;
++	unsigned long long	ipi_count;
+ 
+ 	int			sum_cycles;
+ };
+@@ -164,6 +166,8 @@ static void osnoise_top_header(struct osnoise_tool *top)
+ 		goto eol;
+ 
+ 	trace_seq_printf(s, "          IRQ      Softirq       Thread");
++	if (params->common.ipi)
++		trace_seq_printf(s, "          IPI");
+ 
+ eol:
+ 	if (pretty)
+@@ -218,7 +222,10 @@ static void osnoise_top_print(struct osnoise_tool *tool, int cpu)
+ 
+ 	trace_seq_printf(s, "%12llu ", cpu_data->irq_count);
+ 	trace_seq_printf(s, "%12llu ", cpu_data->softirq_count);
+-	trace_seq_printf(s, "%12llu\n", cpu_data->thread_count);
++	trace_seq_printf(s, "%12llu", cpu_data->thread_count);
++	if (params->common.ipi)
++		trace_seq_printf(s, " %12llu", cpu_data->ipi_count);
++	trace_seq_printf(s, "\n");
+ }
+ 
+ /*
+@@ -275,12 +282,93 @@ osnoise_top_apply_config(struct osnoise_tool *tool)
+ 	return -1;
+ }
+ 
++static void account_ipi(struct osnoise_tool *tool, unsigned long long dst_cpu)
++{
++	struct osnoise_top_cpu *cpu_data;
++	struct osnoise_top_data *data;
++	unsigned long long inc = 1;
 +
-+	Track sources of IPIs.
++	data = tool->data;
++	cpu_data = &data->cpu_data[dst_cpu];
 +
- .. include:: common_top_options.txt
- 
- .. include:: common_options.txt
-diff --git a/tools/tracing/rtla/src/cli.c b/tools/tracing/rtla/src/cli.c
-index c5279c9875310..eb1e76a6b0dea 100644
---- a/tools/tracing/rtla/src/cli.c
-+++ b/tools/tracing/rtla/src/cli.c
-@@ -78,6 +78,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 		RTLA_OPT_STOP_TOTAL('S', "stop-total", "total sample"),
- 		OSNOISE_OPT_THRESHOLD,
- 		RTLA_OPT_TRACE_OUTPUT("osnoise", opt_osnoise_trace_output_cb),
-+		OSNOISE_OPT_IPI,
- 
- 	OPT_GROUP("Event Configuration:"),
- 		RTLA_OPT_EVENT,
-diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
-index 3c939de9abf02..d120fac424e30 100644
---- a/tools/tracing/rtla/src/cli_p.h
-+++ b/tools/tracing/rtla/src/cli_p.h
-@@ -305,6 +305,9 @@ static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
- 	"the minimum delta to be considered a noise", \
- 	opt_llong_callback)
- 
-+#define OSNOISE_OPT_IPI OPT_BOOLEAN(0, "ipi", &params->common.ipi, \
-+	"track sources of IPIs")
++	update_sum(&cpu_data->ipi_count, &inc);
++}
++
++/*
++ * osnoise_ipi_cpu_handler - this is the handler for single CPU IPI events.
++ */
++static int
++osnoise_ipi_cpu_handler(struct trace_seq *s, struct tep_record *record,
++		     struct tep_event *event, void *context)
++{
++	struct osnoise_tool *tool;
++	struct osnoise_params *params;
++	unsigned long long dst_cpu;
++	struct trace_instance *trace = context;
++
++	tool = container_of(trace, struct osnoise_tool, trace);
++	params = to_osnoise_params(tool->params);
++
++	tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
++
++	if (CPU_ISSET(dst_cpu, &params->common.monitored_cpus))
++		account_ipi(tool, dst_cpu);
++
++	return 0;
++}
++
++static cpu_set_t cpumask_tmp_cpus;
++
++/*
++ * osnoise_ipi_cpumask_handler - this is the handler for broadcasted IPI events.
++ */
++static int
++osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *record,
++			 struct tep_event *event, void *context)
++{
++	struct trace_instance *trace = context;
++	struct osnoise_tool *tool;
++	struct osnoise_params *params;
++	struct tep_format_field *field;
++	cpu_set_t *event_cpus;
++	int len;
++
++	tool = container_of(trace, struct osnoise_tool, trace);
++	params = to_osnoise_params(tool->params);
++
++	field = tep_find_field(event, "cpumask");
++	if (!field)
++		return 0;
++
++	event_cpus = tep_get_field_raw(s, event, "cpumask", record, &len, 1);
++	if (!event_cpus) {
++		err_msg("Failed to get cpumask field\n");
++		return 0;
++	}
++
++	CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_cpus);
++
++	/*
++	 * Computing the mask weight is overkill but there is no leaner option
++	 * provided by glibc, e.g cpumask_first() or somesuch.
++	 */
++	if (CPU_COUNT(&cpumask_tmp_cpus)) {
++		for (int cpu = 0; cpu < nr_cpus; cpu++) {
++			if (CPU_ISSET(cpu, &cpumask_tmp_cpus))
++				account_ipi(tool, cpu);
++		}
++	}
++
++	return 0;
++}
 +
  /*
-  * Callback functions for command line options for osnoise tools
+  * osnoise_init_top - initialize a osnoise top tool with parameters
   */
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 04b287a03f6d4..045253230fcf2 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -108,6 +108,7 @@ struct common_params {
- 	bool			kernel_workload;
- 	bool			user_data;
- 	bool			aa_only;
-+	bool			ipi;
+ struct osnoise_tool *osnoise_init_top(struct common_params *params)
+ {
+ 	struct osnoise_tool *tool;
++	int retval;
  
- 	struct actions		threshold_actions;
- 	struct actions		end_actions;
+ 	tool = osnoise_init_tool("osnoise_top");
+ 	if (!tool)
+@@ -295,7 +383,33 @@ struct osnoise_tool *osnoise_init_top(struct common_params *params)
+ 	tep_register_event_handler(tool->trace.tep, -1, "ftrace", "osnoise",
+ 				   osnoise_top_handler, NULL);
+ 
++	if (!params->ipi)
++		goto out;
++
++	retval = tracefs_event_enable(tool->trace.inst, "ipi", "ipi_send_cpu");
++	if (retval < 0 && !errno) {
++		err_msg("Could not find ipi_send_cpu event\n");
++		goto out_err;
++	}
++
++	retval = tracefs_event_enable(tool->trace.inst, "ipi", "ipi_send_cpumask");
++	if (retval < 0 && !errno) {
++		err_msg("Could not find ipi_send_cpumask event\n");
++		goto out_err;
++	}
++
++	tep_register_event_handler(tool->trace.tep, -1, "ipi", "ipi_send_cpu",
++				   osnoise_ipi_cpu_handler, NULL);
++
++	tep_register_event_handler(tool->trace.tep, -1, "ipi", "ipi_send_cpumask",
++				   osnoise_ipi_cpumask_handler, NULL);
++
++out:
+ 	return tool;
++out_err:
++	osnoise_free_top_tool(tool);
++	osnoise_destroy_tool(tool);
++	return NULL;
+ }
+ 
+ struct tool_ops osnoise_top_ops = {
 -- 
 2.55.0
 
