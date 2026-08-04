@@ -1,333 +1,169 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E142D2F87B
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 04:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCA9426416;
+	Tue,  4 Aug 2026 07:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785817325; cv=none; b=LWZV2YXXmAS2KROalEqGmQGwyRS4k93Yqlty6n1HX/Jbcu8T8S34KwDx5iWq9Y6xIoa395vSnFmg2nEg1nX42Cgnvr9WPf7sfTsIhODm00XaHecKF3lhKioi1jP5OUcTx5VVwlFRvkNJY4xK5qoNmgZJoB7N/k08iWRvkFbFtok=
+	t=1785827778; cv=none; b=oXc2DYC27LKn8wRCjDEqp8gORq7l6yV2Ip0RjfXPVo/x/jDep6/phxGuVYBALao3FIw08a3xD8ocK/yZQnshB9X0slDwV9lzZ/BPn/NElsaVHsJ5wBIfmxvLMFJiQYVfpXdUVBj+6ygvAFsoAJJo8LPSYYowBR2x89fT0tzB4Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785817325; c=relaxed/simple;
-	bh=NTcBDqSOqZyDofNkPrY+Dk7jMKpsJG+qzzXqSRDINI8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TAtWgP9RQdxPI779+6R9iYKId6PkrRSnVGOTwsQjVZ/C2krC6IwZ0EMktBWjdXXOIjRJfKxDfMMfy23y1hr9Q9I8jIKE41qWBgFay+YtARncs9B/iRl5VOcD6S84J116dKBNXbYwt5nXKJTj3gb2gEp9FkOZbm2uMO+iBiVSbxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KX/voH+h; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785827778; c=relaxed/simple;
+	bh=nhdXXrarZjM7sUZmIrtvSXcFaOGMaM4FbU85rOdUqv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GHAcbh+OHbLlbwBlsE0e3ipeNSDRJ3EAxyWvNbcfG2iuEh+ogMDtiS9s8eQn3t/AdiolTmo1yRqmSl6yiUutoyW2WDfzF+UDe+LP4y1DzcfZJEiWh6GMUzH8g8YjxKS04wURScZWCspRdCtaFUh2AyKwx1bauDw5FLcW9KdFPq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=zuuQlk9H; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KX/voH+h"
-X-Forwarded-Encrypted: i=1; AHgh+RoD0EF3QMo/4y/lmmO4gvFGQu8JoU/1YtLxA2crFNr6+SjnGgbxk2askF7mz1y0dV4zYkpxAEZePt0u8MxcjNYJAqc=@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785782133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TverFBSwY7MtpYT35sNPQk4g4Kr+oiSA90dPP0U4w/M=;
-	b=KX/voH+hwaibo58fM7Nh2zOdHTP+yJ6yqymnfQgZ90qT6MxnAYnldVm2xKeykrN4C7euQ1
-	kEPa+b/aFv3cQPd8kwS6Ijj3qfKGbX2g54Zjrs1+vrJ0QYT3TO1qiZqCI1vRc/0B/4sbtL
-	OXRWDLKH21mVJ4S4rVh0DIpvVUPbV/A=
-X-Gm-Message-State: AOJu0YwRdtTUNpOc8lCNBm3py7q3M8IyU86EzZ6lOiDFNZ8p9lMyKcbk
-	ktd9u1p0rdLb7gI7dwOVEVPO7LD6uXVvFbewgNH2n114QGBEwmMeK5l2ERihYlj5t5oPG+Clmaf
-	0aYFYoloP6i8smVXFdOg79prwMH84dzGBn8jc/RJQ
-X-Received: by 2002:a05:622a:5914:b0:517:5e32:2d14 with SMTP id
- d75a77b69052e-52cd4fbbf92mr1330831cf.10.1785782130203; Mon, 03 Aug 2026
- 11:35:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="zuuQlk9H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1785827768;
+	bh=C36dNKMErd6fEDuyOzYmXnXLzsDFA2rEQeKm0PrIEwU=;
+	h=From:To:Cc:Subject:Date;
+	b=zuuQlk9HFx1s4aMIaXtgkNF/m3YJ86B2QbZ83bIHeVzXGJfBm3WQ9v5qi06ycUsSA
+	 y8MsnTc4o0Lw3f7cazZ6t3ZC6FpEzOcBi4/n2bvgLJMepXG/4Pg6/7hQIy/DJBPKo1
+	 3AcjhlumYX+Odef7Y8fxkp0G8LLBWqmj0Tg/agbQ=
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 48833E16CF;
+	Tue, 04 Aug 2026 07:16:08 +0000 (UTC)
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-arch@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH 0/5] locking/qspinlock: Add contended_release tracepoint
+Date: Tue,  4 Aug 2026 07:15:40 +0000
+Message-ID: <cover.1785778551.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260803124220.332248-1-fuad.tabba@linux.dev> <20260803124220.332248-11-fuad.tabba@linux.dev>
- <86qzkfaxp9.wl-maz@kernel.org>
-In-Reply-To: <86qzkfaxp9.wl-maz@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Mon, 3 Aug 2026 19:34:52 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTw1=xCPugZrmQ3nj1ddvCZ=vcZT3=KO_FMHB1USUTu7kA@mail.gmail.com>
-X-Gm-Features: AUfX_mzt1I-nWoB71I22HAPLuIRo3_4lIfQ2cr-FZF11IecwevWTzcB4PKY0l4U
-Message-ID: <CA+EHjTw1=xCPugZrmQ3nj1ddvCZ=vcZT3=KO_FMHB1USUTu7kA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] KVM: arm64: nVHE: Check hypercall handlers
- against the declared ABI
-To: Marc Zyngier <maz@kernel.org>
-Cc: oupton@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, alexandru.elisei@arm.com, 
-	vdonnefort@google.com, joey.gouly@arm.com, seiden@linux.ibm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, qperret@google.com, 
-	ardb@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Aug 2026 at 19:03, Marc Zyngier <maz@kernel.org> wrote:
-...
->
-> I've also dropped this with the following hacks. The set_cpu_reg()
-> stuff isn't brilliant, and requires a single word type. But I find the
-> overall scheme less invasive.
->
-> WDYT?
+The contended_release tracepoint landed in v7.2-rc2 for sleeping locks
+(4f070ccb4dc4 "locking: Add contended_release tracepoint to sleepable
+locks"). Spinlock support was dropped from that series. This one adds it
+for queued spinlocks.
 
-Works, and hyp-main.nvhe.o comes out byte identical. I did look for a
-way to dispatch on void without the type table, but _Generic doesn't
-take an incomplete type and __builtin_choose_expr type-checks both
-arms on gcc and clang, so I don't think there's a better option.
+The existing contention_begin/contention_end tracepoints fire on the
+waiter side. The holder's identity and stack can be captured at
+contention_begin time (e.g. perf lock contention --lock-owner), but only
+for locks with an owner field to read: mutex and rwsem. qspinlock has
+none, so a contended spinlock cannot be attributed to its holder at all.
+Even where the owner can be read, it reflects the holder's state when a
+waiter arrives, not when the lock is released.
 
-One nit: the declaration in kvm_hcall.h still says "unsigned long"
-while the definition now says "ulong". Could we make both ulong?
+This series adds a contended_release tracepoint to qspinlock that fires
+on the holder side when a lock with waiters is released. This provides:
 
-I'm happy to respin with both of these, or would you like to fold them in?
+- Hold time estimation: when the holder's own acquisition was
+  contended, its contention_end (acquisition) and contended_release
+  can be correlated to measure how long the lock was held under
+  contention.
 
-Cheers,
-/fuad
+- The holder's stack at release time, which for spinlocks is not
+  available by any other means.
+
+The unlock path might be quite hot, so the tracepoint is made as cheap
+as possible, to keep it usable in production:
+
+- x86 with PARAVIRT_SPINLOCKS=y, which is what distributions ship, swaps
+  the unlock implementation via static_call() when the tracepoint is
+  enabled. The disabled path is byte-identical to today's: the same
+  inline movb, no NOP and no call.
+
+- Everywhere else a static-branch check is compiled into
+  queued_spin_unlock(). On x86_64 that is a single NOP on the executed
+  path, with the call to the traced helper emitted out of line and
+  unreachable while the tracepoint is off. On other architectures a few
+  more instructions to manage a stack frame land on the executed path
+  too, so the generic path sits behind
+  CONFIG_QUEUED_SPINLOCKS_TRACE_CONTENDED_RELEASE (default n).
+
+Costs and measurements are in the individual changelogs. Briefly, no
+throughput or latency change is measurable on either x86_64 or arm64
+with QUEUED_SPINLOCKS_TRACE_CONTENDED_RELEASE=y.
+
+Tested: x86_64 with PARAVIRT_SPINLOCKS=y and =n, arm64, tracepoint on
+and off, disassembly checked in both states, locktorture with tracepoint
+on and off.
+
+Not covered: qrwlock, and architectures with fully custom qspinlock
+implementations (e.g. PowerPC). The stack frame managing instructions on
+arm64 should be avoidable, but that is not done in this patchset.
+
+Patch 1 is Peter's draft from [1] and is missing his Signed-off-by.
+Peter, please add it if you are happy with the patch.
+
+[1]: https://lore.kernel.org/all/20260603120811.GW3493090@noisy.programming.kicks-ass.net/
+
+Dmitry Ilvokhin (4):
+  locking: Factor out queued_spin_release()
+  locking/qspinlock: Add contended_release tracepoint
+  tracing/lock: Use TRACE_EVENT_FN() for contended_release
+  x86/paravirt: Trace contended_release on unlock
+
+Peter Zijlstra (1):
+  x86/paravirt: Use static_call() for the paravirt spinlock ops
+
+ arch/mips/include/asm/spinlock.h         |  6 +--
+ arch/x86/hyperv/hv_spinlock.c            |  4 +-
+ arch/x86/include/asm/cpufeatures.h       |  1 -
+ arch/x86/include/asm/paravirt-spinlock.h | 21 +++++---
+ arch/x86/kernel/kvm.c                    |  5 +-
+ arch/x86/kernel/paravirt-spinlocks.c     | 63 +++++++++++++++++++++---
+ arch/x86/kernel/static_call.c            | 27 ++++++++++
+ arch/x86/xen/spinlock.c                  |  5 +-
+ include/asm-generic/qspinlock.h          | 38 ++++++++++++--
+ include/trace/events/lock.h              | 10 +++-
+ kernel/Kconfig.locks                     | 20 ++++++++
+ kernel/locking/mutex.c                   |  4 ++
+ kernel/locking/qspinlock.c               | 22 +++++++++
+ tools/arch/x86/include/asm/cpufeatures.h |  1 -
+ 14 files changed, 195 insertions(+), 32 deletions(-)
 
 
+base-commit: 5e601ab3615c86be7c4068ce992f94654693a032
+-- 
+2.53.0-Meta
 
-
->
->         M.
->
-> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> index f8ea1661b3166..0d5fa6432461d 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> @@ -39,6 +39,12 @@ DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
->                 ,, cpu_reg(host_ctxt, 3),, cpu_reg(host_ctxt, 4)        \
->                 ,, cpu_reg(host_ctxt, 5),, cpu_reg(host_ctxt, 6))
->
-> +#define set_cpu_reg_ulong(ctxt, r, v)  { cpu_reg(ctxt, r) = v; }
-> +#define set_cpu_reg_u64(ctxt, r, v)    { cpu_reg(ctxt, r) = v; }
-> +#define set_cpu_reg_int(ctxt, r, v)    { cpu_reg(ctxt, r) = v; }
-> +#define set_cpu_reg_void(ctxt, r, v)   { v; }
-> +#define set_cpu_reg(ctxt, r, t, v)     set_cpu_reg_##t(ctxt, r, v)
-> +
->  #define DEFINE_KVM_HOST_HCALL(ret, name, ...)                          \
->         static kvm_host_hcall_sig_##name __do_##name;                   \
->         static __always_inline                                          \
-> @@ -48,39 +54,18 @@ DEFINE_PER_CPU(struct kvm_nvhe_init_params, kvm_init_params);
->         }                                                               \
->         static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
->         {                                                               \
-> -               cpu_reg(host_ctxt, 1) = __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__)); \
-> +               set_cpu_reg(host_ctxt, 1, ret, __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__))); \
->         }                                                               \
->         static ret __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
->
-> -#define DEFINE_KVM_HOST_HCALL_VOID(name, ...)                          \
-> -       static kvm_host_hcall_sig_##name __do_##name;                   \
-> -       static __always_inline                                          \
-> -       void __se_##name(__KVM_HCALL_MAP(__KVM_HCALL_LONG, __VA_ARGS__)) \
-> -       {                                                               \
-> -               __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_CAST, __VA_ARGS__)); \
-> -       }                                                               \
-> -       static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
-> -       {                                                               \
-> -               __se_##name(KVM_HOST_HCALL_REGS(__VA_ARGS__));          \
-> -       }                                                               \
-> -       static void __do_##name(__KVM_HCALL_MAP(__KVM_HCALL_DECL, __VA_ARGS__))
-> -
->  #define DEFINE_KVM_HOST_HCALL0(ret, name)                              \
->         static kvm_host_hcall_sig_##name __do_##name;                   \
->         static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
->         {                                                               \
-> -               cpu_reg(host_ctxt, 1) = __do_##name();                  \
-> +               set_cpu_reg(host_ctxt, 1, ret, __do_##name());          \
->         }                                                               \
->         static ret __do_##name(void)
->
-> -#define DEFINE_KVM_HOST_HCALL0_VOID(name)                              \
-> -       static kvm_host_hcall_sig_##name __do_##name;                   \
-> -       static void handle_##name(struct kvm_cpu_context *host_ctxt)    \
-> -       {                                                               \
-> -               __do_##name();                                          \
-> -       }                                                               \
-> -       static void __do_##name(void)
-> -
->  /* Number of implemented GICv3 LRs. Used by flush_hyp_vcpu(). */
->  unsigned int hyp_gicv3_nr_lr;
->
-> @@ -242,7 +227,7 @@ static void sync_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu)
->                 host_cpu_if->vgic_lr[i] = hyp_cpu_if->vgic_lr[i];
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__pkvm_vcpu_load,
-> +DEFINE_KVM_HOST_HCALL(void, __pkvm_vcpu_load,
->         pkvm_handle_t, handle, unsigned int, vcpu_idx, u64, hcr_el2)
->  {
->         struct pkvm_hyp_vcpu *hyp_vcpu;
-> @@ -261,7 +246,7 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_vcpu_load,
->         }
->  }
->
-> -DEFINE_KVM_HOST_HCALL0_VOID(__pkvm_vcpu_put)
-> +DEFINE_KVM_HOST_HCALL0(void, __pkvm_vcpu_put)
->  {
->         struct pkvm_hyp_vcpu *hyp_vcpu = pkvm_get_loaded_hyp_vcpu();
->
-> @@ -421,42 +406,42 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_mkyoung_guest,
->         return __pkvm_host_mkyoung_guest(gfn, hyp_vcpu);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_adjust_pc,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_adjust_pc,
->         struct kvm_vcpu __kern *, vcpu)
->  {
->         __kvm_adjust_pc(kern_hyp_va_host(vcpu));
->  }
->
-> -DEFINE_KVM_HOST_HCALL0_VOID(__kvm_flush_vm_context)
-> +DEFINE_KVM_HOST_HCALL0(void, __kvm_flush_vm_context)
->  {
->         __kvm_flush_vm_context();
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_ipa,
->         struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
->  {
->         __kvm_tlb_flush_vmid_ipa(kern_hyp_va_host(mmu), ipa, level);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_ipa_nsh,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_ipa_nsh,
->         struct kvm_s2_mmu __kern *, mmu, phys_addr_t, ipa, int, level)
->  {
->         __kvm_tlb_flush_vmid_ipa_nsh(kern_hyp_va_host(mmu), ipa, level);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid_range,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid_range,
->         struct kvm_s2_mmu __kern *, mmu, phys_addr_t, start, unsigned long, pages)
->  {
->         __kvm_tlb_flush_vmid_range(kern_hyp_va_host(mmu), start, pages);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_tlb_flush_vmid,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_tlb_flush_vmid,
->         struct kvm_s2_mmu __kern *, mmu)
->  {
->         __kvm_tlb_flush_vmid(kern_hyp_va_host(mmu));
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
-> +DEFINE_KVM_HOST_HCALL(void, __pkvm_tlb_flush_vmid,
->         pkvm_handle_t, handle)
->  {
->         struct pkvm_hyp_vm *hyp_vm = get_np_pkvm_hyp_vm(handle);
-> @@ -468,19 +453,19 @@ DEFINE_KVM_HOST_HCALL_VOID(__pkvm_tlb_flush_vmid,
->         put_pkvm_hyp_vm(hyp_vm);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_flush_cpu_context,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_flush_cpu_context,
->         struct kvm_s2_mmu __kern *, mmu)
->  {
->         __kvm_flush_cpu_context(kern_hyp_va_host(mmu));
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__kvm_timer_set_cntvoff,
-> +DEFINE_KVM_HOST_HCALL(void, __kvm_timer_set_cntvoff,
->         u64, cntvoff)
->  {
->         __kvm_timer_set_cntvoff(cntvoff);
->  }
->
-> -DEFINE_KVM_HOST_HCALL0_VOID(__kvm_enable_ssbs)
-> +DEFINE_KVM_HOST_HCALL0(void, __kvm_enable_ssbs)
->  {
->         u64 tmp;
->
-> @@ -494,18 +479,18 @@ DEFINE_KVM_HOST_HCALL0(u64, __vgic_v3_get_gic_config)
->         return __vgic_v3_get_gic_config();
->  }
->
-> -DEFINE_KVM_HOST_HCALL0_VOID(__vgic_v3_init_lrs)
-> +DEFINE_KVM_HOST_HCALL0(void, __vgic_v3_init_lrs)
->  {
->         __vgic_v3_init_lrs();
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_save_aprs,
-> +DEFINE_KVM_HOST_HCALL(void, __vgic_v3_save_aprs,
->         struct vgic_v3_cpu_if __kern *, cpu_if)
->  {
->         __vgic_v3_save_aprs(kern_hyp_va_host(cpu_if));
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v3_restore_vmcr_aprs,
-> +DEFINE_KVM_HOST_HCALL(void, __vgic_v3_restore_vmcr_aprs,
->         struct vgic_v3_cpu_if __kern *, cpu_if)
->  {
->         __vgic_v3_restore_vmcr_aprs(kern_hyp_va_host(cpu_if));
-> @@ -541,7 +526,7 @@ DEFINE_KVM_HOST_HCALL(int, __pkvm_host_unshare_hyp,
->         return __pkvm_host_unshare_hyp(pfn);
->  }
->
-> -DEFINE_KVM_HOST_HCALL(unsigned long, __pkvm_create_private_mapping,
-> +DEFINE_KVM_HOST_HCALL(ulong, __pkvm_create_private_mapping,
->         phys_addr_t, phys, size_t, size, u64, prot)
->  {
->         /*
-> @@ -554,7 +539,7 @@ DEFINE_KVM_HOST_HCALL(unsigned long, __pkvm_create_private_mapping,
->          * Instead pass the allocation address as the return value (or return
->          * ERR_PTR() on failure).
->          */
-> -       unsigned long haddr;
-> +       ulong haddr;
->         int err = __pkvm_create_private_mapping(phys, size, prot, &haddr);
->
->         if (err)
-> @@ -573,7 +558,7 @@ DEFINE_KVM_HOST_HCALL0(int, __pkvm_reserve_vm)
->         return __pkvm_reserve_vm();
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__pkvm_unreserve_vm,
-> +DEFINE_KVM_HOST_HCALL(void, __pkvm_unreserve_vm,
->         pkvm_handle_t, handle)
->  {
->         __pkvm_unreserve_vm(handle);
-> @@ -630,7 +615,7 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_load,
->         return __tracing_load(desc_hva, desc_size);
->  }
->
-> -DEFINE_KVM_HOST_HCALL0_VOID(__tracing_unload)
-> +DEFINE_KVM_HOST_HCALL0(void, __tracing_unload)
->  {
->         __tracing_unload();
->  }
-> @@ -647,7 +632,7 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_swap_reader,
->         return __tracing_swap_reader(cpu);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__tracing_update_clock,
-> +DEFINE_KVM_HOST_HCALL(void, __tracing_update_clock,
->         u32, mult, u32, shift, u64, epoch_ns, u64, epoch_cyc)
->  {
->         __tracing_update_clock(mult, shift, epoch_ns, epoch_cyc);
-> @@ -665,19 +650,19 @@ DEFINE_KVM_HOST_HCALL(int, __tracing_enable_event,
->         return __tracing_enable_event(id, enable);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__tracing_write_event,
-> +DEFINE_KVM_HOST_HCALL(void, __tracing_write_event,
->         u64, id)
->  {
->         trace_selftest(id);
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_save_apr,
-> +DEFINE_KVM_HOST_HCALL(void, __vgic_v5_save_apr,
->         struct vgic_v5_cpu_if __kern *, cpu_if)
->  {
->         __vgic_v5_save_apr(kern_hyp_va_host(cpu_if));
->  }
->
-> -DEFINE_KVM_HOST_HCALL_VOID(__vgic_v5_restore_vmcr_apr,
-> +DEFINE_KVM_HOST_HCALL(void, __vgic_v5_restore_vmcr_apr,
->         struct vgic_v5_cpu_if __kern *, cpu_if)
->  {
->         __vgic_v5_restore_vmcr_apr(kern_hyp_va_host(cpu_if));
->
-> --
-> Without deviation from the norm, progress is not possible.
