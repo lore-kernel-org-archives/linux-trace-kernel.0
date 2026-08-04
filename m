@@ -1,32 +1,32 @@
-Received: from out-165.mta1.migadu.com (out-165.mta1.migadu.com [95.215.58.165])
+Received: from out-164.mta1.migadu.com (out-164.mta1.migadu.com [95.215.58.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968D6459AD4
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 11:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B310E45FFBD
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 11:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785842639; cv=none; b=g/+2ObJ1O2qCaK54CjhiaWEeh1RL5gLJQKEiOI/Wn7bIFcvuhKE1Dg9Y88LhMindDdKBNSXbF7gD+kM4kVVVoOZbKOQXdomqNSFBiIUvEnG/H8ApqPhCaZ+YRnpzCDJRKKz22Q+T+4g3FdtjbPnUmQNACs8pEejCh3aFSbjtlaw=
+	t=1785842642; cv=none; b=OeG3hyEA6JP7ovgEWn1v2x+4zQC3F6KBupxYG4sqig0bq1Vc3NjuCEcWmP75q3XLBA2h3F2lgXKXvoPLehKVWSvmE06O4HTA+LKPPQ0y4mSsAAXXJLOZAalURm0PoZFxOrzeYK9j+zG7+3RFBzqmuVeBptmtTqu8lEFKL8vukXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785842639; c=relaxed/simple;
-	bh=/iCvHcbpKF86s8mUijJ9mtfUoT/0j522f9t+I2F3pQY=;
+	s=arc-20240116; t=1785842642; c=relaxed/simple;
+	bh=GaZD8YNbLBwQa9XjzIdEKqb+R+kYZ0rTi364A3qmdig=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t1VMJOd2ICUMuSweUIGymAjrgrjOXrolcwJJV95Jy36mH9FbLwiH1KjjOwwFJjb7rp28yhs/1/SFpegcA/c2kegeKWDDGdIZJNQ8T5/HcJrhSN8HMdxGSljicTyEOmDBZVahfqgLV6zOX+ZIgl0rKm5kvFi8sX0uP0KK3lJJVQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QNCoG8yk; arc=none smtp.client-ip=95.215.58.165
+	 MIME-Version; b=dwliQZWHUQHOcySuT1NPtSoOkGcFbGOE49Q5dURWffUtJzGvUlxGUrdgP7gecpnxkZdEiKZXaHM+jZDafC7M4gfGE/qnUIJNyTmh3JIoPLPzAbEIR9pcyD+NJDZVbIp0Omqc59WknL5d1ZCa30KP7TsYBYDeoCYOF63PpG4Gt8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eDqoRqm1; arc=none smtp.client-ip=95.215.58.164
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QNCoG8yk"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eDqoRqm1"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785842633;
+	t=1785842638;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bVKtopwMrqzEnOyVedKGwt1g22ev9g5F8tMkWzZJze8=;
-	b=QNCoG8yklFuiDeil1YTbf6EhTSPhfpC0uz2qzmE7+FGvUqf+AelqpV4jWMT8NaGw4TxTte
-	K1pr8tii3dDTgXh1WA3TuVcM6VQTbvcw3aLCH/KPm3qrCNEp3XlJWMGk63BXY1jC/qVXbD
-	YRgRULEdi4gZNsyd9/YAHgaKP+YRzvk=
+	bh=mbmwUYRMkOEfVhoKhlo/B+eCrpuKcZd9NIaZ5Zet0iU=;
+	b=eDqoRqm1YK9dMdPjeIr4nXnu2t6bsxrSU6Bfbh2YpnUq/3GDsSfWY2kXxOdu4Hf7CcLkAJ
+	/VhPJovzgYhCypxUVb6icuVSsP+il7RdpLJnDWrEuWc0VpdPPYw0QALZXYPmxJVi6kFsEW
+	3bYfUYCpp7flF+XculerxD75tMmdgZQ=
 From: Fuad Tabba <fuad.tabba@linux.dev>
 To: maz@kernel.org,
 	oupton@kernel.org,
@@ -48,9 +48,9 @@ Cc: catalin.marinas@arm.com,
 	linux-trace-kernel@vger.kernel.org,
 	tabba@google.com,
 	fuad.tabba@linux.dev
-Subject: [PATCH v3 01/11] tracing: Include linux/types.h in trace_remote_event.h
-Date: Tue,  4 Aug 2026 12:23:07 +0100
-Message-Id: <20260804112317.1937387-2-fuad.tabba@linux.dev>
+Subject: [PATCH v3 02/11] KVM: arm64: nVHE: Share the stacktrace per-CPU declarations with EL2
+Date: Tue,  4 Aug 2026 12:23:08 +0100
+Message-Id: <20260804112317.1937387-3-fuad.tabba@linux.dev>
 In-Reply-To: <20260804112317.1937387-1-fuad.tabba@linux.dev>
 References: <20260804112317.1937387-1-fuad.tabba@linux.dev>
 Precedence: bulk
@@ -62,30 +62,87 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-trace_remote_event.h uses bool without including linux/types.h, so a
-translation unit that includes it ahead of anything else that pulls
-types.h in fails to build, as with nvhe/trace.h at EL2.
+The declarations for overflow_stack, kvm_stacktrace_info and
+pkvm_stacktrace are only visible to the host (the first two sit in the
+host-only section of stacktrace/nvhe.h, the last is private to
+kvm/stacktrace.c), so the definitions in nvhe/stacktrace.c compile
+with no declaration in sight and sparse suggests making them static.
+DECLARE_KVM_NVHE_PER_CPU() resolves to the right symbol name on both
+sides of the build: move the declarations where both can see them and
+include the header from the EL2 side unconditionally.
 
-Fixes: 072529158e60 ("tracing: Add events to trace remotes")
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
+No functional change intended.
+
 Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 ---
- include/linux/trace_remote_event.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/stacktrace/nvhe.h | 10 ++++++++--
+ arch/arm64/kvm/hyp/nvhe/stacktrace.c     |  3 +--
+ arch/arm64/kvm/stacktrace.c              |  3 ---
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/trace_remote_event.h b/include/linux/trace_remote_event.h
-index c8ae1e1f5e721..e4cc2d4497bcf 100644
---- a/include/linux/trace_remote_event.h
-+++ b/include/linux/trace_remote_event.h
-@@ -3,6 +3,8 @@
- #ifndef _LINUX_TRACE_REMOTE_EVENTS_H
- #define _LINUX_TRACE_REMOTE_EVENTS_H
+diff --git a/arch/arm64/include/asm/stacktrace/nvhe.h b/arch/arm64/include/asm/stacktrace/nvhe.h
+index 171f9edef49fc..a631a577cbe5d 100644
+--- a/arch/arm64/include/asm/stacktrace/nvhe.h
++++ b/arch/arm64/include/asm/stacktrace/nvhe.h
+@@ -37,6 +37,14 @@ static inline void kvm_nvhe_unwind_init(struct unwind_state *state,
+ 	state->pc = pc;
+ }
  
-+#include <linux/types.h>
++DECLARE_KVM_NVHE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)], overflow_stack);
++DECLARE_KVM_NVHE_PER_CPU(struct kvm_nvhe_stacktrace_info, kvm_stacktrace_info);
 +
- struct trace_remote;
- struct trace_event_fields;
- struct trace_seq;
++#ifdef CONFIG_PKVM_STACKTRACE
++DECLARE_KVM_NVHE_PER_CPU(unsigned long [NVHE_STACKTRACE_SIZE/sizeof(long)],
++			 pkvm_stacktrace);
++#endif
++
+ #ifndef __KVM_NVHE_HYPERVISOR__
+ /*
+  * Conventional (non-protected) nVHE HYP stack unwinder
+@@ -45,8 +53,6 @@ static inline void kvm_nvhe_unwind_init(struct unwind_state *state,
+  * (by the host in EL1).
+  */
+ 
+-DECLARE_KVM_NVHE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)], overflow_stack);
+-DECLARE_KVM_NVHE_PER_CPU(struct kvm_nvhe_stacktrace_info, kvm_stacktrace_info);
+ DECLARE_PER_CPU(unsigned long, kvm_arm_hyp_stack_base);
+ 
+ void kvm_nvhe_dump_backtrace(unsigned long hyp_offset);
+diff --git a/arch/arm64/kvm/hyp/nvhe/stacktrace.c b/arch/arm64/kvm/hyp/nvhe/stacktrace.c
+index 7c832d60d22bb..11fadbebbf1d6 100644
+--- a/arch/arm64/kvm/hyp/nvhe/stacktrace.c
++++ b/arch/arm64/kvm/hyp/nvhe/stacktrace.c
+@@ -8,6 +8,7 @@
+ #include <asm/kvm_hyp.h>
+ #include <asm/memory.h>
+ #include <asm/percpu.h>
++#include <asm/stacktrace/nvhe.h>
+ 
+ DEFINE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)], overflow_stack)
+ 	__aligned(16);
+@@ -35,8 +36,6 @@ static void hyp_prepare_backtrace(unsigned long fp, unsigned long pc)
+ }
+ 
+ #ifdef CONFIG_PKVM_STACKTRACE
+-#include <asm/stacktrace/nvhe.h>
+-
+ DEFINE_PER_CPU(unsigned long [NVHE_STACKTRACE_SIZE/sizeof(long)], pkvm_stacktrace);
+ 
+ static struct stack_info stackinfo_get_overflow(void)
+diff --git a/arch/arm64/kvm/stacktrace.c b/arch/arm64/kvm/stacktrace.c
+index 9724c320126b7..69377195e18b7 100644
+--- a/arch/arm64/kvm/stacktrace.c
++++ b/arch/arm64/kvm/stacktrace.c
+@@ -198,9 +198,6 @@ static void hyp_dump_backtrace(unsigned long hyp_offset)
+ }
+ 
+ #ifdef CONFIG_PKVM_STACKTRACE
+-DECLARE_KVM_NVHE_PER_CPU(unsigned long [NVHE_STACKTRACE_SIZE/sizeof(long)],
+-			 pkvm_stacktrace);
+-
+ /*
+  * pkvm_dump_backtrace - Dump the protected nVHE HYP backtrace.
+  *
 -- 
 2.39.5
 
