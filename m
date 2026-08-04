@@ -1,117 +1,149 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411654BC001;
-	Tue,  4 Aug 2026 20:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EFD43CE5A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 21:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785874380; cv=none; b=ftsfe5w98B3j1alLeLJVw3r1MI8/Kn1+01hRJ7QQowqX4BDujsKzjXk8u+zCZi4eRTgdhYlC3JpSv0QaUELMFAUW5M6rA0lu20L/wiK4pKI1trX8zLdP2YG2o8IXSbjATIRu8AGTzxBW7eiUxn3iZGGep4sOJq0qeH6EWOJKhqM=
+	t=1785878766; cv=none; b=nNOWftkJhp8GH2Ppo70D462giK/5V9PrEjQ12P28vD0SeD9Zdgi9tOIzbktjDeKChoz+MaoVK9RBEdX9MCaYuBSC48vkRI4SCLvMMgbFS05krrGcAsbEymMKs4WB2tJNdVac9oSZdNTUtq7i7tmgCEqggL/Mo8shyWlcdr2gxPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785874380; c=relaxed/simple;
-	bh=ILTxbn6W9ncTqjaTwX6iGT/E5SWnftK1Ol2UONTgAxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bfhVpVNlh6jK11OoWx6YOxusPg6ccz6c5VUG+OERIFU63n67qk9VW37uqY8W9IWvdHP0A2jCfQbHwQksH22hXYI9fU52siV0PAnnKsoCCerGxkNEgjSkEcmNrHc3geXQPzPHZ+I9fi28m1wQU/wsXky68PBf4GYNXFPX/ENeQog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-209-185-035.092.209.pools.vodafone-ip.de ([92.209.185.35] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1wrL6j-00000000HBk-3ikW;
-	Tue, 04 Aug 2026 21:47:25 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Martin Kaiser <martin@kaiser.cx>,
-	kernel test robot <oliver.sang@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: refactor eprobes test to fix argument checks
-Date: Tue,  4 Aug 2026 21:46:35 +0200
-Message-ID: <20260804194705.760893-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1785878766; c=relaxed/simple;
+	bh=BCQAfpaUqnDRdhFBqf5W6hE9jelLT+UwP2GtKgTlhtw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=aJhWJs/e/nEBpETQjBQu4+ITpJ+EPt0OnKch0ET0Q/KW0raseByes8QFZJcg/cQEOFkFmXbkIvWVK7huiLrkuY/VcNFLZOkfDZXMoh4+fldNenQtBDbX0qpIjjxNooTFdROhhusJ5YR3ZTT7iizue6KRxVZOdTXY/gxHc6t5uzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OGntIopd; arc=none smtp.client-ip=209.85.215.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OGntIopd"
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cb835525b13so276738a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 14:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785878763; x=1786483563; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=D1m+pWGOS10uU1f2bsRnNlJub5JOhExh9V1AKmoVmG8=;
+        b=OGntIopdxeQgPpCguxXN77FhflQfdmSlk+3k2USXLV2CXYHffSVoYsWDw1d44U+bVR
+         6XQNlDBwgUEqMZ7i24XGlYm4fJZ5Bxe0DG5N388S07HMBNAasDLKhN4CSuRIN0ASLQ1x
+         IVryFuwDs1FXdXVLBx7vjdg3LSm3KazG4Ed6MDLNYCvduMBZTqhictb0PpyNak59T8t/
+         mdEHAp6XBvznUgVlxqviBcAHarDJi347E/vFv6t2LorVainUaaa3m3ZLXvY6sg/AYCNt
+         +3j+y+5aTmA6DpTH0e/cjTU6t3Oee8tv5+bQ7DzDNENgFdGNZfJc4hYAXRspQtFQejci
+         fijA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785878763; x=1786483563;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=D1m+pWGOS10uU1f2bsRnNlJub5JOhExh9V1AKmoVmG8=;
+        b=eDA6GafwNC2mK6SYTnpLjEC8O/xxZiEuX06S1tZQjlFl9QALE+Xs/3SfNwZnpnUDTq
+         FRKCo27+yVN1wi/Pf0QUd/C0PklmepcwL2RFrW3d0FurO1/QoR9tCpNEHuEscSWSk7Mv
+         El5EmHvlqIzJ/Yon/3lkzkcexc8f9nXhLhkXAU/tTW5P3bx/JkFZ7TdFbAKdd86zuboB
+         WrjdDQbfFfbNkXn6Dajeg+Evr1puktj3ctvvddDmmw24evXiwqpd5M0XD7sICnJl7yKV
+         hWym+b5NdCKPyYEhgDNbCvRaz6HpxhMVBr5FGJtU3NTVQZPqquveKXnUZX9/t+qzxBWO
+         tNiw==
+X-Forwarded-Encrypted: i=1; AHgh+RqyRnUzwWgAFFoWJb4LyL94YQKeqoMi/bWWrmfTW6o9THzkmmQnPQaZ8Ku31cc+YhWzoaFk+7ep0Sf3JASS8EaAKXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9DDyB8swDKsTjegCZhwcs6I1r4awj4tLYV30l4iAkI4+Q+wkG
+	fopzvoceFK/Hta3hNJEqq2h6LhwntBgLfVC69uFNTuhBXH5QlRcsB1U7JrvURnM+NF9ITVUFn4m
+	z+wEcJg==
+X-Received: from pgip24.prod.google.com ([2002:a63:c158:0:b0:c82:7761:9936])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a103:b0:3bf:6237:4d3f
+ with SMTP id adf61e73a8af0-3cb85e4dc7fmr1611110637.18.1785878762819; Tue, 04
+ Aug 2026 14:26:02 -0700 (PDT)
+Date: Tue, 4 Aug 2026 14:26:02 -0700
+In-Reply-To: <CAEvNRgErZqaLPpBveBd2VxdrS_8mjMbArL_=AhzMdikXmUU5VA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-20-35f9aec2aed2@google.com>
+ <7f23d149-b7f0-465a-a9c0-5c7484e289d2@intel.com> <CAEvNRgErZqaLPpBveBd2VxdrS_8mjMbArL_=AhzMdikXmUU5VA@mail.gmail.com>
+Message-ID: <anJY6opttIJ4OQHP@google.com>
+Subject: Re: [PATCH v9 20/41] KVM: Let userspace disable per-VM mem
+ attributes, enable per-gmem attributes
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-The add/remove eprobe test installs an eprobe for the openat syscall and
-runs ls. It checks the filenames that were opened by ls against a
-whitelist and a blacklist.
+On Tue, Aug 04, 2026, Ackerley Tng wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> 
+> >
+> > [...snip...]
+> >
+> >> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> >> index ea2752989f8bd..df67a6188aa99 100644
+> >> --- a/virt/kvm/guest_memfd.c
+> >> +++ b/virt/kvm/guest_memfd.c
+> >> @@ -1137,10 +1137,12 @@ static bool kvm_range_is_private(struct file *file, pgoff_t index,
+> >>   {
+> >>   	struct inode *inode = file_inode(file);
+> >>
+> >> +#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+> >>   	if (!gmem_in_place_conversion)
+> >>   		return kvm_range_has_vm_memory_attributes(kvm, gfn, gfn + nr_pages,
+> >>   							  KVM_MEMORY_ATTRIBUTE_PRIVATE,
+> >>   							  KVM_MEMORY_ATTRIBUTE_PRIVATE);
+> >> +#endif
+> >>
+> >>   	return kvm_gmem_range_has_attributes(inode, index, nr_pages,
+> >>   					     KVM_MEMORY_ATTRIBUTE_PRIVATE);
+> >
+> > With my suggestion[1] on patch 7, this diff block can be dropped.
+> >
+> > [1]
+> > https://lore.kernel.org/all/dd4201f2-3660-46ad-958f-c70feb1ab1c3@intel.com/
+> >
+> > The code looks good to me,
+> >
+> > Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> >
+> 
+> I think your earlier suggestion on only defining the module_param when
+> CONFIG_KVM_VM_MEMORY_ATTRIBUTES is selected still applies, since it
+> removes an avenue for a user to turn off gmem_in_place_conversion if
+> the other option (VM memory attributes) isn't available.
+> 
+>   +#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>   +module_param(gmem_in_place_conversion, bool, 0444);
+>   +#endif
+> 
+> Given that we're now dropping the diff block as you suggested, do you
+> agree that we should keep this #ifdef?
 
-Commit 206b25c09080 ("tracing: eprobe: read the complete FILTER_PTR_STRING
-pointer") fixed access to some string fields in eprobes. This triggers
-test failures as the blacklist does not allow relative paths for the
-openat parameters.
+Yes, the param needs to remain hidden if CONFIG_KVM_VM_MEMORY_ATTRIBUTES=n, so
+that userspace attempts to disable gmem_in_place_conversion are ignored (and
+logged as such).
 
-What makes this test unstable is the fact that the openat calls vary a
-lot between different systems.
-
-Refactor the test to make it more robust. "cd <directory>" will issue a
-chdir syscall with the target directory as parameter. Set an eprobe on
-the sys_enter_chdir event and filter for the exact directory name. Allow
-(fault) as fallback.
-
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202607151010.b68428e1-lkp@intel.com
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- .../ftrace/test.d/dynevent/add_remove_eprobe.tc  | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
-index c300eb020262..e2322693d0c3 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_eprobe.tc
-@@ -1,16 +1,16 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Generic dynamic event - add/remove eprobe events
--# requires: dynamic_events events/syscalls/sys_enter_openat "<attached-group>.<attached-event> [<args>]":README
-+# requires: dynamic_events events/syscalls/sys_enter_chdir "<attached-group>.<attached-event> [<args>]":README
- 
- echo 0 > events/enable
- 
- clear_dynamic_events
- 
- SYSTEM="syscalls"
--EVENT="sys_enter_openat"
-+EVENT="sys_enter_chdir"
- FIELD="filename"
--EPROBE="eprobe_open"
-+EPROBE="eprobe_chdir"
- OPTIONS="file=+0(\$filename):ustring"
- echo "e:$EPROBE $SYSTEM/$EVENT $OPTIONS" >> dynamic_events
- 
-@@ -18,20 +18,14 @@ grep -q "$EPROBE" dynamic_events
- test -d events/eprobes/$EPROBE
- 
- echo 1 > events/eprobes/$EPROBE/enable
--ls
-+cd /sys/kernel/tracing
- echo 0 > events/eprobes/$EPROBE/enable
- 
--content=`grep '^ *ls-' trace | grep 'file='`
--nocontent=`grep '^ *ls-' trace | grep 'file=' | grep -v -e '"/' -e '"."' -e '(fault)' ` || true
--
-+content=`grep -e 'file="/sys/kernel/tracing"\|(fault)' trace`
- if [ -z "$content" ]; then
- 	exit_fail
- fi
- 
--if [ ! -z "$nocontent" ]; then
--	exit_fail
--fi
--
- echo "-:$EPROBE" >> dynamic_events
- 
- ! grep -q "$EPROBE" dynamic_events
--- 
-2.43.7
-
+The obvious downside is that the param won't exist when in-place conversion is
+forced on, which is kinda weird, but I think it's the lesser evil?
