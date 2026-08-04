@@ -1,60 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB8F43E9FD
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 17:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E00F485CE3
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 17:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785865400; cv=none; b=Cs3LI+Y6dP3QWcc/8YoteYoBgTji+tGrTxtefvbjCARNTzfBuMPBEZzAIT5FN8F4ik5+gaZ4ukcWesRdWtlHxY3maqbTx6/aqAXOC5q/ZU6pS8ZBaYGUTpShInOTC0jTq7NNuEXgyf3BWToGgBnmnEYYH6J3gHoz6kjfWMhvA5A=
+	t=1785865404; cv=none; b=e4lFv5QH6HATet9njXwwpWG3chrpFAiNTEexofL5Dv9zwC8kkpbn1xQ4XOXrviH2oZcOC6OlE6yZAD7VMM6ZCgRgLBXiioF01LqE4pcOI/LTb0vekp35hG6YevfO+pCmBPIwwWGJHsKHu8YwCMEREgApkMxMUQ7GuGLv0oQal0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785865400; c=relaxed/simple;
-	bh=LmtkPNT7OA50pIWREDZmmsPOFGwY+6prfDBN425VXOE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e5i+dlQE15eYz3Fqan1vPwHTPeJwnOGFxFlEFAMpymo1iTrv55aOR1lZQHY31r32AtpmXQPg1DYekDQlhdmSbhNk8qExesU3e9AyfhKnXcoGarlHQUQgkceIM1HE5QsCXTH8ANTPm6nODFc8WDf5BrKDGrOOJ5KVKvEwJkqtE4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZEhqClzJ; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1785865404; c=relaxed/simple;
+	bh=dQafBnijouqMjy3pJ+JGvQ3Lx38g2EjDegrTCOoR974=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=ukxMmkm8xDMbDyvCfAgHPCy4yalwtNGs4t95IL0IsHr2KPglXeqvGipSLEnRkp1b7M/7Ev5uNxyYkcrC8RqkRKl0xMfLq1s4d/oDhBhvwZEId2pj1y5Hpq/idAW7tjqU/wbIy3vRx85pwICwBhdpIoczdz6y4Xw0dDEpztocx6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fmz2fEuR; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZEhqClzJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fmz2fEuR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785865397;
+	s=mimecast20190719; t=1785865402;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5HNEiOmcNvNIRoVh955nnmNdw9FkXY2EZFVZ3Ml4Ei0=;
-	b=ZEhqClzJmP4lovFRcbrTy3Kj0vJlEp2qXELDRAypl5+IEGh81DCepIzoM7y3p38+/UUt0I
-	rsWzFukkNWISqT/eZ9IZ2WWRV4gB3qOSDBfTtzqETrv2icK4szK1r4yFKeQ33WXahVSJ8/
-	FzgJ7xYhGuOf8L8KAi1EUrcZJlbJ2Os=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qqt3NijuaP9d9I1bY77shy06Tx7yDwPkFM7B3C4MGt4=;
+	b=Fmz2fEuRj8Ac/CnoOnvVImmJq1O0jKdV1ZQyDsMbKG+Bpn83n21KkwMQb3jKGodLYGezVM
+	WjpLRtQuKCDslHsttJc/a7KiuTss99v5DI3j5GNIIMMlpzOGrqG/W6uHHB8O76mo7OY3pg
+	BqxmU9ML9zllLi6R3H/cL04gl0zlB8g=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-okZE7ZHSP6O-FyeAqpchyQ-1; Tue,
- 04 Aug 2026 13:43:14 -0400
-X-MC-Unique: okZE7ZHSP6O-FyeAqpchyQ-1
-X-Mimecast-MFC-AGG-ID: okZE7ZHSP6O-FyeAqpchyQ_1785865393
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-9Ppxk5l_NDe8_Fv-F5qU6Q-1; Tue,
+ 04 Aug 2026 13:43:19 -0400
+X-MC-Unique: 9Ppxk5l_NDe8_Fv-F5qU6Q-1
+X-Mimecast-MFC-AGG-ID: 9Ppxk5l_NDe8_Fv-F5qU6Q_1785865396
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD33A19560BB;
-	Tue,  4 Aug 2026 17:43:12 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FBA31955DAF;
+	Tue,  4 Aug 2026 17:43:16 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.44.34.30])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91FF7195608E;
-	Tue,  4 Aug 2026 17:43:08 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3EC4D195608E;
+	Tue,  4 Aug 2026 17:43:12 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tomas Glozar <tglozar@redhat.com>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	Crystal Wood <crwood@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Ivan Pravdin <ipravdin.official@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v4 0/6] tracing/osnoise: Track IPIs
-Date: Tue,  4 Aug 2026 19:42:32 +0200
-Message-ID: <20260804174242.2288433-1-vschneid@redhat.com>
+Subject: [PATCH v4 1/6] rtla/osnoise: Add IPI tracking cmdline option
+Date: Tue,  4 Aug 2026 19:42:33 +0200
+Message-ID: <20260804174242.2288433-2-vschneid@redhat.com>
+In-Reply-To: <20260804174242.2288433-1-vschneid@redhat.com>
+References: <20260804174242.2288433-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,79 +66,76 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: j7zTSMRhQvRJF5QrRfdyYFnoUtChQlal65YSJbLLO2k_1785865393
+X-Mimecast-MFC-PROC-ID: -pXOy_6en_LfnpxAGDZSgiSQSDKbU7Ma9I1E4VZxczc_1785865396
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi folks,
+Later commits will add IPI tracking to osnoise top. To avoid breaking
+existing scripts, this new feature will be gated behind a new --ipi option.
 
-So I've seen a few times now reports of latency spikes caused by IPIs, usually
-because of isolation misconfiguration, but only detected at the tail of end
-e.g. a 24h timerlat run.
+Suggested-by: Tomas Glozar <tglozar@redhat.com>
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+---
+ Documentation/tools/rtla/rtla-osnoise-top.rst | 4 ++++
+ tools/tracing/rtla/src/cli.c                  | 1 +
+ tools/tracing/rtla/src/cli_p.h                | 3 +++
+ tools/tracing/rtla/src/common.h               | 1 +
+ 4 files changed, 9 insertions(+)
 
-It's not because those IPIs are rare, but rather that they don't by themselves
-cause a monitered CPU to reach the latency threshold, it's usually a combined
-interference that gets us there.
-
-I'd like to make it easier to detect such misconfigurations and thus IPIs
-hitting supposedly-isolated CPUs. I initially kludged a timerlat option to stop
-tracing as soon as an IPI was sent to a monitored CPU, regardless of the latency
-threshold. It sort of did the trick, but Tomáš convinced me timerlat wasn't
-really the place for that.
-
-Patches are available at
-
-https://gitlab.com/vschneid/linux.git -b mainline/tracing/osnoise-ipi-userspace/v4
-
-Cheers,
-Valentin
-
-Revisions
-=========
-
-v3 -> v4
-++++++++
-
-o Rebased onto v7.2-rc4
-o Fixed changelog typo
-
-v2 -> v3
-++++++++
-
-o Dropped the short-form -i option to leave it free 
-o Re-arranged top header printing 
-o Fixed tracefs_event_file_write() return value handling
-
-o Changed IPI filtering to allow it to gracefully fail on older kernels
-o Added filter clearing for -e events to ensure a known state
-
-
-v1 -> v2
-++++++++
-
-o Dropped the in-kernel osnoise_sample changes and made it all userspace
-
-Valentin Schneider (6):
-  rtla/osnoise: Add IPI tracking cmdline option
-  rtla/osnoise: Record IPI count in osnoise top
-  rtla/osnoise: Leverage IPI event filters when tracing a subset of CPUs
-  rtla/osnoise: Allow IPI filters to gracefully fail
-  rtla: Unconditionally clean any pre-existing filters for user-provided
-    events
-  rtla/osnoise: Trace IPI events when recording a trace file
-
- Documentation/tools/rtla/rtla-osnoise-top.rst |   4 +
- tools/tracing/rtla/src/cli.c                  |   1 +
- tools/tracing/rtla/src/cli_p.h                |   3 +
- tools/tracing/rtla/src/common.c               |   2 +-
- tools/tracing/rtla/src/common.h               |   3 +-
- tools/tracing/rtla/src/osnoise.c              |  72 +++++++-
- tools/tracing/rtla/src/osnoise.h              |   4 +
- tools/tracing/rtla/src/osnoise_top.c          | 155 +++++++++++++++++-
- tools/tracing/rtla/src/trace.c                |   4 +
- 9 files changed, 244 insertions(+), 4 deletions(-)
-
---
+diff --git a/Documentation/tools/rtla/rtla-osnoise-top.rst b/Documentation/tools/rtla/rtla-osnoise-top.rst
+index b91c02ac2bbe1..b948a813d45cb 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-top.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-top.rst
+@@ -28,6 +28,10 @@ OPTIONS
+ =======
+ .. include:: common_osnoise_options.txt
+ 
++**--ipi**
++
++	Track sources of IPIs.
++
+ .. include:: common_top_options.txt
+ 
+ .. include:: common_options.txt
+diff --git a/tools/tracing/rtla/src/cli.c b/tools/tracing/rtla/src/cli.c
+index c5279c9875310..eb1e76a6b0dea 100644
+--- a/tools/tracing/rtla/src/cli.c
++++ b/tools/tracing/rtla/src/cli.c
+@@ -78,6 +78,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 		RTLA_OPT_STOP_TOTAL('S', "stop-total", "total sample"),
+ 		OSNOISE_OPT_THRESHOLD,
+ 		RTLA_OPT_TRACE_OUTPUT("osnoise", opt_osnoise_trace_output_cb),
++		OSNOISE_OPT_IPI,
+ 
+ 	OPT_GROUP("Event Configuration:"),
+ 		RTLA_OPT_EVENT,
+diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
+index 3c939de9abf02..d120fac424e30 100644
+--- a/tools/tracing/rtla/src/cli_p.h
++++ b/tools/tracing/rtla/src/cli_p.h
+@@ -305,6 +305,9 @@ static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
+ 	"the minimum delta to be considered a noise", \
+ 	opt_llong_callback)
+ 
++#define OSNOISE_OPT_IPI OPT_BOOLEAN(0, "ipi", &params->common.ipi, \
++	"track sources of IPIs")
++
+ /*
+  * Callback functions for command line options for osnoise tools
+  */
+diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
+index 04b287a03f6d4..045253230fcf2 100644
+--- a/tools/tracing/rtla/src/common.h
++++ b/tools/tracing/rtla/src/common.h
+@@ -108,6 +108,7 @@ struct common_params {
+ 	bool			kernel_workload;
+ 	bool			user_data;
+ 	bool			aa_only;
++	bool			ipi;
+ 
+ 	struct actions		threshold_actions;
+ 	struct actions		end_actions;
+-- 
 2.55.0
 
