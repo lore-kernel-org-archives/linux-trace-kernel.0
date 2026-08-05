@@ -1,109 +1,120 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF1E38E8A6
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Aug 2026 23:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4881E1D5CC9;
+	Wed,  5 Aug 2026 01:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785885354; cv=none; b=XOsrEP/YoD08NP8jVvTtQjNxOGvG7gkkwgagUgrps8K6zNMDk9v9hLMUnvGwVOdy+tk+8AGnG2xxBjGEy7zeR5lmVjifReo+IFOSj/ljIdG9IAWY/P7Lgalz7QUK/oY9w9VwkiGBMJIWx4+tDM8I7E6l8AHdrzEiVUP+PkpInSs=
+	t=1785892966; cv=none; b=Rwx/Q4TxwA9M8rmg+MtQ2XBd3nS1ok4DE6wwbeKQpJ58Fn1rHcyIHB4+VZ5zBUxWYpdaVsdoo4s/O9loxsvE8E5ucjCvWIGA+A9Uygz619CXR56AhjV4M71TZn6SlTcH+p9yYeJz0CwbLhPU4HtEwLEK/6CvgPWn7Zeel+G7c/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785885354; c=relaxed/simple;
-	bh=CQxbt8HUW9NzD6kY4dP+QdWUZhtRuWP0yx/1re3yKbQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s4O1q30iXUI4qEqYBjlQUPUBlp8KKCTAvC89Som1G7QIKfm+MeEiQlqYRuX3sMMlI9nOe4TmqEmW5z1rRmvlEEiliPjyRegy9CSWW+RIbqsh3yaQTlZ6ubmd1m7cXovf4cBMYxALSV1UfOh9D+9XZv3ie7jQ/wuS1cvdA/mvAPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JIIG5LpR; arc=none smtp.client-ip=209.85.210.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1785892966; c=relaxed/simple;
+	bh=x73GVCLjD04ys1/SrhiYSCsWd+Q+xmz+IUlcLQ7Y1pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V1wvkD+KFovVGp66dsbosxpA1/Jqop8mvzQ5ettarzVrPr5RpO0Vbk1iAiSpHOpVJaZfluv138HQlkrD/E/nXGmto3KS5GmMsCDd3VbY1VVPQa9NVYexro4FsPdfkp8UpWdBvUv/6ZyrBuR5LTURv/zcTcgn6x5rf/9gdMuwtgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DmnXEVuZ; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JIIG5LpR"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-848860def2cso362084b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Aug 2026 16:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785885349; x=1786490149; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lz3QUw22bh8QYe/ZiAsreDFp91isZAPnzZuU7CX+ujA=;
-        b=JIIG5LpRyZ9YSrGomghxnXaaw9n5pFKARoczMsPVr2lBqhJntkncP0TIeobp8PVg+V
-         pBOsecuTT0XITt1zu8vjNN1ip6inffWZzyUAc+XWaLfA6xXGm3bq/O6CsyQbMP9wKfE5
-         xy3KUxvnv3dRWSWiiXqIW6Ox5zv/UADVE1wUTKoW2SCYebdZcQo7LnR452xudYG7DNgL
-         TSPKcMzBGg56wYkhlZ+dfL0Tu2YyvGOfxnpMnM0qzQ+FiwRVuZVH7ZWDTB1qGpByorKb
-         Qm3UTPgRC1x2tlSn4mZhIji+pjVL6BFEQ28q1nUPQXA+xSvpF9t2hzw0vl1n4wzqoBpC
-         QfQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785885349; x=1786490149;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=lz3QUw22bh8QYe/ZiAsreDFp91isZAPnzZuU7CX+ujA=;
-        b=A/fLZOg61ug1ttO8eaqOcK3UIxXXhndkoEYe2alE4SKOlLzQ4bAYjtgTSZZog2JHde
-         xwR/Gwvj8PqmbhQs1pD73nL4No+1DLwCNTWb5qGXR+HxZ3ylBcuLlb+eUvnPFewPzFGh
-         8iQCQAEblDW/bzYqostbbbP6puxVbkWv/l1oiR5gkkcVztAHCEEVX2jL7v7rLRT/NUHJ
-         KjXk7FBfJ+zd3ALg1KZWPNrdvyU00ccz/qEU29+gmGx3wFadWYg0nsBT52ZcMOkTFvhC
-         D8gIcsv32UBiz/hLyBQAXknOx4NS1LqiHVnW765lWt6hNVfXJggKCL8cGGQtoT7BOH3A
-         spKQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpxzJn7sTekpi0qNiLJXKF/FJY6p7azGRGaWWEBmSpfMjsh1VjB9TrNwkev1v09lEGv3CYlhecnrNDYkvPzqorA1OU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2X04Mwzpb85Wg5csfK4fIqcfGGTlmJWoSQa35VaZ1y090zDK/
-	v103+b4jicmVugVE1Ldzx0W/bag43lvr7klA4TtJOnmFC3RdJL/09ybYxfDVTTLrQGALBe6gCJW
-	JjI7rFg==
-X-Received: from pfbbq18.prod.google.com ([2002:a05:6a00:e12:b0:848:5740:db83])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9517:b0:84e:e809:dd49
- with SMTP id d2e1a72fcca58-84f2e12d02bmr2017520b3a.36.1785885348892; Tue, 04
- Aug 2026 16:15:48 -0700 (PDT)
-Date: Tue, 4 Aug 2026 16:15:48 -0700
-In-Reply-To: <CAEvNRgEOE5oeFVRYYucsCGJaFAQYS1oNRXAwGKzRAyqmoHT9OQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DmnXEVuZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785892964; x=1817428964;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=x73GVCLjD04ys1/SrhiYSCsWd+Q+xmz+IUlcLQ7Y1pw=;
+  b=DmnXEVuZjmUeufD9YGWWs/HqaRfm2jseC54vLu0QnFVse1yDoDPyKJqv
+   0p6KRZFcxLr3UE2CwXxbgoK7kX9BApPLrZA5Fw1PniNRTZP3GJsbbcMH9
+   2dVnnrdiRJntXvMUG1l4zBMOH3Z3JcGyoa+3RAK2lHYQeZ/laZtb44Wo+
+   6G4sDMgq9b+xtbl1fM8TnmsyE6soKKZ8X0eI3XELndyYMhzdoqAsfH7iE
+   2vD5m/ugcfPTLLnL1x9fwu9EqJhwxP7lT9iSrvT842Ttufe/TccX46EVK
+   1vNwBEKTJMWQwohICBG4GQWr3cbfZCS0qwu0kgvZxtuR651rV02LZgVvQ
+   A==;
+X-CSE-ConnectionGUID: BMRniQvFRrWKr8scoaiCUg==
+X-CSE-MsgGUID: K0+qUxbDTkWWXR1Lz5PU1A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11865"; a="90132261"
+X-IronPort-AV: E=Sophos;i="6.25,205,1779174000"; 
+   d="scan'208";a="90132261"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2026 18:22:44 -0700
+X-CSE-ConnectionGUID: UH3cUCg5Sh2vN9h05lqx6w==
+X-CSE-MsgGUID: aWb1dOFcQwy5LtJoJwkD0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,205,1779174000"; 
+   d="scan'208";a="261096102"
+Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 04 Aug 2026 18:22:42 -0700
+Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wrQL9-00000000BAL-21Fw;
+	Wed, 05 Aug 2026 01:22:39 +0000
+Date: Wed, 5 Aug 2026 09:22:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH] tracing: Cleanup event_enable_trigger_parse() by using
+ __free()
+Message-ID: <202608050901.w9NoTLGg-lkp@intel.com>
+References: <20260701174829.67ab8a33@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <edc3566b-370c-41a0-a71d-2e4a0e1a94f7@kernel.org>
- <CAEvNRgEas_9BEV-cNxXu4_wQx8sR2M4_OaW6DEd4=fszALMV0w@mail.gmail.com>
- <60552bee-3326-4917-b00f-5fb7ba3b8adb@kernel.org> <be77c2cb-6e41-4382-9d2f-cd299f634196@kernel.org>
- <anCtzQrUkFSSq8De@google.com> <99037993-ee13-4160-8c87-b6642faea554@kernel.org>
- <CAEvNRgHYhKACDfx9ZZy4a-TTS4yWzEJt=Jc92=eXxS15LPnTYg@mail.gmail.com>
- <anJbMf5GBe0Pxh_x@google.com> <de780cc3-8c43-46f8-b8e6-3ddfe93d753d@arm.com> <CAEvNRgEOE5oeFVRYYucsCGJaFAQYS1oNRXAwGKzRAyqmoHT9OQ@mail.gmail.com>
-Message-ID: <anJypPblO8ww0IHY@google.com>
-Subject: Re: [PATCH v9 14/41] mm: swap: Introduce lru_add_drain_progressive()
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, "David Hildenbrand (Arm)" <david@kernel.org>, aik@amd.com, 
-	andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	chao.p.peng@linux.intel.com, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, "hughd@google.com" <hughd@google.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260701174829.67ab8a33@gandalf.local.home>
 
-On Tue, Aug 04, 2026, Ackerley Tng wrote:
-> Suzuki K Poulose <suzuki.poulose@arm.com> writes:
-> Sean, for the two attachments you left, did you intend 0001 to be the
-> first patch in the conversions series, or separately handled? 
+Hi Steven,
 
-Please include it in this series.  FWIW, it doesn't have to be the very first
-patch, though that probably does make the most sense.
+kernel test robot noticed the following build warnings:
 
-> and 0002 will replace these 2 patches (in-place, in terms of order), right?
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v7.2-rc6 next-20260804]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yep, thanks!
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Cleanup-event_enable_trigger_parse-by-using-__free/20260805-073956
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20260701174829.67ab8a33%40gandalf.local.home
+patch subject: [PATCH] tracing: Cleanup event_enable_trigger_parse() by using __free()
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20260805/202608050901.w9NoTLGg-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 16.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260805/202608050901.w9NoTLGg-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202608050901.w9NoTLGg-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/file.h:13,
+                    from include/linux/kernel_read_file.h:5,
+                    from include/linux/security.h:26,
+                    from kernel/trace/trace_events_trigger.c:8:
+   kernel/trace/trace_events_trigger.c: In function 'event_enable_trigger_parse':
+>> include/linux/cleanup.h:228:22: warning: ignoring return value of '__must_check_fn' declared with attribute 'warn_unused_result' [-Wunused-result]
+     228 |         ((typeof(p)) __must_check_fn((__force const volatile void *)__get_and_null(p, NULL)))
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace_events_trigger.c:1842:9: note: in expansion of macro 'no_free_ptr'
+    1842 |         no_free_ptr(enable_data);
+         |         ^~~~~~~~~~~
+
+
+vim +228 include/linux/cleanup.h
+
+85be6d84244706 Peter Zijlstra 2023-08-15  226  
+54da6a0924311c Peter Zijlstra 2023-05-26  227  #define no_free_ptr(p) \
+366fef794bd2b7 Ilpo Järvinen  2025-03-10 @228  	((typeof(p)) __must_check_fn((__force const volatile void *)__get_and_null(p, NULL)))
+54da6a0924311c Peter Zijlstra 2023-05-26  229  
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
