@@ -1,104 +1,145 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13922360EF2;
-	Wed,  5 Aug 2026 14:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890D641B8D9
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Aug 2026 15:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785939304; cv=none; b=D9nrIDTPSVgAsfsWtoQmDZliigRsIFZfiE0+cfldjfg2W055QAGzNIugQHVd6yaMS300z05A5TMHmWPhqcODj2XagUNLFXx9Q4We3oEfYZZILRs6oHQVe7PXvz7zr5rKd5IWaZBnPh7tJ02EEXScA5c0pxqDutOYa/82XkGmqOo=
+	t=1785942870; cv=none; b=FAoHQSUF7qoOvzZVNxNHsnnIN/mR3CT1Nx74R2uKzNWXPBBILDCf3Em9YuRTNjk4d6bW5z2+MVlVQYGJAhWnn1KRoxd+8r9yD/YhS9dkmdOBjdyedef4ZbsDTxIrRrCCZsfiOVafE345j7miz3WekqT/E4jGGFgO23zqbAXJt7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785939304; c=relaxed/simple;
-	bh=sHISbQRVT8OOfRaHccMY/K9NONhXWRGgQh9pCdeLPc8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aH4sadDY6lWVp9VgfBjDB8ArVNZqT2JvF5um9scvDf+ZM87odP5+fLbQZE6m614UV/KFPnYxjvYeY0er0Rxk61y9gWbwK1oa6+9u2iz6SV6la+M8as3HocXSX1gtsa28NyKtpeEkGCEIAfHLR/bnC9O4o1ge0JDTH52uu+qKiVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZK8qMVIN; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1785942870; c=relaxed/simple;
+	bh=Hs5V3juOMVZH5ra/jogh0AuQcuuOORr/9WsnqQU1PDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=mijjETm469MIOqJHg0ZMYAXKRbZ0zwrBnpMXPcGbFJyAhvWUQLMSgpFQVmdM7Of9amne3SCWPIrt5IybMyBNLT84Ofo+xgskYGWRInnRyudS0WPGBhn6rmg9fSe8hUDlGKY3cPJxLDRDcWwtuw8HbvNLSBtkNb/acxCw+R0QBos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U7drgEjf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZK8qMVIN"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1785939292; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=0SLaqhckWEc3QyNtTsd3YEo6O8h5dl7e0vqZloeFzhQ=;
-	b=ZK8qMVINKJ+hRPDpmNR+IJgH2s4v5DPRRPXCkLrLbZ7QbIPDec6q7NqWjfwaBG/3NdW0G9Pso+tTOT9N1BYZujyQzMRjRmc/TI3HjA7l9BE5pBZGNj/Qb4S5gKZ+5YOGevndjoYWRE9h3869c6suUWX4aJi2u1fa0ASAWkAFIqE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=ying.huang@linux.alibaba.com;NM=1;PH=DS;RN=48;SR=0;TI=SMTPD_---0X8RNYkg_1785939272;
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0X8RNYkg_1785939272 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 05 Aug 2026 22:14:48 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
-Cc: Thomas Gleixner <tglx@kernel.org>,  Ingo Molnar <mingo@redhat.com>,
-  Borislav Petkov <bp@alien8.de>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  x86@kernel.org,  "H. Peter Anvin"
- <hpa@zytor.com>,  Andrew Morton <akpm@linux-foundation.org>,  David
- Hildenbrand <david@kernel.org>,  Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>,  "Liam R. Howlett"
- <Liam.Howlett@oracle.com>,  Vlastimil Babka <vbabka@kernel.org>,  Mike
- Rapoport <rppt@kernel.org>,  Suren Baghdasaryan <surenb@google.com>,
-  Michal Hocko <mhocko@suse.com>,  Trond Myklebust <trondmy@kernel.org>,
-  Anna Schumaker <anna@kernel.org>,  Zi Yan <ziy@nvidia.com>,  Matthew
- Brost <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,
-  Rakie Kim <rakie.kim@sk.com>,  Byungchul Park <byungchul@sk.com>,
-  Gregory Price <gourry@gourry.net>,  Alistair Popple <apopple@nvidia.com>,
-  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Brendan Jackman <jackmanb@google.com>,
-  Johannes Weiner <hannes@cmpxchg.org>,  David Rientjes
- <rientjes@google.com>,  Davidlohr Bueso <dave@stgolabs.net>,  Fan Ni
- <nifan.cxl@gmail.com>,  Frank van der Linden <fvdl@google.com>,  Jonathan
- Cameron <jic23@kernel.org>,  Raghavendra K T <rkodsara@amd.com>,  "Rao,
- Bharata Bhasker" <bharata@amd.com>,  SeongJae Park <sj@kernel.org>,  Wei
- Xu <weixugc@google.com>,  Xuezheng Chu <xuezhengchu@huawei.com>,  Yiannis
- Nikolakopoulos <yiannis@zptcorp.com>,  dimitrios@palyvos.net,  Ryan
- Roberts <ryan.roberts@arm.com>,  Huan Nguyen <nhuhuan@google.com>,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  linux-nfs@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,  Alirad
- Malek <alirad.malek@zptcorp.com>
-Subject: Re: [PATCH RFC v2 2/3] mm: new migrate_mode flag for async using
- non-temporal stores
-In-Reply-To: <20260730-rfc-nt-demote-v2-2-452dbe3b5073@zptcorp.com> (Yiannis
-	Nikolakopoulos's message of "Thu, 30 Jul 2026 17:02:58 +0200")
-References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
-	<20260730-rfc-nt-demote-v2-2-452dbe3b5073@zptcorp.com>
-Date: Wed, 05 Aug 2026 22:14:31 +0800
-Message-ID: <87h5l88xiw.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U7drgEjf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785942865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3rCq9tsK99vV/IKDIQH4AsvKIO8wZbuF/vm3wB8OIMI=;
+	b=U7drgEjfUcf2oGWaKhwc3B/wDmVKNbT9Z77tmCiAquJ3KFvkR1Eo9pzCMqRXd9kUjT8769
+	zN/u3JrvQdzCHyr19+CfkEBqlapOuGDSo1Vau1Lg8ZDudy9Cko6Yh5LrDL7aeT0aLrLZOj
+	PbM6EYkIrIw/ZedULYRsUR0Fdg2i/JQ=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-EbKoPf_FPNCZjbBdEtddHg-1; Wed,
+ 05 Aug 2026 11:14:20 -0400
+X-MC-Unique: EbKoPf_FPNCZjbBdEtddHg-1
+X-Mimecast-MFC-AGG-ID: EbKoPf_FPNCZjbBdEtddHg_1785942858
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A62A119560B5;
+	Wed,  5 Aug 2026 15:14:18 +0000 (UTC)
+Received: from fedora (unknown [10.44.32.54])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2B303195DF93;
+	Wed,  5 Aug 2026 15:14:14 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  5 Aug 2026 17:14:18 +0200 (CEST)
+Date: Wed, 5 Aug 2026 17:14:13 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Sumanth Korikkar <sumanthk@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH] uprobes: Skip breakpoint installation on non executable
+ vmas
+Message-ID: <anNTRb2aGsvY8_Rf@redhat.com>
+References: <20260805131904.1127416-1-sumanthk@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <20260805131904.1127416-1-sumanthk@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: y_VsvkTWstrUwhxPXTwNmjl-McdUij1wJ_vT9cvMjsE_1785942858
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com> writes:
+On 08/05, Sumanth Korikkar wrote:
+>
+> bpftrace  -e 'usdt:./testprogs/usdt_semaphore_test:tracetest:testprobe {
+> printf("%s\n", str(arg1) ); exit(); }'
 
-[snip]
+I am hoping that Andrii and Jiri (cc'ed) can take a look, I know nothing
+about usdt... And TBH, I don't even know what RELRO is ;)
 
-> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-> index 265c4328b36a..f7186e705b48 100644
-> --- a/include/linux/migrate_mode.h
-> +++ b/include/linux/migrate_mode.h
-> @@ -3,6 +3,8 @@
->  #define MIGRATE_MODE_H_INCLUDED
->  /*
->   * MIGRATE_ASYNC means never block
-> + * MIGRATE_ASYNC_NON_TEMPORAL_STORES means never block and use non-temporal
-> + * stores if supported by the architecture
->   * MIGRATE_SYNC_LIGHT in the current implementation means to allow blocking
->   *	on most operations but not ->writepage as the potential stall time
->   *	is too significant
-> @@ -10,10 +12,17 @@
->   */
->  enum migrate_mode {
->  	MIGRATE_ASYNC,
-> +	MIGRATE_ASYNC_NON_TEMPORAL_STORES,
->  	MIGRATE_SYNC_LIGHT,
->  	MIGRATE_SYNC,
->  };
+Let me ask a couple of questions for now.
 
-Is it better to turn migrate_mode parameter into migrate_flags?
+> expects a semaphore increment of 1, but semaphore gets double incremented
+>
+> Test program:
+> https://github.com/bpftrace/bpftrace/blob/master/tests/testprogs/usdt_semaphore_test.c
 
----
-Best Regards,
-Huang, Ying
+Perhaps you can provide the test-case which I could compile on my
+machine without libbpf-usdt/usdt.h?
+
+And can you explain what the bpftrace cmd above actually does? I mean,
+where does it put the uprobe? I guess the ref_ctr_offset argument of
+uprobe_register() refers to USDT_DEFINE_SEMA() in that test-case...
+
+> Reason: .text mapping and RELRO mapping resolve to the same page aligned
+> file offset 0
+> 01000000-01001000 r-xp 00000000 5e:01 usdt_semaphore_test (.text)
+> 01001000-01002000 r--p 00000000 5e:01 usdt_semaphore_test (RELRO)
+> 01002000-01003000 rw-p 00001000 5e:01 usdt_semaphore_test (semaphore)
+>
+> valid_vma() currently accepts both mappings (which contains executable
+> text and RELRO mapping) during uprobe registration, since both have
+> VM_MAYEXEC set. This causes register_for_each_vma() to call
+> install_breakpoint() twice for the same underlying uprobe offset in the
+> process.  This means, update_ref_ctr() is called twice for the same
+> process, so a usdt semaphore is incremented from 0 to 2.
+
+So, 2 vmas map the same binary, install_breakpoint() is called twice.
+But, the 2nd install_breakpoint() -> ... -> uprobe_write() should see
+that the original insn was already replaced by int3, in this case
+verify_opcode() returns 0 and uprobe_write() should do nothing.
+
+And, if this uprobe was optimized before the 2nd install_breakpoint(),
+uprobe_write() won't be called.
+
+Hmm.
+
+> Installing a breakpoint for mapping without VM_EXEC and
+> updating usdt reference counter in that case is not useful.
+>
+> Skip non VM_EXEC mappings in install_breakpoint(). This fixes semaphore
+> double increment as shown in the above usecase.
+>
+> Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> ---
+>  kernel/events/uprobes.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 6300b216012c..9e0bbc3cf401 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1155,6 +1155,9 @@ static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
+>  	bool first_uprobe;
+>  	int ret;
+>
+> +	if (!(vma->vm_flags & VM_EXEC))
+> +		return 0;
+> +
+
+Well, but then it makes more sense to change valid_vma() to nack the
+non VM_EXEC mappings ?
+
+Oleg.
+
