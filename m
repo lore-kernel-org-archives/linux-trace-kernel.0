@@ -1,147 +1,104 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CCC47013A;
-	Wed,  5 Aug 2026 13:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13922360EF2;
+	Wed,  5 Aug 2026 14:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785935996; cv=none; b=E4wGC6Q5S8mc5iawD3m1vmFWsiksE25T9ILazaI7Ry0NEvPMeb4E+lJWuZzyltKl2sBrTzu1WVdCBgahV1VRWsslYOSi/johtmLzjXykVV72NvSxKzo9VjyecS8iB2g7vCoz89ceYyK0jHMpJn+0R/pjtRmNXayNTevrhpU7loQ=
+	t=1785939304; cv=none; b=D9nrIDTPSVgAsfsWtoQmDZliigRsIFZfiE0+cfldjfg2W055QAGzNIugQHVd6yaMS300z05A5TMHmWPhqcODj2XagUNLFXx9Q4We3oEfYZZILRs6oHQVe7PXvz7zr5rKd5IWaZBnPh7tJ02EEXScA5c0pxqDutOYa/82XkGmqOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785935996; c=relaxed/simple;
-	bh=7SSn/eHx9DBm9e/ciZonBoZ7MpWdg1Bs5jWyn6uwsBk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iXo0ZMX6Oyk3Ffk3BQ+Jrta8h7b0XYtfvrjZsy7/wIGlK0NkfeZPJuEybU8xyiXcnRYeahhZeyByTHVCyhDJzDlmZBgLqGveCxJqi8lf1DjWzqUHmpaH8QB1iZG6wRFS2xQd3hc3lsdg4wf/RQCwMituNLZK/9nzHfaJAtPLEes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DlZU5QfM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1785939304; c=relaxed/simple;
+	bh=sHISbQRVT8OOfRaHccMY/K9NONhXWRGgQh9pCdeLPc8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aH4sadDY6lWVp9VgfBjDB8ArVNZqT2JvF5um9scvDf+ZM87odP5+fLbQZE6m614UV/KFPnYxjvYeY0er0Rxk61y9gWbwK1oa6+9u2iz6SV6la+M8as3HocXSX1gtsa28NyKtpeEkGCEIAfHLR/bnC9O4o1ge0JDTH52uu+qKiVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZK8qMVIN; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DlZU5QfM"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 675CHnJs3724707;
-	Wed, 5 Aug 2026 13:19:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=r9tp8f63V8MVF39cPBB9Ef/Krl0yRvEborCTSeWgo
-	w0=; b=DlZU5QfMoz+l1GRUEpQ2A3d9DWY5GzA1MWDZ3jqjY/+/PFhJUR6khdPyw
-	eVcd2Xv1aaGehxGRRJ2QQ4opqZsrBkBIMUJH5wru1ZtwNWZ5DxDgd68rcNav5qsp
-	BVmnbjrJ5o+pJoqzn7WMeUDJU7xgxHufl7ApJIvVDnkl8s1m1B3dpE6kk8SjEz9R
-	D1BB4ZiJ5zol7kvreSX74w+q2LvlGZKt0qVrfHsRp87PUMX++RJNSRSjr0wGG3ae
-	9uiG7WQQquSNkHwoXg0qlshBygeMiZcFbuld1/76yJw+hnj0tJO3Seqil88oqB6M
-	X9aDE91O2x8UdXJzWpG6veKxUU8Fg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs77gatk6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Aug 2026 13:19:51 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 675DBHFE002463;
-	Wed, 5 Aug 2026 13:19:51 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fsugw6sx3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Aug 2026 13:19:50 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 675DJkPZ51511644
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Aug 2026 13:19:46 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C09FB2004B;
-	Wed,  5 Aug 2026 13:19:46 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9E80120043;
-	Wed,  5 Aug 2026 13:19:46 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Aug 2026 13:19:46 +0000 (GMT)
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, sumanthk@linux.ibm.com
-Subject: [PATCH] uprobes: Skip breakpoint installation on non executable vmas
-Date: Wed,  5 Aug 2026 15:19:04 +0200
-Message-ID: <20260805131904.1127416-1-sumanthk@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZK8qMVIN"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1785939292; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=0SLaqhckWEc3QyNtTsd3YEo6O8h5dl7e0vqZloeFzhQ=;
+	b=ZK8qMVINKJ+hRPDpmNR+IJgH2s4v5DPRRPXCkLrLbZ7QbIPDec6q7NqWjfwaBG/3NdW0G9Pso+tTOT9N1BYZujyQzMRjRmc/TI3HjA7l9BE5pBZGNj/Qb4S5gKZ+5YOGevndjoYWRE9h3869c6suUWX4aJi2u1fa0ASAWkAFIqE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=ying.huang@linux.alibaba.com;NM=1;PH=DS;RN=48;SR=0;TI=SMTPD_---0X8RNYkg_1785939272;
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0X8RNYkg_1785939272 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Aug 2026 22:14:48 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+Cc: Thomas Gleixner <tglx@kernel.org>,  Ingo Molnar <mingo@redhat.com>,
+  Borislav Petkov <bp@alien8.de>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  x86@kernel.org,  "H. Peter Anvin"
+ <hpa@zytor.com>,  Andrew Morton <akpm@linux-foundation.org>,  David
+ Hildenbrand <david@kernel.org>,  Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>,  "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>,  Vlastimil Babka <vbabka@kernel.org>,  Mike
+ Rapoport <rppt@kernel.org>,  Suren Baghdasaryan <surenb@google.com>,
+  Michal Hocko <mhocko@suse.com>,  Trond Myklebust <trondmy@kernel.org>,
+  Anna Schumaker <anna@kernel.org>,  Zi Yan <ziy@nvidia.com>,  Matthew
+ Brost <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,
+  Rakie Kim <rakie.kim@sk.com>,  Byungchul Park <byungchul@sk.com>,
+  Gregory Price <gourry@gourry.net>,  Alistair Popple <apopple@nvidia.com>,
+  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,  Brendan Jackman <jackmanb@google.com>,
+  Johannes Weiner <hannes@cmpxchg.org>,  David Rientjes
+ <rientjes@google.com>,  Davidlohr Bueso <dave@stgolabs.net>,  Fan Ni
+ <nifan.cxl@gmail.com>,  Frank van der Linden <fvdl@google.com>,  Jonathan
+ Cameron <jic23@kernel.org>,  Raghavendra K T <rkodsara@amd.com>,  "Rao,
+ Bharata Bhasker" <bharata@amd.com>,  SeongJae Park <sj@kernel.org>,  Wei
+ Xu <weixugc@google.com>,  Xuezheng Chu <xuezhengchu@huawei.com>,  Yiannis
+ Nikolakopoulos <yiannis@zptcorp.com>,  dimitrios@palyvos.net,  Ryan
+ Roberts <ryan.roberts@arm.com>,  Huan Nguyen <nhuhuan@google.com>,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  linux-nfs@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,  Alirad
+ Malek <alirad.malek@zptcorp.com>
+Subject: Re: [PATCH RFC v2 2/3] mm: new migrate_mode flag for async using
+ non-temporal stores
+In-Reply-To: <20260730-rfc-nt-demote-v2-2-452dbe3b5073@zptcorp.com> (Yiannis
+	Nikolakopoulos's message of "Thu, 30 Jul 2026 17:02:58 +0200")
+References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
+	<20260730-rfc-nt-demote-v2-2-452dbe3b5073@zptcorp.com>
+Date: Wed, 05 Aug 2026 22:14:31 +0800
+Message-ID: <87h5l88xiw.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA1MDEwNyBTYWx0ZWRfXw3FDzfBAk3Fm
- P8tvZ+zA/W6Ak7ylMdYDIGWYSwaejPEA3ZY/gSwjjOdTicFyLeMeEzOxhojOW/8bHiu4nCj8lDl
- g2mOLfY+CvPdZRqMu5XcRYd5NDv5XsnQ1AP9PPanOqkDT4QzGzh+LU/N81bqupPDqEKjk+6V1Kr
- uzR8nfaft/qHdZoH4ktgFQ92ErFL3dPMEC7NJ9L2E0v6SbAHnQgWh/DCna8koA20D7K2xEInLz4
- 3Lip/hPRhUFrUEbTlOWZRFbJ5u4gs7FbprmnMyd4gKa7VaFVppfSrmKsmzvZqlER+XqgM5ITTii
- DwFlOYZG3WcJbgDK/+4nzRJ5kHPIRZePq2XmhkGSWHuNPhRz70rpN3QBWJmOnh4NQNnkdoHZMe4
- PBAdkEt9b9EQzJz1S55RmHj1sdTRFJl8PsALvMS0gkZza+VMMOC8UPD3pRlcP5F5Z7frR8uUh8i
- qt4Ozwmu776qpQL9NYA==
-X-Authority-Analysis: v=2.4 cv=WIFPmHsR c=1 sm=1 tr=0 ts=6a733877 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=rEqGk-WHAAAA:20 a=VnNF1IyMAAAA:8
- a=Azb0KeSeonOynWWGDFkA:9 a=bA3UWDv6hWIuX7UZL3qL:22
-X-Proofpoint-GUID: -q6khzYLWKGBT06kzF9sww4MkKV6xWQ0
-X-Proofpoint-ORIG-GUID: -q6khzYLWKGBT06kzF9sww4MkKV6xWQ0
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA1MDEwNyBTYWx0ZWRfX5A9AfjClI1he
- syft5JN9z5SNUM98D9RpxOP1asPj+24J7fEMFvftiyYTbzw9z72zrZaLCu7tf0Hjh5sYfBbUGAF
- oAgAxX29w2H56vnGiQGHQLWPiPnwEhc=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-05_04,2026-08-04_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- suspectscore=0 clxscore=1011 impostorscore=0 bulkscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608050107
+Content-Type: text/plain; charset=ascii
 
-bpftrace  -e 'usdt:./testprogs/usdt_semaphore_test:tracetest:testprobe {
-printf("%s\n", str(arg1) ); exit(); }'
+Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com> writes:
 
-expects a semaphore increment of 1, but semaphore gets double incremented
+[snip]
 
-Test program:
-https://github.com/bpftrace/bpftrace/blob/master/tests/testprogs/usdt_semaphore_test.c
+> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
+> index 265c4328b36a..f7186e705b48 100644
+> --- a/include/linux/migrate_mode.h
+> +++ b/include/linux/migrate_mode.h
+> @@ -3,6 +3,8 @@
+>  #define MIGRATE_MODE_H_INCLUDED
+>  /*
+>   * MIGRATE_ASYNC means never block
+> + * MIGRATE_ASYNC_NON_TEMPORAL_STORES means never block and use non-temporal
+> + * stores if supported by the architecture
+>   * MIGRATE_SYNC_LIGHT in the current implementation means to allow blocking
+>   *	on most operations but not ->writepage as the potential stall time
+>   *	is too significant
+> @@ -10,10 +12,17 @@
+>   */
+>  enum migrate_mode {
+>  	MIGRATE_ASYNC,
+> +	MIGRATE_ASYNC_NON_TEMPORAL_STORES,
+>  	MIGRATE_SYNC_LIGHT,
+>  	MIGRATE_SYNC,
+>  };
 
-Reason: .text mapping and RELRO mapping resolve to the same page aligned
-file offset 0
-01000000-01001000 r-xp 00000000 5e:01 usdt_semaphore_test (.text)
-01001000-01002000 r--p 00000000 5e:01 usdt_semaphore_test (RELRO)
-01002000-01003000 rw-p 00001000 5e:01 usdt_semaphore_test (semaphore)
+Is it better to turn migrate_mode parameter into migrate_flags?
 
-valid_vma() currently accepts both mappings (which contains executable
-text and RELRO mapping) during uprobe registration, since both have
-VM_MAYEXEC set. This causes register_for_each_vma() to call
-install_breakpoint() twice for the same underlying uprobe offset in the
-process.  This means, update_ref_ctr() is called twice for the same
-process, so a usdt semaphore is incremented from 0 to 2.
-
-Installing a breakpoint for mapping without VM_EXEC and
-updating usdt reference counter in that case is not useful.
-
-Skip non VM_EXEC mappings in install_breakpoint(). This fixes semaphore
-double increment as shown in the above usecase.
-
-Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 ---
- kernel/events/uprobes.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 6300b216012c..9e0bbc3cf401 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1155,6 +1155,9 @@ static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
- 	bool first_uprobe;
- 	int ret;
- 
-+	if (!(vma->vm_flags & VM_EXEC))
-+		return 0;
-+
- 	ret = prepare_uprobe(uprobe, vma->vm_file, mm, vaddr);
- 	if (ret)
- 		return ret;
--- 
-2.53.0
-
+Best Regards,
+Huang, Ying
