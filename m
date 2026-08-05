@@ -1,133 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C69847D464
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Aug 2026 15:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D063147DD71
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Aug 2026 15:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785943709; cv=none; b=Q8TSOD8d++s0KulppD0UhN8xMDthHZViGhCCLco8VJb8qqXeor8/oh4iBrOA9xgrywQ1J/5jPwAj/9vsbwGCaVmekmPkPKPs45EcQNblFAanjJRN6vERyMRd5rLNzSsz/J0+Y9QxNxkMMbGrCfLlfWLwiv7qzzBTyOMf0yi37Go=
+	t=1785943963; cv=none; b=ox1fJdVEED30xbMSSCVANwb0nzSmdHnphMGYbwx9/KiMHXA/4LJvum6mT8JWuK6LDeCfdsB9tibojhIVhoZJa+pUy0YsHvLXXEmrirzAv42/W5KvuRMbbJsOhGqGd4gB7jl2mv2UUphQBA7luAtmQQEeeji9gUMMd7+berSN3BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785943709; c=relaxed/simple;
-	bh=7P+95rV/TT2pjxEUWAqZlW3qZJwsQmHgEDFHcG7CoDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=pOZ+9uZj0L3GgsN4BgrQy1ap/htMVbqJBGrHCrg1jtH/69mfz7WVxFWCabCJEdjw6Gtfku4LxfH6v1XBapcqhgWMRhvH2YHPmb5oeOX/j9X/zw470YqiIezcrvXyh1BaypcvhYK3LMwbHkSQYpR4t9xCKvv7iC5z+KoiOKhTmwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aCDm9/ne; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1785943963; c=relaxed/simple;
+	bh=fSfHKUXXjeuaF5GoHZqzt3ghM/ntROBEcVxwVLLKf5c=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=U+RLXfUB/4C8H/DgmfYJF4nQTXQviAj8Hsb542jbVPrIxQkbHduoQSVx/Y92VkEt6MYW6Qctdbbg0JYu1iVd1UNuVl7KKqoilh6bsOA1EUvKuKAaKxM1OwX1ED3vYdxKySGM0XcAL9NgQzm5YjXafch1pXJ3xG0MjEelKltdvpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=stizqqRa; arc=none smtp.client-ip=209.85.128.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCDm9/ne"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785943693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ctK7/PVJVWRli4Y2LPB1zFtJQgnpw1xEyC0DTxTCzuA=;
-	b=aCDm9/neQJPI+bj5GrJY9rbriExxCtiHNiXwWEDW00AkSJfiuijNC4C3nIgQVf6+t7gG7Z
-	lNSGPn63QOk0vqebhKTkbhju3C0+PDsWrBqXbYqyFYKWsaAW+Qvc611h+kmA6tYFSI8Gju
-	i90xRweRh1WqI9EerLd3JDwYNXXQQ74=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-417-scZsBcpfMnml1bp4lxmY4A-1; Wed,
- 05 Aug 2026 11:28:05 -0400
-X-MC-Unique: scZsBcpfMnml1bp4lxmY4A-1
-X-Mimecast-MFC-AGG-ID: scZsBcpfMnml1bp4lxmY4A_1785943684
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 794D8180064C;
-	Wed,  5 Aug 2026 15:28:04 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.39])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ADD8E19560AB;
-	Wed,  5 Aug 2026 15:28:02 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [GIT PULL] RTLA changes for 7.3
-Date: Wed,  5 Aug 2026 17:10:55 +0200
-Message-ID: <20260805151055.870722-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="stizqqRa"
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-496b61bd846so8873125e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Aug 2026 08:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785943956; x=1786548756; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=dURYyTAr3xD5Ug+KUce+nub8IT6QTcigszEQZYZJDrw=;
+        b=stizqqRanQgIpndQuGOLsWECD1eUKSphGBcuRy9HaX7RvLdQAeBkQTPHvabUKA8hfM
+         9H5FlYe9l2D+Bvc61C8ae0/JTEc9i0P73nXSZJLfcYcaUZkVoVOH+kHnEiqI0FKojpUM
+         jnD2zGqeC9f35TdYO4ttmecm4dg7al1bpIavSfuoDesmWtbxCYY2ih6M/E3R13u5mJBi
+         HSqq2X8Bth7811djhAb17gR01dmYkJhdfeBBPYAFIzq9Ge+ogTeAgcQl50qbjHKA3ptz
+         LcuV5JohOUXogHZ2UZuLpvHTIMSsGtTq2/GL9cdWuPBJvn0XpWMNaUcs9gZJFFKwezCR
+         AOFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785943956; x=1786548756;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=dURYyTAr3xD5Ug+KUce+nub8IT6QTcigszEQZYZJDrw=;
+        b=cPLpoe1rtH3xPcuDr52xmsZkY+kx7Ij6KnXAGqPzs4LfPjb/bl5lftZ4sWl2C+yosk
+         OH9Qs5v3pN7vb4n8FYN+j0xj5RNQ+UuKc4K5Pqrnn+jbhVaKC8wt6bL3xeEyU0Jv24wR
+         4juHXN8JHbQOGULR8PPxfOm3WIjscQY3Y45b3aPHW9H7sVwxk9h/EoZ2OPTwfLd0b3Wa
+         37H2RztvuLJVggmg5rvu9wnYB/bIIQQmtcV0TXCMMPKyaKSC7WJd8OZDxV4Dz4AuXmvw
+         6alq739QST6u1oHS4q26Xpf/NIpQZWPF7KjJR9iYJ4GULfvLl4S+iCDVTj2PfpxTXK18
+         tYxw==
+X-Forwarded-Encrypted: i=1; AHgh+RpSAJVFmPY1GUa0pyWbwaJDF4IxiOEYAz7piCkATnnAHBWDjA0jxzTTbeHgPsLLUFmnud9uj4MY0QuHcL+wtLdNdyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFQUlMM+eUptsr39urXmAmyXXYCvqohD9NREGGy30ad+kkzr2f
+	ExYWzYlXkN7KFYbXHzGsU8MpVyHYmPbsWrVqchpWSUN5PGqzGLd7XFyMBZ0A3wziasfjoIt1M0S
+	ZOc9gGO+1lB0E6oNZaQBlrA==
+X-Received: from wmby14.prod.google.com ([2002:a05:600c:c04e:b0:495:3c12:fb52])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4595:b0:498:952:e276 with SMTP id 5b1f17b1804b1-4994e79e377mr64342435e9.8.1785943955841;
+ Wed, 05 Aug 2026 08:32:35 -0700 (PDT)
+Date: Wed,  5 Aug 2026 16:32:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: OX7-fg5pPwK_2a8r9179zEBolb4RoWFmpTM4Y4GEsYo_1785943684
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
+Message-ID: <20260805153225.2096152-1-vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Prevent subbuf order change when resizing is disabled
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
+	syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Steven,
+Because ring_buffer_subbuf_order_set() frees buffer pages, we can't
+allow it when risizing is disabled. A non-consuming reader is at risk of
+use-after-free (rb_advance_iter()).
 
-The following changes since commit 075b74841bd0065a3bda3440873c747938e69b68:
+Return -EBUSY on resize_disabled, matching ring_buffer_resize()
+behaviour.
 
-  Linux 7.2-rc6 (2026-08-02 16:24:24 -0700)
+Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
+Reported-by: syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-are available in the Git repository at:
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 8e2485bb3aa8..414bca2121a7 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7358,7 +7358,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+-		if (cpu_buffer->mapped) {
++		if (atomic_read(&cpu_buffer->resize_disabled)) {
+ 			err = -EBUSY;
+ 			goto error;
+ 		}
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git tags/rtla-v7.3
-
-for you to fetch changes up to 0ad45018ace734e3a21c8b15280df65b429135d1:
-
-  rtla/cli: Unify and improve handling of invalid option arguments (2026-08-05 10:14:40 +0200)
-
-----------------------------------------------------------------
-RTLA patches for 7.3
-
-- Extend support for unsetting CLI options
-
-libsubcmd auto-generates "--no-<option>" to unset options, provided
-the option callback supports it. Implement this for RTLA CLI beyond
-boolean options, and document the few exceptions that are left out.
-
-- Test all tracer options in runtime tests
-
-Verify that RTLA sets osnoise/timerlat options correctly by reading them
-from tracefs during runtime tests.
-
-- Improve range validation for option arguments
-
-Make CLI range validation consistent with the kernel limits and unify
-implementation and error messages between options.
-
-- Improve invalid option argument parsing
-
-Consistently reject invalid values for numeric option arguments with
-a unified error message for all options.
-
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-
-----------------------------------------------------------------
-Tomas Glozar (7):
-      rtla: Allow unsetting non-list custom-callback CLI options
-      rtla: Add unit tests for unset in opt callbacks
-      rtla: Add unit tests for CLI with unset
-      Documentation/rtla: Document unsetting options
-      rtla/tests: Test all tracer options in runtime tests
-      rtla/cli: Unify and improve range validation logic
-      rtla/cli: Unify and improve handling of invalid option arguments
-
- Documentation/tools/rtla/common_appendix.txt       |  17 +
- Documentation/tools/rtla/common_options.txt        |  13 +-
- .../tools/rtla/common_osnoise_options.txt          |   4 +
- .../tools/rtla/common_timerlat_options.txt         |   4 +
- tools/tracing/rtla/src/cli.c                       |  42 +-
- tools/tracing/rtla/src/cli_p.h                     | 497 ++++++++++++-------
- tools/tracing/rtla/tests/engine.sh                 |  41 +-
- tools/tracing/rtla/tests/hwnoise.t                 |   3 +
- tools/tracing/rtla/tests/osnoise.t                 |  39 +-
- .../rtla/tests/scripts/check-osnoise-option.sh     |  16 +
- .../rtla/tests/scripts/check-tracefs-value.sh      |  11 +
- tools/tracing/rtla/tests/timerlat.t                |  40 +-
- tools/tracing/rtla/tests/unit/cli_opt_callback.c   | 534 ++++++++++++++-------
- tools/tracing/rtla/tests/unit/osnoise_hist_cli.c   |  18 +
- tools/tracing/rtla/tests/unit/osnoise_top_cli.c    |  18 +
- tools/tracing/rtla/tests/unit/timerlat_hist_cli.c  |  18 +
- tools/tracing/rtla/tests/unit/timerlat_top_cli.c   |  18 +
- 17 files changed, 949 insertions(+), 384 deletions(-)
- create mode 100755 tools/tracing/rtla/tests/scripts/check-osnoise-option.sh
- create mode 100755 tools/tracing/rtla/tests/scripts/check-tracefs-value.sh
+base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+-- 
+2.55.0.571.g244d577d93-goog
 
