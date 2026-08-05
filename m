@@ -1,133 +1,121 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F72C3DEFF0
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Aug 2026 19:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68889397E64;
+	Wed,  5 Aug 2026 19:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785957327; cv=none; b=nCAhyjw9OMJ53C6auK5zDlQckNBAFDGbU92rWDgBsUJVoOEOdBdjyhbhMq3+vl4gCRhH5RCw6qZnJraiOH+P627uONMsRGZ+N9tvWlKQZxZQVDOpXKynMYjuHyefyrhUwvKUCi4ygadWCkB3AHWxjBBwVk4WnBxG09oGrOs07EY=
+	t=1785958160; cv=none; b=aC9/T4m4iYxAZCP9mBwF5EJlOJ7jFhRCxHUXhtUQNKQLCkLyuiafVAxL5mnh++4fkxNjOPM3WEIOMixTMwaOQJD6mod3OeMGBxMSgmWPGBDDDFVFk1QFhS/O/6JGACS7dFZN7qj32zKIGYyp49LKB5gra4JpCuOT2stfo5qGIr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785957327; c=relaxed/simple;
-	bh=qBOhmuZWnCOO6cEqbrIcWSbSvOFI6cPahRdg3JWl7sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uHDqX3pvKRyrDTytFOXT55RtK8uGM2zHhbWyuDc3nyWzDNLbtiKzw8zFvL8R+BAR17gqxtHM1mwLBAyxnio938N/3/6Gej7359CasYITz0C6BU4jTE3c2LL929gxcG/UlO/QTlWg0VTDfI1wGnRh6EANJiyZLDd/qwKl7otRnIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t1P2GeX3; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1P2GeX3"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-495635a85d2so11963645e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Aug 2026 12:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785957320; x=1786562120; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=IgDUz1mwBjwKeSTBZbWMAC274nF2JO5FiqJPNXQBRTE=;
-        b=t1P2GeX3ldsmSWITj4rxwbIt+irJ/ksc8+tAWvgMpRSM1oRkEit+t7MlLBT2+0LkAF
-         A+JTOYcPlj64iM7zI9Y8yvG9FMkxMPV9wH3trRQxo6yq6f6nvCEIJaTzrLiGRRUy2rcx
-         EI11VJ5Jl7w3wViKIeJERSbouokZ27JCd0GwKwcwsoKhLlY912CGsBzf63hyi8FBbwIg
-         QGzkbueBR92ng5D9p9Z6WJ4R+tquhPprdVpYhBWJj5VsTTmS4rK5dwflnP3fVHJlhn+M
-         AFnYwJ4G/rPxwMt9lww+Y90IqVzWD2Kay0oi/uidk2JPsOyuMy23Aua4kRyvFraiR/bd
-         f31g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785957320; x=1786562120;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=IgDUz1mwBjwKeSTBZbWMAC274nF2JO5FiqJPNXQBRTE=;
-        b=shhumbdi+LJ0e+6cI/+70RPkfRU/Z1drLDRsgFVrToBJCQ7H9ZNAVNxan0tLziq4VA
-         ghIiLpnHy/uKl07zSjS9eN6tsdeGEZgROv0u5QbFnkcLLuS+YHqrOfilNeXHYscPNQNX
-         II95kAUlbbpZtIOHMu1da2zOjaZ4ap4oc/y3lUe+R1GjuTTuO2Hna9kxwm2pzWOzwaLk
-         8wVk0WgD5drA7Tvnplb71afHQ278R5BB4dMbmllWUyHffAhcZcVn9IvUlI45V7a31fQH
-         eVkWCM3pmO02v6yzhi5FIrl/4f8FbyJUUJ6f/RipTj/dfCoWEEFqiNWJyl2QfrvPSM0I
-         RCOQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoA5TyQW2qPqnKBPIJUrraRANmu3ohKcnyl4qNLbSIhF47cmE6uo6wGuxwc4FIwKJIjQln7jvUS2XAVQXMDU5o+WGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkeIUY8R8IYi+QARD3IFpZOCYlL9tpbzzwfFjWKXNv8lEH7k1c
-	c6r+XLu8ihtr+HO7AaXPM4lZ2MxMfHHOezflrm4dSwXcmoP2c1M5LlShRZDNs3ASKQ==
-X-Gm-Gg: AR+sD12y+wLufdhLvrla8nuE7apWlB2zW4MmQHUdpkJa+h9wYrIVZvVotagYwCIovva
-	eWw7SaS5v9FSsToxeCTFwwVBXynkKGKsP1tkIBDGncaJkSWWFjWmyUtoI5wmo7z+kF6MoMSUHI1
-	/An41PlsK19GG3h0GhNdJGkgeQ8ymMLORVEJs33yYNA9+5NbQZsVvrK15HJiFfzquedfd8jxytO
-	luc9lVh5ooyKZwNzVXRnLwPY1QCKsbHMYzmSJ7pcnRbVb8VpCznJPTfeU7EC/gC2PcYIreckGgC
-	MOPSGoXmAxohDilZQ8QvE+gov2T4WmApuMhzbRtygqY0v9GV5n7fSmwnIMa+UgCZH02HRHv4Dix
-	hlVJ3Cf+nOkjFhyH8ZzPnEeRUwhaO1DkoMDNgYMgC62XemcDVRHuKphBoHJ30TMH1KvAQM2E1sH
-	WxODtg7ammPhNztf6TFQBX86E+WNYRUM+TB1cuC5A/ghsEgpkrUvbeI1CjAsCQ0/iXkJ1hJRY3o
-	nLOipa9gfhHltiKjQY733Q/FrH69us3
-X-Received: by 2002:a05:600c:138a:b0:498:943:ccc0 with SMTP id 5b1f17b1804b1-4994e714d8fmr115961675e9.6.1785957319636;
-        Wed, 05 Aug 2026 12:15:19 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4994e99319bsm59638565e9.3.2026.08.05.12.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 12:15:19 -0700 (PDT)
-Date: Wed, 5 Aug 2026 20:15:15 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org,
-	syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com
-Subject: Re: [PATCH] ring-buffer: Prevent subbuf order change when resizing
- is disabled
-Message-ID: <anOLw1kOAjMX7Bfc@google.com>
-References: <20260805153225.2096152-1-vdonnefort@google.com>
- <anNmo6KLI697zYJP@google.com>
+	s=arc-20240116; t=1785958160; c=relaxed/simple;
+	bh=IGo0DsIUIVQY+Em4SA7KaXmLO0bkUukIUEwRnp6SRjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XLcCTtkknBgB4L4KTElaVYn7YeWFGSG6ZDaqx+myPXCygrpDQHw/1EwSg670BUdAcdW3ZuuQZvd2eeH+9mg4MZ/vJT8OqlA3c2rey7WTpwz2b2hklYWuHBdYbrhXDGBK5QCAGyk0pHhl5uwcHuwtpEF+MF0tw8o5I6Zi4qg+JJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id C85621A05C7;
+	Wed,  5 Aug 2026 19:29:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id C826B18;
+	Wed,  5 Aug 2026 19:29:14 +0000 (UTC)
+Date: Wed, 5 Aug 2026 15:30:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: Fix off-by-one fentry site disable in
+ ftrace_free_mem()
+Message-ID: <20260805153005.0bbc428a@gandalf.local.home>
+In-Reply-To: <d0a6a1deda9836c614a11c458fef2c8cf321333a.1785726456.git.jpoimboe@kernel.org>
+References: <d0a6a1deda9836c614a11c458fef2c8cf321333a.1785726456.git.jpoimboe@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <anNmo6KLI697zYJP@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: sucbi9eduaw58uqxtcs4kx9r1bmgujpg
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: C826B18
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18VXgCXhh1lMd6Rg67zRgoNQv1HeKU5wo0=
+X-HE-Tag: 1785958154-461527
+X-HE-Meta: U2FsdGVkX1/Hnwv5rGtFgJS5mknaxT9zg1JRXVAQ2Educj9BXWvyzvGFlu97ekAiVVDuT2dZYZTfmZnNDrcSOGpV9jpSPA6Xr6vbsoDqDiOaTFEX6BgIfW+Ibqtc7gET5zjjqTn6Ubt0IKCu3HvXJuS8ZxXh9dpReN5ZGL6z02z5d2LN9akvhx73wWOLUc5Td9nAECfpTEDsbTR+cCDP+FZmgHzsCHML+q0AkRk3rWNYN+S5IIRYmNSIiite0D5UQI97EehQszSmdZAYFBWDGGs7ZzbC5STDFJzuORRieo3fha9vvSDSWvze4+HOpnsOj4ncyexRbOixNZB0R3fGPK8HsY9QlVZG
 
-On Wed, Aug 05, 2026 at 05:36:51PM +0100, Vincent Donnefort wrote:
-> On Wed, Aug 05, 2026 at 04:32:24PM +0100, Vincent Donnefort wrote:
-> > Because ring_buffer_subbuf_order_set() frees buffer pages, we can't
-> > allow it when risizing is disabled. A non-consuming reader is at risk of
-> > use-after-free (rb_advance_iter()).
-> > 
-> > Return -EBUSY on resize_disabled, matching ring_buffer_resize()
-> > behaviour.
-> > 
-> > Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
-> > Reported-by: syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 8e2485bb3aa8..414bca2121a7 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -7358,7 +7358,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
-> >  
-> >  		cpu_buffer = buffer->buffers[cpu];
-> >  
-> > -		if (cpu_buffer->mapped) {
-> > +		if (atomic_read(&cpu_buffer->resize_disabled)) {
-> 
-> Ha, my bad I forgot that mapped is not just "user-space mapped" but also
-> "range-mapped". 
-> 
-> However probably the best is just to record_disable range mapped buffers in
-> rb_allocate_cpu_buffer()... especially ring_buffer_resize() doesn't use
-> cpu_buffer->mapped
+On Sun,  2 Aug 2026 20:08:35 -0700
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-I am also looking at the other findings from Sashiko. I believe some are legit.
+> When a module's init text is freed, do_init_module() calls
+> ftrace_free_mem() with a half-open [start, end) range.  However the
+> ftrace_cmp_recs() comparator treats the upper bound as inclusive, as all
+> its other users do, passing 'ip + size - 1'.  So ftrace_free_mem() can
+> delete a record sitting exactly at 'end', which is outside the freed
+> range.
+> 
+> For a kernel without CFI or IBT, the first record of a function is at
+> the function start, which for the first function in a module is also the
+> base of its text allocation.  As the module allocator packs its regions,
+> that address is often the 'end' passed by a neighboring module's
+> do_init_module(), causing the first function's ftrace location to get
+> disabled, preventing an attempt to livepatch it:
+> 
+>   livepatch: failed to find location for function 'pcspkr_probe'
+> 
+> Convert the exclusive end to the inclusive 'end - 1' the comparator
+> expects, and return early for an empty range to avoid the subtraction
+> from underflowing when the init text size is zero.
+
+Nice catch.
 
 
 > 
-> >  			err = -EBUSY;
-> >  			goto error;
-> >  		}
-> > 
-> > base-commit: 075b74841bd0065a3bda3440873c747938e69b68
-> > -- 
-> > 2.55.0.571.g244d577d93-goog
-> > 
+> Fixes: 42c269c88dc1 ("ftrace: Allow for function tracing to record init functions on boot up")
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> ---
+>  kernel/trace/ftrace.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> -- 
-> Vincent
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index f93e34dd2328..7d8b736f0d86 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -8293,8 +8293,11 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+>  	struct ftrace_init_func *func, *func_next;
+>  	LIST_HEAD(clear_hash);
+>  
+> +	if (start >= end)
+> +		return;
+> +
+>  	key.ip = start;
+> -	key.flags = end;	/* overload flags, as it is unsigned long */
+> +	key.flags = end - 1;	/* overload flags, as it is unsigned long */
 
--- 
-Vincent
+I'd like to keep this consistent with lookup_rec().
+
+>  
+>  	mutex_lock(&ftrace_lock);
+>  
+
+Can you do this instead?
+
+-- Steve
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 6c47a94f5924..dbb0fc2928d8 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -8296,7 +8296,8 @@ static void add_to_clear_hash_list(struct list_head *clear_list,
+ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ {
+ 	unsigned long start = (unsigned long)(start_ptr);
+-	unsigned long end = (unsigned long)(end_ptr);
++	/* end is inclusive and end_ptr is exclusive */
++	unsigned long end = (unsigned long)(end_ptr) - 1;
+ 	struct ftrace_page **last_pg = &ftrace_pages_start;
+ 	struct ftrace_page *tmp_page = NULL;
+ 	struct ftrace_page *pg;
