@@ -1,118 +1,86 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6983D6689
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Aug 2026 20:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995A23D6CA5;
+	Wed,  5 Aug 2026 20:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785961531; cv=none; b=dJil0a35TwSZxYY2C9qW4PytPDSQeabgB/j3PX2+enSJ5I5vT/u1oxhogT723XjG1TAJhPz4j54iE093xt+7aHGX3ocT2khGHf+lmmrQN3QmKCw+p3B781+oZwStadXf5DefdMVDKNMKUfBwmgt3E++hkKTicb7Z1LqYlBBMupE=
+	t=1785963236; cv=none; b=qAdNZ3kZ5fcXWGn/nG9xY0ybPjs8B9loih5Fc0BBGCah8JgvUp3zfGmZe579IGbkN1zR/FCmSeiSTzFjx+Qf6Kkoc3IkhDWDW32Xvis+JwewyWjbUm6UzMh16928ej7a9voB055qQ/0Ff+UkmaiVEt54t75gziDJI3k8+OE1toU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785961531; c=relaxed/simple;
-	bh=XloeEc0VC7CzKRCx+z/BAvyR2vU4IIPzzZHEOTfwaI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GzwNmNCUemhwwNvwF+eb/YwRm6BWfQfnQapj9eriSeH61vwBHTWHPVAYPTN6E0YNv4vML+02Mntlcpy18mi8cXUSklx++AaFTXSjOFgIWwfz5rHGo1eDg73HSqppoFHkGLdH3plfwFcMDUehNY2Yvm71bRV90oTkoJmplHt2C+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fmNTrwrV; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmNTrwrV"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6ab04bbcc8fso819015eaf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Aug 2026 13:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785961528; x=1786566328; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8Qc29af7044Ktsuo50pkEIXiXat2x/FckVqq57fZa/0=;
-        b=fmNTrwrVnsLagfbdhDNyca5miUrit5LAWnXzw0oUTMnUf18qufxR85EZcjZPp/5mWp
-         fxnSs76zaxzHptHNJkIOLfj7joBCmHqz6ITIBUc2otKE8Hs3gb8svElLFZNPEeZy/sNA
-         Wl0J4wu4vGHyhQVABwAGIiyrEKmMRtj9ybu4XIFy1EuX4NXnCm6w5aXpeekwWuG2ghq1
-         8xp+yPqg0Yi0MDHWDmuFPNHls6ClE1YWNeJrfeaZxovdQNW2jVCuziF9AVBEnkd47GA7
-         Dwn3wWr7u8JkOUTrUlmnK7ZO5GkxiWISLmj/nIkERi8ePpkPzrs5Y1j3ZE3zUY399YyD
-         RONA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785961528; x=1786566328;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=8Qc29af7044Ktsuo50pkEIXiXat2x/FckVqq57fZa/0=;
-        b=ZXmHD/VAF3Ec5spwU3tHZ0gdlHsiIYLpTFXdXWRi1mGarBjnb9yy31WCkc56aNXeoZ
-         NaSpRZ1cFUmZdhbgfLLKPK2Aqk9fyi97uZVbVCpEryvoxZ5M+MHtL2D8z7bBV/YOzcoh
-         dIVLfuq5XI/YXxzJAGg4BsPsbGqJz1qTNUg3670jdiWdDO9PasKEj4D6BMT+HgtX8KKB
-         eN03469vLkODXTnwX9MV5hQUuQ2SGYzxqlCMY+LbNBs8Y7Y/nRKMwFk7sV0QUv2q3xsg
-         J78Oy4EtjHSEd+fCXHsx3yUDvy7gPKECYAAS3CPUtKCY4xgeFhzLcaW1OEFqtPOMsw4f
-         m1ug==
-X-Gm-Message-State: AOJu0YwAFtDQIY2ikizQD+a/aAnJwx3VedQ1/A5KXno7Dpel1NQ57H4M
-	u1N1pOBdkVVkm9uYeRqsueLa1Jsm81Bk5YCGio49MqtgNEk/XHUYBqeO
-X-Gm-Gg: AR+sD1194y5Ag/hjglNPndxXNYa3Lsz/V3yoKedWUFvDfsXAM1Re9w2lUbVX2f0E9JE
-	g+rhiUYYOafwbAdmiKFXXFrNzjkYL37BveSUelrFz/6MEukugzruobp86AQEfbaJHPo3DtBJHXL
-	CI/WlwwLKV0cZlFmFftkjZS75bWtHQ+7Uw6rKjMC0UHH5Tm6SFc7WqipS+uHesc+g+OlK9JyWog
-	Fa7yyi/Eui8mMnjdKRZVjYmouYF6o/W4I2Ye4c7cfBXc79CvvN0QQW2mt3V3nj7CY4P4gbkQNW0
-	fjRa+aJf5VyvqvYdERYfPH/UvfILUoBe72Tt9jcyfP5g4iWWyPvCbNaIF87lFGRDdOb08SaxsQb
-	Sqddivf6P8MYJwOFC2dgBZ5afODVsAGu/l3zLuWborhDMJoMJABnfrkTeUXG+mPFcRkjpwTVJTa
-	HyHABk5GsLVh2mXSzxewO3IxKBVdsBbcs9wPi0QK498WiQwbMrVoiVf1VSnr0jm7LAxinJnXwJ1
-	urX876KircDXpWpmjLMTjnrj7Hs+oFqvdTJ74IpQE9qnw==
-X-Received: by 2002:a05:6820:4ccb:b0:6a1:40ad:cfac with SMTP id 006d021491bc7-6ae96c8c786mr5192892eaf.13.1785961527561;
-        Wed, 05 Aug 2026 13:25:27 -0700 (PDT)
-Received: from ?IPV6:2607:fb91:ac9:d9bf:2112:37bc:94a6:a6db? ([2607:fb91:ac9:d9bf:2112:37bc:94a6:a6db])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4599e24dfc5sm3683651fac.7.2026.08.05.13.25.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2026 13:25:27 -0700 (PDT)
-Message-ID: <b0d9df6c-c408-4482-b221-34093c110580@gmail.com>
-Date: Wed, 5 Aug 2026 13:25:35 -0700
+	s=arc-20240116; t=1785963236; c=relaxed/simple;
+	bh=nuuxHAPBlapaUTkdySFg2/beJaAzM9XHpZ0juQT2a2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cVmKOfNSxn7Qt+bsCwySzeDNZkG94GzljEd4i/arnfLaW+E//NQw245XRO6Zaqus8FVNDLoXKK4PTESIBf5J5OPXxjI9+6UQ8It585+zHp0ixufYlfvrypSgC3XH1HC1wzcLHKhK+XfZY9191o+nbEHAAmTPwDSyzB98zsxN0Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id A84C81A059C;
+	Wed,  5 Aug 2026 20:53:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id CC2332002C;
+	Wed,  5 Aug 2026 20:53:46 +0000 (UTC)
+Date: Wed, 5 Aug 2026 16:54:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Fuad Tabba <fuad.tabba@linux.dev>
+Cc: maz@kernel.org, oupton@kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org,
+ mhiramat@kernel.org, alexandru.elisei@arm.com, vdonnefort@google.com,
+ joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, qperret@google.com, ardb@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ tabba@google.com
+Subject: Re: [PATCH v3 01/11] tracing: Include linux/types.h in
+ trace_remote_event.h
+Message-ID: <20260805165432.0118a513@gandalf.local.home>
+In-Reply-To: <20260804112317.1937387-2-fuad.tabba@linux.dev>
+References: <20260804112317.1937387-1-fuad.tabba@linux.dev>
+	<20260804112317.1937387-2-fuad.tabba@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kprobes: Fix NULL pointer dereference in
- unregister_kretprobes()
-To: Luigi Rizzo <lrizzo@google.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Naveen N Rao <naveen@kernel.org>, Luigi Rizzo <rizzo.unipi@gmail.com>,
- "David S . Miller" <davem@davemloft.net>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260805161221.2428623-1-lrizzo@google.com>
-Content-Language: en-US
-From: JP Kobryn <inwardvessel@gmail.com>
-In-Reply-To: <20260805161221.2428623-1-lrizzo@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: CC2332002C
+X-Stat-Signature: pxsw1pa851hmtm4bd3fsfd3rxys5wq8o
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Ii2lk289HP5RYh2cytm4riV8/kWfoNK4=
+X-HE-Tag: 1785963226-84509
+X-HE-Meta: U2FsdGVkX18LjkoLn70IBd+mdTzL3BBwKziwL1mftDUpVecf84v6aX7M5PCYnIXzb3JQz4/epiui+kwQlLFVoL2Azwhvfdb88Up8yzvb0bvWgRI4ScImgQFztoVKY9LKRRV1BQXpd18qgWqRbUPnsSMIKYZa9wrECuSSAGeq1u/Z1MZVzTUcXbc2Z/vztp7CwPRw8GqypKKKU4AaBflBm4JaLIOJud2J0TMLmFwQaRfvi3RYxypub6O4sBv6U2TcDfaH9/mucJ3j3C4zPxZEDrxcvYR+qiI1NHTLwJ6U+FiyQvhC7pRNUJq68ys8Elsrsj361ai54w3QngssXiaH4gWgeldMRHqjV2Nt/d6496G2vWH4XCmAGVtUjMjpfhg4FY+8ipgFHe0trTnE9E/aSncSmKfO2fw2
 
-On 8/5/2026 9:12 AM, Luigi Rizzo wrote:
-> In unregister_kretprobes(), rps[i]->rph can be NULL e.g. when called
-> after kretprobe failed registration. Under !CONFIG_KRETPROBE_ON_RETHOOK,
-> the unconditional access to rps[i]->rph->rp, causes a kernel panic due
-> to NULL pointer dereference.
+On Tue,  4 Aug 2026 12:23:07 +0100
+Fuad Tabba <fuad.tabba@linux.dev> wrote:
+
+> trace_remote_event.h uses bool without including linux/types.h, so a
+> translation unit that includes it ahead of anything else that pulls
+> types.h in fails to build, as with nvhe/trace.h at EL2.
 > 
-> Add a NULL check for rps[i]->rph before invoking rcu_assign_pointer().
-> 
-> Fixes: d839a656d0f3 ("kprobes: consistent rcu api usage for kretprobe holder")
-
-The bug was not introduced in this commit. It goes further back to:
-
-d741bf41d7c7 ("kprobes: Remove kretprobe hash")
-
-> Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+> Fixes: 072529158e60 ("tracing: Add events to trace remotes")
+> Acked-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 > ---
->   kernel/kprobes.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>  include/linux/trace_remote_event.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index bfc89083daa93..5dd4786c455de 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -2359,7 +2359,8 @@ void unregister_kretprobes(struct kretprobe **rps, int num)
->   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
->   		rethook_free(rps[i]->rh);
->   #else
-> -		rcu_assign_pointer(rps[i]->rph->rp, NULL);
-> +		if (rps[i]->rph)
-> +			rcu_assign_pointer(rps[i]->rph->rp, NULL);
->   #endif
->   	}
->   
+> diff --git a/include/linux/trace_remote_event.h b/include/linux/trace_remote_event.h
+> index c8ae1e1f5e721..e4cc2d4497bcf 100644
+> --- a/include/linux/trace_remote_event.h
+> +++ b/include/linux/trace_remote_event.h
+> @@ -3,6 +3,8 @@
+>  #ifndef _LINUX_TRACE_REMOTE_EVENTS_H
+>  #define _LINUX_TRACE_REMOTE_EVENTS_H
+>  
+> +#include <linux/types.h>
+> +
+>  struct trace_remote;
+>  struct trace_event_fields;
+>  struct trace_seq;
 
+My ack still stands, but I wonder if we should just not use the include and
+instead s/bool/_Bool/ ?
+
+-- Steve
