@@ -1,128 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5418248B;
-	Thu,  6 Aug 2026 00:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C179237AA78
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 00:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785975143; cv=none; b=bi0RQ2WeO1lTYdf6JZQC13Sa9nHpbutPuhWw4pdYMTnHnxxz37oj2GyaJk1AwlI1WNAfIJKtjKeGCe5u/zO7nsDYMCfHRXP9bFEEJYEV9cmh3blSyv4DbmKFbOf17Symwbu8NAhNmo6WFQSUIA5TuQgANLWtHNuaxKPKzv8woMw=
+	t=1785977033; cv=none; b=M93Up1YAxaHcT4HLPS9cE4GdmZNRooQRcAdr4uDsDjJovvRDoH+Qg997g+GX7rH1LooeOxmbBZO1pFHIieTrT37+4G+atvrAK+dkU/SAc9z/3TMOQIPaiozrsgRQcRpxDKBH0OMaMLCiVH/QBDry306HbVWrygeGGl5unB07RxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785975143; c=relaxed/simple;
-	bh=YRjryu4I+ED+IpJT84vgCn+ldoDUwa4XJSQR6fYMcP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Svbn8NWNGNRJzaAhebSVtNeXVelyec1uTnXeMPexBwNXQ5G4dx2CUJdtA9zTKLTlHGimL+X0onVutfMCHBhcpGU+5gri/ZEWSxnUUBjIFN7SXxbd7P8bCSKAD1pH5xOQSoffVWIkcP5CKJ2fbtM0AXnpbYToYu7DCyFrb6q0+tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNX0lZuU; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785977033; c=relaxed/simple;
+	bh=MOBnrAzJHjAXv0busTUd8AQe2wVTRESDC3GYmdGx6Jc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pqT4YUaYAtv/wZ85y1YOflWK9x/CJvMnt1rBGL8kODlLApVnCrPXDDO/Z57iCuZ9oyUvHkoZsX7pCOYrOFo1TW63jo6E1m9GIQvxYYYRH1mbk6V2kFS9AlxJacTxFxlbPY6ZcFd0LRyqmcb+2oyzzGQb11RN3YDF7mmkl94JIt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s9W9uVBX; arc=none smtp.client-ip=209.85.215.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNX0lZuU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893E01F000E9;
-	Thu,  6 Aug 2026 00:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785975142;
-	bh=fdaDCWaOpYDudE/QaGVbePvjNGYP8RNAxxxSF/5EvyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YNX0lZuUxIl05HkFARrpvfnqBhw2JlU2ghSdtr1VDtMld6gVdM2mQl4sZGjdItOOx
-	 F5Rq6QT+7zPBWDuq1p09xpAv2oAMBOpa1Hq5B0w1Yq6IdPblQEbyiuenZCvsWgCjIS
-	 SZoLOSmDk3GeHXDUVJgkTQ/e9a9J4mZh/SeoJVpDmEwpMDuziermtFOro7BcSZgP0x
-	 Gv/4Zy6lCKeu/U5P6xJDpS3E3XIBTYrR6sGdpbFFR2Nj4tsxjaI7th8YRU4ofneFti
-	 0/qBCoZYypw5CK7A8tHXKUFfFbNdRsSYyob52nCz9ygKZwq5xHVHJ4+wzJV4PCYP3J
-	 vXy60Q5QUTJVw==
-Date: Wed, 5 Aug 2026 17:12:19 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Fix off-by-one fentry site disable in
- ftrace_free_mem()
-Message-ID: <jhkedgexoznj7ycuypjdeznz57x77cj4fjnamnhram7lm4fdms@esmvzcfy5r3t>
-References: <d0a6a1deda9836c614a11c458fef2c8cf321333a.1785726456.git.jpoimboe@kernel.org>
- <20260805153005.0bbc428a@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s9W9uVBX"
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cb11535e6a1so1394035a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Aug 2026 17:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785977031; x=1786581831; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GW1XyS3pE1vmBMrFND4uaqlT60WFAOcGNZed7ARn/tI=;
+        b=s9W9uVBXMZADMYL3esIoidDW/3wdqPJ/VWnjeAbH6rJQJRQPL0AggH0/MOCz7FWeoV
+         EGW4WNmQRuMx2WRkobs6JklVdkd+HnuAtR8jtJ4gUbjU23NQXBvQlRiBLlu8KpzKJc1G
+         XUx5jKHagJDb77xXRqa877eee8TI6vhVWvZHj0OBitBkg8QBF3NnBLs+k1wcrnH1WrKL
+         Xba3KfjDaCPDRtpnL5ff33HcpEBLdJPB3hzbvB37BGUJNXddi1+omIEmN9n8Qnw3NCYi
+         L3wzawiNBzx2tbrN/pDuO+IiJRzFiJ5msDIUPSakKdCbGAicfGYnrwjwmfFT+s7HPha/
+         aMog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785977031; x=1786581831;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GW1XyS3pE1vmBMrFND4uaqlT60WFAOcGNZed7ARn/tI=;
+        b=j2l2OcfuzgggG8JWMf6nrvSYKZpS/jbTzZfbGWiSqqTV6k/VkG6gSIoQTQab3nY7ZL
+         BpWQUvLkWV+wb9a5dpku9+9bG+amLkiqmDq9/WQivX1uuQ7ju9Y03UjRijEuGpOaiH7A
+         g9mZTj0m88dOXIGDid2nPblz3VFDoPYJNmZcf765wmogPwyorzM9aN1EFuFNbezEFMMj
+         O9XWHIJlJISPbYUSi1PwRxLINFqu00jW/LLoZ19Hc3/3UHWs1rze60rf6ksDTUPOxv5h
+         7nM70In2G+tM3+waNY59JWH+yKAXGeusM6xbTSplU2kzcJ/crsJBKBnyzQcDnXDu9CHv
+         BpZQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rpi5EtQehhOyNUoNbKQFW5b9twjQspfpCBcGsApNChu+4CdA/Q06Nn3iyXAetY7KXah/30gOlx05VoJXqq+TXiVCbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyybL7glfPDdAmLhC8aT731ieiKG+8XEe12aB6WrlxDUSaGMNDJ
+	pFskis3DAqELzNOdNs165DPPMz3EGd5ARQZJkmgPI2EOKjmRsvbWewGzvAkhFzp8XQ0gkt1rzr8
+	F8au1Bw==
+X-Received: from pgki21.prod.google.com ([2002:a63:e455:0:b0:c9e:9c6:a85e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6112:b0:3b4:e4f6:4f15
+ with SMTP id adf61e73a8af0-3cb85e9922cmr13235742637.5.1785977030773; Wed, 05
+ Aug 2026 17:43:50 -0700 (PDT)
+Date: Wed, 5 Aug 2026 17:43:50 -0700
+In-Reply-To: <b9ad1a1d-c167-4adb-980b-90096515a363@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260805153005.0bbc428a@gandalf.local.home>
+Mime-Version: 1.0
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-3-35f9aec2aed2@google.com>
+ <7dafaa90-f3d4-4be4-a5cc-472163f18040@intel.com> <CAEvNRgG3qXrG2ix2MEcyVo0GXaen-Pte4gFAwEN+9AY=VtGU5w@mail.gmail.com>
+ <b9ad1a1d-c167-4adb-980b-90096515a363@intel.com>
+Message-ID: <anPYxp-LMWaLDbMk@google.com>
+Subject: Re: [PATCH v9 03/41] KVM: Enumerate support for PRIVATE memory iff
+ kvm_arch_has_private_mem is defined
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Aug 05, 2026 at 03:30:05PM -0400, Steven Rostedt wrote:
-> On Sun,  2 Aug 2026 20:08:35 -0700
-> Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Wed, Aug 05, 2026, Xiaoyao Li wrote:
+> On 7/31/2026 4:34 AM, Ackerley Tng wrote:
+> > I think another way to phrase this is that if we don't make this change,
+> > say, on the foo architecture where there's no CoCo and no private mem
+> > support, kvm_supported_mem_attributes() would return true for the !kvm
+> > case, which is over-reporting.
 > 
-> > When a module's init text is freed, do_init_module() calls
-> > ftrace_free_mem() with a half-open [start, end) range.  However the
-> > ftrace_cmp_recs() comparator treats the upper bound as inclusive, as all
-> > its other users do, passing 'ip + size - 1'.  So ftrace_free_mem() can
-> > delete a record sitting exactly at 'end', which is outside the freed
-> > range.
+> Under the condition that the foo architecture enables
+> CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
+> 
+> > How about this, replacing the entire changelog paragraph above:
 > > 
-> > For a kernel without CFI or IBT, the first record of a function is at
-> > the function start, which for the first function in a module is also the
-> > base of its text allocation.  As the module allocator packs its regions,
-> > that address is often the 'end' passed by a neighboring module's
-> > do_init_module(), causing the first function's ftrace location to get
-> > disabled, preventing an attempt to livepatch it:
-> > 
-> >   livepatch: failed to find location for function 'pcspkr_probe'
-> > 
-> > Convert the exclusive end to the inclusive 'end - 1' the comparator
-> > expects, and return early for an empty range to avoid the subtraction
-> > from underflowing when the init text size is zero.
+> >    Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE
+> >    based on kvm_arch_has_private_mem being #defined. This improves
+> >    reporting accuracy by not reporting support for
+> >    KVM_MEMORY_ATTRIBUTE_PRIVATE when kvm_supported_mem_attributes() is
+> >    called with kvm == NULL.
 > 
-> Nice catch.
+> It doesn't help for the case where kvm == NULL, but help for the case where
+> CONFIG_KVM_VM_MEMORY_ATTRIBUTES is defined but kvm_arch_has_private_mem not.
 > 
+> sorry for being picky. I think we can say
 > 
-> > 
-> > Fixes: 42c269c88dc1 ("ftrace: Allow for function tracing to record init functions on boot up")
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > ---
-> >  kernel/trace/ftrace.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index f93e34dd2328..7d8b736f0d86 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -8293,8 +8293,11 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
-> >  	struct ftrace_init_func *func, *func_next;
-> >  	LIST_HEAD(clear_hash);
-> >  
-> > +	if (start >= end)
-> > +		return;
-> > +
-> >  	key.ip = start;
-> > -	key.flags = end;	/* overload flags, as it is unsigned long */
-> > +	key.flags = end - 1;	/* overload flags, as it is unsigned long */
-> 
-> I'd like to keep this consistent with lookup_rec().
-> 
-> >  
-> >  	mutex_lock(&ftrace_lock);
-> >  
-> 
-> Can you do this instead?
+> This improves the reporting accuracy by avoiding the case where
+> KVM_MEMORY_ATTRIBUTE_PRIVATE is reported when kvm == null even without
+> kvm_arch_has_private_mem being #defined.
 
-Yeah, that would be better, let me go do that.
+How about this?
+
+Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
+on kvm_arch_has_private_mem being #defined in anticipation of tracking
+PRIVATE vs. SHARED state per-guest_memfd, not per-VM (to allow in-place
+conversion).
+
+guest_memfd support for memory attributes is expected to be unconditional
+to avoid yet more macros (all architectures that support guest_memfd are
+expected to use per-gmem attributes at some point), at which point
+enumerating support KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory
+attributes being supported by KVM at-large would result in a system-scope
+check (NULL @kvm) over-reporting support on arm64.
 
 > 
-> -- Steve
+> >    Give architectures full control over overriding the default definition
+> >    of kvm_arch_has_private_mem() by removing the coupling with
+> >    CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
+> > 
+> >    In a later patch, kvm_arch_has_private_mem() will be defined based on
+> >    whether architectural features are compiled in, and made orthogonal to
+> >    CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 6c47a94f5924..dbb0fc2928d8 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -8296,7 +8296,8 @@ static void add_to_clear_hash_list(struct list_head *clear_list,
->  void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
->  {
->  	unsigned long start = (unsigned long)(start_ptr);
-> -	unsigned long end = (unsigned long)(end_ptr);
-> +	/* end is inclusive and end_ptr is exclusive */
-> +	unsigned long end = (unsigned long)(end_ptr) - 1;
->  	struct ftrace_page **last_pg = &ftrace_pages_start;
->  	struct ftrace_page *tmp_page = NULL;
->  	struct ftrace_page *pg;
-
--- 
-Josh
