@@ -1,127 +1,213 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F1F42EED8;
-	Thu,  6 Aug 2026 17:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607F9385D87
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 17:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786036399; cv=none; b=FUrAQspKUZ/GNn1l3l0I/ScacRXMQPqyBJrvdfS/PdG+N424TIOmk418eQMXlsSn6O00GH4QwdPnt46tpiBAB1RBzVaCCDMcfluTxvz3KcdE27sOEYfBJ3pPVcnoiLPar1PQP/XrMQ2nqlwuXwE+XBbSnTuKcRmdWknjVms0dXI=
+	t=1786036926; cv=none; b=pcGFFQj8XYE/rJWlzvZh1olwrxR64H8tyGT5E6JGyFUGzYDRK2IX0oYe0K+ZFeXZS2xw+Q2b2m4fzWFovC1kPSsAnNzEJ5LgYHE7kKcfICjrJkMoMmkCSV3+W0z6iv/agBn6dH9aKdrSalclSZlusriSSWi8bDS+bxHDGY3bXtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786036399; c=relaxed/simple;
-	bh=q5uKfuQLoGtmdrRsn36ltCuoJ1Eo9bvxw7g7uBsegQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gRdu3a5Ay8uMIeFn1c4vxIVEmavjJzTiZUFVRs1OYDMbfhYBuGhLjk1GzVbVn1hZhbLOITPLWPIpO4AQNiT1hslBfF21+5n0d6eESrWGmGaWbW5voQRg8f+X5jkyrNtjK/Kqw7mRWpz2g3jhyqHpZp7Jrc6sfNLTTzIjR+YK4eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id BC3461A0179;
-	Thu,  6 Aug 2026 17:13:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id CC4AA20026;
-	Thu,  6 Aug 2026 17:13:13 +0000 (UTC)
-Date: Thu, 6 Aug 2026 13:13:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: kernel test robot <lkp@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, oe-kbuild-all@lists.linux.dev, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH] tracing: Cleanup event_enable_trigger_parse() by using
- __free()
-Message-ID: <20260806131314.771bfaea@gandalf.local.home>
-In-Reply-To: <202608050839.Ip5dU0Jz-lkp@intel.com>
-References: <20260701174829.67ab8a33@gandalf.local.home>
-	<202608050839.Ip5dU0Jz-lkp@intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786036926; c=relaxed/simple;
+	bh=bAZ3xWT17LiPCPPqrLMqDHOrLaErqGkWnw2RshU26LI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YmjuR+7m8WCojnm1t2Vtdrs+fIB8jNHF5G7oQbR64RemuduUZd8nBrNTgjSzU4K7456uNk3+uAPVnSpqN62hrh2B+Z3LB3kUlDnwoOvSiz3SwHXr2cUcmjfX2pKirH80GrNgjHdUsrXNdKaFSV5G7VEf+oJS2rmgVhPklEAqr8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=1twUNUkZ; arc=none smtp.client-ip=84.16.66.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="1twUNUkZ"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hGDbp6cTmzn2k;
+	Thu,  6 Aug 2026 19:21:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1786036918;
+	bh=GIXZ74wxKXTVoiR32tjBTjv2nPYH2Pa11xY8e7a+dzk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1twUNUkZJehJ3rm7ZCbd4pSsH8jOT4LTxFZr3+VDlyAxi4D48YBQAbAMsfte00Dv/
+	 92CMj3pccP0E9VK7rfFokizC066V0cFw3q8YbhAF95aHIUk1Or/JpKFx0vepSp1Qct
+	 QneEn9Zgt9UUJzQvlkzYDZMrzfqI3q4id8I/TzvE=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hGDbn3SR0znHm;
+	Thu,  6 Aug 2026 19:21:56 +0200 (CEST)
+Date: Thu, 6 Aug 2026 19:21:52 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Christian Brauner <brauner@kernel.org>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, 
+	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/20] tracing: Add __print_untrusted_str()
+Message-ID: <20260806.ooMo8dungahj@digikod.net>
+References: <20260722171159.2776765-1-mic@digikod.net>
+ <20260722171159.2776765-8-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: 3zxu5catii7wwqom4cwgc78hmyihubya
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: CC4AA20026
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18wntJ8eLTWdze1jVk+IAZAz1C3ntxvfDU=
-X-HE-Tag: 1786036393-324928
-X-HE-Meta: U2FsdGVkX1/rgBM+CLUsf9sxmKDuJo5inziZG8FyT956ybuU/wxkKtdKsjwuN6loKAowENvTchxhkRbEdbpilbQhc2k79pwiG5RtmbCVk75gDOpGchPH9BikICD75KL/R13ZLdazPxvb1bJo7KoYJ8Toj54MS0bCm8tRBA/6PJhpsDEgKcytiDYZdIHg5p6ylg/jq33OSszE9a6Hmvm0O4aqGNZAmnfQNzE8rvJiRwHqHBStkv8W6y0Oe3l6eZar28pZPQM5WLPDWKM6AM3hVcrXCcQ9DA14C2n1xYNi3bgSWGluvxnScTr6uG4iZF5g+BLUxvV9JQmGwCXJygzKG1ppZq5HlQn71yjm4ojabaJ3tEZFChwiQPBZhzWag4VTYV/Xs9aMMD9lXKlcYS7vU3wMiaScHAPxNL3rknYd4e+e/8Sqg7xAC7jwgk+1FDhMgdOySyo6ivt8y8BvBOTuC4d/BxgqEa27
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260722171159.2776765-8-mic@digikod.net>
+X-Infomaniak-Routing: alpha
 
+Hi Steven,
 
-Does the kernel test robot just keep on testing old versions of a patch?
-Sashiko discovered this issue and I made a v2 with a fix a week ago:
+I addressed your previous review for this helper, is this patch ok with
+you now?
 
-  https://lore.kernel.org/all/20260727155459.202af38d@gandalf.local.home/
+I also addressed your other review about the tracepoints.  They are well
+tested, including with a dedicated tool I wrote (not public yet).  Could
+you get a quick look for me to push this series to -next before the
+merge window?
 
--- Steve
+Thanks
 
-
-On Wed, 5 Aug 2026 08:21:33 +0200
-kernel test robot <lkp@intel.com> wrote:
-
-> Hi Steven,
->=20
-> kernel test robot noticed the following build warnings:
->=20
-> [auto build test WARNING on trace/for-next]
-> [also build test WARNING on linus/master v7.2-rc6 next-20260804]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->=20
-> url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tra=
-cing-Cleanup-event_enable_trigger_parse-by-using-__free/20260805-073956
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace=
- for-next
-> patch link:    https://lore.kernel.org/r/20260701174829.67ab8a33%40gandal=
-f.local.home
-> patch subject: [PATCH] tracing: Cleanup event_enable_trigger_parse() by u=
-sing __free()
-> config: s390-allnoconfig-bpf (https://download.01.org/0day-ci/archive/202=
-60805/202608050839.Ip5dU0Jz-lkp@intel.com/config)
-> compiler: s390x-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20260805/202608050839.Ip5dU0Jz-lkp@intel.com/reproduce)
->=20
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202608050839.Ip5dU0Jz-lkp=
-@intel.com/
->=20
-> All warnings (new ones prefixed by >>):
->=20
->    In file included from ./include/linux/file.h:13,
->                     from ./include/linux/kernel_read_file.h:5,
->                     from ./include/linux/security.h:26,
->                     from kernel/trace/trace_events_trigger.c:8:
->    kernel/trace/trace_events_trigger.c: In function 'event_enable_trigger=
-_parse':
-> >> ./include/linux/cleanup.h:228:22: warning: ignoring return value of '_=
-_must_check_fn' declared with attribute 'warn_unused_result' [-Wunused-resu=
-lt] =20
->      228 |         ((typeof(p)) __must_check_fn((__force const volatile v=
-oid *)__get_and_null(p, NULL)))
->          |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    kernel/trace/trace_events_trigger.c:1842:9: note: in expansion of macr=
-o 'no_free_ptr'
->     1842 |         no_free_ptr(enable_data);
->          |         ^~~~~~~~~~~
->=20
->=20
-> vim +228 ./include/linux/cleanup.h
->=20
-> 85be6d84244706 Peter Zijlstra 2023-08-15  226 =20
-> 54da6a0924311c Peter Zijlstra 2023-05-26  227  #define no_free_ptr(p) \
-> 366fef794bd2b7 Ilpo J=C3=A4rvinen  2025-03-10 @228  	((typeof(p)) __must_=
-check_fn((__force const volatile void *)__get_and_null(p, NULL)))
-> 54da6a0924311c Peter Zijlstra 2023-05-26  229 =20
->=20
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-
+On Wed, Jul 22, 2026 at 07:11:39PM +0200, Mickaël Salaün wrote:
+> Landlock tracepoints expose filesystem paths and process names that may
+> contain spaces, equal signs, or other characters that break ftrace field
+> parsing.
+> 
+> Add a __print_untrusted_str() TP_printk helper that escapes separators
+> (space, equal sign), quotes, backslashes, and non-printable bytes via
+> string_escape_mem(), so an untrusted string cannot inject field
+> separators or control characters into the ftrace output and can be
+> unambiguously recovered.
+> 
+> This guarantee applies to the in-kernel ftrace text output (trace,
+> trace_pipe).  Userspace libtraceevent (perf, trace-cmd) does not yet
+> parse this helper, so a companion libtraceevent change is needed for
+> those consumers to pretty-print the field.
+> 
+> Cc: Günther Noack <gnoack@google.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Tingmao Wang <m@maowtm.org>
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> ---
+> 
+> Changes since v2:
+> https://patch.msgid.link/20260406143717.1815792-6-mic@digikod.net
+> - Add a Return: kdoc for trace_print_untrusted_str_seq() and rename its
+>   declaration parameter to src.
+> 
+> Changes since v1:
+> https://patch.msgid.link/20250523165741.693976-4-mic@digikod.net
+> - Remove WARN_ON() (pointed out by Steven Rostedt).
+> ---
+>  include/linux/trace_events.h               |  2 +
+>  include/trace/stages/stage3_trace_output.h |  4 ++
+>  include/trace/stages/stage7_class_define.h |  1 +
+>  kernel/trace/trace_output.c                | 44 ++++++++++++++++++++++
+>  4 files changed, 51 insertions(+)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 308c76b57d13..4ece9b8d9d6b 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -60,6 +60,8 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
+>  			 int prefix_type, int rowsize, int groupsize,
+>  			 const void *buf, size_t len, bool ascii);
+>  
+> +const char *trace_print_untrusted_str_seq(struct trace_seq *s, const char *src);
+> +
+>  int trace_raw_output_prep(struct trace_iterator *iter,
+>  			  struct trace_event *event);
+>  extern __printf(2, 3)
+> diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
+> index 181b81335781..0235dbd11b52 100644
+> --- a/include/trace/stages/stage3_trace_output.h
+> +++ b/include/trace/stages/stage3_trace_output.h
+> @@ -133,6 +133,10 @@
+>  	trace_print_hex_dump_seq(p, prefix_str, prefix_type,		\
+>  				 rowsize, groupsize, buf, len, ascii)
+>  
+> +#undef __print_untrusted_str
+> +#define __print_untrusted_str(str)					\
+> +		trace_print_untrusted_str_seq(p, __get_str(str))
+> +
+>  #undef __print_ns_to_secs
+>  #define __print_ns_to_secs(value)			\
+>  	({						\
+> diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
+> index 47008897a795..f29a82e7a4c4 100644
+> --- a/include/trace/stages/stage7_class_define.h
+> +++ b/include/trace/stages/stage7_class_define.h
+> @@ -24,6 +24,7 @@
+>  #undef __print_array
+>  #undef __print_dynamic_array
+>  #undef __print_hex_dump
+> +#undef __print_untrusted_str
+>  #undef __get_buf
+>  
+>  #undef __event_in_hardirq
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index a5ad76175d10..f0a9b29b3e36 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/btf.h>
+>  #include <linux/bpf.h>
+>  #include <linux/hashtable.h>
+> +#include <linux/string_helpers.h>
+>  
+>  #include "trace_output.h"
+>  #include "trace_btf.h"
+> @@ -325,6 +326,49 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
+>  }
+>  EXPORT_SYMBOL(trace_print_hex_dump_seq);
+>  
+> +/**
+> + * trace_print_untrusted_str_seq - print a string after escaping characters
+> + * @s: trace seq struct to write to
+> + * @src: The string to print
+> + *
+> + * Prints a string to a trace seq after escaping all special characters,
+> + * including common separators (space, equal sign), quotes, and backslashes.
+> + * This transforms a string from an untrusted source (e.g. user space) to make
+> + * it:
+> + * - safe to parse,
+> + * - easy to read (for simple strings),
+> + * - easy to get back the original.
+> + *
+> + * Return: A pointer to the escaped string within the trace seq buffer, or
+> + * %NULL if @src is %NULL or the buffer is exhausted.
+> + */
+> +const char *trace_print_untrusted_str_seq(struct trace_seq *s,
+> +					   const char *src)
+> +{
+> +	int escaped_size;
+> +	char *buf;
+> +	size_t buf_size = seq_buf_get_buf(&s->seq, &buf);
+> +	const char *ret = trace_seq_buffer_ptr(s);
+> +
+> +	/* Buffer exhaustion is normal when the trace buffer is full. */
+> +	if (!src || buf_size == 0)
+> +		return NULL;
+> +
+> +	escaped_size = string_escape_mem(src, strlen(src), buf, buf_size,
+> +		ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_NAP | ESCAPE_APPEND |
+> +		ESCAPE_OCTAL, " ='\"\\");
+> +	if (unlikely(escaped_size >= buf_size)) {
+> +		/* We need some room for the final '\0'. */
+> +		seq_buf_set_overflow(&s->seq);
+> +		s->full = 1;
+> +		return NULL;
+> +	}
+> +	seq_buf_commit(&s->seq, escaped_size);
+> +	trace_seq_putc(s, 0);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(trace_print_untrusted_str_seq);
+> +
+>  int trace_raw_output_prep(struct trace_iterator *iter,
+>  			  struct trace_event *trace_event)
+>  {
+> -- 
+> 2.54.0
+> 
+> 
