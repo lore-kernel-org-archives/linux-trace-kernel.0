@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374474A32;
-	Thu,  6 Aug 2026 13:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9402A33F385;
+	Thu,  6 Aug 2026 13:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786023691; cv=none; b=Vku1R8af4lBGm1MqG3L7rqATeJz4Kw2rK7VzrzP2Wsby740XMi/q/1dP/5SxtXQW+PLX+9+gcAgsUikEdvBwtHeOvxCkc0ELh1QvyyNCuzniQhfiihoC6foD2OaVkOMZNPvkHIA7/DIRUZdxAwfv4h7Ts+2VTM9rC1BqyqCwlz8=
+	t=1786024720; cv=none; b=KoFmIg3jYJtkcj2/LMRLSiSjYX9z1aIlleyDkFYi1xzaPmn5Nj99oBw95KDQz7EgggpnunaPRt5RCLFpZWogRpc1KKWbY53kudg/Vvs3EwokTeQhRPN8VqR5YYIZ3JVy8Rrcl0gAuqofVPjglT2lXciUcNhhvY4uo67B0/uoFJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786023691; c=relaxed/simple;
-	bh=vKwmvMQ3K/xckpG0mZgEBf79C8grhiemZP7bBkbDmLA=;
+	s=arc-20240116; t=1786024720; c=relaxed/simple;
+	bh=jlNF1/gTJiuNt9aYwkNT4i989+l8aw0tKF6HssSvdOc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nmdk8m5uYHL+rJP8pevWYq8vlB55tyZMQbyfjQv2yJlMi6A5T1jU4XtTOlA2HUjsuuCngxnQNCSgEzocTn76RlLRxsjZ1rE6Z3yoKAARCJfwNKcmOC4IpudIWnz/vWRsiT5941FXvmJ6tHdc+kSj05UexKx3Gevw9VcEHHPkMfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqPqoInk; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=AMgD/m3xLWM958vUh5gm/dOQ6N3sgF58FPNfcGUO70e0ATX5338rt6R8JFsAs3K0+qRioadfxYoBREgM6HhN3dxF1BQVUwLrgXubQJASNWg30aNZ4G4ThXgkqnDbvWt08ICFGXGTcBMyVS5i3ptzMzRm2wtFK6JoCSa4nGAXBRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4hFIKtr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqPqoInk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 192F11F000E9;
-	Thu,  6 Aug 2026 13:41:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4hFIKtr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCFC1F00A3A;
+	Thu,  6 Aug 2026 13:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786023689;
-	bh=Ru6IPOsdzDitRU6k/P9dLvDIcUp6eZjujRM3axRZpGI=;
+	s=k20260515; t=1786024719;
+	bh=pqjc3XrcksOIjFw/0npkQJ2JqWUfGvQAgYKF2YA/2fQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=GqPqoInklXR36s3aFWIeh8vu0mUyTXHZ20MxRidbesHpWU2j+OkJQHHtBfP81A8DE
-	 IvMwh9nHvRv7CPN4NDkfKXDeDulcrob2V8PS2ICtBuqfq0K/tPlwuKRiV9wXtiWP6c
-	 RwCEQaxIkVX3/jo4I2u6Q6A1Ivm231BBnQyon6DyRtKj0ShFTIc61f3doUYgjpkPR/
-	 6QDu+Di/RbRZSEQ0J3YnpIqXaikj6VMrCYXsJTDLyO+dalKkkmvcs9LIgpBXPzQsRK
-	 nd3+nuoI7TSCc+D9bJ2iRR5xfk18/AvKTKOU0qCkKsQ7iODApKVbjhdb+X4Wc+BXVi
-	 b/TUVxTP//Qkg==
-Date: Thu, 6 Aug 2026 22:41:25 +0900
+	b=g4hFIKtrNVekfsmLvhju5m4jz4Jo+tqIOakT7NWfWwtu4Oy1M92zUBxdetR1Fe8aE
+	 ABuvlmiw2ndlSZHC+dLp8GBZeTGQNpXTSWi+zsCKm28tsRsJIA+Jd0Z39XmhQJONgD
+	 47M3mVkCNnfc2BnWd4asIG0WefxaRHhk+rvwldGl1DdgBTtCGCXxPz70a9JACOM7t3
+	 z+SkuPaEZ2GQo8SLH/cNuU5X+JWf7t+GubhmRpwUja+5NzdcjEwmEyQ7TnPU+7fWcE
+	 GK6x0yDsB6U5mRqqUeuXAlWdc9GM2YV0SJn/ptdtkd/s1G1pMl8dN57U8ax6Fgnl18
+	 aOKVG6WhIvjZA==
+Date: Thu, 6 Aug 2026 22:58:35 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Luigi Rizzo <lrizzo@google.com>
-Cc: Naveen N Rao <naveen@kernel.org>, Luigi Rizzo <rizzo.unipi@gmail.com>,
- "David S . Miller" <davem@davemloft.net>, JP Kobryn
- <inwardvessel@gmail.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Fix NULL pointer dereference in
- unregister_kretprobes()
-Message-Id: <20260806224125.6c1048fed96cac11bfb31233@kernel.org>
-In-Reply-To: <CAMOZA0+4dE0N3J35pTVTBgvFzP2a-b47Z_LZYwKNwej5jUx0zg@mail.gmail.com>
-References: <20260805161221.2428623-1-lrizzo@google.com>
-	<20260806090235.e40c75f84f8a01b9a80fd570@kernel.org>
-	<CAMOZA0+4dE0N3J35pTVTBgvFzP2a-b47Z_LZYwKNwej5jUx0zg@mail.gmail.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ftrace: Fix off-by-one fentry site disable in
+ ftrace_free_mem()
+Message-Id: <20260806225835.8b96b6422aa93a1d0dccd71b@kernel.org>
+In-Reply-To: <1b5ccfa8095bdb1277f84af1c2c2e2205aca03ae.1785992188.git.jpoimboe@kernel.org>
+References: <1b5ccfa8095bdb1277f84af1c2c2e2205aca03ae.1785992188.git.jpoimboe@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,46 +45,72 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Aug 2026 09:23:29 +0200
-Luigi Rizzo <lrizzo@google.com> wrote:
+On Wed,  5 Aug 2026 21:56:46 -0700
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-> On Thu, Aug 6, 2026 at 2:02 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Wed,  5 Aug 2026 16:12:21 +0000
-> > Luigi Rizzo <lrizzo@google.com> wrote:
-> >
-> > > In unregister_kretprobes(), rps[i]->rph can be NULL e.g. when called
-> > > after kretprobe failed registration. Under !CONFIG_KRETPROBE_ON_RETHOOK,
-> > > the unconditional access to rps[i]->rph->rp, causes a kernel panic due
-> > > to NULL pointer dereference.
-> >
-> > This is not a bug, since if register_kretprobe(rp) fails, rp must NOT be
-> > passed to unregister_kretprobe(rp). Or, do you find any cases where
-> > register_kretprobe() fails, preventing proper cleanup, and requiring
-> > unregister_kretprobe()? If so, we have to fix that case.
+> When a module's init text is freed, do_init_module() calls
+> ftrace_free_mem() with a half-open [start, end) range.  However the
+> ftrace_cmp_recs() comparator treats the upper bound as inclusive, as all
+> its other users do, passing 'ip + size - 1'.  So ftrace_free_mem() can
+> delete a record sitting exactly at 'end', which is outside the freed
+> range.
 > 
-> Masami, you are right, the kernel tree does not call unregister_kretprobes()
-> on a failed registration. I was confused by the unregister_kretprobes(rps, i);
-> call in the cleanup in register_kretprobes(), but the failed entry i is
-> not unregistered).
-
-Yes, in that case rps[i] is not unregistered ;)
-
+> For a kernel without CFI or IBT, the first record of a function is at
+> the function start, which for the first function in a module is also the
+> base of its text allocation.  As the module allocator packs its regions,
+> that address is often the 'end' passed by a neighboring module's
+> do_init_module(), causing the first function's ftrace location to get
+> disabled, preventing an attempt to livepatch it:
 > 
-> So aside from protective coding (but where would one stop ?
-> null rps, null rps[i], ... ), there is no need for this patch.
-
-OK, Thanks for the confirmation!
-
-Thanks,
-
-
+>   livepatch: failed to find location for function 'pcspkr_probe'
 > 
-> thanks for the feedback
-> Luigi
+> Convert the exclusive end to the inclusive 'end - 1' the comparator
+> expects, and return early for an empty range to avoid the subtraction
+> from underflowing when the init text size is zero.
+> 
+> Fixes: 42c269c88dc1 ("ftrace: Allow for function tracing to record init functions on boot up")
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> ---
+>  kernel/trace/ftrace.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index f93e34dd23288..6bde28d56f41b 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -8283,7 +8283,8 @@ static void add_to_clear_hash_list(struct list_head *clear_list,
+>  void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+>  {
+>  	unsigned long start = (unsigned long)(start_ptr);
+> -	unsigned long end = (unsigned long)(end_ptr);
+> +	/* end is inclusive and end_ptr is exclusive */
+> +	unsigned long end = (unsigned long)(end_ptr) - 1;
+>  	struct ftrace_page **last_pg = &ftrace_pages_start;
+>  	struct ftrace_page *tmp_page = NULL;
+>  	struct ftrace_page *pg;
+> @@ -8293,6 +8294,9 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+>  	struct ftrace_init_func *func, *func_next;
+>  	LIST_HEAD(clear_hash);
+>  
+> +	if (start_ptr >= end_ptr)
+> +		return;
+> +
+>  	key.ip = start;
+>  	key.flags = end;	/* overload flags, as it is unsigned long */
+>  
+> -- 
+> 2.54.0
+> 
 
 
 -- 
