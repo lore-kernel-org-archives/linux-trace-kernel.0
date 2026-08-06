@@ -1,166 +1,111 @@
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A05F41DE02
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 21:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D90230BE9
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 21:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786050816; cv=none; b=IIerCwwsVRDIOEnMIIWCidz8ibD9MBN4+nmU56qY2sKZ72CY5dLH9PIBCUzn68l7EgeKjR+y7IPwz0EixPsSNFnhvnn76ptyHyw2GJePyUiGuZTzZ3hT7PO2I2Tq3xS/XisYt2ZDMZ+VFW5/7CaCebSHdw9+sfI8tbpI5YVQxKI=
+	t=1786051118; cv=none; b=IbXJapyqZo1rfnxlk2djNrIUgychEf/vIbswN//duPBggQkyeFnR7JusmHpBOjKHqrxv9qzh9Ruh+IY8sTJdqJkQoJG0jCuzVbnjX4zD5+h3h6Ykj6N//dpI1b5y/+MsqYJEfA/kO7oyEUUrOwIK17d1YrBAaa4KfUxtztr+OqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786050816; c=relaxed/simple;
-	bh=CNQvFhVdRoGryLzJvLKX3hSTsH+qre2RJpUcVf9nXh4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RXq/n+nloElINz8Nspz1YoCnDyh9IR+A1n4cYv8Iy/WK/gzLQBs4WxhE0mO/xP74YnCXUhSIwRaB5RcUj2G/CRytriuJDDqbhCmOH1fjBW2YdqFg+61ddxEeT4NPb2cPRM+oFTfLFt8WTA16FULuN+fGSFBEJ4V5fH/phCMGN9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IccDDM99; arc=none smtp.client-ip=209.85.128.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1786051118; c=relaxed/simple;
+	bh=omYC/0CsEWbjCXrhWXnCRdSCMvvNYHrVSNaA5Kh2WME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f6xF7TQE68xB53L6iq3UXcVbLb7Ipk3gdkiCO4zYZjXsNKEOKiiwLsTJKzoEPByJcqXTkDhadzXPzVRIB5MdORXd0MdKGVGpCcTlkMT9LCs/szo5B9uoNCSFgoGJ/gBM5c/voQqsqTXbb3uIxKa4p46eAvh/MsT1b2MTlYSNwJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdY4ykLf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IccDDM99"
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4955843c6cdso22826135e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 14:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786050801; x=1786655601; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cXf5OkyQb5t84Kc/wGzH1+QneGiHelNLSJRdaS24HXA=;
-        b=IccDDM99e7E1RAIfTfbyL7r97zFtwKJF28/mG7tHKgjjMHrRyMDI9HZBi5BRqIaI9F
-         kYU65IBfh8JyuES9n6ZSUn5D2oS7rzmYSR3wqaeka3hULvuQ/Um0zXKOlWzbbF3VrdkK
-         s8Bj18bqiRnht2URu9HtedVOFcMlg/e88Z9UYM3y0UE2wtxMMSpnbetMVawu3HxszkHy
-         sVM4eYTLNEZJwCz1BOm/9z5fcga43Ximpm/AQ0TOvZQ/knZh+gjUGbN6vs3c/bfDfuO5
-         GpMDbA8+xuC/wrga7YYZrswgmqg9vU+dM2Jy2h9egfRJmQd40Wg3rXR3T9nAknF/Ge9Y
-         ZyhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786050801; x=1786655601;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=cXf5OkyQb5t84Kc/wGzH1+QneGiHelNLSJRdaS24HXA=;
-        b=DKzs+U7xx1mNgqLSQltxaaBvDQv2Cn2odIdb0EKVLa5FSxby94hAFA7YoaDo7zSKbs
-         Iiiwl83yeRA7v61tNxCI0tBV31b+QYgs2VjATcmx2qH7B9MtMdHTM1mqsHmmDmsEcDPP
-         2sTKXAylnTnWaLhlUKNQ/1NnXcn7LULju5I30j7LyrGJG7scZyF3IQ7sxpDPp9qFWF6p
-         pLpJqCH2viLiZWmy7OF+GNrupA5fecRTpZ7yd8EMoH1rEx+eGTML0MQlH3+hjI4eV80b
-         FyRqEXJXFnEqmJKwI040BGJM4U7VPq/4VuqVV8FFFY+pl8vhQdHqvkzp4OyriOJCy+Ru
-         21jA==
-X-Forwarded-Encrypted: i=1; AHgh+RqGxLuF7CPZ8SthDbMUQ1gf1muiJh47CaEkf499g9VjBtUT33Tfp9fvSx26RoSGwa1HTJhOd8Tn43XOUhcUclYo578=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7fekYVMHzH8kok0gktyF3hrC3ofd/ES42suIGuLHqcushJeUE
-	RqFa75OljhSfgbiyY+19EJB6Nwz5ZYRf15Ci3VfSiWsqwQOi8VtE3GGS9HJXrgPJt6OqpQ7VTe/
-	axGta8W6eJj5aS3LbRk6Daw==
-X-Received: from wmbb14.prod.google.com ([2002:a05:600c:588e:b0:495:4a25:69f7])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4f4a:b0:499:51f0:a9b2 with SMTP id 5b1f17b1804b1-49959e0179bmr50513235e9.1.1786050801122;
- Thu, 06 Aug 2026 14:13:21 -0700 (PDT)
-Date: Thu,  6 Aug 2026 22:13:05 +0100
-In-Reply-To: <20260806211306.3704194-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdY4ykLf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA301F00ACA
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 21:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786051117;
+	bh=7iK461ESpNVqLm9X3mINmjVFtgPa61Ne86Hxh9FvtdE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=MdY4ykLfCOE5L1anriEHxDSQWaxYawwnXuTy6R9nqDGCksSj13W14Q3Blv0o2Yqbc
+	 /kLP75p0VjAXXJelRJuXaxhAfJwiV7mLTk9pJOMkxIez+0UXQb/4daKjd2hYQthjXc
+	 S/3ubeTLb1LiymIdN7FU5HLsSJL/IeyUduKRksbgvo20QtdAk5ECW7H514hnpJoy+8
+	 p0iGPcGCJ6FmEroi6+Ku4MhIR0QdFJDb133TKcxW5wQPp5nJN9bB+ClZZ0RDgrDU3L
+	 zTF/HNjTth5vrWLYFSNbAe9vApJWfgvC/yP0oT6dG0V7DJKkHajhgp0BCno+GWPs5l
+	 eluT0mPRgedoQ==
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-93108a3c326so95287485a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 14:18:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rq/Mr1EXQFWisRfEo9YEHrQtyJZXuCyOtxYkISZCfgyANTkewNh5gdh1Epd7zDDbaY0ddI+HTw2WdNioRqz0vckzk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzElI503zRjj7ss4XgMj3/2dTb+ZetLGYPrLaHxThdW8ipP1ppv
+	sGCrJDmD8pdv2MJoebZiIP6+8lUA166aU2y0EsnCSd2i9CMbvmlC+OJr1omEmfu+/rWCZHFwlfQ
+	9mg7I+V+GCuB1Yq1A5IJMeeWvDX3vi2E=
+X-Received: by 2002:a05:620a:3d89:b0:915:92f3:54e3 with SMTP id
+ af79cd13be357-9365945e9demr809487785a.4.1786051116804; Thu, 06 Aug 2026
+ 14:18:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260806211306.3704194-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.55.0.654.g21b8a5bc05-goog
-Message-ID: <20260806211306.3704194-6-vdonnefort@google.com>
-Subject: [PATCH 5/6] ring-buffer: Dynamically calculate max_data_size
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+MIME-Version: 1.0
+References: <20260806153000.4184871-1-andrey.grodzovsky@crowdstrike.com> <20260806153000.4184871-3-andrey.grodzovsky@crowdstrike.com>
+In-Reply-To: <20260806153000.4184871-3-andrey.grodzovsky@crowdstrike.com>
+From: Song Liu <song@kernel.org>
+Date: Thu, 6 Aug 2026 14:18:24 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7gOs2Opo5DRm+YKxBxwU+ncBmEAKHYO5jPjzxM9S8i5w@mail.gmail.com>
+X-Gm-Features: AUfX_myLm4rrhFHB6ribxegz34WsGyCezFjywzASsvUedhjj05jmJkbjlTkIwlw
+Message-ID: <CAPhsuW7gOs2Opo5DRm+YKxBxwU+ncBmEAKHYO5jPjzxM9S8i5w@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next v3 2/2] selftests/livepatch: update
+ test-ftrace.sh for deprecated ftrace_enabled
+To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	live-patching@vger.kernel.org, rostedt@goodmis.org, mbenes@suse.cz, 
+	jolsa@kernel.org, mhiramat@kernel.org, jpoimboe@kernel.org, 
+	joe.lawrence@redhat.com, mark.rutland@arm.com, corbet@lwn.net, 
+	stable@vger.kernel.org, linux-open-source@crowdstrike.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The ring buffer order can be dynamically modified and temporarily
-disables writing to do so. It is therefore safe to use the updated value
-to calculate the maximum event size which can be written onto the ring
-buffer.
+On Thu, Aug 6, 2026 at 8:30=E2=80=AFAM Andrey Grodzovsky
+<andrey.grodzovsky@crowdstrike.com> wrote:
+>
+> kernel.ftrace_enabled=3D0 is now refused on kernels that deprecate the
+> knob, so the old disable/reload flow no longer applies there. Probe
+> for this with ftrace_disable_supported() and keep the full original
+> scenario (disable, fail to load a livepatch, re-enable, load, confirm
+> disable is refused while loaded) on kernels where it still works;
+> otherwise just confirm the write is refused.
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Assisted-by: Claude:claude-sonnet-5
+> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+> ---
+>  .../testing/selftests/livepatch/functions.sh  | 14 ++++++
+>  .../selftests/livepatch/test-ftrace.sh        | 45 ++++++++++++-------
+>  2 files changed, 42 insertions(+), 17 deletions(-)
+>
+> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testi=
+ng/selftests/livepatch/functions.sh
+> index 30dc677b2f45..a65b7b1ac8ad 100644
+> --- a/tools/testing/selftests/livepatch/functions.sh
+> +++ b/tools/testing/selftests/livepatch/functions.sh
+> @@ -126,6 +126,20 @@ function set_ftrace_enabled() {
+>         echo "livepatch: kernel.ftrace_enabled =3D $result" > /dev/kmsg
+>  }
+>
+> +# ftrace_disable_supported() - probe whether kernel.ftrace_enabled=3D0
+> +#      can still disable ftrace on this kernel. Newer kernels deprecate
+> +#      the knob and always refuse the write with -EOPNOTSUPP.
+> +function ftrace_disable_supported() {
+> +       local orig result
+> +
+> +       orig=3D$(sysctl --values kernel.ftrace_enabled)
+> +       sysctl -q kernel.ftrace_enabled=3D0 &> /dev/null
+> +       result=3D$(sysctl --values kernel.ftrace_enabled)
+> +       sysctl -q "kernel.ftrace_enabled=3D$orig" &> /dev/null
+> +
+> +       [[ "$result" =3D=3D "0" ]]
+> +}
 
-However, notice it is hardly making any difference for trace_marker
-because of the TRACE_MARKER_MAX_SIZE limit. For an 8KiB subbuf size,
-trace_marker can take 4096 characters while it can 'only' take 4054
-bytes for smaller subbufs.
+Since the selftests are shipped with the kernel code, I think
+we don't need to handle backward compatibility here. Instead,
+we can just assume disabling ftrace is no longer supported.
 
-Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Thanks,
+Song
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 3531005aab43..d2480ccc81b8 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -587,7 +587,6 @@ struct trace_buffer {
- 	struct ring_buffer_meta		*meta;
- 
- 	unsigned int			subbuf_order;
--	unsigned int			max_data_size;
- };
- 
- static inline unsigned int rb_subbuf_size(struct trace_buffer *buffer)
-@@ -600,6 +599,17 @@ static inline unsigned int rb_subbuf_capacity(struct trace_buffer *buffer)
- 	return rb_subbuf_size(buffer) - BUF_PAGE_HDR_SIZE;
- }
- 
-+static inline unsigned int rb_max_data_size(struct trace_buffer *buffer)
-+{
-+	struct ring_buffer_event *event;
-+
-+	/*
-+	 * surely rb_subbuf_capacity() is bigger than
-+	 * RINGBUF_TYPE_DATA_TYPE_LEN_MAX (see ring_buffer_event_length).
-+	 */
-+	return rb_subbuf_capacity(buffer) - RB_EVNT_HDR_SIZE - sizeof(event->array[0]);
-+}
-+
- static inline unsigned int rb_page_capacity(struct buffer_page *bpage)
- {
- 	return (PAGE_SIZE << bpage->order) - BUF_PAGE_HDR_SIZE;
-@@ -2745,9 +2755,6 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	buffer->subbuf_order = order;
- 	subbuf_size = (PAGE_SIZE << order);
- 
--	/* Max payload is buffer page size - header (8bytes) */
--	buffer->max_data_size = rb_subbuf_capacity(buffer) - (sizeof(u32) * 2);
--
- 	buffer->flags = flags;
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
-@@ -4914,7 +4921,7 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	if (ring_buffer_time_stamp_abs(cpu_buffer->buffer)) {
- 		add_ts_default = RB_ADD_STAMP_ABSOLUTE;
- 		info.length += RB_LEN_TIME_EXTEND;
--		if (info.length > cpu_buffer->buffer->max_data_size)
-+		if (info.length > rb_max_data_size(cpu_buffer->buffer))
- 			goto out_fail;
- 	} else {
- 		add_ts_default = RB_ADD_STAMP_NONE;
-@@ -4989,7 +4996,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
- 	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
- 		goto out;
- 
--	if (unlikely(length > buffer->max_data_size))
-+	if (unlikely(length > rb_max_data_size(buffer)))
- 		goto out;
- 
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
-@@ -5136,7 +5143,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
- 	if (atomic_read(&cpu_buffer->record_disabled))
- 		return -EBUSY;
- 
--	if (length > buffer->max_data_size)
-+	if (length > rb_max_data_size(buffer))
- 		return -EBUSY;
- 
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
-@@ -6495,8 +6502,9 @@ unsigned long ring_buffer_max_event_size(struct trace_buffer *buffer)
- {
- 	/* If abs timestamp is requested, events have a timestamp too */
- 	if (ring_buffer_time_stamp_abs(buffer))
--		return buffer->max_data_size - RB_LEN_TIME_EXTEND;
--	return buffer->max_data_size;
-+		return rb_max_data_size(buffer) - RB_LEN_TIME_EXTEND;
-+
-+	return rb_max_data_size(buffer);
- }
- EXPORT_SYMBOL_GPL(ring_buffer_max_event_size);
- 
--- 
-2.55.0.654.g21b8a5bc05-goog
-
+[...]
