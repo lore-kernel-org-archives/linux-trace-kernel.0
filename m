@@ -1,153 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F9F72630;
-	Thu,  6 Aug 2026 16:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460CF37F333;
+	Thu,  6 Aug 2026 16:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786033866; cv=none; b=AjCKAlq4aZJntvS1sNbCRbcGCQPF1PJnb/Y6RepXUUHTa+tzQ0/EH6TU/rjIteHrFBFSzkqFRheRYs9WSjRTnueCAbMaeNlL0MfmxcuKpf5ajUrWyvHFmjyv149ltKn+awOu72N4YPCyT2tqx3xFFdHaxreGRL1dbM7YE+5B+wU=
+	t=1786035247; cv=none; b=HfFYxcFeV/BgXvJEiKxMQfgZwphyhcxjoFhEHdsA3/SjgdQYztPJbpc+U1qVGwj5iJTClvUbHie48GemCxFCBT3mgqB+MCSRI0haW/iSdIyrKWWswzNc5k4y/74N+XmpRcF9Gt9BTIx05VrB5078u46YmRpdzQGsBYQxmIBRMk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786033866; c=relaxed/simple;
-	bh=mVTwW0b2WURKlJNz5W6ur6Q9trw1irf346v/mtsQRWs=;
+	s=arc-20240116; t=1786035247; c=relaxed/simple;
+	bh=ijet5q641iizCCPDbWe6qAYNPvfuSgFXgHd9tGZ1ulM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sfzxo/5nLvf58zdgIvA+0hAUTSMhw1iXt+BcOvx12R8YHKsatvXo6xPn6DgD4bvXtxVai+4QJPHz7LL8s3/b4U0mo72MDnl4Vm3uLCimUR1nAqPygSOXum9a0NA1/jgAE9EPo5PHSHJ0sbdkLl5sv6ytgBlLTGv8g2wtbkaPK3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1kXRt+y; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=MYHd26+69gIGUSW9sfOoU3IPCLtBMZDAnGzlGIgG4mGIOzz+LVc/8LImjlsFAoGMUpjVxmt+MtIilgPZ86hUuu9BrTwQgLwJgQ9ZgWJKehXnAZ0SOT058em79SdSQb29OI2kciZcVgQpn3XLqtAuGvD4P7YsopBtoP99SNDpRAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3rF6SYo; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1kXRt+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 135FF1F000E9;
-	Thu,  6 Aug 2026 16:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786033864;
-	bh=mVTwW0b2WURKlJNz5W6ur6Q9trw1irf346v/mtsQRWs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=P1kXRt+yoIsWD7ulhfbS3urOuVuE0SbPvMDxieMb81wACWsaIkq5JOoANzW7S8NWx
-	 J4fqscMVF4IvMA4A+ZyRcGi0cMYWRm03UyH3hRQu7dJiZRCTeFLT3MM1bCRaAr1/dQ
-	 Wzyv+1ZLBNqWJj5KtPgT6L6qt2ViX4mrbhABS0c2K59hQ/rk5vF3QtJfGoYwVTs7Pm
-	 8qo2h9eKBwfZAv5ivqMMODftIZf+/eIV2YydgQxJmFW66KSbq2aFP8It6DXFMsSP7E
-	 SJIUOL5KNIfVP1j2jZc4I9RAWvtZYm1iUOuYSejOF40J37fdh5bmrCbSSKxhHw9NgD
-	 YOSMfYvvnXfgg==
-Date: Thu, 6 Aug 2026 18:31:02 +0200
-From: Thierry Reding <thierry.reding@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
-	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-Message-ID: <anS0nxAwCXGWZRl9@orome>
-References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
- <20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
- <b1c1693d-02b4-4c5c-bb0a-1c2d87258d30@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3rF6SYo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786035245; x=1817571245;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ijet5q641iizCCPDbWe6qAYNPvfuSgFXgHd9tGZ1ulM=;
+  b=I3rF6SYokyoIwqQ12tXsRTR/qEnkmxCkcW8PUQZIhDBIJ8rrUk5Njh4F
+   587vbZ73Qm+DIJWx8bhIsSdTGYO4plx3CkIkzWt6n97Wodl99tpG8ZeE4
+   1MgNhhVvXZf8NbV4kxFy9v5vJJ5/JJ2RGYFb9voZkpwyjrQtiGELfeFn8
+   Zqj2/MDVxB+JE+ZEBHToi0+pxIMfQDer/6ZR4s1WctXnErviw+zPYs7ed
+   AtnLZ0j6dfnPMM+vupswvpxxLcMuLq+qIfnW0nkRAbfaLdG4RfCRWd1io
+   rOyiw6PTvo2nuev4p0u8jOpxHPHfASFUdWBNCCmD6g30sJcr9URppaZyC
+   w==;
+X-CSE-ConnectionGUID: Tu05L2FZQ0mIEbwsryniyA==
+X-CSE-MsgGUID: qHFZ6piPRDWEA6yaGLMDDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="86486217"
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="86486217"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 09:54:04 -0700
+X-CSE-ConnectionGUID: vcG3Zu0eShq4diKcXCaeVg==
+X-CSE-MsgGUID: jG606nB5SPqMIoWZuUMP9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="257853545"
+Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 06 Aug 2026 09:54:01 -0700
+Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1ws1Ly-00000000Fi9-3CTs;
+	Thu, 06 Aug 2026 16:53:58 +0000
+Date: Fri, 7 Aug 2026 00:53:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Martin Weiss <martin.githubacc@gmail.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Martin Weiss <Martin.weiss2410@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace_branch: use per-cpu counters for correct/incorrect
+ stats
+Message-ID: <202608070005.js0pMRDK-lkp@intel.com>
+References: <20260629095838.601926-1-Martin.weiss2410@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rscp6jw7dv2pn33g"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b1c1693d-02b4-4c5c-bb0a-1c2d87258d30@kernel.org>
+In-Reply-To: <20260629095838.601926-1-Martin.weiss2410@gmail.com>
+
+Hi Martin,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v7.2-rc6 next-20260806]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Martin-Weiss/trace_branch-use-per-cpu-counters-for-correct-incorrect-stats/20260806-093445
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20260629095838.601926-1-Martin.weiss2410%40gmail.com
+patch subject: [PATCH] trace_branch: use per-cpu counters for correct/incorrect stats
+config: arm64-randconfig-r062-20260806 (https://download.01.org/0day-ci/archive/20260807/202608070005.js0pMRDK-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260807/202608070005.js0pMRDK-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202608070005.js0pMRDK-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   kernel/trace/trace_branch.c: In function 'ftrace_likely_update':
+>> kernel/trace/trace_branch.c:198:6: warning: infinite recursion detected [-Winfinite-recursion]
+     198 | void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+         |      ^~~~~~~~~~~~~~~~~~~~
+   In file included from include/linux/array_size.h:5,
+                    from include/linux/kernel.h:16,
+                    from include/linux/kallsyms.h:11,
+                    from kernel/trace/trace_branch.c:7:
+   include/linux/compiler.h:33:25: note: recursive call
+      33 |                         ftrace_likely_update(&______f, ______r,         \
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      34 |                                              expect, is_constant);      \
+         |                                              ~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler.h:68:10: note: in definition of macro '__trace_if_value'
+      68 |         (cond) ?                                        \
+         |          ^~~~
+   include/linux/compiler.h:55:28: note: in expansion of macro '__trace_if_var'
+      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+         |                            ^~~~~~~~~~~~~~
+   include/linux/preempt.h:238:9: note: in expansion of macro 'if'
+     238 |         if (unlikely(__preempt_count_dec_and_test())) \
+         |         ^~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/preempt.h:238:13: note: in expansion of macro 'unlikely'
+     238 |         if (unlikely(__preempt_count_dec_and_test())) \
+         |             ^~~~~~~~
+   arch/arm64/include/asm/percpu.h:160:9: note: in expansion of macro 'preempt_enable_notrace'
+     160 |         preempt_enable_notrace();                                       \
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   arch/arm64/include/asm/percpu.h:197:9: note: in expansion of macro '_pcp_protect'
+     197 |         _pcp_protect(__percpu_add_case_64, pcp, val)
+         |         ^~~~~~~~~~~~
+   include/linux/percpu-defs.h:372:25: note: in expansion of macro 'this_cpu_add_8'
+     372 |                 case 8: stem##8(variable, __VA_ARGS__);break;           \
+         |                         ^~~~
+   include/linux/percpu-defs.h:501:41: note: in expansion of macro '__pcpu_size_call'
+     501 | #define this_cpu_add(pcp, val)          __pcpu_size_call(this_cpu_add_, pcp, val)
+         |                                         ^~~~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:511:41: note: in expansion of macro 'this_cpu_add'
+     511 | #define this_cpu_inc(pcp)               this_cpu_add(pcp, 1)
+         |                                         ^~~~~~~~~~~~
+   kernel/trace/trace_branch.c:218:17: note: in expansion of macro 'this_cpu_inc'
+     218 |                 this_cpu_inc(f->data.correct);
+         |                 ^~~~~~~~~~~~
+   include/linux/compiler.h:33:25: note: recursive call
+      33 |                         ftrace_likely_update(&______f, ______r,         \
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      34 |                                              expect, is_constant);      \
+         |                                              ~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler.h:68:10: note: in definition of macro '__trace_if_value'
+      68 |         (cond) ?                                        \
+         |          ^~~~
+   include/linux/compiler.h:55:28: note: in expansion of macro '__trace_if_var'
+      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+         |                            ^~~~~~~~~~~~~~
+   include/linux/preempt.h:238:9: note: in expansion of macro 'if'
+     238 |         if (unlikely(__preempt_count_dec_and_test())) \
+         |         ^~
+   include/linux/compiler.h:47:26: note: in expansion of macro '__branch_check__'
+      47 | #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+         |                          ^~~~~~~~~~~~~~~~
+   include/linux/preempt.h:238:13: note: in expansion of macro 'unlikely'
+     238 |         if (unlikely(__preempt_count_dec_and_test())) \
+         |             ^~~~~~~~
+   arch/arm64/include/asm/percpu.h:160:9: note: in expansion of macro 'preempt_enable_notrace'
+     160 |         preempt_enable_notrace();                                       \
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   arch/arm64/include/asm/percpu.h:197:9: note: in expansion of macro '_pcp_protect'
+     197 |         _pcp_protect(__percpu_add_case_64, pcp, val)
+         |         ^~~~~~~~~~~~
+   include/linux/percpu-defs.h:372:25: note: in expansion of macro 'this_cpu_add_8'
+     372 |                 case 8: stem##8(variable, __VA_ARGS__);break;           \
+         |                         ^~~~
+   include/linux/percpu-defs.h:501:41: note: in expansion of macro '__pcpu_size_call'
+     501 | #define this_cpu_add(pcp, val)          __pcpu_size_call(this_cpu_add_, pcp, val)
+         |                                         ^~~~~~~~~~~~~~~~
+   include/linux/percpu-defs.h:511:41: note: in expansion of macro 'this_cpu_add'
+     511 | #define this_cpu_inc(pcp)               this_cpu_add(pcp, 1)
+         |                                         ^~~~~~~~~~~~
+   kernel/trace/trace_branch.c:220:17: note: in expansion of macro 'this_cpu_inc'
+     220 |                 this_cpu_inc(f->data.incorrect);
+         |                 ^~~~~~~~~~~~
 
 
---rscp6jw7dv2pn33g
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-MIME-Version: 1.0
+vim +198 kernel/trace/trace_branch.c
 
-On Wed, Jul 08, 2026 at 10:59:46AM +0200, David Hildenbrand (Arm) wrote:
-> On 7/1/26 18:08, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > There is no technical reason why there should be a limited number of CMA
-> > regions, so extract some code into helpers and use them to create extra
-> > functions (cma_create() and cma_free()) that allow creating and freeing,
-> > respectively, CMA regions dynamically at runtime.
->=20
-> I'm confused. We still allow cma_create() only during __init, right?
->=20
-> Would we expect callers of cma_free() after __init? Or at which point?
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  197  
+134e6a034cb004 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-19 @198) void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+d45ae1f7041ac5 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-17  199) 			  int expect, int is_constant)
+1f0d69a9fc815d kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  200  {
+4a6c91fbdef846 kernel/trace/trace_branch.c   Peter Zijlstra          2019-03-07  201  	unsigned long flags = user_access_save();
+4a6c91fbdef846 kernel/trace/trace_branch.c   Peter Zijlstra          2019-03-07  202  
+d45ae1f7041ac5 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-17  203) 	/* A constant is always correct */
+134e6a034cb004 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-19  204) 	if (is_constant) {
+134e6a034cb004 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-19  205) 		f->constant++;
+d45ae1f7041ac5 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-17  206) 		val = expect;
+134e6a034cb004 kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-19  207) 	}
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  208  	/*
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  209  	 * I would love to have a trace point here instead, but the
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  210  	 * trace point code is so inundated with unlikely and likely
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  211  	 * conditions that the recursive nightmare that exists is too
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  212  	 * much to try to get working. At least for now.
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  213  	 */
+068f530b3f274d kernel/trace/trace_branch.c   Steven Rostedt (VMware  2017-01-19  214) 	trace_likely_condition(f, val, expect);
+52f232cb720a7b kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  215  
+a53c1587fa9e39 kernel/trace/trace_branch.c   Martin Weiss            2026-06-29  216  	/* use per-cpu counters to avoid contention */
+1f0d69a9fc815d kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  217  	if (val == expect)
+a53c1587fa9e39 kernel/trace/trace_branch.c   Martin Weiss            2026-06-29  218  		this_cpu_inc(f->data.correct);
+1f0d69a9fc815d kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  219  	else
+a53c1587fa9e39 kernel/trace/trace_branch.c   Martin Weiss            2026-06-29  220  		this_cpu_inc(f->data.incorrect);
+4a6c91fbdef846 kernel/trace/trace_branch.c   Peter Zijlstra          2019-03-07  221  
+4a6c91fbdef846 kernel/trace/trace_branch.c   Peter Zijlstra          2019-03-07  222  	user_access_restore(flags);
+1f0d69a9fc815d kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  223  }
+1f0d69a9fc815d kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  224  EXPORT_SYMBOL(ftrace_likely_update);
+1f0d69a9fc815d kernel/trace/trace_unlikely.c Steven Rostedt          2008-11-12  225  
 
-The idea is to allow cma_create() at any point. I forgot to properly
-remove the various __init annotations to make that clear. I've done that
-for the next revision.
-
-Technically cma_free() could happen any time a user no longer needs it.
-While we currently only do this on error-unwind, the Tegra VPR driver
-could technically be turned into a module and the entire region be torn
-down at that point, including calling cma_free() on all the chunks. I
-don't think we ever want to do that and it'd require a bit of tweaking
-to the OF reserved-memory code, but generally speaking I don't see why
-we wouldn't want to allow cma_create() and cma_free() at any time after
-__init.
-
-> > The static array of CMA areas cannot be replaced by dynamically created
-> > areas because for many of them, allocation must not fail and some cases
-> > may need to initialize them before the slab allocator is even available.
->=20
-> We can start with a memblock array of an initial size (like we do today).
->=20
-> Then, when you need more space, we can double the size (copying content a=
-nd
-> exchanging the pointer). Either allocate from memblock or from slab, if
-> available (slab_is_available).
->=20
-> memblock does something similar, see memblock_double_array().
-
-After replying to T.J. I think this static array is actually a nice
-feature in a way. It allows us to more easily make a distinction between
-the regular CMA regions created from reserved-memory regions that
-represent classic carveouts, and the more versatile CMA areas that could
-be used for any purpose.
-
-Telling the two types apart could obviously also be solved using some
-kind of flag stored with the CMA area, but at this point I don't really
-see a reason why the two lists would need to be unified.
-
-Thierry
-
---rscp6jw7dv2pn33g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmp0tsYACgkQ3SOs138+
-s6EDqQ//VPlX14ZCCWQFTzMM+CH1U7z90n2OI2r6sVAf3mIXAqF56hCOe1TSTHch
-SLJpzBAU/F15bA6jirr2jOS8SHr7N0C+ox5M2yoEGywgGsbTEOjWSvejWrHWkJ9m
-7fdcdEl/hB7yzbpBvDMxGiATg+0SwQrhy4Sp7105QzaPpE3/9dS5UXbQuhsbCcAy
-4fU7Xd3wOOLcxg5u7Fl0ggfWHiAX68o32alTzPijPaVubxFJ1RnLQLeNhTdwJv03
-nvh3RVR8dpDTY7hZbsTr/4r5+4L3ktGvufT5m3K0lImfKVb5hklsKVbNTnQMtJ+i
-nAC+BTofn33vMautsZwPhhAQeesfMSJkuNASPD9kqZ0U+b+W7XtmmkmwbigS2r9u
-1lajCmiV77/KeZazBydPFJzqt+0lEkLAwWtBAk+M/Fw0Lsx3/ycfApXqEtCv/Jfw
-G1oTIraXEv0tXgSbl0Q0zAY/TKTgTmtNqVNbLJh2VxhQiicJGiEYZ9w7i971TlUs
-obsrwFtpOrWdkBI8VFGUm59sNK7yjrl2XWpejZ+xmhY4GanpuNYf/Ki6nBhTn39r
-qUNyB63c492tlL7PYUHVx1tMFCMwDBPw9wg5Dn57++j5s3gmoAmgqaAykpl/tuhB
-lRoRWYWo4mgQ/C62svXRtyqVx5TMhQpRLrpQOAGdx4y6SF4GmGk=
-=TjKb
------END PGP SIGNATURE-----
-
---rscp6jw7dv2pn33g--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
