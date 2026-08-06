@@ -1,49 +1,49 @@
-Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED964360EDC
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 17:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FF448BD54
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 18:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786038126; cv=none; b=XuKzTsRG1RoN7YXVJw59MEUzTKF8OuGrMDAqNbfrKYnOM5EK5DXWbTFD1nri/vecQxE8jCgGTYu+lYAplUv7rZZgByhKJ51oAnFGGKMPRwG33nz23h11+AA7buE1Q5mvPA1Gno9ZhuEux+TGpLQb8y4onSKLgcego7zMU8q0MM4=
+	t=1786040533; cv=none; b=R4fnzydtD6/A7cpp+OvVXM1DdxFo55Vb5YHP0Fx4vsuR326+h/BMnoHVBrZP3AaQ6/sD7xFUrKDm55kONWgONhMlsEYGorIpIHJA5kpRPxkK8kTBYdtq+AGnOHxv1Cn0J1a232q/8eZeYIc2aSQYSFf+1r3Q2Y7cazPh9ERAbPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786038126; c=relaxed/simple;
-	bh=GeScITOVtMDf5mf4JANMPiPfpgf0CTwPjLb72QCr7j8=;
+	s=arc-20240116; t=1786040533; c=relaxed/simple;
+	bh=9BRzFZVy4zKx6m7/bhK1JfFyj65ASnZXRSc9F2yoeeo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amzgmL3dMlGH3LVLJW7i4onfzSyUVBVoz6vM0bZ2dj53N9/HtYc4LL2cO3qIzzKkCt36lJq8olnxfBUMTsRLHlsYDQ0OK7P84jYX1jVj9FHw6PcLptqAnGnIHF+6q69cTOdQiVxjacZbk0yXl0TFgD5Df8UK8ve3LzU2m0UqnP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=KtvCxy04; arc=none smtp.client-ip=84.16.66.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=md9TI+ebCWzspQysMkQCFh6dvE7d7aJAJLFdK/Nd6uu/9KtFYf4PHh50bJNsIwlW++RFLfN+6CMjRpxt8e/KlvxeoR97OPGAmn/3GIrEnLtRNOo7uxcWPmU+34UYazR6NcwMcwYybMgk1QYptcygN11vI8jaKK+5B3aICMcTDvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=FTNQIO9b; arc=none smtp.client-ip=45.157.188.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="KtvCxy04"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hGF2q426rzcHT;
-	Thu,  6 Aug 2026 19:41:55 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="FTNQIO9b"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hGFx64wChzrmF;
+	Thu,  6 Aug 2026 20:22:02 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1786038115;
-	bh=+jZTnzeU9akkNKo9pqMtKVeMpOAZJe4vlDnDBnjbnok=;
+	s=20191114; t=1786040522;
+	bh=vc4db9dlLjXPzCYYOSOgOswJHqHMqmmneD5cZW73c68=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KtvCxy04K0imZMmIu1vEDVnCr80R52UFIhbuqOqQwCK14GOZkk0CKdlOtdrb8eGxf
-	 NauX+Wf5W6Ps6pJoBwk7QbKWSWqcXYexnJ08iw5i7vqYhC4aEmkwC9uP2074MkJY4i
-	 tkgIDhflXCmROQffL0e5x5TuqFOVGGACgbVsauXM=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hGF2n6JqWzy72;
-	Thu,  6 Aug 2026 19:41:53 +0200 (CEST)
-Date: Thu, 6 Aug 2026 19:41:49 +0200
+	b=FTNQIO9byojoRV7z2fq67n+YYqG/OYHred6BLWe1Wx249UHZNZF8dEO4RXhkZyXZM
+	 K0edI2MMY4MvYO+r8MMEVYGlJWKatFiRBjhXWLxpgqGADSoTRZ5sGjvZWMkDJ26DB6
+	 3lzZzoWWoHEL20G+nx5CKyRfCKJctxNnosQKdZIs=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hGFx46CcPzHwB;
+	Thu,  6 Aug 2026 20:22:00 +0200 (CEST)
+Date: Thu, 6 Aug 2026 20:21:56 +0200
 From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Justin Suess <utilityemal77@gmail.com>
-Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Christian Brauner <brauner@kernel.org>, 
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>, 
+To: Tingmao Wang <m@maowtm.org>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
 	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
-	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, 
+	kernel-team@cloudflare.com, linux-fsdevel@vger.kernel.org, 
 	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/20] landlock: Split struct landlock_domain from
- struct landlock_ruleset
-Message-ID: <20260806.rooz1ieJahng@digikod.net>
-References: <20260722171159.2776765-1-mic@digikod.net>
- <20260722171159.2776765-4-mic@digikod.net>
- <amEwEUKyCPNUxITb@zenbox>
+Subject: Re: [PATCH v2 01/17] landlock: Prepare ruleset and domain type split
+Message-ID: <20260806.zi7ahDoash5r@digikod.net>
+References: <20260406143717.1815792-1-mic@digikod.net>
+ <20260406143717.1815792-2-mic@digikod.net>
+ <0e6fe895-9c3e-443d-a928-35640ba8c184@maowtm.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,41 +53,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <amEwEUKyCPNUxITb@zenbox>
+In-Reply-To: <0e6fe895-9c3e-443d-a928-35640ba8c184@maowtm.org>
 X-Infomaniak-Routing: alpha
 
-On Wed, Jul 22, 2026 at 05:12:18PM -0400, Justin Suess wrote:
-> On Wed, Jul 22, 2026 at 07:11:35PM +0200, Mickaël Salaün wrote:
-> > Switch all domain users to the new struct landlock_domain type
-> > introduced by a previous commit, eliminating the conflation between
-> > mutable rulesets and immutable domains. landlock_merge_ruleset() now
-> > returns and allocates a struct landlock_domain, and the merge and
-> > inherit helpers move next to it; the former static insert_rule() is
-> > exported as landlock_rule_insert() for its new caller across the
-> > translation-unit boundary.
-> > 
-> Seems a little confusing that we have
-> 
-> landlock_rule_insert()
-
-(the new one)
-
-> 
-> and
-> 
-> landlock_insert_rule()
-
-(the existing one)
-
-> 
-> Maybe a rename of one these would be appropriate?
-
-It's indeed confusing...  What about landlock_store_rule()?  I couldn't
-find anything better given the already taken names.
-
-> 
-> Otherwise looks good :)
-> 
-> Justin
+On Sun, Apr 12, 2026 at 05:29:24PM +0100, Tingmao Wang wrote:
+> On 4/6/26 15:36, Mickaël Salaün wrote:
 > > [...]
+> 
+> Hi Mickaël,
+> 
+> I like this approach, as I basically ended up doing similar refactoring
+> previously for the hashtable / array-based domain changes, and having this
+> done first should make it easier to adopt the domain data structure
+> changes in the future.
+> 
+> I assume it's fine for me to add:
+> Reviewed-by: Tingmao Wang <m@maowtm.org>
+
+I couldn't keep your tag because of the refactoring, but I'll appreciate
+a new review.
+
+> 
+> > @@ -175,19 +163,24 @@ static void free_rule(struct landlock_rule *const rule,
+> >  
+> >  static void build_check_ruleset(void)
+> >  {
+> > -	const struct landlock_ruleset ruleset = {
+> > +	const struct landlock_rules rules = {
+> >  		.num_rules = ~0,
+> > +	};
+> > +	const struct landlock_ruleset ruleset = {
+> >  		.num_layers = ~0,
+> >  	};
+> >  
+> > -	BUILD_BUG_ON(ruleset.num_rules < LANDLOCK_MAX_NUM_RULES);
+> > +	BUILD_BUG_ON(rules.num_rules < LANDLOCK_MAX_NUM_RULES);
+> >  	BUILD_BUG_ON(ruleset.num_layers < LANDLOCK_MAX_NUM_LAYERS);
+> >  }
+> >  
+> >  /**
+> > - * insert_rule - Create and insert a rule in a ruleset
+> > + * insert_rule - Create and insert a rule in a rule set
+>                                                   ^^^^^^^^
+> 
+> Should this be rule storage to be consistent with the next 2 lines?
+> 
+> Alternatively maybe we can just say "struct landlock_rules" to avoid
+> inventing new names?
+
+I realized I didn't replied here, but the v3 now uses "rule storage" to
+be future-proof.
+
+> 
+> >   *
+> > - * @ruleset: The ruleset to be updated.
+> > + * @rules: The rule storage to be updated.  The caller is responsible for
+> > + *         any required locking.  For rulesets, this means holding
+> > + *         landlock_ruleset.lock.  For domains under construction, no lock is
+> > + *         needed because the domain is not yet visible to other tasks.
+> >   * @id: The ID to build the new rule with.  The underlying kernel object, if
+> >   *      any, must be held by the caller.
+> >   * @layers: One or multiple layers to be copied into the new rule.
 > 
