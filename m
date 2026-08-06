@@ -1,149 +1,80 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB233242DF
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 02:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AFD346FB5
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 04:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785985126; cv=none; b=A3nPj0QQ9MgFJ5i30HkbyshtkQ+cJ8DWASjuHJKmwu1bUdxHmy7d19sLGG/5BUU7cqsuC3GeD375zsl0Ibe3ZZT3CqtXxqNQ3chDF2Qj17dGaswFO7iZ1rvGXsr7s2Rul3+nOYqiHJjWXVg03S7BX/3pcAcg5povNe3qQa7TSrw=
+	t=1785990443; cv=none; b=JP6AmBggaLRet8GOCPDb28wKXbUnW5WcEMErD6K2x1NZw1sdCODyvZ6c8PElwx6a6l837YKtqdg+6hCdwdkRRztEj+Ovut+XNo3LKTVeIQkppgLNJ9Hkx5pCv8pYGeIXtfiUeZSdr0EoLy6lSph9nr5oHt/0iX5hMdtAW7/QgiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785985126; c=relaxed/simple;
-	bh=fsWRZDHmdhpEVey7PNeiNthgILPDQgnkk9V8OIsmTHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lh7APtwhUtQ11jbkmZbknyeo38IfwVk39JTGyI837wAPkoSvsdd9ihHfLkKdz9tK6ooweyUU5oBGit8lXdwWeADI8Qa/BWxg22LEZ3RUadrgs7hUMKt5FS6wIBDk/pXIwME+uYfz63ryocZyJmTNr+BX8/39bkLYuCi8nbIC/5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKDW0I+T; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785990443; c=relaxed/simple;
+	bh=jFRvPBEEffqKE8w6gOIwRIA20uqFF3wOpNsGpGlAE4w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kV/JKuVJ0F86PcTXbf25zMsRqF78TqkDMRQTJtsIZgSRMfgE3ewPXVRLelCLWymynOpjHgcmrhwrbfoXlCvpXipcC0aI/xYv91qYJGk+83v4zdgUBt8g39S5T96YkIW5sMmoTvRd7/Mq1Yx/uQzpQfgg68R8Y1V0mwwievtqko0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=YE5KLZT/; arc=none smtp.client-ip=57.129.93.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKDW0I+T"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6b01abe5cdbso1286eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Aug 2026 19:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785985122; x=1786589922; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Cb3qpMNSQjkPFBRsgWqX2QuJCQXNljC6fDwPCJ7VZBs=;
-        b=LKDW0I+TS5kgEgK5PhYaJHnShgS6TQ69xoyA9jq00AsOqWA6ZXC3bpIWJOSNjOrZ+V
-         +0B8gISScl19XWere4KZOr7GItxoxVqmVmavHTTLlTe94vnSDzwPjgksiCBoF55PwB8A
-         BuQHRWSSNs3YUtGX66F2aB+oMd0X72WsxxAXZiIu8LycsUSB4hfc4SdzintLZLntxaQu
-         lxk3tB3f6lx5rheFOkVkMu8WPFu7lftePgBPpHuDm+oSKSPj8x347aGDNrlUGOXtqHZ1
-         Bqe4TwzupE98ZPkyZVC6ZB/xLU69VGZc/4XSdBmwlYOuMmhpHy1Q/td9cjKgX5k4jw4Y
-         lfaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785985122; x=1786589922;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Cb3qpMNSQjkPFBRsgWqX2QuJCQXNljC6fDwPCJ7VZBs=;
-        b=VbjK3VgzpjznufMEl3yw0Xo5jVgpHPB66o5Ezy2cCUajPooJ+tuTG68iTNvzhPZv0R
-         0yPeqvzIEyrlOQzUxnqr26JxU+LtFNwOpiaxkRPeMXc7XulvpBVIYEFPJ5n7bo7seZmO
-         cS4abjh+q0Zx1jDeXr3tifnEO7k3DR12RqpdofTQRI3aoG3HwRJkBqQ9Ekain/wdGXK5
-         L322sUsG5XigIgAtwo7gtuQBKd35r6P2RYE89H2imDtwDTzWHt+NC1m23DLE0l6Pkm2u
-         1XSAmwwPWwmjZySK2GPOwKjeTZIRQSvoRCNLC+uo1ispSMHYoSgyk37fVPvvmf0bmBK6
-         kAGA==
-X-Forwarded-Encrypted: i=1; AHgh+RoXz0BfkFIFosU/jGz+g1LewuZGK5i2voPvIz8LudBgakgxr8A67QkCJ7JObQKARcsm7CJWLwE5P4V1Evr1TV2rPlM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAytO5GNgc54L0CEukZatY68RHfUT9EbjWfnb+hO0316pk5SwZ
-	gZcJkUUmOeq8ZCVa8/DBPnOlgFOsKYJ1SaA2Qrw3HSreO0LZ0PPmy5Br
-X-Gm-Gg: AR+sD12dTvLmh5lFLAechaAv0/+HH1xT46D5iDULoK3eTaCJxrHlZEg9vCP9VpOjZiX
-	agXRW2jo+U2KTKo+PSRz4CkPVvd73Yf+CIgqC6gHKA7FlacNC0/tZuaBFPair07hYIPUwxS+bFJ
-	vCxKVdCI3gNiGp82Tsfi551vyrbNdBLthIL4+ItKImgqlA33SzDWjX8bqiV1NoBtw3Y24xA0dcn
-	LazYsMX35SIBPGeKrO3Y/fieEb+IZyzF6s+2Nuw3HVAgQJw/oD5yOqgQqxDlDIbMdx0Z0Ik5tsD
-	VCd+V/W4YE9qgPMvUZ2NISyGT5ueMLjq/CokaQHlFu8RL20HrHDzDG2Pz3JzOeacw1IiKtHVwDv
-	QmfLk4Exm/4/GXGdLBXTbQG6E/dH1eCeydINnvOY+LJi290FTOS/xTobYOWArnYH/bLG7She+py
-	PR2wpGlLDWJJ/P2iBlQaVuNEVhb6dCwpnImtnBTQ2f9XQEE9bjbbMQS+brzbunu9o=
-X-Received: by 2002:a05:6820:4dcd:b0:6a1:363d:bc42 with SMTP id 006d021491bc7-6ae96c55f8fmr6311046eaf.15.1785985121804;
-        Wed, 05 Aug 2026 19:58:41 -0700 (PDT)
-Received: from [127.0.0.1] ([144.24.58.22])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6ae93cbf7a9sm4532734eaf.2.2026.08.05.19.58.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2026 19:58:41 -0700 (PDT)
-Message-ID: <c21f0ba6-912d-45ff-8636-b69a0ddc92e4@gmail.com>
-Date: Thu, 6 Aug 2026 10:58:27 +0800
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="YE5KLZT/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1785990423; x=1786249623;
+	bh=ohwSW8qsPRtbPjZwvKouZx5YOEapTwS/HTecdhR8dFE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=YE5KLZT/Ujh/wCVs2578hyIePWtq1WhS2Y/TMfZUFkqSTLUzIuuIfl156XjGuPh8d
+	 tAREIXs8ClwTEne/VAsFApveZVY2ITDh2LXIA4nHaln7Ho0wfINSV8QSFyJVV67vKy
+	 ckV0cuiobt0Ew/x3frlpqh8roflB9jqIf8WHl9sILJKa/85KTm3DyDyU9+z7YnAIdh
+	 8CA21h/J35fOcDwP21cWCL/dDPCNdz0C49CMrXcA8ifX1tLv2BztYrWIFXFUSKKQSO
+	 kjvltzrMBS/xaz99EEKc92p7m1qsFn6Swl+q7ZW1Ub52caiEp7lxeoLytG8pblzJeh
+	 fNslVFXTlBf5g==
+Date: Thu, 06 Aug 2026 04:26:55 +0000
+To: NeilBrown <neil@brown.name>
+From: quanyeyang <quanyeyang@proton.me>
+Cc: Quanye Yang <quanyemostima@gmail.com>, Justin Suess <utilityemal77@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, KP Singh <kpsingh@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Yonghong Song <yonghong.song@linux.dev>, Emil Tsalapatis <emil@etsalapatis.com>, "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, syzbot+ef8d17bae14efb960935@syzkaller.appspotmail.com
+Subject: =?utf-8?Q?Re:_=E5=9B=9E=E5=A4=8D=EF=BC=9A_Re:_[PATCH]_bpf:_disable_lockdep_while_running_BPF_on_lock=5Frelease?=
+Message-ID: <EIbqlFfOtIoQjwWMjF_wfOLoXINOeoNtFxL8C-kwq2ynyLK1gqMXt-4qEaZr2mcNIyK6xkxNJOyn0BXgmZvlNmd01Y-om7FfnP85flTwFBk=@proton.me>
+In-Reply-To: <178596983056.3252194.16986843925963956795@noble.neil.brown.name>
+References: <20260803-fix-lock-tracepoint-bpf-lockdep-v1-1-91fb7afb526a@gmail.com> <anEuaSqiCVsQ6I4P@zenbox> <178583246611.3252194.4318729338489544399@noble.neil.brown.name> <CABcBDJuznu=BgDhevsD6PybX8+6fcaO1xyTcuGuv8F_+MfeZoQ@mail.gmail.com> <178588373680.3252194.4414470901360919775@noble.neil.brown.name> <46Fu_iB0xOxZXb0l5G6pslLArj7TrP_AOICffhfZKoviSn7zVUVVVSMfWaVBYNqt9RiCWWHhSAvlMc3RaJvRFSnvbV2EcBz9VUBQzb2wSkw=@proton.me> <178592062568.3252194.6464683099845305898@noble.neil.brown.name> <178596983056.3252194.16986843925963956795@noble.neil.brown.name>
+Feedback-ID: 206494642:user:proton
+X-Pm-Message-ID: 8597740ae3517b5f6005a6544ef05cbdc5ada27b
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 04/11] tracing: wprobe: Add watchpoint probe event
- based on hardware breakpoint
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <178565870538.714490.11309825813968306287.stgit@devnote2>
- <178565875046.714490.17724442147958346980.stgit@devnote2>
- <20260803070356.GV49951@noisy.programming.kicks-ass.net>
- <20260804080035.6b719368c9328bbdd8219867@kernel.org>
- <20260803230840.GJ687043@noisy.programming.kicks-ass.net>
- <20260806090641.e59484ac570b0f842bc930bc@kernel.org>
-From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <20260806090641.e59484ac570b0f842bc930bc@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 8/6/2026 8:06 AM, Masami Hiramatsu (Google) wrote:
-> On Tue, 4 Aug 2026 01:08:40 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
->> On Tue, Aug 04, 2026 at 08:00:35AM +0900, Masami Hiramatsu wrote:
->>> On Mon, 3 Aug 2026 09:03:56 +0200
->>> Peter Zijlstra <peterz@infradead.org> wrote:
->>>
->>>> On Sun, Aug 02, 2026 at 05:19:10PM +0900, Masami Hiramatsu (Google) wrote:
->>>>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>>>>
->>>>> Add a new probe event for the hardware breakpoint called wprobe-event.
->>>>> This wprobe allows user to trace (watch) the memory access at the
->>>>> specified memory address.
->>>>
->>>> s/the memory/the kernel memory/
->>>
->>> Indeed.
->>>
->>>>
->>>>> The new syntax is;
->>>>>
->>>>>  w[:[GROUP/]EVENT] [r|w|rw]@[ADDR|SYM][:SIZE] [FETCH_ARGs]
->>>>>
->>>>> User also can use $addr to fetch the accessed address and $value to fetch
->>>>> the accessed memory value (shorthand for '+0($addr)'). No other variables
->>>>> are supported.
->>>>
->>>> This seems limited to kernel addresses only? Should not also userspace
->>>> addresses be supported?
->>>
->>> Hmm, for x86, yes, since it causes a trap after executing (all page fault
->>> are handled). But other architecture like arm64 may not be able to support
->>> it because it needs to enable watchpoint after major page fault.
->>> At this step, I would like to limit it just for kernel memory.
->>
->> Sure, but suppose you were to add userspace, what would the ABI be?
-> 
-> Ahh, sorry. It was misreading, I mean it should be only for the kernel address,
-> not for user space. So I don't want to add userspace. (I answered the first one)
-> 
-> Thank you,
-> 
+On Thursday, August 6th, 2026 at AM 6:44, NeilBrown <neilb@ownmail.net> wro=
+te:
 
-Keeping wprobe limited to kernel addresses makes sense to me.
-Userspace watchpoints are already supported by the perf hardware-breakpoint API,
-and supporting them in wprobe would add unnecessary complexity.
+> So I thought about this some more and came up with this approach which
+> might be a good compromise.  I builds but I haven't tested it.
+> What do you thing?
+>=20
+> NeilBrown
 
-An explicit address check could also make this boundary clear.
+Tested it now (PROVE_LOCKING + the syzbot reproducer at the Closes:
+link). It fixes the false positive cleanly:
 
->>
->> That is, don't paint yourself in a corner etc.
-> 
-> 
+  before: "WARNING: possible recursive locking" on rhashtable_bucket,
+          5 instances during the reproducer's run;
+  after:  no warning; new lockdep complaints.
+
+The subclass layout reads right, and rhashtable.c has the single
+mutex_lock(&ht->mutex) (rht_deferred_worker, which you moved to
+_nested(1)), so nothing else is left at the old subclass.
+
+One nit: the new field line in your mail shows a stray leading "o"
+
+  o      struct lock_class_key           *lockdep_key;
+
+probably a paste artifact; the actual field is fine.
+
+Thanks for working this through -- reusing the existing per-init-site
+key with subclasses is much cleaner than my params suggestion.
+
+quanyeyang
 
