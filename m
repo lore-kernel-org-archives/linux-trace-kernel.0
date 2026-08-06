@@ -1,248 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC548F85B;
-	Thu,  6 Aug 2026 20:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786048149; cv=none; b=P1wJrDq61Gh6IPmhLJYw8CXEPEa1CyLQhvohCp37BfmSw2GOl4wRmksNPUiOyxU/T7STr6u/yiii+ftBu6b0WffxGNOY9JLPcg1oUur1m1SMMqgdlJf2RrY5WKBFwuG0LiKiPoy0PTxp1MOga8gta91QzW1ZiuUp6IJmXPK0vRg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786048149; c=relaxed/simple;
-	bh=Hf1sWA2I3g3xjEoBx6Nr1xgWjzHqdTMWAurRnr10dBc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AfR6bqcGX+ZEfw72C5yJDUmJLMPqQCAjgOqNLBPP9KAwI+a7kr641d+RkOjN5fXkqnokghRyJI2DrOC674ltZhOxqJG7DuWW4GZRF1e8vT/gG99QV20oIUpQl6GgxYoTwPKWzJDLfpxMGoVSq6Jy5TgwEncAYyo/CXIjNoa9v9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqixkwPX; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ED147F769
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 20:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786048944; cv=pass; b=odWjFLPhBd/7Y0HP/YfoDp1XLhdVu8NhzOaLTeuv/4bI9/bQgtBS3DmDYZthWwMwRb8uQPu2ksQzfRaXVP7egxgs/5sUviCYslunILcYqWZ5UiT4574G1MuO/b+W9/+zx/bEhKlNOnUtlqpw7qBydDmOCYL45ArrD6F9OCXlfwA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786048944; c=relaxed/simple;
+	bh=IEAKiadDDfRNm1Z+dbK3Nd06wHGzWvoim664DT4WGyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A3lgEgdSTijFJ52YaGPoDBZO9PmwUhi9fRNUXOxGb55sC5cpvHCEZ5FUQllZAUxzkFzTYkgjJa9qv5Oy0CPxd0m6YdCf7agcO5I9VSMFaIXtzd7TUBt4mH+SNOYd2iTw45RU/TxngKy7Y/eNbhwpHL26xzqz1S/xgXIefILbUC0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GchDjg/W; arc=pass smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqixkwPX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6631F01559;
-	Thu,  6 Aug 2026 20:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786048145;
-	bh=zxluIbSheiE2FDZ53esBrjUVebLxGYMQbFJodrgP/1g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MqixkwPXrlSArdj2AxmQRUBAZOxeLM45HENcNI18hOrmFCubXTqm3d/pW/j+GilWB
-	 9BahqG6yE3oQZYYcsw3PW6+dCIC8tpH1E7EVsm176N3UJmTmu2M/Dq6UlGOOKi0fG/
-	 bZWAQdPIFjolMfp+Tn/LN3PXlnONNeQMHvvqoHDq4L0yGD9qJBJnptEEtbcxSm2wLQ
-	 Z9JO6AB2xF4av8yDDgKhEnLl4sZQt4ZCyPALOpTUCNvnXwIDY6FjrcByNEoCYBm0Yl
-	 89v/zFEEAT7TvOEzEK2scmXfAZHCbFM3Cs7QX5BVF619scXT30pbj7AwTy6jaXq0VU
-	 eOdySbmCEenGw==
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Date: Thu, 06 Aug 2026 21:21:45 +0100
-Subject: [PATCH v4 20/20] tools/testing/selftests/mm: add
- MAP_PRIVATE-/dev/zero merge tests
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GchDjg/W"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-38f0f132f56so1077121a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 13:42:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786048943; cv=none;
+        d=google.com; s=arc-20260327;
+        b=BGdJ6JYASNtHEEmEvdLGXB8wuUNH+NRt1ud9j7WXvcV8E4skdafW/VIT5u4acDoKaO
+         Lo0tKy5Z6U7cWxRbDC1vcS2LIt6LXH25EdXnQT39ibEhtnzObmdVSphPUUz4XJtvWFXa
+         6OjpW4dxc+XQMBSHYvx8UA0hHAPz4z2TpucGmHXYGU5LrGopNJiC72QiKIeGii/twPmh
+         FlRy1xu4Vg41yw99gmm3K6KiCJOi+3rHagvw7XuiNJb/zEA9SUVroRrblhbneyaKO4+1
+         VCsuJMgnu6JRxZ2OMG5gZiCDmyDlx4URO306gNrhc+XBL1CrTHO3ShcybSvXwMEEn/vE
+         Oelw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=RQ1FfzBkBhxgzhysNoqlk9Ugh62yE+uGqtILaSuzzOQ=;
+        fh=blkD10Nub4LHLgPCTmBha52J1XB+mR/RjcxcN5HVzPQ=;
+        b=WJoIh4zNC6EzG6TTk3oc+sT4oZcHzxbzx7+zHm1SSBchsYAWlYoFvHWs92kpMZDvT3
+         l/O+bCnXYG/hORtEyAZUpdgIKFHH/gg3L1k6RqvlGqPkQlY7hVVRwIAdgd/Y/IEa/EIs
+         9NDRpVdBF77I5DveHvz/Tzm+zflOA9AZ+HO84iGDO5WybZJ8iP+puM9fmRQ0ConVJEge
+         /Ijj+0txO3oeBZ2EIUqQ6U1HNeccEb6zl19OsEGG2bFwsYvUJFtXP8j+hJXTD+H0vVPO
+         nr3x9FEMXLYEL+cVgfecfWY63dNljtEGHB2+LgmSkcVlldrl7ZrRV/Rw55vOSw4k5RtR
+         zwIw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786048943; x=1786653743; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RQ1FfzBkBhxgzhysNoqlk9Ugh62yE+uGqtILaSuzzOQ=;
+        b=GchDjg/WCojDDgQiXFg4q2koveZmYske+fc39H8B59+hvyb7+khIAz8j6Cy5kzEISF
+         jvBk9erst9DuaAolbCfrCVRxg5T+fl6I/7/c9yoA5wILg/fjetlLuZ6hMPn0nsip+B8g
+         pB1BG+WijX4IRqzd/03qa0XZ6NWuAGYdmI2w98ZGjKNMKyYEtCHeOxcwY2cl6RFqtRXN
+         nOYKve7+WjgCV27rmW9tqe9ct51hlc7WAP0SiMvBia9LRgujq/zFyjthsk4aEoLs446D
+         +jjng8ze9fjhUN/c+JXyJuBYdFlzMvyrWRYEUhgkAp3w4/2n3kpxje+7Ins82OGxFQDY
+         i09g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786048943; x=1786653743;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RQ1FfzBkBhxgzhysNoqlk9Ugh62yE+uGqtILaSuzzOQ=;
+        b=eLJnwi/MV7Kxp22RXu+Un1vAWcgU9GnVmHmWzwBFe8nw4LfLbvbMlBPlPJ0JyUH6NN
+         6zXbEiy3dh47BPLP9BQ/YWOFlFL6nVgPTm9ATCBUqC/41ux+vIkB1L6vq/d0GrrjZDIs
+         rW/Lha+yAMRPpnddZ54hcsJffzUKOA7+K7vId+iv88Ex2J5zKK8i2/RP5VtMh/gLmnJX
+         7HovGJUKIA1C97g45pLI+I4OXA3xIoaUA3jGhghfw0C0nuQFQk5KjZzrdgR33XJKUHql
+         8qOMBQzEtC3Bb/oV38HyoE25M8BllUUCFUy0svkrqLs03YOP1i6UAM7AqCAeDalr3/tc
+         geRw==
+X-Forwarded-Encrypted: i=1; AHgh+RqBGkyVJop415KVQ7mhjGptpglWUCSpEYZnE66vAUyLeu1FFH9WY/TxpsDrbYXHJ8zLC86kmQhWb61YTEnErB67L0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0mWGeNcsDLlZ5T84ZRNHLhCQnFfnEbaH3FnEKd8KzOjy45fKn
+	ORJtxeHUW79oTt6tgj6qtlXh+x16ZgPvoEd6ImM0ycOwHDofydl1fgmwN189XYYqUi+7LHqPp0Z
+	CGnzusgIDyJIdzbPSKPfC37FP/ETSjsc=
+X-Gm-Gg: AR+sD12NSabYrDRhZ5lezyln6c/T6OoV5lyQcClQo5LpCfeFvX9hB2OKueWS8N/s0jL
+	UPYEV7yStCjJmYfXg3mgWz/G8AV1ZzIqRRGsoPfBtDhA+jHYczSCpnGZfqFea2aTPbL543A1AO8
+	kToxVMRhN4y4lDebSkDUZndqIdaJgHIx9nMHW6czvLRvDx4z9WxyEYOPE2X8o6bZpBFRUeHj8t2
+	XxDwv/VEGSQhOCe8A5zxY7jQ3fPhCJtjK43o3sup5pACObkf5Tz4ULRzJSXkupsJyHWyzOEc6p0
+	CZz3sgQxm/tUlK/81e7xFKxqho7wnlgGYDmPTRHBOjKwfrgheugPTuYgZA7LPrZGWujH6eVpA+9
+	9Y4+/NYbeQTBnXRiV2kdZ1SwrplTCyxESop3ddz+sNQ==
+X-Received: by 2002:a17:90b:4a52:b0:390:84db:888e with SMTP id
+ 98e67ed59e1d1-3908976ebe5mr2158790a91.7.1786048942551; Thu, 06 Aug 2026
+ 13:42:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260806-b4-scalable-cow-virt-pgoff-v4-20-ab318a350404@kernel.org>
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
-In-Reply-To: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Miaohe Lin <linmiaohe@huawei.com>, 
- Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, 
- Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
- Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
- Matthew Brost <matthew.brost@intel.com>, 
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, 
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Janosch Frank <frankja@linux.ibm.com>, 
- Claudio Imbrenda <imbrenda@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Alex Deucher <alexander.deucher@amd.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
- =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
- John Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, 
- Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
- Youngjun Park <youngjun.park@lge.com>
-Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
- linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- syzbot@syzkaller.appspotmail.com
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4325; i=ljs@kernel.org;
- h=from:subject:message-id; bh=Hf1sWA2I3g3xjEoBx6Nr1xgWjzHqdTMWAurRnr10dBc=;
- b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLJK3lx8f3eBxxNuU4MJd/orhZRcbc8ErJlwcsVS4QDNx
- BWGF9x9O0pZGMS4GGTFFFmefxHfHyQSNq/zgr8bzBxWJpAhDFycAjCRPy8Z/llEfH7qFB7SUJnB
- 6yfno9ad9iN3vuQpqacrFlZ0SamUP2b4pztd5lrZobh1Z9ycDvMcn7Ak4I/HB3mXjVurlwrFbPU
- 0ZwQA
-X-Developer-Key: i=ljs@kernel.org; a=openpgp;
- fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
+References: <20260805131904.1127416-1-sumanthk@linux.ibm.com>
+ <anNTRb2aGsvY8_Rf@redhat.com> <anOlxodwEMPvb1EJ@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
+ <anRpdyApCza3MYVi@redhat.com> <anSNg4EA-tUc3C7W@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
+ <anSpyzXNCF_e3NFc@redhat.com>
+In-Reply-To: <anSpyzXNCF_e3NFc@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 6 Aug 2026 13:42:07 -0700
+X-Gm-Features: AUfX_mzLzfnMr5JzhO_LfD8itd6PObYZ2vjgmz7RdHZl9DJIxyA6-AdybXOhwG8
+Message-ID: <CAEf4BzY50c1ZxyNoE4619qiK9ZpZuLOkNawgGqQKZ3i9RgJWDg@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: Skip breakpoint installation on non executable vmas
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Assert that MAP_PRIVATE-mapped /dev/zero mappings behave like they are
-anonymous.
+On Thu, Aug 6, 2026 at 8:35=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
+>
+> On 08/06, Sumanth Korikkar wrote:
+> >
+> > On Thu, Aug 06, 2026 at 01:01:11PM +0200, Oleg Nesterov wrote:
+> > >
+> > > But your change in install_breakpoint() essentually reverts that comm=
+it?
+> > > If uprobe_register() -> register_for_each_vma() finds a VM_MAYEXEC vm=
+a
+> > > without VM_EXEC valid_vma() will return true, but then install_breakp=
+oint()
+> > > will fail anyway.
+> >
+> > Initially non exec vma will be ignored via uprobe_register(),
+> > install_breakpoint() will reject non vma mappings initially.
+> >
+> > As far as I understand,  if mprotect(PROT_EXEC) is performed later by a
+> > process, it adds VM_EXEC flag to vma and calls vma_complete() via
+> > vma_modify_flags(). uprobe_mmap() will then call install_breakpoint()
+> > and now it should succeed because VM_EXEC is set.
+>
+> Heh, I am stupid the 2nd time in the same thread ;)
+>
+> Sumanth, thanks for correcting me! It seems that I forgot everything abou=
+t
+> these code paths.
+>
+> Then this change makes more sense, but the VM_EXEC check needs the commen=
+t
+> to explain this all.
+>
+> However, I personally still don't think it's worth "fixing". But I leave =
+the
+> decision to Andrii and Jiri who (unlike me) understand how USDT's are use=
+d.
+>
 
-We test both unfaulted and faulted/unfaulted merges - each with the regions
-having page offset of 0, which would not merge if the mappings were treated
-as if they were file-backed.
+I agree, I don't see what needs to be fixed here.
 
-With the recent change that makes them behave as pure anonymous mappings,
-the merges should succeed as their page offsets are equal to their
-anonymous page offsets.
-
-Tested-by: syzbot@syzkaller.appspotmail.com
-Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
----
- tools/testing/selftests/mm/merge.c | 104 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
-
-diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
-index cb7cdb6b7ada..19c9bf9eb9ce 100644
---- a/tools/testing/selftests/mm/merge.c
-+++ b/tools/testing/selftests/mm/merge.c
-@@ -1362,6 +1362,110 @@ TEST_F(merge, anon_and_page_offset_mismatch_memfd)
- 	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
- }
- 
-+TEST_F(merge, merge_map_private_dev_zero_unfaulted)
-+{
-+	struct procmap_fd *procmap = &self->procmap;
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	char *ptr, *ptr2;
-+	int fd_zero;
-+
-+	if (access("/dev/zero", F_OK))
-+		SKIP(return, "No /dev/zero.");
-+	fd_zero = open("/dev/zero", O_RDWR);
-+	ASSERT_NE(fd_zero, -1);
-+
-+	/*
-+	 * Map two MAP_PRIVATE-/dev/zero VMAs next to one another with offset 0
-+	 * each.
-+	 *
-+	 * With these being made truly anonymous upon mapping, they will
-+	 * merge. If they were file-backed VMAs the page offsets would prevent
-+	 * merge:
-+	 *
-+	 * |-----||------|    |-------------|
-+	 * | ptr || ptr2 | -> |     ptr     |
-+	 * |-----||------|    |-------------|
-+	 */
-+	ptr = mmap(carveout, 5 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_FIXED | MAP_PRIVATE, fd_zero, 0);
-+	if (ptr == MAP_FAILED) {
-+		close(fd_zero);
-+		ASSERT_TRUE(false);
-+	}
-+	ptr2 = mmap(&carveout[5 * page_size], 5 * page_size,
-+		   PROT_READ | PROT_WRITE, MAP_FIXED | MAP_PRIVATE, fd_zero, 0);
-+	if (ptr2 == MAP_FAILED) {
-+		close(fd_zero);
-+		ASSERT_TRUE(false);
-+	}
-+	close(fd_zero);
-+
-+	/* Assert that they merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
-+}
-+
-+TEST_F(merge, merge_map_private_dev_zero_faulted_unfaulted)
-+{
-+	struct procmap_fd *procmap = &self->procmap;
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	char *ptr, *ptr2;
-+	int fd_zero;
-+
-+	if (access("/dev/zero", F_OK))
-+		SKIP(return, "No /dev/zero.");
-+	fd_zero = open("/dev/zero", O_RDWR);
-+	ASSERT_NE(fd_zero, -1);
-+
-+	/*
-+	 * Map a MAP_PRIVATE mapping of /dev/zero with page offset 0, then fault
-+	 * it in:
-+	 *
-+	 * |-------------------------------|
-+	 * |           faulted             |
-+	 * |-------------------------------|
-+	 */
-+	ptr = mmap(carveout, 15 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_FIXED | MAP_PRIVATE, fd_zero, 0);
-+	if (ptr == MAP_FAILED) {
-+		close(fd_zero);
-+		ASSERT_TRUE(false);
-+	}
-+	memset(ptr, 'x', 15 * page_size);
-+
-+	/*
-+	 * Unmap the middle:
-+	 *
-+	 * |---------|           |---------|
-+	 * | faulted |           | faulted |
-+	 * |---------|           |---------|
-+	 */
-+	ASSERT_EQ(munmap(&ptr[5 * page_size], 5 * page_size), 0);
-+
-+	/*
-+	 * Map in a new unfaulted mapping in the middle with page offset 0 -
-+	 * this should merge and would not if it were treated as a file rather
-+	 * than pure anon:
-+	 *
-+	 * |---------|-----------|---------|
-+	 * | faulted | unfaulted | faulted |
-+	 * |---------|-----------|---------|
-+	 */
-+	ptr2 = mmap(&carveout[5 * page_size], 5 * page_size,
-+		    PROT_READ | PROT_WRITE, MAP_FIXED | MAP_PRIVATE,
-+		    fd_zero, 0);
-+	close(fd_zero);
-+	ASSERT_NE(ptr2, MAP_FAILED);
-+
-+	/* Assert that they merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
-+}
-+
- TEST_F(merge_with_fork, mremap_faulted_to_unfaulted_prev)
- {
- 	struct procmap_fd *procmap = &self->procmap;
-
--- 
-2.55.0
-
+> Oleg.
+>
