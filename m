@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9402A33F385;
-	Thu,  6 Aug 2026 13:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F97E1DF74F;
+	Thu,  6 Aug 2026 14:00:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786024720; cv=none; b=KoFmIg3jYJtkcj2/LMRLSiSjYX9z1aIlleyDkFYi1xzaPmn5Nj99oBw95KDQz7EgggpnunaPRt5RCLFpZWogRpc1KKWbY53kudg/Vvs3EwokTeQhRPN8VqR5YYIZ3JVy8Rrcl0gAuqofVPjglT2lXciUcNhhvY4uo67B0/uoFJs=
+	t=1786024848; cv=none; b=Vy7fWKDLFzKUjCedQjlce5UjlagxORrM9GFPP5w99vEXTv0GVu5Qbfb84L2fNnV06edHntONg7v7t92muFV2jfGxJ27W/zPJ+j4ckuvBFnTkEHq/dV853QU0rmWLwj2UIbzVfIzpMLhlT3Kvvw9jK+gv2j6j/q1mKjdaKZeEtEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786024720; c=relaxed/simple;
-	bh=jlNF1/gTJiuNt9aYwkNT4i989+l8aw0tKF6HssSvdOc=;
+	s=arc-20240116; t=1786024848; c=relaxed/simple;
+	bh=FLo/tTT1AA7PcBx0X2JOGcd9MVdDBypORBeegIPBKxY=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AMgD/m3xLWM958vUh5gm/dOQ6N3sgF58FPNfcGUO70e0ATX5338rt6R8JFsAs3K0+qRioadfxYoBREgM6HhN3dxF1BQVUwLrgXubQJASNWg30aNZ4G4ThXgkqnDbvWt08ICFGXGTcBMyVS5i3ptzMzRm2wtFK6JoCSa4nGAXBRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4hFIKtr; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=o2s6CDFfCHlHLxDx0k//iNsQetixZ7sSpk3yqMOoPjEqRkEMFACuGcQLyNklL/OwCiZIWdsHSDZSs0POBtKOz0cYrtQsoi6KFUkH0lMcaDiPkg2SZF55tUXBVs9A/hlxiMhkMyLaabaUzbJfpytlsUKkKiCmDYm2ya6JoeMMbL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlsIq/oc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4hFIKtr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCFC1F00A3A;
-	Thu,  6 Aug 2026 13:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlsIq/oc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C8E51F000E9;
+	Thu,  6 Aug 2026 14:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786024719;
-	bh=pqjc3XrcksOIjFw/0npkQJ2JqWUfGvQAgYKF2YA/2fQ=;
+	s=k20260515; t=1786024847;
+	bh=clwkUdjC9f6arDcuk5/6HHXe9MuwtSGSEYEAbJBzyF4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=g4hFIKtrNVekfsmLvhju5m4jz4Jo+tqIOakT7NWfWwtu4Oy1M92zUBxdetR1Fe8aE
-	 ABuvlmiw2ndlSZHC+dLp8GBZeTGQNpXTSWi+zsCKm28tsRsJIA+Jd0Z39XmhQJONgD
-	 47M3mVkCNnfc2BnWd4asIG0WefxaRHhk+rvwldGl1DdgBTtCGCXxPz70a9JACOM7t3
-	 z+SkuPaEZ2GQo8SLH/cNuU5X+JWf7t+GubhmRpwUja+5NzdcjEwmEyQ7TnPU+7fWcE
-	 GK6x0yDsB6U5mRqqUeuXAlWdc9GM2YV0SJn/ptdtkd/s1G1pMl8dN57U8ax6Fgnl18
-	 aOKVG6WhIvjZA==
-Date: Thu, 6 Aug 2026 22:58:35 +0900
+	b=BlsIq/ocHUL+LSB2Fazepjlb97ldgloqUre/sGiQ15JUXarJeAB6P/+yXJlvyTMg4
+	 o7KDivndjU8u+yZ2+ymvki3/LuI0JPnkJX4I8t18GzXCNeTWG2htRvfnLSMLxYv0CS
+	 P9x8TTKSGyYfx430H3kp3MieT/5OP3NyHMWffRlUbXWsyJ7t6zxZOlWpRG8zQzuYjv
+	 1sota53wQxg3539kFtlLZCKWi7fdO4ACoLCM4RX4R9F1MBNHynhC4lUq/EHPxkRJsB
+	 eg+VAvokS/pzaFKgtSTvu/a/WWU0nI4ucdoxdW915lRWgSWSDpVeXbQs93eyjuh+b2
+	 o0St4TM7xyJHQ==
+Date: Thu, 6 Aug 2026 23:00:42 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Fix off-by-one fentry site disable in
- ftrace_free_mem()
-Message-Id: <20260806225835.8b96b6422aa93a1d0dccd71b@kernel.org>
-In-Reply-To: <1b5ccfa8095bdb1277f84af1c2c2e2205aca03ae.1785992188.git.jpoimboe@kernel.org>
-References: <1b5ccfa8095bdb1277f84af1c2c2e2205aca03ae.1785992188.git.jpoimboe@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing/boot: Add support for eprobe, fprobe, and
+ tprobe events
+Message-Id: <20260806230042.ab2b9cc1b67c3d888b3f94a4@kernel.org>
+In-Reply-To: <178597842125.123558.2594525097237345437.stgit@devnote2>
+References: <178597841107.123558.13065821394773752510.stgit@devnote2>
+	<178597842125.123558.2594525097237345437.stgit@devnote2>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,68 +50,233 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  5 Aug 2026 21:56:46 -0700
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Thu,  6 Aug 2026 10:07:01 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> When a module's init text is freed, do_init_module() calls
-> ftrace_free_mem() with a half-open [start, end) range.  However the
-> ftrace_cmp_recs() comparator treats the upper bound as inclusive, as all
-> its other users do, passing 'ip + size - 1'.  So ftrace_free_mem() can
-> delete a record sitting exactly at 'end', which is outside the freed
-> range.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> For a kernel without CFI or IBT, the first record of a function is at
-> the function start, which for the first function in a module is also the
-> base of its text allocation.  As the module allocator packs its regions,
-> that address is often the 'end' passed by a neighboring module's
-> do_init_module(), causing the first function's ftrace location to get
-> disabled, preventing an attempt to livepatch it:
+> Boot-time tracing currently supports kprobe-events and synthetic-events
+> under per-event configuration options.
 > 
->   livepatch: failed to find location for function 'pcspkr_probe'
+> Extend boot-time tracing to support newly added dynamic probe types:
+> - event probes (eprobe) under the "eprobes" event group
+> - function probes (fprobe) under the "fprobes" event group
+> - tracepoint probes (tprobe) under the "tracepoints" or "tprobes"
+>   event group
 > 
-> Convert the exclusive end to the inclusive 'end - 1' the comparator
-> expects, and return early for an empty range to avoid the subtraction
-> from underflowing when the init text size is zero.
+> To support this cleanly, update dyn_event_create() in trace_dynevent.c
+> so that passing NULL as the type parameter delegates to
+> create_dyn_event(), allowing generic creation of any registered
+> dynamic event type from a raw command string.
 > 
-> Fixes: 42c269c88dc1 ("ftrace: Allow for function tracing to record init functions on boot up")
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Update Documentation/trace/boottime-trace.rst accordingly to describe
+> the new per-event bootconfig options.
+> 
+> Assisted-by: Antigravity:gemini-3.6-flash
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Documentation/trace/boottime-trace.rst |   18 ++++-
+>  kernel/trace/trace_boot.c              |  113 ++++++++++++++++++++++++++++++++
+>  kernel/trace/trace_dynevent.c          |    5 +
+>  3 files changed, 133 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+> index 651f3a2c01de..2c3c1fedb92c 100644
+> --- a/Documentation/trace/boottime-trace.rst
+> +++ b/Documentation/trace/boottime-trace.rst
+> @@ -121,9 +121,21 @@ ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2[...]]
+>     Defines new synthetic event with FIELDs. Each field should be
+>     "type varname".
+>  
+> -Note that kprobe and synthetic event definitions can be written under
+> -instance node, but those are also visible from other instances. So please
+> -take care for event name conflict.
+> +ftrace.[instance.INSTANCE.]event.eprobes.EVENT.probes = PROBE[, PROBE2[...]]
+> +   Defines new event probe based on PROBEs. This option is available only
+> +   for the event which group name is "eprobes".
+> +
+> +ftrace.[instance.INSTANCE.]event.fprobes.EVENT.probes = PROBE[, PROBE2[...]]
+> +   Defines new fprobe event based on PROBEs. This option is available only
+> +   for the event which group name is "fprobes".
+> +
+> +ftrace.[instance.INSTANCE.]event.tracepoints.EVENT.probes = PROBE[, PROBE2[...]]
+> +   Defines new tracepoint probe based on PROBEs. This option is available only
+> +   for the event which group name is "tracepoints" or "tprobes".
+> +
+> +Note that dynamic event definitions can be written under instance node, but
+> +those are also visible from other instances. So please take care for event
+> +name conflict.
+>  
+>  Ftrace Histogram Options
+>  ------------------------
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 2ca2541c8a58..6ecf1a035caa 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/trace_events.h>
+>  
+>  #include "trace.h"
+> +#include "trace_dynevent.h"
+>  
+>  #define MAX_BUF_LEN 256
+>  
+> @@ -172,6 +173,109 @@ trace_boot_add_synth_event(struct xbc_node *node, const char *event)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_EPROBE_EVENTS
+> +static int __init
+> +trace_boot_add_eprobe_event(struct xbc_node *node, const char *group,
+> +			    const char *event)
+> +{
+> +	struct xbc_node *anode;
+> +	char buf[MAX_BUF_LEN];
+> +	const char *val;
+> +	int ret = 0;
+> +
+> +	xbc_node_for_each_array_value(node, "probes", anode, val) {
+> +		if (val[0] == 'e' && (val[1] == ':' || isdigit(val[1])))
 
-Looks good to me.
+Oops, I missed it, this isdigit is only required kretprobes...
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Let me fix it.
 
 Thank you,
 
-> ---
->  kernel/trace/ftrace.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index f93e34dd23288..6bde28d56f41b 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -8283,7 +8283,8 @@ static void add_to_clear_hash_list(struct list_head *clear_list,
->  void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
->  {
->  	unsigned long start = (unsigned long)(start_ptr);
-> -	unsigned long end = (unsigned long)(end_ptr);
-> +	/* end is inclusive and end_ptr is exclusive */
-> +	unsigned long end = (unsigned long)(end_ptr) - 1;
->  	struct ftrace_page **last_pg = &ftrace_pages_start;
->  	struct ftrace_page *tmp_page = NULL;
->  	struct ftrace_page *pg;
-> @@ -8293,6 +8294,9 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
->  	struct ftrace_init_func *func, *func_next;
->  	LIST_HEAD(clear_hash);
->  
-> +	if (start_ptr >= end_ptr)
-> +		return;
+> +			strscpy(buf, val, MAX_BUF_LEN);
+> +		else
+> +			snprintf(buf, MAX_BUF_LEN, "e:%s/%s %s", group, event, val);
 > +
->  	key.ip = start;
->  	key.flags = end;	/* overload flags, as it is unsigned long */
+> +		ret = dyn_event_create(buf, NULL);
+> +		if (ret) {
+> +			pr_err("Failed to add eprobe: %s\n", buf);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +#else
+> +static inline int __init
+> +trace_boot_add_eprobe_event(struct xbc_node *node, const char *group,
+> +			    const char *event)
+> +{
+> +	pr_err("Event probe is not supported.\n");
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_FPROBE_EVENTS
+> +static int __init
+> +trace_boot_add_fprobe_event(struct xbc_node *node, const char *group,
+> +			    const char *event)
+> +{
+> +	struct xbc_node *anode;
+> +	char buf[MAX_BUF_LEN];
+> +	const char *val;
+> +	int ret = 0;
+> +
+> +	xbc_node_for_each_array_value(node, "probes", anode, val) {
+> +		if (val[0] == 'f' && (val[1] == ':' || isdigit(val[1])))
+> +			strscpy(buf, val, MAX_BUF_LEN);
+> +		else
+> +			snprintf(buf, MAX_BUF_LEN, "f:%s/%s %s", group, event, val);
+> +
+> +		ret = dyn_event_create(buf, NULL);
+> +		if (ret) {
+> +			pr_err("Failed to add fprobe: %s\n", buf);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int __init
+> +trace_boot_add_tprobe_event(struct xbc_node *node, const char *group,
+> +			    const char *event)
+> +{
+> +	struct xbc_node *anode;
+> +	char buf[MAX_BUF_LEN];
+> +	const char *val;
+> +	int ret = 0;
+> +
+> +	xbc_node_for_each_array_value(node, "probes", anode, val) {
+> +		if (val[0] == 't' && (val[1] == ':' || isdigit(val[1])))
+> +			strscpy(buf, val, MAX_BUF_LEN);
+> +		else
+> +			snprintf(buf, MAX_BUF_LEN, "t:%s/%s %s", group, event, val);
+> +
+> +		ret = dyn_event_create(buf, NULL);
+> +		if (ret) {
+> +			pr_err("Failed to add tprobe: %s\n", buf);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +#else
+> +static inline int __init
+> +trace_boot_add_fprobe_event(struct xbc_node *node, const char *group,
+> +			    const char *event)
+> +{
+> +	pr_err("Fprobe event is not supported.\n");
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int __init
+> +trace_boot_add_tprobe_event(struct xbc_node *node, const char *group,
+> +			    const char *event)
+> +{
+> +	pr_err("Tracepoint probe is not supported.\n");
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_HIST_TRIGGERS
+>  static int __init __printf(3, 4)
+>  append_printf(char **bufp, char *end, const char *fmt, ...)
+> @@ -477,6 +581,15 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+>  	if (!strcmp(group, "synthetic"))
+>  		if (trace_boot_add_synth_event(enode, event) < 0)
+>  			return;
+> +	if (!strcmp(group, "eprobes"))
+> +		if (trace_boot_add_eprobe_event(enode, group, event) < 0)
+> +			return;
+> +	if (!strcmp(group, "fprobes"))
+> +		if (trace_boot_add_fprobe_event(enode, group, event) < 0)
+> +			return;
+> +	if (!strcmp(group, "tracepoints") || !strcmp(group, "tprobes"))
+> +		if (trace_boot_add_tprobe_event(enode, group, event) < 0)
+> +			return;
 >  
-> -- 
-> 2.54.0
+>  	mutex_lock(&event_mutex);
+>  	file = find_event_file(tr, group, event);
+> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> index c4dfbc293bae..6f2e39b797e5 100644
+> --- a/kernel/trace/trace_dynevent.c
+> +++ b/kernel/trace/trace_dynevent.c
+> @@ -116,6 +116,8 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+>  	return ret;
+>  }
+>  
+> +static int create_dyn_event(const char *raw_command);
+> +
+>  /*
+>   * Locked version of event creation. The event creation must be protected by
+>   * dyn_event_ops_mutex because of protecting trace_probe_log.
+> @@ -124,6 +126,9 @@ int dyn_event_create(const char *raw_command, struct dyn_event_operations *type)
+>  {
+>  	int ret;
+>  
+> +	if (!type)
+> +		return create_dyn_event(raw_command);
+> +
+>  	mutex_lock(&dyn_event_ops_mutex);
+>  	ret = type->create(raw_command);
+>  	mutex_unlock(&dyn_event_ops_mutex);
 > 
 
 
