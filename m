@@ -1,125 +1,108 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D85F2248BE
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 12:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6962C3768;
+	Thu,  6 Aug 2026 12:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786019750; cv=none; b=YcYzwX7jgRntYE+dBLQqg8W7C7rcu6HlT7GkMBQiqCr+vZtdT3a1IqVvF92H91ZI42UAquOILjyLXlXu5Kgud4G419Aob0zYBeHCYmKnIdMdT0cSdP5R3dfNAaOllIe+5OcRn678IU7OBh4A03T7MVsCXzT5QL05TZCEsQX53/o=
+	t=1786021114; cv=none; b=UJf1rjXCvGE/1fPuKNGfPWGrCRW+HHeHK/sOUQGTTnbtW5po/TVoIvVK35po88VIyjrP7Zm9XP+u+2R2iN/rSehldZYanKhW6lpmaw6N17kFSxXBaT4h6VGpXzaB1dGbZyD/Sqr/PQEWm5kqFDdaPP8p8eNpUmSmjh+ANLBujN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786019750; c=relaxed/simple;
-	bh=iuqm8IUhjhGQjcfwt27SIuyIUbPXiWsuLKm8o0NR6jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lGc63oXbnlgSfkiua9ZtTqFZsbO12L9IId4Q2p15ASPNIc4zg5P+lUaQQvW8jE8Y28uvv99ShZNJ+femh6vt71/tlJcg4zJrNQdgXIYJYr9+qPteBSNJZVaHHl4HbsgonuqJT6Sc2PNWAmvWJt5v5BdA7rnBvQMijPVCDx6v2/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WoC3wsqH; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WoC3wsqH"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c15d111ca99so235840866b.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 05:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786019746; x=1786624546; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/n69lRzU+/KobSt2jufolpdWS7t3iHXcIlRoKqP9Tf4=;
-        b=WoC3wsqHiFCyALd27Kr1MJhldYEGJymlFlgD+PxOzP+Ocl/uAHS2+PP0UCDWft7XlQ
-         KzBVaZ9/LJA76cMLnW3lqexITpEDYNiGvcR8/M9g5VzqwhZvJHARNn0c0pT/AB3QWavy
-         pvBQ1akuub42DuSBaJomwgux1OlXsAwA4i6BGsiBErwwwx5SZreywaSdpm7hNBZ22ghb
-         yJnWrmS/QrD7+KscdTAbyJ2hokfd1H8xVbVKkk4Edrn5mNRGJ0+VcjPP+hnHB3Rq8+Wa
-         YhPyXIVqpgQ6H+7MozwsrvRowN8HM+bjHLcw7rwE/4z3XCKvJOxq6x/NMiMBHFTsIe4G
-         6prg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786019746; x=1786624546;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/n69lRzU+/KobSt2jufolpdWS7t3iHXcIlRoKqP9Tf4=;
-        b=hT4vvFSv4hAKsH3uypejlc1fk/AnQOy6vBDxVhUo8LO+BPhGgcCCtJc71oYOHcX4JD
-         Ug1iLeHjyiSegDoXji3JI7OFK3vRnIUB87s+qLsTjw0xrkpL0X9KlUW66WFaRnaSTMLh
-         tmpBtLs0+7AEL18eO2NxC3PcxB/Lc/cLXiLOQBZV/G6s6/lrDfKqOb3K44zQehipP6S0
-         UREw4sk23BRjjhZY5/1OYxDP4diK0cImHF1jijHTQCAng8TKA6wW/saeSqWAM3i6L54z
-         9NiXlhiAyErk9S8uUIdpvWGr2BtHlNf+6zr26eygunuiHiVRNViz1XbzzOx2Ded3GCIF
-         Csgw==
-X-Forwarded-Encrypted: i=1; AHgh+RrbnBgpnOPwKACF8RvOx3PQdBqU5VeW0Y/5hfnZa5GXI4783QzN+iAflgyFH1/AygWgYMWi1KYAiu1/r+8mlnWIDNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCTXLRe2qk8tEr6c3vP7ITKplbdJFrnTwEiSkHfYVAnvX0Q1oI
-	e968hJCTfSktS7uobl85SzYen/uYH8bfBzCYAkS1RLpsD3lXyj7dyRVWZfP5JUtkPw==
-X-Gm-Gg: AR+sD108f+x6UORAKm/1qY9bQRoxpvu+PHfA13IS5AsaSlqRk8SFvdUrClrzE2uQe2X
-	CKDyIM5TY5XUGCP1nLlJWBcS06r0+BkGLh6ytoohoc+ueHtnDG9rr46963QjBMyOu3b4I7v1WfD
-	gbaQXtmBdmexkPIVJkzEdKXLKTKEfCUzZqpnreXvzzr80oXo/3CpOoChVrerYwUuYupLVQ5c/MF
-	3pxQpW5fjThzPWUhIZpOaBvq2YabgrjQa4RQ8KW2wfic4tF6H/Bg4W7rbeOYxfGdeaLwGD+BsHQ
-	enj6VqdZ33q4df8zNc5gv8ppPC0mLWHP0jnbG3LP00ZqVyvDbV6n2YSIN0GTt5bcxmlZfb1haqc
-	BBRxghag3nG8QFaFtroh+mA83baAZl/6vQy7GIdEeffXkVzXIkmC/l45dN2R/MXFGYFqJE3gDkr
-	0TjgEdBbmNKUpZGvdK3CjMWawOzSI14wNdkJGxxUqIEA8S8or9EyGPNQrexR2YaIEdCJTxsi7GT
-	9tvc0R8xg9zR62w0iBSUQmiWRBjPq04
-X-Received: by 2002:a17:907:c00d:b0:c16:9043:7973 with SMTP id a640c23a62f3a-c2039af8befmr794258966b.4.1786019745003;
-        Thu, 06 Aug 2026 05:35:45 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c203642435dsm244849866b.44.2026.08.06.05.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2026 05:35:44 -0700 (PDT)
-Date: Thu, 6 Aug 2026 13:35:40 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Fuad Tabba <fuad.tabba@linux.dev>, maz@kernel.org, oupton@kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
-	alexandru.elisei@arm.com, joey.gouly@arm.com, seiden@linux.ibm.com,
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, qperret@google.com,
-	ardb@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] tracing: Include linux/types.h in
- trace_remote_event.h
-Message-ID: <anR_nEDeWLYKIs7P@google.com>
-References: <20260804112317.1937387-1-fuad.tabba@linux.dev>
- <20260804112317.1937387-2-fuad.tabba@linux.dev>
- <20260805165432.0118a513@gandalf.local.home>
- <CA+EHjTxZ1tBfau4eK-nOdqig1xwngzsq8YyHtiE-iAMkZpSF8g@mail.gmail.com>
- <20260806081952.5cbd8170@gandalf.local.home>
+	s=arc-20240116; t=1786021114; c=relaxed/simple;
+	bh=t+hXEegpOqgVm5F8/JKQzgC1+MS4e8Jwyl2OCPfXrGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wkr7dj+xR8k/xgc0z/8t5Abz3hXAl1YKwvai4msbVXX3gi03Kl7cwcFIx8MVqoFgYhfaZbT5ZN4eOfRTRXBr1EXaw7pioxz47TRjNzXYYNGJ6Py1DJrBHphFFISmlfiJyL/OYSQfT7by8pDEuc3CVuSBTP2eSGigBuOCCoJT7B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 95AB6C05EA;
+	Thu,  6 Aug 2026 12:58:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id AA91420028;
+	Thu,  6 Aug 2026 12:58:28 +0000 (UTC)
+Date: Thu, 6 Aug 2026 08:58:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: syzbot <syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [trace?] KASAN: slab-use-after-free Read in
+ ring_buffer_iter_advance
+Message-ID: <20260806085828.3652b5f0@gandalf.local.home>
+In-Reply-To: <6a7137d1.40259c87.584f4.04ab.GAE@google.com>
+References: <6a7137d1.40259c87.584f4.04ab.GAE@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260806081952.5cbd8170@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: nrw5ej4s1e4aufpe63j6dmhyw7bioe3e
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: AA91420028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX185dbVDICUNT8e67SfQU2be7FkLnYzIdU0=
+X-HE-Tag: 1786021108-847306
+X-HE-Meta: U2FsdGVkX1/zAUR1eXW9mcPhNZruUdZm0T55krUju0Ztn0Illqa23DHQlUu8LiVzhEf0iAk6P8HBEXq3vVVVTtv5pqFDMXZHBl4uXiwGQN78++MFaUTwStSt5wvxN9IfhXPyTnOaXJs4rr1DSucHN76bb/gZXxcUZqMAoL852KE3lSsuaS3fu8SSr7hEL6ZdYwImF6km+MmiaSErXPN9vcyXqrWP2xO9CvR0K3BpTNHWpWdr7YDV/dSixFQAJV7qMLIWUa5pXi1ZxmTD4R2+db71shpObi6veX7TNIwMHDNUfE1IinLP4YZNGVvUiY2DV2725x5k7R0xvjpPAaFhbqgigKO2j3EyKQrtq2o6AtJXXEkYaXQblm15v0vzUFYv
 
-On Thu, Aug 06, 2026 at 08:19:52AM -0400, Steven Rostedt wrote:
-> On Thu, 6 Aug 2026 09:43:00 +0100
-> Fuad Tabba <fuad.tabba@linux.dev> wrote:
-> 
-> > > My ack still stands, but I wonder if we should just not use the include and
-> > > instead s/bool/_Bool/ ?  
-> > 
-> > I'd prefer to keep the include, if you don't mind.
-> > 
-> > As far as I can tell, apart from the typedef itself, the only headers
-> > built into the kernel that use _Bool as a type are a uapi one and
-> > arch/um's user.h when it's built for the host, neither of which has
-> > bool available, plus what looks like a leftover in bcache_ondisk.h
-> > from when it was uapi.
-> > 
-> > The include also covers whatever field gets added next.
-> > 
-> > Happy to switch if you'd still prefer _Bool.
-> 
-> The reason I suggested this is because I'm not sure how much we want to add
-> Linux headers to files built for the hypervisor.
-> 
-> If Vincent is good with adding this, then so am I.
-> 
-> But I rather have him give an ack before we do.
-> 
-> -- Steve
+On Mon, 03 Aug 2026 17:52:33 -0700
+syzbot <syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com> wrote:
 
-We have types.h already in several places in the hypervisor, so I think it's
-alright to include it here also.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+e0cc44465d6bae735679@syzkaller.appspotmail.com
 
-Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
+This is a legitimate bug.
 
--- 
-Vincent
+> 
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in rb_page_size kernel/trace/ring_buffer.c:391 [inline]
+> BUG: KASAN: slab-use-after-free in rb_advance_iter+0x40e/0x460 kernel/trace/ring_buffer.c:6024
+> Read of size 8 at addr ffff88802d79b8b8 by task syz.4.389/6869
+> 
+> CPU: 0 UID: 0 PID: 6869 Comm: syz.4.389 Not tainted syzkaller #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/16/2026
+> Call Trace:
+>  <TASK>
+
+>  rb_page_size kernel/trace/ring_buffer.c:391 [inline]
+>  rb_advance_iter+0x40e/0x460 kernel/trace/ring_buffer.c:6024
+>  ring_buffer_iter_advance+0x69/0x90 kernel/trace/ring_buffer.c:6445
+
+The iterator is updated under the raw cpu_buffer reader lock.
+
+> 
+> Freed by task 6871:
+>  kasan_save_stack+0x30/0x50 mm/kasan/common.c:57
+>  kasan_save_track+0x14/0x30 mm/kasan/common.c:78
+>  kasan_save_free_info+0x3b/0x70 mm/kasan/generic.c:584
+>  poison_slab_object mm/kasan/common.c:253 [inline]
+>  __kasan_slab_free+0x5f/0x80 mm/kasan/common.c:285
+>  kasan_slab_free include/linux/kasan.h:235 [inline]
+>  slab_free_hook mm/slub.c:2677 [inline]
+>  slab_free mm/slub.c:6377 [inline]
+>  kfree+0x22b/0x6c0 mm/slub.c:6692
+>  free_buffer_page kernel/trace/ring_buffer.c:399 [inline]
+>  ring_buffer_subbuf_order_set+0x116b/0x18a0 kernel/trace/ring_buffer.c:7439
+
+The pages are removed from the visible reader list onto a temporary link
+list under the raw cpu_buffer reader lock.
+
+After the reader lock is released, the list is then freed. No reader should
+have access to any of these items as they were only visible under the
+reader_lock.
+
+The bug is that the ring buffer iterator keeps state! It can still have a
+pointer to a sub-buffer that has been freed. When another read happens, it
+may have a stale pointer.
+
+The fix is to add some state to the cpu_buffer for when it frees pages so
+that the next read from the iterator will reset its state.
+
+I'll have to address this when I get some time.
+
+Thanks,
+
+-- Steve
