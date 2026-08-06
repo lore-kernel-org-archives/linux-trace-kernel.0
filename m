@@ -1,106 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C343743B48C
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 15:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918193AA4E2;
+	Thu,  6 Aug 2026 16:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786030555; cv=none; b=uyY2kq8EObWP9R0QcW5JVvpKahiWsEUuMrIuv2TiqxnTysL6ozYx4Jp8ZW7Os6Z8OOafFK7WPNzs8+wxTp3/98uoqyPStR+WxL8Lwhs6XiAXXx7vmdkK/FGVVSvm+8QwwEWWjJPRON8TKVX8c9JbAFCjXuFf5J9bBUfccFhYRKU=
+	t=1786032552; cv=none; b=dl2yEACu4yXb/PNidDl3ZfSz+Q9kkKorr2vGPgNWfmbrPopVgKoZfU/N3IzEqwcaaUkSmlyA12dADUsq6widAtjXlc6x1s47uq2d4HzRHeWoSXoI4pv1czxLYNqSII3VSw+IdddIDBq9/SFiDPNklGW99oALiRVg2gaDvPcyj3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786030555; c=relaxed/simple;
-	bh=r6HeOM6i2D+rbIGS117BMSevYrXhqKly7idLuF29n0k=;
+	s=arc-20240116; t=1786032552; c=relaxed/simple;
+	bh=J1mmhRLKDxaELj7616F3jLYF/axUtWF1l/JEzzjmppo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=nRo3D0oEx3OPr5qTuI7bOvz6OEvfvf6HFk3whqoi1WiH9s+K5DOoii2GQmBpI1aJk5HP9SaPPA7CFE7/Y9XKx5WnSoU9IiDGniaaX4FenDidNe31nmEF4OnYnQgsRZEjkGOLK2KJE9AGA2p1MZQfxf9Ikon1yXheXDG9f26neD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZFDxsPlR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZc0h6Ey93RKvXjo7szZouQSPCVLcsOx5DJesSSHhTCcYv4BcIvB7hJOWxaGmurYV1wSrzLD2EzrEj/zEyZRYh3UbGH218x7CczU2r9/jBy8BYIdzoFZjqSQaUIEMBPWXCRurlJUgGd+WNa9gWZRN3/goyvgVasf5G3tu2VE5XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKNEIVai; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZFDxsPlR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786030552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3a+zvsPBODBUkg2zPTRvsk0hWuKJ+5dJXyH550K1dLI=;
-	b=ZFDxsPlRsIYvMVEHy4pR1VWw+Drmw1cosGcW7XUfeqlHvzl6s6PTNKkkdr1EtCiY54BdTx
-	u0z2ZWughls0wjqrLRZMZnQnLGrq9ZquOUiFJMt6lkJWwuvF0ohWkZP6KfmSe/98lUevex
-	DoOBo0VijG+aVqQY6oP2wXpY5oJcMGE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-576-POPOuaPvN8267V3tIFsocA-1; Thu,
- 06 Aug 2026 11:35:47 -0400
-X-MC-Unique: POPOuaPvN8267V3tIFsocA-1
-X-Mimecast-MFC-AGG-ID: POPOuaPvN8267V3tIFsocA_1786030544
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B9371956088;
-	Thu,  6 Aug 2026 15:35:44 +0000 (UTC)
-Received: from fedora (unknown [10.44.32.54])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0B17B30001A2;
-	Thu,  6 Aug 2026 15:35:40 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  6 Aug 2026 17:35:44 +0200 (CEST)
-Date: Thu, 6 Aug 2026 17:35:39 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH] uprobes: Skip breakpoint installation on non executable
- vmas
-Message-ID: <anSpyzXNCF_e3NFc@redhat.com>
-References: <20260805131904.1127416-1-sumanthk@linux.ibm.com>
- <anNTRb2aGsvY8_Rf@redhat.com>
- <anOlxodwEMPvb1EJ@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
- <anRpdyApCza3MYVi@redhat.com>
- <anSNg4EA-tUc3C7W@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKNEIVai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4651F00A3E;
+	Thu,  6 Aug 2026 16:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786032551;
+	bh=J1mmhRLKDxaELj7616F3jLYF/axUtWF1l/JEzzjmppo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kKNEIVaiVH4wrn5oHK5ajPxUnFHB9+4/A/1LvM/uKTkDc0Tv9t57ZG0ITr9wXU8Xp
+	 dM7Cy6hGgHbZ/yeYTfWQ71Y57HgqRdmv1eKN2HCcuSEE4ilC3CtyGNaMO6veI78U67
+	 YcMqItiqFW5t/eUfTLQayfOrEOELuT08s9jUqHMsWIlKuGRS7h4T2GXPWrf4X6w2Zv
+	 tNNgofe3iP7rxX22Z7nlivDoSEEfrD+/jWedR6As/aEKkVkXWpqV8mSDDYNCbarkZ1
+	 SVWiBIPcCxOreaWD7DyyAbxr2eCgQZMraKPZN7mkuyWcqW1KUCi9T1+4s4zx6S89Zo
+	 2vOjrgZWIe6og==
+Date: Thu, 6 Aug 2026 18:09:08 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
+Message-ID: <anSuYvj1JU5K8xUO@orome>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <CGME20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c@eucas1p1.samsung.com>
+ <20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
+ <3f47aeab-33b1-4966-a5ce-5d6d5261e0e2@samsung.com>
+ <e212caac-6c30-448a-9e10-32fff8b842f6@kernel.org>
+ <83e5e74d-7106-4e14-9d10-56438372f6a3@samsung.com>
+ <ak_E4UxfnFJywJa7@orome>
+ <1eec88e6-1ea8-4525-bb17-e41444d715dc@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <anSNg4EA-tUc3C7W@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: c1F9NrzmLeGaGMUB7sQdar0AKxn2b6YVSQZkmjF4CoI_1786030544
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="awe2ln3pvo2iqnm5"
 Content-Disposition: inline
+In-Reply-To: <1eec88e6-1ea8-4525-bb17-e41444d715dc@samsung.com>
 
-On 08/06, Sumanth Korikkar wrote:
->
-> On Thu, Aug 06, 2026 at 01:01:11PM +0200, Oleg Nesterov wrote:
-> >
-> > But your change in install_breakpoint() essentually reverts that commit?
-> > If uprobe_register() -> register_for_each_vma() finds a VM_MAYEXEC vma
-> > without VM_EXEC valid_vma() will return true, but then install_breakpoint()
-> > will fail anyway.
->
-> Initially non exec vma will be ignored via uprobe_register(),
-> install_breakpoint() will reject non vma mappings initially.
->
-> As far as I understand,  if mprotect(PROT_EXEC) is performed later by a
-> process, it adds VM_EXEC flag to vma and calls vma_complete() via
-> vma_modify_flags(). uprobe_mmap() will then call install_breakpoint()
-> and now it should succeed because VM_EXEC is set.
 
-Heh, I am stupid the 2nd time in the same thread ;)
+--awe2ln3pvo2iqnm5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
+MIME-Version: 1.0
 
-Sumanth, thanks for correcting me! It seems that I forgot everything about
-these code paths.
+On Thu, Jul 16, 2026 at 12:43:56PM +0200, Marek Szyprowski wrote:
+> On 09.07.2026 17:59, Thierry Reding wrote:
+> > On Thu, Jul 09, 2026 at 07:56:45AM +0200, Marek Szyprowski wrote:
+> >> On 08.07.2026 10:35, David Hildenbrand (Arm) wrote:
+> >>> On 7/7/26 12:02, Marek Szyprowski wrote:
+> >>>> On 01.07.2026 18:08, Thierry Reding wrote:
+> >>>>> From: Thierry Reding <treding@nvidia.com>
+> >>>>>
+> >>>>> There is no technical reason why there should be a limited number o=
+f CMA
+> >>>>> regions, so extract some code into helpers and use them to create e=
+xtra
+> >>>>> functions (cma_create() and cma_free()) that allow creating and fre=
+eing,
+> >>>>> respectively, CMA regions dynamically at runtime.
+> >>>> Well, the technical reason for not creating cma regions dynamically =
+at
+> >>>> runtime is that on some architectures (like 32bit ARM) the early fix=
+up
+> >>>> for the region is needed to make it functional for DMA.
+> >>> Can you point me at the code that does that? Thanks!
+> >> Check dma_contiguous_early_fixup() and dma_contiguous_remap() in=C2=A0
+> >> arch/arm/mm/dma-mapping.c. Those functions ensures that the CPU mappin=
+gs for
+> >> the CMA reserved region in linear map are remapped with 4k pages inste=
+ad
+> >> of the 1M sections, so later, it will be=C2=A0possible to alter the ma=
+ppings and
+> >> change them to coherent when needed (altering 1M sections is not possi=
+ble,
+> >> because each process has it's own level-1 array even for the kernel li=
+near
+> >> mapping).
+> >>
+> >>
+> >>
+> >> However, in the use case in this patchset the reserved region is only =
+shared
+> >> with buddy allocator by using the CMA infrastructure, not registered t=
+o the
+> >> regular DMA-mapping API, so it would work fine. I'm not convinced that=
+ this
+> >> is the right API to use for this though.
+> > Are you saying you're not convinced that CMA is the right API to use for
+> > this? Or something else?
+> I read this again and indeed CMA seems to be right solution. I only wonder
+> why do You want to create the CMA areas dynamically? Imho it would work=
+=C2=A0if
+> You just create large enough CMA area on boot, what would automatically
+> share the memory with buddy allocator and then allocate dynamic VPR regio=
+ns
+> with cma_alloc(), potentially unmapping or marking the allocated region as
+> reserved in linear kernel mapping to avoid any potential speculative acce=
+ss
+> to the protected memory.
 
-Then this change makes more sense, but the VM_EXEC check needs the comment
-to explain this all.
+Hi Marek,
 
-However, I personally still don't think it's worth "fixing". But I leave the
-decision to Andrii and Jiri who (unlike me) understand how USDT's are used.
+sorry for missing your reply earlier.
 
-Oleg.
+The reason why we want to create the CMA areas dynamically is because we
+want to split the secure memory into multiple areas. And the size and
+number of these areas may need to vary, so I didn't want to have to rely
+on rebuilding kernels with different numbers of maximum CMA areas
+depending on the chunk size that we choose.
 
+The reason why we need to split up the protected memory into multiple
+CMA areas is that allocation patterns can create holes within a CMA
+area. For the VPR memory, however, we must ensure that there aren't any
+holes within the protected region because it is specified using a single
+base address and a size. So there is one contiguous region that can be
+marked protected.
+
+If we were to use a single CMA area, we could get holes within an area
+that is marked protected and once the pages are returned to the buddy
+allocator with cma_release(), something else could be attempting to
+access it and cause an error because it is still protected.
+
+The only way to make sure we get a single, resizable and contiguous
+region is by using multiple CMA areas and allocating the entire area
+once our allocations need to expand into that new area. So we're not in
+fact using much of the CMA infrastructure and actually need to duplicate
+some of it. We primarily need it for the page migration and reclaim
+functionality.
+
+> In both cases You will probably won't need the DMA-mapping API on top of
+> it, although it might be even possible to partially use with by
+> registering custom dma_ops for the devices using the protected region
+> (assuming that it would support only DMA_ATTR_NO_KERNEL_MAPPING
+> allocations).
+
+Yeah, I don't think we want the DMA API on top at all. The allocator has
+special needs, like clustered allocations to minimize fragmentation and
+keeping as few chunks activated as possible. We also want to avoid
+resize operations because they can be quite heavy depending on system
+load.
+
+Thierry
+
+--awe2ln3pvo2iqnm5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmp0saEACgkQ3SOs138+
+s6HmUQ//RyPTgx2QiCZkziDzWhQ8YjQ9J8KlwiQnyLspOz+Na5x6bslbOl/AuuBd
+DCTC8+y/ax94aG30aB0SctUZLtHriGHwevA3J9hm/CfR1K72DsjLSDnkqujE5h7B
+QxLJyl9wyqStgOfJEl6PwA8H9VbDkdJNHJlmpFzeki7a5QHQR28b+FyoWOZGGutC
+YKiDlqpqQk1rs9d8WQ4M5w6JiRmImAI9YcoFP36b36oPf6/DziGOYjqCO6k9o1GI
+pKj8EV6as2MTKoCdsuwHiQo/f2gQfyquJF+yK6m62NZy6wyr1ceed6jmCoIcuuh6
+NKDs1AUWYdLhOVod22LHwn8GCjaDRkYHuUNgRtVrz5BgUuVUW/EmVieF/7BeRpna
+HZ+uWPa09LwQq0ma8cRTNEQykq4zhVKxshPlVGeFuRJqIQ7C3ba/4UCWEDtT4Dlj
+udGkgC059nR72DiCjPnQ40LV5naHw+dIkTt7uS2rh/xRih0ZW5bTc1ex3KvVq2H+
+wtjVSehARwHbIzU3ijuk3iNDaGRYZS99YYB5NjULlXGFeldz0M4qj8L/Gu684Kt0
+c0DFGObvF6isiTZgfuIwCNEEURIKdOut/DpqvFXcAmaAYvwvko7EPo4xwigfSapd
+63yY0m3zfV1lefYdShI86wkQ8t4KSbU6Vhoh/A0AUNc1mcNqir8=
+=PD/g
+-----END PGP SIGNATURE-----
+
+--awe2ln3pvo2iqnm5--
