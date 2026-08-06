@@ -1,213 +1,157 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607F9385D87
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 17:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232E6481FCA;
+	Thu,  6 Aug 2026 17:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786036926; cv=none; b=pcGFFQj8XYE/rJWlzvZh1olwrxR64H8tyGT5E6JGyFUGzYDRK2IX0oYe0K+ZFeXZS2xw+Q2b2m4fzWFovC1kPSsAnNzEJ5LgYHE7kKcfICjrJkMoMmkCSV3+W0z6iv/agBn6dH9aKdrSalclSZlusriSSWi8bDS+bxHDGY3bXtI=
+	t=1786038059; cv=none; b=SY15D+Ve2btwkfU7ggsWmYFvQVbTeMkMUK7fyKVqjzliwscMO/taDK7moXQPl3gmfWjC+Dalr19Foj/wSNW1J/X5ZWrB+oa466BuVcew4mzR1d992mUiwX5Fjda/TqxFBhbXRPMnhhjdFeZDyoSuUllufKblNGvbecJFP1Rm1tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786036926; c=relaxed/simple;
-	bh=bAZ3xWT17LiPCPPqrLMqDHOrLaErqGkWnw2RshU26LI=;
+	s=arc-20240116; t=1786038059; c=relaxed/simple;
+	bh=jR6UAf+W3pRyagiBnBIthX9L1RTvVK8tgmNzQD67mJU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YmjuR+7m8WCojnm1t2Vtdrs+fIB8jNHF5G7oQbR64RemuduUZd8nBrNTgjSzU4K7456uNk3+uAPVnSpqN62hrh2B+Z3LB3kUlDnwoOvSiz3SwHXr2cUcmjfX2pKirH80GrNgjHdUsrXNdKaFSV5G7VEf+oJS2rmgVhPklEAqr8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=1twUNUkZ; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnxA61I61T8q3hiKRA2zTWkPq4jZoCjbelZ06oazTGLVBlSRkHxB7DOC5PTDTSBV4C07/yjbMVAfafT7IVI9tjJC9x1WbOGmFfE/HdV9bz/C7nzmeb70h0UZXyb0uethVduKy1Fq3pnyjBYrx4m9rz9gyvQy9RXBX8d5JH4yV30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lWpTxuxP; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="1twUNUkZ"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hGDbp6cTmzn2k;
-	Thu,  6 Aug 2026 19:21:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1786036918;
-	bh=GIXZ74wxKXTVoiR32tjBTjv2nPYH2Pa11xY8e7a+dzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1twUNUkZJehJ3rm7ZCbd4pSsH8jOT4LTxFZr3+VDlyAxi4D48YBQAbAMsfte00Dv/
-	 92CMj3pccP0E9VK7rfFokizC066V0cFw3q8YbhAF95aHIUk1Or/JpKFx0vepSp1Qct
-	 QneEn9Zgt9UUJzQvlkzYDZMrzfqI3q4id8I/TzvE=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hGDbn3SR0znHm;
-	Thu,  6 Aug 2026 19:21:56 +0200 (CEST)
-Date: Thu, 6 Aug 2026 19:21:52 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
-	Justin Suess <utilityemal77@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Matthieu Buffet <matthieu@buffet.re>, Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
-	Tingmao Wang <m@maowtm.org>, kernel-team@cloudflare.com, 
-	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/20] tracing: Add __print_untrusted_str()
-Message-ID: <20260806.ooMo8dungahj@digikod.net>
-References: <20260722171159.2776765-1-mic@digikod.net>
- <20260722171159.2776765-8-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lWpTxuxP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786038058; x=1817574058;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jR6UAf+W3pRyagiBnBIthX9L1RTvVK8tgmNzQD67mJU=;
+  b=lWpTxuxPDWz8JQzO9DOn/GoslLZ7c1UN3NkPUIy08mh9OA2HKcWIcxuy
+   ihbPUl7o8B8tjcSghoWzuPTmAZH4cZfv/ra1ox4CtUy71ep0ZUEyzJbNJ
+   Ed0cFP4tDWbTzm+7pFJfZK0+LWTm0k93ApptxeFJRDmpeNdtLKpwGPZfd
+   BcodF6DnuNYkysOLHvssREQN1nEPz1eUI0zOb3u1IkN/cc/I04ncO8Cjo
+   5nV9l5B1oifh1XR181yst5Hguru/xgQAiBIvIjZOjZYwkHYjJE3bFzPAy
+   uc8RnMtnlJ+CKjQW1u4HLwdyPWb6XgynmYpFQxlsh6OMYTlkpzGZjTWdm
+   g==;
+X-CSE-ConnectionGUID: r5Vd7SBkRP6MLumyYFCKOg==
+X-CSE-MsgGUID: 02BNnFMdQoa8q6shNRLTDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="98151986"
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="98151986"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 10:40:57 -0700
+X-CSE-ConnectionGUID: 7DB5m3cyQx2LtjOXhuPo6g==
+X-CSE-MsgGUID: 1SUtF5e8QmWqOPxccB+TSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="300373251"
+Received: from igk-lkp-server01.igk.intel.com (HELO 3cba2a188a06) ([10.211.93.152])
+  by orviesa001.jf.intel.com with ESMTP; 06 Aug 2026 10:40:51 -0700
+Received: from kbuild by 3cba2a188a06 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1ws25I-000000004f4-1D7z;
+	Thu, 06 Aug 2026 17:40:48 +0000
+Date: Thu, 6 Aug 2026 19:40:10 +0200
+From: kernel test robot <lkp@intel.com>
+To: Markus Elfring <Markus.Elfring@web.de>, acpica-devel@lists.linux.dev,
+	bpf@vger.kernel.org, coresight@lists.linaro.org,
+	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	mptcp@lists.linux.dev, netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, virtualization@lists.linux.dev,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andi Kleen <ak@linux.intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH] tools: Use fputc() calls in some functions
+Message-ID: <202608061909.wj199SHx-lkp@intel.com>
+References: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260722171159.2776765-8-mic@digikod.net>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
 
-Hi Steven,
+Hi Markus,
 
-I addressed your previous review for this helper, is this patch ok with
-you now?
+kernel test robot noticed the following build errors:
 
-I also addressed your other review about the tracepoints.  They are well
-tested, including with a dedicated tool I wrote (not public yet).  Could
-you get a quick look for me to push this series to -next before the
-merge window?
+[auto build test ERROR on perf-tools-next/perf-tools-next]
+[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v7.2-rc6 next-20260806]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks
+url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Elfring/tools-Use-fputc-calls-in-some-functions/20260806-165154
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/48f2d61f-d468-49b7-881e-f00777db073f%40web.de
+patch subject: [PATCH] tools: Use fputc() calls in some functions
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260806/202608061909.wj199SHx-lkp@intel.com/config)
+compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260806/202608061909.wj199SHx-lkp@intel.com/reproduce)
 
-On Wed, Jul 22, 2026 at 07:11:39PM +0200, Mickaël Salaün wrote:
-> Landlock tracepoints expose filesystem paths and process names that may
-> contain spaces, equal signs, or other characters that break ftrace field
-> parsing.
-> 
-> Add a __print_untrusted_str() TP_printk helper that escapes separators
-> (space, equal sign), quotes, backslashes, and non-printable bytes via
-> string_escape_mem(), so an untrusted string cannot inject field
-> separators or control characters into the ftrace output and can be
-> unambiguously recovered.
-> 
-> This guarantee applies to the in-kernel ftrace text output (trace,
-> trace_pipe).  Userspace libtraceevent (perf, trace-cmd) does not yet
-> parse this helper, so a companion libtraceevent change is needed for
-> those consumers to pretty-print the field.
-> 
-> Cc: Günther Noack <gnoack@google.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Tingmao Wang <m@maowtm.org>
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> ---
-> 
-> Changes since v2:
-> https://patch.msgid.link/20260406143717.1815792-6-mic@digikod.net
-> - Add a Return: kdoc for trace_print_untrusted_str_seq() and rename its
->   declaration parameter to src.
-> 
-> Changes since v1:
-> https://patch.msgid.link/20250523165741.693976-4-mic@digikod.net
-> - Remove WARN_ON() (pointed out by Steven Rostedt).
-> ---
->  include/linux/trace_events.h               |  2 +
->  include/trace/stages/stage3_trace_output.h |  4 ++
->  include/trace/stages/stage7_class_define.h |  1 +
->  kernel/trace/trace_output.c                | 44 ++++++++++++++++++++++
->  4 files changed, 51 insertions(+)
-> 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 308c76b57d13..4ece9b8d9d6b 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -60,6 +60,8 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
->  			 int prefix_type, int rowsize, int groupsize,
->  			 const void *buf, size_t len, bool ascii);
->  
-> +const char *trace_print_untrusted_str_seq(struct trace_seq *s, const char *src);
-> +
->  int trace_raw_output_prep(struct trace_iterator *iter,
->  			  struct trace_event *event);
->  extern __printf(2, 3)
-> diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
-> index 181b81335781..0235dbd11b52 100644
-> --- a/include/trace/stages/stage3_trace_output.h
-> +++ b/include/trace/stages/stage3_trace_output.h
-> @@ -133,6 +133,10 @@
->  	trace_print_hex_dump_seq(p, prefix_str, prefix_type,		\
->  				 rowsize, groupsize, buf, len, ascii)
->  
-> +#undef __print_untrusted_str
-> +#define __print_untrusted_str(str)					\
-> +		trace_print_untrusted_str_seq(p, __get_str(str))
-> +
->  #undef __print_ns_to_secs
->  #define __print_ns_to_secs(value)			\
->  	({						\
-> diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
-> index 47008897a795..f29a82e7a4c4 100644
-> --- a/include/trace/stages/stage7_class_define.h
-> +++ b/include/trace/stages/stage7_class_define.h
-> @@ -24,6 +24,7 @@
->  #undef __print_array
->  #undef __print_dynamic_array
->  #undef __print_hex_dump
-> +#undef __print_untrusted_str
->  #undef __get_buf
->  
->  #undef __event_in_hardirq
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index a5ad76175d10..f0a9b29b3e36 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -16,6 +16,7 @@
->  #include <linux/btf.h>
->  #include <linux/bpf.h>
->  #include <linux/hashtable.h>
-> +#include <linux/string_helpers.h>
->  
->  #include "trace_output.h"
->  #include "trace_btf.h"
-> @@ -325,6 +326,49 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
->  }
->  EXPORT_SYMBOL(trace_print_hex_dump_seq);
->  
-> +/**
-> + * trace_print_untrusted_str_seq - print a string after escaping characters
-> + * @s: trace seq struct to write to
-> + * @src: The string to print
-> + *
-> + * Prints a string to a trace seq after escaping all special characters,
-> + * including common separators (space, equal sign), quotes, and backslashes.
-> + * This transforms a string from an untrusted source (e.g. user space) to make
-> + * it:
-> + * - safe to parse,
-> + * - easy to read (for simple strings),
-> + * - easy to get back the original.
-> + *
-> + * Return: A pointer to the escaped string within the trace seq buffer, or
-> + * %NULL if @src is %NULL or the buffer is exhausted.
-> + */
-> +const char *trace_print_untrusted_str_seq(struct trace_seq *s,
-> +					   const char *src)
-> +{
-> +	int escaped_size;
-> +	char *buf;
-> +	size_t buf_size = seq_buf_get_buf(&s->seq, &buf);
-> +	const char *ret = trace_seq_buffer_ptr(s);
-> +
-> +	/* Buffer exhaustion is normal when the trace buffer is full. */
-> +	if (!src || buf_size == 0)
-> +		return NULL;
-> +
-> +	escaped_size = string_escape_mem(src, strlen(src), buf, buf_size,
-> +		ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_NAP | ESCAPE_APPEND |
-> +		ESCAPE_OCTAL, " ='\"\\");
-> +	if (unlikely(escaped_size >= buf_size)) {
-> +		/* We need some room for the final '\0'. */
-> +		seq_buf_set_overflow(&s->seq);
-> +		s->full = 1;
-> +		return NULL;
-> +	}
-> +	seq_buf_commit(&s->seq, escaped_size);
-> +	trace_seq_putc(s, 0);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(trace_print_untrusted_str_seq);
-> +
->  int trace_raw_output_prep(struct trace_iterator *iter,
->  			  struct trace_event *trace_event)
->  {
-> -- 
-> 2.54.0
-> 
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202608061909.wj199SHx-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> builtin-check.c:300:8: error: incompatible pointer to integer conversion passing 'FILE *' (aka 'struct _IO_FILE *') to parameter of type 'int' [-Wint-conversion]
+     300 |         fputc(stderr, '\n');
+         |               ^~~~~~
+   /usr/include/stdio.h:155:16: note: expanded from macro 'stderr'
+     155 | #define stderr stderr
+         |                ^~~~~~
+   /usr/include/stdio.h:611:23: note: passing argument to parameter '__c' here
+     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
+         |                       ^
+>> builtin-check.c:300:16: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'FILE *' (aka 'struct _IO_FILE *') [-Wint-conversion]
+     300 |         fputc(stderr, '\n');
+         |                       ^~~~
+   /usr/include/stdio.h:611:34: note: passing argument to parameter '__stream' here
+     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
+         |                                  ^
+   2 errors generated.
+   make[5]: *** [tools/build/Makefile.build:95: tools/objtool/builtin-check.o] Error 1
+>> disas.c:540:9: error: incompatible pointer to integer conversion passing 'FILE *' (aka 'struct _IO_FILE *') to parameter of type 'int' [-Wint-conversion]
+     540 |                 fputc(stream, '\n');
+         |                       ^~~~~~
+   /usr/include/stdio.h:611:23: note: passing argument to parameter '__c' here
+     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
+         |                       ^
+>> disas.c:540:17: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'FILE *' (aka 'struct _IO_FILE *') [-Wint-conversion]
+     540 |                 fputc(stream, '\n');
+         |                               ^~~~
+   /usr/include/stdio.h:611:34: note: passing argument to parameter '__stream' here
+     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
+         |                                  ^
+   2 errors generated.
+   make[5]: *** [tools/build/Makefile.build:95: tools/objtool/disas.o] Error 1
+   make[5]: Target '__build' not remade because of errors.
+   make[4]: *** [Makefile:123: tools/objtool/objtool-in.o] Error 2
+   make[4]: Target 'all' not remade because of errors.
+   make[3]: *** [Makefile:74: objtool] Error 2
+   make[2]: *** [Makefile:1587: tools/objtool] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
