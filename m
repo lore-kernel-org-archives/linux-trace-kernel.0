@@ -1,157 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8622340EBA1;
-	Thu,  6 Aug 2026 21:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786053094; cv=none; b=ZGDSjh/UeYY3QtMCWm/s6QcV/xr1NDwdQpmNld6AQyUElqhgQ6CiYQfCgvQ1krWwUx6KBpvDwkWOBn+4MlMQUlxfCitHGT4qmYd8zqkJvCERa0y0ddS684h6g1bNqZXpO2vkpVTxGELgMcWxKoYTbr6eN3ATUID78pPworxZuB4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786053094; c=relaxed/simple;
-	bh=7YXZzO7rHKj6qKOZ2jDkYVaRVikc1Wt8k9LrXwdPOkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ast/+CtArSYz1oAKxx39wSbWi+RiV3uenwR9z3qmHOBBEkujKuiCrpCa6otmo9mn3fYGWsr5c5E2HXX8KFZgwM+T/Li25Dcolr8FXitV4svdseprvlecpXw0/0DtOrEbdTsQfZ/syv80DtBbuKZe87AWVaVRZbes9gjgxsBEhIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=STrjp17Z; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC1E3672B0
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 21:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=148.163.148.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786053151; cv=pass; b=tH31A8dW8qqbJdCelh+Z1IVth55RaqH91GTaeFmmAoFxITIyvCEqbvEDP4UtYwqWxqcH+mTBn9phekNGd58RZ8gftt2ZX2kNXn9NPiv5RZXia1bTRABIY/lBERFxOV+VPqTFD6G3aIYKXnBJug0S4mYMyHFdTd3Yi7//hlwltRU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786053151; c=relaxed/simple;
+	bh=4j27c3ITXpBErSHQ7ijBlE2exB417P5mbmq8l9SQNdQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q/vZDm3ouOOdNnwNfE0izj66YnF07o6w9EJIU5AJ1p4wjviQkYWBKP1heWACtex9tnKI3plEhg7C4hx7lgNINLh3EbuUtSpjw3Et54+RURPAjYpDNlOwHFG/YXMqrRPNVUNNBhgh0JKataKYRsu13NBrOse6WyPNui6K2CEJojM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=EpeLMTVH; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=IG55PzML; arc=pass smtp.client-ip=148.163.148.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="STrjp17Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786053093; x=1817589093;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7YXZzO7rHKj6qKOZ2jDkYVaRVikc1Wt8k9LrXwdPOkI=;
-  b=STrjp17ZrWDDfBkq6sC6Z3ueXIF2jXJWW7OIEK375PjXAX9+Kg0x881B
-   B/tFAsOhA40Z0lvuWVffvaQAEljKw7HYMqX/u7KP0ur9dOv6jJC6wRO0d
-   DHJUEQxewFwF/3wcMAPvZ3ix9baxvlK4Vk9YNc++PpXraV3YglmGArkoC
-   iKmr4WFz3XinofM9bF2IfWwapjytMYTSBBTRaGoHF485ODLSJ+83P9WYi
-   TWw13K4aqwMmD5m4HxjNkjtU44HLV1zYQPtySd2JSudd5Gj+2p4RPZQKS
-   mpPou75Nx/vjJJkTUg/wpXIUtZopZQJCa9y9NqB10rFxJ7pc54PduokLY
-   g==;
-X-CSE-ConnectionGUID: KFxNgBEHR9KxKySnE2yhMg==
-X-CSE-MsgGUID: YzVDWGa4Tq+38KhSvoMDDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="85630870"
-X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
-   d="scan'208";a="85630870"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 14:51:32 -0700
-X-CSE-ConnectionGUID: AB8YyTXOSCSKko1pPJhpvA==
-X-CSE-MsgGUID: gfPYtjsYTwuf1P+pMEQQWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
-   d="scan'208";a="285586569"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 06 Aug 2026 14:51:25 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1ws5zl-00000000GKf-1GLg;
-	Thu, 06 Aug 2026 21:51:21 +0000
-Date: Fri, 7 Aug 2026 05:50:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Markus Elfring <Markus.Elfring@web.de>, acpica-devel@lists.linux.dev,
-	bpf@vger.kernel.org, coresight@lists.linaro.org,
-	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	mptcp@lists.linux.dev, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, virtualization@lists.linux.dev,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH] tools: Use fputc() calls in some functions
-Message-ID: <202608070547.MRKfa3bH-lkp@intel.com>
-References: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="EpeLMTVH";
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="IG55PzML"
+Received: from pps.filterd (m0354652.ppops.net [127.0.0.1])
+	by mx0a-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 676Kfl7R791582
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 6 Aug 2026 21:52:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	default; bh=DfxBWQSPaUr2vqUZLxxkFzY58elRjodnE5b1RCZlWXk=; b=EpeL
+	MTVHcxv76x1tW4kL6f0PWpDMX88pkGsCejHUiuCnq8z0xx8/3XgnQAU3IJt1F+8M
+	dlF9iyMhSAqOLCD20RtoY2tYQaO0B/nGwS/ij6wLJ/JG0q4kd0JvPqCa+g5o3fN1
+	PgtR8LsQ1hOLOsCNu6+TIqPh6YE+jQkRX9Ss3t1m1gVsWbIxXiIIgUdUAuf9lp47
+	EWeUwFGewzkFtjI7p2IW1wTefeFIK4SJ5HDdA7/Jbo0oyC4YAJ/x1Lvr//tE3I47
+	UiqVQlqgiUwwNQa0GEAvER8A4Shw7DvDm1pOnSZVOkAfRsb3DVYgHcmvS92dPX8/
+	++RT6gGHJs2reTHbzA==
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com [209.85.128.197])
+	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 4fv69t8quw-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 21:52:29 +0000 (GMT)
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-81e6ae12b42so39799227b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 14:52:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786053148; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Oqj4vNfZ44OKYaCifv4CYgeZGb5nOuSdktwLeIsyuS4gKQLiO2jGrlf29FGm8nNfmp
+         jA7rITpZ1Plz6955cnlszk3BXj+4R7oICbBC8LN5KjpsQM1EpFsi2GoS5nZHd1Jzq6zk
+         /l7jWrgnXUM6yTRTJFeyAkpml/XYFBSQxAHle+P34VmpxxqeYcf5YiaX1Fgf2p16naFt
+         LSkwZ9n1qws2XDTOEaJSLhKhKo80eLyruYHDpeK/iYkxd5/o6U0mBuS1nRexn5JLgQdZ
+         znyzp0ciZwDat105cU/MZVtdIDUmVgGAC3sx912wWhre1JfEK2UPEa3DsDfji5ovsaf+
+         BZgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=DfxBWQSPaUr2vqUZLxxkFzY58elRjodnE5b1RCZlWXk=;
+        fh=1O3En+fJ9sSXklfAmp04VB01kKIEyB1T/ESinGXyz6w=;
+        b=XFwbM/QEJNrKawgAq6tBsVKy9opp7c0aMgmmU/6zjdJ+NOwuWyVsv4dW6ZyR21HIs5
+         HDYdBxqJsDo+cPjq9Uu7E/OS1G9PyzG44s7ebsQ4/uTC/Zekvwy1NJXgWETOozpDRGaA
+         x96RM2rkLCipwbPsmhoAWRH8/MwsLtlFGpx6NzmssOTkPFGCBblfjYpncZFFqt82F72M
+         QpPReSdvGglMIJrBm6sQ+EOWCnBQroWfv3bs3tqPOfbsOz5CdezsHeda4PAeWzFi2lY2
+         pVElEBM2co0sl20IrNsBlzbaPm/8bSD4QDLzgGM0/NlB5NCLaW+8vFztCxWjOpuR+2XI
+         MdZw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=crowdstrike.com; s=google; t=1786053148; x=1786657948; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=DfxBWQSPaUr2vqUZLxxkFzY58elRjodnE5b1RCZlWXk=;
+        b=IG55PzMLLNCYWzhBq+cwUO8E5Of/wmqPJPmzTS/rAITe0mS1DjeD0Kbq0pUL86flIL
+         mM25R62hSyAn/KkErAQTQ4RBXpFKtQmPlMDK7tv+tNksUA95j0a1M2x3NMXFulv0Dab3
+         Dq3hIyDdxswH3aa2vR9XXgzXs3MEpYgtuVq38MKvsOGmZLMiltu8h3Goz5WbIm/9yQ8T
+         Vz0AxXRbUpRUqTxvF1c7hnZitkUbt9TA37aIIgMkwbvUjHLy+lOecqNo95cmS7opkDuh
+         pf4TfGlwHpDWNoc22BJC+HOX2dz6V03YoinhUMq/aEmUkmdm80HcaW3nmreO9cXUWTBV
+         ESiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786053148; x=1786657948;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DfxBWQSPaUr2vqUZLxxkFzY58elRjodnE5b1RCZlWXk=;
+        b=cEf1568Q986+A3gaw81udK+sGGWC0atN9HjIsLpQE2YRB3Q7ylkFRERzYkffyNFoAA
+         6WOi0GXNYYXKw7PS1KIyZ1oJ8nDd2ZKFrhzGhufxbD0Nl3wcF54OknT+g3r0Kjgo02hN
+         Ar01cDJ2RtKQfy5/IygS/AUEdE0eQ5jtrhhS/gfBVZnRWk/gqhu3OVZ0AJZdglhYLxoP
+         +9PqqrCJLUYSiUgFrck9PJvxG/s1WyLoj8/XqkZhlCjv+NLA4BUWeeg5WjuEBulGKUAS
+         bLWgDwMj0YpjV/aT+gWJ/Zqfe5uRd6UbGP8pO8KVPHl4244iNq8pfJvA2a0BFGHsAAPx
+         G2UA==
+X-Forwarded-Encrypted: i=1; AHgh+RrX8i18dUeZwtfKSYCUD1LgYV3yL4kIE+xPGVmUnbyXVR7j6P99FH9WS+EyIyNmJwPKcWaO++Io4UHyryhU4RPgBW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd6ZSYUAkHanwAX2JIDeIV5D6DuYxuxVhuEljAM7RJjf0GDlem
+	Bkbvkaoryc2pkMwMuO2URslU0yacCt5ftFUaANnknI8TJprdVYRuTxP6cUhD25I7MFRI6JOVkcq
+	rOc7TVimTa83IfCN6KLeibOHk0eHBbxyHElvzyhdrQFujkh5q1ytNBE4jbUy+/b+YoNEANoqq5Y
+	oYrbOYKOxaekcLAcaOmWDtlLSfLB5p91edS33kzdC9yE2/R40Y
+X-Gm-Gg: AR+sD101rmx4x90rKSNGKjyE49pq6DnOlTX6pAtFWxA1vu0EPuz0g6CAPQE/vuH1WM0
+	9w0zaiXKM0HY58g5E67n8pcR36FEhBwLr86+5CBCE6wo3T/pU7p7tUJnuYVoYmP7GlD0uAaUTBl
+	oSInS9JG7IfByYgpDxUyBQf1NpcHJXVdWaIYQVGnvuBs2WfVB6yImz2n3lKA==
+X-Received: by 2002:a05:690e:d83:b0:667:ca27:479e with SMTP id 956f58d0204a3-66ac2e29103mr3422578d50.8.1786053148459;
+        Thu, 06 Aug 2026 14:52:28 -0700 (PDT)
+X-Received: by 2002:a05:690e:d83:b0:667:ca27:479e with SMTP id
+ 956f58d0204a3-66ac2e29103mr3422536d50.8.1786053147864; Thu, 06 Aug 2026
+ 14:52:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
+References: <20260806153000.4184871-1-andrey.grodzovsky@crowdstrike.com>
+ <20260806153000.4184871-2-andrey.grodzovsky@crowdstrike.com> <CAPhsuW53yRgFMkNuAPCrCm9fhNNb4EpN7vbcSEGkNCZXHjk7AA@mail.gmail.com>
+In-Reply-To: <CAPhsuW53yRgFMkNuAPCrCm9fhNNb4EpN7vbcSEGkNCZXHjk7AA@mail.gmail.com>
+From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Date: Thu, 6 Aug 2026 17:52:16 -0400
+X-Gm-Features: AUfX_mxi9cOXXsF6mNBrlNENbUcZVrExzFYiYnyltoL6hOluHOkwQ37RLslPbyA
+Message-ID: <CAOu3gNhjDNFgzg0nf458FdMMMPx4WJi=n01musucvk=hbY0HMg@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next v3 1/2] ftrace: deprecate disabling via
+ ftrace_enabled sysctl
+To: Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, mbenes@suse.cz, jolsa@kernel.org,
+        mhiramat@kernel.org, jpoimboe@kernel.org, joe.lawrence@redhat.com,
+        mark.rutland@arm.com, corbet@lwn.net, stable@vger.kernel.org,
+        linux-open-source@crowdstrike.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Authority-Analysis: v=2.4 cv=QYJWeMbv c=1 sm=1 tr=0 ts=6a75021d cx=c_pps
+ a=0mLRTIufkjop4KoA/9S1MA==:117 a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10
+ a=KZhmPCYDdY0A:10 a=VkNPw1HP01LnGYTKEx00:22 a=T2KQ53IYiC3MXPrxx8bB:22
+ a=2KvRFfd_T_-xjmS8C1aD:22 a=VwQbUJbxAAAA:8 a=pl6vuDidAAAA:8 a=meVymXHHAAAA:8
+ a=VIIMA12v6iqWkxtvh5QA:9 a=QEXdDO2ut3YA:10 a=WgItmB6HBUc_1uVUp3mg:22
+ a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-GUID: Ptq4qdhtMeOZm-bKd3kO3mGKF9ySdib-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA2MDE3MSBTYWx0ZWRfXxElGwidUwRXb
+ qkxl5+fhfvUVQXpQW33LGgl15j76WtdLj+awzRyaHHfrHkWGreAl8El1Ed2epNEBXZ8Jp9P6yYM
+ 0Wpput4nWEecn1qlDEKzf+fuTSHpNZrq5ges6G9IFIDI0PR5aUmgyU2bxxxx6792n9HK0aOBOrs
+ K0Kjf9uZYbM+v9/5WOqNNJHh2StPOoF+oaE9h5V31hE0vKKtdvp4eWlCIt8TMeiwV37K6gUPBuF
+ j0DXmm48JBaJtMkpLT6Pbu57Spo8s5q1B540sAjFcvm7o1EgBZCov6hTyx63hnUsXghUxBjA+Fs
+ LSfAOB0FMcRNpoDFS6uAYH0VeetIL7u2sU6443SkD8z2dKB4kWzp5CxowjSwcwvWVyr3eZwRXya
+ K4WgpsExmB73i0HwTopFJ1AcjCPrsmUvxEFaFOyhK8g59/XeDXXhgAXOgMneEsiHhtAmT50PGpS
+ GyxYBhC0gJ8QG5O3u5g==
+X-Proofpoint-ORIG-GUID: Ptq4qdhtMeOZm-bKd3kO3mGKF9ySdib-
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA2MDE3MSBTYWx0ZWRfX15bTXAvTzfg0
+ YNczXsXkRIiohUHPBK7nTlFLZhoap2kjJ2j7IrE6Ht17pYmxseg+2M4I+cD2XJgCDpSlQSbC7l4
+ zJbYIfph6tKLKKgsulJ7SYpsHMdehSP679+Z0K6BbdCpywWf/cnA
+X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11867
+ signatures=596817
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608060171
 
-Hi Markus,
+On Thu, Aug 6, 2026 at 5:22=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+>
+> On Thu, Aug 6, 2026 at 8:30=E2=80=AFAM Andrey Grodzovsky
+> <andrey.grodzovsky@crowdstrike.com> wrote:
+> >
+> > Writing 0 to kernel.ftrace_enabled has not reliably disabled ftrace
+> > for years (FTRACE_OPS_FL_PERMANENT users already block it, and more
+> > callers rely on ftrace always being on). Refuse the write instead of
+> > leaving it in an inconsistent "disables some, not all" state: return
+> > -EOPNOTSUPP and log a message. Reads and enabling (writing 1) are
+> > unaffected.
+> >
+> > Update the docs to note the deprecation up front.
+> >
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+>
+> Sashiko's comments make sense. Other than those:
+>
 
-kernel test robot noticed the following build errors:
+The bot has 2 comments.
 
-[auto build test ERROR on perf-tools-next/perf-tools-next]
-[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v7.2-rc6 next-20260806]
-[cannot apply to acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+In my opinion, the test-breaking comment is wrong as he looked
+strictly at this patch w/o reviewing the follow-up live patch testing
+changes which update the tests to avoid breaks.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Elfring/tools-Use-fputc-calls-in-some-functions/20260806-165154
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/48f2d61f-d468-49b7-881e-f00777db073f%40web.de
-patch subject: [PATCH] tools: Use fputc() calls in some functions
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260807/202608070547.MRKfa3bH-lkp@intel.com/config)
-compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260807/202608070547.MRKfa3bH-lkp@intel.com/reproduce)
+The cleanup comment is valid but since we aren't sure if we'll need to
+revert this change later if it breaks userspace in some unseen way, I
+wonder how extensive the cleanup should be? Steven, can you advise
+please ?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202608070547.MRKfa3bH-lkp@intel.com/
+Andrey
 
-All errors (new ones prefixed by >>):
-
->> builtin-check.c:300:8: error: incompatible pointer to integer conversion passing 'FILE *' (aka 'struct _IO_FILE *') to parameter of type 'int' [-Wint-conversion]
-     300 |         fputc(stderr, '\n');
-         |               ^~~~~~
-   /usr/include/stdio.h:155:16: note: expanded from macro 'stderr'
-     155 | #define stderr stderr
-         |                ^~~~~~
-   /usr/include/stdio.h:611:23: note: passing argument to parameter '__c' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                       ^
->> builtin-check.c:300:16: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'FILE *' (aka 'struct _IO_FILE *') [-Wint-conversion]
-     300 |         fputc(stderr, '\n');
-         |                       ^~~~
-   /usr/include/stdio.h:611:34: note: passing argument to parameter '__stream' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                                  ^
-   2 errors generated.
->> disas.c:540:9: error: incompatible pointer to integer conversion passing 'FILE *' (aka 'struct _IO_FILE *') to parameter of type 'int' [-Wint-conversion]
-     540 |                 fputc(stream, '\n');
-         |                       ^~~~~~
-   /usr/include/stdio.h:611:23: note: passing argument to parameter '__c' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                       ^
->> disas.c:540:17: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'FILE *' (aka 'struct _IO_FILE *') [-Wint-conversion]
-     540 |                 fputc(stream, '\n');
-         |                               ^~~~
-   /usr/include/stdio.h:611:34: note: passing argument to parameter '__stream' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                                  ^
-   make[5]: *** [tools/build/Makefile.build:96: tools/objtool/builtin-check.o] Error 1
-   2 errors generated.
-   make[5]: *** [tools/build/Makefile.build:95: tools/objtool/disas.o] Error 1
-   make[5]: Target '__build' not remade because of errors.
-   make[4]: *** [Makefile:123: tools/objtool/objtool-in.o] Error 2
-   make[4]: Target 'all' not remade because of errors.
-   make[3]: *** [Makefile:74: objtool] Error 2
-   make[2]: *** [Makefile:1587: tools/objtool] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Acked-by: Song Liu <song@kernel.org>
+>
+> > ---
+> >  Documentation/trace/ftrace.rst |  5 ++++
+> >  kernel/trace/ftrace.c          | 43 +++++-----------------------------
+> >  2 files changed, 11 insertions(+), 37 deletions(-)
+> >
