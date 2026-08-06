@@ -1,89 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625D24322FC;
-	Thu,  6 Aug 2026 09:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420843F210C
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 10:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786007861; cv=none; b=HlklJ03lh+Ht4WNEAPmo/A3ZK1EdRcHwQscbfKNx3ZyuqHZQ4zxpu0lzTOt3vhh5IgMh0tzFx+tc7ftOkxiptYjtLQtm3Lb5BBKaNOAoP91XlbFA9U5C0U7/rm/4L0mKKdxrFYrPMA/liPLAJ9JDmFf6LVK4RK3TzuCzl2H287U=
+	t=1786010490; cv=none; b=bRbmz83fUlStHu5lkT3Edg+oTqww8TJ18iaCVy+t/L1XwLNnRjwSjujmDoGHc4tV6VIwGXDf3cqfoyaqO5MV1o/9Q+al0yJ1c7ncvjq9CE73ORtfB81Le68M7OtRuiCnzJ+enjVCZP6npms6xrMmrAR4adCAaSwxrUPUnH2mPV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786007861; c=relaxed/simple;
-	bh=R2486NsX5wH1jSYnlzCN18112f08Iz4w8hUy1tscIp4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N2arX3QOqtBr0+dYH0MRF2Dd8L10+Hl3C2KhiPcEolv6ECmjyHuAjVHoJYsHwLK+/bT28BYvZsogMlCXyKQUq0MNPPlclbHRJuctGrOyWZe7Kq/mu8r8MOB2EoVS+k71JXMbywLJB0NEjDZwLNbuqwZNhFSk55NwxxZMfBUEZGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0eGjq9B; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786010490; c=relaxed/simple;
+	bh=FKQymnvLP+45tnKKdIOvzx6ghqHQww6/gA67X3JR0uU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=ihepUdWrYl4750lMxGJqIMbaa2HBpmJPWPewG/0qMVQXo5oCoVJi6lT3n6oG1oqAF0tBX+kiBzaBkY5ZGs2GOi9UzxFx6FziOQnAdwKpZhCp+qLNVWCwmW8IzHt2HyOfxS3EzHrwYqHr4xHj14rF3Qa+/dfL8242JXHSjkeuuL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d7ljlDEs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0eGjq9B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013A31F000E9;
-	Thu,  6 Aug 2026 09:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786007860;
-	bh=ZGAg67APnk4f86xLcZ/DC827Eyr/vTZZ/mLO5dMsUEM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=I0eGjq9BC7JmOhvUGTm7RDrWcUB5Km5/Wtd+Lotp3hvXGetMfnx8b718bjx15voYQ
-	 Nxou9nJyyuEIwRT8XKXrb1KE5h4nahey4TGJNUjIctJIvbWYClqQjGClYmc/ochlzm
-	 bDBVs+GzpsiABbfLm34v8GYQr44th+eVGR5nt+r/ryMXl4WrxEcd2UnlY5t5W7RJQh
-	 AaXMJlbJKUgFFzIolzaA7Qw7mg/g4YBtSix6pk231MVTnGWYIHzCZP2SvT6SxFLvo8
-	 NAWnoZ665S+Fqdp0RCY8+GLXocoGUBXfzmycQHq1nnOeJfInum0/uM0FcOOwQEv73o
-	 pxJzC/vEOxj9A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1wruEL-0000000CtW0-2cSZ;
-	Thu, 06 Aug 2026 09:17:37 +0000
-Date: Thu, 06 Aug 2026 10:17:37 +0100
-Message-ID: <86bjbfbob2.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Fuad Tabba <fuad.tabba@linux.dev>
-Cc: oupton@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	alexandru.elisei@arm.com,
-	vdonnefort@google.com,
-	joey.gouly@arm.com,
-	seiden@linux.ibm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	qperret@google.com,
-	ardb@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	tabba@google.com
-Subject: Re: [PATCH v3 00/11] KVM: arm64: Restore type-checking across the host/hyp hypercall boundary
-In-Reply-To: <20260804112317.1937387-1-fuad.tabba@linux.dev>
-References: <20260804112317.1937387-1-fuad.tabba@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7ljlDEs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786010488;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sR0E8zPFJ/0Uasd45XPRVgC5GfJL0Xwf6xufPDhKRAc=;
+	b=d7ljlDEsQ4BthnhIR6gxoZIR0+OYr6/U0fq8GesUHOym5kNBoSg/yz8VLsoCCAHS6kbJTH
+	oEgLUzxUx54YkwM90NeHM/8anbNwhV1Iux0JameGFSWy6nLMUmxV5f4AZJ0nmbw5Vgqimx
+	hDnhvl15gsMIE0JHQuAW3DlWRh8IMbE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-jjirUl9sO2GEA6d20rt6KQ-1; Thu,
+ 06 Aug 2026 06:01:26 -0400
+X-MC-Unique: jjirUl9sO2GEA6d20rt6KQ-1
+X-Mimecast-MFC-AGG-ID: jjirUl9sO2GEA6d20rt6KQ_1786010485
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91F981955F29;
+	Thu,  6 Aug 2026 10:01:25 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B5496426;
+	Thu,  6 Aug 2026 10:01:23 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Chao Liu <chao.liu@processmission.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [GIT PULL] rv fixes for v7.3 (for-next)
+Date: Thu,  6 Aug 2026 12:00:27 +0200
+Message-ID: <20260806100026.112251-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: fuad.tabba@linux.dev, oupton@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, alexandru.elisei@arm.com, vdonnefort@google.com, joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, qperret@google.com, ardb@kernel.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, tabba@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: QbuPt48FL00S4xB1XeX-Tnm_oO6pTuJOHz74lOsX89U_1786010485
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Tue, 04 Aug 2026 12:23:06 +0100,
-Fuad Tabba <fuad.tabba@linux.dev> wrote:
-> 
-> Hi folks,
-> 
-> This is based on rc6, but in case it is easier to take on kvmarm/next
-> (320840b34af2a), the same series applied there is at [1]. It passes the
-> same checks: bisectable, sparse clean, npVM and pVM boot.
+Steve,
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+The following changes since commit 984b5a36fd12d1849511a45fda32036fe2b0d004:
 
-	M.
+  selftests/verification: Add selftests for deadline and stall monitors (2026-07-31 16:27:46 +0200)
 
--- 
-Without deviation from the norm, progress is not possible.
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-fixes-7.3-next
+
+for you to fetch changes up to 7d81675d1bb2cc6db61a2d93b1e0dc7fb0929f9c:
+
+  Documentation/rv: Explain epoll and aborted sleeps (2026-08-04 16:11:28 +0200)
+
+----------------------------------------------------------------
+rv fixes for v7.3 (for-next)
+
+Summary of changes:
+
+- Fix 32-bit build of nomiss KUnit test
+
+  A previous commit introduced a division between an u64 and a constant
+  value and that doesn't build on 32-bit systems. Use div_u64() instead.
+
+- Document changes in sleep monitor
+
+  The sleep monitor introduced some changes in the past like allowing
+  epoll_wait() as a valid sleep and a task going to runnable before
+  scheduling as a valid wakeup. Document both.
+
+----------------------------------------------------------------
+Chao Liu (1):
+      Documentation/rv: Explain epoll and aborted sleeps
+
+Gabriele Monaco (1):
+      rv: Fix 32-bit build of nomiss KUnit test
+
+ Documentation/trace/rv/monitor_rtapp.rst       | 6 ++++++
+ kernel/trace/rv/monitors/nomiss/nomiss_kunit.c | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Chao Liu <chao.liu@processmission.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+
