@@ -1,66 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918193AA4E2;
-	Thu,  6 Aug 2026 16:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEC22C3261;
+	Thu,  6 Aug 2026 16:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786032552; cv=none; b=dl2yEACu4yXb/PNidDl3ZfSz+Q9kkKorr2vGPgNWfmbrPopVgKoZfU/N3IzEqwcaaUkSmlyA12dADUsq6widAtjXlc6x1s47uq2d4HzRHeWoSXoI4pv1czxLYNqSII3VSw+IdddIDBq9/SFiDPNklGW99oALiRVg2gaDvPcyj3g=
+	t=1786033307; cv=none; b=rjwpZ8GyRGAxyRgz/nEBmJ2rRfh1kp0h79spXzh3yKfLTpYN/ubaFobsHiJ+QGW7frtVPDlStmOdxD9x429xtpsJ5LNBkBhWh9njyOMQGtk7baOPo2ht+yVYRAY/3fTMDkEY7d82yDqTGE1ZhqJSM7QY605qRsSQnRX0mVjNnNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786032552; c=relaxed/simple;
-	bh=J1mmhRLKDxaELj7616F3jLYF/axUtWF1l/JEzzjmppo=;
+	s=arc-20240116; t=1786033307; c=relaxed/simple;
+	bh=9OQRYxnEbL1vlfwxgT977i1AfPRqWf0vi68WNMX/Mqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KZc0h6Ey93RKvXjo7szZouQSPCVLcsOx5DJesSSHhTCcYv4BcIvB7hJOWxaGmurYV1wSrzLD2EzrEj/zEyZRYh3UbGH218x7CczU2r9/jBy8BYIdzoFZjqSQaUIEMBPWXCRurlJUgGd+WNa9gWZRN3/goyvgVasf5G3tu2VE5XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKNEIVai; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=jChrveXNMxV/hMpr3En8w+WuF1MAw9PO1jZORwpLKLhVy3Pj2BoI20kvB2SY8rlnTNFvAiVFlraTvVhSccf4z19frr4qsO+z8usy+LAZSFN8VodTDUAlwBF2Mz+zyzU8Oi7Z6L5qZVDsahSLvr+8OL3aiYw1UEbzSlHZl/tLEOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aalAEn7r; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKNEIVai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4651F00A3E;
-	Thu,  6 Aug 2026 16:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aalAEn7r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3844E1F00A3A;
+	Thu,  6 Aug 2026 16:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786032551;
-	bh=J1mmhRLKDxaELj7616F3jLYF/axUtWF1l/JEzzjmppo=;
+	s=k20260515; t=1786033305;
+	bh=9OQRYxnEbL1vlfwxgT977i1AfPRqWf0vi68WNMX/Mqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kKNEIVaiVH4wrn5oHK5ajPxUnFHB9+4/A/1LvM/uKTkDc0Tv9t57ZG0ITr9wXU8Xp
-	 dM7Cy6hGgHbZ/yeYTfWQ71Y57HgqRdmv1eKN2HCcuSEE4ilC3CtyGNaMO6veI78U67
-	 YcMqItiqFW5t/eUfTLQayfOrEOELuT08s9jUqHMsWIlKuGRS7h4T2GXPWrf4X6w2Zv
-	 tNNgofe3iP7rxX22Z7nlivDoSEEfrD+/jWedR6As/aEKkVkXWpqV8mSDDYNCbarkZ1
-	 SVWiBIPcCxOreaWD7DyyAbxr2eCgQZMraKPZN7mkuyWcqW1KUCi9T1+4s4zx6S89Zo
-	 2vOjrgZWIe6og==
-Date: Thu, 6 Aug 2026 18:09:08 +0200
+	b=aalAEn7rNUlyRJPV20BjL3yI3iPPN+js6kl4wiCICluf+ZHpYklDJI/OsH7/3ARg6
+	 6B8o11hfV2IPUN3Qq6QJmnNjXQC+59EpEP5WYdtoDSed9abq3u+doW4SPm6/oDr3T7
+	 WWaEaKql5HntTfMkY72NHSwnnY6fX/u97XSO3ci0teM4TfzFOTv5O8ebSGlHprBcY8
+	 llw1LEhloYGFMqTMz6BQvN3SKr+VR2DwYRLKw1W8OM9fFn1tKTbaycRrBHNmPXt+oU
+	 fLBXBy6hbmtPaffVx6Jj94F/NzDmzVT6Qs46zlC7UEKdcgz0I0lIyGDW38wbRt4aCm
+	 UPYrrB9vJfAAQ==
+Date: Thu, 6 Aug 2026 18:21:43 +0200
 From: Thierry Reding <thierry.reding@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
 	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
 	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
 	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
 	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
 	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
 	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
 	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
-	linux-trace-kernel@vger.kernel.org
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
 Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-Message-ID: <anSuYvj1JU5K8xUO@orome>
+Message-ID: <anSyU_-zArFch-an@orome>
 References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
- <CGME20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c@eucas1p1.samsung.com>
  <20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
- <3f47aeab-33b1-4966-a5ce-5d6d5261e0e2@samsung.com>
- <e212caac-6c30-448a-9e10-32fff8b842f6@kernel.org>
- <83e5e74d-7106-4e14-9d10-56438372f6a3@samsung.com>
- <ak_E4UxfnFJywJa7@orome>
- <1eec88e6-1ea8-4525-bb17-e41444d715dc@samsung.com>
+ <CABdmKX2i_vxs3EgJgydEbXoTxqWe9g9pj=hqPKuwf0ge0SjZuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,135 +67,79 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="awe2ln3pvo2iqnm5"
+	protocol="application/pgp-signature"; boundary="4gmnekg7ar3gl7m6"
 Content-Disposition: inline
-In-Reply-To: <1eec88e6-1ea8-4525-bb17-e41444d715dc@samsung.com>
+In-Reply-To: <CABdmKX2i_vxs3EgJgydEbXoTxqWe9g9pj=hqPKuwf0ge0SjZuQ@mail.gmail.com>
 
 
---awe2ln3pvo2iqnm5
+--4gmnekg7ar3gl7m6
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
 MIME-Version: 1.0
 
-On Thu, Jul 16, 2026 at 12:43:56PM +0200, Marek Szyprowski wrote:
-> On 09.07.2026 17:59, Thierry Reding wrote:
-> > On Thu, Jul 09, 2026 at 07:56:45AM +0200, Marek Szyprowski wrote:
-> >> On 08.07.2026 10:35, David Hildenbrand (Arm) wrote:
-> >>> On 7/7/26 12:02, Marek Szyprowski wrote:
-> >>>> On 01.07.2026 18:08, Thierry Reding wrote:
-> >>>>> From: Thierry Reding <treding@nvidia.com>
-> >>>>>
-> >>>>> There is no technical reason why there should be a limited number o=
-f CMA
-> >>>>> regions, so extract some code into helpers and use them to create e=
-xtra
-> >>>>> functions (cma_create() and cma_free()) that allow creating and fre=
-eing,
-> >>>>> respectively, CMA regions dynamically at runtime.
-> >>>> Well, the technical reason for not creating cma regions dynamically =
-at
-> >>>> runtime is that on some architectures (like 32bit ARM) the early fix=
-up
-> >>>> for the region is needed to make it functional for DMA.
-> >>> Can you point me at the code that does that? Thanks!
-> >> Check dma_contiguous_early_fixup() and dma_contiguous_remap() in=C2=A0
-> >> arch/arm/mm/dma-mapping.c. Those functions ensures that the CPU mappin=
-gs for
-> >> the CMA reserved region in linear map are remapped with 4k pages inste=
-ad
-> >> of the 1M sections, so later, it will be=C2=A0possible to alter the ma=
-ppings and
-> >> change them to coherent when needed (altering 1M sections is not possi=
-ble,
-> >> because each process has it's own level-1 array even for the kernel li=
-near
-> >> mapping).
-> >>
-> >>
-> >>
-> >> However, in the use case in this patchset the reserved region is only =
-shared
-> >> with buddy allocator by using the CMA infrastructure, not registered t=
-o the
-> >> regular DMA-mapping API, so it would work fine. I'm not convinced that=
- this
-> >> is the right API to use for this though.
-> > Are you saying you're not convinced that CMA is the right API to use for
-> > this? Or something else?
-> I read this again and indeed CMA seems to be right solution. I only wonder
-> why do You want to create the CMA areas dynamically? Imho it would work=
-=C2=A0if
-> You just create large enough CMA area on boot, what would automatically
-> share the memory with buddy allocator and then allocate dynamic VPR regio=
-ns
-> with cma_alloc(), potentially unmapping or marking the allocated region as
-> reserved in linear kernel mapping to avoid any potential speculative acce=
-ss
-> to the protected memory.
+On Wed, Jul 08, 2026 at 04:49:31PM -0700, T.J. Mercier wrote:
+> On Wed, Jul 1, 2026 at 9:09=E2=80=AFAM Thierry Reding <thierry.reding@ker=
+nel.org> wrote:
+> >
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > There is no technical reason why there should be a limited number of CMA
+> > regions, so extract some code into helpers and use them to create extra
+> > functions (cma_create() and cma_free()) that allow creating and freeing,
+> > respectively, CMA regions dynamically at runtime.
+> >
+> > The static array of CMA areas cannot be replaced by dynamically created
+> > areas because for many of them, allocation must not fail and some cases
+> > may need to initialize them before the slab allocator is even available.
+> > To account for this, keep these "early" areas in a separate list and
+> > track the dynamic areas in a separate list.
 
-Hi Marek,
+Huh... going over this thread again I could've sworn that I had replied
+to this before, but I can't find any evidence of any reply.
 
-sorry for missing your reply earlier.
+> Hi, It looks like you'll also need to update the CMA dma-buf heap's
+> add_cma_heaps init function so that it adds all the CMA areas, not
+> just the early ones.
 
-The reason why we want to create the CMA areas dynamically is because we
-want to split the secure memory into multiple areas. And the size and
-number of these areas may need to vary, so I didn't want to have to rely
-on rebuilding kernels with different numbers of maximum CMA areas
-depending on the chunk size that we choose.
+I would actually rather not do that. The case that we need this for is
+creating a special purpose dma-buf heap that's composed of multiple CMA
+areas. These areas must not be used by anyone else. Exposing these to
+the CMA dma-buf heap would allow anyone to allocate from individual
+chunks and throw off the accounting that we need to do in order to keep
+the protected memory from working correctly.
 
-The reason why we need to split up the protected memory into multiple
-CMA areas is that allocation patterns can create holes within a CMA
-area. For the VPR memory, however, we must ensure that there aren't any
-holes within the protected region because it is specified using a single
-base address and a size. So there is one contiguous region that can be
-marked protected.
+Besides, given the dynamic nature of this means that the CMA dma-buf
+heap might already have probed when these dynamic CMA areas are added.
+So we would either need to have some way of notifying the CMA dma-buf
+heap of newly created areas or we might end up with an incomplete set
+of registered heaps.
 
-If we were to use a single CMA area, we could get holes within an area
-that is marked protected and once the pages are returned to the buddy
-allocator with cma_release(), something else could be attempting to
-access it and cause an error because it is still protected.
-
-The only way to make sure we get a single, resizable and contiguous
-region is by using multiple CMA areas and allocating the entire area
-once our allocations need to expand into that new area. So we're not in
-fact using much of the CMA infrastructure and actually need to duplicate
-some of it. We primarily need it for the page migration and reclaim
-functionality.
-
-> In both cases You will probably won't need the DMA-mapping API on top of
-> it, although it might be even possible to partially use with by
-> registering custom dma_ops for the devices using the protected region
-> (assuming that it would support only DMA_ATTR_NO_KERNEL_MAPPING
-> allocations).
-
-Yeah, I don't think we want the DMA API on top at all. The allocator has
-special needs, like clustered allocations to minimize fragmentation and
-keeping as few chunks activated as possible. We also want to avoid
-resize operations because they can be quite heavy depending on system
-load.
+If you really insist, I could look into this, but I think it's actually
+a nice feature that the CMA dma-buf heap only registers these "early"
+areas and exposes them.
 
 Thierry
 
---awe2ln3pvo2iqnm5
+--4gmnekg7ar3gl7m6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmp0saEACgkQ3SOs138+
-s6HmUQ//RyPTgx2QiCZkziDzWhQ8YjQ9J8KlwiQnyLspOz+Na5x6bslbOl/AuuBd
-DCTC8+y/ax94aG30aB0SctUZLtHriGHwevA3J9hm/CfR1K72DsjLSDnkqujE5h7B
-QxLJyl9wyqStgOfJEl6PwA8H9VbDkdJNHJlmpFzeki7a5QHQR28b+FyoWOZGGutC
-YKiDlqpqQk1rs9d8WQ4M5w6JiRmImAI9YcoFP36b36oPf6/DziGOYjqCO6k9o1GI
-pKj8EV6as2MTKoCdsuwHiQo/f2gQfyquJF+yK6m62NZy6wyr1ceed6jmCoIcuuh6
-NKDs1AUWYdLhOVod22LHwn8GCjaDRkYHuUNgRtVrz5BgUuVUW/EmVieF/7BeRpna
-HZ+uWPa09LwQq0ma8cRTNEQykq4zhVKxshPlVGeFuRJqIQ7C3ba/4UCWEDtT4Dlj
-udGkgC059nR72DiCjPnQ40LV5naHw+dIkTt7uS2rh/xRih0ZW5bTc1ex3KvVq2H+
-wtjVSehARwHbIzU3ijuk3iNDaGRYZS99YYB5NjULlXGFeldz0M4qj8L/Gu684Kt0
-c0DFGObvF6isiTZgfuIwCNEEURIKdOut/DpqvFXcAmaAYvwvko7EPo4xwigfSapd
-63yY0m3zfV1lefYdShI86wkQ8t4KSbU6Vhoh/A0AUNc1mcNqir8=
-=PD/g
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmp0tJQACgkQ3SOs138+
+s6Hx2A/+LyXBkYE0i4vOlsqA/Ydjj8c8/300xmhsRpFbwbpF3gTAquepUhv4ccLk
+pn6s3oOPckjHUjgqi17LCjM+dbGIQRiXZ5sHHuq69DOmSq6K43pvPWC9DQE3kICK
+i05UEwUTy2GyHSp229X6bMmMKYyl4WW9pde+bHXFO3IBdszOFd76qxdMqtl3agOv
+kfgnaTJezzmgsC1qP4etPKCdwHkxCcCO+r/IUp5vm8tuot9r3ZmBeyeLcSaboN0D
+RP21XS13WS+QLN/rZAXyBAVhrpNrTBOcQcI5CYrTXnDFkJYeQJEkd5ugPi/q2wr4
+KM8oHddCYYYHQyIEOG7pFcNGhonqPopbSVLN/BwII0fbmJXppQrdPyR4B3ZzsZzI
+51eP67NZSMCtnEqOeaqKYc629FRTyBsrMWfEhmHu19hAJb/p9PvkqxCIR+TlebSt
+HbuYY8JUEbz4Ck0Cb9FHGHsuYwsYkSKVpy0CpXnqkYEayTLU7dEHHpoKyTtS5Wvz
+w8fNZPuvXMWffnb1L+4nblBj2VNkJCSUvr3ZcgU0H6PlqcES02A5W6ectwCN/2R2
+STUcZd3vK2dFxCKRPHOx5+YyienQ9dBUapH7HwK01V0SFwh9m58TpMKmacD+y7vU
+Ns4RBrD6r3h3Ua+YybzB1+b9dqB8U4mzDp9x92jAksifc9ZHH5Y=
+=/fYh
 -----END PGP SIGNATURE-----
 
---awe2ln3pvo2iqnm5--
+--4gmnekg7ar3gl7m6--
