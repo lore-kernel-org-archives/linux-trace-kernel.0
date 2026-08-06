@@ -1,200 +1,167 @@
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F35F385D6E
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 13:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66E838645E;
+	Thu,  6 Aug 2026 13:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786022425; cv=none; b=fEo9HI88R3vOuQ51cKNOUMqf9WwhOkq1icJlK1Lmb7Sw7H+wGJWAilce/kzgPDt7hXelwbN/8OWiJGs6u6etxizHs0sOrQCWBGmjmpHAT3DAWYRqR5tUpIoDOkeRdqrxTPjEeHJ+gKCVcYlY2fvlVjx0M/eA+Y3HJwUeJkiyH7k=
+	t=1786023324; cv=none; b=WbLDyg4V2KlgKjsG2DiyhuLoFn+Jzud2kTN3AGtNfVS+1uLwcV7vk9L/8WlBJSxU5V0Ze5xDbpdloMU7KXc1bMzL/sbBt9ycrlLHP3UsnzCEPFJnM3tXL6EmfXOzLgnVC3GF2Vtir4Fy/DsBPcC6YG0I8MPCuURNQ2I3Jp7RgYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786022425; c=relaxed/simple;
-	bh=/Jh5oYlubsywuVmQ5YDdqkn0evsJEQYRz4nFdjoYIFk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eyZQHB0CLohK1/3pmPZxNpxVJeHb5MPusOzdYCkRrdYcSoxYSOloJBrr2ChMrrlw/hSxo47/mCUhZs5vUkkB8ourvkMUfVB6urx5K6srG8ue2TwdbIKZBnlBWdaL/oWrgx8NtIwxleUmRlC67UQp94LRxsa6AWQixp06qwBRa1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D1byBUH7; arc=none smtp.client-ip=209.85.210.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1786023324; c=relaxed/simple;
+	bh=6WOUaYVtl9kIfgUtlfuaxglgjlouSRKKqZ0p/VgF24Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pwo1vsrAN36HeIV+52/EdEPO+efTHVDlJ5IfPQ1KUTL8qkTexom7t3cngx0fJsliO1wPSWwZ8Z2/z6kNi2zkgk3b9JF8zF6wyns3MtrMNGeMt3LKj6CjnF2sqm6bw7j42hhvdzb65VJl8mIT/9pXT6ytC9NqIRBju3NshdCUVEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EA20htVQ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1byBUH7"
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-84e13b57b2cso2745296b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Aug 2026 06:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786022417; x=1786627217; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=quMxwgvzS8F8CxQzPIpHc+hBSqfVyEO+f6ARjKTQRm8=;
-        b=D1byBUH7rhMNbdLarcIo2F/MsOXYOEPyXeY+6+x/GiEXIJoBjTRlBaVdK+7cwRD1jd
-         RpiQZKlSrwUHSx6vEl6JrUiPikI9JuQSWm5atoi9VR52Vi2ReT090mwH2GuDPXUqKvxY
-         8/aXK8AK6ziAu1ZOTEpfvxHeohVtHGjDUIWsKRTbTy0kslhg3t248Uu88Q9XZbEONLYU
-         Zsre/Wn0z/1QV1rxgRtZzOq7igMLsgeNTsuNDU33xuDpuRHPIM4rY7tG3qdISx4F5T3n
-         ZAiDSdbMMM3GP2lDxo3/V+Jq/Wj54gEYJ6sGAkQRyTqGxv3o1XZdgmZpgmbvjK+bphia
-         x49w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786022417; x=1786627217;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=quMxwgvzS8F8CxQzPIpHc+hBSqfVyEO+f6ARjKTQRm8=;
-        b=BlnV78kGfvJhe84YjmeUbZEdhqII7vu5vr3qQnNdNV4VhOqHQbhrlAiAm5mTHAUw8d
-         YntS91IYM3DfIWAd8RF0hrjcTe8w+NI9PgVf+F0mRnSnJwoijV2GBGeOySYoTDXxByNr
-         italKViKwhgj2/pL7TtnxByWl0rji2TpGqSSPX4dDEg6WW0YBYYVv/EdlrIbCnUIqFB7
-         jGJoB3kea5Utnh/gBWijj3Mudk9OxLfejx6DovtHGkYAV84AjpqgHZzPQ/m2sJ4EbqrS
-         7Yu3KzUXkty3E+vr3pIXAMtaxab6R33Ae0Q0n7c4KDeEMcLKJjRTgPddIBwyr/8JC1a9
-         VD6w==
-X-Forwarded-Encrypted: i=1; AHgh+Rpye2sOU9jDMg/lZy9uxsCvyz/cCSHfh15MM8wy1bgtb/WEbUh2CKdcQWoLEzL2MRBQKpf0A63GDO82MLFd+S2JOqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqXAFYl914R08NO4GZLCW20Au994LPQw/cuWbcJkgP0mvbqMFR
-	rdvAuYIGGRCxxKoqJMNBW28J9Qsfc3v2YiGVWw2d7IRDbfXuKQVwYIq7CxNcNc5NzgQfR6jdUih
-	Zhs77Ew==
-X-Received: from pfbcj19.prod.google.com ([2002:a05:6a00:2993:b0:84c:3651:a4b1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3ccd:b0:845:c7f1:29fa
- with SMTP id d2e1a72fcca58-84f2e04a63bmr16001363b3a.30.1786022416699; Thu, 06
- Aug 2026 06:20:16 -0700 (PDT)
-Date: Thu, 6 Aug 2026 06:19:45 -0700
-In-Reply-To: <fda26964-721d-4a8c-9225-46ca3a5b2785@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EA20htVQ"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 675Nmra01068446;
+	Thu, 6 Aug 2026 13:35:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=WV5VnaD2da3/Wc+lQzJnyOpsrJF+cL
+	tjDaqj3yjNJeI=; b=EA20htVQSpE3k7h66JyiiVIBXyNY5Obzdgxvxd9wMGg8cV
+	cutb+wUp3qldS/0bDe2B4lzC9JSjV0ZCxpi3d4XT7Wvf1536yUjtB0G/THCA183f
+	QNT4zsgFY6ltAo95a5K9tBnLw0uZBeMXXGdxUlXiSPKyKUG3qWyWyeuhlvy7gtCF
+	Ax+Cl7cbOo1DHH5TThW3DsAYzUg52mF7zC2RryfcXSiLzVxbswBM4z+suMJCBEhq
+	bCj+y1tmw6FoBBmYcUmOAZh5I0Q6YDq2dyWJ8lPfB30oVcRnaKm3xBSdByq4j4s2
+	ghJRnDjZUYOgEEIDVhCwiTmwMrBpoGaM0a9O4aLA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs8a48e3e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Aug 2026 13:35:05 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 676DQigT005336;
+	Thu, 6 Aug 2026 13:35:04 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswbgk4q0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Aug 2026 13:35:04 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 676DZ0g835520790
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Aug 2026 13:35:01 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D310C2004B;
+	Thu,  6 Aug 2026 13:35:00 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A84D720040;
+	Thu,  6 Aug 2026 13:35:00 +0000 (GMT)
+Received: from li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com (unknown [9.224.64.159])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  6 Aug 2026 13:35:00 +0000 (GMT)
+Date: Thu, 6 Aug 2026 15:34:59 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH] uprobes: Skip breakpoint installation on non executable
+ vmas
+Message-ID: <anSNg4EA-tUc3C7W@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
+References: <20260805131904.1127416-1-sumanthk@linux.ibm.com>
+ <anNTRb2aGsvY8_Rf@redhat.com>
+ <anOlxodwEMPvb1EJ@li-0f4bfd12-9554-4bfb-8b14-7ccf0f0767af.ibm.com>
+ <anRpdyApCza3MYVi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-3-35f9aec2aed2@google.com>
- <7dafaa90-f3d4-4be4-a5cc-472163f18040@intel.com> <CAEvNRgG3qXrG2ix2MEcyVo0GXaen-Pte4gFAwEN+9AY=VtGU5w@mail.gmail.com>
- <b9ad1a1d-c167-4adb-980b-90096515a363@intel.com> <anPYxp-LMWaLDbMk@google.com>
- <fda26964-721d-4a8c-9225-46ca3a5b2785@intel.com>
-Message-ID: <anSJ1lLS0HZnfjCt@google.com>
-Subject: Re: [PATCH v9 03/41] KVM: Enumerate support for PRIVATE memory iff
- kvm_arch_has_private_mem is defined
-From: Sean Christopherson <seanjc@google.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
-	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	shivankg@amd.com, steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <anRpdyApCza3MYVi@redhat.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=E6P9Y6dl c=1 sm=1 tr=0 ts=6a748d89 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=kj9zAlcOel0A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=x50oQC-lhhJfbDA-FTcA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: iN4K-sujkeSHo4wz9-0aXCjqXld-D_e4
+X-Proofpoint-GUID: iN4K-sujkeSHo4wz9-0aXCjqXld-D_e4
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA2MDEwNCBTYWx0ZWRfX7FOvioTEFrSX
+ 1Me2qMShZI/NKRL2FI4ui/Wgg94iQ90MEX3U7lpUdKVbqeE0NURiVVpLJsa9UFfdONv22gBFiMr
+ GDqHpbHtnJEn2uimYcP1BwXa84+dg3o=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA2MDEwNCBTYWx0ZWRfX0sGor8QxejYY
+ /fWhxO6Dnw5IoXxQng2gg5nbpMifE6Yonr7RVJ95TkadZ/Qk6AOFvTqdsBrg+CcOW2LfCOfuOi3
+ 5SqgGf3jNk6tRecgPfa17pMZb8dJJfrGv2D3FK09Dg4yu0+E5PU1NMhTaoRultanyJ6yGLiYM8L
+ 2oR0FwLtYTJBdAWRQ9XtWD+v1CD0Ls/ToCyjQxZonVowTV5OB8SmBscSmNUeEAeuyrn9oGUHNvp
+ eV47+VdsE1Kq0TjmqFDAcY2e1cWl0104YbiZKK2q1FM4btI5vUHIW1sLEguph+JjxjQlsmodfrY
+ yakzomMRT5c3jWsLv4RTw2YhOixFd72ciZFQHdPLVesZh2nofHa6jw1sC5uG+fS2mQmEAEFjNvz
+ hHziRmBll3Kd9mNDm+hE5cgVGn5AAjGcRezzlbeuP5YG6uPj3uB+eZyYph+tcDBQII040nxIong
+ 5B1tbT6HvbQm+3e0Nig==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-05_06,2026-08-05_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608060104
 
-On Thu, Aug 06, 2026, Xiaoyao Li wrote:
-> On 8/6/2026 8:43 AM, Sean Christopherson wrote:
-> > On Wed, Aug 05, 2026, Xiaoyao Li wrote:
-> > > On 7/31/2026 4:34 AM, Ackerley Tng wrote:
-> > > > I think another way to phrase this is that if we don't make this change,
-> > > > say, on the foo architecture where there's no CoCo and no private mem
-> > > > support, kvm_supported_mem_attributes() would return true for the !kvm
-> > > > case, which is over-reporting.
-> > > 
-> > > Under the condition that the foo architecture enables
-> > > CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
-> > > 
-> > > > How about this, replacing the entire changelog paragraph above:
-> > > > 
-> > > >     Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE
-> > > >     based on kvm_arch_has_private_mem being #defined. This improves
-> > > >     reporting accuracy by not reporting support for
-> > > >     KVM_MEMORY_ATTRIBUTE_PRIVATE when kvm_supported_mem_attributes() is
-> > > >     called with kvm == NULL.
-> > > 
-> > > It doesn't help for the case where kvm == NULL, but help for the case where
-> > > CONFIG_KVM_VM_MEMORY_ATTRIBUTES is defined but kvm_arch_has_private_mem not.
-> > > 
-> > > sorry for being picky. I think we can say
-> > > 
-> > > This improves the reporting accuracy by avoiding the case where
-> > > KVM_MEMORY_ATTRIBUTE_PRIVATE is reported when kvm == null even without
-> > > kvm_arch_has_private_mem being #defined.
-> > 
-> > How about this?
-> > 
-> > Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
-> > on kvm_arch_has_private_mem being #defined in anticipation of tracking
-> > PRIVATE vs. SHARED state per-guest_memfd, not per-VM (to allow in-place
-> > conversion).
+On Thu, Aug 06, 2026 at 01:01:11PM +0200, Oleg Nesterov wrote:
+> Sumanth, thanks for details!
 > 
-> Sorry, maybe I'm stupid. I still don't understand how to connect it to
-> tracking PRIVATE vs. SHARED state per-guest_memfd.
+> On 08/05, Sumanth Korikkar wrote:
+> >
+> > So semphore incremented to 2 when a tracer was attached and decremented
+> > back to 0 when tracer was detached. install_breakpoint() was called for
+> > both vaddr and succeeded, also remove_breakpoint() succeeded for both
+> > vaddr.
 > 
-> There are two diffs in this patch, and we are talking about the second diff,
-> right?
-
-Yes, the second diff is what provides the desired change in behavior.
-
-> If the kvm_supported_mem_attributes() will be used by gmem, I can buy the
-> justification. But it won't. At least, it won't after this series.
-
-It's not about gmem using that API, it's about non-gmem using the API when
-reporting KVM_CAP_MEMORY_ATTRIBUTES.  Without the change, if KVM supports any
-memory attributes, i.e. if KVM_GENERIC_MEMORY_ATTRIBUTES=y, then the below will
-*incorrctly* include PRIVATE in the set of memory attributes, because
-KVM_CAP_MEMORY_ATTRIBUTES reports what memory attributes are supported via the
-VM-scoped KVM_SET_MEMORY_ATTRIBUTES.
-
-#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
-	case KVM_CAP_MEMORY_ATTRIBUTES:
-		return kvm_supported_mem_attributes(kvm);
-#endif
-
-
+> Then I agree with Andrii, we don't really care. IIUC, only the value of
+> .active != 0 matters correctness-wise.
 > 
-> > guest_memfd support for memory attributes is expected to be unconditional
-> > to avoid yet more macros (all architectures that support guest_memfd are
-> > expected to use per-gmem attributes at some point), at which point
-> > enumerating support KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory
-> > attributes being supported by KVM at-large would result in a system-scope
+> > > > --- a/kernel/events/uprobes.c
+> > > > +++ b/kernel/events/uprobes.c
+> > > > @@ -1155,6 +1155,9 @@ static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
+> > > >  	bool first_uprobe;
+> > > >  	int ret;
+> > > >
+> > > > +	if (!(vma->vm_flags & VM_EXEC))
+> > > > +		return 0;
+> > > > +
+> > >
+> > > Well, but then it makes more sense to change valid_vma() to nack the
+> > > non VM_EXEC mappings ?
+> >
+> > After looking at your 2012 commit 78a320542e6c ("uprobes: Change valid_vma()
+> > to demand VM_MAYEXEC rather than VM_EXEC"), I thought changing it in
+> > valid_vma() was not the right approach.
+> >
+> > "If a program maps memory as non executable initially, but it has
+> > VM_MAYEXEC permission, the program can later call mprotect(PROT_EXEC)
+> > to make it executable." So adding VM_EXEC in valid_vma() can be too
+> > strict.
 > 
-> s/memory attributes/CONFIG_KVM_VM_MEMORY_ATTRIBUTES/ ?
-
-No.  I mean "memory attributes" as in KVM as a whole entity, i.e. everything
-linked into kvm.ko (and kvm-{amd,intel}.ko, supports memory attributes.
-
-> > check (NULL @kvm) over-reporting support on arm64.
+> Yes,
 > 
-> I think arm64 won't define CONFIG_KVM_VM_MEMORY_ATTRIBUTES?
-
-Precisely *because* of this patch.  More at the bottom.
-
-> So it seems to have nothing to do with arm64.
+> > Hence, I think install_breakpoint() can be one point where non VM_EXEC
+> > mapping can be restricted.
 > 
-> It matters for x86. After patch 20, CONFIG_KVM_VM_MEMORY_ATTRIBUTES is
-> user-configurable. At that time, people can disable
-> CONFIG_KVM_SW_PROTECTED_VM, CONFIG_KVM_INTEL_TDX and CONFIG_KVM_AMD_SEV, but
-> enable CONFIG_KVM_VM_MEMORY_ATTRIBUTES on x86. 
+> But your change in install_breakpoint() essentually reverts that commit?
+> If uprobe_register() -> register_for_each_vma() finds a VM_MAYEXEC vma
+> without VM_EXEC valid_vma() will return true, but then install_breakpoint()
+> will fail anyway.
+> 
+> Oleg.
 
-No, they can't.  KVM_VM_MEMORY_ATTRIBUTES depends on one of those three being
-enabled.  What am I missing?
+Initially non exec vma will be ignored via uprobe_register(),
+install_breakpoint() will reject non vma mappings initially.
 
-config KVM_VM_MEMORY_ATTRIBUTES
-	bool "Enable per-VM PRIVATE vs. SHARED attributes (for CoCo VMs)"
-	depends on KVM_SW_PROTECTED_VM || KVM_INTEL_TDX || KVM_AMD_SEV  <======
+As far as I understand,  if mprotect(PROT_EXEC) is performed later by a
+process, it adds VM_EXEC flag to vma and calls vma_complete() via
+vma_modify_flags(). uprobe_mmap() will then call install_breakpoint()
+and now it should succeed because VM_EXEC is set.
 
-> In this case, kvm_supported_mem_attributes() reports
-> KVM_MEMORY_ATTRIBUTE_PRIVATE for system-scope query which is totally wrong. I
-> think this is the case we want to prevent not something won't happen for
-> arm64?
+So, it doesnt really revert 2012 commit. But it just defers installation
+of breakpoint until the vma actually becomes executable right?.
 
-Well, yeah, because of patches like this one.  That's the whole point.  Without
-this change, kvm_supports_private_mem() would be reachable if and only if
-KVM_VM_MEMORY_ATTRIBUTES=y, which would prevent burying that Kconfig in x86 and
-would prevent arm64 from enabling the PRIVATE memory attribute in guest_memfd.
+Thanks
