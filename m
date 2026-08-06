@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658733839BD;
-	Thu,  6 Aug 2026 15:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2278430E0D6;
+	Thu,  6 Aug 2026 15:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786029704; cv=none; b=AqdC1+7ZFEjhYE80g1Z3JWBjKjMNuDCI/VXJpgZa70L442sHL2+qmPRdi51MJRb7FDk6gAmg+R6nfvWAw9iBRe80hVS4n3DqcgOQtEFajvdyrxInE+McgzDoex4EW5YnK1fu7E+UycloZT/4BvNTRv+VVvDunA5xYJnmgayGeAY=
+	t=1786029714; cv=none; b=V1BlHgPaGw4KS5K+/SwSQUbiBtQieBIJd2kwmsYT/6l4tqC8sJN50Wj1xzvxgfSq4lLwKyb1hGxvuj/PlY016MNl19L19u8Tdr7juwajMoy/wTNSTow+/cSIGKio0IRm0EHYTm8ONDI/Ipjqn6B+EmFCakoBxN1HuK31CWE23oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786029704; c=relaxed/simple;
-	bh=If94aqDMfUhqHZbf0eoe4fgpsQJQfmn3Y15jw7TnSqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dtCxYrR7qB5eQrrb73JvXFd8wA1XewVN//zBl0PP0As0G7IJHRAeI855EWk4sTXXDu0A/WaRPpDi63dLPXT79Vn7vJDl4dSt30t/no5y1pgxeqItkaCbzIKeScn0cWiwNF5K1x54ZVmHvUuHajFQzuwbhQkiym/vLAdHKHorT/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kj6SV/f8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786029714; c=relaxed/simple;
+	bh=MbaVqOimnB2PepN4cP3JP2c8sndbM0AOApiAQvhTTKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EUFU3yvWI451It1LHQdaw1aIfsvlGlR5ygf3slWdAaHWKmTfUDHwBHLRKjG+evIJ0CTzhUuh6dbiSTKcM72VhsZATxss3V7xKudbWw2/6kCiv8zPXDm3wKOnM/VngJkwpE8nTIiItxLdui4tTiVIBnReTtj1J3EBk+pH57BXd2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgPiMxzm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kj6SV/f8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD2A1F000E9;
-	Thu,  6 Aug 2026 15:21:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgPiMxzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB9AB1F000E9;
+	Thu,  6 Aug 2026 15:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786029703;
-	bh=AR3+Gfeim1gth5wk3IdJHMpUv87QCXqfBE3YsoXite4=;
-	h=From:To:Cc:Subject:Date;
-	b=kj6SV/f8Jz3lDjU87yK7Z4ZiPTX/SVnrx+7dUxFVCGuOtCvZWSsU0NZl34/4LE/gP
-	 UTrhtJhPq3+83aasb3ySOHoja1srW/0TDswc/33rJVLJBYSDPArVIPuYRp0DTa4qHs
-	 KL1M0QZhO3tz678oocm6Op/JWzDSZBiVPVKLsncNPzzRyFabTdlJkqf4rFn7rmzcm1
-	 DKwRdbXjHVbWT305+n1CFkScb3CkS32kkRra0wFT01Yi+I7yVJNi7uN5sA1Ko759V0
-	 eBdI+oy5Nj67AhT9go23t1oqDbyQAviwzDGXe26Cwu1ZpDNGgPoBUwTzM2MOK+y/kl
-	 2UaCH4Wcr9bdQ==
+	s=k20260515; t=1786029712;
+	bh=nkqsTD5ySydxaKtCYDGV3LNnpEbKrG41kBt1atrphzw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=EgPiMxzm48opp5uKy+R3JlknloFP/USgI+oUB8wvoeNUE67+NlBKtTCPTmQpR1jPC
+	 Yk+MoxFcvgcu46AyKXQEjxnfqnD1upp8rjq85fqLWxfd8pQk7opjmZtMmXqxE2266q
+	 xNSyRqamVgdUxr0lNcCRbotVjJWw9O1ay5BYIU1z395exzP+AKBNo0kbuicE4VkiCg
+	 6/a2gruruVh6QyYD5D0zK7dQ8sfRu8DI+A7tGMw/M6F6qUagm7Z8y9rsnD0Kd1l8Lm
+	 l/xLGV7OgYdHeFUbEjamthgmSsqVb0omoUKrXnnjOrZ2tdEI9g6Ju6bXUVD74hI+FB
+	 sJK9dIawGhiZw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -35,10 +36,12 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 0/2] tracing/boot: Support eprobe, fprobe, and tprobe events and add test framework
-Date: Fri,  7 Aug 2026 00:21:38 +0900
-Message-ID: <178602969872.141946.3932041319962687996.stgit@devnote2>
+Subject: [PATCH v2 1/2] tracing/boot: Add support for eprobe, fprobe, and tprobe events
+Date: Fri,  7 Aug 2026 00:21:48 +0900
+Message-ID: <178602970854.141946.4094580379384586498.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178602969872.141946.3932041319962687996.stgit@devnote2>
+References: <178602969872.141946.3932041319962687996.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,84 +52,200 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This is 2nd version of series to extend kernel boot-time tracing to
-support newly added dynamic event types (eprobes, fprobes, and tracepoint
-probes) and introduces an automated QEMU-based test suite under
-tools/tracing/boottime/.
-Previous version is here:
+Boot-time tracing currently supports kprobe-events and synthetic-events
+under per-event configuration options.
 
- https://lore.kernel.org/all/178597841107.123558.13065821394773752510.stgit@devnote2/
+Extend boot-time tracing to support newly added dynamic probe types:
+- event probes (eprobe) under the "eprobes" event group
+- function probes (fprobe) under the "fprobes" event group
+- tracepoint probes (tprobe) under the "tracepoints" or "tprobes"
+  event group
 
-This version fixes some issues reported by Sashiko [1], simplifying
-code, and improve test program.
+To support this cleanly, update dyn_event_create() in trace_dynevent.c
+so that passing NULL as the type parameter delegates to
+create_dyn_event(), allowing generic creation of any registered
+dynamic event type from a raw command string.
 
-[1/2]
+Update Documentation/trace/boottime-trace.rst accordingly to describe
+the new per-event bootconfig options.
+
+Assisted-by: Antigravity:gemini-3.6-flash
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+Changes in v2:
  - Fix raw command detection logic for eprobes, fprobes, and tprobes
    by requiring ':' or isspace() after type prefix.
  - Consolidate duplicate loop logic into trace_boot_add_probe_event()
    helper function.
-[2/2]
- - Copy shared library dependencies using ldd if busybox is dynamically
-   linked.
- - Wrap QEMU execution with timeout command and add -T/--timeout CLI
-   option.
- - Add pre-flight checks for busybox architecture compatibility and
-   cpio tool in run_boottime_test.sh.
- - Fix POSIX syntax compatibility and allow bypassing HOST_ARCH skip
-   when custom kernel/QEMU parameters are passed.
- - Add boottime/run_boottime_test.sh to TEST_PROGS_EXTENDED in
-   selftests/ftrace/Makefile.
-
-[1] https://sashiko.dev/#/patchset/178597841107.123558.13065821394773752510.stgit%40devnote2
-
-Thanks,
-
 ---
-base-commit: ea694cdd92b6bfa123b3f5c563e47b4cf968046a
+ Documentation/trace/boottime-trace.rst |   18 ++++++-
+ kernel/trace/trace_boot.c              |   86 ++++++++++++++++++++++++++++++++
+ kernel/trace/trace_dynevent.c          |    5 ++
+ 3 files changed, 106 insertions(+), 3 deletions(-)
 
-Masami Hiramatsu (Google) (2):
-      tracing/boot: Add support for eprobe, fprobe, and tprobe events
-      selftests/ftrace: Add boot-time tracing test framework
+diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+index 651f3a2c01de..2c3c1fedb92c 100644
+--- a/Documentation/trace/boottime-trace.rst
++++ b/Documentation/trace/boottime-trace.rst
+@@ -121,9 +121,21 @@ ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2[...]]
+    Defines new synthetic event with FIELDs. Each field should be
+    "type varname".
+ 
+-Note that kprobe and synthetic event definitions can be written under
+-instance node, but those are also visible from other instances. So please
+-take care for event name conflict.
++ftrace.[instance.INSTANCE.]event.eprobes.EVENT.probes = PROBE[, PROBE2[...]]
++   Defines new event probe based on PROBEs. This option is available only
++   for the event which group name is "eprobes".
++
++ftrace.[instance.INSTANCE.]event.fprobes.EVENT.probes = PROBE[, PROBE2[...]]
++   Defines new fprobe event based on PROBEs. This option is available only
++   for the event which group name is "fprobes".
++
++ftrace.[instance.INSTANCE.]event.tracepoints.EVENT.probes = PROBE[, PROBE2[...]]
++   Defines new tracepoint probe based on PROBEs. This option is available only
++   for the event which group name is "tracepoints" or "tprobes".
++
++Note that dynamic event definitions can be written under instance node, but
++those are also visible from other instances. So please take care for event
++name conflict.
+ 
+ Ftrace Histogram Options
+ ------------------------
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 2ca2541c8a58..4a71b91ad203 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -18,6 +18,7 @@
+ #include <linux/trace_events.h>
+ 
+ #include "trace.h"
++#include "trace_dynevent.h"
+ 
+ #define MAX_BUF_LEN 256
+ 
+@@ -172,6 +173,82 @@ trace_boot_add_synth_event(struct xbc_node *node, const char *event)
+ }
+ #endif
+ 
++#if defined(CONFIG_EPROBE_EVENTS) || defined(CONFIG_FPROBE_EVENTS)
++static int __init
++trace_boot_add_probe_event(struct xbc_node *node, const char *group,
++			    const char *event, char type, const char *type_name)
++{
++	struct xbc_node *anode;
++	char buf[MAX_BUF_LEN];
++	const char *val;
++	int ret = 0;
++
++	xbc_node_for_each_array_value(node, "probes", anode, val) {
++		if (val[0] == type && (val[1] == ':' || isspace(val[1])))
++			strscpy(buf, val, MAX_BUF_LEN);
++		else
++			snprintf(buf, MAX_BUF_LEN, "%c:%s/%s %s", type, group, event, val);
++
++		ret = dyn_event_create(buf, NULL);
++		if (ret) {
++			pr_err("Failed to add %s: %s\n", type_name, buf);
++			break;
++		}
++	}
++
++	return ret;
++}
++#endif
++
++#ifdef CONFIG_EPROBE_EVENTS
++static inline int __init
++trace_boot_add_eprobe_event(struct xbc_node *node, const char *group,
++			    const char *event)
++{
++	return trace_boot_add_probe_event(node, group, event, 'e', "eprobe");
++}
++#else
++static inline int __init
++trace_boot_add_eprobe_event(struct xbc_node *node, const char *group,
++			    const char *event)
++{
++	pr_err("Event probe is not supported.\n");
++	return -EOPNOTSUPP;
++}
++#endif
++
++#ifdef CONFIG_FPROBE_EVENTS
++static inline int __init
++trace_boot_add_fprobe_event(struct xbc_node *node, const char *group,
++			    const char *event)
++{
++	return trace_boot_add_probe_event(node, group, event, 'f', "fprobe");
++}
++
++static inline int __init
++trace_boot_add_tprobe_event(struct xbc_node *node, const char *group,
++			    const char *event)
++{
++	return trace_boot_add_probe_event(node, group, event, 't', "tprobe");
++}
++#else
++static inline int __init
++trace_boot_add_fprobe_event(struct xbc_node *node, const char *group,
++			    const char *event)
++{
++	pr_err("Fprobe event is not supported.\n");
++	return -EOPNOTSUPP;
++}
++
++static inline int __init
++trace_boot_add_tprobe_event(struct xbc_node *node, const char *group,
++			    const char *event)
++{
++	pr_err("Tracepoint probe is not supported.\n");
++	return -EOPNOTSUPP;
++}
++#endif
++
+ #ifdef CONFIG_HIST_TRIGGERS
+ static int __init __printf(3, 4)
+ append_printf(char **bufp, char *end, const char *fmt, ...)
+@@ -477,6 +554,15 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 	if (!strcmp(group, "synthetic"))
+ 		if (trace_boot_add_synth_event(enode, event) < 0)
+ 			return;
++	if (!strcmp(group, "eprobes"))
++		if (trace_boot_add_eprobe_event(enode, group, event) < 0)
++			return;
++	if (!strcmp(group, "fprobes"))
++		if (trace_boot_add_fprobe_event(enode, group, event) < 0)
++			return;
++	if (!strcmp(group, "tracepoints") || !strcmp(group, "tprobes"))
++		if (trace_boot_add_tprobe_event(enode, group, event) < 0)
++			return;
+ 
+ 	mutex_lock(&event_mutex);
+ 	file = find_event_file(tr, group, event);
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index c4dfbc293bae..6f2e39b797e5 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -116,6 +116,8 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	return ret;
+ }
+ 
++static int create_dyn_event(const char *raw_command);
++
+ /*
+  * Locked version of event creation. The event creation must be protected by
+  * dyn_event_ops_mutex because of protecting trace_probe_log.
+@@ -124,6 +126,9 @@ int dyn_event_create(const char *raw_command, struct dyn_event_operations *type)
+ {
+ 	int ret;
+ 
++	if (!type)
++		return create_dyn_event(raw_command);
++
+ 	mutex_lock(&dyn_event_ops_mutex);
+ 	ret = type->create(raw_command);
+ 	mutex_unlock(&dyn_event_ops_mutex);
 
-
- Documentation/trace/boottime-trace.rst             |   18 +
- kernel/trace/trace_boot.c                          |   86 +++++++
- kernel/trace/trace_dynevent.c                      |    5 
- tools/testing/selftests/ftrace/Makefile            |    4 
- tools/testing/selftests/ftrace/boottime/Makefile   |   10 +
- tools/testing/selftests/ftrace/boottime/README     |   58 ++++
- .../ftrace/boottime/bootconfigs/01-kprobe.bconf    |    5 
- .../ftrace/boottime/bootconfigs/02-synth.bconf     |    4 
- .../ftrace/boottime/bootconfigs/03-eprobe.bconf    |    4 
- .../ftrace/boottime/bootconfigs/04-fprobe.bconf    |    4 
- .../ftrace/boottime/bootconfigs/05-tprobe.bconf    |    4 
- .../ftrace/boottime/bootconfigs/06-instance.bconf  |    5 
- .../selftests/ftrace/boottime/run_boottime_test.sh |  264 ++++++++++++++++++++
- .../selftests/ftrace/boottime/tests/01-kprobe.sh   |   18 +
- .../selftests/ftrace/boottime/tests/02-synth.sh    |   18 +
- .../selftests/ftrace/boottime/tests/03-eprobe.sh   |   18 +
- .../selftests/ftrace/boottime/tests/04-fprobe.sh   |   18 +
- .../selftests/ftrace/boottime/tests/05-tprobe.sh   |   18 +
- .../selftests/ftrace/boottime/tests/06-instance.sh |   23 ++
- tools/testing/selftests/ftrace/config              |    4 
- 20 files changed, 583 insertions(+), 5 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/boottime/Makefile
- create mode 100644 tools/testing/selftests/ftrace/boottime/README
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf
- create mode 100755 tools/testing/selftests/ftrace/boottime/run_boottime_test.sh
- create mode 100755 tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh
- create mode 100755 tools/testing/selftests/ftrace/boottime/tests/02-synth.sh
- create mode 100755 tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh
- create mode 100755 tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh
- create mode 100755 tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh
- create mode 100755 tools/testing/selftests/ftrace/boottime/tests/06-instance.sh
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
