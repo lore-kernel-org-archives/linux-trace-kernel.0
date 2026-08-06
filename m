@@ -1,41 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D199287246;
-	Thu,  6 Aug 2026 04:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11CA3876A7
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Aug 2026 05:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785992215; cv=none; b=PZoRy7ExScjbgrVKB6ocHHIrId/F/Arn7+zncIGfNKvt+B9PQp2rSR3i/gQh08LEKP42Gbv7ZafDL8b5dp6l7AxBVaTFE2ExrSzSSZxM8pbGe8xKmSr2WFP9MuOzszopYGdYHNK1t3fCDKmT5ppVPKYhtJj/2ecxpRNN2Y1kzFo=
+	t=1785992843; cv=none; b=Z3Gna9DFOrsHB5N+R+TrrJISFDgwyhbJUKP0wlwNUYl+NmPL2wMNnnQCq7zg9yNYixXrZ2zK7JQEqTqp3fkXCG/K+2Y2yF8Y4WUFV43ZHrZOkdyn96kv2/lycAA3dbfC2lYWYj08pCAM4/0kTzFKSkShw6qTg856uirSilxk+Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785992215; c=relaxed/simple;
-	bh=JB+7l4s5oMpm0hwgT63PQU9tsrgKcqpD+w2cv1g/joY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kig+oWS5L9NDtlGQMwQ2haWVKaFTX8MyLQxpNoxikCRx828skVclQhPq86cT8nK7eif80Rp0Re0R4Hf9y/VV4txw9vss4AOyYHvFrS7dSY1pRQGphbESmFn3dmLho6AcPrdFarooRQKNZ/8dNqvfjbp1NNR9Jsjmr8kPBQ9GJSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQuW2oEc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785992843; c=relaxed/simple;
+	bh=YySJq6hHiRI5ruUBjw9xY9PfrGu76MSyIUcHMeHoEug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uDK68R2NT3SjfpwNYiT5yhdbv9Xe86/1GrXHfoiwIQAvaVy6YBuYpgrIvK8Q4aEif8y6vzDqhsRCFXZA6FtQuVPVdjhc7wGtHZhpKzE9eu9N/5E7tuYdHCW2c/IH8FQKf/wyjmXyIs4Jcd9ZpzSwJbNFPTJ06/+BkEgQrGeMqBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBrgToE3; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQuW2oEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B790C1F000E9;
-	Thu,  6 Aug 2026 04:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785992214;
-	bh=LueuOhm0TxashHbSXdaA6DESHRWStPQsbnY2D/xxb+I=;
-	h=From:To:Cc:Subject:Date;
-	b=lQuW2oEc3BFf3WH01Dcwt+efS0iX74iSualsJIeZFasGRKeHqBXFLVrF1J7C5wtBO
-	 8RvKLG9cY+mknxa1dZ3+syt5D/nf8GpIBLGtGqumJaDGc6axTiPT4S3CFM7VZA6hdJ
-	 NeUe7dINc2pZ9gDBj4xhaOu899iLgP+dg0CHEZ1yFsrwN9I/mBaQc5Ql/BmfSIo6Ri
-	 QnSfYTY+w4B7gvKSMuDnay+LfNoxoAGnMMVib29heXWiQOjwMm8144gHTeuVV/c6/a
-	 CtBlGpj16vSvJQ0WWJLc3fWjO3ywwAKhGESEwM29FvdYv3R4oqoqKETHBBV621IXas
-	 Hk33stwt9ftYw==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBrgToE3"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-496b7622a83so14017705e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Aug 2026 22:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785992840; x=1786597640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Q9RiNZzQISUcjwGnzw0LWdiOOvRPI/zRy9W/nyk1gSQ=;
+        b=OBrgToE3OgdgfJ+Tq9tGGmQE1Xmxfb3aHGKyhO73+ot8oVKwcNVlzeFquB+yB/Y9/f
+         DRpd29DGV1f/tj6ZykqK6ot15yBHtGT5ZKDk88OwbbrU4i73FOSegW4Ff91GxujUqyQv
+         U/VRdSsCQPM0CvsoPLE9zKgxbLZViHhU53kz4taQV4dgRzW96lZKJkqAOVgAiaaVoCfS
+         ThdUKKBMLRwniKB/RkYDq/P795XOmdlnVlSUivvz6wXn3Q4qD1Auj04ylUx//KzE/TUK
+         ukTRyFnlRAgnlYhvF1RZmSYUGxpjFXnURqhVNa+hPHqk7hmAnNMDetrIsZpI8MUQ2M/h
+         w/fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785992840; x=1786597640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Q9RiNZzQISUcjwGnzw0LWdiOOvRPI/zRy9W/nyk1gSQ=;
+        b=SM9CuQsPccQl448Gy68OJsnM/SgOkydo0U+6N0b3JwcuYRS82ATXPE5Tr1RPuJuYrq
+         QbMPXuaIzrOybUB5SxFDwBGaeG8hf6GiLhoPc1sXfO5+Jfvw4PEuC4fdvmssWl+hkQ33
+         bkhhd644ts0CdYE+wKJjFJvlNkXgCF57d9fcT0xL1a3zbvkCv619d8deSIDFkpejfJqZ
+         mhLTpany9K34YL2sWtZ2KDxiXyYISXcAQMpa+Um/QljnkkCozKm8C0qJCyAXpPLVrk2S
+         Or4tj+0QYDpXW9fV1tDl/JdJTM6u1QC0ZvpN34IT+I6zyszay7JRNV/VY2wF1R6eU2nD
+         DWSg==
+X-Forwarded-Encrypted: i=1; AHgh+RqGUPZRcfwLGfblzEzsKiPjI6JIfflZSwBv4UtgDPePLwgyTa1kke3lH/rh/f1NfeOWMqqTJMOj4RoCdnufIdHyaAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOEQYdyuY7mUq+582WWX0TJ/OwvttUyjdPxffzueYHUS7FC6EZ
+	jCC/+EETB8AtLrxPLuQG4bXuKVmkiAyT+riYiLInS7rC9CUhyId5mdQ8
+X-Gm-Gg: AR+sD12hs7LfLFQ7BE6N8yEopBJEQehWXX19rbAz1Q+KTM44A8cOla+9bqpgIysR+St
+	A2oZgKKcjTXSNv3zVzcYlPNRhjhmJBwshf3+Q2+QE9MEdH6QpDEZBgiYmwlp+crXT/L7sj2AbAQ
+	daPs+C01iNPGL7RcqFB8exiC7H9J8SlyzfreWBI7CzkGPhrlKf0TJ0/xspENdHMeOyz23G1cQxT
+	s122cHHn426KBcUSUddDu6DpYbrtrecQNWrCO6rruK1wpSWI6jMYjI/u3poOrLX0Jkl4SmFF2Nf
+	IrlwvDLDF9E9UDRQpzUycq4+ZJG5kVp5psUS1zjHu4SBHfSS+VW3pzGBE6HVsuCjjUXXXKKUIei
+	z9zC6Jn67sjbIAj+is/7I7HxVkbh4kOyzWEqnnIywDGdFr9js8bNrZrCGae1OnFnlQ8y8W9Pczn
+	CvlBwx1iBiExKcsPdB8BnrnGc+b8YwVzUdRRyrDBrD1rNy4nxqu3HKLio4kypn2iBj4YpKhDrtF
+	Wxj1vUoxheinJXTyY2zgJsGZpo8KDC8QqwqGoJsl8esTy4q
+X-Received: by 2002:a05:600c:2142:b0:495:5858:8101 with SMTP id 5b1f17b1804b1-4994e7cbcbfmr122212915e9.15.1785992839612;
+        Wed, 05 Aug 2026 22:07:19 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4995420cb4esm32477045e9.2.2026.08.05.22.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2026 22:07:19 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] ftrace: Fix off-by-one fentry site disable in ftrace_free_mem()
-Date: Wed,  5 Aug 2026 21:56:46 -0700
-Message-ID: <1b5ccfa8095bdb1277f84af1c2c2e2205aca03ae.1785992188.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH] tracing: Report TP_printk double dereference with pr_warn()
+Date: Thu,  6 Aug 2026 06:07:16 +0100
+Message-ID: <20260806050716.16612-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,56 +76,37 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a module's init text is freed, do_init_module() calls
-ftrace_free_mem() with a half-open [start, end) range.  However the
-ftrace_cmp_recs() comparator treats the upper bound as inclusive, as all
-its other users do, passing 'ip + size - 1'.  So ftrace_free_mem() can
-delete a record sitting exactly at 'end', which is outside the freed
-range.
+test_double_dereference() uses WARN_ONCE(), which is per-call-site. Only
+the first offending event in the kernel is ever reported, and the tree
+still has six: ice_{rx,tx}_dim_template, two hfi1 txq events, mtu3_ep and
+edma_log_io. Whichever registers first hides the rest, and it taints the
+kernel for what is a source-level mistake.
 
-For a kernel without CFI or IBT, the first record of a function is at
-the function start, which for the first function in a module is also the
-base of its text allocation.  As the module allocator packs its regions,
-that address is often the 'end' passed by a neighboring module's
-do_init_module(), causing the first function's ftrace location to get
-disabled, preventing an attempt to livepatch it:
+Use pr_warn() instead, matching the "TRACE EVENT ERROR:" report that
+handle_dereference_arg() already emits for the same class of problem.
+All offenders are now listed on one boot.
 
-  livepatch: failed to find location for function 'pcspkr_probe'
-
-Convert the exclusive end to the inclusive 'end - 1' the comparator
-expects, and return early for an empty range to avoid the subtraction
-from underflowing when the init text size is zero.
-
-Fixes: 42c269c88dc1 ("ftrace: Allow for function tracing to record init functions on boot up")
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Fixes: b5cc230af5e5 ("tracing: Warn when an event dereferences a pointer in TP_printk()")
+Signed-off-by: David Carlier <devnexen@gmail.com>
 ---
- kernel/trace/ftrace.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f93e34dd23288..6bde28d56f41b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -8283,7 +8283,8 @@ static void add_to_clear_hash_list(struct list_head *clear_list,
- void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- {
- 	unsigned long start = (unsigned long)(start_ptr);
--	unsigned long end = (unsigned long)(end_ptr);
-+	/* end is inclusive and end_ptr is exclusive */
-+	unsigned long end = (unsigned long)(end_ptr) - 1;
- 	struct ftrace_page **last_pg = &ftrace_pages_start;
- 	struct ftrace_page *tmp_page = NULL;
- 	struct ftrace_page *pg;
-@@ -8293,6 +8294,9 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 	struct ftrace_init_func *func, *func_next;
- 	LIST_HEAD(clear_hash);
- 
-+	if (start_ptr >= end_ptr)
-+		return;
-+
- 	key.ip = start;
- 	key.flags = end;	/* overload flags, as it is unsigned long */
- 
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index a8590d2394e3..53f32752edc0 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -415,8 +415,8 @@ static void test_double_dereference(const char *str, int len,
+ 		ptr += 5;
+ 		for (; ptr < end; ptr++) {
+ 			if (ptr[0] == '-' && ptr[1] == '>') {
+-				WARN_ONCE(1, "Event %s has double dereference in TP_printk: %.*s\n",
+-					  trace_event_name(call), len, str);
++				pr_warn("TRACE EVENT ERROR: Event %s has double dereference in TP_printk: %.*s\n",
++					trace_event_name(call), len, str);
+ 				return;
+ 			}
+ 			if (!isalnum(*ptr) && *ptr != '_')
 -- 
-2.54.0
+2.55.0
 
