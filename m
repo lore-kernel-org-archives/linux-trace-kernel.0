@@ -1,119 +1,153 @@
-Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A73E46C4CD
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Aug 2026 08:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A9941D110
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Aug 2026 08:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786090575; cv=none; b=K+dI2BmpSceBUAS/rYMQaUGyF+SmBNC11wTfavJM7oIFBC26kBYYFv8jgLPnjlU8C03aHLEQKLi4JOuSv+JQdEECtLrdbOPDKljJXSs55kSFmXfP68MP3+ZzYOdJjhYMeK1M/GLxeQd2CRkwHB2w0wa4mZif2N1/3LeqcHrF/t4=
+	t=1786090783; cv=none; b=H2AXkuoLKlIuJG0C9gK4BkMasBS9tPsi55xMnxfEj2xmC1o5mxVLzWFj3VCtUR7V9Hf7/2MO0mLHb4wN+d0Ef996MTPlBwBKIVuMIx5jvV/xyifibu7OabUyNvMlUnc0uJ1Vs4Bjg5cuckPqsqbhsGuXZzm61Hg/8ystftBbR38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786090575; c=relaxed/simple;
-	bh=qozgKeqjQY8jqxFJp3ds9EO0gAHwRe1fjjWm2OUEFWo=;
-	h=To:Subject:References:Content-Type:From:Date:In-Reply-To:Cc:
-	 Message-Id:Mime-Version; b=FB1pp4AI7Rwu7eM8L/nz3SIHfh3xrm+uo+lgzLZvZKh4+krSb5T5wXv2jS4Fs2qeuTeEaQUk03x8u3Iy1FaiPDnidcrOj7WCR385RqJ6BY4aPORNGyoay5YZ0FDA4DZhNPmnxt3s/592uv1SIKtIQwqvMmFsXyqJ2nzH8I/2OMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dI2LgVzg; arc=none smtp.client-ip=209.127.230.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1786090783; c=relaxed/simple;
+	bh=8lyBm9Wm93qDz42hxXXkdlccFQmsPzGQYDQhxrJxKW8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lTfUvHsAW1Mtk78XM4nePAJOfYbRH9Sd9dK7oyKw8HmtJ7mkuiK10DFwsxE9+tpXTB1pkIWvfRXMGfdUqhZ+D75jZOEwvm+bCitgattambv3ich8ii/3/Ca2h8Bh2u0OH18WIAuwy+UVUXoQ5bta91JxYWPCU3TjR9iKZSPK4YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C4Q6zPW0; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dI2LgVzg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1786090559; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=m5Q6pj+2aZgVsaFgFCzX1cAV4lDF7uuJhuFlfFc6gII=;
- b=dI2LgVzgvZXAKE5kY2lgFx0jK2dQgdcnI31YfYbo2bRuU7itBKM+b2B1azWpyR/w4eIQ8l
- 7igJcWysMrdgHm+xG5VyHd9GA3F83z0GslJOoFURj6OxQ9Sfk/biql5bwluoZxowWEb40E
- 7ciyQ/vysfkpEPFTOxu4kfQI1FMIYhFJPke/XwEgu3U8TudctaXoBDo9jFaMLX+lln5f7h
- 7RaPZoIKPBwFY7e96zKDu7fekOPFUA7Mtn43N+FQkvI2x5VhI5fpeBr5oIhspyCP2058D8
- wQCl5Gm/SKrdkLmyIxVwMHg7SnOq+7W8ZZlQ7U3lf0BIsWEOd11nfpSgOqxGrQ==
-To: "Steven Rostedt" <rostedt@goodmis.org>, 
-	"Masami Hiramatsu" <mhiramat@kernel.org>
-Subject: [PATCH v2 2/2] selftests/ftrace: Convert ELF entry point to file offset in uprobe test
-X-Lms-Return-Path: <lba+26a75943c+ab6dd3+vger.kernel.org+qirui.001@bytedance.com>
-References: <20260806083101.2651025-1-qirui.001@bytedance.com> <20260807081512.2974757-1-qirui.001@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-From: "Rui Qi" <qirui.001@bytedance.com>
-Date: Fri,  7 Aug 2026 16:15:12 +0800
-In-Reply-To: <20260807081512.2974757-1-qirui.001@bytedance.com>
-Cc: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, 
-	"Shuah Khan" <shuah@kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>, 
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>, 
-	<linux-kselftest@vger.kernel.org>, "Rui Qi" <qirui.001@bytedance.com>
-Message-Id: <20260807081512.2974757-3-qirui.001@bytedance.com>
-Content-Transfer-Encoding: 7bit
-X-Mailer: git-send-email 2.20.1
-X-Original-From: Rui Qi <qirui.001@bytedance.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4Q6zPW0"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-47f633e6058so2606749f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Aug 2026 01:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786090780; x=1786695580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=qieJb84NY/DGIyJFPREzT33jCTD11yTCdeI153UvP3Y=;
+        b=C4Q6zPW0imL8i+4ZlJv8dhtubAV51gfBrV2vd706K2DAbnOsomN0GtqGFA4s/FceEw
+         sHlSirW4x+NQfKSx0mZEL/yd73PSEQNRVrwF9vUZTECVdrryZNkK8q8KVbQai6SWE2/+
+         YwMU+vFWdhnEjQagl5OitKNjq7qyOPX2wJhg3aK1TT65cc0BN1BDKsmlSgMWXZtTpVH/
+         HUmS++JlBE/iYeGSprKPHGrkOsLHx/TjRwYPGnmm8aCI8d0W/Dj+mb8loWvzhQ5PLUa0
+         ZW33++s3IVnxYW28T9nEYgXIB1sYl7cdG6wutO2pUpsgalH0XapHR68jL3lasTDHzzTB
+         Lr2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786090780; x=1786695580;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=qieJb84NY/DGIyJFPREzT33jCTD11yTCdeI153UvP3Y=;
+        b=TN7UPjBbi9AOGssxyPOl3WzlMvk82UOUdW9tMhTa5Aa7CKOzSboqvOgqZJzlEMfcFB
+         4Gf0XqyWmpVELTXfnwOhYPKi0wwQC/mKGOi2EijhBpiIYVpJWGUOd/Yc4V3MDopH/Q+Y
+         5JGDO/uUphJPkBrC5EYqoK6S3b1CSonxqsoqSs1xbi9UetUuYhZ/5Nq5QuSBqkv4AjvT
+         6sSL6rA2S5jHGyEPWxM5NrLc5SHU/NZqJIRn9sOACLX4aVTmBEqn/WincbE1AaEK32u4
+         QF8L+TxE9md2CIUBogyyIBlqZPcJcpBMU2o2TYww4Co9jIQYZxPvog/15pBLKt79UpGY
+         lOBg==
+X-Forwarded-Encrypted: i=1; AHgh+RpDRHru4Oo9+jQatB5eV7ofg3XLEFFSHaxFYK86My4vw8r23a2Knm5dGMLasrqBfdC5rmoBnsRSI7Se3WRUbZ1Ri1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjsV+HrUOo7YiD8TRzVWOvy+xgOPI7dtGHovt2KKGUAP40bqsH
+	avRAI/ijSZ1/8YniZtx6adJsTulWSaCp2Bb6yvqCbRhu+3qiM/zZxyh0
+X-Gm-Gg: AR+sD13KY6/OA0uAv8o1n0cxf4eWBMy0pj8o345NXMt8FUT7OcYpffkg7LPABJq2uYI
+	UzylnWbZJduQrwZZ8E9WUOxqdixM9Qoo8uwwr9LehqTbQd28UK4di8LB6dY8U005ZJJg2dDUXNG
+	7qRE391m47odhvEQw7tKGuaattKsORT1Wtb6jrEg7j6VaQJO0UnC167+1fhVpGdrYLjzbRwfUOC
+	IyNodrMgh0gYyItrUI3B/wqX+OnLjBu+pDwXb08fs6NE4bBBq7U8Z2/YbXWVWUNa0/jTiQLNYoG
+	adV1syPOwHjdLoSWObkVdH8tBBDSr997vwCZXeZqCXt3vNYUQRkr/s2XPIjXljd5A8fxEePmhDS
+	rO1HyH3RNfM/Wh12eezDX8Z9W5DUi5HbAM6vhprysC2XbFxkCd8beHDHLnVaUDDY9EIf+zItRsM
+	aCoXbb2NcHm3xQAgINkDbDx145oU17sR2YSw==
+X-Received: by 2002:adf:e001:0:20b0:47f:e721:1f77 with SMTP id ffacd0b85a97d-47fec51f260mr26165338f8f.13.1786090779619;
+        Fri, 07 Aug 2026 01:19:39 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::cded])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48002150952sm3057648f8f.15.2026.08.07.01.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2026 01:19:39 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 7 Aug 2026 10:19:37 +0200
+To: Hui Zhu <hui.zhu@linux.dev>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <matt@bobrowski.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, Hui Zhu <zhuhui@kylinos.cn>
+Subject: Re: [PATCH bpf-next v2 0/3] bpf: Fix UAF in
+ bpf_trampoline_multi_attach/detach on update failure
+Message-ID: <anWVGT_M1H49a0HX@krava>
+References: <cover.1785902527.git.zhuhui@kylinos.cn>
+ <anRE9L9HgOIYVCtj@krava>
+ <4a6ee31b46b732eaad76b955d95c8cc261941894@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a6ee31b46b732eaad76b955d95c8cc261941894@linux.dev>
 
-The add_remove_uprobe test uses readelf -h to obtain the ELF entry
-point (e_entry) and passes it directly as the offset to uprobe_events.
-However, uprobe_events expects a file offset, not a virtual address.
+On Fri, Aug 07, 2026 at 02:00:11AM +0000, Hui Zhu wrote:
+> > 
+> > On Wed, Aug 05, 2026 at 12:04:05PM +0800, Hui Zhu wrote:
+> > 
+> > > 
+> > > From: Hui Zhu <zhuhui@kylinos.cn>
+> > >  
+> > >  This series fixes several use-after-free issues in the BPF trampoline
+> > >  multi-attach/detach error paths, where ftrace direct-call updates can
+> > >  fail and leave ftrace pointing at freed memory.
+> > > 
+> > hi,
+> > I need to stare at it bit more, but tbh I'm not sure the benefit of
+> > preventing hypothetical crash is worth the extra complexity on the
+> > detach side
+> > 
+> > IIUC we can't reproduce this error without instrumenting the code, right?
+> > 
+> > jirka
+> 
+> Hi Jiri,
+> 
+> You're right. I went through the failure paths and the realistic
+> triggers basically don't exist for a normal user:
+> 
+> The allocations are all GFP_KERNEL (reclaim + OOM handle them),
+> and bpf_jit_charge_modmem() lets CAP_BPF callers exceed the JIT
+> limit, so ENOMEM doesn't get there.
+> -E2BIG is attach-time, before cur_image is set, so no UAF.
+> SHARE_IPMODIFY -EAGAIN needs livepatch on the same function and
+> is retried in bpf_trampoline_update(); the multi path where it
+> could escape needs a second failure on the undo del, which doesn't
+> do ipmodify negotiation, so it doesn't reach the UAF either.
+> The rest is bugs or not user-driven.
+> 
+> So this is fault-injection territory, and I won't claim it's
+> a customer bug.
+> 
+> I'd like to drop patches 2 and 3 and the prog-side machinery
+> (pinned_prog + rollback + the trampoline leak).
+> And keep only the one-line image-side fix in patch 1: only free
+> old_image when it differs from cur_image.
 
-For PIE binaries, the virtual address happens to equal the file offset
-because the first LOAD segment has p_vaddr == p_offset, so the test
-works by coincidence. But for non-PIE executables, e_entry is an
-absolute virtual address that can far exceed the file size. When the
-probe is enabled, uprobe_register() checks offset > i_size_read(inode)
-and rejects it with -EINVAL.
+right, that one looks good
 
-Fix this by converting the virtual address to a file offset using the
-ELF program headers: scan readelf -lW output for the LOAD segment
-containing the entry point, then compute file_offset = e_entry -
-p_vaddr + p_offset. For PIE binaries the result is unchanged; for
-non-PIE binaries the offset is correctly translated.
+> It's obviously correct: if cur_image == old_image, ftrace is still
+> calling into it, so freeing it is wrong. And it costs almost nothing.
+> 
+> Would you prefer I proceed with just this single patch,
+> or drop the entire series instead?
 
-The conversion uses only POSIX shell primitives, with no dependency on
-gawk or perl.
+also we can change bpf_trampoline_multi_detach to return void
+and drop the WARN_ON_ONCE on that call
 
-Fixes: dc4b165855f2 ("selftests/ftrace: Use readelf to find entry point in uprobe test")
-Signed-off-by: Rui Qi <qirui.001@bytedance.com>
----
- .../test.d/dynevent/add_remove_uprobe.tc      | 27 +++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-index f2048c244526..19430bd5864c 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-@@ -12,9 +12,32 @@ echo 0 > events/enable
- echo > dynamic_events
- 
- REALBIN=`readlink -f /bin/sh`
--ENTRYPOINT=`readelf -h ${REALBIN} | grep Entry | sed -e 's/[^0]*//'`
- 
--echo "p:myevent ${REALBIN}:${ENTRYPOINT}" >> uprobe_events
-+# Get the entry point virtual address from ELF header
-+ENTRY=`readelf -hW ${REALBIN} | grep "Entry point" | awk '{print $NF}'`
-+
-+# Convert virtual address to file offset: find the LOAD segment containing
-+# the entry point, then compute file_offset = e_entry - p_vaddr + p_offset.
-+# For PIE binaries this is a no-op (vaddr == file offset), but for non-PIE
-+# executables the virtual address is much larger than the file size and
-+# must be converted, otherwise uprobe_register() rejects it with -EINVAL.
-+ENTRY_DEC=$(printf '%d' "$ENTRY")
-+OFFSET=$ENTRY
-+while IFS= read -r line; do
-+    set -- $line
-+    [ "$1" = "LOAD" ] || continue
-+    VA_DEC=$(printf '%d' "$3")
-+    OFF_DEC=$(printf '%d' "$2")
-+    FSZ_DEC=$(printf '%d' "$5")
-+    if [ "$ENTRY_DEC" -ge "$VA_DEC" ] && [ "$ENTRY_DEC" -lt "$((VA_DEC + FSZ_DEC))" ]; then
-+        OFFSET=$(printf '0x%x' "$((ENTRY_DEC - VA_DEC + OFF_DEC))")
-+        break
-+    fi
-+done << EOF
-+$(readelf -lW ${REALBIN} | grep LOAD)
-+EOF
-+
-+echo "p:myevent ${REALBIN}:${OFFSET}" >> uprobe_events
- 
- grep -q myevent uprobe_events
- test -d events/uprobes/myevent
--- 
-2.20.1
+thanks,
+jirka
