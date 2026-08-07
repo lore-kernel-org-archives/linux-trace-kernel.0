@@ -1,176 +1,140 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B3037204C;
-	Fri,  7 Aug 2026 21:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA7D4503F5;
+	Fri,  7 Aug 2026 21:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786136649; cv=none; b=BpInANTl/ZNlWzhiUg3Z0C1w1te5P9SRKedpBP742aU1hSK/A2BwdsTVy9y+ULsRJy35YYh0dN711Ktl7JliYhmJjL85G9GvXXz9GsC5A/yNCRrHPBBgczAeMwnUn38jkq/VW8++GxhboAYfh/dhy2ah3yGJEJqp9tPrME2g3C8=
+	t=1786139047; cv=none; b=c0vdnvZBb1CcBXmFiSRZwcQx7J3/rf6bgjkCGmTdhccsFuOY/+axwi+kM15ajwbxs9EpT/5BF9erYR6vTvbGSIaNc26hbMYmhbwY0lrlVJR29K7wEuZwrbquv+njgmg1+2OhvIoXy0tFWtPfUQJCgdh3vVd8eQJuTofu09YgofU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786136649; c=relaxed/simple;
-	bh=JLgGv+/lZ0a6PjONWxEOdCOcmg6jsnGKFagDbKouyRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jOCyONjmL10Rc73MYCfQ7dtu8lFiXmi+Nlf6hXfmR6CchUr4c6TLLe6iskd5cuIoj4SH8OwXZw1/LuoQ/KssLJE0rQhBXlKWku+XlBFaOH28Zoul18D2VmGnZhiPrjx9vqBFzeM1DTtmIrObKDEgqyS5OEo4W/K/LYg5New1S2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=2K9O9jgm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IH8QmeyW; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
+	s=arc-20240116; t=1786139047; c=relaxed/simple;
+	bh=JQcWIT+1S/tWgjvXfbDkpTr7gOUS5VS5O+trfb/ofAY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SUOJkhbIHJpHXaX0yeIHzZ6lCG7w8blwgb9PxfUvEFvCUKeFUU5wuKeXXurB/Etw6BBVecbU2Bkk1v/6rVDL8F9eLDI5wJaz8+mL3TQYIG0zHL8MGjZKBJdXGU3s7NwXKFDqE/aUTY7iM3xUy7FVriRXZCT+AaV+qk7FjoBbOhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYijX0wk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="2K9O9jgm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IH8QmeyW"
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 299BFEC00B5;
-	Fri,  7 Aug 2026 17:04:05 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Fri, 07 Aug 2026 17:04:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1786136645; x=1786223045; bh=ek
-	ynGHeayKilMRgRQc2c2kmLYN7Rz66dAzJEnRIE9ME=; b=2K9O9jgmbbYOksv5xk
-	MDCs0HrMGHUo205w5a8cfCtPMd3JPxh5n5SZCRh7O+58SwOz8xEKcRN4cXk9tyBN
-	FNCNpGiHNOFslpxULabebVidvOEonu+igCclQ5ns8UX9loHVuOP596EcFXbj54YQ
-	RWDVpk/b6YySE9fQ2gmjCSQFIsFqRXddnnnP8QI6UZLjVsflRKOUzHTjY74LVRJK
-	PL3EJ3xD3CVjtee3GeomWre5Y1gG6+BvEbkjq72lgeGxMMm5RESuuNJ10tUkQ55S
-	Rj0vW+00LDcWTvjvcEwm14dzta6dgh09lfF3THhLUEWAkIreT4WzhpZ25vW+9xmr
-	LfXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1786136645; x=1786223045; bh=ekynGHeayKilMRgRQc2c2kmLYN7R
-	z66dAzJEnRIE9ME=; b=IH8QmeyWZpi/jbDUd7cQCv0Duj22NnGXsPet0iqX4LaD
-	DyaWRRib42uT/uYUg/dToYcba9i/UTGLJY6fxBbcI+3Wj2WKAOLtOvvDuERVRUTe
-	orw6QYJNreO2pIIDhDLI6lNZbPRdiSSJVrJykvEt52JOBUzyq/CnVfcwumYmcdcE
-	YftA5QTOdVUZlV8TsA6E+qshGwKEmKcj4UnRikQnA+TmrLozhBVZGCasapP5kyEE
-	fYpR40S++U+z1PtYv7duQq50mGuPpLvGkMp/KsfWlc6D1a4uQJV7+1mJgp+M5zpg
-	yalnhMJYbxKlZmiI5K6adHOaOve1MjTZrOsEQrdQ5Q==
-X-ME-Sender: <xms:REh2alOUtb6_OGDoaS2zMGC4Ipasngpxw6zeLm08H0StyTLdrc4DyA>
-    <xme:REh2alzHNua1pVqqvhrxDQcIWPXZeJJ8eY8xIUeO5aDFNmxYJH0rYHfsOiThma_Mm
-    BGjvr1XUpOrhO7pDbVtDcA0-UBXihU_qBM855xN7usqSZGwZDOG4JI>
-X-ME-Received: <xmr:REh2auu_gHrcXKT3QLo9OBj5JMFwDULfkL6bM2mr48_fgV1Ha5ilyGBylop0s8Gr9J0V9_ph>
-X-ME-Proxy-Cause: dmFkZTGzUib+ZqcW06o+q3+RWkByAHj1v/ep/bY16CKX4FMaTMGm2f/qjd9AwJB75THpIc
-    HbuEo+MJG8ZnFou3H+iNEC41+Za7yzMbwpDLuXhmRm1j+fwMSJIy+0gbmwz3WUUkQKXXB2
-    2/W6i5wdWpi5B9UdgjTqujvsmLK3i0PyUptwwkFTuR6Mb31kaWtCHF3Frfe6JHL4uzgboE
-    ENM+s1IdprUPDN3g38sGqPpc7oofHIiF5deJeiWOXtezHGm1++/KCBi/KHWrkjaIgaVIyS
-    IfqKVN5+VJcZtzqY+HOdZQbNqc0VhpqtKuBOUf6G8rZylpp9CKIC31AuJB9n5GN+UPKmQ3
-    eFv4hpmN6FS4yvitEnjg9MP+pOoMmekgSLjLR3E912yb3/4KGpo8qnd2RFzA2ftxcZlevp
-    eO70ZI1rymCu/lQsVtIgQhjzZmOH47S7Ex7z3xYZAF15Py893qKSjraaAI7RBEkiDjcsgM
-    QuSR98a1zyRXEO4jqSg55DVdyImYq6fbGPEmjPWlZ6baaj0qNO4rnxP56eOlA8QthRB0Dp
-    TxOQ34+cceEtW7b2LuK9pOspqRIxdmvIjLvFwo8WYur5wPxVABHYgY7YSLpGCSUcOVrcv7
-    DCjsiD+2LEyjr1QPA91Fkz+daWHCl4UheLR/6cKsqHOzFrJU+gj6242n+yTQ
-X-ME-Proxy: <xmx:RUh2au4medpHsIQI5SkLwrh38_OF1949yGqlOKLIRFPtINqdpUp1Zw>
-    <xmx:RUh2atR64q32GEGwj9ZJLzqOMPWbiFbZe7Jkur-7a99rVWVyArJEMA>
-    <xmx:RUh2atqqZbJbmAzAqWBnelK7_8nKNKLE-Z7ChwwOyPbrm8oNtfUjKg>
-    <xmx:RUh2arIt1Hw7WFOX9JTlm96i9E8dTyCX0qVILeacS-Mhq9jrh5QrDg>
-    <xmx:RUh2au-D6SJnob1Vc9okCBnITzqst8j2e8IxwWfGgFLbVwWKdozYuFvV>
-Feedback-ID: id06e481b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Aug 2026 17:04:04 -0400 (EDT)
-Date: Fri, 7 Aug 2026 17:04:08 -0400
-From: Steven Rostedt <steven@rostedt.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] eventfs: Use children field for rcu head and add memory
- barriers
-Message-ID: <20260807170408.2d324df5@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYijX0wk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF58C1F000E9;
+	Fri,  7 Aug 2026 21:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786139045;
+	bh=5/o05a6r7jF5fualbliVrZ++Vos0kZBurmfa59XjZxI=;
+	h=From:To:Cc:Subject:Date;
+	b=cYijX0wkC2o/BnFl3/7nm3AjIiht3PJoPullB6igA5OibuV5VVZUt2C+ft0jPwHpm
+	 Yd7BiT5hLUfn+WTyrpTywzRikOaTjGBol+hUivDEtbE/Hv8NesVuHPQz1i7RRiKxzq
+	 hdXHm5W4GHxrAEuSFunES3w3TEjwMdEz4fIEuOqIwZgt3rqcKShZQjoNT3s9DT0/tM
+	 aPoik4m08R8qi3f0/n8mWd6pqco+o2umXUmGq9uFX3cETaQBs8IwtIWvEC2h3nM6fs
+	 97LuCcbmdpuMqJShvQGpmiKH3VTmUI0WHYX6WTuQxN1PLAaokLCWt2ISiobODqKR+R
+	 P7Dht4LrTXKQw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 0/2] tracing/boot: Support eprobe, fprobe, and tprobe events and add test framework
+Date: Sat,  8 Aug 2026 06:44:01 +0900
+Message-ID: <178613904128.259829.16130019979800943264.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi,
 
-When an eventfs inode is freed, it sets ei->is_freed and then uses its
-ei->list to add it to the srcu link list as the list field is a union with
-the rcu list head. As the ei->list is used to iterate over an SRCU
-protected list without taking the eventfs_mutex, there's nothing stopping
-the iteration over that list to see the ei->rcu instead of the ei->list
-and it will read a corrupt target.
+This is the 3rd version of series to extend kernel boot-time tracing to
+support newly added dynamic event types (eprobes, fprobes, and tracepoint
+probes) and introduces an automated QEMU-based test suite under
+tools/testing/selftests/ftrace/boottime/.
+The previous version is here:
 
-To fix this, change the union of the rcu list head with the children list.
-On freeing the eventfs inode, set the is_free and execute a smp_wmb()
-before adding the eventfs inode to the SRCU list.
+ https://lore.kernel.org/all/178602969872.141946.3932041319962687996.stgit@devnote2/
 
-On iteration of the ei->children list, at the start, execute a smp_rmb()
-and then read the is_freed of the ei to see if the children list is still
-valid. If is_freed is set, then the ei_child read is not valid and the
-loop should exit immediately.
+Changes in v3:
+ - tracing/boot: Check return values of strscpy() and snprintf() in
+   trace_boot_add_probe_event() to prevent silent buffer truncation.
+ - selftests/ftrace: Remove boottime/run_boottime_test.sh from
+   TEST_PROGS_EXTENDED in Makefile to prevent lib.mk from flattening it
+   into top-level ftrace/ on make install.
+ - selftests/ftrace: Support executing run_boottime_test.sh both in-tree
+   and in installed kselftest environment.
+ - selftests/ftrace: Add HUP, INT, and TERM signal handlers to tempdir
+   cleanup trap.
+ - selftests/ftrace: Validate workdir creation and update
+   run_single_test() to return 0 on test failure so set -e is not
+   suspended by invocation in an AND-OR list.
 
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/#/patchset/20260806022719.375354-1-shuangpeng.kernel%40gmail.com
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Changes in v2:
+ - Fix raw command detection logic for eprobes, fprobes, and tprobes
+   by requiring ':' or isspace() after type prefix.
+ - Consolidate duplicate loop logic into trace_boot_add_probe_event()
+   helper function.
+ - Copy shared library dependencies using ldd if busybox is dynamically
+   linked.
+ - Wrap QEMU execution with timeout command and add -T/--timeout CLI
+   option.
+ - Add pre-flight checks for busybox architecture compatibility and
+   cpio tool in run_boottime_test.sh.
+ - Fix POSIX syntax compatibility and allow bypassing HOST_ARCH skip
+   when custom kernel/QEMU parameters are passed.
+ - Add boottime/run_boottime_test.sh to TEST_PROGS_EXTENDED in
+   selftests/ftrace/Makefile.
+
+Thanks,
+
 ---
- fs/tracefs/event_inode.c | 24 ++++++++++++++++++++++++
- fs/tracefs/internal.h    |  4 ++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
+base-commit: 54f133c6178d06b169dceae18cc92c4945933b8c
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 39c7a34531e8..677c39b0d62f 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -124,6 +124,16 @@ static inline void put_ei(struct eventfs_inode *ei)
- static inline void free_ei(struct eventfs_inode *ei)
- {
- 	if (ei) {
-+		WARN_ON_ONCE(!list_empty(&ei->children));
-+		/*
-+		 * The ei should have no children if it is being freed.
-+		 * The SRCU iteration has a smp_rmb() to make sure it
-+		 * sees a child (that may have already been freed)
-+		 * before it reads is_free. If is_free is set, it must
-+		 * not use the child it acquired from ei->children, as
-+		 * the list may be used for SRCU.
-+		 */
-+		smp_wmb();
- 		ei->is_freed = 1;
- 		put_ei(ei);
- 	}
-@@ -627,6 +637,20 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	list_for_each_entry_srcu(ei_child, &ei->children, list,
- 				 srcu_read_lock_held(&eventfs_srcu)) {
- 
-+		/*
-+		 * If the ei is being freed, then the ei->children may be
-+		 * being used as the rcu list, which means the next element
-+		 * may be garbage. The ei->is_free is set before switching
-+		 * the ei->children over to ei->rcu. The read memory barrier
-+		 * here makes sure the ei_child is read before is_free is
-+		 * updated.
-+		 *
-+		 * Matches the smp_wmb() in put_ei()
-+		 */
-+		smp_rmb();
-+		if (ei->is_freed)
-+			return -EINVAL;
-+
- 		if (c > 0) {
- 			c--;
- 			continue;
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index a4a7f8431aff..c61481d04c8e 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -46,11 +46,11 @@ struct eventfs_attr {
-  * @ino:	The saved inode number
-  */
- struct eventfs_inode {
-+	struct list_head	list;
- 	union {
--		struct list_head	list;
-+		struct list_head	children;
- 		struct rcu_head		rcu;
- 	};
--	struct list_head		children;
- 	const struct eventfs_entry	*entries;
- 	const char			*name;
- 	struct eventfs_attr		*entry_attrs;
--- 
-2.53.0
+Masami Hiramatsu (Google) (2):
+      tracing/boot: Add support for eprobe, fprobe, and tprobe events
+      selftests/ftrace: Add boot-time tracing test framework
 
+
+ Documentation/trace/boottime-trace.rst             |   18 +
+ kernel/trace/trace_boot.c                          |   97 +++++++
+ kernel/trace/trace_dynevent.c                      |    5 
+ tools/testing/selftests/ftrace/Makefile            |    2 
+ tools/testing/selftests/ftrace/boottime/Makefile   |   10 +
+ tools/testing/selftests/ftrace/boottime/README     |   58 ++++
+ .../ftrace/boottime/bootconfigs/01-kprobe.bconf    |    5 
+ .../ftrace/boottime/bootconfigs/02-synth.bconf     |    4 
+ .../ftrace/boottime/bootconfigs/03-eprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/04-fprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/05-tprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/06-instance.bconf  |    5 
+ .../selftests/ftrace/boottime/run_boottime_test.sh |  271 ++++++++++++++++++++
+ .../selftests/ftrace/boottime/tests/01-kprobe.sh   |   18 +
+ .../selftests/ftrace/boottime/tests/02-synth.sh    |   18 +
+ .../selftests/ftrace/boottime/tests/03-eprobe.sh   |   18 +
+ .../selftests/ftrace/boottime/tests/04-fprobe.sh   |   18 +
+ .../selftests/ftrace/boottime/tests/05-tprobe.sh   |   18 +
+ .../selftests/ftrace/boottime/tests/06-instance.sh |   23 ++
+ tools/testing/selftests/ftrace/config              |    4 
+ 20 files changed, 600 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/boottime/Makefile
+ create mode 100644 tools/testing/selftests/ftrace/boottime/README
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf
+ create mode 100755 tools/testing/selftests/ftrace/boottime/run_boottime_test.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/02-synth.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/06-instance.sh
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
