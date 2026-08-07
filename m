@@ -1,168 +1,86 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932973B42FE
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Aug 2026 02:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA4F4B04BE;
+	Fri,  7 Aug 2026 02:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786068039; cv=none; b=QugbZJFKtvpQSVuceyK7CPsawbjrfXCUYd41Dy0XageGxgno5jMlTJarStfgzlb8k3nwdHmvzIqZWmuycBWMwKVjtVskQeW5T6qUS5SqUnpdUUDwQVIatjn4PX7l/w6KwXCObgbxOS35+YcLJ3HLnJTyA9YzvP0dNIs2Abp36FY=
+	t=1786069094; cv=none; b=i1wYzTCqY8w8grWmIBsTlZMROhXso5/d6lxwuHkdwfwSDL8OOICnVhfN7YAXl1+S3j+aVEa096IbC33rywi7lsp6/b6bamfNg1JdWoN0BekC5mIHdzuqMRsYiRM3EJf39pvII+BGxqzq8p1+AJcVZzDKStzexaVESo9SXNgBlLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786068039; c=relaxed/simple;
-	bh=bSXk7KOXPR+3IUX3cqw8JHhdVivrK9r9VZngI9cV3cY=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=fIGkIJ67/DH3CJcAy1CYraQmZfuWmd1OCuNxZANNODTNTUY4nwzZoFZiaM3SlPKgkBKbMeiC2EQu2lO+9EkMImDgNt7LKV3/cIj7w5vRPxgpG3+UN6D61u8ASTP4eThiDbBSnJ2nZ7B/SWl3mZLNeaAc+TLJGdCIRlrnL5utv6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gsOBc82i; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786069094; c=relaxed/simple;
+	bh=o8xa0d4zP3W4d/qmgbw462IiVKZQW/RAb/fnn4glbMY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uvKmyfu9iEGGqyDAPSAQgMQsss5oIC3XNAc4FcvnyyraL60zsm/c9uzZgZ7jvT7FCLub/Fhv6aO6kDnubjDUA4hH+T4IOHt0aPzOtIENGB4UHNvmpIHBVNrbsOv8kvRr13trQxQHraem47nWoB66O1rnRFwNKoqpP3q+7aElVio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdznoxIw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gsOBc82i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdznoxIw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06EA61F00A3A;
+	Fri,  7 Aug 2026 02:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786069092;
+	bh=S0MmS1X/o3qhSqO2FtU6A5NP/rsVHTbyLARehzpVOGA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=RdznoxIwmaSL6ojxwnx57vJjDEre2Cqs2guPmaxxszl+zLo98b7Hf+rtEOfDaWUAU
+	 RfEXml4dWFOA4WUtkjrYJBucZI2JqpSNSZO1FUEQuPaYb2bsDtYrRO0lH29KsI9sI9
+	 D7Y5KrEdpVMtxJBbgc8VSfdC34XHrrIYZn8kvkutaahGA1jZ3ftT2PnU+KTD7nczTz
+	 fteDIVcVX3FsZM+ymbMZdvdr1+wERIqZigqfnTkIT3ENiF0nx+nkDenI9+CPTYEEAG
+	 H+flOXe0BjGdlCwgnwM4ajzaeVVVjwXsUYmBF8J6PIpg1tjQgxrPkfjTy+0mmXLuLl
+	 MD/vF2g5yyrdA==
+Date: Fri, 7 Aug 2026 11:18:08 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] ring-buffer: Prevent resizing of persistent ring
+ buffer
+Message-Id: <20260807111808.d5dc1a48b080d241100f4a57@kernel.org>
+In-Reply-To: <20260806211306.3704194-2-vdonnefort@google.com>
+References: <20260806211306.3704194-1-vdonnefort@google.com>
+	<20260806211306.3704194-2-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786068014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L388HzKXjWWS1JR+DZhWZmkNa/DQHIGZ/f0Zx+Y1zyQ=;
-	b=gsOBc82i1wokBnSYxyPeeJpTF+byqm5Nc1P8jfDxCxOo2hz4wEVDGzJQHx5RC4qKw03du0
-	imMo/z6o+ETzBuMwOlgWOuZYd9aU03P97ok7jnzw1onlUCsuLYK+WCbdqblTCVnsUhG2kP
-	6nYeIC01+fadmTl5W4MMqVhI0U+PT9s=
-Date: Fri, 07 Aug 2026 02:00:11 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Hui Zhu" <hui.zhu@linux.dev>
-Message-ID: <4a6ee31b46b732eaad76b955d95c8cc261941894@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v2 0/3] bpf: Fix UAF in
- bpf_trampoline_multi_attach/detach on update failure
-To: "Jiri Olsa" <olsajiri@gmail.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Eduard Zingerman"
- <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi" <memxor@gmail.com>,
- "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>, "Emil Tsalapatis"
- <emil@etsalapatis.com>, "Ihor Solodrai" <ihor.solodrai@linux.dev>, "KP
- Singh" <kpsingh@kernel.org>, "Matt Bobrowski" <matt@bobrowski.net>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu"
- <mhiramat@kernel.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, "Hui
- Zhu" <zhuhui@kylinos.cn>
-In-Reply-To: <anRE9L9HgOIYVCtj@krava>
-References: <cover.1785902527.git.zhuhui@kylinos.cn> <anRE9L9HgOIYVCtj@krava>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
->=20
->=20On Wed, Aug 05, 2026 at 12:04:05PM +0800, Hui Zhu wrote:
->=20
->=20>=20
->=20> From: Hui Zhu <zhuhui@kylinos.cn>
-> >=20=20
->=20>  This series fixes several use-after-free issues in the BPF trampol=
-ine
-> >  multi-attach/detach error paths, where ftrace direct-call updates ca=
-n
-> >  fail and leave ftrace pointing at freed memory.
-> >=20
->=20hi,
-> I need to stare at it bit more, but tbh I'm not sure the benefit of
-> preventing hypothetical crash is worth the extra complexity on the
-> detach side
->=20
->=20IIUC we can't reproduce this error without instrumenting the code, ri=
-ght?
->=20
->=20jirka
+On Thu,  6 Aug 2026 22:13:01 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Hi Jiri,
+> Dynamically resizing a persistent ring buffer is not possible. Disable
+> the feature.
 
-You're right. I went through the failure paths and the realistic
-triggers basically don't exist for a normal user:
+Is it true? Of course there is meaningless to resize the persistent
+ring buffer (because it makes the buffer none-persistent), we are currently
+allows user to resize it (like for resizing unused persistent ring buffer)
 
-The allocations are all GFP_KERNEL (reclaim + OOM handle them),
-and bpf_jit_charge_modmem() lets CAP_BPF callers exceed the JIT
-limit, so ENOMEM doesn't get there.
--E2BIG is attach-time, before cur_image is set, so no UAF.
-SHARE_IPMODIFY -EAGAIN needs livepatch on the same function and
-is retried in bpf_trampoline_update(); the multi path where it
-could escape needs a second failure on the undo del, which doesn't
-do ipmodify negotiation, so it doesn't reach the UAF either.
-The rest is bugs or not user-driven.
+Thank you,
 
-So this is fault-injection territory, and I won't claim it's
-a customer bug.
+> 
+> Fixes: be68d63a139b ("ring-buffer: Add ring_buffer_alloc_range()")
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 8e2485bb3aa8..afe75ad2bbf2 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -2528,6 +2528,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  		if (cpu_buffer->ring_meta->head_buffer)
+>  			rb_meta_buffer_update(cpu_buffer, bpage);
+>  		bpage->range = 1;
+> +
+> +		atomic_inc(&cpu_buffer->resize_disabled);
+>  	} else if (buffer->remote) {
+>  		struct ring_buffer_desc *desc = ring_buffer_desc(buffer->remote->desc, cpu);
+>  
+> -- 
+> 2.55.0.654.g21b8a5bc05-goog
+> 
 
-I'd like to drop patches 2 and 3 and the prog-side machinery
-(pinned_prog + rollback + the trampoline leak).
-And keep only the one-line image-side fix in patch 1: only free
-old_image when it differs from cur_image.
-It's obviously correct: if cur_image =3D=3D old_image, ftrace is still
-calling into it, so freeing it is wrong. And it costs almost nothing.
 
-Would you prefer I proceed with just this single patch,
-or drop the entire series instead?
-
-Best,
-Hui
-
->=20
->=20>=20
->=20> Patch 1 addresses two UAF scenarios in bpf_trampoline_multi_detach(=
-):
-> >  the single-point unlink failure path (old_image =3D=3D cur_image) an=
-d the
-> >  batch ftrace update failure path. A new pinned_prog field in struct
-> >  bpf_tramp_image keeps the bpf_prog alive while ftrace may still
-> >  reference its image. bpf_trampoline_multi_detach() is made to return
-> >  void, since callers cannot usefully react to failures, and
-> >  bpf_trampoline_put() is taught to leak the trampoline when cur_image
-> >  was left behind by a rollback, so ftrace keeps a valid target.
-> >=20=20
->=20>  Patch 2 fixes a similar UAF in bpf_trampoline_multi_attach() rollb=
-ack:
-> >  when the register-path undo fails, ftrace still calls into cur_image=
-,
-> >  so the prog is pinned on cur_image instead of being rolled back.
-> >=20=20
->=20>  Patch 3 fixes the common __bpf_trampoline_unlink_prog() path, cove=
-ring
-> >  both multi (bpf_trampoline_multi_detach) and non-multi
-> >  (bpf_tracing_link_release, bpf_shim_tramp_link_release) callers.
-> >=20=20
->=20>  Hui Zhu (3):
-> >  bpf: Fix UAF in bpf_trampoline_multi_detach on update failure
-> >  bpf: Fix prog UAF in bpf_trampoline_multi_attach() register-path
-> >  rollback
-> >  bpf: Fix prog UAF in __bpf_trampoline_unlink_prog() on update failur=
-e
-> >=20=20
->=20>  include/linux/bpf.h | 20 +++--
-> >  kernel/bpf/trampoline.c | 183 +++++++++++++++++++++++++++++++++++---=
--
-> >  kernel/trace/bpf_trace.c | 2 +-
-> >  3 files changed, 183 insertions(+), 22 deletions(-)
-> >=20=20
->=20>  Changelog:
-> >  v2:
-> >  Folded v1's two detach patches into patch 1.
-> >  According to the comments of Jiri Olsa, Pin the prog (pinned_prog) o=
-n
-> >  cur_image so it stays alive while ftrace may still call into it.
-> >  Make bpf_trampoline_multi_detach() return void.
-> >  Fix the same UAF in standard (non-multi) trampolines.
-> >  According to the comments of sashiko, Fix the prog UAF in
-> >  bpf_trampoline_multi_attach() rollback.
-> >  Leak the trampoline in bpf_trampoline_put() when cur_image is left
-> >  by a rollback.
-> >=20=20
->=20>  --=20
->=20>  2.53.0
-> >
->
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
