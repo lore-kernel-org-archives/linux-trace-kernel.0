@@ -1,102 +1,143 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74BE47D44D;
-	Fri,  7 Aug 2026 15:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5975439EF35
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Aug 2026 15:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786117404; cv=none; b=WgO9cdjcq1fk7IppQMOq8RymaGxPPhr6P+TLIZplqhuZgepVZrr5zT/ccolM4PiEInofz0ngsy2Fi5pqGITzA7RqmPIHjkHsgVqEHIx7cHL4YYRs9hSLM9B8pMHxWO8ivqfH+quZqu7RvFuUFQY/UYIXR+Jj3BBhdktM6AifFr8=
+	t=1786117532; cv=none; b=qZL4PllXQVZ1gghhFJssjP0bipnsxmDeSMLsgmOws4fwoAT2A2BrDOgJ1tRzZvceem9qSiiT4l6caa6DQc2OiiKV2r1Qi3b+Yh2hkUnZi6XacgEmNJ1Hoz9sw8Dx0aFbV9oQIdgCKZOz6Voa2XRPg7+hsWOrXiBmnQzqwEWSKMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786117404; c=relaxed/simple;
-	bh=5BwIXjNXOqIB3B5MrRmGoSzyplQVb3VXUkGn9Eu6Qcc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L27v1I1nZrRtTT+SyeMeUgVJTanBn1uyTphpYUvHUlpf3CZCAETgkIsoubYFot/+nsR5YXGIQ7m1MQGmgRnNh3sI260TiFfBE6MmAZO6igbER/Km7IfF9v2dyvFLSCdZnyTQp+2qPOtENtBGtMdPMdO5gPiWqdfYIIkGdfr6T80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Zru8Dznm; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1786117532; c=relaxed/simple;
+	bh=Ek3pTZqQvm7qk435X2ebWHZF1j4UDu6RIlWcOQUp8gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JRcLrxAcSvoolBYadh9SHrPkRo3NM5o/bagv+t1FeD27UZTT67iV2cci/Ov6fSh2x94dGfYCF9Yv4fsRFWG9OWqB9o6YxAEHuRi7T6RuUP820NhYrTmpJO7I/ypu924HhCIBLxVzKEjbDMOzbHcrMM9e23ZLvoORl2s6tq1mnpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QCNF/iRQ; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Zru8Dznm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Nh
-	su+hO92dsCdty2EoE+vFnRNquHPYHyd8w06LW7iqM=; b=Zru8Dznm0nGuL1Fv1t
-	ZTeErClmWwlvhYYNdCZWlC6FgErHeGo5nu/gj5FMOriLZ6XximrIdtrczgmQVyvO
-	3QfDkhSQrsm/FrJvX9pA9zot/7n0QgNMF8JKaPvP/hdI8GPLSo/rndVvGFoAkbFh
-	wdGubhZpZK2ErwgR6JECKaqK0=
-Received: from localhost (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgA3XrHy_HVqPDDBLA--.8549S2;
-	Fri, 07 Aug 2026 23:42:43 +0800 (CST)
-From: Hui Su <sh_def@163.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Hui Su <sh_def@163.com>
-Subject: [PATCH] ring-buffer: Fix crash passing ERR_PTR to kthread_stop()
-Date: Fri,  7 Aug 2026 23:41:46 +0800
-Message-ID: <20260807154145.2846521-2-sh_def@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QCNF/iRQ"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6a17c04563fso4045577a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Aug 2026 08:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786117529; x=1786722329; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=aHCw92KXAlA4YbfTRDT8QawrMa/113X+G0Ur1NsGMR8=;
+        b=QCNF/iRQmTp7E5vDGvCflaU/RkDNaZBYsYqP56yR12XGqYw0UBiF/3pqDCIwSbhfJV
+         gCZWQikzRVyLNEldRNszwdEHFGBsH72/QR1LbA/ynWbX3+gxBaAxL/GtbC0toYA8Q+Q+
+         W10uDSVCdNf1wie9yqeq0PqQuXf4QkTVFfsfJOhnuuA0asZWWBoDtlJTsJyu9uyzSV3X
+         DroQkgEXQiayeGh4QuRfrsDvXYWUliBVZ4ZokloL/qK6Kd0SUwDf02qA4vgk7OXT5YSX
+         KAuLLGUq/bpvyZDjDuKgT/9b+2Bml4mQziVSyRyPOeWbVS5XTtBXDcmmgmXhFaoNBW6d
+         v1bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786117529; x=1786722329;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=aHCw92KXAlA4YbfTRDT8QawrMa/113X+G0Ur1NsGMR8=;
+        b=fy9bVIL5BdciqxSUWV/3t5YV7S/S9tv1Z6MIQ6f0dkwQtFy/7aQxnn97KtGKiHfk7+
+         uOe7YPUZFyFhalQDn01E+zFSnmWBWdBWZTmrhJxsrIycfEHJgvx5aKwbCHSRZ/boBy+k
+         kV+KdH2AE9UxOZXUn19zh/glBdIejh9oboQqNyOdkdjJWlOAdGOoShPtN2CJvZOskSFZ
+         oR1PzLY85lYi4H3S456PCXRZY4elOkOM2FYX/+JuYsBBXhX5fjC68hA5eBZtebhdUF93
+         pFuIZXyYSbI+1QwSpY+zix7bAJpMubdzp0dDS4WYamP6FgoZnSx8NGJBrOIFxHz7nhm6
+         7Oxw==
+X-Forwarded-Encrypted: i=1; AHgh+RqxyWvLHpc5I/uL5AjgkrPUZm33TQMXrwh2CP8NuxhZjS6zpCG47/2SNktV+7dJhem4peJhM7ZmBQvoqAMTjIt0l8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi+8NuCmprzyqnbMg+aqgL/d90PRf+XbQq66UXKsM0RGjtjYmY
+	CGlwWL6ZZ8E3l80eT6lL4FqaDZ+ciFzRDxjbUjusBZvCPasLRe8Rq4HA4Lx42bewwA==
+X-Gm-Gg: AR+sD11NTQr3uWdsNiGIxjhhdlLBwBPaCZleKSqabXigtkIbkdpc5t3ChdG722PAklB
+	QySLaXI7sHgWksnmL9EK54KxvDu4E5TdexZKTpDtAp/+tmLuN44r/TGUFnPP7M6pMej6j4bo53m
+	mw/dj+lJNIFJrYt2X3mHQWEKf9b1tLQurJOaEB5YdiD8p1tvGnRyfg+6Nms8HJGBJBQxWczuooB
+	KqlZYDerceHpX4NNRf3n0kmHy37jjXh7H9tMOdNZdF3NCTUaCMGFPuT3cKUqKf0rYjGRO+qgLQH
+	RTe/67wCwGoCElbCQ6FIrlSYDkdIa5/Dg/qqS6DhsaPfRX29WI51dtEbPCYUkmVdvgbzZsZmNHK
+	fEgEfL7mwNwHO+5nnsPeaVrPHgNIC9unzvOhDJoVtY4uWdH2PEDAcTl3gNtzX3QuNvoJMib3JjZ
+	n/x1xEaa13QibwHYEQP/ikBTGBATABcNgGj0YA/Px8OSkny7NZwxXYir871EQWQq0UNQ+eiXpQL
+	SOZTsSv0Sa+isYdTA5CFYodzum3Iaoh/VrMuJpUIzE=
+X-Received: by 2002:a17:907:94d4:b0:c20:367b:acae with SMTP id a640c23a62f3a-c2073431341mr473270066b.32.1786117527762;
+        Fri, 07 Aug 2026 08:45:27 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2080cc3963sm67670466b.50.2026.08.07.08.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2026 08:45:27 -0700 (PDT)
+Date: Fri, 7 Aug 2026 16:45:23 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] ring-buffer: Prevent resizing of persistent ring
+ buffer
+Message-ID: <anX9k8x67m4Cdw5n@google.com>
+References: <20260806211306.3704194-1-vdonnefort@google.com>
+ <20260806211306.3704194-2-vdonnefort@google.com>
+ <20260807111808.d5dc1a48b080d241100f4a57@kernel.org>
+ <anWT4heM5Z--A1Mo@google.com>
+ <anWosNi-U8lVqBZP@google.com>
+ <20260807104526.38430aa2@gandalf.local.home>
+ <anX47awNHC9caDN_@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgA3XrHy_HVqPDDBLA--.8549S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrWrKw4DZr1DZw17Gr13XFb_yoW8AF4xpr
-	W5KF4UKr48AF4kZw4Uu3WF9ry7JFs8Z3W7Gr97Aw1rJF1UKw45Xr9xZFyYqrWqk3yrX343
-	Kr98XrWvkan8ZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRHCJkUUUUU=
-X-CM-SenderInfo: xvkbvvri6rljoofrz/xtbCwRNz0mp1-POEBAAA3j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <anX47awNHC9caDN_@google.com>
 
-In test_ringbuffer()'s out_free cleanup loop, the check
-`!rb_threads[cpu]` only catches NULL entries and misses entries that
-hold an ERR_PTR.
+On Fri, Aug 07, 2026 at 04:25:33PM +0100, Vincent Donnefort wrote:
+> On Fri, Aug 07, 2026 at 10:45:26AM -0400, Steven Rostedt wrote:
+> > On Fri, 7 Aug 2026 10:43:12 +0100
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > 
+> > > On Fri, Aug 07, 2026 at 09:14:26AM +0100, Vincent Donnefort wrote:
+> > > > On Fri, Aug 07, 2026 at 11:18:08AM +0900, Masami Hiramatsu wrote:  
+> > > > > On Thu,  6 Aug 2026 22:13:01 +0100
+> > > > > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > > > >   
+> > > > > > Dynamically resizing a persistent ring buffer is not possible. Disable
+> > > > > > the feature.  
+> > > > > 
+> > > > > Is it true? Of course there is meaningless to resize the persistent
+> > > > > ring buffer (because it makes the buffer none-persistent), we are currently
+> > > > > allows user to resize it (like for resizing unused persistent ring buffer)  
+> > > > 
+> > > > __rb_allocate_pages() in ring_buffer_resize() would call for a persistent buffer
+> > > > rb_range_buffer(), which IIUC, is just reusing the same ring buffer pages as the
+> > > > one already in the persistent buffer.  
+> > > 
+> > > I have just tried and if reducing the size works, increasing fails in both
+> > > rb_set_head_page() and rb_insert_pages() with a warning, which I believe is
+> > > expected.
+> > > 
+> > > We could improve that, but it feels like it is a lot of work for a meaningless
+> > > feature which we should just disable?
+> > 
+> > Resizing a persistent ring buffer to a smaller size may be allowed, but I
+> > see no point in increasing the size. Making it smaller should allow us to
+> > give back a portion of the persistent ring buffer for general usage.
+> > 
+> > -- Steve
+> 
+> While I see the appeal to reclaim that memory, I don't think we have any good
+> interface for that. There is no nice way to get the list of pages that have been
+> freed and we have no control over what part of the ring-buffer is removed.
+> 
+> Also, as this memory is from a reserved-range, is there really a way to re-inject
+> it into the buddy allocator?
 
-rb_threads[] is static, so unassigned slots are NULL. But when
-kthread_run_on_cpu() fails for a cpu, it stores ERR_PTR(-ENOMEM) (or
--EINTR) in rb_threads[cpu] before the creation loop jumps to out_free.
-That entry is non-NULL, so the old `!ptr` check does not break, and the
-cleanup proceeds to call kthread_stop() on the ERR_PTR. kthread_stop()
-then dereferences the bogus pointer, crashing the kernel during the
-late_initcall self-test.
+free_reserved_page() would do actually. But then it is definitive. 
 
-crash logs:
-  BUG: kernel NULL pointer dereference, address: 000000000000001c
-  Oops: 0002 [#1] SMP NOPTI
-  CPU: 1 PID: 1 Comm: swapper/0 Not tainted 7.2.0-rc6-dirty #7 PREEMPT(lazy)
-  RIP: 0010:kthread_stop+0x2e/0x220
-  RBX: fffffffffffffff4
-  CR2: 000000000000001c
-  Call Trace:
-   <TASK>
-   test_ringbuffer+0x1ec/0x650
-   do_one_initcall+0x6c/0x2c0
-   kernel_init_freeable+0x21d/0x420
-   kernel_init+0x15/0x1c0
-   ret_from_fork+0x21b/0x320
-   </TASK>
-  Kernel panic - not syncing: Fatal exception
+Happy to implement something like that. That also means that the instance can be
+actually freed?
 
-Fixes: 64ed3a049e3e ("ring-buffer: make use of the helper function kthread_run_on_cpu()")
-Signed-off-by: Hui Su <sh_def@163.com>
----
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Perhaps what would make sense for resizing would be to support a CMA pool as a
+> persistent buffer?
+> 
+> -- 
+> Vincent
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 8e2485bb3aa8..6af7e36ca526 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -8214,7 +8214,7 @@ static __init int test_ringbuffer(void)
- 
-  out_free:
- 	for_each_online_cpu(cpu) {
--		if (!rb_threads[cpu])
-+		if (IS_ERR_OR_NULL(rb_threads[cpu]))
- 			break;
- 		kthread_stop(rb_threads[cpu]);
- 	}
 -- 
-2.43.0
-
+Vincent
