@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8081D46E01C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F0A470EAA;
 	Fri,  7 Aug 2026 21:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786139569; cv=none; b=EFYDYZiF9rZSMeFJvWJck8Bo/RRJVb0fMK9FECs+aWA4vdWkkutaVuC4vXsBpPW27XlAoY7okTmKRTernoDFY9bRjEzXgCzc+X13LCdKVlAuUVQupkabW9B+2KkJeP01mu4kW25cXJXAAR5KB6U7iz4HyHTnjdYxKqh6/ZsCtJo=
+	t=1786139569; cv=none; b=sfeh0ab57G5nnX4Rfv44szqf92nYNGGZ4hc/5BBQ5a9X2lNOoKn+e1wIzWpBQH4mTXRNuJmtJBHxWXLFTx1Bezvo06ZS2z6xzgAglHUvnKvI0jUVFccgN49x/7CMselS7O3U92OqTzcKvFKulIjjm5cLlzNS1iMLfq4jCODaZQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786139569; c=relaxed/simple;
-	bh=vlMdPByiTSwzUUCngQu0R7QT3mZcq70VQdRClRIO7xE=;
+	bh=2EpBA5sGDET0qt2T2epup75WyxodbT/NsUKEpK8prA8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O09ARcWj57tDdgac29jx+5Dvaaan24I4qALyqAPsv5M60JyKuC7Tp7hnUMwnrLTSPyHaVz3qEPAcSrMus8LL2WKltI05gN4M4UwwdD+gJXdkshH3bHSCGrdq4uoEn9MKssBKs3NJ/7VQeXId7CeMONkzD09xt0ZbCJImNwIJ8v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3e89q+G; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=B3AraZwnp3IhGJBknY/uyUHPfcjM9C5HTdgE+HkAwTHH7sVW4rsyxESsYYZmBDMkUFgu+t9/zBtiWW8QxiqbSG/A5tvj5Ctfp+dktaXB4UoxXcWpP5jfpr0eLdTxdHRAT03QZvTqRKaG91qLqMZian/BI+nUTBvlc426u8Dg030=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoyUtaFO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3e89q+G"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 42F5AC2BCFD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoyUtaFO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 87257C2BCB8;
 	Fri,  7 Aug 2026 21:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1786139569;
-	bh=vlMdPByiTSwzUUCngQu0R7QT3mZcq70VQdRClRIO7xE=;
+	bh=2EpBA5sGDET0qt2T2epup75WyxodbT/NsUKEpK8prA8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=L3e89q+GDFleJcGjL5VMnUKlaKh0Pmh4Xd8lok7xboM5efF5etd6xaXQElHVXzPIv
-	 36lXYFvxbo8VSx+gsfu5OxDzPfdCri1aArnTBAc3S6Ay0JjVFGTIzuyJK0OdTy9TyH
-	 HRDbQNW1MJviiGsJzEtN2rMkp0FSZgF1m1FT0OWAqSbwbAjqT9NbxGj1WdXUKxZBfC
-	 xkKj4iX74AoNG+cN6ikIMte1YjbHBnK0ieBJJzkmdeAEjG4ljZhuAgNKJgiIJ2sTKJ
-	 u8JqZ3ltOOPxvFjaz0A+2Er0vVt4ON34cWeT7G5m77Xn1V8SLYBEzwjlAuYRZ4lma0
-	 Z9OTdzE1bocUQ==
+	b=XoyUtaFOTuS2Be191isNuZ26ETbtz66rE/oCWcdLe5cOnb9gNkjoEZN/Vha8YIFvU
+	 tgPlG8hkygbNLamvgLDVFj7DBE7/1oLiJvme/NcpM0BCFDYT16LxsEKlTunf2jF1m5
+	 LHfzKXjp1vAXc8FkgfjLYj7r2PkVo7LukambYNrpsDMvNuZx1nOTwiLYAn7QKlsM8M
+	 Q/v4+BX4vcGCuXlqnpYx1PYTgCTuGjLJLLa9ZlnkpBHa0wLGG9slg8HIsAYsPLItXa
+	 xYSiKlE4pQ+Kxroc40P9wE+iJii/IfIH/50D818WdCFWZAlQXjapNG5vdMhAb/nHei
+	 TJ2wydTWKwHUQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA1EC5ACDC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67232C5ACD7;
 	Fri,  7 Aug 2026 21:52:49 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Fri, 07 Aug 2026 14:52:55 -0700
-Subject: [PATCH v10 16/41] KVM: guest_memfd: Zero page while getting pfn
+Date: Fri, 07 Aug 2026 14:52:58 -0700
+Subject: [PATCH v10 19/41] KVM: Move KVM_VM_MEMORY_ATTRIBUTES config
+ definition to x86
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-gmem-inplace-conversion-v10-16-2fc18ee6d3ba@google.com>
+Message-Id: <20260807-gmem-inplace-conversion-v10-19-2fc18ee6d3ba@google.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
 In-Reply-To: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -77,11 +78,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
  Xiaoyao Li <xiaoyao.li@intel.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1786139565; l=2563;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786139565; l=1945;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=yJn/ZHgiLozpfiaF3WvTX3dAxLUI4g7cee7UK9m2PVM=;
- b=l30Jr9f3hi6OTXNRNCJUYvIodwuNAe/9sIlpUlyIylb9JLbckvWkQEC0O3MkF9z/Ad2RJAuKg
- fQ+UqUROtkeAcqmpEqLAFhsm4pcVQLQgS28LhNijkgBlq/BTWV7VOub
+ bh=+JOgNYzvijHAbgsG714d2CFgRX+TpUch731NU30JkJw=;
+ b=qa1RDK48ZoSRufWd3VcENYFdgzxg5WzQA1log0T8jZiNU2/DF9PGN9GgSFYHGl/wJ2CoWclDe
+ SuehuYSCVQNDv2bAvArbWAzQ5d2REkZybveET4JY+WVWBRXal2ObNBE
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -89,78 +90,61 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: Ackerley Tng <ackerleytng@google.com>
+From: Sean Christopherson <seanjc@google.com>
 
-Move the folio initialization logic from kvm_gmem_get_pfn() into
-__kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-kvm_gmem_populate().
+Bury KVM_VM_MEMORY_ATTRIBUTES in x86 to discourage other architectures
+from adding support for per-VM memory attributes, because tracking private
+vs. shared memory on a per-VM basis is now deprecated in favor of tracking
+on a per-guest_memfd basis, and while RWX memory attributes are on the
+horizon, they too are expected to be x86-only.
 
-With in-place conversion, the existing data in a guest_memfd page can be
-populated into guest memory through platform-specific ioctls.
+This will also allow modifying KVM_VM_MEMORY_ATTRIBUTES to be
+user-selectable (in x86) without creating weirdness in KVM's Kconfigs.
+Now that guest_memfd supports in-place conversions, it's entirely possible
+to run x86 CoCo VMs without support for KVM_VM_MEMORY_ATTRIBUTES.
 
-Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-might contain uninitialized host memory, which would leak to the guest if
-the populate completes.
+Leave the code itself in common KVM so that it's trivial to undo this
+change if new per-VM attributes do come along.
 
-guest_memfd pages are zeroed at most once in the page's entire lifetime
-with guest_memfd, and that is tracked using the uptodate flag.
-
-Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-can get a page, write to the page and then set page uptodate without
-zeroing.
-
-This aligns with the concept of zeroing before first use - the other place
-where zeroing happens is in kvm_gmem_fault_user_mapping().
-
-Don't mark the page uptodate again after populating, since the page would
-already be marked uptodate before the post_populate() call.
-
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
-Tested-by: Shivank Garg <shivankg@amd.com>
 Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- virt/kvm/guest_memfd.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ arch/x86/kvm/Kconfig | 3 +++
+ virt/kvm/Kconfig     | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 030af0855f8b0..41950c8105b5d 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -1079,6 +1079,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
- 		return ERR_PTR(-EHWPOISON);
- 	}
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 2f8e1b5a8a72c..abb108886733a 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -80,6 +80,9 @@ config KVM_WERROR
  
-+	if (!folio_test_uptodate(folio)) {
-+		clear_highpage(folio_page(folio, 0));
-+		folio_mark_uptodate(folio);
-+	}
+ 	  If in doubt, say "N".
+ 
++config KVM_VM_MEMORY_ATTRIBUTES
++	bool
 +
- 	*pfn = folio_file_pfn(folio, index);
- 	if (max_order)
- 		*max_order = 0;
-@@ -1108,11 +1113,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		goto out;
- 	}
+ config KVM_SW_PROTECTED_VM
+ 	bool "Enable support for KVM software-protected VMs"
+ 	depends on EXPERT
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index df575449d97b5..a0678ef8ee3f5 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -100,9 +100,6 @@ config KVM_ELIDE_TLB_FLUSH_IF_YOUNG
+ config KVM_MMU_LOCKLESS_AGING
+        bool
  
--	if (!folio_test_uptodate(folio)) {
--		clear_highpage(folio_page(folio, 0));
--		folio_mark_uptodate(folio);
--	}
+-config KVM_VM_MEMORY_ATTRIBUTES
+-       bool
 -
- #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
- 	if (kvm_gmem_is_private_mem(file_inode(file), index))
- 		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
-@@ -1159,8 +1159,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	}
- 
- 	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
--	if (!ret)
--		folio_mark_uptodate(folio);
- 
- out_put_folio:
- 	folio_put(folio);
+ config KVM_GUEST_MEMFD
+        select XARRAY_MULTI
+        bool
 
 -- 
 2.55.0.654.g21b8a5bc05-goog
