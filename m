@@ -1,155 +1,108 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972C1153BE9
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Aug 2026 09:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1F33B42C1
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Aug 2026 09:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786095800; cv=none; b=EhqKLmjdbZhAcOkITAek1WvvzBmhk+mDAifdApHHe1Fg4Fs151VUaYEODzuW4O7YYVhBLvwfek6OZVv5vxjaAuvERDnP8NHdxXowjU9Q0BcQF5/aZEexqxcRhh1z/qC6l6xoeoOa7NhSSpKxF+JpdZmotmB1l9T9JYBZgjY+MD0=
+	t=1786095971; cv=none; b=CD7fKnH71hdyAcbHnT0xK94WrQKLGCmL1bpfOAZouDyYwIWtYBmpeVGzn/RsZeIJJtjtYYHSxCwWB2IIsCId1DiA9FnRmZ3eczWvBi18IBkcbTqctfOyp+IwaJEcol1LU7p4c/02rwry1oJ54qGR/L75rWoMI1Kg+O1zaiWyaNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786095800; c=relaxed/simple;
-	bh=j2eOaWnvU2KJhWx8NMfzCfYofi5p7LfuzO4wpDMwkK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVjQAHdzAxwRdmgz3o2hcld3Uz2QUAyjUYQT0F5x6ailKYG+ViQocOu9aWr9kYJxlUY/k/fvjenfBqPSLzShX4mjrwIAQ0ygF6m91HSIXOxB+1+v6nbxT3x681beftPwZ9q79xW5y+u2tySzMEirl4yAvkB9GH8X3ZpHSIClpJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dF4FahK5; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1786095971; c=relaxed/simple;
+	bh=pp/HNxJtm2qgKpoVk0PTHkP9OBX+9Rk9zKwRGrNHuqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=BHCcySkdUVbKcCUBJQLq80ttrPNfd3MPkXoAfyvpL4WrsHEo1mysII8pNPXavKVflHKNT24EoK3Gi8zwM/8DocKahJiK8od9AUwrmaYQ9pfBBTIfaiqxKt/+CBp61t2T9nODY1SEb1sirlIwZYbXOiJLabiwq9ZXH4GWrfULSGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GTswKFIJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dF4FahK5"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c1677c91969so374187166b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Aug 2026 02:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786095797; x=1786700597; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=HbE2bwnVMi7D8tqiB/gbTbPGphKHmCKr06HT/XDSX9o=;
-        b=dF4FahK5v6IvxnK5kR+TXDjUw5DyqYT4URFNoLKZPY0Jq8WtpU2qcPdIivXHvciFc1
-         uQJky6Ygmpq1WFwLfdQJ5XWSjJCi4lKQAb6qYxFGtuu5XuPJV136hvpIK2HoKE6yEBDi
-         bPkkT1w0HNVsNqI2knJX2dO1mNdGv8IHQ/WyhE36xUI3GqYv4rmdLNJj1Zr7jmB8A8BZ
-         glaWYnlFKqzrrp/UaYbokx4M4tjWZTjYj4BieSGKnYguzPGA/QpUtWHMulZ18KmqqJu3
-         45Wl4HBgEy2t8z/YFhAvqvXhhd/Y6PYfBy8lvdabwP3esGm807XKH38NjBFWcye+ED5B
-         PWMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786095797; x=1786700597;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HbE2bwnVMi7D8tqiB/gbTbPGphKHmCKr06HT/XDSX9o=;
-        b=T3sHBYXqx44oBNApUuccl/UlgWIzWkFzfn6puyNRPws1Th1SK510jz5C2hZno+xJx2
-         HXp8VVZHFJ7gH85kKHYiwP+8ScPVgE3nYl/Xe6UZErCHyU45WU8f4dBpkGHjpjgrbe1g
-         EUwOUwWnM/1ByTFvB+YI3fMqCHB4/1MrkYZu95wgrZZAQYbsI16kWKwtefjDTZwdV9gk
-         AdEuQM3n9B0fn0j4sj88VSqdYC6xM97grUycpDUg2u0/d3rOyU1AfrLbjtsU9yfFiTN0
-         6lNJC2rqie+5FF5nLDE4qkQ3OM8GhCXQOP7vv42LLnz0xy4mhZKp+6722dv1LLLHtaAD
-         2qKA==
-X-Forwarded-Encrypted: i=1; AHgh+RrSCyG5DnaHVL07HutWY8apdjBAWLXgD5tZwx093tGaewrdM+/vjLDO8XEDPOQYXu/Jei3mgA1/RRgIWWYwkqvq3fw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTmi/tTsLu5kVBI04mDOFxcU/yGagGY+8ODLK12QvS8oda27pd
-	0oqRqU1NnpYKDKPHzBV0rlT0wdUn1Az9JtgchCneRq9bK3mapztIGFwz9SnMUYkwqA==
-X-Gm-Gg: AR+sD13ddvQ/idNiH3NREAsKVFSjvHqt77/WOl40WQRbzI0tPk1NvDTRrUrRNSTYFIQ
-	Vy1e3rDuMO/N6ZT74YydNcGOy7cHqLGu6OpRXNpvD4XSEsdvXHvOFyVssEU2igfdAGuC+reV5r8
-	sAmxUqjnHAJEuzWJZst4zqKyr3dzUEH3cQa3J6t+xl7x3cXpcMaXwGPit3bOhl3mh1PDE6B9Ein
-	PUcmJrK0d1lPoGG2opMf8cB/gdCJUnm55HjyF18DOtgeZweKC/mPsr6bAOD30DHaBwOKKRjQ5bw
-	yGDRnEQqCp9720dHnGoS6j0OtOkaF057wEyROfd35Q4+aM8AfswJvCJEV697VdUyVTlFzj28Ktg
-	XhxotKBetsTe+wmvetp7MW7/VzH3HEyaAOhPY+C7bc1SVZXmP88gQP0Vn/wCg9qXTkVLof0bGQ7
-	g5UqV4KAGm7lAmrDFMnVEukthV04ywX3NAEOQAbf2TUCkLqGybC8PycHs92UnEBeIbWoD+8Ey6Q
-	IVoFeGP/9yf20sIF4ucwSpv/X/2zXFb
-X-Received: by 2002:a17:907:72d5:b0:c16:16b9:98fa with SMTP id a640c23a62f3a-c2039afa743mr957100566b.5.1786095796229;
-        Fri, 07 Aug 2026 02:43:16 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2080a6e657sm33479666b.14.2026.08.07.02.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2026 02:43:15 -0700 (PDT)
-Date: Fri, 7 Aug 2026 10:43:12 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] ring-buffer: Prevent resizing of persistent ring
- buffer
-Message-ID: <anWosNi-U8lVqBZP@google.com>
-References: <20260806211306.3704194-1-vdonnefort@google.com>
- <20260806211306.3704194-2-vdonnefort@google.com>
- <20260807111808.d5dc1a48b080d241100f4a57@kernel.org>
- <anWT4heM5Z--A1Mo@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTswKFIJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786095968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=y0QGvq8Xmf+ZVN6jXbeinSkN5fKa+U8pqjn+i2I6yBQ=;
+	b=GTswKFIJaASFfXiNSSSJLi8IS+gv4zuFZh/mlm3vtcudKKQIj0L3eHN5NUcgH9iJzAT2S6
+	wKSgIeiNUPkanbFXzV5QsivLABIyH9tUTU5ku3pNNzgb6w8l/KcCdGOTmWwxIwqIb+e4r0
+	6wQQ7sVHjAv1fAzACXCT9OL8lsdPNuo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-tpeMzjC4OemFQwF7jmX1VQ-1; Fri,
+ 07 Aug 2026 05:46:02 -0400
+X-MC-Unique: tpeMzjC4OemFQwF7jmX1VQ-1
+X-Mimecast-MFC-AGG-ID: tpeMzjC4OemFQwF7jmX1VQ_1786095961
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C3DD18002F8;
+	Fri,  7 Aug 2026 09:46:01 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.32.160])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 60ED31956049;
+	Fri,  7 Aug 2026 09:45:57 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] rtla/tests: Test actions in absence of threshold
+Date: Fri,  7 Aug 2026 11:45:55 +0200
+Message-ID: <20260807094555.1244103-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <anWT4heM5Z--A1Mo@google.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: 0MXc07uNLyrBQOayIwRkf_H68240v1G6Aet9yGvjq_A_1786095961
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Fri, Aug 07, 2026 at 09:14:26AM +0100, Vincent Donnefort wrote:
-> On Fri, Aug 07, 2026 at 11:18:08AM +0900, Masami Hiramatsu wrote:
-> > On Thu,  6 Aug 2026 22:13:01 +0100
-> > Vincent Donnefort <vdonnefort@google.com> wrote:
-> > 
-> > > Dynamically resizing a persistent ring buffer is not possible. Disable
-> > > the feature.
-> > 
-> > Is it true? Of course there is meaningless to resize the persistent
-> > ring buffer (because it makes the buffer none-persistent), we are currently
-> > allows user to resize it (like for resizing unused persistent ring buffer)
-> 
-> __rb_allocate_pages() in ring_buffer_resize() would call for a persistent buffer
-> rb_range_buffer(), which IIUC, is just reusing the same ring buffer pages as the
-> one already in the persistent buffer.
+Commit fafb66e5903c ("rtla/timerlat_top: Fix on-threshold actions firing
+on signal") fixed a bug where on-threshold actions were being triggered
+even without a threshold being set.
 
-I have just tried and if reducing the size works, increasing fails in both
-rb_set_head_page() and rb_insert_pages() with a warning, which I believe is
-expected.
+Test all four tools with an --on-threshold action, but with no set
+threshold, and verify the action does not trigger.
 
-We could improve that, but it feels like it is a lot of work for a meaningless
-feature which we should just disable?
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/tests/osnoise.t  | 2 ++
+ tools/tracing/rtla/tests/timerlat.t | 2 ++
+ 2 files changed, 4 insertions(+)
 
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+index 214fd40fc610c..352b302372453 100644
+--- a/tools/tracing/rtla/tests/osnoise.t
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -98,5 +98,7 @@ check_top_q_hist "with conditional continue" \
+ 	"osnoise TOOL -S 2 --on-threshold shell,command='if [ -f a ]; then echo 2; exit 1; else echo -n 1; touch a; fi' --on-threshold continue" 2 "^12$" "^2$"
+ check_top_hist "with trace output at end" \
+ 	"osnoise TOOL -d 1s --on-end trace" 0 "^  Saving trace to osnoise_trace.txt$"
++check_top_q_hist "action with no threshold" \
++	"osnoise TOOL -d 1s --on-threshold shell,command='echo BAD'" 0 "" "BAD"
+ 
+ test_end
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index 5116857d7da45..1d317c851a0fa 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -136,6 +136,8 @@ check_top_q_hist "with conditional continue" \
+ 	"timerlat TOOL -T 2 --on-threshold shell,command='if [ -f a ]; then echo 2; exit 1; else echo -n 1; touch a; fi' --on-threshold continue" 2 "^12$" "^2$"
+ check_top_hist "with trace output at end" \
+ 	"timerlat TOOL -d 1s --on-end trace" 0 "^  Saving trace to timerlat_trace.txt$"
++check_top_q_hist "action with no threshold" \
++	"timerlat TOOL -d 1s --on-threshold shell,command='echo BAD'" 0 "" "BAD"
+ 
+ # BPF action program tests
+ if [ "$option" -eq 0 ]
 -- 
-Vincent
-
-> 
-> So, reducing the size would surely work, however increasing it, would most
-> likely mean having buffer_page pointing to the same buffer_data_page?
-> 
-> Also, the comment
-> 
->   /* 
->    * Range mapped buffers have the same restrictions as memory
->    * mapped ones do.
->    */
-> 
-> Made me think that resize_disabled was omitted.
-> 
-> > 
-> > Thank you,
-> > 
-> > > 
-> > > Fixes: be68d63a139b ("ring-buffer: Add ring_buffer_alloc_range()")
-> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > > 
-> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > index 8e2485bb3aa8..afe75ad2bbf2 100644
-> > > --- a/kernel/trace/ring_buffer.c
-> > > +++ b/kernel/trace/ring_buffer.c
-> > > @@ -2528,6 +2528,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
-> > >  		if (cpu_buffer->ring_meta->head_buffer)
-> > >  			rb_meta_buffer_update(cpu_buffer, bpage);
-> > >  		bpage->range = 1;
-> > > +
-> > > +		atomic_inc(&cpu_buffer->resize_disabled);
-> > >  	} else if (buffer->remote) {
-> > >  		struct ring_buffer_desc *desc = ring_buffer_desc(buffer->remote->desc, cpu);
-> > >  
-> > > -- 
-> > > 2.55.0.654.g21b8a5bc05-goog
-> > > 
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> -- 
-> Vincent
+2.55.0
 
