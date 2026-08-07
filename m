@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8A046D2B8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C37A46D554;
 	Fri,  7 Aug 2026 21:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786139569; cv=none; b=OWo36W64P/WGi/Hqu5jMM9YSKreqrzrv26IoI5Gwa3xariHg4s0ea3j36gASj7zQhOPNaHvw0+E8rWYOmwtSSqToygjd2HEh2iZx/OCjlYYtIuPLod3pinKEXdTc6UjcUmXI1wqRKop6B3wMQuL6pW6KA/Vf8wBxddTAFBd6yAs=
+	t=1786139569; cv=none; b=gaPY9ZkesrF2krMAbNxL1HXZs1I+uD6LREZP0lQzfzbMDv497Q2AGAsMcwbgA3z3fhfsIkbf0yZM3YK7r39UImq/VMwhDnWH7V0QZloRn9BWktuEFrFFpsoYsOmEiQUezDcr7ZddEYFHrTTiqwlKAwm+fCO+t/F5thko6V9zl7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786139569; c=relaxed/simple;
-	bh=C8OI6kju/OzMAnmo1MLoFl/+g7Mz5T91QIShVMCU3HM=;
+	bh=TkzoIndNGWAz7eMJZIeS00Akw8QP2H+V8GKbGu+OhPY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e6yTwSRlPLrAK4gFF3P9yr9Ccg2w9wwKlC2I/+a3m2kuCJV8gcKCeBWuT2NUKYF4A6dWcl1Owr27Xbkl3tMoAwH3KX3OF3941aV5s0R7erJS7bD+lQHC8LV6N52FvC6x4Ffn/LiJdTrcjFdMrkj3hLBqXwdJ5kz2o/blG/Zo46s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGeSFBf7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GNu7gseQ3z92vIm37Z0FL64MWmEvWGJ52RjSD6jXo8+CdGqn+uus+HnROmCagWjP+mN+FiIpnQzr5T0N1QCL8v5acmSo2e+TZPf0KUjG9O702ijBcj1oB88E3eGIFobIEuoiLYkmvI0+4mwf+Bf697+/XQL8id9gR8zfo3WUCUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLjD6LF7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGeSFBf7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 087B8C4AF50;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLjD6LF7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1CB93C2BCFA;
 	Fri,  7 Aug 2026 21:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1786139569;
-	bh=C8OI6kju/OzMAnmo1MLoFl/+g7Mz5T91QIShVMCU3HM=;
+	bh=TkzoIndNGWAz7eMJZIeS00Akw8QP2H+V8GKbGu+OhPY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=eGeSFBf7/4+J80IRIsOi3FHf6wjaVM8/+K955E0oLP9NWFiU1sGNewFog625zOgOY
-	 AOB7xqCmqQLkedW+shhfVpoqAzmKTGDrANHgX1UyZMqJgiFBNP6lrk9WukFa3T812/
-	 lg/8XNxR148+odbnj29usyJTNpVN4/+hQ7xFNSDr7qUb0/KfvmPGmHVxMBbc4J2veL
-	 N+vljeyRxgGH/JyEWip/XQb8HjKdPVynYDcBA97fc18E0uPMfs2gB0sa26nBLjpPcs
-	 RIEXMJFp/0cDxs0crZvB14efNoNVqxGfbI/4YpduxgtlWL91v+cIQ17jn4NlqEWun7
-	 PXjHq7DnisSBw==
+	b=FLjD6LF7CmdK9sSRhsqRFy72cX5AQdbHg9Gl/7NkFIrl/CCSM9yBJgZHB/WqJXmIg
+	 9zVspnWnCfoGkk9XU4xt4dv0ojCKW2JaHsKzaptjrgUQ9te1ucdBwxfyTRVYHotQXb
+	 hsXbkbKpM6OdbeVbTroe2kT7zk6zfRXrF9rgf8dlqgldxhr8amZ+U46LWAS6PfxdYp
+	 TgT8EX+wurZzkD+hy53R22CVQk+i4N+abVS/WFAOU+Zigh8aVrhjwLPJj/32h1fHnD
+	 ETYPcSyurHVqU0vD8202HRqss3gQDOpppFFdrAs7pDyH1iAfpPJat33TU40+k7O2lz
+	 qqxcdLg8RcZag==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EB2C5ACD1;
-	Fri,  7 Aug 2026 21:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065F0C5ACD4;
+	Fri,  7 Aug 2026 21:52:49 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Fri, 07 Aug 2026 14:52:53 -0700
-Subject: [PATCH v10 14/41] mm/gup: factor out LRU cache draining for folio
- into lru_cache_drain_for_folio()
+Date: Fri, 07 Aug 2026 14:52:54 -0700
+Subject: [PATCH v10 15/41] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-gmem-inplace-conversion-v10-14-2fc18ee6d3ba@google.com>
+Message-Id: <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
 In-Reply-To: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -75,13 +75,14 @@ To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
- linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
+ linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1786139565; l=5756;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786139565; l=3762;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=xV++FlZvFI4NwrLc3veqIQ22RTFlEXFJFbRA5Ehxu/0=;
- b=9YrnGTHepXwH7Ocuf/jdvkIQyqGXFL+hq1GjIfVIdNlq/Sj/XRMZp5UufgETznFOEOs76yZdZ
- b8PmUno3coGDK7JcNd2gKLkodQEly/BURV7tihbNuQW+fmMbNrK3aFw
+ bh=vRHAPnsy/a831M2QO9lXaFqyTG6Mc0Skqo/1hc4/61s=;
+ b=9TIb+ZXbdQMmrXLDC7072TqBL/mub/d5Ks6MUbovt3WcKeDpnixAU2yGfF0KPtDV9N+i5+ZFg
+ hfk34FX6oJiCGmv+DpvAaRMkwVZbxV9kE6Xqd6nBrhbp7s0dXmGD85o
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -89,159 +90,111 @@ X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
 X-Original-From: Ackerley Tng <ackerleytng@google.com>
 Reply-To: ackerleytng@google.com
 
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+From: Ackerley Tng <ackerleytng@google.com>
 
-KVM with guest_memfd wants to remove any folio references due to LRU
-caches, as it really must only allow to convert folios from shared to
-private when there are no unexpected folio references (e.g., from GUP
-references).
+A guest_memfd folio is safe for conversion if guest_memfd holds the last
+references on it. Any other references on the folio may indicate another
+user, and guest_memfd cannot convert it to private if there may be an
+existing host user.
 
-So, to drive the refcount down, it needs a way to flush the LRU caches.
-Let's factor out what we have in lru_cache_drain_for_folio(). Document
-it, and also mention that concurrent folio (un)mapping might, in theory,
-miss detecting LRU cache references. Keep obtaining the expected refcount
-twice to minimize the possibility. For the current and future user that
-should work, and we don't really have a better alternative: we could
-detect if the mapcount changed, but it would still be racy and add more
-complexity with questionable benefit.
+A folio will have extra refcounts if it is present in a per-CPU lru_add
+fbatch. guest_memfd does not actually participate in LRU, but
+freshly-allocated folios are still added to the lru_add fbatch for batch
+LRU statistics processing.
 
-Maybe there is a chance to avoid the draining entirely in the future,
-by avoiding extra references from the LRU cache: Hugh thinks there might
-be a way. But for the time being, this handling is unfortunately
-required.
+This one known "usage" of the folio is handled by draining the lru_add
+fbatch. After draining, if the refcount is still elevated, then there's
+truly some other user of this page, and the page is not safe for
+conversion.
 
-Make folio_may_be_lru_cached() accept a const pointer so
-lru_cache_drain_for_folio() can accept a const pointer as well.
+If the page may be dma pinned, DMA is obviously using it and hence not safe
+for conversions. If the page is still mapped after guest_memfd tried to
+unmap it earlier in the conversion process, it is also obviously not safe
+for conversion. Exit early to avoid unnecessary draining in these 2 cases.
 
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+Provide a drain status to only drain once ever while processing a batch of
+folios.
+
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+Suggested-by: David Hildenbrand <david@kernel.org>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- include/linux/swap.h | 11 ++++++++++-
- mm/gup.c             | 15 ++-------------
- mm/swap.c            | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 58 insertions(+), 14 deletions(-)
+ mm/swap.c              |  2 ++
+ virt/kvm/guest_memfd.c | 23 +++++++++++++++++++----
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 8f0f68e245baa..e625d64c9e13d 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -317,7 +317,7 @@ void folio_add_lru_vma(struct folio *, struct vm_area_struct *);
- void mark_page_accessed(struct page *);
- void folio_mark_accessed(struct folio *);
- 
--static inline bool folio_may_be_lru_cached(struct folio *folio)
-+static inline bool folio_may_be_lru_cached(const struct folio *folio)
- {
- 	/*
- 	 * Holding PMD-sized folios in per-CPU LRU cache unbalances accounting.
-@@ -344,6 +344,15 @@ extern void lru_add_drain(void);
- extern void lru_add_drain_cpu(int cpu);
- extern void lru_add_drain_cpu_zone(struct zone *zone);
- extern void lru_add_drain_all(void);
-+
-+enum lru_cache_drained {
-+	LRU_CACHE_NOT_DRAINED,
-+	LRU_CACHE_DRAINED,
-+	LRU_CACHE_DRAINED_ALL,
-+};
-+void lru_cache_drain_for_folio(const struct folio *folio,
-+		unsigned int extra_refs, enum lru_cache_drained *drained);
-+
- void folio_deactivate(struct folio *folio);
- void folio_mark_lazyfree(struct folio *folio);
- extern void swap_setup(void);
-diff --git a/mm/gup.c b/mm/gup.c
-index bde05664fe9a9..1bd8915517196 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2266,9 +2266,9 @@ static unsigned long collect_longterm_unpinnable_folios(
- 		struct list_head *movable_folio_list,
- 		struct pages_or_folios *pofs)
- {
-+	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
- 	unsigned long collected = 0;
- 	struct folio *folio;
--	int drained = 0;
- 	long i = 0;
- 
- 	for (folio = pofs_get_folio(pofs, i); folio;
-@@ -2293,18 +2293,7 @@ static unsigned long collect_longterm_unpinnable_folios(
- 		 * but also to remove any other folio references from LRU
- 		 * caches.
- 		 */
--		if (drained == 0 && folio_may_be_lru_cached(folio) &&
--				folio_ref_count(folio) !=
--				folio_expected_ref_count(folio) + pin_refs) {
--			lru_add_drain();
--			drained = 1;
--		}
--		if (drained == 1 && folio_may_be_lru_cached(folio) &&
--				folio_ref_count(folio) !=
--				folio_expected_ref_count(folio) + pin_refs) {
--			lru_add_drain_all();
--			drained = 2;
--		}
-+		lru_cache_drain_for_folio(folio, pin_refs, &drained);
- 
- 		if (!folio_isolate_lru(folio))
- 			continue;
 diff --git a/mm/swap.c b/mm/swap.c
-index 588f50d8f1a8c..8e965c8ce9aa9 100644
+index 8e965c8ce9aa9..9f511b97ab110 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -950,6 +950,52 @@ void lru_add_drain_all(void)
- }
- #endif /* CONFIG_SMP */
+@@ -37,6 +37,7 @@
+ #include <linux/page_idle.h>
+ #include <linux/local_lock.h>
+ #include <linux/buffer_head.h>
++#include <linux/kvm_types.h>
  
-+/**
-+ * lru_cache_drain_for_folio() - drain LRU caches if the caches might hold
-+ *				 folio references
-+ * @folio: The folio.
-+ * @extra_refs: Extra folio references held by the caller.
-+ * @drained: Drain status for batch folio processing.
-+ *
-+ * Drain LRU caches if the caches might hold folio references. Start
-+ * with a local LRU cache drain, to then drain LRU caches on all CPUs if
-+ * local draining was insufficient.
-+ *
-+ * This function detects LRU cache references by comparing the folio refcount
-+ * with the sum of the expected folio refcount + extra references held by the
-+ * caller. Note that we cannot rely on PG_lru to reliably detect all LRU
-+ * cache references, and there are rare scenarios (concurrent folio (un)mapping)
-+ * where this function might miss detecting LRU cache references.
-+ *
-+ * If @drained is not NULL, the function will avoid re-draining LRU caches
-+ * when processing multiple folios in a row. In that case, the variable
-+ * @drained points at must be initialized to LRU_CACHE_NOT_DRAINED before
-+ * the first invocation by the caller.
-+ */
-+void lru_cache_drain_for_folio(const struct folio *folio,
-+		unsigned int extra_refs, enum lru_cache_drained *drained)
-+{
-+	if (!folio_may_be_lru_cached(folio))
-+		return;
-+
-+	if (!drained || *drained == LRU_CACHE_NOT_DRAINED) {
-+		if (folio_ref_count(folio) ==
-+		    folio_expected_ref_count(folio) + extra_refs)
-+			return;
-+		lru_add_drain();
-+		if (drained)
-+			*drained = LRU_CACHE_DRAINED;
-+	}
-+	if (!drained || *drained == LRU_CACHE_DRAINED) {
-+		if (folio_ref_count(folio) ==
-+		    folio_expected_ref_count(folio) + extra_refs)
-+			return;
-+		lru_add_drain_all();
-+		if (drained)
-+			*drained = LRU_CACHE_DRAINED_ALL;
-+	}
-+}
-+
+ #include "internal.h"
+ 
+@@ -995,6 +996,7 @@ void lru_cache_drain_for_folio(const struct folio *folio,
+ 			*drained = LRU_CACHE_DRAINED_ALL;
+ 	}
+ }
++EXPORT_SYMBOL_FOR_KVM(lru_cache_drain_for_folio);
+ 
  atomic_t lru_disable_count = ATOMIC_INIT(0);
  
- /*
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 896699afcad9d..030af0855f8b0 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -8,6 +8,7 @@
+ #include <linux/mempolicy.h>
+ #include <linux/pseudo_fs.h>
+ #include <linux/pagemap.h>
++#include <linux/swap.h>
+ 
+ #include "kvm_mm.h"
+ #include "guest_memfd.h"
+@@ -542,11 +543,26 @@ static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
+ 	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
+ }
+ 
++static bool __folio_safe_for_conversion(struct folio *folio,
++					enum lru_cache_drained *drained)
++{
++	const int filemap_get_folios_refcount = 1;
++
++	if (folio_maybe_dma_pinned(folio) || folio_mapped(folio))
++		return false;
++
++	lru_cache_drain_for_folio(folio, filemap_get_folios_refcount,
++				  drained);
++
++	return folio_ref_count(folio) ==
++	       folio_nr_pages(folio) + filemap_get_folios_refcount;
++}
++
+ static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+ 					    size_t nr_pages, pgoff_t *err_index)
+ {
++	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
+ 	struct address_space *mapping = inode->i_mapping;
+-	const int filemap_get_folios_refcount = 1;
+ 	pgoff_t last = start + nr_pages - 1;
+ 	struct folio_batch fbatch;
+ 	bool safe = true;
+@@ -560,9 +576,8 @@ static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+ 		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
+ 			struct folio *folio = fbatch.folios[i];
+ 
+-			if (folio_ref_count(folio) !=
+-			    folio_nr_pages(folio) + filemap_get_folios_refcount) {
+-				safe = false;
++			safe = __folio_safe_for_conversion(folio, &drained);
++			if (!safe) {
+ 				*err_index = max(start, folio->index);
+ 				break;
+ 			}
 
 -- 
 2.55.0.654.g21b8a5bc05-goog
