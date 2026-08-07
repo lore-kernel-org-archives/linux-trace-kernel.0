@@ -1,85 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A8240EBB1;
-	Fri,  7 Aug 2026 19:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF01523D2B1;
+	Fri,  7 Aug 2026 19:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786130812; cv=none; b=D0CHeNapiXtyx2FO9DA6nzL3DJkSQCyy6kDtdWtHa6yr+1VNqR/o1QDGRk2lf231OUUSewo+u4EpTXQv0IXJ+5hJJleG6GED9Jey/qMygUGyLYw34Cz64uAgruB7Qh/oW9ced6zB/+daUxsuwEYdVg/KJyIl9hQDj1TIkL5bMwI=
+	t=1786132256; cv=none; b=AJ+GFSEonhIvM/csjMROSZBUVo3IkJQrqYlMfoCwc8WyQzW3iS2wtdOx3WMqQrNQbpymaBORwisbDklInGTmoxyJy5303DIddba2/5ohM0AHSqP83p/hVnK4GEcgsnTCKtpOX/h59xucw5RsKnNHvSnM8VQ+Z3CDcdTipEXS1OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786130812; c=relaxed/simple;
-	bh=Mjer4IIAZTqtFDOJHS6B13C4xIZbYyfjxrausYoelf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sd2a5tel/4ACEDeX0tgJPt+GeDtVNppMRh2HzTM5Ip8DzzmN6L1OOrT4moPwvCL4sLwARAkW8zmdWNeiTm8XDW+I5z8j8hnsv3m61VyjlwTD739LRIwUZyh+S+mBVKX/lHwPgCA77RW1W8Gl1mJrweApGquUkG1JbQQxehrcd7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 606BF40010;
-	Fri,  7 Aug 2026 19:26:40 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 868962000E;
-	Fri,  7 Aug 2026 19:26:38 +0000 (UTC)
-Date: Fri, 7 Aug 2026 15:26:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] ring-buffer: Prevent resizing of persistent ring
- buffer
-Message-ID: <20260807152641.4b9deff0@gandalf.local.home>
-In-Reply-To: <anX9k8x67m4Cdw5n@google.com>
-References: <20260806211306.3704194-1-vdonnefort@google.com>
-	<20260806211306.3704194-2-vdonnefort@google.com>
-	<20260807111808.d5dc1a48b080d241100f4a57@kernel.org>
-	<anWT4heM5Z--A1Mo@google.com>
-	<anWosNi-U8lVqBZP@google.com>
-	<20260807104526.38430aa2@gandalf.local.home>
-	<anX47awNHC9caDN_@google.com>
-	<anX9k8x67m4Cdw5n@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786132256; c=relaxed/simple;
+	bh=pW2eRMSIRBmL0WZmmE4NhGMN16X8u7MJQrN1O38oywA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=X4607uZbzCJICHpyFfnnnVe3+kQIZC8uR/tqnPfYPqO0Q5F6Oh5EFQSik1FY6oo1ZplJ5/kNzlFx3xqgSvgQ55WXUysfVoOZa2xXJY2CNQ6YdtIrFScahOM7gVaS0uKR7eO46tBOdsKspDGrczRAzhbRu8xaL/aap8KSv9RlltU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=y1TxN7DY; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="y1TxN7DY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55931F000E9;
+	Fri,  7 Aug 2026 19:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1786132255;
+	bh=LGQLBYZ8sXJOnkR3tH0uUyY8O3oqFIt4zUiX/ukeTU8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=y1TxN7DYS0h5WK8bX+BiCJsu3MYwDVAHCQxDfN4c5JzJNvebxuBW9AdTC1+HhkvtA
+	 zPmNA6JtgnATURgkCTCNYYg8+wZFZRicRYeVg2KQUCz5iMBL3nmVwP20D6Xp5NA4WD
+	 gstX2HCC0T4ZJsgdoSsoNHqD8mPptk4Ne8r+9YRI=
+Date: Fri, 7 Aug 2026 12:50:54 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Meijing Zhao <zhaomeijing100@gmail.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 0/3] mm: trace: decode architecture-specific VMA
+ flags
+Message-Id: <20260807125054.d69baf2c6df589ddebbccd48@linux-foundation.org>
+In-Reply-To: <20260807084745.5d96995e@gandalf.local.home>
+References: <20260723092905.761037-1-zhaomeijing100@gmail.com>
+	<20260807031349.3119855-1-zhaomeijing100@gmail.com>
+	<20260807084745.5d96995e@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 868962000E
-X-Stat-Signature: eif3ddu6ojp17tzeyruor4wxhit4ise4
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+3zB9Wh6YtNDBpwBeFg6fLhIpNdzI47Iw=
-X-HE-Tag: 1786130798-53163
-X-HE-Meta: U2FsdGVkX1+ot5lH290X2eay8ZKx3xJr9197nxul+Yo/UNEY3XeMwSzex6cfEP61uegjblv0rJqZaH979edyeiRHPMjaPCZpddxk5s6RId/YnZHOzB8TgKnPdAaTvJTiXXTPmtrzuwDUldZaF9rVEWCPzgGiL3OETBJjFc98TC+M/aCCiujvYoUrOCV6YQojSEkDO5Rx6B1OXEQVqTxxJdxh9845eyqQiT4zwP0pya4j/QUYlY5xG/E/oDvLeEMP942DR7Tsuu8VsqsGob6+s0eKgpUYe+xUdZ9NxgVL5ntcfbgzVANnzuRKUC42/Oqle6SkHw3Bp4DjL1yDuvutlmNMPEU9ezH8wO54QfBAMFTybE0eBieVWg==
 
-On Fri, 7 Aug 2026 16:45:23 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Fri, 7 Aug 2026 08:47:45 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> free_reserved_page() would do actually. But then it is definitive. 
-
-It's not always a reserved page.
-
+> On Fri,  7 Aug 2026 11:13:49 +0800
+> Meijing Zhao <zhaomeijing100@gmail.com> wrote:
 > 
-> Happy to implement something like that. That also means that the instance can be
-> actually freed?
+> > Hi,
+> > 
+> > A gentle ping on this patch series. It has been about two weeks since
+> > it was posted, and I have not received any feedback yet.
+> > 
+> > Would you have a chance to take a look? Please let me know if I should
+> > rebase or resend the series.
+> > 
+> > For reference, the original thread is available here:
+> > https://lore.kernel.org/linux-mm/20260723092905.761037-1-zhaomeijing100@gmail.com/
+> > 
+> 
+> You may need to Cc the MM maintainers too. Not just linux-mm mailing list.
+> Modifications of tracepoints in subsystems belong to the subsystem
+> maintainer, not the tracing maintainers. We just maintain the
+> infrastructure, not the content.
 
-They can be freed now. Try a rmdir on one.
+get_maintainer isn't very useful with include/trace/events/mmflags.h.
 
-Note implementing this is not straight forward. What I would suggest is
-that because the persistent ring buffers are contiguous, to resize, you
-basically need to remap to the new size. That means each of the buffers
-will still be attached to each other.
+As it's a vma-flags thing then cc'ing Lorenzo Stoakes (ARM)
+<ljs@kernel.org> would be appropriate.
 
-What would need to be done is:
+We're in lockdown-for-merge-window mode so please plan on a resend
+after 7.3-rc1.
 
-  1. calculate the new size needed to accommodate all the CPU buffers.
-  2. Split them up within the new size region.
-  3. Then free the remaining pages.
+AI review made a minor comment regarding the changelog:
+	https://sashiko.dev/#/patchset/20260723092905.761037-1-zhaomeijing100@gmail.com
 
-Obviously, access to the buffer from readers and writers will need to be
-prohibited while this is happening.
-
--- Steve
 
