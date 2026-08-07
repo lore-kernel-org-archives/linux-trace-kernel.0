@@ -1,134 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9930047011F;
-	Fri,  7 Aug 2026 10:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934F53DDAFA;
+	Fri,  7 Aug 2026 12:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786098620; cv=none; b=f0bANfoSSj5T2H5e8hzneebk9t84gWqv4QI3YJSm+fqVHLDXP7YjkO3JfFcOYBy+JhErr2aueuym3kdf7BOGyKojoMTfeBpftdA8UyI1nQgS+MYYMq5EXqilS6+n1K8cDg2OYJkRv8qqClnu6ND/JbTKfNqX1cDHeqX9AlO8tCs=
+	t=1786106603; cv=none; b=iM+iLc2sKyfmOi8VFUgJ9Y62WOK/z/LAQFSaW3UiFvmY4UTs3FJ5z5AKVlQx6jB+mOUtgQJHaYOWZ+P5cV2FYM2/FhLdDBGVWCTFWo4gU+nm5qjgfISHbzTeJz75YX18b7F2mLS3smTd7CFcp03XFNLgFoEJ+UkwepHkDC8ei80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786098620; c=relaxed/simple;
-	bh=65SnBkKgpNg1bsafp7VGHMOEGAmrM4yY6cpRnA+3vFY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=o+EIlXAPR7250ThZaecDC7PdGCkUeECXSu367sUPRn7aeQXharvvFi+0MuVyeDAWJg+1sgit49wow6NFSF7QqUZhvCiuXd8UMUQXxf4Krb8B5HiKOu6NjFXNz5PjBi/0FsqGWUefU5japzhIxwoo3Igf8WiAmuX25iBTpjiYElI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQzWs8wq; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQzWs8wq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B101F000E9;
-	Fri,  7 Aug 2026 10:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786098617;
-	bh=D57BfGvE5e2Os2mPHIcMDuZXtKECmeWmZYmGAmiUz34=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=aQzWs8wq+XMWmhGbeVqv6S5c9jg2C3sGoqij4SztGeBGWz9Q4im84gyQM7Lkmb5GD
-	 3UyKlt7FvvMChAPHXSl3/JtjH5+DJkjWLiZ++v/spwYCbDEes+xKx9gGKEyq2wRhBP
-	 EI5BVsDnKquuviYY7w2a/E43QYvshGvcf8sN+5z3O/GhFYiff4bTA6bURAKc0+r/qX
-	 kq4iLLu65YO2IY/qWYb16kiw05rOWpgSAG6qoiHDCkm7g3LjtdMgKxQE5z4ONbloXb
-	 qohYlk6+A70B2iXjagZYZWitFwBr7VBIKXSDjLShxfyhuyI7BriFxaiONrNGQdZghU
-	 NU45pJZqyySfA==
-Date: Fri, 7 Aug 2026 19:30:13 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Rui Qi" <qirui.001@bytedance.com>
-Cc: "Steven Rostedt" <rostedt@goodmis.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Shuah Khan" <shuah@kernel.org>,
- "Heiko Carstens" <hca@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] selftests/ftrace: Convert ELF entry point to
- file offset in uprobe test
-Message-Id: <20260807193013.7fe47144c1f41facb60b310f@kernel.org>
-In-Reply-To: <20260807081512.2974757-3-qirui.001@bytedance.com>
-References: <20260806083101.2651025-1-qirui.001@bytedance.com>
-	<20260807081512.2974757-1-qirui.001@bytedance.com>
-	<20260807081512.2974757-3-qirui.001@bytedance.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786106603; c=relaxed/simple;
+	bh=Z2tpQELTJkv3OPU11PMOnQB1hQoYBuVGrBkTMIQ995Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=khmYm5X7mKGwwksv7MC0o9xC+1N8HXQKvNW+TG5B/p5FNTAlxBTJve9z32JC1WWi0bab+TKXE4hHKjqnGfZcKNQ+MyD3//Ee7lwC9iD+wDe9FQdERUnM4gNCCZ0ipCPY1pRNrHnGPqIEvZLfpt8SspPQw8TECPXqIZIsybRfT1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 4B9714033D;
+	Fri,  7 Aug 2026 12:43:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 455FB2002D;
+	Fri,  7 Aug 2026 12:43:00 +0000 (UTC)
+Date: Fri, 7 Aug 2026 08:42:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Song Liu <song@kernel.org>
+Cc: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>,
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, mbenes@suse.cz, jolsa@kernel.org,
+ mhiramat@kernel.org, jpoimboe@kernel.org, joe.lawrence@redhat.com,
+ mark.rutland@arm.com, corbet@lwn.net, stable@vger.kernel.org,
+ linux-open-source@crowdstrike.com
+Subject: Re: [RFC PATCH bpf-next v3 2/2] selftests/livepatch: update
+ test-ftrace.sh for deprecated ftrace_enabled
+Message-ID: <20260807084257.56a5984e@gandalf.local.home>
+In-Reply-To: <CAPhsuW7vPwX-BGWmtMhA8dYwDOQYQLVXOUddZPbTvoazMpaKgA@mail.gmail.com>
+References: <20260806153000.4184871-1-andrey.grodzovsky@crowdstrike.com>
+	<20260806153000.4184871-3-andrey.grodzovsky@crowdstrike.com>
+	<CAPhsuW7gOs2Opo5DRm+YKxBxwU+ncBmEAKHYO5jPjzxM9S8i5w@mail.gmail.com>
+	<CAOu3gNi8i9m7nEuKF28G8cYqJULvE4W6CuDeYVFk58z1xSbBoQ@mail.gmail.com>
+	<20260806205144.743c45e6@gandalf.local.home>
+	<CAPhsuW7vPwX-BGWmtMhA8dYwDOQYQLVXOUddZPbTvoazMpaKgA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 455FB2002D
+X-Stat-Signature: i9ecsa7xz9i37xuy954zjoktkfq9ms3u
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+HubzqSoruDjDW3Q7qpDXcMyS3FS+UntU=
+X-HE-Tag: 1786106580-345906
+X-HE-Meta: U2FsdGVkX19vRGycf/vqMn7wZTxDwKkkJj+Jup2KS11ylAAcCBlJftUi/wKsCTprU5Qq122tD50/kFLDXbtb1gK2Tq0Lx+GXMa9niEaA1X63KGy3gsmIW2FITre6sTyUi+x3gIV3Gfvr1jPfm1jSzbwkts+Me0CQQwjJgwctv2TajrI+j0rni+aZ2XHciJxvXBZIE/3hZvT25YajD86/VUmLR2+C7xnwzBDXm3GHe9TumbGvjm0AjxFGdFBavL/jGO/JPdvAAklxXrZGPivR1hV9Ct59MbLcgsJHebdPWKdR3w3FyVivjzAd0R3YvIBXfASNvNfS3MKtvD0icvQnPFXZGt0RodqS
 
-On Fri,  7 Aug 2026 16:15:12 +0800
-"Rui Qi" <qirui.001@bytedance.com> wrote:
+On Fri, 7 Aug 2026 00:17:27 -0700
+Song Liu <song@kernel.org> wrote:
 
-> The add_remove_uprobe test uses readelf -h to obtain the ELF entry
-> point (e_entry) and passes it directly as the offset to uprobe_events.
-> However, uprobe_events expects a file offset, not a virtual address.
-> 
-> For PIE binaries, the virtual address happens to equal the file offset
-> because the first LOAD segment has p_vaddr == p_offset, so the test
-> works by coincidence. But for non-PIE executables, e_entry is an
-> absolute virtual address that can far exceed the file size. When the
-> probe is enabled, uprobe_register() checks offset > i_size_read(inode)
-> and rejects it with -EINVAL.
-
-Good catch!
 
 > 
-> Fix this by converting the virtual address to a file offset using the
-> ELF program headers: scan readelf -lW output for the LOAD segment
-> containing the entry point, then compute file_offset = e_entry -
-> p_vaddr + p_offset. For PIE binaries the result is unchanged; for
-> non-PIE binaries the offset is correctly translated.
+> However, requiring compatibility in selftests has its own issues:
 > 
-> The conversion uses only POSIX shell primitives, with no dependency on
-> gawk or perl.
+> 1) It makes writing and/or maintaining selftests harder. For example,
+>    shall the selftest for a new feature fail or skip on older kernels.
+
+Skip. It's a feature of our test suite.
+
+>    Either way, some extra work is required to handle this, e.g.,
+>    someone need to remember that this kernel-test combination is
+>    expected to fail, and it is OK.
+
+We explicitly require that new features are detectable (sometimes by just
+updating /sys/kernel/tracing/README). The ftracetests has a way to see the
+dependencies to know if a test should be run or not.
+
+We have a "requires:" field at the top of every test case. For example, in
+test.d/filter/event-filter-function.tc:
+
+  #!/bin/sh
+  # SPDX-License-Identifier: GPL-2.0
+  # description: event filter function - test event filtering on functions
+  # requires: set_event events/kmem/kmem_cache_free/filter
+  # flags: instance
+
+If "set_event" or "events/kmem/kmem_cache_free/filter" does not exist, the
+test will be skipped.
+
+> 2) It delays the actual deprecation of a feature. IOW, the feature will
+>    somehow stays in the selftests for much longer time.
+
+We do not deprecate features. tracefs code is user API. We do not break
+user space. The ftrace_enabled is something that is being removed because
+it is broken to begin with. In fact, if we find out that anything depends
+on ftrace_enabled, we need to revert the change that disabled it.
+
+The removal of ftrace_enabled is the exception and not the rule.
+
 > 
-> Fixes: dc4b165855f2 ("selftests/ftrace: Use readelf to find entry point in uprobe test")
-> Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+> Overall, I think requiring backward compatibility appears to be
+> attractive when we go from "having very little selftests" to
+> "having some selftest coverage". However, not requiring backward
+> compatibility will help us achieve better test coverage in the long run.
 
-OK, let me take it.
+The ftrace selftest requirements are different than the BPF requirements.
+We have been supporting this since 2014 without issue. And have actually
+found making things backward compatible helpful. We are not going to change
+that.
 
-Thank you!
+I hope that makes sense.
 
-> ---
->  .../test.d/dynevent/add_remove_uprobe.tc      | 27 +++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> index f2048c244526..19430bd5864c 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> @@ -12,9 +12,32 @@ echo 0 > events/enable
->  echo > dynamic_events
->  
->  REALBIN=`readlink -f /bin/sh`
-> -ENTRYPOINT=`readelf -h ${REALBIN} | grep Entry | sed -e 's/[^0]*//'`
->  
-> -echo "p:myevent ${REALBIN}:${ENTRYPOINT}" >> uprobe_events
-> +# Get the entry point virtual address from ELF header
-> +ENTRY=`readelf -hW ${REALBIN} | grep "Entry point" | awk '{print $NF}'`
-> +
-> +# Convert virtual address to file offset: find the LOAD segment containing
-> +# the entry point, then compute file_offset = e_entry - p_vaddr + p_offset.
-> +# For PIE binaries this is a no-op (vaddr == file offset), but for non-PIE
-> +# executables the virtual address is much larger than the file size and
-> +# must be converted, otherwise uprobe_register() rejects it with -EINVAL.
-> +ENTRY_DEC=$(printf '%d' "$ENTRY")
-> +OFFSET=$ENTRY
-> +while IFS= read -r line; do
-> +    set -- $line
-> +    [ "$1" = "LOAD" ] || continue
-> +    VA_DEC=$(printf '%d' "$3")
-> +    OFF_DEC=$(printf '%d' "$2")
-> +    FSZ_DEC=$(printf '%d' "$5")
-> +    if [ "$ENTRY_DEC" -ge "$VA_DEC" ] && [ "$ENTRY_DEC" -lt "$((VA_DEC + FSZ_DEC))" ]; then
-> +        OFFSET=$(printf '0x%x' "$((ENTRY_DEC - VA_DEC + OFF_DEC))")
-> +        break
-> +    fi
-> +done << EOF
-> +$(readelf -lW ${REALBIN} | grep LOAD)
-> +EOF
-> +
-> +echo "p:myevent ${REALBIN}:${OFFSET}" >> uprobe_events
->  
->  grep -q myevent uprobe_events
->  test -d events/uprobes/myevent
-> -- 
-> 2.20.1
+-- Steve
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
