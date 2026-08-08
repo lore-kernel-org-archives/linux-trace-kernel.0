@@ -1,80 +1,36 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5F82C0F93;
-	Sat,  8 Aug 2026 00:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913F42C1594;
+	Sat,  8 Aug 2026 00:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786149881; cv=none; b=P3KNlN7eYyOfCl+KwUbiHAeqQPsGb9cBbKzeILMhvJIWOG6ERFRBuV9vh5YjIONZ/xCKnOpTxD715d1nwTGdKfOqFq76hCHblcTVYCexuE+pnOpt+l5dfyc58cJJs9xfx4xxX2/8uYGjo1MVcxiRw2O3J2NXC3oL7x0LCAxxGMg=
+	t=1786150258; cv=none; b=RpAWI48JVkzk72sT8yjZnYxzXy7c6E9nvDeqBhGlXMjumfFCp05RltCj79SVXgfNqdRfAt95tn5CF0MQmjTgAKS3/f2hX0cnsxNduHutcIUlOWCOp/TNLdJ7xTW5N+tcIFPO+IF808VDhmFJxlnZudt7VWMC+OVo84nCT3C5EvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786149881; c=relaxed/simple;
-	bh=NVt6LZTcraoSfFqp+02c3N3zHk/htmnudH7UuYizWHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SkuoSCDf/Cyqm/q1hCTrcdDPLpnGG6cjX1iyPjav8p7MCdfrwAvpPRpIwXmb9uTkxmcdCCDcbS3c/St7ykNFWbIEEzn9L84uHXvFXJjJ6OsKTPex2pWtPVfoUfQVqL0uLMLyKBwMaNB6RmaM747iEYUxszKrZ+TDQ5sf+z12TFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=uuLOihL2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V8hd5+Kl; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="uuLOihL2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V8hd5+Kl"
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 134591400128;
-	Fri,  7 Aug 2026 20:44:38 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Fri, 07 Aug 2026 20:44:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1786149878; x=1786236278; bh=A4
-	tml5VsplrVAaUZ4iBW70/uug6/4mWsPU5I3LeKWEs=; b=uuLOihL2bGfZwL7vFx
-	Nbp7DN09/8ZNVj2XtVUfMMZQdxUna5QKIGl+SANcaf9XXyiqzzNIkJJdVMfxaZjq
-	cmoL2AMdWLvgU6uvUaNUMJQu+7zaDu6Lqfx+PmPm5o0tkLxzCjEspHx9kUi2scrb
-	O64/YklXYgOypwaKBb5NCU9nMwfV+sSzWZ/IM1Vdn0uUKnkMBaOl66Y9i097S6wN
-	kqr4P4PfUXR5VJs2C7sJihLip1/6LJAxvwTp/Qxq83hXJ+W6bwvZHhpaxdRyLaTq
-	SdE20VsmaASd35bQQBEvijqFIbVZsBnuN/DNl4P0/+zGv4kku9h/mWunQR0tEgvb
-	yO6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1786149878; x=1786236278; bh=A4tml5VsplrVAaUZ4iBW70/uug6/
-	4mWsPU5I3LeKWEs=; b=V8hd5+KleljlhfcqUZqhvdnyXfOWw6+lHT8/F+rpVFc2
-	Lp5N3JZ8ydtQzd1hKm+7nZtFU2pKbGrbgBXRCZbUhR+D4pjBhs9cMqwH0Xy1cbXK
-	xAqt4WW0fxFseqUdzahBvouCU7OoY6obrOb7LFBEjvPQnznh3vV9GuPx+kNJcxLI
-	rTy+P0NfHHbEM5nZ1T/LU5XRCMBISO43Gylh7RwxAIJ2wVMi38txGDCcg/iwO1TS
-	M3ztDqUUYoEqxVrrx4rS89uWiI4xogIk9sGqgjrWQTw1eAJ2OECIyFrUUoThm834
-	Gds+7bAU0crHNbpNr21+XTDjxtuxmQXkamI/CHzygQ==
-X-ME-Sender: <xms:9Xt2aqifRzXxUeHP1NT7kGPSwX1UXMA2VoI1s2EqNr9SIamnQkAy4g>
-    <xme:9Xt2ao3478A1q010AgUpk-x_VRiFUTS3G7dSnDcJE66x2jf_XH1RKmzxfwGUYYTb-
-    7EscPgweU9imuN3aIgXaKr_9KSRrX5c-2d1QlOE0r4qcqOSjvgYI6o6>
-X-ME-Received: <xmr:9Xt2asi3uNQXO8syFRci2eOh-sREsl8oYiG7BZdoSJK4jYcJpVTQNL_jVItHIR7ZnMYig_iP>
-X-ME-Proxy-Cause: dmFkZTFN4P37v1lyJv4q4MMHb6Y7Fl+huj4fb5+IgGLhdWTlHowF0MRqnYi0oXl7fNKZYd
-    9WJzROIe0tccN5lxRwLK+ef74QLvOd7Y3mlJjbuesdN3hFI50rXg2HeNVnhubTk6hMsa0c
-    k9V4Wb9mgBtKOnrADfkIzSSaKe/+FkDRJSMJ2MUoW3WhxSIf6cXVrChqsZEhYlaxtkfS60
-    dqZ0t/jFAurscjITByvu+3L+ZOz7vvX4WlsHXfQsUvijR1Lcxcmd7BFBfnBBqrmOmp4rU9
-    o1638/+TyFhDl0wI1Gqpj3RWHwGS8AzsnlyrhSazWm94VjLVqtaagsSgvAX42PfxxMAmHC
-    UvqwvJf88gKuQ3wCIgsj9PNFvyec6kIXFGFttfa8kqqx0+kFR6ReF05+qB5weiY4QUQ0CF
-    EjIarrg9KZH+WjgK8Afsy9GAXMBQB8aoCMCxgn1j58g/ZYhyDxBSu6o1Tsy87Ar2SJAiz0
-    4f/FFRrpa1jmM3//mCM/mbE9egCkVM5i4YJeUXIa2JRMZWpL0QPXnvJowrWsGsPpJONQUH
-    un1SK/KP/5UZJP4X8rx5dpJSrxBTbLdMLCrXoArVOwdIiwKsh5fIG7jv864ZEn2xBC3w2M
-    Tz+MgBhW96LOrRyKPD0SCZxm+fBaVT+VDeXqR6lUNwZhK6IN2NE9bwpmq0Bg
-X-ME-Proxy: <xmx:9Xt2agc-urLa99hFG9NK4L8_0F0CtaroA6w3W1WqmKHlEIGwL45icw>
-    <xmx:9Xt2annGZTVb_EJwOEk9qUH2yC3cf-uDlkikgEKohl9Vc5nV1RjB2g>
-    <xmx:9Xt2ahseXy1PB5qXBN_Y4hhnLYtPuWhva8IywWYT-Fk2l1SD84kPHQ>
-    <xmx:9Xt2al-mgpSt2sLDRYdsmwR54NIUQoxtSSZ75uYej88X3-x_fIxNpQ>
-    <xmx:9nt2aoz_FgOhYSzhlt-UZ_lyKuRWJU2h5TU1D7iOy1iUHji-ELIp_Z3h>
-Feedback-ID: id06e481b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Aug 2026 20:44:37 -0400 (EDT)
-Date: Fri, 7 Aug 2026 20:44:41 -0400
-From: Steven Rostedt <steven@rostedt.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] eventfs: Use children field for rcu head and add memory
- barriers
-Message-ID: <20260807204441.75a7db89@gandalf.local.home>
+	s=arc-20240116; t=1786150258; c=relaxed/simple;
+	bh=wCjMZJxiQb5jNPngAYFU602tT3LnRqedsDi0U55tcTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fQBdPGDmdy/tu607XVBNjqFSaYWnf6SyaCIj2dPeZBiCdK0b2YPVQWG3rXHMoTKLU3KnHvH54PI49ilvkM1eiERZBT3mZeDOYNa1dbj+20CquagRxu5ZXijtcwL6iIwO3tVSFuzoWP/z8NiTqQ7BBDP8T1O070zZTa4Mc4EAyQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 1B4358020C;
+	Sat,  8 Aug 2026 00:50:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 522E12000E;
+	Sat,  8 Aug 2026 00:50:50 +0000 (UTC)
+Date: Fri, 7 Aug 2026 20:50:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Pekka Paalanen <ppaalanen@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] tracing/mmiotrace: Clean up coding style and
+ redundant debug logs
+Message-ID: <20260807205053.7000eef0@gandalf.local.home>
+In-Reply-To: <178524301945.56416.2087305624947649637.stgit@devnote2>
+References: <178524298182.56416.7520852015178187644.stgit@devnote2>
+	<178524301945.56416.2087305624947649637.stgit@devnote2>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -84,101 +40,136 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: but57si57nhqcgc6yng1suher1mosm3u
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 522E12000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19gRu8bUZ9VZnlDoRBGEO+tZKahHYXFwsU=
+X-HE-Tag: 1786150250-943132
+X-HE-Meta: U2FsdGVkX1+WHC481oLJWAA19yCFqIbY1AD5kD10b9zjYdqPGVuqTyJDTlsfGr0ZRtGwSyRfHk9WjqEkwfRCFNQopbZL89yvsCebadSWHixmFQWA8YzADAlUaIpxpYr/hzDTrW/GjndiCmSN+9f2ENi4M3ak1dQsOsluTWqRpFNhx35RjGcFajI9bYZ45Ke7abt+pFHko9dEpgMyN9g5Lcq22AOAdJFnrA6euvPhbDjyU69JrobJyGPVN/22GoZRcKJCQf4pf8xGGz9P521ZhIL1ZnqS3pYUsqfCQlaGnNhNtO/onqmhmXU1gbyVgDAy/J2fdPkePP7pgWLNfMdIV/10LA0mos2p
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 28 Jul 2026 21:50:19 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-When an eventfs inode is freed, it sets ei->is_freed and then uses its
-ei->list to add it to the srcu link list as the list field is a union with
-the rcu list head. As the ei->list is used to iterate over an SRCU
-protected list without taking the eventfs_mutex, there's nothing stopping
-the iteration over that list to see the ei->rcu instead of the ei->list
-and it will read a corrupt target.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Clean up coding style issues in trace_mmiotrace.c:
+> - Remove redundant pr_debug() entries in tracer callbacks.
+> - Fix opening brace placement for mmio_tracer.
+> - Prefer 'unsigned int' to bare 'unsigned'.
+> - Add missing blank lines after local variable declarations.
+> 
+> Assisted-by: Antigravity:gemini-3.6-flash
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_mmiotrace.c |   16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_mmiotrace.c b/kernel/trace/trace_mmiotrace.c
+> index 77120d467e11..ce16e1c53d12 100644
+> --- a/kernel/trace/trace_mmiotrace.c
+> +++ b/kernel/trace/trace_mmiotrace.c
+> @@ -36,7 +36,6 @@ static void mmio_reset_data(struct trace_array *tr)
+>  
+>  static int mmio_trace_init(struct trace_array *tr)
+>  {
+> -	pr_debug("in %s\n", __func__);
 
-To fix this, change the union of the rcu list head with the children list.
-On freeing the eventfs inode, set the is_free and execute a smp_wmb()
-before adding the eventfs inode to the SRCU list.
+So how are these redundant?
 
-On iteration of the ei->children list, at the start, execute a smp_rmb()
-and then read the is_freed of the ei to see if the children list is still
-valid. If is_freed is set, then the ei_child read is not valid and the
-loop should exit immediately.
+Are there pr_debug() prints elsewhere?
 
-Cc: stable@vger.kernel.org
-Fixes: 704f960dbee2f ("eventfs: Read ei->entries before ei->children in eventfs_iterate()")
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/#/patchset/20260806022719.375354-1-shuangpeng.kernel%40gmail.com
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20260807170408.2d324df5@gandalf.local.home
+>  	mmio_trace_array = tr;
+>  
+>  	mmio_reset_data(tr);
+> @@ -46,8 +45,6 @@ static int mmio_trace_init(struct trace_array *tr)
+>  
+>  static void mmio_trace_reset(struct trace_array *tr)
+>  {
+> -	pr_debug("in %s\n", __func__);
+> -
+>  	disable_mmiotrace();
+>  	mmio_reset_data(tr);
+>  	mmio_trace_array = NULL;
+> @@ -55,7 +52,6 @@ static void mmio_trace_reset(struct trace_array *tr)
+>  
+>  static void mmio_trace_start(struct trace_array *tr)
+>  {
+> -	pr_debug("in %s\n", __func__);
+>  	mmio_reset_data(tr);
+>  }
+>  
+> @@ -113,6 +109,7 @@ static void mmio_pipe_open(struct trace_iterator *iter)
+>  static void mmio_close(struct trace_iterator *iter)
+>  {
+>  	struct header_iter *hiter = iter->private;
+> +
+>  	destroy_header_iter(hiter);
+>  	iter->private = NULL;
+>  }
 
-- Fixed placement of smp_wmb() and is_free (Reported by Sashiko)
+This is fine.
 
- fs/tracefs/event_inode.c | 24 ++++++++++++++++++++++++
- fs/tracefs/internal.h    |  4 ++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
+> @@ -170,7 +167,7 @@ static enum print_line_t mmio_print_rw(struct trace_iterator *iter)
+>  	struct trace_seq *s	= &iter->seq;
+>  	unsigned long long t	= ns2usecs(iter->ts);
+>  	unsigned long usec_rem	= do_div(t, USEC_PER_SEC);
+> -	unsigned secs		= (unsigned long)t;
+> +	unsigned int secs	= (unsigned long)t;
+>  
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 39c7a34531e8..7d2431f2bb08 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -124,7 +124,17 @@ static inline void put_ei(struct eventfs_inode *ei)
- static inline void free_ei(struct eventfs_inode *ei)
- {
- 	if (ei) {
-+		/* The ei should have no children if it is being freed. */
-+		WARN_ON_ONCE(!list_empty(&ei->children));
- 		ei->is_freed = 1;
-+		/*
-+		 * The SRCU iteration has a smp_rmb() to make sure it
-+		 * sees a child (that may have already been freed)
-+		 * before it reads is_free. If is_free is set, it must
-+		 * not use the child it acquired from ei->children, as
-+		 * the list may be used for SRCU.
-+		 */
-+		smp_wmb();
- 		put_ei(ei);
- 	}
- }
-@@ -627,6 +637,20 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	list_for_each_entry_srcu(ei_child, &ei->children, list,
- 				 srcu_read_lock_held(&eventfs_srcu)) {
- 
-+		/*
-+		 * If the ei is being freed, then the ei->children may be
-+		 * being used as the rcu list, which means the next element
-+		 * may be garbage. The ei->is_free is set before switching
-+		 * the ei->children over to ei->rcu. The read memory barrier
-+		 * here makes sure the ei_child is read before is_free is
-+		 * updated.
-+		 *
-+		 * Matches the smp_wmb() in put_ei()
-+		 */
-+		smp_rmb();
-+		if (ei->is_freed)
-+			return -EINVAL;
-+
- 		if (c > 0) {
- 			c--;
- 			continue;
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index a4a7f8431aff..c61481d04c8e 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -46,11 +46,11 @@ struct eventfs_attr {
-  * @ino:	The saved inode number
-  */
- struct eventfs_inode {
-+	struct list_head	list;
- 	union {
--		struct list_head	list;
-+		struct list_head	children;
- 		struct rcu_head		rcu;
- 	};
--	struct list_head		children;
- 	const struct eventfs_entry	*entries;
- 	const char			*name;
- 	struct eventfs_attr		*entry_attrs;
--- 
-2.53.0
+OK.
 
+>  	trace_assign_type(field, entry);
+>  	rw = &field->rw;
+> @@ -215,7 +212,7 @@ static enum print_line_t mmio_print_map(struct trace_iterator *iter)
+>  	struct trace_seq *s	= &iter->seq;
+>  	unsigned long long t	= ns2usecs(iter->ts);
+>  	unsigned long usec_rem	= do_div(t, USEC_PER_SEC);
+> -	unsigned secs		= (unsigned long)t;
+> +	unsigned int secs	= (unsigned long)t;
+>  
+>  	trace_assign_type(field, entry);
+>  	m = &field->map;
+> @@ -249,7 +246,7 @@ static enum print_line_t mmio_print_mark(struct trace_iterator *iter)
+>  	struct trace_seq *s	= &iter->seq;
+>  	unsigned long long t	= ns2usecs(iter->ts);
+>  	unsigned long usec_rem	= do_div(t, USEC_PER_SEC);
+> -	unsigned secs		= (unsigned long)t;
+> +	unsigned int secs	= (unsigned long)t;
+>  
+>  	trace_assign_type(print, entry);
+>  	msg = print->buf;
+> @@ -274,8 +271,7 @@ static enum print_line_t mmio_print_line(struct trace_iterator *iter)
+>  	}
+>  }
+>  
+> -static struct tracer mmio_tracer __read_mostly =
+> -{
+> +static struct tracer mmio_tracer __read_mostly = {
+
+OK.
+
+>  	.name		= "mmiotrace",
+>  	.init		= mmio_trace_init,
+>  	.reset		= mmio_trace_reset,
+> @@ -322,6 +318,7 @@ static void __trace_mmiotrace_rw(struct trace_array *tr,
+>  void mmio_trace_rw(struct mmiotrace_rw *rw)
+>  {
+>  	struct trace_array *tr = mmio_trace_array;
+> +
+>  	__trace_mmiotrace_rw(tr, rw);
+>  }
+>  
+> @@ -353,6 +350,7 @@ static void __trace_mmiotrace_map(struct trace_array *tr,
+>  void mmio_trace_mapping(struct mmiotrace_map *map)
+>  {
+>  	struct trace_array *tr = mmio_trace_array;
+> +
+>  	__trace_mmiotrace_map(tr, map);
+>  }
+
+Honestly, for one line functions like the above, I think it looks better
+without that blank line.
+
+-- Steve
