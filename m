@@ -1,389 +1,257 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5542A1F8755
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  9 Aug 2026 17:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD24B12C534;
+	Sun,  9 Aug 2026 17:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786297351; cv=none; b=BvGW/ZoRFT5vRwwKq6javr5AxZCxyxhU20xqHdLuDRZlE7qFo4g82Kbp6V9XniAM/BXiSfX143Lw0wxedNPSy+mQQo52J1uDWuRLoZSipjUZNsq4zA/+fLfMztapobvUibn+Rw1QZFnc7zLeFbX93/SCQCPPhYEy3/lt+NBDXQQ=
+	t=1786297635; cv=none; b=BthzJVCkpRQgNQmkCEuHqgekf6xCvmhIC8a5O+4Epcu0IGnfMOt6e8htGzKOQEeC6KVNbV1u8rfADE5F+yJYXYFkbDnuuieNaZtTh406sWtGTBs8OUZdQbi6W9dWPmjJGo4R31BYj46cgTTeg7cC4B5GG6QVCHIqMCAzaICA8iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786297351; c=relaxed/simple;
-	bh=jHaJAxu5HjPRRIhZJYMVYhQAaoUGehqnqbJxd/9L5CQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L83JXTZM+zmqm6hd11340lQ4tO0AfxqJFFACRp7Iox7Ou57/j7oEdi+5e+nKAHiqMIbqyHNEjjNjIjh7PPjqGrRcfYNVuDcBeCiwyfb+6SV/pGd9+1Ubu9QVIPpREU3Ivh/pWqlBjNyBrqTpwU4/UYZigEYnnhOgG6gwtW1meb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lXiAmGR3; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786297635; c=relaxed/simple;
+	bh=zl4SAJTSchEb9pA9X1DIKEcTq748jMN5xJObiLCmC9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tXIoFp2fU8N9Vbo2puxZvR59XgjIKRWt94Jv32fHnP89Ct1jh6AXLgZScyovi6+OLJuAO5gdh+ZXi45gPn7WddG2HYFaBmkKJdmFUXS7zaKgYGxzZQYFYdaTpcft3Ci3HyWNYPovK0f3icA+OnJqFVkKmafaHjfrbnlIaXO9Hxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UabY2i2O; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lXiAmGR3"
-Message-ID: <6762485a-a6af-4250-b7e1-1548d7a772e6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786297345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PprEhvA83UnQ1ZESVM6sgqSJSfr3iw8469C1fY8YS5k=;
-	b=lXiAmGR3gpd33IpPjmKiBijEqstH2jgKiYgOO6kqD2SFkCUkshM/4Dwwh0ozZnkPdlTt70
-	N36ermOR5fzTEfFq1tfHx9VUB8n7255qn6v9wcmFIY+Qd5tp2ju62fz45n2CeFEEbcsHSP
-	HDp9yL7SwCt0XCvolVKy9s1Tns8KwZs=
-Date: Mon, 10 Aug 2026 01:42:15 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UabY2i2O"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 679FW1sE3277678;
+	Sun, 9 Aug 2026 17:45:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=1V46XsJ2ASYOMqPQa9NRG149ty7O7K
+	B1wPG7dfwq0b8=; b=UabY2i2O0DFebgnB5Itk1pRi3/Htbxgsnj9zfMhYyXAq+k
+	yF4QkmQIRPAjVGN5n1TRYRA93L73U7SajNdDfI3dDHHhuVPIhOocLrBCQRPGo6fO
+	zRUesLej41tQv0v/OKC288JhXJxpOKbIav1Tz2cpvXyghY1uWfY3xJlpLdnQWSkO
+	g9By3jcVfZdNthUqy8R7s35WFAUQpmZ+ICuM5XKofi9TBR9lWHWDncMDr7e2p4Pd
+	ahAwkkpqBsFsqnU9UxNpc/YeN9/xorzOtztL+lqAorMkbJvqxaDn+ti/Ykb1NS4P
+	GkIfLBl2FlcgU/0FYB7OxhPqwp9WpNOjoazF1Vnw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvq94twx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 09 Aug 2026 17:45:48 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 679HfJG7012053;
+	Sun, 9 Aug 2026 17:45:47 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fxf5vt2bb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 09 Aug 2026 17:45:47 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 679HjjQR34275656
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 9 Aug 2026 17:45:45 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0842520040;
+	Sun,  9 Aug 2026 17:45:45 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C40720043;
+	Sun,  9 Aug 2026 17:45:42 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.87.135.220])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sun,  9 Aug 2026 17:45:42 +0000 (GMT)
+Date: Sun, 9 Aug 2026 19:45:41 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        David Hildenbrand <david@kernel.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
+        ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH 1/9] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <4a42c498-58ca-46f4-819f-da14cfba154f-agordeev@linux.ibm.com>
+References: <20260806083926.1807279-1-usama.anjum@arm.com>
+ <20260806083926.1807279-2-usama.anjum@arm.com>
+ <3db8233c-3785-444e-b2eb-3e5fc5cb2f17-agordeev@linux.ibm.com>
+ <eef14e97-20cd-4b08-ae22-7636af049b09@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 4/4] rv/reactors: add KUnit tests for reactor
- registration and dispatch
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1785695669.git.wen.yang@linux.dev>
- <55a167aacaf1497fafbbe9fd578ffe14cbee368f.1785695669.git.wen.yang@linux.dev>
- <d2bbe352facbd02de931305d23bcc2115d14fba5.camel@redhat.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <d2bbe352facbd02de931305d23bcc2115d14fba5.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eef14e97-20cd-4b08-ae22-7636af049b09@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ehRYw8QMBCJQ6XIfQUmc1xOZ8VBocr8y
+X-Authority-Analysis: v=2.4 cv=PbDPQChd c=1 sm=1 tr=0 ts=6a78bccc cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=kj9zAlcOel0A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=7CQSdrXTAAAA:8
+ a=7ZejAh3qsUrew3BXsuMA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA5MDE1OCBTYWx0ZWRfX8PAJydAF9Sdz
+ 7Q3LQNawdCCW5p3S9Cbrhno/+8i0akWT9oxXen6S0nUhBQsH880/7RsGl95VX21rT54x9YhFqi1
+ 20KERD3HCbwvoqxx4T70j96cVKwA2YxlZ6l2xOFcmMWRehBEI40oNe5oKbokVHGzUV8t5ZkpMSK
+ ns0C/90GTY6G7Afmg3i4iWKGKI/x2MSzhpkhUmia4LUS0tqD/uSG8uJudCOs75ncoAMtIyBtPts
+ SBc2vAEfXkhI2UuaiCwcdAwFVnvK8EgubcrGc/SgeNggiVPjDgs5qWQ8+vOIPtcC9cEpr02poOB
+ Lg7APmO3Rx8vA6tguusRIZ4Fs8vWJdm8vnK+m2H0UOB6WahoA26KXbJqrB0927hzkoKT62s0AOf
+ RGde2c8tcj7xMXKNQULCZu1ZlHt1NIVwRcJ45XzbncbVNxXZWhcoK8gsn97hT6hSSx+Fo3N5VVF
+ ELeKceQfHYIaUoeswKw==
+X-Proofpoint-ORIG-GUID: ehRYw8QMBCJQ6XIfQUmc1xOZ8VBocr8y
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA5MDE1OCBTYWx0ZWRfX40Jd01nPAYq/
+ 0UVJDKsUAxNz/IYIJFjnAhSgQRETCQqeUcuCeVy3WJaqKm5o/wyOjpQIKh0TKZ3HawAxontKM5X
+ Anm2JSFRi6CK3bLpHrJPHohn6MgFj5w=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-09_05,2026-08-07_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 suspectscore=0 phishscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608090158
 
-
-
-On 8/3/26 20:49, Gabriele Monaco wrote:
-> On Mon, 2026-08-03 at 02:43 +0800, wen.yang@linux.dev wrote:
->> From: Wen Yang <wen.yang@linux.dev>
->>
->> Add KUnit tests covering the reactor register/unregister lifecycle
->> (including duplicate and name-length rejection) and rv_react() dispatch
->> (a no-op without a callback, exactly one invocation with one; the mdelay
->> callback keeps the CPU busy so a timer interrupt exercises the LD_WAIT_SPIN
->> lockdep context).  The Kconfig entry is tristate so the tests can be built
->> as a module when CONFIG_KUNIT=m; only RV_REACTORS is required.
->>
->> Signed-off-by: Wen Yang <wen.yang@linux.dev>
->> ---
->>   kernel/trace/rv/Kconfig             |  12 +++
->>   kernel/trace/rv/Makefile            |   1 +
->>   kernel/trace/rv/rv_reactors_kunit.c | 143 ++++++++++++++++++++++++++++
->>   3 files changed, 156 insertions(+)
->>   create mode 100644 kernel/trace/rv/rv_reactors_kunit.c
->>
->> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
->> index efa930f94ea4..9bfd429ffdea 100644
->> --- a/kernel/trace/rv/Kconfig
->> +++ b/kernel/trace/rv/Kconfig
->> @@ -113,6 +113,18 @@ config RV_REACT_PANIC
->>   	  Enables the panic reactor. The panic reactor emits a printk()
->>   	  message if an exception is found and panic()s the system.
->>   
->> +config RV_REACTORS_KUNIT
->> +	tristate "KUnit tests for RV reactors" if !KUNIT_ALL_TESTS
->> +	depends on KUNIT
->> +	depends on RV_REACTORS
->> +	default KUNIT_ALL_TESTS
->> +	help
->> +	  Enable KUnit tests for RV reactor registration and dispatch.
->> +	  These tests verify the register/unregister lifecycle, duplicate
->> +	  rejection, and that rv_react() correctly invokes callbacks.
->> +
->> +	  If unsure, say N.
->> +
->>   config RV_MONITORS_KUNIT_TEST
->>   	tristate "KUnit tests for RV monitors" if !KUNIT_ALL_TESTS
->>   	depends on KUNIT && RV && RV_REACTORS
->> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
->> index cdbf68c84f5a..c895d81dfdad 100644
->> --- a/kernel/trace/rv/Makefile
->> +++ b/kernel/trace/rv/Makefile
->> @@ -25,4 +25,5 @@ obj-$(CONFIG_RV_MON_WAKEUP) += monitors/wakeup/wakeup.o
->>   obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
->>   obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
->>   obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
->> +obj-$(CONFIG_RV_REACTORS_KUNIT) += rv_reactors_kunit.o
->>   obj-$(CONFIG_RV_MONITORS_KUNIT_TEST) += rv_monitors_test.o
->> diff --git a/kernel/trace/rv/rv_reactors_kunit.c
->> b/kernel/trace/rv/rv_reactors_kunit.c
->> new file mode 100644
->> index 000000000000..32c25dcf0cb6
->> --- /dev/null
->> +++ b/kernel/trace/rv/rv_reactors_kunit.c
->> @@ -0,0 +1,143 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * KUnit tests for RV reactor registration and dispatch.
->> + */
->> +
->> +#include <kunit/test.h>
->> +#include <linux/rv.h>
->> +#include <linux/delay.h>
->> +#include <linux/atomic.h>
->> +#include "rv.h"
->> +
->> +static struct rv_reactor test_reactor = {
->> +	.name		= "kunit_test_reactor",
->> +	.description	= "KUnit test reactor",
->> +};
->> +
->> +/*
->> + * rv_unregister_reactor() on a reactor that was never registered would
->> + * list_del() an uninitialized list_head, so track registration and only
->> + * unregister in the teardown if it is still on the list.
->> + */
->> +static bool test_reactor_registered;
+On Fri, Aug 07, 2026 at 04:24:00PM +0100, Muhammad Usama Anjum wrote:
+> On 07/08/2026 8:09 am, Alexander Gordeev wrote:
+> > On Thu, Aug 06, 2026 at 09:38:39AM +0100, Muhammad Usama Anjum wrote:
+> >> pte_t is used both for logical PTE values and for entries stored in a PTE
+> >> table, so pte_t * does not distinguish a pointer to a copied value from a
+> >> pointer to table storage.
+> >>
+> >> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+> >> as a macro alias of pte_t by default. When an architecture selects
+> >> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
+> >> This preserves the representation while allowing converted architectures
+> >> to enforce the distinction at compile time.
+> >>
+> >> Keep the C type definitions behind an __ASSEMBLY__ check because
+> >> architecture assembly sources can include this header indirectly. Include
+> >> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
+> >> they previously obtained from that header.
+> >>
+> >> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> >> ---
+> >> Changes since RFC v1:
+> >> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
+> >> - Exclude the C type definitions from assembly sources.
+> >> - Update the description for the new opt-in model.
+> >> ---
+> >>  MAINTAINERS                   |  1 +
+> >>  include/linux/pgtable_types.h | 17 +++++++++++++++++
+> >>  mm/Kconfig                    |  3 +++
+> >>  3 files changed, 21 insertions(+)
+> >>  create mode 100644 include/linux/pgtable_types.h
+> >>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index e9c8567308a75..7169bea968cf5 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -16982,6 +16982,7 @@ F:	include/linux/mmu_notifier.h
+> >>  F:	include/linux/pagewalk.h
+> >>  F:	include/linux/pgalloc.h
+> >>  F:	include/linux/pgtable.h
+> >> +F:	include/linux/pgtable_types.h
+> >>  F:	include/linux/ptdump.h
+> >>  F:	include/linux/vmpressure.h
+> >>  F:	include/linux/vmstat.h
+> >> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+> >> new file mode 100644
+> >> index 0000000000000..70c3edd00a01b
+> >> --- /dev/null
+> >> +++ b/include/linux/pgtable_types.h
+> >> @@ -0,0 +1,17 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +#ifndef _LINUX_PGTABLE_TYPES_H
+> >> +#define _LINUX_PGTABLE_TYPES_H
+> >> +
+> >> +#include <asm/page.h>
+> >> +
+> >> +#ifndef __ASSEMBLY__
+> >> +
+> >> +#ifdef CONFIG_ARCH_HAS_HW_PTE_T
+> >> +typedef struct { pte_t __pte; } hw_pte_t;
+> > 
+> > On s390 it fails to compile once we do typedef hw_pte_t *pgtable_t
+> > in asm/page.h. m68k, powerpc and sparc may also have such problem.
+> > 
+> > The below declaration helps to resolve it using forward declaration
+> > and without meddling with headers, though I do not like it much:
+> > 
+> > typedef struct __hw_pte_t { pte_t __pte; } hw_pte_t;
+> Thank you for testing it out on s390.
 > 
-> I'm not too fond of adding more logic than necessary in the test, but if you
-> really want to keep the dynamic teardown cannot this variable stay somehow in
-> test-specific memory (test->priv)?
+> As __hw_pte_t isn't being used yet in this series, would s390 enablement
+> patches add __hw_pte_t to this definition?
+
+I hope there is a better solution. As I noted m68k, powerpc and sparc
+may also be affected, so I would suggest to look into those as well.
+I would prefer s390 to use the generic one rather than circumvent a
+compile error in a custom way.
+
+> This could have been avoided if each architecture defined its own hw_pte_t.
+> But for now we are keeping the generic definition of hw_pte_t.
 > 
-> That feels to me a bit cleaner, although the reactor and obviously the reactors
-> list are still static, so we probably wouldn't gain a huge deal.
+> > 
+> >> +#else
+> >> +#define hw_pte_t pte_t
+> >> +#endif
+> >> +
+> >> +#endif /* !__ASSEMBLY__ */
+> >> +
+> >> +#endif /* _LINUX_PGTABLE_TYPES_H */
+> >> diff --git a/mm/Kconfig b/mm/Kconfig
+> >> index 331daf7fcfab5..31ba9ebf4aafd 100644
+> >> --- a/mm/Kconfig
+> >> +++ b/mm/Kconfig
+> >> @@ -1316,6 +1316,9 @@ comment "GUP_TEST needs to have DEBUG_FS enabled"
+> >>  config GUP_GET_PXX_LOW_HIGH
+> >>  	bool
+> >>  
+> >> +config ARCH_HAS_HW_PTE_T
+> >> +	bool
+> >> +
+> >>  config DMAPOOL_TEST
+> >>  	tristate "Enable a module to run time tests on dma_pool"
+> >>  	depends on HAS_DMA
+> >> -- 
+> >> 2.47.3
+> >>
 > 
-> What do you think?
-> 
-Thansk, your suggestion in the next comment -- relying purely on 
-theteardown action.  Since reactor_teardown() is only registered after 
-rv_register_reactor() succeeds, calling rv_unregister_reactor() 
-unconditionally inside it is always safe.  This lets us drop 
-test_reactor_registered entirely, along with the 
-unregister_test_reactor() wrapper.  See the updated code below.
-
-
->> +
->> +static int unregister_test_reactor(void)
->> +{
->> +	int ret = 0;
->> +
->> +	if (test_reactor_registered) {
->> +		ret = rv_unregister_reactor(&test_reactor);
->> +		test_reactor_registered = false;
-> 
-> rv_unregister_reactor() cannot fail and probably never will (I'm not quite sure
-> it should return int).
-> But setting test_reactor_registered to false here is assuming it didn't fail
-> while the rest of the test doesn't make this assumption.
-> 
-> Maybe let's make it void and stop tracking a result that can never change (and
-> that real reactors already have to ignore).
-> 
-> If we do that you may even stop unregistering manually and rely only on the
-> teardown, and perhaps get rid of test_reactor_registered. Even
-> test_register_unregister() would be mostly already covered by the next one.
-> Just throwing in the idea.
-> 
-
-Agreed on all points.  In v3:
-- unregister_test_reactor() is gone; reactor_teardown() calls
-   rv_unregister_reactor() directly.
-- test_reactor_registered is gone.
-- test_register_unregister() is removed; the teardown covers
-   the unregister path, and test_double_register() already exercises
-   the register→verify→unregister (via teardown) flow.
-
-The updated teardown is:
-
-   static void reactor_teardown(void *arg)
-   {
-	rv_unregister_reactor(&test_reactor);
-   }
-
-   static void register_test_reactor(struct kunit *test)
-   {
-	KUNIT_ASSERT_EQ(test, rv_register_reactor(&test_reactor), 0);
-	KUNIT_ASSERT_EQ(test,
-			kunit_add_action_or_reset(test,reactor_teardown,
-						  NULL), 0);
-   }
-
-
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +/*
->> + * The teardown action guarantees the reactor is unregistered even if a
->> + * test fails mid-way, so a leftover entry cannot corrupt later tests.
->> + */
->> +static void reactor_teardown(void *arg)
->> +{
->> +	unregister_test_reactor();
->> +}
->> +
->> +static void register_test_reactor(struct kunit *test)
->> +{
->> +	KUNIT_ASSERT_EQ(test, rv_register_reactor(&test_reactor), 0);
->> +	test_reactor_registered = true;
->> +	KUNIT_ASSERT_EQ(test,
->> +			kunit_add_action_or_reset(test, reactor_teardown,
->> NULL), 0);
->> +}
->> +
->> +static void test_register_unregister(struct kunit *test)
->> +{
->> +	register_test_reactor(test);
->> +
->> +	KUNIT_EXPECT_EQ(test, unregister_test_reactor(), 0);
->> +}
->> +
->> +static void test_double_register(struct kunit *test)
->> +{
->> +	register_test_reactor(test);
->> +
->> +	KUNIT_EXPECT_EQ(test, rv_register_reactor(&test_reactor), -EINVAL);
->> +
->> +	KUNIT_EXPECT_EQ(test, unregister_test_reactor(), 0);
->> +}
->> +
->> +static void test_name_too_long(struct kunit *test)
->> +{
->> +	/* Name length of MAX_RV_REACTOR_NAME_SIZE (32) must be rejected. */
->> +	static struct rv_reactor long_reactor = {
->> +		.name = "kunit_reactor_name_too_long_xxx_",
->> +	};
->> +
->> +	KUNIT_ASSERT_EQ(test, (int)strlen(long_reactor.name),
->> +			MAX_RV_REACTOR_NAME_SIZE);
-> 
-> You probably want KUNIT_ASSERT_GE, or even better
-> _Static_assert(sizeof(long_name) - 1 >= MAX_RV_REACTOR_NAME_SIZE)
-> 
-> (you'd need to save the name to a static array first for sizeof() to work as
-> expected) 
-> 
-
-Good idea.  The _Static_assert approach is strictly better: it catches 
-the mistake at build time rather than test run time, and the assertion 
-is always evaluated regardless of whether the test runs at all.
-
-In v3 the name is stored in a fixed-size array:
-
-static const char long_reactor_name[] = "kunit_reactor_name_too_long_xxx_";
-_Static_assert(sizeof(long_reactor_name) - 1 >= MAX_RV_REACTOR_NAME_SIZE,
-               "long_reactor_name must be at least 
-MAX_RV_REACTOR_NAME_SIZE chars");
-
-static void test_name_too_long(struct kunit *test)
-{
-        static struct rv_reactor long_reactor = {
-                .name = long_reactor_name,
-        };
-
-        KUNIT_EXPECT_EQ(test, rv_register_reactor(&long_reactor), -EINVAL);
-}
-
-The KUNIT_ASSERT_EQ(strlen(...)) runtime check is removed.
-
-
->> +	KUNIT_EXPECT_EQ(test, rv_register_reactor(&long_reactor), -EINVAL);
->> +}
->> +
->> +static struct kunit_case rv_reactor_registration_cases[] = {
->> +	KUNIT_CASE(test_register_unregister),
->> +	KUNIT_CASE(test_double_register),
->> +	KUNIT_CASE(test_name_too_long),
->> +	{}
->> +};
->> +
->> +static struct kunit_suite rv_reactor_registration_suite = {
->> +	.name		= "rv_reactor_registration",
->> +	.test_cases	= rv_reactor_registration_cases,
->> +};
->> +
->> +static atomic_t react_call_count;
->> +
->> +__printf(1, 0) static void mock_react(const char *msg, va_list args)
->> +{
->> +	atomic_inc(&react_call_count);
->> +	/*
->> +	 * Hold the CPU for 5 ms so a timer interrupt is likely to fire
->> +	 * inside rv_react()'s lockdep context, exercising the LD_WAIT_SPIN
->> +	 * constraint.  mdelay() is a calibrated busy-wait with no scheduler
->> +	 * interaction.
->> +	 */
->> +	mdelay(5);
->> +}
->> +
->> +static void test_react_no_callback(struct kunit *test)
->> +{
->> +	struct rv_monitor monitor = {
->> +		.name = "kunit_null_react",
->> +	};
->> +
->> +	/* rv_react() must silently return when monitor->react is NULL. */
->> +	rv_react(&monitor, "no callback");
-> 
-> So what are we testing here? That the kernel doesn't panic? It's fair to expect
-> a silent return, but we cannot really validate that.
-> 
-> If that's your intent, maybe specify it better, since, in fact, KUnit cannot
-> validate this. Something like:
-> 
->    "The only possible failure in this test case is a kernel panic"
-> 
-
-Good point. And thinking further about it: we actually can do better 
-than a pure crash guard here.  The existing mock_react() already 
-increments react_call_count, so we can reuse that counter to assert that 
-the callback was never invoked.  That turns the test from "does not 
-panic" into "callback count stays zero", which catches a broader class 
-of bugs.
-
-In v3 the test becomes:
-
-static void test_react_no_callback(struct kunit *test)
-{
-        struct rv_monitor monitor = {
-                .name = "kunit_null_react",
-        };
-
-        atomic_set(&react_call_count, 0);
-        rv_react(&monitor, "no callback");
-
-        /*
-         * The only possible failure in this test case is a kernel panic.
-         * NULL react guard: callback must NOT have been invoked
-         */
-        KUNIT_EXPECT_EQ(test, atomic_read(&react_call_count), 0);
-}
-
-
-Thanks,
-
---
-Best wishes,
-Wen
-
-> 
->> +}
->> +
->> +static void test_react_callback_invoked(struct kunit *test)
->> +{
->> +	struct rv_monitor monitor = {
->> +		.name	= "kunit_dispatch_monitor",
->> +		.react	= mock_react,
->> +	};
->> +
->> +	atomic_set(&react_call_count, 0);
->> +	rv_react(&monitor, "callback invocation test");
->> +	KUNIT_EXPECT_EQ(test, atomic_read(&react_call_count), 1);
->> +}
->> +
->> +static struct kunit_case rv_react_dispatch_cases[] = {
->> +	KUNIT_CASE(test_react_no_callback),
->> +	KUNIT_CASE(test_react_callback_invoked),
->> +	{}
->> +};
->> +
->> +static struct kunit_suite rv_react_dispatch_suite = {
->> +	.name		= "rv_react_dispatch",
->> +	.test_cases	= rv_react_dispatch_cases,
->> +};
->> +
->> +kunit_test_suites(&rv_reactor_registration_suite, &rv_react_dispatch_suite);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("KUnit tests for RV reactor registration and dispatch");
+> -- 
+> Thanks,
+> Usama
 > 
