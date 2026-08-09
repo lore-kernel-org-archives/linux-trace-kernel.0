@@ -1,30 +1,32 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from out-181.mta1.migadu.com (mta1.migadu.com [37.59.57.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C7A38F926
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  9 Aug 2026 15:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0DA3988F9
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  9 Aug 2026 15:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.59.57.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786287717; cv=none; b=BmJ1kquZs1KowZLJ+Sh42Ifctq6FZRGnF7DNjSiiDmbNHYFFTaR5laBZpOvC5msUuff8fh9skYH9LVbTPh+PrjlxLKQ4VTyWI9pjdldK0oJOWmFeE86dtCbWhyx++xS9rZEFPgYlkucFfuNKb5lR1ftXpNFtAHfl0qJ1W2gNXeI=
+	t=1786287722; cv=none; b=CGrmjreoL97xM/PmrDfMTV3cwkZftHE9ss6WNuBmLjF3Q1z+k/VZ+mREOR9U7RnIyq+cnKl4G/xzWW5/BgwL9rVVL3MBkHjbZygRIIVqde6bmA/7AbB3FeoMOWyczej2PLYnPqelf5kXUJ3STWwHFNqhWQQbYVQ+kBSKCBBDJe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786287717; c=relaxed/simple;
-	bh=3oNs8QSrFoe5bUDHUnLg5XCzSZ0JCxLnph4plr9mrKM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r4TS3oKnckOS94isGoc/VOYWQ1iHKR9ipsFeCvxXffAgvh8mtJ0oAJOg1V9TKIYytPMoXEXslYbHw8gqhHLWYMeb2ywYPU/+6wGeX32EVmqLX1Aj+n1S2TmnyToqDAP7lIv1YnoAQO7qQpTnco9phOqtdAGVVJwYsi4ewWOPHPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SZPA9Knj; arc=none smtp.client-ip=95.215.58.175
+	s=arc-20240116; t=1786287722; c=relaxed/simple;
+	bh=NPPv63MwhFAsbs4rGDL9pQ7OXlzNtqBnsPeNXBDr5hQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PkOSlhB2eFM9Ws7Vkfl6Pa6qL7PZkOUr8DYXho8MFyolqmHxi3SA3/Qvy+ateEkXefagW4Z348R/BGBayKuMvoNBwVA+R1gOfc6b1vx0CqGZa1svcoxndABKHJ2Zwe7H87pINlD9P8gVkGRY9ofE+1Nw6vrjuh5lQfh0cRRCKsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n1/W/gnA; arc=none smtp.client-ip=37.59.57.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SZPA9Knj"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n1/W/gnA"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786287711;
+	t=1786287718;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KP+Yi6mHI4T84FcQS0INnfN/N5ZjzIUJJSjrPWRGYuE=;
-	b=SZPA9KnjuC0GirlVYdSwgj8GrkTkmTpk3VBdRooUPPjP1FBTPFiMTxjJYOk9PxI8BgedlP
-	kVrH4ZF1A/puOLuaTX04FJLlNQSgKIQfKWUepGh15GSLs3XginZx9qyxXErc6qMvTmbFX5
-	Q6xttTrQN9dPtOeD9V9/+1dn97kp7r0=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0nWaRn08RUguxiYGsJ8AlACfbwZDlTj8g6X00LLcNBk=;
+	b=n1/W/gnAdHJBs3InaDrzXLC+vxGUeQNeitL/NhNMpWZd6XJKjfIGQJSaQoh7qeTu3rChs1
+	Y3HiUt815mpH7jECtG2iF97dBob3y8V8LPzGHYeNzLSABKGLwEQ0Y9prDbLOXEBc+YAxGj
+	L+JMzFhBGXS1n/kdW/pGiJ1cFiTxWbI=
 From: Leon Hwang <leon.hwang@linux.dev>
 To: bpf@vger.kernel.org
 Cc: Alexei Starovoitov <ast@kernel.org>,
@@ -55,9 +57,11 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next 00/13] bpf: Add tracing_multi link support for bpf progs
-Date: Sun,  9 Aug 2026 23:00:58 +0800
-Message-ID: <20260809150111.45000-1-leon.hwang@linux.dev>
+Subject: [PATCH bpf-next 01/13] bpf: Initialize ftrace_managed in bpf_trampoline_get
+Date: Sun,  9 Aug 2026 23:00:59 +0800
+Message-ID: <20260809150111.45000-2-leon.hwang@linux.dev>
+In-Reply-To: <20260809150111.45000-1-leon.hwang@linux.dev>
+References: <20260809150111.45000-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,47 +71,60 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Similar to the tracing_multi link support for kernel functions [1], add
-support for bpf progs.
+A trampoline managed by ftrace is determined by its target, that said
+ftrace_managed is already known when the trampoline is initialized. so,
+set 'ftrace_managed = tr->ip != 0' in bpf_trampoline_get() instead of
+relying on the first regular or tracing_multi attachment to set it.
 
-When attaching to bpf progs, it must attaches to the target by text poke
-way.
+This makes the backend selection independent of attachment order and keeps
+the registration callbacks focused on installing the trampoline.
 
-[1] https://lore.kernel.org/bpf/20260606123955.345967-1-jolsa@kernel.org/
+Assisted-by: Codex:gpt-5.6-sol
+Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+---
+ kernel/bpf/trampoline.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-Leon Hwang (13):
-  bpf: Initialize ftrace_managed in bpf_trampoline_get
-  bpf: Factor out update_fentry_multi helper
-  bpf: Drop unnecessary ftrace_location() in update_fentry_multi()
-  bpf: Add tracing_multi link support for bpf progs
-  libbpf: Add tracing_multi link support for bpf progs
-  bpf: Add tracing_multi link fdinfo support for bpf progs
-  bpf: Add tracing_multi link info support for bpf progs
-  selftests/bpf: Add tracing_multi bpf prog attach test
-  selftests/bpf: Add tracing_multi bpf prog attach failure tests
-  selftests/bpf: Add tracing_multi bpf prog cookie test
-  selftests/bpf: Add tracing_multi bpf prog rollback test
-  selftests/bpf: Add tracing_multi bpf prog link info test
-  selftests/bpf: Test tailcall with fentry.multi
-
- include/linux/bpf.h                           |   3 +
- include/uapi/linux/bpf.h                      |   6 +-
- kernel/bpf/trampoline.c                       |  87 +++---
- kernel/bpf/verifier.c                         |  22 +-
- kernel/trace/bpf_trace.c                      | 212 ++++++++++++---
- tools/bpf/bpftool/link.c                      |  59 +++-
- tools/include/uapi/linux/bpf.h                |   6 +-
- tools/lib/bpf/bpf.c                           |   1 +
- tools/lib/bpf/bpf.h                           |   2 +
- tools/lib/bpf/libbpf.c                        |  39 ++-
- tools/lib/bpf/libbpf.h                        |   4 +-
- tools/lib/bpf/libbpf_internal.h               |   1 +
- .../selftests/bpf/prog_tests/fill_link_info.c | 170 ++++++++++--
- .../selftests/bpf/prog_tests/tailcalls.c      |  62 +++++
- .../selftests/bpf/prog_tests/tracing_multi.c  | 254 ++++++++++++++++++
- .../selftests/bpf/progs/tracing_multi_bpf.c   |  61 +++++
- 16 files changed, 869 insertions(+), 120 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_bpf.c
-
---
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index e07af35ed040..8c2c1d1b9094 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -474,18 +474,11 @@ static int register_fentry(struct bpf_trampoline *tr, struct bpf_tramp_image *im
+ 			   void *data __maybe_unused)
+ {
+ 	void *new_addr = im->image;
+-	void *ip = tr->func.addr;
+-	unsigned long faddr;
+ 	int ret;
+ 
+-	faddr = ftrace_location((unsigned long)ip);
+-	if (faddr) {
++	if (tr->func.ftrace_managed) {
+ 		if (!tr->fops)
+ 			return -ENOTSUPP;
+-		tr->func.ftrace_managed = true;
+-	}
+-
+-	if (tr->func.ftrace_managed) {
+ 		ret = direct_ops_add(tr, new_addr);
+ 	} else {
+ 		ret = bpf_trampoline_update_fentry(tr, 0, NULL, new_addr);
+@@ -1226,6 +1219,7 @@ struct bpf_trampoline *bpf_trampoline_get(u64 key,
+ 
+ 	memcpy(&tr->func.model, &tgt_info->fmodel, sizeof(tgt_info->fmodel));
+ 	tr->func.addr = (void *)tgt_info->tgt_addr;
++	tr->func.ftrace_managed = tr->ip != 0;
+ out:
+ 	trampoline_unlock(tr);
+ 	return tr;
+@@ -1583,7 +1577,6 @@ static int register_fentry_multi(struct bpf_trampoline *tr, struct bpf_tramp_ima
+ 	if (bpf_trampoline_use_jmp(tr->flags))
+ 		addr = ftrace_jmp_set(addr);
+ 
+-	tr->func.ftrace_managed = true;
+ 	ftrace_hash_add(data->reg, data->entry, ip, addr);
+ 	tr->cur_image = im;
+ 	return 0;
+-- 
 2.55.0
+
