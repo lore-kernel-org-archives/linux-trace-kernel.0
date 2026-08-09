@@ -1,180 +1,313 @@
-Received: from mail-oo1-f80.google.com (mail-oo1-f80.google.com [209.85.161.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD58B640
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  9 Aug 2026 21:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.80
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786312293; cv=none; b=t5cSBgvwbWIh162vdPgZOX74OVk9ZtRiE9U1by7G+8sFnzsS7uZ6aHqvKdnfN1vM9oJpbmGkiU+s7dpS6Lq8rdkDoW0yEYA5op9KLf8FcLJYNK8v9/gPtftEbJqW/RKqN3r1mUoq/b5E7BYMcdxsx/2Q/beGjynZEalom9h22UU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786312293; c=relaxed/simple;
-	bh=WY9FAFiTekcTQzamWFn7NLA8/c0tUAy11t7oHE+rePY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T2BVHTNzT4YL/uOclSYeVYmDPX5mrphxU09msJMuDwOlwPiMi3tqUtce7DuE6oUQVeeOUfPpYhj9bd0j4HzdelntnAaHrqlu+oIQ/SOrnCYBMKN5eCbbiBjayZVuaO4C4Xkhbp33ktezNUzr3iTNG6ytd5RzhgW/Oq/B6a8nJys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f80.google.com with SMTP id 006d021491bc7-6aaefd6909fso498607eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Aug 2026 14:51:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786312290; x=1786917090;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=V1ZlWHjVY7ndYW1ZsOFi+iZRZGVj81O6tO9Dw18q/yM=;
-        b=dv43Yz0PAx1K0p1AH/GLqUjTrByrbl4UYmdqOgY3eCQeuxSNIKumEGnH/2G5hdh6V8
-         8eOInRG15lkCxM7QWYnQoggqi2Lh02EvRFCEfRMpzvrQFRLXDKzOZ5wIktT9UVqfS0I6
-         aJTirOdR0LW83XMj+eFSBmtt/ttlv7qRFbNVhAxE7c45TC+6RXUCQ/Qd4qvGUdC7kYEo
-         J0hV1fxyqpHifFGZkSLmow58ZPcbv2AQAXZXEId6MJymHS3BOTRHj0jL05xp0GPI5cqG
-         h8/R84W0CMhgkLBzND+2/SBHZCSW0XDMm9Jo4YI8ZcnxY4mgKlUeXY0KPzg0mFs2M6f7
-         a9bQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqwlL35TEJBXYWewKKGEDEIAwp6Ai0cFcF4zXLcBIRARW7J1jZwzGk8aikiLnQ1+DzO78a6y5vbIXEOg1fDPf25TNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdf3STb2s5l1PeZ0OOHl6Niu4XQjfdQ+gsCmfZ++grhPnL3M09
-	hFJhkG85N9SlA+SOuPwjQgakbnSUPFxkoGvOE7hPoJS107zxproUsm96y3UkSHRBJaUWFlV3DgV
-	zEVViklp5PRlaA1QukhMxJ8SzQ9wMSk7uYOjimouSGuU9xtd/kER8L6XAG74=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321A6199E89;
+	Sun,  9 Aug 2026 22:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786314767; cv=fail; b=NUJVUojUii27dtnBL2xQdBrzUp+NgsldldHx0QXipbcxC+lhxhjLdP2vW/iuke4UBQfWh3JdexS9EY5NB+I2SjdyJ0aNxzJw852gZCwO+OFJRi5ibhoDEMS2wbGo0O4+lmy3QWdZb1tXxttJik0T+0j03I8yOtTHD9wG+AGFlrY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786314767; c=relaxed/simple;
+	bh=Z6Nut3JqUkivUkFgfgtxRD98EUotezr0k65ZYhJfie0=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Spcn4Uf8Uh8pNCRJwYDuv7mBukMBPgz/VmDvFt5Xz0BDz+zRVLv7PpNSp+lVZwkha2wi47q5dkms6niRki3NNFXrn4QKA84bcQfkLE25/ihvcw3aEbLVUB7aDEuu9cTtlbJ3Gqcy55XR67V7AkBucXGACNEVJWMEYsLqOuJNjOE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L8eO2Nrb; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L8eO2Nrb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786314766; x=1817850766;
+  h=date:from:to:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=Z6Nut3JqUkivUkFgfgtxRD98EUotezr0k65ZYhJfie0=;
+  b=L8eO2NrbSBBu88U4abb4ATTspgXtriZt8X/7nkmrm2xLrRoq3aX2HplS
+   AbTYwuvbWD/tIfkp0OY+cH7Wlo3rRHk7MWlQ/gc83hhzQL4KiNPzqopTZ
+   2Se06Q0dcIkMz5Rq8z8kVVhYzqgtr5bekJqQsCSwNVjVecMUihBSrMajO
+   t3QNLBWo3bkEblWeL4Tdd753hONz7vsVBGAaCAgmGRVflvUVILCaBfmch
+   hyFcF7NW/DFlhEqEeL8Lr3tMoWBK9Zu8K+1AyaGdvQLdNFMWpcXvmHPL5
+   Kw6l9SU1i9Qje3cxINthcCS+WRPmAVH90G2hnk99cgZ616obgqguFjbKo
+   w==;
+X-CSE-ConnectionGUID: XckOTeZoQgmSqrRzNezK9Q==
+X-CSE-MsgGUID: 4BUWUwu8R0a56wdZFRkZng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="87046350"
+X-IronPort-AV: E=Sophos;i="6.25,214,1779174000"; 
+   d="scan'208";a="87046350"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 15:32:45 -0700
+X-CSE-ConnectionGUID: uX1HnpfdSEmoso4seaYnow==
+X-CSE-MsgGUID: eDht+bxPTrCiLJv7lQ0ebQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,214,1779174000"; 
+   d="scan'208";a="259562115"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 15:32:44 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Sun, 9 Aug 2026 15:32:43 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Sun, 9 Aug 2026 15:32:43 -0700
+Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.8) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Sun, 9 Aug 2026 15:32:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JZ9sMxv9zkuRIdjwLjgeGeAO4gN0gnMlq32eX1uIS6mS9LTLtMGtlDXdV08Vb1zYWFgsbrULI162n5/5/BgJFDIbKEfhcQ0RpeFDDqPWv7EidgvA6sSZjConY4HY9RBo5JbExKohUMJeWAyitU0g3R3erqAaJfAm4ThQtaAJ0ZwUPZtje8CASoLzlgcVkdYCOj4+hehZhJU/evhwCa1AGwk+69SKCCAlXS18zJUeUP5yLhSEezw3kZE+3oOMcWBxRmYIdLUaQ6+l8Pizo49FR10tRC+jY9ONw/1fsUT3MkvSgFA7fHIeYSNhFVtgbZOvkhK1BtUqxb0UQCfh7LUC7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vJ15D2VIsi7yHAUnQtN26vDgyzXtl6Vy9mttyAs9J5s=;
+ b=rKq2UK4qUhHRYoxpPgUjbxOlc9PgJfIM3ca49Hf0OZDVfSDFodoHR4Lomo/cyZzbEZJhCzdcZoAVjbLvhyMK+XqknIvdlfckUGVYCrPSJixQTD2Ui88pdo92dHK95gJbKdkxrXcgd//wCD1ItluFWgm83amBLMZc0mD99vtXKAGWUl+TesQyXNIDYrmMq6IBrpOZKpERnC3ThnXdTx01upth8+WsHdbmM45jPAmQ4hsDOHbpkyRzLV1ZUwOvuxkyGlCVapoygV2+GHLQkZhVZ7qOeFnws6ZhSnKIq/LK7qswTU6pUa/aumwPFE5pQ8YQC6iSpWsYQzZ8mTkj1ENMiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DSVPR11MB9579.namprd11.prod.outlook.com (2603:10b6:8:383::17)
+ by SA3PR11MB689426.namprd11.prod.outlook.com (2603:10b6:806:58b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Sun, 9 Aug
+ 2026 22:32:40 +0000
+Received: from DSVPR11MB9579.namprd11.prod.outlook.com
+ ([fe80::ab5f:5d0f:fb90:9d]) by DSVPR11MB9579.namprd11.prod.outlook.com
+ ([fe80::ab5f:5d0f:fb90:9d%3]) with mapi id 15.21.0292.024; Sun, 9 Aug 2026
+ 22:32:40 +0000
+Date: Mon, 10 Aug 2026 05:51:40 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: <ackerleytng@google.com>, <aik@amd.com>, <andrew.jones@linux.dev>,
+	<binbin.wu@linux.intel.com>, <brauner@kernel.org>,
+	<chao.p.peng@linux.intel.com>, <david@kernel.org>, <jmattson@google.com>,
+	<jthoughton@google.com>, <michael.roth@amd.com>, <oupton@kernel.org>,
+	<pankaj.gupta@amd.com>, <qperret@google.com>, <rick.p.edgecombe@intel.com>,
+	<rientjes@google.com>, <shivankg@amd.com>, <steven.price@arm.com>,
+	<tabba@google.com>, <willy@infradead.org>, <wyihan@google.com>,
+	<forkloop@google.com>, <pratyush@kernel.org>, <suzuki.poulose@arm.com>,
+	<aneesh.kumar@kernel.org>, <liam@infradead.org>, Paolo Bonzini
+	<pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, "Thomas
+ Gleixner" <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, "Vishal
+ Annapurve" <vannapurve@google.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, Kairui Song
+	<kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
+	<nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, Axel Rasmussen
+	<axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
+	<weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, Qi Zheng
+	<qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau
+	<kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe
+	<jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
+	<peterx@redhat.com>, <tarunsahu@google.com>, Vlastimil Babka
+	<vbabka@kernel.org>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-coco@lists.linux.dev>
+Subject: Re: [PATCH v10 11/41] KVM: guest_memfd: Ensure pages are not in use
+ before conversion
+Message-ID: <anj2bPrGqzZgZWMF@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-11-2fc18ee6d3ba@google.com>
+ <anZ4W9o5pTWIEgMY@yzhao56-desk.sh.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <anZ4W9o5pTWIEgMY@yzhao56-desk.sh.intel.com>
+X-ClientProxiedBy: TP0P295CA0046.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:3::9)
+ To DSVPR11MB9579.namprd11.prod.outlook.com (2603:10b6:8:383::17)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:208c:b0:69e:3e6b:c07 with SMTP id
- 006d021491bc7-6ae96c1edb3mr19908278eaf.5.1786312290501; Sun, 09 Aug 2026
- 14:51:30 -0700 (PDT)
-Date: Sun, 09 Aug 2026 14:51:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a78f662.b50370da.49fe0.0045.GAE@google.com>
-Subject: [syzbot] [trace?] KASAN: use-after-free Read in ignore_event
-From: syzbot <syzbot+0b5074bf48547b3a63ac@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DSVPR11MB9579:EE_|SA3PR11MB689426:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3c2ed973-4574-4cfd-8a6a-08def6661eed
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|7416014|4143699003|11063799006|10067099003|6133799003|56012099006|921020|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: kvap3r+n/nZt5B/dC76sUC+VKssvaio9bt6/oT18FaXLkJP1wgSDiHWDlnwLHY3gtB+zYonAH3e+0MZ8x8HfmA51WcqO62rCHAg+jbpPq9gt1FFM7IPaWoPLST3cSP+rVIrfJ8/eQmIrkj86cE9opllCLfQONlcUYT9GVxaEzUAMZBUJ4BAFcwa7F2eplfUPQEpzqbantwWFPsBlyyP3Q90iH78Y76ZPGdSTzKDWpOz0Qmc3NNuJlZPgJTh3mQKqN5S3Om/UiKpTji9C6aunx+9HcljYRThDTN7bZEMDnm63giSfMS150/30/yoX389Fthq7hoxoZXYvaHyj/KMMO/FJ7Io6L0YUV99kt1XUuKMjK43BAF7+8mqN/nvgZUNsvrtOs3pNC1dgUi6t0wIXLbMyfs11FmwCJeB0cMQTnrKwMjXVFAAkjKQ0neXu91+m/0J0QITS9mI43b0wOxI+BHQdI/XxNMJNUXlJ4hj5Ao2YEJegZvZTLF/yLV0lcU/lCe7Q2+ho3DK1EItbIjck7X96MSf2JbvTYai9CXju4n/fV+mNGIzeqP13wkAnkL23M0gqTkFc2r3GzyRdwoAEvxMTdhoaI8wwV/GDhuwV8cwnO2fPaYVUzHOhHRUtx/W7Xr/S6R6tM7jjdOc+utDRCDwRXul0n2Qu/9e5U5/shFPAu12GWBQv8qosTAvuKXJ6Qth7P+s5l7rWZQMWGV7J8g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR11MB9579.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(7416014)(4143699003)(11063799006)(10067099003)(6133799003)(56012099006)(921020)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?quxruQiV8gQjkIoHofjjJPnlSvrEpk8VhYAR1EzEoJ8SaUbW3PI79phPeUPv?=
+ =?us-ascii?Q?g+jGFKhsYq18DWU7wnn8jOTqoWZOh54UJIVH+IiKA/++LvUk0Sf1bSBB/pUa?=
+ =?us-ascii?Q?HLTzIyjpyYI1a4aUQdAQKBq985U7BqRDigyKQvVGL+tnK6hGyGsiRbgFkTlL?=
+ =?us-ascii?Q?k6UzXIqxSfHsf9XeEy3X+1klPGuAnsuU6XZWBT6Ib5zAoREaPs1YAbRDdywD?=
+ =?us-ascii?Q?8efKUZ7tOEbRVkrkyBbAHaES0pe9cK1rgDj/dnFqktPgTHqCRw0ELGm4Dcka?=
+ =?us-ascii?Q?fgQKaFyF8LWyZz3e8kFh0f+qH2bgyLwVcJU9NrwSKlghMfcjkNEKkxc73XTX?=
+ =?us-ascii?Q?bFqL+t2BxQh/I4OAtRfMEsYw0ppu5w5vpZQAEKEts7dDO8LQFCS9nUpxJ4zn?=
+ =?us-ascii?Q?nhXyo8p6eVrOZ14gFPmBKmm+Nkjf5+U5zZfX4ZvlDKq+sFHaRa9ZY0LfAgSJ?=
+ =?us-ascii?Q?f/b5CX0EENMMR37do2/CuGyfR/JNia4RV74/r/Kbm40IPjiKGHEc63TG2fR1?=
+ =?us-ascii?Q?MkAYl/1AI8tmnMFNrW7I6tsVSQM05YJIx8jQu5FQNlRMcCoK/cO6KZXMztkX?=
+ =?us-ascii?Q?L3eAci+2Op+5c+6sIukXkA7ZqT/9K6YfcXwrHkU3RIaWKckawhQR+IB8PP+5?=
+ =?us-ascii?Q?Bxs1RyWMAg591z81UTK4OdP6bZMbUIW4DO9JHvZXrvWsqrvicVFlF4ODgDFt?=
+ =?us-ascii?Q?26ODV0z2nW7rWaf35Gf6iE4S/tlIgOZBs449JmLlWfZY4JP9NSBTadj5XG4B?=
+ =?us-ascii?Q?BZ9oXEoveXbJTyUUcghjFrjWN4R3yG5SG6nd03qNGu99IwaiArVqUOiLG61m?=
+ =?us-ascii?Q?edZqUQBXqOTm8L7e7dFeRc6y1+W4nRxhoLapYoKL1vEJpv0Qy1JCI9CFTMc0?=
+ =?us-ascii?Q?qT5EsPzzXAwnW5jfOitujQNFs4T1T0YgF2TByKPKWrvVPshJOwzWLmg6qiZL?=
+ =?us-ascii?Q?+E1dLIC/ERU/zKvcDSvcqWJ5tXg28fZ+281vs2VAUnGxUUJ+X546jeXAHzPB?=
+ =?us-ascii?Q?UC3ECW0Q/AelNjwTdIEQFkl8sYY1OJJqh76/P2KhS61EZVtvXfSV3p7n9PZE?=
+ =?us-ascii?Q?cYWdM9rlJhTgqNRPrh8KEB/xeJch2exwkvGSSQbp3eC4tg7fVQNFRO69roRs?=
+ =?us-ascii?Q?w5nPhUPUwDR6Cub+1mnfL6YKFWdAVdMk3DHFYUXL8vcWR/4xJwiXGTc+81x4?=
+ =?us-ascii?Q?r1wlSobqeOqTaw5p95SKdW984Ya4SgRkOI2NVO0d6JcAyQYbSgEd9hiQG3MO?=
+ =?us-ascii?Q?EzO1w/aoaxb1bh/HNclujonH/XrStCIDpqTT4nD8BYZq8e2V3XQlIyPGm8og?=
+ =?us-ascii?Q?45cR+09lrP1tE4Jdcc2896m496IU/IChYiNQEw+yvprrO9dcQ4zWgbXKiIEM?=
+ =?us-ascii?Q?7NPQ66rkquYvFZwaWE+dYcxBdyhGPxdNM4ZLVifgkK5F8B7W6Te60kF9Lbqd?=
+ =?us-ascii?Q?RjiKpySjenZikZ8sHE08IP9RHHO5YYtzbzpI96ZEo2BO2RqLeMEsXTaSLduj?=
+ =?us-ascii?Q?HMOJy2yB4aa1SlQ1B05g7zZV7jMXXtIU4Of7/dCd5JZ+EsJ3KSDy37PiSj6s?=
+ =?us-ascii?Q?jg8wEvg42DbGNr2N2LjNSW1i64txWoWH5D6JPmhUUj31wxBc4an0casp2HyD?=
+ =?us-ascii?Q?bii+wkpuSMgY0exPBztZe0n+OibjaOVUUcr8Rgb6hxvA2ltmhIyTgneSpqo1?=
+ =?us-ascii?Q?roEQhxz09LC4tM3k9JhJduXS3B2V6KSpPJrCfQchxamk9MT+WpyGVlP6t1xj?=
+ =?us-ascii?Q?deJN9GByew=3D=3D?=
+X-Exchange-RoutingPolicyChecked: tOaZFxI0dTKmRT6W8ugHXxxNjcF6c2MvbM1MO6nNgc/xYy1a/t/OhYxWQQiW+n4yn71+MazK2gMCcUxOTBoWhWNbCIdWmVwfN2PiozxIpLkCKGXSxmRwZoJG4skzEgt35uizmHyzGIuN1wSKhcX2N8DhA5nZuRSN0/ve3o3ZxbeX1jyzzaZLdLkhNagmLw/+h+BDm9FsojVldGY16mr42/IPgerBdKxCvp7R/e1HndWk14L2R1ZAmBzFizfF4BLuB8TVNcpXRdCp6ZDE5M+QkT9Xsl825Tf3mLXbBOaQ/fo0nlwUXO3sIc0c9da2Fph8zch4P9yMFUzESw8dSj/6kg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c2ed973-4574-4cfd-8a6a-08def6661eed
+X-MS-Exchange-CrossTenant-AuthSource: DSVPR11MB9579.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2026 22:32:40.0926
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WP4n5Vj0SMv42azTYhd+fRJNo3FK8L0dN0uaAwAYo9De6Q9pxniTt9Lhgo8YMLkwfJdEdBrD1mMKiAgoXyed/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB689426
+X-OriginatorOrg: intel.com
 
-Hello,
+On Sat, Aug 08, 2026 at 08:29:15AM +0800, Yan Zhao wrote:
+> On Fri, Aug 07, 2026 at 02:52:50PM -0700, Ackerley Tng via B4 Relay wrote:
+> > +static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+> > +					    size_t nr_pages, pgoff_t *err_index)
+> > +{
+> > +	struct address_space *mapping = inode->i_mapping;
+> > +	const int filemap_get_folios_refcount = 1;
+> > +	pgoff_t last = start + nr_pages - 1;
+> > +	struct folio_batch fbatch;
+> > +	bool safe = true;
+> > +	pgoff_t next;
+> > +	int i;
+> > +
+> > +	folio_batch_init(&fbatch);
+> > +
+> > +	next = start;
+> > +	while (safe && filemap_get_folios(mapping, &next, last, &fbatch)) {
+> > +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
+> > +			struct folio *folio = fbatch.folios[i];
+> > +
+> > +			if (folio_ref_count(folio) !=
+> > +			    folio_nr_pages(folio) + filemap_get_folios_refcount) {
+> > +				safe = false;
+> > +				*err_index = max(start, folio->index);
+> > +				break;
+> > +			}
+> > +		}
+> > +
+> > +		folio_batch_release(&fbatch);
+> > +		cond_resched();
+> > +	}
+> > +
+> > +	return safe;
+> > +}
+> > +
+> >  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
+> > -				     size_t nr_pages, uint64_t attrs)
+> > +				     size_t nr_pages, uint64_t attrs,
+> > +				     pgoff_t *err_index)
+> >  {
+> >  	bool to_private = attrs & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> >  	struct address_space *mapping = inode->i_mapping;
+> > @@ -542,8 +576,21 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
+> >  
+> >  	mas_init(&mas, mt, start);
+> >  	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
+> > -	if (r)
+> > +	if (r) {
+> > +		*err_index = start;
+> >  		goto out;
+> > +	}
+> > +
+> > +	if (to_private) {
+> > +		unmap_mapping_pages(mapping, start, nr_pages, false);
+> > +
+> > +		if (!kvm_gmem_is_safe_for_conversion(inode, start, nr_pages,
+> > +						     err_index)) {
+> Note: conversion failures could occur if another vCPU is attempting to map a GFN
+> within this range.
+> 
+> CPU 0 (setting attributes)          CPU 1 (attempting to map)
+> --------------------------          --------------------
+>                                  A: mmu_invalidate_retry_gfn_unsafe
+>                                     filemap_invalidate_lock_shared
+>                                     __kvm_gmem_get_pfn ==> folio refcount++
+>                                     filemap_invalidate_unlock_shared
+> 
+> filemap_invalidate_lock
+> filemap_get_folios
+> check folio_ref_count(folio) ==> Not match !!
+> filemap_invalidate_unlock
+> 
+>                                  B: read_lock(&vcpu->kvm->mmu_lock);
+>                                     is_page_fault_stale
+>                                     kvm_mmu_finish_page_fault ==>folio recount--
+> 				    read_unlock(&vcpu->kvm->mmu_lock);
+> 
+> 
+> Retrying in kvm_gmem_is_safe_for_conversion() or moving the invocation of
+> kvm_mmu_invalidate_start() + kvm_mmu_invalidate_range_add() to an earlier
+> position does not help as long as CPU 1 stays at stage A.
+> 
+> So, should we avoid this failure?
+> e.g., by moving filemap_invalidate_unlock_shared() from stage A to after
+> stage B?
 
-syzbot found the following issue on:
+Or what about having KVM always treat gmem page as non-refcounted, and have
+kvm_gmem_get_pfn() put folio refcount before releasing the filemap invalidate
+lock?
+Below patch is applied and tested at the end of this series.
 
-HEAD commit:    3708dd948844 Merge tag 'pm-7.2-rc6' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17557a49580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7079b368dcec295
-dashboard link: https://syzkaller.appspot.com/bug?extid=0b5074bf48547b3a63ac
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
+From 8c2f29bc15bceb6a8fa103cf2585ec11354fd74e Mon Sep 17 00:00:00 2001
+From: Yan Zhao <yan.y.zhao@intel.com>
+Date: Mon, 10 Aug 2026 06:24:52 +0800
+Subject: [PATCH] KVM: guest_memfd: Return gmem page as non-refcounted
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Have kvm_gmem_get_pfn() put gmem page refcount before releasing filemap
+invalidate lock and return the gmem page as non-refcounted. This avoids
+gmem memory attribute conversion failure caused by temporarily holding gmem
+page after faulting and before completing mapping.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3cbcba767cb8/disk-3708dd94.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/37b77da165c5/vmlinux-3708dd94.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0f4930dc3972/bzImage-3708dd94.xz
+guest_memfd always holds gmem page in filemap cache. TDX does not increment
+gmem page refcount when having gmem pages mapped in S-EPT. Additionally,
+as gmem pages are not swappable, setting dirty or accessed bit is not
+necessary. Therefore, there's no need to treat gmem pages as refcounted
+pages.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0b5074bf48547b3a63ac@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in ignore_event+0x83e/0xaa0 kernel/trace/trace.c:2526
-Read of size 2 at addr ffff88804705a1ac by task syz.6.1383/11771
-
-CPU: 0 UID: 0 PID: 11771 Comm: syz.6.1383 Tainted: G S                  syzkaller #0 PREEMPT(full) 
-Tainted: [S]=CPU_OUT_OF_SPEC
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/16/2026
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x100/0x190 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x13d/0x4b0 mm/kasan/report.c:482
- kasan_report+0xdf/0x1c0 mm/kasan/report.c:595
- ignore_event+0x83e/0xaa0 kernel/trace/trace.c:2526
- trace_event_printf+0xb5/0x160 kernel/trace/trace_output.c:356
- trace_raw_output_sys_enter+0x4c/0x60 include/trace/events/syscalls.h:18
- print_trace_fmt kernel/trace/trace.c:3071 [inline]
- print_trace_line+0x97d/0x1790 kernel/trace/trace.c:3237
- tracing_read_pipe+0x586/0xd60 kernel/trace/trace.c:5444
- vfs_read+0x1e4/0xb40 fs/read_write.c:572
- ksys_read+0x12a/0x250 fs/read_write.c:716
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x115/0x870 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f48cdd9e019
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f48cebb5028 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00007f48ce025fa0 RCX: 00007f48cdd9e019
-RDX: 0000000000002000 RSI: 0000200000001000 RDI: 0000000000000003
-RBP: 00007f48cde3500c R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f48ce026038 R14: 00007f48ce025fa0 R15: 00007ffe7508fde8
- </TASK>
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x4705a
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 ffffea00009a6048 ffffea00007bac08 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as freed
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x44dc0(GFP_KERNEL|__GFP_ZERO|__GFP_RETRY_MAYFAIL|__GFP_COMP), pid 9023, tgid 9022 (syz.6.770), ts 304966657874, free_ts 587151444439
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0xfd/0x120 mm/page_alloc.c:1859
- prep_new_page mm/page_alloc.c:1867 [inline]
- get_page_from_freelist+0xf48/0x3530 mm/page_alloc.c:3946
- __alloc_frozen_pages_noprof+0x299/0x2dc0 mm/page_alloc.c:5304
- __alloc_pages_noprof+0xb/0x110 mm/page_alloc.c:5338
- __alloc_pages_node_noprof include/linux/gfp.h:291 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:318 [inline]
- alloc_cpu_data+0x60/0x160 kernel/trace/ring_buffer.c:427
- __rb_allocate_pages+0xbd5/0x10a0 kernel/trace/ring_buffer.c:2436
- ring_buffer_resize+0x6df/0x1e80 kernel/trace/ring_buffer.c:3270
- __tracing_resize_ring_buffer.part.0+0x52/0x1f0 kernel/trace/trace.c:4738
- __tracing_resize_ring_buffer kernel/trace/trace.c:4732 [inline]
- tracing_update_buffers+0xd4/0xf0 kernel/trace/trace.c:4977
- event_enable_write+0x23f/0x340 kernel/trace/trace_events.c:1926
- vfs_write+0x2aa/0x1050 fs/read_write.c:685
- ksys_write+0x12a/0x250 fs/read_write.c:739
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x115/0x870 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 11775 tgid 11774 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- __free_pages_prepare mm/page_alloc.c:1406 [inline]
- __free_frozen_pages+0x79f/0x1090 mm/page_alloc.c:2950
- free_buffer_page kernel/trace/ring_buffer.c:398 [inline]
- ring_buffer_subbuf_order_set+0x12d5/0x18a0 kernel/trace/ring_buffer.c:7439
- buffer_subbuf_size_write+0x182/0x280 kernel/trace/trace.c:8221
- vfs_write+0x2aa/0x1050 fs/read_write.c:685
- ksys_write+0x12a/0x250 fs/read_write.c:739
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x115/0x870 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88804705a080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff88804705a100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff88804705a180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                  ^
- ffff88804705a200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff88804705a280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-
-
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ virt/kvm/guest_memfd.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 2115e73e455a..e357b4ffa777 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -1332,11 +1332,10 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ #endif
+ 
+ 	folio_unlock(folio);
++	folio_put(folio);
+ 
+ 	if (!r)
+-		*page = folio_file_page(folio, index);
+-	else
+-		folio_put(folio);
++		*page = NULL;
+ 
+ out:
+ 	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
+-- 
+2.43.2
