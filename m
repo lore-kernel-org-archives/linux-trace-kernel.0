@@ -1,197 +1,180 @@
-Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f80.google.com (mail-oo1-f80.google.com [209.85.161.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7382E2FD69D
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  9 Aug 2026 18:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=148.163.148.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786300357; cv=pass; b=m1dKOLGKZ8OhBBRrrbPdCXrLQLm1FlXb9RdaOCk8YE81oylsOiaYRP3o61z+KYPLhKjFRF/+qur8+6md4dsiII7aF6UkBUVQOpj+B8meI3fwJtW0gKIZXizH3gHImw3/BXZhDXOK1ZPmyDDD+xpbZHtiAxala16M/shid/RFfFo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786300357; c=relaxed/simple;
-	bh=ZRvxCPN/Pn6xKN4kzylsdN8URZcXpD40RKKAE4yvtcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qEPd83kJeMsTXSB81dyiUDJ8J9tntcr/Li7q6LE0mFBQ2lGGZtZiYFTtFAJVlAwlqKY6MAMvrq6UB2q81eCWNIohkeeqmDUeKyZg3NMHIwTHBcSH5A9reob4ivwdmlNCHCz+obwXGfnyh2Z9/J4m4t/mTBvZkeeYcuLbx7TAwO4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=FfTink7w; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=gFUI2ecx; arc=pass smtp.client-ip=148.163.148.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="FfTink7w";
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="gFUI2ecx"
-Received: from pps.filterd (m0354650.ppops.net [127.0.0.1])
-	by mx0a-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 679Fm4O21434057
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 9 Aug 2026 18:32:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	default; bh=Henl/L+kFOLuAzV5yx+ibTkMLFGMN5q9FPJK6MTPsC8=; b=FfTi
-	nk7wAnz35vkjyqgaz5kxh8xN/mxzF5PiLfKFsxowFPJ9BLT4e4XeNrIcqhwaVXWE
-	dGBuWprH5ZuhY0JxYqZkg7ERi1/Uw3uQDeZL5p+GAl04552mj2ToUocoVEuEfxa0
-	jGf+GkVtd58SX5y0mu7mJ/JIAFmr21JTqSg6ish8OBzj6wGxO2Br5377wCjldAXd
-	aKt69xzBWYA6ZnkoPLT9g4ZrFweGpVG8siwTezwba1nMzPleA5qh9ilPbtL81hok
-	WQcJMzGLPZuXrL9ha2pTuEPlC1AHsbYrCXXU+1HjKsbLzd6VCqKhKFOUC5N4Oo8d
-	LUMWSqijyLQ2I86EAg==
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com [209.85.128.200])
-	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 4fxgxasay2-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Aug 2026 18:32:29 +0000 (GMT)
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-821167f53cfso39641537b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Aug 2026 11:32:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786300349; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Ewte87rdhStXVZnIcn3kJykg5R7DAjdhOnQy4d3+QXxjrmzPzfghMf8xS7MvDPlPju
-         uAv6sLkOJnTXXftKbTqryHbQocLtSEb6gTm+UV6ZUU08BTd25mw3YWpeJi6bOJhJl+Ej
-         PqkZNauwbFYhcFkI+Hq5oQPP/DtQkP628Vd5YGUwSg6Bvpka+gr93f2BoikGjX/JKDGU
-         ErytaFkIhJkzmiaZ3DKPWMibOxEg3DXZMc4gOmjQcCECH5+3vlyfpEZMap+9krbLGny/
-         BWlEc2uWiHBilzKSiKhddVr3v+aixxuUXd+BTnXDDtHy5B8rAXeirKD7hHdVG9jitBij
-         vAMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Henl/L+kFOLuAzV5yx+ibTkMLFGMN5q9FPJK6MTPsC8=;
-        fh=1PKmbPtT4D8U5IGuJ9twFOIU3Jo0IWAGflp4D8P+4bo=;
-        b=jHUICR7gKosLufAyTykrTj98eaQabYofa2Tq0xTr8CtsAbyajLgRITNXqE8+3eo9H9
-         U2X9J6JbJUnkB9NpS0pRMMeUbw0hA2GYgBt6aIk9BPfu+eDlmPRJa32ZfZjf/G3Dq8Bo
-         ME2gbTnXnfmNKvxTH8OhrUseDvX8uP7HP0R515MF1YVXui5nIpJaw/9eEtFwhgi7su9n
-         rqr9Gdv2zwe2HnGyO265iG/V318GqTiWZMnM1B6E7Tu3LNuwAdNWn7z0OlEICdvBofGA
-         5Rhmen+RpefuNUfkZ/cvaw+izBu3RnvW7uuCt1Y5V1W2CaHtl75rjA26eHltScEQI8wt
-         f6Dg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=crowdstrike.com; s=google; t=1786300349; x=1786905149; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Henl/L+kFOLuAzV5yx+ibTkMLFGMN5q9FPJK6MTPsC8=;
-        b=gFUI2ecxASqj86RV116VD5mzrU5KAA/rbb1xhqriAdMmI9cPJveswvJ71H3YGcfjok
-         kJFDFvQBuproli1/q6go3sHtL3OGBP6WxYsJgMpeb2mfmRDZDlZBWKV0qLNYH01FomLa
-         SzsO909KdkM7dwdTgO0szrEiZtKk7TSLADHNYkcybF/SG6S+sMQ5b4tp3z1JVb4Qlrmb
-         OPlknHMUlotlus548ElwNxz4ZiwUN4ds1ZiTBJv7TcCb4p24FfzKM8ObatNScjjmaia3
-         bayhQrZ/dA25V0vzx9R+tj2mTmHKtpri7FPpaBPnzX9BlnwpOMmcj1/dSxUfKKlUCQxi
-         jMFw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD58B640
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  9 Aug 2026 21:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.80
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786312293; cv=none; b=t5cSBgvwbWIh162vdPgZOX74OVk9ZtRiE9U1by7G+8sFnzsS7uZ6aHqvKdnfN1vM9oJpbmGkiU+s7dpS6Lq8rdkDoW0yEYA5op9KLf8FcLJYNK8v9/gPtftEbJqW/RKqN3r1mUoq/b5E7BYMcdxsx/2Q/beGjynZEalom9h22UU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786312293; c=relaxed/simple;
+	bh=WY9FAFiTekcTQzamWFn7NLA8/c0tUAy11t7oHE+rePY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T2BVHTNzT4YL/uOclSYeVYmDPX5mrphxU09msJMuDwOlwPiMi3tqUtce7DuE6oUQVeeOUfPpYhj9bd0j4HzdelntnAaHrqlu+oIQ/SOrnCYBMKN5eCbbiBjayZVuaO4C4Xkhbp33ktezNUzr3iTNG6ytd5RzhgW/Oq/B6a8nJys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f80.google.com with SMTP id 006d021491bc7-6aaefd6909fso498607eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Aug 2026 14:51:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786300349; x=1786905149;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20251104; t=1786312290; x=1786917090;
+        h=content-type:to:from:subject:message-id:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Henl/L+kFOLuAzV5yx+ibTkMLFGMN5q9FPJK6MTPsC8=;
-        b=ipE+tPtwMNFwyclt5XRjCpCrCR2DukiIgfzKSudNyZZ1FvHrc85r2CMj6CQhXg23Kn
-         Mb5ji45xpBMrA0X4PI//0zNxJcwnW3J/SkupxRamFe5HS0+OxBX9Agn6/Dhr0itQPTuE
-         QVZZj5QfFv+A5HCg2MJbrB9IZJxgK5B3h6cpnfoHxUxrEx2PMkzETqYY4rV/98/RpFsw
-         9QdQSEltV/NUPm9xP9FexS0j52YYz/pqCrxIT9lhb7R9/oSLpurTHH2E0dHwvmZfXk2d
-         zge4M+ccHEoXIJBU7KEbZ0xBrpI8usB4H3Pw6+egvowTp3ASIgJjzY96FIMxCzATCn0+
-         fdKw==
-X-Forwarded-Encrypted: i=1; AHgh+Rq9idYvIvE/X1DQkX/b7NkkQGEBE4Rulcp5EPO7Eb4pe4qJ0YgTxlAC0e6dZ+tclfJUqQjPcx76MLMF6WFiZkMrTuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUhkmjdprkmIaOPQFcAvKMDpDaYl00oOyvTZuWeCk8Z74FguGQ
-	Oh4fNISnfV1FswrFZOTv9RPTtRMGKmWdhIHEmyFz2sUWI1sZeX4khvarYLgxRUmdfWNBdjBGoWe
-	ODGqsrAUQ8vo7Ulnj10BjLuHOaDa9nGAWj9N5sK7VKHOktuO/E5v0DoF3eX7KqDg9eR+tw8ekB9
-	TaR/KV8tkmTBgkePhRzXJk0R94w51IyCQl5ACFrdgJSTMV2Pqzkwl3SsM2
-X-Gm-Gg: AR+sD13E6A7SrDIgqjffDcrpRwx0clUY3gV10AYC2WBnj2zuvU0PVsp5zZD+rSb7WhU
-	knyqaKPlLDCR3oiPaxib6VxuAid6AX7WjAQgJ2ULv3BEuMm4R8mYg6mOAZEOfnMZWUVCTkd4o50
-	rLhrhV7WRbMpTOwBCncjQzy05lgDJEXLVER6rCT0ZWlGVaKSKqY3WLxvucyA==
-X-Received: by 2002:a05:690c:a90:b0:81d:4174:6818 with SMTP id 00721157ae682-8257357f604mr89550387b3.13.1786300348800;
-        Sun, 09 Aug 2026 11:32:28 -0700 (PDT)
-X-Received: by 2002:a05:690c:a90:b0:81d:4174:6818 with SMTP id
- 00721157ae682-8257357f604mr89550147b3.13.1786300348210; Sun, 09 Aug 2026
- 11:32:28 -0700 (PDT)
+        bh=V1ZlWHjVY7ndYW1ZsOFi+iZRZGVj81O6tO9Dw18q/yM=;
+        b=dv43Yz0PAx1K0p1AH/GLqUjTrByrbl4UYmdqOgY3eCQeuxSNIKumEGnH/2G5hdh6V8
+         8eOInRG15lkCxM7QWYnQoggqi2Lh02EvRFCEfRMpzvrQFRLXDKzOZ5wIktT9UVqfS0I6
+         aJTirOdR0LW83XMj+eFSBmtt/ttlv7qRFbNVhAxE7c45TC+6RXUCQ/Qd4qvGUdC7kYEo
+         J0hV1fxyqpHifFGZkSLmow58ZPcbv2AQAXZXEId6MJymHS3BOTRHj0jL05xp0GPI5cqG
+         h8/R84W0CMhgkLBzND+2/SBHZCSW0XDMm9Jo4YI8ZcnxY4mgKlUeXY0KPzg0mFs2M6f7
+         a9bQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqwlL35TEJBXYWewKKGEDEIAwp6Ai0cFcF4zXLcBIRARW7J1jZwzGk8aikiLnQ1+DzO78a6y5vbIXEOg1fDPf25TNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywdf3STb2s5l1PeZ0OOHl6Niu4XQjfdQ+gsCmfZ++grhPnL3M09
+	hFJhkG85N9SlA+SOuPwjQgakbnSUPFxkoGvOE7hPoJS107zxproUsm96y3UkSHRBJaUWFlV3DgV
+	zEVViklp5PRlaA1QukhMxJ8SzQ9wMSk7uYOjimouSGuU9xtd/kER8L6XAG74=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260806153000.4184871-1-andrey.grodzovsky@crowdstrike.com>
- <20260806153000.4184871-2-andrey.grodzovsky@crowdstrike.com>
- <CAPhsuW53yRgFMkNuAPCrCm9fhNNb4EpN7vbcSEGkNCZXHjk7AA@mail.gmail.com> <CAOu3gNhjDNFgzg0nf458FdMMMPx4WJi=n01musucvk=hbY0HMg@mail.gmail.com>
-In-Reply-To: <CAOu3gNhjDNFgzg0nf458FdMMMPx4WJi=n01musucvk=hbY0HMg@mail.gmail.com>
-From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Date: Sun, 9 Aug 2026 14:32:16 -0400
-X-Gm-Features: AUfX_mxB61PImxk7Ub1YrOZ365ALM_DPyxKzut-8yKDjXWIjCGfwpeEyQKycU1U
-Message-ID: <CAOu3gNhgRTh8uZdfNf+XBpYuJWAFu5i+UNjQC2jce4DdRc-bGg@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next v3 1/2] ftrace: deprecate disabling via
- ftrace_enabled sysctl
-To: Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, mbenes@suse.cz, jolsa@kernel.org,
-        mhiramat@kernel.org, jpoimboe@kernel.org, joe.lawrence@redhat.com,
-        mark.rutland@arm.com, corbet@lwn.net, stable@vger.kernel.org,
-        linux-open-source@crowdstrike.com
+X-Received: by 2002:a05:6820:208c:b0:69e:3e6b:c07 with SMTP id
+ 006d021491bc7-6ae96c1edb3mr19908278eaf.5.1786312290501; Sun, 09 Aug 2026
+ 14:51:30 -0700 (PDT)
+Date: Sun, 09 Aug 2026 14:51:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6a78f662.b50370da.49fe0.0045.GAE@google.com>
+Subject: [syzbot] [trace?] KASAN: use-after-free Read in ignore_event
+From: syzbot <syzbot+0b5074bf48547b3a63ac@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA5MDE2OCBTYWx0ZWRfX2vcDkCUlMV5o
- 8ohPnozx2A0gZ0PDlM9fnDvzHIkXQp4DP9i42+8vuXrWC8Cf2My5Z248TIi8AQWi78F5sgIKbFL
- 9UHAEjpT7UcJaPhwvW4itB+BxhUOlhz5FQDV4CeXE+eM25BfToj7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA5MDE2OCBTYWx0ZWRfX/c78dHdQxPuB
- XZ0dZsSnZVjnTNecfx4EesHtV+bVID/TG3atrid5RCV2jWg282itFKwWB3YaIFEDE+BXnJEuVVg
- WZT9MIoLVvkTHHBMI1LCkQI9o0fYMlbfDZ3phEkWgxf16ZC3gjLsBJsphF+xkrUFTNV2fDuRuQU
- OzbocWDYTW+n0vPLqnklCtvs9WXPoKc40j0I0Txw4MmWKVeyXY9bjFfiytaij0SSJO1PC2hM7IJ
- SIon9f4Poi1BEW/YQMzygL3ZO3TwiFhE+qFxJpso8wHR+IhQRWEXIyrN1whp88jUYsfHPL8tUix
- XB4qlC73RxqiIhGek7NfnKZYQx6rwaOeUJNgRrEQ/NQss6BnaVdJ9uqOpDznxFtvkg5eKHdOx39
- 0ynzrf4FIOEX0fD+37VXGY8GnkfDUryBDqeZw9hwuCTagKeT3hcRT1FTevz6qUd6OSAUrY1QMQ+
- P5ZQcFE4Mx1Sr82qDNA==
-X-Proofpoint-GUID: pskg6o-PH4XU59ztxl7tDopZp1b9OQX3
-X-Authority-Analysis: v=2.4 cv=QfdWeMbv c=1 sm=1 tr=0 ts=6a78c7bd cx=c_pps
- a=NMvoxGxYzVyQPkMeJjVPKg==:117 a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10
- a=KZhmPCYDdY0A:10 a=VkNPw1HP01LnGYTKEx00:22 a=T2KQ53IYiC3MXPrxx8bB:22
- a=t04HzT_fAfAF5W-3wVZy:22 a=pl6vuDidAAAA:8 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8
- a=jPl8K6pqbzkCHX85MxAA:9 a=QEXdDO2ut3YA:10 a=kLokIza1BN8a-hAJ3hfR:22
- a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-ORIG-GUID: pskg6o-PH4XU59ztxl7tDopZp1b9OQX3
-X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11870
- signatures=596817
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 adultscore=0 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608090168
 
-On Thu, Aug 6, 2026 at 5:52=E2=80=AFPM Andrey Grodzovsky
-<andrey.grodzovsky@crowdstrike.com> wrote:
->
-> On Thu, Aug 6, 2026 at 5:22=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> >
-> > On Thu, Aug 6, 2026 at 8:30=E2=80=AFAM Andrey Grodzovsky
-> > <andrey.grodzovsky@crowdstrike.com> wrote:
-> > >
-> > > Writing 0 to kernel.ftrace_enabled has not reliably disabled ftrace
-> > > for years (FTRACE_OPS_FL_PERMANENT users already block it, and more
-> > > callers rely on ftrace always being on). Refuse the write instead of
-> > > leaving it in an inconsistent "disables some, not all" state: return
-> > > -EOPNOTSUPP and log a message. Reads and enabling (writing 1) are
-> > > unaffected.
-> > >
-> > > Update the docs to note the deprecation up front.
-> > >
-> > > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > > Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-> >
-> > Sashiko's comments make sense. Other than those:
-> >
->
-> The bot has 2 comments.
->
-> In my opinion, the test-breaking comment is wrong as he looked
-> strictly at this patch w/o reviewing the follow-up live patch testing
-> changes which update the tests to avoid breaks.
->
-> The cleanup comment is valid but since we aren't sure if we'll need to
-> revert this change later if it breaks userspace in some unseen way, I
-> wonder how extensive the cleanup should be? Steven, can you advise
-> please ?
->
-> Andrey
+Hello,
 
-Gentle ping on this question above Steven.
+syzbot found the following issue on:
 
-Andrey
+HEAD commit:    3708dd948844 Merge tag 'pm-7.2-rc6' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17557a49580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7079b368dcec295
+dashboard link: https://syzkaller.appspot.com/bug?extid=0b5074bf48547b3a63ac
+compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
 
->
-> > Acked-by: Song Liu <song@kernel.org>
-> >
-> > > ---
-> > >  Documentation/trace/ftrace.rst |  5 ++++
-> > >  kernel/trace/ftrace.c          | 43 +++++---------------------------=
---
-> > >  2 files changed, 11 insertions(+), 37 deletions(-)
-> > >
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3cbcba767cb8/disk-3708dd94.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/37b77da165c5/vmlinux-3708dd94.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0f4930dc3972/bzImage-3708dd94.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0b5074bf48547b3a63ac@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in ignore_event+0x83e/0xaa0 kernel/trace/trace.c:2526
+Read of size 2 at addr ffff88804705a1ac by task syz.6.1383/11771
+
+CPU: 0 UID: 0 PID: 11771 Comm: syz.6.1383 Tainted: G S                  syzkaller #0 PREEMPT(full) 
+Tainted: [S]=CPU_OUT_OF_SPEC
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/16/2026
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x100/0x190 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0x13d/0x4b0 mm/kasan/report.c:482
+ kasan_report+0xdf/0x1c0 mm/kasan/report.c:595
+ ignore_event+0x83e/0xaa0 kernel/trace/trace.c:2526
+ trace_event_printf+0xb5/0x160 kernel/trace/trace_output.c:356
+ trace_raw_output_sys_enter+0x4c/0x60 include/trace/events/syscalls.h:18
+ print_trace_fmt kernel/trace/trace.c:3071 [inline]
+ print_trace_line+0x97d/0x1790 kernel/trace/trace.c:3237
+ tracing_read_pipe+0x586/0xd60 kernel/trace/trace.c:5444
+ vfs_read+0x1e4/0xb40 fs/read_write.c:572
+ ksys_read+0x12a/0x250 fs/read_write.c:716
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x115/0x870 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f48cdd9e019
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f48cebb5028 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00007f48ce025fa0 RCX: 00007f48cdd9e019
+RDX: 0000000000002000 RSI: 0000200000001000 RDI: 0000000000000003
+RBP: 00007f48cde3500c R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f48ce026038 R14: 00007f48ce025fa0 R15: 00007ffe7508fde8
+ </TASK>
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x4705a
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 ffffea00009a6048 ffffea00007bac08 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x44dc0(GFP_KERNEL|__GFP_ZERO|__GFP_RETRY_MAYFAIL|__GFP_COMP), pid 9023, tgid 9022 (syz.6.770), ts 304966657874, free_ts 587151444439
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0xfd/0x120 mm/page_alloc.c:1859
+ prep_new_page mm/page_alloc.c:1867 [inline]
+ get_page_from_freelist+0xf48/0x3530 mm/page_alloc.c:3946
+ __alloc_frozen_pages_noprof+0x299/0x2dc0 mm/page_alloc.c:5304
+ __alloc_pages_noprof+0xb/0x110 mm/page_alloc.c:5338
+ __alloc_pages_node_noprof include/linux/gfp.h:291 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:318 [inline]
+ alloc_cpu_data+0x60/0x160 kernel/trace/ring_buffer.c:427
+ __rb_allocate_pages+0xbd5/0x10a0 kernel/trace/ring_buffer.c:2436
+ ring_buffer_resize+0x6df/0x1e80 kernel/trace/ring_buffer.c:3270
+ __tracing_resize_ring_buffer.part.0+0x52/0x1f0 kernel/trace/trace.c:4738
+ __tracing_resize_ring_buffer kernel/trace/trace.c:4732 [inline]
+ tracing_update_buffers+0xd4/0xf0 kernel/trace/trace.c:4977
+ event_enable_write+0x23f/0x340 kernel/trace/trace_events.c:1926
+ vfs_write+0x2aa/0x1050 fs/read_write.c:685
+ ksys_write+0x12a/0x250 fs/read_write.c:739
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x115/0x870 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 11775 tgid 11774 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1406 [inline]
+ __free_frozen_pages+0x79f/0x1090 mm/page_alloc.c:2950
+ free_buffer_page kernel/trace/ring_buffer.c:398 [inline]
+ ring_buffer_subbuf_order_set+0x12d5/0x18a0 kernel/trace/ring_buffer.c:7439
+ buffer_subbuf_size_write+0x182/0x280 kernel/trace/trace.c:8221
+ vfs_write+0x2aa/0x1050 fs/read_write.c:685
+ ksys_write+0x12a/0x250 fs/read_write.c:739
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x115/0x870 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88804705a080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88804705a100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff88804705a180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                  ^
+ ffff88804705a200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88804705a280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
