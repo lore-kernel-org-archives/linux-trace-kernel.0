@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2D13B0AFA;
-	Mon, 10 Aug 2026 09:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B52D3AFD11;
+	Mon, 10 Aug 2026 09:33:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786354252; cv=none; b=cEsppQ2dK0b/TGhAILdpr2Qlg0AAV4aEiIduj3XUVBJq/yqWPRzjceKClUWI2XZ1DN4gCOr4+zU71u8PvdQ64u0olWh7V0NGFKhG9SDpcojUp6m8IsElqfyRmdd0KaCeGN8cN+UbAxNLfHUwPv9S+KOyCOX3bEQ5Tv7M7twyJAw=
+	t=1786354387; cv=none; b=J4WcJw4FbtCsBj3bMakxloCiY8h87oaB8Dm5gDrEao+LoEyCKIsvHYxcR42t7xW311ck010IYg2+4iqCvIy8nYd5k1j9seTy7ez3XW9IJXXWKjpy9w1K6fDZN+vPZNBawyoJ9Jj/nxvwmKE38LnIvDnF74+Sj8uoeiroNILZzEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786354252; c=relaxed/simple;
-	bh=CforaZHhCp0D4PRuKp5wg559Zx2JmhiPGocYgW6LoZs=;
+	s=arc-20240116; t=1786354387; c=relaxed/simple;
+	bh=oapsZf1fPfPSEGKl8ZA9AlMSNM2tlXBPlNT75K21Rv0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b43eeqapUz3tDnxyOVQb0TyuUo6vZdylRWeWfzgfi51XOVdiZjXgTfP9Gpjfv5k4fgooD0kMYmDa2MRolA7cvksd/q9fkk4s2+WRm94MUptoHkGfdNdBvC1d8YheGKwEwb7eplv5S3ff/sHSB85CsiU6G3HlnL0ewZcUEse15zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bohlnxP3; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=H5tFiehbaGIvEfR1Q9ertu8Uk+z4TB9dLYvoHZe07j1f2qnHBnSrlQ0EgYPXG317RiRTM3d4R03uBm6SjJ56TPm9HmDyD+hSqzd7hz3/qbcrIIrQU6SywDI3qiLGVUwrabVTmLSEURkxpeVQOkJyjgUfvPN66AiXavJZfWyOv1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFiZ73qw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bohlnxP3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10BE1F000E9;
-	Mon, 10 Aug 2026 09:30:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFiZ73qw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237D61F000E9;
+	Mon, 10 Aug 2026 09:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786354250;
-	bh=l2my6VqSN1Pi6OPxK0/5FmAellJIX3EJ4Czc065zjm4=;
+	s=k20260515; t=1786354385;
+	bh=puBatuzKpdITG9/LirLMSAY4o6mBGHBdHb4a5q1RtgY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bohlnxP3jBpV1WhsLd9bskHbEHKnYQzLSBniquP2TI1eoX9xUZkhF6o4QCGeexn9I
-	 eIcYh4ZZt9g5AoC91V4GVEDjgaiFPnNwuUPdyYGwgYOXOy25mXQv2j60thszqnLr8T
-	 ecFbv0GHwaNwhLeQstEov/iTQWIdVq2h8eDuKRc4TlNUmKk2INXLZIZy0HB+1F3JWA
-	 xzmccK5095T+EepC03FnWQCvmvzYl/VqbOakMLBMAuLFYP61issA2uA8g7TuNQoh1O
-	 oXJl7l3BW5Eb4kwXsPNYzzBpHdF/RtbsGptzlyJ1kBQGQSEe493MF8azC9K8Nyt5in
-	 svnE5Oj2krolQ==
-Message-ID: <dd9ebd52-7171-4353-8c83-9363019d55b8@kernel.org>
-Date: Mon, 10 Aug 2026 11:30:29 +0200
+	b=CFiZ73qwlmdLBwOq0EF9s3+3mq69NpHgrowj1UkIuK9sjUNhZkM2D9QmAG0wujV/1
+	 k7jgB948Mw1Gd1Aty/UekqvJswDyZX4WVeT7cWQA4x83t6GWQqFuKAuJXIc3nT+bXb
+	 q9CDlfm5UXlj+3yW/ivOAKboC9UIr07TdDGVhTtfh5jGzFaLNHHpK+ee0xzyCCUyCP
+	 la6FjR1ssQobEPVnL2PoMPWL1uadslzCNU5fMFI6MY9Dp6D3dcWl5Du2vc5Vb2zgu4
+	 oHWmiK4HAQt0ZxRSfWd8DWlG8ptVNG5wMTjojS2BF4K1EU/ofhOgRKLJ+Dp8WQ+PEU
+	 4VCGIRMhkbJLQ==
+Message-ID: <ed997598-8ae8-4aec-aa85-3a9204132513@kernel.org>
+Date: Mon, 10 Aug 2026 11:32:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 16/41] KVM: guest_memfd: Zero page while getting pfn
+Subject: Re: [PATCH v10 19/41] KVM: Move KVM_VM_MEMORY_ATTRIBUTES config
+ definition to x86
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -68,7 +69,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-16-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-19-2fc18ee6d3ba@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -115,88 +116,36 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-16-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-19-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+> From: Sean Christopherson <seanjc@google.com>
 > 
-> Move the folio initialization logic from kvm_gmem_get_pfn() into
-> __kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-> kvm_gmem_populate().
+> Bury KVM_VM_MEMORY_ATTRIBUTES in x86 to discourage other architectures
+> from adding support for per-VM memory attributes, because tracking private
+> vs. shared memory on a per-VM basis is now deprecated in favor of tracking
+> on a per-guest_memfd basis, and while RWX memory attributes are on the
+> horizon, they too are expected to be x86-only.
 > 
-> With in-place conversion, the existing data in a guest_memfd page can be
-> populated into guest memory through platform-specific ioctls.
+> This will also allow modifying KVM_VM_MEMORY_ATTRIBUTES to be
+> user-selectable (in x86) without creating weirdness in KVM's Kconfigs.
+> Now that guest_memfd supports in-place conversions, it's entirely possible
+> to run x86 CoCo VMs without support for KVM_VM_MEMORY_ATTRIBUTES.
 > 
-> Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-> might contain uninitialized host memory, which would leak to the guest if
-> the populate completes.
+> Leave the code itself in common KVM so that it's trivial to undo this
+> change if new per-VM attributes do come along.
 > 
-> guest_memfd pages are zeroed at most once in the page's entire lifetime
-> with guest_memfd, and that is tracked using the uptodate flag.
-> 
-> Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-> kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-> can get a page, write to the page and then set page uptodate without
-> zeroing.
-> 
-> This aligns with the concept of zeroing before first use - the other place
-> where zeroing happens is in kvm_gmem_fault_user_mapping().
-> 
-> Don't mark the page uptodate again after populating, since the page would
-> already be marked uptodate before the post_populate() call.
-
-The downside is that __kvm_gmem_populate() will now zero+write. I assume we
-don't care about possible performance impacts?
-
-Worth spelling that out.
-
-> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > Reviewed-by: Fuad Tabba <tabba@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
 > Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
->  virt/kvm/guest_memfd.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 030af0855f8b0..41950c8105b5d 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -1079,6 +1079,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
->  		return ERR_PTR(-EHWPOISON);
->  	}
->  
-> +	if (!folio_test_uptodate(folio)) {
-> +		clear_highpage(folio_page(folio, 0));
-> +		folio_mark_uptodate(folio);
-> +	}
-> +
->  	*pfn = folio_file_pfn(folio, index);
->  	if (max_order)
->  		*max_order = 0;
-> @@ -1108,11 +1113,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->  		goto out;
->  	}
->  
-> -	if (!folio_test_uptodate(folio)) {
-> -		clear_highpage(folio_page(folio, 0));
-> -		folio_mark_uptodate(folio);
-> -	}
-> -
->  #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
->  	if (kvm_gmem_is_private_mem(file_inode(file), index))
->  		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
-> @@ -1159,8 +1159,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
->  	}
->  
->  	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
-> -	if (!ret)
-> -		folio_mark_uptodate(folio);
 
-In case post-populate failed, do we want to re-zero the pages?
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
