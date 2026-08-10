@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A910817B505;
-	Mon, 10 Aug 2026 08:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E48E396D38;
+	Mon, 10 Aug 2026 08:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786351422; cv=none; b=BFGWRYIFFwJmZB7ZvfzfCloqqBA3OidNgILcudHXF5PChlzPpm4Ue663gKo99CMjCPBrUwM7k1Cgm4GwYSPaWNixi0bEN/HqLdlfI8EBG5xKozlzrcEGdZsC0XCkRHCPMfrdAPhmT/1HfyEcXJnVtyb+fmCZ4nZu56fRuzcKcAc=
+	t=1786351794; cv=none; b=Iz6VY12wPZVpBLY7zCd3l013XIVLubYO+5PBdPkaLhYdVVPLLZd4auxd38NA82/C0xd1nYe5laipXc28rw36CTXdrS2YwyMhr2PlumaCArIXXcTdpP6G0rKKnrUHddW2heUGv4ratjPcvbCUJiTCjX7c9htx5G0RlqHSAFGRvQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786351422; c=relaxed/simple;
-	bh=OaBdcE+yZqO1HYKuM72fMIoKip0Nls40njz55Fqutrs=;
+	s=arc-20240116; t=1786351794; c=relaxed/simple;
+	bh=87X6HhZwLKTMl3Y1C3OmrRwPCU48ruFWGcNXkCV12Yo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NUyLBFih8op7NC3M1Cph3nSi7bYXEh8yEHGzkTQ6XFvFJdT5vfNd6pqVrHILkbW9xwsiv4vKuD/98iUhZ8GB4w+3mjQTWOI36g/ggqhIsgEpOCIriguHAlJolI8FNYxSNQAKZ8IbfJ3swKUdldueoln0btrzO4HCkKlkO6mbxAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FImHoxXg; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=fj2lZLo99WqCEqcSpRjsNJqClFughN2mUi8iMtWrl1uM4O7wfaJ2OUDrHcBS3qt1XC+80iDsd345VbCAzluoOp4gG+AZR4vRRpW82Qv79iTtwHJFu/WWyBYtFgVvil9NRHo/SAXk1339JABo+k6Fqcf2+sOeRlX1xqrQvd0qzF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LM4dvE+I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FImHoxXg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE561F000E9;
-	Mon, 10 Aug 2026 08:43:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LM4dvE+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368A41F000E9;
+	Mon, 10 Aug 2026 08:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786351421;
-	bh=smOt6mZG+PevRoowKw0zUZxXoHsvJYbHF/KUnR1DfrA=;
+	s=k20260515; t=1786351789;
+	bh=oyi1K6Vb11sIVm2DqmDTjgO2DUYGijf3ZjwPoeHhIpI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FImHoxXgIxwzbVyPu7nfHaTw3qR2eukHNsnftNgcvcDDrlqlqcA4HteQC0p9YmIbC
-	 IYa0UrJmyfRXHxGd+ID4Zr168Qs7C/7IeoKv1E8TcvW5irCGeMMzd9AnedtK/sPrrd
-	 PUpDnXWclVQccNpIUwMrDVvLXtpWakjkH34kIGE32ljzuvrax91OIsyWQJoM5cySLl
-	 8Pg0xMWTSW+nDib6pwUdPqbIOkqLRxasEsrzI1V/P6lBj8+hlRpRpd4tGzb5Tm6hwg
-	 pq+3j65ZLwYWz83rp9pEC9AROYEdQoTJwKJvxQSf2LBKrDEkNS6aI79YDjibbettmQ
-	 g5FdPN5a0AwHg==
-Message-ID: <7b93b756-1c48-407c-a12d-864f0a5bea01@kernel.org>
-Date: Mon, 10 Aug 2026 10:43:20 +0200
+	b=LM4dvE+IKC/Ejo+9/rKz+PKvAdzmvpVvRevxAjCQ5s8v5M45CzxupdrZgWT2JRvuc
+	 5Tizm2ZXxGCYgm9t3tVLtMdV0AoWpSGA7Wm3b5DVASrvII4aYdkcwae8HLnI7Z9i3s
+	 iwnnDOx39L6omLCMv2h0Evag/b4MJtfvAfDUxwZ2NHUZclv3+ean7YnI76R2fN0vBZ
+	 dWL+WY/+gHBfXv6qPOj4/EeIcc4qXwY/S1hJV1NcE02I67uo7riHg9ePIyU6mqCgxx
+	 krur+cesfmybko1Hv3JxueBRP7HRivu3ABRQPWz7RfFxbF5+gWIWyBbqkHUBHDPgHR
+	 vl9843J0x9v1g==
+Message-ID: <ed483d25-d908-4248-b8c7-862dd35dc6d4@kernel.org>
+Date: Mon, 10 Aug 2026 10:49:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/41] guest_memfd: In-place conversion support
+Subject: Re: [PATCH v10 07/41] KVM: guest_memfd: Stub in ability to enable
+ in-place shared<=>private conversion
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -66,9 +67,9 @@ To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>,
- Fuad Tabba <fuad.tabba@linux.dev>
+ linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -115,18 +116,69 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-> Previous versions of this feature, part of other series, are available at:
+On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson <seanjc@google.com>
 > 
-> + https://lore.kernel.org/all/bd163de3118b626d1005aa88e71ef2fb72f0be0f.1726009989.git.ackerleytng@google.com/
-> + https://lore.kernel.org/all/20250117163001.2326672-6-tabba@google.com/
-> + https://lore.kernel.org/all/b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com/
+> Stub in global variable to enable in-place guest_memfd private<=>shared
+> memory conversion, which will eventually be exposed to userspace via a
+> module param, and wire up the __kvm_mem_is_private() static call to the
+> guest_memfd version when in-place conversion is enabled, i.e. when gmem is
+> the sole authority on private vs. shared memory.
+> 
+> Cc: Fuad Tabba <tabba@google.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> ---
+>  include/linux/kvm_host.h |  6 ++++++
+>  virt/kvm/guest_memfd.c   | 26 ++++++++++++++++++++++++++
+>  virt/kvm/kvm_main.c      | 12 +++++++++++-
+>  3 files changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 65fbce46b63f4..9477ecebbbced 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2580,6 +2580,8 @@ static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>  #endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
+>  
+>  #ifdef kvm_arch_has_private_mem
+> +extern bool gmem_in_place_conversion;
 
-Sorry, I saw v10 too late and left some tags+comments on v9.
+Is there a "supports/has/enable" in there? And should we call it "kvm_gmem" for
+completeness?
+
+
+> +
+>  typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
+>  DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
+>  
+> @@ -2588,6 +2590,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>  	return static_call(__kvm_mem_is_private)(kvm, gfn);
+>  }
+>  #else
+> +#define gmem_in_place_conversion false
+> +
+>  static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>  {
+>  	return false;
+> @@ -2595,6 +2599,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>  #endif /* kvm_arch_has_private_mem */
+>  
+>  #ifdef CONFIG_KVM_GUEST_MEMFD
+> +bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn);
+
+As mentioned in v9, the name is confusing.
+
+	kvm_gmem_mem_is_private
+
+?
+
 
 -- 
 Cheers,
