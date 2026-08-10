@@ -1,184 +1,217 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6613A3955EB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 21:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786397349; cv=pass; b=VtJbqGto6OmS6M1EvL/LebCl4hlYZ9pjR9G82iQ/U2zKBvfJLwxGVfdBBLA9QBNiDZ908kOSBsK8z1cKLa5HED6QIrlf/lsF7abl3sixbjK9RoHjmpVK2KAMlR09Tzh1HUK2lsFdgrnCv+6vVzEAqZ+vXscWfJbrUWegOeFzzPM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786397349; c=relaxed/simple;
-	bh=wN+q38rdlKIr22xrGQOunHcrcy7dQztjwHhaozPCfDU=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rIU6BXFvQb/J6S+DZyWuAWcaEOZe6U7XFu6vMDyS3YCs4wXZBMRCiaiXkrE8LcLCfsLl5lK1inWH5oUOuQGiMDeA1M4CKksJnsKIZgX8DSFgj/fwfoatSx8fGqPpGJweTYaw5vGVgzCSTI9hljft83ZL250dwdDa1TzRpWsf1NA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sc84Gh/R; arc=pass smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sc84Gh/R"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-cbb8b54fcf8so197792a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 14:29:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786397348; cv=none;
-        d=google.com; s=arc-20260327;
-        b=d5km5BC8yhzDefiejKcnodKHyxJHbF6U1wu9ci5TEhx56kA34CqBiB/2vK3OTK0HqF
-         WaRF1Z03Y+FPK/Q4XyJ3dUehtC+uWsbNDxMwstzlq5vLoL/T+5wK2c5gjLWvmB1khzhp
-         mCPzF/ZJ6e/r+DBrPMN/qRvL+hCd5qfrl0DPh+DuvxLn7F4hP4tfTlIuYMNQHhpdegxd
-         uImPLBQPA8CFumNJrSH9QeQK7o6SVSmrpgTKo8xOe7ePVG32FVQuo7N6fQYzKHRppt07
-         ApzLvhxlLhuC8Hk+K2uweTyFCud6piya1JmxPPUZgM1PghhuK9tbKOcyqCHbm8FNtJLX
-         +imA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=wN+q38rdlKIr22xrGQOunHcrcy7dQztjwHhaozPCfDU=;
-        fh=sLPeiq8T4OmnA9HoBa0pew3v11bvvx7DT6fINJpTYA0=;
-        b=SM3p6MBa2aHO9GnLcoNwd5inOt5xQBZzBLTs2nL/0S1P/6kmF6lfODon0xf3eGuMQR
-         SfhY7Bszl1/1T2Cj8SdCD7lbnnQ2ptErE/xUEucDpGa7b0M9Z3DZam8Me/qaetS8M/1w
-         6dnNNJCWQ0HBt8QI/bMqpgCZIz8iZl4NsvC/kihmFYtKa/8dTQxZD9EugWrpkgWlvGJm
-         IiYIvFRofmu21ck15bbIZL/k8m6oXdf0V/F6cbcaYaCJbaXZs6EtWAXBDsm6PbGjoBNw
-         U52WL4MJxkq96ihReeKwjPqn3SfoDAMgRDApsuEIeT2agsSsxzoT1I0TE7zuY+dqlLl2
-         msVA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786397348; x=1787002148; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wN+q38rdlKIr22xrGQOunHcrcy7dQztjwHhaozPCfDU=;
-        b=sc84Gh/RC1fJT7FD4YKcWetEE7zL2nWKMj/1RSzjh/2nFq5aLkn/aYPRwl3ChtRsfk
-         63ATih+/9geGVWmXhhQ+VEW8HK7suiKvASQfQoPC6JNmfrHvthl5vVxBr/HGNDwHzPAI
-         VOWDGUeT6zemAzczPO8rRe2JltFMRTdBi1vluKQkS/cYOZfhEmbtsvSv+r5JzCk2E3RF
-         Y0qS1GZZ5Wc1jhctkFQk+rjb2TTdPEZZCBneO3xv3rffcilua5vGRNfI1F9gPhpOgUJQ
-         Gvf5du4fbcIrY7Tc+sByKjOs7hCsGOi09VBnQGOJccJjpbUCK2bk4SVwLf25NgGaLslQ
-         lc6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786397348; x=1787002148;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wN+q38rdlKIr22xrGQOunHcrcy7dQztjwHhaozPCfDU=;
-        b=XGNyUVz2OkjuvXLGC3yGewi6e8tQp7x9hDFdNOVX1D8T0JpHI2mRvQJsw+yeB/rVdt
-         QsNFdKjsMLC1NUqe2g474h53Ch/LzdmtNA8nxocw67hYWZfOPKZe9AjFp2Ixbyf69KeJ
-         7ZhV8nCpJ8yjth/zmeocz/dG8ud+fiGmrUTSOcpJ+7G/gxzFwys0HzyvC8qJoXw5GW3l
-         f5RNJeATCYfx+CqQhq4zmY5sRBuXGbSg1TI5yX17vXCa3GFnTF77kRnT/T/JI6rutSFz
-         TzIhOknbIC8SIKsiwxC+/OVKIHMvRun33xin3RLgueJeLrA/+5RanpcwBXUPf1R5F7Bq
-         gFYQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoXJ6RB3yMaYjjMUEd2ShOvprquy1NSE0EOBB7pC1512sIGfAJIZWPUfIf/SJ8OaN2UbnoblMfwLV8CMLvbGBQvZBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEZ6YwvRJNRxORQGuLZ/OtBtssKWheoCB4lJiYjQgdw5VUZ76h
-	pln1lnGHtPINZ8V4aVjSSRhE2WJHBS3Q8ymqcMnw6pD1nlGQ+nvIjLqXL8gH90VQmjhlvkhgpz/
-	5/kPk2TEbXz82xbuVcdvBDdEEPmAkuFLeEX2NbgE7
-X-Gm-Gg: AR+sD119bJKvWJ6HhROm6kCcGm1i+rHvyPlZXLBnNB1Jn+F6xdr9ZY5ZSVJH0mErkVl
-	BgfVTUOk0/NfLqBMa6x+2nZRxGmrzZQF4Z+y1T9tbbuvt5aa7fJbPHzlTBP7b4lSw9it3PQTPXa
-	y/69ttMBbSx3MQh9H0KSL3vfjMbkmqS2bNaXpjuSKR/DhW+dEbAvk3IUkJWVl/Yn0FEGhEc4S85
-	Nevx0fOl1zZLeaEpFZF4mOef1CYpdtAUwZdXyUHNmnr6NnoBgAMXtoy12iTUFxjNGZEXEPE2DcF
-	/rwbBy+d92+3CljtzpIkbjWpDTKKyUa8vZyD5GW0luoWeHTzoZGKuWLFSn2gnX53OS05z6JCgc1
-	ESI6IM0M+Wfd4Dm1fl2iP6AMn10Vy2YTShPE=
-X-Received: by 2002:a05:6a20:4321:b0:3c3:b57b:6291 with SMTP id
- adf61e73a8af0-3cb85e6689fmr49405061637.18.1786397346906; Mon, 10 Aug 2026
- 14:29:06 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 10 Aug 2026 14:29:05 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 10 Aug 2026 14:29:05 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <aa545680-2fee-468c-ba34-cc9beb16f4cf@kernel.org>
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com> <aa545680-2fee-468c-ba34-cc9beb16f4cf@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10793264614;
+	Mon, 10 Aug 2026 21:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786397959; cv=none; b=mVS2B0Df32Xw5NT/uzkSO0OytLeYjXQI89DF5RMrML8IdUVBUeG180BFI/nWz8K528GF8pcnsG0N3czhfRyx7jw0TeMSiS3CznADMzlR3ZqPCxaCs9KYyrRHigIE1JSVuNZNvBVySC+dWYalY3VemoSsyTVzhdi2SoX1lMISVVM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786397959; c=relaxed/simple;
+	bh=yNbKGCC+ucFp04okUhCItWlQDIYsthwzFfbBr8g1jOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a72w29CqX43CriprBGd4OVyF6s+rgTYR1Dob/LCgUdjNmC34aatuz8qOjZOx0jZb3+XXySnoo/zenfVewfuEOe4hqkb+w4gQT2PKIB083Fw+Dv9LhLrP9O076A4QYxuddn0bS7UtfbDIOzOkWA0pHSKjlOaI9AdIymF2D4KlkpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id F002D1C0202;
+	Mon, 10 Aug 2026 21:39:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 9DB8320030;
+	Mon, 10 Aug 2026 21:39:13 +0000 (UTC)
+Date: Mon, 10 Aug 2026 17:39:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Anubhav Shelat <ashelat@redhat.com>, Masami Hiramatsu 
+ <mhiramat@kernel.org>, Shivank Garg <shivankg@amd.com>, Ackerley Tng 
+ <ackerleytng@google.com>, Fuad Tabba <tabba@google.com>, Christian Brauner
+  <brauner@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ "sashiko-bot@kernel.org" <sashiko-bot@kernel.org>,
+ "sashiko-reviews@lists.linux.dev" <sashiko-reviews@lists.linux.dev>
+Subject: Re: [PATCH v3] tracefs: Add read-only eventfs filesystem at
+ /sys/kernel/events
+Message-ID: <20260810173923.32a42907@gandalf.local.home>
+In-Reply-To: <20260810160708.3460a2fd@gandalf.local.home>
+References: <20260810160708.3460a2fd@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 10 Aug 2026 14:29:05 -0700
-X-Gm-Features: AUfX_mxwV4sMMEn8xD5iLtETNHGAZsCJNscksNcNQT60_O-j0WNrenHXqsrVJ0k
-Message-ID: <CAEvNRgFSdddvuT8ZJUPOC9BCAtBgx6Vk=UbbPZ0nTAz8M52dSQ@mail.gmail.com>
-Subject: Re: [PATCH v10 15/41] KVM: guest_memfd: Handle lru_add fbatch
- refcounts during conversion safety check
-To: "David Hildenbrand (Arm)" <david@kernel.org>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
-	Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-
-"David Hildenbrand (Arm)" <david@kernel.org> writes:
-
-> On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
->> From: Ackerley Tng <ackerleytng@google.com>
->>
->> A guest_memfd folio is safe for conversion if guest_memfd holds the last
->> references on it. Any other references on the folio may indicate another
->> user, and guest_memfd cannot convert it to private if there may be an
->> existing host user.
->>
->> A folio will have extra refcounts if it is present in a per-CPU lru_add
->> fbatch. guest_memfd does not actually participate in LRU, but
->> freshly-allocated folios are still added to the lru_add fbatch for batch
->> LRU statistics processing.
->
-> As discussed, what would happen if we mlocked gmem folios? In that case, they
-> could also have been added to the mlock cache (which we treat like an LRU cache).
->
-> But that's just a comment regarding the text here.
->
-> [...]
->
-
-To make sure I'll get the wording right, let me know what you think of
-this (will replace the entire commit message for v11):
-
- A guest_memfd folio is safe for conversion if guest_memfd holds the last
- references on it. Any other references on the folio may indicate another
- user, and guest_memfd cannot convert it to private if there may be an
- existing host user.
-
- A folio will have extra refcounts if it is present in a per-CPU lru_add
- fbatch. guest_memfd does not actually participate in LRU, but
- freshly-allocated folios are still added to the lru_add fbatch for batch
- LRU statistics processing.
-
- A folio may also have extra refcounts if it is on the mlock fbatch.
-
- These two known "usages" of the folio are handled calling
- lru_cache_drain_for_folio, which drains both the lru_add and mlock
- fbatches. After draining, if the refcount is still elevated, then
- there's truly some other user of this page, and the page is not safe
- for conversion.
-
- If the page may be dma pinned, DMA is obviously using it and hence not safe
- for conversions. If the page is still mapped after guest_memfd tried to
- unmap it earlier in the conversion process, it is also obviously not safe
- for conversion. Exit early to avoid unnecessary draining in these 2 cases.
-
- Provide a drain status to only drain once ever while processing a batch of
- folios.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9DB8320030
+X-Stat-Signature: bz5t9osdzsds7g9jton7uennewsco1zt
+X-Rspamd-Server: rspamout03
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18agrxIcwZ3dt2+xFJMEeRexx0GVhnT78M=
+X-HE-Tag: 1786397953-516905
+X-HE-Meta: U2FsdGVkX18Z5S/d3j37m3d+vLbWFZiVmOfaAsIADd/kT77dTemCZuURQWQUBmNC70XmIhTlTF4xZldFUEcOT0e6VMkJhD8vOMoJ8ZVZvN/I1frW4GMYOuHisMCTT/jGagSDbhsyBpYIqekZHrz01oQ+B0uqHkieR5X9vc+R6ceC6IEXTi/N+0RvaN96t3ZAhyFMXEuN4N3c8uYxh1+8xG3KmN8cE8T01tX7lKPJ681SNJeF7IjGOtgSzNRYKGhwauwx14RO/kgei8mnInSNkli2iI0MbYAxv/v5dBdaDsXawxS//LtcLNhGM2YogIyyTl1awJeocRdx7UVTYIVslpqIJi8dFwYPOODeQjfRvP2pn4Py98Vqg6QxzCIG6C2tETizvh5PBPgXmceKB7bZFA==
 
 
-> --
-> Cheers,
->
-> David
+Replying to Sashiko: https://sashiko.dev/#/patchset/20260810160708.3460a2fd%40gandalf.local.home
+
+> --- Patch [1]: [PATCH v3] tracefs: Add read-only eventfs filesystem at /sys/kernel/events ---
+> commit 5fedbb447b6c46a029edb4492a02145a903d2475
+> Author: Anubhav Shelat <ashelat@redhat.com>
+> 
+> tracefs: Add read-only eventfs filesystem at /sys/kernel/events
+> 
+> This commit introduces a read-only pseudo-filesystem "eventfs" mounted at
+> /sys/kernel/events, exposing trace event format and id files to unprivileged
+> users. It reuses the eventfs_inode lazy-lookup infrastructure with new
+> super_operations to share the tracefs inode allocator.
+> 
+> > diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> > index a524584353279..3af1cf5abe4ab 100644
+> > --- a/fs/tracefs/event_inode.c
+> > +++ b/fs/tracefs/event_inode.c
+> [ ... ]
+> > @@ -561,20 +653,40 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+> [ ... ]
+> >  /*
+> >   * Walk the children of a eventfs_inode to fill in getdents().
+> >   */
+> > -static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+> > +static int __eventfs_iterate(struct file *file, struct dir_context *ctx, bool ro)
+> >  {
+> >  	const struct file_operations *fops;
+> >  	struct inode *f_inode = file_inode(file);
+> 
+> This is a pre-existing issue, but does exposing this directory iteration
+> code to unprivileged users create a severe security vulnerability?
+> 
+> Looking at __eventfs_iterate(), there is an existing integer truncation
+> when setting up the loop:
+> 
+> fs/tracefs/event_inode.c:__eventfs_iterate() {
+>         ...
+>         c = ctx->pos - 2;
+>         ...
+>         for (i = c; i < ei->nr_entries; i++, ctx->pos++) {
+>                 ...
+>                 entry = &ei->entries[i];
+>                 ...
+>                 r = entry->callback(name, &mode, &cdata, &fops);
+> 
+> If an attacker uses lseek() to set ctx->pos to 0x100000000, ctx->pos - 2
+> truncates into the 32-bit signed integer 'c', resulting in c = -2.
+
+Once again, this is not possible. That's because both eventfs and tracefs
+have their super_block maxbytes set to the default which is 0x7fffffff.
+Anything more than that will return an error. You can't use lseek() bigger
+than that.
+
+> 
+> Since the 30-bit unsigned bitfield ei->nr_entries is promoted to a signed
+> int in C, the loop condition (i < ei->nr_entries) evaluates as (-2 < 5),
+> which is true.
+> 
+> This allows a negative index to be used in &ei->entries[i], reading
+> out-of-bounds memory to find the function pointer entry->callback, which is
+> then immediately executed.
+> 
+> Because this patch makes eventfs available to unprivileged users via the
+> new 0555 mount, can this be used by any local user to trigger the
+> out-of-bounds read and control-flow hijack?
+
+With the following code:
+
+readdir.c:
+-------------------------------8<-------------------------------
+#define _LARGEFILE64_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <dirent.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+
+int main(int argc, char **argv)
+{
+	unsigned long long addr;
+	struct dirent *dirent;
+	DIR *dir;
+	char *file;
+	int fd;
+
+	if (argc != 3) {
+		fprintf(stderr,"usage: %s dir addr\n",argv[0]);
+		exit(-1);
+	}
+
+	file = argv[1];
+	addr = strtoull(argv[2], NULL, 0);
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0) {
+		perror("open");
+		exit(0);
+	}
+	printf("lseek to %llx\n", addr);
+	if (lseek64(fd, addr, SEEK_SET) == (off_t)-1) {
+		perror("lseek");
+		exit(-1);
+	}
+
+	dir = fdopendir(fd);
+	dirent = readdir(dir);
+	if (!dirent) {
+		printf("Nothing to read\n");
+		exit(0);
+	}
+
+	printf("entry: %s\n", dirent->d_name);
+	return 0;
+}
+------------------------------->8-------------------------------
+
+I run:
+
+~# ./readdir /sys/kernel/events 0x7fffffff
+lseek to 7fffffff
+Nothing to read
+
+~# ./readdir /sys/kernel/events/sched 0x7fffffff
+lseek to 7fffffff
+Nothing to read
+
+~# ./readdir /sys/kernel/events/sched/sched_switch 0x7fffffff
+lseek to 7fffffff
+Nothing to read
+
+~# ./readdir /sys/kernel/events/ 0x100000000
+lseek to 100000000
+lseek: Invalid argument
+
+~# ./readdir /sys/kernel/events/sched 0x100000000
+lseek to 100000000
+lseek: Invalid argument
+
+~# ./readdir /sys/kernel/events/sched/sched_switch 0x100000000
+lseek to 100000000
+lseek: Invalid argument
+
+~# ./readdir /sys/kernel/events/ 2
+lseek to 2
+entry: header_page
+
+~# ./readdir /sys/kernel/events/sched 2
+lseek to 2
+entry: sched_wake_idle_without_ipi
+
+~# ./readdir /sys/kernel/events/sched/sched_switch/ 2
+lseek to 2
+entry: format
+
+How can we hit the condition that Sashiko is reporting?
+
+-- Steve
