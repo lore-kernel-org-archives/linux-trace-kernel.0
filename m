@@ -1,35 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFFC3AB48F;
-	Mon, 10 Aug 2026 22:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4662928F5;
+	Mon, 10 Aug 2026 22:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786401748; cv=none; b=aL3T03bGF2miVfjftCa3C8yAkn8waH8DjAlo+dhzENaVFWEsWIqmVt3do93p1jH6mEdCAU5G5T+i1f9QfLvuaHLMSv/H3wjtf5nBAhrdH25cIAGikYitvpjBAIK7XUeA9YXnaHzKPYNBTFaKqhMIMyKnzxm6U8NKUDF/0lptlwU=
+	t=1786401967; cv=none; b=Tm9zkO34ZLBLCg4MbqXvTACOvCxAo54/wv1+FQHJaQkmGiCRPm53BUSGMSgpNrwzUVDnbf8rPDv3qk95fQRVlZL3Lf269WbVsR4BeNpN0IjuXRYmqhOhSHqwnyRPOyw4513L7iqOko80VGbO0to5Sum334ItQmfdvHyOOzeaS2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786401748; c=relaxed/simple;
-	bh=7RoINJE4dbmabMMBpH1OQxD33IndvQyZfXs/LTop7vE=;
+	s=arc-20240116; t=1786401967; c=relaxed/simple;
+	bh=QhMXrfraOvdh9YrEuAVwdoG/FYIJ1/zDvQVpJizxhYI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p263tMP8Kk6WJWbs2vsKKq6HHfyJUMiKzAMy1JKbt0xhYMbFmFv7e/VcSphDhDdMwLJc0sDMqyAs3g2TKr/G+pf0hd64YP9FFw1UtJx5uKPvuNfB8TKS4Ght0p/ok1h8+58rhaJgu71+dLsVo3vFo10Wkn/H1W8EvyDY11+jDJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=dvrPwMhdyszEBnt6r/z4f6R2DU3fotyz+rlEBRcBH8Yma7kVkMRL3ArNxszFoWu9WHh71xcT8LRlztKqi8dn/Hg46QnD/yAgIp/PMZUgVsszCEcJtCHfoh7qfsukgosPoG8+ZssVNgBwRMcBrV77QB9fm0ZPulsBQ+eCv30Q2S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 13A4214029E;
-	Mon, 10 Aug 2026 22:42:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 0F44C20025;
-	Mon, 10 Aug 2026 22:42:22 +0000 (UTC)
-Date: Mon, 10 Aug 2026 18:42:16 -0400
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 8FA821A0276;
+	Mon, 10 Aug 2026 22:46:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id A2DFD20011;
+	Mon, 10 Aug 2026 22:46:02 +0000 (UTC)
+Date: Mon, 10 Aug 2026 18:46:01 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
  mathieu.desnoyers@efficios.com, kernel-team@android.com,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 06/18] tracing/remotes: Add dmesg tracefs file
-Message-ID: <20260810184216.3484cfd6@robin>
-In-Reply-To: <20260804140333.797210-7-vdonnefort@google.com>
+Subject: Re: [PATCH v4 07/18] tracing/remotes: selftests: Add a test for the
+ dmesg tracefs file
+Message-ID: <20260810184601.2d42dfd7@robin>
+In-Reply-To: <20260804140333.797210-8-vdonnefort@google.com>
 References: <20260804140333.797210-1-vdonnefort@google.com>
-	<20260804140333.797210-7-vdonnefort@google.com>
+	<20260804140333.797210-8-vdonnefort@google.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,108 +40,73 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 0F44C20025
-X-Stat-Signature: tp5cghu49t5i784h5iq8kq356q65cd8q
+X-Stat-Signature: sgc5kts4ws4eiiqcz3h4z5y9kmxadqg1
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: A2DFD20011
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1//PoLAJORmJuh/4Sn43dzA1QgdKWLWnZo=
-X-HE-Tag: 1786401742-889997
-X-HE-Meta: U2FsdGVkX1887pcpfHh0VeRjLffvaiXV57p/7Jrdlw2ZCak81yUqhCVs71BZufMMDJhZGv46IQ4S63xQA/shRfGFfV1uSECN+NHJz2ztjH7kjS7eeMGKSIJ4GSgiQUCK05MUoQNy+cBy9p+4YKYE8Lm0R7YR4BaanBkxk6Yz6RSKERFRI4vYOBXBzVwRXYkBGVzM6sbyisx98F/OR3XlspKCeLpepZk/xEnCrsJD0M49mHKBftNHhp+2kgQ8pn0c/PA3VR+RV6XEFBivpMrC1QqqwBciedkbXMVvCfbkSVFihY+XgcB8w3fEgjPVTstUpGq87OqU3Liu3SPWSh4bv9ZXqzg1ZMiKIBV7BxOT4lkR3tl7Xvzic3FesybuwkMvTZsha3fJuRz9KAzAxoo8+w==
+X-Session-ID: U2FsdGVkX1+f0IQSllQciosXMuF0Ho59ciuuITY4j0I=
+X-HE-Tag: 1786401962-119
+X-HE-Meta: U2FsdGVkX19nwoFB8qFBI3vbgl9RiDMLvWATZ+/mYMyCBMeleVTSWd5Wm0VTCdvcYtNdyP3gymBJhlrU2h33KIQRaa/NIDAjXv+o/ynbFA5t9c9BCjxZbp0KthuXXC1bks5fH/sHlqY1vdgOMgKY1QixJraywPB/A9UdJaJi0/jXBhgroBspL3Zh+uhqdQVkK1neP4qWd0ZAQPBMlMYMdV+Cvqp/o8PxrSQJ6ONwt9WsfXwI8Wwit15O0ed6NCPkrey6HSrFslQwlQWRV9nvV8fkASHRfeLiZjAdFNdaayczDnNUNflp7IGkbFSdmEMWJ2pwVFLg294UmMqZpB7KNcem8HOD76hn4IK3GRS9CE0aes43dEXgtRWOpRQVN1g1gk/D3/bBA8oCOujr5A9P5g==
+
 
 Adding Sashiko review: https://sashiko.dev/#/patchset/20260804140333.797210-2-vdonnefort%40google.com
 
-> --- Patch [6]: [PATCH v4 06/18] tracing/remotes: Add dmesg tracefs file ---
-> commit b6a4c19257d91807c612baa19691b2d602bb0670
+
+> --- Patch [7]: [PATCH v4 07/18] tracing/remotes: selftests: Add a test for the dmesg tracefs file ---
+> commit e79aa4baf215905a3bfd330e32c4f3d3b06f9a1c
 > Author: Vincent Donnefort <vdonnefort@google.com>
 > 
-> tracing/remotes: Add dmesg tracefs file
+> tracing/remotes: selftests: Add a test for the dmesg tracefs file
 > 
-> When enabled, the dmesg tracefs file enables the redirection of all
-> events to dmesg. This is similar to tp_printk.
+> This commit adds a new ftrace selftest for the dmesg tracefs file. It
+> exercises the dmesg redirection by toggling it on and off, and verifies
+> that events are correctly logged to or withheld from the kernel log.
 > 
-> > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> > index 1fbe2f3f20e99..58a38f3d49024 100644
-> > --- a/kernel/trace/trace_remote.c
-> > +++ b/kernel/trace/trace_remote.c
+> > diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc b/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+> > new file mode 100644
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
 > 
-> > [ ... ]
+> [ ... ]
 > 
-> > @@ -882,6 +908,87 @@ static const struct file_operations trace_fops = {
-> >  	.release	= trace_release,
-> >  };
-> >  
-> > +static bool trace_remote_do_dmesg(struct trace_remote *remote)
+> > +test_dmesg()
 > > +{
-> > +	struct trace_remote_iterator *iter = smp_load_acquire(&remote->dmesg);
-> > +	unsigned int max_events = 1000;
+> > +    echo 0 > tracing_on
+> > +    assert_unloaded
 > > +
-> > +	if (!iter)
-> > +		return false;
+> > +    #
+> > +    # Test dmesg on/off when tracing is disabled
+> > +    #
+> > +    echo 1 > dmesg
+> > +    test $(cat dmesg) -eq 1
+> > +    assert_loaded
 > > +
-> > +	trace_remote_iter_read_start(iter);
+> > +    echo 0 > dmesg
+> > +    test $(cat dmesg) -eq 0
+> > +    assert_unloaded
 > > +
-> > +	while (trace_remote_iter_read_event(iter)) {
-> > +		trace_seq_init(&iter->seq);
-> > +
-> > +		trace_remote_iter_print_event(iter);
-> > +		trace_seq_putc(&iter->seq, 0);
-> > +		if (!pr_info("%s", iter->seq.buffer))
+> > +    #
+> > +    # Test events are logged to dmesg
+> > +    #
+> > +    dmesg -c > /dev/null
 > 
-> If the remote trace event exceeds the PAGE_SIZE sequence buffer, does
-> trace_seq_putc() in trace_remote_do_dmesg() fail to append the null byte?
+> Does this indiscriminately clear the system-wide kernel ring buffer?
 > 
-> Since iter->seq.buffer might not be null-terminated in this case, could this
-> lead to an out-of-bounds read when pr_info() prints the string?
+> Flushing the global log buffer destroys all previous kernel log history.
+> In automated testing frameworks, this can suppress earlier warnings, oopses,
+> or bug reports that occurred during the test run or kernel boot, making
+> failure triage much more difficult.
+> 
+> Could this be adjusted to isolate the test output without permanently
+> wiping the global dmesg history?
 
-Yeah, we may want to have it be:
-
-		if (!pr_info("%s", seq_buf_str(&iter->seq))
-
-Which will make sure the buffer is nul terminated.
-
-
-> 
-> This isn't a bug introduced by this patch, but the same pattern appears
-> to exist in the pre-existing trace_remote_panic_handler() with pr_emerg().
-> 
-> If the kernel is built with CONFIG_PRINTK disabled, pr_info() evaluates to 0.
-> 
-> Will this cause the loop in trace_remote_do_dmesg() to break without calling
-> trace_remote_iter_move(), leaving the event unconsumed and permanently
-> stalling the workqueue?
-> 
-> > +			break;
-> > +
-> > +		trace_remote_iter_move(iter);
-> > +
-> > +		if (!(--max_events))
-> > +			break;
-> > +	}
-> > +
-> > +	trace_remote_iter_read_finished(iter);
-> > +
-> > +	return !max_events;
-> > +}
-> 
-> While reviewing this, I also noticed a pre-existing issue in trace_pipe_read()
-> when handling oversized events:
-> 
-> kernel/trace/trace_remote.c:trace_pipe_read() {
->         ...
->         if (trace_remote_iter_print_event(iter)) {
->                 iter->seq.seq.len = prev_len;
->                 break;
->         }
->         ...
-> }
-> 
-> This is a pre-existing issue, but if an oversized event causes
-> trace_remote_iter_print_event() to return -EOVERFLOW, will this break
-> the loop without calling trace_remote_iter_move()?
-> 
-> Since the event is left unconsumed in the buffer, could this lead to an
-> uninterruptible infinite loop (hard lockup) when reading the trace pipe?
-
-I'll let you answer the above.
+I agree, tests should not clear dmesg history.
 
 -- Steve
+
+> 
+> > +
+> > +    echo 1 > tracing_on
+> > +    assert_loaded
+> > +    echo 1 > dmesg
+> > +    test $(cat dmesg) -eq 1
