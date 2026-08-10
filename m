@@ -1,108 +1,224 @@
-Received: from out28-123.mail.aliyun.com (out28-123.mail.aliyun.com [115.124.28.123])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C4B345725;
-	Mon, 10 Aug 2026 06:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD5835C1A6;
+	Mon, 10 Aug 2026 06:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786343564; cv=none; b=K9l4+UBnTuf1aicOlG5ijlooFdA/BEiuj0cw3rZcQN/te+DZkvRm2WmKaKPoOAcPv34scI6I4CWDwTVjiRtPMYc0SZFVkaxcLq26onIrkIsVixnRADCmowOClO4bVrF8IiT1cw31oKsB2NfX5I1aGfP8JT6eoSqaua4TeSElodo=
+	t=1786344366; cv=none; b=aOkI5RfwEuxrH4BY5RonYEylSOE6qCk5nJ4Fs81S52zDVNkBJ2aUaxyNPkfCPGEVGmeK/037B4O0tDwsTZOX5uUzcuGL/WQOLzsws0dYjuYZeX8EWYSXI4XV5Px4Ff+KrMCuBFl4GRqV54NdpEhrSCjvZ4/7C+WhxZmpGq+lBYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786343564; c=relaxed/simple;
-	bh=27k1X9vAM1qMy4wwY7ziUz5/u+StbIUNBHGh0LN5BKs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=qwEtx5eRjKk01litHgAZwJLenStizBVKFaedQO+fNKQwKmFEKyscgnEYITmsnefiJEV5POsdNJMtSp7lnMoJGkRsXEArfaGDo0QMxJAZnNP4lD9bnXerijb252sX4gZE/VEpM+aGqA4QBoam2NJWfYJw0lA1/5aVSWQE81ksF5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1086931|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0119426-0.031275-0.956782;FP=13247847429411803131|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037025160;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.iiCXqdE_1786343550;
-Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.iiCXqdE_1786343550 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Aug 2026 14:32:31 +0800
-Message-ID: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
-Date: Mon, 10 Aug 2026 14:32:30 +0800
+	s=arc-20240116; t=1786344366; c=relaxed/simple;
+	bh=46c6vocBVce9Y/Apjkez7FMUK7jmFceu+6/gfgpl9AM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dPCY/YupmhqQcAbXv57O/NrpjAbB8DJ+pHIN0588486X1hVt2uetBzcPGdWrlLjypxTSSLD+6uq+mLIrYMUS7f7gez/PDZKz8PLubFRmyrP7ek+Pv76PPCkT4Fv44b/xECTvVI3zEOwb08HHnr4wV55IfHJZYmiIa0azVJ1xKVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cP2dX1rq; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cP2dX1rq"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67A5VYZX3085069;
+	Mon, 10 Aug 2026 06:44:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=vVPGPVZ23NsreeExE7+jGCM0ud2bcA
+	JA4ypv1DILR34=; b=cP2dX1rqRgJGyJQPsc4KFbE1PC99K1ErC8LoPBcJX/kDVk
+	D9Jo4Iz1SXdFchU8Ko5W4WB9COXrRcti5DpxhwdI5dfEePzz5UmgRzT8EYYyBi07
+	KU36zRJaFsP0Akw7apyJ4SCl4IAb1VRGvP8L0mKhwBZnn0XUkDZ2PW7t9oviZUQq
+	bN2tmVBhSWNgiSiSi7ymdtf6iKh4gNTCCXIweHK0Tg6HF6KYslOZj/J1AEcJVHnf
+	kWNlsq5fwLgQr2DlUZF0whZYM5XqlyiEV4xJgAR6wPkWOH+OEMcVL/bVHH8IYS6D
+	MxDe73qz6EXJrcPmB5P+oxGbZoA1keo68zERDcAg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvjypkqg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Aug 2026 06:44:37 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67A6ffw0026503;
+	Mon, 10 Aug 2026 06:44:36 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fxhfxueyp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Aug 2026 06:44:36 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67A6iYQG34930976
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Aug 2026 06:44:34 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 17B532004B;
+	Mon, 10 Aug 2026 06:44:34 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2335D20043;
+	Mon, 10 Aug 2026 06:44:31 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.87.135.220])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 10 Aug 2026 06:44:31 +0000 (GMT)
+Date: Mon, 10 Aug 2026 08:44:29 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        David Hildenbrand <david@kernel.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
+        ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH 6/9] mm: convert PTE table entry to pte
+Message-ID: <2599c5b3-e8ac-4865-993b-d41e6f060d52-agordeev@linux.ibm.com>
+References: <20260806083926.1807279-1-usama.anjum@arm.com>
+ <20260806083926.1807279-7-usama.anjum@arm.com>
+ <fab9fc78-1e1d-4d5b-a9ca-92f3ebd04108-agordeev@linux.ibm.com>
+ <5c329236-7761-4e42-a549-b822e43b4358@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-From: Michael Wu <michael@allwinnertech.com>
-Subject: [PATCH v5] tracing: Fix race between update_event_fields and,
- event_define_fields
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c329236-7761-4e42-a549-b822e43b4358@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODEwMDA1NCBTYWx0ZWRfXxI/cthX2D0Wc
+ iHPLS8hc2Kj/zk+XaKiAAFgipdFaX6yt5ULiZYFw9cMykKZhsGzYdz8Ozez/WjJFTxNxMxdlY+Z
+ xRKD8hb46fc3eq4T3zk/Ay2gFewaqBQyLERBaqjOrmguPqyfrY4V/sj3PMJQSwHxbC9gQ3JPdGp
+ nwoFQng/LWfi/b2CNXX0ejbyTRbXCpU6ISkPy5ReFIqwletsdYxZQh3JZdOlQrUjBCsND1GblNt
+ G/4DaSrhSqHIA4lB3PliH1JLOCq/gqtakESjF4VI9bapYhuQXt1SuBKOBQMvOtnuq4THGnpYdaA
+ 9DlU8ZKdg0fttjy6cWWMXxwJNMzsJQnfWACC9mQPG3O4x/cS3d0NgAmCjmdVYfXi8XGUV9/5PxJ
+ HdlkuRfRyvN/kE+SQ4EeTy+wa+g6t6URPTCSrkC11WsiBzyO9FuJFEs1QK/7K/rvQyfHrqCYbs4
+ iMEVrVdUzEx5zR0r21A==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODEwMDA1NCBTYWx0ZWRfX9Ko1NY31ilHb
+ y/krrlO5A2ANnAiXusNks5NMrWI4UvS7c1Y7yzgoGS6CxTGjDGRyAu8EHxJ1ITitPdxPjbMc8pe
+ lyb7xPyJDB1SIBriSbnTKYVPxMcf33w=
+X-Authority-Analysis: v=2.4 cv=RqD16imK c=1 sm=1 tr=0 ts=6a797355 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=kj9zAlcOel0A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=2hzp2EkNZNX3k9pX5ccA:9 a=CjuIK1q_8ugA:10
+ a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-GUID: YbHEwP5JTLZr3QYF8zr2RkJeozrhuIz7
+X-Proofpoint-ORIG-GUID: YbHEwP5JTLZr3QYF8zr2RkJeozrhuIz7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-10_01,2026-08-07_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608100054
 
-The following sequence may leads race between event_define_fields()
-and update_event_fields():
-  CPU0 (module A, pri=1 notifier)        CPU1 (module B, pri=0 notifier)
-  ===============================        ===============================
-  event_define_fields(call_A)            trace_event_update_all()
-    for each f:                            list_for_each_entry(...,
-      list_add(&f->link,                                &ftrace_events)
-               &class->fields)               -> finds call_A
-        f->link.next = next;        (2)
-                                           update_event_fields(call_A)
-        WRITE_ONCE(class->fields->next,
-                   &f->link);       (4)
-                                             list_for_each_entry(field,
-                                               &class->fields, link)
-                                             -> field = class->fields->next
-                                                  = &f->link
-                                                  = f (offset 0)
-                                             -> arm64 weak ordering:
-                                                (4) visible before (2)
-                                                field->link.next == 0
-                                             -> next iteration:
-                                                field = (void *)0 = NULL
-                                             -> crash at NULL->type (0x18)
+On Fri, Aug 07, 2026 at 05:26:04PM +0100, Muhammad Usama Anjum wrote:
+> On 07/08/2026 7:58 am, Alexander Gordeev wrote:
+> > On Thu, Aug 06, 2026 at 09:38:44AM +0100, Muhammad Usama Anjum wrote:
+> >> The non-MMU stub receives hw_pte_t but returns a logical pte_t
+> >> value. Convert the stored entry through __pte_from_hw() before
+> >> returning.
+> >>
+> >> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> >> ---
+> >>  include/linux/hugetlb.h | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> >> index bc0b9c65aa1d0..9e8b391aa4bc9 100644
+> >> --- a/include/linux/hugetlb.h
+> >> +++ b/include/linux/hugetlb.h
+> >> @@ -1283,7 +1283,7 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+> >>  #ifdef CONFIG_MMU
+> >>  	return ptep_get(ptep);
+> >>  #else
+> >> -	return *ptep;
+> >> +	return __pte_from_hw(*ptep);
+> > 
+> > But this is a direct dereferencing, which breaks the whole point, isn't it?
+> Yes, this is particular line is for non MMU. In this case, CONIFG_ARCH_HAS_HW_PTE
+> would never be defined. Hence hw_pte_t is just pte_t and direct dereference is
+> allowed. I'd thought a lot about it; is better to leave direct dereference here
+> or use some helper. Then used __pte_from_hw() was already being used in generic
+> ptep_get().
 
-This produces the following panic:
-   Unable to handle kernel access ... at virtual address 0000000000000018
-   pc : update_event_fields+0xf8/0x368
-   Call trace:
-    update_event_fields+0xf8/0x368
-    trace_event_update_all+0x7c/0x2b4
-    trace_module_notify+0x4c/0x1dc
-    notifier_call_chain+0x84/0x168
-    blocking_notifier_call_chain_robust+0x64/0xd4
-    load_module+0x10c8/0x123c
-    __arm64_sys_finit_module+0x230/0x31c
+But in case CONIFG_ARCH_HAS_HW_PTE=n __pte_from_hw() is still gets called.
+That looks inconsistent to me. Why not just call ptep_deref() (see below)?
 
-Fix by taking event_mutex in trace_event_update_all() before
-trace_event_sem.
+> There are only two users of __pte_from_hw() at this time. 
+> 
+> > 
+> > What about introducing something like pte_t ptep_get_sw(hw_pte_t *ptep)
+> > to be used in exactly situations like this? With that the semantics of
+> > hw_pte_t pointers becomes straightforward and closes the still ongoing
+> > "storage vs lifetime" discussion:
+> > 
+> > hw_pte_t*     points to HW-formatted page table entries
+> > 
+> > ptep_get()    is used to obtain HW-linked/attached entries, and may wire
+> >               extra code like [1] or [2]
+> > 
+> > ptep_get_sw() is used to obtain HW-unlinked/unattached entries and in
+> >               most cases is just a direct dereference
+> ptep_get_sw() or ptep_get_deref() is better name here?
 
-Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Wu <michael@allwinnertech.com>
----
- kernel/trace/trace_events.c | 2 ++
- 1 file changed, 2 insertions(+)
+ptep_deref() would be it.
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 956692856fa8..9632788da5af 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
- 	int last_i;
- 	int i;
- 
-+	mutex_lock(&event_mutex);
- 	down_write(&trace_event_sem);
- 	list_for_each_entry_safe(call, p, &ftrace_events, list) {
- 		/* events are usually grouped together with systems */
-@@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
- 		cond_resched();
- 	}
- 	up_write(&trace_event_sem);
-+	mutex_unlock(&event_mutex);
- }
- 
- static bool event_in_systems(struct trace_event_call *call,
--- 
-2.29.0
+Do you agree to the suggested API requirements?
+
+> I thought __pte_from_hw() is ugly enough that if someone tries to use it
+> wrongly, it'll be noticed pretty easily. I'm fine with any other name.
+
+The name may be not perfect, but it is the way it is used above looks
+wrong to me.
+
+> > The caller should always know whether the entry is attached or not, so
+> > confusions like [3] are avoided.
+> > 
+> > 1. https://lore.kernel.org/linux-mm/20260526-kpkeys-v8-21-eaaacdacc67c@arm.com/
+> > 2. https://lore.kernel.org/linux-s390/650903a4-0dd9-4e6b-9d4b-3c32c5657236-agordeev@linux.ibm.com/
+> > 3. https://lore.kernel.org/linux-s390/b44e071d-7c9d-4e7e-a84d-4af3499a5a05@arm.com/
+> > 
+> >>  #endif
+> >>  }
+
+Thanks!
+
+> -- 
+> Thanks,
+> Usama
+> 
