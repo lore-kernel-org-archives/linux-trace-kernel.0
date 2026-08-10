@@ -1,139 +1,146 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A816360EF0;
-	Mon, 10 Aug 2026 08:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58CA3630BF;
+	Mon, 10 Aug 2026 08:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786349405; cv=none; b=SH5W5Bg/HVZ2il/En2xzNQZejbqX3H6FN8U3lje+CivgbVaxMprLKS/9cdlR8eev0ueU3IshqiUe5gB6UhmJr3RHGluNMEXLNgdINvdBs+1dLwU+Xzu4kEB9iceShNO8fP5De+z/4BZVo6RqW6k/I9kDw9QzCG2irAe46AhnWho=
+	t=1786349739; cv=none; b=TQUrNcoS6ZCWDdRRwPEGKRbp9CL6xaM8DU602HG2Gy3UDCnipQ/vsKc6vREk+ZdvK7/NY5PcVbE0bK/vEJyirpSpabSK37Wv3NK7FRQqcMzA7tWJcBYYc4Kwc1w6Bt/DCe5b6rrs1A11DCCzOgIkCSe+KfEcUxZgLdTlo9io5f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786349405; c=relaxed/simple;
-	bh=wj2up3krv6ir+N7jNprjGhy9L8njqY2Fy8mPlGl/VaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dFB/T2eQg+y57qazHKGyIDzhV4qvITPoncPjHx3X67MsM1m6rSOBfW6549mwclRdSSji7DdR4cnR01ujTVZBQCK3gc+1PZtnGlDxO0LiI0gDXIZZOaGWHShe+E9VkilGlgefG3yDE8olRkHo1Z+rEtG7dsREE8sltpOSR+6hNyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from smtp.gmail.com (unknown [121.237.244.183])
-	by APP-03 (Coremail) with SMTP id rQCowAB3fjxvhXlqEdJwBA--.3674S2;
-	Mon, 10 Aug 2026 16:01:51 +0800 (CST)
-From: daichengrong <daichengrong@iscas.ac.cn>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	daichengrong <daichengrong@iscas.ac.cn>
-Subject: [PATCH v2] uprobes: Restore original return address in uretprobe context
-Date: Mon, 10 Aug 2026 16:01:40 +0800
-Message-Id: <20260810080140.96587-1-daichengrong@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1786349739; c=relaxed/simple;
+	bh=RZSollSfsi3Ky29xrlecwbv/8hCGezEDm42kjKhyk2I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PY/O+7k7Cqu0v3+aLu6eP5QvX+5uVfXYeYPH1PRN1kyceo7L/Lxluui59qQGtaBb1zLj76XMFl7ZzM6vBCHzFBQTc/xP7ZLyRs/m3cbIsY2RpxA6LBrbq/yfiDsSsWm4JNmjmwArsxkdZ87fC/uyfRrRjEvOHONFL+S+YKg/iwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBanxYJA; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBanxYJA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9931F000E9;
+	Mon, 10 Aug 2026 08:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786349737;
+	bh=r+Zgr0IR0+qdoeJYyafoaY4SMWyH81vw1JCyiRYTceY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=DBanxYJA7lovar94EsiwPth3eNumrx9nWGHwUz4ZFay3VZX83X6uRaiihbaPt1/Pe
+	 dGim3yzhdWb2H/rg6R3uVY4LfD4xTpBdOdSYPhaK9lZ/ySfYK/O2Tt/DpUzo3aNRRc
+	 eF1B8JSgeegXFwuMDjfLPzaKewDfRo43ytRr+xRiAqS3vyQ8uYN8bsaidcdfa7qMP2
+	 PkCGe6OJ5VwpAb66t9vC+AXD9jF3OQxJrOmL2JqKXc2d+z8+RMGGETTH9VsZDzaGgi
+	 mi+I/pQUZciW8dZTql7nU/gkwcT/19C9c0Y76e3e4cH+lGBJNId1PCr7XiJmJ4amaC
+	 /jWic+PreoCOQ==
+Message-ID: <091debe7-d740-4652-885a-1f22e8006ce7@kernel.org>
+Date: Mon, 10 Aug 2026 10:15:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAB3fjxvhXlqEdJwBA--.3674S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF1fJFW5tF48ur1rXr1DKFg_yoWrJr1xpa
-	1vka43KFWDG34UurZxXr48Z3WFvrZ5Xw42kr1xK34fCw15KryfJr1I93y7ZF1rtrZagF13
-	Ar4UtrWjvFZxJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUw0edUUUUU=
-X-CM-SenderInfo: pgdluxxhqj201qj6x2xfdvhtffof0/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 05/41] KVM: Provide generic interface for checking
+ memory private/shared status
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
+ oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com,
+ rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com,
+ steven.price@arm.com, tabba@google.com, willy@infradead.org,
+ wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com,
+ pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org,
+ liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-5-35f9aec2aed2@google.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260728-gmem-inplace-conversion-v9-5-35f9aec2aed2@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-uretprobe replaces the original return address of a probed function with
-a trampoline address to capture function return events.
+On 7/29/26 02:35, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson <seanjc@google.com>
+> 
+> Introduce a generic kvm_mem_is_private() interface using a static call to
+> determine if a GFN is private. This allows the implementation for checking
+> a GFN's private/shared status to be set at runtime.
+> 
+> In preparation for choosing implementations between a guest_memfd lookup
+> and the existing VM attribute lookup, rename the existing
+> VM-attribute-based check to kvm_vm_mem_is_private to emphasize that it
+> looks up VM attributes.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> ---
 
-After the trampoline is entered and the uretprobe handler completes, the
-original return address needs to be restored in the user register context
-to keep the register state consistent with the state before probing.
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Add an architecture-specific hook for restoring the original return
-address during uretprobe handling.
-
-The initial implementation adds support for RISC-V. Other architectures
-keep the default empty implementation until their corresponding restore
-logic is implemented.
-
-Signed-off-by: daichengrong <daichengrong@iscas.ac.cn>
----
-Change in v2:
- - Rename arch_uretprobe_hijack_set_addr() to arch_uretprobe_restore_return_address() as suggested
- 
-v1: https://lore.kernel.org/all/20260717082331.27058-1-daichengrong@iscas.ac.cn/
----
- arch/riscv/kernel/probes/uprobes.c | 7 +++++++
- include/linux/uprobes.h            | 1 +
- kernel/events/uprobes.c            | 5 +++++
- 3 files changed, 13 insertions(+)
-
-diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
-index eb177d0ce8ab..90ed8596e73f 100644
---- a/arch/riscv/kernel/probes/uprobes.c
-+++ b/arch/riscv/kernel/probes/uprobes.c
-@@ -139,6 +139,13 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
- 	return ra;
- }
- 
-+void
-+arch_uretprobe_restore_return_address(unsigned long orig_ret_vaddr,
-+				  struct pt_regs *regs)
-+{
-+	regs->ra = orig_ret_vaddr;
-+}
-+
- int arch_uprobe_exception_notify(struct notifier_block *self,
- 				 unsigned long val, void *data)
- {
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f548fea2adec..af5b633f92dd 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -230,6 +230,7 @@ extern bool arch_uprobe_xol_was_trapped(struct task_struct *tsk);
- extern int  arch_uprobe_exception_notify(struct notifier_block *self, unsigned long val, void *data);
- extern void arch_uprobe_abort_xol(struct arch_uprobe *aup, struct pt_regs *regs);
- extern unsigned long arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs);
-+extern void arch_uretprobe_restore_return_address(unsigned long orig_ret_vaddr, struct pt_regs *regs);
- extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx, struct pt_regs *regs);
- extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
- extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 6300b216012c..9a2e9ce4e398 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1748,6 +1748,10 @@ void * __weak arch_uretprobe_trampoline(unsigned long *psize)
- 	return &insn;
- }
- 
-+void __weak arch_uretprobe_restore_return_address(unsigned long orig_ret_vaddr, struct pt_regs *regs)
-+{
-+}
-+
- static struct xol_area *__create_xol_area(unsigned long vaddr)
- {
- 	struct mm_struct *mm = current->mm;
-@@ -2659,6 +2663,7 @@ void uprobe_handle_trampoline(struct pt_regs *regs)
- 		valid = !next_chain || arch_uretprobe_is_alive(next_chain, RP_CHECK_RET, regs);
- 
- 		instruction_pointer_set(regs, ri->orig_ret_vaddr);
-+		arch_uretprobe_restore_return_address(ri->orig_ret_vaddr, regs);
- 		do {
- 			/* pop current instance from the stack of pending return instances,
- 			 * as it's not pending anymore: we just fixed up original
 -- 
-2.25.1
+Cheers,
 
+David
