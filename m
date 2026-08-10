@@ -1,153 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B52D3AFD11;
-	Mon, 10 Aug 2026 09:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2BF3AFCF3;
+	Mon, 10 Aug 2026 09:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786354387; cv=none; b=J4WcJw4FbtCsBj3bMakxloCiY8h87oaB8Dm5gDrEao+LoEyCKIsvHYxcR42t7xW311ck010IYg2+4iqCvIy8nYd5k1j9seTy7ez3XW9IJXXWKjpy9w1K6fDZN+vPZNBawyoJ9Jj/nxvwmKE38LnIvDnF74+Sj8uoeiroNILZzEk=
+	t=1786354430; cv=none; b=ZtFwH+IDMui6KHWnQo0NKjj47Y9+KLEZYiiNxZOsFCUNlZ7WwCDgsUYwNlCK812CcTQrfaVMJc0E05nJbiKc1/HAMSCt753MVBNJiIEqiNGwQxe2hOGi//9+GA70/xxfBwOhtlOQMVqywbiuRquiFDGLOVh1MYxRX0RZgqSuWrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786354387; c=relaxed/simple;
-	bh=oapsZf1fPfPSEGKl8ZA9AlMSNM2tlXBPlNT75K21Rv0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H5tFiehbaGIvEfR1Q9ertu8Uk+z4TB9dLYvoHZe07j1f2qnHBnSrlQ0EgYPXG317RiRTM3d4R03uBm6SjJ56TPm9HmDyD+hSqzd7hz3/qbcrIIrQU6SywDI3qiLGVUwrabVTmLSEURkxpeVQOkJyjgUfvPN66AiXavJZfWyOv1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFiZ73qw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786354430; c=relaxed/simple;
+	bh=nuRth1NWMlGonkkWVwij5r+CQGcnCnQhMbGKaFC6OJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cmeyYsPk4fAvOC9oDVgXiojKpskL+FnRb5E2b+p7j0qC99Tr4lMY5g0eYnYmLd59cekJvToAdQFWJWLxTpByrVk+ylSU16CT41oKOlPxJ3WXFbhJ5a40Y5v7No+HJpTiN2Lk9unEfx6o3vGCtp4EeCqE/e7ZI5lKZgF0O7kVBpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fT5jXQPn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFiZ73qw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237D61F000E9;
-	Mon, 10 Aug 2026 09:32:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fT5jXQPn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A1F1F000E9;
+	Mon, 10 Aug 2026 09:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786354385;
-	bh=puBatuzKpdITG9/LirLMSAY4o6mBGHBdHb4a5q1RtgY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CFiZ73qwlmdLBwOq0EF9s3+3mq69NpHgrowj1UkIuK9sjUNhZkM2D9QmAG0wujV/1
-	 k7jgB948Mw1Gd1Aty/UekqvJswDyZX4WVeT7cWQA4x83t6GWQqFuKAuJXIc3nT+bXb
-	 q9CDlfm5UXlj+3yW/ivOAKboC9UIr07TdDGVhTtfh5jGzFaLNHHpK+ee0xzyCCUyCP
-	 la6FjR1ssQobEPVnL2PoMPWL1uadslzCNU5fMFI6MY9Dp6D3dcWl5Du2vc5Vb2zgu4
-	 oHWmiK4HAQt0ZxRSfWd8DWlG8ptVNG5wMTjojS2BF4K1EU/ofhOgRKLJ+Dp8WQ+PEU
-	 4VCGIRMhkbJLQ==
-Message-ID: <ed997598-8ae8-4aec-aa85-3a9204132513@kernel.org>
-Date: Mon, 10 Aug 2026 11:32:44 +0200
+	s=k20260515; t=1786354428;
+	bh=khKUbSlK5ktk9+KgsFA7MDUpALx27X0pj/SwoRqFIGU=;
+	h=From:To:Cc:Subject:Date;
+	b=fT5jXQPnm+f9zadbqeojUt8bLfhSaVtEkgGq21aCfFxQUY1IsFbOkIAY2N95dPWVp
+	 hWLIvvoG5Tp3PqmEtE9B0gr98F/971nWoVMSV4OJDEkGLUaXSjuQoB/iISjN3DaFu/
+	 qXkD2OZFQEuA/UocAb73XF9ZpIb00lwKtm0XdmXOMP88/9bCOt2517YYR7MpyYWbgV
+	 QcMWI5Rb2KrC+LAkNXhSfEFKR4kfGG+qJ71YtnUZSIuWaAs+Ef0O79aXwQWMAPIXBR
+	 /bA1cI9zjKebrmcxdh9PW/p5rQO1COR5R/69u4LCJWlgOAfL2vtGeWhw2u5z/9djrB
+	 dySdjuZ5yjwjg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v1 0/4] selftests/ftrace: Add a boottime tracing test framework
+Date: Mon, 10 Aug 2026 18:33:45 +0900
+Message-ID: <178635442508.380779.3709136256425432083.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 19/41] KVM: Move KVM_VM_MEMORY_ATTRIBUTES config
- definition to x86
-To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
- oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com,
- rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com,
- steven.price@arm.com, tabba@google.com, willy@infradead.org,
- wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com,
- pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org,
- liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
- Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-19-2fc18ee6d3ba@google.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-19-2fc18ee6d3ba@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
-> 
-> Bury KVM_VM_MEMORY_ATTRIBUTES in x86 to discourage other architectures
-> from adding support for per-VM memory attributes, because tracking private
-> vs. shared memory on a per-VM basis is now deprecated in favor of tracking
-> on a per-guest_memfd basis, and while RWX memory attributes are on the
-> horizon, they too are expected to be x86-only.
-> 
-> This will also allow modifying KVM_VM_MEMORY_ATTRIBUTES to be
-> user-selectable (in x86) without creating weirdness in KVM's Kconfigs.
-> Now that guest_memfd supports in-place conversions, it's entirely possible
-> to run x86 CoCo VMs without support for KVM_VM_MEMORY_ATTRIBUTES.
-> 
-> Leave the code itself in common KVM so that it's trivial to undo this
-> change if new per-VM attributes do come along.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
+Hi,
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+This series adds a boottime tracing test framework to selftests/ftrace.
+This is based on v3 series[1] of the boot-time trace (via bootconfig)
+testing script.
 
--- 
-Cheers,
+[1] https://lore.kernel.org/all/178613904128.259829.16130019979800943264.stgit@devnote2/
 
-David
+The new run_boottime_test.sh can run tests not only for boottime trace
+but also other kernel cmdline tracing options, including persistent
+ring buffer and its backup.
+This makes it possible to easily detect regression bugs in the kernel
+boot trace options.
+
+Here is an example of the test output.
+-----
+TAP version 13
+1..14
+ok 1 01-kprobe
+ok 2 02-synth
+ok 3 03-eprobe
+ok 4 04-fprobe
+ok 5 05-tprobe
+ok 6 06-instance
+ok 7 cmdline-01-ftrace
+ok 8 cmdline-02-trace-event
+ok 9 cmdline-03-trace-buf-size
+ok 10 cmdline-04-trace-options
+ok 11 cmdline-05-trace-clock
+ok 12 cmdline-06-trace-instance
+ok 13 persistent-01-reserve-mem
+ok 14 persistent-02-backup-instance
+# Totals: pass:14 fail:0 xfail:0 xpass:0 skip:0 error:0
+-----
+
+Thanks,
+
+---
+base-commit: 29a86c5e6361caffa7e75e891169e813f82ff688
+
+Masami Hiramatsu (Google) (4):
+      selftests/ftrace: Add generic boot tracing test framework
+      selftests/ftrace: Add boot-time tracing testcases
+      selftests/ftrace: Add kernel cmdline tracing testcases
+      selftests/ftrace: Add persistent ring buffer testcases
+
+
+ tools/testing/selftests/ftrace/Makefile            |    2 
+ tools/testing/selftests/ftrace/boottime/Makefile   |   10 +
+ tools/testing/selftests/ftrace/boottime/README     |   71 ++++
+ .../ftrace/boottime/bootconfigs/01-kprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/02-synth.bconf     |    4 
+ .../ftrace/boottime/bootconfigs/03-eprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/04-fprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/05-tprobe.bconf    |    4 
+ .../ftrace/boottime/bootconfigs/06-instance.bconf  |    5 
+ .../boottime/cmdlines/cmdline-01-ftrace.cmdline    |    1 
+ .../cmdlines/cmdline-02-trace-event.cmdline        |    1 
+ .../cmdlines/cmdline-03-trace-buf-size.cmdline     |    1 
+ .../cmdlines/cmdline-04-trace-options.cmdline      |    1 
+ .../cmdlines/cmdline-05-trace-clock.cmdline        |    1 
+ .../cmdlines/cmdline-06-trace-instance.cmdline     |    1 
+ .../cmdlines/persistent-01-reserve-mem.cmdline     |    1 
+ .../cmdlines/persistent-02-backup-instance.cmdline |    1 
+ .../selftests/ftrace/boottime/run_boottime_test.sh |  373 ++++++++++++++++++++
+ .../selftests/ftrace/boottime/tests/01-kprobe.sh   |   25 +
+ .../selftests/ftrace/boottime/tests/02-synth.sh    |   25 +
+ .../selftests/ftrace/boottime/tests/03-eprobe.sh   |   25 +
+ .../selftests/ftrace/boottime/tests/04-fprobe.sh   |   25 +
+ .../selftests/ftrace/boottime/tests/05-tprobe.sh   |   25 +
+ .../selftests/ftrace/boottime/tests/06-instance.sh |   30 ++
+ .../ftrace/boottime/tests/cmdline-01-ftrace.sh     |   19 +
+ .../boottime/tests/cmdline-02-trace-event.sh       |   26 +
+ .../boottime/tests/cmdline-03-trace-buf-size.sh    |   19 +
+ .../boottime/tests/cmdline-04-trace-options.sh     |   23 +
+ .../boottime/tests/cmdline-05-trace-clock.sh       |   19 +
+ .../boottime/tests/cmdline-06-trace-instance.sh    |   24 +
+ .../boottime/tests/persistent-01-reserve-mem.sh    |   28 ++
+ .../tests/persistent-02-backup-instance.sh         |   40 ++
+ tools/testing/selftests/ftrace/config              |    6 
+ 33 files changed, 847 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/ftrace/boottime/Makefile
+ create mode 100644 tools/testing/selftests/ftrace/boottime/README
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/persistent-01-reserve-mem.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/persistent-02-backup-instance.cmdline
+ create mode 100755 tools/testing/selftests/ftrace/boottime/run_boottime_test.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/02-synth.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/06-instance.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/persistent-01-reserve-mem.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/persistent-02-backup-instance.sh
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
