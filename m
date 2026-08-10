@@ -1,213 +1,165 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CB43C2BAF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 13:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18AC3DA7ED;
+	Mon, 10 Aug 2026 13:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786367627; cv=none; b=Qyh0iE3yrH/ozVBlvhUWshchAXhGr75KDXWOtV/tfQ4a25lH/rie8WebQ27E23kXLbjMfL5DBRMcQGlMDDnqvv7oQB59+vAe2Qt88y3lanbV9LPAXZTYzr5oiP5TLlazmExnNd+PR3bvrPRvaV5jwuW1XDTdK44/mgx2mhGiJzs=
+	t=1786367651; cv=none; b=VjNKR8/uvF0tX/hcbxfl+L4fPDt68ZxwW2AgDZc4eXO4AQqJiXMThJAzRYuJ4BQpG4mJW7Ynx9IMlXBd2Eq2viwQ+kGHkB0VaAQva7MTnz55qdw3gnD/qJO5ITzFpQ4Ec8WnLW8hzCECnQbOdVGKg1YwTnfC+k49BdkqrRJCNgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786367627; c=relaxed/simple;
-	bh=+p361PJ3B+QMHcZkiDEsM9uslCImslOoTSD1bEzCyJk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ExCK58+NiPvIJ8HW3pHrtVq6+phxCBzkp1cPPJnfwGJfyEOk81POplQ9L8UnxVQY2oQhGb5+sxoATiU8NLRhUlQYbmE6PCvxPknHr0KSzT2pZqKPUNFpI3cIjPveiEz8mJa30PIsax3cMjkRHmwUkrPmAMXyBn++EppG1KvbOT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqeEJioY; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqeEJioY"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-69fc9f25118so1728504a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 06:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786367624; x=1786972424; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=omSmpY+SPBy7RnMBwSboFmt1RUmEOInaHtgqQGhZ4w0=;
-        b=bqeEJioYn4bSJgBxcqAJIchULM+3EIjjJDVS5Slu6T3wBa2LvYSpPeJgG9/UhMphai
-         5G75SVGkI5xEvsoymeUuO/Gh5aSDFRw81RTpZK3lqMxlMkdCKP+DHzJLEdq8NTMR7o3f
-         B0gPff9GFMlgbTgYhqTLm+GxjX2xJrFjhyPVuGgJ645g+uWe5kTEgls5vr2j8DZjeWPL
-         5oT+b586PZ8knq1xULscJYsu4oZBS7/87pqdxAeg5eDfAmx3miunA8eUILINNH5873f+
-         u7yq/Uf00P3Ot0+jZQABtOTf5bVNEdmbppGMoV4oFZhQHHHzjYTTHVpEoYKMEpPEc/6O
-         58Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786367624; x=1786972424;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=omSmpY+SPBy7RnMBwSboFmt1RUmEOInaHtgqQGhZ4w0=;
-        b=sfuCc0FSaPuNDF7V9u7z9ugarHNG4wVNXdF5jWxQH0R0g6sa3X8CfQ2dJdzvaq/xRZ
-         vJskyUFkWW5FwLofP/DlxEucMKhdnCWiQfDvNStZDd3CukgJw3W1qrqjsy6/gIste2Mq
-         nuDx5IJn0QE84gcEhBLvRdDqDzOLZGUpV+gWyzTnez2K/UC73UCWLHxdbsSDOY9sDgkX
-         FOrh9Wv+eWiGX52pmVfG7Gb7LV++iemCPiDWL8Vt/pQJAktxRHFKVZm308pVEeNlPbV/
-         vJLTNNik5Za5FASkDRFI30R9SyGheA9otACOXkTtrSbYqrCjJlNiMtOII78WwpHbPlLO
-         Ibgw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp4/vRhrXPQtkXSiGIUCLWfpOfWwid7diTQMTvFdNTC/XLD54j4BVhAr5Zwi4Zg7bgTBCCxj84r7nc+vadQKcTTsTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLuwhoV0hgRGTLa1WCN/52ZX0nMAFjWvfKmeYSuX+L7NMevFJH
-	HH+BikQkpsyLZgSuVp3uS+I7DBhnmkXomoh/PZ08vuRm4CE4pNPTnaC0
-X-Gm-Gg: AR+sD13yP3o/BO75OJTLHaK5LmWocXpQm+Uo+hKsq5hmZNI6klNMkdzSXb0twEU9FV7
-	46B53WacOFNiyjYTewrDH01VutEz5FFGE0KzmvyPOVuOT4ewrzTHowvXlgmwGuCxIVZKks2Ge3S
-	E7yjic8bOEoX4Z7zmpL8koeksJ9JxIX8k1uknGpIMBpyTqgTO3TvugCxlXrezpt/Nl3XFFVCel+
-	TOD3WdX2oTYQaUzP/z/s16esFquORJtzO/q3FnXbC+0HePAVYnbZIYnQgrJ1ioOKJG+mj5QDBpK
-	v+OLvCzjOZIvTzIx+uJWlW0ct8kZVJlJuckP+DalKVw+ho5uCY6Urx+Tp/kmRF0UPe51lIEfp2O
-	RiKetrsHVJRVGHySclPPOn6+hdKy0E9FfH3i/0zU4Rlcb65aot6c2CctrcflxUMtVnI1UPhKuk7
-	hWLUsuQwtu9chOaZNQ4B2vqeqEMYdpth5WbQnbo9xF/VGm39E=
-X-Received: by 2002:a05:6402:388d:b0:698:ae69:3992 with SMTP id 4fb4d7f45d1cf-6a1b4b98deemr13567414a12.16.1786367623915;
-        Mon, 10 Aug 2026 06:13:43 -0700 (PDT)
-Received: from krava ([173.38.220.33])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a1e7d5aacesm4507663a12.21.2026.08.10.06.13.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2026 06:13:43 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 10 Aug 2026 15:13:41 +0200
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Quentin Monnet <qmo@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Mykyta Yatsenko <yatsenko@meta.com>,
-	Avinash Duduskar <avinash.duduskar@gmail.com>,
-	Anton Protopopov <a.s.protopopov@gmail.com>,
-	Amery Hung <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
-	Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
-	Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
-	Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next 04/13] bpf: Add tracing_multi link support for
- bpf progs
-Message-ID: <annOhedRtHBce3px@krava>
-References: <20260809150111.45000-1-leon.hwang@linux.dev>
- <20260809150111.45000-5-leon.hwang@linux.dev>
+	s=arc-20240116; t=1786367651; c=relaxed/simple;
+	bh=I0ExxeRt1leU0yjlEz/bq5fHSnHMSEL9zIdxoK6Cytw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ehHdglOHK6c/Jv7N4UUr6uMmIjt+gogz6IViGzL8H2trzar5xXHaxKit+zqJKIMJDvSycmHsW0blbyWKZPdXBLm39HVQTiPlOcb0a9/7Pa0Gso6WdFx2m46N0hz6y2qze7CHNwqyVFLz4X0vE1nnI0AhgS1NwEhT2yv4C2zLzCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hJZvh4ywPzYQvBm;
+	Mon, 10 Aug 2026 21:13:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 4DA624056B;
+	Mon, 10 Aug 2026 21:13:54 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP1 (Coremail) with UTF8SMTPA id cCh0CgAHQs6Rznlqjbw8Bw--.2609S2;
+	Mon, 10 Aug 2026 21:13:54 +0800 (CST)
+Message-ID: <7e8c9706-86d6-42b5-b7ad-b24a7552d950@huaweicloud.com>
+Date: Mon, 10 Aug 2026 21:13:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260809150111.45000-5-leon.hwang@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] tracing/snapshot: Use work_on_cpu to avoid -EBUSY
+ during snapshot swap
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260803005640.2445666-1-wutengda@huaweicloud.com>
+ <20260803005640.2445666-3-wutengda@huaweicloud.com>
+ <20260808105855.09f8d794@robin>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20260808105855.09f8d794@robin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAHQs6Rznlqjbw8Bw--.2609S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF1DWw1DKFyUGw4kZFyfXrb_yoW5Kr1DpF
+	Waka4DGw4DZF40ya4Iqw1xCryrtrZ5G34xur13Ga1rZa90kFySqr48K3W3ua48CrnFk3y2
+	vF4Y9FZ7GF1jyFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7IJmUUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Sun, Aug 09, 2026 at 11:01:02PM +0800, Leon Hwang wrote:
 
-SNIP
 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index eddd259d3776..fc51ea2428be 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -1572,12 +1572,23 @@ static int update_fentry_multi(struct bpf_trampoline *tr, u32 orig_flags,
->  			       struct bpf_tramp_image *im, struct ftrace_hash *hash,
->  			       struct bpf_tracing_multi_data *data)
->  {
-> -	unsigned long addr = (unsigned long)(im ? im->image : tr->cur_image->image);
-> +	if (tr->func.ftrace_managed) {
-> +		unsigned long addr = (unsigned long)(im ? im->image : tr->cur_image->image);
->  
-> -	if (bpf_trampoline_use_jmp(tr->flags))
-> -		addr = ftrace_jmp_set(addr);
-> +		if (bpf_trampoline_use_jmp(tr->flags))
-> +			addr = ftrace_jmp_set(addr);
-> +
-> +		ftrace_hash_add(hash, data->entry, tr->ip, addr);
-> +	} else {
-> +		void *old_addr = tr->cur_image ? tr->cur_image->image : NULL;
-> +		void *new_addr = im ? im->image : NULL;
-> +		int ret;
-> +
-> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr, new_addr);
-> +		if (ret)
-> +			return ret;
-> +	}
+On 2026/8/8 22:58, Steven Rostedt wrote:
+> 
+> Sashiko brings up a good point. This will break the recording of what
+> task is being interrupted.
+> 
+>   https://sashiko.dev/#/patchset/20260803005640.2445666-2-wutengda%40huaweicloud.com
+> 
+> 
+>> --- Patch [2]: [PATCH v2 2/2] tracing/snapshot: Use work_on_cpu to avoid -EBUSY during snapshot swap ---
+>> commit b61ca8359fdea427c80a410f6d4052c68af5eae3
+>> Author: Tengda Wu <wutengda@huaweicloud.com>
+>>
+>> tracing/snapshot: Use work_on_cpu to avoid -EBUSY during snapshot swap
+>>
+>> This commit replaces smp_call_function_single() with work_on_cpu() in
+>> the snapshot write path to avoid -EBUSY errors when a target CPU is
+>> actively writing to the ring buffer.
+>>
+>>> diff --git a/kernel/trace/trace_snapshot.c b/kernel/trace/trace_snapshot.c
+>>> --- a/kernel/trace/trace_snapshot.c
+>>> +++ b/kernel/trace/trace_snapshot.c
+>>
+>> [ ... ]
+>>
+>>> -static void tracing_swap_cpu_buffer(void *tr)
+>>> +static long tracing_swap_cpu_buffer(void *tr)
+>>>  {
+>>> +	local_irq_disable();
+>>>  	update_max_tr_single((struct trace_array *)tr, current, smp_processor_id());
+>>
+>> When calling update_max_tr_single() from a workqueue thread, does passing
+>> current result in the trace snapshot recording the kworker task instead of
+>> the interrupted task?
+>>
+>> In the previous smp_call_function_single() implementation, current would
+>> represent the task executing on the target CPU, but now it will capture
+>> the kworker thread.
+> 
+> And thinking of one usecase, what if you had a high priroity task you
+> wanted to snashot? This wouldn't work to do that.
+> 
+> Now we can still keep the ipi and send data that holds the tr and
+> state. It waits for the ipi to finish anyway. Then it can check if the
+> swap happened or not, and could report a fail, or it could try again?
+> 
 
-hum, so IIUC this sequentially attaches to target bpf program as it
-would with current API, so there's no attachent speedup, right?
+Indeed, work_on_cpu() cannot handle these scenarios properly.
 
->  
-> -	ftrace_hash_add(hash, data->entry, tr->ip, addr);
->  	tr->cur_image = im;
->  	return 0;
->  }
-> @@ -1627,6 +1638,18 @@ static void bpf_trampoline_multi_attach_free(struct bpf_trampoline *tr)
->  
->  static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
->  {
-> +	if (!tr->func.ftrace_managed) {
-> +		void *failed_addr = tr->cur_image ? tr->cur_image->image : NULL;
-> +		void *old_addr = tr->multi_attach.old_image ?
-> +				 tr->multi_attach.old_image->image : NULL;
-> +		u32 orig_flags = tr->flags;
-> +		int ret;
-> +
-> +		tr->flags = tr->multi_attach.old_flags;
-> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, failed_addr, old_addr);
-> +		WARN_ONCE(ret, "bpf_trampoline_update_fentry failed: %d\n", ret);
-> +	}
-> +
->  	if (tr->cur_image)
->  		bpf_tramp_image_put(tr->cur_image);
->  	tr->cur_image = tr->multi_attach.old_image;
-> @@ -1643,6 +1666,7 @@ static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
->  	for_each_mnode_cnt(mnode, link, link->nodes_cnt)
->  
->  int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
-> +				u64 *keys, struct bpf_prog **progs,
->  				struct bpf_tracing_multi_link *link)
->  {
->  	struct bpf_tracing_multi_data *data = &link->data;
-> @@ -1651,18 +1675,18 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
->  	struct bpf_tracing_multi_node *mnode;
->  	struct bpf_trampoline *tr;
->  	int i, err, rollback_cnt;
-> -	u64 key;
->  
->  	for_each_mnode(mnode, link) {
->  		rollback_cnt = i;
->  
-> -		err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
-> +		if (progs)
-> +			err = bpf_check_attach_target(NULL, prog, progs[i], ids[i], &tgt_info);
-> +		else
-> +			err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
->  		if (err)
->  			goto rollback_put;
->  
-> -		key = bpf_trampoline_compute_key(NULL, btf, ids[i]);
-> -
-> -		tr = bpf_trampoline_get(key, &tgt_info);
-> +		tr = bpf_trampoline_get(keys[i], &tgt_info);
->  		if (!tr) {
->  			err = -ENOMEM;
->  			goto rollback_put;
-> @@ -1691,6 +1715,9 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
->  	for_each_mnode(mnode, link) {
->  		bpf_trampoline_multi_attach_init(mnode->trampoline);
->  
-> +		if (progs && progs[i]->aux->tail_call_reachable)
-> +			mnode->trampoline->flags |= BPF_TRAMP_F_TAIL_CALL_CTX;
-> +
->  		data->entry = &mnode->entry;
->  		err = __bpf_trampoline_link_prog(&mnode->node, mnode->trampoline, NULL,
->  						 &trampoline_multi_ops, data);
+I just tried handling the return value and noticed that there is already
+a log message inside update_max_tr_single() that reports the
+ring_buffer_swap_cpu() error.
+(I had previously overlooked this error handling and didn't notice it.)
 
-IIUC for bpf_program targets the actuall attachment is happening in
-here, right?
+So, it seems that no additional handling is necessary. I will keep the
+current implementation unchanged.
 
-the rest of the function logic won't execute, because there won't
-be any data in the reg/noreg/mod hashes..?
+Thank you for your accurate catch and thoughtful suggestions.
 
-you seem to use the tracing_multi API to ease up attachment to multiple
-bpf programs and end up with just single link fd for all attachments
+Best regards,
+Tengda
 
-I think it'd be cleaner to have separate api or code paths for that
+>>
+>>> +	local_irq_enable();
+>>> +	return 0;
+>>>  }
+>>
+>> [ ... ]
+>>
+>>> @@ -689,8 +692,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+>>>  			update_max_tr(tr, current, smp_processor_id(), NULL);
+>>>  			local_irq_enable();
+>>>  		} else {
+>>> -			smp_call_function_single(iter->cpu_file, tracing_swap_cpu_buffer,
+>>> -						 (void *)tr, 1);
+>>> +			work_on_cpu(iter->cpu_file, tracing_swap_cpu_buffer, (void *)tr);
+>>
+>> Can this result in swapping the wrong CPU's trace ring buffer if
+>> iter->cpu_file is an offline CPU, or if the CPU goes offline concurrently?
+>>
+>> Because cpus_read_lock() is not held, if the target CPU is offline, the
+>> workqueue subsystem may execute the work on a fallback online CPU.
+>>
+>> When tracing_swap_cpu_buffer() then calls smp_processor_id(), it will
+>> evaluate to the fallback CPU's ID rather than the intended target CPU.
+>>
+>> This could potentially modify an unrelated online CPU's trace buffer while
+>> leaving the requested offline CPU's buffer unchanged.
+> 
+> This too looks to be a valid concern.
+> 
+>>
+>>>  		}
+>>>  		tracing_disarm_snapshot(tr);
+>>>  		break;
+> 
+> -- Steve
 
-jirka
