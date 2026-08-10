@@ -1,56 +1,56 @@
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697903DAAB0
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 12:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7973DB655
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 12:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786366634; cv=none; b=hTYR6zECY5iWgWl9jkp+U72pYLrs+ATQhtAD7OpgbUlNnKB8iV8Fr8deblMd4i/mFGdlIIsNuVA+pDP2VrO9jgNc1hmUHCAoWD6Ufa6hdu8053gostFifCK8c4nqATQS7wqNnpY6gercsoZTbW5Q0EADcIbSiPUyJ6BkruHXHZ4=
+	t=1786366635; cv=none; b=WBpd5zqTeK86zvHcug0oWGOuJPc42RUwJf9OWa4ktZ8Fnv0nFzZvukuhtNHASnNDt71tdgSEwkXP4hsTmDOxLknDdnuEM7zIZH2wegrAgXiOc5JqvsSU7F2MvXHfkaM5PaNJ9zdG+GfdNAdtd8EdziFZgn+h10+Z9S0KH/FEakM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786366634; c=relaxed/simple;
-	bh=OCC11WT+L0V1cHbP4680wTmAV6r/xDAuXXa+GfOkaho=;
+	s=arc-20240116; t=1786366635; c=relaxed/simple;
+	bh=jRx7FUxQCaRzyA6Q6NNBtT1C/3AjpZAuS49buYtI2Vc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cfV9sqO0DQzarUsGoFQrCyIDJWpRkLYIFvArx4Nr/V4jCsji3ZpnsN/Yhym3F/kv6ouD+WnNCmxQZQ2wAOf/RDbHHKL9NcuJWIeMFZAW2uch55QNvMBKartdmhEdbov9jWm3oujpN1DKhp2svmmVrnqv2DH200/f8ktm/+h4uCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ltpfSQt9; arc=none smtp.client-ip=209.85.221.69
+	 To:Cc:Content-Type; b=sWfrofspadwpHWoJUeUCGLJ/RzoIvpIpbZNeRweLac4Vh97KW9AWf2mLoJ336r1DGvXPGh9YdIyLMN62QtdiQkq2xDkBCIiw4+GP6ZVYiKpslzEo8XOYGTftnGYnpwcEJUrWT2mGK3ccIfetsNiSz7nBvleUwULlAVMVryy8DLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SqTM5Z2v; arc=none smtp.client-ip=209.85.128.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ltpfSQt9"
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47fe85684b9so1596596f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 05:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqTM5Z2v"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-495569acf8dso11307005e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 05:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786366631; x=1786971431; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786366632; x=1786971432; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=lnUv13X3Cbui6u5X9Nc10vpxGzYNp5ZKvp/hBJ6VPvY=;
-        b=ltpfSQt9LvjupofvlFrot0h/SEchKxW2d7XN5MCEBUWfsIsN7iz2ZRhL74eZKi6pjf
-         56YoktfmsEVYXVsbqCGy3NqlDZzJQzWa1rCV7YXwUvxwt20x+NS5iY+NjA8VQpdZBGw9
-         Jp1LJ/wwUKWsUBsZfUibqABo09QkZFQ0cjhbv/X6hkTV149Q4+QjmvNgNYG8brwU4XTd
-         8TJzc5Xmuo8nwRjIHKpu0FhyJPt5znMyxns1Z7t5QB897Oz5XmyXLWWMIcewAX4TNCr/
-         U1zwzEk4oWcPUnhyVhaUwHIKs9CANMz4RmCnTwOY59gAuMNYHRyQHCx8XeV0WQfSuDfx
-         PXAQ==
+        bh=AGN3xBFNrfMXyZfTcIj6JyUQyIsdFi2od4FC/Au3R/I=;
+        b=SqTM5Z2vMPedJzzngk8CRjU7CKTiag/7tKoxvlcc8kRjy7xu0BwXpBALnInUnAOP0S
+         qZ44s8nrA9aye8llc5NWNSUM4yvEA3sj8VNr5QxUrOOyINFogH5xJroYR8rVXqL1jmmh
+         fe0wnvYFGOtq/UhtNp0e0//qB/H2x6kpmeABkBBun8cAaDA5aQHnVHho3JQ1CiTPMNBC
+         dMPCt9bBMNzqEtyMQrGfubkYLV0XKUi6HWfI3dvAy33E57xrBvZU8RfChqK5Opa6522c
+         GxMm1nZ00nhOoLLMo2UVhBW1l11YDF0YiUhx3ESpbr2Ny5EHdab3LtQo7jga8U7k9sDm
+         x1vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786366631; x=1786971431;
+        d=1e100.net; s=20251104; t=1786366632; x=1786971432;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=lnUv13X3Cbui6u5X9Nc10vpxGzYNp5ZKvp/hBJ6VPvY=;
-        b=Wy9cjx09wAG6kGWEvQy4mw95AhzPtZ/9Gh7R77ai6RE8oHOvHqdy0cdcrEqr15qIC+
-         JXZNlnWXaxnxe7w1fpG1VaPBV4z4lSDOxLwR5u+dK52pyY8K+BX2XL/wpp54t3aH1sFE
-         snSqBTyVnWUJcpThg55LHaPaqgbOdK2/03VasTpoy+cd3+x2t+vbbFy37w7oHjnlHX7j
-         witw+bWBtLoxSqmFoaW8fPYAtcyPT8Uxb1k7+UdfDkBgrEbbXJevzk9l+ucfQ6zQuVC3
-         EB6j/SmC1tRnbQkqcor66szPSg8luneR/pRD9sALbZcLL/Wb997sb/t27SyszDI3dGyp
-         JJGg==
-X-Forwarded-Encrypted: i=1; AHgh+Rp3e/IyZkrJSPoI+34gFLQxszbabcuMjK009VSUjGdnUInZIgxdTxNJcKX9p6rQKs68QaHz84ZvBD34pguEfDWvU9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyY7QsCV3LZ9Xox+T97GoBLoO1TBEnsKPlC+mA/h8QBmNpdrsv
-	hmY1XSVsNaC4Q5Pu7C9Rh7KNGNr1OgGtSIeHiLDgs0u+up2pxniIjlHs3DpwsVsgTA4RWIk3TKt
-	EnGDXZV5EyAhqSlfHjb1L5g==
-X-Received: from wruj18.prod.google.com ([2002:a5d:6192:0:b0:47f:87c5:6f9f])
+        bh=AGN3xBFNrfMXyZfTcIj6JyUQyIsdFi2od4FC/Au3R/I=;
+        b=RdZioCygjTyshqXSPd6iS+M+q4BCfas9jTMLt/k5hqiUvbRAMLzHSm6euY1WPy2ygB
+         7jQr39eDpVD/KjRtVFlOgmAk4rCQiRHE7EgB2t4zauGcQM/+ZNwDYaHRjlREwl6pk1nj
+         uQyMI1dbBQRD6e88JEfyeoiWCT6No8jJFX1w6DhHDIc2lZcmSuIv5v8L9W0FFNsKwjRo
+         bYpNFS2MhibLB09zH6aIE0AO0IOY4HzaZ9FJf1a4Wr3FKkamF186FzDl/vmk+AgZem2h
+         9m/hGStosOQhRkLTBUe8W8zWehH6xmSNVPlcwk9l6JSvZBU0RBZ9fJy8bn2g1hP5IC8P
+         yYKQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rp1bNjW7jYbfF8Jh+2NpkHdL4UXbIhoym4X1vc+gF91dfsC6FYTNbgq+P34a2OVudPwA+kRhCQozMsvTZJf4eBe7YQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzElVLGifu96Y+aJFqH27GH5GCXDuWD7GGWMhoj2dGb/4oyZj0A
+	bQ07e8/JtkFumS3eL+P2cQwnWtFiyUgluoh+3/gE0KGamRybW3WZUqGMqIopidFJOFwEjfzETRc
+	FKdyRb7LRDupQJ+e8HwXtew==
+X-Received: from wmg18.prod.google.com ([2002:a05:600c:22d2:b0:493:e006:3161])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:5850:0:b0:47f:7964:9887 with SMTP id ffacd0b85a97d-4814565ec16mr2541620f8f.25.1786366630409;
- Mon, 10 Aug 2026 05:57:10 -0700 (PDT)
-Date: Mon, 10 Aug 2026 13:56:30 +0100
+ 2002:a05:600c:474a:b0:496:c361:fb96 with SMTP id 5b1f17b1804b1-4994e6db5aemr508989395e9.0.1786366631742;
+ Mon, 10 Aug 2026 05:57:11 -0700 (PDT)
+Date: Mon, 10 Aug 2026 13:56:31 +0100
 In-Reply-To: <20260810125633.3344684-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,37 +60,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260810125633.3344684-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.654.g21b8a5bc05-goog
-Message-ID: <20260810125633.3344684-4-vdonnefort@google.com>
-Subject: [PATCH 3/6] ring-buffer: Free cpu_buffer->free_page with subbuf_order
+Message-ID: <20260810125633.3344684-5-vdonnefort@google.com>
+Subject: [PATCH 4/6] ring-buffer: Remove trace_buffer::cpus
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
 Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Sashiko <sashiko-bot@kernel.org>
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When sub-buffers use an order greater than 0, cpu_buffer->free_page is
-allocated with subbuf_order. Use the correct order for
-cpu_buffer->free_page.
+The 'cpus' field in struct trace_buffer became useless in commit
+8e7b58c27b3c ("ring-buffer: Just update the subbuffers when changing their
+allocation order"). Remove it
 
-Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
-Reported-by: Sashiko <sashiko-bot@kernel.org>
+Fixes: 8e7b58c27b3c ("ring-buffer: Just update the subbuffers when changing their allocation order")
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 026658c70351..ac5f5d9502dd 100644
+index ac5f5d9502dd..d128bda5b661 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -2654,7 +2654,7 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 		free_buffer_page(bpage);
- 	}
+@@ -566,7 +566,6 @@ struct ring_buffer_per_cpu {
  
--	free_page((unsigned long)cpu_buffer->free_page);
-+	free_pages((unsigned long)cpu_buffer->free_page, cpu_buffer->buffer->subbuf_order);
+ struct trace_buffer {
+ 	unsigned			flags;
+-	int				cpus;
+ 	atomic_t			record_disabled;
+ 	atomic_t			resizing;
+ 	cpumask_var_t			cpumask;
+@@ -2762,7 +2761,6 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 	init_irq_work(&buffer->irq_work.work, rb_wake_up_waiters);
+ 	init_waitqueue_head(&buffer->irq_work.waiters);
  
- 	kfree(cpu_buffer);
- }
+-	buffer->cpus = nr_cpu_ids;
+ 
+ 	bsize = sizeof(void *) * nr_cpu_ids;
+ 	buffer->buffers = kzalloc(ALIGN(bsize, cache_line_size()),
 -- 
 2.55.0.654.g21b8a5bc05-goog
 
