@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0976030F7FF;
-	Mon, 10 Aug 2026 09:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0E34A32;
+	Mon, 10 Aug 2026 09:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786353611; cv=none; b=A/p3Qlcy5SxnPng1VLp9jgactHcsh1HD1w073O7IEegozIdKLZ56sh8OjuC8FEIEmgY29/GiZ8M0AMqm7Qblnd9lCQPVWtcqHUYqVsZFveCAI+UDZnhT1KeuIaIoyWB5qUTMvtK30hmRZDzeZOQ5n9L6Ah20EwTuk2autaiLf4g=
+	t=1786353746; cv=none; b=cCDLLl6MR+b0P/hKjFJx8E89kNKCZLZ1mFuyEnd7JPVgN3jmILZ7iAZxRGxwtZ5xIu6FiQyKW7ZAfCSrTNZ4GdrBrpoRFcb//nuxwBu02UYZ41YoAfb/KdhwX/Sk+6sXPj6TDt1N5l0URGTckE6SoAbig+Ipgzjdv1aPzlqs95M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786353611; c=relaxed/simple;
-	bh=7vge6SQNAp4DZJJsAeFyFclIvAG4Wz4oqgpUkveaZR4=;
+	s=arc-20240116; t=1786353746; c=relaxed/simple;
+	bh=WVh+PT+GlPYxA4QqgvYF/mPP+gpHu13vKtT3MaGwdos=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rHr5SaFXVYRSwqScj8qAHHkilZKhZ5dYHgq3TqfTK/4iNWjWTjqqLmBmkmaM6JibRFnbuCcY5pDKhS5crZKcSWkrLYqNcXDG10cbmXN1b39/yo74Wl00z08GZDcQMuuEWQwyBS3FNivCP8b75Le6/AYsA9pi7YsYyDS2kFcGvDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Srx5NcHv; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Q+vm3TRwWIQAqg5KBH2XOM+Vj2hbIn36QdvRDoU/CKTQsKk8Vm994eGDmktznSaiIpq2DHFce4wITp8+ysR1X7bpjpyEP5nfJmMLLLlVpFdGZs0vEsI50l2b0qWHP/elIWWhf0LU3CB1W0CSptxXXP3KsttREQbdyOsspw8J7wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcoznZ5A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Srx5NcHv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7EA81F000E9;
-	Mon, 10 Aug 2026 09:19:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcoznZ5A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459751F000E9;
+	Mon, 10 Aug 2026 09:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786353609;
-	bh=NOaEX7G7WbL3WRc3qOqS40hHvnBJZDj9XRocVTD2BrE=;
+	s=k20260515; t=1786353745;
+	bh=6wQr3PYTUoSXpaDl5k0IG1zQOBI7tNXiUqLf3cd1RKg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Srx5NcHvuYWHX7NKDmEKead6xMO2DdHxbktyD9Wsiv3rNza+l3o4CtjVjAv1VubgE
-	 3w3ZeQ7jZ+1VmfNPGmp/BFpMnSDsI9RIQtrg0a2v8irfeFG6aMZadFAobQ1+sDZ6ly
-	 4UW4Zj7DfHuZjUIWGda7tQp5AhJ981xhEgzC4cz5rW1S4qzCs7DdoWdLOR7X0Cbtt9
-	 IU3a8mFD5qgLgfiOk59J7AgohHhlXa52xlis0TM8yJMkYifzxw49Fad1jB5MwWHHPm
-	 Xi1xUcLa9D3aOkNAvOT+o2xZ4xRddHQ+h1ExEA7gUCBQQ4G1fXw8ms9QYrrHIJYr3m
-	 BjXmxfFWKGSEw==
-Message-ID: <eb1b5763-37bc-4cb3-890c-1e619e5a8ae4@kernel.org>
-Date: Mon, 10 Aug 2026 11:19:48 +0200
+	b=gcoznZ5AtoqypeuzFMUFCV0SMZb31NgwLMyAOZz/m430M40GrLBfXae1BEO+LjcA4
+	 XuKCG/K1eNaSIhwwyrXHHUUiAagMRg08hWANytGDAoToeNFKX4wR71XEYFGkFbUWjk
+	 xqs2uRpDOpUmvayAD1TsECcSybfbFE7IbwuCUQxc4kE3FZ6eF4eAJEg/qTFVk5suAe
+	 FstVMR84DcIukqC/PhHwIPZj3vMsyQyBIi/Yiy32UcvUROna5tfQH/+wkTGaeZLDOi
+	 d0eblAzJLiLUDuD98q1S66cpzfD+9zFh8IrH7rGPro3csMwEaReIYEyXaXQjHV5Z0Y
+	 tgGH+JPNFocaw==
+Message-ID: <a30391cf-cca5-4e6c-a3cd-a71c5b88d1f5@kernel.org>
+Date: Mon, 10 Aug 2026 11:22:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 11/41] KVM: guest_memfd: Ensure pages are not in use
- before conversion
+Subject: Re: [PATCH v10 14/41] mm/gup: factor out LRU cache draining for folio
+ into lru_cache_drain_for_folio()
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -69,7 +69,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-11-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-14-2fc18ee6d3ba@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -116,116 +116,41 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-11-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-14-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+> From: "David Hildenbrand (Arm)" <david@kernel.org>
 > 
-> When converting memory to private in guest_memfd, it is necessary to ensure
-> that the pages are not currently being accessed by any other part of the
-> kernel or userspace to avoid any current user writing to guest private
-> memory.
+> KVM with guest_memfd wants to remove any folio references due to LRU
+> caches, as it really must only allow to convert folios from shared to
+> private when there are no unexpected folio references (e.g., from GUP
+> references).
 > 
-> guest_memfd checks for unexpected refcounts to determine whether a page is
-> still in use. The only expected refcounts after unmapping the range
-> requested for conversion are those that are held by guest_memfd itself.
+> So, to drive the refcount down, it needs a way to flush the LRU caches.
+> Let's factor out what we have in lru_cache_drain_for_folio(). Document
+> it, and also mention that concurrent folio (un)mapping might, in theory,
+> miss detecting LRU cache references. Keep obtaining the expected refcount
+> twice to minimize the possibility. For the current and future user that
+> should work, and we don't really have a better alternative: we could
+> detect if the mapcount changed, but it would still be racy and add more
+> complexity with questionable benefit.
 > 
-> Update the kvm_memory_attributes2 structure to include an error_offset
-> field. This allows KVM to report the exact offset where a conversion
-> failed to userspace. If the safety check fails, return -EAGAIN and copy
-> the error_offset back to userspace so that it can potentially retry the
-> operation or handle the failure gracefully.
+> Maybe there is a chance to avoid the draining entirely in the future,
+> by avoiding extra references from the LRU cache: Hugh thinks there might
+> be a way. But for the time being, this handling is unfortunately
+> required.
 > 
-> Update documentation to document the error_offset field and the possible
-> -EAGAIN error.
+> Make folio_may_be_lru_cached() accept a const pointer so
+> lru_cache_drain_for_folio() can accept a const pointer as well.
 > 
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
 
-[...]
-
->  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 3783e63476569..13c3989136f67 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -524,8 +524,42 @@ static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
->  	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
->  }
->  
-> +static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
-> +					    size_t nr_pages, pgoff_t *err_index)
-
-I would focus on the "to_private" aspect or abstract it to
-"kvm_gmem_mem_has_unexpected_refs" or sth like that.
-
-> +{
-> +	struct address_space *mapping = inode->i_mapping;
-> +	const int filemap_get_folios_refcount = 1;
-> +	pgoff_t last = start + nr_pages - 1;
-> +	struct folio_batch fbatch;
-> +	bool safe = true;
-> +	pgoff_t next;
-> +	int i;
-> +
-> +	folio_batch_init(&fbatch);
-> +
-> +	next = start;
-> +	while (safe && filemap_get_folios(mapping, &next, last, &fbatch)) {
-> +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-> +			struct folio *folio = fbatch.folios[i];
-> +
-> +			if (folio_ref_count(folio) !=
-> +			    folio_nr_pages(folio) + filemap_get_folios_refcount) {
-
-I'd rather add a comment than have this filemap_get_folios_refcount.
-
-/*
- * We expect one reference per folio-page in the pagecache and one
- * reference from filemap_get_folios().
- */
-if (folio_ref_count(folio) != folio_nr_pages(folio) + 1)
-
-> +				safe = false;
-> +				*err_index = max(start, folio->index);
-> +				break;
-> +			}
-> +		}
-> +
-> +		folio_batch_release(&fbatch);
-> +		cond_resched();
-> +	}
-> +
-> +	return safe;
-> +}
-> +
->  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
-> -				     size_t nr_pages, uint64_t attrs)
-> +				     size_t nr_pages, uint64_t attrs,
-> +				     pgoff_t *err_index)
->  {
->  	bool to_private = attrs & KVM_MEMORY_ATTRIBUTE_PRIVATE;
->  	struct address_space *mapping = inode->i_mapping;
-> @@ -542,8 +576,21 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->  
->  	mas_init(&mas, mt, start);
->  	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
-> -	if (r)
-> +	if (r) {
-> +		*err_index = start;
->  		goto out;
-> +	}
-> +
-> +	if (to_private) {
-
-I'd add a comment here for the "why are we unmapping".
+If all goes well, this patch should go into 7.3-rc1. So once you rebase, you'd
+get it for free :)
 
 -- 
 Cheers,
