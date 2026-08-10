@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717A6360EF0;
-	Mon, 10 Aug 2026 08:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FCE378D72;
+	Mon, 10 Aug 2026 08:10:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786349281; cv=none; b=mJMAEjRsj88qcIANhy/LNlKZQjNeF59ppfWdGMriI5D+26ciHKUp9aFWk6n4CmQUlA6nnQ5QDCsd2ZnIMZs8altURPzsFdHOLw+c6QUmdNcN5z9xK/sAWUdW/dmrNYXNxo8/FH6aRZYVfeEBi3pVtxhvq5XzMqZnSac2qF72O9E=
+	t=1786349403; cv=none; b=J4oaXjQJRj+KmpDJ6ZEhRhjCXrhE1/ufcJXjsx5YTG4Vnkh2YyR+lPZS9rv3PZacBk0sPXmfnrOWMnZRIw3uLy9AT5pS4g0XIle5MHsVLIUzlpOjMT3G2DpPtwwOjmAlhg8TqL5deUJ5IUfVmUbyc54YO+g+da3hz43Cw7f34Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786349281; c=relaxed/simple;
-	bh=x6IIPqyvI+KfhaKLifqBCzfHKNGRKqfWfc06++Zpeg0=;
+	s=arc-20240116; t=1786349403; c=relaxed/simple;
+	bh=rRMljgg76tmuBGaTR+PS5T5xZoWc64bk0HQPitOd1vk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qt2rD9okrANagCL8P5S8NvFUOyUTPW2RzESgzXB1gnV5rtx7Z6+bqVq5mmv5cXEgNEAMlnqIQCodz6y4JxiK5mAp0fSI8b4AplBdSUxKmOooOpD2D74xF1lY2WcLtljQmQLYklmFrlc/ahPnF5A1uVz67IhQKggWwcGQqwHrbwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtk/UaeU; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=U9lxUyV8oP58K954yL34mJjr4V61XDdvpee5KdPWJJ3dkOrJTPSv2nliAzHIbW3e99h5cplpRYl7hndXbmdcVPOZ3WcAaxGmPS0NSf2uFIwl+2+2I8wFDqYS5xLOjmQig1xTkvlVSs3jG2J2h/lwwSZFjpexAvCHm4Bdad7RH+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfTBdkoY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtk/UaeU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7921F000E9;
-	Mon, 10 Aug 2026 08:07:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfTBdkoY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E16A1F000E9;
+	Mon, 10 Aug 2026 08:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786349280;
-	bh=nFhGsVAUsNp9P12Sw9NmmlITztpvk1ZNsJoMsuJuh6s=;
+	s=k20260515; t=1786349401;
+	bh=OLW453wfp7TG7edKDi4mkJgnCHT8TeVF/tH4dA3Vb3U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jtk/UaeUSktXAID9PZ7kQSq4FoJyluNekVHL7zUaCAnej7UqdoKGd0qRbOxQuOdMU
-	 LDHZvvb5IQ6CeMkrAIDqo1E61MPAveZYT/E0T11m0988lbcpWc9jl2BoR3pEZr3OfW
-	 VvMvqEnxYDu7bqN4Mk4zjSsf2ftH2tt0yv9Ws15YLnduraT9Ps2hNHmJaaYZp2SlqS
-	 QJP7GD9fj9RLV3FE0GdyQNpiIw2Llr9Ci0rAEa072aIwfmw02174dpDDOsJlqHofua
-	 eBP3Ao+EJ4mdNPCgHNNJjsB/YaDtaxKTXSTQR6OYmmqm0hDlKBI35/O3bgC5vzYkFz
-	 +G0MwMj4735pw==
-Message-ID: <7be3503a-2ed7-40ea-9ba3-68a4f2f3b348@kernel.org>
-Date: Mon, 10 Aug 2026 10:07:38 +0200
+	b=lfTBdkoYldI3SLP2xsB2q3Mtq7LW0RZ9E8cbtg4dD5/f47DT2+XG0pANB1kWTDl7L
+	 lylQlATU6oRkA6IvP6oFcUo1Z+VIpwrk4FHiox9+6y9w1x7BTWrtbTPeenDTdM7gYN
+	 8S7QeZ+oz3zZC1rmM7Mw71FvlX34ZNeD2vQEM4/jcsIVGMDblEeWHkzVW55R0VQMUj
+	 /RKt5fT4EEWLk1ZJSyWWXESIAAqAGqUrpLCRQ3OhzZgiqUU1KqHGsTe5VCucrR+5/8
+	 HptV4VKmMW29q25w0iU06i2gw36L1jh9KhfDxnf2f4CztcxetMZtneIhnW+XFV/9fF
+	 iQuDmu8sJvEMw==
+Message-ID: <2f72a8a3-f158-441b-82fe-25bdb98ea982@kernel.org>
+Date: Mon, 10 Aug 2026 10:09:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 03/41] KVM: Enumerate support for PRIVATE memory iff
- kvm_arch_has_private_mem is defined
+Subject: Re: [PATCH v9 04/41] KVM: Rename memory attribute APIs to prepare for
+ in-place gmem conversion
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -68,7 +68,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com>
- <20260728-gmem-inplace-conversion-v9-3-35f9aec2aed2@google.com>
+ <20260728-gmem-inplace-conversion-v9-4-35f9aec2aed2@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -115,25 +115,28 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260728-gmem-inplace-conversion-v9-3-35f9aec2aed2@google.com>
+In-Reply-To: <20260728-gmem-inplace-conversion-v9-4-35f9aec2aed2@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 7/29/26 02:35, Ackerley Tng via B4 Relay wrote:
 > From: Sean Christopherson <seanjc@google.com>
 > 
-> Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
-> on kvm_arch_has_private_mem being #defined in anticipation of decoupling
-> kvm_supported_mem_attributes() from CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
-> guest_memfd support for memory attributes will be unconditional to avoid
-> yet more macros (all architectures that support guest_memfd are expected to
-> use per-gmem attributes at some point), at which point enumerating support
-> KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory attributes being
-> supported _somewhere_ would result in KVM over-reporting support on arm64.
+> Rename memory attribute APIs to add a "vm_" in the name in anticipation of
+> moving PRIVATE tracking into guest_memfd, to allow in-place conversion
+> between SHARED and PRIVATE.  At that point, there will effectively be two
+> (potential) sources of memory attributes: the VM and guest_memfd.
+> 
+> kvm_vm_set_mem_attributes() already has "vm" in the name to indicate that
+> it is a VM ioctl. Rename it to kvm_set_vm_mem_attributes() to show that it
+> is setting the VM's memory attributes. (Drop the VM-ioctl scoping since it
+> is a helper local to the file.) Update the accompanying trace function to
+> match.
+> 
+> No functional change intended.
 > 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 > Reviewed-by: Fuad Tabba <tabba@google.com>
-> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 > Tested-by: Shivank Garg <shivankg@amd.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
