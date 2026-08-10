@@ -1,187 +1,108 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out28-123.mail.aliyun.com (out28-123.mail.aliyun.com [115.124.28.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B0937A48A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Aug 2026 06:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C4B345725;
+	Mon, 10 Aug 2026 06:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786342430; cv=none; b=So6RyvE8wAzM9mKq2z7RO4ea2i2QjrNSEnEPijXhQUAElObhvdN+hmFLF5Ywu1TXpJRd79zePxRrZNSKOxesCTsMjm1TiGNg7Em2a9copHdHabYWQAernmJjtylvXqZyvczTbU30HBTkrOeSR482WoZ8bzZO/s+RXEr2H5674Pc=
+	t=1786343564; cv=none; b=K9l4+UBnTuf1aicOlG5ijlooFdA/BEiuj0cw3rZcQN/te+DZkvRm2WmKaKPoOAcPv34scI6I4CWDwTVjiRtPMYc0SZFVkaxcLq26onIrkIsVixnRADCmowOClO4bVrF8IiT1cw31oKsB2NfX5I1aGfP8JT6eoSqaua4TeSElodo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786342430; c=relaxed/simple;
-	bh=3kdNeUY+t/kFBqYbrh/MfIaV9XrnVsNXkVq0RMLHU1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q4OvWA2ikPFrwm3kWJ43uuYPakuaiH2YBEbmmvwR81blIFnLw7s26v/vY6UkqwO5y2uwHeU9rTZcQZZtTU0WW+eo3QBA44QnD+ZMZemzlBHEXD+lfa00zoVjLwOPraDfaD1VwGcEGWJQivp/B5pj2LIbTpIv9TzbB0rjFwXo4j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZNzakP1H; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZNzakP1H"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786342425;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nwVYmsqkZEiQlGwfKTmbx4LsFnCpdg3YKsT26FZwP7w=;
-	b=ZNzakP1Hw2zC/FVoF2MzyzObPo/SX0U1X+m8ToVsQ+FNNGFMLFBVUy9s7Wt9QgpZE4zYzF
-	/91/fT82kBBNaJsiPnNQsObouydbfQrhDD5O8KxzBoTx4gRKF3KVlUKbiLSgby35CGRZ30
-	yXjs2a49RGVVBVreph4xA1RCXnfFYeU=
-From: "Hui Zhu" <hui.zhu@linux.dev>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Matt Bobrowski <matt@bobrowski.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Hui Zhu <zhuhui@kylinos.cn>
-Subject: [PATCH v4] bpf: Fix UAF in bpf_trampoline_multi_attach_free on update failure
-Date: Mon, 10 Aug 2026 14:13:29 +0800
-Message-ID: <20260810061329.224276-1-hui.zhu@linux.dev>
+	s=arc-20240116; t=1786343564; c=relaxed/simple;
+	bh=27k1X9vAM1qMy4wwY7ziUz5/u+StbIUNBHGh0LN5BKs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=qwEtx5eRjKk01litHgAZwJLenStizBVKFaedQO+fNKQwKmFEKyscgnEYITmsnefiJEV5POsdNJMtSp7lnMoJGkRsXEArfaGDo0QMxJAZnNP4lD9bnXerijb252sX4gZE/VEpM+aGqA4QBoam2NJWfYJw0lA1/5aVSWQE81ksF5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1086931|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0119426-0.031275-0.956782;FP=13247847429411803131|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037025160;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.iiCXqdE_1786343550;
+Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.iiCXqdE_1786343550 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Mon, 10 Aug 2026 14:32:31 +0800
+Message-ID: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
+Date: Mon, 10 Aug 2026 14:32:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+From: Michael Wu <michael@allwinnertech.com>
+Subject: [PATCH v5] tracing: Fix race between update_event_fields and,
+ event_define_fields
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Hui Zhu <zhuhui@kylinos.cn>
+The following sequence may leads race between event_define_fields()
+and update_event_fields():
+  CPU0 (module A, pri=1 notifier)        CPU1 (module B, pri=0 notifier)
+  ===============================        ===============================
+  event_define_fields(call_A)            trace_event_update_all()
+    for each f:                            list_for_each_entry(...,
+      list_add(&f->link,                                &ftrace_events)
+               &class->fields)               -> finds call_A
+        f->link.next = next;        (2)
+                                           update_event_fields(call_A)
+        WRITE_ONCE(class->fields->next,
+                   &f->link);       (4)
+                                             list_for_each_entry(field,
+                                               &class->fields, link)
+                                             -> field = class->fields->next
+                                                  = &f->link
+                                                  = f (offset 0)
+                                             -> arm64 weak ordering:
+                                                (4) visible before (2)
+                                                field->link.next == 0
+                                             -> next iteration:
+                                                field = (void *)0 = NULL
+                                             -> crash at NULL->type (0x18)
 
-When bpf_trampoline_update() fails before modify_fentry_multi()/
-unregister_fentry_multi() is called, cur_image is unchanged
-(cur_image == old_image) and ftrace still calls into it.  Freeing
-old_image in that case causes a UAF.
+This produces the following panic:
+   Unable to handle kernel access ... at virtual address 0000000000000018
+   pc : update_event_fields+0xf8/0x368
+   Call trace:
+    update_event_fields+0xf8/0x368
+    trace_event_update_all+0x7c/0x2b4
+    trace_module_notify+0x4c/0x1dc
+    notifier_call_chain+0x84/0x168
+    blocking_notifier_call_chain_robust+0x64/0xd4
+    load_module+0x10c8/0x123c
+    __arm64_sys_finit_module+0x230/0x31c
 
-Only free old_image when it differs from cur_image.
+Fix by taking event_mutex in trace_event_update_all() before
+trace_event_sem.
 
-Also change bpf_trampoline_multi_detach() to return void and drop
-the WARN_ON_ONCE at its call site.
-
-Fixes: aef4dfa790b2 ("bpf: Add bpf_trampoline_multi_attach/detach functions")
-Signed-off-by: Hui Zhu <zhuhui@kylinos.cn>
+Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Wu <michael@allwinnertech.com>
 ---
-Changelog:
-v4:
-According to the comments of bot+bpf-ci, add Fixes: and update comments
-of bpf_trampoline_multi_attach_free.
-v3:
-According to the comments of Jiri Olsa, drop patches 2/3 and the
-prog-side machinery.
-keep only the simplified image-side fix in
-bpf_trampoline_multi_attach_free() and make
-bpf_trampoline_multi_detach() return void.
-v2:
-Folded v1's two detach patches into patch 1.
-According to the comments of Jiri Olsa, Pin the prog (pinned_prog) on
-cur_image so it stays alive while ftrace may still call into it.
-Make bpf_trampoline_multi_detach() return void.
-Fix the same UAF in standard (non-multi) trampolines.
-According to the comments of sashiko, Fix the prog UAF in
-bpf_trampoline_multi_attach() rollback.
-Leak the trampoline in bpf_trampoline_put() when cur_image is left
-by a rollback.
+ kernel/trace/trace_events.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- include/linux/bpf.h      |  9 ++++-----
- kernel/bpf/trampoline.c  | 16 +++++++++++++---
- kernel/trace/bpf_trace.c |  2 +-
- 3 files changed, 18 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 73bacfc6444d..3255c6f5ea6b 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1518,8 +1518,8 @@ int arch_prepare_bpf_dispatcher(void *image, void *buf, s64 *funcs, int num_func
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 956692856fa8..9632788da5af 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3566,6 +3566,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
+ 	int last_i;
+ 	int i;
  
- int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
- 				struct bpf_tracing_multi_link *link);
--int bpf_trampoline_multi_detach(struct bpf_prog *prog,
--				struct bpf_tracing_multi_link *link);
-+void bpf_trampoline_multi_detach(struct bpf_prog *prog,
-+				 struct bpf_tracing_multi_link *link);
- void bpf_trampoline_set_flags(struct bpf_trampoline *tr, u32 flags);
- 
- /*
-@@ -1639,10 +1639,9 @@ static inline int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
- {
- 	return -ENOTSUPP;
- }
--static inline int bpf_trampoline_multi_detach(struct bpf_prog *prog,
--					      struct bpf_tracing_multi_link *link)
-+static inline void bpf_trampoline_multi_detach(struct bpf_prog *prog,
-+					       struct bpf_tracing_multi_link *link)
- {
--	return -ENOTSUPP;
- }
- static inline void bpf_trampoline_set_flags(struct bpf_trampoline *tr, u32 flags) {}
- #endif
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index ed7999ad6c66..e30425789487 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -1595,7 +1595,17 @@ static void bpf_trampoline_multi_attach_init(struct bpf_trampoline *tr)
- 
- static void bpf_trampoline_multi_attach_free(struct bpf_trampoline *tr)
- {
--	if (tr->multi_attach.old_image)
-+	/*
-+	 * Only free old_image if it is no longer the active image.
-+	 * When bpf_trampoline_update() fails before modify_fentry_multi()/
-+	 * unregister_fentry_multi() is called, cur_image is unchanged
-+	 * (cur_image == old_image) and ftrace still points to it. Freeing
-+	 * it would cause a UAF when ftrace calls into the freed memory.
-+	 * On success, cur_image is either a new image or NULL, so
-+	 * old_image != cur_image means the image is stale.
-+	 */
-+	if (tr->multi_attach.old_image &&
-+	    tr->multi_attach.old_image != tr->cur_image)
- 		bpf_tramp_image_put(tr->multi_attach.old_image);
- 
- 	tr->multi_attach.old_image = NULL;
-@@ -1719,7 +1729,8 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
- 	return err;
++	mutex_lock(&event_mutex);
+ 	down_write(&trace_event_sem);
+ 	list_for_each_entry_safe(call, p, &ftrace_events, list) {
+ 		/* events are usually grouped together with systems */
+@@ -3604,6 +3605,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
+ 		cond_resched();
+ 	}
+ 	up_write(&trace_event_sem);
++	mutex_unlock(&event_mutex);
  }
  
--int bpf_trampoline_multi_detach(struct bpf_prog *prog, struct bpf_tracing_multi_link *link)
-+void bpf_trampoline_multi_detach(struct bpf_prog *prog,
-+				 struct bpf_tracing_multi_link *link)
- {
- 	struct bpf_tracing_multi_data *data = &link->data;
- 	struct bpf_tracing_multi_node *mnode;
-@@ -1749,7 +1760,6 @@ int bpf_trampoline_multi_detach(struct bpf_prog *prog, struct bpf_tracing_multi_
- 		bpf_trampoline_put(mnode->trampoline);
- 
- 	clear_tracing_multi_data(data);
--	return 0;
- }
- 
- #undef for_each_mnode_cnt
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 891897f8a1b3..29260951aa87 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3687,7 +3687,7 @@ static void bpf_tracing_multi_link_release(struct bpf_link *link)
- 	struct bpf_tracing_multi_link *tr_link =
- 		container_of(link, struct bpf_tracing_multi_link, link);
- 
--	WARN_ON_ONCE(bpf_trampoline_multi_detach(link->prog, tr_link));
-+	bpf_trampoline_multi_detach(link->prog, tr_link);
- }
- 
- static void bpf_tracing_multi_link_dealloc(struct bpf_link *link)
+ static bool event_in_systems(struct trace_event_call *call,
 -- 
-2.53.0
-
+2.29.0
