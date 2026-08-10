@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E48E396D38;
-	Mon, 10 Aug 2026 08:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BABE2236EE;
+	Mon, 10 Aug 2026 08:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786351794; cv=none; b=Iz6VY12wPZVpBLY7zCd3l013XIVLubYO+5PBdPkaLhYdVVPLLZd4auxd38NA82/C0xd1nYe5laipXc28rw36CTXdrS2YwyMhr2PlumaCArIXXcTdpP6G0rKKnrUHddW2heUGv4ratjPcvbCUJiTCjX7c9htx5G0RlqHSAFGRvQE=
+	t=1786351837; cv=none; b=ndwnCSj+shG0XCiIizMzfB5mEmz3OAyq/FFOtiZf/y4UkjpdDPz0n6Xp2t2PC6KLcDs0uXi4+e0MNqCbTOakOwg4UC/4znCZtOCci/L/+68SJbbCal2k+NGhS7KyrUA189msffDcJfgm3FErWE33fUD01eyLHa3DO0Tx1BiGKWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786351794; c=relaxed/simple;
-	bh=87X6HhZwLKTMl3Y1C3OmrRwPCU48ruFWGcNXkCV12Yo=;
+	s=arc-20240116; t=1786351837; c=relaxed/simple;
+	bh=LwV+TppOY83Rbn/3RCbXsFMRbwDhwemCmOAoJa8KSBo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fj2lZLo99WqCEqcSpRjsNJqClFughN2mUi8iMtWrl1uM4O7wfaJ2OUDrHcBS3qt1XC+80iDsd345VbCAzluoOp4gG+AZR4vRRpW82Qv79iTtwHJFu/WWyBYtFgVvil9NRHo/SAXk1339JABo+k6Fqcf2+sOeRlX1xqrQvd0qzF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LM4dvE+I; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Z7lVCEsAFZOjPhVy/k/KLACqX4nbgErjwjQYPgaVBrU8ivsInkzwMIh0R14q0OmqDy5Vl9mGrl4uYnkCKehTcSMo6WJZz1PEthOLxfhWLikC7SZhbRwlTI+ER+V4fVeHtNKKW2Twp2Gb4EAaBT7WGOF+VmJndckQxQsQuDV6Et0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SM/P1WV3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LM4dvE+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368A41F000E9;
-	Mon, 10 Aug 2026 08:49:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SM/P1WV3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0A61F000E9;
+	Mon, 10 Aug 2026 08:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786351789;
-	bh=oyi1K6Vb11sIVm2DqmDTjgO2DUYGijf3ZjwPoeHhIpI=;
+	s=k20260515; t=1786351836;
+	bh=32eQ8RiOgQgeidQGipeTq06XdRmfmVmvwXXxzjSlN3U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LM4dvE+IKC/Ejo+9/rKz+PKvAdzmvpVvRevxAjCQ5s8v5M45CzxupdrZgWT2JRvuc
-	 5Tizm2ZXxGCYgm9t3tVLtMdV0AoWpSGA7Wm3b5DVASrvII4aYdkcwae8HLnI7Z9i3s
-	 iwnnDOx39L6omLCMv2h0Evag/b4MJtfvAfDUxwZ2NHUZclv3+ean7YnI76R2fN0vBZ
-	 dWL+WY/+gHBfXv6qPOj4/EeIcc4qXwY/S1hJV1NcE02I67uo7riHg9ePIyU6mqCgxx
-	 krur+cesfmybko1Hv3JxueBRP7HRivu3ABRQPWz7RfFxbF5+gWIWyBbqkHUBHDPgHR
-	 vl9843J0x9v1g==
-Message-ID: <ed483d25-d908-4248-b8c7-862dd35dc6d4@kernel.org>
-Date: Mon, 10 Aug 2026 10:49:28 +0200
+	b=SM/P1WV3C8zFESyVbhdVq5tad57H8sCNhjQuEBVfNmdL/9KekwKyq+sy2MoeTRTxi
+	 9gpyYY/u6fxNSmlnmF8Rya5V6q+sZLUqKRPSSFo+VlQsjpY7LPRgD0Z5uX8uZ+AXkn
+	 PM1I7vhmhQF1dIp38+N3NBbQYh5+e3YRGbQhpwBZDmO9ocZbaRM9pSR9VW11aawym0
+	 OJ4wRui0/fC3MBwTXbiS8O8O6upweVhhHwFpOz6/J65qL0+TSbE6L6+sm+A/19QBzU
+	 Oa3z4YInY9KHU97DeC3zmT2SxcsSNTZ7WQYDCIwyrQWzqPdl8VOydPzwsdy2LQJcYl
+	 rqpqifrHLwQ0w==
+Message-ID: <c42c8146-4616-46ba-b46f-85746149e99a@kernel.org>
+Date: Mon, 10 Aug 2026 10:50:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 07/41] KVM: guest_memfd: Stub in ability to enable
- in-place shared<=>private conversion
+Subject: Re: [PATCH v10 08/41] KVM: Consolidate private memory and guest_memfd
+ ifdeffery in kvm_host.h
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -69,7 +69,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-8-2fc18ee6d3ba@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -116,69 +116,28 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-8-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
 > From: Sean Christopherson <seanjc@google.com>
 > 
-> Stub in global variable to enable in-place guest_memfd private<=>shared
-> memory conversion, which will eventually be exposed to userspace via a
-> module param, and wire up the __kvm_mem_is_private() static call to the
-> guest_memfd version when in-place conversion is enabled, i.e. when gmem is
-> the sole authority on private vs. shared memory.
+> Move the kvm_arch_has_private_mem() stub and a few guest_memfd function
+> definitions/declarations "down" in kvm_host.h to utilize existing #ifdefs,
+> and so that related code is clustered together.
 > 
-> Cc: Fuad Tabba <tabba@google.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> No functional change intended.
+> 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
->  include/linux/kvm_host.h |  6 ++++++
->  virt/kvm/guest_memfd.c   | 26 ++++++++++++++++++++++++++
->  virt/kvm/kvm_main.c      | 12 +++++++++++-
->  3 files changed, 43 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 65fbce46b63f4..9477ecebbbced 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2580,6 +2580,8 @@ static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->  #endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
->  
->  #ifdef kvm_arch_has_private_mem
-> +extern bool gmem_in_place_conversion;
 
-Is there a "supports/has/enable" in there? And should we call it "kvm_gmem" for
-completeness?
-
-
-> +
->  typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
->  DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
->  
-> @@ -2588,6 +2590,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->  	return static_call(__kvm_mem_is_private)(kvm, gfn);
->  }
->  #else
-> +#define gmem_in_place_conversion false
-> +
->  static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->  {
->  	return false;
-> @@ -2595,6 +2599,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->  #endif /* kvm_arch_has_private_mem */
->  
->  #ifdef CONFIG_KVM_GUEST_MEMFD
-> +bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn);
-
-As mentioned in v9, the name is confusing.
-
-	kvm_gmem_mem_is_private
-
-?
-
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
