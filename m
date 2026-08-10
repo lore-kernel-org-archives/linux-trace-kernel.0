@@ -1,276 +1,259 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013057.outbound.protection.outlook.com [40.107.162.57])
+Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021073.outbound.protection.outlook.com [52.101.100.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44EC35C695;
-	Mon, 10 Aug 2026 10:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.57
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786356613; cv=fail; b=t3IPvIIvyxzYTFqHj6OnQMiblz5w/HICpaWFcjl2Ba3V0+aXlwEP05faWJ9503iQs5chSyIsjfjh0WbIDVjscR9QWrGGiKmN66NY0TQuzikn11zPkqlwbfmCZkp0oUzfyLWgECx9VHzoOpVyKCSN5MZNcN96CnvUrLr6Jpp8Qpc=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786356613; c=relaxed/simple;
-	bh=DYXokWt9MgiQ3NLZbjDm+GnJeMZXEt0HOdso3th6Jh8=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nW+kWt5XXYvRaUyvft1wOcszJ6GU47Efoni1UO5CqgYtOcaDYaKuVwuYetzGhwrOwJRpF4wkhEvpnvNAoWWIjjk64EAFkqSM1QG6yMcuEdUUQ/ypHz/R7a4wlA6PlqjFR/lf639eMJXZU/JVIcOsjheIGTFfFKOb6jH0OE4tOcs=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=X/TDbJ7e; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=X/TDbJ7e; arc=fail smtp.client-ip=40.107.162.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69613B100A;
+	Mon, 10 Aug 2026 10:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786358518; cv=fail; b=IJlXzY19Ql0aoxNgNO/gyAbzJ8HPs9ZvyDJFWQeljDrhYynmDOQvAgx1e/7pbe3HFLAG7yX5yNNWyvx8rp4m+p2Ii3g1qGN+L674eJrNfUDJcWbqm58pk5Gvwxf0nFhQ+T4vFTUVf9N7Hqb05jM9Zs8aQzvw4t6GqG56EghUY2c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786358518; c=relaxed/simple;
+	bh=dg7nD1xVsjWHjUwovPbdM2xy5O7uF6lg0emGsIoA3t8=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=DOZP6s1fZIfilUaB0mfKCsM7B9UD6cXL18JjMlNaBwTMZFnEpA3XbmQ+AP5YUR6mMkPpgA0jkf+5s/JvbpNWCS+Wf4Y0IPxjE/UE7qz/PWA0hIAUfMdCM7b6/5gv3mAABpw9UVz1S99HLFPgeBeGtbSUKvSD/2J/+A0sIbsdeX8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=sdj8Irqn; arc=fail smtp.client-ip=52.101.100.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="X/TDbJ7e";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="X/TDbJ7e"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=S2VIJpv8VwAb5nGpLGZco2CwJBxJrdyYG0R62U+CUHku9g3BmuTtMlMlIalp3nI4J7nE7zlNG9ZnMtfOtlZTFLneApMOEKjlMD7Ql6qnWhXJ5IFseiPtR3Th4DDKJaIdYvVWj+X5pw9qFiTe80e8kNtxtL1olXtIBI3mcZ2ZElrHCmVnqKWUHhryztxnYN0XtDj5KDUStZ/CpJ6yD0+vXzgXcAwh1p1jNY18syNeP+u+6Rf/JgIh83qOelSMLB2jjsipz2iZkbwTgJWDRyaE6sg6dhDLCsQdETz/8GqmSbYDfiWc4ukfs2V7R+KGM1DLVLPyWp1yBhymet1S8Hy/JQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sGHMm995GRpz8U1PURPcj9ORNaGW0JAp4jH7dTCsP5Q=;
- b=v1zz21/zgnctBGF04WoXuyaVM+n5aAJ7fY9Xa8kNx9OlnPNxnTdtI9JDT7zRBWR/jESJ5pyShmr0RkuG8+nyLXgWakdbtpE2OZVWzZ+eUDTQyRgEFqA3aCf6liib8Hhtfj3vm2AaqDgdCwqXGXm6YlZZ4tAndD3O+JqoGjcLEYi6cXk3oeCc+meBuwwtRzHf6MriVf+TGaj+b1lUnvcmgr69NfqY2+Aar+yk2YHMoJzcW8QcAQnz9B6smEzBJWx9MuUyohXKTF3uwtUk9MHvCgWX99gHiROvfAMFeXf6r9ur7ozd0DQq4BAbt/wBySamT6N9dGd2+/2GoSoA3Hewxg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sGHMm995GRpz8U1PURPcj9ORNaGW0JAp4jH7dTCsP5Q=;
- b=X/TDbJ7ebcrgT+EhFqFMXkZrLW/4YZDc8WqKTw7e75/PXAK8hVBv6C+G4sRbqAlFtYUqJEtd2tPQmUS9T18h/wXtC2aoCPud+bRck2pQq9CYkNqoCovk3ytIAzcRbI1Snb/v7MuNLuEi4ToSBvjeB4IQeWdFklu/yB6MC0uCDmQ=
-Received: from AS4P191CA0001.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:5d5::14)
- by AS4PR08MB7831.eurprd08.prod.outlook.com (2603:10a6:20b:51b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Mon, 10 Aug
- 2026 10:10:02 +0000
-Received: from DB5PEPF00014B90.eurprd02.prod.outlook.com
- (2603:10a6:20b:5d5:cafe::71) by AS4P191CA0001.outlook.office365.com
- (2603:10a6:20b:5d5::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.292.25 via Frontend Transport; Mon,
- 10 Aug 2026 10:10:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB5PEPF00014B90.mail.protection.outlook.com (10.167.8.228) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.315.6
- via Frontend Transport; Mon, 10 Aug 2026 10:10:02 +0000
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="sdj8Irqn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lu7ea3NWDFQpIQidj/jgqt5/KcmZz0+/1a76oNtofgRKQtEybTY1fyBCnkJjwDsyW7/qX3L6SuD9Uh5OOHCJZv4AsAKYRa7pqgYV5bpV89zK0ET5xvFNA69JUYBVaBtP0v7tg2VZAyWAiuyhnRXyRJmyI6iJTXkdrK8qzmLAX72W8xQB1C86P44R4flTtnd2wfkhUaNejYRyNyzz7kDmWdH4jUVPDlAovM32wCDcB9FIoKAtzVEOFXG21H0s8vbW8kpr9DkQcw+l1uc4z2ouPB+PKPpQgUkqAgSo7BymZKjTQDr1YQgtlWllUFntTrZaE/f0vUEuw7WNLHE7NfbLKw==
+ b=ExsVhWz8vGr+sjC/xGbobRHJqIGEiA0s5OGrGdmDGJDN7WRjGZAS2d9cgDcfMtt1eC/gSmGwDJShNPLZ6Ca3L02CVwCED7WjM3SiIJrJty5aKEoQM/fPlAYQ6v9PHtg0aHIkiefurdWUTnX03+ST3zj6jRS7W169mKLxyfTE09OyHz6BpA/a2Qjvq71yX+TNvIBuE6NtYMTY7TVOUdQiXWTLz+AiQJPElUMdgGffvDEZO2YTlf2b4qB50Z7Fw9tAyHMrvwobn2JSQELmlbvrShsP2WzB1GAxfx/1+DsXo8iiJuaFNOPkq+C/Sc5n6TY2xV1wIguojOsBK5UoLhOi5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sGHMm995GRpz8U1PURPcj9ORNaGW0JAp4jH7dTCsP5Q=;
- b=INpxTaXgNxtQiT573C05qSNgM1vbGnG8XOl2r9kZCWWdSH5g6G1tsg4YtDB2RnlUfjNClceUU3wo9Klb9vEyafV39ILI5xqT1mB40WqPtm3NOuPUzwS5rBds59divY4qpTl7kf1EzwOf8HLDVNq5OTM7M6etkjs2xop/w+dMmKowx8ZP6A7DWAFSqY0QuOdrj5QS8eOgAYJv13UTwNieAv7yjfEIN10iM0PeUyIVFvRpY3+skcHmBU15LSyj0evBb/FYsMgrn8p9G/rw5d2z6CVDr0Xv7YlNJpp1GNZQl4fgnkZvyFgrCH78oR/UhFhwGdFC2APICbt2IEP03StPWw==
+ bh=uZX7zctSpkP9/pOq/N/uXZeNBa+UYsLFrp2d/Pe5Hmc=;
+ b=gBz9Fe17IOktQ5h1BWMSpRh80uknIjhMfW+gO4dYIij7gOw7oBfJlC2bz96/rFqTpDWRwAKbFI++cG39fi5cf1ELwX1LhM2zIVefTQUaaWuZlBQgRFQ4v1Y65Q8R0esrtRKSDxZxhOumwCXnK1lA32ROATm4cxGlqmOFXKxCbI3Lk/4CWsqYycfmu3rbmruSvYUqsA9LGBU9buAxKnaWNxi5nYVPqs2GlGgasrIcYERYwp8WGqX6poHFPLguajEA1girogM0gs7rPAWsmZfTLHHogDPxmjMZ2PwQWdGAfmbRggLLLxhxMVHRDwQ+pH2QAKEcdTQ1zfe1zTjRqb7wYQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sGHMm995GRpz8U1PURPcj9ORNaGW0JAp4jH7dTCsP5Q=;
- b=X/TDbJ7ebcrgT+EhFqFMXkZrLW/4YZDc8WqKTw7e75/PXAK8hVBv6C+G4sRbqAlFtYUqJEtd2tPQmUS9T18h/wXtC2aoCPud+bRck2pQq9CYkNqoCovk3ytIAzcRbI1Snb/v7MuNLuEi4ToSBvjeB4IQeWdFklu/yB6MC0uCDmQ=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM6PR08MB3414.eurprd08.prod.outlook.com (2603:10a6:20b:49::10)
- by GV2PR08MB11418.eurprd08.prod.outlook.com (2603:10a6:150:2c9::6) with
+ bh=uZX7zctSpkP9/pOq/N/uXZeNBa+UYsLFrp2d/Pe5Hmc=;
+ b=sdj8Irqnffb6xVFcw+egKdWAXYKAV8NWzw8KkasC/Jf4WoSPaff5Y+0V/abPtv5cPpGsTBpwboU1JNpiVMG264PieC5+o0jXy5uJ6fpUhHEkGuT57NBgJkDVUu+g6ZJ8HtF4WDbUPZaRiosifO/Tk+dduf/KWR9nQUapmXNbxrE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:4ab::19)
+ by LO7P265MB7544.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:41c::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Mon, 10 Aug
- 2026 10:09:26 +0000
-Received: from AM6PR08MB3414.eurprd08.prod.outlook.com
- ([fe80::dde8:bf0b:1dc:2a2]) by AM6PR08MB3414.eurprd08.prod.outlook.com
- ([fe80::dde8:bf0b:1dc:2a2%2]) with mapi id 15.21.0292.024; Mon, 10 Aug 2026
- 10:09:25 +0000
-Message-ID: <52b5066c-64f6-40bb-9bce-365a18f24265@arm.com>
-Date: Mon, 10 Aug 2026 11:09:24 +0100
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@arm.com, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- David Hildenbrand <david@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH 1/9] mm: introduce hw_pte_t for PTE table storage
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-References: <20260806083926.1807279-1-usama.anjum@arm.com>
- <20260806083926.1807279-2-usama.anjum@arm.com>
- <3db8233c-3785-444e-b2eb-3e5fc5cb2f17-agordeev@linux.ibm.com>
- <eef14e97-20cd-4b08-ae22-7636af049b09@arm.com>
- <4a42c498-58ca-46f4-819f-da14cfba154f-agordeev@linux.ibm.com>
-From: Muhammad Usama Anjum <usama.anjum@arm.com>
-Content-Language: en-US
-In-Reply-To: <4a42c498-58ca-46f4-819f-da14cfba154f-agordeev@linux.ibm.com>
+ 2026 10:41:49 +0000
+Received: from LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::f60b:1537:68d7:4fc1]) by LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::f60b:1537:68d7:4fc1%4]) with mapi id 15.21.0292.024; Mon, 10 Aug 2026
+ 10:41:49 +0000
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0541.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:319::12) To AM6PR08MB3414.eurprd08.prod.outlook.com
- (2603:10a6:20b:49::10)
+Date: Mon, 10 Aug 2026 11:41:48 +0100
+Message-Id: <DKL78PUDAC7Q.SHSLAX51OP1O@garyguo.net>
+Subject: Re: [PATCH v1] rust: add mark_used macro
+From: "Gary Guo" <gary@garyguo.net>
+To: "FUJITA Tomonori" <tomo@flapping.org>, <aliceryhl@google.com>,
+ <ojeda@kernel.org>, <rostedt@goodmis.org>
+Cc: <a.hindborg@kernel.org>, <acourbot@nvidia.com>,
+ <bjorn3_gh@protonmail.com>, <boqun@kernel.org>, <dakr@kernel.org>,
+ <daniel.almeida@collabora.com>, <gary@garyguo.net>, <lossin@kernel.org>,
+ <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
+ <tamird@kernel.org>, <tmgross@umich.edu>, <work@onurozkan.dev>,
+ <linux-trace-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+X-Mailer: aerc 0.21.0
+References: <20260810075144.1245761-1-tomo@flapping.org>
+In-Reply-To: <20260810075144.1245761-1-tomo@flapping.org>
+X-ClientProxiedBy: LO4P123CA0051.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:152::20) To LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:4ab::19)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM6PR08MB3414:EE_|GV2PR08MB11418:EE_|DB5PEPF00014B90:EE_|AS4PR08MB7831:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96d6ff17-0376-40a1-bf75-08def6c78b22
-x-checkrecipientrouted: true
-NoDisclaimer: true
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LOAP265MB8560:EE_|LO7P265MB7544:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77fa89a7-1835-42e0-b76b-08def6cbfba4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|376014|366016|7416014|1800799024|23010399003|6133799003|4143699003|11063799006|56012099006|10067099003|3023799007|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info-Original:
- mSQv7AaybVdP8lh1lVFlcXP3kGG1cksbK7NhWTSFCBI3T0vZN0VuY2xwLDoDTGWs3W5PpK1u3qICDytNzKUqK9SDvSv7mOhBGz8mCm/T4p9TZ37PTi68WrHC7SBnCBiKxzCJ1ggOVHo04CZfBzLVji6+kBvSiujrzeh5gmb35+T9IoDVoY8YoaoS6y3IVsR/GNlvmGtl5h83qJwaCQGveRteXDi/EkCuqvbd5zatwi9ASQA/qgf3VrS4W7mHxiqhY/nlY5S2wjkycoMVtJy07vAqhKdVMsdnlL25x/Iwz4DXtgLyS6aJ6fYrNzxhQ3+eeZbR9SXZ64cp+5Kn89v3W3otEbkLRadT3SUQngLaRqNN8wIsqyOU8D4Yz99lvY6ZDxbtPq7pRcf3CTk8/Al5XLIF1V5sHok4sc9I5uDs30xNOq+ymqN4IBv9JdPHOaSs/1do4M34tKTFM41rHL/hmWIhHTdx8kq07vwMPgvnN5p7o+qmmoZSROUn3GPPhVdKXZ/LpJhu+sxmyl/Sx++vGNwaHa6REVMYmcFmZNeFvyZ/Y3jMrZuslEQMs0LbQZ2M5AtlfuTDIL4Je4PJTXc6RkGhF6yffaGrIBjR+RmxDHg5eXT2WqHRIQ6DcoTZIfTUIKxMWJPNuZkweSPQ7vN4An9Dr/hNzavgZ0covaVZmjI=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3414.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(23010399003)(6133799003)(4143699003)(11063799006)(56012099006)(10067099003)(3023799007)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked:
- opP+uzSVHSCRZK1SnjoVnNSw+fDPOATCeo/EkQ/9TKyIWl0BioAAzSjZhW8oRWRhh0VP/Q1IhuRQUxZSxCsMBYVxG/vcaCq1wzUNu0nQPwwWo+QE2KhmS9+j4egy16LiRS4nTmRLKN+XuBdurSLoP+kaCOoDnMKd3pxwSOThge4lF9ONak39/a4lKk8vojL/Ah1HFZ0d8Go5NuqSGNowzXBjnKGdIXTD/jk32PsEmyqcNbc2TwzdKXhRdNZujBGi+KEGdynA/VP0mrbFbmrciAva+eyNqKFeXEVWYbI8GKT7kDRSysVn0Mgym+JU9ctCXZkrSk7GbR3mC+NkBpOOug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB11418
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB5PEPF00014B90.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	b22ca400-de72-440a-7983-08def6c77506
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|82310400026|14060799003|36860700016|35042699022|22082099003|18002099003|56012099006|10067099003|3023799007|11063799006|4143699003|6133799003;
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|10070799003|23010399003|22082099003|18002099003|10067099003|56012099006|5023799004|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	cRrjktM/0DgtNP+E1PYP/0TkmX3sW8qhpY9DcxvRfNeCDy8AXNMKLuDb4jtrpgipjzOzFQliODcOOY4RT92OTAXEaRCQ7E8drxYE9301ePLgTjvbj5KSRwz5uxaT8ET0eGm6NCQdUL4MwmspJAR/K/koXYxEQR8PpkShv+2mLpdO/hvV2vVx5phfc7TjVBx1COc/IpRWuf2G9XfZZks0y1EN2Q34OgU0Am9DiPRHRbT6k1rn9/q6qNa5cEuxA1CBtpe3HM/na9j3mE3HhYOgZLW96Ez7DsV+rlaQV0o5bVbUzSqItNRYQhG7ggz04xHaeOzU7WiE1ZHXzQDL9LHzaOccmv9e29M6u4Lu404ORpzuva9lnkueRswUV+7NHztVd2TdweKlYHqyHaQV32baOQHtWWgOCzxPP/i8y2k1EdqfeVivtE+SUotRzWqX4b+wFKf8TE1x6gs3kJEt1vD0O6iQaetLgtFPOD9lcztBFADSza/1D1T64EPGO/iULK9iV+gQ+WcfsG9Xet7UAWNF4verB7aZ71XjTFFAH10J705ZwKAORUbP9qntrVwLy7R5q2qJXHXiMYH28W9O8rJf8X981Y/FdjlFG7a8rlCqezM9+Vx8/f1ahn1fMI1qpujZx87DZcCRqB+fAUZ9biioHBrXp6PqYCzMzAlkIXMokzwZFfsfSA0aonNvmQ21odrDzgb8d/ug7NM2gwuGhDfScw==
+	mS/a9Z15qqlC7mIl2eHyj9A2zxftXWpIWKfLfJ1VFutZTAdnTQ/ykKoFBpJ7OOY3mtkY5zqSJLxemVEUtMgTuTZzfB7q8Ax3c58v0xvGh6oga1YdjCvPzuT6sjYKnhbhx6W5SNUNtp9KjiQawiapZlKD2NBaI6B3MH4DzBOPlrKu/JJ3N5hs/6GWAGVFL4rE9AT/JVgiwP8m8D3cBWA6no3dgjyW/an6GnCv19MM2bjrbRXhcMX+hOGY/fOXmMlAwnevkpHv8UYMkTZUd5NLISbOH9Z0z+g4rOc9KirYp5JpfVSMGnR+iJJSyE6ia+5v3QQurdDGB8F7fcMST2uXZFsTxKf5YhHjP5jtKZi2czAklMW0VvBmoqywn/KJ6uq5WuZvAlDU+0UZsW1mbn1IFuwBGFOiOtqstVupdVRWsZLmLY87S092nYXsj49sL46g0R7TGj5FsBUzNlWgs/lJ4DfGbgK5z/0FaI5GPr6tg8I8FIw9BLq93Ixwy9Nit3akCdKmf8exKNRKTMDaBMvRWI/kbKBDpj3D3kbVVPyaetQlZ+0ut0MOyG8nYtizxZbnZkoMM5WPsP8dEdeL9K5/3cot/sjbzhS1SUVqypGEoENDgiyqBgneJ24QrGFW7+lSctSRAQwztq3kABHKO5ysP4Hgd4988dqwr/BcjVSIoNI=
 X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(82310400026)(14060799003)(36860700016)(35042699022)(22082099003)(18002099003)(56012099006)(10067099003)(3023799007)(11063799006)(4143699003)(6133799003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(10070799003)(23010399003)(22082099003)(18002099003)(10067099003)(56012099006)(5023799004)(6133799003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	RZu5a05QZ2FkwUV+f3u/xNJ5M977oWBQ8C7GFk7ktc47z+21uudAEAHRHlGSo5AXhoiep89PdJZItSNMVMKzhUWkAzOcbK1aDFW/Mi7N4e8tpvPJlry/aLrtdxgCK6kaQFJRAsOgE/+7N3cXDyiQfUZw+1Gee/0CnYC2dvf05U3qAEsjAQfdrCTHKQKH5tBZy+2KPL7OM2eCxrNi9Gz0AbGh/+NomfeCMStvdy//InA+bHcfFAOJZTvNIE6SEqd15SnoxmQPwOC0MKvmF+jgtvEYJ1/QNCoj4vbau8Q6BterG7888HbRyE6pSP2pgILQsPNbTd+Am8BVwld3VFN6zngsr09c3yxKP3xFmqxE/jdbWplTagyu0d+50/ntJpmFUgC5AEPtB0UZ7gK6HWiys18iUs6JwL3+Gige/sROB32Eq1eo0jD5flZ0SUXOiW8/
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2026 10:10:02.5666
+	=?utf-8?B?R1hiQUk5NTl0eitKMDBBbnp2azNjb3JkQmEzU2pWS0xzUXFoSjVmRmhROUdw?=
+ =?utf-8?B?bXpma1VuWW5ibHV0QUNLWCtLOVk2WUN5Q0pnNDgwbXJsQ0JCYzdmMlFLTHp3?=
+ =?utf-8?B?Z1VaV2V6d2RWVG5vejQ1ZFpzMHloVXdEeEpleENpUnpQS3ZOMnNNVnBxa1Ft?=
+ =?utf-8?B?ZGRhSTlIYWtEcnlaSnloWHFCd0tUa1JFeGFwR1lLd3Z4S081MU5jV0xrYkd0?=
+ =?utf-8?B?UVYxOWVtamhZUjdvSWNyYmJLTitFaEEzZHFhb0ozOEtEZ3JsOW0wcGdWU3Vy?=
+ =?utf-8?B?R1duYnlTK2VzM0RVY3Q1L082VTZDVnBBZTlRdzU4eitLaVZVMndjMDdTRjRH?=
+ =?utf-8?B?cldYRmIwRTlkS2xBb05DaWpnbFdtK3Qrd3UraTBwVnVUeUpOcjc1Y0dIcStU?=
+ =?utf-8?B?SlV6MDVZSy8wcXJTTzB0TjVKeGpqdjdiUHNOVFZQdW1pOXhLZmJKdHVEdHlF?=
+ =?utf-8?B?Qk9aQTV2a0dDTk9aSXZFVHRTN3VyWGYvWW4rRDIvcW9GTlM5ZW82UUlYQ09T?=
+ =?utf-8?B?QWY3R1VoMWJldXBWSG9WOU5FS1h4Ums2eS9aZnRRekJvTnF5TUg3bStmYlNF?=
+ =?utf-8?B?a2xQVlZaVTBRaWhQYUFhU0JrNXZtZGQwU3NTQ2huY1YvOGk1R1NZdVpLS0ZI?=
+ =?utf-8?B?czNFanRReExMT2ZoYnJRWmZ2YjQ2dENLbHdwZmIvMTZLYXNiZzR3N1F4UHdX?=
+ =?utf-8?B?cjZOUEZsbGdESU9vNHpKd0RhT0wxRk1XRjRxWS8rVllkeUl4cjdkY2JxS3lq?=
+ =?utf-8?B?WWJrbVNBekJyMndIUFgvc1ZHS3lPRllTOG1XV2xMMjFXdVdJK09xOUNJaEF0?=
+ =?utf-8?B?eDZuWFh0ckRORmlXL1NuQ1RYbmFDQW94dGJNRE9pTXBBM1IyNWJTWTU2c3ls?=
+ =?utf-8?B?Sm5yUzZPc3BvYnN3cTNwM0x5OXVrRXNvVGtzSE9CQ0Q2K3kwT3lVMStia0VW?=
+ =?utf-8?B?VFFPWUgvZTNnRHhWcXFWUG5oR0ticTB3ajhaTmlnZ2lraDVYdUpaSEVkQTJa?=
+ =?utf-8?B?bXZNa1FNWUo1QU5MZW52L2ViT0ZhOEJpMW1pNTF3THlVdlZndG9SSWFDL25K?=
+ =?utf-8?B?RTFuMTRqMmhmZkRnejJ3dE11SXluaVJDL09VbzJCd0wvTGtiSmE1QWZSWGYr?=
+ =?utf-8?B?VFlhSFJLRFRSUEZIeE52bFUvREx1cm1LU1pRNDN6RGxHMzlqWkhoOGNXbmdl?=
+ =?utf-8?B?K2FXdlc0NGJveFM0Ri93aEQxZm02dlR6OERvNk5DZEdYTjVNMDVpUm9RRWhp?=
+ =?utf-8?B?QitwZlA2STloWEUwUkRPdzBTOE1xUWprV095WGZ5eG8zNStsU3dDd3FxN2R4?=
+ =?utf-8?B?OER4L0RPa245bXpPbTFTMGt6eTRnRnl1dnZvaGJuVG1aQjhTdzQ2VmVjbkhv?=
+ =?utf-8?B?d0VXZno4MHpJUzFDNGh2QjNlN1N2MFNtRHlHdWxaaXJXUDBvOXZreGRzWjJW?=
+ =?utf-8?B?dzJaV1RxR3B0STFLRi9zaUgyckNUdGE2NkFvMmFUb3ZoeEVMNDkzbHEyWFFJ?=
+ =?utf-8?B?OWhzR0g2eVN4WkdzSHMxZHA2T2pRQ2xxd08ySzNFbnpQSFd3amhqSHZqaVZt?=
+ =?utf-8?B?b2lqUnZneHIweW8vZkVPN0hRR2FYOUFEMENONEJndjZQMEttU1BrNmp6UFg1?=
+ =?utf-8?B?dXFvNjBHYW8zZE5sS0daUk9Hekk0N1JpaGxnSy93YWVnRERBSkFVQWFNNDNt?=
+ =?utf-8?B?YTVBL0JmbjMycEw3TVNyYzFZNnpjK1dlS3NGdDdWUWlzdlFxNWVTd1hZQVdQ?=
+ =?utf-8?B?ZWtQeXBsTGFET2RsUFVkZkZVaXhzUVAwaXJVeTBrQzF2SktQTUtrYTZhQ1Ey?=
+ =?utf-8?B?L3Robjd6OXBGcjZ2OEN4ZHIyU3RxYVI3cU03cEZzS1dFcUNmRUgvVm9xUzBR?=
+ =?utf-8?B?OWZBeEpoNWRiMjZxZldXSnlYSDR2ZXlUdnByL1pwZDV6Qm9xeFdJek84Q2lF?=
+ =?utf-8?B?ak5RWlBteTQxcFpRTEFIYjV2WFZaZnJ5ZFBJdjNYS0JFU2lXOGc5L0hadE5M?=
+ =?utf-8?B?cnVzR3hUekVLWmd2SmwwTkxnY2FjOGRjbzFWZS9sRWhVdjNpYTA1bVl5YnRK?=
+ =?utf-8?B?U3RsWC9JVXZNbStEYVI4TU9EcW0rd1paVUVhSHVnd3lLdXN3cjJRc2gwWUNF?=
+ =?utf-8?B?Qk90dUE3ai9Rb01CNHNJaHlGRTY0S0pINFJPM3NDeC9ZVS9xeWN6TXJDZnBx?=
+ =?utf-8?B?SlQwcmZSemV5ZkcvYXZ4MU9WTTIrbzh3ZEVKU1lsUkFlb1RDYkwwQjNUNXNI?=
+ =?utf-8?B?QjZ0Qzc0MndxWkhOWW9ydUlra1paWEFwSnU0angwV25BMnZLYS9ORnp1RmVM?=
+ =?utf-8?B?cUxWSmtkUENqaHZmZmxhaUFPNkF6VVJJWTdCYVFDYU9VQUoyelZ0Zz09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77fa89a7-1835-42e0-b76b-08def6cbfba4
+X-MS-Exchange-CrossTenant-AuthSource: LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2026 10:41:49.5158
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96d6ff17-0376-40a1-bf75-08def6c78b22
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B90.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR08MB7831
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RsWuF+n3l73l08zsyS+VsRlgDYYADz/7yF3gj6yBU6ouAqQNGhfaTiDpvJoUKIAf5RqGR4O0M43vBLfbgR3nRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P265MB7544
 
-On 09/08/2026 6:45 pm, Alexander Gordeev wrote:
-> On Fri, Aug 07, 2026 at 04:24:00PM +0100, Muhammad Usama Anjum wrote:
->> On 07/08/2026 8:09 am, Alexander Gordeev wrote:
->>> On Thu, Aug 06, 2026 at 09:38:39AM +0100, Muhammad Usama Anjum wrote:
->>>> pte_t is used both for logical PTE values and for entries stored in a PTE
->>>> table, so pte_t * does not distinguish a pointer to a copied value from a
->>>> pointer to table storage.
->>>>
->>>> Introduce hw_pte_t as the generic name for a PTE table element. Define it
->>>> as a macro alias of pte_t by default. When an architecture selects
->>>> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
->>>> This preserves the representation while allowing converted architectures
->>>> to enforce the distinction at compile time.
->>>>
->>>> Keep the C type definitions behind an __ASSEMBLY__ check because
->>>> architecture assembly sources can include this header indirectly. Include
->>>> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
->>>> they previously obtained from that header.
->>>>
->>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->>>> ---
->>>> Changes since RFC v1:
->>>> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
->>>> - Exclude the C type definitions from assembly sources.
->>>> - Update the description for the new opt-in model.
->>>> ---
->>>>  MAINTAINERS                   |  1 +
->>>>  include/linux/pgtable_types.h | 17 +++++++++++++++++
->>>>  mm/Kconfig                    |  3 +++
->>>>  3 files changed, 21 insertions(+)
->>>>  create mode 100644 include/linux/pgtable_types.h
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index e9c8567308a75..7169bea968cf5 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -16982,6 +16982,7 @@ F:	include/linux/mmu_notifier.h
->>>>  F:	include/linux/pagewalk.h
->>>>  F:	include/linux/pgalloc.h
->>>>  F:	include/linux/pgtable.h
->>>> +F:	include/linux/pgtable_types.h
->>>>  F:	include/linux/ptdump.h
->>>>  F:	include/linux/vmpressure.h
->>>>  F:	include/linux/vmstat.h
->>>> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
->>>> new file mode 100644
->>>> index 0000000000000..70c3edd00a01b
->>>> --- /dev/null
->>>> +++ b/include/linux/pgtable_types.h
->>>> @@ -0,0 +1,17 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +#ifndef _LINUX_PGTABLE_TYPES_H
->>>> +#define _LINUX_PGTABLE_TYPES_H
->>>> +
->>>> +#include <asm/page.h>
->>>> +
->>>> +#ifndef __ASSEMBLY__
->>>> +
->>>> +#ifdef CONFIG_ARCH_HAS_HW_PTE_T
->>>> +typedef struct { pte_t __pte; } hw_pte_t;
->>>
->>> On s390 it fails to compile once we do typedef hw_pte_t *pgtable_t
->>> in asm/page.h. m68k, powerpc and sparc may also have such problem.
->>>
->>> The below declaration helps to resolve it using forward declaration
->>> and without meddling with headers, though I do not like it much:
->>>
->>> typedef struct __hw_pte_t { pte_t __pte; } hw_pte_t;
->> Thank you for testing it out on s390.
->>
->> As __hw_pte_t isn't being used yet in this series, would s390 enablement
->> patches add __hw_pte_t to this definition?
-> 
-> I hope there is a better solution. As I noted m68k, powerpc and sparc
-> may also be affected, so I would suggest to look into those as well.
-> I would prefer s390 to use the generic one rather than circumvent a
-> compile error in a custom way.
-I've just checked all of these architectures by doing dirty conversion and
-reached to same conclusion that __hw_pte_t must be defined like:
- 
-typedef struct __hw_pte_t { pte_t __pte; } hw_pte_t;
+On Mon Aug 10, 2026 at 8:51 AM BST, FUJITA Tomonori wrote:
+> From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>
+> Macros whose expansion depends on the kernel configuration end up
+> ignoring some of their arguments, resulting in unused warnings.
+>
+> Add a macro for the `if false { _ =3D ...; }` idiom used to avoid them,
+> and convert the existing open-coded users in `warn_flags!` and
+> `declare_trace!`.
+>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-I'lll add __hw_pte_t to this series. (Initially on last email I'd thought
-that the first user would add __hw_pte_t. But it seems sensible to add it
-now)
+Reviewed-by: Gary Guo <gary@garyguo.net>
 
--- 
-Thanks,
-Usama
+> ---
+>  rust/kernel/bug.rs        | 18 ++++--------------
+>  rust/kernel/lib.rs        | 12 ++++++++++++
+>  rust/kernel/tracepoint.rs |  5 ++---
+>  3 files changed, 18 insertions(+), 17 deletions(-)
+>
+> diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
+> index 3566f0234ca4..c1e4eb7d4a70 100644
+> --- a/rust/kernel/bug.rs
+> +++ b/rust/kernel/bug.rs
+> @@ -55,9 +55,7 @@ macro_rules! warn_flags {
+>      ($file:expr, $flags:expr) =3D> {
+>          const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
+> =20
+> -        if false {
+> -            _ =3D $file;
+> -        }
+> +        $crate::mark_used!($file);
+> =20
+>          // SAFETY:
+>          // - `flags` and `size` are all compile-time constants, preventi=
+ng
+> @@ -83,9 +81,7 @@ macro_rules! warn_flags {
+>  #[cfg(all(CONFIG_BUG, CONFIG_UML))]
+>  macro_rules! warn_flags {
+>      ($file:expr, $flags:expr) =3D> {
+> -        if false {
+> -            _ =3D $file;
+> -        }
+> +        $crate::mark_used!($file);
+> =20
+>          // SAFETY: It is always safe to call `warn_slowpath_fmt()`
+>          // with a valid null-terminated string.
+> @@ -106,10 +102,7 @@ macro_rules! warn_flags {
+>  #[cfg(all(CONFIG_BUG, any(CONFIG_LOONGARCH, CONFIG_ARM)))]
+>  macro_rules! warn_flags {
+>      ($file:expr, $flags:expr) =3D> {
+> -        if false {
+> -            _ =3D $file;
+> -            _ =3D $flags;
+> -        }
+> +        $crate::mark_used!($file, $flags);
+> =20
+>          // SAFETY: It is always safe to call `WARN_ON()`.
+>          unsafe { $crate::bindings::WARN_ON(true) }
+> @@ -121,10 +114,7 @@ macro_rules! warn_flags {
+>  #[cfg(any(testlib, not(CONFIG_BUG)))]
+>  macro_rules! warn_flags {
+>      ($file:expr, $flags:expr) =3D> {
+> -        if false {
+> -            _ =3D $file;
+> -            _ =3D $flags;
+> -        }
+> +        $crate::mark_used!($file, $flags);
+>      };
+>  }
+> =20
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 9512af7156df..2f770d80bd8a 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -266,6 +266,18 @@ macro_rules! container_of {
+>  #[doc(hidden)]
+>  pub fn assert_same_type<T>(_: T, _: T) {}
+> =20
+> +/// Marks the given expressions as used.
+> +///
+> +/// This avoids "unused" warnings in kernel configurations that do not o=
+therwise use them.
+> +#[macro_export]
+> +macro_rules! mark_used {
+> +    ($($e:expr),* $(,)?) =3D> {
+> +        if false {
+> +            $( _ =3D $e; )*
+> +        }
+> +    };
+> +}
+> +
+>  /// Helper for `.rs.S` files.
+>  #[doc(hidden)]
+>  #[macro_export]
+> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
+> index c6e80aa99e8e..cb06fec4c4d9 100644
+> --- a/rust/kernel/tracepoint.rs
+> +++ b/rust/kernel/tracepoint.rs
+> @@ -38,9 +38,8 @@ macro_rules! declare_trace {
+> =20
+>              #[cfg(not(CONFIG_TRACEPOINTS))]
+>              {
+> -                // If tracepoints are disabled, insert a trivial use of =
+each argument
+> -                // to avoid unused argument warnings.
+> -                $( let _unused =3D $argname; )*
+> +                // If tracepoints are disabled, the arguments are unused=
+.
+
+nit: the comment seems redundant now that the macro name is self-documentin=
+g.
+
+Best,
+Gary
+
+> +                $crate::mark_used!($($argname),*);
+>              }
+>          }
+>      )*}
+>
+> base-commit: d8973c47544371613313ecb9a8c3e7b244aa9bbf
+
 
