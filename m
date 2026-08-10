@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0E34A32;
-	Mon, 10 Aug 2026 09:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0053B37A840;
+	Mon, 10 Aug 2026 09:25:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786353746; cv=none; b=cCDLLl6MR+b0P/hKjFJx8E89kNKCZLZ1mFuyEnd7JPVgN3jmILZ7iAZxRGxwtZ5xIu6FiQyKW7ZAfCSrTNZ4GdrBrpoRFcb//nuxwBu02UYZ41YoAfb/KdhwX/Sk+6sXPj6TDt1N5l0URGTckE6SoAbig+Ipgzjdv1aPzlqs95M=
+	t=1786353941; cv=none; b=J7iOBL49ZSswtRjU5Ebw1826t6eLWYtKWCqzenDLdZRYfKY33WcQF7Eo+acsfsMkrwBXQHGBQhEl3D3VSd1yVqNG9FK6ge6hZ88YWDI33IdrTe2kwc2v9Zs1lIrjagJGzv/ZCaemZ80wEcOVcil+7nlVeeeF3kFRWNP0NGacv10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786353746; c=relaxed/simple;
-	bh=WVh+PT+GlPYxA4QqgvYF/mPP+gpHu13vKtT3MaGwdos=;
+	s=arc-20240116; t=1786353941; c=relaxed/simple;
+	bh=5xN4dUJzVjmzwSsG3Zf61oCXRIXcjv8feZSCPQWDInA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q+vm3TRwWIQAqg5KBH2XOM+Vj2hbIn36QdvRDoU/CKTQsKk8Vm994eGDmktznSaiIpq2DHFce4wITp8+ysR1X7bpjpyEP5nfJmMLLLlVpFdGZs0vEsI50l2b0qWHP/elIWWhf0LU3CB1W0CSptxXXP3KsttREQbdyOsspw8J7wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcoznZ5A; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=V/Z/sN20e63l6JxWt4tbg2HHqXCSBRmQWkICl/YlywEn1elVoVQDg+QwkvwNn8ZxPvM4p6Iq8LlDSaDBPiSlosUzip1M9W5jBcI2konMBnWQjUFiwQ/Pe1fHiipkVQi2kMhPySnhlOxQ81tSfDhK7P4+Jkyx3F4DOoPbxo65AD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Te0td2+v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcoznZ5A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459751F000E9;
-	Mon, 10 Aug 2026 09:22:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Te0td2+v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC611F000E9;
+	Mon, 10 Aug 2026 09:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786353745;
-	bh=6wQr3PYTUoSXpaDl5k0IG1zQOBI7tNXiUqLf3cd1RKg=;
+	s=k20260515; t=1786353939;
+	bh=FW+DCdZf91aXSiXpZadYY/zYCPM3/NZ456W0+Qt8738=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gcoznZ5AtoqypeuzFMUFCV0SMZb31NgwLMyAOZz/m430M40GrLBfXae1BEO+LjcA4
-	 XuKCG/K1eNaSIhwwyrXHHUUiAagMRg08hWANytGDAoToeNFKX4wR71XEYFGkFbUWjk
-	 xqs2uRpDOpUmvayAD1TsECcSybfbFE7IbwuCUQxc4kE3FZ6eF4eAJEg/qTFVk5suAe
-	 FstVMR84DcIukqC/PhHwIPZj3vMsyQyBIi/Yiy32UcvUROna5tfQH/+wkTGaeZLDOi
-	 d0eblAzJLiLUDuD98q1S66cpzfD+9zFh8IrH7rGPro3csMwEaReIYEyXaXQjHV5Z0Y
-	 tgGH+JPNFocaw==
-Message-ID: <a30391cf-cca5-4e6c-a3cd-a71c5b88d1f5@kernel.org>
-Date: Mon, 10 Aug 2026 11:22:04 +0200
+	b=Te0td2+vh2cJ4FxDisqxBKsHzQ0BeIztq2W3Tvbcb3gawhlzZCouFcbrDOMorkZIV
+	 j8Ll0w/+J7RwUovuLhLslVQNeVNJC3ejLAjEE0xsIL16gKE89mX5kMjlvitp9EuICp
+	 JOJ6gT70gWmQrKa+BQIfrGs8VAiHVYuN5Iy3JxuW+EsIzaWt4j/F6LA9v9XNay4tL1
+	 fSpeY2w36ghn3Z2V+p6I5j7wJgeC2OeBEcspY+RDTfhXquw92tHyyED8EG2IlSRB2D
+	 yselX3lmkFkZXy+nO/osfWCIPZPJmeQQ3I/RUIlbocwcj/+hE+5S0k8+TmGVdUq0kX
+	 1WVQu2WyrSLxg==
+Message-ID: <aa545680-2fee-468c-ba34-cc9beb16f4cf@kernel.org>
+Date: Mon, 10 Aug 2026 11:25:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 14/41] mm/gup: factor out LRU cache draining for folio
- into lru_cache_drain_for_folio()
+Subject: Re: [PATCH v10 15/41] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -69,7 +69,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-14-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -116,41 +116,29 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-14-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/7/26 23:52, Ackerley Tng via B4 Relay wrote:
-> From: "David Hildenbrand (Arm)" <david@kernel.org>
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
-> KVM with guest_memfd wants to remove any folio references due to LRU
-> caches, as it really must only allow to convert folios from shared to
-> private when there are no unexpected folio references (e.g., from GUP
-> references).
+> A guest_memfd folio is safe for conversion if guest_memfd holds the last
+> references on it. Any other references on the folio may indicate another
+> user, and guest_memfd cannot convert it to private if there may be an
+> existing host user.
 > 
-> So, to drive the refcount down, it needs a way to flush the LRU caches.
-> Let's factor out what we have in lru_cache_drain_for_folio(). Document
-> it, and also mention that concurrent folio (un)mapping might, in theory,
-> miss detecting LRU cache references. Keep obtaining the expected refcount
-> twice to minimize the possibility. For the current and future user that
-> should work, and we don't really have a better alternative: we could
-> detect if the mapcount changed, but it would still be racy and add more
-> complexity with questionable benefit.
-> 
-> Maybe there is a chance to avoid the draining entirely in the future,
-> by avoiding extra references from the LRU cache: Hugh thinks there might
-> be a way. But for the time being, this handling is unfortunately
-> required.
-> 
-> Make folio_may_be_lru_cached() accept a const pointer so
-> lru_cache_drain_for_folio() can accept a const pointer as well.
-> 
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
+> A folio will have extra refcounts if it is present in a per-CPU lru_add
+> fbatch. guest_memfd does not actually participate in LRU, but
+> freshly-allocated folios are still added to the lru_add fbatch for batch
+> LRU statistics processing.
 
-If all goes well, this patch should go into 7.3-rc1. So once you rebase, you'd
-get it for free :)
+As discussed, what would happen if we mlocked gmem folios? In that case, they
+could also have been added to the mlock cache (which we treat like an LRU cache).
+
+But that's just a comment regarding the text here.
+
+[...]
 
 -- 
 Cheers,
