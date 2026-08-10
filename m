@@ -1,136 +1,194 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5215B3F926D;
-	Mon, 10 Aug 2026 21:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB07C3314AE;
+	Mon, 10 Aug 2026 22:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786399161; cv=none; b=hZXiyx/sL9oXgndl53N1enRtEZJKnaAchC4FkE8ECAcZ0LtC433KtKhcZUPB9glopt8llWzMD9tXq3wR76ZCe3K2OZbU3hE8/CYVG71PEit3d7QZgSIUc6CU2ZMof895rhq6MWDFwx6Q5frvyjpn4IgCkA6mxIwVuL9mdqt1xHY=
+	t=1786399811; cv=none; b=hlSWU4gbsH9UY6A+r4gZEjgdVHnKwIupQPCa5Xz1RlDNTelu8fNA0OUlNJPLr4oSTci8wsdYTmKE3KipMuzzevgnjaaiVssYZz6NE8s607CQvuFMaBn3iUmDcYkJlDz8KO/RZSa9AfjKwjim2mQWi0KKzULYPhCWGOah0oXPKyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786399161; c=relaxed/simple;
-	bh=/h/1nABPWjlguKlS0Bb3x2xTwZX9AjjBTfHlyHcCgD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DgupnL5xcyx/7tABog7g7Sx5bmtEsyfvc98X2oglUrkqnFH/Yc5F51rEmhrRp/jZ0vv9x+IEqMJzIjj3Z6Yor/A1Ds6XmbISEptui9TEcHVpeZ+LvSh6dZb0odLP3y+Ui2xuxEeGaXeEqBbVosSHIBNNQ7wkU609PV69Figoz6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=rOLGboi2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CFnZlSFQ; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
+	s=arc-20240116; t=1786399811; c=relaxed/simple;
+	bh=0RWpdfIzCKEiyFzszpDc1xkHvtl02bntYX24+KDlego=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=qj8jAECR6HfvLNZWPvRCGW+dv4oD+gMp3zR10Rx3dJ56Ap7Z20lAySDZXQXBEkEQjGkCE9k227c/T7ZCccvVleVy0WgkdwYU7o2cuTY9BVr/IywsO6fOyngywA8nj+tfHR2qKesA8aw3EySDSU75BrPdlm45qHmGneyxG0GT3Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UwX/Ilov; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="rOLGboi2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CFnZlSFQ"
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 758327A00D7;
-	Mon, 10 Aug 2026 17:59:18 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Mon, 10 Aug 2026 17:59:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1786399158; x=1786485558; bh=jw
-	a1uEHTAmH/Zps+yM13QKRK4H7f98othvWFyoUIXTc=; b=rOLGboi2oE9TRasfvZ
-	JrUYMb2aMOPFqmqajtwPryZUcgRuUgiPSYMLZsuuqQzKJju/ArFfzV9TPtlZxKxy
-	FrAaFEyLYDG6NiZDEbnR241YDqYSlWVoNih2GmAJtSIWeIFfV7vbg943cyf+nvxL
-	FhPv/wfS5oyh5CPCZh6bWUhbdx2WX1wrbbHa+g0jiOkirLCweGJ+Lr04k8raymLj
-	MRMf5aTffWJHoaNaDlx1LatfdP2+okI3C8hIhNb84jlOYlX54jrdH160M3c59N0H
-	9s3c74Pk++lo9LfEgZeQBG6QCj9BBpErS3HormLJbwHBY0Ium7XErjmYdd8YNSSt
-	LnsA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1786399158; x=1786485558; bh=jwa1uEHTAmH/Zps+yM13QKRK4H7f
-	98othvWFyoUIXTc=; b=CFnZlSFQPhsZPUcO5I/2P2jWswBQBUT8ymak76N3XQR9
-	z2zovvzYMVWaHfjZUUN0nSLDPVKPOOqitBj5cDZLL3n72XThwaVQUnnkErgn12ij
-	gjgR8/o6deT8E1049f00Aqxcdu5p3+4ZYJC1+Pwcj3Cyg6XpD0VA2Xa/SwczUsdG
-	EvYO4heLdpdUps1ubj3f0Iuj4s/+kJJXbpdUAVl69Bs0DcDHVSQHbF+stCqKArbf
-	ad2r8IunPDHbypaN7GuHHNkIM6M62GRyfcYxLagvo6cjZEU1DCS86YAuLFX/XT/f
-	edJLxFaSSVTYvmQhAWdsU+NUsh9AzU+K0wDLwlS5Dg==
-X-ME-Sender: <xms:tkl6auXZvjSBQ0fzz6QzBhxB06_sHm6T_x9PbOYVtAeR-khqXdpYWg>
-    <xme:tkl6aoaSQjs7hONlrSs0dTsnnfWiYNp53NxNlT01aEr7O_X9_RxYk0LiAtI236oLd
-    fCUaYRpaQHhJRq1L6TozTOjLTWZ6vqJoR-UXNyWJ3OeJmIZ7Nx6Q6NH>
-X-ME-Received: <xmr:tkl6as38xf8CjFA1kozUbN3XEyoaoEzU7pi_lGMDnV6yo8t55Uze4OdeMmOn1FqSuRq8r19E>
-X-ME-Proxy-Cause: dmFkZTEGLOl/NxVtse1/8nPKU4ufmz8ZoTztOi1ed4RC0pZ71clEb6L2gJNAmbknbqy+Kx
-    S7TGQeO3lzrvRrlERfRa7ziqOkPSl8adr97wKgLUBzHnggAbCKQ1ikw4O/h5u0aCPEq+vX
-    4V2kJcVC/lAyrK+4WR6RCtqLn5E4XaFrn5x+qmj9/5gPOO8myz56vU7mGNVBqeXCYmLuI/
-    5dPUw1Lp8CFtnDK6feBV14EZrvt0SBoT7Joh9pf58IZgQxiCqf5ygmghwQn4y+p6d3gz4l
-    q9f1gvgKOHyQCdr7wob/GRlft7MiayXh1MC5TOw9PdPw48nraWp1vm7R+Tnwt05E0hcGI7
-    rmN3s8iXtYny3j3uNm22avGaJdH+gkqlxYTX6rWE3pPITAUm7Z5ZKZ3YOSbJCV5cnKY8nI
-    ZkCHGTrIh4vJnNlQ7HOvGqb+fLoF1lF4JZ7m9VhgOXMRN2GggAulg/4Z1yWHkWB039EmeV
-    0JHOb4huRr11qlu5mPZVqO9hyUd5Iex5DGQ4O4DIg00HxbRyJSSC6ZrHWnMjeSEikzPSnW
-    Fo5an3SDrv3sWbn0mRF6B+w1nXwV5jXcoSeIx6Ing3z6uSFJTkrbR19zsaJEp3Rz3ihckP
-    L8CFax9G0085vvx3IIWJXBSKQdpqKQQ6dt/kGfgpNAUlqbtJOPjZ/GA9vZIg
-X-ME-Proxy: <xmx:tkl6aigf_-lUkASKbQMxPbf5ZCyYIrOLfrGnba3F1PZwHBtBUsPn9Q>
-    <xmx:tkl6aoZHachloicX91urr-tdOwVdD-kg1_FrEofpN0O9YML5bKI8pw>
-    <xmx:tkl6aqS-yingntqjJ_mmAWS4DZS7dFSSTnXpm598TdSucsbUEPDWoA>
-    <xmx:tkl6arQW3Yzdvo-Qi_vDemi57_bpYtiMqL8EGmyPc5WjTKCsQMWk0Q>
-    <xmx:tkl6alEWskU6BOh4PZ4aUy42OOkA4hJJalqw6jh9cgvKmzxKD_uz9AqO>
-Feedback-ID: id06e481b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Aug 2026 17:59:17 -0400 (EDT)
-Date: Mon, 10 Aug 2026 17:59:28 -0400
-From: Steven Rostedt <steven@rostedt.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] eventfs: Add warning for out of bounds pos in
- __eventfs_iterate()
-Message-ID: <20260810175928.5f4d9d5c@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UwX/Ilov"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB66F1F000E9;
+	Mon, 10 Aug 2026 22:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1786399810;
+	bh=/hUK9nmdYQUfhG6ut1/QpR/T7D3LLI4jSc7+bBZ5Ofc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=UwX/Ilov0bIFii9m3iwtL8q7dWNlzT+Wx3UroPo9PylX7if0NcfH9JAavRDAn86dw
+	 JNwDAbfcVY3VRo/UBsUbAdQe6WqOiVdxquE1mb7LVSCrY0NRcx31i22SVoR5H3wZ9K
+	 Nroa/JyRqqFqLrw3hFrR5C55A7jEiwD4QPiMGP18=
+Date: Mon, 10 Aug 2026 15:10:07 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
+ <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato
+ <pfalcato@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
+ <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, Kees Cook
+ <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan
+ Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, Matthew Brost
+ <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim
+ <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price
+ <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
+ Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin
+ <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank
+ <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Alex
+ Deucher <alexander.deucher@amd.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
+ <tzimmermann@suse.de>, Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
+ Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
+ Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, John
+ Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, Oscar
+ Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, Kairui Song
+ <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
+ <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, Youngjun Park
+ <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/20] mm: provide vma_[flags_]is_cow_mapping() and
+ remove is_cow_mapping()
+Message-Id: <20260810151007.c1cfbcf46d498d2f8ce566f9@linux-foundation.org>
+In-Reply-To: <ann-vS6MYT9kuXqu@lucifer>
+References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
+	<20260806-b4-scalable-cow-virt-pgoff-v4-2-ab318a350404@kernel.org>
+	<ann-vS6MYT9kuXqu@lucifer>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, 10 Aug 2026 18:59:34 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
 
-Sashiko has complained about out of bounds issues if ctx->pos isn't what
-is expected in __eventfs_iterate()[1]. This would be an issue if the logic
-that calls __eventfs_iterate() didn't already prevent the code from going
-out of bounds.
+> Hi Andrew - would it be possible to insert the comments added below? Trying
+> to avoid a respin if possible :)
 
-The issue Sashiko brings up is if a user uses lseek64() to put in a
-position like 0x100000000 which will overflow the integer used to iterate
-the files. This should never be an issue because both tracefs and eventfs
-uses the default "maxbytes" for its superblock "s_maxbytes" field which is
-defined as:
+np, like this?
 
-  fs/super.c:     s->s_maxbytes = MAX_NON_LFS;
-  include/linux/fs.h:#define      MAX_NON_LFS     ((1UL<<31) - 1)
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: mm-provide-vma_is_cow_mapping-and-remove-is_cow_mapping-fix
+Date: Mon Aug 10 03:07:02 PM PDT 2026
 
-Where MAX_NON_LFS turns into 0x7fffffff.
+add comments, per Lorenzo
 
-Testing this with code to try to pass 0x100000000 to lseek64() to a
-eventfs directory returns -EINVAL.
-
-But relying on logic for the integrity of a function is not very robust.
-Add a WARN_ON_ONCE() in case the ctx->pos is out of the expected range.
-
-[1] https://sashiko.dev/#/patchset/20260810160708.3460a2fd%40gandalf.local.home
-
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Link: https://lore.kernel.org/ann-vS6MYT9kuXqu@lucifer
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- fs/tracefs/event_inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index be21b8510c14..ee5d03e403ec 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -696,6 +696,10 @@ static int __eventfs_iterate(struct file *file, struct dir_context *ctx, bool ro
- 	if (!(ti->flags & TRACEFS_EVENT_INODE))
- 		return -EINVAL;
+ include/linux/mm.h |   57 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+
+--- a/include/linux/mm.h~mm-provide-vma_is_cow_mapping-and-remove-is_cow_mapping-fix
++++ a/include/linux/mm.h
+@@ -2271,17 +2271,74 @@ void unpin_user_pages(struct page **page
+ void unpin_user_folio(struct folio *folio, unsigned long npages);
+ void unpin_folios(struct folio **folios, unsigned long nfolios);
  
-+	/* Logic should prevent ctx->pos from going out of range */
-+	if (WARN_ON_ONCE(ctx->pos < 2 || ctx->pos > 0x7fffffffULL))
-+		return -EINVAL;
-+
- 	c = ctx->pos - 2;
++/**
++ * vma_flags_is_cow_mapping() - Do these VMA flags imply a CoW mapping?
++ * @flags: The VMA flags to check.
++ *
++ * Mappings which could be CoW'd (subject to Copy-On-Write faults) are
++ * described as CoW mappings.
++ *
++ * All mappings backed by anonymous folios (all anonymous mappings and most
++ * MAP_PRIVATE-file backed ranges) are CoW mappings.
++ *
++ * All other mappings (including all writable MAP_SHARED mappings) are
++ * non-CoW.
++ *
++ * The criteria are !VMA_SHARED_BIT, VMA_MAYWRITE_BIT.
++ *
++ * VMA_MAYWRITE_BIT is checked instead of VMA_WRITE_BIT to account for both
++ * future mprotect() calls which can render a read-only mapping writable, and
++ * GUP with FOLL_FORCE (e.g. ptrace) which can CoW a read-only mapping.
++ *
++ * - No anonymous mapping can ever clear VMA_MAYWRITE_BIT.
++ *
++ * - Writes to anonymous mappings do not immediately result in CoW faults but
++ *   may do so after the process is forked or if a read is followed by a
++ *   write.
++ *
++ * - Writes to MAP_PRIVATE file-backed mappings result in CoW faults and may
++ *   do so again after fork.
++ *
++ * - MAP_SHARED mappings of a file opened read-only are transformed into
++ *   VMA_MAYSHARE_BIT, !VMA_SHARED_BIT, !VMA_MAYWRITE_BIT mappings, so remain
++ *   non-CoW.
++ *
++ * - Drivers may clear VMA_MAYWRITE_BIT but do so at mmap() time and cannot
++ *   mark themselves anonymous. Having cleared this flag it is not valid for
++ *   them to leave the VMA_WRITE_BIT flag set.
++ *
++ * As a consequence, the anonymous reverse mapping only tracks CoW mappings.
++ *
++ * Returns: true if the flags indicate a CoW mapping, otherwise false.
++ */
+ static inline bool vma_flags_is_cow_mapping(const vma_flags_t *flags)
+ {
+ 	return vma_flags_test(flags, VMA_MAYWRITE_BIT) &&
+ 		!vma_flags_test(flags, VMA_SHARED_BIT);
+ }
  
- 	guard(srcu)(&eventfs_srcu);
--- 
-2.53.0
++/**
++ * vma_is_cow_mapping() - Is this VMA a CoW mapping?
++ * @desc: The VMA to check.
++ *
++ * See vma_flags_is_cow_mapping() for details.
++ *
++ * Returns: true if the VMA is a CoW mapping, otherwise false.
++ */
+ static inline bool vma_is_cow_mapping(const struct vm_area_struct *vma)
+ {
+ 	return vma_flags_is_cow_mapping(&vma->flags);
+ }
+ 
++/**
++ * vma_desc_is_cow_mapping() - Is this VMA descriptor a CoW mapping?
++ * @desc: The VMA descriptor to check.
++ *
++ * See vma_flags_is_cow_mapping() for details.
++ *
++ * Returns: true if the VMA descriptor describes a CoW mapping, otherwise
++ * false.
++ */
+ static inline bool vma_desc_is_cow_mapping(struct vm_area_desc *desc)
+ {
+ 	return vma_flags_is_cow_mapping(&desc->vma_flags);
+_
 
