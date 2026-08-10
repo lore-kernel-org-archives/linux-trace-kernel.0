@@ -1,259 +1,114 @@
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021073.outbound.protection.outlook.com [52.101.100.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69613B100A;
-	Mon, 10 Aug 2026 10:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786358518; cv=fail; b=IJlXzY19Ql0aoxNgNO/gyAbzJ8HPs9ZvyDJFWQeljDrhYynmDOQvAgx1e/7pbe3HFLAG7yX5yNNWyvx8rp4m+p2Ii3g1qGN+L674eJrNfUDJcWbqm58pk5Gvwxf0nFhQ+T4vFTUVf9N7Hqb05jM9Zs8aQzvw4t6GqG56EghUY2c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786358518; c=relaxed/simple;
-	bh=dg7nD1xVsjWHjUwovPbdM2xy5O7uF6lg0emGsIoA3t8=;
-	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
-	 In-Reply-To:MIME-Version; b=DOZP6s1fZIfilUaB0mfKCsM7B9UD6cXL18JjMlNaBwTMZFnEpA3XbmQ+AP5YUR6mMkPpgA0jkf+5s/JvbpNWCS+Wf4Y0IPxjE/UE7qz/PWA0hIAUfMdCM7b6/5gv3mAABpw9UVz1S99HLFPgeBeGtbSUKvSD/2J/+A0sIbsdeX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=sdj8Irqn; arc=fail smtp.client-ip=52.101.100.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1813B8D40;
+	Mon, 10 Aug 2026 10:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786359166; cv=none; b=C/ZFBs2CeGQsakmSdNr1o570rB03beYqTx7KVlgfp02xK3A2V4rMjM/zPK6fxU6yd08nVflSew1YdaMzlPT4ZwNIsj+ZV2xVocpu7844rkGTtL0OCGxhLQXfDCHH5eL9vyRB5i57wfQH1RZXdaTv4TdTqe6UfJ5QSqn6CQwftEw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786359166; c=relaxed/simple;
+	bh=14ljZKx8+rnpkOU2bY6EeU4UyPhEINA0LUfwidRQTok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UP52ZXADx3ieIb3F8QAvXyhzfXy90WPKX/u2MlZO2i7TOVeFlzsIvodV9yzC3P0U33C3O6Wl+BreGBqVZhjfadVmDuxl8XRnyT65mEbh/5pnYityE3wUGFRXCY9lGF+kNXsZvxzEBvAJUSQBUn6wmnDycXUegnvj81XbBGFTyZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFB1dv/E; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="sdj8Irqn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ExsVhWz8vGr+sjC/xGbobRHJqIGEiA0s5OGrGdmDGJDN7WRjGZAS2d9cgDcfMtt1eC/gSmGwDJShNPLZ6Ca3L02CVwCED7WjM3SiIJrJty5aKEoQM/fPlAYQ6v9PHtg0aHIkiefurdWUTnX03+ST3zj6jRS7W169mKLxyfTE09OyHz6BpA/a2Qjvq71yX+TNvIBuE6NtYMTY7TVOUdQiXWTLz+AiQJPElUMdgGffvDEZO2YTlf2b4qB50Z7Fw9tAyHMrvwobn2JSQELmlbvrShsP2WzB1GAxfx/1+DsXo8iiJuaFNOPkq+C/Sc5n6TY2xV1wIguojOsBK5UoLhOi5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uZX7zctSpkP9/pOq/N/uXZeNBa+UYsLFrp2d/Pe5Hmc=;
- b=gBz9Fe17IOktQ5h1BWMSpRh80uknIjhMfW+gO4dYIij7gOw7oBfJlC2bz96/rFqTpDWRwAKbFI++cG39fi5cf1ELwX1LhM2zIVefTQUaaWuZlBQgRFQ4v1Y65Q8R0esrtRKSDxZxhOumwCXnK1lA32ROATm4cxGlqmOFXKxCbI3Lk/4CWsqYycfmu3rbmruSvYUqsA9LGBU9buAxKnaWNxi5nYVPqs2GlGgasrIcYERYwp8WGqX6poHFPLguajEA1girogM0gs7rPAWsmZfTLHHogDPxmjMZ2PwQWdGAfmbRggLLLxhxMVHRDwQ+pH2QAKEcdTQ1zfe1zTjRqb7wYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uZX7zctSpkP9/pOq/N/uXZeNBa+UYsLFrp2d/Pe5Hmc=;
- b=sdj8Irqnffb6xVFcw+egKdWAXYKAV8NWzw8KkasC/Jf4WoSPaff5Y+0V/abPtv5cPpGsTBpwboU1JNpiVMG264PieC5+o0jXy5uJ6fpUhHEkGuT57NBgJkDVUu+g6ZJ8HtF4WDbUPZaRiosifO/Tk+dduf/KWR9nQUapmXNbxrE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:4ab::19)
- by LO7P265MB7544.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:41c::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Mon, 10 Aug
- 2026 10:41:49 +0000
-Received: from LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
- ([fe80::f60b:1537:68d7:4fc1]) by LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
- ([fe80::f60b:1537:68d7:4fc1%4]) with mapi id 15.21.0292.024; Mon, 10 Aug 2026
- 10:41:49 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Aug 2026 11:41:48 +0100
-Message-Id: <DKL78PUDAC7Q.SHSLAX51OP1O@garyguo.net>
-Subject: Re: [PATCH v1] rust: add mark_used macro
-From: "Gary Guo" <gary@garyguo.net>
-To: "FUJITA Tomonori" <tomo@flapping.org>, <aliceryhl@google.com>,
- <ojeda@kernel.org>, <rostedt@goodmis.org>
-Cc: <a.hindborg@kernel.org>, <acourbot@nvidia.com>,
- <bjorn3_gh@protonmail.com>, <boqun@kernel.org>, <dakr@kernel.org>,
- <daniel.almeida@collabora.com>, <gary@garyguo.net>, <lossin@kernel.org>,
- <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
- <tamird@kernel.org>, <tmgross@umich.edu>, <work@onurozkan.dev>,
- <linux-trace-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-X-Mailer: aerc 0.21.0
-References: <20260810075144.1245761-1-tomo@flapping.org>
-In-Reply-To: <20260810075144.1245761-1-tomo@flapping.org>
-X-ClientProxiedBy: LO4P123CA0051.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:152::20) To LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:4ab::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFB1dv/E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1DB1F000E9;
+	Mon, 10 Aug 2026 10:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786359165;
+	bh=xd7uYlI3wnjsUpJNqV8hMKDPnzd4/RrOMCkHIu6ecco=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=XFB1dv/E1xORbGmgRjDNX1HyLkdZhUvti4vokmTBUS5WWoC/8aCtfNGix+ti0ljCQ
+	 tRmjUfaRtN+omFlttkw8IpYh28r9q3lmEmeUXzmOUuLu2Eyvdx+zy/B4ydniOmloSK
+	 oYSlKhZ15KK1hFX8mnzA9zDKeK9t5zGWfn6+tIf5q1uv7AxB96UEMB5P3KDWN3vrsC
+	 7tppJGXbcW97ZkA58zyFlln2hVOEFJITZHnJwP1zVCQIIXI6YvKwazQrrTXSSvS3UT
+	 hw0E2yTZyuey76B98vwPO3doBlVa6TVfPwv/0+Mh+oMBM+E2JIxiLBNeVcb2sImMnv
+	 sg+CtjYVoEycQ==
+Message-ID: <69df3080-a719-4131-a247-62bf47bda8a6@kernel.org>
+Date: Mon, 10 Aug 2026 12:52:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LOAP265MB8560:EE_|LO7P265MB7544:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77fa89a7-1835-42e0-b76b-08def6cbfba4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|10070799003|23010399003|22082099003|18002099003|10067099003|56012099006|5023799004|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	mS/a9Z15qqlC7mIl2eHyj9A2zxftXWpIWKfLfJ1VFutZTAdnTQ/ykKoFBpJ7OOY3mtkY5zqSJLxemVEUtMgTuTZzfB7q8Ax3c58v0xvGh6oga1YdjCvPzuT6sjYKnhbhx6W5SNUNtp9KjiQawiapZlKD2NBaI6B3MH4DzBOPlrKu/JJ3N5hs/6GWAGVFL4rE9AT/JVgiwP8m8D3cBWA6no3dgjyW/an6GnCv19MM2bjrbRXhcMX+hOGY/fOXmMlAwnevkpHv8UYMkTZUd5NLISbOH9Z0z+g4rOc9KirYp5JpfVSMGnR+iJJSyE6ia+5v3QQurdDGB8F7fcMST2uXZFsTxKf5YhHjP5jtKZi2czAklMW0VvBmoqywn/KJ6uq5WuZvAlDU+0UZsW1mbn1IFuwBGFOiOtqstVupdVRWsZLmLY87S092nYXsj49sL46g0R7TGj5FsBUzNlWgs/lJ4DfGbgK5z/0FaI5GPr6tg8I8FIw9BLq93Ixwy9Nit3akCdKmf8exKNRKTMDaBMvRWI/kbKBDpj3D3kbVVPyaetQlZ+0ut0MOyG8nYtizxZbnZkoMM5WPsP8dEdeL9K5/3cot/sjbzhS1SUVqypGEoENDgiyqBgneJ24QrGFW7+lSctSRAQwztq3kABHKO5ysP4Hgd4988dqwr/BcjVSIoNI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(10070799003)(23010399003)(22082099003)(18002099003)(10067099003)(56012099006)(5023799004)(6133799003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R1hiQUk5NTl0eitKMDBBbnp2azNjb3JkQmEzU2pWS0xzUXFoSjVmRmhROUdw?=
- =?utf-8?B?bXpma1VuWW5ibHV0QUNLWCtLOVk2WUN5Q0pnNDgwbXJsQ0JCYzdmMlFLTHp3?=
- =?utf-8?B?Z1VaV2V6d2RWVG5vejQ1ZFpzMHloVXdEeEpleENpUnpQS3ZOMnNNVnBxa1Ft?=
- =?utf-8?B?ZGRhSTlIYWtEcnlaSnloWHFCd0tUa1JFeGFwR1lLd3Z4S081MU5jV0xrYkd0?=
- =?utf-8?B?UVYxOWVtamhZUjdvSWNyYmJLTitFaEEzZHFhb0ozOEtEZ3JsOW0wcGdWU3Vy?=
- =?utf-8?B?R1duYnlTK2VzM0RVY3Q1L082VTZDVnBBZTlRdzU4eitLaVZVMndjMDdTRjRH?=
- =?utf-8?B?cldYRmIwRTlkS2xBb05DaWpnbFdtK3Qrd3UraTBwVnVUeUpOcjc1Y0dIcStU?=
- =?utf-8?B?SlV6MDVZSy8wcXJTTzB0TjVKeGpqdjdiUHNOVFZQdW1pOXhLZmJKdHVEdHlF?=
- =?utf-8?B?Qk9aQTV2a0dDTk9aSXZFVHRTN3VyWGYvWW4rRDIvcW9GTlM5ZW82UUlYQ09T?=
- =?utf-8?B?QWY3R1VoMWJldXBWSG9WOU5FS1h4Ums2eS9aZnRRekJvTnF5TUg3bStmYlNF?=
- =?utf-8?B?a2xQVlZaVTBRaWhQYUFhU0JrNXZtZGQwU3NTQ2huY1YvOGk1R1NZdVpLS0ZI?=
- =?utf-8?B?czNFanRReExMT2ZoYnJRWmZ2YjQ2dENLbHdwZmIvMTZLYXNiZzR3N1F4UHdX?=
- =?utf-8?B?cjZOUEZsbGdESU9vNHpKd0RhT0wxRk1XRjRxWS8rVllkeUl4cjdkY2JxS3lq?=
- =?utf-8?B?WWJrbVNBekJyMndIUFgvc1ZHS3lPRllTOG1XV2xMMjFXdVdJK09xOUNJaEF0?=
- =?utf-8?B?eDZuWFh0ckRORmlXL1NuQ1RYbmFDQW94dGJNRE9pTXBBM1IyNWJTWTU2c3ls?=
- =?utf-8?B?Sm5yUzZPc3BvYnN3cTNwM0x5OXVrRXNvVGtzSE9CQ0Q2K3kwT3lVMStia0VW?=
- =?utf-8?B?VFFPWUgvZTNnRHhWcXFWUG5oR0ticTB3ajhaTmlnZ2lraDVYdUpaSEVkQTJa?=
- =?utf-8?B?bXZNa1FNWUo1QU5MZW52L2ViT0ZhOEJpMW1pNTF3THlVdlZndG9SSWFDL25K?=
- =?utf-8?B?RTFuMTRqMmhmZkRnejJ3dE11SXluaVJDL09VbzJCd0wvTGtiSmE1QWZSWGYr?=
- =?utf-8?B?VFlhSFJLRFRSUEZIeE52bFUvREx1cm1LU1pRNDN6RGxHMzlqWkhoOGNXbmdl?=
- =?utf-8?B?K2FXdlc0NGJveFM0Ri93aEQxZm02dlR6OERvNk5DZEdYTjVNMDVpUm9RRWhp?=
- =?utf-8?B?QitwZlA2STloWEUwUkRPdzBTOE1xUWprV095WGZ5eG8zNStsU3dDd3FxN2R4?=
- =?utf-8?B?OER4L0RPa245bXpPbTFTMGt6eTRnRnl1dnZvaGJuVG1aQjhTdzQ2VmVjbkhv?=
- =?utf-8?B?d0VXZno4MHpJUzFDNGh2QjNlN1N2MFNtRHlHdWxaaXJXUDBvOXZreGRzWjJW?=
- =?utf-8?B?dzJaV1RxR3B0STFLRi9zaUgyckNUdGE2NkFvMmFUb3ZoeEVMNDkzbHEyWFFJ?=
- =?utf-8?B?OWhzR0g2eVN4WkdzSHMxZHA2T2pRQ2xxd08ySzNFbnpQSFd3amhqSHZqaVZt?=
- =?utf-8?B?b2lqUnZneHIweW8vZkVPN0hRR2FYOUFEMENONEJndjZQMEttU1BrNmp6UFg1?=
- =?utf-8?B?dXFvNjBHYW8zZE5sS0daUk9Hekk0N1JpaGxnSy93YWVnRERBSkFVQWFNNDNt?=
- =?utf-8?B?YTVBL0JmbjMycEw3TVNyYzFZNnpjK1dlS3NGdDdWUWlzdlFxNWVTd1hZQVdQ?=
- =?utf-8?B?ZWtQeXBsTGFET2RsUFVkZkZVaXhzUVAwaXJVeTBrQzF2SktQTUtrYTZhQ1Ey?=
- =?utf-8?B?L3Robjd6OXBGcjZ2OEN4ZHIyU3RxYVI3cU03cEZzS1dFcUNmRUgvVm9xUzBR?=
- =?utf-8?B?OWZBeEpoNWRiMjZxZldXSnlYSDR2ZXlUdnByL1pwZDV6Qm9xeFdJek84Q2lF?=
- =?utf-8?B?ak5RWlBteTQxcFpRTEFIYjV2WFZaZnJ5ZFBJdjNYS0JFU2lXOGc5L0hadE5M?=
- =?utf-8?B?cnVzR3hUekVLWmd2SmwwTkxnY2FjOGRjbzFWZS9sRWhVdjNpYTA1bVl5YnRK?=
- =?utf-8?B?U3RsWC9JVXZNbStEYVI4TU9EcW0rd1paVUVhSHVnd3lLdXN3cjJRc2gwWUNF?=
- =?utf-8?B?Qk90dUE3ai9Rb01CNHNJaHlGRTY0S0pINFJPM3NDeC9ZVS9xeWN6TXJDZnBx?=
- =?utf-8?B?SlQwcmZSemV5ZkcvYXZ4MU9WTTIrbzh3ZEVKU1lsUkFlb1RDYkwwQjNUNXNI?=
- =?utf-8?B?QjZ0Qzc0MndxWkhOWW9ydUlra1paWEFwSnU0angwV25BMnZLYS9ORnp1RmVM?=
- =?utf-8?B?cUxWSmtkUENqaHZmZmxhaUFPNkF6VVJJWTdCYVFDYU9VQUoyelZ0Zz09?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77fa89a7-1835-42e0-b76b-08def6cbfba4
-X-MS-Exchange-CrossTenant-AuthSource: LOAP265MB8560.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2026 10:41:49.5158
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RsWuF+n3l73l08zsyS+VsRlgDYYADz/7yF3gj6yBU6ouAqQNGhfaTiDpvJoUKIAf5RqGR4O0M43vBLfbgR3nRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P265MB7544
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: report buffer memory in /proc/meminfo
+To: Xiang Gao <gxxa03070307@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, liam@infradead.org,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Xiang Gao <gaoxiang17@xiaomi.com>
+References: <20260810094025.136705-1-gaoxiang17@xiaomi.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260810094025.136705-1-gaoxiang17@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon Aug 10, 2026 at 8:51 AM BST, FUJITA Tomonori wrote:
-> From: FUJITA Tomonori <fujita.tomonori@gmail.com>
->
-> Macros whose expansion depends on the kernel configuration end up
-> ignoring some of their arguments, resulting in unused warnings.
->
-> Add a macro for the `if false { _ =3D ...; }` idiom used to avoid them,
-> and convert the existing open-coded users in `warn_flags!` and
-> `declare_trace!`.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+On 8/10/26 11:40, Xiang Gao wrote:
+> Report the data capacity of all ftrace ring buffers through a new Ftrace
+> field in /proc/meminfo. Include the main and snapshot buffers of the
+> global trace array and all tracing instances, while leaving ring-buffer
+> metadata accounted for by Slab.
 
-Reviewed-by: Gary Guo <gary@garyguo.net>
+why? :)
 
-> ---
->  rust/kernel/bug.rs        | 18 ++++--------------
->  rust/kernel/lib.rs        | 12 ++++++++++++
->  rust/kernel/tracepoint.rs |  5 ++---
->  3 files changed, 18 insertions(+), 17 deletions(-)
->
-> diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
-> index 3566f0234ca4..c1e4eb7d4a70 100644
-> --- a/rust/kernel/bug.rs
-> +++ b/rust/kernel/bug.rs
-> @@ -55,9 +55,7 @@ macro_rules! warn_flags {
->      ($file:expr, $flags:expr) =3D> {
->          const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
-> =20
-> -        if false {
-> -            _ =3D $file;
-> -        }
-> +        $crate::mark_used!($file);
-> =20
->          // SAFETY:
->          // - `flags` and `size` are all compile-time constants, preventi=
-ng
-> @@ -83,9 +81,7 @@ macro_rules! warn_flags {
->  #[cfg(all(CONFIG_BUG, CONFIG_UML))]
->  macro_rules! warn_flags {
->      ($file:expr, $flags:expr) =3D> {
-> -        if false {
-> -            _ =3D $file;
-> -        }
-> +        $crate::mark_used!($file);
-> =20
->          // SAFETY: It is always safe to call `warn_slowpath_fmt()`
->          // with a valid null-terminated string.
-> @@ -106,10 +102,7 @@ macro_rules! warn_flags {
->  #[cfg(all(CONFIG_BUG, any(CONFIG_LOONGARCH, CONFIG_ARM)))]
->  macro_rules! warn_flags {
->      ($file:expr, $flags:expr) =3D> {
-> -        if false {
-> -            _ =3D $file;
-> -            _ =3D $flags;
-> -        }
-> +        $crate::mark_used!($file, $flags);
-> =20
->          // SAFETY: It is always safe to call `WARN_ON()`.
->          unsafe { $crate::bindings::WARN_ON(true) }
-> @@ -121,10 +114,7 @@ macro_rules! warn_flags {
->  #[cfg(any(testlib, not(CONFIG_BUG)))]
->  macro_rules! warn_flags {
->      ($file:expr, $flags:expr) =3D> {
-> -        if false {
-> -            _ =3D $file;
-> -            _ =3D $flags;
-> -        }
-> +        $crate::mark_used!($file, $flags);
->      };
->  }
-> =20
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 9512af7156df..2f770d80bd8a 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -266,6 +266,18 @@ macro_rules! container_of {
->  #[doc(hidden)]
->  pub fn assert_same_type<T>(_: T, _: T) {}
-> =20
-> +/// Marks the given expressions as used.
-> +///
-> +/// This avoids "unused" warnings in kernel configurations that do not o=
-therwise use them.
-> +#[macro_export]
-> +macro_rules! mark_used {
-> +    ($($e:expr),* $(,)?) =3D> {
-> +        if false {
-> +            $( _ =3D $e; )*
-> +        }
-> +    };
-> +}
-> +
->  /// Helper for `.rs.S` files.
->  #[doc(hidden)]
->  #[macro_export]
-> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> index c6e80aa99e8e..cb06fec4c4d9 100644
-> --- a/rust/kernel/tracepoint.rs
-> +++ b/rust/kernel/tracepoint.rs
-> @@ -38,9 +38,8 @@ macro_rules! declare_trace {
-> =20
->              #[cfg(not(CONFIG_TRACEPOINTS))]
->              {
-> -                // If tracepoints are disabled, insert a trivial use of =
-each argument
-> -                // to avoid unused argument warnings.
-> -                $( let _unused =3D $argname; )*
-> +                // If tracepoints are disabled, the arguments are unused=
-.
+To report a handful of KiB as in your example below? Doesn't sound super helpful
+TBH.
 
-nit: the comment seems redundant now that the macro name is self-documentin=
-g.
+-- 
+Cheers,
 
-Best,
-Gary
-
-> +                $crate::mark_used!($($argname),*);
->              }
->          }
->      )*}
->
-> base-commit: d8973c47544371613313ecb9a8c3e7b244aa9bbf
-
-
+David
