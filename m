@@ -1,202 +1,91 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51F13B9D97
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 06:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919C13BCD3B;
+	Tue, 11 Aug 2026 06:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786428782; cv=none; b=L/U9Po7lTAU32FTLUDs3/5gaVSHy+33gmoa1o+AIpnLp2ba05wUqSC1PqoMLB5bzNVz2+mo6V9FugVAa7QOIP2shnf1yuIhnQghLmPcIbjD2jHFHnONR/RF+WBJ924s7xL5zCRFbM/gGmEuf1r0RucZCULD/fMviiUSj4zHvRgQ=
+	t=1786430420; cv=none; b=PwylbCw2pBl7Nyr9sV0UlMI6T6jBT9OnKVdKXB7yRI5QP68XBCh0hj3bhMrIM0kju8eYe3M9RmtrgXToYljaqqHE7X6QCtOMvYG9Coh+r9q/g856qwhYtKEQ5RSZJDYAdK91QYvt60GEiUYzeEV0f4NoNqe95RWgiUKeUkEIjV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786428782; c=relaxed/simple;
-	bh=lkiMx7uA/A5/aSn1bsWFGNt11TcSrA6IVEQGhDwO9+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KdAsVaTZNdpHvQv20awBdPt0VHu2tnABGl8ZkwIjFU1m6adsYdbpj0M2t5AoUunXaAoz7cAhYY+Y79r0EGjm8Fbnj5iiWF4nlzGbmNU9flD8OIzHCya5tJ+gwIUqYJtGeHf7ku888FuhW0YQ6KCUclHl3wUMLqxPqooH4Ch3eZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gh5bmr7a; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gh5bmr7a"
-Message-ID: <0a2fc4c0-db9e-4b53-8232-aeb0dda112b2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786428767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ogf+73rRak/6Js/7MzR2OgNYsxkzJu6wOHRliPqhoyU=;
-	b=gh5bmr7aHa3c+DIMKyoVCuJ/lCW6Gomgq7WERSM2AdMXYoKnziX2JRdRGRwYTHP7Gt1gJ3
-	/8mvD0SUFuI0QkU6Vv6j6rLjIcsBzUfzhaM4W6wSt6T2SqQqMkvlCxqiqfFk3KImDN+rNs
-	bS+igK7ntBtS1upZv8vmma7ZSM6WuOA=
-Date: Tue, 11 Aug 2026 14:12:31 +0800
+	s=arc-20240116; t=1786430420; c=relaxed/simple;
+	bh=zpn9Q6wCbwmAi1LjmnjfD/IaDhZQ0R7Hf16niZw3nMU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VFGjEoDzlRLjUamo9aC0mDjBVMkXIN1ZyEpZ779eiOQ2dY0lEbSBOejJEFVfQhoYKQJ//MugzmBDpc+LieQr13vAou5MjcVapHvmgYS1ohOGb4qlwqq9hi8ar/lAnaPeG+1OYTHK8BlZ8SHMmm5MIiOlhZf2+HhdbcPAqDu8Z2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from TW001.hihonor.com (unknown [10.77.229.151])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4hK1l66fMXzYl1n1;
+	Tue, 11 Aug 2026 14:22:58 +0800 (CST)
+Received: from TA008-1.hihonor.com (10.72.0.148) by TW001.hihonor.com
+ (10.77.229.151) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 11 Aug
+ 2026 14:22:58 +0800
+Received: from TA008-1.hihonor.com (10.72.0.148) by TA008-1.hihonor.com
+ (10.72.0.148) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 11 Aug
+ 2026 14:22:58 +0800
+Received: from TA008-1.hihonor.com ([fe80::e1cf:9270:9b1f:2b7]) by
+ TA008-1.hihonor.com ([fe80::e1cf:9270:9b1f:2b7%17]) with mapi id
+ 15.02.2562.045; Tue, 11 Aug 2026 14:22:58 +0800
+From: gao xu <gaoxu2@honor.com>
+To: Steven Rostedt <rostedt@goodmis.org>, "Lorenzo Stoakes (ARM)"
+	<ljs@kernel.org>
+CC: "David Hildenbrand (Arm)" <david@kernel.org>, Xiang Gao
+	<gxxa03070307@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, "liam@infradead.org" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Xiang Gao <gaoxiang17@xiaomi.com>
+Subject: RE: [PATCH] tracing: report buffer memory in /proc/meminfo
+Thread-Topic: [PATCH] tracing: report buffer memory in /proc/meminfo
+Thread-Index: AQHdKKxQUSjNT0U+CkilnXunKM92XraWlUIAgAAIaICAADvrAIABWdpw
+Date: Tue, 11 Aug 2026 06:22:58 +0000
+Message-ID: <9bd98f51abd44d81a569d95e907070c6@honor.com>
+References: <20260810094025.136705-1-gaoxiang17@xiaomi.com>
+	<69df3080-a719-4131-a247-62bf47bda8a6@kernel.org>	<anm0SMuVpBz7wLac@lucifer>
+ <20260810105710.6ee5e493@gandalf.local.home>
+In-Reply-To: <20260810105710.6ee5e493@gandalf.local.home>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 04/13] bpf: Add tracing_multi link support for
- bpf progs
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Quentin Monnet <qmo@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Mykyta Yatsenko <yatsenko@meta.com>,
- Avinash Duduskar <avinash.duduskar@gmail.com>,
- Anton Protopopov <a.s.protopopov@gmail.com>, Amery Hung
- <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
- Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
- Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
- Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260809150111.45000-1-leon.hwang@linux.dev>
- <20260809150111.45000-5-leon.hwang@linux.dev> <annOhedRtHBce3px@krava>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <annOhedRtHBce3px@krava>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 10/8/26 21:13, Jiri Olsa wrote:
-> On Sun, Aug 09, 2026 at 11:01:02PM +0800, Leon Hwang wrote:
-> 
-> SNIP
-> 
->> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
->> index eddd259d3776..fc51ea2428be 100644
->> --- a/kernel/bpf/trampoline.c
->> +++ b/kernel/bpf/trampoline.c
->> @@ -1572,12 +1572,23 @@ static int update_fentry_multi(struct bpf_trampoline *tr, u32 orig_flags,
->>  			       struct bpf_tramp_image *im, struct ftrace_hash *hash,
->>  			       struct bpf_tracing_multi_data *data)
->>  {
->> -	unsigned long addr = (unsigned long)(im ? im->image : tr->cur_image->image);
->> +	if (tr->func.ftrace_managed) {
->> +		unsigned long addr = (unsigned long)(im ? im->image : tr->cur_image->image);
->>  
->> -	if (bpf_trampoline_use_jmp(tr->flags))
->> -		addr = ftrace_jmp_set(addr);
->> +		if (bpf_trampoline_use_jmp(tr->flags))
->> +			addr = ftrace_jmp_set(addr);
->> +
->> +		ftrace_hash_add(hash, data->entry, tr->ip, addr);
->> +	} else {
->> +		void *old_addr = tr->cur_image ? tr->cur_image->image : NULL;
->> +		void *new_addr = im ? im->image : NULL;
->> +		int ret;
->> +
->> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr, new_addr);
->> +		if (ret)
->> +			return ret;
->> +	}
-> 
-> hum, so IIUC this sequentially attaches to target bpf program as it
-> would with current API, so there's no attachent speedup, right?
-
-
-Correct.
-
-> 
->>  
->> -	ftrace_hash_add(hash, data->entry, tr->ip, addr);
->>  	tr->cur_image = im;
->>  	return 0;
->>  }
->> @@ -1627,6 +1638,18 @@ static void bpf_trampoline_multi_attach_free(struct bpf_trampoline *tr)
->>  
->>  static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
->>  {
->> +	if (!tr->func.ftrace_managed) {
->> +		void *failed_addr = tr->cur_image ? tr->cur_image->image : NULL;
->> +		void *old_addr = tr->multi_attach.old_image ?
->> +				 tr->multi_attach.old_image->image : NULL;
->> +		u32 orig_flags = tr->flags;
->> +		int ret;
->> +
->> +		tr->flags = tr->multi_attach.old_flags;
->> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, failed_addr, old_addr);
->> +		WARN_ONCE(ret, "bpf_trampoline_update_fentry failed: %d\n", ret);
->> +	}
->> +
->>  	if (tr->cur_image)
->>  		bpf_tramp_image_put(tr->cur_image);
->>  	tr->cur_image = tr->multi_attach.old_image;
->> @@ -1643,6 +1666,7 @@ static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
->>  	for_each_mnode_cnt(mnode, link, link->nodes_cnt)
->>  
->>  int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
->> +				u64 *keys, struct bpf_prog **progs,
->>  				struct bpf_tracing_multi_link *link)
->>  {
->>  	struct bpf_tracing_multi_data *data = &link->data;
->> @@ -1651,18 +1675,18 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
->>  	struct bpf_tracing_multi_node *mnode;
->>  	struct bpf_trampoline *tr;
->>  	int i, err, rollback_cnt;
->> -	u64 key;
->>  
->>  	for_each_mnode(mnode, link) {
->>  		rollback_cnt = i;
->>  
->> -		err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
->> +		if (progs)
->> +			err = bpf_check_attach_target(NULL, prog, progs[i], ids[i], &tgt_info);
->> +		else
->> +			err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
->>  		if (err)
->>  			goto rollback_put;
->>  
->> -		key = bpf_trampoline_compute_key(NULL, btf, ids[i]);
->> -
->> -		tr = bpf_trampoline_get(key, &tgt_info);
->> +		tr = bpf_trampoline_get(keys[i], &tgt_info);
->>  		if (!tr) {
->>  			err = -ENOMEM;
->>  			goto rollback_put;
->> @@ -1691,6 +1715,9 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
->>  	for_each_mnode(mnode, link) {
->>  		bpf_trampoline_multi_attach_init(mnode->trampoline);
->>  
->> +		if (progs && progs[i]->aux->tail_call_reachable)
->> +			mnode->trampoline->flags |= BPF_TRAMP_F_TAIL_CALL_CTX;
->> +
->>  		data->entry = &mnode->entry;
->>  		err = __bpf_trampoline_link_prog(&mnode->node, mnode->trampoline, NULL,
->>  						 &trampoline_multi_ops, data);
-> 
-> IIUC for bpf_program targets the actuall attachment is happening in
-> here, right?
-
-
-Right.
-
-> 
-> the rest of the function logic won't execute, because there won't
-> be any data in the reg/noreg/mod hashes..?
-> 
-> you seem to use the tracing_multi API to ease up attachment to multiple
-> bpf programs and end up with just single link fd for all attachments
-> 
-> I think it'd be cleaner to have separate api or code paths for that
-> 
-
-
-Makes sense.
-
-I'd like to use the same UAPI, and re-implement it with another code
-path, mainly in trampoline.c. And, the re-implementation will get rid of
-HAVE_SINGLE_FTRACE_DIRECT_OPS for targeting bpf progs at the same time.
-
-Then, I think I can speed up the attachment using text-poke in batch on
-x86_64.
-
-Thanks,
-Leon
-
+PiBPbiBNb24sIDEwIEF1ZyAyMDI2IDEyOjIyOjQzICswMTAwDQo+ICJMb3JlbnpvIFN0b2FrZXMg
+KEFSTSkiIDxsanNAa2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPiA+IE9uIE1vbiwgQXVnIDEwLCAy
+MDI2IGF0IDEyOjUyOjM4UE0gKzAyMDAsIERhdmlkIEhpbGRlbmJyYW5kIChBcm0pIHdyb3RlOg0K
+PiA+ID4gT24gOC8xMC8yNiAxMTo0MCwgWGlhbmcgR2FvIHdyb3RlOg0KPiA+ID4gPiBSZXBvcnQg
+dGhlIGRhdGEgY2FwYWNpdHkgb2YgYWxsIGZ0cmFjZSByaW5nIGJ1ZmZlcnMgdGhyb3VnaCBhIG5l
+dw0KPiA+ID4gPiBGdHJhY2UgZmllbGQgaW4gL3Byb2MvbWVtaW5mby4gSW5jbHVkZSB0aGUgbWFp
+biBhbmQgc25hcHNob3QNCj4gPiA+ID4gYnVmZmVycyBvZiB0aGUgZ2xvYmFsIHRyYWNlIGFycmF5
+IGFuZCBhbGwgdHJhY2luZyBpbnN0YW5jZXMsIHdoaWxlDQo+ID4gPiA+IGxlYXZpbmcgcmluZy1i
+dWZmZXIgbWV0YWRhdGEgYWNjb3VudGVkIGZvciBieSBTbGFiLg0KPiA+ID4NCj4gPiA+IHdoeT8g
+OikNCj4gPiA+DQo+ID4gPiBUbyByZXBvcnQgYSBoYW5kZnVsIG9mIEtpQiBhcyBpbiB5b3VyIGV4
+YW1wbGUgYmVsb3c/IERvZXNuJ3Qgc291bmQNCj4gPiA+IHN1cGVyIGhlbHBmdWwgVEJILg0KPiA+
+DQo+ID4gWWVhaCBJIHRoaW5rIHdlIG5lZWQgdG8gc3RvcCB3aXRoIGFsbCB0aGUgcHJvcG9zZWQg
+YWRkaXRpb25zIHRvDQo+ID4gL3Byb2MvbWVtaW5mbyA6KQ0KPiA+DQo+ID4gQWxzbyBzb21ldGhp
+bmcgbGlrZSB0aGlzIHdoZXJlIHlvdSBhcmUgbWFraW5nIGEgY2hhbmdlIGluIG91dHB1dCB0aGF0
+DQo+ID4gaXQgaXMganVzdCB5b3VyIG9waW5pb24gdGhhdCBpdCBpcyB1c2VmdWwgc2hvdWxkIGJl
+IGFuIFJGQyB0byBzZWUgd2hhdA0KPiA+IHRoZSBjb21tdW5pdHkgdGhpbmtzIGZpcnN0Lg0KPiAN
+Cj4gQWdyZWVkLiBUaGlzIGRvZXNuJ3QgYmVsb25nIGluIHRoZSBtZW1pbmZvLiBJZiB5b3Ugd2Fu
+dCBtZW1vcnkgc3RhdGlzdGljcyBmb3INCj4gdHJhY2luZywgSSBtYXkgYmUgT0sgaWYgeW91IGFk
+ZCBhICJ0b3RhbF9tZW1vcnlfa2IiIGZpbGUgaW4gdGhlDQo+IC9zeXMva2VybmVsL3RyYWNpbmcv
+dHJhY2Vfc3RhdHMvIGRpcmVjdG9yeS4NCldvdWxkIGl0IGJlIHBvc3NpYmxlIHRvIGluY2x1ZGUg
+dGhpcyBpbmZvIGluIHNob3dfbWVtKCk/DQpUaGlzIHdvdWxkIGJlIGhlbHBmdWwgZm9yIGFuYWx5
+emluZyBsb3ctbWVtb3J5IGFuZCBPT00gaXNzdWVzLg0KPiANCj4gQW5kIGJyZWFrIGl0IHVwIGZv
+ciBtZW1vcnkgdXNlZC4gUmluZyBidWZmZXJzLCBldmVudHMsIGV0Yy4NCj4gDQo+IFBlcmhhcHMg
+ZXZlbiBhZGQgb25lIHBlciBDUFUgYXMgd2VsbC4NCj4gDQo+IEknbSBhbHdheXMgY29uc2NpZW5j
+ZSBhYm91dCBob3cgbXVjaCBtZW1vcnkgdHJhY2luZyBpcyB0YWtpbmcgdXAgaW4gdGhlDQo+IHN5
+c3RlbS4NCj4gDQo+IC0tIFN0ZXZlDQoNCg==
