@@ -1,136 +1,202 @@
-Received: from out28-50.mail.aliyun.com (out28-50.mail.aliyun.com [115.124.28.50])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7303337B41F;
-	Tue, 11 Aug 2026 06:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51F13B9D97
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 06:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786428020; cv=none; b=TURNVYML01MtBzh8vIGS4RFSwe1VagFu/TUj7cHmOu61qUU1C0MTWg5rfORS7/orF3b747yjsEYz5lCf1UUw75sZ93xZT65Kk/X5qxsq+W8tPRwXynnfAMzbXEyOhDJgQyRCp0eb3DNP2YD5rs0EGxcTvU1lQz3hWJwSmKt6kGU=
+	t=1786428782; cv=none; b=L/U9Po7lTAU32FTLUDs3/5gaVSHy+33gmoa1o+AIpnLp2ba05wUqSC1PqoMLB5bzNVz2+mo6V9FugVAa7QOIP2shnf1yuIhnQghLmPcIbjD2jHFHnONR/RF+WBJ924s7xL5zCRFbM/gGmEuf1r0RucZCULD/fMviiUSj4zHvRgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786428020; c=relaxed/simple;
-	bh=WIMM879jcs6ktYtWd9rrpk7xFTIT2X291HczHctSjeQ=;
+	s=arc-20240116; t=1786428782; c=relaxed/simple;
+	bh=lkiMx7uA/A5/aSn1bsWFGNt11TcSrA6IVEQGhDwO9+s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bF/D4YcGaj/kt24tApnn/6U9q3ugl9fRI60xFwePphz0qnewWhmLihP7roLFJOao/08FEmmp2CPutqdOHV+0yk/YpPSgfVzMpWx7qWXhhODqe+rX0/9yuA4+AfuhwryYB/Js6L6CcVCWwUU7qDfozH/ypXDQvZteTVljmED212g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07641056|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0153744-0.0352241-0.949402;FP=17796272291498788178|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033032062159;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.ij9Eqmo_1786428005;
-Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.ij9Eqmo_1786428005 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 14:00:06 +0800
-Message-ID: <3f27bacf-5f01-8cb5-a04c-824ca7b2c13f@allwinnertech.com>
-Date: Tue, 11 Aug 2026 14:00:05 +0800
+	 In-Reply-To:Content-Type; b=KdAsVaTZNdpHvQv20awBdPt0VHu2tnABGl8ZkwIjFU1m6adsYdbpj0M2t5AoUunXaAoz7cAhYY+Y79r0EGjm8Fbnj5iiWF4nlzGbmNU9flD8OIzHCya5tJ+gwIUqYJtGeHf7ku888FuhW0YQ6KCUclHl3wUMLqxPqooH4Ch3eZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gh5bmr7a; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gh5bmr7a"
+Message-ID: <0a2fc4c0-db9e-4b53-8232-aeb0dda112b2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1786428767;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ogf+73rRak/6Js/7MzR2OgNYsxkzJu6wOHRliPqhoyU=;
+	b=gh5bmr7aHa3c+DIMKyoVCuJ/lCW6Gomgq7WERSM2AdMXYoKnziX2JRdRGRwYTHP7Gt1gJ3
+	/8mvD0SUFuI0QkU6Vv6j6rLjIcsBzUfzhaM4W6wSt6T2SqQqMkvlCxqiqfFk3KImDN+rNs
+	bS+igK7ntBtS1upZv8vmma7ZSM6WuOA=
+Date: Tue, 11 Aug 2026 14:12:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v5] tracing: Fix race between update_event_fields and,
- event_define_fields
+Subject: Re: [PATCH bpf-next 04/13] bpf: Add tracing_multi link support for
+ bpf progs
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Quentin Monnet <qmo@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Mykyta Yatsenko <yatsenko@meta.com>,
+ Avinash Duduskar <avinash.duduskar@gmail.com>,
+ Anton Protopopov <a.s.protopopov@gmail.com>, Amery Hung
+ <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
+ Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
+ Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
+ Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260809150111.45000-1-leon.hwang@linux.dev>
+ <20260809150111.45000-5-leon.hwang@linux.dev> <annOhedRtHBce3px@krava>
 Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
- <20260810104525.6a3a2e6c@gandalf.local.home>
-From: Michael Wu <michael@allwinnertech.com>
-In-Reply-To: <20260810104525.6a3a2e6c@gandalf.local.home>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <annOhedRtHBce3px@krava>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-> What does the above mean? Are you loading two modules at the same time?
-Two modules (A and B) are loaded simultaneously on different CPUs. On the arm64,
- when CPU0's trace_module_notify [pri=1] and CPU1's trace_module_notify [pri=0] 
-simultaneously perform operations on call_A, because they are in different cache lines,
-CPU1 may observe WRITE_ONCE(head->next, &f->link) in step (4) before f->link.next=next in step (2).
- At this time, CPU1 reads an uninitialized f->link.next and performs an operation that causes to crash.
-
-> What does "pri=X notifier" mean? What function calls are these coming from?
-`pri=X notifier` represents `trace_events.c:trace_module_notify [pri=1]` and `trace.c:trace_module_notify [pri=0]`, respectively.
- CPU0 (loads module A)                      CPU1 (loads module B)
-  ===============================            ===============================
-  load_module(A)                             load_module(B)
-    blocking_notifier_call_chain_robust        blocking_notifier_call_chain_robust
-         notifier_call_chain                     notifier_call_chain
-          nb = trace_events.c:                     nb = trace.c:
-          trace_module_notify [pri=1]              trace_module_notify [pri=0]
-            mutex_lock(&event_mutex)                 trace_event_update_all() 
-            trace_module_add_events(A)               down_write(&trace_event_sem) 
-              __register_event(call_A)                
-              __add_event_to_tracers(call_A)           
-                event_define_fields(call_A)            
-                  for each f:                          
-                    f = kmem_cache_alloc()             
-                    list_add(&f->link,               	
-                             &class->fields)           
-                      f->link.next=next; (2)       	   
-                      WRITE_ONCE(head->next,        
-                                &f->link); (4)       update_event_fields(call_A)   											           
-            mutex_unlock(&event_mutex)	               list_for_each_entry(field, 
-                                                         &class->fields, link) 
-                                                         field = class->fields->next 
-                                                               = &f->link 
-                                                       	       = f (offset 0) 
-                                                      up_write(&trace_event_sem)  
-On 8/10/2026 10:45 PM, Steven Rostedt wrote:
-> On Mon, 10 Aug 2026 14:32:30 +0800
-> Michael Wu <michael@allwinnertech.com> wrote:
+On 10/8/26 21:13, Jiri Olsa wrote:
+> On Sun, Aug 09, 2026 at 11:01:02PM +0800, Leon Hwang wrote:
 > 
->> The following sequence may leads race between event_define_fields()
->> and update_event_fields():
+> SNIP
 > 
->>   CPU0 (module A, pri=1 notifier)        CPU1 (module B, pri=0 notifier)
+>> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+>> index eddd259d3776..fc51ea2428be 100644
+>> --- a/kernel/bpf/trampoline.c
+>> +++ b/kernel/bpf/trampoline.c
+>> @@ -1572,12 +1572,23 @@ static int update_fentry_multi(struct bpf_trampoline *tr, u32 orig_flags,
+>>  			       struct bpf_tramp_image *im, struct ftrace_hash *hash,
+>>  			       struct bpf_tracing_multi_data *data)
+>>  {
+>> -	unsigned long addr = (unsigned long)(im ? im->image : tr->cur_image->image);
+>> +	if (tr->func.ftrace_managed) {
+>> +		unsigned long addr = (unsigned long)(im ? im->image : tr->cur_image->image);
+>>  
+>> -	if (bpf_trampoline_use_jmp(tr->flags))
+>> -		addr = ftrace_jmp_set(addr);
+>> +		if (bpf_trampoline_use_jmp(tr->flags))
+>> +			addr = ftrace_jmp_set(addr);
+>> +
+>> +		ftrace_hash_add(hash, data->entry, tr->ip, addr);
+>> +	} else {
+>> +		void *old_addr = tr->cur_image ? tr->cur_image->image : NULL;
+>> +		void *new_addr = im ? im->image : NULL;
+>> +		int ret;
+>> +
+>> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr, new_addr);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
 > 
-> What does the above mean? Are you loading two modules at the same time?
-> What does "pri=X notifier" mean? What function calls are these coming from?
-> 
-> -- Steve
-> 
->>   ===============================        ===============================
->>   event_define_fields(call_A)            trace_event_update_all()
->>     for each f:                            list_for_each_entry(...,
->>       list_add(&f->link,                                &ftrace_events)
->>                &class->fields)               -> finds call_A
->>         f->link.next = next;        (2)
->>                                            update_event_fields(call_A)
->>         WRITE_ONCE(class->fields->next,
->>                    &f->link);       (4)
->>                                              list_for_each_entry(field,
->>                                                &class->fields, link)
->>                                              -> field = class->fields->next  
->>                                                   = &f->link
->>                                                   = f (offset 0)
->>                                              -> arm64 weak ordering:  
->>                                                 (4) visible before (2)
->>                                                 field->link.next == 0
->>                                              -> next iteration:  
->>                                                 field = (void *)0 = NULL
->>                                              -> crash at NULL->type (0x18)  
->>
->> This produces the following panic:
->>    Unable to handle kernel access ... at virtual address 0000000000000018
->>    pc : update_event_fields+0xf8/0x368
->>    Call trace:
->>     update_event_fields+0xf8/0x368
->>     trace_event_update_all+0x7c/0x2b4
->>     trace_module_notify+0x4c/0x1dc
->>     notifier_call_chain+0x84/0x168
->>     blocking_notifier_call_chain_robust+0x64/0xd4
->>     load_module+0x10c8/0x123c
->>     __arm64_sys_finit_module+0x230/0x31c
->>
->> Fix by taking event_mutex in trace_event_update_all() before
->> trace_event_sem.
->>
->> Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Michael Wu <michael@allwinnertech.com>
+> hum, so IIUC this sequentially attaches to target bpf program as it
+> would with current API, so there's no attachent speedup, right?
 
 
--- 
-Regards,
-Michael Wu
+Correct.
+
+> 
+>>  
+>> -	ftrace_hash_add(hash, data->entry, tr->ip, addr);
+>>  	tr->cur_image = im;
+>>  	return 0;
+>>  }
+>> @@ -1627,6 +1638,18 @@ static void bpf_trampoline_multi_attach_free(struct bpf_trampoline *tr)
+>>  
+>>  static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
+>>  {
+>> +	if (!tr->func.ftrace_managed) {
+>> +		void *failed_addr = tr->cur_image ? tr->cur_image->image : NULL;
+>> +		void *old_addr = tr->multi_attach.old_image ?
+>> +				 tr->multi_attach.old_image->image : NULL;
+>> +		u32 orig_flags = tr->flags;
+>> +		int ret;
+>> +
+>> +		tr->flags = tr->multi_attach.old_flags;
+>> +		ret = bpf_trampoline_update_fentry(tr, orig_flags, failed_addr, old_addr);
+>> +		WARN_ONCE(ret, "bpf_trampoline_update_fentry failed: %d\n", ret);
+>> +	}
+>> +
+>>  	if (tr->cur_image)
+>>  		bpf_tramp_image_put(tr->cur_image);
+>>  	tr->cur_image = tr->multi_attach.old_image;
+>> @@ -1643,6 +1666,7 @@ static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
+>>  	for_each_mnode_cnt(mnode, link, link->nodes_cnt)
+>>  
+>>  int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
+>> +				u64 *keys, struct bpf_prog **progs,
+>>  				struct bpf_tracing_multi_link *link)
+>>  {
+>>  	struct bpf_tracing_multi_data *data = &link->data;
+>> @@ -1651,18 +1675,18 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
+>>  	struct bpf_tracing_multi_node *mnode;
+>>  	struct bpf_trampoline *tr;
+>>  	int i, err, rollback_cnt;
+>> -	u64 key;
+>>  
+>>  	for_each_mnode(mnode, link) {
+>>  		rollback_cnt = i;
+>>  
+>> -		err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
+>> +		if (progs)
+>> +			err = bpf_check_attach_target(NULL, prog, progs[i], ids[i], &tgt_info);
+>> +		else
+>> +			err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
+>>  		if (err)
+>>  			goto rollback_put;
+>>  
+>> -		key = bpf_trampoline_compute_key(NULL, btf, ids[i]);
+>> -
+>> -		tr = bpf_trampoline_get(key, &tgt_info);
+>> +		tr = bpf_trampoline_get(keys[i], &tgt_info);
+>>  		if (!tr) {
+>>  			err = -ENOMEM;
+>>  			goto rollback_put;
+>> @@ -1691,6 +1715,9 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
+>>  	for_each_mnode(mnode, link) {
+>>  		bpf_trampoline_multi_attach_init(mnode->trampoline);
+>>  
+>> +		if (progs && progs[i]->aux->tail_call_reachable)
+>> +			mnode->trampoline->flags |= BPF_TRAMP_F_TAIL_CALL_CTX;
+>> +
+>>  		data->entry = &mnode->entry;
+>>  		err = __bpf_trampoline_link_prog(&mnode->node, mnode->trampoline, NULL,
+>>  						 &trampoline_multi_ops, data);
+> 
+> IIUC for bpf_program targets the actuall attachment is happening in
+> here, right?
+
+
+Right.
+
+> 
+> the rest of the function logic won't execute, because there won't
+> be any data in the reg/noreg/mod hashes..?
+> 
+> you seem to use the tracing_multi API to ease up attachment to multiple
+> bpf programs and end up with just single link fd for all attachments
+> 
+> I think it'd be cleaner to have separate api or code paths for that
+> 
+
+
+Makes sense.
+
+I'd like to use the same UAPI, and re-implement it with another code
+path, mainly in trampoline.c. And, the re-implementation will get rid of
+HAVE_SINGLE_FTRACE_DIRECT_OPS for targeting bpf progs at the same time.
+
+Then, I think I can speed up the attachment using text-poke in batch on
+x86_64.
+
+Thanks,
+Leon
+
