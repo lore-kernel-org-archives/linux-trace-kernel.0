@@ -1,138 +1,263 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011012.outbound.protection.outlook.com [40.107.130.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E7743E061
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 11:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786446406; cv=none; b=VqiAYU4mS7c+RksUPhLmPyALPk0+7b0dbj5ONHNkfnXV/mTKFZhaaTvWRT+uHsLqiQ9oJllMO2WrPEHmRcZykX+h1VI6VAejdfu8pTFsdOMJUn1Cf/7ufYkgk/aKkLRu1ZylYLo3cGGNcBHefmCEv12rc4wZjgvM7slNF1UtlBg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786446406; c=relaxed/simple;
-	bh=tukP0gFXkGjbkkO6Sate91Hwdk6oZ5TQM06hGsQvC+U=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m+s3sxUafsSweHtS8Bb7b1pHL1ZFWAKyCWSB4dP9I8lxfr+IsNjiLlnvZr0osbGW0o6RUMB2bROTqPzF+o0eiEPd6J0s/831MDmKmuwx/CmmJt3XPx1hkOgdtL5dRuQx1lMUr7eFupSVOgSTr5YP1fvb13l9Rm7TbNqllZUf1LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PxtFFuBV; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583F3B058E;
+	Tue, 11 Aug 2026 11:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.12
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786447567; cv=fail; b=LQcIhdnaA6bNnnSUoyVPI4FtJd7AuYqTC0uLQ4ZR0FD2YfxVy2or/n/ArVmz1gUZLv6GTqdRYTrZfR6p/b23UxH0vDpbIxLV6AUBj6inF9jB49ajJJ3MxT/S/ZxBovB9nCGiZlBRsmnZxKskgTHyWfN6MP3ddf/gSbQSXqXPAd4=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786447567; c=relaxed/simple;
+	bh=Rb6FDDcLLcUSL5xgsdgWtnCQY2VoZoavAvmLYFfEH1E=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PPzu0OYy2kG7Wk4Gsr2ubwWwR+cd2ihR/Hf25PX48Oju0kifi5dO3OcJCrq+tY4NtGF9h8Dt4/bvYZfaB5t05zxVINPCly3Kkt2wyXaPJ0nhgdsT2y4Y9mCFrdLcptriTsT967MHv3YJ0yGmJVldXTPzHNnxOC8zEsw+2KloGwY=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ZDqaLm7g; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ZDqaLm7g; arc=fail smtp.client-ip=40.107.130.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxtFFuBV"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c15c42a45adso126713766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 04:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786446401; x=1787051201; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ncPBKBVNM6ovNcsCic32cHugMXoIYOhz070STPXc4TY=;
-        b=PxtFFuBVzA94mCJ3JJ759NJiepI34WbXGkeLbqFaW7SIkE0SYvZzAEJdTw33amsc2q
-         LUxSByhQxUvt2EnFnbM4ezb89uRIwnb0fZEwO/N1bY6doD+I8hqRErZnCj4tf9Ipw1gd
-         2jxWYffv+nLchU+5A15QXk4yhnseUNksra+DF7eDGzhywISBNhhjEtQhvkLEWqzgkrgW
-         C8IsJl22qBLJ8TzT0hPsyoyMVjL8j0eBpLzjftMOj/yqTlzUy0b1ofTJYmnJDSwOox6N
-         /TR/C5373pAFSlJ3kW+c9uHzNnVOaDWEeDX2ZBN0ChTTJc957HCZHGcYGldW8IabYuZP
-         uNsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786446401; x=1787051201;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ncPBKBVNM6ovNcsCic32cHugMXoIYOhz070STPXc4TY=;
-        b=nJtwHJBxs5S1ctU4VG5FV7rcFd4KMbcXJRYidxBILRsrTR5sTs+P2NZLx4b8A34TAJ
-         vr2rWtNBrzfPHeIECaMdHUkZOh3r705jrneTJsYW9+vmVqxvAY/QGibPM0tDH/wBYzzi
-         pps9sMxmoZAGae5DZiJWBQOeOpbaOHVZEGhO76o97fZ+zPSTo4Kb6RERZb0Nub7nE5Vr
-         uWd8hvj5Wa6GfPwUk6NeMiXEcdxA+BRAwK5IMrHoOSc9htzuSvAPxfqVlnFV1FZHRSiZ
-         XCheCaupXnxUUVbj0xLNdD4RWUdmlZIZ3Pqt3A/YTtlK/uaW1r9R+o3Dr0KOewENVEBl
-         lvPg==
-X-Forwarded-Encrypted: i=1; AHgh+Rpu8uEAAjViqsCnMMDBFfVW19CHC+vQJtKR6tjF27C6CNaCPB5r3zbBMO7rQdx4BP50WpfRvabGUkNXCbz/7fsVWGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMOvz+7GCK1n7upYpoZlsQyVyb1t9RZJe1wVNKHFxPs0cAJFGQ
-	CydyhLt4UzaOPIqpROw9MBI49JAvF3vSldj1aC/xnDnuHzr1t1GBmmMg
-X-Gm-Gg: AR+sD129ER7OfurlirRGBomtFL2pj6CuVeXnDYrDwNzMiwH90WJvN4lLpqdFbHtnQYK
-	tgzAlAbVSIXqmyfl20RyFcR4BHqLDfi87TJluSIWtOgvmFBEQVyzc4MO1V197IucF+Tk/tmBqmb
-	Z7bsXdaOI0oazTWmDj9t9uvJCfRLHYVFd6IdjbH7BXbHRw06xeJ9QGOxLT/yqeSTJFrn8k1VvJT
-	u9cofP49Q1Y2o3UD9oW1aFR4wwVEhU8SAt7TVG2v73P2MRUmvw5hma1q7gI+f6jmcZ5Lcbb9X03
-	XpNOv56wNtzGwZlLPyneQCJh2lAH4SogHMxB7kL9BbdpTlBsNa+R4Zbo0991djlCVvJw24tNeuU
-	l/IUFAGLInrqJDyXRzvV1NQAzdKMhcd0Km5JO95RPxR3MZnlkJ9JOzGVMayfSRVD5YPP29sX4g/
-	vwhos7eMA+ps6AuH/T6ECcjCbmNRjVr8z7lWx65lv6+8drrP46pv0FR1OVqg==
-X-Received: by 2002:a17:907:3e0e:b0:c19:5bf1:368e with SMTP id a640c23a62f3a-c20e5ed6832mr106791266b.13.1786446401261;
-        Tue, 11 Aug 2026 04:06:41 -0700 (PDT)
-Received: from krava ([173.38.220.33])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c20e414ddadsm37804266b.27.2026.08.11.04.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2026 04:06:40 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 11 Aug 2026 13:06:39 +0200
-To: Hui Zhu <hui.zhu@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <matt@bobrowski.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, Hui Zhu <zhuhui@kylinos.cn>
-Subject: Re: [PATCH bpf-next v5 0/2] bpf: Fix trampoline image UAF on multi
- detach failure
-Message-ID: <ansCPw7KqDWQ4s5N@krava>
-References: <cover.1786412280.git.zhuhui@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ZDqaLm7g";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ZDqaLm7g"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=LR8XLs2K7Av+AN8MFbA38rp+OtYJPybhHowexY5/w4ouSFJJ7P/yP3vj7Cm2IeTMlZUj1pQ0O/2xjCMBBxbLjGLOU55YHqcINNoh6I/SyXT2Vo8NviLhu9ja9UKLZ/MUPzP2Kz1b2WXJPpwW1Fxm68JpYbJBXvmvh3sW1r9D4hLkQDayxSjkruAHPxmAnkffcN1lRWpMdfWrzDgEFtzrarXmMiFXblxTSucUPpQetKHzyHdwmnPeiPOsTpNg73awK3ttMZ8tT/0KkdliCas5KKrRIIfbM4WvDorehZIAmpcMl1cijjZcpJUC9+61eQBB5En17HO8PVWcxM2YYaNCcA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Upa8H8lYci2AEeo5pg4WAAxc+FTB6t5I5dTvHmgOG8=;
+ b=arhJojw6f6UGnxzfNGNedm3EQ31RL+LDDUtCFjgoxJgxH0RGYktGR8/+2qcqTfubb1JHgR8nHmVO9oOC4zjDWAJq81J1hXJ8TQRMZU/Xd+qMZVtX6Szi1NvtBpGif7CZRlZt06G5UJU3ijGMpdRGZRgKDjDJjDAV0achaWfQ8bXAMxQICwThYJ6+MhlbSbWpy5cT7ZXJ5iJz8Ql3kzozGUMZcYJbC09tm/1mI8nOia3fX5Ed/jQGw0p6HjBIJhV8g3q2fZIvxwKbDG0HTiroHKak2ZXnLMQ0iNBOJgkEXbBp42CIW9wEmUCx91ZFp/Y5npRVsUrr0W7dnu36MqtQ2A==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Upa8H8lYci2AEeo5pg4WAAxc+FTB6t5I5dTvHmgOG8=;
+ b=ZDqaLm7gWhUITSg3PvlCRuHDeaF0jtytI9AB0HVCOFjQL41efiVP1AEJKscTP+JFRYc3f4vwBxX6ZAv4Y4PTsCJUFq4gLgyuAFM1k5WCHt84HzI07ZD2DqdbEand2v5A73ThSJ6I32hkVU7sgGurUuuZJ0gjrk4FBCJjr8mRbic=
+Received: from AS4P191CA0033.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:657::20)
+ by AS2PR08MB8747.eurprd08.prod.outlook.com (2603:10a6:20b:55f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Tue, 11 Aug
+ 2026 11:25:57 +0000
+Received: from AMS0EPF000001A9.eurprd05.prod.outlook.com
+ (2603:10a6:20b:657:cafe::7a) by AS4P191CA0033.outlook.office365.com
+ (2603:10a6:20b:657::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.292.25 via Frontend Transport; Tue,
+ 11 Aug 2026 11:25:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AMS0EPF000001A9.mail.protection.outlook.com (10.167.16.149) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.315.6
+ via Frontend Transport; Tue, 11 Aug 2026 11:25:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rfpSa1oKx33iClOdPa8JCMayv6kb2mS5cLSdASv8gqPN7G9jRNvNZr0BRV4nAn6sr7qPWueIE9ojHmSandXoWV6JVIpWCGw0mabIwDi3hHXaLXz/d09eY9YS/qmXGiad6Nx7LwvsP3kdsAo4tvgS/k3HhLmg2aGodcwlkU1qKK2+WtV5Z5feAlL1aVtakk4g/bMK/rfm4u6YKvP7XXcz9/i8d0vgwi39NfSQ1znyncgm9lObFdDx6hgSgY61WahCZgSNmpzHZZeo5EpCJhHGjpN3AhYm7QSKGEWktVwtPMb8mZ/r7AU9IqrFuiWeqKZGgdDb0JOBgfrWxcD4VVqDPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Upa8H8lYci2AEeo5pg4WAAxc+FTB6t5I5dTvHmgOG8=;
+ b=wPp6P2gJ4yNQDU7fWUD1/g6d6JagwvLy15xCBXNctqNPVJNxT71iw0065K7P6c05Yufxg2vVpUuu1t5vH85kR7TRcPvqyfqE4PpXf6TAwLs89iK9hg0BqavgDwN8+AFGzg+osrO2SGItVo/uJYHvmGhmr1GRm5CljI++dqBRw+wB0W+Td9dzJ9gI8qkjy1cSs7hPwJtlQDELDD7lUnOQFut0LFcDCBf3Y/x99uqfZF2ujpT45Smb/nAIPnrxA1r7ex+SOUNkIqhY2cmz+HO2/YWS3qbYInruq9XQi0dBfnhbKn5vsoPQbFeEi7DmozIPRLvwFmokHwABpcYYEaWsiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Upa8H8lYci2AEeo5pg4WAAxc+FTB6t5I5dTvHmgOG8=;
+ b=ZDqaLm7gWhUITSg3PvlCRuHDeaF0jtytI9AB0HVCOFjQL41efiVP1AEJKscTP+JFRYc3f4vwBxX6ZAv4Y4PTsCJUFq4gLgyuAFM1k5WCHt84HzI07ZD2DqdbEand2v5A73ThSJ6I32hkVU7sgGurUuuZJ0gjrk4FBCJjr8mRbic=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from VI1PR08MB3421.eurprd08.prod.outlook.com (2603:10a6:803:80::16)
+ by GV1PR08MB8033.eurprd08.prod.outlook.com (2603:10a6:150:9a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Tue, 11 Aug
+ 2026 11:25:13 +0000
+Received: from VI1PR08MB3421.eurprd08.prod.outlook.com
+ ([fe80::e079:6bd:fbe0:89b4]) by VI1PR08MB3421.eurprd08.prod.outlook.com
+ ([fe80::e079:6bd:fbe0:89b4%3]) with mapi id 15.21.0315.008; Tue, 11 Aug 2026
+ 11:25:11 +0000
+Message-ID: <85286df7-363a-4671-bce8-8157ae5c8f02@arm.com>
+Date: Tue, 11 Aug 2026 12:25:08 +0100
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@arm.com, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ ziy@nvidia.com, pfalcato@suse.de, agordeev@linux.ibm.com,
+ ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH 2/9] mm: make hw_pte_t visible to generic PTE interfaces
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ David Hildenbrand <david@kernel.org>
+References: <20260806083926.1807279-1-usama.anjum@arm.com>
+ <20260806083926.1807279-3-usama.anjum@arm.com>
+ <7xbai2nyu6nuyr6otqv556dnphpgwaqsmvwkqwoqwbh5nvj3ns@ddy5ezgvb7w3>
+From: Muhammad Usama Anjum <usama.anjum@arm.com>
+Content-Language: en-US
+In-Reply-To: <7xbai2nyu6nuyr6otqv556dnphpgwaqsmvwkqwoqwbh5nvj3ns@ddy5ezgvb7w3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0164.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:312::13) To VI1PR08MB3421.eurprd08.prod.outlook.com
+ (2603:10a6:803:80::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1786412280.git.zhuhui@kylinos.cn>
+X-MS-TrafficTypeDiagnostic:
+	VI1PR08MB3421:EE_|GV1PR08MB8033:EE_|AMS0EPF000001A9:EE_|AS2PR08MB8747:EE_
+X-MS-Office365-Filtering-Correlation-Id: b28951d4-3669-499f-4352-08def79b5085
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|56012099006|10067099003|4143699003|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info-Original:
+ S6S52yYdxtDtrbu3+R3LqA1hBff1nj/2rLzT9GQ0+Ov8ipkmk0O3mjgrS/DUQ1/AFHfZWm9IZqKqqBU43nupYPXdHctB4A1PEZb9VDmjzZVISz3QfTXgSdr/68htGFhRc/j48gtQ4l6+L4ZW1nZja24rc6nWlSCYCtCWwtrMSs9R7h+dNpcLi2YgHViFI9Py9PcceBHI2y1hbD3tgIm9e45D/TvCqL/DDHF12QMIcti8yIvgdyO09z7AYYF74iZeACzU7uBne+6EXxl5OTZFg6QDzYUP73s7GSAEpT8D0uC32vGvMHjG8m+SK/kgAzP+Nmx82vnMrK3xq8uA+VWijeEIKRH0QxmnSwYsuk1AtsGokPKiK6I6K7ncpwqGz621yibL1B1X/TtMxwipICwYVw/YV+fP2FF6t2BPeh9+LOL+/jJ5P4Q0nEQm8VGkWH7CqIW3RZfdDrfhmWwygRbb4FGuEulKGS0Zb9XSJgqJ/zyiqn5W4UNQbXYIOTge5Vv9t0ogYUJ+UEirnawh/Dtsl7J7crALwP6tP+AkARGX3R1W7ZcuiL99OIu2CO3DNYis4WRH+XIaGeh4GtZWlHcy/Q/iSOzNy8TKPbP6PMGBNW2rO6bfWb0+8p3gurQ1AfDE8vOseTc5WWE/ndAm09GMDOSotmNmMi7644PyBtk9BhE=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3421.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(56012099006)(10067099003)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-Exchange-RoutingPolicyChecked:
+ HcK3rNnbwnlUGSwsDidSABGG1HQSoO72TkmhaC28ctmrJg8jVmz1OTzbiHJyHscmR1RSZ/MVJf3UF+V1Dje2C1z7jQczHvpZZk9NqnA1pIaWUyQ0NJGWUP8OQZQ7BxNR+CvvvJU4JV3+pgE+pVX/LgqCg/GXYo9PNipkTyJMz9mRgXBJrvoOJFLveHRnnNj6ydDRiY+xZEs2n9JOMvPO5HLQY82ufTlmcOJ3FL9PskIALGq/04QKaGj1BuKnnTOeCwktvBeWr/VO5+ier2emXtvzMh/0Yd8zfkfTpnuAfv7qGuIggIUVnYNjisH2v/7Pxh+mGQifH9TryIJK1GhcFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB8033
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS0EPF000001A9.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	eedea4c3-0f48-4936-b2b9-08def79b350b
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|14060799003|36860700016|35042699022|23010399003|1800799024|82310400026|7416014|376014|10067099003|56012099006|11063799006|4143699003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	6KeX0Y8hlJ6T8DzdMW1+mLWuzvKwSvsLtVaM1FZSBYQFe2/wJ9AM2jY6ZKYld4Xl2hdLlFmzsPGUB5r4A4gd7B3BDO7zfp+pOAwufqbeXfYmrHSUmyqnHgYGKQTtPxLxVvlkmrZV6SHU2W4jdHN5JitLujQKDD98cTOrNXmnw2rMrGNzhPel/sMCrrxUOwcDyNJzMhjNvTihybUfZEVVS6KX6L7TIuHg6Hrt5ougauduq1FrBUL+6J76wEjtl/xKDnxve5EXBb7d1FXkUSfEgNgAHCwP0vZIRt40S4BHfeSviAlN4pxqH2tUK41SRVj5I7A6f+xUG9WT0yFTvXowhCvXxrlE3eD+2PiLSAOujzLikwzfHMtN9knYkKcDtMFMcq+/iqei+pN0DkXdGTnlV5+aILrwkI5aQvTaP5+NzPWrhEmc3B+TO+4dcPLY1VlERE1j70QDf71kHs4R3st0+eZpsjxeFEOV3sxJo8/V+bdpg8iT81OrvEvWHFyrFBPyta3aIdfh0/WyiKDrN2Lp0d8WTKmHlQFnlvDseOO3dPGPLGROGxMiC/xqCne8h2QWiQKpjdh3pJipAoo3nL0btv/sUspBv1jsoWkKSEk8X3xlhoLcq4AWhm3rWFtoTS3eh1ZCxS7IbIcbzCEVnAAXUrXMliI1AAoko08NSYK6d4Fj3BLijKjNKhwfbDVCGGcgRmz0pcNOwhIIpwUuMdFgsg==
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(36860700016)(35042699022)(23010399003)(1800799024)(82310400026)(7416014)(376014)(10067099003)(56012099006)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	PpJWUGBI0WXngUjmkkmjZ8b9gVABqPlGGdB9in5/n5SVZR/asrpHB7LtoHfG4dL4AjWVyKTXpsEwcsX+jvKJYl51kZwclhNMX8lZECOJjm1ho6qMO3JWlgYLZbH1Fq9uRoCjmRSkf89Wu5QQgQiJQn7NgXUp1gxZDG+bm7d6kU7ubZhtxXLe55hhalbMJFecFRP3KRfX1w+j6xBke2NFN/V2E7odXBw/sjlfrNmeBofeAKv/j7gH42MDjAGWfA8EQwUOF8zhAC42fhaPcfmtjCYKn4wJElqHNc37lF105kHubkPzm7VB2ryGNn/JgYeP0MlcOcYG1Dn5KUpILs7lTmk+Xjb5U9iSSjI4JApKKGTiYPMVqrcCIQYYHQEHa09ZjxJEZjARr7DDEpsYzqGq0xo6ca/UhZFYZtmedtQ2phr8KIsEK0Kbi9zCAxauV+9Z
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2026 11:25:57.5424
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b28951d4-3669-499f-4352-08def79b5085
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001A9.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8747
 
-On Tue, Aug 11, 2026 at 10:46:18AM +0800, Hui Zhu wrote:
-> From: Hui Zhu <zhuhui@kylinos.cn>
+On 11/08/2026 11:15 am, Anshuman Khandual wrote:
+> On Thu, Aug 06, 2026 at 09:38:40AM +0100, Muhammad Usama Anjum wrote:
+>> Later conversions use hw_pte_t in page-table checking, generic page-table
+>> helpers, and vmalloc interfaces. Include linux/pgtable_types.h from the
+>> headers that declare those interfaces before changing their types.
+>>
+>> For vmalloc.h, replace the direct asm/page.h include with
+>> linux/pgtable_types.h. The latter includes asm/page.h, so pgprot_t remains
+>> available. It also provides either the default alias or the opted-in
+>> hw_pte_t wrapper.
 > 
-> This series fixes a UAF in bpf_trampoline_multi_attach_free() where
-> old_image is freed while ftrace still calls into it, and makes
-> bpf_trampoline_multi_detach() return void as suggested by Jiri Olsa.
-> 
-> Patch 1 fixes the UAF.  Patch 2 is an independent cleanup that
-> changes the return type to void and drops the WARN_ON_ONCE at the
-> call site.
-> 
-> Changelog:
-> v5:
-> According to the comments of bot+bpf-ci, split the single patch into
-> two: the bug fix and the return-type cleanup.
-> v4:
-> According to the comments of bot+bpf-ci, add Fixes: and update comments
-> of bpf_trampoline_multi_attach_free.
-> v3:
-> According to the comments of Jiri Olsa, drop patches 2/3 and the
-> prog-side machinery.
-> keep only the simplified image-side fix in
-> bpf_trampoline_multi_attach_free() and make
-> bpf_trampoline_multi_detach() return void.
-> v2:
-> Folded v1's two detach patches into patch 1.
-> According to the comments of Jiri Olsa, Pin the prog (pinned_prog) on
-> cur_image so it stays alive while ftrace may still call into it.
-> Make bpf_trampoline_multi_detach() return void.
-> Fix the same UAF in standard (non-multi) trampolines.
-> According to the comments of sashiko, Fix the prog UAF in
-> bpf_trampoline_multi_attach() rollback.
-> Leak the trampoline in bpf_trampoline_put() when cur_image is left
-> by a rollback.
-> 
-> Hui Zhu (2):
->   bpf: Fix UAF in bpf_trampoline_multi_attach_free on update failure
->   bpf: Make bpf_trampoline_multi_detach return void
+> Stand-alone header file updates are not ideal. Why cannot these changes be
+> folded in, where hw_pte_t gets used first time ever in the above mentioned
+> places.
+That's correct. This patch should be merged with the 3/9 patch. But that patch
+is already too much big as it was generated with the help of Coccinelle. So I
+kept it separate.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Do you still think we should merge it as its a special case?
 
-thanks,
-jirka
+> 
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>> ---
+>> Changes since RFC v1:
+>> - Clarify that the header provides both generic hw_pte_t definitions.
+>> ---
+>>  include/linux/page_table_check.h | 2 ++
+>>  include/linux/pgtable.h          | 1 +
+>>  include/linux/vmalloc.h          | 2 +-
+>>  3 files changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/page_table_check.h b/include/linux/page_table_check.h
+>> index 12268a32e8be1..12ee6d16ad339 100644
+>> --- a/include/linux/page_table_check.h
+>> +++ b/include/linux/page_table_check.h
+>> @@ -7,6 +7,8 @@
+>>  #ifndef __LINUX_PAGE_TABLE_CHECK_H
+>>  #define __LINUX_PAGE_TABLE_CHECK_H
+>>  
+>> +#include <linux/pgtable_types.h>
+>> +
+>>  #ifdef CONFIG_PAGE_TABLE_CHECK
+>>  #include <linux/jump_label.h>
+>>  
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index 8c093c119e5a8..cf595608cc4c4 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -4,6 +4,7 @@
+>>  
+>>  #include <linux/pfn.h>
+>>  #include <asm/pgtable.h>
+>> +#include <linux/pgtable_types.h>
+>>  
+>>  #define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
+>>  #define PUD_ORDER	(PUD_SHIFT - PAGE_SHIFT)
+>> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+>> index aed121d729b01..b068e6ade4207 100644
+>> --- a/include/linux/vmalloc.h
+>> +++ b/include/linux/vmalloc.h
+>> @@ -8,7 +8,7 @@
+>>  #include <linux/init.h>
+>>  #include <linux/list.h>
+>>  #include <linux/llist.h>
+>> -#include <asm/page.h>		/* pgprot_t */
+>> +#include <linux/pgtable_types.h>	/* pgprot_t, hw_pte_t */
+>>  #include <linux/rbtree.h>
+>>  #include <linux/overflow.h>
+>>  
+>> -- 
+>> 2.47.3
+>>
+
+-- 
+Thanks,
+Usama
+
