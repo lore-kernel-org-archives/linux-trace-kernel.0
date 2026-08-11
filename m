@@ -1,33 +1,33 @@
 Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A84426D0A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 09:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6883742C51D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 09:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786441820; cv=none; b=uUD9hVObLNGnlgsS+LZRfZAipiz9DCOkv09y1FgoqoDiHDcfISWBMeioVaD0TLPnCfrMPfsibQKbzhRws+pP/ix7hXZd8V144NlWDW7qIlLNZjBFW0lS6768u5mCXi4G0mAg4QJCErgSoM7YH/2pFkPhKcxRhWXpeHYfK+BeyqQ=
+	t=1786441820; cv=none; b=u7hnkbVF35M10R8ZSMgu1mxi+NLM5dBZnjMti7cpK4mteNIhJk/qqk3TNPjwWQnT5oBSl5LATqDLyoqb78g9tUeuVBa4anYxRvV5hv/oTfTdMLWiwoBAAzif7RovgysIdj5JsQfhlWf39BE5I0HN9oOTBm5zpShbDItxCcu4lJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786441820; c=relaxed/simple;
-	bh=8yc/5SsSBS/4ACOUrVK3C5QVdRmIE5+8fPVIv87GgG8=;
+	bh=kLqHSHrBqou5E0860a5PfzdR5XbbXMWKhJvQ2wZLMtY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AaRnx3LwR2g3sNGXxHila4KvEOn/hSy0K0mO5HRMLE2deWe4lc3k+4AWZi3GQQxvIZKp5xLeR0Lt5fytTVk/UWYxmhgg1tf7b86pcEEMMNn7lkjTXudou7VcgW9G9vIK3bieYtXHEK46UVWu6Ai3TkpKIug+tFZfkQw9Jy0OVPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=crxxTIBU; arc=none smtp.client-ip=45.157.188.13
+	 MIME-Version:Content-Type; b=AOMlcQi7U15G59WqXQhq1ltWyp66QswGFIrvDSoQop0MeoH846xidHXHf5C1VSoXRggXZ1VBcI3HT1f7S9WOD+40RBPydNlrAsgFutn+45DNKPY1l4G3WqofarnmQ1Q2LKFmgGhxEvXapc6OFlZnUixoN3gHLj5aiRFbSt745Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=TL50zToc; arc=none smtp.client-ip=45.157.188.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="crxxTIBU"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hK6C030NCzClB;
-	Tue, 11 Aug 2026 11:43:56 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="TL50zToc"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hK6C90bQKzCVZ;
+	Tue, 11 Aug 2026 11:44:05 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1786441436;
-	bh=dFsgLq31B1yEwTnAe5VXn0vjAC6/oGGCigNK+SNeDYo=;
+	s=20191114; t=1786441444;
+	bh=ncMwcN5p33PdM1URvZzQ3n41peLKTOh0s0DZMahOZc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=crxxTIBUqdaMK7hBAW/G25uOxK8DwN8jrpU6jz3MCmcKG6d/e9qiJgh11Ny41GGQh
-	 7eW29IqVKB642zmsPEi6kcUdXtwHBSLTpVUIhBmBoIZdXCN20nfiW7YFm7U/KIjUcX
-	 a4jxOa7HkNClZMC2u4KgVn5a/RqFBYcA+10XO9wM=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hK6Bz1sqqzZH8;
-	Tue, 11 Aug 2026 11:43:55 +0200 (CEST)
+	b=TL50zToc4RQP5vqUJr+HVROaJ8ugCB5yojbkiJAjApHedsoYX3VLgC1cLLNsZHZRz
+	 h5nfa1IBXB6hOsv9Q04dhuDw1AvmfMN1ZBZR/+YCjCNZuTPsEmg6wscZ/pluTpiBu7
+	 wEM06UOgcsE1S9UqdtUkzmXpRTgjUeHQQcPPTt8g=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hK6C73SnBzPst;
+	Tue, 11 Aug 2026 11:44:03 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>
@@ -45,9 +45,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	kernel-team@cloudflare.com,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 05/19] landlock: Decouple the per-denial logging decision from CONFIG_AUDIT
-Date: Tue, 11 Aug 2026 11:43:19 +0200
-Message-ID: <20260811094338.288094-6-mic@digikod.net>
+Subject: [PATCH v4 10/19] landlock: Add landlock_enforce_domain tracepoint
+Date: Tue, 11 Aug 2026 11:43:24 +0200
+Message-ID: <20260811094338.288094-11-mic@digikod.net>
 In-Reply-To: <20260811094338.288094-1-mic@digikod.net>
 References: <20260811094338.288094-1-mic@digikod.net>
 Precedence: bulk
@@ -60,317 +60,211 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Until now, whether a denial is logged was decided inside
-landlock_audit_denial(): a per-execution flag check (log_same_exec or
-log_new_exec, selected by the credential's domain_exec bitmask),
-preceded by a LANDLOCK_LOG_DISABLED early return in
-landlock_log_denial() for domains an ancestor fully quieted.
+The landlock_create_domain event records that a domain was created,
+once, before thread-sync.  It cannot tell which threads end up enforcing
+it: a successful landlock_restrict_self(2) with
+LANDLOCK_RESTRICT_SELF_TSYNC applies the domain to the caller and every
+eligible sibling.  Creation (the operation) and enforcement (the
+per-thread outcome) are distinct.
 
-Factor that decision into a single is_denial_logged() helper called once
-by landlock_log_denial(), and pass its result to landlock_audit_denial()
-as a "logged" boolean.  A following commit passes the same boolean to
-the deny tracepoints, so audit and tracing share one decision that stays
-correct as new log state is added, and a tracepoints-only build
-(CONFIG_AUDIT=n) computes it identically.  Computing the logged verdict
-once in the shared helper makes audit and tracing apply identical
-filtering, so they cannot report different logged= values for the same
-denial as log controls grow.
+Add landlock_enforce_domain(domain, complete, process_wide), emitted
+once per thread the domain is applied to, strictly after that thread's
+commit_creds(), so it fires only for a thread that is enforcing the
+domain, never speculatively; an aborted operation emits none.  The
+lifecycle now reads create -> enforce* -> free.
 
-Move the LANDLOCK_LOG_DISABLED gate out of landlock_log_denial() into
-the decision so num_denials counts every denial, including those a
-domain quiets.  This was previously masked: the only reader of
-num_denials is the audit "domain deallocated" record, emitted only for
-domains that reached LANDLOCK_LOG_RECORDED; a fully quieted domain never
-records, so its undercount was never observable.  A following commit
-adds a free_domain tracepoint that reports num_denials, which needs the
-full count.
+The two booleans name properties, not the implementation:
+- complete: marks the single event that concludes the operation.  It
+  names the outcome, the set is now enforced, not which thread
+  finishes, which the contract leaves unspecified.
+- process_wide: means every eligible thread of the process is
+  covered.  It is set race-free by either establishing path,
+  thread-sync or a single-threaded process, so
+  complete && process_wide is the whole-process-enforced guarantee.
 
-This is not a functional change for audit: the logged decision and the
-audit_enabled gate are preserved, so the emitted records are identical.
+The requesting thread and source ruleset are not repeated here: they are
+on create_domain (joined via domain->hierarchy->id) and on the immutable
+domain->hierarchy->details.  Source ruleset means the ruleset_id and
+ruleset_version recorded on create_domain, not the ruleset object, which
+the caller may close before enforcement.
 
 Cc: Günther Noack <gnoack@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tingmao Wang <m@maowtm.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
 
+Changes since v3:
+https://patch.msgid.link/20260722171159.2776765-12-mic@digikod.net
+- Rebased onto landlock-next: emit the enforce_domain tracepoint
+  alongside the new LANDLOCK_RESTRICT_SELF_NO_NEW_PRIVS handling in
+  landlock_restrict_self().
+- Add a no_new_privs field to landlock_enforce_domain recording the
+  thread's no_new_privs state (task_no_new_privs() at emission, for
+  both the caller and TSYNC-swept siblings), so consumers see whether
+  the domain is backed by no_new_privs or by CAP_SYS_ADMIN.  The raw
+  restrict_self flags stay unexposed here (readable via the
+  syscall-entry tracepoint).
+
 Changes since v2:
 - New patch.
 ---
- security/landlock/audit.c | 90 ++++-----------------------------------
- security/landlock/audit.h | 14 ++----
- security/landlock/log.c   | 88 ++++++++++++++++++++++++++++++++++++--
- 3 files changed, 97 insertions(+), 95 deletions(-)
+ include/trace/events/landlock.h | 60 +++++++++++++++++++++++++++++++++
+ security/landlock/syscalls.c    | 14 +++++++-
+ security/landlock/tsync.c       | 16 +++++++++
+ 3 files changed, 89 insertions(+), 1 deletion(-)
 
-diff --git a/security/landlock/audit.c b/security/landlock/audit.c
-index dfa1e5a64aac..32260e7cbfe9 100644
---- a/security/landlock/audit.c
-+++ b/security/landlock/audit.c
-@@ -136,104 +136,32 @@ static void log_domain(struct landlock_hierarchy *const hierarchy)
- 	WRITE_ONCE(hierarchy->log_status, LANDLOCK_LOG_RECORDED);
- }
+diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+index 9f0d0436a8bb..43bf126eb449 100644
+--- a/include/trace/events/landlock.h
++++ b/include/trace/events/landlock.h
+@@ -339,6 +339,66 @@ TRACE_EVENT(landlock_create_domain,
+ 		__entry->ruleset_id, __entry->ruleset_version)
+ );
  
--static access_mask_t
--pick_access_mask_for_request_type(const enum landlock_request_type type,
--				  const struct access_masks access_masks)
--{
--	switch (type) {
--	case LANDLOCK_REQUEST_FS_ACCESS:
--		return access_masks.fs;
--	case LANDLOCK_REQUEST_NET_ACCESS:
--		return access_masks.net;
--	default:
--		WARN_ONCE(1, "Invalid request type %d passed to %s", type,
--			  __func__);
--		return 0;
--	}
--}
--
++/**
++ * landlock_enforce_domain - Domain enforced on a thread
++ *
++ * @domain: Domain now enforced on the current thread (never NULL,
++ *          immutable; read locklessly).  Correlate to
++ *          landlock_create_domain via @domain->hierarchy->id for the
++ *          source ruleset and requesting thread, or read
++ *          @domain->hierarchy->details for the requesting process.
++ * @complete: Set on the single event that concludes the operation, after
++ *            all its other enforcements; filter on it for one event per
++ *            operation.
++ * @process_wide: The enforcement covers every eligible (non-exiting)
++ *                thread of the process: set when the caller used
++ *                %LANDLOCK_RESTRICT_SELF_TSYNC or the process is
++ *                single-threaded.  A lone thread whose group still
++ *                holds a zombie leader is not counted single-threaded,
++ *                so process_wide == 0 never proves the opposite.
++ * @no_new_privs: The enforcing thread's no_new_privs state at
++ *                enforcement time: 1 if set (by a prior
++ *                :manpage:`prctl(2)` %PR_SET_NO_NEW_PRIVS or by
++ *                %LANDLOCK_RESTRICT_SELF_NO_NEW_PRIVS), 0 if the domain
++ *                was enforced with %CAP_SYS_ADMIN instead.
++ *
++ * Emitted for each thread sys_landlock_restrict_self() enforces the
++ * domain on, in that thread's own context, right after its
++ * commit_creds(), so it fires only once the thread is irreversibly
++ * enforcing the domain (aborted operations emit none).  Not
++ * balanced; every enforcement falls between the domain's
++ * landlock_create_domain and landlock_free_domain events.
++ *
++ * @complete == 1 && @process_wide == 1 means the whole process is
++ * sandboxed by @domain, durably (Landlock domains are monotonic and
++ * inherited on :manpage:`clone(2)`).
++ */
++TRACE_EVENT(landlock_enforce_domain,
++
++	TP_PROTO(const struct landlock_domain *domain, bool complete,
++		 bool process_wide, bool no_new_privs),
++
++	TP_ARGS(domain, complete, process_wide, no_new_privs),
++
++	TP_STRUCT__entry(
++		__field(	__u64,		domain_id	)
++		__field(	bool,		complete	)
++		__field(	bool,		process_wide	)
++		__field(	bool,		no_new_privs	)
++	),
++
++	TP_fast_assign(
++		__entry->domain_id	= domain->hierarchy->id;
++		__entry->complete	= complete;
++		__entry->process_wide	= process_wide;
++		__entry->no_new_privs	= no_new_privs;
++	),
++
++	TP_printk("domain=%llx complete=%d process_wide=%d no_new_privs=%d",
++		__entry->domain_id, __entry->complete, __entry->process_wide,
++		__entry->no_new_privs)
++);
++
  /**
-  * landlock_audit_denial - Create an audit record for a denied access request
+  * landlock_free_domain - Domain freed
   *
-- * @subject: The Landlock subject's credential denying an action.
-  * @request: Detail of the user space request.
-  * @youngest_denied: The youngest hierarchy node that denied the access.
-- * @youngest_layer: The layer index of @youngest_denied.
-  * @missing: The set of denied access rights.
-- * @object_quiet_flag: Whether the object denied by @youngest_denied is
-- *                     covered by a quiet rule in that layer.
-+ * @logged: Whether the denial is selected for logging, as computed by
-+ *          landlock_log_denial() (domain policy and quiet rules).
-  *
-- * Called from landlock_log_denial() with the same arguments.
-+ * Emits the record when audit is enabled and the denial is selected for
-+ * logging.
+diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+index ba4193673c70..1d02d57f4c48 100644
+--- a/security/landlock/syscalls.c
++++ b/security/landlock/syscalls.c
+@@ -22,6 +22,7 @@
+ #include <linux/mount.h>
+ #include <linux/path.h>
+ #include <linux/sched.h>
++#include <linux/sched/signal.h>
+ #include <linux/security.h>
+ #include <linux/stddef.h>
+ #include <linux/syscalls.h>
+@@ -546,6 +547,7 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
+ 	struct landlock_domain *new_dom = NULL;
+ 	struct cred *new_cred;
+ 	struct landlock_cred_security *new_llcred;
++	bool process_wide;
+ 	bool __maybe_unused log_same_exec, log_new_exec, log_subdomains,
+ 		prev_log_subdomains;
+ 
+@@ -690,5 +692,15 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
+ 	if (flags & LANDLOCK_RESTRICT_SELF_NO_NEW_PRIVS)
+ 		task_set_no_new_privs(current);
+ 
+-	return commit_creds(new_cred);
++	/* Whole process: thread-sync swept siblings, or single-threaded. */
++	process_wide = (flags & LANDLOCK_RESTRICT_SELF_TSYNC) ||
++		       get_nr_threads(current) == 1;
++	commit_creds(new_cred);
++
++	/* The caller commits last, so its event concludes the operation. */
++	if (ruleset)
++		trace_landlock_enforce_domain(new_dom, true, process_wide,
++					      task_no_new_privs(current));
++
++	return 0;
+ }
+diff --git a/security/landlock/tsync.c b/security/landlock/tsync.c
+index 0b71e158c3f5..cfa73a2a67ca 100644
+--- a/security/landlock/tsync.c
++++ b/security/landlock/tsync.c
+@@ -22,6 +22,8 @@
+ #include "cred.h"
+ #include "tsync.h"
+ 
++#include <trace/events/landlock.h>
++
+ /*
+  * Shared state between multiple threads which are enforcing Landlock rulesets
+  * in lockstep with each other.
+@@ -79,6 +81,8 @@ struct tsync_work {
   */
--void landlock_audit_denial(const struct landlock_cred_security *const subject,
--			   const struct landlock_request *const request,
-+void landlock_audit_denial(const struct landlock_request *const request,
- 			   struct landlock_hierarchy *const youngest_denied,
--			   const size_t youngest_layer,
--			   const access_mask_t missing,
--			   const bool object_quiet_flag)
-+			   const access_mask_t missing, const bool logged)
+ static void restrict_one_thread(struct tsync_shared_context *ctx)
  {
- 	struct audit_buffer *ab;
--	bool quiet_applicable_to_access = false;
++	const struct landlock_domain *new_dom =
++		landlock_cred(ctx->new_cred)->domain;
+ 	int err;
+ 	struct cred *cred = NULL;
  
- 	if (!audit_enabled)
- 		return;
+@@ -147,6 +151,18 @@ static void restrict_one_thread(struct tsync_shared_context *ctx)
  
--	/* Checks if the current exec was restricting itself. */
--	if (subject->domain_exec & BIT(youngest_layer)) {
--		/* Ignores denials for the same execution. */
--		if (!youngest_denied->log_same_exec)
--			return;
--	} else {
--		/* Ignores denials after a new execution. */
--		if (!youngest_denied->log_new_exec)
--			return;
--	}
--
- 	/*
--	 * Checks if the object is marked quiet by the layer that denied the
--	 * request.  If it's a different layer that marked it as quiet, but that
--	 * layer is not the one that denied the request, we should still audit
--	 * log the denial.
-+	 * Skips denials the domain's policy or a quiet rule excludes from
-+	 * logging (folded into @logged by landlock_log_denial()).
- 	 */
--	if (object_quiet_flag) {
--		/*
--		 * We now check if the denied requests are all covered by the
--		 * layer's quiet access bits.
--		 */
--		const access_mask_t quiet_mask =
--			pick_access_mask_for_request_type(
--				request->type, youngest_denied->quiet_masks);
--
--		quiet_applicable_to_access = (quiet_mask & missing) == missing;
--	} else {
--		/*
--		 * Either the object is not quiet, or this is a scope request.
--		 * We check request->type to distinguish between the two cases.
--		 */
--		const access_mask_t quiet_mask =
--			youngest_denied->quiet_masks.scope;
--
--		switch (request->type) {
--		case LANDLOCK_REQUEST_SCOPE_SIGNAL:
--			quiet_applicable_to_access =
--				!!(quiet_mask & LANDLOCK_SCOPE_SIGNAL);
--			break;
--		case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
--			quiet_applicable_to_access =
--				!!(quiet_mask &
--				   LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
--			break;
--		/*
--		 * Leave LANDLOCK_REQUEST_PTRACE and
--		 * LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY unhandled for now - they
--		 * are never quiet.
--		 */
--		default:
--			break;
--		}
--	}
--
--	if (quiet_applicable_to_access)
-+	if (!logged)
- 		return;
+ 	commit_creds(cred);
  
- 	/* Uses consistent allocation flags wrt common_lsm_audit(). */
-diff --git a/security/landlock/audit.h b/security/landlock/audit.h
-index 1b36bb3c6cfd..14a514065e08 100644
---- a/security/landlock/audit.h
-+++ b/security/landlock/audit.h
-@@ -12,18 +12,14 @@
- 
- #include "access.h"
- 
--struct landlock_cred_security;
- struct landlock_hierarchy;
- struct landlock_request;
- 
- #ifdef CONFIG_AUDIT
- 
--void landlock_audit_denial(const struct landlock_cred_security *const subject,
--			   const struct landlock_request *const request,
-+void landlock_audit_denial(const struct landlock_request *const request,
- 			   struct landlock_hierarchy *const youngest_denied,
--			   const size_t youngest_layer,
--			   const access_mask_t missing,
--			   const bool object_quiet_flag);
-+			   const access_mask_t missing, const bool logged);
- 
- void landlock_audit_free_domain(
- 	const struct landlock_hierarchy *const hierarchy);
-@@ -31,11 +27,9 @@ void landlock_audit_free_domain(
- #else /* CONFIG_AUDIT */
- 
- static inline void
--landlock_audit_denial(const struct landlock_cred_security *const subject,
--		      const struct landlock_request *const request,
-+landlock_audit_denial(const struct landlock_request *const request,
- 		      struct landlock_hierarchy *const youngest_denied,
--		      const size_t youngest_layer, const access_mask_t missing,
--		      const bool object_quiet_flag)
-+		      const access_mask_t missing, const bool logged)
- {
- }
- 
-diff --git a/security/landlock/log.c b/security/landlock/log.c
-index 6dd3373c4ba4..f42e6dc4de5c 100644
---- a/security/landlock/log.c
-+++ b/security/landlock/log.c
-@@ -405,6 +405,86 @@ static bool is_valid_request(const struct landlock_request *const request)
- 	return true;
- }
- 
-+static access_mask_t
-+pick_access_mask_for_request_type(const enum landlock_request_type type,
-+				  const struct access_masks access_masks)
-+{
-+	switch (type) {
-+	case LANDLOCK_REQUEST_FS_ACCESS:
-+		return access_masks.fs;
-+	case LANDLOCK_REQUEST_NET_ACCESS:
-+		return access_masks.net;
-+	default:
-+		WARN_ONCE(1, "Invalid request type %d passed to %s", type,
-+			  __func__);
-+		return 0;
-+	}
-+}
-+
-+/*
-+ * Whether a quiet rule silences the denial: the rule must cover the whole
-+ * denied access in the layer that denied it (a quiet rule in a non-denying
-+ * layer does not suppress the denial).
-+ */
-+static bool
-+is_denial_quieted(const struct landlock_request *const request,
-+		  const struct landlock_hierarchy *const youngest_denied,
-+		  const access_mask_t missing, const bool object_quiet_flag)
-+{
-+	if (object_quiet_flag) {
-+		const access_mask_t quiet_mask =
-+			pick_access_mask_for_request_type(
-+				request->type, youngest_denied->quiet_masks);
-+
-+		return (quiet_mask & missing) == missing;
-+	}
-+
 +	/*
-+	 * Either the object is not quiet, or this is a scope request.  We check
-+	 * request->type to distinguish between the two cases.
++	 * Emitted strictly after commit_creds() and before the out: label, so
++	 * it fires only for a thread now enforcing new_dom, and every
++	 * non-concluding (complete == false) event happens-before the
++	 * operation's single concluding one.  Skipped on the flags-only path,
++	 * where old_cred and new_cred carry the same domain.  A sibling never
++	 * concludes the operation and its enforcement is always process-wide.
 +	 */
-+	switch (request->type) {
-+	case LANDLOCK_REQUEST_SCOPE_SIGNAL:
-+		return !!(youngest_denied->quiet_masks.scope &
-+			  LANDLOCK_SCOPE_SIGNAL);
-+	case LANDLOCK_REQUEST_SCOPE_ABSTRACT_UNIX_SOCKET:
-+		return !!(youngest_denied->quiet_masks.scope &
-+			  LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
-+	/*
-+	 * Leave LANDLOCK_REQUEST_PTRACE and LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY
-+	 * unhandled for now - they are never quiet.
-+	 */
-+	default:
-+		return false;
-+	}
-+}
++	if (new_dom != landlock_cred(ctx->old_cred)->domain)
++		trace_landlock_enforce_domain(new_dom, false, true,
++					      task_no_new_privs(current));
 +
-+/*
-+ * Computes whether a denial from youngest_denied is selected for logging by the
-+ * domain's policy: its logging must not be disabled (by both per-execution
-+ * flags being off, or by an ancestor's
-+ * LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF), the per-execution flag matching
-+ * same_exec must be set, and no quiet rule may cover the denied access.
-+ * landlock_log_denial() computes this once and passes it to
-+ * landlock_audit_denial(), which additionally requires audit_enabled.
-+ */
-+static bool
-+is_denial_logged(const struct landlock_request *const request,
-+		 const struct landlock_hierarchy *const youngest_denied,
-+		 const access_mask_t missing, const bool same_exec,
-+		 const bool object_quiet_flag)
-+{
-+	if (READ_ONCE(youngest_denied->log_status) == LANDLOCK_LOG_DISABLED)
-+		return false;
-+
-+	if (!(same_exec ? youngest_denied->log_same_exec :
-+			  youngest_denied->log_new_exec))
-+		return false;
-+
-+	return !is_denial_quieted(request, youngest_denied, missing,
-+				  object_quiet_flag);
-+}
-+
- /**
-  * landlock_log_denial - Log a denied access
-  *
-@@ -451,8 +531,9 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
- 			get_hierarchy(subject->domain, youngest_layer);
- 	}
- 
--	if (READ_ONCE(youngest_denied->log_status) == LANDLOCK_LOG_DISABLED)
--		return;
-+	const bool same_exec = !!(subject->domain_exec & BIT(youngest_layer));
-+	const bool logged = is_denial_logged(request, youngest_denied, missing,
-+					     same_exec, object_quiet_flag);
- 
- 	/*
- 	 * Consistently keeps track of the number of denied access requests even
-@@ -461,8 +542,7 @@ void landlock_log_denial(const struct landlock_cred_security *const subject,
- 	 */
- 	atomic64_inc(&youngest_denied->num_denials);
- 
--	landlock_audit_denial(subject, request, youngest_denied, youngest_layer,
--			      missing, object_quiet_flag);
-+	landlock_audit_denial(request, youngest_denied, missing, logged);
- }
- 
- /**
+ out:
+ 	/* Notify the calling thread once all threads are done */
+ 	if (atomic_dec_return(&ctx->num_unfinished) == 0)
 -- 
 2.54.0
 
