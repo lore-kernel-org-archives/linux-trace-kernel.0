@@ -1,114 +1,333 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6789D36D4E1;
-	Tue, 11 Aug 2026 20:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F0D357CEA;
+	Tue, 11 Aug 2026 23:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786479681; cv=none; b=ayV+CnKmUS/RpiNRRz0LxWRqU+BNmEnfGf5bfLsstVcesHDrKdyXedViFSGLvUwq5/L5aw8QPacXURIqlitT/bo7mWcF3FEMhPayRJf8pNnNvAUIc8jbN7bUbYNeGJgEqLC/cz6AfJ2mgk9dgXEBaTawMRWN+tlBbOnRuUun6JM=
+	t=1786491548; cv=none; b=DXX4PYaUt/4ZcGYOSQLvtSWb8Gz9toCX/CBXsu8wIFzUUF89bByLKb8VeNcO7KHtw2/7raYzEBMQy0yCt2N07B0kygzrQrZfu9pou4dp1iy1pxwybFc2z1K9z7nTSgPEOdWadGmMi++a3WFAp5f29ssnS6IILI8rOZQHlZ7t2Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786479681; c=relaxed/simple;
-	bh=j5vSuUlMpsm5RdxJT6qJSOQz9ajuzeV2Y3eY8G0ywRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lKtekBrBRkPe73+Edvvgrwe2Q55HyBgvNb/yX9KhHJs2iOHT722rsSozm2DFRtEJVbmaINibKRM49jPtwv0Ew5vCmbxWMqiK3PeDF+AU2sFLDTizajY9xBNga9fl0FmpmcspyzMI1/AJES1HAqTULOAkwJqv0iQryZzTzC4D7r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 472ED12020D;
-	Tue, 11 Aug 2026 20:21:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 2B58617;
-	Tue, 11 Aug 2026 20:21:15 +0000 (UTC)
-Date: Tue, 11 Aug 2026 16:21:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Baolin Liu <liubaolin12138@163.com>
-Cc: almaz.alexandrovich@paragon-software.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- ntfs3@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
- liubaolin12138@gmail.com, Baolin Liu <liubaolin@kylinos.cn>
-Subject: Re: [PATCH v3 v3 5/7] ntfs3: add allocation tracepoints
-Message-ID: <20260811162127.5f98eadb@gandalf.local.home>
-In-Reply-To: <20260807010354.2277156-6-liubaolin12138@163.com>
-References: <20260807010354.2277156-1-liubaolin12138@163.com>
-	<20260807010354.2277156-6-liubaolin12138@163.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786491548; c=relaxed/simple;
+	bh=jp5aDgUNdw4lX3EKDUEmrqhbhHbpntaFPtOqvW3Y4i4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=dP/wieoumO07paGBQXt/TUItFD0VPw3fB3kZfuwHc/y0Oa6+JHps73hcqQIpNxDyOkU3hxuYOL5b0c8dl39utHI2+hT0OKeOxL6smRZoL6OmcWNnWzr/oDYAEykcxHqToA3UjezUEFs96jtYh4dFhUYDyk4oTqPXumZtO+tYNOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOm5vJuK; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOm5vJuK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB621F000E9;
+	Tue, 11 Aug 2026 23:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786491546;
+	bh=DdzHxzFb+l4uABALkV1V87Z+v8mnXXrznbeqaw4w41M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=dOm5vJuKisjnM+EPw1YGhZAm6alvXSZg7/Grr4RB1AZsqfDhPf6Tw+NAlhuqxlkmu
+	 GwZNz1HjSOWx8bJvb3KqSsxnn/LnKSgSmT4c0e1EhjoJce007iy3T3rFwFgvfNb9i/
+	 kYHaO6hn1Wv2EJ1kT3us6p+dVvFlPEM6DMYc/caM4cbNdNllG9rRBKFpRDwVWcZXcJ
+	 0S980z2i0wFldPJSKMQOw+B0qXXnaJdKxtK+Ld8iJKn2kjb4QDW6y4tC+ycXGXMaGx
+	 B2wuig4CXSzsLzUTuVPx4dRp994eLnyh5uA59Dna0PBdsT1Vy2OCKEGQBNwzREl701
+	 2HKpe4n8rO3EA==
+Date: Wed, 12 Aug 2026 08:39:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan
+ <skhan@linuxfoundation.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] selftests/ftrace: Add kernel cmdline tracing
+ testcases
+Message-Id: <20260812083902.2866cd1bb7e3834e36a1ce69@kernel.org>
+In-Reply-To: <178646248625.428104.6475014420560529192.stgit@devnote2>
+References: <178646245730.428104.4400499381224001727.stgit@devnote2>
+	<178646248625.428104.6475014420560529192.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 2B58617
-X-Stat-Signature: ocjs9nwgno1du4p8cgdsbye7n7pmtnyh
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/VU1IovNUTnpcMeB6DOZ3dU/YGtDrMiPc=
-X-HE-Tag: 1786479675-313721
-X-HE-Meta: U2FsdGVkX18Vc6VeKMEkbAlF3WmEe58w7Dt8nBcaBp42q4QsW6Nl1xAF53wEIuyX4osdtK915C/jAE7BTDU1uIQQvW0RTczlxoirvGf7cuw//knGnJKI89t7k9MISFvggTR7Jofwem9n790ur1xmHMaeVEna/rKqJd/mG3hB2u8RTTfHmK81sMLquY6XG2erVb92se9voSuA7MIRoQHslIMg0H3n1qoxvYIIWQAbioHWA2Q9JNi4XKq9len1K+ZRjg4zStkA18fRVoQSiRaKROSkIOUIXyhmg2mhd8yYALzFBiwHJUDbIw5tI2FAD7EK0xJYFApOEd5XTTviGdOm6106Un37yOB4WLXaqbDPOfgLtEY1KcijBWpdW4qd9K/FV482v3h8OMW7DK1UgS+JXQ==
 
-Also Sashiko had something to say about this patch: https://sashiko.dev/#/patchset/20260807010354.2277156-8-liubaolin12138%40163.com
+On Wed, 12 Aug 2026 00:34:46 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> --- Patch [5]: [PATCH v3 v3 5/7] ntfs3: add allocation tracepoints ---
-> commit 0592c540bc564c346cb524c624f6ee4a5768406b
-> Author: Baolin Liu <liubaolin@kylinos.cn>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> ntfs3: add allocation tracepoints
+> Add test cases for kernel command-line tracing options. It verifies
+> various parameters like trace_buf_size and trace_options by reading
+> the output of tracing files in sysfs.
 > 
-> This commit adds trace events for ntfs3 allocation operations. It introduces
-> events for attr_allocate_clusters, attr_set_size_ex, and attr_data_get_block
-> to help observe cluster allocation, size changes, and block mapping activity.
+> Assisted-by: Antigravity:gemini-3.6-flash
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> Changes in v2:
+>  - Fix buffer_size_kb parsing in cmdline-03-trace-buf-size.sh to handle
+>    unexpanded buffer string output '1 (expanded: 2048)'.
+>  - Use grep -qw in cmdline-04-trace-options.sh to match word options
+>    and avoid matching disabled 'no<option>' entries.
+> ---
+>  .../boottime/cmdlines/cmdline-01-ftrace.cmdline    |    1 +
+>  .../cmdlines/cmdline-02-trace-event.cmdline        |    1 +
+>  .../cmdlines/cmdline-03-trace-buf-size.cmdline     |    1 +
+>  .../cmdlines/cmdline-04-trace-options.cmdline      |    1 +
+>  .../cmdlines/cmdline-05-trace-clock.cmdline        |    1 +
+>  .../cmdlines/cmdline-06-trace-instance.cmdline     |    1 +
+>  .../ftrace/boottime/tests/cmdline-01-ftrace.sh     |   19 ++++++++++++++
+>  .../boottime/tests/cmdline-02-trace-event.sh       |   26 +++++++++++++++++++
+>  .../boottime/tests/cmdline-03-trace-buf-size.sh    |   28 ++++++++++++++++++++
+>  .../boottime/tests/cmdline-04-trace-options.sh     |   23 ++++++++++++++++
+>  .../boottime/tests/cmdline-05-trace-clock.sh       |   19 ++++++++++++++
+>  .../boottime/tests/cmdline-06-trace-instance.sh    |   24 +++++++++++++++++
+>  12 files changed, 145 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
+>  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
 > 
-> > diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
-> > index 4ac05ed29e49d..d16dd127ff2e5 100644
-> > --- a/include/trace/events/ntfs3.h
-> > +++ b/include/trace/events/ntfs3.h
-> [ ... ]
-> > +TRACE_EVENT(ntfs3_attr_set_size_ex,
-> > +	TP_PROTO(struct inode *inode, u32 type, u64 new_size, bool keep_prealloc,
-> > +		 bool no_da),
-> > +	TP_ARGS(inode, type, new_size, keep_prealloc, no_da),
-> > +	TP_STRUCT__entry(
-> > +		__field(loff_t, old_size)
-> > +		__field(u64, new_size)
-> > +		__field(unsigned long, ino)
-> > +		__field(dev_t, dev)
-> > +		__field(u32, type)
-> > +		__field(bool, keep_prealloc)
-> > +		__field(bool, no_da)
-> > +	),
-> > +	TP_fast_assign(
-> > +		__entry->old_size = i_size_read(inode);
-> 
-> Will this actually record the previous size during truncate operations?
-> 
-> When an application truncates a file, the VFS size is often updated before 
-> calling into the filesystem. For instance, looking at how ntfs_setattr()
-> handles this:
-> 
-> fs/ntfs3/file.c:ntfs_setattr() {
->         ...
->         truncate_setsize(inode, newsize);
->         
->         err = ntfs_set_size(inode, newsize);
->         ...
-> }
-> 
-> Since truncate_setsize() updates the VFS inode size before attr_set_size_ex()
-> and this tracepoint are reached, won't i_size_read(inode) just return the
-> newly truncated size, resulting in old_size equaling new_size?
-> 
-> Could the actual old size be passed as an explicit parameter to the 
-> tracepoint instead of sampling it here?
-> 
-> > +		__entry->new_size = new_size;
-> > +		__entry->ino = inode->i_ino;
-> > +		__entry->dev = inode->i_sb->s_dev;
-> > +		__entry->type = type;
-> > +		__entry->keep_prealloc = keep_prealloc;
-> > +		__entry->no_da = no_da;
-> > +	),
-> [ ... ]
+> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+> new file mode 100644
+> index 000000000000..4f6fc54240c8
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+> @@ -0,0 +1 @@
+> +ftrace=function
+> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
+> new file mode 100644
+> index 000000000000..66bcd29b14cb
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
+> @@ -0,0 +1 @@
+> +trace_event=sched:sched_switch,kmem:kmalloc
+> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
+> new file mode 100644
+> index 000000000000..e5d1c4a8ca89
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
+> @@ -0,0 +1 @@
+> +trace_buf_size=2048K
+> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
+> new file mode 100644
+> index 000000000000..51d82f8e948d
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
+> @@ -0,0 +1 @@
+> +trace_options=sym-addr,verbose
+> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
+> new file mode 100644
+> index 000000000000..f72a4ac808a3
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
+> @@ -0,0 +1 @@
+> +trace_clock=global
+> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
+> new file mode 100644
+> index 000000000000..9618e3e2b88b
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
+> @@ -0,0 +1 @@
+> +trace_instance=bar,sched:sched_switch
+> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
+> new file mode 100644
+> index 000000000000..23a0b15f2dd3
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
+> @@ -0,0 +1,19 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026, Google LLC.
+> +# Check ftrace= kernel command-line tracer setting
+> +TRACEDIR="/sys/kernel/tracing"
+> +
+> +if [ ! -f "$TRACEDIR/current_tracer" ]; then
+> +	echo "FAIL: current_tracer does not exist"
+> +	exit 1
+> +fi
+> +
+> +read -r TRACER _ < "$TRACEDIR/current_tracer"
+> +if [ "$TRACER" != "function" ]; then
+> +	echo "FAIL: current_tracer is '$TRACER', expected 'function'"
+> +	exit 1
+> +fi
+> +
+> +echo "PASS: cmdline-01-ftrace"
+> +exit 0
+> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
+> new file mode 100644
+> index 000000000000..b793907c48cd
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
+> @@ -0,0 +1,26 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026, Google LLC.
+> +# Check trace_event= kernel command-line setting
+> +TRACEDIR="/sys/kernel/tracing"
+> +
+> +if [ ! -d "$TRACEDIR/events/sched/sched_switch" ]; then
+> +	echo "FAIL: event sched:sched_switch does not exist"
+> +	exit 1
+> +fi
+> +
+> +if [ ! -d "$TRACEDIR/events/kmem/kmalloc" ]; then
+> +	echo "FAIL: event kmem:kmalloc does not exist"
+> +	exit 1
+> +fi
+> +
+> +ENABLE1=$(cat "$TRACEDIR/events/sched/sched_switch/enable")
+> +ENABLE2=$(cat "$TRACEDIR/events/kmem/kmalloc/enable")
+> +
+> +if [ "$ENABLE1" != "1" ] || [ "$ENABLE2" != "1" ]; then
+> +	echo "FAIL: events not enabled (sched_switch=$ENABLE1, kmalloc=$ENABLE2)"
+> +	exit 1
+> +fi
+> +
+> +echo "PASS: cmdline-02-trace-event"
+> +exit 0
+> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
+> new file mode 100644
+> index 000000000000..2eab5fb487a3
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
+> @@ -0,0 +1,28 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026, Google LLC.
+> +# Check trace_buf_size= kernel command-line setting
+> +TRACEDIR="/sys/kernel/tracing"
+> +
+> +if [ ! -f "$TRACEDIR/buffer_size_kb" ]; then
+> +	echo "FAIL: buffer_size_kb does not exist"
+> +	exit 1
+> +fi
+> +
+> +BUF_RAW=$(cat "$TRACEDIR/buffer_size_kb")
+> +case "$BUF_RAW" in
+> +	*"expanded:"*)
+> +		BUFSIZE=$(echo "$BUF_RAW" | sed -n 's/.*expanded: *\([0-9]*\).*/\1/p')
+> +		;;
+> +	*)
+> +		BUFSIZE=$(echo "$BUF_RAW" | awk '{print $1}')
 
--- Steve
+Hmm, as Sashiko said:
+
+> Will this script fail at runtime if the expanded: string is missing?
+> The boottime initramfs busybox environment (defined in BUSYBOX_APPLETS in
+> tools/testing/selftests/ftrace/boottime/run_boottime_test.sh) doesn't seem to
+> include awk. If awk isn't available, wouldn't BUFSIZE evaluate to an empty
+> string and cause a false positive test failure?
+
+yes, I forgot to add awk in applets. I think it should be definable for each
+test script. Something like:
+
+# APPRET: awk
+
+Thanks,
+
+> +		;;
+> +esac
+> +
+> +if [ -z "$BUFSIZE" ] || [ "$BUFSIZE" -lt 2048 ]; then
+> +	echo "FAIL: buffer_size_kb is '$BUF_RAW', expected >= 2048"
+> +	exit 1
+> +fi
+> +
+> +echo "PASS: cmdline-03-trace-buf-size"
+> +exit 0
+> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
+> new file mode 100644
+> index 000000000000..53a65b55f7a7
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
+> @@ -0,0 +1,23 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026, Google LLC.
+> +# Check trace_options= kernel command-line setting
+> +TRACEDIR="/sys/kernel/tracing"
+> +
+> +if [ ! -f "$TRACEDIR/trace_options" ]; then
+> +	echo "FAIL: trace_options file does not exist"
+> +	exit 1
+> +fi
+> +
+> +if ! grep -qw "sym-addr" "$TRACEDIR/trace_options"; then
+> +	echo "FAIL: sym-addr option is not set in trace_options"
+> +	exit 1
+> +fi
+> +
+> +if ! grep -qw "verbose" "$TRACEDIR/trace_options"; then
+> +	echo "FAIL: verbose option is not set in trace_options"
+> +	exit 1
+> +fi
+> +
+> +echo "PASS: cmdline-04-trace-options"
+> +exit 0
+> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
+> new file mode 100644
+> index 000000000000..d6de9f6e2090
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
+> @@ -0,0 +1,19 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026, Google LLC.
+> +# Check trace_clock= kernel command-line setting
+> +TRACEDIR="/sys/kernel/tracing"
+> +
+> +if [ ! -f "$TRACEDIR/trace_clock" ]; then
+> +	echo "FAIL: trace_clock file does not exist"
+> +	exit 1
+> +fi
+> +
+> +if ! grep -q '\[global\]' "$TRACEDIR/trace_clock"; then
+> +	CLOCK=$(cat "$TRACEDIR/trace_clock")
+> +	echo "FAIL: trace_clock is not set to global ($CLOCK)"
+> +	exit 1
+> +fi
+> +
+> +echo "PASS: cmdline-05-trace-clock"
+> +exit 0
+> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
+> new file mode 100644
+> index 000000000000..aae7f0a86d81
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
+> @@ -0,0 +1,24 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026, Google LLC.
+> +# Check trace_instance= kernel command-line setting
+> +TRACEDIR="/sys/kernel/tracing"
+> +
+> +if [ ! -d "$TRACEDIR/instances/bar" ]; then
+> +	echo "FAIL: trace instance bar does not exist"
+> +	exit 1
+> +fi
+> +
+> +if [ ! -d "$TRACEDIR/instances/bar/events/sched/sched_switch" ]; then
+> +	echo "FAIL: event sched_switch does not exist in instance bar"
+> +	exit 1
+> +fi
+> +
+> +ENABLE=$(cat "$TRACEDIR/instances/bar/events/sched/sched_switch/enable")
+> +if [ "$ENABLE" != "1" ]; then
+> +	echo "FAIL: event sched_switch is not enabled in instance bar ($ENABLE)"
+> +	exit 1
+> +fi
+> +
+> +echo "PASS: cmdline-06-trace-instance"
+> +exit 0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
