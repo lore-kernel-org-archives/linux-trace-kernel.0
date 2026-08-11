@@ -1,117 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC21B2F8E91;
-	Tue, 11 Aug 2026 20:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6789D36D4E1;
+	Tue, 11 Aug 2026 20:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786478920; cv=none; b=SgwWJGmpkc8rfltaY68kXuowNaOh1GBB2Ifbcic5tzqQAy5CYrkPq42fgQaX0u5yXZTj6yXeWLyPFNENko9gAUSGWiuxnvr0reNcpC4Fu/hjRScwhYS9CImAAYuJ9m0Lj6e6nyDKNqKP8Rh0wkdAL5Ca09iejSZ0x1WVFmrENkk=
+	t=1786479681; cv=none; b=ayV+CnKmUS/RpiNRRz0LxWRqU+BNmEnfGf5bfLsstVcesHDrKdyXedViFSGLvUwq5/L5aw8QPacXURIqlitT/bo7mWcF3FEMhPayRJf8pNnNvAUIc8jbN7bUbYNeGJgEqLC/cz6AfJ2mgk9dgXEBaTawMRWN+tlBbOnRuUun6JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786478920; c=relaxed/simple;
-	bh=SInW6aPtiXmfT1CA7VtmXzt8BbA3T2FQBK1qPozb2GA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ahiB3T8bANXbgjzULdp9kocbXnec9QkM/R4rcFkSMUVF0ZibJRygV9cYmKrkYsiuIyz/XVBA/NqO/1DWFeZuaxCHpomhqRmh8LP0QrXU1LXjX++5H17Eq4FEj2KPog24nQ0sRhB93nH/6XnZ3GUfdL3PQH3xl3xVmIKfhLUKjPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MVsx4Y86; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MVsx4Y86"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384501F00A3A;
-	Tue, 11 Aug 2026 20:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1786478915;
-	bh=ay4Sx1aFee/8WOMMoH+smEVqfxFPpuKMRZQpbR6u3yw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=MVsx4Y86Lda8QCjyAeakFZeNbk1U1nnbpjqsIPtBxUMubFHCaQYUz20Z8mA0RiRLA
-	 VCd+fPtrTR+NcFIxYVzfhh214iv37GZnIs3sWMgVPEcj8F9bTxcMlXmXihxTs0oG+8
-	 fLgI8mKfy36hIx1mSwWptiKfVBg1ORNZHfRMBLR4=
-Date: Tue, 11 Aug 2026 13:08:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato
- <pfalcato@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
- Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
- <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, Kees Cook
- <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan
- Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, Matthew Brost
- <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim
- <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price
- <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
- Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin
- <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank
- <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Alex
- Deucher <alexander.deucher@amd.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
- <tzimmermann@suse.de>, Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
- Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, John
- Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, Kairui Song
- <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
- <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, Youngjun Park
- <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kvm@vger.kernel.org, linux-s390@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 16/20] tools/testing/selftests/mm: test anonymous
- page offset merge behaviour
-Message-Id: <20260811130832.3f18d4326a5ebe6eb18cfb5f@linux-foundation.org>
-In-Reply-To: <antWw3a0iEv4l1Yd@gremlin>
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
-	<20260806-b4-scalable-cow-virt-pgoff-v4-16-ab318a350404@kernel.org>
-	<cf70ce8f-cdde-43ec-a50e-796d4e390f3f@kernel.org>
-	<antWw3a0iEv4l1Yd@gremlin>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786479681; c=relaxed/simple;
+	bh=j5vSuUlMpsm5RdxJT6qJSOQz9ajuzeV2Y3eY8G0ywRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lKtekBrBRkPe73+Edvvgrwe2Q55HyBgvNb/yX9KhHJs2iOHT722rsSozm2DFRtEJVbmaINibKRM49jPtwv0Ew5vCmbxWMqiK3PeDF+AU2sFLDTizajY9xBNga9fl0FmpmcspyzMI1/AJES1HAqTULOAkwJqv0iQryZzTzC4D7r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 472ED12020D;
+	Tue, 11 Aug 2026 20:21:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 2B58617;
+	Tue, 11 Aug 2026 20:21:15 +0000 (UTC)
+Date: Tue, 11 Aug 2026 16:21:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Baolin Liu <liubaolin12138@163.com>
+Cc: almaz.alexandrovich@paragon-software.com, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ ntfs3@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ liubaolin12138@gmail.com, Baolin Liu <liubaolin@kylinos.cn>
+Subject: Re: [PATCH v3 v3 5/7] ntfs3: add allocation tracepoints
+Message-ID: <20260811162127.5f98eadb@gandalf.local.home>
+In-Reply-To: <20260807010354.2277156-6-liubaolin12138@163.com>
+References: <20260807010354.2277156-1-liubaolin12138@163.com>
+	<20260807010354.2277156-6-liubaolin12138@163.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 2B58617
+X-Stat-Signature: ocjs9nwgno1du4p8cgdsbye7n7pmtnyh
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/VU1IovNUTnpcMeB6DOZ3dU/YGtDrMiPc=
+X-HE-Tag: 1786479675-313721
+X-HE-Meta: U2FsdGVkX18Vc6VeKMEkbAlF3WmEe58w7Dt8nBcaBp42q4QsW6Nl1xAF53wEIuyX4osdtK915C/jAE7BTDU1uIQQvW0RTczlxoirvGf7cuw//knGnJKI89t7k9MISFvggTR7Jofwem9n790ur1xmHMaeVEna/rKqJd/mG3hB2u8RTTfHmK81sMLquY6XG2erVb92se9voSuA7MIRoQHslIMg0H3n1qoxvYIIWQAbioHWA2Q9JNi4XKq9len1K+ZRjg4zStkA18fRVoQSiRaKROSkIOUIXyhmg2mhd8yYALzFBiwHJUDbIw5tI2FAD7EK0xJYFApOEd5XTTviGdOm6106Un37yOB4WLXaqbDPOfgLtEY1KcijBWpdW4qd9K/FV482v3h8OMW7DK1UgS+JXQ==
 
-On Tue, 11 Aug 2026 18:07:36 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
+Also Sashiko had something to say about this patch: https://sashiko.dev/#/patchset/20260807010354.2277156-8-liubaolin12138%40163.com
 
-> > "Fault in" is imprecise, as a read-fault won't do. "Trigger a CoW fault." might
-> > be better.
+> --- Patch [5]: [PATCH v3 v3 5/7] ntfs3: add allocation tracepoints ---
+> commit 0592c540bc564c346cb524c624f6ee4a5768406b
+> Author: Baolin Liu <liubaolin@kylinos.cn>
 > 
-> Andrew - could you fix up? Thanks :)
+> ntfs3: add allocation tracepoints
+> 
+> This commit adds trace events for ntfs3 allocation operations. It introduces
+> events for attr_allocate_clusters, attr_set_size_ex, and attr_data_get_block
+> to help observe cluster allocation, size changes, and block mapping activity.
+> 
+> > diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
+> > index 4ac05ed29e49d..d16dd127ff2e5 100644
+> > --- a/include/trace/events/ntfs3.h
+> > +++ b/include/trace/events/ntfs3.h
+> [ ... ]
+> > +TRACE_EVENT(ntfs3_attr_set_size_ex,
+> > +	TP_PROTO(struct inode *inode, u32 type, u64 new_size, bool keep_prealloc,
+> > +		 bool no_da),
+> > +	TP_ARGS(inode, type, new_size, keep_prealloc, no_da),
+> > +	TP_STRUCT__entry(
+> > +		__field(loff_t, old_size)
+> > +		__field(u64, new_size)
+> > +		__field(unsigned long, ino)
+> > +		__field(dev_t, dev)
+> > +		__field(u32, type)
+> > +		__field(bool, keep_prealloc)
+> > +		__field(bool, no_da)
+> > +	),
+> > +	TP_fast_assign(
+> > +		__entry->old_size = i_size_read(inode);
+> 
+> Will this actually record the previous size during truncate operations?
+> 
+> When an application truncates a file, the VFS size is often updated before 
+> calling into the filesystem. For instance, looking at how ntfs_setattr()
+> handles this:
+> 
+> fs/ntfs3/file.c:ntfs_setattr() {
+>         ...
+>         truncate_setsize(inode, newsize);
+>         
+>         err = ntfs_set_size(inode, newsize);
+>         ...
+> }
+> 
+> Since truncate_setsize() updates the VFS inode size before attr_set_size_ex()
+> and this tracepoint are reached, won't i_size_read(inode) just return the
+> newly truncated size, resulting in old_size equaling new_size?
+> 
+> Could the actual old size be passed as an explicit parameter to the 
+> tracepoint instead of sampling it here?
+> 
+> > +		__entry->new_size = new_size;
+> > +		__entry->ino = inode->i_ino;
+> > +		__entry->dev = inode->i_sb->s_dev;
+> > +		__entry->type = type;
+> > +		__entry->keep_prealloc = keep_prealloc;
+> > +		__entry->no_da = no_da;
+> > +	),
+> [ ... ]
 
-np.
-
---- a/tools/testing/selftests/mm/merge.c~tools-testing-selftests-mm-test-anonymous-page-offset-merge-behaviour-fix
-+++ a/tools/testing/selftests/mm/merge.c
-@@ -1324,7 +1324,7 @@ TEST_F(merge, anon_and_page_offset_misma
- 	ASSERT_NE(ptr, MAP_FAILED);
- 
- 	/*
--	 * Map another separately, and fault in, at page offset 5:
-+	 * Map another separately and trigger a CoW fault, at page offset 5:
- 	 *
- 	 * |-----------|           |---------|
- 	 * | unfaulted |           | faulted |
-_
-
+-- Steve
