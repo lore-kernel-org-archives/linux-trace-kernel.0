@@ -1,398 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out28-50.mail.aliyun.com (out28-50.mail.aliyun.com [115.124.28.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFE537A84F;
-	Tue, 11 Aug 2026 05:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786426320; cv=fail; b=dU+8IFgg1GdA2D0gZgEwioocMbdKskdDaGkHzNF/AoIb5363KWAVeZx1G6k2+Iup8lrXqo1159SMO15QAjlAcFKDyYxjaxlwnxzzbl8riqqFuyNZ/h3D8M1sbbRJDqMVpgSdEk/PA6CTKtHOlwfs/Ue9Y8lTetzs5MYXPmUk5DA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786426320; c=relaxed/simple;
-	bh=pE7s7rvxHQKRrmhwdR9++C7UnfVHT4/S+5/AT4Za56s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=BfKfyKawnb2mNH5KWfKJLcJE4uYGmE3mddPBv/BUm8PuQ52vknwR/j4f741aR1Z1Bz8NBp+hlcqcgUYCDMYqkPzUbra+VuKUsEMmLi2JhhkU861x2PyL+IO7vSz2mAcv/QtmfI7ZpzybbffxlyVo1v3cDh3jSZHdMkwos+SjKLY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GkJSPjWB; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GkJSPjWB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786426317; x=1817962317;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=pE7s7rvxHQKRrmhwdR9++C7UnfVHT4/S+5/AT4Za56s=;
-  b=GkJSPjWBPYD/w5sgf7AS84aNGcRg7hrFFdxavYG9p7uGIIbNT1LdfpPf
-   Rf006X1dZyMU1P01M7UJ+AE8mzmdbejlzWoN+oFeAS98es16BEHIMFwrB
-   W8co/p52Jgh+ycByR8JTkdv+OBKl6tA3XO3CswVU7mK6cuE/Kf8Y4moFe
-   gWk5PrO/Ny4nbCyaOf6HyRdMHv94p/wyPLmgcmlGlnN9vwaodeEXhyOBX
-   ZQjTdXPHJJsEXNpZKX9PJN5QHbGab9SO4B5FX1wySOD1I0tpkx98gvkB0
-   cijM21FgEdhzN4lMAAZ5ttf7XeSnv0dmmnrNKFaiVDfMEinRbbvw+bUOo
-   g==;
-X-CSE-ConnectionGUID: EYxRNUSFRXC7dL1hfQq/0w==
-X-CSE-MsgGUID: OP/RhCXIQ7G3DC1Yfh1PHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11871"; a="86070965"
-X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
-   d="scan'208";a="86070965"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 22:31:55 -0700
-X-CSE-ConnectionGUID: Ps9ZGFqrRGe3+aiZijArcw==
-X-CSE-MsgGUID: q+LmgAQTTCactctl+pzZPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
-   d="scan'208";a="265246577"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 22:31:54 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 10 Aug 2026 22:31:53 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45 via Frontend Transport; Mon, 10 Aug 2026 22:31:53 -0700
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.68) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 10 Aug 2026 22:31:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R25YZg5A1O8jaos59md0trIvAF9cMpefwEQH/Gqd3n6gh1WukOD+ni7CXOF8DrkGsmOsomnCHoGvQ+CNyamHNEbDsDxmlh1hUCovW93PEZzgHQ3zk4dTr/YHhZADlqqAPtC0GhWIlq54LnoMyS6YwRO0kJF72tfgXavmyeTh2meGhRrrQ37SyWtljuykWwyGbUxGqKJGQMjvYHVeha2XdQ10OiNscPNLfdtrmxX0dKIFIZMpZf/KEXQvcYkThBiauuumGLuf8vggQkXxTKaotorPfEJtfrnJeGWhEkN5AOBGzxUdFJGfB5H+osD//jw0/0t44DwDgOfQdTH2G5ofKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KXDPQQNVKEUfl6JkIsw153TEE64qimqT9wwotylWm5I=;
- b=tGzKqe7uBMDIzQsUvRuQjbx6g+nQ/3MdXphAy30MD4c+LC/K/U+WVvhwJJD55lLEAvOvsmwdidGeXwvGvZel+u+LTXjRHT6H/4ZdSlMSYkCByn8YUqfWe5nAMpWYa7QOmUr0QwWuOyr4krUfX1TgyFrbiFkPhIQQntKyia6iato/eVmuSNy6cvPaleJyzUFxzSld3pb1zZ1aFoctM5xWKS8co6zmjO2E7eN/qTSU0ELXjw2aqU4UOX4gQWaq5wACHt7pRAjx5u2gNTuLdVmVibVzZfLNvcB7IIkIpDvXj3+reDJgK6xEKy5hbcffpmyDcbh/uteR0ItxCB/oQuci4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DSVPR11MB9579.namprd11.prod.outlook.com (2603:10b6:8:383::17)
- by BL1PR11MB5288.namprd11.prod.outlook.com (2603:10b6:208:316::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.11; Tue, 11 Aug
- 2026 05:31:50 +0000
-Received: from DSVPR11MB9579.namprd11.prod.outlook.com
- ([fe80::ab5f:5d0f:fb90:9d]) by DSVPR11MB9579.namprd11.prod.outlook.com
- ([fe80::ab5f:5d0f:fb90:9d%3]) with mapi id 15.21.0292.024; Tue, 11 Aug 2026
- 05:31:49 +0000
-Date: Tue, 11 Aug 2026 12:50:48 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Ackerley Tng <ackerleytng@google.com>
-CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
-	<brauner@kernel.org>, <chao.p.peng@linux.intel.com>, <david@kernel.org>,
-	<jmattson@google.com>, <jthoughton@google.com>, <michael.roth@amd.com>,
-	<oupton@kernel.org>, <pankaj.gupta@amd.com>, <qperret@google.com>,
-	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <shivankg@amd.com>,
-	<steven.price@arm.com>, <tabba@google.com>, <willy@infradead.org>,
-	<wyihan@google.com>, <forkloop@google.com>, <pratyush@kernel.org>,
-	<suzuki.poulose@arm.com>, <aneesh.kumar@kernel.org>, <liam@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, Jonathan Corbet
-	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan
-	<shuah@kernel.org>, "Vishal Annapurve" <vannapurve@google.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, Kairui Song
-	<kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
-	<nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, Axel Rasmussen
-	<axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
-	<weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, Qi Zheng
-	<qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau
-	<kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe
-	<jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
-	<peterx@redhat.com>, <tarunsahu@google.com>, Vlastimil Babka
-	<vbabka@kernel.org>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-coco@lists.linux.dev>
-Subject: Re: [PATCH v10 11/41] KVM: guest_memfd: Ensure pages are not in use
- before conversion
-Message-ID: <anqqKH6kuwpvuwp9@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-11-2fc18ee6d3ba@google.com>
- <anZ4W9o5pTWIEgMY@yzhao56-desk.sh.intel.com>
- <anj2bPrGqzZgZWMF@yzhao56-desk.sh.intel.com>
- <CAEvNRgFzRj_=GVy8T4P8ehhQjYomYxkngzwtKBF0iEL0Cv6fuQ@mail.gmail.com>
- <anp1I64K0KeyQuyo@yzhao56-desk.sh.intel.com>
- <CAEvNRgFWcndQKJE_q+ZATFZEMYd=6uRLygozLvg7L77bPX0cEQ@mail.gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAEvNRgFWcndQKJE_q+ZATFZEMYd=6uRLygozLvg7L77bPX0cEQ@mail.gmail.com>
-X-ClientProxiedBy: TPYP295CA0016.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:a::8)
- To DSVPR11MB9579.namprd11.prod.outlook.com (2603:10b6:8:383::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7303337B41F;
+	Tue, 11 Aug 2026 06:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786428020; cv=none; b=TURNVYML01MtBzh8vIGS4RFSwe1VagFu/TUj7cHmOu61qUU1C0MTWg5rfORS7/orF3b747yjsEYz5lCf1UUw75sZ93xZT65Kk/X5qxsq+W8tPRwXynnfAMzbXEyOhDJgQyRCp0eb3DNP2YD5rs0EGxcTvU1lQz3hWJwSmKt6kGU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786428020; c=relaxed/simple;
+	bh=WIMM879jcs6ktYtWd9rrpk7xFTIT2X291HczHctSjeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bF/D4YcGaj/kt24tApnn/6U9q3ugl9fRI60xFwePphz0qnewWhmLihP7roLFJOao/08FEmmp2CPutqdOHV+0yk/YpPSgfVzMpWx7qWXhhODqe+rX0/9yuA4+AfuhwryYB/Js6L6CcVCWwUU7qDfozH/ypXDQvZteTVljmED212g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07641056|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0153744-0.0352241-0.949402;FP=17796272291498788178|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033032062159;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.ij9Eqmo_1786428005;
+Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.ij9Eqmo_1786428005 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Aug 2026 14:00:06 +0800
+Message-ID: <3f27bacf-5f01-8cb5-a04c-824ca7b2c13f@allwinnertech.com>
+Date: Tue, 11 Aug 2026 14:00:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DSVPR11MB9579:EE_|BL1PR11MB5288:EE_
-X-MS-Office365-Filtering-Correlation-Id: 200641ab-e2aa-41ea-76bc-08def769d788
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|366016|3023799007|56012099006|11063799006|4143699003|10067099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: RQCV23OFPxH7TCgCW/yTZmlbe2MEOHhHeHu8BRVWrcihV8NF3MjZXd7Hs5yq//4YjXd3lA1gIMLOwOLrvCejLTCwRzMxA9/63ReKAfABdius5ChK5cTTiJR6BKXZrInyMQYY/dF84aI2PuKeHp4jIKv8+82MyG9OfC2rcgX4cwjzBKhhYwzRQrduFb1nIiaqrgCQ1sUeo+dW0oJhBesQcbS/y713Lknw+9xBO+DSxDaNn7+1UKZSoN98Fje1z2VKPJ5yIhL5gMMVhjJ7k29FV83dyfAP0tMuaINPExW40mdbKR1x0x3ZkTOUydi8y8pk/nbVC+fZXvhXFohH4OPcUYlAIilAkAQ2I3hMNxmUii7UhbK+XwqQUQGOnWLamNN4mLXaJy1OSLh9krQoBi4r7PPQC3RuV9IX5P0YjgGev8QR0+XtbuZDVcKkFuWt8S5FUEhpvPJQa3E4J+AKRNew5mVAoPcSeDjQSDo6UfRP5th310KB5oGt5kzJdT53d7Ujv+gLwxXSvBay55J4Sab8JSiK2N1aVXUE4w9xyLgoJLp1yNYTCEYD5gnj77/3Q+2JfigHAL8FizwdtqoaPxVuu2r9zV3nnNzaenYzStTjf7aJlx5lvD9e8HpDZ2R6bTBX1aH2CwEcBmd6lIFYt3vVhQre70j/X6qxsT3U/CVnYxc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR11MB9579.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(366016)(3023799007)(56012099006)(11063799006)(4143699003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QE9YXjw2ig4X/YJ5qRpu3ZLgV015unQBRjOHF6VTFjkf1Mp1FWwB7NJ32E6u?=
- =?us-ascii?Q?nNDYA6tabgI8/zfh9a+p4rTnQ/SG9+yC+Cj2I/ELZn9p38Msh5G1sehurLIo?=
- =?us-ascii?Q?09zkK/5JzCXpUqsXUu8CL4HMnznbue+BZKsUK9G9td4TDkiMSASz25ATDHqA?=
- =?us-ascii?Q?W7Z5JdJw7vPQ0aegq+mO/a1LB7XHFFXKeNOiVRWwRw/Tvm6d1FmExQGpKpq9?=
- =?us-ascii?Q?xk7Roh7lqKRhi0mmK+oX1INdMaRqkzN/AKUFKT9BJMz+n75OsLA6OLgy41v8?=
- =?us-ascii?Q?FbzhclCMXolZoR4mRoFAz8eEbJkbHL/nJNEjMD/RzRUfVvuZUe8riFBZhfoJ?=
- =?us-ascii?Q?/ysTdXY/iNGpzf3ESLHAPeR1OtwNkqFrBdfIOCSQC3EK+/gjxpxPQ2Ittz2z?=
- =?us-ascii?Q?63G/9a5a0jsFmCHSB1S3lToAwJKCP50PLWIdtLnvvRqEWAOLVZlE3rXjUE49?=
- =?us-ascii?Q?Ate5Z2YcaHx4M2QQPZBsM4sdrOxHOnfxayuqW7h/Rv1qQIsJ8ZqLsGRgRx6o?=
- =?us-ascii?Q?lEsM2Am0dz2YX25X4vI/XfmecqojQD29FZuvAqG9/PqBhB8KHolBNWXnUWbV?=
- =?us-ascii?Q?qjpN6+gZ78nex3JIHryOvCvbtVEcHYNofSksxzfPs+hYcbnc5a7Dpxi5b5tY?=
- =?us-ascii?Q?z0FBV15kDr5U8JVqZhT3PuCdaNNJ6iLhHQsMNH/lptI3IyU9+vzkH9rjk8e+?=
- =?us-ascii?Q?j7T9jOMSzDmOsJo0s9d5htREVBzd4rw/yZgaczjfIyNJM1CPrP7hbRSGG/Ff?=
- =?us-ascii?Q?l2+knzX24kxwBsyc5HiL6f1smx4ZQ3iUoZzRSPyjhshZJy/L/zn7EIZdZ+Eg?=
- =?us-ascii?Q?GZqFrtev8y01vl0YCTtVYpKdGIwFvsaUHeyKOiETrdWYmjNx0J7OTpYW4jun?=
- =?us-ascii?Q?0ErHipushq1sAw8NiZ8T9ekEBE5NxgMfL7lTC70NyVEOlKww1z2YduoWU1wW?=
- =?us-ascii?Q?KNLHZTSYjqfgCjr+MtM1PVBAMd+e3RKaHOIdyuhqHtWUPnssOjr1VRfU78Yb?=
- =?us-ascii?Q?UNIMsqXX1CK0Pw8ZsYw/ltH5+89FuIFECAstFG6Aom6UYIxDJOlN4RWaihLV?=
- =?us-ascii?Q?s/R3WIoZjf9iVXmhITGK8nJBYLqX0mV0aX0q30vVVA9O44B2DejKve3dyZv+?=
- =?us-ascii?Q?fQjRXZqNxO8tJCEQ1VBwX8CuCI0Gcrj0mMoKdpBCjd5TTa16PDEg8Swz0Eap?=
- =?us-ascii?Q?d0VWlPsLtZYx0qGYAZTP7GV1PKhJjdQQbD37UteorAkvfqHDR60XF/AJNqzX?=
- =?us-ascii?Q?Sp3uyEF4AJ+yfJSz6Fnm7mtvw6nN26BB2qeOpGUfdgcjHSl1HtPVzVa1XBKc?=
- =?us-ascii?Q?w8jPOHe06hknNQvrsMzJfBLEeu2X/z0gbhS6b6WmjIF4y6ieg34zezjr+iFA?=
- =?us-ascii?Q?GIPeDIQ+PkjIyH72BvIM4elVMYrvoCi+wTpSCC4x1KtOnZ/HVYOibaWP8gyA?=
- =?us-ascii?Q?AuabMlq6zQpilcQpklKd3Pe5IiCt9vCBB9y4ZwdKKF7fz/GlqO2pOSb/IaW+?=
- =?us-ascii?Q?TATuUUdFY2dH7DxTf/Ik9OVkejGFdh9on/koU22N3Yty9CEMIt/xJQ9Po98K?=
- =?us-ascii?Q?8SoX0XXigs/a+yXkwEaQ7lUY/hVvXpZIk2HVbxkkq/KHnLswY97SY7kfxFSN?=
- =?us-ascii?Q?MKVp0C4IBRFkkmxF3awvHAsqbbXWbHP2WuSjZeRrgdTVPv6W8xkfY2EScD5G?=
- =?us-ascii?Q?50hiZqsqiwT2ad/yQ7phgGAB0awC035T9reFWeG1HsnsWfIFGZa/RwQreSnD?=
- =?us-ascii?Q?c1+xK5yaBw=3D=3D?=
-X-Exchange-RoutingPolicyChecked: lfpzmw1k5ZDzreQV3uR5RsnbbLKOonbtbGColL0m6E0ZBVPjmdYBxVhQ/IYKuftumUNPDkrosCvVyGcGlodzOV6R1ZqPeRPKo/39ZOXdcx/6/7Gh9xX60oCL7twSMxJcsUE8y58gN5vOx5OiUVAUWuvvaJPOKwcT5ZvHWROFbyVUzGoqM1BB5YTX5a5qd6RoNFxCYy0pZ+Jjgi5IFzhhQ9lRGdbuVrR6GV1XTpoDn1WENyqIFjz6Ea2oXvRf1IzQSKyCUJMy5d9Z1HpWowKUTHHbRERnK8avf7g+v7ilakcFhThD/iAwHb33m5hRvEIGQfFQ/658AK1YjGSlh4eR1Q==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 200641ab-e2aa-41ea-76bc-08def769d788
-X-MS-Exchange-CrossTenant-AuthSource: DSVPR11MB9579.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2026 05:31:49.5524
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nluw9H9XZCoBiTcb3C/HcSjw2TaGSZgLzb5HXEBgTaLv2zcywo4HEUIkxGAizOs/uGx6BbdvWeAV7Q4f+3TRCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5288
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v5] tracing: Fix race between update_event_fields and,
+ event_define_fields
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
+ <20260810104525.6a3a2e6c@gandalf.local.home>
+From: Michael Wu <michael@allwinnertech.com>
+In-Reply-To: <20260810104525.6a3a2e6c@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 10, 2026 at 07:17:11PM -0700, Ackerley Tng wrote:
-> Yan Zhao <yan.y.zhao@intel.com> writes:
+> What does the above mean? Are you loading two modules at the same time?
+Two modules (A and B) are loaded simultaneously on different CPUs. On the arm64,
+ when CPU0's trace_module_notify [pri=1] and CPU1's trace_module_notify [pri=0] 
+simultaneously perform operations on call_A, because they are in different cache lines,
+CPU1 may observe WRITE_ONCE(head->next, &f->link) in step (4) before f->link.next=next in step (2).
+ At this time, CPU1 reads an uninitialized f->link.next and performs an operation that causes to crash.
+
+> What does "pri=X notifier" mean? What function calls are these coming from?
+`pri=X notifier` represents `trace_events.c:trace_module_notify [pri=1]` and `trace.c:trace_module_notify [pri=0]`, respectively.
+ CPU0 (loads module A)                      CPU1 (loads module B)
+  ===============================            ===============================
+  load_module(A)                             load_module(B)
+    blocking_notifier_call_chain_robust        blocking_notifier_call_chain_robust
+         notifier_call_chain                     notifier_call_chain
+          nb = trace_events.c:                     nb = trace.c:
+          trace_module_notify [pri=1]              trace_module_notify [pri=0]
+            mutex_lock(&event_mutex)                 trace_event_update_all() 
+            trace_module_add_events(A)               down_write(&trace_event_sem) 
+              __register_event(call_A)                
+              __add_event_to_tracers(call_A)           
+                event_define_fields(call_A)            
+                  for each f:                          
+                    f = kmem_cache_alloc()             
+                    list_add(&f->link,               	
+                             &class->fields)           
+                      f->link.next=next; (2)       	   
+                      WRITE_ONCE(head->next,        
+                                &f->link); (4)       update_event_fields(call_A)   											           
+            mutex_unlock(&event_mutex)	               list_for_each_entry(field, 
+                                                         &class->fields, link) 
+                                                         field = class->fields->next 
+                                                               = &f->link 
+                                                       	       = f (offset 0) 
+                                                      up_write(&trace_event_sem)  
+On 8/10/2026 10:45 PM, Steven Rostedt wrote:
+> On Mon, 10 Aug 2026 14:32:30 +0800
+> Michael Wu <michael@allwinnertech.com> wrote:
 > 
-> > On Mon, Aug 10, 2026 at 02:06:06PM -0700, Ackerley Tng wrote:
-> >> Yan Zhao <yan.y.zhao@intel.com> writes:
-> >>
-> >> >
-> >> > [...snip...]
-> >> >
-> >> >> > @@ -542,8 +576,21 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
-> >> >> >
-> >> >> >  	mas_init(&mas, mt, start);
-> >> >> >  	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
-> >> >> > -	if (r)
-> >> >> > +	if (r) {
-> >> >> > +		*err_index = start;
-> >> >> >  		goto out;
-> >> >> > +	}
-> >> >> > +
-> >> >> > +	if (to_private) {
-> >> >> > +		unmap_mapping_pages(mapping, start, nr_pages, false);
-> >> >> > +
-> >> >> > +		if (!kvm_gmem_is_safe_for_conversion(inode, start, nr_pages,
-> >> >> > +						     err_index)) {
-> >> >> Note: conversion failures could occur if another vCPU is attempting to map a GFN
-> >> >> within this range.
-> >> >>
-> >> >> CPU 0 (setting attributes)          CPU 1 (attempting to map)
-> >> >> --------------------------          --------------------
-> >> >>                                  A: mmu_invalidate_retry_gfn_unsafe
-> >> >>                                     filemap_invalidate_lock_shared
-> >> >>                                     __kvm_gmem_get_pfn ==> folio refcount++
-> >> >>                                     filemap_invalidate_unlock_shared
-> >> >>
-> >> >> filemap_invalidate_lock
-> >> >> filemap_get_folios
-> >> >> check folio_ref_count(folio) ==> Not match !!
-> >> >> filemap_invalidate_unlock
-> >> >>
-> >> >>                                  B: read_lock(&vcpu->kvm->mmu_lock);
-> >> >>                                     is_page_fault_stale
-> >> >>                                     kvm_mmu_finish_page_fault ==>folio recount--
-> >> >> 				    read_unlock(&vcpu->kvm->mmu_lock);
-> >> >>
-> >> >>
-> >>
-> >> Thanks for reporting this!
-> >>
-> >> >> Retrying in kvm_gmem_is_safe_for_conversion() or moving the invocation of
-> >> >> kvm_mmu_invalidate_start() + kvm_mmu_invalidate_range_add() to an earlier
-> >> >> position does not help as long as CPU 1 stays at stage A.
-> >> >>
-> >>
-> >> IIUC CPU 1 isn't blocked by a conversion so stages A and B should
-> >> complete fine, and CPU 0 would already be retrying for other reasons
-> >> anyway, like speculative refcounts from elsewhere in the kernel, so the
-> >> conversion would take longer but it'd work out.
-> >>
-> >> Is that understanding right, that this doesn't completely break
-> >> conversions?
-> > It depends on the timing. The max retry count cannot be expected under unlucky
-> > conditions.
-> >
-> >> >> So, should we avoid this failure?
-> >> >> e.g., by moving filemap_invalidate_unlock_shared() from stage A to after
-> >> >> stage B?
-> >>
-> >> Not really sure about this, how will control go back to guest_memfd
-> >> after the fault finishes for guest_memfd to unlock the filemap?
-> > I don't understand your question. But I find this solution is less ideal than my
-> > below proposal.
-> >
+>> The following sequence may leads race between event_define_fields()
+>> and update_event_fields():
 > 
-> When kvm_gmem_get_pfn() is called from kvm_mmu_faultin_pfn_gmem(), KVM
-> MMU takes over from there, there isn't another call when KVM MMU
-> finishes mapping the page into the stage 2 page tables back into
-> guest_memfd.
+>>   CPU0 (module A, pri=1 notifier)        CPU1 (module B, pri=0 notifier)
 > 
-> After stage B, how is filemap_invalidate_unlock_shared() going to be
-> called? Do you mean filemap_invalidate_unlock_shared(folio->mapping)?
-Something like this. However, since this would cause the shared filemap
-invalidate lock to be held longer, conversions may have to wait for any on-going
-faults regardless of the GFN range, which I don't quite like.
-
-> I think filemap_invalidate_unlock_shared(folio->mapping) is a little
-> asymmetric...
+> What does the above mean? Are you loading two modules at the same time?
+> What does "pri=X notifier" mean? What function calls are these coming from?
 > 
-> >> > Or what about having KVM always treat gmem page as non-refcounted, and have
-> >> > kvm_gmem_get_pfn() put folio refcount before releasing the filemap invalidate
-> >> > lock?
-> >> > Below patch is applied and tested at the end of this series.
-> >> >
-> >> > From 8c2f29bc15bceb6a8fa103cf2585ec11354fd74e Mon Sep 17 00:00:00 2001
-> >> > From: Yan Zhao <yan.y.zhao@intel.com>
-> >> > Date: Mon, 10 Aug 2026 06:24:52 +0800
-> >> > Subject: [PATCH] KVM: guest_memfd: Return gmem page as non-refcounted
-> >> >
-> >> > Have kvm_gmem_get_pfn() put gmem page refcount before releasing filemap
-> >> > invalidate lock and return the gmem page as non-refcounted. This avoids
-> >> > gmem memory attribute conversion failure caused by temporarily holding gmem
-> >> > page after faulting and before completing mapping.
-> >> >
-> >> > guest_memfd always holds gmem page in filemap cache. TDX does not increment
-> >> > gmem page refcount when having gmem pages mapped in S-EPT. Additionally,
-> >> > as gmem pages are not swappable, setting dirty or accessed bit is not
-> >> > necessary. Therefore, there's no need to treat gmem pages as refcounted
-> >> > pages.
-> >> >
-> >> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> >> > ---
-> >> >  virt/kvm/guest_memfd.c | 5 ++---
-> >> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >> >
-> >> > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> >> > index 2115e73e455a..e357b4ffa777 100644
-> >> > --- a/virt/kvm/guest_memfd.c
-> >> > +++ b/virt/kvm/guest_memfd.c
-> >> > @@ -1332,11 +1332,10 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> >> >  #endif
-> >> >
-> >> >  	folio_unlock(folio);
-> >> > +	folio_put(folio);
-> >> >
-> >> >  	if (!r)
-> >> > -		*page = folio_file_page(folio, index);
-> >> > -	else
-> >> > -		folio_put(folio);
-> >> > +		*page = NULL;
-> >> >
-> >> >  out:
-> >> >  	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
-> >> > --
-> >> > 2.43.2
-> >>
-> >> Hmm going with the above CPU 0 and 1 illustration, if instead CPU 0
-> >> truncates the folio and the folio ends up being freed, then KVM's MMU
-> >> has a pointer to a page that is already
-> >> freed. kvm_release_faultin_page() is passed the pointer to this page and
-> >> will dereference the page.
-> > Not really. It's just like KVM mapping non-refcounted pages.
-> > kvm_release_faultin_page() does not access the non-refcounted pages.
-> > The invalidate protocol also ensures no mapping of stale pfn.
-> >
-> > As below, if CPU 0 truncates the folio, it needs to hold filemap invalidate lock,
-> > add KVM mmu invalidate range, hold mmu_lock, zap KVM mappings before the
-> > truncation.
-> >
-> >
-> > CPU 0                                      CPU 1
-> > -----                                    --------
-> >                                          Save fault->mmu_seq
-> >
-> >                                      B1. filemap_invalidate_lock_shared
-> >                                          __kvm_gmem_get_pfn
-> >                                          folio_put
-> >                                          filemap_invalidate_unlock_shared
-> >
-> > 				     B2. read_lock
-> >                                          is_page_fault_stale
-> >
-> >                                      B3. kvm_tdp_mmu_map
-> >                                      B4. kvm_mmu_finish_page_fault
-> >                                          read_unlock
-> > A1. filemap_invalidate_lock
-> >     kvm_gmem_invalidate_start
-> >
-> > A2. write_lock
-> >     zap KVM MMU
-> >     write_unlock
-> >     truncate
-> >
-> > A3. kvm_gmem_invalidate_end
-> >     filemap_invalidate_unlock
-> >
-> >
-> > A1 occurs either before or after B1.
-> > 1) If A1 occurs before B1, B1 will find the correct pfn.
-> > 2) If A1 occurs after B1 and before B2,
-> >    a. if A2 is before B2, B2 must find the fault is stale, so it's fine.
-> >    b. if A2 is after B2, A2 must be after B4 as well. So, accessing stale pfn
-> >       in CPU 1 is fine.
-> > 3) If A1 occurs after B2 and before B3,
-> > 4) If A1 occurs after B3 and before B4,
-> > 5) If A1 occurs after B4,
-> >    A2 must be after B4 (for 3-5 conditions).
-> >    So, accessing stale pfn in CPU 1 is fine.
+> -- Steve
 > 
-> It's not about the stale PFN, if there's no refcount on the page
-> returned from B1, then after A3, the page can be freed.
->
-> Contractually, I think KVM is allowed to reference the page?
-> kvm_release_page_clean() calls kvm_set_page_accessed() on the page
-In my patch, "*page = NULL;" is returned in kvm_gmem_get_pfn(). So,
-fault->refcounted_page is NULL. With it, kvm_release_faultin_page() does
-not access the faultin PFN or the page.
-So, no worry about UAF.
+>>   ===============================        ===============================
+>>   event_define_fields(call_A)            trace_event_update_all()
+>>     for each f:                            list_for_each_entry(...,
+>>       list_add(&f->link,                                &ftrace_events)
+>>                &class->fields)               -> finds call_A
+>>         f->link.next = next;        (2)
+>>                                            update_event_fields(call_A)
+>>         WRITE_ONCE(class->fields->next,
+>>                    &f->link);       (4)
+>>                                              list_for_each_entry(field,
+>>                                                &class->fields, link)
+>>                                              -> field = class->fields->next  
+>>                                                   = &f->link
+>>                                                   = f (offset 0)
+>>                                              -> arm64 weak ordering:  
+>>                                                 (4) visible before (2)
+>>                                                 field->link.next == 0
+>>                                              -> next iteration:  
+>>                                                 field = (void *)0 = NULL
+>>                                              -> crash at NULL->type (0x18)  
+>>
+>> This produces the following panic:
+>>    Unable to handle kernel access ... at virtual address 0000000000000018
+>>    pc : update_event_fields+0xf8/0x368
+>>    Call trace:
+>>     update_event_fields+0xf8/0x368
+>>     trace_event_update_all+0x7c/0x2b4
+>>     trace_module_notify+0x4c/0x1dc
+>>     notifier_call_chain+0x84/0x168
+>>     blocking_notifier_call_chain_robust+0x64/0xd4
+>>     load_module+0x10c8/0x123c
+>>     __arm64_sys_finit_module+0x230/0x31c
+>>
+>> Fix by taking event_mutex in trace_event_update_all() before
+>> trace_event_sem.
+>>
+>> Fixes: b3bc8547d3be ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Michael Wu <michael@allwinnertech.com>
 
-> (UAF?). Not sure which other KVM architectures reference the struct page
-> itself. Are we going to teach the rest of KVM to not reference and not
-> do kvm_release_page_*?
-It's just like how KVM maps non-refcounted pages.
-And guest_memfd actually asks consumers (like TDX) not to take page refcount.
-__kvm_gmem_populate() also puts the folio refcount before invoking
-filemap_invalidate_unlock().
 
-> Would like to see what Sean thinks of this. Either way, is it okay to
-> follow up after conversions lands?
-Let's see what Sean thinks of this :)
-I raised this because the issue was encountered by one TDX's stress selftest.
-I have no strong opinion on whether it should be fixed after this series lands.
-But the fix I proposed is quite small :)
-
-
+-- 
+Regards,
+Michael Wu
