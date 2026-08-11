@@ -1,32 +1,33 @@
-Received: from smtp-42aa.mail.infomaniak.ch (smtp-42aa.mail.infomaniak.ch [84.16.66.170])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2898B429CD2
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 09:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98770429CD7
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 09:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786441817; cv=none; b=BJbgs2ezyqEJeqyAgjL83qniaAz8T4fQ0vYWvEZpeD6QEuUOeNHj/M6OzD1xzaz6c7ZU5xj3awodigXCrcOqzRazbxS2TuFe+hwaZlLjNUszHBJdhqZ+72K5zf8sy7y1WpbhiZNLdRYJueaPPp0dmSWybYwbDrXBFtp5pHrCch8=
+	t=1786441819; cv=none; b=awVpeswqZHtsCiZuhCglIYTepC9TiaMifwoHIRKwWeWQETEprIbVu3yDxC4cLvumuWdSBHr+Ar1jm0Gg+oD4N61kMRI2LmYCacSbPPkfgRgR0sMxAqso+TKJJ3DF/VNaCtrQDS+/vVt+VfKQc24P+rVt6vJ0oItqR6WFp+Le6pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786441817; c=relaxed/simple;
-	bh=jtM0Ra8e88cVKa97St5vr4lB/vCKVIuY1xQzIgaH2qI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q52Dr1YSSiBWSBSXpXW8LiwR3sG0bmMajTTR/GusDODoY7bs+48r8DgCw1TaCrfmcJqPL5wjw7cL/1EJzNU0g/ecv3SN1QI3cZT1dciDyLRYgzsEnrbc3MVuOC96CoXmogYHbk4pvWitkZcUxQ2McE8Z7EPSUEg467TaASezhL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=lPPyJ3Z6; arc=none smtp.client-ip=84.16.66.170
+	s=arc-20240116; t=1786441819; c=relaxed/simple;
+	bh=BCzeNFejIk9XMhzNp87EsViQpk4GDt6az8s9TMwXsEg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kHW+DsFYIrni29BXuFIHXVuL16TVvla1+5aLgiKpD8IgHGbbXR9R+AWtXcUC7ds67h/2fQhSLXZy17fHJmxC6T9P9EaFUsX2CCVVX0bBngREUrkXMBjvJmJH5Ua+t6MNzEqlnfhHNKvAMd2Y8em5sqmyiiAwfErJKMQQ8ysNZmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=YOL0SXU+; arc=none smtp.client-ip=185.125.25.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="lPPyJ3Z6"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hK6Br0NV4zJhZ;
-	Tue, 11 Aug 2026 11:43:48 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="YOL0SXU+"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hK6CB5QgqzLnf;
+	Tue, 11 Aug 2026 11:44:06 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1786441427;
-	bh=KW+i5yys70vnVcQFN7BhajIkSYqFFFogDyPX1fbQoGQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lPPyJ3Z6f4cUUtO+g+cOFq81cZ14rjVOYcmauqX4lhFXsc/Aeve62qhf65zDBTxDT
-	 qHRtjs5HaNRz9coLO3sJc0dCtE+mJhU/xInEqfJU5J2xSb8lXz9/np45hWTi/Urn3s
-	 8vkyv4UZft27kJ1J8OPO5IeHeafc2M7VBi5oAnwA=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hK6Bp2rLpzYlP;
-	Tue, 11 Aug 2026 11:43:46 +0200 (CEST)
+	s=20191114; t=1786441446;
+	bh=2MJXuAF3/y2bFnFnJ3BsHsC4lByxS5nLSt6BlVPw5YQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YOL0SXU+Kpia6GpAQ7FV/Ue4D3W0ySQKCNZ6BrRWL4VmoJ+10NyR93NqepZcHT6Zx
+	 rD9yw3yV+Duw/sBAdRU4Mz62Qcw0z6PqEiT7iyGabITsmAMDcBf1a6UotQ54NYsdAa
+	 1i0V/gf711nzVbDTimumFY28xT7laqjb9DuHNG/Q=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4hK6C94l8cz2H1;
+	Tue, 11 Aug 2026 11:44:05 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>
@@ -44,9 +45,11 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	kernel-team@cloudflare.com,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 00/19] Landlock tracepoints
-Date: Tue, 11 Aug 2026 11:43:14 +0200
-Message-ID: <20260811094338.288094-1-mic@digikod.net>
+Subject: [PATCH v4 11/19] landlock: Add tracepoints for rule checking
+Date: Tue, 11 Aug 2026 11:43:25 +0200
+Message-ID: <20260811094338.288094-12-mic@digikod.net>
+In-Reply-To: <20260811094338.288094-1-mic@digikod.net>
+References: <20260811094338.288094-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,257 +60,673 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Hi,
+Merge landlock_find_rule() into landlock_unmask_layers() so rule
+pointers stay inside the domain implementation while unmask checking
+gets the matched rule it needs for the check_rule tracepoint.
+landlock_unmask_layers() now takes a landlock_id and the domain instead
+of a rule pointer.  A rename or link evaluates the same dentry against
+both renamed parents, so this path now looks the rule up once per
+parent; collapsing that back to a single lookup is left to a follow-up.
 
-This series adds 14 tracepoints that cover the full Landlock lifecycle,
-from ruleset creation to domain destruction.  They can be used directly
-via /sys/kernel/tracing/events/landlock/* or attached by eBPF programs
-for richer introspection.
+Emit, via the per-type wrappers unmask_layers_fs() and
+unmask_layers_net(), the rights each matching rule grants at every
+domain layer.  The events carry this as a dynamic per-layer array (up to
+LANDLOCK_MAX_NUM_LAYERS entries) reserved from the trace ring buffer,
+not the caller's stack, and rendered symbolically per layer.  A
+WARN_ON_ONCE() in __trace_landlock_fill_layers() flags a rule whose
+layer levels fall outside the domain range or are unsorted, a
+cannot-happen case; the zero-filled slots keep the rendered output and
+the array bounds safe regardless.
 
-This series is self-contained and intended to be merged through the
-Landlock tree.
+Setting allowed_parent2 to true for non-dom-check requests when
+get_inode_id() returns false preserves the pre-refactoring behavior: a
+negative dentry (no backing inode) has no matching rule, so the access
+is allowed at this path component.  Before the refactoring,
+landlock_unmask_layers() with a NULL rule produced this result as a side
+effect; now the caller must set it explicitly.
 
-Earlier versions touched code owned by other subsystems: a
-__print_untrusted_str() TP_printk helper in the tracing core
-(kernel/trace/trace_output.c and include/trace/stages/) and a
-DEFINE_FREE(__putname) cleanup guard in include/linux/fs.h.  To avoid
-blocking the series on cross-tree review, both are now Landlock-private:
-the untrusted-string escaping is a Landlock helper used only by the
-Landlock trace events, and the __putname scope-guard is defined locally
-in the Landlock filesystem code.
+Name the trace-only check_rule fields so each printk label equals its
+ring-buffer field name and works directly as an ftrace filter: the
+request field is labelled access_request= and the per-layer array is
+named grants.  Values audit also logs keep audit's label (domain=,
+ruleset=) so a single filter works across trace and audit.
 
-Steven, Masami, Mathieu, Christian: both helpers are generic and could
-be useful beyond Landlock.  I kept them private only to avoid blocking
-the series on cross-tree review, and I would be happy to move them
-(back) into the tracing core and include/linux/fs.h as shared
-helpers/functions/macros if you prefer, as a follow-up.
-
-Patches 1-6 refactor Landlock internals: they split struct
-landlock_domain from struct landlock_ruleset, move denial logging into a
-common framework shared by audit and tracing, decouple the per-denial
-logging decision from audit, and consolidate the access-right and scope
-names into a shared header.  Patches 7-11 add lifecycle tracepoints:
-ruleset creation and destruction, rule addition for filesystem and
-network, domain creation, enforcement, and destruction, and per-rule
-access checks.  Patches 12-13 add denial tracepoints for filesystem,
-network, ptrace, and scope operations.  Patches 14-18 add selftests and
-patch 19 adds documentation.
-
-Each rule type has a dedicated tracepoint with strongly-typed fields
-(dev/ino for filesystem, port for network), following the same approach
-as the audit logs.
-
-The scope and ptrace denial events also record the other party's
-Landlock domain ID, so a consumer that tracked domain creation can
-reproduce the two-domain verdict behind a relational denial.
-
-This feature is useful to troubleshoot policy issues and should limit
-the need for custom debugging kernel code when developing new Landlock
-features.
-
-Landlock already has audit support for logging denied access requests,
-which is useful to identify security issues or sandbox misconfiguration.
-However, audit might not be enough to debug Landlock policies.  The main
-difference with audit events is that traces are disabled by default, can
-be very verbose, and can be filtered according to process and Landlock
-properties (e.g. domain ID).
-
-As for audit, tracing may expose sensitive information about all
-sandboxed processes on the system, and must only be accessible to the
-system administrator.  For unprivileged monitoring scoped to a single
-sandbox (e.g., interactive permission prompts), Tingmao Wang's "Landlock
-supervise" RFC [1] proposes a dedicated userspace API.  The
-infrastructure changes in this series (the domain type split, the denial
-framework, and the tracepoint consistency guarantees) benefit that
-approach.
-
-I will release a companion tool that leverages these tracepoints to
-monitor Landlock events in real time.
-
-This series applies on top of the Landlock next branch.
+Cc: Günther Noack <gnoack@google.com>
+Cc: Justin Suess <utilityemal77@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tingmao Wang <m@maowtm.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
 
 Changes since v3:
-https://patch.msgid.link/20260722171159.2776765-1-mic@digikod.net
-- Renamed the exported rule-storage helper landlock_rule_insert() to
-  landlock_store_rule(), restoring the verb-first naming convention
-  (Justin Suess).
-- Rebased onto landlock-next (was v7.2-rc4), merging the enforce_domain
-  tracepoint with the new LANDLOCK_RESTRICT_SELF_NO_NEW_PRIVS handling
-  in landlock_restrict_self(), and adding a no_new_privs field to
-  enforce_domain that records the enforcing thread's no_new_privs state
-  (so consumers see whether a domain is backed by no_new_privs or
-  CAP_SYS_ADMIN).
-- Made the tracepoint helpers Landlock-private so the series can be
-  merged through the Landlock tree, dropping all include/trace/,
-  kernel/trace/, and include/linux/fs.h changes: the untrusted-string
-  escaping (formerly the core __print_untrusted_str() TP_printk helper)
-  is now a static inline __trace_print_untrusted_str() folded into the
-  add_rule tracepoint patch (Tingmao Wang's Reviewed-by of the standalone
-  helper is credited there), and DEFINE_FREE(__putname) moved into the
-  Landlock filesystem code.
-- Gave __trace_print_untrusted_str() an explicit length so an abstract
-  unix socket name with embedded NUL bytes is escaped in full instead of
-  being truncated at the first NUL, with a regression test.
-- Hardened the enforcement tests: enforce_abort uses 200 sibling threads
-  so the thread-sync abort race is exercised on multi-core hosts, and
-  the non-leader test asserts the reachable process_wide=0 (its former
-  get_nr_threads()==1 precondition is unreachable through a zombie
-  leader).
-- Collapsed near-duplicate tracepoint selftests into FIXTURE_VARIANT
-  tables with the same cases, assertions, and per-line coverage.
+https://patch.msgid.link/20260722171159.2776765-13-mic@digikod.net
+- Move the layer helpers (__trace_landlock_fill_layers,
+  __trace_landlock_print_layers) into the single shared
+  CREATE_TRACE_POINTS helper block instead of a separate second block.
 
 Changes since v2:
-https://patch.msgid.link/20260406143717.1815792-1-mic@digikod.net
-- Renamed the landlock_restrict_self tracepoint to
-  landlock_create_domain.
-- Ordered the add_rule_net and check_rule tracepoint arguments with the
-  common part first: access_rights before port (add_rule_net), and
-  domain, rule before access_request and the object (check_rule).
-- Recorded the other party's Landlock domain as a scalar ID on scope
-  and ptrace denials: target_domain=, peer_domain=, tracee_domain=
-  (0 when unsandboxed).
-- Replaced the deny events' log_same_exec and log_new_exec fields with a
-  single kernel-computed logged field; logged and the quiet suppression
-  are gated on CONFIG_SECURITY_LANDLOCK_LOG, so the value is identical
-  in a tracepoints-only build (CONFIG_AUDIT=n).
-- Fixed a NULL dereference in landlock_deny_access_fs on a denied
-  ftruncate() or ioctl() by selecting the path from the request's
-  audit-data type.
-- Moved landlock_restrict_self's creation event under the ruleset lock,
-  before the thread-sync; a thread-sync abort still emits the matching
-  free_domain, keeping the create/free pair balanced.
-- Split the denial-logging framework three ways (common log.c, audit.c,
-  and a tracepoint-only trace.c), each behind its own CONFIG, so the
-  tracepoints work without CONFIG_AUDIT and every commit stays
-  bisectable.
-- Rendered trace access masks as symbolic names (check_rule grants=,
-  denial blockers=) instead of raw hex, and renamed the check_rule
-  request= and denial comm= labels to access_request= and
-  tracee_comm=/target_comm=.
-- Reworked the trace documentation: consolidated the shared eBPF and
-  trace-event guarantees into a DOC block, de-duplicated the admin
-  guide and the trace event reference, and documented the logged field
-  and the grants= format.
-- Extended the trace selftests: asserted the relational domain-ID
-  fields across the signal, abstract-unix-socket, and ptrace hooks,
-  added a check_rule_net field test, and added landlock_enforce_domain
-  coverage of the single-threaded, TSYNC, multi-threaded, non-leader,
-  flags-only, and thread-sync-abort cases.
-- New patch 5 factors the per-denial logging decision into a shared,
-  config-independent logged verdict used by audit and tracing.
-- New patch 6 consolidates the access-right and scope names in a shared
-  header (enabling the symbolic rendering above).
-- New patch 11 adds the landlock_enforce_domain tracepoint to complete
-  landlock_create_domain.
-- Dropped v2 patch 10 ("landlock: Set audit_net.sk for socket access
-  checks") and its follow-up AF_UNSPEC UDP-send fix, both merged
-  upstream; subsequent patches renumbered.
+https://patch.msgid.link/20260406143717.1815792-10-mic@digikod.net
+- Order the check_rule tracepoint arguments with the common part
+  (domain, rule) before the event-specific access_request and object.
+- Reformatted TP_STRUCT__entry and TP_fast_assign to kernel tracing
+  convention (requested by Steven Rostedt).
+- Render the request access right as symbolic names with
+  __print_flags(), shared with the audit blocker names.
+- Rename the per-layer field label allowed= to grants= and render it
+  symbolically via __print_landlock_layers(), intersected with the
+  request to show the granted requested rights per layer (was a raw hex
+  value).
+- Rename struct layer_access_masks to the base's struct layer_masks.
+- Rename the check_rule printk label request= to access_request= and the
+  per-layer ring-buffer field layers to grants, so each trace-only field
+  and its printk label share one name (usable directly as an ftrace
+  filter); audit-shared labels (domain=, ruleset=) are unchanged.
 
-Changes since RFC v1:
-https://patch.msgid.link/20250523165741.693976-1-mic@digikod.net
-- New patches 1-4: split struct landlock_domain from struct
-  landlock_ruleset; split denial logging from audit into common
-  framework with CONFIG_SECURITY_LANDLOCK_LOG.
-- Patch 5 (was v1 3/5): removed WARN_ON() (pointed out by Steven
-  Rostedt).
-- New patch 6: added create_ruleset and free_ruleset tracepoints
-  (split from the v1 add_rule_fs tracepoint patch).
-- Patch 7 (was v1 4/5): added add_rule_net tracepoint, used
-  ruleset Landlock ID instead of kernel pointer, added version
-  field to struct landlock_ruleset, differentiated d_absolute_path()
-  error cases (suggested by Tingmao Wang), moved
-  DEFINE_FREE(__putname) to include/linux/fs.h (noticed by Tingmao
-  Wang).
-- New patch 8: added restrict_self and free_domain tracepoints.
-- Patch 9 (was v1 5/5): merged find-rule consolidation, added
-  check_rule_net tracepoint.
-- New patch 10: split audit_net.sk fix with Fixes: tag.
-- New patches 11-12: added denial tracepoints for filesystem,
-  network, ptrace, and scope operations.
-- New patches 13-17: split selftests into per-feature commits with
-  documentation.
+Changes since v1:
+https://patch.msgid.link/20250523165741.693976-6-mic@digikod.net
+- Merged find-rule consolidation (v1 2/5) into this patch.
+- Added check_rule_net tracepoint for network rules.
+- Added get_inode_id() helper with rcu_access_pointer().
+- Added allowed_parent2 behavioral fix.
+---
+ include/trace/events/landlock.h | 196 ++++++++++++++++++++++++++++++++
+ security/landlock/domain.c      |  32 ++++--
+ security/landlock/domain.h      |  10 +-
+ security/landlock/fs.c          | 149 ++++++++++++++++--------
+ security/landlock/net.c         |  21 +++-
+ 5 files changed, 343 insertions(+), 65 deletions(-)
 
-Closes: https://github.com/landlock-lsm/linux/issues/47
-[1] https://lore.kernel.org/r/cover.1741047969.git.m@maowtm.org
-
-Regards,
-
-Mickaël Salaün (19):
-  landlock: Prepare ruleset and domain type split
-  landlock: Move domain query functions to domain.c
-  landlock: Split struct landlock_domain from struct landlock_ruleset
-  landlock: Split denial logging from audit into common framework
-  landlock: Decouple the per-denial logging decision from CONFIG_AUDIT
-  landlock: Consolidate access-right and scope names in a shared header
-  landlock: Add create_ruleset and free_ruleset tracepoints
-  landlock: Add landlock_add_rule_fs and landlock_add_rule_net
-    tracepoints
-  landlock: Add create_domain and free_domain tracepoints
-  landlock: Add landlock_enforce_domain tracepoint
-  landlock: Add tracepoints for rule checking
-  landlock: Add landlock_deny_access_fs and landlock_deny_access_net
-  landlock: Add tracepoints for ptrace and scope denials
-  selftests/landlock: Add trace event test infrastructure and tests
-  selftests/landlock: Add filesystem tracepoint tests
-  selftests/landlock: Add network tracepoint tests
-  selftests/landlock: Add scope and ptrace tracepoint tests
-  selftests/landlock: Add landlock_enforce_domain trace tests
-  landlock: Document tracepoints
-
- Documentation/admin-guide/LSM/landlock.rst    |  105 +-
- Documentation/security/landlock.rst           |   38 +-
- Documentation/trace/events-landlock.rst       |  326 ++++
- Documentation/trace/index.rst                 |    1 +
- Documentation/userspace-api/landlock.rst      |   12 +-
- MAINTAINERS                                   |    3 +
- include/linux/landlock.h                      |   56 +
- include/trace/events/landlock.h               |  965 ++++++++++
- security/landlock/Kconfig                     |    5 +
- security/landlock/Makefile                    |   12 +-
- security/landlock/access.h                    |    6 +-
- security/landlock/audit.c                     |  641 +------
- security/landlock/audit.h                     |   57 +-
- security/landlock/cred.c                      |   14 +-
- security/landlock/cred.h                      |   29 +-
- security/landlock/domain.c                    |  475 ++++-
- security/landlock/domain.h                    |  162 +-
- security/landlock/fs.c                        |  218 ++-
- security/landlock/fs.h                        |   40 +-
- security/landlock/id.h                        |    6 +-
- security/landlock/log.c                       |  586 ++++++
- security/landlock/log.h                       |   86 +
- security/landlock/net.c                       |   38 +-
- security/landlock/ruleset.c                   |  546 +-----
- security/landlock/ruleset.h                   |  250 +--
- security/landlock/syscalls.c                  |   90 +-
- security/landlock/task.c                      |   76 +-
- security/landlock/trace.c                     |  185 ++
- security/landlock/trace.h                     |   44 +
- security/landlock/tsync.c                     |   16 +
- tools/testing/selftests/landlock/audit.h      |   35 -
- tools/testing/selftests/landlock/common.h     |   47 +
- tools/testing/selftests/landlock/config       |    2 +
- tools/testing/selftests/landlock/fs_test.c    |  483 +++++
- tools/testing/selftests/landlock/net_test.c   |  590 +++++-
- .../testing/selftests/landlock/ptrace_test.c  |  402 ++++
- .../landlock/scoped_abstract_unix_test.c      |  264 +++
- .../selftests/landlock/scoped_signal_test.c   |  404 ++++
- tools/testing/selftests/landlock/trace.h      |  639 +++++++
- .../selftests/landlock/trace_fs_test.c        |  496 +++++
- tools/testing/selftests/landlock/trace_test.c | 1620 +++++++++++++++++
- tools/testing/selftests/landlock/true.c       |   10 +
- 42 files changed, 8636 insertions(+), 1444 deletions(-)
- create mode 100644 Documentation/trace/events-landlock.rst
- create mode 100644 include/linux/landlock.h
- create mode 100644 include/trace/events/landlock.h
- create mode 100644 security/landlock/log.c
- create mode 100644 security/landlock/log.h
- create mode 100644 security/landlock/trace.c
- create mode 100644 security/landlock/trace.h
- create mode 100644 tools/testing/selftests/landlock/trace.h
- create mode 100644 tools/testing/selftests/landlock/trace_fs_test.c
- create mode 100644 tools/testing/selftests/landlock/trace_test.c
-
+diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+index 43bf126eb449..166c9bb544c0 100644
+--- a/include/trace/events/landlock.h
++++ b/include/trace/events/landlock.h
+@@ -16,8 +16,10 @@
+ #include <linux/tracepoint.h>
+ #include <linux/trace_seq.h>
+ 
++struct dentry;
+ struct landlock_domain;
+ struct landlock_hierarchy;
++struct landlock_rule;
+ struct landlock_ruleset;
+ struct path;
+ 
+@@ -63,6 +65,77 @@ __trace_print_untrusted_str(struct trace_seq *p, const char *src, size_t len)
+ 	return ret;
+ }
+ 
++/*
++ * Fills the dense per-domain-layer array layers (one access mask per layer,
++ * indexed by level - 1) from rule's sparse layer stack, keeping only the
++ * requested rights (access_request).  Layers with no matching rule entry get
++ * a zero mask.  Shared by the check_rule_fs and check_rule_net events.
++ *
++ * rule->layers is sorted by ascending level, with levels in the domain's
++ * [1, num_layers] range (see landlock_merge_ruleset()), so every entry maps
++ * to a slot.  A leftover entry would be a malformed rule; the zero-filled
++ * slots keep the output and the array bounds safe regardless.
++ */
++static inline void
++__trace_landlock_fill_layers(access_mask_t *const layers,
++			     const size_t num_layers,
++			     const struct landlock_rule *const rule,
++			     const access_mask_t access_request)
++{
++	size_t i = 0;
++
++	for (size_t level = 1; level <= num_layers; level++) {
++		access_mask_t grants = 0;
++
++		if (i < rule->num_layers && level == rule->layers[i].level) {
++			grants = rule->layers[i].access & access_request;
++			i++;
++		}
++		layers[level - 1] = grants;
++	}
++
++	/* A leftover entry means an out-of-range or unsorted rule level. */
++	WARN_ON_ONCE(i < rule->num_layers);
++}
++
++/*
++ * Renders the dense per-domain-layer access array as symbolic flag names for
++ * the grants field: layers wrapped in "{}", flags within a layer joined by
++ * "|", layers separated by ",", an empty layer rendered as nothing.
++ * Open-codes the flag walk because trace_print_flags_seq() NUL-terminates per
++ * call and so cannot be chained into a single field.  The shared names table
++ * covers every access right, so masked bits are always named.  Returns the
++ * trace_seq position like __print_flags().
++ */
++static inline const char *__trace_landlock_print_layers(
++	struct trace_seq *p, const access_mask_t *const layers,
++	const size_t num_layers, const struct trace_print_flags *const names,
++	const size_t names_size)
++{
++	const char *const ret = trace_seq_buffer_ptr(p);
++
++	trace_seq_putc(p, '{');
++	for (size_t i = 0; i < num_layers; i++) {
++		access_mask_t mask = layers[i];
++		bool first = true;
++
++		if (i)
++			trace_seq_putc(p, ',');
++		for (size_t j = 0; mask && j < names_size; j++) {
++			if ((mask & names[j].mask) != names[j].mask)
++				continue;
++			if (!first)
++				trace_seq_putc(p, '|');
++			trace_seq_puts(p, names[j].name);
++			mask &= ~names[j].mask;
++			first = false;
++		}
++	}
++	trace_seq_putc(p, '}');
++	trace_seq_putc(p, 0);
++	return ret;
++}
++
+ #endif /* CREATE_TRACE_POINTS */
+ 
+ /* clang-format off */
+@@ -123,7 +196,33 @@ __trace_print_untrusted_str(struct trace_seq *p, const char *src, size_t len)
+  * (e.g. network ports are __u64 in host endianness, like
+  * landlock_net_port_attr.port).  Per-event details, such as where a value
+  * is byte-swapped, live in the field's own kdoc.
++ *
++ * Rule-check fields
++ * ~~~~~~~~~~~~~~~~~
++ *
++ * The check_rule events fire during an access check, once per matching
++ * rule, before the final allow-or-deny verdict.  They share domain (the
++ * enforcing domain being evaluated), access_request (the access mask being
++ * checked), and rule (the matching rule, with per-layer access masks).
++ */
++
++/*
++ * Prints a per-layer access mask array (the dynamic array @array) as symbolic
++ * flag names using the shared @flag_names list (a _LANDLOCK_*_NAMES macro).
++ * Stays outside CREATE_TRACE_POINTS: TP_printk is expanded in the print-output
++ * pass where that macro is undefined.
+  */
++#define __print_landlock_layers(array, flag_names...)			\
++	({								\
++		static const struct trace_print_flags __layer_names[] = { \
++			flag_names					\
++		};							\
++		__trace_landlock_print_layers(				\
++			p, __get_dynamic_array(array),			\
++			__get_dynamic_array_len(array) /		\
++				sizeof(access_mask_t),			\
++			__layer_names, ARRAY_SIZE(__layer_names));	\
++	})
+ 
+ /**
+  * landlock_create_ruleset - New ruleset created
+@@ -432,6 +531,103 @@ TRACE_EVENT(landlock_free_domain,
+ 		__entry->domain_id, __entry->denials)
+ );
+ 
++/**
++ * landlock_check_rule_fs - Filesystem rule evaluated during access check
++ *
++ * @domain: Enforcing domain (never NULL).
++ * @rule: Matching rule with per-layer access masks (never NULL).
++ * @access_request: Access mask evaluated against the rule (the domain's
++ *                   handled mask during rename/link double-checks).
++ * @dentry: Filesystem dentry being checked (never NULL).
++ *
++ * Emitted for each rule that matches during a filesystem access check.
++ * The grants array shows the requested rights the rule grants at each
++ * domain layer.  See Documentation/trace/events-landlock.rst for how to
++ * interpret it.
++ */
++TRACE_EVENT(landlock_check_rule_fs,
++
++	TP_PROTO(const struct landlock_domain *domain,
++		 const struct landlock_rule *rule,
++		 access_mask_t access_request, const struct dentry *dentry),
++
++	TP_ARGS(domain, rule, access_request, dentry),
++
++	TP_STRUCT__entry(
++		__field(	__u64,		domain_id	)
++		__field(	access_mask_t,	access_request	)
++		__field(	dev_t,		dev		)
++		__field(	ino_t,		ino		)
++		__dynamic_array(access_mask_t,	grants,
++				domain->num_layers)
++	),
++
++	TP_fast_assign(
++		__entry->domain_id	= domain->hierarchy->id;
++		__entry->access_request	= access_request;
++		__entry->dev		= dentry->d_sb->s_dev;
++		__entry->ino		= d_backing_inode(dentry)->i_ino;
++
++		__trace_landlock_fill_layers(__get_dynamic_array(grants),
++					     __get_dynamic_array_len(grants) /
++						     sizeof(access_mask_t),
++					     rule, access_request);
++	),
++
++	TP_printk("domain=%llx access_request=%s dev=%u:%u ino=%lu grants=%s",
++		__entry->domain_id,
++		__print_flags(__entry->access_request, "|", _LANDLOCK_ACCESS_FS_NAMES),
++		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
++		__print_landlock_layers(grants, _LANDLOCK_ACCESS_FS_NAMES))
++);
++
++/**
++ * landlock_check_rule_net - Network port rule evaluated during access check
++ *
++ * @domain: Enforcing domain (never NULL).
++ * @rule: Matching rule with per-layer access masks (never NULL).
++ * @access_request: Access mask being requested.
++ * @port: Network port being checked (host endianness).
++ *
++ * Emitted for each rule that matches during a network access check.  The
++ * grants array shows the requested rights the rule grants at each domain
++ * layer.  See Documentation/trace/events-landlock.rst for how to
++ * interpret it.
++ */
++TRACE_EVENT(landlock_check_rule_net,
++
++	TP_PROTO(const struct landlock_domain *domain,
++		 const struct landlock_rule *rule,
++		 access_mask_t access_request, __u64 port),
++
++	TP_ARGS(domain, rule, access_request, port),
++
++	TP_STRUCT__entry(
++		__field(	__u64,		domain_id	)
++		__field(	access_mask_t,	access_request	)
++		__field(	__u64,		port		)
++		__dynamic_array(access_mask_t,	grants,
++				domain->num_layers)
++	),
++
++	TP_fast_assign(
++		__entry->domain_id	= domain->hierarchy->id;
++		__entry->access_request	= access_request;
++		__entry->port		= port;
++
++		__trace_landlock_fill_layers(__get_dynamic_array(grants),
++					     __get_dynamic_array_len(grants) /
++						     sizeof(access_mask_t),
++					     rule, access_request);
++	),
++
++	TP_printk("domain=%llx access_request=%s port=%llu grants=%s",
++		__entry->domain_id,
++		__print_flags(__entry->access_request, "|", _LANDLOCK_ACCESS_NET_NAMES),
++		__entry->port,
++		__print_landlock_layers(grants, _LANDLOCK_ACCESS_NET_NAMES))
++);
++
+ #undef _LANDLOCK_NAME_ENTRY
+ 
+ #endif /* _TRACE_LANDLOCK_H */
+diff --git a/security/landlock/domain.c b/security/landlock/domain.c
+index 7651eee8fe02..1e592ea52fa1 100644
+--- a/security/landlock/domain.c
++++ b/security/landlock/domain.c
+@@ -97,9 +97,9 @@ void landlock_put_domain_deferred(struct landlock_domain *const domain)
+ }
+ 
+ /* The returned access has the same lifetime as the domain. */
+-const struct landlock_rule *
+-landlock_find_rule(const struct landlock_domain *const domain,
+-		   const struct landlock_id id)
++static const struct landlock_rule *
++find_rule(const struct landlock_domain *const domain,
++	  const struct landlock_id id)
+ {
+ 	const struct rb_root *root;
+ 	const struct rb_node *node;
+@@ -126,26 +126,38 @@ landlock_find_rule(const struct landlock_domain *const domain,
+ 
+ /**
+  * landlock_unmask_layers - Remove the access rights in @masks which are
+- *                          granted in @rule
++ *                          granted by a matching rule
+  *
+- * Updates the set of (per-layer) unfulfilled access rights @masks so that all
+- * the access rights granted in @rule are removed from it (because they are now
+- * fulfilled).
++ * Looks up the rule matching @id in @domain, then updates the set of
++ * (per-layer) unfulfilled access rights @masks so that all the access rights
++ * granted by that rule are removed (because they are now fulfilled).
+  *
+- * @rule: A rule that grants a set of access rights for each layer.
++ * @domain: The Landlock domain to search for a matching rule.
++ * @id: Identifier for the rule target (e.g. inode, port).
+  * @masks: A matrix of unfulfilled access rights for each layer.
++ * @matched_rule: Optional output for the matched rule (for tracing); set to
++ *                the matching rule when non-NULL, unchanged otherwise.
+  *
+  * Return: True if the request is allowed (i.e. the access rights granted all
+  * remaining unfulfilled access rights and masks has no leftover set bits).
+  */
+-bool landlock_unmask_layers(const struct landlock_rule *const rule,
+-			    struct layer_masks *masks)
++bool landlock_unmask_layers(const struct landlock_domain *const domain,
++			    const struct landlock_id id,
++			    struct layer_masks *masks,
++			    const struct landlock_rule **matched_rule)
+ {
++	const struct landlock_rule *rule;
++
+ 	if (!masks)
+ 		return true;
++
++	rule = find_rule(domain, id);
+ 	if (!rule)
+ 		return false;
+ 
++	if (matched_rule)
++		*matched_rule = rule;
++
+ 	/*
+ 	 * An access is granted if, for each policy layer, at least one rule
+ 	 * encountered on the pathwalk grants the requested access, regardless
+diff --git a/security/landlock/domain.h b/security/landlock/domain.h
+index 8351e22016fe..5baa4a73b446 100644
+--- a/security/landlock/domain.h
++++ b/security/landlock/domain.h
+@@ -305,12 +305,10 @@ struct landlock_domain *
+ landlock_merge_ruleset(struct landlock_domain *const parent,
+ 		       struct landlock_ruleset *const ruleset);
+ 
+-const struct landlock_rule *
+-landlock_find_rule(const struct landlock_domain *const domain,
+-		   const struct landlock_id id);
+-
+-bool landlock_unmask_layers(const struct landlock_rule *const rule,
+-			    struct layer_masks *masks);
++bool landlock_unmask_layers(const struct landlock_domain *const domain,
++			    const struct landlock_id id,
++			    struct layer_masks *masks,
++			    const struct landlock_rule **matched_rule);
+ 
+ access_mask_t
+ landlock_init_layer_masks(const struct landlock_domain *const domain,
+diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+index 3a33e7393e25..30aa6ce13590 100644
+--- a/security/landlock/fs.c
++++ b/security/landlock/fs.c
+@@ -377,31 +377,55 @@ int landlock_append_fs_rule(struct landlock_ruleset *const ruleset,
+ 
+ /* Access-control management */
+ 
+-/*
+- * The lifetime of the returned rule is tied to @domain.
++/**
++ * get_inode_id - Look up the Landlock object for a dentry
++ * @dentry: The dentry to look up.
++ * @id: Filled with the inode's Landlock object pointer on success.
++ *
++ * Extracts the Landlock object pointer from @dentry's inode security blob and
++ * stores it in @id for use as a rule-tree lookup key.
+  *
+- * Returns NULL if no rule is found or if @dentry is negative.
++ * When this returns false (negative dentry or no Landlock object), no rule can
++ * match this inode, so landlock_unmask_layers() need not be called.  Callers
++ * that gate landlock_unmask_layers() on this function must handle the NULL
++ * masks case independently, since the !masks-returns-true early-return in
++ * landlock_unmask_layers() will not be reached.  See the allowed_parent2
++ * initialization in is_access_to_paths_allowed().
++ *
++ * Return: True if a Landlock object exists for @dentry, false otherwise.
+  */
+-static const struct landlock_rule *
+-find_rule(const struct landlock_domain *const domain,
+-	  const struct dentry *const dentry)
++static bool get_inode_id(const struct dentry *const dentry,
++			 struct landlock_id *id)
+ {
+-	const struct landlock_rule *rule;
+-	const struct inode *inode;
+-	struct landlock_id id = {
+-		.type = LANDLOCK_KEY_INODE,
+-	};
+-
+ 	/* Ignores nonexistent leafs. */
+ 	if (d_is_negative(dentry))
+-		return NULL;
++		return false;
+ 
+-	inode = d_backing_inode(dentry);
+-	rcu_read_lock();
+-	id.key.object = rcu_dereference(landlock_inode(inode)->object);
+-	rule = landlock_find_rule(domain, id);
+-	rcu_read_unlock();
+-	return rule;
++	/*
++	 * rcu_access_pointer() is sufficient: the pointer is used only as a
++	 * numeric comparison key for rule lookup, not dereferenced.  The object
++	 * cannot be freed while the domain exists because the domain's rule
++	 * tree holds its own reference to it.
++	 */
++	id->key.object = rcu_access_pointer(
++		landlock_inode(d_backing_inode(dentry))->object);
++	return !!id->key.object;
++}
++
++static bool unmask_layers_fs(const struct landlock_domain *const domain,
++			     const struct landlock_id id,
++			     const access_mask_t access_request,
++			     struct layer_masks *masks,
++			     const struct dentry *const dentry)
++{
++	const struct landlock_rule *rule = NULL;
++	bool ret;
++
++	ret = landlock_unmask_layers(domain, id, masks, &rule);
++	if (rule)
++		trace_landlock_check_rule_fs(domain, rule, access_request,
++					     dentry);
++	return ret;
+ }
+ 
+ /*
+@@ -782,6 +806,9 @@ is_access_to_paths_allowed(const struct landlock_domain *const domain,
+ 	bool allowed_parent1 = false, allowed_parent2 = false, is_dom_check,
+ 	     child1_is_directory = true, child2_is_directory = true;
+ 	struct path walker_path;
++	struct landlock_id id = {
++		.type = LANDLOCK_KEY_INODE,
++	};
+ 	access_mask_t access_masked_parent1, access_masked_parent2;
+ 	struct layer_masks _layer_masks_child1, _layer_masks_child2;
+ 	struct layer_masks *layer_masks_child1 = NULL,
+@@ -821,28 +848,46 @@ is_access_to_paths_allowed(const struct landlock_domain *const domain,
+ 		/* For a simple request, only check for requested accesses. */
+ 		access_masked_parent1 = access_request_parent1;
+ 		access_masked_parent2 = access_request_parent2;
++		/*
++		 * Simple requests have no parent2 to check, so parent2 is
++		 * trivially allowed.  This must be set explicitly because the
++		 * get_inode_id() gate in the pathwalk loop may prevent
++		 * landlock_unmask_layers() from being called (which would
++		 * otherwise return true for NULL masks as a side effect).
++		 */
++		allowed_parent2 = true;
+ 		is_dom_check = false;
+ 	}
+ 
+ 	if (unlikely(dentry_child1)) {
+-		/*
+-		 * Get the layer masks for the child dentries for use by domain
+-		 * check later.
+-		 */
+-		if (landlock_init_layer_masks(domain, LANDLOCK_MASK_ACCESS_FS,
+-					      &_layer_masks_child1,
+-					      LANDLOCK_KEY_INODE))
+-			landlock_unmask_layers(find_rule(domain, dentry_child1),
+-					       &_layer_masks_child1);
++		struct landlock_id id = {
++			.type = LANDLOCK_KEY_INODE,
++		};
++		access_mask_t handled;
++
++		handled = landlock_init_layer_masks(domain,
++						    LANDLOCK_MASK_ACCESS_FS,
++						    &_layer_masks_child1,
++						    LANDLOCK_KEY_INODE);
++		if (handled && get_inode_id(dentry_child1, &id))
++			unmask_layers_fs(domain, id, handled,
++					 &_layer_masks_child1, dentry_child1);
+ 		layer_masks_child1 = &_layer_masks_child1;
+ 		child1_is_directory = d_is_dir(dentry_child1);
+ 	}
+ 	if (unlikely(dentry_child2)) {
+-		if (landlock_init_layer_masks(domain, LANDLOCK_MASK_ACCESS_FS,
+-					      &_layer_masks_child2,
+-					      LANDLOCK_KEY_INODE))
+-			landlock_unmask_layers(find_rule(domain, dentry_child2),
+-					       &_layer_masks_child2);
++		struct landlock_id id = {
++			.type = LANDLOCK_KEY_INODE,
++		};
++		access_mask_t handled;
++
++		handled = landlock_init_layer_masks(domain,
++						    LANDLOCK_MASK_ACCESS_FS,
++						    &_layer_masks_child2,
++						    LANDLOCK_KEY_INODE);
++		if (handled && get_inode_id(dentry_child2, &id))
++			unmask_layers_fs(domain, id, handled,
++					 &_layer_masks_child2, dentry_child2);
+ 		layer_masks_child2 = &_layer_masks_child2;
+ 		child2_is_directory = d_is_dir(dentry_child2);
+ 	}
+@@ -854,8 +899,6 @@ is_access_to_paths_allowed(const struct landlock_domain *const domain,
+ 	 * restriction.
+ 	 */
+ 	while (true) {
+-		const struct landlock_rule *rule;
+-
+ 		/*
+ 		 * If at least all accesses allowed on the destination are
+ 		 * already allowed on the source, respectively if there is at
+@@ -896,13 +939,20 @@ is_access_to_paths_allowed(const struct landlock_domain *const domain,
+ 				break;
+ 		}
+ 
+-		rule = find_rule(domain, walker_path.dentry);
+-		allowed_parent1 =
+-			allowed_parent1 ||
+-			landlock_unmask_layers(rule, layer_masks_parent1);
+-		allowed_parent2 =
+-			allowed_parent2 ||
+-			landlock_unmask_layers(rule, layer_masks_parent2);
++		if (get_inode_id(walker_path.dentry, &id)) {
++			allowed_parent1 =
++				allowed_parent1 ||
++				unmask_layers_fs(domain, id,
++						 access_masked_parent1,
++						 layer_masks_parent1,
++						 walker_path.dentry);
++			allowed_parent2 =
++				allowed_parent2 ||
++				unmask_layers_fs(domain, id,
++						 access_masked_parent2,
++						 layer_masks_parent2,
++						 walker_path.dentry);
++		}
+ 
+ 		/* Stops when a rule from each layer grants access. */
+ 		if (allowed_parent1 && allowed_parent2)
+@@ -1076,23 +1126,30 @@ static bool collect_domain_accesses(const struct landlock_domain *const domain,
+ 				    struct layer_masks *layer_masks_dom)
+ {
+ 	bool ret = false;
++	access_mask_t access_masked_dom;
+ 
+ 	if (WARN_ON_ONCE(!domain || !mnt_root || !dir || !layer_masks_dom))
+ 		return true;
+ 	if (is_nouser_or_private(dir))
+ 		return true;
+ 
+-	if (!landlock_init_layer_masks(domain, LANDLOCK_MASK_ACCESS_FS,
+-				       layer_masks_dom, LANDLOCK_KEY_INODE))
++	access_masked_dom =
++		landlock_init_layer_masks(domain, LANDLOCK_MASK_ACCESS_FS,
++					  layer_masks_dom, LANDLOCK_KEY_INODE);
++	if (!access_masked_dom)
+ 		return true;
+ 
+ 	dget(dir);
+ 	while (true) {
+ 		struct dentry *parent_dentry;
++		struct landlock_id id = {
++			.type = LANDLOCK_KEY_INODE,
++		};
+ 
+ 		/* Gets all layers allowing all domain accesses. */
+-		if (landlock_unmask_layers(find_rule(domain, dir),
+-					   layer_masks_dom)) {
++		if (get_inode_id(dir, &id) &&
++		    unmask_layers_fs(domain, id, access_masked_dom,
++				     layer_masks_dom, dir)) {
+ 			/*
+ 			 * Stops when all handled accesses are allowed by at
+ 			 * least one rule in each layer.
+diff --git a/security/landlock/net.c b/security/landlock/net.c
+index ead97fcfdcff..8f2aaac54b33 100644
+--- a/security/landlock/net.c
++++ b/security/landlock/net.c
+@@ -53,6 +53,22 @@ int landlock_append_net_rule(struct landlock_ruleset *const ruleset,
+ 	return err;
+ }
+ 
++static bool unmask_layers_net(const struct landlock_domain *const domain,
++			      const struct landlock_id id,
++			      struct layer_masks *masks,
++			      access_mask_t access_request)
++{
++	const struct landlock_rule *rule = NULL;
++	bool ret;
++
++	ret = landlock_unmask_layers(domain, id, masks, &rule);
++	if (rule)
++		trace_landlock_check_rule_net(
++			domain, rule, access_request,
++			ntohs((__force __be16)id.key.data));
++	return ret;
++}
++
+ static int current_check_access_socket(struct socket *const sock,
+ 				       struct sockaddr *const address,
+ 				       const int addrlen,
+@@ -62,7 +78,6 @@ static int current_check_access_socket(struct socket *const sock,
+ 	unsigned short sock_family;
+ 	__be16 port;
+ 	struct layer_masks layer_masks = {};
+-	const struct landlock_rule *rule;
+ 	struct landlock_id id = {
+ 		.type = LANDLOCK_KEY_NET_PORT,
+ 	};
+@@ -248,14 +263,14 @@ static int current_check_access_socket(struct socket *const sock,
+ 	id.key.data = (__force uintptr_t)port;
+ 	BUILD_BUG_ON(sizeof(port) > sizeof(id.key.data));
+ 
+-	rule = landlock_find_rule(subject->domain, id);
+ 	access_request = landlock_init_layer_masks(subject->domain,
+ 						   access_request, &layer_masks,
+ 						   LANDLOCK_KEY_NET_PORT);
+ 	if (!access_request)
+ 		return 0;
+ 
+-	if (landlock_unmask_layers(rule, &layer_masks))
++	if (unmask_layers_net(subject->domain, id, &layer_masks,
++			      access_request))
+ 		return 0;
+ 
+ 	audit_net.family = address->sa_family;
 -- 
 2.54.0
 
