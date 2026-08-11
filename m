@@ -1,126 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8902F25F3
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 07:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E03A35AC07;
+	Tue, 11 Aug 2026 07:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786432993; cv=none; b=RV987s7GIreNSy0amZiNLBEAPUJ+pCq3CSIYlLFW7n15985EfkJIVCXVieTdOMk4UycBZBArh9hFcs4FIK2ejbVhfKMITHbwaOwAmC9NqxonmJGz+PZnDoKmWgm1HqzyWNpdEeQpCNJVkY9PSdMcqHMuXe4psJtcYPEWdZyP8Oc=
+	t=1786433675; cv=none; b=fFd2r+GRzC6t12bIjCwtxrgmY8kxetZt7xAilGLZc60Ubmvt7dwDR0j9hr5Yp+vVeMnvJ2mK+QsTRQatTo0i3AP69xa3IEVwV8AkfPFW754GjytXptjVyV8NcelBQC+h84Vl4ArpVQ7UuHkQOCqtvQWKi/U609uPza8tP8X+jvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786432993; c=relaxed/simple;
-	bh=X0hdybD28tQSSUJcKWyRQqNC8MMk7mUyibywTJcZkPk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKMmx3rL7L3d+9P4pQDiXATwPZOfBgUysgQO3vFh0YrOzV8ZtW8A+mxriEZp5dTna5D81sGh7x3HeCduq0ojS1XAe0Uq9WHQpOqZAVaG8ITdwlajqyBw8KpbP0Bt6ZboeZG4riNvn6yhJsQlsRwh5SCFCMc+6iOjySZkUgJJuS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ewnzJboG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786433675; c=relaxed/simple;
+	bh=PH6cZGx9LYOHeKQhFjEwx6tN9N1GG4fsvAMNHfcjr+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qcLzJc0d7TpBiRgJB3p6RQvVQxho9w+nyeVWutK9dKRxZBPe2C+BaFONo29QRa4nfbVl3Fr+JKsz5ZwHrC58mtTMZhswxN6EKIPRNi+sXufFAlZybEyctDjQebgHJmIY19dOlppryniVoB/zFjrD9iwozaXkvuQ09SGBfZU3Mgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYJgr4Uj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ewnzJboG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786432990;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X0hdybD28tQSSUJcKWyRQqNC8MMk7mUyibywTJcZkPk=;
-	b=ewnzJboG0Cgdi3G+lvlYIPg5SaRCxKA2BkbPlaydREDT5Oz/qcNO/sIzO25N91p2jw8Msj
-	K4q9WPbxkkeU5qU9tV1QjVVe7g29YKL7E54O9E/zP0xChBcJhTinIdSydkD4YxxkluyupD
-	wkFXHhKj0NYIYgoApSRyZrnTsHBKjM4=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-332-6Uv-C0sKOuSDiy5Mn0GHcQ-1; Tue, 11 Aug 2026 03:23:08 -0400
-X-MC-Unique: 6Uv-C0sKOuSDiy5Mn0GHcQ-1
-X-Mimecast-MFC-AGG-ID: 6Uv-C0sKOuSDiy5Mn0GHcQ_1786432987
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c16740eb587so198501066b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 00:23:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786432987; x=1787037787;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=X0hdybD28tQSSUJcKWyRQqNC8MMk7mUyibywTJcZkPk=;
-        b=KQcUP8xdWe9TmbtS8qATrnAoR34Hoo/vxdeWpwLM+l53haV9RF1s48gzp6uIUG9qHL
-         uJz032KJob016xlz2isvFDKIJppLLzyr5PwZzqZMTJTeXUUy+g/BtnpWy3EoX+sWHg3a
-         ICZ/zt17bWC/SdsHSPQHzSoJ42dw6RZJKiXskEnBY7tzbMnOKdm49s0o8UdB8rWX+nN4
-         ibxSng+ZOQ9D9EKhqerRKwxwb1+uddKk52uHZtZgOlolhhePz0Ubwk+B1Y8KY9haEjml
-         41M/x/hff5RifSok1ES9hbtYImIScQggqbxW7LDbIKJTJt1Mn4jlHOnD54FIOhknSRTn
-         wjQg==
-X-Forwarded-Encrypted: i=1; AHgh+Ro0mqE+nuppcLeeqI8LX++UomvjDH9eov5pkcfkv55ifiQDtHU+2SmcFPKvD6gVVfm+3YUnplR00zcH/b6dPVZsSNs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1GVn8SptTHtM7h7jwQ3dnHmmKU4iUSxh0vWb284TtVRmMzSUR
-	SNPrHQADR1fmAkOxxmKEHRtgLMu4pw1CdnKWIgaeVQDumgBq1aeGFmnBsaF/XGL3bOM/MtG82F5
-	V+0iocJvs5fgMveq5UA/8ssrc3uXUV4lCA1KlP3qKEb/3fxyK+yuNP0LZZ4a/FxzTEcuL2tVTtt
-	xByPvqe0FVVU0UdqJUiySH7Rk+0p1mZW/D/vFXpIpZ2uaQ+M82
-X-Gm-Gg: AR+sD11GooFlxDcVLbYcmPazGilfkXzdAoabXlYFy/FF8tB2UKV3tozzROxJJ2DPrhf
-	eeL987lakVHhO5wnSifT6d6bVgdts4UkUnD6VSc/DyCY32rpwFi+E85MkCXLsLr5kTWUFyjQDl7
-	MoFkRQb67vum+N+N45JTp46/1Tq0rmyTUpj69POWgVMPuHe0jgCC6n+NBr
-X-Received: by 2002:a17:906:f583:b0:c20:3733:a8c5 with SMTP id a640c23a62f3a-c20e608810cmr49288766b.8.1786432986699;
-        Tue, 11 Aug 2026 00:23:06 -0700 (PDT)
-X-Received: by 2002:a17:906:f583:b0:c20:3733:a8c5 with SMTP id
- a640c23a62f3a-c20e608810cmr49285166b.8.1786432986202; Tue, 11 Aug 2026
- 00:23:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYJgr4Uj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D727C1F000E9;
+	Tue, 11 Aug 2026 07:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786433673;
+	bh=PH6cZGx9LYOHeKQhFjEwx6tN9N1GG4fsvAMNHfcjr+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hYJgr4UjkDDJmyBrHtvX7sMiaB1LfpYKkoqma4LEDLxn2vAxGmcG8HDbfm0OcPpxO
+	 /PoguVv425iXNK1y+28ugx44Olws6TLU6cVlLpWCRA4qYDbC48QiYt0ue9yMu7yDPM
+	 hrgSU/23qphxumPAw638uBx+m5KQpLwy+pcczNPXpwAbPpHWu1r2/MQlKqDMuShDXC
+	 Ar6BiBaeawo3AAzB/piLKYsbf3BGkLDLEIet4ooFD7eH9tpOi/maVnpldU1wkj82qL
+	 fHHl5ygVUwlgIugjSD7Wr4SAmC0pX/fLfjhcGI+SdWugSlHhbNrwQBI1bbUzURAnYF
+	 +DX/gNrlHxk9w==
+Date: Tue, 11 Aug 2026 08:34:13 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: gao xu <gaoxu2@honor.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	"David Hildenbrand (Arm)" <david@kernel.org>, Xiang Gao <gxxa03070307@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "liam@infradead.org" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Xiang Gao <gaoxiang17@xiaomi.com>
+Subject: Re: [PATCH] tracing: report buffer memory in /proc/meminfo
+Message-ID: <anrPJN-V8K4fhGzZ@lucifer>
+References: <20260810094025.136705-1-gaoxiang17@xiaomi.com>
+ <69df3080-a719-4131-a247-62bf47bda8a6@kernel.org>
+ <anm0SMuVpBz7wLac@lucifer>
+ <20260810105710.6ee5e493@gandalf.local.home>
+ <9bd98f51abd44d81a569d95e907070c6@honor.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260805151055.870722-1-tglozar@redhat.com> <20260810210425.61435b0b@robin>
-In-Reply-To: <20260810210425.61435b0b@robin>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 11 Aug 2026 09:22:54 +0200
-X-Gm-Features: AUfX_mxkCbUyM3vF9Bo0LlQkJRP2J6BcmIhDswN_3MCz8HI9t5r3QXSmVqyUgbQ
-Message-ID: <CAP4=nvRWKYdkfr-9_1OMupZfF0nUYVVtMd7Vwsd3o4pO__SCew@mail.gmail.com>
-Subject: Re: [GIT PULL] RTLA changes for 7.3
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: kNHxf0WOjmhoBn1qwEwdUuB_fWslej9q6M7QxX5OPHc_1786432987
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9bd98f51abd44d81a569d95e907070c6@honor.com>
 
-=C3=BAt 11. 8. 2026 v 3:04 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.=
-org> napsal:
+On Tue, Aug 11, 2026 at 06:22:58AM +0000, gao xu wrote:
+> > On Mon, 10 Aug 2026 12:22:43 +0100
+> > "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
+> >
+> > > On Mon, Aug 10, 2026 at 12:52:38PM +0200, David Hildenbrand (Arm) wrote:
+> > > > On 8/10/26 11:40, Xiang Gao wrote:
+> > > > > Report the data capacity of all ftrace ring buffers through a new
+> > > > > Ftrace field in /proc/meminfo. Include the main and snapshot
+> > > > > buffers of the global trace array and all tracing instances, while
+> > > > > leaving ring-buffer metadata accounted for by Slab.
+> > > >
+> > > > why? :)
+> > > >
+> > > > To report a handful of KiB as in your example below? Doesn't sound
+> > > > super helpful TBH.
+> > >
+> > > Yeah I think we need to stop with all the proposed additions to
+> > > /proc/meminfo :)
+> > >
+> > > Also something like this where you are making a change in output that
+> > > it is just your opinion that it is useful should be an RFC to see what
+> > > the community thinks first.
+> >
+> > Agreed. This doesn't belong in the meminfo. If you want memory statistics for
+> > tracing, I may be OK if you add a "total_memory_kb" file in the
+> > /sys/kernel/tracing/trace_stats/ directory.
+> Would it be possible to include this info in show_mem()?
+> This would be helpful for analyzing low-memory and OOM issues.
+
+You have to back up requests with reasons, it's not a case of 'please add X to
+Y' and then we deign to do it or not.
+
+Justifications are required. We could add endless crap to show_mem() until the
+CoWs come home, maybe even list the number of emojis used since last boot
+obviously.
+
+So - why are you asking for this? Is it only a handful of KiB used for tracing?
+Is it GiB? If so maybe it's because you're doing something crazy? Why does a
+kernelfs file not suffice, etc.?
+
+You need to engage with the discussion and back things up rather just asking
+like you were typing into an LLM prompt...
+
+But in general, no, it makes absolutely no sense to randomly output some trace
+information there, unless you're about to offer up the most compelling argument
+since the invention of marmite and butter on toast.
+
+show_mem() is for critical memory information displayed at the point of OOM or
+sysrq-please-help-me, not random stats.
+
+> >
+> > And break it up for memory used. Ring buffers, events, etc.
+> >
+> > Perhaps even add one per CPU as well.
+> >
+> > I'm always conscience about how much memory tracing is taking up in the
+> > system.
+> >
+> > -- Steve
 >
-> I just tested this on my VM and have the following results from "make che=
-ck":
->
-> [...]
-> not ok 20 - top verify -c/--cpus
-> # Output match failed: "^Affinity of threads: 0$"
-> # Affinity of threads:
-> [...]
-> not ok 21 - hist verify -c/--cpus
-> # Output match failed: "^Affinity of threads: 0$"
-> # Affinity of threads:
-> [...]
-> not ok 26 - top verify -u/--user-threads
-> # Output match failed: "0 kernel threads, 1 user threads"
-> # 0 kernel threads, 0 user threads
-> [...]
-> not ok 27 - hist verify -u/--user-threads
-> # Output match failed: "0 kernel threads, 1 user threads"
-> # 0 kernel threads, 0 user threads
-> [..]
->
-> -- Steve
->
 
-tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh is for some
-reason not finding the user threads (as the tests for -H and -k
-succeeded) on your system. The threads themselves had to be running,
-as timerlat is reporting samples from them. The script and the related
-tests cases were added in 7.2 already, this pull request does not
-touch them so it's most likely a pre-existing issue.
-
-Either way, I will look into that, thank you for testing. It might be
-environment-dependent, as the test relies on the test script (executed
-as an --on-threshold action) being a direct child of the main rtla
-process - which only holds when the system() shell executes the script
-directly, not as a subprocess.
-
-Tomas
-
+--
+Cheers, Lorenzo
