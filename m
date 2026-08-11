@@ -1,91 +1,126 @@
-Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919C13BCD3B;
-	Tue, 11 Aug 2026 06:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8902F25F3
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 07:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786430420; cv=none; b=PwylbCw2pBl7Nyr9sV0UlMI6T6jBT9OnKVdKXB7yRI5QP68XBCh0hj3bhMrIM0kju8eYe3M9RmtrgXToYljaqqHE7X6QCtOMvYG9Coh+r9q/g856qwhYtKEQ5RSZJDYAdK91QYvt60GEiUYzeEV0f4NoNqe95RWgiUKeUkEIjV8=
+	t=1786432993; cv=none; b=RV987s7GIreNSy0amZiNLBEAPUJ+pCq3CSIYlLFW7n15985EfkJIVCXVieTdOMk4UycBZBArh9hFcs4FIK2ejbVhfKMITHbwaOwAmC9NqxonmJGz+PZnDoKmWgm1HqzyWNpdEeQpCNJVkY9PSdMcqHMuXe4psJtcYPEWdZyP8Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786430420; c=relaxed/simple;
-	bh=zpn9Q6wCbwmAi1LjmnjfD/IaDhZQ0R7Hf16niZw3nMU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VFGjEoDzlRLjUamo9aC0mDjBVMkXIN1ZyEpZ779eiOQ2dY0lEbSBOejJEFVfQhoYKQJ//MugzmBDpc+LieQr13vAou5MjcVapHvmgYS1ohOGb4qlwqq9hi8ar/lAnaPeG+1OYTHK8BlZ8SHMmm5MIiOlhZf2+HhdbcPAqDu8Z2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from TW001.hihonor.com (unknown [10.77.229.151])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4hK1l66fMXzYl1n1;
-	Tue, 11 Aug 2026 14:22:58 +0800 (CST)
-Received: from TA008-1.hihonor.com (10.72.0.148) by TW001.hihonor.com
- (10.77.229.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 11 Aug
- 2026 14:22:58 +0800
-Received: from TA008-1.hihonor.com (10.72.0.148) by TA008-1.hihonor.com
- (10.72.0.148) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 11 Aug
- 2026 14:22:58 +0800
-Received: from TA008-1.hihonor.com ([fe80::e1cf:9270:9b1f:2b7]) by
- TA008-1.hihonor.com ([fe80::e1cf:9270:9b1f:2b7%17]) with mapi id
- 15.02.2562.045; Tue, 11 Aug 2026 14:22:58 +0800
-From: gao xu <gaoxu2@honor.com>
-To: Steven Rostedt <rostedt@goodmis.org>, "Lorenzo Stoakes (ARM)"
-	<ljs@kernel.org>
-CC: "David Hildenbrand (Arm)" <david@kernel.org>, Xiang Gao
-	<gxxa03070307@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, "liam@infradead.org" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, "Suren
- Baghdasaryan" <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Xiang Gao <gaoxiang17@xiaomi.com>
-Subject: RE: [PATCH] tracing: report buffer memory in /proc/meminfo
-Thread-Topic: [PATCH] tracing: report buffer memory in /proc/meminfo
-Thread-Index: AQHdKKxQUSjNT0U+CkilnXunKM92XraWlUIAgAAIaICAADvrAIABWdpw
-Date: Tue, 11 Aug 2026 06:22:58 +0000
-Message-ID: <9bd98f51abd44d81a569d95e907070c6@honor.com>
-References: <20260810094025.136705-1-gaoxiang17@xiaomi.com>
-	<69df3080-a719-4131-a247-62bf47bda8a6@kernel.org>	<anm0SMuVpBz7wLac@lucifer>
- <20260810105710.6ee5e493@gandalf.local.home>
-In-Reply-To: <20260810105710.6ee5e493@gandalf.local.home>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1786432993; c=relaxed/simple;
+	bh=X0hdybD28tQSSUJcKWyRQqNC8MMk7mUyibywTJcZkPk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nKMmx3rL7L3d+9P4pQDiXATwPZOfBgUysgQO3vFh0YrOzV8ZtW8A+mxriEZp5dTna5D81sGh7x3HeCduq0ojS1XAe0Uq9WHQpOqZAVaG8ITdwlajqyBw8KpbP0Bt6ZboeZG4riNvn6yhJsQlsRwh5SCFCMc+6iOjySZkUgJJuS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ewnzJboG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ewnzJboG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786432990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X0hdybD28tQSSUJcKWyRQqNC8MMk7mUyibywTJcZkPk=;
+	b=ewnzJboG0Cgdi3G+lvlYIPg5SaRCxKA2BkbPlaydREDT5Oz/qcNO/sIzO25N91p2jw8Msj
+	K4q9WPbxkkeU5qU9tV1QjVVe7g29YKL7E54O9E/zP0xChBcJhTinIdSydkD4YxxkluyupD
+	wkFXHhKj0NYIYgoApSRyZrnTsHBKjM4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-332-6Uv-C0sKOuSDiy5Mn0GHcQ-1; Tue, 11 Aug 2026 03:23:08 -0400
+X-MC-Unique: 6Uv-C0sKOuSDiy5Mn0GHcQ-1
+X-Mimecast-MFC-AGG-ID: 6Uv-C0sKOuSDiy5Mn0GHcQ_1786432987
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c16740eb587so198501066b.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 00:23:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786432987; x=1787037787;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=X0hdybD28tQSSUJcKWyRQqNC8MMk7mUyibywTJcZkPk=;
+        b=KQcUP8xdWe9TmbtS8qATrnAoR34Hoo/vxdeWpwLM+l53haV9RF1s48gzp6uIUG9qHL
+         uJz032KJob016xlz2isvFDKIJppLLzyr5PwZzqZMTJTeXUUy+g/BtnpWy3EoX+sWHg3a
+         ICZ/zt17bWC/SdsHSPQHzSoJ42dw6RZJKiXskEnBY7tzbMnOKdm49s0o8UdB8rWX+nN4
+         ibxSng+ZOQ9D9EKhqerRKwxwb1+uddKk52uHZtZgOlolhhePz0Ubwk+B1Y8KY9haEjml
+         41M/x/hff5RifSok1ES9hbtYImIScQggqbxW7LDbIKJTJt1Mn4jlHOnD54FIOhknSRTn
+         wjQg==
+X-Forwarded-Encrypted: i=1; AHgh+Ro0mqE+nuppcLeeqI8LX++UomvjDH9eov5pkcfkv55ifiQDtHU+2SmcFPKvD6gVVfm+3YUnplR00zcH/b6dPVZsSNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1GVn8SptTHtM7h7jwQ3dnHmmKU4iUSxh0vWb284TtVRmMzSUR
+	SNPrHQADR1fmAkOxxmKEHRtgLMu4pw1CdnKWIgaeVQDumgBq1aeGFmnBsaF/XGL3bOM/MtG82F5
+	V+0iocJvs5fgMveq5UA/8ssrc3uXUV4lCA1KlP3qKEb/3fxyK+yuNP0LZZ4a/FxzTEcuL2tVTtt
+	xByPvqe0FVVU0UdqJUiySH7Rk+0p1mZW/D/vFXpIpZ2uaQ+M82
+X-Gm-Gg: AR+sD11GooFlxDcVLbYcmPazGilfkXzdAoabXlYFy/FF8tB2UKV3tozzROxJJ2DPrhf
+	eeL987lakVHhO5wnSifT6d6bVgdts4UkUnD6VSc/DyCY32rpwFi+E85MkCXLsLr5kTWUFyjQDl7
+	MoFkRQb67vum+N+N45JTp46/1Tq0rmyTUpj69POWgVMPuHe0jgCC6n+NBr
+X-Received: by 2002:a17:906:f583:b0:c20:3733:a8c5 with SMTP id a640c23a62f3a-c20e608810cmr49288766b.8.1786432986699;
+        Tue, 11 Aug 2026 00:23:06 -0700 (PDT)
+X-Received: by 2002:a17:906:f583:b0:c20:3733:a8c5 with SMTP id
+ a640c23a62f3a-c20e608810cmr49285166b.8.1786432986202; Tue, 11 Aug 2026
+ 00:23:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260805151055.870722-1-tglozar@redhat.com> <20260810210425.61435b0b@robin>
+In-Reply-To: <20260810210425.61435b0b@robin>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 11 Aug 2026 09:22:54 +0200
+X-Gm-Features: AUfX_mxkCbUyM3vF9Bo0LlQkJRP2J6BcmIhDswN_3MCz8HI9t5r3QXSmVqyUgbQ
+Message-ID: <CAP4=nvRWKYdkfr-9_1OMupZfF0nUYVVtMd7Vwsd3o4pO__SCew@mail.gmail.com>
+Subject: Re: [GIT PULL] RTLA changes for 7.3
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: kNHxf0WOjmhoBn1qwEwdUuB_fWslej9q6M7QxX5OPHc_1786432987
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiBPbiBNb24sIDEwIEF1ZyAyMDI2IDEyOjIyOjQzICswMTAwDQo+ICJMb3JlbnpvIFN0b2FrZXMg
-KEFSTSkiIDxsanNAa2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPiA+IE9uIE1vbiwgQXVnIDEwLCAy
-MDI2IGF0IDEyOjUyOjM4UE0gKzAyMDAsIERhdmlkIEhpbGRlbmJyYW5kIChBcm0pIHdyb3RlOg0K
-PiA+ID4gT24gOC8xMC8yNiAxMTo0MCwgWGlhbmcgR2FvIHdyb3RlOg0KPiA+ID4gPiBSZXBvcnQg
-dGhlIGRhdGEgY2FwYWNpdHkgb2YgYWxsIGZ0cmFjZSByaW5nIGJ1ZmZlcnMgdGhyb3VnaCBhIG5l
-dw0KPiA+ID4gPiBGdHJhY2UgZmllbGQgaW4gL3Byb2MvbWVtaW5mby4gSW5jbHVkZSB0aGUgbWFp
-biBhbmQgc25hcHNob3QNCj4gPiA+ID4gYnVmZmVycyBvZiB0aGUgZ2xvYmFsIHRyYWNlIGFycmF5
-IGFuZCBhbGwgdHJhY2luZyBpbnN0YW5jZXMsIHdoaWxlDQo+ID4gPiA+IGxlYXZpbmcgcmluZy1i
-dWZmZXIgbWV0YWRhdGEgYWNjb3VudGVkIGZvciBieSBTbGFiLg0KPiA+ID4NCj4gPiA+IHdoeT8g
-OikNCj4gPiA+DQo+ID4gPiBUbyByZXBvcnQgYSBoYW5kZnVsIG9mIEtpQiBhcyBpbiB5b3VyIGV4
-YW1wbGUgYmVsb3c/IERvZXNuJ3Qgc291bmQNCj4gPiA+IHN1cGVyIGhlbHBmdWwgVEJILg0KPiA+
-DQo+ID4gWWVhaCBJIHRoaW5rIHdlIG5lZWQgdG8gc3RvcCB3aXRoIGFsbCB0aGUgcHJvcG9zZWQg
-YWRkaXRpb25zIHRvDQo+ID4gL3Byb2MvbWVtaW5mbyA6KQ0KPiA+DQo+ID4gQWxzbyBzb21ldGhp
-bmcgbGlrZSB0aGlzIHdoZXJlIHlvdSBhcmUgbWFraW5nIGEgY2hhbmdlIGluIG91dHB1dCB0aGF0
-DQo+ID4gaXQgaXMganVzdCB5b3VyIG9waW5pb24gdGhhdCBpdCBpcyB1c2VmdWwgc2hvdWxkIGJl
-IGFuIFJGQyB0byBzZWUgd2hhdA0KPiA+IHRoZSBjb21tdW5pdHkgdGhpbmtzIGZpcnN0Lg0KPiAN
-Cj4gQWdyZWVkLiBUaGlzIGRvZXNuJ3QgYmVsb25nIGluIHRoZSBtZW1pbmZvLiBJZiB5b3Ugd2Fu
-dCBtZW1vcnkgc3RhdGlzdGljcyBmb3INCj4gdHJhY2luZywgSSBtYXkgYmUgT0sgaWYgeW91IGFk
-ZCBhICJ0b3RhbF9tZW1vcnlfa2IiIGZpbGUgaW4gdGhlDQo+IC9zeXMva2VybmVsL3RyYWNpbmcv
-dHJhY2Vfc3RhdHMvIGRpcmVjdG9yeS4NCldvdWxkIGl0IGJlIHBvc3NpYmxlIHRvIGluY2x1ZGUg
-dGhpcyBpbmZvIGluIHNob3dfbWVtKCk/DQpUaGlzIHdvdWxkIGJlIGhlbHBmdWwgZm9yIGFuYWx5
-emluZyBsb3ctbWVtb3J5IGFuZCBPT00gaXNzdWVzLg0KPiANCj4gQW5kIGJyZWFrIGl0IHVwIGZv
-ciBtZW1vcnkgdXNlZC4gUmluZyBidWZmZXJzLCBldmVudHMsIGV0Yy4NCj4gDQo+IFBlcmhhcHMg
-ZXZlbiBhZGQgb25lIHBlciBDUFUgYXMgd2VsbC4NCj4gDQo+IEknbSBhbHdheXMgY29uc2NpZW5j
-ZSBhYm91dCBob3cgbXVjaCBtZW1vcnkgdHJhY2luZyBpcyB0YWtpbmcgdXAgaW4gdGhlDQo+IHN5
-c3RlbS4NCj4gDQo+IC0tIFN0ZXZlDQoNCg==
+=C3=BAt 11. 8. 2026 v 3:04 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.=
+org> napsal:
+>
+> I just tested this on my VM and have the following results from "make che=
+ck":
+>
+> [...]
+> not ok 20 - top verify -c/--cpus
+> # Output match failed: "^Affinity of threads: 0$"
+> # Affinity of threads:
+> [...]
+> not ok 21 - hist verify -c/--cpus
+> # Output match failed: "^Affinity of threads: 0$"
+> # Affinity of threads:
+> [...]
+> not ok 26 - top verify -u/--user-threads
+> # Output match failed: "0 kernel threads, 1 user threads"
+> # 0 kernel threads, 0 user threads
+> [...]
+> not ok 27 - hist verify -u/--user-threads
+> # Output match failed: "0 kernel threads, 1 user threads"
+> # 0 kernel threads, 0 user threads
+> [..]
+>
+> -- Steve
+>
+
+tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh is for some
+reason not finding the user threads (as the tests for -H and -k
+succeeded) on your system. The threads themselves had to be running,
+as timerlat is reporting samples from them. The script and the related
+tests cases were added in 7.2 already, this pull request does not
+touch them so it's most likely a pre-existing issue.
+
+Either way, I will look into that, thank you for testing. It might be
+environment-dependent, as the test relies on the test script (executed
+as an --on-threshold action) being a direct child of the main rtla
+process - which only holds when the system() shell executes the script
+directly, not as a subprocess.
+
+Tomas
+
