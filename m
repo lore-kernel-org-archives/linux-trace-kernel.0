@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDE23B19D1;
-	Tue, 11 Aug 2026 15:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C36C3B7B84;
+	Tue, 11 Aug 2026 15:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786462482; cv=none; b=sRu4j4gEA6QWPKa5wHHkWgEuTWdm7fyijoQVtAk9dqDYQAVORpcSs6Rno51zDlbzQm/ZJ+ybmmIRsbFtr4MeHLwCE+p6LolmZuAZ1ogySPDS77DVeVJ/vk2d3zV4EC0FTlg+JaUtRYeeP6UWzZoCfkyAMtEKSOTv314pSHG15Vs=
+	t=1786462491; cv=none; b=OgK+M8G4OZFjxcGNusrYkykVvbWgoUzb0uFanbvqtHMCYgW+1jNbjPPx5Wpr1bQ2HxP195fYnaG+8GBaMveSSIh3bdiuHrkE+eI+4UP3NBaSQ8RXxL+F0ZQG1TXipCHJKJFVYuq+rf8mFqL4S/k/3DJ9T4sZDycY0uhQ+oVUsDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786462482; c=relaxed/simple;
-	bh=s9W90EukrfC9rhIckxKAWYAjrTJKR308zNW6FQCO9KU=;
+	s=arc-20240116; t=1786462491; c=relaxed/simple;
+	bh=h0vdLp3uFjraAj3uw5dvEIszs8OhnYAP5MfYsK7xiIA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KyYgm2C9bPaEPzkHk85jqZvJRaVdgjhy/ksezndlYt0BZtRBDIlMzeQHxTAvacII2j53995OP3jVn0OvnKo7rRkl8KmwhIWlk6XbvzGdQKU+JMnE60FfNWKv9w4s3gnaKIckHs20K1XOApXQFD2E8xYdBGcZU4XUs384CCIw7hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLwvwgid; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=NvjD3WVvIYUgq3Dl9r269ThCNDMAPNScQHYrZT8U04cAO+Z0Us5u1KNkbro+Fd3WYLx5M2pm+OkiaClIO1lYJ3mLtxGHGOZOPIDffYCCbA9TT0vQeOm4VTvgze10QDGz1ogwwDRmJ0OtIzd4Btj9tCD8O8tGaTRg1LfhuOM5OR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8QtCneF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLwvwgid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D12B1F000E9;
-	Tue, 11 Aug 2026 15:34:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8QtCneF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF9D1F000E9;
+	Tue, 11 Aug 2026 15:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786462480;
-	bh=8rhLh4T/FGEzcoW4SaLoVPimMTJUUICBdRkRnALrYRo=;
+	s=k20260515; t=1786462490;
+	bh=DGeNEk6aokux5UuWFWZuvvQt7PgSt+SrH1jOlLCpTw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FLwvwgidfKgMh71OKvBNOzMFLPRhw4BO+sBEifCAgdOTbhSpmNkEX8Wmb/ikmWeO8
-	 bEXbMaZDBBRKeS7yeoRrqS0V+sUVm58XfxqA39ZQgCFPCIuma2JnBGVQ9P5nyxfvFl
-	 Ppr9qnYQkFfGv5corJa24xNAIMLxZT56+qaHZG/79bPuT55p+1mHf/9gSnFCIzubf8
-	 OS1ZBvFVKuAUsTFZXiN907XAiYQ5T3wWY9tjImDfTF2ppLG016HA59P0P48bSpO/Hk
-	 FbKmN+FkCmMQFmqw6//bv86weK1fhpjQXlGxbz5Rh/nbzrxS8n6OG6Do6jMhkIF8vx
-	 aSxUSnvNIa9mg==
+	b=O8QtCneFK8IgXd1Grd4Dl8598BezJ73JZv5WvXwLB2Y3wP8YYWU+d3q5G7HrTW84r
+	 qdVLy3pjl1ksMIiMVMGIKDjgywABd/BVtge7SB9OeAmamNothyfFtjmYQV1ALXY6tc
+	 3fJAi6az1tm2fG7YmWpW0MTO1of2XpKuqFGZvjAYbEWW1a2UF0jL2v3qH/C33M+dtw
+	 GRlSsRxxqOZnWsAWmoesk3MUsaWE+Pnd3eu2vxw4tiupTbMsUg2toh4Oc60wefrAoZ
+	 aCxzWLgUDF/98P3Bc/lYL2mUe2VyV5rV32MInFyXcwKlMbSdOxFzu0761i7P55RVhg
+	 PlveRA7n1b9Mw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 2/4] selftests/ftrace: Add boot-time tracing testcases
-Date: Wed, 12 Aug 2026 00:34:36 +0900
-Message-ID: <178646247685.428104.10393955447718273712.stgit@devnote2>
+Subject: [PATCH v2 3/4] selftests/ftrace: Add kernel cmdline tracing testcases
+Date: Wed, 12 Aug 2026 00:34:46 +0900
+Message-ID: <178646248625.428104.6475014420560529192.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178646245730.428104.4400499381224001727.stgit@devnote2>
 References: <178646245730.428104.4400499381224001727.stgit@devnote2>
@@ -52,296 +52,260 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add test cases for boot-time tracing configuration via bootconfig
-(see Documentation/trace/boottime-trace.rst).
-
-These test cases verify:
- - 01-kprobe: Dynamic kprobe events via bootconfig
- - 02-synth: Synthetic events via bootconfig
- - 03-eprobe: Event probes (eprobes) via bootconfig
- - 04-fprobe: Function probes (fprobes) via bootconfig
- - 05-tprobe: Tracepoint probes via bootconfig
- - 06-instance: Custom trace instances via bootconfig
+Add test cases for kernel command-line tracing options. It verifies
+various parameters like trace_buf_size and trace_options by reading
+the output of tracing files in sysfs.
 
 Assisted-by: Antigravity:gemini-3.6-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- .../ftrace/boottime/bootconfigs/01-kprobe.bconf    |    4 +++
- .../ftrace/boottime/bootconfigs/02-synth.bconf     |    4 +++
- .../ftrace/boottime/bootconfigs/03-eprobe.bconf    |    4 +++
- .../ftrace/boottime/bootconfigs/04-fprobe.bconf    |    4 +++
- .../ftrace/boottime/bootconfigs/05-tprobe.bconf    |    4 +++
- .../ftrace/boottime/bootconfigs/06-instance.bconf  |    5 +++
- .../selftests/ftrace/boottime/tests/01-kprobe.sh   |   25 +++++++++++++++++
- .../selftests/ftrace/boottime/tests/02-synth.sh    |   25 +++++++++++++++++
- .../selftests/ftrace/boottime/tests/03-eprobe.sh   |   25 +++++++++++++++++
- .../selftests/ftrace/boottime/tests/04-fprobe.sh   |   25 +++++++++++++++++
- .../selftests/ftrace/boottime/tests/05-tprobe.sh   |   25 +++++++++++++++++
- .../selftests/ftrace/boottime/tests/06-instance.sh |   30 ++++++++++++++++++++
- 12 files changed, 180 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/02-synth.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/06-instance.sh
+Changes in v2:
+ - Fix buffer_size_kb parsing in cmdline-03-trace-buf-size.sh to handle
+   unexpanded buffer string output '1 (expanded: 2048)'.
+ - Use grep -qw in cmdline-04-trace-options.sh to match word options
+   and avoid matching disabled 'no<option>' entries.
+---
+ .../boottime/cmdlines/cmdline-01-ftrace.cmdline    |    1 +
+ .../cmdlines/cmdline-02-trace-event.cmdline        |    1 +
+ .../cmdlines/cmdline-03-trace-buf-size.cmdline     |    1 +
+ .../cmdlines/cmdline-04-trace-options.cmdline      |    1 +
+ .../cmdlines/cmdline-05-trace-clock.cmdline        |    1 +
+ .../cmdlines/cmdline-06-trace-instance.cmdline     |    1 +
+ .../ftrace/boottime/tests/cmdline-01-ftrace.sh     |   19 ++++++++++++++
+ .../boottime/tests/cmdline-02-trace-event.sh       |   26 +++++++++++++++++++
+ .../boottime/tests/cmdline-03-trace-buf-size.sh    |   28 ++++++++++++++++++++
+ .../boottime/tests/cmdline-04-trace-options.sh     |   23 ++++++++++++++++
+ .../boottime/tests/cmdline-05-trace-clock.sh       |   19 ++++++++++++++
+ .../boottime/tests/cmdline-06-trace-instance.sh    |   24 +++++++++++++++++
+ 12 files changed, 145 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
 
-diff --git a/tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf b/tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
 new file mode 100644
-index 000000000000..13d30d1e51a6
+index 000000000000..4f6fc54240c8
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/bootconfigs/01-kprobe.bconf
-@@ -0,0 +1,4 @@
-+ftrace.event.kprobes.vfs_read {
-+	probes = "vfs_read $arg1"
-+	enable
-+}
-diff --git a/tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf b/tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+@@ -0,0 +1 @@
++ftrace=function
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
 new file mode 100644
-index 000000000000..b1f37713f33c
+index 000000000000..66bcd29b14cb
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/bootconfigs/02-synth.bconf
-@@ -0,0 +1,4 @@
-+ftrace.event.synthetic.boot_lat {
-+	fields = "unsigned long id", "u64 delta"
-+	enable
-+}
-diff --git a/tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf b/tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
+@@ -0,0 +1 @@
++trace_event=sched:sched_switch,kmem:kmalloc
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
 new file mode 100644
-index 000000000000..c1a8138e605d
+index 000000000000..e5d1c4a8ca89
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/bootconfigs/03-eprobe.bconf
-@@ -0,0 +1,4 @@
-+ftrace.event.eprobes.ep_read {
-+	probes = "sched/sched_switch"
-+	enable
-+}
-diff --git a/tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf b/tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
+@@ -0,0 +1 @@
++trace_buf_size=2048K
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
 new file mode 100644
-index 000000000000..82ae2ac0629f
+index 000000000000..51d82f8e948d
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/bootconfigs/04-fprobe.bconf
-@@ -0,0 +1,4 @@
-+ftrace.event.fprobes.fp_read {
-+	probes = "vfs_read"
-+	enable
-+}
-diff --git a/tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf b/tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
+@@ -0,0 +1 @@
++trace_options=sym-addr,verbose
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
 new file mode 100644
-index 000000000000..02a2803c770a
+index 000000000000..f72a4ac808a3
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/bootconfigs/05-tprobe.bconf
-@@ -0,0 +1,4 @@
-+ftrace.event.tracepoints.tp_sched {
-+	probes = "sched_switch"
-+	enable
-+}
-diff --git a/tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf b/tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
+@@ -0,0 +1 @@
++trace_clock=global
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
 new file mode 100644
-index 000000000000..3fdb6717afe2
+index 000000000000..9618e3e2b88b
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/bootconfigs/06-instance.bconf
-@@ -0,0 +1,5 @@
-+ftrace.instance.foo {
-+	event.sched.sched_switch {
-+		enable
-+	}
-+}
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh b/tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
+@@ -0,0 +1 @@
++trace_instance=bar,sched:sched_switch
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
 new file mode 100644
-index 000000000000..6ed7caca4c5f
+index 000000000000..23a0b15f2dd3
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/01-kprobe.sh
-@@ -0,0 +1,25 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
+@@ -0,0 +1,19 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check kprobe bootconfig settings on tracefs
++# Check ftrace= kernel command-line tracer setting
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ -f /proc/bootconfig ] && grep -q "dump_bconf" /proc/cmdline 2>/dev/null; then
-+	echo "=== /proc/bootconfig ==="
-+	cat /proc/bootconfig
-+	echo "========================"
-+fi
-+
-+if [ ! -d "$TRACEDIR/events/kprobes/vfs_read" ]; then
-+	echo "FAIL: kprobe event kprobes/vfs_read does not exist"
++if [ ! -f "$TRACEDIR/current_tracer" ]; then
++	echo "FAIL: current_tracer does not exist"
 +	exit 1
 +fi
 +
-+ENABLE=$(cat "$TRACEDIR/events/kprobes/vfs_read/enable")
-+if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: kprobe event kprobes/vfs_read is not enabled ($ENABLE)"
++read -r TRACER _ < "$TRACEDIR/current_tracer"
++if [ "$TRACER" != "function" ]; then
++	echo "FAIL: current_tracer is '$TRACER', expected 'function'"
 +	exit 1
 +fi
 +
-+echo "PASS: 01-kprobe"
++echo "PASS: cmdline-01-ftrace"
 +exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/02-synth.sh b/tools/testing/selftests/ftrace/boottime/tests/02-synth.sh
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
 new file mode 100644
-index 000000000000..745c328dde15
+index 000000000000..b793907c48cd
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/02-synth.sh
-@@ -0,0 +1,25 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
+@@ -0,0 +1,26 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check synthetic event bootconfig settings on tracefs
++# Check trace_event= kernel command-line setting
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ -f /proc/bootconfig ] && grep -q "dump_bconf" /proc/cmdline 2>/dev/null; then
-+	echo "=== /proc/bootconfig ==="
-+	cat /proc/bootconfig
-+	echo "========================"
-+fi
-+
-+if [ ! -d "$TRACEDIR/events/synthetic/boot_lat" ]; then
-+	echo "FAIL: synthetic event synthetic/boot_lat does not exist"
++if [ ! -d "$TRACEDIR/events/sched/sched_switch" ]; then
++	echo "FAIL: event sched:sched_switch does not exist"
 +	exit 1
 +fi
 +
-+ENABLE=$(cat "$TRACEDIR/events/synthetic/boot_lat/enable")
-+if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: synthetic event synthetic/boot_lat is not enabled ($ENABLE)"
++if [ ! -d "$TRACEDIR/events/kmem/kmalloc" ]; then
++	echo "FAIL: event kmem:kmalloc does not exist"
 +	exit 1
 +fi
 +
-+echo "PASS: 02-synth"
++ENABLE1=$(cat "$TRACEDIR/events/sched/sched_switch/enable")
++ENABLE2=$(cat "$TRACEDIR/events/kmem/kmalloc/enable")
++
++if [ "$ENABLE1" != "1" ] || [ "$ENABLE2" != "1" ]; then
++	echo "FAIL: events not enabled (sched_switch=$ENABLE1, kmalloc=$ENABLE2)"
++	exit 1
++fi
++
++echo "PASS: cmdline-02-trace-event"
 +exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh b/tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
 new file mode 100644
-index 000000000000..9b3b7ab23c69
+index 000000000000..2eab5fb487a3
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/03-eprobe.sh
-@@ -0,0 +1,25 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
+@@ -0,0 +1,28 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check eprobe event bootconfig settings on tracefs
++# Check trace_buf_size= kernel command-line setting
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ -f /proc/bootconfig ] && grep -q "dump_bconf" /proc/cmdline 2>/dev/null; then
-+	echo "=== /proc/bootconfig ==="
-+	cat /proc/bootconfig
-+	echo "========================"
-+fi
-+
-+if [ ! -d "$TRACEDIR/events/eprobes/ep_read" ]; then
-+	echo "FAIL: eprobe event eprobes/ep_read does not exist"
++if [ ! -f "$TRACEDIR/buffer_size_kb" ]; then
++	echo "FAIL: buffer_size_kb does not exist"
 +	exit 1
 +fi
 +
-+ENABLE=$(cat "$TRACEDIR/events/eprobes/ep_read/enable")
-+if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: eprobe event eprobes/ep_read is not enabled ($ENABLE)"
++BUF_RAW=$(cat "$TRACEDIR/buffer_size_kb")
++case "$BUF_RAW" in
++	*"expanded:"*)
++		BUFSIZE=$(echo "$BUF_RAW" | sed -n 's/.*expanded: *\([0-9]*\).*/\1/p')
++		;;
++	*)
++		BUFSIZE=$(echo "$BUF_RAW" | awk '{print $1}')
++		;;
++esac
++
++if [ -z "$BUFSIZE" ] || [ "$BUFSIZE" -lt 2048 ]; then
++	echo "FAIL: buffer_size_kb is '$BUF_RAW', expected >= 2048"
 +	exit 1
 +fi
 +
-+echo "PASS: 03-eprobe"
++echo "PASS: cmdline-03-trace-buf-size"
 +exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh b/tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
 new file mode 100644
-index 000000000000..27e090c28a4b
+index 000000000000..53a65b55f7a7
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/04-fprobe.sh
-@@ -0,0 +1,25 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
+@@ -0,0 +1,23 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check fprobe event bootconfig settings on tracefs
++# Check trace_options= kernel command-line setting
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ -f /proc/bootconfig ] && grep -q "dump_bconf" /proc/cmdline 2>/dev/null; then
-+	echo "=== /proc/bootconfig ==="
-+	cat /proc/bootconfig
-+	echo "========================"
-+fi
-+
-+if [ ! -d "$TRACEDIR/events/fprobes/fp_read" ]; then
-+	echo "FAIL: fprobe event fprobes/fp_read does not exist"
++if [ ! -f "$TRACEDIR/trace_options" ]; then
++	echo "FAIL: trace_options file does not exist"
 +	exit 1
 +fi
 +
-+ENABLE=$(cat "$TRACEDIR/events/fprobes/fp_read/enable")
-+if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: fprobe event fprobes/fp_read is not enabled ($ENABLE)"
++if ! grep -qw "sym-addr" "$TRACEDIR/trace_options"; then
++	echo "FAIL: sym-addr option is not set in trace_options"
 +	exit 1
 +fi
 +
-+echo "PASS: 04-fprobe"
++if ! grep -qw "verbose" "$TRACEDIR/trace_options"; then
++	echo "FAIL: verbose option is not set in trace_options"
++	exit 1
++fi
++
++echo "PASS: cmdline-04-trace-options"
 +exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh b/tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
 new file mode 100644
-index 000000000000..810d34055f94
+index 000000000000..d6de9f6e2090
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/05-tprobe.sh
-@@ -0,0 +1,25 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
+@@ -0,0 +1,19 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check tracepoint probe event bootconfig settings on tracefs
++# Check trace_clock= kernel command-line setting
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ -f /proc/bootconfig ] && grep -q "dump_bconf" /proc/cmdline 2>/dev/null; then
-+	echo "=== /proc/bootconfig ==="
-+	cat /proc/bootconfig
-+	echo "========================"
-+fi
-+
-+if [ ! -d "$TRACEDIR/events/tracepoints/tp_sched" ]; then
-+	echo "FAIL: tracepoint probe event tracepoints/tp_sched does not exist"
++if [ ! -f "$TRACEDIR/trace_clock" ]; then
++	echo "FAIL: trace_clock file does not exist"
 +	exit 1
 +fi
 +
-+ENABLE=$(cat "$TRACEDIR/events/tracepoints/tp_sched/enable")
-+if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: tracepoint probe event tracepoints/tp_sched is not enabled ($ENABLE)"
++if ! grep -q '\[global\]' "$TRACEDIR/trace_clock"; then
++	CLOCK=$(cat "$TRACEDIR/trace_clock")
++	echo "FAIL: trace_clock is not set to global ($CLOCK)"
 +	exit 1
 +fi
 +
-+echo "PASS: 05-tprobe"
++echo "PASS: cmdline-05-trace-clock"
 +exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/06-instance.sh b/tools/testing/selftests/ftrace/boottime/tests/06-instance.sh
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
 new file mode 100644
-index 000000000000..f6e8519912e4
+index 000000000000..aae7f0a86d81
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/06-instance.sh
-@@ -0,0 +1,30 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
+@@ -0,0 +1,24 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check instance bootconfig settings on tracefs
++# Check trace_instance= kernel command-line setting
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ -f /proc/bootconfig ] && grep -q "dump_bconf" /proc/cmdline 2>/dev/null; then
-+	echo "=== /proc/bootconfig ==="
-+	cat /proc/bootconfig
-+	echo "========================"
-+fi
-+
-+if [ ! -d "$TRACEDIR/instances/foo" ]; then
-+	echo "FAIL: trace instance foo does not exist"
++if [ ! -d "$TRACEDIR/instances/bar" ]; then
++	echo "FAIL: trace instance bar does not exist"
 +	exit 1
 +fi
 +
-+if [ ! -d "$TRACEDIR/instances/foo/events/sched/sched_switch" ]; then
-+	echo "FAIL: event sched_switch does not exist in instance foo"
++if [ ! -d "$TRACEDIR/instances/bar/events/sched/sched_switch" ]; then
++	echo "FAIL: event sched_switch does not exist in instance bar"
 +	exit 1
 +fi
 +
-+ENABLE=$(cat "$TRACEDIR/instances/foo/events/sched/sched_switch/enable")
++ENABLE=$(cat "$TRACEDIR/instances/bar/events/sched/sched_switch/enable")
 +if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: event sched_switch is not enabled in instance foo ($ENABLE)"
++	echo "FAIL: event sched_switch is not enabled in instance bar ($ENABLE)"
 +	exit 1
 +fi
 +
-+echo "PASS: 06-instance"
++echo "PASS: cmdline-06-trace-instance"
 +exit 0
 
