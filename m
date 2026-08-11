@@ -1,333 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F0D357CEA;
-	Tue, 11 Aug 2026 23:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE253AFCE9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 23:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786491548; cv=none; b=DXX4PYaUt/4ZcGYOSQLvtSWb8Gz9toCX/CBXsu8wIFzUUF89bByLKb8VeNcO7KHtw2/7raYzEBMQy0yCt2N07B0kygzrQrZfu9pou4dp1iy1pxwybFc2z1K9z7nTSgPEOdWadGmMi++a3WFAp5f29ssnS6IILI8rOZQHlZ7t2Q4=
+	t=1786492431; cv=none; b=BxDoa6pQuPm7gOfjJP4stzJ3kHU21+R6ZCRhxMkJyORVgdmQk+bQ+5au14zSJDnFHyNlKfbQXdYJXUoj7vncYXEPXhkfTubOSLXu9eqaxCEdWxgkuNrzuFDUWhWKOtbZYZz8T0YEkCClNjiRu7ZGcZKcWYJVElNO4U36oithMPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786491548; c=relaxed/simple;
-	bh=jp5aDgUNdw4lX3EKDUEmrqhbhHbpntaFPtOqvW3Y4i4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dP/wieoumO07paGBQXt/TUItFD0VPw3fB3kZfuwHc/y0Oa6+JHps73hcqQIpNxDyOkU3hxuYOL5b0c8dl39utHI2+hT0OKeOxL6smRZoL6OmcWNnWzr/oDYAEykcxHqToA3UjezUEFs96jtYh4dFhUYDyk4oTqPXumZtO+tYNOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOm5vJuK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786492431; c=relaxed/simple;
+	bh=qpY9hwUm1VtCpfQaT9JtmZnLLzTR3oMcZSOjkRsdLB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q8JVPeRRpsVkrxCtNrl3lurzztv+2CUSDds91rN6PdUvr0DfjxzQfJEFDoBrJESlS3mCC18OUUefEu4XpPxm6kusWISEnNElVrunBwD1H54XZUapOUdTWmIeVbl0nPT4fnwvqQ/6ES4/aM6Y0/HOwqhFotdn4S/P9/2aEe/1t4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wp889cmc; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOm5vJuK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB621F000E9;
-	Tue, 11 Aug 2026 23:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786491546;
-	bh=DdzHxzFb+l4uABALkV1V87Z+v8mnXXrznbeqaw4w41M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=dOm5vJuKisjnM+EPw1YGhZAm6alvXSZg7/Grr4RB1AZsqfDhPf6Tw+NAlhuqxlkmu
-	 GwZNz1HjSOWx8bJvb3KqSsxnn/LnKSgSmT4c0e1EhjoJce007iy3T3rFwFgvfNb9i/
-	 kYHaO6hn1Wv2EJ1kT3us6p+dVvFlPEM6DMYc/caM4cbNdNllG9rRBKFpRDwVWcZXcJ
-	 0S980z2i0wFldPJSKMQOw+B0qXXnaJdKxtK+Ld8iJKn2kjb4QDW6y4tC+ycXGXMaGx
-	 B2wuig4CXSzsLzUTuVPx4dRp994eLnyh5uA59Dna0PBdsT1Vy2OCKEGQBNwzREl701
-	 2HKpe4n8rO3EA==
-Date: Wed, 12 Aug 2026 08:39:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan
- <skhan@linuxfoundation.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] selftests/ftrace: Add kernel cmdline tracing
- testcases
-Message-Id: <20260812083902.2866cd1bb7e3834e36a1ce69@kernel.org>
-In-Reply-To: <178646248625.428104.6475014420560529192.stgit@devnote2>
-References: <178646245730.428104.4400499381224001727.stgit@devnote2>
-	<178646248625.428104.6475014420560529192.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wp889cmc"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cbedc9ec119so191110a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Aug 2026 16:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786492430; x=1787097230; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=AY/Dp7ip8sCatNzHcOgs/oMLEEtZQxV5ZR6XyZHm6HY=;
+        b=Wp889cmcqoYlX8mUZlm58ciIBxFZxpDkuD+/G4g1QUyg6UEajlf23DztPx/y6OZ59K
+         rKDt7WdR9yxsIs5YE9lwEgsJuINzhiMXo+dD9SmGx40U5lQv8h22PyDGkKtMWlVCfvA5
+         SBLCOxlrOc5HBQ1b4dq1Cjf4nMFktyD/k852vyCF2hfGAi0UoVOXHfl1FDL9rPnAjtZR
+         miRQEkxOOiIlFaOfbdycMoeDsy0iAvnz57dGto332Qg0gYSKmdXDvpEPylv94hzozuLk
+         ZiZumgwCMOy20kWIlzFc7x7/DFjjyMMK0sKuUfnEfOu9LPOIGwlTeWn1X95LrNS16+it
+         rNww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786492430; x=1787097230;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=AY/Dp7ip8sCatNzHcOgs/oMLEEtZQxV5ZR6XyZHm6HY=;
+        b=RuPkxpzxj551aoaji5IxBDcIHzxYjPypYXPfvx0Stt6WCHHhhN9xNvsBqFmLlAhIqM
+         n6rwL6Pfek9zg96955HUPqmtz0YnNOWwW+q6t6zE7+WY1Pf1zldSROFPX+JG2cCzOlyA
+         +5qzgjx55SALXdTlaNuVdynSS/r0gwrZP74KA3xlBhn2C9U3+ptzvAizjorJGOGXWQxb
+         eu1TeSmWVaFOcRV8AC03yQUPfMUytBtoxx5g2W085k32YyOhDacwYeIdniwLbK3+5rHY
+         EkUO2ZiZYdr5rXTtAOvlOA3rwx0wkYdMj8Ra9ZVbEBiramy2lsG9j/gxPxU6P4V8+QZl
+         bfwQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoMJjRdq2OdR81LpPH6kw2Go1pXuSPjXJTJba3aPwW3va0/I9kpxqRfqsQDibBK3ATqgF6EvRRijjWfDFhcGGor8YI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLyujyCmd6dIqJXk1dwi/cnY5hMWE6fiMZoTqM5DpM0PRzwFWZ
+	Wn6YxYE36/zlGBNoyTe+vx5EMdOvY2eXuZMmUNpQbxi5HTWInWQ0FFx0
+X-Gm-Gg: AR+sD13tJhrDSg8Zegjfp0eeoa+d69pWO9sPBexWInasVFm49jCD9xlJFYm4pk0RgU1
+	kNhMecBiDHQZn3Vi7tutMlGDL9JkdzTkoRrp3+bOFfyHaEe2yJVf3lTaWhJkDXWt98AdtfbF7CN
+	ACl0iLicJPPJE19D44tKHSCGEE7uPA39dw11ISJcYxYhNxTcmovqhV6JvXOg8Fhp7ANuwrzY6JZ
+	3W157MA05u/QF5nN8vfKfqlKqkOqw8MlZlIvQl5rlQRhXR6v09T/182PKH8Z2bsi5BXl0ItKjOH
+	InjAatb+uCcVAzpLFLO4YaFNNs5GmCAtXmqFgGyk19pMen9U2FdDCPi7ACBWR5AAofK4Hdy9Klj
+	maKrq2k6OJ5OGEJbApUeVSIqdwj459IT9lvYi5bdxLMTjT7waGPu2FnnCqciR9slogBK2LMov0T
+	X3nxgLveJIAJf9pEPtXDEHNmvg2l/S/K76bjOxyjFSMV2BK3GNpChRFT76XQ2a3GQqDt9FScP9M
+	y66p3Uk7m5ZvaRn7D5mS4j8A0EpgUhAXPg/EMl6TFysIEkKLEGSOg==
+X-Received: by 2002:a05:6a20:3c8f:b0:3c3:8d4c:6673 with SMTP id adf61e73a8af0-3cc3f8ade77mr603568637.37.1786492429914;
+        Tue, 11 Aug 2026 16:53:49 -0700 (PDT)
+Received: from deepanshu-Legion-Pro-5-16AFR10.. ([2405:201:682f:383f:4531:180e:142a:c2f1])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31cf3d0b432sm3853828eec.8.2026.08.11.16.53.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2026 16:53:48 -0700 (PDT)
+From: Deepanshu Kartikey <kartikey406@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	song@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	martin.lau@linux.dev,
+	yonghong.song@linux.dev,
+	emil@etsalapatis.com,
+	kpsingh@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	me@kylehuey.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Deepanshu Kartikey <kartikey406@gmail.com>,
+	syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
+Subject: [PATCH] perf/bpf: Fix data race in __perf_event_overflow
+Date: Wed, 12 Aug 2026 05:23:31 +0530
+Message-ID: <20260811235331.10044-1-kartikey406@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Aug 2026 00:34:46 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+perf_event_detach_bpf_prog() writes event->prog = NULL
+under bpf_event_mutex, while __perf_event_overflow() reads
+event->prog concurrently without any lock protection. This
+causes a data race detected by KCSAN.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Add test cases for kernel command-line tracing options. It verifies
-> various parameters like trace_buf_size and trace_options by reading
-> the output of tracing files in sysfs.
-> 
-> Assisted-by: Antigravity:gemini-3.6-flash
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v2:
->  - Fix buffer_size_kb parsing in cmdline-03-trace-buf-size.sh to handle
->    unexpanded buffer string output '1 (expanded: 2048)'.
->  - Use grep -qw in cmdline-04-trace-options.sh to match word options
->    and avoid matching disabled 'no<option>' entries.
-> ---
->  .../boottime/cmdlines/cmdline-01-ftrace.cmdline    |    1 +
->  .../cmdlines/cmdline-02-trace-event.cmdline        |    1 +
->  .../cmdlines/cmdline-03-trace-buf-size.cmdline     |    1 +
->  .../cmdlines/cmdline-04-trace-options.cmdline      |    1 +
->  .../cmdlines/cmdline-05-trace-clock.cmdline        |    1 +
->  .../cmdlines/cmdline-06-trace-instance.cmdline     |    1 +
->  .../ftrace/boottime/tests/cmdline-01-ftrace.sh     |   19 ++++++++++++++
->  .../boottime/tests/cmdline-02-trace-event.sh       |   26 +++++++++++++++++++
->  .../boottime/tests/cmdline-03-trace-buf-size.sh    |   28 ++++++++++++++++++++
->  .../boottime/tests/cmdline-04-trace-options.sh     |   23 ++++++++++++++++
->  .../boottime/tests/cmdline-05-trace-clock.sh       |   19 ++++++++++++++
->  .../boottime/tests/cmdline-06-trace-instance.sh    |   24 +++++++++++++++++
->  12 files changed, 145 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
->  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
->  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
->  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
->  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
->  create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
->  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
->  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
->  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
->  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
->  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
->  create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
-> 
-> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
-> new file mode 100644
-> index 000000000000..4f6fc54240c8
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
-> @@ -0,0 +1 @@
-> +ftrace=function
-> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
-> new file mode 100644
-> index 000000000000..66bcd29b14cb
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
-> @@ -0,0 +1 @@
-> +trace_event=sched:sched_switch,kmem:kmalloc
-> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
-> new file mode 100644
-> index 000000000000..e5d1c4a8ca89
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
-> @@ -0,0 +1 @@
-> +trace_buf_size=2048K
-> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
-> new file mode 100644
-> index 000000000000..51d82f8e948d
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
-> @@ -0,0 +1 @@
-> +trace_options=sym-addr,verbose
-> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
-> new file mode 100644
-> index 000000000000..f72a4ac808a3
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
-> @@ -0,0 +1 @@
-> +trace_clock=global
-> diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
-> new file mode 100644
-> index 000000000000..9618e3e2b88b
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
-> @@ -0,0 +1 @@
-> +trace_instance=bar,sched:sched_switch
-> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
-> new file mode 100644
-> index 000000000000..23a0b15f2dd3
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
-> @@ -0,0 +1,19 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2026, Google LLC.
-> +# Check ftrace= kernel command-line tracer setting
-> +TRACEDIR="/sys/kernel/tracing"
-> +
-> +if [ ! -f "$TRACEDIR/current_tracer" ]; then
-> +	echo "FAIL: current_tracer does not exist"
-> +	exit 1
-> +fi
-> +
-> +read -r TRACER _ < "$TRACEDIR/current_tracer"
-> +if [ "$TRACER" != "function" ]; then
-> +	echo "FAIL: current_tracer is '$TRACER', expected 'function'"
-> +	exit 1
-> +fi
-> +
-> +echo "PASS: cmdline-01-ftrace"
-> +exit 0
-> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
-> new file mode 100644
-> index 000000000000..b793907c48cd
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
-> @@ -0,0 +1,26 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2026, Google LLC.
-> +# Check trace_event= kernel command-line setting
-> +TRACEDIR="/sys/kernel/tracing"
-> +
-> +if [ ! -d "$TRACEDIR/events/sched/sched_switch" ]; then
-> +	echo "FAIL: event sched:sched_switch does not exist"
-> +	exit 1
-> +fi
-> +
-> +if [ ! -d "$TRACEDIR/events/kmem/kmalloc" ]; then
-> +	echo "FAIL: event kmem:kmalloc does not exist"
-> +	exit 1
-> +fi
-> +
-> +ENABLE1=$(cat "$TRACEDIR/events/sched/sched_switch/enable")
-> +ENABLE2=$(cat "$TRACEDIR/events/kmem/kmalloc/enable")
-> +
-> +if [ "$ENABLE1" != "1" ] || [ "$ENABLE2" != "1" ]; then
-> +	echo "FAIL: events not enabled (sched_switch=$ENABLE1, kmalloc=$ENABLE2)"
-> +	exit 1
-> +fi
-> +
-> +echo "PASS: cmdline-02-trace-event"
-> +exit 0
-> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
-> new file mode 100644
-> index 000000000000..2eab5fb487a3
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
-> @@ -0,0 +1,28 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2026, Google LLC.
-> +# Check trace_buf_size= kernel command-line setting
-> +TRACEDIR="/sys/kernel/tracing"
-> +
-> +if [ ! -f "$TRACEDIR/buffer_size_kb" ]; then
-> +	echo "FAIL: buffer_size_kb does not exist"
-> +	exit 1
-> +fi
-> +
-> +BUF_RAW=$(cat "$TRACEDIR/buffer_size_kb")
-> +case "$BUF_RAW" in
-> +	*"expanded:"*)
-> +		BUFSIZE=$(echo "$BUF_RAW" | sed -n 's/.*expanded: *\([0-9]*\).*/\1/p')
-> +		;;
-> +	*)
-> +		BUFSIZE=$(echo "$BUF_RAW" | awk '{print $1}')
+__perf_event_overflow() can be called from interrupt/NMI
+context, so it cannot acquire bpf_event_mutex. Fix the race
+by using WRITE_ONCE() in perf_event_detach_bpf_prog() and
+READ_ONCE() in __perf_event_overflow(). Also store the result
+of READ_ONCE() in a local variable to avoid reading event->prog
+twice which could result in a NULL pointer dereference if the
+pointer becomes NULL between the two reads.
 
-Hmm, as Sashiko said:
+Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=651d2774bd1d8395595f
+Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through overflow machinery")
+Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
+---
+ kernel/events/core.c     | 4 +++-
+ kernel/trace/bpf_trace.c | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-> Will this script fail at runtime if the expanded: string is missing?
-> The boottime initramfs busybox environment (defined in BUSYBOX_APPLETS in
-> tools/testing/selftests/ftrace/boottime/run_boottime_test.sh) doesn't seem to
-> include awk. If awk isn't available, wouldn't BUFSIZE evaluate to an empty
-> string and cause a false positive test failure?
-
-yes, I forgot to add awk in applets. I think it should be definable for each
-test script. Something like:
-
-# APPRET: awk
-
-Thanks,
-
-> +		;;
-> +esac
-> +
-> +if [ -z "$BUFSIZE" ] || [ "$BUFSIZE" -lt 2048 ]; then
-> +	echo "FAIL: buffer_size_kb is '$BUF_RAW', expected >= 2048"
-> +	exit 1
-> +fi
-> +
-> +echo "PASS: cmdline-03-trace-buf-size"
-> +exit 0
-> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
-> new file mode 100644
-> index 000000000000..53a65b55f7a7
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
-> @@ -0,0 +1,23 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2026, Google LLC.
-> +# Check trace_options= kernel command-line setting
-> +TRACEDIR="/sys/kernel/tracing"
-> +
-> +if [ ! -f "$TRACEDIR/trace_options" ]; then
-> +	echo "FAIL: trace_options file does not exist"
-> +	exit 1
-> +fi
-> +
-> +if ! grep -qw "sym-addr" "$TRACEDIR/trace_options"; then
-> +	echo "FAIL: sym-addr option is not set in trace_options"
-> +	exit 1
-> +fi
-> +
-> +if ! grep -qw "verbose" "$TRACEDIR/trace_options"; then
-> +	echo "FAIL: verbose option is not set in trace_options"
-> +	exit 1
-> +fi
-> +
-> +echo "PASS: cmdline-04-trace-options"
-> +exit 0
-> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
-> new file mode 100644
-> index 000000000000..d6de9f6e2090
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
-> @@ -0,0 +1,19 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2026, Google LLC.
-> +# Check trace_clock= kernel command-line setting
-> +TRACEDIR="/sys/kernel/tracing"
-> +
-> +if [ ! -f "$TRACEDIR/trace_clock" ]; then
-> +	echo "FAIL: trace_clock file does not exist"
-> +	exit 1
-> +fi
-> +
-> +if ! grep -q '\[global\]' "$TRACEDIR/trace_clock"; then
-> +	CLOCK=$(cat "$TRACEDIR/trace_clock")
-> +	echo "FAIL: trace_clock is not set to global ($CLOCK)"
-> +	exit 1
-> +fi
-> +
-> +echo "PASS: cmdline-05-trace-clock"
-> +exit 0
-> diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
-> new file mode 100644
-> index 000000000000..aae7f0a86d81
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
-> @@ -0,0 +1,24 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2026, Google LLC.
-> +# Check trace_instance= kernel command-line setting
-> +TRACEDIR="/sys/kernel/tracing"
-> +
-> +if [ ! -d "$TRACEDIR/instances/bar" ]; then
-> +	echo "FAIL: trace instance bar does not exist"
-> +	exit 1
-> +fi
-> +
-> +if [ ! -d "$TRACEDIR/instances/bar/events/sched/sched_switch" ]; then
-> +	echo "FAIL: event sched_switch does not exist in instance bar"
-> +	exit 1
-> +fi
-> +
-> +ENABLE=$(cat "$TRACEDIR/instances/bar/events/sched/sched_switch/enable")
-> +if [ "$ENABLE" != "1" ]; then
-> +	echo "FAIL: event sched_switch is not enabled in instance bar ($ENABLE)"
-> +	exit 1
-> +fi
-> +
-> +echo "PASS: cmdline-06-trace-instance"
-> +exit 0
-> 
-
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index ba5bd6a78fe7..9d9c5477772e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10753,6 +10753,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ {
+ 	int events = atomic_read(&event->event_limit);
+ 	int ret = 0;
++	struct bpf_prog *prog;
+ 
+ 	/*
+ 	 * Non-sampling counters might still use the PMI to fold short
+@@ -10766,7 +10767,8 @@ static int __perf_event_overflow(struct perf_event *event,
+ 	if (event->attr.aux_pause)
+ 		perf_event_aux_pause(event->aux_event, true);
+ 
+-	if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
++	prog = READ_ONCE(event->prog);
++	if (prog && prog->type == BPF_PROG_TYPE_PERF_EVENT &&
+ 	    !bpf_overflow_handler(event, data, regs))
+ 		goto out;
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 75495a5c3507..ee61dc760045 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
+ 
+ put:
+ 	prog = event->prog;
+-	event->prog = NULL;
++	WRITE_ONCE(event->prog, NULL);
+ 
+ unlock:
+ 	mutex_unlock(&bpf_event_mutex);
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
