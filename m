@@ -1,56 +1,56 @@
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DB838A706
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8434307AB
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786551232; cv=none; b=rf6V83mO9MvegZFiB8PAvMlN7pRq1R90njxdAOVmTEUUhze3LZsx9PXDGm2d1AkkzUqO8jJ8tScS0By1OP16fZ/w2K/gvMEmH36lFS/9WsatiTDTDvyXkjRepC2LgoxvQy/e0WSEpdCKSQbnIP5seeb92/X+7O9hzQcexaGU3r0=
+	t=1786551233; cv=none; b=iu9YIlNMUzMbGTviVuBe92N9qaHW+e64fLTDSJ3Wo7pEum0wHBWlhKncuUujYQrk4A6vPfGfxlaiECG0wFMbC4GeJhJjNDE6PQbm5fERriS+VeDKycgMs1oQxxON29+6yHn4lmFG2FS6kWClZw7DuKSoX4VOZm87dEnS9qXHjxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786551232; c=relaxed/simple;
-	bh=L+2QAEBkvpfMfvv4BJuh81OLAo05SjYcg1Y1ztPK6nI=;
+	s=arc-20240116; t=1786551233; c=relaxed/simple;
+	bh=+6dPvGulOdcG8bTgTGM/N9X4v4myJf5iG43YXUqVW4Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bpQzjE5faDH7632QqNDbia+Bt92v4JP+z8BGT8Eb+NAh8l9FmQ/PyfromJJZXzy1QVEbm73KqQUhOKyv4t6VUvcOLQ01ZfJp51dg2FW4eVOAW2UKEsE/3+18H5CwU+C3RLsjkdsaAW/0SJHI6xYCzoxYf75lB8fHsPoQiVPxAEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PZsQgIK4; arc=none smtp.client-ip=209.85.128.70
+	 To:Cc:Content-Type; b=XHKjeAUtIgpJZDpUXhCQfRzVvz5dRf25XDFRG4OwWDxTIM6Q+aAVxjV7vbNUWW0JEaefNE4uZjQCasPbEf+/Jai+J53VK67cqy80KcMe9ZSIaT2RAleY6rLZOc6D5EjjvgKKWbhZNKb/IlNjInEuKeBHb9Q9IntMQmhUdKTEohs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HzGo5I55; arc=none smtp.client-ip=209.85.128.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PZsQgIK4"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4954dcd6131so10827025e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 09:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HzGo5I55"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4955fd77c18so7898775e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 09:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786551229; x=1787156029; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786551230; x=1787156030; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jQSXH8itKYe9e/GgW7Re1BlgNqyiuWl+Ci4z3wFYfrI=;
-        b=PZsQgIK43T64sSQK6XC9K8DAeqV22OP0V05rDTLXEcapjqQNXbGYemZ0n2to57S0Ks
-         4xXTvX5wRlPotA9akY3AiATU9cZz0PUZl8LKtNib1fEE4oY2gxGm9ipH3kI4MWbM+05q
-         Qr7/oAylhudVGRKgTlHKsH0PyDEqW+5dYvrsCWg3e64ItTqh0cE2X+qm17i6JT/XqisZ
-         //VG2BhdGDjsS3RwlW36lWEYdkefW88zqCIDyWbXWUJCvbl23O1fEQU4R/BXNqmxXviU
-         qZLR4svGbGGLfuOb6WrNN9/ku3TstG50b8346UbXwwW699QUT/86F8sAfQPSUwDqZsp6
-         pi0g==
+        bh=S8XgNxuY5DpwjIT2t2rtjilcKs/c3q6DS2R6kVT+oYM=;
+        b=HzGo5I55ADTSGnq82yzIbUX1N3CX6lxYewp5Bu92yQH+ys5j74srmOHiSrZX8tWQlV
+         oplItnRUjvYonvC8cABBfly722U1T6mi3n/FjGO+emHyginm9CpMbKtWRpl+5Eh1ULIH
+         HGTm1SnQOuRokng8MTV/vI7Tk+CTSv9OhVsEK5ovUQyXhCSHHSCJcetjAupDpD28BF3W
+         hXj9J4W3GjFxzX5AgxVOKKVEgEZQkUuY1JsFfV+B2YS+G8emuwqKhO0weCTxPx7fQJU+
+         dfqMspuLbERniFRwDL20qb5T3T0MEhz5Pb3f2kH/pQ8siz1tr3a7U1b744IVKxlyywbG
+         XmMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786551229; x=1787156029;
+        d=1e100.net; s=20251104; t=1786551230; x=1787156030;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=jQSXH8itKYe9e/GgW7Re1BlgNqyiuWl+Ci4z3wFYfrI=;
-        b=cQTJPn4j8ZO3ugJ4Y8Epa/i+t2zCtWYvpMqJYjx/JOz9NcMLJbn4bPPB5MW+sAvsJj
-         QkhKLTCZvV6h1AR1oy695uzHpuTMP3+7EtfiXXDTEmhKMH3zLJlDRN9WBEEoIjRTmTK3
-         iNy8Xuw5Nw399ls+XeNUOVEgdRdzW1ciI8EIADcLQLBO2MZOEzyeNTfMohlCug/CjxWE
-         QAo7NcfgnGjL+SlzvX4C9ncfUu2eFle6RvmwFdqJH65vfNiLE1f/XyxLWlaBnEahYhtV
-         sjCZmcXOPJVX4L3zk5STai5eHSJ0Gyhzz7/8dBrodEUdOwoOcztdx+NAtOkTdpYVkI5U
-         Dm0A==
-X-Forwarded-Encrypted: i=1; AHgh+RqG9iqOBLbQyoSHWUrNP/2PeMns6aFQNQMonZp1aKZPJTpWZvAPs6DsL9JhFV3AkizV0+mbxLbu4BuuEmacRxOdwlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF3cN/I+H1yPN4wHPQez43a+vXaGUugEqFfw7ZV7OF/Qt0rUNh
-	AuhO2g4snmu1e5v0CFSqnWO12Fgr04L6JHaWnF2a8OeFELLk3zib+SiIY6GYlwtmi46b9Dgza/W
-	+7DoqbxS6w3TCKA5j/3798w==
-X-Received: from wmbc22.prod.google.com ([2002:a7b:c016:0:b0:495:5bab:557])
+        bh=S8XgNxuY5DpwjIT2t2rtjilcKs/c3q6DS2R6kVT+oYM=;
+        b=ltuuZyZPR7x0YjoDbY35W6qLJ3sLJws7pMi8DZLaW33ika++ccMyEVfUQZBGc+yWoJ
+         uL1fmi8DT6P+CWLhdrRqpXlu5HMO+vHx0/pfGaoPTXQ7XvtFUMXHzBBAMb7AA42XgkRL
+         tTovG1H/UDWogiXNeUYH06dxqVMIIKkl0OnsMLQ3irR6fmjy/kCEJ4/yJCKowESpgsQe
+         8fwsEYsOatcgErnTEghDucvnDVnB3/faezNWoRB87fJvzyJRTYiqg1lST7eOGnA0Dhxq
+         yPd5yoMrx0/WotUlCApmbE4AuXC89ASl94liucI3Pf/p31MZ5BgHWl6zR6pT/cOMi/pS
+         B5ug==
+X-Forwarded-Encrypted: i=1; AHgh+Rrt1dZdq0ZWdHMLpyR+hbqK7UPXDTpt3JkMKOu1BSHSIBDiw6MgsdsyyfI/ahuBb7oDmeCmO9TFmGwEKThjan4VGaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnFPeG+3l//vAW0+Bu42ZLU6poAfanQA0GdpH6zmPNW2orGCjD
+	UZ2WQKYPMwW1fAMUvcv9PrWHZJG7JucWf4PSEjBm9oR9nsNULeFGixjzAttYIT0moighyazVKVx
+	dHBCFEnSRFUP2/3gxespqfQ==
+X-Received: from wmqy6.prod.google.com ([2002:a05:600c:3646:b0:493:d1b8:3df5])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:620f:b0:499:7aa8:bd09 with SMTP id 5b1f17b1804b1-4997c0fecd5mr93632035e9.4.1786551229050;
- Wed, 12 Aug 2026 09:13:49 -0700 (PDT)
-Date: Wed, 12 Aug 2026 17:13:26 +0100
+ 2002:a05:600c:3146:b0:495:4d00:2fda with SMTP id 5b1f17b1804b1-4997c0f75e7mr70943805e9.2.1786551230039;
+ Wed, 12 Aug 2026 09:13:50 -0700 (PDT)
+Date: Wed, 12 Aug 2026 17:13:27 +0100
 In-Reply-To: <20260812161340.2417322-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260812161340.2417322-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260812161340.2417322-5-vdonnefort@google.com>
-Subject: [PATCH v5 04/18] tracing/remotes: Use a single per-remote polling work
+Message-ID: <20260812161340.2417322-6-vdonnefort@google.com>
+Subject: [PATCH v5 05/18] tracing/simple_ring_buffer: Add support for
+ compressed length
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -69,125 +70,77 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Having a per-iterator polling work is wasteful when logging several
-trace_remote per_cpu/trace_pipe files in parallel. This results in one
-work running per-CPU, where only one would suffice.
+The array length is the total size in bytes of the data for the current
+event. It is possible to compress this value into the event header type,
+which has 28 unused types, saving 32 bits for sufficiently small events.
 
-Transition to a single per-remote polling work, scheduled on the first
-consumer creation and stopped when the last consuming iterator is freed.
-
-This blanket polls all CPUs, regardless of which ones are actually being
-read. This is acceptable because the poll consists of reading the
-meta-page, which is a fast operation. Also, it is more common to log all
-CPUs in the system than only one, so this use-case should be favoured.
+The compressed length is expressed as a multiple of the ring-buffer
+alignment, 4-bytes by default. Enforce this alignment.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index 0e4d41a93a7c..1fbe2f3f20e9 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -26,7 +26,6 @@ enum tri_type {
- struct trace_remote_iterator {
- 	struct trace_remote		*remote;
- 	struct trace_seq		seq;
--	struct delayed_work		poll_work;
- 	unsigned long			lost_events;
- 	u64				ts;
- 	struct ring_buffer_iter		*rb_iter;
-@@ -55,8 +54,10 @@ struct trace_remote {
- 	struct rw_semaphore		reader_lock;
- 	struct rw_semaphore		*pcpu_reader_locks;
- 	unsigned int			nr_readers;
-+	unsigned int			poll_cnt;
- 	unsigned int			poll_ms;
- 	bool				tracing_on;
-+	struct delayed_work		poll_work;
- };
+diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
+index f4642f5adda3..1a97d17cca24 100644
+--- a/kernel/trace/simple_ring_buffer.c
++++ b/kernel/trace/simple_ring_buffer.c
+@@ -207,7 +207,15 @@ static unsigned long rb_event_size(unsigned long length)
+ {
+ 	struct ring_buffer_event *event;
  
- static DEFINE_MUTEX(trace_remotes_lock);
-@@ -350,17 +351,6 @@ static bool trace_remote_has_cpu(struct trace_remote *remote, int cpu)
- 	return ring_buffer_poll_remote(remote->trace_buffer, cpu) == 0;
+-	return length + RB_EVNT_HDR_SIZE + sizeof(event->array[0]);
++	if (!length)
++		length++;
++
++	length = ALIGN(length, RB_ALIGNMENT);
++
++	if (length > RB_MAX_SMALL_DATA)
++		length += sizeof(event->array[0]);
++
++	return length + RB_EVNT_HDR_SIZE;
  }
  
--static void __poll_remote(struct work_struct *work)
--{
--	struct delayed_work *dwork = to_delayed_work(work);
--	struct trace_remote_iterator *iter;
--
--	iter = container_of(dwork, struct trace_remote_iterator, poll_work);
--	ring_buffer_poll_remote(iter->remote->trace_buffer, iter->cpu);
--	schedule_delayed_work((struct delayed_work *)work,
--			      msecs_to_jiffies(iter->remote->poll_ms));
--}
--
- static void __free_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
+ static struct ring_buffer_event *
+@@ -223,12 +231,15 @@ rb_event_add_ts_extend(struct ring_buffer_event *event, u64 delta)
+ static struct ring_buffer_event *
+ simple_rb_reserve_next(struct simple_rb_per_cpu *cpu_buffer, unsigned long length, u64 timestamp)
  {
- 	if (cpu != RING_BUFFER_ALL_CPUS) {
-@@ -404,6 +394,36 @@ static int __alloc_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
- 	return 0;
+-	unsigned long ts_ext_size = 0, event_size = rb_event_size(length);
+ 	struct simple_buffer_page *tail = cpu_buffer->tail_page;
++	unsigned long event_size, array_size, ts_ext_size = 0;
+ 	struct ring_buffer_event *event;
+ 	u32 write, prev_write;
+ 	u64 time_delta;
+ 
++	event_size = rb_event_size(length);
++	array_size = event_size - RB_EVNT_HDR_SIZE;
++
+ 	time_delta = timestamp - cpu_buffer->write_stamp;
+ 
+ 	if (test_time_stamp(time_delta))
+@@ -259,9 +270,13 @@ simple_rb_reserve_next(struct simple_rb_per_cpu *cpu_buffer, unsigned long lengt
+ 		time_delta = 0;
+ 	}
+ 
+-	event->type_len = 0;
++	if (length > RB_MAX_SMALL_DATA) {
++		event->type_len = 0;
++		event->array[0] = array_size;
++	} else {
++		event->type_len = DIV_ROUND_UP(array_size, RB_ALIGNMENT);
++	}
+ 	event->time_delta = time_delta;
+-	event->array[0] = event_size - RB_EVNT_HDR_SIZE;
+ 
+ 	return event;
  }
+@@ -284,7 +299,7 @@ void *simple_ring_buffer_reserve(struct simple_rb_per_cpu *cpu_buffer, unsigned
  
-+static void trace_remote_do_poll(struct trace_remote *remote)
-+{
-+	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
-+	schedule_delayed_work(&remote->poll_work, msecs_to_jiffies(remote->poll_ms));
-+}
-+
-+static void __poll_remote(struct work_struct *work)
-+{
-+	struct delayed_work *dwork = to_delayed_work(work);
-+
-+	trace_remote_do_poll(container_of(dwork, struct trace_remote, poll_work));
-+}
-+
-+static void trace_remote_inc_poll(struct trace_remote *remote)
-+{
-+	/* poll_cnt <= nr_readers, inherits its overflow protection */
-+	if (!remote->poll_cnt++)
-+		trace_remote_do_poll(remote);
-+}
-+
-+static void trace_remote_dec_poll(struct trace_remote *remote)
-+{
-+	if (WARN_ON_ONCE(!remote->poll_cnt))
-+		return;
-+
-+	remote->poll_cnt--;
-+	if (!remote->poll_cnt)
-+		cancel_delayed_work_sync(&remote->poll_work);
-+}
-+
- static struct trace_remote_iterator
- *trace_remote_iter(struct trace_remote *remote, int cpu, enum tri_type type)
- {
-@@ -433,9 +453,7 @@ static struct trace_remote_iterator
+ 	rb_event = simple_rb_reserve_next(cpu_buffer, length, timestamp);
  
- 		switch (type) {
- 		case TRI_CONSUMING:
--			ring_buffer_poll_remote(remote->trace_buffer, cpu);
--			INIT_DELAYED_WORK(&iter->poll_work, __poll_remote);
--			schedule_delayed_work(&iter->poll_work, msecs_to_jiffies(remote->poll_ms));
-+			trace_remote_inc_poll(remote);
- 			break;
- 		case TRI_NONCONSUMING:
- 			ret = __alloc_ring_buffer_iter(iter, cpu);
-@@ -469,7 +487,7 @@ static void trace_remote_iter_free(struct trace_remote_iterator *iter)
- 
- 	switch (iter->type) {
- 	case TRI_CONSUMING:
--		cancel_delayed_work_sync(&iter->poll_work);
-+		trace_remote_dec_poll(remote);
- 		break;
- 	case TRI_NONCONSUMING:
- 		__free_ring_buffer_iter(iter, iter->cpu);
-@@ -1002,6 +1020,7 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
- 	remote->poll_ms = 100;
- 	mutex_init(&remote->lock);
- 	init_rwsem(&remote->reader_lock);
-+	INIT_DELAYED_WORK(&remote->poll_work, __poll_remote);
- 
- 	guard(mutex)(&trace_remotes_lock);
+-	return &rb_event->array[1];
++	return rb_event->type_len ? &rb_event->array[0] : &rb_event->array[1];
+ }
+ EXPORT_SYMBOL_GPL(simple_ring_buffer_reserve);
  
 -- 
 2.55.0.691.gc56d675ccc-goog
