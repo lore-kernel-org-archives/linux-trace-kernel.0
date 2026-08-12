@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9953264CC
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 15:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14617470425
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 15:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786549627; cv=none; b=fWQWQ0Le9mkCWaumWXFFjkBQmJWMibQrki7WoDFIWAC8heDNNontwd+l7bD3Wh8iuGQTDtGX/qLZNSB/Nfzv7RNvuji4w5Fm7haVAvA96INQzMY7LEVxr1KYnwtRUHe6kYDgJQE3KHH4y2gEa70Lt8QjeEIYBQFnnaCPvFyH3ZI=
+	t=1786549634; cv=none; b=GWh5pXbAnHuLzJwk5qyrm5juXNetR2dIXglEuqhdbzaWf1rSWcSX3F4Mce9L+IuLHxdhuP1SEbF9r5owJVvQltQJjrYSwh/M1PraffAaq8s+ZJuJranJ0tdBAokd+WzziQtbDIBr26T6LyRsdJdXlzls/cudBlXXoLF3fdGY04g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786549627; c=relaxed/simple;
-	bh=bBYwN34GZAZcfcipGZe/f2EL76t0JAtgVtWbD2pY+vI=;
+	s=arc-20240116; t=1786549634; c=relaxed/simple;
+	bh=rGT/DyZAMAMWaF2YRXBSeKdOgYP6XoopFtYJGn6xkR8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=s8HZKwkpuh+YJaHqN4Ixl6uIcjSCS8x9/Pnzy12rLNU6DK0zLrpOzFPLNo9X8+wemxY0pjDEkLSWgEvfG2mCYf1xwX/ukNjrJi8FJXbdu2HrJ89nVMRBQuebnG1jL8IUptgLmiS4N4Yj74hFKfy3KVfpmqv3G4EpYTJ2T/L20kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qmm8N01u; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Xols1g4vd/M3aXJTYX4WvT0/isbZdq9gXFFFmPQkrKW1TpbItLhpbnnTDKPLvdLcZ1uter/JhX+8YBJVusQm4BC4glW8QJNG4k69j5Wflxlqzvj/m567Mv3d1z2tLk65Js4nUUgq2LPH7z5Su6m+oNuY8mYUiYxtfWyLbKPW6EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrZ+8s89; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qmm8N01u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486061F000E9;
-	Wed, 12 Aug 2026 15:47:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrZ+8s89"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B1751F000E9;
+	Wed, 12 Aug 2026 15:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786549626;
-	bh=8VF2nnlvbumUzDJiXDn/ou4E7fIPmpG8itsw+ucKZR4=;
+	s=k20260515; t=1786549632;
+	bh=+mgXJXSIKOo4IYYKFF4g+yeoj1kKqRKxBTBf37PfGJY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Qmm8N01uxWHqVyrOzuVncyMhu8ZUTNo5HrAl8tcWINABPscTphYWj0WmLSN5aqVBb
-	 EvtUdzhDXX26NDdxhT4Vc4CckKraLDUEuejYm+8EmXITM45MDXxFdDSC2mJzmMgVT1
-	 BpoGlGxxgk1D1/hJuqasnie1ZVb136aPT++lm2fxwofFx9WEzN8rYmMphUFUHAb59b
-	 c+9T/ob/ox3SN0f0mpYJxOAaMNrhcQeUeP4d2pNBIOEPYxw6DgMrEljiHtsFOPSpEC
-	 Wh2HQ7kOGApvERa6VDNA+JukVn5Dz3V8ugCm5qx+LziyEUlhqgnHgiD3TgWa5farBO
-	 xrSJ/zm0tNGAg==
+	b=IrZ+8s89UPjUTZhgz5sWxkHGW2JNnt2L4XumSEm8UVgvkAQyLDvKnl+mnQ8tWAqTz
+	 SpGoUg2fT7W+wzcDfjbGu+2qK3YSAegDqsI3PCaxibTbRV+xjZ3nRvklQ/jXozlVLg
+	 esQl/UFOBrEvlvazuDk8eSgKdtbQQQG4QkjDjhE/0tOibgJwAndD0aLmFJFybAuf40
+	 7GtOpl7xc2Geo9I5A1SEhmu7g1Wvz1cAPf7tckMapRw6AbUqk3BS+cJTVvwlJcr3ih
+	 5VWTPQoQZkjDgD+YiMEATLXDBtCbgKS87+G6cB5D3GFmFr/s2akdvk2h1faRQyfGE1
+	 0/soNpBEFJ/qA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 5/9] tracing: Fix subbuf resize races in
- trace_pipe_raw readers
+Subject: Re: [PATCH v4 9/9] ring-buffer: Make nr_pages unsigned int
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260812153311.2328812-6-vdonnefort@google.com>
+In-Reply-To: <20260812153311.2328812-10-vdonnefort@google.com>
 References: <20260812153311.2328812-1-vdonnefort@google.com>
- <20260812153311.2328812-6-vdonnefort@google.com>
+ <20260812153311.2328812-10-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 15:47:05 +0000
-Message-Id: <20260812154706.486061F000E9@smtp.kernel.org>
+Date: Wed, 12 Aug 2026 15:47:11 +0000
+Message-Id: <20260812154712.1B1751F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,159 +46,104 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] A logic error in the retry loop of `tracing_buffers_read()` bypass=
-es `ring_buffer_read_page()` on retry, leaking uninitialized or stale kerne=
-l memory to userspace.
-
-Pre-existing issues:
-- [Critical] A race condition during subbuffer resize causes `cpu_buffer->f=
-ree_page` to retain an old allocation size while `buffer->subbuf_order` ref=
-lects the new order, leading to a kernel buffer overflow.
+- [Critical] Integer truncation of `nr_pages_to_update` allows a massive bu=
+ffer resize to bypass memory allocation checks, directly triggering an out-=
+of-bounds page removal loop causing a critical kernel Use-After-Free (UAF).
+- [High] Multiplication overflow in `subbuf_size * nr_pages` evaluates as a=
+n `unsigned int` when allocating huge persistent ring buffers, destroying t=
+race data isolation.
 --
 
---- Patch [5]: [PATCH v4 5/9] tracing: Fix subbuf resize races in trace_pip=
-e_raw readers ---
-commit c5c1a16fabb91c8f580283f14e5e76cc1ccb99b0
+--- Patch [9]: [PATCH v4 9/9] ring-buffer: Make nr_pages unsigned int ---
+commit cb1365ebdbbed7daa3a685ae1d6be7a4167052dd
 Author: Vincent Donnefort <vdonnefort@google.com>
+Date:   Wed Aug 12 15:33:10 2026 +0000
 
-tracing: Fix subbuf resize races in trace_pipe_raw readers
-
-Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
-uninitialized memory to userspace due to stale size values.
+    ring-buffer: Make nr_pages unsigned int
+   =20
+    nr_pages is an int or unsigned int almost everywhere already. Also, all
+    the meta-data ring_buffer_desc, ring_buffer_cpu_meta and
+    trace_buffer_meta allowing to share information about the ring buffer
+    are already capping this value to 32-bits.
+   =20
+    Make ring_buffer_per_cpu::nr_pages unsigned and align all the users to
+    it. As a side effect, this makes ring_buffer_per_cpu slightly smaller.
 
 > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 94552a433228d..f62d6853ee5c0 100644
+> index 990a904cefe85..2fccb950e593c 100644
 > --- a/kernel/trace/ring_buffer.c
 > +++ b/kernel/trace/ring_buffer.c
-
 [ ... ]
-
-> @@ -6988,22 +6988,34 @@ EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
->   * Returns:
->   *  The page allocated, or ERR_PTR
->   */
-> -struct buffer_data_read_page *
-> -ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
-> +struct buffer_data_read_page *ring_buffer_alloc_read_page(struct trace_b=
-uffer *buffer, int cpu,
-> +							  struct buffer_data_read_page *prev)
->  {
-> +	struct buffer_data_read_page *bpage =3D prev;
->  	struct ring_buffer_per_cpu *cpu_buffer;
-> -	struct buffer_data_read_page *bpage =3D NULL;
->  	unsigned long flags;
-> +	unsigned int order;
+> @@ -561,7 +561,7 @@ struct ring_buffer_per_cpu {
+>  	struct ring_buffer_remote	*remote;
 > =20
->  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
->  		return ERR_PTR(-ENODEV);
-> =20
-> -	bpage =3D kzalloc_obj(*bpage);
-> -	if (!bpage)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	bpage->order =3D buffer->subbuf_order;
-> +	order =3D buffer->subbuf_order;
->  	cpu_buffer =3D buffer->buffers[cpu];
-> +
-> +	if (!bpage) {
-> +		bpage =3D kzalloc_obj(*bpage);
-> +		if (!bpage)
-> +			return ERR_PTR(-ENOMEM);
-> +	} else {
-> +		if (bpage->order =3D=3D order)
-> +			return bpage;
-> +
-> +		free_pages((unsigned long)bpage->data, bpage->order);
-> +		bpage->data =3D NULL;
-> +	}
-> +
-> +	bpage->order =3D order;
-> +
->  	local_irq_save(flags);
->  	arch_spin_lock(&cpu_buffer->lock);
-> =20
->  	if (cpu_buffer->free_page) {
->  		bpage->data =3D cpu_buffer->free_page;
->  		cpu_buffer->free_page =3D NULL;
->  	}
+>  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+> -	long				nr_pages_to_update;
+> +	int				nr_pages_to_update;
+>  	struct list_head		new_pages; /* new pages to add */
+>  	struct work_struct		update_pages_work;
+>  	struct completion		update_done;
 
 [Severity: Critical]
-This is a pre-existing issue, but can this lead to an out-of-bounds write
-during a subbuffer resize?
+Could this type change lead to an out-of-bounds page removal regression?
 
-In ring_buffer_alloc_read_page(), the newly read buffer->subbuf_order is
-assigned to a page stolen from cpu_buffer->free_page without checking if
-their size orders match.
+In ring_buffer_resize(), size is an unsigned long and can be quite large,
+resulting in an unsigned int nr_pages near the maximum 32-bit value. When
+calculating nr_pages_to_update:
 
-If a concurrent call to ring_buffer_subbuf_order_set() updates
-buffer->subbuf_order locklessly, and this function is called before
-cpu_buffer->free_page is cleared, it will steal the old free_page but assign
-it the new size order.
+ring_buffer_resize() {
+    ...
+    cpu_buffer->nr_pages_to_update =3D nr_pages - cpu_buffer->nr_pages;
+    if (cpu_buffer->nr_pages_to_update <=3D 0)
+        continue;
+    ...
+}
 
-Will this malformed page be swapped into the ring buffer, allowing writers
-to write past its actual bounds?
+If nr_pages is very large (e.g. 4294967286), subtracting the current nr_pag=
+es
+(e.g. 10) results in an unsigned value that wraps into a small negative num=
+ber
+when stored in the 32-bit int nr_pages_to_update (e.g. -20).
+
+This would bypass the allocation checks and trigger rb_remove_pages() to
+remove more pages than exist in the buffer, causing it to loop past the end
+of the list and free pages that are still in use.
 
 [ ... ]
-
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 395238b2b715c..0409d20a168bb 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-
-[ ... ]
-
-> @@ -7080,8 +7080,8 @@ ssize_t tracing_buffers_read(struct file *filp, cha=
-r __user *ubuf,
+> @@ -2773,7 +2773,7 @@ static struct trace_buffer *alloc_buffer(unsigned l=
+ong size, unsigned flags,
+>  					 struct ring_buffer_remote *remote)
 >  {
->  	struct ftrace_buffer_info *info =3D filp->private_data;
->  	struct trace_iterator *iter =3D &info->iter;
-> -	void *trace_data;
-> -	int page_size;
-> +	void *trace_data, *prev_spare;
-> +	unsigned int spare_size;
->  	ssize_t ret =3D 0;
->  	ssize_t size;
-> =20
-> @@ -7091,36 +7091,31 @@ ssize_t tracing_buffers_read(struct file *filp, c=
-har __user *ubuf,
->  	if (iter->snapshot && tracer_uses_snapshot(iter->tr->current_trace))
->  		return -EBUSY;
-> =20
-> -	page_size =3D ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
-> +again:
-> +	prev_spare =3D info->spare;
-> +	if (prev_spare) {
-> +		spare_size =3D ring_buffer_read_page_size(info->spare);
-> =20
-> -	/* Make sure the spare matches the current sub buffer size */
-> -	if (info->spare) {
-> -		if (page_size !=3D info->spare_size) {
-> -			ring_buffer_free_read_page(iter->array_buffer->buffer,
-> -						   info->spare_cpu, info->spare);
-> -			info->spare =3D NULL;
-> -		}
-> +		/* Do we have previous read data to read? */
-> +		if (info->read < spare_size)
-> +			goto read;
->  	}
+>  	struct trace_buffer *buffer __free(kfree) =3D NULL;
+> -	long nr_pages;
+> +	unsigned int nr_pages;
+>  	int subbuf_size;
+>  	int bsize;
+>  	int cpu;
 
 [Severity: High]
-Can the retry path bypass the actual read function and copy stale data
-to userspace?
+Will this type change cause a multiplication overflow when allocating large
+persistent ring buffers?
 
-When reading from an empty trace_pipe_raw file, ring_buffer_read_page()
-returns < 0. The code then blocks in wait_on_pipe(). Once woken up, it
-executes a goto again.
+Later in alloc_buffer(), the pointer is advanced for the next CPU's buffer:
 
-At the again label, info->read is 0 and info->spare is already allocated,
-so the condition info->read < spare_size will evaluate to true.
+alloc_buffer() {
+    ...
+    ptr +=3D subbuf_size * nr_pages;
+    ...
+}
 
-Does this cause execution to jump directly to the read label, bypassing
-ring_buffer_read_page(), and copy the uninitialized or stale info->spare
-page to userspace?
+Because subbuf_size is an int and nr_pages is now an unsigned int, the
+multiplication is evaluated as a 32-bit unsigned integer.=20
+
+If the buffer is larger than 4GB per CPU, this will overflow before being
+added to ptr, placing the next CPU's buffer inside the previous CPU's buffe=
+r.
+
+Previously, when nr_pages was a long, this math was safely performed as 64-=
+bit
+on 64-bit systems.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812153311.2328=
-812-1-vdonnefort@google.com?part=3D5
+812-1-vdonnefort@google.com?part=3D9
