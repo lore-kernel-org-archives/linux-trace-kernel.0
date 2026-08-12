@@ -1,56 +1,56 @@
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97A347A867
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66DF47CA87
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786551242; cv=none; b=qjSZ7KryH1ISdK67hAU7Ox1Zf7xqFC72rhAvZv0eJ0DMVAG0AIL48YKmgzN6NpYp7/CxoLsmtG8dKeO78eNuOqTuPHOa1vnP1Klr309jdfvstlFc5ffl9F+MBJZwyfCrevIHauMdTe9/L+cZmOPm4LnFqOeu92naYO7nDn04ynU=
+	t=1786551243; cv=none; b=MX1eAOl5usYAA47FNh5FSX3MqiY36kn/XKoCojcm22kkWOJv4+26xIGpEWajTKGPXgBo4cU0X2/69aWBm/aOkOfsq5mgOOWzcKtleNFUKeIBzCXdGZG/GtILaJvsMm8YuMrDqgHxY5ApTbwRfcVIMpIQhTxx57xZgUEnjVvomQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786551242; c=relaxed/simple;
-	bh=Ii2OuRf4zwNlj73CfRZs+kR9iJ4o3zII30x1wBWwED0=;
+	s=arc-20240116; t=1786551243; c=relaxed/simple;
+	bh=Q3kaC7y6azYi2qsxU5Tx8RlcvUUiR5/BoTSyGNe7H5w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=anUd4FaXGMAij5Rhh6plVbQOsJJOyTlvtPT3AjE3LoWzvOOuRDSUh1zsVp/DHED72PwWUIcCYL9pEMurQqBd+49bXQZP+XLbm2ZE/AlgFeZqbOI+DqnLDzyCCK+5h4CPI1bI4S3qhtwFrmtO7+KPrBFKUhLI6VF9nxeIm6p7NhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WlPm41yj; arc=none smtp.client-ip=209.85.221.72
+	 To:Cc:Content-Type; b=T7UNltjFhUltaVnA3DXfmrUtz8VpyO3MLQqn65OXvg1iwFjgEsOky0zXgU3R+G5CBu0eZ17HLm3xbvaw+jeYDfULEWfBfTq6VXttC4RbfzJKribF8s3IINx/G9BuHrmbze0vueAnwSKTGfR6Obhvv8HDb8twf+ZX1h5q96Isq/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VVL1dIYb; arc=none smtp.client-ip=209.85.221.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WlPm41yj"
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47f8398ed9fso912911f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 09:14:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VVL1dIYb"
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-47f84ac1990so759957f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 09:14:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786551239; x=1787156039; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786551240; x=1787156040; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=pm77dBnkYlOIgFVlI3YdUJ99Y8FRA2qRFk5RhHXS/4U=;
-        b=WlPm41yjhFphSB0bqrZjSoDlqOuw3ej1IaFbOLs9DU1isOqaQxlsCBrpTTm3JjPJbj
-         biVCO/jyLwwM8mjrowldV3SbE78If3wkAwIS1NDmNq2+dRan3mGI5e/DjmWE4LXUWLVe
-         9jh4H8DxzcWr+iQqBy93SFOc4khafj5kYp4qIAUsbSO82ssysOyLM6x2GbVCe0vvcvV+
-         BMtpYVQGoBNDMMbhjFUbkElMxXXnzWRmzCwXBGXqXA7hZrs48p9jO1IWncYLSR3W5OEA
-         cgC7IBrn/MWV6CCtJ7bHxTMZBcQAoilkILNdX1o5cHsq4KT48QR/W4AmuSZe07XHN/LT
-         a41g==
+        bh=gptDZ+SIOu9XP4iw4DNNMjlkLg35QG9nhQ8OcIEot7U=;
+        b=VVL1dIYbdrbOdSZW76BcKjKamd5DaR4v/aFrkcKXoCLzYYHR6GmuLPUMvQbUH9vddL
+         gb6YKzM9L+6jJ7A12OPG8uYaaif+RZK8/D+ebALGrj/Cq0wwuQX9d0mTL3zFMh7dwnja
+         4/1jXUfGOJ4LdAx+MzBXxzyMnhWMvVDTUAo3jDtrUehWo3qDlN4FYg+SMcYaQM22ZmwH
+         177uCXfYzN8uz8qa5SzQ+z7OLprQ/QE/tNqFlo3tAf+KenpWpWH9ULfaoEr8dEVK6ZX1
+         BiMPXefuQ8rWPlqMRVmDyDioEgLp4IE7AMhMKhd9JhRJ3hENGaI7D41t+TuqVBejrbf/
+         PM4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786551239; x=1787156039;
+        d=1e100.net; s=20251104; t=1786551240; x=1787156040;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=pm77dBnkYlOIgFVlI3YdUJ99Y8FRA2qRFk5RhHXS/4U=;
-        b=TxeBlCQazVW8RUgXRZsHs90YSjf+nWN/SL+dMOe2Ibt3tzMf0YjbniaCiQjU+Kz/a9
-         iLowgGpYVhR8hgcM0z5ARngY5pMCuw/yMZsWoFpHSQlidutNqfztDLmAzylw4oVtYQdf
-         XvxhzXOIX/5PqTxNAEqkV1EIy4I2HFNq5c87hdi4x97eWGu/q/xojrbytn2qn7jDrs2g
-         B1wB+hTdn/YlaW1h27qp8WuHaglNyLUA3vKHRCfF7ngignZGTLqyS5bkGFibi9KOwJJH
-         5hUilMXLAi87nfwvYCj+dj7Wpn1cMlWS6fvDK1i4TYdJeYiEljlVNUkeQJWGkF+3XLJb
-         hw2A==
-X-Forwarded-Encrypted: i=1; AHgh+RpUzlukEvB7GXQfEdqFavWG1bH2TqSs88yGt0/XOmywA/T7O5MJhlO5J23o1Q1iz1DazUD9DD56J4++b3wccc4T3fU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMqeMxlQY6xdY2Unx9ao4gbz/WjgrekE1pQaJfBPjyKzMNWHsN
-	kHrZEdsMtu8U9HpQcOJbo0aZAMnen0J0vkH+wHh2NGtsTm0cTyXxbmZ3OcP5hhc8AhAvCj9FCQB
-	0gW5cDBe3Ca9HdJeVKenW0g==
-X-Received: from wmee13.prod.google.com ([2002:a05:600c:218d:b0:493:ba73:4a1b])
+        bh=gptDZ+SIOu9XP4iw4DNNMjlkLg35QG9nhQ8OcIEot7U=;
+        b=b3RWeXWUk4OuLSqGyVDz5iHCKEElWwWRRNKq/Ykliem6+ZAuSW15R7qkRWnjBj+hno
+         ZeN6+0qVoWCVHa+m+3mV3OoEW7nJvu3oTBty2i8ql4TvBLuOn+i6YY5LIihMDGrNC0pM
+         u13EDDY6Isie4xp0G+j2ghVaGON+/DAJLXaXgyY7BlPjDzSek0c3ItHUUC2dI2kgVapL
+         84W5rL6K+55kcf8naZbAs0JQmJLzFdQk3g2OLbirdXgP3CjDlopBlj01v3AV1Vt1ZVxq
+         Cq6f98PV3Af3UdLbipPFmdOEKrnWCB0eompWZNZoPoBZolBrz+0Tl+oc1H7BZd2L8Ytw
+         kSoA==
+X-Forwarded-Encrypted: i=1; AHgh+RqSraHKwZ4HcNvHZcLSPgQFDPmH9OU1QOkUbW0Hche5BLi/DBE9T2gy++1v+zcTWP18RDrTIFLY/E32wl7NUFxsz8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8SzEcj2sqJdcgAHVjuol8zbQbojz0P1GpCbT3HNiojXz/qoDF
+	QZzrWi7R0OUBO+w7BxHP2CuFv4kP9BkfjSq1wIYzTtJ/dJiAIG3R9l6yjoRGLxjHVuCxWAfHncO
+	i/EW7IdRFxqNS5reM0AIezA==
+X-Received: from wmaz26.prod.google.com ([2002:a05:600c:6d9a:b0:495:4837:275e])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a204:b0:496:bbce:f3 with SMTP id 5b1f17b1804b1-4997c106d8fmr60275165e9.6.1786551238522;
- Wed, 12 Aug 2026 09:13:58 -0700 (PDT)
-Date: Wed, 12 Aug 2026 17:13:35 +0100
+ 2002:a05:600c:3b20:b0:493:f318:3bc6 with SMTP id 5b1f17b1804b1-4997c15729cmr82969795e9.13.1786551239673;
+ Wed, 12 Aug 2026 09:13:59 -0700 (PDT)
+Date: Wed, 12 Aug 2026 17:13:36 +0100
 In-Reply-To: <20260812161340.2417322-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260812161340.2417322-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260812161340.2417322-14-vdonnefort@google.com>
-Subject: [PATCH v5 13/18] tracing/remotes: Add dump_on_panic tracefs file
+Message-ID: <20260812161340.2417322-15-vdonnefort@google.com>
+Subject: [PATCH v5 14/18] tracing/remotes: selftests: Add a test for the
+ dump_on_panic tracefs file
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -69,352 +70,97 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When enabled, dump_on_panic will dump the content of the trace remote
-buffer if the system panics.
+Exercise the newly introduced dump_on_panic tracefs file that turns on
+or off the trace remote buffer dump on system panic.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index 9e78267d71f8..5536e0df4379 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -7,6 +7,7 @@
- #include <linux/kstrtox.h>
- #include <linux/lockdep.h>
- #include <linux/mutex.h>
-+#include <linux/panic_notifier.h>
- #include <linux/tracefs.h>
- #include <linux/trace_remote.h>
- #include <linux/trace_seq.h>
-@@ -22,6 +23,7 @@ enum tri_type {
- 	TRI_CONSUMING,
- 	TRI_NONCONSUMING,
- 	TRI_DMESG,
-+	TRI_PANIC,
- };
- 
- struct trace_remote_iterator {
-@@ -59,6 +61,9 @@ struct trace_remote {
- 	unsigned int			poll_cnt;
- 	unsigned int			poll_ms;
- 	bool				tracing_on;
-+	bool				panic_on;
-+	struct notifier_block		panic_notifier;
-+	struct trace_remote_iterator	*panic_iter;
- 	struct delayed_work		poll_work;
- };
- 
-@@ -71,10 +76,15 @@ static bool trace_remote_loaded(struct trace_remote *remote)
- 	return !!remote->trace_buffer;
- }
- 
-+static void trace_remote_unload(struct trace_remote *remote);
-+static int trace_remote_panic_load(struct trace_remote *remote);
-+static void trace_remote_panic_unload(struct trace_remote *remote);
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
+new file mode 100644
+index 000000000000..5e3d3c412ecd
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test hypervisor trace dump_on_panic
++# requires: remotes/hypervisor/write_event
 +
- static int trace_remote_load(struct trace_remote *remote)
- {
- 	struct ring_buffer_remote *rb_remote = &remote->rb_remote;
- 	struct trace_buffer_desc *desc;
-+	int ret = 0;
- 
- 	lockdep_assert_held(&remote->lock);
- 
-@@ -89,15 +99,28 @@ static int trace_remote_load(struct trace_remote *remote)
- 	rb_remote->swap_reader_page = remote->cbs->swap_reader_page;
- 	rb_remote->priv = remote->priv;
- 	rb_remote->reset = remote->cbs->reset;
-+	remote->trace_buffer_desc = desc;
- 	remote->trace_buffer = ring_buffer_alloc_remote(rb_remote);
- 	if (!remote->trace_buffer) {
- 		remote->cbs->unload_trace_buffer(desc, remote->priv);
- 		return -ENOMEM;
- 	}
- 
--	remote->trace_buffer_desc = desc;
-+	if (remote->panic_on) {
-+		ret = trace_remote_panic_load(remote);
-+		if (ret)
-+			trace_remote_unload(remote);
-+	}
- 
--	return 0;
-+	return ret;
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/dump_on_panic.tc
++
++set -e
++setup_remote "hypervisor"
++test_dump_on_panic
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
+new file mode 100644
+index 000000000000..cb9b4c6dc86c
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
+@@ -0,0 +1,51 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test trace remote dump_on_panic
++# requires: remotes/test
++
++. $TEST_DIR/remotes/functions
++
++test_dump_on_panic()
++{
++    #
++    # Toggle when the buffer is loaded
++    #
++    assert_loaded
++    echo 1 > dump_on_panic
++    echo 0 > dump_on_panic
++
++    #
++    # Toggle when the buffer is unloaded
++    #
++    echo 0 > tracing_on
++    assert_unloaded
++    echo 1 > dump_on_panic
++    echo 0 > dump_on_panic
++
++    #
++    # Load and unload buffer while dump_on_panic is enabled
++    #
++    echo 0 > tracing_on
++    assert_unloaded
++
++    echo 1 > dump_on_panic
++    echo 1 > tracing_on
++    echo 0 > tracing_on
++
++    # REMOVE ME FOR A PROPER OOPS TEST
++    return
++
++    echo 1 > tracing_on
++
++    for i in $(seq 1 32); do
++        echo $i > write_event
++    done
++
++    echo c > /proc/sysrq-trigger
 +}
 +
-+static void trace_remote_unload(struct trace_remote *remote)
-+{
-+	trace_remote_panic_unload(remote);
-+	ring_buffer_free(remote->trace_buffer);
-+	remote->trace_buffer = NULL;
-+	remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
- }
- 
- static void trace_remote_try_unload(struct trace_remote *remote)
-@@ -115,9 +138,7 @@ static void trace_remote_try_unload(struct trace_remote *remote)
- 	if (!ring_buffer_empty(remote->trace_buffer))
- 		return;
- 
--	ring_buffer_free(remote->trace_buffer);
--	remote->trace_buffer = NULL;
--	remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
-+	trace_remote_unload(remote);
- }
- 
- static int trace_remote_enable_tracing(struct trace_remote *remote)
-@@ -434,58 +455,68 @@ static void trace_remote_dec_poll(struct trace_remote *remote)
- static struct trace_remote_iterator
- *trace_remote_iter(struct trace_remote *remote, int cpu, enum tri_type type)
- {
--	struct trace_remote_iterator *iter = NULL;
-+	struct trace_remote_iterator *iter __free(kfree) = kzalloc_obj(*iter);
- 	int ret;
- 
- 	lockdep_assert_held(&remote->lock);
- 
--	if (type == TRI_NONCONSUMING && !trace_remote_loaded(remote))
--		return NULL;
-+	if (!iter)
-+		return ERR_PTR(-ENOMEM);
- 
--	ret = trace_remote_get(remote, cpu);
--	if (ret)
--		return ERR_PTR(ret);
-+	switch (type) {
-+	case TRI_NONCONSUMING:
-+		if (!trace_remote_loaded(remote))
-+			return NULL;
-+		fallthrough;
-+	case TRI_CONSUMING:
-+	case TRI_DMESG:
-+		ret = trace_remote_get(remote, cpu);
-+		if (ret)
-+			return ERR_PTR(ret);
-+		break;
-+	case TRI_PANIC:
-+		break;
-+	}
- 
- 	if (!trace_remote_has_cpu(remote, cpu)) {
- 		ret = -ENODEV;
- 		goto err;
- 	}
- 
--	iter = kzalloc_obj(*iter);
--	if (iter) {
--		iter->remote = remote;
--		iter->cpu = cpu;
--		iter->type = type;
--		trace_seq_init(&iter->seq);
-+	iter->remote = remote;
-+	iter->cpu = cpu;
-+	iter->type = type;
-+	trace_seq_init(&iter->seq);
- 
--		switch (type) {
--		case TRI_DMESG:
--			/* only one dmesg iter allowed */
--			if (WARN_ON_ONCE(remote->dmesg)) {
--				ret = -EBUSY;
--				break;
--			}
--			smp_store_release(&remote->dmesg, iter);
--			fallthrough;
--		case TRI_CONSUMING:
--			trace_remote_inc_poll(remote);
--			break;
--		case TRI_NONCONSUMING:
--			ret = __alloc_ring_buffer_iter(iter, cpu);
--			break;
-+	switch (type) {
-+	case TRI_DMESG:
-+		/* only one dmesg iter allowed */
-+		if (WARN_ON_ONCE(remote->dmesg)) {
-+			ret = -EBUSY;
-+			goto err;
- 		}
--
-+		smp_store_release(&remote->dmesg, iter);
-+		fallthrough;
-+	case TRI_CONSUMING:
-+		trace_remote_inc_poll(remote);
-+		break;
-+	case TRI_PANIC:
-+	case TRI_NONCONSUMING:
-+		ret = __alloc_ring_buffer_iter(iter, cpu);
- 		if (ret)
- 			goto err;
--
--		return iter;
-+		break;
- 	}
--	ret = -ENOMEM;
-+
-+	return no_free_ptr(iter);
- 
- err:
--	kfree(iter);
--	trace_remote_put(remote);
--
-+	switch (type) {
-+	case TRI_PANIC:
-+		break;
-+	default:
-+		trace_remote_put(remote);
-+	}
- 	return ERR_PTR(ret);
- }
- 
-@@ -508,14 +539,18 @@ static void trace_remote_iter_free(struct trace_remote_iterator *iter)
- 		fallthrough;
- 	case TRI_CONSUMING:
- 		trace_remote_dec_poll(remote);
-+		trace_remote_put(remote);
- 		break;
- 	case TRI_NONCONSUMING:
-+		__free_ring_buffer_iter(iter, iter->cpu);
-+		trace_remote_put(remote);
-+		break;
-+	case TRI_PANIC:
- 		__free_ring_buffer_iter(iter, iter->cpu);
- 		break;
- 	}
- 
- 	kfree(iter);
--	trace_remote_put(remote);
- }
- 
- static bool trace_remote_iter_is_consuming(struct trace_remote_iterator *iter)
-@@ -989,6 +1024,117 @@ static int dmesg_show(struct seq_file *s, void *unused)
- }
- DEFINE_TRACE_REMOTE_ATTRIBUTE(dmesg);
- 
-+static int trace_remote_panic_handler(struct notifier_block *self, unsigned long ev, void *v)
-+{
-+	struct trace_remote *remote = container_of(self, struct trace_remote, panic_notifier);
-+	struct trace_remote_iterator *iter = smp_load_acquire(&remote->panic_iter);
-+	int cpu;
-+
-+	if (!iter) {
-+		pr_warn("Unexpected error: no panic iterator for the trace remote\n");
-+		return NOTIFY_DONE;
-+	}
-+
-+	for_each_possible_cpu(cpu) {
-+		if (iter->rb_iters[cpu]) {
-+			/* No RING_BUFFER_ALL_CPUS to avoid taking cpu_read_lock() */
-+			ring_buffer_read_remote_meta_page(remote->trace_buffer, cpu);
-+			ring_buffer_iter_reset(iter->rb_iters[cpu]);
-+		}
-+	}
-+
-+	while (trace_remote_iter_read_event(iter)) {
-+		trace_seq_init(&iter->seq);
-+
-+		trace_remote_iter_print_event(iter);
-+		trace_seq_putc(&iter->seq, 0);
-+		pr_emerg("%s", seq_buf_str(&iter->seq.seq));
-+
-+		trace_remote_iter_move(iter);
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int trace_remote_panic_load(struct trace_remote *remote)
-+{
-+	struct notifier_block *notifier = &remote->panic_notifier;
-+	struct trace_remote_iterator *iter;
-+
-+	lockdep_assert_held(&remote->lock);
-+
-+	if (remote->panic_iter)
-+		return 0;
-+
-+	iter = trace_remote_iter(remote, RING_BUFFER_ALL_CPUS, TRI_PANIC);
-+	if (IS_ERR(iter))
-+		return PTR_ERR(iter);
-+
-+	smp_store_release(&remote->panic_iter, iter);
-+
-+	notifier->notifier_call = trace_remote_panic_handler;
-+	notifier->priority = INT_MAX - 1;
-+	atomic_notifier_chain_register(&panic_notifier_list, notifier);
-+
-+	return 0;
-+}
-+
-+static void trace_remote_panic_unload(struct trace_remote *remote)
-+{
-+	struct trace_remote_iterator *iter = remote->panic_iter;
-+
-+	lockdep_assert_held(&remote->lock);
-+
-+	if (!iter)
-+		return;
-+
-+	atomic_notifier_chain_unregister(&panic_notifier_list, &remote->panic_notifier);
-+	smp_store_release(&remote->panic_iter, NULL);
-+	trace_remote_iter_free(iter);
-+}
-+
-+static ssize_t dump_on_panic_write(struct file *filp, const char __user *ubuf,
-+				  size_t cnt, loff_t *ppos)
-+{
-+	struct seq_file *seq = filp->private_data;
-+	struct trace_remote *remote = seq->private;
-+	bool enable;
-+	int ret;
-+
-+	ret = kstrtobool_from_user(ubuf, cnt, &enable);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&remote->lock);
-+
-+	if (enable == remote->panic_on)
-+		return cnt;
-+
-+	if (trace_remote_loaded(remote)) {
-+		if (enable) {
-+			ret = trace_remote_panic_load(remote);
-+			if (ret)
-+				return ret;
-+		} else {
-+			trace_remote_panic_unload(remote);
-+		}
-+	}
-+
-+	remote->panic_on = enable;
-+
-+	return cnt;
-+}
-+
-+static int dump_on_panic_show(struct seq_file *s, void *unused)
-+{
-+	struct trace_remote *remote = s->private;
-+
-+	seq_printf(s, "%d\n", remote->panic_on);
-+
-+	return 0;
-+}
-+DEFINE_TRACE_REMOTE_ATTRIBUTE(dump_on_panic);
-+
- static int trace_remote_init_tracefs(const char *name, struct trace_remote *remote)
- {
- 	struct dentry *remote_d, *percpu_d, *d;
-@@ -1016,6 +1162,11 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
- 	if (!d)
- 		goto err;
- 
-+	d = trace_create_file("dump_on_panic", TRACEFS_MODE_WRITE, remote_d, remote,
-+			      &dump_on_panic_fops);
-+	if (!d)
-+		goto err;
-+
- 	d = trace_create_file("buffer_size_kb", TRACEFS_MODE_WRITE, remote_d, remote,
- 			      &buffer_size_kb_fops);
- 	if (!d)
++if [ -z "$SOURCE_REMOTE_TEST" ]; then
++    set -e
++    setup_remote_test
++    test_dump_on_panic
++fi
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
+index 4a14aa72fdf0..bdd28b5b8596 100644
+--- a/tools/testing/selftests/ftrace/test.d/remotes/functions
++++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
+@@ -9,6 +9,7 @@ setup_remote()
+ 	cd remotes/$name/
+ 	echo 0 > tracing_on
+ 	echo 0 > dmesg
++	echo 0 > dump_on_panic
+ 	clear_trace
+ 	echo 7 > buffer_size_kb
+ 	echo 0 > events/enable
 -- 
 2.55.0.691.gc56d675ccc-goog
 
