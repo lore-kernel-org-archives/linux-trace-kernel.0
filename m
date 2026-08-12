@@ -1,330 +1,187 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550AD42123A;
-	Wed, 12 Aug 2026 11:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458C3328B7F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 12:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786534705; cv=none; b=OyF9J5WUnNyqsVHmSn4BMYEKelQ/71c685xPUaNKT9Tlh4mZoS0WlWFYZdXKr2iOmzy3b9tPp9H5qkf1kwHW6oRRtdpfdfu5n90uvP6xzH+TguO3iekRKbb4+DvE/NYB6XkD4zbVfN+7YqJobwbp7B4q33FqbnCX1DK5E64QbgQ=
+	t=1786538080; cv=none; b=Bx1Bb2M+cbMDm+IFVxaPnRmNQcFFuiJh6GRSjMbwQSgcCN3jSJD2oi4MSvghLGtfuIK2vIqezCfjsMVckikc/Za2G1oqBHffuZJIDouAKO6ZIUD7AxUHUNaME6XUFoGKCoROKYU4raqDE6OGRuNcM6BJyGf/hiTJTz6oi9eaCBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786534705; c=relaxed/simple;
-	bh=vgqe1h+eYVYOWzbCJjtgWuVo61eMnLX5XXCOk1TxyDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQ3a0hKcs/lZuOL65cyIjkz5abU0fQdXSqd8WlVc86x+cvpiq0dtXMdvvGVLn9SG/BOKnLrxkUOSk7nok3mK4KUAOtn2S6KwoZdI/rwCr7YLcEvV1Z+V06r5xR0/UXVlA0ObRVQciIZF7WqwPDDuG39idk14qZuI4wTN8PSk+AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mgUQ3KT6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dZglaoYa; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Kk/U+rhz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nhFtDdk7; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1786538080; c=relaxed/simple;
+	bh=hIFtKQ3FtlY3HFQ/xsX8PZQ3ou39v+kavljWws218lo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l+yMWgrgtZvaFL0dA+sxlJU8WA9icPBw8HZPPGoNlzAta/0DzkklAaMzqEWFP36LoVNkPMGeHxcpDDjTVgHFgKknmUBJtlTL1r5CHRSfTEwfcwnr+oO1jPB/KSh7ZEm56rtl1/zXaaKlEa8OiIV9shg2g//BENUd3fMJTBpQ298=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gRp2zXn6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mgUQ3KT6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dZglaoYa";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Kk/U+rhz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nhFtDdk7"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C89DC821A4;
-	Wed, 12 Aug 2026 11:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1786534697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gRp2zXn6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786538077;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GiRdq+w0PozpCp7HO83flgdAQWcC6RKGzKFbWUYuU3E=;
-	b=mgUQ3KT60b/eSylm2RIjYxXbJVeJerENDh65/fx15NNdQGNrJSrv/FY3V8f9Wvn/0iy1Uo
-	U1BUm0hKXb5xeGzzLphvef5zYW5ZVUajsHCRKKpq/W7urBCtmJT/aJoCWLg0PekCPeFgXF
-	K74gpr36xuCD9mnAQXhPdioJRuTPpOc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1786534697;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GiRdq+w0PozpCp7HO83flgdAQWcC6RKGzKFbWUYuU3E=;
-	b=dZglaoYaq2kyVKefpeLqXeiXzMS0bZmx4TDi/bEUB5Tu8rviwhYCDQkCsckQQwIDthvXgO
-	yYlpO5A099f9SwDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="Kk/U+rhz";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=nhFtDdk7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1786534692; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GiRdq+w0PozpCp7HO83flgdAQWcC6RKGzKFbWUYuU3E=;
-	b=Kk/U+rhzHj+IBb9/qBxup7dBaOygsfyg5U92JTQELmXqPpD4miUes+npv2xc7/yYQ8ESOo
-	7c2qWq/5+f+ahy4+3jOB5DVu/TymUPr/bS1G1ZFksD735mdYxt4wKZnlJ1hsOvJzKsDcGQ
-	85IFrROZtOK/d8uJQGS49Sb5OY8d+OI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1786534692;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GiRdq+w0PozpCp7HO83flgdAQWcC6RKGzKFbWUYuU3E=;
-	b=nhFtDdk7Ok/obk+6RzjbTwEHQvuYZyfzsjSweHBGbvStIt9YiqDd+Scbr1Q57G9krIvm6f
-	ibB6x5J2ChhmhkAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1037E779B2;
-	Wed, 12 Aug 2026 11:38:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NzmbACJbfGotdwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 12 Aug 2026 11:38:10 +0000
-Date: Wed, 12 Aug 2026 12:38:08 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: rppt@kernel.org, akpm@linux-foundation.org, 
-	anton.ivanov@cambridgegreys.com, bp@alien8.de, brendan.higgins@linux.dev, da.gomez@samsung.com, 
-	danielt@kernel.org, dave.hansen@linux.intel.com, davidgow@google.com, 
-	dianders@chromium.org, hpa@zytor.com, jason.wessel@windriver.com, jikos@kernel.org, 
-	joe.lawrence@redhat.com, johannes@sipsolutions.net, jpoimboe@kernel.org, 
-	kgdb-bugreport@lists.sourceforge.net, kirill.shutemov@linux.intel.com, kunit-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
-	live-patching@vger.kernel.org, lorenzo.stoakes@oracle.com, luto@kernel.org, 
-	mark.rutland@arm.com, mbenes@suse.cz, mcgrof@kernel.org, mhiramat@kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, petr.pavlu@suse.com, pmladek@suse.com, 
-	richard@nod.at, rmoar@google.com, rostedt@goodmis.org, samitolvanen@google.com, 
-	shuah@kernel.org, song@kernel.org, tglx@linutronix.de, x86@kernel.org, 
-	bharata@amd.com, ananth.narayan@amd.com
-Subject: Re: [PATCH v3 9/9] x86: re-enable EXECMEM_ROX support
-Message-ID: <anxa3VjtukAkY4Cl@pedro-suse>
-References: <20250126074733.1384926-10-rppt@kernel.org>
- <20260812063316.21371-1-nikunj@amd.com>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hIFtKQ3FtlY3HFQ/xsX8PZQ3ou39v+kavljWws218lo=;
+	b=gRp2zXn6EhhL35HAMdUSXeZP9icEwtLillAB3y6IPEJ+eQz4abB7YG/7wWsz5vInouxdc/
+	+vBK497aXviM67mGw0lsoNgAcjvTqjoDfxqPcpjx2E18FTCNicbVgGuxjVVFp3SOYD5/fM
+	DtdSIxMsOwjeA80DeQmz6RrlGvU4utI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-64-mlhSO1s2O4GXBytR278RRw-1; Wed, 12 Aug 2026 08:34:08 -0400
+X-MC-Unique: mlhSO1s2O4GXBytR278RRw-1
+X-Mimecast-MFC-AGG-ID: mlhSO1s2O4GXBytR278RRw_1786538047
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49545071724so9243725e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 05:34:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786538047; x=1787142847;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Nv5ly0m1D08U/TFFN+ZAY0FDeBAmpfUnhFFvB/yjXXM=;
+        b=IwsgyMuqisF8RWRbsQHawwxWUnd7bwM15VhBmwgLKrw90mShrKbI2R2PIiI8t9oYb6
+         jrMRYnXJrvNRFA0Jp0xJi6m2Ije0SLrXsu2qrcRcvadDfj4OiID/pkkK8kp0+KEfY0i2
+         i1QwG7dI8Zehhwik7seSPS6aNnOw/NA04n0hOED1RBqCO87tX/BeUjUCxeG3e1Zj8lFq
+         kynlgyJncOJ0h+xg2jddXcIE/H87W5TQjz89B1RlgyXZo30SfnOr3A9ErTgbwiRmHzF3
+         EdsaquUR/vbWMePXSYajPMtrT5DvNcgAjjjwwqyOrPgFkunC018eCM/H6K/OhHARbQTb
+         CXCg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp0lFy0dTnP6fg/o7ejsQNIJyZi2wvEt85FBMtWODJ5rCRVoJ7XvxZIIWsBrxZm/PA3qBoKbw3KXl8F1eWM2Czgt4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0pWGL9Yb5emgb4hQWkpSf+xTvL1wfdQdsHAzAw4v5cBtfiBNs
+	XthWcz488IM5LVSip4vmgJrn61N5EwKXlK4ETFfQxU+yoxquaKpiGq9OdhjvHbXC0uhtHGSiC15
+	14+KtB/u+TSs9fATtJGawP1OER1gQIg03P/fzMw4SzWOFBUZYKJgAs8qoMgQ3qbsNzJ7Umu7sMA
+	==
+X-Gm-Gg: AR+sD13fUDIeu0yW2rBrueqF1IwoJWKMB7dmV9SBQTW+FvHVpLNpNxTAnTbankYwp+T
+	56ovclSX1JKnJcR48zEqMYQ3vPpIlgCD4sGhlIeA+gz+30AFTai9ld5It0u2TTiNWaLDnrPKAlk
+	5gGdGI1tPUushXGZNxglkCrvBRXjbfFBoD/jqOOv8pXMv5Uc/JIq+P0RnjVFeuA//EddAIwo045
+	tss5f9Apa9cIGMbhTW+xWzJIR/7YmWSUjE2+ZGbFNhrYrVo26KsU7E4592IVmsU7372RtcpY+C+
+	tnzZx5hHE6+lOB9p4kJR8t4VKMDPLNuXYNdud1SXdI162XfjMVl4pN3OYGduWlcUXQmnzIR0KbQ
+	gtK5S3RvxRvOAm3HtI1zUNZwlAdDP
+X-Received: by 2002:a05:600c:1f82:b0:499:5c3c:41a5 with SMTP id 5b1f17b1804b1-4997bf88a5emr59165855e9.0.1786538046670;
+        Wed, 12 Aug 2026 05:34:06 -0700 (PDT)
+X-Received: by 2002:a05:600c:1f82:b0:499:5c3c:41a5 with SMTP id 5b1f17b1804b1-4997bf88a5emr59164975e9.0.1786538046200;
+        Wed, 12 Aug 2026 05:34:06 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48150c088c9sm7294272f8f.13.2026.08.12.05.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2026 05:34:04 -0700 (PDT)
+Message-ID: <38decc4f7ef5b6f03b37705c7e97f22a7e40d7e2.camel@redhat.com>
+Subject: Re: [PATCH v3 1/4] rv/reactors: use context-sensitive lockdep wait
+ type in rv_react()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	 <thomas.weissschuh@linutronix.de>
+Date: Wed, 12 Aug 2026 14:34:03 +0200
+In-Reply-To: <26526e555baa5118325b2383e9f7f0f8f9b6a199.1786294920.git.wen.yang@linux.dev>
+References: <cover.1786294920.git.wen.yang@linux.dev>
+	 <26526e555baa5118325b2383e9f7f0f8f9b6a199.1786294920.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260812063316.21371-1-nikunj@amd.com>
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: C89DC821A4
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[47];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLziudqfrzo6b7hzgpxksh1d9i)];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	URIBL_BLOCKED(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,ubuntu.com:url];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ZNlzRCMCukoxeYcaTE5ZRyrOyU2z3_Qi1nyF-MvRI2U_1786538047
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 12, 2026 at 06:33:15AM +0000, Nikunj A Dadhania wrote:
-> Hi,
-> 
-> A kernel BUG in __text_poke() is observed inside a Ubuntu 26.04 guest 
-> (v7.0.0.28 and also with upstream v7.2-4c5). Host is running on v7.2-rc5.
-> 
-> SETUP
-> -----
-> 
-> 512 QEMU Q35 guests (2 vCPUs, 1G RAM each) boot concurrently across 200
-> iterations. The crash is seen during module loading in early boot.
-> 2-7 guests out of ~100,000 boot attempts crash with the kernel BUG.
-> 
-> Reproduced on:
->   - AMD EPYC, QEMU Q35 guests
->   - Intel Icelake, QEMU Q35 guests
-> 
-> Apparently it was seen once in the non-guest Ubuntu 26.04 environment as well
-> https://discourse.ubuntu.com/t/failed-boot-one-time-on-ubuntu-unity-26-04-educational-mission/85300
-> 
-> SYMPTOMS
-> --------
-> 
-> Either of the below two crash signatures is observed:
-> 
-> Signature 1 — BUG_ON(!pages[0]) in __text_poke():
-> 
->   kernel BUG at arch/x86/kernel/alternative.c:2564!
->   Oops: invalid opcode: 0000 [#1] SMP NOPTI
->   CPU: 0 UID: 0 PID: 741 Comm: (udev-worker) Not tainted 7.0.0-28-generic #28-Ubuntu PREEMPT(lazy)
->   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)
->   RIP: 0010:__text_poke+0x2a4/0x400
->   Call Trace:
->    <TASK>
->    smp_text_poke_batch_finish+0x25f/0x5b0
->    smp_text_poke_single+0x13/0x30
->    __static_call_transform+0x10e/0x210
->    arch_static_call_transform+0x5c/0xc0
->    __static_call_init+0x154/0x300
->    static_call_module_notify+0x144/0x170
->    notifier_call_chain+0x62/0xf0
->    blocking_notifier_call_chain_robust+0x62/0xc0
->    load_module+0x5ef/0x960
->   Modules linked in: ppdev(+) kvm(+) irqbypass ...
-> 
-> Signature 2 — BUG_ON(memcmp()) in __text_poke():
-> 
->   kernel BUG at arch/x86/kernel/alternative.c:2632!
->   Oops: invalid opcode: 0000 [#1] SMP NOPTI
->   CPU: 0 UID: 0 PID: 742 Comm: (udev-worker) Not tainted 7.0.0-28-generic #28-Ubuntu PREEMPT(lazy)
->   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)
->   RIP: 0010:__text_poke+0x380/0x400
->   Call Trace:
->    <TASK>
->    smp_text_poke_batch_finish+0x323/0x5b0
->    smp_text_poke_single+0x13/0x30
->    __static_call_transform+0x10e/0x210
->    arch_static_call_transform+0x5c/0xc0
->    __static_call_init+0x154/0x300
->    static_call_module_notify+0x144/0x170
->    notifier_call_chain+0x62/0xf0
->    blocking_notifier_call_chain_robust+0x62/0xc0
->    load_module+0x5ef/0x960
->   Modules linked in: kvm(+) irqbypass ...
-> 
-> INSTRUMENTATION
-> ---------------
-> 
-> The following instrumentation was applied to capture the page table state at
-> the moment of failure:
-> 
->   In mm/vmalloc.c::vmalloc_to_page()
-> 
->     ptep = pte_offset_kernel(pmd, addr);
->     pte = ptep_get(ptep);
->     if (pte_present(pte))
->         page = pte_page(pte);
->     else
->         pr_err("vmalloc_to_page: pte_not_present for addr=%lx "
->                "PGD=%lx P4D=%lx PUD=%lx PMD=%lx PTE=%lx\n",
->                addr, pgd_val(*pgd), p4d_val(*p4d), pud_val(*pud),
->                pmd_val(*pmd), pte_val(pte));
-> 
->   In arch/x86/kernel/alternative.c::__text_poke()
-> 
->     /* BUG 1: pages[0] NULL */
->     if (!pages[0] || ...) {
->         pr_err("%s: vmalloc_to_page failed for addr=%pK pages[0]=%pK pages[1]=%pK cross=%d\n", ...);
->         BUG();
->     }
-> 
->     ...
-> 
->     /* BUG 2: memcmp mismatch */
->     if (memcmp(addr, src, len)) {
->         struct page *page_now = vmalloc_to_page(addr);
->         pr_err("%s: memcmp failed at addr=%pK len=%zu\n", __func__, addr, len);
->         pr_err("%s: expected (src): %*ph\n", __func__, (int)len, src);
->         pr_err("%s: found    (dst): %*ph\n", __func__, (int)len, (u8 *)addr);
->         pr_err("%s: pfn at poke time (vmalloc_to_page): %lx\n", __func__, page_to_pfn(pages[0]));
->         pr_err("%s: pfn at readback time (vmalloc_to_page): %lx\n", __func__, page_to_pfn(page_now));
->         text_poke_dump_pagetable((unsigned long)addr); /* reads CR3 */
->         BUG();
->     }
-> 
-> Signature 1 — vmalloc_to_page() returned NULL:
-> 
->   vmalloc_to_page: pte_not_present for addr=ffffffffc0697979 PGD=28242067 P4D=28243067 PUD=28245067 PMD=3be001a1 PTE=0
->   SMP alternatives: __text_poke: vmalloc_to_page failed for addr=ffffffffc0697979 pages[0]=0000000000000000 pages[1]=0000000000000000 cross=0
-> 
->   PMD was not a leaf, and the code reached a point to check pte_present() and
->   finds the PTE to be not present. But in the dump in else case, pmd_val(*pmd)
->   shows that it is a PMD leaf (PSE bit set).
-> 
-> Signature 2 — vmalloc_to_page() returned a wrong page:
-> 
->   SMP alternatives: __text_poke: memcmp failed at addr=ffffffffc06fc4bd len=1
->   SMP alternatives: __text_poke: expected (src): cc
->   SMP alternatives: __text_poke: found    (dst): e8
->   SMP alternatives: __text_poke: pfn at poke time (vmalloc_to_page): 3884a
->   SMP alternatives: __text_poke: pfn at readback time (vmalloc_to_page): 52fc
->   SMP alternatives: __text_poke: page table dump for addr:
->     PGD 1ba42067  P4D 1ba43067  PUD 1ba45067  PMD 52001a1
-> 
->   vmalloc_to_page() returned pfn=0x3884a when pages[0] was queried. The write
->   of 0xcc landed there. When vmalloc_to_page() was called again during the
->   memcmp readback in the instrumentation code, the vmap mapping resolved through
->   PMD=52001a1 to a different pfn=0x52fc, which contains 0xe8 (existing
->   instruction bytes). This is silent memory corruption — 0xcc was written to
->   the wrong physical page (pfn=0x3884a).
-> 
-> BISECTION
-> ---------
-> 
-> The following experiments all ran 200 iterations of 512 concurrent guest boots
-> with zero crashes.
-> 
->   1. Remove "select ARCH_HAS_EXECMEM_ROX" from arch/x86/Kconfig
-> 
->   2. Boot with "nohugevmalloc"
-> 
->   3. Remove VM_ALLOW_HUGE_VMAP from vm_flags in execmem_cache_populate()
-> 
->        - unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
->        + unsigned long vm_flags = 0;
-> 
->   4. Remove CPA_COLLAPSE from set_memory_rox()
-> 
->        return change_page_attr_set_clr(&addr, numpages, __pgprot(0), clr, 0,
->   -                                    CPA_COLLAPSE, NULL);
->   +                                    0, NULL);
-> 
->      Without CPA_COLLAPSE, set_memory_rox() changes 4K PTE permissions
->      in-place and the PMD stays permanently as a PTE-page pointer after
->      the first split — no re-collapse, no future race window. This
->      confirms that CPA_COLLAPSE is a necessary part of the race sequence.
-> 
->   5. Hold pgd_lock around vmalloc_to_page() in __text_poke()
-> 
->          if (!core_kernel_text((unsigned long)addr)) {
->      +           spin_lock(&pgd_lock);
->                  pages[0] = vmalloc_to_page(addr);
->                  if (cross_page_boundary)
->                          pages[1] = vmalloc_to_page(addr + PAGE_SIZE);
->      +           spin_unlock(&pgd_lock);
->          } else {
-> 
->      __split_large_page() holds pgd_lock while installing the new PMD
->      and populating all 512 4K PTEs. Holding pgd_lock around
->      vmalloc_to_page() prevents CPA from modifying the PMD concurrently
->      with the page table walk. This confirms the race is precisely
->      between vmalloc_to_page() reading the PMD/PTE and
->      __split_large_page() modifying it under pgd_lock.
-> 
->      Note: this is a diagnostic experiment, not a production fix.
-> 
-> The experiments point to a race between vmalloc_to_page() in
-> __text_poke() and __split_large_page() modifying the shared PMD under
-> pgd_lock. __split_large_page() holds pgd_lock while modifying the
-> PMD; vmalloc_to_page() holds no lock and can observe the PMD in an
-> intermediate state.
-> 
-> What would be the correct fix for this issue?
-> 
-> Happy to test any proposed fix or run further experiments.
+On Mon, 2026-08-10 at 01:10 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> Reactors must not explicitly take locks, so they should comply with
+> LD_WAIT_FREE.=C2=A0 However, reactor callbacks can run with preemption
+> enabled on any kernel (not just PREEMPT_RT).=C2=A0 If a timer interrupt
+> fires during the callback, the interrupt exit path schedules and
+> acquires rq->__lock (LD_WAIT_SPIN) while the lockdep override map that
+> declared LD_WAIT_FREE is still held, triggering a spurious
+> "Invalid wait context" warning:
+>=20
+> =C2=A0=C2=A0=C2=A0 [ BUG: Invalid wait context ]
+> =C2=A0=C2=A0=C2=A0 context-{5:5}
+> =C2=A0=C2=A0=C2=A0 1 lock held by kunit_try_catch/209:
+> =C2=A0=C2=A0=C2=A0=C2=A0 #0: (rv_react_map-wait-type-override){+.+.}-{1:1=
+}
+> =C2=A0=C2=A0=C2=A0 kunit_try_catch/209 is trying to lock:
+> =C2=A0=C2=A0=C2=A0 ffff8a743ed3e8a0 (&rq->__lock){-...}-{2:2}
+>=20
+> Fixes: 69d8895cb9a9 ("rv: Add explicit lockdep context for reactors")
+> Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
 
-https://lore.kernel.org/linux-mm/anCK3eWFMwZqq5ka@pedro-suse/
+You came up with the idea, I at most suggested how I'd like it worded in th=
+e
+comment.
 
--- 
-Pedro
+Anyway, I'd appreciate comments/acks from the other folks in the loop, but =
+from
+my side this looks good.
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+Thanks,
+Gabriele
+
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> Cc: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+> =C2=A0kernel/trace/rv/rv_reactors.c | 20 +++++++++++++++-----
+> =C2=A01 file changed, 15 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
+c
+> index 2f5fc8d18dea..5830229210e8 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -465,18 +465,28 @@ int init_rv_reactors(struct dentry *root_dir)
+> =C2=A0
+> =C2=A0void rv_react(struct rv_monitor *monitor, const char *msg, ...)
+> =C2=A0{
+> -=09static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_FREE);
+> +=09/*
+> +=09 * Reactors must not explicitly take locks, so they should be
+> +=09 * LD_WAIT_FREE.=C2=A0 However, reactor callbacks can run with preemp=
+tion
+> +=09 * enabled, meaning the preempting code (e.g. the scheduler taking
+> +=09 * rq->__lock at LD_WAIT_SPIN) may violate that constraint.=C2=A0 Use
+> +=09 * LD_WAIT_SPIN in preemptible contexts to avoid false-positive
+> lockdep
+> +=09 * reports; keep LD_WAIT_FREE in NMI/hardirq where preemption is
+> +=09 * disabled and the scheduler cannot run.
+> +=09 */
+> +=09static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map,=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 LD_WAIT_SPIN);
+> +=09static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map_atomic, LD_WAIT_FREE);
+> +=09struct lockdep_map * __maybe_unused map;
+> =C2=A0=09va_list args;
+> =C2=A0
+> =C2=A0=09if (!rv_reacting_on() || !monitor->react)
+> =C2=A0=09=09return;
+> =C2=A0
+> +=09map =3D (in_nmi() || in_hardirq()) ? &rv_react_map_atomic :
+> &rv_react_map;
+> =C2=A0=09va_start(args, msg);
+> -
+> -=09lock_map_acquire_try(&rv_react_map);
+> +=09lock_map_acquire_try(map);
+> =C2=A0=09monitor->react(msg, args);
+> -=09lock_map_release(&rv_react_map);
+> -
+> +=09lock_map_release(map);
+> =C2=A0=09va_end(args);
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(rv_react);
+
