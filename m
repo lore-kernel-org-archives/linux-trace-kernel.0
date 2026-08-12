@@ -1,162 +1,119 @@
-Received: from out-178.mta1.migadu.com (mta1.migadu.com [37.59.57.117])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81872392822
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 04:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.59.57.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1197230E0D5;
+	Wed, 12 Aug 2026 05:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786507636; cv=none; b=SAw3DmrVzyFMVUtuUBNwR5sHKnwIRB49kHilzj6j3H/u/7sG03mvnxIGB1yLccQCz6GUHgM5VqFN1FKppdxEny/TVfHIQR53uWji3UHDt2xDzh7qeXHAaRH5zMaNSyK09Tx7LpcxpMzeWTdgJ66Hkb7vp2T9byULIZjig5r/bUk=
+	t=1786512218; cv=none; b=bdmrd63jsexjoYDov6IZOi6WuPV64G7rIJSzTkPqzVUnTDmjhNh289j0+G3rRjhwGvJXraZptYNS36+1TNwUAFI7UY9+NVBXqLcN4qaO2yyi5ZM8dv0TSiGdTnwOdPIqQfxdvz27UuSDx2M/YF30UMl+FpBduV0uo3mIMFWS9D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786507636; c=relaxed/simple;
-	bh=jEfwf6pY2c/ehx5EqOVxqtxCTc31f1emrXYEoOLX5/U=;
+	s=arc-20240116; t=1786512218; c=relaxed/simple;
+	bh=iE7WD9cC5Zp1jYTzEd47muCzZZ8TB+7wVvVGgHiezK0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h97DSSbLXlkqAbsfZyrWqwYf99dMJjlWZ+Ykm64BrXEMQoRTYGzJSIAB9o76mVkiPCEukgejWXuWxn/WhRXbVdfSUL8Pr/ggNVedXS/TB4uI/ZTS/8OSZCYhYIJ4fjNmk7kf4/xwGRKBoTEaKI1DG3nyz79c101/Vk8AO2BW7Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iGjc0MJJ; arc=none smtp.client-ip=37.59.57.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=mt2L6NRLrG552O0PJ9TeCASsRXrcd1uHte56S68isSHvqCjJ6Pd99PI+0E4zvNENMs5F6kI37zDF10ZZnSDk+REfBaZZY5v/FqtwH7YeaMmT75bkhbg9EWjscVt9y4qAFeyMv2okxrdTm2uMVeQctojo+flXPQmyfwF6iD2JP7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OpukalZq; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iGjc0MJJ"
-Message-ID: <90e79390-569b-4ff9-8828-f7eb839cef6f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786507631;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=puo0fp38rYZgwJqTaTvd8UMYu3clFBbGtdCSz6QQqZ0=;
-	b=iGjc0MJJKdKhd0HiIWTPDl31V+PiXhwq7hwqy+ioQPvScVH+uZseDgvQ9itZAeRRn1Fd44
-	n/1da9Ya4YI480prq6uv6s0JGxFiHLs8uwYW55O7nyYc/QvDXVj2PiiA5CWJ99ASqtzWe/
-	ON9eb3IKHw5LmBhvKJzexLguu4r6xkA=
-Date: Wed, 12 Aug 2026 12:06:39 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OpukalZq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786512216; x=1818048216;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iE7WD9cC5Zp1jYTzEd47muCzZZ8TB+7wVvVGgHiezK0=;
+  b=OpukalZqB99QR2lt9G7Jvp3zYAT49pMhvUi8wyft/VbD+LtwvS3CnCuH
+   a8++2UOLJqD+lNgWaDTVWmW+Ox1nNM0yX4YdyMWwg5yZyf5i6tg1m8Dr8
+   3v3BOP71aSCI6pA9sgRLPPgAjSTeT7QW1EKxT2ZdYpih3Fhcrg4WD87F+
+   E0/MmLMv5ACH6IpKgBvDWP5CmoUY7Rh504JV7uNYA7gYuJz3DKcrzmbHa
+   Hl/yfOecoDVIL2yyUSj8uZz3kRSimAypc6XLJkuAIdkZPV3YQtXNo9fF8
+   LTyYcbACAcqPhlMRLvPjiCHdOiW6fhXbSENYT+x+/0cme1u1p96mskhZy
+   g==;
+X-CSE-ConnectionGUID: /22aGNHhQUWsdlK4SS1HZQ==
+X-CSE-MsgGUID: 6Ss/GOxLRICCtziHgNoB8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="112600181"
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="112600181"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 22:23:35 -0700
+X-CSE-ConnectionGUID: 1SnU3e7vSsmcahYLs71EJQ==
+X-CSE-MsgGUID: KGD9BSXaRIiKAaUKOK5hpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="261785396"
+Received: from unknown (HELO [10.238.2.33]) ([10.238.2.33])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 22:23:22 -0700
+Message-ID: <3722b4d2-ef2a-4ab8-9a24-7d61a776b05e@linux.intel.com>
+Date: Wed, 12 Aug 2026 13:23:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 10/13] selftests/bpf: Add tracing_multi bpf prog
- cookie test
-To: bot+bpf-ci@kernel.org, bpf@vger.kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
- martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
- jolsa@kernel.org, emil@etsalapatis.com, ihor.solodrai@linux.dev,
- qmo@kernel.org, shuah@kernel.org, yatsenko@meta.com,
- avinash.duduskar@gmail.com, a.s.protopopov@gmail.com, ameryhung@gmail.com,
- jordan@jrife.io, rongtao@cestc.cn, eyal.birger@gmail.com,
- pulehui@huawei.com, tanjingguo@huawei.com, malin89@huawei.com,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 05/41] KVM: Rename memory attribute APIs to prepare
+ for in-place gmem conversion
+To: ackerleytng@google.com
+Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
+ suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
+ Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, martin.lau@kernel.org, clm@meta.com
-References: <20260809150111.45000-11-leon.hwang@linux.dev>
- <64e207da37d7fd430e941082680bc7d32ee40ef7098bc40c5bf2c9d318c37e5c@mail.kernel.org>
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org, linux-coco@lists.linux.dev,
+ Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-5-2fc18ee6d3ba@google.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <64e207da37d7fd430e941082680bc7d32ee40ef7098bc40c5bf2c9d318c37e5c@mail.kernel.org>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-5-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 10/8/26 00:20, bot+bpf-ci@kernel.org wrote:
->> diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
->> index 5cf11707eaf89..070266a864d4f 100644
->> --- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
->> +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
->> @@ -304,9 +304,12 @@ static int run_bpf_target(struct bpf_program *prog, __u32 retval, const char *na
->>  	return 0;
->>  }
->>
->> -static void test_link_api_bpf_prog(void)
->> +static void __test_link_api_bpf_prog(bool test_cookies)
->>  {
->>  	const char *funcs[] = { "target_1", "target_2" };
->> +	__u64 fentry_cookies[] = { 0xfeed01, 0xfeed01 };
->> +	__u64 fexit_cookies[] = { 0xfeed02, 0xfeed02 };
->> +	__u64 fsession_cookies[] = { 0xfeed03, 0xfeed03 };
+On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson <seanjc@google.com>
 > 
-> A subsystem pattern flags this as potentially concerning: every per-target
-> cookie array holds the same value twice. The test on the BPF side compares
-> against a single scalar global set from element [0]:
+> Rename memory attribute APIs to add a "vm_" in the name in anticipation of
+> moving PRIVATE tracking into guest_memfd, to allow in-place conversion
+> between SHARED and PRIVATE.  At that point, there will effectively be two
+> (potential) sources of memory attributes: the VM and guest_memfd.
 > 
->   skel->bss->fentry_cookie = fentry_cookies[0];
+> kvm_vm_set_mem_attributes() already has "vm" in the name to indicate that
+> it is a VM ioctl. Rename it to kvm_set_vm_mem_attributes() to show that it
+> is setting the VM's memory attributes. (Drop the VM-ioctl scoping since it
+> is a helper local to the file.) Update the accompanying trace function to
+> match.
 > 
-> and in progs/tracing_multi_bpf.c:
+> No functional change intended.
 > 
->   if (!test_cookies || bpf_get_attach_cookie(ctx) == fentry_cookie)
->           test_result_fentry++;
-> 
-> Since cookie[0] == cookie[1] for all three arrays, the test cannot
-> distinguish a correct cookie-to-target mapping from a permuted one. The
-> assertions (test_result_fentry == 2, etc.) succeed as long as some
-> correct-looking cookie value is delivered on both invocations, but swapping
-> the cookies of target_1 and target_2 in the kernel is invisible.
-> 
-> That matters because the kernel path this commit exercises is exactly a
-> permutation: bpf_tracing_multi_attach() calls check_dup_keys() which calls
-> keys_swap_r() in kernel/trace/bpf_trace.c to reorder the cookies, ids, and
-> progs arrays to follow the sorted trampoline keys:
-> 
->   id_a    = ids + (key_a - keys);
->   if (data->progs) { ... swap(*prog_a, *prog_b); }
->   if (cookies) { cookie_a = cookies + (id_a - ids); ... swap(*cookie_a, *cookie_b); }
-> 
-> An indexing mistake in that swap could desynchronise cookies from progs/ids,
-> yet the test would still pass. Since fds[]/ids[] come from BPF prog FDs, the
-> sort order is not the array order the caller supplied.
-> 
-> The neighbouring test for kernel-function targets in this same file already
-> does this correctly: bpf_fentry_test_cookies[] uses ten distinct values
-> deliberately out of order (8, 9, 7, 5, 4, 2, 3, 1, 10, 6) and
-> progs/tracing_multi_check.c checks the cookie per-IP with something like:
-> 
->   err |= test_cookies ? cookie != 8 : 0;
-> 
-> under `ip == &bpf_fentry_test1`.
-> 
-> Can the test use distinct cookies and a bpf_get_func_ip()-based per-target
-> expectation so it is sensitive to cookie mis-association?
-> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
-Will update the cookies with different values.
-
->>  	LIBBPF_OPTS(bpf_tracing_multi_opts, opts);
->>  	struct tracing_multi_bpf *skel = NULL;
->>  	int fds[ARRAY_SIZE(funcs)];
-> 
-> [ ... ]
-> 
->> @@ -356,6 +367,16 @@ static void test_link_api_bpf_prog(void)
->>  	tracing_multi_bpf__destroy(skel);
->>  }
->>
->> +static void test_link_api_bpf_prog(void)
->> +{
->> +	__test_link_api_bpf_prog(false);
->> +}
->> +
->> +static void test_cookies_bpf_prog(void)
->> +{
->> +	__test_link_api_bpf_prog(true);
->> +}
-> 
-> This isn't a bug, but would calling __test_link_api_bpf_prog(false) and
-> __test_link_api_bpf_prog(true) straight from the two subtest arms read more
-> consistently? The neighbouring test_link_api_ids() is dispatched directly as
-> test_link_api_ids(false) and test_link_api_ids(true) just a dozen lines
-> down, without wrapper functions.
-> 
-
-Okay, will drop these two wrappers.
-
-Thanks,
-Leon
-
-> [ ... ]
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/31320427087
-
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
