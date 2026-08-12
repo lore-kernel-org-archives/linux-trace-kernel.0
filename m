@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AA035E1BC;
-	Wed, 12 Aug 2026 00:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5591E2877E8;
+	Wed, 12 Aug 2026 00:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786495443; cv=none; b=UriZ3/VzE+LKHUHWzqKbv6W2hvTLt+aNc8QfsMZM+uOJXQUNjHIdOtsd7GUNMC71sQE0ImpBGf77z9npuZRulwY1uKwpX+Ji12Eo/KjpHFga1rJHzjbOE/AfTCilIsWc8hDSrQFXv30lA5ZQ/VeJjN/AhGNkQwpe5qL6rikJr5Y=
+	t=1786495452; cv=none; b=om+nW1yjzC5mSKJd22DcaI2PvavszgxY5bMRtNzy58uNHRK/atqKwWZ2JsgHIuJKk9Z1+TYV042ZsS/em8ZwLX9p5dzQr9tZxcQSWOLh2wNxRUMBxy8GS74tapGHyEtKYwBKnt6KA43CIZfU+1h3/kerPwlYIkyK9ImUp90Dz/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786495443; c=relaxed/simple;
-	bh=knkDdaWfdVNlrw22Oq7ycDhUbsdq3vyJ46zOt54AA5Y=;
+	s=arc-20240116; t=1786495452; c=relaxed/simple;
+	bh=oj155J8WdN24CH7OTppEnli8Za/z6mHS1JU++3ERia4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qey930cuLTTkAMhjaJuowKl46PAPLHYTwY+aQEWcvZ0hW3Skpb79+yqxzZfAG6U2yPWsA+BppvrJPj0NerKRC64Y7aBU8ZVIWRrMdaUOWANIHtt1++Re23cFTrSZGrfFui3RFz6sTz89Ef3ZfllbqM53ampQuYfU7fWxi93Jq2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1GKhb7q; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=NOSPAy7HUBU9+pi9gZ+y6nk8RTDZMyEF9cXNccWAUUUZRU/hAuDnDYomjkmG3uZXmMxZgul2w+Tf8cxkfcR2JlSEIGAQhqxs5qZjU8t9S/5Hanpe77kJfMQILK5ZFZ8p+YLK/1cDA6JZlTyNyBTPK1SxY+3zsImMK2BI95Sw+h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nebqLtJ+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1GKhb7q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EA3E1F000E9;
-	Wed, 12 Aug 2026 00:43:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nebqLtJ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43FD01F000E9;
+	Wed, 12 Aug 2026 00:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786495441;
-	bh=L1Zxh0GtY97hDkHRxkP6L0I18WWlqvDfDAUKZN7nGSQ=;
+	s=k20260515; t=1786495451;
+	bh=bCWjy227zq95PX7LUF27D+H8lsveDD20rzvQ0kh5R1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=G1GKhb7qrXa/sUK1kYYdTrHSCVO+52Nv67EXoZJz6A3uTA9uHYKcg63hZDizaV886
-	 +uyGixU+Rm32rlh1ouQ+S1UYFFdDMeMR4ZW1gMDrtDmBZnyhlIp+r91MGCGBhKBwsA
-	 bUsR1nm4AK5dlia57Rrf2hPGE9PD1r7eUGj9vvr1YKeSUtllfXXW4d39JXzuT8fA8p
-	 PlMDCBl9uoxTizT3yXm2QGBOYJMmmCirYeIqkqWuMVZhuzHIGLgO0Gm7PWrgMwCZkt
-	 p/4tf4OeVjn3v4AL9QzGFKgW5UL75Wp6zraQWI3oX2l1rd9250Jp+jmTRf0Q4wtIs6
-	 3s6JDEuFfg0Rw==
+	b=nebqLtJ+DftQC/tN738fe9tNVd0j18/lSiL2k5GJ/9cKiyaEoRIdE03fDFSJDO8un
+	 E1jhjOFEK61koPdEeEuRt/OTYOuUh9c9idCxE8jjTjSr9Y8HZxiicYTZPgUf6FWwrm
+	 Lsel3A4mDvTVT6ZM9yU33d8vKObtw685jzMLX1PneAZaZ4RiofxaRJsB8VI2K0oAYe
+	 OGWvDb9LCi1AsVsGnomLMqMFdAPgHgiR9vBJTOuBkVYBGbPeoCc1wVtF6DSyvzBI5b
+	 0rjxjMwRvAggi6wEi+qpIT+S8jIFwY5LFCURyJt3FfZVGi3PmyiJthSUH9bjG8KElg
+	 0/wPZjHyEL2hg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 3/4] selftests/ftrace: Add kernel cmdline tracing testcases
-Date: Wed, 12 Aug 2026 09:43:57 +0900
-Message-ID: <178649543741.438282.2638887907664217934.stgit@devnote2>
+Subject: [PATCH v3 4/4] selftests/ftrace: Add persistent ring buffer testcases
+Date: Wed, 12 Aug 2026 09:44:06 +0900
+Message-ID: <178649544683.438282.14573895196260214231.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178649540853.438282.4271870161169100680.stgit@devnote2>
 References: <178649540853.438282.4271870161169100680.stgit@devnote2>
@@ -52,264 +52,129 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add test cases for kernel command-line tracing options. It verifies
-various parameters like trace_buf_size and trace_options by reading
-the output of tracing files in sysfs.
+Add test cases for persistent ring buffer (reserve_mem= combined
+with trace_instance=) and backup instance (trace_instance=backup=boot_map).
+
+These test cases verify:
+ - persistent-01-reserve-mem: Memory reservation via reserve_mem=
+   and trace_instance=boot_map@trace. Verifies trace data retention in
+   the boot_map instance across guest crash/reboot via sysrq-trigger.
+ - persistent-02-backup-instance: Backup instance creation via
+   trace_instance=backup=boot_map. Verifies that previous boot trace
+   log is preserved in the backup instance on the subsequent boot.
+
+These test cases specify '# REBOOT: 1' to enable multi-boot guest
+crash/reboot testing with doubled QEMU timeout.
 
 Assisted-by: Antigravity:gemini-3.6-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v3:
- - Add '# APPLETS: awk' header to cmdline-03-trace-buf-size.sh to request
-   awk applet in initramfs.
 Changes in v2:
- - Fix buffer_size_kb parsing in cmdline-03-trace-buf-size.sh to handle
-   unexpanded buffer string output '1 (expanded: 2048)'.
- - Use grep -qw in cmdline-04-trace-options.sh to match word options
-   and avoid matching disabled 'no<option>' entries.
+ - Increase reserve_mem alignment to 32M (reserve_mem=12M:32M:trace) to
+   ensure stable physical memory placement across KASLR reboots.
 ---
- .../boottime/cmdlines/cmdline-01-ftrace.cmdline    |    1 +
- .../cmdlines/cmdline-02-trace-event.cmdline        |    1 +
- .../cmdlines/cmdline-03-trace-buf-size.cmdline     |    1 +
- .../cmdlines/cmdline-04-trace-options.cmdline      |    1 +
- .../cmdlines/cmdline-05-trace-clock.cmdline        |    1 +
- .../cmdlines/cmdline-06-trace-instance.cmdline     |    1 +
- .../ftrace/boottime/tests/cmdline-01-ftrace.sh     |   19 +++++++++++++
- .../boottime/tests/cmdline-02-trace-event.sh       |   26 ++++++++++++++++++
- .../boottime/tests/cmdline-03-trace-buf-size.sh    |   29 ++++++++++++++++++++
- .../boottime/tests/cmdline-04-trace-options.sh     |   23 ++++++++++++++++
- .../boottime/tests/cmdline-05-trace-clock.sh       |   19 +++++++++++++
- .../boottime/tests/cmdline-06-trace-instance.sh    |   24 +++++++++++++++++
- 12 files changed, 146 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
- create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
- create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
- create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
- create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
- create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
- create mode 100644 tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
+ .../cmdlines/persistent-01-reserve-mem.cmdline     |    1 +
+ .../cmdlines/persistent-02-backup-instance.cmdline |    1 +
+ .../boottime/tests/persistent-01-reserve-mem.sh    |   28 ++++++++++++++
+ .../tests/persistent-02-backup-instance.sh         |   40 ++++++++++++++++++++
+ 4 files changed, 70 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/persistent-01-reserve-mem.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/cmdlines/persistent-02-backup-instance.cmdline
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/persistent-01-reserve-mem.sh
+ create mode 100644 tools/testing/selftests/ftrace/boottime/tests/persistent-02-backup-instance.sh
 
-diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/persistent-01-reserve-mem.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/persistent-01-reserve-mem.cmdline
 new file mode 100644
-index 000000000000..4f6fc54240c8
+index 000000000000..c69eeb27deb6
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-01-ftrace.cmdline
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/persistent-01-reserve-mem.cmdline
 @@ -0,0 +1 @@
-+ftrace=function
-diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
++reserve_mem=12M:32M:trace trace_instance=boot_map@trace
+diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/persistent-02-backup-instance.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/persistent-02-backup-instance.cmdline
 new file mode 100644
-index 000000000000..66bcd29b14cb
+index 000000000000..43217c986ca1
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-02-trace-event.cmdline
++++ b/tools/testing/selftests/ftrace/boottime/cmdlines/persistent-02-backup-instance.cmdline
 @@ -0,0 +1 @@
-+trace_event=sched:sched_switch,kmem:kmalloc
-diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
++reserve_mem=12M:32M:trace trace_instance=boot_map@trace trace_instance=backup=boot_map
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/persistent-01-reserve-mem.sh b/tools/testing/selftests/ftrace/boottime/tests/persistent-01-reserve-mem.sh
 new file mode 100644
-index 000000000000..e5d1c4a8ca89
+index 000000000000..49abaf518481
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-03-trace-buf-size.cmdline
-@@ -0,0 +1 @@
-+trace_buf_size=2048K
-diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
-new file mode 100644
-index 000000000000..51d82f8e948d
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-04-trace-options.cmdline
-@@ -0,0 +1 @@
-+trace_options=sym-addr,verbose
-diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
-new file mode 100644
-index 000000000000..f72a4ac808a3
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-05-trace-clock.cmdline
-@@ -0,0 +1 @@
-+trace_clock=global
-diff --git a/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
-new file mode 100644
-index 000000000000..9618e3e2b88b
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/cmdlines/cmdline-06-trace-instance.cmdline
-@@ -0,0 +1 @@
-+trace_instance=bar,sched:sched_switch
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
-new file mode 100644
-index 000000000000..23a0b15f2dd3
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-01-ftrace.sh
-@@ -0,0 +1,19 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/persistent-01-reserve-mem.sh
+@@ -0,0 +1,28 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check ftrace= kernel command-line tracer setting
++# Check persistent ring buffer across guest crash/reboot
++# REBOOT: 1
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ ! -f "$TRACEDIR/current_tracer" ]; then
-+	echo "FAIL: current_tracer does not exist"
++if [ ! -f "$TRACEDIR/instances/boot_map/trace" ]; then
++	echo "FAIL: persistent trace instance boot_map/trace file missing"
 +	exit 1
 +fi
 +
-+read -r TRACER _ < "$TRACEDIR/current_tracer"
-+if [ "$TRACER" != "function" ]; then
-+	echo "FAIL: current_tracer is '$TRACER', expected 'function'"
-+	exit 1
++# Check if Boot 1 marker was already written
++if grep -q "BOOT1_MARKER" "$TRACEDIR/instances/boot_map/trace" 2>/dev/null; then
++	# Second boot: verify persistent ring buffer content from first boot
++	echo "PASS: persistent-01-reserve-mem"
++	exit 0
 +fi
 +
-+echo "PASS: cmdline-01-ftrace"
-+exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
++# First boot: write marker to persistent buffer and trigger kernel crash/reboot
++echo "BOOT1_MARKER" > "$TRACEDIR/instances/boot_map/trace_marker"
++sync
++
++# Trigger reboot to restart into second boot
++echo b > /proc/sysrq-trigger 2>/dev/null || echo c > /proc/sysrq-trigger 2>/dev/null || true
++sleep 5
++echo "FAIL: reboot trigger failed on first boot"
++exit 1
+diff --git a/tools/testing/selftests/ftrace/boottime/tests/persistent-02-backup-instance.sh b/tools/testing/selftests/ftrace/boottime/tests/persistent-02-backup-instance.sh
 new file mode 100644
-index 000000000000..b793907c48cd
+index 000000000000..0b2a2f03ce4f
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-02-trace-event.sh
-@@ -0,0 +1,26 @@
++++ b/tools/testing/selftests/ftrace/boottime/tests/persistent-02-backup-instance.sh
+@@ -0,0 +1,40 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (C) 2026, Google LLC.
-+# Check trace_event= kernel command-line setting
++# Check persistent backup instance across guest crash/reboot
++# REBOOT: 1
 +TRACEDIR="/sys/kernel/tracing"
 +
-+if [ ! -d "$TRACEDIR/events/sched/sched_switch" ]; then
-+	echo "FAIL: event sched:sched_switch does not exist"
++# Ensure both boot_map/trace and backup/trace files exist
++if [ ! -f "$TRACEDIR/instances/boot_map/trace" ]; then
++	echo "FAIL: boot_map/trace file missing"
 +	exit 1
 +fi
 +
-+if [ ! -d "$TRACEDIR/events/kmem/kmalloc" ]; then
-+	echo "FAIL: event kmem:kmalloc does not exist"
++if [ ! -f "$TRACEDIR/instances/backup/trace" ]; then
++	echo "FAIL: backup/trace file missing"
 +	exit 1
 +fi
 +
-+ENABLE1=$(cat "$TRACEDIR/events/sched/sched_switch/enable")
-+ENABLE2=$(cat "$TRACEDIR/events/kmem/kmalloc/enable")
-+
-+if [ "$ENABLE1" != "1" ] || [ "$ENABLE2" != "1" ]; then
-+	echo "FAIL: events not enabled (sched_switch=$ENABLE1, kmalloc=$ENABLE2)"
-+	exit 1
++# Check if BOOT1_MARKER is in boot_map/trace (indicates second boot)
++if grep -q "BOOT1_MARKER" "$TRACEDIR/instances/boot_map/trace" 2>/dev/null; then
++	# Second boot: verify BOOT1_MARKER was copied into backup/trace from Boot 1
++	if grep -q "BOOT1_MARKER" "$TRACEDIR/instances/backup/trace" 2>/dev/null; then
++		echo "PASS: persistent-02-backup-instance"
++		exit 0
++	else
++		echo "FAIL: BOOT1_MARKER found in boot_map/trace" \
++			"but missing from backup/trace on second boot"
++		exit 1
++	fi
 +fi
 +
-+echo "PASS: cmdline-02-trace-event"
-+exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
-new file mode 100644
-index 000000000000..4b936f84d4d7
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-03-trace-buf-size.sh
-@@ -0,0 +1,29 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026, Google LLC.
-+# APPLETS: awk
-+# Check trace_buf_size= kernel command-line setting
-+TRACEDIR="/sys/kernel/tracing"
++# First boot: write BOOT1_MARKER to boot_map and reboot via sysrq-trigger
++echo "BOOT1_MARKER" > "$TRACEDIR/instances/boot_map/trace_marker"
++sync
 +
-+if [ ! -f "$TRACEDIR/buffer_size_kb" ]; then
-+	echo "FAIL: buffer_size_kb does not exist"
-+	exit 1
-+fi
-+
-+BUF_RAW=$(cat "$TRACEDIR/buffer_size_kb")
-+case "$BUF_RAW" in
-+	*"expanded:"*)
-+		BUFSIZE=$(echo "$BUF_RAW" | sed -n 's/.*expanded: *\([0-9]*\).*/\1/p')
-+		;;
-+	*)
-+		BUFSIZE=$(echo "$BUF_RAW" | awk '{print $1}')
-+		;;
-+esac
-+
-+if [ -z "$BUFSIZE" ] || [ "$BUFSIZE" -lt 2048 ]; then
-+	echo "FAIL: buffer_size_kb is '$BUF_RAW', expected >= 2048"
-+	exit 1
-+fi
-+
-+echo "PASS: cmdline-03-trace-buf-size"
-+exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
-new file mode 100644
-index 000000000000..53a65b55f7a7
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-04-trace-options.sh
-@@ -0,0 +1,23 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026, Google LLC.
-+# Check trace_options= kernel command-line setting
-+TRACEDIR="/sys/kernel/tracing"
-+
-+if [ ! -f "$TRACEDIR/trace_options" ]; then
-+	echo "FAIL: trace_options file does not exist"
-+	exit 1
-+fi
-+
-+if ! grep -qw "sym-addr" "$TRACEDIR/trace_options"; then
-+	echo "FAIL: sym-addr option is not set in trace_options"
-+	exit 1
-+fi
-+
-+if ! grep -qw "verbose" "$TRACEDIR/trace_options"; then
-+	echo "FAIL: verbose option is not set in trace_options"
-+	exit 1
-+fi
-+
-+echo "PASS: cmdline-04-trace-options"
-+exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
-new file mode 100644
-index 000000000000..d6de9f6e2090
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-05-trace-clock.sh
-@@ -0,0 +1,19 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026, Google LLC.
-+# Check trace_clock= kernel command-line setting
-+TRACEDIR="/sys/kernel/tracing"
-+
-+if [ ! -f "$TRACEDIR/trace_clock" ]; then
-+	echo "FAIL: trace_clock file does not exist"
-+	exit 1
-+fi
-+
-+if ! grep -q '\[global\]' "$TRACEDIR/trace_clock"; then
-+	CLOCK=$(cat "$TRACEDIR/trace_clock")
-+	echo "FAIL: trace_clock is not set to global ($CLOCK)"
-+	exit 1
-+fi
-+
-+echo "PASS: cmdline-05-trace-clock"
-+exit 0
-diff --git a/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
-new file mode 100644
-index 000000000000..aae7f0a86d81
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/boottime/tests/cmdline-06-trace-instance.sh
-@@ -0,0 +1,24 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026, Google LLC.
-+# Check trace_instance= kernel command-line setting
-+TRACEDIR="/sys/kernel/tracing"
-+
-+if [ ! -d "$TRACEDIR/instances/bar" ]; then
-+	echo "FAIL: trace instance bar does not exist"
-+	exit 1
-+fi
-+
-+if [ ! -d "$TRACEDIR/instances/bar/events/sched/sched_switch" ]; then
-+	echo "FAIL: event sched_switch does not exist in instance bar"
-+	exit 1
-+fi
-+
-+ENABLE=$(cat "$TRACEDIR/instances/bar/events/sched/sched_switch/enable")
-+if [ "$ENABLE" != "1" ]; then
-+	echo "FAIL: event sched_switch is not enabled in instance bar ($ENABLE)"
-+	exit 1
-+fi
-+
-+echo "PASS: cmdline-06-trace-instance"
-+exit 0
++# Trigger reboot to restart into second boot
++echo b > /proc/sysrq-trigger 2>/dev/null || echo c > /proc/sysrq-trigger 2>/dev/null || true
++sleep 5
++echo "FAIL: reboot trigger failed on first boot"
++exit 1
 
