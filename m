@@ -1,109 +1,192 @@
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D6B47FB03
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084D039020C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786551248; cv=none; b=DTDVTubSJsR3DoAR2bVAGVPEeCScmcylghF2HVZ89Bf4EFhSugEDc96p62QKPpYmNqLQaZANu/zKt+dC3Q1TOxsHktolOY+/T7liuUmDx9ILR14tk6WpeYcCRkhILKNAbhkulJK0mXFgydbnTc3mHIF1VI0JvdT8XUqlalCzH7g=
+	t=1786551905; cv=none; b=JzR7lQKAZqEo2EHn+DR4FkUDgHqrtiRLodLxMyM1ZH50ZxZ6j0TfTYx40/nqdLFb96yGiK9Mpp64T5sz77cfWkxm7LCoyOZEroQkwW0wQxm2BoNQRbh2AbIHT+oRrAAFMca94Fw5jq3fd0Lq7iAXZHgHIF8tx4nLPykyTJPWSN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786551248; c=relaxed/simple;
-	bh=ogKVkojYhIgKo43aQZCA93Ay/iBAXTOBSm+XGGonPWw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tyBuz//BgBLxRwwYOcGMGLJxJRGbjhUN+527wqVR33YGdGoBNCcAye+Ak/5J7UuyDLrU2dv3eULg/A09n23irlAWOOhTH1Ur6vBWiI1s9EqqjtbIG+KJK3qsKv2+qj/N+2jDisMQoulTn1PLRgz5RRHJctrUcEO0hcT6dOHvYQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l2nYXHPb; arc=none smtp.client-ip=209.85.128.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1786551905; c=relaxed/simple;
+	bh=rFMl85qJmcHjjGeAgxWcY6kB9vl960BAGwGsi5M7O2s=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=cV1+Zkxj3jU9bHopT6U7xGcTx2TB5UNeVB3ySnwW6GsoiHqvYOnIQmUhNuH7JWt76+FIkr75AAeTVRiJ8RCIL6RwBYumQ2OyZ9ttZtPE7RrBfNTDMh7MjpfFTYy7SiBIrJvtGVPenzDBoAm+V1J8AYewfe/lATqpjsGs5OH4tVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6RkPJgu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l2nYXHPb"
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49955a9dbcdso7165285e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 09:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786551245; x=1787156045; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=QJOSwOXHKUDqnuUug/nFET9BDR+g78Qi6YXpVdn7CdU=;
-        b=l2nYXHPbrJ+Hnwi9udPWT9YBEG27j1YvLL3fuSclkYuUdBsxmnD0avI+Ak8123jtTi
-         mbDKdV3JbiDXRKXFTGNyxBIyyVju9WgYPJo1y3c8NNdYih7fPDmDa4CLj2P5UOnxxVIS
-         zr6xqqIn9W3JMm/F8eCc6Jbd5gPZYI9WRNJsVOkKLkDV2fbKZU6aAJRAbUZksnMzr0+B
-         uQ6c/C+vnwUtp3sCpmnPTFHm4MYdVYeb89uiPUJ+RdaJSVRwm3VxmewpMM+Jq3ucdGPu
-         5s+D6Ht+S+53gN0qgfj8NkiBm2+tAG7BBoCvJ8Vn0C0shH2UXjAuXer1BXYmeqWrBjQg
-         nVvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786551245; x=1787156045;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=QJOSwOXHKUDqnuUug/nFET9BDR+g78Qi6YXpVdn7CdU=;
-        b=BsSnWG9ZNPuGCtfys0kksb5jaFAG5KV867WLHDo9FkR62YrNg4BzeYKtusEin1I4z+
-         G28NJLdwKG+ek3Bjd0kOFP9ev/NzuHyj5yBVTdrgi18RqCUVj81QKfHjCXIunH5I/uh3
-         5seNxbUf6cps9oRgN0vA1pYzNN3rOhGo+ewKzAoO9NmgbVPKxiLZ5T9rDACw8fAocqiQ
-         SM9M8A4AycQfe9hdJlQc/scO3o9t5DXGDXf2T37jtX+YC54XV0pwdFd+KXH3F+Avhk7e
-         vJW30j7xjZWYwQKGP8mG7daIu8kn2s2ibrTBjQp5sd4teK0A3eR3yUeZt7mW2dLiA06W
-         5Yvw==
-X-Forwarded-Encrypted: i=1; AHgh+RryrZuikkCXY2t9I7qdGdsCg4WCvQxYxUuvVZ88CRSLS2llMZR0993lRz6NNFZEeJU7oSAdZjunfNQMKefChbCLITw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZxWa43V0O1L2r2R/o25xL0wm8p+zDMnU81/jyN+rwoPz6x33S
-	bBYf0s3n1/GD+wCm/qmJUxbnjVf/aQrAd6M42F21qnd1+4XitP5ei4xrezwx3puaAgyNY3LY114
-	RKzjAlSNYNM9k+G8xxco+/A==
-X-Received: from wmap7.prod.google.com ([2002:a7b:cc87:0:b0:495:443b:34da])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:c490:b0:499:5b04:6920 with SMTP id 5b1f17b1804b1-4997c126712mr80031445e9.16.1786551244500;
- Wed, 12 Aug 2026 09:14:04 -0700 (PDT)
-Date: Wed, 12 Aug 2026 17:13:40 +0100
-In-Reply-To: <20260812161340.2417322-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6RkPJgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4FC1F000E9;
+	Wed, 12 Aug 2026 16:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786551903;
+	bh=qwDQIVD4fUgnGGiOUZd+vCDyZDqOmS/CfqAfXm2FdnU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=H6RkPJguDKfcpnT4IaC3ODJ1e0pAitum59pcZWuT/xgeEem/jDZMi2u51/AvPgPzo
+	 Dg8ynVVS1QE7ft22vQtP4Pzci76qAE/QGdOapdteWtQlcJPATmIR26800IzvZDGIQH
+	 1l8cBv5FAAhPf2XTA9bB9Y4+Edu9TpxdjvcogEzLO03mqIysKnX84rwPVB2JiSqAjZ
+	 nv8VK4N5nbg18LbIiDbYUzpOOlyjulrPIcsRIoR4EhErhb791rpg1DnvqjMT6+NMHd
+	 IBQYmS5i0VGBbtMSPRUPFIg6W5LQeaCiHHu7AnNtWlRozHn3PcNsJGeET8Sn+jHW8A
+	 IGXzm19uoYu2g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 02/18] tracing/remotes: Release tracefs,eventfs on
+ registration failure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260812161340.2417322-3-vdonnefort@google.com>
+References: <20260812161340.2417322-1-vdonnefort@google.com>
+ <20260812161340.2417322-3-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 16:25:03 +0000
+Message-Id: <20260812162503.6A4FC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260812161340.2417322-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260812161340.2417322-19-vdonnefort@google.com>
-Subject: [PATCH v5 18/18] Documentation/kernel-parameters: Add trace_remote
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-The trace_remote parameter allows configuring a trace remote on
-registration. The syntax is similar to trace_instance.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+New issues:
+- [High] Expanding the global `trace_remotes_lock` over the external driver=
+ callback `cbs->init()` introduces a severe risk of deadlocks and priority =
+inversion.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3d35270dddef..c8470050b285 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7787,6 +7787,25 @@ Kernel parameters
- 			See also Documentation/trace/ftrace.rst "trace options"
- 			section.
- 
-+	trace_remote=[remote-info]
-+			[FTRACE] Configure a trace remote instance at boot.
-+			Format: <name>[^option1[^option2...]][,event1[,event2...]]
-+
-+			Supported options:
-+
-+			dump_on_panic   - Enable dumping the trace buffer on
-+					  panic.
-+			dmesg           - Redirect tracing output to dmesg.
-+			buf_size=<size> - Set the trace buffer size (e.g. 2M).
-+			poll=<ms>       - Set the trace remote polling interval
-+					  in milliseconds.
-+
-+			Events are a comma-separated list of events to enable.
-+			If events are specified, tracing is automatically enabled.
-+
-+			Multiple remotes can be configured by specifying this
-+			parameter multiple times.
-+
- 	trace_trigger=[trigger-list]
- 			[FTRACE] Add an event trigger on specific events.
- 			Set a trigger on top of a specific event, with an optional
--- 
-2.55.0.691.gc56d675ccc-goog
+Pre-existing issues:
+- [Critical] A Time-Of-Check to Time-Of-Use race condition between `trace_r=
+emote_tracefs_open()` and concurrent unregistration leads to a Use-After-Fr=
+ee.
+--
 
+--- Patch [2]: [PATCH v5 02/18] tracing/remotes: Release tracefs,eventfs on=
+ registration failure ---
+commit 70ddc6ce63b80a301a72ec3efb7683b32447865f
+Author: Vincent Donnefort <vdonnefort@google.com>
+
+tracing/remotes: Release tracefs,eventfs on registration failure
+   =20
+In trace_remote_register(), if registration of events or the init
+callback fails, the created tracefs and eventfs directories are leaked.
+Release the entire eventfs and tracefs hierarchy on trace_remote
+registration failure.
+
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index ce2d517183b79..0384277070b9e 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+
+[ ... ]
+
+> @@ -972,10 +990,9 @@ static int trace_remote_register_events(const char *=
+remote_name, struct trace_re
+>  int trace_remote_register(const char *name, struct trace_remote_callback=
+s *cbs, void *priv,
+>  			  struct remote_event *events, size_t nr_events)
+>  {
+> -	struct trace_remote *remote;
+> +	struct trace_remote *remote __free(kfree) =3D kzalloc_obj(*remote);
+>  	int ret;
+> =20
+> -	remote =3D kzalloc_obj(*remote);
+>  	if (!remote)
+>  		return -ENOMEM;
+> =20
+> @@ -986,13 +1003,15 @@ int trace_remote_register(const char *name, struct=
+ trace_remote_callbacks *cbs,
+>  	mutex_init(&remote->lock);
+>  	init_rwsem(&remote->reader_lock);
+> =20
+> -	if (trace_remote_init_tracefs(name, remote)) {
+> -		kfree(remote);
+> -		return -ENOMEM;
+> -	}
+> +	guard(mutex)(&trace_remotes_lock);
+> +
+> +	ret =3D trace_remote_init_tracefs(name, remote);
+> +	if (ret)
+> +		return ret;
+> =20
+>  	ret =3D trace_remote_register_events(name, remote, events, nr_events);
+>  	if (ret) {
+> +		trace_remote_remove_tracefs(remote);
+>  		pr_err("Failed to register events for trace remote '%s' (%d)\n",
+>  		       name, ret);
+>  		return ret;
+> @@ -1000,13 +1019,16 @@ int trace_remote_register(const char *name, struc=
+t trace_remote_callbacks *cbs,
+> =20
+>  	ret =3D cbs->init ? cbs->init(remote->dentry, priv) : 0;
+
+[Severity: High]
+Does holding the global trace_remotes_lock while calling the external init()
+callback introduce a risk of deadlocks?
+
+Because trace_remotes_lock was acquired via guard(mutex) earlier in this
+function, calling an opaque external callback with this global subsystem lo=
+ck
+held establishes an inverted lock dependency.
+
+If the teardown path of the external driver takes its own locks before
+unregistering the trace remote, could this result in an ABBA deadlock?
+
+>  	if (ret) {
+> +		trace_remote_unregister_events(remote);
+> +		trace_remote_remove_tracefs(remote);
+>  		pr_err("Init failed for trace remote '%s' (%d)\n", name, ret);
+> -	} else {
+> -		guard(mutex)(&trace_remotes_lock);
+> -		list_add(&remote->node, &trace_remotes);
+>  	}
+> =20
+> -	return ret;
+> +	list_add(&remote->node, &trace_remotes);
+> +	retain_and_null_ptr(remote);
+> +
+> +	return 0;
+>  }
+
+[Severity: Critical]
+This is a pre-existing issue, but is there a race condition between
+trace_remote_tracefs_open() and concurrent unregistration?
+
+In trace_remote_tracefs_open(), the code checks if the remote object exists
+in the global trace_remotes list:
+
+kernel/trace/trace_remote.c:trace_remote_tracefs_open() {
+    ...
+    guard(mutex)(&trace_remotes_lock);
+
+    /* i_private is either a struct trace_remote or a struct remote_event */
+    list_for_each_entry(r, &trace_remotes, node) {
+        if (r =3D=3D i_private)
+            return 0;
+    ...
+}
+
+However, the lock is dropped on return without incrementing the object's
+reference count.
+
+Then in trace_open(), the unprotected remote pointer is dereferenced:
+
+kernel/trace/trace_remote.c:trace_open() {
+    ...
+    ret =3D trace_remote_tracefs_open(inode, filp);
+    if (ret)
+        return ret;
+
+    if (!(filp->f_mode & FMODE_READ))
+        return 0;
+    ...
+    guard(mutex)(&remote->lock);
+    ...
+}
+
+If a concurrent unregistration acquires trace_remotes_lock, removes the
+remote, and frees it after trace_remote_tracefs_open() returns but before
+trace_open() acquires remote->lock, will this result in a use-after-free
+regression?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812161340.2417=
+322-1-vdonnefort@google.com?part=3D2
