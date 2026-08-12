@@ -1,175 +1,226 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733983803D3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 04:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9336E386C3F;
+	Wed, 12 Aug 2026 04:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786507505; cv=none; b=NI7RLAHRqzwkpkSv0/kqY8UUHbLuydxVvvKsEZN0kVC9qbftmmx7D8mxfuAI5x9mONaidnIcGWO21anmmyQDoa4JjfwfbcFI3tCKCLTVeNUZQW/ChG96Ii75HQA2aZtBwD0VwhultVeNrbpgJ0Mug7C9BOId4SOfGcnabxGzRpo=
+	t=1786507578; cv=none; b=JvQA9mgSjs+iVP3m6J49WxXBZUrJ5GlOawkzlnUaK5/hS0C16tf2UwHgYZtx20Ypw1TJLAN4Y383dyIK5UdCOhnptfJdBcfhy8P9Bu0kuhNRmEpARH8bqqDjJf7N1nir/WRhiuHPPG1vTvDIOuUSJ8Svlv6Q4dorE3bNr0BqVvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786507505; c=relaxed/simple;
-	bh=/YZeZwwFa5TpuUOSd/UoIZuT/s/ltTcBxeK9N3tzamw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FUQOXk9HzSTzQzbqju3reYVMadI7ZeCY1HMPEOlL5dV36rcr6zRb2n6BRq9YX3UMI4VTza4S2gwTu5yRyl7C36wLrJN7j49ZiZVHF6JWvnkQ0fKxgI2y+O1X5gR4kyonmdubFv030Ed25KVeZYRsTZMCA+dh19URYNu85P72BlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X7QxQXIj; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786507578; c=relaxed/simple;
+	bh=IHjypAHsNKjpNGDu8aCRCeoUOQ9LFF7rYITg0sTzbDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMEU3qYwQ81aYugOdHHMotCOiJ8XFRIe8UwXUHNqEnuw3UT9Hg/hwu+m6WrKzyL7An4A5lppJQd03Q6RQEsLxkrxH+5WBBAUT8Xh5nxAXCpSDdKScGVKffIsUjr9LC2r9tLKZeM1f8Z4xIfbZvTaP4WXrxkhKRhH3cykj92sh9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Rg9GEe8O; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X7QxQXIj"
-Message-ID: <11079006-dc15-4474-bd35-a8386b42d34f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786507500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+DcwB1fUEJ4620xXoPomLg/qv9ihwgzgXsYTlPEqa/8=;
-	b=X7QxQXIj7DgxQVB/lhL7xRYIFBynStEzLeTq9JKpbKlfNHkhr/Rm/eCTNYVyCmuoD1L7o1
-	6S4l+w5mj9I46Z2Um/DHfWuyLHI2FZ/kNyITdJgWLP7y8kc8h8HCvlRu0ceK4NZX5gdGp5
-	fMQwzyVEk6u1hMEl6CegmrKCNr7gixQ=
-Date: Wed, 12 Aug 2026 12:04:32 +0800
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Rg9GEe8O"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B56A31682;
+	Tue, 11 Aug 2026 21:06:10 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 018DD3F86F;
+	Tue, 11 Aug 2026 21:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786507574; bh=IHjypAHsNKjpNGDu8aCRCeoUOQ9LFF7rYITg0sTzbDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rg9GEe8ORnIQSzAFzPE9Q3CsOniFeZz3B5DAx1vSbU2ayamMlqi+pdI/abA/SWthR
+	 JHd2kD7S7LWpcNIoT65928j5y1fwj3S00eMdlQR9LYSfVNqmGWvx2Jo8nRyP2/XrUC
+	 occW+1n2ku+jahULG28ttJSOr0S4qPMQj+wCR/cQ=
+Date: Wed, 12 Aug 2026 09:36:11 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	David Hildenbrand <david@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
+	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, 
+	pfalcato@suse.de, agordeev@linux.ibm.com, ryan.roberts@arm.com, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	damon@lists.linux.dev
+Subject: Re: [PATCH 3/9] mm: name pointers to copied PTE values ptentp
+Message-ID: <hwkurkpobxysltkid5523qxndufebqqmat4qjaq6zhwno2drmh@efwoegm2huo6>
+References: <20260806083926.1807279-1-usama.anjum@arm.com>
+ <20260806083926.1807279-4-usama.anjum@arm.com>
+ <e7osakog3yvdewhdlrk3bsp27pwt2nnhroeb7zihlfxyjotarb@rwxkcb25crh3>
+ <b21c4cc9-84a3-429e-8156-0b9967b2f133@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 06/13] bpf: Add tracing_multi link fdinfo support
- for bpf progs
-To: bot+bpf-ci@kernel.org, bpf@vger.kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
- martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
- jolsa@kernel.org, emil@etsalapatis.com, ihor.solodrai@linux.dev,
- qmo@kernel.org, shuah@kernel.org, yatsenko@meta.com,
- avinash.duduskar@gmail.com, a.s.protopopov@gmail.com, ameryhung@gmail.com,
- jordan@jrife.io, rongtao@cestc.cn, eyal.birger@gmail.com,
- pulehui@huawei.com, tanjingguo@huawei.com, malin89@huawei.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, martin.lau@kernel.org, clm@meta.com
-References: <20260809150111.45000-7-leon.hwang@linux.dev>
- <f227b719d241d4cc87954725d9ddaab8377c9991c7b6b03aaef4aa5d098fcca7@mail.kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <f227b719d241d4cc87954725d9ddaab8377c9991c7b6b03aaef4aa5d098fcca7@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b21c4cc9-84a3-429e-8156-0b9967b2f133@arm.com>
 
-On 10/8/26 00:20, bot+bpf-ci@kernel.org wrote:
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index a805a5b73303f..80928401830c7 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -3759,26 +3759,46 @@ static int bpf_tracing_multi_link_fill_link_info(const struct bpf_link *link,
->>  }
->>
->>  #ifdef CONFIG_PROC_FS
->> +static const char *bpf_prog_func_name(struct bpf_prog *prog, u32 btf_id)
->> +{
->> +	const struct btf *btf = prog->aux->btf;
->> +	const struct btf_type *t;
->> +
->> +	t = btf_type_by_id(btf, btf_id);
->> +	if (!t || !btf_type_is_func(t))
->> +		return "";
->> +
->> +	return btf_name_by_offset(btf, t->name_off);
->> +}
->> +
->>  static void bpf_tracing_multi_show_fdinfo(const struct bpf_link *link,
->>  					  struct seq_file *seq)
->>  {
->>  	struct bpf_tracing_multi_link *tr_link =
->>  		container_of(link, struct bpf_tracing_multi_link, link);
->>  	bool has_cookies = !!tr_link->cookies;
->> +	bool has_progs = !!tr_link->progs;
->>
->>  	seq_printf(seq, "attach_type:\t%u\n", tr_link->link.attach_type);
->>  	seq_printf(seq, "cnt:\t%u\n", tr_link->nodes_cnt);
->>
->> -	seq_printf(seq, "%s\t %s\t %s\t %s\n", "obj-id", "btf-id", "cookie", "func");
->> +	seq_printf(seq, "%s\t %s\t %s\t %s\n", has_progs ? "prog-id" : "obj-id", "btf-id", "cookie",
->> +		   "func");
->>  	for (int i = 0; i < tr_link->nodes_cnt; i++) {
->>  		struct bpf_tracing_multi_node *mnode = &tr_link->nodes[i];
->> +		u64 cookie = has_cookies ? tr_link->cookies[i] : 0;
->>  		u32 btf_id, obj_id;
->>
->>  		bpf_trampoline_unpack_key(mnode->trampoline->key, &obj_id, &btf_id);
->> +		btf_id = has_progs ? (u32) mnode->trampoline->key : btf_id;
->                         ^^^^
+On Tue, Aug 11, 2026 at 03:09:07PM +0100, Muhammad Usama Anjum wrote:
+> On 11/08/2026 11:58 am, Anshuman Khandual wrote:
+> > Subject line is very confusing. Perhaps something like the following.
+> > 
+> > mm: Rename pointers to copied PTE values as ptentp
+> > 
+> > But even 'copied PTE values' is not very clear as well.
 > 
-> This isn't a bug, but since bpf_trampoline_unpack_key() only masks off
-> bit 31, which is never set for prog targets, does this re-assignment
-> change anything, or could the unpacked value be used directly?
+> Something like:
 > 
-> bpf_trampoline_unpack_key() already sets btf_id = key & 0x7FFFFFFF, and
-> bit 31 is only set by the !tgt_prog branch of bpf_trampoline_compute_key()
-> (the kernel-BTF case).
+> mm: rename pointers to logical PTE values as ptentp
 > 
-> In the has_progs case the key was built as:
+> or
 > 
->     ((u64)tgt_prog->aux->id << 32) | ids[i]
-> 
-> and ids[i] must be a valid BTF type id (<= BTF_MAX_TYPE, 0xfffff) or
-> bpf_check_attach_target() would have rejected the attach, so (u32)key
-> and the unpacked btf_id are always equal here.
-> 
+> mm: rename pointers to software PTE values as ptentp
 
-Good catch.
-
-Will drop this line.
-
->> +		if (has_progs)
->> +			seq_printf(seq, "%u\t %u\t %llu\t %s\n",
->> +				   obj_id, btf_id, cookie,
->> +				   bpf_prog_func_name(tr_link->progs[i], btf_id));
->> +		else
->> +			seq_printf(seq, "%u\t %u\t %llu\t %pS\n",
->> +				   obj_id, btf_id, cookie,
->> +				   (void *) mnode->trampoline->ip);
->>
->>  		cond_resched();
->>  	}
-> 
-> The commit message shows the sample fdinfo output but doesn't say much
-> about the implementation or why this change is needed. In particular:
-> 
->> Show the target bpf prog info in the fdinfo.
->>
->> $ cat /proc/self/fdinfo/13
->> pos:    0
->> flags:  02000000
->> mnt_id: 18
->> ino:    1045
->> link_type:      tracing_multi
->> link_id:        9
->> prog_tag:       9a7f9e3ab6f138ab
->> prog_id:        25
->> attach_type:    61
->> cnt:    2
->> prog-id  btf-id  cookie  func
->> 21       4       16706819        target_1
->> 22       5       16706819        target_2
-> 
-> This isn't a bug, but could the changelog say why the trampoline ip is
-> not usable as the func column for prog targets (tr->ip is 0 for JIT'd
-> prog addresses), rather than mostly showing the resulting output? It
-> also doesn't mention that the first column header changes from "obj-id"
-> to "prog-id" for prog-target links.
-> 
-
-Hmm, will describe the change in the commit msg.
-
-Thanks,
-Leon
+Yeah but we need to get these nomenclature right at the very beginning
+and also probably get it documented some where.
 
 > 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> > 
+> > On Thu, Aug 06, 2026 at 09:38:41AM +0100, Muhammad Usama Anjum wrote:
+> >> The hw_pte_t conversion must retain pte_t * for pointers to standalone PTE
+> > 
+> > We need to explain what is `standalone PTE values` first.
+> > 
+> >> values. Name the value parameters ptentp in the install_pte callback,
+> >> write_protect_page(), and guard_install_set_pte() so the later mechanical
+> >> conversion can distinguish them from pointers to PTE table storage.
+> >>
+> >> Some functions already use the ptentp name, including:
+> >> - madvise_folio_pte_batch()
+> >> - folio_pte_batch_flags()
+> >> No need to convert them.
+> >>
+> >> This is a naming-only change.
+> > 
+> > Small nit - s/naming-only/rename
 > 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/31320427087
+> I'll fix it.
+> 
+> > 
+> > The commit message needs rewrite clearly explaining the following details
+> > 
+> > - What are standalone PTE values
+> Logical/software PTE is correct and better name here.
 
+Right but we need to define these early on and then be consistent in their usage
+afterwards in the entire series.
+
+> 
+> > - How these are different from HW pgtable pointers
+> > - Change is just a rename for pointers into such 'standalone PTE'
+> > - These renamed 'ptentp' here would be used for skip or replaced during
+> >   upcoming mechanical change via a script
+> > - No functional changes intended
+> I'll update message in more elaborate way.
+> 
+> > 
+> >>
+> >> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> >> ---
+> >> Changes since RFC v1:
+> >> - Update the description for the architecture opt-in conversion.
+> >> ---
+> >>  include/linux/pagewalk.h | 2 +-
+> >>  mm/ksm.c                 | 4 ++--
+> >>  mm/madvise.c             | 4 ++--
+> >>  3 files changed, 5 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+> >> index b41d7265c01bc..c34d826c5e4a2 100644
+> >> --- a/include/linux/pagewalk.h
+> >> +++ b/include/linux/pagewalk.h
+> >> @@ -89,7 +89,7 @@ struct mm_walk_ops {
+> >>  		       struct mm_walk *walk);
+> >>  	void (*post_vma)(struct mm_walk *walk);
+> >>  	int (*install_pte)(unsigned long addr, unsigned long next,
+> >> -			   pte_t *ptep, struct mm_walk *walk);
+> >> +			   pte_t *ptentp, struct mm_walk *walk);
+> >>  	enum page_walk_lock walk_lock;
+> >>  };
+> >>  
+> >> diff --git a/mm/ksm.c b/mm/ksm.c
+> >> index ad05d7791307e..11d50518d02e9 100644
+> >> --- a/mm/ksm.c
+> >> +++ b/mm/ksm.c
+> >> @@ -1292,7 +1292,7 @@ static u32 calc_checksum(struct page *page)
+> >>  }
+> >>  
+> >>  static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
+> >> -			      pte_t *orig_pte)
+> >> +			      pte_t *ptentp)
+> >>  {
+> >>  	struct mm_struct *mm = vma->vm_mm;
+> >>  	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, 0, 0);
+> >> @@ -1371,7 +1371,7 @@ static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
+> >>  
+> >>  		set_pte_at(mm, pvmw.address, pvmw.pte, entry);
+> >>  	}
+> >> -	*orig_pte = entry;
+> >> +	*ptentp = entry;
+> >>  	err = 0;
+> >>  
+> >>  out_unlock:
+> >> diff --git a/mm/madvise.c b/mm/madvise.c
+> >> index 07a21ca31bad4..c324cc991f841 100644
+> >> --- a/mm/madvise.c
+> >> +++ b/mm/madvise.c
+> >> @@ -1101,12 +1101,12 @@ static int guard_install_pte_entry(pte_t *pte, unsigned long addr,
+> >>  }
+> >>  
+> >>  static int guard_install_set_pte(unsigned long addr, unsigned long next,
+> >> -				 pte_t *ptep, struct mm_walk *walk)
+> >> +				 pte_t *ptentp, struct mm_walk *walk)
+> >>  {
+> >>  	unsigned long *nr_pages = (unsigned long *)walk->private;
+> >>  
+> >>  	/* Simply install a PTE marker, this causes segfault on access. */
+> >> -	*ptep = make_pte_marker(PTE_MARKER_GUARD);
+> >> +	*ptentp = make_pte_marker(PTE_MARKER_GUARD);
+> >>  	(*nr_pages)++;
+> >>  
+> >>  	return 0;
+> >> -- 
+> >> 2.47.3
+> >>
+> > 
+> > How did we ensure that the above changes are comprehensive and nothing
+> > else got left in here ?
+> 
+> The order of patches and even the code was found out after adding hw_pte_t
+> structure. Then everything was converted, until some pte_t pointers were left
+> which didn't require conversion.
+> 
+> If something is left, we'll get build errors when we build a converted architecture.
+> So the branch mentioned in the cover letter when built, would produce build errors.
+> (Those patches would be sent separately, after finalization of this series).
+> 
+> Whenever I'm rebasing (on mm-new), I'm rerunning Coccinelle script to see if new code
+> has arrived which requires conversion or renaming.
+
+But in the early patch where the manual renaming was done for the script to
+pick up 'ptentp' patterns needs to be audited again.
+
+> 
+> -- 
+> Thanks,
+> Usama
+> 
