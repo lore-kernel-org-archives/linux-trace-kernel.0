@@ -1,130 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2EE453A2F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 15:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526384302F0;
+	Wed, 12 Aug 2026 15:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786549615; cv=none; b=UH6iSLu04R+0+vpQYIWV1fEZq+9UEGhtJ0RX9D6EbAtDnSOVwpLoFPDL5OC67LnwI7VXLpF60F+k3nTd2OpEWP03k2Vsx+uJw/t52GDO98mc94nfVqhwGG4gk897CZwLeXROOFZIzybLqJDGw81tBwvYqIo4Wzz//EE3MVk4XxQ=
+	t=1786549616; cv=none; b=OgYlAcdziWcTGWe+tPg7Xhx7o8WTP/g3QMAsLGZzWjftn7kT65Egzkgp/BGGLFEfAs0QBdzTyfe+FkwJRIFYw5hGCRth2zwvE144xiECUgLZ/GqAh6KNpdIk2bzeIqvUY9eWjnHaqnKI/lhlIJFtpi9emL2O/YkXrc5k7mooGsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786549615; c=relaxed/simple;
-	bh=jE6fdAmoyNVYryR5FQ29q9PuqK7fyQWERI0+PxvjnaI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sebm0CEjYKTEBZRbKfzFcWitsQmYzKMqnwReTZF689+CMfC1eYTD3pPAGXxQhbz7kdPGdB6imo51WjegX96Luiwo3xKgN0/54jvU8L43QvPuXguWoTS2UiJkn7UGsuIXC7tpVS0HYu//keakxWonOW/JKoz1dTpfv1FYiCCknfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxFwpiTD; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxFwpiTD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87BD11F00A3D;
-	Wed, 12 Aug 2026 15:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786549613;
-	bh=FLvxi43sS/jlFGwfnrN8oCmUbWal9PTDWjD3V1GTcW4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WxFwpiTDh3DPc5UD3VbVaUMNKGtrv09A1BBTeyBHLTuLMR7+j4a8KRuURrYP7MoyM
-	 LMmPUh1B+EpC4BMT/4J3pOcZsN981OP+WCPKaRlvoH7iRsTHYaG4Z0U0bFIGEGeos+
-	 inkA2bVjt8w5fFf7dde06GtjcY75EmxO3VUd+kbEt5SJAloyV455TksEbOXv3bmRyk
-	 Au4GSUxJlBYvn0E3IxPWoDpJSTuXVRHy4IZBjAFj/pzhXqgyU7bUy6xGnigIH2zQRD
-	 fn1bI78IezN2MCQ1GGWQtexpUN1TjnbSgd2dhs43/Y6BeA/xbYih3RMefBJUPm2wJo
-	 dAwEW/KUxD7Mg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 4/9] ring-buffer: Fix subbuf resize race in
- ring_buffer_alloc_read_page()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260812153311.2328812-5-vdonnefort@google.com>
-References: <20260812153311.2328812-1-vdonnefort@google.com>
- <20260812153311.2328812-5-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 15:46:53 +0000
-Message-Id: <20260812154653.87BD11F00A3D@smtp.kernel.org>
+	s=arc-20240116; t=1786549616; c=relaxed/simple;
+	bh=t18RAuHb52fghdO6FyOpnMWRuYBTGZoEnry749spOZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ADd+VmkcYcCPdWo+zJsl550yf9tmbK2xtKGi9Bcgup8c2QBtsDti+lC1/PHSkfviPwoGpx3QhOe0ZvNa42TXGijH5Zc4zs1Tv8JbfyN+dFu8hp3GPDX+HiXnRPOILG7xHIz2uAJDckPKt6iXQQemJgcMTzzSymv4cmBCiZEAkpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 595761A0220;
+	Wed, 12 Aug 2026 15:46:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 2ED3C1C;
+	Wed, 12 Aug 2026 15:46:50 +0000 (UTC)
+Date: Wed, 12 Aug 2026 11:47:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
+Cc: Xiang Gao <gxxa03070307@gmail.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, gao xu <gaoxu2@honor.com>,
+ =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [External Mail]Re: [RFC] tracing: aggregate ring-buffer usage
+ statistics
+Message-ID: <20260812114704.2f61bc5a@gandalf.local.home>
+In-Reply-To: <cd441eb194d54265b1bf9ab659716c45@xiaomi.com>
+References: <20260811114818.1449933-1-gaoxiang17@xiaomi.com>
+	<20260811100830.7976bbe8@gandalf.local.home>
+	<cd441eb194d54265b1bf9ab659716c45@xiaomi.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: jj55tpuq734zrntr4mkk48tuo8hzoa9h
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 2ED3C1C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+by/rQIKubySb9lhljso6RTy3PoJgX2ew=
+X-HE-Tag: 1786549610-224787
+X-HE-Meta: U2FsdGVkX18gjr0dOC6PWIz5eVBeLbyJ3izL+U0m82/9r/HPau+llgEP75MBoxAEPEQTN/l3MX1VSvnWeNMGowQmOk+rObggFZl8nJwt4FPQoNCEIgeTvgDE1Fb+gHa/LihN1JW8MBdo1DSj3eCveydHIz9AAwWnvZNTt4vt2rsrX6rr3z2AT6+IZUIbYaA1WSJMiQyvLgawQ97FeJdiM6h1JqGOC+LOQpXlTtRQ5+7OoJYKbYdKNNkXyZH4phaVasIl8mtCSiGHKQJ5sLk6/DKt0FC1/qFCHhrqiscSVoJFndeCv/HgUcAfdKH0he/qHfOvLx1Dh1cwXJtaiPfWTNWoyI42XrYC
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Wed, 12 Aug 2026 13:21:29 +0000
+=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
 
-Pre-existing issues:
-- [High] The patch is an incomplete fix for a race condition in `ring_buffe=
-r_alloc_read_page()`. While it ensures newly allocated pages use `bpage->or=
-der`, it entirely misses the branch where `cpu_buffer->free_page` is reused=
-. This allows an undersized cached page to be paired with a newer, larger `=
-bpage->order`, leading to heap buffer overflows during reads and out-of-bou=
-nds frees when the page is released.
---
+> Thanks, Steve.
+>=20
+> For the initial implementation, I plan to add:
+>=20
+>   /sys/kernel/tracing/trace_stats/total_memory_kb
+>=20
+> The file would use an extensible key/value format. Initially it would
+> report the ring-buffer data capacity:
+>=20
+>   total:                   395664
+>   ring_buffer:             395664
+>   ring_buffer_live:        395544
+>   ring_buffer_snapshot:       120
 
---- Patch [4]: [PATCH v4 4/9] ring-buffer: Fix subbuf resize race in ring_b=
-uffer_alloc_read_page() ---
-commit 28754c82212e5979b25cf6fac815748ff021a277
-Author: Vincent Donnefort <vdonnefort@google.com>
+You can rename the above to:
 
-ring-buffer: Fix subbuf resize race in ring_buffer_alloc_read_page()
+   total:
+   buffers_mem:
+   snapshot_buffers_mem:
 
-ring_buffer_alloc_read_page() is racy with ring_buffer_subbuf_order_set,
-it can allocate a reader page with an outdated order. This isn't a big
-issue, the user can still re-allocate a new reader page and try again.
+No need to use "ring" and it keeps consistent with "buffer_size_kb".
 
-However, what is more problematic is if the value of subbuf_order
-changes in the middle of ring_buffer_alloc_read_page(). In that case,
-bpage->order might not match the actual allocated memory.
+I added the "mem" part to distinguish the difference between these numbers
+and the buffer_size_kb, as these numbers are about total memory whereas
+the "buffer_size_kb" is about usable memory.
 
-Use bpage->order for the allocation to prevent this race.
+There's already a total for all memory listed. We don't need to have a
+total for the "live" and "snapshot".
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 97449423d3a68..94552a433228d 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7018,7 +7018,7 @@ ring_buffer_alloc_read_page(struct trace_buffer *bu=
-ffer, int cpu)
->  	if (bpage->data) {
->  		rb_init_data_page(bpage->data);
+>=20
+> Here, ring_buffer is the sum of ring_buffer_live and
+> ring_buffer_snapshot. The values cover the global trace array and all
+> tracing instances across all tracing CPUs.
+>=20
+> Additional accounted categories, such as event memory, could be appended
+> later and included in total. Per-CPU statistics could be exposed
+> separately under trace_stats/per_cpu/cpuN/ to avoid mixing aggregate and
+> per-CPU values in one file.
 
-[Severity: High]
-This is a pre-existing issue, but does this path leave bpage->order
-mismatched with the actual allocation size of cpu_buffer->free_page?
+Agreed, this file should exist in the cpuN/ directories and be only for
+those instances.
 
-If ring_buffer_subbuf_order_set() updates buffer->subbuf_order to a larger
-size before clearing cpu_buffer->free_page, ring_buffer_alloc_read_page()
-might read the new larger order into bpage->order, but then claim an older,
-smaller cpu_buffer->free_page:
+>=20
+> Userspace would parse fields by name and ignore unknown fields, so new
+> categories can be added without changing the existing format.
 
-kernel/trace/ring_buffer.c:ring_buffer_alloc_read_page() {
-    ...
-	bpage->order =3D order;
-    ...
-	if (cpu_buffer->free_page) {
-		bpage->data =3D cpu_buffer->free_page;
-		cpu_buffer->free_page =3D NULL;
-	}
-    ...
-}
+Right. I would expect additional items to be added here.
 
-Could this lead to an overflow of dpage->data when reading events?
+>=20
+> Does this initial format look reasonable?
+>=20
 
-kernel/trace/ring_buffer.c:ring_buffer_read_page() {
-    ...
-			memcpy(dpage->data + pos, rpage->data + rpos, event_size);
-    ...
-}
+Yes, thanks for doing this.
 
-It also appears this could cause an out-of-bounds free of bpage->data when
-the page is released, since it frees using the mismatched bpage->order
-instead of the page's actual allocation order.
-
-Should we also verify the cached page's actual order matches bpage->order
-before claiming it?
-
->  	} else {
-> -		bpage->data =3D alloc_cpu_data(cpu, cpu_buffer->buffer->subbuf_order);
-> +		bpage->data =3D alloc_cpu_data(cpu, bpage->order);
->  		if (!bpage->data) {
->  			kfree(bpage);
->  			return ERR_PTR(-ENOMEM);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812153311.2328=
-812-1-vdonnefort@google.com?part=3D4
+-- Steve
