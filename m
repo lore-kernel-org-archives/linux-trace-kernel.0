@@ -1,130 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884E12045AD
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 15:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A4138944D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 16:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786550204; cv=none; b=qIQ75c5SP3+9KQ5vruAlzn4l0baaN9CBc0jp6uGPtq4Na47omUSpOTyxz7CCxiorHDX6KDCBPyMRriSbWS7tJVx0IKDFizRPHEuXHXXu7Cz/XI6amwlozk5OYwf3Nw1Y+sM0gLSLMa/vm9zSYTQZxKzocfk+Nfcwq1k12tZGFfk=
+	t=1786551228; cv=none; b=a88MydF0m1WP1ooTFp+jh5dG1hpam6JFdg5GL9x9scfRERUqLCXpyBna2payZle7yCDBenqbgiBwWqGUPuAIV86JPt9E6M1+apiid5uFWNfgvvYpUM+o8NO9JbDLs+bhN+PVLhYcTNdg8gimivTR4qUxGkEWYpmLqNr0KaxcXio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786550204; c=relaxed/simple;
-	bh=EaUKbF5RZ3WFlP/1JzmNFLPxjRuQ6JVGrkR3oA7YjSU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Y6bdiBb1D9ltM8ybogIBH2IsDdv19eeNv8dSUd3WsYmnu1Nhkny3OCXClBay5oNTT9b5vLrB2L1X7cax7PH8DDrXzYyeCProANHyGaV+fjCY/2G5a7h+O+8sPIfgwcT/P2Q07LdMijU33IDCjJJqEfPN73fvEXUVTEUIyZubC0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAejKfJx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786551228; c=relaxed/simple;
+	bh=zlJiy7Lskp7fPiaYc1w00lksFFmHcJT5rhoz2SKnPME=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=C3rCTB/XovXo2bGvRlH1Ei62V9boDTrsapSkdHZj2GM4vYSsOeknC3hhFWLDJVfiEgAQBo1yEwX/QAQNF3XiDcHBVZE/5SiBokjOgd0ec86dwNytKfSH5rwOy7q5enNNTsoZIe4HIbLzybotuMtKWhE1kurJILb3FSFLE0TyFJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OJnoBjzY; arc=none smtp.client-ip=209.85.128.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAejKfJx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A6D71F000E9;
-	Wed, 12 Aug 2026 15:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786550203;
-	bh=COae/Ley4u52IOteiX2roidTVK1mdJAxoUuwrd029L8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EAejKfJxZPpU9n7/PsnGoiMTiqQPO9c7Tb7OAbI+/CSBBMRfRh88VPeSqxC2pCpot
-	 btCxNNaCbDOsfGqj5ZTSK6rtLc2TV+cXZd8LTKr0ifAuTcXhZ/cNlM+dSlYbXX20Di
-	 IpUEMUkT8EgAPwj+edbEATTG2ihZaCkAj1EVQq22SEjsT0erDq/IFVeovYUOmwQsSw
-	 YX9pc6rlpEEV3e8KQ6YTgULG3in6q7QgvN4MbbIta/Z/FV0KACaJpKDi4pS+kcOR6Y
-	 BlrKfS3yZFIIuem5gDq43wDzrl7nfNQf9uU8KeJMudAuS/q/tk5g8ZO6q/h06SrmpP
-	 aF9dZLSQ0J3yg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 6/9] ring-buffer: Dynamically calculate max_data_size
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260812153311.2328812-7-vdonnefort@google.com>
-References: <20260812153311.2328812-1-vdonnefort@google.com>
- <20260812153311.2328812-7-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 15:56:42 +0000
-Message-Id: <20260812155643.1A6D71F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJnoBjzY"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490a767c7dcso9675895e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 09:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786551224; x=1787156024; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xrE2u64S82F1C4AwUwPP20oILB/i2V5EILdyGWgL5to=;
+        b=OJnoBjzY8s70K0MuPANn+odPwhKBSdLM+QutqNMt6fpUuk0RONZkDAMIMtxNt3KS3q
+         pJRzic41rKt/nj3xtKvWglLk5aPTHPzX/5Zbf9+0t4dOCk5dsCNdflAjTFrW2MN6TLe5
+         yOtslnxyB0J/PgUcuo3AFXqAse0ntSgcgZ2UbrSQ72PF9J4oJdcBGx072JuXnL18Bs56
+         TycY/TNiFvLmxjsZYcUcqzKr8X57O+Y1YR9kyjYy4GrxIz+dvvulkpOBaqq77mugrvBj
+         3C1rzuDe2HxmMcaMwN+MQwJ4KEon4oaiQo8Y1S8S2V0kV1fW3A7cdYPND77kqWlCznsf
+         vMow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786551224; x=1787156024;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xrE2u64S82F1C4AwUwPP20oILB/i2V5EILdyGWgL5to=;
+        b=XOhQUubw75+HzkkgOtaSwwSRWD71UbBWLx33QI+vUr6+0qio+Z5uJLc52yJimBpCLr
+         Y2TMWZ/SPSdzQ4LBUvRKjKNrh47F4VmOslt+muwOi6R8NUZDfoVZo18LtPIUatyE03uW
+         APbByLsm3IVEwnrxq+wHTrur8y2n0qPN+KTlkmbQLqiOb8sQrZYqqgxJmNH0TT6yBGCs
+         OQWOtlh4N4TZu4MDggaqXTd2wLcyRWdzZnt79dx6ys2DlsitX2tRcgcXFQzw2mJL6xta
+         tXFkeeYVfk5jQOrk89YP+NyyMhVLJAeRqggCu7Ojm2Me3zkgcqGSJqkLIfX9oH2Iou6D
+         td0g==
+X-Forwarded-Encrypted: i=1; AHgh+RpsCvvB+1BXdd75kA9ySIYRJqWnNetTY4HGYNS0CQjOWqCVDgp57ip6VkOFBx/8REUY/8SVw7ED6H3NIbNYhyuJjCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKbKYzk59mNsfS3oV5yaDTiDgWOa5yRjxuWgTCdgT7cO42UL7h
+	0ee+YuedaYSMIhImUN98t8vXgKObp08d2KFIAYcnAPrmKnqC3XdGN4yBUR+UKs0QsT7kehvb0Dm
+	jfTq0AeI0ZC2bL7jukcrGeQ==
+X-Received: from wrpr8.prod.google.com ([2002:adf:f708:0:b0:443:10cf:2903])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:6012:b0:499:81ae:1020 with SMTP id 5b1f17b1804b1-49981ae1070mr635165e9.11.1786551224266;
+ Wed, 12 Aug 2026 09:13:44 -0700 (PDT)
+Date: Wed, 12 Aug 2026 17:13:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
+Message-ID: <20260812161340.2417322-1-vdonnefort@google.com>
+Subject: [PATCH v5 00/18] tracing/remotes: Add printk, dump_on_panic and boot parameters
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+This series extends the recently introduced trace remotes
+infrastructure, bringing useful features for developers:
 
-Pre-existing issues:
-- [Critical] Concurrent execution of ring_buffer_alloc_read_page() and ring=
-_buffer_subbuf_order_set() leads to buddy allocator corruption and potentia=
-l OOB memory access due to a mismatched page order when taking cpu_buffer->=
-free_page.
---
+  * dump_on_panic: Dump the trace remote buffer on system panic.
+  * dmesg: Redirect remote events to dmesg.
+  * trace_remote=: Configure a trace_remote from the commandline.
+  * poll_ms: Modify the polling period.
 
---- Patch [6]: [PATCH v4 6/9] ring-buffer: Dynamically calculate max_data_s=
-ize ---
-commit a7794ac711440e6d89d8e099e4a88707ad083ed7
-Author: Vincent Donnefort <vdonnefort@google.com>
+It also brings a couple of optimisations:
 
-ring-buffer: Dynamically calculate max_data_size
+  * In-header compressed length support for small events.
+  * Single work thread for remote polling.
 
-The ring buffer order can be dynamically modified and temporarily
-disables writing to do so. It is therefore safe to use the updated value
-to calculate the maximum event size which can be written onto the ring
-buffer.
+And some misc improvements:
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index f62d6853ee5c0..64bf4ac853f57 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -598,7 +598,6 @@ struct trace_buffer {
->  	struct ring_buffer_meta		*meta;
-> =20
->  	unsigned int			subbuf_order;
-> -	unsigned int			max_data_size;
->  };
-> =20
->  static __always_inline unsigned int rb_subbuf_size(struct trace_buffer *=
-buffer)
+  * Use kstrtobool where possible
+  * Free resources on remote registration failure
 
-[ ... ]
+Changelog:
 
-[Severity: Critical]
-This is a pre-existing issue, but can concurrent execution of
-ring_buffer_alloc_read_page() and ring_buffer_subbuf_order_set() lead to bu=
-ddy
-allocator corruption and potential out-of-bounds memory access?
+v5:
 
-When a user reads /sys/kernel/tracing/per_cpu/cpuX/trace_pipe_raw, it calls
-ring_buffer_alloc_read_page(). If another thread concurrently resizes the r=
-ing
-buffer via /sys/kernel/tracing/buffer_subbuf_order, it calls
-ring_buffer_subbuf_order_set().
+  * Use seq_buf_str() for safe, properly terminated trace_seq extraction. (Steven)
+  * Remove destructive dmesg -c from selftests and rely on timestamp matching instead. (Steven)
 
-In ring_buffer_subbuf_order_set(), buffer->subbuf_order is updated lockless=
-ly
-with respect to the reader:
+v4 (https://lore.kernel.org/all/20260804140333.797210-1-vdonnefort@google.com/):
 
-kernel/trace/ring_buffer.c:ring_buffer_subbuf_order_set() {
-    ...
-	buffer->subbuf_order =3D order;
+  * Rebase on 7.2-rc6
+  * Use trace_append_boot_param() to parse cmdline options.
+  * Fix trace_remote_iterator cleanup order for non-consuming iterators
+    (Sashiko).
 
-	/* Make sure all new buffers are allocated, before deleting the old ones */
-	for_each_buffer_cpu(buffer, cpu) {
-    ...
-}
+v3 (https://lore.kernel.org/all/20260721103603.342266-1-vdonnefort@google.com/):
 
-Before ring_buffer_subbuf_order_set() reaches its second loop to clear
-cpu_buffer->free_page, ring_buffer_alloc_read_page() can fetch the new
-order, grab the old page from cpu_buffer->free_page, and assign the new
-order to bpage->order:
+  * Make sure dmesg and panic handlers are using null-terminated
+    trace_seq.
+  * Make struct trace_remote more compact
+  * Fix dump_on_panic test unloaded case (Sashiko)
+  * Rebase on 7.2-rc4
 
-kernel/trace/ring_buffer.c:ring_buffer_alloc_read_page() {
-    ...
-	if (cpu_buffer->free_page) {
-		bpage->data =3D cpu_buffer->free_page;
-		cpu_buffer->free_page =3D NULL;
-	}
-    ...
-}
+v2 (https://lore.kernel.org/all/20260605163825.1762953-1-vdonnefort@google.com/):
 
-When this page is later freed or swapped into the ring buffer, could this
-cause memory corruption because writers believe the subbuffer size is the
-new order, leading them to overwrite past the old order page?
+Sashiko had a few spot-on comments on the v1 which forced me to heavily
+re-arrange the series, so I thought it'd be alright to send a v2
+already including those changes.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812153311.2328=
-812-1-vdonnefort@google.com?part=3D6
+  * dump_on_oops -> dump_on_panic
+  * printk -> dmesg
+  * Allow to configure poll_ms
+  * Make the ring_buffer_iter functions panic-friendly
+  * Gate tracefs .open on remote registration (Sashiko)
+  * Use irqsave for reader lock (Sashiko)
+  * Fix iter locking for TRI_DMESG (Sashiko)
+  * Yield in the dmesg work (Sashiko)
+
+v1 (https://lore.kernel.org/all/20260602171146.2238998-1-vdonnefort@google.com/)
+
+Vincent Donnefort (18):
+  tracing/remotes: Gate tracefs files opening on trace remote
+    registration
+  tracing/remotes: Release tracefs,eventfs on registration failure
+  tracing/remotes: Use kstrtobool for boolean tracefs files
+  tracing/remotes: Use a single per-remote polling work
+  tracing/simple_ring_buffer: Add support for compressed length
+  tracing/remotes: Add dmesg tracefs file
+  tracing/remotes: selftests: Add a test for the dmesg tracefs file
+  tracing/remotes: selftests: Prefix hypervisor folder
+  ring-buffer: Use irqsave for the reader lock in
+    ring_buffer_poll_remote
+  ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
+  ring-buffer: Add ring_buffer_read_remote_meta_page()
+  ring-buffer: Add kerneldoc for ring_buffer_poll_remote
+  tracing/remotes: Add dump_on_panic tracefs file
+  tracing/remotes: selftests: Add a test for the dump_on_panic tracefs
+    file
+  tracing/remotes: Add poll_ms tracefs file
+  tracing/remotes: Add trace_remote cmdline options
+  Documentation: tracing/remotes: Add detailed tracefs layout
+  Documentation/kernel-parameters: Add trace_remote
+
+ .../admin-guide/kernel-parameters.txt         |  19 +
+ Documentation/trace/remotes.rst               |  66 +-
+ include/linux/ring_buffer.h                   |   1 +
+ kernel/trace/ring_buffer.c                    |  88 +-
+ kernel/trace/simple_ring_buffer.c             |  25 +-
+ kernel/trace/trace_remote.c                   | 817 +++++++++++++++---
+ .../buffer_size.tc                            |   0
+ .../test.d/remotes/00hypervisor/dmesg.tc      |  11 +
+ .../remotes/00hypervisor/dump_on_panic.tc     |  11 +
+ .../{hypervisor => 00hypervisor}/hotplug.tc   |   0
+ .../{hypervisor => 00hypervisor}/reset.tc     |   0
+ .../{hypervisor => 00hypervisor}/trace.tc     |   0
+ .../trace_pipe.tc                             |   0
+ .../{hypervisor => 00hypervisor}/unloading.tc |   0
+ .../selftests/ftrace/test.d/remotes/dmesg.tc  |  81 ++
+ .../ftrace/test.d/remotes/dump_on_panic.tc    |  51 ++
+ .../selftests/ftrace/test.d/remotes/functions |   2 +
+ 17 files changed, 1032 insertions(+), 140 deletions(-)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/buffer_size.tc (100%)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/hotplug.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/reset.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace_pipe.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/unloading.tc (100%)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
+
+
+base-commit: db2ddb87143519e20a95aa36c60b36107b736a58
+-- 
+2.55.0.691.gc56d675ccc-goog
+
