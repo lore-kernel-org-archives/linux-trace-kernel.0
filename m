@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4BD36B935;
-	Wed, 12 Aug 2026 08:16:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC97E3B14C2;
+	Wed, 12 Aug 2026 08:23:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786522605; cv=none; b=QnX1vWZA0fTIOWlt3aYEk81tcIL9pHikh7rdp43Vqs56sqDDpjhgWWyFB17PM8HO3HXdRpJzJbRROn71mmHA8P27a+tG/fpYfQZiHpB5yHmS44mL1AbPt0bUwLz7asUf7mH4523/3BwEzbiaNBctpbU22Bqoage8nUnQ+0yRdnU=
+	t=1786523036; cv=none; b=sNuzP5zVIlnIu3lP6IWyR+/dH4PwcwTCz58SM1Bmm+gG0F1HbzQ9JP6CwAgJ3ihdF00QrNTv2N//ga1a5SqovSM7rcrl5wLDhhvMQ8w/y9Rf1+FQlGy1lc8cFBQ/D0yeH0/wDQMgzq1SY/MyHLPbiDdzZ80WrNsH+oJVWw6d1F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786522605; c=relaxed/simple;
-	bh=JSuQnVhQTnRB2r+8uupOQXcxSlYbUTdL6DRqoze9JUU=;
+	s=arc-20240116; t=1786523036; c=relaxed/simple;
+	bh=W+jcq+2Wzamwh76nz0OcGlGI0ou5c5gwJ2B1PP/p9zc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dnnrsyo+ho0+ssf3E5hgB4Jv13dFUvtTT+4d7308i5lfhgdBku4+plc0J/Gq3xYAuSxqAHlvzF1wKIbuIwpOp9N7ENOsdDiFdzL1i/1JDRPmS3F0XBs5rHdhC7VA2FajHTYs8eynpH+b/nxB5Aj4WIC81Y2sOiNLrtL6mnwbqSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nKSh2SIs; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=TirvHX9G45P1K+ny1Xl+XasBe/95vN9znAsCuxImeHOO8rSqSQB658p2L/70850kIFt5Bhou6tfCW/wdD7f+PjyJ8ePB+Mbd7Azv9zTZJO4UsnrKzQLtEU5VGSl8SrjpEGrSTP/4UcUGmTzujoksBupcY34QvA0ANaTBYIooGpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iwAyO77L; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nKSh2SIs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iwAyO77L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786522604; x=1818058604;
+  t=1786523034; x=1818059034;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=JSuQnVhQTnRB2r+8uupOQXcxSlYbUTdL6DRqoze9JUU=;
-  b=nKSh2SIs8qW8afsCqKJT+tvZA77i0d11BdiUKgC2jbTeaIwfmBsmTn4f
-   p9JOkQdl87Ycsc+g171QlKSNhitSY7ARVoRlb2nt/CQ60sC9c5+XBQtsb
-   BxzXLcX0Vc8XDAMs3LDTPcn4o379R4L1gEENkqLup+913SgJVLm+KfE4R
-   QYPXyvUZD3aAq9/8c7US/1i75JIMd/2yBwtKM6Hz9uK65JttOa0UjfKqy
-   6OlaNlT4+RUI0CK9ZgsGUiiGcIsjC3jm4PLjNSToTDWSK8sn/rS6Syd1a
-   7XCnIb/5O+Iz4YwMpI/p1TlGGKMjGf5pOvrseXOSNspHxJmWo3LRJEuh1
-   g==;
-X-CSE-ConnectionGUID: mIQFyaG8RFyO4UGqUX8i9A==
-X-CSE-MsgGUID: CM7e6rWAS2WomG6Z57ucFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="97414132"
+  bh=W+jcq+2Wzamwh76nz0OcGlGI0ou5c5gwJ2B1PP/p9zc=;
+  b=iwAyO77Lo6lBb6+g4b2tI7LUg2VT6cotOs2bWrp4VmWDIAASSOMBrT5U
+   qIIRuv+/SQNvzUU4ihHx+QN4SjUC/jm9ZCNtdtCB2tA5/yFTdJVeiGZyh
+   xC48v+DpXl2gAZ3fEM0goc2rFtVeSyyY9rV0zci2ydjsglRLjtdaTnSNj
+   HLK7z3qVSICsRWxGL25m5oZN0eZ2LWj2ifw3CIeV2IfwiXX6zwPYIVcqS
+   ussQYa9GvThMdSsKLsPJNvthSMhyDMan40zsS1b4ijc6EEerosC0hNyoQ
+   42bMXuxtOzhcmIH6ZWnKlE4KRMoM/s66C9oL+c9QD7TX8P95O4do4R5Zq
+   w==;
+X-CSE-ConnectionGUID: ZueSlsXgTXap1rgwctY1NA==
+X-CSE-MsgGUID: nNxRgY5aSEeJgWHFQEABVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="97414832"
 X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
-   d="scan'208";a="97414132"
+   d="scan'208";a="97414832"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 01:16:43 -0700
-X-CSE-ConnectionGUID: BL1IvoWBSoi/4zQSJDcW7A==
-X-CSE-MsgGUID: BLvW57sVSIqi8lRVaUvP2Q==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 01:23:53 -0700
+X-CSE-ConnectionGUID: BVDpwXjLQ5mrX6YTBE6jjA==
+X-CSE-MsgGUID: wd0espIgTjCF/EZNhS5SlA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
-   d="scan'208";a="257378842"
+   d="scan'208";a="257380624"
 Received: from unknown (HELO [10.238.208.98]) ([10.238.208.98])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 01:16:30 -0700
-Message-ID: <84ad91f5-1006-410b-94a4-01e7dcc6fcbd@intel.com>
-Date: Wed, 12 Aug 2026 16:16:27 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 01:23:34 -0700
+Message-ID: <2f68b143-f3e1-48b7-8666-52072249e0be@intel.com>
+Date: Wed, 12 Aug 2026 16:23:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 01/41] KVM: guest_memfd: Use kvm_mem_is_private() when
- populating guest_memfd memory
+Subject: Re: [PATCH v10 04/41] KVM: Enumerate support for PRIVATE memory iff
+ kvm_arch_has_private_mem is defined
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  david@kernel.org, jmattson@google.com, jthoughton@google.com,
@@ -87,47 +87,76 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-1-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-4-2fc18ee6d3ba@google.com>
 Content-Language: en-US
 From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-1-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-4-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
 > From: Sean Christopherson <seanjc@google.com>
 > 
-> Using kvm_mem_is_private() when populating guest_memfd instead of using an
-> open coded equivalent.  In addition to simplifying the populate code *now*,
-> this avoids the need to provide a range-based gmem lookup API in the future
-> as well.
+> Explicitly guard reporting support for KVM_MEMORY_ATTRIBUTE_PRIVATE based
+> on kvm_arch_has_private_mem being #defined in anticipation of tracking
+> PRIVATE vs. SHARED state per-guest_memfd, not per-VM (to allow in-place
+> conversion).
 > 
-> No functional change intended.
+> guest_memfd support for memory attributes is expected to be unconditional
+> to avoid yet more macros (all architectures that support guest_memfd are
+> expected to use per-gmem attributes at some point), at which point
+> enumerating support KVM_MEMORY_ATTRIBUTE_PRIVATE based solely on memory
+> attributes being supported by KVM at-large would result in a system-scope
+> check (NULL @kvm) over-reporting support on arm64.
 > 
-> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Give architectures full control over overriding the default definition of
+> kvm_arch_has_private_mem() by removing the coupling with
+> CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
+> 
+> In a later patch, kvm_arch_has_private_mem() will be defined based on
+> whether architectural features are compiled in, and made orthogonal to
+> CONFIG_KVM_VM_MEMORY_ATTRIBUTES.
+> 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
 Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 
 > ---
->   virt/kvm/guest_memfd.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
+>   include/linux/kvm_host.h | 2 +-
+>   virt/kvm/kvm_main.c      | 2 ++
+>   2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index b596486d184ca..a11cf6dc785da 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -811,9 +811,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 3e86cdd00e59b..e3666d0b40b74 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -722,7 +722,7 @@ static inline int kvm_arch_vcpu_memslots_id(struct kvm_vcpu *vcpu)
+>   }
+>   #endif
 >   
->   	folio_unlock(folio);
+> -#ifndef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+> +#ifndef kvm_arch_has_private_mem
+>   static inline bool kvm_arch_has_private_mem(struct kvm *kvm)
+>   {
+>   	return false;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e3a77d1e6d8ae..560ff05e95959 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2422,8 +2422,10 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+>   #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+>   static u64 kvm_supported_mem_attributes(struct kvm *kvm)
+>   {
+> +#ifdef kvm_arch_has_private_mem
+>   	if (!kvm || kvm_arch_has_private_mem(kvm))
+>   		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +#endif
 >   
-> -	if (!kvm_range_has_memory_attributes(kvm, gfn, gfn + 1,
-> -					     KVM_MEMORY_ATTRIBUTE_PRIVATE,
-> -					     KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
-> +	if (!kvm_mem_is_private(kvm, gfn)) {
->   		ret = -EINVAL;
->   		goto out_put_folio;
->   	}
+>   	return 0;
+>   }
 > 
 
