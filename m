@@ -1,76 +1,138 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C868356A37;
-	Wed, 12 Aug 2026 13:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693623FD96E;
+	Wed, 12 Aug 2026 14:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786542658; cv=none; b=JNWTP1PHlZsC2UPqpW/dEsnMzjR+d9ZD67YbBhJAktVvwmCMEKxzHrJYROznWTvbACLlnwPi7KU7Sj0O0h88lr3kj5dKwcsjxsoHyzlti8S6QM40ODeWiPhJHIiRnQEm4A+G1Xc9g+0EbLg+YxSSk8uAAwHZkWvG7R+yjDOhnH0=
+	t=1786546570; cv=none; b=uV8Q7fMKTFxokV8A8/NeqTw1Rbw84wtXOynqqy2iliziSETfmH642oQpB3aAkAUdOwwcwpf/8CNgTenxEMlMDY4I2IavLmM1uMX0YzPRYqsuhOJmtFajR259RRdzN2dWWc8pmRqqFxoJbBDwhkTERlH/E3wJpkqZzds0f8x0+CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786542658; c=relaxed/simple;
-	bh=M1qhVYA36Uv5lcNYDYO4xqqSGlN6e51AlM4xoxnJvew=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CG3ywCWQQRdJ30cG+Jay9GZZY8kLDJrmwA7SfGFoJ5fVxIYLShYOBjG/dml5Wzk9YK9/ad5aRRKconp8y0CqsVgy59ZFZXIheiGq4XfHNLltxrMKojTwnRiurCUtit1r6geC4pDz0bE+MYtgXMobdyCZyjJUf7z3qylbriB4lFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 8407EC015A;
-	Wed, 12 Aug 2026 13:50:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id B855F17;
-	Wed, 12 Aug 2026 13:50:52 +0000 (UTC)
-Date: Wed, 12 Aug 2026 09:51:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Michael Wu <michael@allwinnertech.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] tracing: Fix race between update_event_fields and,
- event_define_fields
-Message-ID: <20260812095106.6b2e76df@gandalf.local.home>
-In-Reply-To: <f7b0e5a6-c38d-634e-4353-6d1bb5dcd12e@allwinnertech.com>
-References: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
-	<20260810104525.6a3a2e6c@gandalf.local.home>
-	<3f27bacf-5f01-8cb5-a04c-824ca7b2c13f@allwinnertech.com>
-	<20260811090045.2a3cbed9@gandalf.local.home>
-	<f7b0e5a6-c38d-634e-4353-6d1bb5dcd12e@allwinnertech.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786546570; c=relaxed/simple;
+	bh=Rnb6ZAP/we5Dfpv1iauF0xj3H8QBRP5MNFuriepJ7a0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ooXmOaWQA3fy4C0KzcdX3xjQeljDmeSZi3Nw1QziDUMs6zMduifChoe0fRUsg5GBNp42YxSzR7gRhmzBoFnRHWTs/mG7+NDoHegT8cb5Mf6vfLiV2FPJvoql8ty4dorcyjF0y/gKnTtGdmGqqiNJcC8Roi+lKroaynOsvA+Z9Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDLue4Ne; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDLue4Ne"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519451F00A3A;
+	Wed, 12 Aug 2026 14:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786546557;
+	bh=PE3ckqAzJuLdyX7hrN6QogEst9yy454JJ106p3AyeTE=;
+	h=From:Subject:Date:To:Cc;
+	b=WDLue4NeSrHVW1tkDGnCMGXhRN6X7/4ofiJXlUAoYM1LNNRjapvIpdvUvNcrJCw0u
+	 Yo2mc5RRZy3p3IYPz0p1Co6ZNlgym1lLEk9tN5AoF6KYHe6lsfkBXALZJQXvSSEd1y
+	 U1yYaEnOu3dPN0HnsLtO6JOpLK2flPV2UgDeAgEt4E/TT4h1GR18DcDWNVrd8+F3GL
+	 KVArsyfbrrrvcaco9GRQSRBLJILEj+fhALmhiAVsrt+084iaWbMj9vrfBr+6C9n1K/
+	 go82qOw8OZUD59I1zegOWrZ/OimhwllbTqgprA4A5MLKw0Y9xPvDnxEbJPwGc2Hgw6
+	 7HmkLvezzrzHw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 00/11] mptcp: misc. features for v7.3
+Date: Wed, 12 Aug 2026 16:55:35 +0200
+Message-Id: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: B855F17
-X-Stat-Signature: bosoajoosq4woka3a7p57cimmqaofztd
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/hUtLLlMXjwBzUEQZ6Vaj8jo7isCPh2W0=
-X-HE-Tag: 1786542652-341870
-X-HE-Meta: U2FsdGVkX1+SGOdG+5V8Hmxe8k4ZmINEZB75l6rLsLVj6UbBc6Tvh+iuH3URtgVv2vbAoo571Noa/k4QcPo39HI3mnq2QPvCiiV69hR7qtW3TpZJ9mqgMZei2rovhJaAwsnAbr5Hp0HMIMF7fUbYU6dw1PzUFoX0VTupzqJQ1yU8MBpnchQSOMNVR8HItZfnm9NWqubW3zSoy6MbHjBloqxYam8cUI4XpcDnuI8rAw2I9z27N6tNe4fF1sVHKdHBf90uObEP9AZvipia9rfIhDw9PuR8Hir1m9bbwqmtLuVB+EByMn+3Xmy3o776WFJJF5ugXt4Lpc8WXu02JTte+BIdy7HNqXpTWClZlQOTAS8oSAGZuhfgZTYJBn6jzkZ0
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWMQQrCMBBFr1Jm7UASaSpeRVykyVRHaAyZUQqld
+ zdWXPzF4/PeCkKVSeDcrVDpzcLP3MAeOoj3kG+EnBqDM86bkzWYSdsWxbloLDizRJwoKA54xNF
+ 4nyy51A8BWqJUmnjZ8xf4m3D9PfIaHxT1W4dt+wClI/NKigAAAA==
+X-Change-ID: 20260810-net-next-mptcp-misc-feat-7-3-b066d1e2d57a
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Tao Cui <cuitao@kylinos.cn>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org, 
+ Kalpan Jani <kalpan.jani@mpiricsoftware.com>, 
+ Shardul Bankar <shardul.b@mpiricsoftware.com>, 
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+ Jiangshan Yi <yijiangshan@kylinos.cn>, Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2905; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Rnb6ZAP/we5Dfpv1iauF0xj3H8QBRP5MNFuriepJ7a0=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJqOov4ootaeUyEDCxbLy88oBh+We2Wo3m234yD2bfvt
+ lwMeN/QUcrCIMbFICumyCLdFpk/83kVb4mXnwXMHFYmkCEMXJwCMBFxL0aGX/nTT10J1X0QdF50
+ rVVY7fMf5S3f3VZa3DA35dPILHtgyMgwY+nJc7/XapboV+Z9/PFbYEay7NlT1wwV59pfqOqaLGv
+ MAgA=
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Wed, 12 Aug 2026 10:14:24 +0800
-Michael Wu <michael@allwinnertech.com> wrote:
+This series contains a few independent new features, and small fixes for
+net-next:
 
-> On 8/11/2026 9:00 PM, Steven Rostedt wrote:
-> > This is still way too verbose. Is this AI written? If so, AI is *not* your friend.  
+- Patch 1: Add WARN_ON_ONCE guards around extra_subflows to catch issues
+  with this counter, similar to what is done with other PM counters.
 
-> This commit was written by me, not by AI. I apologize for wasting your time. Thank you for rewriting the change.
+- Patches 2-3: Follow-up patches to remove data_ack field from struct
+  mptcp_ext -- now unused after recent fixes -- and makes a userspace PM
+  helper static.
 
-Heh, AI tends to be very verbose, which is why I was thinking it was AI.
+- Patch 4: Honour tcp_rto_{min_us,max_ms} sysctls for MPTCP-level
+  retransmit timers like with DATA_FIN's and fallback timeout.
 
-> > Why are the priorities of the notifiers important here?  
+- Patches 5-6: Add per-event MIB counters for MPTCP_RST_EMPTCP resets to
+  help to spot such situations in production.
 
-> I probably wanted to describe the entire process, so I've gone on to say too much.
+- Patches 7-9: Small pcap-related improvements in the selftests.
 
-Yeah, adding more than what is needed distracts from the issue.
+- Patch 10: Fix compiler warning in the selftests.
 
-> > Less is more when it comes to describing a bug.  
+- Patch 11: Avoid a buffer overflow when misusing the mptcp_diag tool
+  from the selftests.
 
-> Got it.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (2):
+      mptcp: remove unused data_ack from struct mptcp_ext
+      selftests: mptcp: fix const qualifier warnings in strchr usage
 
-Great. And thanks for the fix.
+Jiangshan Yi (1):
+      selftests: mptcp: diag: fix stack buffer overflow in get_subflow_info()
 
--- Steve
+Kalpan Jani (1):
+      mptcp: honour configured min/max RTO in retransmit paths
+
+Matthieu Baerts (NGI0) (4):
+      mptcp: pm: userspace: make remove_addr_entry static
+      selftests: mptcp: connect: test name in pcap file
+      selftests: mptcp: simult_flow: test name in pcap file
+      selftests: mptcp: pcap: drop most of the payload
+
+Shardul Bankar (2):
+      mptcp: add per-event MIB counters for MPTCP_RST_EMPTCP resets
+      selftests: mptcp: check per-event MPTCP_RST_EMPTCP counters
+
+Tao Cui (1):
+      mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow
+
+ include/net/mptcp.h                                |  4 -
+ include/trace/events/mptcp.h                       |  6 +-
+ net/mptcp/mib.c                                    |  7 ++
+ net/mptcp/mib.h                                    |  7 ++
+ net/mptcp/pm.c                                     |  3 +-
+ net/mptcp/pm_userspace.c                           |  7 +-
+ net/mptcp/protocol.c                               | 23 +++++-
+ net/mptcp/protocol.h                               |  5 +-
+ net/mptcp/subflow.c                                | 10 +++
+ tools/testing/selftests/net/mptcp/mptcp_connect.c  |  4 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  8 +-
+ tools/testing/selftests/net/mptcp/mptcp_diag.c     |  3 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 95 +++++++++++++++++++++-
+ tools/testing/selftests/net/mptcp/simult_flows.sh  | 11 ++-
+ 14 files changed, 163 insertions(+), 30 deletions(-)
+---
+base-commit: ac155a26750a595703e7dadff84735456d75a479
+change-id: 20260810-net-next-mptcp-misc-feat-7-3-b066d1e2d57a
+
+Best regards,
+--  
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
