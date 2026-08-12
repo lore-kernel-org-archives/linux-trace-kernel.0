@@ -1,113 +1,146 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526384302F0;
-	Wed, 12 Aug 2026 15:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF95453A2F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 15:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786549616; cv=none; b=OgYlAcdziWcTGWe+tPg7Xhx7o8WTP/g3QMAsLGZzWjftn7kT65Egzkgp/BGGLFEfAs0QBdzTyfe+FkwJRIFYw5hGCRth2zwvE144xiECUgLZ/GqAh6KNpdIk2bzeIqvUY9eWjnHaqnKI/lhlIJFtpi9emL2O/YkXrc5k7mooGsE=
+	t=1786549621; cv=none; b=OAUi8jRnKZTaUlK9T78i0BIxdGB79SJglJOxchk3/TmJClf9VcUIQT0Cu/DWPg5x0gDyLxz3uqI0n0Fbxrfc5wgvJPjkpLp7EdT/qV45+8X4fBAirF8gUPqnmZadDE8xT719RopKAEUFmDt1tXJS+1xqZ6SY9FXE+9Ep4Y1QAEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786549616; c=relaxed/simple;
-	bh=t18RAuHb52fghdO6FyOpnMWRuYBTGZoEnry749spOZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ADd+VmkcYcCPdWo+zJsl550yf9tmbK2xtKGi9Bcgup8c2QBtsDti+lC1/PHSkfviPwoGpx3QhOe0ZvNa42TXGijH5Zc4zs1Tv8JbfyN+dFu8hp3GPDX+HiXnRPOILG7xHIz2uAJDckPKt6iXQQemJgcMTzzSymv4cmBCiZEAkpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 595761A0220;
-	Wed, 12 Aug 2026 15:46:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 2ED3C1C;
-	Wed, 12 Aug 2026 15:46:50 +0000 (UTC)
-Date: Wed, 12 Aug 2026 11:47:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
-Cc: Xiang Gao <gxxa03070307@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <ljs@kernel.org>, gao xu <gaoxu2@honor.com>,
- =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [External Mail]Re: [RFC] tracing: aggregate ring-buffer usage
- statistics
-Message-ID: <20260812114704.2f61bc5a@gandalf.local.home>
-In-Reply-To: <cd441eb194d54265b1bf9ab659716c45@xiaomi.com>
-References: <20260811114818.1449933-1-gaoxiang17@xiaomi.com>
-	<20260811100830.7976bbe8@gandalf.local.home>
-	<cd441eb194d54265b1bf9ab659716c45@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786549621; c=relaxed/simple;
+	bh=YXpGHBRzju+EFLrNueJ4YK+WqWGwIFpEVlA8gngs3C4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=LG2+EcjTY28xfAzmEPccpmdwmU/i3qfgFH1+9zFBlulgaFGJAhMwNk1YC1stDy+ztb4io9Yi6kdN0s5zpXXznwRgJFTPoiGmY6ZA5zYeQ1ub/MXuv3eJ4AGh+0r0aZDXi+712A2YOnqv1OWTl79XuZWZbINq3nN7bO5ksOuPmK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efxP2kC3; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efxP2kC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E3081F00A3F;
+	Wed, 12 Aug 2026 15:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786549619;
+	bh=SeK0xRgUvUsAD2+oi00QfsTwipZHZBmUyw5W/PVUFP8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=efxP2kC3spSW42L3WOxaoON61+zGNwKaHkNR/DQJ9UG7gK5V9SOLcphCIEW9izGAk
+	 DhIzqWPXwUtvvgFLri75+wTdECMB2G8LpfhkBvigTayEMVp2kPKdk3hifLLniZWraX
+	 K3D+P8GTvoOuY9HuoapRZXhVGaun73XzJovEIymHkixz6qBhHDnHuom0+ABARzdRTu
+	 XtU10iCJuK5w4kbzWDseYC360BPdGt7nUovvjCKis5c+0BvWVcr3RMaVVY0zc7uYB1
+	 M9jhmuhFqiMcjpBzXtTn4rw3Jvxc9t4yWcQ6FaI8uDy5MFPk6cugkQvLFFpmn6PFXM
+	 saEHMvpbVADGg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 2/9] ring-buffer: Hold cpu_buffer::lock when resizing
+ a subbuf
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260812153311.2328812-3-vdonnefort@google.com>
+References: <20260812153311.2328812-1-vdonnefort@google.com>
+ <20260812153311.2328812-3-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 15:46:58 +0000
+Message-Id: <20260812154659.3E3081F00A3F@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: jj55tpuq734zrntr4mkk48tuo8hzoa9h
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 2ED3C1C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+by/rQIKubySb9lhljso6RTy3PoJgX2ew=
-X-HE-Tag: 1786549610-224787
-X-HE-Meta: U2FsdGVkX18gjr0dOC6PWIz5eVBeLbyJ3izL+U0m82/9r/HPau+llgEP75MBoxAEPEQTN/l3MX1VSvnWeNMGowQmOk+rObggFZl8nJwt4FPQoNCEIgeTvgDE1Fb+gHa/LihN1JW8MBdo1DSj3eCveydHIz9AAwWnvZNTt4vt2rsrX6rr3z2AT6+IZUIbYaA1WSJMiQyvLgawQ97FeJdiM6h1JqGOC+LOQpXlTtRQ5+7OoJYKbYdKNNkXyZH4phaVasIl8mtCSiGHKQJ5sLk6/DKt0FC1/qFCHhrqiscSVoJFndeCv/HgUcAfdKH0he/qHfOvLx1Dh1cwXJtaiPfWTNWoyI42XrYC
 
-On Wed, 12 Aug 2026 13:21:29 +0000
-=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-> Thanks, Steve.
->=20
-> For the initial implementation, I plan to add:
->=20
->   /sys/kernel/tracing/trace_stats/total_memory_kb
->=20
-> The file would use an extensible key/value format. Initially it would
-> report the ring-buffer data capacity:
->=20
->   total:                   395664
->   ring_buffer:             395664
->   ring_buffer_live:        395544
->   ring_buffer_snapshot:       120
+Pre-existing issues:
+- [Critical] The patch attempts to fix a race with `cpu_buffer->free_page` =
+by adding an `arch_spin_lock(&cpu_buffer->lock)`, but it leaves a severe Ti=
+me-Of-Check to Time-Of-Use (TOCTOU) race unaddressed. `buffer->subbuf_order=
+` and `buffer->subbuf_size` are updated globally outside of any per-CPU loc=
+k. If a reader (like `tracing_buffers_splice_read`) calls `ring_buffer_allo=
+c_read_page()` concurrently, it locklessly reads the NEW `buffer->subbuf_or=
+der` but then retrieves the OLD, incorrectly-sized `free_page` from the loc=
+ked cache. When `ring_buffer_read_page()` uses this page, it copies data up=
+ to the NEW `buffer->subbuf_size`, leading to a heap buffer overflow if the=
+ new order is larger. Similarly, `ring_buffer_free_read_page()` validates `=
+data_page->order` locklessly; if the global order changes just after the ch=
+eck, it inserts a new-order page into `free_page`, which `ring_buffer_subbu=
+f_order_set()` will later free using the `old_order`, corrupting the page a=
+llocator.
+- [High] The patch adds an unconditional `arch_spin_lock(&cpu_buffer->lock)=
+` to `ring_buffer_subbuf_order_set()`. This creates an NMI deadlock window.=
+ If an NMI (e.g., from a watchdog or an Oops triggering `ftrace_dump_on_oop=
+s`) fires on the same CPU while this lock is held, the NMI handler may atte=
+mpt to read the ring buffer. The read path (via `ring_buffer_peek()` -> `rb=
+_buffer_peek()` -> `__rb_get_reader_page()`) unconditionally acquires the s=
+ame `cpu_buffer->lock` using `arch_spin_lock()` without an NMI-safe trylock=
+ fallback. Because the interrupted context holds the lock, the NMI handler =
+will spin forever, causing a hard lockup.
+--
 
-You can rename the above to:
+--- Patch [2]: [PATCH v4 2/9] ring-buffer: Hold cpu_buffer::lock when resiz=
+ing a subbuf ---
+commit 1db68f92346fd21f55d54529fb97b920f02a0136
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-   total:
-   buffers_mem:
-   snapshot_buffers_mem:
+ring-buffer: Hold cpu_buffer::lock when resizing a subbuf
 
-No need to use "ring" and it keeps consistent with "buffer_size_kb".
+This commit adds an arch_spin_lock() around the clearing of
+cpu_buffer->free_page in ring_buffer_subbuf_order_set(). This aims to
+prevent races with ring_buffer_alloc_read_page() and
+ring_buffer_free_read_page() during sub-buffer resizing.
 
-I added the "mem" part to distinguish the difference between these numbers
-and the buffer_size_kb, as these numbers are about total memory whereas
-the "buffer_size_kb" is about usable memory.
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index a3d28b2e2c94a..ec4f5a0c93e85 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -7431,8 +7431,10 @@ int ring_buffer_subbuf_order_set(struct trace_buff=
+er *buffer, int order)
+>  		cpu_buffer->nr_pages =3D cpu_buffer->nr_pages_to_update;
+>  		cpu_buffer->nr_pages_to_update =3D 0;
+> =20
+> +		arch_spin_lock(&cpu_buffer->lock);
 
-There's already a total for all memory listed. We don't need to have a
-total for the "live" and "snapshot".
+[Severity: Critical]
+This is a pre-existing issue, but is there a Time-Of-Check to Time-Of-Use
+(TOCTOU) race between the global order updates and this per-CPU lock?
 
->=20
-> Here, ring_buffer is the sum of ring_buffer_live and
-> ring_buffer_snapshot. The values cover the global trace array and all
-> tracing instances across all tracing CPUs.
->=20
-> Additional accounted categories, such as event memory, could be appended
-> later and included in total. Per-CPU statistics could be exposed
-> separately under trace_stats/per_cpu/cpuN/ to avoid mixing aggregate and
-> per-CPU values in one file.
+Earlier in ring_buffer_subbuf_order_set(), buffer->subbuf_order and
+buffer->subbuf_size are updated globally outside of any per-CPU lock.
 
-Agreed, this file should exist in the cpuN/ directories and be only for
-those instances.
+If a reader like tracing_buffers_splice_read() calls
+ring_buffer_alloc_read_page() concurrently, can it locklessly read the new
+buffer->subbuf_order, but then retrieve the old, incorrectly-sized
+free_page from the locked cache?
 
->=20
-> Userspace would parse fields by name and ignore unknown fields, so new
-> categories can be added without changing the existing format.
+When ring_buffer_read_page() uses this page, wouldn't it copy data up to
+the new buffer->subbuf_size, leading to a heap buffer overflow if the new
+order is larger?
 
-Right. I would expect additional items to be added here.
+Similarly, ring_buffer_free_read_page() validates data_page->order against
+buffer->subbuf_order locklessly. If the global order changes right after
+the check, could it insert a new-order page into free_page, which
+ring_buffer_subbuf_order_set() will later free using the old order,
+corrupting the page allocator?
 
->=20
-> Does this initial format look reasonable?
->=20
+[Severity: High]
+This is also a pre-existing issue, but does adding this unconditional
+arch_spin_lock() widen an NMI deadlock window?
 
-Yes, thanks for doing this.
+If an NMI (such as a watchdog or an Oops triggering ftrace_dump_on_oops)
+fires on the same CPU while this lock is held, the NMI handler may attempt
+to read the ring buffer.
 
--- Steve
+The read path via __rb_get_reader_page() unconditionally acquires the same
+cpu_buffer->lock using arch_spin_lock() without an NMI-safe trylock
+fallback.
+
+Because the interrupted context holds the lock, will the NMI handler spin
+forever, causing a hard lockup?
+
+>  		old_free_data_page =3D cpu_buffer->free_page;
+>  		cpu_buffer->free_page =3D NULL;
+> +		arch_spin_unlock(&cpu_buffer->lock);
+> =20
+>  		rb_head_page_activate(cpu_buffer);
+>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812153311.2328=
+812-1-vdonnefort@google.com?part=3D2
