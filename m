@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34090430CDC;
-	Wed, 12 Aug 2026 23:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF383B42F9;
+	Wed, 12 Aug 2026 23:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786577962; cv=none; b=Jik4/7Hr3tcLr2wBOT2Wgf6s1iB9gHA0/pahXn3rrFcyLXCpI7MiTKhPw0bVfCV2Wempez4/ROhfbEZ6kUNHucJfMANeuJWTWvIemRZjuNA/4RbBgMBmv9dFUPlYxY2JsEoLd6j1T4BUycDWj6ydGgDAly7i6Imejz44FkmsOkE=
+	t=1786578113; cv=none; b=nMflhBqOM5hMPHLaVzkmpRtW8PvJnfq15oImtNuzsMjaH94tcrzZd+KJr6ZyeBkB+65SO9ujiSlPubZh+XkOp4iBRq0+YPQEqifA5apoBV87Ty1lnZHthkPIjjLyivRIpDclngQ7bmU44tcy1Y9jiNE8k56Fwf+hdqlmrREQ4Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786577962; c=relaxed/simple;
-	bh=avumzkLO0nZN8ddbyezPBTLrfLpNZIAA3NDzvznBZfo=;
+	s=arc-20240116; t=1786578113; c=relaxed/simple;
+	bh=P9osnGMEfu7Fq4kBhKTpwhE9lWWMOn8Pjcq9zAFW8o8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iel0YwnVITBd/FKFNX/i4Y3qqO4URysPXHngrp/3zZ5pfsPNC6T4gi5N3AxOACKX20aQO5AWrt13CjWOEgpe6h4aH3A6BWA5b5ucb2LyiUKfJEwoOim502LTDjoX6lsS6RA4UNrJHH9aOdFklZckV5bCbJryVxW/MPnDyEtv0cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epuncTyq; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=Yc8wmLslwq1MMrm0FRGHnzFh8Ws/hiEWfZ1M0wi1EKn23ZwNED9U5zR9ZbuSoW1fXj6ZxliW1/oFJZt8+JkPrqmAbdJmX/UbRbWDaymD+0fzxtzzl3H3rgjL7iR3/SOazY92+L5OlCB7CqqKkm304jyy7/QleDyjZzM/AWFVqXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpJjVeD4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epuncTyq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD481F000E9;
-	Wed, 12 Aug 2026 23:39:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpJjVeD4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946E21F000E9;
+	Wed, 12 Aug 2026 23:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786577960;
-	bh=cz8Ol6N3ilwM/2lcPOc6cNlIh/iPQ/8t/venZSH7Hkg=;
+	s=k20260515; t=1786578112;
+	bh=3F6egPcCnZXgUG4ALUc+aW58huXaS8Em/m3p3tdpGX4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=epuncTyqw24GATpotoftUkAgEYCEglVa6REXGfQ3NnheBG/nD0pvbHtp3S2EY+5yV
-	 qOpehvLKUaOtqzVsrl5WFWkba46NJMheIoZUBbX/yCv86kh1xZbvoffg+qy12xqbp6
-	 l9EcAMOz5UsYlDKQ+WOTF6EobX1JMy6mTH1EEEBR9tix8cS/DZ6YqVjl+0J786UMf9
-	 6+i0Lg3jnoyjLbX0GXf4DwqztKj8XcRcird8KPMDu3b4JAyqTKLgqWPIPItM0/SmyS
-	 AA/zwSIlsdvRmK4dQtwMYekUw/AlnmIzKZgOOCOa8rNsgyBPcCJzAbxb/GtHvqEMJs
-	 4GjA8HVxBe5gg==
-Date: Thu, 13 Aug 2026 08:39:16 +0900
+	b=JpJjVeD4DTM++gXTxWTf7XexVEJg7irzUKWqfbo4azn7ljimXucu3eTvAjEz9xsoH
+	 JOr/RCL03CNNyuzqxun+YuzW08cVnlhkMkcNgMrjpXngAj4tDkhokQh+zGTywZfadt
+	 dOE0OMmrRx7PPzIBycTlsIUWP3tFj/giVcvqh9Ga/RGvzyutfxcdpkekhCPvzTuTRV
+	 WtCvgBj70MLPb9rECaxkX8G0KAvvByIogAR1nSBow4ZuwStxp9GrIFQ+Zrqk1MNLNo
+	 VrA8MmTJqLfewhL5hLWXHAyALtxAdbLK1ARZIWNF2s//rlTT2G613e/SErZQ1D1w3K
+	 +cS2XS542fK2Q==
+Date: Thu, 13 Aug 2026 08:41:48 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, "Vincent Donnefort" <vdonnefort@google.com>,
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>, Vincent Donnefort
+ <vdonnefort@google.com>, sashiko-reviews@lists.linux.dev,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/9] ring-buffer: Hold cpu_buffer::lock when resizing
- a subbuf
-Message-Id: <20260813083916.7113e424e6cc4158ff72fcac@kernel.org>
-In-Reply-To: <20260812154659.3E3081F00A3F@smtp.kernel.org>
+Subject: Re: [PATCH v4 3/9] ring-buffer: Fix subbuf resize race with ring
+ buffer readers
+Message-Id: <20260813084148.2cd802c4a8ef6ff8ba151bbf@kernel.org>
+In-Reply-To: <20260812132457.69d467ce@gandalf.local.home>
 References: <20260812153311.2328812-1-vdonnefort@google.com>
-	<20260812153311.2328812-3-vdonnefort@google.com>
-	<20260812154659.3E3081F00A3F@smtp.kernel.org>
+	<20260812153311.2328812-4-vdonnefort@google.com>
+	<20260812155312.ADF031F000E9@smtp.kernel.org>
+	<anyi-W-fZHqCPRZd@google.com>
+	<20260812132457.69d467ce@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,30 +51,58 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 12 Aug 2026 15:46:58 +0000
-sashiko-bot@kernel.org wrote:
+On Wed, 12 Aug 2026 13:24:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> [Severity: High]
-> This is also a pre-existing issue, but does adding this unconditional
-> arch_spin_lock() widen an NMI deadlock window?
 > 
-> If an NMI (such as a watchdog or an Oops triggering ftrace_dump_on_oops)
-> fires on the same CPU while this lock is held, the NMI handler may attempt
-> to read the ring buffer.
+> Hi Roman,
 > 
-> The read path via __rb_get_reader_page() unconditionally acquires the same
-> cpu_buffer->lock using arch_spin_lock() without an NMI-safe trylock
-> fallback.
+> On Wed, 12 Aug 2026 17:44:41 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Because the interrupted context holds the lock, will the NMI handler spin
-> forever, causing a hard lockup?
+> > > [Severity: High]
+> > > This is a pre-existing issue, but can this 32-bit integer capacity calculation
+> > > truncate large trace buffers?
+> > > 
+> > > For buffers larger than 4GB, the multiplication of old_capacity and
+> > > buffer->buffers[cpu]->nr_pages can exceed 32 bits. Because nr_pages is a
+> > > 32-bit signed integer, the result is truncated, and the buffer is shrunk to a
+> > > tiny fraction of its intended size during a resize operation.  
+> > 
+> > This is fixed in a later patch.
+> > 
+> > >   
+> > > > +		nr_pages = DIV_ROUND_UP(nr_pages, rb_subbuf_capacity(buffer));
+> > > >  
+> > > >  		/* we need a minimum of two pages */
+> > > >  		if (nr_pages < 2)  
+> > > [ ... ]  
+> > > > @@ -7896,7 +7941,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+> > > >  			 * missed events, then record it there.
+> > > >  			 */
+> > > >  			commit = rb_page_size(reader);
+> > > > -			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
+> > > > +			if (rb_subbuf_capacity(buffer) - commit >= sizeof(missed_events)) {  
+> > > 
+> > > [Severity: High]
+> > > This is a pre-existing issue, but does this create a time-of-check to
+> > > time-of-use race leading to an out-of-bounds kernel memory write and
+> > > VMAP flush?  
+> > 
+> > This is fixed in a later patch.
+> > 
+> 
+> Is it possible to have Sashiko pull together all the patches so that it
+> doesn't report bugs that are fixed later in the series? I mean, sending a
+> patch series to fix a bunch of issues shouldn't trigger Sashiko telling you
+> about the issues in the early patches where the fix is in that same patch
+> series later on.
 
-Ah, just a comment. The reader side is using rb_reader_lock(), which checks
-in_nmi() and use trylock. Since this ring_buffer_subbuf_order_set() is
-never be used from NMI, we don't need to care about this.
+Agreed. Since we have to backport the fixes to stable kernels, the fixes
+must be the first in the series (even if it looks like ad-hoc). We can
+clean it up or enhance it later.
 
-Thanks,
-
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
