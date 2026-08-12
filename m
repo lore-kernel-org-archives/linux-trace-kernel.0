@@ -1,89 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out28-172.mail.aliyun.com (out28-172.mail.aliyun.com [115.124.28.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B12364927;
-	Wed, 12 Aug 2026 01:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EC6375ABE;
+	Wed, 12 Aug 2026 02:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786496681; cv=none; b=MXSnYNfJrBVC7B37BNCGoL2zHkcvn1z6hM7t+rBJfy/iFlaRtT4gcz3a2gdQxTNq8RwCTN6BF/zz24yka5I3KP94bOJdT+ZqTlixNXaYGxh1FT4UNgZ+ULzApfZU4Nz5uKaKtiQ3oYUDIjrf6IhrYCD9BDQeHrwGsy0YXbA/W+g=
+	t=1786500878; cv=none; b=Zy8wdS7lGqyvm/EcsPMAEttelXrbRSjMLjVWwWb+1CR0H1NrR8qY1+lEdmLWHZLFd/7xrvWVnNO9zV+t8/dthTN0yGvN58+FKJz6dxrU4d16idgyEdMCWF0luhBruKmMx4BHc0+HEySD7+7H1oTABydiifa9ODApCxDsGNfNtQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786496681; c=relaxed/simple;
-	bh=R9pMwnMT0S22nQ2QreVdnq4esafNM9N3nXnYhytS4Uc=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=BFx651kimwqkHt68mVJSA0qiv6q3pcNU+YV8NDaoE2LvLJWEkvjxWdxFSaUcnJfu3z7ONRtLshELBb/wx06KKF27GMhBR8LTQGAfdCJxPTWz85DPl6U8a982w6hLLO347HWvMyG+ooFHrps6s3Davba2XsC91Ev1PH442qXEjrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8G/l1I5; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8G/l1I5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A601F000E9;
-	Wed, 12 Aug 2026 01:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786496678;
-	bh=WKX7VNXBPgapL0AoeSRXV2Q2DGQaFFWHAmrcE1PQMK0=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=a8G/l1I54jJ4YhqvsH0r9O9Popdifnp0OE718wLjwRbA2OzDphwBv+qEXRteho5hA
-	 ypcPN+DhaiSnq+2z8RIfwslb9BiI0XC2tl9/UXWyzz7esaRIBy+xYdLZrZB4l/4UI/
-	 x9Uwx1jMDOud8ve2qE0yOivxfsMCcps+BZOG8sYIaCNadNYoaGRzQBauv0symDsbnP
-	 z9IksUA34pu1vjCU4JP+k9NiRyVd3M6gR0NZB+YoAcrIxou1FW2kE5KN6zU7I/VYuW
-	 JbPran9kR8xfC3vjxDbnAKK3mDgBCxhQpRdeprMtDob4Qg9eWw8C1RnZ3Q3zThexRs
-	 ImDKAp9xzzpfw==
-Content-Type: multipart/mixed; boundary="===============1302207253100925257=="
+	s=arc-20240116; t=1786500878; c=relaxed/simple;
+	bh=WPUJQLKAO1IcWGRktCWFESp53OLi18zBfvn8kquoHY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZiCJV5e6aZXM9iPJkTA9e8m9HV/oyMJF6MZMm6txxJIO+0yTQuXPtdK7eYnCF9QdpJ288BVCSR7JC9gKB/9XORQMzv/euJRMgBm4Xayuyf1uNok8liOYGQA86Bv5qo0cvtLTRlKgt7hp1CR9b3J1uNjqLS/SJLA3tCsmmbSdam4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07447758|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.117566-0.130689-0.751745;FP=17796360389834409298|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033045220102;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.ijodgzg_1786500864;
+Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.ijodgzg_1786500864 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Aug 2026 10:14:25 +0800
+Message-ID: <f7b0e5a6-c38d-634e-4353-6d1bb5dcd12e@allwinnertech.com>
+Date: Wed, 12 Aug 2026 10:14:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <42d2df770e6e5f9134476509f690ec9b7d68f0da4cd1ffadcf3f9c1b75f0adf2@mail.kernel.org>
-In-Reply-To: <20260811235331.10044-1-kartikey406@gmail.com>
-References: <20260811235331.10044-1-kartikey406@gmail.com>
-Subject: Re: [PATCH] perf/bpf: Fix data race in __perf_event_overflow
-From: bot+bpf-ci@kernel.org
-To: kartikey406@gmail.com,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,james.clark@linaro.org,song@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,yonghong.song@linux.dev,emil@etsalapatis.com,kpsingh@kernel.org,mattbobrowski@google.com,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,me@kylehuey.com
-Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kartikey406@gmail.com,syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Wed, 12 Aug 2026 01:04:37 +0000 (UTC)
-
---===============1302207253100925257==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v5] tracing: Fix race between update_event_fields and,
+ event_define_fields
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
+ <20260810104525.6a3a2e6c@gandalf.local.home>
+ <3f27bacf-5f01-8cb5-a04c-824ca7b2c13f@allwinnertech.com>
+ <20260811090045.2a3cbed9@gandalf.local.home>
+From: Michael Wu <michael@allwinnertech.com>
+In-Reply-To: <20260811090045.2a3cbed9@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-> commit ffa161d3558e4937793a0c3e98e19e4b22e58bd9
-> Author: Deepanshu Kartikey <kartikey406@gmail.com>
-> Date:   Wed Aug 12 05:23:31 2026 +0530
->
->     perf/bpf: Fix data race in __perf_event_overflow
->
->     perf_event_detach_bpf_prog() writes event->prog = NULL
->     under bpf_event_mutex, while __perf_event_overflow() reads
->     event->prog concurrently without any lock protection. This
->     causes a data race detected by KCSAN.
->
->     __perf_event_overflow() can be called from interrupt/NMI
->     context, so it cannot acquire bpf_event_mutex. Fix the race
->     by using WRITE_ONCE() in perf_event_detach_bpf_prog() and
->     READ_ONCE() in __perf_event_overflow(). Also store the result
->     of READ_ONCE() in a local variable to avoid reading event->prog
->     twice which could result in a NULL pointer dereference if the
->     pointer becomes NULL between the two reads.
->
->     Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
->     Closes: https://syzkaller.appspot.com/bug?extid=651d2774bd1d8395595f
->     Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through overflow machinery")
->     Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
->     Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
->     Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
+On 8/11/2026 9:00 PM, Steven Rostedt wrote:
+> This is still way too verbose. Is this AI written? If so, AI is *not* your friend.
+This commit was written by me, not by AI. I apologize for wasting your time. Thank you for rewriting the change.
+> Why are the priorities of the notifiers important here?
+I probably wanted to describe the entire process, so I've gone on to say too much.
+> Less is more when it comes to describing a bug.
+Got it.
 
-The trailer block contains duplicate tags: both Reported-by: and
-Signed-off-by: appear twice. Also, the second Reported-by: is placed
-after the first Signed-off-by:, which breaks the conventional trailer
-ordering (Reported-by/Closes/Fixes should come before Signed-off-by).
+> On Tue, 11 Aug 2026 14:00:05 +0800
+> Michael Wu <michael@allwinnertech.com> wrote:
+> 
+>>> What does the above mean? Are you loading two modules at the same time?  
+>> Two modules (A and B) are loaded simultaneously on different CPUs. On the arm64,
+>>  when CPU0's trace_module_notify [pri=1] and CPU1's trace_module_notify [pri=0] 
+>> simultaneously perform operations on call_A, because they are in different cache lines,
+>> CPU1 may observe WRITE_ONCE(head->next, &f->link) in step (4) before f->link.next=next in step (2).
+>>  At this time, CPU1 reads an uninitialized f->link.next and performs an operation that causes to crash.
+> 
+> This is still way too verbose. Is this AI written? If so, AI is *not* your friend.
+> 
+> 
+>>
+>>> What does "pri=X notifier" mean? What function calls are these coming from?  
+>> `pri=X notifier` represents `trace_events.c:trace_module_notify [pri=1]` and `trace.c:trace_module_notify [pri=0]`, respectively.
+> 
+> Why are the priorities of the notifiers important here?
+> 
+> I honestly didn't know one was allowed to load two modules at the same time
+> and thought that it the module logic would prevent that. But if that's not
+> the case, then yeah, we need protection.
+> 
+> 
+>>  CPU0 (loads module A)                      CPU1 (loads module B)
+>>   ===============================            ===============================
+>>   load_module(A)                             load_module(B)
+>>     blocking_notifier_call_chain_robust        blocking_notifier_call_chain_robust
+>>          notifier_call_chain                     notifier_call_chain
+>>           nb = trace_events.c:                     nb = trace.c:
+>>           trace_module_notify [pri=1]              trace_module_notify [pri=0]
+>>             mutex_lock(&event_mutex)                 trace_event_update_all() 
+>>             trace_module_add_events(A)               down_write(&trace_event_sem) 
+>>               __register_event(call_A)                
+>>               __add_event_to_tracers(call_A)           
+>>                 event_define_fields(call_A)            
+>>                   for each f:                          
+>>                     f = kmem_cache_alloc()             
+>>                     list_add(&f->link,               	
+>>                              &class->fields)           
+>>                       f->link.next=next; (2)       	   
+>>                       WRITE_ONCE(head->next,        
+>>                                 &f->link); (4)       update_event_fields(call_A)   											           
+>>             mutex_unlock(&event_mutex)	               list_for_each_entry(field, 
+>>                                                          &class->fields, link) 
+>>                                                          field = class->fields->next 
+>>                                                                = &f->link 
+>>                                                        	       = f (offset 0) 
+>>                                                       up_write(&trace_event_sem)  
+> 
+> Basically this can be summed up to being:
+> 
+>  CPU0 (loads module A)                      CPU1 (loads module B)
+>  ===============================            ===============================
+>  load_module(A)                             load_module(B)
+>    notifier_call_chain                        notifier_call_chain
+>      trace_module_notify                        trace_module_notify
+>        mutex_lock(&event_mutex)                   trace_event_update_all() 
+>          trace_module_add_events(A)                 down_write(&trace_event_sem) 
+>             __register_event(call_A)                
+>               __add_event_to_tracers(call_A)           
+>                 event_define_fields(call_A)            
+>                   for each f:                         list_for_each_entry(field, 
+>                     list_add(&f->link,                                    &class->fields, link) 
+>                              &class->fields)            field = class->fields->next;
+> 
+> Where you can see that one is being read while the other is being written
+> to. You do not need to go into details of the cache visibility here because
+> this is an obvious race condition. All that information just distracts from
+> the real issue that is being fixed.
+> 
+> Less is more when it comes to describing a bug.
+> 
+> I'll rewrite you change log and take the patch.
+> 
+> Thanks,
+> 
+> -- Steve
 
-Should the duplicates be collapsed to one of each, in proper trailer order?
 
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/31550171807
---===============1302207253100925257==--
+-- 
+Regards,
+Michael Wu
