@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1197230E0D5;
-	Wed, 12 Aug 2026 05:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3E92E5B2A;
+	Wed, 12 Aug 2026 05:34:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786512218; cv=none; b=bdmrd63jsexjoYDov6IZOi6WuPV64G7rIJSzTkPqzVUnTDmjhNh289j0+G3rRjhwGvJXraZptYNS36+1TNwUAFI7UY9+NVBXqLcN4qaO2yyi5ZM8dv0TSiGdTnwOdPIqQfxdvz27UuSDx2M/YF30UMl+FpBduV0uo3mIMFWS9D8=
+	t=1786512847; cv=none; b=odO37yNf4tbGAxYw5Ci9QBFIY7FPD8lADZY5noA3CTC9ATwc8VW2xV7oCRdWp1Z64d9eH68p9KleMub4rpLrMjOa9SViNh2ms9o/7kx+Mq6QtEy6gIHYMG7wANbzckFWanDOXJxKhU/0s8ZOZ4ap4jei0Xafd0BK5x95y62fPUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786512218; c=relaxed/simple;
-	bh=iE7WD9cC5Zp1jYTzEd47muCzZZ8TB+7wVvVGgHiezK0=;
+	s=arc-20240116; t=1786512847; c=relaxed/simple;
+	bh=+nEGQQL5Gn+WI2vY6/f7bvYSr4WEHuPAEm+UsH53etw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mt2L6NRLrG552O0PJ9TeCASsRXrcd1uHte56S68isSHvqCjJ6Pd99PI+0E4zvNENMs5F6kI37zDF10ZZnSDk+REfBaZZY5v/FqtwH7YeaMmT75bkhbg9EWjscVt9y4qAFeyMv2okxrdTm2uMVeQctojo+flXPQmyfwF6iD2JP7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OpukalZq; arc=none smtp.client-ip=192.198.163.7
+	 In-Reply-To:Content-Type; b=owesMnv+RQsrqDkHSUvyfwANTBad5TjTWoB5Gi8+PpnJClji1/+NXsCcUjTTYcCXOrITHK3TQwKCWIKUJsd+YC2Pr0EV+Knf5zyLtFMHXCg8jMvg8z88SsZMJMhX0UwgQawyKCQ24tQy/UmThrLF7tEjwA5Hk0aMOwhtlEsnMek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CO6J/vVW; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OpukalZq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CO6J/vVW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786512216; x=1818048216;
+  t=1786512846; x=1818048846;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=iE7WD9cC5Zp1jYTzEd47muCzZZ8TB+7wVvVGgHiezK0=;
-  b=OpukalZqB99QR2lt9G7Jvp3zYAT49pMhvUi8wyft/VbD+LtwvS3CnCuH
-   a8++2UOLJqD+lNgWaDTVWmW+Ox1nNM0yX4YdyMWwg5yZyf5i6tg1m8Dr8
-   3v3BOP71aSCI6pA9sgRLPPgAjSTeT7QW1EKxT2ZdYpih3Fhcrg4WD87F+
-   E0/MmLMv5ACH6IpKgBvDWP5CmoUY7Rh504JV7uNYA7gYuJz3DKcrzmbHa
-   Hl/yfOecoDVIL2yyUSj8uZz3kRSimAypc6XLJkuAIdkZPV3YQtXNo9fF8
-   LTyYcbACAcqPhlMRLvPjiCHdOiW6fhXbSENYT+x+/0cme1u1p96mskhZy
-   g==;
-X-CSE-ConnectionGUID: /22aGNHhQUWsdlK4SS1HZQ==
-X-CSE-MsgGUID: 6Ss/GOxLRICCtziHgNoB8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="112600181"
+  bh=+nEGQQL5Gn+WI2vY6/f7bvYSr4WEHuPAEm+UsH53etw=;
+  b=CO6J/vVWdpbIQi1F5G+vqFPp6heZ6z9CCKRLWsppMBt4RGD9fNB0CdcW
+   a7qdrsdoldXUD3+leAFZmPMTxKKG3lL9G67bJBLxA+MpA7EHgRdOpaQp8
+   WVLNqOt6cPRb0xBLl8FW3W2l8YQFoBJiMrI06bpR5hLbxPKNQpHQWDu2i
+   /900rCJIXj74fhj6s7agQkFPiW0BHLDAdsQsRY+QH0UPDnEWt1z/v0WS0
+   DiN6DGCHRAiFCWnT7vNDoEsxclq3i/aOAMCaYC0URSnaesB7fqH0quzLf
+   U+eavgaBlVFLoEKanA6Dmok4W8FfFC3V9oIFAmkKy6yEAYQpmss0SYMmL
+   w==;
+X-CSE-ConnectionGUID: csnuFQcNQ6WOD9cetrnMgQ==
+X-CSE-MsgGUID: 9RkcT0HJRHaTrEUDUzunWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="112600700"
 X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="112600181"
+   d="scan'208";a="112600700"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 22:23:35 -0700
-X-CSE-ConnectionGUID: 1SnU3e7vSsmcahYLs71EJQ==
-X-CSE-MsgGUID: KGD9BSXaRIiKAaUKOK5hpA==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 22:34:05 -0700
+X-CSE-ConnectionGUID: fPXyq4LvQsCVdziJqFJAOQ==
+X-CSE-MsgGUID: K7I87BFVSgisT8D/7Pn29Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="261785396"
+   d="scan'208";a="261787286"
 Received: from unknown (HELO [10.238.2.33]) ([10.238.2.33])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 22:23:22 -0700
-Message-ID: <3722b4d2-ef2a-4ab8-9a24-7d61a776b05e@linux.intel.com>
-Date: Wed, 12 Aug 2026 13:23:19 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 22:33:52 -0700
+Message-ID: <079c36db-003a-462f-9877-5361f10d9571@linux.intel.com>
+Date: Wed, 12 Aug 2026 13:33:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 05/41] KVM: Rename memory attribute APIs to prepare
- for in-place gmem conversion
+Subject: Re: [PATCH v10 06/41] KVM: Provide generic interface for checking
+ memory private/shared status
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
@@ -87,33 +87,33 @@ Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  linux-mm@kvack.org, linux-coco@lists.linux.dev,
  Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-5-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-6-2fc18ee6d3ba@google.com>
 Content-Language: en-US
 From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-5-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-6-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
 > From: Sean Christopherson <seanjc@google.com>
 > 
-> Rename memory attribute APIs to add a "vm_" in the name in anticipation of
-> moving PRIVATE tracking into guest_memfd, to allow in-place conversion
-> between SHARED and PRIVATE.  At that point, there will effectively be two
-> (potential) sources of memory attributes: the VM and guest_memfd.
+> Introduce a generic kvm_mem_is_private() interface using a static call to
+> determine if a GFN is private. This allows the implementation for checking
+> a GFN's private/shared status to be set at runtime.
 > 
-> kvm_vm_set_mem_attributes() already has "vm" in the name to indicate that
-> it is a VM ioctl. Rename it to kvm_set_vm_mem_attributes() to show that it
-> is setting the VM's memory attributes. (Drop the VM-ioctl scoping since it
-> is a helper local to the file.) Update the accompanying trace function to
-> match.
-> 
-> No functional change intended.
+> In preparation for choosing implementations between a guest_memfd lookup
+> and the existing VM attribute lookup, rename the existing
+> VM-attribute-based check to kvm_vm_mem_is_private to emphasize that it
+
+Nit:
+kvm_vm_mem_is_private -> kvm_vm_mem_is_private()
+
+> looks up VM attributes.
 > 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > Reviewed-by: Fuad Tabba <tabba@google.com>
 > Tested-by: Shivank Garg <shivankg@amd.com>
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
 Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
