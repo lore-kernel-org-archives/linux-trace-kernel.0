@@ -1,94 +1,58 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mta0.migadu.com (out-164.mta0.migadu.com [91.218.175.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2694535C6B4
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 13:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786541806; cv=pass; b=POsUD7PeoFin1G1tSH++G2W66rzlNd+LMJ1VnfhI37PTtnHOidVJfjcGi8G+Rypvw5pwcvp5w8FbeBfvr9BRk3FTKetED/ysZYM6OLLbLvoDGy+vtiQWpqGfOl+CknqXWBMyDFPZQect1STpLfNVtAQmEaiyQMH42Uk2+NJk3O4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786541806; c=relaxed/simple;
-	bh=KaA5tLZHEghQu61RuODWZrlhn1D0edYuT22vJ4+vjrc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548E53546D2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 13:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.164
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786541834; cv=none; b=TRyvKthXRRiCvc1YtHwGSyfteQcRdKoijB7WhV4YdMxJJt7p77yyLpiHP6PORyvYGeBwWYFjvfJuoLyANlWJQyVtaT/47B7vJMbSLqfnk0acrMDQMCNeprfJLu9QpdO+PzDxHwKMnYFr45WVoW7vMmg/eSRWOKz/1Sl0LARa1bc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786541834; c=relaxed/simple;
+	bh=9Xb9EfUOdgvpGqMkiydwEhSmxQ/7eEZavJu7C2JawOQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M0yeVXO8IdN+KT/8LY3kvLO3EImh8F3mx6Iw4kcLBXKMBqnpFNBbpvPyUN0SutHYc9BWaAfu/UU+4EOA1CU1BXSoZJKxwDkKK5VDJgJtKWV8mkYkYRvmPmkYUnhlD9Pnb4Wnu7/I2BSXonclhgluiH/DCSe1TWH+SuG6YOhHFpA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JT9wDa4z; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=tX79Trl9WCSU9qVVGBtmDadv7MEbFuTGo462hmmwVqASBL3HU7Xh4cGClPI4eqhtckTdtSK2seJbPHP+NVm3UYl5yfjNRJ4pD8jKrpA6pS5v+E1epuPAl7xrAS5zpak2+r5wg7pqufRhWynRz9CqE84MmTKBIQLAdkiHH+4US/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mY3WnspT; arc=none smtp.client-ip=91.218.175.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JT9wDa4z"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-51c10e86e52so229541cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 06:36:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786541795; cv=none;
-        d=google.com; s=arc-20260327;
-        b=r4tsHqpQ3XRtkHeieW44oz4bKGel2Z1kgyCAngrmWKs317RHl9Ll281JeFhJ3vMCgY
-         Cfom2GJbvuhucNW/NoZ9pS1/Bo74rt/NVIl/ZqznQR7bl1mSWeJLb3Ka/8wT2siwH/0i
-         CBLIAUsVi4QL3jXrmJrx0EhX1KAW/CqGrYBoa3IGj8jyJiOYMwiQZ3iRqRHMEGu8OUcW
-         YxDwnQ0OAaDq6lLhdvIWVyXQJ2sLVYdGKy+vlkx1UIwZuwTs7QR2zvLdEGn+4hxkeGGI
-         yfYbBgOpaHni9EjFq28FFjkXbdEV3HaV1K8iZCoLLkiZ2c6FxIGAulUJ5tira6X92dr8
-         kgZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=O8ig8WOZx7XhZvybLzPJyMWD7j4qDk1RSS9jPUIQvDQ=;
-        fh=v+1eAzgkd40oqgC4L3EwRwmWGJSppEU8W2CzgV0GLkU=;
-        b=axVsYXMBAVFiC3yCW1vZ/TW4MvLxf9SimcX7BYRKbX95RIPS3Jl9btMKwzv92zgy6e
-         V07NsXRrDwVqbRJEOn2JIDSgSTERKCvw/oUcjE6KwNj3q2emZSudDhzNVTgYPtZYOA7v
-         D6KswBUZ6tEaUuZF1mF84ZQmuc1NBZWTrFreZmuJn/GXiA23vdGmr6raFm2oYp7tOiMd
-         Mih48njht047uxXy2LId5FeF1J70EnJhVLSuSGTvmI0bdZzPjNBYjZ15bIjVw8i7QTYu
-         45Kq4GwoIuA4SFbX6dbc/iAlcenxebAsiYxPoiLpqXHV1ueVSkKwlT+sexfj068KOLse
-         Z7gg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786541795; x=1787146595; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=O8ig8WOZx7XhZvybLzPJyMWD7j4qDk1RSS9jPUIQvDQ=;
-        b=JT9wDa4zE6nQFgYOmue5yaURYrLbhmLZXjDnJbab24AAPl+fH/GCri6xm+EmsbIF6R
-         qlR1LCgcTC3WtT1Ygu5GgHcswgbNp6Dt+6YN6US3CzzzgrB5y/isNUZL+jVqrkkh/xjw
-         tyZnC/sDGY4gA8nuyuNY4t+xwg9sZRrdkD45gZd7Z/zCR6oA/+o6jl3egZtFn/Br2BFo
-         9J2TUJZOfAycT5BaF1rG3wkUlbDRjsmwYAkq7z2ocM6WSzOB3HtwF2PtdBKEU22xai9s
-         vUeNYhDZmnAWaGCn2Hd7Ic9AI7G/Ppx6f08EmxAW3QhigMvW+8s7L0UzPfsw/dig9/7/
-         vy2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786541795; x=1787146595;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=O8ig8WOZx7XhZvybLzPJyMWD7j4qDk1RSS9jPUIQvDQ=;
-        b=Tgy+69z+iniDK7FpS2c8RjMm6hnCkOAih3lKB/v63cKfw6K1jAJj5m+OV3pWYQeJGS
-         b9StVeZaAgxzhS0uvcf/VQOIRWSYtRyyiiWrRBc8a1/gyS1po+LG4C0M061J/XROj42B
-         XA4ugA3Ydty0eXW+GgIBUAPM2EjWr2VAZ8POoOP5eYdm076QyO7EKX1/H5K0xvmoquuJ
-         L8Rt1EZkuofGwRthfaZJljb6ord0be0w1SnEyNB9PKvvQpHcftd/eJE/yLPIbthpFCdg
-         5xDsyvE8Yu8+MMjdWIUFIowVppnfTYAFIITpmeIvWw7cNuf7FWNs9VfAq6jVj927OcwT
-         azYg==
-X-Forwarded-Encrypted: i=1; AHgh+RpRaeF+LJYJIyaNqRzd2sRQRC80ySSjkZYx5xrPcw6pQwahRk/hsjPSplKk6XPzC2ScSB8qZzvNNxyzQkCm6Xs9C2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymoP/qiaMiehpRBbYBH+2vQAgAqpTPt5YdtwUolHd3k7LtnOyt
-	comBkmpcMQyWoGlaIZZgASCHr1gHzjHAlJvTNG/MOtaPhOuIbMlzvAEcWd27ou95f5O/58TWvDM
-	xv1tTQdYZyq3Ak6Fs9k+b/Mg/DJbnlQmFiUVDdR2W
-X-Gm-Gg: AR+sD103zFdiph9LPu3KB1UeVAeIcC0ttNlurG2XH0mvVnB0gEHy68NJeBKp+FFAH6K
-	HoAAu2oB0UVcrTCs4QZcb/1TCtwe08/6ta7y9kMGjnI7+OqEJgZWtgahtTqXUPThYVyeUsToaQf
-	Y6Jt/vhwPtpvQNTkiScUXmaywoArlW1ZCt/VmFIqmGYNoW+BiomKPlMlZ1M9KRn/agbbmkK9Q5Q
-	YjFN7EI2u8hCjsvEZnvD1HKYdLFxnrEpqURSIumLQ1P87HE7F6c9zRZP4BJ34hriqAbypy/zWib
-	ufaQHotPNxMI3q4Qv1dlE5ykTzJFrPmA5g1nCljNCnwIFA==
-X-Received: by 2002:a05:622a:e198:10b0:50f:af60:3496 with SMTP id
- d75a77b69052e-52d65464646mr13738681cf.1.1786541794243; Wed, 12 Aug 2026
- 06:36:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mY3WnspT"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=9Xb9EfUOdgvpGqMkiydwEhSmxQ/7eEZavJu7C2JawOQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786541827; v=1; x=1787146627;
+ b=mY3WnspTxkO91G/G6M7i288lAbBUgokXfHiCDc+trkhDS1i611+4f+r6EPFKf7MqcLAX4Zw4
+ Hf6LzigIjgk0ZtcMS6J5I33fqK35pLnKfx4qZwtPiz625L5HDjjx5pPSVq9G2gLEh0v3yUuCZnI
+ YaN5TVuRuwve6XbbrCPElq6Q=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: from mail-qt1-f179.google.com (209.85.160.179)
+	by smtp.migadu.com with ESMTPS id 82e74a25a7367976;
+	Wed, 12 Aug 2026 13:37:07 +0000
+X-Migadu-Flow: FLOW_OUT
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-51c15a5b265so229201cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 06:37:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpS8xZUDM/cd5qdYxeT6FukBtAXBEe8RM2a2DDsWfdX+gGZHMdXP5vMeri7FJG2wwv4pWL4NxDr+wRawHSOp5KTMOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcHfi6Ve/25fRooFkcyPnZvDm1InBviUGE5K8kVVGCpZxbgcML
+	buUlWD3cWfmwIeg4lUOXZarSzJCQVW4Kdf5oVlquLj90q2Or5NHUUMn0qYta8YMicU6iQbjFRk7
+	MbP5/sghh31w/3ty0y5D/gAtcbB+ThM1JFc5iTl9b
+X-Received: by 2002:a05:622a:40cd:b0:52b:4ec6:52ba with SMTP id
+ d75a77b69052e-52d61f23159mr20522611cf.6.1786541825229; Wed, 12 Aug 2026
+ 06:37:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com> <20260807-gmem-inplace-conversion-v10-9-2fc18ee6d3ba@google.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-9-2fc18ee6d3ba@google.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Wed, 12 Aug 2026 15:35:57 +0200
-X-Gm-Features: AUfX_mzWYjCDwiui5b6BAKCYfBkQOYXMoJhicR-4oNYgSy_SG6-tlHfLwASmQvc
-Message-ID: <CA+EHjTxPznVrL8t2T1AX0Qs6Ph8z-Z3e_z0ZLt3sgAOf37VFRw@mail.gmail.com>
-Subject: Re: [PATCH v10 09/41] KVM: guest_memfd: Filter both shared and
- private when invalidating
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com> <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com>
+From: Fuad Tabba <fuad.tabba@linux.dev>
+Date: Wed, 12 Aug 2026 15:36:28 +0200
+X-Gmail-Original-Message-ID: <CA+EHjTxmA0U+RxULtiZtFRvBzhcbCMgj_kTO6a9fqkPvvyrh0A@mail.gmail.com>
+X-Gm-Features: AUfX_myT7Ln5tM4ht32h0TuFrnmnlLxzcErRjugq3csyVB5j1YAHRpRMYVzjI2U
+Message-ID: <CA+EHjTxmA0U+RxULtiZtFRvBzhcbCMgj_kTO6a9fqkPvvyrh0A@mail.gmail.com>
+Subject: Re: [PATCH v10 15/41] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -124,20 +88,31 @@ On Fri, 7 Aug 2026 at 23:52, Ackerley Tng via B4 Relay
 >
 > From: Ackerley Tng <ackerleytng@google.com>
 >
-> Before conversion, a guest_memfd could be either all shared, or all
-> private, configured at creation time using the INIT_SHARED flag. Hence,
-> when zapping pages from stage 2 page tables, guest_memfd can filter which
-> to zap based on the initial shared/private state.
+> A guest_memfd folio is safe for conversion if guest_memfd holds the last
+> references on it. Any other references on the folio may indicate another
+> user, and guest_memfd cannot convert it to private if there may be an
+> existing host user.
 >
-> With conversion, guest_memfd tracks shared/private state on a per-page
-> level, so a range can contain both private and shared pages. Zap both
-> private and shared pages for simplicity.
+> A folio will have extra refcounts if it is present in a per-CPU lru_add
+> fbatch. guest_memfd does not actually participate in LRU, but
+> freshly-allocated folios are still added to the lru_add fbatch for batch
+> LRU statistics processing.
 >
-> An alternative would be to iterate guest_memfd attributes and only zap both
-> if shared and private pages exist within the range. Setting both the shared
-> and private filters lets the zapping logic do that iteration instead.
+> This one known "usage" of the folio is handled by draining the lru_add
+> fbatch. After draining, if the refcount is still elevated, then there's
+> truly some other user of this page, and the page is not safe for
+> conversion.
 >
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> If the page may be dma pinned, DMA is obviously using it and hence not safe
+> for conversions. If the page is still mapped after guest_memfd tried to
+> unmap it earlier in the conversion process, it is also obviously not safe
+> for conversion. Exit early to avoid unnecessary draining in these 2 cases.
+>
+> Provide a drain status to only drain once ever while processing a batch of
+> folios.
+>
+> Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+> Suggested-by: David Hildenbrand <david@kernel.org>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
 Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
@@ -145,77 +120,84 @@ Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 Cheers,
 /fuad
 
+
 > ---
->  virt/kvm/guest_memfd.c | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
+>  mm/swap.c              |  2 ++
+>  virt/kvm/guest_memfd.c | 23 +++++++++++++++++++----
+>  2 files changed, 21 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 8e965c8ce9aa9..9f511b97ab110 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -37,6 +37,7 @@
+>  #include <linux/page_idle.h>
+>  #include <linux/local_lock.h>
+>  #include <linux/buffer_head.h>
+> +#include <linux/kvm_types.h>
+>
+>  #include "internal.h"
+>
+> @@ -995,6 +996,7 @@ void lru_cache_drain_for_folio(const struct folio *folio,
+>                         *drained = LRU_CACHE_DRAINED_ALL;
+>         }
+>  }
+> +EXPORT_SYMBOL_FOR_KVM(lru_cache_drain_for_folio);
+>
+>  atomic_t lru_disable_count = ATOMIC_INIT(0);
 >
 > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 75979c885e030..b1537226e5adf 100644
+> index 896699afcad9d..030af0855f8b0 100644
 > --- a/virt/kvm/guest_memfd.c
 > +++ b/virt/kvm/guest_memfd.c
-> @@ -136,14 +136,6 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->         return folio;
+> @@ -8,6 +8,7 @@
+>  #include <linux/mempolicy.h>
+>  #include <linux/pseudo_fs.h>
+>  #include <linux/pagemap.h>
+> +#include <linux/swap.h>
+>
+>  #include "kvm_mm.h"
+>  #include "guest_memfd.h"
+> @@ -542,11 +543,26 @@ static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
+>         return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
 >  }
 >
-> -static enum kvm_gfn_range_filter kvm_gmem_get_invalidate_filter(struct inode *inode)
-> -{
-> -       if (GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED)
-> -               return KVM_FILTER_SHARED;
-> -
-> -       return KVM_FILTER_PRIVATE;
-> -}
-> -
->  static void __kvm_gmem_invalidate_start(struct gmem_file *f, pgoff_t start,
->                                         pgoff_t end,
->                                         enum kvm_gfn_range_filter attr_filter)
-> @@ -186,15 +178,13 @@ static void __kvm_gmem_invalidate_start(struct gmem_file *f, pgoff_t start,
->  }
->
->  static void kvm_gmem_invalidate_start(struct inode *inode, pgoff_t start,
-> -                                     pgoff_t end)
-> +                                     pgoff_t end,
-> +                                     enum kvm_gfn_range_filter filter)
+> +static bool __folio_safe_for_conversion(struct folio *folio,
+> +                                       enum lru_cache_drained *drained)
+> +{
+> +       const int filemap_get_folios_refcount = 1;
+> +
+> +       if (folio_maybe_dma_pinned(folio) || folio_mapped(folio))
+> +               return false;
+> +
+> +       lru_cache_drain_for_folio(folio, filemap_get_folios_refcount,
+> +                                 drained);
+> +
+> +       return folio_ref_count(folio) ==
+> +              folio_nr_pages(folio) + filemap_get_folios_refcount;
+> +}
+> +
+>  static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+>                                             size_t nr_pages, pgoff_t *err_index)
 >  {
-> -       enum kvm_gfn_range_filter attr_filter;
->         struct gmem_file *f;
+> +       enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
+>         struct address_space *mapping = inode->i_mapping;
+> -       const int filemap_get_folios_refcount = 1;
+>         pgoff_t last = start + nr_pages - 1;
+>         struct folio_batch fbatch;
+>         bool safe = true;
+> @@ -560,9 +576,8 @@ static bool kvm_gmem_is_safe_for_conversion(struct inode *inode, pgoff_t start,
+>                 for (i = 0; i < folio_batch_count(&fbatch); ++i) {
+>                         struct folio *folio = fbatch.folios[i];
 >
-> -       attr_filter = kvm_gmem_get_invalidate_filter(inode);
-> -
->         kvm_gmem_for_each_file(f, inode)
-> -               __kvm_gmem_invalidate_start(f, start, end, attr_filter);
-> +               __kvm_gmem_invalidate_start(f, start, end, filter);
->  }
->
->  static void __kvm_gmem_invalidate_end(struct gmem_file *f, pgoff_t start,
-> @@ -229,7 +219,8 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
->          */
->         filemap_invalidate_lock(inode->i_mapping);
->
-> -       kvm_gmem_invalidate_start(inode, start, end);
-> +       kvm_gmem_invalidate_start(inode, start, end,
-> +                                 KVM_FILTER_SHARED | KVM_FILTER_PRIVATE);
->
->         truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
->
-> @@ -344,7 +335,7 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
->          * memory, as its lifetime is associated with the inode, not the file.
->          */
->         __kvm_gmem_invalidate_start(f, 0, -1ul,
-> -                                   kvm_gmem_get_invalidate_filter(inode));
-> +                                   KVM_FILTER_SHARED | KVM_FILTER_PRIVATE);
->         __kvm_gmem_invalidate_end(f, 0, -1ul);
->
->         list_del(&f->entry);
-> @@ -525,7 +516,8 @@ static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *fol
->         start = folio->index;
->         end = start + folio_nr_pages(folio);
->
-> -       kvm_gmem_invalidate_start(mapping->host, start, end);
-> +       kvm_gmem_invalidate_start(mapping->host, start, end,
-> +                                 KVM_FILTER_SHARED | KVM_FILTER_PRIVATE);
->
->         /*
->          * Do not truncate the range, what action is taken in response to the
+> -                       if (folio_ref_count(folio) !=
+> -                           folio_nr_pages(folio) + filemap_get_folios_refcount) {
+> -                               safe = false;
+> +                       safe = __folio_safe_for_conversion(folio, &drained);
+> +                       if (!safe) {
+>                                 *err_index = max(start, folio->index);
+>                                 break;
+>                         }
 >
 > --
 > 2.55.0.654.g21b8a5bc05-goog
