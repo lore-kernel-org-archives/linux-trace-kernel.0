@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A2F21D591;
-	Wed, 12 Aug 2026 03:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4668F382292;
+	Wed, 12 Aug 2026 03:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786504392; cv=none; b=a8pb/G5kwjV0p0pf4OuA8H1menBtgMr0d7sNdohjlyTTmmCM5Qs75n8jfey7STfsWdP6XVAhmsril+ylxClT76+pZoLEbcUNjUrsuWannAsSvP8m4DCH4eZiWawNrVsG9hivgodLR3hQvsb73vXs8EKmOJgRQt1rJnhKU3iQ6Ok=
+	t=1786505274; cv=none; b=qiLu3juZTH6tUhzExPXivIOqzFjpK3Nz/BH4wdKZy49F69/9Ao6CzbX5zH5Ecs1widHf72tfzqRfdQzZE1YDX4op85QX0M1hVxtgZNuPk53ikqUEG5ZlsmMU1WB2UTbUpuZaxSf7Zgvx2G5SgbsjeSACUGKhZBUTjU+1GMuSykY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786504392; c=relaxed/simple;
-	bh=AkKijx+yhl0VzD/BsT+PyE6ekz5n9cwWuOOi+c1ujAc=;
+	s=arc-20240116; t=1786505274; c=relaxed/simple;
+	bh=DHngFFMTzobiHwpPz3SjP9y266L3Dd5I1hQOUiek3dg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U4MeesotSY88uQbejb2iJz3R/nfLrstmukCfpZDuxml9XIpoFx+/sl04h9VQDL5p/l7eEDe5jQgfWNKCxRq8VfutKdn4w5kpDw0Sr5/o8kRvE9bTAkSu+5yLW8J7KsoHam4g909ndgPmbnrbbmsQ/BEJCkHdgxchc4l3ZxA+Aw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnMfDSKr; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=eaNjNx8uOd9SEamCax3DX79nZrDxyQdjeNvNQ8u/DBxgaceEsGxJmXf/59lL+953Z69wTWrvERAFofaW7Oo49FdzME88Z5Q1m461oeravVFP2X8/54o8Sb7a5VbDbbFXLxBQn8rFIDdgoBAez5/OO/1gXtkoW0NZYzEK769rUAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lSWSVr6I; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnMfDSKr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lSWSVr6I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786504390; x=1818040390;
+  t=1786505273; x=1818041273;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=AkKijx+yhl0VzD/BsT+PyE6ekz5n9cwWuOOi+c1ujAc=;
-  b=TnMfDSKr548TJGD8PuteND1I/uTXa4UjUYFZJ6ippm3R/scduuHmxGV/
-   8mOjngGXt6eJBCGlV+lhkcWWnJV9v8GkezVEmaZZ6xSEmF9nmNZz846Vc
-   tBcy3I9O/M6FNw6ndxKMjX9gjizdYNYxYfKDeojb4q6BzP6SfhuzJb/kn
-   /kz0Q9vl4C/NMQRUe0yh5G3ELUrRBezN/jmlZ7AxnbQv0L/HdFLr7fhB2
-   J4VaYO0W+d8Ubfy/83KhcehJk53CB+Rxb5hGBjOTaY4ovOzrwrcVrFgg0
-   srz6SNtb0rs7GoxsHFi35fEgc0/boKLs02fecsG+IxeyBb0HdDIVMM5XK
-   A==;
-X-CSE-ConnectionGUID: 7uqvdKkjQiy7DozZi3KQRQ==
-X-CSE-MsgGUID: m3+IpmOySNqDDaCL1bjM1w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="87069595"
+  bh=DHngFFMTzobiHwpPz3SjP9y266L3Dd5I1hQOUiek3dg=;
+  b=lSWSVr6IIOBA+nE7CS6HNVGsc9J50fb6vBLrJdIFK1d/Ev+djFY2Uc/+
+   GHAkiKAFc/D2Qo911CnmwaTqBA4yI3NDQ4V7XKO99xMA/EkcANsSR5yGa
+   ZjCeA0Odl/zYPSalIw40aZTv1WdeliIzMqNlbPW5RwPFp/83Rg+Q3KkfK
+   yo6mZTXzZmUPXClwUksKZQJ483XRuAI6mBHIgO2H7d+prcykvciF320+h
+   i85afMebF1kAiOE7TWLq3CXf9axQLj+l9kU6bYJKhD+r/lGAMsf72AjKb
+   WDfsj16UZWFpJxhpdhcY9d3iWbFcqe3CR7zgN08qWBPVRfo43HpLZdRCz
+   g==;
+X-CSE-ConnectionGUID: 9A8I7pjyS1yRoYv6HYrq1g==
+X-CSE-MsgGUID: uOSsAfyWSF+DDxFWnDwXIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="89575901"
 X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="87069595"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 20:13:09 -0700
-X-CSE-ConnectionGUID: +2b0w5VQSvqkwpgU/D8G6w==
-X-CSE-MsgGUID: /572NDDhT8KJyc2EdBGfOg==
+   d="scan'208";a="89575901"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 20:27:52 -0700
+X-CSE-ConnectionGUID: jXyrUnQUTjijHpNVquEIwg==
+X-CSE-MsgGUID: bUYlg8z2QcKiPLUcckGC1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="267358694"
+   d="scan'208";a="261763974"
 Received: from unknown (HELO [10.238.2.33]) ([10.238.2.33])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 20:12:55 -0700
-Message-ID: <06f8fbe4-80b3-4d5b-a8cd-2144087e3dbe@linux.intel.com>
-Date: Wed, 12 Aug 2026 11:12:53 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 20:27:38 -0700
+Message-ID: <5d7151af-79a4-4e3b-8d06-949b1dd670ee@linux.intel.com>
+Date: Wed, 12 Aug 2026 11:27:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 01/41] KVM: guest_memfd: Use kvm_mem_is_private() when
- populating guest_memfd memory
+Subject: Re: [PATCH v10 02/41] KVM: guest_memfd: Introduce per-gmem
+ attributes, use to guard user mappings
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
@@ -87,50 +87,38 @@ Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  linux-mm@kvack.org, linux-coco@lists.linux.dev,
  Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-1-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-2-2fc18ee6d3ba@google.com>
 Content-Language: en-US
 From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-1-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-2-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
 > From: Sean Christopherson <seanjc@google.com>
 > 
-> Using kvm_mem_is_private() when populating guest_memfd instead of using an
-
-Nit:
-Using -> Use?
-> open coded equivalent.  In addition to simplifying the populate code *now*,
-> this avoids the need to provide a range-based gmem lookup API in the future
-> as well.
+> Start plumbing in guest_memfd support for in-place private<=>shared
+> conversions by tracking attributes via a maple tree.  KVM currently tracks
+> private vs. shared attributes on a per-VM basis, which made sense when a
+> guest_memfd _only_ supported private memory, but tracking per-VM simply
+> can't work for in-place conversions as the shared/private status of a given
+> page needs to be per-gmem_inode, not per-VM.
 > 
-> No functional change intended.
+> Use the filemap invalidation lock to protect the maple tree, as taking the
+> lock for read when faulting in memory (for userspace or the guest) isn't
+> expected to result in meaningful contention, and using a separate lock
+> would add significant complexity (avoiding deadlock is quite difficult).
 > 
-> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
+> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+> Co-developed-by: Fuad Tabba <tabba@google.com>
+> Signed-off-by: Fuad Tabba <tabba@google.com>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
+With Sean's fixup in https://lore.kernel.org/kvm/annqex-kBOc0UJvp@google.com/ 
+
 Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-
-> ---
->  virt/kvm/guest_memfd.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index b596486d184ca..a11cf6dc785da 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -811,9 +811,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
->  
->  	folio_unlock(folio);
->  
-> -	if (!kvm_range_has_memory_attributes(kvm, gfn, gfn + 1,
-> -					     KVM_MEMORY_ATTRIBUTE_PRIVATE,
-> -					     KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
-> +	if (!kvm_mem_is_private(kvm, gfn)) {
->  		ret = -EINVAL;
->  		goto out_put_folio;
->  	}
-> 
-
