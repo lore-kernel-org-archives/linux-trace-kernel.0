@@ -1,137 +1,136 @@
-Received: from out28-172.mail.aliyun.com (out28-172.mail.aliyun.com [115.124.28.172])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EC6375ABE;
-	Wed, 12 Aug 2026 02:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A2F21D591;
+	Wed, 12 Aug 2026 03:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786500878; cv=none; b=Zy8wdS7lGqyvm/EcsPMAEttelXrbRSjMLjVWwWb+1CR0H1NrR8qY1+lEdmLWHZLFd/7xrvWVnNO9zV+t8/dthTN0yGvN58+FKJz6dxrU4d16idgyEdMCWF0luhBruKmMx4BHc0+HEySD7+7H1oTABydiifa9ODApCxDsGNfNtQo=
+	t=1786504392; cv=none; b=a8pb/G5kwjV0p0pf4OuA8H1menBtgMr0d7sNdohjlyTTmmCM5Qs75n8jfey7STfsWdP6XVAhmsril+ylxClT76+pZoLEbcUNjUrsuWannAsSvP8m4DCH4eZiWawNrVsG9hivgodLR3hQvsb73vXs8EKmOJgRQt1rJnhKU3iQ6Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786500878; c=relaxed/simple;
-	bh=WPUJQLKAO1IcWGRktCWFESp53OLi18zBfvn8kquoHY0=;
+	s=arc-20240116; t=1786504392; c=relaxed/simple;
+	bh=AkKijx+yhl0VzD/BsT+PyE6ekz5n9cwWuOOi+c1ujAc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZiCJV5e6aZXM9iPJkTA9e8m9HV/oyMJF6MZMm6txxJIO+0yTQuXPtdK7eYnCF9QdpJ288BVCSR7JC9gKB/9XORQMzv/euJRMgBm4Xayuyf1uNok8liOYGQA86Bv5qo0cvtLTRlKgt7hp1CR9b3J1uNjqLS/SJLA3tCsmmbSdam4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com; spf=pass smtp.mailfrom=allwinnertech.com; arc=none smtp.client-ip=115.124.28.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=allwinnertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allwinnertech.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07447758|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.117566-0.130689-0.751745;FP=17796360389834409298|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033045220102;MF=michael@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.ijodgzg_1786500864;
-Received: from 192.168.208.183(mailfrom:michael@allwinnertech.com fp:SMTPD_---.ijodgzg_1786500864 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 10:14:25 +0800
-Message-ID: <f7b0e5a6-c38d-634e-4353-6d1bb5dcd12e@allwinnertech.com>
-Date: Wed, 12 Aug 2026 10:14:24 +0800
+	 In-Reply-To:Content-Type; b=U4MeesotSY88uQbejb2iJz3R/nfLrstmukCfpZDuxml9XIpoFx+/sl04h9VQDL5p/l7eEDe5jQgfWNKCxRq8VfutKdn4w5kpDw0Sr5/o8kRvE9bTAkSu+5yLW8J7KsoHam4g909ndgPmbnrbbmsQ/BEJCkHdgxchc4l3ZxA+Aw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnMfDSKr; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnMfDSKr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786504390; x=1818040390;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AkKijx+yhl0VzD/BsT+PyE6ekz5n9cwWuOOi+c1ujAc=;
+  b=TnMfDSKr548TJGD8PuteND1I/uTXa4UjUYFZJ6ippm3R/scduuHmxGV/
+   8mOjngGXt6eJBCGlV+lhkcWWnJV9v8GkezVEmaZZ6xSEmF9nmNZz846Vc
+   tBcy3I9O/M6FNw6ndxKMjX9gjizdYNYxYfKDeojb4q6BzP6SfhuzJb/kn
+   /kz0Q9vl4C/NMQRUe0yh5G3ELUrRBezN/jmlZ7AxnbQv0L/HdFLr7fhB2
+   J4VaYO0W+d8Ubfy/83KhcehJk53CB+Rxb5hGBjOTaY4ovOzrwrcVrFgg0
+   srz6SNtb0rs7GoxsHFi35fEgc0/boKLs02fecsG+IxeyBb0HdDIVMM5XK
+   A==;
+X-CSE-ConnectionGUID: 7uqvdKkjQiy7DozZi3KQRQ==
+X-CSE-MsgGUID: m3+IpmOySNqDDaCL1bjM1w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="87069595"
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="87069595"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 20:13:09 -0700
+X-CSE-ConnectionGUID: +2b0w5VQSvqkwpgU/D8G6w==
+X-CSE-MsgGUID: /572NDDhT8KJyc2EdBGfOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="267358694"
+Received: from unknown (HELO [10.238.2.33]) ([10.238.2.33])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 20:12:55 -0700
+Message-ID: <06f8fbe4-80b3-4d5b-a8cd-2144087e3dbe@linux.intel.com>
+Date: Wed, 12 Aug 2026 11:12:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v5] tracing: Fix race between update_event_fields and,
- event_define_fields
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 01/41] KVM: guest_memfd: Use kvm_mem_is_private() when
+ populating guest_memfd memory
+To: ackerleytng@google.com
+Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
+ suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <2e5730d2-c631-da41-3a3a-ae35bb4895f3@allwinnertech.com>
- <20260810104525.6a3a2e6c@gandalf.local.home>
- <3f27bacf-5f01-8cb5-a04c-824ca7b2c13f@allwinnertech.com>
- <20260811090045.2a3cbed9@gandalf.local.home>
-From: Michael Wu <michael@allwinnertech.com>
-In-Reply-To: <20260811090045.2a3cbed9@gandalf.local.home>
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
+ Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org, linux-coco@lists.linux.dev,
+ Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-1-2fc18ee6d3ba@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-1-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/11/2026 9:00 PM, Steven Rostedt wrote:
-> This is still way too verbose. Is this AI written? If so, AI is *not* your friend.
-This commit was written by me, not by AI. I apologize for wasting your time. Thank you for rewriting the change.
-> Why are the priorities of the notifiers important here?
-I probably wanted to describe the entire process, so I've gone on to say too much.
-> Less is more when it comes to describing a bug.
-Got it.
+On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson <seanjc@google.com>
+> 
+> Using kvm_mem_is_private() when populating guest_memfd instead of using an
 
-> On Tue, 11 Aug 2026 14:00:05 +0800
-> Michael Wu <michael@allwinnertech.com> wrote:
+Nit:
+Using -> Use?
+> open coded equivalent.  In addition to simplifying the populate code *now*,
+> this avoids the need to provide a range-based gmem lookup API in the future
+> as well.
 > 
->>> What does the above mean? Are you loading two modules at the same time?  
->> Two modules (A and B) are loaded simultaneously on different CPUs. On the arm64,
->>  when CPU0's trace_module_notify [pri=1] and CPU1's trace_module_notify [pri=0] 
->> simultaneously perform operations on call_A, because they are in different cache lines,
->> CPU1 may observe WRITE_ONCE(head->next, &f->link) in step (4) before f->link.next=next in step (2).
->>  At this time, CPU1 reads an uninitialized f->link.next and performs an operation that causes to crash.
+> No functional change intended.
 > 
-> This is still way too verbose. Is this AI written? If so, AI is *not* your friend.
-> 
-> 
->>
->>> What does "pri=X notifier" mean? What function calls are these coming from?  
->> `pri=X notifier` represents `trace_events.c:trace_module_notify [pri=1]` and `trace.c:trace_module_notify [pri=0]`, respectively.
-> 
-> Why are the priorities of the notifiers important here?
-> 
-> I honestly didn't know one was allowed to load two modules at the same time
-> and thought that it the module logic would prevent that. But if that's not
-> the case, then yeah, we need protection.
-> 
-> 
->>  CPU0 (loads module A)                      CPU1 (loads module B)
->>   ===============================            ===============================
->>   load_module(A)                             load_module(B)
->>     blocking_notifier_call_chain_robust        blocking_notifier_call_chain_robust
->>          notifier_call_chain                     notifier_call_chain
->>           nb = trace_events.c:                     nb = trace.c:
->>           trace_module_notify [pri=1]              trace_module_notify [pri=0]
->>             mutex_lock(&event_mutex)                 trace_event_update_all() 
->>             trace_module_add_events(A)               down_write(&trace_event_sem) 
->>               __register_event(call_A)                
->>               __add_event_to_tracers(call_A)           
->>                 event_define_fields(call_A)            
->>                   for each f:                          
->>                     f = kmem_cache_alloc()             
->>                     list_add(&f->link,               	
->>                              &class->fields)           
->>                       f->link.next=next; (2)       	   
->>                       WRITE_ONCE(head->next,        
->>                                 &f->link); (4)       update_event_fields(call_A)   											           
->>             mutex_unlock(&event_mutex)	               list_for_each_entry(field, 
->>                                                          &class->fields, link) 
->>                                                          field = class->fields->next 
->>                                                                = &f->link 
->>                                                        	       = f (offset 0) 
->>                                                       up_write(&trace_event_sem)  
-> 
-> Basically this can be summed up to being:
-> 
->  CPU0 (loads module A)                      CPU1 (loads module B)
->  ===============================            ===============================
->  load_module(A)                             load_module(B)
->    notifier_call_chain                        notifier_call_chain
->      trace_module_notify                        trace_module_notify
->        mutex_lock(&event_mutex)                   trace_event_update_all() 
->          trace_module_add_events(A)                 down_write(&trace_event_sem) 
->             __register_event(call_A)                
->               __add_event_to_tracers(call_A)           
->                 event_define_fields(call_A)            
->                   for each f:                         list_for_each_entry(field, 
->                     list_add(&f->link,                                    &class->fields, link) 
->                              &class->fields)            field = class->fields->next;
-> 
-> Where you can see that one is being read while the other is being written
-> to. You do not need to go into details of the cache visibility here because
-> this is an obvious race condition. All that information just distracts from
-> the real issue that is being fixed.
-> 
-> Less is more when it comes to describing a bug.
-> 
-> I'll rewrite you change log and take the patch.
-> 
-> Thanks,
-> 
-> -- Steve
+> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 
--- 
-Regards,
-Michael Wu
+> ---
+>  virt/kvm/guest_memfd.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index b596486d184ca..a11cf6dc785da 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -811,9 +811,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
+>  
+>  	folio_unlock(folio);
+>  
+> -	if (!kvm_range_has_memory_attributes(kvm, gfn, gfn + 1,
+> -					     KVM_MEMORY_ATTRIBUTE_PRIVATE,
+> -					     KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
+> +	if (!kvm_mem_is_private(kvm, gfn)) {
+>  		ret = -EINVAL;
+>  		goto out_put_folio;
+>  	}
+> 
+
