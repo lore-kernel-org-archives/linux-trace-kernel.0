@@ -1,133 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022BA46EC69;
-	Wed, 12 Aug 2026 14:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF8025F7A9
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 15:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786546575; cv=none; b=llI1WSe7H+7/+KVO8xcpJz3eUb/W3VPZ2Z5s9bLE2XU1DnfgTKv8QffM6NKzhwAicY1VcJc+Ont1lQx639iTxuTHAxuQHff+7+QdKk30PLhEvukAO8831omNPLwSKcGoLyhWtOL/AeP+SsW7FfmxGMqvyEZZmmHLkLJQOG+MPqw=
+	t=1786548815; cv=none; b=uhGc5oqH/TgD2dcI5JaZfiHHIgKkjz9g+mrAOfj70im4DEMCQYp6GopMaqM73zf59AGVnM9dRKunyo2orsRpTzeats21lUGvudGfsooYJ6a4P6kU6TB9hs20SfDFVE5erGFsgxZRh8/FhlFJPrlEhIXd8jhnKqeH5nkbNj/EGJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786546575; c=relaxed/simple;
-	bh=2QzIb/jNE1OcHLnHPrfA7nX9AqIAo1yYkGQwq3UFsGw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iuJ1nC91ouaojpuYF4yn02Nn5NlETovDgcwfnPKTA0fTFonq36RTu46i2xfOW4WVfSzdRjxplT2zs/2sY4BgPu9Us5bfPX02dmN9QVSbnRe86+usJ7NO1Iwz66BKBKLzD6tolIk7DD8WMfogg0LLBCJIirXTVupNXmzEIcFIzZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcF2Ntme; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786548815; c=relaxed/simple;
+	bh=RnyxOYCwhQgTKJ1d8W1Pm0f+ZLeYf+TecB/avfsb4Jk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=f96fZhpdYhBrM6T58xkRVMsIDkrSS+ybX2uDMfiJDr3cswQlmj9cN79B18ju1QRkjeyebL4dLSUtvBMco/zbcdPswJiHvpXLMWPxIIweIygExe6DiWL2Qg94om+tk8lJyVrY2vw1KxoChnSV0Usdyjdrrt36YMuBWV70I0FdNXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fSEVNOCw; arc=none smtp.client-ip=209.85.221.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcF2Ntme"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 688EC1F00ADB;
-	Wed, 12 Aug 2026 14:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786546562;
-	bh=qLUPtfFf9FhflLXSbkntjMYPfWGrc/D4NeOfLtwZGug=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=dcF2Ntmel4kXMZdYiAKCeCcveNaojBLGqs+0ejME4vXB2rVSXG9vmfmw04sLsBKpv
-	 dMbdTOWIIVjrgAdc2Tms2FMD+lBFeEJv5C82y8ihri7kvwzrhGGccnMhH6AHi/7Vf/
-	 CwPuThUUhTm7zhQgluWexA193uec/4RGf9UZv+osFMECN8bFg8wXlKb7LIe2hV86f0
-	 wzi1kKduR0FAVOxwuZfcQWckjltXMwrY65SC1uyGiLM6lWcEabHuTZgaQm8fqBhvwd
-	 e2sOzJkKub2BmPLW9fpN5h4zrVEe0jaX/rzbcmUTYQ+ubLbeguEZMzDDd+pD9ZuUPr
-	 td8hdHsAreIlg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 12 Aug 2026 16:55:37 +0200
-Subject: [PATCH net-next 02/11] mptcp: remove unused data_ack from struct
- mptcp_ext
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fSEVNOCw"
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47f7039fa59so897636f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 08:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786548808; x=1787153608; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mYJnf32SraedkkQAhf1lNG9n6MN2rsucTWkpU2qB8LU=;
+        b=fSEVNOCwALQXTxgKUxiKYdnSAiBEzYPzLmS8z90WjTf5zJUwHOfFEnMAOo38KBwRzX
+         KyiqX/DZ5/MArOvDwPVxvsGDvgUJsDoYQmNj1+baQJO1zUckDsHym1G1SCUD+IdRopHd
+         8E+11kmkxKQQ+fwsNyasagrzvsI1WHyzGOeiu1adkhzxX2aD2exxe2bYnwhGKUwllgs6
+         3al/kcDSOyKvJUe+Dlzel2ZMtjJ182m6zOfM0+00iJUbmk2wxl92Zq9Uzx4CJJwRmZ1+
+         GFvDA4vbHiCaGYYfHbHbG6H0iYsq40j+KPCGoHLgOwJHN6AoF7/CighkM2lDCsZEW+54
+         WaGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786548808; x=1787153608;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mYJnf32SraedkkQAhf1lNG9n6MN2rsucTWkpU2qB8LU=;
+        b=feBlswDIHaKGGJzSOCw/s7YmFd01VoCIBLPiVfwW+02aJop+iLpOVe+zq1gkKQx5Q/
+         /CCTabYFKMMkHzmiHL8OWXIG7g6c8V3KZ1LYTSkDelhrKMH/XkkCbqXsO4+YBYgLYhY5
+         SNmYZwiY4HoCodMwefNpI3t2ehl/LjCKynE40ThljZbR/fcnd06DRkzYRRunbGOkh97R
+         JJhFVnpSGDo9ZaPgWeaUlLNDaABH7Frxzhr5e5sWRV14q6mi0ctC9DCHyX6XSpd4QlI4
+         vZ1k/s8nALPfjkOkg/wqK8veD07OEGazCgA8QaVFWP9EJniMui0l7n2Na7os1CIL6nce
+         WagQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqDGG0WbkZPDGkgwsxaf+QqHonb8fMumt1I9LhdqFRElT7aaI3Ss0kiqIkxo/IBIaxNl1iJkcav8wu1UkaGrM7ae4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykTJp7MdyXIsIIZ+gMDVLiNGT9iTsmD/iHyIQWhGNwzCzm0r2y
+	Im3ZZdnY6oFXOY7kQZ/76XGQMJAoNe+fyZjUk+8sjkbi7gtg6HjE9ESlsQ05pD8rv3PjPr5LCDp
+	RPM3dqY25MaE5fFrf93CtGQ==
+X-Received: from wrms2.prod.google.com ([2002:adf:ea82:0:b0:47f:ffcf:7045])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:188e:b0:47e:81aa:3832 with SMTP id ffacd0b85a97d-481528f7238mr7770005f8f.16.1786548807933;
+ Wed, 12 Aug 2026 08:33:27 -0700 (PDT)
+Date: Wed, 12 Aug 2026 16:33:02 +0100
+In-Reply-To: <20260812153311.2328812-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260812-net-next-mptcp-misc-feat-7-3-v1-2-1905a818f6cb@kernel.org>
-References: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
-In-Reply-To: <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org, Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2561; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=RWzRcFuSIbEV/td2eQo1OegNXZesOq80bWBdbOKhYO0=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGLJqOov3Mpj1NBjUSfnKruS1naLm/v7QtanrPt34NiFth
- ZTYVE3njlIWBjEuBlkxRRbptsj8mc+reEu8/Cxg5rAygQxh4OIUgInwtTD8U3/M1xHT3HXvu6PS
- h8vTbtbO9Xhy1I07a9l1s5frnU6aizD8s3kglflj3aHFS55v6GI2jEjfcv+TUExlrPS3yVc/3Jk
- uxAoA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Mime-Version: 1.0
+References: <20260812153311.2328812-1-vdonnefort@google.com>
+X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
+Message-ID: <20260812153311.2328812-2-vdonnefort@google.com>
+Subject: [PATCH v4 1/9] ring-buffer: Free cpu_buffer->free_page with subbuf_order
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
+	Sashiko <sashiko-bot@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+When sub-buffers use an order greater than 0, cpu_buffer->free_page is
+allocated with subbuf_order. Use the correct order for
+cpu_buffer->free_page.
 
-The data_ack and data_ack32 fields in struct mptcp_ext are no longer used
-anywhere. Remove them from the structure and update mptcp_dump_mpext()
-trace helper accordingly. Drop the data_ack field from the trace entry
-and the corresponding output in TP_printk().
+Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
- include/net/mptcp.h          | 4 ----
- include/trace/events/mptcp.h | 6 ++----
- 2 files changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 71b9fc5a5796..485d55b66ea6 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -19,10 +19,6 @@ struct seq_file;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 2667992f0aa2..a3d28b2e2c94 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2631,7 +2631,7 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ 		free_buffer_page(bpage);
+ 	}
  
- /* MPTCP sk_buff extension data */
- struct mptcp_ext {
--	union {
--		u64	data_ack;
--		u32	data_ack32;
--	};
- 	u64		data_seq;
- 	u32		subflow_seq;
- 	u16		data_len;
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 04521acba483..22882bd03459 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -75,7 +75,6 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 	TP_ARGS(mpext),
+-	free_page((unsigned long)cpu_buffer->free_page);
++	free_pages((unsigned long)cpu_buffer->free_page, cpu_buffer->buffer->subbuf_order);
  
- 	TP_STRUCT__entry(
--		__field(u64, data_ack)
- 		__field(u64, data_seq)
- 		__field(u32, subflow_seq)
- 		__field(u16, data_len)
-@@ -94,7 +93,6 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 	),
- 
- 	TP_fast_assign(
--		__entry->data_ack = mpext->ack64 ? mpext->data_ack : mpext->data_ack32;
- 		__entry->data_seq = mpext->data_seq;
- 		__entry->subflow_seq = mpext->subflow_seq;
- 		__entry->data_len = mpext->data_len;
-@@ -112,8 +110,8 @@ DECLARE_EVENT_CLASS(mptcp_dump_mpext,
- 		__entry->infinite_map = mpext->infinite_map;
- 	),
- 
--	TP_printk("data_ack=%llu data_seq=%llu subflow_seq=%u data_len=%u csum=%x use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u csum_reqd=%u infinite_map=%u",
--		  __entry->data_ack, __entry->data_seq,
-+	TP_printk("data_seq=%llu subflow_seq=%u data_len=%u csum=%x use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u csum_reqd=%u infinite_map=%u",
-+		  __entry->data_seq,
- 		  __entry->subflow_seq, __entry->data_len,
- 		  __entry->csum, __entry->use_map,
- 		  __entry->dsn64, __entry->data_fin,
-
+ 	kfree(cpu_buffer);
+ }
 -- 
-2.53.0
+2.55.0.691.gc56d675ccc-goog
 
