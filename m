@@ -1,162 +1,147 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF673D0939
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 22:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E012EBBB9;
+	Thu, 13 Aug 2026 22:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786658935; cv=none; b=sLTd1nrl5NplH3PmeG7pMDNFiTj/yINn7syt2+lS9wW3nMfM3ZByFwpolyzLJa0sNpedI3X9cG2/GYLlE6RnQx4dXJyQ98GPmDUPqKDwpDYw4xqGbXfdp1FC04YE6JeUg3DcyWHMC6jct//1D2SqFhYi4eL6OelETeToJ99zZmQ=
+	t=1786661496; cv=none; b=OYnF28p074+A6O8diczMq/n54u5l1RbBzP/HQdthemIYQsEMY3EMmnbX2wOYI6sqeEQ7rfF57S0EfhUQ7IrzYn0iuf8KMCyBSrphBj+fOiBOPsmMwKQPYVbv0b/uCEUUrw0vwKeUjRPud9Zhgmqh1RqC1Y8EI5IzLU5o1npFGig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786658935; c=relaxed/simple;
-	bh=KiztK1JbpO5JZhhPbKHjeFsloeqjBsAvtQBBDIoVGKs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AotEcsExjMbsJOaTzGYLSf7htY8ADDsa+2dBIhs+emdWjqTCk7k56eBAKZvrVCBQEJrKmdYgyU+6GsgEXZn9D9zTuDcxR2cw5E65nk6PTWMWb/RLgITPefYot5sUUTjl6yF/NhzPmWM4a6m4dmEu89DfCstVSjOjTEByKPOcVAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O77IikC1; arc=none smtp.client-ip=209.85.215.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1786661496; c=relaxed/simple;
+	bh=CMBCQjjuL9iHDRdGF1/bzRuWSoVNhKKBAnbkYC2bJqQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=If/9FHANET4cN3bXhRcci+V1Y+P2mZcndcbllMz/jEYncAcivG+PEucOZWx4UbaaMyUa7gTiGCSNVglaXl3gtRJUmzG6FXZJTox3mjGE1VI84LicRlS1D7nNgzaHFrTbQGIGwyipw+Xjos4+zj8PQh9UM6rQ8k8v3o+lD91IyVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAuUZH87; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O77IikC1"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cb7049fa552so221929a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 15:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786658930; x=1787263730; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=N/3XZWjnKAuEX+EJn/U2x2ZdOkAMPrJlBbo8McfTGik=;
-        b=O77IikC1sR3xbQiMdywHmVt9JDOGw8IV08kS1LlwG8tzdQFj+o2dEb5UtJfGTjdWMh
-         pgDMHr1drHwz1I8R/nduFxDD3mpZjyZ++TGcDlZyZcxBYFUDrjwowv1eTOikIInNxZK2
-         C+BVoq7Rs9oMQv2z+nf3MxU/4RS2i6u6Pxm9pG6jOBNP7zkUxOTEtpiMBbclB7Exjwtk
-         eLzyLlr0iUpPg+Uj/+ovfahhebV2/xui++RgIUBhZHyjnJ5MUZcEkEyf4t1dIX/Vg0C+
-         Pyjk4KGvxS80cFbaFhV6oQ01WJyWy0A5Tvo9HpI6vkZFozu109yY7U7GGivUD5HBvXEP
-         IHdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786658930; x=1787263730;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=N/3XZWjnKAuEX+EJn/U2x2ZdOkAMPrJlBbo8McfTGik=;
-        b=ab6v8Kw9ng6iUXQUDCk5DVLGOgK+eG3PqpeN4p7yp1Ho3h5/hRxTLhKgjDuKdeVJPU
-         +Gelrf0jQBapPkEhCNhoeL8WLUYeUpsZo8mKWj2/Hz3BgvM83dJq/uTj1Mw2VgYUgFnR
-         dv1lNRxrVxSxtiL4fXnpjbTbYUJhf3NRYrOST/Wh4Jd/U8KA0jEZZR9EagFX5BN9B07J
-         YD5czUnLG8b+a3tsVFU6wKu8EsHDqiHoLN1sU9AbsIZ5qv4IWpp8MEtncF/egBh24eWr
-         1TOV75uSW5/4TQMP5ID8Q4I7J+xm5FJjzqHmcweXuqvTD8ty2GTKdPj3W8QBmoyutuew
-         a9og==
-X-Forwarded-Encrypted: i=1; AHgh+RqjLNHTZBbF7nGoKab//h44DTk8GVJjNuh/oT6Ti3ZrPEZYgG7asFZMj610RgOZJ2rcZOCtpayEzmXhwMZG59exLbc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPmZNcBfy97pQcuFXMzDnHO9Aimp8UNLvt65aMnpKheUOoXQDG
-	8ZZlwJYrYRldwN1brF1XqM1DHD7YPeuprwsmeqvDdl/hunHlUWjSk4zu78PoCP5HXlLhRGKi0JV
-	4n3BMyw==
-X-Received: from pgcd20.prod.google.com ([2002:a05:6a02:4c54:b0:c9e:41e5:2eec])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a21:b0:3b5:489c:7bb5
- with SMTP id adf61e73a8af0-3cc71d1e1c7mr839682637.28.1786658929498; Thu, 13
- Aug 2026 15:08:49 -0700 (PDT)
-Date: Thu, 13 Aug 2026 15:08:48 -0700
-In-Reply-To: <CAEvNRgGpCVCGVjc9jCt9Yr+XypF=71h6eBahkXNkrXhfrtGY+g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAuUZH87"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF471F000E9;
+	Thu, 13 Aug 2026 22:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786661495;
+	bh=U2ytmh6H0BwdypntoKyZImTiAoYrsm6+Io/A1/Krb9A=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mAuUZH87CVPkrqaZ8TqrjUAQ3oeiW72COow/LB7vtGOYg9e10ukDMeiFwj3aqdtaL
+	 vME3hAVFlQGbW3Djn4R+FE5DEvkpOEddLIx9JsUKpZ6qIAH4zwRWu+jfSkYmHRuvkd
+	 qdrlkZqQj8EjYKek5fmeOuYrbDO6VT2vjm5+2VU92u68nQBZkMD910OfdaWwUOqOHC
+	 B+T8RjnCfVSqjKWfzOcXyvQtnx1ZMjZR+rLppyKEN2rn4zSpjrFkUUpzgLpgdCRmSA
+	 W1oLlGDwIx+FnXxwvtMetKQv/I91AaIIYhUotaTX9P/ryvLoTyxQAO2yoEh7/jy/4i
+	 5uJmwtAzpcYkg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC v4 13/44] KVM: guest_memfd: Apply content modes
+ while setting memory attributes
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ackerley Tng" <ackerleytng@google.com>
+Cc: kvm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260326-gmem-inplace-conversion-v4-13-e202fe950ffd@google.com>
+References: <20260326-gmem-inplace-conversion-v4-13-e202fe950ffd@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 22:51:34 +0000
+Message-Id: <20260813225134.DFF471F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-12-2fc18ee6d3ba@google.com>
- <1ec08cd8-3072-4753-ad5e-cd34956647f8@linux.intel.com> <an3o4h-E8mj6CUaM@google.com>
- <CAEvNRgGpCVCGVjc9jCt9Yr+XypF=71h6eBahkXNkrXhfrtGY+g@mail.gmail.com>
-Message-ID: <an5AcEG9mqDgnBYk@google.com>
-Subject: Re: [PATCH v10 12/41] KVM: guest_memfd: Call arch make_shared
- callback for to-shared conversion
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Binbin Wu <binbin.wu@linux.intel.com>, aik@amd.com, andrew.jones@linux.dev, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev, Fuad Tabba <fuad.tabba@linux.dev>
-Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Aug 13, 2026, Ackerley Tng wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > On Thu, Aug 13, 2026, Binbin Wu wrote:
-> >> On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
-> >> > +#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
-> >> > +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end)
-> >> > +{
-> >> > +	struct folio_batch fbatch;
-> >> > +	pgoff_t next = start;
-> >> > +	int i;
-> >> > +
-> >> > +	folio_batch_init(&fbatch);
-> >> > +	while (filemap_get_folios(inode->i_mapping, &next, end - 1, &fbatch)) {
-> >> > +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-> >> > +			struct folio *folio = fbatch.folios[i];
-> >> > +			pgoff_t start_index, end_index;
-> >> > +			kvm_pfn_t start_pfn;
-> >> > +			kvm_pfn_t nr_pages;
-> >> > +
-> >> > +			start_index = max(start, folio->index);
-> >> > +			end_index = min(end, folio_next_index(folio));
-> >> > +			/*
-> >> > +			 * end_index is either in folio or points to
-> >> > +			 * the first page of the next folio. Hence,
-> >> > +			 * all pages in range [start_index, end_index)
-> >> > +			 * are contiguous.
-> >> > +			 */
-> >> > +			start_pfn = folio_file_pfn(folio, start_index);
-> >> > +			nr_pages = end_index - start_index;
-> >> > +
-> >> > +			kvm_arch_gmem_make_shared(start_pfn, nr_pages);
-> >> > +		}
-> >> > +
-> >> > +		folio_batch_release(&fbatch);
-> >> > +		cond_resched();
-> >> > +	}
-> >> > +}
-> >> > +#else
-> >> > +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end) {}
-> >> > +#endif
-> >> > +
-> >> >  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
-> >> >  				     size_t nr_pages, uint64_t attrs,
-> >> >  				     pgoff_t *err_index)
-> >> > @@ -599,7 +636,12 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
-> >> >
-> >> >  	filter = to_private ? KVM_FILTER_SHARED : KVM_FILTER_PRIVATE;
-> >> >  	kvm_gmem_invalidate_start(inode, start, end, filter);
-> >> > +
-> >> > +	if (!to_private)
-> 
-> Should I make this condition
-> 
-> 	if (!to_private && kvm_x86_ops.gmem_make_shared)
-> 
-> instead?
-> 
-> Will that help?
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] WARN_ON() discards the error code from kvm_gmem_apply_content_mode=
+(), leading to silent failures and a user-triggerable kernel warning (DoS v=
+ector).
+- [Medium] Applying content mode without invalidating MMU mappings when mem=
+ory attributes do not change causes data races and potential hardware machi=
+ne checks.
+--
 
-No, because that's bleeding x86 details into common code, which defeats the purpose
-of arch hooks.  That's why I think it's worth analyzing the cost: if it's in the
-noise, leave it alone.  If it's meaningful, figure out a not-too-gross way to skip
-the entire thing if kvm_arch_gmem_make_shared() is a glorified nop in the end.
+--- Patch [13]: [PATCH RFC v4 13/44] KVM: guest_memfd: Apply content modes =
+while setting memory attributes ---
+commit 47c20f7dd20767b04a5efc7e5951d56b44e5a590
+Author: Ackerley Tng <ackerleytng@google.com>
+
+KVM: guest_memfd: Apply content modes while setting memory attributes
+
+Provide defined memory content modes so that KVM can make guarantees about
+memory content after setting memory attributes, according to userspace
+requests.
+
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index e270e54e030f0..eeac7678fcf4e 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+
+[ ... ]
+
+> @@ -752,9 +783,23 @@ static int __kvm_gmem_set_attributes(struct inode *i=
+node, pgoff_t start,
+> =20
+>  	filemap_invalidate_lock(mapping);
+> =20
+> +	if (!kvm_gmem_content_mode_is_supported(kvm, content_mode,
+> +						to_private)) {
+> +		r =3D -EOPNOTSUPP;
+> +		*err_index =3D start;
+> +		goto out;
+> +	}
+> +
+>  	mas_init(&mas, mt, start);
+> =20
+>  	if (kvm_gmem_range_has_attributes(mt, start, nr_pages, attrs)) {
+> +		/*
+> +		 * Even if no update is required to attributes, the
+> +		 * requested content mode is applied.
+> +		 */
+> +		WARN_ON(kvm_gmem_apply_content_mode(kvm, content_mode,
+> +						    inode, start, end));
+> +
+>  		r =3D 0;
+>  		goto out;
+>  	}
+
+[Severity: Medium]
+Does this path allow the host to modify memory (e.g., zeroing it) while the
+guest still has active PTEs?
+
+Since this early exit path skips kvm_gmem_invalidate_begin() or
+unmap_mapping_pages(), the KVM MMU is not zapped. Could this introduce guest
+data races, or hardware state machine violations if the architecture-specif=
+ic
+preserve operation acts on actively mapped private pages?
+
+[Severity: High]
+Is the error code from kvm_gmem_apply_content_mode() being discarded here?
+
+WARN_ON() evaluates to a boolean and its return value isn't captured. If a
+folio is hardware-poisoned and kvm_gmem_apply_content_mode_zero() returns
+-EHWPOISON, it appears this will silently return 0 (success) to userspace=20
+meaning memory was not zeroed as requested.
+
+Additionally, since this is reachable by untrusted userspace via the=20
+KVM_SET_MEMORY_ATTRIBUTES2 ioctl, could this trigger a host denial of
+service if panic_on_warn is enabled?
+
+[ ... ]
+
+> @@ -786,6 +831,9 @@ static int __kvm_gmem_set_attributes(struct inode *in=
+ode, pgoff_t start,
+>  	if (!to_private)
+>  		kvm_gmem_invalidate(inode, start, end);
+> =20
+> +	WARN_ON(kvm_gmem_apply_content_mode(kvm, content_mode, inode,
+> +					    start, end));
+> +
+>  	mas_store_prealloc(&mas, xa_mk_value(attrs));
+> =20
+>  	kvm_gmem_invalidate_end(inode, start, end);
+
+[Severity: High]
+Similar to the early exit path above, does this discard the error code from
+kvm_gmem_apply_content_mode()?
+
+If this is modified to capture and return the error code, would we also
+need to call mas_destroy(&mas) on the error path to avoid leaking the
+preallocated maple tree nodes?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260326-gmem-inpla=
+ce-conversion-v4-0-e202fe950ffd@google.com?part=3D13
