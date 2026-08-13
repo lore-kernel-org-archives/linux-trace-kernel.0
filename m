@@ -1,108 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f11.google.com (mail-wm2-f11.google.com [74.125.225.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF383B42F9;
-	Wed, 12 Aug 2026 23:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F763148D8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 01:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786578113; cv=none; b=nMflhBqOM5hMPHLaVzkmpRtW8PvJnfq15oImtNuzsMjaH94tcrzZd+KJr6ZyeBkB+65SO9ujiSlPubZh+XkOp4iBRq0+YPQEqifA5apoBV87Ty1lnZHthkPIjjLyivRIpDclngQ7bmU44tcy1Y9jiNE8k56Fwf+hdqlmrREQ4Lo=
+	t=1786582913; cv=none; b=C7S9+SA7Mld9a7cf7KQzW0M6V+SJFwutwjAcsF9flLy6LGTHWlnDWlnd9oqMiinsOcXpSO2PEi7neMt7DcFYvH/0WgkMv3RvknIGuFgqMAlGI3O3oJalQUrFSnGJpbsOz69OMHjE5YSHemFa/Gj/ZSedJMHzhRQGCVwSvsCs8NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786578113; c=relaxed/simple;
-	bh=P9osnGMEfu7Fq4kBhKTpwhE9lWWMOn8Pjcq9zAFW8o8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Yc8wmLslwq1MMrm0FRGHnzFh8Ws/hiEWfZ1M0wi1EKn23ZwNED9U5zR9ZbuSoW1fXj6ZxliW1/oFJZt8+JkPrqmAbdJmX/UbRbWDaymD+0fzxtzzl3H3rgjL7iR3/SOazY92+L5OlCB7CqqKkm304jyy7/QleDyjZzM/AWFVqXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpJjVeD4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786582913; c=relaxed/simple;
+	bh=muTbayIHnU/H6lCZiJDxMSpqcbT7t/+H78XUaWL31UQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JcUwEHNSwYa9hTw0EhkFIGcx5CPLeZ3UtvuDrYbhGsK/YnsJwFOnWbL3yICo9Vn7PrLoyHdvggGaaMJTwz6+mllkx56qjOlQryDLhPPeoBTbpjCV9Oz30Wbj6xbwHHk7AQrpnHZiJWQUbXDf6tTobOSsZovwPGC0AJNjaO3TOC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p2y4rkco; arc=none smtp.client-ip=74.125.225.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpJjVeD4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946E21F000E9;
-	Wed, 12 Aug 2026 23:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786578112;
-	bh=3F6egPcCnZXgUG4ALUc+aW58huXaS8Em/m3p3tdpGX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=JpJjVeD4DTM++gXTxWTf7XexVEJg7irzUKWqfbo4azn7ljimXucu3eTvAjEz9xsoH
-	 JOr/RCL03CNNyuzqxun+YuzW08cVnlhkMkcNgMrjpXngAj4tDkhokQh+zGTywZfadt
-	 dOE0OMmrRx7PPzIBycTlsIUWP3tFj/giVcvqh9Ga/RGvzyutfxcdpkekhCPvzTuTRV
-	 WtCvgBj70MLPb9rECaxkX8G0KAvvByIogAR1nSBow4ZuwStxp9GrIFQ+Zrqk1MNLNo
-	 VrA8MmTJqLfewhL5hLWXHAyALtxAdbLK1ARZIWNF2s//rlTT2G613e/SErZQ1D1w3K
-	 +cS2XS542fK2Q==
-Date: Thu, 13 Aug 2026 08:41:48 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, Vincent Donnefort
- <vdonnefort@google.com>, sashiko-reviews@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] ring-buffer: Fix subbuf resize race with ring
- buffer readers
-Message-Id: <20260813084148.2cd802c4a8ef6ff8ba151bbf@kernel.org>
-In-Reply-To: <20260812132457.69d467ce@gandalf.local.home>
-References: <20260812153311.2328812-1-vdonnefort@google.com>
-	<20260812153311.2328812-4-vdonnefort@google.com>
-	<20260812155312.ADF031F000E9@smtp.kernel.org>
-	<anyi-W-fZHqCPRZd@google.com>
-	<20260812132457.69d467ce@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2y4rkco"
+Received: by mail-wm2-f11.google.com with SMTP id 5b1f17b1804b1-4994d67d2e7so504115e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 18:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786582910; x=1787187710; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XTpt2/LZ7+UdpBiyBfBFxsa5plQ+r90fyz3STBPz1iM=;
+        b=p2y4rkcoHHJVf1FsDp/BZGrniGQH49pjUbWbi8O/dJkCw2ce/JkjzMlRBoN4JMuLq8
+         tsE0vMqWSh/IQ9Dc3e/beKYQkIAYkZpWo28irn0I69oxTFE+ESWfDEZk2l/uv9U53DBD
+         8Pdfw47YCn8I70nzs5YM9qXUnIjqqqAOQM1F3SLdnV+0ddEx7u4A2S9KFBXVYPu1tmP6
+         QNbhBI5xr4UF2DtjIPGWi7U6EdL2WOkznma9tAE4KJpy1DWD7ELv6UfQsz5WaLZMNfXg
+         0fkxvuDx+UiNotSsDkZMN/p8MQx1NwBcNJXi7GVGPBvoVpaxQiDanJaTjBstNBuChfMw
+         d1TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786582910; x=1787187710;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XTpt2/LZ7+UdpBiyBfBFxsa5plQ+r90fyz3STBPz1iM=;
+        b=dTapj8MenjBh/VJzHZcBxquvzZ8JVsAkHZTidAh/RqzI+BUk4ixUV+cI93Z2HazLnO
+         M3/X+hY0YrjoSx7OiJwa1FP0+ACjVeroeYtsnkTc/56YOMDx53X8lHbWJbYF+MIKTWfI
+         FQi9qzNbtTcoN6jcf3QvKlcF/+SUSogQzRt5Z0Ro7WoD7cpQyEH/2mcKacmLxBN/KIuq
+         dD29s33zj+LWmHTxma8r8SxigLVDMlrfwyz0mz0M96VXaxBpMOUaKUeozPq+at3eAVDC
+         MxjNqP7TX9Dvtdpd0MhtxKYDlpmN3SUIu2P6UXW96O33tCipqKnKYwXG+DenGHWQzeiR
+         Kz5g==
+X-Forwarded-Encrypted: i=1; AHgh+Rr3PaQukcXzyLWP2hUc/TBMmwb71PpngWdfpDzhuA87ixS4UeRbaTeFcgsBVMlDFN7BkKnFF27Q8gB1QXdyXj9QS9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlbayKkKpJ2wuk637r64XUBTZbKEoTZX8WZSJhMMhZbzBUKPNa
+	+J+CFRRpDrtKbJZW1iziburuVXSyfQ+leUJQ57zBk5bf1NfeEK5qfxOm
+X-Gm-Gg: AR+sD11ZLmWtiy6mR6fjSrm1YKBKSDFJiOIsgf9W7bRWlCsCldw+mvhS29+Bw/+5+Q4
+	K0W122aSPtcc74hRKFVrPuDVft9vbABFfnw+Dxo/hm/byJFcpfAwBSXgA0pde1FxbJ3gHdi5HDz
+	DgjnV2SFFOA9rA1QAHAniH9J8pXpsem9Tkfk3cVws/FBYoP1C65nzr9oyy1dySZwJH+daJpDat+
+	3HpmTDfnzCXWbeZ0ekPGlXWLoGdFe5oHBaHNQrhQiY8ocZtmRLDTOgClPnm1Irx7eRIQOuMJgbC
+	fe8AanBFsfIi+yrH/FAE/28ItCJWlQyehAc+LzizD//d8MwBjlIJWS4RD/cChPeiyP4VKkQHHRz
+	R4tO5TExR1+kxP8YzOnoIAkd//+sX/20vivzK3bkxszGh9VBsplB1t5CDM2GROKH3e96TX72Kb2
+	6s8GbFbGSSsDUob6/gEx8GqafFqPxQlW2nuKucu09U7lfKiUHjTbfzKsJl0+5hv3nhMdAYF7kW8
+	bm+3CsYVXgNSfRFUkYr1WzlliD1cf+k0kVEGznH6WyMFQSHrWo6AAyVe/t6bmoACWtL1NPwqqVy
+	8mUDn4qWaZUn1oN6lbfFaJdTbkI=
+X-Received: by 2002:a05:600c:4f54:b0:498:2b1f:e0c6 with SMTP id 5b1f17b1804b1-499821fb125mr14780215e9.18.1786582910122;
+        Wed, 12 Aug 2026 18:01:50 -0700 (PDT)
+Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49981b0f4afsm29808285e9.5.2026.08.12.18.01.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2026 18:01:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 13 Aug 2026 03:01:48 +0200
+Message-Id: <DKNES9HIPWUR.1Z9BVZ9VDT420@gmail.com>
+Cc: "Hui Zhu" <zhuhui@kylinos.cn>
+Subject: Re: [PATCH bpf-next v5 0/2] bpf: Fix trampoline image UAF on multi
+ detach failure
+From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
+To: "Hui Zhu" <hui.zhu@linux.dev>, "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>, "John Fastabend"
+ <john.fastabend@gmail.com>, "Andrii Nakryiko" <andrii@kernel.org>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Martin KaFai Lau" <martin.lau@linux.dev>,
+ "Song Liu" <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Emil Tsalapatis" <emil@etsalapatis.com>,
+ "Ihor Solodrai" <ihor.solodrai@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
+ "Matt Bobrowski" <matt@bobrowski.net>, "Steven Rostedt"
+ <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+X-Mailer: aerc 0.21.0
+References: <cover.1786412280.git.zhuhui@kylinos.cn>
+In-Reply-To: <cover.1786412280.git.zhuhui@kylinos.cn>
 
-On Wed, 12 Aug 2026 13:24:57 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue Aug 11, 2026 at 4:46 AM CEST, Hui Zhu wrote:
+> From: Hui Zhu <zhuhui@kylinos.cn>
+>
+> This series fixes a UAF in bpf_trampoline_multi_attach_free() where
+> old_image is freed while ftrace still calls into it, and makes
+> bpf_trampoline_multi_detach() return void as suggested by Jiri Olsa.
+>
+> Patch 1 fixes the UAF.  Patch 2 is an independent cleanup that
+> changes the return type to void and drops the WARN_ON_ONCE at the
+> call site.
+>
+> Changelog:
+> v5:
+> According to the comments of bot+bpf-ci, split the single patch into
+> two: the bug fix and the return-type cleanup.
+> v4:
+> According to the comments of bot+bpf-ci, add Fixes: and update comments
+> of bpf_trampoline_multi_attach_free.
+> v3:
+> According to the comments of Jiri Olsa, drop patches 2/3 and the
+> prog-side machinery.
+> keep only the simplified image-side fix in
+> bpf_trampoline_multi_attach_free() and make
+> bpf_trampoline_multi_detach() return void.
+> v2:
+> Folded v1's two detach patches into patch 1.
+> According to the comments of Jiri Olsa, Pin the prog (pinned_prog) on
+> cur_image so it stays alive while ftrace may still call into it.
+> Make bpf_trampoline_multi_detach() return void.
+> Fix the same UAF in standard (non-multi) trampolines.
+> According to the comments of sashiko, Fix the prog UAF in
+> bpf_trampoline_multi_attach() rollback.
+> Leak the trampoline in bpf_trampoline_put() when cur_image is left
+> by a rollback.
+>
 
-> 
-> Hi Roman,
-> 
-> On Wed, 12 Aug 2026 17:44:41 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > > [Severity: High]
-> > > This is a pre-existing issue, but can this 32-bit integer capacity calculation
-> > > truncate large trace buffers?
-> > > 
-> > > For buffers larger than 4GB, the multiplication of old_capacity and
-> > > buffer->buffers[cpu]->nr_pages can exceed 32 bits. Because nr_pages is a
-> > > 32-bit signed integer, the result is truncated, and the buffer is shrunk to a
-> > > tiny fraction of its intended size during a resize operation.  
-> > 
-> > This is fixed in a later patch.
-> > 
-> > >   
-> > > > +		nr_pages = DIV_ROUND_UP(nr_pages, rb_subbuf_capacity(buffer));
-> > > >  
-> > > >  		/* we need a minimum of two pages */
-> > > >  		if (nr_pages < 2)  
-> > > [ ... ]  
-> > > > @@ -7896,7 +7941,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
-> > > >  			 * missed events, then record it there.
-> > > >  			 */
-> > > >  			commit = rb_page_size(reader);
-> > > > -			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
-> > > > +			if (rb_subbuf_capacity(buffer) - commit >= sizeof(missed_events)) {  
-> > > 
-> > > [Severity: High]
-> > > This is a pre-existing issue, but does this create a time-of-check to
-> > > time-of-use race leading to an out-of-bounds kernel memory write and
-> > > VMAP flush?  
-> > 
-> > This is fixed in a later patch.
-> > 
-> 
-> Is it possible to have Sashiko pull together all the patches so that it
-> doesn't report bugs that are fixed later in the series? I mean, sending a
-> patch series to fix a bunch of issues shouldn't trigger Sashiko telling you
-> about the issues in the early patches where the fix is in that same patch
-> series later on.
+Applied, thanks.
 
-Agreed. Since we have to backport the fixes to stable kernels, the fixes
-must be the first in the series (even if it looks like ad-hoc). We can
-clean it up or enhance it later.
+> Hui Zhu (2):
+>   bpf: Fix UAF in bpf_trampoline_multi_attach_free on update failure
+>   bpf: Make bpf_trampoline_multi_detach return void
+>
+>  include/linux/bpf.h      |  9 ++++-----
+>  kernel/bpf/trampoline.c  | 16 +++++++++++++---
+>  kernel/trace/bpf_trace.c |  2 +-
+>  3 files changed, 18 insertions(+), 9 deletions(-)
 
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
