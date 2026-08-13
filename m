@@ -1,56 +1,56 @@
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455C547DD4A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 13:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0940F47DFBA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 13:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786626728; cv=none; b=b+kXx6enH69PkM/RIFrmg5LAByK9KaAS8pARgLHu17fvs1zJyUejlkPELVXukIp2+q0ToO/xUvfOjOXygHcVvTV2u2kJ5jSgIfcSo4IeDMwCILLVSZAg4AGRExL1gEPuKd84+ID6Zrq7p/5eYqk+T3SVDTlf5wE75yMc78PMrrU=
+	t=1786626730; cv=none; b=aKLB2qaDrJUuFFGygygQ7vWiL/WoZa+vRFeI8o2haQ/1AXIIKst8yRnu6BeFTqQwIYz7Ko8uZl1H6joNXENI6yVpbuiaAD1SL6sM2PRhafsc046HauYVfDp608Quel+7B2BTQ2MmP7GmrpSU7vcppJGwGTnPDCK+y3jePgZOq88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786626728; c=relaxed/simple;
-	bh=GDfudVeqUNJDDsQyGfFgyXJRGIi8nBlg1DBu2jtXP/E=;
+	s=arc-20240116; t=1786626730; c=relaxed/simple;
+	bh=GJIQzWniejHngWrrRZoVkvz5khkJfFg38oim/jvLcvI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=arOoZS9FNTZbELrWMhukNICd6WdpC2NLiU/axtlaBweZOJo9pGzaMmKFUVovKSjr/J2bJxIMExlBRWWB6R4vtF9L9WFe/tuYeuL7Ly9ts1f0hN+0G0EoaMItU4MQSBxMGm6lCuW0IGd5NekiLHPcXcLxdJTq0gdVTYtwYAtS/hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mHMfr5fi; arc=none smtp.client-ip=209.85.128.72
+	 To:Cc:Content-Type; b=VZ3ArY5nSvIWRS48mT2Jd0qRfQmCkJ9vd7nzCf5DDvd+8K2exAPk3XY5LZ23cklqxGD689Ae1orQF3Teixlbcs7SAKL37Llo120XFMbAZXnCEyAXjWtRl9wlwzqzxBJ3yk1kJDyQMxQJJlxDbd13qdCICP63ZsPndWuAJ7El7N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pb3zUerM; arc=none smtp.client-ip=209.85.208.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mHMfr5fi"
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4994d67d0e3so14939995e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 06:12:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pb3zUerM"
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-69841da1946so1840384a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 06:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786626721; x=1787231521; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786626726; x=1787231526; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ElOrjdWXgbGM4dlqT5NvceC6FVfQO/iUb68RR1af7yw=;
-        b=mHMfr5fiy166N9mdFF5R6g9RIUOjYQHmrTr92I/z/APZr7HPOOz6Xq9OOfgQK82Bf9
-         9Jn0ROCk0M7b3Xc037ITsUuYDCFfyVk7JRx+3qCdRtLVUiWGGyFUxg7oXBH1bN3yelFM
-         1pphcPqWf5C2fKz2FmKCZg6gBhF+KIJMBv8katU1sydvNu77tB0MZRaQJdzcHo0BxT43
-         +4dntL/PvqHeaFOykKtQXqJMPgS8XaSI9//sJbNVXatlhjEcDX7cXBTryp/uJcze5VjT
-         zsq808fFNtzLfBzdSC5HfCXdvRUWehgbeSJ1kL3hUnFDKcuXXaMhMXuDjRvgph2qDHAY
-         dFkw==
+        bh=cdLXT6hO5jBH5ZtVjhTw/BzhwnKt/Y5GE8hlcIZdn2Y=;
+        b=pb3zUerMFY6JMCuTW0Qpe9/seGzHhtPgWvc78PXrlH4thg+ldUtIXEsvSu4748p5u2
+         8qhgGD0S2+XhtyPqDJhGKzxf0GXrh/oEDB8YC7WN6X7diZG1Rojt/0Yq5XhztD1I0Fut
+         f9XduvFUGL1cpGUHfXGQzYUBcEEHl185E8Ny59pKLSBNLiRuKqEKBRlSg1AGbTl142Gs
+         ZfAf1Xl2ToqYw9oklpYctZkl2S88b5CHAzmYGQksbC1UosKWz9uwl9qObk+vL7DONZ7b
+         yjTT2xCuJY4U15QPT8IiZC+arEoBY/ThmJq/fkmMIpmgTlXD7p+J/RPZEpJL+8slcpeQ
+         q3rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786626721; x=1787231521;
+        d=1e100.net; s=20251104; t=1786626726; x=1787231526;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ElOrjdWXgbGM4dlqT5NvceC6FVfQO/iUb68RR1af7yw=;
-        b=n40woZefqjRijk+6gythScwffaH+FxVTOTHGaloeBXlgngwTmkHIxn9GFLjccXPwpq
-         2PDR7MkwLL8bA5cHMVdRDw6ELhGuXvkRHsrnVwLpURpAHy7Hge4XPUOv6M2jPeVzkjZB
-         9JkWnXR2HRl8Btj+aRbQrQe+GLhq9c1bQN/qQfRSazDK4Oh1rGEKtk734Fc4GW6VYoQD
-         aI87DplIschCUJJ4/Q4L9y0GRCnvXWvICRgBkwqDZGK2iPbwBxgORboKElE+ruoF/5QZ
-         LvBXmDJ36o53arrMWg4H3G8ZoGKmC7JcjtM1TWbIx0Ee7o2+22ROjiVz8MyCL2SbMfv4
-         hWOw==
-X-Forwarded-Encrypted: i=1; AHgh+RpbhAFe2DjfKd7Q+xPmIOzOil2hCB/bpjB81gzLOJH+GLOZxGHayj3I8Oe2j5M0CcCS1QdPCSdhO5QBFT3AODODsok=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7i31kQZjFp+CViezkA6lSctzRRR7fBi63SRX9a2RATMnq2vWV
-	WT5PRT6CM3z4SLzWbQdfReyeu8DXSIU1XBh0FJflmhOfdybvah4wm0ukvikuIgfnpYuU2ovHjMy
-	TpmAmTmF8IQZBNRWMtxpOuQ==
-X-Received: from wmbf15.prod.google.com ([2002:a05:600c:594f:b0:499:4fc8:f8eb])
+        bh=cdLXT6hO5jBH5ZtVjhTw/BzhwnKt/Y5GE8hlcIZdn2Y=;
+        b=Zy49ykSSDgVvQOxwuedpCUnC4i33uGWvlpqYFdyQy9l5W76xhQMGEexb2Vp+VUxn6N
+         eK1KNLvRxQTL8vDTQpYl/lbhH8dRtldrLWx8pbbarKHuCirgAWBpaB953BonSAe0Hx3Y
+         FjbNn0jAZGBGtKpD4zYILjOdPYGHsPQE6fqXKoUQbWP1PxvehTvwfaWZcOohd+yHy/Z0
+         O+OojIElYcldXxGU0xQiE1JYf75jI4N3+3XJ5oU0yJ3cjB+Cyzaeuxiz/EjNiWDQuHRg
+         txkW0TIobPSbk+if9ZYZZcmCAR3fVdDYaioeliWtjn4Y0fBQi5tg1w9UspzWSzO/WCOA
+         Y5VA==
+X-Forwarded-Encrypted: i=1; AHgh+RqE0w8f5bzto8hwgM4c3IKU8Jm5EDbt2FR/Na22sStLqhQePnABEp3+mtMt0GOmJNbFLiOvzEM2uHXVonJBieBKL0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/xF880we0H/LjmSaoz/MsKZpfs3at9N1GXldkFwvVERZF8kq5
+	pJ6+BAiqSx6nYl7a4o6k/c6FVHt3m+4eu3vcfy7x/XgTIQNgz95X4eUbfeQ2VIppxq12PW6bTgy
+	QYANH17re/mpJKYdIahWfkA==
+X-Received: from edpr18.prod.google.com ([2002:aa7:c152:0:b0:69c:458d:1598])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1da8:b0:499:726b:7375 with SMTP id 5b1f17b1804b1-499821c3119mr86065855e9.14.1786626721227;
- Thu, 13 Aug 2026 06:12:01 -0700 (PDT)
-Date: Thu, 13 Aug 2026 14:11:47 +0100
+ 2002:a05:6402:28cd:b0:699:728e:48c3 with SMTP id 4fb4d7f45d1cf-6a3805b0362mr2958926a12.9.1786626725971;
+ Thu, 13 Aug 2026 06:12:05 -0700 (PDT)
+Date: Thu, 13 Aug 2026 14:11:51 +0100
 In-Reply-To: <20260813131152.3589632-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,43 +60,165 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260813131152.3589632-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260813131152.3589632-6-vdonnefort@google.com>
-Subject: [PATCH v5 05/10] ring-buffer: Fix subbuf resize race with ring_buffer_alloc_read_page()
+Message-ID: <20260813131152.3589632-10-vdonnefort@google.com>
+Subject: [PATCH v5 09/10] ring-buffer: Remove ring_buffer_per_cpu::mapped
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
 Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Sashiko <sashiko-bot@kernel.org>
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-ring_buffer_alloc_read_page() is racy with ring_buffer_subbuf_order_set,
-it can allocate a reader page with an outdated order. This isn't a big
-issue, the user can still re-allocate a new reader page and try again.
+ring_buffer_per_cpu::mapped tracks if a ring-buffer is either mapped by
+user-space or if it is a persistent buffer. We already have user_mapped
+for the former and ring_meta for the latter. Get rid of mapped and
+instead create rb_is_static(). A static ring-buffer cannot be resized,
+swapped or have its pages extracted.
 
-However, what is more problematic is if the value of subbuf_order
-changes in the middle of ring_buffer_alloc_read_page(). In that case,
-bpage->order might not match the actual allocated memory.
-
-Use bpage->order for the allocation to prevent this race.
-
-Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
-Reported-by: Sashiko <sashiko-bot@kernel.org>
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index ec520c72124e..a00ab8a9cbd0 100644
+index 905b2e6df9ab..79459c99ce9a 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -7018,7 +7018,7 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
- 	if (bpage->data) {
- 		rb_init_data_page(bpage->data);
+@@ -514,7 +514,7 @@ struct ring_buffer_per_cpu {
+ 	int				cpu;
+ 	atomic_t			record_disabled;
+ 	atomic_t			resize_disabled;
+-	struct trace_buffer	*buffer;
++	struct trace_buffer		*buffer;
+ 	raw_spinlock_t			reader_lock;	/* serialize readers */
+ 	arch_spinlock_t			lock;
+ 	struct lock_class_key		lock_key;
+@@ -552,7 +552,6 @@ struct ring_buffer_per_cpu {
+ 	/* pages removed since last reset */
+ 	unsigned long			pages_removed;
+ 
+-	unsigned int			mapped;
+ 	unsigned int			user_mapped;	/* user space mapping */
+ 	struct mutex			mapping_lock;
+ 	struct buffer_page		**subbuf_ids;	/* ID to subbuf VA */
+@@ -648,6 +647,11 @@ unsigned long rb_subbuf_start(struct trace_buffer *buffer, unsigned long addr)
+ 	return addr & ~((unsigned long)(rb_subbuf_size(buffer) - 1));
+ }
+ 
++static bool rb_is_static(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	return cpu_buffer->user_mapped || cpu_buffer->remote || cpu_buffer->ring_meta;
++}
++
+ struct ring_buffer_iter {
+ 	struct ring_buffer_per_cpu	*cpu_buffer;
+ 	unsigned long			head;
+@@ -2578,7 +2582,6 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 		 * Range mapped buffers have the same restrictions as memory
+ 		 * mapped ones do.
+ 		 */
+-		cpu_buffer->mapped = 1;
+ 		cpu_buffer->ring_meta = rb_range_meta(buffer, nr_pages, cpu);
+ 		bpage->page = rb_range_buffer(cpu_buffer, 0);
+ 		if (!bpage->page)
+@@ -6667,12 +6670,11 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ 	rb_head_page_activate(cpu_buffer);
+ 	cpu_buffer->pages_removed = 0;
+ 
+-	if (cpu_buffer->mapped) {
+-		rb_update_meta_page(cpu_buffer);
+-		if (cpu_buffer->ring_meta) {
+-			struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+-			meta->commit_buffer = meta->head_buffer;
+-		}
++	rb_update_meta_page(cpu_buffer);
++	if (cpu_buffer->ring_meta) {
++		struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
++
++		meta->commit_buffer = meta->head_buffer;
+ 	}
+ }
+ 
+@@ -6921,8 +6923,8 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ 	cpu_buffer_a = buffer_a->buffers[cpu];
+ 	cpu_buffer_b = buffer_b->buffers[cpu];
+ 
+-	/* It's up to the callers to not try to swap mapped buffers */
+-	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped))
++	/* It's up to the callers to not try to swap static buffers */
++	if (WARN_ON_ONCE(rb_is_static(cpu_buffer_a) || rb_is_static(cpu_buffer_b)))
+ 		return -EBUSY;
+ 
+ 	/* At least make sure the two buffers are somewhat the same */
+@@ -7163,7 +7165,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	unsigned int size;
+ 	unsigned int read;
+ 	u64 save_timestamp;
+-	bool force_memcpy;
+ 
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return -1;
+@@ -7202,8 +7203,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	/* Check if any events were dropped */
+ 	missed_events = cpu_buffer->lost_events;
+ 
+-	force_memcpy = cpu_buffer->mapped || cpu_buffer->remote;
+-
+ 	/*
+ 	 * If this page has been partially read or
+ 	 * if len is not big enough to read the rest of the page or
+@@ -7213,7 +7212,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	 */
+ 	if (read || (len < (size - read)) ||
+ 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+-	    force_memcpy) {
++	    rb_is_static(cpu_buffer)) {
+ 		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
+ 		unsigned int rpos = read;
+ 		unsigned int pos = 0;
+@@ -7674,11 +7673,7 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	lockdep_assert_held(&cpu_buffer->mapping_lock);
+ 
+-	/* mapped is always greater or equal to user_mapped */
+-	if (WARN_ON(cpu_buffer->mapped < cpu_buffer->user_mapped))
+-		return -EINVAL;
+-
+-	if (inc && cpu_buffer->mapped == UINT_MAX)
++	if (inc && cpu_buffer->user_mapped == UINT_MAX)
+ 		return -EBUSY;
+ 
+ 	if (WARN_ON(!inc && cpu_buffer->user_mapped == 0))
+@@ -7687,13 +7682,10 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
+ 	mutex_lock(&cpu_buffer->buffer->mutex);
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 
+-	if (inc) {
++	if (inc)
+ 		cpu_buffer->user_mapped++;
+-		cpu_buffer->mapped++;
+-	} else {
++	else
+ 		cpu_buffer->user_mapped--;
+-		cpu_buffer->mapped--;
+-	}
+ 
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	mutex_unlock(&cpu_buffer->buffer->mutex);
+@@ -7865,7 +7857,6 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	if (!err) {
+ 		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 		/* This is the first time it is mapped by user */
+-		cpu_buffer->mapped++;
+ 		cpu_buffer->user_mapped = 1;
+ 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
  	} else {
--		bpage->data = alloc_cpu_data(cpu, cpu_buffer->buffer->subbuf_order);
-+		bpage->data = alloc_cpu_data(cpu, bpage->order);
- 		if (!bpage->data) {
- 			kfree(bpage);
- 			return ERR_PTR(-ENOMEM);
+@@ -7922,8 +7913,6 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 
+ 	/* This is the last user space mapping */
+-	if (!WARN_ON_ONCE(cpu_buffer->mapped < cpu_buffer->user_mapped))
+-		cpu_buffer->mapped--;
+ 	cpu_buffer->user_mapped = 0;
+ 
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
 -- 
 2.55.0.691.gc56d675ccc-goog
 
