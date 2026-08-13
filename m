@@ -1,193 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1922642F702;
-	Thu, 13 Aug 2026 06:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B93432E8E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 07:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786604191; cv=none; b=UPfU/keSsThGkaShUdtA294MKFnxuhjvECinhjk/FZCVNm3Be1n22zFl819MWKAefMNzq073MgXBJQ3FP3k7VXMhfeD3NEUHMwnLxZWJml3m0wt+HlSR+LZ5VEVzZFgqtqGVyvGN4Pmx9CrGr5aMcFgNK6DPino9m13WsSv602w=
+	t=1786604418; cv=none; b=SH4xWVF9afKIueBsjtxqI7qcmlIpd7YpovY5OcRS6UlHoeRcxqXN+1Q/y1EZ670byKL6OtxBsxEJiQzY/NSXz9zvIW31EyCG+Ggp9Z3cYSZ3Y6QQ+JgD/gxcmNPurACCYNMC13vOcycVoqgd9B6f+Few5tCUNEY/Yl3ZcW33mtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786604191; c=relaxed/simple;
-	bh=EiRUT7eibLcdH0tOQiOYhPqjIQxyxShzLvniKf9KyN0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrErwSUz+inmbBN7aQytfeOC/+3GPPHFB4vW7spnYexe3qCCZNp9P8sWI4CmYXU0XX4eS/w3htRCyXuqLMMUn4bDgyeSxccMO9Gq7F8x5wPkIi+vPpT5VqC2EQQDzCfJoQ75g1WjmOnP7pu2dPUo57NtN/bsbIkrAPYMOJ0Ia8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DcUSMufw; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1786604418; c=relaxed/simple;
+	bh=jy+M/Ef5F3mIbwU+SLhYZ/vrVyGS4YlsGeu/7uS6ahA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=YcGRMAU91aydkkqMWuuETL+5LoKCOiWHUefO8CGmW3K4VLLAps5JkKEEdu6+SP5rFxRkYE/k3RzvY1qiWpnm9CYOeY/z9u0Ggk6H7iINcTmV61DtTLtetW4O0mbAJQpLZxeKsXBFY9+WLHQmL6lKRhGtYewTGFJjsQxWzmaQc98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOjhwDhz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DcUSMufw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786604190; x=1818140190;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EiRUT7eibLcdH0tOQiOYhPqjIQxyxShzLvniKf9KyN0=;
-  b=DcUSMufwNz+PqSYYqon6wSY5/VjfeChHGQXmwYoKYBh8Gq/gJ7yjtmBu
-   Rv4sdZFiAz4zJSUdftQx8GwX1aqM/GDbvtgp8x4f+vf4pMLn2MQoGj6ng
-   WzQtELWbFYyhH23sAENDUh8rbBMidu3fV61vuFCmqKsdG2OLrOKZ0EUSy
-   R2HYLu3xF01GugRrqv/sW17Xg23h5lrNiJLY0L4WdeQx8rK2twPXv5WFg
-   eKDFQXY0EnLBL3TrIFKQiZiX8Yl1xhVzLjMrtyLrapazUXwo2TXx5moZy
-   R9U/KyitPKRoWuXYZevkGtx9g1TF0/zsF3GPmrz/FvD7Fwwa6vLnxyLaz
-   A==;
-X-CSE-ConnectionGUID: GhMaEBwOTG+85KdnOVhNkw==
-X-CSE-MsgGUID: YMbghMO9ShyDNeycten64g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="86290007"
-X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
-   d="scan'208";a="86290007"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 23:56:28 -0700
-X-CSE-ConnectionGUID: G3H/IDqNR/ShOWEVvKkhtw==
-X-CSE-MsgGUID: hHyHwXdWQJSEvzpnZYeIQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
-   d="scan'208";a="265841672"
-Received: from unknown (HELO [10.238.2.33]) ([10.238.2.33])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 23:56:14 -0700
-Message-ID: <1ec08cd8-3072-4753-ad5e-cd34956647f8@linux.intel.com>
-Date: Thu, 13 Aug 2026 14:56:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOjhwDhz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E02321F000E9;
+	Thu, 13 Aug 2026 07:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786604407;
+	bh=QEUT35ngPwtBHB6GyXU9lR5fWdeTLmwYXy7zE07KtXI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VOjhwDhzyLDfoydklNNa5+OiOfTmrq4nsWDSiGO3wS2CoV9ZRpM45taAb6atWOhNH
+	 INkZ3HMkt0uBU8BeNQ45zDnvSz6+v4Wn6PM9hoq2dfb7CIhJ/gSLrgu0DDYcPWbc1F
+	 5sPqQ1mz+9VvPLa2KAKhcnOJeUYMn9NdPX2MAjjlvht10NuZ2EmCu/TbKuGjQ+Kllu
+	 V5m+9YjOQJHKfOPbsh+X9lxhS9roztlqQCf8LNe6PRSgo6uR4x29yNWmB/KOK1OG5p
+	 YjBXPYaR42uNI+GuLrdL3zLdl5v9X2EWUCC0VkxV2PAJfkmvh2fqtwCdSY80lFIosY
+	 oYFASY7+LB3Jg==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v2 3/4] arm64/kprobes: Make the entire Kprobe
+ noinstr
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hongyan Xia" <hongyan.xia@transsion.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <9df18d2d664974aa05cfe39261d13c7366c8ef8a.1786603168.git.hongyan.xia@transsion.com>
+References: <cover.1786603168.git.hongyan.xia@transsion.com>
+ <9df18d2d664974aa05cfe39261d13c7366c8ef8a.1786603168.git.hongyan.xia@transsion.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 07:00:06 +0000
+Message-Id: <20260813070006.E02321F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 12/41] KVM: guest_memfd: Call arch make_shared
- callback for to-shared conversion
-To: ackerleytng@google.com
-Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
- chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
- jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
- pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
- rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
- tabba@google.com, willy@infradead.org, wyihan@google.com,
- yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
- suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
- Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-coco@lists.linux.dev,
- Fuad Tabba <fuad.tabba@linux.dev>
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-12-2fc18ee6d3ba@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-12-2fc18ee6d3ba@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
-> 
-> When memory in guest_memfd is converted from private to shared, the
-> platform-specific state associated with the guest-private pages must be
-> invalidated or cleaned up.
-> 
-> Iterate over the folios in the affected range and call the
-> kvm_arch_gmem_make_shared() hook for each PFN range. This allows
-> architectures to update hardware metadata or encryption states to
-> transition pages to the shared state.
-> 
-> Invoke this helper after indicating to KVM's mmu code that an invalidation
-> is in progress to stop in-flight page faults from succeeding.
-> 
-> Omit support for calling the arch hook to make private, since SNP, the only
-> implementer of the arch make-private hook today, would actually prefer
-> making private only just before faulting memory into the NPTs.
-> 
-> Calling the make-private arch hook would require iterating both bindings
-> and the filemap to find the intersection of bindings and allocated
-> folios. On top of that, SNP would need to figure out whether to actually
-> make private based on whether the memory is about the be faulted, or
-                                                     ^
-the -> to?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Functions converted to `noinstr` directly call non-noinstr and i=
+nstrumentable code without using the required `instrumentation_begin()` / `=
+instrumentation_end()` wrappers, violating strict non-instrumentation bound=
+aries.
+--
 
-> whether it is a conversion.
-> 
+--- Patch [3]: [RFC PATCH v2 3/4] arm64/kprobes: Make the entire Kprobe noi=
+nstr ---
+commit 3ef2956d1a4e614b73b64bbc64be2a2e20e577e4
+Author: Hongyan Xia <hongyan.xia@transsion.com>
+arm64/kprobes: Make the entire Kprobe noinstr
 
-[...]
+This commit converts the kprobe handling path to use noinstr instead of
+__kprobes, ensuring the code between debug_exception entry and exit is
+strictly non-instrumentable. It also marks leaf helpers as __always_inline
+and explicitly leaves the instruction simulation path as future work.
 
->  
-> +#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
-> +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end)
-> +{
-> +	struct folio_batch fbatch;
-> +	pgoff_t next = start;
-> +	int i;
-> +
-> +	folio_batch_init(&fbatch);
-> +	while (filemap_get_folios(inode->i_mapping, &next, end - 1, &fbatch)) {
-> +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-> +			struct folio *folio = fbatch.folios[i];
-> +			pgoff_t start_index, end_index;
-> +			kvm_pfn_t start_pfn;
-> +			kvm_pfn_t nr_pages;
-> +
-> +			start_index = max(start, folio->index);
-> +			end_index = min(end, folio_next_index(folio));
-> +			/*
-> +			 * end_index is either in folio or points to
-> +			 * the first page of the next folio. Hence,
-> +			 * all pages in range [start_index, end_index)
-> +			 * are contiguous.
-> +			 */
-> +			start_pfn = folio_file_pfn(folio, start_index);
-> +			nr_pages = end_index - start_index;
-> +
-> +			kvm_arch_gmem_make_shared(start_pfn, nr_pages);
-> +		}
-> +
-> +		folio_batch_release(&fbatch);
-> +		cond_resched();
-> +	}
-> +}
-> +#else
-> +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end) {}
-> +#endif
-> +
->  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->  				     size_t nr_pages, uint64_t attrs,
->  				     pgoff_t *err_index)
-> @@ -599,7 +636,12 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->  
->  	filter = to_private ? KVM_FILTER_SHARED : KVM_FILTER_PRIVATE;
->  	kvm_gmem_invalidate_start(inode, start, end, filter);
-> +
-> +	if (!to_private)
-> +		kvm_gmem_make_shared(inode, start, end);
+> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probe=
+s/kprobes.c
+> index 0e66abf9958e2..5ec5f4ef99852 100644
+> --- a/arch/arm64/kernel/probes/kprobes.c
+> +++ b/arch/arm64/kernel/probes/kprobes.c
+[ ... ]
+> -static void __kprobes setup_singlestep(struct kprobe *p,
+> -				       struct pt_regs *regs,
+> -				       struct kprobe_ctlblk *kcb, int reenter)
+> +static void noinstr setup_singlestep(struct kprobe *p,
+> +				     struct pt_regs *regs,
+> +				     struct kprobe_ctlblk *kcb, int reenter)
+>  {
+[ ... ]
+>  	if (p->ainsn.xol_insn) {
+>  		/* prepare for single stepping */
+>  		slot =3D (unsigned long)p->ainsn.xol_insn;
+> =20
+>  		kprobes_save_local_irqflag(kcb, regs);
+>  		instruction_pointer_set(regs, slot);
+>  	} else {
+>  		/* insn simulation */
+>  		arch_simulate_insn(p, regs);
 
-If both KVM_AMD_SEV and KVM_INTEL_TDX are enabled, HAVE_KVM_ARCH_GMEM_CONVERT
-will be enabled and the logic in kvm_gmem_make_shared() introduces unnecessary
-overhead for TDX.
-Not sure about CSPs, but in a standard distribution kernel, it's very likely
-that both are enabled, right？ Should kvm_gmem_make_shared() do some
-optimization or the overhead is relative small in the conversion to shared
-path so that the optimization is not worth it? 
+[Severity: Medium]
+Since setup_singlestep() is now marked noinstr, is it safe to call
+arch_simulate_insn() here without instrumentation_begin() and
+instrumentation_end()? The commit message notes the simulation path isn't
+noinstr yet, so calling it directly from a noinstr function could trigger
+objtool validation failures and issues with KASAN/KCOV.
 
+>  	}
+>  }
+> =20
+> -static int __kprobes reenter_kprobe(struct kprobe *p,
+> -				    struct pt_regs *regs,
+> -				    struct kprobe_ctlblk *kcb)
+> +static int noinstr reenter_kprobe(struct kprobe *p,
+> +				  struct pt_regs *regs,
+> +				  struct kprobe_ctlblk *kcb)
+>  {
+>  	switch (kcb->kprobe_status) {
+>  	case KPROBE_HIT_SSDONE:
+>  	case KPROBE_HIT_ACTIVE:
+>  		kprobes_inc_nmissed_count(p);
+>  		setup_singlestep(p, regs, kcb, 1);
+>  		break;
+>  	case KPROBE_HIT_SS:
+>  	case KPROBE_REENTER:
+>  		pr_warn("Failed to recover from reentered kprobes.\n");
+>  		dump_kprobe(p);
+>  		BUG();
+>  		break;
+>  	default:
+>  		WARN_ON(1);
 
-> +
->  	mas_store_prealloc(&mas, xa_mk_value(attrs));
-> +
->  	kvm_gmem_invalidate_end(inode, start, end);
->  out:
->  	filemap_invalidate_unlock(mapping);
-> 
+[Severity: Medium]
+Similarly, reenter_kprobe() is now noinstr but makes calls to instrumentable
+functions like pr_warn(), dump_kprobe(), BUG(), and WARN_ON(). Should these=
+ be
+wrapped in instrumentation_begin() / instrumentation_end() to prevent
+instrumentation from running in an un-instrumentable context?
 
+>  		return 0;
+>  	}
+> =20
+>  	return 1;
+>  }
+> =20
+> -static void __kprobes
+> +static void noinstr
+>  post_kprobe_handler(struct kprobe *cur, struct kprobe_ctlblk *kcb, struc=
+t pt_regs *regs)
+>  {
+>  	/* return addr restore if non-branching insn */
+>  	if (cur->ainsn.xol_restore !=3D 0)
+>  		instruction_pointer_set(regs, cur->ainsn.xol_restore);
+> =20
+>  	/* restore back original saved kprobe variables and continue */
+>  	if (kcb->kprobe_status =3D=3D KPROBE_REENTER) {
+>  		restore_previous_kprobe(kcb);
+>  		return;
+>  	}
+>  	/* call post handler */
+>  	kcb->kprobe_status =3D KPROBE_HIT_SSDONE;
+>  	if (cur->post_handler)
+>  		cur->post_handler(cur, regs, 0);
+
+[Severity: Medium]
+Does the call to cur->post_handler() also need to be wrapped in
+instrumentation_begin() / instrumentation_end()? User-supplied post handlers
+are instrumentable, so executing them directly from a noinstr context might
+violate strict non-instrumentation boundaries if the probe triggers in early
+exception entry.
+
+> =20
+>  	reset_current_kprobe();
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1786603168.gi=
+t.hongyan.xia@transsion.com?part=3D3
