@@ -1,263 +1,250 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB95364927
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 06:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE54A263F5D;
+	Thu, 13 Aug 2026 06:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786601150; cv=none; b=TCqyoMc53OmTE8K0jysSN1Mz+HOT1vEvaTLfiO2SO2X/CPgn9fGNCJ4bQ/Z4J5ZR0My/yj86TJZw4tq6EYZtgc6i4xUhi7N/wTkLLP7MIJaHxpD/fAbffIjX0VM8p7lNTd2549Va119TL5BGukTnpD9nS0OQ4uQiwnshSGwDk2s=
+	t=1786602139; cv=none; b=XVNoOgZ8L2pctJNE8PKH0m/KfLFCjt+qG85tuc4I1e/eUks70ZUR/E/Ap64L1dWF1J5Og16Dab471/7mGF8Yhpp8K2ENB026ULgXLtUh5UE4iNehPF41AfsfE0xnWxv2X+X4jUTywQ+gkye4wFjDqs54lJSHCCI2UQZAsR+csMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786601150; c=relaxed/simple;
-	bh=gd+4LCjUbkx1vP7VWW7agRjbCyduRFoFkXIFhYOn71w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=siM1dmFcos10riYHQafykFVERthi9cdgEpy/n/maKp9kCMMAUU8McJlB5mhqKpPKN4AtZJpak1V54njcgIMSGRRXUYOwkpfuGmI7LlOXT9u+WhF1UsyQi6AIUUU5LKHEdN+xNasXONS6xfQce0it6JYxmej0p2Ku+Bxo9bgI0G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YT8OmAsf; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786602139; c=relaxed/simple;
+	bh=+5D3p7sScaegm1VIyeqCpLf42CdpIop97jVtqGW3CuU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=R8IBjyIs9/rSjEMHTWNsgJcLN36hcJi4VPgAiBFLNUUrwj/kWrsOfAlhsvoQHix0jxD/buSHYVq7BVyxSM8d7qLLAHtJZY12SU9xB0fhvzSnOT0OumVrd2w2WqPX4TvLp+GybeEfwiapjh636aJzEuo17Ql9JBixv9RqtuXw7PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6wiVsus; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YT8OmAsf"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-38fdeaed181so2439200a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Aug 2026 23:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786601148; x=1787205948; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+DYOovTJldgmLOYu4jYgvpEtdbhEO2kLDnKjhxMcLho=;
-        b=YT8OmAsf5ho7jPHZS+E0G90CuH6hAfggfcVXcq26Ohavalz773kRSGkGD2kcJTNusW
-         Fvz6bQ5IyEzbFk+5BHsrQ6onV16zYG3DX0x/g3FcKLv77pWkzWoWdlCtdJ9/xPIA91wx
-         3bhULHdK/52hYHmDAwmeKvjLBytkDWMYf2Sokwe7wXSXrqTrt9yKjo7IGufnCGD1DOPx
-         w1ZBc8atkCApDikiJrrdHPYPhUC5MVvh1Y2d3njXogtAzNJ39D4jtWq4Yy44bN4KW/TR
-         7ytizjjaFvWDSoTlTsF9ASTo+UmIWK7GkJb1dDHvTwC4eiBLg+jqZVuqtLadZnZXOA7C
-         6eNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786601148; x=1787205948;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+DYOovTJldgmLOYu4jYgvpEtdbhEO2kLDnKjhxMcLho=;
-        b=DOz1IrOIF3EmaGRIBTWrHfiZHNhKLkD8lh//V/ipI7F1RXKrdTGP3D2baIrqkNxFiO
-         4IRfwCu5ajXE0MuPsBLKk/7bpkk/jevGHPMN1511eBundTwkKPqpyBWZlte1eSbn1FKa
-         d4xkmkWy3gOLc/UcVTq4ipxMkO98a8eoV0+sz6G2AxbwIEj65apL8qNoxTDizWKt6QPk
-         yPF87cLDFnAidxgbdBpKrnjsrEotrGrJTgo7gjqMYu9T4YIPC8imVfmQyAAqhYGrY/YH
-         eDECa1LIamhLIG3wBOUR6ebtCDbR8/hWTourhbi6BMlfz78mzcnjHm32hpwqo3r07ccp
-         KXHQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrqyWkOwUmt8EVY1yLyLOYmh9nagZEXm2TgpYGtywC7gwo7ivcBU2Q0mJJgFOy+q+YPI2X7lR8K8qGWGE9jQwzEhTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3gI3NgCK637HKsbPgkwlLTRpMfk41qcReZelNnbrsap9DMvll
-	gJNHgfdpTvzeJnF6pCJSWssDas61GhSScktcj9K24ABTViuD6qldLDnp
-X-Gm-Gg: AR+sD10SCiUIKTw2ZLbTXA7PkvfvrFgn0BdsZv0xP8SfGW8wWLxeb3e2Z4iE7lnuj2J
-	h3l1IyU511S7eOqTxJdBX0ia8mSHtxyjeCXWC8ZYSAHX5SYJH6U+OnXU0AnsSXEngMBFVc0Hd2K
-	9tQLzomZHQAimHnb/1XpVCVeZ3xsmwWMy55pE4nJWexYDyQ88tLEC1p1VFIezAz1j81Ju+VQUK/
-	Xi/zFWrdb7/Ca9w8U6Hz6QVRRhWnEIrC8E+JK/Fb4lDf7kB4lHTs+1d1wVraGgjuLxG/bT+Tdlm
-	mzDbuUMPU3WUcd743ELqVsOtouyxWHMf1nKStHuqnsDV+JOKSMs7/+pD08+dxQslKlu3BMgZ6BI
-	cEpDTTR6Ow9ZslCNdlCTK193Iml2frVU7yu9PdZwnGhHy0l6TDMiLmYb2wfff/2PM3sDeWy/lCE
-	q+WOf84u72IUMitH5C5O5qQ3feVITWggFCnzoj6AIMGIIonCZwo7CW/DqaPSx66epybTo1cVyRu
-	bto72sLqmXcnjamA3FM2cbx6TP66QlXdu9/rLuay7R1JYrtsHcyMw==
-X-Received: by 2002:a17:90b:33c6:b0:37f:ed7e:7e42 with SMTP id 98e67ed59e1d1-3931e298274mr3295644a91.14.1786601147820;
-        Wed, 12 Aug 2026 23:05:47 -0700 (PDT)
-Received: from deepanshu-Legion-Pro-5-16AFR10.. ([2405:201:682f:383f:229c:e2c9:8c03:c9c1])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31ec0223e31sm3712487eec.25.2026.08.12.23.05.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 23:05:47 -0700 (PDT)
-From: Deepanshu Kartikey <kartikey406@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	olsajiri@gmail.com,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	song@kernel.org,
-	kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	martin.lau@linux.dev,
-	yonghong.song@linux.dev,
-	emil@etsalapatis.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Deepanshu Kartikey <kartikey406@gmail.com>,
-	syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
-Subject: [PATCH v2] perf/bpf: Fix data races in BPF perf event handling
-Date: Thu, 13 Aug 2026 11:35:28 +0530
-Message-ID: <20260813060528.365959-1-kartikey406@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6wiVsus"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279721F000E9;
+	Thu, 13 Aug 2026 06:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786602137;
+	bh=Rlj1vBayaDgp+9Da8eEHI6cd9R9vw9wihbVfkn1bs7k=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=W6wiVsusoSR1wDQPEvTaTVdyDoIazlFyoA9h4w1trf8gj08kgGvoahxYZrnOUdxWg
+	 Diqg+RW3Mc0GkhQpkkDilFEyatnLAFn2+seZ4b7WqUYlXPIzZicaWQ+lhb/NAIup4y
+	 nOf5+FcdSO3QbRDpAFDcWigtDKd/dc2xghF9w8FDmch8YjrGv7jGKRr6p15+e5IXgx
+	 qBbLRmHcIos0IpTVyhNs40SnzJL845WsNK/eo/wUaiGbQxHq9AldgUq/t06GJ/KK5E
+	 IuhbKsqn8TSCcX3VlsFb5mAQyQT9fT3vW/95FCy9AMGk8gm2v3l/rOTZx5pDGVbSC2
+	 RUTyCLwBGKokA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf/bpf: Fix data races in BPF perf event handling
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Deepanshu Kartikey" <kartikey406@gmail.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260813060528.365959-1-kartikey406@gmail.com>
+References: <20260813060528.365959-1-kartikey406@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 06:22:16 +0000
+Message-Id: <20260813062217.279721F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Fix multiple data races involving event->prog field:
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+s) to consider:
 
-1. __perf_event_overflow() reads event->prog twice without
-   synchronization creating a TOCTOU race. Fix by using READ_ONCE()
-   to capture prog into a local variable and pass it directly to
-   bpf_overflow_handler() to avoid a second read inside that function.
+New issues:
+- [High] Unconditional use of `bpf_event_mutex` in `kernel/events/core.c` c=
+auses a linker error in valid Kconfig combinations where `CONFIG_BPF_EVENTS=
+` is disabled.
 
-2. perf_event_set_bpf_handler() and perf_event_free_bpf_handler()
-   perform plain writes to event->prog without WRITE_ONCE(), failing
-   to pair with the READ_ONCE() in __perf_event_overflow(). Fix by
-   using WRITE_ONCE() in all write paths including
-   perf_event_detach_bpf_prog().
+Pre-existing issues:
+- [High] The fix for the data race in `perf_event_alloc()` is incomplete be=
+cause `bpf_event_mutex` is not held during the detachment of non-tracing BP=
+F programs, leaving the use-after-free race unfixed.
+- [High] Dereferencing prog->type without rcu_read_lock_trace() exposes sle=
+epable BPF programs to Use-After-Free.
+- [Medium] The patch misses a plain write to event->prog in perf_event_atta=
+ch_bpf_prog(), leaving a data race with READ_ONCE(event->prog) unfixed.
+- [Medium] `perf_event_free_bpf_handler()` still contains a plain read of `=
+event->prog` which can race with a concurrent `WRITE_ONCE()` in `perf_event=
+_set_bpf_handler()`.
+- [Medium] Missing release barrier in perf_event_set_bpf_handler() allows B=
+PF programs to observe uninitialized or stale bpf_cookie values.
+--
 
-3. perf_event_alloc() reads parent_event->prog locklessly during
-   fork() which can race with a concurrent detach clearing and freeing
-   the prog, potentially causing a NULL pointer dereference or
-   use-after-free in bpf_prog_inc(). Fix by holding bpf_event_mutex
-   when inheriting the BPF program. Make bpf_event_mutex non-static
-   and declare it extern in perf_event.h so it is accessible from
-   kernel/events/core.c.
+--- Patch [1]: [PATCH v2] perf/bpf: Fix data races in BPF perf event handli=
+ng ---
+commit f4518a73c55a1297eca26073838ec515d34cb05a
+Author: Deepanshu Kartikey <kartikey406@gmail.com>
+perf/bpf: Fix data races in BPF perf event handling
 
-Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=651d2774bd1d8395595f
-Link: https://lore.kernel.org/all/20260811235331.10044-1-kartikey406@gmail.com/T/ [v1]
-Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
----
-v2:
-- Pass validated prog pointer directly to bpf_overflow_handler()
-  to avoid TOCTOU race from second READ_ONCE() inside the handler
-- Add WRITE_ONCE() to perf_event_set_bpf_handler() and
-  perf_event_free_bpf_handler() to pair with READ_ONCE() in overflow
-- Fix lockless access in perf_event_alloc() during fork() by holding
-  bpf_event_mutex to prevent concurrent detach UAF
-- Make bpf_event_mutex non-static and export via perf_event.h
----
- include/linux/perf_event.h |  2 ++
- kernel/events/core.c       | 23 +++++++++++++----------
- kernel/trace/bpf_trace.c   |  4 ++--
- 3 files changed, 17 insertions(+), 12 deletions(-)
+This commit attempts to fix data races around the event->prog field
+by introducing READ_ONCE and WRITE_ONCE in various handlers, and acquiring
+bpf_event_mutex during fork() in perf_event_alloc().
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 48d851fbd8ea..5c6dabb6dccb 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
- }
- #endif
- 
-+extern struct mutex bpf_event_mutex;
-+
- #endif /* _LINUX_PERF_EVENT_H */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ba5bd6a78fe7..6f8d3b57fa01 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10652,20 +10652,19 @@ static inline bool sample_is_allowed(struct perf_event *event, struct pt_regs *r
- #ifdef CONFIG_BPF_SYSCALL
- static int bpf_overflow_handler(struct perf_event *event,
- 				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+				struct pt_regs *regs,
-+				struct bpf_prog *prog)
- {
- 	struct bpf_perf_event_data_kern ctx = {
- 		.data = data,
- 		.event = event,
- 	};
--	struct bpf_prog *prog;
- 	int ret = 0;
- 
- 	ctx.regs = perf_arch_bpf_user_pt_regs(regs);
- 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1))
- 		goto out;
- 	rcu_read_lock();
--	prog = READ_ONCE(event->prog);
- 	if (prog) {
- 		perf_prepare_sample(data, event, regs);
- 		ret = bpf_prog_run(prog, &ctx);
-@@ -10708,7 +10707,7 @@ static inline int perf_event_set_bpf_handler(struct perf_event *event,
- 		return -EPROTO;
- 	}
- 
--	event->prog = prog;
-+	WRITE_ONCE(event->prog, prog);
- 	event->bpf_cookie = bpf_cookie;
- 	return 0;
- }
-@@ -10720,7 +10719,7 @@ static inline void perf_event_free_bpf_handler(struct perf_event *event)
- 	if (!prog)
- 		return;
- 
--	event->prog = NULL;
-+	WRITE_ONCE(event->prog, NULL);
- 	bpf_prog_put(prog);
- }
- #else
-@@ -10753,6 +10752,7 @@ static int __perf_event_overflow(struct perf_event *event,
- {
- 	int events = atomic_read(&event->event_limit);
- 	int ret = 0;
-+	struct bpf_prog *prog;
- 
- 	/*
- 	 * Non-sampling counters might still use the PMI to fold short
-@@ -10766,8 +10766,9 @@ static int __perf_event_overflow(struct perf_event *event,
- 	if (event->attr.aux_pause)
- 		perf_event_aux_pause(event->aux_event, true);
- 
--	if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
--	    !bpf_overflow_handler(event, data, regs))
-+	prog = READ_ONCE(event->prog);
-+	if (prog && prog->type == BPF_PROG_TYPE_PERF_EVENT &&
-+	    !bpf_overflow_handler(event, data, regs, prog))
- 		goto out;
- 
- 	/*
-@@ -13433,12 +13434,15 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		overflow_handler = parent_event->overflow_handler;
- 		context = parent_event->overflow_handler_context;
- #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
--		if (parent_event->prog) {
--			struct bpf_prog *prog = parent_event->prog;
--
-+		struct bpf_prog *prog;
-+
-+		mutex_lock(&bpf_event_mutex);
-+		prog = parent_event->prog;
-+		if (prog) {
- 			bpf_prog_inc(prog);
- 			event->prog = prog;
- 		}
-+		mutex_unlock(&bpf_event_mutex);
- #endif
- 	}
- 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 75495a5c3507..026b5c492115 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1944,7 +1944,7 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
- const struct bpf_prog_ops perf_event_prog_ops = {
- };
- 
--static DEFINE_MUTEX(bpf_event_mutex);
-+DEFINE_MUTEX(bpf_event_mutex);
- 
- #define BPF_TRACE_MAX_PROGS 64
- 
-@@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
- 
- put:
- 	prog = event->prog;
--	event->prog = NULL;
-+	WRITE_ONCE(event->prog, NULL);
- 
- unlock:
- 	mutex_unlock(&bpf_event_mutex);
--- 
-2.43.0
+Link: https://lore.kernel.org/all/20260811235331.10044-1-kartikey406@gmail.=
+com/T/
 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 48d851fbd8ea5..5c6dabb6dccb1 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
+>  }
+>  #endif
+> =20
+> +extern struct mutex bpf_event_mutex;
+> +
+
+[Severity: High]
+Will this extern declaration lead to a linker error in valid Kconfig
+combinations where CONFIG_BPF_EVENTS is disabled?
+
+The bpf_event_mutex is defined in kernel/trace/bpf_trace.c, which is
+only compiled when CONFIG_BPF_EVENTS=3Dy. If a kernel is configured with
+CONFIG_BPF_SYSCALL=3Dy and CONFIG_EVENT_TRACING=3Dy, but kprobe and uprobe
+events are disabled, this might result in an unresolved external symbol.
+
+>  #endif /* _LINUX_PERF_EVENT_H */
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index ba5bd6a78fe7b..1416066ef460e 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+
+[ ... ]
+
+> @@ -10708,7 +10707,7 @@ static inline int perf_event_set_bpf_handler(stru=
+ct perf_event *event,
+>  		return -EPROTO;
+>  	}
+> =20
+> -	event->prog =3D prog;
+> +	WRITE_ONCE(event->prog, prog);
+>  	event->bpf_cookie =3D bpf_cookie;
+>  	return 0;
+>  }
+
+[Severity: Medium]
+This is a pre-existing issue, but does publishing event->prog without a
+release barrier allow concurrent readers in __perf_event_overflow() to
+observe an uninitialized or stale bpf_cookie?
+
+Without smp_store_release() or similar ordering, the CPU can reorder the
+event->prog write and the plain store to event->bpf_cookie. Since the reader
+uses READ_ONCE(), which lacks acquire semantics, a BPF program might read
+the uninitialized cookie.
+
+> @@ -10720,7 +10719,7 @@ static inline void perf_event_free_bpf_handler(st=
+ruct perf_event *event)
+>  	if (!prog)
+>  		return;
+> =20
+> -	event->prog =3D NULL;
+> +	WRITE_ONCE(event->prog, NULL);
+>  	bpf_prog_put(prog);
+>  }
+
+[Severity: Medium]
+This is a pre-existing issue, but does perf_event_free_bpf_handler() still
+contain a plain read of event->prog?
+
+At the beginning of this function:
+	struct bpf_prog *prog =3D event->prog;
+
+Could this read race with a concurrent WRITE_ONCE() from
+perf_event_set_bpf_handler() during ioctl(PERF_EVENT_IOC_SET_BPF)?
+
+[Severity: High]
+This is a pre-existing issue, but does perf_event_free_bpf_handler() need to
+acquire bpf_event_mutex to safely detach non-tracing BPF programs?
+
+Because this function clears event->prog and drops the program reference
+locklessly, a concurrent fork() calling perf_event_alloc() could acquire the
+mutex, read the program, and increment a zero-refcount object.
+
+>  #else
+> @@ -10753,6 +10752,7 @@ static int __perf_event_overflow(struct perf_even=
+t *event,
+>  {
+>  	int events =3D atomic_read(&event->event_limit);
+>  	int ret =3D 0;
+> +	struct bpf_prog *prog;
+> =20
+>  	/*
+>  	 * Non-sampling counters might still use the PMI to fold short
+> @@ -10766,8 +10766,9 @@ static int __perf_event_overflow(struct perf_even=
+t *event,
+>  	if (event->attr.aux_pause)
+>  		perf_event_aux_pause(event->aux_event, true);
+> =20
+> -	if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
+> -	    !bpf_overflow_handler(event, data, regs))
+> +	prog =3D READ_ONCE(event->prog);
+> +	if (prog && prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
+> +	    !bpf_overflow_handler(event, data, regs, prog))
+
+[Severity: High]
+This is a pre-existing issue, but does dereferencing prog->type here
+without rcu_read_lock_trace() expose sleepable BPF programs to a
+use-after-free?
+
+RCU Tasks Trace grace periods do not wait for NMIs or preemption-disabled
+sections (Classic RCU context). If a sleepable program is detached and freed
+via call_rcu_tasks_trace(), couldn't it be freed while __perf_event_overflo=
+w()
+is still executing and evaluating prog->type?
+
+>  		goto out;
+> =20
+>  	/*
+> @@ -13433,12 +13434,15 @@ perf_event_alloc(struct perf_event_attr *attr, =
+int cpu,
+>  		overflow_handler =3D parent_event->overflow_handler;
+>  		context =3D parent_event->overflow_handler_context;
+>  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
+> -		if (parent_event->prog) {
+> -			struct bpf_prog *prog =3D parent_event->prog;
+> =20
+> +		struct bpf_prog *prog;
+> =20
+> +		mutex_lock(&bpf_event_mutex);
+> +		prog =3D parent_event->prog;
+> +		if (prog) {
+>  			bpf_prog_inc(prog);
+>  			event->prog =3D prog;
+>  		}
+> +		mutex_unlock(&bpf_event_mutex);
+>  #endif
+
+[Severity: High]
+As mentioned above, since bpf_event_mutex is only compiled when
+CONFIG_BPF_EVENTS=3Dy, will unconditionally locking it here cause a build
+failure on kernels where that configuration is disabled?
+
+>  	}
+> =20
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 75495a5c35079..026b5c4921158 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+
+[ ... ]
+
+> @@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *=
+event)
+> =20
+>  put:
+>  	prog =3D event->prog;
+> -	event->prog =3D NULL;
+> +	WRITE_ONCE(event->prog, NULL);
+> =20
+>  unlock:
+>  	mutex_unlock(&bpf_event_mutex);
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but doesn't
+perf_event_attach_bpf_prog() still contain a plain write to event->prog?
+
+Since this patch fixes data races against the READ_ONCE() in the fast
+path, should the plain write:
+    event->prog =3D prog;
+
+in the attach path also be converted to a WRITE_ONCE()?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813060528.3659=
+59-1-kartikey406@gmail.com?part=3D1
