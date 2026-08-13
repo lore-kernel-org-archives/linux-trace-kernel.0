@@ -1,131 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A29481247
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 14:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFF347DFB0
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 14:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786630503; cv=none; b=rh4rMG0gaL23C3dpjSuvHLkZUsDFXXvPmsF9xdrycqZZuW3v6OKGKh1RkUdorIB7m7Y8+smlg5Gh9CW/15M2YF/2til+MYKl9fSKurNUTxbKHLz0YK91pWIuf1nFzkE29AxXpkuEV0XLg5PT9HU2REhdJI3KeNsCpdWDUHOr+5Q=
+	t=1786630845; cv=none; b=MqXn4SpDVcYY3gL7lxuVMzhq9jibfuFXl3qt9J9wUMYrvL6gPoZu77egpq3Np6ordfXTjOa7sGQodHCYHSugdp97jK8sycov7d/v+szeKLXkgvMLe65r1j+U0A+JOzGrqeOvAFfPUKq5LJTHKKIF1EBhiXPLvwQdlojhH+4lWx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786630503; c=relaxed/simple;
-	bh=Vt2Kh4fYpLVYuxixNQuNzoVK9vwbXay8f1xbjIOdsx8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UE1sWNpeLEeySGbAse74urwv8OOXOLKbo8DVg5x+XH3FbP2ktgPjYeVt239HxzS3VFJz/vizL1k/+UVMJ+y2/l4aueuX8u34lgEOjtmK3C3rgmpHjEfXrzPyvJ9Lq6qRJQzsB1I78cKUj2tbh7jhM+JZ/LizIon2jP5UYBwx6pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUvmlrq+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786630845; c=relaxed/simple;
+	bh=BKkZHAxbqg0Xvz3ay8iJpo5Ks0LapLfKRR8tWj7WlVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sAyWM/UvJrdRwUOdDsE2s5xbX7L9IKaAS2bfa9tIyzYnfeaLbrxsIDeH2IhxalXsdT1vTPoqZxkY2Jmu3VOzqSdLgwo1Yu/LoIZd09U4JFNBjp1I5ODqh6XrraTcFEuIhw5kjk/lwlabaY7z8rmLTS4OcLWt3AytngDcUCENCfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q4GdcQF7; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUvmlrq+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347E21F000E9;
-	Thu, 13 Aug 2026 14:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786630501;
-	bh=Z4Hmh/PeoGObsMfV6r92seq6SLx+8Uvxp+Sm01EN52Y=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TUvmlrq+CkRz7W5NwvPiEdemI5t7+hNHp1AXiTTf/af+UucxMw7do/AcMaJ4+cX/z
-	 PtY3qCVohEvU+n9be7i3uwQWgXNOGvHSmcrJAjfAx0qMTUXE2csN8rdBGIfEXfErjA
-	 Sn34nQHUQYz2SEFqnkyyPV04nPYJDy37XTFaiV3A0Knqc4aNzZP6sfmwiDE2unmF+z
-	 ibkZ6N3B8l8zebpqQwQ1IwMnjmv9ICigYVeatXK24Ceii1e4nBesrGzDBWcxKB+CFQ
-	 nN/78hUgm0CGxQDRHSbUkJKW/wQKXLMeuZSP7lMXVweNRlJ7YnJ9fhNKD56mNFd/rk
-	 vv5shvdtMC1Iw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 3/7] tracing: Stop modifying the input buffer in
- ftrace_set_clr_event()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?VGhvbWFzIFdlacOfc2NodWg=?= <thomas.weissschuh@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q4GdcQF7"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-49558ce01afso17338625e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 07:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786630838; x=1787235638; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Kpl5xwcJLZQQoBi2QcazQFcRB+AFZZkbtY/pIHVQKyk=;
+        b=q4GdcQF7Yt2BraNewrpLnMXar+KxqXe6sHR9VJH8wA4Nvx7Cpl+lHaEpGXzVqj1rrK
+         rY+EJswbfy+14zXpG2wLUYTEGr8CPUOUR62ZK+7S0m3iHJ/8/AumXxiAk4HwDsD8ORLy
+         dmBaV1z9vWJ8ooAsYYtWG7H1p/WmUTlVn5VH2Z0bIyli12M5t1l3VCXHqzeXHWpLWZ7Z
+         yAwOHT2xjgEu65RaQ487oV+8aI5oYJyTmuSd/3Iz62ZIThE1guO4roqtVlhqcY9gG3XV
+         n3dBtHZvUYIXcCnNSTJ1VflQzf8zBWMO/lZtV8t0GdDgHuxidY3NPI/18zyrkM2MIUgO
+         tTbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786630838; x=1787235638;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Kpl5xwcJLZQQoBi2QcazQFcRB+AFZZkbtY/pIHVQKyk=;
+        b=ic1vUVfD1PhRg9reTOhZd8U9k3koiq4YVeLFGvty2dpypyov07ihYp8g9dFbOWzLFt
+         a1DTJHqMKgUKN/qK+HNVwxx4IoaOzSQmJi7SNMuhm5A66U66XAoJF4Ru+kJTKU6QPuNZ
+         rwL2c1yMmMJMMqL8RwLx41ylke2k8Oy2vVoXGwYFxkS2L73J3JKqoVHDDT2V3cw0VN24
+         pJHt70LyBCoIu6K5sJ+44Zt0HGQ4HuVXLyEphUfhxPjmSHkSk+T7utuRbC0GIo3jw8AH
+         9h4wFs2WRITsnglbAi/27ztSt8hOYEqpUAaTFms17/h5c9goNwzMI+QEgqSOuXS0giOr
+         plow==
+X-Gm-Message-State: AOJu0Yy9rq3qk1Pn3AfuVUsBJpjWsFAskIYlRtLLivx6K+pCWOhDcp2T
+	3Ap1lGCtv2zl7eWNVSunAyZ5vtAULLki9r2YHRZ+3YstRwz9Q8QdftYdOf2kHRftRYfyhUfyTS4
+	bM+bbEw==
+X-Gm-Gg: AR+sD129p4zpiMC0iY4DeGvXeukt/3d0/2xY1uvo54ajnDzWhqcpo//Yjpp5Oc6/0nR
+	8xSRWRiZMfexte6/QPB378ES0zJNSuQEVKae+nieoz1NojvhYmxn8HmYL7+bs+uYbjmgSIdQ960
+	vGO30wCRCzOIoONWCkO0NIR5STFYLUuvRRikssppJMORvzhHL3gsxuTHuAp3G3VwU9ZFyaBKfCo
+	EfcfrbP+F7+IMMGx2DRsPfnx0TAw/sTpQK+7hNYo5STK1uQNQFEHxg1sTLU1UH4hqtxoj1c4822
+	GUV+6pHs1Cui7kEOgF5Da2Uo2j4n6jydCSUluv/fsveACnYH2fPShBHWV2Os93OgN0vrzAdAJ+h
+	wu46A5A2AVnKPiuFCOoOmN3nyMuG15qB0xtKNoGM0aM21TX9s36KqFykxmTwVLPs9YXza0CK47M
+	BpgwFYE5edbcn3HGQx+zYHVao+qL9dbSp3WQsfTJ5i5rmCIwo4BjJSAp8tKQpWt0O48ZGvoflVh
+	YjGj0Vb1PIX7VYr0ChDiZ3Nr9dU/Td0
+X-Received: by 2002:a05:600c:524c:b0:499:79ba:a754 with SMTP id 5b1f17b1804b1-499821add45mr79820975e9.11.1786630837322;
+        Thu, 13 Aug 2026 07:20:37 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499821652dbsm67797955e9.9.2026.08.13.07.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2026 07:20:36 -0700 (PDT)
+Date: Thu, 13 Aug 2026 15:20:33 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: sashiko-reviews@lists.linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260813-tracing-cli-event-filter-v1-3-57c4e8029c86@linutronix.de>
-References: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
- <20260813-tracing-cli-event-filter-v1-3-57c4e8029c86@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 14:15:00 +0000
-Message-Id: <20260813141501.347E21F000E9@smtp.kernel.org>
+Subject: Re: [PATCH v5 15/18] tracing/remotes: Add poll_ms tracefs file
+Message-ID: <an3SsR5ANiiipIOl@google.com>
+References: <20260812161340.2417322-1-vdonnefort@google.com>
+ <20260812161340.2417322-16-vdonnefort@google.com>
+ <20260812171304.A47D41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260812171304.A47D41F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Invalid free (causing kernel panic) and memory leak due to `strsep=
-()` modifying a pointer managed by `__free(kfree)`.
---
+On Wed, Aug 12, 2026 at 05:13:04PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Low] Data race on `remote->poll_ms` due to lockless reads.
+> - [Low] Improper mixing of goto-based error handling and scope-based cleanup (__free) in `trace_remote_iter`.
+> --
+> 
+> --- Patch [15]: [PATCH v5 15/18] tracing/remotes: Add poll_ms tracefs file ---
+> commit a661ee191c6d806ed0a716f67237aca890febe25
+> Author: Vincent Donnefort <vdonnefort@google.com>
+> 
+> tracing/remotes: Add poll_ms tracefs file
+> 
+> Add a tracefs file to configure the trace remote polling period. Keep
+> the default value to 100ms.
+> 
+> > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> > index 5536e0df43795..b1c75666ab638 100644
+> > --- a/kernel/trace/trace_remote.c
+> > +++ b/kernel/trace/trace_remote.c
+> > @@ -1135,6 +1135,40 @@ static int dump_on_panic_show(struct seq_file *s, void *unused)
+> >  }
+> >  DEFINE_TRACE_REMOTE_ATTRIBUTE(dump_on_panic);
+> >  
+> > +static ssize_t poll_ms_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
+> > +{
+> > +	struct seq_file *seq = filp->private_data;
+> > +	struct trace_remote *remote = seq->private;
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	ret = kstrtouint_from_user(ubuf, cnt, 10, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!val)
+> > +		return -EINVAL;
+> > +
+> > +	guard(mutex)(&remote->lock);
+> > +
+> > +	if (val < remote->poll_ms && remote->poll_cnt)
+> > +		mod_delayed_work(system_percpu_wq, &remote->poll_work, msecs_to_jiffies(val));
+> > +
+> > +	remote->poll_ms = val;
+> > +
+> > +	return cnt;
+> > +}
+> > +
+> > +static int poll_ms_show(struct seq_file *s, void *unused)
+> > +{
+> > +	struct trace_remote *remote = s->private;
+> > +
+> > +	seq_printf(s, "%u\n", remote->poll_ms);
+> 
+> [Severity: Low]
+> Does this code introduce a data race on remote->poll_ms?
+> 
+> In poll_ms_write(), remote->poll_ms is modified while holding remote->lock.
+> However, in poll_ms_show(), remote->poll_ms is read without holding
+> remote->lock.
+> 
+> It appears this could also cause a data race with lockless reads in
+> trace_remote_do_poll():
+> 
+> kernel/trace/trace_remote.c:trace_remote_do_poll() {
+>     ...
+> 	schedule_delayed_work(&remote->poll_work, yield ? 0 : msecs_to_jiffies(remote->poll_ms));
+> }
+> 
+> Could this concurrent read and write cause a data race, potentially leading
+> to torn reads or violating kernel concurrency expectations?
 
---- Patch [3]: [PATCH RFC 3/7] tracing: Stop modifying the input buffer in =
-ftrace_set_clr_event() ---
-commit c968a27c39638474537de841b7e2191407463142
-Author: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Fair enough... I'll WRITE_ONCE/READ_ONCE.
 
-tracing: Stop modifying the input buffer in ftrace_set_clr_event()
+-- 
+Vincent
 
-This commit changes ftrace_set_clr_event() to copy its input buffer using
-kstrdup() and manage it with __free(kfree). This removes the need to
-restore the original buffer modifications before returning.
-
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 6aa32c4922807..c75a7f5b55def 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1411,14 +1411,17 @@ static int __ftrace_set_clr_event(struct trace_ar=
-ray *tr, const char *match,
->  	return ret;
->  }
-> =20
-> -int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
-> +int ftrace_set_clr_event(struct trace_array *tr, const char *_buf, int s=
-et)
->  {
->  	char *event =3D NULL, *sub =3D NULL, *match, *mod;
-> =20
->  	if (!tr)
->  		return -ENOENT;
-> =20
-> +	char *buf __free(kfree) =3D kstrdup(_buf, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-
-[Severity: High]
-Will this lead to an invalid free or memory leak when buf is later modified=
-?=20
-
-Further down in ftrace_set_clr_event(), buf is passed to strsep(), which
-modifies the pointer in place:
-
-    match =3D strsep(&buf, ":");
-
-If strsep() advances the pointer to the next token, the cleanup function
-will call kfree() on an interior pointer, causing a slab corruption bug or
-kernel panic upon scope exit. If buf is advanced to NULL (when no colon is
-found), it will result in a memory leak of the duplicated string since
-kfree(NULL) is a no-op.
-
-Could a separate pointer be used to track the allocation for cleanup,
-leaving buf free to be safely advanced by strsep()?
-
->  	/* Modules events can be appended with :mod:<module> */
->  	mod =3D strstr(buf, ":mod:");
->  	if (mod) {
-
-[ ... ]
-
-> @@ -1455,15 +1458,7 @@ int ftrace_set_clr_event(struct trace_array *tr, c=
-har *buf, int set)
->  			match =3D NULL;
->  	}
-> =20
-> -	ret =3D __ftrace_set_clr_event(tr, match, sub, event, set, mod);
-> -
-> -	/* Put back the colon to allow this to be called again */
-> -	if (buf)
-> -		*(buf - 1) =3D ':';
-> -	if (mod)
-> -		*(mod - 5) =3D ':';
-> -
-> -	return ret;
-> +	return __ftrace_set_clr_event(tr, match, sub, event, set, mod);
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813-tracing-cl=
-i-event-filter-v1-0-57c4e8029c86@linutronix.de?part=3D3
+> 
+> [ ... ]
+> 
+> Also, looking at trace_remote_iter() in kernel/trace/trace_remote.c:
+> 
+> kernel/trace/trace_remote.c:trace_remote_iter() {
+> 	struct trace_remote_iterator *iter __free(kfree) = kzalloc_obj(*iter);
+>     ...
+> 		if (WARN_ON_ONCE(remote->dmesg)) {
+> 			ret = -EBUSY;
+> 			goto err;
+> 		}
+>     ...
+> err:
+> 	switch (type) {
+> 	case TRI_PANIC:
+> 		break;
+> 	default:
+> 		trace_remote_put(remote);
+> 	}
+> 	return ERR_PTR(ret);
+> }
+> 
+> [Severity: Low]
+> Does this code incorrectly mix goto-based error handling and scope-based
+> cleanup (__free)?
+> 
+> The cleanup subsystem guidelines prohibit mixing goto-based error paths
+> with __free() variable declarations in the same function. While it does not
+> appear to cause a concrete resource leak or double-free in this specific
+> instance, could this create confusing ownership semantics and risk future
+> bugs during refactoring?
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260812161340.2417322-1-vdonnefort@google.com?part=15
