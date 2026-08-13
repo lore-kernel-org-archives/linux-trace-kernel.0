@@ -1,103 +1,130 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39AB341062;
-	Thu, 13 Aug 2026 03:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426E82749DC
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 03:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786593070; cv=none; b=UDHkOlJJUkaQ0UAeK1DjWHg3zRI9NC/2eJOFBy2r/PIZY17+xid/4zgMabN3SiXKQowv83mk3bHKIgxuigG1xAwHiyBEZIPRW4+8l+mAx9n471WTDiqt4X2iUYBtV7FZ4RVSAq+QIbd5RFKEOqezxRQj5f73THV8Hh+Vg/r3ad0=
+	t=1786593545; cv=none; b=BoNMM3pbsU7qxhT8wrOptYu5OUIF1pdza+3jq2qTL718yYMP0L6xVuYjbZZH1BFJ8kpQ8ph+JcL4PF7CjEnGLdzh08ZcE24pcNOTmIBEE6xRDTZXTA/PxwZ7bCXsdjAQ/qTkkQUosqp+Pbhmd4wndAJe1RYXGTGab3QrdrcufNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786593070; c=relaxed/simple;
-	bh=0mtxE/WEsIHruPQpODluMt+xs1Gkb+zYSYfoyG1vQss=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nqk2n8x33dISRu3XjFEouzgeg87cW8U9DeVzNDWhkX5En0rA4StvoNdAmk37NDyG1fV7NdpLvajsKxNlq5dwe9jAEX4ivhFVRT83TSb9s7nP8QAiHx9lP0jLKxaxrDBkou/a1EMauNGWBFcCc6yFeesIMv2uw6C2FcxSXtA0vsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev; spf=pass smtp.mailfrom=mavick.dev; dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b=MzfwnqSH; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mavick.dev
+	s=arc-20240116; t=1786593545; c=relaxed/simple;
+	bh=KCX19psVm2v2413LzTrwvna4e5y/e7+4AsDibYelKlY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ZhDqqYQ+SVM8QnNA9nli0RPvWdJK3GlpWKaRuCXl3iQlnLrKd+SBPU+tioHnpi1wzkCVyNxjdOZU4V8HQy0eiFH+GuB0CweFC9PiD4Yb810EUtwuVesx1EGLht0d3YK4G9tUIwoG38rlLUtFFMgwgwt8U7KgHkmcRW6hQ8QkYgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9M+ozQ/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b="MzfwnqSH"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4hLBGx30BCzMlLk;
-	Thu, 13 Aug 2026 05:51:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mavick.dev; s=MBO0001;
-	t=1786593065;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P8Jl8v7uhIYg0BWuM9zYsmcifoKGiiRIRhrZEbo+mEQ=;
-	b=MzfwnqSHOYD5YM5aCrRFniW1OfkUeCU06L/n+43NoY1fVjkCGlzdsXMlgJPPfQBs1W8yZq
-	D/lY82jW4YI/Eesc2eJBZhws8aafwSAGu+MBEubTcFqpZeY8Bxtt3PTi7E3XhqbTJi3ZXS
-	WwwPUtcShTv8T/hFl3pt+O48G9rGGjvRYZrzqyRTSMCo4zi3SDcHfZdjt7TVZPrlkzTnvQ
-	R34OT7PiMu2oKWIJ6qEBDjlg6x6JidqwIkxS9vlRy9I6YT7xYjbzf228K55w2Ompy09vw2
-	eJlzTCI6tr3Z+/V+zTAwfGbvwPwJS1PnIvZQjQNlNBWtfoxxWb/9jf/eqZmZYw==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of m@mavick.dev designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=m@mavick.dev
-From: Eugene Mavick <m@mavick.dev>
-Date: Thu, 13 Aug 2026 11:49:11 +0800
-Subject: [PATCH v5 5/5] MAINTAINERS: add entries for refcount_final_put
- trace
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9M+ozQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F21061F000E9;
+	Thu, 13 Aug 2026 03:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786593544;
+	bh=ZozHSV4d5BJ/DSxYzEGh8Dbp1/E8qzeMuzJeAcP/Ayg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=m9M+ozQ/Qxyiu685HV0E/+35cRGzQ2ywC3/+Co/UG6a2lC+hPvFqA+QscXxetk8H+
+	 IAAFQa3ErnGn+WOstI5PmXtCx+vpNRAzRL0UQVkdlk1AjWV8o+IxHBgTKlh6NAiZ49
+	 IlxRctfr5cD5sy4VH4vWRhTttq4lFKD/PBJRNNlMNUAIHLVoZWHZqTDDITPH6t8ivY
+	 xz6Y2hC2LBMAPkA8O2f+7Q/Q3BXpFOlbilb1/iVGadvLKGzd1B7rqIOBBJ/r3lY27a
+	 RyHg/frW8qWGjmqUZolEVq6u40UdrEcPhmQz4KEBhbh9dhFqbmv/v70tHaFn+qXab5
+	 fkaG1wte9rO9A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 2/5] refcount: add refcount_final_put tracepoint
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Eugene Mavick" <m@mavick.dev>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260813-refcount-final-put-trace-v5-2-6e8bf8a38b31@mavick.dev>
+References: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
+ <20260813-refcount-final-put-trace-v5-2-6e8bf8a38b31@mavick.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 03:59:03 +0000
+Message-Id: <20260813035903.F21061F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260813-refcount-final-put-trace-v5-5-6e8bf8a38b31@mavick.dev>
-References: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
-In-Reply-To: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
-To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Boqun Feng <boqun@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Gary Guo <gary@garyguo.net>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, 
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
- Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
- Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-mm@kvack.org, kasan-dev@googlegroups.com, 
- Eugene Mavick <m@mavick.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=642; i=m@mavick.dev;
- h=from:subject:message-id; bh=0mtxE/WEsIHruPQpODluMt+xs1Gkb+zYSYfoyG1vQss=;
- b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFm1dgf1+nxWHu2zCrJQKOCau/GT8f4nLE8lNvmssjN7K
- PdTdq1jRykLgxgXg6yYIktNVoJ7xspZicZHJ/XAzGFlAhnCwMUpABO58JLhn374JIufT99E1jUv
- 3r3d6GZUuF0ek2Hf3BmdHl08F1wydBn+R+xLW/NC4qv5s9D3F1SThVWNJdW/zdtdb8XGZc8i7qv
- GDwA=
-X-Developer-Key: i=m@mavick.dev; a=openpgp;
- fpr=7C6A604768A99A6133C5928C9D1FCA7EDB7D344F
-X-Rspamd-Queue-Id: 4hLBGx30BCzMlLk
 
-Add new files added in the patch series to MAINTAINERS
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Exporting the trace wrapper via GPL-only symbols inside fundamenta=
+l static inline refcount primitives breaks the ability of non-GPL modules t=
+o load.
+- [Medium] The `caller` and `ip` fields recorded by the tracepoint yield fu=
+ndamentally inconsistent addresses depending on whether the calling functio=
+n is evaluated as inline or out-of-line.
+--
 
-Signed-off-by: Eugene Mavick <m@mavick.dev>
----
- MAINTAINERS | 3 +++
- 1 file changed, 3 insertions(+)
+--- Patch [2]: [PATCH v5 2/5] refcount: add refcount_final_put tracepoint -=
+--
+commit 89e648b43dd0e3f81f4dd1bfaaa093ab2953cba7
+Author: Eugene Mavick <m@mavick.dev>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 10e8253181d3..c37e4cd0e4ff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4210,7 +4210,10 @@ S:	Maintained
- F:	Documentation/atomic_*.txt
- F:	arch/*/include/asm/atomic*.h
- F:	include/*/atomic*.h
-+F:	include/linux/refcount_trace.h
- F:	include/linux/refcount.h
-+F:	lib/refcount_trace.c
-+F:	lib/tests/refcount_trace_kunit.c
- F:	scripts/atomic/
- F:	rust/kernel/sync/atomic.rs
- F:	rust/kernel/sync/atomic/
+refcount: add refcount_final_put tracepoint
+   =20
+Add the refcount_final_put tracepoint to __refcount_sub_and_test()
+and refcount_dec_if_one()
 
--- 
-2.51.2
+refcount_final_put fires when a reference
+count reaches zero and the object enters its final release path.
 
+> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+> index ba7657ced2817..23291a31d1be2 100644
+> --- a/include/linux/refcount.h
+> +++ b/include/linux/refcount.h
+[ ... ]
+> @@ -393,6 +394,7 @@ bool __refcount_sub_and_test(int i, refcount_t *r, in=
+t *oldp)
+> =20
+>  	if (old > 0 && old =3D=3D i) {
+>  		smp_acquire__after_ctrl_dep();
+> +		do_trace_refcount_final_put(r);
+
+[Severity: High]
+Does this break out-of-tree non-GPL modules?
+
+Since __refcount_sub_and_test() is a fundamental inline primitive, embedding
+the tracepoint macro here forces callers to resolve the GPL-only tracepoint
+symbols. This will cause non-GPL modules to fail to load when they include
+<linux/refcount.h> and call this function.
+
+[Severity: Medium]
+Will this record inconsistent instruction pointers depending on whether the
+function is evaluated inline?
+
+Because __refcount_sub_and_test() is static inline, _RET_IP_ will evaluate =
+to
+the return address of the module invoking the refcount API (the caller's
+caller), while _THIS_IP_ evaluates to the caller.
+
+>  		return true;
+>  	}
+> =20
+> diff --git a/lib/refcount.c b/lib/refcount.c
+> index a207a8f22b3ca..8b148b5765037 100644
+> --- a/lib/refcount.c
+> +++ b/lib/refcount.c
+[ ... ]
+> @@ -56,7 +57,10 @@ bool refcount_dec_if_one(refcount_t *r)
+>  {
+>  	int val =3D 1;
+> =20
+> -	return atomic_try_cmpxchg_release(&r->refs, &val, 0);
+> +	bool ret =3D atomic_try_cmpxchg_release(&r->refs, &val, 0);
+> +
+> +	do_trace_refcount_final_put_cond(ret, r);
+
+[Severity: Medium]
+In this out-of-line context, _RET_IP_ evaluates to the immediate caller.
+
+Does this mean the caller and ip fields recorded by the tracepoint will yie=
+ld
+fundamentally inconsistent addresses compared to the inline usage in
+__refcount_sub_and_test()?
+
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(refcount_dec_if_one);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813-refcount-f=
+inal-put-trace-v5-0-6e8bf8a38b31@mavick.dev?part=3D2
