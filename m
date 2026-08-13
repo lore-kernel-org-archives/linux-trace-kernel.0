@@ -1,44 +1,45 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC7633E37A;
-	Thu, 13 Aug 2026 03:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F0237AA65;
+	Thu, 13 Aug 2026 03:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786593021; cv=none; b=sPujJ5yDWuLM7/IFa8EuJGDXuidVTorhXB6ngo9fNR1NybbfZoMb08OjYW+q3BYblPfMI8PBEmAhdpSsfImglEoDvuH2PnVoJJckWlFUwIKYen90qbSKQ7C653SxXK2pblR26N9BNf+z44XRX0sT7m8VM+b+CrUYDS5gZN467Q8=
+	t=1786593032; cv=none; b=k2w8lnJuGXOFbz+c5hKkdSNHMZvpZ3QjNEv1MUrKHw4IirA06tnKYDjQ4u+YMz3tYV7wCkfjf9Qt0I59l8mY5OM9BbiW+12IRAIlplmVciHo1DsZFeyXxzRuZ8JVQQzj0xorQJvjQ2fb78yHNykH6eT1c9QeJdX96tV4HWK1VFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786593021; c=relaxed/simple;
-	bh=Ns/xH6GcCBmS1i+tcQhV2JbxQS4nqkIivlI8t64dovo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lPU2e0aEbULE3yQRNLfywasayP2gZl4WReHl3sUYOyJrI4RaFZ8Il8ov52c3wzu2HFnvw7LpbjvsmGr4wxjT29QmSlnvVR6sMIJB+j4DwYnCji8UEUQuc4aex6gxg3hQuWOnihO4SRPXSKB9Be1kHyZmUz9EumBdCDcwUfMXCX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev; spf=pass smtp.mailfrom=mavick.dev; dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b=T6xoeJin; arc=none smtp.client-ip=80.241.56.171
+	s=arc-20240116; t=1786593032; c=relaxed/simple;
+	bh=/DyJ/Pt5HgNY+1AYXZ1YsFD8V1gs37HPB1lvRPBQOWM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YJFEcAKtS+AaciJa3kgslC7R8iQNA6i9R+V7UqfhzIWHPFZwMH2rwhS/czaWCFEE6xNjNPY+c+9/7xkOSgLRYUNJ2WJGh1qdtmOzRlJntOIrThIUrK720Z87cPzCKh2eudoWFVzrdG77ABw8caNL3oM6435ZprYQ0OCnJHjQ/mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev; spf=pass smtp.mailfrom=mavick.dev; dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b=xHgBGCEm; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mavick.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mavick.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b="T6xoeJin"
+	dkim=pass (2048-bit key) header.d=mavick.dev header.i=@mavick.dev header.b="xHgBGCEm"
 Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4hLBFy2hGgzMlMX;
-	Thu, 13 Aug 2026 05:50:14 +0200 (CEST)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4hLBG92N6QzKw1y;
+	Thu, 13 Aug 2026 05:50:25 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mavick.dev; s=MBO0001;
-	t=1786593014;
+	t=1786593025;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BcFrn3fh6XowM0CfCDLPqJ3XCi/Ke60FiRueM8hTud4=;
-	b=T6xoeJinvOqEL/fGUMLk4gZ5L2Y6BKn7KsQ+6g8Xdi924M7WLIBvTlv9tj1Y+qCEpzKuR5
-	O3OWoHeNLAoP5U2aSRkl+wV3199W9B/sSsIKVa/3YH7XmoBfHtZu6aKX/1dBmbzgwaWa4I
-	TH1yftRwSq+qw9UiNjlmgy2/j4kJAt2AINzX1oxAZqmsNriC34cqfIkOi2YDhhZTuq93F/
-	k4k0vi1DEfdDDznl8XVabs3bnJUq+AvXM2jVfMaZEsTtyK4KhvK+7ctdJdwBc6C7doQzHM
-	lOoSiyoRGtlV4MyqjqQO7wAXAXPAHuPJOalvxYatWYVD7HXbHN0i5G+Th8I22A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bEXWfsEWtFFEp+0efKsBCvQdDR44+02Pu5SRRh4WvD8=;
+	b=xHgBGCEm+3b1/xWePC0fKvD2X+/AktKduhbs5J/5JXXpF4UF5K0KM4vKDypjx3SNJqUMEi
+	3i1lzTbnGNvLvW/7YTNM3TgYF08OSnvSew8OTOdxenB6arH4tzF/tR5uBe/ITZ6iIftFUU
+	6Bj181XPQeoFyxwaNDO3sVN4KGxWNAjI694DaD8CZQY5/NcLdvl8eOC0M3jzqUxcdAZeAr
+	F26NLiE321S3EGYlq82BDro0jhkZtOwCvmr4DcGWj3C55ZdZ5z7/OO8OetIGrUvp6SaKlS
+	8tNTuhqnDI8FLqI5IbXgkNQdjbkUKR6a0QiDO56RByl5dNasyYahRzTX8C3yjA==
 Authentication-Results: outgoing_mbo_mout;
 	dkim=none;
 	spf=pass (outgoing_mbo_mout: domain of m@mavick.dev designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=m@mavick.dev
 From: Eugene Mavick <m@mavick.dev>
-Subject: [PATCH v5 0/5] tracing: add refcount_final_put tracing
-Date: Thu, 13 Aug 2026 11:49:06 +0800
-Message-Id: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
+Date: Thu, 13 Aug 2026 11:49:07 +0800
+Subject: [PATCH v5 1/5] tracing: add refcount_final_put tracepoint
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,12 +48,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALI+fWoC/53QzWrDMAwH8FcpPs9D/nZ62nuMHRxLXs22pDip2
- Sh59zndYB2DDHoR/IX0E+jMJiqZJrbfnVmhmqc8Di2Yux2LhzA8E8/YMpMgLVipeaEUx9Mw85S
- H8MqPp5nPJUTiuuvRRdWqCaytH9tkfr/Qj08tH/I0j+XjcqmKtfuFOthAq+DAe+2dthhEku7hL
- dQcX+6R6nrkWzD/CBERQGgrbehuE4IWqBICeXujAIE6ZQl7Z+BaWH9T1dU/hNiQVJOs09EnUNi
- l7o+kfyQPW5JukiTjrWtWSvhLWpblExWAr5obAgAA
-X-Change-ID: 20260624-refcount-final-put-trace-49bd7c39bd5a
+Message-Id: <20260813-refcount-final-put-trace-v5-1-6e8bf8a38b31@mavick.dev>
+References: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
+In-Reply-To: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
 To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
  Boqun Feng <boqun@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
  Gary Guo <gary@garyguo.net>, Steven Rostedt <rostedt@goodmis.org>, 
@@ -66,135 +64,186 @@ To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  linux-mm@kvack.org, kasan-dev@googlegroups.com, 
  Eugene Mavick <m@mavick.dev>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4929; i=m@mavick.dev;
- h=from:subject:message-id; bh=Ns/xH6GcCBmS1i+tcQhV2JbxQS4nqkIivlI8t64dovo=;
- b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFm1dgfFDP+9OHUi1U3cYVNreeq8vFypKwuS/NbvOne6m
- svhpdr/jlIWBjEuBlkxRZaarAT3jJWzEo2PTuqBmcPKBDKEgYtTACZSdZuR4SnD3kvXXkpc5lds
- fvDnUTX/XKV9ZfMSd33jXS5pa+8Rbc7wP5hz8rvFewoLeA/ePNV6W9MtccvjBrbZm96/rb3d+oi
- NjR8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5562; i=m@mavick.dev;
+ h=from:subject:message-id; bh=/DyJ/Pt5HgNY+1AYXZ1YsFD8V1gs37HPB1lvRPBQOWM=;
+ b=owGbwMvMwCU2V/5U3e1aE3/G02pJDFm1dgen8J9b9fMDq5pp/aWjMaqSlwrVjvyJExR7IlwSw
+ x+7edvUjlIWBjEuBlkxRZaarAT3jJWzEo2PTuqBmcPKBDKEgYtTACYyk4Hhf85WLaft4Zf2337d
+ 8+ov+3LnJ8W3rkutXaDnWt3yw/GXgjnD/6j9k78unJKeydLcfe7ijGt/JdQTJC3jXd43MvmsrXe
+ I5gMA
 X-Developer-Key: i=m@mavick.dev; a=openpgp;
  fpr=7C6A604768A99A6133C5928C9D1FCA7EDB7D344F
-X-Rspamd-Queue-Id: 4hLBFy2hGgzMlMX
+X-Rspamd-Queue-Id: 4hLBG92N6QzKw1y
 
-When debugging use-after-free(UAF) bugs, knowing when the object reaches
-0 references and enters final release(final put) can significantly aid the
-debugging process.
-
-This patch series adds a tracepoint, refcount_final_put, with
-compilation toggleable with CONFIG_REFCOUNT_TRACE_FINAL_PUT.
+Add refcount_final_put tracepoint and related core infrastructure
 
 refcount_final_put fires when a reference
 count reaches zero and the object enters its final release path.
 
-refcount_final_put records three fields:
+The tracepoint records three fields:
 - caller: function that called the refcounting
   function(refcount_sub_and_test, percpu_ref_put_many)
 - ip: return address of trace wrapper macro call
 - obj: refcount object(struct percpu_ref, refcount_t)
 
-bloat-o-meter stats:
-
-CONFIG_REFCOUNT_TRACE_FINAL_PUT=n :
-Total: Before=24703933, After=24703933, chg +0.00%
-
-CONFIG_REFCOUNT_TRACE_FINAL_PUT=y :
-Total: Before=24703933, After=24764816, chg +0.25%
-
-Alternatives to obtain this information require live reproduction, and
-incur a significant performance cost, making them impractical to have
-enabled on fuzzers like syzbot.
-
-refcount functions performing final-puts are also inlined, further
-complicating alternative dynamic tracing possibilities.
-
-Debugging UAFs without final-put knowledge is possible but is often
-significantly harder and requires broad code reading and mapping,
-whereas knowing the final-put allows narrowing the scope, thus
-decreasing time and effort required.
-
-Local live reproduction and alternative tracing are time, hardware
-resource, and manual effort exhaustive. Time-sensitive UAFs which
-require many iterations to reproduce further worsen these requirements.
-
-Remote-fuzzer report based UAF debugging is an incredibly frequent
-occurence.
-
 Signed-off-by: Eugene Mavick <m@mavick.dev>
 ---
-Changes in v5:
--rename ref_trace to refcount
--add CONFIG_REFCOUNT_TRACE_FINAL_PUT Kconfig option, due to high footprint
--improve cover letter, add bloat-o-meter statistics
-v4: https://lore.kernel.org/r/20260801-refcount-final-put-trace-v4-0-2e58678f0ffd@mavick.dev
+ include/linux/refcount_trace.h  | 33 +++++++++++++++++++++++++
+ include/trace/events/refcount.h | 55 +++++++++++++++++++++++++++++++++++++++++
+ lib/Kconfig                     |  8 ++++++
+ lib/Makefile                    |  2 ++
+ lib/refcount_trace.c            | 14 +++++++++++
+ 5 files changed, 112 insertions(+)
 
-Changes in v4:
-ref-trace:
--remove fn
--add ip variable
--change trace wrapper macro respectively, _THIS_IP_ is used for ip variable
--change relevant code respect to fn removal and ip addition
--fix style issues in include/linux/ref_trace.h
--add new macro do_trace_ref_final_put_cond that only calls tracepoint if cond is
- true
-lib/refcount.c:
--change from do_trace_ref_final_put to *_cond
--remove if statement above since _cond already performs the check
-KUnit:
--change relevant code respect to fn removal and ip addition
--check if caller and ip are valid addresses
--change timeout from 10 jiffies to 10 seconds
--move didn't timeout assertion from before to after probe
- unregistration, to prevent it from impacting next test
+diff --git a/include/linux/refcount_trace.h b/include/linux/refcount_trace.h
+new file mode 100644
+index 000000000000..6f8d0ba910f0
+--- /dev/null
++++ b/include/linux/refcount_trace.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_REFCOUNT_TRACE_H
++#define _LINUX_REFCOUNT_TRACE_H
++
++#include <linux/tracepoint-defs.h>
++#include <linux/instruction_pointer.h>
++
++#ifdef CONFIG_REFCOUNT_TRACE_FINAL_PUT
++/* Declare the tracepoint so tracepoint_enabled() can be used */
++DECLARE_TRACEPOINT(refcount_final_put);
++
++/* Wrapper function implemented in lib/ref_trace.c */
++extern void do_refcount_trace_final_put(unsigned long caller, unsigned long ip, const void *obj);
++
++#define do_trace_refcount_final_put(obj)					\
++	do {									\
++		if (tracepoint_enabled(refcount_final_put))			\
++			do_refcount_trace_final_put(_RET_IP_, _THIS_IP_, obj);	\
++	} while (0)
++
++#define do_trace_refcount_final_put_cond(cond, obj)				\
++	do {									\
++		if (tracepoint_enabled(refcount_final_put) && cond)		\
++			do_refcount_trace_final_put(_RET_IP_, _THIS_IP_, obj);	\
++	} while (0)
++
++#else /* !CONFIG_REFCOUNT_TRACE_FINAL_PUT */
++extern void do_refcount_trace_final_put(unsigned long caller, unsigned long ip, const void *obj);
++#define do_trace_refcount_final_put(obj) do { } while (0)
++#define do_trace_refcount_final_put_cond(cond, obj) do { } while (0)
++#endif
++
++#endif /* _LINUX_REFCOUNT_TRACE_H */
+diff --git a/include/trace/events/refcount.h b/include/trace/events/refcount.h
+new file mode 100644
+index 000000000000..a4dc23aff93b
+--- /dev/null
++++ b/include/trace/events/refcount.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM refcount
++
++#if !defined(_TRACE_REFCOUNT_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_REFCOUNT_H
++
++#include <linux/tracepoint.h>
++
++#ifdef CONFIG_REFCOUNT_TRACE_FINAL_PUT
++
++/**
++ * refcount_final_put - trace when a reference count reaches zero
++ * @caller: return address of refcount
++ * function(refcount_sub_and_test, percpu_ref_put_many)
++ * @ip: return address of trace wrapper macro call,
++ * inlining may cause it to be something else tho
++ * @obj: refcount object(struct percpu_ref, refcount_t)
++ *
++ * Tracepoint instrumentation can be added using the do_refcount_trace_final_put
++ * macro defined in include/linux/refcount_trace.h
++ * which uses _RET_IP_ and _THIS_IP_ for caller and ip arguments respectively,
++ * thus only requiring obj arg to be supplied
++ */
++TRACE_EVENT(refcount_final_put,
++
++	TP_PROTO(unsigned long caller, unsigned long ip, const void *obj),
++
++	TP_ARGS(caller, ip, obj),
++
++	TP_STRUCT__entry(
++		__field(	unsigned long,		caller	)
++		__field(	unsigned long,		ip	)
++		__field(	const void *,		obj	)
++	),
++
++	TP_fast_assign(
++		__entry->caller = caller;
++		__entry->ip = ip;
++		__entry->obj = obj;
++	),
++
++	TP_printk("caller=%pS ip=%pS obj=%p",
++		  (void *)__entry->caller,
++		  (void *)__entry->ip,
++		  __entry->obj
++	)
++);
++
++#endif /* CONFIG_REFCOUNT_TRACE_FINAL_PUT */
++
++#endif /* _TRACE_REFCOUNT_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 00a9509636c1..12bc59515a3e 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -52,6 +52,14 @@ config PACKING_KUNIT_TEST
+ 
+ 	  When in doubt, say N.
+ 
++config REFCOUNT_TRACE_FINAL_PUT
++	bool "Trace final puts on multiple refcount implementations"
++	depends on TRACEPOINTS && DEBUG_KERNEL
++	help
++	  Trace when a refcount implementation considers refcounted object dead.
++
++	  If unsure, say N.
++
+ config BITREVERSE
+ 	tristate
+ 
+diff --git a/lib/Makefile b/lib/Makefile
+index f33a24bf1c19..e75e88f0c870 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -335,3 +335,5 @@ CONTEXT_ANALYSIS_test_context-analysis.o := y
+ obj-$(CONFIG_CONTEXT_ANALYSIS_TEST) += test_context-analysis.o
+ 
+ subdir-$(CONFIG_FORTIFY_SOURCE) += test_fortify
++
++obj-$(CONFIG_REFCOUNT_TRACE_FINAL_PUT) += refcount_trace.o
+diff --git a/lib/refcount_trace.c b/lib/refcount_trace.c
+new file mode 100644
+index 000000000000..2476bb5f2f60
+--- /dev/null
++++ b/lib/refcount_trace.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++#define CREATE_TRACE_POINTS
++#include <trace/events/refcount.h>
++#include <linux/refcount_trace.h>
++
++//Wrapper function for functions defined entirely in header files
++void do_refcount_trace_final_put(unsigned long caller,
++				 unsigned long ip,
++				 const void *obj)
++{
++	trace_call__refcount_final_put(caller, ip, obj);
++}
++EXPORT_SYMBOL_GPL(do_refcount_trace_final_put);
++EXPORT_TRACEPOINT_SYMBOL_GPL(refcount_final_put);
 
-Changes in v3:
-include/trace/events/ref_trace.h kernel doc comments:
--caller of refcount function -> return address of refcount function
--ref_trace_final_put->do_ref_trace_final_put
-lib/ref_trace.c: add include trace/events/ref_trace.h
-kunit:
--change Kconfig depends from FTRACE->TRACEPOINTS
--EXPECT_FALSE->ASSERT_FALSE for calling percpu_ref_init
--add tracepoint_synchronise_unregister to test_exit macro
--added timeout to capture.count waiting
--remove noinline and __always_inline from function attributes
- (added for testing, but accidentally submitted)
--add period to the end of Kconfig help text
-v2 link:
-https://lore.kernel.org/all/20260710-refcount-final-put-trace-v2-0-557cfce860a2@mavick.dev/
-
-Changes in v2:
--include/linux/ref_trace.h: change macro name, use direct tracepoint
- call in macro to avoid double check
--add tracepoint to refcount_dec_if_one
--kunit: make significant improvements to design, fix critical bug, add test case for
- refcount_dec_if_one()
--Link to v1: https://lore.kernel.org/r/20260705-refcount-final-put-trace-v1-0-0ae936edb750@mavick.dev
-
----
-Eugene Mavick (5):
-      tracing: add refcount_final_put tracepoint
-      refcount: add refcount_final_put tracepoint
-      percpu-refcount: add refcount_final_put tracepoint
-      kunit: add test for refcount_final_put
-      MAINTAINERS: add entries for refcount_final_put trace
-
- MAINTAINERS                      |   3 +
- include/linux/percpu-refcount.h  |   5 +-
- include/linux/refcount.h         |   2 +
- include/linux/refcount_trace.h   |  33 +++++++++
- include/trace/events/refcount.h  |  55 +++++++++++++++
- lib/Kconfig                      |  18 +++++
- lib/Makefile                     |   2 +
- lib/refcount.c                   |   6 +-
- lib/refcount_trace.c             |  14 ++++
- lib/tests/Makefile               |   1 +
- lib/tests/refcount_trace_kunit.c | 141 +++++++++++++++++++++++++++++++++++++++
- 11 files changed, 278 insertions(+), 2 deletions(-)
----
-base-commit: df685633c3dbc67441cc86f1c3fee58de4652ba2
-change-id: 20260624-refcount-final-put-trace-49bd7c39bd5a
-
-Best regards,
 -- 
-Eugene Mavick <m@mavick.dev>
+2.51.2
 
