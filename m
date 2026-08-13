@@ -1,145 +1,69 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03975478E5E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 14:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC90484227
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 14:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786632052; cv=none; b=BVBtP1fWGTNmXS3F0yrxyt0Atj4PfXCz/xkUfeAZeXG7kY7UqbWXgImRMgm4x8SJEV1d1d0RkcBtyqaugXOAFRNqXgyyCzM1CmxwaYrTp3xe2lrRXOATW5LLVL9CUei6JCfoC0tHBl4MWV4s2/k3IewoCByP2a3/W0T/j/NzuO0=
+	t=1786632312; cv=none; b=sFVJpVzwYvNIAoswPCEFMAbjI02V+FgCiJbnOjAFyWNLxTy9K1H9xZpNmYEG/P++vVgYxLId/NDFULYBkkN3OwRa3wowgmp4GFkGA14FJt6m7m9JMG1mu0mGUvkkZhVgz5iVzQgqUxhMEdRtJJBNpZQKlXrlTB16PB6dhGUCw9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786632052; c=relaxed/simple;
-	bh=rUcO2gzRvKvE6eMggLtIX7U6PuOVcdx00WgIf0BsLgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oXxDAsQqQIA/aGRDdHhidGRO8hU9FS3ZiD75DtCk7NqpYPNwHOn0IbVtBAzDsFP+WfJ5NRnFPcczxWTHFwL6tYOGrc0Ws1BEomFH5/gwOQ3rXLX6NkUhYsuA1VzURN97iOwZhOD4JKK82snDsgGLw7uyG6x1tx1KLBr7vB7jJ2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p2MQ/rOo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jteyQ4uj; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1786632312; c=relaxed/simple;
+	bh=UKiEw25JACPfoRyZOGdENNRZZgzji4bHQNrW3S+x3YI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sqibdjxv6ixezzCAZs2bskyl28G5PVDvzbNSDmdxT3DbqRI3G8kOINYjxLw/J2t11DkViRv+7rS6bJ+MYx7y7NXNq8WkPWefp2MFMnpYD8s5Km8eQw/+cDJq4jXBYjB3hIv9N+rhqDuzvuTnURLAUvsffaV0NUcrq071mHbkwSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Wi0M6lCt; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p2MQ/rOo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jteyQ4uj"
-Date: Thu, 13 Aug 2026 16:40:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1786632048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sfPGh9RfMdDRiyeR2IpHJiREzHBOJQ2IiBHfFF080Hk=;
-	b=p2MQ/rOoOeA5aPGQUDTyZ1TDchSOD9VK9HMsd2JEQICh/b/qDkqhsB5MWiA6Rbvp4PmQQZ
-	tCUw33HjD0IYJohdAmVTk7Zpi4eDs33uh19eig0jzi9JG+zwgidEFCoKNhhiuPWvAhqxku
-	/Y8KJnQTPgYBWKmtmDW6H/cCu4fymsYNmwGWXzo1ubZqXSMflnDjpcaErdzgX7YfbmQX32
-	fL4y45YDZDL+PfjQcGRc0ShJdmQFjliGGZnA41FYQylvsTx4NijdegnskwM9/O8fYAV6na
-	/jZfg+C0GUf6avUBjf0oL1U3HKlpNnWcl/VA4rbPO+Urvgb116d7z2DR6kxeGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1786632048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sfPGh9RfMdDRiyeR2IpHJiREzHBOJQ2IiBHfFF080Hk=;
-	b=jteyQ4ujyXRdT118fq8U//LLP5vPrzDkBUTrQNkJ10+mLH1uuWzxwgBw5AkpjUUCxSfxgf
-	n/XTu7Ov/RBZDMCw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Wi0M6lCt"
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id CFC7980143;
+	Thu, 13 Aug 2026 14:45:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 2E67A2002D;
+	Thu, 13 Aug 2026 14:45:01 +0000 (UTC)
+Date: Thu, 13 Aug 2026 10:45:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH RFC 3/7] tracing: Stop modifying the input buffer in
  ftrace_set_clr_event()
-Message-ID: <20260813164014-bb2d92fc-631f-4e0d-b940-2f2c63859563@linutronix.de>
+Message-ID: <20260813104517.588cc978@gandalf.local.home>
+In-Reply-To: <20260813164014-bb2d92fc-631f-4e0d-b940-2f2c63859563@linutronix.de>
 References: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
- <20260813-tracing-cli-event-filter-v1-3-57c4e8029c86@linutronix.de>
- <20260813141501.347E21F000E9@smtp.kernel.org>
- <20260813103821.36d6b6f7@gandalf.local.home>
+	<20260813-tracing-cli-event-filter-v1-3-57c4e8029c86@linutronix.de>
+	<20260813141501.347E21F000E9@smtp.kernel.org>
+	<20260813103821.36d6b6f7@gandalf.local.home>
+	<20260813164014-bb2d92fc-631f-4e0d-b940-2f2c63859563@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260813103821.36d6b6f7@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: c63d5gk5xugksbbqogfdpbu5m8be7nwb
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 2E67A2002D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18gTdyoOwJ5gGMvOjFDNh7D9rmbOJeSEvI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=UKiEw25JACPfoRyZOGdENNRZZgzji4bHQNrW3S+x3YI=; b=Wi0M6lCtuPF2afXqJl7wqPVA86Ex0P4Rf27JuAgydEENURxm0+hZluu8CuSdvN+cfYuzLBNe9GrkTVStIEa4YKy+mEUG6YdoyiseZv39MUEhXXtXptSQkUzUfM+Yt6rL6k1hnxWJJs77dfIlmX7dnlE5QahBZrmW7GtoNdF/cWM=
+X-HE-Tag: 1786632301-102954
+X-HE-Meta: U2FsdGVkX1/YTE9NQyiHwsIGVUOEF2ABuU2WZ10JVc0ItvrWfl1fraSzyEvpCrJBL9oN0TxK/L7QFkmil1BEskaAZUV7uVir8HPGXUG/1kaGBk5mULCoHYXyJlGO9XbIoS+cU7p07rGhygC+uJVzwwxZHH1BkFCulTF59WHoXmbh/b3J4UwtnSA7HFIdCpgVIAkSjNDnis5CyKD8wwNVFtm3YRcgfwC0WLnfDaJyZQ/NQvL5wEXsaePrEM565s41ZzwhTDqmggSfOcqn8r30XqdQJzKCA7D+5hEQOVgCRAZfIFlnhC8QEjBE9Q+E4akz
 
-On Thu, Aug 13, 2026 at 10:38:21AM -0400, Steven Rostedt wrote:
-> On Thu, 13 Aug 2026 14:15:00 +0000
-> sashiko-bot@kernel.org wrote:
-> 
-> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> > - [High] Invalid free (causing kernel panic) and memory leak due to `strsep()` modifying a pointer managed by `__free(kfree)`.
-> > --
-> > 
-> > --- Patch [3]: [PATCH RFC 3/7] tracing: Stop modifying the input buffer in ftrace_set_clr_event() ---
-> > commit c968a27c39638474537de841b7e2191407463142
-> > Author: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > 
-> > tracing: Stop modifying the input buffer in ftrace_set_clr_event()
-> > 
-> > This commit changes ftrace_set_clr_event() to copy its input buffer using
-> > kstrdup() and manage it with __free(kfree). This removes the need to
-> > restore the original buffer modifications before returning.
-> > 
-> > > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > > index 6aa32c4922807..c75a7f5b55def 100644
-> > > --- a/kernel/trace/trace_events.c
-> > > +++ b/kernel/trace/trace_events.c
-> > > @@ -1411,14 +1411,17 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > -int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
-> > > +int ftrace_set_clr_event(struct trace_array *tr, const char *_buf, int set)
-> > >  {
-> > >  	char *event = NULL, *sub = NULL, *match, *mod;
-> > >  
-> > >  	if (!tr)
-> > >  		return -ENOENT;
-> > >  
-> > > +	char *buf __free(kfree) = kstrdup(_buf, GFP_KERNEL);
-> > > +	if (!buf)
-> > > +		return -ENOMEM;
-> > > +  
-> > 
-> > [Severity: High]
-> > Will this lead to an invalid free or memory leak when buf is later modified? 
-> > 
-> > Further down in ftrace_set_clr_event(), buf is passed to strsep(), which
-> > modifies the pointer in place:
-> > 
-> >     match = strsep(&buf, ":");
-> > 
-> > If strsep() advances the pointer to the next token, the cleanup function
-> > will call kfree() on an interior pointer, causing a slab corruption bug or
-> > kernel panic upon scope exit. If buf is advanced to NULL (when no colon is
-> > found), it will result in a memory leak of the duplicated string since
-> > kfree(NULL) is a no-op.
-> > 
-> > Could a separate pointer be used to track the allocation for cleanup,
-> > leaving buf free to be safely advanced by strsep()?
-> 
-> Yes, this is a legitimate bug.
-> 
-> I guess you need to have:
-> 
-> int ftrace_set_clr_event(struct trace_array *tr, const char *buffer, int set)
-> {
-> 	char *event = NULL, *sub = NULL, *match, *mod;
-> 	char *buf;
-> 	int ret;
-> 
-> 	if (!tr)
-> 		return -ENOENT;
-> 
-> 	char *_buf __free(kfree) = kstrdup(_buf, GFP_KERNEL);
-> 	if (!_buf)
-> 		return -ENOMEM;
-> 
-> 	/* Need to keep _buf pointing to the start of the buffer */
-> 	buf = _buf;
+On Thu, 13 Aug 2026 16:40:48 +0200
+Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de> wrote:
 
-Agreed.
+> I'll deal with the Sashiko fallout if you are fine with the general idea.
 
-I'll deal with the Sashiko fallout if you are fine with the general idea.
+I'm fine with the general idea of adding filtering logic to kernel command
+line, but can you show some examples of how it would work? That is,
+examples of the kernel command line.
 
+This should be in the cover letter.
 
-Thomas
+Thanks,
+
+-- Steve
