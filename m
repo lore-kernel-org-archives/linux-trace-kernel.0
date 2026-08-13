@@ -1,116 +1,252 @@
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4FE38E8B9;
-	Thu, 13 Aug 2026 17:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0682F3911A1;
+	Thu, 13 Aug 2026 17:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786642487; cv=none; b=I5fDH9en1N2hb3piaXQ3qNHDhdZ+09O7ZlqKYb8ZPm25uZ0sQ/wOvpWELFc7QVu1vS8Nl1jQo5Lyq/bA9HGZGvbB9rhUNs1nljcxqc+QozUUvi6cehxETsA+bFAEl8w+CS8dqdH1ods0vsP79meqx6Ix/rV8RQyFsErlkfHQgIs=
+	t=1786642507; cv=none; b=bFA37SPYchKzeUI+Iu9GIf2l/OTzhxXYbCRR0VeMcoHKPcRb90FBuGiSxqepfsILOMNIWJrK+XlXURCWA38jmR11Eial9AFJWr5rKk5tF/9siVtQSGg7i/BVRZyC7oLFmVo9Z8s06kRLVVlRoqqYDRQB+wOpMCWpLr7gvbRxkGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786642487; c=relaxed/simple;
-	bh=N1Hjk9riHLlq/h7iFL323EOWWDmlwzDwCifp8K79TiY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=eO5dZypTlSi9YnWHrl0SVcFniOwpby5q74hUuVUqSglmaqlc1w1v3yW7oXwOsH7IYPAJWbM2PDeKX1FMZm4UzYFxbPRp+PsL4IN3R8lzMW5lQAdn2wF2Eh6R6GDOgdYZJwfpsqztuRHJPSY//3Pz3Wes5w6x3Z84d9cfFEq0T5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=L5+ZsqOt; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+	s=arc-20240116; t=1786642507; c=relaxed/simple;
+	bh=p77ev8vuIe2NzptTm2ieSg/F7FGTlLmZaKMePPxwgJc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gX4z6YtUiIbxQhI2+3hhBZTkO87rZGTNTnsg6ednbfS9R8WIcoa6Iz0QeXrQM/STpHzYx17RdPTYgMnKKTOyS7CcwVRDCeXO0Gd06VUe4nQ6sqeVoEwnPKpgUB/KnUPchQyXbH4Kql0qwgKd7uaVSoPdEzLODAg2R9THJb7+5ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtSqY/H9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="L5+ZsqOt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=XFj6VBuvNlnLerahn+Ew2ADvQ1GLzQ4tJ+S+S2qSCZ0=; b=L5+ZsqOtNkaXdXhMeUmtDlxXCG
-	4+nWgHrJ/6YJ7a7wgq9ZARZicz03xxQhv5a2V1xFjOPSAstssr5ix0VfMjKwL/MfYk69qSVdYKa8V
-	7EIhycg37CLe4uJq27WaATd/QsdIRjTdsbnIXr9jGYu25sgB50xhxmWVTIlFhp1xha4mAHmrQ9ioR
-	In/HlwNTgm+4Tm3c68Xl5hpr7vZPzq6XUCRoM84rgn8q+bD/2msGM9FUqy43Xu708/xoa9lTnNDfV
-	AZ/h2VOCknwxnLug35RZsU//sokoMiM5WhtQv5m7s7DHnjngbdfaHNASnF1F2SsosrLxUXDsFByBY
-	ePAS7V1A==;
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([96.51.150.74] helo=[10.0.33.8])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1wuZK6-00000002RIj-2N9e;
-	Thu, 13 Aug 2026 11:34:35 -0600
-Message-ID: <9bdb074f-da65-41a9-b7bc-790ecab27e60@deltatee.com>
-Date: Thu, 13 Aug 2026 11:33:22 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtSqY/H9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8889F1F000E9;
+	Thu, 13 Aug 2026 17:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786642505;
+	bh=jHeRoJJr2O8/TaKftY2r1DUlL3KME6EykG7g/IHvkjk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=OtSqY/H9sqJEAHUIMd6G0CbKd8RO2TgYWZL9dRMCbGMnxyxtrTZ04YIhDmmPnZyIL
+	 dnCdS7meG7AfAt7cLXD3GxZEn2WAtW+YfBj+PQxek5U7GYVd1tFylkXiMKk9h41H7z
+	 uCLFDAsS3nGgEjWs13IqMvGiqlx5syYnHtUwxZKa3t16U0wX6QtP4TfnBu/Y/6O7zy
+	 HU4BlORDw5SdeJ67S+cNDuC9Ls6tRrs9gcd78uXLdG1DP83NeG02vLznkJkgdka12a
+	 GMhsfDn3hS4W0UXSMb/G8QLz6iVo5jISGfrVbGsRKzp/Gc+W5CS/92+ObTJ1J2xv/d
+	 SjUsZsi6nh6aQ==
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Date: Thu, 13 Aug 2026 18:32:23 +0100
+Subject: [PATCH v5 06/16] mm: introduce and use vma_filebacked_address()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Frank.Li@oss.nxp.com, Jacky Huang <ychuang3@nuvoton.com>,
- Shan-Chun Hung <schung@nuvoton.com>, Vinod Koul <vkoul@kernel.org>,
- Frank Li <Frank.Li@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Binbin Zhou <zhoubinbin@loongson.cn>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- =?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thierry Reding <thierry.reding@kernel.org>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Viresh Kumar <vireshk@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <mani@kernel.org>, Daniel Mack <daniel@zonque.org>,
- Haojian Zhuang <haojian.zhuang@gmail.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>, Chen-Yu Tsai <wens@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Kelvin Cao <kelvin.cao@microchip.com>,
- Laxman Dewangan <ldewangan@nvidia.com>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-References: <20260812-dma-chan_dev-rename-v1-0-a67131f7d5c2@nxp.com>
- <20260812-dma-chan_dev-rename-v1-2-a67131f7d5c2@nxp.com>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20260812-dma-chan_dev-rename-v1-2-a67131f7d5c2@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 96.51.150.74
-X-SA-Exim-Rcpt-To: Frank.Li@oss.nxp.com, ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org, Frank.Li@kernel.org, paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, andriy.shevchenko@linux.intel.com, zhoubinbin@loongson.cn, patrice.chotard@foss.st.com, amelie.delaunay@foss.st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, thierry.reding@kernel.org, jonathanh@nvidia.com, ludovic.desroches@microchip.com, vireshk@kernel.org, keguang.zhang@gmail.com, afaerber@suse.de, mani@kernel.org, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, wens@kernel.org, jernej.skrabec@gmail.com, samuel@sholland.org, kelvin.cao@microchip.com, ldewangan@nvidia.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev, imx@lists.linux.dev, Frank.Li@nxp.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 2/2] dmaengine: add union chan_dev for dma_chan::dev for
- clarity
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Message-Id: <20260813-b4-scalable-cow-virt-pgoff-v5-6-c21581c0c3c8@kernel.org>
+References: <20260813-b4-scalable-cow-virt-pgoff-v5-0-c21581c0c3c8@kernel.org>
+In-Reply-To: <20260813-b4-scalable-cow-virt-pgoff-v5-0-c21581c0c3c8@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+ Pedro Falcato <pfalcato@suse.de>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, 
+ Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+ Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
+ Matthew Brost <matthew.brost@intel.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Janosch Frank <frankja@linux.ibm.com>, 
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Alex Deucher <alexander.deucher@amd.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+ Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ John Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, 
+ Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Youngjun Park <youngjun.park@lge.com>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
+ linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ syzbot@syzkaller.appspotmail.com
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4971; i=ljs@kernel.org;
+ h=from:subject:message-id; bh=p77ev8vuIe2NzptTm2ieSg/F7FGTlLmZaKMePPxwgJc=;
+ b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLJq/6/eIlF58FHJ3ilGt/2fyeoEGh1/4X/wOcPUA13zX
+ 982fyUr31HKwiDGxSArpsjy/Iv4/iCRsHmdF/zdYOawMoEMYeDiFICJmN5jZLgr3nP/0lvxFM1u
+ Lk+hijXPjXq0/brua4Y/XOLMuiBKrpvhf1HgrzWhx+6Z7u+w6692iE7o/v/gyv0fBbm1TcJ9iis
+ +MwAA
+X-Developer-Key: i=ljs@kernel.org; a=openpgp;
+ fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
 
+In cases where we know that the VMA is file-backed, use
+vma_filebacked_address() rather than vma_address().
 
+This lays the foundation for using the anonymous page offset via
+vma_anon_address().
 
-On 2026-08-12 3:24 p.m., Frank.Li@oss.nxp.com wrote:
-> From: Frank Li <Frank.Li@nxp.com>
-> 
-> The current dma_chan structure contains both "device" and "dev". So
-> 
-> chan->device->dev refers to the DMA engine device.
-> chan->dev->device refers to the per-channel device instance.
-> 
-> Their similar naming makes the distinction unclear and increases reader
-> confusion.
-> 
-> Add union dma_chan::chan_dev to make its purpose explicit and clearly
-> identify it as the per-channel device. After all user switch to chan_dev,
-> union and dma_chan::dev will be removed.
-> 
-> Update the kernel-doc accordingly. Besides its sysfs usage, the per-channel
-> device is also used by some DMA engine drivers for IOMMU mapping and
-> therefore deserves a more accurate description.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Also add an assert to ensure that the VMA whose address is required is not
+anonymous.
 
-Thanks, I've often been confused by this myself. I'm glad you're
-cleaning it up and making progress.
+No functional change intended.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Tested-by: syzbot@syzkaller.appspotmail.com
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+---
+ mm/internal.h        | 18 ++++++++++++++++++
+ mm/memory-failure.c  |  4 ++--
+ mm/page_vma_mapped.c |  6 +++++-
+ mm/rmap.c            | 10 ++++++----
+ 4 files changed, 31 insertions(+), 7 deletions(-)
+
+diff --git a/mm/internal.h b/mm/internal.h
+index 10b6662be8ed..03145b8d0d56 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1025,6 +1025,24 @@ static inline unsigned long __vma_address(const struct vm_area_struct *vma,
+ 	return address;
+ }
+ 
++/**
++ * vma_filebacked_address - Find the virtual address a file-backed page range is
++ * mapped at.
++ * @vma: The vma which maps this object.
++ * @pgoff: The page offset within its object.
++ * @nr_pages: The number of pages to consider.
++ *
++ * Returns: If any page in this range is mapped by this VMA, return the first
++ * address where any of these pages appear.  Otherwise, return -EFAULT.
++ */
++static inline unsigned long vma_filebacked_address(const struct vm_area_struct *vma,
++		pgoff_t pgoff, unsigned long nr_pages)
++{
++	VM_WARN_ON_ONCE(vma_is_anonymous(vma));
++
++	return __vma_address(vma, pgoff, vma_start_pgoff(vma), nr_pages);
++}
++
+ /**
+  * vma_address - Find the virtual address a page range is mapped at.
+  * @vma: The vma which maps this object.
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index aaf14608b30e..a8b03e2920ba 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -620,7 +620,7 @@ static void add_to_kill_fsdax(struct task_struct *tsk, const struct page *p,
+ 			      struct vm_area_struct *vma,
+ 			      struct list_head *to_kill, pgoff_t pgoff)
+ {
+-	unsigned long addr = vma_address(vma, pgoff, 1);
++	unsigned long addr = vma_filebacked_address(vma, pgoff, 1);
+ 	__add_to_kill(tsk, p, vma, to_kill, addr);
+ }
+ 
+@@ -2265,7 +2265,7 @@ static void add_to_kill_pgoff(struct task_struct *tsk,
+ 	}
+ 
+ 	/* Check for pgoff not backed by struct page */
+-	tk->addr = vma_address(vma, pgoff, 1);
++	tk->addr = vma_filebacked_address(vma, pgoff, 1);
+ 	tk->size_shift = PAGE_SHIFT;
+ 
+ 	if (tk->addr == -EFAULT)
+diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
+index d7670ba4147b..081e483cc7bf 100644
+--- a/mm/page_vma_mapped.c
++++ b/mm/page_vma_mapped.c
+@@ -356,6 +356,7 @@ unsigned long page_mapped_in_vma(const struct page *page,
+ 		struct vm_area_struct *vma)
+ {
+ 	const struct folio *folio = page_folio(page);
++	const pgoff_t pgoff = page_pgoff(folio, page);
+ 	struct page_vma_mapped_walk pvmw = {
+ 		.pfn = page_to_pfn(page),
+ 		.nr_pages = 1,
+@@ -363,7 +364,10 @@ unsigned long page_mapped_in_vma(const struct page *page,
+ 		.flags = PVMW_SYNC,
+ 	};
+ 
+-	pvmw.address = vma_address(vma, page_pgoff(folio, page), 1);
++	if (folio_test_anon(folio))
++		pvmw.address = vma_address(vma, pgoff, 1);
++	else
++		pvmw.address = vma_filebacked_address(vma, pgoff, 1);
+ 	if (pvmw.address == -EFAULT)
+ 		goto out;
+ 	if (!page_vma_mapped_walk(&pvmw))
+diff --git a/mm/rmap.c b/mm/rmap.c
+index ad820fe86f7d..5798427d007f 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -865,14 +865,15 @@ unsigned long page_address_in_vma(const struct folio *folio,
+ 		if (!vma->anon_vma || !anon_vma ||
+ 		    vma->anon_vma->root != anon_vma->root)
+ 			return -EFAULT;
++		/* KSM folios don't reach here because of the !anon_vma check */
++		return vma_address(vma, page_pgoff(folio, page), 1);
+ 	} else if (!vma->vm_file) {
+ 		return -EFAULT;
+ 	} else if (vma->vm_file->f_mapping != folio->mapping) {
+ 		return -EFAULT;
+ 	}
+ 
+-	/* KSM folios don't reach here because of the !anon_vma check */
+-	return vma_address(vma, page_pgoff(folio, page), 1);
++	return vma_filebacked_address(vma, page_pgoff(folio, page), 1);
+ }
+ 
+ /*
+@@ -1321,7 +1322,7 @@ int pfn_mkclean_range(unsigned long pfn, unsigned long nr_pages, pgoff_t pgoff,
+ 	if (invalid_mkclean_vma(vma, NULL))
+ 		return 0;
+ 
+-	pvmw.address = vma_address(vma, pgoff, nr_pages);
++	pvmw.address = vma_filebacked_address(vma, pgoff, nr_pages);
+ 	VM_BUG_ON_VMA(pvmw.address == -EFAULT, vma);
+ 
+ 	return page_vma_mkclean_one(&pvmw);
+@@ -3100,7 +3101,8 @@ static void __rmap_walk_file(struct folio *folio, struct address_space *mapping,
+ 	}
+ lookup:
+ 	mapping_rmap_tree_foreach(vma, mapping, pgoff_start, pgoff_end) {
+-		unsigned long address = vma_address(vma, pgoff_start, nr_pages);
++		unsigned long address = vma_filebacked_address(vma, pgoff_start,
++							       nr_pages);
+ 
+ 		VM_BUG_ON_VMA(address == -EFAULT, vma);
+ 		cond_resched();
+
+-- 
+2.55.0
+
