@@ -1,250 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022104.outbound.protection.outlook.com [40.107.75.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE54A263F5D;
-	Thu, 13 Aug 2026 06:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786602139; cv=none; b=XVNoOgZ8L2pctJNE8PKH0m/KfLFCjt+qG85tuc4I1e/eUks70ZUR/E/Ap64L1dWF1J5Og16Dab471/7mGF8Yhpp8K2ENB026ULgXLtUh5UE4iNehPF41AfsfE0xnWxv2X+X4jUTywQ+gkye4wFjDqs54lJSHCCI2UQZAsR+csMw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786602139; c=relaxed/simple;
-	bh=+5D3p7sScaegm1VIyeqCpLf42CdpIop97jVtqGW3CuU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=R8IBjyIs9/rSjEMHTWNsgJcLN36hcJi4VPgAiBFLNUUrwj/kWrsOfAlhsvoQHix0jxD/buSHYVq7BVyxSM8d7qLLAHtJZY12SU9xB0fhvzSnOT0OumVrd2w2WqPX4TvLp+GybeEfwiapjh636aJzEuo17Ql9JBixv9RqtuXw7PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6wiVsus; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35754353EE0;
+	Thu, 13 Aug 2026 06:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786603810; cv=fail; b=We59B/pD+HOrtyIX9HEMMgI5vyK62iUjtefvIUcHe7ILNVa9JflboB7/GxqUq+uump+FoBnCPAITQj2MIRyZo0zwWLvVo2akDrgu2wy3Uw06jV2mDmAvAq+LjFT8FOQueOkE09Y98CPC+6kYA3CBkUlMtM6Obp2Rkc6BNuecjdA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786603810; c=relaxed/simple;
+	bh=AAeBMMkiGqp0glRo8hoLt8svl9PsGJAhBx0uRESfj1k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=TeReZgbb1CcY093fcQ9DZ2SbiTZzofGuCJKz9fwS4MGT255RbD+R9DxGxfGHZSasiOyOCWX/btHaNcP0dH5e6WhDdWl7kQv7GntuONYBP9TR9dJsiVdEQtfPoZYOWFqa3xYQ06GtvSnI7sFQmwNL2MKYcOaIaVjn2Qq/w446orY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com; spf=pass smtp.mailfrom=transsion.com; dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b=HMxxhKhn; arc=fail smtp.client-ip=40.107.75.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=transsion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=transsion.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6wiVsus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279721F000E9;
-	Thu, 13 Aug 2026 06:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786602137;
-	bh=Rlj1vBayaDgp+9Da8eEHI6cd9R9vw9wihbVfkn1bs7k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W6wiVsusoSR1wDQPEvTaTVdyDoIazlFyoA9h4w1trf8gj08kgGvoahxYZrnOUdxWg
-	 Diqg+RW3Mc0GkhQpkkDilFEyatnLAFn2+seZ4b7WqUYlXPIzZicaWQ+lhb/NAIup4y
-	 nOf5+FcdSO3QbRDpAFDcWigtDKd/dc2xghF9w8FDmch8YjrGv7jGKRr6p15+e5IXgx
-	 qBbLRmHcIos0IpTVyhNs40SnzJL845WsNK/eo/wUaiGbQxHq9AldgUq/t06GJ/KK5E
-	 IuhbKsqn8TSCcX3VlsFb5mAQyQT9fT3vW/95FCy9AMGk8gm2v3l/rOTZx5pDGVbSC2
-	 RUTyCLwBGKokA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf/bpf: Fix data races in BPF perf event handling
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Deepanshu Kartikey" <kartikey406@gmail.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260813060528.365959-1-kartikey406@gmail.com>
-References: <20260813060528.365959-1-kartikey406@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 06:22:16 +0000
-Message-Id: <20260813062217.279721F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=transsion.com header.i=@transsion.com header.b="HMxxhKhn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lvX4lMvto2FVSSxSGlNRRzSg+tyHhmHl1pLU+kF8NRIe74/SEpUrloF1MsGpziIsS6xBj29+fK2IYmLpflu8mT3U4kb37g5m7Xymo+IfJrtGwyOfAbl5rQNTkhLsFXjHbJjgUcaJih9bP7MiqzVTf3lJyZ6pZvQc5RTeM2WtQT0E5wDCd+W8cO3fTPXQhTXDt9yssPRLEuJrbwPYlTqOyjCUUO5v+hjlDjInRDux9Qhrv4BsjJynu+Irag56JtU5T5xXFzcdWnNvcHLDXmdsVBlea0j4vkTGSWEZPILF3GpS04cL/7N1Hh2Dxm9YL3B+2vxuJoPBCglIiAxK6YvyJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AAeBMMkiGqp0glRo8hoLt8svl9PsGJAhBx0uRESfj1k=;
+ b=ZKYhrz72oh6XJAR9AqF5Jha/Liyw3tpXcYOeiKK8pEZ64Ov5sAd2PHDrU9T37vfFqPHt5skRNe/exTSZ6amhY+qkWHJhUNJTjofzWTckJfPlAwq7gg0UHBMW00nZrHpTpKmacFM0RwF5MQOJqBGgCidhG3BnCX2D3botSZ8Ca83Ar2wtX/QBNawSXbgEuBP2pjnP+bWfYoxddA7OVSNxfTn+KoHSr8uRM9jE0BU48wbQ5kMNdE0/fQa/aorEfSn2SvVRUmuc5tJ58ravacsDyrWP9zm4H2TE+Q7f5xKUF6DFNfydWMXAo5YHOgEZjJ7maXfigYLEGnKVTitHGN5EjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=transsion.com; dmarc=pass action=none
+ header.from=transsion.com; dkim=pass header.d=transsion.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=transsion.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AAeBMMkiGqp0glRo8hoLt8svl9PsGJAhBx0uRESfj1k=;
+ b=HMxxhKhnLaiSmTrP3BUBQ5nVOklPa/0zceWkqyFMi5JhdWFxO+NDSy9rASTHtrKybEgBXTYcrVjmyetob4TiCndCktF532neR/ORe9DopIKj+39+SyTpfytZ2ZS0YKtSyT8blITkKrOdaneYzlli3ZForrOeNvRD6MbHIy2B/Gw=
+Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
+ (2603:1096:820:c7::13) by PUZPR04MB6843.apcprd04.prod.outlook.com
+ (2603:1096:301:107::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.3; Thu, 13 Aug
+ 2026 06:50:04 +0000
+Received: from KL1PR0401MB6196.apcprd04.prod.outlook.com
+ ([fe80::f2ee:1e28:9022:99f3]) by KL1PR0401MB6196.apcprd04.prod.outlook.com
+ ([fe80::f2ee:1e28:9022:99f3%3]) with mapi id 15.21.0339.002; Thu, 13 Aug 2026
+ 06:50:04 +0000
+From: Hongyan Xia <hongyan.xia@transsion.com>
+To: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
+	<tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Oleg Nesterov <oleg@redhat.com>, Naveen N Rao
+	<naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Nathan
+ Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+CC: Jiazi Li <jiazi.li@transsion.com>, Pu Hu <hupu@transsion.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-trace-kernel@vger.kernel.org"
+	<linux-trace-kernel@vger.kernel.org>, "llvm@lists.linux.dev"
+	<llvm@lists.linux.dev>
+Subject: [RFC PATCH v2 3/4] arm64/kprobes: Make the entire Kprobe noinstr
+Thread-Topic: [RFC PATCH v2 3/4] arm64/kprobes: Make the entire Kprobe noinstr
+Thread-Index: AQHdKu/4EsQHGmaT1EmLeqN6UrT2Wg==
+Date: Thu, 13 Aug 2026 06:50:04 +0000
+Message-ID:
+ <9df18d2d664974aa05cfe39261d13c7366c8ef8a.1786603168.git.hongyan.xia@transsion.com>
+References: <cover.1786603168.git.hongyan.xia@transsion.com>
+In-Reply-To: <cover.1786603168.git.hongyan.xia@transsion.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=transsion.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: KL1PR0401MB6196:EE_|PUZPR04MB6843:EE_
+x-ms-office365-filtering-correlation-id: 1a233261-75a0-45ca-da78-08def9071b1e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|22082099003|18002099003|921020|38070700021|10067099003|6133799003|11063799006|3023799007|56012099006;
+x-microsoft-antispam-message-info:
+ LsKRgV5ds77dXM6NqUNnqxj2iAZ57LU9FKBkNqP7ucc91iq7tEA3Gha5ebNY5tC1vdVv/OpjY5ur4UrR7stUzvOBMC8EL4K6eksNY80+Lc2YVMJNFiPWkIHP3U3dqoJeELXIBJlHl5ccxzA1b3GHoRbFT7T7HcbEs2tKhsGgsTVs2eqy1ZPzjnlmPHVF5qVCZN3h4NHz7K1FUxktAtKiapXwTvpFRDgp53dCn0gnniMkIDtUstPqWFTWg9cLZw5MJxrkPjsS95L5kDhiDjNk6aT74sVSC1tpgffwg9IUXlg0udMmbny08WGU4D+RaOIgFbOTyPAZAAStKsesEYiUlgim7V8v5huaSRv4xtOrcqk4IGoiQrwJoUZDFWOJ16GxOHb1PJA0/QRpgivDMUpHk4b95c/MgnU4xDPU7u7PlxsP5ezw7xOx/rVS5kO7rJtXT6XpGFwhwdx1w1dwDZLbCOsXcO+JUxQSpc9u2qkNH1S7sciVfpJNYe5vXE66NwU3UuM7C9bgbVI6v9C0eU9bBmHmOPdoSNZsM/CjT4vRDpi37KHDDQdTw2gmpX17Xaqh6L4pgClMNL3zdaVH/789wOZ9lH6gwNwVBOKNF73+0rgyMoCVMHxRrXt5IDCFpRcOtFX5Hhqu++a4Av8XSNGCq9Sgx85rb/FJ/Wh7zLOEtmmWhg+O4TFdzqkufshwhmYb88DAw6znquxlOHPc0VJFamCuc/qcFqdMGfu32Guhd3Pt7BJOwAAN9HbEGQzOv5pf
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0401MB6196.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(22082099003)(18002099003)(921020)(38070700021)(10067099003)(6133799003)(11063799006)(3023799007)(56012099006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?V1VZL2ZXa0M1RG1UeXRMWHU2VUFkQmxGdEU5TGw5MGQ1NmJMbThVblAzUkxk?=
+ =?utf-8?B?WGxTRXF5TFBBZ1ZSd1V3ZVJvT1JjTXpod2cxczRBdnQyQy9oSW56ZEZvQU1X?=
+ =?utf-8?B?bzJSZjE3a3FPMURCVFNRV2pvaWprRXNzWmk2aDRMaEV6S2xXNEN1RFBXQXVp?=
+ =?utf-8?B?MHVmR2pBMGJEanFSYTlCK2VzZ2pSNUw1WGRVenJ3Mk9NNUFHOHBsdWxiUG1C?=
+ =?utf-8?B?OHExOXZsY0R6S1lwdmJEQUlYMEFHK01BNzgwUGhmTnpsbGZneVgzNlpEL0FT?=
+ =?utf-8?B?SCtDb21NVzVlbURranR3cy9hTW9sUkszdFVmSlVGK01ydURFRFJDMUNldWpr?=
+ =?utf-8?B?SUxhalF3SEhMalhHb1pQTENLNmJVTVFoRFE1cTJmalEyeTN3WFhybEhES2dL?=
+ =?utf-8?B?WU9hZjNOQU1NRk5aQVVMRzBYMDIrS3UxbEc1Z20rY1JXS1YzZXNXMEZZVmht?=
+ =?utf-8?B?VDQzSFFsM0dzTHhpNXlCS0prNzMzVHF2ZVdITjR6eHI5blZ4ZWIzczZRSmho?=
+ =?utf-8?B?MktlbzJhTHpjRFNES1BtaTlOdGVtQThWT09JV0F0Z1RGZWVPUzAvbTFQZ3JE?=
+ =?utf-8?B?Vjl2R1BFeGQ4R0pkTDdiQlFGYlBqMFo3MVRSWVNQTUVoeXo0Uy9TSTBXM0Nm?=
+ =?utf-8?B?R0pscTJ2OWJhVE45Y2VFOVlBcW1tVlF3cjFXQ2VLaTNOa041bDFSQnRJcm0z?=
+ =?utf-8?B?U2hpMk0wTUNFL0FNMXdBUjdtNUdEUnF2TGxSb1dlcFExVG4xMXhjTWZlL1R0?=
+ =?utf-8?B?alZsY3Vpc2lRR2tUSVR0bjRENzhFTHlWbmRRMmVrWWdHNHdlMDNkTFU5M2s1?=
+ =?utf-8?B?L2NZUWlnN1FYQWVIMGZCNi9SQnhZWU40eFVUN0tKMzBBQmY1UElRbC9rM3ht?=
+ =?utf-8?B?Wm9QSXo3bWwyVFpZZnQvbUVLN1diNWJSeHdhYTR1WlppUFc2dFcyYS85eHZ4?=
+ =?utf-8?B?dDJxbzF3akVGWCs0enVhRGtQVzhUbVJNZkw3NlVMaW1GNmJXTUxEK3h4OXJM?=
+ =?utf-8?B?L3ovYzI1Tzk0WU4ybkcxaE5WeWFRWUNVcTMrU1lRbUtDcEFzd09TQkNCdUNQ?=
+ =?utf-8?B?dW5udDg4d29qMW11ajhkSDF4RlhNS05EYTdvcCswZVlmNDh0UDYxRlRPS0dC?=
+ =?utf-8?B?QXNGczNmY05zZTZaTGtNN2EvSWFuNXFnU0cyS1RXSFpxZHNlVDBMb3BiUW52?=
+ =?utf-8?B?REF2cEpabGVmcGJGUzFDeFJDWGdDcHE0QzFzOTNUUFFpR01oT3NRMDRzZWRQ?=
+ =?utf-8?B?R1c4N3dMaUU4VEU1cnVCTm9wUWFCQWlwZXhBRVNXaDloZlJnUTBBd0xHZjlk?=
+ =?utf-8?B?OTJhVnM2Mk16c0F0ZWNvMWF6ZXJJeW5mWnhoVkdRV2Z6c05MRW4xTk1VME80?=
+ =?utf-8?B?UXdJNFF0QUZVdUxwZU9zYlRXQzZjczl6MW50NUZhOGxoREhpTTdmd1IwaDZI?=
+ =?utf-8?B?My81b1h4WGRaVzczWXdRb2NFM1J4L29oR2wxZmloZDlTV0hCVEdBbjh5RE5i?=
+ =?utf-8?B?M2dGcFFtekRxU3B4OHYwUzNBTDRBcVg5NVlaSkZiWTUrZ3BBakxZdWh6ODBB?=
+ =?utf-8?B?VlhlT1NtUmJnQnNiNUY4dlpNQWcrNXZ2VjQyS2draXc0Z3BvOHFOUE9ScG1r?=
+ =?utf-8?B?QUN4T0lIUGpZb3NhVUVFU1hGU1oraTlaU1NXWWFjZG9yd2RvN3FXaFQ3emlq?=
+ =?utf-8?B?UmtOQy9seEpRSzVsdmNlMi9zL0YxTHoybFNoZnZ1UXF4NGhYb3dDMS9RMUR4?=
+ =?utf-8?B?NjFwbjhjZkcxcUM5Syt1ODByS2Jvb0wrSGJTUkl1Si9zaWlmMzlyb3cyTlRU?=
+ =?utf-8?B?d3NuZC9mb21iWWhEMlJpcFBpeGJyVStYd1pYZzFSY3k3cHA2ZG9WSCtkdWNo?=
+ =?utf-8?B?cytHTy85TVd3NS9KRWJrK1EvZERUQTlYejZGNko0dmlxS1BHeHBacFpnTDNN?=
+ =?utf-8?B?MER5RUNkMUJ6NXNvbG5LN1YxcXlmM3E0cVpoTTVDdnQ0UnAwZTJyZDBUSnZj?=
+ =?utf-8?B?c3JDK3VDRE9lL1ljT1U0WlpJYzJ6VXNKS05MWWNjL3JNYUhVb0E3c1IzOEpa?=
+ =?utf-8?B?TUF6SDdQZlF0WWNkY2F4MG1MUDNUZ0hEKzhUWTBOWG5rZEVqOXM1NkNRR2g1?=
+ =?utf-8?B?d3Z6R3orT3paaUdxOUxsaDVoMzlOaHJLQmRITWlYN0Fqbk81eFRQMERWb3Zv?=
+ =?utf-8?B?NXU4UE9uY1dNYlpmUU12WlpuSC83eGJJcThjVWZJMXVEQ2FXaEREOWprb3lV?=
+ =?utf-8?B?OTBSaXB3WDBGdjVJbGhRK1hML3U0d00yeHg0Q1ZNc285SHVYdGllOWcxVE5w?=
+ =?utf-8?B?UXo4QnduZWZEQnp6a0I4LzRaWWFtQ0NCTEtNQnF5eWFZQXpmUktRdz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: transsion.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR0401MB6196.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a233261-75a0-45ca-da78-08def9071b1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2026 06:50:04.8175
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2e8503a6-2d01-4333-8e36-6ab7c8cd7ae2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wrxP+OJXT3qYGNxYo4K73SdC4QYMZhhKCuH5625KAiCD9O8py8K1884IeXjX+9DqW0CtWxeFK6b35M1U93zYZDADDErMlRg8ubGO195qkl8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR04MB6843
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
-
-New issues:
-- [High] Unconditional use of `bpf_event_mutex` in `kernel/events/core.c` c=
-auses a linker error in valid Kconfig combinations where `CONFIG_BPF_EVENTS=
-` is disabled.
-
-Pre-existing issues:
-- [High] The fix for the data race in `perf_event_alloc()` is incomplete be=
-cause `bpf_event_mutex` is not held during the detachment of non-tracing BP=
-F programs, leaving the use-after-free race unfixed.
-- [High] Dereferencing prog->type without rcu_read_lock_trace() exposes sle=
-epable BPF programs to Use-After-Free.
-- [Medium] The patch misses a plain write to event->prog in perf_event_atta=
-ch_bpf_prog(), leaving a data race with READ_ONCE(event->prog) unfixed.
-- [Medium] `perf_event_free_bpf_handler()` still contains a plain read of `=
-event->prog` which can race with a concurrent `WRITE_ONCE()` in `perf_event=
-_set_bpf_handler()`.
-- [Medium] Missing release barrier in perf_event_set_bpf_handler() allows B=
-PF programs to observe uninitialized or stale bpf_cookie values.
---
-
---- Patch [1]: [PATCH v2] perf/bpf: Fix data races in BPF perf event handli=
-ng ---
-commit f4518a73c55a1297eca26073838ec515d34cb05a
-Author: Deepanshu Kartikey <kartikey406@gmail.com>
-perf/bpf: Fix data races in BPF perf event handling
-
-This commit attempts to fix data races around the event->prog field
-by introducing READ_ONCE and WRITE_ONCE in various handlers, and acquiring
-bpf_event_mutex during fork() in perf_event_alloc().
-
-Link: https://lore.kernel.org/all/20260811235331.10044-1-kartikey406@gmail.=
-com/T/
-
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 48d851fbd8ea5..5c6dabb6dccb1 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
->  }
->  #endif
-> =20
-> +extern struct mutex bpf_event_mutex;
-> +
-
-[Severity: High]
-Will this extern declaration lead to a linker error in valid Kconfig
-combinations where CONFIG_BPF_EVENTS is disabled?
-
-The bpf_event_mutex is defined in kernel/trace/bpf_trace.c, which is
-only compiled when CONFIG_BPF_EVENTS=3Dy. If a kernel is configured with
-CONFIG_BPF_SYSCALL=3Dy and CONFIG_EVENT_TRACING=3Dy, but kprobe and uprobe
-events are disabled, this might result in an unresolved external symbol.
-
->  #endif /* _LINUX_PERF_EVENT_H */
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index ba5bd6a78fe7b..1416066ef460e 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-
-[ ... ]
-
-> @@ -10708,7 +10707,7 @@ static inline int perf_event_set_bpf_handler(stru=
-ct perf_event *event,
->  		return -EPROTO;
->  	}
-> =20
-> -	event->prog =3D prog;
-> +	WRITE_ONCE(event->prog, prog);
->  	event->bpf_cookie =3D bpf_cookie;
->  	return 0;
->  }
-
-[Severity: Medium]
-This is a pre-existing issue, but does publishing event->prog without a
-release barrier allow concurrent readers in __perf_event_overflow() to
-observe an uninitialized or stale bpf_cookie?
-
-Without smp_store_release() or similar ordering, the CPU can reorder the
-event->prog write and the plain store to event->bpf_cookie. Since the reader
-uses READ_ONCE(), which lacks acquire semantics, a BPF program might read
-the uninitialized cookie.
-
-> @@ -10720,7 +10719,7 @@ static inline void perf_event_free_bpf_handler(st=
-ruct perf_event *event)
->  	if (!prog)
->  		return;
-> =20
-> -	event->prog =3D NULL;
-> +	WRITE_ONCE(event->prog, NULL);
->  	bpf_prog_put(prog);
->  }
-
-[Severity: Medium]
-This is a pre-existing issue, but does perf_event_free_bpf_handler() still
-contain a plain read of event->prog?
-
-At the beginning of this function:
-	struct bpf_prog *prog =3D event->prog;
-
-Could this read race with a concurrent WRITE_ONCE() from
-perf_event_set_bpf_handler() during ioctl(PERF_EVENT_IOC_SET_BPF)?
-
-[Severity: High]
-This is a pre-existing issue, but does perf_event_free_bpf_handler() need to
-acquire bpf_event_mutex to safely detach non-tracing BPF programs?
-
-Because this function clears event->prog and drops the program reference
-locklessly, a concurrent fork() calling perf_event_alloc() could acquire the
-mutex, read the program, and increment a zero-refcount object.
-
->  #else
-> @@ -10753,6 +10752,7 @@ static int __perf_event_overflow(struct perf_even=
-t *event,
->  {
->  	int events =3D atomic_read(&event->event_limit);
->  	int ret =3D 0;
-> +	struct bpf_prog *prog;
-> =20
->  	/*
->  	 * Non-sampling counters might still use the PMI to fold short
-> @@ -10766,8 +10766,9 @@ static int __perf_event_overflow(struct perf_even=
-t *event,
->  	if (event->attr.aux_pause)
->  		perf_event_aux_pause(event->aux_event, true);
-> =20
-> -	if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
-> -	    !bpf_overflow_handler(event, data, regs))
-> +	prog =3D READ_ONCE(event->prog);
-> +	if (prog && prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
-> +	    !bpf_overflow_handler(event, data, regs, prog))
-
-[Severity: High]
-This is a pre-existing issue, but does dereferencing prog->type here
-without rcu_read_lock_trace() expose sleepable BPF programs to a
-use-after-free?
-
-RCU Tasks Trace grace periods do not wait for NMIs or preemption-disabled
-sections (Classic RCU context). If a sleepable program is detached and freed
-via call_rcu_tasks_trace(), couldn't it be freed while __perf_event_overflo=
-w()
-is still executing and evaluating prog->type?
-
->  		goto out;
-> =20
->  	/*
-> @@ -13433,12 +13434,15 @@ perf_event_alloc(struct perf_event_attr *attr, =
-int cpu,
->  		overflow_handler =3D parent_event->overflow_handler;
->  		context =3D parent_event->overflow_handler_context;
->  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
-> -		if (parent_event->prog) {
-> -			struct bpf_prog *prog =3D parent_event->prog;
-> =20
-> +		struct bpf_prog *prog;
-> =20
-> +		mutex_lock(&bpf_event_mutex);
-> +		prog =3D parent_event->prog;
-> +		if (prog) {
->  			bpf_prog_inc(prog);
->  			event->prog =3D prog;
->  		}
-> +		mutex_unlock(&bpf_event_mutex);
->  #endif
-
-[Severity: High]
-As mentioned above, since bpf_event_mutex is only compiled when
-CONFIG_BPF_EVENTS=3Dy, will unconditionally locking it here cause a build
-failure on kernels where that configuration is disabled?
-
->  	}
-> =20
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 75495a5c35079..026b5c4921158 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-
-[ ... ]
-
-> @@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *=
-event)
-> =20
->  put:
->  	prog =3D event->prog;
-> -	event->prog =3D NULL;
-> +	WRITE_ONCE(event->prog, NULL);
-> =20
->  unlock:
->  	mutex_unlock(&bpf_event_mutex);
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but doesn't
-perf_event_attach_bpf_prog() still contain a plain write to event->prog?
-
-Since this patch fixes data races against the READ_ONCE() in the fast
-path, should the plain write:
-    event->prog =3D prog;
-
-in the attach path also be converted to a WRITE_ONCE()?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813060528.3659=
-59-1-kartikey406@gmail.com?part=3D1
+RnJvbTogSG9uZ3lhbiBYaWEgPGhvbmd5YW4ueGlhQHRyYW5zc2lvbi5jb20+CgpDb252ZXJ0IGFs
+bCB0aGUgc3ViLWZ1bmN0aW9ucyBjYWxsZWQgYnkga3Byb2JlX2Jya19oYW5kbGVyLAprcHJvYmVf
+c3NfYnJrX2hhbmRsZXIgYW5kIGtyZXRwcm9iZV9icmtfaGFuZGxlciBub2luc3RyLiBBZnRlciB0
+aGlzCmNvbW1pdCwgdGhlIGVudGlyZSBLcHJvYmUgcGF0aCAoYW55dGhpbmcgYmV0d2VlbiBLcHJv
+YmUgZGVidWdfZXhjZXB0aW9uCmVudHJ5IGFuZCBleGl0KSBpcyBub3cgbm9pbnN0ci4KCk9uZSBi
+aWcgaXRlbSB0aGF0IGlzIG1pc3NpbmcgaXMgdGhlIGluc3RydWN0aW9uIHNpbXVsYXRpb24gcGF0
+aC4gV2UKbGVhdmUgaXQgYXMgZnV0dXJlIHdvcmsgYXMgdGhlIEdDUyBoYW5kbGluZyBuZWVkcyBl
+eHRyYSBjYXJlLgoKVGhlIF9fa3Byb2JlcyBhdHRyaWJ1dGUgKG5vdHJhY2UgKyAua3Byb2Jlcy50
+ZXh0KSBpcyByZXBsYWNlZCBieQpub2luc3RyLCB3aGljaCBpcyBhIHN0cmljdCBzdXBlcnNldCBm
+b3IgdGhlc2UgZnVuY3Rpb25zLgoKQWxzbyBtYXJrIHRoZSBsZWFmIGhlbHBlcnMgdXNlZCBpbnNp
+ZGUgdGhlc2UgZnVuY3Rpb25zCl9fYWx3YXlzX2lubGluZSwgYXMgY2xhbmcgZG9lcyBub3QgcmVs
+aWFibHkgaW5saW5lIHBsYWluIHN0YXRpYyBpbmxpbmUKZnVuY3Rpb25zIGludG8gbm9pbmxpbmUg
+KG5vaW5zdHIpIGNhbGxlcnMuCgpTaWduZWQtb2ZmLWJ5OiBIb25neWFuIFhpYSA8aG9uZ3lhbi54
+aWFAdHJhbnNzaW9uLmNvbT4KLS0tCiBhcmNoL2FybTY0L2luY2x1ZGUvYXNtL3BlcmNwdS5oICAg
+IHwgIDIgKy0KIGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vcHRyYWNlLmggICAgfCAgNCArKy0tCiBh
+cmNoL2FybTY0L2tlcm5lbC9wcm9iZXMva3Byb2Jlcy5jIHwgMzAgKysrKysrKysrKysrKysrLS0t
+LS0tLS0tLS0tLS0tCiBpbmNsdWRlL2xpbnV4L2twcm9iZXMuaCAgICAgICAgICAgIHwgIDggKysr
+Ky0tLS0KIDQgZmlsZXMgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMjIgZGVsZXRpb25zKC0p
+CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9wZXJjcHUuaCBiL2FyY2gvYXJt
+NjQvaW5jbHVkZS9hc20vcGVyY3B1LmgKaW5kZXggYjU3YjJiYjAwOTY3Li5kNGNhZTQ3ZmRlOGMg
+MTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvaW5jbHVkZS9hc20vcGVyY3B1LmgKKysrIGIvYXJjaC9h
+cm02NC9pbmNsdWRlL2FzbS9wZXJjcHUuaApAQCAtMjksNyArMjksNyBAQCBzdGF0aWMgaW5saW5l
+IHVuc2lnbmVkIGxvbmcgX19oeXBfbXlfY3B1X29mZnNldCh2b2lkKQogCXJldHVybiByZWFkX3N5
+c3JlZyh0cGlkcl9lbDIpOwogfQogCi1zdGF0aWMgaW5saW5lIHVuc2lnbmVkIGxvbmcgX19rZXJu
+X215X2NwdV9vZmZzZXQodm9pZCkKK3N0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdW5zaWduZWQgbG9u
+ZyBfX2tlcm5fbXlfY3B1X29mZnNldCh2b2lkKQogewogCXVuc2lnbmVkIGxvbmcgb2ZmOwogCmRp
+ZmYgLS1naXQgYS9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL3B0cmFjZS5oIGIvYXJjaC9hcm02NC9p
+bmNsdWRlL2FzbS9wdHJhY2UuaAppbmRleCAzOTU4MjUxMWFkNzIuLjQ2MDcyNjIyNDI5OSAxMDA2
+NDQKLS0tIGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9wdHJhY2UuaAorKysgYi9hcmNoL2FybTY0
+L2luY2x1ZGUvYXNtL3B0cmFjZS5oCkBAIC0zMzYsMTEgKzMzNiwxMSBAQCBzdGF0aWMgaW5saW5l
+IHVuc2lnbmVkIGxvbmcgcmVnc19nZXRfa2VybmVsX2FyZ3VtZW50KHN0cnVjdCBwdF9yZWdzICpy
+ZWdzLAogc3RydWN0IHRhc2tfc3RydWN0OwogaW50IHZhbGlkX3VzZXJfcmVncyhzdHJ1Y3QgdXNl
+cl9wdF9yZWdzICpyZWdzLCBzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2spOwogCi1zdGF0aWMgaW5s
+aW5lIHVuc2lnbmVkIGxvbmcgaW5zdHJ1Y3Rpb25fcG9pbnRlcihzdHJ1Y3QgcHRfcmVncyAqcmVn
+cykKK3N0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdW5zaWduZWQgbG9uZyBpbnN0cnVjdGlvbl9wb2lu
+dGVyKHN0cnVjdCBwdF9yZWdzICpyZWdzKQogewogCXJldHVybiByZWdzLT5wYzsKIH0KLXN0YXRp
+YyBpbmxpbmUgdm9pZCBpbnN0cnVjdGlvbl9wb2ludGVyX3NldChzdHJ1Y3QgcHRfcmVncyAqcmVn
+cywKK3N0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdm9pZCBpbnN0cnVjdGlvbl9wb2ludGVyX3NldChz
+dHJ1Y3QgcHRfcmVncyAqcmVncywKIAkJdW5zaWduZWQgbG9uZyB2YWwpCiB7CiAJcmVncy0+cGMg
+PSB2YWw7CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2tlcm5lbC9wcm9iZXMva3Byb2Jlcy5jIGIv
+YXJjaC9hcm02NC9rZXJuZWwvcHJvYmVzL2twcm9iZXMuYwppbmRleCAwZTY2YWJmOTk1OGUuLjVl
+YzVmNGVmOTk4NSAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvcHJvYmVzL2twcm9iZXMu
+YworKysgYi9hcmNoL2FybTY0L2tlcm5lbC9wcm9iZXMva3Byb2Jlcy5jCkBAIC0zOSw3ICszOSw3
+IEBACiBERUZJTkVfUEVSX0NQVShzdHJ1Y3Qga3Byb2JlICosIGN1cnJlbnRfa3Byb2JlKSA9IE5V
+TEw7CiBERUZJTkVfUEVSX0NQVShzdHJ1Y3Qga3Byb2JlX2N0bGJsaywga3Byb2JlX2N0bGJsayk7
+CiAKLXN0YXRpYyB2b2lkIF9fa3Byb2Jlcworc3RhdGljIHZvaWQgbm9pbnN0cgogcG9zdF9rcHJv
+YmVfaGFuZGxlcihzdHJ1Y3Qga3Byb2JlICosIHN0cnVjdCBrcHJvYmVfY3RsYmxrICosIHN0cnVj
+dCBwdF9yZWdzICopOwogCiB2b2lkICphbGxvY19pbnNuX3BhZ2Uodm9pZCkKQEAgLTE3MCw3ICsx
+NzAsNyBAQCB2b2lkIF9fa3Byb2JlcyBhcmNoX3JlbW92ZV9rcHJvYmUoc3RydWN0IGtwcm9iZSAq
+cCkKIAl9CiB9CiAKLXN0YXRpYyB2b2lkIF9fa3Byb2JlcyBzYXZlX3ByZXZpb3VzX2twcm9iZShz
+dHJ1Y3Qga3Byb2JlX2N0bGJsayAqa2NiKQorc3RhdGljIHZvaWQgbm9pbnN0ciBzYXZlX3ByZXZp
+b3VzX2twcm9iZShzdHJ1Y3Qga3Byb2JlX2N0bGJsayAqa2NiKQogewogCWtjYi0+cHJldl9rcHJv
+YmUua3AgPSBrcHJvYmVfcnVubmluZygpOwogCWtjYi0+cHJldl9rcHJvYmUuc3RhdHVzID0ga2Ni
+LT5rcHJvYmVfc3RhdHVzOwpAQCAtMTg0LDcgKzE4NCw3IEBAIHN0YXRpYyB2b2lkIF9fa3Byb2Jl
+cyBzYXZlX3ByZXZpb3VzX2twcm9iZShzdHJ1Y3Qga3Byb2JlX2N0bGJsayAqa2NiKQogCWtjYi0+
+cHJldl9rcHJvYmUuc2F2ZWRfaXJxZmxhZyA9IGtjYi0+c2F2ZWRfaXJxZmxhZzsKIH0KIAotc3Rh
+dGljIHZvaWQgX19rcHJvYmVzIHJlc3RvcmVfcHJldmlvdXNfa3Byb2JlKHN0cnVjdCBrcHJvYmVf
+Y3RsYmxrICprY2IpCitzdGF0aWMgdm9pZCBub2luc3RyIHJlc3RvcmVfcHJldmlvdXNfa3Byb2Jl
+KHN0cnVjdCBrcHJvYmVfY3RsYmxrICprY2IpCiB7CiAJX190aGlzX2NwdV93cml0ZShjdXJyZW50
+X2twcm9iZSwga2NiLT5wcmV2X2twcm9iZS5rcCk7CiAJa2NiLT5rcHJvYmVfc3RhdHVzID0ga2Ni
+LT5wcmV2X2twcm9iZS5zdGF0dXM7CkBAIC0xOTcsNyArMTk3LDcgQEAgc3RhdGljIHZvaWQgX19r
+cHJvYmVzIHJlc3RvcmVfcHJldmlvdXNfa3Byb2JlKHN0cnVjdCBrcHJvYmVfY3RsYmxrICprY2Ip
+CiAJa2NiLT5zYXZlZF9pcnFmbGFnID0ga2NiLT5wcmV2X2twcm9iZS5zYXZlZF9pcnFmbGFnOwog
+fQogCi1zdGF0aWMgdm9pZCBfX2twcm9iZXMgc2V0X2N1cnJlbnRfa3Byb2JlKHN0cnVjdCBrcHJv
+YmUgKnApCitzdGF0aWMgdm9pZCBub2luc3RyIHNldF9jdXJyZW50X2twcm9iZShzdHJ1Y3Qga3By
+b2JlICpwKQogewogCV9fdGhpc19jcHVfd3JpdGUoY3VycmVudF9rcHJvYmUsIHApOwogfQpAQCAt
+MjA3LDIzICsyMDcsMjMgQEAgc3RhdGljIHZvaWQgX19rcHJvYmVzIHNldF9jdXJyZW50X2twcm9i
+ZShzdHJ1Y3Qga3Byb2JlICpwKQogICogc2ltcGxlIGFuZCBhdm9pZCBuZXN0aW5nIGV4Y2VwdGlv
+bnMuIEludGVycnVwdHMgZG8gaGF2ZSB0byBiZSBkaXNhYmxlZCBzaW5jZQogICogdGhlIGtwcm9i
+ZSBzdGF0ZSBpcyBwZXItQ1BVIGFuZCBkb2Vzbid0IGdldCBtaWdyYXRlZC4KICAqLwotc3RhdGlj
+IHZvaWQgX19rcHJvYmVzIGtwcm9iZXNfc2F2ZV9sb2NhbF9pcnFmbGFnKHN0cnVjdCBrcHJvYmVf
+Y3RsYmxrICprY2IsCi0JCQkJCQlzdHJ1Y3QgcHRfcmVncyAqcmVncykKK3N0YXRpYyB2b2lkIG5v
+aW5zdHIga3Byb2Jlc19zYXZlX2xvY2FsX2lycWZsYWcoc3RydWN0IGtwcm9iZV9jdGxibGsgKmtj
+YiwKKwkJCQkJICAgICAgIHN0cnVjdCBwdF9yZWdzICpyZWdzKQogewogCWtjYi0+c2F2ZWRfaXJx
+ZmxhZyA9IHJlZ3MtPnBzdGF0ZSAmIERBSUZfTUFTSzsKIAlyZWdzLT5wc3RhdGUgfD0gREFJRl9N
+QVNLOwogfQogCi1zdGF0aWMgdm9pZCBfX2twcm9iZXMga3Byb2Jlc19yZXN0b3JlX2xvY2FsX2ly
+cWZsYWcoc3RydWN0IGtwcm9iZV9jdGxibGsgKmtjYiwKLQkJCQkJCXN0cnVjdCBwdF9yZWdzICpy
+ZWdzKQorc3RhdGljIHZvaWQgbm9pbnN0ciBrcHJvYmVzX3Jlc3RvcmVfbG9jYWxfaXJxZmxhZyhz
+dHJ1Y3Qga3Byb2JlX2N0bGJsayAqa2NiLAorCQkJCQkJICBzdHJ1Y3QgcHRfcmVncyAqcmVncykK
+IHsKIAlyZWdzLT5wc3RhdGUgJj0gfkRBSUZfTUFTSzsKIAlyZWdzLT5wc3RhdGUgfD0ga2NiLT5z
+YXZlZF9pcnFmbGFnOwogfQogCi1zdGF0aWMgdm9pZCBfX2twcm9iZXMgc2V0dXBfc2luZ2xlc3Rl
+cChzdHJ1Y3Qga3Byb2JlICpwLAotCQkJCSAgICAgICBzdHJ1Y3QgcHRfcmVncyAqcmVncywKLQkJ
+CQkgICAgICAgc3RydWN0IGtwcm9iZV9jdGxibGsgKmtjYiwgaW50IHJlZW50ZXIpCitzdGF0aWMg
+dm9pZCBub2luc3RyIHNldHVwX3NpbmdsZXN0ZXAoc3RydWN0IGtwcm9iZSAqcCwKKwkJCQkgICAg
+IHN0cnVjdCBwdF9yZWdzICpyZWdzLAorCQkJCSAgICAgc3RydWN0IGtwcm9iZV9jdGxibGsgKmtj
+YiwgaW50IHJlZW50ZXIpCiB7CiAJdW5zaWduZWQgbG9uZyBzbG90OwogCkBAIC0yNDgsOSArMjQ4
+LDkgQEAgc3RhdGljIHZvaWQgX19rcHJvYmVzIHNldHVwX3NpbmdsZXN0ZXAoc3RydWN0IGtwcm9i
+ZSAqcCwKIAl9CiB9CiAKLXN0YXRpYyBpbnQgX19rcHJvYmVzIHJlZW50ZXJfa3Byb2JlKHN0cnVj
+dCBrcHJvYmUgKnAsCi0JCQkJICAgIHN0cnVjdCBwdF9yZWdzICpyZWdzLAotCQkJCSAgICBzdHJ1
+Y3Qga3Byb2JlX2N0bGJsayAqa2NiKQorc3RhdGljIGludCBub2luc3RyIHJlZW50ZXJfa3Byb2Jl
+KHN0cnVjdCBrcHJvYmUgKnAsCisJCQkJICBzdHJ1Y3QgcHRfcmVncyAqcmVncywKKwkJCQkgIHN0
+cnVjdCBrcHJvYmVfY3RsYmxrICprY2IpCiB7CiAJc3dpdGNoIChrY2ItPmtwcm9iZV9zdGF0dXMp
+IHsKIAljYXNlIEtQUk9CRV9ISVRfU1NET05FOgpAQCAtMjc4LDcgKzI3OCw3IEBAIHN0YXRpYyBp
+bnQgX19rcHJvYmVzIHJlZW50ZXJfa3Byb2JlKHN0cnVjdCBrcHJvYmUgKnAsCiAJcmV0dXJuIDE7
+CiB9CiAKLXN0YXRpYyB2b2lkIF9fa3Byb2Jlcworc3RhdGljIHZvaWQgbm9pbnN0cgogcG9zdF9r
+cHJvYmVfaGFuZGxlcihzdHJ1Y3Qga3Byb2JlICpjdXIsIHN0cnVjdCBrcHJvYmVfY3RsYmxrICpr
+Y2IsIHN0cnVjdCBwdF9yZWdzICpyZWdzKQogewogCS8qIHJldHVybiBhZGRyIHJlc3RvcmUgaWYg
+bm9uLWJyYW5jaGluZyBpbnNuICovCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2twcm9iZXMu
+aCBiL2luY2x1ZGUvbGludXgva3Byb2Jlcy5oCmluZGV4IDhjNGYzYmIyNDQyOS4uNTg4MDQ0NWVk
+MGYwIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2twcm9iZXMuaAorKysgYi9pbmNsdWRlL2xp
+bnV4L2twcm9iZXMuaApAQCAtMzg0LDE3ICszODQsMTcgQEAgc3RhdGljIGlubGluZSB2b2lkIGtw
+cm9iZV9mdHJhY2Vfa2lsbCh2b2lkKSB7fQogc3RydWN0IGtwcm9iZSAqZ2V0X2twcm9iZSh2b2lk
+ICphZGRyKTsKIAogLyoga3Byb2JlX3J1bm5pbmcoKSB3aWxsIGp1c3QgcmV0dXJuIHRoZSBjdXJy
+ZW50X2twcm9iZSBvbiB0aGlzIENQVSAqLwotc3RhdGljIGlubGluZSBzdHJ1Y3Qga3Byb2JlICpr
+cHJvYmVfcnVubmluZyh2b2lkKQorc3RhdGljIF9fYWx3YXlzX2lubGluZSBzdHJ1Y3Qga3Byb2Jl
+ICprcHJvYmVfcnVubmluZyh2b2lkKQogewogCXJldHVybiBfX3RoaXNfY3B1X3JlYWQoY3VycmVu
+dF9rcHJvYmUpOwogfQogCi1zdGF0aWMgaW5saW5lIHZvaWQgcmVzZXRfY3VycmVudF9rcHJvYmUo
+dm9pZCkKK3N0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdm9pZCByZXNldF9jdXJyZW50X2twcm9iZSh2
+b2lkKQogewogCV9fdGhpc19jcHVfd3JpdGUoY3VycmVudF9rcHJvYmUsIE5VTEwpOwogfQogCi1z
+dGF0aWMgaW5saW5lIHN0cnVjdCBrcHJvYmVfY3RsYmxrICpnZXRfa3Byb2JlX2N0bGJsayh2b2lk
+KQorc3RhdGljIF9fYWx3YXlzX2lubGluZSBzdHJ1Y3Qga3Byb2JlX2N0bGJsayAqZ2V0X2twcm9i
+ZV9jdGxibGsodm9pZCkKIHsKIAlyZXR1cm4gdGhpc19jcHVfcHRyKCZrcHJvYmVfY3RsYmxrKTsK
+IH0KQEAgLTQ0OSw3ICs0NDksNyBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBrcHJvYmUgKmdldF9r
+cHJvYmUodm9pZCAqYWRkcikKIHsKIAlyZXR1cm4gTlVMTDsKIH0KLXN0YXRpYyBpbmxpbmUgc3Ry
+dWN0IGtwcm9iZSAqa3Byb2JlX3J1bm5pbmcodm9pZCkKK3N0YXRpYyBfX2Fsd2F5c19pbmxpbmUg
+c3RydWN0IGtwcm9iZSAqa3Byb2JlX3J1bm5pbmcodm9pZCkKIHsKIAlyZXR1cm4gTlVMTDsKIH0K
+LS0gCjIuNDcuMwoK
