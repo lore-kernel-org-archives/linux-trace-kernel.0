@@ -1,110 +1,107 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD294A33E1
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 17:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D38248F72;
+	Thu, 13 Aug 2026 17:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786641957; cv=none; b=eE1gWYosCTLKc6ZH1OfT1/dKm2lfhPZ1V74Uj9QxooACe2luY6+o1rsaKy+Tg8WE2zEIWdGkd8mUQnaAhpTxhHJZmmnkFzjIU+C67KuAJP9CzoYho/R0WBaLSHsxQA8ZldmJPiqkcNA+L/96qIb0BPXn9ZNuylwMTrmOZMwPT2M=
+	t=1786642265; cv=none; b=FiCghJzGPHCC6yij3NODRcChNsXb9OhaxNvHEiFGGquxu2hQ2PZblhitRdbwziGamW3ZsUx6HurP4Gv0/hcRjhy+cLr5wcQGfKquxDcYbmUs8BHmZdCZDZpqZlyL48+IiHPwyTaW8jW6+PF22Hujd5ptHE/ptH7HJP+FSdn33Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786641957; c=relaxed/simple;
-	bh=OArQ9c4MMcXgH9+Tw78yQqP/z7XON/wM/5m8ONyG1G8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SoCIM2iI1cxNTqwe+nVyJMYTNjdVuXfrrIm91M3Xp/OTWH2YBDAt7bixTvve77AYSuD4/AEklO0+uU1DgrioWFcyaLskUPC4YCHeuC2mw2l3FwoMlc67Q0Ie1UwL8Rq4rmhgpaCPbCFPvphZ1qWQ9V34r+Zo137ELrr/hKUZDMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UNeKMI9G; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1786642265; c=relaxed/simple;
+	bh=mjiOVMOMk2a1S5jj4W+hcPd085Qe5oN/ZdhhlcJBzic=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=jakgAmupEGEnXk0vJE8ielw437MWzy5EQd9WzmanzSab/CotD+AQzPnLgCYmnkF5QnLYnLP+jInKXuUyTnITKjucv7wOT/3nLtelU/2glv2cXdU4OS4kiCyylCuAOdO9mk0uadRjsDtL1TltLlZKysTsZcq9EJWKjwSw9y62qz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=BrKU/2d1; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UNeKMI9G"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-47fe89fb333so35049f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 10:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786641952; x=1787246752; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Vel6XA2+zNnsnhR1zxSk3iAl4F9DLTFaOpNJqTCaJik=;
-        b=UNeKMI9GXcc8W/qWNsbuuAaJbt1tEBkvh9XQCWS7K7aTUTlI9apyRFy9+LwP2mC8W1
-         FPuFeXL2dV/IdrspuXsibXLhz7VQaxJ9qzcammvBA6XewWm4j9/qkPfiY+V7LPlC4+WT
-         1LzQMTtfoiNbc/htyX1FRSdWhnxKZy5s8W35fUSVFl58H26dXeITeVP/dTgY809Q13Ll
-         diUoGqoiZ2YKdrY8kV+JJaSxLSPOp6AW3lnR8biMQrEZy3NhFSZgddepij/JK8qS1I7a
-         iDXq2JZaFzPU7J342NFluYMZC7rmjryFozdch6HhQXN0syGvce5To0jNd9RWNa0CF/nQ
-         OgzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786641952; x=1787246752;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Vel6XA2+zNnsnhR1zxSk3iAl4F9DLTFaOpNJqTCaJik=;
-        b=Z3e1R8El+SdSLEcZ2nzQjn0IfkpakIrJdtsQEm7KRFQRMRv2eK1k6D965RtxI3ercB
-         u3G7evQeokZBjPXJ1bXwPOiFDpz8wv0lhzaA8EYY92bX8+DKez6l7PgwabhFA6Xk66Re
-         RUYJvpJSyZxlRYfRicezhhQTTBRqvrcww8xV8CdJEywlaZnYmaQW6OY8pgPYgucNLP5J
-         ZSogAcTnZMRlJ1vE0iNpGiyEjElPpBK5mil+1NfsTezmfgtF/YEw0/IHBP0JktRXTBhV
-         sTyAzMEzt6ES5wS93q/zDRxzQqGtxPBEyLMtkXxEW0paVpXvydt0ZKR1kIcrCnA6B5eK
-         xAlg==
-X-Forwarded-Encrypted: i=1; AHgh+Rr+WROE1VHbgRxooPoLcmvl7zDz0Jqz/GUKIFfRyoj/EUd/MBg+7vG4qE0cdWKYivY159vTtCdR+siOyl8iYEbEmh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwjrpGhTnjWodjiZ8oHv0WTVpceVYlYeT8GBRmRdYIYfUvyATb
-	Np0fP3jkWaNhOU5sGaoLfXfG/lCU8exsNHr7rt/OsJaW4fe5lqkOoO6i7kH4WrhpYg==
-X-Gm-Gg: AR+sD11zMDCPZ5Ulb+LD5ihbY56N+v98hrNbTVVdIs95cUDxye+B2ip4QMeTk4iLKOv
-	qWjotPAZsBq/PSBNT8o8B4MzxTL2PhzpQT0a5KJlDX1EgaGJTQppgLnJa24y1L3U7q9MbFUf2mL
-	uAX5ZfmevDiJqUuGbMkVvWgfKJXCY65qfaaFvdZNIj6Ids1wYhBY09NUBjDM/UUsAyx4HmVyLKR
-	Rt7FY4bGC9jyRX3Mrlg7x8X94J7rHBfFSns0dBerMrlJZusXxFPdFNd5IvGpl3GIvf0lrVfXS7u
-	2DlvaIEFOvxTe6Qf87DzS7o+UaSesKJ5i95/xaaeEkeZt68rqaWP2qFBmvqII6Q5JLqa+aSlFf2
-	1WoKXNN70fmwMC4XGAaPEZ47o0SCpYdRNzkI4glJn/oCG1hXxOGsUGE8IiIfCQnGI65v5/FtLdB
-	OVlbF+U2I5/MDWb2Tlf32c3bprIrLibYJd00TzY5BP/4t9+CgM+ARqOq1SdVCgWa2VU9ZFAHNCk
-	zIoJACQfxB8h1wS/tDKe9Ahv+Xye90k
-X-Received: by 2002:adf:e58d:0:b0:481:512c:4a7c with SMTP id ffacd0b85a97d-48159cc05bbmr9051714f8f.9.1786641951349;
-        Thu, 13 Aug 2026 10:25:51 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2005bcsm935600f8f.6.2026.08.13.10.25.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 10:25:36 -0700 (PDT)
-Date: Thu, 13 Aug 2026 18:25:32 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH 0/1] ring-buffer: Fix sub-buffer order updates and
- free_page leaks
-Message-ID: <an3-DCFFkOo4LSR5@google.com>
-References: <178663776361.475864.7685868697103378735.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="BrKU/2d1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=9kz+jvI32wPERrbL870TVMeN4G7K9bL5RJ1JKWoZA1Q=; b=BrKU/2d1rri5u9vmgacwHn1MUI
+	ZHpp0GTxVHpY8teh3yMHnFNG1J2YK/+OR2P641SXEh/9xOhAsGzmWrdPYKr1TyHQFIAWs8Wv0N2z4
+	PdKTylS+hQFqrZkg8asEh4M5ashON/XmnNl3rnu/VxcIUxQkFTqqC50w+6+fbUD/kR3FUxDrRVze8
+	+NXhu0EYOxSfpxfHKSK4Hs32KJU17r+EfCUMrZdbbEk9UTCDQFIXpFsA5GBAPaEXKyL3iqJArWxou
+	L80v7g3Nno34JxU/Z3I3NRZC8FY1yzGCY6QIUaoc9DR8OQb+YptrrqBpfwBY4INCvEpebpD8r0wej
+	18FOpRvw==;
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([96.51.150.74] helo=[10.0.33.8])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.2)
+	(envelope-from <logang@deltatee.com>)
+	id 1wuZGC-00000002RFD-3NzV;
+	Thu, 13 Aug 2026 11:30:33 -0600
+Message-ID: <11f666ce-ea7f-48c7-8219-baeb04498654@deltatee.com>
+Date: Thu, 13 Aug 2026 11:28:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <178663776361.475864.7685868697103378735.stgit@devnote2>
+User-Agent: Mozilla Thunderbird
+To: Frank.Li@oss.nxp.com, Jacky Huang <ychuang3@nuvoton.com>,
+ Shan-Chun Hung <schung@nuvoton.com>, Vinod Koul <vkoul@kernel.org>,
+ Frank Li <Frank.Li@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Binbin Zhou <zhoubinbin@loongson.cn>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ =?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thierry Reding <thierry.reding@kernel.org>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>,
+ Viresh Kumar <vireshk@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Manivannan Sadhasivam <mani@kernel.org>, Daniel Mack <daniel@zonque.org>,
+ Haojian Zhuang <haojian.zhuang@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>, Chen-Yu Tsai <wens@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Kelvin Cao <kelvin.cao@microchip.com>,
+ Laxman Dewangan <ldewangan@nvidia.com>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
+References: <20260812-dma-chan_dev-rename-v1-0-a67131f7d5c2@nxp.com>
+ <20260812-dma-chan_dev-rename-v1-1-a67131f7d5c2@nxp.com>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20260812-dma-chan_dev-rename-v1-1-a67131f7d5c2@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 96.51.150.74
+X-SA-Exim-Rcpt-To: Frank.Li@oss.nxp.com, ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org, Frank.Li@kernel.org, paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, andriy.shevchenko@linux.intel.com, zhoubinbin@loongson.cn, patrice.chotard@foss.st.com, amelie.delaunay@foss.st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, thierry.reding@kernel.org, jonathanh@nvidia.com, ludovic.desroches@microchip.com, vireshk@kernel.org, keguang.zhang@gmail.com, afaerber@suse.de, mani@kernel.org, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, wens@kernel.org, jernej.skrabec@gmail.com, samuel@sholland.org, kelvin.cao@microchip.com, ldewangan@nvidia.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev, imx@lists.linux.dev, Frank.Li@nxp.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH 1/2] dmaengine: use dma_chan_name() helper to get
+ per-channel device name
+X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On Fri, Aug 14, 2026 at 01:16:03AM +0900, Masami Hiramatsu (Google) wrote:
-> Hi Vincent,
-> 
-> Here is my patch to fix the race and free_page problem.
-> Let's see what Sashiko says for this.
-> 
-> Thank you,
-> 
-> ---
-> base-commit: 3d6d817622b0a9721e3cc404df3469171582be13
-> 
-> Masami Hiramatsu (Google) (1):
->       ring-buffer: Fix race between ring_buffer_subbuf_order_set() and readers
-> 
-> 
->  kernel/trace/ring_buffer.c |   35 +++++++++++++++++++++++++++++------
->  1 file changed, 29 insertions(+), 6 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Sorry I am not sure to understand what is wrong with that series I made here?
 
-https://lore.kernel.org/all/20260813131152.3589632-1-vdonnefort@google.com/
+On 2026-08-12 3:24 p.m., Frank.Li@oss.nxp.com wrote:
+> From: Frank Li <Frank.Li@nxp.com>
+> 
+> Use the existing dma_chan_name() helper to obtain the per-channel device
+> name instead of open-coding: dev_name(chan->dev->device) /
+> dev_name(chan2dev())
+> 
+> Simplify the code and improve consistency.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
--- 
-Vincent
+Makes sense to me.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+
