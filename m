@@ -1,178 +1,135 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD57248F82D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 15:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5477248D893
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 16:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786636525; cv=none; b=TKsV6CYOBKkwm+V0KhHDiGdXr9kB4veXrQ6GY3F0tXbgNJhz2vJfOoke7XswfWD5SxpvKpWqHqh7Wx6IvqA975BIPXjl7OPi07EJ7krMTa8bzSVwFzinPpvVOHYWRR/0l8nov97rs0z/HdvHKBQoXa+5uW2KpU3yOtg5WLlopI0=
+	t=1786636988; cv=none; b=Qm44+2KEIQPYQfpBvPI0sbydkNPBIaNqJV03RBzefKc3d9JdaBpg/Djq+DEht4BDUpvn3VB0b+i3CdPg+AlSTHhHfnEpQleHU3YSWqRyD3J7ldFrBTsLZs8Dadcv76d55+O3EPIPjI27znaPDCSkGgBLymp/AUfN9kkmW01TwDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786636525; c=relaxed/simple;
-	bh=KjvD0FYtibQe8DPB7+KaUJitoRzCPmTVRI1ZUYReScM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=I2ttFcnmXVDYkXi0L5Cf1JurwNfHcwd1Xlr40fFj3edQhwEb+YvV/FqsZ7zsh6Gvyr08UyZtQGTS2LVfqLVXvZiGfZTCcRG+8N9u9sLnFsJwyT/46QwzDJIq6zR7HlvdEU7YN7e0DIqmViYepmBk/YdrEnm6Pf1DzoXlQv031IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HcNZfx6v; arc=none smtp.client-ip=209.85.216.70
+	s=arc-20240116; t=1786636988; c=relaxed/simple;
+	bh=SKsbIEp8R4pXw1IRNNNSLjpPn2PWGslZn1iXKYSQdXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MRzGTDMUYLV6j+wNM+kKe5Ec6KEl1OhZXuPlIZPjnVoFt6LQnCRFkFcpiIPTgVPXr/nr+41z83MnFkQI1phrnDJLS+yHskujNmRDsEZb4FUyhVYCcorg3FWrweSTHZHaCx+8/RGB7gL9p8QAJtsrZsNnnLTp6+mrtFrBICSqCyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f5sONZsZ; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HcNZfx6v"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38ea32e57e2so1614440a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 08:55:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5sONZsZ"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-47f703a9e5dso4003f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 09:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786636515; x=1787241315; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=NWd+efJbNRhMQi4tFuFF6oho5IzekPVE1UiVHSpD6zk=;
-        b=HcNZfx6vLVC9BEDC8pXA2hcsv1hw1DlxI8tikd0v/Vo9/mx/VfXMUd77bFcBKP9q+m
-         dfHxlzZ6qZ2Nck2sQdH4hN+EwNi3vHEUVF4XsK9AEDm9hlSToITJ56mHWxhopD39isb+
-         RawwSZUj7w65cysAh7SIYq+F2CSM9zJqI97fIchtzcIpG9ezxz9PDQ4Ta266yFHlU3Tg
-         JVetymie04n7vw2meuI/o9dyatD/0p0LHk9FMUi4RN8eLF5rsdLyvncUg3xuxqJK1V7I
-         ecuUQ1PGX5WvTDb3Y7wFXusJ/cJYPgf0CHQmqBF6xDq5r27hlL9DEgnfeGudigfVR9mH
-         SmYQ==
+        d=google.com; s=20251104; t=1786636980; x=1787241780; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=treW88TWQM0npumBYWNuqQc/1poh2s7oeF0WGn40048=;
+        b=f5sONZsZ+aC7ZKty79joTl8szXH847mnn8p3lB6SrEkdBRpGpj9xp/V45abdHHLhX7
+         XU/psne4m1pEkjmwkzIf5jB7tbcPBd3mgBOAa99hciZfYTuRJmwxMq+kdHEuJds5XRr+
+         J+vmrqsN0r4AbFZhNbgrJX5AlVMokldZaX2OfGXR8f6kfu+/wY+bc0NZ9pguHeZ1lHot
+         E/M5upHKxIIkh4aAKVrFK/y7A8DCCru0lqVJU5kx6z7AgvfLyLfYWUY417soU1hG4QfR
+         vTLuYuWL3K2YGj18zKMZOjp49yECkpehCSAGOeyyaKYkgaqEs+mVK8scpixYa3MVgZb1
+         4jKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786636515; x=1787241315;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date
+        d=1e100.net; s=20251104; t=1786636980; x=1787241780;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NWd+efJbNRhMQi4tFuFF6oho5IzekPVE1UiVHSpD6zk=;
-        b=aGWZwViuCqDFrZX5qTi5DaGIjFq532IL5A797stLZU2IRAxzGyc5jUko1ujqiLNw7H
-         ZJcpu99CDPuCqRY6FyoqWJ5jjjhSHQ96DQOx3hTEV4Mqs0qBC68t5G0ruM9LrvbfbdVU
-         ojfPUpf9ODYu38iVFxszRQ9nUfjUKrlpN8Rxiz3kQJigY+1bmL3LAKlmHrK5m+kAMlOn
-         VvuiAPPfkHyzS6Sjd4eqz0/5E+DHzNPNvNmYarGGRuDSI3dYt6aNehVEUD02HJy/YY8p
-         WE0q2DIhYa8zfLgDW2DfPyyS7MZkMzDRIagpPyToxWNkZtW9WYAp1p3tnhkJjK13tQq6
-         hpZQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoGt1V27iSe/n3ZYnjCiGKbPvBL2n2sVm/e9YVN/UQi3Wr9ErOeSHo+LVUhMYfubnb553Fm7u3S1q8W9AakQBSUbiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwLYP+3r6SesNDoMDAjEXzb4sAK+RYAkWVrvpliNkEK71YXL7t
-	bgjJWh1QVqNzx7CGNNgpLrF2Xf/IlphcoIplnFQk5rDi+iyWFQgLc/d9hV73kNY9MjG4RBrYEsy
-	x9aKLHg==
-X-Received: from pjbmr22.prod.google.com ([2002:a17:90b:2396:b0:381:1d7f:b8db])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a8d:b0:36a:8240:2477
- with SMTP id 98e67ed59e1d1-3931e31a6f4mr7349226a91.19.1786636514937; Thu, 13
- Aug 2026 08:55:14 -0700 (PDT)
-Date: Thu, 13 Aug 2026 08:55:14 -0700
-In-Reply-To: <1ec08cd8-3072-4753-ad5e-cd34956647f8@linux.intel.com>
+        bh=treW88TWQM0npumBYWNuqQc/1poh2s7oeF0WGn40048=;
+        b=E8BDqwD17VuICgHLGtcqFQx+CkhKZecCLPTbLLbgnn64eBxtDvfjmPVAbAxkhMM8nS
+         24P6imDkz/43o8TcuxNv5zCqDl821QVKfYxZCKjUJB4epESkvk3/xbP8vWOGLuA3/B7E
+         qX2+V5z3YHV+Y7lwpUVOr5L+6XuMJdgKnwOnTfGxGNlV7GBlykyjwg2yWPKO5GpYyBOt
+         iOpsjwQdJuq+qViBgV1vsOJ9Rrw87gUNQVQCFu4qf3HkbIhA9fBaNsWsOh9JoJZiZsA4
+         4MHIHM/+4/QoQpaPZ7ZQ0DYO6h1hGNHD3G2H/EXAoymiLC+aUXJ3WK1iNN14teEUOLLr
+         OrSg==
+X-Forwarded-Encrypted: i=1; AHgh+RqeAAUA2Mw7hsnckaL7P4VBGm+SA/AU9Et3E8z46AzdK+4oj6Qc1spMVWcAlgx75K1ycxPVm/DF+lfvkIkNBN+lK5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcEp1i1ra3K0Ug18CzsEGCYQi9wEP9eWrO92DDMIMKOM/t97lh
+	tOd1K8CXxXMc/p4x64Q8EgO4B/drnZTnzUZhKygRg1bEm+2AorqjoaS3WuXUrsoU7w==
+X-Gm-Gg: AR+sD12vVEHTOlpXkdUxltBRHXzwbjfzmze8H5OhzsvKFvorIboT7HZ//ZEQx+4FrhB
+	ArNBgR/lCyCM6u9lAwqxz3Lp5JWBX77oprD2XQiPNrZ/ShG5W2VF1H0F4cRTjM4XbJFo7OEv1QQ
+	nEAliHVQU1mPf9zm3lo6MhvL9hK3May/KaN6UBgPFTJ0lWm/ot9sNphUFsQL6Z1PL1SgX1Z/ivG
+	VuhtefJ7yDNht5K509PeW7hqR5UthQxUE6OZR03kTM3qfdywugs+m6YfCz6WtyTUOvJj1PG28I2
+	6jWgUo71aKHRfCzKVp4Ov1o5beWYnNwJTFomqgIOPmYJiM95aucMUwLczP+Sw13YRP2utwfAtjO
+	EFXpkJMiNPJ7UN/pPrgs33Y5DZJP4Cp+o6Av42N7El3YK/Sw6IXMrG5twHoAnkDKAs5PJz42JzU
+	N9N+ALqzwd8fUWQy1WLjDm2U/7gUVqJJtgsN8WECeO9PQCeam+MxizwOxGnnunVJsmwGX/YAXdX
+	68+jr1lWKUNZ7J67Dr2sAkrsVgrQRp+
+X-Received: by 2002:a05:6000:4619:b0:47f:9de0:c27f with SMTP id ffacd0b85a97d-48159c9031fmr11468648f8f.1.1786636979725;
+        Thu, 13 Aug 2026 09:02:59 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2b1d9bsm288102f8f.24.2026.08.13.09.02.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2026 09:02:58 -0700 (PDT)
+Date: Thu, 13 Aug 2026 17:02:54 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev, sashiko-bot@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/10] ring-buffer: Free cpu_buffer::free_page with
+ subbuf_order
+Message-ID: <an3qrsYnQJ7ovwhQ@google.com>
+References: <20260813131152.3589632-1-vdonnefort@google.com>
+ <20260813131152.3589632-2-vdonnefort@google.com>
+ <20260813135439.E42E01F000E9@smtp.kernel.org>
+ <20260814004932.4bf99af3fd65e8132142d335@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-12-2fc18ee6d3ba@google.com> <1ec08cd8-3072-4753-ad5e-cd34956647f8@linux.intel.com>
-Message-ID: <an3o4h-E8mj6CUaM@google.com>
-Subject: Re: [PATCH v10 12/41] KVM: guest_memfd: Call arch make_shared
- callback for to-shared conversion
-From: Sean Christopherson <seanjc@google.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
-	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
-	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
-	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
-	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev, Fuad Tabba <fuad.tabba@linux.dev>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260814004932.4bf99af3fd65e8132142d335@kernel.org>
 
-On Thu, Aug 13, 2026, Binbin Wu wrote:
-> On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
-> > +#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
-> > +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, p=
-goff_t end)
-> > +{
-> > +	struct folio_batch fbatch;
-> > +	pgoff_t next =3D start;
-> > +	int i;
-> > +
-> > +	folio_batch_init(&fbatch);
-> > +	while (filemap_get_folios(inode->i_mapping, &next, end - 1, &fbatch))=
- {
-> > +		for (i =3D 0; i < folio_batch_count(&fbatch); ++i) {
-> > +			struct folio *folio =3D fbatch.folios[i];
-> > +			pgoff_t start_index, end_index;
-> > +			kvm_pfn_t start_pfn;
-> > +			kvm_pfn_t nr_pages;
-> > +
-> > +			start_index =3D max(start, folio->index);
-> > +			end_index =3D min(end, folio_next_index(folio));
-> > +			/*
-> > +			 * end_index is either in folio or points to
-> > +			 * the first page of the next folio. Hence,
-> > +			 * all pages in range [start_index, end_index)
-> > +			 * are contiguous.
-> > +			 */
-> > +			start_pfn =3D folio_file_pfn(folio, start_index);
-> > +			nr_pages =3D end_index - start_index;
-> > +
-> > +			kvm_arch_gmem_make_shared(start_pfn, nr_pages);
-> > +		}
-> > +
-> > +		folio_batch_release(&fbatch);
-> > +		cond_resched();
-> > +	}
-> > +}
-> > +#else
-> > +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, p=
-goff_t end) {}
-> > +#endif
-> > +
-> >  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t star=
-t,
-> >  				     size_t nr_pages, uint64_t attrs,
-> >  				     pgoff_t *err_index)
-> > @@ -599,7 +636,12 @@ static int __kvm_gmem_set_attributes(struct inode =
-*inode, pgoff_t start,
-> > =20
-> >  	filter =3D to_private ? KVM_FILTER_SHARED : KVM_FILTER_PRIVATE;
-> >  	kvm_gmem_invalidate_start(inode, start, end, filter);
-> > +
-> > +	if (!to_private)
-> > +		kvm_gmem_make_shared(inode, start, end);
->=20
-> If both KVM_AMD_SEV and KVM_INTEL_TDX are enabled, HAVE_KVM_ARCH_GMEM_CON=
-VERT
-> will be enabled and the logic in kvm_gmem_make_shared() introduces unnece=
-ssary
-> overhead for TDX.
-> Not sure about CSPs, but in a standard distribution kernel, it's very lik=
-ely
-> that both are enabled, right=EF=BC=9F
+On Fri, Aug 14, 2026 at 12:49:32AM +0900, Masami Hiramatsu wrote:
+> On Thu, 13 Aug 2026 13:54:39 +0000
+> sashiko-bot@kernel.org wrote:
+> 
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > 
+> > Pre-existing issues:
+> > - [Critical] A data race and locking mismatch between `ring_buffer_subbuf_order_set()`, `ring_buffer_alloc_read_page()`, and `ring_buffer_free_read_page()` allows `cpu_buffer->free_page` to cache a page of an old order while `buffer->subbuf_order` reflects a new larger order. This leads to heap buffer overflow and buddy allocator corruption.
+> > --
+> > 
+> > --- Patch [1]: [PATCH v5 01/10] ring-buffer: Free cpu_buffer::free_page with subbuf_order ---
+> > commit f550c0bfeadcc22eca47316e1820b4d91f6ef261
+> > Author: Vincent Donnefort <vdonnefort@google.com>
+> > 
+> > ring-buffer: Free cpu_buffer::free_page with subbuf_order
+> >     
+> > When sub-buffers use an order greater than 0, cpu_buffer->free_page is
+> > allocated with subbuf_order. Use the correct order for
+> > cpu_buffer->free_page.
+> > 
+> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > index 2667992f0aa29..a3d28b2e2c94a 100644
+> > > --- a/kernel/trace/ring_buffer.c
+> > > +++ b/kernel/trace/ring_buffer.c
+> > > @@ -2631,7 +2631,7 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  		free_buffer_page(bpage);
+> > >  	}
+> > >  
+> > > -	free_page((unsigned long)cpu_buffer->free_page);
+> > > +	free_pages((unsigned long)cpu_buffer->free_page, cpu_buffer->buffer->subbuf_order);
+> > 
+> > [Severity: Critical]
+> > This is a pre-existing issue, but does this change expose a buddy allocator
+> > corruption if cpu_buffer->free_page contains a page of a smaller order than
+> > buffer->subbuf_order?
+> 
+> Hmm, I think you have to fix cpu_buffer->{free_page,subbuf_order} race issue at first.
+> Let me try another series to fix it.
+> 
+> Thank you,
 
-Yep.
+You mean this one?
 
-> Should kvm_gmem_make_shared() do some optimization or the overhead is rel=
-ative
-> small in the conversion to shared path so that the optimization is not wo=
-rth it?
+https://lore.kernel.org/all/20260813131152.3589632-4-vdonnefort@google.com/
 
-I assume it's relatively small, but it's probably a good idea to gets numbe=
-rs so
-that we can make a semi-informed decision.  E.g. if processing 1GiB work of=
- 4KiB
-folios is <100 cycles, I think we generally don't care.  But if it's more l=
-ike
-tens of microseconds, then I think we do care enough to optimize the walkin=
-g for
-TDX.
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+-- 
+Vincent
