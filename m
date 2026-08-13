@@ -1,233 +1,191 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923A39FCB1
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 13:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401BD47CA86
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 13:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786627551; cv=none; b=hmha0G9Q9MvhHp5jHJAkYc7CGZ6DajK6iXPaoVfXe8fqzsjSkRL8vOX1mpSw49ngcmDd/GB+L39x/Uh1o1Q3SG/YX6WijBKaVW7WYR3UYz/cqbHawXveYPc4AFDD/J0ozxdo2rINt3jxqdoEHUQr03m4ucP0Al1W4URt3ZTxbJI=
+	t=1786629104; cv=none; b=lOu1Rz3DVz0ohd/d9ylz+AJUsAcYyUqulpUEd2jd0AasSol9RvcKu47scLZj9C3s4YoxBSaXzVbApidVKhUiQtJ5c/Kl4oaHgmld1p/koDAvS6h+o83lowZOq8UaMnwEVwolcbo6HtqPTZnyZvLWpTTwbqkvMB0lhvWNVH+XVKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786627551; c=relaxed/simple;
-	bh=2BuxNkQYxYj9qq/cib0m9rPF3xFiXsKVNtyEBD4V7CQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mboeCd6XVfo1RapZ7m3p6HLBSqMhhjyyWZK0HE7wdnLs5JC2AuriOZJtU8rBamtmgugiGPSeFwYDPGag0l77YS7EU58um8JhbNS7giGadxalFfXB7uIxpmg7U8z8cHxjCeAzV7bWpRRadY7SEbOcDAlNaeVbXxEHue8USebj4pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GhTq80OI; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1786629104; c=relaxed/simple;
+	bh=Dxd8oFk63Dr4IJQC/81yB0ws8vysbyQrrlccUUBkZPk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=aIH8zcnl8kE+JDCESnKLgcZOK/6DkGFboGAvPul7VEp5VMf3oOsm4dBNiimJeFNTCX8zOfE2Z8G4GRE30rX0JLaS0W6tEmLZKo02QeQ5wKnfGiJAaFyONPVFOv/JDAvrlicGAnrUQNOYsMGSaTj2RgVRe3eUoxzJ5QgB2SjSd+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8UtNiQi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GhTq80OI"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c1c50c1e29bso300962266b.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 06:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786627548; x=1787232348; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+H3sd2IVUaZuvvTHtvhvefhtE2d9rSylbl8r/c0+eUI=;
-        b=GhTq80OIL7WvxefETzkteq3aP9h704F00sGacNRsRl5QboggDQcH9GtfNWQ2DGFkOm
-         /aMm0GnOphV3fnxz453n6l0mBp/zNmjWkXHBJqeuouG/TIyhktHjjG7kg8na3PvJY3oi
-         D5Whi4Y6dZJDm+Yw6qBQa0LQKW7f2ZHsPRNREgWtbT9WiIdvT/31Xis4EjHPrBEZ6a6d
-         nnDM1+kK1dCthtOm5x0Y9WDDLg0n3OJ8Pu2bjnFi9NmMZb0LgiXjL0QxTW2xVCGVlqRI
-         b/8SyOVGTd7HCa6z5+pnbWS4g3a1uFCFIex1FzppZ00bW25snNaMEthpd0jJDHqLx1sS
-         C9Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786627548; x=1787232348;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=+H3sd2IVUaZuvvTHtvhvefhtE2d9rSylbl8r/c0+eUI=;
-        b=ZRj20/JvrHy/fVD3qroYrWHJsduMny4tsVBcTw1ahWqOMZEy/FAyEopjfoY0TqkyUe
-         O+aVT29nDakX01XM/2ba490uiaTqzJxlt7jQMYwBW3zBxJGJuZFIHMSDraAgTECN0NQ4
-         A2XDvd+fZmprnzS/bjAWKanqvGvyGHivcbz2zh4hbLFcQQQNtmyjdKBvJ69gYZLKfr08
-         HF9+GcgsmKOEEMbvo/pH6U0E60mex8C7MhflPyXMLo6+GMTxUubXVbWS3/CyUxUdpdSu
-         2Af8A65V1co/qd6yoa3NlP4eIF2qDceApPmgPZfp7Uox6jbNVgOtyLRppO3blKhBRyo7
-         HngA==
-X-Gm-Message-State: AOJu0YxrtDUO+3G/xOzOIK0DGPJLqIKwKd4Vhnxi6AW7/JXDOIhUfoNr
-	rqS8pm/kuesYjawQArmJhEeNPuykv+eI2aRfPZKDuPHLggLCz6bvrwaCE9MQ9ebN1AcL4Il9jRF
-	DRlV9Qw==
-X-Gm-Gg: AR+sD13q6SOnKzmvuAXHEa5xnGKKlTJ4raW9Jli+nQ7ivEwgWsjXPFF3qzyJY+rbc3U
-	EkPXnyDnFR21rUf2n8wicyw4324kwQ++mJbJERF8oyaiff2h/WN3v9INhX03aFjc+40X1A2N96b
-	skHRat2vb0FxjQJ0j30MJwKLgUXG01OzKNEL6FfLK/AdZ8JquAgZ3stSSwFJClma2J1ycDqgfJK
-	vAGMYTxvFgV9LOflLdHVqlKNfBS+O5BNDrgHMcn1MxxFq9ZYEvguK8txokDfyZD4xZqY2hj0vyT
-	YIA1XAZCt57Q90lanQFxiFFVgwdLAimyqF4YDHl9OPibvbETGfJ3CT8DomS1i3KsobV1uiUKzad
-	vA8avf5Dw3VmN1d01qyPImaPKxR0OCVCJdZOOkOmoN3yZaEEGF12arCdSOoN1KG1qNQsrwNlGFJ
-	QD/rEnnFYD+3mueaUT0/FzSwiwaApcHhVxDjYsiPSNqALsYlwq0dt0b7w9B4pFwR1aNRQvmSeHm
-	foP4KTrVM61Wynd9/fpGi1sFINv/A0hnObpXzW0F/E=
-X-Received: by 2002:a17:907:1784:b0:c20:f95c:9088 with SMTP id a640c23a62f3a-c2108dbee00mr306737066b.4.1786627547045;
-        Thu, 13 Aug 2026 06:25:47 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c211aa04446sm14068766b.26.2026.08.13.06.25.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 06:25:45 -0700 (PDT)
-Date: Thu, 13 Aug 2026 14:25:42 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: sashiko-reviews@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8UtNiQi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27031F000E9;
+	Thu, 13 Aug 2026 13:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786629102;
+	bh=+81OSdIn/ORsjZJoJQVEcD305TusyyU97nTp7ZKo8ZM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=l8UtNiQiFWKNYqAl6/vxwCLPxvlnixGXp1By4OruAVrU/ANvqyCypXfBC/igTqQ+S
+	 xaQqDpZE8X4sohRK8uGkJCkJa1kq+4o82AZwkz2+pC9ZPAbplF3S/pAr/Zqu8hG68C
+	 pPqMqd0LS2p0tNTDaHa+JYmIsDRIBRwsfOSBy1U6bvNnXqWrggyN8p3aKRLx1Ecq/M
+	 6EZV0+9y5FvVp1OCYlAcNXalJ3fyMe8momtjKtwbuBwtbUd9S7fKSrxjVIWrFZs3IO
+	 ktVvOPHOwlKmsPW2RCkQaPWkDeClMSsUo3dQuuxo+PkV8B0eG4FV7waoppYPmTweVI
+	 XsePHo+ZbQU5Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 04/10] ring-buffer: Fix subbuf resize race with ring
+ buffer readers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/18] tracing/remotes: Release tracefs,eventfs on
- registration failure
-Message-ID: <an3F1j_7CYxFk-FQ@google.com>
-References: <20260812161340.2417322-1-vdonnefort@google.com>
- <20260812161340.2417322-3-vdonnefort@google.com>
- <20260812162503.6A4FC1F000E9@smtp.kernel.org>
+In-Reply-To: <20260813131152.3589632-5-vdonnefort@google.com>
+References: <20260813131152.3589632-1-vdonnefort@google.com>
+ <20260813131152.3589632-5-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 13:51:42 +0000
+Message-Id: <20260813135142.C27031F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260812162503.6A4FC1F000E9@smtp.kernel.org>
 
-On Wed, Aug 12, 2026 at 04:25:03PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] Expanding the global `trace_remotes_lock` over the external driver callback `cbs->init()` introduces a severe risk of deadlocks and priority inversion.
-> 
-> Pre-existing issues:
-> - [Critical] A Time-Of-Check to Time-Of-Use race condition between `trace_remote_tracefs_open()` and concurrent unregistration leads to a Use-After-Free.
-> --
-> 
-> --- Patch [2]: [PATCH v5 02/18] tracing/remotes: Release tracefs,eventfs on registration failure ---
-> commit 70ddc6ce63b80a301a72ec3efb7683b32447865f
-> Author: Vincent Donnefort <vdonnefort@google.com>
-> 
-> tracing/remotes: Release tracefs,eventfs on registration failure
->     
-> In trace_remote_register(), if registration of events or the init
-> callback fails, the created tracefs and eventfs directories are leaked.
-> Release the entire eventfs and tracefs hierarchy on trace_remote
-> registration failure.
-> 
-> > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> > index ce2d517183b79..0384277070b9e 100644
-> > --- a/kernel/trace/trace_remote.c
-> > +++ b/kernel/trace/trace_remote.c
-> 
-> [ ... ]
-> 
-> > @@ -972,10 +990,9 @@ static int trace_remote_register_events(const char *remote_name, struct trace_re
-> >  int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs, void *priv,
-> >  			  struct remote_event *events, size_t nr_events)
-> >  {
-> > -	struct trace_remote *remote;
-> > +	struct trace_remote *remote __free(kfree) = kzalloc_obj(*remote);
-> >  	int ret;
-> >  
-> > -	remote = kzalloc_obj(*remote);
-> >  	if (!remote)
-> >  		return -ENOMEM;
-> >  
-> > @@ -986,13 +1003,15 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
-> >  	mutex_init(&remote->lock);
-> >  	init_rwsem(&remote->reader_lock);
-> >  
-> > -	if (trace_remote_init_tracefs(name, remote)) {
-> > -		kfree(remote);
-> > -		return -ENOMEM;
-> > -	}
-> > +	guard(mutex)(&trace_remotes_lock);
-> > +
-> > +	ret = trace_remote_init_tracefs(name, remote);
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	ret = trace_remote_register_events(name, remote, events, nr_events);
-> >  	if (ret) {
-> > +		trace_remote_remove_tracefs(remote);
-> >  		pr_err("Failed to register events for trace remote '%s' (%d)\n",
-> >  		       name, ret);
-> >  		return ret;
-> > @@ -1000,13 +1019,16 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
-> >  
-> >  	ret = cbs->init ? cbs->init(remote->dentry, priv) : 0;
-> 
-> [Severity: High]
-> Does holding the global trace_remotes_lock while calling the external init()
-> callback introduce a risk of deadlocks?
-> 
-> Because trace_remotes_lock was acquired via guard(mutex) earlier in this
-> function, calling an opaque external callback with this global subsystem lock
-> held establishes an inverted lock dependency.
-> 
-> If the teardown path of the external driver takes its own locks before
-> unregistering the trace remote, could this result in an ABBA deadlock?
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Current users are just fine. I do not think that is something worth considering
-at the moment.
+New issues:
+- [High] `ring_buffer_read_start()` introduces a Use-After-Free vulnerabili=
+ty for callers using `GFP_ATOMIC`.
 
-> 
-> >  	if (ret) {
-> > +		trace_remote_unregister_events(remote);
-> > +		trace_remote_remove_tracefs(remote);
-> >  		pr_err("Init failed for trace remote '%s' (%d)\n", name, ret);
-> > -	} else {
-> > -		guard(mutex)(&trace_remotes_lock);
-> > -		list_add(&remote->node, &trace_remotes);
-> >  	}
-> >  
-> > -	return ret;
-> > +	list_add(&remote->node, &trace_remotes);
-> > +	retain_and_null_ptr(remote);
-> > +
-> > +	return 0;
-> >  }
-> 
-> [Severity: Critical]
-> This is a pre-existing issue, but is there a race condition between
-> trace_remote_tracefs_open() and concurrent unregistration?
-> 
-> In trace_remote_tracefs_open(), the code checks if the remote object exists
-> in the global trace_remotes list:
-> 
-> kernel/trace/trace_remote.c:trace_remote_tracefs_open() {
->     ...
->     guard(mutex)(&trace_remotes_lock);
-> 
->     /* i_private is either a struct trace_remote or a struct remote_event */
->     list_for_each_entry(r, &trace_remotes, node) {
->         if (r == i_private)
->             return 0;
->     ...
-> }
-> 
-> However, the lock is dropped on return without incrementing the object's
-> reference count.
-> 
-> Then in trace_open(), the unprotected remote pointer is dereferenced:
-> 
-> kernel/trace/trace_remote.c:trace_open() {
->     ...
->     ret = trace_remote_tracefs_open(inode, filp);
->     if (ret)
->         return ret;
-> 
->     if (!(filp->f_mode & FMODE_READ))
->         return 0;
->     ...
->     guard(mutex)(&remote->lock);
->     ...
-> }
-> 
-> If a concurrent unregistration acquires trace_remotes_lock, removes the
-> remote, and frees it after trace_remote_tracefs_open() returns but before
-> trace_open() acquires remote->lock, will this result in a use-after-free
-> regression?
+Pre-existing issues:
+- [High] Race condition and Out-of-Bounds write in `ring_buffer_map_get_rea=
+der()` due to evaluating the global `buffer->subbuf_order`.
+--
 
-trace_remote_tracefs_open() will block until the remote is properly registered,
-that is, added to the list trace_remotes.
+--- Patch [4]: [PATCH v5 04/10] ring-buffer: Fix subbuf resize race with ri=
+ng buffer readers ---
+commit 71a276d1d136c0fb8371689f58251aa6fc99f54c
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-After the remote is added to the list, there is no unregistration possible at
-the moment.
+    ring-buffer: Fix subbuf resize race with ring buffer readers
 
-I do not see any concurrent unregistration possible.
+This commit replaces the lockless read of trace_buffer::subbuf_size with
+bpage::order in ring_buffer_read_start() and ring_buffer_read_page() to
+prevent races during resizing. It also removes subbuf_size entirely and
+introduces new capacity accessors.
 
--- 
-Vincent
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index b6fa258aafe2c..ec520c72124e5 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
 
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260812161340.2417322-1-vdonnefort@google.com?part=2
+[ ... ]
+
+> @@ -6380,36 +6417,44 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+>  struct ring_buffer_iter *
+>  ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
+>  {
+
+[ ... ]
+
+> +	/*
+> +	 * Only KDB is using GFP_ATOMIC, for the others, lock the buffer to
+> +	 * prevent concurrent resizing.
+> +	 */
+> +	if (gfpflags_allow_blocking(flags))
+> +		mutex_lock(&buffer->mutex);
+> =20
+>  	atomic_inc(&cpu_buffer->resize_disabled);
+> =20
+> +	if (gfpflags_allow_blocking(flags))
+> +		mutex_unlock(&buffer->mutex);
+> +
+> +	/* Holds the entire event: data and meta data. */
+> +	iter->event_size =3D rb_page_capacity(READ_ONCE(cpu_buffer->reader_page=
+));
+
+[Severity: High]
+Can this cause a use-after-free when called with GFP_ATOMIC?
+
+If this is called with GFP_ATOMIC, it skips taking buffer->mutex and
+increments resize_disabled without synchronization. If a concurrent
+ring_buffer_subbuf_order_set() evaluated resize_disabled to 0 just before
+this increment, it can proceed to replace and free the reader_page.
+
+The lockless dereference of bpage->order inside rb_page_capacity() on the
+freed reader_page would then access freed memory. Prior to this patch, it
+read the scalar buffer->subbuf_size which was safe from this use-after-free.
+
+[ ... ]
+
+> @@ -7340,18 +7383,21 @@ int ring_buffer_subbuf_order_set(struct trace_buf=
+fer *buffer, int order)
+
+[ ... ]
+
+>  	/* prevent another thread from changing buffer sizes */
+>  	guard(mutex)(&buffer->mutex);
+> +
+> +	old_order =3D buffer->subbuf_order;
+> +	if (old_order =3D=3D order)
+> +		return 0;
+> +
+> +	old_capacity =3D rb_subbuf_capacity(buffer);
+> +
+>  	atomic_inc(&buffer->record_disabled);
+> =20
+>  	/* Make sure all commits have finished */
+>  	synchronize_rcu();
+> =20
+>  	buffer->subbuf_order =3D order;
+
+[ ... ]
+
+> @@ -7896,7 +7941,7 @@ int ring_buffer_map_get_reader(struct trace_buffer =
+*buffer, int cpu)
+>  			 * missed events, then record it there.
+>  			 */
+>  			commit =3D rb_page_size(reader);
+> -			if (buffer->subbuf_size - commit >=3D sizeof(missed_events)) {
+> +			if (rb_subbuf_capacity(buffer) - commit >=3D sizeof(missed_events)) {
+
+[Severity: High]
+This is a pre-existing issue, but can this lead to an out-of-bounds write?
+
+Since ring_buffer_map_get_reader() does not hold buffer->mutex, it can run
+concurrently with ring_buffer_subbuf_order_set(). As shown in the hunk abov=
+e,
+ring_buffer_subbuf_order_set() updates the global buffer->subbuf_order befo=
+re
+checking if resize_disabled is set on the CPU buffers.
+
+If ring_buffer_map_get_reader() reads this temporarily inflated global
+capacity while processing an older, smaller reader_page, the capacity check
+could incorrectly pass. This would allow the following memcpy() to write
+missed_events out of bounds.
+
+Should this use rb_page_capacity(reader) instead of the global
+rb_subbuf_capacity(buffer), similar to the fix applied to
+ring_buffer_read_page()?
+
+>  				memcpy(&dpage->data[commit], &missed_events,
+>  				       sizeof(missed_events));
+>  				local_add(RB_MISSED_STORED, &dpage->commit);
+
+[ ... ]
+
+> @@ -7928,7 +7973,7 @@ int ring_buffer_map_get_reader(struct trace_buffer =
+*buffer, int cpu)
+>  out:
+>  	/* Some archs do not have data cache coherency between kernel and user-=
+space */
+>  	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
+> -				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
+> +				rb_subbuf_size(buffer));
+
+[Severity: High]
+This isn't a bug introduced by this patch, but could this flush more memory
+than is actually mapped?
+
+Similar to the check above, if this reads a temporarily inflated global
+capacity while flushing an older, smaller reader_page, the flush range
+might exceed the actual allocated page bounds.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813131152.3589=
+632-1-vdonnefort@google.com?part=3D4
