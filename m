@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91493483BD3;
-	Thu, 13 Aug 2026 14:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C864484257;
+	Thu, 13 Aug 2026 14:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786630053; cv=none; b=LfILiuqOjqY6sUi7eWYVsPPru08GXOH1od11RuTUCsq7rLuvQf8C5Pam3c4qYa3seMSUX1dIGYAdFRFXE7ZZmsWtj6vvDafVUanBCzO7I76Ahg2Xaj9GkAUp+An85VMJtaR/dvmoi3nFWfIiuDubrkIGc+KEOw8hOOamhuxM1GE=
+	t=1786630054; cv=none; b=E8h6E+hWoTpxn2qSyMDUGXMw9rgFYTv1V1GNgp7Fy9cu3kZnERVup9KT+/gTy+L2VhnZexGu9xY5A763wOPINzAFhs6M9LI14f0hdInyHR2YzVFvJ4UHzI63x0hmrBrXTSxBePCEWedhRnmGS2nJ8dtQounXk2oI/FGDcyZOGcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786630053; c=relaxed/simple;
-	bh=4YSg6q5BnaYywr3fPl6vkuJOqPpAkW0f05ia6cMS4vs=;
+	s=arc-20240116; t=1786630054; c=relaxed/simple;
+	bh=YWFW1zcn9gtEa9Lz/HYzGgMoaHvPxdat3XRJHNgLzZI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H+3MSQc0aKDQe/YX2xjc4gjuSb/wONumRLiYTZyCHm84SoHbsy3OyrsEyAh3XwIqK9xKZzH8uTFTrffNeBG0HhC4FR3CyhhHuBSaG6UbI4JTRaDFKGGPzOqXY6v6ekgvnbYUKr7YUMEizCVARc4iouZZNjuB/YMmaorDSwVYORM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gpMFFvRC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o697awFc; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Vk9d01sP3z6dMmvEXOeP7M/9jm+e+dfQa1CPRLHcfnuMnuvo8o29XyV6Mcfph3KrFCPjXs3+6S4YZA13wW2pAb9UnHkVFEpMGXg9l3f7AjcQi2jsyJF4wNPDe2Z3fIM/3lnyF37/A0H1ttEW4LFdZOd/LYbRCaAelpz0n0ymeJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ByRyLMrz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PHSMyvLj; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gpMFFvRC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o697awFc"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ByRyLMrz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PHSMyvLj"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1786630049;
+	s=2020; t=1786630050;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BUBV4UfNe6DT8kodPBUPI5rVvc0/aAmNySrxh4n/hBY=;
-	b=gpMFFvRCzk8omLjRJkoLMRqhqu1yNvU5qkDZRlosvjzLYNpgjJ6pucSio+K3mKIzTLF8GB
-	D7jCB5FbXiHjCIIVele0IY+LYdcKlDbdlxO1S4rZN4sknrOGslq1ADScRjBTyUmar+e9Ko
-	ULx/DG3Z3lylS76hagGUQDJ1zzn0H2odANn1mcZQN12P+mnHQSbXh2oTtmRAxB6fI/vLWl
-	pW2+ptUcsWKr7hFrDt2WGZgQU02WQ4sCX/fjiqe31fPJ5EgFcSFQXp7Tke+1NeRwL/CaYN
-	JSFLpUxqT4qMN4RX0Nho80KPjS26IAgMQ6eugd2wQ5/8z8X8cfOVIXKqTLrkjQ==
+	bh=iKbiUJ/lxCgVioUyVAAFZc/QFm1LoDhCJCkL6YyTbWY=;
+	b=ByRyLMrzB5bRHhSU/aHtVObFi0xnByBp3Gvg3QEtr29oKV7VSf1DwvYyIJXJATzAXqN8EY
+	graXGlKUtUCcULfE9s+c4wqIM0lgmENVqyZqRVXEcelXr/sBFBrutJyiSVqcaqXZ0nHkHP
+	oJE2DXOgjpLi2C+nRNJ6b1I03xo6Ms3lt+zB9VSMx8lTaIrwFy0zhP9FTLAAn7HGUGydMz
+	18RRlhNzQpGkUlgY5/Gn01EZf6zZgcsyuzEkBkzYDxwONImm6+9hSxe83wzIWisNvqQDmN
+	27szZczdFi3qFoH2hbiOqz+CfQ7U+TwlBS2zTceh4MYK/5JMjefjSiXLMnrjrA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1786630049;
+	s=2020e; t=1786630050;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BUBV4UfNe6DT8kodPBUPI5rVvc0/aAmNySrxh4n/hBY=;
-	b=o697awFcZf9eHmjFIdCNKE5rtAxBEmtUeG5i6VpKZzgD4pcQeG7C/qYjw9/7pVuNFFWBmG
-	uAV4+WKu6nbTIyDg==
-Date: Thu, 13 Aug 2026 16:07:18 +0200
-Subject: [PATCH RFC 5/7] tracing: Add a test for
- ftrace_parse_event_string()
+	bh=iKbiUJ/lxCgVioUyVAAFZc/QFm1LoDhCJCkL6YyTbWY=;
+	b=PHSMyvLjqisPnVkzC7vCp+61t/VuRuIT5iExn3wr3EnM+DP/uJncnyS3ep6jg/71J24JJq
+	joA5JkSsfe9Lo9BA==
+Date: Thu, 13 Aug 2026 16:07:19 +0200
+Subject: [PATCH RFC 6/7] tracing: Add a filter argument to
+ __ftrace_set_clr_event()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260813-tracing-cli-event-filter-v1-5-57c4e8029c86@linutronix.de>
+Message-Id: <20260813-tracing-cli-event-filter-v1-6-57c4e8029c86@linutronix.de>
 References: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
 In-Reply-To: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
 To: Steven Rostedt <rostedt@goodmis.org>, 
@@ -58,207 +58,213 @@ To: Steven Rostedt <rostedt@goodmis.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1786630039; l=5237;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786630039; l=7315;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=4YSg6q5BnaYywr3fPl6vkuJOqPpAkW0f05ia6cMS4vs=;
- b=yrP9gshAK6xc5yLgyO/KDsWObN8FfwV4KsOOkIqs21aetqzaY7hT83jqOeuf654xCxxP6z2GX
- rnxOKhx9DNAD0+ev2nXlKjKkgqsWoQpKGPU13McDgAyoeVDAmns7Gxf
+ bh=YWFW1zcn9gtEa9Lz/HYzGgMoaHvPxdat3XRJHNgLzZI=;
+ b=u9b4SIM0bhn9zRwXDzWU2xTvX6gwjR6dfkL46w5pPjKBpD8fl9Hj5vyxp06pr5Q6Zj5M/z6A9
+ SCLBeIog9iDDJXxTk1heap8cokRJINO/3jOGCE2sjvbgU3waSkNf3fl
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The parsing logic is a bit complicated and about to become more so.
+Make it possible to directly enable a filter when enabling an event.
 
-Add a unit test to avoid regressions.
+For now this is unused, an upcoming patch will wire it up.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- kernel/trace/Kconfig             |   8 ++++
- kernel/trace/Makefile            |   1 +
- kernel/trace/trace.h             |   4 ++
- kernel/trace/trace_events.c      |   5 +-
- kernel/trace/trace_events_test.c | 101 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 118 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events.c | 47 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 17 deletions(-)
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 084f34dc6c9f..e5eb26780abf 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -151,6 +151,14 @@ config EVENT_TRACING
- 	select GLOB
- 	bool
- 
-+config EVENT_TRACING_TEST
-+	tristate "Test for event tracing" if !KUNIT_ALL_TESTS
-+	depends on EVENT_TRACING
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  KUnit test for the event tracing implementation.
-+
- config CONTEXT_SWITCH_TRACER
- 	bool
- 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index f934ff586bd4..7bef5a84ce47 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -96,6 +96,7 @@ obj-$(CONFIG_EVENT_TRACING) += blktrace.o
- endif
- obj-$(CONFIG_EVENT_TRACING) += trace_events.o
- obj-$(CONFIG_EVENT_TRACING) += trace_export.o
-+obj-$(CONFIG_EVENT_TRACING_TEST) += trace_events_test.o
- obj-$(CONFIG_FTRACE_SYSCALLS) += trace_syscalls.o
- ifeq ($(CONFIG_PERF_EVENTS),y)
- obj-$(CONFIG_EVENT_TRACING) += trace_event_perf.o
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index c00e4741f815..6bf4f031efa8 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2505,3 +2505,7 @@ static inline int rv_init_interface(void)
- 	})
- 
- #endif /* _LINUX_KERNEL_TRACE_H */
-+
-+#if IS_ENABLED(CONFIG_KUNIT)
-+void ftrace_parse_event_string(char *buf, char **match, char **sub, char **event, char **mod);
-+#endif
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 4ff3f9214894..098a5aee5ec7 100644
+index 098a5aee5ec7..c24929d003dd 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -23,6 +23,8 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
+@@ -916,6 +916,7 @@ struct event_mod_load {
+ 	char			*match;
+ 	char			*system;
+ 	char			*event;
++	char			*filter;
+ };
  
-+#include <kunit/visibility.h>
+ static void free_event_mod(struct event_mod_load *event_mod)
+@@ -925,6 +926,7 @@ static void free_event_mod(struct event_mod_load *event_mod)
+ 	kfree(event_mod->match);
+ 	kfree(event_mod->system);
+ 	kfree(event_mod->event);
++	kfree(event_mod->filter);
+ 	kfree(event_mod);
+ }
+ 
+@@ -966,7 +968,7 @@ static int remove_cache_mod(struct trace_array *tr, const char *mod,
+ }
+ 
+ static int cache_mod(struct trace_array *tr, const char *mod, int set,
+-		     const char *match, const char *system, const char *event)
++		     const char *match, const char *system, const char *event, const char *filter)
+ {
+ 	struct event_mod_load *event_mod;
+ 
+@@ -1005,6 +1007,12 @@ static int cache_mod(struct trace_array *tr, const char *mod, int set,
+ 			goto out_free;
+ 	}
+ 
++	if (filter) {
++		event_mod->filter = kstrdup(filter, GFP_KERNEL);
++		if (!event_mod->filter)
++			goto out_free;
++	}
 +
- #include <trace/events/sched.h>
- #include <trace/syscall.h>
+ 	list_add(&event_mod->list, &tr->mod_events);
  
-@@ -1411,7 +1413,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 	return 0;
+@@ -1017,7 +1025,7 @@ static int cache_mod(struct trace_array *tr, const char *mod, int set,
+ #else /* CONFIG_MODULES */
+ static inline void clear_mod_events(struct trace_array *tr) { }
+ static int cache_mod(struct trace_array *tr, const char *mod, int set,
+-		     const char *match, const char *system, const char *event)
++		     const char *match, const char *system, const char *event, const char *filter)
+ {
+ 	return -EINVAL;
+ }
+@@ -1326,7 +1334,7 @@ static void remove_event_file_dir(struct trace_event_file *file)
+ static int
+ __ftrace_set_clr_event_nolock(struct trace_array *tr, const char *match,
+ 			      const char *sub, const char *event, int set,
+-			      const char *mod)
++			      const char *mod, char *filter)
+ {
+ 	struct trace_event_file *file;
+ 	struct trace_event_call *call;
+@@ -1374,7 +1382,11 @@ __ftrace_set_clr_event_nolock(struct trace_array *tr, const char *match,
+ 		if (event && strcmp(event, name) != 0)
+ 			continue;
+ 
+-		ret = ftrace_event_enable_disable(file, set);
++		if (filter)
++			ret = apply_event_filter(file, filter);
++
++		if (!filter || !ret)
++			ret = ftrace_event_enable_disable(file, set);
+ 
+ 		/*
+ 		 * Save the first error and return that. Some events
+@@ -1392,14 +1404,14 @@ __ftrace_set_clr_event_nolock(struct trace_array *tr, const char *match,
+ 	 * check if the module was loaded. If it wasn't cache it.
+ 	 */
+ 	if (module && ret == -EINVAL && !eret)
+-		ret = cache_mod(tr, module, set, match, sub, event);
++		ret = cache_mod(tr, module, set, match, sub, event, filter);
+ 
  	return ret;
  }
  
--static void
-+VISIBLE_IF_KUNIT void
- ftrace_parse_event_string(char *buf, char **match, char **sub, char **event, char **mod)
+ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 				  const char *sub, const char *event, int set,
+-				  const char *mod)
++				  const char *mod, char *filter)
  {
- 	*event = NULL;
-@@ -1453,6 +1455,7 @@ ftrace_parse_event_string(char *buf, char **match, char **sub, char **event, cha
- 			*match = NULL;
+ 	int ret;
+ 
+@@ -1407,7 +1419,7 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
+ 		return -EACCES;
+ 
+ 	mutex_lock(&event_mutex);
+-	ret = __ftrace_set_clr_event_nolock(tr, match, sub, event, set, mod);
++	ret = __ftrace_set_clr_event_nolock(tr, match, sub, event, set, mod, filter);
+ 	mutex_unlock(&event_mutex);
+ 
+ 	return ret;
+@@ -1470,7 +1482,7 @@ int ftrace_set_clr_event(struct trace_array *tr, const char *_buf, int set)
+ 
+ 	ftrace_parse_event_string(buf, &match, &sub, &event, &mod);
+ 
+-	return __ftrace_set_clr_event(tr, match, sub, event, set, mod);
++	return __ftrace_set_clr_event(tr, match, sub, event, set, mod, NULL);
+ }
+ 
+ /**
+@@ -1492,7 +1504,7 @@ int trace_set_clr_event(const char *system, const char *event, int set)
+ 	if (!tr)
+ 		return -ENODEV;
+ 
+-	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL);
++	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL, NULL);
+ }
+ EXPORT_SYMBOL_GPL(trace_set_clr_event);
+ 
+@@ -1518,7 +1530,7 @@ int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+ 		return -ENOENT;
+ 
+ 	set = (enable == true) ? 1 : 0;
+-	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL);
++	return __ftrace_set_clr_event(tr, NULL, system, event, set, NULL, NULL);
+ }
+ EXPORT_SYMBOL_GPL(trace_array_set_clr_event);
+ 
+@@ -2038,7 +2050,7 @@ system_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	if (system)
+ 		name = system->name;
+ 
+-	ret = __ftrace_set_clr_event(dir->tr, NULL, name, NULL, val, NULL);
++	ret = __ftrace_set_clr_event(dir->tr, NULL, name, NULL, val, NULL, NULL);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -3909,7 +3921,8 @@ static void update_mod_cache(struct trace_array *tr, struct module *mod)
+ 
+ 		__ftrace_set_clr_event_nolock(tr, event_mod->match,
+ 					      event_mod->system,
+-					      event_mod->event, 1, mod->name);
++					      event_mod->event, 1, mod->name,
++					      event_mod->filter);
+ 		free_event_mod(event_mod);
  	}
  }
-+EXPORT_SYMBOL_IF_KUNIT(ftrace_parse_event_string);
+@@ -4676,7 +4689,7 @@ int event_trace_del_tracer(struct trace_array *tr)
+ 	__ftrace_clear_event_pids(tr, TRACE_PIDS | TRACE_NO_PIDS);
  
- int ftrace_set_clr_event(struct trace_array *tr, const char *_buf, int set)
- {
-diff --git a/kernel/trace/trace_events_test.c b/kernel/trace/trace_events_test.c
-new file mode 100644
-index 000000000000..e090a699b8d5
---- /dev/null
-+++ b/kernel/trace/trace_events_test.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/module.h>
-+
-+#include <kunit/test.h>
-+
-+#include "trace.h"
-+
-+struct parse_event_test_case {
-+	const char *input;
-+
-+	const char *match, *sub, *event, *mod;
-+};
-+
-+static const struct parse_event_test_case parse_event_test_cases[] = {
-+	{
-+		"",
-+		.match	= "",
-+	},
-+	{
-+		"*:event",
-+		.event	= "event",
-+	},
-+	{
-+		":event",
-+		.event	= "event",
-+	},
-+	{
-+		"sub:*",
-+		.sub	= "sub",
-+	},
-+	{
-+		"sub:",
-+		.sub	= "sub",
-+	},
-+	{
-+		"sub:event",
-+		.sub	= "sub",
-+		.event	= "event",
-+	},
-+	{
-+		"match",
-+		.match	= "match",
-+	},
-+	{
-+		":mod:module",
-+		.mod	= "module",
-+	},
-+	{
-+		"sub:event:mod:module",
-+		.sub	= "sub",
-+		.event	= "event",
-+		.mod	= "module",
-+	},
-+};
-+
-+static void parse_event_test_desc(const struct parse_event_test_case *params, char *desc)
-+{
-+	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "'%s'", params->input);
-+}
-+
-+KUNIT_ARRAY_PARAM(parse_event, parse_event_test_cases, parse_event_test_desc);
-+
-+#define EXPECT_NULL_OR_STR_EQ(test, left, right)		\
-+({								\
-+	if ((left) != NULL)					\
-+		KUNIT_EXPECT_STREQ(test, (left), (right));	\
-+	else							\
-+		KUNIT_EXPECT_NULL(test, (right));		\
-+})
-+
-+static void parse_event(struct kunit *test)
-+{
-+	const struct parse_event_test_case *params = test->param_value;
-+	char *input, *match, *sub, *event, *mod;
-+
-+	input = kunit_kstrdup(test, params->input, GFP_KERNEL);
-+	if (!input)
-+		kunit_skip(test, "ENOMEM");
-+
-+	ftrace_parse_event_string(input, &match, &sub, &event, &mod);
-+
-+	EXPECT_NULL_OR_STR_EQ(test, match, params->match);
-+	EXPECT_NULL_OR_STR_EQ(test, sub, params->sub);
-+	EXPECT_NULL_OR_STR_EQ(test, event, params->event);
-+	EXPECT_NULL_OR_STR_EQ(test, mod, params->mod);
-+}
-+
-+static struct kunit_case trace_events_test_cases[] = {
-+	KUNIT_CASE_PARAM(parse_event, parse_event_gen_params),
-+	{}
-+};
-+
-+static struct kunit_suite trace_events_test_suite = {
-+	.name = "trace-events",
-+	.test_cases = trace_events_test_cases,
-+};
-+kunit_test_suite(trace_events_test_suite);
-+
-+
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+ 	/* Disable any running events */
+-	__ftrace_set_clr_event_nolock(tr, NULL, NULL, NULL, 0, NULL);
++	__ftrace_set_clr_event_nolock(tr, NULL, NULL, NULL, 0, NULL, NULL);
+ 
+ 	/* Make sure no more events are being executed */
+ 	tracepoint_synchronize_unregister();
+@@ -4982,7 +4995,7 @@ static __init void event_trace_self_tests(void)
+ 
+ 		pr_info("Testing event system %s: ", system->name);
+ 
+-		ret = __ftrace_set_clr_event(tr, NULL, system->name, NULL, 1, NULL);
++		ret = __ftrace_set_clr_event(tr, NULL, system->name, NULL, 1, NULL, NULL);
+ 		if (WARN_ON_ONCE(ret)) {
+ 			pr_warn("error enabling system %s\n",
+ 				system->name);
+@@ -4991,7 +5004,7 @@ static __init void event_trace_self_tests(void)
+ 
+ 		event_test_stuff();
+ 
+-		ret = __ftrace_set_clr_event(tr, NULL, system->name, NULL, 0, NULL);
++		ret = __ftrace_set_clr_event(tr, NULL, system->name, NULL, 0, NULL, NULL);
+ 		if (WARN_ON_ONCE(ret)) {
+ 			pr_warn("error disabling system %s\n",
+ 				system->name);
+@@ -5006,7 +5019,7 @@ static __init void event_trace_self_tests(void)
+ 	pr_info("Running tests on all trace events:\n");
+ 	pr_info("Testing all events: ");
+ 
+-	ret = __ftrace_set_clr_event(tr, NULL, NULL, NULL, 1, NULL);
++	ret = __ftrace_set_clr_event(tr, NULL, NULL, NULL, 1, NULL, NULL);
+ 	if (WARN_ON_ONCE(ret)) {
+ 		pr_warn("error enabling all events\n");
+ 		return;
+@@ -5015,7 +5028,7 @@ static __init void event_trace_self_tests(void)
+ 	event_test_stuff();
+ 
+ 	/* reset sysname */
+-	ret = __ftrace_set_clr_event(tr, NULL, NULL, NULL, 0, NULL);
++	ret = __ftrace_set_clr_event(tr, NULL, NULL, NULL, 0, NULL, NULL);
+ 	if (WARN_ON_ONCE(ret)) {
+ 		pr_warn("error disabling all events\n");
+ 		return;
 
 -- 
 2.55.0
