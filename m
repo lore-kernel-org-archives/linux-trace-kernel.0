@@ -1,183 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D1E2C21F0
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 04:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92602737FC
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 04:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786593692; cv=none; b=r2REA7jCAayVNEi97GF1ny+nr5d4DAeC2azI1cnAJ4p2G511Thr/QiGs1qLUDR3yVgadXjgGYDEOTzFhpw/+/b+zB8xa73EywVBdYDxrSlrlYB53STH+ZZMkRYuy4VDU3qZRe60/bzD3ljtdpTzOY9DO7hlYv8n2OjC0bKlCsK8=
+	t=1786593740; cv=none; b=ADe5SS6bpSHb/afOvHtAh+MAxF1IgfEIWv+NGFqwERm+oFUdw4dAlpKAQ15+teyT+2E3+CHWd2J2y/BNZMRYu6omiQks9nUV0VeXHHZJI1YhHy30jecvxzcBOupb2jVTKUClIYgsPUTQev3InK/3G1p77bxVsUdvTkzvmyRnios=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786593692; c=relaxed/simple;
-	bh=vG0FDfXoXFOcjnL8xRrDzZ2vlgGZK0HyEYd6IHOonr0=;
+	s=arc-20240116; t=1786593740; c=relaxed/simple;
+	bh=rVApbGGh+gwEayGWmWzWsVUikhz5UxkT1Z5NQDs0S7c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qyp7vzYv30UR3T8iI35BsdnFogYa5tg0mnNzRZj6LSoagvOBI1iT/mT5HuartScv7AtNogcFKgGtRITDPENHVbTmyiAyNK11u4ATLXb0BROLNDB8kk5/IoU/D0Z0wWGU37AOyjWNyEFl7N5kTjObyV2yyYEUxz71tBolY5AzbxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imKjqyCd; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=kPNT+zYq+5k4cCUo3hnINkm9ljXmugUdrMPLFbCOJPlRuWkmYOXxLqbBhbtfVOkRkylEjni2j5X/OYO+opHPIVH3B7a6wYK+xi7unNHYEGCUgp2YETfs+CkarxOXK9ArFcHARm/6oi3F8ouNke03kwa4nZUXlWqE1TiH3ZTZlps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvJDrsgM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imKjqyCd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D67D1F000E9;
-	Thu, 13 Aug 2026 04:01:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvJDrsgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50A241F000E9;
+	Thu, 13 Aug 2026 04:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786593690;
-	bh=AOU6/d7Ki9oijdfIcZKCcgCzQ4v/6mQwXHmgvwsu8A4=;
+	s=k20260515; t=1786593739;
+	bh=7SRuvH4rdjp9ma+C/CWCN4/TfHa4fWOvQsoHGpR8HMw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=imKjqyCdxa+Gdx97XOSVDSrJPgELZtsHsygwaJ9BWCSoAlKS+pbNFwo2I0x5bVYME
-	 lL6cYShYjxfqORe725lmiMk84TIzS4Esh2HYyXrNbASuftKN7KhI3K3Gfjjv3XYsTt
-	 3UtVzjMfbvRKXcovag1LFaRdlPfRr/aJrSl2RtOw8eQVoUKRSPS/6mQo4jMw6h2a1u
-	 CM+OVxROfs3s8srjgFQyXd6HvPgOWESjy9zf3dmGeRmf6RGkh2v7rbE+9eY+4B901k
-	 +hJ8rSjbnYANkOgrkwE8WCuXNppNuwEpXhOoIpkzjN+PuQU22DnKI9trZqVpgliAyi
-	 rt7JId4yfgoFw==
+	b=VvJDrsgMhOVxHLK9sfXe5Xw0enDKhGRu1+iRc4cGlu6ddXqhryVc1QZaUTbIPTYJ3
+	 8AfYVWIBw4Y9FTkC34HwRkRM4TnbvvhuQkeTtRKWDGKijkvqoUjIu8mxUbKAiPPdN1
+	 3buKstOoHSCBxMfVxwVHmN9E/FfRcmg6c8dStLlYLaixJpD48tI2gjCgA6L9vrRm5v
+	 2G0KaoIuGeB6BloEbvc0uo398K/NXBtgCfjoR71qh/lPrMtUljJz6Z32UxgQhpfiyO
+	 /BvO6Cv9WCEsvB3hv3oUc1P6kApA5Ca7FkSfwORj6B3qfkGuuT7Why99YGiNE37lX4
+	 8Azc6GFjiAzZw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 4/5] kunit: add test for refcount_final_put
+Subject: Re: [PATCH v5 1/5] tracing: add refcount_final_put tracepoint
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Eugene Mavick" <m@mavick.dev>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260813-refcount-final-put-trace-v5-4-6e8bf8a38b31@mavick.dev>
+In-Reply-To: <20260813-refcount-final-put-trace-v5-1-6e8bf8a38b31@mavick.dev>
 References: <20260813-refcount-final-put-trace-v5-0-6e8bf8a38b31@mavick.dev>
- <20260813-refcount-final-put-trace-v5-4-6e8bf8a38b31@mavick.dev>
+ <20260813-refcount-final-put-trace-v5-1-6e8bf8a38b31@mavick.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 04:01:30 +0000
-Message-Id: <20260813040130.7D67D1F000E9@smtp.kernel.org>
+Date: Thu, 13 Aug 2026 04:02:18 +0000
+Message-Id: <20260813040219.50A241F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [High] KUNIT_ASSERT_* usage bypasses test cleanup on failure, permanently=
- leaking memory and leaving a global trace probe registered.
-- [Medium] Shared test state is initialized after the global tracepoint pro=
-be is registered, creating a data race with concurrent kernel threads.
-- [Medium] Missing wake_up_var in the tracepoint probe causes a 10-second h=
-ang on test failure.
+- [Medium] The `do_trace_refcount_final_put_cond` macro does not parenthesi=
+ze its `cond` parameter, which can lead to logical errors and bypass the tr=
+acepoint static branch.
+- [Medium] The refcount_final_put tracepoint is dead code because no caller=
+s were added to invoke it.
+- [Low] Missing `<linux/export.h>` in `lib/refcount_trace.c`.
+- [Low] Incorrect file name referenced in comment for the trace wrapper imp=
+lementation.
 --
 
---- Patch [4]: [PATCH v5 4/5] kunit: add test for refcount_final_put ---
-commit fef38efeda6f44aecbf042d2f2cbb9c0d0c7ccb4
+--- Patch [1]: [PATCH v5 1/5] tracing: add refcount_final_put tracepoint ---
+commit 6fe677465a197120927dfba704ab4c4aff5f134a
 Author: Eugene Mavick <m@mavick.dev>
 
-kunit: add test for refcount_final_put
-   =20
-Add a KUnit test suite for the refcount_final_put tracepoint.
-   =20
-The test registers a probe function and triggers both refcount_t and
-percpu_ref final put paths, verifying that the tracepoint fires
-correctly and that the recorded fields match expected values.
+tracing: add refcount_final_put tracepoint
 
-> diff --git a/lib/tests/refcount_trace_kunit.c b/lib/tests/refcount_trace_=
-kunit.c
+Add refcount_final_put tracepoint and related core infrastructure
+
+refcount_final_put fires when a reference
+count reaches zero and the object enters its final release path.
+
+> The tracepoint records three fields:
+> - caller: function that called the refcounting
+>   function(refcount_sub_and_test, percpu_ref_put_many)
+
+[Severity: Medium]
+Are there missing callers for the tracepoint macro?
+
+The commit message mentions that the tracepoint records the caller function,
+such as refcount_sub_and_test or percpu_ref_put_many, but this patch doesn't
+add any calls to do_trace_refcount_final_put() in the refcount release path=
+s.
+
+This leaves the tracepoint inactive.
+
+> diff --git a/include/linux/refcount_trace.h b/include/linux/refcount_trac=
+e.h
 > new file mode 100644
-> index 0000000000000..a57e9e4cfa427
+> index 0000000000000..6f8d0ba910f05
 > --- /dev/null
-> +++ b/lib/tests/refcount_trace_kunit.c
-> @@ -0,0 +1,141 @@
+> +++ b/include/linux/refcount_trace.h
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_REFCOUNT_TRACE_H
+> +#define _LINUX_REFCOUNT_TRACE_H
+> +
+> +#include <linux/tracepoint-defs.h>
+> +#include <linux/instruction_pointer.h>
+> +
+> +#ifdef CONFIG_REFCOUNT_TRACE_FINAL_PUT
+> +/* Declare the tracepoint so tracepoint_enabled() can be used */
+> +DECLARE_TRACEPOINT(refcount_final_put);
+> +
+> +/* Wrapper function implemented in lib/ref_trace.c */
 
-[ ... ]
+[Severity: Low]
+This isn't a bug, but there's a typo in the filename here.
 
-> +struct data {
-> +	unsigned long caller;
-> +	unsigned long ip;
-> +	const void *obj;
-> +	atomic_t count;
-> +};
+The wrapper is implemented in lib/refcount_trace.c, not lib/ref_trace.c.
+
+> +extern void do_refcount_trace_final_put(unsigned long caller, unsigned l=
+ong ip, const void *obj);
 > +
-> +struct data capture;
-> +
-> +const void *chk_obj;
-> +
-> +#define test_init()								\
+> +#define do_trace_refcount_final_put(obj)					\
 > +	do {									\
-> +		KUNIT_EXPECT_FALSE(						\
-> +			test, register_trace_refcount_final_put(probe, NULL));	\
-> +										\
-> +		atomic_set_release(&capture.count, 0);				\
-> +										\
-> +		chk_obj =3D &obj;							\
+> +		if (tracepoint_enabled(refcount_final_put))			\
+> +			do_refcount_trace_final_put(_RET_IP_, _THIS_IP_, obj);	\
+> +	} while (0)
+> +
+> +#define do_trace_refcount_final_put_cond(cond, obj)				\
+> +	do {									\
+> +		if (tracepoint_enabled(refcount_final_put) && cond)		\
+
+[Severity: Medium]
+Should cond be wrapped in parentheses here?
+
+If a caller passes a condition containing a logical OR, such as a || b,
+operator precedence would cause this to evaluate as:
+
+    (tracepoint_enabled(...) && a) || b
+
+If b is true, the trace wrapper would be invoked unconditionally even when =
+the
+tracepoint is disabled, bypassing the static key optimization.
+
+> +			do_refcount_trace_final_put(_RET_IP_, _THIS_IP_, obj);	\
 > +	} while (0)
 
-[Severity: Medium]
-Does registering this system-wide tracepoint before initializing
-capture.count and chk_obj create a data race?
-
-If a concurrent kernel thread triggers a refcount final put immediately
-after register_trace_refcount_final_put() succeeds, it will execute probe()
-and locklessly read chk_obj before the test thread initializes it here.
-
-Would it be safer to initialize the test state variables prior to
-registering the probe?
-
-> +
-> +
-> +#define test_exit()								\
-> +	do {									\
-> +		/* wait for probe completion */					\
-> +		int notimeout =3D wait_var_event_timeout(				\
-> +			&capture.count,						\
-> +			atomic_read_acquire(&capture.count),			\
-> +			msecs_to_jiffies(10000)					\
-> +		);								\
-
-[Severity: Medium]
-Will this wait unconditionally hang for the full 10-second timeout on a
-test failure?
-
-The test thread waits here for capture.count to change, but looking at
-probe(), the state is incremented with atomic_inc_return_release() without
-a corresponding wake_up_var(&capture.count).
-
-If the tracepoint fails to fire synchronously, does the missing wakeup
-leave the thread permanently sleeping until the timeout expires?
-
-> +										\
-> +		unregister_trace_refcount_final_put(probe, NULL);		\
-> +		tracepoint_synchronize_unregister();				\
-> +										\
-> +		KUNIT_ASSERT_TRUE(test, notimeout);				\
-
-[Severity: High]
-Is it safe to use KUNIT_ASSERT_TRUE() here before the test cleanup has
-finished?
-
-If this assertion fails (e.g. the wait times out), the test aborts
-immediately and skips the remainder of test_exit(). For tests like
-test_percpu_ref_put_many(), this means percpu_ref_exit() is never called,
-resulting in a memory leak.
-
-> +										\
-> +		KUNIT_EXPECT_EQ(test, atomic_read_acquire(&capture.count), 1);	\
-
 [ ... ]
 
-> +static void test_percpu_ref_put_many(struct kunit *test)
+> diff --git a/lib/refcount_trace.c b/lib/refcount_trace.c
+> new file mode 100644
+> index 0000000000000..2476bb5f2f603
+> --- /dev/null
+> +++ b/lib/refcount_trace.c
+> @@ -0,0 +1,14 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/refcount.h>
+> +#include <linux/refcount_trace.h>
+> +
+
+[Severity: Low]
+Should this file include <linux/export.h>?
+
+It uses EXPORT_SYMBOL_GPL and EXPORT_TRACEPOINT_SYMBOL_GPL below. Relying on
+implicit inclusions can sometimes cause build failures on different
+architectures or configurations.
+
+> +//Wrapper function for functions defined entirely in header files
+> +void do_refcount_trace_final_put(unsigned long caller,
+> +				 unsigned long ip,
+> +				 const void *obj)
 > +{
-> +	struct percpu_ref obj;
-> +
-> +	test_init();
-> +
-> +	KUNIT_ASSERT_FALSE(test, percpu_ref_init(&obj, dummy_release, 0, GFP_KE=
-RNEL));
-
-[Severity: High]
-Does using KUNIT_ASSERT_FALSE() here risk leaving the global trace probe
-permanently registered?
-
-If percpu_ref_init() fails, KUNIT_ASSERT_FALSE() will abort the test execut=
-ion
-and skip test_exit(). This leaves the probe function registered globally.
-When the KUnit module is later unloaded, any subsequent refcount final put
-in the system will invoke the freed probe function, causing a kernel panic.
-
-Should this test use kunit_add_action() for deferred cleanup to ensure
-the tracepoint is always unregistered?
-
-> +
-> +	percpu_ref_get(&obj);
-> +	percpu_ref_get(&obj);
-
-[ ... ]
+> +	trace_call__refcount_final_put(caller, ip, obj);
+> +}
+> +EXPORT_SYMBOL_GPL(do_refcount_trace_final_put);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(refcount_final_put);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813-refcount-f=
-inal-put-trace-v5-0-6e8bf8a38b31@mavick.dev?part=3D4
+inal-put-trace-v5-0-6e8bf8a38b31@mavick.dev?part=3D1
