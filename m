@@ -1,160 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA88476CEB
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 13:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620734772B0
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Aug 2026 13:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786629328; cv=none; b=tfYdK6MrmvUb/KBjjupDu8PfYeujjq4DZ+9Nwx/WVT6v2/xlraVDYc4f8lig3/T09vCTA7tOG5nxMWEE+6vIFV/iOroNPtnw1nYF2T1RQ8rVnPi8MjTByZB/Qh10nShpWJcqHXW57tXME/Ng7BF70niT2EbA16+fUvW0bLaJsAQ=
+	t=1786629375; cv=none; b=KuT8W7L/Q5NS29qRDQO3xkkNyY0iWPgVT/3yJVtfS7thtLwSuJ7szJYOYV99JLeD9GQ3xL8zIUn1vWN8PLGR5n6MkA44pW5fal237Z6XoP1oJ8PK8d94o7uH/9wf+/VGdzX+Ci3qNifG4rPB3+1B36vL9YVEMFRK/6h//UTSsSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786629328; c=relaxed/simple;
-	bh=Aps5dTXGjSkrn4kMCRHqVuAZeO9Iz0iw8WOANvjtXZo=;
+	s=arc-20240116; t=1786629375; c=relaxed/simple;
+	bh=ch2m4n9o9CoTNFxw/eK2RhpOt1eLyR2YGeyqD54VlEI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A0KLPUHUAXduyCFGWyjZCoBJOE8VJRbZ9QTnd/9z9G6OGFeZGsN6AJrE1Uoy2OJMSSBGPFIXsZYDENLIY7MnH4sf/q7LkwWIq4oMC+NR3zuIlp/1Xyf24KC+zWBg0UMgVccbA14SsdnyVIGy4T6IHE29wojQjGrlaXpgjPw3Lh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdX79nG/; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=r/vQP2mYrbdF1HSGUJDJwU5QIWUPth5uXTedGbD7rZ3wvZXa/cN6sYZ9r9oxbAgGdLf8x+lWieUin5ni4nQu7kHcB3dEpMmhjIc12fUEYsehnSYUUk3QJiCY6DPeuexjQ7y4WiNit8Gn/kmTb3vxJPqwdu+unCKhbphtzOXw06c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8BZw6qp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdX79nG/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF9CF1F000E9;
-	Thu, 13 Aug 2026 13:55:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8BZw6qp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3A11F00A3A;
+	Thu, 13 Aug 2026 13:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786629327;
-	bh=37N9euT9+6NP48QpVQ803FmwfTFFCpvFW5YXm8o/XeI=;
+	s=k20260515; t=1786629373;
+	bh=jtp+ExyN0nAS7Uzl9OZ17n755pIps8XjzAvXAoQkA2E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fdX79nG/lv6v9nLyweYzB7YC309osQypZguD5zDZT+w6rP9SCdl/w+yDnm1m9ZQiH
-	 KMX8Chd+x68qAx+Qi3Jbl1fdjR0SeUptWpVupuB5ImfF8vOOqcxdEEzqVo/qpz4y6U
-	 SdKlxl34QH4keZ1rVCcxYe10zBZLOZhThbf6VoF2p7RXgFObAfOy0aw/vJfb0w46n6
-	 OvyQZj8k+imaRMlLNI8+vA/AA4Npo6TvPAehegR7vf4VSBZduAfLWVDOye6bI7lEyB
-	 eMXrfSSA5OZ1CoMuTG4Yqs2yvTYgkHHr2lONbY4eaAxW4B0lQRMjncJw+KEDz9osIA
-	 P0TVrqXFeYquw==
+	b=J8BZw6qpurWYVIMQFJjRreuUg6sDy1f6o2jgikWC+KqyJRVa6D4TyO3z6AZOCjt/z
+	 fe+BF5CVPbQr2nd4XD7W1+gdu+qThLOLIwY+LSZMamghDEDaK1fesEi+AMgRveCyC6
+	 CukzrcvqbN9lLQa/DOhDS6gqECYWOCUOIhwJXWb3OEfuvKmwTxRc6w9yP434vs0qLR
+	 PRSq7VJjBSyp2DRH+JWc1j1C6QDzgowxkvxvCZstDpit+IqQ8T0HzYto+yTghNIV56
+	 mIC1rEwlMTfrkN++LLi90o4t67i4r1o+ctnPsWlPMSypU5Aor4qV7+ahmqHZE76E0K
+	 XSvIT3BVjejdA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 10/10] ring-buffer: Make nr_pages unsigned int
+Subject: Re: [PATCH v5 03/10] ring-buffer: Make cpu_buffer::free_page a
+ buffer_data_read_page
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260813131152.3589632-11-vdonnefort@google.com>
+In-Reply-To: <20260813131152.3589632-4-vdonnefort@google.com>
 References: <20260813131152.3589632-1-vdonnefort@google.com>
- <20260813131152.3589632-11-vdonnefort@google.com>
+ <20260813131152.3589632-4-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 13:55:26 +0000
-Message-Id: <20260813135526.EF9CF1F000E9@smtp.kernel.org>
+Date: Thu, 13 Aug 2026 13:56:13 +0000
+Message-Id: <20260813135613.BD3A11F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] Integer overflow in ring_buffer_resize() allows an attacker to=
- bypass allocation checks and trigger a massive out-of-bounds ring buffer s=
-hrink, leading to a Use-After-Free.
-- [Medium] 32-bit shift overflow in __rb_map_vma() truncates the mapped pag=
-e count for huge ring buffers, causing mmap to fail.
+- [High] `ring_buffer_alloc_read_page()` returning a cached page with an ob=
+solete order causes `tracing_buffers_read()` to permanently return EOF to u=
+serspace.
 --
 
---- Patch [10]: [PATCH v5 10/10] ring-buffer: Make nr_pages unsigned int ---
-commit 25e7b6bfdf3741f228ceb9dc41c8bbf6e253f525
+--- Patch [3]: [PATCH v5 03/10] ring-buffer: Make cpu_buffer::free_page a b=
+uffer_data_read_page ---
+commit 19f06657067d8dbcf108f6bacc6885d031739166
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-ring-buffer: Make nr_pages unsigned int
-   =20
-nr_pages is an int or unsigned int almost everywhere already. Also, all
-the meta-data ring_buffer_desc, ring_buffer_cpu_meta and
-trace_buffer_meta allowing to share information about the ring buffer
-are already capping this value to 32-bits.
+    ring-buffer: Make cpu_buffer::free_page a buffer_data_read_page
+
+This commit changes the free_page cache to store the page order alongside
+the page address. This fixes a mismatch when a cached reader page is
+discarded after a concurrent ring buffer resize changes the global
+subbuf_order.
 
 > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 79459c99ce9a0..d9dcd6d4e7cc4 100644
+> index ec4f5a0c93e85..b6fa258aafe2c 100644
 > --- a/kernel/trace/ring_buffer.c
 > +++ b/kernel/trace/ring_buffer.c
-> @@ -561,7 +561,7 @@ struct ring_buffer_per_cpu {
->  	struct ring_buffer_remote	*remote;
-> =20
->  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
-> -	long				nr_pages_to_update;
-> +	int				nr_pages_to_update;
->  	struct list_head		new_pages; /* new pages to add */
->  	struct work_struct		update_pages_work;
->  	struct completion		update_done;
-
 [ ... ]
-
-> @@ -3264,7 +3263,7 @@ int ring_buffer_resize(struct trace_buffer *buffer,=
- unsigned long size,
->  			int cpu_id)
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer;
-> -	unsigned long nr_pages;
-> +	unsigned int nr_pages;
-
-[Severity: Critical]
-If a huge value is written to buffer_size_kb, could the unsigned
-difference between nr_pages and cpu_buffer->nr_pages overflow when
-assigned to the now 32-bit signed cpu_buffer->nr_pages_to_update?
-
-Later in this function, we do:
-
-    cpu_buffer->nr_pages_to_update =3D nr_pages - cpu_buffer->nr_pages;
-    if (cpu_buffer->nr_pages_to_update <=3D 0)
-        continue;
-
-If the difference overflows into a negative integer, wouldn't it skip this
-allocation limits check but still schedule the worker thread (since it is
-non-zero)?
-
-The worker thread calls rb_update_pages():
-
-    success =3D rb_remove_pages(cpu_buffer, -cpu_buffer->nr_pages_to_update=
-);
-
-This would pass a large positive count to rb_remove_pages(). As it wildly
-wraps around the small circular list:
-
-    for (nr_removed =3D 0; nr_removed < nr_pages; nr_removed++) {
-        to_remove =3D rb_list_head(to_remove)->next;
-        head_bit |=3D (unsigned long)to_remove & RB_PAGE_HEAD;
-    }
-
-Could this unlink and double-free actively used pages, leaving ring buffer
-structures pointing to freed memory and causing a use-after-free?
-
->  	int cpu, err;
+> @@ -6962,9 +6962,9 @@ ring_buffer_alloc_read_page(struct trace_buffer *bu=
+ffer, int cpu)
+>  	local_irq_save(flags);
+>  	arch_spin_lock(&cpu_buffer->lock);
 > =20
->  	/*
+> -	if (cpu_buffer->free_page) {
+> -		bpage->data =3D cpu_buffer->free_page;
+> -		cpu_buffer->free_page =3D NULL;
+> +	if (cpu_buffer->free_page.data) {
+> +		*bpage =3D cpu_buffer->free_page;
+> +		cpu_buffer->free_page.data =3D NULL;
 
-[ ... ]
+[Severity: High]
+Does this struct assignment cause tracing_buffers_read() to permanently
+return EOF to userspace during a concurrent resize?
 
-> @@ -7708,8 +7708,8 @@ static int __rb_inc_dec_mapped(struct ring_buffer_p=
-er_cpu *cpu_buffer,
->  static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->  			struct vm_area_struct *vma)
->  {
-> -	unsigned long nr_subbufs, nr_pages, nr_vma_pages, pgoff =3D vma->vm_pgo=
-ff;
-> -	unsigned int subbuf_pages, subbuf_order;
-> +	unsigned long nr_pages, nr_vma_pages, pgoff =3D vma->vm_pgoff;
-> +	unsigned int nr_subbufs, subbuf_pages, subbuf_order;
+When a resize happens in ring_buffer_subbuf_order_set(),
+buffer->subbuf_order is updated first:
 
-[Severity: Medium]
-Since nr_subbufs is now an unsigned int, could the bitwise shift operation
-later in this function silently truncate for exceptionally large ring buffe=
-rs?
+	buffer->subbuf_order =3D order;
 
-__rb_map_vma() later computes:
+	/* Make sure all new buffers are allocated, before deleting... */
+	for_each_buffer_cpu(buffer, cpu) {
 
-    nr_pages =3D ((nr_subbufs + 1) << subbuf_order) - 1;
+This opens a large race window before cpu_buffer->free_page.data is
+cleared for each CPU.
 
-Because the operands are now 32-bit, the shift is computed entirely in
-32-bit math before assignment to the unsigned long nr_pages.=20
+If a user reads from trace_pipe_raw during this window,
+ring_buffer_alloc_read_page() allocates bpage and initially sets
+bpage->order to the new buffer->subbuf_order. However, the struct
+assignment *bpage =3D cpu_buffer->free_page copies the old free_page,
+overwriting bpage->order with the old order.
 
-If a buffer is large enough to overflow 32-bits, will this cause bounds
-checks to fail and mmap to return -EINVAL?
+Later in tracing_buffers_read(), the caller caches this mismatched page
+and sets spare_size to the new size:
 
->  	struct page **pages __free(kfree) =3D NULL;
->  	int p =3D 0, s =3D 0;
->  	int err;
+		} else {
+			info->spare_cpu =3D iter->cpu_file;
+			info->spare_size =3D page_size;
+		}
+
+Because the orders don't match, ring_buffer_read_page() rejects the page:
+
+	if (data_page->order !=3D buffer->subbuf_order)
+		return -1;
+
+This returns -1, which tracing_buffers_read() treats as EOF. Subsequent
+reads see info->spare_size =3D=3D page_size, reuse the bad page, and
+permanently return EOF.
+
+>  	}
+> =20
+>  	arch_spin_unlock(&cpu_buffer->lock);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813131152.3589=
-632-1-vdonnefort@google.com?part=3D10
+632-1-vdonnefort@google.com?part=3D3
