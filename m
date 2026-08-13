@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72223380FEC;
-	Thu, 13 Aug 2026 16:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F00374A11;
+	Thu, 13 Aug 2026 16:22:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786637934; cv=none; b=QXcJYN9weCPoaridrZv4xOEZJKvKBA/N0A2WVGOHjYMtftZpnelATPOxmNhqEcrPFSqpvsahXr3gx8tJEENkBqpeecu5x/HsOCgQKeppDofrnyPzrHJLYeL+fT8+q7FgYorIUen6gFiMq7n7X9Hm7IiH7M7HUQ/TiuYwjbMGXN4=
+	t=1786638150; cv=none; b=sAEXZEhu6ul2ArP4T1aBQh232XHkbL35sqFNIiSkNqMdxUUmu/Jt4vIDHEYG2XUyWOV1mzUK9MYons6ifAw89nQOsNSKjvgpPd1u6V7eHTfdLPFiLiPLc5e85POiNgmV555Ub5wBvWqgvKFCL2S77FBcWE5gNxie5uxcK9hkZuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786637934; c=relaxed/simple;
-	bh=DMewnovxthKp7l8w7dRnVgVLPUwaIRb6G56TUl+yzOw=;
+	s=arc-20240116; t=1786638150; c=relaxed/simple;
+	bh=FOsYGgBoLe5aErvtXtCceYed/JlY14VNGofHx3POIB0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OLRQsdRyheo9qHbpsrSVXDQmBlydhkX6gPp9YjwvbKXJFid4bqEeIq7xARACuy0rP+7nXhteG47ggDD0nxRoSN+EJGPUMCBa0OVCfYHQVQYf2SjlOB/MIj2jOl3HZ7dfp6ZnE37EsPi0IQQ8Weay3T0Itn3v4hw8Zp+1kStJEGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SOIlPHwm; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=msMER0FRzRTz0Hu7gS8xZ7ZhL5fce5JZomDiVjZfTC7g9WgCRDtiICECSSKNza17lM3ylZ8uP7fP2FcrLomLQotUgwfBgQKoiSywS8KBzOWndDFllL2QrtPfNnYzeFC7cvwr447ra4oh6TCDdziv2O1IB9Ub8DGHZFoUAJJ5b64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHdLqst9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SOIlPHwm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6C11F000E9;
-	Thu, 13 Aug 2026 16:18:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHdLqst9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C751F000E9;
+	Thu, 13 Aug 2026 16:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786637929;
-	bh=S8pmJG7RXhwxXc0l78ZDZzHu2uDxsfC0BDvGqhtWoK4=;
+	s=k20260515; t=1786638148;
+	bh=UnduXndmd7rpMu1/05t/znNnxnCdGOqm/oY7N5LTUI0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=SOIlPHwmciIaQeoVX4Uotxh9mYXKlTOt9wLT6G0NapvLkcLjpwlNv0iBTSViWWxKd
-	 zBncKPoHN3jqC8GQkAtYHb/Gb6o2B4N1mJhHOyKkmagBzY6JW9l3yj+ux7suvFQdWX
-	 E79hBsm3GTimxju9RRycLJfD7JMLtgow8s2dyZTgvAg/xsx9QN57rAMpjkBnq+eYBe
-	 66IFTpM2WwNyAGK7l40U33XA2+aIzhMU6cOg5v7b+reDl8VIJ7HGbhmNe+1HfePNEl
-	 Cs+Ug5O4G4g+p9HoHN35n+0vHgboLlrCUIJJywNVGxS5qN1jWHAqUP0lVogW/7wXj5
-	 SToR5iFlEWXWg==
-Date: Fri, 14 Aug 2026 01:18:45 +0900
+	b=kHdLqst9Wdm3F4a2EmRe8cKN4SJI+hObJYDqDbaYE4b1gHn4azsofhvvu54CwJxPp
+	 KU7DS7ZDkIQY8rqyCC+0QJUjybBKjfUSOXWGs1XokHDwCLJRq+fw8krX17o4OA4pDx
+	 1cO9Wlp3iV6tdXftsfFtE84ic2za3w3j2M7j83ii7omgZpy/j2i2v02CKddvikuWkO
+	 uVpABtQH6V4BLS0SYN1mx10Q9GJtoXt0si0/pkTxvPzxK7vyzY/EPerzFMVffwopA2
+	 EGviohxiKUjlPBH40INO8FICsvJyL41fg3Hw/rIra8kPkvlcGfJG1S8hvT1DCM6xW6
+	 JvicmFcXtlb9w==
+Date: Fri, 14 Aug 2026 01:22:24 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
-Subject: Re: [PATCH v5 01/10] ring-buffer: Free cpu_buffer::free_page with
- subbuf_order
-Message-Id: <20260814011845.06da757640bd16bb3dc723a7@kernel.org>
-In-Reply-To: <20260813131152.3589632-2-vdonnefort@google.com>
-References: <20260813131152.3589632-1-vdonnefort@google.com>
-	<20260813131152.3589632-2-vdonnefort@google.com>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 7/7] tracing: Parse filter from event string
+Message-Id: <20260814012224.019f01054bfad020dee43494@kernel.org>
+In-Reply-To: <20260813-tracing-cli-event-filter-v1-7-57c4e8029c86@linutronix.de>
+References: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
+	<20260813-tracing-cli-event-filter-v1-7-57c4e8029c86@linutronix.de>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,42 +44,19 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Aug 2026 14:11:43 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Thu, 13 Aug 2026 16:07:20 +0200
+Thomas Weißschuh <thomas.weissschuh@linutronix.de> wrote:
 
-> When sub-buffers use an order greater than 0, cpu_buffer->free_page is
-> allocated with subbuf_order. Use the correct order for
-> cpu_buffer->free_page.
+> Make it possible to specify a trace event filter from the
+> kernel command line.
 > 
-> Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-This looks good to me. (with fixing racing issue.)
+But how to use it? Could you give an example and update the document?
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 2667992f0aa2..a3d28b2e2c94 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -2631,7 +2631,7 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
->  		free_buffer_page(bpage);
->  	}
->  
-> -	free_page((unsigned long)cpu_buffer->free_page);
-> +	free_pages((unsigned long)cpu_buffer->free_page, cpu_buffer->buffer->subbuf_order);
->  
->  	kfree(cpu_buffer);
->  }
-> -- 
-> 2.55.0.691.gc56d675ccc-goog
-> 
-> 
+Thank you,
 
 
 -- 
