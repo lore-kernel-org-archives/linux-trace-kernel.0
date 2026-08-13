@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DCE47AF42;
-	Thu, 13 Aug 2026 14:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227A4481250;
+	Thu, 13 Aug 2026 14:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786630048; cv=none; b=llKjdKUznlDSkuo1tKmqj7fF9wQ/o3V63zcFgtIdvJkQYFIIPINNfvV7HzMmF6KlLpml2BH5gKI7z4+I1KB30ig/hwZ2CLgoMEJ2Xra7X5sIb4xmvb6ErlEk/BJ8PLBzAW5S6qq/dBSzkSTAg3MKZjwI3iv99Ef3I0d7la5rzZM=
+	t=1786630049; cv=none; b=p9dsCFQAma6VIv+KfkKbqdGT/DjuhUGcAOr32ohr8Eu89U4k2ehcJY6lvFhIYDcXAvAznvs94JPwD5rMfSfA+tuQhbb8L5IZTnS/7129B/ZdompDF4+lVlvMLY0ErKJKlVAWsIRHgxCWtnlqsr71IcVtZ4HQjL+AJeuxCtx0a7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786630048; c=relaxed/simple;
-	bh=Fqn7isJpEy0tNbhyXRMm4QBjNlNd33jIQfGv6bPhvm0=;
+	s=arc-20240116; t=1786630049; c=relaxed/simple;
+	bh=gl06iMv/syv71dRvrhZvxHtAduITqKwKiPntPXMOHnU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fn+C7i8yGsIViWRuwURcp4Uycfvlzw3fbeJ28zdfcv+h0zrg28Ff9r98Kkauno3HG8OGFBggKBsZZGX4o3bKlD+usp1KpYPPZkp12iheVYyK5Nvfa6EdPWxlM5/PIVqQ4kphXGSFcPqFPQ8WfcCDzWl599S0sSk4DX2GkStLKWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4vIVPM7y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=23F0YiM+; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=dFcGOExWzgxni9NVcBZzewVct0uZb97zLw5LPXSQHx/pv/0tgek6dJprE0Va/3qjHgoevcIfVbuiOlyf2GxgAVNp3nrxeyXAZ2CAcQ4A7uarVLuoByc9Pkc2LLD/dT6F14sOfYmIsPlV1SkBwGCi6e568ORqN6qJoI5Fdrz2KDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gGF6I9hr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0t7wj4Y9; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4vIVPM7y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="23F0YiM+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gGF6I9hr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0t7wj4Y9"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1786630045;
+	s=2020; t=1786630046;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RYsiGRJ5VRa0CWly24xrYp0uLMoS4M867617Q5RPOd8=;
-	b=4vIVPM7y+jTmy+v5FdOb9VUTZD3X9/rQHQTDm+YaDc0Bn6iUGZ6dGqZo7EmTkSbU06y9w5
-	bFverpNxVgzPA6Gdk5jxFsIhUVSqkvEt/ijLOYazmej4K+zoIyhmtLbHDBwEzw4qBnjdpl
-	R/mYaCSm4l0S/vhaOqaORZu9BcG7CP0Ko0cBrhKxY3pTYQb5M9fJOtvXZvFYVGMeD0gNUK
-	fmyVjNkruxN/O04/76sjwHvqtOhFxKitMJfJY7HMNZg8I0Nb5NeO9Ehq8t86j5FJiR7Kyb
-	mB0WRkDd6l1gkVVQlNOhViBD49X5nnpzX/g8Pi6qYHkg/MBWmb7m7AT+Wtolsw==
+	bh=V0KBUZ+fAIZp+Clpmtkqz5bk9loQYOgO5ZwoXQ3pL5g=;
+	b=gGF6I9hrWu5BNWfkJ11BqEksDaFNqZmRcPQi96pv27KaZ2jMTPm/KSJ/NAoO+V+bpPDiUS
+	sh0Lx1d5f2HsR7NNbL5cuSFV2EZzuUTcDoMC95lzbRjp1m1YPh7/g1VkLlbwiG3rGht+fx
+	HD9Ve0MUBP+DYbpnaBelXcKxcD8V+3/H5tVu7xkbhvRfcOjg0nEOoCPgp2bTVQtby5yK+e
+	XUVkouSiUEEocF639CYdyJhEO2NL7eVtDYlOhj9LmgaZD/iF3XuYZ3ECWj0JqXtS/HiCLx
+	lZDPeXh+l9L2twvATBcZtlJCgmQUAezEhsNu/WioEgDKidNtECj5xa+ywF5WRQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1786630045;
+	s=2020e; t=1786630046;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RYsiGRJ5VRa0CWly24xrYp0uLMoS4M867617Q5RPOd8=;
-	b=23F0YiM+UFGTWMqvDts1olu8gPZXmm76ToYd7IU9GBV/qIEZyd0K0pXhuGrLcljsvItmSQ
-	308RHgJJle0f1SAg==
-Date: Thu, 13 Aug 2026 16:07:14 +0200
-Subject: [PATCH RFC 1/7] tracing: Restore :mod: trailer after parsing in
+	bh=V0KBUZ+fAIZp+Clpmtkqz5bk9loQYOgO5ZwoXQ3pL5g=;
+	b=0t7wj4Y9PN1im/UPjc2pxsYHsniesW/x0+PDaB4HBzLFLz9nXQtKhcjYcK3zqRxS/Kbzw6
+	RTiOVftv6LrNAaCw==
+Date: Thu, 13 Aug 2026 16:07:15 +0200
+Subject: [PATCH RFC 2/7] tracing: Remove duplicate declaration of
  ftrace_set_clr_event()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,53 +50,46 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260813-tracing-cli-event-filter-v1-1-57c4e8029c86@linutronix.de>
+Message-Id: <20260813-tracing-cli-event-filter-v1-2-57c4e8029c86@linutronix.de>
 References: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
 In-Reply-To: <20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de>
 To: Steven Rostedt <rostedt@goodmis.org>, 
  Masami Hiramatsu <mhiramat@kernel.org>, 
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- stable@vger.kernel.org
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1786630039; l=1066;
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786630039; l=977;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=Fqn7isJpEy0tNbhyXRMm4QBjNlNd33jIQfGv6bPhvm0=;
- b=ocotHqo+/4aGWH5NW3+sM15QLvSJ+cCd81EjxJ8OoNYbtGGedksbIlce2OljiWY/kf3tFF2TZ
- TQJ/3nzfg3VAMqOoHxY7WgWQhGiYBFdRLZ5Z06n93+Q41HEOjGATQut
+ bh=gl06iMv/syv71dRvrhZvxHtAduITqKwKiPntPXMOHnU=;
+ b=oc+qIawThcHhN4cok3NM6zwD5W2eb2rT1BPiRscQpQvmyFwwaJo7H9fq1tj2TN2UwZ+U9VU/Y
+ tq6H9tLGpVzDYEPFgsRAC9eCr/EthhMfb9U2I9vjgQ/NfYXrnY0DLqc
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-While ftrace_set_clr_event() modifies its input buffer during parsing,
-before returning to the caller the buffer is supposed to be restored
-to its original state.
+The function is also declared in include/linux/trace_events.h which is
+even included from kernel/trace/trace.h.
 
-This works correctly for the colon between the subsystem and event
-but not the colon at the beginning of :mod:.
+Having two declarations creates churn when changing the signature.
 
-Restore the colon, so the :mod: trailer is not stripped after
-ftrace_set_clr_event().
+Remove the unnecessary, duplicate declaration.
 
-Fixes: 4c86bc531e60 ("tracing: Add :mod: command to enabled module events")
-Cc: stable@vger.kernel.org
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- kernel/trace/trace_events.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/trace.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c46e623e7e0d..6aa32c492280 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1460,6 +1460,8 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
- 	/* Put back the colon to allow this to be called again */
- 	if (buf)
- 		*(buf - 1) = ':';
-+	if (mod)
-+		*(mod - 5) = ':';
- 
- 	return ret;
- }
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 80fe152af1dd..c00e4741f815 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -2286,7 +2286,6 @@ static inline const char *get_syscall_name(int syscall)
+ void trace_event_init(void);
+ void trace_event_update_all(struct trace_eval_map **map, int len);
+ /* Used from boot time tracer */
+-extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+ extern int trigger_process_regex(struct trace_event_file *file, char *buff);
+ #else
+ static inline void __init trace_event_init(void) { }
 
 -- 
 2.55.0
