@@ -1,112 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7187930BF69
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 13:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB552E173D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 14:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786715759; cv=none; b=OIXOlOSdRze+JcExx5yzuqcncotfjduyeD67yd19YrkjUYJTYIh6q/wSivrysWkfpmUUC0wDTdvdyCanKCtD7Ps7CVamZqsqsov4jEyq201BW+h6IvtsDqGASvdWFeKOop1avE5bTHnNp+cJaeJKfqIfNyZEcGUEdsq7Nye7zwQ=
+	t=1786716179; cv=none; b=M0vavHKP2OQen6aGvqOkYvhya67kH/kPvQSwk3MiCqvJGOAYE2pdzHwO1+ZzeACl0Vo80UjJu0wIC4egU2Jnf+U2zCLaHuBEEzilyaqPVo4lspChbycYBpzV+tnzkQ6I/NSrsBokdGrL6xyoGvTEeBSTfAFRY+rw+SsU5/vO6Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786715759; c=relaxed/simple;
-	bh=Y/5SyS3gwj9KjuvhfhI5U5SNRgbHxgZHdzwTve78Emo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=cByb0fPozKeVZ3nI345YdqJD7+8Gb6+CtSJx7VOpkskD/fPZ+N4GKr05Qo5yxd53JXERKQuGRArQV5D+3j8gSSQyumtg0fQlMGoYdrqvMMQBMa+QNTQmSArCnDuKMbo4A8twu9MC0sXLJ0oUSR1O5vz76Kgf3TvRtohRMM+pNcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iej6kESo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786716179; c=relaxed/simple;
+	bh=8Lo/Hy8TY7ECweRASA0fsU7NhCGgYKRu1dvQp4pnV7I=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=RH8IAYFRLc6Gx5qflCnqcdwZ7LP8QDEld4U6y7gUws1xsghbKLMYRbGFUHTnKK2feZwmxXV8Nul3Hz9dS2fCfQeSY4mwsfw7JkRXh9LfIBjyvYDNbBLGKlCJ26vrh9vSAlALXw0NKSsXdZ5N7R39TtBrSTZgzmml+voWuNKUaFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECobVDo6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iej6kESo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786715753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qwll/rx1QVHE0RLr1ij+LcJY3pppLEwm58AIGj5D33k=;
-	b=iej6kESoY8LsH13VcOCctrx0HtkpY+GVdI0yjf+VX7LE21/TR2CeXDKcEYuJWMVQyHVFaQ
-	FkkMvkghwirbARlcHNaZFAC6tAuXfRQNyZhQLhHeJgFvKm78/djojl0AbSJ4GSt7lZ7k7d
-	7oox5YKhBHiJVcBvgdKNUcMNLhgQolE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-T1c88Km9M9GqnCtG3iDVPQ-1; Fri,
- 14 Aug 2026 09:55:52 -0400
-X-MC-Unique: T1c88Km9M9GqnCtG3iDVPQ-1
-X-Mimecast-MFC-AGG-ID: T1c88Km9M9GqnCtG3iDVPQ_1786715751
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D9A619560A5;
-	Fri, 14 Aug 2026 13:55:51 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.33.92])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ECBCA18005AC;
-	Fri, 14 Aug 2026 13:55:47 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH 5/5] rtla/tests: Add unit test for get_max_cpu_from_list()
-Date: Fri, 14 Aug 2026 15:55:11 +0200
-Message-ID: <20260814135511.2207190-6-tglozar@redhat.com>
-In-Reply-To: <20260814135511.2207190-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ECobVDo6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6C81F000E9;
+	Fri, 14 Aug 2026 14:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786716178;
+	bh=L2PHGh8XhqF5mQKsNslPqGOg65X9vL03TaHwSYdIspk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ECobVDo6wd92QJP9ymzYthalJHDhJ+sS/+OoawLjohmmZfyS/UCY/1P3wUdtvt7kH
+	 NtMaABBr7gGirmURf9O2lSGMnJzn+KLi4CKlKJzbuNSz0uDNkozN5tEF44yZP3aOg3
+	 UWMlxAUoV9DmJ0KPkD8MKEEq7DLaYGyQIc00Ll55H74NQo9FULyHGnMdI0Yf+hWUxp
+	 kMJWC7x/NK0Vumvb/RlmiREMaZEd7E041w46hiKDEN4FmtD2E+ATr308ay4HahyVaF
+	 1n6OJiikXCKtkqJAMxWUNZvDZG/DBYEM5ata41NwomMW1vDFY9OrMCVSHUowTk+0K5
+	 DrdFPzkNmavPQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/5] rtla: Discard trace entries with cpu >= nr_cpus
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tomas Glozar" <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260814135511.2207190-3-tglozar@redhat.com>
 References: <20260814135511.2207190-1-tglozar@redhat.com>
+ <20260814135511.2207190-3-tglozar@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Aug 2026 14:02:58 +0000
+Message-Id: <20260814140258.7A6C81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: zN8sZFJQF032Pojit735Y-xX8uDtaUtG6wpKedgXJ4M_1786715751
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The get_max_cpu_from_list() function is used when parsing osnoise cpus
-"all" value. Furthermore, the callback used by it is also used in
-get_possible_cpus().
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The printf format strings incorrectly use `%lld` to print `unsigned=
+ long long` variables.
+--
 
-Add unit test to cover it.
+--- Patch [2]: [PATCH 2/5] rtla: Discard trace entries with cpu >=3D nr_cpu=
+s ---
+commit 2e2ceb9161355aea34f26cdf4de0da20e2aa2e3d
+Author: Tomas Glozar <tglozar@redhat.com>
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/tests/unit/utils.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+rtla: Discard trace entries with cpu >=3D nr_cpus
 
-diff --git a/tools/tracing/rtla/tests/unit/utils.c b/tools/tracing/rtla/tests/unit/utils.c
-index 0cb5e217c56eb..cdd84ff895f86 100644
---- a/tools/tracing/rtla/tests/unit/utils.c
-+++ b/tools/tracing/rtla/tests/unit/utils.c
-@@ -95,6 +95,14 @@ START_TEST(test_cpu_list_iterate)
- }
- END_TEST
- 
-+START_TEST(test_get_max_cpu_from_list)
-+{
-+	ck_assert_int_eq(get_max_cpu_from_list("1,2,3,4-60"), 60);
-+	ck_assert_int_eq(get_max_cpu_from_list("2,1-7,4"), 7);
-+	ck_assert_int_eq(get_max_cpu_from_list("invalid"), -1);
-+}
-+END_TEST
-+
- START_TEST(test_parse_cpu_set)
- {
- 	cpu_set_t set;
-@@ -160,6 +168,7 @@ Suite *utils_suite(void)
- 
- 	tcase_add_test(tc, test_strtoi);
- 	tcase_add_test(tc, test_cpu_list_iterate);
-+	tcase_add_test(tc, test_get_max_cpu_from_list);
- 	tcase_add_test(tc, test_parse_cpu_set);
- 	tcase_add_test(tc, test_parse_prio);
- 
--- 
-2.55.0
+This commit adds a bounds check to rtla to discard trace entries when the
+CPU index exceeds the known number of CPUs. It introduces an invalid_events
+counter and updates the tool's output to report when such events occur.
 
+> diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/os=
+noise.c
+> index 4ff5dad013b10..b9bcbf9ee430c 100644
+> --- a/tools/tracing/rtla/src/osnoise.c
+> +++ b/tools/tracing/rtla/src/osnoise.c
+
+[ ... ]
+
+> +void
+> +osnoise_report_invalid_events(struct osnoise_tool *tool)
+> +{
+> +	unsigned long long total_events;
+> +
+> +	if (tool->trace.invalid_events > 0) {
+> +		if (tool->trace.missed_events !=3D UINT64_MAX) {
+> +			total_events =3D tool->trace.processed_events + tool->trace.invalid_e=
+vents +
+> +				tool->trace.missed_events;
+> +
+> +			printf("%lld (%.2f%%) invalid events, results might not be accurate\n=
+",
+> +				tool->trace.invalid_events,
+> +				(double) tool->trace.invalid_events / total_events * 100.0);
+
+[Severity: Low]
+Since invalid_events is declared as an unsigned long long in struct
+trace_instance, should this printf format string use %llu instead of %lld?
+If the value were to somehow exceed LLONG_MAX, it would print as a negative
+number.
+
+> +		} else {
+> +			printf("%lld invalid events, results might not be accurate\n",
+> +				tool->trace.invalid_events);
+
+[Severity: Low]
+Does this format string also need to be updated to %llu to match the
+unsigned long long type of invalid_events?
+
+> +		}
+> +	}
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260814135511.2207=
+190-1-tglozar@redhat.com?part=3D2
