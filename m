@@ -1,169 +1,525 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB95486E40;
-	Fri, 14 Aug 2026 15:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3C74756D9;
+	Fri, 14 Aug 2026 15:32:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786721403; cv=none; b=MwGIsZC45AVzZtAIMPCRT2zQuIaRH9VgYWEDbDhRW5CnRfbLU/uuEks6KWpRI68pzkbU6u2uo+MyVrgKMwPwBC3hENfyhYDRdT+zI8cOmf4dlqqONPhnq8nHnWMw2xMCrttPrKHdY49cGM+jjSYvHDCvn4bqyL1tHZxIQHIsoMY=
+	t=1786721538; cv=none; b=fIb8X4lofKChxJmnpjhsZ92FOGnapCP/BqQqxKrhQUyLgS6+PGmFgPpuZ55N+d/W0LkqRNDpB/H6CYc4xBs7KNN4oiyKeZWIP4C6sqOvRQFTmmLRRZWbMDX/NkZusDiXvBjLmRwdqrZCCN5VuIlWZh+Pvv0PmQtmqzRzVHoSDyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786721403; c=relaxed/simple;
-	bh=tl4J5nZhsTsNnoEGHzqT7X31R2+FzAdmY+JzEZBZ/wI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bLZywGSmk4W1yDFGa9LWqCUfyHED97woPrjCj45b2QuQkyZ0I8f+eZd+ftE5eCpl1uVyELOsCSnDKzExFznlN+d/+oSAOQkcB1glkqPCtDVqqD05mShwHRNAnzJigtDx34Ja3/lvgRKWG65PfmsrUmCl52WVOHLHw42dcjDuKDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyLKd7df; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786721538; c=relaxed/simple;
+	bh=tdzkW32ww2sIUcNkpk6p9mepAG+/q5wGfFPBkk1ux/Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UF69aQBbYfaz5oStUfLhOQChvIo5A4s1QGUTbdC09EgiGMyThWVcrT0+VOSwNgfoY7rTnippTodgDxuTkPUb4lt6EhAoyaWCNie5DZQLdCf5kBRFKMdaQTu899qXRL8kaXQKVkbgbsWCxi9cEiQ68sJqXIRdzmgNH1hnx2RwCvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDcp3Q3/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyLKd7df"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A70961F000E9;
-	Fri, 14 Aug 2026 15:29:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDcp3Q3/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 655541F000E9;
+	Fri, 14 Aug 2026 15:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786721400;
-	bh=uaLT8Pt+Su2uzISlW009doIM0VJ15n6/6fL5974J+dg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=dyLKd7dfiBNnwmTsFUCJeuYgeUh8Ew4Yy3vfvAWnGGsbpXhsuQXVd8XQ9w2HaM6Zu
-	 QgBFaTPJEssOx024yYFYiy0ikk8y+yf6M2aqF58IXU4qyJA374I2BXJ7LsBV6pl8DT
-	 5Xj+P2HKB2Pvpmjt6zEYOI340apfB0nAFJ7XkX9fme6Uj6Sja0Sl4FcAYaZnu8TMkU
-	 guyQVkgOZfVNqwCLYiPXu0ohVQDFkAnBDc0rCPHMOOb+6qmvJLpRHkLxEJw7lW+vos
-	 Ntys2s5CLDmS3/R8vkRNfeJVwr6Ss0RjKsCRj38cipYc0tgAJxcOXlAUDB4Z8VRD4s
-	 iGqg8t0wrurrw==
-From: Thierry Reding <thierry.reding@kernel.org>
-Date: Fri, 14 Aug 2026 17:29:18 +0200
-Subject: [PATCH v5 10/10] arm64: tegra: Add VPR placeholder node on
- Tegra264
+	s=k20260515; t=1786721536;
+	bh=frNnxTOxBMlj/LY1bB/WPVTjhigliBmfiLnScnc3Z/E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=VDcp3Q3/qwgaohwi2y+cjh245gpF7GYr/Dzo+ZqaVTFwsKOrPA9yWBAJ8Iqw/8FkQ
+	 /mlkI/noG/RjcIZDX2gl28HoQI3M9XCaQwbmFlxgGzmr5SKG6ChxeY2CXHcHarZcF8
+	 vIVs3xc5Urd8c2EPAlYUju7ax8YvsHtwoIvc+f40iuLO+KNOP3n9M8m90q9E366jbk
+	 +864CjGeL+wGOrviNp64HEd6vhVevZuKJvZeDcVdVlHsklMeyB9V9wBFkz8rP/xB2Y
+	 Ln4lgZNFlIMxWWZ0LfNLWFG90IeZ4al1nmHmWAM4sJ/E3+ROl5jMNLuhvFxy5fkzRa
+	 svHomRo5aLUPA==
+Date: Sat, 15 Aug 2026 00:32:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [PATCH v5 04/10] ring-buffer: Fix subbuf resize race with ring
+ buffer readers
+Message-Id: <20260815003211.3d47c7a14f84e286258871a6@kernel.org>
+In-Reply-To: <20260813131152.3589632-5-vdonnefort@google.com>
+References: <20260813131152.3589632-1-vdonnefort@google.com>
+	<20260813131152.3589632-5-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260814-tegra-vpr-v5-10-71832b5d0246@nvidia.com>
-References: <20260814-tegra-vpr-v5-0-71832b5d0246@nvidia.com>
-In-Reply-To: <20260814-tegra-vpr-v5-0-71832b5d0246@nvidia.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@kernel.org>, 
- Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Sowjanya Komatineni <skomatineni@nvidia.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Russell King <linux@armlinux.org.uk>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
- Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
- "T.J. Mercier" <tjmercier@google.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Chun Ng <chunn@nvidia.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
- linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
- linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2208; i=treding@nvidia.com;
- h=from:subject:message-id; bh=db5pktqTEHmL7nm7eEWg8RTfTXMm0eSnWFgz4562xI4=;
- b=owEBbQKS/ZANAwAKAd0jrNd/PrOhAcsmYgBqfzRZRCHM4P+QZFcsZdjlqbbApnEWVTk6Wm7E+
- KnIdEu0AYmJAjMEAAEKAB0WIQSI6sMIAUnM98CNyJ/dI6zXfz6zoQUCan80WQAKCRDdI6zXfz6z
- oSXAD/9osIn6vKwbtFrpb26y/g3b9z+UjI1W3E3npab2OW3Xl4zfKOoluxB7F9krSl7aDrrKhw9
- uI7kMIHw32NFU50O6kjYGE1Zi6s89gv4UeeYqNiIPtYqyU3dVS6/wt2AN2eoQgD6y5y7lgsX+a2
- b+TaC+idL5S+NJxjlha1/Ax3mH0kmL/NYjMVT2F+OWOfJDFbmYtwCkXa/bnlAJaExbFvVow52w3
- lKV4KUg+Q1zuwcv9wWrrkcEOElranQ1b5jO/E27+zvhIle3MhK/RkJOKCiRlFR7g1/oAIVHCYVx
- vLgtY9ifFDRxVuTQrWHpCJcq9q+YtSAZUiM4WjJutFgVF0fejgX7YDv23ar7NkoI7I+eiHqKv7r
- KznaE0HyuGIGpGExgj3QeEEMVqz7I4xibixSV+MPk2EVlm16ZcqShTUu9ZaIadCxfAS1rcRqSz1
- Cz/etrRh+A2EV+V+tgDcNBE5kmN6YvTZE826o1yVVtSAVlrf7S4s/rOnwfRHTxTH7Ek3OWUkdpR
- kuXJlxiZ+xIKx4VQ9y03bVyg+FeLRphkOO952z6VQq5Gk13e02mBOUG2liVGPh70aWOmkoXVhtN
- b268m+4V1J8PieinrHxibQ6o225G8PrDeNOSGlbNKkQf6afUzpcG51yPU2vS4//Wl7rnKmgE8qO
- nrj9H5tdo/9uipA==
-X-Developer-Key: i=treding@nvidia.com; a=openpgp;
- fpr=88EAC3080149CCF7C08DC89FDD23ACD77F3EB3A1
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, 13 Aug 2026 14:11:46 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-This node contains two sets of properties, one for the case where the
-VPR is resizable (in which case the VPR region will be dynamically
-allocated at boot time) and another case where the VPR is fixed in size
-and initialized by early firmware.
+> trace_buffer subbuf_size is read lockless in ring_buffer_read_page() and
+> ring_buffer_read_start(), while it can simultaneously be resized with
+> ring_buffer_subbuf_order_set().
+> 
+> Instead of trace_buffer::subbuf_size, use bpage::order in
+> ring_buffer_read_start() and ring_buffer_read_page().
+> 
+> In ring_buffer_read_start(), even with resize_disabled, there is still a
+> possibility of a race with a buffer modification. Hold the trace_buffer
+> mutex to synchronise with any pending ring buffer order modification.
+> 
+> trace_buffer::subbuf_size is now actually useless, remove it. Also,
+> create accessors rb_subbuf_capacity() and rb_page_capacity() which
+> return the actual size available for storing events, while
+> rb_subbuf_size() returns the actual subbuf page-size.
+> 
+> Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
 
-The firmware running on the device is responsible for updating the node
-with the real physical address for the fixed VPR case and remove the
-properties needed only for resizable VPR. Similarly, if the VPR is
-resizable, the firmware should remove the "reg" property since it is no
-longer needed.
+Can you add Closes: tag with Sashiko's url?
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v3:
-- comment out fixed VPR properties, assume resizable by default
-- rename node to "protected"
----
- arch/arm64/boot/dts/nvidia/tegra264.dtsi | 33 ++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+The code looks good to me.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra264.dtsi b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-index 31bd29df8e46..b3a8ea64aa37 100644
---- a/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-@@ -24,6 +24,39 @@ shmem_bpmp: shmem@86070000 {
- 			reg = <0x0 0x86070000 0x0 0x2000>;
- 			no-map;
- 		};
-+
-+		vpr: protected {
-+			compatible = "nvidia,tegra-video-protection-region";
-+			status = "disabled";
-+
-+			/*
-+			 * Two variants exist for this. For fixed VPR, the
-+			 * firmware is supposed to update the "reg" property
-+			 * with the fixed memory region configured as VPR.
-+			 *
-+			 * For resizable VPR we don't care about the exact
-+			 * address and instead want a reserved region to be
-+			 * allocated with a certain size and alignment at
-+			 * boot time.
-+			 *
-+			 * The below assumes resizable VPR by default. If the
-+			 * firmwares sets up fixed VPR, it is responsible for
-+			 * adding the missing "reg" property, removing any of
-+			 * the unused properties, as well as adding a unit-
-+			 * address matching the "reg" property.
-+			 */
-+
-+			/* fixed VPR */
-+			/*
-+			reg = <0x0 0x0 0x0 0x0>;
-+			no-map;
-+			*/
-+
-+			/* resizable VPR */
-+			size = <0x0 0x70000000>;
-+			alignment = <0x0 0x100000>;
-+			reusable;
-+		};
- 	};
- 
- 	/* SYSTEM MMIO */
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index b6fa258aafe2..ec520c72124e 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -391,6 +391,17 @@ static __always_inline unsigned int rb_page_size(struct buffer_page *bpage)
+>  	return rb_data_page_size(bpage->page);
+>  }
+>  
+> +/**
+> + * rb_page_capacity - Get the capacity of a buffer page
+> + * @bpage:	The buffer page
+> + *
+> + * Return: The maximum size available for events in the given buffer page.
+> + */
+> +static __always_inline unsigned int rb_page_capacity(struct buffer_page *bpage)
+> +{
+> +	return (PAGE_SIZE << bpage->order) - BUF_PAGE_HDR_SIZE;
+> +}
+> +
+>  static void free_buffer_page(struct buffer_page *bpage)
+>  {
+>  	/* Range pages are not to be freed */
+> @@ -586,11 +597,42 @@ struct trace_buffer {
+>  
+>  	struct ring_buffer_meta		*meta;
+>  
+> -	unsigned int			subbuf_size;
+>  	unsigned int			subbuf_order;
+>  	unsigned int			max_data_size;
+>  };
+>  
+> +static __always_inline unsigned int rb_subbuf_size(struct trace_buffer *buffer)
+> +{
+> +	return PAGE_SIZE << buffer->subbuf_order;
+> +}
+> +
+> +/**
+> + * rb_subbuf_capacity - Get the capacity of a subbuffer
+> + * @buffer:	A trace buffer
+> + *
+> + * Unsafe to use without holding trace_buffer::mutex or with resizing enabled.
+> + * Consider rb_page_capacity() instead.
+> + *
+> + * Return: The maximum size available for events in a trace buffer subbuffer.
+> + */
+> +static __always_inline unsigned int rb_subbuf_capacity(struct trace_buffer *buffer)
+> +{
+> +	return rb_subbuf_size(buffer) - BUF_PAGE_HDR_SIZE;
+> +}
+> +
+> +/**
+> + * rb_subbuf_start - Get the start address of a subbuffer
+> + * @buffer:	A trace buffer
+> + * @addr:	An address of an event on a subbuffer
+> + *
+> + * Return: The start of the subbuffer for where @addr sits
+> + */
+> +static __always_inline
+> +unsigned long rb_subbuf_start(struct trace_buffer *buffer, unsigned long addr)
+> +{
+> +	return addr & ~((unsigned long)(rb_subbuf_size(buffer) - 1));
+> +}
+> +
+>  struct ring_buffer_iter {
+>  	struct ring_buffer_per_cpu	*cpu_buffer;
+>  	unsigned long			head;
+> @@ -630,7 +672,7 @@ int ring_buffer_print_page_header(struct trace_buffer *buffer, struct trace_seq
+>  	trace_seq_printf(s, "\tfield: char data;\t"
+>  			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+>  			 (unsigned int)offsetof(typeof(field), data),
+> -			 (unsigned int)(buffer ? buffer->subbuf_size :
+> +			 (unsigned int)(buffer ? rb_subbuf_capacity(buffer) :
+>  						 PAGE_SIZE - BUF_PAGE_HDR_SIZE),
+>  			 (unsigned int)is_signed_type(char));
+>  
+> @@ -1620,7 +1662,7 @@ rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
+>   */
+>  static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
+>  {
+> -	int subbuf_size = buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> +	int subbuf_size = rb_subbuf_size(buffer);
+>  	struct ring_buffer_cpu_meta *meta;
+>  	struct ring_buffer_meta *bmeta;
+>  	unsigned long ptr;
+> @@ -2432,8 +2474,8 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  			bpage->id = i + 1;
+>  			cpu_buffer->subbuf_ids[i + 1] = bpage;
+>  		} else {
+> -			int order = cpu_buffer->buffer->subbuf_order;
+> -			bpage->page = alloc_cpu_data(cpu_buffer->cpu, order);
+> +			bpage->page = alloc_cpu_data(cpu_buffer->cpu,
+> +						     cpu_buffer->buffer->subbuf_order);
+>  			if (!bpage->page)
+>  				goto free_pages;
+>  		}
+> @@ -2556,8 +2598,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  		bpage->range = 1;
+>  		cpu_buffer->subbuf_ids[0] = bpage;
+>  	} else {
+> -		int order = cpu_buffer->buffer->subbuf_order;
+> -		bpage->page = alloc_cpu_data(cpu, order);
+> +		bpage->page = alloc_cpu_data(cpu, bpage->order);
+>  		if (!bpage->page)
+>  			goto fail_free_reader;
+>  	}
+> @@ -2731,10 +2772,9 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  
+>  	buffer->subbuf_order = order;
+>  	subbuf_size = (PAGE_SIZE << order);
+> -	buffer->subbuf_size = subbuf_size - BUF_PAGE_HDR_SIZE;
+>  
+>  	/* Max payload is buffer page size - header (8bytes) */
+> -	buffer->max_data_size = buffer->subbuf_size - (sizeof(u32) * 2);
+> +	buffer->max_data_size = rb_subbuf_capacity(buffer) - (sizeof(u32) * 2);
+>  
+>  	buffer->flags = flags;
+>  	buffer->clock = trace_clock_local;
+> @@ -2818,9 +2858,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  		if (nr_pages < 2)
+>  			goto fail_free_buffers;
+>  	} else {
+> -
+>  		/* need at least two pages */
+> -		nr_pages = DIV_ROUND_UP(size, buffer->subbuf_size);
+> +		nr_pages = DIV_ROUND_UP(size, rb_subbuf_capacity(buffer));
+>  		if (nr_pages < 2)
+>  			nr_pages = 2;
+>  	}
+> @@ -3203,7 +3242,7 @@ static void update_pages_handler(struct work_struct *work)
+>   * @size: the new size.
+>   * @cpu_id: the cpu buffer to resize
+>   *
+> - * Minimum size is 2 * buffer->subbuf_size.
+> + * Minimum size is 2 * rb_subbuf_capacity(buffer).
+>   *
+>   * Returns 0 on success and < 0 on failure.
+>   */
+> @@ -3225,12 +3264,6 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+>  	    !cpumask_test_cpu(cpu_id, buffer->cpumask))
+>  		return 0;
+>  
+> -	nr_pages = DIV_ROUND_UP(size, buffer->subbuf_size);
+> -
+> -	/* we need a minimum of two pages */
+> -	if (nr_pages < 2)
+> -		nr_pages = 2;
+> -
+>  	/*
+>  	 * Keep CPUs from coming online while resizing to synchronize
+>  	 * with new per CPU buffers being created.
+> @@ -3241,6 +3274,12 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+>  	mutex_lock(&buffer->mutex);
+>  	atomic_inc(&buffer->resizing);
+>  
+> +	nr_pages = DIV_ROUND_UP(size, rb_subbuf_capacity(buffer));
+> +
+> +	/* we need a minimum of two pages */
+> +	if (nr_pages < 2)
+> +		nr_pages = 2;
+> +
+>  	if (cpu_id == RING_BUFFER_ALL_CPUS) {
+>  		/*
+>  		 * Don't succeed if resizing is disabled, as a reader might be
+> @@ -3513,7 +3552,7 @@ rb_event_index(struct ring_buffer_per_cpu *cpu_buffer, struct ring_buffer_event
+>  {
+>  	unsigned long addr = (unsigned long)event;
+>  
+> -	addr &= (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1;
+> +	addr &= (unsigned long)rb_subbuf_size(cpu_buffer->buffer) - 1;
+>  
+>  	return addr - BUF_PAGE_HDR_SIZE;
+>  }
+> @@ -3755,8 +3794,8 @@ static inline void
+>  rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
+>  	      unsigned long tail, struct rb_event_info *info)
+>  {
+> -	unsigned long bsize = READ_ONCE(cpu_buffer->buffer->subbuf_size);
+>  	struct buffer_page *tail_page = info->tail_page;
+> +	unsigned long bsize = rb_page_capacity(tail_page);
+>  	struct ring_buffer_event *event;
+>  	unsigned long length = info->length;
+>  
+> @@ -4101,8 +4140,7 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
+>  
+>  	new_index = rb_event_index(cpu_buffer, event);
+>  	old_index = new_index + rb_event_ts_length(event);
+> -	addr = (unsigned long)event;
+> -	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
+> +	addr = rb_subbuf_start(cpu_buffer->buffer, (unsigned long)event);
+>  
+>  	bpage = READ_ONCE(cpu_buffer->tail_page);
+>  
+> @@ -4767,7 +4805,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+>  	tail = write - info->length;
+>  
+>  	/* See if we shot pass the end of this buffer page */
+> -	if (unlikely(write > cpu_buffer->buffer->subbuf_size)) {
+> +	if (unlikely(write > rb_page_capacity(tail_page))) {
+>  		check_buffer(cpu_buffer, info, CHECK_FULL_PAGE);
+>  		return rb_move_tail(cpu_buffer, tail, info);
+>  	}
+> @@ -5012,7 +5050,7 @@ rb_decrement_entry(struct ring_buffer_per_cpu *cpu_buffer,
+>  	struct buffer_page *bpage = cpu_buffer->commit_page;
+>  	struct buffer_page *start;
+>  
+> -	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
+> +	addr = rb_subbuf_start(cpu_buffer->buffer, addr);
+>  
+>  	/* Do the likely case first */
+>  	if (likely(bpage->page == (void *)addr)) {
+> @@ -5799,7 +5837,6 @@ static struct buffer_page *
+>  __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+>  {
+>  	int max_loops = cpu_buffer->ring_meta ? cpu_buffer->nr_pages : 3;
+> -	unsigned long bsize = READ_ONCE(cpu_buffer->buffer->subbuf_size);
+>  	struct buffer_page *reader = NULL;
+>  	unsigned long overwrite;
+>  	unsigned long flags;
+> @@ -5947,7 +5984,7 @@ __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+>  #define USECS_WAIT	1000000
+>          for (nr_loops = 0; nr_loops < USECS_WAIT; nr_loops++) {
+>  		/* If the write is past the end of page, a writer is still updating it */
+> -		if (likely(!reader || rb_page_write(reader) <= bsize))
+> +		if (likely(!reader || rb_page_write(reader) <= rb_page_capacity(reader)))
+>  			break;
+>  
+>  		udelay(1);
+> @@ -6380,36 +6417,44 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+>  struct ring_buffer_iter *
+>  ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
+>  {
+> +	struct ring_buffer_iter *iter __free(kfree) = kzalloc_obj(*iter, flags);
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+> -	struct ring_buffer_iter *iter;
+> +
+> +	if (!iter)
+> +		return NULL;
+>  
+>  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  		return NULL;
+>  
+> -	iter = kzalloc_obj(*iter, flags);
+> -	if (!iter)
+> -		return NULL;
+> -
+> -	/* Holds the entire event: data and meta data */
+> -	iter->event_size = buffer->subbuf_size;
+> -	iter->event = kmalloc(iter->event_size, flags);
+> -	if (!iter->event) {
+> -		kfree(iter);
+> -		return NULL;
+> -	}
+> -
+>  	cpu_buffer = buffer->buffers[cpu];
+>  
+> -	iter->cpu_buffer = cpu_buffer;
+> +	/*
+> +	 * Only KDB is using GFP_ATOMIC, for the others, lock the buffer to
+> +	 * prevent concurrent resizing.
+> +	 */
+> +	if (gfpflags_allow_blocking(flags))
+> +		mutex_lock(&buffer->mutex);
+>  
+>  	atomic_inc(&cpu_buffer->resize_disabled);
+>  
+> +	if (gfpflags_allow_blocking(flags))
+> +		mutex_unlock(&buffer->mutex);
+> +
+> +	/* Holds the entire event: data and meta data. */
+> +	iter->event_size = rb_page_capacity(READ_ONCE(cpu_buffer->reader_page));
+> +	iter->event = kmalloc(iter->event_size, flags);
+> +	if (!iter->event) {
+> +		atomic_dec(&cpu_buffer->resize_disabled);
+> +		return NULL;
+> +	}
+> +	iter->cpu_buffer = cpu_buffer;
+> +
+>  	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+>  	arch_spin_lock(&cpu_buffer->lock);
+>  	rb_iter_reset(iter);
+>  	arch_spin_unlock(&cpu_buffer->lock);
+>  
+> -	return iter;
+> +	return_ptr(iter);
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_read_start);
+>  
+> @@ -6463,7 +6508,7 @@ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
+>  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  		return 0;
+>  
+> -	return buffer->subbuf_size * buffer->buffers[cpu]->nr_pages;
+> +	return rb_subbuf_capacity(buffer) * buffer->buffers[cpu]->nr_pages;
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_size);
+>  
+> @@ -7094,15 +7139,15 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	if (!data_page || !data_page->data)
+>  		return -1;
+>  
+> -	if (data_page->order != buffer->subbuf_order)
+> -		return -1;
+> -
+>  	dpage = data_page->data;
+>  	if (!dpage)
+>  		return -1;
+>  
+>  	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+>  
+> +	if (data_page->order != cpu_buffer->reader_page->order)
+> +		return -1;
+> +
+>  	reader = rb_get_reader_page(cpu_buffer);
+>  	if (!reader)
+>  		return -1;
+> @@ -7228,7 +7273,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  		 * missed events, then record it there.
+>  		 */
+>  		if (missed_events > 0 &&
+> -		    buffer->subbuf_size - size >= sizeof(missed_events)) {
+> +		    rb_page_capacity(reader) - size >= sizeof(missed_events)) {
+>  			memcpy(&dpage->data[size], &missed_events,
+>  			       sizeof(missed_events));
+>  			local_add(RB_MISSED_STORED, &dpage->commit);
+> @@ -7248,8 +7293,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	/*
+>  	 * This page may be off to user land. Zero it out here.
+>  	 */
+> -	if (size < buffer->subbuf_size)
+> -		memset(&dpage->data[size], 0, buffer->subbuf_size - size);
+> +	if (size < rb_page_capacity(reader))
+> +		memset(&dpage->data[size], 0, rb_page_capacity(reader) - size);
+>  
+>  	return read;
+>  }
+> @@ -7275,7 +7320,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_page_data);
+>   */
+>  int ring_buffer_subbuf_size_get(struct trace_buffer *buffer)
+>  {
+> -	return buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> +	return rb_subbuf_size(buffer);
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_size_get);
+>  
+> @@ -7320,7 +7365,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  {
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+>  	struct buffer_page *bpage, *tmp;
+> -	int old_order, old_size;
+> +	unsigned int old_capacity;
+> +	int old_order;
+>  	int nr_pages;
+>  	int psize;
+>  	int err;
+> @@ -7329,9 +7375,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  	if (!buffer || order < 0)
+>  		return -EINVAL;
+>  
+> -	if (buffer->subbuf_order == order)
+> -		return 0;
+> -
+>  	psize = (1 << order) * PAGE_SIZE;
+>  	if (psize <= BUF_PAGE_HDR_SIZE)
+>  		return -EINVAL;
+> @@ -7340,18 +7383,21 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  	if (psize > RB_WRITE_MASK + 1)
+>  		return -EINVAL;
+>  
+> -	old_order = buffer->subbuf_order;
+> -	old_size = buffer->subbuf_size;
+> -
+>  	/* prevent another thread from changing buffer sizes */
+>  	guard(mutex)(&buffer->mutex);
+> +
+> +	old_order = buffer->subbuf_order;
+> +	if (old_order == order)
+> +		return 0;
+> +
+> +	old_capacity = rb_subbuf_capacity(buffer);
+> +
+>  	atomic_inc(&buffer->record_disabled);
+>  
+>  	/* Make sure all commits have finished */
+>  	synchronize_rcu();
+>  
+>  	buffer->subbuf_order = order;
+> -	buffer->subbuf_size = psize - BUF_PAGE_HDR_SIZE;
+>  
+>  	/* Make sure all new buffers are allocated, before deleting the old ones */
+>  	for_each_buffer_cpu(buffer, cpu) {
+> @@ -7367,8 +7413,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  		}
+>  
+>  		/* Update the number of pages to match the new size */
+> -		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
+> -		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
+> +		nr_pages = old_capacity * buffer->buffers[cpu]->nr_pages;
+> +		nr_pages = DIV_ROUND_UP(nr_pages, rb_subbuf_capacity(buffer));
+>  
+>  		/* we need a minimum of two pages */
+>  		if (nr_pages < 2)
+> @@ -7456,7 +7502,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  
+>  error:
+>  	buffer->subbuf_order = old_order;
+> -	buffer->subbuf_size = old_size;
+>  
+>  	atomic_dec(&buffer->record_disabled);
+>  
+> @@ -7534,7 +7579,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+>  
+>  	meta->meta_struct_len = sizeof(*meta);
+>  	meta->nr_subbufs = nr_subbufs;
+> -	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> +	meta->subbuf_size = rb_subbuf_size(cpu_buffer->buffer);
+>  	meta->meta_page_size = meta->subbuf_size;
+>  
+>  	rb_update_meta_page(cpu_buffer);
+> @@ -7896,7 +7941,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+>  			 * missed events, then record it there.
+>  			 */
+>  			commit = rb_page_size(reader);
+> -			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
+> +			if (rb_subbuf_capacity(buffer) - commit >= sizeof(missed_events)) {
+>  				memcpy(&dpage->data[commit], &missed_events,
+>  				       sizeof(missed_events));
+>  				local_add(RB_MISSED_STORED, &dpage->commit);
+> @@ -7928,7 +7973,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+>  out:
+>  	/* Some archs do not have data cache coherency between kernel and user-space */
+>  	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
+> -				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
+> +				rb_subbuf_size(buffer));
+>  
+>  	rb_update_meta_page(cpu_buffer);
+>  
+> -- 
+> 2.55.0.691.gc56d675ccc-goog
+> 
+
 
 -- 
-2.55.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
