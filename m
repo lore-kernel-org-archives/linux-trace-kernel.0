@@ -1,70 +1,112 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B42492515;
-	Fri, 14 Aug 2026 17:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C767748F84A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 17:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786728957; cv=none; b=QSdNo10z30C8wY1thiw8WbhKmYSpzCu17UWIefrGnGTQUb1ZM/PGF1XJ0G+9MWipT2JgSpxMLCxvP0oDveGTmWWRPdwh/H2USf2kKLxCYhTiuNCiyYJJIWGtfHBjYJ/H7Xagz3vJx8XwIeMOTJQ6GDmA4qFeULxOmRMpUh2v+bw=
+	t=1786729787; cv=none; b=roKIo8zPVyeVrEpYfzsmerDZKawsY+UVArdnSdI0VWsCcvoebXlLwYzt63sLO9HBVF48caxkCI2Js6ZYshgPpHD3pweQifRLXTHFIOdVYliYgnJrPBrQMDBK/hLlIZHAy8YuwsejrZqiiJeLBGSYGoITsrxruZHeQeYfsgku8nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786728957; c=relaxed/simple;
-	bh=Rh7YmftQk3S0jxfjxrGMdKV//RENjflqpuDNP9eLxYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OGxvlu+qwG3osDfxeA9bqPyLgxCe1QUIEiJuL5hyGfKlXaf3t4NGhAiYv+ONyZNbhHSuoj2Hx8TmB1hT+DI0rSHX52RjR6mQMWDPEKJd26qWjLTgAYAewYoFqGyn4EOOtUmduDke0EfXK/dSPlE8bNr5xXqfmBCunCs7Fk3sF4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=VOlVyjHW; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1786729787; c=relaxed/simple;
+	bh=JyKy7mnAmUw8tnHbEwiiGFVJCd1yhCZDBWylOQNKIUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3kd4Gkby60N5L7hCe0yWq2w9cnvWxU/JXdPyOPQVVXaTwZzJgQKWkROjwpIf6zYLCAXpTN+L44geT2+JXRYAMmukPcoRA/RFTJUUe0MVXb/yxjAGaea8MGYmm59CBR7XXFy78NkPm2ducTV4WdDYXleG3yige7QWYES9GTIBKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hv+CPWml; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="VOlVyjHW"
-Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id DC12B14016A;
-	Fri, 14 Aug 2026 17:35:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 3423E1A;
-	Fri, 14 Aug 2026 17:35:52 +0000 (UTC)
-Date: Fri, 14 Aug 2026 13:36:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] selftests/ftrace: Add a boottime tracing test
- framework
-Message-ID: <20260814133610.32eb5da9@gandalf.local.home>
-In-Reply-To: <20260815010524.b361dc036dd2e997d23cc421@kernel.org>
-References: <178649540853.438282.4271870161169100680.stgit@devnote2>
-	<20260815010524.b361dc036dd2e997d23cc421@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hv+CPWml"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786729784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JyKy7mnAmUw8tnHbEwiiGFVJCd1yhCZDBWylOQNKIUQ=;
+	b=Hv+CPWml7IfytB/E35HGnMCkeSR8DwZAOuy++FI+LgDFgawFoVSQPLgYrnS6XXOrtN04CO
+	CZUYZzGeNH40k/VbNO7icA+SbqW2CUT91ue7eZuiKRUm/wN/7ZMYSnAffHgqDMSuEK9r33
+	3ODaOQbW/z4NSWGBwsPTrCS8eWPWxNI=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-3-S7lc9AwWMFCBOKqMF3vSpw-1; Fri, 14 Aug 2026 13:49:43 -0400
+X-MC-Unique: S7lc9AwWMFCBOKqMF3vSpw-1
+X-Mimecast-MFC-AGG-ID: S7lc9AwWMFCBOKqMF3vSpw_1786729782
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c20e1599870so153669666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 10:49:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786729782; x=1787334582;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JyKy7mnAmUw8tnHbEwiiGFVJCd1yhCZDBWylOQNKIUQ=;
+        b=MB/jKp/0rSxRYd7gO4WKLTQiCzlFSkUmq5Tq74LqBZJQsernU/LtXVWvg/Y+cUtXUR
+         tjS4mvZSoi0otpOB2ke4ABJ7Ny5MooitYvWcvh0pyJN5SS585iR4xPNwpoYJAx+6+5Co
+         x81qGU370Ih/SK9smPxHeYpfp7nXrjUKPcCXb+PNSz4/cWt4bPgmHlVC+Q1k56OQjxS6
+         Bm4pf/hsD9YhxlsVyZUBu+QbkFa8po94BieH7A0n2/DDvI2stwrcWiO4nXFDE3Y3Y6C6
+         j9yZejAuH98LNzxt7PTljS30KTp72Pobj//T8iO4lUbuk9oSZG6aasH+hjaC3wchWjxA
+         slJA==
+X-Forwarded-Encrypted: i=1; AHgh+RpkENI2UvdxwkqsCWq8hZokrWGxMLS4B9rk8ncouKofjhQqAoWo2/PtiB6WD/vujnmaxwHy1CVRGy3RZyZiHOFR+bY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmxyfXrmsKw9M2kzAKRZWo30CQgQCFIUqYC8GUpsScKktG+RHz
+	PrEgKRM8QxbuOTseSmOYn5bwb4NOn2ipbYZHiRMaDXRQyxt5BSmtEEaoi3g7lxwL7tii6SlX6Zn
+	nQ4mLOsghQuf9ZigpzQbHuEocqJi2oyh7OckHnlRwFUwdAVyg55rKSsz2iJBrj/N5ZDWCjZQMp7
+	LDcplNLTQGNA4PFDuzC4GLPmylxyKkVOyXYA2WB14bWzk5xD9/
+X-Gm-Gg: AR+sD10OGK0BQhKUcTGBbMVevVOOd8yarosvim5OdJGJYlg4cDopvKFFZdjMhPEJfRl
+	HbjWhr/ez0TvslKSa1AEerebe38mIlMtxCO6tWNQcGRnynq0UWkF9dxW1ZgBsxEXlSjAAE5UNOV
+	6oKYgJs5wq8SkP4Y8Pc+6+q+XQ/M3/+amwv1QUuyTD4vLVIxcYLtFFKoO9+4eea7GpSVEjyAwxk
+	1gU3I1qw90clWM=
+X-Received: by 2002:a17:906:100f:10b0:c20:af9d:454a with SMTP id a640c23a62f3a-c212a2b2dfdmr257299466b.16.1786729782248;
+        Fri, 14 Aug 2026 10:49:42 -0700 (PDT)
+X-Received: by 2002:a17:906:100f:10b0:c20:af9d:454a with SMTP id
+ a640c23a62f3a-c212a2b2dfdmr257297966b.16.1786729781913; Fri, 14 Aug 2026
+ 10:49:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 3423E1A
-X-Stat-Signature: e3xy4kwfse6hoorbp6wbx9ea14gb9mo1
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+IlRGdQa8Sj4kzmsASPsiH5S/NInFQq9A=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=t4FISVqsfs6nJtW26w8JkGUvUUjrOIuGS2r6809IyQw=; b=VOlVyjHWN7syomysvwK+A3S08FzrwqAsOnS3r3qejwp8WuxApyUy1QVFdNHPmjIPsB9S9HFL9zFoIdHJ5GkCLIl2QmHlJGFKChYaAeTBnisLdISp05TXpDMGi6dWtrHZqdiRQso0ihsh7Fxn4of29MviJOp6Umij0mkaW9EqEYc=
-X-HE-Tag: 1786728952-314789
-X-HE-Meta: U2FsdGVkX1+zbFzPf+U5hv/21sGfk/YDMA4skqQzfloJB86IYspdICqKMU9Hy+ynVgddXfa8E7w2hQVI4nBI9M5SIcTa9o48AMIJ5xg4e3XrORQo2SaXHVvekSCeSz37CcsaUeGK47OvSULBTu23YNVt7GatEpjZk56unMVV0M3RDyW6hHRll/uEc6AKdQzSefqdr3Paw8tUFdHSPguSAUHRDUxJiuq55xmXq6R0/YVYTD4EHP1jAGjdWhPnAmzCm1ogt73WErAyoMKUa/nTE0qnXz2QX+QM/6CjAOEq+AKxhm7OKT+nZnqMPTckx4+qFG/25Xq+mcAOpFm1y+mKRrDoIjTR90sd
+References: <20260814135511.2207190-1-tglozar@redhat.com> <20260814103045.6efc2514@gandalf.local.home>
+In-Reply-To: <20260814103045.6efc2514@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 14 Aug 2026 19:49:30 +0200
+X-Gm-Features: AUfX_myWFj21cw2g9YuF_kwrwmSP3f8gxOtOiHVltDklc-bfujcbQVF4wYz-OQY
+Message-ID: <CAP4=nvTb-6f9PmhZzA0fp88FrOEtVjr0Hr5UdEzCbt8igJ2n2A@mail.gmail.com>
+Subject: Re: [PATCH 0/5] rtla: Implement more robust nr_cpus handling
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
+	Crystal Wood <crwood@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 7YMXumH3Zx6dSx0ebF58zfFhBx6DHnZ_oTgeMtOZZjQ_1786729782
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 15 Aug 2026 01:05:24 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+p=C3=A1 14. 8. 2026 v 16:30 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
+.org> napsal:
+>
+> Note, the merge window will likely open next week (Sunday) (and of course=
+,
+> I'll be traveling). If you want this in the next release, please send a p=
+ull
+> request today. Otherwise it will likely not be able to go into Linus's tr=
+ee
+> until 7.4.
+>
+> -- Steve
+>
 
-> Hi Steve,
-> 
-> Would you have any comment on this? I would like to pick this to probes/for-next
-> for ensuring boottime tracing works correctly.
+Thanks for the note. This is targeted for 7.4, I generally like for
+patches to sit on the mailing list for at least a few days to let
+people give feedback, unless they are trivial and/or urgent. This
+patchset is neither.
 
-Hmm, it's a bit too close to the merge window for a good review of it. I'll
-be traveling next week and I'm trying to get all my pull requests ready
-before then. You sent v1 on Monday and v3 on Tuesday. Sounds to me a bit
-rushed when you have 3 versions during the -rc7 release week.
+I will try to leave a note next time when sending a patchset for the
+next cycle late in the previous one, so that you don't have to worry
+about it.
 
-This isn't a trivial feature. I think we should let it settle during the
-next merge cycle to do it properly.
+Tomas
 
--- Steve
