@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB9033938B;
-	Fri, 14 Aug 2026 06:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40245371CFF;
+	Fri, 14 Aug 2026 06:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786689046; cv=none; b=SXYALi1RyEFyMknmd52YvXXJDMn0BMnpT1tlgnFj9/xw7A9ZCpvELgav618Bx+V0kzlRB5mVvVqfBCuFE7UILLcqKfccDbmWlo8XKyvZwgNjKSYhTpFPaGpj3Tb1iEdmWUGia/7ZzF+kZ3lUNZtbo9YmlI4wMqmylyD3qOFKGa0=
+	t=1786689392; cv=none; b=hYUXV5rO1WxmRwpd4lHQ+44s54eMrRf8eucFwhRFFPgSpWpuj1ATBFeaz8b5xtuP/xBK2yGDQF1biB+FGT9ItD2GuFfh1OmLAw3HD9tG9rQ/H1aZwNW4Wtx0SilLaKLmncwVyAF39WHQfgNqZud2fc++I3Gx9eisFfRsnW096co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786689046; c=relaxed/simple;
-	bh=lvF7pJW1VM34mjkgORqlnrodCT6IZU0t2OrgLf/yWf8=;
+	s=arc-20240116; t=1786689392; c=relaxed/simple;
+	bh=QS50L3Ej/o3Eh9pAbeQ2YK77qR7pbIzS03/vLRtWg60=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tls+K1PHbNiKail8H61Et+lOl8G2MFg9DV4CCOrkfJtJ9fMZaZOHujXrclNp3w41fiOrKFyPGGqmXpOMlJORfxuuU/kvHQOjh+H7OqK27MrgSRRaJfYE7yzHufTsW/gbkQ4+OHqiLHj1VvQzIV5qrf6RIwI1zgHDMerSSlJ0a0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kQ7IW8DF; arc=none smtp.client-ip=192.198.163.11
+	 In-Reply-To:Content-Type; b=XHw0AyAtspaGxr6LdifEnXUxxw0ux9Q15mSftvOA+vBk84kwXyHIJ3m0Y/5sy2VvR/FoiYmdlNMs4BC9IfRGLeFYeQk4maFkKSafpm0qCLsCNzQC4ifxsNonbWpmT5QT9Oh86EW+ms2lpWKxrK1yULuXjo+WaiZkTVPOZRFEcIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXnO4n68; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kQ7IW8DF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXnO4n68"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786689044; x=1818225044;
+  t=1786689390; x=1818225390;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=lvF7pJW1VM34mjkgORqlnrodCT6IZU0t2OrgLf/yWf8=;
-  b=kQ7IW8DFgLX/G6UnC204lEgH5RYrAe15GlpDH434/7r0wUnr74bD0f+u
-   J7Uf6VH2bnWYj6mX1SdLgg7GfvAGx6+HIWKJ+Q2Vo0yKM3I5ze9Gg2L1r
-   qzIRxy8kDD9sC4u4YdtpjWht0SFzDbQt8Q+6KjBgdZY+pHdUVlWh+jSBQ
-   HFfCeV0jVILNngbWGdm30ZHD55uEWQk8jXcBqf5mCv0E3Ex3IYzZGzv95
-   zobKO//Fkoihr42/m3deash/K7kC9tTYm3oqVJmnZPaTOFD3mDfyCXi6p
-   EmLSfQqOneABR/I2bJbI1SzFe53C+gy0CycHmwAAxu460UFgvNaqVZ0he
-   g==;
-X-CSE-ConnectionGUID: fCCMCUfeRqO027pG2/7MHg==
-X-CSE-MsgGUID: G4BjdzIITQGo5vX1VvWtnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="97858860"
+  bh=QS50L3Ej/o3Eh9pAbeQ2YK77qR7pbIzS03/vLRtWg60=;
+  b=EXnO4n680GlEtZhSRJjvjCapi9SVIXyQpIvY4A75L3/urY1Ktyp+5/ZH
+   Va9m0TBtncGDJ5aB8Mma8/CMWbY2i9zTqlDqIWegmV9iSDAdK4YXrMQbQ
+   BmsFez3bjjWEtpXN3LgT/Vv9MitasUkdGgR6R/jwCvz9np5mgUXIeQpgF
+   ujxyfcD1WZfzOtIggCLVd1+pZqTmYhr17a+1LG8hyfIvTfmTNhkmVI/Pe
+   OGG2/GBNXuizUPGDfrzv5182VXqQr7yUdRECR4gqiG7jcQBr8b1PYdaYx
+   MZczLFuz5HUfottjbEQLrUMcAlFJqq7qmM3kqTaNZppq4s1J1ifqeaEu9
+   Q==;
+X-CSE-ConnectionGUID: TnO7V0sESXK3G9nTYqkGew==
+X-CSE-MsgGUID: h/vRWQyvT4WwVQyNliqEbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="97859361"
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="97858860"
+   d="scan'208";a="97859361"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 23:30:41 -0700
-X-CSE-ConnectionGUID: Dbj20DsZSw+g4w0B3MfgWw==
-X-CSE-MsgGUID: TWw3KlovS5Ot+mNiNFDdEg==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 23:36:29 -0700
+X-CSE-ConnectionGUID: GUn57tdyTJmSCwMdue8GsA==
+X-CSE-MsgGUID: wgv+28R0Spi44YdDQh7WUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="288934258"
+   d="scan'208";a="288935132"
 Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.245.162]) ([10.124.245.162])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 23:30:26 -0700
-Message-ID: <f41624da-8461-45cf-b555-241091faeb63@linux.intel.com>
-Date: Fri, 14 Aug 2026 14:30:23 +0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 23:36:15 -0700
+Message-ID: <658c8441-972a-4298-a4b2-8ec4f2ca338a@linux.intel.com>
+Date: Fri, 14 Aug 2026 14:36:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 20/41] KVM: Let userspace disable per-VM mem
- attributes, enable per-gmem attributes
+Subject: Re: [PATCH v10 21/41] KVM: guest_memfd: Enable INIT_SHARED on
+ guest_memfd for x86 Coco VMs
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
@@ -87,134 +87,27 @@ Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  linux-mm@kvack.org, linux-coco@lists.linux.dev,
  Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-20-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-21-2fc18ee6d3ba@google.com>
 Content-Language: en-US
 From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-20-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-21-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+On 8/8/2026 5:53 AM, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson <seanjc@google.com>
 > 
-> Make gmem_in_place_conversion a module parameter so that userspace can
-> configure enable or disable the use of VM-level memory attributes. The
-> module parameter is only available if CONFIG_KVM_VM_MEMORY_ATTRIBUTES is
-> enabled.
-> 
-> To avoid inconsistencies in the way memory attributes are tracked in KVM
-> and guest_memfd, the vm_memory_attributes module_param is made
-
-The description is stale, since there is no module_param called
-vm_memory_attributes?
-
-> read-only (0444).
-> 
-> Since selecting CONFIG_KVM_VM_MEMORY_ATTRIBUTES disables in-place
-> conversion, 
-
-"selecting CONFIG_KVM_VM_MEMORY_ATTRIBUTES" doesn't necessarily disable
-in-place conversion, it also depends on the setting of
-gmem_in_place_conversion.
-To be accurate, maybe add "by default"?
-
-actually make CONFIG_KVM_VM_MEMORY_ATTRIBUTES selectable. Make
-> the config only selectable for (CoCo) VM types that might use
-> vm_memory_attributes.
-> 
-> Since memory attributes are trackable in guest_memfd, the concept of having
-> private memory is no longer dependent on
-> CONFIG_KVM_VM_MEMORY_ATTRIBUTES. Define kvm_arch_has_private_mem() based on
-> platform config, so that having private memory is dependent on (CoCo) VM
-> type.
+> Now that guest_memfd supports tracking private vs. shared within gmem
+> itself, allow userspace to specify INIT_SHARED on a guest_memfd instance
+> for x86 Confidential Computing (CoCo) VMs, so long as in-place conversion
+> is enabled, i.e. when it's actually possible for a guest_memfd instance to
+> contain shared memory.
 > 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 > Reviewed-by: Fuad Tabba <tabba@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
-> [Define module_param only if CONFIG_KVM_VM_MEMORY_ATTRIBUTES is enabled]
-> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  4 +++-
->  arch/x86/kvm/Kconfig            | 14 ++++++++++----
->  virt/kvm/kvm_main.c             |  5 ++++-
->  3 files changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 497da6aaf2942..bb2c1ade62cf9 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1851,7 +1851,9 @@ enum kvm_intr_type {
->  	((vcpu) && (vcpu)->arch.handling_intr_from_guest && \
->  	 (!!in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
->  
-> -#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-> +#if defined(CONFIG_KVM_SW_PROTECTED_VM) ||	\
-> +    defined(CONFIG_KVM_INTEL_TDX) ||		\
-> +    defined(CONFIG_KVM_AMD_SEV)
->  #define kvm_arch_has_private_mem(kvm) ((kvm)->arch.has_private_mem)
->  #endif
->  
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index abb108886733a..2c3c22aeafa54 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -81,13 +81,21 @@ config KVM_WERROR
->  	  If in doubt, say "N".
->  
->  config KVM_VM_MEMORY_ATTRIBUTES
-> -	bool
-> +	bool "Enable per-VM PRIVATE vs. SHARED attributes (for CoCo VMs)"
-> +	depends on KVM_SW_PROTECTED_VM || KVM_INTEL_TDX || KVM_AMD_SEV
-> +	help
-> +	  Enable support for tracking PRIVATE vs. SHARED memory using per-VM
-> +	  memory attributes.  Using per-VM attributes is deprecated in favor of
-> +	  tracking PRIVATE state in guest_memfd.  Select this if you need to run
-> +	  CoCo VMs using a VMM that doesn't support guest_memfd memory
-> +	  attributes.
-> +
-> +	  If unsure, say N.
->  
->  config KVM_SW_PROTECTED_VM
->  	bool "Enable support for KVM software-protected VMs"
->  	depends on EXPERT
->  	depends on KVM_X86 && X86_64
-> -	select KVM_VM_MEMORY_ATTRIBUTES
->  	help
->  	  Enable support for KVM software-protected VMs.  Currently, software-
->  	  protected VMs are purely a development and testing vehicle for
-> @@ -138,7 +146,6 @@ config KVM_INTEL_TDX
->  	bool "Intel Trust Domain Extensions (TDX) support"
->  	default y
->  	depends on INTEL_TDX_HOST
-> -	select KVM_VM_MEMORY_ATTRIBUTES
->  	select HAVE_KVM_ARCH_GMEM_POPULATE
->  	help
->  	  Provides support for launching Intel Trust Domain Extensions (TDX)
-> @@ -162,7 +169,6 @@ config KVM_AMD_SEV
->  	depends on KVM_AMD && X86_64
->  	depends on CRYPTO_DEV_SP_PSP && !(KVM_AMD=y && CRYPTO_DEV_CCP_DD=m)
->  	select ARCH_HAS_CC_PLATFORM
-> -	select KVM_VM_MEMORY_ATTRIBUTES
->  	select HAVE_KVM_ARCH_GMEM_CONVERT
->  	select HAVE_KVM_ARCH_GMEM_RECLAIM
->  	select HAVE_KVM_ARCH_GMEM_INVALIDATE
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index c8faf1cb82167..85dfc3f5af805 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -103,7 +103,10 @@ static bool __ro_after_init allow_unsafe_mappings;
->  module_param(allow_unsafe_mappings, bool, 0444);
->  
->  #ifdef kvm_arch_has_private_mem
-> -bool __ro_after_init gmem_in_place_conversion = false;
-> +bool __ro_after_init gmem_in_place_conversion = !IS_ENABLED(CONFIG_KVM_VM_MEMORY_ATTRIBUTES);
-> +#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-> +module_param(gmem_in_place_conversion, bool, 0444);
-> +#endif
->  EXPORT_SYMBOL_FOR_KVM_INTERNAL(gmem_in_place_conversion);
->  #endif
->  
-> 
+
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 
