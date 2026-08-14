@@ -1,56 +1,56 @@
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB53483BEA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 15:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1862731E846
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 15:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786722511; cv=none; b=DskFiTXaF5xlFtrZUacEVsoMckERSuKmvOBzSPBH9tAY2Fz6epTHHDDMJTOasaeiPxarmYbRYEZS2q7pRThEzdECdPA/3FNraScz4B2BOxmGPGSdiwdJt1luvlubpPvBvnWM4jfcIWe+mRhsdw8UxpJxd4K2tTU1GT4RP6l58+s=
+	t=1786722512; cv=none; b=D2fCnQAFOdifpsZrjnDc8h0F93RePmutF2PZ732qjTTM63QQEKMmhtKO/CIZxZQjAT3FuWUtbJ1Vze6CbGpze+dGMZXeVIzoWY3xGuddukFq1TnzR+SYyNl3pQVOT4Z9Ynd0yK6ip15QpFIDOlNSnQ3NVYhvV8vByT8cb+nNZbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786722511; c=relaxed/simple;
-	bh=vQz6byzmMJzpQAWYZ5Vk3vVodifkgcRQQP/XzqERhuY=;
+	s=arc-20240116; t=1786722512; c=relaxed/simple;
+	bh=vCINmSJb9yZg5xEVHdEsLNU9vN/Gy2+jMIw4/AOwC7Y=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LZzA/cmt/4PaDGqFLbnyXMoXB56THB1rTqw5StgIlphdPL3QBdQ7MbbTrwyRMPNAdCXdeOm10CRDahfwwyOG2O+V63SGIlM5wOydbZN46FYpz0csiQ4I4wfRu7D0BF23olrdWZ2I9Xq2Zw9tz1ij9dHPKDxMPOVTIzX/0arhAZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kt+o5clM; arc=none smtp.client-ip=209.85.128.71
+	 To:Cc:Content-Type; b=O8rQyVxQYzLAb0S2ZEu/hqumpSt8fSS86h9WuoPJGAo7SY48QbtUgYCY1/1jGm2nuoUyIfRjNTA5gyBn9lGGUM3+x86r/sVAh9HWJCBKzGqqA3+CQaRDYzV+pp6dhJ8mu6iM+hmsfA2epBFPRj1w6IAaGFuAPjMjCp+FXC7A78U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FkrKBKEL; arc=none smtp.client-ip=209.85.221.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kt+o5clM"
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-493fa6e28a7so11930635e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 08:48:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FkrKBKEL"
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-47fecbb553bso1042591f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 08:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786722508; x=1787327308; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786722507; x=1787327307; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=J77n4YvjmDIOQaLmeeAERFnDXFw9L4MYNzDkoQbO2tk=;
-        b=kt+o5clMHhVzM8MylLK6hahSTujcykJio7u7TlPQbumz9iUW3wdbpO5+K6Njgdc+OJ
-         Ka6AbcvbUkepeQKXZolfduuE1Ea5cRGipnPeHeeAQtd1lLFXKzUF1dkQMtLxvBQrrG2S
-         VZtcIjI5GuvvM66+zTW686kTHfaDj2zxrgr6Sylk2qtNYc/O7pyVvIoA6Lfe05JQCXDa
-         HYzvH9cMDsoMtcGOemes8SpffYpPABBlXQyA93qKDKatEVxx2etnLV+8WxedyD3eTzE9
-         gcN/55B8lRo8PIpws6TZriJyYFzR+374d9cJyqKQH7S493TXd7POYI9OtSnRhvrd3hcY
-         lFsw==
+        bh=nV1pWWkD5bsCCpYwQOvn4bitJK+uOOJiLtYFD+r/bCQ=;
+        b=FkrKBKELyfgs4S+8mXzFKDh5QaefPjH64UYRohTDwMrmoX4yPzQIY42f48h4bqDelk
+         1T8Rmv3sNQ0C8we7u34PyeHhQqfKG3tNAOYuWE5Cxh9yl0N3cIBFVIbhIV/Ce24Z/1tZ
+         EZ7Z4WPsjfSxMCsgAFZV9jsThWoahEskaUilcKLo7M09+Lh4cyhjn/2YPMJbFWa2df7M
+         CwkKqqtIVV8Z1UWCk1MOplQ6dmW1xBIMr5oOWtYPlB0tqnNfKs7uHFEaykjsAR59Gaax
+         UdLVYT6oSVqUzxkkVAYLJ6PeXNfTA000vvqGi77/hQEbnTQDgBiSJSunjgiX0UyKyvYK
+         SWNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786722508; x=1787327308;
+        d=1e100.net; s=20251104; t=1786722507; x=1787327307;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=J77n4YvjmDIOQaLmeeAERFnDXFw9L4MYNzDkoQbO2tk=;
-        b=ncIktwbQTRUOBIF6Ok63M+B3u2EyM61JKy54YOgvwH/wOBqHAOn+AbPrZQEt4I167d
-         l+B6VIkFj6pRl6Q5xdj89xpVV72DYQqY9NtjNlkG6z7JgCIGz6CE26P+44vRH0eQN5Dg
-         RcqKoiyEsAsMcpGsbimN9z48cfDoD76f3C13hQflbZbOdhK6a3B0e58VFuoi6Z+X1HDp
-         IzdzDU5vma1pra4BhoDSSaUvYQ1UA+A3SKpPE6+Xq+1hOpdp1jD11UDmXE5C6syqM2hd
-         aRfh+aKNiXPbD05c7yeObDxJPSlXwtCDeLlSFzdXm+ieTKl3GJG6/QZ/b6I6GHFGxZkP
-         gMuQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpndTRJVkXfbzQqQ4AUT2lWJ5vK61De1Rw7l0CIIXU8KB5nU6G0Lom98+sLiD1qU3bDpCCCrT3+H6n2Mg35x3cfERE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz75GMWjdialC2aUpVgJT6O+Hft/7h21/B4FLfsYwAk1/LOLQn
-	nq6I8DiBHKO2DI7HyT8Or121WPOv0wTP17vPo05Z7u/ZodMx7aX4aBAw58vRwOa8ip9ZYjHivyu
-	h4Dxa3HWQ59BS+0Z2m8QX1g==
-X-Received: from wmow7.prod.google.com ([2002:a05:600c:4747:b0:495:5b59:7a9c])
+        bh=nV1pWWkD5bsCCpYwQOvn4bitJK+uOOJiLtYFD+r/bCQ=;
+        b=efmow0eIw9dXOBnnE9J7z4qbxgrxev5Nbr9dznFClBcmXFoiFVB6PwG9J/MRc+Vxdc
+         2fsyHjIW/IAEskwcqgnVGC+KZ+457C9jxOv5hvcMGdoYxGiOj/EdpMLGQbp63WM+oIGH
+         ZW/MGN6MKXOWULS5AuaYDjEBU24vobWNO8iIvZB9OQKGm05aO647BLliCFoNQ5tMlkTf
+         9GihuTGrJM3yeenNSKpxa4FzjiaqLe2ujy2/chTHVNwwGAffY3zoTG4uWop/vXd3+Duo
+         QtTrwSXmie9f4nMJjre9hwUh6pSmEC7kYpoI5xFgKZ3RtUTrpbpFAnqWZ2V3Z6e7pbZo
+         eObw==
+X-Forwarded-Encrypted: i=1; AHgh+RqFqI92hwmpaVtd9CP0lupeTvBelgmTY/9RHC/64Xob3kkep2Qd6gEcyRx9H9/YUQUgioy/1lB8EtuNr39oWKyqvkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNsUm8jLLw+sbYwEnO4GbNqn+COjrUK7PW66qAyRFQhVZlw6Mz
+	Ch2Dsf0deWd57k/oNZp52QUZUFYn1NirqCGDEBTvBgPgpo718V7mHN/Hl733O5LoaUcb4CsJs7w
+	GtwH0im2nTSsfP5kwtrCPgw==
+X-Received: from wmti12.prod.google.com ([2002:a05:600c:8b8c:b0:495:5762:2123])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3e15:b0:498:ee7:e407 with SMTP id 5b1f17b1804b1-49987999622mr100926375e9.17.1786722508134;
- Fri, 14 Aug 2026 08:48:28 -0700 (PDT)
-Date: Fri, 14 Aug 2026 16:48:23 +0100
+ 2002:a05:600c:1385:b0:499:5220:db3d with SMTP id 5b1f17b1804b1-499879a50afmr75294865e9.16.1786722507053;
+ Fri, 14 Aug 2026 08:48:27 -0700 (PDT)
+Date: Fri, 14 Aug 2026 16:48:22 +0100
 In-Reply-To: <20260814154823.755406-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260814154823.755406-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260814154823.755406-3-vdonnefort@google.com>
-Subject: [PATCH v6 2/2] ring-buffer: Improve nr_pages type
+Message-ID: <20260814154823.755406-2-vdonnefort@google.com>
+Subject: [PATCH v6 1/2] tracing: Fix subbuf resize races with trace_pipe_raw readers
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -69,185 +69,493 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-If ring_buffer_per_cpu::nr_pages is defined as unsigned long, it is
-capped to 32-bits in a few places, limiting the operations possible on a
-very large buffer.
+Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
+uninitialized memory to userspace due to stale size values.
 
-Make sure nr_pages is never capped to 32-bits (that includes nr_subbufs)
-and reject a value over 32-bits for the user-mapped, persistent buffer
-and remote buffer cases where the limiting factor is the shared
-meta-data member for the number of pages/subbufs.
+Modify ring_buffer_alloc_read_page() to let it handle the resizing of
+a previous buffer_data_read_page if necessary and add a new
+ring_buffer_read_page_size() which enable ring-buffer users to not use
+the racy ring_buffer_subbuf_size_get(). This makes the spare_size member
+of ftrace_buffer_info redundant.
 
-While at it, make sure subbuf_size is 'unsigned int'.
+Use those functions in trace_pipe_raw readers and handle in both the
+case where the subbuf order is modified in the middle of the read.
 
+Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/ring_buffer.c | 46 ++++++++++++++++++++++++--------------
- 1 file changed, 29 insertions(+), 17 deletions(-)
+ include/linux/ring_buffer.h          |   5 +-
+ kernel/trace/ring_buffer.c           | 100 ++++++++++++++++++--------
+ kernel/trace/ring_buffer_benchmark.c |   6 +-
+ kernel/trace/trace.c                 | 104 +++++++++++++--------------
+ kernel/trace/trace.h                 |   9 ++-
+ 5 files changed, 130 insertions(+), 94 deletions(-)
 
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 0670742b2d60..afc7daa6ee7d 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -218,14 +218,15 @@ bool ring_buffer_time_stamp_abs(struct trace_buffer *buffer);
+ size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu);
+ 
+ struct buffer_data_read_page;
+-struct buffer_data_read_page *
+-ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu);
++int ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu,
++				struct buffer_data_read_page **rpage);
+ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
+ 				struct buffer_data_read_page *page);
+ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 			  struct buffer_data_read_page *data_page,
+ 			  size_t len, int cpu, int full);
+ void *ring_buffer_read_page_data(struct buffer_data_read_page *page);
++unsigned int ring_buffer_read_page_size(struct buffer_data_read_page *rpage);
+ 
+ struct trace_seq;
+ 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index ec13779922ff..ec127e2ad052 100644
+index 5fc009edc1ec..ec13779922ff 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -1669,7 +1669,7 @@ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
-  * This is used to help find the next per cpu subbuffer within a mapped range.
+@@ -6990,56 +6990,78 @@ EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
+  * ring_buffer_alloc_read_page - allocate a page to read from buffer
+  * @buffer: the buffer to allocate for.
+  * @cpu: the cpu buffer to allocate.
++ * @rpage: pointer to pass in an already allocated page (can be NULL)
++ *         and returns the allocated page.
+  *
+- * This function is used in conjunction with ring_buffer_read_page.
++ * This function is used in conjunction with ring_buffer_read_page().
+  * When reading a full page from the ring buffer, these functions
+  * can be used to speed up the process. The calling function should
+  * allocate a few pages first with this function. Then when it
+  * needs to get pages from the ring buffer, it passes the result
+- * of this function into ring_buffer_read_page, which will swap
++ * of this function into ring_buffer_read_page(), which will swap
+  * the page that was allocated, with the read page of the buffer.
+  *
++ * If @rpage is provided, and it has a different order than the current
++ * subbuffer order, its payload will be freed and re-allocated. If it
++ * already matches the order, it is simply returned.
++ *
+  * Returns:
+- *  The page allocated, or ERR_PTR
++ *  0 on success, < 0 on error
   */
- static unsigned long
--rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
-+rb_range_align_subbuf(unsigned long addr, unsigned int subbuf_size, unsigned long nr_subbufs)
+-struct buffer_data_read_page *
+-ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
++int ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu,
++				struct buffer_data_read_page **rpage)
  {
- 	addr += sizeof(struct ring_buffer_cpu_meta) +
- 		sizeof(int) * nr_subbufs;
-@@ -1679,13 +1679,12 @@ rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
- /*
-  * Return the ring_buffer_meta for a given @cpu.
-  */
--static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
-+static void *rb_range_meta(struct trace_buffer *buffer, unsigned long nr_pages, int cpu)
- {
--	int subbuf_size = rb_subbuf_size(buffer);
-+	unsigned int subbuf_size = rb_subbuf_size(buffer);
- 	struct ring_buffer_cpu_meta *meta;
- 	struct ring_buffer_meta *bmeta;
--	unsigned long ptr;
--	int nr_subbufs;
-+	unsigned long ptr, nr_subbufs;
- 
- 	bmeta = buffer->meta;
- 	if (!bmeta)
-@@ -1731,7 +1730,7 @@ static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
- /* Return the start of subbufs given the meta pointer */
- static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
- {
--	int subbuf_size = meta->subbuf_size;
-+	unsigned int subbuf_size = meta->subbuf_size;
- 	unsigned long ptr;
- 
- 	ptr = (unsigned long)meta;
-@@ -1746,8 +1745,8 @@ static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
- static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
- {
- 	struct ring_buffer_cpu_meta *meta;
-+	unsigned int subbuf_size;
- 	unsigned long ptr;
--	int subbuf_size;
- 
- 	meta = rb_range_meta(cpu_buffer->buffer, 0, cpu_buffer->cpu);
- 	if (!meta)
-@@ -1840,10 +1839,10 @@ static bool rb_meta_init(struct trace_buffer *buffer, int scratch_size)
-  * must be the same.
-  */
- static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
--			      struct trace_buffer *buffer, int nr_pages,
-+			      struct trace_buffer *buffer, unsigned long nr_pages,
- 			      unsigned long *subbuf_mask)
- {
--	int subbuf_size = PAGE_SIZE;
-+	unsigned int subbuf_size = PAGE_SIZE;
- 	unsigned long buffers_start;
- 	unsigned long buffers_end;
- 	int i;
-@@ -2231,7 +2230,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	}
- }
- 
--static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int scratch_size)
-+static void rb_range_meta_init(struct trace_buffer *buffer,
-+			       unsigned long nr_pages, int scratch_size)
- {
- 	struct ring_buffer_cpu_meta *meta;
- 	unsigned long *subbuf_mask;
-@@ -2417,7 +2417,7 @@ static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, unsigned int p
- }
- 
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
--		long nr_pages, struct list_head *pages)
-+			       unsigned long nr_pages, struct list_head *pages)
- {
- 	struct trace_buffer *buffer = cpu_buffer->buffer;
- 	struct ring_buffer_cpu_meta *meta = NULL;
-@@ -2545,7 +2545,7 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- }
- 
- static struct ring_buffer_per_cpu *
--rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
-+rb_allocate_cpu_buffer(struct trace_buffer *buffer, unsigned long nr_pages, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer __free(kfree) =
- 		alloc_cpu_buffer(cpu);
-@@ -2702,8 +2702,8 @@ static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
- 	struct ring_buffer_cpu_meta *meta;
- 	struct buffer_data_page *dpage;
- 	unsigned long entry_bytes = 0;
-+	unsigned int subbuf_size;
- 	unsigned long ptr;
--	int subbuf_size;
- 	int invalid = 0;
- 	int cpu;
- 	int i;
-@@ -2773,8 +2773,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 struct ring_buffer_remote *remote)
- {
- 	struct trace_buffer *buffer __free(kfree) = NULL;
--	long nr_pages;
--	int subbuf_size;
-+	unsigned int subbuf_size;
-+	unsigned long nr_pages;
- 	int bsize;
- 	int cpu;
- 	int ret;
-@@ -2837,6 +2837,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 		 */
- 		nr_pages = (size - sizeof(struct ring_buffer_cpu_meta)) /
- 			(subbuf_size + sizeof(int));
-+
-+		/* limited by ring_buffer_cpu_meta::nr_subbufs */
-+		if (nr_pages > U32_MAX - 1)
-+			goto fail_free_buffers;
- 		/* Need at least two pages plus the reader page */
- 		if (nr_pages < 3)
- 			goto fail_free_buffers;
-@@ -2869,6 +2873,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 		/* The writer is remote. This ring-buffer is read-only */
- 		atomic_inc(&buffer->record_disabled);
- 		nr_pages = desc->nr_page_va - 1;
-+
-+		/* limited by ring_buffer_desc::nr_page_va */
-+		if (nr_pages > U32_MAX - 1)
-+			goto fail_free_buffers;
- 		if (nr_pages < 2)
- 			goto fail_free_buffers;
- 	} else {
-@@ -7421,8 +7429,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
  	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct buffer_page *bpage, *tmp;
- 	unsigned int old_capacity;
-+	unsigned long nr_pages;
- 	int old_order;
--	int nr_pages;
- 	int psize;
- 	int err;
- 	int cpu;
-@@ -7604,7 +7612,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 				   struct buffer_page **subbuf_ids)
- {
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
--	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-+	unsigned long nr_subbufs = cpu_buffer->nr_pages + 1;
- 	struct buffer_page *first_subbuf, *subbuf;
- 	int cnt = 0;
- 	int id = 0;
-@@ -7834,6 +7842,10 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 	/* prevent another thread from changing buffer/sub-buffer sizes */
- 	guard(mutex)(&buffer->mutex);
+-	struct buffer_data_read_page *bpage = NULL;
+ 	unsigned long flags;
++	unsigned int order;
  
-+	/* limited by trace_buffer_meta::nr_subbufs */
-+	if (cpu_buffer->nr_pages > U32_MAX - 1)
-+		return -E2BIG;
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+-		return ERR_PTR(-ENODEV);
++		return -ENODEV;
+ 
+-	bpage = kzalloc_obj(*bpage);
+-	if (!bpage)
+-		return ERR_PTR(-ENOMEM);
++	if (!rpage)
++		return -EINVAL;
+ 
+-	bpage->order = buffer->subbuf_order;
++	order = buffer->subbuf_order;
 +
- 	err = rb_alloc_meta_page(cpu_buffer);
- 	if (err)
- 		return err;
++	if (*rpage) {
++		if ((*rpage)->order == order)
++			return 0;
++
++		/* We can reuse rpage, but we discard the payload */
++		free_pages((unsigned long)(*rpage)->data, (*rpage)->order);
++		(*rpage)->data = NULL;
++	} else {
++		*rpage = kzalloc_obj(**rpage);
++		if (!*rpage)
++			return -ENOMEM;
++	}
++
++	(*rpage)->order = order;
+ 	cpu_buffer = buffer->buffers[cpu];
++
+ 	local_irq_save(flags);
+ 	arch_spin_lock(&cpu_buffer->lock);
+ 
+ 	if (cpu_buffer->free_page.data) {
+-		*bpage = cpu_buffer->free_page;
++		**rpage = cpu_buffer->free_page;
+ 		cpu_buffer->free_page.data = NULL;
+ 	}
+ 
+ 	arch_spin_unlock(&cpu_buffer->lock);
+ 	local_irq_restore(flags);
+ 
+-	if (bpage->data) {
+-		rb_init_data_page(bpage->data);
++	if ((*rpage)->data) {
++		rb_init_data_page((*rpage)->data);
+ 	} else {
+-		bpage->data = alloc_cpu_data(cpu, bpage->order);
+-		if (!bpage->data) {
+-			kfree(bpage);
+-			return ERR_PTR(-ENOMEM);
++		(*rpage)->data = alloc_cpu_data(cpu, (*rpage)->order);
++		if (!(*rpage)->data) {
++			kfree(*rpage);
++			*rpage = NULL;
++			return -ENOMEM;
+ 		}
+ 	}
+ 
+-	return bpage;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
+ 
+@@ -7047,21 +7069,30 @@ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
+  * ring_buffer_free_read_page - free an allocated read page
+  * @buffer: the buffer the page was allocate for
+  * @cpu: the cpu buffer the page came from
+- * @data_page: the page to free
++ * @rpage: the buffer_dat_read_page to free
+  *
+  * Free a page allocated from ring_buffer_alloc_read_page.
+  */
+ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
+-				struct buffer_data_read_page *data_page)
++				struct buffer_data_read_page *rpage)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	struct buffer_data_page *dpage = data_page->data;
+-	struct page *page = virt_to_page(dpage);
++	struct buffer_data_page *dpage;
+ 	unsigned long flags;
++	struct page *page;
+ 
+ 	if (!buffer || !buffer->buffers || !buffer->buffers[cpu])
+ 		return;
+ 
++	if (!rpage)
++		return;
++
++	dpage = rpage->data;
++	if (!dpage)
++		goto out;
++
++	page = virt_to_page(dpage);
++
+ 	cpu_buffer = buffer->buffers[cpu];
+ 
+ 	/*
+@@ -7069,14 +7100,14 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
+ 	 * is different from the subbuffer order of the buffer -
+ 	 * we can't reuse it
+ 	 */
+-	if (page_ref_count(page) > 1 || data_page->order != buffer->subbuf_order)
++	if (page_ref_count(page) > 1 || rpage->order != buffer->subbuf_order)
+ 		goto out;
+ 
+ 	local_irq_save(flags);
+ 	arch_spin_lock(&cpu_buffer->lock);
+ 
+ 	if (!cpu_buffer->free_page.data) {
+-		cpu_buffer->free_page = *data_page;
++		cpu_buffer->free_page = *rpage;
+ 		dpage = NULL;
+ 	}
+ 
+@@ -7084,8 +7115,8 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
+ 	local_irq_restore(flags);
+ 
+  out:
+-	free_pages((unsigned long)dpage, data_page->order);
+-	kfree(data_page);
++	free_pages((unsigned long)dpage, rpage->order);
++	kfree(rpage);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_free_read_page);
+ 
+@@ -7122,6 +7153,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_free_read_page);
+  * Returns:
+  *  >=0 if data has been transferred, returns the offset of consumed data.
+  *  <0 if no data has been transferred.
++ *  -EAGAIN if the subbuf size has changed and @data_page must be reallocated.
+  */
+ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 			  struct buffer_data_read_page *data_page,
+@@ -7159,7 +7191,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+ 
+ 	if (data_page->order != cpu_buffer->reader_page->order)
+-		return -1;
++		return -EAGAIN;
+ 
+ 	reader = rb_get_reader_page(cpu_buffer);
+ 	if (!reader)
+@@ -7323,6 +7355,18 @@ void *ring_buffer_read_page_data(struct buffer_data_read_page *page)
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_read_page_data);
+ 
++/**
++ * ring_buffer_read_page_size - get size of the read page.
++ * @page:  the page to get the size from
++ *
++ * Returns size of the page in bytes.
++ */
++unsigned int ring_buffer_read_page_size(struct buffer_data_read_page *rpage)
++{
++	return PAGE_SIZE << rpage->order;
++}
++EXPORT_SYMBOL_GPL(ring_buffer_read_page_size);
++
+ /**
+  * ring_buffer_subbuf_size_get - get size of the sub buffer.
+  * @buffer: the buffer to get the sub buffer size from
+diff --git a/kernel/trace/ring_buffer_benchmark.c b/kernel/trace/ring_buffer_benchmark.c
+index 593e3b59e42e..c3d34c0e64e2 100644
+--- a/kernel/trace/ring_buffer_benchmark.c
++++ b/kernel/trace/ring_buffer_benchmark.c
+@@ -104,7 +104,7 @@ static enum event_status read_event(int cpu)
+ 
+ static enum event_status read_page(int cpu)
+ {
+-	struct buffer_data_read_page *bpage;
++	struct buffer_data_read_page *bpage = NULL;
+ 	struct ring_buffer_event *event;
+ 	struct rb_page *rpage;
+ 	unsigned long commit;
+@@ -114,8 +114,8 @@ static enum event_status read_page(int cpu)
+ 	int inc;
+ 	int i;
+ 
+-	bpage = ring_buffer_alloc_read_page(buffer, cpu);
+-	if (IS_ERR(bpage))
++	ret = ring_buffer_alloc_read_page(buffer, cpu, &bpage);
++	if (ret < 0)
+ 		return EVENT_DROPPED;
+ 
+ 	page_size = ring_buffer_subbuf_size_get(buffer);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 395238b2b715..355278083b3f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7080,8 +7080,8 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
+ {
+ 	struct ftrace_buffer_info *info = filp->private_data;
+ 	struct trace_iterator *iter = &info->iter;
++	unsigned int spare_size;
+ 	void *trace_data;
+-	int page_size;
+ 	ssize_t ret = 0;
+ 	ssize_t size;
+ 
+@@ -7091,36 +7091,21 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 	if (iter->snapshot && tracer_uses_snapshot(iter->tr->current_trace))
+ 		return -EBUSY;
+ 
+-	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
+-
+-	/* Make sure the spare matches the current sub buffer size */
+-	if (info->spare) {
+-		if (page_size != info->spare_size) {
+-			ring_buffer_free_read_page(iter->array_buffer->buffer,
+-						   info->spare_cpu, info->spare);
+-			info->spare = NULL;
+-		}
+-	}
+-
+-	if (!info->spare) {
+-		info->spare = ring_buffer_alloc_read_page(iter->array_buffer->buffer,
+-							  iter->cpu_file);
+-		if (IS_ERR(info->spare)) {
+-			ret = PTR_ERR(info->spare);
+-			info->spare = NULL;
+-		} else {
+-			info->spare_cpu = iter->cpu_file;
+-			info->spare_size = page_size;
+-		}
+-	}
+-	if (!info->spare)
+-		return ret;
+-
++again:
+ 	/* Do we have previous read data to read? */
+-	if (info->read < page_size)
++	if (info->spare && (info->read < ring_buffer_read_page_size(info->spare)))
+ 		goto read;
+ 
+- again:
++	/* Make sure the read page order is aligned with the current buffer subbuf order */
++	ret = ring_buffer_alloc_read_page(iter->array_buffer->buffer, iter->cpu_file,
++					  &info->spare);
++	if (ret < 0)
++		return ret;
++
++	spare_size = ring_buffer_read_page_size(info->spare);
++	info->read = spare_size;
++	info->spare_cpu = iter->cpu_file;
++
+ 	trace_access_lock(iter->cpu_file);
+ 	ret = ring_buffer_read_page(iter->array_buffer->buffer,
+ 				    info->spare,
+@@ -7128,7 +7113,9 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 				    iter->cpu_file, 0);
+ 	trace_access_unlock(iter->cpu_file);
+ 
+-	if (ret < 0) {
++	if (ret == -EAGAIN) {
++		goto again;
++	} else if (ret < 0) {
+ 		if (trace_empty(iter) && !iter->closed) {
+ 			if (update_last_data_if_empty(iter->tr))
+ 				return 0;
+@@ -7146,8 +7133,9 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 	}
+ 
+ 	info->read = 0;
++
+  read:
+-	size = page_size - info->read;
++	size = spare_size - info->read;
+ 	if (size > count)
+ 		size = count;
+ 	trace_data = ring_buffer_read_page_data(info->spare);
+@@ -7197,17 +7185,17 @@ int tracing_buffers_release(struct inode *inode, struct file *file)
+ }
+ 
+ struct buffer_ref {
+-	struct trace_buffer	*buffer;
+-	void			*page;
+-	int			cpu;
+-	refcount_t		refcount;
++	struct trace_buffer		*buffer;
++	struct buffer_data_read_page	*rpage;
++	int				cpu;
++	refcount_t			refcount;
+ };
+ 
+ static void buffer_ref_release(struct buffer_ref *ref)
+ {
+ 	if (!refcount_dec_and_test(&ref->refcount))
+ 		return;
+-	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
++	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->rpage);
+ 	kfree(ref);
+ }
+ 
+@@ -7268,23 +7256,12 @@ ssize_t tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 	};
+ 	struct buffer_ref *ref;
+ 	bool woken = false;
+-	int page_size;
+ 	int entries, i;
+ 	ssize_t ret = 0;
+ 
+ 	if (iter->snapshot && tracer_uses_snapshot(iter->tr->current_trace))
+ 		return -EBUSY;
+ 
+-	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
+-	if (*ppos & (page_size - 1))
+-		return -EINVAL;
+-
+-	if (len & (page_size - 1)) {
+-		if (len < page_size)
+-			return -EINVAL;
+-		len &= (~(page_size - 1));
+-	}
+-
+ 	if (splice_grow_spd(pipe, &spd))
+ 		return -ENOMEM;
+ 
+@@ -7292,7 +7269,8 @@ ssize_t tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 	trace_access_lock(iter->cpu_file);
+ 	entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
+ 
+-	for (i = 0; i < spd.nr_pages_max && len && entries; i++, len -= page_size) {
++	for (i = 0; i < spd.nr_pages_max && len && entries; i++) {
++		unsigned int page_size;
+ 		struct page *page;
+ 		int r;
+ 
+@@ -7304,25 +7282,38 @@ ssize_t tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 
+ 		refcount_set(&ref->refcount, 1);
+ 		ref->buffer = iter->array_buffer->buffer;
+-		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
+-		if (IS_ERR(ref->page)) {
+-			ret = PTR_ERR(ref->page);
+-			ref->page = NULL;
++
++new_read_page:
++		ret = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file, &ref->rpage);
++		if (ret < 0) {
+ 			kfree(ref);
+ 			break;
+ 		}
+ 		ref->cpu = iter->cpu_file;
+ 
+-		r = ring_buffer_read_page(ref->buffer, ref->page,
+-					  len, iter->cpu_file, 1);
++		page_size = ring_buffer_read_page_size(ref->rpage);
++
++		r = -EINVAL;
++		if (IS_ALIGNED(*ppos, page_size) && len >= page_size) {
++			r = ring_buffer_read_page(ref->buffer, ref->rpage, len, iter->cpu_file, 1);
++			if (r == -EAGAIN)
++				goto new_read_page;
++		} else if (!i) {
++			/*
++			 * If the first iteration fails this is an invalid userspace input.
++			 * Otherwise, this is because the subbuf order has been modified. Do not
++			 * report an error and finish the read.
++			 */
++			ret = -EINVAL;
++		}
++
+ 		if (r < 0) {
+-			ring_buffer_free_read_page(ref->buffer, ref->cpu,
+-						   ref->page);
++			ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->rpage);
+ 			kfree(ref);
+ 			break;
+ 		}
+ 
+-		page = virt_to_page(ring_buffer_read_page_data(ref->page));
++		page = virt_to_page(ring_buffer_read_page_data(ref->rpage));
+ 
+ 		spd.pages[i] = page;
+ 		spd.partial[i].len = page_size;
+@@ -7330,6 +7321,7 @@ ssize_t tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 		spd.partial[i].private = (unsigned long)ref;
+ 		spd.nr_pages++;
+ 		*ppos += page_size;
++		len -= page_size;
+ 
+ 		entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
+ 	}
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index bf77331f56a4..cbf54eded447 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -745,11 +745,10 @@ static inline int tracing_get_cpu(struct inode *inode)
+ void tracing_reset_cpu(struct array_buffer *buf, int cpu);
+ 
+ struct ftrace_buffer_info {
+-	struct trace_iterator	iter;
+-	void			*spare;
+-	unsigned int		spare_cpu;
+-	unsigned int		spare_size;
+-	unsigned int		read;
++	struct trace_iterator		iter;
++	struct buffer_data_read_page	*spare;
++	unsigned int			spare_cpu;
++	unsigned int			read;
+ };
+ 
+ /**
 -- 
 2.55.0.691.gc56d675ccc-goog
 
