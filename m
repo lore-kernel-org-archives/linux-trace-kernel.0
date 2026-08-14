@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865F8346A04;
-	Fri, 14 Aug 2026 05:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD3D355819;
+	Fri, 14 Aug 2026 05:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786684717; cv=none; b=omiDrswumaSrjXLBoPBlQKC1QQyFg9LFdHv9DxmfjneJwHH8Pt/SLpFWV/hpDW2phLDa/oFgT7fRKorrg5wKTszsT5ItHEIvzVqx3EB1+i3LNBmLdMjlVhwTYaBZIrAzKid3KW+APknNK5K3QPmNXwJl8G5O56xBud1R87ZPA8c=
+	t=1786687095; cv=none; b=pssd0pjfm4ULOXFyuSv5T43h+BaMS129UoAjvxuS2Ek43Bo3IqJg2njrSpfbZDo4z2KhJxsx6byD6GHqfIoX40LZpDNndFiwQFg4IOi5QK/SClzze3ptIsxHteNK6kt5zJW+WS68XRS8OkOFxQjQpIRGXO0A8QDjSoyx/HoREnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786684717; c=relaxed/simple;
-	bh=+MUxfRWOkqREAuoekA780+CfxxKTEqlm5E/NKiwihFE=;
+	s=arc-20240116; t=1786687095; c=relaxed/simple;
+	bh=QC5S96Wlg2aYg9zmHkHBo/+oJKFdCtwv78fz5ZqTCcY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EqP04Dc8rKKALwPXMed/HPrSR7MmaRdN86c/QccuQzeEm1MUCYdh2vxkSvmP4mq2PxKAyUGIxW/q2oifs1teLhlEp2Hjwtf/ENHoeuD+T9JxA67e9cuJSoA7AcEEbP3bc0Nn8oXkp+LNXf4DCXRk09M4zbrEHGRKJ8f8tV/cXKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1kHph+z; arc=none smtp.client-ip=198.175.65.16
+	 In-Reply-To:Content-Type; b=Kc/M5KtXHgjRGmN5++aEtEjBsHeY6B1OXZDgl52n5T+gQRMs0tr8ZGG+CU6ba7C4Y4uEk7JzJW1+VuF91HZ1jHkSfDupdEPilXtB6aVfZ4EG/SkQUElsy5U05dTL8zR09hD6SdLjIfSN0IX6YI2vNAwp0n2pOn8rRUZD0VTzU70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Enqwr2mb; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1kHph+z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Enqwr2mb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786684715; x=1818220715;
+  t=1786687093; x=1818223093;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+MUxfRWOkqREAuoekA780+CfxxKTEqlm5E/NKiwihFE=;
-  b=P1kHph+zrCFpTLxg8CIkAkdkjhiuKSHXRCYAK7lTE1/8HU0mB3OVubg1
-   2BAytgo0YmAoX+4n5xlaij/qwnDx4IryD0Ek9UF0G6KWfHYT+H8IjLDPH
-   FKjUzluaZ5kbA9cMujrKMwoZQ2P/yv8t7Y+28wvFaYI+VwOIPX5GZxkwI
-   gW4+53d/MqJCRuTXV4B7yjUGbFvhDXz3rRoiLYoPtmuse4JjeTqRzRoOG
-   4mOGkwwf0/SD65ZExxbTNOr2+q9UtUlXrdxHPLg9VpxJWXWp8iIRv6Aof
-   /cSEp+j909mfj7JlnI7TIUJDAKbK8BRMn4mir1HlY4+BLfs21mAUs1W5I
-   w==;
-X-CSE-ConnectionGUID: Z3Veuck/TZeR6EpD4DSAaw==
-X-CSE-MsgGUID: 5M++MCpnSomnIdFo8yQZsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="87481113"
+  bh=QC5S96Wlg2aYg9zmHkHBo/+oJKFdCtwv78fz5ZqTCcY=;
+  b=Enqwr2mb+vwBnJVgQ1LZlMqBXuJrqRMDp4UjsMCmfGT1q6Nn9U/+QzdN
+   EMrn2ABiS7Ky2W3aXUnOghAL4W3Abykx98zTBzsU0dcts2W5of6F5LOG9
+   wylASDkjULYU/YTLTRk4XqZzMtVuIpBvyGshQ4ILYpuQ7t8Bhs1+VCuIC
+   4rBVxST3Xjc+F2x2DplMpMBabVuU+QA33EEjgeWIoJpv56ccfdtVi7OYF
+   DRonHhLoV0eEWsINh2Hur6ZO9oGyh5XsYSgtXfpj5OnKYJCCQS3v19IbM
+   FY6BdD2G68TVKl4h74AUiO0IGe0fizKodGwb4i9ipLscdXNF1Q5Ax+H3w
+   Q==;
+X-CSE-ConnectionGUID: 3kFp1zt0RNWpkeU/gpF5Zg==
+X-CSE-MsgGUID: pWqUt+P3R9KUsHZjupKW3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="110053713"
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="87481113"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 22:18:34 -0700
-X-CSE-ConnectionGUID: IN/b0L//SVCz/TGsloL3PQ==
-X-CSE-MsgGUID: VWlRvfb+T1OqDKsfu60fhQ==
+   d="scan'208";a="110053713"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 22:58:11 -0700
+X-CSE-ConnectionGUID: cUW8aUaXR5u17W+d+k7SFQ==
+X-CSE-MsgGUID: D9N+GuVcQ1SFu1yh9D48qw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="266117899"
+   d="scan'208";a="257921021"
 Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.245.162]) ([10.124.245.162])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 22:18:20 -0700
-Message-ID: <645af2bd-2791-473a-9441-40db01f58913@linux.intel.com>
-Date: Fri, 14 Aug 2026 13:18:17 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 22:57:57 -0700
+Message-ID: <36baf0ec-0b7c-4ffd-9a1e-dfe9617e057d@linux.intel.com>
+Date: Fri, 14 Aug 2026 13:57:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,7 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 16/41] KVM: guest_memfd: Zero page while getting pfn
+Subject: Re: [PATCH v10 18/41] KVM: TDX: Make source page optional for
+ KVM_TDX_INIT_MEM_REGION
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
@@ -83,91 +84,96 @@ Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org,
  Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-coco@lists.linux.dev,
- Xiaoyao Li <xiaoyao.li@intel.com>
+ linux-mm@kvack.org, linux-coco@lists.linux.dev
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-16-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-18-2fc18ee6d3ba@google.com>
 Content-Language: en-US
 From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-16-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-18-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
 > From: Ackerley Tng <ackerleytng@google.com>
 > 
-> Move the folio initialization logic from kvm_gmem_get_pfn() into
-> __kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-> kvm_gmem_populate().
+> Update tdx_gmem_post_populate() to handle cases where userspace requests
+> "no source page". To handle "no source page", populate (perform
+> TDH.MEM.PAGE.ADD) using memory in-place at the target PFN.
 > 
-> With in-place conversion, the existing data in a guest_memfd page can be
-> populated into guest memory through platform-specific ioctls.
+> Allow "no source page" only when gmem_in_place_conversion is enabled,
+> because retroactively adding support for out-of-place conversion would mean
+> requiring a userspace update for a feature that's being deprecated.
 > 
-> Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-> might contain uninitialized host memory, which would leak to the guest if
-> the populate completes.
+> Also, KVM supporting "no source page" without in-place conversion would
+> effectively be an obscure zero-page optimization that relies on the page
+> being zeroed when it is allocated by guest_memfd.
 > 
-> guest_memfd pages are zeroed at most once in the page's entire lifetime
-> with guest_memfd, and that is tracked using the uptodate flag.
+> Rejecting "no source page" without in-place conversion scenario is valuable
+> for KVM developers since it helps newcomers understand what exactly is and
+> isn't possible.
 > 
-> Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-> kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-> can get a page, write to the page and then set page uptodate without
-> zeroing.
-> 
-> This aligns with the concept of zeroing before first use - the other place
-> where zeroing happens is in kvm_gmem_fault_user_mapping().
-> 
-> Don't mark the page uptodate again after populating, since the page would
-> already be marked uptodate before the post_populate() call.
-> 
-> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+Nit:
+Is Sean's SoB intentional here?
+
 > Tested-by: Shivank Garg <shivankg@amd.com>
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Reviewed-by:Binbin Wu <binbin.wu@linux.intel.com>
 
 > ---
->  virt/kvm/guest_memfd.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+>  Documentation/virt/kvm/x86/intel-tdx.rst | 4 ++++
+>  arch/x86/kvm/vmx/tdx.c                   | 8 +++++---
+>  2 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 030af0855f8b0..41950c8105b5d 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -1079,6 +1079,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
->  		return ERR_PTR(-EHWPOISON);
->  	}
+> diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
+> index 6a222e9d09541..d8d9409120e61 100644
+> --- a/Documentation/virt/kvm/x86/intel-tdx.rst
+> +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
+> @@ -158,6 +158,10 @@ KVM_TDX_INIT_MEM_REGION
+>  Initialize @nr_pages TDX guest private memory starting from @gpa with userspace
+>  provided data from @source_addr. @source_addr must be PAGE_SIZE-aligned.
 >  
-> +	if (!folio_test_uptodate(folio)) {
-> +		clear_highpage(folio_page(folio, 0));
-> +		folio_mark_uptodate(folio);
-> +	}
+> +If guest_memfd in-place conversion is enabled, pass 0 for @source_addr
+> +to represent "no source page". A source page is required if in-place
+> +conversion is not enabled or not supported.
 > +
->  	*pfn = folio_file_pfn(folio, index);
->  	if (max_order)
->  		*max_order = 0;
-> @@ -1108,11 +1113,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->  		goto out;
->  	}
+>  Note, before calling this sub command, memory attribute of the range
+>  [gpa, gpa + nr_pages] needs to be private.  Userspace can use
+>  KVM_SET_MEMORY_ATTRIBUTES to set the attribute.
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index b272c20586a74..7654a9f5fa128 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -3189,7 +3189,7 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+>  	if (KVM_BUG_ON(kvm_tdx->page_add_src, kvm))
+>  		return -EIO;
 >  
-> -	if (!folio_test_uptodate(folio)) {
-> -		clear_highpage(folio_page(folio, 0));
-> -		folio_mark_uptodate(folio);
-> -	}
-> -
->  #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
->  	if (kvm_gmem_is_private_mem(file_inode(file), index))
->  		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
-> @@ -1159,8 +1159,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
->  	}
+> -	kvm_tdx->page_add_src = src_page;
+> +	kvm_tdx->page_add_src = src_page ?: pfn_to_page(pfn);
+>  	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
+>  	kvm_tdx->page_add_src = NULL;
 >  
->  	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
-> -	if (!ret)
-> -		folio_mark_uptodate(folio);
+> @@ -3235,7 +3235,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+>  	if (copy_from_user(&region, u64_to_user_ptr(cmd->data), sizeof(region)))
+>  		return -EFAULT;
 >  
->  out_put_folio:
->  	folio_put(folio);
+> -	if (!PAGE_ALIGNED(region.source_addr) || !region.source_addr ||
+> +	if (!PAGE_ALIGNED(region.source_addr) ||
+> +	    (!gmem_in_place_conversion && !region.source_addr) ||
+>  	    !PAGE_ALIGNED(region.gpa) || !region.nr_pages ||
+>  	    region.gpa + (region.nr_pages << PAGE_SHIFT) <= region.gpa ||
+>  	    !vt_is_tdx_private_gpa(kvm, region.gpa) ||
+> @@ -3266,7 +3267,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+>  			break;
+>  		}
+>  
+> -		region.source_addr += PAGE_SIZE;
+> +		if (region.source_addr)
+> +			region.source_addr += PAGE_SIZE;
+>  		region.gpa += PAGE_SIZE;
+>  		region.nr_pages--;
+>  
 > 
 
