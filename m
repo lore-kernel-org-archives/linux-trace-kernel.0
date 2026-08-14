@@ -1,77 +1,91 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11A5430782
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 08:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38583422541;
+	Fri, 14 Aug 2026 08:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786694620; cv=none; b=iTT4Hv8bVJot7N0wHs4u+ADwHM42HTr6XbZkvtsrBisHiI47Gete8ZS7cuvLZbjLraq7cYshQP7xq6nT6jqNnbMvgZvmu8Wf3OlGfCYsvcjUfAOPJsTjqLLoZ6Q43Goisjill5mkbL53o2QnGaFpyZbwiCX/tXtbybWfyUxEhSg=
+	t=1786694643; cv=none; b=BQ0S5ihz21yUblWTH0YXKPTWieYUkHdLdiifqviT2FwQvuMRGZX7lg+JU2AQ/cueSSXBkpsvGd6TBznsgJNAh7tye3x96iC4zNI4DbBoZ5CyHl9W6MxsGvlleDyL8yskqaELgNKY2YABHNvRFwfORCA3hXk5COR31/x/ReIAXao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786694620; c=relaxed/simple;
-	bh=HZPcZn6KVzUbjUq4/fHah+/C47ftJLRPnev0e4deQd4=;
+	s=arc-20240116; t=1786694643; c=relaxed/simple;
+	bh=f/gV5vYFiyp1v8tbidEy1y5VhvcAHpOxhT/ORtc2H+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K1qxDUCjFj7GITm+5XiJarwmSK8/moPZpa7E5dtYW8OE3tPvEN/79Xz4440Ocp97Pg26OoWvB5msTiES/sxdPXLATvyXg8hrs0+Fmngdboyuo0w99L67O2SvpJvbn+W0JemsVDvz19N9BUK9OZyNNdRgodwLZGwi6rXb4WlNwpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JaZK+RSv; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lycpGs0g0Ov0mzjT/Wr4RR54VZUT8/4YT2+BTgq0X73NgWBVfzd8rkmyYRflOwtbfvbCXChqtgIVQcSo5M/wCkBipLugszSbpE/KfR7bs5+q8YrjqJcQdLBYmxrb45rkGF0JAFbZGxUute3vw0TDdOO7C12xoy69PmZl4T06VuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cTcNcRrX; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JaZK+RSv"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-69c600f76ccso1054518a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 01:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786694617; x=1787299417; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Qfga6kTEgNRkec+hK5oUCTaxG2BZlPVkrA02S50FL+E=;
-        b=JaZK+RSvHZMRSUyHdCrn9l7vODLtg3hDkDGWzBHRDWinhyfaZvUVcZES5fClVYKY/5
-         Qosrj8AypMedXyKb2suNwdJQ5+RG/pfnIE2gwnKRjeeh20gDr/CvkUWzAVBvAHFU1LAt
-         GKSek359Mf8lcHfedL1cvzblK8d7dwi+2VT4VGbDvSFcWfDqVKbbuYwoi9aJYuHwS9eL
-         Pl0+wXGBAIwCzlgAkrPfw6hWZiI0ZqifLBc9LGeHPjPBn2W3g971vzgJuUg91i43F2Iv
-         fM1vfZQ5MN1MgmdtsxyYooAjzXHjO04j5S3EGUV14cJdPRkUB1oDZtBDKU86FmyD/0v8
-         C6Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786694617; x=1787299417;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Qfga6kTEgNRkec+hK5oUCTaxG2BZlPVkrA02S50FL+E=;
-        b=qABE9H6CGApVrizNU4xkuIYURebPm4R+mpxkHdKOQpLtzIrRjU/3/53+R9JW7y1Z5h
-         OEpXFqO4oFLS5nYvRGqnWdNlItITowKS5KkDZDXsO9BSqsXYyRRMcXGbCyspYzEz/Ydk
-         a5zTCeuc4pp9Eu7pHLJ+a7RLum7/aiOJk6b8Y22fPxFGXYIXhwjWxpOTgGDXXbksZ+ce
-         dImUdSILJly/ZZkadUCHJVlPALj0gm2R5AP4qxhPybTB19ga9LtdeQGY81vENX+jE7Yd
-         I3RMQBHjc/NmhRXmCSUbuWHEjbW+pzJJSgH+Ix+wSlVU/1tVA62u4VhFTiCnU8OicuFc
-         SoLQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoRVLcnJUMQsnvkzFR8UE88DND0ARClyuF6/P1TG1vVqWhKuNBgy/mnjmh8r8rC+a8ycQa47dCT5LTuh6KimTXSnCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytbi55R3zlHwXNeNhAQoMSLH62bHNHQk2FOQyfBHxHmtHbgLjR
-	92ArevbohECaN7YNm48513u6DPfNkGWHWyMKQqnYaQ0YlFN1l3gS7WQ1Etzm5mRtkQ==
-X-Gm-Gg: AR+sD11xR6DJeqEJMkWFA/iEd7ASEHXQW1ZEHkYWnoyLODpnRt/hxd/RKtsYAISWpLZ
-	ZQipqB2GwUVRirF1JHm9DH/Kt+d8XOd/iDNrZCXoERADUqaSMN4jZ2/HreF2kOX6iCfY4r8jaMY
-	EJiMNEHZP/tposoE+K93EUGPgTEI2RRJJNtX9qS3qXVXmaTXvVK1ABLOfW707pX0J1s2dN5fE20
-	vKjoFOPAHC2GX7fL7e9XbDQxX02z8TlcVugu5oZBlg/e1cRuDoWgrbo/GiS4i4eIKY1QvxILVCT
-	I0A2hjf0W/j1Mwp/3RiUSATU+TiBOtK3UJ8uy2fLwZ1/HnhE8+rdT5XfFeQtaW0QGe7dBGIRWBB
-	oUGKO1EoI1cdLLmJxk8Ap/lTOlMmWpERQfekQlKtJeCEe58ITb0ZY0KMZRp7Xdls/deHbaOi/80
-	Ym+P1Q0eHCR3zuiWZPs+S6kIJ2IqOCDuQWHdrpWGm+MKGrp5sROXY0Y412Ai02E8VR71tGX5M6d
-	sYpoayOKp5GyK+Gl193DLxMbxQZo4AL
-X-Received: by 2002:a17:907:d08:b0:c12:9b98:209e with SMTP id a640c23a62f3a-c212a2d8028mr127457966b.23.1786694579960;
-        Fri, 14 Aug 2026 01:02:59 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2b1d9bsm6154877f8f.24.2026.08.14.01.02.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2026 01:02:59 -0700 (PDT)
-Date: Fri, 14 Aug 2026 09:02:55 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 06/10] tracing: Fix subbuf resize races with
- trace_pipe_raw readers
-Message-ID: <an7Lr4wMOwg_-vgX@google.com>
-References: <20260813131152.3589632-1-vdonnefort@google.com>
- <20260813131152.3589632-7-vdonnefort@google.com>
- <20260813213153.4ac1e1ff@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cTcNcRrX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786694641; x=1818230641;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=f/gV5vYFiyp1v8tbidEy1y5VhvcAHpOxhT/ORtc2H+I=;
+  b=cTcNcRrXUbQ9hOi3YD1CGV5POETSr5xaawdLedvsK1MBoXJuY+Xv3tqe
+   yRWxZxT+oIsr+30AdUnALEY6laweC0txgxIzFG3gR5inbLpPlRuNZrz0Z
+   kb7ktZFRDDOyMFxJb+kAUbnIAQhvflQJdpwpxOjfbVW2lm8LiUKqQgJTl
+   Edc/yQEkNxv62K2zWyXOT2XBLVYQ00U3sk7EFwMPliMt7+Gxe0WupN48Z
+   ue3+25FpHTP33agne25DEbistskhO6AgDANqUjLcjZ7gKKdc6nvmxg6FR
+   7Hm0sl7Lt0qvN25indkNcISB08HVIi7cl/MfU8iECtuAceG7hBH8USGU9
+   w==;
+X-CSE-ConnectionGUID: N599WOnbSO6vNyAyoCQ5bQ==
+X-CSE-MsgGUID: 2SiWvGjZT5mGLRxlkbDgdg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="112817475"
+X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
+   d="scan'208";a="112817475"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2026 01:04:00 -0700
+X-CSE-ConnectionGUID: uZWHJQ8jQdKFP7Q1mWiRNg==
+X-CSE-MsgGUID: 8lhQsporQJ2V5PiZN1hVjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
+   d="scan'208";a="262411537"
+Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.134])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2026 01:03:51 -0700
+Date: Fri, 14 Aug 2026 11:03:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Frank.Li@oss.nxp.com
+Cc: Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Kelvin Cao <kelvin.cao@microchip.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH 1/2] dmaengine: use dma_chan_name() helper to get
+ per-channel device name
+Message-ID: <an7L5D_9aGMkLiEw@ashevche-desk.local>
+References: <20260812-dma-chan_dev-rename-v1-0-a67131f7d5c2@nxp.com>
+ <20260812-dma-chan_dev-rename-v1-1-a67131f7d5c2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,193 +94,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260813213153.4ac1e1ff@gandalf.local.home>
+In-Reply-To: <20260812-dma-chan_dev-rename-v1-1-a67131f7d5c2@nxp.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Aug 13, 2026 at 09:31:53PM -0400, Steven Rostedt wrote:
-> On Thu, 13 Aug 2026 14:11:48 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index a00ab8a9cbd0..83292d90599e 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -6976,34 +6976,52 @@ EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
-> >   * ring_buffer_alloc_read_page - allocate a page to read from buffer
-> >   * @buffer: the buffer to allocate for.
-> >   * @cpu: the cpu buffer to allocate.
-> > + * @prev: The previous page to be repurposed (can be NULL).
-> >   *
-> > - * This function is used in conjunction with ring_buffer_read_page.
-> > + * This function is used in conjunction with ring_buffer_read_page().
-> >   * When reading a full page from the ring buffer, these functions
-> >   * can be used to speed up the process. The calling function should
-> >   * allocate a few pages first with this function. Then when it
-> >   * needs to get pages from the ring buffer, it passes the result
-> > - * of this function into ring_buffer_read_page, which will swap
-> > + * of this function into ring_buffer_read_page(), which will swap
-> >   * the page that was allocated, with the read page of the buffer.
-> >   *
-> > + * If @prev is provided, and it has a different order than the current
-> > + * subbuffer order, its payload will be freed and re-allocated. If it
-> > + * already matches the order, it is simply returned.
-> > + *
-> >   * Returns:
-> >   *  The page allocated, or ERR_PTR
-> >   */
-> > -struct buffer_data_read_page *
-> > -ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
-> > +struct buffer_data_read_page *ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu,
-> > +							  struct buffer_data_read_page *prev)
-> 
-> I think we should do this differently. I don't like the "prev" argument.
-> Instead, let's pass by address.
-> 
-> int ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu, struct buffer_data_read_page **rpage)
-> 
->
+On Wed, Aug 12, 2026 at 05:24:08PM -0400, Frank.Li@oss.nxp.com wrote:
 
-ack.
+> Use the existing dma_chan_name() helper to obtain the per-channel device
+> name instead of open-coding: dev_name(chan->dev->device) /
+> dev_name(chan2dev())
+> 
+> Simplify the code and improve consistency.
+> 
+> No functional change intended.
 
-> 
-> 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 395238b2b715..f9399f391ac6 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -7080,8 +7080,8 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
-> >  {
-> >  	struct ftrace_buffer_info *info = filp->private_data;
-> >  	struct trace_iterator *iter = &info->iter;
-> > -	void *trace_data;
-> > -	int page_size;
-> > +	void *trace_data, *prev_spare;
-> > +	unsigned int spare_size;
-> >  	ssize_t ret = 0;
-> >  	ssize_t size;
-> >  
-> > @@ -7091,36 +7091,30 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
-> >  	if (iter->snapshot && tracer_uses_snapshot(iter->tr->current_trace))
-> >  		return -EBUSY;
-> >  
-> > -	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
-> > +again:
-> 
-> 
-> > +	prev_spare = info->spare;
-> > +	if (prev_spare) {
-> > +		spare_size = ring_buffer_read_page_size(info->spare);
-> >  
-> > -	/* Make sure the spare matches the current sub buffer size */
-> > -	if (info->spare) {
-> > -		if (page_size != info->spare_size) {
-> > -			ring_buffer_free_read_page(iter->array_buffer->buffer,
-> > -						   info->spare_cpu, info->spare);
-> > -			info->spare = NULL;
-> > -		}
-> > +		/* Do we have previous read data to read? */
-> > +		if (info->read < spare_size)
-> > +			goto read;
-> >  	}
-> >  
-> > -	if (!info->spare) {
-> > -		info->spare = ring_buffer_alloc_read_page(iter->array_buffer->buffer,
-> > -							  iter->cpu_file);
-> > -		if (IS_ERR(info->spare)) {
-> > -			ret = PTR_ERR(info->spare);
-> > -			info->spare = NULL;
-> > -		} else {
-> > -			info->spare_cpu = iter->cpu_file;
-> > -			info->spare_size = page_size;
-> > -		}
-> > -	}
-> > -	if (!info->spare)
-> > +	/* Make sure the read page order is aligned with the current buffer subbuf order */
-> > +	info->spare = ring_buffer_alloc_read_page(iter->array_buffer->buffer, iter->cpu_file,
-> > +						  prev_spare);
-> > +	if (IS_ERR(info->spare)) {
-> > +		ret = PTR_ERR(info->spare);
-> > +		info->spare = NULL;
-> > +		ring_buffer_free_read_page(iter->array_buffer->buffer, info->spare_cpu, prev_spare);
-> >  		return ret;
-> > +	}
-> 
-> 
-> instead of the above:
-> 
-> 	ret = ring_buffer_alloc_read_page(iter->array_buffer->buffer, iter->cpu_file,
-> 					  &info->space);
-> 
-> Where the above could do (under lock):
-> 
-> 	if (*rpage) {
-> 		if (*rpage)->order == buffer->subbuf_order)
-> 			return 0;
-> 		ring_buffer_free_read_page(*rpage);
-> 		*rpage = NULL;
-> 	}
-> 
-> 	*rpage = all the reader page;
-> 
-> That is, lets completely remove the responsibility of the user having to
-> keep track of the buffer order here.
-> 
-> >  
-> > -	/* Do we have previous read data to read? */
-> > -	if (info->read < page_size)
-> > -		goto read;
-> > +	spare_size = ring_buffer_read_page_size(info->spare);
-> > +	info->read = spare_size;
-> > +	info->spare_cpu = iter->cpu_file;
-> >  
-> > - again:
-> >  	trace_access_lock(iter->cpu_file);
-> >  	ret = ring_buffer_read_page(iter->array_buffer->buffer,
-> >  				    info->spare,
-> 
-> And if we could make ring_buffer_read_page() return -EAGAIN if the spare is
-> not the proper order. And only for that case.
+...
 
-Sounds good.
+>  		ret = devm_request_irq(dev, lchan->irq, loongson2_cmc_dma_chan_irq, IRQF_SHARED,
+> -				       dev_name(chan2dev(lchan)), lchan);
+> +				       dma_chan_name(&lchan->vchan.chan), lchan);
+
+Depending on the amount of users (and I expect there is a number), I would
+expect specific API for virt-dma case.
+
+>  		if (ret)
+>  			return ret;
 
 -- 
-Vincent
+With Best Regards,
+Andy Shevchenko
 
-> 
-> 
-> > @@ -7129,6 +7123,10 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
-> >  	trace_access_unlock(iter->cpu_file);
-> >  
-> >  	if (ret < 0) {
-> > +		/* Did we race with ring_buffer_subbuf_order_set ? */
-> > +		if (spare_size != ring_buffer_subbuf_size_get(iter->array_buffer->buffer))
-> > +			goto again;
-> 
-> Then here we can just have:
-> 
-> 		if (ret == -EAGAIN)
-> 			goto again;
-> 
-> -- Steve
-> 
-> 
-> > +
-> >  		if (trace_empty(iter) && !iter->closed) {
-> >  			if (update_last_data_if_empty(iter->tr))
-> >  				return 0;
-> > @@ -7142,12 +7140,14 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
-> >  
-> >  			goto again;
-> >  		}
-> > +
-> >  		return 0;
-> >  	}
-> >  
-> >  	info->read = 0;
-> > +
-> >   read:
-> > -	size = page_size - info->read;
-> > +	size = spare_size - info->read;
-> >  	if (size > count)
-> >  		size = count;
-> >  	trace_data = ring_buffer_read_page_data(info->spare);
 
