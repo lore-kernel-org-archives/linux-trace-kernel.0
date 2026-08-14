@@ -1,34 +1,38 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972119E839;
-	Fri, 14 Aug 2026 00:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FFA2045AD
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 01:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786668134; cv=none; b=slthmeaBSodKYCPZCPPZlLuOxtd6QiBICR+U4G0y4ChpVEaXqWXRkdwUq3iUbJCkucp5XevJwuRR9tSG/vnUrEkJjoeVqp44YF11ck/OtGt4R4Ud9HF2ZFJy4hlNhBxhfjZhrZn9BbJCqukvA7l1rOopmbizSmLjKdaw2BHWR/M=
+	t=1786669479; cv=none; b=fVOUwtq16GMyua0yOUgmFRxWV6H307AHu0PBtum8rIat9JYqh22AQvOMvjorEr+5cm9/84ctNlh5eoC+uzaFWUDmhnNZOo5v9eJYljl8Sb9zV2Iq5BvWLE6ieKqR3KHTnRLmdj9qMG8isex7xBWqr/bfMxkC9HTblSmAETiPjVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786668134; c=relaxed/simple;
-	bh=Jt8pzgLgZHdKgBuxzBF+/+vqGd2tENbapL5Be2Me8lQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oZE9SW5uQjaaDRn5bm1FxeY0V5fMBf/QHxbzuNIIpslAJcjnPPv4HwWlJods7Jd86nXlGYsy4d0/iETE5Yxw/jb5w7E7RT3H4KeLwYWnsN+duaN/10Ofl1SAkfH3tMBe74H5gNs+aJXFhjp+AM6eMBU0Xcm/hjBg8kg4AyOPvaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=NUAYhTiz; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1786669479; c=relaxed/simple;
+	bh=i8WnjqxHmS+PKrArGVUl3dEMeIfSO9n5cVHL/oQ5+ts=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bnMX+/IjQE/6P8GsOD5SXw6Xgajcn0Z6t65zAYfHH9VFVkBYuvBeODgR3621daILzYqtSmu7DUYvrXrUfFy1HAvN/6qd4POGHpSnJxaQd0EKkEKihzO/33lH2gNs13/2QCKNJBrDYoF/L/FZ4ELx0s9aIfO6RrvGbotrSM59p5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=cRPsgzzY; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="NUAYhTiz"
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id EE1EC802F3;
-	Fri, 14 Aug 2026 00:42:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 5B1EA20026;
-	Fri, 14 Aug 2026 00:42:09 +0000 (UTC)
-Date: Thu, 13 Aug 2026 20:42:26 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="cRPsgzzY"
+Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id AC0DFC0325;
+	Fri, 14 Aug 2026 01:04:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 174E380013;
+	Fri, 14 Aug 2026 01:04:29 +0000 (UTC)
+Date: Thu, 13 Aug 2026 21:04:45 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Have trace_event_update_all() only handle module
- that is loading
-Message-ID: <20260813204226.29563591@gandalf.local.home>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, "Vincent Donnefort"
+ <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/10] ring-buffer: Make cpu_buffer::free_page a
+ buffer_data_read_page
+Message-ID: <20260813210445.74b69fce@gandalf.local.home>
+In-Reply-To: <20260813135613.BD3A11F00A3A@smtp.kernel.org>
+References: <20260813131152.3589632-1-vdonnefort@google.com>
+	<20260813131152.3589632-4-vdonnefort@google.com>
+	<20260813135613.BD3A11F00A3A@smtp.kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,91 +42,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 5B1EA20026
-X-Stat-Signature: z4bciic6wokgn19hbnjoo7ftdzie3mue
+X-Rspamd-Queue-Id: 174E380013
+X-Stat-Signature: cnbwesfs7betqa87xmhgh1gk9hbab1cr
+X-Rspamd-Server: rspamout03
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+L/uTFqGYx307nE+fw2IelLWNkvQlNirk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=4vgQkqt4Mbj/JVGDBZc8/RwHPM0tKfvKns6hdRlzyLQ=; b=NUAYhTizXOCbJF3J2EhrVaVRNC71SwY2C4JT3ncOh2m8CJVYLRPWqlwz3Qf6LEC+iHoKhz6gATZxdIS0uwZxZsBoQEftk5mJyUs8972cxmoHnrModt+ytstWhNlqVaMDbWnUK6cGDnt8g7qRjxbjVslN+Bq+iMvq5b3BEmGO1IY=
-X-HE-Tag: 1786668129-240995
-X-HE-Meta: U2FsdGVkX1+7Qd8t/V5t1lIgWHAXhhsSDYHXQa5POKwjKnUS+5KLaAIYXJLzXA6VLjQ7VxiJ30ojW5siwDrYQWvL5bxjJ67XSmYApWFxM9BDUp6UEAOyO6N34E0n1BYdKXbqUB32Du8bwQptOu/2zyecrzpJL6U1csTVHiJKvDlZWqFZEkKPpnLh9/GMPLiVK+2Gl3AOMr5dkK8B3OeC0dxsqasDr9dnppMOGxkeI5R8wOI3tz6XtftHS9kEHiS+USzmlkqOdlIUSwibybyTbzpll0osE2MM6LSee9VRWrqglKEHFjH4deum2RgChYX3V/H9ettFDh/Q4Q73/0qhFL3rZ2aMzX1Io+xj4UJVWBI+lVNdVZnFJQxFCXMXe+49
+X-Session-ID: U2FsdGVkX1+E/J0Mtfi5r8kNh3hrDciSggRftT9B2Jk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=i8WnjqxHmS+PKrArGVUl3dEMeIfSO9n5cVHL/oQ5+ts=; b=cRPsgzzYuYmu74zrcd75rOHCD+BEWSCifloXPNYT/EKsckIW4FVxWLULj5jU/6qLoC+vhCE6VGDjCe2luH437cK7ran5VmUqdnR0+IUGWENJ0KFogcymmf+Jycn/6jX36DFM0n/ZmfJMGnjTrKyPOxeYd+YfVAuRm9b2uy6spoQ=
+X-HE-Tag: 1786669468-696948
+X-HE-Meta: U2FsdGVkX19X3bdl5vkKSKEQEJleFcaCgNdsUAluQ1L+OqyRTyyftlE48sJNpoSp9c2qdesOI22BwoRxCpvrd2IIAxZDbqK1Tyg1UncaXkY/ntgnVDTEplO0XYq/LauPVwxmOQItVaGuf0df8UB/R4fCB8Y9GkSfv9cB162KMP5BcCPnmIPyN3PUTVb04ZZG7TzzKITJQhi/9jNvcWlf6zta8+r6jTnXnbfZm4geqHwP1/27ffCIIkqsSkOKFDl8TXjCM234dw6Cb0O2MkVFdo4hYpbps9lVnObvm/pA2UA9Ref72AxUYaI/qA2wCTy9XAP+009wv49wg5QRsjrbE/Rl3sNyCDD5
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 13 Aug 2026 13:56:13 +0000
+sashiko-bot@kernel.org wrote:
 
-The function trace_event_update_all() does a scan of events looking to
-replace enums with their values in the strings that get exported to the
-event format files. It's run at boot up on all events and again when a
-module loads.
+> This returns -1, which tracing_buffers_read() treats as EOF. Subsequent
+> reads see info->spare_size == page_size, reuse the bad page, and
+> permanently return EOF.
 
-The issue is that when a module loads, it still runs on *all* events.
-There's no reason to process every event when a module loads as the
-previous events have already been processed. Only execute on the events
-that are loaded with the module.
+If you are resizing the ring buffer at the same time as reading
+trace_pipe_raw, yeah you may get garbage or an early EOF.
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- kernel/trace/trace.c        | 2 +-
- kernel/trace/trace.h        | 4 ++--
- kernel/trace/trace_events.c | 6 +++++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+It's stupid to do.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 01a5e87af299..575912e4c310 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4669,7 +4669,7 @@ trace_event_update_with_eval_map(struct module *mod,
- 
- 	map = start;
- 
--	trace_event_update_all(map, len);
-+	trace_event_update_all(map, len, mod);
- 
- 	if (len <= 0)
- 		return;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index bf77331f56a4..74a7a50d1e78 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2285,13 +2285,13 @@ static inline const char *get_syscall_name(int syscall)
- 
- #ifdef CONFIG_EVENT_TRACING
- void trace_event_init(void);
--void trace_event_update_all(struct trace_eval_map **map, int len);
-+void trace_event_update_all(struct trace_eval_map **map, int len, struct module *mod);
- /* Used from boot time tracer */
- extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
- extern int trigger_process_regex(struct trace_event_file *file, char *buff);
- #else
- static inline void __init trace_event_init(void) { }
--static inline void trace_event_update_all(struct trace_eval_map **map, int len) { }
-+static inline void trace_event_update_all(struct trace_eval_map **map, int len, struct module *mod) { }
- #endif
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 956692856fa8..21fc68067805 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3557,7 +3557,7 @@ static void update_event_fields(struct trace_event_call *call,
- }
- 
- /* Update all events for replacing eval and sanitizing */
--void trace_event_update_all(struct trace_eval_map **map, int len)
-+void trace_event_update_all(struct trace_eval_map **map, int len, struct module *mod)
- {
- 	struct trace_event_call *call, *p;
- 	const char *last_system = NULL;
-@@ -3568,6 +3568,10 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
- 
- 	down_write(&trace_event_sem);
- 	list_for_each_entry_safe(call, p, &ftrace_events, list) {
-+
-+		if (mod && call->module != mod)
-+			continue;
-+
- 		/* events are usually grouped together with systems */
- 		if (!last_system || call->class->system != last_system) {
- 			first = true;
--- 
-2.53.0
-
+-- Steve
