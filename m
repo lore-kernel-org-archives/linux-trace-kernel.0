@@ -1,122 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31ECF343D8A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 17:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A1C492525
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 17:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786730041; cv=none; b=PD6RNC1BzA0TSHt75LqD0CqJB0T6ETyklzvPCeB6aGJ6cSrVrKvJjuY6IQ21AemY9vdIULSuI9M2biDKWgWxLQL9C0+bY178BiBw1MRSSrELA2oyOppl5A43hitn8c2z9rmlxGdZhx0MXnTepxN80Fg2+c2/Pryg8MW6NkdJOrI=
+	t=1786730269; cv=none; b=B5JIFxyZ4WSDetjapwbOkr4Q09l9UUKcAweRIjTXA3NgjQ1e4x8cF7q1wqjoL6SmDpdFFsL2UUeVbnCF/3VgrrVD9XCNb32ESNiPM4H1zfuYZUVAXIy5CosRKlauD3x/p3zMm4MixVE9+KFm089LC93in3JN/lmpnK8pgEQiTjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786730041; c=relaxed/simple;
-	bh=vVIxzxqKpJB42eAB7QQkiNdfnN7e8QwPwOzhr6DFoRw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JTEIHnlK5n0sN62nZGob8F5IqvVa+kNZqkW1Gxiu/hb/J0ka658S7hslN5j1B5vbNI5OJKrAfR2aNXq1m1cVCHHWdMN9pobenDqsD/sZnN5vkt3+5ioIUlpnkGR6GnK7xmfEJdgYNfprOyXbP6nWi1HXeHyZgco1T1bbo2LjQuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MqWRSmj9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786730269; c=relaxed/simple;
+	bh=vfWVk5cbC2alWZ2RcQ2gPFo+PGPYjPxWOtNwHPYXyoc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=A0xwpdi+BUcJ4cbZ1GAZ1mbInXjHHh/LkwIOQ8eYLtVGGQC6BMTt8yTgsb7QzQT48MfA8CV27skqPQsL9+ymS29kakaNB56fROKHJXpf7atumcZ9vnOCHBCdJbsRxg6P04yye4nDzotqdV7PMPF8n1oXKTE0PVTL4UIuAVm0MjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T+cbN0QJ; arc=none smtp.client-ip=209.85.214.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MqWRSmj9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786730039;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vVIxzxqKpJB42eAB7QQkiNdfnN7e8QwPwOzhr6DFoRw=;
-	b=MqWRSmj9oUulXjf3jl/rsOCcTx1RcXx0gq4X9MEDXpNqHHckV2PULj45e+/fsq8258/N8o
-	poMgccuVslFpsG4OIerDQfSoQvrC9/CtACxqnumFtEizMILzEHuHfZYmWpITBG36Mp+QIu
-	ZtiTJqBQOhgEB/yCeeocWREPJSoXfoY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-203-TPdJBQnSN_m7ZUOZOjB8Nw-1; Fri, 14 Aug 2026 13:53:57 -0400
-X-MC-Unique: TPdJBQnSN_m7ZUOZOjB8Nw-1
-X-Mimecast-MFC-AGG-ID: TPdJBQnSN_m7ZUOZOjB8Nw_1786730037
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c20262b5e10so136304966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 10:53:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786730036; x=1787334836;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T+cbN0QJ"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2ce8a76df2dso26629485ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Aug 2026 10:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786730268; x=1787335068; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vVIxzxqKpJB42eAB7QQkiNdfnN7e8QwPwOzhr6DFoRw=;
-        b=miVvFQKBQytOEnRDYMW3KS+F7a4N6hXbyrHr6ypm5gwtZYS1PK9oG1Sfm5+nVfL8Lr
-         /Bi3aMSBIXPlJAWJHu8eKG1pfZmNcN9HfwWKKPCz/T2hokhdC3wcieaX4kYliS9glxr9
-         udUeKV0pk90JJtIT87r3aLC/KK+hJdiTbh8rIve0srgg5YBlfzsjpP3D3BbLdgVpLugD
-         OzaKiJlOUCsz+IWM9w2X22khvcNjk/1RgTI9nAwppD00ic0TbFiG60OlfZFQlAR1hg1c
-         It9+0/W3QIXbVrAw2w9bTcxfU/C0mwyJz5kQNk5hVkbh+SYHtuQRZTVhVi75wYAW70hD
-         FVHg==
-X-Forwarded-Encrypted: i=1; AHgh+RotrvOrxhM74f+XCh0VS8UQLnYsMgOZi6eOsunqvakyr107qoRsBiL0vj28gPujiPIFbEYrhDfDyFod+4jaqv3s8To=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNq23uSuTp4oE6K/btPSN9ijTqbKwgnQ13lT5002S6wZ3qnCZq
-	UyA8Yfc7iIYWRMUNWcSUfarYlbxSFIfIFkkpCnP/T7j7JZ0vvvOq+ohC3EkeyuU/1Pmajy+DHJz
-	/Kt1VWYMHjgajo+81V2iRkgTw4erdeZS8KgDtqjONAQALbhJ35llXYC24W0p3IHMHUyd9IbYD80
-	WFR797xWUHyn28yrBOrCRRkC7LIwffE0x0h+iE9nxV2lomCeQ3
-X-Gm-Gg: AR+sD11QD6rHpI0H/j1bz3lrJuOAu1d331kpXwdV/lvnJuomEFZpZ3Jb/gD6rTWEtcV
-	KNNd+rgR6mWbYi+aI2fiJ3wDgKHbAXoMtCDKHHhhQAHKBAqgIhEM6lObklnxFshW9U3TgAP7NrE
-	t1lIlHE9pyrkqwl582IdPKcCHDu3LngN6Pj2WMQHtJo8f9xnFS62xQyStWM6DI7/jMBeANOkUEJ
-	XlFhy3Zrk1Yypk=
-X-Received: by 2002:a17:907:980a:b0:c19:49ee:19b9 with SMTP id a640c23a62f3a-c212a11e24fmr353174466b.15.1786730036632;
-        Fri, 14 Aug 2026 10:53:56 -0700 (PDT)
-X-Received: by 2002:a17:907:980a:b0:c19:49ee:19b9 with SMTP id
- a640c23a62f3a-c212a11e24fmr353171366b.15.1786730036127; Fri, 14 Aug 2026
- 10:53:56 -0700 (PDT)
+        bh=FTRpQbBcuIQQHhR/UQMYNM1PA+jfAXsDHcYqcmWTXOk=;
+        b=T+cbN0QJAG39Q+VhsESLtUVozx52DEwrqTIq1n7m3RCErpkB/FlaWzlNjYiXyph4p4
+         bKL8YGFd1mAZmlWpS91ETHhFpnGGg99yNovCiBsn747I9u5UWB5IDDrSTg8g0fyTpqYw
+         axNYimylIvtry/W8h3GAaTobIjj8h/aJpGVQPHk2j15NK6HwdD6WRu/Q2ngNigNdw1Qt
+         EWf/HZwIi296XSK0LRAiHEdIFBwfaF/ZVReRFYpClR+4WUywxdkuD/J2Mr+AHNauhpOD
+         tqIR53WxMONQHgfQXrPoGJgzNPors3Nlf8gj/T4mLWK4JbFnsGNT2CpngcYgtHCWtlAi
+         5DOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786730268; x=1787335068;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=FTRpQbBcuIQQHhR/UQMYNM1PA+jfAXsDHcYqcmWTXOk=;
+        b=jfZNF8EesepsMg2mql/HO7SEdt7EvxeBlsQakOEpWxuqy/dDmnpTg/ffyXqy9zLGjZ
+         vnCXX24yqsIdDqXuGYSbNVs5m9zHsrsJvR/t1ijQ9SdkzCuJyaLyQLCgl5yfJfsjlXGo
+         JYwWwi6TlzhYQs82Pp3sr5KvzmkFWZwGR+jpl/37yQmoHnq3j6v6AG3TXnwXxy0z4K2M
+         F+UiTSiCoY4Jg+mOTqrRkFUILGf4SGw7eyw1bnd0snRBhvYB+t0l0hJXTFU2YlaA8/ZE
+         3PyNri1z9NLyi53nnvjT1g5SelLFHLsGJ+ok6eSbQt/exC9I1g5xq6+JjchlP6WxAsqy
+         IQDQ==
+X-Forwarded-Encrypted: i=1; AHgh+RorDgKd2ums3rJ3kUQkMbyi5Mm8jiCe2K9rOs4kKi1YKwwLRTzBqSzISQFzInmzwqXZQD/t/8TRUK2gEzSpYDyu8zs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgEz8yHQlLdlK1y9FwsS5hIUFuC7a1VFInySBIF1DkbdPe0JW1
+	dFIxUTP2yJeLV1to/eEljsi3EuAqS8THQxFS7BNs6m1cAW3A2r9WHhY2Z19r7KInEnMbbinbVn2
+	HB4tWQw==
+X-Received: from plbmt15.prod.google.com ([2002:a17:903:b0f:b0:2ca:5dc9:51d3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:22c6:b0:2c0:db23:4c4
+ with SMTP id d9443c01a7336-2d3b0c8852emr91417425ad.16.1786730267363; Fri, 14
+ Aug 2026 10:57:47 -0700 (PDT)
+Date: Fri, 14 Aug 2026 10:57:46 -0700
+In-Reply-To: <36baf0ec-0b7c-4ffd-9a1e-dfe9617e057d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260805151055.870722-1-tglozar@redhat.com> <20260810210425.61435b0b@robin>
- <CAP4=nvRWKYdkfr-9_1OMupZfF0nUYVVtMd7Vwsd3o4pO__SCew@mail.gmail.com> <20260814101906.26679d49@gandalf.local.home>
-In-Reply-To: <20260814101906.26679d49@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 14 Aug 2026 19:53:44 +0200
-X-Gm-Features: AUfX_mwNiMIamNkV_EIHHO-hgPZc_pfHO4ZxKKowKmJenw0yn14d2_T_Af3S1zg
-Message-ID: <CAP4=nvToTgOw6iyx4vNp63UzYJGjzXbSVXmfAbycvHYpBaa7Dw@mail.gmail.com>
-Subject: Re: [GIT PULL] RTLA changes for 7.3
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Gi2J6nylLVheZoGDOz6lnfSg-tFXQJ6HAwZW5GS_OuE_1786730037
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-18-2fc18ee6d3ba@google.com> <36baf0ec-0b7c-4ffd-9a1e-dfe9617e057d@linux.intel.com>
+Message-ID: <an9XGrcPw3h-ExA9@google.com>
+Subject: Re: [PATCH v10 18/41] KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
+From: Sean Christopherson <seanjc@google.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev, 
+	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
+	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-p=C3=A1 14. 8. 2026 v 16:19 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
-.org> napsal:
->
-> On Tue, 11 Aug 2026 09:22:54 +0200
-> Tomas Glozar <tglozar@redhat.com> wrote:
->
-> > tools/tracing/rtla/tests/scripts/lib/get_workload_pids.sh is for some
-> > reason not finding the user threads (as the tests for -H and -k
-> > succeeded) on your system. The threads themselves had to be running,
-> > as timerlat is reporting samples from them. The script and the related
-> > tests cases were added in 7.2 already, this pull request does not
-> > touch them so it's most likely a pre-existing issue.
-> >
-> > Either way, I will look into that, thank you for testing. It might be
-> > environment-dependent, as the test relies on the test script (executed
-> > as an --on-threshold action) being a direct child of the main rtla
-> > process - which only holds when the system() shell executes the script
-> > directly, not as a subprocess.
->
-> I just pushed this to the for-next branch. I'll let you figure out if the=
-re
-> needs to be any more updates.
->
-> -- Steve
->
+On Fri, Aug 14, 2026, Binbin Wu wrote:
+> On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
+> > From: Ackerley Tng <ackerleytng@google.com>
+> > 
+> > Update tdx_gmem_post_populate() to handle cases where userspace requests
+> > "no source page". To handle "no source page", populate (perform
+> > TDH.MEM.PAGE.ADD) using memory in-place at the target PFN.
+> > 
+> > Allow "no source page" only when gmem_in_place_conversion is enabled,
+> > because retroactively adding support for out-of-place conversion would mean
+> > requiring a userspace update for a feature that's being deprecated.
+> > 
+> > Also, KVM supporting "no source page" without in-place conversion would
+> > effectively be an obscure zero-page optimization that relies on the page
+> > being zeroed when it is allocated by guest_memfd.
+> > 
+> > Rejecting "no source page" without in-place conversion scenario is valuable
+> > for KVM developers since it helps newcomers understand what exactly is and
+> > isn't possible.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> 
+> Nit:
+> Is Sean's SoB intentional here?
 
-Thanks. As this is now a known bug in the test (and is already in 7.2
-rather than a 7.3 regression in the pull request), I was not rushing
-to fix that and rather continued to focus on my patchset.
-
-Of course, I'm trying to keep tests passing, now that the majority of
-high-frequency intermittent failures are fixed, so that people running
-tests are not desensitized to failures.
-
-Tomas
-
+Kinda sorta?  I handed commits to Ackerley after rebasing them locally at one
+point, which is how my SoB got here.  I think it makes sense to just drop them
+from the patches where I'm not listed as the author or Co-developed-by.  In the
+end, I expect to apply this series and so my SoB will get added backon anyways.
