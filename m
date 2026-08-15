@@ -1,85 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5752E413;
-	Sat, 15 Aug 2026 19:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376217A2E8
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Aug 2026 19:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786820599; cv=none; b=eIpNbYt7aLeE2XTqmbhFcN1goVASjX6z4m0JV6WDEXZMW12cRYjcXXRfWEoW1UWvWfIRN2qf+h7js18QWgx96WObJcuujfFFo537GCQscj0PrVtFhmt77JTh0G45b01WiqXHF59WteXSQ/29KqyMhel0IsDwSATAuTJAmsmA8io=
+	t=1786821036; cv=none; b=O5E6B073Vz2uAJ/V3S212O1ysGuzbrg+IfoCe/CdTHzG6PDq1gTB8NhmyfTszBYReJH/GVBZ5lrqwTvMZ0+6fuxtVtFk3OdX6cqPzP0ZaF7RIS9/fog/JwA7IaIjV9qyUCLd3w4zW/o9I1Ud4cpDzCihKvb90Z8gpWmtgfQv5Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786820599; c=relaxed/simple;
-	bh=hSZMvDhf2JDjYglgkmLPKAOmNSHRBRi5/MH4P4nxlWQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lkC4LSh3Gmjl+ScL8zR2Drxp5+pHSQWhDH29XFqEkn7SJbr55swJAC1eVFGVYZSHGMvFnSB9u6pyVv4fdqGVTjrjAs38KCBaKDacA/r/r9iYZo463xUGDlfNi9IhtJ64W3P3RAFZCYPuCfA8DHmrUCEFpURAUohOw432IXjXgUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kfn9fae1; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1786821036; c=relaxed/simple;
+	bh=i8QicLoEzSIGpA/4Owv0U5Fl1Y9w0z/49g14n+1xEUg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=PkUJlTUz+v7QvrU+oYig5s3oC/OygX33RZt1PAORRLp4j1HS3s82A4RbO8OKoRDkOPTDiC48CRbKABCWkv9yeJTu1Bslhk6mGj8me5dgwQHdE5w5JMpCxRZChJ/TeZVpSHfsoR38uRGbrHfPVzZVxXLk42Ob9AzVxuayFV1rLjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpaeZhL/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kfn9fae1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Ij
-	OLI4exvrM4btx0V+CGxecfRyauxUM6PXqGpt82jSs=; b=kfn9fae1Jef4X/prg6
-	MCyyrUIjTLb8eCgwSLAyg46p9+cJSpcdFoQJ2aE7FpJhZ6ZFjVMFV7fO6ysQHdMh
-	sZVQPaybhSZ9WHq3jQO/BcW2RU1Qaxlty7wYRR7jncB2ecrDfO5xPKLpFEbGam2c
-	SMuvsQ47MtBKsMKC9A+TRDyew=
-Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCX9BnRt4BqU5qVPA--.26600S2;
-	Sun, 16 Aug 2026 03:02:41 +0800 (CST)
-From: Hui Su <sh_def@163.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] tracing: Fix crash passing ERR_PTR to kthread_stop()
-Date: Sun, 16 Aug 2026 03:01:54 +0800
-Message-ID: <20260815190151.568893-4-sh_def@163.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpaeZhL/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D8F1F000E9;
+	Sat, 15 Aug 2026 19:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786821034;
+	bh=k7CQxRGE+oUMUyEVBPhDWgVuWWFHUWCSKuzYutCSNGE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SpaeZhL/W/N/75T+dxhp/9xcC34QbLkreqfuWEVPcnUmhtYUKzSRX19mWi8qJRxog
+	 IQVAcOyrEhA22LhNhjZgjhX0UocGNja5FEZ+7I2noFC6rJjOFtz3EFdXver/I9Uvs8
+	 vJhXQOflsMTyB5pkgQa/fg+98dm7h02DNHL2Gr5J4mUbqKdI181kmzeY1jHgctTWtc
+	 uIx9XCKS2y1/qEL6rTD0Ridk32mkpKwM0VHSiPsvVEttGOzK4USgtYfTnq7bg9GPYw
+	 IemIRl1VDHg7WpzCfYzRTyAYkcZmZZethC9+HcwU8bqhSUqm9udnQ7wJWsZ8omFRm1
+	 SsspJOz2V+qng==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Fix crash passing ERR_PTR to kthread_stop()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hui Su" <sh_def@163.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260815190151.568893-4-sh_def@163.com>
+References: <20260815190151.568893-4-sh_def@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 15 Aug 2026 19:10:34 +0000
+Message-Id: <20260815191034.82D8F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCX9BnRt4BqU5qVPA--.26600S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uw4kGr1rGF4kWFW8uw48WFg_yoW8JFWUpa
-	yFkr13Kr4UAan29a4kW3Wvkr18Ja48Xa4UCr95Gw1fAw1Ygw45XFWjgFyj9w1Fkr48W34a
-	vws0vrZFg3yDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UQ4S7UUUUU=
-X-CM-SenderInfo: xvkbvvri6rljoofrz/xtbCwRLcPGqAt9LHKQAA3S
 
-event_test_stuff() calls kthread_run() and unconditionally passes the
-returned task_struct pointer to kthread_stop(). kthread_run() returns an
-error pointer such as ERR_PTR(-ENOMEM) when kthread creation fails, for
-example under memory pressure during the boot-time event self-test.
-kthread_stop() then dereferences the invalid pointer, crashing the
-kernel.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Silent Test Bypass
+--
 
-Check IS_ERR() on the result of kthread_run() before passing it to
-kthread_stop(), matching the ring-buffer self-test fix in commit
-91542863abad ("ring-buffer: Fix crash passing ERR_PTR to kthread_stop()").
+--- Patch [1]: [PATCH] tracing: Fix crash passing ERR_PTR to kthread_stop()=
+ ---
+commit 40985725587eec80dcbbfbf251d18cd9797fe26c
+Author: Hui Su <sh_def@163.com>
 
-Fixes: e6187007d6c3 ("tracing/events: add startup tests for events")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hui Su <sh_def@163.com>
----
- kernel/trace/trace_events.c | 2 ++
- 1 file changed, 2 insertions(+)
+    tracing: Fix crash passing ERR_PTR to kthread_stop()
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 3650d84d4f16..d21564733b4a 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -4901,6 +4901,8 @@ static __init void event_test_stuff(void)
- 	struct task_struct *test_thread;
- 
- 	test_thread = kthread_run(event_test_thread, NULL, "test-events");
-+	if (IS_ERR(test_thread))
-+		return;
- 	msleep(1);
- 	kthread_stop(test_thread);
- }
--- 
-2.54.0
+    event_test_stuff() calls kthread_run() and unconditionally passes the
+    returned task_struct pointer to kthread_stop(). kthread_run() returns an
+    error pointer such as ERR_PTR(-ENOMEM) when kthread creation fails, for
+    example under memory pressure during the boot-time event self-test.
+    kthread_stop() then dereferences the invalid pointer, crashing the
+    kernel.
 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 0356cae0cf74e..207f47f54dbbf 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3866,6 +3866,8 @@ static __init void event_test_stuff(void)
+>  	struct task_struct *test_thread;
+> =20
+>  	test_thread =3D kthread_run(event_test_thread, NULL, "test-events");
+> +	if (IS_ERR(test_thread))
+> +		return;
+
+[Severity: Medium]
+Does returning silently here cause the self-test framework to falsely report
+success when the workload thread cannot be created?
+
+The caller event_trace_self_tests() unconditionally prints "OK" after calli=
+ng
+this function:
+
+kernel/trace/trace_events.c:event_trace_self_tests() {
+        ...
+		ftrace_event_enable_disable(file, 1);
+		event_test_stuff();
+		ftrace_event_enable_disable(file, 0);
+
+		pr_cont("OK\n");
+	}
+        ...
+}
+
+Should event_test_stuff() propagate the error so that the caller can correc=
+tly
+report the test failure or skip it appropriately?
+
+>  	msleep(1);
+>  	kthread_stop(test_thread);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260815190151.5688=
+93-4-sh_def@163.com?part=3D1
