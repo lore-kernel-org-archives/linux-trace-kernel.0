@@ -1,130 +1,123 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1C4331A63;
-	Sun, 16 Aug 2026 10:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082842931F1
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Aug 2026 10:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786874964; cv=none; b=PeOZw1LlxG/oBzQAh99AWJJ7QW24hO1QNOtmvVIHzWasqrGtB0gcRzU7DOpuwhsjCseEFnVTFul1yeFP/rBZKZgOonLy2b8TPrPwAXmQHwtB23L9aAhCfR4OMh/izD1p4YkmDNfxW9+Lx+HO5DyZnHxBf4slUcdx243Gxj2ycHw=
+	t=1786876335; cv=none; b=DhB6AhKQnPAGiHoPsW42/Mb1OMBOqXOKDC8mxP5tlf1Qd3/fUTRCADsfKsiSW9M7jc2ohL3Ll/wRP6jkLHPQqHFFLCM6Gu+uk6LaFbNmRdQRLPTTGRyyM+rDm/oYGBt64a4JCf5dgHlr+Q7W8nd2U2ZEwa4X7HRwDTpPehiJzp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786874964; c=relaxed/simple;
-	bh=/mKAOxenTlVLV/NSiPNXhb+L3reSdCcDy8WrDgp0700=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uqPIkUWuw/8okN9JdQDyojwjdR+++pQFxDIFAk9rp3gxJrLRneNnLcJMEoBRa0AGVDKK0GzDeU8Om0b49TH3LSNHGALWlDrsVkgmMu5aRlGqZV0D8FvkHhogwVBZCQLy1k93AZRGz/3yf72aHBJRLDw5Ad+wmzMJBJUbwunsXSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=QjVI20Fr; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1786876335; c=relaxed/simple;
+	bh=z8tmrrugPakLz5kNJPKVg+IxT5wehCn74J4LqJkddcs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=OPfitIgGYtLJPjWw41rzO1mYZP7UoqXh1ZD6eOIUXh1q5SDSaPmgjzRuKDuN3K85HSpS+1xX0xYt25FkIa/A5g80Pnuo6TZUydEh2KG65MXLqGDdnGC6kG1+uN4LUyu1j7qPcChog5yV7ZInuYScbbV4Boau9ldQa9dqLCCMx0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtAuV8om; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="QjVI20Fr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=3k
-	j3CWKVoqanhjaDiOQkFlbZwGd/reF0lfRSEGgryzY=; b=QjVI20FrC+RSFqFjn8
-	y9aP891HD10WM9ugroKcbvgIrFU9CDUwB97s1G1o4MP47lKU/Vvm/ijPNoS5h9sC
-	eWWnh8+kmkHtMDDdZLupqUDVf9BlMFLQtOhY4lDaftyizo7KNQUg4SUyNBU2ORiV
-	5tVxM8Kf/HlVmjFU6DB7+dNac=
-Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDnV8cHjIFqSc7HPQ--.53482S2;
-	Sun, 16 Aug 2026 18:08:08 +0800 (CST)
-From: Hui Su <sh_def@163.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] tracing/histograms: Fix use-after-free with same-name named triggers
-Date: Sun, 16 Aug 2026 18:04:29 +0800
-Message-ID: <20260816100427.33642-3-sh_def@163.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtAuV8om"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBED1F000E9;
+	Sun, 16 Aug 2026 10:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786876333;
+	bh=OkYr8e9+IkJayw0jJC1ilTNkCjAAd/folhZ83tWZVV8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=BtAuV8omEbnpHYTeUQyD3D+0KHFXJdkK4Eq8m7L4u5CCg59510x5EfUSv9Zmvv/21
+	 lEfLWai+VarUYgbnzIigs8AcLAs1ob1Ft3b4iu6dZyMeOptz0ww8DH2C/rF+Qn4KJB
+	 6miZGF0EkLWjp3y573oPIagDR7GVcTVzTC4kRU3lb58ih7oKUOAjRjuZANFCiuhBTj
+	 hj0Hp1qOm0EDUlnCopgK4jPGkhO51IRO1MXG58MkZouodZrJR30xMCV/VhMvmyBiNj
+	 Wyrna/1Q/wxPVDtJa8taF8sgODqYuYqc5aOkUKiK8bRiuMUMl8309OXCVsYMtF/mg1
+	 OBeV4v5i6F82A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing/histograms: Fix use-after-free with same-name
+ named triggers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hui Su" <sh_def@163.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260816100427.33642-3-sh_def@163.com>
+References: <20260816100427.33642-3-sh_def@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 16 Aug 2026 10:32:13 +0000
+Message-Id: <20260816103213.6EBED1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnV8cHjIFqSc7HPQ--.53482S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGw43CF48CF47ZFWfWF4DJwb_yoW5Ar4fpF
-	WFgr13Kr48tr42vF4xuF48u347CrW8JrZrWF4UCw13t3s8Wr10gFZFgay7Z3WrtF48WrZ8
-	KF4jgrWjgrW7XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UQ0eLUUUUU=
-X-CM-SenderInfo: xvkbvvri6rljoofrz/xtbC6Qggf2qBjAgMNwAA3q
+
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [Critical] Missing rollback of data->ops->init() when tracing_set_clock()=
+ fails, leading to a use-after-free in the global named_triggers list.
+- [Critical] Double-free and use-after-free of `hist_data` and global list =
+corruption of `trigger_data` when a reused named trigger successfully regis=
+ters but fails to enable.
+--
+
+--- Patch [1]: [PATCH] tracing/histograms: Fix use-after-free with same-nam=
+e named triggers ---
+commit 5aedb1f49e82add364d36e7e38374f9abcb9b2b9
+Author: Hui Su <sh_def@163.com>
+
+tracing/histograms: Fix use-after-free with same-name named triggers
 
 When two hist triggers on different events are registered with the same
-name=, the second one reuses the first as named_data.  Both are added to
+name=3D, the second one reuses the first as named_data. Both are added to
 tr->hist_vars by save_hist_vars() during event_hist_trigger_parse(),
-because save_hist_vars() is called before event_trigger_register() while
-the named reuse is only detected later, in hist_register_trigger().
+but the named reuse is only detected later. This commit fixes a dangling
+pointer issue by properly removing the hist_data from tr->hist_vars before
+freeing it.
 
-In the named-data branch hist_register_trigger() then frees the second
-histogram's hist_data via destroy_hist_data(), but never removes its
-tr->hist_vars list entry, leaving a dangling pointer and leaking the
-trace_array reference it holds.
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
+_hist.c
+> index fdf784620c283..50e86f81ea32a 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -6044,8 +6044,10 @@ static int hist_register_trigger(char *glob,
+>  		tracing_set_filter_buffering(file->tr, true);
+>  	}
+> =20
 
-A later hist trigger that references a variable makes find_var_file()
-walk tr->hist_vars and dereference the freed hist_data.  The bug is
-reproducible from userspace by writing three hist triggers to tracefs:
+[Severity: Critical]
+This is a pre-existing issue, but I noticed a potential problem in the error
+handling right above this block when tracing_set_clock() fails.
 
-  echo 'hist:keys=common_pid:x=common_pid:name=mh' > \
-      /sys/kernel/tracing/events/sched/sched_switch/trigger
-  echo 'hist:keys=common_pid:x=common_pid:name=mh' > \
-      /sys/kernel/tracing/events/sched/sched_process_fork/trigger
-  echo 'hist:keys=common_pid:vals=$x' > \
-      /sys/kernel/tracing/events/sched/sched_process_exit/trigger
+If tracing_set_clock() fails, the code executes goto out, returning without
+rolling back the data->ops->init() call that added the trigger to the global
+list.
 
-The third write panics the kernel:
+Would this result in event_hist_trigger_parse() executing kfree(trigger_dat=
+a)
+via its out_free path while trigger_data->named_list is still linked in the
+global named_triggers list? Could this lead to a slab-use-after-free during
+global list traversal?
 
-  BUG: KASAN: slab-use-after-free in find_var_file.part.0+0x272/0x290
-  Read of size 8 at addr ffff888001f8a0e0 by task sh/1
-  CPU: 1 UID: 0 PID: 1 Comm: sh Tainted: G      D          N
-  Call Trace:
-    find_var_file.part.0
-    find_event_var
-    parse_atom
-    parse_expr
-    __create_val_field
-    event_hist_trigger_parse
-    trigger_process_regex
-    event_trigger_write
-    vfs_write
-    ksys_write
-    do_syscall_64
-    entry_SYSCALL_64_after_hwframe
-  Allocated by task 1:
-    event_hist_trigger_parse
-  Freed by task 1:
-    hist_register_trigger+0x618/0xa30
-    event_hist_trigger_parse
-  The buggy address belongs to freed 2048-byte region
-  Oops: general protection fault ... RIP: find_var_file.part.0
-  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+> -	if (named_data)
+> +	if (named_data) {
+> +		remove_hist_vars(hist_data);
+>  		destroy_hist_data(hist_data);
 
-Fix by removing the hist_data from tr->hist_vars and releasing the
-trace_array reference in the named-data branch of hist_register_trigger()
-before freeing the hist_data.
+[Severity: Critical]
+This is another pre-existing issue, but might freeing hist_data here cause a
+double-free if registration ultimately fails?
 
-Fixes: 6f86bdeab633 ("tracing: Fix bad hist from corrupting named_triggers list")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hui Su <sh_def@163.com>
----
- kernel/trace/trace_events_hist.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+When reusing a named trigger, hist_data is freed here. However, it appears
+event_hist_trigger_parse() does not update its local hist_data pointer. If
+a subsequent operation like hist_trigger_enable() fails, will the out_free
+path in event_hist_trigger_parse() execute remove_hist_vars() and
+destroy_hist_data() on the already-freed hist_data pointer?
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 58d28cd1afa3..6bf00710fd10 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -6641,8 +6641,10 @@ static int hist_register_trigger(char *glob,
- 		tracing_set_filter_buffering(file->tr, true);
- 	}
- 
--	if (named_data)
-+	if (named_data) {
-+		remove_hist_vars(hist_data);
- 		destroy_hist_data(hist_data);
-+	}
-  out:
- 	return ret;
- }
--- 
-2.54.0
+Additionally, it seems kfree(trigger_data) would be called in that same
+error path without unlinking it from the global named_triggers list. Can th=
+is
+corrupt the global list?
 
+> +	}
+>   out:
+>  	return ret;
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260816100427.3364=
+2-3-sh_def@163.com?part=3D1
