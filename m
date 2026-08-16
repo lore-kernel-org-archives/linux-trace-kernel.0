@@ -1,114 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661753D647E;
-	Sun, 16 Aug 2026 22:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3A613B58C;
+	Sun, 16 Aug 2026 22:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786918296; cv=none; b=Xzfq5V+Q77O1LNi3JOFo/nDjOauwG4EXAmd03VUGLeqz3FMrcOS+wYfZeBhd71TrhRvnP+T0gvg+6s9umlyqkoB06u+LVcvFC2rKvghxmRf778n28+YQu6pl8VM4pFnGDuLx512bTCCtSVOuQFi0lQxXLuh/FEWM6ew5YeuhnaA=
+	t=1786919986; cv=none; b=hpq9D9Rt07hNcS3KaMnSrKb2BKi+1ge8Il/A1DX6AaC3FnOvwPDtr6N3P9LWkHwr9PGi3MyzYsyOm3Nm9agGZDDwSj0r32e0HJgfKvBBHrf/Ksb1+ALe1J0/FJhLbzJUAcC7BJsWRWk79NOTM2EwqnSpprw+ZtWUSEstHdkKdLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786918296; c=relaxed/simple;
-	bh=BetprM0RdBz9U2XhwsqIZQvo/uqW/2vTiRA6sJXlsic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhQ8tyXMxrg2gGkWk/KmYl16HrGIoRqQL9ygoepSdab8dQMPidnxHYzeTCazxSAUj5zcC6Td8EpEbg0L/00MxVIsORyMt0MVqi7adkAFrTzxdeYwi+vxo87nR/mg3wtQgq7TyoKMgVeD5CIzUrF12XesKV2UR+rQvXKTLQyuanU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEeEd4aK; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786919986; c=relaxed/simple;
+	bh=EyEbculfdmcKB1EZX0QglINCttopCIL5evClcdTV5Ik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bh6ompwKbCh3Jjw+3otzC16wrR+WzU7oAp7gwQ2UV6XhOtEABREcCoVpnjnYmfPQgZdXexoazbSdtdytWxXPki6O6qz9uVNWkNvjYnPhplrMQyP50cSljB06qFaD5Sfys23e4G/1TKBCa7RaQvxz/BroEqUpAA9jxRsV2lDBFeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=PCxxr9i/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Rybartp2; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEeEd4aK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786918294; x=1818454294;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BetprM0RdBz9U2XhwsqIZQvo/uqW/2vTiRA6sJXlsic=;
-  b=IEeEd4aKdtKrCQDAilyis9lWYadiv8FIiaDABQBpfWMc3jSxJlnN0OpG
-   eFlcNfpBGEcV4+bhjJDMLOM8jB9G5IFeFMwm5AbR0/uH1eIYJvlqOfy+s
-   vN56igwIbllGWLOBKvywdm7yKKiR77KGZPo8UyiwicRbXxhZLFRRUs5Et
-   0H3gA7gX6ZTUFpcMnw4/OGTpqzkZ9YP6n7L5Sqnczjf6AHLNQokPRER2Z
-   BFnJZ94tgj1UMPv4iyyLYYZLuHzUQhHWt996OItDWLWUpSdW7ojm4r+Vw
-   m9hZsNDuJKZPg2fLv91m47ImSIa6fpVHMPUmlBA2BiWx8whAPLo5qtKON
-   Q==;
-X-CSE-ConnectionGUID: C25LUqHZQ5GJT1I7TjLQsg==
-X-CSE-MsgGUID: fjKTFzetRwSqi9aibgkHRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11877"; a="89915456"
-X-IronPort-AV: E=Sophos;i="6.25,227,1779174000"; 
-   d="scan'208";a="89915456"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2026 15:11:33 -0700
-X-CSE-ConnectionGUID: bY3ozt2VS+uJOiiRoOwL0Q==
-X-CSE-MsgGUID: 9R/KWFVPQSK71mWWEsbOZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,227,1779174000"; 
-   d="scan'208";a="263415551"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 16 Aug 2026 15:11:30 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wvj4g-00000000d7m-3x14;
-	Sun, 16 Aug 2026 22:11:26 +0000
-Date: Mon, 17 Aug 2026 06:10:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>, rostedt@goodmis.org
-Cc: oe-kbuild-all@lists.linux.dev, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org,
-	skhan@linuxfoundation.org, me@brighamcampbell.com,
-	jkoolstra@xs4all.nl, woradorn.laon@gmail.com
-Subject: Re: [PATCH v2] tracing: Use seq_buf for string concatenation
-Message-ID: <202608170556.RyB6XrT0-lkp@intel.com>
-References: <20260622094623.18469-1-woradorn.laon@gmail.com>
+	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="PCxxr9i/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rybartp2"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 204F314000E7;
+	Sun, 16 Aug 2026 18:39:43 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Sun, 16 Aug 2026 18:39:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1786919983;
+	 x=1787006383; bh=EyEbculfdmcKB1EZX0QglINCttopCIL5evClcdTV5Ik=; b=
+	PCxxr9i/1SfOluatBlV3zwVnWsoPbCgu6+BYQOfPgRv9GAs5gqFFQLOHVxe4fmR3
+	e1Jmn9SfkmZ6NINtowpVNhSVcx+90+MFy82NVwbXZ3qMIFiLU4baUj4QXljimnlp
+	cMAI2ncU0Efe4xoGq4dx+1ReAMBZtnQ/aI+GLwwBLd5qMOPxI+ze6EMV9gFcGpAe
+	OFrwteIg/5pXMl2Jj/cvmIhNe8i/If7xTJ3wTZrgd45ubXw/z5ZK8dIaHM5+rvQK
+	jbatiTIr0c+7GkDWS5m2aay6xow5CY54EJCrl5m3weEdfFGLMvqfgTYJIABO1Yh/
+	KBJnABY4FVF1AADeQpPY+g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786919983; x=
+	1787006383; bh=EyEbculfdmcKB1EZX0QglINCttopCIL5evClcdTV5Ik=; b=R
+	ybartp2CIfsb8zBcDFSK7sAu6tgh8m4FXqLtllHNk6i0DAYZAxnV2FxMnnqZfVQL
+	QzQTsCsmYF2EC2+z6m72LrkvPVm9d5BbFPqmyf8t+GeLsHtcLzNwYgMzs3wZp138
+	8EsS1OKJvIU22JiOIM2FJj9c12kZisSshOQ/EA1vSjO4zQYWTx7lRjJSKcmfkiSh
+	rDhlkloWMmIu0p5mvvXR4ZV1/K/ok1/ZH7oHeGBI0veXLzIZwi/0Xq3D8wpzB3xo
+	OLIWh33XJARYV/+Os8Bkb0pUFZ5AsQZXuXefKu/SBGz5QpP+vVpTwO/2Wk4cvat1
+	Fk53Agwpr7tjpwWyw/Lzw==
+X-ME-Sender: <xms:LjyCaskp4Wl7bzRsNkJiS1dHNOZeqc5klAXcz-QIqE2BSZn_3cX2Fg>
+    <xme:LjyCappu1QzT5FXVOzcH_K7uKzylogydu9JWH1N7gRRwQYIcxuHAW-MmO-ep8vT5L
+    UYoSCcupIHZkKgD8ngd2cFExnrSF4xef3A2vv-x7DpjQIt1gqWAoUjf>
+X-ME-Received: <xmr:LjyCalGpd2e095-V1qgyC6CMrbMSiKFl1wpvfrZlMPsFnWC3gm8KPMZAZWIlZ_dn4g5VqVnm2WFbeVkqmL0w-JmrXXqdfQns6YAlLyfmaKhVvolvgW9E2pY>
+X-ME-Proxy-Cause: dmFkZTGj5+rsZ1MdkW2jE4UWQOyt5NIdygHBfwpYCnu6v7AtmRd24aCCjJvper54sAi4E1
+    9jSAXM/AfRve4DY5E+v78kQH2qqIlNaOvoRerSIBrKTG/pa+IB8ZkJZoJc5T4aGVhq7Avr
+    cM4FwcJ4dU0e04+rUIZ47No6eO01WEjBhDkX0GkJmcAibDwDElpyf5S+7zETgdi6G9+43C
+    W2Bk4ebnOqe5cAPH4Csj/n23keTvR7x2wFgYvyZTAzGayI9fSeCyYLW3SVRqICkSIJwIYG
+    e3hgYIHFnzo521dja0acOrl8Hyk+xXfKpmTGTShK/0jreExxbcfo/HGlu2PAdRcdocRkKj
+    U1q+N5wB2XZPGZJAyoda/EbLcaAhbY+pLOXXoaa+iHkx5uIHGVd8QWswLtpMp/orqOY+fJ
+    wdUPdpIqWyPndjmXYClug2YZlMF95eFkE277IIdIlPbo+E9nffJfF5P9A0La7c7VJOnYwj
+    g2TGJvVO0zPFZtv1CSRv/3110u+HC2vPzcm8HUR3xbgbKudbr1JQZSx8Dq21qBSjHV1ETg
+    g/3BCF7mvqGKaMLTqxsLyi3Gh7419kmta4tbTCpag3YQnSWIrwCLKG7fMV1FOWT8sDbpv6
+    PRYk/RPw2t0VUqlETwxWJT31n888dsdj35AB7ry9gYxA2JH+LMEbUd8pFhog
+X-ME-Proxy: <xmx:LjyCalwrVDP2GO89d0ccODW7z1HgJdQlJAKQOTKHzghF6-JdQF5bMg>
+    <xmx:LjyCaqoxhsK5cbZ4C9kId74-sAnxAOtQoGtizlYi-xTxaX0n2VA_Rg>
+    <xmx:LjyCavjHprO8Q1l7Sja7U4LsWwndkh5Ui-iHFrlYIG77WBDebrvJ1A>
+    <xmx:LjyCaniHXmGP1kTcMZaxAyYP6W_10dwIGgd_9XDEPAXMZrqSkv0_GQ>
+    <xmx:LzyCas7YzN1007uQICkPqrdg_1l6qRW6XA3UTW1-Y4o0ZW15aniJXcga>
+Feedback-ID: i580e4893:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 16 Aug 2026 18:39:42 -0400 (EDT)
+Message-ID: <a0436d25-d6a2-4d12-8859-823cbace3119@maowtm.org>
+Date: Sun, 16 Aug 2026 23:39:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622094623.18469-1-woradorn.laon@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/19] landlock: Decouple the per-denial logging
+ decision from CONFIG_AUDIT
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: kernel-team@cloudflare.com, linux-security-module@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260811094338.288094-1-mic@digikod.net>
+ <20260811094338.288094-6-mic@digikod.net>
+Content-Language: en-US
+From: Tingmao Wang <m@maowtm.org>
+In-Reply-To: <20260811094338.288094-6-mic@digikod.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Woradorn,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on v7.2-rc7]
-[also build test WARNING on linus/master]
-[cannot apply to linux-review/Woradorn-Laodhanadhaworn/tracing-Use-seq_buf-for-string-concatenation/20260813-224524 trace/for-next next-20260814]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Woradorn-Laodhanadhaworn/tracing-Use-seq_buf-for-string-concatenation/20260815-195403
-base:   v7.2-rc7
-patch link:    https://lore.kernel.org/r/20260622094623.18469-1-woradorn.laon%40gmail.com
-patch subject: [PATCH v2] tracing: Use seq_buf for string concatenation
-config: hexagon-randconfig-r123-20260816 (https://download.01.org/0day-ci/archive/20260817/202608170556.RyB6XrT0-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-sparse: v0.6.5-rc1
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260817/202608170556.RyB6XrT0-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202608170556.RyB6XrT0-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x4 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x8 (section: .text) -> bootup_event_buf (section: .init.data)
->> WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0xe0 (section: .text) -> __TRACE_SYSTEM_ERROR_DETECTOR_KFENCE (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0xe4 (section: .text) -> __TRACE_SYSTEM_ERROR_DETECTOR_KFENCE (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0xfc (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x100 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1cc (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1d0 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1f4 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1f8 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x228 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x22c (section: .text) -> bootup_event_buf (section: .init.data)
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Tingmao Wang <m@maowtm.org>
