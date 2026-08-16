@@ -1,178 +1,166 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4573E6DEB;
-	Sun, 16 Aug 2026 22:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786920485; cv=none; b=PFV+xjoP+H6fMAgZQY4lBsarBgEXiHvlb2paM5iiqpq/eQ2hlmgWCrWyV+O/LOG9XCqcnMIhEL7wmXf0W1YIyl6Rsd7yExtv9d8B16Ml7TPvsk9H5fD74GGYRGT9pwGm5VZfbUxmmf4IVK/ce/MsgPH0KQzB5eBqN9Ifv+xssAs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786920485; c=relaxed/simple;
-	bh=y4Oe55bBTpGkU/aNbfP6J95JKmmpSt53Q4zvyPHYMcs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qLHvBIoLMfIXCyIktMEZIaiWm6gza8pvPT1LvchtzqpbaBqi9XwY+NLvkUnT+C/KteOM0SL7zvn7bchBYd5u7YSCE+yDZ0RBPZMGSfvLwjbkSjprIBka/kaFggFcYLtxOaobznac/vmjXD3gMbLNA9duyHU5wYuqX/grXmLp9OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=GFVDPNvE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Hz4HNAaV; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4102F3E315C
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Aug 2026 23:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786921339; cv=pass; b=Xu/YhMfYeVGXHTCgytZjOiuYP8B5CeTBzchTgH3Sej9F48dHXob//1OG3M5yoe0yMkSBfCAzD8EAsxOdJsseRwxxdsHAo4PPcmWEtnem2uqa6wntQIhyAcbMHErFMe34cLTUx88GtiDCXSuv+GiQhHY0DAseAR9OO/6TF+yOs2k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786921339; c=relaxed/simple;
+	bh=TfZcEuGOfr1J68VSYUvGJF5oR+xbrzPMOaOCm+qrrgM=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nZhBU3R2BBBUgxt2p5r3PqZs/Nqm3GwnqzUGhC+ENND3hxSAg+zo21bqo6aerkp0Y3wJ3sQwM8aXEcMaG6LYl5MSUrBJLvPXvABQ0VBH4ftv2HyDSGu9hggqurA4nl0wL7olsR5WIb7k8wSObaqpE0YbZiagvKRdcgm0dSoKlFE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZhytyHed; arc=pass smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="GFVDPNvE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hz4HNAaV"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id E8B7A14000FD;
-	Sun, 16 Aug 2026 18:48:02 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Sun, 16 Aug 2026 18:48:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1786920482; x=
-	1787006882; bh=Iai5LJEqyfwXNhMcgzy+VoGlTqvQD8cplGNN5rO3Gn4=; b=G
-	FVDPNvEdF/lL/bDhKjUQATKlA6pTWX5pDq2Wh5U6aMTM9BzGaSDO688Im2i2YsZr
-	RgZLwS2n+5inMq7Sob+xaV5+TCHHdQG1qDsXXUMDes8OSNoX72MFONQN46UfiGaT
-	gmUPI3kN38+KKJmS39xN5epeDUOgbe34UYQSTXxEscLFjf44HpGbu46bsYtgURrZ
-	hz6oW55iwh5iz4ibfqIA0SlbLWZgVWwx5fgQBGNHTH0sDswgjEjq2xeCLlqIwx7k
-	OjZXiy7IskzyAQXUmhglwRWDYBI7GyO6jyOInK7bkJYi7godKmrDUlhG0svHBspK
-	BKCCz6S1+MQLpB6oJhZ+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1786920482; x=1787006882; bh=I
-	ai5LJEqyfwXNhMcgzy+VoGlTqvQD8cplGNN5rO3Gn4=; b=Hz4HNAaVKEcF2CWJo
-	Om6xPuGHGt2tE6CzXz/iroFOtOXu9jVJ8U1KDKTNufChodRcuF6N/9cR+S45Gc7g
-	U2qTpO/u8LNLszJ+pDJwpQfivAb1vmdzkS/riL3/qXvhsLcKxH0fNGh4G6ViFzFC
-	tlhWV4G6yKXiImzcb3QnFXD/nY+PbuOc5yUw15F6eAa5vnCNtOnYN9ZbnxZuL//0
-	qgPvJyeIyqZPA3gpeNlSE77SZhJx9bF3g3hQp2HA7hU3CDoVLugXJIMJZSUwUysW
-	d7g98jMRabHLZTxC5QOF9JigdxfvevOF9qGHTsmEueBRNVNgfHonEANULwlpslQ/
-	iq3cQ==
-X-ME-Sender: <xms:Ij6CaioSJsqUhI4Aqnx3wt2s0nWySiT1NeBSaIjGrFArF2py7iF4RQ>
-    <xme:Ij6CaqNvDc7Td3dMzxJdZ-Kt7IR2H--Sf4Cf1huLpTAyGgeUd_Dfbvp7yhcZKzlIF
-    YLyqI_5sCybxeqxZGp1SVgxJMsGCxuP34foHNH741tX6Ykq-Zq66orC>
-X-ME-Received: <xmr:Ij6Caird1e9QSdZLPmEkfVKsG-hEMJo4kzWBi2nFYPgFp1GlibN8QyRHddY>
-X-ME-Proxy-Cause: dmFkZTEdkpHxwPvghylIRiDh2DXj/W+5rHHxiNSRAV/FnUvF+pTHTSRogpF51K0JMFOoNq
-    FXR3xXOJwqbxi3xnpOR1gVnxkOx0+3lmAqj6HIZkTE7HCsj4rfJi12LdCUf4noPIB2xzxm
-    G7I/52H/Ds2kSEPPWl68t4mZYEFuU9+tOum6r1AuUpSuXeb/EuVzDQV2mgKoQzhJqWy9WS
-    TVItjwfT9Ds7erymUHvJC6I4UFiVodQ+tEdI5cAgcJk8Vajp+hbWnlKpegW2smcmqEpO9y
-    vf97AV5jaic/zQ1Bw2Y9IMD/RUnDCUvC3h/3BgvkY0X8lg0WF0YKtDhM/4K5gFEWm8G2hC
-    o7UOq1ARSQoAFN87IS8L7LmQD0NqIPY7B3lg1mFqX/Ux9m5lhs/bBn3ORbVqzOiq5xkBQH
-    eMvoSuKMYDFCUz5886MTOlInYpH1NMOThGQVJpNdwJoccgzj6LI2NAzcCnEuDStOxdS3Ob
-    t7IJbEzdcGjLWgq+oRueBNy4DT1TJGHM6PcqkdDdDDoeUE9kieAliwATf6dSYT+wGv4zS8
-    PNNAWvqZZQE8EQod+tB+wj3MtC6rQT+AzOTnzegSlTSw16FRcdIH8OOwF9BXYH+8WCobx4
-    N+1qrWjy3Npgs0clVyYZ0uus3IX3Vf/faSpYjpWgaZtEl4vpp9FuSha/Ga2Q
-X-ME-Proxy: <xmx:Ij6Cagko3JAvb8fMKFhrpQD__u94Z7-YYZku2lum-7QB6QLigMaibQ>
-    <xmx:Ij6CaixAAkAfGekw3AatVXYZGsAydjRbujxVMotnnR75tf2lPNujWA>
-    <xmx:Ij6Cam0v9fPLp8U5tAs4LmdJjkJrrczGOd66tLnpOx7H2hI0mGhMUg>
-    <xmx:Ij6CarbDdgMLosGVqBmC_0tjhS9tqo07XH2nWjprpLIOJsowtDhxPA>
-    <xmx:Ij6CaqEsI3e8D_SGUBLJEtTHMZ4NMCfxEflyw8uzpoFBx1MnHHKWyloc>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 16 Aug 2026 18:48:02 -0400 (EDT)
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: akpm@linux-foundation.org,
-	david@kernel.org,
-	ljs@kernel.org,
-	nico.pache@linux.dev
-Cc: baolin.wang@linux.alibaba.com,
-	baohua@kernel.org,
-	dev.jain@arm.com,
-	hughd@google.com,
-	lance.yang@linux.dev,
-	liam@infradead.org,
-	mhocko@suse.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shuah@kernel.org,
-	surenb@google.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	ziy@nvidia.com,
-	usama.anjum@arm.com,
-	agordeev@linux.ibm.com,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kas@kernel.org,
-	jannh@google.com,
-	willy@infradead.org,
-	pfalcato@suse.de,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [RFC PATCH 57/57] MAINTAINERS: add an entry for collapse
-Date: Sun, 16 Aug 2026 23:46:09 +0100
-Message-ID: <20260816224609.308019-58-kirill@shutemov.name>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260816224609.308019-1-kirill@shutemov.name>
-References: <20260816224609.308019-1-kirill@shutemov.name>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZhytyHed"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-38de840f2f0so2271825a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Aug 2026 16:02:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786921337; cv=none;
+        d=google.com; s=arc-20260327;
+        b=NQxaOfAESuErw2sSsRgJZ4gKrthmu4vrC5xN20lIe5fuvdXmbAOSJ1zCITwaQ214KV
+         NurQeIjX9SoaBVUTK3vhmLegtjPh2NKk6+GgTgE5hCuFER+1CrUtv6PBM3qrreJZkyJw
+         Vcgnrln72FXdrX2eK0B7x3GID8T6GNZpojPfJ8sdE0CTQoiKMqwxVFIf/P3Y5IN9tp/X
+         LGMFmxiKTeEavxHsRrTJwYKxiAFR2ai0JzEmJ5T+yhplKZtY7zvDKhNjftZq39FHOqtm
+         faj78gyWJCXDeSJDfdhnRCKx8fFXUjBodkVgd/Mj0AClNVdw7eQX8ai0nF54QyEI64Jd
+         CSjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=5ZNfUxpi7veRTWLY2tYd3MK6swZzgBzgGr9g7FewAwE=;
+        fh=R8yujAsZzsVpzISSUxx6B3Pc43ZVIcWKi1ziLSd+IK4=;
+        b=s/0P2oVf4mfmnkZy/ojj7xKa5n+j6+LnNPe7DGsp4eK3hHyKpJROlsQgEn4K0Mp+hn
+         i2SY8v7v26aI1zCDBMfCpGeM9UKZOO3gKR6Fzq6lXXJrGH+j+fQx6KSZcDTVmuaKhEFg
+         +0c1d+NfFTHXioXIlEKt1Ftp7OAsNY9HY9JcXMkIUkK4GYJxEovLesP01n6NDGWB1Jmd
+         3jLztZkfBnfklz5XPVC1YpNkCreYOBe59u90Jo3opME4Q1fUksxiGQHYBAeOUKhmBWrZ
+         8GO22pi09x5gvblUKAhiFWdwigLXkCDwcbBQBcWilPdx4cZ/vTP89svtiPFtmEqK5yr2
+         clBg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786921337; x=1787526137; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5ZNfUxpi7veRTWLY2tYd3MK6swZzgBzgGr9g7FewAwE=;
+        b=ZhytyHedRegTQJdB72hzhl36LkwlPMY+SUvTiVNmcR2RGcaV/Y45h8XH7PULKVmJWW
+         kvNIpiVinXbb4MeanQHpAtpUun6QXSs0d2gEFj+kShHk//NNiQs+bjHTR+ZmkzVebzK7
+         uyEHY6wzjDKN7zja4oujvUBnY5AHVcx0t9x5whiMPyj7K6rSofmJYrmbDWZWWKr8U1ei
+         GGOjbdRWoXsmZPFDzMqRZ3E1iIEUq1UyVXLkFfi+91Le7OjmGd+hbYHNUY5H1kYwkyz2
+         jesurAJdpwqbBKRhJlRgPo+0Hpj4OsfpssK8OGcz8iruokGlfWQLtX856uCRYohbZGhu
+         BWUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786921337; x=1787526137;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5ZNfUxpi7veRTWLY2tYd3MK6swZzgBzgGr9g7FewAwE=;
+        b=oyk+OjUn+B2fVGG1tFD9Cw8od5ziuMazCpH4P0hYI4yZ/ZVKZFz8+a7/7XxUUXmpTN
+         sM5hCrt8EGHkI8vLxtZBXyckbpJw7Fd4SIqVxqkzh+FKY78n3G59SYdFfViDnL/5SC54
+         9ng6dbXWUZ+yFC8a+JWaEbGKR5vttt0Mjwxv1hswzO9TOisCM5H6o2ftCwcJwW/lN2fZ
+         qLL2phfbieytXD3sgQKvliUGTNrzUj5KZKu3olA29o6pNQ15zIwa70+V+349TAABKDrf
+         L8/PlgTthAOUL361+PrIz4s3T2XBSjEWk6hjsWrHQcAGly2B7De5A+ZFeiGq7FDoBO2L
+         Mh3g==
+X-Forwarded-Encrypted: i=1; AHgh+Rq3XKPB4OT0lycvZn1kIfuaiP5Y7I5CKApg0xIU9jlboVj3RGV7z4MTa+e2jwRWezrMWHU/waOfgUshwwjWMIJHpAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqw77yZsNvlEindEvHW2cAsDB8BcZpNSb71wpNksoBz6U5F8sk
+	mgMkTF6kNDN77YUgfjDFEDql80P2mFwAnAWNBt0/vgWQiiSybYUcJ/L50+yd1b/iAJScdGWR4X6
+	SrYgVn1phDmRPpgwG/XeWRI+q/zAchbhUE2ZoQ/ET
+X-Gm-Gg: AR+sD12pqam5Zxx2VHJcsPC/kmAG5mmh0jj+hEt9Wf3eCJpdxin8jEUgFyP98GRgUMY
+	/vEppk705C94+XsMeth61KecqspyKNpB0xD2UsUaWjebvXNBnP/j3ok3Y/9G+fAaULXSwTxXfxu
+	Luz3WTv8CLJ707dnkzYOtPdt+LRqrSJxzqOF5Bw8VHWR6TtGBYRO3xkIfu3xBDk9MQB7EptxiNa
+	vIgkdZqoxFhxpv0wDeq8jXgKoX0tCyagV32RaW2oT1aAbjiEdz3DLDR38wf9d2fu/DNqy8KFk/S
+	mEwQPw1xMVDWWygxfbH067Emk7PGTe1tGH5xhjrfclFa0kwMD27X16dN/Tz52mOAP4jFcuZDJAN
+	LFg==
+X-Received: by 2002:a17:90a:e7c8:b0:38d:adae:4866 with SMTP id
+ 98e67ed59e1d1-3933bd2066dmr20117316a91.21.1786921336732; Sun, 16 Aug 2026
+ 16:02:16 -0700 (PDT)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Sun, 16 Aug 2026 16:02:15 -0700
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Sun, 16 Aug 2026 16:02:15 -0700
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <beecf36b-b0eb-4691-918f-fd39f46d5d8f@linux.intel.com>
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-15-2fc18ee6d3ba@google.com> <beecf36b-b0eb-4691-918f-fd39f46d5d8f@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Sun, 16 Aug 2026 16:02:15 -0700
+X-Gm-Features: AcwNN1Va1JdlpRRtXfl-rgaiOwbgkg6rBN2xjp1zNZlzVot1c-IWzDKRKQ6t494
+Message-ID: <CAEvNRgGtnQfhCkrWah3jNeivbHCQqRSQEXs=uqJhBmS+GVntrA@mail.gmail.com>
+Subject: Re: [PATCH v10 15/41] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: aik@amd.com, andrew.jones@linux.dev, brauner@kernel.org, 
+	chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com, 
+	jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org, 
+	pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com, 
+	rientjes@google.com, shivankg@amd.com, steven.price@arm.com, tabba@google.com, 
+	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com, 
+	forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com, 
+	aneesh.kumar@kernel.org, liam@infradead.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+Binbin Wu <binbin.wu@linux.intel.com> writes:
 
-Collapse is now its own body of code: mm/collapse.c, a header stating what
-it offers a caller, and its own tracepoint family.  It has two callers,
-the khugepaged daemon and MADV_COLLAPSE, rather than living inside one of
-them.
+>
+> [...snip...]
+>
+>> +static bool __folio_safe_for_conversion(struct folio *folio,
+>> +					enum lru_cache_drained *drained)
+>> +{
+>> +	const int filemap_get_folios_refcount = 1;
+>> +
+>
+> Nit:
+> After adding the helper, the use of filemap_get_folios_refcount seems
+> less obvious. It introduces unnecessary tight coupling with the caller,
+> though it has only one caller currently.
+>
+> Is it better to pass the value as extra_refs, similar to what
+> lru_cache_drain_for_folio() does?
+>
+>
 
-Add a section for it, and move what belongs to it out of the THP entry:
-khugepaged.c and its header, the trace header, the selftests, and
-mm_slot.h.
+David also suggested [1] something similar, please see
+https://lore.kernel.org/all/4c638fc5-5a74-43d0-b5bf-d7ef893cb994@kernel.org/,
 
-The selftests are matched as khugepaged*.c, which also covers the race and
-sync-check harnesses the THP entry did not list.  mm_slot.h stays listed
-under KSM as well, which is the other user of it.
+Please add on to that thread if you disagree with the suggestions!
 
-Assisted-by: Claude-Code:claude-opus-5
-Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
----
- MAINTAINERS | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7c179b333e4e..4e4e5030b979 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16955,6 +16955,20 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
- F:	include/linux/balloon.h
- F:	mm/balloon.c
- 
-+MEMORY MANAGEMENT - COLLAPSE
-+M:	Kiryl Shutsemau <kas@kernel.org>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+W:	http://www.linux-mm.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-+F:	include/linux/khugepaged.h
-+F:	include/trace/events/collapse.h
-+F:	mm/collapse.c
-+F:	mm/collapse.h
-+F:	mm/khugepaged.c
-+F:	mm/mm_slot.h
-+F:	tools/testing/selftests/mm/khugepaged*.c
-+
- MEMORY MANAGEMENT - CORE
- M:	Andrew Morton <akpm@linux-foundation.org>
- M:	David Hildenbrand <david@kernel.org>
-@@ -17272,12 +17286,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
- F:	Documentation/ABI/testing/sysfs-kernel-mm-transparent-hugepage
- F:	Documentation/admin-guide/mm/transhuge.rst
- F:	include/linux/huge_mm.h
--F:	include/linux/khugepaged.h
--F:	include/trace/events/collapse.h
- F:	mm/huge_memory.c
--F:	mm/khugepaged.c
--F:	mm/mm_slot.h
--F:	tools/testing/selftests/mm/khugepaged.c
- F:	tools/testing/selftests/mm/split_huge_page_test.c
- F:	tools/testing/selftests/mm/transhuge-stress.c
- 
--- 
-2.54.0
-
+>> +	if (folio_maybe_dma_pinned(folio) || folio_mapped(folio))
+>> +		return false;
+>> +
+>> +	lru_cache_drain_for_folio(folio, filemap_get_folios_refcount,
+>> +				  drained);
+>> +
+>> +	return folio_ref_count(folio) ==
+>> +	       folio_nr_pages(folio) + filemap_get_folios_refcount;
+>> +}
+>> +
+>>
+>> [...snip...]
+>>
