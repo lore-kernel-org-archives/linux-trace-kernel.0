@@ -1,145 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B993033CB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 07:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A643B3C14;
+	Mon, 17 Aug 2026 08:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786950962; cv=none; b=qHGMUx+AnCRS7gnsQPjdiekudp4d6IXycK6+B9esfUvJifadi6tGPDo6vNhrC84qwAAqqUKuDRPZYSRDMtSOLx2LrPw7yk0DPFMfY9P/Rp+nU+GjwHZjoaUGZ7stLe2XwIXRqiuYDmDMBQQpMkZNkxRgsgYz/NoCtlOA5tTkHGo=
+	t=1786953890; cv=none; b=kyJIn+k/AD+eoYR5uSuiAqEMJj6vszUUuHIiODi4TNB/mZcTcqL+5SrSEQdWm4lMK0kUDPGJIPoAIufpNiLQ5QIBa0kccLV/XY/d006ZEhLhC8FjSKyMdq1G1iND9qJi5Su1Xq0EfdPqyhzmuQmsubf1qEjEH8LIGnJ/hzSfPgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786950962; c=relaxed/simple;
-	bh=v3z4PfSM6JghqMlh7wiK/S7MvWZveC5X5xWc2flFhdY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aFmESQpfUUizdVTMLWHI0kcISeM0paP0a9cgB8aJGFaGuqvh3zRBe7h9UjCQHUChERbGVqhC59YzEjdi2C5KIX9fN0d4KG5D0rChzL5Cm4rkbLSNA41gk4Eqf6BHXvMfh6EePysL/gt9YqAim+7kDOY7UnvJ9H87fqnHO4/gEEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MyZiIPi+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786953890; c=relaxed/simple;
+	bh=vysRNSYSTwolpYgu/f2kDU3j2KSjD484zo5IVWXfZIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pdNkR0pQpWAQ2th3RzQwB3EImj7c30kdGkNVwdSC9UcvhFeMQSQpDma67Bt1JdLNiI01rGI8DhqnR5byxgQetilPa4Kb4qdjutG/CxoRj3O3asq8Mq1uUe7kjbdom3EoA7R3zfJPmpJI4YeyTjjLXeab/5J4OE2JlXLytbGn04E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlsg3MZQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MyZiIPi+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786950959;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v3z4PfSM6JghqMlh7wiK/S7MvWZveC5X5xWc2flFhdY=;
-	b=MyZiIPi+tRFRKDGmHbf1czEGQs16Qxvc36uvQXOLOga8aR7dBZ/pDClLY5cfbFWgUK2LPr
-	CLeco1YLX4MHpSfGlzRDr3Je9n1+pbxWxXQoWRtQrgQ3LYSxI2x66DhqZii6TXFdSdnhok
-	rtObg5VkgmZOix3g4W93O9xs9CGW8ME=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-320-0ySl7t_TPy2gWn47qeR50A-1; Mon, 17 Aug 2026 03:15:58 -0400
-X-MC-Unique: 0ySl7t_TPy2gWn47qeR50A-1
-X-Mimecast-MFC-AGG-ID: 0ySl7t_TPy2gWn47qeR50A_1786950957
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-496c06ba017so16599435e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 00:15:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786950957; x=1787555757;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=v3z4PfSM6JghqMlh7wiK/S7MvWZveC5X5xWc2flFhdY=;
-        b=RlPRgfbOUYaUmhJ/+XtwSGu/pLmq/XKIyvuQnVproMwrDt+rgyq1HRv/JUS2vdoi4Y
-         F369R34tDKexOiW01vX30Qi3a57fBIurVvksAygoGPva04vAPfX1Lp19WjQpfPDE4WAH
-         YMx5VUtYlR5hpNgmCJ666E02kZOOihwFt5xZTofQ3UElmnetHsNtfcruNw+l4SQhXGfN
-         8cqR033EIDbG6JojTPZOZWZ9iT9Kw86RrUad6fgEILdfQTRoBjD3Od0zyqY8qKEeKeDu
-         3ebyc4A3WDugXAANw6g1buJaVXrST84DiijXClK4uqN5sCHTegBPEhz9lwiKGk2lhdtl
-         +GGA==
-X-Forwarded-Encrypted: i=1; AHgh+Rps1/7zdOicnKFlJGKalv05/HXXQ2sSUxg+hZxEzoyKILLydcYJYjKYhjNNcPro4LfW2N5iy8r008G0k9sI1uKEFWE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKLKlYinNDWR0MAaztFRQ7LZ7ij1/FeEfSNNUSttTplzfNgmOv
-	TPPg2RrHaOy52ybX0g6wINaawMGgMx173ctWubLuiDtrNpMG762pOMWhsXvFyX1/isHs7RXtAMR
-	awMCIC540coiVK7UtZ8Y2c2kT3spxuKfiTpZU+XNpNnObaCJpOnq8HGlBUwTcE5Wf2yFVuEoltw
-	==
-X-Gm-Gg: AR+sD11E75QI3BIIk8YZgw4w/329oXUcxWwYuIoxzobYs8i40iortkaRhRIFsPFkI5Y
-	KZCAEwnBhrQW2Lj4gGXlz7FEiAY/3oHqnc9TChcMJxGphnYvuiRLw1Hb4Xt8aHl2IhylW+scZL3
-	hS/u6IzXI5bZNgd8pxEpPAfOAOWStXV+v2CXfCWDR/f7kiIfXIQaY120yhfE7AmVJDSTgVLDWOm
-	X1SkdwHQTDw0/zUzWsVYrmEFV7DY5annCpuuUUz+TJ6unSmPVGFs4ijk9s7SLsrb3NCpaS+rjAo
-	BxieZNmptlurTZz3pXyZu0pbCwNLvOlX7VPrkViLPc5x2giTn8gVkGdYeX/Q8olmKekqAYf3IEX
-	tzK245DjzCmvO+bmkknDrIJap75y7TvapD20x1qWz9SXV4HtpxZOdy3NUMnKBfaIFQnAJJg==
-X-Received: by 2002:a05:600c:3b90:b0:499:59fd:dbfc with SMTP id 5b1f17b1804b1-49987a4f131mr302421275e9.1.1786950957064;
-        Mon, 17 Aug 2026 00:15:57 -0700 (PDT)
-X-Received: by 2002:a05:600c:3b90:b0:499:59fd:dbfc with SMTP id 5b1f17b1804b1-49987a4f131mr302420595e9.1.1786950956598;
-        Mon, 17 Aug 2026 00:15:56 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4999610ed6dsm158565235e9.8.2026.08.17.00.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 00:15:56 -0700 (PDT)
-Message-ID: <8e9c771e8962eb9ebcc1f433571e9c45838a565f.camel@redhat.com>
-Subject: Re: [PATCH] percpu: Drop CONFIG_DEBUG_FORCE_WEAK_PER_CPU
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Tejun Heo <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>
-Cc: Christoph Lameter <cl@gentwo.org>, Andrew Morton
- <akpm@linux-foundation.org>,  Suren Baghdasaryan	 <surenb@google.com>, Kent
- Overstreet <kent.overstreet@linux.dev>, Steven Rostedt
- <rostedt@goodmis.org>, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Mon, 17 Aug 2026 09:15:54 +0200
-In-Reply-To: <178656406317.2437052.7257990869957704195@slm.duckdns.org>
-References: <178656406317.2437052.7257990869957704195@slm.duckdns.org>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlsg3MZQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE351F000E9;
+	Mon, 17 Aug 2026 08:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786953886;
+	bh=/8YEgw0OcGhLggCgZu0df/8CubxvmgeZk0MDZaoHme4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jlsg3MZQb936uD7sRHVGzRJsM4FPP06SzC3LJGqDw3Ziw3v0yU1MFVOvQeRHx3m8o
+	 2tS/8PUESGgMjjAPH43sdrcpv3blq0zwFE7Y9/Jwus9K5nh2OSeLV4CUWEWbjXRLLY
+	 uzLKcaBO52LJeRgop+GD7611SUufWlz9v8BtmwWELgHKrQ3CopYlUrafbxLptgRsXS
+	 ZcxocQSRRySex3jfHuDZLY/ig8HI2qtgXuVA2LIrKB17xKtWo08XOMKjeNz+eKD84x
+	 m+qvoZlHD469WMQh3awtCO952TARRFzZDrvSk2C/1IZ4CGLsOtVxFr5sbaGd4V851Y
+	 g9g+uW3thmbhQ==
+Date: Mon, 17 Aug 2026 09:04:24 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: akpm@linux-foundation.org, david@kernel.org, nico.pache@linux.dev, 
+	baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com, hughd@google.com, 
+	lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com, rppt@kernel.org, 
+	ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, usama.arif@linux.dev, 
+	vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, agordeev@linux.ibm.com, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kas@kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de, 
+	rostedt@goodmis.org, mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 57/57] MAINTAINERS: add an entry for collapse
+Message-ID: <aoLASuFkQ3rUrWa0@lucifer>
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <20260816224609.308019-58-kirill@shutemov.name>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LtMImGhlQzUN4rzL_CjGVK-aucny8kPpv4lcgE2LDbQ_1786950957
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260816224609.308019-58-kirill@shutemov.name>
 
-On Wed, 2026-08-12 at 09:47 -1000, Tejun Heo wrote:
-> alpha requires percpu variables in modules to be defined as weak so that =
-the
-> compiler generates GOT based external references for them. This puts two
-> extra restrictions on percpu variable definitions. The symbol must be
-> globally unique even when static and a static percpu variable can't be
-> defined inside a function. DEBUG_FORCE_WEAK_PER_CPU exists to give generi=
-c
-> code build coverage for these restrictions without building for alpha.
->=20
-> MEM_ALLOC_PROFILING defines a static percpu counter at each allocation ca=
-ll
-> site and thus can't be built with weak percpu definitions, so it depends =
-on
-> !DEBUG_FORCE_WEAK_PER_CPU. As allmodconfig enables DEBUG_FORCE_WEAK_PER_C=
-PU,
-> this knocks MEM_ALLOC_PROFILING out of allmodconfig build coverage.
->=20
-> allmodconfig coverage for MEM_ALLOC_PROFILING is worth more than build
-> coverage for restrictions which only matter to alpha module builds. Drop
-> DEBUG_FORCE_WEAK_PER_CPU. Restriction violations will now show up only on
-> alpha builds.
->=20
-> Reported-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
+On Sun, Aug 16, 2026 at 11:46:09PM +0100, Kiryl Shutsemau wrote:
+> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+>
+> Collapse is now its own body of code: mm/collapse.c, a header stating what
+> it offers a caller, and its own tracepoint family.  It has two callers,
+> the khugepaged daemon and MADV_COLLAPSE, rather than living inside one of
+> them.
+>
+> Add a section for it, and move what belongs to it out of the THP entry:
+> khugepaged.c and its header, the trace header, the selftests, and
+> mm_slot.h.
+>
+> The selftests are matched as khugepaged*.c, which also covers the race and
+> sync-check harnesses the THP entry did not list.  mm_slot.h stays listed
+> under KSM as well, which is the other user of it.
+>
+> Assisted-by: Claude-Code:claude-opus-5
+> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> ---
+>  MAINTAINERS | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7c179b333e4e..4e4e5030b979 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16955,6 +16955,20 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>  F:	include/linux/balloon.h
+>  F:	mm/balloon.c
+>
+> +MEMORY MANAGEMENT - COLLAPSE
+> +M:	Kiryl Shutsemau <kas@kernel.org>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +W:	http://www.linux-mm.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	include/linux/khugepaged.h
+> +F:	include/trace/events/collapse.h
+> +F:	mm/collapse.c
+> +F:	mm/collapse.h
+> +F:	mm/khugepaged.c
+> +F:	mm/mm_slot.h
+> +F:	tools/testing/selftests/mm/khugepaged*.c
+> +
 
-> --- a/include/rv/da_monitor.h
-> +++ b/include/rv/da_monitor.h
-> @@ -24,7 +24,7 @@
-> =C2=A0
-> =C2=A0/*
-> =C2=A0 * Per-cpu variables require a unique name although static in some
-> - * configurations (e.g. CONFIG_DEBUG_FORCE_WEAK_PER_CPU or alpha modules=
-).
-> + * configurations (e.g. alpha modules).
-> =C2=A0 */
-> =C2=A0#define DA_MON_NAME CONCATENATE(da_mon_, MONITOR_NAME)
+I'll look through the series properly, but presumably this is a separation of
+the THP collapse logic, and therefore should have the same maintainers/reviewers
+as the rest of THP.
 
-For the tiny change in the RV header:
+>  MEMORY MANAGEMENT - CORE
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	David Hildenbrand <david@kernel.org>
+> @@ -17272,12 +17286,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>  F:	Documentation/ABI/testing/sysfs-kernel-mm-transparent-hugepage
+>  F:	Documentation/admin-guide/mm/transhuge.rst
+>  F:	include/linux/huge_mm.h
+> -F:	include/linux/khugepaged.h
+> -F:	include/trace/events/collapse.h
+>  F:	mm/huge_memory.c
+> -F:	mm/khugepaged.c
+> -F:	mm/mm_slot.h
+> -F:	tools/testing/selftests/mm/khugepaged.c
+>  F:	tools/testing/selftests/mm/split_huge_page_test.c
+>  F:	tools/testing/selftests/mm/transhuge-stress.c
+>
+> --
+> 2.54.0
+>
 
-Acked-by: Gabriele Monaco <gmonaco@redhat.com>
-
+--
+Cheers, Lorenzo
