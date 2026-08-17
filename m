@@ -1,226 +1,310 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20643F5BFD
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 11:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A378A3DB321
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 11:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786964723; cv=none; b=sJDghD2VcLgIaPyB+XPBcN3dhFFd2r/+iiBVfec9LHgKYzBsMJ4RlzsZRnIblvoql9nf+Jj6BxjaI+Z91Qwq5GzyP8ZbDEtIWPxe56WfYfzfgMu+ppkAD3csvB7pBbLjSSahoVmrdMMAuMBKOTdr3QEJ2A8E/E8jUmn9ZcXXKdk=
+	t=1786967496; cv=none; b=huOol0bZMIGL0+L6MndpvU3POwtlo7awC5v+YtM74GO/A/EAFaL4mYpnCH+l4k6UEFamhBbc1t5PuvLIyYAp6czqyi6Qho2LMCaSJakurR+d9+1/U89L86zJ5uXpR1Uq43h19E/Q1FdqLzUP67OUixODy+NWThXI3gOTOJ2fXGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786964723; c=relaxed/simple;
-	bh=VSoEXH18n8VSRL1XUU1ajNZQgIIyb5rsL/oEgfpDneI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hNt+S29TTFN7YjXmBit/Z8JL1Bd/0gos7AMiL/diKUWQBYD+wMI2/N/GAxxq23Gb/cqVe/pFyFPE09NJdu03e0Lk3zg81gQC7dDGrckdoBTCZqYiYcXdoP4JtMVDDSNA8FQjEue7QIBSnOWm/FeobhubqOPUpxLHCFhU7QWgkDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xrj/qcjT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1786967496; c=relaxed/simple;
+	bh=JW/OUHm0+iHvEZgreUAX7GG5l6sE3x+M8wliXF9FvFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jcFZ5rdtRUoGtEOAJT3KQIZQibV5mB0J/N27PEjkD2o2fIf8wRQOf2xhccW9KlRX3TCMqQUtUImRWW8fAwXQZmeoFAMeEscK8Lej7ji7G3aVCIH830PBMjV9SsyjGpdOmp32LDtkeaA9Yt/q7A2AcOa7qFopP7vcDWXIFsJm6Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j8CKmQT5; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xrj/qcjT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786964720;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VSoEXH18n8VSRL1XUU1ajNZQgIIyb5rsL/oEgfpDneI=;
-	b=Xrj/qcjTwlT1Qq92gDR7oSloEDvfVExEfDGce+VAjOfxt9T8uu6mJVF9pr+tcGTbRmXMMu
-	5i1uI2h0DOSruHCvVTTvXx4XAkcpX9HyGaUiYTjHqq58MsSZ8xNpprPkmin965spM91NO0
-	vUHrpQbcFVnXD2LBrOXiYOFGNSbmPz0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-544-pv2Cl0XZM_6i9iomEKPZgg-1; Mon, 17 Aug 2026 07:05:14 -0400
-X-MC-Unique: pv2Cl0XZM_6i9iomEKPZgg-1
-X-Mimecast-MFC-AGG-ID: pv2Cl0XZM_6i9iomEKPZgg_1786964713
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4955843c6cdso31379525e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 04:05:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8CKmQT5"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6b0be561175so1882694eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 04:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786967492; x=1787572292; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DVdBgZgiFXGDjbJpuNlt9gLYnAgItSA9haLa1Vijdyg=;
+        b=j8CKmQT5ymAs/w2KaE9/fLu43OGrrZiIdhNC7n4fuoBiyM2KMAYsj4Ggo4OU2WxO10
+         bRO9hTEdv/c5bOn4AvTx2abw97xMOeobpa209OyeBEKPTt/iVQLVpEjmR1rAxFjdePwE
+         mUqluDWOSpKT7LbS+zBaLiAKJkvgfpauIZZe3BvVpkMH84QFv+EvE4qLP/0aS64jnS2Y
+         PMu2WVeziEUPOB7b7fx0DdUClnKgFMZpVYu9foosKhq5QJPblIDwCQ2N1wiTmJnFq08P
+         0OL09sbfoAmotZOjOGi6owWe9LH1fq7RM/d5wZDegt5K0BESkKR0H0CwU8BXXv3yURnz
+         5I7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786964713; x=1787569513;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=bFJHtQEQTjEN89h+WkE0r6/DImgMIWSTd0t59oRhvCU=;
-        b=HvvN8qklZV7DRKBGtvMMmT5JTSX0Rq02aZ0WPvSNan3Q1E5f+8HDSJBMJnnKMT2tZ+
-         wIirkV5mkWK4Xi0wJCPUcL2dtGwDh90niAIgYL1j40cbZYfd+wR4L4jo1ONOaUefB7dn
-         YdThnXHNWtnfe6m6y5zpPNlH2KjSSfuGVigKEwnzVhhaSa8bsdpB+44i01de/KrgieZi
-         +Y3O2Ggw3GeLKmrZkxSElytjWK4PpyNbcJiOo8TElErBIGyELd0e9FfekwJ/4L16opVM
-         2eC6CwbENNbrQnB9Iq2Vf7E00lcJtF23rpHlgQ6Lp6ZbhjkyAj6HGb2L9TeFdShlctqv
-         96uw==
-X-Gm-Message-State: AOJu0YxswGzdnThwWbvnHXko89tR4sNqjUeIVCAYy/pquGxVCP6mc3a2
-	ZLx+JymjRO60Fyf7THs4PJYaiqQnA8jQE7Wy+VMSGfMddShcmuaFJNqh7WPgKXbEriouzjPy1Rz
-	mjhHPU6T448TPSg2epmkXKmeyNI18t3OoCYpgjALyoDDx8h6HTHLy4kMGA/OdQ38xlnKPC43mMw
-	==
-X-Gm-Gg: AR+sD12Z6gVQzIwYwv03jb5vqF5duCQ6FyFRxg1cTo549psXsgB7p2LpVmrtAbq4/jJ
-	mhhT6+Nd3u/aBKgL/sxyvmC6nIDVdJKnpWEwbvx0l+pr0eXMKmSNSJAls2wKxQn2aR9Na5VCAgi
-	ilRnmtxsb24wcpSjVmrkuSNBoSd0UwhgoxHBgZ7ZkO9ltxyPwHApVSEEyNprw3jx9MTTz0BeAFN
-	ugoGcE8C4/00m+8TWhBS2enOW0Ph3XJbQ2a527myhQjuXlpxEFCBdW4tWUFh+VccmdgHbpxTaoS
-	PKVrg87C+eY55mn58EGaloDCDiCa/OYyt2LrWKjOcjJQ1K2V/kiKctWsbY39X8acytmHNaL/k/F
-	R1mb2DVYrEHQ6yh2g4jJ7l+iv6/6mddBPdB6qJsuJsbu2rpQRrLbei578dTLMM14ps/mzBg==
-X-Received: by 2002:a05:600c:3151:b0:499:51f0:a9b2 with SMTP id 5b1f17b1804b1-499880b4335mr339156475e9.1.1786964713052;
-        Mon, 17 Aug 2026 04:05:13 -0700 (PDT)
-X-Received: by 2002:a05:600c:3151:b0:499:51f0:a9b2 with SMTP id 5b1f17b1804b1-499880b4335mr339155485e9.1.1786964712658;
-        Mon, 17 Aug 2026 04:05:12 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482a5a3b51asm3138914f8f.11.2026.08.17.04.05.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 04:05:12 -0700 (PDT)
-Message-ID: <0e0641cfd06ee56488305ffdb410ab27706f202b.camel@redhat.com>
-Subject: Re: [PATCH v3 4/4] rv/reactors: add KUnit tests for reactor
- registration and dispatch
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, wen.yang@linux.dev
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 17 Aug 2026 13:05:10 +0200
-In-Reply-To: <87wltpnhne.fsf@yellow.woof>
-References: <cover.1786294920.git.wen.yang@linux.dev>
-	 <2b91af9f6d045f7fdb8620ef5c66c3b3e189833b.1786294920.git.wen.yang@linux.dev>
-	 <87wltpnhne.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        d=1e100.net; s=20251104; t=1786967492; x=1787572292;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=DVdBgZgiFXGDjbJpuNlt9gLYnAgItSA9haLa1Vijdyg=;
+        b=g9DNktFE+49IkhIGHQznG/jNUZ05xfcXMr70gSY/TyRhwMw7zWAu+ecOxUuUu31Z2l
+         cxyRHkpg+hnAbZ+q2y0DtULBA0Hv1X8p1xLthJlQ3uv1kILrfxwsggwhHkDcbbqJYkQy
+         4jMZvxGk8khJiGytR/3L1j2X+cFr4RneAnxy/cl2tL/7+WkRBZVannWZJjHEHXcGC+Ox
+         AQzlQ4i5A3oRCvCWnxRlbijnujjpV/ldBPWiaTT8Fg/tvN6Gknqp5c6IZUsDX0amzdnk
+         w48TbU3DgpMs9/CmiD/8mEK8EmEGJsNTt7GE7qXcUUQ8CAjgGz2DdF6CedF1Et3pIfSG
+         EcGQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rq+fkOBaa2AxMB1yQkATOcGjJBewKAJwk7B+/GabDCC42GB8Taqbkiao2H1yh7jwOdtUl9imqM+G1cgVYygYC6gKf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHsONW88PIlp7fBlKFnnILVQO4kI7nNqDTUuTfc4TXgnOPEppW
+	3yQt2dzrO0rP0aChUo1wIrDVxVKnoYRcT0g3ZUVjh7XGtcqJM5ljvjyb
+X-Gm-Gg: AR+sD12oOkgxtZa56JO/m9XSCZo4HQMQLzkpTvrExFDWrYCvXrQ2UYzINFNAzHt81ub
+	uUXyBg0YiJPiLK3L3ZOy6UVMJP4pYBC1Fcjk+IaXfG0KYjc+KGOTo4FE+c6NgL8eY48qPUBpFH6
+	AkGsoAhChOQ/49+LNSrUblJ65ZGwf1XyVVrC7XdmUjOXsmOQfL4ey7OICoa0CS2UO9GDUXwdWTP
+	5oNsn9Dly0CF/qmAmEHQX73s9a9dNsbYay+nBy16uZT4WsdK8JwqyTkJB6fYOSEErB1SfiqIC0t
+	62ywSj9ZZI1r53BiIRKKBzYPA23tAs1G1FDq8f3c3yA0RgCHQZklbYitCHQxPsvUZbRVb76Omwc
+	apFfb3KS+MT+zvfAMZ9hGOKCCAZZzegAUKqqWxi4ubf70oZOHbFnV5cxzRdvw9KgArZZjPs7prS
+	VGXA4Tcb2R0Akdq8JjbVIJFdP8WwlBnoqbVR/QL4cMQQTHbqYu4v3tB/4Nezwwuw==
+X-Received: by 2002:a4a:edc9:0:b0:6a3:7af2:90ef with SMTP id 006d021491bc7-6b0d5fdc3a6mr23600155eaf.6.1786967491410;
+        Mon, 17 Aug 2026 04:51:31 -0700 (PDT)
+Received: from [127.0.0.1] ([144.24.58.22])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-45f22d73a34sm881100fac.9.2026.08.17.04.51.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2026 04:51:30 -0700 (PDT)
+Message-ID: <77a90576-7142-4537-9e24-6fcefb0c6dde@gmail.com>
+Date: Mon, 17 Aug 2026 19:51:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 8kl9r8-P8TqjbnSrHq0At88ARxviwOveOq13WIFyCM0_1786964713
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 04/11] tracing/wprobe: Add wprobe (watchpoint probe)
+ trace event support
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <178611679753.237811.10190793347982785419.stgit@devnote2>
+ <178611684231.237811.7919346786503289720.stgit@devnote2>
+Content-Language: en-US
+From: Jinchao Wang <wangjinchao600@gmail.com>
+In-Reply-To: <178611684231.237811.7919346786503289720.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2026-08-17 at 12:52 +0200, Nam Cao wrote:
-> wen.yang@linux.dev=C2=A0writes:
-> > +/*
-> > + * Use a fixed-size array so sizeof() gives the exact byte count at
-> > + * compile time.
-> > + */
->=20
-> There is no need for a comment. This is obvious from the code itself.
->=20
-> > +static const char long_reactor_name[] =3D "kunit_reactor_name_too_long=
-_xxx_";
-> > +_Static_assert(sizeof(long_reactor_name) - 1 >=3D MAX_RV_REACTOR_NAME_=
-SIZE,
-> > +=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "long_reactor_name must be at =
-least MAX_RV_REACTOR_NAME_SIZE
-> > chars");
-> > +
-> > +static void test_name_too_long(struct kunit *test)
-> > +{
-> > +=09static struct rv_reactor long_reactor =3D {
-> > +=09=09.name =3D long_reactor_name,
-> > +=09};
-> > +
-> > +=09KUNIT_EXPECT_EQ(test, rv_register_reactor(&long_reactor), -EINVAL);
-> > +}
-> > +
-> > +static struct kunit_case rv_reactor_registration_cases[] =3D {
-> > +=09KUNIT_CASE(test_double_register),
-> > +=09KUNIT_CASE(test_name_too_long),
-> > +=09{}
-> > +};
->=20
-> I am not sure about the usefulness of these test cases.
-> rv_register_reactor() is not an user API that we have to prepare
-> for corner case usage. We can expect its users to be sane since the
-> users are us.
->=20
-> But well, if Gabriele wants to keep them..
->=20
+On 8/7/2026 11:34 PM, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add hardware-breakpoint-based dynamic trace event support (wprobe).
+> Wprobe creates a dynamic event on data read/write accesses using
+> hardware breakpoints and logs the access context and fetchargs.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> Changes in v12:
+>  - Fix syntax comment typo ('b' to 'w') and remove dead 'ret = 0'
+>    initialization in __trace_wprobe_create().
+>  - Fix documentation notation to SYMBOL[[+|-]OFFS].
+> Changes in v11:
+>  - Add trace_wprobe_is_busy() to prevent releasing busy events.
+> Changes in v9:
+>  - Use kzalloc_flex for alloc_trace_wprobe.
+> ---
+>  Documentation/trace/index.rst       |    1 
+>  Documentation/trace/wprobetrace.rst |   70 +++
+>  include/linux/trace_events.h        |    2 
+>  kernel/trace/Kconfig                |   13 +
+>  kernel/trace/Makefile               |    1 
+>  kernel/trace/trace.c                |    9 
+>  kernel/trace/trace.h                |    5 
+>  kernel/trace/trace_probe.c          |   21 +
+>  kernel/trace/trace_probe.h          |   10 
+>  kernel/trace/trace_wprobe.c         |  765 +++++++++++++++++++++++++++++++++++
+>  10 files changed, 893 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/trace/wprobetrace.rst
+>  create mode 100644 kernel/trace/trace_wprobe.c
+> 
+> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+> index 5d9bf4694d5d..2f04f32001ed 100644
+> --- a/Documentation/trace/index.rst
+> +++ b/Documentation/trace/index.rst
+> @@ -36,6 +36,7 @@ the Linux kernel.
+>     kprobes
+>     kprobetrace
+>     fprobetrace
+> +   wprobetrace
+>     eprobetrace
+>     fprobe
+>     ring-buffer-design
+> diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
+> new file mode 100644
+> index 000000000000..ad5f089b5ef5
+> --- /dev/null
+> +++ b/Documentation/trace/wprobetrace.rst
+> @@ -0,0 +1,70 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================================
+> +Watchpoint probe (wprobe) Event Tracing
+> +=======================================
+> +
+> +.. Author: Masami Hiramatsu <mhiramat@kernel.org>
+> +
+> +Overview
+> +--------
+> +
+> +Wprobe event is a dynamic event based on the hardware breakpoint, which is
+> +similar to other probe events, but it is for watching data access. It allows
+> +you to trace which code accesses a specified data.
+> +
+> +As same as other dynamic events, wprobe events are defined via
+> +`dynamic_events` interface file on tracefs.
+> +
+> +Synopsis of wprobe-events
+> +-------------------------
+> +::
+> +
+> +  w:[GRP/][EVENT] SPEC [FETCHARGS]                       : Probe on data access
+> +
+> + GRP            : Group name for wprobe. If omitted, use "wprobes" for it.
+> + EVENT          : Event name for wprobe. If omitted, an event name is
+> +                  generated based on the address or symbol.
+> + SPEC           : Breakpoint specification.
+> +                  [r|w|rw]@<ADDRESS|SYMBOL[[+|-]OFFS]>[:LENGTH]
+> +
+> +   r|w|rw       : Access type, r for read, w for write, and rw for both.
+> +                  Default is rw if omitted.
+> +   ADDRESS      : Address to trace (hexadecimal). MUST be in kernel space.
+> +   SYMBOL       : Symbol name to trace.
+> +   LENGTH       : Length of the data to trace in bytes. (1, 2, 4, or 8)
 
-That's right, it can be a bit of an overkill, but I'm thinking one day reac=
-tors
-could come from (out-of-tree) kernel modules, it wouldn't hurt to have this=
- path
-tested, especially if it doesn't require much effort.
+Should it show default value 4?
+> +
+> +  FETCHARGS      : Arguments. Each probe can have up to 128 args.
+> +   $addr         : Fetch the accessing address.
+> +   $value        : Fetch the memory value at the accessing address (same as +0($addr)).
+> +   @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
+> +  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
+> +  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*1)(\*2)
+> +  \IMM          : Store an immediate value to the argument.
+> +  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+> +  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> +                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> +                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
+> +                  and bitfield are supported.
 
-> > +
-> > +static struct kunit_suite rv_reactor_registration_suite =3D {
-> > +=09.name=09=09=3D "rv_reactor_registration",
-> > +=09.test_cases=09=3D rv_reactor_registration_cases,
-> > +};
-> > +
-> > +static atomic_t react_call_count;
->=20
-> Do we really need atomic_t? Does int work?
+FETCHARGS block is not aligned.
 
-Missed that, yes, it should work just fine since KUnit runs in a single thr=
-ead.
+> +
+> +  (\*1) this is useful for fetching a field of data structures.
+> +  (\*2) "u" means user-space dereference.
+> +
+> +For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
+> +
+> +Usage examples
+> +--------------
+> +Here is an example to add a wprobe event on a variable `jiffies`.
+> +::
+> +
+> +  # echo 'w:my_jiffies w@jiffies' >> dynamic_events
+> +  # cat dynamic_events
+> +  w:wprobes/my_jiffies w@jiffies
+> +  # echo 1 > events/wprobes/enable
+> +  # cat trace | head
+> +  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> +  #              | |         |   |||||     |         |
+> +           <idle>-0       [000] d.Z1.  717.026259: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> +           <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> +
+> +You can see the code which writes to `jiffies` is `tick_do_update_jiffies64()`.
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 5cbd09c8be8d..43ffd9a76d88 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -337,6 +337,7 @@ enum {
+>  	TRACE_EVENT_FL_UPROBE_BIT,
+>  	TRACE_EVENT_FL_EPROBE_BIT,
+>  	TRACE_EVENT_FL_FPROBE_BIT,
+> +	TRACE_EVENT_FL_WPROBE_BIT,
+>  	TRACE_EVENT_FL_CUSTOM_BIT,
+>  	TRACE_EVENT_FL_TEST_STR_BIT,
+>  };
+> @@ -367,6 +368,7 @@ enum {
+>  	TRACE_EVENT_FL_UPROBE		= (1 << TRACE_EVENT_FL_UPROBE_BIT),
+>  	TRACE_EVENT_FL_EPROBE		= (1 << TRACE_EVENT_FL_EPROBE_BIT),
+>  	TRACE_EVENT_FL_FPROBE		= (1 << TRACE_EVENT_FL_FPROBE_BIT),
+> +	TRACE_EVENT_FL_WPROBE		= (1 << TRACE_EVENT_FL_WPROBE_BIT),
+>  	TRACE_EVENT_FL_CUSTOM		= (1 << TRACE_EVENT_FL_CUSTOM_BIT),
+>  	TRACE_EVENT_FL_TEST_STR		= (1 << TRACE_EVENT_FL_TEST_STR_BIT),
+>  };
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index 0ab5916575a9..b58c2565024f 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -862,6 +862,19 @@ config EPROBE_EVENTS
+>  	  convert the type of an event field. For example, turn an
+>  	  address into a string.
+>  
+> +config WPROBE_EVENTS
+> +	bool "Enable wprobe-based dynamic events"
+> +	depends on TRACING
+> +	depends on HAVE_HW_BREAKPOINT
+> +	select PROBE_EVENTS
+> +	select DYNAMIC_EVENTS
+> +	help
+> +	  This allows the user to add watchpoint tracing events based on
+> +	  hardware breakpoints on the fly via the ftrace interface.
+> +
+> +	  Those events can be inserted wherever hardware breakpoints can be
+> +	  set, and record accessed memory address and values.
+> +
+>  config BPF_EVENTS
+>  	depends on BPF_SYSCALL
+>  	depends on (KPROBE_EVENTS || UPROBE_EVENTS) && PERF_EVENTS
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index f934ff586bd4..141c8323de20 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -126,6 +126,7 @@ obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
+>  obj-$(CONFIG_FPROBE) += fprobe.o
+>  obj-$(CONFIG_RETHOOK) += rethook.o
+>  obj-$(CONFIG_FPROBE_EVENTS) += trace_fprobe.o
+> +obj-$(CONFIG_WPROBE_EVENTS) += trace_wprobe.o
+>  
+>  obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
+>  obj-$(CONFIG_RV) += rv/
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 19cc07360005..4ebece96d8b7 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -4294,8 +4294,12 @@ static const char readme_msg[] =
+>  	"  uprobe_events\t\t- Create/append/remove/show the userspace dynamic events\n"
+>  	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+>  #endif
+> +#ifdef CONFIG_WPROBE_EVENTS
+> +	"  wprobe_events\t\t- Create/append/remove/show the hardware breakpoint dynamic events\n"
+> +	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+> +#endif
+>  #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS) || \
+> -    defined(CONFIG_FPROBE_EVENTS)
+> +    defined(CONFIG_FPROBE_EVENTS) || defined(CONFIG_WPROBE_EVENTS)
+>  	"\t  accepts: event-definitions (one definition per line)\n"
+>  #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS)
+>  	"\t   Format: p[:[<group>/][<event>]] <place> [<args>]\n"
+> @@ -4305,6 +4309,9 @@ static const char readme_msg[] =
+>  	"\t           f[:[<group>/][<event>]] <func-name>[%return] [<args>]\n"
+>  	"\t           t[:[<group>/][<event>]] <tracepoint> [<args>]\n"
+>  #endif
+> +#ifdef CONFIG_WPROBE_EVENTS
+> +	"\t           w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]\n"
 
->=20
-> > +
-> > +__printf(1, 0) static void mock_react(const char *msg, va_list args)
-> > +{
-> > +=09atomic_inc(&react_call_count);
-> > +=09/*
-> > +=09 * Hold the CPU for 5 ms so a timer interrupt is likely to fire
-> > +=09 * inside rv_react()'s lockdep context, exercising the LD_WAIT_SPIN
-> > +=09 * constraint.=C2=A0 mdelay() is a calibrated busy-wait with no
-> > scheduler
-> > +=09 * interaction.
-> > +=09 */
->=20
-> The comment above mdelay()'s definition already explains what it does.
->=20
-> > +=09mdelay(5);
-> > +}
-> > +
-> > +static void test_react_no_callback(struct kunit *test)
-> > +{
-> > +=09struct rv_monitor monitor =3D {
-> > +=09=09.name =3D "kunit_null_react",
-> > +=09};
-> > +
-> > +=09atomic_set(&react_call_count, 0);
-> > +=09rv_react(&monitor, "no callback");
-> > +
-> > +=09/*
-> > +=09 * The only possible failure in this test case is a kernel panic.
-> > +=09 * NULL react guard: callback must NOT have been invoked
-> > +=09 */
->=20
-> Obvious comment.
->=20
-> > +=09KUNIT_EXPECT_EQ(test, atomic_read(&react_call_count), 0);
-> > +}
-> > +
-> > +static void test_react_callback_invoked(struct kunit *test)
-> > +{
-> > +=09struct rv_monitor monitor =3D {
-> > +=09=09.name=09=3D "kunit_dispatch_monitor",
-> > +=09=09.react=09=3D mock_react,
-> > +=09};
-> > +
-> > +=09atomic_set(&react_call_count, 0);
-> > +=09rv_react(&monitor, "callback invocation test");
-> > +=09KUNIT_EXPECT_EQ(test, atomic_read(&react_call_count), 1);
-> > +}
->=20
-> So the test calls rv_react(), and validates that the reactor is called?
-> Honestly I am not sure how useful that is. Especially since Gabriele
-> already made the selftest which validates that the reactor is invoked.
+missing [<args>]
 
-From what I understood, the value in this test suite isn't really about the
-assertions (especially in test_react_no_callback). It triggers cases that s=
-hould
-not produce a splat (panic/lockdep) and a pass should consider that too.
-This makes them not quite pure KUnit, but again, I think it doesn't hurt to=
- have
-this kind of test since KUnit output is in dmesg anyway, so a splat would h=
-ardly
-slip.
+> +#endif
+>  #ifdef CONFIG_HIST_TRIGGERS
+>  	"\t           s:[synthetic/]<event> <field> [<field>]\n"
+>  #endif
 
-What do you think?
+Thanks,
+Jinchao
 
-Gabriele
 
