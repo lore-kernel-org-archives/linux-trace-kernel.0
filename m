@@ -1,56 +1,56 @@
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C81439905
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 13:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BDA279907
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 13:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786974936; cv=none; b=sy7uoIlnfKsNlYLc+Co6qrw4oDL3o1rN2LRrAUhPZgkxcsWYhomENWJAgXp08Om9MwS2STW84JtVPMTvubaagkG5AUSsJjoACB7ov1dbmEU185nyA+GJ07rtKaOFV8tzz1Mlrw6E5krfh2hI0ftj3GEgun9C4Nn7SKE4kxOzh8M=
+	t=1786974936; cv=none; b=RgFBCP0wnq55LhRMDzX1oY5M56sygUM51SnHtL53huxz4KvnY0Ci395Bv2GZmZiwDuvJ99gXARyFLjJLE0DP+R0cuDxhp9JmC52FxVkaw5Xkxgh+ReMQbi/335IfYnxSX/gKYOlK+75jh8PhS3lZKN6h9loZIucPUqlcvIXk8u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786974936; c=relaxed/simple;
-	bh=Jx7xlLdpoWJhMoXgfqu6lxgjtTSgdi9QT+7edRFiAlk=;
+	bh=DZViWPy2+2sy/hkFebzwzqzhjCCRLljq317GDvgSvPM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pRWWyxD2aHl/eWcXI9rEWubEqyaAyODD0p7tj06BonQlY1vIQAO+XxwQ096CUNzjH0HpKL9/csVokR97X+OneswQxNOCBz4q0eDk3tOXsE4de3IGEm1vqcDvL42waJXFjjhdCV/r/uDu00/mR8XiBfHz8QBOBjNm69/42kv0Zno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QPfcodgG; arc=none smtp.client-ip=209.85.128.70
+	 To:Cc:Content-Type; b=Y71SR3c+EO1U+y0jDp5fPr9LbtFpRx7Ba3wyXV8tV7fBqeMGD6wiWAGCPegd/R+L0rKaSZfrezPSUOnB0FgkpW91LPjjvPHJH770ihYxFeAvLE/Zha8v40UebmMhgyWuLfIXBY+3vXBGi47yhgEVT9Qk6LY/9FCspYKK9yeC75o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BykoIqiN; arc=none smtp.client-ip=209.85.128.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QPfcodgG"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-499913d1a79so15765815e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 06:55:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BykoIqiN"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4997b060af8so20735345e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 06:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786974928; x=1787579728; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786974929; x=1787579729; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=b8uz4zJj9P3BOE+rlckL4XqZjMwLqhcjRKuRxRGL1PM=;
-        b=QPfcodgGv49eOQXVwfFxu+5Vxy9M72kIHs9M1htBPkdiooO5ErlLDEywgvpx+ApJ6k
-         Exq5wHz/XYweESWWpmt7d5+UAU4nj6Xs0tZQh3ErXyBZF1GXvhQW5FAEK/yoM0txTawa
-         DXaXch2+zQj4jRsUaI5VAAdMeuaL3SsNSlVVA31Temb7GCpUl349ElBF+YCjgpi+vaqk
-         ee/0zi+oIP1nxbfK171d3Uc9ol2S4VZXixaunkDw8BWvj8uZS3jPVcrzUXSXdStFRmwT
-         0mDzgfSe4erTIXQR2zQiDb3v8QTOKOczXgJBzN/t/zQ2rp4mV08BoFXbJ0nHEo7yRX4K
-         Qb5Q==
+        bh=sD1OVcnleQWQNe5py72F53Ad0jsG5MJ1gMcK57vy+8o=;
+        b=BykoIqiNI97CeQdvwvATPhuDlKhGNj8hcfBgkSPffP+PLxbrw2E01NKEHveh1Rvtiv
+         Bqhxg+TlI5erl9CgTLkjNY9m0LAlBeFLAiDHXnqQXxTL3wiE4B9qKCJ+aAhV2dpfKYsd
+         6H7kDFxJOpIlaig4/P9gA0r9alkpjK3CNPQHkaxgjKTl1upHRvqLqapNSt6NgrIRQmhc
+         ivxLnnq0D8BVC1gJvFLPlKNUBavEyryuQfXwU75HgI/tXvabaErzat4QMigRNKjNt7cn
+         +NJhvGoDBZUsiVj5dQc2aWssC8XHIGVMBj+B+QJMHPGtA8COK73PeWA3Ik8Yt07JP5uv
+         wibw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786974928; x=1787579728;
+        d=1e100.net; s=20251104; t=1786974929; x=1787579729;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=b8uz4zJj9P3BOE+rlckL4XqZjMwLqhcjRKuRxRGL1PM=;
-        b=b2gq3wBOOZW8ek6H/uq/3xHZUyHMSiV8es9v5ayDe/wLeRxzsefyl0D4CA3hoI2urQ
-         2a+tVC5c1PI5Rf7upj6DQsRlRscVBdXYx5lXbN2wlRUTVCaV15oPt+xcMeVFk6enyhRB
-         bV9S/CnTvydLrhu67zTBnCIdvDx+88Vrg8NcIcgKA+4qCaWJnj+n6wyI38z1PHWbOYzp
-         oMzTu4kaTzKZz1UNrc9dWIM/2u2B6bjvJNt9nNgkSmY/4wXAy82uojMcQwKcEpPkKvc4
-         Qba455cuU/qC4M/LSoYNqFxudGX0TdeCFhS2DNJ3/VghMpfs5oar5lNqm9ryCZxYsorv
-         U1lQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqyE391T2xmbW117UBNn8yIn7OwDFpvLlxx2fENNV0ay+IVA3j3t/p3rbjLctTcGtk0fvvj7PTCWd7yQKkpmr+VTHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7ot2UdoY9UIGLLpjt7LEUzlnRZZl726fM6TKjFXicPtA4AWep
-	1+Q1HnclHd4Kr5IiDZHgR1Ig78ZFVdoSoiN1qIpo1zc7UKAierI5msSRA8sQC5a4pGJygrrZFJk
-	6zcWx03MCbn6hHrFSrU1v6w==
-X-Received: from wrnc5.prod.google.com ([2002:adf:e745:0:b0:47f:4faa:d0fe])
+        bh=sD1OVcnleQWQNe5py72F53Ad0jsG5MJ1gMcK57vy+8o=;
+        b=Yx5rZcECiyVfoYP7ELY1+skFmQZV5xoURr0WJy/zXa2sAVsHgtO/t02E7Hnzz2uE4r
+         HV008a+y5v+lWeoz3enF6OwPsPHkii4jkjL7UU+xKno7QcGFI04FDQcNRj/BYA18SbV4
+         9M1YfTIEAA4Th9DN+gr12WJ6kq6vvVMFDwbbuLS4AmZ8F9A2m2E9hW5bOlGdToTi9yNi
+         9VupRgACZO6fDdptz8nvNhjyJao4f1aoysYNEpAja8tIzWeoAQRTAThTLS9AeALgYbEW
+         9CAEXKxxfMOWhnFzpuC/bDVAkwEjszC5bMAheXrC9ND9R0ZXeg+6lBdacw1LG8gUoyl/
+         2Clg==
+X-Forwarded-Encrypted: i=1; AHgh+RrRTl4eQqYrpokQmSrYg4uJc1buuE8nJ5oXUcRHMo7/xrNuimPCl4Mbo4Maqqg4T0YQ2Qcz8MK1z9K0YIc/bR3qaBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiX0/MitXGwTGA403l8v27V+59mNpX3bqVqxXRUh0ZMbELhh5O
+	wJ8wIIAsUDWERzJs04MlSwTmAXQs+YbdMS5Ggt8N30W8gggJa+KdkJSLtauir1IB3kLOSmxnd90
+	t7WqcZm+kkrhp63DIWMbwAQ==
+X-Received: from wmxb14-n2.prod.google.com ([2002:a05:600d:844e:20b0:499:8f0d:36d6])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:46cf:b0:499:8807:345f with SMTP id 5b1f17b1804b1-4999fb8a0f0mr3382605e9.13.1786974928045;
- Mon, 17 Aug 2026 06:55:28 -0700 (PDT)
-Date: Mon, 17 Aug 2026 14:55:06 +0100
+ 2002:a7b:cbc5:0:b0:498:261:dd93 with SMTP id 5b1f17b1804b1-4998799bb46mr241604285e9.18.1786974929008;
+ Mon, 17 Aug 2026 06:55:29 -0700 (PDT)
+Date: Mon, 17 Aug 2026 14:55:07 +0100
 In-Reply-To: <20260817135517.3919534-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260817135517.3919534-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260817135517.3919534-8-vdonnefort@google.com>
-Subject: [PATCH v6 07/18] tracing/remotes: selftests: Add a test for the dmesg
- tracefs file
+Message-ID: <20260817135517.3919534-9-vdonnefort@google.com>
+Subject: [PATCH v6 08/18] tracing/remotes: selftests: Prefix hypervisor folder
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -70,127 +69,40 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Exercise the newly introduced dmesg tracefs file that turns on and off
-the dmesg redirection.
+Rename the hypervisor tests directory to "00hypervisor" to ensure they
+run first. This prevents the hypervisor tests from being interleaved
+with other remote tests which is confusing.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc b/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
-new file mode 100644
-index 000000000000..74f801a5e39e
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
-@@ -0,0 +1,81 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote dmesg redirection
-+# requires: remotes/test remotes/test/dmesg
-+
-+. $TEST_DIR/remotes/functions
-+
-+test_dmesg()
-+{
-+    echo 0 > tracing_on
-+    assert_unloaded
-+
-+    #
-+    # Test dmesg on/off when tracing is disabled
-+    #
-+    echo 1 > dmesg
-+    test $(cat dmesg) -eq 1
-+    assert_loaded
-+
-+    echo 0 > dmesg
-+    test $(cat dmesg) -eq 0
-+    assert_unloaded
-+
-+    #
-+    # Test events are logged to dmesg
-+    #
-+
-+    echo 1 > tracing_on
-+    assert_loaded
-+    echo 1 > dmesg
-+    test $(cat dmesg) -eq 1
-+
-+    # Timestamp format is '[    XXXX.YYYY]'
-+    last_ts=$(dmesg | tail -1 | sed -n 's/^\[ *\([0-9]*.[0-9]*\)\].*/\1/p')
-+    if [ -z "$last_ts" ]; then
-+        last_ts=0
-+    fi
-+
-+    nr_events=128
-+    for i in $(seq 1 $nr_events); do
-+        echo $i > write_event
-+    done
-+
-+    sleep 1
-+    output=$(mktemp $TMPDIR/remote_test.XXXXXX)
-+    dmesg | awk -v ts=$last_ts '
-+    /^\[ *[0-9]+\.[0-9]+\]/ {
-+        t=$0; sub(/^[[ \t]*/, "", t); sub(/].*/, "", t);
-+        if (t+0 > ts+0) print $0
-+    }' | grep "selftest id=" | sed 's/^[^]]*] //'> $output
-+
-+    check_trace 1 $nr_events $output
-+
-+    rm $output
-+
-+    #
-+    # Disable dmesg and verify events were not consumed by dmesg
-+    #
-+    echo 0 > dmesg
-+    test $(cat dmesg) -eq 0
-+
-+    start_id=$(($nr_events + 1))
-+    end_id=$(($start_id + $nr_events))
-+
-+    for i in $(seq $start_id $end_id); do
-+        echo $i > write_event
-+    done
-+
-+    sleep 1
-+
-+    output=$(dump_trace_pipe)
-+    check_trace $start_id $end_id $output
-+    rm $output
-+}
-+
-+if [ -z "$SOURCE_REMOTE_TEST" ]; then
-+    set -e
-+
-+    setup_remote_test
-+    test_dmesg
-+fi
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
-index 05224fac3653..4a14aa72fdf0 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/functions
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
-@@ -8,6 +8,7 @@ setup_remote()
- 
- 	cd remotes/$name/
- 	echo 0 > tracing_on
-+	echo 0 > dmesg
- 	clear_trace
- 	echo 7 > buffer_size_kb
- 	echo 0 > events/enable
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc
-new file mode 100644
-index 000000000000..4d6ce8fed3cb
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace dmesg redirection
-+# requires: remotes/hypervisor/write_event remotes/hypervisor/dmesg
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/dmesg.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_dmesg
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/buffer_size.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/buffer_size.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/hotplug.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/hotplug.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/reset.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/reset.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace_pipe.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace_pipe.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/unloading.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/unloading.tc
 -- 
 2.55.0.691.gc56d675ccc-goog
 
