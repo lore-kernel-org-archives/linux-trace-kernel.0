@@ -1,115 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4F83C81B9
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 14:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484563B811F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 14:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786975495; cv=none; b=em9r+rCfSeohaP/C+AmD/5aVhuf87NwUxvVfeCZI7I/zVP3+gnTxj+9ordKQ+X/T49tN8g3u4caPhLrY9/NPUbiLK47Yuy/yOri1dThLyU/dP/i6pCdHVXAi+lS1DeURw5mVswl2c7V+f3daqeXGS70KUvY8cs8n4rKcZSTmhv8=
+	t=1786975517; cv=none; b=k6gxD+8wx+hmgBadmvHyePFCoCSGEmXvZSD+zPly6D7fTXxDZSb28uoFfTfdgdcQldNwmKZ2y1j5zu8B7hheZ44QFYPmVEUN+SxQFkh52BT33V0YgNU8yV1kh2pbX0Z/zLNkgRXIcD42ZfXC6ueElGU71rEzO7n6CvNQYszwsT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786975495; c=relaxed/simple;
-	bh=MIxOIXY8Y6QVmz+dsTSn1QQUxZTwE/WdHZL0Xd35QHc=;
+	s=arc-20240116; t=1786975517; c=relaxed/simple;
+	bh=Q2Ey1AANsOKFOHjRvF3SG0jg53UftD+jHv4F/W+JM+8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FI8tDUetbdgS8M04HraOM6Aft36IxWEuVzBBOV09tZzwNW9TYjEX08sPVWrPKqt9tnVR/kCs3Gug3//p2Mo6zygkExx0nkDVxKHJkLpRbKiMAOJf5SK+l3MrzqucrdEzVXmDrsxhG6wPSZKti7RsftPaEa3wYQOAMKR/81WmhVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAygILA3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WP/YItbeOZVlPL2rSwn0UFMD+4edjwCBk8YgSkzTHpGWmocmNjv+aJCVH7H1X1rfDrNJSOr88FyB62LqsMseZplUeHFOkBn1wTpEuTVF66NtBhl90SzWZ9MXfpeMfrWXhzNPASRWt9woF8yY3wthkYAhtZMtoVlBh7qAbCXqqOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbKg8/X1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAygILA3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 231C71F00A3A;
-	Mon, 17 Aug 2026 14:04:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbKg8/X1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE67B1F00A3A;
+	Mon, 17 Aug 2026 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786975494;
-	bh=OSkmiC8uo9X2maTITCIDywaJJUTDQnG99gXaRBwhzgc=;
+	s=k20260515; t=1786975515;
+	bh=8BKTAvZKzlN4KNmS50jsH78KF4vNb4HKLq6ajMydq4M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WAygILA3wfoxW4WjgNAAO/0sxKqT4mOmkxsbJyhdjGeaVOBwc860WrxQ5qh/oYU7R
-	 i3/h71fAsYtrrTS4/jL0mEUA/SLyrwlS3yxJHwCNXc84nytNtQOKBn8nCjkFKmaubw
-	 GqaqFp+ouAVkdyfSu8dFqYaZwcUXJNUruXBdu1jWefykVKShoM1s4UUpgIe9MB1+z2
-	 4gzOyd8RXi6hcW3scpk5ixsJCrKbniWR9knrsqEtRE4rRjah1M9yiFgezrUipge1R6
-	 N2Pz1hSy8AbApUPpsHY9bB7jmb1I3tGl+UqJzmw3PqQGbBXqEXJKYdw0Oyj+UmZCO4
-	 p/FmQ1bJnYWbg==
+	b=fbKg8/X1akRAKv2Owixtxub2lxqOBHIZ52SBzG7KAY6koIK2utVebQI1+nMBh7bR0
+	 T1JkupcuRfBNG73wobTuzZBbCNgF68wu9FhT/lhsNMxRW5Us7Vu9Pf9vsJ+9ktaRML
+	 aHhoetjaANaHX0UQOeuHvq+xIoM5QU7jRN1Db604cMGqF36BPRWrdEtX6uD1xjmhcP
+	 0dIe5EX0YgyFaPFkOGJjPEw35NbMEP/5oOjwTuLoGA/TRuGhsH2Vs1hDzE/mVK82UY
+	 Efm5VJakxjwFIwg/UqHz+QuR5w1G+KaHS2JyjWQSBb+n2O+VW924GrXQ4tN8y5xuuk
+	 OMI8uDNU5gLIw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 10/18] ring-buffer: Use panic-friendly locking in
- ring_buffer_iter interface
+Subject: Re: [PATCH v6 07/18] tracing/remotes: selftests: Add a test for the
+ dmesg tracefs file
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260817135517.3919534-11-vdonnefort@google.com>
+In-Reply-To: <20260817135517.3919534-8-vdonnefort@google.com>
 References: <20260817135517.3919534-1-vdonnefort@google.com>
- <20260817135517.3919534-11-vdonnefort@google.com>
+ <20260817135517.3919534-8-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 17 Aug 2026 14:04:53 +0000
-Message-Id: <20260817140454.231C71F00A3A@smtp.kernel.org>
+Date: Mon, 17 Aug 2026 14:05:14 +0000
+Message-Id: <20260817140514.DE67B1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Incomplete panic-friendly locking leaves the system vulnerable to =
-deadlocks during non-NMI panics.
+- [Medium] Unconditional write to the newly introduced `dmesg` tracefs file=
+ in `setup_remote()` breaks existing remote tests on older kernels lacking =
+this feature.
+- [Medium] The dmesg test implicitly depends on dmesg timestamps and silent=
+ly fails if they are disabled.
 --
 
---- Patch [10]: [PATCH v6 10/18] ring-buffer: Use panic-friendly locking in=
- ring_buffer_iter interface ---
-commit ecd8a71adf986114125493b0d7821b40d48b7d2e
+--- Patch [7]: [PATCH v6 07/18] tracing/remotes: selftests: Add a test for =
+the dmesg tracefs file ---
+commit f74a3f691a6b4375c6156c109a1d6336670de341
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
+tracing/remotes: selftests: Add a test for the dmesg tracefs file
 
-This commit replaces raw_spin_lock_irqsave with rb_reader_lock in the
-ring_buffer_iter functions. This prepares the iterator interface for dumping
-the buffer on panic without deadlocking on the reader_lock.
+This commit adds a new selftest to exercise the newly introduced dmesg
+tracefs file. It checks the ability to turn on and off dmesg redirection.
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index a7d9936b4c835..a6f2293f409b8 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc b/too=
+ls/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+> new file mode 100644
+> index 0000000000000..74f801a5e39ea
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+
 [ ... ]
-> @@ -6302,11 +6308,14 @@ ring_buffer_iter_peek(struct ring_buffer_iter *it=
-er, u64 *ts)
->  	struct ring_buffer_per_cpu *cpu_buffer =3D iter->cpu_buffer;
->  	struct ring_buffer_event *event;
->  	unsigned long flags;
-> +	bool dolock;
+
+> +    sleep 1
+> +    output=3D$(mktemp $TMPDIR/remote_test.XXXXXX)
+> +    dmesg | awk -v ts=3D$last_ts '
+> +    /^\[ *[0-9]+\.[0-9]+\]/ {
+> +        t=3D$0; sub(/^\[[ \t]*/, "", t); sub(/].*/, "", t);
+> +        if (t+0 > ts+0) print $0
+> +    }' | grep "selftest id=3D" | sed 's/^[^]]*] //'> $output
+
+[Severity: Medium]
+Does this implicitly depend on dmesg timestamps being enabled?
+
+If the kernel is configured with CONFIG_PRINTK_TIME=3Dn, or if the user-spa=
+ce
+dmesg utility suppresses timestamps by default, the output won't have the
+[ X.Y] prefix.
+
+The awk script strictly expects this format and drops lines that do not
+match the prefix. This would result in an empty temporary file. Because
+the script executes with set -e, an empty file might cause the subsequent
+check_trace validation to abort the test.
+
+[ ... ]
+
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/to=
+ols/testing/selftests/ftrace/test.d/remotes/functions
+> index 05224fac3653d..4a14aa72fdf09 100644
+> --- a/tools/testing/selftests/ftrace/test.d/remotes/functions
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
+> @@ -8,6 +8,7 @@ setup_remote()
 > =20
->   again:
-> -	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> +	local_irq_save(flags);
-> +	dolock =3D rb_reader_lock(cpu_buffer);
+>  	cd remotes/$name/
+>  	echo 0 > tracing_on
+> +	echo 0 > dmesg
 
-[Severity: High]
-This is a pre-existing issue, but does rb_reader_lock() actually prevent
-deadlocks during non-NMI panics?
+[Severity: Medium]
+Will this unconditional write break existing remote tests when run on older
+kernels?
 
-Looking at rb_reader_lock(), it only falls back to raw_spin_trylock() when
-in_nmi() is true:
+Since this test suite frequently runs with set -e enabled in the caller
+scripts, if the dmesg tracefs file does not exist on an older kernel, this
+echo command will fail with a "No such file or directory" error and abort
+the script.
 
-static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
-{
-	if (likely(!in_nmi())) {
-		raw_spin_lock(&cpu_buffer->reader_lock);
-		return true;
-	}
-...
+Could we check if the dmesg file exists before attempting to write to it?
 
-If a standard oops or sysrq-c triggers a panic in a normal process or softi=
-rq
-context where in_nmi() is false, won't this unconditionally call
-raw_spin_lock()?
-
-If smp_send_stop() halted another CPU that was currently holding the
-reader_lock, or if the panicking CPU interrupted a context holding the lock,
-this would spin forever and prevent kdump or panic_timeout from working.
-
-Should rb_reader_lock() also check oops_in_progress to fully realize the
-panic-friendly locking behavior intended by this patch?
-
-[ ... ]
+>  	clear_trace
+>  	echo 7 > buffer_size_kb
+>  	echo 0 > events/enable
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260817135517.3919=
-534-1-vdonnefort@google.com?part=3D10
+534-1-vdonnefort@google.com?part=3D7
