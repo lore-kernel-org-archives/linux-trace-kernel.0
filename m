@@ -1,198 +1,341 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010034.outbound.protection.outlook.com [52.101.201.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E753D3D565F;
-	Mon, 17 Aug 2026 16:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786984490; cv=fail; b=gdvP+8QOXCDL3R1DKhCMX36CL2CHiG5BeCDZfZanggUrDr4jlCoxePkjKoWUcMhxWMjiwJVAvTu8fFHfsGakbhD831WvckdijiwZ3vsyIbGKHUGrOvm9rWvIFDajidviBfnwExr0V6vOzX48QxqeYLeBS9KdNZ9VHa9S4bbQ1cQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786984490; c=relaxed/simple;
-	bh=sCxUBodGOG9Da3uqCFMwFapZ5Hs5OiR494PgtfkEn0Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Bh7WoHLABdpzyGd7YHRXS/VsEK/G8fUNdpTltVrdXmF23PNDv0Gp2Re9GWErYRUMxgsxVQFuHDC2zUQi7CK6ZAeLdDCMDoC6+vBdtxGHvAaXVvkhpnbtT1WKbFsaLB6R4X9flL0pON+yOGz6XFHCMaby5btanSihvzERGbiXLw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cAHd3bfa; arc=fail smtp.client-ip=52.101.201.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAC946A5F2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 17:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786987342; cv=none; b=MtT0QAzo6OxSKFfC6CcVu0GLQ3HuCn1LCblgng8FO3geZNAKnXLd0cwYuU1D9xwkYWn7Bu51kfpWPflrpuxHS85Dem10ydpfB1ZL3B6QHY7qpqyA2q45bTTjW+VYosJRWgVFtVh1XNxiSdlkbj5aZZ4zKZ30+7WRPsYTyfw8q30=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786987342; c=relaxed/simple;
+	bh=TsDzbeMIAoB15auULJGz0zaAQwkoG+YfRfs7YSfJtPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8B3vjKbxbvaKvbyN6hwEqv5V4Fkur3r+uOqLdDeEdle7Sj+5Pis8QjnFdqbv/c/22MEVmK4wDLIgiErSpvE/OD/7Iqv+yNd9rCfwjenfy3qsVe7KAj3GpdCfTheWsI/tver3KfDjH/NIoyXNcpnI19wcThcsCDByjce2dfcRvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rT3iikZD; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cAHd3bfa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dXw3cRbXz8dfPq/ynvxCvGhu3wO/jyq93ESexyq36Er39UNxCBvYy0Zu6uC3u6OuLfE1zWTk8x10JyRE3JKOU1w/RAtc/+e7A+qJ2KB8kOPLZXj/6RLTuQ/83CEtC9CAEQz6V75sMxOnRlMjfbKtt42xU54G6dmJXhzcFpj55/DR1p9NbxLK6EZUjKvHkXYOYocqSi/21y08vGB+okzo3mmmpEI/3OZdtJ0IfayC91TLcOGI9GlbntCkK1tHwm+a7a3/s+Fys893Bfceebc6AOOMz+N3Zu3FWMgDRHis1Rv0EoooVekT6Jmg8Tj5cQLcSCsxAzslqNc2fHmO3JuV3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sCxUBodGOG9Da3uqCFMwFapZ5Hs5OiR494PgtfkEn0Q=;
- b=gynEsqcM5uFmttcWbKsGffgTWpNODvQNPZAPVO81UE0JhP+Bf2adZQb5lQwm+1vfF3jBlvPWlcvwBJWadCGDCGjEeTcJl1glQImDBDDb+kjsvKZ1Gwy7WxjnB1ja5rh3CC7mW0nm4XMbaAERVsk4OXd5oCJP55ng/tQkQgVL3q7p5fygHFLIR3b69sgTotWEY0I5nhfPmaGF3058bwZZbgAKWaQTXK55HBlDoGupwE7K/Uf3tJ+kLCiXIcgeOv3+Jf4pm0zk1iSey6swbwECihVSW8dmC41gwEg1RFz9JsBk4NCsmYzAY9CkZ3/koTMH5iWvF+72RuYA6nGLaPvSPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sCxUBodGOG9Da3uqCFMwFapZ5Hs5OiR494PgtfkEn0Q=;
- b=cAHd3bfa9atX3NzpX8es3xmPBIn2TJH7VH6FUgKj+6QXECnJS6WDvrx0xUDs8SwO3DzZSy1FT8theOHlXbNGpsy9FNvNRASYmmUquY+ZGGd6dCVgG8evpkHkSxnvYresh1TrAt9pG2qCGuEE2D3jjReWyoxaRMbR/qzxDMr+558=
-Received: from BN9PR12MB5259.namprd12.prod.outlook.com (2603:10b6:408:100::17)
- by CH3PR12MB8850.namprd12.prod.outlook.com (2603:10b6:610:167::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Mon, 17 Aug
- 2026 16:34:39 +0000
-Received: from BN9PR12MB5259.namprd12.prod.outlook.com
- ([fe80::122c:cca7:c2b3:90ed]) by BN9PR12MB5259.namprd12.prod.outlook.com
- ([fe80::122c:cca7:c2b3:90ed%2]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
- 16:34:39 +0000
-From: "Garg, Shivank" <shivankg@amd.com>
-To: "nhuhuan@google.com" <nhuhuan@google.com>, "yiannis.nikolakop@gmail.com"
-	<yiannis.nikolakop@gmail.com>
-CC: "ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
-	"xuezhengchu@huawei.com" <xuezhengchu@huawei.com>, "sj@kernel.org"
-	<sj@kernel.org>, "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"joshua.hahnjy@gmail.com" <joshua.hahnjy@gmail.com>, "david@kernel.org"
-	<david@kernel.org>, "anna@kernel.org" <anna@kernel.org>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "rientjes@google.com"
-	<rientjes@google.com>, "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"tglx@kernel.org" <tglx@kernel.org>, "mhocko@suse.com" <mhocko@suse.com>,
-	"weixugc@google.com" <weixugc@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "gourry@gourry.net" <gourry@gourry.net>,
-	"Rao, Bharata Bhasker" <bharata@amd.com>, "byungchul@sk.com"
-	<byungchul@sk.com>, "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "linux-trace-kernel@vger.kernel.org"
-	<linux-trace-kernel@vger.kernel.org>, "rppt@kernel.org" <rppt@kernel.org>,
-	"alirad.malek@zptcorp.com" <alirad.malek@zptcorp.com>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "mhiramat@kernel.org"
-	<mhiramat@kernel.org>, "jackmanb@google.com" <jackmanb@google.com>,
-	"dimitrios@palyvos.net" <dimitrios@palyvos.net>, "surenb@google.com"
-	<surenb@google.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"matthew.brost@intel.com" <matthew.brost@intel.com>, "fvdl@google.com"
-	<fvdl@google.com>, "trondmy@kernel.org" <trondmy@kernel.org>, "hpa@zytor.com"
-	<hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>, "yiannis@zptcorp.com"
-	<yiannis@zptcorp.com>, "rakie.kim@sk.com" <rakie.kim@sk.com>, RaghavendraKT
-	<Raghavendra.KodsaraThimmappa@amd.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "apopple@nvidia.com" <apopple@nvidia.com>,
-	"ziy@nvidia.com" <ziy@nvidia.com>, "vbabka@kernel.org" <vbabka@kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "jic23@kernel.org"
-	<jic23@kernel.org>, "mathieu.desnoyers@efficios.com"
-	<mathieu.desnoyers@efficios.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 1/3] mm, x86: support copying a folio using
- non-temporal stores
-Thread-Topic: [PATCH RFC v2 1/3] mm, x86: support copying a folio using
- non-temporal stores
-Thread-Index: AQHdLjulRdOdfNkj60iymqacCQxua7aIEZaAgBpehwA=
-Date: Mon, 17 Aug 2026 16:34:38 +0000
-Message-ID: <8af161b862695557c40ba9c2ddca0ba0fe004b86.camel@amd.com>
-References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
-	 <20260730-rfc-nt-demote-v2-1-452dbe3b5073@zptcorp.com>
-	 <CALwWd5usu+e=MgX95zGPUeqRjEu_SARLoiMPQpyMYBoUVQkk_g@mail.gmail.com>
-In-Reply-To:
- <CALwWd5usu+e=MgX95zGPUeqRjEu_SARLoiMPQpyMYBoUVQkk_g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR12MB5259:EE_|CH3PR12MB8850:EE_
-x-ms-office365-filtering-correlation-id: f0e7798c-2b51-4ef1-72cf-08defc7d6ea2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|23010399003|18002099003|22082099003|56012099006|3023799007|38070700021|11063799006|4143699003|10067099003;
-x-microsoft-antispam-message-info:
- z4LQMb2ZP5QtsTo0ju07WE4w6bPgaDM4IGSE7UFaPmcK1ZOUjRY05t9t+uBXp4DOkJ94Q21/kp8OL+wcE/ZVOFca0VXL/1VEKOLLMgLdm8WhdKwTvjuPwBzPrLrlQ+Are+e2qPzkxFMdNUbWauqPuf9wqbnvW4i4abmachf0EjSzlaN5V2Vr7G3yEGekBS2WyU+JK+tXXCEzRd9GhXfi7g4rO5PPMtJJpYyagi2HB4xUB2SqDegP09evln5i5jceMlc6ox6ytB+hbdEMFjRxKVIyv72pIv6PspSGFA3IT7XhvFIBU2WALTNpq7N+rNWaRkaqlD/7ejlegyj7nQZq3mMN97+mWJFZiCE06j18tjzaS6QarqMaSTj4GTTCYNAG7Mqb92ogjQ4O2GZagz1wURWo2XGJuKr63+8X4J3HMVFQEzTdz9S9yofacEh2iEEjk0BqXlCH7se2tIeNZag9BcvTCluYydgbSz6ZA1tzKPEWb/QpRTSHlbjnklxiD9BGXy1bwyJrdAguqQW9Y0bpv/CiDvnxekbS3L2rWG9O6/qYX6wnSCePztH+VnZ5N3Xqb3WcVYhz1KYsHb9FGoKUg94mHc+BUITnQp8Onh04VlB4j70uEqMMt7u9sPg1xqg7GFMBlfjA8ZFcnymPVdB4ZF07u9mHFpqMCURZgfGFEIZGa+sO+2hZkRJ/JF1G98dmyWXpaRRukL/WLsijVgFIlL+jv9jkuLhorCOaZ7GsVr8=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5259.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(23010399003)(18002099003)(22082099003)(56012099006)(3023799007)(38070700021)(11063799006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?QVlEUlZXSGcySnV6UmhtZ1dRcUZwcjBtbGQwRVJDTEcrNkF1MkEzVFRJZlkw?=
- =?utf-8?B?ZFdxd01MaVpuRkJVZStWcWM3bWd2bU0wRUFHcFl3SlFVSUd4SXpKbTZzMm1m?=
- =?utf-8?B?UXZ4aERnTHFEWnk1U3FDSHI5S2VmY1ZRcFU0aHRjRTA2T1ZacnZvWmZncFBa?=
- =?utf-8?B?dUNoSlhYaWtzU3NGU2RLczN1emZaanZTb2tTQmlBa21XVDJ5ejVST1p3SUxI?=
- =?utf-8?B?bmVBTFZjeWlzc25NVzRudUhWRmk0YWh2SmpBbURCMTNyTTR2ckpFWE5MREtZ?=
- =?utf-8?B?aU5VNW8xKy96Q0ZJOG5ydFM2ZWw1WnNuVFdFcVE3Zy9wWWNPWWM2Sy81dGky?=
- =?utf-8?B?VmorQ2Q1aDJ2V2NJNXNzV0NWV0s1ZmRnQXBSdmNrbGNoV2wzTURnVVRiL1Ry?=
- =?utf-8?B?QnZMZWNUZmxsSng2MkN5YXk0V2k4QWVWY0hCYWhTeHNQK3ZpaEJZQUM3dVhu?=
- =?utf-8?B?b2dHaFRtN3A0Wnl4Z1djQmVoVWZWcTZBMmptb3g1QmZnSzJSQ2hPV1h4VjlB?=
- =?utf-8?B?N0ZZanpuUGZDT000a2pjTjVoUmIzSlh3Q01PcmptWVpMQnBXclF2VE56d3N1?=
- =?utf-8?B?dDlkdjNoeXRlaXNSUDlXdnE1MkgxbXd6S2hLU0dlZ3VQakJsNEo1VTdzUGxz?=
- =?utf-8?B?RzNIRTV2SHVhMlhVTmt3R1dCdlJ2R3FZYXpoVDRiS29iYVZKakxIbmFBQ2Vz?=
- =?utf-8?B?VkpBS1IrSlJRdjN1cDlBV2VEemdMRmdFQndFQndYSW0vcnFkdWZwbXZxQ0Fp?=
- =?utf-8?B?ak5CVE1wbWxmZ3doRGNWd21XeTNCdUdBZVo0ZlQ0WWdGRHB1N0w0dllESlV4?=
- =?utf-8?B?bmR4MmdZK2tEYi95Y3JFNkVEQkErei9OQjdUUUZHSllkRVcxOHhTMThUdjho?=
- =?utf-8?B?TmFSdS9EaGxwUk10VUYweGkzRnUvbGp3NjB1Y1NpSDRpajhsNTV4MC9zUWpO?=
- =?utf-8?B?SHgydm9HYzJZWnE2M0hFdEVnQkVHc0F5ekdjbUVXbWVlOVh3WDZmdUhHOG5z?=
- =?utf-8?B?b28zWGIyY0F5YVUrNG1zRmt0T3EwVkFCMGo5SUNodEZDUWprSzRMSlpNVzkw?=
- =?utf-8?B?ME9CUGp4RERZdkhMK2orSk1RUVVuWHZxTFRRaVRTejdRYWYwbWpXcVhHOGF3?=
- =?utf-8?B?V0E3dlpzRDJaSEc4bXpEWEtoOUZWZm9nRjNTenpHbjkvdVN5VDVZWGsvVHE1?=
- =?utf-8?B?MW81N0k4eGxadlFPRERBbVlzWmFQOFA0akM5QmdzMm9IUzVZbHBkL1BkRmlk?=
- =?utf-8?B?b0xuYzc0eHJaRGc1TGUvSnJJMzNnQTllZ3VOMXZiamx3dEtoNmszZVZuRFNU?=
- =?utf-8?B?Rmthc0FUeHlnSlBaSVM3TEhCQkUzOGR4WE5oTWxBT05MdWxyazc2MmxSeVMy?=
- =?utf-8?B?S0tSMzNYK1IyOTJBQ1ptcHRGTTZnc0V1MFRWV1dack9HOEdHN2l0QzBNVkJh?=
- =?utf-8?B?Z1hDTFpJU1BuRUtBN09UcDZMRXpRUGMvWDZzVmM5cnp1Z2I4Mk1HSm5mZjJJ?=
- =?utf-8?B?YTlNZzg3TUZUQ1doZUZYc2tTUlJRaXRWRUFUTDZaSitCN0M0VW1CZUhid09r?=
- =?utf-8?B?bWlhR0NhNGUyTEhiT1ZNVkxteXR6TG43cStsNjlITmtJMEdDRW1iZWRtV2g2?=
- =?utf-8?B?SnZMaGRDY3FhNndlNTA1RklkemcyMlhQYk9IdExTaldKSEZyV1BJRUl4KzRi?=
- =?utf-8?B?TFZUS2w0ZzZ4TGx0bEVpMDBwa0lEeVRMYzRHY2xLck9TNGQ1b1dSbW5nczlj?=
- =?utf-8?B?cnprbWFYS29IUTNnNXp3YWpXS3RjUXdDL1M2M0R2OWp0QndQMnBkWGdvNjBJ?=
- =?utf-8?B?L2RrOWZBMnp3Zm03SFJZU01Fa2lBVlVVeWZmcXlIUnZHWWI2RFR2endrTkl5?=
- =?utf-8?B?eGdOc0g1c0dRd0ZhRDJmblNHNGs4MkYvMUZtcFZkZkJXNm43OXFrdmVZZ1Bt?=
- =?utf-8?B?ZXRvZU9STmhFdXRJeE1jZ3dJNGF4UjRGQ0x0VVVGVTN4UFJkN3NYVC9WNFlG?=
- =?utf-8?B?NHB1YVYvY25JR3VYMTNuZGJXWVpGRWsyanVkZER3OWV4dHVha2s0U3hJZ3lk?=
- =?utf-8?B?NEtDYkxYT0xvbm96cUtiOWdQL3dkaTRsM3pxZHpINEcwbE5wcUpURFRnTUxw?=
- =?utf-8?B?YjdhWCs1aEJ1V3lxNDVTVWcvcnNzc0RpSWFGcVNVaFJYeEcyN2tmMi91MUtQ?=
- =?utf-8?B?U2liTlhheHprVVRoZnJmbGYxYzlndmZvZkxnU2xjbllRWC9VaHIxZ2lZREE4?=
- =?utf-8?B?Mi9Ud2VhUDh3U2V2czFZRzVaOWd4Y04yd1RjZzRiSVYxTkVHTVlyR2hKMlla?=
- =?utf-8?B?VXVycTlwZ1lQK1ZKQ0tOeXgvL2ZOZ3E0dmRGOVc4aUxSdTYyeEVkQT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C52418229C0E314EA0CAFFAA235C4E24@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rT3iikZD"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-49558ce01afso28359215e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 10:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786987338; x=1787592138; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=c63lTPw0sJ/0kiyWxvGmU6Nz+vfC7FNZqHlcFwaoBHw=;
+        b=rT3iikZD/YYIJoqR5MfpwvdJQrQVjCs9vXXmvNmzLsCCyrNoyku0JRW/9YpPrIEG9C
+         +yzLoM5UDpd+tncwANyA55sMO7PGY0/9qi+OUumYrfXbFpEhGl5KzUU38nCx2AzT/I9Q
+         nAalEHdBnOoA4AD152DUqZZ/sCuvPbTtzmfLOes5kYueXge7+A2xjnK8F5n3V5Fn+tVP
+         7jTM7HDD+Qcz4L5TgBDMO/qYrhdJCw9Athq3BfGH2VTAKfaDxGdYUBniSws7tO/qkP2Z
+         b4wfC3ghkKo6lTqo8k9wmPhu9VDca/p93FB7g69O7KnOYn8N0MAqA0eZWTk3D3g9Uy3e
+         9vKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786987338; x=1787592138;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=c63lTPw0sJ/0kiyWxvGmU6Nz+vfC7FNZqHlcFwaoBHw=;
+        b=seSWC4H1LUwD+759Y6oQ6CGCyZbPPQ9kV+z3Aexec+q8A6w8PytD8P75NO4GjiMiPd
+         FXgtlLpkdXJl9Ux0pNLKEC04+aPacpgSn99YuAjB2dJNOhf1+uUFa0rE/JSpFQ1WCPCD
+         m9g/bKovjzp/YAHVu31l0Cbz4SaAOMvL2dPRKrrLsvIYl7Dgm4GsGCHKBWSRbjpgCbnD
+         8LU4oqcEUCsth7Np0IQ7onGemQb8BtI//v8VYgkrYP2U0hVuSUWydWlwIHw4L5chpr4c
+         i9DdGv9ftRRpnJErrABWZta9SNj64UN/MKOGru0X2dPqMshz31JtC03w90zGapiCdDUY
+         59Ng==
+X-Forwarded-Encrypted: i=1; AHgh+RrtLnoksQp2ObH+0cqC/fAU8HYnBJRpiX8iDU1SjmfhYotY6FdBKA8m1XXLgP/r/Rh6Vx2WIeQti2Zsors9X21MNec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTE6alI/ZQrXZGhn2Rpbupc4FuyPUgjpCDDvHUalKJa8HuJ+MN
+	fl5mVqptlJC6JOb1UNK4t/R/EBqfah94CidTk60qK6gi1ATPmg+GTB1xxWitGzwbHA==
+X-Gm-Gg: AR+sD137FWEc+NJltSD6Ct2+K3PuOTPzuXcciH+ZGiC74ExxqQhfew/Ne39FHHL+lP9
+	FG0LcfeitvzUo+fxC7F8Q14xfKEbKXc4cHiXtEQd6C3Aq5JXAK43gNMO6ZwUR4A/kh2gmCN802V
+	JkH9MyBBzmjSBuC/+reZu1sXJHioqdKb1IkLOkgYH0jP3FRL/QwG8i+wE/jgui+j70+97NS+AhD
+	litdAT2ntIGJU/BbBAH1daY57aFOz5zNBFHk8tLsHqZiEu9Jp28Eig1zirkaw0K4I+zIqQ0i7HL
+	HjZUySjkm5VvmHHk5ZmGr08JLlaAm/qCmP4EDfcyXqqZHsfF3EBsSfEZJ4wRLl/1+f8WfkniNZd
+	WblU8+MbkX4vTgCOwIfMRkkgoatlMyQhVGmbquL+Kjn+aKWbQyvyY8OrUcDfPa3OWFHcKHWg2YS
+	qnrqsEKi2IsH66Qtvg3OBC0r7oAxN4RTxfINwkqZEp1HdFLX49YsP76uevOGLNfQiFgn2+sEkuf
+	e3mr8T71S9cAcq+CLy0CO3JQTSoQV5X
+X-Received: by 2002:a05:600c:c171:b0:499:7f38:d77 with SMTP id 5b1f17b1804b1-4999fb2e1dbmr33554105e9.6.1786987337398;
+        Mon, 17 Aug 2026 10:22:17 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482a5a3b51asm5583583f8f.11.2026.08.17.10.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 10:22:16 -0700 (PDT)
+Date: Mon, 17 Aug 2026 18:22:13 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Thierry Reding <thierry.reding@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Chun Ng <chunn@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thierry Reding <treding@nvidia.com>, pavan.kondeti@oss.qualcomm.com
+Subject: Re: [PATCH v4 07/10] dma-buf: heaps: Add support for Tegra VPR
+Message-ID: <aoNDRTKCUkzd2n5G@google.com>
+References: <20260807-tegra-vpr-v4-0-5510d16af89e@nvidia.com>
+ <20260807-tegra-vpr-v4-7-5510d16af89e@nvidia.com>
+ <an4MEI7lkc2p3nKI@google.com>
+ <an8K2gb1pIqbDj6-@orome>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5259.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0e7798c-2b51-4ef1-72cf-08defc7d6ea2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2026 16:34:39.0082
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w9blSOMbf9b1NXYBTc38B3Vg76I1gfCPgbFkbEndWXEAlCSAOK+9b8wXR8IhBJt/ScUBqc6XmKqlAuA5rEFjRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8850
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <an8K2gb1pIqbDj6-@orome>
 
-T24gRnJpLCAyMDI2LTA3LTMxIGF0IDE0OjUzIC0wNzAwLCBIdWFuIE5ndXllbiB3cm90ZToNCj4g
-SGkgWWlhbm5pcywNCj4gDQo+IEFsdGhvdWdoIGNvcHlfbWNfdG9fa2VybmVsX250KCkgYXNzZXJ0
-cyBib3RoICJtYyIgKG1hY2hpbmUgY2hlY2sgZXhjZXB0aW9uKQ0KPiBhbmQgIm50IiAobm9uLXRl
-bXBvcmFsIHN0b3JlKSwgdGhlIGltcGxlbWVudGF0aW9uIGZhaWxzIHRvIGRlbGl2ZXIgYm90aDoN
-Cj4gMS4gY29weV9tY19mcmFnaWxlKCkgaXMgTUNFLXNhZmUsIGJ1dCBpdCBkb2VzIG5vdCB1c2Ug
-bW92bnRpLg0KPiAyLiBtZW1jcHlfZmx1c2hjYWNoZSgpIHVzZXMgbW92bnRpLCBidXQgaXQgaXMg
-bm90IE1DRS1zYWZlLg0KPiANCj4gQWRkaXRpb25hbGx5LCBhY2NvcmRpbmcgdG8gdGhlIEludGVs
-IG1hbnVhbCwgc2luY2UgbW92bnRpIHVzZXMgdGhlIFdDIHByb3RvY29sDQo+IChhIHdlYWtseS1v
-cmRlcmVkIG1lbW9yeSBtb2RlbCksIGEgZmVuY2luZyBvcGVyYXRpb24gaXMgcmVxdWlyZWQuIEJl
-Y2F1c2UNCj4gbWVtY3B5X2ZsdXNoY2FjaGUoKSBsYWNrcyBhbiBzZmVuY2UsIGl0IGNhbiByZXN1
-bHQgaW4gcmVhZGluZyBzdGFsZSBvciBjb3JydXB0ZWQNCj4gZGF0YSBhZnRlciBmb2xpb191bmxv
-Y2soKS4NCj4gDQo+IEZ1cnRoZXJtb3JlLCBjb3B5X21jX2hpZ2hwYWdlKCkgaXMgdW5vcHRpbWl6
-ZWQgZm9yIHBhZ2UgbWlncmF0aW9uIG9wZXJhdGlvbnMNCj4gYmVjYXVzZSBpdCByZXVzZXMgY29w
-eV9tY190b19rZXJuZWwoKSwgYnVpbHQgdG8gaGFuZGxlDQo+IHZhcmlhYmxlLWxlbmd0aCwgdW5h
-bGlnbmVkDQo+IG1lbW9yeS4gQXMgY29weV9tY19oaWdocGFnZV9udCgpIGZvbGxvd3MgY29weV9t
-Y19oaWdocGFnZSgpLCBpdCBpbmhlcml0cyB0aGlzDQo+IGZsYXcuIEluIGNvbnRyYXN0LCBjb3B5
-X2hpZ2hwYWdlKCkgaXMgb3B0aW1pemVkIGZvciBwYWdlIG1pZ3JhdGlvbiBieSBsZXZlcmFnaW5n
-DQo+IGNvcHlfcGFnZSgpLCBkZWRpY2F0ZWQgdG8gNEtpQi1hbGlnbmVkIG1lbW9yeS4NCj4gDQoN
-CkkgZG9uJ3QgdGhpbmsgY29weV9tY19oaWdocGFnZSgpIGlzIHVub3B0aW1pemVkIGZvciBwYWdl
-IG1pZ3JhdGlvbiBjb3BpZXMuDQoNCk9uIEVSTVMgc3lzdGVtcywgY29weV9tY190b19rZXJuZWwo
-KSB1c2VzIGNvcHlfbWNfZW5oYW5jZWRfZmFzdF9zdHJpbmcoKSwNCndoaWNoIGlzIHJlcCBtb3Zz
-Yi4gY29weV9wYWdlKCkgdXNlcyByZXAgbW92c3Egb24gUkVQX0dPT0Qgc3lzdGVtcy4NCg0KKFRo
-ZSBjb3B5X21jX2ZyYWdpbGVfZW5hYmxlZCBwYXRoIGxvb2tzIGxpa2UgYSBzcGVjaWFsIGNhc2Ug
-YW5kDQplbmFibGVfY29weV9tY19mcmFnaWxlKCkgaXMgcmVhY2hhYmxlIGVpdGhlciB3aGVuIG1j
-ZT1yZWNvdmVyeSBvciB0aHJvdWdoDQpvbmUgb2YgNCBpbnRlbCBDUFVzIGluIHg4Ni9rZXJuZWwv
-cXVpcmtzLmMpDQoNCkluIG15IHRlc3Rpbmcgb24gQU1EIEVQWUMgOTY1NSAoWkVOIDUpLCBib3Ro
-IGZvbGlvX21jX2NvcHkoKSBhbmQNCmZvbGlvX2NvcHkoKSBzaG93ZWQgc2ltaWxhciBwZXJmb3Jt
-YW5jZS4NCg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjYwNDI3MTQyMDM2LjExMTk0
-MC0yLXNoaXZhbmtnQGFtZC5jb20NCg0KQW5kIHRoZXJlIGlzIGFjdHVhbGx5IHNjb3BlIG9mIHVw
-dG8gfjJYIHNwZWVkdXAgZm9yDQpmb2xpb19jb3B5L2ZvbGlvX21jX2NvcHkgZm9yIGxhcmdlIHBh
-Z2VzIGlmIHdlIGJhdGNoIDRLaUIgY29waWVzLiANCg0KVGhhbmtzLA0KU2hpdmFuaw0K
+On Fri, Aug 14, 2026 at 02:56:05PM +0200, Thierry Reding wrote:
+> On Thu, Aug 13, 2026 at 07:25:20PM +0100, Vincent Donnefort wrote:
+> > On Fri, Aug 07, 2026 at 05:54:27PM +0200, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > > 
+> > > NVIDIA Tegra SoCs commonly define a Video-Protection-Region, which is a
+> > > region of memory dedicated to content-protected video decode and
+> > > playback. This memory cannot be accessed by the CPU and only certain
+> > > hardware devices have access to it.
+> > > 
+> > > Expose the VPR as a DMA heap so that applications and drivers can
+> > > allocate buffers from this region for use-cases that require this kind
+> > > of protected memory.
+> > > 
+> > > VPR has a few very critical peculiarities. First, it must be a single
+> > > contiguous region of memory (there is a single pair of registers that
+> > > set the base address and size of the region), which is configured by
+> > > calling back into the secure monitor. The memory region also needs to
+> > > quite large for some use-cases because it needs to fit multiple video
+> > > frames (8K video should be supported), so VPR sizes of ~2 GiB are
+> > > expected. However, some devices cannot afford to reserve this amount
+> > > of memory for a particular use-case, and therefore the VPR must be
+> > > resizable.
+> > > 
+> > > Unfortunately, resizing the VPR is slightly tricky because the GPU found
+> > > on Tegra SoCs must be in reset during the VPR resize operation. This is
+> > > currently implemented by freezing all userspace processes and calling
+> > > invoking the GPU's freeze() implementation, resizing and the thawing the
+> > > GPU and userspace processes. This is quite heavy-handed, so eventually
+> > > it might be better to implement thawing/freezing in the GPU driver in
+> > > such a way that they block accesses to the GPU so that the VPR resize
+> > > operation can happen without suspending all userspace.
+> > > 
+> > > In order to balance the memory usage versus the amount of resizing that
+> > > needs to happen, the VPR is divided into multiple chunks. Each chunk is
+> > > implemented as a CMA area that is completely allocated on first use to
+> > > guarantee the contiguity of the VPR. Once all buffers from a chunk have
+> > > been freed, the CMA area is deallocated and the memory returned to the
+> > > system.
+> > 
+> > Hi,
+> > 
+> > I believe we (the Android team) are trying to solve similar issue to yours: Arm
+> > CPUs can still speculatively read memory after it has been transitioned to the
+> > Secure state, as long as they retain a cacheable mapping to it.
+> > 
+> > As modifying the direct mapping is difficult, the workaround ended up in the
+> > hypervisor which unmaps the pages from the host stage-2 on intercepted FF-A Lend
+> > invocations.
+> > 
+> > If convenient, this is nonetheless the wrong place to do it. Scattering the host
+> > stage-2 is really terrible for performance and we would like to move it where it
+> > should be, directly into the kernel...
+> > 
+> > This is what I thought was the attempt in v3, but I am now a bit confused
+> > because I see you are using set_direct_map_invalid_noflush()
+> > set_direct_map_default_noflush(), but I am not sure that works if rodata=full is
+> > not set? So does the memory for the NVIDIA IP still need to be unmapped?
+> 
+> Yeah, this currently relies on the circumstances being such that
+> can_set_direct_map() returns true, and in the case where we want to use
+> the resizable VPR functionality, we're going to have page-granular
+> mappings anyway.
+> 
+> > If so, how about having an option where the CMA allocation is backed by a direct
+> > map with the same page granularity, or at least a smaller and aligned granule?
+> > 
+> > With that, we know that for whatever CMA allocation we do, we can safely unmap
+> > from the direct map without risking splitting blocks. On CMA free, we can safely
+> > remap into the direct map as I do not believe we coalesce yet.
+> 
+> This sounds intriguing. For VPR we could possibly make the size a
+> multiple of the memblock size (or whatever might be appropriate). If we
+> can create a page-granular linear mapping specifically for that region,
+> that'd be ideal. I don't know if the linear mapping can be subdivided in
+> this fashion, though.
+
+Actually I don't think modifying the memblock is necessary at all!
+
+Here's what I have so far:
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index d4de88770ecf..a9f81413b70d 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -22,6 +22,7 @@
+ #include <linux/fs.h>
+ #include <linux/io.h>
+ #include <linux/mm.h>
++#include <linux/of_fdt.h>
+ #include <linux/vmalloc.h>
+ #include <linux/set_memory.h>
+ #include <linux/kfence.h>
+@@ -1138,6 +1139,27 @@ static inline void arm64_kfence_map_pool(void) { }
+ 
+ #endif /* CONFIG_KFENCE */
+ 
++#define MAX_FORCE_PTE_REGIONS 64 /* Greater or equal to MAX_RESERVED_REGIONS */
++
++static struct {
++       phys_addr_t start;
++       phys_addr_t end;
++} force_pte_regions[MAX_FORCE_PTE_REGIONS] __initdata;
++
++void __init early_init_dt_force_pte_arch(phys_addr_t start, phys_addr_t end)
++{
++       static int count;
++
++       if (force_pte_mapping())
++               return;
++
++       if (count >= MAX_FORCE_PTE_REGIONS)
++               return;
++
++       force_pte_regions[count].start = start;
++       force_pte_regions[count++].end = end;
++}
++
+ static void __init map_mem(void)
+ {
+        static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
+@@ -1186,6 +1208,15 @@ static void __init map_mem(void)
+        __map_memblock(init_end, kernel_end, pgprot_tagged(PAGE_KERNEL),
+                       flags);
+ 
++       for (i = 0; i < ARRAY_SIZE(force_pte_regions); i++) {
++               if (!force_pte_regions[i].end)
++                       break;
++
++               __map_memblock(force_pte_regions[i].start, force_pte_regions[i].end,
++                              pgprot_tagged(PAGE_KERNEL),
++                              flags | NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
++       }
++
+        /* map all the memory banks */
+        for_each_mem_range(i, &start, &end) {
+                /*
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 42e3e2d8a2b8..445f204f01e4 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -136,6 +136,8 @@ static int __init early_init_dt_reserve_memory(phys_addr_t base,
+        return memblock_reserve(base, size);
+ }
+ 
++void __weak early_init_dt_force_pte_arch(phys_addr_t start, phys_addr_t end) { }
++
+ /*
+  * __reserved_mem_reserve_reg() - reserve memory described in the
+  * first entry in 'reg' property
+@@ -168,6 +170,9 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
+        size = s;
+ 
+        if (size && early_init_dt_reserve_memory(base, size, nomap) == 0) {
++               if (of_get_flat_dt_prop(node, "force-pte", NULL))
++                       early_init_dt_force_pte_arch(base, base + size);
++
+                fdt_fixup_reserved_mem_node(node, base, size);
+                pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %lu MiB\n",
+                         uname, &base, (unsigned long)(size / SZ_1M));
+@@ -517,6 +522,9 @@ static int __init __reserved_mem_alloc_size(unsigned long node, const char *unam
+                return -ENOMEM;
+        }
+ 
++       if (of_get_flat_dt_prop(node, "force-pte", NULL))
++               early_init_dt_force_pte_arch(base, base + size);
++
+        fdt_fixup_reserved_mem_node(node, base, size);
+        fdt_init_reserved_mem_node(node, uname, base, size);
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 51dadbaa3d63..6c73c76dee1b 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -74,6 +74,7 @@ extern void early_init_dt_check_for_usable_mem_range(void);
+ extern int early_init_dt_scan_chosen_stdout(void);
+ extern void early_init_fdt_scan_reserved_mem(void);
+ extern void early_init_fdt_reserve_self(void);
++extern void early_init_dt_force_pte_arch(phys_addr_t start, phys_addr_t end);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+ extern u64 dt_mem_next_cell(int s, const __be32 **cellp);
+ 
+> 
+> > (This alignment is not necessary for upcoming systems with BBML3)
+> > 
+> > However, to implement this, we'd need to split memblocks and I believe the only
+> > way at the moment is temporarily mark it as "nomap" which didn't seem very
+> > popular in the comments on v3.
+> 
+> Could this be simplified if this type of allocation is always memblock
+> aligned?
+> 
+> Looking at map_mem(), it seems like we could add some sort of special-
+> casing in the for_each_mem_range() block to check if the memory is VPR
+> (or generic, page-granular carveout, or whatever we want to call it) and
+> set NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS in that case.
+> 
+> If that works, set_direct_map_*() could be enhanced to detect such cases
+> and always work. Or perhaps a more specific API could be introduced.
+> 
+> Thierry
+
+for set_direct_map() I think we could extend it to check if it is mapped at the
+PTE-level and if it is we can proceed?
+
+I am currently looking at extending CMA with an option "unmap-on-alloc;" that
+would only be available if CONFIG_ARCH_HAS_SET_DIRECT_MAP, or
+cma_set_unmap_on_alloc, or if "force-pte;" is set. 
+
+Hopefully I can share something this week.
+
+-- 
+Vincent
