@@ -1,242 +1,273 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF413F5BF3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 10:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EEC3F5BFD
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 10:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786961698; cv=none; b=mY2WLV+6CotwP/lG4/aqt4mwXoUL8jfXsExrBfRAd5ndG0rKy9Onqub1xIGnxO+OupAJyVimS8y8T3Z9MrwiVi5S04lUNzUv8oKNoILMKn+3cBdWiyJtXaR54z485/wd/9Qi29cgSI4tYnsOXjp1Wbb+zn/Q60OfxWcvNK3DX38=
+	t=1786962431; cv=none; b=SK+Uz3+ZLxhKlFurWoCxYyHK8vRsqz9vuGyRK1BpoDH+Dk2C7UwtqqLfcCFEw55sUhHenZwTO8eEh+kJBWsrNKbI8R0s9tjY89hpeAd6cAsId0eK39oK4sxHMALuAI3apEsqVRTxis5Chi9KUn8ZHOrTsJW0SVCKLYTQDVjORCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786961698; c=relaxed/simple;
-	bh=jEtdv8cixT4yT8CUzlCKJ298vzSvS3wb33Tb68PE/XE=;
+	s=arc-20240116; t=1786962431; c=relaxed/simple;
+	bh=GmyHdqZmRLI3WI9sTLJ+TBQ84ImAIi3nhCQNwW+JshY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KyUwxvF2+K83R3Xb9Eyqya60Wa47cd7fR+wPawOXqWnR9ppjjzczy7dnvcScMAK7NSpHbkPQc25vm+YEmE9jSNp86dIpNLxCT2eOLpJJNDvQ6Yry0ly87cpQtWnx+c2BexTUQgCET6alC1chCvkEvP62AZNs7ZW+VBJs1FV8Tk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kT2a3HlV; arc=none smtp.client-ip=209.85.128.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=oPbHJLQ4Pwz5+1Lo3r7O2d8JlCqenFUAPKkY8xFAUHo80coBU/F+F1PcS4QWD0Qs0GbD5Cyek3y34tuum4AE1lwL6r0Y2kQ4/d1gnQd3TsJU1fYHGxBbxGni4QzI+1IpUtVlcj5jsUzWWngowHSk0qhg2KeqPa6FBB3Tl/sYoAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OgRxXn0h; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kT2a3HlV"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-499840a2575so23907965e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 03:14:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OgRxXn0h"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-49545ba3d4eso15206155e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 03:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786961691; x=1787566491; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=WkV77Z8Ixwaqf7EeDyRNAP+C+NWCpS3WdahE3ARQznE=;
-        b=kT2a3HlVBavcvdorkOFoxSgI55qUU7NXKNozxZamOh2ueTSQkGqZbT9UzGYncoHXeq
-         vHPvAtoFXcVibFYLW+xmlJvuidv2D/LPwTh+DCdtWYwEBTxbV2DPzVagJEYr5tjs+lWq
-         kHaIS4eoRVVbHxStfMQJjnppxvGGWfRgvtI39oAOag2OWDjeYDaQbvOi/KCB8ojV3CLA
-         ALskrhuVPd2X8h0e4SccgSL95K4NKcrjgg53rVkQTQMM52+ffIJPj8vlaLey7oX9bCnr
-         A8ruBxwLef308776ki1HoZNuUhH3Fu2z9BRvTzgUZLU4TzKSfRMEQiDUv+s/VCzJu+a9
-         j5EQ==
+        d=google.com; s=20251104; t=1786962426; x=1787567226; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=tPiELKIFrUueStBDV+f+2bCYmZSbeJm73pkY576W4Us=;
+        b=OgRxXn0hfLV9uehelNYlSMbBbYYwso7JwbEsxuEF8AKZDTTglVX7beSBU6zQ/TxUNN
+         8cshUI2878odnw0YnVeXC/P+Jg3oetknyhbryBsisBrShorIoXR+5wK1fvC93pgMZ88h
+         AcCIOF1kRNNIhreBStVbMD9JDhCbillOwnEZtLAEgU7kpn1M3AT+ukPk/bF5mGdTOoUL
+         i1178H+ttOXJ7BxzVpG6MM/oua/sE2eVC0/0ulGOc1ohgKnqePTgzi990u4rsg7qiyum
+         mDb9ojma5n+LFDjF3oDNU5gg8W0ZewJtRtIGt972l4N8YC7auWcAdbpM+6DdjQMXbjbU
+         DJUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786961691; x=1787566491;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=WkV77Z8Ixwaqf7EeDyRNAP+C+NWCpS3WdahE3ARQznE=;
-        b=Gzs7c+u7Ccj67f1riC6dXEfvpWlaaVwMHcKedjw2a4rw65KXHQvSWDEzje6zXQodmx
-         bfoai9jPf1xkNGghuYvl3BRlayViEiqe/O/sCeXWZNfBWiD5IXx7AFvTTeztUt2Jz/bG
-         q+pP7ctbAbw70Fx3qTtAR8Wqoi3DjEdBH7DHyo3kGyFJhvASPuHqW31Rdoo5I8s/Taa0
-         nLv/OGz82RdUfjRy3znYw9mKj1wPkJ4GL2gUKw/IJcuCb63ny0sPnvb9z68DN2VHCekz
-         /1AMRa4RTsTy/cKY4kAppZTnGlN295ffZHVoo7/B7M+1B4vHqlsGt8Mt5CnUMyl+gSVD
-         R9Rg==
-X-Gm-Message-State: AOJu0Yxb/EcyRR/ptuZC4Efr8iMQIJqcI0MSwqsMdfmmHaj7rFjIBA1z
-	2LmCJctgJQm5g3YzyY/uaDXA3miSvCA/4acIeZu3+xl3lgN+aP0lIfcLD9Tb/bas088JDUsfZ20
-	urqPO2w==
-X-Gm-Gg: AR+sD10EM0e4vHqQETTlP3IO5El4lQPoeR1yX4Kaf3NwQL2bThrOOUMb83DSlsBGbKZ
-	wdPfMvgNDI5bBvGWncxtzJHpl8JV6Q8mCnPyAYwuIhHDMEAJomQ+DeIiCLKvyvPRWfsk/I6leYV
-	I6CyZE2kaonB6w1SBbyECHZULU041gNOfkHn1KVg+yTX09PXx7vw7Cp594VmyXBHp8pK1t0Pg4I
-	uFxkzFukogBg5e2EwuP0fS8+445EYc141YeYFZvtx6AoyrqNX3iXPZAXbM65oKE9CrKMKqe69LW
-	Zx8Lf/qgOpy+0TrrSBDpMkwnwJZD397IeoJkdMrTHFnXfCXDdiGw2jTg7NaHM5DLspP0SHrV314
-	bafCXe4P3i2uot0qoYyI79SxbpQjhm4s0ieBuJbYvqrZCQx6HHaNBccH6q8mtVq+3RGBLep88f0
-	sX7EychfNVRTKPh6HyYRDrUN9KFgughYAFPcAiQ/okoqRiKIld2BVd1WklKGjrsIK8DDmA/Bb1m
-	NaTkKj3MUcEgOfqGOSMJYAzJ2JQuM5m
-X-Received: by 2002:a05:600c:3796:b0:495:4811:7998 with SMTP id 5b1f17b1804b1-49987993e08mr307088115e9.17.1786961690475;
-        Mon, 17 Aug 2026 03:14:50 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1786962426; x=1787567226;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tPiELKIFrUueStBDV+f+2bCYmZSbeJm73pkY576W4Us=;
+        b=StMATq+wqNXdrk1SbhKoCwDm6U8n+kROq59eDeeR8ZaVdT8eZ/bNtGeLfPX7gGLvP1
+         LyPvEYrmuyprSWLVCTj8d+3yktFTmwqevoYJd8eBIUTImcWmkl0J9LO0bzBQ9i/UMMuQ
+         HIpUpGB7d9X2e2I0/yj2rW/eVl0pK/fJc2AL4hC9BAq9t2Ao9Tlac2zLaNklkz3Wt8Ou
+         h7nNj5DnC3Mephai5lJ6+czO1psCFOQQzP0eZNGNI64y7bCk1ys8/mJNTZrsFANEk6KL
+         oErTxAgPws/jzu4mcOml/zpXHMxr1jRUVYl50Unn6UxhHGfza6YBB3zVMBnIz1lGAJQL
+         50EA==
+X-Forwarded-Encrypted: i=1; AHgh+RqgtEHP4V12lkflBXWFn/fFRAkPs5B+YD6RbdpQN9spq1C2pumKiB6hOIEZdzPbwQLQCfamjQL24HGCYsvFthC//DE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzswcgMyDNBqR6YVtRNUaTiGrvJlnlpFTyWOd1wa/Qya6CaLxbn
+	NeK3vx7pkuk1WezbRm/gpIMiYAr+m1lQInOrqvTiFyshvAElbI1LZKamAn2mROVo6Ijkre1KNay
+	3qiS3RQ==
+X-Gm-Gg: AR+sD12g+XFQeYZzkfexK/AJfx9IyDJzbLUVj39ktpjcFXPH97+jCQlzPcgdtkcHBG1
+	A1g2pTC9fuZqiOFv9R8g/JppplAz6LGxyILqhWi785Pf6VcTsf/K4XdP9kabBUR+23vfpOnFRwg
+	rrQxSZ01m6alqFzK2JyNORPfQK5xA1iT5pIQwHTn8PRaYb7QFxSRxUsGj/GONIP3I7mSW5b+CXM
+	bdl1UOdgvWF5Sbf6swPUk/LN0kQlPYH81gwG6/rB7DqSFjiQYamD4Z0aqcB+SZkb4xwN+pRd8Tq
+	zktCJcJNk3THpma9x5OO7sF8iKyWxyL7CILIft4LIFeLhskkuziSWSmPBm2xPGx4z8Vi7zkeZRf
+	YJ0j5SoAgT6MMpoQjFlfo264NMGQcxysfWxUY/l7JADKwES4LjXFpG+Ud2ByEKb4Lk00f1ffKsl
+	qQhF6jnafypsWjVynKmHGfjlcZPVcwkbB8AWb7caCSXqrEaYFgFTaGIX715Xp57WsQAlSwtsf8g
+	xH2pXlVBUxjY24OMX/g6hDQb/uuLRE949Wl0eE8LSs=
+X-Received: by 2002:a05:600c:34ca:b0:499:7f38:d77 with SMTP id 5b1f17b1804b1-49988cab011mr381517215e9.6.1786962425777;
+        Mon, 17 Aug 2026 03:27:05 -0700 (PDT)
 Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49996109652sm169231445e9.4.2026.08.17.03.14.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4999d063a68sm26758815e9.2.2026.08.17.03.27.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 03:14:49 -0700 (PDT)
-Date: Mon, 17 Aug 2026 11:14:46 +0100
+        Mon, 17 Aug 2026 03:27:05 -0700 (PDT)
+Date: Mon, 17 Aug 2026 11:27:01 +0100
 From: Vincent Donnefort <vdonnefort@google.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
+To: rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v6 2/2] ring-buffer: Improve nr_pages type
-Message-ID: <aoLfFtBTvvyvI_Wu@google.com>
+Message-ID: <aoLh9djyr-3PFSvj@google.com>
 References: <20260814154823.755406-1-vdonnefort@google.com>
  <20260814154823.755406-3-vdonnefort@google.com>
- <20260814155944.F017E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260814155944.F017E1F000E9@smtp.kernel.org>
+In-Reply-To: <20260814154823.755406-3-vdonnefort@google.com>
 
-On Fri, Aug 14, 2026 at 03:59:44PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] When `nr_pages` is exactly `U32_MAX - 1`, the expression `meta->nr_subbufs + 1` overflows to 0, silently skipping persistent ring buffer validation and wiping data.
-> 
-> Pre-existing issues:
-> - [Critical] Loop counters iterating over `meta->nr_subbufs` are typed as `signed int`, which wrap to negative values for extremely large buffers, leading to out-of-bounds memory accesses.
-> - [Critical] The `meta->nr_subbufs` field is read from potentially corrupted persistent memory and used without validation against `nr_pages`, causing a heap out-of-bounds write in `bitmap_clear()`.
-> - [High] Multiplication of `subbuf_size` and `idx` overflows 32 bits for ring buffers > 4GB, causing severe memory aliasing.
-> --
-> 
-> --- Patch [2]: [PATCH v6 2/2] ring-buffer: Improve nr_pages type ---
-> commit 030ec6a7ceec6e71123077bd1fc64e0cf5c27cc8
-> Author: Vincent Donnefort <vdonnefort@google.com>
-> 
-> ring-buffer: Improve nr_pages type
-> 
+On Fri, Aug 14, 2026 at 04:48:23PM +0100, Vincent Donnefort wrote:
 > If ring_buffer_per_cpu::nr_pages is defined as unsigned long, it is
 > capped to 32-bits in a few places, limiting the operations possible on a
 > very large buffer.
 > 
-> [ ... ]
+> Make sure nr_pages is never capped to 32-bits (that includes nr_subbufs)
+> and reject a value over 32-bits for the user-mapped, persistent buffer
+> and remote buffer cases where the limiting factor is the shared
+> meta-data member for the number of pages/subbufs.
 > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index ec13779922ffb..ec127e2ad0527 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
+> While at it, make sure subbuf_size is 'unsigned int'.
 > 
-> [ ... ]
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> ---
+>  kernel/trace/ring_buffer.c | 46 ++++++++++++++++++++++++--------------
+>  1 file changed, 29 insertions(+), 17 deletions(-)
 > 
-> > @@ -1746,8 +1745,8 @@ static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
-> >  static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
-> >  {
-> >  	struct ring_buffer_cpu_meta *meta;
-> > +	unsigned int subbuf_size;
-> >  	unsigned long ptr;
-> > -	int subbuf_size;
-> >  
-> >  	meta = rb_range_meta(cpu_buffer->buffer, 0, cpu_buffer->cpu);
-> >  	if (!meta)
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does the multiplication of subbuf_size and
-> idx overflow 32 bits for ring buffers larger than 4GB?
-> 
-> In rb_range_buffer(), we have:
-> 
->     subbuf_size = meta->subbuf_size;
->     idx = meta->buffers[idx];
->     ptr = (unsigned long)rb_subbufs_from_meta(meta);
->     ptr += subbuf_size * idx;
-> 
-> Since subbuf_size is an unsigned int and idx is an int, the multiplication
-> evaluates as a 32-bit unsigned integer. For ring buffers over 4GB, this can
-> overflow and wrap around before being zero-extended and added to the 64-bit
-> ptr, causing memory aliasing by overwriting earlier subbuffers.
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index ec13779922ff..ec127e2ad052 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1669,7 +1669,7 @@ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+>   * This is used to help find the next per cpu subbuffer within a mapped range.
+>   */
+>  static unsigned long
+> -rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
+> +rb_range_align_subbuf(unsigned long addr, unsigned int subbuf_size, unsigned long nr_subbufs)
+>  {
+>  	addr += sizeof(struct ring_buffer_cpu_meta) +
+>  		sizeof(int) * nr_subbufs;
+> @@ -1679,13 +1679,12 @@ rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
+>  /*
+>   * Return the ring_buffer_meta for a given @cpu.
+>   */
+> -static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
+> +static void *rb_range_meta(struct trace_buffer *buffer, unsigned long nr_pages, int cpu)
+>  {
+> -	int subbuf_size = rb_subbuf_size(buffer);
+> +	unsigned int subbuf_size = rb_subbuf_size(buffer);
+>  	struct ring_buffer_cpu_meta *meta;
+>  	struct ring_buffer_meta *bmeta;
+> -	unsigned long ptr;
+> -	int nr_subbufs;
+> +	unsigned long ptr, nr_subbufs;
+>  
+>  	bmeta = buffer->meta;
+>  	if (!bmeta)
+> @@ -1731,7 +1730,7 @@ static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
+>  /* Return the start of subbufs given the meta pointer */
+>  static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
+>  {
+> -	int subbuf_size = meta->subbuf_size;
+> +	unsigned int subbuf_size = meta->subbuf_size;
+>  	unsigned long ptr;
+>  
+>  	ptr = (unsigned long)meta;
+> @@ -1746,8 +1745,8 @@ static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
+>  static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
+>  {
+>  	struct ring_buffer_cpu_meta *meta;
+> +	unsigned int subbuf_size;
+>  	unsigned long ptr;
+> -	int subbuf_size;
+>  
+>  	meta = rb_range_meta(cpu_buffer->buffer, 0, cpu_buffer->cpu);
+>  	if (!meta)
+> @@ -1840,10 +1839,10 @@ static bool rb_meta_init(struct trace_buffer *buffer, int scratch_size)
+>   * must be the same.
+>   */
+>  static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
+> -			      struct trace_buffer *buffer, int nr_pages,
+> +			      struct trace_buffer *buffer, unsigned long nr_pages,
+>  			      unsigned long *subbuf_mask)
+>  {
+> -	int subbuf_size = PAGE_SIZE;
+> +	unsigned int subbuf_size = PAGE_SIZE;
+>  	unsigned long buffers_start;
+>  	unsigned long buffers_end;
+>  	int i;
+> @@ -2231,7 +2230,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+>  	}
+>  }
+>  
+> -static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int scratch_size)
+> +static void rb_range_meta_init(struct trace_buffer *buffer,
+> +			       unsigned long nr_pages, int scratch_size)
+>  {
+>  	struct ring_buffer_cpu_meta *meta;
+>  	unsigned long *subbuf_mask;
+> @@ -2417,7 +2417,7 @@ static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, unsigned int p
+>  }
+>  
+>  static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+> -		long nr_pages, struct list_head *pages)
+> +			       unsigned long nr_pages, struct list_head *pages)
+>  {
+>  	struct trace_buffer *buffer = cpu_buffer->buffer;
+>  	struct ring_buffer_cpu_meta *meta = NULL;
+> @@ -2545,7 +2545,7 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  }
+>  
+>  static struct ring_buffer_per_cpu *
+> -rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+> +rb_allocate_cpu_buffer(struct trace_buffer *buffer, unsigned long nr_pages, int cpu)
+>  {
+>  	struct ring_buffer_per_cpu *cpu_buffer __free(kfree) =
+>  		alloc_cpu_buffer(cpu);
+> @@ -2702,8 +2702,8 @@ static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
+>  	struct ring_buffer_cpu_meta *meta;
+>  	struct buffer_data_page *dpage;
+>  	unsigned long entry_bytes = 0;
+> +	unsigned int subbuf_size;
+>  	unsigned long ptr;
+> -	int subbuf_size;
+>  	int invalid = 0;
+>  	int cpu;
+>  	int i;
+> @@ -2773,8 +2773,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  					 struct ring_buffer_remote *remote)
+>  {
+>  	struct trace_buffer *buffer __free(kfree) = NULL;
+> -	long nr_pages;
+> -	int subbuf_size;
+> +	unsigned int subbuf_size;
+> +	unsigned long nr_pages;
+>  	int bsize;
+>  	int cpu;
+>  	int ret;
+> @@ -2837,6 +2837,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  		 */
+>  		nr_pages = (size - sizeof(struct ring_buffer_cpu_meta)) /
+>  			(subbuf_size + sizeof(int));
+> +
+> +		/* limited by ring_buffer_cpu_meta::nr_subbufs */
+> +		if (nr_pages > U32_MAX - 1)
+> +			goto fail_free_buffers;
+>  		/* Need at least two pages plus the reader page */
+>  		if (nr_pages < 3)
+>  			goto fail_free_buffers;
+> @@ -2869,6 +2873,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  		/* The writer is remote. This ring-buffer is read-only */
+>  		atomic_inc(&buffer->record_disabled);
+>  		nr_pages = desc->nr_page_va - 1;
+> +
+> +		/* limited by ring_buffer_desc::nr_page_va */
+> +		if (nr_pages > U32_MAX - 1)
+> +			goto fail_free_buffers;
+>  		if (nr_pages < 2)
+>  			goto fail_free_buffers;
+>  	} else {
+> @@ -7421,8 +7429,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+>  	struct buffer_page *bpage, *tmp;
+>  	unsigned int old_capacity;
+> +	unsigned long nr_pages;
+>  	int old_order;
+> -	int nr_pages;
+>  	int psize;
+>  	int err;
+>  	int cpu;
+> @@ -7604,7 +7612,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+>  				   struct buffer_page **subbuf_ids)
+>  {
+>  	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> -	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+> +	unsigned long nr_subbufs = cpu_buffer->nr_pages + 1;
+>  	struct buffer_page *first_subbuf, *subbuf;
+>  	int cnt = 0;
+>  	int id = 0;
+> @@ -7834,6 +7842,10 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  	/* prevent another thread from changing buffer/sub-buffer sizes */
+>  	guard(mutex)(&buffer->mutex);
+>  
+> +	/* limited by trace_buffer_meta::nr_subbufs */
 
-I can add this to this patch/
+And actually I have realised the limiting factor is bpage::id which is only
+30-bits.
 
+> +	if (cpu_buffer->nr_pages > U32_MAX - 1)
+> +		return -E2BIG;
+> +
+>  	err = rb_alloc_meta_page(cpu_buffer);
+>  	if (err)
+>  		return err;
+> -- 
+> 2.55.0.691.gc56d675ccc-goog
 > 
-> [ ... ]
-> 
-> > @@ -1840,10 +1839,10 @@ static bool rb_meta_init(struct trace_buffer *buffer, int scratch_size)
-> >   * must be the same.
-> >   */
-> >  static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
-> > -			      struct trace_buffer *buffer, int nr_pages,
-> > +			      struct trace_buffer *buffer, unsigned long nr_pages,
-> >  			      unsigned long *subbuf_mask)
-> >  {
-> > -	int subbuf_size = PAGE_SIZE;
-> > +	unsigned int subbuf_size = PAGE_SIZE;
-> >  	unsigned long buffers_start;
-> >  	unsigned long buffers_end;
-> >  	int i;
-> 
-> [Severity: Critical]
-> This is a pre-existing issue, but will loop counters iterating over
-> meta->nr_subbufs wrap to negative values for extremely large buffers?
-> 
-> In rb_cpu_meta_valid():
-> 
->     for (i = 0; i < meta->nr_subbufs; i++) {
->         if (meta->buffers[i] < 0 || ...
-> 
-> And in rb_range_meta_init():
-> 
->     for (i = 0; i < meta->nr_subbufs; i++) {
->         meta->buffers[i] = i;
-> 
-> The loop counter i is a signed int. Since nr_pages can now go up to
-> U32_MAX - 1, if the buffer size pushes meta->nr_subbufs past INT_MAX, i
-> will wrap to negative. i < meta->nr_subbufs will promote i to unsigned,
-> evaluating to true, and the negative index will be sign-extended on 64-bit
-> architectures, causing out-of-bounds reads and writes.
-
-Yeah sure, I'll make it unsigned int... doesn't sound too critical though!
-
-> 
-> [Severity: Critical]
-> This is a pre-existing issue, but could meta->nr_subbufs cause a heap
-> out-of-bounds write if it doesn't match nr_pages?
-> 
-> In rb_cpu_meta_valid():
-> 
->     bitmap_clear(subbuf_mask, 0, meta->nr_subbufs);
-> 
->     for (i = 0; i < meta->nr_subbufs; i++) {
->         ...
->         set_bit(meta->buffers[i], subbuf_mask);
-> 
-> meta->nr_subbufs is read directly from persistent memory and used without
-> being validated against the dynamically allocated subbuf_mask size, which is
-> based on nr_pages + 1. If meta->nr_subbufs is maliciously or accidentally set
-> larger than nr_pages + 1, bitmap_clear() and set_bit() will write zeroes and
-> ones past the end of the bitmap allocation.
-
-Sure, but that'll be another patch.
-
-> 
-> [ ... ]
-> 
-> > @@ -2837,6 +2837,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
-> >  		 */
-> >  		nr_pages = (size - sizeof(struct ring_buffer_cpu_meta)) /
-> >  			(subbuf_size + sizeof(int));
-> > +
-> > +		/* limited by ring_buffer_cpu_meta::nr_subbufs */
-> > +		if (nr_pages > U32_MAX - 1)
-> > +			goto fail_free_buffers;
-> >  		/* Need at least two pages plus the reader page */
-> >  		if (nr_pages < 3)
-> >  			goto fail_free_buffers;
-> 
-> [Severity: High]
-> Does meta->nr_subbufs + 1 overflow when nr_pages is exactly U32_MAX - 1?
-> 
-> If nr_pages is exactly U32_MAX - 1, meta->nr_subbufs becomes U32_MAX.
-> In rb_meta_validate_events(), there are loops with this condition:
-> 
->     for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-> 
-> U32_MAX + 1 overflows to 0 in 32-bit unsigned arithmetic. This makes the loop
-> condition i < 0, causing the loops to terminate immediately without rewinding
-> and validating the persistent ring buffer from a previous boot.
-
-Sure, this can be  unsigned it as well...
-
-And there are plenty of other functions that need fixing then.
-rb_meta_subbuf_idx, rb_cpu_meta_valid, __rb_get_reader_page, rb_iter_peek... 
-
-I need a bit more time to audit what must be modified.
 
 -- 
 Vincent
-
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260814154823.755406-1-vdonnefort@google.com?part=2
