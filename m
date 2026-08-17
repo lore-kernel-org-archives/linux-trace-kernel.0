@@ -1,341 +1,181 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAC946A5F2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 17:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536F437B012;
+	Mon, 17 Aug 2026 17:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786987342; cv=none; b=MtT0QAzo6OxSKFfC6CcVu0GLQ3HuCn1LCblgng8FO3geZNAKnXLd0cwYuU1D9xwkYWn7Bu51kfpWPflrpuxHS85Dem10ydpfB1ZL3B6QHY7qpqyA2q45bTTjW+VYosJRWgVFtVh1XNxiSdlkbj5aZZ4zKZ30+7WRPsYTyfw8q30=
+	t=1786989463; cv=none; b=QgKf1iKx0c4ThPV7Lh2DCjgJIVRw3IiWJYOxDyjBhHo1XFYibTYPty+PD73DwIcw+INpeoS3NQM7P+Snm2RG6+cS2Tqw0d5Lt3AwjK5CwKefpC1NGJ+zRDwmfQTt5Zwc01ilyxmrYKmAQVXr8G66Jw7dUchU8EG5jNAqd5OkakM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786987342; c=relaxed/simple;
-	bh=TsDzbeMIAoB15auULJGz0zaAQwkoG+YfRfs7YSfJtPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c8B3vjKbxbvaKvbyN6hwEqv5V4Fkur3r+uOqLdDeEdle7Sj+5Pis8QjnFdqbv/c/22MEVmK4wDLIgiErSpvE/OD/7Iqv+yNd9rCfwjenfy3qsVe7KAj3GpdCfTheWsI/tver3KfDjH/NIoyXNcpnI19wcThcsCDByjce2dfcRvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rT3iikZD; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1786989463; c=relaxed/simple;
+	bh=HpnmfGDDSMoxbUJUM/NFcevNEY7pZNmPRsJqEVj4ofM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XNTiEqwFSQLl5gRyiwZ/79xlOSjEL7TNEWaQfWnZ2Kp7kK+Un0M/s+C40+uoy4dz4gcy6E7mEuSOw3WLHNwnPL0TIRvgDSgYN03UuNd6CW231RCHBA7O9BOXMY5eOf24ULyPoyGPoH6HJEUkcoXqe64xCN/kL1TA6e5xpoDueF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ReK/IXSP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rT3iikZD"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-49558ce01afso28359215e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 10:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786987338; x=1787592138; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=c63lTPw0sJ/0kiyWxvGmU6Nz+vfC7FNZqHlcFwaoBHw=;
-        b=rT3iikZD/YYIJoqR5MfpwvdJQrQVjCs9vXXmvNmzLsCCyrNoyku0JRW/9YpPrIEG9C
-         +yzLoM5UDpd+tncwANyA55sMO7PGY0/9qi+OUumYrfXbFpEhGl5KzUU38nCx2AzT/I9Q
-         nAalEHdBnOoA4AD152DUqZZ/sCuvPbTtzmfLOes5kYueXge7+A2xjnK8F5n3V5Fn+tVP
-         7jTM7HDD+Qcz4L5TgBDMO/qYrhdJCw9Athq3BfGH2VTAKfaDxGdYUBniSws7tO/qkP2Z
-         b4wfC3ghkKo6lTqo8k9wmPhu9VDca/p93FB7g69O7KnOYn8N0MAqA0eZWTk3D3g9Uy3e
-         9vKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786987338; x=1787592138;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=c63lTPw0sJ/0kiyWxvGmU6Nz+vfC7FNZqHlcFwaoBHw=;
-        b=seSWC4H1LUwD+759Y6oQ6CGCyZbPPQ9kV+z3Aexec+q8A6w8PytD8P75NO4GjiMiPd
-         FXgtlLpkdXJl9Ux0pNLKEC04+aPacpgSn99YuAjB2dJNOhf1+uUFa0rE/JSpFQ1WCPCD
-         m9g/bKovjzp/YAHVu31l0Cbz4SaAOMvL2dPRKrrLsvIYl7Dgm4GsGCHKBWSRbjpgCbnD
-         8LU4oqcEUCsth7Np0IQ7onGemQb8BtI//v8VYgkrYP2U0hVuSUWydWlwIHw4L5chpr4c
-         i9DdGv9ftRRpnJErrABWZta9SNj64UN/MKOGru0X2dPqMshz31JtC03w90zGapiCdDUY
-         59Ng==
-X-Forwarded-Encrypted: i=1; AHgh+RrtLnoksQp2ObH+0cqC/fAU8HYnBJRpiX8iDU1SjmfhYotY6FdBKA8m1XXLgP/r/Rh6Vx2WIeQti2Zsors9X21MNec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTE6alI/ZQrXZGhn2Rpbupc4FuyPUgjpCDDvHUalKJa8HuJ+MN
-	fl5mVqptlJC6JOb1UNK4t/R/EBqfah94CidTk60qK6gi1ATPmg+GTB1xxWitGzwbHA==
-X-Gm-Gg: AR+sD137FWEc+NJltSD6Ct2+K3PuOTPzuXcciH+ZGiC74ExxqQhfew/Ne39FHHL+lP9
-	FG0LcfeitvzUo+fxC7F8Q14xfKEbKXc4cHiXtEQd6C3Aq5JXAK43gNMO6ZwUR4A/kh2gmCN802V
-	JkH9MyBBzmjSBuC/+reZu1sXJHioqdKb1IkLOkgYH0jP3FRL/QwG8i+wE/jgui+j70+97NS+AhD
-	litdAT2ntIGJU/BbBAH1daY57aFOz5zNBFHk8tLsHqZiEu9Jp28Eig1zirkaw0K4I+zIqQ0i7HL
-	HjZUySjkm5VvmHHk5ZmGr08JLlaAm/qCmP4EDfcyXqqZHsfF3EBsSfEZJ4wRLl/1+f8WfkniNZd
-	WblU8+MbkX4vTgCOwIfMRkkgoatlMyQhVGmbquL+Kjn+aKWbQyvyY8OrUcDfPa3OWFHcKHWg2YS
-	qnrqsEKi2IsH66Qtvg3OBC0r7oAxN4RTxfINwkqZEp1HdFLX49YsP76uevOGLNfQiFgn2+sEkuf
-	e3mr8T71S9cAcq+CLy0CO3JQTSoQV5X
-X-Received: by 2002:a05:600c:c171:b0:499:7f38:d77 with SMTP id 5b1f17b1804b1-4999fb2e1dbmr33554105e9.6.1786987337398;
-        Mon, 17 Aug 2026 10:22:17 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482a5a3b51asm5583583f8f.11.2026.08.17.10.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 10:22:16 -0700 (PDT)
-Date: Mon, 17 Aug 2026 18:22:13 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Thierry Reding <thierry.reding@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Chun Ng <chunn@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-mm@kvack.org,
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thierry Reding <treding@nvidia.com>, pavan.kondeti@oss.qualcomm.com
-Subject: Re: [PATCH v4 07/10] dma-buf: heaps: Add support for Tegra VPR
-Message-ID: <aoNDRTKCUkzd2n5G@google.com>
-References: <20260807-tegra-vpr-v4-0-5510d16af89e@nvidia.com>
- <20260807-tegra-vpr-v4-7-5510d16af89e@nvidia.com>
- <an4MEI7lkc2p3nKI@google.com>
- <an8K2gb1pIqbDj6-@orome>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ReK/IXSP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E51E31F000E9;
+	Mon, 17 Aug 2026 17:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786989460;
+	bh=i2yF4c1OLwY8lWTysKwC0MTw86KJas6HJqgjleBRs4w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ReK/IXSPH/4YsYTJZkaBfAvgKjwrfynlRf/qwsQFkzdMLro7PTAjFl9rXfwinda3h
+	 OoQWPkCFVlEV6OoqID/oSBHI8ah3Fjca17apx3QCIYgKh2gsIKiaUlyN5dcXI/LUJF
+	 V1rN0ix1OEhOTAkppuFKARsF75Ifu5mRR+sNJHDfI7Y0ICb8TnOEcnuqx+MskgGzaH
+	 xwtxbBHv+KboL/M9Zy5sQ63uKgAFzHv9K1ffro05lDfVoWmBsMZxmEPqm3/3DV7qyL
+	 xevV7ckBzNltGWxcfh3NH3aWU+NR6wb8BKE3bE8qmuL2QupgF99sxiHYIsLQolH8P+
+	 awDL+LI2VFGxg==
+Message-ID: <4e8e208c-3aa4-4060-b0a2-499bc76d19fa@kernel.org>
+Date: Mon, 17 Aug 2026 19:57:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <an8K2gb1pIqbDj6-@orome>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 02/57] mm: add pte_none_or_zero()
+To: Kiryl Shutsemau <kirill@shutemov.name>, akpm@linux-foundation.org,
+ ljs@kernel.org, nico.pache@linux.dev
+Cc: baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
+ hughd@google.com, lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com,
+ rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
+ usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
+ usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kas@kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de,
+ rostedt@goodmis.org, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <20260816224609.308019-3-kirill@shutemov.name>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260816224609.308019-3-kirill@shutemov.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 14, 2026 at 02:56:05PM +0200, Thierry Reding wrote:
-> On Thu, Aug 13, 2026 at 07:25:20PM +0100, Vincent Donnefort wrote:
-> > On Fri, Aug 07, 2026 at 05:54:27PM +0200, Thierry Reding wrote:
-> > > From: Thierry Reding <treding@nvidia.com>
-> > > 
-> > > NVIDIA Tegra SoCs commonly define a Video-Protection-Region, which is a
-> > > region of memory dedicated to content-protected video decode and
-> > > playback. This memory cannot be accessed by the CPU and only certain
-> > > hardware devices have access to it.
-> > > 
-> > > Expose the VPR as a DMA heap so that applications and drivers can
-> > > allocate buffers from this region for use-cases that require this kind
-> > > of protected memory.
-> > > 
-> > > VPR has a few very critical peculiarities. First, it must be a single
-> > > contiguous region of memory (there is a single pair of registers that
-> > > set the base address and size of the region), which is configured by
-> > > calling back into the secure monitor. The memory region also needs to
-> > > quite large for some use-cases because it needs to fit multiple video
-> > > frames (8K video should be supported), so VPR sizes of ~2 GiB are
-> > > expected. However, some devices cannot afford to reserve this amount
-> > > of memory for a particular use-case, and therefore the VPR must be
-> > > resizable.
-> > > 
-> > > Unfortunately, resizing the VPR is slightly tricky because the GPU found
-> > > on Tegra SoCs must be in reset during the VPR resize operation. This is
-> > > currently implemented by freezing all userspace processes and calling
-> > > invoking the GPU's freeze() implementation, resizing and the thawing the
-> > > GPU and userspace processes. This is quite heavy-handed, so eventually
-> > > it might be better to implement thawing/freezing in the GPU driver in
-> > > such a way that they block accesses to the GPU so that the VPR resize
-> > > operation can happen without suspending all userspace.
-> > > 
-> > > In order to balance the memory usage versus the amount of resizing that
-> > > needs to happen, the VPR is divided into multiple chunks. Each chunk is
-> > > implemented as a CMA area that is completely allocated on first use to
-> > > guarantee the contiguity of the VPR. Once all buffers from a chunk have
-> > > been freed, the CMA area is deallocated and the memory returned to the
-> > > system.
-> > 
-> > Hi,
-> > 
-> > I believe we (the Android team) are trying to solve similar issue to yours: Arm
-> > CPUs can still speculatively read memory after it has been transitioned to the
-> > Secure state, as long as they retain a cacheable mapping to it.
-> > 
-> > As modifying the direct mapping is difficult, the workaround ended up in the
-> > hypervisor which unmaps the pages from the host stage-2 on intercepted FF-A Lend
-> > invocations.
-> > 
-> > If convenient, this is nonetheless the wrong place to do it. Scattering the host
-> > stage-2 is really terrible for performance and we would like to move it where it
-> > should be, directly into the kernel...
-> > 
-> > This is what I thought was the attempt in v3, but I am now a bit confused
-> > because I see you are using set_direct_map_invalid_noflush()
-> > set_direct_map_default_noflush(), but I am not sure that works if rodata=full is
-> > not set? So does the memory for the NVIDIA IP still need to be unmapped?
+On 8/17/26 00:45, Kiryl Shutsemau wrote:
+> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
 > 
-> Yeah, this currently relies on the circumstances being such that
-> can_set_direct_map() returns true, and in the case where we want to use
-> the resizable VPR functionality, we're going to have page-granular
-> mappings anyway.
+> A PTE that is none and one that maps the shared zeropage both stand for
+> a page of zeroes the mapping does not own.  Code that cares only about
+> the contents can treat the two alike.
 > 
-> > If so, how about having an option where the CMA allocation is backed by a direct
-> > map with the same page granularity, or at least a smaller and aligned granule?
-> > 
-> > With that, we know that for whatever CMA allocation we do, we can safely unmap
-> > from the direct map without risking splitting blocks. On CMA free, we can safely
-> > remap into the direct map as I do not believe we coalesce yet.
+> Move khugepaged's local helper for that test to pgtable.h, below the
+> is_zero_pfn() it is built on.
 > 
-> This sounds intriguing. For VPR we could possibly make the size a
-> multiple of the memblock size (or whatever might be appropriate). If we
-> can create a page-granular linear mapping specifically for that region,
-> that'd be ideal. I don't know if the linear mapping can be subdivided in
-> this fashion, though.
+> migrate_vma_insert_page() open-codes the same test on the slot it is
+> about to fill.  Convert it.  It still tells none from the zeropage, but
+> only to decide whether there is an old mapping to flush.
+> 
+> No functional change intended.
+> 
+> Assisted-by: Claude-Code:claude-opus-5
+> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> ---
+>  include/linux/pgtable.h | 17 +++++++++++++++++
+>  mm/khugepaged.c         |  7 -------
+>  mm/migrate_device.c     |  9 ++-------
+>  3 files changed, 19 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 8c093c119e5a..bbee6d31f015 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -2064,6 +2064,23 @@ static inline struct page *_zero_page(unsigned long addr)
+>  
+>  #ifdef CONFIG_MMU
+>  
+> +/**
+> + * pte_none_or_zero - Does this PTE map nothing, or the shared zeropage?
+> + * @pte: The page table entry to test.
+> + *
+> + * A PTE that is none and one that maps the shared zeropage both stand for a
+> + * page of zeroes the mapping does not own, so code that only cares about the
+> + * contents can treat them alike.
+> + *
+> + * Return: %true if @pte is none or maps the shared zeropage.
+> + */
+> +static inline bool pte_none_or_zero(pte_t pte)
+> +{
+> +	if (pte_none(pte))
+> +		return true;
+> +	return pte_present(pte) && is_zero_pfn(pte_pfn(pte));
+> +}
 
-Actually I don't think modifying the memblock is necessary at all!
+(casually skimming over some patches)
 
-Here's what I have so far:
+That's just a horrible function. :)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index d4de88770ecf..a9f81413b70d 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -22,6 +22,7 @@
- #include <linux/fs.h>
- #include <linux/io.h>
- #include <linux/mm.h>
-+#include <linux/of_fdt.h>
- #include <linux/vmalloc.h>
- #include <linux/set_memory.h>
- #include <linux/kfence.h>
-@@ -1138,6 +1139,27 @@ static inline void arm64_kfence_map_pool(void) { }
- 
- #endif /* CONFIG_KFENCE */
- 
-+#define MAX_FORCE_PTE_REGIONS 64 /* Greater or equal to MAX_RESERVED_REGIONS */
-+
-+static struct {
-+       phys_addr_t start;
-+       phys_addr_t end;
-+} force_pte_regions[MAX_FORCE_PTE_REGIONS] __initdata;
-+
-+void __init early_init_dt_force_pte_arch(phys_addr_t start, phys_addr_t end)
-+{
-+       static int count;
-+
-+       if (force_pte_mapping())
-+               return;
-+
-+       if (count >= MAX_FORCE_PTE_REGIONS)
-+               return;
-+
-+       force_pte_regions[count].start = start;
-+       force_pte_regions[count++].end = end;
-+}
-+
- static void __init map_mem(void)
- {
-        static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
-@@ -1186,6 +1208,15 @@ static void __init map_mem(void)
-        __map_memblock(init_end, kernel_end, pgprot_tagged(PAGE_KERNEL),
-                       flags);
- 
-+       for (i = 0; i < ARRAY_SIZE(force_pte_regions); i++) {
-+               if (!force_pte_regions[i].end)
-+                       break;
-+
-+               __map_memblock(force_pte_regions[i].start, force_pte_regions[i].end,
-+                              pgprot_tagged(PAGE_KERNEL),
-+                              flags | NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
-+       }
-+
-        /* map all the memory banks */
-        for_each_mem_range(i, &start, &end) {
-                /*
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 42e3e2d8a2b8..445f204f01e4 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -136,6 +136,8 @@ static int __init early_init_dt_reserve_memory(phys_addr_t base,
-        return memblock_reserve(base, size);
- }
- 
-+void __weak early_init_dt_force_pte_arch(phys_addr_t start, phys_addr_t end) { }
-+
- /*
-  * __reserved_mem_reserve_reg() - reserve memory described in the
-  * first entry in 'reg' property
-@@ -168,6 +170,9 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
-        size = s;
- 
-        if (size && early_init_dt_reserve_memory(base, size, nomap) == 0) {
-+               if (of_get_flat_dt_prop(node, "force-pte", NULL))
-+                       early_init_dt_force_pte_arch(base, base + size);
-+
-                fdt_fixup_reserved_mem_node(node, base, size);
-                pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %lu MiB\n",
-                         uname, &base, (unsigned long)(size / SZ_1M));
-@@ -517,6 +522,9 @@ static int __init __reserved_mem_alloc_size(unsigned long node, const char *unam
-                return -ENOMEM;
-        }
- 
-+       if (of_get_flat_dt_prop(node, "force-pte", NULL))
-+               early_init_dt_force_pte_arch(base, base + size);
-+
-        fdt_fixup_reserved_mem_node(node, base, size);
-        fdt_init_reserved_mem_node(node, uname, base, size);
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 51dadbaa3d63..6c73c76dee1b 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -74,6 +74,7 @@ extern void early_init_dt_check_for_usable_mem_range(void);
- extern int early_init_dt_scan_chosen_stdout(void);
- extern void early_init_fdt_scan_reserved_mem(void);
- extern void early_init_fdt_reserve_self(void);
-+extern void early_init_dt_force_pte_arch(phys_addr_t start, phys_addr_t end);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
- extern u64 dt_mem_next_cell(int s, const __be32 **cellp);
- 
-> 
-> > (This alignment is not necessary for upcoming systems with BBML3)
-> > 
-> > However, to implement this, we'd need to split memblocks and I believe the only
-> > way at the moment is temporarily mark it as "nomap" which didn't seem very
-> > popular in the comments on v3.
-> 
-> Could this be simplified if this type of allocation is always memblock
-> aligned?
-> 
-> Looking at map_mem(), it seems like we could add some sort of special-
-> casing in the for_each_mem_range() block to check if the memory is VPR
-> (or generic, page-granular carveout, or whatever we want to call it) and
-> set NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS in that case.
-> 
-> If that works, set_direct_map_*() could be enhanced to detect such cases
-> and always work. Or perhaps a more specific API could be introduced.
-> 
-> Thierry
+If there is no pte_zero() then there also shouldn't be a pte_none_or_zero().
 
-for set_direct_map() I think we could extend it to check if it is mapped at the
-PTE-level and if it is we can proceed?
+And in the code-base we have "pte_t pte_zero = {0}" which actually makes sense,
+but is not what we care about here.
 
-I am currently looking at extending CMA with an option "unmap-on-alloc;" that
-would only be available if CONFIG_ARCH_HAS_SET_DIRECT_MAP, or
-cma_set_unmap_on_alloc, or if "force-pte;" is set. 
 
-Hopefully I can share something this week.
+Just have an additional helper like:
+
+	pte_maps_zero_page()
+	pte_is_zero_page()
+	pte_maps_zero_folio()
+	pte_is_zero_folio()
+	pte_zero_page()
+	pte_zero_folio()
+
+And let the callers still spell both cases out.
+
+if (pte_none(pte) || pte_is_zero_page(pte))
+	/* Do something amazing */
+
+(we have both is_zero_page() and is_zero_folio() I assume "zero page" is cleaner
+as this thing might soon no longer be a folio)
 
 -- 
-Vincent
+Cheers,
+
+David
