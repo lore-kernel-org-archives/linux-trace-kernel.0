@@ -1,77 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7E744237F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 14:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEF14315F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Aug 2026 14:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786975975; cv=none; b=JuIDxS7bY/TtbRNJoFDsGsOsMWAhwwKuZPF0S3IsGU2OKxViFYTw78o1HzRowiDy/m+LVapeD/UUzsy2e1BlrOfBx0SigKjcdke1+Dpw+XFcDzJGC9Mh1gpRR3PIrHoAGnRYJ+3n1YDKE9SzfRlmvl3clfMXp2KBsr5gmSvWxpw=
+	t=1786976486; cv=none; b=OZ02imO6kAbDOvrUBW4kDnmnydzF4Z5TtLlWya+nHHFgFHfMBpgnNyuuavOJp5R3K7n/U9/hadEsDKi1E2czT8P6YLtJVi+yqW1jB0mbr4rZfx22EFbLrPisHjQ9esAIO7TLTYua8+QeIPZp+sttdTH2jBhBWMrbN7hknAUmdj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786975975; c=relaxed/simple;
-	bh=Y65HKPPTeZBxnSLao3JEWI0PmPWtlw/TOGgp5lxaKVc=;
+	s=arc-20240116; t=1786976486; c=relaxed/simple;
+	bh=2wVzuKQIfFaM2o8iqB8BCkypOeL9jjw6g0xKHHtEcyg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mGZ8HJGs5wRFvKmOvqmtRQNZAXO44JuaWE6YFBxp4IUQ/QoaYvJSlbX5wGKo4DCmmZZLV+gBUFWzjUSi88x5829eZBzFlukhpxwZn+UkB1rHkHlaaOCBOoaKTUF7u428y6++tEwHpVrbAUWNOn//XEiKZvSI0x/c+F1Fa2eTz+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lU9ZgeMg; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=LGwb/vgNyJj4DoPKg8jdBLEPNxE7rcFjO7Qlxif8/5iSLBWGvGuZ117mmKr/KIoiGWKrrjwlyk74sswUFNp/Wp4H8fqKBmy1AwmKv3h3AslRwcr/To/C3cmhflO7SFenafeueQQ3LmJGNL46ee6UT+f9l/0q8frvpP1b3i0DoF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YaMy+pDk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lU9ZgeMg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD471F00A3A;
-	Mon, 17 Aug 2026 14:12:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YaMy+pDk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB481F00A3A;
+	Mon, 17 Aug 2026 14:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786975972;
-	bh=4xR5bVlhMaSaFwQqgde/QWQpoBT46WytYqP7dlNeR4Q=;
+	s=k20260515; t=1786976485;
+	bh=38L4AM1YfReQXprbVyvhlpvpQFENmg69BhVp9vaDxek=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lU9ZgeMgVVnDiBqebFXjmaETZvbI6e+Zaiaj8PaORpz0DneiiDDUXHrgMPDdhcTU7
-	 PBn1xzN/GAgHE8H7H/+Ih4cMy9x1fvIAa9gQ4HEnv4YL67JVEX0PEUolf/u9xts1Q+
-	 o/wVtrtso6UVGeRNysw0vPqVHbApbZsldwSch4j2L74uNPvEEaioGfiU4d2eEItRGV
-	 6uFoweJe9OVaz6fKovH/1Fm0U7OSQ6/L1dye5GilYv9AhjQbM5HZUIJc1E581eRy3w
-	 Z0zU1p22gUQO1RKjuZwhHxSj2I8TeDg9DfTzv2OYegFvGNSd5xhtZ/wzlsZTy98zxJ
-	 CVAFwBmURJDqQ==
+	b=YaMy+pDkn/NHPZeHFbqQTRr2e2frdPBKyCQNM5f9psTtdWvpBPs5qe+oqsue1pyL6
+	 L3r11rNV4JIKkTxOAZQAUhrqhWe8jor19tdfpmL5H/4FQ7AZIWR/fwNf186vsFxI5i
+	 R6Vrj0MvUUjdIRF0zB7Ip2vddvJ2D8maIAqqjVyB1rdoJnO9j8YL7eR5p9q7rGqKsV
+	 9Arn+6EnUXbtaCPnKPMYCFrXgejP9K+yN7vCXb3q9HoeXW3Pz0hPnuIfSHY0Dhg5Rf
+	 6n9MbOcRkosbnqzTgVXLiC65soSpAy1wDhKgfIhMy0RTYG/fy8LIjR8s6Xu5/HBTh0
+	 OVRnFFCnNPoJQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 16/18] tracing/remotes: Add trace_remote cmdline
- options
+Subject: Re: [PATCH v6 18/18] Documentation/kernel-parameters: Add
+ trace_remote
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260817135517.3919534-17-vdonnefort@google.com>
+In-Reply-To: <20260817135517.3919534-19-vdonnefort@google.com>
 References: <20260817135517.3919534-1-vdonnefort@google.com>
- <20260817135517.3919534-17-vdonnefort@google.com>
+ <20260817135517.3919534-19-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 17 Aug 2026 14:12:51 +0000
-Message-Id: <20260817141252.4FD471F00A3A@smtp.kernel.org>
+Date: Mon, 17 Aug 2026 14:21:24 +0000
+Message-Id: <20260817142125.0FB481F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The `dump_on_panic` command-line option sets `remote->panic_on =
-=3D true` but fails to dynamically register the panic handler if the trace =
-buffer is already loaded.
+
+New issues:
+- [Medium] The `dump_on_panic` command-line option silently fails to regist=
+er the panic handler if the remote buffer was already loaded by a preceding=
+ parameter.
+
+Pre-existing issues:
+- [High] `trace_pipe_read` loops infinitely inside the kernel if an event c=
+annot fit into the trace_seq buffer.
 --
 
---- Patch [16]: [PATCH v6 16/18] tracing/remotes: Add trace_remote cmdline =
-options ---
-commit 16551de261e3bdeffe51c1a5227c6a115ddbe725
+--- Patch [18]: [PATCH v6 18/18] Documentation/kernel-parameters: Add trace=
+_remote ---
+commit fb8043141866facf6319346314d1e6305e601a6e
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-tracing/remotes: Add trace_remote cmdline options
-   =20
-This commit introduces command-line options for trace remotes, allowing
-configuration of features like dump_on_panic, dmesg, buf_size, and poll,
-as well as enabling specific trace events automatically on boot.
+Documentation/kernel-parameters: Add trace_remote
+
+The trace_remote parameter allows configuring a trace remote on
+registration. The syntax is similar to trace_instance.
 
 > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index 204d5bef7a8c4..34847463d9e43 100644
+> index e6724f947170d..34847463d9e43 100644
 > --- a/kernel/trace/trace_remote.c
 > +++ b/kernel/trace/trace_remote.c
 
 [ ... ]
 
-> @@ -1170,6 +1172,126 @@ static int poll_ms_show(struct seq_file *s, void =
-*unused)
 > +static void trace_remote_apply_cmdline_opts(struct trace_remote *remote,=
  char *cmdline)
 > +{
@@ -85,29 +88,50 @@ as well as enabling specific trace events automatically on boot.
 > +
 > +		if (!strcmp(opt, "dump_on_panic")) {
 > +			remote->panic_on =3D true;
+> +		} else if (!strcmp(opt, "dmesg")) {
 
 [Severity: Medium]
-If the trace remote was configured across multiple command line arguments, =
-and
-an earlier argument already enabled events (which loads the trace buffer via
-trace_remote_enable_tracing()), will setting remote->panic_on =3D true here
-fail to register the panic notifier?
+If the remote buffer was already loaded by a preceding parameter on the
+command line (e.g., via an earlier trace_remote=3D that specified dmesg or
+enabled an event), does setting remote->panic_on =3D true here silently fai=
+l to
+register the panic handler?
 
-Since this doesn't call trace_remote_panic_load() if the buffer is already
-loaded, it appears the panic handler might never be registered under this
-configuration pattern.
-
-> +		} else if (!strcmp(opt, "dmesg")) {
-> +			dmesg_on =3D true;
-> +		} else if (!strncmp(opt, "buf_size=3D", 9)) {
-> +			/* buf_size can only be applied if the buffer is unloaded */
-> +			if (trace_remote_loaded(remote))
-> +				pr_warn("Cannot apply buf_size after events are enabled\n");
-> +			else
-> +				remote->trace_buffer_size =3D memparse(opt + 9, NULL);
+This differs from the tracefs write paths which dynamically register the pa=
+nic
+handler if the remote is already loaded. Could this cause the request to du=
+mp
+the trace buffer on panic to be silently ignored despite the configuration
+reporting it as enabled?
 
 [ ... ]
 
+kernel/trace/trace_remote.c:trace_pipe_read() {
+    ...
+	while (trace_remote_iter_read_event(iter)) {
+		int prev_len =3D iter->seq.seq.len;
+
+		if (trace_remote_iter_print_event(iter)) {
+			iter->seq.seq.len =3D prev_len;
+			break;
+		}
+
+		trace_remote_iter_move(iter);
+	}
+    ...
+}
+
+[Severity: High]
+This is a pre-existing issue, but if a trace remote generates an oversized
+event whose formatted string exceeds PAGE_SIZE, trace_remote_iter_print_eve=
+nt()
+returns -EOVERFLOW and the loop breaks without calling trace_remote_iter_mo=
+ve().
+
+Since the unconsumed oversized event remains in the ring buffer, will
+ring_buffer_wait() return immediately on the next read, causing the task to
+re-read the same event, fail to print it, break, and repeat infinitely?
+
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260817135517.3919=
-534-1-vdonnefort@google.com?part=3D16
+534-1-vdonnefort@google.com?part=3D18
