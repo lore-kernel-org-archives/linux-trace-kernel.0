@@ -1,236 +1,300 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33C55474F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 22:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27604330B15;
+	Tue, 18 Aug 2026 22:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787092267; cv=none; b=iS9faGsALzva5DCoYIrPpG6P2V4cXtWsKHDCcNPjE7xHDSHCHh0vY9znKusAp964nWBxrwpHvb4gXOleRA6GMD0g1U+EJrJERoe5KrMR9OA2GCva/AoTUXd6/CYswU1JCacP/+lNA0EU4YDI0+aaXNu2sIfjN+oNcGrWFmYvNrY=
+	t=1787092432; cv=none; b=WxsFaIRmcI0e/hafnufxx0Sf6XMgBWZiKtI35JievP3fMlk/529aEznxh7uw3v9CJPr09h8zf4JEWXL++ZF1SuOKDGuN+/AQyslPAV4qywL+NZ52197bAZzFOkOXzWP05MzXu15+sbSEnPo5O2/Fh33S8bJLDoHUJ1iwq9FEATA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787092267; c=relaxed/simple;
-	bh=cEAUlVrnwFYcUbaih8b4M/AXALgEnPiYvfqYIUSFi8A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T0gxir4TdC8kBMuoSztsHFQC0w9rqf06U6ESulvEbe3/e/WUXOHwrPtWm2JvBvl/eMvuFZTRmrkH5GTF7LYoqr4kuMa77zHD4ibbghnEaTBk9LJ6QecHnIL1L/Hac5Jh7vnNk85NK8AVqFAbMClf1NAdNoPGl9lKZkG8J9CAnZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eSxk4ReW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1787092432; c=relaxed/simple;
+	bh=qHM3US8HLZMePSvpntPPPleLs8FIxKov3WGCuqjIgSc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=auYFcvb40wvDqJMmjN+aB7l99hlx/m2NA70ZZswl9HbXll22ExAM3DRmGjcCvy2OsupTMQP37C4vhVlTeGBJzO4QjLR61AtPD+lwzP0oQcB1xx+214/qaCyfRbVFzZvwC4lcbgAqsiDDnvema3Z84/fhN373XjbTtbUeQhQXpKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI5VW90j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eSxk4ReW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787092264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ka33O0a5qwccrjVpff6VzG4m8rfuJ6C/aWMH+nm7MRc=;
-	b=eSxk4ReWbSJNIMdfAQrVU7m7UVQpIIV3CMWCqpevTA0UhFVCrOECIx9zXutLHGr12lkZaT
-	TkZ6xL3z0rYPKmaSZkPW81uzpuZA3c+vS0OnSXWyL1DGVvvCrL9B+Rv2Q7vpj34+pgvPC+
-	5mfXE8Lgx7CvC5Tp1EJ7hb7hybLGOuE=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-385-oZ84z7i_P2OL_nLZCyB7uQ-1; Tue, 18 Aug 2026 18:31:03 -0400
-X-MC-Unique: oZ84z7i_P2OL_nLZCyB7uQ-1
-X-Mimecast-MFC-AGG-ID: oZ84z7i_P2OL_nLZCyB7uQ_1787092263
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-52d33c89a29so5056041cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 15:31:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787092263; x=1787697063;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ka33O0a5qwccrjVpff6VzG4m8rfuJ6C/aWMH+nm7MRc=;
-        b=TLVv0crXbvuREjK2SWdiGiOtErZMtUsvMo5+/tvEUMt3ncDhxykVQm/C0NcUMmK+sD
-         ozY24Ae5ZN7KXtToVygUK5hnA9PLIlQb0zybNzAs/rqbxw5vEQ3Tb6Dl8OZj/u6xvAKg
-         euwSOpGJ23myR/Ac9sWBNW1B42kD2r6ZCdq6hWyzWIOh8aYn/3gplD6i+2bston65Uk1
-         cMVZIg7FIQzm8F4YI5bDMYUYFY1OZlfFmCIsFa0sqbaMfq5/o4u3OtnqoR2HZviun90V
-         4znxMf8hF7XBpktwdGC57v+dJgvWovDfw76Ksy2MVs5C4iho4/3Jme5eQD4KgJodmtk/
-         j34g==
-X-Forwarded-Encrypted: i=1; AHgh+Ro+js8fgnl0bZNVzcP42G+9ghP39g0/or5YR6mdESrfP/Wnwk4gaJhWLmWGvVLbL9XNh9PD6o2kjBB8fLSyZTGJnsY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBpUkT5nfFw/rA1Gw10NbCbxFT2dkvhjy07UMI1QgL3b3eIf4l
-	i7jlkKhdDwvAzlwTIEoTumZeuXhEnk38V8pSTq2k2mDMVVWLkmTSRJXwmUqSHn0P4wMecGVHT9o
-	SPc30xFlYuw/vpwHuS8dHJSOvnr7Mkumb+MGJJvmOkIns4eqfvZSMsWlhFVgm8IHBxZf7udYbDw
-	==
-X-Gm-Gg: AR+sD133oIqpesxORVlL5hFdWcki+1rWE1WWY1WtmQeOjcrwyfD7cI0ob0DsiaVh1Yb
-	8qrupIPhSt2jQfThArE0lvK1luAgRtPEq77x6kHciYoDCoDGfHJsAeGv4RrwdoRVK52Yt9nx7kp
-	LEIHqgzdczow5XbGhvoP/dTAcGGhoBJfUPqy3GrmfQUbUExCs+Bsr2cYxyAiJqCMTG5DRpkf1bU
-	FobCMS3LxX2HAd3x5ZP/3mERrShV2GJHCZdduMMj6aaw8FdJwpsmanQCwRZ2muNGCRSqOO0KDJC
-	mH/EkOFWHp/KPE1v9LMokwqMED+4pyHDlo49Kdqmg37wX9dt47mMnPKacVDfxKhvjHvm+NLvFem
-	P1JcWk+DSqbf8tsm/vnuaizTjjQVEuMpb
-X-Received: by 2002:a05:6214:450d:b0:907:bf2a:481f with SMTP id 6a1803df08f44-90c5e7142cbmr2306726d6.1.1787092262719;
-        Tue, 18 Aug 2026 15:31:02 -0700 (PDT)
-X-Received: by 2002:a05:6214:450d:b0:907:bf2a:481f with SMTP id 6a1803df08f44-90c5e7142cbmr2305906d6.1.1787092262259;
-        Tue, 18 Aug 2026 15:31:02 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc01:6890:c623:cd89:345e:99f3])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec3214sm226246d6.16.2026.08.18.15.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2026 15:31:01 -0700 (PDT)
-Message-ID: <67895578a730d56a50568a7403ba4ef8f7b3e24a.camel@redhat.com>
-Subject: Re: [PATCH] rtla: Simplify osnoise tracer option setting code
-From: Crystal Wood <crwood@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
- Luis Goncalves <lgoncalv@redhat.com>, Costa Shulyupin
- <costa.shul@redhat.com>, Wander Lairson Costa	 <wander@redhat.com>, LKML
- <linux-kernel@vger.kernel.org>, linux-trace-kernel	
- <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 18 Aug 2026 17:31:00 -0500
-In-Reply-To: <CAP4=nvRMAZ6AJ_WQPVM2sm9jH++4RwN8DhodU7oL6-AcXNg8OA@mail.gmail.com>
-References: <20260612115121.54862-1-tglozar@redhat.com>
-	 <725da8a4ca6a46ea8ba41778971602b49d650e60.camel@redhat.com>
-	 <CAP4=nvRMAZ6AJ_WQPVM2sm9jH++4RwN8DhodU7oL6-AcXNg8OA@mail.gmail.com>
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI5VW90j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED9ED1F000E9;
+	Tue, 18 Aug 2026 22:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787092430;
+	bh=CAXtEoG3ZwN55od8cpcTzNd778E3/hW958EsDeZAns0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=LI5VW90jbLQkNNtgxrvKtfhLWB36VMH6i3x6koR2aUuIK4go2sf51lfLN02i6iBi1
+	 6kB0cArrti0nz6OPXwTx5++xQNTeo2HF8xJ8gVxXzGpLxfrSPjECijM5AcRELK7iRx
+	 t4XFgrFAyAioQYkuTJM4cIUFvrsK5dJljb3rNosUOErqMRz6xaykOACYuZI6w1bkZQ
+	 tv0sZgLHMy3LZs4qEK94JnBFyaYVsItZzyNiLKm2Tw2uZ9cxGy7/89lsGrotWE1dRy
+	 1Kw2dA8VTr0ZuMu8A+BIJVpRHpGGVl9T4UdIyIJn800eYbX76T4hVsbjsJMfsa+VN6
+	 XU16f9HRncNhA==
+Date: Wed, 19 Aug 2026 07:33:44 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
+ <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
+Message-Id: <20260819073344.50eb99b94932df2a193d6cbc@kernel.org>
+In-Reply-To: <d833b191-ced9-4cf6-ac37-fc593d06191b@gmail.com>
+References: <178611679753.237811.10190793347982785419.stgit@devnote2>
+	<178611688737.237811.17143803996766057381.stgit@devnote2>
+	<d833b191-ced9-4cf6-ac37-fc593d06191b@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: RECtcwnyg_USt0brm7GsVMnKa6_NN0ortTstpA-_yag_1787092263
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2026-07-03 at 14:11 +0200, Tomas Glozar wrote:
-> p=C3=A1 12. 6. 2026 v 19:55 Crystal Wood <crwood@redhat.com> napsala:
->=20
-> > > OSNOISE_LL_OPTIONS takes three options: name - struct osnoise_context
-> > > field name (written "<opt>" above), path - filename inside
-> > > /sys/kernel/tracing/osnoise passed to libtracefs, and init_val - init=
-ial
-> > > value of struct fields, corresponding to an otherwise invalid option
-> > > (some options use OSNOISE_OPTION_INIT_VAL =3D -1, some use
-> > > OSNOISE_TIME_INIT_VAL =3D 0).
-> >=20
-> > Can we simplify by always using -1?  Especially since that's already
-> > treated as the universal "invalid" by osnoise_read_ll_config().
-> >=20
-> > FWIW using "init val" to mean "invalid" rather than "default" is a bit
-> > unintuitive.
-> >=20
->=20
-> The idea behind *_INIT_VAL is to re-use a value that is invalid on the
-> osnoise tracer side to mean "not (read from tracer and) set yet (on
-> the RTLA side)". OSNOISE_TIME_INIT_VAL is used for values where 0 is
-> invalid (e.g. period, runtime), OSNOISE_OPTION_INIT_VAL is used for
-> those where 0 is valid.
->=20
+On Tue, 18 Aug 2026 17:22:27 +0800
+Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-Right, it just hurts seeing something called "INIT_VAL" that isn't the
-initial value. :-/
+> On 8/7/2026 11:34 PM, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add set_wprobe and clear_wprobe event triggers to dynamically attach
+> > and detach hardware breakpoint address monitoring based on event field
+> > contents.
+> > 
+> 
+> This patch does not build with wprobe enabled.
 
-> > While we're at it, can we move this code to common.c, and drop
-> > "osnoise" from the names, to move closer to using that only for the
-> > actual osnoise mode?
-> >=20
-> > Or if we really want to namespace things that are specific to the
-> > osnoise subsystem (i.e. everything implemented in trace_osnoise.c) but
-> > not specific with respect to the osnoise/timerlat split, I'd suggest
-> > something different like "osn_".
-> >=20
->=20
-> They are called "osnoise options" in the interface (although they are
-> shared with the timerlat tracer), which cannot be changed. I don't
-> like using an esoteric prefix like "osn".
+Oops, thanks for testing! Let me fix it.
 
-I'm not suggesting changing the kernel interface, just having some
-convention within rtla (and within trace_osnoise.c) to make it clearer
-which things apply to osnoise-the-subsystem versus osnoise-the-specific-
-tracer.  It might be "esoteric" which one gets the abbreviation, but as
-long as it's consistent I think it'd be an improvement over the current
-jumble.
+> 
+> > Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> > Changes in v12:
+> >  - Decrement trigger data->count only when watchpoint state is actually changed.
+> >  - Remove dyn_event_ops_mutex to fix lockdep circular dependency deadlock.
+> >  - Add event_trigger_init() call to prevent premature freeing of trigger_data.
+> >  - Use WRITE_ONCE() when modifying tw->addr to pair with READ_ONCE().
+> >  - Add missing braces to else-block in wprobe_trigger_print().
+> >  - Initialize tw->addr only after trace_event_enable_disable() succeeds.
+> >  - Counter counts only if the trigger is actually working.
+> > Changes in v11:
+> >  - Soft-enable (register) wprobe event on WPROBE_DEFAULT_CLEAR_ADDRESS.
+> >  - Add work_pending check before updating tw->addr.
+> > ---
+> >  Documentation/trace/wprobetrace.rst |   98 +++++++
+> >  include/linux/trace_events.h        |    1 
+> >  kernel/trace/Kconfig                |   10 +
+> >  kernel/trace/trace.h                |    1 
+> >  kernel/trace/trace_dynevent.h       |    1 
+> >  kernel/trace/trace_events_trigger.c |    2 
+> >  kernel/trace/trace_probe.c          |    2 
+> >  kernel/trace/trace_probe.h          |    9 +
+> >  kernel/trace/trace_wprobe.c         |  527 +++++++++++++++++++++++++++++++++++
+> >  9 files changed, 648 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
+> > index ad5f089b5ef5..a579347735d2 100644
+> > --- a/Documentation/trace/wprobetrace.rst
+> > +++ b/Documentation/trace/wprobetrace.rst
+> > @@ -68,3 +68,101 @@ Here is an example to add a wprobe event on a variable `jiffies`.
+> >             <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> >  
+> >  You can see the code which writes to `jiffies` is `tick_do_update_jiffies64()`.
+> > +
+> > +Combination with trigger action
+> > +-------------------------------
+> > +The event trigger action can extend the utilization of this wprobe.
+> > +
+> > +- set_wprobe:WPEVENT:FIELD[+|-ADJUST]
+> > +- clear_wprobe:WPEVENT[:FIELD[+|-]ADJUST]
+> 
+> Both forms accept an optional [:COUNT] which is not documented here.
 
->=20
-> > > + * Long long option get/set/restore/put functions, generated from OS=
-NOISE_LL_OPTIONS.
-> > > + */
-> > > +#define OSNOISE_LL_OPTION(name, path, init_val)                     =
-                         \
-> > > +static long long                                                    =
-                 \
-> > > +osnoise_get_##name(struct osnoise_context *context)                 =
-                 \
-> > > +{                                                                   =
-                 \
-> > > +     long long name;                                                =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     if (context->name !=3D (init_val))                             =
-                   \
-> > > +             return context->name;                                  =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     if (context->orig_##name !=3D (init_val))                      =
-                   \
-> > > +             return context->orig_##name;                           =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     name =3D osnoise_read_ll_config(path);                         =
-                   \
-> > > +     if (name < 0)                                                  =
-                 \
-> > > +             return (init_val);                                     =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     context->orig_##name =3D name;                                 =
-                   \
-> > > +     return name;                                                   =
-                 \
-> > > +}                                                                   =
-                 \
-> > > +                                                                    =
-                 \
-> > > +int osnoise_set_##name(struct osnoise_context *context, long long na=
-me)                      \
-> > > +{                                                                   =
-                 \
-> > > +     long long curr =3D osnoise_get_##name(context);                =
-                   \
-> > > +     int retval;                                                    =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     if (curr =3D=3D (init_val))                                    =
-                     \
-> > > +             return -1;                                             =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     retval =3D osnoise_write_ll_config(path, name);                =
-                   \
-> > > +     if (retval < 0)                                                =
-                 \
-> > > +             return -2;                                             =
-                 \
-> > > +                                                                    =
-                 \
-> > > +     context->name =3D name;                                        =
-                   \
-> > > +     return 0;                                                      =
-                 \
-> > > +}                                                                   =
-                 \
-> >=20
-> > Using "name" for the value is confusing... "val" would be better.
-> >=20
->=20
-> But it's the *name* of the option/field/argument here, not the value.
-> If you use "value" you'll get:
->=20
-> #define OSNOISE_LL_OPTION(value, path, init_val)
->=20
-> which is incorrect. Would making the macro options in capital letters
-> (i.e. NAME) make it more clear?
+Ah, indeed.
 
-That's not what I meant.  I was suggesting this:
+> 
+> > +
+> > +Set these triggers to the target event, then the WPROBE event will be
+> > +setup to trace the memory access at FIELD[+|-ADJUST] address.
+> > +When clear_wprobe is hit, if FIELD is NOT specified, the WPEVENT is
+> > +forcibly cleared. If FIELD[[+|-]ADJUST] is set, it clears WPEVENT only
+> > +if its watching address is the same as the FIELD[[+|-]ADJUST] value.
+> 
+> Two forms of adjust:
+> [+|-ADJUST]
+> [+|-]ADJUST
 
-int osnoise_set_##name(struct osnoise_context *context, long long val)
+OK. [+ADJUST|-ADJUST] is correct form.
 
--Crystal
+> 
+> 
+> > +
+> > +Notes:
+> > +The set_wprobe trigger does not change the type and length, these
+> > +must be set when creating a new wprobe.
+> > +
+> > +The WPROBE event must be disabled when setting the new trigger
+> > +and it will be busy afterwards. Recommended usage is to add a new
+> > +wprobe at NULL address and keep disabled.
+> > +
+> 
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index d9b6fa5c35d9..5fd8ed63c516 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -876,6 +876,16 @@ config WPROBE_EVENTS
+> >  	  Those events can be inserted wherever hardware breakpoints can be
+> >  	  set, and record accessed memory address and values.
+> >  
+> > +config WPROBE_TRIGGERS
+> > +	depends on WPROBE_EVENTS
+> > +	depends on HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
+> > +	bool
+> > +	default y
+> > +	help
+> > +	  This adds an event trigger which will set the wprobe on a specific
+> > +	  field of an event. This allows user to trace the memory access of
+> > +	  an address pointed by the event field.
+> > +
+> >  config BPF_EVENTS
+> >  	depends on BPF_SYSCALL
+> >  	depends on (KPROBE_EVENTS || UPROBE_EVENTS) && PERF_EVENTS
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index 64851a8d021f..a789a722bc8b 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -1983,6 +1983,7 @@ trigger_data_alloc(struct event_command *cmd_ops, char *cmd, char *param,
+> >  		   void *private_data);
+> >  extern void trigger_data_free(struct event_trigger_data *data);
+> >  extern int event_trigger_init(struct event_trigger_data *data);
+> > +extern void event_trigger_free(struct event_trigger_data *data);
+> >  extern int trace_event_trigger_enable_disable(struct trace_event_file *file,
+> >  					      int trigger_enable);
+> >  extern void update_cond_flag(struct trace_event_file *file);
+> > diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+> > index beee3f8d7544..77c2c84dcdb5 100644
+> > --- a/kernel/trace/trace_dynevent.h
+> > +++ b/kernel/trace/trace_dynevent.h
+> > @@ -64,6 +64,7 @@ struct dyn_event {
+> >  };
+> >  
+> >  extern struct list_head dyn_event_list;
+> > +extern struct mutex dyn_event_ops_mutex;
+> 
+> dyn_event_ops_mutex is not needed anymore.
 
+Ah, good catch!
+
+> 
+> >  
+> >  static inline
+> >  int dyn_event_init(struct dyn_event *ev, struct dyn_event_operations *ops)
+> > diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> > index ad83419cb420..fa409ebd73c2 100644
+> > --- a/kernel/trace/trace_events_trigger.c
+> > +++ b/kernel/trace/trace_events_trigger.c
+> > @@ -589,7 +589,7 @@ int event_trigger_init(struct event_trigger_data *data)
+> >   * Usually used directly as the @free method in event trigger
+> >   * implementations.
+> >   */
+> > -static void
+> > +void
+> >  event_trigger_free(struct event_trigger_data *data)
+> >  {
+> >  	if (WARN_ON_ONCE(data->ref <= 0))
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index 9f4cad18977a..36e07275a04d 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -20,7 +20,7 @@
+> >  #undef C
+> >  #define C(a, b)		b
+> >  
+> > -static const char *trace_probe_err_text[] = { ERRORS };
+> > +const char *trace_probe_err_text[] = { ERRORS };
+> >  
+> >  static const char *reserved_field_names[] = {
+> >  	"common_type",
+> > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> > index 6543d4c2cda5..e08f17c99138 100644
+> > --- a/kernel/trace/trace_probe.h
+> > +++ b/kernel/trace/trace_probe.h
+> > @@ -634,7 +634,12 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+> >  	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"),	\
+> >  	C(USED_ARG_NAME,	"This argument name is already used"),		\
+> >  	C(WPROBE_NO_MAXACT,	"Watchpoint probe does not support maxactive"),	\
+> > -	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"),
+> > +	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"), \
+> > +	C(WPROBE_ON_KPROBE,	"Wprobe trigger is not supported on kprobe event"), \
+> > +	C(WPROBE_NOT_FOUND,	"Target wprobe event is not found"),		\
+> > +	C(WPROBE_BUSY,		"Target wprobe event is already enabled"),	\
+> > +	C(WPROBE_NEED_FIELD,	"Wprobe trigger requires a target field"),	\
+> > +	C(WPROBE_BAD_FIELD,	"Target field must be pointer size"),
+> >  
+> >  #undef C
+> >  #define C(a, b)		TP_ERR_##a
+> > @@ -658,6 +663,8 @@ void __trace_probe_log_err(int offset, int err);
+> >  
+> >  DEFINE_FREE(trace_probe_log_clear, const char *, if (_T) trace_probe_log_clear())
+> >  
+> > +extern const char *trace_probe_err_text[];
+> > +
+> >  #define trace_probe_log_err(offs, err)	\
+> >  	__trace_probe_log_err(offs, TP_ERR_##err)
+> >  
+> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> > index df592d9280a4..c64bbdc90a40 100644
+> > --- a/kernel/trace/trace_wprobe.c
+> > +++ b/kernel/trace/trace_wprobe.c
+> > @@ -6,7 +6,9 @@
+> >   */
+> >  #define pr_fmt(fmt)	"trace_wprobe: " fmt
+> >  
+> > +#include <linux/atomic.h>
+> >  #include <linux/compiler.h>
+> > +#include <linux/errno.h>
+> >  #include <linux/hw_breakpoint.h>
+> >  #include <linux/kallsyms.h>
+> >  #include <linux/list.h>
+> > @@ -15,11 +17,16 @@
+> >  #include <linux/perf_event.h>
+> >  #include <linux/rculist.h>
+> >  #include <linux/security.h>
+> > +#include <linux/spinlock.h>
+> >  #include <linux/tracepoint.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/workqueue.h>
+> > +#include <linux/irq_work.h>
+> > +#include <linux/preempt.h>
+> >  
+> >  #include <asm/ptrace.h>
+> >  
+> > +#include "trace.h"
+> >  #include "trace_dynevent.h"
+> >  #include "trace_probe.h"
+> >  #include "trace_probe_kernel.h"
+> > @@ -50,6 +57,17 @@ struct trace_wprobe {
+> >  	int			len;
+> >  	int			type;
+> >  	const char		*symbol;
+> > +	raw_spinlock_t		lock;
+> > +	struct irq_work		irq_work;
+> > +	struct work_struct	work;
+> > +	atomic_t		missed;
+> 
+> Is `missed`  read somewhere?
+> I searched this file, only found set and inc.
+
+No, it just count the missed. I'm considering to expose it via
+new `wprobe_profile`.
+
+Thanks,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
