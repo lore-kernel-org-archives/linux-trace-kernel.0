@@ -1,130 +1,102 @@
-Received: from confino.investici.org (confino.investici.org [93.190.126.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D32BEFFD;
-	Tue, 18 Aug 2026 01:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8DF37FF70
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 02:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787018010; cv=none; b=fZQX2xBQ5Iu5sTrj/d5sS/WoKYP/Q3q7tA/PKZAUZ+fW5pEowEgH1Oy8eddkfmL+kQrqtxh12vGJdcfFPqZBWlFxZn8w7dUWGsjdNMEmifFAQ0+2oeVjDO2KjyZ5mwmebBpcWAl9Ufa8UXLBRyQAxkOZiQ+zjyl1NA036HnP59Q=
+	t=1787018482; cv=none; b=kWpIHy10q/CzIarzRuxyiBRRGiQRb0jUjrS47MaHxcYsg0fjzrJu0G/aTnQstNVLIwhf8Ra8ddkJrlzOCaWw1yn1jP+qGhwqBa7xuS7utYNYHC0nNHKQbdUfuS7L4kUnIzVI87FIm/uta3NnP4t+0Rpua+2L1wGdpMMZVYUwjKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787018010; c=relaxed/simple;
-	bh=FLG6R+kLr4hsyuo1Kep15Oic3sdgmGltpTtPT6u1ZHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rPQ5zFidlUqhkOBFkbZo1dI4j6zmbyXEz4AfVwwz+cX1Mcyd6Iw1p8OyY8grkjVdiNGyDnECchaBtbTxj5MWzus0XDS8hFn/LTmhvZAeLSjoBD7u30NcWr8hJHClv3dQShr013vHd0Ck+aNAVKhkR4QFhCSH9eeOhU+aTLL5cLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=raPsoM7T; arc=none smtp.client-ip=93.190.126.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1787018482; c=relaxed/simple;
+	bh=dG0HbUQl1MRCTT0hGIumW5vizwwuIZNXTeL3sOvoySM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=eZWpgKZ3gHfHLUDj+zC5sshasTqGYcoZ88RQylOYl1gmqwYxHU5hSybaPUXin5LgkLXnNkbzL6+d35uw9+/5xng6s8kjbGZrDaQYfPTsThk+ii3W+xy+7S2EaONy9kGxeeqx2EYw+yoj1cQopHrh3rgbKS80ATsCXjreA6xOD3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3MLWeGw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="raPsoM7T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787017998;
-	bh=GJmUpksao1Sv6uYL7I5hs2EQUNBvO+WsMG2klFFd1gY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=raPsoM7TS0sLAWB0Djw9C4TS6mym4paAdLagC/Ea70D5semspumvTRd/eAkUG72LY
-	 EOQZKkh0dC9exn8lcUX4O94+MzWDxr7LFPSJG7/RyMD/UpQFMLrUzswM4YACwXemLA
-	 n9IjdUZT2LhT2IpeGsbrM9HnyhhURFSXbauIQH7w=
-Received: from mx1.investici.org (unknown [127.0.0.1])
-	by confino.investici.org (Postfix) with UTF8SMTP id 4hPCQk6vR4z10rt;
-	Tue, 18 Aug 2026 01:53:18 +0000 (UTC)
-Received: by mx1.investici.org (Postfix) id 4hPCQk4fJvz10rZ;
-	Tue, 18 Aug 2026 01:53:18 +0000 (UTC)
-From: Bradley Morgan <include@grrlz.net>
-To: Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob
-Date: Tue, 18 Aug 2026 01:53:18 +0000
-Message-ID: <20260818015318.24103-1-include@grrlz.net>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3MLWeGw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF141F000E9;
+	Tue, 18 Aug 2026 02:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787018479;
+	bh=Io0TUV4tUpoY2w2OS7DnXuKk9hnwaan/rWPsJQ+mm0E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=G3MLWeGwJvMYxeSrqHbAB+0m8Iav5NKGV7JWUZBYDiS9JAZwFJdBDGNRT+XwLYDHO
+	 Yrhwyl+Wo7IppkhKm+drDVoYpP3Zq5dyTcUSCObSknxYWV6kIz5HLEq4AbolIalyWR
+	 9EtB/FwnqhhvXLT6RW7WPKwevp8jaexfBAh/GEFi6n4A4r5znNs00dyODKZ3RJwpqP
+	 2vQF4RjFOGtC5jgvZJ7LwCZI5tFhWymzGW3PJo4MhC0+JbRL/t1zHGEsb13Es23Ayw
+	 W/TyWjup5ghtC6gkpYbY6ZGr4VAIqnoTUBpNGEGtq2thAQIAcFUZhfSxEor3VOD+/q
+	 wyCp7Rt4023EA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled
+ knob
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Bradley Morgan" <include@grrlz.net>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260818014920.23870-1-include@grrlz.net>
+References: <20260818014920.23870-1-include@grrlz.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 18 Aug 2026 02:01:18 +0000
+Message-Id: <20260818020119.2DF141F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This enabled knob is a disgusting terrible hack. It has rolled its
-own read/write pair since 2007, writing '1' or '0' into a three byte
-buffer by hand just to print a single character, with an XXX comment
-begging debugfs for write callbacks on bool files.
-DEFINE_DEBUGFS_ATTRIBUTE showed up in 2016 and does exactly that, so
-the disgusting terrible hack has outlived its excuse for nine years.
-Kill it, and the stale comment with it.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The 'enabled' debugfs file is created using `debugfs_create_file()`=
+ instead of `debugfs_create_file_unsafe()` with a `DEFINE_DEBUGFS_ATTRIBUTE=
+` struct, leading to redundant proxying and overhead.
+--
 
-The behavior does not change, except the write only accepts 0/1 now
-instead of y/n/on/off, and nothing uses anything else.
+--- Patch [1]: [PATCH] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enable=
+d knob ---
+commit f5babbd146ccf4194f28506d04f5cbfb2c40150a
+Author: Bradley Morgan <include@grrlz.net>
 
-Signed-off-by: Bradley Morgan <include@grrlz.net>
----
-Changes since v1:
- - Added the missing Signed-off-by, sorry.
+    kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob
 
- kernel/kprobes.c | 43 +++++++++----------------------------------
- 1 file changed, 9 insertions(+), 34 deletions(-)
+This commit replaces the custom read/write handlers for the debugfs enabled
+file with the standard DEFINE_DEBUGFS_ATTRIBUTE macro. It simplifies the
+implementation and accepts integer inputs rather than characters.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index bfc89083daa9..044c6b5fd2aa 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -3013,47 +3013,22 @@ static int disarm_all_kprobes(void)
- 	return ret;
- }
- 
--/*
-- * XXX: The debugfs bool file interface doesn't allow for callbacks
-- * when the bool state is switched. We can reuse that facility when
-- * available
-- */
--static ssize_t read_enabled_file_bool(struct file *file,
--	       char __user *user_buf, size_t count, loff_t *ppos)
-+static int kprobes_enabled_set(void *data, u64 val)
- {
--	char buf[3];
-+	if (val)
-+		return arm_all_kprobes();
- 
--	if (!kprobes_all_disarmed)
--		buf[0] = '1';
--	else
--		buf[0] = '0';
--	buf[1] = '\n';
--	buf[2] = 0x00;
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return disarm_all_kprobes();
- }
- 
--static ssize_t write_enabled_file_bool(struct file *file,
--	       const char __user *user_buf, size_t count, loff_t *ppos)
-+static int kprobes_enabled_get(void *data, u64 *val)
- {
--	bool enable;
--	int ret;
--
--	ret = kstrtobool_from_user(user_buf, count, &enable);
--	if (ret)
--		return ret;
--
--	ret = enable ? arm_all_kprobes() : disarm_all_kprobes();
--	if (ret)
--		return ret;
--
--	return count;
-+	*val = !kprobes_all_disarmed;
-+	return 0;
- }
- 
--static const struct file_operations fops_kp = {
--	.read =         read_enabled_file_bool,
--	.write =        write_enabled_file_bool,
--	.llseek =	default_llseek,
--};
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
-+			 kprobes_enabled_set, "%llu\n");
- 
- static int __init debugfs_kprobe_init(void)
- {
--- 
-2.47.3
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index ca9d834d0b843..10bcc2a0926a6 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2962,47 +2962,22 @@ static int disarm_all_kprobes(void)
 
+[ ... ]
+
+> -static const struct file_operations fops_kp =3D {
+> -	.read =3D         read_enabled_file_bool,
+> -	.write =3D        write_enabled_file_bool,
+> -	.llseek =3D	default_llseek,
+> -};
+> +DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
+> +			 kprobes_enabled_set, "%llu\n");
+> =20
+>  static int __init debugfs_kprobe_init(void)
+>  {
+
+[Severity: Low]
+Will this lead to double-proxying for the debugfs file?
+
+Since DEFINE_DEBUGFS_ATTRIBUTE natively provides debugfs_attr_read and
+debugfs_attr_write operations that already include debugfs_file_get() and
+debugfs_file_put() protection, passing fops_kp to debugfs_create_file()
+in debugfs_kprobe_init() will cause the debugfs core to wrap it again:
+
+kernel/kprobes.c:debugfs_kprobe_init() {
+    ...
+	debugfs_create_file("enabled", 0600, dir, NULL, &fops_kp);
+    ...
+}
+
+Could this use debugfs_create_file_unsafe() instead?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260818014920.2387=
+0-1-include@grrlz.net?part=3D1
