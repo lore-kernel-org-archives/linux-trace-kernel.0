@@ -1,152 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F69175A88;
-	Tue, 18 Aug 2026 14:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E402283FC4;
+	Tue, 18 Aug 2026 14:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787062539; cv=none; b=IQ/HOR2uMTMgoJwDVbd3VVPIsbKNgVNT4w+ac+7v7Ouz+9/vgGTPOI4XAM7+CApSvZARBn2EMjYNFjQTgcKbHuur+zFdNftRjT3Zc8PQU91bmClR5HaueFTAKzIladXQ5SMCNN6gXsd2LlY6/cXF2eEMPN5+haeKbwG/ukZdgxs=
+	t=1787063117; cv=none; b=SOnPKcUmeaPeUQjMOP436FKx1th7AyQtR5Yzz0il/2MP31PfDXwiGio7Znwgi7oxhgTeV+Df3NVVC4iMmYr6tPsdAcknZ89fQYiZkdjYCneF5Lb0mEGLCVAjGEmdId168TuZwQ/xpNdoEq3yjYOppDrEgQlmJk+WKY5bIFTLhPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787062539; c=relaxed/simple;
-	bh=3sc9jhutDQogoK0YLOwRMtxdYw3oTIlvs7NVL1reC+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PcvkZkwaVnP8JqVupmB2KWCo+9o7UTzjjivE9JAg8Wc3rNkE0u6W2yGpL1uUwG59qPBt6SyOGDwz7wUplzhkU2pBS5+m7iVlZJ0al7hZ8XPz9jps2HvxZ+uYp4J+yQU1tbxso6/AdWciXmdLsVyk47LKDl0Y6MgaPsK25UL1PHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4txqm8P; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787063117; c=relaxed/simple;
+	bh=E5/rGVzlBcnqQpnTv5+IlQUiwRUmnA0eNZNFu07RT0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IQpGWZ0FS6wKIzsTdXBhSMhs6DITWlc4XZH6J6mgL3J91FOk7fXkfg6Cl8zTdsb2vx5wkqJ7V3OpL2RbdILjY8zQ1YK0xgQyMmHJcI3y9xKIbvDAfUGIEbeG7d+0JmswaytrrJWyVNkCik7PqudK/jnWR+5bbuBPafYghk+fcdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=pcx/LIHk; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4txqm8P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528441F000E9;
-	Tue, 18 Aug 2026 14:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787062537;
-	bh=Qx7Q9Tkm+30Vy5GpQNpuwA2/ZGcx6zXr2iqGQrjyaow=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=J4txqm8PSDHPtAGQRTxTA5BirFk7+ogzhOIXx818dDoEykvFj2mrVFD5zdFYcfFJ0
-	 /jprkZRDFxQc8+QCcmNb0ApwCPKRCXrDv8FdOKGTuzZSBcmf10N4ZNE2LUmmbewdbR
-	 j4nU0aKvIRwA6/P+7rKRyvxb+WqvxxEYHHG++dyYmXrcmPJ4wvxfPuZA75WpgPVgxs
-	 f0B9a3AoNrZyoj+6NB3OnEml7VuMxDNvR+DUcxVjWZC/C0Sw9hEPBcvxjPfQATlp3A
-	 n0QvsdIbuzJrd8r8lo//noi6umHRcuvqsDdZ55Q9yQZXT5rNReYRnMfBHGHAV80cYT
-	 U4t5de0eRoHxA==
-Message-ID: <99138bda-55ba-4c58-9b79-b76e9daecdde@kernel.org>
-Date: Tue, 18 Aug 2026 16:15:27 +0200
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="pcx/LIHk"
+Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 47FB1160279;
+	Tue, 18 Aug 2026 14:25:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 1F44720028;
+	Tue, 18 Aug 2026 14:25:04 +0000 (UTC)
+Date: Tue, 18 Aug 2026 10:24:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
+Cc: Xiang Gao <gxxa03070307@gmail.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, gao xu <gaoxu2@honor.com>,
+ =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [External Mail]Re: [RFC] tracing: aggregate ring-buffer usage
+ statistics
+Message-ID: <20260818102456.03f52b8f@robin>
+In-Reply-To: <11242d2e40eb4fd4b439ac66ebbe26ed@xiaomi.com>
+References: <20260811114818.1449933-1-gaoxiang17@xiaomi.com>
+	<20260811100830.7976bbe8@gandalf.local.home>
+	<cd441eb194d54265b1bf9ab659716c45@xiaomi.com>
+	<20260812114704.2f61bc5a@gandalf.local.home>
+	<d5bb28119dbb4ff1ab1059bb2564ad29@xiaomi.com>
+	<0e42953988164786aafe175ef0f4e745@xiaomi.com>
+	<11242d2e40eb4fd4b439ac66ebbe26ed@xiaomi.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
- primitives
-To: Kiryl Shutsemau <kirill@shutemov.name>,
- "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: akpm@linux-foundation.org, nico.pache@linux.dev,
- baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
- hughd@google.com, lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com,
- rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
- usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
- usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- jannh@google.com, willy@infradead.org, pfalcato@suse.de,
- rostedt@goodmis.org, mhiramat@kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20260816224609.308019-1-kirill@shutemov.name>
- <aoLAly-oL2OAa4n8@lucifer> <aoLkMUtmzRVuv2Hx@thinkstation>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aoLkMUtmzRVuv2Hx@thinkstation>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: 9zprk6udzdaksuhwujqxs1tos18bd7xf
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 1F44720028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18HcnJ66CNnHw+pNMNxXyVfBT9aUSk6dI0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=E5/rGVzlBcnqQpnTv5+IlQUiwRUmnA0eNZNFu07RT0g=; b=pcx/LIHkxu0dCkt1AI/WVyNjJ8VXYVGo8ykVn0ey5hjtthg0MkTrRYIH6uDDJxQcoX8FfbLii8T3kNJApi2+JJDryyNgmzE6iLw04cI5g/aVEtAFiOampkXLAHPHxiBnPtoJTFFrEvE3MKj7FZTw9z3dppi19WMOIKdaVh7TG4s=
+X-HE-Tag: 1787063104-385141
+X-HE-Meta: U2FsdGVkX19kUE2e7JTYzjcyI5IvKIsVRELHE9ewQ+N343pZipCABDOGQz64cQSxwJ4o2fcR6NWOhHoFj+3b6ozab+17Hu8SayjboJSOAnWDSqwUmxkwycjgHBKUCFaRikeY10PNzAW018wJCNoXbtC5G12ud8WH86ZNmPz0WCU8O/7pkqTg1ZGo3d21/aj1z0hDx0vfnzZZo660/+kjgoaAxJrlJsXY3NNWaH10bv+fRBHuPtNrSAxKqPRiKK9xlswp41YH6jaSDj0fbITYLx2adfbbA1Pr7CVj5/L3nEknweLaIWByM38VU+B0m2h4xj6ejmIULnwi+hlvWu1piRLGLb0T0Bwa
 
-On 8/17/26 15:38, Kiryl Shutsemau wrote:
-> On Mon, Aug 17, 2026 at 09:52:13AM +0100, Lorenzo Stoakes (ARM) wrote:
->> We have a THP cabal meeting every couple of weeks where it would have been
->> useful for you to raise this first.
-> 
-> Fair -- though my invite is on my old @linux.intel.com address.  Could
-> you forward it to kas@kernel.org?
-> 
->> In any case - this series is not something we'd consider at the moment,
->> even broken into parts.
->>
->> David and I have put THP into feature freeze - until the codebase is
->> subtantially improved we're not really interested in seeing significant
->> development.
->>
->> The technical debt is substantial and has to be paid down first.
->>
->> See [0] for a rough list of TODOs in this regard.
-> 
-> I read the TODO list and I'll pick from it -- though I notice the
-> technical debt section includes "Literally all of the code in
-> mm/huge_memory.c and mm/khugepaged.c", which I'd argue this series is a
-> fairly committed attempt at :)
-> 
-> One clean up I wanted to do is consolidate code by functionality, not by
-> the THP/non-THP split.  Move all page fault handler code into mm/fault.c,
-> unmap code into mm/zap.c, fork's copying into mm/fork.c -- mirroring
-> kernel/fork.c, so the mm half of a subsystem sits under the same name.
-> Large folios are an integral part of mm nowadays and I don't think we
-> benefit from keeping THP in a separate file.  It is also an opportunity to
-> shift away from mm/memory.c being a kitchen sink.
-> 
-> David and I talked about this at LSF/MM. 
+On Tue, 18 Aug 2026 13:30:26 +0000
+=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
 
-Ah, I missed the context in my other reply. Lorenzo already had some patches at
-some point to split up mm/memory.c into better chunks that will also better help
-our subcomponent maintenance model.
+> Hi Steve,
+>=20
+>=20
+> Just a gentle ping. I have the RFC patch ready for
+> trace_stats/total_memory_kb, with the buffers_mem and
+> snapshot_buffers_mem breakdown.
+>=20
+>=20
+> Would you prefer I post the RFC patch for review, or is there anything
+> you would like to clarify about the accounting scope first?
 
-I think the challenge is how to handle huge_memory.c, because ideally, we'd not
-have these stupid callbacks into huge_memory.c once we make PMDs just a
-first-class citizen.
+I'm traveling this week. Can you send another RFC next week.
 
-This is, unfortunately, also something that needs more thought, because we don't
-want to end up moving stuff back and forth.
+Thanks,
 
--- 
-Cheers,
-
-David
+-- Steve
