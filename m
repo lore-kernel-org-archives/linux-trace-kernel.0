@@ -1,35 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from devianza.investici.org (devianza.investici.org [198.167.222.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34DCB67E;
-	Tue, 18 Aug 2026 00:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC8036197F;
+	Tue, 18 Aug 2026 01:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.167.222.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787013670; cv=none; b=PR2LMKxFhYWpOZEFhsxyXGLe/UwCxLgFw+SKKrobGAYjf8QwgRKvCMHJd/MNv5cqt0Ve9AkXavOXq5AjC1XiBtN/0UewPx7rvzI9FxmazHvPnMdrZL1pKuECqHx0FTj4WZhBxGzdjCz8O8Dau4KWmhl0E1Gbj8U+P8/d2ou2TQg=
+	t=1787017767; cv=none; b=IRybAUbY3/BbfgIGXmpfjM0hDTJkHNq0i7btFTDmTXH8VcNkE5DW7Wkr56ZxiChEu2w/B9iAZoXKyfqni1xlj9GFKe3V/ILftGV4DsQ5neTzLt7vKO6TFwhHAcSfzNAWmxLaKRpmwkLOJjqS+taZ4D66R50I6PbNlLub3uwluUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787013670; c=relaxed/simple;
-	bh=9fMYnDDsYiJgWRR33BMJ8/GbO1x9Fix/42kWTLHAjCg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=IwnLnlNl0Z5vmVz8vxDaGMYzTdWBXrH7/DZXMzRSHQeqOnPXlweeI8muvxlUZVksohc0/AZMPUKd6D+cYx/Lyd2Yfbdcx05zhxR0G24FwEcY1PWK78OS8KklpsOpxfJ3oz9ma9Q9139g8IpaWWiT2NCDpjq0pdFR/8U/pAdINKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOAuMA0F; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787017767; c=relaxed/simple;
+	bh=bwhWo0hek5rBhE1m0hibdd5mIgRosMqhyVy2zNv6gTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nS/I/J3J4Acj5pGODrm4apDCLnOQoXAQKzPpTlF9ohPGbTZkOw3AAPPnXHScFPCBi494LdRz2MYHQTjEtLfIjCw0dhg4QttR2QEWOu3Azlj9m44lpsQS2Rwr786B+ylm48UsRC8ME5fWNYLohgqo12FdmMoRfE/hKmcNGWcKLgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=nWtZw8AX; arc=none smtp.client-ip=198.167.222.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOAuMA0F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4291F000E9;
-	Tue, 18 Aug 2026 00:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787013669;
-	bh=1X5VG67df49Jj49wCdf/D8+ExtHuAzWPZSjmw/48vZs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=oOAuMA0FOlWmWIvP8GTVCRBRjoIP1Pbvydm1tRD++U+Fp2AMnzwcoeAbwvfuNYIPU
-	 8muw0C4k9wCgtPWwKnkQ03t1R1JDL2dFvhKPSKhmKb1hnrD+TgOocvp5EbYv8ek4bg
-	 dDcAEAiTt4PZsmnx1dcW8b+JdZOHQVFeNbSYpWJ6v9iBBsv9l7QQ+PFUEhAzZvSyXc
-	 IolFKFg/U9G5iH4vU88og3pXNtzHhMB+P+yQuGBPVS3RdauQo/2qzEWpyqhKZyWUnC
-	 A4Jf2nFkmtoTy6Trklo+105rcqYXAisJhSpBttZg4pHREAc8lWC7GMgYP9oKpevS6q
-	 WNY2QxJU1SSRA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 939F43926278;
-	Tue, 18 Aug 2026 00:40:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="nWtZw8AX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1787017761;
+	bh=D1VLsZxHNhJ3v+xdlRBBnkDRdhvXFPEoQH3K6UtYqW0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nWtZw8AXAE3AjbEPg+dSjN3gBPPzjVNDsMyMnrFJEs7/9vDIWUm2wzkXBvlFM7wnT
+	 Zthtt6owTFS6vYLGrNk2QutISDlmY4w5GEDkFao2yplI205yR9BSJ5V52cvy+9pMNI
+	 pt5gr5A2Mv1Di2EXmPwYMpLtDtrvbXSo/sUF75VM=
+Received: from mx2.investici.org (unknown [127.0.0.1])
+	by devianza.investici.org (Postfix) with UTF8SMTP id 4hPCL914CZz6vNR;
+	Tue, 18 Aug 2026 01:49:21 +0000 (UTC)
+Received: by mx2.investici.org (Postfix) id 4hPCL85kZPz4y6W;
+	Tue, 18 Aug 2026 01:49:20 +0000 (UTC)
+From: Bradley Morgan <include@grrlz.net>
+To: Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob
+Date: Tue, 18 Aug 2026 01:49:20 +0000
+Message-ID: <20260818014920.23870-1-include@grrlz.net>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,69 +44,82 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/11] mptcp: misc. features for v7.3
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178701362114.1806156.7611412383996379895.git-patchwork-notify@kernel.org>
-Date: Tue, 18 Aug 2026 00:40:21 +0000
-References: 
- <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
-In-Reply-To: 
- <20260812-net-next-mptcp-misc-feat-7-3-v1-0-1905a818f6cb@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- cuitao@kylinos.cn, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- kalpan.jani@mpiricsoftware.com, shardul.b@mpiricsoftware.com,
- shuah@kernel.org, linux-kselftest@vger.kernel.org, yijiangshan@kylinos.cn
 
-Hello:
+This enabled knob is a disgusting terrible hack. It has rolled its
+own read/write pair since 2007, writing '1' or '0' into a three byte
+buffer by hand just to print a single character, with an XXX comment
+begging debugfs for write callbacks on bool files.
+DEFINE_DEBUGFS_ATTRIBUTE showed up in 2016 and does exactly that, so
+the disgusting terrible hack has outlived its excuse for nine years.
+Kill it, and the stale comment with it.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+The behavior does not change, except the write only accepts 0/1 now
+instead of y/n/on/off, and nothing uses anything else.
+---
+ kernel/kprobes.c | 43 +++++++++----------------------------------
+ 1 file changed, 9 insertions(+), 34 deletions(-)
 
-On Wed, 12 Aug 2026 16:55:35 +0200 you wrote:
-> This series contains a few independent new features, and small fixes for
-> net-next:
-> 
-> - Patch 1: Add WARN_ON_ONCE guards around extra_subflows to catch issues
->   with this counter, similar to what is done with other PM counters.
-> 
-> - Patches 2-3: Follow-up patches to remove data_ack field from struct
->   mptcp_ext -- now unused after recent fixes -- and makes a userspace PM
->   helper static.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,01/11] mptcp: pm: add WARN_ON_ONCE guards on extra_subflows underflow
-    https://git.kernel.org/netdev/net-next/c/e99c1ca89071
-  - [net-next,02/11] mptcp: remove unused data_ack from struct mptcp_ext
-    https://git.kernel.org/netdev/net-next/c/91424c4513dd
-  - [net-next,03/11] mptcp: pm: userspace: make remove_addr_entry static
-    https://git.kernel.org/netdev/net-next/c/bb961fdd1700
-  - [net-next,04/11] mptcp: honour configured min/max RTO in retransmit paths
-    https://git.kernel.org/netdev/net-next/c/ea4eb2adb0d3
-  - [net-next,05/11] mptcp: add per-event MIB counters for MPTCP_RST_EMPTCP resets
-    https://git.kernel.org/netdev/net-next/c/3420c0fd7e5d
-  - [net-next,06/11] selftests: mptcp: check per-event MPTCP_RST_EMPTCP counters
-    https://git.kernel.org/netdev/net-next/c/1aa38a1581c4
-  - [net-next,07/11] selftests: mptcp: connect: test name in pcap file
-    https://git.kernel.org/netdev/net-next/c/158765a0e50d
-  - [net-next,08/11] selftests: mptcp: simult_flow: test name in pcap file
-    https://git.kernel.org/netdev/net-next/c/a574bd9b6101
-  - [net-next,09/11] selftests: mptcp: pcap: drop most of the payload
-    https://git.kernel.org/netdev/net-next/c/1d206e8e4371
-  - [net-next,10/11] selftests: mptcp: fix const qualifier warnings in strchr usage
-    https://git.kernel.org/netdev/net-next/c/f4a1b63ed520
-  - [net-next,11/11] selftests: mptcp: diag: fix stack buffer overflow in get_subflow_info()
-    https://git.kernel.org/netdev/net-next/c/6e5635a714c8
-
-You are awesome, thank you!
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index bfc89083daa9..044c6b5fd2aa 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -3013,47 +3013,22 @@ static int disarm_all_kprobes(void)
+ 	return ret;
+ }
+ 
+-/*
+- * XXX: The debugfs bool file interface doesn't allow for callbacks
+- * when the bool state is switched. We can reuse that facility when
+- * available
+- */
+-static ssize_t read_enabled_file_bool(struct file *file,
+-	       char __user *user_buf, size_t count, loff_t *ppos)
++static int kprobes_enabled_set(void *data, u64 val)
+ {
+-	char buf[3];
++	if (val)
++		return arm_all_kprobes();
+ 
+-	if (!kprobes_all_disarmed)
+-		buf[0] = '1';
+-	else
+-		buf[0] = '0';
+-	buf[1] = '\n';
+-	buf[2] = 0x00;
+-	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
++	return disarm_all_kprobes();
+ }
+ 
+-static ssize_t write_enabled_file_bool(struct file *file,
+-	       const char __user *user_buf, size_t count, loff_t *ppos)
++static int kprobes_enabled_get(void *data, u64 *val)
+ {
+-	bool enable;
+-	int ret;
+-
+-	ret = kstrtobool_from_user(user_buf, count, &enable);
+-	if (ret)
+-		return ret;
+-
+-	ret = enable ? arm_all_kprobes() : disarm_all_kprobes();
+-	if (ret)
+-		return ret;
+-
+-	return count;
++	*val = !kprobes_all_disarmed;
++	return 0;
+ }
+ 
+-static const struct file_operations fops_kp = {
+-	.read =         read_enabled_file_bool,
+-	.write =        write_enabled_file_bool,
+-	.llseek =	default_llseek,
+-};
++DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
++			 kprobes_enabled_set, "%llu\n");
+ 
+ static int __init debugfs_kprobe_init(void)
+ {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.3
 
