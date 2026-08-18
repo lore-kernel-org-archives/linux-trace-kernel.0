@@ -1,263 +1,314 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ECA42049A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 08:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787041375; cv=pass; b=iH5VRslJUmg0pfqs1ymeavKevIoyWiInlFFnXZoY4YHPlsiKcNSQLxzknFjj5bQ446MdHwbo6Xzh78DmiHeM5A7PpbZMTrdDRMAp9GUVpegTtXRE6v5wAhaBfVVuFbMo2RpMTo0sRHmkKSV2H5S9N97pVZ/dMi++tqSguS38uBQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787041375; c=relaxed/simple;
-	bh=5J3xUB3/7aisz9iRktEt7o1yC5SHtH7S+wRq998947s=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gr4RJMUfQmAki0SeQispaiG4cpZB/XBTEpCFe5JIE7LG7tePYUxAUkC+i30JzU+M53qpkpk7SbRjwVyPMN83Gm0LG10ql1rWlUAkNkgqEVQeMZ8/RZxjRqrQ0oCGg7SudNhMHcBHd4AD4L4yNzKJUHdvDF8/4KTiuanGV65PWgY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T826V2Jz; arc=pass smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B14543D4E0
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 09:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787044959; cv=none; b=akKmSpM+/QjRD+EzV8beFbXlgvQ8o4i7SnWdFIg0TXEv7abCqfc6DqQ1v33rd0Hq7Q4jWOO8VhWfMdkDO1TwiZT5bVnyV54/vEbJA639k9Kmc195MgPIwkQE9rkb5J5eqWnh0d8jCsE41mRqGlKpivT7GDyft5D4k20u5P6NCwY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787044959; c=relaxed/simple;
+	bh=rWGvV6RH4tfNJQkB60DUu3/OAoscpTL4+4KSJdvssmk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BRS9aRqMkkdgvzzkg0ixJ6yjQCPqTFrSFl5E2oQKzl+d/Ixny/wzYP/uOeSKWz8dfQeKPB00wm0qk8okbVJ9/KhTKZ4b3NFSs0sTEZ/wEzCHCN/33eHkM+2Ls2RYwv5VJJ3o8TtULS00W21rvrpGBXaJK/edJaJroPZtEshFLww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lAbMqWiZ; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T826V2Jz"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2cf50c6f235so52722935ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 01:22:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787041373; cv=none;
-        d=google.com; s=arc-20260327;
-        b=PWKCFddRoOCEWyxKI2CfJKpncLqbkewjkKSUsABBuWmE0h3BwoZjk5sAzzHuAtVPPo
-         RJKcA7ctiogablETeu2Yh34f5t/ri66b37oT/9aqn/d92F1MjXzUIdAoLfQZZY6GB0Up
-         +A0pYU4oJdqQxihfoUKoYl/xwPfVpRguB9osQxjKn0qidd2mdhxXBP4l/ufWONaWF5G7
-         cJMzwPsr0GEJFdUCM1fmWknR0xcZxYZPJJTz3SzMmjHeYtM3iZqc5KJH/6axaZEot21N
-         0UKg43VETq9Ja1AJIdqpNy6XRnlY5yi2DL1P/lCqPmrvKZjDuWMLs0rmQrOwp2Dqdg34
-         XjOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=y79lKilZje+Nl3Rv+2N5vQhP9be8wEt4E0ek84GffA4=;
-        fh=upz7POsMbHDyxBnlANTqRGFH1dIdyORK1vnjlYjgEN4=;
-        b=lSRo38o0MJlEwNZ+f9wY/nnG1Dm1drBxogc/kaapxRIlY+46gFURQn64cFDd88fkH1
-         4Ve1MYccuZ2qywjNXp5tZFIiw5UhZ3lm9YqnU1xyNt75WYuEnszEHnh2LAqzA95kgU+j
-         Jb7FgvYXfvYH1y3pI7eN7Pf9u7mR+6F5Vl0gkq4oTl45OBKsB104Hu4aorOKsmR0MDUw
-         Og5fmk8MntQT19H9iIIdSi3H6z68kn3SlmGYb1tKOq1CwgVccvst3GWk+CCGWwnIZAQT
-         YRNyQ1YAL2AqOirWwqGW07UOE65q2FfP845laEOHep/r19+qJxGNPjPy4NUxdJb4oFjB
-         xMhw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAbMqWiZ"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7eb63dbd229so540156a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 02:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787041373; x=1787646173; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1787044956; x=1787649756; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=y79lKilZje+Nl3Rv+2N5vQhP9be8wEt4E0ek84GffA4=;
-        b=T826V2JzQmY0bin515X5csS1JNLlgJ+k5RabIjx8Nf7P7g03ErnJyovgsFXd23Q9Vc
-         z8AQrpDSkqu5btNFUJQ+DwbG49sSIRey6haYFnfXG7fADLiaig6qymiR7wtLstRdfMZZ
-         Hf47/UsUqaozOh0olPd+JMVYoN1k0yKArFcwSNgUOsZbXZIGNV8S8jn8ebaDN+Nqis4D
-         kshDA4GemxSpnAG1A75p227PY8LLhRZhUFG00TbwipJnr1y0LnFlW12gzWrQgdkbnWEr
-         IqclVk5a6tg9N5IhKhpIgj77Jx0w5raAz9uJnCZH4mGjIWvuqjtRXD97grWSZ+ls6bWw
-         m+5g==
+        bh=v7Kv1tYbrkVXERJ81NQKIW3So0Xg9hhEFLDYBfxt8VI=;
+        b=lAbMqWiZlZWdl6s+h1My32N0OFhPhqqhLMIaUvt7+JKCi969z/CwB9RXuIrP/wkjfS
+         d+PpFcafmigtE2McakHHYnkO0bg8hEhXQEfYMt21hgLiu3yaCeDLWQMkR9HiG+YypJUU
+         bykoBQUTNO5WVJG/N1+A2N6pV/ko9abG6IIQ6aThF9wQEwvjy2Q/qNNPyDj4cyXoYAmL
+         CBNpOYyZsQ2AZ9z1p4PjqncjH+sFF7G6AadVwhqi0m4cu3m3v38eRC7dkjTUM2U27jdT
+         CbvCmiJbOSRbiD8SeHgBPmrQhB0KhZRaGbp9XBN0DbZ5A1y/5vRAcxTES+1P+aMU+iB7
+         s08w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787041373; x=1787646173;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1787044956; x=1787649756;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=y79lKilZje+Nl3Rv+2N5vQhP9be8wEt4E0ek84GffA4=;
-        b=KqbgLT7lTtNEdGMD/FFnfppOsK4EMiM0LfqJYPbDjIESshGLqYlbQGNLhBjbXGLC23
-         rzTublEnDL94s794l3lUu1/z7sQcpZcUvQaSOox/lUTvCjZDkPcLs0XvGMy9v7t3DzOh
-         +IEGEHkLfCgixsazl+iJCwS7c9tCOsslfMbTOg4KCsXSMC5Gq+hR1IdzbT1y0+1M0y5h
-         CS/BtabWmrzttOTM3AIPwOCfdzBAgBZt77lQQ9MIZ52ewcIJUrXqAKtKy9xD/CHy2VMp
-         pKzjUwZELMbPzjDhxihp1DqAhcSahUmagOAXOdnB5xEozB5eyHNb+tmvJ0tdofQPSljk
-         eptw==
-X-Forwarded-Encrypted: i=1; AHgh+RocCDbA7xYG6ykpY/N9p8Mt7m6TSzTyZD8jV1pFRvsuw27lqccQEaQFJO5jE34HF5DXRfdXpd7Wrkjb/VovvSwtDg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSUVyC5gdBcdsHkpMgWumcEelEReR7/XQVWJafpTx98qkV+HD9
-	8gQtqYBVZmi38NeLgC76UQgHq8XCFaBHAKpZ73acjVodL0FT+QWy4y9vXWJDlgNRybTuavYRk0p
-	EKRw2Gwg8Eyl48/UFVL9iooSe6p4Ci0KftZtChdiq
-X-Gm-Gg: AR+sD11KQoTq/pFfzYX4D++UGMc5gi1lk3UHKKLFAHCNDu4c6nQA6j6EMyvjOP7VQps
-	eBOYYE2GoSjAEE2jxXe8CHOzXYlvW3k2LNfm+R2MgOwMadHB6ybe0lWqiHRsAyNZCh6f76m5Pop
-	Kt0442oyTMLlBh7HQYb4WHYV/icybikj/lixYJNfg5w10m6/K9/0Bt0wdUK2jciEw4EwwCuxsxJ
-	drR4d9DBRwYOf8KlwSWJBjOLAoor+xjS0czfZWcKoi7vM3AA67gAEoQ61uH5PBwghL2CzROUm3g
-	JvChrK38UnaG95t3SZsiBiefFhQYf9vmsjLbChOuXUKjke6iCkUqBaV7lmTUxKHeHJ4GMf84g84
-	+i9h2ahvK6w==
-X-Received: by 2002:a17:90b:314a:b0:395:5404:95 with SMTP id
- 98e67ed59e1d1-3955a79c987mr7608716a91.12.1787041372060; Tue, 18 Aug 2026
- 01:22:52 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 18 Aug 2026 01:22:50 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 18 Aug 2026 01:22:49 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <aoOJRk5SXBzzT24K@google.com>
-References: <CAEvNRgFWcndQKJE_q+ZATFZEMYd=6uRLygozLvg7L77bPX0cEQ@mail.gmail.com>
- <anqqKH6kuwpvuwp9@yzhao56-desk.sh.intel.com> <CAEvNRgGWDY_fxbyBM-5sMdYMevMe0HzVP9kbC1cCGLE_dV=_Gw@mail.gmail.com>
- <a71d4fccdffd1f6a12332ddd18fa812542ea2118.camel@intel.com>
- <CAEvNRgHxda6XK_XqWaqqVnA7oW=Fhp_C5gF4vNcL+-HfwfXMqQ@mail.gmail.com>
- <0c80b9b0e13e3ab2cbe4f9eaf4a02ebba25a7001.camel@intel.com>
- <an5RJYTwlYeym--O@google.com> <aoKnmW9St5zCoTD3@yzhao56-desk.sh.intel.com>
- <aoNrFX9yLfsM7KQI@google.com> <CAEvNRgH_=8YqKHb_OJfT583ZJ346cceRimd9YJ762Vv08uJGHQ@mail.gmail.com>
- <aoOJRk5SXBzzT24K@google.com>
+        bh=v7Kv1tYbrkVXERJ81NQKIW3So0Xg9hhEFLDYBfxt8VI=;
+        b=WWZIn46wpHN7zaZ0T70yH974y7TQXI4yynO+Qk3u/06+eRD1xSKDvqjIngTquQregF
+         kyJFTAHl5oKavnWQkWeYfuFwxbV1clML2thOY632nrVay5zM7Duug8PNo0bUP+Af8/Bd
+         mmA7UvzNlqTBE67xaxYHLuWyN/9NLQObdYvfyoy630o6mOoXEM+6+8Y3lvGtPDrb6zeu
+         cAYPCH5bUekH+i4afle7V6zHjmCmw4seG9KnLgBGEKBjJ9KZHClOB0+9JOQg1RdGCTb8
+         ABF8EiCl/2vq/jCtXyMa0vP+o8IJ5SvKp46pQrgIIM73GobOVT2IMaNjYrzpVaRA8RLS
+         nWRA==
+X-Forwarded-Encrypted: i=1; AHgh+Ro9BmfrjZFbIioPugct85EZGle+9Eer5BuLBxHETnLjIkys1DWAAwYuw4geD1B15dAPJ18XAqNu/njEzrSL91+4Ju0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+6tT8IxNO/JXPk1X/nkQYOy2z6BnMboqvdFkjhPUeA7ULPKKX
+	8Lomg6UIcag0VKmNxN+DVMeOvkEGAVIMf2IHyKOMvWrs6GUR7jQsFP0D
+X-Gm-Gg: AR+sD12S4Wi1AROiNA8+3v7d2MLkSpixsMUVw2BEaEsHWJUBbO3y/uj0mMIRRRBav5u
+	DhZ674VDTd729XNzS7cBu9OJgS5GQZhP9x4cWy7Fkq7qF2oBNDS4Ijc8mdmKQTwp/Rnoy8QLcvB
+	qA8PxWbPRyOKgEMzdflSj7soAJwUquj7G/V9GKHQgccFBUrQNUAewsbK+sGoM9tNhN0pT24Qou/
+	ye2uuUh/1OJXnLz6CWDe2wZyurvp5wc3Mn3BZcDqUx2CsmNjOeaP7OBl3BSTOnhC/GrW8HbtgHp
+	u3EBcY5vq2C9tSReMiJSoAavia8hLkklBcsDmVR8MyioS3MrRjVjBWtCD1AsfiYiTt9Zr/kul97
+	enQCFjz70mJP4gskVSXsNTQBRud5/MOIf6FADboqndt3I1iGBHBdj4NnFt6/lrGQjV/1APjbfCg
+	BazPStSPxPDBBnUP6ccpG3WwL359/DI1u93VDJ57hDC3vzcKmwCr1gGf0fK50XVf/NMlsH2MAQ
+X-Received: by 2002:a05:6830:3897:b0:7e7:24f9:55c8 with SMTP id 46e09a7af769-7f4290949a9mr2972823a34.5.1787044956325;
+        Tue, 18 Aug 2026 02:22:36 -0700 (PDT)
+Received: from [127.0.0.1] ([144.24.58.22])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f41c12b683sm3958040a34.26.2026.08.18.02.22.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2026 02:22:35 -0700 (PDT)
+Message-ID: <d833b191-ced9-4cf6-ac37-fc593d06191b@gmail.com>
+Date: Tue, 18 Aug 2026 17:22:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 18 Aug 2026 01:22:49 -0700
-X-Gm-Features: AcwNN1UwBN-I8e5ZL1Wm4VeVuI85_vvgyrgG68xpeG1bFCBW0uOQsMiH1U5tIzU
-Message-ID: <CAEvNRgHXXXBgO2Pw9PcaiaTLXBrm-F++nJKSeHn6m0rnZiT7RQ@mail.gmail.com>
-Subject: Re: [PATCH v10 11/41] KVM: guest_memfd: Ensure pages are not in use
- before conversion
-To: Sean Christopherson <seanjc@google.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>, Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
-	"david@kernel.org" <david@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"steven.price@arm.com" <steven.price@arm.com>, "peterx@redhat.com" <peterx@redhat.com>, 
-	"forkloop@google.com" <forkloop@google.com>, "tabba@google.com" <tabba@google.com>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	Vishal Annapurve <vannapurve@google.com>, "willy@infradead.org" <willy@infradead.org>, 
-	"tglx@kernel.org" <tglx@kernel.org>, "wyihan@google.com" <wyihan@google.com>, 
-	"pratyush@kernel.org" <pratyush@kernel.org>, "aik@amd.com" <aik@amd.com>, 
-	"jmattson@google.com" <jmattson@google.com>, "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "rientjes@google.com" <rientjes@google.com>, 
-	"andrew.jones@linux.dev" <andrew.jones@linux.dev>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "chrisl@kernel.org" <chrisl@kernel.org>, 
-	"shakeel.butt@linux.dev" <shakeel.butt@linux.dev>, 
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>, "oupton@kernel.org" <oupton@kernel.org>, 
-	"mhiramat@kernel.org" <mhiramat@kernel.org>, "baohua@kernel.org" <baohua@kernel.org>, 
-	"tarunsahu@google.com" <tarunsahu@google.com>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "jhubbard@nvidia.com" <jhubbard@nvidia.com>, 
-	"jgg@ziepe.ca" <jgg@ziepe.ca>, "jthoughton@google.com" <jthoughton@google.com>, 
-	"yuanchu@google.com" <yuanchu@google.com>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"shikemeng@huaweicloud.com" <shikemeng@huaweicloud.com>, "nphamcs@gmail.com" <nphamcs@gmail.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "shivankg@amd.com" <shivankg@amd.com>, 
-	"shuah@kernel.org" <shuah@kernel.org>, "youngjun.park@lge.com" <youngjun.park@lge.com>, 
-	"kasong@tencent.com" <kasong@tencent.com>, "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, 
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
-	"chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"vbabka@kernel.org" <vbabka@kernel.org>, "weixugc@google.com" <weixugc@google.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "qperret@google.com" <qperret@google.com>, 
-	"brauner@kernel.org" <brauner@kernel.org>, "bp@alien8.de" <bp@alien8.de>, 
-	"baoquan.he@linux.dev" <baoquan.he@linux.dev>, "corbet@lwn.net" <corbet@lwn.net>, 
-	"skhan@linuxfoundation.org" <skhan@linuxfoundation.org>, "liam@infradead.org" <liam@infradead.org>, 
-	"axelrasmussen@google.com" <axelrasmussen@google.com>, "kas@kernel.org" <kas@kernel.org>, 
-	"qi.zheng@linux.dev" <qi.zheng@linux.dev>, "linux-mm@kvack.org" <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and clear_wprobe
+ event triggers
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <178611679753.237811.10190793347982785419.stgit@devnote2>
+ <178611688737.237811.17143803996766057381.stgit@devnote2>
+Content-Language: en-US
+From: Jinchao Wang <wangjinchao600@gmail.com>
+In-Reply-To: <178611688737.237811.17143803996766057381.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Sean Christopherson <seanjc@google.com> writes:
+On 8/7/2026 11:34 PM, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add set_wprobe and clear_wprobe event triggers to dynamically attach
+> and detach hardware breakpoint address monitoring based on event field
+> contents.
+> 
 
->
-> [...snip...]
->
->> > The only question is if we want to commit to
->> > guaranteeing that conversion will succeed in this scenario, or if we want to take
->> > the easy way out and formally document that conversion can fail with EAGAIN at any
->> > time, even if userspace has never mmap()'d the memory in question.
->>
->> I don't really think there's a need to commit to this, IIUC in principle,
->> ignoring that on many paths of those guest_memfd may be excluded, refcounts
->> can be taken even if there are no host userspace mappings. For one, memory
->> failure handling doesn't care if there are mappings, the refcount will be
->> taken for a short while and could cause this conversion failure.
->>
->> Here's the relevant part of the documentation added for conversions:
->>
->>   If this ioctl returns -EAGAIN, the offset of the page with unexpected
->>   refcounts will be returned in `error_offset`. This can occur if there
->>   are transient refcounts on the pages, taken by other parts of the
->>   kernel.
->>
->>   Userspace is expected to figure out how to remove all known refcounts
->>   on the shared pages, such as refcounts taken by get_user_pages(), and
->>   try the ioctl again. A possible source of these long term refcounts is
->>   if the guest_memfd memory was pinned in IOMMU page tables.
->>
->> > I'm leaning pretty strongly towards guaranteeing conversion will succeed.  We'll
->> > still need to document the EAGAIN behavior, but IMO there's a massive difference
->> > between conversion failing if there's a lingering reference acquired via a VMA,
->> > conversion failing because a vCPU page fault raced with conversion.  E.g. being
->> > able to assert success in a very curated test, as the stress test presumably does,
->> > would be extremely valuable for helping detect/prevent edge case bugs.
->> >
->> > The argument against guaranteeing success is that we might make our future lives
->> > harder, e.g. if it turns out there are legitimate, hard-to-solve edge cases.  But
->> > I'm ok with that risk, as it seems highly unlikely to be problematic in practice,
->> > and there is real benefit to guaranteeing success.
->> >
->>
->> Is there really a need to commit to anything? This is already documented
->> as "can fail", and it's orthogonal to whether the memory was mapped.
->
-> Yes, but the above docs also say "it's userspace's problem".  Which I generally
-> agree with, but that's not a very good story when it comes to KVM itself taking
-> transient references, because then the answer becomes "Stop running all vCPUs",
-> which I don't like.  E.g. in a very pathological scenario, it's theoretically
-> possible that conversion may never succeed.  That's what gives me pause.
->
->> The transient nature of refcounts on pages in general makes it hard to
->> guarantee, and this stretches outside of KVM. I mean, anything could take a
->> refcount on a page in future and we can't be auditing the entire kernel for
->> no refcounts on guest_memfd pages ever.
->
-> True, but at the same time, if there were never any VMAs then I would expect there
-> to never be transient refcounts, modulo memory failure.  And it'd be easy enough
-> to document the memory failure angle.
->
+This patch does not build with wprobe enabled.
 
-I think even modulo memory failure the contract in mm for pages is that
-transient refcounts are allowed to be taken.
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> Changes in v12:
+>  - Decrement trigger data->count only when watchpoint state is actually changed.
+>  - Remove dyn_event_ops_mutex to fix lockdep circular dependency deadlock.
+>  - Add event_trigger_init() call to prevent premature freeing of trigger_data.
+>  - Use WRITE_ONCE() when modifying tw->addr to pair with READ_ONCE().
+>  - Add missing braces to else-block in wprobe_trigger_print().
+>  - Initialize tw->addr only after trace_event_enable_disable() succeeds.
+>  - Counter counts only if the trigger is actually working.
+> Changes in v11:
+>  - Soft-enable (register) wprobe event on WPROBE_DEFAULT_CLEAR_ADDRESS.
+>  - Add work_pending check before updating tw->addr.
+> ---
+>  Documentation/trace/wprobetrace.rst |   98 +++++++
+>  include/linux/trace_events.h        |    1 
+>  kernel/trace/Kconfig                |   10 +
+>  kernel/trace/trace.h                |    1 
+>  kernel/trace/trace_dynevent.h       |    1 
+>  kernel/trace/trace_events_trigger.c |    2 
+>  kernel/trace/trace_probe.c          |    2 
+>  kernel/trace/trace_probe.h          |    9 +
+>  kernel/trace/trace_wprobe.c         |  527 +++++++++++++++++++++++++++++++++++
+>  9 files changed, 648 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
+> index ad5f089b5ef5..a579347735d2 100644
+> --- a/Documentation/trace/wprobetrace.rst
+> +++ b/Documentation/trace/wprobetrace.rst
+> @@ -68,3 +68,101 @@ Here is an example to add a wprobe event on a variable `jiffies`.
+>             <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+>  
+>  You can see the code which writes to `jiffies` is `tick_do_update_jiffies64()`.
+> +
+> +Combination with trigger action
+> +-------------------------------
+> +The event trigger action can extend the utilization of this wprobe.
+> +
+> +- set_wprobe:WPEVENT:FIELD[+|-ADJUST]
+> +- clear_wprobe:WPEVENT[:FIELD[+|-]ADJUST]
 
->> >> > As for in-place conversion, this is not a blocker.
->> >> Sorry. I didn't intend to block in-place conversion.
->> >
->> > LOL, what we intend and what happens aren't always the same. :-)
->>
->> I don't think we're ready to guarantee conversion success when guest_memfd
->> pages are not mapped to userspace
->
-> Yeah, that was too strong of wording on my part.  The needle I was trying to
-> thread was "conversion for this specific scenario, in a controlled environment,
-> is guaranteed to succeed".
->
+Both forms accept an optional [:COUNT] which is not documented here.
 
-So I think we can only specifically fix this case Yan reported.
+> +
+> +Set these triggers to the target event, then the WPROBE event will be
+> +setup to trace the memory access at FIELD[+|-ADJUST] address.
+> +When clear_wprobe is hit, if FIELD is NOT specified, the WPEVENT is
+> +forcibly cleared. If FIELD[[+|-]ADJUST] is set, it clears WPEVENT only
+> +if its watching address is the same as the FIELD[[+|-]ADJUST] value.
 
->> without dragging this out way further.
->>
->> I'm all for KVM not taking any references on guest_memfd, but I think
->> eliminating KVM itself as a source of transient refcounts can be a
->> series in itself.
->
-> Yes, it would definitely be a separate mini-series.
->
->> KVM not taking any references on guest_memfd memory is definitely welcome,
->> it'll pave the way to using non-struct-page memory in guest_memfd.
->>
->> It'll come, can we not block on this please?
->
-> FWIW, it doesn't have to block initial merge, just the final release.  E.g. even
-> if we decide that this is a blocking issue, we can still land the in-place
-> conversion series, so long as it's not exposed to userspace in the final release
-> of 7.4 (or whatever kernel) without fixing the transient refcount issue.
->
->> If we find a way to strengthen the guarantee, wouldn't that be an iterative
->> improvement?
->
-> Yes, but we do need to draw a line in the sand.  E.g. if conversion failed 99%
-> of the time because KVM was taking spurious references, I think we'd all agree
-> that needs to be fixed before the code is released.
->
-> I'm still leaning towards saying this one has to be fixed, because it would give
-> us a solid baseline from which to start, and a way to enforce it going forward
-> (Yan's stress test).  I could certinaly be convinced otherwise, though dropping
-> the transiest reference seems straightforward enough that hopefully it's a moot
-> point, i.e. we land both in 7.4 and don't actually have to make a decision.
+Two forms of adjust:
+[+|-ADJUST]
+[+|-]ADJUST
 
-Sean seems confident enough that it's a small change to drop the
-transient reference so I went ahead to put together the series [1] so we
-can kick off the reviews.
 
-I'll follow up soon with some testing and report on the other series
-[1]. Yan, if you could provide a Tested-by on either series it'd be
-great :)
+> +
+> +Notes:
+> +The set_wprobe trigger does not change the type and length, these
+> +must be set when creating a new wprobe.
+> +
+> +The WPROBE event must be disabled when setting the new trigger
+> +and it will be busy afterwards. Recommended usage is to add a new
+> +wprobe at NULL address and keep disabled.
+> +
 
-Please send your reviews on [1] so we can make it for 7.4! ~7 weeks to
-the soft-close of 7.3-rc5!
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index d9b6fa5c35d9..5fd8ed63c516 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -876,6 +876,16 @@ config WPROBE_EVENTS
+>  	  Those events can be inserted wherever hardware breakpoints can be
+>  	  set, and record accessed memory address and values.
+>  
+> +config WPROBE_TRIGGERS
+> +	depends on WPROBE_EVENTS
+> +	depends on HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
+> +	bool
+> +	default y
+> +	help
+> +	  This adds an event trigger which will set the wprobe on a specific
+> +	  field of an event. This allows user to trace the memory access of
+> +	  an address pointed by the event field.
+> +
+>  config BPF_EVENTS
+>  	depends on BPF_SYSCALL
+>  	depends on (KPROBE_EVENTS || UPROBE_EVENTS) && PERF_EVENTS
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 64851a8d021f..a789a722bc8b 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -1983,6 +1983,7 @@ trigger_data_alloc(struct event_command *cmd_ops, char *cmd, char *param,
+>  		   void *private_data);
+>  extern void trigger_data_free(struct event_trigger_data *data);
+>  extern int event_trigger_init(struct event_trigger_data *data);
+> +extern void event_trigger_free(struct event_trigger_data *data);
+>  extern int trace_event_trigger_enable_disable(struct trace_event_file *file,
+>  					      int trigger_enable);
+>  extern void update_cond_flag(struct trace_event_file *file);
+> diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+> index beee3f8d7544..77c2c84dcdb5 100644
+> --- a/kernel/trace/trace_dynevent.h
+> +++ b/kernel/trace/trace_dynevent.h
+> @@ -64,6 +64,7 @@ struct dyn_event {
+>  };
+>  
+>  extern struct list_head dyn_event_list;
+> +extern struct mutex dyn_event_ops_mutex;
 
-[1] https://lore.kernel.org/all/20260818-gmem-no-return-page-v1-0-4f8d939efdbc@google.com/
+dyn_event_ops_mutex is not needed anymore.
+
+>  
+>  static inline
+>  int dyn_event_init(struct dyn_event *ev, struct dyn_event_operations *ops)
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index ad83419cb420..fa409ebd73c2 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -589,7 +589,7 @@ int event_trigger_init(struct event_trigger_data *data)
+>   * Usually used directly as the @free method in event trigger
+>   * implementations.
+>   */
+> -static void
+> +void
+>  event_trigger_free(struct event_trigger_data *data)
+>  {
+>  	if (WARN_ON_ONCE(data->ref <= 0))
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 9f4cad18977a..36e07275a04d 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -20,7 +20,7 @@
+>  #undef C
+>  #define C(a, b)		b
+>  
+> -static const char *trace_probe_err_text[] = { ERRORS };
+> +const char *trace_probe_err_text[] = { ERRORS };
+>  
+>  static const char *reserved_field_names[] = {
+>  	"common_type",
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 6543d4c2cda5..e08f17c99138 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -634,7 +634,12 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+>  	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"),	\
+>  	C(USED_ARG_NAME,	"This argument name is already used"),		\
+>  	C(WPROBE_NO_MAXACT,	"Watchpoint probe does not support maxactive"),	\
+> -	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"),
+> +	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"), \
+> +	C(WPROBE_ON_KPROBE,	"Wprobe trigger is not supported on kprobe event"), \
+> +	C(WPROBE_NOT_FOUND,	"Target wprobe event is not found"),		\
+> +	C(WPROBE_BUSY,		"Target wprobe event is already enabled"),	\
+> +	C(WPROBE_NEED_FIELD,	"Wprobe trigger requires a target field"),	\
+> +	C(WPROBE_BAD_FIELD,	"Target field must be pointer size"),
+>  
+>  #undef C
+>  #define C(a, b)		TP_ERR_##a
+> @@ -658,6 +663,8 @@ void __trace_probe_log_err(int offset, int err);
+>  
+>  DEFINE_FREE(trace_probe_log_clear, const char *, if (_T) trace_probe_log_clear())
+>  
+> +extern const char *trace_probe_err_text[];
+> +
+>  #define trace_probe_log_err(offs, err)	\
+>  	__trace_probe_log_err(offs, TP_ERR_##err)
+>  
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> index df592d9280a4..c64bbdc90a40 100644
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
+> @@ -6,7 +6,9 @@
+>   */
+>  #define pr_fmt(fmt)	"trace_wprobe: " fmt
+>  
+> +#include <linux/atomic.h>
+>  #include <linux/compiler.h>
+> +#include <linux/errno.h>
+>  #include <linux/hw_breakpoint.h>
+>  #include <linux/kallsyms.h>
+>  #include <linux/list.h>
+> @@ -15,11 +17,16 @@
+>  #include <linux/perf_event.h>
+>  #include <linux/rculist.h>
+>  #include <linux/security.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/tracepoint.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/irq_work.h>
+> +#include <linux/preempt.h>
+>  
+>  #include <asm/ptrace.h>
+>  
+> +#include "trace.h"
+>  #include "trace_dynevent.h"
+>  #include "trace_probe.h"
+>  #include "trace_probe_kernel.h"
+> @@ -50,6 +57,17 @@ struct trace_wprobe {
+>  	int			len;
+>  	int			type;
+>  	const char		*symbol;
+> +	raw_spinlock_t		lock;
+> +	struct irq_work		irq_work;
+> +	struct work_struct	work;
+> +	atomic_t		missed;
+
+Is `missed`  read somewhere?
+I searched this file, only found set and inc.
+
+
+
