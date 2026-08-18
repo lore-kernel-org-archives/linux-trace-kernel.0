@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0556D4734C6;
-	Tue, 18 Aug 2026 13:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8585479875;
+	Tue, 18 Aug 2026 14:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787061368; cv=none; b=Mn0vQGkqnvg1U/WMrhkTwP/MDWkhkhLrIz1jcHqwUGoiuEXjupdL770r0/DWhJeWC6PQ6GYP7b0mnW1/E6892tAciZ6LFpXabExENt+zQd1uRzuwnWU0feP798TrnR8BvQJ1iWhWVEI0s1Bi3fIU8NEkVP11jmN5KMdbO727oqo=
+	t=1787062350; cv=none; b=KM2bJbEj4eL1mHuStPe21fCpdlbZD/1dQOLhEQxC8Klz2DVA0uDFkyRNec8QtnsqHnNlMyycYeIKFiFC1OkX8PDJl9tYqsRPS0yFVBGWXiPRoZDM3+OCARolYN+otGXYwvRNVDqokovswaPpMwQbhlVlWZOVAnZ4Ta6RxC+BL6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787061368; c=relaxed/simple;
-	bh=nKvGTEeUQ3GsRXuw/gZr+Xz+ozSEWSf0FV4S/Yjj2lQ=;
+	s=arc-20240116; t=1787062350; c=relaxed/simple;
+	bh=oqE56bS3SGsRsfaFr8lPO7u0GCoTicW0P/B8im+Pdu8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2VRiap//PDzFHw5mhjxKVXXziSZp9UwfO4Xn1bKibcmLaG6IMHKSZtif5d3JkMS/jja65jI193S4l8udsv5q9jb9/rbSk3jIkvzg+M+i1wRy6wvxvuJYeqnbgUu5TGii6ys8ZTJCWYgrRsSmJHqSk5Sg3nggchYiAT6hXOsPvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUgmc/3D; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=HoL3man6XWEp+P82qeRxzyxfrf0Bekdx6mjgzQY4LR4ZtZeRw0nGvVR5m2i5dc2d4285YtFNoZyKnGOCNlhvTfPDLvfpgkQksOLvufBQNge/ZfRRpI13ddalHEqkpA0Zo9TFYgvoL8hkcrl2mQa6xj/uV7Ie8dM8uDpzry3U2As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7fgtiew; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUgmc/3D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBE21F000E9;
-	Tue, 18 Aug 2026 13:55:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7fgtiew"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE7C1F000E9;
+	Tue, 18 Aug 2026 14:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787061366;
-	bh=0ybpsH1qF2kQ2X6hSDpZ9q8bsv7zDFXVoiomo/Pu55E=;
+	s=k20260515; t=1787062348;
+	bh=VDXqL7k+knl0jkjn1/aRQLOgRCL9XqV9SBb/yRhLycU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GUgmc/3D567E4tL2tG1nSOtkACzTHrpqUfHPfBlNAV9t3PmzP0NP295lMalU/nCau
-	 rxnJ6+EiTC/EDYUMcMxNrBhER1u6ShT+OxJDkOzAGBkjCcz63dObu9toyz/wCg+TKA
-	 vlMqebfHedAKp4/lmWURIRjylBxowC/VhEUGhWBnd6Jrnw/a4cij3WExAL3GwbEoGc
-	 aaSO0Z1DS7ZhmjjHjK3PWjqOlx2KgjninBCIgV8b0qGKq2lpsSm8pQEDGSSZY8azFE
-	 J7q/edGf0D+c3RIe9Quxt7PTUsnmsb/GVtbA0HKIya75yKFMJa05bqxCMtSw68UlgL
-	 XrOEp6Yz5E+ng==
-Message-ID: <9f51ac27-24b2-495b-b397-84865f977d24@kernel.org>
-Date: Tue, 18 Aug 2026 15:55:55 +0200
+	b=k7fgtiew3sQROMKATfkzeYmZ8lMA4FEFtSOWmgJKmHlC/KVM8bYABwCDJOILFZn8V
+	 4+PlOo5WhEFiD/6YT5j0I6aydDO3hY20SxflBZhvNvviV3nhiYixa6zaVU3M1UYw7B
+	 u1P2Isq+pze0hJRmlUtlbXehWcf6OvBiv3JICbLfmjh9SrMLd8Qub92HH2/FUdu1cX
+	 htZUt+eqVM6BXdGGJ9FFX5m5gOYR0v/NSF3bzz/qbgMGVCGQLbUUimvC1YgJ1u46nG
+	 ctUj6ckK8JIYMgsg250bFMC6JBRgVSiAqSoqk1EY6npKMtCjYDtgzevhVBkECLsAbd
+	 Q2TdWq+hJFwWQ==
+Message-ID: <0153303d-f9d6-45ea-a276-fbf2e5625ef9@kernel.org>
+Date: Tue, 18 Aug 2026 16:12:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,18 +37,21 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
  primitives
-To: Kiryl Shutsemau <kirill@shutemov.name>, akpm@linux-foundation.org,
- ljs@kernel.org, nico.pache@linux.dev
-Cc: baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+ Kiryl Shutsemau <kirill@shutemov.name>
+Cc: akpm@linux-foundation.org, nico.pache@linux.dev,
+ baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
  hughd@google.com, lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com,
  rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
  usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
  usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org,
  linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- kas@kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de,
+ jannh@google.com, willy@infradead.org, pfalcato@suse.de,
  rostedt@goodmis.org, mhiramat@kernel.org,
  linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
 References: <20260816224609.308019-1-kirill@shutemov.name>
+ <aoLAly-oL2OAa4n8@lucifer> <aoLkMUtmzRVuv2Hx@thinkstation>
+ <aoQ77EcD3M2kjeya@lucifer>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -95,271 +98,88 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260816224609.308019-1-kirill@shutemov.name>
+In-Reply-To: <aoQ77EcD3M2kjeya@lucifer>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/17/26 00:45, Kiryl Shutsemau wrote:
-> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+On 8/18/26 15:06, Lorenzo Stoakes (ARM) wrote:
+> (I'll reply to the rest of this later)
 > 
-> Yes, I know, this is a lot of changes. But I'm happy with the overall state
-> of the patchset and the only reason I tag it as RFC is that it is tricky
-> to get 57 patches upstream.
+> On Mon, Aug 17, 2026 at 02:38:44PM +0100, Kiryl Shutsemau wrote:
+>> David and I talked about this at LSF/MM.  I can give it a try if it fits
+>> your idea of "feature freeze" -- and if it doesn't collide with the series
+>> you have in flight, in which case I'd rather go after yours than around it.
 > 
-> I wanted to give a view of the end state first. I will suggest a possible
-> way to split it below.
-> 
-> I would appreciate any feedback.
+> Whether intended or not you sound rather like you are trying to override me
+> in favour of my co-maintainer here and it's... not helpful.
 
-Replying here on the overall design first before reading into the other
-discussions (and process related topics).
+I think Kiryl tried to say that we discussed at LSF/MM which areas of MM scream
+for an improvement, and we discussed that khugepaged is just horrible code.
 
-> 
-> TL;DR
-> =====
-> 
-> This replaces khugepaged's anonymous collapse with an engine that
-> can collapse sub-PMD ranges. It is built around migration entries and
-> frozen folios instead of heavy locking and isolation, aiming for better
-> scalability and less disruption to the workload being collapsed.
+I think we all agree that there is a lot of room for improvement, but the big
+question is:
 
-I recall us discussing something around using some PTE/PMD markers (e.g.,
-migration entries) in the past.
+(a) When does it stop being a cleanup and is a new feature in disguise that
+    makes the code more complicated and even harder to maintain.
 
-One thing that needed care is handling concurrent MADV_DONTNEED + faultin after
-dropping relevant locks.
+(b) Can it just naturally be made looking like a cleanup.
 
-> 
-> Why
-> ===
-> 
-> mTHP collapse landed in khugepaged in 7.2 and I was glad to see it.  We
-> at Meta run arm64 with 64K base pages, where a PMD is 512M: PMD-order THP
-> is of limited use at that size, and mTHP is exactly what we want.
+Ideally, we'd get b), in small, nice-to-review chunks that incrementally improve
+the code without inflating it heavily or moving everything around.
 
-Right, as the first step, we decided to go for the simpler and minimally
-intrusive approach of using the existing mechanism that always operates on PMD
-ranges, keeping using the existing pmdp_collapse_flush()-based mechanism and
-locking in place.
+The current locking is nasty, so anything that moves us one step closer into
+something that is not only simpler but also more scalable is nice. I am a bit
+concerned with the churn in the series as is.
 
-That's why anything more elaborate will require significantly more LOC :)
+After this series, mm/collapse.c itself is way larger than just mm/khugepaged.c
+originally, which raises some eyebrows.
+
+We should also be aware that people are proposing file/shmem mTHP collapse, so
+ideally what we refactor would naturally unify some of these code paths.
+
+I am wondering whether shmem mTHP collapse should come first. (I'm hoping that
+shmem mTHP collapse can unify some of the anon+file collapse code in a nice way,
+to similarly just look like a cleanup while enabling a new scenario. Which is
+really what I am hoping for because the current code is A MESS with weirdly
+named functions all over the place. I hope it can be unified somehow ... and
+that needs some proper thought)
 
 > 
-> It turned out not to help us.
-> 
-> khugepaged only ever looks at PMD-aligned windows, and it is not an easy
-> limitation to lift.
+> David and I co-maintain THP together, are in constant communication, and
+> have a great working relationship :)
 
-
-I recall we discussed some simpler way to make this work with VMAs that don't
-fully span PMDs: I think write-locking VMAs (+ rmap) that cover the PMD was
-discussed as a low-hanging fruit, such that other page table walkers would not
-suddenly stumble over the temporarily removed page table.
-
-So the mmap_write_lock() + vma write-locks prevents concurrent mmap+page faults
-and the rmap locks prevent concurrent rmap walks.
-
-There were discussions on the impact when a PMD spans many VMAs, and I think one
-conclusion was that such scenarios are likely not worth considering (e.g., 512
-VMAs in a single PMD, all with different rmap locks; your workload sucks already).
+Yes! :)
 
 > 
-> Fixing the alignment is a one-line change, but what it feeds assumes the
-> PMD everywhere that matters: collapse_huge_page() clears and flushes the
-> whole PMD whatever order it is collapsing, installs a PMD leaf because
-> that is the only thing it can produce, and keeps everyone out with
-> mmap_write_lock, anon_vma_lock_write() and an IPI broadcast while it
-> does.
+> IOW - if one of us states a position on the sub(sub?)system - then take
+> that to be the actual position.
 > 
-> Which is why hugepage_vma_revalidate() demands that the VMA span the
-> whole PMD even for an mTHP order -- "we'd need to lock all VMAs in the
-> PMD range to support this", as the comment there puts it.  A PMD-granular
-> operation is only safe when one VMA owns the PMD, and that is exactly the
-> restriction in the way.  The alignment is the symptom; the PMD is the
-> design.
+> I have poured what must be hundreds of hours now into THP maintainership -
+> it's by far my biggest workload on the maintenance front, by far the most
+> painful and by far the most thankless.
+> 
+> I do it because I care about mm a great deal and am, frankly, driven by a
+> desire to see THP turn from a flaming trash pile of a code base with
+> confusing semantics and many, many broken parts into something that serves
+> the community's needs with far less maintenance burden.
+> 
+> Looking over your series it seems some of the patches works in this
+> direction (great!), but much else of it fundamentally changes key
+> behaviour.
 
-I disagree with "A PMD-granular operation is only safe when one VMA owns the
-PMD". It's safe when all page table walkers can be stopped (see above).
+Agreed, I think we really should unify+cleanup the existing code first before
+doing more drastic changes.
 
-> 
-> So both roots have to go.
-> 
-> Design
-> ======
-> 
-> The old mechanism holds the address space still because it has nothing
-> else stopping the sources from moving under the copy.  The new engine
-> makes the sources themselves inert instead, with the two barriers
-> migration already uses, raised in that order:
-> 
->   1. migration entries replace the source PTEs.  Faults and GUP-slow
->      now wait on the source folio's lock, which is taken before the
->      first entry becomes visible.
->   2. the source folio's refcount is frozen to its expected value.
->      GUP-fast, pfn walkers, reclaim, compaction and memory-failure all
->      fail folio_try_get() and back off.
-> 
-> Between the two, nothing can reach a source, so the copy runs with no
-> lock held at all -- and the address space is left alone while it does.
+Having a series that throws all of khugepaged.c into a mixer and pours something
+new into collapse.c is ... concerning :)
 
-Right. Concurrent MADV_DONTNEED can zap migration PTEs and other faults even
-re-fault fresh anon folios. So that must be detected before replacing migration
-entries again I guess.
+But I am sure there is a way to incrementally improve the code? At least that's
+what I hope.
 
 > 
-> What that removes from every collapse path:
-> 
->   mmap_write_lock              -> mmap_read
->   anon_vma_lock_write()        -> nothing: an rmap walk needs the folio
->                                   locked, and the engine holds that lock
->                                   from freeze to putback
->   tlb_remove_table_sync_one()  -> nothing: one ranged flush per round
->   LRU isolation                -> nothing: sources are inert in place
-> 
-
-Not sure how you handle PMD collapse. I recall problems with migration entries
-on the PMD level for non-folio things (we discussed something along these lines
-also in the past).
-
-> Working in windows rather than whole PMDs takes care of the other root.
-> A sub-PMD window is collapsed under the page table lock, so a collapse
-> disturbs only the window it collapses, and each candidate is validated
-
-I recall us discussing that holding the PT lock for a longer collapse operation
-(especially on 64k) is problematic. But I don't get all the details from your
-description here.
-
-> at its own order -- a window need only fit its own VMA.  A PMD-order
-> candidate still has to own the whole PMD, which is the old rule kept
-> where it is still needed.
-> 
-> Candidates are carried through the passes a batch at a time rather than
-> one window at a time, so a round pays for its flush and its lock
-> acquisitions once.
-
-Now I am starting to feel that there are too many changes packed in a single
-series :)
-
-> 
-> With the barriers holding the sources still, which read lock the engine
-> takes stops being part of the design.  A round works inside a single
-> VMA, so patches 43-49 switch it from mmap_read to per-VMA locking: an
-> mmap_write elsewhere in the mm then stops waiting for a collapse that
-> has nothing to do with it.  That block is the only part of the series
-> that needs per-VMA locking to be unconditional, and it is a separate
-> dependency (see below); everything before it runs under mmap_read and
-> does not care.
-> 
-> Patch 7 sketches the engine as a comment naming every pass, what lock it
-> takes and what it may sleep on; the details are there rather than here.
-> 
-> What falls out beyond the lock diet:
-> 
->  - mTHP collapse in VMAs smaller than a PMD, which is the arm64 case
->    above: a 2M VMA on an arm64/64K machine collapses nothing today at
->    any order, and collapses to mTHP here.
->  - Hole and zeropage population at every order, so partially populated
->    windows collapse to mTHP under the same max_ptes_none policy as PMD.
->  - Sources come in spans -- any stretch of consecutive PTEs mapping
->    consecutive pages of one folio -- so partially mapped and scrambled
->    compound sources (the PTE-mapped-THP re-collapse class) work at
->    every order.
->  - A table that cannot become one huge page still yields the largest
->    windows inside it, where before a single disqualified PTE gave up
->    the whole table.
-> 
-> Reading the series
-> ==================
-> 
-> 57 patches is a lot to land on a list.  They go in blocks:
-> 
->   1-6    helpers and shared state: pte_folio(), pte_none_or_zero(),
->          mm/collapse.h, and the policy that replaces asking whether
->          khugepaged started a collapse
->   7-8    the engine's shape: entry points, a call-tree comment naming
->          every pass, and the scan filled in
->   9-23   the collapse half, top down: the round frame, then each pass
->          in turn, then selection and the retry store
-
-I fail to parse this sentence.
-
->   24     per-candidate tracing, before the switch takes the old
->          tracepoints away
->   25-28  the switch: point the anon path at the engine, widen coverage
->          to sub-PMD VMAs, delete the mechanism it replaces
->   29-35  move what is left of collapse out of khugepaged.c, and
->          MADV_COLLAPSE into madvise.c
->   36-42  tracing: the engine's own events and trace header
->   43-49  per-VMA locking, and the mm reference that makes it safe
->   50-56  selftests for what the engine can now do
->   57     MAINTAINERS
-> 
-> The two patches worth reading first if you read nothing else are 7 (the
-> design, as a comment naming the whole call tree) and 16 (the freeze,
-> which is where the safety argument lives).
-> 
-> A possible split, if that helps:
-> 
->   1-2    two mm helpers, pte_folio() and pte_none_or_zero().  Both
->          convert callers outside collapse and are useful on their own
->   3-27   the engine and the switch-over.  This is the smallest unit
->          that does anything: stop earlier and the tree carries an
->          engine nothing calls
->   28     remove the mechanism the engine replaces
->   29-42  moving what is left of collapse out of khugepaged.c, and the
->          engine's own tracepoints
->   43-49  per-VMA locking
->   50-57  selftests and MAINTAINERS
-> 
-> Keeping the removal separate leaves both engines in the tree with only
-> the new one reachable, so the switch can be reverted on its own if
-> something turns up.  The old mechanism is already carried that way for
-> three patches inside the series, so this costs nothing but 975 lines of
-> unreferenced code until 28 lands.  That safety net only lasts until the
-> blocks after it land, though: once collapse has moved out of
-> khugepaged.c and the locking has changed, reverting the switch no longer
-> gives back a working old engine.
-
-[...]
-
-> Performance
-> ===========
-> 
-> Measuring khugepaged is awkward.  It is a background daemon, so what
-> matters is what a workload feels while it runs, not what the daemon
-> reports about itself -- and the usual coverage instrument is no help
-> below the PMD: smaps AnonHugePages only counts PMD-order folios, so it
-> reads zero however much mTHP has been collapsed.
-> 
-> So I wrote "perf bench mem usemem" for this.  It touches a region while
-> khugepaged works on it and reports the workload's own latency
-> percentiles and throughput, against per-size counters that can see
-> sub-PMD folios.  The branch is above; it is unposted and not a
-> dependency.
-
-Something more realistic might be running some workload in a VM whereby the VM
-is getting collapsed by khugepaged.
-
-[...]
-
-> There may be a way out -- a PMD migration entry over the table during
-> the window, so the CPU never caches a walk to shoot down -- but that
-> means teaching every pmd-level walker a new kind of entry, and I have
-> not tried it.
-
-I think we discussed that in the past and it's absolutely nasty.
-
-[...]
-
-> Size
-> ====
-> 
-> mm/ grows by 1915 lines net: 4475 added against 2560 deleted.
-> 
-That's quite a lot for something that reads like a cleanup at first.
-
-
-Okay, let me read the other discussions.
+> So it's just a question of deferring the latter until we get to a sane
+> point with the former.
+Thanks Lorenzo.
 
 -- 
 Cheers,
