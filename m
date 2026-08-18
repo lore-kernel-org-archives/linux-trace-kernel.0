@@ -1,124 +1,236 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E6336E466;
-	Tue, 18 Aug 2026 20:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33C55474F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 22:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787083847; cv=none; b=bhSiOtWj/FW2GvJDP1qoKxUc4h2Mgk2TzE/iwyVGnHbZmgWXimKkL1P+4eFhaS6pJ8o4HiRb2xOOQWX0VDOnS8QrzuPty9au2LIW80oxIWzvweZ0/e5HKlanZbIkJtPgejPkCgQaHJGqwC3+ATDybBTpFQscySUmjxOs6I3ltTQ=
+	t=1787092267; cv=none; b=iS9faGsALzva5DCoYIrPpG6P2V4cXtWsKHDCcNPjE7xHDSHCHh0vY9znKusAp964nWBxrwpHvb4gXOleRA6GMD0g1U+EJrJERoe5KrMR9OA2GCva/AoTUXd6/CYswU1JCacP/+lNA0EU4YDI0+aaXNu2sIfjN+oNcGrWFmYvNrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787083847; c=relaxed/simple;
-	bh=woT1zsi14to1BWM9P1WvMv8qVMYsV1szojyD7lMbyCc=;
+	s=arc-20240116; t=1787092267; c=relaxed/simple;
+	bh=cEAUlVrnwFYcUbaih8b4M/AXALgEnPiYvfqYIUSFi8A=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nXzg1kCGWwGGZ+U7xGDfLxe3hSt/nDZX96PbvZ+o/75MKBk41FQPVoa+wQkf0aXYK8V88y97EaGeyO+vCr8VsVxMTagRkcD92AWurE49EddPmylSWUk6JNlESJWowF2vPZJSktjo56LBxNZdJAu9RTihupcrLYvMPvI8TCHe3pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=OQsHpuIt; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+	 MIME-Version:Content-Type; b=T0gxir4TdC8kBMuoSztsHFQC0w9rqf06U6ESulvEbe3/e/WUXOHwrPtWm2JvBvl/eMvuFZTRmrkH5GTF7LYoqr4kuMa77zHD4ibbghnEaTBk9LJ6QecHnIL1L/Hac5Jh7vnNk85NK8AVqFAbMClf1NAdNoPGl9lKZkG8J9CAnZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eSxk4ReW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="OQsHpuIt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID; bh=woT1zsi14to1BWM9P1WvMv8qVMYsV1szojyD7lMbyCc=; b=OQsHpu
-	ItmETeHPBNCexRGovGmSiK/1fEe9+feHxvUwum1vDTb3CfY+mvvrEAKC/LZb4I/e31JQabE4pAaDF
-	S0kdmZIMNZK3/4VsuxvzcdelOKLKBLDZeCADpZ2dmDCGJNdNh840FUZO+GEOtz6Z9GNl8EdMNpsVL
-	idS1l/7HJSth11v7TVneHNO9TsAzorxwdVSV+GOD9YZnGvZEF0RMoTzb6YbhkpgWTv5evnZsoac2+
-	ff9fINsIRrjiChTD8wo21iXUFag7kAEZdG2uYL8gT41oDNPzUbaEno1Hb/RtC8HFQXeItIQtBVqm1
-	vkW6ZUY+u+2Gl9kyKxyXPyuxyiOA==;
-Received: from [2601:18c:8100:a0e0:5a47:caff:fe78:8708]
-	by shelob.surriel.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.5)
-	(envelope-from <riel@surriel.com>)
-	id 1wwQ35-00000001X80-2pgq;
-	Tue, 18 Aug 2026 20:04:39 +0000
-Message-ID: <edcebef940c262a83421666de67e8a07ca93e85d.camel@surriel.com>
-Subject: Re: [RFC PATCH 01/57] mm: add pte_folio()
-From: Rik van Riel <riel@surriel.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>, Kiryl Shutsemau
-	 <kirill@shutemov.name>, akpm@linux-foundation.org, ljs@kernel.org, 
-	nico.pache@linux.dev
-Cc: baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com, 
-	hughd@google.com, lance.yang@linux.dev, liam@infradead.org,
- mhocko@suse.com, 	rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org,
- surenb@google.com, 	usama.arif@linux.dev, vbabka@kernel.org,
- ziy@nvidia.com, usama.anjum@arm.com, 	agordeev@linux.ibm.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kas@kernel.org, jannh@google.com, 
-	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org,
- mhiramat@kernel.org, 	linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Date: Tue, 18 Aug 2026 16:04:39 -0400
-In-Reply-To: <c05f7bfb-c84b-4c36-8091-5ec7721a658b@kernel.org>
-References: <20260816224609.308019-1-kirill@shutemov.name>
-	 <20260816224609.308019-2-kirill@shutemov.name>
-	 <905d08d102e56a026a5ad69573c507d2d9becc37.camel@surriel.com>
-	 <c05f7bfb-c84b-4c36-8091-5ec7721a658b@kernel.org>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eSxk4ReW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787092264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ka33O0a5qwccrjVpff6VzG4m8rfuJ6C/aWMH+nm7MRc=;
+	b=eSxk4ReWbSJNIMdfAQrVU7m7UVQpIIV3CMWCqpevTA0UhFVCrOECIx9zXutLHGr12lkZaT
+	TkZ6xL3z0rYPKmaSZkPW81uzpuZA3c+vS0OnSXWyL1DGVvvCrL9B+Rv2Q7vpj34+pgvPC+
+	5mfXE8Lgx7CvC5Tp1EJ7hb7hybLGOuE=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-385-oZ84z7i_P2OL_nLZCyB7uQ-1; Tue, 18 Aug 2026 18:31:03 -0400
+X-MC-Unique: oZ84z7i_P2OL_nLZCyB7uQ-1
+X-Mimecast-MFC-AGG-ID: oZ84z7i_P2OL_nLZCyB7uQ_1787092263
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-52d33c89a29so5056041cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 15:31:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787092263; x=1787697063;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ka33O0a5qwccrjVpff6VzG4m8rfuJ6C/aWMH+nm7MRc=;
+        b=TLVv0crXbvuREjK2SWdiGiOtErZMtUsvMo5+/tvEUMt3ncDhxykVQm/C0NcUMmK+sD
+         ozY24Ae5ZN7KXtToVygUK5hnA9PLIlQb0zybNzAs/rqbxw5vEQ3Tb6Dl8OZj/u6xvAKg
+         euwSOpGJ23myR/Ac9sWBNW1B42kD2r6ZCdq6hWyzWIOh8aYn/3gplD6i+2bston65Uk1
+         cMVZIg7FIQzm8F4YI5bDMYUYFY1OZlfFmCIsFa0sqbaMfq5/o4u3OtnqoR2HZviun90V
+         4znxMf8hF7XBpktwdGC57v+dJgvWovDfw76Ksy2MVs5C4iho4/3Jme5eQD4KgJodmtk/
+         j34g==
+X-Forwarded-Encrypted: i=1; AHgh+Ro+js8fgnl0bZNVzcP42G+9ghP39g0/or5YR6mdESrfP/Wnwk4gaJhWLmWGvVLbL9XNh9PD6o2kjBB8fLSyZTGJnsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBpUkT5nfFw/rA1Gw10NbCbxFT2dkvhjy07UMI1QgL3b3eIf4l
+	i7jlkKhdDwvAzlwTIEoTumZeuXhEnk38V8pSTq2k2mDMVVWLkmTSRJXwmUqSHn0P4wMecGVHT9o
+	SPc30xFlYuw/vpwHuS8dHJSOvnr7Mkumb+MGJJvmOkIns4eqfvZSMsWlhFVgm8IHBxZf7udYbDw
+	==
+X-Gm-Gg: AR+sD133oIqpesxORVlL5hFdWcki+1rWE1WWY1WtmQeOjcrwyfD7cI0ob0DsiaVh1Yb
+	8qrupIPhSt2jQfThArE0lvK1luAgRtPEq77x6kHciYoDCoDGfHJsAeGv4RrwdoRVK52Yt9nx7kp
+	LEIHqgzdczow5XbGhvoP/dTAcGGhoBJfUPqy3GrmfQUbUExCs+Bsr2cYxyAiJqCMTG5DRpkf1bU
+	FobCMS3LxX2HAd3x5ZP/3mERrShV2GJHCZdduMMj6aaw8FdJwpsmanQCwRZ2muNGCRSqOO0KDJC
+	mH/EkOFWHp/KPE1v9LMokwqMED+4pyHDlo49Kdqmg37wX9dt47mMnPKacVDfxKhvjHvm+NLvFem
+	P1JcWk+DSqbf8tsm/vnuaizTjjQVEuMpb
+X-Received: by 2002:a05:6214:450d:b0:907:bf2a:481f with SMTP id 6a1803df08f44-90c5e7142cbmr2306726d6.1.1787092262719;
+        Tue, 18 Aug 2026 15:31:02 -0700 (PDT)
+X-Received: by 2002:a05:6214:450d:b0:907:bf2a:481f with SMTP id 6a1803df08f44-90c5e7142cbmr2305906d6.1.1787092262259;
+        Tue, 18 Aug 2026 15:31:02 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc01:6890:c623:cd89:345e:99f3])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec3214sm226246d6.16.2026.08.18.15.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2026 15:31:01 -0700 (PDT)
+Message-ID: <67895578a730d56a50568a7403ba4ef8f7b3e24a.camel@redhat.com>
+Subject: Re: [PATCH] rtla: Simplify osnoise tracer option setting code
+From: Crystal Wood <crwood@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+ Luis Goncalves <lgoncalv@redhat.com>, Costa Shulyupin
+ <costa.shul@redhat.com>, Wander Lairson Costa	 <wander@redhat.com>, LKML
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel	
+ <linux-trace-kernel@vger.kernel.org>
+Date: Tue, 18 Aug 2026 17:31:00 -0500
+In-Reply-To: <CAP4=nvRMAZ6AJ_WQPVM2sm9jH++4RwN8DhodU7oL6-AcXNg8OA@mail.gmail.com>
+References: <20260612115121.54862-1-tglozar@redhat.com>
+	 <725da8a4ca6a46ea8ba41778971602b49d650e60.camel@redhat.com>
+	 <CAP4=nvRMAZ6AJ_WQPVM2sm9jH++4RwN8DhodU7oL6-AcXNg8OA@mail.gmail.com>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: RECtcwnyg_USt0brm7GsVMnKa6_NN0ortTstpA-_yag_1787092263
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-08-18 at 20:13 +0200, David Hildenbrand (Arm) wrote:
-> On 8/18/26 18:38, Rik van Riel wrote:
-> > On Sun, 2026-08-16 at 23:45 +0100, Kiryl Shutsemau wrote:
-> > > From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
-> > >=20
-> > > Callers that want the folio behind a present PTE spell it out as
-> > > page_folio(pte_page(pte)).
-> > >=20
-> > > Add pte_folio() as the folio companion to pte_page(), and convert
-> > > the
-> > > callers in fs/proc/task_mmu.c and mm/hugetlb.c.
-> > >=20
-> > > Preparation for the anonymous collapse engine, which reads the
-> > > folio
-> > > behind a PTE in several places.
-> > >=20
-> > > Assisted-by: Claude-Code:claude-opus-5
-> > > Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
-> >=20
-> > Oh nice, this could clean up some things in the
-> > get_user_pages code too, when we get around to
-> > tech debt there.
+On Fri, 2026-07-03 at 14:11 +0200, Tomas Glozar wrote:
+> p=C3=A1 12. 6. 2026 v 19:55 Crystal Wood <crwood@redhat.com> napsala:
 >=20
-> We really need the page in GUP code ...
+> > > OSNOISE_LL_OPTIONS takes three options: name - struct osnoise_context
+> > > field name (written "<opt>" above), path - filename inside
+> > > /sys/kernel/tracing/osnoise passed to libtracefs, and init_val - init=
+ial
+> > > value of struct fields, corresponding to an otherwise invalid option
+> > > (some options use OSNOISE_OPTION_INIT_VAL =3D -1, some use
+> > > OSNOISE_TIME_INIT_VAL =3D 0).
+> >=20
+> > Can we simplify by always using -1?  Especially since that's already
+> > treated as the universal "invalid" by osnoise_read_ll_config().
+> >=20
+> > FWIW using "init val" to mean "invalid" rather than "default" is a bit
+> > unintuitive.
+> >=20
+>=20
+> The idea behind *_INIT_VAL is to re-use a value that is invalid on the
+> osnoise tracer side to mean "not (read from tracer and) set yet (on
+> the RTLA side)". OSNOISE_TIME_INIT_VAL is used for values where 0 is
+> invalid (e.g. period, runtime), OSNOISE_OPTION_INIT_VAL is used for
+> those where 0 is valid.
+>=20
 
-Ugh, indeed. COW can create "holes" in the middle of
-a large folio, so even __access_remote_vm() will
-continue to need pages.
+Right, it just hurts seeing something called "INIT_VAL" that isn't the
+initial value. :-/
 
-I guess we'll continue to look up both page and
-folio in that code, then :/
+> > While we're at it, can we move this code to common.c, and drop
+> > "osnoise" from the names, to move closer to using that only for the
+> > actual osnoise mode?
+> >=20
+> > Or if we really want to namespace things that are specific to the
+> > osnoise subsystem (i.e. everything implemented in trace_osnoise.c) but
+> > not specific with respect to the osnoise/timerlat split, I'd suggest
+> > something different like "osn_".
+> >=20
+>=20
+> They are called "osnoise options" in the interface (although they are
+> shared with the timerlat tracer), which cannot be changed. I don't
+> like using an esoteric prefix like "osn".
 
---=20
-All Rights Reversed.
+I'm not suggesting changing the kernel interface, just having some
+convention within rtla (and within trace_osnoise.c) to make it clearer
+which things apply to osnoise-the-subsystem versus osnoise-the-specific-
+tracer.  It might be "esoteric" which one gets the abbreviation, but as
+long as it's consistent I think it'd be an improvement over the current
+jumble.
+
+>=20
+> > > + * Long long option get/set/restore/put functions, generated from OS=
+NOISE_LL_OPTIONS.
+> > > + */
+> > > +#define OSNOISE_LL_OPTION(name, path, init_val)                     =
+                         \
+> > > +static long long                                                    =
+                 \
+> > > +osnoise_get_##name(struct osnoise_context *context)                 =
+                 \
+> > > +{                                                                   =
+                 \
+> > > +     long long name;                                                =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     if (context->name !=3D (init_val))                             =
+                   \
+> > > +             return context->name;                                  =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     if (context->orig_##name !=3D (init_val))                      =
+                   \
+> > > +             return context->orig_##name;                           =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     name =3D osnoise_read_ll_config(path);                         =
+                   \
+> > > +     if (name < 0)                                                  =
+                 \
+> > > +             return (init_val);                                     =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     context->orig_##name =3D name;                                 =
+                   \
+> > > +     return name;                                                   =
+                 \
+> > > +}                                                                   =
+                 \
+> > > +                                                                    =
+                 \
+> > > +int osnoise_set_##name(struct osnoise_context *context, long long na=
+me)                      \
+> > > +{                                                                   =
+                 \
+> > > +     long long curr =3D osnoise_get_##name(context);                =
+                   \
+> > > +     int retval;                                                    =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     if (curr =3D=3D (init_val))                                    =
+                     \
+> > > +             return -1;                                             =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     retval =3D osnoise_write_ll_config(path, name);                =
+                   \
+> > > +     if (retval < 0)                                                =
+                 \
+> > > +             return -2;                                             =
+                 \
+> > > +                                                                    =
+                 \
+> > > +     context->name =3D name;                                        =
+                   \
+> > > +     return 0;                                                      =
+                 \
+> > > +}                                                                   =
+                 \
+> >=20
+> > Using "name" for the value is confusing... "val" would be better.
+> >=20
+>=20
+> But it's the *name* of the option/field/argument here, not the value.
+> If you use "value" you'll get:
+>=20
+> #define OSNOISE_LL_OPTION(value, path, init_val)
+>=20
+> which is incorrect. Would making the macro options in capital letters
+> (i.e. NAME) make it more clear?
+
+That's not what I meant.  I was suggesting this:
+
+int osnoise_set_##name(struct osnoise_context *context, long long val)
+
+-Crystal
+
