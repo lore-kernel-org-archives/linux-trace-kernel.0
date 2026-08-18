@@ -1,41 +1,41 @@
-Received: from devianza.investici.org (devianza.investici.org [198.167.222.108])
+Received: from confino.investici.org (confino.investici.org [93.190.126.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC8036197F;
-	Tue, 18 Aug 2026 01:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.167.222.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D32BEFFD;
+	Tue, 18 Aug 2026 01:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787017767; cv=none; b=IRybAUbY3/BbfgIGXmpfjM0hDTJkHNq0i7btFTDmTXH8VcNkE5DW7Wkr56ZxiChEu2w/B9iAZoXKyfqni1xlj9GFKe3V/ILftGV4DsQ5neTzLt7vKO6TFwhHAcSfzNAWmxLaKRpmwkLOJjqS+taZ4D66R50I6PbNlLub3uwluUU=
+	t=1787018010; cv=none; b=fZQX2xBQ5Iu5sTrj/d5sS/WoKYP/Q3q7tA/PKZAUZ+fW5pEowEgH1Oy8eddkfmL+kQrqtxh12vGJdcfFPqZBWlFxZn8w7dUWGsjdNMEmifFAQ0+2oeVjDO2KjyZ5mwmebBpcWAl9Ufa8UXLBRyQAxkOZiQ+zjyl1NA036HnP59Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787017767; c=relaxed/simple;
-	bh=bwhWo0hek5rBhE1m0hibdd5mIgRosMqhyVy2zNv6gTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nS/I/J3J4Acj5pGODrm4apDCLnOQoXAQKzPpTlF9ohPGbTZkOw3AAPPnXHScFPCBi494LdRz2MYHQTjEtLfIjCw0dhg4QttR2QEWOu3Azlj9m44lpsQS2Rwr786B+ylm48UsRC8ME5fWNYLohgqo12FdmMoRfE/hKmcNGWcKLgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=nWtZw8AX; arc=none smtp.client-ip=198.167.222.108
+	s=arc-20240116; t=1787018010; c=relaxed/simple;
+	bh=FLG6R+kLr4hsyuo1Kep15Oic3sdgmGltpTtPT6u1ZHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rPQ5zFidlUqhkOBFkbZo1dI4j6zmbyXEz4AfVwwz+cX1Mcyd6Iw1p8OyY8grkjVdiNGyDnECchaBtbTxj5MWzus0XDS8hFn/LTmhvZAeLSjoBD7u30NcWr8hJHClv3dQShr013vHd0Ck+aNAVKhkR4QFhCSH9eeOhU+aTLL5cLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=raPsoM7T; arc=none smtp.client-ip=93.190.126.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="nWtZw8AX"
+	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="raPsoM7T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787017761;
-	bh=D1VLsZxHNhJ3v+xdlRBBnkDRdhvXFPEoQH3K6UtYqW0=;
+	s=stigmate; t=1787017998;
+	bh=GJmUpksao1Sv6uYL7I5hs2EQUNBvO+WsMG2klFFd1gY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=nWtZw8AXAE3AjbEPg+dSjN3gBPPzjVNDsMyMnrFJEs7/9vDIWUm2wzkXBvlFM7wnT
-	 Zthtt6owTFS6vYLGrNk2QutISDlmY4w5GEDkFao2yplI205yR9BSJ5V52cvy+9pMNI
-	 pt5gr5A2Mv1Di2EXmPwYMpLtDtrvbXSo/sUF75VM=
-Received: from mx2.investici.org (unknown [127.0.0.1])
-	by devianza.investici.org (Postfix) with UTF8SMTP id 4hPCL914CZz6vNR;
-	Tue, 18 Aug 2026 01:49:21 +0000 (UTC)
-Received: by mx2.investici.org (Postfix) id 4hPCL85kZPz4y6W;
-	Tue, 18 Aug 2026 01:49:20 +0000 (UTC)
+	b=raPsoM7TS0sLAWB0Djw9C4TS6mym4paAdLagC/Ea70D5semspumvTRd/eAkUG72LY
+	 EOQZKkh0dC9exn8lcUX4O94+MzWDxr7LFPSJG7/RyMD/UpQFMLrUzswM4YACwXemLA
+	 n9IjdUZT2LhT2IpeGsbrM9HnyhhURFSXbauIQH7w=
+Received: from mx1.investici.org (unknown [127.0.0.1])
+	by confino.investici.org (Postfix) with UTF8SMTP id 4hPCQk6vR4z10rt;
+	Tue, 18 Aug 2026 01:53:18 +0000 (UTC)
+Received: by mx1.investici.org (Postfix) id 4hPCQk4fJvz10rZ;
+	Tue, 18 Aug 2026 01:53:18 +0000 (UTC)
 From: Bradley Morgan <include@grrlz.net>
 To: Naveen N Rao <naveen@kernel.org>,
 	"David S . Miller" <davem@davemloft.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob
-Date: Tue, 18 Aug 2026 01:49:20 +0000
-Message-ID: <20260818014920.23870-1-include@grrlz.net>
+Subject: [PATCH v2] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob
+Date: Tue, 18 Aug 2026 01:53:18 +0000
+Message-ID: <20260818015318.24103-1-include@grrlz.net>
 X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,7 +55,12 @@ Kill it, and the stale comment with it.
 
 The behavior does not change, except the write only accepts 0/1 now
 instead of y/n/on/off, and nothing uses anything else.
+
+Signed-off-by: Bradley Morgan <include@grrlz.net>
 ---
+Changes since v1:
+ - Added the missing Signed-off-by, sorry.
+
  kernel/kprobes.c | 43 +++++++++----------------------------------
  1 file changed, 9 insertions(+), 34 deletions(-)
 
