@@ -1,109 +1,148 @@
-Received: from devianza.investici.org (devianza.investici.org [198.167.222.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE4D3A6EF1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Aug 2026 15:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.167.222.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87E93AB5C7;
+	Tue, 18 Aug 2026 15:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787066253; cv=none; b=NSPqe6Y97DYmA/JUGoMHGYpPUiQRv22/reZwIGXKrdvDu2du/BtEZXPkbp2JYUXgXcldXY9O6dUwtmaSFKHbTnw1ephBiRYryLxBU8sd6Nu4Zq4aLifV6Fv7mu1+0ADno5VMElThfHZeSGgH9uyI7r5PXaSwMmxxh4bbS88+GtI=
+	t=1787066304; cv=none; b=XO3jR6VgX3910pnmMOmOxpUSPks3wPwjBK9MPBvSf+5m/ilEaOwhNQvKrhhtUmR+TTlsmKkWi7746U+yFbd2fH2XIXsH+NjBCv+LczjPKrZovVaninuy5Y7Az2TZiCtIKlg+6vT6CKhhAfgaVevmwl0BuD9UKAlHSyhzAANfoBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787066253; c=relaxed/simple;
-	bh=IAFOleP9PKZrqVNHvILegTCgb2/Y9h07y+JQuxY4Wnk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=bJ5awD8g5OgjfotYU2pN24EII7CJR52hUQO2HxhR6gAN4Voc8JBrXSECIlXttyIJJ7Swpynu0/0MIw36z2YmP+d415dhkzHAZKG3OYRoQZyTIvAbDz2ntf3WuUU18AfN9/DyUB27IdAcm2UABIvKuT5EjXHey4lnu6NAIzEGFeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=Rfjy0M/u; arc=none smtp.client-ip=198.167.222.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1787066304; c=relaxed/simple;
+	bh=R5tM4gAjDW+eaR/dLTZOP+e2n8FmfEseVDpTWc22KuQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=UZJy4X935mMNqS+sNgM3i8kLNxXh655jUtHJPRRNKebP6L884oZGSTFRULMX4v3/Zcsmh2x+UCoP5PKd1VXp1apKIeAQAzjCxJpDQFtS/0IeAKqZ0+X1nnbqZkAqtKfX8zRQbKJ+4ADt38lDYSjQSQSd+LrgMAabja4cDEG9Go8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWCPmpdi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="Rfjy0M/u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787066241;
-	bh=4pgB6nTt+K8CIebFqRQUJykNy2kI7bCZa71ZlN3FIBs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Rfjy0M/uoJu2Sui7u+ve8khcxnyNywQUHebzBcNMtIcY0w9wrFg4Qca/ynJWAM2gB
-	 PnSiACJ1Sv6HGnOIL3y2HN+LmXAFpoSgYihVILbf4KGDe2J39lKuMBSWtfg6WCsmqA
-	 duJjaAtKfGM4JBBpfYb88U+oSGkbr0UWw2y++1a4=
-Received: from mx2.investici.org (unknown [127.0.0.1])
-	by devianza.investici.org (Postfix) with ESMTP id 4hPYGT0jNRz6vHk;
-	Tue, 18 Aug 2026 15:17:21 +0000 (UTC)
-Received: by mx2.investici.org (Postfix) id 4hPYGS561Gz4y6W;
-	Tue, 18 Aug 2026 15:17:20 +0000 (UTC)
-Date: Tue, 18 Aug 2026 16:17:20 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: sashiko-reviews@lists.linux.dev, sashiko-bot@kernel.org
-CC: linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_kprobes=3A_use_DEFINE=5FDEB?=
- =?US-ASCII?Q?UGFS=5FATTRIBUTE_for_the_enabled_knob?=
-In-Reply-To: <20260818020119.2DF141F000E9@smtp.kernel.org>
-References: <20260818014920.23870-1-include@grrlz.net> <20260818020119.2DF141F000E9@smtp.kernel.org>
-Message-ID: <786EF401-1ECA-4ACC-BED9-764ADFAB9087@grrlz.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWCPmpdi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F161F000E9;
+	Tue, 18 Aug 2026 15:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787066303;
+	bh=4/ER9l30bxbqF71G3U/TBPJvk0ITrzfhWzVQG6UdLxY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gWCPmpdiPwr8RlTT9aF2QaVoPaZ6xRfzxXYwIcMQAVyMn3ywCQ/ZZp2OHVTVrxMOP
+	 S+A6IsbeLkiUeIIKW8bxYp/Wsh06FSEJirkmuSP8GUO6pxLcKwSHFeQ6oSgstSw/p4
+	 LZgYzlXYnG7AlCP5P7BK82SIHUDdl5Vx/yFI7pkGghUqK7cDHSJrImsduCSkgap/JN
+	 qmoC5mpl95WOuu78R3pcSiawfTrwQmsT1HqbGFcmllsV7e9Wc/e3BMYy2L50G40N02
+	 KCfM/Qh33KXd0Yre3Q5VuMwOONxcDkmVtrID0qvaSXspHNUEDIA4i3KSbl8a0uVo2e
+	 DRAamYCvl/Bcw==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v1 10/25] unwind_user/eh_frame: Detect .eh_frame_hdr
+ sections in executables
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jens Remus" <jremus@linux.ibm.com>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-trace-kernel@vger.kernel.org, "Christian
+ Borntraeger" <borntraeger@linux.ibm.com>, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>
+In-Reply-To: <20260818144954.2320378-11-jremus@linux.ibm.com>
+References: <20260818144954.2320378-1-jremus@linux.ibm.com>
+ <20260818144954.2320378-11-jremus@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 18 Aug 2026 15:18:22 +0000
+Message-Id: <20260818151823.18F161F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-On 18 August 2026 03:01:18 BST, sashiko-bot@kernel.org wrote:
->Thank you for your contribution! Sashiko AI review found 1 potential
->issue(s) to consider:
->- [Low] The 'enabled' debugfs file is created using `debugfs_create_file()` instead of `debugfs_create_file_unsafe()` with a `DEFINE_DEBUGFS_ATTRIBUTE` struct, leading to redundant proxying and overhead.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Missing duplication of eh_frame_mt during fork() leaves child proc=
+esses without stack unwind capability.
+- [Medium] Executable segments with a trailing BSS section silently fail .e=
+h_frame_hdr registration.
+--
 
-+akpm@linux-foundation.org 
+--- Patch [10]: [RFC PATCH v1 10/25] unwind_user/eh_frame: Detect .eh_frame=
+_hdr sections in executables ---
+commit e178ff4c7b227a1dcb3db08f8923210e443187ac
+Author: Jens Remus <jremus@linux.ibm.com>
 
-I hate sashiko so damn much, best to wait for review!
+unwind_user/eh_frame: Detect .eh_frame_hdr sections in executables
 
->--
->
->--- Patch [1]: [PATCH] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob ---
->commit f5babbd146ccf4194f28506d04f5cbfb2c40150a
->Author: Bradley Morgan <include@grrlz.net>
->
->    kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the enabled knob
->
->This commit replaces the custom read/write handlers for the debugfs
->enabled
->file with the standard DEFINE_DEBUGFS_ATTRIBUTE macro. It simplifies the
->implementation and accepts integer inputs rather than characters.
->
->> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
->> index ca9d834d0b843..10bcc2a0926a6 100644
->> --- a/kernel/kprobes.c
->> +++ b/kernel/kprobes.c
->> @@ -2962,47 +2962,22 @@ static int disarm_all_kprobes(void)
->
->[ ... ]
->
->> -static const struct file_operations fops_kp = {
->> -	.read =         read_enabled_file_bool,
->> -	.write =        write_enabled_file_bool,
->> -	.llseek =	default_llseek,
->> -};
->> +DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
->> +			 kprobes_enabled_set, "%llu\n");
->>  
->>  static int __init debugfs_kprobe_init(void)
->>  {
->
->[Severity: Low]
->Will this lead to double-proxying for the debugfs file?
->
->Since DEFINE_DEBUGFS_ATTRIBUTE natively provides debugfs_attr_read and
->debugfs_attr_write operations that already include debugfs_file_get() and
->debugfs_file_put() protection, passing fops_kp to debugfs_create_file()
->in debugfs_kprobe_init() will cause the debugfs core to wrap it again:
->
->kernel/kprobes.c:debugfs_kprobe_init() {
->    ...
->	debugfs_create_file("enabled", 0600, dir, NULL, &fops_kp);
->    ...
->}
->
->Could this use debugfs_create_file_unsafe() instead?
->
->
+This commit modifies the ELF loader to automatically detect .eh_frame_hdr
+sections during binary and interpreter loading. It associates these sections
+with the mm_struct to support user-space stack unwinding.
 
-Thanks!
+> When loading an ELF executable, automatically detect .eh_frame_hdr
+> sections and associate them with the mm_struct.
+
+[Severity: High]
+Are these eh_frame sections properly preserved for child processes during
+fork()?
+
+When a process forks, dup_mm() creates a new mm_struct and calls mm_init(),
+which appears to initialize eh_frame_mt as an empty maple tree:
+
+kernel/fork.c:mm_init_eh_frame() {
+    ...
+    mt_init(&mm->eh_frame_mt);
+    ...
+}
+
+Is there any subsequent logic that duplicates the parent's eh_frame_mt
+entries during dup_mm()? If not, won't child processes inherit correctly
+duplicated VMAs but an empty eh_frame_mt, resulting in a complete loss of
+stack unwinding capabilities for all children?
+
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 16a56b6b3f6ca..8c1cdd8318c53 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+
+[ ... ]
+
+> @@ -637,6 +638,23 @@ static inline int make_prot(u32 p_flags, struct arch=
+_elf_state *arch_state,
+>  	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
+>  }
+> =20
+> +static void elf_add_eh_frame(const struct elf_phdr *text,
+> +			     const struct elf_phdr *eh_frame,
+> +			     unsigned long base_addr)
+> +{
+> +	unsigned long eh_frame_start, eh_frame_end,
+> +		      text_start, text_end;
+> +
+> +	eh_frame_start =3D base_addr + eh_frame->p_vaddr;
+> +	eh_frame_end   =3D eh_frame_start + eh_frame->p_memsz;
+> +
+> +	text_start   =3D base_addr + text->p_vaddr;
+> +	text_end     =3D text_start + text->p_memsz;
+
+[Severity: Medium]
+Will this silently fail to register .eh_frame_hdr for segments with a
+trailing BSS section?
+
+When an ELF executable segment has p_memsz > p_filesz crossing a page
+boundary, the loader maps the file-backed portion and creates a separate
+anonymous VMA for the BSS.
+
+Because text_end is calculated using p_memsz, it may extend beyond the
+file-backed VMA boundary. When this is passed to eh_frame_add_section(),
+it uses vma_lookup() and checks if the entire segment resides in a single
+VMA:
+
+kernel/unwind/eh_frame.c:eh_frame_add_section() {
+    ...
+    if (!text_vma ||
+        !(text_vma->vm_flags & VM_EXEC) ||
+        text_end > text_vma->vm_end) {
+        return -EINVAL;
+    ...
+}
+
+Since the file-backed VMA ends before text_end in this scenario, won't the
+text_end > text_vma->vm_end check fail and terminate registration?
+
+> +
+> +	/* Ignore return value, eh_frame[_hdr] section isn't critical */
+> +	eh_frame_add_section(eh_frame_start, eh_frame_end, text_start, text_end=
+);
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260818144954.2320=
+378-1-jremus@linux.ibm.com?part=3D10
