@@ -1,133 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from devianza.investici.org (devianza.investici.org [198.167.222.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FCB1F63D9;
-	Tue, 18 Aug 2026 22:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25D837C0E6;
+	Tue, 18 Aug 2026 22:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.167.222.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787093793; cv=none; b=o6i/yzV4z1QDbjqyGJz132mYsIGWeB/ZGIi5rzPRODiU1epFOPDlrMHWrG5G8ujC9gGVNj6siKJe3Fb/MmIEjfZlqBbx1MmSgcHdAuwYalyMqMvA+bMZI0ZMy2gRshKJm93tID/ixduJhyv7goevjSe2D7bfVXTHnDfqZaKtdQk=
+	t=1787093805; cv=none; b=A/UcXBIV2aUFSfWs47BB6dafRCFECqWGOBSoJ68JvL5jsL1MdMSGO4+SdWSDc9sUx0XLkYOBT9iWHHoqV/+a8p60XzMpNioH6rL2wnOxdXbUHbEAQm3MjRlPZqx3c/GgIbK4GPrhum76m+eShw1xyeq5Gbks+HkC7qw1uthovis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787093793; c=relaxed/simple;
-	bh=faMKR1rbgxXHtkQpw5a1Tw5wko3xKGUPNA0L/xuNmts=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=p6E3pSr92KU7Eeg79yA+RwyX/N0guwenB22IJI0M7oEw6TmmXtdqFYxPpQx+89ESBMQPe6/B/nDlwwxew/xol4GbX48yCMKHOf3USyIHXjEEKS9tDoUw83T2h+fEGEyko8zq578ufgBCzB5jUV1rnunkQJxGpFh8UbZL1vCstwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beOmcgFg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787093805; c=relaxed/simple;
+	bh=5lKh5BGw7zm9TwWQQfgH7LLEST2T5cU2G/j7BgZboEg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=FpWKdhySHi8SulLTerWe7xzdCjo1ktDstuztozhlh/i19YlK5In9p4Jt25Lc5NlYIREn2NH78+7HdK6H67AnTPyDKhXWVgfYl6ChowGXfe3FJqjkVfDElpdBhQfGji3nDcKs6UugBrqUUL+PXCaHMVaLBDFPX5PJJxRygv5u2Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=ExFI9cit; arc=none smtp.client-ip=198.167.222.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beOmcgFg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3D0C1F000E9;
-	Tue, 18 Aug 2026 22:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787093792;
-	bh=a7AbzolX3oxsjZ/EW6/COzIpdkV3NkowEJ9wyZ/wdFM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=beOmcgFgtoaRx5qshfXhaXkcd9gVYVvm0nBwlD4leVnBH6gzCsyKPKCnhvJyBDqEQ
-	 QIomoXzSKEpqxGoxSu/JIHKx3jRCEMTiHbT7poX1ya5mhqUKAf/xmhedAn4Lagurqx
-	 dOGwDmae5vdTDGGcML2kmOcAOXOz1OBvf6P3Vd2k03uXFCh79PgZPatK7QoezxFtx5
-	 AR6Qe4OZjWryA4cWAIqpHTRFFAvFk+M8WmsBeph1t3/hdQqvJ/HD7+lzYi1B826wHE
-	 WJOftSE/+adEBHOrNnQNkq2UiY68NdQR+ScwlcPSB64rs1D3hDgnDkTSUidUwofV2H
-	 w1NKToGpHxQ4A==
-Date: Wed, 19 Aug 2026 07:56:26 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v12 05/11] x86: hw_breakpoint: Add a kconfig to clarify
- when a breakpoint fires
-Message-Id: <20260819075626.84cdb95c8351c26de1ffc3ab@kernel.org>
-In-Reply-To: <d80c8e99-7062-4d41-b47f-e45f1dde5745@gmail.com>
-References: <178611679753.237811.10190793347982785419.stgit@devnote2>
-	<178611685388.237811.14452013458905879452.stgit@devnote2>
-	<d80c8e99-7062-4d41-b47f-e45f1dde5745@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="ExFI9cit"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1787093799;
+	bh=BNGYDh4ZJwFgt3Ju+YTzxQOpy8YN08qwymU4qPNrEak=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ExFI9cit3v4zlSyZ3qgTijsRP+N5WxHLGM5fVau4Y7FOIZ5kbmYoGgfHBCqAi1L0N
+	 X5P5rjsCfvIptBxJty0HxlyfuJoNBy85qp6YAykUp1Ue7WIdYUAmNI/FhYA5/JxuJx
+	 tuwM947byDRcAE5EQfmMYXLnPyo3M8/81vRlgEH8=
+Received: from mx2.investici.org (unknown [127.0.0.1])
+	by devianza.investici.org (Postfix) with ESMTP id 4hPlSR3LFmz6vZN;
+	Tue, 18 Aug 2026 22:56:39 +0000 (UTC)
+Received: by mx2.investici.org (Postfix) id 4hPlSR0SYyz4y6W;
+	Tue, 18 Aug 2026 22:56:39 +0000 (UTC)
+Date: Tue, 18 Aug 2026 23:56:39 +0100
+From: Bradley Morgan <include@grrlz.net>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+CC: Naveen N Rao <naveen@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_kprobes=3A_use_DEFINE=5FDEB?=
+ =?US-ASCII?Q?UGFS=5FATTRIBUTE_for_the_enabled_knob?=
+In-Reply-To: <20260819075221.18e9abdaab49d39f362ee0dc@kernel.org>
+References: <20260818014920.23870-1-include@grrlz.net> <20260819075221.18e9abdaab49d39f362ee0dc@kernel.org>
+Message-ID: <96B4535F-EB03-4B13-9A2B-0D3AC34627ED@grrlz.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 17 Aug 2026 20:10:58 +0800
-Jinchao Wang <wangjinchao600@gmail.com> wrote:
+On 18 August 2026 23:52:21 BST, Masami Hiramatsu <mhiramat@kernel.org>
+wrote:
+>On Tue, 18 Aug 2026 01:49:20 +0000
+>Bradley Morgan <include@grrlz.net> wrote:
+>
+>> This enabled knob is a disgusting terrible hack. It has rolled its
+>> own read/write pair since 2007, writing '1' or '0' into a three byte
+>> buffer by hand just to print a single character, with an XXX comment
+>> begging debugfs for write callbacks on bool files.
+>> DEFINE_DEBUGFS_ATTRIBUTE showed up in 2016 and does exactly that, so
+>> the disgusting terrible hack has outlived its excuse for nine years.
+>> Kill it, and the stale comment with it.
+>
+>Hm, OK, but please calm down. Just describe the technical reason here.
+>
 
-> On 8/7/2026 11:34 PM, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add CONFIG_HAVE_POST_BREAKPOINT_HOOK which indicates the hw_breakpoint
-> > on that architecture fires after the target memory has been modified.
-> > This is currently x86 only behavior.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v11:
-> >   - Move select to alphabetically sorted place.
-> > ---
-> >  arch/Kconfig         |   10 ++++++++++
-> >  arch/x86/Kconfig     |    1 +
-> >  kernel/trace/Kconfig |    1 +
-> >  3 files changed, 12 insertions(+)
-> > 
-> > diff --git a/arch/Kconfig b/arch/Kconfig
-> > index bea383408e32..a096952987a8 100644
-> > --- a/arch/Kconfig
-> > +++ b/arch/Kconfig
-> > @@ -457,6 +457,16 @@ config HAVE_MIXED_BREAKPOINTS_REGS
-> >  	  Select this option if your arch implements breakpoints under the
-> >  	  latter fashion.
-> >  
-> > +config HAVE_POST_BREAKPOINT_HOOK
-> > +	bool
-> > +	depends on HAVE_HW_BREAKPOINT
-> > +	help
-> > +	  Depending on the arch implementation of hardware breakpoints,
-> > +	  some of them provide breakpoint hook after the target memory
-> > +	  is modified.
-> > +	  Select this option if your arch implements breakpoints overflow
-> > +	  handler hooks after the target memory is modified.
-> > +
-> >  config HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
-> >  	bool
-> >  	depends on HAVE_HW_BREAKPOINT
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 33908103d9a0..533010ab29a9 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -287,6 +287,7 @@ config X86
-> >  	select MMU_GATHER_RCU_TABLE_FREE
-> >  	select MMU_GATHER_MERGE_VMAS
-> >  	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-> > +	select HAVE_POST_BREAKPOINT_HOOK
-> >  	select HAVE_REGS_AND_STACK_ACCESS_API
-> >  	select HAVE_RELIABLE_STACKTRACE		if UNWINDER_ORC || STACK_VALIDATION
-> >  	select HAVE_FUNCTION_ARG_ACCESS_API
-> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> > index b58c2565024f..d9b6fa5c35d9 100644
-> > --- a/kernel/trace/Kconfig
-> > +++ b/kernel/trace/Kconfig
-> > @@ -866,6 +866,7 @@ config WPROBE_EVENTS
-> >  	bool "Enable wprobe-based dynamic events"
-> >  	depends on TRACING
-> >  	depends on HAVE_HW_BREAKPOINT
-> > +	depends on HAVE_POST_BREAKPOINT_HOOK
-> >  	select PROBE_EVENTS
-> >  	select DYNAMIC_EVENTS
-> >  	help
-> > 
-> Reviewed-by: Jinchao Wang <wangjinchao600@gmail.com>
 
-Thank you for your review!
+>> 
+>> The behavior does not change, except the write only accepts 0/1 now
+>> instead of y/n/on/off, and nothing uses anything else.
+>
+>I think this comment is needed.
+>
 
-I'll update this series.
+What do you suggest?
 
-Thanks,
+I'm saying
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+/* Let's kill this hack */
+
+(I love using the word hack!)
+
+>Please add Signed-off-by.
+>
+
+V2 acks it 
+
+>The code looks good to me.
+>
+>Thanks,
+>
+>> ---
+>>  kernel/kprobes.c | 43 +++++++++----------------------------------
+>>  1 file changed, 9 insertions(+), 34 deletions(-)
+>> 
+>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+>> index bfc89083daa9..044c6b5fd2aa 100644
+>> --- a/kernel/kprobes.c
+>> +++ b/kernel/kprobes.c
+>> @@ -3013,47 +3013,22 @@ static int disarm_all_kprobes(void)
+>>  	return ret;
+>>  }
+>>  
+>> -/*
+>> - * XXX: The debugfs bool file interface doesn't allow for callbacks
+>> - * when the bool state is switched. We can reuse that facility when
+>> - * available
+>> - */
+>> -static ssize_t read_enabled_file_bool(struct file *file,
+>> -	       char __user *user_buf, size_t count, loff_t *ppos)
+>> +static int kprobes_enabled_set(void *data, u64 val)
+>>  {
+>> -	char buf[3];
+>> +	if (val)
+>> +		return arm_all_kprobes();
+>>  
+>> -	if (!kprobes_all_disarmed)
+>> -		buf[0] = '1';
+>> -	else
+>> -		buf[0] = '0';
+>> -	buf[1] = '\n';
+>> -	buf[2] = 0x00;
+>> -	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
+>> +	return disarm_all_kprobes();
+>>  }
+>>  
+>> -static ssize_t write_enabled_file_bool(struct file *file,
+>> -	       const char __user *user_buf, size_t count, loff_t *ppos)
+>> +static int kprobes_enabled_get(void *data, u64 *val)
+>>  {
+>> -	bool enable;
+>> -	int ret;
+>> -
+>> -	ret = kstrtobool_from_user(user_buf, count, &enable);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	ret = enable ? arm_all_kprobes() : disarm_all_kprobes();
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	return count;
+>> +	*val = !kprobes_all_disarmed;
+>> +	return 0;
+>>  }
+>>  
+>> -static const struct file_operations fops_kp = {
+>> -	.read =         read_enabled_file_bool,
+>> -	.write =        write_enabled_file_bool,
+>> -	.llseek =	default_llseek,
+>> -};
+>> +DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
+>> +			 kprobes_enabled_set, "%llu\n");
+>>  
+>>  static int __init debugfs_kprobe_init(void)
+>>  {
+>> -- 
+>> 2.47.3
+>> 
+>
+>
+>
+
+Thanks!
