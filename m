@@ -1,217 +1,183 @@
-Received: from mta1.migadu.com (out-44.mta1.migadu.com [95.215.58.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C324637BE93
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 17:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AD23A783F;
+	Wed, 19 Aug 2026 18:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787160538; cv=none; b=ho0IuqkbIoP+J687GNBf1m3wNzIq4Zx+2xpq7DF3h0Mn5e1Yt+llWAD0ntfEy4Al09cicRCC0JyGSPUcGuQ3Vj+8oWg3b5XWF30kWsM3R/bDDmzHolYTnvu3xEYMctBnLV6r5MDyYf4WjWhzV7Gc+d8VO3Kq2JVGrVkxP1zR8Ts=
+	t=1787162895; cv=none; b=C2CTUHOC09iMCOOwq7LvrV2v17ckt2O4zBlUhzQQKgy7UK2Clx7yjGpbH1Cu9RiqKqQCzMglmJ0VEYsCe4PztmGKP5oqSvLWLJaLm+m9vVcfqR3NyHKsedSQCN/il3C9fA7ihZK9jnMqrnsiSKndY4Y/Vzt8YVuAv2bKE3YcNyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787160538; c=relaxed/simple;
-	bh=g3lcXJeSq1Zk4YQXSbf7TCZ5uXRcVcwca2QGvEtKrpY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kEew2i++fE+sL28693Yri5aJCEzXkB4+1GwNUfTzcmJq8ZkSchwzUeK8ccRSNWiN/mMB/LnNrvJjSHpZYk+DjOEWRjUvkZbnY+vPIXVx/UrJjZ92ppiXQ6yWu17moPDl6B6nddqQoBjKwPGzev4IxL1wF+Gho6718OyZQOIpG4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OeQK1TDB; arc=none smtp.client-ip=95.215.58.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787162895; c=relaxed/simple;
+	bh=NxRWT3YuLuxcyCM9JPBt79mgiyRMppnpNEGHh6ddUOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fhBGT4hAKfg0QtyfaKV0pA3KphF9ist1w+JBvJ7V4OWOAvIhxcstW3pKf4p6E3CYGF3sG47UNi3QklLc1G8NpCSMT0erK+Wl15/f6wkwxXAh6uwbeHSSW8V4dsZcoO7Sbi5o7atLExs9gH7TNxXJp1rLmjxGvlZCr19UOheoWMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=u5w5tF95; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CSQq0HY7; arc=none smtp.client-ip=202.12.124.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OeQK1TDB"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=g3lcXJeSq1Zk4YQXSbf7TCZ5uXRcVcwca2QGvEtKrpY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787160532; v=1; x=1787765332;
- b=OeQK1TDBjnE3Jowkmp37QWNDgqeQj6RXoIfxiEqn+Z0KXsRCOXQI5XlrgM5r8eVOgTqU7nkj
- gV5Sq2Uvo99HZkYs8dUM9VdVo4G234CMH+D1gB2PSVcVH7oYUOkfnzOLAwgnGKn8ECtE/VH2s0u
- DDTQR9UgA2GVoViDn/8yO8L0=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from [192.168.1.71] (218.1.223.168)
-	by smtp.migadu.com with ESMTPS id 2a23afa2a303163f;
-	Wed, 19 Aug 2026 17:28:52 +0000
-X-Mizu-Trace-ID: 2a23afa2a303163f
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <d72daef4-5d68-49e4-a264-3f813d897813@linux.dev>
-Date: Thu, 20 Aug 2026 01:28:45 +0800
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="u5w5tF95";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CSQq0HY7"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 6895E13000FB;
+	Wed, 19 Aug 2026 14:08:11 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Wed, 19 Aug 2026 14:08:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1787162891; x=
+	1787170091; bh=uaq+0fbwEcqKURx4TAQgKDlnoNt1749aqNbx25RhZlk=; b=u
+	5w5tF95V3lXZcp5D0I0zfs+ecHlKfmPG2blkZY15q6J5+xaW1Kvt5Yd8bBDrCDNR
+	1TUZq+FtPFEiXhbCY2aSYH1dR/0NqHHkX5bQMkzEzGy7ieH7z/G0h8DOW9FytuK1
+	Z0qBTiwBH+6SY4MuJM9YdqsqbK7fZwxtLvUxbqGzacL9uW5l1FLiz/ZI8g/m6M1n
+	qdI408wm3zB4vX7lDBrmwQfwH2w8zg9uc7Rp3VmO/IScTq9U6SHc+MEhvqArW49a
+	fVfRWZMH4xcwsQwSU3GgMMxaEkKOq8WR+O0jMBPHaUqPLc+bOgLG5f1a0IRQInJv
+	fkWrde0dQ7kB2ixaGv74g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1787162891; x=1787170091; bh=uaq+0fbwEcqKURx4TAQgKDlnoNt1749aqNb
+	x25RhZlk=; b=CSQq0HY76xdlaq5ZxlAH2Psixw7Fv1d5/+v1qDCxoWI+QLfvTKs
+	+Wttv0ep25W/mCZm2VJ/dE6jiGBkKvtm2mwK+gMvJnnmMFk9uX6kCSRcwr8QwXe3
+	BmO28VGnkGttLEnifmwulWQTZVmjUcgUW6yBkqpy2Ocr3ENhlKBTtEdYRuh0noi7
+	Whsp1pCFfrz7eyv/b40wfxoM1U9nyiaxn2F36Uiv1z48NYnIvPF+Hv5N093ep17w
+	vQRlrX/KZ7KM4LOMys8u568AR23idEmH9V3DydOp8IFpdUPhhbwRbS8ME2LOY6J/
+	9xndGtqNVrl3ETwirElPUdJVsXHdpzMM5Ig==
+X-ME-Sender: <xms:CfGFamBmv7jTcwHu4_7WZ1usDVB61LkbyCHTGj57imaS5Qs6Xn6NNg>
+    <xme:CfGFag9PC1_VlT9T7ICg8IrFgyIt6_gfraXKG9Gx-Mxb9M9rnJWLX_7s0R1yEJFdl
+    jSwOrwYFf9-GdaL5sezszorg4nEJgrkDV88fm4GNS2HiYFeRScAlR-k>
+X-ME-Received: <xmr:CfGFarC5DjE8pq2NZguhLaP3hS2x8EltD2og72MELpSo5GwfSjVqtoTqdiY>
+X-ME-Proxy-Cause: dmFkZTEgoTbh0p34SJ7+/0elPjJ1CCVFNDauFEce9e/PhqdeYc+K+ZgiTHZkYjWz6as8HW
+    oQqR7eMJeilkJP6P1vcZe7H7THogp3+w/si1KyGhbFLyCmCZ3dPSp7xAHp9w9JVMzETRjH
+    ZGi/BBtM8fbP2xEpT5MXNgJOPYusCj9icwG2R8r2iUSU/Af7shD7UHlpDl2FqwQISqGxrn
+    4VHBTrLtusZogfLm1C7BWVIo+E+nsrpLj0jpAuYoyY+biRGqR6g19JzN77aqCq3myX5CqS
+    Ub8VqStbhVuyo3lwlRqil4HhAefmg77OYfy+hvKjlo0cc4lJXUaWtMhIMsqxRKBY3dE9Ls
+    EM7L17LM7uTf+mZo8Wl70TIRE0ptPYiP/tSP0az76p/Du9Z8wMv+ViEMNvMtIkWhMPlHwj
+    GVP9xctd5omGc04HD83qAkNK25YjUu5tn6zQ4NkAWG/C9oBh/HZU3kbP3Y8cM4aK1fqXpb
+    LqNz4vAtJFiqhGscoBf4snNRUbxuKWv16sb4TX3eoLDwCBEHTQ/B9WKLkXPdhUOUIgKIob
+    Tvxkf2MrVd0T1Ro7nCtt5EPQRQ7gHD5h+IzboECIdC7ZZgl4+OMaUY+lJDQ40FwWSi35ZH
+    NJvywTZIbRunZkGTSi4Nf9wcmV96zAG4Q9LJxGfSmcLsbTBh8jK/80HwU1tg
+X-ME-Proxy: <xmx:CfGFakxXBBkjw866zcaxeAN8XwJoSukID1GcaW1PPLxULaKrnzrTHA>
+    <xmx:CfGFaqrf5vjKwFGgHUgrf28PNDd_wKCxUZPhERsQu-IWsWP8mOBiGg>
+    <xmx:CfGFanwyg8yvx0IqclLgrSuHWYJSG0qDArvdTj__rq8LDsP44ve51w>
+    <xmx:CfGFakP5BQAMevJkef1rpMVWlvELiICBlM2tyKp7v78gWI6xejeRWA>
+    <xmx:C_GFajaxphludb9eZOBP7B56bu181zvGOnr8Co02FXO0mHd60Etj6X7x>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 19 Aug 2026 14:08:08 -0400 (EDT)
+Date: Wed, 19 Aug 2026 19:08:07 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, akpm@linux-foundation.org, 
+	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
+	dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, liam@infradead.org, 
+	mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, 
+	surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, 
+	usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, jannh@google.com, 
+	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
+ primitives
+Message-ID: <aoXn1B7cPnPq7uxd@thinkstation>
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <aoLAly-oL2OAa4n8@lucifer>
+ <aoLkMUtmzRVuv2Hx@thinkstation>
+ <aoQ77EcD3M2kjeya@lucifer>
+ <0153303d-f9d6-45ea-a276-fbf2e5625ef9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] rv/reactors: use context-sensitive lockdep wait
- type in rv_react()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1786294920.git.wen.yang@linux.dev>
- <26526e555baa5118325b2383e9f7f0f8f9b6a199.1786294920.git.wen.yang@linux.dev>
- <38decc4f7ef5b6f03b37705c7e97f22a7e40d7e2.camel@redhat.com>
- <87zeylnos3.fsf@yellow.woof>
- <b6de8228ee3045104a03ab4754e5ecc50e67f627.camel@redhat.com>
- <20260819112038-e7b033f8-3711-4acd-ba05-dbef015c6fc8@linutronix.de>
-Content-Language: en-US
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <20260819112038-e7b033f8-3711-4acd-ba05-dbef015c6fc8@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0153303d-f9d6-45ea-a276-fbf2e5625ef9@kernel.org>
 
-
-
-On 8/19/26 17:24, Thomas Weißschuh wrote:
-> On Wed, Aug 19, 2026 at 09:12:43AM +0200, Gabriele Monaco wrote:
->> On Mon, 2026-08-17 at 10:18 +0200, Nam Cao wrote:
->>> Gabriele Monaco <gmonaco@redhat.com> writes:
->>>
->>>> On Mon, 2026-08-10 at 01:10 +0800, wen.yang@linux.dev wrote:
->>>>> From: Wen Yang <wen.yang@linux.dev>
->>>>>
->>>>> Reactors must not explicitly take locks, so they should comply with
->>>>> LD_WAIT_FREE.  However, reactor callbacks can run with preemption
->>>>> enabled on any kernel (not just PREEMPT_RT).  If a timer interrupt
->>>>> fires during the callback, the interrupt exit path schedules and
->>>>> acquires rq->__lock (LD_WAIT_SPIN) while the lockdep override map that
->>>>> declared LD_WAIT_FREE is still held, triggering a spurious
->>>>> "Invalid wait context" warning:
->>> ...
->>>> Anyway, I'd appreciate comments/acks from the other folks in the loop
->>>
->>> Sorry, I do not know enough about lockdep to comment on this.
->>>
->>> FWIW, I would rather just use LD_WAIT_SPIN and keep things
->>> simple. Context-sensitive code paths "feels wrong" to me. Spinning
->>> should either be allowed or forbidden. Making it dynamic "feels like" it
->>> will bring further complications down the road.
+On Tue, Aug 18, 2026 at 04:12:17PM +0200, David Hildenbrand (Arm) wrote:
+> I think we all agree that there is a lot of room for improvement, but the big
+> question is:
 > 
-> To me the dynamic logic also feels quite complicated.
-> We could also disable preemption before overriding the lockdep context
-> when lockdep is enabled to avoid the observed issue.
+> (a) When does it stop being a cleanup and is a new feature in disguise that
+>     makes the code more complicated and even harder to maintain.
 > 
-
-Thanks,
-
-rv_react() already has two callers in this tree that land in very
-different places.
-nrp attaches to local_timer_entry, which fires from inside the hardirq 
-handler itself:
-
-     DEFINE_IDTENTRY_SYSVEC(sysvec_apic_timer_interrupt)
-       irq_enter_rcu()                  -> 
-preempt_count_add(HARDIRQ_OFFSET)
-       trace_local_timer_entry()
-         handle_vector_irq_entry() -> da_handle_event() -> rv_react()
-
-in_hardirq() is true for the whole of that rv_react() call.
-
-While pagefault, on the other hand, attaches to page_fault_user, which 
-only fires when the interrupted context was user mode -- i.e. 
-preempt_count is guaranteed 0:
-
-     exc_page_fault()
-       trace_page_fault_user()
-         handle_page_fault() -> ltl_atom_pulse() -> ... -> rv_react()
-
-A timer tick can land inside that second one and there's nothing wrong
-with it doing so.
-
-So I don't think LD_WAIT_SPIN for everything is safe, it's not just 
-"less strict on paper".
-If a reactor ever does raw_spin_lock() by mistake while running from 
-nrp's path, check_wait_context() takes the wait type straight from the 
-override map:
-
-     if (unlikely(class->lock_type == LD_LOCK_WAIT_OVERRIDE))
-             curr_inner = prev_inner;        /* SPIN */
-     if (next_outer > curr_inner)
-             return print_lock_invalid_wait_context(...);
-
-SPIN nested in SPIN is 2 > 2, which is false, so it just passes.
-We'd be silently giving up the one case (hardirq/NMI) where the "no 
-locks" rule for reactors actually matters, which is the same thing that 
-bit you with the signal reactor.
-
-And for what it's worth, checking context to decide the wait type isn't 
-something we'd be introducing -- lockdep does the same thing to get the 
-baseline before any override is applied, in the exact function that 
-produced this splat:
-
-     static inline short task_wait_context(struct task_struct *curr)
-     {
-             if (lockdep_hardirq_context()) {
-                     if (curr->hardirq_threaded || curr->irq_config)
-                             return LD_WAIT_CONFIG;
-                     return LD_WAIT_SPIN;
-             } else if (curr->softirq_context) {
-                     return LD_WAIT_CONFIG;
-             }
-             return LD_WAIT_MAX;
-     }
-
-That's four cases. Our in_nmi() || in_hardirq() is a simplification of
-what's already there, not a new habit.
-
-Thomas, on disabling preemption instead: it does fix the pagefault
-case, and it's a no-op for nrp since preempt_count is already elevated 
-there. But it changes what a reactor is allowed to do, for every 
-reactor, not just the two above.cspin_lock() on RT checks 
-might_resched() before it even looks at thevlock:
-
-     static __always_inline void __rt_spin_lock(spinlock_t *lock)
-     {
-             rtlock_might_resched();   /* unconditional */
-             rtlock_lock(&lock->lock);
-     }
-
-so any future reactor using a plain spinlock would hit that every single 
-time, lock contended or not, on top of whatever it's already called for. 
-That seems worse than the thing we're trying to fix.
-
-Since neither struct rv_reactor nor rv_react() actually documents what
-context a callback may run in, maybe that's worth spelling out
-separately regardless of what we do here -- something close to what
-printk already does for the same reason (reactor_printk's
-vprintk_deferred() leans on this internally: is_printk_legacy_deferred()
-checks in_nmi() to decide whether it's safe to take console_lock or
-whether it has to go through the lock-free irq_work path instead).
-
-A reactor that wants to do more than printk/panic would follow the same 
-shape:
-
-     static void some_reactor(const char *msg, va_list args)
-     {
-             if (atomic_cmpxchg(&pending, 0, 1) == 0)
-                     irq_work_queue(&my_irq_work);   /* NMI-safe */
-     }
-
-     static void some_irq_work_fn(struct irq_work *work)
-     {
-             schedule_work(&my_work);   /* spin_lock()/mutex_lock() now 
-fine */
-     }
-
-
-Please let me know if there are any concerns or if further changes are 
-needed.
-
-
---
-Best wishes,
-Wen
-
-
->>> But that's just my intuition.
->>
->> I don't have a strong opinion on this, but since there's no one in the kernel
->> using LD_WAIT_FREE as inner type, that feels like a hint to go down the simple
->> route too and allow LD_WAIT_SPIN.
->>
->> If a reactor ever uses spinlocks, lockdep would already complain on its own if
->> that ends up being an issue, wouldn't it?
+> (b) Can it just naturally be made looking like a cleanup.
 > 
-> Only if that reactor is actually triggered by a tracepoint in the wrong context.
-> This might not happen during testing. This happened to me in my signal reactor
-> patch, which is why I added the lockdep override.
+> Ideally, we'd get b), in small, nice-to-review chunks that incrementally improve
+> the code without inflating it heavily or moving everything around.
+
+It is not a cleanup and I would rather not sell it as one.  It replaces a
+mechanism, so judged as (b) it fails by construction.
+
+I believe the end result is much cleaner. But I might be biased. :)
+
+> The current locking is nasty, so anything that moves us one step closer into
+> something that is not only simpler but also more scalable is nice. I am a bit
+> concerned with the churn in the series as is.
 > 
+> After this series, mm/collapse.c itself is way larger than just mm/khugepaged.c
+> originally, which raises some eyebrows.
+
+Line count is a poor proxy for simplicity or scalability.  What the
+engine changes is the serialization model, and that is the part collapse
+needs changed: the PMD granularity and the exclusion both come out of
+the locking.
+
+Incremental does not reach it, though.  The old mechanism is correct
+because it holds mmap_write_lock, the anon_vma write lock and a reference
+from the LRU; the engine is correct because the sources are frozen behind
+migration entries.  There is no halfway state that is correct under both,
+so the switch lands as one patch.
+
+What can be incremental is everything around it: the engine goes in beside
+the old mechanism, patch 25 points the anon path at it, and 28 removes what
+it replaces.  Until 28 both are in the tree with only one of them
+reachable, so the switch can be reverted on its own.
+
+> We should also be aware that people are proposing file/shmem mTHP collapse, so
+> ideally what we refactor would naturally unify some of these code paths.
 > 
-> Thomas
+> I am wondering whether shmem mTHP collapse should come first. (I'm hoping that
+> shmem mTHP collapse can unify some of the anon+file collapse code in a nice way,
+> to similarly just look like a cleanup while enabling a new scenario.
+
+mTHP collapse as it stands has limited usability: PMD-aligned windows only,
+and one VMA has to own the PMD.  Bolting file collapse onto the same
+structure adds to the debt instead of paying it down.
+
+It would fit the new design.  The frame -- scan, candidate selection, the
+round and its passes -- has nothing anon-specific in it; what is
+anon-specific sits in the freeze (folio_test_anon(), PageAnonExclusive())
+and the unshare in the fault-in pass.  A file source would bring its own
+check, freeze, copy and install.
+
+I am not sure it should, though.
+
+Do we want to find file collapse candidates by walking the virtual
+address space at all?
+
+collapse_file() already works on the mapping -- it builds the folio in
+the page cache and then repairs every mapping through
+retract_page_tables() -- so the VMA walk only picks which inode range to
+try, and it reaches only what a registered mm maps right now.  Large
+folios buy more than TLB reach: fewer page cache entries, cheaper
+writeback, natural locking batch, etc.  Those apply whether the file is
+mapped or not, and going at the inode directly would reach them.
+
+> Agreed, I think we really should unify+cleanup the existing code first before
+> doing more drastic changes.
+> 
+> Having a series that throws all of khugepaged.c into a mixer and pours something
+> new into collapse.c is ... concerning :)
+
+The moving around is patches 29-35 and the tracing after them.  None of it
+is needed for the engine: 1-28 add it, switch the anon path over and delete
+the old mechanism, without moving anything else out of khugepaged.c.  If
+the churn is the problem, v2 can stop there and the moves can come later as
+their own series.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
