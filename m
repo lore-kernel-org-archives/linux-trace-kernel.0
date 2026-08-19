@@ -1,163 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A7F3C1F45
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 18:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF43440656
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 18:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787164214; cv=none; b=HqDK26tuOM0lwfz6YH1wtadqbJs8uUvucZFk4EXLPJuobzoS+WzOBrlbJ+zKeOVF/iacRn05Ardjv8D7LgRNadePKtgOif8xxHH1wfM7wuhluUr7Tih2Q4yi2hZEVIC3xCaFU3uz+g/uzpX7+AvHAPMlTnpO3IKNpQPrR0GQdsY=
+	t=1787164295; cv=none; b=J8oXvvx6e76DUz4II3oyW1n4C/HPHIDqYKDbOInyf5urPTFnM61Rgf4W5iM0UpVthVIYl/QSRwXy6HJqV6OH4kC7XWbDvU3GYxTRTex4nHN9B7OR6DPmK/1+7In5WiuA6S3fXstgfoSWBqmI5HYDyYdZ6o9AWmLaOzsF2WU8Nic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787164214; c=relaxed/simple;
-	bh=17sxEN0ZcB4b7i65rwGIvqItKc0jmkNSIfbpd30wAOU=;
+	s=arc-20240116; t=1787164295; c=relaxed/simple;
+	bh=vAU9vgROXTf2FRO9haQ3qcBLs1+rx4d3/kfw4GfAYXQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FdDwl3udEdAyopFGyukeyTgdde/Of4yMTu3B8oYt+OG2n9+q8F0I2ETpD1/NfeRPfGARQT3TrdqhiRg5RcEG6mb0Q3gYd4Mo7VIv7WwKe2+60hbpAolEvGHLx4B63nbHaFw88sNzJkmGR3K05m+BDZgoup30WATTW10ZKVCQ1Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIPVmygl; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=DybrQTKV9Z+x8ndxMX6i7yHGg6bqiiUG+JC3ztKLqrUmCgXLZV9MahlihTK/RNkj+QwBT/9MyXi/e+6/I7fm2xDRzMmQhkuaro4S5M+Nvx+Q3zfRuFv0ObQiKDSrrMpKI2ksFknL+BtTl7h/XjgJY+DYsh2ZXlA/6PMm8ax0C8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcv7o8vs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIPVmygl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F881F000E9;
-	Wed, 19 Aug 2026 18:30:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcv7o8vs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE301F000E9;
+	Wed, 19 Aug 2026 18:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787164212;
-	bh=QVidbXbcXH6f6yzSS8txw9/aAMpZl2vTUBYVIiUzNtw=;
+	s=k20260515; t=1787164293;
+	bh=1WqZ0ViI5tk7nsrO94k/gDInfQPMpVEorf4+V3uK9Yw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lIPVmyglHtdszyjCo8B2zARBZP0HCyRHsIz6APKoHMdKiMuLcD3g90NqR4gZRU9OK
-	 LmKL9R89dQ7zkJqUqR0cUhhtNo1/036yTA5TiaR2TECBQAUicGQZqhWUM3puN9/DTU
-	 nlSCl9kQgNyfFM5gF8DMrbRzYUAOy9RQ76iwTnDEGpaSdJQb12ZDER49LueYEQyS7m
-	 Gtom6EW9BnpZjgmsujs5sEYzSkBVi4T6Cb/8+EkAJIkULOa8jXQvWjXTjLzmZNBd4G
-	 bRVOCcy/pROslLKl0nP3H0XtNZSjOyntTzWaExnz0NIpssjGWZrF/ajl+yUbPXYVoI
-	 lX5q0fX40oL0A==
+	b=bcv7o8vswHbgDR6xaxd4O9OrOhPxePJliPynAhaqAXCle5cFaEmyW1+mAf+WXJCRO
+	 Rrf2Tc0tPcK7MuQnMKFFj5Mzdvb51ZC6Riufq2IX8KyaOZwhB5l/s8FqXeoa++feyl
+	 LoBQmH5DnslmY3PXNqmEp0kaefP8AVFXJ1xX10DPl8yZX6QMis9lQ50gG169Si/IPZ
+	 5uV4OD6s4g+au1ZbmNaLOwvLdmAuoDKNZgDDaD0KKlUtv8X/GFhKuhXQxUYoNSahJm
+	 ZOEiv/1AYU2d0n/q1HjlOLdV00zOoNkk1M/9FeHYBjT4+6w/3yUo1/HJuYR2Cmk+Jc
+	 yJ3htEN/3czfg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 5/9] rv: Make da_monitor_reset_hook and
- EVENT_NONE_LBL overridable
+Subject: Re: [PATCH v5 9/9] selftests/ftrace: Walk up to find
+ test.d/functions when a subdirectory is passed
 Reply-To: sashiko-reviews@lists.linux.dev
 To: wen.yang@linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <93c62b568c392352cb0a507c85f49c46cd49fbe0.1787161646.git.wen.yang@linux.dev>
+In-Reply-To: <7808194405719fd0ae7b0bcf4301c5902eb31929.1787161646.git.wen.yang@linux.dev>
 References: <cover.1787161646.git.wen.yang@linux.dev>
- <93c62b568c392352cb0a507c85f49c46cd49fbe0.1787161646.git.wen.yang@linux.dev>
+ <7808194405719fd0ae7b0bcf4301c5902eb31929.1787161646.git.wen.yang@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Aug 2026 18:30:12 +0000
-Message-Id: <20260819183012.C7F881F000E9@smtp.kernel.org>
+Date: Wed, 19 Aug 2026 18:31:33 +0000
+Message-Id: <20260819183133.5EE301F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Overriding `da_monitor_reset_hook` to synchronously cancel timers =
-deadlocks the system
-- [Medium] Undocumented API change allowing `da_monitor_sync_hook` to be ov=
-erridden
-
-Pre-existing issues:
-- [High] Monitor teardown sequence causes a Use-After-Free due to improper =
-timer cancellation
-- [High] Lockless update of discrete state and hybrid environment variables=
- allows concurrent events to evaluate inconsistent state
+- [High] Local Privilege Escalation via untrusted directory traversal when =
+implicitly sourcing test.d/functions.
+- [Medium] Infinite loop in directory traversal when testing top-level dire=
+ctories due to POSIX 'dirname' behavior with double slashes.
 --
 
---- Patch [5]: [PATCH v5 5/9] rv: Make da_monitor_reset_hook and EVENT_NONE=
-_LBL overridable ---
-commit 367db4a7d614e2458fbdde565ff9b9fc8d92d1b1
+--- Patch [9]: [PATCH v5 9/9] selftests/ftrace: Walk up to find test.d/func=
+tions when a subdirectory is passed ---
+commit 982c65a7f93c6d254f86b734c29fd401b0e3707a
 Author: Wen Yang <wen.yang@linux.dev>
 
-rv: Make da_monitor_reset_hook and EVENT_NONE_LBL overridable
+selftests/ftrace: Walk up to find test.d/functions when a subdirectory is p=
+assed
 
-This commit wraps da_monitor_reset_hook and EVENT_NONE_LBL with #ifndef gua=
-rds
-to allow HA-based monitors to substitute their own implementations. It is
-intended to help tools define custom reset hooks for per-task hrtimer clean=
-up.
+When a test directory that does not itself contain test.d/functions is
+passed to ftracetest (e.g. verification/test.d/tlob/), ftracetest fell
+back to its own functions file and lost the rv-specific check_requires
+handling for ':monitor' and ':reactor' requirements.
 
-> rv: Make da_monitor_reset_hook and EVENT_NONE_LBL overridable
->=20
-> Wrap both definitions with #ifndef guards so HA-based monitors can
-> substitute their own implementations before including this header.
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/se=
+lftests/ftrace/ftracetest
+> index 0a56bf209f6c0..3ba929820dd2c 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -159,9 +159,20 @@ parse_opts() { # opts
+>    if [ -n "$OPT_TEST_CASES" ]; then
+>      TEST_CASES=3D$OPT_TEST_CASES
+>    fi
+> -  if [ -n "$OPT_TEST_DIR" -a -f "$OPT_TEST_DIR"/test.d/functions ]; then
+> -    TOP_DIR=3D$OPT_TEST_DIR
+> -    TEST_DIR=3D$TOP_DIR/test.d
+> +  if [ -n "$OPT_TEST_DIR" ]; then
+> +    # Walk up from OPT_TEST_DIR to find the nearest ancestor that contai=
+ns
+> +    # test.d/functions.  This allows a monitor subdirectory (e.g.
+> +    # verification/test.d/tlob/) to be passed directly without placing a
+> +    # dummy functions shim in each new subdirectory.
+> +    dir=3D$OPT_TEST_DIR
+> +    while [ "$dir" !=3D "/" ]; do
 
 [Severity: Medium]
-The commit message mentions wrapping both definitions (da_monitor_reset_hook
-and EVENT_NONE_LBL), but the patch also silently wraps a third definition:
-da_monitor_sync_hook(). Could the commit message be updated to reflect this
-additional API change, or was this change unintentional?
+Can this loop run indefinitely if a user passes a directory directly under
+the root, like /tmp?
 
-> diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-> index e1738d199b289..807b981eb548a 100644
-> --- a/include/rv/ha_monitor.h
-> +++ b/include/rv/ha_monitor.h
-> @@ -36,8 +36,14 @@ static bool ha_monitor_handle_constraint(struct da_mon=
-itor *da_mon,
->  					 da_id_type id);
->  #define da_monitor_event_hook ha_monitor_handle_constraint
+If the path is formatted as //tmp, GNU dirname preserves double leading
+slashes because it treats them as POSIX UNC paths. If dir starts as //tmp,
+dirname "$dir" evaluates to //, and the loop condition [ "$dir" !=3D "/" ]
+will evaluate to true infinitely, causing the test script to hang.
 
-[Severity: High]
-This isn't a bug introduced by this patch, but can concurrent events evalua=
-te
-inconsistent states here?
-
-Looking at the event processing sequence, da_event() in
-include/rv/da_monitor.h updates the monitor's discrete state using a lockle=
-ss
-try_cmpxchg() loop. Only after the state is successfully updated does it ca=
-ll
-da_monitor_event_hook(), which resolves to ha_monitor_handle_constraint(),
-to update the environment variables.
-
-Could a concurrent event on another CPU observe the newly updated discrete
-state but still see the stale environment variables before the first CPU
-finishes updating them?
-
->  #define da_monitor_init_hook ha_monitor_init_env
-> +
-> +/* Overrides must still call ha_monitor_reset_env() or cancel the timer.=
- */
-> +#ifndef da_monitor_reset_hook
->  #define da_monitor_reset_hook ha_monitor_reset_env
-> +#endif
+> +      if [ -f "$dir/test.d/functions" ]; then
+> +        TOP_DIR=3D$dir
+> +        TEST_DIR=3D$TOP_DIR/test.d
+> +        break
+> +      fi
 
 [Severity: High]
-Could following the documentation to cancel the timer here cause a deadlock?
+Could this directory traversal lead to arbitrary code execution if the path
+walks back through a world-writable directory?
 
-If a developer overrides this hook to synchronously cancel their timers (su=
-ch
-as using hrtimer_cancel() or timer_delete_sync()), it appears this will
-deadlock when called from the timer callback itself.
+If ftracetest is run as root on a trusted directory inside a path like
+/tmp/legitimate_tests/, the loop will traverse up to /tmp and search for
+/tmp/test.d/functions.
 
-The timer callback __ha_monitor_timer_callback() calls da_monitor_reset(),
-which unconditionally invokes da_monitor_reset_hook(). Would this result in
-the timer callback attempting to synchronously cancel itself?
+An unprivileged attacker could preemptively plant a malicious script at
+that location. The script would then be found, and since the ftracetest
+script later sources this file, it would execute the attacker's code with
+root privileges.
 
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a use-after-free ri=
-sk
-during monitor teardown due to improper timer cancellation?
-
-When a per-object monitor is destroyed, da_destroy_storage() cancels timers
-without waiting (using hrtimer_try_to_cancel() or timer_delete() via
-ha_cancel_timer()) and then defers freeing the storage using call_rcu() or
-kfree_rcu().
-
-The timer callback __ha_monitor_timer_callback() relies on guard(rcu)() for
-synchronization. However, if the timer callback thread is preempted before =
-it
-enters the RCU read-side critical section, the grace period could complete =
-and
-the monitor storage could be freed.
-
-When the timer callback resumes, would it then dereference the freed monitor
-pointer?
-
-> +#ifndef da_monitor_sync_hook
->  #define da_monitor_sync_hook() synchronize_rcu()
-> +#endif
-
-[ ... ]
+> +      dir=3D$(dirname "$dir")
+> +    done
+> +  fi
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787161646.gi=
-t.wen.yang@linux.dev?part=3D5
+t.wen.yang@linux.dev?part=3D9
