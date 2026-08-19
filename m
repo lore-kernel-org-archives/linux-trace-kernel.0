@@ -1,34 +1,34 @@
-Received: from mta1.migadu.com (out-48.mta1.migadu.com [95.215.58.48])
+Received: from mta1.migadu.com (out-51.mta1.migadu.com [95.215.58.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAE24B8DE6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 18:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038A34C0402
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 18:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787163371; cv=none; b=jLOtMoCwon6ffo0/ZE2itcCjUriKmvVuPq27ZWO6WCawuv+3mDs02wXjtL8sAhfadtzWFpC46cmf6IFUqLjPooTqJHKkEbGVitWg78p+sCwM9KSOpO8ur0nUQT8tZsGohxvkAv9nJwsR6i0Xm9HG2xTNkhqFrq8z6cGnGb87zM4=
+	t=1787163375; cv=none; b=FM0Vcc1NME9PyiFkwohRyK3/PJtpUD8VbnnOS0aP/gDayjiJ6JqNrCmTcLPA9nlTAn5Y1kvONN7GGQlRLmsQJOBL1YnE3d2nhrGu8ymBjpvqd9kw94hkRaces1d2m8MIjgYVNMPeyNLYD57qUqIv2Kfoz5fqVSpkVGf2BYLEGds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787163371; c=relaxed/simple;
-	bh=KgSsIn7n6rPCEzuv9vq7SpDsKMx4CvsjnRMQ9SjLX+I=;
+	s=arc-20240116; t=1787163375; c=relaxed/simple;
+	bh=5l7zNU8xFDd3uROoIZ45HJYblWzWPFr5g3AcZj9zDaA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TjxAOvinNIUvUNvi0DzPxzZTWUhBVrGNMB+T8mDEPC4YmWGokQfELqJRb5vsaUPeMrq7dQvq+b+UgHy0ugZUIViRaxE0O9+WqlL+uB8c8zBkgFGNKdo7PXUa9Qecvmfp3Qr9QPkOmnmPQTJ3hD6iAsPBHtFZlcQUNo10a/CD30c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xKdYHgKf; arc=none smtp.client-ip=95.215.58.48
+	 MIME-Version; b=amS2ICJ16CLHyRjZzpDkuBfWcc0owTwvjaXYV5rICeuU4aPjgBILz6lod8sY+0VV1Gv//p+pzNx4YhyDY6e0hFUctSVQM488Eh5rq0s4xOs6QwsjlighMBcB0htMhz8j+JmWb/cr1PIcjUV0sUIorD044vC4Mo7OdEvkzxlOlbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ImReXGib; arc=none smtp.client-ip=95.215.58.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xKdYHgKf"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ImReXGib"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=KgSsIn7n6rPCEzuv9vq7SpDsKMx4CvsjnRMQ9SjLX+I=;
+DKIM-Signature: a=rsa-sha256; bh=5l7zNU8xFDd3uROoIZ45HJYblWzWPFr5g3AcZj9zDaA=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787163363; v=1; x=1787768163;
- b=xKdYHgKfZLnt54gzaURDulM14Eq/PPEmdr2FhRQ4tMKDGZih1txVcsmZgQw2gEaC9cHx5WTB
- bQSGpjM2pbN5HJXEIw2I2b+voi7vlK6H8nsj8yQSLByu4XRJdTR2TayZiMDTnFSKWo9qymJCpj0
- 79T+pcO1Go8xUhkDYrAvIoQw=
+ t=1787163365; v=1; x=1787768165;
+ b=ImReXGibhKiky5TbLXLA1/r82tIBFtdGjaLm5ZVgkPPFvAvWi28Vb4IL8OOEv/EaAt8oOGDY
+ hK+7CHrj5CC0XEjXhfLzo0oVwY/44xCYzWUXAwJ/erWtJVwo7Erb1Bz3beqf7hG5m17u2738zSo
+ wWrsD6FUBj6kLxyITiydIhL0=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
 Received: from localhost.localdomain (180.165.15.98)
-	by mta12.migadu.com with ESMTPS id 2a29fa37307592c7;
-	Wed, 19 Aug 2026 18:16:03 +0000
-X-Mizu-Trace-ID: 2a29fa37307592c7
+	by mta12.migadu.com with ESMTPS id 3378b5cc75fab53a;
+	Wed, 19 Aug 2026 18:16:05 +0000
+X-Mizu-Trace-ID: 3378b5cc75fab53a
 X-Migadu-Flow: FLOW_OUT
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
@@ -36,9 +36,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v5 4/9] rv: Fix ha_invariant_passed_ns silent bypass of invariant check
-Date: Thu, 20 Aug 2026 02:15:21 +0800
-Message-Id: <0cab75f11e598ffb0137209e009d02e5705dc127.1787161646.git.wen.yang@linux.dev>
+Subject: [PATCH v5 5/9] rv: Make da_monitor_reset_hook and EVENT_NONE_LBL overridable
+Date: Thu, 20 Aug 2026 02:15:22 +0800
+Message-Id: <93c62b568c392352cb0a507c85f49c46cd49fbe0.1787161646.git.wen.yang@linux.dev>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1787161646.git.wen.yang@linux.dev>
 References: <cover.1787161646.git.wen.yang@linux.dev>
@@ -52,55 +52,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wen.yang@linux.dev>
 
-When env_store is U64_MAX (its initial sentinel value),
-ha_invariant_passed_ns() returns 0 immediately without initializing
-env_store to the current clock.  Subsequent calls to
-ha_check_invariant_ns() then find env_store still at U64_MAX, causing
-the elapsed comparison to wrap and always report the invariant as
-satisfied, silently masking any violations.
+Wrap both definitions with #ifndef guards so HA-based monitors can
+substitute their own implementations before including this header.
+tlob uses this to define a reset hook that cancels per-task hrtimers
+on monitor teardown.
 
-Fix by calling ha_reset_clk_ns() to establish the guard on the first
-invocation instead of returning early.  Apply the same fix to
-ha_invariant_passed_jiffy().
+Overrides must still call ha_monitor_reset_env() or cancel outstanding
+timers to avoid timer UAF.
 
-This is a stopgap: once the RV framework reworks the per-env clock
-guard, this first-invocation reset should be subsumed.
+No behaviour change for monitors that do not override either macro.
 
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- include/rv/ha_monitor.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/rv/ha_monitor.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-index 6e1c7fe5449a..e1738d199b28 100644
+index e1738d199b28..807b981eb548 100644
 --- a/include/rv/ha_monitor.h
 +++ b/include/rv/ha_monitor.h
-@@ -355,7 +355,7 @@ static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon, enum envs en
- 	if (env < 0 || env >= ENV_MAX_STORED)
- 		return 0;
- 	if (ha_monitor_env_invalid(ha_mon, env))
--		return 0;
-+		ha_reset_clk_ns(ha_mon, env, time_ns);
- 	return ha_get_env(ha_mon, env, time_ns);
- }
- 
-@@ -375,6 +375,7 @@ static inline bool ha_check_invariant_jiffy(struct ha_monitor *ha_mon, enum envs
- {
- 	return time_after64(READ_ONCE(ha_mon->env_store[env]), get_jiffies_64() - expire_jiffy);
- }
+@@ -36,8 +36,14 @@ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
+ 					 da_id_type id);
+ #define da_monitor_event_hook ha_monitor_handle_constraint
+ #define da_monitor_init_hook ha_monitor_init_env
 +
- /*
-  * ha_invariant_passed_jiffy - prepare the invariant and return the time since reset
-  */
-@@ -383,7 +384,7 @@ static inline u64 ha_invariant_passed_jiffy(struct ha_monitor *ha_mon, enum envs
- 	if (env < 0 || env >= ENV_MAX_STORED)
- 		return 0;
- 	if (ha_monitor_env_invalid(ha_mon, env))
--		return 0;
-+		ha_reset_clk_jiffy(ha_mon, env);
- 	return ha_get_env(ha_mon, env, time_ns);
- }
++/* Overrides must still call ha_monitor_reset_env() or cancel the timer. */
++#ifndef da_monitor_reset_hook
+ #define da_monitor_reset_hook ha_monitor_reset_env
++#endif
++#ifndef da_monitor_sync_hook
+ #define da_monitor_sync_hook() synchronize_rcu()
++#endif
  
+ #if !defined(HA_SKIP_AUTO_CLEANUP) && RV_MON_TYPE == RV_MON_PER_TASK
+ /*
+@@ -75,7 +81,9 @@ _Static_assert(offsetof(struct ha_monitor, da_mon) == 0,
+ #define ENV_INVALID_VALUE U64_MAX
+ /* Error with no event occurs only on timeouts */
+ #define EVENT_NONE EVENT_MAX
++#ifndef EVENT_NONE_LBL
+ #define EVENT_NONE_LBL "none"
++#endif
+ #define ENV_BUFFER_SIZE 64
+ 
+ #ifdef CONFIG_RV_REACTORS
 -- 
 2.25.1
 
