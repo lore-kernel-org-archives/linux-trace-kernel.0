@@ -1,131 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2163B3894;
-	Wed, 19 Aug 2026 14:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFC43BE652;
+	Wed, 19 Aug 2026 17:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787149194; cv=none; b=Z2xTOxDSLx50RM9xzVqlyZmWkOqI+ht5SDc/VpgLo2VABxavXjj8++N7qmPaRx9lYYQuIdFwagWsVUvTvOSMKInTJQ04I0ROU/X+kA9dXNe+HAME1TcMZZrZYYqBoeiyPhJZVksZ580Ap9IYrux6ELNYI0bWR4oDv91eL/9/mIs=
+	t=1787159359; cv=none; b=Di3xlsAH9FeU6NYZcWcfn2CcqcnJOjF26MtAI6O3GMECnRT23cv7ScqgmwcBbRChHz5eZWIY8bL5cdb9JJ+yNjG0+Gzte9m/oyqvsO4b6ejXe8kuqJLnETpqBRhYsCE9R6YfSFVZQUBFllUVTQKxqw1qupCIixVovHahK5R7rDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787149194; c=relaxed/simple;
-	bh=EKdzdtV9gGDl90vDkZXHARTjVKH6GRgG90mcetkij1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c7E2cHMiJ2LVe8xMwO8vTgSpbVqK32G2UgDXEH6QUvT3gzBQvFv7WCuOR3Gt+c+8hIoIrpEczawY2twWTWFBgVFP7g4yiI7ruoaf7cKgnu1SutsJ6O2UYnGwOtIcyCU6dQ4vJIg5vkHdsKblvA6XmOapqJPMWLKEV2ZVAM4OG6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xc+GCmXX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787159359; c=relaxed/simple;
+	bh=GaTMdOcQwQGnDb/PPYF1UOE4PRaASulBBwReUYNtedY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AiM4BO6OpH/TayhLOWHFdhseeZCZmmX2zizM7rvcXdTWDoNtRW1kmIV0fVZtF2sScCiR7dSKhzEzfhzsiCqmPw2fV4oHf/8GghcIE6C/hZ/EPWN3VcPixLMR0ksmnZBUlthqz65CHzUtVXB4pZJ51OtuINriEVWYLx6fpE7d/Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=XkXQWv4m; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=B56neHLq; arc=none smtp.client-ip=103.168.172.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xc+GCmXX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F20E1F000E9;
-	Wed, 19 Aug 2026 14:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787149192;
-	bh=GOsETi3yZCXmrX9YQrYtabDAuoutuTIBcppaw8Vqk6w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Xc+GCmXXjO7SWndjDHOMYXk4f3YbiyFouGV1Haxakt28T/a0hPCWi75njYqq9lrpg
-	 jVHZUoqXeajh7HibO9BnjItpPccS4yS0A48lVecHXa2WGu9PpTHpVW1zxnuZZwfgwX
-	 1jPzc9K04ceG8+g0zLdC+GoRkSzHvxieohtDKTrLEPjAQXWtWw1PH+nIi4g/Ohj8N5
-	 KiJg3E+ojnsoj1hbF/NXn93eLMrXOkXUsnsdfjrTP1+3yhATIcPp2NggQgQRcVkvAq
-	 Z8AfcmLB2cd26sfAN8nBzILxYZPDuPvf78VG8dT5oUdOrL4hjKmvoA14whUplp9QA2
-	 ShfzjJhXpvoTg==
-Message-ID: <3113ac8b-c1ce-4577-9e93-449b70818918@kernel.org>
-Date: Wed, 19 Aug 2026 16:19:41 +0200
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="XkXQWv4m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B56neHLq"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id B412913801E1;
+	Wed, 19 Aug 2026 13:09:15 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Wed, 19 Aug 2026 13:09:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1787159355; x=
+	1787166555; bh=rngWsIbqp4UM0fSmr3ndBU+ttc5Nai8HRxYczVDElJk=; b=X
+	kXQWv4mldgxmebPhO5HInIrxwEyXD7vdckRHaKRDChcdEPNbk3qUOf9dnVbAxlMk
+	az0p914xNSD65d/CambQfN2m53NBgSIkHBnSKTXEIclH4UOt4ibk3DKjRnU5yycs
+	W7gDD2J/wOyvepAeEmZgp9k0q7alDQtUKYNLYKWaqLBHf+QG8jqy7cMnTfj+GAuu
+	7MQ1r1ZnLMcfU8hBJlRrigPUfjmRCFrQRm1vdhOQQL6UeeoG4NjPyKihvsxb0bkG
+	Phm8LO8GScuNqukHYN3lMaQr3SwfMpvPpHZKUKrOTPc05t8FaOh2Z2Kj0H+zOP5p
+	KsvUp92DdQ24UqVFIDM1Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1787159355; x=1787166555; bh=rngWsIbqp4UM0fSmr3ndBU+ttc5Nai8HRxY
+	czVDElJk=; b=B56neHLq7er86+lmQ2V++BpiXFLH6WkSpfWF4TZ53vg1yUV4AW3
+	9SQBlGGfqGGcpFkq6dQTt6aFnKNJyxn/7BSYUTvQ/RvRsnElNoxGCBrhrEgXXGNx
+	qaLVSl81xjPChjmV16jkux7Sty6758SxBluBXpK3eOQc2e/ch2GoUONBIbKngSxX
+	VTFwZOhvh75/cYypXnDj/c3zTm6u3IU6xugzHtJSGDWIihvQp8e9exTT0PNm3hPS
+	AFDhWChONL8lNT/KUfGjOf6u9qK7vuwlLP89Lciv856uSXuvtWMdER5nTWhkOdt6
+	9bBIctLhJPJTTOE0ghgRBVHd3JpYVHw4FNw==
+X-ME-Sender: <xms:OuOFahdNPCaQTr9ES9HTrKEi-_OhwFcGJL2Y1JwhYpfj-YN4SSFw6g>
+    <xme:OuOFahgThiTOZcJOBYBmDOPIsCJPcyiNaEmsn_nBDnF1DRh1ms9OGeDMtwbdJHfre
+    WAo6GPgUePt_ZD9Nqo--RmJ2IR64gmxMOv77SrY4-0mt22qpyh0nvgT>
+X-ME-Received: <xmr:OuOFapTYCJl9yzGlAvik790RSVDJbcQrwMvOhgXHFHBDFlO5GI5Aj2H_MyY>
+X-ME-Proxy-Cause: dmFkZTF2hJnMxPlMk/jfavBtLUpTUzRd98wV0yj6Xt/Tg57fveFXbfrnoCBHAhwoJSnwvc
+    MtBG50RSMfmClpPI3x6CkcWZCyQvMgs1EZ/KW76Yapbv4d0vUdc6gFqdtYBxQZoYDkSqYD
+    2YcaHdEdQfhRcwKftYsqzXEfDtHBoWdxBFtT8n56HAZST46t7Dn270fSXfsHXaq5JKYPDD
+    JoKvC7wqN5tCFOmjr9104dGNuRhfDkdXo/k1uVDYnCrgfsZx1Du/6tDXbC34XfACrLwl8p
+    prfw7PeES/yEPXECxT/4GTheYyqLa/iux7yvt2JLPJJHC1s6Kbpk2oi4ksERMJCH47snQd
+    o5MgcUNJ9MgaGAfFhljde5JsdiLa7vnywvzsFsEsyh6/jENVfGHBB4NYMoCHdzyeFT8lW6
+    yYx1d6atj2GRUwmmZRZCOxWT0OhZjWhxDuT3G55syUAHSF2ICY/molwLA0RFftwTEOY5DZ
+    vg1rRhzPDm2Yibh8HWbghC4+BGr6CwebgdS5VlYpB58QAw8wmG5zI94Pi9k6Zwc8qPqzi4
+    pLEXAvi5grHrQtpdHqLnZkW8cxNCm4EgsEziTB0bvXmJoMSqnaJDLH4LM2KDB4EHumeg05
+    Oe+IYAPb9sqnI6CCz8ZB7kaLsW4wP+oI0J46P6EySsDJt/Gtpr2OyCnJpRuQ
+X-ME-Proxy: <xmx:OuOFalKbWCWCI4ZXnZ6o2x7NBHXHelXnP4ynvixvbIEXdrgu7mryRA>
+    <xmx:OuOFagQJaZaqTXceo5AM0IZ8hNjlHfdFY2va7llJmUBU9sg0iUsbxA>
+    <xmx:OuOFaiuBACucNMmEX4x_pO3FXL942oTmUfqnR8DAtclVKO7yjC8cgw>
+    <xmx:OuOFal-067q4FSkBuyRRGIfsvMUFjGtdxbPfuJaiDhQe6psxBq8www>
+    <xmx:O-OFas-OgkCIQ2NKZkmWqu2BlJxVNaFGk9Y2qaKYd5zBQIs3fM20His3>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 19 Aug 2026 13:09:13 -0400 (EDT)
+Date: Wed, 19 Aug 2026 18:09:12 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: akpm@linux-foundation.org, ljs@kernel.org, nico.pache@linux.dev, 
+	baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com, hughd@google.com, 
+	lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com, rppt@kernel.org, 
+	ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, usama.arif@linux.dev, 
+	vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, agordeev@linux.ibm.com, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jannh@google.com, willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, 
+	mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
+ primitives
+Message-ID: <aoXRi3ngBhO54Akk@thinkstation>
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <9f51ac27-24b2-495b-b397-84865f977d24@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 03/57] mm/collapse: add collapse.h for the shared
- collapse state
-To: Kiryl Shutsemau <kirill@shutemov.name>, akpm@linux-foundation.org,
- ljs@kernel.org, nico.pache@linux.dev
-Cc: baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
- hughd@google.com, lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com,
- rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
- usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
- usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- kas@kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de,
- rostedt@goodmis.org, mhiramat@kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20260816224609.308019-1-kirill@shutemov.name>
- <20260816224609.308019-4-kirill@shutemov.name>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260816224609.308019-4-kirill@shutemov.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f51ac27-24b2-495b-b397-84865f977d24@kernel.org>
 
-On 8/17/26 00:45, Kiryl Shutsemau wrote:
-> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+On Tue, Aug 18, 2026 at 03:55:55PM +0200, David Hildenbrand (Arm) wrote:
+> > This replaces khugepaged's anonymous collapse with an engine that
+> > can collapse sub-PMD ranges. It is built around migration entries and
+> > frozen folios instead of heavy locking and isolation, aiming for better
+> > scalability and less disruption to the workload being collapsed.
 > 
-> Preparation for building the new collapse engine in its own file.  The
-> engine and khugepaged.c need to agree on what a collapse result is and
-> what state a scan carries.
+> I recall us discussing something around using some PTE/PMD markers (e.g.,
+> migration entries) in the past.
 > 
-> Move enum scan_result and struct collapse_control into a new
-> mm/collapse.h.
+> One thing that needed care is handling concurrent MADV_DONTNEED + faultin after
+> dropping relevant locks.
+
+Handled at install time.
+
+I drop the PTL after the freeze to allow allocation and copy, but sample
+the PTE values (see saved_ptes) at freeze time. If something changed
+under us by the time we install the new page table entries, we give up
+on that candidate and roll it back; the rest of the round still
+installs. We allow harmless transitions: zero page to none.
+
+> > Which is why hugepage_vma_revalidate() demands that the VMA span the
+> > whole PMD even for an mTHP order -- "we'd need to lock all VMAs in the
+> > PMD range to support this", as the comment there puts it.  A PMD-granular
+> > operation is only safe when one VMA owns the PMD, and that is exactly the
+> > restriction in the way.  The alignment is the symptom; the PMD is the
+> > design.
 > 
-> No functional change intended.
+> I disagree with "A PMD-granular operation is only safe when one VMA owns the
+> PMD". It's safe when all page table walkers can be stopped (see above).
+
+Fair, the sentence is too strong.  mmap_write_lock plus a VMA write lock on
+every VMA the PMD covers, plus their rmap locks, would make it safe.
+
+But the mechanism still clears the whole PMD, flushes, IPIs and
+repopulates it to collapse each 16-page window. That's very noisy to the
+workload.
+
+And I am not sure how to deal with rmap locking here.  Nothing in mm
+holds two unrelated anon_vma rwsems: vma_prepare() takes one for both VMAs
+it touches, because a merge requires them to share the anon_vma, and
+anon_vma_clone() takes one because "all anon_vma's share the same root".
+The lock ordering in mm/rmap.c has a single anon_vma->rwsem level, so a PMD
+spanning unrelated mappings would need an ordering rule that does not exist
+today.
+
+> > Between the two, nothing can reach a source, so the copy runs with no
+> > lock held at all -- and the address space is left alone while it does.
 > 
-> Assisted-by: Claude-Code:claude-opus-5
-> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
-> ---
+> Right. Concurrent MADV_DONTNEED can zap migration PTEs and other faults even
+> re-fault fresh anon folios. So that must be detected before replacing migration
+> entries again I guess.
 
-BTW, I'm wondering whether it would result in less churn (independent of the
-other changes) to
+Yes, that is the install-time check above.
 
-a) Rename mm/khugeapged.c to mm/collapse.c
+The copy itself is safe: a zap of a migration entry only clears the slot
+and adjusts rss -- see zap_nonpresent_ptes(), which neither puts the
+folio nor drops its rmap -- so a frozen, locked source cannot go away
+under the copy.
 
-b) Move stuff into mm/collapse.h that a new ...
+The rollback does the rest: it leaves a foreign slot as found and drops
+the rmap the freeze kept, which is the half of the teardown the zapper
+could not do.
 
-c) mm/khugapegd.c will need.
+> 
+> > 
+> > What that removes from every collapse path:
+> > 
+> >   mmap_write_lock              -> mmap_read
+> >   anon_vma_lock_write()        -> nothing: an rmap walk needs the folio
+> >                                   locked, and the engine holds that lock
+> >                                   from freeze to putback
+> >   tlb_remove_table_sync_one()  -> nothing: one ranged flush per round
+> >   LRU isolation                -> nothing: sources are inert in place
+> > 
+> 
+> Not sure how you handle PMD collapse. I recall problems with migration entries
+> on the PMD level for non-folio things (we discussed something along these lines
+> also in the past).
+
+There are no PMD-level migration entries here.
+
+The freeze is always at PTE level, so the pmd keeps pointing at the
+table until the last step, and the PMD leaf goes in as the terminal
+layer: verify, pmdp_collapse_flush(), deposit a fresh table, set the
+leaf, all in one section under the pmd lock with the pte ptl nested
+inside.
+
+A pmd-level walker sees the old table or the leaf and never pmd_none,
+and faults stay held at pte level by the migration entries throughout,
+which is what lets PMD collapse run under a VMA read lock like
+everything else.
+
+> 
+> > Working in windows rather than whole PMDs takes care of the other root.
+> > A sub-PMD window is collapsed under the page table lock, so a collapse
+> > disturbs only the window it collapses, and each candidate is validated
+> 
+> I recall us discussing that holding the PT lock for a longer collapse operation
+> (especially on 64k) is problematic. But I don't get all the details from your
+> description here.
+
+As I mentioned above, we drop the ptl after the freeze. And take it a
+second time for the install.  Allocation and the copy run in between with
+no lock held -- on 64K the copy at PMD order is 512M of it, which is why
+it cannot sit under either lock.
+
+> 
+> > at its own order -- a window need only fit its own VMA.  A PMD-order
+> > candidate still has to own the whole PMD, which is the old rule kept
+> > where it is still needed.
+> > 
+> > Candidates are carried through the passes a batch at a time rather than
+> > one window at a time, so a round pays for its flush and its lock
+> > acquisitions once.
+> 
+> Now I am starting to feel that there are too many changes packed in a single
+> series :)
+
+Batching is not an extra here, it is the only way collapse works at mTHP
+sizes.  What a round pays once -- lru_add_drain(), the mmu_notifier
+invalidate window, the two ptl acquisitions and the TLB flush -- would
+otherwise be paid per collapse.  A 2M PMD is 32 collapses at order-4, and
+a gigabyte collapsed into 64K mTHP is 16384 of them: the serialization
+would dominate, and the workload would feel every one.
+
+> > Reading the series
+> > ==================
+> > 
+> > 57 patches is a lot to land on a list.  They go in blocks:
+> > 
+> >   1-6    helpers and shared state: pte_folio(), pte_none_or_zero(),
+> >          mm/collapse.h, and the policy that replaces asking whether
+> >          khugepaged started a collapse
+> >   7-8    the engine's shape: entry points, a call-tree comment naming
+> >          every pass, and the scan filled in
+> >   9-23   the collapse half, top down: the round frame, then each pass
+> >          in turn, then selection and the retry store
+> 
+> I fail to parse this sentence.
+
+Bad wording.  The engine is introduced in a top-down manner:
+
+  - patch 7 adds the external interface and a comment naming every pass
+  - 8 the scan
+  - 9-11 how candidates become a round and which passes the round has
+  - 12-21 fill in one pass per patch in the order they run
+  - 22-23 add the cursor that picks the windows and the second chance
+    for the refused ones.
+
+I'll spell that out in the next iteration.
+
+> > So I wrote "perf bench mem usemem" for this.  It touches a region while
+> > khugepaged works on it and reports the workload's own latency
+> > percentiles and throughput, against per-size counters that can see
+> > sub-PMD folios.  The branch is above; it is unposted and not a
+> > dependency.
+> 
+> Something more realistic might be running some workload in a VM whereby the VM
+> is getting collapsed by khugepaged.
+
+Fair, I'll run that: a guest touching its memory while the host collapses
+the backing mapping, measured from inside the guest.
+
+> 
+> [...]
+> 
+> > There may be a way out -- a PMD migration entry over the table during
+> > the window, so the CPU never caches a walk to shoot down -- but that
+> > means teaching every pmd-level walker a new kind of entry, and I have
+> > not tried it.
+> 
+> I think we discussed that in the past and it's absolutely nasty.
+
+Let's leave this for now. I will give it a try when it gets its turn.
+
+> 
+> [...]
+> 
+> > Size
+> > ====
+> > 
+> > mm/ grows by 1915 lines net: 4475 added against 2560 deleted.
+> > 
+> That's quite a lot for something that reads like a cleanup at first.
+
+About half of that is comments. :)
 
 -- 
-Cheers,
-
-David
+  Kiryl Shutsemau / Kirill A. Shutemov
