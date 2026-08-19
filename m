@@ -1,284 +1,217 @@
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-44.mta1.migadu.com [95.215.58.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFC43BE652;
-	Wed, 19 Aug 2026 17:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C324637BE93
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 17:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787159359; cv=none; b=Di3xlsAH9FeU6NYZcWcfn2CcqcnJOjF26MtAI6O3GMECnRT23cv7ScqgmwcBbRChHz5eZWIY8bL5cdb9JJ+yNjG0+Gzte9m/oyqvsO4b6ejXe8kuqJLnETpqBRhYsCE9R6YfSFVZQUBFllUVTQKxqw1qupCIixVovHahK5R7rDs=
+	t=1787160538; cv=none; b=ho0IuqkbIoP+J687GNBf1m3wNzIq4Zx+2xpq7DF3h0Mn5e1Yt+llWAD0ntfEy4Al09cicRCC0JyGSPUcGuQ3Vj+8oWg3b5XWF30kWsM3R/bDDmzHolYTnvu3xEYMctBnLV6r5MDyYf4WjWhzV7Gc+d8VO3Kq2JVGrVkxP1zR8Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787159359; c=relaxed/simple;
-	bh=GaTMdOcQwQGnDb/PPYF1UOE4PRaASulBBwReUYNtedY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AiM4BO6OpH/TayhLOWHFdhseeZCZmmX2zizM7rvcXdTWDoNtRW1kmIV0fVZtF2sScCiR7dSKhzEzfhzsiCqmPw2fV4oHf/8GghcIE6C/hZ/EPWN3VcPixLMR0ksmnZBUlthqz65CHzUtVXB4pZJ51OtuINriEVWYLx6fpE7d/Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=XkXQWv4m; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=B56neHLq; arc=none smtp.client-ip=103.168.172.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1787160538; c=relaxed/simple;
+	bh=g3lcXJeSq1Zk4YQXSbf7TCZ5uXRcVcwca2QGvEtKrpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kEew2i++fE+sL28693Yri5aJCEzXkB4+1GwNUfTzcmJq8ZkSchwzUeK8ccRSNWiN/mMB/LnNrvJjSHpZYk+DjOEWRjUvkZbnY+vPIXVx/UrJjZ92ppiXQ6yWu17moPDl6B6nddqQoBjKwPGzev4IxL1wF+Gho6718OyZQOIpG4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OeQK1TDB; arc=none smtp.client-ip=95.215.58.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="XkXQWv4m";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B56neHLq"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.phl.internal (Postfix) with ESMTP id B412913801E1;
-	Wed, 19 Aug 2026 13:09:15 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Wed, 19 Aug 2026 13:09:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1787159355; x=
-	1787166555; bh=rngWsIbqp4UM0fSmr3ndBU+ttc5Nai8HRxYczVDElJk=; b=X
-	kXQWv4mldgxmebPhO5HInIrxwEyXD7vdckRHaKRDChcdEPNbk3qUOf9dnVbAxlMk
-	az0p914xNSD65d/CambQfN2m53NBgSIkHBnSKTXEIclH4UOt4ibk3DKjRnU5yycs
-	W7gDD2J/wOyvepAeEmZgp9k0q7alDQtUKYNLYKWaqLBHf+QG8jqy7cMnTfj+GAuu
-	7MQ1r1ZnLMcfU8hBJlRrigPUfjmRCFrQRm1vdhOQQL6UeeoG4NjPyKihvsxb0bkG
-	Phm8LO8GScuNqukHYN3lMaQr3SwfMpvPpHZKUKrOTPc05t8FaOh2Z2Kj0H+zOP5p
-	KsvUp92DdQ24UqVFIDM1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1787159355; x=1787166555; bh=rngWsIbqp4UM0fSmr3ndBU+ttc5Nai8HRxY
-	czVDElJk=; b=B56neHLq7er86+lmQ2V++BpiXFLH6WkSpfWF4TZ53vg1yUV4AW3
-	9SQBlGGfqGGcpFkq6dQTt6aFnKNJyxn/7BSYUTvQ/RvRsnElNoxGCBrhrEgXXGNx
-	qaLVSl81xjPChjmV16jkux7Sty6758SxBluBXpK3eOQc2e/ch2GoUONBIbKngSxX
-	VTFwZOhvh75/cYypXnDj/c3zTm6u3IU6xugzHtJSGDWIihvQp8e9exTT0PNm3hPS
-	AFDhWChONL8lNT/KUfGjOf6u9qK7vuwlLP89Lciv856uSXuvtWMdER5nTWhkOdt6
-	9bBIctLhJPJTTOE0ghgRBVHd3JpYVHw4FNw==
-X-ME-Sender: <xms:OuOFahdNPCaQTr9ES9HTrKEi-_OhwFcGJL2Y1JwhYpfj-YN4SSFw6g>
-    <xme:OuOFahgThiTOZcJOBYBmDOPIsCJPcyiNaEmsn_nBDnF1DRh1ms9OGeDMtwbdJHfre
-    WAo6GPgUePt_ZD9Nqo--RmJ2IR64gmxMOv77SrY4-0mt22qpyh0nvgT>
-X-ME-Received: <xmr:OuOFapTYCJl9yzGlAvik790RSVDJbcQrwMvOhgXHFHBDFlO5GI5Aj2H_MyY>
-X-ME-Proxy-Cause: dmFkZTF2hJnMxPlMk/jfavBtLUpTUzRd98wV0yj6Xt/Tg57fveFXbfrnoCBHAhwoJSnwvc
-    MtBG50RSMfmClpPI3x6CkcWZCyQvMgs1EZ/KW76Yapbv4d0vUdc6gFqdtYBxQZoYDkSqYD
-    2YcaHdEdQfhRcwKftYsqzXEfDtHBoWdxBFtT8n56HAZST46t7Dn270fSXfsHXaq5JKYPDD
-    JoKvC7wqN5tCFOmjr9104dGNuRhfDkdXo/k1uVDYnCrgfsZx1Du/6tDXbC34XfACrLwl8p
-    prfw7PeES/yEPXECxT/4GTheYyqLa/iux7yvt2JLPJJHC1s6Kbpk2oi4ksERMJCH47snQd
-    o5MgcUNJ9MgaGAfFhljde5JsdiLa7vnywvzsFsEsyh6/jENVfGHBB4NYMoCHdzyeFT8lW6
-    yYx1d6atj2GRUwmmZRZCOxWT0OhZjWhxDuT3G55syUAHSF2ICY/molwLA0RFftwTEOY5DZ
-    vg1rRhzPDm2Yibh8HWbghC4+BGr6CwebgdS5VlYpB58QAw8wmG5zI94Pi9k6Zwc8qPqzi4
-    pLEXAvi5grHrQtpdHqLnZkW8cxNCm4EgsEziTB0bvXmJoMSqnaJDLH4LM2KDB4EHumeg05
-    Oe+IYAPb9sqnI6CCz8ZB7kaLsW4wP+oI0J46P6EySsDJt/Gtpr2OyCnJpRuQ
-X-ME-Proxy: <xmx:OuOFalKbWCWCI4ZXnZ6o2x7NBHXHelXnP4ynvixvbIEXdrgu7mryRA>
-    <xmx:OuOFagQJaZaqTXceo5AM0IZ8hNjlHfdFY2va7llJmUBU9sg0iUsbxA>
-    <xmx:OuOFaiuBACucNMmEX4x_pO3FXL942oTmUfqnR8DAtclVKO7yjC8cgw>
-    <xmx:OuOFal-067q4FSkBuyRRGIfsvMUFjGtdxbPfuJaiDhQe6psxBq8www>
-    <xmx:O-OFas-OgkCIQ2NKZkmWqu2BlJxVNaFGk9Y2qaKYd5zBQIs3fM20His3>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Aug 2026 13:09:13 -0400 (EDT)
-Date: Wed, 19 Aug 2026 18:09:12 +0100
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: akpm@linux-foundation.org, ljs@kernel.org, nico.pache@linux.dev, 
-	baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com, hughd@google.com, 
-	lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com, rppt@kernel.org, 
-	ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, usama.arif@linux.dev, 
-	vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, agordeev@linux.ibm.com, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jannh@google.com, willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, 
-	mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
- primitives
-Message-ID: <aoXRi3ngBhO54Akk@thinkstation>
-References: <20260816224609.308019-1-kirill@shutemov.name>
- <9f51ac27-24b2-495b-b397-84865f977d24@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OeQK1TDB"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=g3lcXJeSq1Zk4YQXSbf7TCZ5uXRcVcwca2QGvEtKrpY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787160532; v=1; x=1787765332;
+ b=OeQK1TDBjnE3Jowkmp37QWNDgqeQj6RXoIfxiEqn+Z0KXsRCOXQI5XlrgM5r8eVOgTqU7nkj
+ gV5Sq2Uvo99HZkYs8dUM9VdVo4G234CMH+D1gB2PSVcVH7oYUOkfnzOLAwgnGKn8ECtE/VH2s0u
+ DDTQR9UgA2GVoViDn/8yO8L0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: from [192.168.1.71] (218.1.223.168)
+	by smtp.migadu.com with ESMTPS id 2a23afa2a303163f;
+	Wed, 19 Aug 2026 17:28:52 +0000
+X-Mizu-Trace-ID: 2a23afa2a303163f
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <d72daef4-5d68-49e4-a264-3f813d897813@linux.dev>
+Date: Thu, 20 Aug 2026 01:28:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f51ac27-24b2-495b-b397-84865f977d24@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] rv/reactors: use context-sensitive lockdep wait
+ type in rv_react()
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1786294920.git.wen.yang@linux.dev>
+ <26526e555baa5118325b2383e9f7f0f8f9b6a199.1786294920.git.wen.yang@linux.dev>
+ <38decc4f7ef5b6f03b37705c7e97f22a7e40d7e2.camel@redhat.com>
+ <87zeylnos3.fsf@yellow.woof>
+ <b6de8228ee3045104a03ab4754e5ecc50e67f627.camel@redhat.com>
+ <20260819112038-e7b033f8-3711-4acd-ba05-dbef015c6fc8@linutronix.de>
+Content-Language: en-US
+From: Wen Yang <wen.yang@linux.dev>
+In-Reply-To: <20260819112038-e7b033f8-3711-4acd-ba05-dbef015c6fc8@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 18, 2026 at 03:55:55PM +0200, David Hildenbrand (Arm) wrote:
-> > This replaces khugepaged's anonymous collapse with an engine that
-> > can collapse sub-PMD ranges. It is built around migration entries and
-> > frozen folios instead of heavy locking and isolation, aiming for better
-> > scalability and less disruption to the workload being collapsed.
+
+
+On 8/19/26 17:24, Thomas Weißschuh wrote:
+> On Wed, Aug 19, 2026 at 09:12:43AM +0200, Gabriele Monaco wrote:
+>> On Mon, 2026-08-17 at 10:18 +0200, Nam Cao wrote:
+>>> Gabriele Monaco <gmonaco@redhat.com> writes:
+>>>
+>>>> On Mon, 2026-08-10 at 01:10 +0800, wen.yang@linux.dev wrote:
+>>>>> From: Wen Yang <wen.yang@linux.dev>
+>>>>>
+>>>>> Reactors must not explicitly take locks, so they should comply with
+>>>>> LD_WAIT_FREE.  However, reactor callbacks can run with preemption
+>>>>> enabled on any kernel (not just PREEMPT_RT).  If a timer interrupt
+>>>>> fires during the callback, the interrupt exit path schedules and
+>>>>> acquires rq->__lock (LD_WAIT_SPIN) while the lockdep override map that
+>>>>> declared LD_WAIT_FREE is still held, triggering a spurious
+>>>>> "Invalid wait context" warning:
+>>> ...
+>>>> Anyway, I'd appreciate comments/acks from the other folks in the loop
+>>>
+>>> Sorry, I do not know enough about lockdep to comment on this.
+>>>
+>>> FWIW, I would rather just use LD_WAIT_SPIN and keep things
+>>> simple. Context-sensitive code paths "feels wrong" to me. Spinning
+>>> should either be allowed or forbidden. Making it dynamic "feels like" it
+>>> will bring further complications down the road.
 > 
-> I recall us discussing something around using some PTE/PMD markers (e.g.,
-> migration entries) in the past.
+> To me the dynamic logic also feels quite complicated.
+> We could also disable preemption before overriding the lockdep context
+> when lockdep is enabled to avoid the observed issue.
 > 
-> One thing that needed care is handling concurrent MADV_DONTNEED + faultin after
-> dropping relevant locks.
 
-Handled at install time.
+Thanks,
 
-I drop the PTL after the freeze to allow allocation and copy, but sample
-the PTE values (see saved_ptes) at freeze time. If something changed
-under us by the time we install the new page table entries, we give up
-on that candidate and roll it back; the rest of the round still
-installs. We allow harmless transitions: zero page to none.
+rv_react() already has two callers in this tree that land in very
+different places.
+nrp attaches to local_timer_entry, which fires from inside the hardirq 
+handler itself:
 
-> > Which is why hugepage_vma_revalidate() demands that the VMA span the
-> > whole PMD even for an mTHP order -- "we'd need to lock all VMAs in the
-> > PMD range to support this", as the comment there puts it.  A PMD-granular
-> > operation is only safe when one VMA owns the PMD, and that is exactly the
-> > restriction in the way.  The alignment is the symptom; the PMD is the
-> > design.
+     DEFINE_IDTENTRY_SYSVEC(sysvec_apic_timer_interrupt)
+       irq_enter_rcu()                  -> 
+preempt_count_add(HARDIRQ_OFFSET)
+       trace_local_timer_entry()
+         handle_vector_irq_entry() -> da_handle_event() -> rv_react()
+
+in_hardirq() is true for the whole of that rv_react() call.
+
+While pagefault, on the other hand, attaches to page_fault_user, which 
+only fires when the interrupted context was user mode -- i.e. 
+preempt_count is guaranteed 0:
+
+     exc_page_fault()
+       trace_page_fault_user()
+         handle_page_fault() -> ltl_atom_pulse() -> ... -> rv_react()
+
+A timer tick can land inside that second one and there's nothing wrong
+with it doing so.
+
+So I don't think LD_WAIT_SPIN for everything is safe, it's not just 
+"less strict on paper".
+If a reactor ever does raw_spin_lock() by mistake while running from 
+nrp's path, check_wait_context() takes the wait type straight from the 
+override map:
+
+     if (unlikely(class->lock_type == LD_LOCK_WAIT_OVERRIDE))
+             curr_inner = prev_inner;        /* SPIN */
+     if (next_outer > curr_inner)
+             return print_lock_invalid_wait_context(...);
+
+SPIN nested in SPIN is 2 > 2, which is false, so it just passes.
+We'd be silently giving up the one case (hardirq/NMI) where the "no 
+locks" rule for reactors actually matters, which is the same thing that 
+bit you with the signal reactor.
+
+And for what it's worth, checking context to decide the wait type isn't 
+something we'd be introducing -- lockdep does the same thing to get the 
+baseline before any override is applied, in the exact function that 
+produced this splat:
+
+     static inline short task_wait_context(struct task_struct *curr)
+     {
+             if (lockdep_hardirq_context()) {
+                     if (curr->hardirq_threaded || curr->irq_config)
+                             return LD_WAIT_CONFIG;
+                     return LD_WAIT_SPIN;
+             } else if (curr->softirq_context) {
+                     return LD_WAIT_CONFIG;
+             }
+             return LD_WAIT_MAX;
+     }
+
+That's four cases. Our in_nmi() || in_hardirq() is a simplification of
+what's already there, not a new habit.
+
+Thomas, on disabling preemption instead: it does fix the pagefault
+case, and it's a no-op for nrp since preempt_count is already elevated 
+there. But it changes what a reactor is allowed to do, for every 
+reactor, not just the two above.cspin_lock() on RT checks 
+might_resched() before it even looks at thevlock:
+
+     static __always_inline void __rt_spin_lock(spinlock_t *lock)
+     {
+             rtlock_might_resched();   /* unconditional */
+             rtlock_lock(&lock->lock);
+     }
+
+so any future reactor using a plain spinlock would hit that every single 
+time, lock contended or not, on top of whatever it's already called for. 
+That seems worse than the thing we're trying to fix.
+
+Since neither struct rv_reactor nor rv_react() actually documents what
+context a callback may run in, maybe that's worth spelling out
+separately regardless of what we do here -- something close to what
+printk already does for the same reason (reactor_printk's
+vprintk_deferred() leans on this internally: is_printk_legacy_deferred()
+checks in_nmi() to decide whether it's safe to take console_lock or
+whether it has to go through the lock-free irq_work path instead).
+
+A reactor that wants to do more than printk/panic would follow the same 
+shape:
+
+     static void some_reactor(const char *msg, va_list args)
+     {
+             if (atomic_cmpxchg(&pending, 0, 1) == 0)
+                     irq_work_queue(&my_irq_work);   /* NMI-safe */
+     }
+
+     static void some_irq_work_fn(struct irq_work *work)
+     {
+             schedule_work(&my_work);   /* spin_lock()/mutex_lock() now 
+fine */
+     }
+
+
+Please let me know if there are any concerns or if further changes are 
+needed.
+
+
+--
+Best wishes,
+Wen
+
+
+>>> But that's just my intuition.
+>>
+>> I don't have a strong opinion on this, but since there's no one in the kernel
+>> using LD_WAIT_FREE as inner type, that feels like a hint to go down the simple
+>> route too and allow LD_WAIT_SPIN.
+>>
+>> If a reactor ever uses spinlocks, lockdep would already complain on its own if
+>> that ends up being an issue, wouldn't it?
 > 
-> I disagree with "A PMD-granular operation is only safe when one VMA owns the
-> PMD". It's safe when all page table walkers can be stopped (see above).
-
-Fair, the sentence is too strong.  mmap_write_lock plus a VMA write lock on
-every VMA the PMD covers, plus their rmap locks, would make it safe.
-
-But the mechanism still clears the whole PMD, flushes, IPIs and
-repopulates it to collapse each 16-page window. That's very noisy to the
-workload.
-
-And I am not sure how to deal with rmap locking here.  Nothing in mm
-holds two unrelated anon_vma rwsems: vma_prepare() takes one for both VMAs
-it touches, because a merge requires them to share the anon_vma, and
-anon_vma_clone() takes one because "all anon_vma's share the same root".
-The lock ordering in mm/rmap.c has a single anon_vma->rwsem level, so a PMD
-spanning unrelated mappings would need an ordering rule that does not exist
-today.
-
-> > Between the two, nothing can reach a source, so the copy runs with no
-> > lock held at all -- and the address space is left alone while it does.
+> Only if that reactor is actually triggered by a tracepoint in the wrong context.
+> This might not happen during testing. This happened to me in my signal reactor
+> patch, which is why I added the lockdep override.
 > 
-> Right. Concurrent MADV_DONTNEED can zap migration PTEs and other faults even
-> re-fault fresh anon folios. So that must be detected before replacing migration
-> entries again I guess.
-
-Yes, that is the install-time check above.
-
-The copy itself is safe: a zap of a migration entry only clears the slot
-and adjusts rss -- see zap_nonpresent_ptes(), which neither puts the
-folio nor drops its rmap -- so a frozen, locked source cannot go away
-under the copy.
-
-The rollback does the rest: it leaves a foreign slot as found and drops
-the rmap the freeze kept, which is the half of the teardown the zapper
-could not do.
-
 > 
-> > 
-> > What that removes from every collapse path:
-> > 
-> >   mmap_write_lock              -> mmap_read
-> >   anon_vma_lock_write()        -> nothing: an rmap walk needs the folio
-> >                                   locked, and the engine holds that lock
-> >                                   from freeze to putback
-> >   tlb_remove_table_sync_one()  -> nothing: one ranged flush per round
-> >   LRU isolation                -> nothing: sources are inert in place
-> > 
-> 
-> Not sure how you handle PMD collapse. I recall problems with migration entries
-> on the PMD level for non-folio things (we discussed something along these lines
-> also in the past).
-
-There are no PMD-level migration entries here.
-
-The freeze is always at PTE level, so the pmd keeps pointing at the
-table until the last step, and the PMD leaf goes in as the terminal
-layer: verify, pmdp_collapse_flush(), deposit a fresh table, set the
-leaf, all in one section under the pmd lock with the pte ptl nested
-inside.
-
-A pmd-level walker sees the old table or the leaf and never pmd_none,
-and faults stay held at pte level by the migration entries throughout,
-which is what lets PMD collapse run under a VMA read lock like
-everything else.
-
-> 
-> > Working in windows rather than whole PMDs takes care of the other root.
-> > A sub-PMD window is collapsed under the page table lock, so a collapse
-> > disturbs only the window it collapses, and each candidate is validated
-> 
-> I recall us discussing that holding the PT lock for a longer collapse operation
-> (especially on 64k) is problematic. But I don't get all the details from your
-> description here.
-
-As I mentioned above, we drop the ptl after the freeze. And take it a
-second time for the install.  Allocation and the copy run in between with
-no lock held -- on 64K the copy at PMD order is 512M of it, which is why
-it cannot sit under either lock.
-
-> 
-> > at its own order -- a window need only fit its own VMA.  A PMD-order
-> > candidate still has to own the whole PMD, which is the old rule kept
-> > where it is still needed.
-> > 
-> > Candidates are carried through the passes a batch at a time rather than
-> > one window at a time, so a round pays for its flush and its lock
-> > acquisitions once.
-> 
-> Now I am starting to feel that there are too many changes packed in a single
-> series :)
-
-Batching is not an extra here, it is the only way collapse works at mTHP
-sizes.  What a round pays once -- lru_add_drain(), the mmu_notifier
-invalidate window, the two ptl acquisitions and the TLB flush -- would
-otherwise be paid per collapse.  A 2M PMD is 32 collapses at order-4, and
-a gigabyte collapsed into 64K mTHP is 16384 of them: the serialization
-would dominate, and the workload would feel every one.
-
-> > Reading the series
-> > ==================
-> > 
-> > 57 patches is a lot to land on a list.  They go in blocks:
-> > 
-> >   1-6    helpers and shared state: pte_folio(), pte_none_or_zero(),
-> >          mm/collapse.h, and the policy that replaces asking whether
-> >          khugepaged started a collapse
-> >   7-8    the engine's shape: entry points, a call-tree comment naming
-> >          every pass, and the scan filled in
-> >   9-23   the collapse half, top down: the round frame, then each pass
-> >          in turn, then selection and the retry store
-> 
-> I fail to parse this sentence.
-
-Bad wording.  The engine is introduced in a top-down manner:
-
-  - patch 7 adds the external interface and a comment naming every pass
-  - 8 the scan
-  - 9-11 how candidates become a round and which passes the round has
-  - 12-21 fill in one pass per patch in the order they run
-  - 22-23 add the cursor that picks the windows and the second chance
-    for the refused ones.
-
-I'll spell that out in the next iteration.
-
-> > So I wrote "perf bench mem usemem" for this.  It touches a region while
-> > khugepaged works on it and reports the workload's own latency
-> > percentiles and throughput, against per-size counters that can see
-> > sub-PMD folios.  The branch is above; it is unposted and not a
-> > dependency.
-> 
-> Something more realistic might be running some workload in a VM whereby the VM
-> is getting collapsed by khugepaged.
-
-Fair, I'll run that: a guest touching its memory while the host collapses
-the backing mapping, measured from inside the guest.
-
-> 
-> [...]
-> 
-> > There may be a way out -- a PMD migration entry over the table during
-> > the window, so the CPU never caches a walk to shoot down -- but that
-> > means teaching every pmd-level walker a new kind of entry, and I have
-> > not tried it.
-> 
-> I think we discussed that in the past and it's absolutely nasty.
-
-Let's leave this for now. I will give it a try when it gets its turn.
-
-> 
-> [...]
-> 
-> > Size
-> > ====
-> > 
-> > mm/ grows by 1915 lines net: 4475 added against 2560 deleted.
-> > 
-> That's quite a lot for something that reads like a cleanup at first.
-
-About half of that is comments. :)
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> Thomas
