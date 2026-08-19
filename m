@@ -1,162 +1,142 @@
-Received: from devianza.investici.org (devianza.investici.org [198.167.222.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C1C233954;
-	Tue, 18 Aug 2026 23:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.167.222.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EB33D47A6
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 07:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787094764; cv=none; b=CT+YLwdb2Ww06/Fc42OK98qrgLM/nHy3MqurjOu5SVvrbI0GOC0TTEEC8OCRpDqqHln+rNxJVVktWlwQkUzzXhnhGYVfEZbr5frYT5j9r9hiSyo62J83SBVW6LZ+ao04OU+YnXWxCJJv/R5N7hpNXLZbDx9t0B6bx5saZptxikA=
+	t=1787123572; cv=none; b=k3NWQ0fmgfmKkNoKnIRx0zYZ3IsE8m8jkWmKqQjCdRqf5j0gKDKSXnY2zsND5MaY5XizjfyJ0RtKTu4KYCuj6GiaZsYcbE5Sdx+wkdCaQaQRuGv8u5ET2X+LfbZNc0nMJUy4VPmc3alLK/qjMa02YCqBQ4gMQj0hU/JBQG70tos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787094764; c=relaxed/simple;
-	bh=KnmdjJGlDiEcqiwyb2gL1oqhiezN0ptxk/Vng4N7kXw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=akT2ayqTryTjKeeEyuGDXp7oAyW75DkBfISBo48XF9o2SSeDHV14A8SGuQAWF9OAkshaLoy3/xo8jSAYVetIeLb0lTQwzhtSOMyJDpQXd+9Xm7UOH8UHHm3XiZZq2fcyo15HJlic0BnyZRJjfdHFeowd2iJvGqUNui44xG/tuUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=jTqupWrr; arc=none smtp.client-ip=198.167.222.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1787123572; c=relaxed/simple;
+	bh=abFhYMkUfAdImPk84cvzsA0w1L5kgTtwCKQLRo3mf0I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AfDvOhwsUX2H2VdAItBF6DIjZQYT6+5xgqmuBCeKqeArFMS6pZm9b572B3Dc/iQItBkcUavdrzHgzgV7g+TvC1kT43ymGYyB5IUlbJ5FJrVX3IxWxRjKJ5f6SVPQj82q1QAL24bGgSnQxzd+klCecERZ2WPmY238sj711wUpJ5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ijMyJUlO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="jTqupWrr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787094760;
-	bh=i5yTHM9sTvE7JYLqlpPURxrPO43udIfu90NwaYLGjvU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=jTqupWrrAewzxi+451xcuZJ4gYi50NGghK7MXFtUJeBfww2AgSDqNNBZ5CBQUrQFg
-	 r1ULlR6GzX2jBaUKGgdTsnH348GY6he5ECTLQ33QEYO7OiAMIL4JAsGpFA2EWfdWVY
-	 HeByGcKrDpyN+HZlCsM8xPGA4Xc8oFVS969dhnxs=
-Received: from mx2.investici.org (unknown [127.0.0.1])
-	by devianza.investici.org (Postfix) with ESMTP id 4hPlpw0M1Nz6vYy;
-	Tue, 18 Aug 2026 23:12:40 +0000 (UTC)
-Received: by mx2.investici.org (Postfix) id 4hPlpv3r3vz4y6W;
-	Tue, 18 Aug 2026 23:12:39 +0000 (UTC)
-Date: Wed, 19 Aug 2026 00:12:40 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-CC: Naveen N Rao <naveen@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_kprobes=3A_use_DEFINE=5FD?=
- =?US-ASCII?Q?EBUGFS=5FATTRIBUTE_for_the_enabled_knob?=
-In-Reply-To: <20260819080813.d66950e37e660e018dfb19e9@kernel.org>
-References: <20260818015318.24103-1-include@grrlz.net> <20260819080813.d66950e37e660e018dfb19e9@kernel.org>
-Message-ID: <9533DBAB-DED1-4D61-93ED-AEFA2C585454@grrlz.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijMyJUlO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787123569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=abFhYMkUfAdImPk84cvzsA0w1L5kgTtwCKQLRo3mf0I=;
+	b=ijMyJUlOLGMNDFYYugqt7m2sMNRjPJk1tx4YgyRDhp9MX+qOe6GprBd6v8pCrfHUD9zo7W
+	BNleyZDNVWEIE7x6RQlpTfp+hJtPl6kcIUgFfBxH4sBjA0Rn9L79e5RRHE29SBqSbqSDGw
+	6rrQGIojrxtpDLS+6zysxuHv+27abTs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-2ixFlrrMNCSh5kZv0DI8fw-1; Wed, 19 Aug 2026 03:12:47 -0400
+X-MC-Unique: 2ixFlrrMNCSh5kZv0DI8fw-1
+X-Mimecast-MFC-AGG-ID: 2ixFlrrMNCSh5kZv0DI8fw_1787123566
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-482a5e9400eso510330f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 00:12:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787123566; x=1787728366;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=abFhYMkUfAdImPk84cvzsA0w1L5kgTtwCKQLRo3mf0I=;
+        b=m0TShb3t236kYm6E4lvcttvxCsEaFv4UdLLEWjTBQgmPZvln7ThxBa0usq2ZHYwv91
+         H2501TP628gpWRbtveUtHOyHTNR0J9ZFd8bmCuwaXB0sALUv6pxI+RaQJZnFN40YElY+
+         7VpTWuLOsHkThgkQsAfYn4mLiFy4ae75BYW+CVCVjIRMxaoP70E8/P9ZA6xtZKsIXBdM
+         /+kavVfUY17ruuMptCf/PHx5ThriBH2AfihmfuNP8fmQoUfpNWjvGw/Ij9Mg0l5U/sQ+
+         J7i4eRPKj0LEzRNtFQIxKQzpCOpUwpQkbFaYJFLTak+QU14QoBdVpyLhcDltzg4ayhFQ
+         1wcA==
+X-Gm-Message-State: AOJu0Yx4fVGgu8s2q2noa7t9ixUdfi1vZ+m5kB+cdNE2NVPcrbGHIg6i
+	5gkeTKZn9uq2/h1dXrhVTgEzhESYedvdydBSww6mHL6XblggfTMgxe1EiN4qtZLy3QY35RIjI5y
+	IUHq2e1lnWSYNgwLLuNVCyYgByNJCiteaSnZf1dKm9bVOb31yiaCmMG9gVwbX0wfgiYgTaDbiVg
+	==
+X-Gm-Gg: AR+sD12Nc+yoodfevjvOm/feDGm73h/T9ZXSdnLaqTfsxTzpCt1eMT7y95h5fd55+0W
+	gBQ2cLTksrR8SiAfXLbTPq0lRWwXr5ff7FidkfqTqimqJ7bIHP09F4eJj66F4nPOiNokDhj78tN
+	seswoxwfJ8//1Ii2hpEfoVuXZkPn/8Y0rLIslDkRyghQ6/l6fm2+8SiVdVQU8+On0DTO4thLH8q
+	2kDd0moWf4PtQFz5c8XT6aWdvy0GgesyAeHlEarYV2S2rvQFvDGZccnopmyNocsx7riaT5aaeMv
+	UrXvhsu+NwVNpMT+8TAEgbdQHeeoKD5sP5V9g9yVJGxBeYo0BPvwNw+OA0I4htwHs4r3NCBkKqb
+	Q4byR6+0Z7cdATpqYlgNflFUggq2rgkWuWPkUMW5fRUrlLovARqzweM+sqLN5czeNM8nY4A==
+X-Received: by 2002:a05:6000:2507:b0:47e:81aa:3832 with SMTP id ffacd0b85a97d-482b1fe7f68mr3475168f8f.16.1787123566625;
+        Wed, 19 Aug 2026 00:12:46 -0700 (PDT)
+X-Received: by 2002:a05:6000:2507:b0:47e:81aa:3832 with SMTP id ffacd0b85a97d-482b1fe7f68mr3475095f8f.16.1787123566243;
+        Wed, 19 Aug 2026 00:12:46 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14c3775sm3207741f8f.26.2026.08.19.00.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2026 00:12:45 -0700 (PDT)
+Message-ID: <b6de8228ee3045104a03ab4754e5ecc50e67f627.camel@redhat.com>
+Subject: Re: [PATCH v3 1/4] rv/reactors: use context-sensitive lockdep wait
+ type in rv_react()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, wen.yang@linux.dev
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas
+ =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Date: Wed, 19 Aug 2026 09:12:43 +0200
+In-Reply-To: <87zeylnos3.fsf@yellow.woof>
+References: <cover.1786294920.git.wen.yang@linux.dev>
+	 <26526e555baa5118325b2383e9f7f0f8f9b6a199.1786294920.git.wen.yang@linux.dev>
+	 <38decc4f7ef5b6f03b37705c7e97f22a7e40d7e2.camel@redhat.com>
+	 <87zeylnos3.fsf@yellow.woof>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4EhBje4OeRBD5i_zXmtkuBiaMqkTcOWPpsBO-87pL6I_1787123566
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19 August 2026 00:08:13 BST, Masami Hiramatsu <mhiramat@kernel.org>
-wrote:
->On Tue, 18 Aug 2026 01:53:18 +0000
->Bradley Morgan <include@grrlz.net> wrote:
->
->> This enabled knob is a disgusting terrible hack. It has rolled its
->> own read/write pair since 2007, writing '1' or '0' into a three byte
->> buffer by hand just to print a single character, with an XXX comment
->> begging debugfs for write callbacks on bool files.
->> DEFINE_DEBUGFS_ATTRIBUTE showed up in 2016 and does exactly that, so
->> the disgusting terrible hack has outlived its excuse for nine years.
->> Kill it, and the stale comment with it.
->
->In other words, does this mean something like the following?
->
->This "enable" knob implemented custom read/write logic, manually writing
->"1" or "0" to a 3-byte buffer solely to output a single character. As
->suggested by comments calling for `debugfs` to support write callbacks
->for boolean files, using `DEFINE_DEBUGFS_ATTRIBUTE` eliminates the need
->for these callbacks.
->
+On Mon, 2026-08-17 at 10:18 +0200, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+>=20
+> > On Mon, 2026-08-10 at 01:10 +0800, wen.yang@linux.dev=C2=A0wrote:
+> > > From: Wen Yang <wen.yang@linux.dev>
+> > >=20
+> > > Reactors must not explicitly take locks, so they should comply with
+> > > LD_WAIT_FREE.=C2=A0 However, reactor callbacks can run with preemptio=
+n
+> > > enabled on any kernel (not just PREEMPT_RT).=C2=A0 If a timer interru=
+pt
+> > > fires during the callback, the interrupt exit path schedules and
+> > > acquires rq->__lock (LD_WAIT_SPIN) while the lockdep override map tha=
+t
+> > > declared LD_WAIT_FREE is still held, triggering a spurious
+> > > "Invalid wait context" warning:
+> ...
+> > Anyway, I'd appreciate comments/acks from the other folks in the loop
+>=20
+> Sorry, I do not know enough about lockdep to comment on this.
+>=20
+> FWIW, I would rather just use LD_WAIT_SPIN and keep things
+> simple. Context-sensitive code paths "feels wrong" to me. Spinning
+> should either be allowed or forbidden. Making it dynamic "feels like" it
+> will bring further complications down the road.
+>=20
+> But that's just my intuition.
 
-ehhhhh, well, my description very well tells someone about why this is
-bad, and a hack, and everything. 
+I don't have a strong opinion on this, but since there's no one in the kern=
+el
+using LD_WAIT_FREE as inner type, that feels like a hint to go down the sim=
+ple
+route too and allow LD_WAIT_SPIN.
 
-Your description is good though... But I love to have my personality in my
-descriptions :(
+If a reactor ever uses spinlocks, lockdep would already complain on its own=
+ if
+that ends up being an issue, wouldn't it?
 
+Gabriele
 
->Thanks,
->
->> 
->> The behavior does not change, except the write only accepts 0/1 now
->> instead of y/n/on/off, and nothing uses anything else.
->> 
->> Signed-off-by: Bradley Morgan <include@grrlz.net>
->> ---
->> Changes since v1:
->>  - Added the missing Signed-off-by, sorry.
->> 
->>  kernel/kprobes.c | 43 +++++++++----------------------------------
->>  1 file changed, 9 insertions(+), 34 deletions(-)
->> 
->> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
->> index bfc89083daa9..044c6b5fd2aa 100644
->> --- a/kernel/kprobes.c
->> +++ b/kernel/kprobes.c
->> @@ -3013,47 +3013,22 @@ static int disarm_all_kprobes(void)
->>  	return ret;
->>  }
->>  
->> -/*
->> - * XXX: The debugfs bool file interface doesn't allow for callbacks
->> - * when the bool state is switched. We can reuse that facility when
->> - * available
->> - */
->> -static ssize_t read_enabled_file_bool(struct file *file,
->> -	       char __user *user_buf, size_t count, loff_t *ppos)
->> +static int kprobes_enabled_set(void *data, u64 val)
->>  {
->> -	char buf[3];
->> +	if (val)
->> +		return arm_all_kprobes();
->>  
->> -	if (!kprobes_all_disarmed)
->> -		buf[0] = '1';
->> -	else
->> -		buf[0] = '0';
->> -	buf[1] = '\n';
->> -	buf[2] = 0x00;
->> -	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
->> +	return disarm_all_kprobes();
->>  }
->>  
->> -static ssize_t write_enabled_file_bool(struct file *file,
->> -	       const char __user *user_buf, size_t count, loff_t *ppos)
->> +static int kprobes_enabled_get(void *data, u64 *val)
->>  {
->> -	bool enable;
->> -	int ret;
->> -
->> -	ret = kstrtobool_from_user(user_buf, count, &enable);
->> -	if (ret)
->> -		return ret;
->> -
->> -	ret = enable ? arm_all_kprobes() : disarm_all_kprobes();
->> -	if (ret)
->> -		return ret;
->> -
->> -	return count;
->> +	*val = !kprobes_all_disarmed;
->> +	return 0;
->>  }
->>  
->> -static const struct file_operations fops_kp = {
->> -	.read =         read_enabled_file_bool,
->> -	.write =        write_enabled_file_bool,
->> -	.llseek =	default_llseek,
->> -};
->> +DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
->> +			 kprobes_enabled_set, "%llu\n");
->>  
->>  static int __init debugfs_kprobe_init(void)
->>  {
->> -- 
->> 2.47.3
->> 
->
->
->
-
-Thanks!
