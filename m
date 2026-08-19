@@ -1,227 +1,134 @@
-Received: from mta0.migadu.com (out-121.mta0.migadu.com [91.218.175.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D0F17993
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 18:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02DD3C1D44
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Aug 2026 18:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787164158; cv=none; b=WxtosElpry/M7WfZjm/lyyAm9RIhId3yvUR1KlaLjF2Je80xXLpQ9y11DRHlZqGj1Jz5g5R7B31uYVrZOPnLj+QmFPvc8Skn+BlRnXCDTwjZ+GvxDvnNco6brSmXPe5+NykX3slgZB99X4Xn3/ZG0u0KoY17V1ophBx7sEwTfZA=
+	t=1787164208; cv=none; b=LT1HbhKpbWsaB8lAEZ3XQk8E/TGrytqBctz0PPKrCCMuhvZS7w/RXhGSGehslJjfhPeSHsNdhrIS2rtbh3+WJhvvUD3s8V9b/VXFGIdecwwxBIwy64TgQiNlk0f4+G2+RFb5mbg5ZDPj7h4vgAEqcUIgBNXfI+rU3zxAyusCW3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787164158; c=relaxed/simple;
-	bh=P70S/RSyEwRSypRMAYJWaMLMUHPOxfCAgMWBNS/a1kw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qqFhLKTFuDcfNgcFcxGw3J4mGjFcmzIkmekWFNN3SbW+ldkCanoyXR2e1e12wySAZSl6OEwJUDtxJ063U7mQKtgjhy5b5MTubWBf81f+By4WzRcIjYCyD+fMYzzE/WcsCEvsTpm6KesHK2/GwQst1MLPkhQHzguriUFw+n+P5A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=quvgeL2k; arc=none smtp.client-ip=91.218.175.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787164208; c=relaxed/simple;
+	bh=RkgBLzumQmoVG41GSZIIvEVarFMqEuEa9pfmMh5INus=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=EmbL7jwOTpqXnXC/b+Fm7rQ/oZPyJ6IYYPCgbFSlJ8NQqyfU/2R1Hlomw1Zy+kOWTpa+nXi65T6AxMccMeidaxs1Rtz5tN0VEarSbZvM7hSniwPfbDlev8t6t7BMF7qjud7/lLxfJ0oXbUGf71Z0AiWPZCuHlnbcSsYzmcwdPAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvkxl4If; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="quvgeL2k"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=P70S/RSyEwRSypRMAYJWaMLMUHPOxfCAgMWBNS/a1kw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787164153; v=1; x=1787768953;
- b=quvgeL2kO9nUaZGz4rVOuSocWZb6xha4e/1Y8bd6NnW3BSazn6WOAIfU/UoYQexLdP8X855I
- VJrUrRm1ZFUXj/nCPQwefcQQk9Kubn7qdNU6Y62GpS5adip/VuVNrVd/JmZTUueFnsP/Mjl0A+v
- ZlvV4wIA6Dts1KQMq6E6dMMs=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from [192.168.1.71] (218.1.223.168)
-	by smtp.migadu.com with ESMTPS id dc1603c7a99b7939;
-	Wed, 19 Aug 2026 18:29:03 +0000
-X-Mizu-Trace-ID: dc1603c7a99b7939
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <030e600b-1df2-4118-93ba-a1e83635b092@linux.dev>
-Date: Thu, 20 Aug 2026 02:29:00 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvkxl4If"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4324E1F000E9;
+	Wed, 19 Aug 2026 18:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787164207;
+	bh=TRqu/PaNShjfCPjZQl75KH0XhqSvGdBBAdWfWtj+E8Q=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bvkxl4If+7l+Z2LPr3Nf22SpAa93p4tR7i/xmetFRD5sRDsYmbLPFBZWgoKgjGaPr
+	 /vX7E5qbEhbc4LdD+J3HQ4EZjWM2dfUhRT0pYTC7WN+JpivItS9+ZmRUeM5NJ+rL/T
+	 em19fgCQR2CopZpP3X2Su7aMTwvioV+NzEnxl0RzftmwJS8OxtRx2lCILBgaRvEEvB
+	 zwHLJvR4u7WIRFV9dFO180yvLy8sSLNmaTRsbinYqlLqX9BgoY+CARNtIMw0PJuYLs
+	 LmFKNBKY+nCxkcT0UyvD4M3Vk21P2H5ZNqN9B68IT7vJub9DyidfuBC9SDym2GFXMu
+	 1uLWPocBZaFCQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 1/9] rv: Introduce DA_MON_ALLOCATION_STRATEGY
+Reply-To: sashiko-reviews@lists.linux.dev
+To: wen.yang@linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <60632bdb34707ffde64381549f1ce09118bd8f5f.1787161646.git.wen.yang@linux.dev>
+References: <cover.1787161646.git.wen.yang@linux.dev>
+ <60632bdb34707ffde64381549f1ce09118bd8f5f.1787161646.git.wen.yang@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 19 Aug 2026 18:30:06 +0000
+Message-Id: <20260819183007.4324E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] rv: add generic uprobe infrastructure for RV
- monitors
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1783524627.git.wen.yang@linux.dev>
- <31d0438f98e80503370a6fb3932d0ec7df0673c3.1783524627.git.wen.yang@linux.dev>
- <55912ee1fc569e5c81e25a32d516db54d1986336.camel@redhat.com>
-Content-Language: en-US
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <55912ee1fc569e5c81e25a32d516db54d1986336.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-
-
-On 7/20/26 23:22, Gabriele Monaco wrote:
-> On Wed, 2026-07-08 at 23:38 +0800, wen.yang@linux.dev wrote:
->> From: Wen Yang <wen.yang@linux.dev>
->>
->> +++ b/kernel/trace/rv/Kconfig
->> @@ -59,6 +59,13 @@ config RV_PER_TASK_MONITORS
->>   	  This option configures the maximum number of per-task RV monitors
->> that can run
->>   	  simultaneously.
->>   
->> +config RV_UPROBE
->> +	bool
->> +	depends on RV && UPROBES
->> +	help
->> +	  Generic uprobe infrastructure for RV monitors.  Provides path
->> +	  resolution, registration, and safe synchronous teardown.
-> 
-> This isn't exposed, it's selected automatically when required, I don't
-> even think the help text is visible (menuconfig doesn't show it), do we
-> really need it?
-> 
-
-Thanks, the bool config stays (it gates the obj build for monitors that 
-need it)but the invisible help text is dropped in v5; the entry is now just:
-
-   config RV_UPROBE
-         bool
-         depends on RV && UPROBES
-
-
->> +
->>   source "kernel/trace/rv/monitors/wip/Kconfig"
->>   source "kernel/trace/rv/monitors/wwnr/Kconfig"
->>   
-> 
-> ...
-> 
->> +++ b/kernel/trace/rv/rv_uprobe.c
->> @@ -0,0 +1,104 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Generic uprobe infrastructure for RV monitors.
->> + *
->> + * struct rv_uprobe embeds struct uprobe_consumer directly.  This is safe
->> + * because rv_uprobe_sync() calls uprobe_unregister_sync(), which calls
->> + * synchronize_rcu_tasks_trace().  handler_chain() runs under
->> + * rcu_read_lock_trace(), so after synchronize_rcu_tasks_trace() returns,
->> + * all in-flight handler_chain() iterations, including any pending
->> + * uc->cons_node.next reads, have completed on all CPUs.  The caller may
->> + * then free the struct containing rv_uprobe immediately.
->> + */
->> +#include <linux/dcache.h>
->> +#include <linux/fs.h>
->> +#include <linux/namei.h>
->> +#include <linux/uprobes.h>
->> +#include <rv/rv_uprobe.h>
->> +
->> +/**
->> + * rv_uprobe_register - initialise and register an uprobe
->> + */
->> +int rv_uprobe_register(const char *binpath, loff_t offset, struct rv_uprobe
->> *p)
->> +{
->> +	struct inode *inode;
->> +	struct path path;
->> +	int ret;
->> +
->> +	if (!p->uc.handler && !p->uc.ret_handler)
->> +		return -EINVAL;
-> 
-> uprobe_register() does this already, do we need it here too?
-> 
->> +
->> +	ret = kern_path(binpath, LOOKUP_FOLLOW, &path);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (!d_is_reg(path.dentry)) {
->> +		path_put(&path);
->> +		return -EINVAL;
->> +	}
->> +
->> +	inode = d_real_inode(path.dentry);
->> +	p->inode = inode;
->> +
->> +	/*
->> +	 * uprobe_register() requires the inode (and mount) to remain
->> +	 * referenced across the call.  Keep the path alive until after
->> +	 * uprobe_register() has stored its own reference, then release it.
->> +	 */
->> +	p->uprobe = uprobe_register(inode, offset, 0, &p->uc);
->> +	path_put(&path);
-> 
-> I believe I was mistaken here, as sashiko pointed out, uprobe_register()
-> doesn't keep a reference to the inode, (explicitly stated in it's docs:
-> "Caller of uprobe_register() is required to keep @inode (and the
-> containing mount) referenced.").
-> 
-> We should probably revert back to holding path instead of inode and
-> putting it after synchronous cleanup. That's also what BPF does.
-> 
-
-Thanks.
-Done in v5: struct rv_uprobe now keeps a struct path to the probed
-binary.  rv_uprobe_register() resolves it via kern_path() and does not
-drop it after uprobe_register(); rv_uprobe_unregister() releases it with
-path_put() only after rv_uprobe_sync() has drained in-flight handlers,
-so no inode reference outlives the probe.
-
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] DA_ALLOC_POOL strategy causes lockdep 'Invalid wait context' warni=
+ngs and crashes on PREEMPT_RT when used in tracepoints that hold raw spinlo=
+cks.
 --
-Best wishes,
-Wen
 
-> 
->> +	if (IS_ERR(p->uprobe)) {
->> +		ret = PTR_ERR(p->uprobe);
->> +		p->uprobe = NULL;
->> +		p->inode = NULL;
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(rv_uprobe_register);
->> +
->> +/**
->> + * rv_uprobe_is_registered - test whether an uprobe is currently active
->> + */
->> +bool rv_uprobe_is_registered(const struct rv_uprobe *p)
->> +{
->> +	return p && p->uprobe;
->> +}
->> +EXPORT_SYMBOL_GPL(rv_uprobe_is_registered);
->> +
->> +/**
->> + * rv_uprobe_unregister - synchronously unregister a uprobe
->> + */
->> +void rv_uprobe_unregister(struct rv_uprobe *p)
->> +{
->> +	if (!p || !p->uprobe)
->> +		return;
->> +
->> +	rv_uprobe_unregister_nosync(p);
->> +	rv_uprobe_sync();
->> +}
->> +EXPORT_SYMBOL_GPL(rv_uprobe_unregister);
->> +
->> +/**
->> + * rv_uprobe_unregister_nosync - dequeue an uprobe without waiting
->> + */
->> +void rv_uprobe_unregister_nosync(struct rv_uprobe *p)
->> +{
->> +	if (!p || !p->uprobe)
->> +		return;
->> +
->> +	uprobe_unregister_nosync(p->uprobe, &p->uc);
->> +	p->uprobe = NULL;
->> +	p->inode = NULL;
->> +}
->> +EXPORT_SYMBOL_GPL(rv_uprobe_unregister_nosync);
->> +
->> +/**
->> + * rv_uprobe_sync - wait for all in-flight uprobe handlers to complete
->> + */
->> +void rv_uprobe_sync(void)
->> +{
->> +	uprobe_unregister_sync();
->> +}
->> +EXPORT_SYMBOL_GPL(rv_uprobe_sync);
-> 
+--- Patch [1]: [PATCH v5 1/9] rv: Introduce DA_MON_ALLOCATION_STRATEGY ---
+commit e8961cb4205551f74e01ec6b7818734bafc846f3
+Author: Wen Yang <wen.yang@linux.dev>
+
+rv: Introduce DA_MON_ALLOCATION_STRATEGY
+
+This patch introduces a compile-time selection for per-object deterministic
+automata (DA) monitor allocation strategies. It adds DA_ALLOC_AUTO,
+DA_ALLOC_POOL, and DA_ALLOC_MANUAL to handle contexts where dynamic memory
+allocation is problematic.
+
+> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> index e3cf85c9ce556..48c534324cbb2 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+[ ... ]
+> @@ -543,6 +596,59 @@ static inline monitor_target da_get_target_by_id(da_=
+id_type id)
+>  	return mon_storage->target;
+>  }
+> =20
+> +/*
+> + * Pre-allocated mempool for DA_ALLOC_POOL monitors: DA_MON_POOL_SIZE
+> + * slots, eager-allocated at init.  mempool_alloc_preallocated() pops a
+> + * slot without touching the allocator (bounded start latency; NULL when
+> + * exhausted).  mempool_free() is safe from RCU-callback context.
+> + * Non-pool monitors get a zero-initialised mempool_t; pool paths compile
+> + * away.
+> + */
+> +static mempool_t da_monitor_pool;
+[ ... ]
+> +/*
+> + * da_create_pool_storage - pop a free pool slot and insert it into the =
+hash.
+> + *
+> + * Returns the new da_monitor, or NULL if the pool is exhausted.  Finding
+> + * an existing entry for the same id fires WARN_ON_ONCE (double-start bu=
+g).
+> + *
+> + * Caller must hold an RCU read-side CS and the monitor's serialisation =
+lock.
+> + */
+> +static inline struct da_monitor *
+> +da_create_pool_storage(da_id_type id, monitor_target target,
+> +		       struct da_monitor *da_mon)
+> +{
+> +	struct da_monitor_storage *mon_storage, *existing;
+> +
+> +	if (da_mon)
+> +		return da_mon;
+> +
+> +	mon_storage =3D mempool_alloc_preallocated(&da_monitor_pool);
+
+[Severity: High]
+Will this cause an "Invalid wait context" lockdep warning or a kernel panic
+on PREEMPT_RT systems when executed from tracepoints holding raw spinlocks?
+
+The patch describes DA_ALLOC_POOL as being useful for contexts problematic
+for allocation, such as scheduling. If a monitor uses this pool strategy in
+a tracepoint like sched_switch, it will be called while holding a
+raw_spinlock_t (like rq->lock).
+
+Looking at mempool_alloc_preallocated(), it unconditionally acquires the
+pool lock, which is a spinlock_t. On PREEMPT_RT, spinlock_t maps to a
+sleepable rt_mutex. Acquiring a sleeping lock while holding a raw_spinlock_t
+is a strict wait-context locking violation.
+
+Is there a way to manage the pre-allocated pool in da_create_pool_storage()
+without relying on locks that sleep on PREEMPT_RT?
+
+> +	if (!mon_storage)
+> +		return NULL;
+> +	memset(mon_storage, 0, sizeof(*mon_storage));
+> +
+> +	mon_storage->id =3D id;
+> +	mon_storage->target =3D target;
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787161646.gi=
+t.wen.yang@linux.dev?part=3D1
