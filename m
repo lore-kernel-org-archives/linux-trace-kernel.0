@@ -1,34 +1,34 @@
-Received: from mta1.migadu.com (out-19.mta1.migadu.com [95.215.58.19])
+Received: from mta1.migadu.com (out-22.mta1.migadu.com [95.215.58.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BF947ECC8
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 16:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C0147CC97
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 16:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787244352; cv=none; b=bZvQZ0TFPacWbg5NrZXJezuJcCP4McFUKPvOPVS3HfH7GCd8CAHDCZ/iSb+GkGmT63iNld+qgGP0Yjow0O2CBCkEkUd52ogwkgDdhsAZ2jdtdxsk/SDoFTmkv1RUhiTBr2Mr3B6NmA1L9atdvc7DqHdklgqGuJKa0MlIS99XUaQ=
+	t=1787244359; cv=none; b=fpqG7TFqvfkyRlqDUqtUJX12Sy0Mkg2KgA09Fs+qEppBr3FrWzGs3PzIj5nLxFwVwW4E8uk8ey37cFPBb+09CZ1lumOSylpQ+iqArCPI2j84iVL+fRvCVyyfw/fs3I3srG00KRIQXHCXsDBrt7gGA8N96X4FN+YplzftmSn49ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787244352; c=relaxed/simple;
-	bh=WsmsBu+BIGCyiGy6htvq6kr9ZQcqixbUM6tJ5pEub7I=;
+	s=arc-20240116; t=1787244359; c=relaxed/simple;
+	bh=KgSsIn7n6rPCEzuv9vq7SpDsKMx4CvsjnRMQ9SjLX+I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XB4bzKsJKkiBf8so4xJGwLe3zv7A9NyAlDzAMppkwhORf94suLc8afrNBa8SoVgxQtdao3eGCPJNctv2mXwZuweeS6cRcNS4uobKAkV1z2q6A+8jDErTvaJazRppIzkke+p3H7Q5bjH6Romsgm6vH/XYIoKagUDHh/XUZum15T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qjz48aqD; arc=none smtp.client-ip=95.215.58.19
+	 MIME-Version; b=k+xu0dqqAxyMtsGEI7UeRGhrBj0htUo80t+CAl9cEobk/p/OatYWk7jEeg1k5jnYiZMReYCFpuGK0IWR5qsPrIu6whWC3kyQSXFfDOblrPCnCKvp5J8CznccnHiVoCFr/IWAaun3Nktz7RYi5u6xMw/RjV8vwrcq/bKd4XKDZ4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w085SKAk; arc=none smtp.client-ip=95.215.58.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qjz48aqD"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w085SKAk"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=WsmsBu+BIGCyiGy6htvq6kr9ZQcqixbUM6tJ5pEub7I=;
+DKIM-Signature: a=rsa-sha256; bh=KgSsIn7n6rPCEzuv9vq7SpDsKMx4CvsjnRMQ9SjLX+I=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787244348; v=1; x=1787849148;
- b=qjz48aqD73x+6gtTfDZqVPTTZr90MHlPAwERk4uP/hK2tbXRmL4tyK5kB0KrjaoflZSpslOw
- Thka/zrA8U3R7tppy917BzaO9gJh5NBF2PUazoXRt67KFJ44NSndAOL9lW67WmDT3qayzf5IzKl
- umCkFYnmh8AnsMBSoFvjHQrY=
+ t=1787244355; v=1; x=1787849155;
+ b=w085SKAkjtEfFILc+ugM57cW7n54cgT4wgKxzJ+K6to35zUtWyl5I4JOv0YGCfrFN1Q+XV1X
+ 66EAKO7xjpG3iNxnx/snLmCKKXNOJ7nn4T7SG/HU/AN8gK5HONhS768vllrRkCz2+H3au1Rblxi
+ 5nv3BQnViOVnNMHGn6ec7AkY=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
 Received: from localhost.localdomain (218.1.210.138)
-	by mta11.migadu.com with ESMTPS id 4208490b75db7ca0;
-	Thu, 20 Aug 2026 16:45:48 +0000
-X-Mizu-Trace-ID: 4208490b75db7ca0
+	by mta11.migadu.com with ESMTPS id 2d47d8cec57a80ce;
+	Thu, 20 Aug 2026 16:45:55 +0000
+X-Mizu-Trace-ID: 2d47d8cec57a80ce
 X-Migadu-Flow: FLOW_OUT
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
@@ -36,9 +36,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v6 3/9] rv: Add tlob model DOT file
-Date: Fri, 21 Aug 2026 00:45:12 +0800
-Message-Id: <9e27f8af4520800fd1f19a2b9e9c0a0f2250920a.1787243842.git.wen.yang@linux.dev>
+Subject: [PATCH v6 4/9] rv: Fix ha_invariant_passed_ns silent bypass of invariant check
+Date: Fri, 21 Aug 2026 00:45:13 +0800
+Message-Id: <b12480afcae971936571d9c0def64d3a8fa0be99.1787243842.git.wen.yang@linux.dev>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1787243842.git.wen.yang@linux.dev>
 References: <cover.1787243842.git.wen.yang@linux.dev>
@@ -52,49 +52,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wen.yang@linux.dev>
 
-Add the Graphviz DOT specification of the tlob hybrid automaton to
-tools/verification/models/.  The model has three states (running,
-waiting, sleeping), five transitions (switch_in, preempt, wakeup,
-sleep), and a single clock invariant clk_elapsed < BUDGET_NS() active
-in all states.
+When env_store is U64_MAX (its initial sentinel value),
+ha_invariant_passed_ns() returns 0 immediately without initializing
+env_store to the current clock.  Subsequent calls to
+ha_check_invariant_ns() then find env_store still at U64_MAX, causing
+the elapsed comparison to wrap and always report the invariant as
+satisfied, silently masking any violations.
 
-Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
+Fix by calling ha_reset_clk_ns() to establish the guard on the first
+invocation instead of returning early.  Apply the same fix to
+ha_invariant_passed_jiffy().
+
+This is a stopgap: once the RV framework reworks the per-env clock
+guard, this first-invocation reset should be subsumed.
+
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- tools/verification/models/tlob.dot | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 tools/verification/models/tlob.dot
+ include/rv/ha_monitor.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/verification/models/tlob.dot b/tools/verification/models/tlob.dot
-new file mode 100644
-index 000000000000..515695599cf0
---- /dev/null
-+++ b/tools/verification/models/tlob.dot
-@@ -0,0 +1,24 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext, style=invis, label=""] "__init_stopped"};
-+	{node [shape = plaintext] "running"};
-+	{node [shape = plaintext] "waiting"};
-+	{node [shape = plaintext] "sleeping"};
-+	{node [shape = plaintext] "stopped"};
-+	"__init_stopped" -> "stopped";
-+	"running"  [label = "running\nclk_elapsed < BUDGET_NS()",  color = green3];
-+	"waiting"  [label = "waiting\nclk_elapsed < BUDGET_NS()"];
-+	"sleeping" [label = "sleeping\nclk_elapsed < BUDGET_NS()"];
-+	"stopped"  [label = "stopped"];
-+	"running"  -> "sleeping" [ label = "sleep" ];
-+	"running"  -> "waiting"  [ label = "preempt" ];
-+	"waiting"  -> "running"  [ label = "switch_in" ];
-+	"sleeping" -> "waiting"  [ label = "wakeup" ];
-+	"running"  -> "stopped"  [ label = "stop" ];
-+	"stopped"  -> "running"  [ label = "start;reset(clk_elapsed)" ];
-+	{ rank = min ;
-+		"__init_stopped";
-+		"stopped";
-+	}
-+}
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index 6e1c7fe5449a..e1738d199b28 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -355,7 +355,7 @@ static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon, enum envs en
+ 	if (env < 0 || env >= ENV_MAX_STORED)
+ 		return 0;
+ 	if (ha_monitor_env_invalid(ha_mon, env))
+-		return 0;
++		ha_reset_clk_ns(ha_mon, env, time_ns);
+ 	return ha_get_env(ha_mon, env, time_ns);
+ }
+ 
+@@ -375,6 +375,7 @@ static inline bool ha_check_invariant_jiffy(struct ha_monitor *ha_mon, enum envs
+ {
+ 	return time_after64(READ_ONCE(ha_mon->env_store[env]), get_jiffies_64() - expire_jiffy);
+ }
++
+ /*
+  * ha_invariant_passed_jiffy - prepare the invariant and return the time since reset
+  */
+@@ -383,7 +384,7 @@ static inline u64 ha_invariant_passed_jiffy(struct ha_monitor *ha_mon, enum envs
+ 	if (env < 0 || env >= ENV_MAX_STORED)
+ 		return 0;
+ 	if (ha_monitor_env_invalid(ha_mon, env))
+-		return 0;
++		ha_reset_clk_jiffy(ha_mon, env);
+ 	return ha_get_env(ha_mon, env, time_ns);
+ }
+ 
 -- 
 2.25.1
 
