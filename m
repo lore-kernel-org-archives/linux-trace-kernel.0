@@ -1,159 +1,246 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC833DDB09;
-	Thu, 20 Aug 2026 09:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BD63F410D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 09:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787216834; cv=none; b=NwNuL/v44SZIkQB74qqx2tJBbv+L0QniYAhHIb+YZDlqNUn/+uL5hlwAfj/n+6Yfw9KEAPPTSOfsQi1oY+CXzE6J3jzKoRKnLUXevXyeaoksnh/mr+3dvn0lOpxryazs35/MfBs7XUnQ/7P7jCIxVc0Zc2SioHRYgvH0tZV4Cbg=
+	t=1787217471; cv=none; b=Yxotq9pLxi0D5m3wAomBuqprTip8BEWCtLkwWALADHyop72aiZI2yR2Z53KekjOyEY7ixnf714tg/3G1nF1/xt2mbxxSJDxFjsKe359AeYUW7OYez/sfrYWbV7imWbcRFeQF+Bc6MrLamvnTpxuPr39vATrdWy+S/UJ66kAcVPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787216834; c=relaxed/simple;
-	bh=3YrGN2r3o4zxkKUcthMdwznjPnpl3mbm4YiZNIESras=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g0mz2Pi8LHJmXSIzK1XG9DE76p9Gu5U/K6Z7u5iyLn6rITLlb992N/yQhj/1PGhOHyaDB0FePQUPucL7i77kZ6IwKpyrSzeoPwnYZkgjL2Ds04an7EqiRPv5B+cmKabAa5XsNRBTg3pYy1DlTHIgo6fpz4Ue2/umyn9h36w7hnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qGSCN5CD; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1787217471; c=relaxed/simple;
+	bh=ifeEOiJpWJOAjtIFOt/5NGuRgBavWXoUWiPhcPYRz9I=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=MXvi51j0AJBZfd/I+rBbJOj1CFdaCWKqRU9ysg1BF3wF+US8PFlsU81ASdZ8pTqhZSvQ9KYheTh+BIa/L4F5yG2+jkQ5sUZAt9WrMwuH5Kd1D2nSbASYS7vMAyZMNWn1K4tC7b4dTRVBPoC562QJv28B9J3xZpDVqmsbYSLwJiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLVj2Bmi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qGSCN5CD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=iG
-	om8Epilwi6V2126R3wVx/l/gkYFTDyDJNaMaHfR+M=; b=qGSCN5CDbI9SY5Ts8W
-	1G2x+prduxUqt9WcZx+zfWxh0q0ogbizoM/jVPC3Bn917FiRNFlvj5h9awmZL6GJ
-	Cp+3LEoKKSpv/2A/w0FvquKLOF6VQl2O0pUYdFnwcvIGRvAC8RZhpyjxsADkR932
-	iDKoMjMa/W/nbPeYem8HNc7K8=
-Received: from liubaolin-ThinkPad-E15-Gen-2 (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHFld6w4ZqIRluPA--.45482S4;
-	Thu, 20 Aug 2026 17:06:22 +0800 (CST)
-From: Baolin Liu <liubaolin12138@163.com>
-To: almaz.alexandrovich@paragon-software.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	liubaolin12138@163.com,
-	liubaolin12138@gmail.com,
-	Baolin Liu <liubaolin@kylinos.cn>
-Subject: [PATCH v4 2/7] ntfs3: add namei tracepoints
-Date: Thu, 20 Aug 2026 17:04:59 +0800
-Message-ID: <20260820090504.950475-3-liubaolin12138@163.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260820090504.950475-1-liubaolin12138@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLVj2Bmi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2191F00A3E;
+	Thu, 20 Aug 2026 09:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787217469;
+	bh=a0SxM9DHWvkTLVcbdjc396sSpQcef9PBPqXQpsy5W+E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NLVj2BminKs/1broNVY6z+EILkL297PgJM9kd0jBH7coz0RlGmDaQdOsXDPqGZFDi
+	 JqazoJME6XdPYnxe2M2KybgkbBHlmmLe/vQ9RLPRGVTWGo91jtrKpmXlJXBXJfoywe
+	 byAFcezeDE7YgO3DkY2jlwH4mHz4ehdD100Sgirs/CCgUKA4r+IXvZsFGrkBLHSjQd
+	 Tp7fY0IZa7H+Im0lXeREF5WAcGhoVrOlpXWYTiiPdCGU/nr/fJNcJ0i07nxwd/TmUS
+	 UxjlWYh8nCQq8raSZrkF2c4MT+w1hGgQgn5eZ2RyYu52MErN8Wf9CeO7aV2Doy2tLA
+	 /SiijBnQ8vHfg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 4/7] ntfs3: add directory index tracepoints
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Baolin Liu" <liubaolin12138@163.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260820090504.950475-5-liubaolin12138@163.com>
 References: <20260820090504.950475-1-liubaolin12138@163.com>
+ <20260820090504.950475-5-liubaolin12138@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 20 Aug 2026 09:17:48 +0000
+Message-Id: <20260820091748.EE2191F00A3E@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAHFld6w4ZqIRluPA--.45482S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGr18Aw4xZF15uw18JrWUArb_yoW5Cr47pF
-	nFyFZ8W393JrsxKwnava15Zr4rZay8ur1Utry29347Ar1IqF1xtrs2gr4DAr95AFWFk347
-	WFWYv3s8Cw15Xr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRbo7_UUUUU=
-X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbCwg5QG2qGw447iQAA3U
 
-From: Baolin Liu <liubaolin@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Add ntfs3 tracepoints for namei operations.
+New issues:
+- [Low] Tracepoints silently truncate 64-bit inode numbers on 32-bit platfo=
+rms.
 
-This adds trace events for ntfs_lookup() and ntfs_rename()
-to help observe directory lookup and rename activity.
+Pre-existing issues:
+- [High] Pre-existing memory leaks of `struct ntfs_fnd` objects in the erro=
+r paths of index modification functions.
+--
 
-Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
----
- fs/ntfs3/namei.c             |  5 ++++
- include/trace/events/ntfs3.h | 44 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+--- Patch [4]: [PATCH v4 4/7] ntfs3: add directory index tracepoints ---
+commit c766c411cdb54b2e6d2b021851b232bc13e68d08
+Author: Baolin Liu <liubaolin@kylinos.cn>
 
-diff --git a/fs/ntfs3/namei.c b/fs/ntfs3/namei.c
-index c59de5f2fa97..c1523decee32 100644
---- a/fs/ntfs3/namei.c
-+++ b/fs/ntfs3/namei.c
-@@ -13,6 +13,7 @@
- #include "debug.h"
- #include "ntfs.h"
- #include "ntfs_fs.h"
-+#include <trace/events/ntfs3.h>
- 
- /*
-  * fill_name_de - Format NTFS_DE in @buf.
-@@ -72,6 +73,8 @@ static struct dentry *ntfs_lookup(struct inode *dir, struct dentry *dentry,
- 	struct inode *inode;
- 	int err;
- 
-+	trace_ntfs3_lookup(dir, dentry);
-+
- 	if (!uni)
- 		inode = ERR_PTR(-ENOMEM);
- 	else {
-@@ -275,6 +278,8 @@ static int ntfs_rename(struct mnt_idmap *idmap, struct inode *dir,
- 	if (unlikely(ntfs3_forced_shutdown(sb)))
- 		return -EIO;
- 
-+	trace_ntfs3_rename(dir, dentry, new_dir, new_dentry);
-+
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
- 
-diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
-index a45f919cb33e..a1e4bdb6ec59 100644
---- a/include/trace/events/ntfs3.h
-+++ b/include/trace/events/ntfs3.h
-@@ -80,6 +80,50 @@ TRACE_EVENT(ntfs3_log_replay,
- 		  __entry->size, __entry->initialized, __entry->err)
- );
- 
-+TRACE_EVENT(ntfs3_lookup,
-+	TP_PROTO(struct inode *dir, struct dentry *dentry),
-+	TP_ARGS(dir, dentry),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, parent_ino)
-+		__field(dev_t, dev)
-+		__string(name, dentry->d_name.name)
-+	),
-+	TP_fast_assign(
-+		__entry->parent_ino = dir->i_ino;
-+		__entry->dev = dir->i_sb->s_dev;
-+		__assign_str(name);
-+	),
-+	TP_printk("dev=(%d,%d) parent=%lu name=%s",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->parent_ino, __get_str(name))
-+);
-+
-+TRACE_EVENT(ntfs3_rename,
-+	TP_PROTO(struct inode *dir, struct dentry *dentry,
-+		 struct inode *new_dir, struct dentry *new_dentry),
-+	TP_ARGS(dir, dentry, new_dir, new_dentry),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, dir_ino)
-+		__field(unsigned long, new_dir_ino)
-+		__field(unsigned long, ino)
-+		__field(dev_t, dev)
-+		__string(old_name, dentry->d_name.name)
-+		__string(new_name, new_dentry->d_name.name)
-+	),
-+	TP_fast_assign(
-+		__entry->dir_ino = dir->i_ino;
-+		__entry->new_dir_ino = new_dir->i_ino;
-+		__entry->ino = d_inode(dentry)->i_ino;
-+		__entry->dev = dir->i_sb->s_dev;
-+		__assign_str(old_name);
-+		__assign_str(new_name);
-+	),
-+	TP_printk("dev=(%d,%d) dir=%lu new_dir=%lu ino=%lu old=%s new=%s",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->dir_ino, __entry->new_dir_ino, __entry->ino,
-+		  __get_str(old_name), __get_str(new_name))
-+);
-+
- #endif /* _TRACE_NTFS3_H */
- 
- #include <trace/define_trace.h>
--- 
-2.51.0
+ntfs3: add directory index tracepoints
 
+Add ntfs3 tracepoints for directory index operations.
+
+This adds trace events for dir_search_u(), indx_find(),
+indx_insert_entry(), and indx_delete_entry() to help observe
+directory index lookup, insert, and delete activity.
+
+> diff --git a/fs/ntfs3/index.c b/fs/ntfs3/index.c
+> index 2b439ac043563..d4ca7b1bb5249 100644
+> --- a/fs/ntfs3/index.c
+> +++ b/fs/ntfs3/index.c
+
+[ ... ]
+
+> @@ -2051,6 +2054,9 @@ int indx_insert_entry(struct ntfs_index *indx, stru=
+ct ntfs_inode *ni,
+>  		return -EINVAL;
+>  	}
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does this direct return in
+indx_insert_entry() leak the fnd_a memory?
+
+Earlier in this function, memory is allocated:
+
+	if (!fnd) {
+		fnd_a =3D fnd_get();
+...
+
+And then later when checking the collation rule:
+
+	cmp =3D get_cmp_func(root);
+	if (unlikely(!cmp)) {
+		WARN_ON_ONCE(1);
+		return -EINVAL;
+	}
+
+If get_cmp_func() returns NULL due to an unrecognized collation rule, shoul=
+dn't
+this jump to the `out` label so that fnd_a can be properly freed?
+
+> =20
+> +	trace_ntfs3_indx_insert_entry(&ni->vfs_inode, indx->type,
+> +				      le16_to_cpu(new_de->key_size), undo);
+> +
+>  	if (fnd_is_empty(fnd)) {
+
+[ ... ]
+
+> @@ -2409,6 +2415,8 @@ int indx_delete_entry(struct ntfs_index *indx, stru=
+ct ntfs_inode *ni,
+>  		return -EINVAL;
+>  	}
+
+[Severity: High]
+This is a pre-existing issue, but does this direct return in
+indx_delete_entry() leak both the fnd and fnd2 memory?
+
+Similar to indx_insert_entry(), this function allocates memory:
+
+	fnd =3D fnd_get();
+...
+	fnd2 =3D fnd_get();
+
+Then if get_cmp_func() returns NULL:
+
+	cmp =3D get_cmp_func(root);
+	if (unlikely(!cmp)) {
+		WARN_ON_ONCE(1);
+		return -EINVAL;
+	}
+
+Shouldn't this go to the `out` label to clean up the memory instead of
+returning directly?
+
+> =20
+> +	trace_ntfs3_indx_delete_entry(&ni->vfs_inode, indx->type, key_len);
+> +
+>  	/* Locate the entry to remove. */
+>  	err =3D indx_find(indx, ni, root, key, key_len, ctx, &diff, &e, fnd);
+
+> diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
+> index 67a2bde0266df..4ac05ed29e49d 100644
+> --- a/include/trace/events/ntfs3.h
+> +++ b/include/trace/events/ntfs3.h
+
+[ ... ]
+
+> @@ -142,6 +142,87 @@ TRACE_EVENT(ntfs3_create_inode,
+>  		  __entry->parent_ino, __get_str(name))
+>  );
+> =20
+> +TRACE_EVENT(ntfs3_dir_search_u,
+> +	TP_PROTO(struct inode *dir, unsigned int name_len),
+> +	TP_ARGS(dir, name_len),
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, dir_ino)
+
+[Severity: Low]
+Since the i_ino field in struct inode is a u64, will declaring this field as
+unsigned long truncate 64-bit inode numbers on 32-bit architectures?
+
+> +		__field(dev_t, dev)
+> +		__field(unsigned int, name_len)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dir_ino =3D dir->i_ino;
+> +		__entry->dev =3D dir->i_sb->s_dev;
+> +		__entry->name_len =3D name_len;
+> +	),
+> +	TP_printk("dev=3D(%d,%d) dir=3D%lu name_len=3D%u",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->dir_ino, __entry->name_len)
+> +);
+> +
+> +TRACE_EVENT(ntfs3_indx_find,
+> +	TP_PROTO(struct inode *inode, u8 type, size_t key_len),
+> +	TP_ARGS(inode, type, key_len),
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, ino)
+
+[Severity: Low]
+Will this also truncate 64-bit inode numbers on 32-bit architectures?
+
+> +		__field(size_t, key_len)
+> +		__field(dev_t, dev)
+> +		__field(u8, type)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->ino =3D inode->i_ino;
+> +		__entry->key_len =3D key_len;
+> +		__entry->dev =3D inode->i_sb->s_dev;
+> +		__entry->type =3D type;
+> +	),
+> +	TP_printk("dev=3D(%d,%d) ino=3D%lu type=3D%u key_len=3D%zu",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->ino, __entry->type, __entry->key_len)
+> +);
+> +
+> +TRACE_EVENT(ntfs3_indx_insert_entry,
+> +	TP_PROTO(struct inode *inode, u8 type, u16 key_len, bool undo),
+> +	TP_ARGS(inode, type, key_len, undo),
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, ino)
+
+[Severity: Low]
+Will this also truncate 64-bit inode numbers on 32-bit architectures?
+
+> +		__field(dev_t, dev)
+> +		__field(u16, key_len)
+> +		__field(u8, type)
+> +		__field(bool, undo)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->ino =3D inode->i_ino;
+> +		__entry->dev =3D inode->i_sb->s_dev;
+> +		__entry->key_len =3D key_len;
+> +		__entry->type =3D type;
+> +		__entry->undo =3D undo;
+> +	),
+> +	TP_printk("dev=3D(%d,%d) ino=3D%lu type=3D%u key_len=3D%u undo=3D%d",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->ino, __entry->type, __entry->key_len,
+> +		  __entry->undo)
+> +);
+> +
+> +TRACE_EVENT(ntfs3_indx_delete_entry,
+> +	TP_PROTO(struct inode *inode, u8 type, u32 key_len),
+> +	TP_ARGS(inode, type, key_len),
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, ino)
+
+[Severity: Low]
+Will this also truncate 64-bit inode numbers on 32-bit architectures?
+
+> +		__field(u32, key_len)
+> +		__field(dev_t, dev)
+> +		__field(u8, type)
+> +	),
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260820090504.9504=
+75-1-liubaolin12138@163.com?part=3D4
