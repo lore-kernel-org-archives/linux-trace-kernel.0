@@ -1,30 +1,30 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CB83DDAFC;
-	Thu, 20 Aug 2026 09:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B266F3E0096;
+	Thu, 20 Aug 2026 09:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787216825; cv=none; b=tKchCDSQJuxdT8aRCUEXw+R2ni1Uib3bMFJeFL9ANW7b3VziuPdB8rOE9QdIbCDl0Lki0YljGDqlt+cWUG6s+nuuTrgi/EMvZsU53mlWVCUGT7R3URKUme3E17w38QfnMnD2w/WMfksw86C2recs3LcudYa9iHBGMlo86E+DRN0=
+	t=1787216825; cv=none; b=Us32Rzp/HFCSXTX2zumZEnw8mb5p0ZwOSIl0Pqm8iDDdgSTfpIYfoJyR/01OYSyfAHFOvg7cgi1Y8pv8lUfWH9ynqE0zrpVThbsYkrabJ8+KOyX7r5tj7I+ljZcubHZCdBbGpN5V8OYcocukDobwUXW2Ql1K3zcWUCymaxIHG24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787216825; c=relaxed/simple;
-	bh=6yp289RtcU/XbDUzoDTS662XLebClI9tKnKjC6GKHuU=;
+	bh=+IL4wbv74qFenbTgX7qYFcnfF+40cGsRn+Ujo8vRI/k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ICulRxOOb9GaLFWP1Hg1eL0ndXFOBxj3rY8z9SyXcMhj3EssYKDY9qc3jMTTsy/nDM9B9fWtnee5AJvWPUne4M2NntnUPRBUk4sfJQEIPGVX13+3muPQ2CqhT9wctEXNJgo9R1Z+9fbyspU6V1yfujadTQlSLGz3y4Z0VUa2r8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iESbqebf; arc=none smtp.client-ip=117.135.210.4
+	 MIME-Version; b=RJiGbYFvuUyUlL4ABByI0dTXN9FOsZDh0zUXTW0eJvEQTCJ3kGrS3gwidBm0btASDixp/u1YiJwT74AVAzbtHwY49kzrJuXnPX1pCzi4n+CLAKfJ0TcaFdXj6yDP2cuIWBQL3ZP5iiU+/Kqn80WRIouPBZYd9s7I/fdvfLWP33A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UzTtX4/+; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iESbqebf"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UzTtX4/+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=ea
-	lyBtV4M6sFpTJmr7xiHwVQ/Aim1DAJvRk46lsItAw=; b=iESbqebfflVKgT21JE
-	vj5bRRENUJee0E2KhBJ/lBAwXKalCFNoSKI8vC2QG4vI2V+9pMVonsXLbfcrBNS5
-	wEHvkDg7zL9eQn0M+glcv8Ut+W6BXZ+sxpebid/TiqExM5tPgDenqEVDgTzJz2dH
-	/dH/mavSx5hvxUrombVigZJ3E=
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=tC
+	vmRUjaZXMsQNbw9VGNSXcVV+yZ6GD/EQLcsG9+HzE=; b=UzTtX4/+mrIH+O4x7T
+	T92uCdKVjGl34SX+XkZlkizQebaxdNhzlvWff80vRpGF1T1ydCgYwmejDVirnlJ6
+	PiaZCWHd5G6+cAjNp7vlvJzvMH6pDwyIkmZCOFfkBNLo0HBMx6wZkOF/U+zYfIHG
+	skgGlqhhYLchysq7fTcjoy1RM=
 Received: from liubaolin-ThinkPad-E15-Gen-2 (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHFld6w4ZqIRluPA--.45482S3;
-	Thu, 20 Aug 2026 17:06:17 +0800 (CST)
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHFld6w4ZqIRluPA--.45482S7;
+	Thu, 20 Aug 2026 17:06:30 +0800 (CST)
 From: Baolin Liu <liubaolin12138@163.com>
 To: almaz.alexandrovich@paragon-software.com,
 	rostedt@goodmis.org,
@@ -36,9 +36,9 @@ Cc: linux-kernel@vger.kernel.org,
 	liubaolin12138@163.com,
 	liubaolin12138@gmail.com,
 	Baolin Liu <liubaolin@kylinos.cn>
-Subject: [PATCH v4 1/7] ntfs3: add mount and log replay tracepoints
-Date: Thu, 20 Aug 2026 17:04:58 +0800
-Message-ID: <20260820090504.950475-2-liubaolin12138@163.com>
+Subject: [PATCH v4 5/7] ntfs3: add allocation tracepoints
+Date: Thu, 20 Aug 2026 17:05:02 +0800
+Message-ID: <20260820090504.950475-6-liubaolin12138@163.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260820090504.950475-1-liubaolin12138@163.com>
 References: <20260820090504.950475-1-liubaolin12138@163.com>
@@ -49,46 +49,32 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAHFld6w4ZqIRluPA--.45482S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GF4xAF4ktw4fury7ur4DJwb_yoWxJryrpF
-	nrAFs3G3yktrWj9ws3tw1Sqr4Fva48uF4Utry3W347Ars7tr1kJr4DtrW8CFZ5ArZ0k3sa
-	q3Z0v39Ykw1rWr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zN4E_UUUUUU=
-X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbC6gtPGmqGw4tzdgAA3V
+X-CM-TRANSID:_____wAHFld6w4ZqIRluPA--.45482S7
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGr15AFy5ZF48Gr4xJFW5Jrb_yoWrKw4fpF
+	1DAFy3Ww48JrZFkwsavw18tw45uay8ur4UKry3Wry2yrn2qFn7tr4DtryqvFyvkrnYkrnI
+	gFyq93s8W3WUWr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRBMKZUUUUU=
+X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbCwRZSHWqGw5YrLAAA3m
 
 From: Baolin Liu <liubaolin@kylinos.cn>
 
-Add ntfs3 tracepoints for mount and log replay paths.
+Add ntfs3 tracepoints for allocation operations.
 
-This adds trace events for ntfs_fill_super(), ntfs_init_from_boot(),
-and log_replay() to help observe mount setup, boot sector parsing,
-and $LogFile replay results.
+This adds trace events for attr_allocate_clusters(),
+attr_set_size_ex(), and attr_data_get_block() to help
+observe cluster allocation, size changes, and block
+mapping activity.
 
 Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
 ---
- MAINTAINERS                  |  1 +
- fs/ntfs3/fslog.c             |  3 ++
- fs/ntfs3/super.c             | 11 ++++-
- include/trace/events/ntfs3.h | 85 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 99 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/ntfs3.h
+ fs/ntfs3/attrib.c            | 12 ++++++
+ include/trace/events/ntfs3.h | 78 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8014b9f8253e..a8e2ea4acef8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19296,6 +19296,7 @@ W:	http://www.paragon-software.com/
- T:	git https://github.com/Paragon-Software-Group/linux-ntfs3.git
- F:	Documentation/filesystems/ntfs3.rst
- F:	fs/ntfs3/
-+F:	include/trace/events/ntfs3.h
- 
- NTSYNC SYNCHRONIZATION PRIMITIVE DRIVER
- M:	Elizabeth Figura <zfigura@codeweavers.com>
-diff --git a/fs/ntfs3/fslog.c b/fs/ntfs3/fslog.c
-index f038c799e7ac..5020da7e72f1 100644
---- a/fs/ntfs3/fslog.c
-+++ b/fs/ntfs3/fslog.c
+diff --git a/fs/ntfs3/attrib.c b/fs/ntfs3/attrib.c
+index c621a4c582f9..8c4a14a87721 100644
+--- a/fs/ntfs3/attrib.c
++++ b/fs/ntfs3/attrib.c
 @@ -13,6 +13,7 @@
  #include "debug.h"
  #include "ntfs.h"
@@ -96,156 +82,128 @@ index f038c799e7ac..5020da7e72f1 100644
 +#include <trace/events/ntfs3.h>
  
  /*
-  * LOG FILE structs
-@@ -5362,6 +5363,8 @@ int log_replay(struct ntfs_inode *ni, bool *initialized)
- 	else if (log->set_dirty)
- 		ntfs_set_state(sbi, NTFS_DIRTY_ERROR);
+  * You can set external NTFS_MIN_LOG2_OF_CLUMP/NTFS_MAX_LOG2_OF_CLUMP to manage
+@@ -167,6 +168,8 @@ int attr_allocate_clusters(struct ntfs_sb_info *sbi, struct runs_tree *run,
+ 	CLST flen, vcn0 = vcn, pre = pre_alloc ? *pre_alloc : 0;
+ 	size_t cnt = run->count;
  
-+	trace_ntfs3_log_replay(&ni->vfs_inode, *initialized, err);
++	trace_ntfs3_attr_allocate_clusters(sbi->sb, vcn, lcn, len, opt);
 +
- 	kfree(log);
- 
- 	return err;
-diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-index 3305fe406cb2..7034ef257452 100644
---- a/fs/ntfs3/super.c
-+++ b/fs/ntfs3/super.c
-@@ -76,6 +76,9 @@
- #include "lib/lib.h"
- #endif
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/ntfs3.h>
-+
- #ifdef CONFIG_PRINTK
- /*
-  * ntfs_printk - Trace warnings/notices/errors.
-@@ -956,7 +959,7 @@ static int ntfs_init_from_boot(struct super_block *sb, u32 sector_size,
- {
- 	struct ntfs_sb_info *sbi = sb->s_fs_info;
- 	int err;
--	u32 mb, gb, boot_sector_size, sct_per_clst, record_size;
-+	u32 mb, gb, boot_sector_size = 0, sct_per_clst, record_size;
- 	u64 sectors, clusters, mlcn, mlcn2, dev_size0;
- 	struct NTFS_BOOT *boot;
- 	struct buffer_head *bh;
-@@ -1216,6 +1219,8 @@ static int ntfs_init_from_boot(struct super_block *sb, u32 sector_size,
+ 	for (;;) {
+ 		err = ntfs_look_for_free_space(sbi, lcn, len + pre, &lcn, &flen,
+ 					       opt);
+@@ -462,6 +465,12 @@ int attr_set_size_ex(struct ntfs_inode *ni, enum ATTR_TYPE type,
+ 		goto bad_inode;
  	}
  
- out:
-+	trace_ntfs3_init_from_boot(sb, sector_size, boot_sector_size,
-+				 !!boot_block, err);
- 	brelse(bh);
++	trace_ntfs3_attr_set_size_ex(&ni->vfs_inode, le32_to_cpu(type),
++				     attr_b->non_res ?
++					     le64_to_cpu(attr_b->nres.data_size) :
++					     le32_to_cpu(attr_b->res.data_size),
++				     new_size, keep_prealloc, no_da);
++
+ 	if (!attr_b->non_res) {
+ 		err = attr_set_size_res(ni, attr_b, le_b, mi_b, new_size, run,
+ 					&attr_b);
+@@ -960,6 +969,9 @@ int attr_data_get_block(struct ntfs_inode *ni, CLST vcn, CLST clen, CLST *lcn,
+ 	if (res)
+ 		*res = NULL;
  
- 	if (err == -EINVAL && !boot_block && dev_size0 > PAGE_SHIFT) {
-@@ -1731,12 +1736,16 @@ static int ntfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	}
- 
- 	ntfs_create_procdir(sb);
-+	trace_ntfs3_fill_super(sb, ro, sbi->cluster_size, sbi->record_size,
-+			      sbi->index_size, 0);
- 
- 	return 0;
- 
- put_inode_out:
- 	iput(inode);
- out:
-+	trace_ntfs3_fill_super(sb, ro, sbi->cluster_size, sbi->record_size,
-+			      sbi->index_size, err);
- 	/* sbi->options == options */
- 	if (options) {
- 		put_mount_options(sbi->options);
++	trace_ntfs3_attr_data_get_block(&ni->vfs_inode, vcn, clen, new, zero,
++					no_da);
++
+ 	/* Try to find in cache. */
+ 	down_read(&ni->file.run_lock);
+ 	if (run_lookup_entry_da(&ni->file.run, !no_da ? &ni->file.run_da : NULL,
 diff --git a/include/trace/events/ntfs3.h b/include/trace/events/ntfs3.h
-new file mode 100644
-index 000000000000..a45f919cb33e
---- /dev/null
+index 4ac05ed29e49..e39765bc062f 100644
+--- a/include/trace/events/ntfs3.h
 +++ b/include/trace/events/ntfs3.h
-@@ -0,0 +1,85 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM ntfs3
-+
-+#if !defined(_TRACE_NTFS3_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_NTFS3_H
-+
-+#include <linux/fs.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(ntfs3_fill_super,
-+	TP_PROTO(struct super_block *sb, bool ro, u32 cluster_size,
-+		 u32 record_size, u32 index_size, int err),
-+	TP_ARGS(sb, ro, cluster_size, record_size, index_size, err),
+@@ -223,6 +223,84 @@ TRACE_EVENT(ntfs3_indx_delete_entry,
+ 		  __entry->ino, __entry->type, __entry->key_len)
+ );
+ 
++TRACE_EVENT(ntfs3_attr_allocate_clusters,
++	TP_PROTO(struct super_block *sb, u64 vcn, u64 lcn, u64 len, u32 opt),
++	TP_ARGS(sb, vcn, lcn, len, opt),
 +	TP_STRUCT__entry(
++		__field(u64, vcn)
++		__field(u64, lcn)
++		__field(u64, len)
 +		__field(dev_t, dev)
-+		__field(u32, cluster_size)
-+		__field(u32, record_size)
-+		__field(u32, index_size)
-+		__field(int, err)
-+		__field(bool, ro)
++		__field(u32, opt)
 +	),
 +	TP_fast_assign(
-+		__entry->dev = sb->s_bdev->bd_dev;
-+		__entry->cluster_size = cluster_size;
-+		__entry->record_size = record_size;
-+		__entry->index_size = index_size;
-+		__entry->err = err;
-+		__entry->ro = ro;
++		__entry->vcn = vcn;
++		__entry->lcn = lcn;
++		__entry->len = len;
++		__entry->dev = sb->s_dev;
++		__entry->opt = opt;
 +	),
-+	TP_printk("dev=(%d,%d) ro=%d cluster=%u record=%u index=%u err=%d",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ro,
-+		  __entry->cluster_size, __entry->record_size,
-+		  __entry->index_size, __entry->err)
-+);
-+
-+TRACE_EVENT(ntfs3_init_from_boot,
-+	TP_PROTO(struct super_block *sb, u32 media_sector_size,
-+		 u32 boot_sector_size, bool used_alt_boot, int err),
-+	TP_ARGS(sb, media_sector_size, boot_sector_size, used_alt_boot, err),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(u32, media_sector_size)
-+		__field(u32, boot_sector_size)
-+		__field(int, err)
-+		__field(bool, used_alt_boot)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = sb->s_bdev->bd_dev;
-+		__entry->media_sector_size = media_sector_size;
-+		__entry->boot_sector_size = boot_sector_size;
-+		__entry->err = err;
-+		__entry->used_alt_boot = used_alt_boot;
-+	),
-+	TP_printk("dev=(%d,%d) media_sector=%u boot_sector=%u alt_boot=%d err=%d",
++	TP_printk("dev=(%d,%d) vcn=%llu lcn=%llu len=%llu opt=0x%x",
 +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->media_sector_size, __entry->boot_sector_size,
-+		  __entry->used_alt_boot, __entry->err)
++		  __entry->vcn, __entry->lcn, __entry->len, __entry->opt)
 +);
 +
-+TRACE_EVENT(ntfs3_log_replay,
-+	TP_PROTO(struct inode *inode, bool initialized, int err),
-+	TP_ARGS(inode, initialized, err),
++TRACE_EVENT(ntfs3_attr_set_size_ex,
++	TP_PROTO(struct inode *inode, u32 type, u64 old_size, u64 new_size,
++		 bool keep_prealloc, bool no_da),
++	TP_ARGS(inode, type, old_size, new_size, keep_prealloc, no_da),
 +	TP_STRUCT__entry(
++		__field(u64, old_size)
++		__field(u64, new_size)
 +		__field(unsigned long, ino)
-+		__field(loff_t, size)
 +		__field(dev_t, dev)
-+		__field(int, err)
-+		__field(bool, initialized)
++		__field(u32, type)
++		__field(bool, keep_prealloc)
++		__field(bool, no_da)
 +	),
 +	TP_fast_assign(
++		__entry->old_size = old_size;
++		__entry->new_size = new_size;
 +		__entry->ino = inode->i_ino;
-+		__entry->size = i_size_read(inode);
 +		__entry->dev = inode->i_sb->s_dev;
-+		__entry->err = err;
-+		__entry->initialized = initialized;
++		__entry->type = type;
++		__entry->keep_prealloc = keep_prealloc;
++		__entry->no_da = no_da;
 +	),
-+	TP_printk("dev=(%d,%d) ino=%lu size=%lld initialized=%d err=%d",
++	TP_printk("dev=(%d,%d) ino=%lu type=0x%x old_size=%llu new_size=%llu keep_prealloc=%d no_da=%d",
 +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
-+		  __entry->size, __entry->initialized, __entry->err)
++		  __entry->type, __entry->old_size, __entry->new_size,
++		  __entry->keep_prealloc, __entry->no_da)
 +);
 +
-+#endif /* _TRACE_NTFS3_H */
++TRACE_EVENT(ntfs3_attr_data_get_block,
++	TP_PROTO(struct inode *inode, u64 vcn, u64 clen, bool *new,
++		 bool zero, bool no_da),
++	TP_ARGS(inode, vcn, clen, new, zero, no_da),
++	TP_STRUCT__entry(
++		__field(u64, vcn)
++		__field(u64, clen)
++		__field(unsigned long, ino)
++		__field(dev_t, dev)
++		__field(bool, create)
++		__field(bool, zero)
++		__field(bool, no_da)
++	),
++	TP_fast_assign(
++		__entry->vcn = vcn;
++		__entry->clen = clen;
++		__entry->ino = inode->i_ino;
++		__entry->dev = inode->i_sb->s_dev;
++		__entry->create = !!new;
++		__entry->zero = zero;
++		__entry->no_da = no_da;
++	),
++	TP_printk("dev=(%d,%d) ino=%lu vcn=%llu clen=%llu create=%d zero=%d no_da=%d",
++		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino,
++		  __entry->vcn, __entry->clen, __entry->create,
++		  __entry->zero, __entry->no_da)
++);
 +
-+#include <trace/define_trace.h>
+ #endif /* _TRACE_NTFS3_H */
+ 
+ #include <trace/define_trace.h>
 -- 
 2.51.0
 
