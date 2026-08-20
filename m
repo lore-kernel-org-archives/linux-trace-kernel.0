@@ -1,149 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5BB3839B7;
-	Thu, 20 Aug 2026 05:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D38E3B776A;
+	Thu, 20 Aug 2026 09:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787203987; cv=none; b=rDqxI8IK1KFbtoSvuO8+ODV3+Cd/+U5tHk6gvxVR6A4KraygbGy7R8UtM1MmYYdeLmYscxkDj06jnNmszXAV753gjBvQC7EsqmXCwi50Bgh1mV2m04od+kcC9O2sVGKJpiscJcaUnTkMgnkhiopfzusZLyJnt4rTNN74jfv7LTw=
+	t=1787216817; cv=none; b=LIHRZS2VMPFWAhdlEcw7lzsRhi3v4WWkvu2+1N5IP72nqrxGZXF3Ms6B6O1WIv06mopJ54SzDK4pcSFtNKmgoo0SKgLxVMsQu3DxzCcgMiWpwbxN0TulYRO3e5vxz3zh10nl92peLpb9COLcLpoZhXiw3suSdKCUTdgZSGrNpBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787203987; c=relaxed/simple;
-	bh=3S1bSnlBhWx4HK5AwtWT7IpvRgMAbGMSQk5Azw7D0/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZqIWBAQYPVlzQIKqj5XAJUosPylB44n34gQlKJljnkJTHaVs3VnLKfq/EUQPn7bO+dt2DASc6bpy9lhKx64jcJM3e0U0CYQNqEwqU60gvZ4sXcJTkI12SFWmA0JPX2FInJ1Mk+CN4jCRTzMyxoIU4hQXh13s050FJESc6kklcSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OWat4R3G; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787216817; c=relaxed/simple;
+	bh=HNcE/9s9LtJMh5rBQOJS6vBoWQ25dpqvvyeJYb4J7gE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CoGBSk0BFOToFgVENHKBBJOzEnvbsoZnKT8cE4FGcmShe2sY8qg7kPfbIGiykGk1DwW37ejwb50dNU8tmHuUH6epKko3waQ8LjbCgQrWmekGYx8RVWRrAzqwQ09UPfbaB75/VpAOmLji0tUGq0skW27sNgv87PwEkI6x29F1Sn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WdqToVQw; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OWat4R3G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787203985; x=1818739985;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3S1bSnlBhWx4HK5AwtWT7IpvRgMAbGMSQk5Azw7D0/Q=;
-  b=OWat4R3GlSmMhLBnzpj1bJWf/+uPX7maVdzxpezdMANUC2OLa4hCvJ+E
-   +eOaGgRtZP1ZyEUoelvZfqjNCMCR6bKEbAjQSRuw3wuKimykw5c2N5gZf
-   AGyNvuL0MZdgnj7Dtcg8ynwgpI0QYk4YymorqzaB8VVXBr9HWl5cov31r
-   Os7T/OQllaqtQWfAIzKUsiNFA3vYtaXfVgjMoh5C6/4n6POOMMmQ9nYmp
-   BKzSRRQ8Osf/CIxtaax8b4Nz5OhLzw6ekFH3SIc/u1C9znwKfLTw7/u5o
-   VMffzqgl/bggKb+8VrUzBRavmR57QWJnVsuZJnQd7iTpMTo+jlSr3//gg
-   g==;
-X-CSE-ConnectionGUID: ZktltSYxSIG/pNmfsvOAng==
-X-CSE-MsgGUID: xE/x0W2iTVKnjCA8z/x+5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11880"; a="87850297"
-X-IronPort-AV: E=Sophos;i="6.25,232,1779174000"; 
-   d="scan'208";a="87850297"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 22:33:04 -0700
-X-CSE-ConnectionGUID: 7cZX4p2jQnu1irIj4tXWwQ==
-X-CSE-MsgGUID: jgjBOSHGQgqyiWsPptTYkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,232,1779174000"; 
-   d="scan'208";a="262055988"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 19 Aug 2026 22:33:01 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wwvOc-00000000hx3-2mfN;
-	Thu, 20 Aug 2026 05:32:58 +0000
-Date: Thu, 20 Aug 2026 13:32:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Anubhav Shelat <ashelat@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shivank Garg <shivankg@amd.com>,
-	Ackerley Tng <ackerleytng@google.com>,
-	Fuad Tabba <tabba@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCH v3] tracefs: Add read-only eventfs filesystem at
- /sys/kernel/events
-Message-ID: <202608201306.OB6m5zzX-lkp@intel.com>
-References: <20260810160708.3460a2fd@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WdqToVQw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=en
+	rVbB0tlzxo2AvUQofyVixrsreHIn5CuB6ineVLbss=; b=WdqToVQwsq4up69vvq
+	ytwUWacsznvtzMJPqfxSMgvp4foGpuDAypo93b1KT1GxG50fzpwKfl90dSmMskzJ
+	ybmsRmOwbBbDVL9GX64VhkV+RV+AvtUKk0DlK6IV1am0yX2SgL6MBkT7CVY2I1hA
+	kOG25K/jPT/Whi77FQsiNqfKs=
+Received: from liubaolin-ThinkPad-E15-Gen-2 (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHFld6w4ZqIRluPA--.45482S2;
+	Thu, 20 Aug 2026 17:06:05 +0800 (CST)
+From: Baolin Liu <liubaolin12138@163.com>
+To: almaz.alexandrovich@paragon-software.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	liubaolin12138@163.com,
+	liubaolin12138@gmail.com,
+	Baolin Liu <liubaolin@kylinos.cn>
+Subject: [PATCH v4 0/7] ntfs3: add tracepoints for core filesystem paths
+Date: Thu, 20 Aug 2026 17:04:57 +0800
+Message-ID: <20260820090504.950475-1-liubaolin12138@163.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260810160708.3460a2fd@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHFld6w4ZqIRluPA--.45482S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw4DCF1fur18urykZr15CFg_yoW8Ww1rpr
+	ZxCrs3Kwn8JrW2ywnavF4DAF1F9ay8C34Ut34a9ry3AryFqr1xGry7Ka40qF48ArWDX347
+	XFn0kr4UGFWUZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piJGYdUUUUU=
+X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbCwR1MF2qGw30oFgAA3r
 
-Hi Steven,
+From: Baolin Liu <liubaolin@kylinos.cn>
 
-kernel test robot noticed the following build errors:
+This series adds an initial set of tracepoints for ntfs3 core paths.
 
-[auto build test ERROR on v7.2]
-[also build test ERROR on next-20260819]
-[cannot apply to trace/for-next linus/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The tracepoints cover:
+   - mount and log replay
+   - namei operations
+   - directory index operations
+   - allocation and block mapping
+   - iomap operations
+   - file I/O entry points
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracefs-Add-read-only-eventfs-filesystem-at-sys-kernel-events/20260810-160708
-base:   v7.2
-patch link:    https://lore.kernel.org/r/20260810160708.3460a2fd%40gandalf.local.home
-patch subject: [PATCH v3] tracefs: Add read-only eventfs filesystem at /sys/kernel/events
-config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20260820/202608201306.OB6m5zzX-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 16.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260820/202608201306.OB6m5zzX-lkp@intel.com/reproduce)
+Changes in v4 (both addressing review comments on patch 5):
+   - ntfs3_attr_data_get_block: pass the "new" pointer to the trace
+     event directly and move the "new != NULL" check into
+     TP_fast_assign(), keeping that logic out of the call site and only
+     executed when the event is enabled
+   - ntfs3_attr_set_size_ex: stop sampling the old size with
+     i_size_read() in TP_fast_assign() - on the truncate path
+     truncate_setsize() has already updated i_size to the new value, so
+     the recorded old_size always equaled new_size. Read the actual old
+     size from the on-disk attribute record and pass it as an explicit
+     parameter; move the call site after the attribute lookup so both
+     resident and non-resident attributes are covered
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202608201306.OB6m5zzX-lkp@intel.com/
+Baolin Liu (7):
+  ntfs3: add mount and log replay tracepoints
+  ntfs3: add namei tracepoints
+  ntfs3: add create inode tracepoint
+  ntfs3: add directory index tracepoints
+  ntfs3: add allocation tracepoints
+  ntfs3: add iomap tracepoints
+  ntfs3: add file I/O tracepoints
 
-All errors (new ones prefixed by >>):
+ MAINTAINERS                  |   1 +
+ fs/ntfs3/attrib.c            |  12 ++
+ fs/ntfs3/dir.c               |   3 +
+ fs/ntfs3/file.c              |   5 +
+ fs/ntfs3/fslog.c             |   3 +
+ fs/ntfs3/index.c             |   8 +
+ fs/ntfs3/inode.c             |   7 +
+ fs/ntfs3/namei.c             |   5 +
+ fs/ntfs3/super.c             |  11 +-
+ include/trace/events/ntfs3.h | 389 +++++++++++++++++++++++++++++++++++
+ 10 files changed, 443 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/ntfs3.h
 
-   fs/tracefs/event_inode.c: In function 'eventfs_ro_fill_super':
->> fs/tracefs/event_inode.c:38:23: error: 'EVENTFS_SUPER_MAGIC' undeclared (first use in this function)
-      38 |         sb->s_magic = EVENTFS_SUPER_MAGIC;
-         |                       ^~~~~~~~~~~~~~~~~~~
-   fs/tracefs/event_inode.c:38:23: note: each undeclared identifier is reported only once for each function it appears in
+-- 
+2.51.0
 
-
-vim +/EVENTFS_SUPER_MAGIC +38 fs/tracefs/event_inode.c
-
-    30	
-    31	static int eventfs_ro_fill_super(struct super_block *sb, struct fs_context *fc)
-    32	{
-    33		struct inode *inode;
-    34		struct dentry *root;
-    35	
-    36		sb->s_blocksize = PAGE_SIZE;
-    37		sb->s_blocksize_bits = PAGE_SHIFT;
-  > 38		sb->s_magic = EVENTFS_SUPER_MAGIC;
-    39		sb->s_op = &eventfs_ro_super_operations;
-    40		sb->s_time_gran = 1;
-    41		sb->s_flags |= SB_RDONLY;
-    42	
-    43		inode = new_inode(sb);
-    44		if (!inode)
-    45			return -ENOMEM;
-    46	
-    47		inode->i_ino = 1;
-    48		inode->i_mode = S_IFDIR | 0555;
-    49		simple_inode_init_ts(inode);
-    50		inode->i_op = &simple_dir_inode_operations;
-    51		inode->i_fop = &simple_dir_operations;
-    52		set_nlink(inode, 2);
-    53	
-    54		set_default_d_op(sb, &tracefs_dentry_operations);
-    55	
-    56		root = d_make_root(inode);
-    57		if (!root)
-    58			return -ENOMEM;
-    59	
-    60		sb->s_root = root;
-    61	
-    62		return 0;
-    63	}
-    64	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
