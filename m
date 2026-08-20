@@ -1,135 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577B547DD4B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 16:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B7A476CED
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 16:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787245103; cv=none; b=TGaw9PzdCa8dff9arze8erjdfg4VW09IobiCiZyORXfV+Pvt3NOmwuQJud3LJ/f9lzVnW2zpevbGq+Nr3w4UDnfikpXg8dRdvclYi+xtJIA7WWdwMVQkyElzQ7PkEziSosXzd3riidT3pyeGIjPpCfLa0A60ug0WLQXFuEZXwko=
+	t=1787245126; cv=none; b=ch7m7eW7QgjmcfdXSN+c4kErVOGlw7PHbroyc/AUO+1OCeSo7Wp2nH8atXxCXpD1jtAVIg/M2KNsRdX/PlIc3QVny+C2QvL/D8hPwQaTQXMnSJfCEAOGXP0jDF9X4ra2seCn0BpdOADsfASriOr/chvqI9Plwl2zAC/hDVgzNXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787245103; c=relaxed/simple;
-	bh=vPJNi8PVoqLO2QQYgTvwSUDab7HXWfohAJu9CIWmYOk=;
+	s=arc-20240116; t=1787245126; c=relaxed/simple;
+	bh=zeavYpUgKt91zIzSUPP+/qVt6hWTqvapfwz4BinTQ9I=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SMIgoa8e61GQtsHgOMXHQ1H8STB5Jvm1QbQlcGjXfMimoAbMC+WfaAeYw35bVsY0Hp+J4/yp0tKZFp8tXN2K9rl2UPcM+8ke7oZQjdHJAMwjbvs0kPk03QtICAQw7UpmgtrwOz6cQUCBM0v+hm5diHCw+xdlKLR/7akvm076It4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRLE4VQN; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=LfLqeGo1xqwkFZDLNuraMKGbHa6cmIUtGYPNenaOisNsgaEg0kJxXOtHlA/UMEfpMOQFU1mcvvTq1lBc3MQa4np66G6zwUpX3N/yXcvWBoiJZ3hO3SrFN5wsB76GXcWEiO65VzlWsOHVTbKieobw6G4O3XQxlqirgFr+Wgzljt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJBu00pG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRLE4VQN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCC71F00A3A;
-	Thu, 20 Aug 2026 16:58:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJBu00pG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21AE71F000E9;
+	Thu, 20 Aug 2026 16:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787245099;
-	bh=loXxIZFIXSXHJU2VtS2lInvjdN5gyEJNndRrg6nW3r4=;
+	s=k20260515; t=1787245125;
+	bh=+iJtI77FV6eKO0b+kIpE4tk1QqLVtNOfhOy252w39J4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aRLE4VQN7lNuMuvLIay9QaLdFjpe+ktQB7vg19fCpo1UDUUZX3pzcG5kWSkoN3i+T
-	 ReikcJfO/Gn5MQgukmOASgoLs0ywSYlKT1hipHk27USsKnvQHg+hjIKfoL/eHuxuq7
-	 Wbrg/AGWlav0BZxZ2+ffc9fCPOm5qOsFo3t185cVFW+7/rtk3I3fI4bZbsCOpaO5ri
-	 K68qvN7flN/a9sFrSPYBhfodc4JNz1/E6+a8hNZX4KcEMLGslYROzoLpyiIJ0FR2Tg
-	 M0+bha7p5E3U28gxYgGWpngsK6+7gduyZMrH+6nUonJsaHjZy+3oKZj0wZaY5UnHKz
-	 edj/55OngABWg==
+	b=bJBu00pGtA7rZ4lxh3KW+P896hwuCDAqIrkrxqS7o0Tj6VTSTEhhWbBG88Lqut7v4
+	 mW01yw39MfxJerUAfxd8Y91t4BTsP1praOuGcoUB0pnbjLTugDnk3FJKKCraQgQnou
+	 1lw4IIc4Pb86VyswRj+OO3RJv87HuFCKOEkr1WrvixIXDZezP8WZ7v00slg7W3YFQi
+	 VLlfzinTiHqov8hwMdQbu+uKf2K6yZjfyJrTuojPH2epuejkKxoiJv61ARFDPXh/wd
+	 ub2ghu9ODLaxejI7ltSnl/Xbg8tfEU5yZtu/duEm2XpoxP4zZOVTHeyZOdD6H2QDqN
+	 ygHsgBhdnvWxw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 9/9] selftests/ftrace: Walk up to find
- test.d/functions when a subdirectory is passed
+Subject: Re: [PATCH v6 4/9] rv: Fix ha_invariant_passed_ns silent bypass of
+ invariant check
 Reply-To: sashiko-reviews@lists.linux.dev
 To: wen.yang@linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <dc58717cc225389b041dc36c684df23e3253c473.1787243842.git.wen.yang@linux.dev>
+In-Reply-To: <b12480afcae971936571d9c0def64d3a8fa0be99.1787243842.git.wen.yang@linux.dev>
 References: <cover.1787243842.git.wen.yang@linux.dev>
- <dc58717cc225389b041dc36c684df23e3253c473.1787243842.git.wen.yang@linux.dev>
+ <b12480afcae971936571d9c0def64d3a8fa0be99.1787243842.git.wen.yang@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Aug 2026 16:58:18 +0000
-Message-Id: <20260820165819.5CCC71F00A3A@smtp.kernel.org>
+Date: Thu, 20 Aug 2026 16:58:44 +0000
+Message-Id: <20260820165845.21AE71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] The directory traversal logic fails to check directory ownership a=
-nd fails open on `stat` error, allowing arbitrary code execution as root vi=
-a an attacker-controlled ancestor directory.
+
+New issues:
+- [High] Check-then-act (TOCTOU) race condition in first-invocation guard r=
+eset allows concurrent thread execution to overwrite an initialized invaria=
+nt timestamp.
+
+Pre-existing issues:
+- [High] `ha_check_invariant_ns` calculates `time_ns - expire_ns`, which ca=
+n underflow and cause valid invariants to falsely fail when the system upti=
+me is less than `expire_ns`.
+- [High] `ha_start_timer_ns` and `ha_start_timer_jiffy` suffer from integer=
+ underflow when elapsed time (`passed`) exceeds the timeout (`expire`), cau=
+sing monitor timers to be scheduled far into the future (or at a random tim=
+e) instead of expiring immediately.
 --
 
---- Patch [9]: [PATCH v6 9/9] selftests/ftrace: Walk up to find test.d/func=
-tions when a subdirectory is passed ---
-commit 71305ea3fc4b8a7294d098d4bcdd8624fd21ca70
+--- Patch [4]: [PATCH v6 4/9] rv: Fix ha_invariant_passed_ns silent bypass =
+of invariant check ---
+commit 1e15107a6865e6fddc264988e2a5c771a535486a
 Author: Wen Yang <wen.yang@linux.dev>
 
-selftests/ftrace: Walk up to find test.d/functions when a subdirectory is p=
-assed
+rv: Fix ha_invariant_passed_ns silent bypass of invariant check
 
-This commit modifies ftracetest to walk up the directory tree from a passed
-test directory until it finds a test.d/functions file. This allows monitor
-subdirectories to be used directly as the test root without needing dummy
-functions shims.
+This patch fixes a silent bypass in ha_invariant_passed_ns() and=20
+ha_invariant_passed_jiffy() by initializing env_store to the current clock
+on the first invocation. It replaces the early return with a call to
+ha_reset_clk_ns() to establish the invariant guard.
 
-> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/se=
-lftests/ftrace/ftracetest
-> index 0a56bf209f6c0..8f9d9291bf4ce 100755
-> --- a/tools/testing/selftests/ftrace/ftracetest
-> +++ b/tools/testing/selftests/ftrace/ftracetest
-
-[ ... ]
-
-> @@ -159,9 +159,29 @@ parse_opts() { # opts
->    if [ -n "$OPT_TEST_CASES" ]; then
->      TEST_CASES=3D$OPT_TEST_CASES
->    fi
-> -  if [ -n "$OPT_TEST_DIR" -a -f "$OPT_TEST_DIR"/test.d/functions ]; then
-> -    TOP_DIR=3D$OPT_TEST_DIR
-> -    TEST_DIR=3D$TOP_DIR/test.d
-> +  if [ -n "$OPT_TEST_DIR" ]; then
-> +    # Walk up from OPT_TEST_DIR to find the nearest ancestor that contai=
-ns
-> +    # test.d/functions.  This allows a monitor subdirectory (e.g.
-> +    # verification/test.d/tlob/) to be passed directly without placing a
-> +    # dummy functions shim in each new subdirectory.
-> +    # Security: only walk within directories owned by root or the curren=
-t user
-> +    # to prevent sourcing a functions file planted in a world-writable a=
-ncestor.
-> +    dir=3D$(realpath "$OPT_TEST_DIR" 2>/dev/null || echo "$OPT_TEST_DIR")
-> +    while [ "$dir" !=3D "/" ] && [ "$dir" !=3D "//" ]; do
-> +      if [ -f "$dir/test.d/functions" ]; then
-> +        # Verify the directory is not world-writable to prevent LPE.
-> +        dirperms=3D$(stat -c "%a" "$dir" 2>/dev/null || stat -f "%Lp" "$=
-dir" 2>/dev/null)
-> +        case "$dirperms" in
-> +          *2|*3|*6|*7) ;; # world-writable: skip this candidate
-> +          *)
-> +            TOP_DIR=3D$dir
+> diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+> index 6e1c7fe5449a3..e1738d199b289 100644
+> --- a/include/rv/ha_monitor.h
+> +++ b/include/rv/ha_monitor.h
+> @@ -355,7 +355,7 @@ static inline u64 ha_invariant_passed_ns(struct ha_mo=
+nitor *ha_mon, enum envs en
+>  	if (env < 0 || env >=3D ENV_MAX_STORED)
+>  		return 0;
+>  	if (ha_monitor_env_invalid(ha_mon, env))
+> -		return 0;
+> +		ha_reset_clk_ns(ha_mon, env, time_ns);
 
 [Severity: High]
-Does this logic actually check directory ownership as mentioned in the comm=
-ents?
+Does this lockless state check and modification allow a check-then-act race?
 
-It appears the code only checks if the directory is world-writable, but omi=
-ts
-validating that it is owned by root or the current user. An attacker could
-potentially create a directory with standard 0755 permissions, plant a
-malicious test.d/functions script, and if a privileged user or automated te=
-st
-harness runs ftracetest against a subdirectory, the script would traverse up
-and source the payload.
+Looking at ha_invariant_passed_ns() in include/rv/ha_monitor.h, if concurre=
+nt
+threads execute this path for the same multi-state monitor, could Thread A =
+and
+Thread B both evaluate ha_monitor_env_invalid() as true?=20
 
-Additionally, if the stat command fails for any reason, dirperms will be em=
-pty.
-Would an empty string match the *) fallback case and cause the script to si=
-lently
-fail open, accepting even a world-writable directory?
+This could lead to one thread blindly overwriting the invariant start time
+initialized by the other, inappropriately pushing the epoch forward and mas=
+king
+violations.
 
-> +            TEST_DIR=3D$TOP_DIR/test.d
-> +            break
-> +            ;;
-> +        esac
-> +      fi
-> +      dir=3D$(dirname "$dir")
-> +    done
->    fi
+>  	return ha_get_env(ha_mon, env, time_ns);
 >  }
+> =20
+> @@ -375,6 +375,7 @@ static inline bool ha_check_invariant_jiffy(struct ha=
+_monitor *ha_mon, enum envs
+>  {
+>  	return time_after64(READ_ONCE(ha_mon->env_store[env]), get_jiffies_64()=
+ - expire_jiffy);
+>  }
+> +
+
+[Severity: High]
+This isn't a bug introduced by this patch, but is there a risk of integer
+underflow in the related ns check function?
+
+include/rv/ha_monitor.h:ha_check_invariant_ns() {
+    return READ_ONCE(ha_mon->env_store[env]) >=3D time_ns - expire_ns;
+}
+
+If the system uptime (time_ns) is smaller than expire_ns (e.g. for a monitor
+started early during boot with a large timeout budget), could time_ns - exp=
+ire_ns
+underflow?
+
+This would immediately trigger a false positive invariant violation that co=
+uld
+cause a kernel panic if the panic reactor is configured.
+
+[Severity: High]
+This is a pre-existing issue, but could integer underflow occur in the timer
+setup functions when the elapsed time exceeds the timeout?
+
+include/rv/ha_monitor.h:ha_start_timer_ns() {
+    u64 passed =3D ha_invariant_passed_ns(ha_mon, env, time_ns);
+    ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
+                         nsecs_to_jiffies(expire - passed + TICK_NSEC - 1),=
+ time_ns);
+}
+
+If passed is greater than expire, expire - passed underflows to a massive u=
+nsigned
+64-bit value.
+
+When passed to nsecs_to_jiffies() (or jiffies_to_nsecs() in ha_start_timer_=
+jiffy),
+this can result in timers being scheduled far into the future (or at a rand=
+om
+time) instead of expiring immediately, nullifying the monitor's ability to
+enforce latency budgets.
+
+>  /*
+>   * ha_invariant_passed_jiffy - prepare the invariant and return the time=
+ since reset
+>   */
+> @@ -383,7 +384,7 @@ static inline u64 ha_invariant_passed_jiffy(struct ha=
+_monitor *ha_mon, enum envs
+>  	if (env < 0 || env >=3D ENV_MAX_STORED)
+>  		return 0;
+>  	if (ha_monitor_env_invalid(ha_mon, env))
+> -		return 0;
+> +		ha_reset_clk_jiffy(ha_mon, env);
+
+[Severity: High]
+Can concurrent threads race when resetting the jiffy clock here as well?
+
+Similarly to ha_invariant_passed_ns(), could multiple CPUs evaluating
+ha_monitor_env_invalid() at the same time in ha_invariant_passed_jiffy() ca=
+use
+an initialized invariant timestamp to be silently overwritten?
+
+>  	return ha_get_env(ha_mon, env, time_ns);
+>  }
+>
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787243842.gi=
-t.wen.yang@linux.dev?part=3D9
+t.wen.yang@linux.dev?part=3D4
