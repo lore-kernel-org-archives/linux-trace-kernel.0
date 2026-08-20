@@ -1,146 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C662247DD5F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 16:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577B547DD4B
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Aug 2026 16:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787244995; cv=none; b=mfmTJqwDhlzDuAQRkyRegsLhSxuqCgGdUYys7QLC4d4i1ZrM3FCeYaHVoCEQsqkZqXxdgMAjZVxUdll4GZtuOZ0yfF2Wb8DaGIoq1TvEsOa+4duWVEa4MkxENGlsHKda50uHyalg3XKJktYv44IObeWP8OaJ6qtMkglU9Etc+x8=
+	t=1787245103; cv=none; b=TGaw9PzdCa8dff9arze8erjdfg4VW09IobiCiZyORXfV+Pvt3NOmwuQJud3LJ/f9lzVnW2zpevbGq+Nr3w4UDnfikpXg8dRdvclYi+xtJIA7WWdwMVQkyElzQ7PkEziSosXzd3riidT3pyeGIjPpCfLa0A60ug0WLQXFuEZXwko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787244995; c=relaxed/simple;
-	bh=qgUuG6x2D01JeW1ls/KsraS0g/6Y2Buzfpo5t5rYHiM=;
+	s=arc-20240116; t=1787245103; c=relaxed/simple;
+	bh=vPJNi8PVoqLO2QQYgTvwSUDab7HXWfohAJu9CIWmYOk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LDxFYp+3ajb7FvIKaVD1UJLBs3Wghh7mysldm0/xJMkvVz8zHU9IaUhS+/P6KFXjGMs9aaQxLqjzIGUr05+gVffjJDjK8HiiSeQLlYp4tuTPcC5RJey72fDqpwWuT9awEAhTpArz+3MPQXcuJ4Q0kO75y7yWwxmcbolwuTctiw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjJMg2pn; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=SMIgoa8e61GQtsHgOMXHQ1H8STB5Jvm1QbQlcGjXfMimoAbMC+WfaAeYw35bVsY0Hp+J4/yp0tKZFp8tXN2K9rl2UPcM+8ke7oZQjdHJAMwjbvs0kPk03QtICAQw7UpmgtrwOz6cQUCBM0v+hm5diHCw+xdlKLR/7akvm076It4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRLE4VQN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjJMg2pn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5066B1F00A3A;
-	Thu, 20 Aug 2026 16:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRLE4VQN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCC71F00A3A;
+	Thu, 20 Aug 2026 16:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787244993;
-	bh=iPHR41ed3HrVv7Bd05PHkb8iYM4KBufv6i8VC+xyx3U=;
+	s=k20260515; t=1787245099;
+	bh=loXxIZFIXSXHJU2VtS2lInvjdN5gyEJNndRrg6nW3r4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XjJMg2pn+yRtBtC/H3l6tHH2PJXW/qmqVKgTFuCClAlRBrdsjGzj5krw4WXpOVDRE
-	 I9+pEAKoMgJfRIfhoWCow2DYieG7QZqcToj8qMM+UyRlPcgv9Zgvlyy/mcb3h7S4PG
-	 u9ZLgT/mwO1MyKGOyYeycDkjGBhPr1ylUsE4RoVafA1WgCgPJ7jjY3URmxev7SKNeF
-	 1S69WBoseGodJaO5mqkGV2U/xRK8+L1Mb2yM7WWPG+abNDB9ZxmqP4ZgN7vnqBIJqK
-	 JsoM2NOCSvTH5GW5Un7+14gC+fpGTNaxUpLOVTy1ZWaD0KETdOpZBCdUL0OHip17Qb
-	 41r22tHmYia2w==
+	b=aRLE4VQN7lNuMuvLIay9QaLdFjpe+ktQB7vg19fCpo1UDUUZX3pzcG5kWSkoN3i+T
+	 ReikcJfO/Gn5MQgukmOASgoLs0ywSYlKT1hipHk27USsKnvQHg+hjIKfoL/eHuxuq7
+	 Wbrg/AGWlav0BZxZ2+ffc9fCPOm5qOsFo3t185cVFW+7/rtk3I3fI4bZbsCOpaO5ri
+	 K68qvN7flN/a9sFrSPYBhfodc4JNz1/E6+a8hNZX4KcEMLGslYROzoLpyiIJ0FR2Tg
+	 M0+bha7p5E3U28gxYgGWpngsK6+7gduyZMrH+6nUonJsaHjZy+3oKZj0wZaY5UnHKz
+	 edj/55OngABWg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 8/9] selftests/verification: Add tlob selftests
+Subject: Re: [PATCH v6 9/9] selftests/ftrace: Walk up to find
+ test.d/functions when a subdirectory is passed
 Reply-To: sashiko-reviews@lists.linux.dev
 To: wen.yang@linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <c1305284e09e0522c5c88e8ebf4a0f6e59541999.1787243842.git.wen.yang@linux.dev>
+In-Reply-To: <dc58717cc225389b041dc36c684df23e3253c473.1787243842.git.wen.yang@linux.dev>
 References: <cover.1787243842.git.wen.yang@linux.dev>
- <c1305284e09e0522c5c88e8ebf4a0f6e59541999.1787243842.git.wen.yang@linux.dev>
+ <dc58717cc225389b041dc36c684df23e3253c473.1787243842.git.wen.yang@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Aug 2026 16:56:32 +0000
-Message-Id: <20260820165633.5066B1F00A3A@smtp.kernel.org>
+Date: Thu, 20 Aug 2026 16:58:18 +0000
+Message-Id: <20260820165819.5CCC71F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Using `$(nproc) - 1` to determine a target CPU ID assumes that C=
-PU IDs are contiguous and start from 0, which breaks on sparse affinity mas=
-ks or offline CPUs.
-- [Medium] The ELF parser in `tlob_sym.c` lacks sufficient bounds checks wh=
-en validating headers and iterating over sections, leading to out-of-bounds=
- memory accesses.
+- [High] The directory traversal logic fails to check directory ownership a=
+nd fails open on `stat` error, allowing arbitrary code execution as root vi=
+a an attacker-controlled ancestor directory.
 --
 
---- Patch [8]: [PATCH v6 8/9] selftests/verification: Add tlob selftests ---
-commit cb49807af49abc34cb32dee7d7e1d06575cff80a
+--- Patch [9]: [PATCH v6 9/9] selftests/ftrace: Walk up to find test.d/func=
+tions when a subdirectory is passed ---
+commit 71305ea3fc4b8a7294d098d4bcdd8624fd21ca70
 Author: Wen Yang <wen.yang@linux.dev>
 
-selftests/verification: Add tlob selftests
+selftests/ftrace: Walk up to find test.d/functions when a subdirectory is p=
+assed
 
-This commit adds seven ftrace-style test scripts for the tlob RV monitor,=20
-covering uprobe binding management, budget violation detection, and per-sta=
-te=20
-time accounting. It also includes a standalone runner and C helper programs=
-=20
-for target execution and ELF symbol parsing.
+This commit modifies ftracetest to walk up the directory tree from a passed
+test directory until it finds a test.d/functions file. This allows monitor
+subdirectories to be used directly as the test root without needing dummy
+functions shims.
 
-> diff --git a/tools/testing/selftests/verification/test.d/tlob/uprobe_deta=
-il_waiting.tc b/tools/testing/selftests/verification/test.d/tlob/uprobe_det=
-ail_waiting.tc
-> new file mode 100644
-> index 0000000000000..798a04012b6ea
-> --- /dev/null
-> +++ b/tools/testing/selftests/verification/test.d/tlob/uprobe_detail_wait=
-ing.tc
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/se=
+lftests/ftrace/ftracetest
+> index 0a56bf209f6c0..8f9d9291bf4ce 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+
 [ ... ]
-> +start_offset=3D$("$TLOB_SYM" sym_offset "$UPROBE_TARGET" tlob_preempt_wo=
-rk 2>/dev/null)
-> +stop_offset=3D$("$TLOB_SYM" sym_offset "$UPROBE_TARGET" tlob_preempt_wor=
-k_done 2>/dev/null)
-> +
-> +# Pick the last CPU to avoid cpu0 which is used by vng infrastructure.
-> +cpu=3D$(($(nproc) - 1))
-> +
 
-[Severity: Medium]
-Does this CPU ID calculation safely handle systems with sparse CPU affinity
-masks or offline CPUs?
+> @@ -159,9 +159,29 @@ parse_opts() { # opts
+>    if [ -n "$OPT_TEST_CASES" ]; then
+>      TEST_CASES=3D$OPT_TEST_CASES
+>    fi
+> -  if [ -n "$OPT_TEST_DIR" -a -f "$OPT_TEST_DIR"/test.d/functions ]; then
+> -    TOP_DIR=3D$OPT_TEST_DIR
+> -    TEST_DIR=3D$TOP_DIR/test.d
+> +  if [ -n "$OPT_TEST_DIR" ]; then
+> +    # Walk up from OPT_TEST_DIR to find the nearest ancestor that contai=
+ns
+> +    # test.d/functions.  This allows a monitor subdirectory (e.g.
+> +    # verification/test.d/tlob/) to be passed directly without placing a
+> +    # dummy functions shim in each new subdirectory.
+> +    # Security: only walk within directories owned by root or the curren=
+t user
+> +    # to prevent sourcing a functions file planted in a world-writable a=
+ncestor.
+> +    dir=3D$(realpath "$OPT_TEST_DIR" 2>/dev/null || echo "$OPT_TEST_DIR")
+> +    while [ "$dir" !=3D "/" ] && [ "$dir" !=3D "//" ]; do
+> +      if [ -f "$dir/test.d/functions" ]; then
+> +        # Verify the directory is not world-writable to prevent LPE.
+> +        dirperms=3D$(stat -c "%a" "$dir" 2>/dev/null || stat -f "%Lp" "$=
+dir" 2>/dev/null)
+> +        case "$dirperms" in
+> +          *2|*3|*6|*7) ;; # world-writable: skip this candidate
+> +          *)
+> +            TOP_DIR=3D$dir
 
-If a system has non-contiguous CPU IDs (for example, if CPU 1 is offline but
-CPUs 0 and 2 are online), nproc will evaluate to 2. This calculation would
-yield CPU 1, which might cause the subsequent taskset commands to fail with
-an invalid argument error since CPU 1 is unavailable.
+[Severity: High]
+Does this logic actually check directory ownership as mentioned in the comm=
+ents?
 
-> +echo 1 > ../events/rv/detail_env_tlob/enable
-> +echo 1 > ../tracing_on
-> +echo 1 > monitors/tlob/enable
-> +echo > ../trace
-[ ... ]
-> diff --git a/tools/testing/selftests/verification/tlob_sym.c b/tools/test=
-ing/selftests/verification/tlob_sym.c
-> new file mode 100644
-> index 0000000000000..2d9561331d2f9
-> --- /dev/null
-> +++ b/tools/testing/selftests/verification/tlob_sym.c
-[ ... ]
-> +		for (int pass =3D 0; pass < 2 && !found; pass++) {
-> +			const char *target =3D pass ? ".dynsym" : ".symtab";
-> +
-> +			for (si =3D 0; si < ehdr->e_shnum && !found; si++) {
-> +				Elf64_Shdr *sh =3D &shdrs[si];
-> +				const char *name =3D shstrtab + sh->sh_name;
+It appears the code only checks if the directory is world-writable, but omi=
+ts
+validating that it is owned by root or the current user. An attacker could
+potentially create a directory with standard 0755 permissions, plant a
+malicious test.d/functions script, and if a privileged user or automated te=
+st
+harness runs ftracetest against a subdirectory, the script would traverse up
+and source the payload.
 
-[Severity: Medium]
-Is there a risk of an out-of-bounds read when accessing the string table
-here?
+Additionally, if the stat command fails for any reason, dirperms will be em=
+pty.
+Would an empty string match the *) fallback case and cause the script to si=
+lently
+fail open, accepting even a world-writable directory?
 
-It appears sh->sh_name is used as an offset into shstrtab and passed to
-strcmp() without bounds checking against the actual string table size. Could
-a malformed binary cause a segmentation fault when the tool attempts to read
-beyond the mapped memory?
-
-> +
-> +				if (strcmp(name, target) !=3D 0)
-> +					continue;
-> +
-> +				Elf64_Shdr *strtab_sh =3D &shdrs[sh->sh_link];
-
-[Severity: Medium]
-Could this array indexing access memory outside the section header table?
-
-The sh->sh_link field is used directly as an index into shdrs. Since there
-is no verification that sh->sh_link is less than ehdr->e_shnum, a malformed
-ELF file could cause the tool to read arbitrary memory when mapping headers.
-
-> +				const char *strtab =3D (char *)map + strtab_sh->sh_offset;
-> +				Elf64_Sym *syms =3D (Elf64_Sym *)((char *)map + sh->sh_offset);
-> +				uint64_t nsyms =3D sh->sh_size / sizeof(Elf64_Sym);
-> +				uint64_t j;
-[ ... ]
+> +            TEST_DIR=3D$TOP_DIR/test.d
+> +            break
+> +            ;;
+> +        esac
+> +      fi
+> +      dir=3D$(dirname "$dir")
+> +    done
+>    fi
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787243842.gi=
-t.wen.yang@linux.dev?part=3D8
+t.wen.yang@linux.dev?part=3D9
