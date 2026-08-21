@@ -1,89 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F8A29D288;
-	Fri, 21 Aug 2026 02:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2150035CB6D;
+	Fri, 21 Aug 2026 03:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787279566; cv=none; b=j5FcfBcC2EG3fLPH8ft9XJlEsJYwfEcGqpZL1UPmGPOCbUjUaD7itdV1+KgwJ/Qd7bNLrseptWHEQATDCKRxKvZCYcVG2xvO8+YT0VfcYAHJyutlG4Awds0AzHjw53rQelph+1gSKYBof73XFqqtdTiyBOe7+T6BYAMEmw7ITrk=
+	t=1787281539; cv=none; b=E6eVCnN8ttBnBDtT1h96JVB+LPZ/RbGnDR3cFUvBfMTYbkgG1zJaEPhFp38zRLbEEEtJIPE3Nm/M7n53HQDXfRfZmZld4SnFI1+r4feOHKszUja1PbdPNK1AaoJW7iy+kMkOreVfR1oQQ1GrVCF+UrZ9MRp00KEttQsCBi2LrrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787279566; c=relaxed/simple;
-	bh=cv0qD6cuAPOR4oVc+l9cq2nNzMHpnMYQpOrykZjjDXA=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=bj2Z7dCdpRZtKXnvEhZTKDzRAsDI8olB+vJdPDuSoJp5MolGA0hit4tek1wYbi1PUJrHN9TywBunH6/TqD2cuJVb4iTYvy52k8vQDz4w2RnX/Aa7eQ5gY5ia/jNr6MUqQLLh/Y11barkBKZe3jSQtE3CMsLVCFA/2fAzNh6597U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bf8T2l8p; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787281539; c=relaxed/simple;
+	bh=dedcoEmUAKUk7YmPtA3wkGYwA/i32pF22h4YcKAscyg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d08tXHD5HzuwGPt6/7b6zvULfPm6ee91JojNlkrVVSDw/KQWr+qEE7rGKxwanUyrFg/bzkiZCEAeuMH1aE0xWAsuZu1o0HAisiL9mr0Vtk1zhNN0gu5SMLiL8ot+jtXM0B5ZYtyTBaIn9+Pc/T3Hb2D8zzMh4ixI5PChDndYEC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b5CtC+WG; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bf8T2l8p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058101F000E9;
-	Fri, 21 Aug 2026 02:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787279564;
-	bh=oIYdPIsa1yHw4YcSQlyJ7OAKiCfgQ6xlum8LonMt0jo=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=bf8T2l8p2dNTOVICkeIH/0rk98gIkErznti9g27kzj+QxXBpWXkeqpw2uTil3DJ+o
-	 Y2Ym1NXEdz1QehvWSeh6cLxPphtTfC6udtVOK1YZD8Qajrm89pV8W+q5Th78113v3U
-	 7SdKM89MDMPlnQAb8TkpnMPzm7xm+LtYEiB0ieg2UCmRlgh8pg7jhkLVcylUw4Pa3o
-	 2HqZyukmAWy+2je0yiQ86vlwYTb//3STwsiOe+pw7mnu8L+dtG7YZ0gB38wI1eZW3E
-	 U+nkjT2nycBBPAr9WagXGFeeXh1/Dre4Bv4zscsRVJxUSzLwQ5wEDhXVwV37Ea9jFG
-	 phHPt1tZYkDyw==
-Content-Type: multipart/mixed; boundary="===============0871903515966817128=="
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b5CtC+WG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787281538; x=1818817538;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dedcoEmUAKUk7YmPtA3wkGYwA/i32pF22h4YcKAscyg=;
+  b=b5CtC+WG67HJa5swtr1JMnpPjqylYOOWtoFFOxTur6jXHtrPEgnut0zd
+   M4gWeHemo45WE2r6Ccnpj/zwIfGS09h29pdcQ5ZKWGBGA36rKuY1381x7
+   4+KsI4vNKrCqIgXHA6h2kIBf1VYhERW0gKR+cGC8pJrcllysOpeC+WLQO
+   72rReXXhtLllKKMhdYdwmVsisp9Ku7B+CAOdNqX1B/XiR6ACw2Wf2yQiw
+   +9vlsW0hwmF1TAd7NfYsjC+aEIw+wGo35ClxYFu7GIlMdrEJk5iY7thDw
+   HQGiaCs5wrY3enIHfVYHWsnZzlC8LpDp1vnhWeU5RkAtOgOxVWwO9140C
+   w==;
+X-CSE-ConnectionGUID: Rumq3KWGStWb1ceO6Bwq+A==
+X-CSE-MsgGUID: PR/NVffAQyuIHB1keW4+Ow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="91700457"
+X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
+   d="scan'208";a="91700457"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 20:05:35 -0700
+X-CSE-ConnectionGUID: 7MhXezB7RU+EV+DHFikReg==
+X-CSE-MsgGUID: YTXbn5W/Q4OQ6BfbzvVtsQ==
+X-ExtLoop1: 1
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.119]) ([10.124.240.119])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 20:05:17 -0700
+Message-ID: <a410cca6-0776-44af-8353-9b7375e2fd4e@intel.com>
+Date: Fri, 21 Aug 2026 11:05:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <092049279b8456492ee51b43f97926a94ebec32c3477ac6ce1758324710fc1e5@mail.kernel.org>
-In-Reply-To: <20260821014210.18681-1-kartikey406@gmail.com>
-References: <20260821014210.18681-1-kartikey406@gmail.com>
-Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
-From: bot+bpf-ci@kernel.org
-To: kartikey406@gmail.com,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,olsajiri@gmail.com,irogers@google.com,adrian.hunter@intel.com,james.clark@linaro.org,kpsingh@kernel.org,matt@bobrowski.net,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,emil@etsalapatis.com,ihor.solodrai@linux.dev,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com
-Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kartikey406@gmail.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Fri, 21 Aug 2026 02:32:44 +0000 (UTC)
-
---===============0871903515966817128==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 07/41] KVM: guest_memfd: Stub in ability to enable
+ in-place shared<=>private conversion
+To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
+ binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
+ david@kernel.org, jmattson@google.com, jthoughton@google.com,
+ michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
+ qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ shivankg@amd.com, steven.price@arm.com, tabba@google.com,
+ willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
+ forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
+ aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
+ Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-> commit ba658ac0ee57b66edf6626745df8d57173c68285
-> Author: Deepanshu Kartikey <kartikey406@gmail.com>
-> Date:   Fri Aug 21 07:12:10 2026 +0530
->
->     perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
->
->     During fork(), perf_event_alloc() reads parent_event->prog locklessly
->     which can race with a concurrent bpf_perf_link_release() clearing and
->     freeing the prog via perf_event_detach_bpf_prog(). This can result in
->     a NULL pointer dereference or use-after-free in bpf_prog_inc().
->
->     Fix by holding bpf_event_mutex when inheriting the BPF program during
->     fork(). Make bpf_event_mutex non-static and declare it extern in
->     perf_event.h so it is accessible from kernel/events/core.c.
->
->     Fixes: 85192dbf4de0 ("bpf: Convert bpf_prog refcnt to atomic64_t")
+On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
+> From: Sean Christopherson <seanjc@google.com>
+> 
+> Stub in global variable to enable in-place guest_memfd private<=>shared
+> memory conversion, which will eventually be exposed to userspace via a
+> module param, and wire up the __kvm_mem_is_private() static call to the
+> guest_memfd version when in-place conversion is enabled, i.e. when gmem is
+> the sole authority on private vs. shared memory.
 
-The Fixes tag points at commit 85192dbf4de0 ("bpf: Convert bpf_prog
-refcnt to atomic64_t") by Andrii Nakryiko, which only converted
-bpf_prog->aux->refcnt from atomic_t to atomic64_t and made bpf_prog_inc()
-non-failing.
+I find this patch changes the default memory type for a @gfn.
 
-That commit's modified-symbol set is entirely in kernel/bpf/,
-include/linux/bpf.h and various net drivers, and it does not touch
-kernel/events/core.c or perf_event_alloc() at all.
+- When memory attribute is tracked per-VM, the default memory type is 
+always shared.
 
-The unlocked read of parent_event->prog in perf_event_alloc() predates
-it and was introduced by the commit that added BPF overflow-handler
-inheritance to perf_event_alloc().
+- when gmem_in_place_conversion is true,
+   - if the @gfn has no memslot, or the memslot where the @gfn locates
+     doesn't have gmem bound, the default memory type is shared,
+   - otherwise, the default memory type is determined by the
+     GUEST_MEMFD_FLAG_INIT_SHARED flag.
 
-Should the Fixes tag name the commit that introduced the unlocked read so
-the fix is backported to the right stable trees?
+I think we should document this change.
 
+> Cc: Fuad Tabba <tabba@google.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> ---
+>   include/linux/kvm_host.h |  6 ++++++
+>   virt/kvm/guest_memfd.c   | 26 ++++++++++++++++++++++++++
+>   virt/kvm/kvm_main.c      | 12 +++++++++++-
+>   3 files changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 65fbce46b63f4..9477ecebbbced 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -2580,6 +2580,8 @@ static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>   #endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
+>   
+>   #ifdef kvm_arch_has_private_mem
+> +extern bool gmem_in_place_conversion;
+> +
+>   typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
+>   DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
+>   
+> @@ -2588,6 +2590,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>   	return static_call(__kvm_mem_is_private)(kvm, gfn);
+>   }
+>   #else
+> +#define gmem_in_place_conversion false
+> +
+>   static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>   {
+>   	return false;
+> @@ -2595,6 +2599,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
+>   #endif /* kvm_arch_has_private_mem */
+>   
+>   #ifdef CONFIG_KVM_GUEST_MEMFD
+> +bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn);
+> +
+>   int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>   		     gfn_t gfn, kvm_pfn_t *pfn, struct page **page,
+>   		     int *max_order);
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index 1f1ae61b4878b..75979c885e030 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -475,6 +475,32 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
+>   	return 0;
+>   }
+>   
+> +bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn)
+> +{
+> +	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+> +	struct inode *inode;
+> +
+> +	if (!slot)
+> +		return 0;
+> +
+> +	CLASS(gmem_get_file, file)(slot);
+> +	if (!file)
+> +		return 0;
+> +
+> +	inode = file_inode(file);
+> +
+> +	/*
+> +	 * Rely on the maple tree's internal RCU lock to ensure a stable result.
+> +	 * This result can become stale as soon as the lock is dropped, so the
+> +	 * caller _must_ protect consumption of private vs. shared either by
+> +	 * holding guest_memfd's invalidate lock for the entire duration, or by
+> +	 * checking mmu_invalidate_retry_gfn() under mmu_lock to serialize
+> +	 * against concurrent attribute updates.
+> +	 */
+> +	return kvm_gmem_is_private_mem(inode, kvm_gmem_get_index(slot, gfn));
+> +}
+> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_is_private);
+> +
+>   static struct file_operations kvm_gmem_fops = {
+>   	.mmap		= kvm_gmem_mmap,
+>   	.open		= generic_file_open,
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index a01d336eab18b..0a5a1bee8de0f 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -102,6 +102,10 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(halt_poll_ns_shrink);
+>   static bool __ro_after_init allow_unsafe_mappings;
+>   module_param(allow_unsafe_mappings, bool, 0444);
+>   
+> +#ifdef kvm_arch_has_private_mem
+> +bool __ro_after_init gmem_in_place_conversion = false;
+> +#endif
+> +
+>   /*
+>    * Ordering of locks:
+>    *
+> @@ -2423,6 +2427,9 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+>   static u64 kvm_supported_vm_mem_attributes(struct kvm *kvm)
+>   {
+>   #ifdef kvm_arch_has_private_mem
+> +	if (gmem_in_place_conversion)
+> +		return 0;
+> +
+>   	if (!kvm || kvm_arch_has_private_mem(kvm))
+>   		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+>   #endif
+> @@ -2634,8 +2641,11 @@ EXPORT_STATIC_CALL_GPL(__kvm_mem_is_private);
+>   
+>   static void kvm_init_memory_attributes(void)
+>   {
+> +	if (gmem_in_place_conversion)
+> +		static_call_update(__kvm_mem_is_private, kvm_gmem_is_private);
+>   #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+> -	static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
+> +	else
+> +		static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
+>   #endif
+>   }
+>   #else
+> 
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/32437947108
---===============0871903515966817128==--
