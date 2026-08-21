@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C1F390C94;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC96541A77C;
 	Fri, 21 Aug 2026 23:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787355016; cv=none; b=fDHrvzpHx4nUCKId2nUewO7Vr1nEL9WDS9FFl4YiFdWYG9kBJNYEKvqXz/+IEiw7iTLJqCxPpY5rW9fvTbX8iZMOxAMFqtPOmctqVroQhBHDN7rf5k1mbTImL6swwfEr5wQLm3aclPrte2T00sd3Y6/LoH+mTYnR4AqkI2fU3t8=
+	t=1787355016; cv=none; b=e98EX/nx6dcB0PVFB4jELxhCiNPusBeDx1OFTEf0z9Fucydb+y2/LuU4FBZ25kVBJ/xoNjjFHu7kXAsOTlSZyalKNp2xBqys88EXQsOhQTdnXevoPC4ZzC9XIJkJw/Dpd3Ku7BRcM1E/lgbM50jjOIRMfRWWyP0bhK48PO3z3Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787355016; c=relaxed/simple;
-	bh=tic/eCG29DwfwVGbWxAuRBOrKemDF71lhWCK6+t3UbA=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=kgHyUpBNy6IPk67DOFBtrMK+zlJMJKEXgAkuzIoxyARWrP4ALeTReoodg5TgmJ4ov58P7BsC7GOZpdq39KzXEMn4SicUT+Cr55/4O+oEyNiBlHRhv63YDSo031EH/ayGHb6Vk8W8JORgEn2s0Ixi0r3IbcQ7lUhbblH1lfR93Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i575Ts/+; arc=none smtp.client-ip=100.103.45.18
+	bh=ezlIhANHrjnxFDnlU+9qpNt99P8bYmW7/9exs/RavcU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=ZkTGJd13u91f8Ldmykc1CnG+d2Rn9UuESbnuLJCQJZcVOYDbMU+WrQU5vGN2gxTPXMY/fL9O+ltpxPDaVQ3ekLbbp7Xt0MCTLm/ZkD5FYulD5A3uvvvzEJGXV8zf7+TwkO8KEmDMYvtufWuxwT4JAa6VsXQSH7CyVIFQoZ1hkCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj6VPDLu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i575Ts/+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4941F00A3A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj6VPDLu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D4B91F00AC4;
 	Fri, 21 Aug 2026 23:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1787355015;
-	bh=aTLLnedvrxWkk6BZVlEE6rO7y4yaYjbcD+kaduCb7WM=;
-	h=Date:From:To:Cc:Subject;
-	b=i575Ts/+g05oA0P7BLSpkwkxMIS/C9cI9fApuW6hDZ7I2gQ81fdDMQzHIOQgGBwE1
-	 RfpAK+JU2Nqz12EuaMzsRHt09fjwEPDnEkyvs5LCiqjMXnPKQC2ax2MJDQxcfOslfB
-	 d2SyL1yh9jGK9cD494aIgUK0kSIpqzeblGPrAsl+tHvo6DSl4hvTaHBSo1to5yQ7SU
-	 Kab1bmg8qJWhZYR1Hy2y8rLniQkbDOqSEN5uglxMaVs0J++0PWXEsxQ4SIy2AqHVpG
-	 2s2OWUo+nmcjUlXacJVhvxf+3iVZxFLVCfhgKDN8GDmmuKO7dGO13nVxURg3Keu463
-	 Ub9y4G2iuB/SQ==
+	bh=v+dH5bVNfNvYtFzF2cQ1b7nY01NW4X168+YJBJ8OAe8=;
+	h=Date:From:To:Cc:Subject:References;
+	b=dj6VPDLushZi8BEuOct0LWqTxA47VBbbu0EEWfANvlUsDGrUuoiksH5ZxiEvrcslc
+	 9qOu/Sajaqw+X0a3vIx/AQHqdCYvOHGcgen8lBM8Yd20BzhlEXW+74jM6/4RXNf58p
+	 FgP2JyuR7lHW+ATe80qZnx3uNo7Ct0Aap8kbl6dnOgptuYz2vdS0EZuSuPmQbVUqDJ
+	 SA7jPmIC+W/1nRPvOjaodX241lgMwxtEEGPLwXj8T8i1Y2XT4ZshflsSkvhwf7ZfdE
+	 jzQrjTxB1LLSpFnpMikOfTw2Wak7fM7CXkQQ66FLZNxw3Mmc5YdEnBlblCYiRTVsy+
+	 JshffODYER2Hg==
 Received: from rostedt by gandalf with local (Exim 4.99.4)
 	(envelope-from <rostedt@kernel.org>)
-	id 1wxYhG-00000005riq-1Iz9;
+	id 1wxYhG-00000005rjq-2duu;
 	Fri, 21 Aug 2026 19:30:50 -0400
-Message-ID: <20260821232820.717143516@kernel.org>
+Message-ID: <20260821233050.488131029@kernel.org>
 User-Agent: quilt/0.69
-Date: Fri, 21 Aug 2026 19:28:20 -0400
+Date: Fri, 21 Aug 2026 19:28:22 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,33 +41,61 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Chen Jun <chenjun102@huawei.com>
-Subject: [PATCH v2 0/2] tracing: Add 'within' filter logic
+Subject: [PATCH v2 2/2] tracnig: Add proper error message for glob use with "within" filter
+References: <20260821232820.717143516@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Add a "within" filter predicate that tests whether a given function
-appears in the current call stack at event time. The function name
-is resolved to its address range via kallsyms during filter setup;
-at runtime, stack_trace_save() captures the call stack and compares
-each return address against the stored range.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20260608145556.94931-1-chenjun102@huawei.com
+If a user were to use a glob expression with the "within" filter, it
+currently just fails with an errno return but does not update the
+error_log to tell the user why it failed. Update it to use the parsing
+error log to tell the user why it failed.
 
-- Added patch to show error message
+  # echo 'within ~ "*_read"' > events/kmem/kmem_cache_alloc/filter
+  -bash: echo: write error: Invalid argument
 
-Chen Jun (1):
-      tracing: Add "within" filter for call-stack-based event filtering
+  # cat error_log
+  [ 4676.606481] event filter parse error: error: 'within' filter cannot take glob expressions
+    Command: within ~ "*_read"
+                              ^
 
-Steven Rostedt (1):
-      tracnig: Add proper error message for glob use with "within" filter
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-----
- Documentation/trace/events.rst     | 12 +++++++++++
- include/linux/trace_events.h       |  1 +
- kernel/trace/trace.h               |  3 ++-
- kernel/trace/trace_events.c        |  3 +++
- kernel/trace/trace_events_filter.c | 44 ++++++++++++++++++++++++++++++++++++--
- 5 files changed, 60 insertions(+), 3 deletions(-)
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 297bf156ea65..f811c527cce8 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -118,6 +118,7 @@ struct filter_pred {
+ 	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
+ 	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
+ 	C(NO_FUNCTION,		"Function not found"),			\
++	C(GLOB_WITHIN,		"'within' filter cannot take glob expressions"), \
+ 	C(ERRNO,		"Error"),				\
+ 	C(NO_FILTER,		"No filter found")
+ 
+@@ -2024,8 +2025,10 @@ static int parse_pred(const char *str, void *data,
+ 		} else if (field->filter_type == FILTER_WITHIN) {
+ 			unsigned long func;
+ 
+-			if (op == OP_GLOB)
++			if (op == OP_GLOB) {
++				parse_error(pe, FILT_ERR_GLOB_WITHIN, pos + i);
+ 				goto err_free;
++			}
+ 
+ 			pred->fn_num = FILTER_PRED_FN_WITHIN;
+ 			func = kallsyms_lookup_name(pred->regex->pattern);
+-- 
+2.53.0
+
+
