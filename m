@@ -1,195 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01E8352018;
-	Fri, 21 Aug 2026 01:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2211352027;
+	Fri, 21 Aug 2026 01:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787277390; cv=none; b=XJ2uQpnMsMLw/EYAx69IsZEDRG9XQ+CgX2lZlunsrhADcCEOMTKOkz3IrBB38d6Q6ZWn5DiAvw8ikBIjBHhRxiVnitHZ3faQzcYKPbnnzSt3fsSlvuY4fqWeNefIihdn5tqSUVzC8VUzErxDYmXzvghXWaAtGNnT5ap2PhmTQxQ=
+	t=1787277414; cv=none; b=DWg8JZ9b9npROWe+o9LZRu6i/mTT3Ifq2iEUvxj8Mm1LlY7fHNyP8Q0Wj/6VVxVPY4eDfsS0nYd7ddvKENRaLrEAb8b0XgBqQMOyKBxK+eUUpq/On+I+ilt2WPFHRXTujeVYoVCQtQ9PKqc8Cl4qX4jyQqcg6sWd3foo3hAvC/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787277390; c=relaxed/simple;
-	bh=Ii1AnT0UgnYwkqRaQdOxDbEek/O/yTQQ1ZpMn8+3qA0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZJqN87zDCLuSZtWQypTDTF93ZwABG7QIQyo9Chm8x0cG8YA0HI4SkobTCvoSe3UiTaaPjgSIY1NvUzVCkOUHSXip6NVCaL8MHUbSKsTfrItbkp3tLGUwDE3dfQro2GTLd/BPZsT7NDUhJFycrQUB+pePXkG0z5UnSnZZJjme48s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxDrRazl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787277414; c=relaxed/simple;
+	bh=WQwGVlmJS8ZGNIy7MMpvSumA65lyGiTbC6vv6/SOgwQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kcnCzraRShNBvIM7O9DDSSggNuuDWITXgByMUwhnsxqLCagRNDNnhDzl34v1KpPB9t9EBanhr2moW4iu0vb64XtnLKm/RRKFfAMs/4ySXjVvJb9ZbkM/IPS63NkXalAflnjWig6WNCxd0oE/seYPc5ul3fQF/v/YWyoTh9wAEaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCAiNRFK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxDrRazl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2C61F00A3A;
-	Fri, 21 Aug 2026 01:56:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCAiNRFK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E271F000E9;
+	Fri, 21 Aug 2026 01:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787277389;
-	bh=JUmPDRmvMxHFLfF9+Liqr3d2OkeovUNHrU7qBdG/Pts=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZxDrRazlJ031Fjr9fHs+4try12RXfx0VB7lRO94oes90sX7XzkCzDGCCQDNHSgCgX
-	 Mm8joY9iB9yhIMjsEEoEtEVK2FAMiU0xMpBn6pJca4KDK6OQXLlCELUXLH/pOrOw8e
-	 88XKF6EGLIkPweXik4Kl44gSXZNcIZIBhZ/J9MmLkNSBfaFK63v4+/6aI7rk1hutvJ
-	 X935tE89IQzER3bZd0PqAaNArVkejK9Da+cO0VTUCGjRkffzEgwTmTBQGGkdgQB7Mc
-	 1R9DDD5j5MxrlHDBQB/6Tr83JUcUsIOQzH+zDaM9QB/xPyE9o0kTh7vQkO5Z/j9I3P
-	 JwFgyRSRK90sg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in
- perf_event_alloc()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Deepanshu Kartikey" <kartikey406@gmail.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260821014210.18681-1-kartikey406@gmail.com>
-References: <20260821014210.18681-1-kartikey406@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 01:56:28 +0000
-Message-Id: <20260821015629.1A2C61F00A3A@smtp.kernel.org>
+	s=k20260515; t=1787277411;
+	bh=ORrlGlOs6ayk4JwVCyUSqXr19F8FX0TJSKaECaxN0Kw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=QCAiNRFKSzszo+V2BQmOwgQNk+TT/+7Q/tvWcPkcA3NqLPINJ2J+zsrkC0WSSN2mU
+	 TSsm/7IJvq8h3NdLicadip86Fhe2RvMVoMXTbB8+DS3lgCD3UcqR4Y/iSnX9DojDu1
+	 2AHE03AWjllwWrtL8BhE1kkjMU7gUBbGBwXN1FyoCgCrEcMIaECkfjpHGqILu1f/4B
+	 1Aj5I/aTWvFG79m+nmACQ1nBF4JqifRW1iQSahY7kAGKXf9os1aSx5wd8ze1IBVTyM
+	 t4IbFg1sB6XS1Ca2bVg9ci/vt690EL0wEDrZZ96xexWtS7JEFARTsAhM+ZbiZvbUhk
+	 nd5FJjaEZ+JLA==
+Date: Fri, 21 Aug 2026 10:56:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Bradley Morgan <include@grrlz.net>
+Cc: Naveen N Rao <naveen@kernel.org>, "David S . Miller"
+ <davem@davemloft.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kprobes: use DEFINE_DEBUGFS_ATTRIBUTE for the
+ enabled knob
+Message-Id: <20260821105648.ebe0e567367bddf8e449fe4c@kernel.org>
+In-Reply-To: <D6D3A89D-FD2D-4D09-B2DF-7808ED89854D@grrlz.net>
+References: <20260818015318.24103-1-include@grrlz.net>
+	<20260819080813.d66950e37e660e018dfb19e9@kernel.org>
+	<9533DBAB-DED1-4D61-93ED-AEFA2C585454@grrlz.net>
+	<D6D3A89D-FD2D-4D09-B2DF-7808ED89854D@grrlz.net>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
+On Thu, 20 Aug 2026 16:14:42 +0100
+Bradley Morgan <include@grrlz.net> wrote:
 
-New issues:
-- [High] The patch introduces a build failure/linker error on configuration=
-s where `CONFIG_BPF_EVENTS` is disabled.
-- [High] Severe global lock contention and performance regression during `f=
-ork()` for all inherited perf events.
+> On 19 August 2026 00:12:40 BST, Bradley Morgan <include@grrlz.net> wrote:
+> >On 19 August 2026 00:08:13 BST, Masami Hiramatsu <mhiramat@kernel.org>
+> >wrote:
+> >>On Tue, 18 Aug 2026 01:53:18 +0000
+> >>Bradley Morgan <include@grrlz.net> wrote:
+> >>
+> >>> This enabled knob is a disgusting terrible hack. It has rolled its
+> >>> own read/write pair since 2007, writing '1' or '0' into a three byte
+> >>> buffer by hand just to print a single character, with an XXX comment
+> >>> begging debugfs for write callbacks on bool files.
+> >>> DEFINE_DEBUGFS_ATTRIBUTE showed up in 2016 and does exactly that, so
+> >>> the disgusting terrible hack has outlived its excuse for nine years.
+> >>> Kill it, and the stale comment with it.
+> >>
+> >>In other words, does this mean something like the following?
+> >>
+> >>This "enable" knob implemented custom read/write logic, manually writing
+> >>"1" or "0" to a 3-byte buffer solely to output a single character. As
+> >>suggested by comments calling for `debugfs` to support write callbacks
+> >>for boolean files, using `DEFINE_DEBUGFS_ATTRIBUTE` eliminates the need
+> >>for these callbacks.
+> >>
+> >
+> >ehhhhh, well, my description very well tells someone about why this is
+> >bad, and a hack, and everything. 
+> >
+> >Your description is good though... But I love to have my personality in my
+> >descriptions :(
+> >
+> 
+> Masami, could you give a round down of your nits for V3?
 
-Pre-existing issues:
-- [High] Memory and reference count leak of BPF programs and address filter=
-s in the `perf_event_alloc` error path.
-- [High] The patch fails to fix the use-after-free race condition for non-t=
-racing events, as they bypass `bpf_event_mutex`.
-- [High] Tracepoint BPF programs are globally detached and disabled when an=
-y inherited child perf event is closed.
---
+Ah, OK. The phrasing aside, what you said wasn't wrong, so if you're happy
+with it, I'll pick it. (Let me pick it to probes/core)
 
---- Patch [1]: [PATCH] perf/bpf: Fix lockless access to parent_event->prog =
-in perf_event_alloc() ---
-commit f1b901f0de2c25ddd86c536608909f0fd81cff45
-Author: Deepanshu Kartikey <kartikey406@gmail.com>
+Thanks.
 
-perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
 
-This patch attempts to fix a use-after-free and NULL pointer dereference in
-perf_event_alloc() during fork(). It introduces bpf_event_mutex to
-synchronize the inheritance of the BPF program with concurrent detach
-operations.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 2eee83cdb43de..e62c34f1f89c7 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -13463,12 +13463,15 @@ perf_event_alloc(struct perf_event_attr *attr, =
-int cpu,
->  		overflow_handler =3D parent_event->overflow_handler;
->  		context =3D parent_event->overflow_handler_context;
->  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
-> -		if (parent_event->prog) {
-> -			struct bpf_prog *prog =3D parent_event->prog;
-> =20
-> +		struct bpf_prog *prog;
-> +
-> +		mutex_lock(&bpf_event_mutex);
+> 
+> 
+> >
+> >>Thanks,
+> >>
+> >>> 
+> >>> The behavior does not change, except the write only accepts 0/1 now
+> >>> instead of y/n/on/off, and nothing uses anything else.
+> >>> 
+> >>> Signed-off-by: Bradley Morgan <include@grrlz.net>
+> >>> ---
+> >>> Changes since v1:
+> >>>  - Added the missing Signed-off-by, sorry.
+> >>> 
+> >>>  kernel/kprobes.c | 43 +++++++++----------------------------------
+> >>>  1 file changed, 9 insertions(+), 34 deletions(-)
+> >>> 
+> >>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> >>> index bfc89083daa9..044c6b5fd2aa 100644
+> >>> --- a/kernel/kprobes.c
+> >>> +++ b/kernel/kprobes.c
+> >>> @@ -3013,47 +3013,22 @@ static int disarm_all_kprobes(void)
+> >>>  	return ret;
+> >>>  }
+> >>>  
+> >>> -/*
+> >>> - * XXX: The debugfs bool file interface doesn't allow for callbacks
+> >>> - * when the bool state is switched. We can reuse that facility when
+> >>> - * available
+> >>> - */
+> >>> -static ssize_t read_enabled_file_bool(struct file *file,
+> >>> -	       char __user *user_buf, size_t count, loff_t *ppos)
+> >>> +static int kprobes_enabled_set(void *data, u64 val)
+> >>>  {
+> >>> -	char buf[3];
+> >>> +	if (val)
+> >>> +		return arm_all_kprobes();
+> >>>  
+> >>> -	if (!kprobes_all_disarmed)
+> >>> -		buf[0] = '1';
+> >>> -	else
+> >>> -		buf[0] = '0';
+> >>> -	buf[1] = '\n';
+> >>> -	buf[2] = 0x00;
+> >>> -	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
+> >>> +	return disarm_all_kprobes();
+> >>>  }
+> >>>  
+> >>> -static ssize_t write_enabled_file_bool(struct file *file,
+> >>> -	       const char __user *user_buf, size_t count, loff_t *ppos)
+> >>> +static int kprobes_enabled_get(void *data, u64 *val)
+> >>>  {
+> >>> -	bool enable;
+> >>> -	int ret;
+> >>> -
+> >>> -	ret = kstrtobool_from_user(user_buf, count, &enable);
+> >>> -	if (ret)
+> >>> -		return ret;
+> >>> -
+> >>> -	ret = enable ? arm_all_kprobes() : disarm_all_kprobes();
+> >>> -	if (ret)
+> >>> -		return ret;
+> >>> -
+> >>> -	return count;
+> >>> +	*val = !kprobes_all_disarmed;
+> >>> +	return 0;
+> >>>  }
+> >>>  
+> >>> -static const struct file_operations fops_kp = {
+> >>> -	.read =         read_enabled_file_bool,
+> >>> -	.write =        write_enabled_file_bool,
+> >>> -	.llseek =	default_llseek,
+> >>> -};
+> >>> +DEFINE_DEBUGFS_ATTRIBUTE(fops_kp, kprobes_enabled_get,
+> >>> +			 kprobes_enabled_set, "%llu\n");
+> >>>  
+> >>>  static int __init debugfs_kprobe_init(void)
+> >>>  {
+> >>> -- 
+> >>> 2.47.3
+> >>> 
+> >>
+> >>
+> >>
+> >
+> >Thanks!
+> 
+> Thanks!
 
-[Severity: High]
-Does this introduce a linker error when CONFIG_BPF_EVENTS is disabled?
 
-The bpf_event_mutex is defined in kernel/trace/bpf_trace.c, which is only
-compiled when CONFIG_BPF_EVENTS is enabled. However, this code is guarded by
-checking CONFIG_BPF_SYSCALL and CONFIG_EVENT_TRACING.
-
-If a configuration has CONFIG_BPF_SYSCALL=3Dy, CONFIG_EVENT_TRACING=3Dy, and
-CONFIG_PERF_EVENTS=3Dy, but disables CONFIG_KPROBE_EVENTS and
-CONFIG_UPROBE_EVENTS, CONFIG_BPF_EVENTS evaluates to n. Will this result
-in an undefined reference to bpf_event_mutex?
-
-[Severity: High]
-Does unconditionally acquiring this global lock penalize the performance of
-process creation when basic perf inherited tracing is active?
-
-This acquires bpf_event_mutex across all CPUs during fork() for every
-inherited event, even when parent_event->prog is NULL. Should there be a
-lockless fast-path check, for example:
-
-if (READ_ONCE(parent_event->prog))
-
-before acquiring the mutex?
-
-[Severity: High]
-This is a pre-existing issue, but does this fail to prevent the race
-condition for non-tracing events?
-
-While bpf_event_mutex is held here in perf_event_alloc(), concurrent
-detach operations for non-tracing events bypass this mutex entirely:
-
-kernel/events/core.c:perf_event_free_bpf_handler() {
-    event->prog =3D NULL;
-    bpf_prog_put(prog);
-}
-
-Since perf_event_free_bpf_handler() operates locklessly, doesn't the
-original use-after-free vulnerability remain unfixed for event types
-like BPF_PROG_TYPE_PERF_EVENT?
-
-> +		prog =3D parent_event->prog;
-> +		if (prog) {
->  			bpf_prog_inc(prog);
-
-[Severity: High]
-This is a pre-existing issue, but does this leak the BPF program reference
-and address filters if perf_event_alloc() fails later on?
-
-If a failure occurs after this point, the error path uses the
-__free(__free_event) cleanup mechanism:
-
-kernel/events/core.c:__free_event() {
-    ...
-}
-
-Unlike _free_event(), __free_event() omits the calls to
-perf_event_free_bpf_prog(event) and perf_free_addr_filters(event).
-Will this leave the reference incremented by bpf_prog_inc() unbalanced?
-
->  			event->prog =3D prog;
-
-[Severity: High]
-This is a pre-existing issue, but does sharing the parent's program pointer
-here cause tracepoint BPF programs to be globally detached when a child
-exits?
-
-When an inherited child event is closed, it eventually calls:
-
-kernel/trace/bpf_trace.c:perf_event_detach_bpf_prog() {
-    ...
-    ret =3D bpf_prog_array_copy(old_array, event->prog, NULL, 0, &new_array=
-);
-    ...
-}
-
-This permanently removes event->prog from the tracepoint's shared global
-array. If an unprivileged child process exits, will it maliciously or
-accidentally remove the parent's BPF program from the tracepoint entirely?
-
->  		}
-> +		mutex_unlock(&bpf_event_mutex);
->  #endif
->  	}
-
-[ ... ]
-
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 29260951aa871..73065ddad7f6d 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1944,7 +1944,7 @@ const struct bpf_verifier_ops perf_event_verifier_o=
-ps =3D {
->  const struct bpf_prog_ops perf_event_prog_ops =3D {
->  };
-> =20
-> -static DEFINE_MUTEX(bpf_event_mutex);
-> +DEFINE_MUTEX(bpf_event_mutex);
-> =20
->  #define BPF_TRACE_MAX_PROGS 64
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821014210.1868=
-1-1-kartikey406@gmail.com?part=3D1
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
