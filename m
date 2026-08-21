@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2150035CB6D;
-	Fri, 21 Aug 2026 03:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374E336680E;
+	Fri, 21 Aug 2026 03:12:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787281539; cv=none; b=E6eVCnN8ttBnBDtT1h96JVB+LPZ/RbGnDR3cFUvBfMTYbkgG1zJaEPhFp38zRLbEEEtJIPE3Nm/M7n53HQDXfRfZmZld4SnFI1+r4feOHKszUja1PbdPNK1AaoJW7iy+kMkOreVfR1oQQ1GrVCF+UrZ9MRp00KEttQsCBi2LrrY=
+	t=1787281947; cv=none; b=AIUYhn9RV2FuiGixZ2kRwUNPcPJ2K/v2xmLwweFKq6ali60n+Z7YxTPbvRmgUQuqNZk/JUg1b2TEYgc1Ah26tV0DDuQLhXW16DJ9mBS7X7TKVQdYM33AQ4H8Kg/CKt/ElD3c+Oy+g6aCQNgiysVjES5sFatqvSU3OA0mez2eqqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787281539; c=relaxed/simple;
-	bh=dedcoEmUAKUk7YmPtA3wkGYwA/i32pF22h4YcKAscyg=;
+	s=arc-20240116; t=1787281947; c=relaxed/simple;
+	bh=LLdCyUIMvTLvV0Qwwzwy3ePPzmdPaDmUaU/9K8yTvoE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d08tXHD5HzuwGPt6/7b6zvULfPm6ee91JojNlkrVVSDw/KQWr+qEE7rGKxwanUyrFg/bzkiZCEAeuMH1aE0xWAsuZu1o0HAisiL9mr0Vtk1zhNN0gu5SMLiL8ot+jtXM0B5ZYtyTBaIn9+Pc/T3Hb2D8zzMh4ixI5PChDndYEC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b5CtC+WG; arc=none smtp.client-ip=198.175.65.14
+	 In-Reply-To:Content-Type; b=jBazlZrK35CtADQtBV3z36aHBvYDmEdHsLgJVSqh2QVFzzsUht2ckiYWFIMijDY0hLBPYqVBjtdo3TLPKiuSsyxGKDTrkIGTX8qeuMYF3PTiUE3SmvOJBlVEIy8lznEk8Fl1bwO3V2qkL3R2rwZrf3F507exT88lEB0S0EiaLGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AErrDzW8; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b5CtC+WG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AErrDzW8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787281538; x=1818817538;
+  t=1787281936; x=1818817936;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=dedcoEmUAKUk7YmPtA3wkGYwA/i32pF22h4YcKAscyg=;
-  b=b5CtC+WG67HJa5swtr1JMnpPjqylYOOWtoFFOxTur6jXHtrPEgnut0zd
-   M4gWeHemo45WE2r6Ccnpj/zwIfGS09h29pdcQ5ZKWGBGA36rKuY1381x7
-   4+KsI4vNKrCqIgXHA6h2kIBf1VYhERW0gKR+cGC8pJrcllysOpeC+WLQO
-   72rReXXhtLllKKMhdYdwmVsisp9Ku7B+CAOdNqX1B/XiR6ACw2Wf2yQiw
-   +9vlsW0hwmF1TAd7NfYsjC+aEIw+wGo35ClxYFu7GIlMdrEJk5iY7thDw
-   HQGiaCs5wrY3enIHfVYHWsnZzlC8LpDp1vnhWeU5RkAtOgOxVWwO9140C
-   w==;
-X-CSE-ConnectionGUID: Rumq3KWGStWb1ceO6Bwq+A==
-X-CSE-MsgGUID: PR/NVffAQyuIHB1keW4+Ow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="91700457"
+  bh=LLdCyUIMvTLvV0Qwwzwy3ePPzmdPaDmUaU/9K8yTvoE=;
+  b=AErrDzW8Lrl5OggMZs0wUlBqQT8JGU9lcIhvZi2TX2GPtBnUm/ITBPNp
+   K0JF6fxRz9uyGc7gLJBoA8Dl6i/jVvkgDxkDu6suVACFl8clfHGG8DGS0
+   P9HZHdz/IOqrE9FgxXYPbLkPA827HbamAJTkuSKTbw9TzreU1D0uCf1R+
+   sj+w0rTHpwGawgCEUenRtnWOQu5KCISzptlUHuqDANImrjykhX+mWEclp
+   JCrTm7uwUQXCnH2LRPvVjQYVPfYpOaoeU8Nny7fUZ4X5J160hMOqlCplT
+   o/Vzft3+d3Uht0lq3vX8CLUpfbSnOXfbIi+/63SG3d0EyJ+p7Q8znCL1E
+   g==;
+X-CSE-ConnectionGUID: uSZJSUhnRTuS7aB8Gs0/FQ==
+X-CSE-MsgGUID: hoW+MYjVTmedm2DPYhCJ8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="91701114"
 X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="91700457"
+   d="scan'208";a="91701114"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 20:05:35 -0700
-X-CSE-ConnectionGUID: 7MhXezB7RU+EV+DHFikReg==
-X-CSE-MsgGUID: YTXbn5W/Q4OQ6BfbzvVtsQ==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 20:12:09 -0700
+X-CSE-ConnectionGUID: NOkWPYcAQ6ua/qZWMjhxVQ==
+X-CSE-MsgGUID: OFKp6eRTSFCxoY11hYwwiA==
 X-ExtLoop1: 1
 Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.119]) ([10.124.240.119])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 20:05:17 -0700
-Message-ID: <a410cca6-0776-44af-8353-9b7375e2fd4e@intel.com>
-Date: Fri, 21 Aug 2026 11:05:15 +0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 20:11:54 -0700
+Message-ID: <fe1c6359-7371-4ccd-9807-1d81c160d12b@intel.com>
+Date: Fri, 21 Aug 2026 11:11:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 07/41] KVM: guest_memfd: Stub in ability to enable
- in-place shared<=>private conversion
+Subject: Re: [PATCH v10 40/41] KVM: selftests: Update
+ private_mem_conversions_test to mmap() guest_memfd
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  david@kernel.org, jmattson@google.com, jthoughton@google.com,
@@ -85,151 +85,29 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-40-2fc18ee6d3ba@google.com>
 Content-Language: en-US
 From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-40-2fc18ee6d3ba@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
+On 8/8/2026 5:53 AM, Ackerley Tng via B4 Relay wrote:
+> From: Ackerley Tng<ackerleytng@google.com>
 > 
-> Stub in global variable to enable in-place guest_memfd private<=>shared
-> memory conversion, which will eventually be exposed to userspace via a
-> module param, and wire up the __kvm_mem_is_private() static call to the
-> guest_memfd version when in-place conversion is enabled, i.e. when gmem is
-> the sole authority on private vs. shared memory.
-
-I find this patch changes the default memory type for a @gfn.
-
-- When memory attribute is tracked per-VM, the default memory type is 
-always shared.
-
-- when gmem_in_place_conversion is true,
-   - if the @gfn has no memslot, or the memslot where the @gfn locates
-     doesn't have gmem bound, the default memory type is shared,
-   - otherwise, the default memory type is determined by the
-     GUEST_MEMFD_FLAG_INIT_SHARED flag.
-
-I think we should document this change.
-
-> Cc: Fuad Tabba <tabba@google.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
->   include/linux/kvm_host.h |  6 ++++++
->   virt/kvm/guest_memfd.c   | 26 ++++++++++++++++++++++++++
->   virt/kvm/kvm_main.c      | 12 +++++++++++-
->   3 files changed, 43 insertions(+), 1 deletion(-)
+> Update the private memory conversions selftest to also test conversions
+> that are done "in-place" via per-guest_memfd memory attributes. In-place
+> conversions require the host to be able to mmap() the guest_memfd so that
+> the host and guest can share the same backing physical memory.
 > 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 65fbce46b63f4..9477ecebbbced 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2580,6 +2580,8 @@ static inline bool kvm_vm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->   #endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
->   
->   #ifdef kvm_arch_has_private_mem
-> +extern bool gmem_in_place_conversion;
-> +
->   typedef bool (kvm_mem_is_private_t)(struct kvm *kvm, gfn_t gfn);
->   DECLARE_STATIC_CALL(__kvm_mem_is_private, kvm_mem_is_private_t);
->   
-> @@ -2588,6 +2590,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->   	return static_call(__kvm_mem_is_private)(kvm, gfn);
->   }
->   #else
-> +#define gmem_in_place_conversion false
-> +
->   static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->   {
->   	return false;
-> @@ -2595,6 +2599,8 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
->   #endif /* kvm_arch_has_private_mem */
->   
->   #ifdef CONFIG_KVM_GUEST_MEMFD
-> +bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn);
-> +
->   int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->   		     gfn_t gfn, kvm_pfn_t *pfn, struct page **page,
->   		     int *max_order);
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 1f1ae61b4878b..75979c885e030 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -475,6 +475,32 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
->   	return 0;
->   }
->   
-> +bool kvm_gmem_is_private(struct kvm *kvm, gfn_t gfn)
-> +{
-> +	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
-> +	struct inode *inode;
-> +
-> +	if (!slot)
-> +		return 0;
-> +
-> +	CLASS(gmem_get_file, file)(slot);
-> +	if (!file)
-> +		return 0;
-> +
-> +	inode = file_inode(file);
-> +
-> +	/*
-> +	 * Rely on the maple tree's internal RCU lock to ensure a stable result.
-> +	 * This result can become stale as soon as the lock is dropped, so the
-> +	 * caller _must_ protect consumption of private vs. shared either by
-> +	 * holding guest_memfd's invalidate lock for the entire duration, or by
-> +	 * checking mmu_invalidate_retry_gfn() under mmu_lock to serialize
-> +	 * against concurrent attribute updates.
-> +	 */
-> +	return kvm_gmem_is_private_mem(inode, kvm_gmem_get_index(slot, gfn));
-> +}
-> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_is_private);
-> +
->   static struct file_operations kvm_gmem_fops = {
->   	.mmap		= kvm_gmem_mmap,
->   	.open		= generic_file_open,
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index a01d336eab18b..0a5a1bee8de0f 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -102,6 +102,10 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(halt_poll_ns_shrink);
->   static bool __ro_after_init allow_unsafe_mappings;
->   module_param(allow_unsafe_mappings, bool, 0444);
->   
-> +#ifdef kvm_arch_has_private_mem
-> +bool __ro_after_init gmem_in_place_conversion = false;
-> +#endif
-> +
->   /*
->    * Ordering of locks:
->    *
-> @@ -2423,6 +2427,9 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
->   static u64 kvm_supported_vm_mem_attributes(struct kvm *kvm)
->   {
->   #ifdef kvm_arch_has_private_mem
-> +	if (gmem_in_place_conversion)
-> +		return 0;
-> +
->   	if (!kvm || kvm_arch_has_private_mem(kvm))
->   		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
->   #endif
-> @@ -2634,8 +2641,11 @@ EXPORT_STATIC_CALL_GPL(__kvm_mem_is_private);
->   
->   static void kvm_init_memory_attributes(void)
->   {
-> +	if (gmem_in_place_conversion)
-> +		static_call_update(__kvm_mem_is_private, kvm_gmem_is_private);
->   #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-> -	static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
-> +	else
-> +		static_call_update(__kvm_mem_is_private, kvm_vm_mem_is_private);
->   #endif
->   }
->   #else
+> This includes several updates, that are conditioned on the system
+> supporting per-guest_memfd attributes (kvm_has_gmem_attributes):
 > 
+> 1. Set up guest_memfd requesting MMAP and INIT_SHARED.
 
+If I understand correctly, even with in-place gmem, the model that 
+shared memory comes from the userspace_addr and private memory comes 
+from gmem can still work without passing GUEST_MEMFD_FLAG_MMAP flag.
+
+Since this model is not prohibited by KVM. I think we should keep the 
+testcase for this model to ensure test coverage?
