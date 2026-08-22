@@ -1,134 +1,134 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E0E3BCD3F
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 15:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0863F0A9F
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 15:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787411094; cv=none; b=V1vImiGkQjSg+Cfp5F0G088y5k8sAsq1C2hcAcrxd14JxrprwJVRtS47/+YoW0lxlcedJjaP9zt9+/FjdxvbWKAhyWBRDauNm4rMHhqiE8JRlFNuWTkoIIhbGdtJzwF7lQpyGlJT3wmNSmwKiDJ6cCt7+mvO1THUTeGfWRv2Z0A=
+	t=1787411369; cv=none; b=TAeGuwbbLabdQ6+16Uu5swJWUNT+BJx2m26vQK6b2rPHtUPrMODSmRZtT5PYE45bgEIBOkzG7LJ1DKWhJtbFcOY4mfiE2H1kXk8YVtg8qi5E6n1kHOKIwKplht3zgl4eW8dr+9YC8F98Jm+CsCi9/ebTLGHwayRtdcQXZ/XvB1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787411094; c=relaxed/simple;
-	bh=4gSzoUBNkTbMnW2K7t/gknyS64mQ29BZebNS1TnBGRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SKm7er5r3KweXZTvh3Ufq0I3RBxXyqGQ0+V2K5d0CnLDbMaubeEYMB+M2stH1xGwbz1jxNll4SO9clLS5myo3H+TeT39cO5jafODosPKNPzjL3Lxi/A/1bbSWVkebzB9DAeU1mx0cKvgDK9XOvzEm0Isevn6KL009vKBzh5GA/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=REJvq85Z; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1787411369; c=relaxed/simple;
+	bh=IGYS9/MJmi0crQrMqbiomdqqv5fS8S+rJ101ghPw26E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nrtdl+dbmmbxtrUBv92mPzVotMyu1EiQIqxUpDjBIpklh2y+LDiDgq1ObdAikGJwDDyj6KNy1duD4JTyHLjXg2WJOPvi61OAmSjKL45MjOV3kyQquABaZWoVSnUBNfWXwkZPcEiMALenJjZZ3B6JTlq07yD2kxCA7y6wRzXIlHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM7SrUrt; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="REJvq85Z"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 96CE1A25F9;
-	Sat, 22 Aug 2026 15:04:44 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id C842A2002D;
-	Sat, 22 Aug 2026 15:04:37 +0000 (UTC)
-Date: Sat, 22 Aug 2026 11:04:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Vincent Donnefort"
- <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] tracing: Fix subbuf resize races with
- trace_pipe_raw readers
-Message-ID: <20260822110424.346fa3c8@fedora>
-In-Reply-To: <20260817140812.2C7D41F00A3A@smtp.kernel.org>
-References: <20260817134750.3909384-1-vdonnefort@google.com>
-	<20260817134750.3909384-2-vdonnefort@google.com>
-	<20260817140812.2C7D41F00A3A@smtp.kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM7SrUrt"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-382ef647e20so2068136a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 08:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787411367; x=1788016167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xN4hXMOwbHYw8YYoHSGskBU1Hru9hAdLN66h2VVXOns=;
+        b=YM7SrUrtYAnhHYAaeIsAdACdKCoehgVqosn8VSUcPiYv7S5UXVIE6/f/GWmYdyLSSg
+         olfwtyOA0EzuPMwWoMVN0TpOMYvpey2qY18eUwO/6fSPYe4Ni5bjfMZYwMRRGjoTJj7e
+         obec/wGWWF5/P0/9Qx3eOxU/6pVaixqytZbrsKtf9VFK1DPC+ekED/+tjgU1NZbW8hhP
+         NZR7cWUdjp2Qx46Hzqcl7rk340Nc6xoQRYOQDf7FkN1wqTOeElXbu9j+Z2KsBjB002If
+         11ybhfHXz3RpfqT9LnZVryktLlPdV7qsRhvlC/EDjEUhy8oKJiNB4Jxa5o6sRnshBEgP
+         lFsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787411367; x=1788016167;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xN4hXMOwbHYw8YYoHSGskBU1Hru9hAdLN66h2VVXOns=;
+        b=gneUcxJnQmyT1ua+AadcHgPBAMczCKI20fl6EHKEhjzJHiQ/5M3IUJJxl9il155rbU
+         7eY7pBGIFINfPfK0aLyqjHG7CGg4zy6QpLjYma28kA5odKpUigAP7idHc0wt9DFQFkUe
+         Stb8uIzJGO1+xzviMsw+RKwX2bHtKA3EcIJMpb6gXO6z5zZr9of4NCfHEE1re8Jycqsj
+         6T6a+i2nszg+MOANbvZwx8u41UsUhpD9mWM8TiJjHG/dtJHwV1Trbev5zeQYSP3KHN+0
+         wgQ00Wez40fbzLseZTH5+qCIYx7RI3eROJ81/YXzRNu67xW8B/bmo/00O7Kwxb0oaazh
+         CMmg==
+X-Forwarded-Encrypted: i=1; AHgh+Rrxbb3aAdYkMHAxq2DN6n+Lg0WwzLv0hhsitzaKZTtQr3CnL1ARj0Dr7TrB7+iTM7Q+A08wjTAmmgh72aGJSrWw0P4=@vger.kernel.org
+X-Gm-Message-State: AFuF++nyVt3QxjOShquJhm6k2Z1Cui1sfZzdOFudKd7VlDRlIebEbi4u
+	fL4jK5qUKov4r1qSda1siJNlafgV1N/L23Q81YXyCzbWLsG4Eu5Msixx
+X-Gm-Gg: AR+sD10v856RjqpLAg2IdR4EwYeaKQNJB8384O2xlDjPvKtk9tGnVLtn22bxqz30LmT
+	cIS9BJxQSEAAFsiz31h1U0gngF6khO8GB/nuQH1wV+nVWzPdDvfEACLcXGbwilcer4H5RhSN3H9
+	EtQP9wYez5qFyFM+subsLdT/mNqgRkvJV8WhgoKQHIHfgUNpCJPedMvrhYtxserimoO47nV8scE
+	MTAyhyEC6Lr/YXYT6t+E8zRSx7JWdDeZQyTnGxtYsKFtEKYg//DTODxFW1422TQRic8jcRQl+ZH
+	UQRVlanqpE51fKcC43yFTDetQ2k51opBIVGBZnSEPmzOJGAU4/hm3vC9ql1YGORRiIYyZaPWHFV
+	nV5g2nWMP0y0GOBv8p9P9c3P2r3SASUZKOUUlFht0/qAviCrQU2wfV3xyBO+dqVlqBBfvOKm9P3
+	SRiI8Qlokle43EKcFl61t7LhyxSa5y4i889+vv7PsOr46VVk412oj0AM2TjjoIGKZKjiYqOXr1u
+	o+3TWfG2Ce6nf5tUwKEgKo40g==
+X-Received: by 2002:a17:90b:2cc3:b0:392:e5b1:d833 with SMTP id 98e67ed59e1d1-395df29666cmr11845108a91.13.1787411366593;
+        Sat, 22 Aug 2026 08:09:26 -0700 (PDT)
+Received: from jvle-ThinkPad-X1-Carbon-Gen-8.. ([117.172.228.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1418619d6ecsm8057043c88.14.2026.08.22.08.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2026 08:09:25 -0700 (PDT)
+From: Keke Ming <ming.jvle@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Keke Ming <ming.jvle@gmail.com>
+Subject: [PATCH v2] uprobes: Free utask on dup_return_instance() failure
+Date: Sat, 22 Aug 2026 23:09:06 +0800
+Message-ID: <20260822150906.528208-1-ming.jvle@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260822054620.452262-1-ming.jvle@gmail.com>
+References: <20260822054620.452262-1-ming.jvle@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: C842A2002D
-X-Stat-Signature: csot9rfgip36j3dbfjipqur1nawcdwmw
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/puzTS47SMMoyQA487ctOXmD3EuwsLQVg=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=amuDGBPzxC6ExbZ0Fz/ZTEnaJsX4fm3NP4n2KyOgkSM=; b=REJvq85ZrSSU+rvRpF1Q0Gk3aUQoo5gQSELNi0FpojZVoV03bWCTskZ6EaAIsI5eQ2SuTfh6m9SKCi/fMV5zB1iXla0KKwqjZvRQXadLGup/6MDC9wQzCYdJzwwDM20iuj8M7rw3ixhYURSq74OqFR7Sr4rKYfiu2zpX3dsa0LE=
-X-HE-Tag: 1787411077-779464
-X-HE-Meta: U2FsdGVkX18WBIWtfLlSfYmrEK++xmk4S7hN+Tkg3YJv1rMM3TUCPABsI+yk0noTClJi/xX7fOZRuHNrOA58wzGP78NleJWIeTXh8eRkrGPtKRI/E13ncCElXIESAZwNidKBAdRaHuo3Vwv7OKrpJdFCV+2jzBnZ24ugGcIO5vuHWNopjt6rj4fcTu8alR1lzrxjpzewhcT104uF+jpnWNOBMsKXG64GVOoGb2P9cqewa+1ikwhJmn6qTtCrTRqKz/BY1q1ucUJt163SumEapbKsUJpK8FjAqfs7h6t2/FgKGh0PGtCAZuZJtOdlESHmJaz7HkA3jP2Faq1U/ioubUE28E7oPahs
+Content-Transfer-Encoding: 8bit
 
-On Mon, 17 Aug 2026 14:08:11 +0000
-sashiko-bot@kernel.org wrote:
+dup_utask() installs the new uprobe_task in t->utask before copying
+return_instances. If dup_return_instance() fails, the partially copied
+utask is left attached to the child task.
 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 395238b2b715c..737922b236d46 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c  
-> [ ... ]
-> > @@ -7128,7 +7116,9 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
-> >  				    iter->cpu_file, 0);
-> >  	trace_access_unlock(iter->cpu_file);
-> >  
-> > -	if (ret < 0) {
-> > +	if (ret == -EAGAIN) {
-> > +		goto again;
-> > +	} else if (ret < 0) {  
-> 
-> [Severity: High]
-> If ring_buffer_read_page() returns -EAGAIN because the subbuffer order was
-> updated but cpu_buffer->reader_page->order hasn't been updated yet, this
-> branches back to the again label.
-> 
-> Since the loop does not yield the CPU or call cond_resched(), could this cause
-> a hard lockup if the reader and the resize thread are on the same CPU?
+Free the partially copied utask before returning -ENOMEM.
 
-Hmm, this looks legit. We should at least have a way to break out if it
-loops too many times.
+Also, dup_return_instance() copies the return_instance before fixing
+up extra_consumers.
 
-> 
-> >  		if (trace_empty(iter) && !iter->closed) {
-> >  			if (update_last_data_if_empty(iter->tr))
-> >  				return 0;  
-> [ ... ]
+Here, if no deep copy is needed, clear the copied extra_consumers
+pointer.
 
-> > -		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
-> > -		if (IS_ERR(ref->page)) {
-> > -			ret = PTR_ERR(ref->page);
-> > -			ref->page = NULL;
-> > +
-> > +new_read_page:
-> > +		ret = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file, &ref->rpage);
-> > +		if (ret) {
-> >  			kfree(ref);
-> >  			break;
-> >  		}
-> >  		ref->cpu = iter->cpu_file;
-> >  
-> > -		r = ring_buffer_read_page(ref->buffer, ref->page,
-> > -					  len, iter->cpu_file, 1);
-> > +		page_size = ring_buffer_read_page_size(ref->rpage);
-> > +
-> > +		r = -EINVAL;
-> > +		if (IS_ALIGNED(*ppos, page_size) && len >= page_size) {
-> > +			r = ring_buffer_read_page(ref->buffer, ref->rpage, len, iter->cpu_file, 1);
-> > +			if (r == -EAGAIN)
-> > +				goto new_read_page;  
-> 
-> [Severity: High]
-> Similar to the read path above, this catches -EAGAIN and loops back to
-> new_read_page.
-> 
-> Because goto new_read_page executes continuously without releasing
-> trace_access_lock() or yielding the CPU, can this permanently deadlock the
-> system during a resize by preventing the resize thread from acquiring the
-> necessary locks?
+Signed-off-by: Keke Ming <ming.jvle@gmail.com>
+---
+v2 changes:
+- Clear ri->extra_consumers = NULL when old->cons_cnt <= 1 in
+  dup_return_instance(), fixing a potential double free during
+  cleanup.
+- Keep the dup_utask() error cleanup from v1.
 
-This also looks legit.
+ kernel/events/uprobes.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
--- Steve
-
-> 
-> > +		} else if (!i) {
-> > +			/*
-> > +			 * If the first iteration fails this is an invalid userspace input.
-> > +			 * Otherwise, this is because the subbuf order has been modified. Do not
-> > +			 * report an error and finish the read.
-> > +			 */
-> > +			ret = -EINVAL;
-> > +		}  
-> 
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index b25531331902..73a6620c5701 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2118,6 +2118,8 @@ static struct return_instance *dup_return_instance(struct return_instance *old)
+ 			kfree(ri);
+ 			return NULL;
+ 		}
++	} else {
++		ri->extra_consumers = NULL;
+ 	}
+ 
+ 	return ri;
+@@ -2140,8 +2142,10 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
+ 	p = &n_utask->return_instances;
+ 	for (o = o_utask->return_instances; o; o = o->next) {
+ 		n = dup_return_instance(o);
+-		if (!n)
++		if (!n) {
++			uprobe_free_utask(t);
+ 			return -ENOMEM;
++		}
+ 
+ 		/* if uprobe is non-NULL, we'll have an extra refcount for uprobe */
+ 		uprobe = hprobe_expire(&o->hprobe, true);
+-- 
+2.43.0
 
