@@ -1,56 +1,56 @@
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CD63C584F
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 13:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D1531B80E
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 13:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787406851; cv=none; b=GjSuX3gQNARD/guQ02iUGqw5bD0qJpMlR4Li4btrwJrVMu0/sFJL9KXgagIM+fKzOTPotTnbKq8wekBRSalYH172A/14h1rUXHR7jCU3proDcPkicvq2MpePQXRBxXOjwPRTIMCo72f2w4887VXTnz20dG/hjjdsLlo6se6HomQ=
+	t=1787406852; cv=none; b=Sfq5sHi5sQlIrnBUozB6Q1/N3FDOxJiE9Qy4ArHuvep2Gx89vZIQjhfBOKr4P5ZhcZWko7kwMP8V8aoTuryV/r27JXlz/OK0eeKIQRrKkgmM8AAALkoBAzpFvDlxjn3esZ8zHGVKrfIYE0ZVHeuQYw87KarW3bpbYhgPmgQ1dZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787406851; c=relaxed/simple;
-	bh=yELrb/Sn4lo7UMYrT7w3YjKzJs20THaExKEmg90KpcI=;
+	s=arc-20240116; t=1787406852; c=relaxed/simple;
+	bh=uiIKWGpvaKJ4qxRkg9sBdwn+FBNvv3fpEqROSd7N37M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J6j2gVbjak6oj/FTaPLt52XTFPXwAQWonN0EbStEWpXzhR8toZRjVYJkdGMoGW7V1vxz+OPDp3JbzqZ8BF1EIrR3DdzNHLxhiJ0V1hxuZPAO6bHarN7DE+Vg8x5dw5KMJqoC3rjmuGWOEwLG1l29rg5pVnkzq7j6eQMs6aIMvBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ajfLccfz; arc=none smtp.client-ip=209.85.221.69
+	 To:Cc:Content-Type; b=KHIDs5PM+UhvgdiASRHScIFPigMyIKJxt5mqCJ09GRFoJIp3Iy0qt8zRSNYiibL46OTRbftWHvWiKXeq0SHA0eAAd/O4YkMdzbsuqZHnXEU2pW8O5YVnjS8aQoTEVDwHEC1kEHwaoG8YEoB1RzUxd04WGT2gJCkzA1huaU5ijnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pOsNMLzk; arc=none smtp.client-ip=209.85.128.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ajfLccfz"
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47f4601af62so759314f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 06:54:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pOsNMLzk"
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-495529a93f9so17490095e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 06:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787406848; x=1788011648; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787406849; x=1788011649; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3C1MhcgCYBzARL/+z1ptrjz40O26zol1QO0uE2euMIU=;
-        b=ajfLccfzb8aufZ93lpS12KFsEBz1a/lZsL1yqyr0/HMIvDSBamuTL+LGYhOx9pBNbk
-         K1pirkT3tQwPO8v1WYsWEm7dw7ZfY/Of5tZkqMsz2YEVFK/rtu+9YE5wZX+17XcrfAMC
-         MkhEQub5GCxrKCFSQ5zd/WFT0jrtfbnXOr4WhEUHWlQQ8Ns24kbKRxCxz60zlDrHPM/U
-         4TNgyBe12z6G4wNKMy82hpmdtl2KaKIgMWUvjGtdM8DtKYXx6hf/YVf8eQ6NNHwuk0qO
-         2Z2/Gv+YvtIdB8q5bVAt3ZK3CGaNbnK5D0j85Y66QKbF16QmmxJ8TcAGeZegjp4Om3YC
-         Qd0g==
+        bh=kA/leMB5Bml9VvmxH4fPbAWvPl/SN0OCbc+8KnqiWlg=;
+        b=pOsNMLzksKLk/4tYX+baqZH91VmGsWyitbrKqAVGzUFyST0WlK5k8RoAb/hRww6A4k
+         cRz/EhzkxEDURp4fE2xP8tOP7V/SSeGwpVc4hslk7Lc6WZA4365qeBvI1jE4oeqvlkp0
+         uHyUYb+34NPFJ2nzm7gGRUzxKS05W+KMqaGUCRiLmDrFjTHMYJgYtSDA7wmDRi20w7dW
+         lAUnuy+UwjqrnmEad3MnvqAk0SsJVtDmmNfZIDVrK7+EpW8Zu6rhij00HXEHmT68y/Ze
+         RhDj4ecj2JVOtGlPWe0tHKBzQY0gMgWJEZ0m+3ufz5WmP2aTOlzbxyYy1p4kLs0JNlys
+         zNdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787406848; x=1788011648;
+        d=1e100.net; s=20251104; t=1787406849; x=1788011649;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=3C1MhcgCYBzARL/+z1ptrjz40O26zol1QO0uE2euMIU=;
-        b=DCU0wLRhxU/bZu+rqW1zu4/00EaVsVdUjmfw33jQM6QnLPdhSRzF3mDLYYFjm5ZZxW
-         RP4VOgL4h8dh1v9Zq1c0M10VZ5S6BN/ipb43HHTWY8drYq1kjFOyhKWOJ1FEHA4VIcx8
-         Ox5UM057uy2YVqDrqkvocrSU3uFXxcXV2uEhjYcb46BdNmTMOKrqBGr7/yGBgAQXlnrs
-         bMGc5qN8TtgVgSA8nZkLuQQNzMfjLEhcDcfaUG5L/VQWQHB+QsgOHK9sl5QHRtUbvBMc
-         nL8IRDFdMmjzOkWnzvpwqMpXW0jk61FlJoxOOtjL3pZ7VXPUpvVElx3rJHdRu/17+DIG
-         AHUg==
-X-Forwarded-Encrypted: i=1; AHgh+RojGaZAWdT9QM3jyHkZfQdYFHRf+KQ2UGX/5x3avcpQhyCLHy1y9pKmz1HI0FfFSZ5MvF4+6G0afvuPzUJqZuJxf2Q=@vger.kernel.org
-X-Gm-Message-State: AFuF++lm3tvdHOZ/LkXGCgu4R3zDsps5FcN5lE+rIZ3xQ1rSB2GYsPAU
-	TZEuUPc2nug9BRFBKXsP19WhBZp6u4MDNBbUHIPcfOoPuP3NKkct9IC5ZczmsS8yAGbbdwvV0w=
+        bh=kA/leMB5Bml9VvmxH4fPbAWvPl/SN0OCbc+8KnqiWlg=;
+        b=aYZbcm/rpY+CbyK7iEuXRjJreh5Yoj2qOIjOEG6fDrdyEnFVAXN1eyRh0Y+DZ+/Z70
+         U8l4UwgdDtUsWtssdCTOHiMl/V1iHVs0wZQlrkwRZXLSUllJ+5fjx3642qpF1R6hAZMA
+         J8wJkohkAyqrPiMjINogNoPs7TL7iWVvqJc9zH1Hfex36ole+ZTgmXFzAI214kZSGTJg
+         uR8ZizmtwDs8ctoSHvCgTxKSktvqItxKutPI7QFWOFgH7jjxplhUzX6dDtW5iYqJ9zS5
+         R9kPcd6g32GeIQWkcKcJgBSmDrS61fzbgrbbCyZHDO39G8Su+ER8GBlM7lfLN1bX94tV
+         t6KA==
+X-Forwarded-Encrypted: i=1; AHgh+RoudLlBim1zY1knFdE2PFLbbpi+2Sl5gjFU46k+DBcEMfIYwQmk80bvXHhDed/6OsUVlZNuxQpepMklTMQL8bHGZhw=@vger.kernel.org
+X-Gm-Message-State: AFuF++mL91xYlfcUCMytC7NTGIyt3G1fNG2dPHpBfNc5fkfumZ1jOVVx
+	adigjP9C9UNFNeJryZ6JWr5nmOFfOdUhz74+RrYH9bG2TaPxfOI/7qVUR8W9w9UUUcQfSnBqNQ=
 	=
-X-Received: from wrnk3.prod.google.com ([2002:adf:e8c3:0:b0:481:5a0f:19b5])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:310f:b0:47f:7129:e30
- with SMTP id ffacd0b85a97d-482c0b976f1mr17563678f8f.11.1787406847588; Sat, 22
- Aug 2026 06:54:07 -0700 (PDT)
-Date: Sat, 22 Aug 2026 15:53:26 +0200
+X-Received: from wmlu19.prod.google.com ([2002:a05:600c:2113:b0:493:ae35:2761])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3584:b0:499:8777:ccba
+ with SMTP id 5b1f17b1804b1-499c19f3a09mr55389195e9.12.1787406848610; Sat, 22
+ Aug 2026 06:54:08 -0700 (PDT)
+Date: Sat, 22 Aug 2026 15:53:27 +0200
 In-Reply-To: <20260822135323.795946-11-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,14 +60,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260822135323.795946-11-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2204; i=ardb@kernel.org;
- h=from:subject; bh=2CJ7XIW20mRvuSe13JPdhhevFvLjPgwtnqW6fGhR0pc=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIatz5c1bi+7sDNh4oOHy8XMHks1ZWx/c9LM5qpAednXj/
- pol76fv6ChlYRDjYpAVU2QRmP333c7TE6VqnWfJwsxhZQIZwsDFKQAT0dVjZGjsanuobS/bwOzn
- INDJt9ssjUtyEdfbFTGrcj54/RWdJsTw31v4rEPQ3sLVG+ati7dtnpxtEvm4wabQeZJex247NZX 3/AA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1748; i=ardb@kernel.org;
+ h=from:subject; bh=plFvUlms3IX09TbA06fuB9Z3i2CHbmXiXP7osp2wqLc=;
+ b=kA0DAAoWMG4JVi59LVwByyZiAGqJqduhaXhTLES9U3wa8QeLoLCFbLjTooS/ld4OUN8Ev+zVT
+ 4h1BAAWCgAdFiEEEJv97rnLkRp9Q5odMG4JVi59LVwFAmqJqdsACgkQMG4JVi59LVxbUQEAwLd0
+ PDSvV2zyQlqIymz5n+L53p/Botvaje9PasDJEM0A+wcjClUJb3hpwyZuyoMYZ/HDrLzn0R7+g1/ X39juar4F
 X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
-Message-ID: <20260822135323.795946-15-ardb+git@google.com>
-Subject: [RFC PATCH 4/9] module: Allocate MOD_INIT_TEXT from the MOD_TEXT ROX allocation
+Message-ID: <20260822135323.795946-16-ardb+git@google.com>
+Subject: [RFC PATCH 5/9] arm64: mm: Permit permissions changes on huge vmappings
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
@@ -84,69 +84,46 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-When execmem ROX caches are used for module text and inittext, place
-them adjacently in memory, by allocating space for both initially, and
-splitting off the space for MOD_INIT_TEXT as needed.
-
-This avoids the corner case on arm64, where .init.text being placed far
-from .text results in a lot of complexity wrt indirect branches and PLTs
-that we'd prefer to avoid.
+Allow permission changes on huge vmappings in cases where no splitting
+is needed (i.e., the region is aligned sufficiently), or when the system
+has support for splitting live mappings.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- kernel/module/main.c | 22 ++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ arch/arm64/mm/pageattr.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 46dd8d25a605..2d6213496359 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -1342,7 +1342,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
- {
- 	unsigned int size = PAGE_ALIGN(mod->mem[type].size);
- 	enum execmem_type execmem_type;
--	void *ptr;
-+	void *ptr = NULL;
- 
- 	mod->mem[type].size = size;
- 
-@@ -1351,11 +1351,25 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
- 	else
- 		execmem_type = EXECMEM_MODULE_TEXT;
- 
--	ptr = execmem_alloc_rw(execmem_type, size);
-+	bool is_rox = execmem_is_rox(execmem_type);
-+	if (is_rox) {
-+		/*
-+		 * Special case for MOD_TEXT / MOD_INIT_TEXT: allocate the
-+		 * latter by splitting off required space from the former
-+		 * so that they are always placed close together.
-+		 */
-+		if (type == MOD_TEXT)
-+			size += PAGE_ALIGN(mod->mem[MOD_INIT_TEXT].size);
-+		else if (type == MOD_INIT_TEXT)
-+			ptr = execmem_split(mod->mem[MOD_TEXT].base, size);
-+	}
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index bbe98ac9ad8c..20ff9cb273c1 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -169,8 +169,6 @@ static int change_memory_common(unsigned long addr, int numpages,
+ 	 * we are operating on does not result in such splitting.
+ 	 *
+ 	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
+-	 * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
+-	 * mappings are updated and splitting is never needed.
+ 	 *
+ 	 * So check whether the [addr, addr + size) interval is entirely
+ 	 * covered by precisely one VM area that has the VM_ALLOC flag set.
+@@ -179,7 +177,16 @@ static int change_memory_common(unsigned long addr, int numpages,
+ 	if (!area ||
+ 	    ((unsigned long)kasan_reset_tag((void *)end) >
+ 	     (unsigned long)kasan_reset_tag(area->addr) + area->size) ||
+-	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
++	    !(area->flags & VM_ALLOC))
++               return -EINVAL;
 +
-+	if (!ptr)
-+		ptr = execmem_alloc_rw(execmem_type, size);
- 	if (!ptr)
- 		return -ENOMEM;
++	/*
++	 * Disallow VM_ALLOW_HUGE_VMAP mappings unless the region is PMD
++	 * aligned, or splitting live huge mappings is supported.
++	 */
++	if ((area->flags & VM_ALLOW_HUGE_VMAP) &&
++	   ((start % PMD_SIZE) || (size % PMD_SIZE)) &&
++	   WARN_ON_ONCE(!system_supports_bbml2_noabort()))
+ 		return -EINVAL;
  
--	mod->mem[type].is_rox = execmem_is_rox(execmem_type);
-+	mod->mem[type].is_rox = is_rox;
- 
- 	/*
- 	 * The pointer to these blocks of memory are stored on the module
-@@ -1368,7 +1382,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
- 	 * *do* eventually get freed, but let's just keep things simple
- 	 * and avoid *any* false positives.
- 	 */
--	if (!mod->mem[type].is_rox)
-+	if (!is_rox)
- 		kmemleak_not_leak(ptr);
- 
- 	memset(ptr, 0, size);
+ 	if (!numpages)
 -- 
 2.55.0.860.g4b6b3295ed-goog
 
