@@ -1,156 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9F23D2A1;
-	Sat, 22 Aug 2026 14:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101DD175A9C;
+	Sat, 22 Aug 2026 14:12:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787407860; cv=none; b=t2fLHK/FHygwCO0BDNF8GIfT3nP14hdaIYb6ZzAzHOu1IuOiNu35R7hveTbTM9M//YrqJ3RrahGt7fDtKrwn10p32qjfsjvLB7d/KcI8jERysUoCGnZ7BXK8CZd340OBf/D6C1OLN4cA+mRNN1AvVlio1G0xmTYP04cX1PYitQg=
+	t=1787407925; cv=none; b=B0u94ojEAPrShkAAA7G6Jo7afCoLKQc+fB7+CTlymozGOo+G+h3tegvjiXSZ3rnIoOdc/P4ncoXVR6faFbZ2ESsu+hc0yA55hs2UYJv8Z85ESpCVoZPd6dP/HH8MQU1hgYBNMubR1tIt9zLnq7EMGqZdDYCPK6NddOyyG/W8S6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787407860; c=relaxed/simple;
-	bh=kbtzcL5cHPia9PlKij41oovwD+w5VvRynWSKiyMfk8c=;
+	s=arc-20240116; t=1787407925; c=relaxed/simple;
+	bh=ds26tb4uA8xP7XUX1tlIMQRHDDM8pBEN4qtLpUGFl0c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C8Ii1rX36DN+JF1QFWvCV6GJ+03+G4jChjL/lpQTSWDEIVaE3A9mScZwum+qT3ywRwf2ItKpsUM4iQ3lvuJ8+FdTcPRSawWZIvpSmzFM/nRkFwxwF42dQtS0rNDgQ64QC8Fl30c2cPOfWh4oyg2YnN7RiiS+2NCjJdsZv15/B6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0dY7L+r; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JSKBdh2MopNuyKEFxhm/nDxNyJXm/46lvCXJFncYSgGdgG1B1y+KW1iK4ALBIjODLZV1HR4yndkUjCB/YcMSA/WD1IFb8pmaeWqo5ykVzydEC1cH8AFXl+M8qHwBnUxHrOObirYk9jYAYWSDkCBvAKvceRMcrNywVyVFWIGMuRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVuSw91g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0dY7L+r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24451F000E9;
-	Sat, 22 Aug 2026 14:10:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVuSw91g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EAF1F000E9;
+	Sat, 22 Aug 2026 14:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787407858;
-	bh=RuCRdo5ufXFyjX5OqYiaj1ZQB4yzXMPz59E45z8w+GI=;
+	s=k20260515; t=1787407923;
+	bh=3goj8r7jgCLFPzle5xic4wzdoQFVA2hJmgZFK0qieww=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F0dY7L+rk7/k9MbFLRP3tAGoD07hwhDo5IbOWfW/yjwr9F+U8F0w2s5d1hRujZKny
-	 LML+3ttUm1fogvXOY44dscwXZCgyCtJy9UvHvK/U3sicrjMhrvzeYQvoXgMUPp9Gnm
-	 pZ2J6LS3cmAHpojgv/FcSFtjzVS5Uw803R40ZrdHjjcaucPnNSgih0hkRh0wCJ7JYZ
-	 MYA4w7eLJ/XldaTDng12e9xQQrnKTyIcI095CDkykvNaCj7/8ciYLu+Up1CeL9GlEM
-	 ILuf3sMrM/7HLidCd/nrwuq/EMucPpyC2BEuFGPG2lh1iYjETtqBXDXQaOShNX40A0
-	 Ni6aOQJssNiTA==
+	b=bVuSw91gPQ3MQ/NMt8M14Kaxb/Ja304f7zpdv+vigRuImi94QCPzSZjd8fJuw3e4F
+	 FTH5s2Cki5wq1VEh0lCNh30cxGtRFZBtL9LcD+aWMgc5ZBxtLZOQdIVs1XYPjuNyG+
+	 pIWIF2vH4n/wg8hGvN2apap03DCzUe55MFEwr2M6TrvjIs9hMdxqt7vosc7+d0HSP1
+	 HEZXWgzV8/Ef8/UwYEvjWMN13y9GQZbTtdAMoyaVqCqYGM4He3Nat/DyGspITFXdyG
+	 /3VDhXmnSUR08u7iud9SCCTmUkL6CBxFXU+Bs/7UFVvg4DNAFgq2wyTFnxyve543e5
+	 4P50rYvD/dEhQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 5/9] arm64: mm: Permit permissions changes on huge
- vmappings
+Subject: Re: [RFC PATCH 8/9] arm64: module: Combine init and core PLT
+ entries again
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ard Biesheuvel" <ardb+git@google.com>
 Cc: linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-In-Reply-To: <20260822135323.795946-16-ardb+git@google.com>
+In-Reply-To: <20260822135323.795946-19-ardb+git@google.com>
 References: <20260822135323.795946-11-ardb+git@google.com>
- <20260822135323.795946-16-ardb+git@google.com>
+ <20260822135323.795946-19-ardb+git@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 14:10:57 +0000
-Message-Id: <20260822141057.D24451F000E9@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 14:12:03 +0000
+Message-Id: <20260822141203.81EAF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Live splitting of huge vmalloc mappings silently fails and trigger=
-s a kernel warning.
-- [High] Permission changes on small, PTE-mapped vmalloc areas are incorrec=
-tly rejected.
-- [High] Improper use of `WARN_ON_ONCE` for a hardware capability check cau=
-ses unwarranted kernel log spam and potential panic.
-- [Low] Implicit declaration of function `system_supports_bbml2_noabort()` =
-breaks the build.
+- [High] The check `s->st_shndx !=3D SHN_UNDEF` incorrectly skips PLT count=
+ing for special symbols like `SHN_LIVEPATCH` and `SHN_ABS`, breaking livepa=
+tching.
+- [High] Combining core and init PLTs breaks module loading if `execmem_spl=
+it` fails and falls back to an independent memory allocation.
 --
 
---- Patch [5]: [RFC PATCH 5/9] arm64: mm: Permit permissions changes on hug=
-e vmappings ---
-commit e67f32e911a059a6f372cf2818088d9fde53ee7f
+--- Patch [8]: [RFC PATCH 8/9] arm64: module: Combine init and core PLT ent=
+ries again ---
+commit 9e8ee18408a9e3b59ec81f693240a4dd9c7669a3
 Author: Ard Biesheuvel <ardb@kernel.org>
 
-arm64: mm: Permit permissions changes on huge vmappings
+arm64: module: Combine init and core PLT entries again
 
-This commit allows permission changes on huge vmappings without splitting
-when the region is PMD-aligned or when the system supports live splitting.
+This patch consolidates the core and init PLT sections into a single array,
+operating on the assumption that .init.text and .text are now always placed
+within direct branching range of each other. It also eliminates the need
+to allocate PLT entries for intra-module cross-section calls.
 
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index bbe98ac9ad8c6..20ff9cb273c11 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-
+> diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-p=
+lts.c
+> index bde32979c06af..e30876b90e306 100644
+> --- a/arch/arm64/kernel/module-plts.c
+> +++ b/arch/arm64/kernel/module-plts.c
 [ ... ]
-
-> @@ -179,7 +177,16 @@ static int change_memory_common(unsigned long addr, =
-int numpages,
->  	if (!area ||
->  	    ((unsigned long)kasan_reset_tag((void *)end) >
->  	     (unsigned long)kasan_reset_tag(area->addr) + area->size) ||
-> -	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) !=3D VM_ALLOC))
-> +	    !(area->flags & VM_ALLOC))
->                 return -EINVAL;
-> =20
-> +	/*
-> +	 * Disallow VM_ALLOW_HUGE_VMAP mappings unless the region is PMD
-> +	 * aligned, or splitting live huge mappings is supported.
-> +	 */
-> +	if ((area->flags & VM_ALLOW_HUGE_VMAP) &&
-> +	   ((start % PMD_SIZE) || (size % PMD_SIZE)) &&
-> +	   WARN_ON_ONCE(!system_supports_bbml2_noabort()))
-
-[Severity: Low]
-Does the function system_supports_bbml2_noabort() exist in the codebase? It
-appears to be missing a definition or declaration, which might cause the
-kernel to fail to compile due to an implicit function declaration.
+> @@ -169,17 +167,17 @@ static unsigned int count_plts(Elf64_Sym *syms, Elf=
+64_Rela *rela, int num,
+>  		case R_AARCH64_CALL26:
+>  			/*
+>  			 * We only have to consider branch targets that resolve
+> -			 * to symbols that are defined in a different section.
+> +			 * to symbols that are not defined in the same module.
+>  			 * This is not simply a heuristic, it is a fundamental
+>  			 * limitation, since there is no guaranteed way to emit
+>  			 * PLT entries sufficiently close to the branch if the
+>  			 * section size exceeds the range of a branch
+>  			 * instruction. So ignore relocations against defined
+> -			 * symbols if they live in the same section as the
+> +			 * symbols if they live in the same module as the
+>  			 * relocation target.
+>  			 */
 
 [Severity: High]
-Is WARN_ON_ONCE() the right choice for a hardware capability check here?
+Does this safely account for memory pressure during module loading?
 
-If an unaligned permission change is requested on an older system lacking
-BBML2 support, this will trigger a warning stack trace. If panic_on_warn
-is enabled, an unprivileged user loading a BPF program could trigger a
-kernel panic. Should this condition fail silently instead?
+While this patch expects .init.text and .text to be placed within direct=20
+branching range, kernel/module/main.c:module_memory_alloc() attempts to=20
+enforce this by using execmem_split().=20
 
-[Severity: High]
-Does checking area->flags & VM_ALLOW_HUGE_VMAP incorrectly reject small,
-PTE-mapped vmalloc areas?
+If execmem_split() fails, such as a mas_store_gfp() failure under memory=20
+pressure, module_memory_alloc() falls back to an independent=20
+execmem_alloc_rw() allocation. Because MODULES_VSIZE on ARM64 is 2GB,=20
+couldn't this fallback place the init section more than 128MB away from=20
+the core section?
 
-Allocators like execmem use VM_ALLOW_HUGE_VMAP as an allocation hint. If
-an allocation is smaller than PMD_SIZE, it falls back to PTE mappings but
-retains the VM_ALLOW_HUGE_VMAP flag in area->flags.
+If that happens, intra-module calls would exceed the architectural range.=20
+Since this patch removes the PLT entries for them, wouldn't the module=20
+load fail with a WARN_ON in module_emit_plt_entry() and abort the load?
 
-When change_memory_common() processes this on older hardware without
-BBML2, it sees the flag alongside an unaligned size, and rejects the
-request with -EINVAL, even though the page table is already PTE-mapped
-and requires no splitting.
-
-Should we check the actual page table granularity, such as inspecting
-area->page_order, instead of just the allocation flag?
+>  			s =3D syms + ELF64_R_SYM(rela[i].r_info);
+> -			if (s->st_shndx =3D=3D dstidx)
+> +			if (s->st_shndx !=3D SHN_UNDEF)
+>  				break;
 
 [Severity: High]
-If this condition passes because system_supports_bbml2_noabort() is true,
-will the PMD actually be split later?
+Will this skip PLT allocations for special symbols like SHN_LIVEPATCH and=20
+SHN_ABS?
 
-change_memory_common() delegates to __change_memory_common() which
-calls update_range_prot() and eventually split_kernel_leaf_mapping().
+When a livepatch module is loaded, its symbols are marked with SHN_LIVEPATC=
+H=20
+(0xff20) by objtool. Since SHN_LIVEPATCH is not SHN_UNDEF, this check evalu=
+ates
+to true, breaking the loop and skipping PLT allocation for these symbols.
 
-Looking at split_kernel_leaf_mapping() in arch/arm64/mm/mmu.c:
-
-if (!linear_map_requires_bbml3 || is_kfence_address((void *)start))
-    return 0;
-
-if (!system_supports_bbml3()) {
-    ...
-    return 0;
-}
-
-This evaluates system_supports_bbml3() and linear_map_requires_bbml3,
-ignoring both the BBML2 capability and the vmalloc context. If those are
-false (for example, if rodata is off), it returns 0 without splitting the
-PMD.
-
-The subsequent lockless page table walk would then encounter an unsplit PMD
-spanning a larger range than requested, resulting in a warning and a
-failure.
-
-> +		return -EINVAL;
-> =20
->  	if (!numpages)
->  		return 0;
+Later, when klp_apply_section_relocs() attempts to apply the .klp.rela.*=20
+relocations against vmlinux, out-of-range branches will need a PLT entry.
+Since none were allocated, won't module_emit_plt_entry() hit the WARN_ON=20
+for exceeding pltsec->plt_max_entries and abort the load with -ENOEXEC?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822135323.7959=
-46-11-ardb+git@google.com?part=3D5
+46-11-ardb+git@google.com?part=3D8
