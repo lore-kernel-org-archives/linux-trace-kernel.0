@@ -1,56 +1,56 @@
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D893C416A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 13:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CD63C584F
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 13:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787406850; cv=none; b=Mn3VGJlClQAtbZGpsXt4jsyOsZV02jwdiNeLLaDhVXWXOWglumHVxOGxeZE2Bj7CpFwFTwEUgLO6hfjsJuqaLeTWgL7NSmXFqaAHTEqeTJ1U5/1s2QbkuhdOc6OxMV0b+3qCjWDMSflYv7s3Wd/J7nrFuYraZxfBpZDIeitfQPM=
+	t=1787406851; cv=none; b=GjSuX3gQNARD/guQ02iUGqw5bD0qJpMlR4Li4btrwJrVMu0/sFJL9KXgagIM+fKzOTPotTnbKq8wekBRSalYH172A/14h1rUXHR7jCU3proDcPkicvq2MpePQXRBxXOjwPRTIMCo72f2w4887VXTnz20dG/hjjdsLlo6se6HomQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787406850; c=relaxed/simple;
-	bh=AinIhOYRxdY9RQ11Fott/8QSuWqVe/WuXNQsPZeV7zM=;
+	s=arc-20240116; t=1787406851; c=relaxed/simple;
+	bh=yELrb/Sn4lo7UMYrT7w3YjKzJs20THaExKEmg90KpcI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TJz3mCfXjrNfYb3lZQXru2x1cPx9OPF7ynYnUP93N9z3E/k3UfHxOhrkO+VB1MOubqDRm4+mjlmr9IHY6XNGAC3V7YQwLU1CUODtg7i4vnZTQDzqlV30w49H0eXIug5+sLUbkxW7ku0x8PblstJ9hrVBrFeyS0uD2qHURFJ/ZYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q+F6MFYP; arc=none smtp.client-ip=209.85.128.72
+	 To:Cc:Content-Type; b=J6j2gVbjak6oj/FTaPLt52XTFPXwAQWonN0EbStEWpXzhR8toZRjVYJkdGMoGW7V1vxz+OPDp3JbzqZ8BF1EIrR3DdzNHLxhiJ0V1hxuZPAO6bHarN7DE+Vg8x5dw5KMJqoC3rjmuGWOEwLG1l29rg5pVnkzq7j6eQMs6aIMvBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ajfLccfz; arc=none smtp.client-ip=209.85.221.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q+F6MFYP"
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4954dcd6131so17149535e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 06:54:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ajfLccfz"
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-47f4601af62so759314f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 06:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787406847; x=1788011647; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787406848; x=1788011648; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Ei9aAhCyyRq9nczFsrb/oQ6US+9hvk5Rs5Wuqs8mBgQ=;
-        b=Q+F6MFYPnjjZXTQBjiiGUuu8ifKu+d2kjpTf8wEmN9T/27lQ3bX+8jFbm/lSV26u/8
-         Y7rLXnkEqXCKBOYXRtXhWbaBYqN9kB1kTDgS27DvF0KMlCq5LZqFt3NK41HTgdAEuZmB
-         hD/zt3G4STNdV23XqM+GJ+VyL+ku3fai32Cxft1XBdWtgL9O5jqtzFKBSVCdTpAMXEYr
-         93lVOgx0QwUXbZSutMimuDsVPNzwAa0i+whuL9+RsTIsNUNn4ElIMjzxz9T2Msid+zGn
-         3CSb5ym2iWljxZE6uFz/DGKJu1xa6uJUheAsiBWej9qgi/FRRj7ZSSUrac8a7AMUxbv5
-         zXxA==
+        bh=3C1MhcgCYBzARL/+z1ptrjz40O26zol1QO0uE2euMIU=;
+        b=ajfLccfzb8aufZ93lpS12KFsEBz1a/lZsL1yqyr0/HMIvDSBamuTL+LGYhOx9pBNbk
+         K1pirkT3tQwPO8v1WYsWEm7dw7ZfY/Of5tZkqMsz2YEVFK/rtu+9YE5wZX+17XcrfAMC
+         MkhEQub5GCxrKCFSQ5zd/WFT0jrtfbnXOr4WhEUHWlQQ8Ns24kbKRxCxz60zlDrHPM/U
+         4TNgyBe12z6G4wNKMy82hpmdtl2KaKIgMWUvjGtdM8DtKYXx6hf/YVf8eQ6NNHwuk0qO
+         2Z2/Gv+YvtIdB8q5bVAt3ZK3CGaNbnK5D0j85Y66QKbF16QmmxJ8TcAGeZegjp4Om3YC
+         Qd0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787406847; x=1788011647;
+        d=1e100.net; s=20251104; t=1787406848; x=1788011648;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Ei9aAhCyyRq9nczFsrb/oQ6US+9hvk5Rs5Wuqs8mBgQ=;
-        b=YJG0fRTDB8/GGyPT6kuUd7lyAQqiIottWdt0Bb+up0/lhBY+r/j9D+l17Gvqt/X1Cg
-         MbV2UgRRH+3Mzs0iRumxYTRYoSGhWHO3yf5jPc+PEzBiaea2pJARyH3VKRJOCIJuHBni
-         RwTaJPJ1BEvZJx8RR4BovJDCXEo1qehCOyUnkNxEloVrl82kv+FJ96ChhgXC0Vu/ESZi
-         WtoKP+N4U/4Vnt9qyA+jqlSKycYb9f4mkg59imUtLVfveaXgwFctKGcUHu25Uco6RHhe
-         kp2rSyYgI6SW2exyQb1gyadr9X2ZtiaLQ5BI6UO1aHb8f0YLutLzvcZi3FM25JL1+UNk
-         ZTfw==
-X-Forwarded-Encrypted: i=1; AHgh+RoSynLIz/9Hov5OhO+wnTNNX27WBqDuGSngA6S1surcQRm48Q0qiNgK291qWcZu7AYp+NMdhRAN5pBkUyHBFHYR6rE=@vger.kernel.org
-X-Gm-Message-State: AFuF++mjwZcjGAhxYyyGlCmvTYBeleFQS1cVIh673xUjzKPx+zpsuGBR
-	EP4q+HjydbGCko7f76IW/Iu2ZAWl6jbiB0aLxggo5RbBWrrgN+HXhxhTqY5sJtF98z40v4ho4Q=
+        bh=3C1MhcgCYBzARL/+z1ptrjz40O26zol1QO0uE2euMIU=;
+        b=DCU0wLRhxU/bZu+rqW1zu4/00EaVsVdUjmfw33jQM6QnLPdhSRzF3mDLYYFjm5ZZxW
+         RP4VOgL4h8dh1v9Zq1c0M10VZ5S6BN/ipb43HHTWY8drYq1kjFOyhKWOJ1FEHA4VIcx8
+         Ox5UM057uy2YVqDrqkvocrSU3uFXxcXV2uEhjYcb46BdNmTMOKrqBGr7/yGBgAQXlnrs
+         bMGc5qN8TtgVgSA8nZkLuQQNzMfjLEhcDcfaUG5L/VQWQHB+QsgOHK9sl5QHRtUbvBMc
+         nL8IRDFdMmjzOkWnzvpwqMpXW0jk61FlJoxOOtjL3pZ7VXPUpvVElx3rJHdRu/17+DIG
+         AHUg==
+X-Forwarded-Encrypted: i=1; AHgh+RojGaZAWdT9QM3jyHkZfQdYFHRf+KQ2UGX/5x3avcpQhyCLHy1y9pKmz1HI0FfFSZ5MvF4+6G0afvuPzUJqZuJxf2Q=@vger.kernel.org
+X-Gm-Message-State: AFuF++lm3tvdHOZ/LkXGCgu4R3zDsps5FcN5lE+rIZ3xQ1rSB2GYsPAU
+	TZEuUPc2nug9BRFBKXsP19WhBZp6u4MDNBbUHIPcfOoPuP3NKkct9IC5ZczmsS8yAGbbdwvV0w=
 	=
-X-Received: from wmcu3.prod.google.com ([2002:a7b:c043:0:b0:499:8f0d:36d6])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8b77:b0:499:48bb:417e
- with SMTP id 5b1f17b1804b1-499b82f4163mr187118595e9.2.1787406846628; Sat, 22
- Aug 2026 06:54:06 -0700 (PDT)
-Date: Sat, 22 Aug 2026 15:53:25 +0200
+X-Received: from wrnk3.prod.google.com ([2002:adf:e8c3:0:b0:481:5a0f:19b5])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:310f:b0:47f:7129:e30
+ with SMTP id ffacd0b85a97d-482c0b976f1mr17563678f8f.11.1787406847588; Sat, 22
+ Aug 2026 06:54:07 -0700 (PDT)
+Date: Sat, 22 Aug 2026 15:53:26 +0200
 In-Reply-To: <20260822135323.795946-11-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,14 +60,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260822135323.795946-11-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1141; i=ardb@kernel.org;
- h=from:subject; bh=LLSSaN9rhZ2F3aT4P4AsB5UNc3JBgAb9PUajizskM3Y=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIatz5Y0AZ4svS9ISbTaf6Vvbffb640AuEdFH514lyFxeu
- vB339++jlIWBjEuBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCREiuG3+xHy5/ozft6vo39
- a++HnWc27J26lnlODVv1x/cTz/MfferGyHBrod6fpd6OR87MNvD91aMtcLL+0Su90/UXLE4ohsc 1yXMBAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2204; i=ardb@kernel.org;
+ h=from:subject; bh=2CJ7XIW20mRvuSe13JPdhhevFvLjPgwtnqW6fGhR0pc=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIatz5c1bi+7sDNh4oOHy8XMHks1ZWx/c9LM5qpAednXj/
+ pol76fv6ChlYRDjYpAVU2QRmP333c7TE6VqnWfJwsxhZQIZwsDFKQAT0dVjZGjsanuobS/bwOzn
+ INDJt9ssjUtyEdfbFTGrcj54/RWdJsTw31v4rEPQ3sLVG+ati7dtnpxtEvm4wabQeZJex247NZX 3/AA=
 X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
-Message-ID: <20260822135323.795946-14-ardb+git@google.com>
-Subject: [RFC PATCH 3/9] module: Place MOD_TEXT before MOD_INIT_TEXT in enumeration
+Message-ID: <20260822135323.795946-15-ardb+git@google.com>
+Subject: [RFC PATCH 4/9] module: Allocate MOD_INIT_TEXT from the MOD_TEXT ROX allocation
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
@@ -84,39 +84,69 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Reorder enum mod_mem_type so that MOD_TEXT appears right before
-MOD_INIT_TEXT. This will result in MOD_INIT_TEXT being allocated right
-after MOD_TEXT when the allocation logic iterates over the memory types
-in enum declaration order.
+When execmem ROX caches are used for module text and inittext, place
+them adjacently in memory, by allocating space for both initially, and
+splitting off the space for MOD_INIT_TEXT as needed.
 
-In a subsequent patch, this will be taken advantage of, by allocating
-.text and .init.text together, and freeing .init.text by truncating the
-allocation. Doing so without this reordering would likely result in more
-fragmentation, as the truncated .text allocation would be followed by
-.rodata and .data/.bss of the same module.
+This avoids the corner case on arm64, where .init.text being placed far
+from .text results in a lot of complexity wrt indirect branches and PLTs
+that we'd prefer to avoid.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- include/linux/module.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/module/main.c | 22 ++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 7566815fabbe..0336a46733dd 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -316,10 +316,10 @@ struct mod_tree_node {
- };
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 46dd8d25a605..2d6213496359 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -1342,7 +1342,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+ {
+ 	unsigned int size = PAGE_ALIGN(mod->mem[type].size);
+ 	enum execmem_type execmem_type;
+-	void *ptr;
++	void *ptr = NULL;
  
- enum mod_mem_type {
--	MOD_TEXT = 0,
--	MOD_DATA,
-+	MOD_DATA = 0,
- 	MOD_RODATA,
- 	MOD_RO_AFTER_INIT,
-+	MOD_TEXT,
- 	MOD_INIT_TEXT,
- 	MOD_INIT_DATA,
- 	MOD_INIT_RODATA,
+ 	mod->mem[type].size = size;
+ 
+@@ -1351,11 +1351,25 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+ 	else
+ 		execmem_type = EXECMEM_MODULE_TEXT;
+ 
+-	ptr = execmem_alloc_rw(execmem_type, size);
++	bool is_rox = execmem_is_rox(execmem_type);
++	if (is_rox) {
++		/*
++		 * Special case for MOD_TEXT / MOD_INIT_TEXT: allocate the
++		 * latter by splitting off required space from the former
++		 * so that they are always placed close together.
++		 */
++		if (type == MOD_TEXT)
++			size += PAGE_ALIGN(mod->mem[MOD_INIT_TEXT].size);
++		else if (type == MOD_INIT_TEXT)
++			ptr = execmem_split(mod->mem[MOD_TEXT].base, size);
++	}
++
++	if (!ptr)
++		ptr = execmem_alloc_rw(execmem_type, size);
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 
+-	mod->mem[type].is_rox = execmem_is_rox(execmem_type);
++	mod->mem[type].is_rox = is_rox;
+ 
+ 	/*
+ 	 * The pointer to these blocks of memory are stored on the module
+@@ -1368,7 +1382,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+ 	 * *do* eventually get freed, but let's just keep things simple
+ 	 * and avoid *any* false positives.
+ 	 */
+-	if (!mod->mem[type].is_rox)
++	if (!is_rox)
+ 		kmemleak_not_leak(ptr);
+ 
+ 	memset(ptr, 0, size);
 -- 
 2.55.0.860.g4b6b3295ed-goog
 
