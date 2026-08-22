@@ -1,170 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F2A34FF79;
-	Sat, 22 Aug 2026 14:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9F23D2A1;
+	Sat, 22 Aug 2026 14:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787407818; cv=none; b=L2w+VtV+aAAGoidr0Kz6D4frUVngIkA3c5KWWTAJIUuPuRXTm7QFFIEPeUXU7eYU1SMYex9cgfEPpooOHdYEYI3zSrMYazMB1RFL0uKqUYpCyHwKZxH/doyxEy/EEz699xAkjYKisb0HNEPXwWRLwvrpM+e8TtS78c/3PiDj+kw=
+	t=1787407860; cv=none; b=t2fLHK/FHygwCO0BDNF8GIfT3nP14hdaIYb6ZzAzHOu1IuOiNu35R7hveTbTM9M//YrqJ3RrahGt7fDtKrwn10p32qjfsjvLB7d/KcI8jERysUoCGnZ7BXK8CZd340OBf/D6C1OLN4cA+mRNN1AvVlio1G0xmTYP04cX1PYitQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787407818; c=relaxed/simple;
-	bh=f0IunGG2mGbzG+N94BDdOsd2YEWHXsg9H9umn9tRI2M=;
+	s=arc-20240116; t=1787407860; c=relaxed/simple;
+	bh=kbtzcL5cHPia9PlKij41oovwD+w5VvRynWSKiyMfk8c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A7Cx1OULfNT1HrR6G/BuzSLhR2apIuxNfP1e+/uE+e9bo4FzyIJr4bW9tkzyYV/KAVfv6zgKB1GaFc5u+SQaafXBMSECqi7m2effpfrXUH72Kl/YH2+BofttvW1szlr4q9hUS4i2IOGbjrxYyAeXDaI4U8pVHUOCi2wbmrmtpUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKES40kc; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=C8Ii1rX36DN+JF1QFWvCV6GJ+03+G4jChjL/lpQTSWDEIVaE3A9mScZwum+qT3ywRwf2ItKpsUM4iQ3lvuJ8+FdTcPRSawWZIvpSmzFM/nRkFwxwF42dQtS0rNDgQ64QC8Fl30c2cPOfWh4oyg2YnN7RiiS+2NCjJdsZv15/B6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0dY7L+r; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKES40kc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 199431F000E9;
-	Sat, 22 Aug 2026 14:10:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0dY7L+r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24451F000E9;
+	Sat, 22 Aug 2026 14:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787407817;
-	bh=kMFgtJl0mk+tMHD4wQ/xs5aEuXPF1zOFLmpN9FpZFbA=;
+	s=k20260515; t=1787407858;
+	bh=RuCRdo5ufXFyjX5OqYiaj1ZQB4yzXMPz59E45z8w+GI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EKES40kcFoSiwLfV2VGt28mqAsrjf74agB9bao2M3Co50u7+z8zYj/U0b2T+l4ACP
-	 e1prRsM6ZKmIHB1EycecMf0snW0hZV708pAH5RITyekt3Y1jgVmkkkPJVfFnV1sM0X
-	 x7oUnSKB0dZF1UHl84pxYwa8oKLrYXRuaJnBLkX0yrdOCzTeynQBw1hFtSs4fz0SYL
-	 q2nidp2iUM3rnJWlRbjn94dZhcVJDZJJVq1SxP/8ErPGET/R8f23on8v1+3/3UI+Vt
-	 ejR/tYgcgF4AbKLybrfVmu2HC5dkCtgTsM0ALw6gT8+QC9qlJTe2xrTn3K1XGwPF3z
-	 aQim0HUrvF9JQ==
+	b=F0dY7L+rk7/k9MbFLRP3tAGoD07hwhDo5IbOWfW/yjwr9F+U8F0w2s5d1hRujZKny
+	 LML+3ttUm1fogvXOY44dscwXZCgyCtJy9UvHvK/U3sicrjMhrvzeYQvoXgMUPp9Gnm
+	 pZ2J6LS3cmAHpojgv/FcSFtjzVS5Uw803R40ZrdHjjcaucPnNSgih0hkRh0wCJ7JYZ
+	 MYA4w7eLJ/XldaTDng12e9xQQrnKTyIcI095CDkykvNaCj7/8ciYLu+Up1CeL9GlEM
+	 ILuf3sMrM/7HLidCd/nrwuq/EMucPpyC2BEuFGPG2lh1iYjETtqBXDXQaOShNX40A0
+	 Ni6aOQJssNiTA==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 2/9] mm: execmem: Allow huge vmappings to be avoided
- for execmem caches
+Subject: Re: [RFC PATCH 5/9] arm64: mm: Permit permissions changes on huge
+ vmappings
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ard Biesheuvel" <ardb+git@google.com>
 Cc: linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-In-Reply-To: <20260822135323.795946-13-ardb+git@google.com>
+In-Reply-To: <20260822135323.795946-16-ardb+git@google.com>
 References: <20260822135323.795946-11-ardb+git@google.com>
- <20260822135323.795946-13-ardb+git@google.com>
+ <20260822135323.795946-16-ardb+git@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 14:10:16 +0000
-Message-Id: <20260822141017.199431F000E9@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 14:10:57 +0000
+Message-Id: <20260822141057.D24451F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Omitting VM_ALLOW_HUGE_VMAP breaks the ROX cache shrinker by strip=
-ping PMD_SIZE alignment, causing a permanent memory leak of cached module m=
-emory.
-
-Pre-existing issues:
-- [High] Fallback allocations in execmem_cache_populate_alloc() leak memory=
- due to failing the PMD_SIZE alignment checks in the cache shrinker.
-- [High] Ignored return value of execmem_restore_rox() allows memory to be =
-silently returned to the ROX cache with RW permissions.
+- [High] Live splitting of huge vmalloc mappings silently fails and trigger=
+s a kernel warning.
+- [High] Permission changes on small, PTE-mapped vmalloc areas are incorrec=
+tly rejected.
+- [High] Improper use of `WARN_ON_ONCE` for a hardware capability check cau=
+ses unwarranted kernel log spam and potential panic.
+- [Low] Implicit declaration of function `system_supports_bbml2_noabort()` =
+breaks the build.
 --
 
---- Patch [2]: [RFC PATCH 2/9] mm: execmem: Allow huge vmappings to be avoi=
-ded for execmem caches ---
-commit 3d4b59f7ca74d71807be337626018d273686c686
+--- Patch [5]: [RFC PATCH 5/9] arm64: mm: Permit permissions changes on hug=
+e vmappings ---
+commit e67f32e911a059a6f372cf2818088d9fde53ee7f
 Author: Ard Biesheuvel <ardb@kernel.org>
 
-mm: execmem: Allow huge vmappings to be avoided for execmem caches
-   =20
-Only recent arm64 systems are guaranteed to be able to manipulate the
-permissions on live kernel mappings that may use huge mappings. Older
-ones can only do so on live mappings that are mapped down to pages.
+arm64: mm: Permit permissions changes on huge vmappings
 
-In order to make execmem caches work on arm64 despite this distinction,
-allow huge vmappings to be omitted when allocating the caches.
+This commit allows permission changes on huge vmappings without splitting
+when the region is PMD-aligned or when the system supports live splitting.
 
-> diff --git a/mm/execmem.c b/mm/execmem.c
-> index 6db0c1d82a9d6..5790d4a8532af 100644
-> --- a/mm/execmem.c
-> +++ b/mm/execmem.c
-> @@ -276,7 +276,8 @@ static void *__execmem_cache_alloc(struct execmem_ran=
-ge *range, size_t size)
-> =20
->  static void *execmem_cache_populate_alloc(struct execmem_range *range, s=
-ize_t size)
->  {
-> -	unsigned long vm_flags =3D VM_ALLOW_HUGE_VMAP;
-> +	unsigned long vm_flags =3D (range->flags & EXECMEM_NO_HUGE_VMAP)
-> +						? 0 : VM_ALLOW_HUGE_VMAP;
-
-[Severity: High]
-Does dropping VM_ALLOW_HUGE_VMAP here cause a permanent memory leak in the
-ROX cache?
-
-When VM_ALLOW_HUGE_VMAP is omitted, the allocation may fall back to the
-standard alignment (typically PAGE_SIZE) instead of being PMD_SIZE aligned.=
-=20
-
-However, the shrinker in execmem_cache_clean() strictly requires PMD_SIZE
-alignment to free the memory:
-
-mm/execmem.c:execmem_cache_clean() {
-	...
-	mas_for_each(&mas, area, ULONG_MAX) {
-		size_t size =3D mas_range_len(&mas);
-
-		if (IS_ALIGNED(size, PMD_SIZE) &&
-		    IS_ALIGNED(mas.index, PMD_SIZE)) {
-			struct vm_struct *vm =3D find_vm_area(area);
-	...
-}
-
-If the starting address (mas.index) of the chunk allocated without
-VM_ALLOW_HUGE_VMAP is not PMD_SIZE aligned, the shrinker will skip it,
-never returning it to the vmalloc subsystem.
-
->  	struct mutex *mutex =3D &execmem_cache.mutex;
->  	struct vm_struct *vm;
->  	size_t alloc_size;
-> 	int err =3D -ENOMEM;
-> 	void *p;
->=20
-> 	alloc_size =3D round_up(size, PMD_SIZE);
-> 	p =3D execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-> 	if (!p) {
-> 		alloc_size =3D size;
-> 		p =3D execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-
-[Severity: High]
-This is a pre-existing issue, but does this exact-size fallback allocation
-leak memory for the same reason?
-
-If the PMD_SIZE rounded allocation fails under pressure, the fallback
-allocates the exact requested size. Since this fallback size is not
-guaranteed to be PMD_SIZE aligned, it will also permanently fail the
-IS_ALIGNED(size, PMD_SIZE) check in execmem_cache_clean(), leaking the
-vmalloc space.
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index bbe98ac9ad8c6..20ff9cb273c11 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
 
 [ ... ]
 
-> static int __execmem_cache_free(struct ma_state *mas, void *ptr, gfp_t gf=
-p_mask)
-> {
-> 	size_t size =3D mas_range_len(mas);
-> 	int err;
->=20
-> 	err =3D execmem_force_rw(ptr, size);
-> 	if (err)
-> 		return err;
->=20
-> 	execmem_fill_trapping_insns(ptr, size);
-> 	execmem_restore_rox(ptr, size);
->=20
-> 	err =3D execmem_cache_add_locked(ptr, size, gfp_mask);
+> @@ -179,7 +177,16 @@ static int change_memory_common(unsigned long addr, =
+int numpages,
+>  	if (!area ||
+>  	    ((unsigned long)kasan_reset_tag((void *)end) >
+>  	     (unsigned long)kasan_reset_tag(area->addr) + area->size) ||
+> -	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) !=3D VM_ALLOC))
+> +	    !(area->flags & VM_ALLOC))
+>                 return -EINVAL;
+> =20
+> +	/*
+> +	 * Disallow VM_ALLOW_HUGE_VMAP mappings unless the region is PMD
+> +	 * aligned, or splitting live huge mappings is supported.
+> +	 */
+> +	if ((area->flags & VM_ALLOW_HUGE_VMAP) &&
+> +	   ((start % PMD_SIZE) || (size % PMD_SIZE)) &&
+> +	   WARN_ON_ONCE(!system_supports_bbml2_noabort()))
+
+[Severity: Low]
+Does the function system_supports_bbml2_noabort() exist in the codebase? It
+appears to be missing a definition or declaration, which might cause the
+kernel to fail to compile due to an implicit function declaration.
 
 [Severity: High]
-This isn't a bug introduced by this patch, but is it safe to ignore the
-return value of execmem_restore_rox() here?
+Is WARN_ON_ONCE() the right choice for a hardware capability check here?
 
-If restoring the ROX permissions fails (for example, if set_memory_rox() fa=
-ils
-internally), the chunk is still added back to the free_areas tree. Subseque=
-nt
-allocations could then receive memory that is still writable, silently brea=
-king
-the W^X security guarantee.
+If an unaligned permission change is requested on an older system lacking
+BBML2 support, this will trigger a warning stack trace. If panic_on_warn
+is enabled, an unprivileged user loading a BPF program could trigger a
+kernel panic. Should this condition fail silently instead?
+
+[Severity: High]
+Does checking area->flags & VM_ALLOW_HUGE_VMAP incorrectly reject small,
+PTE-mapped vmalloc areas?
+
+Allocators like execmem use VM_ALLOW_HUGE_VMAP as an allocation hint. If
+an allocation is smaller than PMD_SIZE, it falls back to PTE mappings but
+retains the VM_ALLOW_HUGE_VMAP flag in area->flags.
+
+When change_memory_common() processes this on older hardware without
+BBML2, it sees the flag alongside an unaligned size, and rejects the
+request with -EINVAL, even though the page table is already PTE-mapped
+and requires no splitting.
+
+Should we check the actual page table granularity, such as inspecting
+area->page_order, instead of just the allocation flag?
+
+[Severity: High]
+If this condition passes because system_supports_bbml2_noabort() is true,
+will the PMD actually be split later?
+
+change_memory_common() delegates to __change_memory_common() which
+calls update_range_prot() and eventually split_kernel_leaf_mapping().
+
+Looking at split_kernel_leaf_mapping() in arch/arm64/mm/mmu.c:
+
+if (!linear_map_requires_bbml3 || is_kfence_address((void *)start))
+    return 0;
+
+if (!system_supports_bbml3()) {
+    ...
+    return 0;
+}
+
+This evaluates system_supports_bbml3() and linear_map_requires_bbml3,
+ignoring both the BBML2 capability and the vmalloc context. If those are
+false (for example, if rodata is off), it returns 0 without splitting the
+PMD.
+
+The subsequent lockless page table walk would then encounter an unsplit PMD
+spanning a larger range than requested, resulting in a warning and a
+failure.
+
+> +		return -EINVAL;
+> =20
+>  	if (!numpages)
+>  		return 0;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822135323.7959=
-46-11-ardb+git@google.com?part=3D2
+46-11-ardb+git@google.com?part=3D5
