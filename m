@@ -1,224 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D3C3CD8D4;
-	Fri, 21 Aug 2026 23:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC73B275B03;
+	Sat, 22 Aug 2026 03:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787355016; cv=none; b=tgNia8P3XrQ/YZSKuYWF89+4wCBNMkJn2owQofMPpIK0l7J1m9K4LRvfdoQ1tlNMBcL4a7y1WVsYFvBWk6QIzaL9zum0VRA6q05MitkEBlMJZmcbQYlWi0i/uVCKuPLnGxc5bVfFTUJ1nPtRrJQTax/PPnfnNQMNeiKQRwSMLCI=
+	t=1787371185; cv=none; b=UBfIpbSE60/+chG+n6qmoXlw3Ckv2pmX45tPfI5UuFv31QpsyPAIpR+4k9NrcIM1JUoI6kxOhH7bsr8KXuIawC7XkjPZYXBI++LjBgiS0cdD1Bus7N+uvkj/EyZ7i0Be7I3oBYBmsLZEKpeyqNTh2pDwKyjocJWx1zTj6brUPaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787355016; c=relaxed/simple;
-	bh=cgB+yW7CnQOvvU7s4uZkYnzgBjqhRrKiDtupeCT6VQQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=HjaNH5PviinyVFWTRPJOxKPtMQwyKcOc+2Co6qVHt3jKZnfde3E3vtR9mlgkm/fPbwpT0LR7HxQ3yjuIKTfi2xcB6iBRHkye1bqOXjUQhSHrlY6KfxsCX8RARp5xBpyvpgvGXAsv/VJNBMW+ccpTAggA5hrot1dnhaAv0vW2TvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gprebwiX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787371185; c=relaxed/simple;
+	bh=WOtnTIQyBUtUjogvNDn96QQXCzQb2XNNCtggZkv/VnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PjaHzYewzMkdg4T31VxmcgPFeJPVBVbOsnuF5YkhI888T2F5MaxvXmOQ20MjOIIth5hNbW4jiNxVZz5AHYFnYDet8b9QMnqPbtY4OovZNq7gHtByU983+a+uJJk1o5ki3WJ9m8P7/4XRfLzwZyufm35Q4NKfPFLfAeFHYYc8YWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=jch0w6Io; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gprebwiX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9631F00A3E;
-	Fri, 21 Aug 2026 23:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787355015;
-	bh=2pL3RrCCrfq8gY4ns3n3oiNtBRHRtNg5z+ZdoLXJHfg=;
-	h=Date:From:To:Cc:Subject:References;
-	b=gprebwiXG3xXtsE3C1VaZvP/pGGpTO9bsGOjYvZbKv7odK/d9v7ivHSkI546fIs5a
-	 RD5TBruwgJyKhNzMaAoFhPuUO+X3oi+nattGMKv6mv2txxwUre3a9ZYFSWiCPSnnso
-	 Zen4wa6bO9oQu33V1BNtenDJL5wS4r+SH9YRkrgrRMJc5aBjJCxJRU9NhZVBqhF+XI
-	 h2zOcOLxwyjo8U6HPysziVCsdfC5ODek3CJviHj1eBwUNv2XNQ3S16HWHBR6zpoeFl
-	 3tvsNh9Z4Rn3q4EqkJMHfndzy2W8i2sBLJdahUtu6MwhMYILtXqJCyfAwti/CuQrH4
-	 kBLzTrEqAwoUw==
-Received: from rostedt by gandalf with local (Exim 4.99.4)
-	(envelope-from <rostedt@kernel.org>)
-	id 1wxYhG-00000005rjM-1ypC;
-	Fri, 21 Aug 2026 19:30:50 -0400
-Message-ID: <20260821233050.335986786@kernel.org>
-User-Agent: quilt/0.69
-Date: Fri, 21 Aug 2026 19:28:21 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Chen Jun <chenjun102@huawei.com>
-Subject: [PATCH v2 1/2] tracing: Add "within" filter for call-stack-based event filtering
-References: <20260821232820.717143516@kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="jch0w6Io"
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id A5EAFC02DE;
+	Sat, 22 Aug 2026 03:51:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 01B5817;
+	Sat, 22 Aug 2026 03:51:31 +0000 (UTC)
+Date: Fri, 21 Aug 2026 23:51:29 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Li Pengfei <ljdlns1987@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhangbo56@xiaomi.com, lipengfei28@xiaomi.com
+Subject: Re: [RFC PATCH v4 1/3] trace: add lock-free stackmap for stack
+ trace deduplication
+Message-ID: <20260821235129.078dd489@fedora>
+In-Reply-To: <20260715031245.2571869-1-lipengfei28@xiaomi.com>
+References: <20260616064119.438063-1-lipengfei28@xiaomi.com>
+	<20260616064119.438063-2-lipengfei28@xiaomi.com>
+	<20260714171144.4537f163@gandalf.local.home>
+	<20260715031245.2571869-1-lipengfei28@xiaomi.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 01B5817
+X-Stat-Signature: jcg9dakrt1umcszz1qc18aeesij8j15f
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+6h+gXxyvTm++AlqTXDOw4R1i6gaiG1As=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ltstLTxn2DV/4vatN7JV2fbcjeDHbbGsBNDW2fUkZ8g=; b=jch0w6IoIzNUG1iQ6/iABzaDPjijnaRzH2Ko1R98E6mE1zE8yFtwOI0Gazj5HcFE+q3LOTzhjNrwHJIV9NuNIfrYtMMytGwuYVeRT5dF3zEDkjpHqJSpztCdAmyX4CoedTxcbu4s/m0eDmT5+RAltECEx3/XH9X1nGMmD0rgIyk=
+X-HE-Tag: 1787370691-261953
+X-HE-Meta: U2FsdGVkX1/G9RxboLGG1ORvtXdmAw/ojHWSnvqVV207kFbrt9c1xToeF428o/VBGY8GyuiEbshztkRVxDIialkAu8cPdvy5cTDu1Xu6SurCeBWTZnE1A23g8ax8FK66oI3KRlMU0/NstB5AfH4HZeURypjXJk1kadAflewVTIZYNVK8SUaw/N850E7gooj4uzc0BuX7KGkYCA/iYmlF99Jzk3wjLjBMNmzw3jLfTeJWRqxu/HERmCFpJtgz5H0X5492zSHJGLozWbPOti6F4utH02dZ5zsTUrz5S0+JbS/nGFatM75w71Q8Fhqy7OmZDPUN9ompP14dezHN+R8KglxDgcaE3MEQ
 
-From: Chen Jun <chenjun102@huawei.com>
+On Wed, 15 Jul 2026 11:12:45 +0800
+Li Pengfei <ljdlns1987@gmail.com> wrote:
 
-Low-level kernel functions are called from many different paths.
-When debugging, it is often useful to filter trace events to only
-those occurring within a specific call chain.
+Sorry for the late reply, I haven't had the time to look deeply at this
+series.
 
-Add a "within" filter predicate that tests whether a given function
-appears in the current call stack at event time. The function name
-is resolved to its address range via kallsyms during filter setup;
-at runtime, stack_trace_save() captures the call stack and compares
-each return address against the stored range.
+> 
+> One design point I'd like your steer on before respinning: reset
+> checks tracer_tracing_is_on() once under trace_types_lock, but
+> traceon triggers (ftrace_traceon / traceon_trigger) can re-enable
+> tracing without that lock during reset's clear phase. As far as I
+> can tell this is a semantic-contract issue, not a memory-safety
+> one: the map is protected by the resetting flag (get_id bails with
+> -EINVAL and synchronize_rcu() drains in-flight callers), and the
+> ring buffer pages aren't freed by reset, so the worst case is a
+> non-empty / inconsistent buffer after reset rather than corruption.
+> So I'm leaning toward documenting reset as best-effort ("stop
+> tracing, including traceon triggers, before reset") rather than
+> adding machinery to block the window. Does that match your view, or
+> is there a ring-buffer-state hazard I'm missing that would justify
+> blocking it explicitly?
 
-Example:
-  echo 'within == "vfs_read"' > events/sched/sched_switch/filter
+Honestly, I don't think we need to be as strict on reset as you are
+trying to be. What is the worse thing that happens if a reset happens
+while the buffer is not cleared and the trace still exists?
 
-Only "==" and "!=" operators are supported. The filter depends on
-CONFIG_STACKTRACE.
-
-Link: https://patch.msgid.link/20260608145556.94931-1-chenjun102@huawei.com
-Signed-off-by: Chen Jun <chenjun102@huawei.com>
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- Documentation/trace/events.rst     | 12 +++++++++
- include/linux/trace_events.h       |  1 +
- kernel/trace/trace.h               |  3 ++-
- kernel/trace/trace_events.c        |  3 +++
- kernel/trace/trace_events_filter.c | 41 ++++++++++++++++++++++++++++--
- 5 files changed, 57 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-index 581f2260614b..a1a219208ecc 100644
---- a/Documentation/trace/events.rst
-+++ b/Documentation/trace/events.rst
-@@ -243,6 +243,18 @@ the function "security_prepare_creds" and less than the end of that function.
- The ".function" postfix can only be attached to values of size long, and can only
- be compared with "==" or "!=".
- 
-+The special field "within" can be used to filter events based on whether
-+a specific function appears in the current call stack::
-+
-+  within == "function_name"
-+  within != "function_name"
-+
-+For example, to only trace events where "vfs_read" is in the call stack::
-+
-+  # echo 'within == "vfs_read"' > events/sched/sched_switch/filter
-+
-+The within field supports only the "==" and "!=" operators.
-+
- Cpumask fields or scalar fields that encode a CPU number can be filtered using
- a user-provided cpumask in cpulist format. The format is as follows::
- 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 5cbd09c8be8d..d0259a515a83 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -872,6 +872,7 @@ enum {
- 	FILTER_COMM,
- 	FILTER_CPU,
- 	FILTER_STACKTRACE,
-+	FILTER_WITHIN,
- };
- 
- extern int trace_event_raw_init(struct trace_event_call *call);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 74a7a50d1e78..92eee3eca43a 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1825,7 +1825,8 @@ static inline bool is_string_field(struct ftrace_event_field *field)
- 	       field->filter_type == FILTER_RDYN_STRING ||
- 	       field->filter_type == FILTER_STATIC_STRING ||
- 	       field->filter_type == FILTER_PTR_STRING ||
--	       field->filter_type == FILTER_COMM;
-+	       field->filter_type == FILTER_COMM ||
-+	       field->filter_type == FILTER_WITHIN;
- }
- 
- static inline bool is_function_field(struct ftrace_event_field *field)
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7313eb1361c9..874c0c023eb1 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -201,6 +201,9 @@ static int trace_define_generic_fields(void)
- 	__generic_field(char *, comm, FILTER_COMM);
- 	__generic_field(char *, stacktrace, FILTER_STACKTRACE);
- 	__generic_field(char *, STACKTRACE, FILTER_STACKTRACE);
-+#ifdef CONFIG_STACKTRACE
-+	__generic_field(char *, within, FILTER_WITHIN);
-+#endif
- 
- 	return ret;
- }
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 6385cd662d8d..297bf156ea65 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -72,6 +72,7 @@ enum filter_pred_fn {
- 	FILTER_PRED_FN_CPUMASK,
- 	FILTER_PRED_FN_CPUMASK_CPU,
- 	FILTER_PRED_FN_FUNCTION,
-+	FILTER_PRED_FN_WITHIN,
- 	FILTER_PRED_FN_,
- 	FILTER_PRED_TEST_VISITED,
- };
-@@ -1009,6 +1010,22 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
- 	return pred->op == OP_EQ ? ret : !ret;
- }
- 
-+/* Filter predicate for within. */
-+static int filter_pred_within(struct filter_pred *pred, void *event)
-+{
-+#ifdef CONFIG_STACKTRACE
-+	unsigned long entries[16];
-+	unsigned int nr_entries;
-+	int i;
-+
-+	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-+	for (i = 0; i < nr_entries; i++)
-+		if (pred->val <= entries[i] && entries[i] < pred->val2)
-+			return !pred->not;
-+#endif
-+	return pred->not;
-+}
-+
- /*
-  * regex_match_foo - Basic regex callbacks
-  *
-@@ -1615,6 +1632,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
- 		return filter_pred_cpumask_cpu(pred, event);
- 	case FILTER_PRED_FN_FUNCTION:
- 		return filter_pred_function(pred, event);
-+	case FILTER_PRED_FN_WITHIN:
-+		return filter_pred_within(pred, event);
- 	case FILTER_PRED_TEST_VISITED:
- 		return test_pred_visited_fn(pred, event);
- 	default:
-@@ -2000,10 +2019,28 @@ static int parse_pred(const char *str, void *data,
- 
- 		} else if (field->filter_type == FILTER_DYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRLOC;
--		} else if (field->filter_type == FILTER_RDYN_STRING)
-+		} else if (field->filter_type == FILTER_RDYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
--		else {
-+		} else if (field->filter_type == FILTER_WITHIN) {
-+			unsigned long func;
-+
-+			if (op == OP_GLOB)
-+				goto err_free;
- 
-+			pred->fn_num = FILTER_PRED_FN_WITHIN;
-+			func = kallsyms_lookup_name(pred->regex->pattern);
-+			if (!func) {
-+				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
-+				goto err_free;
-+			}
-+			/* Now find the function start and end address */
-+			if (!kallsyms_lookup_size_offset(func, &size, &offset)) {
-+				parse_error(pe, FILT_ERR_NO_FUNCTION, pos + i);
-+				goto err_free;
-+			}
-+			pred->val = func - offset;
-+			pred->val2 = pred->val + size;
-+		} else {
- 			if (!ustring_per_cpu) {
- 				/* Once allocated, keep it around for good */
- 				ustring_per_cpu = alloc_percpu(struct ustring_buffer);
--- 
-2.53.0
-
-
+-- Steve
