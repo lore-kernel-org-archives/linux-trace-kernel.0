@@ -1,183 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE4E3A380F;
-	Sat, 22 Aug 2026 09:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985CE31B80E
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 13:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787392271; cv=none; b=fGRp97KIbVgdCInOjS/rACYWaN+4xXOO3hqDTt4Wt17UNxWMl8IIp/RQTpbyUIjsHVSTbuZZZabZBAo73bmSyr7rxD8ZpLIdpFfrKGBKl16GecZ5mYWPmZd6oeESzWYvk5b7CkrcarWNAu7fj/Y2b6DB5oQrOC6HYHKePx2rIQA=
+	t=1787406840; cv=none; b=Jwuksn8QJ5ztT1cIqxQZNQULCXCj3wGkwUQ/yKBxmtO69K3TkFL2nU0XVxkUv+J6oF+Ul5C+7NwRPef7lP+TTygWl7s3NuGywFft380S3y+vhJLprLoINsDh4/Y5Kd7HjKf5eMN7zyH1e/oXJVq9KjKKzzh3xUlnwjVQw4HpDEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787392271; c=relaxed/simple;
-	bh=4FsIAbiCUY6ZkgqXWKMmj+i/hoHHef5lvtXzj0fOu/k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=PIn4YB9Yf7KD5Ek6l+IeK7gnnhziaN7r8Tgxekvdj9+7X4CjSKNQ9W6UM/oWbFjaoWVWkIYJ9pDgza7vYA7BbPWkVKgqRUgz00F+opu+2Egn87uk/6ummTFqp0p22uDjKmOnXZMSLOtXx+5QNmRBs1BI22JLne9aK9dZi7b0BBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hF7JvL9n; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787406840; c=relaxed/simple;
+	bh=KwumCbK0KC+u949MZK1dUWJ1omlUFIWu77pjxVizA9k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lp69dQ3M+vVFgLEBDBW7ogbS9JbKxPHJr2fqkOipexsc8m4LE7SeIT/I9EaUeWlYGJsPS5YysgrYPtpUi2D12EgBgavfjMz/NeUUqtlh+jgnrEe9GPU3TcCkbzKCkXdACF0+fL8tHqInh9RlJs6UxSS2IdCLCKru2nReGn3cpmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b4PTNAwb; arc=none smtp.client-ip=209.85.128.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hF7JvL9n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0772E1F000E9;
-	Sat, 22 Aug 2026 09:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787392270;
-	bh=MUpcs4p4Kuzy9+neYbRaGt6BANtDkKQzYdyCssXXv4A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hF7JvL9nmimzXo5rPMIpqcv2fdVLg9j0p7Wr95bPO/m2IszKt9ftLj4D1U0Li846t
-	 iZMj2bSFz1U/y1vdcUXZU1XSPoTl44k4MWFx4AexEOhWdpQ9wD6VufTJczrEWdPaw/
-	 mERYCcrtStz6db7hujiVMi/3JZjMXDnS2r54rCqwIemA0Ud66LwCSHPbIvz2McjDHj
-	 erHlUuXL4vUi94ejgd0+bvywXVdBGNtMLlHDGFL4obMe9BpLCga2ZhpB/zQqnrL+So
-	 cM9UixSfAVD9o8d9alDAOvz/R7wxaySwTGJ7xNq0OgNCYNxlD/lP5tZ3nnYfYab5ec
-	 Bx/DkBX2HS1zw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 12/12] tracing/wprobe: Support BTF struct offset
- resolution in set_wprobe trigger
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <178739072694.1520941.18132159339101776117.stgit@devnote2>
-References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
- <178739072694.1520941.18132159339101776117.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 09:51:09 +0000
-Message-Id: <20260822095110.0772E1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b4PTNAwb"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-496b6f97676so17346935e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 06:53:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787406837; x=1788011637; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=SFWwYfK2ORvvb1ePNWqdIkWg8WHsPyZq2XD2ex3XzW0=;
+        b=b4PTNAwb2J56lHyHKwn0suVtTg7T38l7z73LkKx7fqE3BvQBZk6I/2bwuIAyP9ceRW
+         z+E34x1X2Y6wDZBu9yJgZErdSkrfQNA67DzZ45rwQMtDb95q7OD+beXMq9Wa0SuQpfUA
+         dr2bR3ZGHmfG6TRx1+0mYl+A8IOnf9wWheZeCFgmZ6J55KEdA9PTENoP2/MVQXCIJK7u
+         LlLRYX5EFgbavpNkpA2inRmSLQcZSLEEblsGas+UZrIiTbRGC6mYwiBSdd1hkAwW/uf2
+         tbfDVVWIhevMIjb5Qc20VDkOyxFPeKhnLlC9jWGLJ1rUnrHXXNVSf8QrSF0T1+T2CpSS
+         fIyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787406837; x=1788011637;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=SFWwYfK2ORvvb1ePNWqdIkWg8WHsPyZq2XD2ex3XzW0=;
+        b=JhhpMSO7SOIDotc5TMvaqTQBu5WxAIkGHTrcpN8qWG+g8jCJRFe6g98rpBKruMBf7r
+         yu+ja1UbTJmBvcx0QnFg/AtRy0fHmHhVBzrQ+d0D8ZMlIyhOTU17TNhpgZqHCrCtNQNI
+         g3T75e/0LjG4gvj/Sh3iD6tfxwmo1fRB9bwC69jhc/A7+pUxhHiZep5MJzgBhbzAqTn0
+         v1+Id9Zq94bK02x4nC0uE85uxP1PtsvoP2vnbCCDFsnJK9GsAme2jOO+RO0M0YoVke0g
+         Nk4QR5d9AbXB4XJ4Pqd2hHg1//7Pm9MiaCFjBxzy/iW/PeVk5kFTL+SUXPPMwFB42dtH
+         PkaQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqcUjJ3lyHKU4dLUhxGiPndmNGWYeABn6HC7xm560VbFqTYoiVeaLBNFwQjQZHICPheybUvrpyd6VL+5wYLmYIgkYw=@vger.kernel.org
+X-Gm-Message-State: AFuF++nutDr/P4g82OpGb4YImqxjh459G/5gixdbbr4mszuJ/5tCloHb
+	1ayWFSenoJ4YUf6+Bt7mFO2/mcNPMFBRRcvzJTo9XQrhRFAfekai6Qy6xZBApsmB7SlMEhsRcg=
+	=
+X-Received: from wmlu19.prod.google.com ([2002:a05:600c:2113:b0:493:ae35:2761])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4f06:b0:499:a5fc:207e
+ with SMTP id 5b1f17b1804b1-499b8340754mr196385025e9.8.1787406836660; Sat, 22
+ Aug 2026 06:53:56 -0700 (PDT)
+Date: Sat, 22 Aug 2026 15:53:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3648; i=ardb@kernel.org;
+ h=from:subject; bh=2f7AvVCI5x1tX97+DCcut0s/Ah4Z634pXHbbbq7B0rk=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIatz5WXxBeue7y3/sIvrsfxld8u+ud3712Ssecfy8Xo4Z
+ /z2HZaKHaUsDGJcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAiP98zMvRtO33wRsLJ8H2u
+ zLVsqfNVVy7rWL3p0aqaHzyLTcMu3S9h+KfBcnOJYGSsFldpb0TP6S2Bt7lMSs58us+6yehx6eU XX1kA
+X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
+Message-ID: <20260822135323.795946-11-ardb+git@google.com>
+Subject: [RFC PATCH 0/9] arm64: Allocate .text and .init.text together
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Aaron Tomlin <atomlin@atomlin.com>, "=?UTF-8?q?Adrian=20Barna=C5=9B?=" <abarnas@google.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] get_offset_of_field() incorrectly evaluates the BTF kflag of the p=
-arent struct instead of the nested anonymous struct containing the field, l=
-eading to massively inflated offset calculations and bypassing bitfield val=
-idation.
-- [Low] wprobe_trigger_log_err receives a truncated `glob` string, causing =
-syntax error logs to place the caret out-of-bounds and hide the user's inpu=
-t.
---
+From: Ard Biesheuvel <ardb@kernel.org>
 
---- Patch [12]: [PATCH v13 12/12] tracing/wprobe: Support BTF struct offset=
- resolution in set_wprobe trigger ---
-commit 1da976d66d95af47e154412d3c1b912f8a6b4018
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The arm64 module loader has to deal with a couple of corner cases that
+may occur when .init.text is placed out of direct branch range of .text:
 
-tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
-   =20
-Allow set_wprobe trigger to use BTF struct offset resolution to specify
-the target address field.
+- ordinary direct branches from .init.text into .text may require the
+  use of a PLT entry (i.e., a trampoline aka veneer), which means not
+  only that additional PLT entries need to be allocated for
+  cross-section calls, but also that .init.text needs its own PLT
+  reservation, as the one in .text will be out of range as well;
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
+- dynamic patching of the ftrace handler into .init.text code needs its
+  own dedicated trampoline as the one in .text may be too far away.
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index acb15fd018e80..b513561005dc6 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
+- recent compilers may omit BTI veneers for static functions that never
+  have their address taken, and so additional veneers will need to be
+  added to .text in case cross-section direct branches from .init.text=20
+  require a PLT entry (and therefore a landing pad at the target end).
 
-[ ... ]
+This is unfortunate, because it is actually somewhat unusual for .text
+and .init.text to be so far away from each other: only when allocating
+either of them (but not both) exhausts the 'near' (PLT-less) module
+region, the other will be allocated from the spillover region, which is
+not in direct branching range, and therefore requires PLT entries for
+cross-section calls.
 
-> @@ -990,6 +992,181 @@ static void wprobe_trigger_free(struct event_trigge=
-r_data *data)
->  	}
->  }
-> =20
-> +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
-> +
-> +static int get_offset_of_field(struct btf *btf, const struct btf_type *t=
-ype, char *field_name)
-> +{
-> +	const struct btf_member *field;
-> +	int bitoffs =3D 0;
-> +	u32 anon_offs;
-> +	char *next;
-> +
-> +	do {
-> +		next =3D strchr(field_name, '.');
-> +		if (next)
-> +			*next++ =3D '\0';
-> +
-> +		field =3D btf_find_struct_member(btf, type, field_name, &anon_offs);
-> +		if (IS_ERR_OR_NULL(field))
-> +			return -ENOENT;
-> +
-> +		if (btf_type_kflag(type)) {
+This series addresses this wart by allocating both of them as a single
+chunk, and freeing the .init.text part along with the other init
+sections at the appropriate time. This ensures that the two regions will
+never require veneers for cross-section calls, allowing the arm64 module
+loader to be simplified.
 
-[Severity: High]
-Does this code check the kflag of the original parent type instead of the
-anonymous struct that actually contains the field?
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Daniel Gomez <da.gomez@kernel.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Aaron Tomlin <atomlin@atomlin.com>
+Cc: "Adrian Barna=C5=9B" <abarnas@google.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-modules@vger.kernel.org
 
-btf_find_struct_member() can return a field from a nested anonymous struct,
-but if the parent struct and the anonymous struct have mismatched BTF kflags
-(for example, the parent has kflag=3D0 while the anonymous struct has kflag=
-=3D1
-because it contains bitfields), using the parent's kflag here will cause
-the bitfield size encoded in the upper 8 bits of the offset to be
-misinterpreted as part of the byte offset.
+Ard Biesheuvel (9):
+  mm: execmem: Add API to split an existing execmem cache allocation
+  mm: execmem: Allow huge vmappings to be avoided for execmem caches
+  module: Place MOD_TEXT before MOD_INIT_TEXT in enumeration
+  module: Allocate MOD_INIT_TEXT from the MOD_TEXT ROX allocation
+  arm64: mm: Permit permissions changes on huge vmappings
+  arm64: Enable the execmem ROX cache for module text
+  arm64: ftrace: Revert "fix unreachable PLT for ftrace_caller ..."
+  arm64: module: Combine init and core PLT entries again
+  arm64: ftrace: Simplify PLT handling
 
-This can add a massively inflated value to bitoffs and result in a wild
-pointer dereference when the wprobe triggers.
-
-> +			/* Reject bitfield member access */
-> +			if (BTF_MEMBER_BITFIELD_SIZE(field->offset))
-> +				return -EINVAL;
-> +			bitoffs +=3D anon_offs + BTF_MEMBER_BIT_OFFSET(field->offset);
-> +		} else {
-> +			bitoffs +=3D anon_offs + field->offset;
-> +		}
-> +
-> +		field_name =3D next;
-> +		if (next) {
-> +			type =3D btf_type_skip_modifiers(btf, field->type, NULL);
-> +			if (!type)
-> +				return -ENOENT;
-> +		}
-> +	} while (next);
-> +	return bitoffs / BITS_PER_BYTE;
-> +}
-
-[ ... ]
-
-> +static int wprobe_trigger_typecast_parse(char **field_str_ptr,
-> +					 struct trace_event_file *file,
-> +					 struct wprobe_trigger_data *wprobe_data,
-> +					 const char *glob)
-> +{
-> +	struct btf *btf __free(btf_put) =3D NULL;
-> +	const struct btf_type *type;
-> +	char *assign_field;
-> +	char *event_field;
-> +	char *type_field;
-> +	char *type_name;
-> +	char *offs;
-> +	long val =3D 0;
-> +	int id;
-> +	int adjust;
-> +
-> +	type_name =3D *field_str_ptr + 1;
-> +	event_field =3D strchr(type_name, ')');
-> +	if (!event_field) {
-> +		wprobe_trigger_log_err(file, glob, type_name - glob, DEREF_OPEN_BRACE);
-
-[Severity: Low]
-Will this log message place the caret out of bounds and hide the user's
-input?
-
-The glob string passed into wprobe_trigger_log_err() seems to be truncated
-by an earlier strsep() call replacing the delimiter with a null terminator:
-
-kernel/trace/trace_events_trigger.c:trigger_process_regex() {
-    ...
-    command =3D strsep(&next, ": \t");
-    ...
-}
-
-Since glob is truncated to just the command name, calculating the offset as
-type_name - glob can point far past the end of the printed text, making the
-syntax error logs illegible.
-
-> +		return -EINVAL;
-> +	}
+ arch/arm64/Kconfig                  |  1 +
+ arch/arm64/include/asm/module.h     |  2 -
+ arch/arm64/include/asm/module.lds.h |  3 -
+ arch/arm64/kernel/ftrace.c          | 13 +---
+ arch/arm64/kernel/module-plts.c     | 63 +++++---------------
+ arch/arm64/kernel/module.c          | 20 +------
+ arch/arm64/mm/init.c                | 19 +++++-
+ arch/arm64/mm/pageattr.c            | 13 +++-
+ include/linux/execmem.h             | 11 ++++
+ include/linux/module.h              |  4 +-
+ kernel/module/main.c                | 22 +++++--
+ mm/execmem.c                        | 47 ++++++++++++++-
+ 12 files changed, 124 insertions(+), 94 deletions(-)
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178739053919.152094=
-1.17662338993878200834.stgit@devnote2?part=3D12
+2.55.0.860.g4b6b3295ed-goog
+
