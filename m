@@ -1,117 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCC634FF79;
-	Sat, 22 Aug 2026 14:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E0E3BCD3F
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Aug 2026 15:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787407996; cv=none; b=gvOnCfOQnMnWfXe0CEBvMmrbSWHoJC7H/5l4tJSXH61a7Jqqr8GwqYxb+CAU6a1PW5zfReH2EUDcbkD1rTFEH7j2ynMMVTYY6xeixLXUwUwLv17riiQYmjVB8B3y8xR2Er1IbulisKorA9/KGkRKkvn9xkk2EwF9Yx1+wR0+P24=
+	t=1787411094; cv=none; b=V1vImiGkQjSg+Cfp5F0G088y5k8sAsq1C2hcAcrxd14JxrprwJVRtS47/+YoW0lxlcedJjaP9zt9+/FjdxvbWKAhyWBRDauNm4rMHhqiE8JRlFNuWTkoIIhbGdtJzwF7lQpyGlJT3wmNSmwKiDJ6cCt7+mvO1THUTeGfWRv2Z0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787407996; c=relaxed/simple;
-	bh=bFaCMEB66d+Vc/kXWt1AUlH3GY49tiPitno+Y0b7l3I=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GxDZmTYVW5Uje6jyRTvZmVvxcusGC2ozZyrYUKW6dO9iAO5w3mW/+K1W+htTbCM8NOcpzs+UZ2JaFFytlMpdAjw7XLv0yYG3nhzsJvtt92sGsR2WBe3BAG9Ka64tImgJ7Qwsd9dQ/7SjV5bUiW/4/72kYSt57gaa5f4vwlkGJNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mG28AUUX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787411094; c=relaxed/simple;
+	bh=4gSzoUBNkTbMnW2K7t/gknyS64mQ29BZebNS1TnBGRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SKm7er5r3KweXZTvh3Ufq0I3RBxXyqGQ0+V2K5d0CnLDbMaubeEYMB+M2stH1xGwbz1jxNll4SO9clLS5myo3H+TeT39cO5jafODosPKNPzjL3Lxi/A/1bbSWVkebzB9DAeU1mx0cKvgDK9XOvzEm0Isevn6KL009vKBzh5GA/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=REJvq85Z; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mG28AUUX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464241F00A3A;
-	Sat, 22 Aug 2026 14:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787407994;
-	bh=p44FKbbiBIZr4bCU0hlrmcZmibvUdqFBgy23qECxnyY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mG28AUUXWDaco5ZHhQUP656wTS0uMYvfYF3t6pv0l8+TG9Rx2SCr6+Mvc8tqErJlj
-	 E9pIlwMAGf9om5QKnczIDe2F8uVu93SWL3Jaj/cAEL6VZU0MiNuB6cn/rHUHZE8PhH
-	 pEph4WEgqZJ2RD9YymAlTzA0wa+Oe04xhoVHWJ7w7/bMmY1DFCW/t4NPfdb/0eftjY
-	 qFDqxBfs3aajXAd0LljZIymP6S2e9dSBbQW3a3WFR5ZHSbC5WvGp6naVHJyoNk8aBl
-	 xh01YKImx9PME/AouSdyZlctGKSAjTFWjjar94phQxovmXCX3zLVRA/3nF1i8vc2ki
-	 +Cq4spw7XHpVw==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 6/9] arm64: Enable the execmem ROX cache for module
- text
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ard Biesheuvel" <ardb+git@google.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-In-Reply-To: <20260822135323.795946-17-ardb+git@google.com>
-References: <20260822135323.795946-11-ardb+git@google.com>
- <20260822135323.795946-17-ardb+git@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 14:13:13 +0000
-Message-Id: <20260822141314.464241F00A3A@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="REJvq85Z"
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 96CE1A25F9;
+	Sat, 22 Aug 2026 15:04:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id C842A2002D;
+	Sat, 22 Aug 2026 15:04:37 +0000 (UTC)
+Date: Sat, 22 Aug 2026 11:04:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, "Vincent Donnefort"
+ <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] tracing: Fix subbuf resize races with
+ trace_pipe_raw readers
+Message-ID: <20260822110424.346fa3c8@fedora>
+In-Reply-To: <20260817140812.2C7D41F00A3A@smtp.kernel.org>
+References: <20260817134750.3909384-1-vdonnefort@google.com>
+	<20260817134750.3909384-2-vdonnefort@google.com>
+	<20260817140812.2C7D41F00A3A@smtp.kernel.org>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: C842A2002D
+X-Stat-Signature: csot9rfgip36j3dbfjipqur1nawcdwmw
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/puzTS47SMMoyQA487ctOXmD3EuwsLQVg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=amuDGBPzxC6ExbZ0Fz/ZTEnaJsX4fm3NP4n2KyOgkSM=; b=REJvq85ZrSSU+rvRpF1Q0Gk3aUQoo5gQSELNi0FpojZVoV03bWCTskZ6EaAIsI5eQ2SuTfh6m9SKCi/fMV5zB1iXla0KKwqjZvRQXadLGup/6MDC9wQzCYdJzwwDM20iuj8M7rw3ixhYURSq74OqFR7Sr4rKYfiu2zpX3dsa0LE=
+X-HE-Tag: 1787411077-779464
+X-HE-Meta: U2FsdGVkX18WBIWtfLlSfYmrEK++xmk4S7hN+Tkg3YJv1rMM3TUCPABsI+yk0noTClJi/xX7fOZRuHNrOA58wzGP78NleJWIeTXh8eRkrGPtKRI/E13ncCElXIESAZwNidKBAdRaHuo3Vwv7OKrpJdFCV+2jzBnZ24ugGcIO5vuHWNopjt6rj4fcTu8alR1lzrxjpzewhcT104uF+jpnWNOBMsKXG64GVOoGb2P9cqewa+1ikwhJmn6qTtCrTRqKz/BY1q1ucUJt163SumEapbKsUJpK8FjAqfs7h6t2/FgKGh0PGtCAZuZJtOdlESHmJaz7HkA3jP2Faq1U/ioubUE28E7oPahs
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] `execmem_fill_trapping_insns()` writes trapping instructions using=
- `memset32()` with a host-endian constant, producing incorrect/unallocated =
-instructions on big-endian ARM64 kernels.
-- [High] `execmem_fill_trapping_insns()` fails to synchronize D/I caches to=
- the Point of Unification (PoU), potentially causing execution of random un=
-initialized garbage.
-- [Low] The function `system_supports_bbml2_noabort()` is called but is com=
-pletely undefined in the kernel tree.
---
+On Mon, 17 Aug 2026 14:08:11 +0000
+sashiko-bot@kernel.org wrote:
 
---- Patch [6]: [RFC PATCH 6/9] arm64: Enable the execmem ROX cache for modu=
-le text ---
-commit 9f2855ae0653215694678b01c1ed088b2dce033c
-Author: Ard Biesheuvel <ardb@kernel.org>
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 395238b2b715c..737922b236d46 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c  
+> [ ... ]
+> > @@ -7128,7 +7116,9 @@ ssize_t tracing_buffers_read(struct file *filp, char __user *ubuf,
+> >  				    iter->cpu_file, 0);
+> >  	trace_access_unlock(iter->cpu_file);
+> >  
+> > -	if (ret < 0) {
+> > +	if (ret == -EAGAIN) {
+> > +		goto again;
+> > +	} else if (ret < 0) {  
+> 
+> [Severity: High]
+> If ring_buffer_read_page() returns -EAGAIN because the subbuffer order was
+> updated but cpu_buffer->reader_page->order hasn't been updated yet, this
+> branches back to the again label.
+> 
+> Since the loop does not yield the CPU or call cond_resched(), could this cause
+> a hard lockup if the reader and the resize thread are on the same CPU?
 
-arm64: Enable the execmem ROX cache for module text
+Hmm, this looks legit. We should at least have a way to break out if it
+loops too many times.
 
-This commit wires up execmem ROX cache support on arm64 for module text and
-init.text regions. This allows these regions to be allocated from a single
-chunk of memory in subsequent changes.
+> 
+> >  		if (trace_empty(iter) && !iter->closed) {
+> >  			if (update_last_data_if_empty(iter->tr))
+> >  				return 0;  
+> [ ... ]
 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 3b9e1b8de6cbd..40088d362f6c7 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-[ ... ]
-> @@ -557,9 +558,25 @@ struct execmem_info __init *execmem_arch_setup(void)
-[ ... ]
->  	};
-> =20
-> +	if (!system_supports_bbml2_noabort())
+> > -		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
+> > -		if (IS_ERR(ref->page)) {
+> > -			ret = PTR_ERR(ref->page);
+> > -			ref->page = NULL;
+> > +
+> > +new_read_page:
+> > +		ret = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file, &ref->rpage);
+> > +		if (ret) {
+> >  			kfree(ref);
+> >  			break;
+> >  		}
+> >  		ref->cpu = iter->cpu_file;
+> >  
+> > -		r = ring_buffer_read_page(ref->buffer, ref->page,
+> > -					  len, iter->cpu_file, 1);
+> > +		page_size = ring_buffer_read_page_size(ref->rpage);
+> > +
+> > +		r = -EINVAL;
+> > +		if (IS_ALIGNED(*ppos, page_size) && len >= page_size) {
+> > +			r = ring_buffer_read_page(ref->buffer, ref->rpage, len, iter->cpu_file, 1);
+> > +			if (r == -EAGAIN)
+> > +				goto new_read_page;  
+> 
+> [Severity: High]
+> Similar to the read path above, this catches -EAGAIN and loops back to
+> new_read_page.
+> 
+> Because goto new_read_page executes continuously without releasing
+> trace_access_lock() or yielding the CPU, can this permanently deadlock the
+> system during a resize by preventing the resize thread from acquiring the
+> necessary locks?
 
-[Severity: Low]
-Does system_supports_bbml2_noabort() exist in the kernel tree? It appears
-this might cause a compilation error due to an undefined reference.
+This also looks legit.
 
-> +		execmem_info.ranges[EXECMEM_DEFAULT].flags |=3D EXECMEM_NO_HUGE_VMAP;
-> +
->  	return &execmem_info;
->  }
-> +
-> +void execmem_fill_trapping_insns(void *ptr, size_t size)
-> +{
-> +	memset32(ptr, AARCH64_BREAK_FAULT, size / sizeof(__le32));
+-- Steve
 
-[Severity: High]
-Does this correctly handle big-endian ARM64 kernels?=20
+> 
+> > +		} else if (!i) {
+> > +			/*
+> > +			 * If the first iteration fails this is an invalid userspace input.
+> > +			 * Otherwise, this is because the subbuf order has been modified. Do not
+> > +			 * report an error and finish the read.
+> > +			 */
+> > +			ret = -EINVAL;
+> > +		}  
+> 
 
-Since AARCH64_BREAK_FAULT is a host-endian constant and instruction fetches
-are strictly little-endian, it looks like this might write an incorrect byte
-pattern and execute unallocated instructions instead of the intended trap if
-cpu_to_le32() isn't used.
-
-[Severity: High]
-Does this missing cache synchronization allow the CPU to fetch stale
-instructions?
-
-Writing instructions as data requires cleaning the D-cache and invalidating
-the I-cache to the Point of Unification (PoU) (e.g., using
-flush_icache_range()). Otherwise, the CPU might bypass the newly written tr=
-ap
-instructions and fetch garbage from physical memory or the I-cache.
-
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822135323.7959=
-46-11-ardb+git@google.com?part=3D6
