@@ -1,54 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143AD355803
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 21:04:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8DF3AE715
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 21:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787519052; cv=none; b=tu1toUyTlQW595s25zXiUyNX6nqWZ57lhg92CO2WQ5wFn9BRo8D8ch89OHlu7Ix0fdwxuG2o84CHZEnmhMi0pnFj92cV2E5Ea+r3VLwxooijauAee59szRcpO2eQxY9hRWS7bANXAhOFicYujFq+skCyFrFdMMnBN5QIVGYxn+g=
+	t=1787519664; cv=none; b=lehv7bN4M7DkRpuA+gcWjFfJqjXhZfGX9dMJmYNSBH6C/l9Rysvva8cgrBj4EOAmZnncaST0EEYj36U/nqnvuKOuSpHYnVj/VMdOfncG0gVsTOVm2/i8gS5pRLJWr4SF1muvXHaYqRxfgp5dFSyGfj7lbHg+a2admGFTexmnrkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787519052; c=relaxed/simple;
-	bh=Y5VxSwmuQ6ztS1MLxHRfHBUyhAy2w+d0ivs0tkUqY08=;
+	s=arc-20240116; t=1787519664; c=relaxed/simple;
+	bh=5aIk5hjqNt5oNCOWt6NWdUPn77WlZIYMgpDkKjeT4gI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qz4RqyqwK07kc6lUf6sCmNvq4kQP52TbmNZtt44sN+OlbgHQJtUbLDSR2Uk7l8904Ea1/53DkNtAt8v3PKmlQO7A5OIe0seCtoCHIb+6hEHAFSLUUvZ90RXMSOQv6dqer/RvvNDp9lHhISKUX/4E/DOeHPzJp7MpwwzfmrUccqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGWtU1r1; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=fPSGya4x4jqhZtyatKNbZ89giGtLXebzesSd3vkv2dweVPPD5f+SvUYtCGAg9kDwwTwpF4FHRVKCZescK2zQ//kHYpRn2R6ybcfIO5Our2BO7UAGCSWXNaDetr1A2rAanokkPIIe2GR/+A/94rTM8ShxsFoYq0fJ9tSKZnnW5zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rhj8IXPa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGWtU1r1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF6671F0155F
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 21:04:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rhj8IXPa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BFD1F0156A
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 21:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787519050;
-	bh=Y5VxSwmuQ6ztS1MLxHRfHBUyhAy2w+d0ivs0tkUqY08=;
+	s=k20260515; t=1787519662;
+	bh=5aIk5hjqNt5oNCOWt6NWdUPn77WlZIYMgpDkKjeT4gI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=SGWtU1r1O+/G6w/iQF/Am3SuKXqCK3ZinFSW5xmAN8aUfMvGFZ+x5FWOvAa0Io8h/
-	 9f5VppfNfuPpISvprGPw3q1pUYiYb4HaFqNMtv7ACBaANPtEAmoDEZXiahH29QAkcb
-	 9LEk4EyKKh03b/MNF3mhJpS3jNC1eEmgv0US2yWmE6r80gOCYwPou1qD+rwMEsJr1H
-	 4LB0MO6MUFpbSq2Kg4AF1I5WxUqM7kUqNF+GJtIBJCxOg3MjJNT8eObfMLYq03QfOX
-	 E7o2ATBWvHB6w3rXnbfBk5FiwNEIynpqY+HPY8/PzGuhCfji2qC0P/DeaLJoJPHbQv
-	 3XCke1p0vh8NQ==
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8f032b47e3cso17924846d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 14:04:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RqJcNmxpIaoqTMH5eNw76Xl5O8fWKk4XtcoLFUfhiyV+cnXYlIAIiz2jN52P3KoOtdTg4j0UtwNT6xklycEXVMpZzs=@vger.kernel.org
-X-Gm-Message-State: AFuF++k5Ob7m2AFFlWc4uKIJ78cqKUJkkG571XTEUx//DXDRS6sh6cjj
-	u7eLgt6S1QwsSrRJYEM2Boekb06OMObPz5hVM7Cp/4Qe0MpuwGzxiVg4jqN0/IsIPy/9vcI55TG
-	qM2Rk40cDof6nS6cRiw2CWnuiPUnwjr4=
-X-Received: by 2002:ad4:5cc1:0:b0:90c:5947:7e60 with SMTP id
- 6a1803df08f44-90c80c15daamr170758646d6.4.1787519050081; Sun, 23 Aug 2026
- 14:04:10 -0700 (PDT)
+	b=Rhj8IXPa8+Foj6h4ON2DpulSKlWKVqUoCZ0tUxVdjkGMS6mDg62lftZBZsInlJdiY
+	 9GpDcXsON4jAhZZ4UVxL0wFXACUuPm/gwI68BirTUDvAMlIkRrVZyk+5cvZRRbiXOj
+	 mIMsP0r+NQ000h0QPDX0BlQLFJzRlaVf7DjRJcLayjputbhR+RqVLoXIA9cv3UeY6T
+	 g+7X16+0DrTTjEBsO2HzSzyEX6cN5E+PoKo+V4ZVRro0mQTcU+LVyeyHH2bvHkAs89
+	 6EyhV7sl/DZ/aqY81LkD1Rtdna0ZiI6SiNEZDZrVJ3Z/8iludEorqg9pW2Qb1bz9gR
+	 MY6ogG7MytaIQ==
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-51c0ecfaee7so18450231cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 14:14:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqHpNA5BztTuHQE9knKqrJ7sF1OYTb4N5uf0qvFD3PLZJOcjtZv113cRWkfarGljDpDEmGus3lpKWELxgGgRmnS9Uo=@vger.kernel.org
+X-Gm-Message-State: AFuF++m8k69wWfzk6ClIoPu9/lqh92M0qEaODOU0g0thzi961tGlm3BL
+	yfP6n8Pvoikuo6/X7F9bpcVPm7BTIZJapgreH5cNcU2xnxyMNTzWfmUE3hD8/+0qjsn7RZRNUYE
+	OoS6v82RrTR/D2Hvsyc4szY3l32vMQbM=
+X-Received: by 2002:a05:6214:318d:b0:90a:807d:3668 with SMTP id
+ 6a1803df08f44-90c8f941e02mr144419456d6.7.1787519661887; Sun, 23 Aug 2026
+ 14:14:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org> <20260823-uffd-vm-flags-v1-v1-1-3086981b33cf@kernel.org>
-In-Reply-To: <20260823-uffd-vm-flags-v1-v1-1-3086981b33cf@kernel.org>
+References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org> <20260823-uffd-vm-flags-v1-v1-3-3086981b33cf@kernel.org>
+In-Reply-To: <20260823-uffd-vm-flags-v1-v1-3-3086981b33cf@kernel.org>
 From: Barry Song <baohua@kernel.org>
-Date: Mon, 24 Aug 2026 05:03:59 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4z1FHFOggOfq4V_ikdrNNmiAyDTdUaq6=Svw=MSNJODpg@mail.gmail.com>
-X-Gm-Features: AcwNN1XAA5UHMELIWABqTde52FJDm4K7QaHzff4fQOng4mfJiplIHcLVl25NsMI
-Message-ID: <CAGsJ_4z1FHFOggOfq4V_ikdrNNmiAyDTdUaq6=Svw=MSNJODpg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] mm/gup: move gup_can_follow_protnone() to gup.c
+Date: Mon, 24 Aug 2026 05:14:10 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4w643aN5OY5RqSwPy5V=ost8fGyaODGyGQj4c_Q+LYO+A@mail.gmail.com>
+X-Gm-Features: AcwNN1VurWkGDFr7vGNUR0UHyLbUPFfOak-4q4LksN87tuQ5GQ8kLbP5vUnF-Ks
+Message-ID: <CAGsJ_4w643aN5OY5RqSwPy5V=ost8fGyaODGyGQj4c_Q+LYO+A@mail.gmail.com>
+Subject: Re: [PATCH 3/6] userfaultfd: use userfaultfd_*() helpers instead of
+ open coded flag tests
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
 	Baolin Wang <baolin.wang@linux.alibaba.com>, Dev Jain <dev.jain@arm.com>, 
@@ -68,26 +69,25 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.o
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 23, 2026 at 8:17=E2=80=AFPM Mike Rapoport (Microsoft)
+On Sun, Aug 23, 2026 at 8:18=E2=80=AFPM Mike Rapoport (Microsoft)
 <rppt@kernel.org> wrote:
 >
-> gup_can_follow_protnone() is defined in include/linux/mm.h but only used
-> by mm/gup.c.
+> Move userfaultfd_{missing,wp,minor,rwp}() and userfaultfd_protected()
+> ahead of uffd_disable_huge_pmd_share() and uffd_disable_fault_around()
+> and make the latter two use the helpers rather than open coded VMA flag
+> masks.
 >
-> First, there is no reason to have it in already gigantic header.
+> Convert open coded VMA flag test in mfill_get_vma() to userfaultfd_wp()
+> as well.
 >
-> Next, the upcoming refactoring of userfaultfd flags will make
-> gup_can_follow_protnone() depend on userfaultfd_k.h which would cause a
-> cyclic header dependency.
->
-> Move gup_can_follow_protnone() to mm/gup.c.
+> With every user of the per-VMA uffd modes going through the helpers,
+> their underlying representation can be changed in the next step.
 >
 > No functional change.
 >
 > Assisted-by: copilot:claude-opus-5
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
 
-LGTM, thanks!
+LGTM,
 
 Reviewed-by: Barry Song <baohua@kernel.org>
