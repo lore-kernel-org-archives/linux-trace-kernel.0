@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5D5380FC6;
-	Sun, 23 Aug 2026 12:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334433D1CAF;
+	Sun, 23 Aug 2026 12:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787487494; cv=none; b=o3KNTHmWj2gdZ7FF6qV6+cFYRjWDfljBbWFyVledC8S+3qVC2daQPQC2uT+WcqvmpVMU32Cv7CYHegj6Wu1pqHuy0Q8llsEm6rFcH4bLLYXeclDFPv5v1SsW+0g5E8lOUaK1zxQ2w9O0d+p72UT3W/5KDY/4+YV1d07f+qn7w6Q=
+	t=1787487504; cv=none; b=F3XjGOqlF7JaDk0YYx2D08rf/N96mmD74ApOBnhjYtI9HflGoMNvdVbogjgt8Kbd+gBhjKgf8k68nD5NueiMkp6ivpYtOv1i6TWGCxOiOwlpR/kP9M/tccbJUbSwSR0zGO/qolVedsDheW6B1B22SK+l5oIclcLVnKv4kQWOGPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787487494; c=relaxed/simple;
-	bh=Qg7yx77FSVBEj+CsfPgiLo7sYpsRpr/h5Y+cKLlLcrE=;
+	s=arc-20240116; t=1787487504; c=relaxed/simple;
+	bh=bmdCLa+wUfMabOr0G1eIb3RSPxxYjGcawGnzEvbf7GI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IJ8w3Ino5mx2yjGVfzPLsfldbIRNNbwQoUzZEhoEE1/xcTmmtFaytNtGtpaObm2r0z6+0ElcdznJtmzpedM1FC0QGu8Sn3lYouP9pgqc6t3NU23cIGKIOqQKCExBXDeEZsR42NZidofd8n5K0eUNueGIolb4uYMmQlIqXrwKZ20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1iX059/; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:To:Cc; b=n5iAJdJlMMpiYDjBfqAU5nN4+HS57v44Njcsm2SBKHO3diOrZwzgUki+Yiq1bg+w6rPBik9NhVD8psiiJkjZzpJ+gwWhY95CARagF69b3Wbm196uWZ2Ikd233hBxVJSq5WjYxZihd1XVODoYT8HPDlOgL9kqD1GTL0Swnrslndo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2UBVhzD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1iX059/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8BB31F00A3A;
-	Sun, 23 Aug 2026 12:18:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2UBVhzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C851F000E9;
+	Sun, 23 Aug 2026 12:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787487493;
-	bh=nPcwKjVe7nvZQyU74ZGx+OhASVw5VhjTqdhj+ioxLpo=;
+	s=k20260515; t=1787487501;
+	bh=woEWVJb5MiHnHp1LOW/gK5/BrTOnz81Ub7hty9cTHwg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=g1iX059/4fd671ipoP1cbd8ep4SvuMjBn2cP6Nmd1GFSZz4JBgseMsWqA3UYSw0An
-	 HQRWbf0n89PZVfi9hwgTvOF3htN9Dwr2umNmTOcziuGSoCxI6MrTZDkJonFATEkoXu
-	 bOUH7gWOBRjroBmd9mMq+HVynUNmUXmAk3TcKzFkUV5z0NK6tKfCBzg528GuJtHtm3
-	 1XHuHpTTiAWfznjJ2OKA6uRkSHTeREfiJNjVC/jBH7YeanuaqHH+/u6L0Rw0uHETqZ
-	 kOywUx3JSn3XISIR1I+COtEeys1DRIiGtfh/TxvThI1iwPvEISDqM8MZJgZnUoDJ+y
-	 J3FXqk71iVqwQ==
+	b=J2UBVhzD+q+ud6E1L/0A2zmqcBIlHC7eaNbjYiHGPxh2aOEy9eG9L/CmLEp/ulKEa
+	 V0W4qg9loQtHVbupqpWd6cFeTwcNFmmge4L9mt5+SKUZsC5QiTBd6e7ekYZ++yFlH3
+	 leZ+t7a5gocV9lZhKkFM8+f+k9v0ZfSu+tOEsLyIv5lw1JVoVd0nOGCnDhMpDaJV1p
+	 LwCYKHilJbk3R79gQ2pJN88haIs2zZMg8jFSD4jjJYxBA2Jn8/Ofb8oUtDzCzqY7WK
+	 S0Rmfj31zrAJUCTRYVH7f0W9B/PLLgOEXXsZhJFEUKCvdU7WjD7S0vJwIX//G9IEN5
+	 40Fj4HW1xTEcw==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Sun, 23 Aug 2026 15:17:40 +0300
-Subject: [PATCH 3/6] userfaultfd: use userfaultfd_*() helpers instead of
- open coded flag tests
+Date: Sun, 23 Aug 2026 15:17:41 +0300
+Subject: [PATCH 4/6] userfaultfd: rename vm_userfaultfd_ctx to
+ vm_uffd_state
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260823-uffd-vm-flags-v1-v1-3-3086981b33cf@kernel.org>
+Message-Id: <20260823-uffd-vm-flags-v1-v1-4-3086981b33cf@kernel.org>
 References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
 In-Reply-To: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -65,127 +65,561 @@ Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
  linux-trace-kernel@vger.kernel.org
 X-Mailer: b4 0.17-dev
 
-Move userfaultfd_{missing,wp,minor,rwp}() and userfaultfd_protected()
-ahead of uffd_disable_huge_pmd_share() and uffd_disable_fault_around()
-and make the latter two use the helpers rather than open coded VMA flag
-masks.
+Rename struct vm_userfaultfd_ctx to vm_uffd_state to better reflect that
+it will represent the userfaultfd state for a VMA rather than just a
+context pointer.
 
-Convert open coded VMA flag test in mfill_get_vma() to userfaultfd_wp()
-as well.
+This is a preparatory step for extending the struct with a mode field.
 
-With every user of the per-VMA uffd modes going through the helpers,
-their underlying representation can be changed in the next step.
+Mechanical rename, no functional change.
 
-No functional change.
-
-Assisted-by: copilot:claude-opus-5
+Assisted-by: copilot:claude-opus-4.6
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- include/linux/userfaultfd_k.h | 70 +++++++++++++++++++++----------------------
- mm/userfaultfd.c              |  2 +-
- 2 files changed, 35 insertions(+), 37 deletions(-)
+ Documentation/mm/process_addrs.rst |  4 +--
+ include/linux/mm_types.h           | 10 +++---
+ include/linux/userfaultfd_k.h      | 24 ++++++-------
+ mm/mremap.c                        |  4 +--
+ mm/userfaultfd.c                   | 74 +++++++++++++++++++-------------------
+ mm/vma.c                           |  4 +--
+ mm/vma.h                           |  6 ++--
+ mm/vma_init.c                      |  4 +--
+ tools/testing/vma/include/dup.h    |  2 +-
+ tools/testing/vma/include/stubs.h  |  6 ++--
+ 10 files changed, 69 insertions(+), 69 deletions(-)
 
+diff --git a/Documentation/mm/process_addrs.rst b/Documentation/mm/process_addrs.rst
+index a7296f251799..481e9435e4e8 100644
+--- a/Documentation/mm/process_addrs.rst
++++ b/Documentation/mm/process_addrs.rst
+@@ -229,8 +229,8 @@ These are the core fields which describe the MM the VMA belongs to and its attri
+                                                            NUMA balancing in relation to this VMA.  lock.
+                                                            Updated under mmap read lock by
+                                                            :c:func:`!task_numa_work`.
+-   :c:member:`!vm_userfaultfd_ctx`   CONFIG_USERFAULTFD    Userfaultfd context wrapper object of    mmap write,
+-                                                           type :c:type:`!vm_userfaultfd_ctx`,      VMA write.
++   :c:member:`!vm_uffd_state`        CONFIG_USERFAULTFD    Userfaultfd context wrapper object of    mmap write,
++                                                           type :c:type:`!vm_uffd_state`,           VMA write.
+                                                            either of zero size if userfaultfd is
+                                                            disabled, or containing a pointer
+                                                            to an underlying
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 6d815f6440c9..d6deb655d82e 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -720,13 +720,13 @@ struct vm_region {
+ };
+ 
+ #ifdef CONFIG_USERFAULTFD
+-#define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx) { NULL, })
+-struct vm_userfaultfd_ctx {
++#define NULL_VM_UFFD_STATE ((struct vm_uffd_state) { NULL, })
++struct vm_uffd_state {
+ 	struct userfaultfd_ctx *ctx;
+ };
+ #else /* CONFIG_USERFAULTFD */
+-#define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx) {})
+-struct vm_userfaultfd_ctx {};
++#define NULL_VM_UFFD_STATE ((struct vm_uffd_state) {})
++struct vm_uffd_state {};
+ #endif /* CONFIG_USERFAULTFD */
+ 
+ struct anon_vma_name {
+@@ -1071,7 +1071,7 @@ struct vm_area_struct {
+ 	 */
+ 	struct anon_vma_name *anon_name;
+ #endif
+-	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
++	struct vm_uffd_state vm_uffd_state;
+ #ifdef __HAVE_PFNMAP_TRACKING
+ 	struct pfnmap_track_ctx *pfnmap_track_ctx;
+ #endif
 diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-index 3396d270b159..d8262e3dc134 100644
+index d8262e3dc134..45355bdb4ec7 100644
 --- a/include/linux/userfaultfd_k.h
 +++ b/include/linux/userfaultfd_k.h
-@@ -168,42 +168,6 @@ static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
- 	return vma->vm_userfaultfd_ctx.ctx == vm_ctx.ctx;
+@@ -162,10 +162,10 @@ int move_pages_huge_pmd(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd, pm
+ 			unsigned long dst_addr, unsigned long src_addr);
+ 
+ /* mm helpers */
+-static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
+-					struct vm_userfaultfd_ctx vm_ctx)
++static inline bool is_mergeable_vm_uffd_state(struct vm_area_struct *vma,
++					struct vm_uffd_state vm_ctx)
+ {
+-	return vma->vm_userfaultfd_ctx.ctx == vm_ctx.ctx;
++	return vma->vm_uffd_state.ctx == vm_ctx.ctx;
  }
  
--/*
-- * Never enable huge pmd sharing on some uffd registered vmas:
-- *
-- * - VM_UFFD_WP and VM_UFFD_RWP VMAs, because the write protect / access
-- *   tracking information is per pgtable entry.
-- *
-- * - VM_UFFD_MINOR VMAs, because otherwise we would never get minor faults for
-- *   VMAs which share huge pmds. (If you have two mappings to the same
-- *   underlying pages, and fault in the non-UFFD-registered one with a write,
-- *   with huge pmd sharing this would *also* setup the second UFFD-registered
-- *   mapping, and we'd not get minor faults.)
-- */
--static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
--{
--	return vma_test_any_mask(vma,
--		mk_vma_flags_from_masks(VMA_UFFD_WP, VMA_UFFD_RWP,
--					VMA_UFFD_MINOR));
--}
--
--/*
-- * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
-- * MINOR registered range, fault around will be a total disaster and ptes can
-- * be installed without notifications; for WP it should mostly be fine as long
-- * as the fault around checks for pte_none() before the installation, however
-- * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
-- * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
-- * and pollute the tracked working set, so each page must be populated by its
-- * own fault.
-- */
--static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
--{
--	return vma_test_any_mask(vma,
--		mk_vma_flags_from_masks(VMA_UFFD_WP, VMA_UFFD_RWP,
--					VMA_UFFD_MINOR));
--}
--
  static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
+@@ -264,7 +264,7 @@ static inline bool userfaultfd_armed(struct vm_area_struct *vma)
+ 
+ static inline bool vma_has_uffd_without_event_remap(struct vm_area_struct *vma)
  {
- 	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
-@@ -235,6 +199,40 @@ static inline bool userfaultfd_protected(const struct vm_area_struct *vma)
- 	return userfaultfd_wp(vma) || userfaultfd_rwp(vma);
+-	struct userfaultfd_ctx *uffd_ctx = vma->vm_userfaultfd_ctx.ctx;
++	struct userfaultfd_ctx *uffd_ctx = vma->vm_uffd_state.ctx;
+ 
+ 	return uffd_ctx && (uffd_ctx->features & UFFD_FEATURE_EVENT_REMAP) == 0;
+ }
+@@ -274,11 +274,11 @@ extern void dup_userfaultfd_complete(struct list_head *);
+ void dup_userfaultfd_fail(struct list_head *);
+ 
+ extern void mremap_userfaultfd_prep(struct vm_area_struct *,
+-				    struct vm_userfaultfd_ctx *);
+-extern void mremap_userfaultfd_complete(struct vm_userfaultfd_ctx *,
++				    struct vm_uffd_state *);
++extern void mremap_userfaultfd_complete(struct vm_uffd_state *,
+ 					unsigned long from, unsigned long to,
+ 					unsigned long len);
+-void mremap_userfaultfd_fail(struct vm_userfaultfd_ctx *);
++void mremap_userfaultfd_fail(struct vm_uffd_state *);
+ 
+ extern bool userfaultfd_remove(struct vm_area_struct *vma,
+ 			       unsigned long start,
+@@ -345,8 +345,8 @@ static inline long uffd_wp_range(struct vm_area_struct *vma,
+ 	return false;
  }
  
-+/*
-+ * Never enable huge pmd sharing on some uffd registered vmas:
-+ *
-+ * - uffd-WP and uffd-RWP VMAs, because the write protect / access tracking
-+ *   information is per pgtable entry.
-+ *
-+ * - uffd-MINOR VMAs, because otherwise we would never get minor faults for
-+ *   VMAs which share huge pmds. (If you have two mappings to the same
-+ *   underlying pages, and fault in the non-UFFD-registered one with a write,
-+ *   with huge pmd sharing this would *also* setup the second UFFD-registered
-+ *   mapping, and we'd not get minor faults.)
-+ */
-+static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
-+{
-+	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
-+	       userfaultfd_rwp(vma);
-+}
-+
-+/*
-+ * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
-+ * MINOR registered range, fault around will be a total disaster and ptes can
-+ * be installed without notifications; for WP it should mostly be fine as long
-+ * as the fault around checks for pte_none() before the installation, however
-+ * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
-+ * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
-+ * and pollute the tracked working set, so each page must be populated by its
-+ * own fault.
-+ */
-+static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
-+{
-+	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
-+	       userfaultfd_rwp(vma);
-+}
-+
- static inline bool userfaultfd_pte_wp(struct vm_area_struct *vma,
- 				      pte_t pte)
+-static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
+-					struct vm_userfaultfd_ctx vm_ctx)
++static inline bool is_mergeable_vm_uffd_state(struct vm_area_struct *vma,
++					struct vm_uffd_state vm_ctx)
  {
+ 	return true;
+ }
+@@ -420,18 +420,18 @@ static inline void dup_userfaultfd_fail(struct list_head *l)
+ }
+ 
+ static inline void mremap_userfaultfd_prep(struct vm_area_struct *vma,
+-					   struct vm_userfaultfd_ctx *ctx)
++					   struct vm_uffd_state *ctx)
+ {
+ }
+ 
+-static inline void mremap_userfaultfd_complete(struct vm_userfaultfd_ctx *ctx,
++static inline void mremap_userfaultfd_complete(struct vm_uffd_state *ctx,
+ 					       unsigned long from,
+ 					       unsigned long to,
+ 					       unsigned long len)
+ {
+ }
+ 
+-static inline void mremap_userfaultfd_fail(struct vm_userfaultfd_ctx *ctx)
++static inline void mremap_userfaultfd_fail(struct vm_uffd_state *ctx)
+ {
+ }
+ 
+diff --git a/mm/mremap.c b/mm/mremap.c
+index e8df5cdb0ac9..a4a38f30b255 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -56,7 +56,7 @@ struct vma_remap_struct {
+ 	unsigned long new_addr;	/* Optionally, desired new address. */
+ 
+ 	/* uffd state. */
+-	struct vm_userfaultfd_ctx *uf;
++	struct vm_uffd_state *uf;
+ 	struct list_head *uf_unmap_early;
+ 	struct list_head *uf_unmap;
+ 
+@@ -2033,7 +2033,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 		unsigned long, new_len, unsigned long, flags,
+ 		unsigned long, new_addr)
+ {
+-	struct vm_userfaultfd_ctx uf = NULL_VM_UFFD_CTX;
++	struct vm_uffd_state uf = NULL_VM_UFFD_STATE;
+ 	LIST_HEAD(uf_unmap_early);
+ 	LIST_HEAD(uf_unmap);
+ 	/*
 diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 74f04c323c50..32003aa04943 100644
+index 32003aa04943..119304547230 100644
 --- a/mm/userfaultfd.c
 +++ b/mm/userfaultfd.c
-@@ -261,7 +261,7 @@ static int mfill_get_vma(struct mfill_state *state)
- 	 * validate 'mode' now that we know the dst_vma: don't allow
- 	 * a wrprotect copy if the userfaultfd didn't register as WP.
+@@ -99,7 +99,7 @@ bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long dst_end)
+ 	 * enforce the VM_MAYWRITE check done at uffd registration
+ 	 * time.
  	 */
--	if ((flags & MFILL_ATOMIC_WP) && !(dst_vma->vm_flags & VM_UFFD_WP))
-+	if ((flags & MFILL_ATOMIC_WP) && !userfaultfd_wp(dst_vma))
- 		goto out_unlock;
+-	if (!dst_vma->vm_userfaultfd_ctx.ctx)
++	if (!dst_vma->vm_uffd_state.ctx)
+ 		return false;
  
- 	if (is_vm_hugetlb_page(dst_vma))
+ 	return true;
+@@ -1812,8 +1812,8 @@ static int validate_move_areas(struct userfaultfd_ctx *ctx,
+ 		return -EINVAL;
+ 
+ 	/* Ensure dst_vma is registered in uffd we are operating on */
+-	if (!dst_vma->vm_userfaultfd_ctx.ctx ||
+-	    dst_vma->vm_userfaultfd_ctx.ctx != ctx)
++	if (!dst_vma->vm_uffd_state.ctx ||
++	    dst_vma->vm_uffd_state.ctx != ctx)
+ 		return -EINVAL;
+ 
+ 	/* Only allow moving across anonymous vmas */
+@@ -2249,7 +2249,7 @@ static void userfaultfd_set_ctx(struct vm_area_struct *vma,
+ 				vm_flags_t vm_flags)
+ {
+ 	vma_start_write(vma);
+-	vma->vm_userfaultfd_ctx = (struct vm_userfaultfd_ctx){ctx};
++	vma->vm_uffd_state = (struct vm_uffd_state){ctx};
+ 	userfaultfd_set_vm_flags(vma,
+ 				 (vma->vm_flags & ~__VM_UFFD_FLAGS) | vm_flags);
+ }
+@@ -2296,7 +2296,7 @@ static struct vm_area_struct *userfaultfd_clear_vma(struct vma_iterator *vmi,
+ 	}
+ 
+ 	ret = vma_modify_flags_uffd(vmi, prev, vma, start, end,
+-				    &new_vma_flags, NULL_VM_UFFD_CTX,
++				    &new_vma_flags, NULL_VM_UFFD_STATE,
+ 				    give_up_on_oom);
+ 
+ 	/*
+@@ -2330,15 +2330,15 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 		cond_resched();
+ 
+ 		VM_WARN_ON_ONCE(!vma_can_userfault(vma, vm_flags, wp_async));
+-		VM_WARN_ON_ONCE(vma->vm_userfaultfd_ctx.ctx &&
+-				vma->vm_userfaultfd_ctx.ctx != ctx);
++		VM_WARN_ON_ONCE(vma->vm_uffd_state.ctx &&
++				vma->vm_uffd_state.ctx != ctx);
+ 		VM_WARN_ON_ONCE(!vma_test(vma, VMA_MAYWRITE_BIT));
+ 
+ 		/*
+ 		 * Nothing to do: this vma is already registered into this
+ 		 * userfaultfd and with the right tracking mode too.
+ 		 */
+-		if (vma->vm_userfaultfd_ctx.ctx == ctx &&
++		if (vma->vm_uffd_state.ctx == ctx &&
+ 		    vma_test_all_mask(vma, vma_flags))
+ 			goto skip;
+ 
+@@ -2347,7 +2347,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 		 * switches that would drop VM_UFFD_WP or VM_UFFD_RWP, so a
+ 		 * stray bit here is a bug.
+ 		 */
+-		VM_WARN_ON_ONCE(vma->vm_userfaultfd_ctx.ctx == ctx &&
++		VM_WARN_ON_ONCE(vma->vm_uffd_state.ctx == ctx &&
+ 				vma->vm_flags & (VM_UFFD_WP | VM_UFFD_RWP) & ~vm_flags);
+ 
+ 		if (vma->vm_start > start)
+@@ -2360,7 +2360,7 @@ static int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
+ 
+ 		vma = vma_modify_flags_uffd(&vmi, prev, vma, start, vma_end,
+ 					    &new_vma_flags,
+-					    (struct vm_userfaultfd_ctx){ctx},
++					    (struct vm_uffd_state){ctx},
+ 					    /* give_up_on_oom = */false);
+ 		if (IS_ERR(vma))
+ 			return PTR_ERR(vma);
+@@ -2389,10 +2389,10 @@ static void userfaultfd_release_new(struct userfaultfd_ctx *ctx)
+ 	struct vm_area_struct *vma;
+ 	VMA_ITERATOR(vmi, mm, 0);
+ 
+-	/* the various vma->vm_userfaultfd_ctx still points to it */
++	/* the various vma->vm_uffd_state still points to it */
+ 	mmap_write_lock(mm);
+ 	for_each_vma(vmi, vma) {
+-		if (vma->vm_userfaultfd_ctx.ctx == ctx)
++		if (vma->vm_uffd_state.ctx == ctx)
+ 			userfaultfd_reset_ctx(vma);
+ 	}
+ 	mmap_write_unlock(mm);
+@@ -2419,9 +2419,9 @@ static void userfaultfd_release_all(struct mm_struct *mm,
+ 	prev = NULL;
+ 	for_each_vma(vmi, vma) {
+ 		cond_resched();
+-		VM_WARN_ON_ONCE(!!vma->vm_userfaultfd_ctx.ctx ^
++		VM_WARN_ON_ONCE(!!vma->vm_uffd_state.ctx ^
+ 				!!(vma->vm_flags & __VM_UFFD_FLAGS));
+-		if (vma->vm_userfaultfd_ctx.ctx != ctx) {
++		if (vma->vm_uffd_state.ctx != ctx) {
+ 			prev = vma;
+ 			continue;
+ 		}
+@@ -2512,7 +2512,7 @@ static bool userfaultfd_rwp_async_ctx(struct userfaultfd_ctx *ctx)
+  */
+ bool userfaultfd_wp_unpopulated(struct vm_area_struct *vma)
+ {
+-	struct userfaultfd_ctx *ctx = vma->vm_userfaultfd_ctx.ctx;
++	struct userfaultfd_ctx *ctx = vma->vm_uffd_state.ctx;
+ 
+ 	if (!ctx)
+ 		return false;
+@@ -2854,7 +2854,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
+ 
+ 	assert_fault_locked(vmf);
+ 
+-	ctx = vma->vm_userfaultfd_ctx.ctx;
++	ctx = vma->vm_uffd_state.ctx;
+ 	if (!ctx)
+ 		goto out;
+ 
+@@ -3094,7 +3094,7 @@ int dup_userfaultfd(struct vm_area_struct *vma, struct list_head *fcs)
+ 	struct userfaultfd_ctx *ctx = NULL, *octx;
+ 	struct userfaultfd_fork_ctx *fctx;
+ 
+-	octx = vma->vm_userfaultfd_ctx.ctx;
++	octx = vma->vm_uffd_state.ctx;
+ 	if (!octx)
+ 		return 0;
+ 
+@@ -3138,7 +3138,7 @@ int dup_userfaultfd(struct vm_area_struct *vma, struct list_head *fcs)
+ 		list_add_tail(&fctx->list, fcs);
+ 	}
+ 
+-	vma->vm_userfaultfd_ctx.ctx = ctx;
++	vma->vm_uffd_state.ctx = ctx;
+ 	return 0;
+ }
+ 
+@@ -3195,11 +3195,11 @@ void dup_userfaultfd_fail(struct list_head *fcs)
+ }
+ 
+ void mremap_userfaultfd_prep(struct vm_area_struct *vma,
+-			     struct vm_userfaultfd_ctx *vm_ctx)
++			     struct vm_uffd_state *vm_ctx)
+ {
+ 	struct userfaultfd_ctx *ctx;
+ 
+-	ctx = vma->vm_userfaultfd_ctx.ctx;
++	ctx = vma->vm_uffd_state.ctx;
+ 
+ 	if (!ctx)
+ 		return;
+@@ -3216,7 +3216,7 @@ void mremap_userfaultfd_prep(struct vm_area_struct *vma,
+ 	}
+ }
+ 
+-void mremap_userfaultfd_complete(struct vm_userfaultfd_ctx *vm_ctx,
++void mremap_userfaultfd_complete(struct vm_uffd_state *vm_ctx,
+ 				 unsigned long from, unsigned long to,
+ 				 unsigned long len)
+ {
+@@ -3236,7 +3236,7 @@ void mremap_userfaultfd_complete(struct vm_userfaultfd_ctx *vm_ctx,
+ 	userfaultfd_event_wait_completion(ctx, &ewq);
+ }
+ 
+-void mremap_userfaultfd_fail(struct vm_userfaultfd_ctx *vm_ctx)
++void mremap_userfaultfd_fail(struct vm_uffd_state *vm_ctx)
+ {
+ 	struct userfaultfd_ctx *ctx = vm_ctx->ctx;
+ 
+@@ -3255,7 +3255,7 @@ bool userfaultfd_remove(struct vm_area_struct *vma,
+ 	struct userfaultfd_ctx *ctx;
+ 	struct userfaultfd_wait_queue ewq;
+ 
+-	ctx = vma->vm_userfaultfd_ctx.ctx;
++	ctx = vma->vm_uffd_state.ctx;
+ 	if (!ctx || !(ctx->features & UFFD_FEATURE_EVENT_REMOVE))
+ 		return true;
+ 
+@@ -3293,7 +3293,7 @@ int userfaultfd_unmap_prep(struct vm_area_struct *vma, unsigned long start,
+ 			   unsigned long end, struct list_head *unmaps)
+ {
+ 	struct userfaultfd_unmap_ctx *unmap_ctx;
+-	struct userfaultfd_ctx *ctx = vma->vm_userfaultfd_ctx.ctx;
++	struct userfaultfd_ctx *ctx = vma->vm_uffd_state.ctx;
+ 
+ 	if (!ctx || !(ctx->features & UFFD_FEATURE_EVENT_UNMAP) ||
+ 	    has_unmap_ctx(ctx, unmaps, start, end))
+@@ -3813,7 +3813,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 	do {
+ 		cond_resched();
+ 
+-		VM_WARN_ON_ONCE(!!cur->vm_userfaultfd_ctx.ctx ^
++		VM_WARN_ON_ONCE(!!cur->vm_uffd_state.ctx ^
+ 				!!(cur->vm_flags & __VM_UFFD_FLAGS));
+ 
+ 		/* check not compatible vmas */
+@@ -3867,8 +3867,8 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 		 * wouldn't know which one to deliver the userfaults to.
+ 		 */
+ 		ret = -EBUSY;
+-		if (cur->vm_userfaultfd_ctx.ctx &&
+-		    cur->vm_userfaultfd_ctx.ctx != ctx)
++		if (cur->vm_uffd_state.ctx &&
++		    cur->vm_uffd_state.ctx != ctx)
+ 			goto out_unlock;
+ 
+ 		/*
+@@ -3877,7 +3877,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 		 * subsequent mprotect() would then promote stale markers
+ 		 * into the other mode. Require an unregister first.
+ 		 */
+-		if (cur->vm_userfaultfd_ctx.ctx == ctx &&
++		if (cur->vm_uffd_state.ctx == ctx &&
+ 		    cur->vm_flags & (VM_UFFD_WP | VM_UFFD_RWP) & ~vm_flags)
+ 			goto out_unlock;
+ 
+@@ -3985,15 +3985,15 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 	do {
+ 		cond_resched();
+ 
+-		VM_WARN_ON_ONCE(!!cur->vm_userfaultfd_ctx.ctx ^
++		VM_WARN_ON_ONCE(!!cur->vm_uffd_state.ctx ^
+ 				!!(cur->vm_flags & __VM_UFFD_FLAGS));
+ 
+ 		/*
+ 		 * Prevent unregistering through a different userfaultfd than
+ 		 * the one used for registration.
+ 		 */
+-		if (cur->vm_userfaultfd_ctx.ctx &&
+-		    cur->vm_userfaultfd_ctx.ctx != ctx)
++		if (cur->vm_uffd_state.ctx &&
++		    cur->vm_uffd_state.ctx != ctx)
+ 			goto out_unlock;
+ 
+ 		/*
+@@ -4020,10 +4020,10 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 		cond_resched();
+ 
+ 		/* VMA not registered with userfaultfd. */
+-		if (!vma->vm_userfaultfd_ctx.ctx)
++		if (!vma->vm_uffd_state.ctx)
+ 			goto skip;
+ 
+-		VM_WARN_ON_ONCE(vma->vm_userfaultfd_ctx.ctx != ctx);
++		VM_WARN_ON_ONCE(vma->vm_uffd_state.ctx != ctx);
+ 		VM_WARN_ON_ONCE(!vma_can_userfault(vma, vma->vm_flags, wp_async));
+ 		VM_WARN_ON_ONCE(!(vma->vm_flags & VM_MAYWRITE));
+ 
+@@ -4041,7 +4041,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 			struct userfaultfd_wake_range range;
+ 			range.start = start;
+ 			range.len = vma_end - start;
+-			wake_userfault(vma->vm_userfaultfd_ctx.ctx, &range);
++			wake_userfault(vma->vm_uffd_state.ctx, &range);
+ 		}
+ 
+ 		vma = userfaultfd_clear_vma(&vmi, prev, vma,
+@@ -4382,7 +4382,7 @@ static int userfaultfd_set_mode(struct userfaultfd_ctx *ctx,
+ 		VMA_ITERATOR(vmi, mm, 0);
+ 
+ 		for_each_vma(vmi, vma) {
+-			if (vma->vm_userfaultfd_ctx.ctx == ctx)
++			if (vma->vm_uffd_state.ctx == ctx)
+ 				vma_start_write(vma);
+ 		}
+ 	}
+@@ -4537,12 +4537,12 @@ static inline int userfaultfd_poison(struct userfaultfd_ctx *ctx, unsigned long
+ 
+ bool userfaultfd_wp_async(struct vm_area_struct *vma)
+ {
+-	return userfaultfd_wp_async_ctx(vma->vm_userfaultfd_ctx.ctx);
++	return userfaultfd_wp_async_ctx(vma->vm_uffd_state.ctx);
+ }
+ 
+ bool userfaultfd_rwp_async(struct vm_area_struct *vma)
+ {
+-	return userfaultfd_rwp_async_ctx(vma->vm_userfaultfd_ctx.ctx);
++	return userfaultfd_rwp_async_ctx(vma->vm_uffd_state.ctx);
+ }
+ 
+ static inline unsigned int uffd_ctx_features(__u64 user_features)
+diff --git a/mm/vma.c b/mm/vma.c
+index 35e7a64855fa..f2c65d148498 100644
+--- a/mm/vma.c
++++ b/mm/vma.c
+@@ -118,7 +118,7 @@ static inline bool is_mergeable_vma(struct vma_merge_struct *vmg, bool merge_nex
+ 		return false;
+ 	if (vma->vm_file != vmg->file)
+ 		return false;
+-	if (!is_mergeable_vm_userfaultfd_ctx(vma, vmg->uffd_ctx))
++	if (!is_mergeable_vm_uffd_state(vma, vmg->uffd_ctx))
+ 		return false;
+ 	if (!anon_vma_name_eq(anon_vma_name(vma), vmg->anon_name))
+ 		return false;
+@@ -1837,7 +1837,7 @@ struct vm_area_struct *vma_modify_policy(struct vma_iterator *vmi,
+ struct vm_area_struct *vma_modify_flags_uffd(struct vma_iterator *vmi,
+ 		struct vm_area_struct *prev, struct vm_area_struct *vma,
+ 		unsigned long start, unsigned long end,
+-		const vma_flags_t *vma_flags, struct vm_userfaultfd_ctx new_ctx,
++		const vma_flags_t *vma_flags, struct vm_uffd_state new_ctx,
+ 		bool give_up_on_oom)
+ {
+ 	VMG_VMA_STATE(vmg, vmi, prev, vma, start, end);
+diff --git a/mm/vma.h b/mm/vma.h
+index 024fabe63560..ab23a65750de 100644
+--- a/mm/vma.h
++++ b/mm/vma.h
+@@ -114,7 +114,7 @@ struct vma_merge_struct {
+ 	struct file *file;
+ 	struct anon_vma *anon_vma;
+ 	struct mempolicy *policy;
+-	struct vm_userfaultfd_ctx uffd_ctx;
++	struct vm_uffd_state uffd_ctx;
+ 	struct anon_vma_name *anon_name;
+ 	enum vma_merge_state state;
+ 
+@@ -349,7 +349,7 @@ static inline void vma_sub_pgoff(struct vm_area_struct *vma, pgoff_t delta)
+ 		.file = vma_->vm_file,					\
+ 		.anon_vma = vma_->anon_vma,				\
+ 		.policy = vma_policy(vma_),				\
+-		.uffd_ctx = vma_->vm_userfaultfd_ctx,			\
++		.uffd_ctx = vma_->vm_uffd_state,			\
+ 		.anon_name = anon_vma_name(vma_),			\
+ 		.state = VMA_MERGE_START,				\
+ 	}
+@@ -519,7 +519,7 @@ __must_check struct vm_area_struct *vma_modify_policy(struct vma_iterator *vmi,
+ __must_check struct vm_area_struct *vma_modify_flags_uffd(struct vma_iterator *vmi,
+ 		struct vm_area_struct *prev, struct vm_area_struct *vma,
+ 		unsigned long start, unsigned long end, const vma_flags_t *vma_flags,
+-		struct vm_userfaultfd_ctx new_ctx, bool give_up_on_oom);
++		struct vm_uffd_state new_ctx, bool give_up_on_oom);
+ 
+ __must_check struct vm_area_struct *vma_merge_new_range(struct vma_merge_struct *vmg);
+ 
+diff --git a/mm/vma_init.c b/mm/vma_init.c
+index baa7e82f47e3..61ddb31318bb 100644
+--- a/mm/vma_init.c
++++ b/mm/vma_init.c
+@@ -62,8 +62,8 @@ static void vm_area_init_from(const struct vm_area_struct *src,
+ 	 * dup_mmap(), but the clone will reinitialize it.
+ 	 */
+ 	data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->shared)));
+-	memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
+-	       sizeof(dest->vm_userfaultfd_ctx));
++	memcpy(&dest->vm_uffd_state, &src->vm_uffd_state,
++	       sizeof(dest->vm_uffd_state));
+ #ifdef CONFIG_ANON_VMA_NAME
+ 	dest->anon_name = src->anon_name;
+ #endif
+diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
+index 4c58487b764e..1a01c3529d22 100644
+--- a/tools/testing/vma/include/dup.h
++++ b/tools/testing/vma/include/dup.h
+@@ -634,7 +634,7 @@ struct vm_area_struct {
+ 	 */
+ 	struct anon_vma_name *anon_name;
+ #endif
+-	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
++	struct vm_uffd_state vm_uffd_state;
+ } __randomize_layout;
+ 
+ struct vm_operations_struct {
+diff --git a/tools/testing/vma/include/stubs.h b/tools/testing/vma/include/stubs.h
+index d6136e19a8af..dcd1b1719928 100644
+--- a/tools/testing/vma/include/stubs.h
++++ b/tools/testing/vma/include/stubs.h
+@@ -33,7 +33,7 @@ struct unmap_desc;
+ 
+ #define ASSERT_EXCLUSIVE_WRITER(x)
+ 
+-struct vm_userfaultfd_ctx {};
++struct vm_uffd_state {};
+ struct mempolicy {};
+ struct mmu_gather {};
+ struct mutex {};
+@@ -350,8 +350,8 @@ static inline struct anon_vma_name *anon_vma_name(struct vm_area_struct *vma)
+ 	return NULL;
+ }
+ 
+-static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
+-					struct vm_userfaultfd_ctx vm_ctx)
++static inline bool is_mergeable_vm_uffd_state(struct vm_area_struct *vma,
++					struct vm_uffd_state vm_ctx)
+ {
+ 	return true;
+ }
 
 -- 
 2.53.0
