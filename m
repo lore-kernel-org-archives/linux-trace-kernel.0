@@ -1,197 +1,152 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521BA403EB5
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 11:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787570551; cv=pass; b=QmM7XDPsutNovdim+VEIAB3hOlAATYL/aBuPjA0zQYww4b9Muv/E/w/VvRSEZ22R7h6WSLNr96hDAlfTTyLH1VRPakhJVSpwXZ4M+71aRqo552M6dMI/Snv3ecXOEkz/ll3ezlPB3ogNFPdWrMS1k/mF5d0JmEVGwCpIC4B8m1g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787570551; c=relaxed/simple;
-	bh=/0my3t+lF/CL2tBi99WPrBzsGUD/BsCNVNf5PeYgNTU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lt2WOMiscE9EegeEilkgtJezwmnqPAl0H47Fll1tWUGHga+rPP5+lh+qHWm5uxkZqdPQOaT55H7vQ3fFMyKvWEXEtYWoj9EQIuzaIVIYpeffndSzy1Nh69cC2rN0OKclzoBXr1xOCsb0hlHSeQn1DSEb1GSb2S9g2wc6dlsa2R4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLz4Rr4y; arc=pass smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352443B05A7;
+	Mon, 24 Aug 2026 11:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787572086; cv=none; b=Aiad/iq84R9NIsgjNmcq1MIkc28yBGJhDpOq5EF2biMxd8tUz/Er0R/9BxsBShcVOEVAugVTIxJaSQpt04Xt8iGGqni8Mjid/Y4/lEi2rpKLTS8PTCoouWO6k83vrWwyP7BDeWurTvwdOLTrv4qQnFSJcaJ1UU6dxxDFpmSWnDE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787572086; c=relaxed/simple;
+	bh=VgiN9mOqZ2nMHCxe8Teh3Neg0it/yA0MaK2gEg4XNAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BcK/EwptBI3PjdFs0xZddzwa6TMZ0utsnF/W0k/Wx1le4BI9hynP1lxX2Fj+zTWSpO1sO8ybRKfQ2mW+6GYECgatHZjQ9v1nxNCoV9inOPljOqVhNEDa7mfliRQWR2qq5X0MvPtLkIcMgbKgnJyxsR5kokJRErhcIGAMOlsJk6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZYLGiz8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLz4Rr4y"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-80c5cb9a888so35466197b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 04:22:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787570549; cv=none;
-        d=google.com; s=arc-20260327;
-        b=EI8KZ33QbqVlnYkJ6qYA4k5p0JzIRvnZICzJTHH9X9agpq3EhIGvrJJSbr3j36NR2E
-         JajtSj5JiD1jYyFprsXEWj5l7aIt9AWrLKl39cbh+If0BfizwYZDQyCCcTkfBGbkKfMT
-         b+dWfTU0zghazSBehYzE05/lbJpBhSGdtCRnGYVtKRRJbWVCGvsko2KMAZpOCuKPUoO+
-         ElxNA3TUS4zXhe9Nov2+ZEMiFMhO8c6OCWafjVbMOWfSe6As9tjlszhv5WpsMz3VXOGz
-         HZ85qgCYVnibEbBU/q81pSHsdLyH1VS6A97JyYNSAArdDLgWQBTjXOOC6RYRTz3pPeDg
-         L/QA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=a7Hu8aS2tMxi0HUTc73kwEzJzh8H0U/IURM0mZn2fi4=;
-        fh=qwqSfyPV8Gbz/kRySpdIIVPGVwxDn0OZjH0xVjlHdZc=;
-        b=FQGWqvbKSAU0Drv9s6f1/pbhLgni8baQXAWUsSbTl7Gs0ZuT49MrONJGVba2I55c0V
-         67X4bF7dGTq8lS8dLfDQR6Sm3vXVevauiKdi+TwNK9FHrOz1Xg9Fssf1X1osvcNgi22e
-         u+TN+Xcx1ILdosgtiYPdKys5ZX5JzuyQKxMZmT2whCflU6hFKEFc7najZ0VRz8alVqYM
-         9Ag8jzaWf+762SlPlBQS4Vp06ExmilhxdhmSwbmHIhyHcfS+kgbV04Ej5z88hM1tmd+j
-         Ewr+yGrAOK5/8cyEwj1LXEzjZBXwNudAXY+P5DUuTNerOs/BstQRn7pMsoXsYAcMiX1a
-         0krQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787570549; x=1788175349; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=a7Hu8aS2tMxi0HUTc73kwEzJzh8H0U/IURM0mZn2fi4=;
-        b=LLz4Rr4ylmw/d3dg0PhTA61l2aP/C5xNLIlCTjk6Ky23FerKnk/4bTUnqe9RrApKha
-         uBg6y07mFcJu190HnVGZ+9U6obHsawSgxu6Ql6Cf75RU/swkpow6U4k6oVt/W0b4NJRB
-         zaEt75vLV0m8Vwzu82HLkcLkoxsyWKwCDTl6DLhzRZ8W5lfwX6VkTxwF+qtujXJ1jX9R
-         nRFFGN6PjMppL8aR+g/Fh2fPiDUslbHIjodCsPXlMmzNhRn0Qwoj1cAqfphF2U4HuikG
-         zULG+zhlIVSBeZFM9F52mQHtVtFpmuoNncMqJ+ajg6og3w2ferP5NGIHlozdL5pXx40w
-         nVqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787570549; x=1788175349;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=a7Hu8aS2tMxi0HUTc73kwEzJzh8H0U/IURM0mZn2fi4=;
-        b=RJd5mb85RoE3DlKJFwwz/TCXfzCPcfqJPBd2+A/2hPN7nzCVCY9BiQV5Zk2Co8d55c
-         UtdXd7y08w3EXKzYmM4OffKVKfttnB+paGnhdAiPUHp5+8uetRkaO+fMCVRyaTiSjDRM
-         dAf3c408T4B4Y7gBHmBZOXbXPjfC1UqNSEXyzzZnYBcunH2WLYC65jamDgrSJuOxhNFy
-         1NyR/Tma0Bk5wU+J/d1u/gUd+wNyMfm//Zlv7+TqjWpIIhXgLOpJtF/2cXA5YvC3A/fx
-         6b8g7s6jFtolXYndOYKOwZJaUbb8fkLC1dlI/t4S9BJt2DXOZIxZL2t42wf0Xq1mAIX+
-         Vk5Q==
-X-Forwarded-Encrypted: i=1; AHgh+Rq8irT5YbHg1b4Po7Ixa7NAYkt8F1J4fSOfzHqZHSMrNUnrfifd+EukHKK8UUvPNSWuSiJllox5YQNuRDNuwZ8ohtg=@vger.kernel.org
-X-Gm-Message-State: AFuF++k9FhivkxJcEPuS/g/RBT+Zzqyt9ngt0pQwFRVgDvMEp9ySMdLJ
-	UVN0PrSweNAsr26/jU6shSiAzUU+LRcgfAQHEHYyQ6WVAvtwfcSLk8ijgBRkf0i7WnMzSeUo9+H
-	19O6XHAEN8gRvPGKxaZul8taOnl4RgAJLHWt5fLw=
-X-Gm-Gg: AR+sD11pAFr4R3LggwIDenGNg7Bs6MszjE1hbsXzRxgauQ9YhE9sSB7uCgfG8/BBGgo
-	uC4LAldKSB69AfXPDQmsLZ3KRgxiSVa04eD/aEP1lTkm5Y1OKFN6H1bKU0gTUZGSdXTQzc5mMBG
-	a/uOptCIachTge1jVvQTcm8lDHMk4T1rudqOovDHz65ywaiLydOXvpvdQl312uyf+rrNjSyNlSh
-	2hH5y5CMeqKBLvsVBv1dErPulG8fBqz1Fh31e9VZEdmQTGxDyDmf8XU06Ky3ZrMd2e7nJnFm2a3
-	9Slq3FII10wyOo4QoSsun6kGTvdRlTw/LPYpBeSTTKkJpRU=
-X-Received: by 2002:a05:690c:c423:b0:80c:76fd:f732 with SMTP id
- 00721157ae682-849f6a957a9mr78206597b3.26.1787570549300; Mon, 24 Aug 2026
- 04:22:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZYLGiz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3531F000E9;
+	Mon, 24 Aug 2026 11:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787572084;
+	bh=xnWILcZvAXPIFAU4ds9k+iQvpoOkwI2Z2KySfwbLn7o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=kZYLGiz8XKSmI+FIu8i76ktaY6BJPhmezuife5zN6x8SqWXB6n28hCH+ws9jcVaN5
+	 P+Dc8Nyvnk0T10K+QDLHfktnn/e9iBR1HC7H2opBXLSnsAAjI63S0Eo9IzOyA7CnbG
+	 q3HrxQ/XayzJaziKlOhBUH0fkAhzCE8DTBPlZZE7r12VG9JVncydOWXpOsVh2dN/ZI
+	 aXgMDUJOTxKKjKxiYHgw43YQRghaqn7Bmy/R+oluTiROhRJRtlTwpTw4AoqLy+KteW
+	 50yA0nZIE+DxzYQRGy3xkjNlwJW+DMsIYt2/eK2z4kGSzyA01q1+m+UxJlkn0GOpgk
+	 e/NGGwJtFX6qw==
+Message-ID: <65433d1e-95ca-4434-828e-8f381d3384b1@kernel.org>
+Date: Mon, 24 Aug 2026 13:47:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
- <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com> <aotM6tRUHI9Bo7gW@redhat.com>
-In-Reply-To: <aotM6tRUHI9Bo7gW@redhat.com>
-From: Keke Ming <ming.jvle@gmail.com>
-Date: Mon, 24 Aug 2026 19:22:17 +0800
-X-Gm-Features: AcwNN1X5o6OEgGW73-QMaSvUJll9Em5qhnHqT0sH4wBhQMCp_avkxk205HuEKP0
-Message-ID: <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 03/57] mm/collapse: add collapse.h for the shared
+ collapse state
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: akpm@linux-foundation.org, ljs@kernel.org, nico.pache@linux.dev,
+ baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
+ hughd@google.com, lance.yang@linux.dev, liam@infradead.org, mhocko@suse.com,
+ rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
+ usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
+ usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jannh@google.com, willy@infradead.org, pfalcato@suse.de,
+ rostedt@goodmis.org, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <20260816224609.308019-4-kirill@shutemov.name>
+ <3113ac8b-c1ce-4577-9e93-449b70818918@kernel.org>
+ <aobglSY5L1KoIqxF@thinkstation>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aobglSY5L1KoIqxF@thinkstation>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 08/24, Oleg Nesterov wrote:
+On 8/20/26 13:11, Kiryl Shutsemau wrote:
+> On Wed, Aug 19, 2026 at 04:19:41PM +0200, David Hildenbrand (Arm) wrote:
+>> On 8/17/26 00:45, Kiryl Shutsemau wrote:
+>>> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+>>>
+>>> Preparation for building the new collapse engine in its own file.  The
+>>> engine and khugepaged.c need to agree on what a collapse result is and
+>>> what state a scan carries.
+>>>
+>>> Move enum scan_result and struct collapse_control into a new
+>>> mm/collapse.h.
+>>>
+>>> No functional change intended.
+>>>
+>>> Assisted-by: Claude-Code:claude-opus-5
+>>> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+>>> ---
+>>
+>> BTW, I'm wondering whether it would result in less churn (independent of the
+>> other changes) to
+>>
+>> a) Rename mm/khugeapged.c to mm/collapse.c
+>>
+>> b) Move stuff into mm/collapse.h that a new ...
+>>
+>> c) mm/khugapegd.c will need.
+> 
+> I went for a clean collapse.c on purpose: the engine is new code, and a
+> new file keeps it readable while both mechanisms are in the tree, with 28
+> as a plain delete from khugepaged.c.
+> 
+> Your shape is less churn, though, and it keeps blame: 29-35 move about
+> 1700 lines as add-and-delete today, and most of that would stay put, with
+> only the daemon -- mm_slot, the scan loop, sysfs -- extracted into a new
+> khugepaged.c.
+> 
+> If you prefer it that way, I can give it a try for v2.
+> 
+> The rename has to open the series, so it will collide with anything in
+> flight that touches khugepaged.c.
+> 
 
-> Hmm. It is not that I think "it is not enough", I think this is pointless
-> whatever we do.
+Kiryl, I have to ask, are you using AI to write your replies?
 
-Well, I didn't mean to insist on the cleanup, I also think it may
-be redundant. If the child is bound to exit, manually calling
-uprobe_free_utask(t) in dup_utask() is pointless, as the normal
-exit path will handle it.
+-- 
+Cheers,
 
-> Yes, this is what I meant. But this is only the first step to cleanup
-> this logic. I'll try to write another email tomorrow.
-
-Of course, I'm all ears.
-
-Here is my current understanding. One thing I am not sure about
-is the signal semantics. If the copied uprobe state is incomplete,
-the child should not return to user mode with that state.
-
-Option A:
-
-```
-if (dup_utask(t, utask)) {
-  uprobe_warn(t, "dup ret instances");
-  goto kill_child;
-}
-...
-if (!area) {
-  // whether we also need to kill it is open to further discussion.
-  uprobe_warn(t, "dup xol area");
-  goto kill_child;
-}
-...
-kill_child:
-  // I was thinking about SIGKILL here because it cannot be ignored
-  // Of course, you can correct me
-  send_sig(SIGKILL, t, 1);
-```
-
-Option B:
-
-> Note that uprobe_copy_process() warns but returns "void", too late
-> to abort copy_process().
-
-Looking at copy_process(), uprobe_copy_process() is currently called
-after the "No more failure paths" point and after the child has already
-been made visible through the task list and pid links.
-
-Would the longer term fix be to move the uprobe state copy earlier,
-before the "No more failure paths" point, and then add the needed
-bad_fork cleanup for  p->utask?
-
-Keke.
-
-On Mon, Aug 24, 2026 at 3:41=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 08/24, Keke Ming wrote:
-> >
-> > > Note that uprobe_copy_process() warns but returns "void", too late
-> > > to abort copy_process().
-> >
-> > You are right that freeing the partial utask is not enough.
->
-> Hmm. It is not that I think "it is not enough", I think this is pointless
-> whatever we do. Please see below.
->
-> But you know what? I am afraid I am totally confused again, this happens
-> more and more often. So please correct me.
->
-> > Would it make sense to keep the cleanup
->
-> But again, why do you think it makes any sense to keep the cleanup
-> you propose?
->
-> > and additionally send
-> > SIGKILL to the new child when the  uprobe state copy fails?
->
-> Or SIGILL like the rest of uprobes.c does...
->
-> Yes, this is what I meant. But this is only the first step to cleanup
-> this logic. I'll try to write another email tomorrow.
->
-> Lets suppose we change uprobe_copy_process() to kill the child. Then
-> why do we need to call uprobe_free_utask() in dup_utask() or do anything
-> else in copy_process() paths?
->
-> The child won't return to userspace, it will exit and call uprobe_free_ut=
-ask()
-> itself.
->
-> > Also, should the existing "dup xol area" failure path be handled
-> > the same way?
->
-> Yes sure. But perhaps needs another discussion.
->
-> Oleg.
->
+David
