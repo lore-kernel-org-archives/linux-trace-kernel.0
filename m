@@ -1,90 +1,52 @@
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A841334C9A6;
-	Mon, 24 Aug 2026 14:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F9742902E;
+	Mon, 24 Aug 2026 14:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787580797; cv=none; b=FWCMlafqZE43mrxQMoFJQuQkLVcnycQS74SSCoS2RMwp9E5IO6JZJ3myZSaZgvUykHaGcyGX1p9AuZyakjM6UjeDCYQw9/PTVUu2ZKDpoC7paBVh+5jwC/JAjBZDSSSnRShVkaI/3lBz1JBYSEe/ChzWnuLfBK05zvSrhVxJ4XY=
+	t=1787581331; cv=none; b=u4Z5KNbp+Dw2WfutCYDb/fAHp9XszqWBgsn8qKdQIo4KiOPhHOS7KQ3aUvkG6j0O/W9cPiEMcW/FXX9VzTYk9kkbH71km6pS5nVVrx3ip29B8+t8BbOfp3+LcRHYmpsU6A/Dumflq86r5jGyddQkKTij3MVK9+KhjvsXd74LImk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787580797; c=relaxed/simple;
-	bh=G1QNp5h3QCg/occyjcJSeBpT5BqfFu02ZpX4idrSsPw=;
+	s=arc-20240116; t=1787581331; c=relaxed/simple;
+	bh=KJAluXXdqui4zkMtLXpfXyj5UR3ic0BTN3h4iuzhLM4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kagFydNhrHYDOWL+Vn7ddPVOjdyO1xpFby0loJGr+CHbx9XZusV896oupqtMLslWau0brFsJt+nC23qKfcQWwKJFck9iDWFZXTkGIVozR6QxACbBf41mUoc7LBDyro2b35LEMOU6x2LEp4ud7hwVYdXu2eGJCgfqJedLoxVwhGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=iP63UKXB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LJp4A8dO; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	 Content-Type:Content-Disposition:In-Reply-To; b=BAC099lvohUULlkp7q6BGApztrZko3lbxa2FuFj2+7vDETE6PACsPAc1CyFt2j95ecaOzJGzumYcN9zTLxIw9px9DmYC99xcm4OB/HSidUnkaRMtd7ekXbI6U0tTwapRMW7XmiUXJDbk1SKiyRI5eVwpOecC6wiKpSyU0cX4XXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KaO+iZO2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="iP63UKXB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LJp4A8dO"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.phl.internal (Postfix) with ESMTP id C01AB13801E4;
-	Mon, 24 Aug 2026 10:13:14 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Mon, 24 Aug 2026 10:13:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1787580794; x=
-	1787587994; bh=sGr2voTn/4URYLRPHsH5IQjOMwzItseS07qYBk1Gieg=; b=i
-	P63UKXBP8FWswjF/FJlq4Xe5RuBitvDLEwD8PRAfeP1vVx7qDO4r6OYRZXmj+W0t
-	tDOyEyhf5c8Scg1TKL9sAw/u29dW62XdNZwmqMNPKFfW7dId/14J2bIuizLUuVN0
-	DlB/pVYr6sFZvjCwzSg33ZbNs4RapL1uzskaySoqxUVgRM4DjrRS1X2szQ00frjk
-	ZKaVAtonwJ9JaSAIMnbOSWqtF++OCB+EgxhE023V7z2jSFX1BqEJCijQF8ydXBFl
-	auHff9b5YmubO7F4qR6FiCuDuBSHnjTi0oiBy8OQhh2o5k6IumQiI8gy8hqWoRGV
-	L5iZnJE6j91qvSZ1E+ZxA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1787580794; x=1787587994; bh=sGr2voTn/4URYLRPHsH5IQjOMwzItseS07q
-	YBk1Gieg=; b=LJp4A8dODexTNZs9bjp5DL66g1d5YmYaV7coiiH+CHDFA+Fbkre
-	tUJERgfHrm7Qlvp0+susDmaoOGy3YSydw9lqs/fYMFq2E3NNJHtEPwmeCuTq9ViF
-	BaUdGBAp7Klbw2bNRUFydjJW1za/PLpnGBKAp54D9173a9vIHyClLrcJ3jJKJsdR
-	LSBnLPB1zfvmeyGYzRIDuWkXt0tq7uV0m2h09F/rOKf+mvvIqIHtkjXJLu40Y9No
-	p4p1/CwDACcBrxUTgFo5Oib/DB1cRFDTs3Eo7ArLPOLRqI8Bf0yp/5eFdfDTZKw0
-	Cmv58vWr1LsoL21X9rPBWSRunWAb+mWcZfA==
-X-ME-Sender: <xms:eVGMauycaxCMdTcnp1y1QWw_D6lleTd19bjLITd2C652QPNRK9toiQ>
-    <xme:eVGMasRtYe6KFwnjhXkHQWeawG_31huk7tibYvH9EG-qd8jEoamhsWYQA8sef7f1A
-    GX8mX423r4d6L-DbmtaaAer0ga5PAyXZXFYS3GgTNnRRXJJa3RJDxiv>
-X-ME-Received: <xmr:eVGMakm_LNNfHOpu71jD34d4L0L4jGRodYEtSYcS14sDAt8XlXFf_Se3XBw>
-X-ME-Proxy-Cause: dmFkZTE7iU/l2zFXlLm6D9uRhnO1/wflet3q+zsqBlow1mhxui5biosheq/DUvb+sEp8I4
-    u5xTPAy8JgVzFf9/CoE7YYrHLc5rYr517ogPvopNib6F2BhJHz6NGOEF3SHm6tpstAzEnN
-    ToMISdvRE9aRDWeuLzS//ajnynzaNGH23UJb4fOI6RwZbF/lkNEl9T4D+sexmLzQxxW064
-    l4aJAPm8Orlkj9Wd3FcL2K1mfJsjeUGGCUYyNiXpvp9HFN1k4RxcZFRqiV7ZR5wb+YQqjL
-    es/DEbU54mnSDFtJ4ONeUw4zGwcjFfHoT4/e5gdG5u1t0NETVKXv13PvY6vqFUDjQzBsDH
-    2YbgCTXaJ1OYnkDCZff9lqECEFKHJraRpdl9SE0g+OacFeYVy+ThxVtzgpDCQ2ZYt/bCnA
-    JUg7E09T/4aT1XW1yj5PnuFFh61+1xlUVDgGfhxrXUOx1nGkAYnR4aGnEevmQaXC+gEFml
-    ZNjgwAW/ybMSwrUbcsWlD+C3MWWud/lbvHG7bnkRCmmaz76B+sJ8s6+TKECEPe4xguM0mc
-    frXmQxJT+tnA6n4KQFlu4L30J9XxgUGNlT7pyAY1jUOJ1l5ZM+QMhvXWAJlDt2kY6wsb9Q
-    q8PyiaMKdBFA8+feyH45AyL5eieJBM+ptL6naQQ6sq13QpRm6lgqA2Oo/WwA
-X-ME-Proxy: <xmx:eVGMavfNtlTP7Lsq4aVMTy2uLrsuD1h3opeU380pLrYt1vKnvqPblg>
-    <xmx:eVGMakwzPQA3U728von2Cw5b_63ZT9RaUCTekzomux7nN_igpKguVA>
-    <xmx:eVGMau9vtffz42aGk-oz0B5zzKsxvCCUEcX_7wiB8s87rDPCoQhTKA>
-    <xmx:eVGMaggx8W7vuaj-0Ryg5h3Mlj7Er2lganIMx9wnnBKohip9lo5gBQ>
-    <xmx:elGMauE2LyNzGIuYbG1iCBrneZds_h9zBu0UwUfJNl2Z4B1Ty-CpRWRo>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Aug 2026 10:13:12 -0400 (EDT)
-Date: Mon, 24 Aug 2026 15:13:10 +0100
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Lance Yang <lance.yang@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>
-Cc: akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
-	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
-	dev.jain@arm.com, hughd@google.com, liam@infradead.org, mhocko@suse.com, 
-	rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, 
-	usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, 
-	agordeev@linux.ibm.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de, 
-	rostedt@goodmis.org, mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 16/57] mm/collapse: freeze the sources behind
- migration entries
-Message-ID: <aoxQnuEacGpzp2I7@thinkstation>
-References: <20260816224609.308019-17-kirill@shutemov.name>
- <20260824131224.73344-1-lance.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KaO+iZO2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142241F00A3A;
+	Mon, 24 Aug 2026 14:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787581330;
+	bh=5j5DWKJN3cdhmHqdN8rCpFWNLqVKoHQJspSwWStoi7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=KaO+iZO2NSk2Mb6Znp4wkLjU5Psq+sSLTkfTwe0+7WB9WPQgyt6fGHjYZV/zU3Ij4
+	 jlJwIh1FB4tUanbeYBsel3kuT6oDpApt/nGc2A/jpsx8No/76t7v8SkSIGmFPCQZHq
+	 x/stZ2CCZMEYIwBH2TMkf2I6Kb6U4Vb0qQpg+buiH2VOWmHgTwuJ7fLAW4vrSs/qqT
+	 FFfr9sG3A9qW1t2+BBLBIHX/wpRTS0+mcevOWj9fdts3KEZ9zaJXvQwRkTw4iabRz2
+	 MRD5fdodUOKKmoRUSt4jl6yvfX60M8VPs27KzmhOBhTfVgKE8xrxwTcZCVAJ/MhsjO
+	 FxmiBGAPOYNOw==
+Date: Mon, 24 Aug 2026 15:22:02 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	akpm@linux-foundation.org, nico.pache@linux.dev, baolin.wang@linux.alibaba.com, 
+	baohua@kernel.org, dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, 
+	liam@infradead.org, mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, 
+	shuah@kernel.org, surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, 
+	ziy@nvidia.com, usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, jannh@google.com, 
+	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
+ primitives
+Message-ID: <aoxRs0mjyQnpO-IT@gremlin>
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <aoLAly-oL2OAa4n8@lucifer>
+ <aoLkMUtmzRVuv2Hx@thinkstation>
+ <aoQ77EcD3M2kjeya@lucifer>
+ <0153303d-f9d6-45ea-a276-fbf2e5625ef9@kernel.org>
+ <aoXn1B7cPnPq7uxd@thinkstation>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -93,159 +55,105 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260824131224.73344-1-lance.yang@linux.dev>
+In-Reply-To: <aoXn1B7cPnPq7uxd@thinkstation>
 
-On Mon, Aug 24, 2026 at 09:12:24PM +0800, Lance Yang wrote:
-> 
-> On Sun, Aug 16, 2026 at 11:45:28PM +0100, Kiryl Shutsemau wrote:
-> >+		if (!folio_ref_freeze(folio,
-> >+				      folio_expected_ref_count(folio) + 1)) {
-> >+			result = SCAN_PAGE_COUNT;
-> >+			goto unfreeze;
-> >+		}
-> >+		nr_frozen = nr_saved;
-> 
-> Just one thing I was wondering about ... can deferred_split_isolate()
-> remove a source folio from deferred_split_lru while its refcount is
-> frozen by collapse_freeze_candidate()?
-> 
-> Assume an earlier span belongs to an anonymous large folio on the
-> deferred split queue, then a later span fails folio_trylock().
-> collapse_freeze_candidate() continues after freezing each source folio
-> and calls collapse_unfreeze_candidate() on a later failure:
-> 
-> static noinline enum scan_result collapse_freeze_candidate(struct mm_struct *mm,
-> 		struct collapse_candidate *cand, pte_t *pte)
-> {
-> ...
-> 	for (i = 0, addr = cand->addr; i < nr_pages;) {
-> ...
-> 		if (!folio_trylock(folio)) {
-> 			folio_put(folio);
-> 			result = SCAN_PAGE_LOCK;
-> 			goto unfreeze;
-> 		}
-> ...
-> 		nr_saved = i + nr;
-> 
-> 		if (!folio_ref_freeze(folio,
-> 				      folio_expected_ref_count(folio) + 1)) {
-> 			result = SCAN_PAGE_COUNT;
-> 			goto unfreeze;
-> 		}
-> 		nr_frozen = nr_saved;
-> 
-> 		i += nr;
-> 		addr += nr * PAGE_SIZE;
-> 	}
-> 
-> ...
-> unfreeze:
-> 	collapse_unfreeze_candidate(mm, cand, pte, nr_saved, nr_frozen);
-> 	return result;
-> }
-> 
-> folio_ref_freeze() takes the source folio's refcount to zero:
-> 
-> static inline int folio_ref_freeze(struct folio *folio, int count)
-> {
-> 	return page_ref_freeze(&folio->page, count);
-> }
-> 
-> static inline int page_ref_freeze(struct page *page, int count)
-> {
-> 	int ret = likely(atomic_cmpxchg(&page->_refcount, count, 0) == count);
-> 
-> ...
-> 	return ret;
-> }
-> 
-> While collapse_freeze_candidate() still holds the source folio lock,
-> deferred_split_scan() can call deferred_split_isolate():
-> 
-> static unsigned long deferred_split_scan(struct shrinker *shrink,
-> 		struct shrink_control *sc)
-> {
-> 	LIST_HEAD(dispose);
-> 	struct folio *folio, *next;
-> 	int split = 0;
-> 	unsigned long isolated;
-> 
-> 	isolated = list_lru_shrink_walk_irq(&deferred_split_lru, sc,
-> 					    deferred_split_isolate, &dispose);
-> }
-> 
-> static enum lru_status deferred_split_isolate(struct list_head *item,
-> 					      struct list_lru_one *lru,
-> 					      void *cb_arg)
-> {
-> 	struct folio *folio = container_of(item, struct folio, _deferred_list);
-> 	struct list_head *freeable = cb_arg;
-> 
-> 	if (folio_try_get(folio)) {
-> 		list_lru_isolate_move(lru, item, freeable);
-> 		return LRU_REMOVED;
-> 	}
-> 
-> 	/*
-> 	 * We lost race with folio_put(). Read folio state before the
-> 	 * isolate: folio_unqueue_deferred_split() checks list_empty()
-> 	 * locklessly, so once removed the folio can be freed any time.
-> 	 */
-> 	if (folio_test_partially_mapped(folio)) {
-> 		folio_clear_partially_mapped(folio);
-> 		mod_mthp_stat(folio_order(folio),
-> 			      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
-> 	}
-> 	list_lru_isolate(lru, item);
-> 	return LRU_REMOVED;
-> }
-> 
-> And folio_try_get() fails because the source folio has a frozen refcount.
-> deferred_split_isolate() treats the failure as a race with folio_put(),
-> clears PG_partially_mapped and its MTHP_STAT_NR_ANON_PARTIALLY_MAPPED
-> accounting when set, then removes the folio from deferred_split_lru ...
+On Wed, Aug 19, 2026 at 07:08:07PM +0100, Kiryl Shutsemau wrote:
+> On Tue, Aug 18, 2026 at 04:12:17PM +0200, David Hildenbrand (Arm) wrote:
+> > I think we all agree that there is a lot of room for improvement, but the big
+> > question is:
+> >
+> > (a) When does it stop being a cleanup and is a new feature in disguise that
+> >     makes the code more complicated and even harder to maintain.
+> >
+> > (b) Can it just naturally be made looking like a cleanup.
+> >
+> > Ideally, we'd get b), in small, nice-to-review chunks that incrementally improve
+> > the code without inflating it heavily or moving everything around.
+>
+> It is not a cleanup and I would rather not sell it as one.  It replaces a
+> mechanism, so judged as (b) it fails by construction.
+>
+> I believe the end result is much cleaner. But I might be biased. :)
+>
+> > The current locking is nasty, so anything that moves us one step closer into
+> > something that is not only simpler but also more scalable is nice. I am a bit
+> > concerned with the churn in the series as is.
+> >
+> > After this series, mm/collapse.c itself is way larger than just mm/khugepaged.c
+> > originally, which raises some eyebrows.
+>
+> Line count is a poor proxy for simplicity or scalability.  What the
+> engine changes is the serialization model, and that is the part collapse
+> needs changed: the PMD granularity and the exclusion both come out of
+> the locking.
+>
+> Incremental does not reach it, though.  The old mechanism is correct
+> because it holds mmap_write_lock, the anon_vma write lock and a reference
+> from the LRU; the engine is correct because the sources are frozen behind
+> migration entries.  There is no halfway state that is correct under both,
+> so the switch lands as one patch.
+>
+> What can be incremental is everything around it: the engine goes in beside
+> the old mechanism, patch 25 points the anon path at it, and 28 removes what
+> it replaces.  Until 28 both are in the tree with only one of them
+> reachable, so the switch can be reverted on its own.
+>
+> > We should also be aware that people are proposing file/shmem mTHP collapse, so
+> > ideally what we refactor would naturally unify some of these code paths.
+> >
+> > I am wondering whether shmem mTHP collapse should come first. (I'm hoping that
+> > shmem mTHP collapse can unify some of the anon+file collapse code in a nice way,
+> > to similarly just look like a cleanup while enabling a new scenario.
+>
+> mTHP collapse as it stands has limited usability: PMD-aligned windows only,
+> and one VMA has to own the PMD.  Bolting file collapse onto the same
+> structure adds to the debt instead of paying it down.
+>
+> It would fit the new design.  The frame -- scan, candidate selection, the
+> round and its passes -- has nothing anon-specific in it; what is
+> anon-specific sits in the freeze (folio_test_anon(), PageAnonExclusive())
+> and the unshare in the fault-in pass.  A file source would bring its own
+> check, freeze, copy and install.
+>
+> I am not sure it should, though.
+>
+> Do we want to find file collapse candidates by walking the virtual
+> address space at all?
+>
+> collapse_file() already works on the mapping -- it builds the folio in
+> the page cache and then repairs every mapping through
+> retract_page_tables() -- so the VMA walk only picks which inode range to
+> try, and it reaches only what a registered mm maps right now.  Large
+> folios buy more than TLB reach: fewer page cache entries, cheaper
+> writeback, natural locking batch, etc.  Those apply whether the file is
+> mapped or not, and going at the inode directly would reach them.
+>
+> > Agreed, I think we really should unify+cleanup the existing code first before
+> > doing more drastic changes.
+> >
+> > Having a series that throws all of khugepaged.c into a mixer and pours something
+> > new into collapse.c is ... concerning :)
+>
+> The moving around is patches 29-35 and the tracing after them.  None of it
+> is needed for the engine: 1-28 add it, switch the anon path over and delete
+> the old mechanism, without moving anything else out of khugepaged.c.  If
+> the churn is the problem, v2 can stop there and the moves can come later as
+> their own series.
 
-Hm. So, the premise in deferred_split_isolate() is false:
-!folio_try_get() doesn't mean lost race with folio_put().
+This whole reply seems AI-generated...
 
-I think deferred_split_isolate() should do something like:
+You replying only to David twice in this sub-thread which isn't exactly giving
+me warm fuzzy feelings about the working-around-me concerns I raised here.
 
-      if (!folio_try_get(folio))
-              return LRU_SKIP;
+So simple feedback - send a relatively small, no-functional-change series that
+improves THP code and lays foundations for future changes. After the merge
+window.
 
-      list_lru_isolate_move(lru, item, freeable);
-      return LRU_REMOVED;
+Can you explicitly ack this please?
 
-Johannes, do I miss something?
+>
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
 
-> 
-> >+
-> >+		i += nr;
-> >+		addr += nr * PAGE_SIZE;
-> >+	}
-> >+
-> >+	cand->state = CAND_FROZEN;
-> >+	return SCAN_SUCCEED;
-> >+
-> >+unfreeze:
-> >+	collapse_unfreeze_candidate(mm, cand, pte, nr_saved, nr_frozen);
-> >+	return result;
-> 
-> And collapse_unfreeze_candidate() restores the source PTEs and refcount,
-> then unlocks and puts the source folio :)
-> 
-> The source folio is not added back to the deferred split queue, so an
-> underused or partially mapped folio can remain off the queue.
-> 
-> Should collapse unqueue the source folio after folio_ref_freeze()
-> succeeds, remember whether it was on the deferred split queue and whether
-> PG_partially_mapped was set, then requeue it if
-> collapse_unfreeze_candidate() restores the source folio?
-> 
-> [...]
-> 
-> Cheers, Lance
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+--
+Cheers, Lorenzo
