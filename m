@@ -1,152 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B002A43F8B2;
-	Mon, 24 Aug 2026 14:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67EF447813
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 14:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787582786; cv=none; b=VnnyCo1spV00yUb1RwtY7zNBAb4mgjf3o/xm/yVeBh0BeBh1GOqQbhdNwoJINAe93HysoAezVXRlaBt5HAz8Ti39LVcoMzFOo/BexeNIDohbs3GlEH960rFUF7/58+WH7f2EbObaWrWQNSyAc13sRADV3eli4N2473PLiqRjXgc=
+	t=1787582828; cv=none; b=U8qESPeuVEpAGRfLMjWhHwW3tiJjjXecMkEjvgiWmgAzdPqxcyuFXeQ58dbdTkPkzE1+OV0DNuW+Zkp2LFRjqVPlMk53pv6AoDW4CY2T8etiJdJddCC9Vzu8Cz+bDWmpGqRx42U3wMEdKclCkK2KgAsLVMBbKKBPkG6i5PCH7ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787582786; c=relaxed/simple;
-	bh=8nLoyii0J8BYKAAct5Xda7iv5em4yS6sroncW2zsEWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KACKXH7vmvun8sAwT0GKV8iygulUyQNSarauWRYjZQnXyaX3cj5J1P1mGP2HJ3E7TgBYXJBsIQ6dEm26Xn89SQhbRAGsuTxAAkmR0xkm3tftlHPpc+4jn1pkdu5wg1PVvaJ4vZS3idsZZMXAMb7UbwDvaPcxJm5PekUKMbFvYMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b41+8o8I; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787582828; c=relaxed/simple;
+	bh=NXG7bE790VEEAyF28aLFVFci8yXbRztC6StC9DoElGM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JQRER1sLbt0581HDbnMueG96P6woxaiAxoQh0tWWLPS3m8SAeNGHsJucCZTjy7/5bPlA4FVWHsHis2MVQeu77h51CLM5y16b8B1mFIEFDdxcgtIY88/rxtRjc6Uqr+oLxd5vHdBILg/kS/FTzGLXVcRCWc1hws4edhTaV5DG9gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KawySjtM; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b41+8o8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06261F00A3A;
-	Mon, 24 Aug 2026 14:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787582785;
-	bh=uOdefC3ft+rIrM+lRzrzTelVuZoqvjKq0Pla1Vm3VSg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=b41+8o8IJgBxDHtRI6Tjnf9CM9J5j7Wpr08L9h4SkEN4zb9xlhboO6fa2EYO4zIZl
-	 sdWw3YJjUhNAWD7KdcvLEZNGcsRQNWqOlGqMHDg+TxRG7kNVkA+vdr2xJkdvknL/qB
-	 mPvP33WQVDJrkciOrZybBGyyh/1NNq6U9ywOoci9m/Q3TcZzdua8N1wZAAdGBDITuS
-	 jyCSP2oFp9YGQG4Qp6ZlxchyScmDZfKO3PAMS5HdMhTNdpNBVxuw/MfqzoNwwFWoi5
-	 KIHkUfgwAZ2DybB6RBTPsGah/+63Ev53H6zpuWubJqmj3Waob9OZxqaLdwmRjAM5AU
-	 1A47zHPy7WF3g==
-Message-ID: <5bb86e34-6196-4b50-b553-be2ff7c1fa32@kernel.org>
-Date: Mon, 24 Aug 2026 16:46:14 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KawySjtM"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-38d489b6b71so4095833a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 07:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787582825; x=1788187625; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=HbTvMJOA5pAnK3dUzCcI4B1WpzStHPSu12W55oNjXVo=;
+        b=KawySjtMyaKjpiaTzAegy+9sFaXa9f+QcH53evqIh6Eai+w+efb+S4fJ5WTZY851vR
+         qwSITmHO6w/HydKbTUTRKeR3G+2fdegdqJPEy9OQNJcuq2JPqqco4/clcTQ7rn4LbgDP
+         TOdX1wN3re/qmKUJUwYFR2KmgJEdtik/Fvu3RblSbujkY/G9SJaVCBehNwnqHE4h5P9J
+         V/PMqa5t5KahtDp4/yLsSQGicbt2SgVVqBrrtgSgrncxA0QdFwp7lre4KL9TCnOW4wzY
+         i6WcLo7T9PipZX7GplPH+TP5s/wBdyxwmZRpxWXgNfdgPxeYEBw0A641CfSf17PbNkZW
+         sK2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787582825; x=1788187625;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=HbTvMJOA5pAnK3dUzCcI4B1WpzStHPSu12W55oNjXVo=;
+        b=qACi6jFOf+ikGoJUDhEe9BT/kmoMnt/+VfRtT8fCIK4TtMY8S+WLiirN3kW5w8LH6s
+         KT7zkqBqC5I17C1V5W60x9lDpxK2AkmWIq/EAT4P71FMW9FY+q2kXVwIAyiD0ID/M3xZ
+         4Trlnyl2r3jDLhm0DpDZU3G9efNLox+kherekJBf+n0PNG7DiKg/VKO1UnV+dQauidCF
+         eS15i9v8KZL9AprKYjrPRDqb18XJt7shKonTWMmxSBQ75ukomKs7LgRGfgb3GHzbd+tg
+         jfrA3dJjTK02r/Ri2cdUQK5PTevKe8oj7uhRt2382zfOHtZGgVabXsmOeuzKqM7I0sEL
+         w0mQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrzrZqpLZHIbdfSkQBvt3qvfLHFdmiKssYRawDC87jxAXVOl9z2pVhs/w3oHCcj+EJ9tNmKa8VTWgvKfGnlC6Lomos=@vger.kernel.org
+X-Gm-Message-State: AFuF++l+OftzGzfxgpkuptrAlRYlnew+vL9QMDduZGl0B6fr3kJX6axO
+	goo9R1lpxLqn1kPXYpgjmWDNvM7zmzbPJM5SUl5OSNSkOBDi6QBiHQ9z
+X-Gm-Gg: AR+sD13IFxjKmS8xgU2GVn0XLEk4+R+ei3CZKO8/Mkyz0zOlhP+SYjMkM27MizVqGfR
+	fAHrLJaD8cDNdGY9FwqbM380FmquptnTo80Vgv1FGI9TFLfFbB06T/NQElTvWRPMnRBeyFV8CDN
+	W2a4XigbhEBdKz6EjiITKivTAhfwic+C5dzm9wRpObL7fPIfBPFRc9cdcy2QGrFoolHVZhNzISM
+	CREWJGmxM1GYsRloLEr9SoaKUioD6UafSO4HVydL7/1er/UgBtd7f5Pm1Uy/OcJSUYAeMDPutVI
+	MUYrPO3ZfYW0NwgL8rHNN4MUTxZ2LW5XLwnJGypVP7LTbptRqphVkCHUCBSysPN5ajNxAf176AM
+	jbUE8WEnqij2wS/NdubZJRvv1EfHSocHtny7Z3zIhHqGSe73mXa5XHAPjB1bbKLFiXZ+ZDRXHI6
+	kQ1X5TRG86nWMys9OK1k0vPst4lmbspFd9ScyobNZqcqgWTtfl0S40wikHRYohK7Vnq66ZrM9wx
+	ZP1OvZ/33DZijXaeZMxoFA=
+X-Received: by 2002:a17:90a:100f:b0:396:40e6:f631 with SMTP id 98e67ed59e1d1-39640e6f6d9mr1017779a91.3.1787582824587;
+        Mon, 24 Aug 2026 07:47:04 -0700 (PDT)
+Received: from deepanshu.. ([2405:201:682f:383f:4cf4:9e7a:69d:2900])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141861732f8sm25774770c88.10.2026.08.24.07.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2026 07:47:01 -0700 (PDT)
+From: Deepanshu Kartikey <kartikey406@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Deepanshu Kartikey <kartikey406@gmail.com>,
+	syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH] eventfs: Initialize ei->children and ei->list in init_ei()
+Date: Mon, 24 Aug 2026 20:16:53 +0530
+Message-Id: <20260824144653.54044-1-kartikey406@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] userfaultfd: decouple fault reason from VMA flags
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>,
- Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>, Lance Yang <lance.yang@linux.dev>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt
- <rostedt@goodmis.org>, Suren Baghdasaryan <surenb@google.com>,
- Usama Arif <usama.arif@linux.dev>, Vlastimil Babka <vbabka@kernel.org>,
- Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-5-3086981b33cf@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260823-uffd-vm-flags-v1-v1-5-3086981b33cf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/23/26 14:17, Mike Rapoport (Microsoft) wrote:
-> Introduce enum uffd_reason to define reasons for user faults rather than
-> overload VM_UFFD_* VMA flags for that.
-> 
-> Using a dedicated enum makes the code clearer and decoupling the fault
-> reason from VMA flags clears the way for moving the uffd mode bits out
-> of VMA namespace.
-> 
-> No functional change.
-> 
-> Assisted-by: copilot:claude-opus-4.6
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  include/linux/userfaultfd_k.h    | 16 ++++++++++++++--
->  include/uapi/linux/userfaultfd.h |  6 +++---
->  mm/huge_memory.c                 |  6 +++---
->  mm/hugetlb.c                     | 10 +++++-----
->  mm/memory.c                      | 10 +++++-----
->  mm/shmem.c                       |  4 ++--
->  mm/userfaultfd.c                 | 30 +++++++++++++++---------------
->  7 files changed, 47 insertions(+), 35 deletions(-)
-> 
-> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-> index 45355bdb4ec7..f401623f315d 100644
-> --- a/include/linux/userfaultfd_k.h
-> +++ b/include/linux/userfaultfd_k.h
-> @@ -9,6 +9,18 @@
->  #ifndef _LINUX_USERFAULTFD_K_H
->  #define _LINUX_USERFAULTFD_K_H
->  
-> +#include <linux/bits.h>
-> +
-> +/* Fault reason #PF handler passes to handle_userfault() */
-> +enum uf_reason {
+eventfs_create_events_dir() allocates the eventfs_inode via
+alloc_root_ei(), but only calls INIT_LIST_HEAD() on ei->children
+and ei->list after the tracefs_get_inode() check. If that check
+fails, the code jumps to the fail label and calls cleanup_ei(),
+which calls free_ei():
 
-Can we just call this "userfault_reason" or "uffd_reason" ? Maybe the latter is
-actually what we want?
+	WARN_ON_ONCE(!list_empty(&ei->children));
 
+Since ei was allocated with kzalloc(), ei->children.next is NULL
+at this point, not a self-referencing pointer. list_empty() checks
+head->next == head, so it returns false on an uninitialized list
+head, triggering a false-positive WARN_ON_ONCE() even though the
+list was never used.
+
+eventfs_create_dir() has the same latent issue: alloc_ei() is
+called before INIT_LIST_HEAD(), leaving a window where an early
+failure path could hit cleanup_ei() on an uninitialized list head.
+
+Move the INIT_LIST_HEAD() calls into init_ei(), which is called
+by both alloc_ei() and alloc_root_ei() immediately after
+allocation. This guarantees every eventfs_inode has a valid,
+self-linked, empty children/list the moment it is allocated,
+regardless of which failure path runs afterward.
+
+Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=3ef80b4ed02226d04a06
+Cc: stable@vger.kernel.org
+Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
+---
+ fs/tracefs/event_inode.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 604ba3e841d2..6e3513b13cfa 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -438,6 +438,8 @@ static inline struct eventfs_inode *init_ei(struct eventfs_inode *ei, const char
+ 	if (!ei->name)
+ 		return NULL;
+ 	kref_init(&ei->kref);
++	INIT_LIST_HEAD(&ei->children);
++	INIT_LIST_HEAD(&ei->list);
+ 	return ei;
+ }
+ 
+@@ -729,8 +731,6 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	ei->entries = entries;
+ 	ei->nr_entries = size;
+ 	ei->data = data;
+-	INIT_LIST_HEAD(&ei->children);
+-	INIT_LIST_HEAD(&ei->list);
+ 
+ 	scoped_guard(mutex, &eventfs_mutex) {
+ 		if (!parent->is_freed)
+@@ -802,9 +802,6 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	ei->attr.uid = uid;
+ 	ei->attr.gid = gid;
+ 
+-	INIT_LIST_HEAD(&ei->children);
+-	INIT_LIST_HEAD(&ei->list);
+-
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+ 	ti->private = ei;
 -- 
-Cheers,
+2.34.1
 
-David
