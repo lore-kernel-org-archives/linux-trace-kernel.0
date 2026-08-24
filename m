@@ -1,528 +1,287 @@
-Received: from mta0.migadu.com (out-223.mta0.migadu.com [91.218.175.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE24C3A451E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 08:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.223
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787560756; cv=none; b=DEDgVf+UQEal87lTmxJjCMb0L4FwdtmIzjUmh41W6wOTRI9U2b3WfK5sEomhZTx5kIlJNdO2OHA10k2QRvCdHCCQAPLUoL+5oJ3fx4mchtXov6bvs5DEL82Kmf4zSbnglGKw+8WtwFdV59eUmBUyNryD9XjhFcEBFnbI6OI1+Qk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787560756; c=relaxed/simple;
-	bh=1njyCI97mQgHujx4ZxP/EggIo2sx526M8cgC9mSdhy0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lpuYo0acuWgWhHnCxiFCaSUtIjsAgvYw6sHRXgtkNBr4eUrtFEUVjCW4Ljd/0zElG11VyS8RLINx7xPVkcwpvZhuGZY8wrq2Q4QNhCaF9o4cp+fKevu2Dw5mKMbDCTXyIWL+YqdyNKA6MrUoL47lDxT1nhRoOZ3Y0SMvN48Dxio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Doxy8Ff/; arc=none smtp.client-ip=91.218.175.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E419A3EE1C7;
+	Mon, 24 Aug 2026 09:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787562377; cv=fail; b=VBRCMZSFxFsposrimaCuKg61Ds1de5C3NgnPLCHCF4bjDhW75+bOmOJGGbFwvQghYlvmkd+P5S8dVuLld+3FLA96OfAa9DoyZ2KRl+kCoqJweLK+EBPGd5CpJSwhNu6++D5iJCSJhBktv/fS73cPhwW5OEj3qbdXmPljpFgrABM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787562377; c=relaxed/simple;
+	bh=2rGITChiqjTVCYTle3vemLDR0BduuUlgb4jcsbW3RQU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IGE60xm4gQ1bt70eTGl+ZW8xFQqFqi5b72tzA2jdEWoiK5lq3fD5Qgp7cPuTLT/M+wDC8Pp5ZOKaAz8l45/e3UjWpcohPaFKXqzoR3xWgHsCRxXFj+GtGeFunl99CpER8l+Nh/F81LYWgG8215H6mNNaMT6ETx2GevHbY6IfR9g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I47SUvik; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Doxy8Ff/"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=1njyCI97mQgHujx4ZxP/EggIo2sx526M8cgC9mSdhy0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787560751; v=1; x=1788165551;
- b=Doxy8Ff/dKkJImOMLlf/srZ1ybW2gzK6bunjN3aIu6zecrR4JBqnEOmbf5kRaRvlB6uhdgZO
- SapxqFvE3cyNjTPZMxjUg7BQ6zUywHun537iQG5Iz3IKLUZiPwmqMe7ySjtM6605u/sZRXxjWcK
- coHQEt1puW5RxIBtGBmN3Hrk=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from localhost (2602:fce1:44f:115e::)
-	by smtp.migadu.com with ESMTPS id 7d8e2a6175a77d65;
-	Mon, 24 Aug 2026 08:39:11 +0000
-X-Mizu-Trace-ID: 7d8e2a6175a77d65
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: kirill@shutemov.name
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	ljs@kernel.org,
-	nico.pache@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	baohua@kernel.org,
-	dev.jain@arm.com,
-	hughd@google.com,
-	liam@infradead.org,
-	mhocko@suse.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shuah@kernel.org,
-	surenb@google.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	ziy@nvidia.com,
-	usama.anjum@arm.com,
-	agordeev@linux.ibm.com,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kas@kernel.org,
-	jannh@google.com,
-	willy@infradead.org,
-	pfalcato@suse.de,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Lance Yang <lance.yang@linux.dev>
-Subject: Re: [RFC PATCH 08/57] mm/collapse: scan a table for what a collapse could use
-Date: Mon, 24 Aug 2026 16:39:03 +0800
-Message-Id: <20260824083903.52962-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20260816224609.308019-9-kirill@shutemov.name>
-References: <20260816224609.308019-9-kirill@shutemov.name>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I47SUvik"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787562376; x=1819098376;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=2rGITChiqjTVCYTle3vemLDR0BduuUlgb4jcsbW3RQU=;
+  b=I47SUvikjX5xrwplxyrYUJvZe2uVWxIzDy7/XhwpliAUuUcQ2XV6jH03
+   KL7+Igpa1mp1P2gw9Gl1v2Y+s4gfsri5Sk5zp8/JnVbargaclCccLcBRh
+   RGOULSoHuivjYM9L0P42aheVsprRFu9C4lqMdJzPLlZ9WDjR76H1OTAL9
+   h3weLgM3mZMDNUAInGMtFUGK6d7GuDSa3rqkZ+tLPfqRccmSWlmWrlgkv
+   F+7ST/xf5mUQfLNFjfM8QZbO8CK0blrQgj5ZtHTXyiFIcBAsnm0gl5U58
+   DYIQ45DIG5PX8/LRQpw6PDPzRlUnjgzJAdq6otnelOJYevUfWtlD7ntvb
+   w==;
+X-CSE-ConnectionGUID: Y7CkhbpZS6WHtw3oRumDrg==
+X-CSE-MsgGUID: vP3iP8Y2RdGfAU7jUe601A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="87773937"
+X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
+   d="scan'208";a="87773937"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 02:06:15 -0700
+X-CSE-ConnectionGUID: 1lnlxijqRAa3GxU6kc/OTg==
+X-CSE-MsgGUID: mQjPLqoWT4O6LtetdrIlFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
+   d="scan'208";a="260799742"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 02:06:13 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 24 Aug 2026 02:06:12 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Mon, 24 Aug 2026 02:06:12 -0700
+Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.64) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 24 Aug 2026 02:06:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n6Hs4smu1Ax69Dq+N4mrcnJhnbBd6CpjRTVBPcn/E2FfkrlOyE4zAsW6UHJdfjxLbF2NROMs76NO6qkGuKbokGbFPKE1n7v2HRU+Eb17PtXOwL6KBJHT+NvpzR14ku/dp7VUAQJikTTCS+JbsE6PCLquv6FmU0KH+8s5rRj3QP/wh19NWuDY653BQ87q+xXK+LWN7Ldf/YVjNfX6ZJVWuWdfa/npSlH5rN9vkdcvKiuggSLgVbY7wmDTlTqacHwqfR1Ef06EKmAFFAoA5fcJmJ/CnqdGT8whU9qICozTyS1xhj+yLSbHJ2cyAyLxB9nhQaUk6mWlgyT8m8yHJgXe5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/2LCvBnHaO9ANKU9V7yoMlHmoFHEgZJgIW+MbscRQtQ=;
+ b=LpxduMO51rRhpQ2taOlucTzyItHR+8cqF7qkgr0P0nh8giul/a0Hk3HAVBsXxjn4VeRPnC7Wr0FuiVvdF1vKxB0PIsZqMOBDI3Y3RAngn46PASzlM1zilmc4w+HhY3sDzHSjShIhzHaPfVJKut1Z3nM2Qa5cPQ8M/8rv4wAu168a8IN99RXTWbmR0GmJmNcKGIBacB7YL+m0IQoQDDATzfb+pSZeevMiz62/KAoEq7x4rmgZDKJE9lCLXBTVhjBbLr90LqUakUjkdcDAbOyy0T3q+sNU1Fz9TtR3hc0N+oD7rwVwDNAyYlt9x0DFByfXhICugs3sa/DFLTD3MKehTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DSVPR11MB9579.namprd11.prod.outlook.com (2603:10b6:8:383::17)
+ by SA3PR11MB969295.namprd11.prod.outlook.com (2603:10b6:806:532::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
+ 2026 09:06:09 +0000
+Received: from DSVPR11MB9579.namprd11.prod.outlook.com
+ ([fe80::ab5f:5d0f:fb90:9d]) by DSVPR11MB9579.namprd11.prod.outlook.com
+ ([fe80::ab5f:5d0f:fb90:9d%3]) with mapi id 15.21.0339.008; Mon, 24 Aug 2026
+ 09:06:09 +0000
+Date: Mon, 24 Aug 2026 17:05:34 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: <ackerleytng@google.com>
+CC: <aik@amd.com>, <andrew.jones@linux.dev>, <binbin.wu@linux.intel.com>,
+	<brauner@kernel.org>, <chao.p.peng@linux.intel.com>, <david@kernel.org>,
+	<jmattson@google.com>, <jthoughton@google.com>, <michael.roth@amd.com>,
+	<oupton@kernel.org>, <pankaj.gupta@amd.com>, <qperret@google.com>,
+	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <shivankg@amd.com>,
+	<steven.price@arm.com>, <tabba@google.com>, <willy@infradead.org>,
+	<wyihan@google.com>, <forkloop@google.com>, <pratyush@kernel.org>,
+	<suzuki.poulose@arm.com>, <aneesh.kumar@kernel.org>, <liam@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, Jonathan Corbet
+	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan
+	<shuah@kernel.org>, "Vishal Annapurve" <vannapurve@google.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, Kairui Song
+	<kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
+	<nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, Axel Rasmussen
+	<axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
+	<weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, Qi Zheng
+	<qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Kiryl Shutsemau
+	<kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe
+	<jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
+	<peterx@redhat.com>, <tarunsahu@google.com>, Vlastimil Babka
+	<vbabka@kernel.org>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-coco@lists.linux.dev>
+Subject: Re: [PATCH v10 18/41] KVM: TDX: Make source page optional for
+ KVM_TDX_INIT_MEM_REGION
+Message-ID: <aowJXhCdxy9j2qJf@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-18-2fc18ee6d3ba@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260807-gmem-inplace-conversion-v10-18-2fc18ee6d3ba@google.com>
+X-ClientProxiedBy: KU0P306CA0086.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:2b::19) To DSVPR11MB9579.namprd11.prod.outlook.com
+ (2603:10b6:8:383::17)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DSVPR11MB9579:EE_|SA3PR11MB969295:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b829e63-a8f4-454f-50f5-08df01bef025
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|6133799003|10067099003|56012099006|11063799006|4143699003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: r170g3lkWIWBFucUUog1uYF/rF/POjRR1gV7KkTPeCsXWgzMfpwbfERa3txFUGU+jFmtOf5baH2ItDXLWYjSed3UylbeXRJWhbJdnMKKPlwptIolPLrYW60O6CqzH07ucvp5BP2UWpb3yqOvXJ0Q1SW2VYPIcnC8Gs8cDhRHqlO3Hk11+WfN5P9DzX9s8BNg5YcerqNobZjkf0ATgTnurnDe2pfo1XXZcAy17Q6KfDb1tJHmJAZyrGSp0GikNW/xrjsOeNMQBXlJp9O9MAkBgNEu6K8f6pAl/R/nbfW9pt3LlAL0Q4w42adv/04wtKqfs6rcBDSV5G9Uy3fBrdg7pdpXvu27f4s9YHBZ8hznJMLH5moN3NZU/WIcak+iKED0WoYkfCO5Ggs/BKJQyRqGzxJHrWkIhOTpLziAOSCkDDn+MUNo9vfIHzrCynOmoo81EMKl3BzMqbs4M4TTUQ08pU9QxlMOaiWjeRwcmO8dek3EP2gBJ+eSHQRLuWwMJnaX/RKZ/WPp2qyXr3ktxblurMbwnfPTHf3UCgLieaUYjUZJnMOdEDKbGM1AExoK1Tf1wtEnHc2rfWmLj3dc97oqZzO8RHPPuY9JbaPRB924JJd5UhkpdMbQov28YnWri4oJLc3qBMP81F3qyTRqGoMpaohK0V66XKUX/n+XUlcUEs0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR11MB9579.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(6133799003)(10067099003)(56012099006)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9mV0qOnl0DpKQIJS0wefrHaiVSzW30FQR7z6kh+C34dkbIpxQ/aCnS7+B3JU?=
+ =?us-ascii?Q?ptrPqK+TF83+V2zORcx3eTxJ+0OCEHtdqcCD+HQs1HcP5fr4gs4BGZMLxY90?=
+ =?us-ascii?Q?oZXN28Vhmm7Uh5mBxEEqmfgOGVf/ybu95JOJ1lRpEsE51vWnvebpF+nR3s4S?=
+ =?us-ascii?Q?cNi4dFEhimvUqu1YsU/tdaQPYu3fHophoNj+Vq70lQqxMOloxoTBh22+9HiY?=
+ =?us-ascii?Q?+iqeVkJqN1gbPnYptW4xUAhLGgh+X3+/sUGe4AI8YqAp1PO1IsUVnTpI4C6E?=
+ =?us-ascii?Q?nlWsBgfgbQltcObud7WILR0hSTx4m5BJgQq4bZg6MghdSqjTKnk6FlvuBOBS?=
+ =?us-ascii?Q?Cn8xTxWBwXZCAJFYQZhq4543cldSooiLUkba3j9AB7YrRBO6fnewCqTnfknH?=
+ =?us-ascii?Q?z7AnLaQj4GJNfeUfeonszmIwp8M7vY4IGDL6uXmThEbwUBkXtpQBpfbQRLqn?=
+ =?us-ascii?Q?3DZCLKDwTQTBJjWkaXA6zySxJ+vtDsgavuLjZRLadfRFapRsMNjmGqrw5mhl?=
+ =?us-ascii?Q?DXke8h+o7rnfaHKjMgAouSR7vFMx3lkVqcT5OUyVw27yZTek+TTV9BOhudul?=
+ =?us-ascii?Q?33paZMomyQgYk7az4d3EuJhkqNL5HEXWHsXd2TrgauukfCxfAkpwURbuFR8T?=
+ =?us-ascii?Q?X3nkDjgbS41Qen/U5qPXitGqjfesrTVnoLRWz1y34mJu0FEK0IGupJVziEdd?=
+ =?us-ascii?Q?g408eDEd+MNQ+85Otr4oCmsYjSbNCrMGlXKDcFATVdApdwYpr/l8IQ5K6eJU?=
+ =?us-ascii?Q?jic+pM6XUMjNlgX4sjeS/KzUUjXvEes2R9C9UX7xLEA42U42cgyBGkjVulq1?=
+ =?us-ascii?Q?KZmlkuJ6pl4fxiZk1ApqA97FFc7bq9csoDC8HSttRA6stkSlS4fs84VDuB5k?=
+ =?us-ascii?Q?xTOfWMX4FRdCRAgInJSlucQq4xc2i2GkWbxl6jj+OpCs97HQs9DFHo0Ks5wb?=
+ =?us-ascii?Q?/7OA2N+j7rvIWLm3ARzldS0NMZ9oYZP3nV/LAu96fhYaxvOQ76Y/U0MhydeO?=
+ =?us-ascii?Q?j6YN5ZU1enZldG7OVCEtjkothskpej1zp7f5GjfR4GfByBmFWNY72EjQOM3O?=
+ =?us-ascii?Q?yyTNp0TD3ZjEP2R/KPD+U9jEgE75Durf/Y304N2gUw+AaC3W8IWBirP/jcgx?=
+ =?us-ascii?Q?s843mdqiET8OM+2nVFoAHQo+U5p/1efFrOXA6/F4fkY6yc01GI6diPcE0y6q?=
+ =?us-ascii?Q?Mg5esPheUXk3KtR3I470+EyqPo1TrOLSxD0xwpPp1uhol1WfgRZXWFjkZWqA?=
+ =?us-ascii?Q?O/RxwcdaLZ/2axkOMsrL8a0jz6W4XYCVbIV7OwreSrncCvC3ladLoSBIFNnN?=
+ =?us-ascii?Q?9cmm9Ou9NHC/OmjKlbe7BO9QnHNx4URIKSBOJaUPyfuJ4A4rJ5XUTiVIK77f?=
+ =?us-ascii?Q?Js2FBC8e72Rh9pTEvQZ/RvgzY+jl1aGwEHFvlE8ImtOZ/zh80ItbKxTAU6fI?=
+ =?us-ascii?Q?hzWgz5R22A3yG5SRY59F49oW5RVHK4CEvH7lq04VSJ5NdERVjlkrKn1K9fYC?=
+ =?us-ascii?Q?Ha6mOvLjz7vtOTPoF+U6F2pefr7nieXAz4/AuZ89/6mai5bCXQzHdUAc3Vz5?=
+ =?us-ascii?Q?thUlTe69PtQoXWKvz3s5aJVwSj+2vbfAKSfZ3pJj5cBDNhGC+84nY+eXttUd?=
+ =?us-ascii?Q?NM7KQ32v7YBbQ3H+A1H+PmM6jnFgyYraCCOYb20sOiar2dqtYWXEC7zhRL7O?=
+ =?us-ascii?Q?7BL2hnM0LJtjzwhgr9HjlM2O0li7pmklA63mat1zbsN6SALYcqvmV7yjDkZs?=
+ =?us-ascii?Q?miyDjRQWPA=3D=3D?=
+X-Exchange-RoutingPolicyChecked: I3Uxw5aIhiKjRl6mRa16fYOtCzIejqlFxz1OMmyH+NfwdrSfySdCEVXSclKCXfWd6aPxMOuto9PnGt80Iv6IF5hV2r7mgbE07+9HtlUgCObQXtmC+I1Fsv3uyCcsrm9ZuliKM343psx0C4QnvShuY4Tqr7jufryls7H4gZOJjRLfZ7rztIIPLjU4sT5nw5MnMbmYKdgpBbSzkbsrSSsaPTqdtMpX16lCJNZ7dWvedq35wx1zgnjRPqN0o5TkY7CCn1iHQZmTZ6d7VLykW2dub4ucxZGLUpHyjffrP4cRR8jUXpFdFVOsi48v++wOVGV6l55eagXeaOPFJxn/EHDZ0g==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b829e63-a8f4-454f-50f5-08df01bef025
+X-MS-Exchange-CrossTenant-AuthSource: DSVPR11MB9579.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 09:06:09.6117
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4HShhGAl+T1VlVc/Sn5yBkRFT3WMDBPQuXMBb/0K9aQOLgUuSqz3euhFpFIVhjez/t0WsGxMPSPz2/t7BP58SA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB969295
+X-OriginatorOrg: intel.com
 
-
-On Sun, Aug 16, 2026 at 11:45:20PM +0100, Kiryl Shutsemau wrote:
->From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
->
->Fill in the scan.  Walk the range and set a bit in cc->eligible_ptes for
->every PTE a collapse may take as a source: present, anonymous, not
->uffd-armed, on the LRU and unlocked.  The bit is set last, so a PTE that
->failed anything leaves it clear.
->
->The walk takes no page table lock.  What it produces is advice: the
->freeze settles every question the scan asks, by re-reading the table
->under the lock and freezing each source to the count it expects.  A racy
->read can only cost a candidate the freeze then refuses, or miss one the
->next pass finds.  What it buys is that a fault in the range does not wait
->for a walk of the whole table.
->
->pte_offset_map() holds rcu_read_lock() until pte_unmap(), which keeps the
->table from being freed underneath the walk.  mmap_lock keeps the VMA
->attached, without which free_pgtables() could free it without waiting for
->RCU at all.
->
->The verdict is two-sided, which is the point:
->
-> - A PTE that disqualifies only itself leaves the bitmap clear there and
->   drops the PMD order, since a PMD candidate needs the whole table.
->   Selection still gets the smaller windows that avoid it.
-> - What refuses the table as a unit -- a limit the whole range exceeds,
->   or sources spread across nodes too distant for one folio to serve --
->   leaves no order eligible at all.
->
->Limits on swapped-out and shared PTEs are stated per PMD and scaled to
->what was actually scanned, so a partial table is held to the same density
->as a whole one.
->
->A folio whose reference count its mappings do not account for -- a GUP
->pin, say -- is left to the freeze rather than refused here.
->folio_expected_ref_count() wants a folio that cannot change order while
->it is read.  This walk holds no page table lock and no folio lock, so a
->folio splitting underneath it would have its count read for the wrong
->size.  A reference of its own would not help: that stops a folio being
->freed, not split.
->
->Whether a range has to look used at all is the caller's policy, so only a
->caller that asks gathers the young/referenced evidence.
->
->Assisted-by: Claude-Code:claude-opus-5
->Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
->---
-> mm/collapse.c   | 239 +++++++++++++++++++++++++++++++++++++++++++++++-
-> mm/collapse.h   |   7 ++
-> mm/khugepaged.c |   8 +-
-> 3 files changed, 249 insertions(+), 5 deletions(-)
->
->diff --git a/mm/collapse.c b/mm/collapse.c
->index 0e6c3c68b44c..66931ef6a6d0 100644
->--- a/mm/collapse.c
->+++ b/mm/collapse.c
->@@ -86,6 +86,20 @@
->  * replaces, and is switched over once both halves are complete.
->  */
+On Fri, Aug 07, 2026 at 02:52:57PM -0700, Ackerley Tng via B4 Relay wrote:
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
->+/*
->+ * Is @count past a limit stated per PMD, when only part of a table was scanned?
->+ * Scale the comparison to the table so a partial scan is held to the same
->+ * density as a whole one.
->+ */
->+static bool collapse_exceeds_limit(unsigned int count, unsigned int max_per_pmd,
->+				   unsigned long start, unsigned long end)
->+{
->+	const unsigned long nr_scanned = (end - start) >> PAGE_SHIFT;
->+
->+	return (unsigned long)count * HPAGE_PMD_NR >
->+	       (unsigned long)max_per_pmd * nr_scanned;
->+}
->+
-> /*
->  * Scan the PTEs between @start and @end and record what a collapse could use: a
->  * bit in cc->eligible_ptes for every PTE that may be a source.  Returns
->@@ -97,7 +111,230 @@ static enum scan_result collapse_scan_table(struct vm_area_struct *vma,
-> 					    unsigned long end,
-> 					    struct collapse_control *cc)
-> {
->-	return SCAN_SUCCEED;
->+	const unsigned long pmd_addr = start & HPAGE_PMD_MASK;
->+	unsigned int max_ptes_none, max_ptes_swap, max_ptes_shared;
->+	int none_or_zero = 0, shared = 0, referenced = 0, unmapped = 0;
->+	enum scan_result result, pmd_result = SCAN_SUCCEED;
->+	unsigned int first_offset;
->+	unsigned long addr;
->+	pte_t *pte;
->+	int i;
->+
->+	max_ptes_none = collapse_max_ptes_none(cc, vma, HPAGE_PMD_ORDER);
->+	max_ptes_swap = collapse_max_ptes_swap(cc, HPAGE_PMD_ORDER);
->+	max_ptes_shared = collapse_max_ptes_shared(cc, HPAGE_PMD_ORDER);
->+
->+	/*
->+	 * No page table lock: what this builds is advice, and the freeze settles
->+	 * every question it asks by re-reading the table under the lock and
->+	 * freezing each source to the count it expects.  A racy read can only
->+	 * cost a candidate that the freeze then refuses, or miss one that the
->+	 * next pass finds.  What it buys is that a fault in this range does not
->+	 * wait for a scan of the whole table.
->+	 *
->+	 * pte_offset_map() holds rcu_read_lock() until pte_unmap(), which is
->+	 * what keeps the table itself from being freed underneath the walk;
->+	 * mmap_lock keeps the VMA attached, without which free_pgtables() could
->+	 * free it without waiting for RCU at all.  Nothing below here sleeps.
->+	 */
->+	pte = pte_offset_map(pmd, start);
->+	if (!pte) {
->+		cc->progress++;
->+		result = SCAN_NO_PTE_TABLE;
->+		goto out_no_table;
->+	}
->+
->+	/*
->+	 * The bitmap and the selection offsets stay relative to the table:
->+	 * natural-alignment math needs the table-absolute position, not the
->+	 * position within an arbitrarily placed VMA.
->+	 */
->+	first_offset = (start - pmd_addr) >> PAGE_SHIFT;
->+	for (i = first_offset, addr = start; addr < end;
->+	     i++, addr += PAGE_SIZE) {
->+		pte_t pteval = ptep_get(pte + (i - first_offset));
-
-Hmm, ptep_get() does not look right for a lockless scan ...
-
-On arm64, a contiguous PTE sends ptep_get() to contpte_ptep_get():
-
-static inline pte_t ptep_get(pte_t *ptep)
-{
-...
-	if (likely(!pte_valid_cont(pte)))
-		return pte;
-
-	return contpte_ptep_get(ptep, pte);
-}
-
-contpte_ptep_get() explicitly assumes PTL is held and therefore has no
-consistency retry:
-
-pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
-{
-	/*
-	 * Gather access/dirty bits, which may be populated in any of the ptes
-	 * of the contig range. We are guaranteed to be holding the PTL, so any
-	 * contiguous range cannot be unfolded or otherwise modified under our
-	 * feet.
-	 */
-...
-}
-
-The lockless accessor uses the matching implementation:
-
-static inline pte_t ptep_get_lockless(pte_t *ptep)
-{
-...
-	if (likely(!pte_valid_cont(pte)))
-		return pte;
-
-	return contpte_ptep_get_lockless(ptep);
-}
-
-pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
-{
-	/*
-	 * The ptep_get_lockless() API requires us to read and return *orig_ptep
-	 * so that it is self-consistent, without the PTL held, so we may be
-	 * racing with other threads modifying the pte. Usually a READ_ONCE()
-...
-	 * and we can't read all of those neighbouring ptes atomically, so any
-	 * contiguous range may be unfolded/modified/refolded under our feet.
-	 * Therefore we ensure we read a _consistent_ contpte range by checking
-	 * that all ptes in the range are valid and have CONT_PTE set, that all
-	 * pfns are contiguous and that all pgprots are the same (ignoring
-	 * access/dirty). If we find a pte that is not consistent, then we must
-	 * be racing with an update so start again. If the target pte does not
-...
-	 */
-...
-retry:
-	orig_pte = __ptep_get(orig_ptep);
-
-	if (!pte_valid_cont(orig_pte))
-		return orig_pte;
-...
-	for (i = 0; i < CONT_PTES; i++, ptep++, pfn++) {
-		pte = __ptep_get(ptep);
-
-		if (!contpte_is_consistent(pte, pfn, orig_prot))
-			goto retry;
-...
-}
-
-The later freeze can reject a stale candidate, but the earlier PTE read
-is still lockless. Should the read use ptep_get_lockless() so arm64 can
-retry if it finds an inconsistent PTE in the contpte range?
-
-Cheers, Lance
-
-
->+		struct folio *folio;
->+		struct page *page;
->+		int node;
->+
->+		cc->progress++;
->+
->+		if (pte_none_or_zero(pteval)) {
->+			if (++none_or_zero > max_ptes_none &&
->+			    pmd_result == SCAN_SUCCEED) {
->+				pmd_result = SCAN_EXCEED_NONE_PTE;
->+				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
->+				count_mthp_stat(HPAGE_PMD_ORDER,
->+						MTHP_STAT_COLLAPSE_EXCEED_NONE);
->+			}
->+			continue;
->+		}
->+		if (!pte_present(pteval)) {
->+			unmapped++;
->+			if (collapse_exceeds_limit(unmapped, max_ptes_swap,
->+						   start, end)) {
->+				result = SCAN_EXCEED_SWAP_PTE;
->+				count_vm_event(THP_SCAN_EXCEED_SWAP_PTE);
->+				count_mthp_stat(HPAGE_PMD_ORDER,
->+						MTHP_STAT_COLLAPSE_EXCEED_SWAP);
->+				goto out_table_refused;
->+			}
->+			/* Swap entries armed with uffd-wp are refused too */
->+			if (pte_swp_uffd_any(pteval) &&
->+			    pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PTE_UFFD;
->+			continue;
->+		}
->+		if (pte_uffd(pteval)) {
->+			/*
->+			 * The huge PMD could be marked write protected when any
->+			 * of the small ones is, but that could deliver
->+			 * userfaults outside the registered range.  Keep it
->+			 * simple and refuse the PTE.
->+			 */
->+			if (pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PTE_UFFD;
->+			continue;
->+		}
->+
->+		page = vm_normal_page(vma, addr, pteval);
->+		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
->+			if (pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PAGE_NULL;
->+			continue;
->+		}
->+		folio = page_folio(page);
->+
->+		/*
->+		 * A VM_DROPPABLE VMA keeps the lazyfree property across the
->+		 * collapse, so there is nothing to preserve by skipping.
->+		 */
->+		if (cc->policy.skip_lazyfree &&
->+		    !(vma->vm_flags & VM_DROPPABLE) &&
->+		    folio_test_lazyfree(folio) && !pte_dirty(pteval)) {
->+			if (pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PAGE_LAZYFREE;
->+			continue;
->+		}
->+
->+		if (!folio_test_anon(folio)) {
->+			if (pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PAGE_ANON;
->+			continue;
->+		}
->+
->+		/*
->+		 * A page counts as shared if any part of its folio is, which
->+		 * bounds the cost of CoW-breaking rather than the count of it:
->+		 * collapse_faultin() unshares on !PageAnonExclusive(), a broader
->+		 * test -- a page whose fork co-mapper has exited is
->+		 * single-mapped, so not counted here, yet stays non-exclusive
->+		 * until a write reuses it.  Those are the cheap ones, reused in
->+		 * place.  A page that has to be copied is one this test catches,
->+		 * so the limit does bound the copying it is there to bound.
->+		 */
->+		if (folio_maybe_mapped_shared(folio)) {
->+			shared++;
->+			if (collapse_exceeds_limit(shared, max_ptes_shared,
->+						   start, end)) {
->+				result = SCAN_EXCEED_SHARED_PTE;
->+				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
->+				count_mthp_stat(HPAGE_PMD_ORDER,
->+						MTHP_STAT_COLLAPSE_EXCEED_SHARED);
->+				goto out_table_refused;
->+			}
->+		}
->+
->+		/*
->+		 * Which node the sources are on decides where the destination is
->+		 * allocated: the one with the most of them wins.
->+		 */
->+		node = folio_nid(folio);
->+		if (collapse_scan_abort(node, cc)) {
->+			result = SCAN_SCAN_ABORT;
->+			goto out_table_refused;
->+		}
->+		cc->node_load[node]++;
->+
->+		/*
->+		 * Usually a folio somebody else is already isolating, whose
->+		 * reference the freeze would refuse anyway.  Not exact: one
->+		 * still on a per-CPU add batch reads the same, and the freeze
->+		 * drains those before it starts.
->+		 */
->+		if (!folio_test_lru(folio)) {
->+			if (pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PAGE_LRU;
->+			continue;
->+		}
->+		if (folio_test_locked(folio)) {
->+			if (pmd_result == SCAN_SUCCEED)
->+				pmd_result = SCAN_PAGE_LOCK;
->+			continue;
->+		}
->+
->+		/*
->+		 * A folio whose reference count its mappings do not account for
->+		 * -- a GUP pin, say -- is refused by the freeze, not here.
->+		 * folio_expected_ref_count() wants a folio that cannot change
->+		 * order while it is read, and this walk holds no page table lock
->+		 * and no folio lock, so a folio splitting underneath it would
->+		 * have the count read for the wrong size.  A reference of our
->+		 * own would not help: it stops the folio being freed, not split.
->+		 *
->+		 * So leave it to the freeze, which reads the table under the
->+		 * lock and settles the question by freezing each source to the
->+		 * count it expects.  What it costs is a window selected here and
->+		 * refused there.
->+		 */
->+
->+		/*
->+		 * Every check passed: this PTE can be a collapse source.  The
->+		 * bit is set last, so a disqualified PTE leaves it clear.
->+		 */
->+		__set_bit(i, cc->eligible_ptes);
->+
->+		/*
->+		 * Whether a range has to look used at all is the caller's
->+		 * policy, so only a caller that asks gathers the evidence.
->+		 */
->+		if (cc->policy.require_referenced &&
->+		    (pte_young(pteval) || folio_test_young(folio) ||
->+		     folio_test_referenced(folio) ||
->+		     mmu_notifier_test_young(vma->vm_mm, addr)))
->+			referenced++;
->+	}
->+
->+	if (cc->policy.require_referenced &&
->+	    (!referenced || (unmapped && referenced < HPAGE_PMD_NR / 2)))
->+		result = SCAN_LACK_REFERENCED_PAGE;
->+	else
->+		result = pmd_result;
->+	pte_unmap(pte);
->+	goto out;
->+
->+out_table_refused:
->+	/*
->+	 * The table is refused as a unit -- a limit the whole range exceeds, or
->+	 * pages on nodes too distant for one folio to serve them all -- so no
->+	 * window inside it is eligible either.
->+	 */
->+	pte_unmap(pte);
->+out_no_table:
->+	cc->select_orders = 0;
->+out:
->+	/*
->+	 * A PMD candidate needs the whole table, so anything that disqualified a
->+	 * single PTE rules it out.  Smaller windows that avoid the offending
->+	 * PTEs are still collapsible, so drop just that order and leave the rest
->+	 * to selection -- dropping it also lowers the order selection roots its
->+	 * windows at.  MADV_COLLAPSE has no other order enabled, so it is left
->+	 * with none.
->+	 */
->+	if (result != SCAN_SUCCEED)
->+		cc->select_orders &= ~BIT(HPAGE_PMD_ORDER);
->+
->+	return result;
-> }
+> Update tdx_gmem_post_populate() to handle cases where userspace requests
+> "no source page". To handle "no source page", populate (perform
+> TDH.MEM.PAGE.ADD) using memory in-place at the target PFN.
 > 
-> /* Everything a table is judged on starts empty for each table */
->diff --git a/mm/collapse.h b/mm/collapse.h
->index e2af4c47cb60..ad88b91d9a72 100644
->--- a/mm/collapse.h
->+++ b/mm/collapse.h
->@@ -130,5 +130,12 @@ unsigned long collapse_possible_orders(struct vm_area_struct *vma,
-> 		vm_flags_t vm_flags, enum tva_type tva_flags);
-> enum scan_result find_pmd_or_thp_or_none(struct mm_struct *mm,
-> 		unsigned long address, pmd_t **pmd);
->+bool collapse_scan_abort(int nid, struct collapse_control *cc);
->+unsigned int collapse_max_ptes_none(struct collapse_control *cc,
->+		struct vm_area_struct *vma, unsigned int order);
->+unsigned int collapse_max_ptes_swap(struct collapse_control *cc,
->+		unsigned int order);
->+unsigned int collapse_max_ptes_shared(struct collapse_control *cc,
->+		unsigned int order);
+> Allow "no source page" only when gmem_in_place_conversion is enabled,
+> because retroactively adding support for out-of-place conversion would mean
+> requiring a userspace update for a feature that's being deprecated.
 > 
-> #endif	/* __MM_COLLAPSE_H */
->diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->index 26d25093260b..9823884a83c9 100644
->--- a/mm/khugepaged.c
->+++ b/mm/khugepaged.c
->@@ -305,7 +305,7 @@ struct attribute_group khugepaged_attr_group = {
->  *
->  * Return: Maximum number of empty/shared zeropage PTEs for the collapse operation
->  */
->-static unsigned int collapse_max_ptes_none(struct collapse_control *cc,
->+unsigned int collapse_max_ptes_none(struct collapse_control *cc,
-> 		struct vm_area_struct *vma, unsigned int order)
-> {
-> 	const unsigned int max_ptes_none = cc->policy.max_ptes_none;
->@@ -341,7 +341,7 @@ static unsigned int collapse_max_ptes_none(struct collapse_control *cc,
->  * Return: Maximum number of PTEs that map shared anonymous pages for the
->  * collapse operation
->  */
->-static unsigned int collapse_max_ptes_shared(struct collapse_control *cc,
->+unsigned int collapse_max_ptes_shared(struct collapse_control *cc,
-> 		unsigned int order)
-> {
-> 	/*
->@@ -362,7 +362,7 @@ static unsigned int collapse_max_ptes_shared(struct collapse_control *cc,
->  * Return: Maximum number of non-present PTEs or the maximum allowed non-present
->  * pagecache entries for the collapse operation.
->  */
->-static unsigned int collapse_max_ptes_swap(struct collapse_control *cc,
->+unsigned int collapse_max_ptes_swap(struct collapse_control *cc,
-> 		unsigned int order)
-> {
-> 	/*
->@@ -934,7 +934,7 @@ static struct collapse_control khugepaged_collapse_control = {
-> 	.is_khugepaged = true,
-> };
+> Also, KVM supporting "no source page" without in-place conversion would
+> effectively be an obscure zero-page optimization that relies on the page
+> being zeroed when it is allocated by guest_memfd.
 > 
->-static bool collapse_scan_abort(int nid, struct collapse_control *cc)
->+bool collapse_scan_abort(int nid, struct collapse_control *cc)
-> {
-> 	int i;
+> Rejecting "no source page" without in-place conversion scenario is valuable
+> for KVM developers since it helps newcomers understand what exactly is and
+> isn't possible.
 > 
->-- 
->2.54.0
->
->
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
+> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> ---
+>  Documentation/virt/kvm/x86/intel-tdx.rst | 4 ++++
+>  arch/x86/kvm/vmx/tdx.c                   | 8 +++++---
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
+> index 6a222e9d09541..d8d9409120e61 100644
+> --- a/Documentation/virt/kvm/x86/intel-tdx.rst
+> +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
+> @@ -158,6 +158,10 @@ KVM_TDX_INIT_MEM_REGION
+>  Initialize @nr_pages TDX guest private memory starting from @gpa with userspace
+>  provided data from @source_addr. @source_addr must be PAGE_SIZE-aligned.
+>  
+> +If guest_memfd in-place conversion is enabled, pass 0 for @source_addr
+> +to represent "no source page". A source page is required if in-place
+> +conversion is not enabled or not supported.
+> +
+>  Note, before calling this sub command, memory attribute of the range
+>  [gpa, gpa + nr_pages] needs to be private.  Userspace can use
+>  KVM_SET_MEMORY_ATTRIBUTES to set the attribute.
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index b272c20586a74..7654a9f5fa128 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -3189,7 +3189,7 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+>  	if (KVM_BUG_ON(kvm_tdx->page_add_src, kvm))
+>  		return -EIO;
+>  
+> -	kvm_tdx->page_add_src = src_page;
+> +	kvm_tdx->page_add_src = src_page ?: pfn_to_page(pfn);
+>  	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
+>  	kvm_tdx->page_add_src = NULL;
+>  
+> @@ -3235,7 +3235,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+>  	if (copy_from_user(&region, u64_to_user_ptr(cmd->data), sizeof(region)))
+>  		return -EFAULT;
+>  
+> -	if (!PAGE_ALIGNED(region.source_addr) || !region.source_addr ||
+> +	if (!PAGE_ALIGNED(region.source_addr) ||
+> +	    (!gmem_in_place_conversion && !region.source_addr) ||
+>  	    !PAGE_ALIGNED(region.gpa) || !region.nr_pages ||
+>  	    region.gpa + (region.nr_pages << PAGE_SHIFT) <= region.gpa ||
+>  	    !vt_is_tdx_private_gpa(kvm, region.gpa) ||
+> @@ -3266,7 +3267,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+>  			break;
+>  		}
+>  
+> -		region.source_addr += PAGE_SIZE;
+> +		if (region.source_addr)
+> +			region.source_addr += PAGE_SIZE;
+>  		region.gpa += PAGE_SIZE;
+>  		region.nr_pages--;
+
+Tested the following scenarios:
+1.gmem_in_place_conversion == true,
+  (1) region.source_addr == NULL.
+      ==> TD launched successfully.
+
+  (2) region.source_addr != NULL,
+      region.source_addr is not from mmap() of the guest_memfd (double backends)
+      ==> TD launched successfully.
+
+  (3) region.source_addr != NULL,
+      region.source_addr is from mmap() of the guest_memfd (single backend),
+      GPA is private.
+      ==> Failed (-EFAULT).
+
+  (4) region.source_addr != NULL,
+      region.source_addr is from mmap() of the guest_memfd (single backend),
+      GPA is shared.
+      ==> Failed (-EINVAL).
+
+2. gmem_in_place_conversion == false,
+  (1) region.source_addr == NULL.
+      ==> Failed (-EINVAL).
+
+  (2) region.source_addr is not from mmap() of the guest_memfd.
+      ==> TD launched successfully.
+ 
+
+So,
+Tested-by: Yan Zhao <yan.y.zhao@intel.com>
+Reviewed-by:  Yan Zhao <yan.y.zhao@intel.com>
+
