@@ -1,140 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B63B346E7A;
-	Mon, 24 Aug 2026 08:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCAC3A8743
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 08:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787559435; cv=none; b=JORIu3qqwkUjebGpa3RrOoXKqeaCvZfwZVczkEW+LFicZGK9VOAgBo7V6IZvYX7JM4XF3rnQxTAbt3HsQj+UpeOzzKh1cq4SS3/nOjlH9ERfK+Gq0d93zqPHR5fcGjv51+uXSpnthEPTuIFV6nY7q/cD8SRjqQT+tHra2KhTQgM=
+	t=1787559540; cv=none; b=PF0i53r+rqZFhvU5KcJS/RIyzCeoOQJ6PkBPe5M2Kn2EdeynqFcOTi8vs0BWfF+VCRgMjA8MRSK4BpylFw0QQEB0CfOO89PPwDvdhNGDik2ULec7eiGG5RCXrXYlVgVhA0/Awuawz3HQK5VJOURqhi8EmQH5Lqg5ESXj7IeE4dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787559435; c=relaxed/simple;
-	bh=l5DE0vLKC2aO/UHzn1eUKYSOSLzkqDEzUDKrM/QvHwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ji206NvkeSBWidy/JWhzyRYbXxoITk8JMXhpPOskDVouZKFsAwEsrYQsTeW357IjFDXv2RN5bPKEM+ZqzEe2s++I6wzq2SGrkw0aMQLXnB/USpf8624kGFT0/sh4WamZXHgg31FUt/uk8SvCHJuFND3O15OuIIxTWOZ5GwkHvpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qpl6pTLo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787559540; c=relaxed/simple;
+	bh=i5V/yNDjoTdBwY0semUyIM9pWhfMJKJHEe8lJJ0tmFk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=FcX3t7YhGE6/opO+vn3AkXjVG3yzLsaEUK/Jnzrdt53D6lWQDbEc/x6KHCdb0E1pzLbSq2JeFf47fzGZN9+1ls++iIzAwxSF2v0uYkjEuhAi7UIzTnVtlxkRViqGTxqythOBwDTANdF/OyCK6KVLXuFzwCWShaI4q0vpjxu+spg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AmTW+DTm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qpl6pTLo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F411F000E9;
-	Mon, 24 Aug 2026 08:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787559433;
-	bh=IXaDWANMBlI65kh+v9rkRtQjLvm/PKZVB63CiqD6Ees=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Qpl6pTLoaAeBpcbEKuwh7r8MjAtDrlHX9jbAvcFpcR3CrHgdYxXx4sNdOyT+5UBKY
-	 hwZq5M/8DVldhkxcUcUBBVJpFFJx65vumAzWROkhZFaJiuN/Go9Oo5qBngNafk2Hnz
-	 4Kxq6N+gG+DKLwsJ0rRHEZidN7GEYCsTMgChe8YBhRjImyKcBI3UrAtavVAVigyJLv
-	 z676QZZTMwHGh3tA/ERm62yiT+TLykLWSMuKPn3ZFlO4phL6vWjYq5HA7PXoJyoZ/A
-	 GP89f/3ADUV4wdxx07Q2m2351EcJIaNzyIUdQOg2KcUhJ+DF4PThf+Jgvs99hwVs8n
-	 TfuPMAbNrQQ5Q==
-Date: Mon, 24 Aug 2026 11:17:00 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, david@kernel.org,
-	baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
-	hughd@google.com, jannh@google.com, jgg@ziepe.ca,
-	jhubbard@nvidia.com, corbet@lwn.net, liam@infradead.org,
-	ljs@kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	mhocko@suse.com, muchun.song@linux.dev, nico.pache@linux.dev,
-	osalvador@suse.de, pfalcato@suse.de, peterx@redhat.com,
-	ryan.roberts@arm.com, shakeel.butt@linux.dev,
-	skhan@linuxfoundation.org, rostedt@goodmis.org, surenb@google.com,
-	usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AmTW+DTm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787559536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jauhlfr76U5wbFVyasfT79OBDBE6yDHaiClEZzAm49E=;
+	b=AmTW+DTmW3iVUf0aTskUQ6Nl/MX+RqSxdCFjGCKbCcWPtG7Q/lgWZ5Hh/QemWzDzmLEUGy
+	ApKjVSmy9H/cja8sIjo3AKnrvdO1M1yCQury667ljOq2BIavrJtMrXoM3tmVPWgHKZMQUz
+	RWH62dUYfMOFwUEGpPswIhnMBxoV0aY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-367-WQxX-z_bPoak744mf-bCmA-1; Mon,
+ 24 Aug 2026 04:18:52 -0400
+X-MC-Unique: WQxX-z_bPoak744mf-bCmA-1
+X-Mimecast-MFC-AGG-ID: WQxX-z_bPoak744mf-bCmA_1787559531
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BF4DD1835E95;
+	Mon, 24 Aug 2026 08:18:50 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 94D081800577;
+	Mon, 24 Aug 2026 08:18:48 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] userfaultfd: collapse VM_UFFD_{MISSING,WP,MINOR,RWP}
- into single VM_UFFD
-Message-ID: <aov9_DIHLHynm7tN@kernel.org>
-References: <20260823-uffd-vm-flags-v1-v1-6-3086981b33cf@kernel.org>
- <20260824071126.41979-1-lance.yang@linux.dev>
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH] verification/rvgen: Use .old instead of .bak for kunit backup files
+Date: Mon, 24 Aug 2026 10:15:19 +0200
+Message-ID: <20260824081519.81103-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260824071126.41979-1-lance.yang@linux.dev>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: STyCn1Zun92p1Pg3BKDXIou0IknN3JqrK77U60OYMzI_1787559531
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Lance, 
+The rvgen kunit command generates .bak backup files and these can be
+checked in for selftests (make check). Clean targets like make disclean
+remove such files, leaving the tree dirty.
 
-On Mon, Aug 24, 2026 at 03:11:26PM +0800, Lance Yang wrote:
-> 
-> On Sun, Aug 23, 2026 at 03:17:43PM +0300, Mike Rapoport (Microsoft) wrote:
-> [...]
-> >diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> >index 83587d34b189..193f6e65d875 100644
-> >--- a/mm/userfaultfd.c
-> >+++ b/mm/userfaultfd.c
-> >@@ -50,10 +50,10 @@ struct mfill_state {
-> > 	pmd_t *pmd;
-> > };
-> > 
-> >-static bool anon_can_userfault(struct vm_area_struct *vma, vm_flags_t vm_flags)
-> >+static bool anon_can_userfault(struct vm_area_struct *vma, unsigned int mode)
-> > {
-> > 	/* anonymous memory does not support MINOR mode */
-> >-	if (vm_flags & VM_UFFD_MINOR)
-> >+	if (mode & UFFD_MODE_MINOR)
-> > 		return false;
-> > 	return true;
-> > }
-> >@@ -462,7 +462,7 @@ static int mfill_copy_folio_locked(struct folio *folio, unsigned long src_addr)
-> > }
-> > 
-> > #define MFILL_RETRY_STATE_VMA_FLAGS \
-> >-	append_vma_flags(__VMA_UFFD_FLAGS, VMA_SHARED_BIT)
-> >+	append_vma_flags(VMA_UFFD, VMA_SHARED_BIT)
-> 
-> Looks like this drops registration mode from the retry snapshot. Assume a
-> shared shmem VMA is registered for MISSING and COPY reaches
-> mfill_copy_folio_retry(). While locks are dropped, the same userfaultfd|
-> can re-register the range for MINOR. VMA_UFFD, VM_SHARED, ops, file and
-> pgoff all stay unchanged, so the old COPY can continue instead of
-> returning -EAGAIN ... no?
+Switch to .old to preserve a clean tree after make disclean.
 
-Good catch, thanks!
+Reported-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Closes: https://lore.kernel.org/lkml/aosuwKH5GOEo0xTN@google.com
+Fixes: 7b6246294eb0 ("verification/rvgen: Add selftests for rvgen kunit")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ tools/verification/rvgen/rvgen/kunit.py                         | 2 +-
+ .../{test_bak_kunit_kunit.c.bak => test_bak_kunit_kunit.c.old}  | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename tools/verification/rvgen/tests/golden/test_bak_kunit/{test_bak_kunit_kunit.c.bak => test_bak_kunit_kunit.c.old} (100%)
+
+diff --git a/tools/verification/rvgen/rvgen/kunit.py b/tools/verification/rvgen/rvgen/kunit.py
+index ed2082d7d3bc..85973f918c9b 100644
+--- a/tools/verification/rvgen/rvgen/kunit.py
++++ b/tools/verification/rvgen/rvgen/kunit.py
+@@ -173,7 +173,7 @@ EXPORT_SYMBOL_IF_KUNIT({struct_name});
+             for path in (header_file_path, kunit_c_file_path):
+                 if path.exists():
+                     try:
+-                        path.rename(path.with_suffix(path.suffix + ".bak"))
++                        path.rename(path.with_suffix(path.suffix + ".old"))
+                     except OSError as e:
+                         raise KUnitError(f"Error backing up file {path}: {e}") from e
  
-> Maybe something like this?
+diff --git a/tools/verification/rvgen/tests/golden/test_bak_kunit/test_bak_kunit_kunit.c.bak b/tools/verification/rvgen/tests/golden/test_bak_kunit/test_bak_kunit_kunit.c.old
+similarity index 100%
+rename from tools/verification/rvgen/tests/golden/test_bak_kunit/test_bak_kunit_kunit.c.bak
+rename to tools/verification/rvgen/tests/golden/test_bak_kunit/test_bak_kunit_kunit.c.old
 
-I prefer to add mode to the retry_state:
-
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 193f6e65d875..a0377f7ecc69 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -471,6 +471,7 @@ static int mfill_copy_folio_locked(struct folio *folio, unsigned long src_addr)
-  */
- struct mfill_retry_state {
- 	const struct vm_uffd_ops *ops;
-+	unsigned long mode;
- 	struct file *file;
- 	vma_flags_t flags;
- 	pgoff_t pgoff;
-@@ -482,6 +483,7 @@ static void mfill_retry_state_save(struct mfill_retry_state *s,
- 	s->flags = vma_flags_and_mask(&vma->flags, MFILL_RETRY_STATE_VMA_FLAGS);
- 	s->ops = vma_uffd_ops(vma);
- 	s->pgoff = vma_start_pgoff(vma);
-+	s->mode = uffd_mode(vma);
- 
- 	if (vma->vm_file)
- 		s->file = get_file(vma->vm_file);
-@@ -493,8 +495,9 @@ static bool mfill_retry_state_changed(struct mfill_retry_state *state,
- 	vma_flags_t flags = vma_flags_and_mask(&vma->flags,
- 					       MFILL_RETRY_STATE_VMA_FLAGS);
- 
--	/* Have any UFFD flags (missing, WP, minor) changed? */
--	if (!vma_flags_same_pair(&state->flags, &flags))
-+	/* UFFD registration mode or VMA sharing changed */
-+	if (!vma_flags_same_pair(&state->flags, &flags) ||
-+	    s->mode != uffd_mode(vma))
- 		return true;
- 
- 	/* VMA type or effective uffd_ops changed while the lock was dropped */
- 
-> Cheers, Lance
-
+base-commit: 0a0d1d55dad570724bf8c7ea83409639cfb4be9b
 -- 
-Sincerely yours,
-Mike.
+2.55.0
+
