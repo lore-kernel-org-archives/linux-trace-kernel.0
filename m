@@ -1,138 +1,102 @@
-Received: from oss.cyber.gouv.fr (oss.cyber.gouv.fr [51.159.188.251])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7EE382381;
-	Mon, 24 Aug 2026 21:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.188.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1332749C1
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 21:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787605882; cv=none; b=usj+VV0Q+/0yVmrXt4Ajnz+lpiamMCcR/2bvXCuMXrXlmWnslMCg35NYbRvhgsEYVsXxCQPQetN2LCYuxUNfm7O8g5OgJ4JZsGphRh/M6chPXnCHrdIVQe/ArTzsom6sdR+MROC8T4s/xWuIcbxqQUaHhBXMDv3CdPz2gTtQjZI=
+	t=1787606170; cv=none; b=M2gXeoFSynnX6e6nk2SJepk2bEJQakusPvZKMtntsDrMTMtMH4p/afviVORSM7QbXbeR0R0nwX2j63ux+/GpljnOYdAVth3qUQsPDv+6hICQbRIdHrNMVMpVanrdgUCqKMmAWqrxGwD/ckoBzzAPsKzcMmuBgpNg+S7DQvJ2w00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787605882; c=relaxed/simple;
-	bh=WvKeOXDUBJ0vzKWW52wQq9/MU2WEgonuUspqHwzV/ao=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=p4mxOwDt88VOLoj6aPc/QM8QQ9Gkv9wbPOcjcwDtDQx4zjsiNBB/LVNpO7GWya+gup9UWf2z7D3xgkc08Gkaazfw9/hartjhaMqCGoCZ0nrw49ffFQAsuIy6o6Y9LkA6P9YnVUq6CMY1bW232kbwQofH5XndKh9+NjF1iVBfGSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=OwDvdRxM; arc=none smtp.client-ip=51.159.188.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.cyber.gouv.fr
+	s=arc-20240116; t=1787606170; c=relaxed/simple;
+	bh=O3pRTqAsEvq1Kiu3DV7vi6sTaJN6oFC49nxk6BngQKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=UrBPzhRhlkCcvZj6gqN3GjQJaVN++lejy2Sq+eXf2njyyOa/ugFcUgCfL1+Phnp1yKX8FQeLOPY83VbEhecaKcqbVgeBdimD4EMD4vjkc2mq5NIGSEt1Mi+UDiZ4JDcjXGImmZaih+RjhDsx6jtcFNte5Qwh40DNqVuGjU9EuYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F8ESOAi6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="OwDvdRxM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=oss.cyber.gouv.fr; s=default; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=R2i2P0wGGg9fMSs8t3mDOGeyRItArPiUrhJHEUE7aQo=; b=OwDvdRxMmyAqHsMMdTnLFpZNBC
-	Pko7EHNVoHfV9TPSZvbvAGTS58+MU00dexzbh2O3aypbp1g2wD/1WYLJ0Li2ho6lnaj6h5SMVuXOQ
-	YGD//r2IFTxiWBG2ZZk+BS8qS4ke/9eNX87oML+Ox0379VdqyIsZ21zaezJP7QrV+sU2osfJxanCd
-	w0tXVQ8R3AAd4kIiYVVrP4wh8QSro5sS/JmOx83htLUcO5CI175dZZE1Fw4BUZT8wIlfoe9q5zZiK
-	78PqI07hAAaPGU4mDpsVB0VVhr+LZubqzejUPmRN/09lOfcNOozCdQsDTZ6Y5CqpzuYLdodgnjoKZ
-	EKwPFcew==;
-Received: from [151.115.150.205] (port=37000 helo=gepetto..)
-	by pf-012.whm.fr-par.scw.cloud with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.5)
-	(envelope-from <Jeremy.Jean@oss.cyber.gouv.fr>)
-	id 1wybwt-0000000E3zh-23RF;
-	Mon, 24 Aug 2026 23:11:18 +0200
-From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Jean?= <Jeremy.Jean@oss.cyber.gouv.fr>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	include@grrlz.net,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F8ESOAi6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787606167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+rR79cVlL8/j1KMYwztFsQXtdGXL1SqDEdDOUZN3juA=;
+	b=F8ESOAi6Fc3YP72tA6ZMI30Tg9lVWEuKU5gVTtiWOpOZpyVyKncRZhHr0ZNbB5H7UA9zoQ
+	Pv2Mqx89MuXsGgeiOST75X5m0BpARwRe0pYYWtG0bQGboufp3K1jizihZFGjIfcdyrwPPa
+	sUXKot4xTUMNXO79NEfKDYBcoCkKOCw=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-IOvYD_k_NeGcWAk98_4dQw-1; Mon, 24 Aug 2026 17:16:06 -0400
+X-MC-Unique: IOvYD_k_NeGcWAk98_4dQw-1
+X-Mimecast-MFC-AGG-ID: IOvYD_k_NeGcWAk98_4dQw_1787606166
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-90c8da50f8dso53418626d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 14:16:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787606166; x=1788210966;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=+rR79cVlL8/j1KMYwztFsQXtdGXL1SqDEdDOUZN3juA=;
+        b=Y3cv1KoYdnRo0V5jNHM32qzDYDbLPY/DFb6Npfchpowm/mwZL7lnTaZJMvwTrbG0k0
+         3oEwxy/81S287Hpq48Uwb9rpoEODcb5Hrp3V1bgPTzpIZXfCxYod7ssBpeYSUA/gT85p
+         MYL2NRYRLXmg0t16SMCRdIDCGueKKqMdEKxj6lWY+NlvCOmxj++2yqbgfKd1M+uU0MLg
+         /qcTAaIKqIRyhzr+c3RwyydNQ5hWnSEnmpSwocd+ceeLMq/kam6lQSMdDu7aghM+UCwv
+         rUE6ndrj7XzcAuOwzxAXsLVwc1NcZ9BOhVJnKXagLWjLKz0r6nhPC6MXXzmLvtGaZVeV
+         Q6vg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp/x/XneO1QZbmc+EvNQVPLkUxUV+7U00bT0TVWRTUX5QozAHXk1MIisyNp5S61ZPHNnhTWYiJBn+0Ea0Oc+MgPNSc=@vger.kernel.org
+X-Gm-Message-State: AFuF++lDmiSYsxDjGosKRGyBNicpWqTnCsyDLP+W1uzYhgBToKIZ4a8S
+	6wTq9owLBH8EF8inSX4MIpolwnxlFhiyGcfisbdH+/AvYx3RcTt0hlsh0mJGBDbprRzmDEQfVH5
+	Ruy5BlGOWTXWtYTUhsUjpSt4SwivQQyMv0e6p+pcyPXmolv1AjoBjJPZX6GI5jc4ydbf5EgX9sQ
+	==
+X-Gm-Gg: AR+sD13UxpEmOLdgN9PWVvxkIsN+mk/oLliMetSuLGMoxPKzde92aoRqlDaNfvQ36kS
+	6DWfBAoaA0uZryxCaWt4QNip8g81KYc6sMKtc5BF4lmVBM6xo7ktgedXoYxnCBPmp5Q6+nEWV2K
+	UJL89ewsRdvCijUgFcmzpBGSnMWxmK18geUKE8a0z3L0Y3FjSvzHc4z2X+CcAtyDEzysWGGKYUE
+	lT/6rPOhiXpjU4Pck9oq4pwE7QMRMmEvLqae/xZcqkHkEKlI7djJUqmhwREdPHR5hN/2VqevDNd
+	b9JLFIz3fpmH/EGmBdAlxpGpyjhcICXRAerSbZUlbO/9lOKx1LNz1b62NjT1Z3imGp5AzfX0VaS
+	U9/WE8vK8+qSUcMxV1yMzyD6QRSvIUmtg
+X-Received: by 2002:a05:6214:5885:b0:8ee:fd0c:5d96 with SMTP id 6a1803df08f44-90c8f90bdc9mr253444276d6.7.1787606165786;
+        Mon, 24 Aug 2026 14:16:05 -0700 (PDT)
+X-Received: by 2002:a05:6214:5885:b0:8ee:fd0c:5d96 with SMTP id 6a1803df08f44-90c8f90bdc9mr253443846d6.7.1787606165352;
+        Mon, 24 Aug 2026 14:16:05 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.redhat.corp ([2601:447:cc01:6890:c623:cd89:345e:99f3])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c93931452sm71832556d6.26.2026.08.24.14.16.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2026 14:16:03 -0700 (PDT)
+From: Crystal Wood <crwood@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
-	=?UTF-8?q?J=C3=A9r=C3=A9my=20Jean?= <Jeremy.Jean@oss.cyber.gouv.fr>
-Subject: [PATCH] tracing/user_events: Clear copied tracing state before fork duplication
-Date: Mon, 24 Aug 2026 21:10:37 +0000
-Message-ID: <20260824211036.3729669-2-Jeremy.Jean@oss.cyber.gouv.fr>
-X-Mailer: git-send-email 2.47.3
+	Crystal Wood <crwood@redhat.com>
+Subject: [PATCH 0/4] tracing/osnoise: Synchronization fixes
+Date: Mon, 24 Aug 2026 16:15:40 -0500
+Message-ID: <20260824211544.3984835-1-crwood@redhat.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ns6PC6s6utjuLJDS5qzpnaCDTvtXa5uWz_htPUqwWGs_1787606166
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - pf-012.whm.fr-par.scw.cloud
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oss.cyber.gouv.fr
-X-Get-Message-Sender-Via: pf-012.whm.fr-par.scw.cloud: authenticated_id: jeremy.jean@oss.cyber.gouv.fr
-X-Authenticated-Sender: pf-012.whm.fr-par.scw.cloud: jeremy.jean@oss.cyber.gouv.fr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-User events keep per-mm tracing state in task_struct::user_event_mm. It
-tracks the registrations and enablers created through the tracefs
-user_events_data interface.
+Various improvements to synchronization in osnoise/timerlat.
 
-dup_task_struct() starts a fork by copying this pointer from the parent.
-user_events_fork() must then either share it for CLONE_VM, or create new
-state for a child with a separate address space.
+Crystal Wood (4):
+  tracing/osnoise: Per-cpu mutex and fd detachment
+  tracing/osnoise: timerlat_main: Disable migration before per-cpu
+    access
+  tracing/osnoise: start_kthread: Always check OSN_WORKLOAD
+  tracing/osnoise: Take trace_types_lock in timerlat_fd_open
 
-The second case can fail. If user_event_mm_dup() cannot allocate the new
-state or copy one of its enablers, it returns without replacing the
-pointer copied by dup_task_struct(). The child now points at the parent's
-tracing state, but did not take a task reference to it.
+ kernel/trace/trace_osnoise.c | 274 +++++++++++++++++++++--------------
+ 1 file changed, 166 insertions(+), 108 deletions(-)
 
-When the child exits, user_event_mm_remove() can drop the parent's task
-count to zero and queue its tracing state for release. The next
-user-events registration in the parent calls current_user_event_mm() and
-writes to the freed object.
-
-KASAN reports:
-
-    BUG: KASAN: slab-use-after-free in current_user_event_mm+0x51/0x1d0
-    Write of size 4 at addr ffff888005010d30 by task init/44
-
-    Call Trace:
-     <TASK>
-     kasan_report+0xce/0x100
-     kasan_check_range+0x10f/0x1e0
-     current_user_event_mm+0x51/0x1d0
-     user_events_ioctl+0x82e/0x15c0
-     __x64_sys_ioctl+0x139/0x1c0
-     do_syscall_64+0xce/0x450
-     entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-    Allocated by task 44:
-     __kasan_kmalloc+0x8f/0xa0
-     __kmalloc_cache_noprof+0x180/0x3a0
-     user_event_mm_alloc+0x3c/0x1f0
-     current_user_event_mm+0x88/0x1d0
-
-    Freed by task 42:
-     __kasan_slab_free+0x43/0x70
-     kfree+0x13a/0x390
-     process_one_work+0x696/0xf90
-     worker_thread+0x420/0xba0
-
-Clear the child's copied user_event_mm before starting the fallible
-duplication. If duplication fails, the child has no user-events tracing
-state to release. The CLONE_VM case remains unchanged because
-user_events_fork() explicitly installs the shared pointer and increments
-its task count.
-
-Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
-Assisted-by: Codex:gpt-daybreak-blue
-Signed-off-by: Jérémy Jean <Jeremy.Jean@oss.cyber.gouv.fr>
----
- include/linux/user_events.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/user_events.h b/include/linux/user_events.h
-index 57d1ff0..2c9ac7b 100644
---- a/include/linux/user_events.h
-+++ b/include/linux/user_events.h
-@@ -48,6 +48,7 @@ static inline void user_events_fork(struct task_struct *t,
- 		return;
- 	}
- 
-+	t->user_event_mm = NULL;
- 	user_event_mm_dup(t, old_mm);
- }
- 
 -- 
-2.47.3
+2.54.0
+
