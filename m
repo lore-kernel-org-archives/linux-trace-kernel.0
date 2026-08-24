@@ -1,127 +1,120 @@
-Received: from mta0.migadu.com (out-244.mta0.migadu.com [91.218.175.244])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780C4493657
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 05:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D90255E43
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 06:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787547657; cv=none; b=HrPdwKZ3baZCtArLcyvzpbC4kx6dfN78nG6s59i8IgBhIbLJk6j7uBBHxFzXHlFvnJNBRScCZFak3NW9Dzy6LCjqKAee9tteXEyiD8WI6L+0t6liqHiqX997++xe6mMzBn8A9KUloSjYottKfcHKnegEzNJfn+tSQvcq1AtMWD0=
+	t=1787552540; cv=none; b=DiMc3N8duQqiC/8COicyZR9iwxt5WunhY1xZNmh7fYdHS9HpNnYiVJkgmlSrjYv0duVvtpbWrmRDG0zAWZCQEviGWmK2HyDm2zxYKQ/Dtc6/kJVVuusqanrm0NgGrlbDDEI0whgLDA/DtXsHq9QWK972CNFlUwxCPnjz8cjay7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787547657; c=relaxed/simple;
-	bh=p+4xVU1crk2PMn+VxeFjFB4dpSsdOnd05KvJdiq1MWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ascwvirlYjMBeETo1lucLNKWlUXSCdCTw1NBqSNR/bAlLLDOW8qI/jgcYrmb5U95iOcONIWgp5pHE0Ff2CGdQanGEz1wexMJB3+nJQVVRgxIn/HZsDjfdb3+Pc0X4xDFEpCtT52ugst0R+E09ufjD3o85Ks7yxoHBiPuMQPIU9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hH7hF9qH; arc=none smtp.client-ip=91.218.175.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787552540; c=relaxed/simple;
+	bh=qcUY9OTujfYD1G7thrLDsVx2wL7XB0pkPW8tVjj6Muk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=npgOMdaMFaaTpXb2+e8s3RlaGkLKjSm8HsvO5X7DwkknpPKz9k8rW2RvvHmpTKGwXzZTnqyfTWjCR3tiWPDBTxaH9zAkxL9Suv256ecn1BZX3MtTSp87m26YJkiRwtbdd/ynRlof9sxvLk+A+By1kIl0VnmG8kXDOkQ7bfscut0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jRshQkdi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hH7hF9qH"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=p+4xVU1crk2PMn+VxeFjFB4dpSsdOnd05KvJdiq1MWo=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787547653; v=1; x=1788152453;
- b=hH7hF9qHgBTY3zoER1cYQYMBRStKII2fjsgTdb9Ltkf4p6oVdYfzpB3fH5VfhzkaytYodRhN
- gOFBq05kF3xZqGlqf9MKA7c0qk83ZgMuAe/Y4iZxLac7V6rYMSDA6QcuZvKzVQMKmFeIZnStdH8
- KimdY8lxzbIlvr/wU4o3MZGo=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from [10.22.64.46] (122.11.166.8)
-	by smtp.migadu.com with ESMTPS id ea6bb7775792a65e;
-	Mon, 24 Aug 2026 05:00:53 +0000
-X-Mizu-Trace-ID: ea6bb7775792a65e
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <c71d27ab-ec59-4b72-855f-7bf437095cd5@linux.dev>
-Date: Mon, 24 Aug 2026 13:00:41 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jRshQkdi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787552536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qcUY9OTujfYD1G7thrLDsVx2wL7XB0pkPW8tVjj6Muk=;
+	b=jRshQkdiwqDDB7ypDxpW20nuBvfR63N/WuPHRk5hGt8Gwtcw2ua/vNG0TqjTC3pAZeviHM
+	awt0YE9gyogDkCH0n1Xw6McUUyqhhEshk0IFF69v2hBd0ytdlIy1SH4L9lQPhu/S2FYKr4
+	iCpUbwrGdxET5G8OfwogqJNq3bUWmU8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-dX5XmyiaNvKu1zIrghG7UA-1; Mon, 24 Aug 2026 02:22:15 -0400
+X-MC-Unique: dX5XmyiaNvKu1zIrghG7UA-1
+X-Mimecast-MFC-AGG-ID: dX5XmyiaNvKu1zIrghG7UA_1787552534
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c1686e23b9cso257265366b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Aug 2026 23:22:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787552534; x=1788157334;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=qcUY9OTujfYD1G7thrLDsVx2wL7XB0pkPW8tVjj6Muk=;
+        b=WhBmTyBQNXPETxSmeV+8rMkrBiCn3Z2XN7temyG/NrbrHPHhBAL7Ayu2VK+CgLqDIY
+         KSNVppa5F0tmx+9ECA7LyqDX8mw3y+dZMqePaawkJhT1h9ax+nFEc4FmBUuAO0Wg93L+
+         xx6kf+SxU+bD+MfRf2wOfWh0Bsor4C90SYnL5oilYkvik1QkelHB0e8WJn83IZvx2jkB
+         MeIWf21Jj+XHH+d7WUTQC7Fe2FzrBj09qxacjPSckB4JQiVUNjsO66uumS6uj4DepSkw
+         5cHPvbNXxGGxIfDljkTHBcJDILLufRr6h4LfsyB3jITBVNy4EngSPHyzNWslRODKS+kH
+         kWog==
+X-Forwarded-Encrypted: i=1; AHgh+RpuCLoyYq8Gsi/dkM00sEG6CJox6t+X5bXIR9ldbR1YhLtnWE/i7FLRxrvg7o7juyjgogy7feY+T2vEU602lgB94ME=@vger.kernel.org
+X-Gm-Message-State: AFuF++nDGcxyXvy2e5naYXEX/ZpW1VDzXYokaz7LfmcXq4eV5Ov06jdf
+	PNv0tyqGm57ThX7GOR3EqET/2w9l5s1Y0JYyeloYakbxEvCAooYbkYf5XqR274TqFawxnW7DAce
+	IcEeH9OoEfdRKj7Qq578CUxhgPnFd3hzsEKMHZoo/60loCkZYUHQKhZFH66XCv9QNWyyAVyS6yQ
+	==
+X-Gm-Gg: AR+sD10G/5iaTzym6rUkH4gd/MLx+LXNA4S1Ei49l8s+Zih20xFEcJ55nZ1P257iD9A
+	o0fXm1WdntSJ2zYkrrRwhqDva3ovnaQNe1+nZwveUYOtn38u8urqsFwqBUWo7aKlDbmMEbBry5n
+	SI0JJUjWhf7bIlq66k5aei1wONSZshb4OFvrppIBMQFJ4T8DoaW2ihn7NQqS1k/zcpJpTya8JC4
+	q65/qTzJ1nIzgTRp5jmQ07MZqIC0+447hgByIaB14sHyY2dJypn1Yid57cI+vgKBboZMYk3+lD1
+	fUzbjZIYBx82lpfiQVSwwJ3/85+v52H2rKSfft3DHIRi98ApETjcAhht82qMMJ8TTNZ0U6DbUZ9
+	4qKEZdKrQZE69GIeZTaj3z1aIlXkDIvsmUkOv5If0uQZbx2bp/by4Q0lSFcl9sCYl7LNYtw==
+X-Received: by 2002:a17:907:c20:b0:c1f:b883:ed3b with SMTP id a640c23a62f3a-c246a2cf2d0mr2746850766b.4.1787552533778;
+        Sun, 23 Aug 2026 23:22:13 -0700 (PDT)
+X-Received: by 2002:a17:907:c20:b0:c1f:b883:ed3b with SMTP id a640c23a62f3a-c246a2cf2d0mr2746845066b.4.1787552533314;
+        Sun, 23 Aug 2026 23:22:13 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c24d6f203acsm62451566b.24.2026.08.23.23.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2026 23:22:12 -0700 (PDT)
+Message-ID: <4b90103fee3b9825d09833b0a314995b21776758.camel@redhat.com>
+Subject: Re: [PATCH v5 10/17] verification/rvgen: Add selftests for rvgen
+ kunit
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, Thomas
+ Weissschuh	 <thomas.weissschuh@linutronix.de>, Tomas Glozar
+ <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>, Wen Yang
+ <wen.yang@linux.dev>
+Date: Mon, 24 Aug 2026 08:22:11 +0200
+In-Reply-To: <aosuwKH5GOEo0xTN@google.com>
+References: <20260723074534.43521-1-gmonaco@redhat.com>
+	 <20260723074534.43521-11-gmonaco@redhat.com> <aosuwKH5GOEo0xTN@google.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next 00/13] bpf: Add tracing_multi link support for
- bpf progs
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Quentin Monnet <qmo@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Mykyta Yatsenko <yatsenko@meta.com>,
- Avinash Duduskar <avinash.duduskar@gmail.com>,
- Anton Protopopov <a.s.protopopov@gmail.com>, Amery Hung
- <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
- Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
- Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
- Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260809150111.45000-1-leon.hwang@linux.dev>
- <CAEf4Bzam=0V6n4_vBahhYh2Qn9KfriDKXSz58L4L+teHJRWfPQ@mail.gmail.com>
- <0b30bc97-2ecf-46eb-a863-94e706e18c6b@linux.dev>
- <CAEf4BzaXaLLqs6XXCG_02c7UcvNWfbGUAJTYosr22oaD4iokuQ@mail.gmail.com>
-Content-Language: en-US
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <CAEf4BzaXaLLqs6XXCG_02c7UcvNWfbGUAJTYosr22oaD4iokuQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: dYMMzzBCmiywL1GkAHMGbmJdXbzTyfX7fT7ZTKUSyqs_1787552534
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22/8/26 01:46, Andrii Nakryiko wrote:
-> On Sun, Aug 16, 2026 at 11:20 PM Leon Hwang <leon.hwang@linux.dev> wrote:
->>
->> On 15/8/26 04:14, Andrii Nakryiko wrote:
->>> On Sun, Aug 9, 2026 at 8:01 AM Leon Hwang <leon.hwang@linux.dev> wrote:
->>>>
->>>> Similar to the tracing_multi link support for kernel functions [1], add
->>>> support for bpf progs.
->>>>
->>>> When attaching to bpf progs, it must attaches to the target by text poke
->>>> way.
->>>>
->>>
->>> Please spend a bit more human effort on justification for the change
->>> and explaining your use case. In what case you'll be attaching to a
->>> large amount of BPF programs such that attachment speed-up (if there
->>> is any) matters.
->>
->> Will update the cover letter with justification and my use case.
->>
->> Here's my use case:
->>
->> I'm planning to enhance the function-graph feature of bpfsnoop [1]. It
->> will trace all bpf progs, including their subprogs, to draw a full
->> function call graph including bpf prog call sites.
->>
-> 
-> fair enough, interesting use case, definitely outline that in the next
-> revision (and provide before/after attach time as well for such use
-> case, please)
-> 
-Will include my use case.
+On Mon, 2026-08-24 at 01:32 +0800, Kuan-Wei Chiu wrote:
+> I noticed a issue regarding the .bak file introduced in this patch.
+>=20
+> When running make distclean on the kernel tree, this file gets
+> automatically deleted. As a result, git tracks this as a deleted file
+> and leaves a dirty working tree, which is a bit annoying during
+> development. Would it be possible to use a different extension for this
+> golden file, such as .backup or something, to prevent it from being
+> swept up by the generic clean rules?
 
-Implemented the attachment micro-benchmark. Here's the result on an
-x86_64 16c16g VM:
+Hi Kuan-Wei,
 
-./bench tracing-multi-attach-progs
-Setting up benchmark 'tracing-multi-attach-progs'...
-tracing-multi-attach-progs: prepared 1000 identical BPF program targets
-tracing-multi-attach-progs: fentry created and attached 1000
-programs/links in 679.324ms
-tracing-multi-attach-progs: fentry.multi created one program and
-attached one 1000-target link in 470.042ms
-tracing-multi-attach-progs: fentry.multi creation/attachment speedup is
-1.45x
+thanks for reporting, that looks quite annoying indeed, let me send a fix.
 
-The speedup 1.45x looks good. But attaching to 1000 progs via fentry
-costs less than 1 second, which is really faster than attaching to
-around 1000 kernel functions via fentry:
-
-bpfsnoop -k '*:(struct sock *)sk' -m entry -D
- Tracing 1096 tracees costs 11.597266736s
-
-Thanks,
-Leon
+Gabriele=20
 
