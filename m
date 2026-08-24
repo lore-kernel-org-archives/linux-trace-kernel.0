@@ -1,54 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617DF239E60;
-	Mon, 24 Aug 2026 14:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0BC35677C;
+	Mon, 24 Aug 2026 14:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787583575; cv=none; b=QN8Xad0zwSuQebgy9AuoIUJxc7aGJY5tljVchDxoPiMY5VRpaNswST6zMcGRTN1KLdtk86hioF+vxle77gwSSOZSK4cXT1pV6WH6Vr93SbwU/HNJqWaTyQfdi607lqxTUY+Zevp6HMFNLu8+99c+TROUhA8J45dQwXbpC6hAsQI=
+	t=1787583597; cv=none; b=rHY/dMvand/Pku0AJXbVH3JjzRvzi4JoHrB186jWhUQap2lahe6aAR9Hqt1w1f2T3mu14WCeOjNcm4Nsbg3APQNz1/CPLNx8wYSobbLFZioXflF+n5V08QLYYU3/t0Ul1sVtigPvCqm6RlqLdNmTXKGG9DOWuuy4A2bWQ1XMfDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787583575; c=relaxed/simple;
-	bh=2xbYWWA2A5lp9vXQmXIPtL6kb0IJD+kCExBxK7q+77Q=;
+	s=arc-20240116; t=1787583597; c=relaxed/simple;
+	bh=1lz9GNT5vd4nkuei9XVegK2uGmskkULx9nOCu1MNVFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/Wm0OvBXvXDvhPxD3C33TIThq64ows/UlPiW5jPk4PBrHj8ryZkmkUN724es6kZf7P0RzEYdnzHkSPt0yMvcXAL5Vz7aFZBzpaFCy/RNrqGCfzW5rfgf0D6/GkAWwFKY4zvjjU4OFtWMLosWPhcPAdWsD3AhRwjAy3HPp2KK/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGFVkLHL; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eu0TTvZzqUeukhvz83MTn1kcymHentrcKkIi3bQu+sG3V4+9DUqP0a4rC6m4PvPn2AiHfI63yX+88IZ3zqEhSFUH2Bxo4jFuqi9omtjsC6zxlKpNJhe/n+mS6y6obo3WoZm6ahpBgQM5fzWSdXh/4xhztWk4SuPh0LphaT00NJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=MGT9z1Sx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R9Wb13ZM; arc=none smtp.client-ip=103.168.172.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGFVkLHL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E2CC1F000E9;
-	Mon, 24 Aug 2026 14:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787583574;
-	bh=AccNNgKH6mpdiOZn+TQ6yi+YTRFl1ckABXXlP5qNp0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WGFVkLHLt8glwJyNyzpbegLiEczgB3KRRpoxrsKbnYBufxLJsdfqDhjhdP7T16Tx5
-	 bqxKzSNDAJCPhN/X/3zf+HiOu+g0MnTXFumI1OQd9LYWSCC54AQS8bvMlvM7Q7DEdB
-	 F6+Y9XiTmfKwR+wo5sGnM0dgZnSkFBQxie7k+L7q0HtnN0kovChN6zZm2ic4jGevda
-	 Hkd+WMr6ZxnA/yTIZcDJL8LfULRtlUE+8UlWLZyr4gIuAu5E7JTeg9qNc7tLpPrH+L
-	 z5FuXi7SjxSz37zwDb/a62Uf6rEkWJgcBNM1Kin4Iwuk7WW72JJ2lAu6X7xGJJIEi9
-	 2kVhcK32BgG3Q==
-Date: Mon, 24 Aug 2026 15:59:26 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>, 
-	Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Lance Yang <lance.yang@linux.dev>, "Liam R. Howlett" <liam@infradead.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>, 
-	Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Usama Arif <usama.arif@linux.dev>, 
-	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] mm/gup: move gup_can_follow_protnone() to gup.c
-Message-ID: <aoxcRstdSy99lNEA@gremlin>
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-1-3086981b33cf@kernel.org>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="MGT9z1Sx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R9Wb13ZM"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id D48A813802BF;
+	Mon, 24 Aug 2026 10:59:54 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Mon, 24 Aug 2026 10:59:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1787583594; x=
+	1787590794; bh=Yu9P/sTLYPHFQVWmVS7Y7Dli1B95EhFAwCCsGt/ZaaY=; b=M
+	GT9z1SxWlB/4TFVji7vo9tPCdCuK/gc08BF5AJxPHyA0iw3i4X8SAyhafQtyCres
+	/0FSTuz4YJztAs7t3lMFV63ci5h1vi894Ok+AnqmyNN3CAcqc24mI40sjyMvj8wj
+	PQ59o6+tcmOZpzI4ag/J6OSRh9e4OGYW4NuGygJGuDyiDsj50tij2YzG4ms1o0Uo
+	h12/46SPWxmGD04cGuQ7uS5Oh+E2/2pIpwAxrYaJxMCTnWJU3Vr9eL2rIudgMb/8
+	FY8cIeP0GzLiV9Kcyt38VI2aV3C+fHtu4bJtDGSUy8dx2Z+RVCerpAI8hbF75MJe
+	XLqd0p0IpJNZHpZLNCX+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1787583594; x=1787590794; bh=Yu9P/sTLYPHFQVWmVS7Y7Dli1B95EhFAwCC
+	sGt/ZaaY=; b=R9Wb13ZM4u6qNWWJQuTlLX5XFswHrSROHybTuFX0w516wPdrm9k
+	fk+yFdV4uIDJvhcEbx8ZRhyYKL2nNOs0Fe5uSALsGbTiyTIBeRrEi52Qq+8m9Zzc
+	/PeeTv1+iB5CjFiVewMc1Pe6yUUiool+QzBwQUjjHKuJSnyJiv1f5kmy6wdW47VC
+	zozvkPyShdJSU+2sNEx1C0Swi0zIi/un93n5nYllykJx9o0HPWQ//OnGnNlcA+sW
+	OjoJ/8H0bDgBJZ/oyZhOew8XvKvCTWatFRt/opbObrZpEfYVzaOEbbuw1PRAywnL
+	abDRU4V1vccxp2FGi9JTFxeqP5BkoLYUWWA==
+X-ME-Sender: <xms:aFyMaphnihHBiQZNoi7T389o1QTZbtMl2akARdWzQgCaTdYfeuHClg>
+    <xme:aFyMaucjM0A6qKXe9E1-iGljJbInsvNsCBKamTairpB0ZbNvF6tJZiuaJuW8qPO4R
+    ft-k4xnpN5t_GgO73GjusZD61IFzsd5qfrUaaDMoYDX89e1iVqDw5s>
+X-ME-Received: <xmr:aFyMaqhpXl8qyNdtn0eD-FoUVVr94to_TDzYTJ_Cu9NRaZ-8pwuDRL9ksWI>
+X-ME-Proxy-Cause: dmFkZTFa7qxHA3qw09qMM0lVFcj/nmVHnRJ0m27uYJT6lMLZ7v1xzgdvd5p6U/QBOQTfkA
+    10cJ+0Icwv6tyE9AIciaBSopNETAHkeNH8otyAPTL4UeuxqJpy7nz4i/xGDZlwvRkCXIPm
+    0yTGMiT7QIObxGSYPnJ6lbBAlLaGqN99Pisa653oUGH0S0u5rxDTMVZxGCG32mXAP1dKXk
+    dMrYaODJGgDXYh6sU8EikjdwkjxNj8YCQ9etN4LJa3av2TnlVTnUKWyZi+Ea3e9YQHJ0QY
+    WAWSZFOmBspb4p46AXwaKJRFFRr88VqQ3E4YELG4yvXtevIuuehkYkhSrktLQi4OAr05d2
+    CHqx2eywsgxYn5epfHNDF2ZfCYYYWomwJJpHejDRWVNcVRcHovhq5pTLxwf5TZaa++R2D6
+    qgTgAfWsFG9kCXRuSBMkvSVNMWAxjfBwOCszJR/Ois+Efkj0B48suowg93eYyLUS1CU57L
+    edmv2OcFEKBnswdwkWsxnFum7HJf3g9okI8NBSRWK1c5lDUSXLvwtXo6X9WECibp1L5GeL
+    +qSn8UTsBkFDkqw8C64eNO1JAd8g1V7AZsHs/NsQGkBK2CaK4HWl4iP4OBoaV86LVAxfbI
+    mTLS9lLSGc42Mn+Ab7nqJOLJzm2Rf+KxZJofVpVDwVvdbTmr8jcThpB1ThjQ
+X-ME-Proxy: <xmx:aFyMauQTq7FNe43FkdTdZ1xmY4EuDBBtJivVng_yDA7oqEk3QPMw8w>
+    <xmx:aFyMamK8dXH13ZK0xjswRGu0Oh8JfE1Z-eMXPZCxsmDn22bUoWoaeg>
+    <xmx:aFyMatR8RIV83iQosn6prU5RDRdiQT_1oz7UUhMw8_uD57JEiR6PTA>
+    <xmx:aFyMaruwPSyawHNRKwHvMdXAbu8ET1Zk0BVLqXekf_CWi1J75UJq8A>
+    <xmx:alyMap5dO2oBDGIh4DBhvvknyQVXRI2wad-Y0wwN7EJ63nGbX_5UgCZQ>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Aug 2026 10:59:51 -0400 (EDT)
+Date: Mon, 24 Aug 2026 15:59:50 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	akpm@linux-foundation.org, nico.pache@linux.dev, baolin.wang@linux.alibaba.com, 
+	baohua@kernel.org, dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, 
+	liam@infradead.org, mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, 
+	shuah@kernel.org, surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, 
+	ziy@nvidia.com, usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, jannh@google.com, 
+	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
+ primitives
+Message-ID: <aoxcN7jrfbK_Ac8V@thinkstation>
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <aoLAly-oL2OAa4n8@lucifer>
+ <aoLkMUtmzRVuv2Hx@thinkstation>
+ <aoQ77EcD3M2kjeya@lucifer>
+ <0153303d-f9d6-45ea-a276-fbf2e5625ef9@kernel.org>
+ <aoXn1B7cPnPq7uxd@thinkstation>
+ <aoxRs0mjyQnpO-IT@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,136 +97,26 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260823-uffd-vm-flags-v1-v1-1-3086981b33cf@kernel.org>
+In-Reply-To: <aoxRs0mjyQnpO-IT@gremlin>
 
-On Sun, Aug 23, 2026 at 03:17:38PM +0300, Mike Rapoport (Microsoft) wrote:
-> gup_can_follow_protnone() is defined in include/linux/mm.h but only used
-> by mm/gup.c.
->
-> First, there is no reason to have it in already gigantic header.
->
-> Next, the upcoming refactoring of userfaultfd flags will make
-> gup_can_follow_protnone() depend on userfaultfd_k.h which would cause a
-> cyclic header dependency.
->
-> Move gup_can_follow_protnone() to mm/gup.c.
->
-> No functional change.
->
-> Assisted-by: copilot:claude-opus-5
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On Mon, Aug 24, 2026 at 03:22:02PM +0100, Lorenzo Stoakes (ARM) wrote:
+> This whole reply seems AI-generated...
 
-LGTM so:
+It is not.
 
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+I heard David's feedback. Will adjust accordingly.
 
-> ---
->  include/linux/mm.h | 38 --------------------------------------
->  mm/gup.c           | 38 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 38 insertions(+), 38 deletions(-)
->
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 0829e0d3b2d1..4daf9cd6ae8e 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -4860,44 +4860,6 @@ static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
->  	return 0;
->  }
->
-> -/*
-> - * Indicates whether GUP can follow a PROT_NONE mapped page, or whether
-> - * a (NUMA hinting or userfaultfd RWP) fault is required.
-> - */
-> -static inline bool gup_can_follow_protnone(const struct vm_area_struct *vma,
-> -					   unsigned int flags)
-> -{
-> -	/*
-> -	 * VM_UFFD_RWP uses protnone as an access-tracking marker, not for
-> -	 * NUMA hinting. GUP must always take a fault so the access is
-> -	 * delivered to userfaultfd, regardless of FOLL_HONOR_NUMA_FAULT.
-> -	 *
-> -	 * Only do so while the VMA is accessible. If it has been made
-> -	 * inaccessible (e.g. mprotect(PROT_NONE)), fall through to the guard
-> -	 * below: forcing a fault there would loop, as handle_mm_fault() makes
-> -	 * no progress on protnone in an inaccessible VMA, and the access is
-> -	 * denied regardless of RWP anyway.
-> -	 */
-> -	if (vma_test_single_mask(vma, VMA_UFFD_RWP) && vma_is_accessible(vma))
-> -		return false;
-> -
-> -	/*
-> -	 * If callers don't want to honor NUMA hinting faults, no need to
-> -	 * determine if we would actually have to trigger a NUMA hinting fault.
-> -	 */
-> -	if (!(flags & FOLL_HONOR_NUMA_FAULT))
-> -		return true;
-> -
-> -	/*
-> -	 * NUMA hinting faults don't apply in inaccessible (PROT_NONE) VMAs.
-> -	 *
-> -	 * Requiring a fault here even for inaccessible VMAs would mean that
-> -	 * FOLL_FORCE cannot make any progress, because handle_mm_fault()
-> -	 * refuses to process NUMA hinting faults in inaccessible VMAs.
-> -	 */
-> -	return !vma_is_accessible(vma);
-> -}
-> -
->  typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
->  extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
->  			       unsigned long size, pte_fn_t fn, void *data);
-> diff --git a/mm/gup.c b/mm/gup.c
-> index eb898ea1ee22..500e2aa99e48 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -633,6 +633,44 @@ static struct page *no_page_table(struct vm_area_struct *vma,
->  	return NULL;
->  }
->
-> +/*
-> + * Indicates whether GUP can follow a PROT_NONE mapped page, or whether
-> + * a (NUMA hinting or userfaultfd RWP) fault is required.
-> + */
-> +static inline bool gup_can_follow_protnone(const struct vm_area_struct *vma,
-> +					   unsigned int flags)
-> +{
-> +	/*
-> +	 * VM_UFFD_RWP uses protnone as an access-tracking marker, not for
-> +	 * NUMA hinting. GUP must always take a fault so the access is
-> +	 * delivered to userfaultfd, regardless of FOLL_HONOR_NUMA_FAULT.
-> +	 *
-> +	 * Only do so while the VMA is accessible. If it has been made
-> +	 * inaccessible (e.g. mprotect(PROT_NONE)), fall through to the guard
-> +	 * below: forcing a fault there would loop, as handle_mm_fault() makes
-> +	 * no progress on protnone in an inaccessible VMA, and the access is
-> +	 * denied regardless of RWP anyway.
-> +	 */
-> +	if (vma_test_single_mask(vma, VMA_UFFD_RWP) && vma_is_accessible(vma))
-> +		return false;
-> +
-> +	/*
-> +	 * If callers don't want to honor NUMA hinting faults, no need to
-> +	 * determine if we would actually have to trigger a NUMA hinting fault.
-> +	 */
-> +	if (!(flags & FOLL_HONOR_NUMA_FAULT))
-> +		return true;
-> +
-> +	/*
-> +	 * NUMA hinting faults don't apply in inaccessible (PROT_NONE) VMAs.
-> +	 *
-> +	 * Requiring a fault here even for inaccessible VMAs would mean that
-> +	 * FOLL_FORCE cannot make any progress, because handle_mm_fault()
-> +	 * refuses to process NUMA hinting faults in inaccessible VMAs.
-> +	 */
-> +	return !vma_is_accessible(vma);
-> +}
-> +
->  #ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
->  /* FOLL_FORCE can write to even unwritable PUDs in COW mappings. */
->  static inline bool can_follow_write_pud(pud_t pud, struct page *page,
->
-> --
-> 2.53.0
->
+> 
+> You replying only to David twice in this sub-thread which isn't exactly giving
+> me warm fuzzy feelings about the working-around-me concerns I raised here.
+> 
+> So simple feedback - send a relatively small, no-functional-change series that
+> improves THP code and lays foundations for future changes. After the merge
+> window.
+> 
+> Can you explicitly ack this please?
 
---
-Cheers, Lorenzo
+Ack.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
