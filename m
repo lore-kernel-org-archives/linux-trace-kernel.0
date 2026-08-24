@@ -1,79 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8549A2749C1
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 21:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F242749C1
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 21:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787606180; cv=none; b=HKYowSRiyCK63hG5PGDCXOUmmRN06hwP+7Q8RPCzc05cbnFuIsYUP1aF/+mtVsepF7keO9Swq7VETz2aHgB36pAAD3jDxliO0kck54BPSuRQHryRpjNgHdGfUfqHJov4kU+EFkZnELncP5IO4ZwG7+HaMzihuy1iO0aBsYxtt/g=
+	t=1787606202; cv=none; b=G459EdeNMxShfiBGkRnvtYIYWWrrnD+vOkLpVDW2y1DeH8J7HeWFJQFrrU2UxJi9wAl6Ec9idnYvWuJQjei9NjDzq2DosHZAdA6xCNXPTCQXebtkokNJ43qWlpnu4BXtuvDHPAVe+A+UxeBgoa/+b6ZYDa9rLRYL646Ux3oOkRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787606180; c=relaxed/simple;
-	bh=uydx0NfvR9oHoUSL2+1kP4u1iqJstPdTDcwaWmoIU4Y=;
+	s=arc-20240116; t=1787606202; c=relaxed/simple;
+	bh=jQhi+n4M5Scc/a1pzByL9BKrlHKQxzaBQgKC1taqUsk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=uEyRzBlzIryW1g/MwHmLnac04zm/jYgZnlNkUTdl8srJ4CSmPN1GGJOxyZJrn9LdcwXDMBNP2TfTwC063YWlwunEnPOL5b30MAvfkTJ48Oca0eLqKwuVwVVmXhUAHhlA58AdCmX0U/AicWN8jIgXzabRBA0jTjwLPOvempIM9Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cT2UPRHQ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=dn+dTJObwVXslW3PLYuSHULGaS1laPL+zFsOVVporguR7KvX0kw0ZREtsATwDsAPSiyiGT4RjPgttoaxCzAm/hu2Z3vr2CsJVJDcqQSQCQi9rUrpPhUzNo6sbx9msEIK+YaDXz1Arxwwo/S1DcUlFEsN95p2mJ0/X7nQGe7/XQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ADU705N2; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cT2UPRHQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADU705N2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787606177;
+	s=mimecast20190719; t=1787606200;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=saDw8qJnLAeBrS0avcXXP2y/beBvgy23uIQc1I8SaRg=;
-	b=cT2UPRHQARsWXZRMnEiwPmDYMTTJIlRr7xb8vFyecNQLIjNvfCrT506H72FwNGsODYi/R2
-	YXMijIuFY1fgd+lX3Thy2mVS8jG76HacNLtJ5Zs5M4h/l5ShfuvRXzjs/Xe3JHzc6VHNJa
-	Q36jWDzO6uTLjDNN1zaGN2aoUMN9pDw=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=lEc6DrA8hC+pnqOQn0Uj/OABcG8wMyqV3Ct9MFThsL0=;
+	b=ADU705N2lf7sSaGaisXse4Yo2CTFmB4ek/8uClCksYrQ6w0SC8qF3mwCq/6IGbeOursWhX
+	llN/Gn4dcmancZF0YoLpyR9qqKsZF7KccIFibNvMNxQhu0xAUxh9HGKXx5u2s4tiQuwier
+	vUeVus+bm/LZZcgAlb8c8rgjBURJR1k=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-tOSF1sdKMieztCJX0MiDbQ-1; Mon, 24 Aug 2026 17:16:15 -0400
-X-MC-Unique: tOSF1sdKMieztCJX0MiDbQ-1
-X-Mimecast-MFC-AGG-ID: tOSF1sdKMieztCJX0MiDbQ_1787606175
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-8eac2620cb0so41655536d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 14:16:15 -0700 (PDT)
+ us-mta-398-9jxc_nEwPrWtH9PmuPH0wQ-1; Mon, 24 Aug 2026 17:16:12 -0400
+X-MC-Unique: 9jxc_nEwPrWtH9PmuPH0wQ-1
+X-Mimecast-MFC-AGG-ID: 9jxc_nEwPrWtH9PmuPH0wQ_1787606171
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-5283df62d68so53141861cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 14:16:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787606175; x=1788210975;
+        d=1e100.net; s=20251104; t=1787606171; x=1788210971;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=saDw8qJnLAeBrS0avcXXP2y/beBvgy23uIQc1I8SaRg=;
-        b=spbSIXd30otwQTHGXZxNi1vG+eLYMV9gRC2GSA9mZTetv2XTuoZCJZDkiic1mQ8o81
-         6YP8ABoDsSC7Nx60M+diA6EvKX6GZpXWui9H/mPn3ZBg5iLvjjqjlqCIVCNWCSt9FzNf
-         ETCTkIyKq/yba4fxuWsU8UbmOMXKCL6C5eXCTjAyPLxar2duxlcOGBu3h6JJGr3vPVmN
-         gndQ+ElO0rKeOlB83Fb3eSrUJx1ZqG8w2UWL4PM9u11Bhvzp396D2vyZqneKHatR2Pwn
-         vyZFG5iMorYKxpxPbKmoG97SBpo2tUA2Gakr8FY/bXtNEn8BCf9JrhA+IhvEJbDxqwYY
-         P9AA==
-X-Forwarded-Encrypted: i=1; AHgh+RrBbLC2S2SeJ9IgawaS+nDm8xaBvIFo1Y6z6uiJG2GgJIZukT5gmaCqpg3OPPs5Dnyb9nRljvGqbSnPQs5VeD7fUN0=@vger.kernel.org
-X-Gm-Message-State: AFuF++kZver+di0SUIgyRaYn+upjzLcxJAtouCKIIWDGABpiD5PoIwGO
-	t7m8SsdLD7DoY4mOOkC7NkK4LEw25pw3qPUYWsSUqNuUXNJMJSj/GI9iZ8I9suD/4ZkRnqahEoY
-	tQ3mv+unUMPHpADlQSkQUV6mxc19sFdVTiKtTW4ZqzMbOFQQalNA1QWCe71JDKMLvYbU/gcHVag
+        bh=lEc6DrA8hC+pnqOQn0Uj/OABcG8wMyqV3Ct9MFThsL0=;
+        b=M2lPhRgOvLREzs7c/86ClmjaKURll+zKNplXJkL8wK7Q2medrpQ0GrltqmRzRlOlNB
+         PBPdW2cLka6MPUM7NRW62gkJwue4l9I5x13JucSJM58RpYRNmHwJyAt6Z6DqKoD/okLl
+         S484pGpTXOduqxCbr7ebfwOgdXaehFuT/dahsYphwuQbGuF4N+z2rss8wsf4ws2mG5Pi
+         xjRt9qbPJb9qubbYxXBgmRpDVeVKV1bSKJEGu01/laQMuYHWaa6v1PW64ecqLDj477uJ
+         rZPlY4lJgp50xwlejNynBXJ+iV3LhnsNNHGec8mo9EqDHu81QkBpLrxeD/4BZPwXNElC
+         19Yw==
+X-Forwarded-Encrypted: i=1; AHgh+RoTXA59zv6aTAISjftGfnLIuGK0Lxh413HQEydXsD34Jr98OOsuV/OI5Wkl4PZAsYFNX7ZgF3Qp5/CkpDCj1NQTsQ4=@vger.kernel.org
+X-Gm-Message-State: AFuF++lmICf/ojg7NYgKBEoN+jy6sR3cXhSNKdvjnevXjvxaFGLGQ/kF
+	UyVkQMEODdDnLVVautlDa6vOF8xL3GdVVslcJ8hLowqNhODa9PianKM8JBvU9Q0hWBpVi0dRQXf
+	LrPM/h6LUQgQKBwrSDsEy2T5Sm7fzGgHSJocnNKDerBeVJs28jo1bmIB2j572PVNpC8cZCOjSvw
 	==
-X-Gm-Gg: AR+sD11PLma0YqOGh/ON1bzxTPtr6gg86A6v8Go3NmmIFygEaE5vzbX3CYD8Sk2NqBL
-	KBdmvxvOvwMnRVGAxpuM6BemO2jgmGu5k/f4iXdbtlAoJyh+OWSQXLaHj62DjW9DmxFTDKHyzis
-	CsPtGrKXhON8HPXgPj7FXO2SUrUZAlHttrFsdN0p2ASnKdyYyN3w0Assl6DeKU79nix1ebCvKOs
-	jTMq6ZoPNSfASmJCygwnni89dv5HEB+5t1Z8R5+HAuDGaVjxbfqcTS1ansBllv295vxqb9UJP+u
-	WHB7fSZQYWphhGduT8eObpI7XTErPi9u1R1xSYc0ZGdozceb+SBitCCD9HuaefHtUjVRZ8raXtC
-	9LO5C0sdr9OZSHF4leAPqhckYStnMcZEE
-X-Received: by 2002:a05:6214:4993:b0:8df:98e0:4594 with SMTP id 6a1803df08f44-90cb78f7853mr19800366d6.15.1787606174787;
-        Mon, 24 Aug 2026 14:16:14 -0700 (PDT)
-X-Received: by 2002:a05:6214:4993:b0:8df:98e0:4594 with SMTP id 6a1803df08f44-90cb78f7853mr19799636d6.15.1787606174204;
-        Mon, 24 Aug 2026 14:16:14 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.redhat.corp ([2601:447:cc01:6890:c623:cd89:345e:99f3])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c93931452sm71832556d6.26.2026.08.24.14.16.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+X-Gm-Gg: AR+sD10QZevfLYN5pPoxx/rbWuoF9YFsapSHaLJgp90UDog9xSudTsS3vesbI42hWHZ
+	yJLc1/CraAiYin10pSBKKS3CjK43vterOKu9mjAqnOX7sF35O77mqwRKh0JCUL+YfYZq9H/bO18
+	G7wpyusT1wh/OSORFQ5TR5PMZIoCr6TkYmOSli8LWY6ySeAS2ogSJSIMAL7dhCBmgUD1Dbr38sH
+	z3Ox4kwusj8J8DzfZtgcQHE36Cdf70rmutqrTY5wAscwXzHbLlqrTZJFrfCAQCNY89S1b2Bx9j3
+	poaMCLtO9yJoB8cGtVuMeIffkA1RsOLlRw7+tax7enX9+ci7xSCxepjgnAgSU+GoWWOnvUb5ETx
+	BFEY2zQcGJFNI2/zLCYcNM1LUNLxzO6dn
+X-Received: by 2002:a05:622a:993:b0:52d:a1cf:a4ee with SMTP id d75a77b69052e-52df572c4cbmr331019441cf.10.1787606171292;
         Mon, 24 Aug 2026 14:16:11 -0700 (PDT)
+X-Received: by 2002:a05:622a:993:b0:52d:a1cf:a4ee with SMTP id d75a77b69052e-52df572c4cbmr331018591cf.10.1787606170664;
+        Mon, 24 Aug 2026 14:16:10 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.redhat.corp ([2601:447:cc01:6890:c623:cd89:345e:99f3])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c93931452sm71832556d6.26.2026.08.24.14.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2026 14:16:09 -0700 (PDT)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH 4/4] tracing/osnoise: Take trace_types_lock in timerlat_fd_open
-Date: Mon, 24 Aug 2026 16:15:44 -0500
-Message-ID: <20260824211544.3984835-5-crwood@redhat.com>
+Subject: [PATCH 3/4] tracing/osnoise: start_kthread: Always check OSN_WORKLOAD
+Date: Mon, 24 Aug 2026 16:15:43 -0500
+Message-ID: <20260824211544.3984835-4-crwood@redhat.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260824211544.3984835-1-crwood@redhat.com>
 References: <20260824211544.3984835-1-crwood@redhat.com>
@@ -84,74 +84,51 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gcXJBoMFW5ufggUDokfBz7FT4dCjhj70bcx4xcnlK9s_1787606175
+X-Mimecast-MFC-PROC-ID: yCCbONzGr5lOo1mst7flIr0TEFSLTHkdxaEVOK0ir9o_1787606171
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This prevents a user fd from being opened when osnoise_options_write()
-has already stopped threads but not yet set OSN_WORKLOAD, and matches what
-all callers of start_kthread() do.
+We can get here on timerlat with OSN_WORKLOAD cleared via
+osnoise_hotplug_workfn().
 
-The original intent was probably for interface_lock to cover things like
-this, but it never covered the full race window, and currently can't
-due to lock order issues stemming from using interface_lock in
-osnoise_sleep().  There does not appear to be any remaining reason
-to take interface_lock in timerlat_fd_open(), so remove it.
+While we're moving this code, remove the pointless compiler barrier
+immediately before returning from a function.  Even if it's inlined,
+it's not doing anything useful.
 
 Signed-off-by: Crystal Wood <crwood@redhat.com>
 ---
-Do we really need that interface_lock in osnoise_sleep()?  Technically
-we should probably be grabbing it every time we access osnoise_data, but
-we don't seem to do so anywhere else.  Perhaps this was due to concerns
-about the atomicity of "period - runtime", but that's just synchronization
-theater given that userspace has no way of writing to both atomically.
-
-In any case, we shouldn't use the same lock for protecting osnoise_data
-members that we use for major reconfiguration procedures.
----
- kernel/trace/trace_osnoise.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ kernel/trace/trace_osnoise.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 0f27af6ade3e..3d12ce8a591e 100644
+index a53a07e59197..0f27af6ade3e 100644
 --- a/kernel/trace/trace_osnoise.c
 +++ b/kernel/trace/trace_osnoise.c
-@@ -2466,16 +2466,14 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	long cpu = (long) inode->i_cdev;
- 	int ret = 0;
+@@ -2056,16 +2056,17 @@ static int start_kthread(unsigned int cpu)
+ 	if (osn->kthread)
+ 		goto out;
  
--	mutex_lock(&interface_lock);
-+	guard(mutex)(&trace_types_lock);
++	/* Can still happen with timerlat via cpu hotplug */
++	if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
++		if (!timerlat_enabled())
++			osn->sampling = true;
++		goto out;
++	}
++
+ 	if (timerlat_enabled()) {
+ 		snprintf(comm, 24, "timerlat/%d", cpu);
+ 		main = timerlat_main;
+ 	} else {
+-		/* if no workload, just return */
+-		if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
+-			per_cpu(per_cpu_osnoise_var, cpu).sampling = true;
+-			barrier();
+-			goto out;
+-		}
+ 		snprintf(comm, 24, "osnoise/%d", cpu);
+ 	}
  
- 	/*
- 	 * This file is accessible only if timerlat is enabled, and
- 	 * NO_OSNOISE_WORKLOAD is set.
- 	 */
--	if (!timerlat_enabled() || test_bit(OSN_WORKLOAD, &osnoise_options)) {
--		mutex_unlock(&interface_lock);
-+	if (!timerlat_enabled() || test_bit(OSN_WORKLOAD, &osnoise_options))
- 		return -EINVAL;
--	}
- 
- 	migrate_disable();
- 
-@@ -2524,7 +2522,6 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	 * Setup is done.
- 	 */
- 	mutex_unlock(&osn_var->lock);
--	mutex_unlock(&interface_lock);
- 
- 	tlat = this_cpu_tmr_var();
- 	tlat->count = 0;
-@@ -2536,7 +2533,6 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 
- err:
- 	mutex_unlock(&osn_var->lock);
--	mutex_unlock(&interface_lock);
- 	migrate_enable();
- 	return ret;
- };
 -- 
 2.54.0
 
