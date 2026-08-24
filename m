@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BE643F8C8;
-	Mon, 24 Aug 2026 14:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7C244683E;
+	Mon, 24 Aug 2026 14:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787582594; cv=none; b=MRPP2o+ZV9mX7iNyzvnkxtIG+/Sk618Hrhn5O8Ucx8HyxQJHukWunpRL3S+Dcar1KWK+h7+EQFIeXqMzBZ2tJcAIWhV9VJKwL+CnXi8wBQMK/rGWBDOC5meepBsdUqNV9etcVazfUMWPbFJYuqDRiIPmMOLwVVmkCpcH7PqwCN0=
+	t=1787582661; cv=none; b=qW4/hLgYnP8OX1jJdp2jZq1BbtqheFcMxCWDaKpsPJQUX+mJnH6NrMXWzyqhHE2RaQ1MSUOcIq6gwSTDDUmk3HRyok3y/8tjkyhLy8E4G+J69hq36S43Jphir8yorq7Cxw3hBYQ+8BU/yd2ALnud43hlJ2lRsY0bpeB9Fmc8Ypw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787582594; c=relaxed/simple;
-	bh=S1o/8Pz7GfQhFFMyrm0b3nr2drVXqdJ7CRIn3MygY1k=;
+	s=arc-20240116; t=1787582661; c=relaxed/simple;
+	bh=EYX+ASLCwuedccj6v5W/gj0NiAxzHRLQGNZYuH/biM8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dFkSJ7uQoSDnZuKff/KXwgYB5CCTVKZXD2fgQAp/vGAt6OExAYQeZwbRT95JXChqTAIh8eOwpXxtjZKuZIBH8ysNrv30mwxQdQpK4fPnDpquRLeCVRKvk4blbDSxrkZl3mwQbybprpiH/hdgvXqb9D6MLejT0Ya+p8AzZbEDOg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlKZbYd/; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=dQlhOQV4XCJYqb8sS5UJ2u/K0WRhHhbrOUg+heLtUZScelRjdUT3kgaYmNUAcivfDcWO8fByzv8PplkN1rRWZaglWBtSnFtR++hZm01QXD8RcLzfZZRTuF+2x2Dv95skYK7vHJrH7AqbgbVpnBjO/i8CCTr88YArXnkyJTPLkFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EDx/ebIR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlKZbYd/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C67481F00A3A;
-	Mon, 24 Aug 2026 14:42:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EDx/ebIR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5131F00A3F;
+	Mon, 24 Aug 2026 14:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787582588;
-	bh=5GFYVfLZYq0r9iG/4b45yVopptA1WJO2ICLEgAVWy20=;
+	s=k20260515; t=1787582650;
+	bh=QQokobOnzFx766ycwjdsmUZkNuOG9N7qwhFQ4tQY8GI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=AlKZbYd/gqBhPNOz0AiQSA5mSiZNAp152sXk75N5tzoj3r9OArCGiokUa5lJlbECv
-	 kGcLfrEbcc/udWmZyaV+xn1HkZOqfnZclpvBRYNSva5ti9gRALHmFgNyu4N+0fbvBb
-	 qYNSK5GbXErmmfTbmwW0icgbaJUrXaWKSn0Y2aOjl1+GCSWFC7oWQRce8X4w/hvLz7
-	 /MHrC8412hiwVSlIvpgO7P17LK6BQsE7abz1FLlMbgR6bVUWr3xen3L4JyWPcteWoY
-	 y6Fb0DpI4A3Ec3MtKksPc+/+fV6SncEL0acQxdu9SXApgnX1dBs36j7v4N01XLJ4Hl
-	 ioL/51laT+d/A==
-Message-ID: <a4650e75-ae01-418a-b695-f8bb15c5d7db@kernel.org>
-Date: Mon, 24 Aug 2026 16:42:56 +0200
+	b=EDx/ebIRHPPAEr4vyUHoRfprdZRzHQrMcuhuD63VjKrhtsdLhKk81VF88Krt4GnL0
+	 q0WsC/GIIjQMj6oZCFatOZVDtFR83C8xJoLAlTb1JiQl0/XmsR8j/2cMRQM8qt8I0z
+	 +Y7b9LVI91ZNRpDuHpvoudk9d3HCrQXfNPvHlHHS3LMWbpghVf9W1MEb28f48OGfO/
+	 b1JeQlSwMxN1wTqU+Olimy5ANpLfroo2pTrn5gx3/jKLVytp9L+f1TERFBfWfw2zId
+	 hgecs3hOSiTiCDrUj6Xp+KM0ofY7PlIIsE3GyiOWEPQ8MmDEaI2pJtg+NBUZDB3UYK
+	 QzxLXe0NYwWxg==
+Message-ID: <7ea3ca54-1975-4b7f-bd08-d28e72fa4b7f@kernel.org>
+Date: Mon, 24 Aug 2026 16:43:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] mm/gup: move gup_can_follow_protnone() to gup.c
+Subject: Re: [PATCH 4/6] userfaultfd: rename vm_userfaultfd_ctx to
+ vm_uffd_state
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
@@ -57,7 +58,7 @@ Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
  linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
 References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-1-3086981b33cf@kernel.org>
+ <20260823-uffd-vm-flags-v1-v1-4-3086981b33cf@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -104,54 +105,22 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260823-uffd-vm-flags-v1-v1-1-3086981b33cf@kernel.org>
+In-Reply-To: <20260823-uffd-vm-flags-v1-v1-4-3086981b33cf@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/23/26 14:17, Mike Rapoport (Microsoft) wrote:
-> gup_can_follow_protnone() is defined in include/linux/mm.h but only used
-> by mm/gup.c.
+> Rename struct vm_userfaultfd_ctx to vm_uffd_state to better reflect that
+> it will represent the userfaultfd state for a VMA rather than just a
+> context pointer.
 > 
-> First, there is no reason to have it in already gigantic header.
-
-Once upon a time there was a user in mm/huge_memory.c, in a beautifully named
-function called follow_trans_huge_pmd().
-
+> This is a preparatory step for extending the struct with a mode field.
 > 
-> Next, the upcoming refactoring of userfaultfd flags will make
-> gup_can_follow_protnone() depend on userfaultfd_k.h which would cause a
-> cyclic header dependency.
+> Mechanical rename, no functional change.
 > 
-> Move gup_can_follow_protnone() to mm/gup.c.
-> 
-> No functional change.
-> 
-> Assisted-by: copilot:claude-opus-5
+> Assisted-by: copilot:claude-opus-4.6
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
-
-
-[...]
-
->  typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
->  extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
->  			       unsigned long size, pte_fn_t fn, void *data);
-> diff --git a/mm/gup.c b/mm/gup.c
-> index eb898ea1ee22..500e2aa99e48 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -633,6 +633,44 @@ static struct page *no_page_table(struct vm_area_struct *vma,
->  	return NULL;
->  }
->  
-> +/*
-> + * Indicates whether GUP can follow a PROT_NONE mapped page, or whether
-> + * a (NUMA hinting or userfaultfd RWP) fault is required.
-> + */
-> +static inline bool gup_can_follow_protnone(const struct vm_area_struct *vma,
-> +					   unsigned int flags)
-
-While at it, could switch to double-tab here.
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
