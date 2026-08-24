@@ -1,161 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DAC367B65;
-	Mon, 24 Aug 2026 15:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AF843D4FD;
+	Mon, 24 Aug 2026 15:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787583818; cv=none; b=rJegAFUQTDke+xiex4pIGpZN4cUVqPQs0yiQTzYrSQSc/6kYLSqgFweaxCoK9Tqp1mNdVolIrWYuPk/z8af7hAlTXM+UTIu3JQ+EjiKeOeUisDANnELuF0rtP2yrroeuwK5GLy0EsmfA4lLWHYdi9SIYn5gHref2+GhuECOEYvM=
+	t=1787583843; cv=none; b=H5fl5hEOh5yDHQAeKDKUCCx/nwpAVpY2aybLgmcE3AbDJqIvLlyUGWymvJBzYgedKL079L/iKlRHMQr0sw5oXyCL1xQ5QYJQqua2wyOLAb8Q0b3/dlpparxEu8FOn7ckqmkOM1/aU5x4oOWOGZBuo+XBBkq3C4pMFXsDbhy4VVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787583818; c=relaxed/simple;
-	bh=nCOLP+pUnNDn8FZg6i8N2Ia0JL+HQa7bBLFp4M6nYSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHshu/j5wC/p4ymisGiV28VZV9Pu7wxd5MrMtCAMGL3znInC8GYRuq94Dv7kj9uNBL+azLmfI4ZKw3Zys0MIxlUUssti3lZomSo8rThTbkd66+7KNiKSuW4lYd/1Lh9e2eulZx9dsui6+zCNpdMblLnLH2kAQ+aVUe66X5/TxZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KI0vHaFK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787583843; c=relaxed/simple;
+	bh=3kDfp4QRIWaZVlLhRqrca4VNvcEtddHyUL9aMfPUzts=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nx51v7aqf60VxB0fJE6RbA+jhK8doVQE0C92AVTCyV/WL2m4y3ZHadnXqSXqX3oMg/mV9GeXOU6dh4f4qnVJWLjeWSbtyHi5yzPvp9tOYfZoeyzHoxzX3go8b9LzostP/EBD4m6aJy8ludffVLJrr0JXXWN+j3E3CQd+I5Ez88E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Mq/fR1Z6; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KI0vHaFK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F33F81F000E9;
-	Mon, 24 Aug 2026 15:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787583816;
-	bh=1N4Dgg6M9ZUavS0An6jb6rtj/L03r3LLP7KAMFYdsrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KI0vHaFKs2iuJuLBxJTIK9hzpbfb70XWVZdAMV9ZNmSB1s5dX3EODo6iK2rwMvff3
-	 o1zo4uNkOUy09uxeY227ljEze1a3rJTOdghr5kYtStFuCASrN68C5wXq15sm38+bAT
-	 Ws7tjHRZmtjHfxUXLJR7Yuwo/17LwBS6i/9QuCr3b4J8f6QnJnCtXixlT8ArO6Iz1s
-	 Om22oh+E7kYUjI76NqdsR4QjPcwMNRS1j/ASCgkr8ipXbaMycJ7ls7Hc1vaozvBhem
-	 V9GLPj4tNytQrv1bFOrJFpWnbWNOhms6MCk2QEG6JzFO7PgXOtlsfOddDdj7QhxkAg
-	 YQKYaFLUEoNJg==
-Date: Mon, 24 Aug 2026 16:03:28 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>, 
-	Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Lance Yang <lance.yang@linux.dev>, "Liam R. Howlett" <liam@infradead.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>, 
-	Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Usama Arif <usama.arif@linux.dev>, 
-	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] userfaultfd: constify VMA parameter of
- userfaultfd_*() helpers
-Message-ID: <aoxcY5n99-Pzlw_b@gremlin>
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-2-3086981b33cf@kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Mq/fR1Z6"
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 838C512017A;
+	Mon, 24 Aug 2026 15:03:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 5C44F2000E;
+	Mon, 24 Aug 2026 15:03:47 +0000 (UTC)
+Date: Mon, 24 Aug 2026 11:03:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Deepanshu Kartikey <kartikey406@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] eventfs: Initialize ei->children and ei->list in
+ init_ei()
+Message-ID: <20260824110345.22c1cfa1@fedora>
+In-Reply-To: <20260824144653.54044-1-kartikey406@gmail.com>
+References: <20260824144653.54044-1-kartikey406@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260823-uffd-vm-flags-v1-v1-2-3086981b33cf@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 5C44F2000E
+X-Stat-Signature: pfkamjb1ca6m7648ddkcb93r1aargk79
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19noBFiXGuJ8r+gHbDs44EKL76xg+eEasE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Pix3je5n0eSam59T6j1O1iBmCSDrhK1scCKfUIa8upA=; b=Mq/fR1Z685uK8A5I+7Dvcus+LkgGSKoFeO1cj3aW4EhOtxjR5t+ED20Q50iaxILBePlsuKGA5owWXuOZ1SLVkeLPSqpNExDrSBs8rUypcSYCsVmdukIu9iX/DgDpTHcl3JJ+qWBM89HuzKzetxlFRS/Ao+ZGccsFnP+S0R9T2QA=
+X-HE-Tag: 1787583827-522272
+X-HE-Meta: U2FsdGVkX19XOevH3L+XpTp3qDrnv29ojfi9CziKLOOjz4cOVyX8+ytvg+Y1W1jT+aieTF6nSOczcv4hCp8JdCeOjnq0KUyKuCzYOObbgKj/87Nzuf6flS2y0NFUem/UgcuVY31DrNpFk3xNAXNfLnMojKjxFqdEU8gFjKAAzTXh1tD/1WRKEA3XmQHvMN12tsVBME3bMOCNA9MuEZmQ5KwBUGMy4Fr5rE8oNW5v548YvpnSRgzCxXcvKVZmRiQCssUDZjnJx6xf9hdJFyHkjKH4HuOIQtcvkw70YzMr4sduoILvValHMVqOb2HZ5W81dqqvAsIDPBT6xZFclKsTomK75Wr3MmXoicruImzNbZdD0u6N1thApYJLQR8okhFDg/ZMUVao42sBpDuCfyxZe3sKcM/OZzfDMOS7kOB4WGIZaLF1OBrE/ft4fZo3JzYH8aVEkwI3QDISyFELvHERU2tPdoSm2VIR9hf8M0yEh1c=
 
-On Sun, Aug 23, 2026 at 03:17:39PM +0300, Mike Rapoport (Microsoft) wrote:
-> userfaultfd_{missing,wp,minor,rwp}() and userfaultfd_protected() only
-> read the VMA.
->
-> Make their vma parameter const.
->
-> No functional change.
->
-> Assisted-by: copilot:claude-opus-5
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On Mon, 24 Aug 2026 20:16:53 +0530
+Deepanshu Kartikey <kartikey406@gmail.com> wrote:
 
-LGTM and compiles GTM so:
+Yeah, I saw the syzbot report and came up immediately with this fix as
+well. But the change log is way too verbose for such a simple fix. Did
+you use AI for this patch? If so, you must divulge that information,
+usually with a tag.
 
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> eventfs_create_events_dir() allocates the eventfs_inode via
+> alloc_root_ei(), but only calls INIT_LIST_HEAD() on ei->children
+> and ei->list after the tracefs_get_inode() check. If that check
+> fails, the code jumps to the fail label and calls cleanup_ei(),
+> which calls free_ei():
+> 
+> 	WARN_ON_ONCE(!list_empty(&ei->children));
+> 
+> Since ei was allocated with kzalloc(), ei->children.next is NULL
+> at this point, not a self-referencing pointer. list_empty() checks
+> head->next == head, so it returns false on an uninitialized list
+> head, triggering a false-positive WARN_ON_ONCE() even though the
+> list was never used.
+> 
+> eventfs_create_dir() has the same latent issue: alloc_ei() is
+> called before INIT_LIST_HEAD(), leaving a window where an early
+> failure path could hit cleanup_ei() on an uninitialized list head.
+> 
+> Move the INIT_LIST_HEAD() calls into init_ei(), which is called
+> by both alloc_ei() and alloc_root_ei() immediately after
+> allocation. This guarantees every eventfs_inode has a valid,
+> self-linked, empty children/list the moment it is allocated,
+> regardless of which failure path runs afterward.
 
+The change log only needs to say:
+
+  eventfs_create_dir() allocates the eventfs_inode and initializes it
+  with init_ei(). But this does not initialize the eventfs_inode
+  list_heads. If the eventfs_create_dir() fails due to memory pressure,
+  it will call free_ei() which checks to make sure the eventfs_inode
+  has no children. But because the list wasn't initialized, it will
+  give a false warning.
+
+  Fix it by moving the list initialization into init_ei().
+
+See, much better. Right to the point without all the AI slop.
+
+I'll take your patch, but I'm replacing the commit log with the above.
+
+-- Steve
+
+
+> 
+> Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+> Reported-by: syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3ef80b4ed02226d04a06
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
 > ---
->  include/linux/userfaultfd_k.h | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-> index a4351cffc60c..3396d270b159 100644
-> --- a/include/linux/userfaultfd_k.h
-> +++ b/include/linux/userfaultfd_k.h
-> @@ -204,22 +204,22 @@ static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
->  					VMA_UFFD_MINOR));
+>  fs/tracefs/event_inode.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 604ba3e841d2..6e3513b13cfa 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -438,6 +438,8 @@ static inline struct eventfs_inode *init_ei(struct eventfs_inode *ei, const char
+>  	if (!ei->name)
+>  		return NULL;
+>  	kref_init(&ei->kref);
+> +	INIT_LIST_HEAD(&ei->children);
+> +	INIT_LIST_HEAD(&ei->list);
+>  	return ei;
 >  }
->
-> -static inline bool userfaultfd_missing(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
->  {
->  	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
->  }
->
-> -static inline bool userfaultfd_wp(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_wp(const struct vm_area_struct *vma)
->  {
->  	return vma_test_any_mask(vma, VMA_UFFD_WP);
->  }
->
-> -static inline bool userfaultfd_minor(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_minor(const struct vm_area_struct *vma)
->  {
->  	return vma_test_any_mask(vma, VMA_UFFD_MINOR);
->  }
->
-> -static inline bool userfaultfd_rwp(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_rwp(const struct vm_area_struct *vma)
->  {
->  	/*
->  	 * Callers gate PAGE_NONE usage on this; PAGE_NONE is a BUILD_BUG()
-> @@ -230,7 +230,7 @@ static inline bool userfaultfd_rwp(struct vm_area_struct *vma)
->  	return vma_test_single_mask(vma, VMA_UFFD_RWP);
->  }
->
-> -static inline bool userfaultfd_protected(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_protected(const struct vm_area_struct *vma)
->  {
->  	return userfaultfd_wp(vma) || userfaultfd_rwp(vma);
->  }
-> @@ -353,27 +353,27 @@ static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
->  	return true;
->  }
->
-> -static inline bool userfaultfd_missing(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
->  {
->  	return false;
->  }
->
-> -static inline bool userfaultfd_wp(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_wp(const struct vm_area_struct *vma)
->  {
->  	return false;
->  }
->
-> -static inline bool userfaultfd_minor(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_minor(const struct vm_area_struct *vma)
->  {
->  	return false;
->  }
->
-> -static inline bool userfaultfd_rwp(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_rwp(const struct vm_area_struct *vma)
->  {
->  	return false;
->  }
->
-> -static inline bool userfaultfd_protected(struct vm_area_struct *vma)
-> +static inline bool userfaultfd_protected(const struct vm_area_struct *vma)
->  {
->  	return false;
->  }
->
-> --
-> 2.53.0
->
+>  
+> @@ -729,8 +731,6 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+>  	ei->entries = entries;
+>  	ei->nr_entries = size;
+>  	ei->data = data;
+> -	INIT_LIST_HEAD(&ei->children);
+> -	INIT_LIST_HEAD(&ei->list);
+>  
+>  	scoped_guard(mutex, &eventfs_mutex) {
+>  		if (!parent->is_freed)
+> @@ -802,9 +802,6 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+>  	ei->attr.uid = uid;
+>  	ei->attr.gid = gid;
+>  
+> -	INIT_LIST_HEAD(&ei->children);
+> -	INIT_LIST_HEAD(&ei->list);
+> -
+>  	ti = get_tracefs(inode);
+>  	ti->flags |= TRACEFS_EVENT_INODE;
+>  	ti->private = ei;
 
---
-Cheers, Lorenzo
