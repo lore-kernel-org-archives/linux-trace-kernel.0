@@ -1,68 +1,182 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E620136F434
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 19:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787600087; cv=none; b=faRtt4/MV82fzK/Bh3Yv8q75FsAtbb8DrGJhEmWzjvM1ecT6Al7CJL/NP94conPihp2Ku0rugQLC9aAbT/LZMPGyyouopXzVjDpsWfJL2ASf66SBg6Pj8Mnxp+564jXTiVgWp3rdUDsiPNr6+f0trSgzFOryA5zMxRvz42t6ae4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787600087; c=relaxed/simple;
-	bh=l4fYMr0Thpsi8CFwiKKbyyqG1r1E+xVcO7ed2HwA5BQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tp0TyOsfzOBSjE+q3L0UST3VlseRSSZtdfbQKbkMyS5nJX5N4NfFDLJAMkh7nsRNhrQ46yofLol+R0TDlxu3H4EZdtzhfJzrOS+0AEStHTh4kEtlNNKlvSeS4OdGINXaHgeEPB95cEF4q8FpioS2wB3LTVSLG7F2prNZoWlSpQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=hq7xNGb1; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C808384CCA
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 19:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787601262; cv=pass; b=dFyNfWq89+cgDEqXJoyfLA72MsnvyvytD7O0CW5iY7VHiIpTm4ZD5uKm07qpYOkh1lqOyl6WVUVSZCHM2zvWe/oa4D9wF16D0V6TV6Jt4RfgFXXKWRPfFjUlFxm+dNZhRx7SSv/NoP1Tq6LrfddjxgbtOD1mlqq8PwGtwOCBC38=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787601262; c=relaxed/simple;
+	bh=7uEPvNkh0wPywyUSpf8tg+GQKzcygTjCuvJr9dww0+c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LP2NkTGwHjgY7Y3puss4PkBHk/A7SvhrlyVt8AQwimE9IhbF3aF4r1yzTR2fdGi9gGG4ox74uIQ1km4Jk+v7gqXHmUDKb+iN3KY6NdLYnwOLuoXh6Tj2hF6VdYIIttRks2Hb1wALs5AUrYPBYxZ3j128GVrTT5kpb3D42r/9BTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GIxu89K5; arc=pass smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="hq7xNGb1"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 06EC240256;
-	Mon, 24 Aug 2026 19:34:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 6F85220027;
-	Mon, 24 Aug 2026 19:34:36 +0000 (UTC)
-Date: Mon, 24 Aug 2026 15:35:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: wen.yang@linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 9/9] selftests/ftrace: Walk up to find
- test.d/functions when a subdirectory is passed
-Message-ID: <20260824153517.681d18ad@gandalf.local.home>
-In-Reply-To: <f70d634ff65d6b1bd61c4ae517cf522881a23c61.camel@redhat.com>
-References: <cover.1787243842.git.wen.yang@linux.dev>
-	<dc58717cc225389b041dc36c684df23e3253c473.1787243842.git.wen.yang@linux.dev>
-	<20260820165819.5CCC71F00A3A@smtp.kernel.org>
-	<f70d634ff65d6b1bd61c4ae517cf522881a23c61.camel@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIxu89K5"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-84faf87d19dso3841682b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 12:54:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787601261; cv=none;
+        d=google.com; s=arc-20260327;
+        b=aGrA0d4nZUBRFkmMnQZ2AJo7aeIwZUcGmulTPjJCJzr3UWs6cezOEwp9n2qs4MeCSO
+         yFZERxeUwOyO7/IzQiK0P/ke0FgT6Pq9r9wLxS7glarCab6DMfwj8LbALv2sb4KN7lEI
+         fabaEybDRkg9SSUuKnTP6IKKYsglA54HNoc8w1tjukuQFhHXs5Dl2Aufvbe/u5GW89gT
+         gKH/2p8SXxERXF1LlDA48eqAAqHU3/WLztxhPv6VNsm9B/kdhSGLTk/yhXy2/9IV9/pT
+         Rw4Nt1nrpdqaSWrIEDbr1h09rX1mHsH9DPjTcJT5eXwDhRmt4es+hpXnQ0/kTwoHV8YA
+         wYpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
+        fh=+WNTMpQfvkRor1SkihobMk91Ph8imhP5EImsB5SBxy0=;
+        b=Q6fUXHkTQAgsnvcFQMK1QEDGdXLB2EW6DrEufqIgVelJRxM1BICJ1ccr7IJJnxXaYZ
+         JDpyAKSdDICJdgW/FT988CLkssC9j95OETBaouT3fJzk8uTW+AzLm3m4LTnBDU9b2H0C
+         +PMv448S2T55AK1G3HyFbo5JyjMYj3rA/0ExUaKgrK6Ep9v78stJEtpKef8f8bW1FNxr
+         moVFd6ICQKKSo+MrNNd7QA0NFQOBMKhaxj4mw7Y21I/8JLYOrJHzpWD61iGpRCzaFca0
+         178gB9oJ0PRjzEjyWEMZqFBxslJ7iyLiefVaxv8VdF036d+H90d5cwj1WRncCoeXFBm8
+         /40g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787601261; x=1788206061; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
+        b=GIxu89K5zRaFr4r/t0Qp6nlWfhp9Hq/iRzRLmUZmC8J9uJmB61qsHgQDMnrRdaTpb3
+         Nap4qzPZc9EffIhvGbHUkhUI2dvcA4mNpr20w2KvN/wCd2i9STVRzNBdbR221ZNcfbIP
+         +JsBjgnfaUwN+2Y4rj9D7iPJ7wPIpCI/yqfNle5GHGakyxbQJgzCucxJWIa4gBkpk+Bo
+         7LywM9aUxoNQonoENDeRRhZ8qo7R/0isETw/d30XdlOGemgdNoDzluSQCtRgwyUrs/Eu
+         MmKfbflmsckFgKBNSCdREpD6J9g1U/DbM+4rsJAEpzbRISMiOdighQt02yU8qRLqK+Gg
+         pT9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787601261; x=1788206061;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
+        b=XnTsa6Ql4VHSg+ZcQSaILZAiP48dlmA8c7pIm3tuN6icaUikJ0rJXb1zQLfuiW8pHq
+         T6u0CuPenIUmux+Tz284SNcYEBKIJ2cCMSDu6mNiTeFPcOad8fHyYArf4dDzfyoUXV1o
+         27mm7I+cUqX5Ib3H7rNukhghkMqL7/Z5WFIGHJNaY8MkRHiYuVm8clCMHud0zUAlKVyb
+         0xH4BRjwgqWbWOzPreSZxD6czA4JjalrXAU5cesrRNJ0V2ejpSiZtiJvzohTaxwsaxuA
+         EU9iLxo7DXBt1hKVStAr+JNarbHTUcxW9IwcXvaFBIfRo8C9RQofS99LKz3XnLa5NdSv
+         GmPA==
+X-Forwarded-Encrypted: i=1; AHgh+RrOgOrHHgfoOPOqY6mrxf+kHCFxLPQl0AkA6xjlRiXL2hUc+mlqiS1jEggpfkeWKsu6XmENfgUjCyImYy16dtU5IZo=@vger.kernel.org
+X-Gm-Message-State: AFuF++kAJXgIVWZgWmdJ6rgXDC71kzrR5M83vzWdE9gdnWEFTTcKm6K9
+	hoqgUcn/kr9XA2rDAcB0jDIV+B/Q3QHCjO/+TD/6o867Et8fpTHLjWhHcrfBGT0TzGp0nAd+Kbs
+	TezKmNjbXfE+MkjvZr9Kws5C9iUq5ez8=
+X-Gm-Gg: AR+sD12QXY1a0yeeShwQxIEHvCkXynEAVL/QdhWAPM3vopZK9r2AZyGIffcOCh9Ovc4
+	svcLKpGuRjQnJ0V4dAqnOjypQ3l8M+eba4Q8RjUfx6EJbckRLdfckjFGY0VRl0WdZXH/kdIU64a
+	CLl/QnBaccnjh2cGQom1t2or8kPnYZyhhHki7OWKrldmusu3H6/+i0jYgD46rsNV41YvOZADcQi
+	s0CK7R7YoPd+LCv3Xv+JBk5VZDgk59z6YrhG7ISmK/sG/HW9dEYqqJ31lh7cJlBESRXKrndnZWo
+	RXUaEd+z6iTUp5+X1ykCKqHy2UBpBt1sre67fhUC78AdoTLD4QnM6cmCOn+GQly+VhIyEPRYAQQ
+	uwJVRFKIFENP/V/OzHpCD1tX4HpF2Dw919V3fqEnPWg==
+X-Received: by 2002:a05:6a00:f08:b0:84f:37c1:f887 with SMTP id
+ d2e1a72fcca58-8520ba2ea2fmr38445574b3a.12.1787601260681; Mon, 24 Aug 2026
+ 12:54:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 6F85220027
-X-Stat-Signature: sidyxqktwjz7gmijep6b1o86666angpp
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+SWhFcumRDKAhJkSSTc38YgN77SZ4zlc0=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=VjLCKRA9bS5fzdj+RNBSKmdF5cEac6ICyUrSd8agY7g=; b=hq7xNGb11D7XLPuornVY7VnR3wwClzogFnGY4vyTCg/ft+kKh1YoEEAwVW80iCcfRagM/CUmBG7EPAMEWU94OcYPLDbckJfkSdbhQWk3h0AgDcCZuU9WZDd/kwhccb6exCqJrJOf/nghbYcnvEbXQBARXUut3NFWs/J5QgYrbfE=
-X-HE-Tag: 1787600076-19111
-X-HE-Meta: U2FsdGVkX18U/eSe6F5nFLg6usAq0I+PniBaVc3yTEatbRoi5FLiAGSch/cUymCVWXowU5N81m1vRzUglmPsbQordEDpD7b0sYTUfzq6vp0Zsw2mtne2NSCI9RlD2F5dxm6uloI1/p4W5LsCLl5oKqrSnECp/AuN3qNjAwLf01OKFwEhaTLyHW1qmEO1f0JRx12l5nyvD/QAO7O5OWMLmf/6gk5c9KnGQ6WuxjamNg5z523KwCsAujwo+m3/9s5c+JYvBkUdRR+5/wBFby2AA1xwJT7eLQ+LIG8EkRo1QIRKIiylVkPm0eLIldprGWkIgUoeEihVg4hgiMtSvNIpBtT0Dm+EmmIA
+References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
+ <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
+ <aotM6tRUHI9Bo7gW@redhat.com> <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
+ <aoxp3Rcbp3fUuqS8@redhat.com>
+In-Reply-To: <aoxp3Rcbp3fUuqS8@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 24 Aug 2026 12:54:06 -0700
+X-Gm-Features: AcwNN1UPgMEuZCxen7PbKRMigTGKjiHrc98UZ0KYRuGhhLnIXTDbxzsARdQVrl4
+Message-ID: <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 24 Aug 2026 12:08:25 +0200
-Gabriele Monaco <gmonaco@redhat.com> wrote:
+On Mon, Aug 24, 2026 at 8:57=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/24, Keke Ming wrote:
+> >
+> > On 08/24, Oleg Nesterov wrote:
+> >
+> > > Hmm. It is not that I think "it is not enough", I think this is point=
+less
+> > > whatever we do.
+> >
+> > Well, I didn't mean to insist on the cleanup, I also think it may
+> > be redundant. If the child is bound to exit, manually calling
+> > uprobe_free_utask(t) in dup_utask() is pointless, as the normal
+> > exit path will handle it.
+>
+> Yes, but the same is true if the child is not bound to exit... IOW,
+> I still can't understand your motivation for this patch...
+>
+> > > But this is only the first step to cleanup
+> > > this logic. I'll try to write another email tomorrow.
+> >
+> > Of course, I'm all ears.
+>
+> You have already mentioned "Option B" below ;) that is what I meant.
+>
+> > Here is my current understanding. One thing I am not sure about
+> > is the signal semantics. If the copied uprobe state is incomplete,
+> > the child should not return to user mode with that state.
+>
+> Perhaps... But consider
+>
+>         func_which_can_be_ret_probed(void)
+>         {
+>                 if (!fork) {
+>                         printf("CHILD\n");
+>                         exit(0);
+>                 }
+>         }
+>
+> > Option A:
+> ...
+> > ...
+> > kill_child:
+> >   // I was thinking about SIGKILL here because it cannot be ignored
+> >   // Of course, you can correct me
+> >   send_sig(SIGKILL, t, 1);
+>
+> force_exit_sig(SIGILL) can't be ignored too. But I am fine either way.
 
-> In my opinion all this stat/dirperms thing is rarely useful, you could just
-> write the concern in a *brief* comment, saying we trust 4-5 level ups are still
-> in the repo and we trust the repo, just to make AIs happy.
-> 
-> What do you think?
+Current SIGILL sending is already pretty bad behavior that bites us
+periodically, instead of doubling down on killing the user space
+process because something about installing uprobe goes wrong, let's
+think about a bit less destructive way to do this. Mark uprobe for a
+particular process as defunct or "detaching it", or something along
+those lines. But not just kill innocent processes.
 
-I personally think we can ignore this comment from Sashiko. The only ones
-that should be running this code is those that are running it on a test
-box/VM. That is, there should be nobody else on the box, and the system can
-be blown away at any time and nobody should care.
-
--- Steve
+>
+> So yes, perhaps this makes sense. Although IMO this all is not that
+> important; GFP_KERNEL shouldn't fail "in practice" and at least
+> uprobe_copy_process() warns in this case...
+>
+> > Option B:
+> >
+> > > Note that uprobe_copy_process() warns but returns "void", too late
+> > > to abort copy_process().
+> >
+> > Looking at copy_process(), uprobe_copy_process() is currently called
+> > after the "No more failure paths" point and after the child has already
+> > been made visible through the task list and pid links.
+> >
+> > Would the longer term fix be to move the uprobe state copy earlier,
+> > before the "No more failure paths" point, and then add the needed
+> > bad_fork cleanup for  p->utask?
+>
+> Agreed, pronably better than Option A. But in therory dup_xol_work()
+> can still fail after fork().
+>
+> Oleg.
+>
