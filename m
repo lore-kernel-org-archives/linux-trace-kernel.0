@@ -1,96 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C521544CF29;
-	Mon, 24 Aug 2026 15:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29A83FBEA5
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 15:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787586703; cv=none; b=hphvo8FbezWgWbK2GpCeCXcyJw+1OvoOtVVSXTXhN6K64+N/7F5U0w5OGdMGBVAYvKNWKLUc2cQBu3OaLGTo5dfrk2BY0zXcuQEIMaKKO7NMl3d3QMx2uuvNwtV3GqMtpVEobBFqsY3wsOn0+anALKe3Z6sTVFVFvAdfeNfUQFQ=
+	t=1787587052; cv=none; b=YR2Pg9UlodwVVR92QDVQWOu/tCGo3fpDKk0iPSpyaj1mjh3qaVNPqULeJFJxXyjbz4wQsEtGv0c7fw5agbneaTBUoy7pxmqcPpm/PrhFAFWicS4hcfNoUT3WYiLVhdekeT9gh5CMrxjcWPTCZuF+Pp8A+GuKSN55dC5oIuAj+XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787586703; c=relaxed/simple;
-	bh=WBZXZg8XyazabFSG7+jXaRU5eW4xxTYW1kiZhb3p5oE=;
+	s=arc-20240116; t=1787587052; c=relaxed/simple;
+	bh=WLDiteWIqF3m1z44XJzECGsDTBGJPPLigkS/d7vyfyk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bbE64qXC61jjNmndtXeThWVRy68l/tBcf7lNFMpWM0LNdPuT6fmrtKxqi3yP2IRzAyiaCB8d7U38H6NT5V2Bb+XYFJU/qWUuLh8RweCtw4TlFZlG5yckelftr1liAinq6ZlWKlMFE2wLwFpxsCUQjoMixauEHxroIslBJB3mbks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLYHtqIZ; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type:Content-Disposition; b=aTIhlKN1YUrWMl4LRqUbMldRLkAp+7UD6CF0e1OAYuVtMiK2h+ds5W1zV14akiCv6srM2OxBNXsS8cfrduvhE97B+kIfWkXzKtpE/gdlKGv7xtXMiA5OGBSKq8F3jOpH1h+EijSF0ceNsdRLby8ifydtUju/79TA79W7JYOU8ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fXbid/uy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLYHtqIZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8811C1F000E9;
-	Mon, 24 Aug 2026 15:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787586702;
-	bh=WBZXZg8XyazabFSG7+jXaRU5eW4xxTYW1kiZhb3p5oE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KLYHtqIZxdRIYDXtaaqoX2/ljO5lG1Zu82Dntr1fIhjL54cQHCrwzOvN64gRGjOuC
-	 3ZIlfGOd5o3DVRNyAkTakRpY3nbAUmsMcYEEn+qkj5lN+4OWRBBDGT9AHlHCfRQkFU
-	 ZtnAJyeea4W2kqfjiGYx2phf9OGh/d426eLtjbOmhKN1SAiUTgiYqPEjZZYv4OWotC
-	 id/QWoppDuGm61CNaVlvELeeCZbK+Zl5nLR29120diREBBX/z5HGoSgDCIPcLoJb5E
-	 Ouxv+7gB76sATufgD0OghTTuJgJ4oe4nZZfYPfa3BVdGv8nflOtvujgNNeJwteZmme
-	 Avdmoq7P7PFIQ==
-Date: Mon, 24 Aug 2026 16:51:35 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	akpm@linux-foundation.org, nico.pache@linux.dev, baolin.wang@linux.alibaba.com, 
-	baohua@kernel.org, dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, 
-	liam@infradead.org, mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, 
-	shuah@kernel.org, surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, 
-	ziy@nvidia.com, usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, jannh@google.com, 
-	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 03/57] mm/collapse: add collapse.h for the shared
- collapse state
-Message-ID: <aoxnmhXB1w1UoPpu@gremlin>
-References: <20260816224609.308019-1-kirill@shutemov.name>
- <20260816224609.308019-4-kirill@shutemov.name>
- <3113ac8b-c1ce-4577-9e93-449b70818918@kernel.org>
- <aobglSY5L1KoIqxF@thinkstation>
- <65433d1e-95ca-4434-828e-8f381d3384b1@kernel.org>
- <aow0Z6mrG2esKpRZ@thinkstation>
- <e1c8c6f5-1b5a-4cad-a52a-f7eff00997c3@kernel.org>
- <aow6J1i2G7U0spjH@thinkstation>
- <aoxPzKTVRmZgmBKg@gremlin>
- <aoxe92BxF-5xaScD@thinkstation>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fXbid/uy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787587049;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lt6JfU9N3TKmHx8nvPAdDqg71QI5DDY6kggznOpUqRc=;
+	b=fXbid/uyd4y1jUk49ftnHcSSJkuvKfuF755ZbuHTOZFvzGc06bTxfcnBc6wKCaQS4c487R
+	pPf2dkXuFEwVKPSY8rkVqJZeFANgYZrCPxn/at+dLy43kA5xDsF24BOjOPyCtCGzVwPH0b
+	YQRPFlGsAXPQ4YzwvqV+O1HFaeixg6Q=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-Wb4jBxTKMfqBc15vuBl-vA-1; Mon,
+ 24 Aug 2026 11:57:25 -0400
+X-MC-Unique: Wb4jBxTKMfqBc15vuBl-vA-1
+X-Mimecast-MFC-AGG-ID: Wb4jBxTKMfqBc15vuBl-vA_1787587042
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6E2D71977535;
+	Mon, 24 Aug 2026 15:57:22 +0000 (UTC)
+Received: from fedora (unknown [10.44.32.9])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3D9CB18005B4;
+	Mon, 24 Aug 2026 15:57:18 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 24 Aug 2026 17:57:22 +0200 (CEST)
+Date: Mon, 24 Aug 2026 17:57:17 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Keke Ming <ming.jvle@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
+Message-ID: <aoxp3Rcbp3fUuqS8@redhat.com>
+References: <20260822054620.452262-1-ming.jvle@gmail.com>
+ <aosT4H14zcowzU_7@redhat.com>
+ <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
+ <aotM6tRUHI9Bo7gW@redhat.com>
+ <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: CBRTzplkKcqt-gzy2V3txP2ckwhk3hfz57yUGWetHhA_1787587042
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aoxe92BxF-5xaScD@thinkstation>
 
-On Mon, Aug 24, 2026 at 04:18:09PM +0100, Kiryl Shutsemau wrote:
-> On Mon, Aug 24, 2026 at 03:09:00PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > On Mon, Aug 24, 2026 at 01:36:03PM +0100, Kiryl Shutsemau wrote:
-> > > On Mon, Aug 24, 2026 at 02:28:39PM +0200, David Hildenbrand (Arm) wrote:
-> > > > On 8/24/26 14:10, Kiryl Shutsemau wrote:
-> > > > > On Mon, Aug 24, 2026 at 01:47:54PM +0200, David Hildenbrand (Arm) wrote:
-> > > > >> On 8/20/26 13:11, Kiryl Shutsemau wrote:
-> > > > >>>
-> > > > >>> I went for a clean collapse.c on purpose: the engine is new code, and a
-> > > > >>> new file keeps it readable while both mechanisms are in the tree, with 28
-> > > > >>> as a plain delete from khugepaged.c.
-> > > > >>>
-> > > > >>> Your shape is less churn, though, and it keeps blame: 29-35 move about
-> > > > >>> 1700 lines as add-and-delete today, and most of that would stay put, with
-> > > > >>> only the daemon -- mm_slot, the scan loop, sysfs -- extracted into a new
-> > > > >>> khugepaged.c.
-> > > > >>>
-> > > > >>> If you prefer it that way, I can give it a try for v2.
-> >
-> > Please don't respin this as a 57 patch series.
+On 08/24, Keke Ming wrote:
 >
-> I didn't plan to.
+> On 08/24, Oleg Nesterov wrote:
 >
-> The goal of this RFC was to show the final form I want to reach.
+> > Hmm. It is not that I think "it is not enough", I think this is pointless
+> > whatever we do.
 >
-> I will move cleanups and refactoring to the front of the patchset and
-> submit in small self-contained chunks while keeping the rest working in
-> a private branch.
+> Well, I didn't mean to insist on the cleanup, I also think it may
+> be redundant. If the child is bound to exit, manually calling
+> uprobe_free_utask(t) in dup_utask() is pointless, as the normal
+> exit path will handle it.
 
-Sorry missed this bit - great, that works for me obviously!
+Yes, but the same is true if the child is not bound to exit... IOW,
+I still can't understand your motivation for this patch...
 
---
-Cheers, Lorenzo
+> > But this is only the first step to cleanup
+> > this logic. I'll try to write another email tomorrow.
+>
+> Of course, I'm all ears.
+
+You have already mentioned "Option B" below ;) that is what I meant.
+
+> Here is my current understanding. One thing I am not sure about
+> is the signal semantics. If the copied uprobe state is incomplete,
+> the child should not return to user mode with that state.
+
+Perhaps... But consider
+
+	func_which_can_be_ret_probed(void)
+	{
+		if (!fork) {
+			printf("CHILD\n");
+			exit(0);
+		}
+	}
+
+> Option A:
+...
+> ...
+> kill_child:
+>   // I was thinking about SIGKILL here because it cannot be ignored
+>   // Of course, you can correct me
+>   send_sig(SIGKILL, t, 1);
+
+force_exit_sig(SIGILL) can't be ignored too. But I am fine either way.
+
+So yes, perhaps this makes sense. Although IMO this all is not that
+important; GFP_KERNEL shouldn't fail "in practice" and at least
+uprobe_copy_process() warns in this case...
+
+> Option B:
+>
+> > Note that uprobe_copy_process() warns but returns "void", too late
+> > to abort copy_process().
+>
+> Looking at copy_process(), uprobe_copy_process() is currently called
+> after the "No more failure paths" point and after the child has already
+> been made visible through the task list and pid links.
+>
+> Would the longer term fix be to move the uprobe state copy earlier,
+> before the "No more failure paths" point, and then add the needed
+> bad_fork cleanup for  p->utask?
+
+Agreed, pronably better than Option A. But in therory dup_xol_work()
+can still fail after fork().
+
+Oleg.
+
