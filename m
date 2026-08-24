@@ -1,96 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-32.mta1.migadu.com [95.215.58.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106133A1D01
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 08:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F1A3A6F0B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 08:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787560084; cv=none; b=jOGtbl3caVxZMGBJ1YAKEtoeb14A60/+bLZWC26TTRM3REtkpx19e0rH2PNhDG9G3NpGhtoAAjeHGsMOA5VFREr3lKmFBNJlm1ECBP8d6J6auOXDiOuJOv523CMocUmxGJqa6+fztQT2t3QAxogGfVugo+gh+6hAOOM16wiW9cc=
+	t=1787560086; cv=none; b=LBdueEAc9CbBgLtBK5Xes7qgc23ivHtq2QarFAKQsr+NhBpdQV/fWSm0wvu2uyGjZ3ZLuXRdyIh6Pix0uqBxc1qvp7HpHyaovWjJ/thDkB3sCyaiEsHfBn8fyBEBqQ5gW67634aI+ZV+QsNmVYGzkNpoWKe3Z9fgk4B7gcisU0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787560084; c=relaxed/simple;
-	bh=YOphZ65KQfi8Y0davdTNQfU8hQc5+kVCArZc0hlmkIw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pPXSr+5cOjR1RowdfZJpPWABcwIpqOVwPy8oa3NDb4LdyX39LlrS8DrO/Ex4r8XXj4mGbJzxKbDnoUz7jIvjVUAb5ReyNvvH/r+Ud7ukWbLA5u4xRKjMMoNKNYcm+7Bc538AIRz127oCDkWJcDlewa7pRqPBSbYKmz1T5HhmvUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Di0TOoIC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787560086; c=relaxed/simple;
+	bh=8Pl7rmcIvwX+tzegpkwJKg5akKbpn9WU8gbrZ1f0X8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=trmSpn9kPkr9LNL+iSOhoTz8O7Pd4OZBeF/9TbCb1CqpXRzRtBcFIi3PCQCJKRMNxvW6dqpv9jX1vWgPSnwGeC3rfL67qJSKR6l3/1/5isW3xdFfpcwa1j5Ef2YD5ug0ae/ObrC4iQG00Bm8EoQSleQsSNyqhJHOqT6Uikkfu1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LjJ6LwxO; arc=none smtp.client-ip=95.215.58.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Di0TOoIC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8011F000E9;
-	Mon, 24 Aug 2026 08:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787560081;
-	bh=aSQGCOvrs7RkeTvXeE5mywi6eUFTagWF9kxlY2qHMXU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Di0TOoICAvevZ0upZ6BS1NqoVREr1CKA3z2YpTPmTWXSNQZTo/Jvvr5CJdCSI9SCb
-	 kSDvUPEMvVCM8TKvKlW84N3bhtpPVXx6o3dpwgvTCco1jJqnFxqKOZX8NJlcC4txVg
-	 eF3Ib31pBcGAsg8AnsNqWb5veoYSyWJBIO1ACgmGB9xGuZYqhwLP8h1vsGHpxOKFpu
-	 pctF5EgzFfLG6NPsVa/9kxkol8/S7mYmXFoXPH8t7daoehw0saQpSq6Y7u76c9SLMM
-	 8s5Hr4mH7BkoctOdLKDwz1L8MWqIB5jfnZePc//ocDbFucxH+YdrolJDtUjcRgQRnU
-	 Tu+zoEOYtrVng==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] verification/rvgen: Use .old instead of .bak for kunit
- backup files
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gabriele Monaco" <gmonaco@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260824081519.81103-2-gmonaco@redhat.com>
-References: <20260824081519.81103-2-gmonaco@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Aug 2026 08:28:00 +0000
-Message-Id: <20260824082801.1D8011F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LjJ6LwxO"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=8Pl7rmcIvwX+tzegpkwJKg5akKbpn9WU8gbrZ1f0X8M=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787560081; v=1; x=1788164881;
+ b=LjJ6LwxO2XPMd9oUysjq8G0CYOWF4VzDt09U8RGs0WH8lFAhfhCHNMnUTeQ9JE83869mX1TK
+ EWbZLkG1UPpibY/1ZklwKooBXY18Nt44P586BiTfw2lnPLEfxfMBS2E71xXXxoPUwK4t3VHGXSd
+ huWKoKD2Z72W8xJ1K0wdXGvU=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: from [10.244.244.3] (2602:fce1:44f:115e::)
+	by smtp.migadu.com with ESMTPS id 8e0a79e38506ea9a;
+	Mon, 24 Aug 2026 08:28:00 +0000
+X-Mizu-Trace-ID: 8e0a79e38506ea9a
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <cff17006-b534-440a-8be7-651fb0a940cd@linux.dev>
+Date: Mon, 24 Aug 2026 16:27:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] userfaultfd: collapse VM_UFFD_{MISSING,WP,MINOR,RWP}
+ into single VM_UFFD
+To: Mike Rapoport <rppt@kernel.org>
+Cc: akpm@linux-foundation.org, david@kernel.org,
+ baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
+ hughd@google.com, jannh@google.com, jgg@ziepe.ca, jhubbard@nvidia.com,
+ corbet@lwn.net, liam@infradead.org, ljs@kernel.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, mhocko@suse.com, muchun.song@linux.dev,
+ nico.pache@linux.dev, osalvador@suse.de, pfalcato@suse.de,
+ peterx@redhat.com, ryan.roberts@arm.com, shakeel.butt@linux.dev,
+ skhan@linuxfoundation.org, rostedt@goodmis.org, surenb@google.com,
+ usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com,
+ linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260823-uffd-vm-flags-v1-v1-6-3086981b33cf@kernel.org>
+ <20260824071126.41979-1-lance.yang@linux.dev> <aov9_DIHLHynm7tN@kernel.org>
+Content-Language: en-US
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <aov9_DIHLHynm7tN@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The `rvgen kunit` tool generates `.old` backup files which are n=
-ot cleaned up by `make distclean`, polluting the user's working directory.
---
 
---- Patch [1]: [PATCH] verification/rvgen: Use .old instead of .bak for kun=
-it backup files ---
-commit 293b444e4dfea5692931faee1bc9c58a549085d8
-Author: Gabriele Monaco <gmonaco@redhat.com>
 
-verification/rvgen: Use .old instead of .bak for kunit backup files
+On 2026/8/24 16:17, Mike Rapoport wrote:
+> Hi Lance,
+> 
+> On Mon, Aug 24, 2026 at 03:11:26PM +0800, Lance Yang wrote:
+>>
+>> On Sun, Aug 23, 2026 at 03:17:43PM +0300, Mike Rapoport (Microsoft) wrote:
+>> [...]
+>>> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+>>> index 83587d34b189..193f6e65d875 100644
+>>> --- a/mm/userfaultfd.c
+>>> +++ b/mm/userfaultfd.c
+>>> @@ -50,10 +50,10 @@ struct mfill_state {
+>>> 	pmd_t *pmd;
+>>> };
+>>>
+>>> -static bool anon_can_userfault(struct vm_area_struct *vma, vm_flags_t vm_flags)
+>>> +static bool anon_can_userfault(struct vm_area_struct *vma, unsigned int mode)
+>>> {
+>>> 	/* anonymous memory does not support MINOR mode */
+>>> -	if (vm_flags & VM_UFFD_MINOR)
+>>> +	if (mode & UFFD_MODE_MINOR)
+>>> 		return false;
+>>> 	return true;
+>>> }
+>>> @@ -462,7 +462,7 @@ static int mfill_copy_folio_locked(struct folio *folio, unsigned long src_addr)
+>>> }
+>>>
+>>> #define MFILL_RETRY_STATE_VMA_FLAGS \
+>>> -	append_vma_flags(__VMA_UFFD_FLAGS, VMA_SHARED_BIT)
+>>> +	append_vma_flags(VMA_UFFD, VMA_SHARED_BIT)
+>>
+>> Looks like this drops registration mode from the retry snapshot. Assume a
+>> shared shmem VMA is registered for MISSING and COPY reaches
+>> mfill_copy_folio_retry(). While locks are dropped, the same userfaultfd|
+>> can re-register the range for MINOR. VMA_UFFD, VM_SHARED, ops, file and
+>> pgoff all stay unchanged, so the old COPY can continue instead of
+>> returning -EAGAIN ... no?
+> 
+> Good catch, thanks!
 
-The rvgen kunit command generates .bak backup files and these can be
-checked in for selftests (make check). Clean targets like make disclean
-remove such files, leaving the tree dirty. Switch to .old to preserve a
-clean tree after make disclean.
+Cheers!
 
-Closes: https://lore.kernel.org/lkml/aosuwKH5GOEo0xTN@google.com
+>   
+>> Maybe something like this?
+> 
+> I prefer to add mode to the retry_state:
+> 
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index 193f6e65d875..a0377f7ecc69 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -471,6 +471,7 @@ static int mfill_copy_folio_locked(struct folio *folio, unsigned long src_addr)
+>    */
+>   struct mfill_retry_state {
+>   	const struct vm_uffd_ops *ops;
+> +	unsigned long mode;
+>   	struct file *file;
+>   	vma_flags_t flags;
+>   	pgoff_t pgoff;
+> @@ -482,6 +483,7 @@ static void mfill_retry_state_save(struct mfill_retry_state *s,
+>   	s->flags = vma_flags_and_mask(&vma->flags, MFILL_RETRY_STATE_VMA_FLAGS);
+>   	s->ops = vma_uffd_ops(vma);
+>   	s->pgoff = vma_start_pgoff(vma);
+> +	s->mode = uffd_mode(vma);
+>   
+>   	if (vma->vm_file)
+>   		s->file = get_file(vma->vm_file);
+> @@ -493,8 +495,9 @@ static bool mfill_retry_state_changed(struct mfill_retry_state *state,
+>   	vma_flags_t flags = vma_flags_and_mask(&vma->flags,
+>   					       MFILL_RETRY_STATE_VMA_FLAGS);
+>   
+> -	/* Have any UFFD flags (missing, WP, minor) changed? */
+> -	if (!vma_flags_same_pair(&state->flags, &flags))
+> +	/* UFFD registration mode or VMA sharing changed */
+> +	if (!vma_flags_same_pair(&state->flags, &flags) ||
+> +	    s->mode != uffd_mode(vma))
 
-> diff --git a/tools/verification/rvgen/rvgen/kunit.py b/tools/verification=
-/rvgen/rvgen/kunit.py
-> index ed2082d7d3bc4..85973f918c9b5 100644
-> --- a/tools/verification/rvgen/rvgen/kunit.py
-> +++ b/tools/verification/rvgen/rvgen/kunit.py
-[ ... ]
-> @@ -173,7 +173,7 @@ EXPORT_SYMBOL_IF_KUNIT({struct_name});
->              for path in (header_file_path, kunit_c_file_path):
->                  if path.exists():
->                      try:
-> -                        path.rename(path.with_suffix(path.suffix + ".bak=
-"))
-> +                        path.rename(path.with_suffix(path.suffix + ".old=
-"))
+I assume you meant
 
-[Severity: Medium]
-Will this regression leave users' working directories polluted with .old
-backup files that aren't cleaned up by the top-level make distclean target?
+s/s->mode/state->mode/
 
-The kernel's global Makefile explicitly cleans *.bak files during
-distclean, but ignores *.old files.
+With that, LGTM :)
 
-When a user runs rvgen kunit in a directory with existing kunit files and
-accepts the backup prompt, print_files() will generate these .old files.
-Since they are no longer .bak files, is it expected that they will persist
-after running make distclean?
+>   		return true;
+>   
+>   	/* VMA type or effective uffd_ops changed while the lock was dropped */
+>   
+>> Cheers, Lance
+>
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260824081519.8110=
-3-2-gmonaco@redhat.com?part=3D1
+Cheers, Lance
