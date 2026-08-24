@@ -1,150 +1,191 @@
-Received: from mail-oi1-f205.google.com (mail-oi1-f205.google.com [209.85.167.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FA23FAE19
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 09:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7C63B42CE
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 10:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787565045; cv=none; b=GxTA3OThAuNv0DT4tl0GX9K2bQPFswvA/s1FmhFmPr0rDU3q0/MkRs1E9ST1GFz09KJGNLuQdkstVmWh+yxWEV1BXm7Nma9jay9NzgzfC8/FC09Zsgs1A/MmLFnPpSKH3h2hlpaNLpAyD1434MVYc4prByF6eFfhalL6ELFaVlM=
+	t=1787566112; cv=none; b=n2hMuq4x4jzpa5rkgeOoAusthQD5FuxbQbgBYXftYUZR9neAs6Q6z6rMzhqeiYuPkqGIdV+WDTWK62aiEfVAFq4CV4Bn5c2JL1Nu50A6PkDWfzSZ01W44wETd8pemszTvoLWsodGi6KLmksrkk8wBCAsKfdCd99y/NP4QnBlM+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787565045; c=relaxed/simple;
-	bh=Txjw6O7RWvrvx2BdRJn4lyWZnEK+gkLyL7TvZJOfpfg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bv3Sz1x95lE0aJM/7ZsApqtQ5RohqRZGCuq9sFDGwJIcbJzd1T3GUbLzRPVA6ryhYzRlMxxR3hZNdXhh+LLPI5fNRSDhcBIuI9PCh4osAnsWRzYCDrQMKoZgx9Ge7+upi1Axbnf9Nq17K16M6mzcIuDjAVRIo8oUeQycHaYmEso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oi1-f205.google.com with SMTP id 5614622812f47-485ebc5706cso8570106b6e.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 02:50:40 -0700 (PDT)
+	s=arc-20240116; t=1787566112; c=relaxed/simple;
+	bh=QA3NnOYpbUT4HJtn2TrtO+2Ug+lASks9+L9s89KbLJk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rEue4L7UTpU4qlM+OG7KdeZu4ReVS7DlVgdvnPPtxnhiXMiXKugKRXLxX/d9rA0JMFQmnfkK8+QH8Z97zYHY2bcyf157cPx6/pOjlypHBDhQk4h/RUsMPLuJ5M3mTf6JIasRCReUJMkfyCYvN+ZpU7OWCTunQ7apGCBK3i7tueY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OG0PqOj+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OG0PqOj+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787566109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QA3NnOYpbUT4HJtn2TrtO+2Ug+lASks9+L9s89KbLJk=;
+	b=OG0PqOj+F0AZTGcgRNwQmPQ9kDMG+OiFJC8iukqBeQnrw7k3iMl94mRqycOk6FBsjwUuhI
+	kYljRwjDNXvJwqLoDW9h62zm8/gwkZ5NLBFgrp3am52pv2hvGXgWP1CPwtcKa7/9O+XCO5
+	61JY5b6H5D+ULI4F7Guunr/NBFC/SFE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-180-eNtRQhDPM4ykf-12WK88LA-1; Mon, 24 Aug 2026 06:08:28 -0400
+X-MC-Unique: eNtRQhDPM4ykf-12WK88LA-1
+X-Mimecast-MFC-AGG-ID: eNtRQhDPM4ykf-12WK88LA_1787566107
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c16740eb587so243728966b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 03:08:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787565038; x=1788169838;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DxAjgfRYxWmWgjBv31YDuU6yuFMKPeHeRDu/GK89Mlw=;
-        b=a33RQUFO4QQnDFN4VYg6i1q2nEvQKm5I5+sYl9I6DlOhuJfu5m7ZMUXELrE+G4Skgp
-         WOy09IXuQkOwbbeDZSnhRCsmzigGZGTv4sZeh3VL18bztF0T+jUZZl62dNU9o68YEuzI
-         hK/k9YxOooP9swcZpAFaHSRQLNKFWBN/2+Tn3mrD7TvaP/W+i9jUygRe3mfqt8q9m0OX
-         K6AhH+E9s92tHB5eQRXsN9NlFZtnGyR8VGsmAibWdHZb+BwFDd9Zp8MTKcH0PpANCL8a
-         mnq19upJJueJLaTI+FxyZ27XfYsLCkSjXwj2HMmPvEe4ifIY7SHF8DxxKOgs1kwyCg93
-         WgIA==
-X-Forwarded-Encrypted: i=1; AHgh+Rou5ML3vEoCNprbNgVWsceqK0VkM5DnaQq7zk0I4s/HjZ8H4wfKSWKt6jsUl3Z7v+S06FmOlQ/gWHGV0mc7U0Dc6o0=@vger.kernel.org
-X-Gm-Message-State: AFuF++m9v/KshcpPHDLZBvyGYIFDGXvKrEC81ssFFp2a7PqsSjgLb2ND
-	ifHKO+gbMJD1vYexfnBmcfESGv3bAKqFEsrM+qUpqJAlt1+fV7OC1apzoEA1N8TC9tkoMGy1h7p
-	GTOI2Xxf6Pfu4x+cCAl9XfTa8XF0gS88tctq47H0ick0nIfO3hBtSYzCwN9o=
+        d=1e100.net; s=20251104; t=1787566107; x=1788170907;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=QA3NnOYpbUT4HJtn2TrtO+2Ug+lASks9+L9s89KbLJk=;
+        b=VUbOGlSz7xrv0lXif8MUcLfAQDgyc4+vMgUOHw4r7+UfDrohrIXuKFLwkgRaKprURh
+         8MJQzxEdorrTpBJCusZuD1yvDOiu8Xclvg94qvWWvTVM124QHJl+5jJMgF95lVBA0HIj
+         TjN9FVzuzG5m4SApeQI/PvYS/yIhI2uHw5VBqkJTzAQt+bo/R5V2nQ26rxNuN1mjBLlc
+         E+cNSVBUxxF/uWSK/dbBbwxyQ04R9P0A5zbeaKA+DlshegEwN+h33MXHNRnKGWyspYPG
+         Q92HdBu3rsx3+AIMg6sUMZLT1glfWPKwDoIF7LpI0wtkR4/z25mQVrWIc2BROIeNOPD/
+         g/pw==
+X-Gm-Message-State: AFuF++nFdB6CvYkJtNV2a6MYrtoq1ejk21Jq5xidYETdSX+K+qntxyrV
+	PNLgWx1w/tpIVLem3AW4WYzdGZQ2pA7SQ08Mqo4B9ze54mGoX3bOlLBi3B3zDeG9J9lVA6iN/5M
+	uGqVIbObr97MzLWSQGedHKrXiG37stVxnsyJcTKAmWJY31TB8zPbH+mUq5aBbJtkhYDTt8QzGcM
+	L5ezuodVO5
+X-Gm-Gg: AR+sD13PQLaSwdqVQewGqMH31Q5LokAHCdJxEP4hvKxzStO/TX3Mp7FZfk3KWiI/fkP
+	S96hP61hVDOWs1wOWo05RkxK2OHGmrJj3J+d/gRHiGb1BcWpw0Lwe5heh8pVNSprAAQjlJ4s/PN
+	hhGre6Rs1H8qHS+qNMTSxG+y9PFRiXQSmApLMBZg4mFLqmsgmPox4WeB2XinYuq2+wRdHJ48/Yn
+	kcZhPhwOL4qZ4ECKStKSYLHVQu87YxBfGuTEfYB/KB5rMFxwek75XwhBP6hgZ6oiLzmcgNcCyTe
+	FAFPm1ZQSOMT0i5xrks+Viz4LOV0xB6Tc5t2XtR8tYkvqiDjfniIiom0EqWtuMGVd1ILjBCjjvy
+	VUdfy+U4SibOCcGw8lCBl7hivY4ucQQFWUDp+wF2vFa7Ct0Kw3HqXJGPEL9kKVXmazBWlWw==
+X-Received: by 2002:a17:907:3c83:b0:c21:7584:fc58 with SMTP id a640c23a62f3a-c246a60cd41mr2821067766b.12.1787566107367;
+        Mon, 24 Aug 2026 03:08:27 -0700 (PDT)
+X-Received: by 2002:a17:907:3c83:b0:c21:7584:fc58 with SMTP id a640c23a62f3a-c246a60cd41mr2821060066b.12.1787566106658;
+        Mon, 24 Aug 2026 03:08:26 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c249686e37bsm1134441566b.55.2026.08.24.03.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2026 03:08:26 -0700 (PDT)
+Message-ID: <f70d634ff65d6b1bd61c4ae517cf522881a23c61.camel@redhat.com>
+Subject: Re: [PATCH v6 9/9] selftests/ftrace: Walk up to find
+ test.d/functions when a subdirectory is passed
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+Date: Mon, 24 Aug 2026 12:08:25 +0200
+In-Reply-To: <20260820165819.5CCC71F00A3A@smtp.kernel.org>
+References: <cover.1787243842.git.wen.yang@linux.dev>
+	 <dc58717cc225389b041dc36c684df23e3253c473.1787243842.git.wen.yang@linux.dev>
+	 <20260820165819.5CCC71F00A3A@smtp.kernel.org>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6808:1992:b0:4b2:8e26:bdd2 with SMTP id
- 5614622812f47-4b2cde69b92mr27450524b6e.16.1787565038196; Mon, 24 Aug 2026
- 02:50:38 -0700 (PDT)
-Date: Mon, 24 Aug 2026 02:50:38 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a8c13ee.91706f20.16b6e3.02d5.GAE@google.com>
-Subject: [syzbot] [fs?] [trace?] WARNING in eventfs_create_events_dir
-From: syzbot <syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HY_jJGtK2U0pSwStqY_-2uxf2--uN9MEPWKMsj9WExk_1787566107
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, 2026-08-20 at 16:58 +0000, sashiko-bot@kernel.org wrote:
+> > +=C2=A0 if [ -n "$OPT_TEST_DIR" ]; then
+> > +=C2=A0=C2=A0=C2=A0 # Walk up from OPT_TEST_DIR to find the nearest anc=
+estor that contains
+> > +=C2=A0=C2=A0=C2=A0 # test.d/functions.=C2=A0 This allows a monitor sub=
+directory (e.g.
+> > +=C2=A0=C2=A0=C2=A0 # verification/test.d/tlob/) to be passed directly =
+without placing a
+> > +=C2=A0=C2=A0=C2=A0 # dummy functions shim in each new subdirectory.
+> > +=C2=A0=C2=A0=C2=A0 # Security: only walk within directories owned by r=
+oot or the current
+> > user
+> > +=C2=A0=C2=A0=C2=A0 # to prevent sourcing a functions file planted in a=
+ world-writable
+> > ancestor.
+> > +=C2=A0=C2=A0=C2=A0 dir=3D$(realpath "$OPT_TEST_DIR" 2>/dev/null || ech=
+o "$OPT_TEST_DIR")
+> > +=C2=A0=C2=A0=C2=A0 while [ "$dir" !=3D "/" ] && [ "$dir" !=3D "//" ]; =
+do
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if [ -f "$dir/test.d/functions" ]; then
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Verify the directory is n=
+ot world-writable to prevent LPE.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dirperms=3D$(stat -c "%a" "=
+$dir" 2>/dev/null || stat -f "%Lp" "$dir"
+> > 2>/dev/null)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case "$dirperms" in
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *2|*3|*6|*7) ;;=
+ # world-writable: skip this candidate
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TOP=
+_DIR=3D$dir
+>=20
+> [Severity: High]
+> Does this logic actually check directory ownership as mentioned in the
+> comments?
+>=20
+> It appears the code only checks if the directory is world-writable, but o=
+mits
+> validating that it is owned by root or the current user. An attacker coul=
+d
+> potentially create a directory with standard 0755 permissions, plant a
+> malicious test.d/functions script, and if a privileged user or automated =
+test
+> harness runs ftracetest against a subdirectory, the script would traverse=
+ up
+> and source the payload.
 
-syzbot found the following issue on:
+I'm wondering if this is a broad example of root can shoot themselves in th=
+e
+foot.
+This is a selftest run by a root user, I believe they are responsible to
+validate what's running isn't malicious.
 
-HEAD commit:    f4cdf7ca9a1f Merge tag 'media/v7.3-1' of git://git.kernel...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=10d46549580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e4b57019f58edf16
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ef80b4ed02226d04a06
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1577ba25580000
+I cannot picture a case where a path is commonly world writable here. I wou=
+ld
+keep things simple and perhaps walk up at a maximum of 4-5 levels
+(tools/testing/selftests/verification/test.d), to kinda make sure we never =
+go
+out of the repository.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/865d16295f11/disk-f4cdf7ca.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/71f476ad78fc/vmlinux-f4cdf7ca.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e19d5dbdc9b7/bzImage-f4cdf7ca.xz
+You cannot really rely on git (may run from a tarball) or other static meth=
+ods,
+but I believe 4-5 levels up will cover us just fine.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com
+In my opinion all this stat/dirperms thing is rarely useful, you could just
+write the concern in a *brief* comment, saying we trust 4-5 level ups are s=
+till
+in the repo and we trust the repo, just to make AIs happy.
 
-Could not create tracefs 'set_event_pid' entry
-Could not create tracefs 'set_event_notrace_pid' entry
-------------[ cut here ]------------
-!list_empty(&ei->children)
-WARNING: fs/tracefs/event_inode.c:128 at free_ei fs/tracefs/event_inode.c:128 [inline], CPU#1: syz.0.20/6104
-WARNING: fs/tracefs/event_inode.c:128 at cleanup_ei fs/tracefs/event_inode.c:150 [inline], CPU#1: syz.0.20/6104
-WARNING: fs/tracefs/event_inode.c:128 at cleanup_ei fs/tracefs/event_inode.c:145 [inline], CPU#1: syz.0.20/6104
-WARNING: fs/tracefs/event_inode.c:128 at eventfs_create_events_dir+0xa3d/0xbe0 fs/tracefs/event_inode.c:834, CPU#1: syz.0.20/6104
-Modules linked in:
-CPU: 1 UID: 0 PID: 6104 Comm: syz.0.20 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/16/2026
-RIP: 0010:free_ei fs/tracefs/event_inode.c:128 [inline]
-RIP: 0010:cleanup_ei fs/tracefs/event_inode.c:150 [inline]
-RIP: 0010:cleanup_ei fs/tracefs/event_inode.c:145 [inline]
-RIP: 0010:eventfs_create_events_dir+0xa3d/0xbe0 fs/tracefs/event_inode.c:834
-Code: 00 e8 57 f7 f9 00 e9 ab fb ff ff e8 2d 6d e6 fd 48 8b 7c 24 10 be 03 00 00 00 e8 3e f7 f9 00 e9 c2 fd ff ff e8 14 6d e6 fd 90 <0f> 0b 90 e9 59 fe ff ff e8 f6 0a 56 fe e9 4b f7 ff ff 48 89 44 24
-RSP: 0018:ffffc90002617b88 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888077746000 RCX: 0000000000000000
-RDX: ffff88802f489f40 RSI: ffffffff8424403c RDI: ffffffff8e679928
-RBP: ffff88802737f210 R08: 00000000ffffffff R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff88802737f250
-R13: 0000000000000003 R14: ffff88802737f24c R15: ffff88802737f200
-FS:  00007f6c427fe6c0(0000) GS:ffff888123ccc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2cf63fff CR3: 0000000026acc000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- create_event_toplevel_files+0x12d/0x1a0 kernel/trace/trace_events.c:4593
- event_trace_add_tracer+0x72/0x260 kernel/trace/trace_events.c:4624
- trace_array_create_dir+0x8e/0x210 kernel/trace/trace.c:8548
- trace_array_create_systems+0x8b3/0xc30 kernel/trace/trace.c:8639
- trace_array_create kernel/trace/trace.c:8666 [inline]
- instance_mkdir+0xca/0x140 kernel/trace/trace.c:8681
- tracefs_syscall_mkdir+0x10e/0x180 fs/tracefs/inode.c:121
- vfs_mkdir+0x364/0x850 fs/namei.c:5410
- filename_mkdirat+0x48b/0x5e0 fs/namei.c:5443
- __do_sys_mkdirat fs/namei.c:5464 [inline]
- __se_sys_mkdirat fs/namei.c:5461 [inline]
- __x64_sys_mkdirat+0x89/0xc0 fs/namei.c:5461
- do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
- do_syscall_64+0x123/0x790 arch/x86/entry/syscall_64.c:84
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6c4319e0d9
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6c427fe028 EFLAGS: 00000246 ORIG_RAX: 0000000000000102
-RAX: ffffffffffffffda RBX: 00007f6c43425fa0 RCX: 00007f6c4319e0d9
-RDX: 00000000000001ff RSI: 0000200000000140 RDI: ffffffffffffff9c
-RBP: 00007f6c43235024 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f6c43426038 R14: 00007f6c43425fa0 R15: 00007fff53277798
- </TASK>
+What do you think?
 
+Gabriele
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> Additionally, if the stat command fails for any reason, dirperms will be
+> empty.
+> Would an empty string match the *) fallback case and cause the script to
+> silently
+> fail open, accepting even a world-writable directory?
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TES=
+T_DIR=3D$TOP_DIR/test.d
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
+ak
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ;;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 esac
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fi
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dir=3D$(dirname "$dir")
+> > +=C2=A0=C2=A0=C2=A0 done
+> > =C2=A0=C2=A0 fi
+> > =C2=A0}
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
