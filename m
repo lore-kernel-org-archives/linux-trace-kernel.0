@@ -1,180 +1,139 @@
-Received: from mta0.migadu.com (out-107.mta0.migadu.com [91.218.175.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D953EC82E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 07:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCFF30EF77
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 07:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787555502; cv=none; b=NJiqcueYj2ibHpECRe1FwESTD5m50rnKFXahRrA3YzZM0yVHzWZY6GVPV58iLrchv6JiJWI50Qr/Nap0yufS/A7bXtKfcwZjeoOgTl0+Zh45J0nRBk3RkiE3mdvDEO55uYIjNDO6BtdR5s0/Q6jX5VZZZ4AAsa2yRJrsOErM1ac=
+	t=1787556456; cv=none; b=HnIbUB2S1U/pSrjuKRWHaYFrZ7nUYDKr0KAr8o7kf63/gCI4tWQgwBjLPznmb9bCududbx8wg8UodJchsU2/i3zyByr99JAAhOe7GHqR+z1aZQhbW2oy7L+Gjpz3FrL4Wk4Kfdpe9UooIe77WSg0YIh2wXKjrn+h5Wv1Kk4iP5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787555502; c=relaxed/simple;
-	bh=upHHen4ux8L9irT5wAQCPUOo8cd6TtLi7blsQg4Qp0c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ludJL+GqAD4yKUEbcrzzU1KE/k5ic/qjb6FBcQCfI2jAjkNRUKyDLKKxgOB7rel4UtsNGddiP+xxhVLQs6hj0E7L4HdovVOLEv56rplm4OSAHZRmCsc7mbg0M+TTK2Zybwb+Nb3uf31wMK1xfiZELTk/P84JC6iHqmdrCN1sUWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BBiXNL4l; arc=none smtp.client-ip=91.218.175.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787556456; c=relaxed/simple;
+	bh=hB8U2CbWl2HpbjkCLOSjJQ6wrxls4ux9C7HC1LRoDEc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=eUCJb9jyCayF5mX7OIR0xQ7RufqVY6V16oqbIUkEBJVVQBFqDsuUXJnmTCEQZL+nT57HrjO/MUWxh7K7s8/o6Zfy7pHVkdim0FKcoUvSYESdSkUc0b3HQYvPW0PUFjIl+JS9EyNcwfnNL3CNjqx7O+cktcvXBlth4hf+ztHLAt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8dcBvYi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BBiXNL4l"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=upHHen4ux8L9irT5wAQCPUOo8cd6TtLi7blsQg4Qp0c=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787555497; v=1; x=1788160297;
- b=BBiXNL4lNREsQ2300oMM+gr2YknnB9p1+MuIdmYBJamkt9iNgJYESP2ang0LIez/h3JLyx5F
- axQqA/FmBM/eA1KsGNvZQkK9FEz9pcH1QOUTMEPpNq5KsU3KKIwRfT/D+oO+iwFLMi+SF/r+w9h
- tt+Q+gJvYFqEsmwROXDciLSo=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from localhost (2602:fce1:44f:115e::)
-	by smtp.migadu.com with ESMTPS id bf7ef9951ffd2d20;
-	Mon, 24 Aug 2026 07:11:37 +0000
-X-Mizu-Trace-ID: bf7ef9951ffd2d20
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: rppt@kernel.org
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	baohua@kernel.org,
-	dev.jain@arm.com,
-	hughd@google.com,
-	jannh@google.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	corbet@lwn.net,
-	liam@infradead.org,
-	ljs@kernel.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhocko@suse.com,
-	muchun.song@linux.dev,
-	nico.pache@linux.dev,
-	osalvador@suse.de,
-	pfalcato@suse.de,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	shakeel.butt@linux.dev,
-	skhan@linuxfoundation.org,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	usama.arif@linux.dev,
-	vbabka@kernel.org,
-	ziy@nvidia.com,
-	linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	Lance Yang <lance.yang@linux.dev>
-Subject: Re: [PATCH 6/6] userfaultfd: collapse VM_UFFD_{MISSING,WP,MINOR,RWP} into single VM_UFFD
-Date: Mon, 24 Aug 2026 15:11:26 +0800
-Message-Id: <20260824071126.41979-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20260823-uffd-vm-flags-v1-v1-6-3086981b33cf@kernel.org>
-References: <20260823-uffd-vm-flags-v1-v1-6-3086981b33cf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8dcBvYi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE431F000E9;
+	Mon, 24 Aug 2026 07:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787556455;
+	bh=ZGtgoye9FTVnElDzC3v9MMqb096BsRsAyNC5pcRjhZE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=d8dcBvYi0gqJ3DpsCTGKmi6PsjPUZC5WOYFzfMe0s67QmAPWCjFKscbjEEoLCTdSO
+	 vqObWp2RiAbIC+r4dyH5VD2RLggZhCTpe5MhGxTSu10asLuGLY6HJeZQhelfVvktrS
+	 1n/bypP7j8hqO9F+yhENgJX/glrtV+Vbk2BeduPTmLmqx3iP9GBMqO9bVw71jzl+1p
+	 eTsEot10bV4HJm2RADJO7npW57e1XfS9Wfv9KLkw6FCNspo16VXIrGiZMM+Zfl7KCu
+	 1qBl2xvcTBcDVsVnqjvkxngdigpEvHI4LKkBb/iDWsQXB3G84ZsZq+82Ff1Ql6ZR1W
+	 k3RyvyzolXwKQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Fix use-after-free on field name/type of
+ dynamic probe events
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Henry Martin" <bsdhenrymartin@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260824071011.3507735-1-bsdhenrymartin@gmail.com>
+References: <20260824071011.3507735-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 24 Aug 2026 07:27:34 +0000
+Message-Id: <20260824072735.2BE431F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-On Sun, Aug 23, 2026 at 03:17:43PM +0300, Mike Rapoport (Microsoft) wrote:
-[...]
->diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
->index 83587d34b189..193f6e65d875 100644
->--- a/mm/userfaultfd.c
->+++ b/mm/userfaultfd.c
->@@ -50,10 +50,10 @@ struct mfill_state {
-> 	pmd_t *pmd;
-> };
-> 
->-static bool anon_can_userfault(struct vm_area_struct *vma, vm_flags_t vm_flags)
->+static bool anon_can_userfault(struct vm_area_struct *vma, unsigned int mode)
-> {
-> 	/* anonymous memory does not support MINOR mode */
->-	if (vm_flags & VM_UFFD_MINOR)
->+	if (mode & UFFD_MODE_MINOR)
-> 		return false;
-> 	return true;
-> }
->@@ -462,7 +462,7 @@ static int mfill_copy_folio_locked(struct folio *folio, unsigned long src_addr)
-> }
-> 
-> #define MFILL_RETRY_STATE_VMA_FLAGS \
->-	append_vma_flags(__VMA_UFFD_FLAGS, VMA_SHARED_BIT)
->+	append_vma_flags(VMA_UFFD, VMA_SHARED_BIT)
+New issues:
+- [Medium] The commit message claims that fields of static trace events ref=
+erence their kernel or module rodata string literals directly without alloc=
+ation, but module strings are unconditionally duplicated.
 
-Looks like this drops registration mode from the retry snapshot. Assume a
-shared shmem VMA is registered for MISSING and COPY reaches
-mfill_copy_folio_retry(). While locks are dropped, the same userfaultfd|
-can re-register the range for MINOR. VMA_UFFD, VM_SHARED, ops, file and
-pgoff all stay unchanged, so the old COPY can continue instead of
-returning -EAGAIN ... no?
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but if a user_event'=
+s destruction fails because the trace event is busy, its fields are irrever=
+sibly destroyed, leaving the active event in a corrupted state.
+--
 
-The snapshot and comparison bracket the unlocked copy:
+--- Patch [1]: [PATCH] tracing: Fix use-after-free on field name/type of dy=
+namic probe events ---
+commit cf6ec74d4b06c238fc3f0cc0f2463ea2e1435590
+Author: Henry Martin <bsdhenrymartin@gmail.com>
 
-static int mfill_copy_folio_retry(struct mfill_state *mfill_state,
-				  struct folio *folio)
-{
-	...
-	mfill_retry_state_save(&retry_state, mfill_state->vma);
+tracing: Fix use-after-free on field name/type of dynamic probe events
 
-	/* retry copying with mm_lock dropped */
-	mfill_put_vma(mfill_state);
-	...
-	/* reget VMA and PMD, they could change underneath us */
-	err = mfill_get_vma(mfill_state);
-	if (err)
-		return err;
+This commit modifies dynamic event trace field registration to duplicate
+field name and type strings using kstrdup_const(). This ensures the field
+owns its strings and prevents use-after-free bugs when primary probes are
+deleted but event calls remain active.
 
-	if (mfill_retry_state_changed(&retry_state, mfill_state->vma))
-		return -EAGAIN;
-	...
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 0356cae0cf74e..13d7675bc5132 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -122,8 +122,18 @@ static int __trace_define_field(struct list_head *he=
+ad, const char *type,
+>  	if (!field)
+>  		return -ENOMEM;
+> =20
+> -	field->name =3D name;
+> -	field->type =3D type;
+> +	field->name =3D kstrdup_const(name, GFP_TRACE);
+> +	if (!field->name) {
+> +		kmem_cache_free(field_cachep, field);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	field->type =3D kstrdup_const(type, GFP_TRACE);
+
+[Severity: Medium]
+The commit message states that fields of static trace events reference their
+kernel or module rodata string literals directly, as kstrdup_const() only
+touches allocated memory.
+
+Does kstrdup_const() actually handle module rodata this way? Looking at
+kstrdup_const(), it delegates to is_kernel_rodata(), which only checks core
+kernel boundaries.=20
+
+Won't this cause module trace events to unconditionally duplicate their name
+and type strings instead of referencing the module rodata?
+
+> +	if (!field->type) {
+> +		kfree_const(field->name);
+> +		kmem_cache_free(field_cachep, field);
+> +		return -ENOMEM;
+> +	}
+> =20
+>  	if (filter_type =3D=3D FILTER_OTHER)
+
+[ ... ]
+
+While reviewing the string lifecycle in trace events, a related preexisting
+issue in user events was identified:
+
+kernel/trace/trace_events_user.c:destroy_user_event() {
+        ...
+        /* Must destroy fields before call removal */
+        user_event_destroy_fields(user);
+
+        ret =3D user_event_set_call_visible(user, false);
+
+        if (ret)
+                return ret;
+        ...
 }
 
-Since mode now lives in vm_uffd_state.mode, could we save it before
-mfill_put_vma() and compare it after mfill_get_vma()? The UFFD flags
-comment also needs an update, since the mask no longer contains per mode
-flags.
+[Severity: High]
+This isn't a bug introduced by this patch, but if a user_event's destruction
+fails because the trace event is busy (user_event_set_call_visible() returns
+-EBUSY), the event's fields are already irreversibly destroyed.
 
-Maybe something like this?
+Will this leave the active event in a corrupted state, where any subsequent
+interactions with this event operate on an empty field list?
 
----8<---
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 193f6e65d875..5e3c86fe8aee 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -493,7 +493,7 @@ static bool mfill_retry_state_changed(struct mfill_retry_state *state,
- 	vma_flags_t flags = vma_flags_and_mask(&vma->flags,
- 					       MFILL_RETRY_STATE_VMA_FLAGS);
-
--	/* Have any UFFD flags (missing, WP, minor) changed? */
-+	/* Has UFFD registration or VMA sharing changed? */
- 	if (!vma_flags_same_pair(&state->flags, &flags))
- 		return true;
-
-@@ -528,6 +528,7 @@ static int mfill_copy_folio_retry(struct mfill_state *mfill_state,
- 	struct mfill_retry_state retry_state = { 0 };
- 	struct mfill_retry_state *for_free __free(retry_put) = &retry_state;
- 	unsigned long src_addr = mfill_state->src_addr;
-+	unsigned int saved_mode = uffd_mode(mfill_state->vma);
- 	void *kaddr;
- 	int err;
-
-@@ -549,7 +550,8 @@ static int mfill_copy_folio_retry(struct mfill_state *mfill_state,
- 	if (err)
- 		return err;
-
--	if (mfill_retry_state_changed(&retry_state, mfill_state->vma))
-+	if (saved_mode != uffd_mode(mfill_state->vma) ||
-+	    mfill_retry_state_changed(&retry_state, mfill_state->vma))
- 		return -EAGAIN;
-
- 	err = mfill_establish_pmd(mfill_state);
----
-
-Cheers, Lance
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260824071011.3507=
+735-1-bsdhenrymartin@gmail.com?part=3D1
