@@ -1,141 +1,221 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-138.mta0.migadu.com [91.218.175.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29A83FBEA5
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 15:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7820F44C51B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787587052; cv=none; b=YR2Pg9UlodwVVR92QDVQWOu/tCGo3fpDKk0iPSpyaj1mjh3qaVNPqULeJFJxXyjbz4wQsEtGv0c7fw5agbneaTBUoy7pxmqcPpm/PrhFAFWicS4hcfNoUT3WYiLVhdekeT9gh5CMrxjcWPTCZuF+Pp8A+GuKSN55dC5oIuAj+XM=
+	t=1787588037; cv=none; b=tDLhUMPSFW+Uldp9/KQPzWYJTsffHD+2lznpXnuxYHvfDlF7LSrItu+g5gwOuyJMzORtrE7HKThs6ZzbJzyfHo9sTPoGIpY+jj0WDEFouf2QuRKfu5KlCmFglOXgwDxqjuQQw9EtngEFRBaPXtAzerf5lokqgIz7nzOGkokBaDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787587052; c=relaxed/simple;
-	bh=WLDiteWIqF3m1z44XJzECGsDTBGJPPLigkS/d7vyfyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=aTIhlKN1YUrWMl4LRqUbMldRLkAp+7UD6CF0e1OAYuVtMiK2h+ds5W1zV14akiCv6srM2OxBNXsS8cfrduvhE97B+kIfWkXzKtpE/gdlKGv7xtXMiA5OGBSKq8F3jOpH1h+EijSF0ceNsdRLby8ifydtUju/79TA79W7JYOU8ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fXbid/uy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1787588037; c=relaxed/simple;
+	bh=moWMKDFo1ejO1Y+SvTSn1ZBtiqsMttxF5PTsWQBALgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AX0ph+g52DPk0Vm0N/TU0ZZn/9kP7LvAeNGom4UpYwxN5vFvMesWV2jf0KIjkv9aIhqmSDhzWpyOEAu/B+A6L92qGm7Dcq29FpJh9TKknSAobUT4G9tMXi2GMXQbTeGALx4caudUJJsBkBWB9skBpoyvj352OWpvnGidE+Q34Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=abSqDNyw; arc=none smtp.client-ip=91.218.175.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fXbid/uy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787587049;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lt6JfU9N3TKmHx8nvPAdDqg71QI5DDY6kggznOpUqRc=;
-	b=fXbid/uyd4y1jUk49ftnHcSSJkuvKfuF755ZbuHTOZFvzGc06bTxfcnBc6wKCaQS4c487R
-	pPf2dkXuFEwVKPSY8rkVqJZeFANgYZrCPxn/at+dLy43kA5xDsF24BOjOPyCtCGzVwPH0b
-	YQRPFlGsAXPQ4YzwvqV+O1HFaeixg6Q=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-Wb4jBxTKMfqBc15vuBl-vA-1; Mon,
- 24 Aug 2026 11:57:25 -0400
-X-MC-Unique: Wb4jBxTKMfqBc15vuBl-vA-1
-X-Mimecast-MFC-AGG-ID: Wb4jBxTKMfqBc15vuBl-vA_1787587042
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6E2D71977535;
-	Mon, 24 Aug 2026 15:57:22 +0000 (UTC)
-Received: from fedora (unknown [10.44.32.9])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3D9CB18005B4;
-	Mon, 24 Aug 2026 15:57:18 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 24 Aug 2026 17:57:22 +0200 (CEST)
-Date: Mon, 24 Aug 2026 17:57:17 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Keke Ming <ming.jvle@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
-Message-ID: <aoxp3Rcbp3fUuqS8@redhat.com>
-References: <20260822054620.452262-1-ming.jvle@gmail.com>
- <aosT4H14zcowzU_7@redhat.com>
- <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
- <aotM6tRUHI9Bo7gW@redhat.com>
- <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="abSqDNyw"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=moWMKDFo1ejO1Y+SvTSn1ZBtiqsMttxF5PTsWQBALgw=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787588033; v=1; x=1788192833;
+ b=abSqDNyw/yKFT4k9pLTjpemjs+ZnH5r8henQ2NmyzQknZ14BHwMXRUfqVQMmcLNGLFEE7/uY
+ pTcnnG5iAw+jRUjqYzg+K/ucUb7aDuxNY9j27CPnV6GrV9Dy10m2Kd1Os6trGrY3qiTzqCcDjon
+ N2wOgPrDYlkyv60NIzhbaSdg=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: from [192.168.50.204] (146.199.86.12)
+	by smtp.migadu.com with ESMTPS id eea20e0d7aa22208;
+	Mon, 24 Aug 2026 16:13:52 +0000
+X-Mizu-Trace-ID: eea20e0d7aa22208
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f81160ac-0c7c-43f2-985f-43ab54a52358@linux.dev>
+Date: Mon, 24 Aug 2026 17:13:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: CBRTzplkKcqt-gzy2V3txP2ckwhk3hfz57yUGWetHhA_1787587042
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 16/57] mm/collapse: freeze the sources behind
+ migration entries
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Kiryl Shutsemau <kirill@shutemov.name>
+Cc: Lance Yang <lance.yang@linux.dev>, akpm@linux-foundation.org,
+ david@kernel.org, ljs@kernel.org, nico.pache@linux.dev,
+ baolin.wang@linux.alibaba.com, baohua@kernel.org, dev.jain@arm.com,
+ hughd@google.com, liam@infradead.org, mhocko@suse.com, rppt@kernel.org,
+ ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
+ vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com,
+ agordeev@linux.ibm.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jannh@google.com, willy@infradead.org,
+ pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20260816224609.308019-17-kirill@shutemov.name>
+ <20260824131224.73344-1-lance.yang@linux.dev> <aoxQnuEacGpzp2I7@thinkstation>
+ <20260824154921.GA863036@cmpxchg.org>
+Content-Language: en-US
+From: Usama Arif <usama.arif@linux.dev>
+In-Reply-To: <20260824154921.GA863036@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 08/24, Keke Ming wrote:
->
-> On 08/24, Oleg Nesterov wrote:
->
-> > Hmm. It is not that I think "it is not enough", I think this is pointless
-> > whatever we do.
->
-> Well, I didn't mean to insist on the cleanup, I also think it may
-> be redundant. If the child is bound to exit, manually calling
-> uprobe_free_utask(t) in dup_utask() is pointless, as the normal
-> exit path will handle it.
 
-Yes, but the same is true if the child is not bound to exit... IOW,
-I still can't understand your motivation for this patch...
 
-> > But this is only the first step to cleanup
-> > this logic. I'll try to write another email tomorrow.
->
-> Of course, I'm all ears.
+On 24/08/2026 16:49, Johannes Weiner wrote:
+> On Mon, Aug 24, 2026 at 03:13:10PM +0100, Kiryl Shutsemau wrote:
+>> On Mon, Aug 24, 2026 at 09:12:24PM +0800, Lance Yang wrote:
+>>>
+>>> On Sun, Aug 16, 2026 at 11:45:28PM +0100, Kiryl Shutsemau wrote:
+>>>> +		if (!folio_ref_freeze(folio,
+>>>> +				      folio_expected_ref_count(folio) + 1)) {
+>>>> +			result = SCAN_PAGE_COUNT;
+>>>> +			goto unfreeze;
+>>>> +		}
+>>>> +		nr_frozen = nr_saved;
+>>>
+>>> Just one thing I was wondering about ... can deferred_split_isolate()
+>>> remove a source folio from deferred_split_lru while its refcount is
+>>> frozen by collapse_freeze_candidate()?
+>>>
+>>> Assume an earlier span belongs to an anonymous large folio on the
+>>> deferred split queue, then a later span fails folio_trylock().
+>>> collapse_freeze_candidate() continues after freezing each source folio
+>>> and calls collapse_unfreeze_candidate() on a later failure:
+>>>
+>>> static noinline enum scan_result collapse_freeze_candidate(struct mm_struct *mm,
+>>> 		struct collapse_candidate *cand, pte_t *pte)
+>>> {
+>>> ...
+>>> 	for (i = 0, addr = cand->addr; i < nr_pages;) {
+>>> ...
+>>> 		if (!folio_trylock(folio)) {
+>>> 			folio_put(folio);
+>>> 			result = SCAN_PAGE_LOCK;
+>>> 			goto unfreeze;
+>>> 		}
+>>> ...
+>>> 		nr_saved = i + nr;
+>>>
+>>> 		if (!folio_ref_freeze(folio,
+>>> 				      folio_expected_ref_count(folio) + 1)) {
+>>> 			result = SCAN_PAGE_COUNT;
+>>> 			goto unfreeze;
+>>> 		}
+>>> 		nr_frozen = nr_saved;
+>>>
+>>> 		i += nr;
+>>> 		addr += nr * PAGE_SIZE;
+>>> 	}
+>>>
+>>> ...
+>>> unfreeze:
+>>> 	collapse_unfreeze_candidate(mm, cand, pte, nr_saved, nr_frozen);
+>>> 	return result;
+>>> }
+>>>
+>>> folio_ref_freeze() takes the source folio's refcount to zero:
+>>>
+>>> static inline int folio_ref_freeze(struct folio *folio, int count)
+>>> {
+>>> 	return page_ref_freeze(&folio->page, count);
+>>> }
+>>>
+>>> static inline int page_ref_freeze(struct page *page, int count)
+>>> {
+>>> 	int ret = likely(atomic_cmpxchg(&page->_refcount, count, 0) == count);
+>>>
+>>> ...
+>>> 	return ret;
+>>> }
+>>>
+>>> While collapse_freeze_candidate() still holds the source folio lock,
+>>> deferred_split_scan() can call deferred_split_isolate():
+>>>
+>>> static unsigned long deferred_split_scan(struct shrinker *shrink,
+>>> 		struct shrink_control *sc)
+>>> {
+>>> 	LIST_HEAD(dispose);
+>>> 	struct folio *folio, *next;
+>>> 	int split = 0;
+>>> 	unsigned long isolated;
+>>>
+>>> 	isolated = list_lru_shrink_walk_irq(&deferred_split_lru, sc,
+>>> 					    deferred_split_isolate, &dispose);
+>>> }
+>>>
+>>> static enum lru_status deferred_split_isolate(struct list_head *item,
+>>> 					      struct list_lru_one *lru,
+>>> 					      void *cb_arg)
+>>> {
+>>> 	struct folio *folio = container_of(item, struct folio, _deferred_list);
+>>> 	struct list_head *freeable = cb_arg;
+>>>
+>>> 	if (folio_try_get(folio)) {
+>>> 		list_lru_isolate_move(lru, item, freeable);
+>>> 		return LRU_REMOVED;
+>>> 	}
+>>>
+>>> 	/*
+>>> 	 * We lost race with folio_put(). Read folio state before the
+>>> 	 * isolate: folio_unqueue_deferred_split() checks list_empty()
+>>> 	 * locklessly, so once removed the folio can be freed any time.
+>>> 	 */
+>>> 	if (folio_test_partially_mapped(folio)) {
+>>> 		folio_clear_partially_mapped(folio);
+>>> 		mod_mthp_stat(folio_order(folio),
+>>> 			      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
+>>> 	}
+>>> 	list_lru_isolate(lru, item);
+>>> 	return LRU_REMOVED;
+>>> }
+>>>
+>>> And folio_try_get() fails because the source folio has a frozen refcount.
+>>> deferred_split_isolate() treats the failure as a race with folio_put(),
+>>> clears PG_partially_mapped and its MTHP_STAT_NR_ANON_PARTIALLY_MAPPED
+>>> accounting when set, then removes the folio from deferred_split_lru ...
+>>
+>> Hm. So, the premise in deferred_split_isolate() is false:
+>> !folio_try_get() doesn't mean lost race with folio_put().
+> 
+> I suppose you mean, not exclusively. But it can also mean that. And
+> then the question is, who cleans up the partially_mapped state.
+> 
+>> I think deferred_split_isolate() should do something like:
+>>
+>>       if (!folio_try_get(folio))
+>>               return LRU_SKIP;
+>>
+>>       list_lru_isolate_move(lru, item, freeable);
+>>       return LRU_REMOVED;
+>>
+>> Johannes, do I miss something?
+> 
+> Ah. The idea being: leave the item on the LRU when there is a race
+> with the refcount going zero; and then it's up to that other side to
+> deal with/clean up the partially_mapped state as appropriate. Thus:
+> 
+> folio_put()
+>   __folio_put()
+>     folio_unqueue_deferred_split()
+>       if __list_lru_del():
+>         // clear partially_mapped state & stats
+> 
+> will always succeed, even if it races with the shrinker. And you are
+> also guaranteed on the collapse side that the state won't vanish from
+> underneath you.
+> 
+> I think that should work. Usama?
 
-You have already mentioned "Option B" below ;) that is what I meant.
 
-> Here is my current understanding. One thing I am not sure about
-> is the signal semantics. If the copied uprobe state is incomplete,
-> the child should not return to user mode with that state.
+Kiryl's suggestion makes sense. I think there is a bug here. If we dont
+get the reference, whoever owns the reference should decide how partially_mapped
+is treated for that folio:
 
-Perhaps... But consider
-
-	func_which_can_be_ret_probed(void)
-	{
-		if (!fork) {
-			printf("CHILD\n");
-			exit(0);
-		}
-	}
-
-> Option A:
-...
-> ...
-> kill_child:
->   // I was thinking about SIGKILL here because it cannot be ignored
->   // Of course, you can correct me
->   send_sig(SIGKILL, t, 1);
-
-force_exit_sig(SIGILL) can't be ignored too. But I am fine either way.
-
-So yes, perhaps this makes sense. Although IMO this all is not that
-important; GFP_KERNEL shouldn't fail "in practice" and at least
-uprobe_copy_process() warns in this case...
-
-> Option B:
->
-> > Note that uprobe_copy_process() warns but returns "void", too late
-> > to abort copy_process().
->
-> Looking at copy_process(), uprobe_copy_process() is currently called
-> after the "No more failure paths" point and after the child has already
-> been made visible through the task list and pid links.
->
-> Would the longer term fix be to move the uprobe state copy earlier,
-> before the "No more failure paths" point, and then add the needed
-> bad_fork cleanup for  p->utask?
-
-Agreed, pronably better than Option A. But in therory dup_xol_work()
-can still fail after fork().
-
-Oleg.
+- If its the last folio_put(), it will clear partially_mapped and cleanup
+after itself.
+- If its folio_ref_freeze(), clearing partially_mapped is wrong (which we
+are currently doing in deferred_split_isolate)
 
