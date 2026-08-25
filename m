@@ -1,358 +1,204 @@
-Received: from mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06D8DF59
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 02:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AA730C16A;
+	Tue, 25 Aug 2026 03:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787625887; cv=none; b=KHvPcghepXVPSdgA5ph5UNMPLRAi+c5EUKuV1OUnPFa06ZGlqo8r3D5nRexB+cruGjUVtdHYDGyNwsg9U1xR+u5uKnlOqKnfvH1LevX2NWsOj5ovsSr2BDdW4Bs5OmI6lAOyXKRJjOL9LqWtPuyjkenLTcB6Ro2MaiEl+f7Cn/8=
+	t=1787629595; cv=none; b=dujZh+2uy96eXtp38cxw3klZr13NJRjSirFch1iS0sIulejCVJikoblOTnkA5CMWTwRZNfba+0ANmmDSm3N/cCfJSeAILEgovDnxynwMWzkzw1A8e1eRju7uHcm2kQ6wrlD42/Trq6S2OF4GNQ/fcUiUmcMA7AZ2PlHNex8nVNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787625887; c=relaxed/simple;
-	bh=QGaCBBZqoDLwrT1fV2aQjhVthAgbGXSKI1ufVgpgOao=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XDPDqoDvcgD5SKxzU/m/whCk0m5X+AY2z5oO9GC9IvKzkNxENf1dXKjuooAprhYImSpCQ8pctkMg5a9CZgKitkKEiusBAm2YfGpANtBs6AF3DAyqQPwVSaDlEUNA/FlG3vhUiJiAER/HY3WT68Hi2rxF9T3x6aeA/B1PHOZWZuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LJFOfwau; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787629595; c=relaxed/simple;
+	bh=pAuHVptymQ0SSWCENqu+L5Le6YmITzmlBl28M1cNQjE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pPO4GlKhIeO2A8H44BWWzRDnWLUUruKRuyJ1ZNeXO88UW6aK2FzkYDwokvCQ821xKkaxZYNjC+URRyDs7odbzsHis0g/zR4F47g1UeMj/RjvGWPBmg/0rTSBljZQjSueJbcNsYZ9h+KDorFXca9MygLAlu6YXqfIAFkshriJ3+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFEfKjIr; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LJFOfwau"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=QGaCBBZqoDLwrT1fV2aQjhVthAgbGXSKI1ufVgpgOao=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787625883; v=1; x=1788230683;
- b=LJFOfwau3//i2kp3whENs9ZtI0YKJrTfDxuNh0uIF3xHks1G0RF7IvjeBmck5DlQNCoIQ0Hy
- uTr0IvOkXrIOQyLu3+t0QAlnjFtToQlRI/a7u4wH/eL99Kvw1EZelaxlJjKvz+76l9Q2HyvEuyh
- Cj34eFN4LHNe56MCyvquMs0Y=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from localhost (2602:fce1:44f:115e::)
-	by smtp.migadu.com with ESMTPS id 72a80e7a41d0f84b;
-	Tue, 25 Aug 2026 02:44:43 +0000
-X-Mizu-Trace-ID: 72a80e7a41d0f84b
-X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: usama.arif@linux.dev,
-	hannes@cmpxchg.org,
-	kirill@shutemov.name
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	ljs@kernel.org,
-	nico.pache@linux.dev,
-	baolin.wang@linux.alibaba.com,
-	baohua@kernel.org,
-	dev.jain@arm.com,
-	hughd@google.com,
-	liam@infradead.org,
-	mhocko@suse.com,
-	rppt@kernel.org,
-	ryan.roberts@arm.com,
-	shuah@kernel.org,
-	surenb@google.com,
-	vbabka@kernel.org,
-	ziy@nvidia.com,
-	usama.anjum@arm.com,
-	agordeev@linux.ibm.com,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jannh@google.com,
-	willy@infradead.org,
-	pfalcato@suse.de,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Lance Yang <lance.yang@linux.dev>
-Subject: Re: [RFC PATCH 16/57] mm/collapse: freeze the sources behind migration entries
-Date: Tue, 25 Aug 2026 10:44:34 +0800
-Message-Id: <20260825024434.39662-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <f81160ac-0c7c-43f2-985f-43ab54a52358@linux.dev>
-References: <f81160ac-0c7c-43f2-985f-43ab54a52358@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFEfKjIr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787629594; x=1819165594;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pAuHVptymQ0SSWCENqu+L5Le6YmITzmlBl28M1cNQjE=;
+  b=XFEfKjIre49tr6S4PIntQszVk/gWLvWGfVLdON39H2HMxG4xxcKiHpCF
+   hzuhtJpHWfy7UvTMFfCFGAhQAZS0mo+qbb0zWWHOo4/3TAP5XKt4mpS0k
+   rXjjhPyXLO+Uz4qlxoOVtGfyg4iwMf9D5FAbL27/4LEi953/6A7azXnXH
+   PEvujOSVCnRC+lSKF15Bi0QzPYolTQheI+aVEwA0CtEakj1v7RsBG6AlL
+   bZEIrasLeieW3zVfCIwsgneiIp6v7Y0eU5CmGCsMC9B/nO6IlstEECEbK
+   dTLOG4B/U0uEL9g4lQATmEed24hEvA2Z34zWKVdgo6FrYCcsBdBJQjPXN
+   w==;
+X-CSE-ConnectionGUID: elwWBXeBTWSiY2NBsRYAkw==
+X-CSE-MsgGUID: iqe5mWoOQNqknPHF4DtVKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88012620"
+X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
+   d="scan'208";a="88012620"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 20:46:33 -0700
+X-CSE-ConnectionGUID: j6vbUiTHQOuZr4Uc0EJ5Mw==
+X-CSE-MsgGUID: aVjU1SuuSLqQW72KLuxDeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
+   d="scan'208";a="263890983"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.119]) ([10.124.240.119])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 20:46:18 -0700
+Message-ID: <54d1bd0e-c27a-4033-ab97-02cd9579a620@intel.com>
+Date: Tue, 25 Aug 2026 11:46:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 07/41] KVM: guest_memfd: Stub in ability to enable
+ in-place shared<=>private conversion
+To: Ackerley Tng <ackerleytng@google.com>, aik@amd.com,
+ andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
+ chao.p.peng@linux.intel.com, david@kernel.org, jmattson@google.com,
+ jthoughton@google.com, michael.roth@amd.com, oupton@kernel.org,
+ pankaj.gupta@amd.com, qperret@google.com, rick.p.edgecombe@intel.com,
+ rientjes@google.com, shivankg@amd.com, steven.price@arm.com,
+ tabba@google.com, willy@infradead.org, wyihan@google.com,
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org,
+ suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
+ Vlastimil Babka <vbabka@kernel.org>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-coco@lists.linux.dev
+References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
+ <20260807-gmem-inplace-conversion-v10-7-2fc18ee6d3ba@google.com>
+ <a410cca6-0776-44af-8353-9b7375e2fd4e@intel.com>
+ <CAEvNRgGvxMus6pp=xuDYOumH3Ge4oi0=YKjTaFykFHwXuzRDwg@mail.gmail.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <CAEvNRgGvxMus6pp=xuDYOumH3Ge4oi0=YKjTaFykFHwXuzRDwg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Mon, Aug 24, 2026 at 05:13:52PM +0100, Usama Arif wrote:
->
->
->On 24/08/2026 16:49, Johannes Weiner wrote:
->> On Mon, Aug 24, 2026 at 03:13:10PM +0100, Kiryl Shutsemau wrote:
->>> On Mon, Aug 24, 2026 at 09:12:24PM +0800, Lance Yang wrote:
->>>>
->>>> On Sun, Aug 16, 2026 at 11:45:28PM +0100, Kiryl Shutsemau wrote:
->>>>> +		if (!folio_ref_freeze(folio,
->>>>> +				      folio_expected_ref_count(folio) + 1)) {
->>>>> +			result = SCAN_PAGE_COUNT;
->>>>> +			goto unfreeze;
->>>>> +		}
->>>>> +		nr_frozen = nr_saved;
->>>>
->>>> Just one thing I was wondering about ... can deferred_split_isolate()
->>>> remove a source folio from deferred_split_lru while its refcount is
->>>> frozen by collapse_freeze_candidate()?
->>>>
->>>> Assume an earlier span belongs to an anonymous large folio on the
->>>> deferred split queue, then a later span fails folio_trylock().
->>>> collapse_freeze_candidate() continues after freezing each source folio
->>>> and calls collapse_unfreeze_candidate() on a later failure:
->>>>
->>>> static noinline enum scan_result collapse_freeze_candidate(struct mm_struct *mm,
->>>> 		struct collapse_candidate *cand, pte_t *pte)
->>>> {
->>>> ...
->>>> 	for (i = 0, addr = cand->addr; i < nr_pages;) {
->>>> ...
->>>> 		if (!folio_trylock(folio)) {
->>>> 			folio_put(folio);
->>>> 			result = SCAN_PAGE_LOCK;
->>>> 			goto unfreeze;
->>>> 		}
->>>> ...
->>>> 		nr_saved = i + nr;
->>>>
->>>> 		if (!folio_ref_freeze(folio,
->>>> 				      folio_expected_ref_count(folio) + 1)) {
->>>> 			result = SCAN_PAGE_COUNT;
->>>> 			goto unfreeze;
->>>> 		}
->>>> 		nr_frozen = nr_saved;
->>>>
->>>> 		i += nr;
->>>> 		addr += nr * PAGE_SIZE;
->>>> 	}
->>>>
->>>> ...
->>>> unfreeze:
->>>> 	collapse_unfreeze_candidate(mm, cand, pte, nr_saved, nr_frozen);
->>>> 	return result;
->>>> }
->>>>
->>>> folio_ref_freeze() takes the source folio's refcount to zero:
->>>>
->>>> static inline int folio_ref_freeze(struct folio *folio, int count)
->>>> {
->>>> 	return page_ref_freeze(&folio->page, count);
->>>> }
->>>>
->>>> static inline int page_ref_freeze(struct page *page, int count)
->>>> {
->>>> 	int ret = likely(atomic_cmpxchg(&page->_refcount, count, 0) == count);
->>>>
->>>> ...
->>>> 	return ret;
->>>> }
->>>>
->>>> While collapse_freeze_candidate() still holds the source folio lock,
->>>> deferred_split_scan() can call deferred_split_isolate():
->>>>
->>>> static unsigned long deferred_split_scan(struct shrinker *shrink,
->>>> 		struct shrink_control *sc)
->>>> {
->>>> 	LIST_HEAD(dispose);
->>>> 	struct folio *folio, *next;
->>>> 	int split = 0;
->>>> 	unsigned long isolated;
->>>>
->>>> 	isolated = list_lru_shrink_walk_irq(&deferred_split_lru, sc,
->>>> 					    deferred_split_isolate, &dispose);
->>>> }
->>>>
->>>> static enum lru_status deferred_split_isolate(struct list_head *item,
->>>> 					      struct list_lru_one *lru,
->>>> 					      void *cb_arg)
->>>> {
->>>> 	struct folio *folio = container_of(item, struct folio, _deferred_list);
->>>> 	struct list_head *freeable = cb_arg;
->>>>
->>>> 	if (folio_try_get(folio)) {
->>>> 		list_lru_isolate_move(lru, item, freeable);
->>>> 		return LRU_REMOVED;
->>>> 	}
->>>>
->>>> 	/*
->>>> 	 * We lost race with folio_put(). Read folio state before the
->>>> 	 * isolate: folio_unqueue_deferred_split() checks list_empty()
->>>> 	 * locklessly, so once removed the folio can be freed any time.
->>>> 	 */
->>>> 	if (folio_test_partially_mapped(folio)) {
->>>> 		folio_clear_partially_mapped(folio);
->>>> 		mod_mthp_stat(folio_order(folio),
->>>> 			      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
->>>> 	}
->>>> 	list_lru_isolate(lru, item);
->>>> 	return LRU_REMOVED;
->>>> }
->>>>
->>>> And folio_try_get() fails because the source folio has a frozen refcount.
->>>> deferred_split_isolate() treats the failure as a race with folio_put(),
->>>> clears PG_partially_mapped and its MTHP_STAT_NR_ANON_PARTIALLY_MAPPED
->>>> accounting when set, then removes the folio from deferred_split_lru ...
+On 8/24/2026 10:45 PM, Ackerley Tng wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> 
+>> On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
+>>> From: Sean Christopherson <seanjc@google.com>
 >>>
->>> Hm. So, the premise in deferred_split_isolate() is false:
->>> !folio_try_get() doesn't mean lost race with folio_put().
->> 
->> I suppose you mean, not exclusively. But it can also mean that. And
->> then the question is, who cleans up the partially_mapped state.
->> 
->>> I think deferred_split_isolate() should do something like:
->>>
->>>       if (!folio_try_get(folio))
->>>               return LRU_SKIP;
->>>
->>>       list_lru_isolate_move(lru, item, freeable);
->>>       return LRU_REMOVED;
->>>
->>> Johannes, do I miss something?
->> 
->> Ah. The idea being: leave the item on the LRU when there is a race
->> with the refcount going zero; and then it's up to that other side to
->> deal with/clean up the partially_mapped state as appropriate. Thus:
->> 
->> folio_put()
->>   __folio_put()
->>     folio_unqueue_deferred_split()
->>       if __list_lru_del():
->>         // clear partially_mapped state & stats
->> 
->> will always succeed, even if it races with the shrinker. And you are
->> also guaranteed on the collapse side that the state won't vanish from
->> underneath you.
->> 
->> I think that should work. Usama?
->
->
->Kiryl's suggestion makes sense. I think there is a bug here. If we dont
->get the reference, whoever owns the reference should decide how partially_mapped
->is treated for that folio:
->
->- If its the last folio_put(), it will clear partially_mapped and cleanup
->after itself.
->- If its folio_ref_freeze(), clearing partially_mapped is wrong (which we
->are currently doing in deferred_split_isolate)
+>>> Stub in global variable to enable in-place guest_memfd private<=>shared
+>>> memory conversion, which will eventually be exposed to userspace via a
+>>> module param, and wire up the __kvm_mem_is_private() static call to the
+>>> guest_memfd version when in-place conversion is enabled, i.e. when gmem is
+>>> the sole authority on private vs. shared memory.
+>>
+>> I find this patch changes the default memory type for a @gfn.
+>>
+>> - When memory attribute is tracked per-VM, the default memory type is
+>> always shared.
+>>
+>> - when gmem_in_place_conversion is true,
+>>     - if the @gfn has no memslot, or the memslot where the @gfn locates
+>>       doesn't have gmem bound, the default memory type is shared,
+>>     - otherwise, the default memory type is determined by the
+>>       GUEST_MEMFD_FLAG_INIT_SHARED flag.
+>>
+>> I think we should document this change.
+>>
+> 
+> In a way it's not really a "change" since gmem_in_place_conversion is
+> set up as false in this patch.
 
-Yeah, returning LRU_SKIP looks right. I have this locally:
+I agree. It is not this patch making the change but the patch allows 
+gmem_in_place_conversion to be true.
 
----8<---
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index e771244f42f3..a269775129c4 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3939,11 +3939,8 @@ static int __folio_freeze_and_split_unmapped(struct folio *folio, unsigned int n
+> When it is enabled in a later patch, another way to see it is that the
+> default remains "shared unless defined as private".
+> 
+> Before:
+> 
+> + no memslot, or memslot not bound to gmem => shared
+> + memory is shared unless VM ioctl used to make gfn private.
+> 
+> After:
+> 
+> + no memslot, or memslot not bound to gmem => still shared
+> + otherwise, ask gmem about status, which I think is already captured in
+>    the module param concept.
+>      + The very usage of gmem (without INIT_SHARED) is defining memory as
+>        private, I think that is already documented elsewhere when
+>        INIT_SHARED was introduced, that now the default is private.
+> 
+> So in summary, I feel that this has already been documented in various
+> places. I'll also add the following in v11's "KVM: Let userspace disable
+> per-VM mem attributes, enable per-gmem attributes", in
+> Documentation/admin-guide/kernel-parameters.txt:
+> 
+> 	kvm.gmem_in_place_conversion=
+> 			[KVM] Controls whether KVM enables in-place conversion
+> 			support for guest_memfd and tracks the private/shared
+> 			state of memory per guest_memfd instead of per VM.
+> 
+> 			If enabled (the default), KVM enables the
 
- 	VM_WARN_ON_ONCE(!mapping && end);
- 	/*
--	 * If this folio can be on the deferred split queue, lock out
--	 * the shrinker before freezing the ref. If the shrinker sees
--	 * a 0-ref folio, it assumes it beat folio_put() to the list
--	 * lock and must clean up the LRU state - the same dequeue we
--	 * will do below as part of the split.
-+	 * If this folio can be on the deferred split queue, hold the list_lru
-+	 * lock across the refcount freeze and dequeue.
- 	 */
- 	dequeue_deferred = folio_test_anon(folio) && old_order > 1;
- 	if (dequeue_deferred) {
-@@ -4592,22 +4589,10 @@ static enum lru_status deferred_split_isolate(struct list_head *item,
- 	struct folio *folio = container_of(item, struct folio, _deferred_list);
- 	struct list_head *freeable = cb_arg;
+I think the default is disabled?
 
--	if (folio_try_get(folio)) {
--		list_lru_isolate_move(lru, item, freeable);
--		return LRU_REMOVED;
--	}
-+	if (!folio_try_get(folio))
-+		return LRU_SKIP;
+> 			KVM_SET_MEMORY_ATTRIBUTES2 ioctl on guest_memfd file
+> 			descriptors and disables the legacy VM-scoped
+> 			KVM_SET_MEMORY_ATTRIBUTES ioctl for private memory state
+> 			tracking. Only the KVM_MEMORY_ATTRIBUTE_PRIVATE
+> 			attribute moves to per-guest_memfd tracking; other
+> 			attributes remain per-VM.
+> 
+> 			This parameter toggles KVM's in-place conversion
+> 			capability support. 
 
--	/*
--	 * We lost race with folio_put(). Read folio state before the
--	 * isolate: folio_unqueue_deferred_split() checks list_empty()
--	 * locklessly, so once removed the folio can be freed any time.
--	 */
--	if (folio_test_partially_mapped(folio)) {
--		folio_clear_partially_mapped(folio);
--		mod_mthp_stat(folio_order(folio),
--			      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
--	}
--	list_lru_isolate(lru, item);
-+	list_lru_isolate_move(lru, item, freeable);
- 	return LRU_REMOVED;
- }
----
+I start to think that the term "in-place conversion" seems to read 
+inaccurate. I think it is describing the shared/private conversion of a 
+gfn, and in-place means when a gfn is converted between shared/private, 
+the backend comes from the same gmem page, thus in-place. But KVM 
+doesn't enforce the "in-place".
 
-One detail, though ...
+If "in-place conversion" describes the shared/private conversion of a 
+gmem page, then "in-place" is redundant because the conversion a 
+specific gmem page is always in-place.
 
-deferred_split_isolate()'s assumption predates patch 16. Patch 16 lets
-collapse_freeze_candidate() leave refcount at zero and later unfreeze it
-on rollback.
+>                       Whether a VMM uses separate backends
+> 			or out-of-place memory management is determined by
+> 			userspace VMM design.
+> 
+> 			Note, this parameter is only available when
+> 			CONFIG_KVM_VM_MEMORY_ATTRIBUTES=y. When
+> 			CONFIG_KVM_VM_MEMORY_ATTRIBUTES is not set, in-place
+> 			conversion is unconditionally enabled.
+> 
+> 			Default is Y (on).
 
-Existing split code takes a list_lru lock for deferred_split_lru before
-folio_ref_freeze() and holds it through dequeue. The shrinker cannot see
-that temporary zero.
+I'm looking at the doc of KVM_SET_USER_MEMORY_REGION2, which reads
 
-collapse_freeze_candidate() does not take that lock and can roll back
-later.
-
-Say a candidate has two source folios. After the first one is frozen,
-deferred_split_isolate() can see refcount 0, dequeue it, clear
-PG_partially_mapped and decrement its accounting. If freezing the second
-one fails, collapse rolls the first one back:
-
-static void collapse_unfreeze_candidate(struct mm_struct *mm,
-					struct collapse_candidate *cand,
-					pte_t *pte, unsigned int nr_saved,
-					unsigned int nr_frozen)
-{
-	unsigned long addr = cand->addr;
-	unsigned int i = 0;
-
-	while (i < nr_saved) {
-		pte_t saved = cand->saved_ptes[i];
-		struct folio *folio;
-		unsigned int nr, k;
-
-...
-		folio = pte_folio(saved);
-		nr = collapse_saved_span_len(cand, i, nr_saved);
-
-		for (k = 0; k < nr; k++) {
-			set_pte_at(mm, addr + k * PAGE_SIZE, pte + i + k,
-				   cand->saved_ptes[i + k]);
-		}
-		if (i < nr_frozen) {
-			folio_ref_unfreeze(folio,
-					   folio_expected_ref_count(folio) + 1);
-		}
-		folio_unlock(folio);
-		folio_put(folio);
-
-		i += nr;
-		addr += nr * PAGE_SIZE;
-	}
-}
-
-PTEs and the folio's refcount are restored, but its deferred split queue
-entry, PG_partially_mapped flag, and accounting are already gone. So yeah,
-patch 16 has a real state-loss bug when collapse rolls back a partially
-mapped folio.
-
-LRU_SKIP looks right. A failed folio_try_get() only says refcount is zero.
-It cannot tell a final folio_put() from a temporary freeze. A final put
-still reaches:
-
-void __folio_put(struct folio *folio)
-{
-...
-	folio_unqueue_deferred_split(folio);
-...
-}
-
-folio_unqueue_deferred_split() takes the same list_lru lock and clears
-PG_partially_mapped + its accounting if the entry is still queued.
-
-Cheers, Lance
+# When mapping a gfn into the guest, KVM selects shared vs. private, i.e 
+consumes
+# userspace_addr vs. guest_memfd, based on the gfn's 
+KVM_MEMORY_ATTRIBUTE_PRIVATE
+# state.  At VM creation time, all memory is shared, i.e. the PRIVATE 
+attribute
+# is '0' for all gfns.  Userspace can control whether memory is 
+shared/private by
+# toggling KVM_MEMORY_ATTRIBUTE_PRIVATE via KVM_SET_MEMORY_ATTRIBUTES as 
+needed.
