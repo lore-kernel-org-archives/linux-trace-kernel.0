@@ -1,39 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E5C386C3B;
-	Tue, 25 Aug 2026 13:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F516403123;
+	Tue, 25 Aug 2026 13:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787665064; cv=none; b=ngUQkf09mg/WpKYVAWZaeeAtzZXYH53styf6bohr+jLgSoD+0EqaC7ZzWttFwBrYIh9MVXUQZil6ffc1fcsG913rVlXvz23kj8Y+zU5oDN/9uEhnVtlHLndUzj0W+SfHOmcneLoT2skSJCD9eSV7843y6soAGSk3bw9k1coln0E=
+	t=1787665835; cv=none; b=PhpDuIqKp8KI5sUynojdyEkUXbVEpN9Lch8meD9HZmKyQRhJgWBVDUPoAS4BIbqS8gzQ6PftgV0BeVIOUkuM0Kk0JzyQ4eWR6CcMkCtAG8o577Bb0Rk1xKg8k+EXfwBbE8+jMPpfQNESr6c/OZ/uTH859ClBcbira03JMSN5qVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787665064; c=relaxed/simple;
-	bh=kp8OWdhQu+ADZeP6ViF5RkBIpPLLX6baIcNWYpZKN0U=;
+	s=arc-20240116; t=1787665835; c=relaxed/simple;
+	bh=ZHnGqxoi+oYhWf+Jt7cUwzbcMZKrzKgg950XjEyq6Hs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GwLkVuHH6U/K+srnGUJEOct9Jx2XmsDgnJAWW7GLuYrWTq0sRQTh1H4szk1XugRwZ5U3wku0Au7sZOcFECi5t5ePeIszfp/44vaDvoAURDaPRGwOh4QPopdr0yF1BcqHQWFO47uPzUQKbLSW+IZUUCveWLALvQ5JMgCqPhQ5dmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=MCghFixd; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=LfqqSNoGC3LcvFB+A9jeRJZumiZqBIyILbRtetvpdK0BbT4EdY0XHzQUxPzzJC5henpzebkh6qEygtscrZze/4hfZ/CWGEwjS+TQJX2LiEgDOyaGtyr/lx/NU08a30gHdaVzVJQjr3hRErhflC6znQ94/hGB5yo92TKy3Cg3+nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=5uRHesK9; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="MCghFixd"
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 350234041B;
-	Tue, 25 Aug 2026 13:37:40 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 609FE20025;
-	Tue, 25 Aug 2026 13:37:38 +0000 (UTC)
-Date: Tue, 25 Aug 2026 09:38:21 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="5uRHesK9"
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id D22B6A03F3;
+	Tue, 25 Aug 2026 13:50:31 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 247F02000F;
+	Tue, 25 Aug 2026 13:50:30 +0000 (UTC)
+Date: Tue, 25 Aug 2026 09:51:12 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: henry martin <bsdhenrymartin@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix use-after-free on field name/type of
- dynamic probe events
-Message-ID: <20260825093821.2378c018@gandalf.local.home>
-In-Reply-To: <CAEnQdOo0qHQK5veJp0Ybf3Hm3Gn2iUicL9Xj_bTNZKhoMfFOTw@mail.gmail.com>
-References: <20260824071011.3507735-1-bsdhenrymartin@gmail.com>
-	<20260824144356.1f61aea2@gandalf.local.home>
-	<CAEnQdOo0qHQK5veJp0Ybf3Hm3Gn2iUicL9Xj_bTNZKhoMfFOTw@mail.gmail.com>
+To: Henry Martin <bsdhenrymartin@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tracing/probes: Fix use-after-free on field
+ name/type of multi-probe events
+Message-ID: <20260825095112.12420edb@gandalf.local.home>
+In-Reply-To: <20260825111210.3271443-1-bsdhenrymartin@gmail.com>
+References: <20260824144356.1f61aea2@gandalf.local.home>
+	<20260825111210.3271443-1-bsdhenrymartin@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,52 +41,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: dsq1bg8qwgbfxz5wjx6qwqnqts59etpj
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 609FE20025
+X-Stat-Signature: 31tze4t7pae3hksqqifffgbra3rwhx1w
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 247F02000F
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ZXxu6eEYKiVGPPqOGng/oujXELo81r68=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=HQMdWbidnSAWUC2jPJuD3zppnSl8XpmVMrwYm+1q+FM=; b=MCghFixdsuGW5jve92Td8vCGWPHFwinbWSX+JUHz/LgDKeS4KQr/TzP71UX7WmnrjyUGsvqy1mF0rxsw/75UgADDqsCPKsh95GEz19bUaWKge+tFJEOQJk/vZLKC7Zo7lKlhjPHxd4d99TjSgfDNtwp9/IkzqDZ+xmpuXsXbWzA=
-X-HE-Tag: 1787665058-648790
-X-HE-Meta: U2FsdGVkX1/+2C+Y2gbWp6R2J3Emqw5KHc2B25Bcngekrjyh/U+zvCnLOW2gkbDcBrHihZIPEfCbn3iuipmInGRLG4GGXZmCui6kNc1OZfSM22W7bCldAC+K6LWwurHzrtlOEeSjAt/roP+KipObHHSqP2yQ9MMJObtJ3icL7KueqoDzbB7BOWwVw/lLfg5xCLQRkpBBjx6ydUrshJN8s6vww7d7ohjD4DMcLqIpSETnEfJoXzHlc4TgCJ9IoaBtDKoLgwk42qfOwMnY2jbq65OzCjvB665EB9rKy0VWwudwess1w9OZcVzc3SrWpSouJtQ3wP/3P2JnWIRqznqk2JYMHBe7t+bc
+X-Session-ID: U2FsdGVkX18709dxrohK0t9s9sDuYK9mcfsOc54+dq0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=+kDSCdTZXKD+FWGPT4VtXD3iVJnB2we72zr2jC36xuc=; b=5uRHesK99kkTDeD7VNy7fROFAxRHuop2qELrSPaC4Vk3dZXDcjz+WI+/lBMVqQ0+KoviJtVOQAQgj7Em9LV6/0b3W8nyePJjgxto0NiyV8uvoXMOBMRfirXW7RcB1+Yg3VeZ3qA1NM4HnF37atJojsmAKSNrOc02netdFj3+oEY=
+X-HE-Tag: 1787665830-840854
+X-HE-Meta: U2FsdGVkX192lIwq2QLlTmMt5qPRkZ9BT9hfnFSThffIigUZltUOJQSg4vNBwYlWtYWlq8/QZtWNbL8x7YFVlhTTXov1jF1T0FZYwGgbBlnoH4ucl1iIgABGTE24zW/M4SWf9jTISzjiuKeA6oWdEckM5aaOun5AKwmrFSo6QLm65xb1CAYumotAKhb7pnHr31RBA0ugCYEcP1xSWTzgd1NiQVB7VGSgEjeMsLF6IQaDQ5kRzRn3VsEu82NJ45ISR9Nhh+tYKRyJhIlN8iFGS8H0a21t0p1C8r0V/G0k9M4Ab/aYjovFTinYd5NaUU/VkRsDTPjd+rESA0Ydo4Epd2u1cXyfFh94
 
-On Tue, 25 Aug 2026 19:03:03 +0800
-henry martin <bsdhenrymartin@gmail.com> wrote:
+On Tue, 25 Aug 2026 19:12:10 +0800
+Henry Martin <bsdhenrymartin@gmail.com> wrote:
 
-> > >
-> > > When several probes are appended to the same event, they share the
-> > > trace_event_call and its field list, which stays the one defined by
-> > > the primary probe. Deleting just the primary probe with  
-> >
-> > What do you mean by "appended to the same event"? Do you mean eprobes?
-> >  
+> The fields of a probe-based dynamic event (kprobe, uprobe, eprobe and
+> fprobe events) are created in traceprobe_define_arg_fields() by handing
+> the probe_arg name/type strings to trace_define_field(), which only
+> stores the pointers without copying. Those strings are owned by the
+> trace_probe and are freed when that probe is removed.
 > 
-> Not eprobes -- I mean the kprobe multi-probe-per-event feature from the
-> Fixes: commit (append_trace_kprobe()): two probes registered under one
-> event name with identical arg names/types but different symbols, so they
-> share a single trace_event_call. eprobe/uprobe/fprobe are affected too
-> only because they all define their fields through the same helper
-> (traceprobe_define_arg_fields()), but the reproducer below is plain
-> kprobe.
-> 
-> > Can you post a reproducer for this?  
-> 
-> Run as root with KASAN, inside the guest:
+> An event can hold several probes ("multi-probe per event", added by the
+> Fixes: commit below).
 
-Does it matter being inside a guest?
+You can remove the ", added by the Fixes: commit below" as that is already
+assumed when there's a Fixes tag.
 
+> The field list is defined only once, by the first
+> probe that registers the event, but it is kept alive by any surviving
+> sibling probe. Deleting just that first probe by symbol -
 > 
->   cd /sys/kernel/tracing
 >   # primary A: fields are defined from A's args
 >   echo 'p:kprobes/ev vfs_read  a1=$arg1' >  kprobe_events
 >   # append B: shares A's event call
 >   echo 'p:kprobes/ev vfs_write a1=$arg1' >> kprobe_events
->   # delete ONLY A (matched by symbol), B survives
+>   # delete only A (matched by symbol), B survives
 >   echo '-:kprobes/ev vfs_read'           >> kprobe_events
->   # field lookup -> strcmp() on the freed name
+> 
+> frees A's args (trace_probe_cleanup() -> traceprobe_free_probe_arg()),
+> but trace_probe_unlink() keeps the trace_probe_event because the probe
+> list is not empty. The event call stays registered via B while its
+> fields now reference freed memory. Any field lookup then reads it, e.g.
+> 
 >   echo 'a1 == 1' > events/kprobes/ev/filter
 > 
 >   BUG: KASAN: slab-use-after-free in strcmp+0xa7/0xb0
+>   Call Trace:
+>    strcmp
 >    trace_find_event_field
 >    parse_pred
 >    process_preds
@@ -96,91 +93,138 @@ Does it matter being inside a guest?
 >    apply_event_filter
 >    event_filter_write
 > 
->   Freed by: traceprobe_free_probe_arg / trace_probe_cleanup /
->             free_trace_kprobe / ... / dyn_event_release
-
-The above is useful information to include in the change log.
-
+> field->name references parg->name (kstrdup'd, freed with the probe) and,
+> for array arguments, field->type references parg->fmt (kmalloc'd, freed
+> with the probe) - the scalar type otherwise points at the static
+> fmttype rodata, which is safe.
 > 
-> Deleting A runs trace_probe_cleanup(A), which frees A's args, then
-> trace_probe_unlink(A) keeps the trace_probe_event because B is still on
-> the probe list. The event survives via B while its fields still point at
-> A's freed arg->name (and, for array args, arg->fmt). Both the delete and
-> the filter write hold event_mutex, so it is a dangling reference after
-> removal, not a race -- it triggers every time.
-> 
-> >  
-> > > "-:group/event symbol" frees the trace_probe and its argument
-> > > strings, while the event call is kept registered by the remaining
-> > > sibling probes. field->name and field->type are left dangling, and
-> > > any field lookup - e.g. writing to events/<grp>/<ev>/filter - reads
-> > > freed memory:
-> > >
-> > >   BUG: KASAN: slab-use-after-free in strcmp+0xa7/0xb0
-> > >   Call trace:
-> > >    trace_find_event_field+0xd6/0x220
-> > >    parse_pred
-> > >    process_preds
-> > >    create_filter
-> > >    apply_event_filter
-> > >    event_filter_write
-> > >
-> > > Make the field own its strings: duplicate name and type with
-> > > kstrdup_const() in __trace_define_field() and release them with
-> > > kfree_const() in trace_destroy_fields(). Fields of static trace
-> > > events still reference their kernel/module rodata string literals
-> > > directly, as kstrdup_const()/kfree_const() only touch memory that
-> > > was actually allocated.  
-> >
-> > Wrong fix.
-> >  
-> > >
-> > > The issue was found by the autokbug dynamic kernel fuzzer at Tencent
-> > > Yunding Lab.
-> > >
-> > > Fixes: ca89bc071d5e4 ("tracing/kprobe: Add multi-probe per event  
-> support")
-> > > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> > > ---
-> > >  kernel/trace/trace_events.c | 14 ++++++++++++--
-> > >  1 file changed, 12 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > > index c01b10b99f67e..ee3b93fa09ee8 100644
-> > > --- a/kernel/trace/trace_events.c
-> > > +++ b/kernel/trace/trace_events.c  
-> >
-> > This is a bug with trace_probes.c and not trace_events.c. This should be
-> > fixed without touching trace_events.c. That is, the trace_probes.c code
-> >  
-> (or
-> > trace_eprobes.c if it's only affects eprobes) should handle this issue.
-> >  
-> 
-> Agreed, that was the wrong place. v3 keeps trace_define_field() and all
-> static events untouched and fixes it where the borrowing happens:
-> traceprobe_define_arg_fields() now kstrdup()s the name/type, and the
-> copies are owned by the trace_probe_event (which embeds the event call
-> and outlives every individual probe), freed in trace_probe_event_free().
-> It is one helper plus its teardown, both in trace_probe.c, plus two
-> fields on struct trace_probe_event.
-> 
-> v3 is posted as a reply in this thread, tested with KASAN +
+> Fix it in the probe layer, which is where the borrowing happens, so that
+> trace_define_field() and static trace events are left untouched. Make
 
-Please post new versions as a separate thread. It helps with tooling.
+You can remove that first sentence. It's not useful information for this
+commit. It's just stating why you changed it from a previous version.
 
-> kasan_multi_shot. The reproducer above triggers the UAF reliably on the
-> unpatched tree; with the patch, deleting the primary probe leaves
-> format/filter intact on the surviving event and the report is gone. I
-> also checked the array-arg
-> case (arr=+0($arg1):u64[2]), where field->type borrows the kmalloc'd
-> parg->fmt: the type string survives the primary delete and full teardown
-> afterwards shows no double-free.
+> traceprobe_define_arg_fields() duplicate the name and type strings and
+> have the trace_probe_event - which embeds the event call and outlives
+> every individual probe - own the copies, releasing them in
+> trace_probe_event_free().
 > 
-> Thanks for the review.
+> The reproducer above triggers reliably; the field lookup and the delete
+> both run under event_mutex, so this is a dangling reference after
+> removal rather than a race.
+> 
+> The issue was found by the autokbug dynamic kernel fuzzer at Tencent
+> Yunding Lab.
+> 
+> Fixes: ca89bc071d5e4 ("tracing/kprobe: Add multi-probe per event support")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+> v3:
+>  - Steve: wrong fix / wrong file. Move the fix out of trace_events.c
+>    into the probe layer (traceprobe_define_arg_fields() /
+>    trace_probe_event_free()) so trace_define_field() and static events
+>    are untouched. Ownership now lives on trace_probe_event, whose
+>    lifetime matches the event call and its field list.
+>  - Clarify in the changelog that this is kprobe multi-probe-per-event
+>    (append_trace_kprobe), not eprobes, and add a shell reproducer.
+> v2:
+>  - Reworded the module-rodata note (dropped, superseded by v3).
+> 
+>  kernel/trace/trace_probe.c | 36 +++++++++++++++++++++++++++++++++++-
+>  kernel/trace/trace_probe.h |  2 ++
+>  2 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index c4163904ba747..26a9fb3533bde 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -2552,19 +2552,48 @@ int traceprobe_set_print_fmt(struct trace_probe *tp, enum probe_print_type ptype
+>  int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+>  				 size_t offset, struct trace_probe *tp)
+>  {
+> +	struct trace_probe_event *tpe = trace_probe_event_from_call(event_call);
+>  	int ret, i;
+>  
+> +	/*
+> +	 * A field created by trace_define_field() only stores the name and
+> +	 * type pointers, it does not copy the strings. Here they point into
+> +	 * the probe_arg of @tp, which is freed when @tp is removed. For a
+> +	 * multi-probe event the field list is defined once by the first probe
 
-I'll look at your other patch.
+Nit. I find "multi-probe event" somewhat ambiguous. Could you reword that
+to "an event with multiple probes attached," ?
 
-Thanks,
+> +	 * but kept alive by the surviving siblings, so removing that first
+> +	 * probe would leave the fields referencing freed memory. Make the
+> +	 * event own duplicates that live as long as the event call itself.
+
+The last sentence doesn't parse for me. Can you reword it?
+
+Other than that, the rest looks good.
+
+Masami, have any thoughts?
 
 -- Steve
+
+
+> +	 */
+> +	if (tp->nr_args) {
+> +		tpe->field_strings = kcalloc(tp->nr_args * 2, sizeof(char *),
+> +					     GFP_KERNEL);
+> +		if (!tpe->field_strings)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	/* Set argument names as fields */
+>  	for (i = 0; i < tp->nr_args; i++) {
+>  		struct probe_arg *parg = &tp->args[i];
+>  		const char *fmt = parg->type->fmttype;
+>  		int size = parg->type->size;
+> +		char *name, *type;
+>  
+>  		if (parg->fmt)
+>  			fmt = parg->fmt;
+>  		if (parg->count)
+>  			size *= parg->count;
+> -		ret = trace_define_field(event_call, fmt, parg->name,
+> +
+> +		name = kstrdup(parg->name, GFP_KERNEL);
+> +		type = kstrdup(fmt, GFP_KERNEL);
+> +		if (!name || !type) {
+> +			kfree(name);
+> +			kfree(type);
+> +			return -ENOMEM;
+> +		}
+> +		tpe->field_strings[tpe->nr_field_strings++] = name;
+> +		tpe->field_strings[tpe->nr_field_strings++] = type;
+> +
+> +		ret = trace_define_field(event_call, type, name,
+>  					 offset + parg->offset, size,
+>  					 parg->type->is_signed,
+>  					 FILTER_OTHER);
+> @@ -2576,6 +2605,11 @@ int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+>  
+>  static void trace_probe_event_free(struct trace_probe_event *tpe)
+>  {
+> +	int i;
+> +
+> +	for (i = 0; i < tpe->nr_field_strings; i++)
+> +		kfree(tpe->field_strings[i]);
+> +	kfree(tpe->field_strings);
+>  	kfree(tpe->class.system);
+>  	kfree(tpe->call.name);
+>  	kfree(tpe->call.print_fmt);
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index fba1af092a9bd..d1fb3520700fb 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -264,6 +264,8 @@ struct trace_probe_event {
+>  	struct trace_event_call		call;
+>  	struct list_head 		files;
+>  	struct list_head		probes;
+> +	char				**field_strings;
+> +	int				nr_field_strings;
+>  	struct trace_uprobe_filter	filter[];
+>  };
+>  
+
