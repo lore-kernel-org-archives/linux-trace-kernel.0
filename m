@@ -1,81 +1,132 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E392F617C;
-	Tue, 25 Aug 2026 01:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787621817; cv=none; b=aEgdVIfy9inp4naMOvyj7qAtNS47IV3d3dhTIoB44UeLa6J+teRX/r+vdTO/YFlCDW840/dXbINGM3Hp51MC6L91ts56l9GzYWnDQb0xROoWpxDHP/B6+yYznFkDG4T0IR3XdLveiYlkBFNRcBTv1Qm0He8RiZV5CY0uJPn5HtE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787621817; c=relaxed/simple;
-	bh=ehycwOTMY9ZC3berHiiIu4MNS2/KrfVKO/tl7ivzsh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UIDWBTYiwWXZ/FcFOztf8pOSDJR1ufjYE6aC+zjJqRtN6g7TlBa5IuJqogk3q4Ok9rcgY3pMzT8n/9VOgJBxPGiOjmC1p8ritXUakG7yqqFM3xmD588BRvK1cWDVgZFcSlPd099BJoeLTPUtSZIH8OQVZ2BylMbkPhtuJA9RoV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=fO26jlWn; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1767303A35
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 01:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787621919; cv=pass; b=pfkitDpZ7VeTOy59ZEbF56KEhyI6U68rSCAtmmMCZJH2LmopInYRrTZ79Hn/gBaOPaZZ+E0EdToSgPfMxgNhmxT9HjefDWbyOO7stB4t6Bscg1euuCYjs+UPGZhh51g7BVNQCbyoj18yARKj5Hctcob7Eo5etEKpEXvJ74d3aSM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787621919; c=relaxed/simple;
+	bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=byM5bqRbSauwhs01AtwJWFkYMg0ksg4yKQa+xhGlALsa2GQHeuaM/RrQyvlo5JZPABz0/5a5CE/kcKky3r1rH/58yst3FWZrOd3ake1fVF/lIS5tzVoqohqd5jkDbeogb7WyAzQteqXsEjTVdvmx6g9PGeYy2/zBBaQ97y5O3bw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcpWmiK8; arc=pass smtp.client-ip=74.125.224.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="fO26jlWn"
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id ECB42402D1;
-	Tue, 25 Aug 2026 01:36:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 03E9E2002B;
-	Tue, 25 Aug 2026 01:36:49 +0000 (UTC)
-Date: Mon, 24 Aug 2026 21:36:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Deepanshu Kartikey <kartikey406@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com,
- stable@vger.kernel.org
-Subject: Re: [PATCH] eventfs: Initialize ei->children and ei->list in
- init_ei()
-Message-ID: <20260824213648.170f69f0@fedora>
-In-Reply-To: <CADhLXY70RXpWsSNToYGsFniSht__2nd8xma4bkFPeR1kyWcL5A@mail.gmail.com>
-References: <20260824144653.54044-1-kartikey406@gmail.com>
-	<20260824110345.22c1cfa1@fedora>
-	<CADhLXY70RXpWsSNToYGsFniSht__2nd8xma4bkFPeR1kyWcL5A@mail.gmail.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcpWmiK8"
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-66c70cff944so4069686d50.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 18:38:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787621917; cv=none;
+        d=google.com; s=arc-20260327;
+        b=C/yEcf/NwwKg7FXK09v0Sm3NvJTrBzGoah8J03I0blaYBVoy4PV0ijcd/ItAb9yFWo
+         U5fX28rPcaPpRgAdeaQLmklyAQ2SitHi2fYyCRYMBTqwnMB1oTJZSREn74ryZrgqURSa
+         5q0EOgZGdqaeo7eRVL+Wsr3Hl5cSTir5RjMoDq1dJjM6dJn9kFEF8qxoZfWdKNF68l4B
+         8PkNNgBpQk5KE0NZjtK3jFG7jz2nmXXBb7XU/rUpBqEg+TbTGNYpbVbgLAP6SmHbRPI9
+         /tO12AtlLgeAOMwJF1VwWmRFlaBBn/nFoWkrYRtxEual+M3eziL4g0566bz8vfs9DdMO
+         61fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
+        fh=hlOyZ/03NVZcVqxoT7vxtQaqgR6pjPWSIFEw6UB+CC0=;
+        b=U6AG2QBHpFTcUuDB8qaoftFgquRv/wbFRv9OOLc/CQpJx3FUJn+0q8fjMeZgukTJ7E
+         wKLMX9kL+q0s3ZodoKphJLs8ecWVSyUjRqerEi315+WODnZSY5ldiIjPIr848dUGlRlV
+         AFeoCaF9xLUQdQH5KSsAezq0pGa6lEV/me9ijCZRSTo6vPXUiGv6FjP3EJTLEk83A/hG
+         AjJabdNF8EETqM5iQKXbEWFNibzwdF9PcXXYne0R/iLygIr/nNuriXCB5ZDdJ8YoR4B/
+         BypPc4gmiMnHXfzU2Ub/fTFTzWk+XPWZ+mskdVHM15i/k2fLGKWgHIEEw0KC2JUfrp2+
+         g6mA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787621917; x=1788226717; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
+        b=RcpWmiK8D6TXy8SeKasN3A0DZYwOfxBRVcB8htDEIll1rHrnI6lELCV5zqfa7hqRIU
+         rEtXhQwWzLhCxVjqmaqiPTZ5z0dJcxPhJuB+w/2g+ZIvxA9AA7wp1nCUmi/Lx3BT7V/D
+         ix6ekhi8ZBI5IfxzW0LEJW0lhdkZsJx2MxnwWBni2MPKVcGdd8ABIe0GT3XfKGApfkV5
+         94uglqgNOv4yjFi7HXESZnyitoC9C18fLhT4/Qfuilf4PgC3Dq1ZbPc5PRBpzoDcd/MI
+         IZqnD5RIjFJMBR6ogU+eumXbmPPa8+C4epLSIHNwNtfwpjDlK2p3AxRoHpFvQWAoEL3b
+         j4lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787621917; x=1788226717;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
+        b=P6qZG6ou9UiWquw/Og7yKlXHhIbarUxdYCe6naE401YN6WDHvDd6Iabz8NC7Wu9snr
+         ERrx9BZqo4ksgs0p3HVHd8eZUskLeqZko3jDWiq/WMYrBDjz4VWA9uV2wySZSUaqxWne
+         KR+uWJf6h0kMFAWvZ/ZKe50VLzbotcvoDrvqpB2K1AqCLD2RDe6IZpUaRugCdCpn38Z1
+         0cpxya6ZzTnvm82te3e+nkywoFdMHoNWTF7t8Bke/wwtcpzG8caYejJNMCFQfTUbybu4
+         SomviGiFVdgxDNSE94tmnSGvbyBcKtGbn3KB/ocPSJewef24jK71CEednViV00mYj94U
+         9g0g==
+X-Forwarded-Encrypted: i=1; AHgh+RpsYmNU+LaHerGvp8XOLNS52MQ7vNL7H+G6FfdTzZKBZQ4x/DeNArRx24rtf4wSn8twm8iJSCLpNawPqMLpqp9/JG4=@vger.kernel.org
+X-Gm-Message-State: AFuF++mPl+NNKmV3Li07q+IjtdHPfd4vXLgWWmcEsQrG6QZo9nx4az98
+	ID1FUBEDG/q6KOLVWy82IPdKLiTi2vp/gxit2OKU6MuxdfhePAYFJu9J4V2GivLV4BPkT1Lqct0
+	GsQzpJVOXC86Acu+fws9WvcHzuJsPmqs=
+X-Gm-Gg: AR+sD12S738MfBVk0PibXQgrGSfdSi0WXQfyWHbvfD7dtiFstjoUUXU/6DWSoeChak1
+	EDTl2KCj1sVEdGQHqBFvZtWQXvb/HrxnZvx6tGY94QnO1HydsTsvIR8Vpjk8KoW6enDIYALhO6V
+	lLWrXiKdcsMKat+fRafV0xgEBQ/GgzU2qLWgtkDqHaPxldY7MpiBNCpOnJbbBAJiVykQlLdA5WC
+	RBa8AnwfDcGhUqhI37a0nQWnuidUJ1oI0oYtMXN0c/7HXw7JK2VN4H9NCh8ZX1STmtOhg9nMRbm
+	ns5yzApFwOfTnFJno2qTLlU7oyJNBQFFnnIzWsaXTLNbPrXD6vGnxUtw6zojwYd/OcIuMr0ZlmB
+	5b+epkuCJvQnV8LMhzAz4FyNx6m56U9GW8I1mP+qYktY=
+X-Received: by 2002:a53:a5d1:0:b0:66c:76e6:2d01 with SMTP id
+ 956f58d0204a3-66d14a21801mr845428d50.9.1787621916851; Mon, 24 Aug 2026
+ 18:38:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20260821014210.18681-1-kartikey406@gmail.com> <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
+From: Deepanshu Kartikey <kartikey406@gmail.com>
+Date: Tue, 25 Aug 2026 07:08:25 +0530
+X-Gm-Features: AcwNN1U0LHGolhM0a7k05nKFQh1Imv-RibXkGJMcsIUuJJbyEfcSMIuHp8mjcg0
+Message-ID: <CADhLXY7_Dpzwuqdq84scYObut=DTTqfZgG_U9f-fP6GFeRVT-Q@mail.gmail.com>
+Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, olsajiri@gmail.com, irogers@google.com, 
+	adrian.hunter@intel.com, james.clark@linaro.org, kpsingh@kernel.org, 
+	matt@bobrowski.net, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
+	yonghong.song@linux.dev, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 03E9E2002B
-X-Stat-Signature: ebwrn6ke76gi14hct5s5fx56j5btxqpb
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19PaWPrmnCvwGQBJSWiDa/tsReUClQROLw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ehycwOTMY9ZC3berHiiIu4MNS2/KrfVKO/tl7ivzsh0=; b=fO26jlWnGjVULGDWjPNkLgJ62fe7Z5w1+otVoXArES85kJ1mNXV6AYAdspAesYnWUnjFG92o9NhU0fizfDTYRY/2HRcVzwkCS8fWvqKMtZYG8mug4AzIX6OHwafllJxw4lsTqgO6Tlc/mRdn/3DFawaWU0+m3d4eOMeMFp300PI=
-X-HE-Tag: 1787621809-264223
-X-HE-Meta: U2FsdGVkX18fpRjGrQjwyC7kSKN8BxX9LslprbQv9fPKewgJCkKYk2nnfKJn/Ie1NlbZnCxReP0UeHN1K/dlXxVnEy1FP6e7UMn6q+ZWo81X+BJ86mQptrjFaZ94m35GZXXQ/zogZUFMzDmZIxXSUCkXXWqr9lGk70FLKGoVbQRoq8csT7HHnUQebupSSrf5DBe08rLmZX2ebfqDvZyUyzKhgUl7LFlEu8lBfGW3HrxjTOugG00xJSbIwmqOOdc5e0pGvi8jYBDAuRtvjM95q+DBna0yxh2M63f7rQPUJxqFa2f8dWbOo1qzEDEiMLeNzLW+NC4opB2yWWEBsN88qh/zJAvBJ0/Ltpwyf3k2tSo4hSE6dBIs6sgyjONzoHwXDTj+AqXVYLRuPc+wxgZ19g==
 
-On Tue, 25 Aug 2026 06:53:55 +0530
-Deepanshu Kartikey <kartikey406@gmail.com> wrote:
+On Sat, Aug 22, 2026 at 12:04=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
 
-> On Mon, Aug 24, 2026 at 8:33=E2=80=AFPM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Mon, 24 Aug 2026 20:16:53 +0530
-> > Deepanshu Kartikey <kartikey406@gmail.com> wrote:
-> >
-> > Yeah, I saw the syzbot report and came up immediately with this fix as
-> > well. But the change log is way too verbose for such a simple fix. Did
-> > you use AI for this patch? If so, you must divulge that information,
-> > usually with a tag.
-> > =20
->=20
-> Yes , I have used AI to create a commit log . I will add the tag in v2
-> and the commit
-> log you have suggested.
->=20
+> exposing this mutex like that is definitely a smell.
+>
+> AI tells me that this perf event inheritance case can happen for
+> non-tracing (i.e., BPF_PROG_TYPE_PERF_EVENT) events, which are
+> attached while holding perf_event_ctx_lock, not the bpf_event_mutex
+> (this one is held for tracepoint/kprobe/uprobe programs).
+>
+> Please validate and adjust the fix.
+>
 
-No need. I pulled your patch and just rewrote the change log. It's now
-in my queue.
+Thank you! You are correct.
 
-Thanks,
+perf_event_set_bpf_handler() is called
+via two paths:
+1. perf_event_set_bpf_prog() with ctx_lock
+2. _perf_ioctl() with no lock
 
--- Steve
+I will investigate the correct fix.
+
+Thanks
+
+Deepanshu
