@@ -1,109 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947A13A6EE9;
-	Tue, 25 Aug 2026 05:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAF3EEB3
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 05:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787635293; cv=none; b=TIv4QtZqUnwfZfNgkxIUxu8FBXnTIeKgOkpu0x20oKL5DIqx+SIot05m/rStS98XJ0wiNvFMvobRYZw91Tn1GakmX2hPo4EPkSmebkP/boFj7Pfd2fLPnpQKCUqd1AD/H1wrUcvn/NrpHhyPGXSzUP+bwllM1q4KOMIznvPfm8Q=
+	t=1787636014; cv=none; b=OM15IfOCFFvabNefDUfChFndfldJodsZ14kWkRaJ+U3dKiYlwq3usaicINWDM1JSIcEH9nO2RG0eiLgwuC2fqGmdgGmAweO6yfu5VUxkbx0zFj2ls7YCL17XFsd9f2iZTSsKTpayD4g2WgEH23GJjnGjJKPvFEtQtt1iCp5HgHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787635293; c=relaxed/simple;
-	bh=O0UzbZAN0EpcTXAFz5ooHMP36tBWRVlQCm0SfHy87J4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mfnSkisZgHMe2/M2o9xS4i97kmCNRvhEU5uNqjUQurUNU1dCspCLIS91agQav0gfL0axSUOac3bKvNLuBD4F4Gn72dhbaiYZMgQrGararHYwqyQfy5YlAUrcKuIXO8+/KGB5Sp/pfIdbaQlCzNwVFs5fxsMbN/2E5A7sej57IGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/HsFukf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1787636014; c=relaxed/simple;
+	bh=W6x8VamMwZwOhEcYhju0YvEQAj/7HHGLouUlzA7fHPU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Vg0oFWJpxYQ7c2SX3k9nyU0ujM6lOP8j+4aQfdNxs/hGXYWwwJHZGIwVpMKGbrmMp0ABPickYCBmT/DuiNJDuHrOITl31xHZxzzv52ojEF6gNLYoncXPJf8s6g15Q5rAd4a7pQ+1XMbCPuhnkQG+tOkfuYZ8th/uYzAtHV5dssw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsBFvQI4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/HsFukf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3A587C2BCFA;
-	Tue, 25 Aug 2026 05:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1787635293;
-	bh=O0UzbZAN0EpcTXAFz5ooHMP36tBWRVlQCm0SfHy87J4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=D/HsFukf1XoOa3vf9YTdmOJD+vyOEoj6hK+NOunVkfj4e67efdz+m543FQeSIYtJO
-	 HeHlMrtI/2A91MG+uFq/yxDdV2aAx9NHKbRBZBsw/5aZynuEswp6ivB+WSApvlqCTm
-	 1Igk9l1hMn6cDXHC6IufXY8UtlyUEcuAByH+UjvUUHMwA321SEU6fqTjyknAbaOkek
-	 leslUHjblA7L/pcpHY90JJNN5ilIv/JtQnBphKn3ZGjAXxk0/T31Ilf+HSQspRoz+4
-	 VbfvuHi20cTs7lxOE1kss4GwRX57Y9yeFLZim8iq0k0+xsKznvsCMMl9UMgrYap4xc
-	 7OeAGQokuXHXA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B340C5DF94;
-	Tue, 25 Aug 2026 05:21:33 +0000 (UTC)
-From: Ivan Immanuel Shaji via B4 Relay <devnull+ivanimmanuel1234.gmail.com@kernel.org>
-Date: Tue, 25 Aug 2026 01:20:37 -0400
-Subject: [PATCH 1/2] tracing: Fix retry exhaustion in simple ring buffer
- reader swap
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsBFvQI4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 234A81F000E9;
+	Tue, 25 Aug 2026 05:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787636013;
+	bh=d+0jG5LsvRKFS5aIF5dFnmFzxIuS2BQgeoFVDRdI1Ys=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=DsBFvQI4VjXK0gNTtXTKxpFbWTqNe/DMRU1vvP5qMb6D/Dee05yrTH7b1rNs8MMqI
+	 kwvbEhN3+w8GFw4ETE5fLGGc4cN5gXhBGaeGP+AFIlDNe2ObR7bp0mlZoaLAUjMUZX
+	 ROs1Bcl1lr4PDYB9DpG96ApFeanuTRlrmyK02N5hweWIoT/mc5bxv0Dhx4Ap+CoaHF
+	 mnxvfI6CPESM+OU3I/9Esisf3zsCB+vZpSnIellOQakTy1xuaa0Tg+/frqbQNjmOd/
+	 DWRdRcg+PVZdRsppzO3YSeB5G9YHzgex7BFo8ij2W92yTxA3tXLz1HuRrhSLBNan1E
+	 TH1ytoK/5iIFA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] ring-buffer: Stop remote reader update when page
+ swap fails
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ivan Immanuel Shaji" <ivanimmanuel1234@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260825-kernel-patch-1-v1-2-e9349aa0b165@gmail.com>
+References: <20260825-kernel-patch-1-v1-0-e9349aa0b165@gmail.com>
+ <20260825-kernel-patch-1-v1-2-e9349aa0b165@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 25 Aug 2026 05:33:32 +0000
+Message-Id: <20260825053333.234A81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260825-kernel-patch-1-v1-1-e9349aa0b165@gmail.com>
-References: <20260825-kernel-patch-1-v1-0-e9349aa0b165@gmail.com>
-In-Reply-To: <20260825-kernel-patch-1-v1-0-e9349aa0b165@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Vincent Donnefort <vdonnefort@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787635292; l=1613;
- i=ivanimmanuel1234@gmail.com; s=20260825; h=from:subject:message-id;
- bh=GwccFW1nTWWYVnS3r35/SqG9HHBPVSmi0y6pEIwL9rA=;
- b=uphKKVL9amV7PgkCBG78fcuiBHKszcd+IQnJm6N6imNxYSqSFjW0vwTnoty5JsRCaN+r3ZGwA
- hLb8upGLaUzDg7I6ayMuYbEt9x+WwgrYYSbp8LSL6urpX6uVbt5TdMF
-X-Developer-Key: i=ivanimmanuel1234@gmail.com; a=ed25519;
- pk=Wx8O3UUs3XneDkbqbOJJnlNdWSpEf2tWbTAoE7/vnqE=
-X-Endpoint-Received: by B4 Relay for ivanimmanuel1234@gmail.com/20260825
- with auth_id=975
-X-Original-From: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
-Reply-To: ivanimmanuel1234@gmail.com
 
-From: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-simple_ring_buffer_swap_reader_page() starts with retry set to 8 and
-post-decrements it only after a failed link replacement. On the final
-attempt, a successful replacement leaves retry at zero, while a failed
-replacement leaves it at -1.
+Pre-existing issues:
+- [Critical] Missing bounds check on shared memory fetch allows out-of-boun=
+ds read and Double Fetch (TOCTOU) arbitrary memory write.
+- [High] Logic Error: Function fails to abort when remote reader swap succe=
+eds but the reader ID is left unchanged, corrupting the ring buffer.
+--
 
-The current !retry test reverses both outcomes. It returns an error after
-a successful final replacement, leaving the link update complete but the
-reader bookkeeping unfinished. After a failed final replacement, it
-falls through and updates the head and reader pointers as though the
-replacement succeeded, which can corrupt the ring.
+--- Patch [2]: [PATCH 2/2] ring-buffer: Stop remote reader update when page=
+ swap fails ---
+commit 90c9d4edbac629b3b97121e741bbf3aba71f7d7d
+Author: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
 
-Treat only a negative counter as exhaustion and return the documented
--EBUSY error.
+ring-buffer: Stop remote reader update when page swap fails
 
-Fixes: 34e5b958bdad ("tracing: Introduce simple_ring_buffer")
-Cc: stable@vger.kernel.org
-Assisted-by: LLM sparse
-Signed-off-by: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
----
- kernel/trace/simple_ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This commit modifies __rb_get_reader_page_from_remote to abort and return
+NULL when the remote swap_reader_page callback fails. This prevents the
+function from splicing the same page as both the previous and new reader,
+avoiding linked-list corruption.
 
-diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-index f4642f5adda3..49913bb0057a 100644
---- a/kernel/trace/simple_ring_buffer.c
-+++ b/kernel/trace/simple_ring_buffer.c
-@@ -160,8 +160,8 @@ int simple_ring_buffer_swap_reader_page(struct simple_rb_per_cpu *cpu_buffer)
- 		overrun = cpu_buffer->meta->overrun;
- 	} while (!simple_bpage_unset_head_link(last, reader, SIMPLE_RB_LINK_NORMAL) && retry--);
- 
--	if (!retry)
--		return -EINVAL;
-+	if (retry < 0)
-+		return -EBUSY;
- 
- 	cpu_buffer->head_page = simple_bpage_from_link(reader->link.next);
- 	cpu_buffer->head_page->link.prev = &reader->link;
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -5805,8 +5805,9 @@ __rb_get_reader_page_from_remote(struct ring_buffer=
+_per_cpu *cpu_buffer)
+> =20
+>  	prev_reader =3D cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id=
+];
 
--- 
-2.53.0
+[Severity: Critical]
+This isn't a bug introduced by this patch, but does the initial fetch of
+meta_page->reader.id need a bounds check and READ_ONCE protection?
 
+If a remote entity (such as a guest VM) concurrently writes an
+out-of-bounds index to meta_page->reader.id in shared memory, it is used
+immediately as an index into the subbuf_ids array.=20
 
+If the remote then updates the index to a valid value before the second
+fetch lower down, the later bounds check will pass, but prev_reader will
+still hold a garbage pointer from the first out-of-bounds read. This
+pointer is later used in linked-list manipulations, which could lead to
+arbitrary memory corruption.
+
+> -	WARN_ON_ONCE(cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu,
+> -							  cpu_buffer->remote->priv));
+> +	if (WARN_ON_ONCE(cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu,
+> +							      cpu_buffer->remote->priv)))
+> +		return NULL;
+>  	/* nr_pages doesn't include the reader page */
+>  	if (WARN_ON_ONCE(cpu_buffer->meta_page->reader.id > cpu_buffer->nr_page=
+s))
+>  		return NULL;
+>
+>  	new_reader =3D cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id];
+>
+>  	WARN_ON_ONCE(prev_reader =3D=3D new_reader);
+
+[Severity: High]
+This is a pre-existing issue, but should the code abort here if prev_reader
+and new_reader are equal?
+
+If the remote reader swap succeeds but the remote erroneously leaves
+meta_page->reader.id unchanged, this condition evaluates to true.=20
+The function correctly identifies the invalid state with a warning but=20
+continues execution rather than returning NULL.
+
+By continuing, the code blindly manipulates the list pointers of the same=20
+page (for example, overwriting new_reader's list.prev to point to itself),=
+=20
+triggering the same kind of linked list corruption this patch was intended=
+=20
+to fix.
+
+> =20
+>  	prev_head =3D new_reader;  /* New reader was also the previous head */
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260825-kernel-pat=
+ch-1-v1-0-e9349aa0b165@gmail.com?part=3D2
