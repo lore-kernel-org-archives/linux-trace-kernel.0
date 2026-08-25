@@ -1,230 +1,131 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F516403123;
-	Tue, 25 Aug 2026 13:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891BD37F326
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 14:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787665835; cv=none; b=PhpDuIqKp8KI5sUynojdyEkUXbVEpN9Lch8meD9HZmKyQRhJgWBVDUPoAS4BIbqS8gzQ6PftgV0BeVIOUkuM0Kk0JzyQ4eWR6CcMkCtAG8o577Bb0Rk1xKg8k+EXfwBbE8+jMPpfQNESr6c/OZ/uTH859ClBcbira03JMSN5qVk=
+	t=1787667026; cv=none; b=V8h/2DVlJxeHkulpaOTTJg36J34WWBetM6+KR5+I97qZfKKpxkI//vdwxNeoHaiJ4d0luCmFl/XS6FqAmxV0tdisdzIhbisWqM9jOUnH1JsDql+1Y6mna9NPkj4j7qKVoXjKHKAV2YEcF/yIUpMn4+J5ZmJkFu+VjlvaEwpQaC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787665835; c=relaxed/simple;
-	bh=ZHnGqxoi+oYhWf+Jt7cUwzbcMZKrzKgg950XjEyq6Hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LfqqSNoGC3LcvFB+A9jeRJZumiZqBIyILbRtetvpdK0BbT4EdY0XHzQUxPzzJC5henpzebkh6qEygtscrZze/4hfZ/CWGEwjS+TQJX2LiEgDOyaGtyr/lx/NU08a30gHdaVzVJQjr3hRErhflC6znQ94/hGB5yo92TKy3Cg3+nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=5uRHesK9; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1787667026; c=relaxed/simple;
+	bh=DLQj/V29zC1RfFosf/sslm7+tSL/OlAM+ZEeoihtfLo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SmOZW/vV0HVqtcEdChxTR5/4eZtHQ6j9Oxiz8k6o3NSYQsIzIg8vL+/0lajbtYtVTObrP6VWImxfRgLOLKD4RmguKhb+k0QswLYQGoP+Dnea+de5LaP4WRywgzcPajuO3SmAAd/NkCzE54j78U2hdVsXQHihU8PsNO7uWbk/GvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NnkQa/wG; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="5uRHesK9"
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id D22B6A03F3;
-	Tue, 25 Aug 2026 13:50:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 247F02000F;
-	Tue, 25 Aug 2026 13:50:30 +0000 (UTC)
-Date: Tue, 25 Aug 2026 09:51:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing/probes: Fix use-after-free on field
- name/type of multi-probe events
-Message-ID: <20260825095112.12420edb@gandalf.local.home>
-In-Reply-To: <20260825111210.3271443-1-bsdhenrymartin@gmail.com>
-References: <20260824144356.1f61aea2@gandalf.local.home>
-	<20260825111210.3271443-1-bsdhenrymartin@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnkQa/wG"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-84f77cc7302so1806719b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 07:10:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787667025; x=1788271825; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=cQP8HjkxkNDs2a4DRjbGf5EG1UJ31ewsQNHJNK1LDJM=;
+        b=NnkQa/wGMibCbb5UQaH2WIFjSGVMgRvDEEY5CCgsT5qQwjkD1F9Qj9xe4OU+BfPQ8U
+         fZbYgeS4Nw2Lb/nG5Ssgjqx3csz+eT6aDvmzA5e3tHewg0cMVVaVqQu3bJ4ePlzlcmjm
+         kz5qOTGkEMOIYAJDZDhyHQUVw2cVY8dGB8Kf4pzE4cEOvDhccCRcHgQl3DrCbzQpGNn5
+         jkKISvh0Od/hjLOG9oKfuA/aq6jkazKj04OTZVV6m5+d0piUPzmoOwAefNp+Fn8lzp3Y
+         D9cEup6yzm6SH3JMptjKlHHaX1YKGNpZd+86AG0hqs/Lm2EqCOTQiv1qsvAk1NinuNj7
+         1GhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787667025; x=1788271825;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=cQP8HjkxkNDs2a4DRjbGf5EG1UJ31ewsQNHJNK1LDJM=;
+        b=kkAOc6nn6qhSb1hmueSPxLtNp261DpUuqg+yl+Wc4yh81OPWuJ3wndUchtOb2mrl6C
+         HEtrUQR6BUomDJGrnCSccF7N3IovMy0mxe28ONOmr22QaVC+7YtFqWcv78TYgHqCJc5t
+         eMsn45GHV7MPQngBWOrj212Ntnxj7/z9JejYOpY21WvVuKvJJtbqlyr0/UKmUaw9BVKT
+         RUGBABxYEpfNXE9UXEvl4vVhKutPME1bCNfWyqNBF/8uSn4fp1qG1NthiyLN9XpHwmt9
+         /xCAnCQTcMA0+JNrk+zwXJNYriXXPVaW0j5wFRTDiysQj3f1UfzHkqushrjV3/WCwJLY
+         OGsQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqRLmqBRueXaTe7a/bN/AID/3c26fcirCmsfdE/UqrKdF+W0+cLsT0tauztTnWy3i4PIrSzUrUyrxM/D57alRxKvTY=@vger.kernel.org
+X-Gm-Message-State: AFuF++lnHV+3Yp6Dg2/pGk4xNceLFmGvo8lIT5LV/RfVPxgz4COWhnYW
+	t+TMNj7RkYWFIzS4hidatf3bqt2iwjqB66c1a6dCNO0iPRFjwSHSnoVJF9nh9lKh
+X-Gm-Gg: AR+sD1349jF9Hl6dc115jvRUQOFDDH0KRF7D/zqzV+3LgprJZk6KH/YUwRgiyvsgQ7q
+	F1rbcSnGTK1Q6/tVmpBIHjhExEkqn7YsYGoKNwxgY3dQ95icqDpEDlLlYX7UvYvopPOFO4X3Nyu
+	BNfAqWJrLgcAFYFOFqH4l0dORe1ARGz6qnkQ5tw5mw7OpAUT7lL70G8yWyQ6H91at3OOo+Q+v8D
+	yW1dNwIbhLuTD/fxA0msEKxY7xuE714S5Hj/dYC7kN0mmnL2LVM0gyTZXA8AHQDjJ1EWoFBXYoQ
+	+nTtrlkdG/5iZNoAKiJAvqgH5Dqs5atzkr9EvqlnL2SOfwZWy2QKKTlT7hCOy1NK+izejZ/3eIk
+	akdrpLyr/IxDPpzE6sDyKkLt6kXRT1h7mL3RqLQX386uQZQIHxQoD5qYBpxcBD4bjk0WJIhcVLo
+	9XpDTrEWvpmJreqDNYNCYiyR0qzoaJva7D+F2UlGm9d/N97LkLNtRG3Minq5/BK5HZ7LFAoyUbM
+	1CkzoA099nu5P45sojCDVwlZJE/
+X-Received: by 2002:a05:6a00:2990:b0:84e:216d:7e4e with SMTP id d2e1a72fcca58-8523c79ec79mr14351778b3a.1.1787667024493;
+        Tue, 25 Aug 2026 07:10:24 -0700 (PDT)
+Received: from bj-kjy-standalone-gaoxiang17.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8520eed22bbsm3143024b3a.11.2026.08.25.07.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2026 07:10:24 -0700 (PDT)
+From: Xiang Gao <gxxa03070307@gmail.com>
+X-Google-Original-From: Xiang Gao <gaoxiang17@xiaomi.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Xiang Gao <gaoxiang17@xiaomi.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Gao Xu <gaoxu2@honor.com>,
+	yinchuang1@xiaomi.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC] tracing: aggregate ring-buffer memory statistics
+Date: Tue, 25 Aug 2026 22:10:15 +0800
+Message-Id: <20260825141015.3539553-1-gaoxiang17@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 31tze4t7pae3hksqqifffgbra3rwhx1w
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 247F02000F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18709dxrohK0t9s9sDuYK9mcfsOc54+dq0=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=+kDSCdTZXKD+FWGPT4VtXD3iVJnB2we72zr2jC36xuc=; b=5uRHesK99kkTDeD7VNy7fROFAxRHuop2qELrSPaC4Vk3dZXDcjz+WI+/lBMVqQ0+KoviJtVOQAQgj7Em9LV6/0b3W8nyePJjgxto0NiyV8uvoXMOBMRfirXW7RcB1+Yg3VeZ3qA1NM4HnF37atJojsmAKSNrOc02netdFj3+oEY=
-X-HE-Tag: 1787665830-840854
-X-HE-Meta: U2FsdGVkX192lIwq2QLlTmMt5qPRkZ9BT9hfnFSThffIigUZltUOJQSg4vNBwYlWtYWlq8/QZtWNbL8x7YFVlhTTXov1jF1T0FZYwGgbBlnoH4ucl1iIgABGTE24zW/M4SWf9jTISzjiuKeA6oWdEckM5aaOun5AKwmrFSo6QLm65xb1CAYumotAKhb7pnHr31RBA0ugCYEcP1xSWTzgd1NiQVB7VGSgEjeMsLF6IQaDQ5kRzRn3VsEu82NJ45ISR9Nhh+tYKRyJhIlN8iFGS8H0a21t0p1C8r0V/G0k9M4Ab/aYjovFTinYd5NaUU/VkRsDTPjd+rESA0Ydo4Epd2u1cXyfFh94
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Aug 2026 19:12:10 +0800
-Henry Martin <bsdhenrymartin@gmail.com> wrote:
+Hi,
 
-> The fields of a probe-based dynamic event (kprobe, uprobe, eprobe and
-> fprobe events) are created in traceprobe_define_arg_fields() by handing
-> the probe_arg name/type strings to trace_define_field(), which only
-> stores the pointers without copying. Those strings are owned by the
-> trace_probe and are freed when that probe is removed.
-> 
-> An event can hold several probes ("multi-probe per event", added by the
-> Fixes: commit below).
+This is a resend of the RFC for exposing tracing buffer memory
+statistics under tracefs.
 
-You can remove the ", added by the Fixes: commit below" as that is already
-assumed when there's a Fixes tag.
+The motivation is Android lost-RAM attribution: tracing buffer memory
+is not represented as a separate category, so it can be counted as lost
+RAM. The memory can be spread across the global trace array, dynamically
+created instances, and snapshot buffers, and userspace currently has to
+discover and sum every instance.
 
-> The field list is defined only once, by the first
-> probe that registers the event, but it is kept alive by any surviving
-> sibling probe. Deleting just that first probe by symbol -
-> 
->   # primary A: fields are defined from A's args
->   echo 'p:kprobes/ev vfs_read  a1=$arg1' >  kprobe_events
->   # append B: shares A's event call
->   echo 'p:kprobes/ev vfs_write a1=$arg1' >> kprobe_events
->   # delete only A (matched by symbol), B survives
->   echo '-:kprobes/ev vfs_read'           >> kprobe_events
-> 
-> frees A's args (trace_probe_cleanup() -> traceprobe_free_probe_arg()),
-> but trace_probe_unlink() keeps the trace_probe_event because the probe
-> list is not empty. The event call stays registered via B while its
-> fields now reference freed memory. Any field lookup then reads it, e.g.
-> 
->   echo 'a1 == 1' > events/kprobes/ev/filter
-> 
->   BUG: KASAN: slab-use-after-free in strcmp+0xa7/0xb0
->   Call Trace:
->    strcmp
->    trace_find_event_field
->    parse_pred
->    process_preds
->    create_filter
->    apply_event_filter
->    event_filter_write
-> 
-> field->name references parg->name (kstrdup'd, freed with the probe) and,
-> for array arguments, field->type references parg->fmt (kmalloc'd, freed
-> with the probe) - the scalar type otherwise points at the static
-> fmttype rodata, which is safe.
-> 
-> Fix it in the probe layer, which is where the borrowing happens, so that
-> trace_define_field() and static trace events are left untouched. Make
+The patch adds:
 
-You can remove that first sentence. It's not useful information for this
-commit. It's just stating why you changed it from a previous version.
+  /sys/kernel/tracing/trace_stats/total_memory_kb
 
-> traceprobe_define_arg_fields() duplicate the name and type strings and
-> have the trace_probe_event - which embeds the event call and outlives
-> every individual probe - own the copies, releasing them in
-> trace_probe_event_free().
-> 
-> The reproducer above triggers reliably; the field lookup and the delete
-> both run under event_mutex, so this is a dangling reference after
-> removal rather than a race.
-> 
-> The issue was found by the autokbug dynamic kernel fuzzer at Tencent
-> Yunding Lab.
-> 
-> Fixes: ca89bc071d5e4 ("tracing/kprobe: Add multi-probe per event support")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> ---
-> v3:
->  - Steve: wrong fix / wrong file. Move the fix out of trace_events.c
->    into the probe layer (traceprobe_define_arg_fields() /
->    trace_probe_event_free()) so trace_define_field() and static events
->    are untouched. Ownership now lives on trace_probe_event, whose
->    lifetime matches the event call and its field list.
->  - Clarify in the changelog that this is kprobe multi-probe-per-event
->    (append_trace_kprobe), not eprobes, and add a shell reproducer.
-> v2:
->  - Reworded the module-rodata note (dropped, superseded by v3).
-> 
->  kernel/trace/trace_probe.c | 36 +++++++++++++++++++++++++++++++++++-
->  kernel/trace/trace_probe.h |  2 ++
->  2 files changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index c4163904ba747..26a9fb3533bde 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -2552,19 +2552,48 @@ int traceprobe_set_print_fmt(struct trace_probe *tp, enum probe_print_type ptype
->  int traceprobe_define_arg_fields(struct trace_event_call *event_call,
->  				 size_t offset, struct trace_probe *tp)
->  {
-> +	struct trace_probe_event *tpe = trace_probe_event_from_call(event_call);
->  	int ret, i;
->  
-> +	/*
-> +	 * A field created by trace_define_field() only stores the name and
-> +	 * type pointers, it does not copy the strings. Here they point into
-> +	 * the probe_arg of @tp, which is freed when @tp is removed. For a
-> +	 * multi-probe event the field list is defined once by the first probe
+reporting:
 
-Nit. I find "multi-probe event" somewhat ambiguous. Could you reword that
-to "an event with multiple probes attached," ?
+  total:
+  buffers_mem:
+  snapshot_buffers_mem:
 
-> +	 * but kept alive by the surviving siblings, so removing that first
-> +	 * probe would leave the fields referencing freed memory. Make the
-> +	 * event own duplicates that live as long as the event call itself.
+The values cover the global trace array and all instances across all
+CPUs. A per-CPU view is provided under:
 
-The last sentence doesn't parse for me. Can you reword it?
+  /sys/kernel/tracing/trace_stats/per_cpu/cpuN/total_memory_kb
 
-Other than that, the rest looks good.
+These *_mem values report the full pages backing the data sub-buffers
+and reader page, unlike buffer_size_kb / buffer_total_size_kb which
+report usable data capacity. The new trace_stats directory is distinct
+from the existing trace_stat directory used for function and branch
+counters.
 
-Masami, have any thoughts?
+For example, with 4 CPUs and 2 sub-buffers per CPU on a 4 KiB page
+system:
 
--- Steve
+  buffer_size_kb        = (4096 - 16) * 2 / 1024 = 7 kB     (one CPU)
+  buffer_total_size_kb  = 7 * 4 = 28 kB                    (one array)
+  buffers_mem           = (2 + 1) * 4096 * 4 / 1024 = 48 kB
 
+The extra memory in buffers_mem comes from the per-page header and the
+reader page.
 
-> +	 */
-> +	if (tp->nr_args) {
-> +		tpe->field_strings = kcalloc(tp->nr_args * 2, sizeof(char *),
-> +					     GFP_KERNEL);
-> +		if (!tpe->field_strings)
-> +			return -ENOMEM;
-> +	}
-> +
->  	/* Set argument names as fields */
->  	for (i = 0; i < tp->nr_args; i++) {
->  		struct probe_arg *parg = &tp->args[i];
->  		const char *fmt = parg->type->fmttype;
->  		int size = parg->type->size;
-> +		char *name, *type;
->  
->  		if (parg->fmt)
->  			fmt = parg->fmt;
->  		if (parg->count)
->  			size *= parg->count;
-> -		ret = trace_define_field(event_call, fmt, parg->name,
-> +
-> +		name = kstrdup(parg->name, GFP_KERNEL);
-> +		type = kstrdup(fmt, GFP_KERNEL);
-> +		if (!name || !type) {
-> +			kfree(name);
-> +			kfree(type);
-> +			return -ENOMEM;
-> +		}
-> +		tpe->field_strings[tpe->nr_field_strings++] = name;
-> +		tpe->field_strings[tpe->nr_field_strings++] = type;
-> +
-> +		ret = trace_define_field(event_call, type, name,
->  					 offset + parg->offset, size,
->  					 parg->type->is_signed,
->  					 FILTER_OTHER);
-> @@ -2576,6 +2605,11 @@ int traceprobe_define_arg_fields(struct trace_event_call *event_call,
->  
->  static void trace_probe_event_free(struct trace_probe_event *tpe)
->  {
-> +	int i;
-> +
-> +	for (i = 0; i < tpe->nr_field_strings; i++)
-> +		kfree(tpe->field_strings[i]);
-> +	kfree(tpe->field_strings);
->  	kfree(tpe->class.system);
->  	kfree(tpe->call.name);
->  	kfree(tpe->call.print_fmt);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index fba1af092a9bd..d1fb3520700fb 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -264,6 +264,8 @@ struct trace_probe_event {
->  	struct trace_event_call		call;
->  	struct list_head 		files;
->  	struct list_head		probes;
-> +	char				**field_strings;
-> +	int				nr_field_strings;
->  	struct trace_uprobe_filter	filter[];
->  };
->  
+Slab-allocated ring-buffer metadata is not included.
 
+One open question is whether reporting page memory only is acceptable
+for the initial version.
+
+Thanks,
+Xiang
