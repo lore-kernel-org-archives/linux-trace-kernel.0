@@ -1,146 +1,200 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F49F388394
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 16:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8325737C930
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 16:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787675938; cv=pass; b=TVRIMsqca6m4URBGgTqI5RRoPP6hJb0ExVM2wKMnW6ZMbugDzBUICifd5uwML7Ew5roJ2dhMftoCf3w4/3Md33mBmNI5IdWomqDqW3K8fMh/8/JNtRE6ft/LBZBg2lhoOiK9H2DHmfrP3Pn7a1FyqcA8hD+PIXQnG+FH480FmDw=
+	t=1787676778; cv=pass; b=IyGLI+6d7dU8Eft49xTE23VEQyjyNRYdTXwDRnBbXWPtDSTfqGUlKvZwyg0ZyxJ3Kq0+IuhY1gZHQ5Tpikk/V2BwvoHQpvG71Myu1iGGORrAdtHf6jrbITD06ZbPV980BPWTUDc5BGWdAPebA4JTRvFv2yiGNwKnBGlzGFmczRk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787675938; c=relaxed/simple;
-	bh=OWo2nKnB4qmmON2XuWKvkiY0Yi8O1pI6igbD89x5D6o=;
+	s=arc-20240116; t=1787676778; c=relaxed/simple;
+	bh=A5rbQUVdXmCBXh8cS9dRt5lu7uhOJRVPi0ZJmSOwvEY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DTknDs0Dt+Y/7E1MPQO9QqaSO5izFRuOBDKBsFRs1aRIU88Nfeh1vyTdIeePe7HEX4ZzsbIbSdFQNOPPcXPZjI/v7NNL2ib92537d+JHk8uKJsFdXFvPaIsU/Q73feoCac//RjhMMETqKpFyfYo7Dx0rhUSj3wGe3mld5EUhcI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrMf+8Ql; arc=pass smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=XOYUdKosZc8K8CZ6IpZ/pv8n+XbF2I4xOqqD8r+kVXFVb3foWa9/HHt/XasudD8uv9LWhyQr92pROoBPCrKNq0y8YxgxUtxiA+8tgtd7ingEMWP1u44jE3W0Mtvo+CdkN5CnfY21gewfVEDj3rqiVnP8qfi+gkIMZGY/hV5VYpI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I9YPmGKX; arc=pass smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrMf+8Ql"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-cc16c6dcae2so4616440a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 09:38:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787675936; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9YPmGKX"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2d3b445a84fso128955ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 09:52:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787676776; cv=none;
         d=google.com; s=arc-20260327;
-        b=LLsQixCDogITiy+ABM9SDxrPg8gxOfqh4jX1gBju9b2FMB+vJapE6m/SDex71oPc1X
-         G+aWTpPuXVcYjbKW4ufNlef8PDlwWQFFyD7C80hJcGLVMItWEeF6BT4NFH++vhcIK/hW
-         FD6s8Wjm5SZvdqHMMQXKgyXXioTHqWFIOZM2MQgCh99+OU+Vzl7EKNkbcnrE493H6mH+
-         Zuc3if3v+6ME8m1kv0FNkQjmgpKuISt72a/ERtrgvspsQH+o8Zmb1g1f2N2dCaI1OZj4
-         BWu3VHdb0iwGUs79R/UivA1NYbR7TfHMDUMqPSos4IPqzv1l0vJ0jCHodSY+Zr360Imi
-         jHtQ==
+        b=jEI+Inh1SUFYOkNIYa3k6He0wJG1vEksgUb4G4Gi7MuErYzzRg80Y5zXsnJYznkFZf
+         85pxLqKAEB983GAprf6pSs8f2t8NJlPhvLDyP9MYWSGacmEbchQTguH0DsHTRGbkjMPx
+         ZhWzVhy/MRWHeMdj22Vqp6+zD1wwnnL+tDKvjIJtVUwknIU3AWMFH6xO/0eJrCEmQlKh
+         Vos7EsJqHgn3Tm4PiSOmbwP5cEx2kREiL9ZZk39taVKLRF3myZBla5Nf/N8Yw2Nnf5rU
+         YfzkCS8ex6zptf7oD15ow2fPMfJS+jHAcPhL8VleHXywfg3E1TBdGIIDxFCjJU8ZJdFY
+         p63A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=OWo2nKnB4qmmON2XuWKvkiY0Yi8O1pI6igbD89x5D6o=;
-        fh=HQicOyL44LCqB9RBKPPQTh2hg7Pvc0gcnNJxne06yEw=;
-        b=JptM8sGShOikaFskF0ZpAgLWNL9xk1/2whBjZ/U2gqwRjjWRA+omIEcaosCVxy+j0K
-         r95IVWAK1Wlpj7dP3/7J4ROZWMKkqaZprn2t4Xr47nRip11V0+EOhHLb8mzsAuitkZEq
-         49D4vhc/Ydq210cayEppPEp+XVkV38SsYvNzZujAnX8EzaqFr6Su58PWnyOJcB1+psBQ
-         Wu6coWJ7Pzs+dXBb1rwxIzNZhNLrU6DDgRcjFC4TQ2YrXaRgJeGouGBfAJ/ZcejDOQws
-         n1Y+0FvZNXBvP0c+Z77LlK2djqWoS6q2nAcMEeh7xJ7X+fXDAxs0K7cXKZ4ABS1zeMzB
-         9yQQ==;
+        bh=ImkuahcqiET0r0yh2i1x0Wqcf5zuafLmEw6TOE3oMq4=;
+        fh=HWqX7Ozs6N+V0Zm++S9QGhQBJ2AJc/JHVe+yiP/S4EQ=;
+        b=jwfy//kCjdWU46Syk/EGkdT5t+Tlalk/Tng0E/oBUx32YerSMKUSmzbCSBMkxg4k/M
+         J1Aj6GlSrg6StKTaf+c09d5i2iuR0i65vpCteOYy70qpbUmTFFE9+OyAUXs/7rWjAsuq
+         TTi4dllJegDRKLiouC19bRtXspEa8vypobR3aJARhi1q/2Dw8wx2ivAmn4fomuBszm3/
+         pK3fUKGMYYsIYL9zp9HhWMLOvI7Jz/ALJpHG5bRFUs+SFTWgaRBj5aspeE9iuu4ZVc3R
+         lj6stWsw3qpMXBb6u4TAqMVgbt6UFd9MkvRLxcx2jZtK64ZYY7o+Je2J1Z1Ir/RKhQD9
+         8cMg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787675936; x=1788280736; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787676776; x=1788281576; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=OWo2nKnB4qmmON2XuWKvkiY0Yi8O1pI6igbD89x5D6o=;
-        b=VrMf+8Qlta+IekxL+624dtrWIpBWdagykY1PdndSNl/tbEsJbJkmWcOum5uUNZV/0L
-         YrpEbYYuiXz7c0RXKdw61ybsWtqfJhC7xEpaULvnhTjC7iXTIblm/6B3s0CxVaVFnPIb
-         eVoPvfw6RnfRcDtwbu10nkXvJcifBvSEaDjloLpwEgtukSWWuDXazK2cuXkN4HMFsoag
-         wBA5A3EniZtN4PIVKAS0b0v9t6w7cbk5lpRK6q/64TcCF4o/bCVt7Ehcynnh+5tEQN9D
-         dBceOzZSDoC52tA3GAz+xpxSh+DREu8rDag8eZ80uT6zM3QUt29NuZ0SaexTd0Ja7n+l
-         QjSA==
+        bh=ImkuahcqiET0r0yh2i1x0Wqcf5zuafLmEw6TOE3oMq4=;
+        b=I9YPmGKXlkGQLRB3WsRrm6J7NNac5Y+u90Dj6v+ZdElThLVs4zxZL1fwt+jZeLluVW
+         eStQTJXcasyfe0DrwkPbK0ptSWcdRk9yT1cu3eNGSDNmKRVAnhBg/+bMcBD5WeL8xQ62
+         JT/ugJ1GmXM/N2sJQ9hXvSivyRYjgXemLkET3pLDSqjpaju3ZAr/j6hHwRj/sH9TcrRU
+         4qKriNXvh0gTl+tBUXEJyrmu79U/HLK/E8HAS4T9fltKhlMJyPJTUGZdrMIawJVIxrGC
+         wN6U+a34+vO119VU+E0OBJ5BbB3CF8qNCFd//7fT3B26+3Rr0oqxt3an6xPeGc4iTB0r
+         so8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787675936; x=1788280736;
+        d=1e100.net; s=20251104; t=1787676776; x=1788281576;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=OWo2nKnB4qmmON2XuWKvkiY0Yi8O1pI6igbD89x5D6o=;
-        b=QImnkdk+K+/BtZf29W/nvm6cUKWjcK4OnMKQJv2MZQpOGSLH4aB71mbZNKHY2aT4lQ
-         y2MvRSrTtPBS1Z/uCw89A7DhHDXYaNnyoshiS/RIx8C41RM5osKn2Vfps/TICzkoE8Xn
-         9Dbfhy3xYUlNqLIZRgW4rAR9plh71kDVdT3f56qwpknIL8dWcqKJJKOB/xvREKwvnf+p
-         HEoVpgETZz0X6g8fhfLaDbeyUKRDZCVEnOGAmbd4sphhQNwg+PCa3vIKDAw+M3ZGK0VJ
-         tCu5b9zq0ftNG/Uf0kuh0G4SYvla9YMFPz19pWh4+2ETwJKn47DnBAGnIvpu6xM65j6X
-         7EMQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpQB8jglweG4Yf9JvoZG5dmUXoHK0OqjnNGec5eXLpHiQVTyTWgYm/O1W+GbBRPbzuHui9F6GbP6fdTnTeQgxRPdx4=@vger.kernel.org
-X-Gm-Message-State: AFuF++lg6ZVf6804PIS6Prh4HjE+Ye9WPYWV3lLZ+1PvI67czZr95GFy
-	HQIeT7361yVFB9IQoaLONydI8fxB0rtL7tgQgNPtr4sEimCJqZ0DczWy+96Y5wY5SAoCSSTNkon
-	ZJnC5ennGvAFIXDK+kkdXObc1vXyz4WE=
-X-Gm-Gg: AR+sD10E4h+lJHjAGYKXda4HMq0L/d+n0/rjZ9BUM4CjBQE7b8RbS4iI1+a8HEZ1Je+
-	+nInIG0oaLDGoQAhC6g41ZeDk4FCXOo3gXjbtQPCs+DL4TfDx1TXK/+7V4ucNddGHgV42I/TxIt
-	52EUgDYeVxVGC2+394Q3McHNQnqR0LOMX5WiOaSIDj1xnI7s5N8aBvt5YkOdZxb5A8wPWK7sCmD
-	ugN/Vn6ndFRCxlfMuK+mk+eFdY46J9OEFkIFgsNyplyzNRhZFXeI/de353BK8arWtG8g7Hw3uqZ
-	TBNTk6Y1Qo3x9Rs4x1uiq/NOcr+oGU0Rd3xiGdMYzLVoqwTatnPQLu/RY87XYlzoL3Qb3fakIQr
-	i4xP8hu6bBKLdugySd5hKHOwyZKWGAmirDkqqaLa+2g==
-X-Received: by 2002:a05:6a20:7288:b0:3c3:6b6e:8ba0 with SMTP id
- adf61e73a8af0-3cd3008a6f1mr59176985637.11.1787675935767; Tue, 25 Aug 2026
- 09:38:55 -0700 (PDT)
+        bh=ImkuahcqiET0r0yh2i1x0Wqcf5zuafLmEw6TOE3oMq4=;
+        b=pv4uBZljqjHOFJNLgBglQXjlBA7c77rOVc674cIyqqQzBTMAAPYdH9eDB+sNf/Yzjq
+         ajeQ9nevHyAhQ3HA2eigNeCxk+OQYbgyzD62JqJROVeMu0DyBTUrzW6tK+a2CpTgUj6q
+         ngsu8YKDyHRcInqAYFgvG0pWiwgUwlT4BY1rbfxGD/TWR532BqQWc06w6VYLvSHrAWv0
+         4/2LfiINVJNAvfjS6XgjJQhy+DWqVWq62EZiHT9DpGcQAwlmxaiAUFCzP7pvJKN+v7re
+         XEFi0KJqy7lro+dAsY2hfk8kidGFpP9izeOhYW7dqu5dE1pdPGdtTfcGFe04vl4+Vs0Z
+         zmgQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpfX6DtTTfRflhbkk9bU5eHDQ5cQJv8YV3vWin46gOTkc4iVMAATo8wFiksVR82tlppUuwe8pbSwu3T/1Lp1WIH3Do=@vger.kernel.org
+X-Gm-Message-State: AFuF++mo6qJqco35hcNzBljZ9zarAIb2LMokRXyYefyNEhKE0idA3Tqf
+	setd/i/ezs48AfvcmjHCipWaNDRoU1o2vA5VHsRJirWFdXkvAAPfdNJ1IoC8YvqiBRp+SG6EJgA
+	unpiK7SZnYhdEeCaMRluEOnKnPryH1cgMX10IQZzX
+X-Gm-Gg: AR+sD12h50Am0ck2LQuyktYxXBVXyq50Thm5U8B41pG/M3UQSzKytnHGc7Khws+UoNx
+	vMR7y5c+10QnHD7wpzMcYj3TLjwWEh2E7uYuTA9C8jGm5l6ArETvnB4RxCNLW/l1BOzFOilCEr/
+	7bmC4K2FbHwxmwvJ2ZTAK3keYQSPN12OHOxIt6M6VCJmFpZWRYn4WG9rYOkcgWv7Ini2uQObvr6
+	co551USr+nSOlGI7btT3OmzoHqjhNaumQSkKFpmw19mT6cckuNvOEWuREvVFvenAGrgKbJYT5ga
+	DNrfVRAGhmczDGy/84wV/HL+UEZH4Y9dt09pTA5/5yVApbtef3uTrDysUwb+GD8HCldHFnJ7rAG
+	eBK452o9ZktDS3c+6XJD6X/+Zwu0M6U2f7w4ZAnnD
+X-Received: by 2002:a17:902:f705:b0:2d5:db3d:1a41 with SMTP id
+ d9443c01a7336-2d6e0757d7amr9055105ad.14.1787676775185; Tue, 25 Aug 2026
+ 09:52:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
- <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
- <aotM6tRUHI9Bo7gW@redhat.com> <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
- <aoxp3Rcbp3fUuqS8@redhat.com> <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
- <ao2KDQuBMNtONu0K@redhat.com>
-In-Reply-To: <ao2KDQuBMNtONu0K@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 25 Aug 2026 09:38:40 -0700
-X-Gm-Features: AcwNN1V0hdtX9Y28fQcJy3eV8oSlMMr7Yb44xedm3cg9kk5uXBgObg30_PxA8NM
-Message-ID: <CAEf4Bza0Hy_a4BpFBrsP2F5wvEDOyL6n2jK5FK8r-QyRFwvBPw@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260816224609.308019-1-kirill@shutemov.name> <20260816224609.308019-20-kirill@shutemov.name>
+In-Reply-To: <20260816224609.308019-20-kirill@shutemov.name>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 25 Aug 2026 18:52:17 +0200
+X-Gm-Features: AcwNN1Vvom-LUSAxEjMWXrQR9qZrcTO8aY2l_-w47SQrAcC9eH4E9yF2js957ac
+Message-ID: <CAG48ez1fiCzTMATN07HHfzvUGFuZ5gELNpZXdXx=ySa7nihxmA@mail.gmail.com>
+Subject: Re: [RFC PATCH 19/57] mm/collapse: install a PMD leaf as the terminal layer
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
+	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
+	dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, liam@infradead.org, 
+	mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, 
+	surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, 
+	usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kas@kernel.org, 
+	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, 
+	mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 25, 2026 at 5:27=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
+On Mon, Aug 17, 2026 at 12:46=E2=80=AFAM Kiryl Shutsemau <kirill@shutemov.n=
+ame> wrote:
+> Fill in the PMD install.  Under the pmd lock, with the pte ptl nested
+> inside it: verify, detach the table with pmdp_collapse_flush(), deposit a
+> fresh one and map the leaf.
 >
-> On 08/24, Andrii Nakryiko wrote:
-> >
-> > On Mon, Aug 24, 2026 at 8:57=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > > force_exit_sig(SIGILL) can't be ignored too. But I am fine either way=
-.
-> >
-> > Current SIGILL sending is already pretty bad behavior that bites us
-> > periodically, instead of doubling down on killing the user space
-> > process because something about installing uprobe goes wrong, let's
-> > think about a bit less destructive way to do this. Mark uprobe for a
-> > particular process as defunct or "detaching it", or something along
-> > those lines. But not just kill innocent processes.
->
-> Well. Yes, SIGILL sending acts as BUG_ON(), this is not nice and
+> That is one atomic section, so no pmd_none() window ever exists: faults
 
-The problem is that this is actually not a bug but a very real and
-expected behavior with user-space using fibers or coroutines. Any
-suggestions how we can make this less violent, as it's actually quite
-dangerous and kills production applications when someone (unknowingly)
-tries to uretprobe trace them...
+What do you mean by "atomic" and "no pmd_none() window ever exists"?
+Is that supposed to be with respect to a subset of readers?
 
-> probably we can improve the current code. And, just in case, as for
-> uprobe_copy_process() in particular I agree that Option B (make fork()
-> fail) is better.
->
-> But what, say, uprobe_handle_trampoline() can do if ->return_instances
-> is NULL? Either we have a kernel bug, or the probed task does something
-> wrong. In both cases it is better to kill the task with pr_warn() and
-> generate the core dump.
+While the PMD table spinlock is held, you clear the PMD entry
+(pmdp_collapse_flush) and set it to a new value
+(map_anon_folio_pmd_nopf). But codepaths that walk page tables don't
+take that spinlock unless they already know they're in a THP case.
 
-I don't remember all the code paths, but just shooting in the dark
-there, we can always poison a pointer to distinguish or something? or
-just assume kernel bugs do not happen and ignore NULL. Or something
-along those lines.
+zap_pmd_range() does not lock the PMD table before checking
+pmd_none(), and if that is true, it skips over the PMD. I think this
+means that THP collapse can race with MADV_DONTNEED or zap_vma_range()
+such that the zap wrongly has no effect?
 
+> stay held down at pte level by the migration entries throughout.  It is
+
+But you don't have a migration entry at the PMD level, right?
+
+> what lets PMD collapse run under mmap_read like everything else here.
 >
-> Oleg.
+> Two things force that nesting, which is the one the tree already uses to
+
+I'm lost, what is "the tree"?
+
+> reinstall a table.  A racing zap of a frozen entry takes the pte ptl, so
+> the verify has to hold it.  And the table must not come apart between
+> verify and detach, which is the pmd lock's job.
 >
+> Nothing leaves the section early, aborts included.  An abort only
+> restores PTEs and would need no pmd-level exclusion of its own, except
+> that its pte pointer came from pte_offset_map_rw_nolock(), whose caller
+> must establish that the pmd is stable.
+>
+> The deposited table is the freshly allocated one, never the table just
+> detached.  A deposited table has to be quiescent, because whoever
+> withdraws it frees it immediately with nothing to hold a lockless walker
+> off first, and a table that has never been reachable is quiescent by
+> construction.
+>
+> The detached one is not: GUP-fast and RCU pte walks that read the old PMD
+> may still be inside it, and on broadcast-TLBI architectures the flush
+> expels nobody.  Quiescing it would need an IPI, which has nowhere to go
+> here -- outside the pmd lock it opens the pmd_none() window this design
+> does not have, inside it is a broadcast under a spinlock.  So the
+> detached table goes to pte_free_defer(), which holds the free until those
+> walkers finish.  One transient table page per PMD collapse is the cost.
+>
+> No anon_vma_lock_write() is taken, unlike the mechanism being replaced:
+>
+>  - rmap walks on the sources are unreachable, their refcounts frozen and
+>    their folio locks held from freeze to putback;
+
+To be clear, we can concurrently rmap-walk into the PMD, right?
+Because we might be looking at a different folio which was created in
+the parent process or something like that? And so a
+page_vma_mapped_walk() without PVMW_SYNC might look at stale PTEs?
+(Which may or may not be fine, but would not be what this commit
+message claims.)
+
+>  - non-rmap pte walkers see migration entries;
+>  - pmd-level observers see either the old table or the leaf, never an
+>    intermediate;
+
+(or pmd_none(), see above)
+
+> +       old_pmd =3D pmdp_collapse_flush(vma, cand->addr, pmd);
+> +       old_table =3D pmd_pgtable(old_pmd);
+[...]
+> +       pgtable_trans_huge_deposit(mm, pmd, cand->deposit);
+> +       map_anon_folio_pmd_nopf(cand->new_folio, pmd, vma, cand->addr);
+[...]
+> +out_unlock:
+> +       if (pte_ptl !=3D pmd_ptl)
+> +               spin_unlock(pte_ptl);
+> +       pte_unmap(pte);
+> +       spin_unlock(pmd_ptl);
+> +
+> +       /* The deposit balanced the detached table, so the count is alrea=
+dy right */
+> +       if (old_table)
+> +               pte_free_defer(mm, old_table);
+
+What does old_table contain at this point - migration entries? I
+wonder if we should zero all the PTEs inside it before dropping its
+spinlock and scheduling its freeing, so that a concurrent
+pte_offset_map_rw_nolock()+spin_lock() wouldn't see dangling migration
+entries. (I'm not sure if we actually have a codepath that does that,
+but even if not, this seems like it might cause problems later.)
