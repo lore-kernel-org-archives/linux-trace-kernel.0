@@ -1,137 +1,105 @@
-Received: from mta1.migadu.com (out-44.mta1.migadu.com [95.215.58.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8C3DF76
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 05:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7407936308A;
+	Tue, 25 Aug 2026 05:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787634942; cv=none; b=Khk3R3fDOVc9XiIuRpn1R296885BO880Qz34XajoxRtOkRJUuXK/p1xElzniatjVdeqJ9KcO1MIvbSMsYH9bWhZ2YCVukm4pfdXpuhPq8JqIFbBul4ptFApAnVft4wFUqh9DdrBiAueWTgI4rYK7hKaLsav1wkaO8DOorOIRbFc=
+	t=1787635293; cv=none; b=NrZYWTdrHtONU5mS925BLWcuThBTsOaFirGDFQEl4e19PHiYLTcMd/mPsIzIUNKhyeX5XVtFo7vlvCVVQUdoTk/zD/VXLSE6dpsHW+D5y1emaF0IA/FgIX7Ag/QpAuK7euBXM7G5M0aKFfVeKnMblVVv8HqsUtRGiKAO/09j7Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787634942; c=relaxed/simple;
-	bh=ycU45ByNsgHHDtVWA4mXYRQ4N25WsNGqUmcu/vjY5q8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cLc6S8pWdRnQZtp/tYlGqDIPF2Bvf/0SbUIZi2Q9WpkzwP05yTf+tDavjyUQ32x76yqrsCVR5FG2RCFNZwtxKJAVYF7Yutkq63r7V6xXv93w+EaMFTcbgtJwcTub37b7T/6i3+Ee/AYfZ3nbTmklnJRzot2EIf1uXNZLm8AdMLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o1hsin8C; arc=none smtp.client-ip=95.215.58.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787635293; c=relaxed/simple;
+	bh=6Y1XbZWfQiu+oywBa1EwFn9wtGU0Z1a2BMaPr+MkY/U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Oen7WB8B0NLxKvnoHCxHMPY7b2AoUS3znFwReQaIijK5YGSlFiOI/Ed+cCSCJ5dm8BA/taNzvWAZ7b/VPn+TahQ5H/p+66Fb25XL22MfHwuCKqia5rkOAZqNap4rauC9PJJsJQ7aqNFOa034+4ATkS6lfzQfTWKisPsiOtURKrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=shmbcStw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o1hsin8C"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=ycU45ByNsgHHDtVWA4mXYRQ4N25WsNGqUmcu/vjY5q8=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787634938; v=1; x=1788239738;
- b=o1hsin8C+lIhe/cRQ0+Dy3CJjuEqrt3ENHswgXc1rKODSMsUSvlnYwFx0H9MMPmt/FHIqOsh
- Jl8pMdN6MprBmkrk50Mr/uE80lonluQElCJ+m5XkEjVamFvHkCKK0JdKoRH4Dbe4UNlyFvEIt0z
- qCR0EGid100ald4g3zweY9IQ=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: from [10.22.64.46] (122.11.166.8)
-	by smtp.migadu.com with ESMTPS id 4cf59cd3d753658a;
-	Tue, 25 Aug 2026 05:15:37 +0000
-X-Mizu-Trace-ID: 4cf59cd3d753658a
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <7f18980c-0c15-4862-af1f-f451ca12dac5@linux.dev>
-Date: Tue, 25 Aug 2026 13:15:23 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="shmbcStw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 464F8C2BCFB;
+	Tue, 25 Aug 2026 05:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1787635293;
+	bh=6Y1XbZWfQiu+oywBa1EwFn9wtGU0Z1a2BMaPr+MkY/U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=shmbcStwdzlHkU1pz/DI2vV39TmrISx9lmIQrhIfUmUx/y/qLodk9wiYX96kxKGvB
+	 nobQLcSIyb7/KOr1JSD4u6K60xTmg43z+/6OgwF+4MW63MHdWfZ03l1WezOG/qiHy3
+	 xVgWRTfMzHT2BvfEm7+/NE/AoPqxvkAimXBV1m4fxifvVV1do9PikYOBWRi84YiwgH
+	 E9eulQP0H5nywd9RMIvmN5ysSli0to8x5fmkQ7hjUDs0WmjXTxLO4b7mddN8mV/vvU
+	 tAwEzu7EagndrRIn0lJ40Rk0PNGsZJuvvzgmNuJAdkWFwbl11Eh90rYRP0Z6ETxUBE
+	 VuYprDepuR04g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A853C61DB6;
+	Tue, 25 Aug 2026 05:21:33 +0000 (UTC)
+From: Ivan Immanuel Shaji via B4 Relay <devnull+ivanimmanuel1234.gmail.com@kernel.org>
+Date: Tue, 25 Aug 2026 01:20:38 -0400
+Subject: [PATCH 2/2] ring-buffer: Stop remote reader update when page swap
+ fails
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next 00/13] bpf: Add tracing_multi link support for
- bpf progs
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Quentin Monnet <qmo@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Mykyta Yatsenko <yatsenko@meta.com>,
- Avinash Duduskar <avinash.duduskar@gmail.com>,
- Anton Protopopov <a.s.protopopov@gmail.com>, Amery Hung
- <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
- Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
- Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
- Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260809150111.45000-1-leon.hwang@linux.dev>
- <CAEf4Bzam=0V6n4_vBahhYh2Qn9KfriDKXSz58L4L+teHJRWfPQ@mail.gmail.com>
- <0b30bc97-2ecf-46eb-a863-94e706e18c6b@linux.dev>
- <CAEf4BzaXaLLqs6XXCG_02c7UcvNWfbGUAJTYosr22oaD4iokuQ@mail.gmail.com>
- <c71d27ab-ec59-4b72-855f-7bf437095cd5@linux.dev>
- <CAEf4BzZpB-qkhu3SAu5MrYYAT2+ZN8WaXqpmnKruOOdjJOLK2A@mail.gmail.com>
-Content-Language: en-US
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <CAEf4BzZpB-qkhu3SAu5MrYYAT2+ZN8WaXqpmnKruOOdjJOLK2A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260825-kernel-patch-1-v1-2-e9349aa0b165@gmail.com>
+References: <20260825-kernel-patch-1-v1-0-e9349aa0b165@gmail.com>
+In-Reply-To: <20260825-kernel-patch-1-v1-0-e9349aa0b165@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Vincent Donnefort <vdonnefort@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787635292; l=1498;
+ i=ivanimmanuel1234@gmail.com; s=20260825; h=from:subject:message-id;
+ bh=Yt3jJEKjDX8/on3DO9yN+/vqaXIqohP/+YVJCaaE2TA=;
+ b=KmTfJ3GvG/u3YrBfBZAyX5nOKK+yVn9H2LRQsIdURBZL6eyXNJKeUDzGR4U1N8WGLf9D7C5OU
+ bnWoYbWgI93DAs3LZpK+WUo1uq3qAEUUgZNrxB3zqY9axeBmdR+8JnZ
+X-Developer-Key: i=ivanimmanuel1234@gmail.com; a=ed25519;
+ pk=Wx8O3UUs3XneDkbqbOJJnlNdWSpEf2tWbTAoE7/vnqE=
+X-Endpoint-Received: by B4 Relay for ivanimmanuel1234@gmail.com/20260825
+ with auth_id=975
+X-Original-From: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
+Reply-To: ivanimmanuel1234@gmail.com
 
-On 25/8/26 04:02, Andrii Nakryiko wrote:
-> On Sun, Aug 23, 2026 at 10:00 PM Leon Hwang <leon.hwang@linux.dev> wrote:
->>
->> On 22/8/26 01:46, Andrii Nakryiko wrote:
->>> On Sun, Aug 16, 2026 at 11:20 PM Leon Hwang <leon.hwang@linux.dev> wrote:
->>>>
->>>> On 15/8/26 04:14, Andrii Nakryiko wrote:
->>>>> On Sun, Aug 9, 2026 at 8:01 AM Leon Hwang <leon.hwang@linux.dev> wrote:
->>>>>>
->>>>>> Similar to the tracing_multi link support for kernel functions [1], add
->>>>>> support for bpf progs.
->>>>>>
->>>>>> When attaching to bpf progs, it must attaches to the target by text poke
->>>>>> way.
->>>>>>
->>>>>
->>>>> Please spend a bit more human effort on justification for the change
->>>>> and explaining your use case. In what case you'll be attaching to a
->>>>> large amount of BPF programs such that attachment speed-up (if there
->>>>> is any) matters.
->>>>
->>>> Will update the cover letter with justification and my use case.
->>>>
->>>> Here's my use case:
->>>>
->>>> I'm planning to enhance the function-graph feature of bpfsnoop [1]. It
->>>> will trace all bpf progs, including their subprogs, to draw a full
->>>> function call graph including bpf prog call sites.
->>>>
->>>
->>> fair enough, interesting use case, definitely outline that in the next
->>> revision (and provide before/after attach time as well for such use
->>> case, please)
->>>
->> Will include my use case.
->>
->> Implemented the attachment micro-benchmark. Here's the result on an
->> x86_64 16c16g VM:
->>
->> ./bench tracing-multi-attach-progs
->> Setting up benchmark 'tracing-multi-attach-progs'...
->> tracing-multi-attach-progs: prepared 1000 identical BPF program targets
->> tracing-multi-attach-progs: fentry created and attached 1000
->> programs/links in 679.324ms
->> tracing-multi-attach-progs: fentry.multi created one program and
->> attached one 1000-target link in 470.042ms
->> tracing-multi-attach-progs: fentry.multi creation/attachment speedup is
->> 1.45x
->>
->> The speedup 1.45x looks good. But attaching to 1000 progs via fentry
-> 
-> I'd say "meh". If 500ms is ok, 700ms is not that much more noticeable.
-> 
-Besides the attachment speedup, this series provides a way to attach to
-multiple bpf progs via one link. The current revision reuses the
-ftrace-based attachment, which relies on
-CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS. In the next revision, it will get
-rid of CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS with its own attachment
-implementation. Hence, this series will be able to run on those arches
-that have trampoline support.
+From: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
 
-Thanks,
-Leon
+The remote swap_reader_page callback can fail when the writer moves the
+head before the remote catches it. __rb_get_reader_page_from_remote()
+warns about that failure but continues with the unchanged reader ID and
+rearranges the local page list as though the swap succeeded.
+
+Stop immediately after warning. Callers already handle a NULL reader
+page as a failed attempt, and this avoids splicing the same page as both
+the previous and new reader.
+
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM sparse
+Signed-off-by: Ivan Immanuel Shaji <ivanimmanuel1234@gmail.com>
+---
+ kernel/trace/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 3c3ed639923d..d11b2759caac 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5805,8 +5805,9 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
+ 
+ 	prev_reader = cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id];
+ 
+-	WARN_ON_ONCE(cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu,
+-							  cpu_buffer->remote->priv));
++	if (WARN_ON_ONCE(cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu,
++							      cpu_buffer->remote->priv)))
++		return NULL;
+ 	/* nr_pages doesn't include the reader page */
+ 	if (WARN_ON_ONCE(cpu_buffer->meta_page->reader.id > cpu_buffer->nr_pages))
+ 		return NULL;
+
+-- 
+2.53.0
+
 
