@@ -1,64 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD97A3FD956;
-	Tue, 25 Aug 2026 11:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172563F44FC;
+	Tue, 25 Aug 2026 11:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787656809; cv=none; b=XRu8z8AlV/UDC5wsoDPGajs1huu1TJmDIep6fVXOrzaJWFn93WPZMoAOvDIC6SFKOjoKBFS21nbCwDdn4sHzitkKJhOg43PyhPvC/AXKcXGkO9xj5Tl/qT7bThj09MCDblx2mDd+cHRlzYbS3TP214renNGd3/Kq5nQRjHFJhc0=
+	t=1787657211; cv=none; b=Z24IUTU6vVRpKenIjhbnjZ1ACU26ooe69XfUthIWQweQpB8Sxz1RR9t0dkAY33jnwa/5Ug1Ezog5dSztAmFmhlR9LL7AeWmSLJoSAqTL6XpOOf0xnASa+HtrURCxGXOPJfncjyJYU2fI2K/sIZMV9EdudpFNaWi5C2QIgnQ4EK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787656809; c=relaxed/simple;
-	bh=UU0xuyL0nYUs58J0CJ3fXuk5wtKom1D9pryqw53RVO4=;
+	s=arc-20240116; t=1787657211; c=relaxed/simple;
+	bh=PbYB/wvtFM1VPd3iwbL1tVogTkEhGUZQvsMK0I2XnnU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVwFiFhI7MoYvJmUIKEtOK19R0HMtC96gwMAofpZNNfSh4cZpqjnRmwCGbaXbbKGOJuWHVwREcRwE7i9xLiSOy2FJ6cH8OGpJW2Llgqm+CCCYYcdtJODmq4IzLTi5n7U2UzYleG2Q2Tc5euU95PaYrmPK2+zCIDbdwz17xfwQV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4S9/yoy; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=OaF68BEnmxFwaRgxxkyuoxlZ0jQURoQF4NMsuyd+EuEGexBHeecHceZ0M5mXFSMWbRYq6cfaSCCmymFVSUnGaVwgLzwuPDr7vfNK3mh10ZaEmar/kIgjZa1lusQx8goI3wXDQePzCvX5G5Rc4PbGUWABBlXuVzOoTgj6wg2AlG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GoXlgVdV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4S9/yoy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBDC1F000E9;
-	Tue, 25 Aug 2026 11:19:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GoXlgVdV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F260C1F000E9;
+	Tue, 25 Aug 2026 11:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787656807;
-	bh=FWf3P/SKIaJRRAsSvxTvo5izA5oqfXztVDKK4GY3V7o=;
+	s=k20260515; t=1787657209;
+	bh=+Kwg1vlmpiXfsrVuG+kXUemOecdCeye6XceIRD4GCkc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=H4S9/yoy2Yjopf5gJYiLZlxYDa/LboiBgyS4EuOYw9JqJD7li/qlty74bcEQgzwtH
-	 4wTenkCXmKrBVCieVML0QhQRsiBRWfj+Vo5U1ZXbrxiQjg+8+jfypo4OCeSwWIkAMZ
-	 tGi4hRTou0eYuIgORrwa23WZJNaOQ2w0LPm0GiNcQKnT6h+UueNqYbGBzx2i4aBbpJ
-	 tEvONlrvVtodXsR5TcH2v8srrbxYCaD/HxUG5j3Vgg3FbW++fP2cqi6mlT7pQ23/d7
-	 DTlQTkMRWi3hjEddNZo4G30JKiM9m2wQEl0uhtjRtMAiRlPyva24nEyUbl9OCvsV3j
-	 TdPxHX9JMazIA==
-Date: Tue, 25 Aug 2026 14:19:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>,
-	Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>, Lance Yang <lance.yang@linux.dev>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Nico Pache <nico.pache@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Usama Arif <usama.arif@linux.dev>,
-	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	b=GoXlgVdVnQB3UIKDtlCK2MeqgMCYQLVg5a+xp6sO3+cbWgVd5+A/I2aV1BFeUM7k6
+	 BVHc7H3QnM5OAstm5ICZF1F8UtUkOy4StSrkX8dng+bSYclRRQOkGUeYGNXJIH+4/P
+	 l6uMBxScbiacbX2oODUOkqBBoDvwqh6gu0SouefX1HJd802b3VnwzhSPutCafbEAgU
+	 8TdZqHlqFtDqM86XjkQzIPwG4CoL+2UmnlHJLOG1je/70VJB/I7p+JYvsI646XL6a8
+	 Mci0t5DOw3pDjpm/SEMAL6Qcu0JDgf8r4KMhu5L88J2MrpMu0jWyZHq0dsDmDpecvY
+	 UJWoV4aI7U0Kg==
+Date: Tue, 25 Aug 2026 12:26:39 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>, 
+	Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Lance Yang <lance.yang@linux.dev>, "Liam R. Howlett" <liam@infradead.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>, 
+	Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Usama Arif <usama.arif@linux.dev>, 
+	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
 	linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 3/6] userfaultfd: use userfaultfd_*() helpers instead of
  open coded flag tests
-Message-ID: <ao16WPoLpdIdU3ID@kernel.org>
+Message-ID: <ao17rY2r-01wJxy6@gremlin>
 References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
  <20260823-uffd-vm-flags-v1-v1-3-3086981b33cf@kernel.org>
  <aoxdWWMEeQbcG5Pq@gremlin>
+ <ao16WPoLpdIdU3ID@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,165 +60,80 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aoxdWWMEeQbcG5Pq@gremlin>
+In-Reply-To: <ao16WPoLpdIdU3ID@kernel.org>
 
-On Mon, Aug 24, 2026 at 04:10:51PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Sun, Aug 23, 2026 at 03:17:40PM +0300, Mike Rapoport (Microsoft) wrote:
-> > Move userfaultfd_{missing,wp,minor,rwp}() and userfaultfd_protected()
-> > ahead of uffd_disable_huge_pmd_share() and uffd_disable_fault_around()
-> > and make the latter two use the helpers rather than open coded VMA flag
-> > masks.
+On Tue, Aug 25, 2026 at 02:19:52PM +0300, Mike Rapoport wrote:
+> > > +/*
+> > > + * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
+> > > + * MINOR registered range, fault around will be a total disaster and ptes can
+> > > + * be installed without notifications; for WP it should mostly be fine as long
+> > > + * as the fault around checks for pte_none() before the installation, however
+> > > + * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
+> > > + * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
+> > > + * and pollute the tracked working set, so each page must be populated by its
+> > > + * own fault.
+> > > + */
+> > > +static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
+> > > +{
+> > > +	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
+> > > +	       userfaultfd_rwp(vma);
 > >
-> > Convert open coded VMA flag test in mfill_get_vma() to userfaultfd_wp()
-> > as well.
-> 
-> It'd be better to do the moves and the reworks separately. We don't have a limit
-> on patch count :)
-> 
+> > This is changing the logic.
 > >
-> > With every user of the per-VMA uffd modes going through the helpers,
-> > their underlying representation can be changed in the next step.
+> > Before we were testing only the flags, now we have:
 > >
-> > No functional change.
-> 
-> There is a functional change, or at least seems to be, see below.
-> 
+> > static inline bool userfaultfd_rwp(const struct vm_area_struct *vma)
+> > {
+> > 	/*
+> > 	 * Callers gate PAGE_NONE usage on this; PAGE_NONE is a BUILD_BUG()
+> > 	 * without CONFIG_ARCH_HAS_PTE_PROTNONE, so fold to false.
+> > 	 */
+> > 	if (!IS_ENABLED(CONFIG_ARCH_HAS_PTE_PROTNONE))
+> > 		return false;
+> > 	return vma_test_single_mask(vma, VMA_UFFD_RWP);
+> > }
 > >
-> > Assisted-by: copilot:claude-opus-5
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  include/linux/userfaultfd_k.h | 70 +++++++++++++++++++++----------------------
-> >  mm/userfaultfd.c              |  2 +-
-> >  2 files changed, 35 insertions(+), 37 deletions(-)
-> >
-> > diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-> > index 3396d270b159..d8262e3dc134 100644
-> > --- a/include/linux/userfaultfd_k.h
-> > +++ b/include/linux/userfaultfd_k.h
-> > @@ -168,42 +168,6 @@ static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
-> >  	return vma->vm_userfaultfd_ctx.ctx == vm_ctx.ctx;
-> >  }
-> >
-> > -/*
-> > - * Never enable huge pmd sharing on some uffd registered vmas:
-> > - *
-> > - * - VM_UFFD_WP and VM_UFFD_RWP VMAs, because the write protect / access
-> > - *   tracking information is per pgtable entry.
-> > - *
-> > - * - VM_UFFD_MINOR VMAs, because otherwise we would never get minor faults for
-> > - *   VMAs which share huge pmds. (If you have two mappings to the same
-> > - *   underlying pages, and fault in the non-UFFD-registered one with a write,
-> > - *   with huge pmd sharing this would *also* setup the second UFFD-registered
-> > - *   mapping, and we'd not get minor faults.)
-> > - */
-> > -static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
-> > -{
-> > -	return vma_test_any_mask(vma,
-> > -		mk_vma_flags_from_masks(VMA_UFFD_WP, VMA_UFFD_RWP,
-> > -					VMA_UFFD_MINOR));
-> > -}
-> > -
-> > -/*
-> > - * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
-> > - * MINOR registered range, fault around will be a total disaster and ptes can
-> > - * be installed without notifications; for WP it should mostly be fine as long
-> > - * as the fault around checks for pte_none() before the installation, however
-> > - * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
-> > - * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
-> > - * and pollute the tracked working set, so each page must be populated by its
-> > - * own fault.
-> > - */
-> > -static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
-> > -{
-> > -	return vma_test_any_mask(vma,
-> > -		mk_vma_flags_from_masks(VMA_UFFD_WP, VMA_UFFD_RWP,
-> > -					VMA_UFFD_MINOR));
-> > -}
-> > -
-> >  static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
-> >  {
-> >  	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
-> > @@ -235,6 +199,40 @@ static inline bool userfaultfd_protected(const struct vm_area_struct *vma)
-> >  	return userfaultfd_wp(vma) || userfaultfd_rwp(vma);
-> >  }
-> >
-> > +/*
-> > + * Never enable huge pmd sharing on some uffd registered vmas:
-> > + *
-> > + * - uffd-WP and uffd-RWP VMAs, because the write protect / access tracking
-> > + *   information is per pgtable entry.
-> > + *
-> > + * - uffd-MINOR VMAs, because otherwise we would never get minor faults for
-> > + *   VMAs which share huge pmds. (If you have two mappings to the same
-> > + *   underlying pages, and fault in the non-UFFD-registered one with a write,
-> > + *   with huge pmd sharing this would *also* setup the second UFFD-registered
-> > + *   mapping, and we'd not get minor faults.)
-> > + */
-> > +static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
-> > +{
-> > +	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
-> > +	       userfaultfd_rwp(vma);
-> > +}
-> > +
-> > +/*
-> > + * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
-> > + * MINOR registered range, fault around will be a total disaster and ptes can
-> > + * be installed without notifications; for WP it should mostly be fine as long
-> > + * as the fault around checks for pte_none() before the installation, however
-> > + * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
-> > + * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
-> > + * and pollute the tracked working set, so each page must be populated by its
-> > + * own fault.
-> > + */
-> > +static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
-> > +{
-> > +	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
-> > +	       userfaultfd_rwp(vma);
-> 
-> This is changing the logic.
-> 
-> Before we were testing only the flags, now we have:
-> 
-> static inline bool userfaultfd_rwp(const struct vm_area_struct *vma)
-> {
-> 	/*
-> 	 * Callers gate PAGE_NONE usage on this; PAGE_NONE is a BUILD_BUG()
-> 	 * without CONFIG_ARCH_HAS_PTE_PROTNONE, so fold to false.
-> 	 */
-> 	if (!IS_ENABLED(CONFIG_ARCH_HAS_PTE_PROTNONE))
-> 		return false;
-> 	return vma_test_single_mask(vma, VMA_UFFD_RWP);
-> }
-> 
-> I.e. adding in a CONFIG_ARCH_HAS_PTE_PROTNONE check.
+> > I.e. adding in a CONFIG_ARCH_HAS_PTE_PROTNONE check.
+>
+> Without CONFIG_ARCH_HAS_PTE_PROTNONE VMA_UFFD_RWP is hardwired to VM_NONE
+> so it's functionally the same ;-)
 
-Without CONFIG_ARCH_HAS_PTE_PROTNONE VMA_UFFD_RWP is hardwired to VM_NONE
-so it's functionally the same ;-)
- 
-> BTW side-note these:
-> 
-> static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
-> {
-> 	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
-> }
-> 
-> static inline bool userfaultfd_wp(const struct vm_area_struct *vma)
-> {
-> 	return vma_test_any_mask(vma, VMA_UFFD_WP);
-> }
-> 
-> static inline bool userfaultfd_minor(const struct vm_area_struct *vma)
-> {
-> 	return vma_test_any_mask(vma, VMA_UFFD_MINOR);
-> }
-> 
-> Should all use vma_test_single_mask() really :)
+Well then you're explicitly removing logic and not mentioning it anywhere
+with a NFC commit.
 
-These are changed anyway in a later patch.
- 
+So please say so in the commit message.
+
+>
+> > BTW side-note these:
+> >
+> > static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
+> > {
+> > 	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
+> > }
+> >
+> > static inline bool userfaultfd_wp(const struct vm_area_struct *vma)
+> > {
+> > 	return vma_test_any_mask(vma, VMA_UFFD_WP);
+> > }
+> >
+> > static inline bool userfaultfd_minor(const struct vm_area_struct *vma)
+> > {
+> > 	return vma_test_any_mask(vma, VMA_UFFD_MINOR);
+> > }
+> >
+> > Should all use vma_test_single_mask() really :)
+>
+> These are changed anyway in a later patch.
+
+Yup, but you (potentially) break one of them. Will comment there.
+
+>
+> > --
+> > Cheers, Lorenzo
+>
 > --
-> Cheers, Lorenzo
+> Sincerely yours,
+> Mike.
 
--- 
-Sincerely yours,
-Mike.
+--
+Cheers, Lorenzo
