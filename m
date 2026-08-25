@@ -1,103 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D598429CE7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 12:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD4142AF8D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 12:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787660829; cv=none; b=n1ot/rFXqUPlfzV8mwcfHF3Xvy2/hZg5l78TmQp3KcQQBYU59h4vnopPadaFa36o6FLP7jF/Y0h89WwgW3AMnIv8RXrFPSZbzupkVoJWKW0nwZveXhGRuFIt8om6JSvB3VcwNpFX229TrFG094fxOyPhTqGqi6txDwaaKznr6y4=
+	t=1787661011; cv=none; b=LWOZB0DQqbEnYrJ4pBv96eJuTS0HDz1g7372vu6PofvcsRXaakQUiCGudRpCyQG7likR77pzdJJtzkbuECchqHs4xOwQ1eC7bYFQ4aUYwiZiClctt4YWU05NisZf1WellIbzg6sj8hvJ4IHUmfx9q8zMOpMzbE4NoyuBqLc8KLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787660829; c=relaxed/simple;
-	bh=9GYDlWtS1yrMi2DmvdcfxbgnSq1hjRXS2RbpilOuJjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=cqqs1JAPjX8Lmj0FFxllHfalAvfpopIAly34v8mBoFYmZXCTHXMt+MdVl91AbYR9JoLMh79HcY8AMh9SqEOzVGllbi3KmZ9IlNAOksf9kbxmY4xw/wiK1WJbAR20buFJYZ9/vNTYZ1RVCtXCs9HtDqRlBjhqvTBaDuVimg/e7Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dc5f2rXX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1787661011; c=relaxed/simple;
+	bh=DBxi0BOOwrT4xCseyDgm+w1BLMxRq77pCreq5EfGDkY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
+	 Content-Type:References; b=hU3/z/+e2MnefuVCr6tikARBLNZhI9uP6QzY9pzI0mw01HZxeLIeb/FNygi+DeeHG7DN3nkEEzS1y80OeDuq3EXsI9xveJdYROiLX1eVVfZf8vhG2YfI+hLfIoQHdycdNEo2CgJmTOZsZNZ8lBYmKf+5i2MSJhQleg1Z4zRpOno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=M/plwnle; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dc5f2rXX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787660826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9GYDlWtS1yrMi2DmvdcfxbgnSq1hjRXS2RbpilOuJjM=;
-	b=Dc5f2rXXdZn4iFfK8LnYJn2Kr/3y5Wdfw7pWMQ4u9ktbhUOcQFsVb/W2SwsMaaK0H8dNXf
-	UqtjaWLc+5rvg/XyBnDWQl/MKSj+7XTIw0pr6F2a2qnBL1RQ6sidwyMQb7d5FZZqi8Sc8v
-	kql66gH7COzke6zw2zIHsBK3OA3+1j0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-WP18YMzGPu2gNGn_XYpIHQ-1; Tue,
- 25 Aug 2026 08:27:00 -0400
-X-MC-Unique: WP18YMzGPu2gNGn_XYpIHQ-1
-X-Mimecast-MFC-AGG-ID: WP18YMzGPu2gNGn_XYpIHQ_1787660819
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0729C191FCD3;
-	Tue, 25 Aug 2026 12:26:59 +0000 (UTC)
-Received: from fedora (unknown [10.44.32.9])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 673DE1800641;
-	Tue, 25 Aug 2026 12:26:55 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 25 Aug 2026 14:26:58 +0200 (CEST)
-Date: Tue, 25 Aug 2026 14:26:53 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
-Message-ID: <ao2KDQuBMNtONu0K@redhat.com>
-References: <20260822054620.452262-1-ming.jvle@gmail.com>
- <aosT4H14zcowzU_7@redhat.com>
- <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
- <aotM6tRUHI9Bo7gW@redhat.com>
- <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
- <aoxp3Rcbp3fUuqS8@redhat.com>
- <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="M/plwnle"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260825123000euoutp01f11288c1bf4b3012b38ac39ff50f11bc~PDDVfOMMv0908509085euoutp01b
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 12:30:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260825123000euoutp01f11288c1bf4b3012b38ac39ff50f11bc~PDDVfOMMv0908509085euoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1787661000;
+	bh=/CFXDg3L0aD6SB3xy+cQUqcdazmfSamoOM2pD2VK9/8=;
+	h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
+	b=M/plwnleb557HnWW2Dgy9vnFWSWbm89jMkXmfdBPQP4QBiSMtpwH1WVf0GPG0YzkB
+	 gifzRvzJLk6W7MqMdMgDOgPSNREwbE762LekRDsHSM41/dqjMNjK0W8f2FmZQdds1C
+	 PimsNKW8gsS17sEJpl3sKl4RVUT9KVaiQ48N53po=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260825123000eucas1p248f943e21b217192142c843eb427dd76~PDDVEpmia1504115041eucas1p2S;
+	Tue, 25 Aug 2026 12:30:00 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260825122959eusmtip1bd8675e1e80e324fa87b118bf74d4d66~PDDULpsjo1767517675eusmtip1d;
+	Tue, 25 Aug 2026 12:29:59 +0000 (GMT)
+Message-ID: <e7605d7a-85f1-4339-99d2-85c0df884ec2@samsung.com>
+Date: Tue, 25 Aug 2026 14:29:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: MPj16nIyUEEpQOMwfYQCJJKzLwv4zRkj3ie24MKlRl0_1787660819
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Betterbird (Windows)
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v5 05/10] mm/cma: Introduce cma_alloc_at() API
+To: "David Hildenbrand (Arm)" <david@kernel.org>, Thierry Reding
+	<thierry.reding@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+	Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jonathan
+	Hunter <jonathanh@nvidia.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <ae6c93e6-10f2-4bac-be61-118bbfc3c05d@kernel.org>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20260825123000eucas1p248f943e21b217192142c843eb427dd76
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20260820180431eucas1p21be3f213606c4dbef2e4a73a2c1623f0
+X-EPHeader: CA
+X-CMS-RootMailID: 20260820180431eucas1p21be3f213606c4dbef2e4a73a2c1623f0
+References: <20260814-tegra-vpr-v5-0-71832b5d0246@nvidia.com>
+	<20260814-tegra-vpr-v5-5-71832b5d0246@nvidia.com>
+	<CGME20260820180431eucas1p21be3f213606c4dbef2e4a73a2c1623f0@eucas1p2.samsung.com>
+	<ae6c93e6-10f2-4bac-be61-118bbfc3c05d@kernel.org>
 
-On 08/24, Andrii Nakryiko wrote:
+On 20.08.2026 20:04, David Hildenbrand (Arm) wrote:
+>> /* This part must be outside protection */> diff --git a/mm/cma.c b/mm/cma.c
+>> index a10ea37a261d..1e1ebae79090 100644
+>> --- a/mm/cma.c
+>> +++ b/mm/cma.c
+>> @@ -936,6 +936,141 @@ struct page *cma_alloc_frozen_compound(struct cma *cma, unsigned int order)
+>> return __cma_alloc_frozen(cma, 1 << order, order, gfp);
+>> }
+>> +static int cma_range_alloc_at(struct cma *cma, struct cma_memrange *cmr,
+>> + unsigned long offset, unsigned long count,
+>> + struct page **pagep, gfp_t gfp)
+>> +{
+>> + struct page *page = NULL;
+>> + unsigned long pfn;
+>> + int ret = -EBUSY;
+>> +
+>> + spin_lock_irq(&cma->lock);
+>> +
+>> + /*
+>> + * If the request is larger than the available number of pages, stop
+>> + * right away.
+>> + */
+>> + if (count > cma->available_count)
+>> + goto unlock;
+>> +
+>> + ret = bitmap_allocate(cmr->bitmap, offset, count);
+>> + if (ret < 0)
+>> + goto unlock;
+>> +
+>> + pfn = cmr->base_pfn + offset;
+>> + page = pfn_to_page(pfn);
+>> +
+>> + /*
+>> + * Do not hand out page ranges that are not contiguous, so
+>> + * callers can just iterate the pages without having to worry
+>> + * about these corner cases.
+>> + */
+>> + if (!page_range_contiguous(page, count)) {
+>> + pr_warn_ratelimited("%s: %s: skipping non-contiguous area [0x%lx-0x%lx]",
+>> + __func__, cma->name, pfn, pfn + count - 1);
+>> + ret = -EBUSY;
+>> + goto clear;
+>> + }
+>> +
+>> + cma->available_count -= count;
+>> +
+>> + /*
+>> + * It's safe to drop the lock here. We've marked this region for
+>> + * our exclusive use. If the migration fails we will take the
+>> + * lock again and unmark it.
+>> + */
+>> + spin_unlock_irq(&cma->lock);
+>> +
+>> + mutex_lock(&cma->alloc_mutex);
+>> + ret = alloc_contig_frozen_range(pfn, pfn + count, ACR_FLAGS_CMA, gfp);
+>> + mutex_unlock(&cma->alloc_mutex);
+>> +
+> There is quite some code duplication with cma_range_alloc(). Please try harder
+> to factor common code out and reuse it.
 >
-> On Mon, Aug 24, 2026 at 8:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > force_exit_sig(SIGILL) can't be ignored too. But I am fine either way.
 >
-> Current SIGILL sending is already pretty bad behavior that bites us
-> periodically, instead of doubling down on killing the user space
-> process because something about installing uprobe goes wrong, let's
-> think about a bit less destructive way to do this. Mark uprobe for a
-> particular process as defunct or "detaching it", or something along
-> those lines. But not just kill innocent processes.
+> > ...
+> Also here, way too much code duplication with __cma_alloc_frozen().
+>
+> There must be a better way :)
 
-Well. Yes, SIGILL sending acts as BUG_ON(), this is not nice and
-probably we can improve the current code. And, just in case, as for
-uprobe_copy_process() in particular I agree that Option B (make fork()
-fail) is better.
+Maybe the existing 'alloc' functions could call 'alloc_at' variant internally
 
-But what, say, uprobe_handle_trampoline() can do if ->return_instances
-is NULL? Either we have a kernel bug, or the probed task does something
-wrong. In both cases it is better to kill the task with pr_warn() and
-generate the core dump.
+(with locks adjusted and moved out).
 
-Oleg.
+
+> (I really prefer this direction of the patch set)
+
+Definitely, I also like this approach much more than previous attempt with
+
+'dynamically' instantiated cma regions.
+
+
+
+Best regards
+
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
