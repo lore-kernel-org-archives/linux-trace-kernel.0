@@ -1,162 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C803D0900;
-	Tue, 25 Aug 2026 08:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B8D3DE427
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 08:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787646348; cv=none; b=ifxaDh4k6j/GYvCD7keOvXOY33akaAhv29as/aZooZKyphSmS4LG3WpknO0aRsbdbOJ8esAGPulNTUn4PmqXTZOALyI2K41Qlr6rA5MRTQ8DDrEL2U72n+clg8FR91lSdOoc/NanpPeKmqhzT7SjS13QgZ1m6N2DHQJ+A8NWbzM=
+	t=1787646375; cv=none; b=rUCqqaSxYrlKYGJVIv1/k8ZY7Sa1d9oQ4aPfS/g/qg5A+OAGKsxHU7gcRsauZcrtCDRJ1sS0YeucaiTzCOE8pEn+rCHJv1nTJRPECRsU8M3/dkbQxtlLpa1pWREyJdpUOU2thmyoYcFncVvGOFr+qoxvalvYb1g7n81adat9ac0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787646348; c=relaxed/simple;
-	bh=gedJs0vtoiKBYvIXCEhQKxHm0BSByi7gwLqVFH+/z/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j32N7Zx49pxGuhD5LIJRvkuBtoXXMH3PCEzCk2UOLHD+IMgmFyElAsE7Tte4FE2ECSvSU1MmDajbqlqw951B2tFbGDvbA1UOVvCXalVOIA4kRe0vgAvZWwSjPf7StNPpOvSrJPSa7cNuFH6T7otWFPQKAl+nhOKjMJYtX+M1Xx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GND00vCh; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787646375; c=relaxed/simple;
+	bh=P8dDe9WGJaB5/v6G6RAFPTJUDTZnGgg0DTzE8KtbvoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6MACdaEZAwjCcMv/hX3B8RwghfNfk2jbMKLRVokh73VD5fFGxSVpqhwzCcm7Ws+nX361SyEFc/lWuxrM2IxBdHj/havbpZa336SJ1ca7mIORITVQfvTbfxIQmsQEcZTpyhd0SamjpBXhLb6dz4FO9iZdVkQuj/CUcZBY4+eJu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vRtMhUh5; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GND00vCh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787646346; x=1819182346;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gedJs0vtoiKBYvIXCEhQKxHm0BSByi7gwLqVFH+/z/Q=;
-  b=GND00vCh4KEHhXaPHUT/B/pIfMUDFgGJcGJt1TULu/iMQcUks9l6MXPx
-   eSeV2IHrQ79ny8uTVJ2qt2gtuI2+4edAb6Bre7E8ljcLxV5fbSTKjB3Dr
-   xw/Qxb1A0EaT4t+FS4hyflFy2fDulmUnrIOEvK101O3An3z2SmDa5BkyQ
-   jukF0H5ynMAexYSs/I3SKJ+b8ru3IIu7hIJRQG/r4y70kD65iK46eMSLW
-   afo2SwtGC3Tl+sgS1B3pDk3UO9deTMRa7wNMCNPHF78XjddpIONli/RUN
-   jOhyNwYiHH5LOQCoKgW6b1QHHiInljSubHTOlQf/YGb3FSXyF9UhLE/8P
-   A==;
-X-CSE-ConnectionGUID: VjZj360RR3GZQyspXZrafA==
-X-CSE-MsgGUID: QGVXH6RXSSuwv3QuY53tYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="99454718"
-X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="99454718"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 01:25:45 -0700
-X-CSE-ConnectionGUID: dbEuODyNSE2d0o/gDaizJg==
-X-CSE-MsgGUID: 4cGhqpINTNCvR1Dnz+3ULw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="270695629"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.119]) ([10.124.240.119])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 01:25:29 -0700
-Message-ID: <f7c2e245-ab9d-4ac7-b3f8-815fe111881d@intel.com>
-Date: Tue, 25 Aug 2026 16:25:26 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vRtMhUh5"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4953e04ef16so40228095e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 01:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787646372; x=1788251172; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=LX5TxyIQ51uP9mPCb4WWu473qdFXpXWJJ9AlVry9ycg=;
+        b=vRtMhUh5kHN3hAQE+vTat/GApD9b8FSZAhm/b/1/WqjneBJjZKd9lERkmQp98OIhoL
+         X5iFTous0PDppt/INnSeruIChqgBUPOUYJEqYlgD0X6fQ8LDTWXPTyB9xCVPQtgiEk27
+         /FOaa34phGeZhLNgoLfBe4bKFOpMvc6fdwLOU/ub7vt7Kk28Jbe1zSXSfWen9NgNrK+e
+         xoK6BqZCivrHsLWlBBfn5S3h0FuGvHK+eCloQPBCr+6MU97QNfVaefDaq/fQ5xgt2otj
+         ikj+1y1cZohiu2ko0Zgk2tVlvPz1ntMBaB9TkFq402icnE94ClqHZewQLiEyIabQpIzJ
+         InyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787646372; x=1788251172;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LX5TxyIQ51uP9mPCb4WWu473qdFXpXWJJ9AlVry9ycg=;
+        b=PryBS7UzDEs08JmYSlD4NF9oKiY9vVLBliQD6LbSFv/d8DVoLRdLHmxztkFu1oSZt6
+         t519jlnfZxPBiaLCkOe1hmzS3WTs7sgB+KRg1ctMJQw70WCrcH7lwv8wlYOs8lS1YpjE
+         7T4H34Y7l5saUq9DtWKwBpN/SoVDugbGbcPjlyLGEFjgozwggBH5SQV5pNOaKjOYwOwj
+         ANPpMF/EN85kLAhO5DHg3Y/Jlxck+l3BiFGv0p1ttjOp4FB/UkOH6mAHbH0aXup8v6bk
+         XYjB4zj4keAg+9kDz75+3zMcQtvf5EpFS+Cy0uF6izYTBkMbH34a65qY5LTxkQLo1tnu
+         kMSQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rr1UO6+v7HmM66A3UTk/WQneZ5akVL9VKuy/J2kgRSy0Q0YJJQxcea8rn297o/93QZHR0RnthYot42X118ISh0Jsgo=@vger.kernel.org
+X-Gm-Message-State: AFuF++lE6m4itEWuzPrFT6Y4VpR4iY4xQNYe7toDAMuYpBYH7X41MinC
+	RjCmlTwLM3t+ghMByFGjCysVvx47/p5PGot9w7fEL3BpVqAY1Y/eaq7Pfme1dcE5VQ==
+X-Gm-Gg: AR+sD12nGtInIUCapspnaNfGxHaEOEZvCdWMJq6XN+JBKdYgGAR67cnsea6UvX5E7dF
+	GiE4yI+Eo2kbOEDb4+6XyZ5xemXLjV5p/aAlHbZj5L048yjj+T2cLYLC5+EbQoxuLb/GtwigQgn
+	FJd1qS/ubyFWWup+giDWa+Lmd6TyijBHgmxWy5v0tuT5b8P8v2G9Af5W1SJT6BvattdpjR01CiL
+	/cOQrpzRIhh8F1jKu8uXD7buH27nRT5IGUw7dhXnTeNiUDwXI7xtCIJoP02u1gEiTwAYLOWpGnD
+	toe0gEw8kiKh47LksXN6cfAGl8lJpuCLk1scXyG+7s8cqk+h9voq81rfDjOoizyVCL6h5EPGSHE
+	pqNNovROJ9QBhNskau1tKl+fz7LYJ7Zmrtr/b3VvRzV8HLFON1ee91eA6/Xd+fBfN+NqCO66dud
+	KjGx7QH92qQbC7C6GIEJgCTl5eCS64gm0NEyYH/T+Waj6uJl6ezizZxEBVQnp5agEYKuLYAvDz6
+	0mAdPH6G2BKhk7iLcJ/IoUyA9W/kvBffXjY+g==
+X-Received: by 2002:a05:600c:3b9f:b0:499:8ae1:b900 with SMTP id 5b1f17b1804b1-499d652362amr52626925e9.12.1787646371723;
+        Tue, 25 Aug 2026 01:26:11 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499d633506bsm21294465e9.3.2026.08.25.01.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2026 01:26:11 -0700 (PDT)
+Date: Tue, 25 Aug 2026 09:26:07 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] tracing: Fix subbuf resize races with
+ trace_pipe_raw readers
+Message-ID: <ao1Rn8ZKr5XafWRZ@google.com>
+References: <20260817134750.3909384-1-vdonnefort@google.com>
+ <20260817134750.3909384-2-vdonnefort@google.com>
+ <20260817140812.2C7D41F00A3A@smtp.kernel.org>
+ <20260822110424.346fa3c8@fedora>
+ <aotTYT0zE5LNik06@google.com>
+ <20260824105315.27377f30@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 13/41] KVM: guest_memfd: Return early if range already
- has requested attributes
-To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
- binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
- david@kernel.org, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, tabba@google.com,
- willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com,
- forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com,
- aneesh.kumar@kernel.org, liam@infradead.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
- Vlastimil Babka <vbabka@kernel.org>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
-References: <20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com>
- <20260807-gmem-inplace-conversion-v10-13-2fc18ee6d3ba@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260807-gmem-inplace-conversion-v10-13-2fc18ee6d3ba@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260824105315.27377f30@gandalf.local.home>
 
-On 8/8/2026 5:52 AM, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+On Mon, Aug 24, 2026 at 10:53:15AM -0400, Steven Rostedt wrote:
+> On Sun, 23 Aug 2026 21:09:05 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Provide function to check that a range has given attributes.
+> > > > [Severity: High]
+> > > > If ring_buffer_read_page() returns -EAGAIN because the subbuffer order was
+> > > > updated but cpu_buffer->reader_page->order hasn't been updated yet, this
+> > > > branches back to the again label.
+> > > > 
+> > > > Since the loop does not yield the CPU or call cond_resched(), could this cause
+> > > > a hard lockup if the reader and the resize thread are on the same CPU?  
+> > > 
+> > > Hmm, this looks legit. We should at least have a way to break out if it
+> > > loops too many times.  
+> > 
+> > Can this happen only on !CONFIG_PREEMPT systems?
 > 
-> Optimize setting memory attributes by returning early if all pages in the
-> requested range already has the requested attributes.
-> 
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+> It can happen with RT tasks as they don't yield. If this task is of higher
+> priority than the one resizing, then it will loop forever even with a
+> cond_resched().
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Ha yes of course!
 
-> ---
->   virt/kvm/guest_memfd.c | 23 ++++++++++++++++++++++-
->   1 file changed, 22 insertions(+), 1 deletion(-)
 > 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index c9874bd85c5d8..896699afcad9d 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -95,6 +95,24 @@ static bool kvm_gmem_is_shared_mem(struct inode *inode, pgoff_t index)
->   	return !kvm_gmem_is_private_mem(inode, index);
->   }
->   
-> +static bool kvm_gmem_range_has_attributes(struct inode *inode,
-> +					  pgoff_t index, size_t nr_pages,
-> +					  u64 attributes)
-> +{
-> +	struct maple_tree *mt = &GMEM_I(inode)->attributes;
-> +	pgoff_t end = index + nr_pages - 1;
-> +	void *entry;
-> +
-> +	lockdep_assert(mt_lock_is_held(mt));
-> +
-> +	mt_for_each(mt, entry, index, end) {
-> +		if (kvm_gmem_get_attributes(inode, entry) != attributes)
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->   /*
->    * Returns a locked folio on success.  The caller is responsible for
->    * setting the up-to-date flag before the memory is mapped into the guest.
-> @@ -605,12 +623,15 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->   	pgoff_t end = start + nr_pages;
->   	struct maple_tree *mt;
->   	struct ma_state mas;
-> -	int r;
-> +	int r = 0;
->   
->   	mt = &gi->attributes;
->   
->   	filemap_invalidate_lock(mapping);
->   
-> +	if (kvm_gmem_range_has_attributes(inode, start, nr_pages, attrs))
-> +		goto out;
-> +
->   	mas_init(&mas, mt, start);
->   	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
->   	if (r) {
+> > 
+> > I can add a cond_resched() here though, I believe that would make sense: if an
+> > order modification is pending, writing is disabled anyway and we are about to
+> > loose the stored events.
 > 
+> For RT tasks, cond_resched() wouldn't be enough.
+> 
+> > 
+> > Additionally I can reduce the window where buffer::subbuf_order differs from the
+> > reader page order by adding an "order" argument to __rb_allocate_pages() and
+> > only set buffer::subbuf_order later in ring_buffer_subbuf_order_set().
+> 
+> I'm wondering if we even care if data_page->order != cpu_buffer->reader_page->order
+> and should change it to being a force copy instead.
+> 
+> If the reader_page is bigger than the dpage, and only copy what the dpage
+> can hold. It would also update the read value of the reader_page which
+> would allow another copy to get the rest. If the data page is bigger, then
+> just copy everything.
+> 
+> It's not like this will happen often.
+> 
+> -- Steve
 
+
+That sounds interesting... that would get rid of the -EAGAIN. Let me try.
+
+Do you think it is still worth to reduce the window of discrepency between
+buffer->subbuf_order and buffer_page->order?
+
+-- 
+Vincent
