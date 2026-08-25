@@ -1,132 +1,73 @@
-Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1767303A35
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 01:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787621919; cv=pass; b=pfkitDpZ7VeTOy59ZEbF56KEhyI6U68rSCAtmmMCZJH2LmopInYRrTZ79Hn/gBaOPaZZ+E0EdToSgPfMxgNhmxT9HjefDWbyOO7stB4t6Bscg1euuCYjs+UPGZhh51g7BVNQCbyoj18yARKj5Hctcob7Eo5etEKpEXvJ74d3aSM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787621919; c=relaxed/simple;
-	bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=byM5bqRbSauwhs01AtwJWFkYMg0ksg4yKQa+xhGlALsa2GQHeuaM/RrQyvlo5JZPABz0/5a5CE/kcKky3r1rH/58yst3FWZrOd3ake1fVF/lIS5tzVoqohqd5jkDbeogb7WyAzQteqXsEjTVdvmx6g9PGeYy2/zBBaQ97y5O3bw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcpWmiK8; arc=pass smtp.client-ip=74.125.224.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663F5346E75;
+	Tue, 25 Aug 2026 01:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787622841; cv=none; b=n8bpNmLb6VscYa4qqm7mzG6j4k7y/lKpcpgOwydpCPOUo5AKPe97sq+2vH+b4r+p/F6Pth/wD0ob//mLhJgfbb34avuVh3I+tQt+9aWCzCoFgXXB7OaC8Cz1raqO2RsXBH2aejuHYg+Myzby+X/MRPIPnOtlmXAyHHbNHAlTuzc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787622841; c=relaxed/simple;
+	bh=rg3Kd+pkvxECtlvdCoSMguh9r9rC5vhQdZQo1+pCE1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jd9zXUqFn9wetclxhA9oXpgYT70BrjyhiBn6vfS6jp2BX7tF4VA0B0CTYgyFpCL+/ZQZuZPXVRxfo5o6sz1//KlyP24N5+tVX68iWvrSXuNfosSwxnB0Wyk4G72LHNOfBLl1vscqHhOEyRaa40xoQJNtWpdASibnS2rnaDou86o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=BtXIACoJ; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcpWmiK8"
-Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-66c70cff944so4069686d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Aug 2026 18:38:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787621917; cv=none;
-        d=google.com; s=arc-20260327;
-        b=C/yEcf/NwwKg7FXK09v0Sm3NvJTrBzGoah8J03I0blaYBVoy4PV0ijcd/ItAb9yFWo
-         U5fX28rPcaPpRgAdeaQLmklyAQ2SitHi2fYyCRYMBTqwnMB1oTJZSREn74ryZrgqURSa
-         5q0EOgZGdqaeo7eRVL+Wsr3Hl5cSTir5RjMoDq1dJjM6dJn9kFEF8qxoZfWdKNF68l4B
-         8PkNNgBpQk5KE0NZjtK3jFG7jz2nmXXBb7XU/rUpBqEg+TbTGNYpbVbgLAP6SmHbRPI9
-         /tO12AtlLgeAOMwJF1VwWmRFlaBBn/nFoWkrYRtxEual+M3eziL4g0566bz8vfs9DdMO
-         61fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-        fh=hlOyZ/03NVZcVqxoT7vxtQaqgR6pjPWSIFEw6UB+CC0=;
-        b=U6AG2QBHpFTcUuDB8qaoftFgquRv/wbFRv9OOLc/CQpJx3FUJn+0q8fjMeZgukTJ7E
-         wKLMX9kL+q0s3ZodoKphJLs8ecWVSyUjRqerEi315+WODnZSY5ldiIjPIr848dUGlRlV
-         AFeoCaF9xLUQdQH5KSsAezq0pGa6lEV/me9ijCZRSTo6vPXUiGv6FjP3EJTLEk83A/hG
-         AjJabdNF8EETqM5iQKXbEWFNibzwdF9PcXXYne0R/iLygIr/nNuriXCB5ZDdJ8YoR4B/
-         BypPc4gmiMnHXfzU2Ub/fTFTzWk+XPWZ+mskdVHM15i/k2fLGKWgHIEEw0KC2JUfrp2+
-         g6mA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787621917; x=1788226717; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-        b=RcpWmiK8D6TXy8SeKasN3A0DZYwOfxBRVcB8htDEIll1rHrnI6lELCV5zqfa7hqRIU
-         rEtXhQwWzLhCxVjqmaqiPTZ5z0dJcxPhJuB+w/2g+ZIvxA9AA7wp1nCUmi/Lx3BT7V/D
-         ix6ekhi8ZBI5IfxzW0LEJW0lhdkZsJx2MxnwWBni2MPKVcGdd8ABIe0GT3XfKGApfkV5
-         94uglqgNOv4yjFi7HXESZnyitoC9C18fLhT4/Qfuilf4PgC3Dq1ZbPc5PRBpzoDcd/MI
-         IZqnD5RIjFJMBR6ogU+eumXbmPPa8+C4epLSIHNwNtfwpjDlK2p3AxRoHpFvQWAoEL3b
-         j4lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787621917; x=1788226717;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-        b=P6qZG6ou9UiWquw/Og7yKlXHhIbarUxdYCe6naE401YN6WDHvDd6Iabz8NC7Wu9snr
-         ERrx9BZqo4ksgs0p3HVHd8eZUskLeqZko3jDWiq/WMYrBDjz4VWA9uV2wySZSUaqxWne
-         KR+uWJf6h0kMFAWvZ/ZKe50VLzbotcvoDrvqpB2K1AqCLD2RDe6IZpUaRugCdCpn38Z1
-         0cpxya6ZzTnvm82te3e+nkywoFdMHoNWTF7t8Bke/wwtcpzG8caYejJNMCFQfTUbybu4
-         SomviGiFVdgxDNSE94tmnSGvbyBcKtGbn3KB/ocPSJewef24jK71CEednViV00mYj94U
-         9g0g==
-X-Forwarded-Encrypted: i=1; AHgh+RpsYmNU+LaHerGvp8XOLNS52MQ7vNL7H+G6FfdTzZKBZQ4x/DeNArRx24rtf4wSn8twm8iJSCLpNawPqMLpqp9/JG4=@vger.kernel.org
-X-Gm-Message-State: AFuF++mPl+NNKmV3Li07q+IjtdHPfd4vXLgWWmcEsQrG6QZo9nx4az98
-	ID1FUBEDG/q6KOLVWy82IPdKLiTi2vp/gxit2OKU6MuxdfhePAYFJu9J4V2GivLV4BPkT1Lqct0
-	GsQzpJVOXC86Acu+fws9WvcHzuJsPmqs=
-X-Gm-Gg: AR+sD12S738MfBVk0PibXQgrGSfdSi0WXQfyWHbvfD7dtiFstjoUUXU/6DWSoeChak1
-	EDTl2KCj1sVEdGQHqBFvZtWQXvb/HrxnZvx6tGY94QnO1HydsTsvIR8Vpjk8KoW6enDIYALhO6V
-	lLWrXiKdcsMKat+fRafV0xgEBQ/GgzU2qLWgtkDqHaPxldY7MpiBNCpOnJbbBAJiVykQlLdA5WC
-	RBa8AnwfDcGhUqhI37a0nQWnuidUJ1oI0oYtMXN0c/7HXw7JK2VN4H9NCh8ZX1STmtOhg9nMRbm
-	ns5yzApFwOfTnFJno2qTLlU7oyJNBQFFnnIzWsaXTLNbPrXD6vGnxUtw6zojwYd/OcIuMr0ZlmB
-	5b+epkuCJvQnV8LMhzAz4FyNx6m56U9GW8I1mP+qYktY=
-X-Received: by 2002:a53:a5d1:0:b0:66c:76e6:2d01 with SMTP id
- 956f58d0204a3-66d14a21801mr845428d50.9.1787621916851; Mon, 24 Aug 2026
- 18:38:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="BtXIACoJ"
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 87ECDC01F1;
+	Tue, 25 Aug 2026 01:53:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 7C31735;
+	Tue, 25 Aug 2026 01:53:55 +0000 (UTC)
+Date: Mon, 24 Aug 2026 21:53:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Deepanshu Kartikey <kartikey406@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ tz.stoyanov@gmail.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ syzbot+685955db58555575fdd2@syzkaller.appspotmail.com
+Subject: Re: [PATCH] tracing: Fix use-after-free in trace_pipe read on
+ sub-buffer order change
+Message-ID: <20260824215354.22142bd4@fedora>
+In-Reply-To: <CADhLXY4t+qgESW4ZPOVtOfsOGcBcwiM=BRnhngMBKvb8R7MemA@mail.gmail.com>
+References: <20260817140655.5694-1-kartikey406@gmail.com>
+	<CADhLXY4t+qgESW4ZPOVtOfsOGcBcwiM=BRnhngMBKvb8R7MemA@mail.gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260821014210.18681-1-kartikey406@gmail.com> <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
-From: Deepanshu Kartikey <kartikey406@gmail.com>
-Date: Tue, 25 Aug 2026 07:08:25 +0530
-X-Gm-Features: AcwNN1U0LHGolhM0a7k05nKFQh1Imv-RibXkGJMcsIUuJJbyEfcSMIuHp8mjcg0
-Message-ID: <CADhLXY7_Dpzwuqdq84scYObut=DTTqfZgG_U9f-fP6GFeRVT-Q@mail.gmail.com>
-Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, olsajiri@gmail.com, irogers@google.com, 
-	adrian.hunter@intel.com, james.clark@linaro.org, kpsingh@kernel.org, 
-	matt@bobrowski.net, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 7C31735
+X-Stat-Signature: k5higfqmu788cs9kmbw3ppg1xzwtq3mr
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18bX9oUhStltEcLR3s6mBKIrIsSBi2lEOc=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Gw2yrio/TOuesBHk5S3gLche0D7GMl8O1Dru7DLXG7g=; b=BtXIACoJAHlR08+XqrqO3TUGRJa17dNOUdUAYzM/IOx61cSnNaZqP5aQU5sQASZ4lhSK3dIz67bT+5Vsp8Zp7EEUNzbSYxGoFE1j07pn/yhC87zaCyjqvTsO49Elcm3f5UFKOjvfk7VJC+y8rFIAfTRwSKOIYVEvHithEFLnArE=
+X-HE-Tag: 1787622835-118348
+X-HE-Meta: U2FsdGVkX18AKoEDJbgsf/2LquGe543UM4hKQNjmBgXhm/+TJvMGggOv9D7xP3/tTSWQEPqvuKYaOjzDDPmXr7e2iwOiWJBQFhRj7iBBa56cqnfbU/bniclQLdSAsaXVwPBnEI3Yuppns5u6gJ8SJ2M+aKmWBDMVu4rrtDpex5MNzGZS0qupfwcnQ5+WqM9sq+rHEKs/Bj6kluOSUvKwlv4EXEPVZe9vjNI9dRUNKA3I/VH5goKl2ZQ2eEEXOXDmggWFWcrj7mj3TkI0qZhXmQ0WrhlENPJ5kjgBnmOA0jA0siakGLsI23sF67eUuXaOBRG7FY2jrOn1E/a/9DP6d9/2FoynjMtQQSLOxN+Mf4q/Y5TBWmA4VA==
 
-On Sat, Aug 22, 2026 at 12:04=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
+On Tue, 25 Aug 2026 06:58:29 +0530
+Deepanshu Kartikey <kartikey406@gmail.com> wrote:
 
-> exposing this mutex like that is definitely a smell.
->
-> AI tells me that this perf event inheritance case can happen for
-> non-tracing (i.e., BPF_PROG_TYPE_PERF_EVENT) events, which are
-> attached while holding perf_event_ctx_lock, not the bpf_event_mutex
-> (this one is held for tracepoint/kprobe/uprobe programs).
->
-> Please validate and adjust the fix.
->
+> On Mon, Aug 17, 2026 at 7:37=E2=80=AFPM Deepanshu Kartikey
 
-Thank you! You are correct.
+You just sent this 6 days ago, and you likely got my out-of-office
+message.
 
-perf_event_set_bpf_handler() is called
-via two paths:
-1. perf_event_set_bpf_prog() with ctx_lock
-2. _perf_ioctl() with no lock
+> <kartikey406@gmail.com> wrote:
 
-I will investigate the correct fix.
+>=20
+> Gentle Reminder. Please let me know the status of this patch
 
-Thanks
+Check patchwork for status:
 
-Deepanshu
+  https://patchwork.kernel.org/project/linux-trace-kernel/patch/20260817140=
+655.5694-1-kartikey406@gmail.com/
+
+-- Steve
