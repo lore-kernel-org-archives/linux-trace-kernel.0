@@ -1,235 +1,231 @@
-Received: from mail-oa2-f0.google.com (mail-oa2-f0.google.com [74.125.231.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308C149362C
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 11:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD97A3FD956;
+	Tue, 25 Aug 2026 11:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787656342; cv=none; b=G+r1+TjMKAT9uRCO30u18ocxO9yTTcMOydgIJoauMp19gv/GL7Ev/i96zpjfzEDEYu43CtyGM544R4G8ss33FoGfmoveIPCgL4jjLTkCJJ/iMpDg+fuuafcBnL6/uFCB4LrZTAdtvO8ZSQokgsiggUTVU0sf8oe9YS43a228rXQ=
+	t=1787656809; cv=none; b=XRu8z8AlV/UDC5wsoDPGajs1huu1TJmDIep6fVXOrzaJWFn93WPZMoAOvDIC6SFKOjoKBFS21nbCwDdn4sHzitkKJhOg43PyhPvC/AXKcXGkO9xj5Tl/qT7bThj09MCDblx2mDd+cHRlzYbS3TP214renNGd3/Kq5nQRjHFJhc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787656342; c=relaxed/simple;
-	bh=R7SiTOh0PFe0DzLthNlxryytuOFiGP1U7I1PBAXV4JM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GlFrleJ8+Cup1t4MDLFq+Yvd4LhX8jtSs3OnxNnr21213Y4BITJt/SA8ncoAiYIJqU5fmBRw86M4FdTf2IequkrRnqNUWNXKwV/Z4RQzzhk3Lf1zZKZXNFYPkcn/QbsARtHZ0jko6mWyQXApH9OuvTPkfvZNTaXFO//hPcJ5xcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mgd3WGnw; arc=none smtp.client-ip=74.125.231.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787656809; c=relaxed/simple;
+	bh=UU0xuyL0nYUs58J0CJ3fXuk5wtKom1D9pryqw53RVO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CVwFiFhI7MoYvJmUIKEtOK19R0HMtC96gwMAofpZNNfSh4cZpqjnRmwCGbaXbbKGOJuWHVwREcRwE7i9xLiSOy2FJ6cH8OGpJW2Llgqm+CCCYYcdtJODmq4IzLTi5n7U2UzYleG2Q2Tc5euU95PaYrmPK2+zCIDbdwz17xfwQV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4S9/yoy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgd3WGnw"
-Received: by mail-oa2-f0.google.com with SMTP id 586e51a60fabf-4483c9986ceso346982fac.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 04:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787656340; x=1788261140; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=3zIxXood4PVZFu1Qa5yvNtX5OE3SRSdZd1BmUJW9SHE=;
-        b=mgd3WGnwiF5iZPRMgbdphvd5HgKDGvMKxIZoBGjnIW54oW9fNm+8yCkcMhcDg06ZMH
-         mrRZkFq5wuPOjtzRYUvTjDoCithKiHFsDj4zPkIr3eFaDsyyV+sALzy3HxTPfUb3CqcR
-         R5k/Qpzi+plj85aty4k2bNV+GzNg63Td0IInScOAO7PSH2q5YuWottVoGS2iygs0YP5M
-         NF3lmD2UOwN3W6A3fTZOEGaSBhW0b7ZhqrIBfwMjQmr6Oy8mQw25wJ0loms3FGsXR4mN
-         5tPHU8tT5HIK1Zv7/EJlnBhKonPobNLmDsG9Gs3iiKXHNr4dFx41aI4AzS6ESWO8Dx50
-         gHAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787656340; x=1788261140;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=3zIxXood4PVZFu1Qa5yvNtX5OE3SRSdZd1BmUJW9SHE=;
-        b=saT+Gm5Rja+26miMnrhINNHI7CK/Thm/z7QvtqriR5SphMx9fB/NIjmITRbETT+EWo
-         CvQ9cpKx3SnrlYl5Jh/ErHGC0fWIQsd3EvsbdF9sLyl6UrrQIJEgpjFthm3lW0T8exX/
-         kipc2TiAQW0cgGh8lT1wEgM3mYu218jsfgytqgOqN55jM8pTdeSspOGrfYvW8S2+Eomp
-         885SPxqzLnuKokVK0Iqe0aM1zzXH7UAraHijbhjum+eTC5yrro32G3lSzE6J+u4E1OLQ
-         I0+wRui8m8o01Isp8N9+pS/jeBK+07N8BDGG55nEm3dJqQuDGA0HmTZQfCgJV35xaw1b
-         94eA==
-X-Forwarded-Encrypted: i=1; AHgh+RpVAAAoLw4VUB71xqnSY7fNOC7lwSleVQWm+RKrg3zSUJyLWOwD4F+T27/AV4Ir8wFI+qcjEVmOIt0htNj1wScaCzs=@vger.kernel.org
-X-Gm-Message-State: AFuF++kOg5+b0iDnSqic3H54S8OeKMyGPk/yWOSOuhDK6iidBPKjihMd
-	OXvkRVgHF0B893hWrHeuvQBQn3w+Y0366GQe7CAHFUA9b7qKpqunFEnc
-X-Gm-Gg: AR+sD114Ks68kAvoPdgAfsl6b54b4KqeTVRaQufbOv+OZXgXwbDumdUfANz6wbUuc3D
-	ZXXWUyVeq9M5/uoUbXKYBGR8jySSj/V0rOFvGJ33mVsBdPDA9La/lgsu8ymc87uBCWjXdw23Q9P
-	a9fJcNL1ulZP+ZFvp7X4LSUZ+qw8a0Qq5LSPkH5cs6QUYc1oTV5iNWL+/WzEfaD+cSdSzZGpx5q
-	sF1Sjb3M6deftqiwTx4KW5KiQbGUg6Y+CHNw15Ma8906kCYnNe9YBAHXZomWYUQCGTth8F2ov5g
-	EfQicIDWcvcdDDlBmI9sytfJjSna4UeJKNY5F3recYmz00+DZ9xTghSCIBh+yLn93uXSsy3iFX3
-	XSrZEwY8v1eBfSE0Fpkj569kyvYqBlEmQ4EXR1zd1vE1HoiuU8hDjeVx4S0igbkd0OxgFrk/N7t
-	63cGU/aIbMwG0VqVzTRbm9KjzHpaaX1vHnePWBaY6Eya7yULjPJ9NhS9RSjLeiYUqY6Ud18fGna
-	5FYSAoIcFNPDDryOYriSxUx2w==
-X-Received: by 2002:a05:6820:1c82:b0:6b1:2a4a:ca8f with SMTP id 006d021491bc7-6b18fb23267mr3914986eaf.10.1787656340006;
-        Tue, 25 Aug 2026 04:12:20 -0700 (PDT)
-Received: from localhost.localdomain ([14.22.11.163])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f48fc4e6f3sm6666893a34.14.2026.08.25.04.12.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2026 04:12:19 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v3] tracing/probes: Fix use-after-free on field name/type of multi-probe events
-Date: Tue, 25 Aug 2026 19:12:10 +0800
-Message-ID: <20260825111210.3271443-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260824144356.1f61aea2@gandalf.local.home>
-References: <20260824144356.1f61aea2@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4S9/yoy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBDC1F000E9;
+	Tue, 25 Aug 2026 11:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787656807;
+	bh=FWf3P/SKIaJRRAsSvxTvo5izA5oqfXztVDKK4GY3V7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=H4S9/yoy2Yjopf5gJYiLZlxYDa/LboiBgyS4EuOYw9JqJD7li/qlty74bcEQgzwtH
+	 4wTenkCXmKrBVCieVML0QhQRsiBRWfj+Vo5U1ZXbrxiQjg+8+jfypo4OCeSwWIkAMZ
+	 tGi4hRTou0eYuIgORrwa23WZJNaOQ2w0LPm0GiNcQKnT6h+UueNqYbGBzx2i4aBbpJ
+	 tEvONlrvVtodXsR5TcH2v8srrbxYCaD/HxUG5j3Vgg3FbW++fP2cqi6mlT7pQ23/d7
+	 DTlQTkMRWi3hjEddNZo4G30JKiM9m2wQEl0uhtjRtMAiRlPyva24nEyUbl9OCvsV3j
+	 TdPxHX9JMazIA==
+Date: Tue, 25 Aug 2026 14:19:52 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>,
+	Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Lance Yang <lance.yang@linux.dev>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Nico Pache <nico.pache@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] userfaultfd: use userfaultfd_*() helpers instead of
+ open coded flag tests
+Message-ID: <ao16WPoLpdIdU3ID@kernel.org>
+References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
+ <20260823-uffd-vm-flags-v1-v1-3-3086981b33cf@kernel.org>
+ <aoxdWWMEeQbcG5Pq@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aoxdWWMEeQbcG5Pq@gremlin>
 
-The fields of a probe-based dynamic event (kprobe, uprobe, eprobe and
-fprobe events) are created in traceprobe_define_arg_fields() by handing
-the probe_arg name/type strings to trace_define_field(), which only
-stores the pointers without copying. Those strings are owned by the
-trace_probe and are freed when that probe is removed.
+On Mon, Aug 24, 2026 at 04:10:51PM +0100, Lorenzo Stoakes (ARM) wrote:
+> On Sun, Aug 23, 2026 at 03:17:40PM +0300, Mike Rapoport (Microsoft) wrote:
+> > Move userfaultfd_{missing,wp,minor,rwp}() and userfaultfd_protected()
+> > ahead of uffd_disable_huge_pmd_share() and uffd_disable_fault_around()
+> > and make the latter two use the helpers rather than open coded VMA flag
+> > masks.
+> >
+> > Convert open coded VMA flag test in mfill_get_vma() to userfaultfd_wp()
+> > as well.
+> 
+> It'd be better to do the moves and the reworks separately. We don't have a limit
+> on patch count :)
+> 
+> >
+> > With every user of the per-VMA uffd modes going through the helpers,
+> > their underlying representation can be changed in the next step.
+> >
+> > No functional change.
+> 
+> There is a functional change, or at least seems to be, see below.
+> 
+> >
+> > Assisted-by: copilot:claude-opus-5
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > ---
+> >  include/linux/userfaultfd_k.h | 70 +++++++++++++++++++++----------------------
+> >  mm/userfaultfd.c              |  2 +-
+> >  2 files changed, 35 insertions(+), 37 deletions(-)
+> >
+> > diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+> > index 3396d270b159..d8262e3dc134 100644
+> > --- a/include/linux/userfaultfd_k.h
+> > +++ b/include/linux/userfaultfd_k.h
+> > @@ -168,42 +168,6 @@ static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
+> >  	return vma->vm_userfaultfd_ctx.ctx == vm_ctx.ctx;
+> >  }
+> >
+> > -/*
+> > - * Never enable huge pmd sharing on some uffd registered vmas:
+> > - *
+> > - * - VM_UFFD_WP and VM_UFFD_RWP VMAs, because the write protect / access
+> > - *   tracking information is per pgtable entry.
+> > - *
+> > - * - VM_UFFD_MINOR VMAs, because otherwise we would never get minor faults for
+> > - *   VMAs which share huge pmds. (If you have two mappings to the same
+> > - *   underlying pages, and fault in the non-UFFD-registered one with a write,
+> > - *   with huge pmd sharing this would *also* setup the second UFFD-registered
+> > - *   mapping, and we'd not get minor faults.)
+> > - */
+> > -static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
+> > -{
+> > -	return vma_test_any_mask(vma,
+> > -		mk_vma_flags_from_masks(VMA_UFFD_WP, VMA_UFFD_RWP,
+> > -					VMA_UFFD_MINOR));
+> > -}
+> > -
+> > -/*
+> > - * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
+> > - * MINOR registered range, fault around will be a total disaster and ptes can
+> > - * be installed without notifications; for WP it should mostly be fine as long
+> > - * as the fault around checks for pte_none() before the installation, however
+> > - * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
+> > - * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
+> > - * and pollute the tracked working set, so each page must be populated by its
+> > - * own fault.
+> > - */
+> > -static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
+> > -{
+> > -	return vma_test_any_mask(vma,
+> > -		mk_vma_flags_from_masks(VMA_UFFD_WP, VMA_UFFD_RWP,
+> > -					VMA_UFFD_MINOR));
+> > -}
+> > -
+> >  static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
+> >  {
+> >  	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
+> > @@ -235,6 +199,40 @@ static inline bool userfaultfd_protected(const struct vm_area_struct *vma)
+> >  	return userfaultfd_wp(vma) || userfaultfd_rwp(vma);
+> >  }
+> >
+> > +/*
+> > + * Never enable huge pmd sharing on some uffd registered vmas:
+> > + *
+> > + * - uffd-WP and uffd-RWP VMAs, because the write protect / access tracking
+> > + *   information is per pgtable entry.
+> > + *
+> > + * - uffd-MINOR VMAs, because otherwise we would never get minor faults for
+> > + *   VMAs which share huge pmds. (If you have two mappings to the same
+> > + *   underlying pages, and fault in the non-UFFD-registered one with a write,
+> > + *   with huge pmd sharing this would *also* setup the second UFFD-registered
+> > + *   mapping, and we'd not get minor faults.)
+> > + */
+> > +static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
+> > +{
+> > +	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
+> > +	       userfaultfd_rwp(vma);
+> > +}
+> > +
+> > +/*
+> > + * Don't do fault around for WP, RWP or MINOR registered uffd range.  For
+> > + * MINOR registered range, fault around will be a total disaster and ptes can
+> > + * be installed without notifications; for WP it should mostly be fine as long
+> > + * as the fault around checks for pte_none() before the installation, however
+> > + * to be super safe we just forbid it; for RWP, pre-faulted neighbours would
+> > + * be indistinguishable from accessed pages in PAGEMAP_SCAN (PAGE_IS_ACCESSED)
+> > + * and pollute the tracked working set, so each page must be populated by its
+> > + * own fault.
+> > + */
+> > +static inline bool uffd_disable_fault_around(struct vm_area_struct *vma)
+> > +{
+> > +	return userfaultfd_minor(vma) || userfaultfd_wp(vma) ||
+> > +	       userfaultfd_rwp(vma);
+> 
+> This is changing the logic.
+> 
+> Before we were testing only the flags, now we have:
+> 
+> static inline bool userfaultfd_rwp(const struct vm_area_struct *vma)
+> {
+> 	/*
+> 	 * Callers gate PAGE_NONE usage on this; PAGE_NONE is a BUILD_BUG()
+> 	 * without CONFIG_ARCH_HAS_PTE_PROTNONE, so fold to false.
+> 	 */
+> 	if (!IS_ENABLED(CONFIG_ARCH_HAS_PTE_PROTNONE))
+> 		return false;
+> 	return vma_test_single_mask(vma, VMA_UFFD_RWP);
+> }
+> 
+> I.e. adding in a CONFIG_ARCH_HAS_PTE_PROTNONE check.
 
-An event can hold several probes ("multi-probe per event", added by the
-Fixes: commit below). The field list is defined only once, by the first
-probe that registers the event, but it is kept alive by any surviving
-sibling probe. Deleting just that first probe by symbol -
-
-  # primary A: fields are defined from A's args
-  echo 'p:kprobes/ev vfs_read  a1=$arg1' >  kprobe_events
-  # append B: shares A's event call
-  echo 'p:kprobes/ev vfs_write a1=$arg1' >> kprobe_events
-  # delete only A (matched by symbol), B survives
-  echo '-:kprobes/ev vfs_read'           >> kprobe_events
-
-frees A's args (trace_probe_cleanup() -> traceprobe_free_probe_arg()),
-but trace_probe_unlink() keeps the trace_probe_event because the probe
-list is not empty. The event call stays registered via B while its
-fields now reference freed memory. Any field lookup then reads it, e.g.
-
-  echo 'a1 == 1' > events/kprobes/ev/filter
-
-  BUG: KASAN: slab-use-after-free in strcmp+0xa7/0xb0
-  Call Trace:
-   strcmp
-   trace_find_event_field
-   parse_pred
-   process_preds
-   create_filter
-   apply_event_filter
-   event_filter_write
-
-field->name references parg->name (kstrdup'd, freed with the probe) and,
-for array arguments, field->type references parg->fmt (kmalloc'd, freed
-with the probe) - the scalar type otherwise points at the static
-fmttype rodata, which is safe.
-
-Fix it in the probe layer, which is where the borrowing happens, so that
-trace_define_field() and static trace events are left untouched. Make
-traceprobe_define_arg_fields() duplicate the name and type strings and
-have the trace_probe_event - which embeds the event call and outlives
-every individual probe - own the copies, releasing them in
-trace_probe_event_free().
-
-The reproducer above triggers reliably; the field lookup and the delete
-both run under event_mutex, so this is a dangling reference after
-removal rather than a race.
-
-The issue was found by the autokbug dynamic kernel fuzzer at Tencent
-Yunding Lab.
-
-Fixes: ca89bc071d5e4 ("tracing/kprobe: Add multi-probe per event support")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-v3:
- - Steve: wrong fix / wrong file. Move the fix out of trace_events.c
-   into the probe layer (traceprobe_define_arg_fields() /
-   trace_probe_event_free()) so trace_define_field() and static events
-   are untouched. Ownership now lives on trace_probe_event, whose
-   lifetime matches the event call and its field list.
- - Clarify in the changelog that this is kprobe multi-probe-per-event
-   (append_trace_kprobe), not eprobes, and add a shell reproducer.
-v2:
- - Reworded the module-rodata note (dropped, superseded by v3).
-
- kernel/trace/trace_probe.c | 36 +++++++++++++++++++++++++++++++++++-
- kernel/trace/trace_probe.h |  2 ++
- 2 files changed, 37 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index c4163904ba747..26a9fb3533bde 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2552,19 +2552,48 @@ int traceprobe_set_print_fmt(struct trace_probe *tp, enum probe_print_type ptype
- int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 				 size_t offset, struct trace_probe *tp)
- {
-+	struct trace_probe_event *tpe = trace_probe_event_from_call(event_call);
- 	int ret, i;
+Without CONFIG_ARCH_HAS_PTE_PROTNONE VMA_UFFD_RWP is hardwired to VM_NONE
+so it's functionally the same ;-)
  
-+	/*
-+	 * A field created by trace_define_field() only stores the name and
-+	 * type pointers, it does not copy the strings. Here they point into
-+	 * the probe_arg of @tp, which is freed when @tp is removed. For a
-+	 * multi-probe event the field list is defined once by the first probe
-+	 * but kept alive by the surviving siblings, so removing that first
-+	 * probe would leave the fields referencing freed memory. Make the
-+	 * event own duplicates that live as long as the event call itself.
-+	 */
-+	if (tp->nr_args) {
-+		tpe->field_strings = kcalloc(tp->nr_args * 2, sizeof(char *),
-+					     GFP_KERNEL);
-+		if (!tpe->field_strings)
-+			return -ENOMEM;
-+	}
-+
- 	/* Set argument names as fields */
- 	for (i = 0; i < tp->nr_args; i++) {
- 		struct probe_arg *parg = &tp->args[i];
- 		const char *fmt = parg->type->fmttype;
- 		int size = parg->type->size;
-+		char *name, *type;
+> BTW side-note these:
+> 
+> static inline bool userfaultfd_missing(const struct vm_area_struct *vma)
+> {
+> 	return vma_test_any_mask(vma, VMA_UFFD_MISSING);
+> }
+> 
+> static inline bool userfaultfd_wp(const struct vm_area_struct *vma)
+> {
+> 	return vma_test_any_mask(vma, VMA_UFFD_WP);
+> }
+> 
+> static inline bool userfaultfd_minor(const struct vm_area_struct *vma)
+> {
+> 	return vma_test_any_mask(vma, VMA_UFFD_MINOR);
+> }
+> 
+> Should all use vma_test_single_mask() really :)
+
+These are changed anyway in a later patch.
  
- 		if (parg->fmt)
- 			fmt = parg->fmt;
- 		if (parg->count)
- 			size *= parg->count;
--		ret = trace_define_field(event_call, fmt, parg->name,
-+
-+		name = kstrdup(parg->name, GFP_KERNEL);
-+		type = kstrdup(fmt, GFP_KERNEL);
-+		if (!name || !type) {
-+			kfree(name);
-+			kfree(type);
-+			return -ENOMEM;
-+		}
-+		tpe->field_strings[tpe->nr_field_strings++] = name;
-+		tpe->field_strings[tpe->nr_field_strings++] = type;
-+
-+		ret = trace_define_field(event_call, type, name,
- 					 offset + parg->offset, size,
- 					 parg->type->is_signed,
- 					 FILTER_OTHER);
-@@ -2576,6 +2605,11 @@ int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 
- static void trace_probe_event_free(struct trace_probe_event *tpe)
- {
-+	int i;
-+
-+	for (i = 0; i < tpe->nr_field_strings; i++)
-+		kfree(tpe->field_strings[i]);
-+	kfree(tpe->field_strings);
- 	kfree(tpe->class.system);
- 	kfree(tpe->call.name);
- 	kfree(tpe->call.print_fmt);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index fba1af092a9bd..d1fb3520700fb 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -264,6 +264,8 @@ struct trace_probe_event {
- 	struct trace_event_call		call;
- 	struct list_head 		files;
- 	struct list_head		probes;
-+	char				**field_strings;
-+	int				nr_field_strings;
- 	struct trace_uprobe_filter	filter[];
- };
- 
+> --
+> Cheers, Lorenzo
+
 -- 
-2.43.0
+Sincerely yours,
+Mike.
