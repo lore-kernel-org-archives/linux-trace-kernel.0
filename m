@@ -1,101 +1,112 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9706449362C;
-	Wed, 26 Aug 2026 01:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4300E17D6
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787709068; cv=none; b=D2RZn5sei4mmR/jIBjhWhZXWN8PpQQQZeYvAIJn0GiauBol+QzUJu/vDMYJtvH5PVIB16JgOrvFBAGRoCTbPFrmrECmXm+ryAEbcV6xL+2neRTc8piIKkNnino8k5GIujb8ApkaCAJoJm1Xvw7rqlIFepGqDtfUi+Bo3Dm9IhzA=
+	t=1787709616; cv=none; b=l4WH38F73XckQZCbuoPdbxeXXDsKTxxE/9wuLX8LrKexT7MG2JEeqYbNt6GO9axk/TJIFJT+U98JelPBJnNMPTykuPYiyZz9Qhfszz4/0/Jy5x9W5h+HXG09Lszs3cp2J245knFCsLiSZzRysoBNweqLju06wQ/XysKL1kyfV2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787709068; c=relaxed/simple;
-	bh=BvjD+j7aMJ9r5B0+nQUZfAHKMYEoyfe+Fndtfzx5GU8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dHBZtmP1n8b8AeUddkBh03rUlhuGbxQ/psS4xOVkeVltbUoKBo93GcPivwceOthxm+8DZjQugZQ3tL1PttnnsvtStYEOaKtD/W4IISD572mOYvABSWrgJ8sl4iaw+uNSsR3jx8ioIFUaCKl6c0u1fEs6tcWABAgVOOfe+uax8vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from DESKTOP-L0HPE2S.localdomain (unknown [36.110.52.2])
-	by APP-01 (Coremail) with SMTP id qwCowAAn_vGDRo5q_E6QBg--.47910S2;
-	Wed, 26 Aug 2026 09:50:59 +0800 (CST)
-From: Haotian Zhang <vulab@iscas.ac.cn>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Haotian Zhang <vulab@iscas.ac.cn>
-Subject: [PATCH v2] samples/ftrace: Fix kthread_stop() on ERR_PTR in ftrace-direct-multi-modify
-Date: Wed, 26 Aug 2026 09:50:50 +0800
-Message-ID: <20260826015050.10772-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1787709616; c=relaxed/simple;
+	bh=vjdqqDWbG6268IlApfRv4qb6nP2zSye5qvoyuI7g2+I=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=VHMhHrc7ZZ9Dz5lq6RokdoGiBrjj6eOgchHj2ipMbYP9BZDKshAMWl9aztRdDHzpcjZYXriBv0AqOMXmoMWupAr3fYEnN5o8cuGLxPZzeiY5XzEmR8amLWymK0o2We/qjKrC4Q7aBwIoj3knmMKewtaBGEHNBQEljayPTE793uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNwkLnZK; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNwkLnZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBDA81F000E9;
+	Wed, 26 Aug 2026 02:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787709615;
+	bh=ASQNVN9LU8P4ngKJfHXa+QkZzjp8bWyLz0zx6y7vdns=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZNwkLnZKdxgfJz4PEfcJKR4tJr13orA5ehsn9oLArH1aF9jrGTq4zXAwv8p0JEAfS
+	 lp75jWAPxW0QvggCSGPr77zy3pVJwm4qemXv31t1DwS6hM4lJdMEtUVzA4a8/5RnZu
+	 uTqhtaNws/BYpaHb9KoN6gZzu/UQU7zyebq+cgt3/ldQPGex4BsKlAp5Gak7vB4o9C
+	 qtH30oM7OlT5NEp+1KfNyabLmyDVVLsa0Xttj5eA/m/8m6bjFuV/Scn6EkB/D7sDMs
+	 JH1oZ1nls4K8PweP/QbwTsw5TcdSnhrZ37U7S3tUAcBHaRbBs74a16XK0PfARixwa5
+	 Pwc2/IrOAa3tw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] samples/ftrace: Fix kthread_stop() on ERR_PTR in
+ ftrace-direct-multi-modify
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Haotian Zhang" <vulab@iscas.ac.cn>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260826015050.10772-1-vulab@iscas.ac.cn>
+References: <20260826015050.10772-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 26 Aug 2026 02:00:14 +0000
+Message-Id: <20260826020014.EBDA81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAn_vGDRo5q_E6QBg--.47910S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WrW5Xr18urW8Cr4fCw43GFg_yoW8ArWrp3
-	y7u3sxKr1rAFZ2gF9ruF17Cr17A347ArWUC3s5A3yYvrsxurWUJryjyF90qF4xArWrKFW7
-	Zrs0yrWkJF45ZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9a14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-	4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUtVWrXwAv7VCY1x0262k0Y48FwI0_Jr0_Gr1lYx0Ex4A2jsIE14
-	v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2
-	zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026x
-	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-	JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7VUjWrW7UUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwgLA2qOJu5mVwAAsa
 
-ftrace_direct_multi_init() assigns kthread_run()'s return value to
-simple_tsk without an IS_ERR() check. When kthread_run() fails it
-returns ERR_PTR(-ENOMEM), but init still returns 0, so the module loads
-with simple_tsk holding an error pointer. On unload,
-ftrace_direct_multi_exit() then passes that ERR_PTR to kthread_stop(),
-leading to a null-pointer-dereference.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Check the return value of kthread_run() with IS_ERR(); on failure,
-unregister the ftrace direct call and propagate the error code.
+Pre-existing issues:
+- [High] The patch fixes an invalid pointer dereference resulting from a kt=
+hread_run() failure in ftrace-direct-multi-modify.c, but leaves the identic=
+al vulnerability unpatched in ftrace-direct-modify.c.
+--
 
-Fixes: e1067a07cfbc ("ftrace/samples: Add module to test multi direct modify interface")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
----
-Changes in v2:
-  - Simplify the code as suggested by Steven Rostedt.
----
- samples/ftrace/ftrace-direct-multi-modify.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+commit 7f181703b20421e482d5701113538a5a801d8141
+Author: Haotian Zhang <vulab@iscas.ac.cn>
 
-diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-index 8f7986d698d8..70c2263d839c 100644
---- a/samples/ftrace/ftrace-direct-multi-modify.c
-+++ b/samples/ftrace/ftrace-direct-multi-modify.c
-@@ -364,9 +364,15 @@ static int __init ftrace_direct_multi_init(void)
- 
- 	ret = register_ftrace_direct(&direct, my_tramp);
- 
--	if (!ret)
--		simple_tsk = kthread_run(simple_thread, NULL, "event-sample-fn");
--	return ret;
-+	if (ret)
-+		return ret;
-+	simple_tsk = kthread_run(simple_thread, NULL, "event-sample-fn");
-+	if (IS_ERR(simple_tsk)) {
-+		unregister_ftrace_direct(&direct, my_tramp, true);
-+		return PTR_ERR(simple_tsk);
-+	}
-+
-+	return 0;
- }
- 
- static void __exit ftrace_direct_multi_exit(void)
--- 
-2.43.0
+samples/ftrace: Fix kthread_stop() on ERR_PTR in ftrace-direct-multi-modify
 
+This commit fixes a bug in ftrace-direct-multi-modify.c where a failed
+kthread_run() returns an error pointer that is later passed to kthread_stop=
+()
+during module unload. It adds proper error handling to unregister the direct
+call and propagate the error.
+
+> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace=
+/ftrace-direct-multi-modify.c
+> --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> @@ -364,9 +364,15 @@ static int __init ftrace_direct_multi_init(void)
+> =20
+>  	ret =3D register_ftrace_direct(&direct, my_tramp);
+> =20
+> -	if (!ret)
+> -		simple_tsk =3D kthread_run(simple_thread, NULL, "event-sample-fn");
+> -	return ret;
+> +	if (ret)
+> +		return ret;
+> +	simple_tsk =3D kthread_run(simple_thread, NULL, "event-sample-fn");
+> +	if (IS_ERR(simple_tsk)) {
+> +		unregister_ftrace_direct(&direct, my_tramp, true);
+> +		return PTR_ERR(simple_tsk);
+> +	}
+> +
+> +	return 0;
+>  }
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does=20
+samples/ftrace/ftrace-direct-modify.c also need this exact same fix?
+
+Looking at ftrace_direct_init() in samples/ftrace/ftrace-direct-modify.c, it
+contains the identical unpatched pattern:
+
+    if (!ret)
+        simple_tsk =3D kthread_run(simple_thread, NULL, "event-sample-fn");
+    return ret;
+
+If kthread_run() fails under memory pressure, it returns an ERR_PTR. Because
+the preceding ret is 0, the initialization function still returns success,
+causing the module to load with simple_tsk holding an error pointer.=20
+
+When the module is unloaded, ftrace_direct_exit() will pass this ERR_PTR
+directly to kthread_stop(), which can result in an invalid pointer
+dereference and oops the kernel.
+
+Should this same error handling update be applied to ftrace-direct-modify.c?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260826015050.1077=
+2-1-vulab@iscas.ac.cn?part=3D1
