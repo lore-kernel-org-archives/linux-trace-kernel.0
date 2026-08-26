@@ -1,56 +1,56 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AA83D9556
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FE73DAAB3
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787735929; cv=none; b=gdZ3th+mJOfsTMyn8f/H/RIhtIQVJQxtWciPXdaZpGIVo50hYVHN8RuqCxRsgD/Q2u1BwnCJm/8xeTVNSoFF5SWC6YgF+PW1z9Obzo9xFANE6BTvUrEOxTf+IwFMWQHITtfiV8xBzuDxmDGJo3zc21ALb6I3ttEVp2ufR0RquSs=
+	t=1787735929; cv=none; b=CYJxJbKoSwJdY2iB28DrkHeGnf7rRk0SxXrrbEfqWmClNfHgyiXongqigRhmePVy+sHljTHavAm3adjItNC2G3B2+/Z0WesKMGlr1u0k5X9dOxVLh+M4zZsJBa4pQLQT9Wh6wQHZc7laPd+dVxYPxLMQjR5ZUKDzjaOgHdrH9Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787735929; c=relaxed/simple;
-	bh=ZTwn4UyMShrGZfEU90otJVup2JEojFMgiToKCnnSVVE=;
+	bh=rjS7YIkj9IfMwuN6szgnaq7r9mhIQEiYfekeu/by3Vc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QDlF5Zv3lMoj/BSTaA8T0Es7caurAebFPkUYmH6irMlbFvppbSc/+FmgptaYR4uYy4hQCbshF9KyJI28dW4mK5XJ+5dHvpV6w2Domc1k1t9iGFeDf1ws7swdDuHLTz9nKAznUuDjN4VNnEckuh33/Zk6eqhS4JaFCagJXaNNyik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fdcfcOy6; arc=none smtp.client-ip=209.85.215.200
+	 To:Cc:Content-Type; b=CdoeLLVDf9PnfbAbZtYfrrdDNxWZiDOgQfgv7O0NyAwkEvDfu9jFQi4SAG+yu47IE3xqkN90Rfu54S3U/7OKccMFC/AZtJgliRXZAl+o7SU+eNNzbt2Yo5ct3QXkqajr4QGGkxTjsDc1OKrQxC74PSG2o2mBLIDVITZ0JShP5PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZmSyFhij; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fdcfcOy6"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cbb20f82a0eso589937a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:18:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZmSyFhij"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cc1cade6b71so278914a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787735919; x=1788340719; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787735920; x=1788340720; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=S/nf3e4536rn08VcIwbRdla3FrzM9D86FJQTH62XB18=;
-        b=fdcfcOy6HRtOZ73daoZ5zvlxhHTJKMPmTvGcbBfkxdVGLpx3kgm6YEpnNEh81jifWj
-         CidD8pxMoBESJ7UJeWnsesrZF/vzaLA54i2t/Xqfpz2dDw4Kf9vX+RtnCjmeoT8+klXg
-         XshsxVoedZMoxvIP2qqi68MuIUINPr5nkAKdG++Iqq7QH2GGKgbhF7RTE23u8NrjklBp
-         4r55oCaQsEjXKwfMDQmdwEjkuyv9wCe9C8u0yRAcxKAWGLPmz6/AOcz42cyaLv07vgEj
-         pdd779s8A3cF3YCBTuKdRDUyvEw7KS13FAwHSzmqFa+QCIF45BaJo3JDL0cyEERLHrTJ
-         qu8Q==
+        bh=mlxub+uHBO/9tuD+fZ54oP42v4czhWpxNnl1EZnj2VA=;
+        b=ZmSyFhijfR8gmzgf8VtnQJvaMaFQh29uhMB88Zx62ItvJt0cuHJZpDekk3E2dTaPuG
+         ijhIpizYu6mMB7iJurlcwm0nDQbM1IdsCeouBYAPA+fLvzYURj61WZfaWD0WTmYJs3rs
+         2nEBZrfhMTjxTyIsgxD1UkC3i6nQKdeZ/W8o4ZDyZDPOw0NRUlKjAjFElgfK7Y+yKhhV
+         yDYT9EJ37iS42JXiD7uU1thV1sf7tTAcLjOEkVH/t3sUr7AyIEQ8m+Qb3B3WMoG6J7mW
+         cM4QAQ3pQTe737ZzXN2QSvweB73s5PTxE4Dep47AIK4azNHDpQ4fOFOfmH6uGOOaaOy+
+         HQDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787735919; x=1788340719;
+        d=1e100.net; s=20251104; t=1787735920; x=1788340720;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=S/nf3e4536rn08VcIwbRdla3FrzM9D86FJQTH62XB18=;
-        b=HUwDi9+aCVGmQAx+tDII/G6tKw7rsTbFKSX8txy2cNi5Jnm8fjz0/Z2OjgtxL8Iq+r
-         kl4x3rDfRhcKoMqm9szdCX+j+2kTXv9LXXcCb9ZalUH37xzfenhYmTiYneM5ufX0gRIs
-         V7JJaOPWWMaFVRTDtq/EE+Ti0q8Pa04OFkUdFunhWT3YwQo+Mrt2LhYSm1I5X70djqWr
-         2v/msK25xQFWJYy+YCoMs1kdUpRzeL2WmvS6ajdqcKUI8t0Cs9iOjvMfWXRpq/EypnBj
-         aFY+HWfBWu7niVPpttrHiF0HHhUB4lNrbyJxGsvGTD0afVCC70/7JCA20cvAkxcMWsxb
-         4cnA==
-X-Forwarded-Encrypted: i=1; AHgh+Rpwulx6Wb3CFsmGfBcpVQlvIcP079bmHQwAS16QbWYgJrcqH/BeP3Qy2cSX73otZQqbyrGXqlqBToftQEibkvw+BjA=@vger.kernel.org
-X-Gm-Message-State: AFuF++lXYdDYF9mKcUjyZ5NxE745nfZXpZTn8PUR1BtQdDX8Oaa+ns9B
-	yvkfThPqbPKjMEwdXYdsPZcaloQGIuZvnuRNl9OW+I5G0qGRl5OsGI/tBDn4EIAvqqU0P7A2vHg
-	EVheIxJPHQ4G5mlU2jG+UeYdXUA==
-X-Received: from pgig7.prod.google.com ([2002:a63:f407:0:b0:cc1:c7d3:7c7b])
+        bh=mlxub+uHBO/9tuD+fZ54oP42v4czhWpxNnl1EZnj2VA=;
+        b=Qw9v5GAhFEgFnPUkWHYI8DZv+dMNmV+qNOF+f5MNvfK7fqzEvJrOwrtakhwSwr2yFG
+         e554laiwjVK+RXdjnGBunLmUqzLEmjZxPZA7vhEjUdep1X9L3hsEdYRqVK9gBIlGmbKx
+         D5ceEe/HWe/OjH4LQkzyWIN2ImaMx9fidbEwjmXUdzK5JloyKsEs1FOxY5Dlmwa3sQKk
+         WGj3Llcbu8f43k0/JTra6MrxoGiAlBmBg+jYI1dP3lZN2Z1g7n8aA3Encpel/3y9Oofp
+         E+nG+d3Jyp9j55tST+Houbp5eGycUSUIIkxokmFoCa5xGGqtOWt9r+oabNcU072U+s7W
+         YEwg==
+X-Forwarded-Encrypted: i=1; AHgh+RqT3Lkkxb2T+osl+Yg+BBXS3Jp7mYLghCjo1sV3zejmZVhFuTgQ9C8HDT/CUpisKOmKGlySwkAczgLonWBePpIlkzs=@vger.kernel.org
+X-Gm-Message-State: AFuF++mTB1KMt6kfoBN8Tt/OPi4904pOijaEpjKOOtlI+bKm8spN0/mU
+	tcICvSrq2ePIMFhOeFLQ/Bzc8z+lx2azHxJAV0Uk+FTvC5Lzj8rDFUb0pTghwvoFBMcGWsfKbMG
+	AuYoZocChmTFkKD3oSn4wwIpwDg==
+X-Received: from pgmn1.prod.google.com ([2002:a63:5c41:0:b0:cc1:b785:2d5c])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:a383:b0:3cd:8d15:895e with SMTP id adf61e73a8af0-3cf84b53689mr11572460637.12.1787735918168;
- Wed, 26 Aug 2026 02:18:38 -0700 (PDT)
-Date: Wed, 26 Aug 2026 09:18:16 +0000
+ 2002:a05:6a21:1398:b0:3bf:8de9:c64e with SMTP id adf61e73a8af0-3ceed381cdcmr7706302637.2.1787735919845;
+ Wed, 26 Aug 2026 02:18:39 -0700 (PDT)
+Date: Wed, 26 Aug 2026 09:18:17 +0000
 In-Reply-To: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,14 +60,13 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787735885; l=4708;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787735885; l=3028;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=ZTwn4UyMShrGZfEU90otJVup2JEojFMgiToKCnnSVVE=; b=dDBRMblwUg6UwX2I1hz2Tpxt+EI3WovENt6hqBknKpraB0X285GZYRtS86E6IMk5svSgepv73
- EfxqI68rjF/CyC9ce+QdXDFmPsPxg8E1UYpFu6gAUyL8f5QVEBtho9j
+ bh=rjS7YIkj9IfMwuN6szgnaq7r9mhIQEiYfekeu/by3Vc=; b=lCUCj1iZvnbvBq8YHDBpqof0pVd2qwZfFFterSX0jRK7/rf6Au2LXCto6eoK3sBAVMPHL3rmu
+ YzrbJeQTET3CW+0To48scfCtCha+gH4+4h5I0KZt9qWeSUgUInKR50f
 X-Mailer: b4 0.16.0
-Message-ID: <20260826-gmem-inplace-conversion-v11-18-0a15d8a799aa@google.com>
-Subject: [PATCH v11 18/46] KVM: guest_memfd: Handle lru_add fbatch refcounts
- during conversion safety check
+Message-ID: <20260826-gmem-inplace-conversion-v11-19-0a15d8a799aa@google.com>
+Subject: [PATCH v11 19/46] KVM: guest_memfd: Zero page while getting pfn
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -97,132 +96,89 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
 	linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
-	"Vlastimil Babka (SUSE)" <vbabka@kernel.org>, Fuad Tabba <fuad.tabba@linux.dev>
+	Xiaoyao Li <xiaoyao.li@intel.com>
 Content-Type: text/plain; charset="utf-8"
 
-A guest_memfd folio has no outstanding references if guest_memfd holds the
-only references on it. Any other references on the folio may indicate
-another user, and guest_memfd cannot convert it to private if there may be
-an existing host user.
+Move the folio initialization logic from kvm_gmem_get_pfn() into
+__kvm_gmem_get_pfn() to also zero pages if the page is to be used in
+kvm_gmem_populate().
 
-A folio will have outstanding references if it is present in a per-CPU
-lru_add fbatch. guest_memfd does not actually participate in LRU, but
-freshly-allocated folios are still added to the lru_add fbatch for batch
-LRU statistics processing.
+With in-place conversion, the existing data in a guest_memfd page can be
+populated into guest memory through platform-specific ioctls.
 
-A folio may also have extra refcounts if it is on the mlock fbatch.
+Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
+might contain uninitialized host memory, which would leak to the guest if
+the populate completes.
 
-These two known "usages" of the folio are handled by calling
-lru_cache_drain_for_folio, which drains both the lru_add and mlock
-fbatches. After draining, if the refcount is still elevated, then there are
-truly outstanding references.
+guest_memfd pages are zeroed at most once in the page's entire lifetime
+with guest_memfd, and that is tracked using the uptodate flag.
 
-If the page may be dma pinned, DMA is using it and hence there are
-outstanding references. folio_maybe_dma_pinned() can have false positives,
-but that's only with a significant number of refcounts, at which point
-draining LRU is not going to move the needle - it can still be concluded
-that the folio has outstanding references.
+Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
+kvm_gmem_get_folio() since other flows, such as a future write() syscall,
+can get a page, write to the page and then set page uptodate without
+zeroing.
 
-If the page is still mapped after guest_memfd tried to unmap it earlier in
-the conversion process, it also has outstanding references.
+There may be some performance penalty due to redundant zeroing, but this
+would pale in comparison to the cost of actually assigning the page to the
+VM.
 
-Return true and exit early to avoid unnecessary draining in these 2 cases.
+This aligns with the concept of zeroing before first use - the other place
+where zeroing happens is in kvm_gmem_fault_user_mapping().
 
-Provide a drain status to only drain once ever while processing a batch of
-folios.
+On populate failure, the page is not re-zeroed, since on SNP, if firmware
+rejects a CPUID page, the expected CPUID values provided by firmware are
+returned to userspace via page contents. More generally, page contents may
+be modified on populate failure.
 
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-Suggested-by: David Hildenbrand <david@kernel.org>
-Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
+Don't mark the page uptodate again after populating, since the page would
+already be marked uptodate before the post_populate() call.
+
+Reviewed-by: Fuad Tabba <tabba@google.com>
+Tested-by: Shivank Garg <shivankg@amd.com>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- mm/swap.c              |  2 ++
- virt/kvm/guest_memfd.c | 30 ++++++++++++++++++++++--------
- 2 files changed, 24 insertions(+), 8 deletions(-)
+ virt/kvm/guest_memfd.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 8e965c8ce9aa9..9f511b97ab110 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -37,6 +37,7 @@
- #include <linux/page_idle.h>
- #include <linux/local_lock.h>
- #include <linux/buffer_head.h>
-+#include <linux/kvm_types.h>
- 
- #include "internal.h"
- 
-@@ -995,6 +996,7 @@ void lru_cache_drain_for_folio(const struct folio *folio,
- 			*drained = LRU_CACHE_DRAINED_ALL;
- 	}
- }
-+EXPORT_SYMBOL_FOR_KVM(lru_cache_drain_for_folio);
- 
- atomic_t lru_disable_count = ATOMIC_INIT(0);
- 
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 6dc199be0eb87..4912f90567fe8 100644
+index 4912f90567fe8..9c2d52bdf25ec 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -8,6 +8,7 @@
- #include <linux/mempolicy.h>
- #include <linux/pseudo_fs.h>
- #include <linux/pagemap.h>
-+#include <linux/swap.h>
+@@ -1105,6 +1105,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
+ 		return ERR_PTR(-EHWPOISON);
+ 	}
  
- #include "kvm_mm.h"
- #include "guest_memfd.h"
-@@ -556,10 +557,28 @@ static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
- 	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
- }
- 
-+static bool __folio_has_outstanding_references(struct folio *folio,
-+					       enum lru_cache_drained *drained)
-+{
-+	if (folio_maybe_dma_pinned(folio) || folio_mapped(folio))
-+		return true;
++	if (!folio_test_uptodate(folio)) {
++		clear_highpage(folio_page(folio, 0));
++		folio_mark_uptodate(folio);
++	}
 +
-+	/* 1 reference held by filemap_get_folios() in the folio batch. */
-+	lru_cache_drain_for_folio(folio, 1, drained);
-+
-+	/*
-+	 * Outstanding references are anything other than those from the page
-+	 * cache, plus 1 temporary reference held by filemap_get_folios() in the
-+	 * folio batch.
-+	 */
-+	return folio_ref_count(folio) != folio_nr_pages(folio) + 1;
-+}
-+
- static bool kvm_gmem_has_outstanding_references(struct inode *inode,
- 						pgoff_t start, size_t nr_pages,
- 						pgoff_t *err_index)
- {
-+	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
- 	struct address_space *mapping = inode->i_mapping;
- 	pgoff_t last = start + nr_pages - 1;
- 	bool has_outstanding = false;
-@@ -570,17 +589,12 @@ static bool kvm_gmem_has_outstanding_references(struct inode *inode,
- 	folio_batch_init(&fbatch);
+ 	*pfn = folio_file_pfn(folio, index);
+ 	if (max_order)
+ 		*max_order = 0;
+@@ -1133,11 +1138,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 		goto out;
+ 	}
  
- 	next = start;
--	while (has_outstanding && filemap_get_folios(mapping, &next, last, &fbatch)) {
-+	while (!has_outstanding && filemap_get_folios(mapping, &next, last, &fbatch)) {
- 		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
- 			struct folio *folio = fbatch.folios[i];
+-	if (!folio_test_uptodate(folio)) {
+-		clear_highpage(folio_page(folio, 0));
+-		folio_mark_uptodate(folio);
+-	}
+-
+ 	if (kvm_arch_has_gmem_convert() &&
+ 	    kvm_gmem_is_private_mem(file_inode(file), index))
+ 		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
+@@ -1179,8 +1179,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	}
  
--			/*
--			 * Outstanding references are anything other than those
--			 * from the page cache, plus 1 temporary reference held
--			 * by filemap_get_folios() in the folio batch.
--			 */
--			if (folio_ref_count(folio) != folio_nr_pages(folio) + 1) {
--				has_outstanding = true;
-+			has_outstanding = __folio_has_outstanding_references(folio, &drained);
-+			if (has_outstanding) {
- 				*err_index = max(start, folio->index);
- 				break;
- 			}
+ 	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
+-	if (!ret)
+-		folio_mark_uptodate(folio);
+ 
+ out_put_folio:
+ 	folio_put(folio);
 
 -- 
 2.55.0.887.g758fc8c411-goog
