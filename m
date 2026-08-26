@@ -1,56 +1,56 @@
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FE73DAAB3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2330A3DAABF
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787735929; cv=none; b=CYJxJbKoSwJdY2iB28DrkHeGnf7rRk0SxXrrbEfqWmClNfHgyiXongqigRhmePVy+sHljTHavAm3adjItNC2G3B2+/Z0WesKMGlr1u0k5X9dOxVLh+M4zZsJBa4pQLQT9Wh6wQHZc7laPd+dVxYPxLMQjR5ZUKDzjaOgHdrH9Fw=
+	t=1787735929; cv=none; b=idLElb3/pM7VLOeZjfLWbZ9+7XhCCHmB4OaWmqdKpM7tZ0uiXbbMeWHZBTaxf56YrdqboYKvTRwC29OG7V4KhbDFIt30SArll/za2RVTH1hYFfQskvxLu9l8rYjh7bKFZwrr4UwYT8aGX0YlAHF6PkSterl1y5wywHiyOT8wDrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787735929; c=relaxed/simple;
-	bh=rjS7YIkj9IfMwuN6szgnaq7r9mhIQEiYfekeu/by3Vc=;
+	bh=dy0yCBXrZoOYao0bizb+pCfviB0m67TSA6YqDM4S6vw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CdoeLLVDf9PnfbAbZtYfrrdDNxWZiDOgQfgv7O0NyAwkEvDfu9jFQi4SAG+yu47IE3xqkN90Rfu54S3U/7OKccMFC/AZtJgliRXZAl+o7SU+eNNzbt2Yo5ct3QXkqajr4QGGkxTjsDc1OKrQxC74PSG2o2mBLIDVITZ0JShP5PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZmSyFhij; arc=none smtp.client-ip=209.85.215.198
+	 To:Cc:Content-Type; b=YgWC9A6iBkihQyo5ndyPDuNQCKb5KqcWxN01mCRXzRvG9e8bhvj7kv5y17ZebBrH9oHuGnKLDHbASZWiXEGK3rdn7GZjw6ogRwNPJfRoe4uxXYcMTRPSTn4q4RGXJfzBF2ezq0q4U81OJLmdmF2Uqb6VisegaQFA59NK1GQlNUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TB8Ld8Fn; arc=none smtp.client-ip=209.85.215.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZmSyFhij"
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cc1cade6b71so278914a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:18:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TB8Ld8Fn"
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cbb467e56aaso608960a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:18:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787735920; x=1788340720; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787735922; x=1788340722; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=mlxub+uHBO/9tuD+fZ54oP42v4czhWpxNnl1EZnj2VA=;
-        b=ZmSyFhijfR8gmzgf8VtnQJvaMaFQh29uhMB88Zx62ItvJt0cuHJZpDekk3E2dTaPuG
-         ijhIpizYu6mMB7iJurlcwm0nDQbM1IdsCeouBYAPA+fLvzYURj61WZfaWD0WTmYJs3rs
-         2nEBZrfhMTjxTyIsgxD1UkC3i6nQKdeZ/W8o4ZDyZDPOw0NRUlKjAjFElgfK7Y+yKhhV
-         yDYT9EJ37iS42JXiD7uU1thV1sf7tTAcLjOEkVH/t3sUr7AyIEQ8m+Qb3B3WMoG6J7mW
-         cM4QAQ3pQTe737ZzXN2QSvweB73s5PTxE4Dep47AIK4azNHDpQ4fOFOfmH6uGOOaaOy+
-         HQDQ==
+        bh=EKp8H31vpndC0T7+bBVQC7oQPgnms4md5owa5X2MPn8=;
+        b=TB8Ld8Fnq1x2joS1MUsEipBynLBPuDVQefIGCDV6Q/r7vZdiJEvGFDg2aGjrI9oFgN
+         EQdY9UT1ryNO24/+skIgKoG19I1MYzIp5Gxam/ynFzUf7DXaqPFee9OMHV5mr3zTuHdz
+         l/GZ94lkPostpPUmtXDoPOZdFjmRHzxBzVHShr5SJmF/lfuIx+kYhUnS/qXMVc9n5B1H
+         BxqyPI8AqBy4EbGKPUomwJWIs2ZrKvrqdoe1PYQGldwTkxATuU4uNdKxEYYE/mbsMX0o
+         yxZ+0p5ewTT7TVAO8MvQKZMGympfB05W+8xnHf88mVAbLIJboRXFRGtNi2sjUeQgUdlE
+         a89w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787735920; x=1788340720;
+        d=1e100.net; s=20251104; t=1787735922; x=1788340722;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=mlxub+uHBO/9tuD+fZ54oP42v4czhWpxNnl1EZnj2VA=;
-        b=Qw9v5GAhFEgFnPUkWHYI8DZv+dMNmV+qNOF+f5MNvfK7fqzEvJrOwrtakhwSwr2yFG
-         e554laiwjVK+RXdjnGBunLmUqzLEmjZxPZA7vhEjUdep1X9L3hsEdYRqVK9gBIlGmbKx
-         D5ceEe/HWe/OjH4LQkzyWIN2ImaMx9fidbEwjmXUdzK5JloyKsEs1FOxY5Dlmwa3sQKk
-         WGj3Llcbu8f43k0/JTra6MrxoGiAlBmBg+jYI1dP3lZN2Z1g7n8aA3Encpel/3y9Oofp
-         E+nG+d3Jyp9j55tST+Houbp5eGycUSUIIkxokmFoCa5xGGqtOWt9r+oabNcU072U+s7W
-         YEwg==
-X-Forwarded-Encrypted: i=1; AHgh+RqT3Lkkxb2T+osl+Yg+BBXS3Jp7mYLghCjo1sV3zejmZVhFuTgQ9C8HDT/CUpisKOmKGlySwkAczgLonWBePpIlkzs=@vger.kernel.org
-X-Gm-Message-State: AFuF++mTB1KMt6kfoBN8Tt/OPi4904pOijaEpjKOOtlI+bKm8spN0/mU
-	tcICvSrq2ePIMFhOeFLQ/Bzc8z+lx2azHxJAV0Uk+FTvC5Lzj8rDFUb0pTghwvoFBMcGWsfKbMG
-	AuYoZocChmTFkKD3oSn4wwIpwDg==
-X-Received: from pgmn1.prod.google.com ([2002:a63:5c41:0:b0:cc1:b785:2d5c])
+        bh=EKp8H31vpndC0T7+bBVQC7oQPgnms4md5owa5X2MPn8=;
+        b=FkroULfA1c+yT/gFRPLcfvXVSI19IaB1Giz6c1L7prX3kUhbqF05MQ0TfSx6FA+oZh
+         UBPgAUpgAIdZREQQ/tZ8io/zC+cr7z0LpylDTViCoXRFhlb2711+mbNyIik9YKzSGNyL
+         ABcvfmUzNrWv8qa3xgRhgOTzfqeQGA5NhRzC+fBqxxi7J0m3zEayHvU+tqKYBNVjB3ND
+         I1tgiCZjRvhgLz76oHDHNGu1Skx72Q1fmWHJwL7TVcvMcGJsfHHzvPi7JZ1KDW0yXRqY
+         56UdbWIrX7b2/hEl1PZ7q1pcR32TwlgfyOylsee6h526PcNQzo8QhTTgLa/VjkbCKpxG
+         ir5A==
+X-Forwarded-Encrypted: i=1; AHgh+RrGEtJIpD7uBIGNoGMUQ+JNT3rHsYaoSBh5bN7st1oAw07z/tjHBIg2RfaHBxjIOu1RaryQMe8aRVaf73dVlDdJL6k=@vger.kernel.org
+X-Gm-Message-State: AFuF++m0XRSrGe+UGcLFd0pOBoCOlnpt8ubBnID9iIn4lKgkw9x37ESB
+	WHLHXc/gOVAUPKcFnu2iFM1aAsVsWvloAIueHJBRaqUhrArahjFAMZKQ9FV4oZPjbvJAP4kjqJO
+	8ZRxF8t1KpT6jWFScn/6D3U5wzA==
+X-Received: from pgbbo19.prod.google.com ([2002:a05:6a02:393:b0:cc1:4e93:a711])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:1398:b0:3bf:8de9:c64e with SMTP id adf61e73a8af0-3ceed381cdcmr7706302637.2.1787735919845;
- Wed, 26 Aug 2026 02:18:39 -0700 (PDT)
-Date: Wed, 26 Aug 2026 09:18:17 +0000
+ 2002:a05:6a21:a03:b0:3c3:9c4e:de3a with SMTP id adf61e73a8af0-3cf82a348a3mr11724369637.6.1787735921564;
+ Wed, 26 Aug 2026 02:18:41 -0700 (PDT)
+Date: Wed, 26 Aug 2026 09:18:18 +0000
 In-Reply-To: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,13 +60,13 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787735885; l=3028;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787735885; l=5596;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=rjS7YIkj9IfMwuN6szgnaq7r9mhIQEiYfekeu/by3Vc=; b=lCUCj1iZvnbvBq8YHDBpqof0pVd2qwZfFFterSX0jRK7/rf6Au2LXCto6eoK3sBAVMPHL3rmu
- YzrbJeQTET3CW+0To48scfCtCha+gH4+4h5I0KZt9qWeSUgUInKR50f
+ bh=NFa90siDaW2AryA30Q8bJ5Qh7q7W2DqG2XaPe8+kXyo=; b=v0d5C4wkWWesFaHM60cN7REFurl8Oyg0VII9TPxllUT2UaIYDsS6Nac84jjl3ihI71jCYcDgl
+ xbEFlslA2w6C5IahaWJaj2wX/VE9nKjbCz3wuE3sGID9S2vKNO9OT1k
 X-Mailer: b4 0.16.0
-Message-ID: <20260826-gmem-inplace-conversion-v11-19-0a15d8a799aa@google.com>
-Subject: [PATCH v11 19/46] KVM: guest_memfd: Zero page while getting pfn
+Message-ID: <20260826-gmem-inplace-conversion-v11-20-0a15d8a799aa@google.com>
+Subject: [PATCH v11 20/46] KVM: SEV: Make 'uaddr' parameter optional for KVM_SEV_SNP_LAUNCH_UPDATE
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -95,90 +95,122 @@ To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
-	Xiaoyao Li <xiaoyao.li@intel.com>
+	linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Move the folio initialization logic from kvm_gmem_get_pfn() into
-__kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-kvm_gmem_populate().
+From: Michael Roth <michael.roth@amd.com>
 
-With in-place conversion, the existing data in a guest_memfd page can be
-populated into guest memory through platform-specific ioctls.
+Make the source page for populating an SNP guest_memfd instance optional
+if in-place conversion/population is enabled.  If KVM can convert the page
+in-place, then it's possible for guest memory to be initialized directly
+from userspace by mmap()'ing the guest_memfd and writing to it while the
+corresponding GPA ranges are in a 'shared' state, before converting them
+to the 'private' state expected by KVM_SEV_SNP_LAUNCH_UPDATE.
 
-Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-might contain uninitialized host memory, which would leak to the guest if
-the populate completes.
+Update the handling/documentation for KVM_SEV_SNP_LAUNCH_UPDATE to allow
+for 'uaddr' to be set to NULL when in-place conversion is enabled, which
+SNP_LAUNCH_UPDATE will then use to determine when it should/shouldn't
+copy in data from a separate memory location. Continue to enforce
+non-NULL when PRIVATE is tracked per-VM, not per-guest_memfd.
 
-guest_memfd pages are zeroed at most once in the page's entire lifetime
-with guest_memfd, and that is tracked using the uptodate flag.
-
-Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-can get a page, write to the page and then set page uptodate without
-zeroing.
-
-There may be some performance penalty due to redundant zeroing, but this
-would pale in comparison to the cost of actually assigning the page to the
-VM.
-
-This aligns with the concept of zeroing before first use - the other place
-where zeroing happens is in kvm_gmem_fault_user_mapping().
-
-On populate failure, the page is not re-zeroed, since on SNP, if firmware
-rejects a CPUID page, the expected CPUID values provided by firmware are
-returned to userspace via page contents. More generally, page contents may
-be modified on populate failure.
-
-Don't mark the page uptodate again after populating, since the page would
-already be marked uptodate before the post_populate() call.
-
-Reviewed-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+[Moved condition to snp_launch_update]
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- virt/kvm/guest_memfd.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ Documentation/virt/kvm/x86/amd-memory-encryption.rst | 14 ++++++++++----
+ arch/x86/kvm/svm/sev.c                               | 11 ++++++-----
+ virt/kvm/kvm_main.c                                  |  1 +
+ 3 files changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 4912f90567fe8..9c2d52bdf25ec 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -1105,6 +1105,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
- 		return ERR_PTR(-EHWPOISON);
- 	}
+diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+index bd04a908a8dbd..5977fbe33b98c 100644
+--- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+@@ -503,7 +503,8 @@ secrets.
  
-+	if (!folio_test_uptodate(folio)) {
-+		clear_highpage(folio_page(folio, 0));
-+		folio_mark_uptodate(folio);
-+	}
+ It is required that the GPA ranges initialized by this command have had the
+ KVM_MEMORY_ATTRIBUTE_PRIVATE attribute set in advance. See the documentation
+-for KVM_SET_MEMORY_ATTRIBUTES for more details on this aspect.
++for KVM_SET_MEMORY_ATTRIBUTES/KVM_SET_MEMORY_ATTRIBUTES2 for more details on
++this aspect.
+ 
+ Upon success, this command is not guaranteed to have processed the entire
+ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+@@ -511,9 +512,14 @@ range requested. Instead, the ``gfn_start``, ``uaddr``, and ``len`` fields of
+ remaining range that has yet to be processed. The caller should continue
+ calling this command until those fields indicate the entire range has been
+ processed, e.g. ``len`` is 0, ``gfn_start`` is equal to the last GFN in the
+-range plus 1, and ``uaddr`` is the last byte of the userspace-provided source
+-buffer address plus 1. In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO,
+-``uaddr`` will be ignored completely.
++range plus 1, and ``uaddr`` (if specified) is the last byte of the
++userspace-provided source buffer address plus 1.
 +
- 	*pfn = folio_file_pfn(folio, index);
- 	if (max_order)
- 		*max_order = 0;
-@@ -1133,11 +1138,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		goto out;
- 	}
++In the case where ``type`` is KVM_SEV_SNP_PAGE_TYPE_ZERO, ``uaddr`` will be
++ignored completely. For all other page types, ``uaddr`` is optional if in-place
++conversion is enabled (i.e. when the data had been written directly to
++guest_memfd while the page was in the shared state) and is required if in-place
++conversion is disabled.
  
--	if (!folio_test_uptodate(folio)) {
--		clear_highpage(folio_page(folio, 0));
--		folio_mark_uptodate(folio);
--	}
--
- 	if (kvm_arch_has_gmem_convert() &&
- 	    kvm_gmem_is_private_mem(file_inode(file), index))
- 		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
-@@ -1179,8 +1179,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	}
+ Parameters (in): struct  kvm_sev_snp_launch_update
  
- 	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
--	if (!ret)
--		folio_mark_uptodate(folio);
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index dff684b88f153..63e8cfa9bf559 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -2400,7 +2400,7 @@ static int sev_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ 	 */
+ 	if (ret && !snp_page_reclaim(kvm, pfn) &&
+ 	    sev_populate_args->type == KVM_SEV_SNP_PAGE_TYPE_CPUID &&
+-	    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM) {
++	    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM && src_page) {
+ 		void *src_vaddr = kmap_local_page(src_page);
+ 		void *dst_vaddr = kmap_local_pfn(pfn);
  
- out_put_folio:
- 	folio_put(folio);
+@@ -2433,8 +2433,8 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	if (copy_from_user(&params, u64_to_user_ptr(argp->data), sizeof(params)))
+ 		return -EFAULT;
+ 
+-	pr_debug("%s: GFN start 0x%llx length 0x%llx type %d flags %d\n", __func__,
+-		 params.gfn_start, params.len, params.type, params.flags);
++	pr_debug("%s: GFN start 0x%llx length 0x%llx type %d flags %d src %llx\n", __func__,
++		 params.gfn_start, params.len, params.type, params.flags, params.uaddr);
+ 
+ 	if (!params.len || !PAGE_ALIGNED(params.len) || params.flags ||
+ 	    (params.type != KVM_SEV_SNP_PAGE_TYPE_NORMAL &&
+@@ -2446,7 +2446,8 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 
+ 	if (params.type == KVM_SEV_SNP_PAGE_TYPE_ZERO)
+ 		src = NULL;
+-	else if (!params.uaddr || !PAGE_ALIGNED(params.uaddr))
++	else if ((!gmem_in_place_conversion && !params.uaddr) ||
++		 !PAGE_ALIGNED(params.uaddr))
+ 		return -EINVAL;
+ 	else
+ 		src = u64_to_user_ptr(params.uaddr);
+@@ -2493,7 +2494,7 @@ static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 
+ 	params.gfn_start += count;
+ 	params.len -= count * PAGE_SIZE;
+-	if (params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO)
++	if (src && params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO)
+ 		params.uaddr += count * PAGE_SIZE;
+ 
+ 	if (copy_to_user(u64_to_user_ptr(argp->data), &params, sizeof(params)))
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 1ea8198821917..05c518c9b8078 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -104,6 +104,7 @@ module_param(allow_unsafe_mappings, bool, 0444);
+ 
+ #ifdef kvm_arch_has_private_mem
+ bool __ro_after_init gmem_in_place_conversion = false;
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(gmem_in_place_conversion);
+ #endif
+ 
+ /*
 
 -- 
 2.55.0.887.g758fc8c411-goog
