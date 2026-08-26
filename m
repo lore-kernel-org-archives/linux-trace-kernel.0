@@ -1,221 +1,141 @@
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C9C47D93A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 19:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CADB3B5301
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 21:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787773502; cv=none; b=mZ8p5KzeDpfvS7/hlsoqvfhbeiLj098WaFFqTc1uecTieZeB2NKw+JjlFqI4ENRXgaMUeocvBX8lEghABgt33TEnTYoj0o49J8/MpByqg7/jzrv3eJ+7jp3Zvpi7JBKGF3EMcA9DX1h0V8s/83tbFBZ9H8JTf7j3VS1yrjKeLqo=
+	t=1787779176; cv=none; b=mwBJEbGGd+JZmGs/xxidx517lRAjz3e3WZZ2kC6uwD5DffWV9/gqwdH/ycXYSdH3B1ZPWm1KV97JqyzX9TFgWiY3YL1tEx4edOBKYBqlAUqu+acZpmYvn6jXG705eFln3kn9palu1LrvlNpJd+WoigS26ksM4j9G3B/HsMwK/6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787773502; c=relaxed/simple;
-	bh=4uZPzlY33aYdoyT/xRZbAIP4+YBkQh6pbbwV+qhDm9o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NeL3A9dEvdneIWbE/G+rXKlEhB4PJ2JB7awYTJ6dwhylhHDpIWHJAPhfrbunc5jOp884z7tsQtNVhkNvDsEBZpBLQWr54xkzin2x0FCoru1Fv5DI9EXNS9x20gp7rHhFtChTnxifnyF0II9utD7bQgTpjowqTzgtxkUAfu+NTAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F9fJ2oxk; arc=none smtp.client-ip=209.85.215.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1787779176; c=relaxed/simple;
+	bh=zOU3jhEls2nlcQi6nn7A7bCR5iYoUqPrg5AVUP9NoEo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cYbuWQXSqJMxI8w8ENDhzAz0wrYxaHcPlgvjYqtXQhoxYh/FHjdGj2j2BSBhPIvkZfxj1lh2lAufNFzh+IyEBAtraNGWCcrFYVGhq2nJKx9L94MdaEfzeITtwh6xhIYZ5wwbAV5qFj5iKajMnvXqaXKq6gmtm0cKp3ktq8raoZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QDbchPww; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9fJ2oxk"
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cbb467e56aaso1035407a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 12:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787773482; x=1788378282; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kAAUyb+BT/S16pFGAm4l7OAoO0iSt3CMmhZez+eRZtg=;
-        b=F9fJ2oxkdgl0eiteWV1ixsN6qOcIqGb+oWpZJNjNftBAzzqQi69cUHU8A49W9Ogpv3
-         tbiiWzGxOdt0zEfK+Ipt3yU+B8To3hbf0LItcX2uXJj63vWpmU7VYGRolp5RYXSTCkBO
-         vasf/F2NhQC+8YzisXODKc+uepKhB77wunWsAZtWGVHdssAR4JZdlU1+4BPWA7wsXtf/
-         fKd3a+8xXFme6yWfvA8e3BXO0klMEmAAFeFv0djfazS6KwrAYF+DF0YX0L1bfUh1cFYB
-         lZ/Mbe1ha9vEkOn8Grha7uMsL799mlM/WLXgEXzT1s+KNqCEYHNZmeaGUCGXF5syWoIv
-         lY4A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QDbchPww"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787779174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hs9Hk1Yz77p64quQu3QJjbDqz+Gy/YAoNjsZDx24MPE=;
+	b=QDbchPww8uzHwoxY/6sG4PvrtSJxjiOcXvrTvT6C/tHZROIAXH92cVcmDs0HoVuU1y36mT
+	NQaEKlsDnhxch8dws58TrfC3U8LrdQ9ml2P2FuLwcpfW+7MeVcGNjjUWUtHERjNT7eNF2O
+	fQZyI82NigR5lt965+1FdV7gIuYZ2b4=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-33-PLGi5NJnMYCS_a-su-169w-1; Wed, 26 Aug 2026 17:19:32 -0400
+X-MC-Unique: PLGi5NJnMYCS_a-su-169w-1
+X-Mimecast-MFC-AGG-ID: PLGi5NJnMYCS_a-su-169w_1787779172
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-93771aa0379so4965485a.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 14:19:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787773482; x=1788378282;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kAAUyb+BT/S16pFGAm4l7OAoO0iSt3CMmhZez+eRZtg=;
-        b=pY+2fCpqwZbkSrWSQJNBtHFNU3phHqxYM/ELwVZ5UrHvRmlNsN/a/i9e51FML3w/GS
-         M/QRccpJnW5Tg0k17/SK2ACIjibAgvCDCdk7vofAyPTBYpBua4RimSN1B7HzNVZGcAXa
-         N65ReyJ0mCIQTECOqlpzf7hXtXz4ybWqj6pNfxuwwiUfNb26dJMDZ7fxJbck/0iyQnfq
-         ye4WFRVbINqaKmZ9w9VI9ZzJ4r/8iFm1e1GoPE7wQ0/Bu2wrPxxH3JSOFaXiqdelQUZo
-         9BIViqm8GCqT+Vmh9ZfBGcw2dASOFx72YicdLFVevUsiFHc2fq5Z9jeexQ0r1sQXVrVN
-         taKQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqnp06K2obAsVuyRmxvpQ1qPmYVmPzcv/X6/d1BnVKW7cpRUzso9W3t5P3njJtZXvvJs6qzdcE8/sFRMqkpzLHdLzc=@vger.kernel.org
-X-Gm-Message-State: AFuF++koz8owKXYXHR2Pk4ADLclsvfPORZ68e+cXFzpgprDXK7qL/u3U
-	TttqvzIU1jFtlWWnvDfxkLHhlj+dc/UhrFZhlmnDipLogiGH2YFFZY+of0G7yPaIDHcT3HFIzKD
-	2uvqDSw==
-X-Received: from pgak6.prod.google.com ([2002:a05:6a02:6746:b0:cbe:9e80:c394])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3216:b0:3c0:b943:f984
- with SMTP id adf61e73a8af0-3cf76286193mr19120390637.3.1787773481481; Wed, 26
- Aug 2026 12:44:41 -0700 (PDT)
-Date: Wed, 26 Aug 2026 12:44:40 -0700
-In-Reply-To: <20260826-gmem-inplace-conversion-v11-15-0a15d8a799aa@google.com>
+        d=1e100.net; s=20251104; t=1787779172; x=1788383972;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Hs9Hk1Yz77p64quQu3QJjbDqz+Gy/YAoNjsZDx24MPE=;
+        b=cUjwog9gd/lolW+blTa/rMiZBBBA3BNSoeirG2MOk/QzOMO4wppndpz9eM9WpIgMFC
+         1o9vaXNaexxGKEn+14Nvq857kf4bQr/Kp4czt/NBzmeafFOXVVPU8TYEHSlC3CHPbmfc
+         NCtL0Q/dIQWX0fnPZiexqM42+7BvWhbj+h4kNZm7F6KpXmCPokIUNhTkzJJKAVcUndRx
+         IHNPWkr+CwAOyA8hZHb6XEtNn17vfv0Gs/XPRvnloWxgLxu5jKf95YSOfmlzKsua3dlB
+         7q9nOGjTwYpLxYywjlHK+4T1J0NjbkXy/BkfA6knxSS3CXK8WxFiq/rrej0iPX3Sq51i
+         494Q==
+X-Forwarded-Encrypted: i=1; AHgh+RqcSsvmIApCJsfKENZtZUlEZbn/oI1wkt0eIQViTS3aMmev/aSvAKPSIGZVMW3C75hkPLtZqDZHWPrhFrswCwAi3X8=@vger.kernel.org
+X-Gm-Message-State: AFuF++lQ2zCovTwV0PG+s1qXWfVmxKq3laO9pYw377T9CrCPgjQZqGx1
+	a/VnpMHXuBKiln7ogAyUB0nwjXU3X29S2mGDyaFh+CZgc/QEdWV15+iIr9uH+Pu4OWLZOuSmFxV
+	Udz95LbfO6NGcmvIxV9TTXypNOdoM3bkPiZR3YfR2f04Z4uLpwYuRPBpIsByeu1ehPwqX/AmCRg
+	==
+X-Gm-Gg: AR+sD12s0GvSiQRsu/sIkIaSZNPP7a+LD/mHpatY7x/Rn7qQ+oYcfXN5Zmrp8EPNbZg
+	Qmj5M/IeEfPguLCXHyHt7zba3KzHH/VYQWi7WbQz79wmrtvpcR4E5RbpoRXroUCVokO+NrBDIB3
+	yzszmWqn6FYqNFJFgZmXXtREGNQrzPOxVtPcebw0uo27uXPzNvhWqNsot5H1QaZdS4/bF0Idzg3
+	PGho+wGrn/uEoHq54uYTdz+kOyqiNerEs/YID8+zDeIBoh5ZFiUtilWqSkTwWpsnrOrivem2BcU
+	vmqUOXLI1cIZIyDqBwZTnDiX68ZCaAT8v5DSmebN/G6CipqrFVSDuzH/KUSESJUwuTmAjR+uvee
+	4txmkxXv0GVbTS4J/9uCGjMZ6mM2V2jrS
+X-Received: by 2002:a05:620a:3622:b0:937:4524:68d7 with SMTP id af79cd13be357-937803e1d93mr868630985a.22.1787779172221;
+        Wed, 26 Aug 2026 14:19:32 -0700 (PDT)
+X-Received: by 2002:a05:620a:3622:b0:937:4524:68d7 with SMTP id af79cd13be357-937803e1d93mr868626985a.22.1787779171607;
+        Wed, 26 Aug 2026 14:19:31 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc01:6890:c623:cd89:345e:99f3])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9377e36879asm301819285a.17.2026.08.26.14.19.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2026 14:19:30 -0700 (PDT)
+Message-ID: <588ce7912915573ccba7439d7e50a90d7941c764.camel@redhat.com>
+Subject: Re: [PATCH 1/4] tracing/osnoise: Per-cpu mutex and fd detachment
+From: Crystal Wood <crwood@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>, sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Date: Wed, 26 Aug 2026 16:19:29 -0500
+In-Reply-To: <20260826153132.1333fac6@gandalf.local.home>
+References: <20260824211544.3984835-1-crwood@redhat.com>
+		<20260824211544.3984835-2-crwood@redhat.com>
+		<20260824213037.F41B11F000E9@smtp.kernel.org>
+	 <20260826153132.1333fac6@gandalf.local.home>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com> <20260826-gmem-inplace-conversion-v11-15-0a15d8a799aa@google.com>
-Message-ID: <ao9CKMXAX-hScRSa@google.com>
-Subject: Re: [PATCH v11 15/46] KVM: guest_memfd: Call arch make_shared
- callback for to-shared conversion
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
-	yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
-	suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
-	Fuad Tabba <fuad.tabba@linux.dev>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 1cVqznX6xYp4ay7hbQ5PClnspPPPZLaReyoJhSgHUeY_1787779172
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 26, 2026, Ackerley Tng wrote:
-> Omit support for calling the arch hook to make private, since SNP, the only
-> implementer of the arch make-private hook today, would actually prefer
-> making private only just before faulting memory into the NPTs.
-> 
-> Calling the make-private arch hook would require iterating both bindings
-> and the filemap to find the intersection of bindings and allocated
-> folios.
+On Wed, 2026-08-26 at 15:31 -0400, Steven Rostedt wrote:
+> On Mon, 24 Aug 2026 21:30:37 +0000
+> sashiko-bot@kernel.org wrote:
+>=20
+> > [Severity: High]
+> > Can holding osn_var->lock while calling kthread_stop() cause a deadlock=
+?
+> >=20
+> > kthread_stop() blocks waiting for the target kthread to exit. However, =
+if
+> > the kthread is currently handling a migration request in
+> > osnoise_migration_pending() (shown slightly earlier in the diff), it wi=
+ll
+> > attempt to acquire this same osn_var->lock before it can clear its stat=
+e and
+> > exit:
+>=20
+> This code has a lot of nastiness in the locking with regard to the thread=
+.
+> I haven't looked deeply at your patch, but the fact that Sashiko pointed
+> out a possible deadlock I think you may be hitting the mess I was hitting=
+.
+>=20
+> Have you looked at this thread: https://lore.kernel.org/all/2024082013000=
+1.124768-1-tglozar@redhat.com/
 
-Why would KVM need to iterate over the bindings?  Only the RMP needs to be updated,
-whether or not the RMP is currently reachable is irrelevant, no?
+That thread is about user fd sync, which is what this patch is trying to
+address.
 
-Subsequent calls to kvm_arch_gmem_make_private() from kvm_gmem_get_pfn() would be
-superfluous, but that's already possible, e.g. if an NPT mappings is removed for
-whatever reason.
+This particular deadlock is with kernel threads, in a corner case of
+getting migrated even though we try to pin them to one cpu.  We can get
+rid of this migration code and just have stop_kthread() take care of it,
+adding a get/put_task_struct() so that it's OK for the thread to die
+early.  This way we can also handle any other abnormal thread exits.
 
-> On top of that, SNP would need to figure out whether to actually
-> make private based on whether the memory is about to be faulted, or
-> whether it is a conversion.
+I'll respond to the rest of the Sashiko comments soon.
 
-This is a non-issue, no?  As above, sev_gmem_make_private() already bails early
-if the page is already assigned in the RMP.
+>=20
+> It has some tests I ran along with tracing that detected issues. Of cours=
+e,
+> everything needs to be run with lockdep enabled too.
 
-I don't care terribly about how SNP handles this, but I do want accurate reasoning
-and justification so that if/when we revisit any of this in the future, we can make
-informed decisions.  Because unless I'm missing something, this is an optimization
-choice (eager vs. lazy to-private conversions), not a complexity tradeoff, and it's
-not clear to me how we decided the lazy approach would provide better performance.
+I did run with lockdep (and some custom hacky state tracking) but
+forcing migration is a hole in my test coverage.
 
-> Calling the make-shared arch hook and not the make-private arch hook does
-> leak SNP-specific details into guest_memfd (as in, why only make-shared
-> during conversions but not make-private?), but the additional complexity is
-> not worth taking on until guest_memfd has a user actually requiring an arch
-> make-private call.
+Is there a particular test you're suggesting?
 
-...
+-Crystal
 
-> +#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
-> +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end)
-> +{
-> +	struct folio_batch fbatch;
-> +	pgoff_t next = start;
-> +	int i;
-> +
-> +	folio_batch_init(&fbatch);
-> +	while (filemap_get_folios(inode->i_mapping, &next, end - 1, &fbatch)) {
-> +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-> +			struct folio *folio = fbatch.folios[i];
-> +			pgoff_t start_index, end_index;
-> +			kvm_pfn_t start_pfn;
-> +			kvm_pfn_t nr_pages;
-> +
-> +			start_index = max(start, folio->index);
-> +			end_index = min(end, folio_next_index(folio));
-> +			/*
-> +			 * end_index is either in folio or points to
-> +			 * the first page of the next folio. Hence,
-> +			 * all pages in range [start_index, end_index)
-> +			 * are contiguous.
-> +			 */
-> +			start_pfn = folio_file_pfn(folio, start_index);
-> +			nr_pages = end_index - start_index;
-> +
-> +			kvm_arch_gmem_make_shared(start_pfn, nr_pages);
-> +		}
-> +
-> +		folio_batch_release(&fbatch);
-> +		cond_resched();
-> +	}
-> +}
-> +#else
-> +static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end) {}
-> +#endif
-> +
->  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->  				     size_t nr_pages, uint64_t attrs,
->  				     pgoff_t *err_index)
-> @@ -624,7 +661,12 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
->  
->  	filter = to_private ? KVM_FILTER_SHARED : KVM_FILTER_PRIVATE;
->  	kvm_gmem_invalidate_start(inode, start, end, filter);
-> +
-> +	if (!to_private && kvm_arch_has_gmem_convert())
-> +		kvm_gmem_make_shared(inode, start, end);
-> +
->  	mas_store_prealloc(&mas, xa_mk_value(attrs));
-> +
->  	kvm_gmem_invalidate_end(inode, start, end);
-
-The real reason I responded...
-
-Thinking about the Secure AVIC mess made me realize zapping NPTs for SNP VMs isn't
-strictly necessary in this path.  The PFN isn't changing, just the attributes, and
-that's (obviously) tracked in the RMP.  KVM doesn't need to zap SPTEs to induce a
-fault, because the mismatched C-bit vs. RMP status will cause an #NPF(RMP), and
-AFAICT kvm_mmu_page_fault() will do the right thing.  A misbehaving guest could
-continue to access the shared data (assuming we stick with lazy conversions), but
-that should be fine?  E.g. it's not really any different than implicit conversions.
-
-In other words, couldn't we do this (as an on-top optimization)?  The only wrinkle
-I can think of is that it could delay reconstituion of a hugepage, especially if
-we opted for eager conversion (because the guest wouldn't hit #NPFs to trigger the
-hugepage promotion).
-
-diff --git arch/x86/kvm/mmu/mmu.c arch/x86/kvm/mmu/mmu.c
-index 62f751952ad8..61f3e270ab61 100644
---- arch/x86/kvm/mmu/mmu.c
-+++ arch/x86/kvm/mmu/mmu.c
-@@ -1670,6 +1670,7 @@ static bool __kvm_rmap_zap_gfn_range(struct kvm *kvm,
- 
- bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range)
- {
-+       unsigned long shared_private =  KVM_FILTER_SHARED | KVM_FILTER_PRIVATE;
-        bool flush = false;
- 
-        /*
-@@ -1683,6 +1684,10 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range)
-        lockdep_assert_once(kvm->mmu_invalidate_in_progress ||
-                            lockdep_is_held(&kvm->slots_lock));
- 
-+       if (gmem_in_place_conversion && !kvm_has_mirrored_tdp(kvm) &&
-+           ((range->attr_filter & shared_private) != shared_private))
-+               return false;
-+
-        if (kvm_memslots_have_rmaps(kvm))
-                flush = __kvm_rmap_zap_gfn_range(kvm, range->slot,
-                                                 range->start, range->end,
