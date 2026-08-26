@@ -1,295 +1,108 @@
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C51280A56
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37C33C942B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787737624; cv=none; b=QeCBZHkzJjXl60T3XgZ/pNsetgRPeUPCkBk9sMhNhGiv+HPGcum4D63OwnRJbN93QLVUSwupLPgIUNAA+cLY3tcY6RJRmUYMxW1uhbrzRJu4Kt+z7ePkrayyH5oLVE9tD3FGIK3EHoD82lJIWkdaRQjYGp7uLlgluiO5OyIcghI=
+	t=1787738389; cv=none; b=PLNrRMv0n3ns+k5vRif7+8qcuE+iASRbC41+l9WxuZBZyPrpEt7E6YeAcY9fI77tP/svEfSmGp++wS24JEBnpRlUVdP7Zs5/rv/5iW80XFMzhRArQxA8i7oLnupIy4dSpfzrDoy9foUmfS5Esp/RUVBuB7W+JJFcq6cYbL/srzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787737624; c=relaxed/simple;
-	bh=n9LyenMFcPw0B9rc52GW+H0nuObAcHawmJDkIecVI4I=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PPvBi0zSvd+ddiOlE1Enbu3JVoNGaYb+21QW37CgXQ6PoLKfLmHNOzGA8EmI3jrJPBa7r86SOiWrMmXBbQhw6bMT1RGfubWOSQvJxFTSifco9eU9bxzROJOOiESVkoau62CXo4WVfkKz3I/QQnBTjDoaWrRExGC8HN4ueSLMoEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=skrkcqwp; arc=none smtp.client-ip=209.85.221.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1787738389; c=relaxed/simple;
+	bh=6e6OjA+zNQxwlsTn1R8mNfyK3bd/UsQ2WupVSHAPhuE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=CwQEWK/LpOqVDPfvBxJmrwgJs0vTjCj56cmTNqOsJUlDKdtMzZ6eOTM7KjWZAXPm/P1Dbi1BJEf/Qx0fPkQFdQW2yuM3lJFfDb2PmOA5FsdXJnFjeuO4o+gb9VIoU1nAm0th6Vx4jF9kJu5R7DbogeremydT7lypj9M4GRu2pO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfM0Cqud; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skrkcqwp"
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-47fd4ee0ac0so535904f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787737621; x=1788342421; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JCN5ZDztYZPoXy473rXzWwFGq4crA1kqoBaWd7gcR/o=;
-        b=skrkcqwpL8RyTUL+DEjbxUeZKtAzIUYQeTGQdUXvKo9YSvkTq9PrWVohDyA+FvKx8r
-         x+tUYPB+pYVphLpTpM4Qa/KHAVtD/MJsSgDu/anGXjvjvGG7URiCuj0QBiKA71a535Qd
-         vp6ILIPdOIlLEgckNVLy/4TQYKg+Qkxo74gzcsVHmlUdH7WZrzFVKx+Y5dJVia2uqafc
-         ri+I7LiMNhr+PPGbrULON3/2DBscwyjKRoNjfktCyG730uOfdYsFvZrE5O2NRI6x5fXS
-         QmizZCc3JtGvh8LrqXkH5TERlOUzUzHujjJKNEZTNWZE1NBGHAgxOB15WDFZInsjDPFx
-         D0dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787737621; x=1788342421;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=JCN5ZDztYZPoXy473rXzWwFGq4crA1kqoBaWd7gcR/o=;
-        b=YMidiFKsidfSBEGlMlwSxOoneNzvKiA+6QEJVTNTCGK6GAvTM0f2xakVV1DrQlWFx6
-         KPFdJh2odLLyzjCROAoVKRDEe8xpTuwEFi17UB2ee43kuMsI9RHT41ZGMxpmVkK8lNeP
-         hGrvJG4yqA1Mskk9YxBhPVkkBovI+suLPokaKzwvK55g/1GbHBU0IU9UxkF0S1EQ7on9
-         RFCoUfvWvLaMPtdOsfVfhMrvIPMF7h5NeSEPg3dyplyebcPUqkaFv97vQ2+0Pm3iru76
-         9xQ1Uw6YFR9K2IbvzyhR+K6a+mOKZ7vo9qShPuAB9MQngJV7VW21wjIK15Rw6TZDH6Xb
-         8jxg==
-X-Forwarded-Encrypted: i=1; AHgh+RrTXBl3/d8bSqS/2Y8jMBXH5W0CeAdrure57ag8ACVE3QQnynvPE1JFaokvDAvWehP2VQJb/gzUwcT6Cd7qm7XQDMs=@vger.kernel.org
-X-Gm-Message-State: AFuF++mmlymMVgu8DHEE917wCMnaLM3p0kDdcX0zo/GyXiM/JQaLBdfB
-	evGPXevdGrN7DKcsFk8waGKTfPEybd3C8ExkKsgwRngDore8gvXOb+nIEPR8ZmHLlbnbc2NUBQP
-	XqtCnv6tiLIusfc5noBQmaQ==
-X-Received: from wrwb11.prod.google.com ([2002:a5d:634b:0:b0:482:ddd8:17fc])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:6f07:0:b0:482:e64d:a1f7 with SMTP id ffacd0b85a97d-482e64da6e6mr1944582f8f.11.1787737534646;
- Wed, 26 Aug 2026 02:45:34 -0700 (PDT)
-Date: Wed, 26 Aug 2026 10:45:28 +0100
-In-Reply-To: <20260826094528.3738023-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfM0Cqud"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF8B1F000E9;
+	Wed, 26 Aug 2026 09:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787738387;
+	bh=7e3g/MMvrAYsj/eE1u9f1r3nJ1mYwxXRBreXNfzRAZM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=TfM0CqudSB34Og5qQ/zGox5QZ/7mqjSnRo2v+vHwQ9kuUOHS+CENOSQ6o2lHJ2oVs
+	 8XqoiuJWd2Z0UWutIAMu30aInvZRh8p2j9wVy9o2powpqFL/HLg7OTaRlMZU9YmwhF
+	 e2OSCjZkgwKa/w1n/b2y/ED1zEjy3nBH4jHUeEqZpvtd5dTsG9RlS+axbabkcGttVp
+	 G21DBZs18gP2aeMqokySckEOhr+xYeiJFA2mgDAQPo+NWSKkjK/Hc/ifQewuRpHq+2
+	 VvCtzm09wq340E3xpzF8dB8NbxdWGgtCM8//eUYwq+YglHCfLexThvaxHP5HMuWkDm
+	 9m7LfZpgHyntg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
+ trace_pipe_raw readers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260826094528.3738023-2-vdonnefort@google.com>
+References: <20260826094528.3738023-1-vdonnefort@google.com>
+ <20260826094528.3738023-2-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 26 Aug 2026 09:59:46 +0000
+Message-Id: <20260826095947.4FF8B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260826094528.3738023-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
-Message-ID: <20260826094528.3738023-4-vdonnefort@google.com>
-Subject: [PATCH v8 3/3] ring-buffer: Prevent truncation of nr_pages / nr_subbufs
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Although ring_buffer_per_cpu::nr_pages is defined as unsigned long, it
-is capped to 32-bits in a few places, limiting the operations possible
-on a very large buffer. Use `unsigned long` where appropriate and
-prevent truncation of values using nr_pages (or nr_subbufs).
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] ring_buffer_read_page() incorrectly returns -1 for splice_read req=
+uests on subbuf order mismatch
+--
 
-While at it, subbuf_size must be at least `unsigned int`.
+commit c4d6ee6f55f23c8ec6da6f812ec3b722b2b7f6b6
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-Note that persistent, remote and user-mapped ring buffers are capping
-the number of pages to 31 bits already, making "int" safe in many
-places.
+tracing: Fix subbuf resize races with trace_pipe_raw readers
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+This commit modifies ring_buffer_alloc_read_page() and
+ring_buffer_read_page() to handle dynamic resizing of trace ring
+buffers, allowing readers to avoid stale size values. It introduces
+a manual data copy fallback in ring_buffer_read_page() when the
+subbuffer orders do not match.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 6089fcc67e2b..1fcf55e2ca81 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1683,7 +1683,7 @@ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
-  * This is used to help find the next per cpu subbuffer within a mapped range.
-  */
- static unsigned long
--rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
-+rb_range_align_subbuf(unsigned long addr, unsigned int subbuf_size, unsigned long nr_subbufs)
- {
- 	addr += sizeof(struct ring_buffer_cpu_meta) +
- 		sizeof(int) * nr_subbufs;
-@@ -1693,13 +1693,12 @@ rb_range_align_subbuf(unsigned long addr, int subbuf_size, int nr_subbufs)
- /*
-  * Return the ring_buffer_meta for a given @cpu.
-  */
--static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
-+static void *rb_range_meta(struct trace_buffer *buffer, unsigned long nr_pages, int cpu)
- {
--	int subbuf_size = rb_subbuf_size(buffer);
-+	unsigned int subbuf_size = rb_subbuf_size(buffer);
- 	struct ring_buffer_cpu_meta *meta;
- 	struct ring_buffer_meta *bmeta;
--	unsigned long ptr;
--	int nr_subbufs;
-+	unsigned long ptr, nr_subbufs;
- 
- 	bmeta = buffer->meta;
- 	if (!bmeta)
-@@ -1745,7 +1744,7 @@ static void *rb_range_meta(struct trace_buffer *buffer, int nr_pages, int cpu)
- /* Return the start of subbufs given the meta pointer */
- static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
- {
--	int subbuf_size = meta->subbuf_size;
-+	unsigned int subbuf_size = meta->subbuf_size;
- 	unsigned long ptr;
- 
- 	ptr = (unsigned long)meta;
-@@ -1757,11 +1756,11 @@ static void *rb_subbufs_from_meta(struct ring_buffer_cpu_meta *meta)
- /*
-  * Return a specific sub-buffer for a given @cpu defined by @idx.
-  */
--static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
-+static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, unsigned int idx)
- {
- 	struct ring_buffer_cpu_meta *meta;
-+	unsigned int subbuf_size;
- 	unsigned long ptr;
--	int subbuf_size;
- 
- 	meta = rb_range_meta(cpu_buffer->buffer, 0, cpu_buffer->cpu);
- 	if (!meta)
-@@ -1777,7 +1776,7 @@ static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
- 
- 	ptr = (unsigned long)rb_subbufs_from_meta(meta);
- 
--	ptr += subbuf_size * idx;
-+	ptr += (unsigned long)subbuf_size * idx;
- 	if (ptr + subbuf_size > cpu_buffer->buffer->range_addr_end)
- 		return NULL;
- 
-@@ -1854,13 +1853,13 @@ static bool rb_meta_init(struct trace_buffer *buffer, int scratch_size)
-  * must be the same.
-  */
- static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
--			      struct trace_buffer *buffer, int nr_pages,
-+			      struct trace_buffer *buffer, unsigned long nr_pages,
- 			      unsigned long *subbuf_mask)
- {
--	int subbuf_size = PAGE_SIZE;
-+	unsigned long subbuf_size = PAGE_SIZE;
- 	unsigned long buffers_start;
- 	unsigned long buffers_end;
--	int i;
-+	unsigned long i;
- 
- 	if (!subbuf_mask)
- 		return false;
-@@ -2109,8 +2108,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	struct buffer_page *head_page, *orig_head, *orig_reader;
- 	struct rb_validation_state state = { 0 };
- 	bool skip = false;
-+	unsigned long i;
- 	int ret;
--	int i;
- 
- 	if (!meta || !meta->head_buffer)
- 		return;
-@@ -2161,7 +2160,7 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 		rb_validate_buffer(head_page, cpu_buffer, meta, &state, 0, state.ts);
- 	}
- 	if (i)
--		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
-+		pr_info("Ring buffer [%d] rewound %lu pages\n", cpu_buffer->cpu, i);
- 
- 	/* The last rewound page must be skipped. */
- 	if (head_page != orig_head)
-@@ -2245,7 +2244,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	}
- }
- 
--static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int scratch_size)
-+static void rb_range_meta_init(struct trace_buffer *buffer,
-+			       unsigned long nr_pages, int scratch_size)
- {
- 	struct ring_buffer_cpu_meta *meta;
- 	unsigned long *subbuf_mask;
-@@ -2345,8 +2345,8 @@ static int rbm_show(struct seq_file *m, void *v)
- 			   rb_meta_subbuf_idx(meta, (void *)meta->head_buffer));
- 		seq_printf(m, "commit_buffer: %d\n",
- 			   rb_meta_subbuf_idx(meta, (void *)meta->commit_buffer));
--		seq_printf(m, "subbuf_size:   %d\n", meta->subbuf_size);
--		seq_printf(m, "nr_subbufs:    %d\n", meta->nr_subbufs);
-+		seq_printf(m, "subbuf_size:   %u\n", meta->subbuf_size);
-+		seq_printf(m, "nr_subbufs:    %u\n", meta->nr_subbufs);
- 		return 0;
- 	}
- 
-@@ -2431,7 +2431,7 @@ static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, unsigned int p
- }
- 
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
--		long nr_pages, struct list_head *pages)
-+			       unsigned long nr_pages, struct list_head *pages)
- {
- 	struct trace_buffer *buffer = cpu_buffer->buffer;
- 	struct ring_buffer_cpu_meta *meta = NULL;
-@@ -2559,7 +2559,7 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- }
- 
- static struct ring_buffer_per_cpu *
--rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
-+rb_allocate_cpu_buffer(struct trace_buffer *buffer, unsigned long nr_pages, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer __free(kfree) =
- 		alloc_cpu_buffer(cpu);
-@@ -2716,8 +2716,8 @@ static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
- 	struct ring_buffer_cpu_meta *meta;
- 	struct buffer_data_page *dpage;
- 	unsigned long entry_bytes = 0;
-+	unsigned int subbuf_size;
- 	unsigned long ptr;
--	int subbuf_size;
- 	int invalid = 0;
- 	int cpu;
- 	int i;
-@@ -2787,8 +2787,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 struct ring_buffer_remote *remote)
- {
- 	struct trace_buffer *buffer __free(kfree) = NULL;
--	long nr_pages;
--	int subbuf_size;
-+	unsigned int subbuf_size;
-+	unsigned long nr_pages;
- 	int bsize;
- 	int cpu;
- 	int ret;
-@@ -5872,12 +5872,12 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
- static struct buffer_page *
- __rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
--	int max_loops = cpu_buffer->ring_meta ? cpu_buffer->nr_pages : 3;
-+	unsigned long max_loops = cpu_buffer->ring_meta ? cpu_buffer->nr_pages : 3;
- 	struct buffer_page *reader = NULL;
-+	unsigned long nr_loops = 0;
- 	unsigned long overwrite;
- 	unsigned long flags;
- 	int missed_events = 0;
--	int nr_loops = 0;
- 	bool ret;
- 
- 	local_irq_save(flags);
-@@ -6195,8 +6195,8 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 	struct trace_buffer *buffer;
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_event *event;
--	int nr_loops = 0;
--	int max_loops;
-+	unsigned long nr_loops = 0;
-+	unsigned long max_loops;
- 
- 	if (ts)
- 		*ts = 0;
-@@ -7442,8 +7442,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct buffer_page *bpage, *tmp;
- 	unsigned int old_capacity;
-+	unsigned long nr_pages;
- 	int old_order;
--	int nr_pages;
- 	int psize;
- 	int err;
- 	int cpu;
-@@ -7625,10 +7625,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 				   struct buffer_page **subbuf_ids)
- {
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
--	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-+	unsigned long nr_subbufs = cpu_buffer->nr_pages + 1;
- 	struct buffer_page *first_subbuf, *subbuf;
--	int cnt = 0;
--	int id = 0;
-+	unsigned int cnt = 0;
-+	unsigned int id = 0;
- 
- 	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
- 	subbuf_ids[id++] = cpu_buffer->reader_page;
--- 
-2.55.0.860.g4b6b3295ed-goog
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+[ ... ]
+> @@ -7183,7 +7218,8 @@ int ring_buffer_read_page(struct trace_buffer *buff=
+er,
+>  	 */
+>  	if (read || (len < (size - read)) ||
+>  	    cpu_buffer->reader_page =3D=3D cpu_buffer->commit_page ||
+> -	    rb_is_static(cpu_buffer)) {
+> +	    rb_is_static(cpu_buffer) ||
+> +	    data_page->order !=3D reader->order) {
+>  		struct buffer_data_page *rpage =3D cpu_buffer->reader_page->page;
+>  		unsigned int rpos =3D read;
+>  		unsigned int pos =3D 0;
 
+[Severity: High]
+Does this new condition break splice reads when the buffer order changes?
+
+When tracing_buffers_splice_read() allocates a read page with the new order
+and calls ring_buffer_read_page() with full=3D1, it will now enter this man=
+ual
+copy block because the subbuffer orders no longer match.
+
+However, just a few lines down inside this block in ring_buffer_read_page(),
+there is the following check:
+
+        if (full &&
+            (!read || (len < (size - read)) ||
+             cpu_buffer->reader_page =3D=3D cpu_buffer->commit_page))
+                return -1;
+
+Since the reader page typically hasn't been partially read yet (read =3D=3D=
+ 0),
+and full =3D=3D 1 from splice, this check evaluates to true and immediately
+returns -1 instead of copying the data.
+
+Because tracing_buffers_splice_read() loops and ultimately returns -EAGAIN
+on failure, will this cause an infinite loop of -EAGAIN for userspace tools
+trying to read across buffer resizes?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260826094528.3738=
+023-1-vdonnefort@google.com?part=3D1
