@@ -1,140 +1,170 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AB440928D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 17:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3428471CF8;
+	Wed, 26 Aug 2026 17:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787764200; cv=none; b=qb6cqv4PdQ+1IOJtX9QtbupJlTxFNp+uiNyMgfZTryeZGl065NX5SRpqy1d4himllcOt5du6yc+CK7/GvmPZZjCvc+SmdE1BlCFdMHjULWEe+witx+SqoMsnkGQMpVj5QnKTPT39CFQkPYh3Q7bNw1JkLucq8Wdni1OZ/xLAtfA=
+	t=1787766919; cv=none; b=hexfX84h2OsCfNcOR556BZjRKNarGUvXvhuiki/h8JJowP6Gp0Yuef0GVswyfLRA7hJgOfdwG/FoJv5mGqRKWen4ENRXlCqkb+1pYCq6dN/7EH/rkt+mrThoGRE1vvtXJc9S1O4EGxbcYwPSmalbBYVTbTtNxg71XQGRpQRxbRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787764200; c=relaxed/simple;
-	bh=HryDV6+5qMbLhZY2KERuGiFp2ZKXAOvyWcXmP57Eq3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jtIr1MXwAIZhvcAxpnu/y/PCpyJQXiqa2dBnewwpBAuzg2lzBhON4Anf1RcGn06ksZ0f5WVIh4X9/65+DxAXwPFkNw4jbD4sJim/Wfw0w1T5KeKqT8XQHFBDWgGVOApFwifhqw4yNpQHymbfPc96yvoYRGFtyUgjoJhjB67hGOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDZeQKGj; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787766919; c=relaxed/simple;
+	bh=eWF20d/kLnpGt8uKR0O11FUEjgn3jjhUNhbGdLe/oZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AbhmNSew8kQqshpb8/0e9a9PbbVe/tT/5IkFpsTwKqrc6vFaQD5xJuMzc7m/xWC393SjdZt7UcrY4iP7m3+7usB8Uf36h1rb9RkrSwlT48fKcOt+UBRUAAdeS512gYeN+9zdyj2WOqBY64nzypj6QtyL7Qhk1e1ykUMgxcUPwAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=a6QD1hq/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=j8c5MrpY; arc=none smtp.client-ip=103.168.172.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDZeQKGj"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-69c108fee7fso1997814a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 10:09:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787764179; x=1788368979; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=TJATd1QCK8mzBoL2c8+JxSkXmq9RldTbZrwKcwNjBmk=;
-        b=kDZeQKGjuHP6Ge59bPmUk6WLTc+NcJVo2XZ1RnDwli+aHKDJAUteHSksxGVCdR8du1
-         bAlX3fA2NcX3AnXBJU7KEwF8QJ82o0afYQ1yoEks10qxCmhjvFJyMRhxUyWrzvpO6Sj4
-         e56n85zapKxQLnEDpayB4Oo7O6hkMgnqLhzRvOI04G80GgjzotdM7u+jrApjqOUiDekE
-         Sw2qaevbutXor/bcuUNh6UvAQfGa0s64DntC/iy122R2E8qD+Bri8AsE9m8N9GCtjPlL
-         X93R02CxR8/3bjmcG4FiYQ3CDYiqIG5ZYYxovOiOxNEKcoITwgL6IdaAjbpsaqtLPPzt
-         JmUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787764179; x=1788368979;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TJATd1QCK8mzBoL2c8+JxSkXmq9RldTbZrwKcwNjBmk=;
-        b=HzVVUKjU77mAuGzMlobSMVG1Dcvf1PGcrYNmJ0/PWx0wqLcBcig2Ojf9mPF22FZvkS
-         bJMFpBR/JAUftk2ilqIHkGAYpG1I2CNNrHOUMrj1sZSCWLHY2Wjvx3JUe4uneNOF4c+R
-         0KsUjoWRJXVntIFbrYrE0gvepzTLcmBtPhDdfUfB+GX4DoHaA2rRisK6UCzAKzLJF9Dp
-         aooMLDX/TnWuPQTXYDE3ojQCBg6nTdEA/h32rvwj1JOlVQDuJtBlni04qGYDWwT/H9IV
-         20pX8uDWxgNboc6F8QBpYhfQ/Vhkja2WSShkyilubUs0C7Rbz68EV/1zeU41Sxo8g7Dk
-         DpnQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrsIOTnyEluRoep/lXL8TkUXLxLOOr6DmByq7/kUizthNipMlu9OR7DraHK3jLHg2EJR4uAT2SRmW5ADYnriMZzyk0=@vger.kernel.org
-X-Gm-Message-State: AFuF++mSfxXZRT6FN2EmQpWSL2fY0+6iHVRo/Q5Y+qLPCbnK7J0LC80X
-	HoGHku+Ffr9fA9HZtgTRXbESVBko+tkDuJKr1cNK6sW4bOg4UIfnEZQF
-X-Gm-Gg: AR+sD13aR2WJ4hltfTKUoPoCvOcdKRDQa2UvuAWwbdSViOtmcz0DFDcdUJrXIxMSFrd
-	+qwgzQ3H/LaBlkfh4rRDZsafIlU0h8Wb3/i626b4bww/Xt2pYxU/J0Vow4UdWXuVFFNufnD2LE5
-	xUWDZ33zt5Qvzcr52/S7ReaQcXzCoF+ZvMNvTPCGDMiBx9/z1jL00ZaJa2hZDASm51XfK26sOZ8
-	HkfBO9QMJSXhf3rlJuEwJ9XKK8ly9eEa75I1nx9mL20xQ6gdZ3boBusA2bmNnvPG/DbNMmB8Gii
-	sWI9kp3m5VWVjRnu96fMh7S/EISjEirAj4ps+waIUSMVk7/n14hHkMnrHw5frkaqqBoR0kxqD0G
-	LmGYAoIep287/HYACCEapHQTKL3VdOcho1W+P3Do9rRtqFX634jdV63L3DGh3QxK8AWxZtpbHHJ
-	aT1+crWILIPES0cOFvqnMVGLNQphiVzP9mlJcdQvGEVNd3pt/FJPgxUn4mIl76JMiphVo=
-X-Received: by 2002:a05:6402:a0d9:b0:6a1:f092:3c1e with SMTP id 4fb4d7f45d1cf-6a5df6410cemr9897163a12.13.1787764179194;
-        Wed, 26 Aug 2026 10:09:39 -0700 (PDT)
-Received: from foxbook (bfk5.neoplus.adsl.tpnet.pl. [83.28.48.5])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a5edef3c26sm2563163a12.17.2026.08.26.10.09.37
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 26 Aug 2026 10:09:38 -0700 (PDT)
-Date: Wed, 26 Aug 2026 19:09:34 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Jonathan
- Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy
- Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-Message-ID: <20260826190934.5042b344.michal.pecio@gmail.com>
-In-Reply-To: <2026082634-cloak-ambush-3861@gregkh>
-References: <20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org>
-	<20260826153311.6340efcd.michal.pecio@gmail.com>
-	<2026082658-statue-census-dc39@gregkh>
-	<20260826173549.18c8a89c.michal.pecio@gmail.com>
-	<2026082634-cloak-ambush-3861@gregkh>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="a6QD1hq/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j8c5MrpY"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailflow.phl.internal (Postfix) with ESMTP id BB4CC13801D2;
+	Wed, 26 Aug 2026 13:54:55 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Wed, 26 Aug 2026 13:54:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1787766895; x=
+	1787774095; bh=2bQByG0NGolsz8+a6PRUigbbsxEl5vWItJfVtq1Eax8=; b=a
+	6QD1hq/hDLGcIi5UhcC8fZVJV/gg+lWo8Em4IgTDR0QqN0IFXBZHnw62SBzTRGxV
+	+BCXpEVn54j4vZgW5s7oIDF/qun739IiHKx4mmfBJ7gjHzTA5sriBSbA7QavTHow
+	lbcG7uQI9Cf2yN5vJjccrhVCfAtCPKHexiQili8X8eqhJY/owteJfkS2Mgn9CkS7
+	PbjxDtnXu5SwWQhfOaFJxizWrGCXgoIuA+3o5aCZlcMiKq5cQHR8S5D2jJHt4TAb
+	Uir06Hh8cTG73q9hTyWrS+cEX+dOA7ZAP9mobgm0e0ygOuSloW9CGt86gIGx/8zx
+	SFbuNTPprs4o7y98T6UMQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1787766895; x=1787774095; bh=2bQByG0NGolsz8+a6PRUigbbsxEl5vWItJf
+	Vtq1Eax8=; b=j8c5MrpYkaqkl0y05FNftCCFN2zIidZN/4k7tL3rELlkn0UeNv+
+	eU4synikzCN9gL6KHsMGmdJ0X2dP0L0Khyalpxw8bLLPhHRs7CzMYxiPzXJdbwxY
+	7LQ5LHCp6IamFhd1yYIz0nKrcMnGPSgCxbN41bqmWvNuFvwCdJtdUtK3mijnZQvU
+	SqpfmK7mlY2b4i4MIzPLsi/wmhpMir8sAkhn9qs4TOn1lrQOwx2/jfRgEUmRVnV7
+	GlXr3SZj6ejLjzCY31s2fgt0xdEcE38sBh0ybtc4iABad0Ss/u3WDSTzBHpx8j6H
+	T3Fyu2AoyqgsGRhfKoUmwCtLG8wBkOFHYVg==
+X-ME-Sender: <xms:biiPahpqMiPoDTkSxn218jcRh5GhsiXyaxrk3k2eVZxyp6g4JEGdMQ>
+    <xme:biiPakEB1cI24gXsaAJ_ZTvF-iR4MgqqPruof3AH0tMG6mjMFTF9efu54mSMqrTuG
+    Tox9m1P8Zz67ab5u2UoaGwT_78CHgDZ3Do6O2WGe0632DyC9oCJz5w>
+X-ME-Received: <xmr:biiPavqEIIZA3npLSdQJk2IUboUKAaoLN4_vlPIF-MBQxF5VcrfseZA_UEQ>
+X-ME-Proxy-Cause: dmFkZTE6xZzK4A32bGUNNPYnXM0UvfGGyn54u86/PwxKoHJcBoHd78FUBKy/v2DPmHJkl9
+    z6yymj3dgIgVeStR7UbyVaUs+utRXUnAqYgVFAhnt52kgJZEi5ZQgcbmim5s3+aY6iT7hg
+    RAzAXVXWBht8ryRB6o+Lm8WKU9830vEgS4QrvXQDSZi6bLXBuRR0KKNBpTFcUXCXrjZf+a
+    SYib5WegN0Asn3j7LrTnbRG94rtanX/000SZQL7VLgr9r2NQkvxXVuBgkwL92yEkOLWxvc
+    cWIu/MmaWbAfrHScydQFgzQcAAnuRtF1hgbqCpkqHznEpAuInIfxdkRyZO2Ae1fd3UQ/Jr
+    Cv1D/cLBTQpEj9o/s0GrlLzWhnIWSM58LvFdoPhPalweAxhzVh8BJ22krLoJCfutihSKJF
+    GtMyiEPEUikdd0udZaidPol5a9WPHZSgEABZEoxgnZX9ABVuBM1xrQsDc+Udjd/eM96Dx1
+    xDPv9RvuGgpBfytZrjPZsaDWtNM4mJWYM7yAM5ukQJTadCGdAjjhiniqu9hxesSC+5Jkrq
+    pa1niqNodDK4GOP566sFWLhT+/FKYr/w7WLX18J2IkmO9s0LzXZwUnm3+0tDws689cMwpu
+    X/HVN05EaQY31jI8yA/Yvt2PRIfY4cGz7MZ8GP+0Tbzp/R6d7/3oFRyWMjnA
+X-ME-Proxy: <xmx:biiPas5hdOI-hAWkJUBnpREq4LcAl_d0ZAJoDDQiBj_yPYtQTc5_IA>
+    <xmx:biiPagQl5NLN6RnDvd52CuARJrrjrPd2VvT5dWIZo2gqhL2pTkmJsw>
+    <xmx:biiPas6VoCR-shXK5WEbAb6YKiT_rfDZLbVwe_gPYXJbR0Q4ZTzpbA>
+    <xmx:biiPai3vXJc0NvPk6-ISHeblxTysiG54VfQheJefcZY4zfRdtcJkaA>
+    <xmx:byiPaoiTxPpmjY5QptMidWSgn1kC-CQECCM_aoaGoy_kZjwTPTydQRu0>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Aug 2026 13:54:53 -0400 (EDT)
+Date: Wed, 26 Aug 2026 18:54:52 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: hughd@google.com, akpm@linux-foundation.org, david@kernel.org, 
+	ljs@kernel.org, nico.pache@linux.dev, baolin.wang@linux.alibaba.com, 
+	baohua@kernel.org, dev.jain@arm.com, liam@infradead.org, mhocko@suse.com, 
+	rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, 
+	usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, 
+	agordeev@linux.ibm.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de, 
+	rostedt@goodmis.org, mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 19/57] mm/collapse: install a PMD leaf as the
+ terminal layer
+Message-ID: <ao8jHveJqHegERGF@thinkstation>
+References: <20260816224609.308019-20-kirill@shutemov.name>
+ <20260825122354.98021-1-lance.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260825122354.98021-1-lance.yang@linux.dev>
 
-On Wed, 26 Aug 2026 17:44:06 +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 26, 2026 at 05:35:49PM +0200, Michal Pecio wrote:
-> > You can't bind random drivers to random devices out of the box,
-> > you need ID overrides. And then you don't need to bind manually,
-> > the kernel will happily select the wrong driver by default.
-> > 
-> > Authors of the recent xhci and thunderbolt patches admitted that
-> > 'driver_override' was involved in both cases.  
+On Tue, Aug 25, 2026 at 08:23:54PM +0800, Lance Yang wrote:
+> >The detached one is not: GUP-fast and RCU pte walks that read the old PMD
+> >may still be inside it, and on broadcast-TLBI architectures the flush
+> >expels nobody.  Quiescing it would need an IPI, which has nowhere to go
+> >here -- outside the pmd lock it opens the pmd_none() window this design
+> >does not have, inside it is a broadcast under a spinlock.  So the
+> >detached table goes to pte_free_defer(), which holds the free until those
+> >walkers finish.  One transient table page per PMD collapse is the cost.
 > 
-> I'll be glad to taint if driver_override is also written to, but it's
-> bind() that triggers the actual action happening.  Or so the traces
-> show.
+> Well, git history spells out why pmdp_get_lockless_sync() is needed here.
 
-Well, I suppose probe() is the first victim to crash in such cases.
+One more good catch, thanks!
 
-But if Syzbot is binding random drivers to random devices, the obvious
-solution is to ban 'driver_override'. Using that is just cheating.
+> Could we keep pmdp_get_lockless_sync() right after pmdp_collapse_flush(),
+> before map_anon_folio_pmd_nopf() (and while the locks are still held)?
 
-If it still manages to crash drivers by binding them to appropriate
-devices then I would say it will finally be doing its job right :)
+Yes, I will put pmdp_get_lockless_sync() there.
 
-> > Meanwhile, Syzbot also found a stupid write to freed memory in USB
-> > core when HCs are unbound. You may say it doesn't matter, but:
-> > 
-> > * USB HCs are hotpluggable thunderbolt "gadgets" these days  
-> 
-> We support PCI devices being removed, but that falls under the PCI
-> hotplug rules/requirements, right?  Anyway, sure, we can fix those bugs
-> when found, but that's not the majority of what we are seeing at the
-> moment.  Look at all of the dumb platform drivers that are getting hit
-> with this on the syzbot reports...
-> 
-> > * there were plans to alter this code so that UAF is triggered by
-> >   hot removal of the USB device, not its parent HC  
-> 
-> I don't understand what you mean by this.
+Here's what I got to my tree:
 
-There are ideas to change some code to use per-device data instead of
-per-HCD data. Coincidentally, Syzbot found that this use races with
-freeing the HCD and it would also race with freeing the device, making
-the UAF easier to trigger after proposed changes.
+      /*
+       * Nothing fallible sits past here.  No anon_vma_lock_write either: rmap
+       * walks on the sources are unreachable -- refcounts frozen, folio locks
+       * held from freeze to putback -- non-rmap pte walkers see migration
+       * entries, pmd-level observers see the old table or the leaf and never an
+       * intermediate, and fork, mremap and munmap take a write lock where the
+       * round holds a read lock.
+       *
+       * The flush inside pmdp_collapse_flush() is the round's second over this
+       * range: the freeze displaced every leaf here and flushed before dropping
+       * the ptl, and the verify above proved nothing has been mapped since.
+       * What it covers is the paging-structure caches -- a CPU may still hold
+       * the pmd-to-table link, for a table that is about to be freed -- which
+       * is why the helper shoots down a pte range rather than a pmd.
+       *
+       * If pmd_t is too wide to load in one access, a lockless walker reads
+       * it half at a time.  Such a walker holds interrupts off, so an
+       * interrupt between two present values is what keeps it from assembling
+       * halves of both; the flush above does not always send one.
+       * pmdp_get_lockless_sync() does, and is an empty inline wherever the
+       * entry loads atomically.
+       */
+      old_pmd = pmdp_collapse_flush(vma, cand->addr, pmd);
+      pmdp_get_lockless_sync();
+      old_table = pmd_pgtable(old_pmd);
 
-I gave it as an example of Syzbot doing something useful with 'unbind'
-when it isn't wasting time on driver overrides.
+      /*
+       * The smp_wmb() in __folio_mark_uptodate() orders the copied data before
+       * the install below publishes it.
+       */
+      __folio_mark_uptodate(cand->new_folio);
 
-Regards,
-Michal
+      /*
+       * Deposit a freshly allocated table, not the one just detached: a
+       * deposited table has to be quiescent, because whoever withdraws it frees
+       * it immediately (zap_huge_pmd()) with nothing to hold a lockless walker
+       * off first.  A table that has never been reachable is quiescent by
+       * construction, which is why collapse_alloc() secured one.
+       *
+       * The detached table is not quiescent.  GUP-fast and RCU pte walks that
+       * read the old PMD before pmdp_collapse_flush() may still be inside it,
+       * and on broadcast-TLBI arches that flush expels nobody.  Quiescing it
+       * would take an IPI in a pmd_none window, which this design does not
+       * have.  So the table goes to pte_free_defer(), which holds the free
+       * until those walkers finish, as retract_page_tables() does.  One
+       * transient table page per PMD collapse is what that costs.
+       */
+      pgtable_trans_huge_deposit(mm, pmd, cand->deposit);
+      map_anon_folio_pmd_nopf(cand->new_folio, pmd, vma, cand->addr);
+
+Any objections?
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
