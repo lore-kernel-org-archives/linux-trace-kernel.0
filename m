@@ -1,254 +1,221 @@
-Received: from mail-oa2-f1.google.com (mail-oa2-f1.google.com [74.125.231.65])
+Received: from mail-lr2-f10.google.com (mail-lr2-f10.google.com [74.125.230.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52AF18C008
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 03:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787713219; cv=none; b=OWrk1lsStum3TTr3h9eHR9VfEuj1I4+h5n6oXags6mlKxAGCtKVKCAr0ZNUIF6MuOaSSIcFyr97EEOXEfArs7zc76CXiyP1A15Fx3KDQ3otyytCdqRGCd1bifBLExf5N59wk2mhBXe6AS0x8GlBApSLzHJSfOiGTsfKZHgMh/tw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787713219; c=relaxed/simple;
-	bh=D8p7mZ3kg+7smOS1vLA4B5w7bt/8s8UNR2Wlj3uMUXQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p0v8YRVk7hUORS+3F7kOjdm8AOEoYWA7cSzKPlaA5+BfZJJHdKHAYBtETq+L7vwRB8hy7bY1RqSMlLqvI6tYjwqVoLga1DEq06im3t+2ntxEJE6LuQB/i9+TkTRWzHYiGnZzy7oNUdJUsHwg6N3GfFAZ0JhTc5TpgfWnzzLTCLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nORop46p; arc=none smtp.client-ip=74.125.231.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11BA2E717B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 03:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787713927; cv=pass; b=oMFyV/OImVj3E2mNc4HgX9OkkqGuCDoNWhApsxdrYr845gAU/5sKdQJzwCg39ReoE86c4K9YcDdnel/MsJhXOUKYEHn1cinAlbgk9Lg3SjdkD+bVLgVbtYUOaKWZWVXlMj0dLrGUG59M7ZM9mYR24gsFOg0menkN9808agGFc8M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787713927; c=relaxed/simple;
+	bh=dSqBXOdyD9HPVRewoslxiTwnYYt7O/GNF6cjvWkbc2Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AufEUQjZsjmQV2seD6lxw67uv4n4mP0LXhuBIMsVAT68CKd6mTgdhefsb6VlvQcyO9yJcjgkgMuK3MGVdbRPeDziIV4XmpzLkZhl76KfYt0vyHDpFRfavP5svHCrwT8tTbDMwDwRJaTbskDSWKlYXHazh2CfUOoIfCq3FzntaN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWgIjUJL; arc=pass smtp.client-ip=74.125.230.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nORop46p"
-Received: by mail-oa2-f1.google.com with SMTP id 586e51a60fabf-451e22b4773so243121fac.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 20:00:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWgIjUJL"
+Received: by mail-lr2-f10.google.com with SMTP id 38308e7fff4ca-3a1921429f3so1856171fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Aug 2026 20:12:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787713924; cv=none;
+        d=google.com; s=arc-20260327;
+        b=qrWHRPa10SBjAcMzZqeWljqLoUxqlWpn7LI/1gzNC1akoJBk//0NxFV4lSyxNB58Az
+         OFy82BDoVUZjkh/HTPX3e9nK2Ju8nApw4FfPoQe9oQc+p6mXMYHK94s7Q0qFRfsXMp5o
+         60FU4Pa9ERJkysGnNUiO5Ic7o4G0/XK4OiHLmLnPIXP5fm635p1LW/hEQFDQCZPMafi0
+         K+4JBIBzySJeR/D8w+F0adxvUXilcjU+RTRpd7DL81z83j0jWnOKB6kLKNyQtFzkfHh+
+         eE4rnMR+IJqXFWzz84zZBPoO3cg7XVIMn63dUex696+WdRHixZh3v44bc0BaMFY/xrZE
+         CWUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=O+Qt3snVLSXt9bz85P9Y6uHkaEjgQM21tQftzjLIsxM=;
+        fh=7c6NSBaymGLaEVCoJia4Pi91nJUw2vIzmki0eIiRSFE=;
+        b=WAf7zWhP4v/9xEDOJqObdKLV0oqtahjoETMRHUOxZEUX9cbP3mxHuZ1IMdG2WlmF6k
+         2e8UxEr2rM7JH/g4CSYFLk3b/H0Z21RfyRvGudueVXY0Kb5JY8pxl3Gu2SaArg2UwQv6
+         NbaDul0nXWNUu04zaevuxqwX8WzJC8+JcdMigIGP1DD8GS3ai5pHTZDCeCJ1OnpzEeS1
+         uk5vD+2WGpHO1oe64iYCpBlw5zRCuXRzx8Rz80mjhS+p1NS3wT/XKhQAaYcY5V0wZV08
+         gCdgqGHv7QYhd4mubpv6pEnNTWYXsWp0hW/ZLrUAMJwZmpIzL9/7hiI+aZi3vFmC9OLl
+         PTVA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787713215; x=1788318015; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=S6uGsUcBpwSrDte5NO1KsCbh+Am7aGUcn0OpWMafaL0=;
-        b=nORop46piOv6ODSxDbpUSI2foMtDncVlwpyL4SbDnL78p0bnEweeSOJPb0eWV9lZAd
-         0WQNUvf4DIwD3grJz4JkoJm7TRYSDD5dB7FqE9fJGLPph2lmdk8NCNSa3/8PB0v0zPsV
-         jIAXcqB4w1sxM5OF18Lu1TMesRq7gsfPrCGc7iS0LzwQzR63aqtbgsSztPPFT6ggQbE7
-         3SSdu+9+K9OXCYF2euMnJOVDzYjvJUxDT8Qr5Sv5OpixJ1NdNPV/oVoniy6x7wVQbefN
-         YwxfJmYJry4+z1zBbqH1jO84kAKmPDrqPtZEc9EcdwrbDEcfcy+nW4OnPzleC9Hv4Tjy
-         eH1Q==
+        d=gmail.com; s=20251104; t=1787713924; x=1788318724; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=O+Qt3snVLSXt9bz85P9Y6uHkaEjgQM21tQftzjLIsxM=;
+        b=AWgIjUJLcMR6jPo5co1GAveSCCuWO+EaGFLSt57UlvsfuDL5HR2sd3u1Id0ZjvC1Tg
+         cfLaDl4S+Kl0watfKiYEmoKx/gDxNtJQ4xRkgQQwYbCOP1WfrgM1kLtpadYbKaFbmHh2
+         qnv6BiP/C7gh8rP+/XgA1BNTj6LPqVet2mjohl38Sa6QF4OM9Ph/DsUidoWGj034fa23
+         y8FfLxuz/NQneEMD+lqwCvByyxA8tdcQ0xlPYazQ0U+RnOz1/fbRxzViPOMOiDidSiS6
+         I94ju7iAcNE3hYwqkoYxCCmaS8uGNCiVMcPNz8Nk1J9Qo1y871BiiGi+ryWTdINXxKQS
+         Tkkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787713215; x=1788318015;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=S6uGsUcBpwSrDte5NO1KsCbh+Am7aGUcn0OpWMafaL0=;
-        b=ft+wVESZJ4Z2e1uyQxwktOyrNNrqT5eXSLDzswK+B8xd55gV/w1ak4hcxf5enezV6X
-         p8PikVBs8nqJ3WI3bg7Zk2Mqmp9zKc9KLkVRuZmzUkM0ImpJkzzyln1r0sxLDkQ4QZJC
-         gcwN367DwkvZhBHHuU2mkJKlh+BGntqrlx5Ab5JZKOaQd7446PBpziPqAPScFQJwvAOC
-         Jxiu9JHyDBZzli3t66NmSi/Dv7EQlbDDf55Q1s5Ieax35bj42F/jlNWVuf+MKxUrJcLm
-         XVWV1RpKCcaYcM72omwVYxdAmjcojre/e5neYw7U9HFM1l2gx/+1mc6rE6WzIzdQ7SP2
-         Bssg==
-X-Forwarded-Encrypted: i=1; AHgh+Rpj+6gUsJJYioJZJQ2y9wtcpyihgb//U3XXFVOggbsy/g5jGUll4FCGmnrv3BWpqapeGnDCu2mh44DTgME99B44eEs=@vger.kernel.org
-X-Gm-Message-State: AFuF++mvcBFtchT4sW4S6DwEgSJHj8ysmwPTgiSuLPPUvCpZQTfy1ZIM
-	AnJDQPXNl6B8c7fnCdui0cUdxrq8TvuRuLaGfgndIwYBMrxCzTo2KLb7RfesRmLY4Ksz2Q==
-X-Gm-Gg: AR+sD11mRXM83IrHtcdwqBVaG4F89UXLGF3fLcMRUgD+XfFM34RG5f20jZFAlnGQhXr
-	lNdZSUkSI8lMJKJNCmtE4ILHBphwh4lKXNJy3mU2gCyl0mwR0fJjmfTKZj40ejuAvPDFNHnf3vG
-	/jTH+DwqdyfMBNgqwn9Seas8bsZzcFczqLZH63xUocdYfxOuHqtS0Q+rGzeAQ9eGKus4loXAc0f
-	uAhvsZxaAwrVV+k4vGTPRlPb/enmWdv34ohsHRK9SfHLHo8XD5OZjb50vQdxaORGeiLvpYSgux/
-	d3znZC5Ri8qGwWNooEHLhUSgIaF6lUYTV6eakQTYCwRIKcPDDCNq7/TUvp6i1TiqKUn7R4mG5Lr
-	DSL+ybhbp1JL58l2T6izUzvprUMhUNCuiGQJxH8aUG5QewFufrVUPxsEd6ICoibY/2MZN+pYlzV
-	JWxNFxRH6bzRyuZkEujxwl1s+zC2Q7R8dy6PIn9N41zzHjJOX1LwLCkoeJoXJ0pTIB/7TePiE61
-	NpVNaS+eECYucVyk4vvxJ4aHA==
-X-Received: by 2002:a05:6870:c6a7:b0:448:71f4:a28 with SMTP id 586e51a60fabf-46597c51710mr4868190fac.2.1787713215432;
-        Tue, 25 Aug 2026 20:00:15 -0700 (PDT)
-Received: from localhost.localdomain ([14.22.11.162])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-465adf69375sm1082389fac.7.2026.08.25.20.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2026 20:00:14 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v4] tracing/probes: Fix use-after-free on field name/type of events with multiple probes
-Date: Wed, 26 Aug 2026 11:00:09 +0800
-Message-ID: <20260826030009.1855331-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260825102221.79713c98@gandalf.local.home>
-References: <20260825102221.79713c98@gandalf.local.home>
+        d=1e100.net; s=20251104; t=1787713924; x=1788318724;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=O+Qt3snVLSXt9bz85P9Y6uHkaEjgQM21tQftzjLIsxM=;
+        b=WD6VKw2Obv0JJRAo81KJv1zXecT7vn3KOS6pHqMD+BJK45vuJ4f3dTqm9kyt0OfTH4
+         VBeo/SL2297dNSonFe9HexTBc7apUg4nK+RPIfKN70jaLhe3bUN/jDLbjUAjp6TJ3Ocp
+         egrYoOCmoJvrQ+McIZk8hCOuHhDyuUi43GZVGNqXpYvmGS2/nkdqLiy8fPE8pfh6sXuD
+         VzyxX9ZqN9jkf69dNtylhQ0/IvKnJ00HFbCClyXYc4fSAb6dmm0i7yD53QLKKnzQJRVg
+         75l48ujGF+WU8UMG2JZ0auC3EO2YIOOwPEGpUBr65/cFg67ObxVUVff6u1WQpmRqNAwN
+         vh8w==
+X-Forwarded-Encrypted: i=1; AHgh+RpXnKtRXwwAQ6mH9SocCZwisiacEzMD5p30ynev2ggsNriUlX8sf6Sub8denz9l4H+Ae5mi2Z8vQCzkx6hGPkx67aY=@vger.kernel.org
+X-Gm-Message-State: AFuF++ky6JoCwCLMi+LoSdEpvaumsKQ7nB0ASKR8dg7Tu0ePc9jSjpLC
+	aru/qWvTxD73xR1jEjHDFQEX5EDfx0TBBVTPz0kkKq5RR/CDhMvQSvQkslzjVvYLz9nUn7V8muR
+	I215UCT2KykgWUS7dGXzpHw9DFnahk6I=
+X-Gm-Gg: AR+sD10qOEYh9jgqbhjOcA01SOHycvFcJ+xYmZt1Sz6gm5n2qsaqlRZPjymc0FLeU0O
+	wpNj+RWi0+ZfFvygscT1trb38bPdX0GSjnU/KVFz/vPXSnnDgUU9i+bKyNV+hfwP0jvmGsOBlrs
+	OV/m/tWNjuklQNe0qs/Z5MtSqfFqWGVoHZBDUtSCnBDDwZQwYV+e5avEp9G3/KXapntJ+T2RXeC
+	zRJbvYZ2VLj7Zohzeo2jPEqo84Ms4wbwOGKrfWnNYbtaJBo1mD0UqGqAmrc1zyPldMcVY5SrzBw
+	XeB1WtSWLCdtODItVVMp5aItTh8C322mCl5MGC80Wnx40g==
+X-Received: by 2002:a2e:be9d:0:b0:39b:7cd:e1ca with SMTP id
+ 38308e7fff4ca-3a1fd6195b9mr5546241fa.9.1787713923379; Tue, 25 Aug 2026
+ 20:12:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260824144356.1f61aea2@gandalf.local.home> <20260825111210.3271443-1-bsdhenrymartin@gmail.com>
+ <20260825113714.188131F000E9@smtp.kernel.org> <20260825102221.79713c98@gandalf.local.home>
+In-Reply-To: <20260825102221.79713c98@gandalf.local.home>
+From: henry martin <bsdhenrymartin@gmail.com>
+Date: Wed, 26 Aug 2026 11:11:51 +0800
+X-Gm-Features: AcwNN1Uze5KPl3mPJAnkr6yhIlyrgGYUjcYqqqNCSUYyKI9Yp24XdzpFrCidUZY
+Message-ID: <CAEnQdOoXAnfFjM_ifc6-JeT+WOdgXTwHY0Dt9sQPxbBPUKztHw@mail.gmail.com>
+Subject: Re: [PATCH v3] tracing/probes: Fix use-after-free on field name/type
+ of multi-probe events
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The fields of a probe-based dynamic event (kprobe, uprobe, eprobe and
-fprobe events) are created in traceprobe_define_arg_fields() by handing
-the probe_arg name/type strings to trace_define_field(), which only
-stores the pointers without copying. Those strings are owned by the
-trace_probe and are freed when that probe is removed.
+[1]: <20260826030009.1855331-1-bsdhenrymartin@gmail.com>
 
-An event can have several probes attached. The field list is defined
-only once, by the first probe that registers the event, but it is kept
-alive by any surviving sibling probe. Deleting just that first probe by
-symbol -
+Thanks,
 
-  # primary A: fields are defined from A's args
-  echo 'p:kprobes/ev vfs_read  a1=$arg1' >  kprobe_events
-  # append B: shares A's event call
-  echo 'p:kprobes/ev vfs_write a1=$arg1' >> kprobe_events
-  # delete only A (matched by symbol), B survives
-  echo '-:kprobes/ev vfs_read'           >> kprobe_events
+-- Henry
 
-frees A's args (trace_probe_cleanup() -> traceprobe_free_probe_arg()),
-but trace_probe_unlink() keeps the trace_probe_event because the probe
-list is not empty. The event call stays registered via B while its
-fields now reference freed memory. Any field lookup then reads it, e.g.
 
-  echo 'a1 == 1' > events/kprobes/ev/filter
-
-  BUG: KASAN: slab-use-after-free in strcmp+0xa7/0xb0
-  Call Trace:
-   strcmp
-   trace_find_event_field
-   parse_pred
-   process_preds
-   create_filter
-   apply_event_filter
-   event_filter_write
-
-field->name references parg->name (kstrdup'd, freed with the probe) and,
-for array arguments, field->type references parg->fmt (kmalloc'd, freed
-with the probe) - the scalar type otherwise points at the static
-fmttype rodata, which is safe.
-
-Have traceprobe_define_arg_fields() duplicate the name and type strings
-and anchor the copies on the trace_probe_event, which embeds the event
-call and outlives every individual probe; trace_probe_event_free()
-releases them.
-
-The reproducer above triggers reliably; the field lookup and the delete
-both run under event_mutex, so this is a dangling reference after
-removal rather than a race.
-
-The issue was found by the autokbug dynamic kernel fuzzer at Tencent
-Yunding Lab.
-
-Fixes: ca89bc071d5e4 ("tracing/kprobe: Add multi-probe per event support")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-v4:
- - Drop the redundant "added by the Fixes: commit below" and reword the
-   code comment ("an event with multiple probes attached"; clearer last
-   sentence), per Steve's review.
- - Steve: drop the sentence explaining the move from the previous
-   version from the changelog.
- - sashiko-bot (ack'd by Steve): traceprobe_define_arg_fields() may be
-   called again after a failed first attempt, since event_define_fields()
-   ignores this hook's return value. Freeing and resetting the leftover
-   duplicates at entry avoids leaking the previous array and writing
-   past the new one.
-v3:
- - Move the fix out of trace_events.c into the probe layer
-   (traceprobe_define_arg_fields()/trace_probe_event_free()). Ownership
-   lives on trace_probe_event, whose lifetime matches the field list.
- - Clarify this is kprobe multi-probe-per-event, not eprobes, and add a
-   shell reproducer.
-v2:
- - Changelog wording (superseded by v3).
-
- kernel/trace/trace_probe.c | 48 ++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace_probe.h |  2 ++
- 2 files changed, 49 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index c4163904ba747..0dfeb6d5eec07 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2552,19 +2552,60 @@ int traceprobe_set_print_fmt(struct trace_probe *tp, enum probe_print_type ptype
- int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 				 size_t offset, struct trace_probe *tp)
- {
-+	struct trace_probe_event *tpe = trace_probe_event_from_call(event_call);
- 	int ret, i;
- 
-+	/*
-+	 * A field created by trace_define_field() only stores the name and
-+	 * type pointers, it does not copy the strings. Here they point into
-+	 * the probe_arg of @tp, which is freed when @tp is removed. For an
-+	 * event with multiple probes attached, the field list is defined
-+	 * once by the first probe but kept alive by the surviving siblings,
-+	 * so removing that first probe would leave the fields referencing
-+	 * freed memory. Duplicate the strings and anchor the copies on the
-+	 * trace_probe_event, which lives as long as the field list itself.
-+	 *
-+	 * event_define_fields() ignores the return value of this hook, so
-+	 * if a previous attempt failed before creating any field, it may
-+	 * call here again. Release duplicates left behind by such an
-+	 * attempt before starting over.
-+	 */
-+	for (i = 0; i < tpe->nr_field_strings; i++)
-+		kfree(tpe->field_strings[i]);
-+	kfree(tpe->field_strings);
-+	tpe->field_strings = NULL;
-+	tpe->nr_field_strings = 0;
-+
-+	if (tp->nr_args) {
-+		tpe->field_strings = kcalloc(tp->nr_args * 2, sizeof(char *),
-+					     GFP_KERNEL);
-+		if (!tpe->field_strings)
-+			return -ENOMEM;
-+	}
-+
- 	/* Set argument names as fields */
- 	for (i = 0; i < tp->nr_args; i++) {
- 		struct probe_arg *parg = &tp->args[i];
- 		const char *fmt = parg->type->fmttype;
- 		int size = parg->type->size;
-+		char *name, *type;
- 
- 		if (parg->fmt)
- 			fmt = parg->fmt;
- 		if (parg->count)
- 			size *= parg->count;
--		ret = trace_define_field(event_call, fmt, parg->name,
-+
-+		name = kstrdup(parg->name, GFP_KERNEL);
-+		type = kstrdup(fmt, GFP_KERNEL);
-+		if (!name || !type) {
-+			kfree(name);
-+			kfree(type);
-+			return -ENOMEM;
-+		}
-+		tpe->field_strings[tpe->nr_field_strings++] = name;
-+		tpe->field_strings[tpe->nr_field_strings++] = type;
-+
-+		ret = trace_define_field(event_call, type, name,
- 					 offset + parg->offset, size,
- 					 parg->type->is_signed,
- 					 FILTER_OTHER);
-@@ -2576,6 +2617,11 @@ int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 
- static void trace_probe_event_free(struct trace_probe_event *tpe)
- {
-+	int i;
-+
-+	for (i = 0; i < tpe->nr_field_strings; i++)
-+		kfree(tpe->field_strings[i]);
-+	kfree(tpe->field_strings);
- 	kfree(tpe->class.system);
- 	kfree(tpe->call.name);
- 	kfree(tpe->call.print_fmt);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index fba1af092a9bd..d1fb3520700fb 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -264,6 +264,8 @@ struct trace_probe_event {
- 	struct trace_event_call		call;
- 	struct list_head 		files;
- 	struct list_head		probes;
-+	char				**field_strings;
-+	int				nr_field_strings;
- 	struct trace_uprobe_filter	filter[];
- };
- 
--- 
-2.43.0
+Steven Rostedt <rostedt@goodmis.org> =E4=BA=8E2026=E5=B9=B48=E6=9C=8825=E6=
+=97=A5=E5=91=A8=E4=BA=8C 22:21=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, 25 Aug 2026 11:37:13 +0000
+> sashiko-bot@kernel.org wrote:
+>
+> > > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > > index 36dff277de464..3057d31c57376 100644
+> > > --- a/kernel/trace/trace_probe.c
+> > > +++ b/kernel/trace/trace_probe.c
+> > > @@ -965,19 +965,48 @@ int traceprobe_set_print_fmt(struct trace_probe=
+ *tp, enum probe_print_type ptype
+> > >  int traceprobe_define_arg_fields(struct trace_event_call *event_call=
+,
+> > >                              size_t offset, struct trace_probe *tp)
+> > >  {
+> > > +   struct trace_probe_event *tpe =3D trace_probe_event_from_call(eve=
+nt_call);
+> > >     int ret, i;
+> > >
+> > > +   /*
+> > > +    * A field created by trace_define_field() only stores the name a=
+nd
+> > > +    * type pointers, it does not copy the strings. Here they point i=
+nto
+> > > +    * the probe_arg of @tp, which is freed when @tp is removed. For =
+a
+> > > +    * multi-probe event the field list is defined once by the first =
+probe
+> > > +    * but kept alive by the surviving siblings, so removing that fir=
+st
+> > > +    * probe would leave the fields referencing freed memory. Make th=
+e
+> > > +    * event own duplicates that live as long as the event call itsel=
+f.
+> > > +    */
+> > > +   if (tp->nr_args) {
+> > > +           tpe->field_strings =3D kcalloc(tp->nr_args * 2, sizeof(ch=
+ar *),
+> > > +                                        GFP_KERNEL);
+> > > +           if (!tpe->field_strings)
+> > > +                   return -ENOMEM;
+> > > +   }
+> > > +
+> > >     /* Set argument names as fields */
+> > >     for (i =3D 0; i < tp->nr_args; i++) {
+> > >             struct probe_arg *parg =3D &tp->args[i];
+> > >             const char *fmt =3D parg->type->fmttype;
+> > >             int size =3D parg->type->size;
+> > > +           char *name, *type;
+> > >
+> > >             if (parg->fmt)
+> > >                     fmt =3D parg->fmt;
+> > >             if (parg->count)
+> > >                     size *=3D parg->count;
+> > > -           ret =3D trace_define_field(event_call, fmt, parg->name,
+> > > +
+> > > +           name =3D kstrdup(parg->name, GFP_KERNEL);
+> > > +           type =3D kstrdup(fmt, GFP_KERNEL);
+> > > +           if (!name || !type) {
+> > > +                   kfree(name);
+> > > +                   kfree(type);
+> > > +                   return -ENOMEM;
+> > > +           }
+> > > +           tpe->field_strings[tpe->nr_field_strings++] =3D name;
+> > > +           tpe->field_strings[tpe->nr_field_strings++] =3D type;
+> > > +
+> > > +           ret =3D trace_define_field(event_call, type, name,
+> > >                                      offset + parg->offset, size,
+> > >                                      parg->type->is_signed,
+> > >                                      FILTER_OTHER);
+> > > +           if (ret)
+> > > +                   return ret;
+> >
+> > [Severity: High]
+> > If trace_define_field() fails, does this error path leak the newly allo=
+cated
+> > strings and the tpe->field_strings array?
+> >
+> > Looking at event_define_fields() in kernel/trace/trace_events.c, the re=
+turn
+> > value from this function is ignored:
+> >
+> >     if (field->type =3D=3D TRACE_FUNCTION_TYPE) {
+> >         field->define_fields(call);
+> >         break;
+> >     }
+> >
+> > Since the return value is ignored and the event's field list remains em=
+pty
+> > if the first argument fails, couldn't the system invoke this function a=
+gain
+> > on retry if there are multiple trace array instances?
+> >
+> > If it is retried, the initial kcalloc() unconditionally overwrites
+> > tpe->field_strings, leaking the old array.
+> >
+> > Additionally, since tpe->nr_field_strings is not reset on failure, woul=
+dn't
+> > a retry start appending string pointers out of bounds of the new array?
+> > This appears like it could eventually cause trace_probe_event_free() to=
+ read
+> > out-of-bounds pointers and pass them to kfree().
+> >
+>
+> The above looks legit too. Please address it.
+>
+> -- Steve
+>
+>
+> > >     }
+> > >     return 0;
+> > >  }
+> >
+>
