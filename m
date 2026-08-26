@@ -1,78 +1,89 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F941361959
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 16:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C617466B57;
+	Wed, 26 Aug 2026 16:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787761484; cv=none; b=FWHLx77StoF7qz1mc83dDY6UwBCxRbg97J0DJf4cjfFSb6VosyrF/Uq6SKCzFf3sUy1/8sDDPmAZ6OSx2lQJ/PrloSmwErvJRN0b20+qPn3NJgKMiHMarwHRteOwPT3j33hUiP1BXoYJCpyhFPcAqF3vbeoOwkg6FsDN0czUmYs=
+	t=1787763492; cv=none; b=mNSIxc0xZGQMQ3ADMpCMOvgXtTL4UcQw8ijAwe5X2xuO/hxDZGNOGWkhNUsWl+eIEcMc1bql8LrTsT6mVEIPLtc6SzeGpB1UYsYbK78bYKbITLAbh/6ibeGnAgNtI8RWi5J7ajRa+nYoUCpXjaNkxxJnhYmz1WVREnw20Z6KmsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787761484; c=relaxed/simple;
-	bh=TyOk4qc9NbEhPQXdVLDwlGeADrLSv/duAMRKU3keWRE=;
+	s=arc-20240116; t=1787763492; c=relaxed/simple;
+	bh=zD4dqAdxXW0Er1wshogf68T7eQtR8N6wUmTMcgSvP24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8ncmVYiMR4E0CVhR6c2sMhQWSit0jFOoDMxjJMW8jr9opglqJRNJ5SpktbGKju0o3gu3NNLbWyQJV+M02ei3WVE30grH1Xp+rpy1rkIXFgvSQO/3Fknw4c/nab9m1Vv7XrPAyCX3HmwpOnwvu64It4juB3Z2mYrhCJYm/UuReU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vKqcML8S; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmpgZy/y5s9UELNCD8gkbgPUU6XJm7oKqOqGQjmqxPKEtBPg+konZLwIZVw3Sdavl9Weq0JeOl89MOxh7g62MP+rrkL+gIM0Cyx+CkKoAxd0tWsP1TbNDAEqOnrMkBrgYNMIg8XySAYfzw54ISTjnp/IdVGsVxoCBNWp9aycBG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=lAEQPsWP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FWcJzcvI; arc=none smtp.client-ip=103.168.172.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vKqcML8S"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-482d9ddf129so664027f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787761480; x=1788366280; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=o4wPhRoiAoITJ/dRbRZTHMg4nlt0LAxopK2lH03YyHA=;
-        b=vKqcML8SQhedkYA/I9nxf2HpV8YA0U2IYMaTWOUjmec0hApKV1zmcRHwunVShNNypF
-         4rLdZoM+R/C+cqiP5orp36n6Ze3j4PerMRn03Nl3oeSqMyZCSzocyC3nXh6oi7v6oJHC
-         79FNWt3oLbajw/8AU1bxeRYBckn1hu/9JkpGum9A8IZu+npL00wdAxGA4eTjxkNGY17L
-         yMknpl4eOjxtTXFugpmN86bQWE7pBVi2juQLShEsTkbpOnexHTMRpucaHELcMfrjEr0x
-         XL3Tp5LFDF9+tuosQSCb4te8wq8bd7LS3IGsvR/wVgJW6XPadaIyAZ6ylaZoqOtpKu+A
-         d0IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787761480; x=1788366280;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=o4wPhRoiAoITJ/dRbRZTHMg4nlt0LAxopK2lH03YyHA=;
-        b=tYvrqT566H1HgGDHEEvj07Ym7YeAPOIN18PjHGoGDX6DqrJROO+pMlpip/7PX7zTAl
-         OHzc7mz6lsR6ADoEn8ajlvBKqQhZ8NIK7tRf0Dnhuh2ipcqMIssIVp2shV2HH1podV3z
-         LiwSyr3HNHRqf9ZkVKwR/x3thFyVxACU6uc5jxE1AqubIAZjdaMRY9wfZ4wUWE6kXtIP
-         TlYSWfqArfgjS14Bu7ffMkyPpiem8/3d8XwSsBzdDofglaqEfmm6voreWfzvRAlt/j3T
-         OwkskVTp702TcT1gFnw4X2Id6far3sn62tQyB2OZGyPHfR1R94Gsp0sgcLbV83Z7qRyH
-         pxLg==
-X-Forwarded-Encrypted: i=1; AHgh+RrtIN+5X3ASznhLfw5cMOA45nji0iy2ssnS8uFLqo4wLcHorN5sUzVxDQDxNjplnk/NUUgrpXlLclvX93wUakYHvU8=@vger.kernel.org
-X-Gm-Message-State: AFuF++lSu4iY6+lhFrlEaQ8yuiYX3A/3q/NsEgsXH/is3o8wqHdc3RsM
-	f3nxg8MMCqHeuxou0neSjeWtHp3Km6Prwq90Y7cFKka+r4vIeFE4s77A6jiEFlwe+duTdFdn61M
-	2j+ZPeJsh
-X-Gm-Gg: AR+sD124TJACeLvId588nI4TygD5gf9mhH1nk58H5+5i1fsIojw+OWAy1SVfguLbGvP
-	QrNEmNpD5CfUC/U+jMOrvZDoVNCdTJJzh1flivN4Fc/xFT9Parlip7WtlAJOLmWSgTakJgnZ3Sq
-	mAKzsXEseFOMrkUFPU1TFOdeUL6ROCyf8EnkuB67IzBc0qhVK4NEwgWKC9bYmd3CbJylsh04+N7
-	hPWkkJMKVBN3qHcSWyJ50ZSfX87NfA59M2CY8UFsFSRS7Fo/ve2aV/DZdjmpK+nCkSFicm01WQi
-	9z9bQR71LIz/O2yFZjH/mAaZ88TG4MXqLKjOjdE+f3ZFLkOL0lOojMjxBJ+A/W6v25H2Cck2tSz
-	r9aaLnw5kLBjakZMVfZwVi4UdWQGXGItw+nmP6xvPfiGqhPN0BiMELvKGtGFlB6Venh7pvDuYdu
-	J6wbcaq4HVkYIVy+cv4waiGrzXThc+k+TLj58QqErSohwVlYpze4FfPHtjPnXVS9Ndv/GnVtSBj
-	TSscEvMHeIsRTU0IWrhBuDdiG0gNkP0
-X-Received: by 2002:a5d:5e12:0:b0:482:dfab:8689 with SMTP id ffacd0b85a97d-482e26d8990mr6671700f8f.13.1787761480049;
-        Wed, 26 Aug 2026 09:24:40 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482e279eb11sm3321640f8f.8.2026.08.26.09.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2026 09:24:38 -0700 (PDT)
-Date: Wed, 26 Aug 2026 17:24:35 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
- trace_pipe_raw readers
-Message-ID: <ao8TQ-SvhjYgy43-@google.com>
-References: <20260826094528.3738023-1-vdonnefort@google.com>
- <20260826094528.3738023-2-vdonnefort@google.com>
- <20260826095947.4FF8B1F000E9@smtp.kernel.org>
- <20260826103736.2b55b464@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="lAEQPsWP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FWcJzcvI"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id C2A131380030;
+	Wed, 26 Aug 2026 12:57:52 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Wed, 26 Aug 2026 12:57:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1787763472; x=
+	1787770672; bh=b/RQVU7x/2Ow8BFt80nTwsnGflSL0G5KQoMqCALTqgw=; b=l
+	AEQPsWPGylc/rDV+icMKHCvV0frQXk7F5fjF/UWtvHS3U9fWb1ezXQP7ShieFlvj
+	GRHu4wj3M0M93AcK6Fk+g0gXO/K1ggVsaQoAtUzo/X7P8nFmbU8FYPwrOSRT/f9e
+	K8ehYKgucU/hhblvFh6gJVzwtpue21D8RH6qOhIP9VgSLjzBvcNWlYSd2E9GEAE/
+	rptw18RRTdRcy16z9qXWzwSBFQIHkye5hOPOBUJthoVYdNZ2mKXOIK8HHDV/+KQ9
+	OuS7oD7vv0OwukUNt0sbRCKWM8g3F9lA/URc0OliMRI76XOfoa10xGDMpreFOEZw
+	TM0E2lfzsLh7Rj8u+H/IQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1787763472; x=1787770672; bh=b/RQVU7x/2Ow8BFt80nTwsnGflSL0G5KQoM
+	qCALTqgw=; b=FWcJzcvIbsh6QBt38zORnV7P0eeo8kO9WRVqoXVqib8+79FS694
+	XuKDCqcuP8xSUq35/uiGv29rROwTWvnQIfT3oylh06izCKj0M3joTmPZlU47Q4Oe
+	3loNfsttBTPANJ3cHFvfNXWdCw0pPQd+2JpG6RTFBc8VMAeOj1lDcOiQaCQaW3H+
+	nlZGkNrwXaxWBE6U+6fuS/vhfs6O6JRCigwrHViNUdATu8xEJ0UF5Mtfj+X9E8y0
+	7lFkn3SroSWUDnay32P8/uUW1sobt87f/JpREWi7wYr2NjMIEARJ4EyUuk86KUr7
+	2aLV0GEJgf39oJ2X/KZqY6UwHX3Lxp+uzIw==
+X-ME-Sender: <xms:DxuPak_Ack9LrPRHKaASHS2wMVcpgG-689x44Ryij79y7lQVrFEVtA>
+    <xme:DxuPavBx2WNCktSwtgXC0SxfLbBEckvRxdJfhs7E9wmLJzgle1DLPmakYzLyGGnTR
+    4WNecrHxs-j4WVhirpK9ouXZhMnQ4889TjbA439uPnzkggzixb8lw1D>
+X-ME-Received: <xmr:DxuPaoxK3jWLjl2liKXaRMPDLyn8sdJrUDu7fIXrSdR4UfIMDoQI3XCIRuY>
+X-ME-Proxy-Cause: dmFkZTFJ4uM7XbmV139GeFVyMoFnf31HwoxJmPLJ3DOlCGleDxaZYboTq/8g92bw2Tr80S
+    wGFNepRmFciZXpZxop62rBrDkHPnv9nXc7KEvSWS/8GpVlaNgXKa6dfYTeFCYhn2wtJOiK
+    307oxwUoWuxtmYGFBjteL06s8X6htc+nvVtjVU1989gEb4MnzMjTATDrZasvNpIzgTin/4
+    7VGQP/85bb5l9LG5OrzuOshjFlmmTq4AsyZh9HGehMneCAhVUK6bc/pCgfQZDFR3x2TwYp
+    uo425DdKwIGf1YipHDcTUXwhFZvn69o/vAlmdQD2hXiHy7vx7Q0z9WPqV/j11J2qlpRNFP
+    N0s33neGxgTZZfYnhJK2+RUlWyP4sJ4EnQb1rLd7dDD7onVFIkM3Si6Mqw8hRUnRhJ3FI1
+    yd7zVWfgPMI4XKuEiHVCS3DmOtq/A5sbrr3G0llk7qra0Ip8+g/oxdsmWQKj2Zz0hg4kGt
+    qz4W6lHUETFMI3z0klSBqecxB0Ht3A+X6YW0W2k0UD3GMOgQgejr6TQFlAOnu6D9X0kjs6
+    7RovcdajI+QYh0ZCP+e0ltkW7g35gD/7KAmPd40hfyJR3mBOnA1DxHo/tOjI4SwFyC0eXy
+    3fAYexBao+lcCDPzbZXITlpM6JIGVZrdRfMCosWDlctgLcUZVs35a2aMXAMA
+X-ME-Proxy: <xmx:DxuPaurxPtHNM4zlRhQUucemYoop_cPCcuSi4QG6ZU93-kiH8PsIkA>
+    <xmx:DxuParx3aF35QlDHf8Ot-LSEgCyypoaVBQoro0MUdxDgW10Pjg-V_w>
+    <xmx:DxuPaoP12wTEyHve1fnxqo8xoWT0M0b81Y1HMZTWOvA4YSlEo9BfPg>
+    <xmx:DxuPatdNAzkwxWAxHwQ7pFsN_taxnKCvmFIevzCVIdFHV2Dv3CPCAg>
+    <xmx:EBuPamdFSp7fldrFIU6gA4GT4OKDZYKJ4F5FNQFbvKSXyMShOLEGLOLt>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Aug 2026 12:57:50 -0400 (EDT)
+Date: Wed, 26 Aug 2026 17:57:49 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
+	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
+	dev.jain@arm.com, hughd@google.com, liam@infradead.org, mhocko@suse.com, 
+	rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, 
+	usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, 
+	agordeev@linux.ibm.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de, 
+	rostedt@goodmis.org, mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 18/57] mm/collapse: install the destinations at PTE
+ level
+Message-ID: <ao8Yz5tqr2WVlPj5@thinkstation>
+References: <20260816224609.308019-19-kirill@shutemov.name>
+ <20260825064851.87309-1-lance.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,69 +92,27 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260826103736.2b55b464@gandalf.local.home>
+In-Reply-To: <20260825064851.87309-1-lance.yang@linux.dev>
 
-On Wed, Aug 26, 2026 at 10:37:36AM -0400, Steven Rostedt wrote:
-> On Wed, 26 Aug 2026 09:59:46 +0000
-> sashiko-bot@kernel.org wrote:
+On Tue, Aug 25, 2026 at 02:48:51PM +0800, Lance Yang wrote:
 > 
-> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > --- a/kernel/trace/ring_buffer.c
-> > > +++ b/kernel/trace/ring_buffer.c  
-> > [ ... ]
-> > > @@ -7183,7 +7218,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> > >  	 */
-> > >  	if (read || (len < (size - read)) ||
-> > >  	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-> > > -	    rb_is_static(cpu_buffer)) {
-> > > +	    rb_is_static(cpu_buffer) ||
-> > > +	    data_page->order != reader->order) {
-> > >  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
-> > >  		unsigned int rpos = read;
-> > >  		unsigned int pos = 0;  
-> > 
-> > [Severity: High]
-> > Does this new condition break splice reads when the buffer order changes?
-> > 
-> > When tracing_buffers_splice_read() allocates a read page with the new order
-> > and calls ring_buffer_read_page() with full=1, it will now enter this manual
-> > copy block because the subbuffer orders no longer match.
-> > 
-> > However, just a few lines down inside this block in ring_buffer_read_page(),
-> > there is the following check:
-> > 
-> >         if (full &&
-> >             (!read || (len < (size - read)) ||
-> >              cpu_buffer->reader_page == cpu_buffer->commit_page))
-> >                 return -1;
-> > 
-> > Since the reader page typically hasn't been partially read yet (read == 0),
-> > and full == 1 from splice, this check evaluates to true and immediately
-> > returns -1 instead of copying the data.
-> > 
-> > Because tracing_buffers_splice_read() loops and ultimately returns -EAGAIN
-> > on failure, will this cause an infinite loop of -EAGAIN for userspace tools
-> > trying to read across buffer resizes?
-> > 
+> On Sun, Aug 16, 2026 at 11:45:30PM +0100, Kiryl Shutsemau wrote:
+> >+		/* Slots with no source gain anon memory that no zap accounted */
+> >+		if (nr_populated)
+> >+			add_mm_counter(mm, MM_ANONPAGES, nr_populated);
 > 
-> 
-> This is a legitimate concern. But with an easy solution. Perhaps just add:
-> 
-> 	if (full &&
-> 	    (!read || (len < (size - read)) ||
-> -	     cpu_buffer->reader_page == cpu_buffer->commit_page))
-> +	     cpu_buffer->reader_page == cpu_buffer->commit_page) &&
-> +	    data_page->order == buffer->subbuf_order)
-> 		return -1;
-> 
-> If the user is changing the buffer size at the same time as reading raw
-> pages, they get what they deserve! I just don't want to let the kernel go
-> into an infinite loop.
-> 
-> -- Steve
-> 
+> Well ... KSM zero-page accounting gets out of sync here.
 
-Sounds good. Do you prefer to get a v9 or you fold this into the existing commit?
+True. Thanks for catching this!
+
+> I was thinking of something like this:
+
+Your code looks correct to me. I will take the collapse_abort_candidate()
+hunk as is.
+
+The install side I will organize slightly differently: a
+collapse_account_install() that does the MM_ANONPAGES accounting in
+addition to the KSM stuff, called from both install paths.
 
 -- 
-Vincent
+  Kiryl Shutsemau / Kirill A. Shutemov
