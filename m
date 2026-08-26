@@ -1,122 +1,186 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617A741B8EE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 13:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764CA42F6FD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 13:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787751203; cv=none; b=f95W/2qrv0+0gByrMsMAeeTpFKzWtbEC09TzTFJq+vyXKmDvb1rVXQHHTYs2kY+O/61sH0AqXdnLQlKW3gsggUsGKJanTt68o5nnNmlZAE4Dw/JddijBcopSnRzt4wmCjQZboq900U0R+H3EV3XXHFUydS/Y7Nonpwn6m8stYvU=
+	t=1787752399; cv=none; b=GeNsFA5FTICqvUOOFfk9cBZX+lUeLp46s2ADclr+DmehLpu9+0Mxov/bez2ks0L6soA+9R/0yXDWPdCPXBBeu8Nsoo/Qr/DSr1DP1kBD7MAVErghfZr7v09VDPRTC36P4WY+VsnaKxLmaxlcHcd6ppb/SsrbH+lIr4RXTCCb8Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787751203; c=relaxed/simple;
-	bh=skh1J20miHyQI+YX6SjrUI0pPMNxBurFeVoXPbNyAqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rMdFz/pXcX/hcrgg6XlFHm7KxlIqMqAwx7jsjeP61caW30eTMdxFY5c64tE4H8kW4nqMZYIruJCcLJlFJG7Um7OQw/ALlhVZQ0eMqvSDEFdqOgkdoOk+F/wR0rlWk0q28Xl6HuuvL2jWMAXsndJi1EZ4UlcXElvHX7S9MES1y30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3jprUtV; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787752399; c=relaxed/simple;
+	bh=aKI/UKGte84OVTfWfIAvvMaWsDxT45eGHGOViohEC78=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=iK0JLhc4+kY9RGUeUFVisTXWl1f9Bljcagii74xLRG5nwiVyaQDKsFAh3CMP6WrdbtwmtFgMlfW5bCda957Dv9awAsSnFsfZsxDVJC7beoKaGK1tKrNjzhlRUybD7JIHoll+uqpLhNIVnSFzzUIDFYqqlwYHkb+rHbmqKzyuuIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fw9M22+/; arc=none smtp.client-ip=209.85.214.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3jprUtV"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-482e1bfcc63so661633f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 06:33:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fw9M22+/"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2ce7dfd33ffso9199735ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 06:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787751200; x=1788356000; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=eDeYb04JA1wKUlB+4fT7hBu1dYeSHzQSzUnUA5UoiTk=;
-        b=c3jprUtVQbhETdxCm6+ylXMzRdkNb5d8VOq2/82y9Gnsg3XZY9bBpfHfOBKK3nLgLV
-         3jxszFUSj7uWNo9rdwFjyJr7pX2PII0A9DohLTxTf8b3KT0BCuWUnMqb5Yjn/2zcJEPN
-         en/lU0QsLn7hSUze0FUqtrG7JwN68xGMbZNSQO/YupFlSTN+RWuj5dzrvqSW5DgBp0UA
-         VZSZRHegLfpTO5rPb3EgXN4Fj9ISh+PjEosJp/rcWM1PbuKki1kOhdh+JXu9ub8TTmFS
-         GXghIHP0hcos1PTLWyIGw63Kjxp0n8n3PWjkTnMADzJmmjILNp4eBa6Fex07ZpF0Cz3o
-         Yl6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787751200; x=1788356000;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1787752391; x=1788357191; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eDeYb04JA1wKUlB+4fT7hBu1dYeSHzQSzUnUA5UoiTk=;
-        b=ij2qTrUjsOGRZjLLvHz7bTg4qzvhD2VPNsly1bj/bsd69E5z8mL/lBXBMKYyKut9KP
-         iHNLYuJfRNmhYfWMjWa9C5+4djaqmzWxh6qE/V2ijlGtXykDdM92BwiVAJH2HMEFZVZW
-         Vc7o88booSfy3wZ+h4JOqVLGCL8PhBvLuWjDE3SPM+83ywWayV3LyJ41D9Wz2R+LWmlU
-         RZUYG1hRajqM5CZ5yPBhGBgTdg6B2J8oAiLjDBw0Ls+YB/v7tSGaKPmFA49vM4oqowKS
-         Js82Wj53CMpDjeG+ZqAC0Owb6TeTqxDwp1Ywgfhm01JdfDASU0EnrUvQM4DLXqm3OBVK
-         /gRg==
-X-Forwarded-Encrypted: i=1; AHgh+RrRfKF66LsZt2BXg7y07jm+x8w1K2GOV4hgXQWRsDJROYbz1A9iVexZJtVggqJF2QXlFPyhUpGRKgnXm8EdyGayBlY=@vger.kernel.org
-X-Gm-Message-State: AFuF++lLT4yoTT3OLwO2qzPtf2nHQFcCUvcdKYaizCun3QseRvkRA6VP
-	gqlqljGcW0xaWkun+7HMlcGgCEex3m1o5aS6uaf2synjx0NeN8i4ySa/
-X-Gm-Gg: AR+sD10I3YRcrToPPv5MNPz6N7YESLIMHngJpdXl21zkRjxj1/P8ts5tWHXn04gmHo5
-	FRkbQxAv2/gYmYzObKykIXkvhRmQoOPaJd4Ok37bM8Fp/MRUv6iY9+D/Z7Zea9YarvdYV49Gt3C
-	i7PtdRgycC7zzFcKMQEpoWgGVlhZuJJ+8NaKlqQJubQTDLRXb2e0e/K2W+t8dwayR2BXxj2vSga
-	uHXaUsxx4JBohXlb4mDYs/k8gy9Y0PUkough9Mfau9+pDZCdaZG1xBkHzQzhg5ZrwSd+ZOsIjhc
-	5YWIEIA2uFfLha4HDx7DcalpgK0yPa63oiRNnByTD6L5T8/4CQRSCljLMjToBz8wu0JI6wY7vt7
-	1X5HoyETlTqV/gNvnFeN6IsI48BDu9CE/xrMwkQQs6zdzz1Oc//8QAObT/Hh2GDBkFIP6pb8mxP
-	PXnCZ4EeqX7e9m2KusujsQBFeTa2afjVVDEwEHjIf8qXPxFpY8lmOsKFfbmzr2SI2WZ40=
-X-Received: by 2002:a05:6000:29d2:b0:482:dfaa:dfa9 with SMTP id ffacd0b85a97d-482e26b3278mr4456632f8f.7.1787751199354;
-        Wed, 26 Aug 2026 06:33:19 -0700 (PDT)
-Received: from foxbook (bfk5.neoplus.adsl.tpnet.pl. [83.28.48.5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482e28f6119sm2777848f8f.34.2026.08.26.06.33.17
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 26 Aug 2026 06:33:18 -0700 (PDT)
-Date: Wed, 26 Aug 2026 15:33:11 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Jonathan
- Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy
- Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-Message-ID: <20260826153311.6340efcd.michal.pecio@gmail.com>
-In-Reply-To: <20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org>
-References: <20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org>
+        bh=njsQrhr1Rw86G3MMqhXpdm0dYelYnqk43kJ0tkWzOHc=;
+        b=Fw9M22+/3+Tuh6ZV/JJEkAFj+RlBK2Q9Is5LYK1aJGSvAYYPdH8byGaD9gmmbxiezq
+         Pws3Ue36HCIptbD8j+oui5RPC+ySOg8GWSwO11fCaJQ++8OhIgiyozKW0Jwj4/bR5ad8
+         15VmAThVs+G8fUQ8R8c/4a4RIqKteUfeRkW1pChn7iLi4mIjVIPbrFZ03L89l+8rNdbF
+         U+sVGh++kCaYC0e0vCVvSoCRsYBYAIEd4Z0mu+N89q/NYltvTvhPE3T7Audf8zSnNxeP
+         7D22SHuL+0zRKUoYVrojsO/83fUXSG5UXu+PgNEFV0uKGVQ8aaEqbMs2mH8eojYT2Dle
+         j6Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787752391; x=1788357191;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=njsQrhr1Rw86G3MMqhXpdm0dYelYnqk43kJ0tkWzOHc=;
+        b=lF18eB2VcihWUe+sPnLjza1dSmcDksWaNaQwy39v+/Mkag+6yfEBMgZZPAZlN0SHj5
+         MNSLB8CVJ0a4pOzL/T5+/Qe1yPVz77BHpOIjUVoPlkZ0LujvYNU0/oGnc5Z25f9RpmRP
+         vK5UdpHao5zUQ5IUUG3w/vPtpRJXbfpi9jIDjzVMR+vi7JEuld5xr3S9sezPnNZPnAvb
+         LZ2tGrpgbnFBcZBfL3wPYna/4QGbqy+FD98S2ONwzL2yfuN6UX9GOEVdFzs276peqZOp
+         Sd6cGx5iCaPPD1BoOFuzqo1NwkLgkMMAU86EWtJRu2M5RC/O7RRjWmOrO6lhUJ9zNICU
+         FxTQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoR6jmDOMaWwdhOOKcLGFMrwQwppFPGD+HLeCyzVqcgikmey02yZF8QzjoJMxb9ZXWUoqpEeVcHqpqdfHqu1HDt6sI=@vger.kernel.org
+X-Gm-Message-State: AFuF++mlGKY/3nPlEZ+9GBpPBtOqQqiakDEs3GztFLFyyr6fdnnlH/Nw
+	4aI8Y8czZ/+SjmwJVTH5ccvIwh87ri+mLWfSBSJiv8r+Kg4nlxJ3Z/Xu5DqCvgl5fZ8oBiK+5mU
+	6lMLerw==
+X-Received: from plnn1.prod.google.com ([2002:a17:902:d0c1:b0:2c8:1ded:d061])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c40a:b0:2d7:1bfd:b240
+ with SMTP id d9443c01a7336-2d71bfdb766mr27401015ad.4.1787752388141; Wed, 26
+ Aug 2026 06:53:08 -0700 (PDT)
+Date: Wed, 26 Aug 2026 06:53:07 -0700
+In-Reply-To: <CAEvNRgFXJbV78ktsg=b4srFp1OFjtQWQGuNPjr_MmWD-wOvjgw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260807-gmem-inplace-conversion-v10-9-2fc18ee6d3ba@google.com>
+ <13ca60c6-e154-4397-8092-09f861e90fe0@kernel.org> <cbf5f7ca-a960-4fb8-a760-2d2794eb6864@arm.com>
+ <CAEvNRgGOyQHnF_b8dk8E0d7_=CcwXtYUdU3ko7Qbep+_O7UC0Q@mail.gmail.com>
+ <aoZZMQ3Uc8yQWPNA@google.com> <7eba513d-cdae-4832-abac-038dcdd88517@intel.com>
+ <meww2a2uf3yeevsfpicyrlg3hch2x4bsdqv2lsv3vfjxg4qzes@co5eogmhkxrk>
+ <ao3lOu8-wpGTs2wd@google.com> <ba8d0441-b52f-4357-b2e7-1e352aa385a2@intel.com>
+ <CAEvNRgFXJbV78ktsg=b4srFp1OFjtQWQGuNPjr_MmWD-wOvjgw@mail.gmail.com>
+Message-ID: <ao7vwx3nMqCjCHZU@google.com>
+Subject: Re: [PATCH v10 09/41] KVM: guest_memfd: Filter both shared and
+ private when invalidating
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>, Michael Roth <michael.roth@amd.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, "David Hildenbrand (Arm)" <david@kernel.org>, aik@amd.com, 
+	andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	chao.p.peng@linux.intel.com, jmattson@google.com, jthoughton@google.com, 
+	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+	steven.price@arm.com, tabba@google.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, aneesh.kumar@kernel.org, liam@infradead.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+	Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 26 Aug 2026 11:19:31 +0200, Greg Kroah-Hartman wrote:
-> The ability to add and remove devices from a driver through the sysfs
-> "bind" and "unbind" files was created all those decades ago as a way
-> that kernel developers can iterate faster, and provide a debugging way
-> for users to attempt to add a new device to a driver without having to
-> rebuild their kernel.
+On Wed, Aug 26, 2026, Ackerley Tng wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
 > 
-> This api over the years has been abused and recently come under a major
-> fuzzing "attack" through tools like syzbot which decided that it would
-> attempt to just randomly bind any driver to any type of device, causing
-> loads of unneeded errors and pointless kernel patches to be generated by
-> unsuspecting new developers.
+> > On 8/26/2026 2:55 AM, Sean Christopherson wrote:
+> >> On Tue, Aug 25, 2026, Michael Roth wrote:
+> >>> On Wed, Aug 26, 2026 at 12:13:47AM +0800, Xiaoyao Li wrote:
+> >>>> On 8/20/2026 9:32 AM, Sean Christopherson wrote:
+> >>>>> And vice versa, a PUNCH_HOLE on a SHARED gmem (if userspace is
+> >>>>> using an INIT_SHARED gmem for the shared branch of a memslot) could invalidate the
+> >>>>> PRIVATE mappings (of a different gmem instance).
+> >>>>
+> >>>> I'm wondering now how this could happen.
+> >>>>
+> >>>> the requirement for PUNCH_HOLE on gmem to trigger mapping invalidation is
+> >>>> the gmem is bound with the memslot. But how can a memslot bound with two
+> >>>> gmem instances?
+> >>>
+> >>> I think this is for when userspace uses an mmap'able guest_memfd instance
+> >>> to handle shared memory, and a 'normal' guest_memfd instance for private
+> >>> memory. Each instance is bound to the same memslot/GPA range, and
+> >>> KVM_SET_MEMORY_ATTRIBUTES handles switching between the 2.
+> >
+> > What I didn't figure out is exactly how the two gmem instances are bound
+> > to the same memslot.
+> >
+> > The case I can imagine is
+> >
+> > 1. create gmem1 with GUEST_MEMFD_FLAG_MMAP and
+> > GUEST_MEMFD_FLAG_INIT_SHARED, and get fd1. mmap the returned fd1 to get
+> > a hva.
+> >
+> > 2. create gmem2 to get a fd2.
+> >
+> > 3. call KVM_SET_USER_MEMORY_REGION2 with KVM_MEM_GUEST_MEMFD flag. Pass
+> > the @hva from 1) to 'userspace_addr' field and pass the gmem fd2 to
+> > 'guest_memfd' field.
+> >
+> > However, with this case, only gmem2 is bound to the memslot while gmem1
+> > is not. Following PUNCH_HOLE on gmem1 doesn't invalidate any mappings
+> > because the f->bindings of it is empty.
+> >
+> > Do I miss anything?
 
-Hi Greg,
+Oh, I misread your question.  You were specifically asking about a PUNCH_HOLE in
+a SHARED gmem instance over-invalidating PRIVATE mappings.  You're right, that
+wouldn't happen because the invalidations would come in via mmu_notifiers, not
+from KVM.
 
-I think you confused 'bind' / 'unbind' with the likes of 'new_id' and
-'driver_override'. Try binding xhci_hcd to NVMe, you won't get far.
+> I think Xiaoyao is right about this, the "vice versa" part is wrong,
 
-FYI, besides being footguns, the latter are apparently used to assign
-any random PCI device to some VM drivers for passthrough or whatnot.
+Ya.
 
-The former hardly are footguns and have further common uses, such as
-removing kernel drivers to make VM / USBFS work or "turn it off and on
-again" when a driver doesn't implement recovery. I've seen a published
-script which does this automatically when xhci goes belly up...
+> Is this just a case of user error? That with gmem_in_place_conversion,
+> userspace should not use userspace_addr from something other than the
+> gmem for the same memslot?
 
+Yes.  It's not just invalidations that will go sideways, KVM accesses to guest
+memory won't hit the same physical page as actual guest accesses.
 
-I am also not convinced that fuzzing 'unbind' alone is a bad thing.
-How is that different from 'rmmod' or pulling out a USB-C plug, which
-may have a bunch of USB *and* PCI devices behind it, mid-operation?
+Huh.  But that isn't strictly guaranteed, because userspace could bind to a
+memslot that isn't configured with GUEST_MEMFD_FLAG_MMAP, in which case SHARED
+faults will go through the VMA, not kvm_mmu_faultin_pfn_gmem().  It's a bit early
+in the morning, but off the top of my head, I can't think of any reason we need
+to support such a setup.  If userspace really, really wants to use a separate
+mapping, they could DELETE+CREATE an equivalent memslot without the guest_memfd
+file descriptor.
 
-Regards,
-Michal
+So I think we should do this?
+
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 9c2d52bdf25e..86f53e53a136 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -1013,7 +1013,7 @@ int kvm_gmem_bind(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	 */
+ 	WRITE_ONCE(slot->gmem.file, file);
+ 	slot->gmem.pgoff = start;
+-	if (kvm_gmem_supports_mmap(inode))
++	if (gmem_in_place_conversion || kvm_gmem_supports_mmap(inode))
+ 		slot->flags |= KVM_MEMSLOT_GMEM_ONLY;
+ 
+ 	xa_store_range(&f->bindings, start, end - 1, slot, GFP_KERNEL);
+
+Regardless, the key aspect of all this is that in-place conversion is brand new
+functionality, so we don't have to ensure backwards compatibility.
