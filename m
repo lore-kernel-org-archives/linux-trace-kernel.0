@@ -1,186 +1,144 @@
-Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AE039B484;
-	Wed, 26 Aug 2026 18:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32903ACF0F;
+	Wed, 26 Aug 2026 19:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787769427; cv=none; b=BLC74E4tsPEwuMIX3X52LH0nNxKYX1F9m/VALOMH7rSM9LKoAKENu1CYKx1bdU2pCRPBX6FzhmiBAZT5BrzVJ3gP+S5gHitwI+TKxLlNJhBwm8he3XxNd/YSy5kmQbEfggBZNolbUlBpHERFBqtg/0eDQ6D5WMODGX7gIFQ4XRk=
+	t=1787772163; cv=none; b=XG6q6E82e3aT+jl1MnWkgCULLu1ZSb6NGDZstyNbs8fQMx+y2fWN/5JBTL/akM14z21BAXl0NgtrL3IxoEJHVkbxbM40gEAzqEHzvG2N/s2oP/bD+MHeY0SmCW9kKmA55HlQ0kPQ4DHK72VCDgM9lxyrb3cNjEn5eVhqCY3EtZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787769427; c=relaxed/simple;
-	bh=Y7+5fzy4IgE6XMXePPk54pq+5mHkhq1S/q96x1AA/D8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bKuqXOeaYiiPai/U4xxx05Sbxv8eW1Numl71VXOl0iTcVPwmZULLIRzvxABLPx25U2GzAdaEL8uEicr3P21hqeOL8odRR3of6LnW2WNSZEOPdUgE5OjDQdDq9tQ5N3E9hML/B6bpdUAqNFV/ob0VdszUzBV98lZ/aBqW4lwTPNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=LBQpOxrt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PICJpeq4; arc=none smtp.client-ip=103.168.172.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1787772163; c=relaxed/simple;
+	bh=oSpQfwKhoSIgOkQ9OJik+kWr+ikQsWyrw4UzrbcnRGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZlcsmQcV/rvOCeG08DskQkyzaeQivKPaVCS3KDip8en98Wm6lApmYUBljW55hnkmoAaqUicq+ZeyLV+m+pKUVL95XaW/tk4DOVAcGLTiIgMzv5O7KTwXpL5+8yRz6IyzpwE5uD6/LkPjSJYG5+zmeojGRrCQhyxiYHpfCW3Mweg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=CCncnxR6; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="LBQpOxrt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PICJpeq4"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailflow.phl.internal (Postfix) with ESMTP id AE72513801B4;
-	Wed, 26 Aug 2026 14:36:57 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Wed, 26 Aug 2026 14:36:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1787769417; x=1787776617; bh=AXIwP4yu3TNgPvU8yf7Hptdh037EP7WE
-	Y8ll6DN52k0=; b=LBQpOxrtTh0AHm/+3hpS801ONfmbZP9VZohFOzrmeORrKAyE
-	mfWglKIzlVEy4aDkGX4U7Nd2uG61ARVxQ99LCXHLb2f52OcX4q568Do8pMNgX1EB
-	JCodDojYQ3oohyoavf5mI9Y7qEDGhyJCBbYYlV3Cv5ka7yeDQcWbCwAVUXvGDEs5
-	6ulyYs61+t2saIh0T1yeFIP1+1rdyA9kCs53nUTnV62J68wIv/eDr/0Yzdo85X5f
-	ytpEKZIhlWpckETJNDj03trvdRpTO/EAyQYkL4gOmaqphScmw9Og7/BIO7G+S1NY
-	0Y+BGlxUup4Pw3TrMY0lgv5fwb+VEj+pvFYM+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787769417; x=
-	1787776617; bh=AXIwP4yu3TNgPvU8yf7Hptdh037EP7WEY8ll6DN52k0=; b=P
-	ICJpeq4O/lZ83UnijZ76oQaOd0AY9+7B63YWSQdHDt8EQiEZKjTqjbcJAe24zkrN
-	jgjih3/ny4F1kz9V0gWasKr3YENujNTB99kgXVIThrEm3RvKxFlv9ndGmL2bmdVX
-	kuuoNebxCocF1OBBPfy9ZU4AfIU12Cf4fav1tjEF1TTHdWWoZlbxYP9TDg0ame/h
-	xIpfFsfeWv2KGS/HlyqCXG/lh0WhN0eU4kzYTAKEeGdSFgtvUbebtZaFT4zU9QAZ
-	BfSVMm+3FjOwLOAocQBmTKCujfy5CLOaCqVzDiOvTLlCdn7nUHAAYQE1zm6HtmQN
-	yOe2yiTEAVjjS5O45Qogg==
-X-ME-Sender: <xms:SDKPapBJp1ltJAcyI_xZxiK78XLWsqgrz-iF1XpLTIi560G_NG1_tQ>
-    <xme:SDKPan8qJEj8Kdw4-xB5grKYqzXe8NQmwdtWlLFp7__J4HOlggFZ2V5Y6_VBYoffb
-    wWeq_BwN-2jVNWP8jj6bqY2hALdTJmBVngXpkVnyaujqDRlaG0b3A>
-X-ME-Received: <xmr:SDKPamDICjFvcSeBnDqbKwk0CFKzWV5NJbgp-l7ZNHVkJkI_2wu0EsHfW2M>
-X-ME-Proxy-Cause: dmFkZTELKOeDfHJP+SHbqjYVk9pwKUGicSk1p7GbSsMsayumgkGRXk9mkO2sicvuyEcat5
-    L0tWOhfSHJuXVtqqVdF+NmJMI2h+ZOwn+i/DBGVryOfj5Qf49E1quVQOsDdf9ZZ1sJ9xbJ
-    poFGDwDqJ51N4cJIM57auo6jEn+a0yODvKmWYzxEJ6fNxbovO9GSlEdv8xp1MFbZ7Gokp5
-    0ZsoL7HwOxjOQe3XnPllK3jRr9Ofv4wbQ2A32YyrpJPvYjpNqQkzKyvfjTe1H+XVKzp2bs
-    aIU/y7f44kV0XbgBtKHpikGU/conieH5Ql/3SuDnp1P7HO7ccqQ5Tavx6wyrRHArYDQuZJ
-    ReEsdYa3AmPew8cuddJjokVkzPRPJmZd3YlR1VJPyTAdqY+NL6xJM4luZPV+8/l6Qx0i9O
-    c9WxaMXcW1JUlkaxjDZucSeXgTS/zXknXXvZdVJFUlbsLlDzdcNTONOx03t+BYALB9FoUb
-    Po9QhwdvUkdZ9FHEcBUPl8FCsJoZyLrHtuPH+oNiPTl7rCXWhkQ5OWb4qtHqQsjhDcuosz
-    W4oad3YDjgmSVNIwJApsoKdvnMi34LkabWs4R+nruTIkDihbTb/EoObomeIcxmI2pB2DqD
-    qOFNlmrgXYkJv2fQY2ER4UL8Q+/bttFG5DVaFN9gi9zcXFGljyS+Q/3/ve1g
-X-ME-Proxy: <xmx:SDKPajy4yLZEPMicPsIi4xXNZ_gD_9QLorXtAOJgUfsRVB1ilFOXUw>
-    <xmx:SDKPatrF2xGnxB3V1_26vacIGFKy3I_TIuM_sv8KI4y08pupxtHgBw>
-    <xmx:SDKPauxU2EdL8_UHOWGKWqqwoeKyz1-vF4wS8jvs-EEQvArn1PO42A>
-    <xmx:SDKPavNCdt-kJhS7kWSYEbYSl9IkMxdsTmfZ10ubOqiJ16Poy94WbQ>
-    <xmx:STKPavZhSWl6PxYOxr7AqrDZzd_-81pOFZSznr5dBkWVsS5jsszOR2Mt>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 26 Aug 2026 14:36:55 -0400 (EDT)
-Date: Wed, 26 Aug 2026 19:36:54 +0100
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Jann Horn <jannh@google.com>
-Cc: akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
-	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
-	dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, liam@infradead.org, 
-	mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, 
-	surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, 
-	usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, willy@infradead.org, 
-	pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 19/57] mm/collapse: install a PMD leaf as the
- terminal layer
-Message-ID: <ao8okZ-A7cnvoju6@thinkstation>
-References: <20260816224609.308019-1-kirill@shutemov.name>
- <20260816224609.308019-20-kirill@shutemov.name>
- <CAG48ez1fiCzTMATN07HHfzvUGFuZ5gELNpZXdXx=ySa7nihxmA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="CCncnxR6"
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 1E44E1601FE;
+	Wed, 26 Aug 2026 19:22:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 542F120031;
+	Wed, 26 Aug 2026 19:22:27 +0000 (UTC)
+Date: Wed, 26 Aug 2026 15:23:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: =?UTF-8?B?SsOpcsOpbXk=?= Jean <Jeremy.Jean@oss.cyber.gouv.fr>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, include@grrlz.net,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/user_events: Clear copied tracing state before
+ fork duplication
+Message-ID: <20260826152312.62d5802e@gandalf.local.home>
+In-Reply-To: <20260824211036.3729669-2-Jeremy.Jean@oss.cyber.gouv.fr>
+References: <20260824211036.3729669-2-Jeremy.Jean@oss.cyber.gouv.fr>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez1fiCzTMATN07HHfzvUGFuZ5gELNpZXdXx=ySa7nihxmA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: can967q4bytt1hw1h51dkjw6ujyjrdey
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 542F120031
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19h4uimY2J2hA37/3JFtVFukaq1XR0G7NA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=xhr3H1oSETvZ1QQ62lGcAt8zWUVienEqZAUbX1OVyEg=; b=CCncnxR6Jw/F7a4KqZMGsh3A4FogPy2Djhvo84dfFkkFfxDK1MdpLSFLQh8qtHLsWxr8FTXZxQLGLyQxUMOJfAWcBIeSbxMDeCxQAlNdKCGJyG7yqmXpeTMSIT64U3sTZsDL8PvUFu/vWcQuDFElQcIqbcJNlfo5wvcC+5vQj80=
+X-HE-Tag: 1787772147-505586
+X-HE-Meta: U2FsdGVkX19DU+jT0ZUm2vRFa0r0Le4ZB22SJ28hui2VIOq/tivZecDka+a5pWtjSIxqprOLhtw+nPg7Z7DKEfZ7tsmOS0KzDx118HqG7Z5Yo0CUIq4OU6jWUbwZG0nj/y/HIp4oTPiseAEoD+T638xPbBpvMtsS2RLLLYEe7NnXegB4IUV7CrH9LeoyzRQ4v3ceV/BS5hWMnLxgLAwgk3O3ik0FK+OXFo7o8C4o7BCxWX+4/xo4bvW9q4cYqL6LkBn1MjIICnOIR5fyYolMH1OdsFVJeLYpEJJ5kAaO9ghj7FoL/gJYU3e5BKt0viBO
 
-On Tue, Aug 25, 2026 at 06:52:17PM +0200, Jann Horn wrote:
-> On Mon, Aug 17, 2026 at 12:46 AM Kiryl Shutsemau <kirill@shutemov.name> wrote:
-> > Fill in the PMD install.  Under the pmd lock, with the pte ptl nested
-> > inside it: verify, detach the table with pmdp_collapse_flush(), deposit a
-> > fresh one and map the leaf.
-> >
-> > That is one atomic section, so no pmd_none() window ever exists: faults
-> 
-> What do you mean by "atomic" and "no pmd_none() window ever exists"?
-> Is that supposed to be with respect to a subset of readers?
-> 
-> While the PMD table spinlock is held, you clear the PMD entry
-> (pmdp_collapse_flush) and set it to a new value
-> (map_anon_folio_pmd_nopf). But codepaths that walk page tables don't
-> take that spinlock unless they already know they're in a THP case.
-> 
-> zap_pmd_range() does not lock the PMD table before checking
-> pmd_none(), and if that is true, it skips over the PMD. I think this
-> means that THP collapse can race with MADV_DONTNEED or zap_vma_range()
-> such that the zap wrongly has no effect?
 
-Yes, the race with MADV_DONTNEED you point out is real. Thanks for
-flagging this.
+[ Replying again, but against the one with the Cc to the mailing lists ]
 
-The idea I want to explore is installing a pmd_mkinvalid() entry rather
-than none in pmdp_collapse_flush(), so walkers have to serialize on the
-pmd lock.
+On Mon, 24 Aug 2026 21:10:37 +0000
+J=C3=A9r=C3=A9my Jean <Jeremy.Jean@oss.cyber.gouv.fr> wrote:
 
-But it was a long day, I am not sure if the idea is sane.
+> User events keep per-mm tracing state in task_struct::user_event_mm. It
+> tracks the registrations and enablers created through the tracefs
+> user_events_data interface.
+>=20
+> dup_task_struct() starts a fork by copying this pointer from the parent.
+> user_events_fork() must then either share it for CLONE_VM, or create new
+> state for a child with a separate address space.
+>=20
+> The second case can fail. If user_event_mm_dup() cannot allocate the new
+> state or copy one of its enablers, it returns without replacing the
+> pointer copied by dup_task_struct(). The child now points at the parent's
+> tracing state, but did not take a task reference to it.
+>=20
+> When the child exits, user_event_mm_remove() can drop the parent's task
+> count to zero and queue its tracing state for release. The next
+> user-events registration in the parent calls current_user_event_mm() and
+> writes to the freed object.
 
-> > stay held down at pte level by the migration entries throughout.  It is
-> 
-> But you don't have a migration entry at the PMD level, right?
+Please, do not cut and paste AI into your change log. Read it,
+understand it, and summerize it!
 
-Right.
+The above is just mumbo jumble and is way too verbose for such a simple
+change. Show me you understand what the bug is. And tell me what was
+wrong. The above is totally not helpful for a change log. It's way too
+verbose and makes it very difficult to know what the bug is.
 
-They are all at pte level, in the table being detached. What
-keeps a fault out during the install is the pmd lock: pmd_install() takes
-it before it can put a table back.
+>=20
+> KASAN reports:
+>=20
+>     BUG: KASAN: slab-use-after-free in current_user_event_mm+0x51/0x1d0
+>     Write of size 4 at addr ffff888005010d30 by task init/44
+>=20
+>     Call Trace:
+>      <TASK>
+>      kasan_report+0xce/0x100
+>      kasan_check_range+0x10f/0x1e0
+>      current_user_event_mm+0x51/0x1d0
+>      user_events_ioctl+0x82e/0x15c0
+>      __x64_sys_ioctl+0x139/0x1c0
+>      do_syscall_64+0xce/0x450
+>      entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>=20
+>     Allocated by task 44:
+>      __kasan_kmalloc+0x8f/0xa0
+>      __kmalloc_cache_noprof+0x180/0x3a0
+>      user_event_mm_alloc+0x3c/0x1f0
+>      current_user_event_mm+0x88/0x1d0
+>=20
+>     Freed by task 42:
+>      __kasan_slab_free+0x43/0x70
+>      kfree+0x13a/0x390
+>      process_one_work+0x696/0xf90
+>      worker_thread+0x420/0xba0
+>=20
+> Clear the child's copied user_event_mm before starting the fallible
+> duplication. If duplication fails, the child has no user-events tracing
+> state to release. The CLONE_VM case remains unchanged because
+> user_events_fork() explicitly installs the shared pointer and increments
+> its task count.
+>=20
+> Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event en=
+ablement")
+> Assisted-by: Codex:gpt-daybreak-blue
+> Signed-off-by: J=C3=A9r=C3=A9my Jean <Jeremy.Jean@oss.cyber.gouv.fr>
+> ---
+>  include/linux/user_events.h | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/include/linux/user_events.h b/include/linux/user_events.h
+> index 57d1ff0..2c9ac7b 100644
+> --- a/include/linux/user_events.h
+> +++ b/include/linux/user_events.h
+> @@ -48,6 +48,7 @@ static inline void user_events_fork(struct task_struct =
+*t,
+>  		return;
+>  	}
+> =20
+> +	t->user_event_mm =3D NULL;
 
-I will fix wording once the pmd_none() question above is settled.
+Honestly, that line should be in user_event_mm_dup() and not here.
 
-> > what lets PMD collapse run under mmap_read like everything else here.
-> >
-> > Two things force that nesting, which is the one the tree already uses to
-> 
-> I'm lost, what is "the tree"?
+-- Steve
 
-Upstream.
+>  	user_event_mm_dup(t, old_mm);
+>  }
+> =20
 
-try_collapse_pte_mapped_thp() and retract_page_tables() nest the pte ptl
-inside the pmd lock the same way.
-
-I will update wording here.
-
-> >  - rmap walks on the sources are unreachable, their refcounts frozen and
-> >    their folio locks held from freeze to putback;
-> 
-> To be clear, we can concurrently rmap-walk into the PMD, right?
-> Because we might be looking at a different folio which was created in
-> the parent process or something like that? And so a
-> page_vma_mapped_walk() without PVMW_SYNC might look at stale PTEs?
-> (Which may or may not be fine, but would not be what this commit
-> message claims.)
-
-Again, wording should be better here.
-
-A walk can reach the range, but it cannot act on a source: that takes the
-folio lock, which the round holds from freeze to putback.
-
-> > +       /* The deposit balanced the detached table, so the count is already right */
-> > +       if (old_table)
-> > +               pte_free_defer(mm, old_table);
-> 
-> What does old_table contain at this point - migration entries?
-
-Yes.  I will clear it under the ptl before it goes.
-
-Not for the pattern you name, though: a pte_offset_map_rw_nolock() caller
-owes a pmd_same() recheck and page_vma_mapped_walk() does it.
-
-The exposure is the plain pte_offset_map() callers -- pagewalk.c,
-memory-failure.c, swap_state.c and a dozen more -- none of which
-rechecks the pmd.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
