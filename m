@@ -1,56 +1,56 @@
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B453B3C1086
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3638E3E6DEC
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 09:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787735940; cv=none; b=USGxpjMTRVO3ynfr++2kWIzOdSZSoZRNmeb4IlKK2QcdA7GT2jvDErpy/UL4FSTt76eC7xt5aIKPQv659M1McT3L/6uzLS0uKZjPv+Niyjh0Qc91KBFP9d0c3qlpxR/ddO7cFKiEJ4qHuJcpiHaiaeen1yOeB4OG1sJaalGaNpw=
+	t=1787735942; cv=none; b=XwTCgUxjpppP7iXLKbIcZRd1Yxrk5ywRFLMialxm7YR6kSSk5sxYKhG42l1MyHSWKmPPCOqds1jX22KsctzG8Bwp+896jeeA4d1IF65/sJ0f3rUxBs5ryvaL5FS8QaRGgSvDNLGVOzy1viFmi03MYwgQvemRJJox7VEKjpKlZ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787735940; c=relaxed/simple;
-	bh=YLgunGHL+AL+LncG9sWVRtMDvArYtWgzJi2/TAMkgIg=;
+	s=arc-20240116; t=1787735942; c=relaxed/simple;
+	bh=1jhPrkvLEI87GTgtEFv40H/xT+b1YJkMlotkTtRBsC0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DxOzHDgu6/2i8XFjhxNREsIAk4BjGtu11GRdCJJ7iiZl1wE+yHDZ2clVlnWbXRSYxS9RXEgV4A9N842tLAu4YPbUjCp2HFV850jtZ90HeKBiTFHCe7sFRjgN2TQOdQ6flPGN6GeprGAvoz1cub3EA+PJHhOJuL52oFFyJfTu8pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dw3FQd+B; arc=none smtp.client-ip=209.85.214.200
+	 To:Cc:Content-Type; b=VsaLrEkAs+Ft5iEBTjvAQ9Kix9Kww7SI/6FR2iWgOgPhWunu0UjFs/CYzWM1H1QZL6O9JVmMMc9TtMoJT38EzPuV7oA8/CPSfYfDShHf84ZmTuajrnAidbj7ni+oxWv+0Y4gtzkRZSwoN9vM8ovqEp21UVpEmNPq8d/FFduKkMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kCuuvQk4; arc=none smtp.client-ip=209.85.214.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dw3FQd+B"
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2cfca8558d2so12355475ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:18:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kCuuvQk4"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2cec4226c70so10275725ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 02:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787735933; x=1788340733; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787735934; x=1788340734; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+cjy+nMsHw5PBRs0QTAeMD0IiOId+CkLeVE5YuR6Qzo=;
-        b=dw3FQd+BnXeFu4v00Jqis+vTJEPvVwDLXrnR/wveN9U6t8gw0IWxuKrfRQoUgcQhY+
-         214Oliw7SXYaWZXbFBDf+urHv4CmD342b21TOAntl0MAyXleeZGXkRKZhp41pj73p8TA
-         eyYR937138kGzGar5OmTojdMVygkHri/uGwPU5HG/oh7FZivuCt5wau5FswhTQXaOX9H
-         jh9zx+VA+xJooFxqRwACiIH6cbshMowz9jdzcERstNz+PXXdShezd98ebM+sfitjfe+B
-         g3izdXkzHrCbLKAWs/FpWN9NL5VUsioxmcfOmA8OfqsCSDhaQ0WXLVp1yW5HLAScjtaH
-         JYug==
+        bh=nW/Bx4P2jJT94oLQdzkm368Cs7uj0juF0EvPF05mG7A=;
+        b=kCuuvQk4gXaplq2+15bUjFQq4Oz2ZVm7KJg4k2Zz5Xo13c5ezTsThybRrMVLExXIRI
+         FBQW1gvVcSAjY67DrjF2MOpoUJPEUjqowcZ2hEy2KX/X4+aiW3MPmUy66RM0q+w4aE7N
+         yaXrQM7rtBEMqepmnrlYK5y+Xpr3AQ87ilfhkH1U5PkI6j4gqXcm806PqGubjGnKJseq
+         Yb9jvYeLdSQL566XRIFA3tWgaoWu1G0aGR5w9UzqxlSwaYolJzeLnYfEpWfmyKZKcoIQ
+         tjr8oEYao+bi40/V7nWePUR0n3I97vyDOqqVL0XNr+kKp9F6CUTSHKagPKcf6in3qib9
+         CjTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787735933; x=1788340733;
+        d=1e100.net; s=20251104; t=1787735934; x=1788340734;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+cjy+nMsHw5PBRs0QTAeMD0IiOId+CkLeVE5YuR6Qzo=;
-        b=Oj2uCMranMhdhP2J2UC8zbnjnY6U3zk/bp2JxyxtpaWlGGHymP4ya+ZCiBdk5JP4j3
-         biBy5CewqnBzi6pcg5nASG6rShtFWTU6gHK3sZY4nY1XL32Xg47k/rVpuepMtG61VAgi
-         i1DEftUGlv5/vdDV/jEva0iibUcKti70RRnGkv7Gl3SNwf+7412rivnu9unQxORO9maf
-         hw3udonocD370KcBUYw6QuOx9lKszYvUH9gnU5uwHQfFDMYP0d7Mgsu3TA04MsfTG4Q7
-         bV/ptrOEx1V74NbnlQRIwcAWV0yD+rmCQ8WyPBPgOp7Z/9W2UjfWSBZgUDp0jVC8LFaT
-         kNLA==
-X-Forwarded-Encrypted: i=1; AHgh+RqwTUKIK4lwdzKZhwhBYfDNx+vy6VpFXAZVysbpxBEetgCIU2JWvXSJLiUOf7EDeEE5RLQAvTY0wFQ6s3hJ21T6fKQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++nYpTjwHEJ0tYvDhq0dpdvPYrVb0e6wZ/FbYXz3Eb4LmDgd/jS2
-	7i7zhSv4tjB379voG09H9H9g3/YnqwgyocBpNmMh/oaJVw91itqluhxrozXFCtTQuSG6MjgtGJ0
-	coGqiMmHKE4uavc4z9qZyvD2O+g==
-X-Received: from plhq8.prod.google.com ([2002:a17:903:11c8:b0:2d2:f257:ff6b])
+        bh=nW/Bx4P2jJT94oLQdzkm368Cs7uj0juF0EvPF05mG7A=;
+        b=oOWYAageFaocVQTBrIkEJV7qKSsyQzMEcxD8RGcA+nwsYsB2PB5glsURjqwxSlauYG
+         79K3K5g2j5GC2YYQNB1sFizfxYEsEacotWYGWw/4VWR+kr0D3RFFtfI07Mnqk7hqzZMQ
+         tNozV1J9J+XYSJSm/31CsVt001IGG3WofcDq6KHg3Jrx7dB6/kv14LirKtAF3gd4qD5h
+         M3xOpcq3RD27MbKvr7p1CMiZDRkG1NtpiUBLeRRtWVp7T6lSTlOMnPd7R1SaRflpZiKD
+         JkU9R70r3AdaDm9duykmjLoC+Fz/NfMSLqjCgNrgArJXp3n9p+18Td9MKAQv0bOie46z
+         +9UA==
+X-Forwarded-Encrypted: i=1; AHgh+RqJh6BBojq0Q42MvfRkQuT7TGJX25mpC9/f0hf/nllpUG28sDvSaFS4D0nX/eMBgh/jqXh2nEcv1WE1HyFBRf9qpG4=@vger.kernel.org
+X-Gm-Message-State: AFuF++m63HctxMWbC+Zx6YV5HtowDgJHKZp1/6bd2zha7syHBfrEprZC
+	j46q6jHj3zvdmVfRpHlyCb3GYcRe0XS2RBeWXvJ5x5nL4I9RIxCzp5DrX3EkDHweHsQYRyt3dqH
+	cDdcEBUDIlMaPFO5hi4TE4t52rw==
+X-Received: from plma15.prod.google.com ([2002:a17:902:7d8f:b0:2c7:f19d:bb15])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:b48:b0:2cf:b68a:340 with SMTP id d9443c01a7336-2d707b7f737mr84539505ad.10.1787735931763;
- Wed, 26 Aug 2026 02:18:51 -0700 (PDT)
-Date: Wed, 26 Aug 2026 09:18:24 +0000
+ 2002:a17:903:1104:b0:2d6:e401:9676 with SMTP id d9443c01a7336-2d707955aa3mr86624575ad.1.1787735933588;
+ Wed, 26 Aug 2026 02:18:53 -0700 (PDT)
+Date: Wed, 26 Aug 2026 09:18:25 +0000
 In-Reply-To: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,13 +60,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519; pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787735885; l=5047;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787735885; l=6306;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=mb3uaLD2f73gjBg5EOuTiW5jIrrwXcBsUyiQfGfT2N8=; b=JETiA2QHKaiExWNZCyGlrQT84yI/YT1kdJUQpYKxpqoY5RadHrf8I2YGHK3b4T5c72XHbZUpU
- 2Jn4PILDbMQB9KRhsSDSu6kzn90BQELMLsi1gc6Ru6P3p1cgHLRu0um
+ bh=iH6mV6vz9nv+7yGhH2glpEiB5Axbc8NLNwkfFuGS8bc=; b=eeGISm57LUVrThy3WYFRGn0ADNhx8cOa1mhGNQcmpPGa+nPA+FZFKYI6zPgeud/R7Bz1UVu2i
+ A8ITRzICJzPAmUnWNb5K4m8g1JY/EWxBUD1EWrzSGQgoaH1E6OTBAWA
 X-Mailer: b4 0.16.0
-Message-ID: <20260826-gmem-inplace-conversion-v11-26-0a15d8a799aa@google.com>
-Subject: [PATCH v11 26/46] KVM: selftests: Rename guest_memfd{,_offset} to gmem_{fd,offset}
+Message-ID: <20260826-gmem-inplace-conversion-v11-27-0a15d8a799aa@google.com>
+Subject: [PATCH v11 27/46] KVM: selftests: Add support for mmap() on
+ guest_memfd in core library
 From: Ackerley Tng <ackerleytng@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -100,124 +101,149 @@ Content-Type: text/plain; charset="utf-8"
 
 From: Sean Christopherson <seanjc@google.com>
 
-Rename local variables and function parameters for the guest memory file
-descriptor and its offset to use a "gmem_" prefix instead of
-"guest_memfd_".
+Accept gmem_flags in vm_mem_add() to be able to create a guest_memfd within
+vm_mem_add().
 
-No functional change intended.
+When vm_mem_add() is used to set up a guest_memfd for a memslot, set up the
+provided (or created) gmem_fd as the fd for the user memory region. This
+makes it available to be mmap()-ed from just like fds from other memory
+sources.
+
+For guest_memfds, mmap() using gmem_offset instead of 0 all the time.
+
+Always use MAP_SHARED if mmap-ing from guest_memfd instead of reading flag
+from the configured src_type, which doesn't include guest_memfd.
+
+Add a kvm_slot_to_fd() helper to provide convenient access to the file
+descriptor of a memslot.
+
+Update existing callers of vm_mem_add() to pass 0 for gmem_flags to
+preserve existing behavior.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
+[mmap() with gmem_offset, and always with MAP_SHARED.]
 Reviewed-by: Fuad Tabba <tabba@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- tools/testing/selftests/kvm/include/kvm_util.h |  6 +++---
- tools/testing/selftests/kvm/lib/kvm_util.c     | 26 +++++++++++++-------------
- 2 files changed, 16 insertions(+), 16 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h     |  7 +++++-
+ tools/testing/selftests/kvm/lib/kvm_util.c         | 28 ++++++++++++----------
+ .../kvm/x86/private_mem_conversions_test.c         |  2 +-
+ 3 files changed, 23 insertions(+), 14 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 5a7a455b53875..cf49a84de02e8 100644
+index cf49a84de02e8..a091c495442a1 100644
 --- a/tools/testing/selftests/kvm/include/kvm_util.h
 +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -690,17 +690,17 @@ int __vm_set_user_memory_region(struct kvm_vm *vm, u32 slot, u32 flags,
- 				gpa_t gpa, u64 size, void *hva);
- void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
- 				gpa_t gpa, u64 size, void *hva,
--				u32 guest_memfd, u64 guest_memfd_offset);
-+				u32 gmem_fd, u64 gmem_offset);
- int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
- 				 gpa_t gpa, u64 size, void *hva,
--				 u32 guest_memfd, u64 guest_memfd_offset);
-+				 u32 gmem_fd, u64 gmem_offset);
- 
- void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 				 enum vm_mem_backing_src_type src_type,
+@@ -700,7 +700,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
  				 gpa_t gpa, u32 slot, u64 npages, u32 flags);
  void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
  		gpa_t gpa, u32 slot, u64 npages, u32 flags,
--		int guest_memfd_fd, u64 guest_memfd_offset);
-+		int gmem_fd, u64 gmem_offset);
+-		int gmem_fd, u64 gmem_offset);
++		int gmem_fd, u64 gmem_offset, u64 gmem_flags);
  
  #ifndef vm_arch_has_protected_memory
  static inline bool vm_arch_has_protected_memory(struct kvm_vm *vm)
+@@ -732,6 +732,11 @@ void *addr_gva2hva(struct kvm_vm *vm, gva_t gva);
+ gpa_t addr_hva2gpa(struct kvm_vm *vm, void *hva);
+ void *addr_gpa2alias(struct kvm_vm *vm, gpa_t gpa);
+ 
++static inline int kvm_slot_to_fd(struct kvm_vm *vm, u32 slot)
++{
++	return memslot2region(vm, slot)->fd;
++}
++
+ #ifndef vcpu_arch_put_guest
+ #define vcpu_arch_put_guest(mem, val) do { (mem) = (val); } while (0)
+ #endif
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 3413d45e34faf..af501a27211a2 100644
+index af501a27211a2..08d0bbcd421ea 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -970,7 +970,7 @@ void vm_set_user_memory_region(struct kvm_vm *vm, u32 slot, u32 flags,
- 
- int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
- 				 gpa_t gpa, u64 size, void *hva,
--				 u32 guest_memfd, u64 guest_memfd_offset)
-+				 u32 gmem_fd, u64 gmem_offset)
- {
- 	struct kvm_userspace_memory_region2 region = {
- 		.slot = slot,
-@@ -978,8 +978,8 @@ int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
- 		.guest_phys_addr = gpa,
- 		.memory_size = size,
- 		.userspace_addr = (uintptr_t)hva,
--		.guest_memfd = guest_memfd,
--		.guest_memfd_offset = guest_memfd_offset,
-+		.guest_memfd = gmem_fd,
-+		.guest_memfd_offset = gmem_offset,
- 	};
- 
- 	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
-@@ -989,10 +989,10 @@ int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
- 
- void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
- 				gpa_t gpa, u64 size, void *hva,
--				u32 guest_memfd, u64 guest_memfd_offset)
-+				u32 gmem_fd, u64 gmem_offset)
- {
- 	int ret = __vm_set_user_memory_region2(vm, slot, flags, gpa, size, hva,
--					       guest_memfd, guest_memfd_offset);
-+					       gmem_fd, gmem_offset);
- 
- 	TEST_ASSERT(!ret, "KVM_SET_USER_MEMORY_REGION2 failed, errno = %d (%s)",
- 		    errno, strerror(errno));
-@@ -1002,7 +1002,7 @@ void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+@@ -1002,12 +1002,14 @@ void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
  /* FIXME: This thing needs to be ripped apart and rewritten. */
  void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
  		gpa_t gpa, u32 slot, u64 npages, u32 flags,
--		int guest_memfd, u64 guest_memfd_offset)
-+		int gmem_fd, u64 gmem_offset)
+-		int gmem_fd, u64 gmem_offset)
++		int gmem_fd, u64 gmem_offset, u64 gmem_flags)
  {
  	int ret;
  	struct userspace_mem_region *region;
-@@ -1078,12 +1078,12 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
- 		region->mmap_size += alignment;
+ 	size_t backing_src_pagesz = get_backing_src_pagesz(src_type);
++	int mmap_flags = vm_mem_backing_src_alias(src_type)->flag;
+ 	size_t mem_size = npages * vm->page_size;
++	off_t mmap_offset = 0;
+ 	size_t alignment = 1;
+ 
+ 	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
+@@ -1079,8 +1081,6 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
  
  	if (flags & KVM_MEM_GUEST_MEMFD) {
--		if (guest_memfd < 0) {
--			u32 guest_memfd_flags = 0;
-+		if (gmem_fd < 0) {
-+			u32 gmem_flags = 0;
- 
--			TEST_ASSERT(!guest_memfd_offset,
-+			TEST_ASSERT(!gmem_offset,
+ 		if (gmem_fd < 0) {
+-			u32 gmem_flags = 0;
+-
+ 			TEST_ASSERT(!gmem_offset,
  				    "Offset must be zero when creating new guest_memfd");
--			guest_memfd = vm_create_guest_memfd(vm, mem_size, guest_memfd_flags);
-+			gmem_fd = vm_create_guest_memfd(vm, mem_size, gmem_flags);
- 		} else {
- 			/*
- 			 * Install a unique fd for each memslot so that the fd
-@@ -1091,11 +1091,11 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
- 			 * needing to track if the fd is owned by the framework
- 			 * or by the caller.
- 			 */
--			guest_memfd = kvm_dup(guest_memfd);
-+			gmem_fd = kvm_dup(gmem_fd);
- 		}
- 
--		region->region.guest_memfd = guest_memfd;
--		region->region.guest_memfd_offset = guest_memfd_offset;
-+		region->region.guest_memfd = gmem_fd;
-+		region->region.guest_memfd_offset = gmem_offset;
- 	} else {
- 		region->region.guest_memfd = -1;
+ 			gmem_fd = vm_create_guest_memfd(vm, mem_size, gmem_flags);
+@@ -1101,13 +1101,17 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
  	}
+ 
+ 	region->fd = -1;
+-	if (backing_src_is_shared(src_type))
++	if (flags & KVM_MEM_GUEST_MEMFD && gmem_flags & GUEST_MEMFD_FLAG_MMAP) {
++		region->fd = kvm_dup(gmem_fd);
++		mmap_flags = MAP_SHARED;
++		mmap_offset = gmem_offset;
++	} else if (backing_src_is_shared(src_type)) {
+ 		region->fd = kvm_memfd_alloc(region->mmap_size,
+ 					     src_type == VM_MEM_SRC_SHARED_HUGETLB);
++	}
+ 
+-	region->mmap_start = kvm_mmap(region->mmap_size, PROT_READ | PROT_WRITE,
+-				      vm_mem_backing_src_alias(src_type)->flag,
+-				      region->fd);
++	region->mmap_start = __kvm_mmap(region->mmap_size, PROT_READ | PROT_WRITE,
++					mmap_flags, region->fd, mmap_offset);
+ 
+ 	TEST_ASSERT(!is_backing_src_hugetlb(src_type) ||
+ 		    region->mmap_start == align_ptr_up(region->mmap_start, backing_src_pagesz),
+@@ -1153,10 +1157,10 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 
+ 	/* If shared memory, create an alias. */
+ 	if (region->fd >= 0) {
+-		region->mmap_alias = kvm_mmap(region->mmap_size,
+-					      PROT_READ | PROT_WRITE,
+-					      vm_mem_backing_src_alias(src_type)->flag,
+-					      region->fd);
++		region->mmap_alias = __kvm_mmap(region->mmap_size,
++						PROT_READ | PROT_WRITE,
++						mmap_flags, region->fd,
++						mmap_offset);
+ 
+ 		/* Align host alias address */
+ 		region->host_alias = align_ptr_up(region->mmap_alias, alignment);
+@@ -1167,7 +1171,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+ 				 enum vm_mem_backing_src_type src_type,
+ 				 gpa_t gpa, u32 slot, u64 npages, u32 flags)
+ {
+-	vm_mem_add(vm, src_type, gpa, slot, npages, flags, -1, 0);
++	vm_mem_add(vm, src_type, gpa, slot, npages, flags, -1, 0, 0);
+ }
+ 
+ /*
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+index 3aa0673f79f33..f3de2a4ab0551 100644
+--- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+@@ -399,7 +399,7 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type, u32 nr_v
+ 	for (i = 0; i < nr_memslots; i++)
+ 		vm_mem_add(vm, src_type, BASE_DATA_GPA + slot_size * i,
+ 			   BASE_DATA_SLOT + i, slot_size / vm->page_size,
+-			   KVM_MEM_GUEST_MEMFD, memfd, slot_size * i);
++			   KVM_MEM_GUEST_MEMFD, memfd, slot_size * i, 0);
+ 
+ 	for (i = 0; i < nr_vcpus; i++) {
+ 		gpa_t gpa =  BASE_DATA_GPA + i * per_cpu_size;
 
 -- 
 2.55.0.887.g758fc8c411-goog
