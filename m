@@ -1,118 +1,140 @@
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C617466B57;
-	Wed, 26 Aug 2026 16:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AB440928D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 17:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787763492; cv=none; b=mNSIxc0xZGQMQ3ADMpCMOvgXtTL4UcQw8ijAwe5X2xuO/hxDZGNOGWkhNUsWl+eIEcMc1bql8LrTsT6mVEIPLtc6SzeGpB1UYsYbK78bYKbITLAbh/6ibeGnAgNtI8RWi5J7ajRa+nYoUCpXjaNkxxJnhYmz1WVREnw20Z6KmsA=
+	t=1787764200; cv=none; b=qb6cqv4PdQ+1IOJtX9QtbupJlTxFNp+uiNyMgfZTryeZGl065NX5SRpqy1d4himllcOt5du6yc+CK7/GvmPZZjCvc+SmdE1BlCFdMHjULWEe+witx+SqoMsnkGQMpVj5QnKTPT39CFQkPYh3Q7bNw1JkLucq8Wdni1OZ/xLAtfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787763492; c=relaxed/simple;
-	bh=zD4dqAdxXW0Er1wshogf68T7eQtR8N6wUmTMcgSvP24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VmpgZy/y5s9UELNCD8gkbgPUU6XJm7oKqOqGQjmqxPKEtBPg+konZLwIZVw3Sdavl9Weq0JeOl89MOxh7g62MP+rrkL+gIM0Cyx+CkKoAxd0tWsP1TbNDAEqOnrMkBrgYNMIg8XySAYfzw54ISTjnp/IdVGsVxoCBNWp9aycBG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=lAEQPsWP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FWcJzcvI; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1787764200; c=relaxed/simple;
+	bh=HryDV6+5qMbLhZY2KERuGiFp2ZKXAOvyWcXmP57Eq3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jtIr1MXwAIZhvcAxpnu/y/PCpyJQXiqa2dBnewwpBAuzg2lzBhON4Anf1RcGn06ksZ0f5WVIh4X9/65+DxAXwPFkNw4jbD4sJim/Wfw0w1T5KeKqT8XQHFBDWgGVOApFwifhqw4yNpQHymbfPc96yvoYRGFtyUgjoJhjB67hGOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDZeQKGj; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="lAEQPsWP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FWcJzcvI"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id C2A131380030;
-	Wed, 26 Aug 2026 12:57:52 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Wed, 26 Aug 2026 12:57:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1787763472; x=
-	1787770672; bh=b/RQVU7x/2Ow8BFt80nTwsnGflSL0G5KQoMqCALTqgw=; b=l
-	AEQPsWPGylc/rDV+icMKHCvV0frQXk7F5fjF/UWtvHS3U9fWb1ezXQP7ShieFlvj
-	GRHu4wj3M0M93AcK6Fk+g0gXO/K1ggVsaQoAtUzo/X7P8nFmbU8FYPwrOSRT/f9e
-	K8ehYKgucU/hhblvFh6gJVzwtpue21D8RH6qOhIP9VgSLjzBvcNWlYSd2E9GEAE/
-	rptw18RRTdRcy16z9qXWzwSBFQIHkye5hOPOBUJthoVYdNZ2mKXOIK8HHDV/+KQ9
-	OuS7oD7vv0OwukUNt0sbRCKWM8g3F9lA/URc0OliMRI76XOfoa10xGDMpreFOEZw
-	TM0E2lfzsLh7Rj8u+H/IQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1787763472; x=1787770672; bh=b/RQVU7x/2Ow8BFt80nTwsnGflSL0G5KQoM
-	qCALTqgw=; b=FWcJzcvIbsh6QBt38zORnV7P0eeo8kO9WRVqoXVqib8+79FS694
-	XuKDCqcuP8xSUq35/uiGv29rROwTWvnQIfT3oylh06izCKj0M3joTmPZlU47Q4Oe
-	3loNfsttBTPANJ3cHFvfNXWdCw0pPQd+2JpG6RTFBc8VMAeOj1lDcOiQaCQaW3H+
-	nlZGkNrwXaxWBE6U+6fuS/vhfs6O6JRCigwrHViNUdATu8xEJ0UF5Mtfj+X9E8y0
-	7lFkn3SroSWUDnay32P8/uUW1sobt87f/JpREWi7wYr2NjMIEARJ4EyUuk86KUr7
-	2aLV0GEJgf39oJ2X/KZqY6UwHX3Lxp+uzIw==
-X-ME-Sender: <xms:DxuPak_Ack9LrPRHKaASHS2wMVcpgG-689x44Ryij79y7lQVrFEVtA>
-    <xme:DxuPavBx2WNCktSwtgXC0SxfLbBEckvRxdJfhs7E9wmLJzgle1DLPmakYzLyGGnTR
-    4WNecrHxs-j4WVhirpK9ouXZhMnQ4889TjbA439uPnzkggzixb8lw1D>
-X-ME-Received: <xmr:DxuPaoxK3jWLjl2liKXaRMPDLyn8sdJrUDu7fIXrSdR4UfIMDoQI3XCIRuY>
-X-ME-Proxy-Cause: dmFkZTFJ4uM7XbmV139GeFVyMoFnf31HwoxJmPLJ3DOlCGleDxaZYboTq/8g92bw2Tr80S
-    wGFNepRmFciZXpZxop62rBrDkHPnv9nXc7KEvSWS/8GpVlaNgXKa6dfYTeFCYhn2wtJOiK
-    307oxwUoWuxtmYGFBjteL06s8X6htc+nvVtjVU1989gEb4MnzMjTATDrZasvNpIzgTin/4
-    7VGQP/85bb5l9LG5OrzuOshjFlmmTq4AsyZh9HGehMneCAhVUK6bc/pCgfQZDFR3x2TwYp
-    uo425DdKwIGf1YipHDcTUXwhFZvn69o/vAlmdQD2hXiHy7vx7Q0z9WPqV/j11J2qlpRNFP
-    N0s33neGxgTZZfYnhJK2+RUlWyP4sJ4EnQb1rLd7dDD7onVFIkM3Si6Mqw8hRUnRhJ3FI1
-    yd7zVWfgPMI4XKuEiHVCS3DmOtq/A5sbrr3G0llk7qra0Ip8+g/oxdsmWQKj2Zz0hg4kGt
-    qz4W6lHUETFMI3z0klSBqecxB0Ht3A+X6YW0W2k0UD3GMOgQgejr6TQFlAOnu6D9X0kjs6
-    7RovcdajI+QYh0ZCP+e0ltkW7g35gD/7KAmPd40hfyJR3mBOnA1DxHo/tOjI4SwFyC0eXy
-    3fAYexBao+lcCDPzbZXITlpM6JIGVZrdRfMCosWDlctgLcUZVs35a2aMXAMA
-X-ME-Proxy: <xmx:DxuPaurxPtHNM4zlRhQUucemYoop_cPCcuSi4QG6ZU93-kiH8PsIkA>
-    <xmx:DxuParx3aF35QlDHf8Ot-LSEgCyypoaVBQoro0MUdxDgW10Pjg-V_w>
-    <xmx:DxuPaoP12wTEyHve1fnxqo8xoWT0M0b81Y1HMZTWOvA4YSlEo9BfPg>
-    <xmx:DxuPatdNAzkwxWAxHwQ7pFsN_taxnKCvmFIevzCVIdFHV2Dv3CPCAg>
-    <xmx:EBuPamdFSp7fldrFIU6gA4GT4OKDZYKJ4F5FNQFbvKSXyMShOLEGLOLt>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 26 Aug 2026 12:57:50 -0400 (EDT)
-Date: Wed, 26 Aug 2026 17:57:49 +0100
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
-	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
-	dev.jain@arm.com, hughd@google.com, liam@infradead.org, mhocko@suse.com, 
-	rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com, 
-	usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, usama.anjum@arm.com, 
-	agordeev@linux.ibm.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jannh@google.com, willy@infradead.org, pfalcato@suse.de, 
-	rostedt@goodmis.org, mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 18/57] mm/collapse: install the destinations at PTE
- level
-Message-ID: <ao8Yz5tqr2WVlPj5@thinkstation>
-References: <20260816224609.308019-19-kirill@shutemov.name>
- <20260825064851.87309-1-lance.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDZeQKGj"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-69c108fee7fso1997814a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Aug 2026 10:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787764179; x=1788368979; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TJATd1QCK8mzBoL2c8+JxSkXmq9RldTbZrwKcwNjBmk=;
+        b=kDZeQKGjuHP6Ge59bPmUk6WLTc+NcJVo2XZ1RnDwli+aHKDJAUteHSksxGVCdR8du1
+         bAlX3fA2NcX3AnXBJU7KEwF8QJ82o0afYQ1yoEks10qxCmhjvFJyMRhxUyWrzvpO6Sj4
+         e56n85zapKxQLnEDpayB4Oo7O6hkMgnqLhzRvOI04G80GgjzotdM7u+jrApjqOUiDekE
+         Sw2qaevbutXor/bcuUNh6UvAQfGa0s64DntC/iy122R2E8qD+Bri8AsE9m8N9GCtjPlL
+         X93R02CxR8/3bjmcG4FiYQ3CDYiqIG5ZYYxovOiOxNEKcoITwgL6IdaAjbpsaqtLPPzt
+         JmUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787764179; x=1788368979;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TJATd1QCK8mzBoL2c8+JxSkXmq9RldTbZrwKcwNjBmk=;
+        b=HzVVUKjU77mAuGzMlobSMVG1Dcvf1PGcrYNmJ0/PWx0wqLcBcig2Ojf9mPF22FZvkS
+         bJMFpBR/JAUftk2ilqIHkGAYpG1I2CNNrHOUMrj1sZSCWLHY2Wjvx3JUe4uneNOF4c+R
+         0KsUjoWRJXVntIFbrYrE0gvepzTLcmBtPhDdfUfB+GX4DoHaA2rRisK6UCzAKzLJF9Dp
+         aooMLDX/TnWuPQTXYDE3ojQCBg6nTdEA/h32rvwj1JOlVQDuJtBlni04qGYDWwT/H9IV
+         20pX8uDWxgNboc6F8QBpYhfQ/Vhkja2WSShkyilubUs0C7Rbz68EV/1zeU41Sxo8g7Dk
+         DpnQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrsIOTnyEluRoep/lXL8TkUXLxLOOr6DmByq7/kUizthNipMlu9OR7DraHK3jLHg2EJR4uAT2SRmW5ADYnriMZzyk0=@vger.kernel.org
+X-Gm-Message-State: AFuF++mSfxXZRT6FN2EmQpWSL2fY0+6iHVRo/Q5Y+qLPCbnK7J0LC80X
+	HoGHku+Ffr9fA9HZtgTRXbESVBko+tkDuJKr1cNK6sW4bOg4UIfnEZQF
+X-Gm-Gg: AR+sD13aR2WJ4hltfTKUoPoCvOcdKRDQa2UvuAWwbdSViOtmcz0DFDcdUJrXIxMSFrd
+	+qwgzQ3H/LaBlkfh4rRDZsafIlU0h8Wb3/i626b4bww/Xt2pYxU/J0Vow4UdWXuVFFNufnD2LE5
+	xUWDZ33zt5Qvzcr52/S7ReaQcXzCoF+ZvMNvTPCGDMiBx9/z1jL00ZaJa2hZDASm51XfK26sOZ8
+	HkfBO9QMJSXhf3rlJuEwJ9XKK8ly9eEa75I1nx9mL20xQ6gdZ3boBusA2bmNnvPG/DbNMmB8Gii
+	sWI9kp3m5VWVjRnu96fMh7S/EISjEirAj4ps+waIUSMVk7/n14hHkMnrHw5frkaqqBoR0kxqD0G
+	LmGYAoIep287/HYACCEapHQTKL3VdOcho1W+P3Do9rRtqFX634jdV63L3DGh3QxK8AWxZtpbHHJ
+	aT1+crWILIPES0cOFvqnMVGLNQphiVzP9mlJcdQvGEVNd3pt/FJPgxUn4mIl76JMiphVo=
+X-Received: by 2002:a05:6402:a0d9:b0:6a1:f092:3c1e with SMTP id 4fb4d7f45d1cf-6a5df6410cemr9897163a12.13.1787764179194;
+        Wed, 26 Aug 2026 10:09:39 -0700 (PDT)
+Received: from foxbook (bfk5.neoplus.adsl.tpnet.pl. [83.28.48.5])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a5edef3c26sm2563163a12.17.2026.08.26.10.09.37
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 26 Aug 2026 10:09:38 -0700 (PDT)
+Date: Wed, 26 Aug 2026 19:09:34 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Jonathan
+ Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy
+ Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-modules@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <20260826190934.5042b344.michal.pecio@gmail.com>
+In-Reply-To: <2026082634-cloak-ambush-3861@gregkh>
+References: <20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org>
+	<20260826153311.6340efcd.michal.pecio@gmail.com>
+	<2026082658-statue-census-dc39@gregkh>
+	<20260826173549.18c8a89c.michal.pecio@gmail.com>
+	<2026082634-cloak-ambush-3861@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260825064851.87309-1-lance.yang@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 25, 2026 at 02:48:51PM +0800, Lance Yang wrote:
+On Wed, 26 Aug 2026 17:44:06 +0200, Greg Kroah-Hartman wrote:
+> On Wed, Aug 26, 2026 at 05:35:49PM +0200, Michal Pecio wrote:
+> > You can't bind random drivers to random devices out of the box,
+> > you need ID overrides. And then you don't need to bind manually,
+> > the kernel will happily select the wrong driver by default.
+> > 
+> > Authors of the recent xhci and thunderbolt patches admitted that
+> > 'driver_override' was involved in both cases.  
 > 
-> On Sun, Aug 16, 2026 at 11:45:30PM +0100, Kiryl Shutsemau wrote:
-> >+		/* Slots with no source gain anon memory that no zap accounted */
-> >+		if (nr_populated)
-> >+			add_mm_counter(mm, MM_ANONPAGES, nr_populated);
+> I'll be glad to taint if driver_override is also written to, but it's
+> bind() that triggers the actual action happening.  Or so the traces
+> show.
+
+Well, I suppose probe() is the first victim to crash in such cases.
+
+But if Syzbot is binding random drivers to random devices, the obvious
+solution is to ban 'driver_override'. Using that is just cheating.
+
+If it still manages to crash drivers by binding them to appropriate
+devices then I would say it will finally be doing its job right :)
+
+> > Meanwhile, Syzbot also found a stupid write to freed memory in USB
+> > core when HCs are unbound. You may say it doesn't matter, but:
+> > 
+> > * USB HCs are hotpluggable thunderbolt "gadgets" these days  
 > 
-> Well ... KSM zero-page accounting gets out of sync here.
+> We support PCI devices being removed, but that falls under the PCI
+> hotplug rules/requirements, right?  Anyway, sure, we can fix those bugs
+> when found, but that's not the majority of what we are seeing at the
+> moment.  Look at all of the dumb platform drivers that are getting hit
+> with this on the syzbot reports...
+> 
+> > * there were plans to alter this code so that UAF is triggered by
+> >   hot removal of the USB device, not its parent HC  
+> 
+> I don't understand what you mean by this.
 
-True. Thanks for catching this!
+There are ideas to change some code to use per-device data instead of
+per-HCD data. Coincidentally, Syzbot found that this use races with
+freeing the HCD and it would also race with freeing the device, making
+the UAF easier to trigger after proposed changes.
 
-> I was thinking of something like this:
+I gave it as an example of Syzbot doing something useful with 'unbind'
+when it isn't wasting time on driver overrides.
 
-Your code looks correct to me. I will take the collapse_abort_candidate()
-hunk as is.
-
-The install side I will organize slightly differently: a
-collapse_account_install() that does the MM_ANONPAGES accounting in
-addition to the KSM stuff, called from both install paths.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards,
+Michal
