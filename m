@@ -1,132 +1,122 @@
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7D43815E2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 20:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787864046; cv=none; b=ssK2imvSXzQZN8A637dvGiog5spyHUgS3JVI8T+8RNJpUEJg0Geta08TLa2qjOJiw6AbE4SbSjfJrHKPj6YFRDr4pGPak4e0aAbCVf/42cpls0jK4kQo2b6O26sb8Egqe+QEumI4JafdWOKBQsJA7wwhqLYDFOfjSUIJze3/0eM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787864046; c=relaxed/simple;
-	bh=584T2Fi+jYdHnPMPryAzdeyBmBsauq81+2zQRXO51LQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cm1SxGAzJwq5P8A0M04VU5He8MsZpXIISY3QEAYhbJU+Qk2CQgF8KhBvLSAerBj33uGUg6Ho8Cxpdu3cFYPtLe0zmLercKRxIN41UGkfmh3WabsUtxGMdiTcy1CwyNZxDsoG5ZUGkYY4L3TKNNqHPE+eZ7MssLpiFNkaNZQ0xic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NDhHjzQU; arc=none smtp.client-ip=209.85.210.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD7F3CDBAA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 23:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787871923; cv=pass; b=FoYu3XmUGXSzZn/XEujqxDGjEDpwoOoDp7hHry7YezTp9vpt12snsiouW/y1yNhEpnsahUMlF/wrfCI9LJjX5zkjldcnmRZSeUU+uLSoCSUkrHYckYa89hQYW8AyqMFnsD+QwvIzacIf9fessjxdP0ZfOlC+omsi4oHWo1ndDpU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787871923; c=relaxed/simple;
+	bh=T0RUxs5iUVohqOFWo7bsso96RXmZbMN1bhLYXJJYlQs=;
+	h=From:MIME-Version:Date:Message-ID:Subject:To:Cc:Content-Type; b=iv5zXwUsVtJ5m71KAsPcl9uVgWgyvEOPLRgINXjswwKlDkLxaxo4imFdGPW4tH2Gy/gDzHGni++75rti92T88c50fE0cUbBvzbJS75vBp0QNfx3jqfwHdTodEe50UXfVH4Bn9Q025toIvNiI7dtevWQpEtLb2dsn3+knNkwLWCQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=berkeley.edu; spf=pass smtp.mailfrom=berkeley.edu; dkim=pass (2048-bit key) header.d=berkeley.edu header.i=@berkeley.edu header.b=XZoGQapS; arc=pass smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=berkeley.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berkeley.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDhHjzQU"
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-85321e37104so400510b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 13:54:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=berkeley.edu header.i=@berkeley.edu header.b="XZoGQapS"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cbe6295f05bso1247783a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 16:05:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787871921; cv=none;
+        d=google.com; s=arc-20260327;
+        b=k+NSoC1UR6N3f1XC2k3EljA3IRlYBMMIauHQRY9317K+seWj9JX9zkzMg6PJZdYnvt
+         whmhXJwgSEtQadeSLOa1ebwzf8yzie/3CAWMOMAdXGQEbWDmBEXao63Q9FSeKiD5M3hT
+         I696Y8Q1CSB8xqLYXhKhJr/FhAs4f/YyexJ2aJofG3bLrgzBYMEZJ/v2D31AKI8jJdRF
+         hd1Qj6YLabe7N75MSXOHiu0QO1YNsxHJaT7rnzaMlVY9dQ4sp98MWy9TND7Eulnz5ipF
+         5qxF0HBOMzD0GEhNan7PAgakpjWduj65Suf2IwUgTh5M5BsqppUAZc64n2f1Ef3VeFTG
+         7pwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:from:dkim-signature;
+        bh=X25WdoWGkB4WSbQ6LwAsBNMpG4cFx/LTnS4pR+o5vbU=;
+        fh=68DCVnFwWtebIqxxOoxBsquWtcaNXQFtoZpxT0sK3t4=;
+        b=QTbNWmz5+uacQxpw8lDMvoZswDmSGolG9XYP/m9QzNC/a2e6VNKCNhgPKgeZFH+g7Q
+         pUafWfJe6/D69JYMaMl2dsh1JmRIjq6cuNncFNscvxBipXwC9zJYwGQ3E1/xgfQdMETn
+         xd6cMK0AHHpRwQAlHjHSgAsQL8HNt9wenpStzNrItbGCFSpr78Kt16tK5SjWcDqd6kPH
+         ZjNL2X7Dah+jab9JqPZuLz+hXiTM3dU7GG31GDMDWN7xE/dAf2oifzvUnx3DfNiZ7GTE
+         54/xMDFQ6hB0tOX+xvcgxhZtT1xFnC9NLpHaq4SJHKuOo50Kf+ufTzoDtYZay3jp5DBc
+         R1BQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787864044; x=1788468844; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ZEfQxTOKQyDG0uZqNyCVnRw0wmiuuoqTc9XyRDn+pn0=;
-        b=NDhHjzQUvh3ExnAjwNkVIJFwsPZcmuA2IniGkFO/nza1s9PQ7UM+5SBSybByx8jfzC
-         9H76VzzIzoNit3xu/+s7pMEmDNzD/0TaoOmS3lzHmaCl3jnT0cx350Cy2zY2AKZARIdx
-         UuaaQUkt10uQ2St3MJ7eZcVmDbXDw+4NTJFh8pjHVBgXnTfepFdpYbWWoX0PWX9/asJN
-         Fq+Bvtpe7qZpck9RIc+q76+2w3yqqe5rKZsboxBBolUEN2/nSmQjxLRV6Iv0be9wYMUH
-         FAx9lcKQxR5EtlqPw+mnJ4X/uuVyLHwt7LvL7KWV7uzVe5Cu4MOsoGK6wumcbonDoEFQ
-         Sq8Q==
+        d=berkeley.edu; s=google; t=1787871921; x=1788476721; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:from:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=X25WdoWGkB4WSbQ6LwAsBNMpG4cFx/LTnS4pR+o5vbU=;
+        b=XZoGQapSLBxHrhD0a/wydlgQffNSzJMSpdSnfCqMvcBXPzX9rTgnFgbbeyrSFtY3lq
+         PoFX8uV2P+CEhCnwAO1CruJQUnusq4hPWDzrNwHJ/TPG9JsCO6CWFrsJAzl/0QHoh8yf
+         GMO6CYnsVjI9we+y+nc+1BRQ9IEKL90RWB/A1feR60vmfrheJZWBM2OdpMQBCA1hjlxy
+         oDLUwXqAm74/zYdCSpA0Ox5tV+PZpqntrHPenqZitCdUF6T1BEu3jV5j8pUBYO6/vpO2
+         fQpjYopPNeRSp87cZZExPXxloTNRtWfihKabw6gwZSGIqZingCGwfT3hI2Vk8EwfOyRf
+         8dIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787864044; x=1788468844;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ZEfQxTOKQyDG0uZqNyCVnRw0wmiuuoqTc9XyRDn+pn0=;
-        b=f2Qls698+sE/m1/o2jFdvfToqho1qhWAR8yjggl5lC+1lRztjk4437PrswGmkUL7aX
-         2yr6Jqtu3cOxAhzSQaJWIfgeG4MicQFiQLEEgSLwg/e4KbApMfveg8oFh8pP/tvaGTLq
-         GLIh/s3K/OhOYjZ3HdCwGLeES64d6C646WDbHzVJgXPJzlZuG7nz7WP1vabx4w1yjSpU
-         nHD6Nn4Bvzx51lTMJwgOqMS5rKr9g1oTpA+XyEXeW5Ao7cXYw0vKBK3A3RxLCLEG/aht
-         dG+/UdKafDbRmGBcX3auZzT1NSR//rAQBn14029Mzyc1U1A9H0Ggd437fMN8XiIAV6wX
-         dnBw==
-X-Forwarded-Encrypted: i=1; AHgh+RqkuFufkKO/nIFxe0wFEWFKwtENQnDgzZA9EWEaTr9Koxc+cmEZP13ftX+xqGMoEjxEDG0QgEoaY+m+EBX2JQsEwww=@vger.kernel.org
-X-Gm-Message-State: AFuF++lw7+DVKWZPj8Ff75PWJmtY0gKHuQ4vhjrmM8VnWbaWn6Bq/blC
-	ivsPnvphakez51kH6nigy07swSwElMfRFAfFwcOkjXsvBFDIGzB8eZYqQFLfmuW9kTec4UH2EiW
-	k0SY1JA==
-X-Received: from pfbkr16.prod.google.com ([2002:a05:6a00:4b50:b0:848:5480:9ac7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:e09:b0:851:fb36:a702
- with SMTP id d2e1a72fcca58-85629f09cc5mr4062708b3a.9.1787864043380; Thu, 27
- Aug 2026 13:54:03 -0700 (PDT)
-Date: Thu, 27 Aug 2026 13:54:02 -0700
-In-Reply-To: <ztufznh6v5md5cn56t7pvokubvbpc3yki6dhiilgebb5uq3ju3@aa4xc6wwte5r>
+        d=1e100.net; s=20251104; t=1787871921; x=1788476721;
+        h=content-type:cc:to:subject:message-id:date:mime-version:from
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=X25WdoWGkB4WSbQ6LwAsBNMpG4cFx/LTnS4pR+o5vbU=;
+        b=a4Vk9ka+lUoa7NMcohwRHApe/nleu5Y13rzRfVG8+YaiVPEFExxsn5ZOgMpTRMRBtP
+         4HRAt6L4aimkdGwbt1/dKlf1d3+2Fo7PLJQopTwM1/CoZaKhVjmTKMqAt0SHZ/kAVCOG
+         gQNMIuDM+IGZm5jXALBykuxYfgE7dfCUaniUNeEyZB541JqA408CHvHmdrMRf0gEf1KA
+         AbAnO8B1qAB20DPdz92NkWLeoxYUa0XcMDJzvZUD8OlK/j9VeuU1sVj5WZb20qIQOjQn
+         wHO757jF+89JkgpRIAA8I51GjOicGlymIc8wLyUx02e9FojZGU0UUNGxTJj8QnU725Jr
+         ELcQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrCV95RXOo8cj1sMSyq/85S7NwHhJgmFa9YhtluwlWiPUP6Pr/oPnH/w7wG+Rz66dN62E8j+b+o3YKjaaLvlfIqoKo=@vger.kernel.org
+X-Gm-Message-State: AFuF++mb2q+aKCgJDc9XsENCni59hw+3t2xrIFE9iBH8HMgSKxjMyP5U
+	+TfaOoQbUDbIzV9f7sXw7YiOLIOtrd/D59nO7kK/MqL4/mpNvONZObTIZzlhBJUUWNoC/b+dsNm
+	IzdCJ3UoKfuraiHjxtYLgsLQnuUNd4r3csWgM+2KqygVrZ268SIhDJA==
+X-Gm-Gg: AR+sD13t78xxabgHpXpH1iMoTfh+7qOJKtyvWANMCJZdqA4Y/dXSmRcmhte8Tk+0uV8
+	XhT1ZalLyjhg8tj6CkrI2l5ruclnEfZ3qXUm4PmmPu6l4Mnf3j3hn2QVWOoqspOcCESZnVJraJc
+	XqRb6wqfk/IYaO+6DfA3hctZG77dsjH2hxfL/qkEINjVpKDVcsBoUwqi3zdgU2jrBw5IyEbLIQj
+	vF25HPlYP8QmsBcGiD+JxWPIZsAN6kjCTtGUN7ZD4bjIEkYsOXBJyNZ46ZRjHVZl5GQuGkphK01
+	R4tSs4Cs9dRAO0Wk94rRvxKxrQrL7OViIHQ8K78UfjHPSmQXMokm9+VP9vYVRXEc2q9fpvR3Hk7
+	8yj/gSXwAvqoy/0G6QmesOTnKEIzOOR1C
+X-Received: by 2002:a17:90b:2c88:b0:390:84db:888e with SMTP id
+ 98e67ed59e1d1-396d0f2181amr2746723a91.7.1787871920400; Thu, 27 Aug 2026
+ 16:05:20 -0700 (PDT)
+Received: from 474444807712 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 27 Aug 2026 23:05:19 +0000
+Received: from 474444807712 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 27 Aug 2026 23:05:19 +0000
+From: Farhad Alemi <farhad.alemi@berkeley.edu>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
- <20260826-gmem-inplace-conversion-v11-15-0a15d8a799aa@google.com>
- <ao9CKMXAX-hScRSa@google.com> <mtbqvvvpwbzybgy6z47lwui6ag53kyubub3hkczui7u72zxesl@lnwsglrgwl5p>
- <ao9px1j7CLYXMiGP@google.com> <ztufznh6v5md5cn56t7pvokubvbpc3yki6dhiilgebb5uq3ju3@aa4xc6wwte5r>
-Message-ID: <apCj6gz8x24Dkle8@google.com>
-Subject: Re: [PATCH v11 15/46] KVM: guest_memfd: Call arch make_shared
- callback for to-shared conversion
-From: Sean Christopherson <seanjc@google.com>
-To: Michael Roth <michael.roth@amd.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
-	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
-	yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
-	suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
-	Fuad Tabba <fuad.tabba@linux.dev>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Date: Thu, 27 Aug 2026 23:05:19 +0000
+X-Gm-Features: AcwNN1U2yz4g3RBqqD2LAORwB7-8ngn-g7PZ_O0yjvAvyo7vWBiPT0oNGxQNvm0
+Message-ID: <CA+0ovCjerKZJLwXScM9bF2ga2rLi4_XOpUfK41NDbENpeu98jA@mail.gmail.com>
+Subject: [BUG] tracing: use-after-free in t_start() when a trace instance is removed
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: falemi@asu.edu, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Aug 26, 2026, Michael Roth wrote:
-> On Wed, Aug 26, 2026 at 03:33:43PM -0700, Sean Christopherson wrote:
-> > > So there's real performance differences here but it's sort of been
-> > > addressed through a solution that offers additional performance
-> > > benefits on top so there's no longer as much to be gained here I think.
-> > 
-> > Or another way to look at it, eager conversion would allow QEMU to drop its
-> > workaround.
-> 
-> True, for SNP at least, but pre-map is nice too, and not really gmem's
-> place, so most likely KVM_PRE_FAULT_MEMORY would remain regardless.
+Hello Steven Rostedt, Masami Hiramatsu,
 
-Hmm, good point.  And as below, we can't sanely avoid the check in kvm_gmem_get_pfn()
-without reintroducing the preparation tracking, so the lazy approach is probably
-the best option at this point.
+While fuzzing Linux 7.1-rc5 with syzkaller, as part of research at ASU's
+SEFCOM lab, we hit the crash below. Crash reports can be found here:
 
-> > To be clear, I'm a-ok with the code as-is, I just want to make sure we document
-> > exactly why we're choosing this implementation.
-> 
-> Agreed. My understanding of the current design choice is basically that
-> it doesn't *need* to happen here, since kvm_gmem_get_pfn() will already
-> trigger it on-demand when it is actually needed (or not), and that tends
-> to happen at fault time when other platforms like TDX handle it. 
+  https://github.com/farhad-alemi/public_bug_reports/tree/main/116-tracing-uaf-t_start-instance-rmdir/
 
-Oh, this jogged my memory.  For out-of-place conversion, waiting until
-kvm_gmem_get_pfn() to update the RMP makes sense because KVM doesn't know whether
-or not the SHARED backing as been allocated, and can't easily get at it in the
-first place.
+  ==================================================================
+  BUG: KASAN: slab-use-after-free in t_next
+kernel/trace/trace_events.c:1568 [inline]
+  BUG: KASAN: slab-use-after-free in t_start+0xcc/0x210
+kernel/trace/trace_events.c:1592
+  Read of size 8 at addr ffff888022f7a960 by task syz.4.116/12466
+  CPU: 0 UID: 0 PID: 12466 Comm: syz.4.116 Not tainted 7.1.0-rc5 #1
+PREEMPT(full)
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
+1.16.3-debian-1.16.3-2 04/01/2014
+  Call Trace:
+  <TASK>
+  dump_stack_lvl+0x94/0xd0 lib/dump_stack.c:120
 
-> To handle it differently would be to go out of our way to make SNP special in
-> this flow in exchange for performance, 
+Our reproducer.c is available upon request.
 
-Not really?  We'd still need kvm_gmem_get_pfn() to update the RMP to handle PFNs
-that were never explicitly converted.  Either that or KVM would have to preallocate
-everything (ewww).
+Happy to test a patch if that would help.
+
+Regards,
