@@ -1,66 +1,102 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D84C472559
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 13:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C21F4746B7;
+	Thu, 27 Aug 2026 13:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787836517; cv=none; b=DVZZhGZEbXFMhlpXz10YeSNMcD5C1xkHsWrc2LbEfJL7481B+ybqD/kfWsUyRKizfIn5vRVDTOvcsigXR74wAp0BK6pjkRRHMxHBTvPKX6plhTT7SsZQ8ayfCKY0wsq4CVy5srQ1Mum3omIUqxYS6C4RdMcnBYEZXSQNf8pUFH0=
+	t=1787837614; cv=none; b=m4ZfeMmAsW9itgXaVEMQ/ASEVjCz7UZ6SXEkaHWBIB2sA2BQXlIek53pm90O6H1qE3NRnxWvHGX3t6r8JOO16Sf8xViWWrpWXZDCp9SNff+fJu62b85ED9kz3F/80FGXRF0E1B8UPzzIJbslQ6pEYEPIKTuDVuGTEZxyVNpp1RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787836517; c=relaxed/simple;
-	bh=jR4mRqs32IUcI/m/KbwQ7Vym5B+Z9w2bM9qUGSorNQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E7gHFrUu1AG+p1J6lH7v6bLKxT8lbGosZvLHJg+UdlYJcSwNw91/xY8NnBnCKsU9oAc0Ahlb9NhPQZfKIDZTIojNnHPAVmdaoa4zbIFnLSa45p7iCTa85WaxRDWd0jdOSM/aERC/OCfgL6ilWOEnFPTbtM6R5H5ctBz0/c8J+fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=NCvWKzhD; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1787837614; c=relaxed/simple;
+	bh=MmhRczpeait+8pej4NW6iWlfBLKfTeVw/6dAVLLtbUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rHUkjtRs/YAxqxgZJuVpPaeyEPc6deL13XX5aFRBtqRT8dEbhG+H8ug5zw3ixzY7N+OdRkjlltxxMS5Rpl9XMuESgOmfk/VDJ2HPB5HArsL8F2UBOU3rh/e0jO93TH2aEeQPPvDnXHrMN30fICOd1PI1lKjWwVE9negjiszlfXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiTRj2c5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="NCvWKzhD"
-Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id AEC85C024A;
-	Thu, 27 Aug 2026 13:14:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id F35216000A;
-	Thu, 27 Aug 2026 13:14:53 +0000 (UTC)
-Date: Thu, 27 Aug 2026 09:15:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
- trace_pipe_raw readers
-Message-ID: <20260827091541.5d03e33c@gandalf.local.home>
-In-Reply-To: <ao_Zu0ThaWThj9YZ@google.com>
-References: <20260826094528.3738023-1-vdonnefort@google.com>
-	<20260826094528.3738023-2-vdonnefort@google.com>
-	<20260826095947.4FF8B1F000E9@smtp.kernel.org>
-	<20260826103736.2b55b464@gandalf.local.home>
-	<ao8TQ-SvhjYgy43-@google.com>
-	<20260826143123.1b3e3854@gandalf.local.home>
-	<ao_Zu0ThaWThj9YZ@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiTRj2c5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 548C61F000E9;
+	Thu, 27 Aug 2026 13:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787837602;
+	bh=VWLd3sU9atQfIoDce7jl0NZ8RDqno2g42DMkclW3s2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JiTRj2c5TEgZDqNGP/gwA6qAeqCW2m94hZugSCyqcfvN1RfoLyTD/kiRcj2+CD/qk
+	 nU8QeIYTFRX+iBGSxhyFEthALC+BsFUMCgTn/8RGriu1mRdcyQNaDV7eh0AWTMwpaw
+	 rKeDsXzBzUqLySAvK1g4tzU9s8y0ef/HECYEZed5wslXyKduIOIxUKTYLBuRGG1Vbg
+	 kXQkv69f2iqqDLfv/ndP1jYauBgVZasQJ2/OsSXwV73AdLBriw8d0/RqD4iQn3bnBc
+	 ixFSv/cl1ow/fCzS2NDNXQe/jDegFPT7u6jfdqQBRaxOLM9ClKqs7w8xoeMFuyLqtw
+	 iIYE93xYUphLg==
+Received: from johan by xi.lan with local (Exim 4.99.4)
+	(envelope-from <johan@kernel.org>)
+	id 1wzaEJ-000000031ue-2nz6;
+	Thu, 27 Aug 2026 15:33:19 +0200
+Date: Thu, 27 Aug 2026 15:33:19 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <apA8n524yIn-g6ep@hovoldconsulting.com>
+References: <20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org>
+ <20260826-bind_taint-v1-2-52b05f4a965c@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: F35216000A
-X-Stat-Signature: finf3sszcgs4ra44k5w4fxt1pd3g9mnb
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+8bBjpjX1rb7w6M/De5rieedWYuH6n+gM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=4rx+Jukd69U71oXhkK+4brjCaBl56wc/fNZAnDqZX4M=; b=NCvWKzhD8HeIKPFs/HWTNtoXZVkZn3mAZ3k1SngPrwLQzmKhcxRRIsiVR+bw14uo5zUN4b9ip4Vy0SFVCfH9plKBICCEYVmt3jIMYlQGXPSI+zRqH0L5KvlWMCN6UAHOguNLvkdi5rD7Z+EJABkLzvnKwj29sW5IRK9v7GvqsqE=
-X-HE-Tag: 1787836493-618963
-X-HE-Meta: U2FsdGVkX19EkAXce3d40tLst0oN3wPKZV7hunF6l4RG3LT5ud9ihlYhdwzfHiK0aRQ10BPDP5CUR9PpH8vNPWN2Ki+B8uLm555FF0fjhS9QvTtPHu1XJCWLJSFQvRPF8F7wro7PkXaQ0kSU9XdO7Mxdd1qXxpk0dkaTqFCVHSu8tqHyuI55+fSKAZZCx+T316qWz9ksfYOEEPXWux6iGgR6rJLsFvKKgB7N1LdNa5+2J0U9AMI8Prsq9aATnT/BaLk4NGpye16WI7nSHxONpXqHcKgXQqYwfGq92iwN02lJ8XBrrEqv2DnbH3l6X6aogqyTSfGzDZHKNYqUa5nOoL8g3LoSJyfATGBHarzwo8ULJ9lTCYT0sQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260826-bind_taint-v1-2-52b05f4a965c@linuxfoundation.org>
 
-On Thu, 27 Aug 2026 07:31:23 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Wed, Aug 26, 2026 at 11:19:33AM +0200, Greg Kroah-Hartman wrote:
+> The ability to add and remove devices from a driver through the sysfs
+> "bind" and "unbind" files was created all those decades ago as a way
+> that kernel developers can iterate faster, and provide a debugging way
+> for users to attempt to add a new device to a driver without having to
+> rebuild their kernel.
+> 
+> This api over the years has been abused and recently come under a major
+> fuzzing "attack" through tools like syzbot which decided that it would
+> attempt to just randomly bind any driver to any type of device, causing
+> loads of unneeded errors and pointless kernel patches to be generated by
+> unsuspecting new developers.
+> 
+> Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
+> will be set on the driver if the bind/unbind sysfs files are ever
+> successfully written to.  This lets kernel developers "know" that a user
+> is attempting to do something that is not normal, and as such, if the
+> kernel breaks they get to keep the shiny pieces laying around on the
+> floor.
+> 
+> Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
+> as many times crashes/oops/warnings/failures happen within the callback,
+> and the taint flag needs to be there to show what was being attempted.
+> If it were to be set after the callback happens, the oops report would
+> not properly reflect what foolishness was being attempted.
+> 
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> Looking at the function again, shouldn't we add !rb_is_static(cpu_buffer) as
-> well to the full page test?
+This makes it clear that this is a development tool, and it is a good
+compromise preferable to adding unnecessary complexity or suppressing
+the attributes completely just to prevent root from shooting themselves
+in the foot:
 
-Why? 
+Reviewed-by: Johan Hovold <johan@kernel.org>
+Tested-by: Johan Hovold <johan@kernel.org>
 
--- Steve
+Johan
