@@ -1,65 +1,104 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BD8480974;
-	Thu, 27 Aug 2026 15:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E235F37187C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 16:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787845061; cv=none; b=mGR3dJwVaCmLCrz9qkDE7/If3qLZpbtM3BoOc0Mvx11z+V47yHd8JA6OphibcCSB6rDlYzXe3s4EzWTDIcsx+uq5GmAaP/l3teU8/Hzte25qvq5CnJDcon72NQuPVtvMOqk2X9pDSCvCC1hUSH8evuJWhj0337TItbgiNSSqKVA=
+	t=1787847707; cv=none; b=miMdow7b1lCsaSjYLd9Pbz6x40tsoYG9DOcoFup2UU3eJyV8pRnRQ/nqX8J0tY1SLGPcvo93PzO7/khT9TOVED043pB6OUixtlkzHJrNuxlkJWvQnAGyvkQsCL4ODEsA75wxd4YD3JsYSlVR+E1cef67iHYlP/Trd3YpDo9ncck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787845061; c=relaxed/simple;
-	bh=7kNzrzrR628KWy4wv+ht+DrCY9yJ3kaAaVVyyCEwKtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N0JNTKncY3W/2Y/Ed07aFRdomiE76Mn1QLsUJf9cYIrI9jUEDSjAPWL5Tcy8WWEhdyRtPb8sKHx1MYKQbTCfuyVw0M5OzMU4MCi44igXPMQ5VAUrArri1XCGSGsrfCVECWdnFPrP0ep9UmRVxDd0Wflo8x6b9bIGGnwPaEs2+wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=FONL3r8v; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1787847707; c=relaxed/simple;
+	bh=O80S3pjkeXSWObOAxYWMssL152HBOgoLeVg1gUU1MFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ll7A3H95gw9crqfxoo7Y8HXCWSoVN41sB8XjcB9LNtvHKWhWsvNStKbDRzu82BhF5QGOcCB4g2bmLubIdee80FSG5njniUQ4bxZ/Ho1tHS1jifBi36/f+GYiD3ke0xKLmRSdYq8xDynMIqSnxDkswX2Czz2Re/GimacbQFtVx3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ccQ4mwvC; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="FONL3r8v"
-Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 278BA1A0482;
-	Thu, 27 Aug 2026 15:37:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 1FCF02002D;
-	Thu, 27 Aug 2026 15:37:28 +0000 (UTC)
-Date: Thu, 27 Aug 2026 11:38:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Xiang Gao <gxxa03070307@gmail.com>
-Cc: Xiang Gao <gaoxiang17@xiaomi.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <ljs@kernel.org>, Gao Xu <gaoxu2@honor.com>,
- yinchuang1@xiaomi.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [RFC] tracing: aggregate ring-buffer memory statistics
-Message-ID: <20260827113815.0a0e37fb@gandalf.local.home>
-In-Reply-To: <20260825141015.3539553-1-gaoxiang17@xiaomi.com>
-References: <20260825141015.3539553-1-gaoxiang17@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ccQ4mwvC"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-499ae1c6471so15026565e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 09:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787847704; x=1788452504; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=xgZRRPFD/4tuccx91/eOfBZb+vhsoVmREaFx21ykfHI=;
+        b=ccQ4mwvCr/2Hf0YCgNNZ0mWQ0u2yv2oNuqmGam8j5SJ9ALrzhJa1He53QqVsw0Ez9n
+         /1rOwV8Act/ugNLWrsqtzjRK5avfHx61RTur5yYNQaIa7GseB+EARAr2OUjFh3Ef58RN
+         5hdb23UhRGPiNzAXgMgA1eCnIKdK6gQRzPLlysT3UAyC2ZxANL7RMgjaNpb6+3MRygoU
+         Ozs8jy9YmETdcgNfw+kcAZFs/TfeJTzJOVHuNS7z0/yMxgVpqiv2lINnYY7pnHiHjQ+q
+         GrdDM9IDSdFvbjd7ySAoviv+gfsDZohVvuZnObPauAFDPqNSt9UjFUhGqtAXY6YEiZSO
+         4Wog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787847704; x=1788452504;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xgZRRPFD/4tuccx91/eOfBZb+vhsoVmREaFx21ykfHI=;
+        b=NKuyg0Ig1beQEcehAgPSGvzsYC5taz9/F4cv/mXeusff8HDyNQYDKxbuGagv6RxgCR
+         RCDd+s+i/KkSK8Sb6YI5xq/eQPSa35q30ohYdwgBnHVWud1qJNSE5NiFh2dcKimyNh9k
+         kLg5/KteX4TFKLbF77I7Ry/a7/Bqq1vZl5YFtzcz/CLwKJFMe12ZJtFHXh3Ybho/5gNS
+         E3/UrGTSEPc3Nv7wQEtdH0R5p03hyTNzOTk+TdBSpC3k7Q6LUCjyJ87Dl2aSkLwEwmzR
+         vnnlPtV4Y8xSmIDvVgnQYWX+oZQ9hsTgMITHaYTYbqGacfoQwofwNoZAgBdAuIprhuih
+         kg8Q==
+X-Forwarded-Encrypted: i=1; AHgh+RpJ65/MABmXrdLQMKMPiP6wrWodNzVXYE8ExY72jbl2TipKuwb/iCMfHsUZJqNsl+rIPVXE3KTDSNLqoynNRHXnAzY=@vger.kernel.org
+X-Gm-Message-State: AFuF++mDgdnK0bNqpBd0N2eiAfrRofAcBKP35Dj96nEQB0KP8JbgIANa
+	CWMY/ZhQH1UdH0HCU5p4cWkExIyhkarplKFNw/BKUwvg6nhq8d46Tpd4VyVXYEWOvg==
+X-Gm-Gg: AR+sD12rUiNz2T67tK+0bqZQ09NwgafDgvv+EQnKmVBirqS4lL4iQqps9hVfVNN8Ssl
+	TTE88BMYV8nq40REBds4doJ2C1J9JTO+z1rPKcg+wnHSuZCYzVSiZHv9yxX2532mBU8+cPauskP
+	HpJgLdP1jG9uWXgrfmepR5+w+MQ0ud8rFk2DIVy2ou+xOgZSajKgs0nNXDkp3sq8S3UNguNsG3/
+	phPSJ8SzRFqhB7uNhxrciFoq5AQCzLawCT9pRNuL0tzR1mAOpjP08PC2kXFpdc2ol+GOeQOKCjk
+	sIOi3TrLTj9NKm2V4M0JtODi0/Yp8tET/eu0I3Rw8LBidVQ+YMsh18zbCJat+BtC0k8A3Ck7FMt
+	nEkbxXlWl7vu3hzFLnogGz8ena2IOI7+nL9bHgL5UVjJpWd3ztrA8AdzNsXEYElq+CgsQNLSzeP
+	zbtnC0lm+gG7IxeVsisAI0mdRhk+iL4FpKxoaRhiXNrFzpeE5Ae34epSqr9by4bXJN8JoPE+fH+
+	yaUFfX+Ke3pIemCb/oXLa79nzu8h4ob
+X-Received: by 2002:a05:600c:8885:b0:49b:909e:922e with SMTP id 5b1f17b1804b1-49b91c4884amr767005e9.10.1787847703719;
+        Thu, 27 Aug 2026 09:21:43 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b91c52609sm108385e9.2.2026.08.27.09.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 09:21:42 -0700 (PDT)
+Date: Thu, 27 Aug 2026 17:21:39 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
+ trace_pipe_raw readers
+Message-ID: <apBhLDTEa_3yYZP5@google.com>
+References: <20260826094528.3738023-1-vdonnefort@google.com>
+ <20260826094528.3738023-2-vdonnefort@google.com>
+ <20260826095947.4FF8B1F000E9@smtp.kernel.org>
+ <20260826103736.2b55b464@gandalf.local.home>
+ <ao8TQ-SvhjYgy43-@google.com>
+ <20260826143123.1b3e3854@gandalf.local.home>
+ <ao_Zu0ThaWThj9YZ@google.com>
+ <20260827091541.5d03e33c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: gz36t9ay3xuqryqmakdzi6jrhuz5y3wc
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 1FCF02002D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Fp3vd/XZK9ZzG0XmgGs7MuhfPTImg7hI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=B5sy7Dnu1doW9a8EFJ94rs455TnrWVmiKgWn+uT2Rbs=; b=FONL3r8vVCTADP1UST9B/fX3+5aKKZ7xbiAlpU42sd1V3VwC35sjsDYOBNEx4+EIUrx0rZytYRZ1t4hCbWPPIGvm9y9arUuUFAgQKEYFtcGjAVszth4+3rz8P/xaS2PLeteHewFcWR+RYYmtliOZ0sfuJoBkxL9Vns2ewGsGrMk=
-X-HE-Tag: 1787845048-712360
-X-HE-Meta: U2FsdGVkX18whgPuv0OOvjJempj+iG/EOSFqn+7N5rNU8fC7dXwUwav+ugDIJ6Y0Z9NvMXRtR7FcDQpOja1wgFmR5m1Q1i6Ql91tZDcwQjTFOVfUTNkZwEqNDIdhGFEuWj6lLZWKInkjLyPKrXvq8QPHGBEtXjaokSO4AHEFAMJkJA0WfEpeXJ3FThNsUCmCGbcHtY2P/r3lxI3XG0EV3lYM3TMQxZXglw/wwQUS/s35TYrWfMebhoiyX3mcg4BzOeDT51KWiSFJer6mne2uUgVQpGILuf62aD/CBOGMKlVDKD4RFGcDs6ydBGTcTlzaqXlCbTmUIhJsqnpqjzU02nGzRRwpPg/p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260827091541.5d03e33c@gandalf.local.home>
 
-On Tue, 25 Aug 2026 22:10:15 +0800
-Xiang Gao <gxxa03070307@gmail.com> wrote:
-
-> Slab-allocated ring-buffer metadata is not included.
+On Thu, Aug 27, 2026 at 09:15:41AM -0400, Steven Rostedt wrote:
+> On Thu, 27 Aug 2026 07:31:23 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> One open question is whether reporting page memory only is acceptable
-> for the initial version.
+> > Looking at the function again, shouldn't we add !rb_is_static(cpu_buffer) as
+> > well to the full page test?
+> 
+> Why? 
+> 
+> -- Steve
 
-As supposed to what? The meta-data? I think meta-data is also good to show,
-if it is allocated. Maybe as a separate line item?
+So that the splice can make progress when the ring-buffer is presistent or
+user-mapped. Or do we say that's expected behaviour? 
 
--- Steve
+-- 
+Vincent
