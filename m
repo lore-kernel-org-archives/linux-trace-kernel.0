@@ -1,80 +1,66 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB074503F0;
-	Thu, 27 Aug 2026 12:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D84C472559
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 13:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787834712; cv=none; b=Gc5s848LIv8uAig10FNSeVrZhOclnKuzWJpOrrZ0mA44HpN/8BuNUwOTtCLHg0lQHORSbyP94g10q6MteBOQYUhxJIGMW9QeB7XITOFjnkdpASivmBvVczeFif06sS+mLdqtk3Il9I8I8mX6Y9u52yssEMbzy8CjzKdp40FYzro=
+	t=1787836517; cv=none; b=DVZZhGZEbXFMhlpXz10YeSNMcD5C1xkHsWrc2LbEfJL7481B+ybqD/kfWsUyRKizfIn5vRVDTOvcsigXR74wAp0BK6pjkRRHMxHBTvPKX6plhTT7SsZQ8ayfCKY0wsq4CVy5srQ1Mum3omIUqxYS6C4RdMcnBYEZXSQNf8pUFH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787834712; c=relaxed/simple;
-	bh=9CO6XPws66LC487FgaRgDop5rE/nPJskI5F38LvJY/k=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=I5UxQVbb3X8khQqCx/kAx2Hk3t2nbpwAmjebmK9xq/MH1+VDoHcwhJ+JnIjET4c6KQX/noVMDXdUyokmxyYt1rkAZauTTVmA/Z6t0RnkAmPBC+aTVP4/Fgf87omdEmVZtUpKGxDWySLNcc1KoEoYRC/HCX2suVFQ+FocUxnFUwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=klSciWqx; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=tsDSy6WB; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1787836517; c=relaxed/simple;
+	bh=jR4mRqs32IUcI/m/KbwQ7Vym5B+Z9w2bM9qUGSorNQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E7gHFrUu1AG+p1J6lH7v6bLKxT8lbGosZvLHJg+UdlYJcSwNw91/xY8NnBnCKsU9oAc0Ahlb9NhPQZfKIDZTIojNnHPAVmdaoa4zbIFnLSa45p7iCTa85WaxRDWd0jdOSM/aERC/OCfgL6ilWOEnFPTbtM6R5H5ctBz0/c8J+fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=NCvWKzhD; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="klSciWqx";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="tsDSy6WB"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1787834653; bh=qmczfJJgEwvbZO3x8rHiMlF
-	+znFs8ONYjHZmCN/ThRY=; b=klSciWqxMtqsoJWx1TECDSEfxO2Uw+5EPKx0ecGx2Q8b6cNxHd
-	cCvkngGlFPq4yfJkJeymy88YCRL6zGOh4SepZV3vB0XF4hp+hAX4M94nuIbeg9WFFrQ5R0Yj0/G
-	0DD9zQjCdub6SKwnCxq0UVqhGGKUQ8acZaJgf+IOstmM4AqtRCWk17R0iPv3sUM6CTUUWKy0peu
-	oKHSEu/0vVJYesRrllvDph10FhbJ4IyFN5ao6Fzvh8gE+UqfTbiWujh2mw4QMVZjnS4j4gh5IlA
-	mp10ogEs+kdKH6nd6QfeNMVREB+/T3JMb0KPL5ehJhgUvsGwQ1TkugN22HmYxAqU9XQ==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1787834653; bh=qmczfJJgEwvbZO3x8rHiMlF
-	+znFs8ONYjHZmCN/ThRY=; b=tsDSy6WBC6MWyDJn2An4rMNmNTxKrhXvTaN7TUG+HJCHteXW8C
-	TbOAwiXG9WRamWPW3tkD54uRfgsGAllYbCDQ==;
-Date: Thu, 27 Aug 2026 13:44:13 +0100
-From: Bradley Morgan <brads@mainlining.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: =?ISO-8859-1?Q?J=E9r=E9my_Jean?= <jeremy.jean@oss.cyber.gouv.fr>,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_tracing/user=5Fevents=3A_Clear_c?=
- =?US-ASCII?Q?opied_tracing_state_before_fork_duplication?=
-In-Reply-To: <20260827084306.54c13b60@gandalf.local.home>
-References: <20260826214414.1971632-2-Jeremy.Jean@oss.cyber.gouv.fr> <20260827080839.35e44d04@gandalf.local.home> <A4F580CE-2211-4D05-9D3D-15AB427C74A4@mainlining.org> <20260827081915.320fe2c3@gandalf.local.home> <3beb0339407a35c0b995856eae74d870@oss.cyber.gouv.fr> <CE51AB37-6584-4001-9375-24AA00C8B79D@mainlining.org> <20260827084306.54c13b60@gandalf.local.home>
-Message-ID: <E35157CB-DB14-4195-87A5-FD411D9E464A@mainlining.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="NCvWKzhD"
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id AEC85C024A;
+	Thu, 27 Aug 2026 13:14:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id F35216000A;
+	Thu, 27 Aug 2026 13:14:53 +0000 (UTC)
+Date: Thu, 27 Aug 2026 09:15:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
+ trace_pipe_raw readers
+Message-ID: <20260827091541.5d03e33c@gandalf.local.home>
+In-Reply-To: <ao_Zu0ThaWThj9YZ@google.com>
+References: <20260826094528.3738023-1-vdonnefort@google.com>
+	<20260826094528.3738023-2-vdonnefort@google.com>
+	<20260826095947.4FF8B1F000E9@smtp.kernel.org>
+	<20260826103736.2b55b464@gandalf.local.home>
+	<ao8TQ-SvhjYgy43-@google.com>
+	<20260826143123.1b3e3854@gandalf.local.home>
+	<ao_Zu0ThaWThj9YZ@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: F35216000A
+X-Stat-Signature: finf3sszcgs4ra44k5w4fxt1pd3g9mnb
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+8bBjpjX1rb7w6M/De5rieedWYuH6n+gM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=4rx+Jukd69U71oXhkK+4brjCaBl56wc/fNZAnDqZX4M=; b=NCvWKzhD8HeIKPFs/HWTNtoXZVkZn3mAZ3k1SngPrwLQzmKhcxRRIsiVR+bw14uo5zUN4b9ip4Vy0SFVCfH9plKBICCEYVmt3jIMYlQGXPSI+zRqH0L5KvlWMCN6UAHOguNLvkdi5rD7Z+EJABkLzvnKwj29sW5IRK9v7GvqsqE=
+X-HE-Tag: 1787836493-618963
+X-HE-Meta: U2FsdGVkX19EkAXce3d40tLst0oN3wPKZV7hunF6l4RG3LT5ud9ihlYhdwzfHiK0aRQ10BPDP5CUR9PpH8vNPWN2Ki+B8uLm555FF0fjhS9QvTtPHu1XJCWLJSFQvRPF8F7wro7PkXaQ0kSU9XdO7Mxdd1qXxpk0dkaTqFCVHSu8tqHyuI55+fSKAZZCx+T316qWz9ksfYOEEPXWux6iGgR6rJLsFvKKgB7N1LdNa5+2J0U9AMI8Prsq9aATnT/BaLk4NGpye16WI7nSHxONpXqHcKgXQqYwfGq92iwN02lJ8XBrrEqv2DnbH3l6X6aogqyTSfGzDZHKNYqUa5nOoL8g3LoSJyfATGBHarzwo8ULJ9lTCYT0sQ==
 
-On 27 August 2026 13:43:06 BST, Steven Rostedt <rostedt@goodmis.org> wrote:
->On Thu, 27 Aug 2026 13:29:20 +0100
->Bradley Morgan <brads@mainlining.org> wrote:
->
->> I review on
->> 
->> 
->> 1: does this do what it's intended
->> 2: does it fix X?
->> 3: Any comments, any new functions used instead, any way to get the line
->count shorter?
->> 
->> 
->> And others, I apologise if I'm wrong. I just review in a different
->style.
->
->Please just focus on correctness, until you understand what the
->maintainer's preferences are.
->
+On Thu, 27 Aug 2026 07:31:23 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Yep, I already do, I focus on if the code is actually correct too.
+> Looking at the function again, shouldn't we add !rb_is_static(cpu_buffer) as
+> well to the full page test?
 
-So don't panic. :)
+Why? 
 
->-- Steve
-
---- Thanks!
-https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
+-- Steve
