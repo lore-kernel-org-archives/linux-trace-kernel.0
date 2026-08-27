@@ -1,81 +1,132 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EE2357D18
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 19:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7D43815E2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 20:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787859157; cv=none; b=fEIKzBTtbpVAfLEetutRf1A3VwS0B2Gs/chIHUGMy+U+tXtoWfxAsEryz6w2V/0TEIdcjymAJ/YdyZvO9ZpfSbF3wwNw5Mee/S9Nryr2jvVSjpw4RTMp+ZqdlIJBs5Bxekk1sMio4SWcNfHk56TmCXGxOWP/Gw4UF+ZntFqFPjU=
+	t=1787864046; cv=none; b=ssK2imvSXzQZN8A637dvGiog5spyHUgS3JVI8T+8RNJpUEJg0Geta08TLa2qjOJiw6AbE4SbSjfJrHKPj6YFRDr4pGPak4e0aAbCVf/42cpls0jK4kQo2b6O26sb8Egqe+QEumI4JafdWOKBQsJA7wwhqLYDFOfjSUIJze3/0eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787859157; c=relaxed/simple;
-	bh=DC4BFkJWg/X0N+gsnTj2MEDN8HTfEUDSa8HvjoV8zdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q5v2rl8wXiCcYmxicM6tzmQNACevkBTSo44WIO7kvnPuXn7k0k/YR9mP0cMYxRLweZJABI1vGbnNAOmNMryuZYpMNcKYt/AEVADWVtqBD+3Rpl6nj+VMCLEz5IbRR4gtPSSVIraXsZ+yN3rCxHj8vLJ4yvtfpfD3tA/k5UXj1cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=2twvMfLk; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1787864046; c=relaxed/simple;
+	bh=584T2Fi+jYdHnPMPryAzdeyBmBsauq81+2zQRXO51LQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cm1SxGAzJwq5P8A0M04VU5He8MsZpXIISY3QEAYhbJU+Qk2CQgF8KhBvLSAerBj33uGUg6Ho8Cxpdu3cFYPtLe0zmLercKRxIN41UGkfmh3WabsUtxGMdiTcy1CwyNZxDsoG5ZUGkYY4L3TKNNqHPE+eZ7MssLpiFNkaNZQ0xic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NDhHjzQU; arc=none smtp.client-ip=209.85.210.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="2twvMfLk"
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id B7F23A01AB;
-	Thu, 27 Aug 2026 19:32:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 2D2FA20025;
-	Thu, 27 Aug 2026 19:32:26 +0000 (UTC)
-Date: Thu, 27 Aug 2026 15:33:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
- trace_pipe_raw readers
-Message-ID: <20260827153314.77218528@gandalf.local.home>
-In-Reply-To: <apBhLDTEa_3yYZP5@google.com>
-References: <20260826094528.3738023-1-vdonnefort@google.com>
-	<20260826094528.3738023-2-vdonnefort@google.com>
-	<20260826095947.4FF8B1F000E9@smtp.kernel.org>
-	<20260826103736.2b55b464@gandalf.local.home>
-	<ao8TQ-SvhjYgy43-@google.com>
-	<20260826143123.1b3e3854@gandalf.local.home>
-	<ao_Zu0ThaWThj9YZ@google.com>
-	<20260827091541.5d03e33c@gandalf.local.home>
-	<apBhLDTEa_3yYZP5@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDhHjzQU"
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-85321e37104so400510b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 13:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787864044; x=1788468844; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZEfQxTOKQyDG0uZqNyCVnRw0wmiuuoqTc9XyRDn+pn0=;
+        b=NDhHjzQUvh3ExnAjwNkVIJFwsPZcmuA2IniGkFO/nza1s9PQ7UM+5SBSybByx8jfzC
+         9H76VzzIzoNit3xu/+s7pMEmDNzD/0TaoOmS3lzHmaCl3jnT0cx350Cy2zY2AKZARIdx
+         UuaaQUkt10uQ2St3MJ7eZcVmDbXDw+4NTJFh8pjHVBgXnTfepFdpYbWWoX0PWX9/asJN
+         Fq+Bvtpe7qZpck9RIc+q76+2w3yqqe5rKZsboxBBolUEN2/nSmQjxLRV6Iv0be9wYMUH
+         FAx9lcKQxR5EtlqPw+mnJ4X/uuVyLHwt7LvL7KWV7uzVe5Cu4MOsoGK6wumcbonDoEFQ
+         Sq8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787864044; x=1788468844;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZEfQxTOKQyDG0uZqNyCVnRw0wmiuuoqTc9XyRDn+pn0=;
+        b=f2Qls698+sE/m1/o2jFdvfToqho1qhWAR8yjggl5lC+1lRztjk4437PrswGmkUL7aX
+         2yr6Jqtu3cOxAhzSQaJWIfgeG4MicQFiQLEEgSLwg/e4KbApMfveg8oFh8pP/tvaGTLq
+         GLIh/s3K/OhOYjZ3HdCwGLeES64d6C646WDbHzVJgXPJzlZuG7nz7WP1vabx4w1yjSpU
+         nHD6Nn4Bvzx51lTMJwgOqMS5rKr9g1oTpA+XyEXeW5Ao7cXYw0vKBK3A3RxLCLEG/aht
+         dG+/UdKafDbRmGBcX3auZzT1NSR//rAQBn14029Mzyc1U1A9H0Ggd437fMN8XiIAV6wX
+         dnBw==
+X-Forwarded-Encrypted: i=1; AHgh+RqkuFufkKO/nIFxe0wFEWFKwtENQnDgzZA9EWEaTr9Koxc+cmEZP13ftX+xqGMoEjxEDG0QgEoaY+m+EBX2JQsEwww=@vger.kernel.org
+X-Gm-Message-State: AFuF++lw7+DVKWZPj8Ff75PWJmtY0gKHuQ4vhjrmM8VnWbaWn6Bq/blC
+	ivsPnvphakez51kH6nigy07swSwElMfRFAfFwcOkjXsvBFDIGzB8eZYqQFLfmuW9kTec4UH2EiW
+	k0SY1JA==
+X-Received: from pfbkr16.prod.google.com ([2002:a05:6a00:4b50:b0:848:5480:9ac7])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:e09:b0:851:fb36:a702
+ with SMTP id d2e1a72fcca58-85629f09cc5mr4062708b3a.9.1787864043380; Thu, 27
+ Aug 2026 13:54:03 -0700 (PDT)
+Date: Thu, 27 Aug 2026 13:54:02 -0700
+In-Reply-To: <ztufznh6v5md5cn56t7pvokubvbpc3yki6dhiilgebb5uq3ju3@aa4xc6wwte5r>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: iozobjrey3g5jkcr6doixc3yfc95o3fb
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2D2FA20025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/UL7GAVv/ig0hpN7SedXw5ufSnN8g2eg8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=MYsZyEV3Fytys/Ah9WMeAgkFvcSFYF6AgdtgppHiN9o=; b=2twvMfLkTLfn/iPCN6oUIrQNs6x8lKnLHuGn8y3mDdA+e6wgb6TjoziQJBBCESeYrRPVeTnb1vH8Y7g9JBRXs9P3XDTxLjGFpSQi6ca2u83UnFKBmlTTWWz2hjb1f4dMAImzsVfxDf4n0L9cHLTFXJAp9xvWFdtKBvnGcGpeHgI=
-X-HE-Tag: 1787859146-349834
-X-HE-Meta: U2FsdGVkX1/GmrrD//8AixNjFF9tdsXA7dCKEscMUFkSLy6gS8PDqvnn5S49OXtse0xXNKVmeWGim66DGWncgyJf7C4Unq/HKboWnYNAKPV7zgfF+2FjuwlLok2PXRLlG3pceiPaQZXoZ3AYZUpjI1kcAoFqzbtaBcSSuY6Z0XiWapuN133I6LDvfoTKCR/Z0QzkDLnF17bdAkcLdqw6sD9pYIGdKYADQaCt4ztmtbgudLihiOGiEEve8zDsTVGVMam4KIVl5LTwPuhhgPQhb8I9QUj3c/HAZ6MFedkXSCSELzlN30YzTv+y9M0wfVqy+ZcsaxhPEo7cJjAhqubIatswTEXSjl6k
+Mime-Version: 1.0
+References: <20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com>
+ <20260826-gmem-inplace-conversion-v11-15-0a15d8a799aa@google.com>
+ <ao9CKMXAX-hScRSa@google.com> <mtbqvvvpwbzybgy6z47lwui6ag53kyubub3hkczui7u72zxesl@lnwsglrgwl5p>
+ <ao9px1j7CLYXMiGP@google.com> <ztufznh6v5md5cn56t7pvokubvbpc3yki6dhiilgebb5uq3ju3@aa4xc6wwte5r>
+Message-ID: <apCj6gz8x24Dkle8@google.com>
+Subject: Re: [PATCH v11 15/46] KVM: guest_memfd: Call arch make_shared
+ callback for to-shared conversion
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Roth <michael.roth@amd.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, aik@amd.com, andrew.jones@linux.dev, 
+	binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+	steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
+	yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
+	suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+	Fuad Tabba <fuad.tabba@linux.dev>, Vlastimil Babka <vbabka@kernel.org>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 27 Aug 2026 17:21:39 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> On Thu, Aug 27, 2026 at 09:15:41AM -0400, Steven Rostedt wrote:
-> > On Thu, 27 Aug 2026 07:31:23 +0100
-> > Vincent Donnefort <vdonnefort@google.com> wrote:
-> >   
-> > > Looking at the function again, shouldn't we add !rb_is_static(cpu_buffer) as
-> > > well to the full page test?  
+On Wed, Aug 26, 2026, Michael Roth wrote:
+> On Wed, Aug 26, 2026 at 03:33:43PM -0700, Sean Christopherson wrote:
+> > > So there's real performance differences here but it's sort of been
+> > > addressed through a solution that offers additional performance
+> > > benefits on top so there's no longer as much to be gained here I think.
 > > 
-> > Why? 
-> > 
-> > -- Steve  
+> > Or another way to look at it, eager conversion would allow QEMU to drop its
+> > workaround.
 > 
-> So that the splice can make progress when the ring-buffer is presistent or
-> user-mapped. Or do we say that's expected behaviour? 
+> True, for SNP at least, but pre-map is nice too, and not really gmem's
+> place, so most likely KVM_PRE_FAULT_MEMORY would remain regardless.
+
+Hmm, good point.  And as below, we can't sanely avoid the check in kvm_gmem_get_pfn()
+without reintroducing the preparation tracking, so the lazy approach is probably
+the best option at this point.
+
+> > To be clear, I'm a-ok with the code as-is, I just want to make sure we document
+> > exactly why we're choosing this implementation.
 > 
+> Agreed. My understanding of the current design choice is basically that
+> it doesn't *need* to happen here, since kvm_gmem_get_pfn() will already
+> trigger it on-demand when it is actually needed (or not), and that tends
+> to happen at fault time when other platforms like TDX handle it. 
 
-Ah yeah, I see. Hmm, looking at the code to see how this would work, I
-think I found another bug. Let me look deeper into it.
+Oh, this jogged my memory.  For out-of-place conversion, waiting until
+kvm_gmem_get_pfn() to update the RMP makes sense because KVM doesn't know whether
+or not the SHARED backing as been allocated, and can't easily get at it in the
+first place.
 
--- Steve
+> To handle it differently would be to go out of our way to make SNP special in
+> this flow in exchange for performance, 
+
+Not really?  We'd still need kvm_gmem_get_pfn() to update the RMP to handle PFNs
+that were never explicitly converted.  Either that or KVM would have to preallocate
+everything (ewww).
