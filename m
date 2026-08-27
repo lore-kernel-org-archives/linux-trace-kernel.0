@@ -1,165 +1,291 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4426C339379
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 07:39:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9608030E85D;
+	Thu, 27 Aug 2026 07:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787816372; cv=none; b=ecLzxk0TjKoZ9bjMiF+2F0srvwkRtCmDCTeMe+XnMgvZSzvTHsOZlbPBNMiLU9MGPTgKvdiDWgNXm3Hm39c1HAqjHvg+CIpRdeIkf5XFJeveWMXHaM8BdH0pyXFaRq8UkT9DnUU3mtFcJNXZWi4KCmH9oU2UKUVT4mDxlMSR1Po=
+	t=1787816553; cv=none; b=VjV9Dd2ZuM/NN0yejvFrkFEy7+e83680cTb4eNCVoYCJwBYjwdajJev0uMhqh0urK6QJusRUqJ7rzuJ6uJahtzdfJa4LIBe6qS4/50shNiIXk1mpoiiYVvX/U5V4MOU26GRrHjbDUKnNLWgww/i77Bj5ESKPVxE4Ih2VeYgnT3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787816372; c=relaxed/simple;
-	bh=FGXbdn3IXp7z6XJl0jLy2OynxDBV9LvKV9hcTa09+hs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FsoVM8rNp/iK04xlGMP11eSV7Xm2OAXjfB9SJSU6eQedS/BU9iH/jqTA6h7MQYn0hsKju1LFfnIw2TPZSqDmMgGVIItogbOM5TIS0uvTI+jNA+pRj8AzWpmJvSL/sHNQAsG9+Rfy8ICbr6e2lJL1rGewiPQ6Rv+C3ZESR1Or2ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RC6gvlJh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787816553; c=relaxed/simple;
+	bh=ENXNt9mzTixOSYXmEGWlhnqoz8v/IMzOpTAvl/dhmTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QA/L2K6UmYid2zAYVLtuUuGoneRTROaFcxmn7rIt0fJauQu51OuxASIs9N/6tbNGR5L7mJPGhCZV7y/jt/or6UdO1V5F9O+uFG+dNmQ0owxHx6NRZSyiL+MZ4QSKYVlu/MkfhhZORMY6YzeS3W4ybDo+9PqWpzjHvJRGXxN0rcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IciJiPKu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RC6gvlJh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150F91F000E9;
-	Thu, 27 Aug 2026 07:39:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IciJiPKu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C451F000E9;
+	Thu, 27 Aug 2026 07:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787816371;
-	bh=sxFHIPOI5QzUMU9QperXuDrbQrrxlliXwEk/uW4+H/k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RC6gvlJhz7czItjSdY8kuDxNw9dbgTqutr2xTa8R5SyMoZ2ZDckOX713vhdtMkZKk
-	 fJXaC7FsUknE7lOg0Bmq8NDck7X86zDvSOH9gfbWfViRN1yNQrYej5VdND4EdxD3Jd
-	 INqGhx5vZI2n8dlnK0MZgAJvGa7fszLUytSMUxTRZPN9+bQvVHiJSr5OwlkbZ+7ynp
-	 XpN9f/tixbOu5FKa1H6LtWnK7msGIhmR+HyzS76XA0VcI97Re5es+Y+a4Xyfms/DXl
-	 uhukCe8u+M9ILYzaDXXu9PWkpEtWp3NMnVz/RaL2+O+yUkmx2Y1LsSTgMsIaAJA0nc
-	 7W6ZO7hhkdBvQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC 2/3] rv: add per-monitor edge-stat facility and stats file
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tobias Schaffner" <tobias.schaffner@siemens.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260827072400.45734-3-tobias.schaffner@siemens.com>
-References: <20260827072400.45734-1-tobias.schaffner@siemens.com>
- <20260827072400.45734-3-tobias.schaffner@siemens.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 07:39:30 +0000
-Message-Id: <20260827073931.150F91F000E9@smtp.kernel.org>
+	s=k20260515; t=1787816551;
+	bh=XnnHLjDW6uYuCq4a/mmPBKPVQrHkZ/YBkrjUKtCWwE4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=IciJiPKuO+y+klx0Lo62QcCmDKVTR1bs9q/7Azajl4Vm9oFV488RF2ROEwq1ZA4mJ
+	 2bSjH7a1HdQ9+yAmEw4vS2L10H/My09Z2VtsWqNW6XhjgLiSmfzd1nq5UfyToZbBHw
+	 u2gUv7ZriSaTaJasLImbj5+Yb9R1U6aZHCw31EQdWFJQOekVgfX4JYDJh7bW1rpnFl
+	 KWw1jH3j2zbzFvZG7tKkA6Og/JaVg9DPCdITA7ePQyMombPZ7fzqv/PPa+bsdiqq1r
+	 i9bRw/2DcFEQjddEy8H1b2k1dy7mPYsbaPg+RTLAQJ+1MgdfkPElaqcZDOFk50nqXo
+	 sN4R0hmMsP3xw==
+Date: Thu, 27 Aug 2026 10:42:16 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>,
+	Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Lance Yang <lance.yang@linux.dev>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Nico Pache <nico.pache@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] userfaultfd: decouple fault reason from VMA flags
+Message-ID: <ao_qWEcoaIcm1WhE@kernel.org>
+References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
+ <20260823-uffd-vm-flags-v1-v1-5-3086981b33cf@kernel.org>
+ <aoxm4jUrmL1eQlCJ@gremlin>
+ <ao1waln1lklfk8th@kernel.org>
+ <ao2Qk87AKnMKuNvg@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ao2Qk87AKnMKuNvg@gremlin>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] destroy_monitor_dir() frees mon->edge_pcpu before VFS synchronizat=
-ion, allowing concurrent readers to access freed memory via the tracefs sta=
-ts file.
-- [Medium] Non-atomic memset corrupts local64_t counters, racing with concu=
-rrent NMI tracepoint updates and lockless tracefs reads.
-- [Medium] rv_edge_reset() only resets statistics on currently online CPUs,=
- violating the guarantee that counters are fully cleared on enablement.
---
+On Tue, Aug 25, 2026 at 02:00:10PM +0100, Lorenzo Stoakes (ARM) wrote:
+> On Tue, Aug 25, 2026 at 01:37:30PM +0300, Mike Rapoport wrote:
+> > On Mon, Aug 24, 2026 at 05:28:29PM +0100, Lorenzo Stoakes (ARM) wrote:
+> > > On Sun, Aug 23, 2026 at 03:17:42PM +0300, Mike Rapoport (Microsoft) wrote:
+> > > > Introduce enum uffd_reason to define reasons for user faults rather than
+> > > > overload VM_UFFD_* VMA flags for that.
+> > > >
+> > > > Using a dedicated enum makes the code clearer and decoupling the fault
+> > > > reason from VMA flags clears the way for moving the uffd mode bits out
+> > > > of VMA namespace.
+> > > >
+> > > > No functional change.
+> > > >
+> > > > Assisted-by: copilot:claude-opus-4.6
+> > > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > > > ---
+> > > >  include/linux/userfaultfd_k.h    | 16 ++++++++++++++--
+> > > >  include/uapi/linux/userfaultfd.h |  6 +++---
+> > > >  mm/huge_memory.c                 |  6 +++---
+> > > >  mm/hugetlb.c                     | 10 +++++-----
+> > > >  mm/memory.c                      | 10 +++++-----
+> > > >  mm/shmem.c                       |  4 ++--
+> > > >  mm/userfaultfd.c                 | 30 +++++++++++++++---------------
+> > > >  7 files changed, 47 insertions(+), 35 deletions(-)
+> > > >
+> > > > diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+> > > > index 45355bdb4ec7..f401623f315d 100644
+> > > > --- a/include/linux/userfaultfd_k.h
+> > > > +++ b/include/linux/userfaultfd_k.h
+> > > > @@ -9,6 +9,18 @@
+> > > >  #ifndef _LINUX_USERFAULTFD_K_H
+> > > >  #define _LINUX_USERFAULTFD_K_H
+> > > >
+> > > > +#include <linux/bits.h>
+> > > > +
+> > > > +/* Fault reason #PF handler passes to handle_userfault() */
+> > > > +enum uf_reason {
+> > > > +	USERFAULT_MISSING	= BIT(0),
+> > > > +	USERFAULT_MINOR		= BIT(1),
+> > > > +	USERFAULT_RWP		= BIT(2),
+> > > > +	USERFAULT_WP		= BIT(3),
+> > > > +};
+> > >
+> > > Hmm your commit message says uffd_reason, uf_reason makes me think of the
+> > > character Ulf from House of the Dragon. But not uffd. So as per David let's
+> > > rename it :)
+> > >
+> > > I'm also not sure if an enum is the right thing for flag values?
+> >
+> > I'll ask LLM why it chose it :)
+> 
+> I mean you then introduce the same flags again seemingly with different
+> names as #define's in the next patch... having several sets of flags with
+> subtly different names seems unwise.
 
-commit 5d961f88b7dec86f152d8e652fbd68ebc65c3317
-Author: Tobias Schaffner <tobias.schaffner@siemens.com>
-rv: add per-monitor edge-stat facility and stats file
+The names are important, the values are not. 
 
-This commit introduces CONFIG_RV_EDGE_STAT, an optional feature that records
-how long a monitor's automaton dwells in a state. It allocates a per-CPU
-buffer on first enable and exposes the counters via a per-monitor stats fil=
-e.
+There are two cases that currently use the same VMA_UFFD_* flags:
+* the way VMA is registered with uffd, i.e. the 'mode' part
+* the type of the user fault that the generic #PF handler passes to
+  handle_userfault()
 
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index ee4e68102f175..88a0bbaec4d0a 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
+They are related, a fault in a VMA that was registered as MISSING will
+never pass MINOR to handle_userfault(), but I think it'll be actually
+clearer to separate them semantically, so that when you read a call site of
+handle_userfault() it is clear what type of the fault it is and when you
+parse userfaultfd code you see what modes user wanted for a VMA.
+ 
+> > > Anything that is parameterised by enum uffd_reason that combines flags will
+> > > break any switch statement in there and yada yada.
+> > >
+> > > I wonder if better just as #define's + unsigned long or something?
+> > >
+> > > Or you could do (and this leads to nicer stuff later):
+> > >
+> > > 	enum uffd_reason {
+> > > 	     USERFAULT_MISSING_BIT = 0,
+> > > 	     USERFAULT_MINOR_BIT = 1,
+> > > 	     USERFAULT_RWP_BIT = 2,
+> > > 	     USERFAULT_WP_BIT = 3,
+> > > 	};
+> > >
+> > > 	#define USERFAULT_MISSING BIT(USERFAULT_MISSING_BIT)
+> > > etc.
+> >
+> > Looks over-engineered to me tbh, if we drop an enum, I'd just
+> >
+> > #define FLAG (1 << SHIFT)
+> >
+> > and call it a day.
+> >
+> > Also see below about aligning with uABI flags.
+> 
+> See review on 6/6, I'm confused actually why we have several sets of these
+> flags...
 
-[ ... ]
+I can see that ;-)
+ 
+> But in general it seems like these flags (in one form or another) are being
+> repeatedly referenced, so it's not really over-engineering I don't think to
+> abstract some of that.
 
-> @@ -289,9 +298,15 @@ static int rv_enable_single(struct rv_monitor *mon)
-> =20
->  	retval =3D mon->enable();
-> =20
-> -	if (!retval)
-> +	if (!retval) {
->  		mon->enabled =3D 1;
-> =20
-> +		if (rv_edge_setup(mon))
-> +			pr_warn("rv: %s: edge statistics unavailable (out of memory)\n",
-> +				mon->name);
-> +		rv_edge_reset(mon);
+Again, the bit numbers do not matter, they are the same because it's easy
+to count from 0. I can make one of those count backwards if it helps :)
+ 
+> Maybe can be in wrappers that make it nicer. But really the issue is the
+> duplication in modes/reasons/flags...
+> 
+> >
+> > > > @@ -168,9 +168,9 @@ struct uffd_msg {
+> > > >
+> > > >  /* flags for UFFD_EVENT_PAGEFAULT */
+> > > >  #define UFFD_PAGEFAULT_FLAG_WRITE	(1<<0)	/* If this was a write fault */
+> > > > -#define UFFD_PAGEFAULT_FLAG_WP		(1<<1)	/* If reason is VM_UFFD_WP */
+> > > > -#define UFFD_PAGEFAULT_FLAG_MINOR	(1<<2)	/* If reason is VM_UFFD_MINOR */
+> > > > -#define UFFD_PAGEFAULT_FLAG_RWP		(1<<3)	/* If reason is VM_UFFD_RWP */
+> > > > +#define UFFD_PAGEFAULT_FLAG_WP		(1<<1)	/* If reason is uffd-wp */
+> > > > +#define UFFD_PAGEFAULT_FLAG_MINOR	(1<<2)	/* If reason is uffd-minor */
+> > > > +#define UFFD_PAGEFAULT_FLAG_RWP		(1<<3)	/* If reason is uffd-rwp */
+> > >
+> > > Is it worth retaining the same bit indexes as the reasons?
+> > >
+> > > Reasons:
+> > >
+> > > 	Bit number
+> > > MINOR	0
+> > > RWP	1
+> > > WP	2
+> > >
+> > > Page fault flags:
+> > >
+> > > 	Bit number
+> > > MINOR	2
+> > > RWP	3
+> > > WP	1
+> >
+> > If we go this way, than it must be
+> >
+> > #define USERFAULT_MINOR UFFD_PAGEFAULT_FLAG_MINOR
+> >
+> > so we won't need to keep them in sync explicitly.
+> >
+> > With a caveat of USERFAULT_MISSING that is expressed as "no flags in
+> > uffd_msg" :)
+> 
+> Ugh.
 
-[Severity: Medium]
-Does resetting the statistics with memset() after the monitor is already
-enabled risk data corruption?
+Yeah, and the PAGEFAULT_FLAG numbers are set in stone because it's uABI.
+ 
+> > >
+> > > With matching flags and unsigned long you could do
+> > >
+> > > 	msg.arg.pagefault.flags |= reason;
+> > >
+> > > I think?
+> >
+> > Almost:
+> >
+> > 	msg.arg.pagefault.flags |= (reason & ~USERFAULT_MISSING);
+> >
+> > And define USERFAULT_MISSING as (1 << 0) with a comment why it's fine.
+> >
+> > I don't feel strongly about it, but my preference is to define reason flags
+> > independently of UFFD_PAGEFAULT_FLAGs and keep the ifs here.
+> 
+> And also modes... Again I think fixing that mess somehow is the better way forward.
 
-Since mon->enable() is called before rv_edge_reset(), NMI tracepoint
-updates can fire concurrently. Using memset() in rv_edge_reset_ipi() to
-clear the array of local64_t counters could race with these
-read-modify-write updates, potentially resulting in torn reads or
-corrupted atomic statistics when rv_edge_stats_show() accesses them.
+Can you elaborate?
 
-> +	}
-> +
->  	return retval;
->  }
+> > > > @@ -2793,14 +2793,14 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
+> > > >  	 * If VMA has UFFD WP faults enabled and WP fault, wait for userspace to
+> > > >  	 * resolve the fault.
+> > > >  	 */
+> > > > -	if (!pte_write(ptent) && (reason & VM_UFFD_WP))
+> > > > +	if (!pte_write(ptent) && (reason & USERFAULT_WP))
+> > >
+> > > I wonder if you could actually
+> > >
+> > > You do this quite a lot and they read a bit horribly with the && and & on the
+> > > same sight-line. With the changes to the enum proposed above you could do:
+> > >
+> > > 	if (!pte_write(ptent) && test_bit(reason, USERFAULT_WP_BIT))
+> >
+> > I find && and & perfectly readable and adding _BIT defines looks really
+> > excessive to me.
+> 
+> Discussed in sub-thread. We'll agree to disagree I suppose.
+ 
+Yes, we will :)
 
-[ ... ]
+> > > > @@ -2835,7 +2835,7 @@ static inline unsigned int userfaultfd_get_blocking_state(unsigned int flags)
+> > > >   * fatal_signal_pending()s, and the mmap_lock must be released before
+> > > >   * returning it.
+> > > >   */
+> > > > -vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
+> > > > +vm_fault_t handle_userfault(struct vm_fault *vmf, enum uf_reason reason)
+> > >
+> > > Hmm what was the 'reason' here before? The flags? Maybe more reason (no pun
+> > > intended) to keep the values the same?
+> >
+> > The 'reason' before was a VM_UFFD_SOMETHING, we really can't keep the
+> > values the same, but we surely can keep it unsigned long.
+> 
+> I notice the 'mode' which is not the same as the 'reason' is an unsigned
+> int in 6/6...
 
-> +static void rv_edge_reset_ipi(void *info)
-> +{
-> +	struct rv_monitor *mon =3D info;
-> +
-> +	memset(this_cpu_ptr(mon->edge_pcpu), 0, rv_edge_blob_size(mon));
-> +}
-> +
-> +/* rv_edge_reset - zero the statistics; call from a monitor reset/enable=
-. */
-> +static void rv_edge_reset(struct rv_monitor *mon)
-> +{
-> +	if (mon->edge_pcpu)
-> +		on_each_cpu(rv_edge_reset_ipi, mon, 1);
-> +}
+Didn't you suggest to make 'reason' an unsigned int as well?
 
-[Severity: Medium]
-Will this skip clearing the statistics on offline CPUs?
+'mode' in 6/6 is an unsigned int because if it were an enum it'd require
+#include <linux/userfaultfd_k.h> in mm_types.h, see the commit message
+there.
 
-Because on_each_cpu() only targets online CPUs, dynamically allocated
-per-CPU edge statistics buffers for offline CPUs remain uncleared. If
-an offline CPU is later brought online, reading the tracefs stats file
-will iterate over it via for_each_online_cpu() and report stale,
-un-reset values from previous runs.
+> --
+> Cheers, Lorenzo
+> 
 
-[ ... ]
-
-> @@ -747,6 +857,10 @@ static const struct file_operations monitoring_on_fo=
-ps =3D {
-> =20
->  static void destroy_monitor_dir(struct rv_monitor *mon)
->  {
-> +#ifdef CONFIG_RV_EDGE_STAT
-> +	free_percpu(mon->edge_pcpu);
-> +	mon->edge_pcpu =3D NULL;
-> +#endif
->  	rv_remove(mon->root_d);
->  }
-
-[Severity: High]
-Could this lead to a use-after-free if the tracefs stats file is read
-while the monitor is being unregistered?
-
-The per-cpu buffer is explicitly freed here before the rv_remove()
-synchronization point removes the tracefs file. A concurrent lockless
-reader using rv_edge_stats_show() could access the freed mon->edge_pcpu
-memory:
-
-kernel/trace/rv/rv.c:rv_edge_stats_show() {
-    ...
-    if (!mon->edge_pcpu)
-        return 0;
-
-    for_each_online_cpu(cpu) {
-        struct rv_edge_stat *s =3D per_cpu_ptr(mon->edge_pcpu, cpu);
-    ...
-}
-
-Should rv_remove() be called before freeing the per-CPU buffer?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827072400.4573=
-4-1-tobias.schaffner@siemens.com?part=3D2
+-- 
+Sincerely yours,
+Mike.
