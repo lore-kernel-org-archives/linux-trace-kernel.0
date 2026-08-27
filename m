@@ -1,124 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from oss.cyber.gouv.fr (oss.cyber.gouv.fr [51.159.188.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD6342CAE7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 18:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D434D403E87;
+	Thu, 27 Aug 2026 18:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.188.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787856028; cv=none; b=dUMzRoNZadVi18CCjst3gGJSJJvX6buHcPlHGYs/oO8KtZNDMSCNXRM4CaCyS4XYTtOmyy9ypxXY/cnjVNlhZqZnwfJZ7O/3Gi7K5F9jEwdJDxxpwCTWWf/eteljjGlOAqWbvijVm77K6TvY4D5iZvSo+MaVE3STe/KWPNyZf1E=
+	t=1787856380; cv=none; b=Hx5+Ba+aN6E+3OtsIQ1nc3T39p33K0+M2RN/KCiObYmQYjPi8dxAbm/SLdmFNEBG5LiSZcV8g7QMVx24ZR+ObTrztxMiXs86nxVVgiB7JdEcDAqAJg7HB2NalONZsALn48sFhRRPC2qAaD2djNTr2ovVafo6+WykMT+oK1+Qe7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787856028; c=relaxed/simple;
-	bh=HJSr71KzZjTqDIc21eNavwxCcESfFFsBWNofrKWKRNo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GTJmirkbySSYya2xdh3yYJG6P9EQ08hTOlcmseHwTSqurZtjf5qIPYgHMeHLXPTH8/pahcXakKtdV8vH+jfoPmgcQUn3x6iZueinLnodcEJf7gxasg6mEp58XPMnbB9terY4abCQmB0v4os2ZGvOa98OmrUfyj3rOFCx5vxTZdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TumrV9fr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787856380; c=relaxed/simple;
+	bh=LJWpH/CgnzOK/t27Oavz+/Vp8FvRx+EU32B+FOPBfSY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pAp5K3iUbPOVGPwzOBisXg++bv9R1Evmd12ZWjoEd2kS6vl0cEeBcYddC2Z8pvlfcNG/5io8s+VIztw0izS9n4QhUEUQS/9uIdLMrfbzxFK74Pl3CWr0QAMotbd+yP5Bf6PVpNrX+CGHGcNfaFGbibSLtkD4ogixBYDhpQDxwqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=iGrro2xz; arc=none smtp.client-ip=51.159.188.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.cyber.gouv.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TumrV9fr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FA31F000E9;
-	Thu, 27 Aug 2026 18:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787856027;
-	bh=KcYqLb1TjjRzhXorr6bZgUN99MfcL6jybuctk4GK+RM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TumrV9frOtiZFCjj/EYd7SJ4ovtgc1e/0OOvQhpXl9loTMIeI63jigpQsdV9pEVLK
-	 nSqMmc7H9KDjxmagJUeVB8Z0FQeo7K5wIKxLR4c0jmTOS5GQddPH5FoquQmhOdtiQ2
-	 IPTdVv60ybwpae90VXD8ir/TR+YTVK/OUWp7mU9y79fW0eHNpyGP76PTM4sZFJMEF7
-	 yt8XdYlRle4htIz1iOrZvkcPVNTvaxZzQ+aU3MpPKbv0pCVx2u1he9ZlOukfhqT4ax
-	 DndYdG6fHQcU0NSFb3MAPJkNpaXKKZTU/GVLka8Le8VDyTMHFazEsO/BldlU7AKGEE
-	 T5bhx68fjxniQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 1/6] treewide: Get rid of get_task_comm()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@igalia.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260827-tonyk-long_name-v5-1-5fa843782a00@igalia.com>
-References: <20260827-tonyk-long_name-v5-0-5fa843782a00@igalia.com>
- <20260827-tonyk-long_name-v5-1-5fa843782a00@igalia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 18:40:26 +0000
-Message-Id: <20260827184027.27FA31F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="iGrro2xz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=oss.cyber.gouv.fr; s=default; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WArSvg+AETs1hXdLSTJKNyQrLs3ixdhp5ELwXHGxzvY=; b=iGrro2xzDEC5bpPEB0cDBp6QvK
+	AO9M+ACOLoTn3QQ05qeuDVYUCTtTyOkEKTfX+NIN6cxjX69RJ/OABM9CVS+IKTodqDB+elPVc/DcG
+	UMPzLEuMBulZ2PyKdpCopZCkztNN7C0vli25G5HCgDh08qzqqJ66Bzlc9IwEOYt1BDcvGEMGsRt7K
+	kDN+ESFAIT3X18J4cTRW+L6IYdpHmjm1SAbObsVJ4p11MzkQGgITdMd8pvAj6XGL/vpSL4VmDzvhr
+	j2V3bXILN33lnUl5TISOQ6d+ueM31E/5L++FEopFPb9ZwdkiVaGcmpu2GHNC51cx4bNS4hKTqOI4b
+	nEOWCiOQ==;
+Received: from [151.115.150.205] (port=42710 helo=gepetto..)
+	by pf-012.whm.fr-par.scw.cloud with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.99.5)
+	(envelope-from <Jeremy.Jean@oss.cyber.gouv.fr>)
+	id 1wzf7A-0000000DUzj-19d5;
+	Thu, 27 Aug 2026 20:46:15 +0200
+From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Jean?= <Jeremy.Jean@oss.cyber.gouv.fr>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	brads@mainlining.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	=?UTF-8?q?J=C3=A9r=C3=A9my=20Jean?= <Jeremy.Jean@oss.cyber.gouv.fr>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] tracing/user_events: Clear copied tracing state before fork duplication
+Date: Thu, 27 Aug 2026 18:43:22 +0000
+Message-ID: <20260827184321.2964601-2-Jeremy.Jean@oss.cyber.gouv.fr>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - pf-012.whm.fr-par.scw.cloud
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - oss.cyber.gouv.fr
+X-Get-Message-Sender-Via: pf-012.whm.fr-par.scw.cloud: authenticated_id: jeremy.jean@oss.cyber.gouv.fr
+X-Authenticated-Sender: pf-012.whm.fr-par.scw.cloud: jeremy.jean@oss.cyber.gouv.fr
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] The commit removes the `get_task_comm()` macro definition from `inc=
-lude/linux/sched.h`, but fails to update its usages in the Smack security m=
-odule. This will result in an implicit function declaration or undeclared i=
-dentifier error during compilation, breaking the build when `CONFIG_SECURIT=
-Y_SMACK` is enabled.
---
+dup_task_struct() copies user_event_mm from the parent into the child,
+without grabbing a reference to it. user_event_mm_dup() should
+replace it, but it leaves that copied pointer unmodified if
+user_event_mm_alloc() fails.
 
-commit 2f9c1f9e715d0c7c819d963ab3e8781e9ac3ae49
-Author: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+When the child exits, user_event_mm_remove() decrements a reference
+the child never owned, which ultimately frees user_event_mm, while
+the parent still as a stale pointer to it. This creates a UAF, which
+KASAN reports as:
 
-treewide: Get rid of get_task_comm()
+    BUG: KASAN: slab-use-after-free in
+    current_user_event_mm+0x51/0x1d0 Write of size 4 at addr
+    ffff888005010d30 by task init/44
 
-This commit replaces usages of get_task_comm() with strscpy_pad() across
-the tree to correctly handle buffer size mismatches. It also removes the
-definition of the get_task_comm() macro entirely from include/linux/sched.h.
+    Call Trace:
+     <TASK>
+     kasan_report+0xce/0x100
+     kasan_check_range+0x10f/0x1e0
+     current_user_event_mm+0x51/0x1d0
+     user_events_ioctl+0x82e/0x15c0
+     __x64_sys_ioctl+0x139/0x1c0
+     do_syscall_64+0xce/0x450
+     entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Link: https://lore.kernel.org/lkml/CAHk-=3Dwi5c=3D_-FBGo_88CowJd_F-Gi6Ud9d=
-=3DTALm65ReN7YjrMw@mail.gmail.com/
+    Allocated by task 44:
+     __kasan_kmalloc+0x8f/0xa0
+     __kmalloc_cache_noprof+0x180/0x3a0
+     user_event_mm_alloc+0x3c/0x1f0
+     current_user_event_mm+0x88/0x1d0
 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index c7cdbb3e4aa68..474ca86ec105e 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-[ ... ]
-> @@ -2035,25 +2035,6 @@ extern void __set_task_comm(struct task_struct *ts=
-k, const char *from, bool exec
->  	__set_task_comm(tsk, from, false);		\
->  })
-> =20
-> -/*
-> - * - Why not use task_lock()?
-> - *   User space can randomly change their names anyway, so locking for r=
-eaders
-> - *   doesn't make sense. For writers, locking is probably necessary, as =
-a race
-> - *   condition could lead to long-term mixed results.
-> - *   The strscpy_pad() in __set_task_comm() can ensure that the task com=
-m is
-> - *   always NUL-terminated and zero-padded. Therefore the race condition=
- between
-> - *   reader and writer is not an issue.
-> - *
-> - * - BUILD_BUG_ON() can help prevent the buf from being truncated.
-> - *   Since the callers don't perform any return value checks, this safeg=
-uard is
-> - *   necessary.
-> - */
-> -#define get_task_comm(buf, tsk) ({			\
-> -	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
-> -	strscpy_pad(buf, (tsk)->comm);			\
-> -	buf;						\
-> -})
-> -
+    Freed by task 42:
+     __kasan_slab_free+0x43/0x70
+     kfree+0x13a/0x390
+     process_one_work+0x696/0xf90
+     worker_thread+0x420/0xba0
 
-[Severity: Low]
-Does this removal cause a build failure when CONFIG_SECURITY_SMACK is enabl=
-ed?
+The fix simply clears the copied pointer before any possible failure.
+In case of failure, the child then has nothing to free.
 
-There appear to be remaining callers of get_task_comm() in the Smack securi=
-ty=20
-module that were missed in this treewide replacement.=20
+Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
+Cc: stable@vger.kernel.org
+Assisted-by: Codex:gpt-5
+Signed-off-by: Jérémy Jean <Jeremy.Jean@oss.cyber.gouv.fr>
+Reviewed-by: Bradley Morgan <brads@mainlining.org>
+---
 
-For example, in security/smack/smack_access.c:smack_log_callback():
+Change in v3:
+ - Simplify the fix.
+ - Add Reviewed-by: tag as requested. 
 
-    get_task_comm(comm, sad->subj_tsk)
+Change in v2:
+ Move the pointer reset into user_event_mm_dup(), before the first
+ allocation (suggestion by Steven Rostedt).
 
-And in security/smack/smack_lsm.c:smk_bu_tsk_to_obj():
+ kernel/trace/trace_events_user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-    acc, get_task_comm(comm, tsk), note);
-
-Without the macro definition in sched.h, will this result in implicit=20
-function declaration or undeclared identifier errors during compilation?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827-tonyk-long=
-_name-v5-0-5fa843782a00@igalia.com?part=3D1
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 8c82ecb735f4..6b89d225b189 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -868,6 +868,9 @@ void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
+ 	struct user_event_mm *mm = user_event_mm_alloc(t);
+ 	struct user_event_enabler *enabler;
+ 
++	/* On failure, do not free parent's copy */
++	t->user_event_mm = NULL;
++
+ 	if (!mm)
+ 		return;
+ 
+-- 
+2.47.3
