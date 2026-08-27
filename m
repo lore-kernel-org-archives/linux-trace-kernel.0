@@ -1,317 +1,275 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03220411F9E;
-	Thu, 27 Aug 2026 11:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE7447806
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 11:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787830189; cv=none; b=AwATMehF2hiWo/eqPvunYMbeDnB2PRvc1kj57rbSCTi5ut5irfCFkphzQjWydd6vZ1Y5VyHpOSVck6/5F3vs2Fg/uqmQpqygaKeDNzSehpn79Y0SfDXMd3dKUkuqZhvOnbAZcrBZcfQIpaErO2SChvGQ6KiBcrp73++4kEJSNCs=
+	t=1787831870; cv=none; b=F/vjfFSducvRD9BiXw8ujPtXbqnn174D9p6YrgpZnj/ye948HhEs8onaRu2YDdi+mVCQfgG611eaIVnXduAgxzwvhpbgzsQz+vN4lSD8zFgZa8NLx/pd8I5lTrT/GtjgIiwyec0AEPeNMPUV87RGAklnuHeAPOTHKcD43xJ9S9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787830189; c=relaxed/simple;
-	bh=dL9Hq53j7AK0AOUBnePKoquwebpsuw9E9yGah/Y+zwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bA5s3emq50pUtXs+n2g6Rc3pQHeC4m8OSk4yI5hCvE1vi8Rbb98TUkEYgYwIo3LH7LC3EoF3dyCZzRid2ZyYqnLdp6G6RXhCiOPkT6CTzmGeLd3h7gZfYn9uSpOA9jcP0f6zZWMu21IhNo7SKIx6SWLVnFGmKY+IfUDOSW+zBj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afD/2Br+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787831870; c=relaxed/simple;
+	bh=mLsR3CoB9HooxjPW4XTaVX5X7D4EPmWTHz5pDX950lA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DIYHj9dIx/nKxtHv4QXYCxFcnnm85ykSHoX2WDQqamI8hZc2e3uEs9q608CPX2SBIYMyKkk80swQMPtULsgUn2JxJQalr/P69k0hNe5YS32xOHjUQKiPpYcxBDcIExYlGxw+C6Wiz5vvtBZaQAYP9Dqq3WIFzPkZYGMP8FFnP78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aRZwNvGB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afD/2Br+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD83B1F000E9;
-	Thu, 27 Aug 2026 11:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787830187;
-	bh=1y2tOmwASyfw2PTeAqcz8xYEBJBZ7KYSO7CTUxpPkJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=afD/2Br+WbOEN1fBUqTISQXUJgjaTyXQwMzBCHt6fJoEXnAMCJ5VWRlhUqoz70ncF
-	 DAyj6dWtyugehMEFf1ytgne/oSPJPBHDNWb6d2euBJuOTwMateF0NHli29Njxzrbw7
-	 MuFZeGJ54N+xw1LgijsanJHl0gYmyd7gB1MMev4mVKno2ERXqzZPtSVGuORtB+OJBH
-	 WIUMfdOy5vwFS3las9n14WI8uRXveRnroSJcLP8LKxX3UMtYsZJEZ13YW0y7SQi4WA
-	 u+4aSUzHiQECKXGOwvKWLUOq/zq+3cclu8v+RgbPGFX5iG+NdhIuWtC/9Nep12LEcs
-	 0mEXPVFLEjU4A==
-Date: Thu, 27 Aug 2026 12:29:38 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>, 
-	Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Lance Yang <lance.yang@linux.dev>, "Liam R. Howlett" <liam@infradead.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>, 
-	Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Usama Arif <usama.arif@linux.dev>, 
-	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] userfaultfd: decouple fault reason from VMA flags
-Message-ID: <apAdUOa2OfxSmSEP@gremlin>
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-5-3086981b33cf@kernel.org>
- <aoxm4jUrmL1eQlCJ@gremlin>
- <ao1waln1lklfk8th@kernel.org>
- <ao2Qk87AKnMKuNvg@gremlin>
- <ao_qWEcoaIcm1WhE@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aRZwNvGB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787831867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xHYbcYE3IWMVMDhGJSw4Fz4bZAfO8c/vbLtvWLVYVKE=;
+	b=aRZwNvGB7a1zAimpzJcOrIYUpdmcys6pyRpK/7psxy84g5CXrWjULpRD50i3ecbclgioNq
+	9hEiBMNufFZdoHNioMezQtJWqicalwrLjmZZnwurmzyA46nMu/4exvLdeUOkZ/vFSZlFCz
+	aeQzltCKtlJLghe8aHVwLgnmlkDqtSk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-622-4yAe7VYyOEWUfSmPJ3SO0g-1; Thu, 27 Aug 2026 07:57:44 -0400
+X-MC-Unique: 4yAe7VYyOEWUfSmPJ3SO0g-1
+X-Mimecast-MFC-AGG-ID: 4yAe7VYyOEWUfSmPJ3SO0g_1787831863
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c252c2ffeb8so192499566b.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 04:57:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787831863; x=1788436663;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=7HpnvAo/5rchYSAkV+wWSi6+4eRJ80plY8raMVgf7q8=;
+        b=AzTl/YSXGifUyTs/cIvFVt2H0GMeO552MEEZqD52O4fdTAkamS5j8+XXbeCDPwmKRU
+         VKU54BD4DeCWPKg25CBROCQBBtMGi+h5ejtCTxsQ+qsnMfAe9GrvFFYVwzgm2pb0lucm
+         /jRettyejtU7/2GGa0OjFFddiIFSL+WcT2BvpSYYIt1OKDsf/IaetRaCUpdMFtQYlYko
+         pHsyhjGDkR62OMAWJ+ZqNw9cuDu0C0Gh/ggFxdZON6pwbh1FQ74kzltotL/NlO/CbWWl
+         l87vZALRIFpRF2Wi5nbk3vZpLETo/nV7anFpvyPzHu2uDjgs2EmXcM1/xnTsWXWEKpVD
+         JemA==
+X-Forwarded-Encrypted: i=1; AHgh+RrcOKCa/wcGfd/UnTjpoRxXFu6JvmZbnshDz3tLMKfAKmAYDFCQO1bPWGKtUpI0hLZT+CSeZN1xiPY52Q+jeseorak=@vger.kernel.org
+X-Gm-Message-State: AFuF++kscw6E76dqRCTjsKo5o1Q4kKIzeBuFx0d7l3NXmDMOXfZREe+u
+	xrrhdVd0/p8IV3xo/XnIaglV0H3Va1ubZ9m8r24ztOWEuRe0Jx7EMBZcF6HedXxhl82iKGMxAiG
+	NrXb82ImO5p6PoFcbJ2Wgv7rNrxkbBiLrO13jIlYFESU5RDUEASe8ypWINUqKazvSGeUleqTY+Q
+	==
+X-Gm-Gg: AR+sD130Y7njPSR+sV/HiT8gGpaookmvsDIkDZ7gbxk9i6MAGkRUr3hnevdbOAZfxVO
+	kKkQveDlyvdNj/7UkcWOSyw3DSb4tPv3qTHQWtbubCogYaZQ7UU5tSSD9VBecDPI/xB6pClIGne
+	7BUPLfoO0TmokRub1ajhFwt2PWj2jkh21h7Vbo5f1qrfTiweEGZeTitwOAGi/ADVLsPP4OABRrD
+	J3lEA2UXY7bkEKkt/wQeFGJ4f2kH3+3mrB74pLfD2m7H7TBI1MxC5GU2avIfsglilafnYzbmU0L
+	QZix5EfWWn69lzocGKZsZtZXZLVzuv0i1CezLtZRDFcvTsdnNCrF4yrFPXVkjCoVGnZgzlz3ah5
+	ZfSEhjec2rNBG5dM7WRBNYJpC/+abFEUmwdPljQ2bOD0D3Ia58Nm7prZkmkWMikFEmgr+Vw==
+X-Received: by 2002:a17:907:6d1a:b0:c19:45e3:2f57 with SMTP id a640c23a62f3a-c250c4b3348mr1308156566b.9.1787831862799;
+        Thu, 27 Aug 2026 04:57:42 -0700 (PDT)
+X-Received: by 2002:a17:907:6d1a:b0:c19:45e3:2f57 with SMTP id a640c23a62f3a-c250c4b3348mr1308152766b.9.1787831862331;
+        Thu, 27 Aug 2026 04:57:42 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c250a72d6dbsm651105666b.24.2026.08.27.04.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 04:57:41 -0700 (PDT)
+Message-ID: <989570aacd3e23acd67a25178a00dc6ed6f2b522.camel@redhat.com>
+Subject: Re: [PATCH v6 1/9] rv: Introduce DA_MON_ALLOCATION_STRATEGY
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 27 Aug 2026 13:57:39 +0200
+In-Reply-To: <30a9acb1cd8a634aed04b28701ff29837ec2f124.1787243842.git.wen.yang@linux.dev>
+References: <cover.1787243842.git.wen.yang@linux.dev>
+	 <30a9acb1cd8a634aed04b28701ff29837ec2f124.1787243842.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ao_qWEcoaIcm1WhE@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: e_tPEyNiAB2UFxyil-gPc3yheaAIic74yjLyY-8VoAQ_1787831863
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 27, 2026 at 10:42:16AM +0300, Mike Rapoport wrote:
-> On Tue, Aug 25, 2026 at 02:00:10PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > I mean you then introduce the same flags again seemingly with different
-> > names as #define's in the next patch... having several sets of flags with
-> > subtly different names seems unwise.
+On Fri, 2026-08-21 at 00:45 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
 >
-> The names are important, the values are not.
->
-> There are two cases that currently use the same VMA_UFFD_* flags:
-> * the way VMA is registered with uffd, i.e. the 'mode' part
-> * the type of the user fault that the generic #PF handler passes to
->   handle_userfault()
->
-> They are related, a fault in a VMA that was registered as MISSING will
-> never pass MINOR to handle_userfault(), but I think it'll be actually
-> clearer to separate them semantically, so that when you read a call site of
-> handle_userfault() it is clear what type of the fault it is and when you
-> parse userfaultfd code you see what modes user wanted for a VMA.
+> +#define DA_ALLOC_AUTO=C2=A0=C2=A0 0
+> +#define DA_ALLOC_POOL=C2=A0=C2=A0 1
+> +#define DA_ALLOC_MANUAL 2
+> +
+> +#ifdef DA_MON_POOL_SIZE
+> +#ifdef DA_MON_ALLOCATION_STRATEGY
 
-OK, thanks for that explanation.
+That's correct, but technically it wouldn't be wrong to also define
+DA_ALLOC_POOL. We could do:
 
-I think summing that up in a comment and definitely the commit message would be
-useful.
+  #if defined(DA_MON_ALLOCATION_STRATEGY) && DA_MON_ALLOCATION_STRATEGY !=
+=3D DA_ALLOC_POOL
+  #error "DA_MON_POOL_SIZE implies DA_ALLOC_POOL"
+  #endif
 
-Also potentially gathering all this kind of state and putting it in mm.h or
-mm_types.h would be nice too.
+Then the next define shouldn't be an issue because the preprocessor
+doesn't complain on multiple /equivalent/ definitions.
 
-I say this elsewhere but I do think userfaultfd_k.h is a bit of a confused
-mess and we shouldn't make things more confusing by wanting to keep state
-explicitly there.
+No big deal if you prefer it like this though.
 
->
-> > > > Anything that is parameterised by enum uffd_reason that combines flags will
-> > > > break any switch statement in there and yada yada.
-> > > >
-> > > > I wonder if better just as #define's + unsigned long or something?
-> > > >
-> > > > Or you could do (and this leads to nicer stuff later):
-> > > >
-> > > > 	enum uffd_reason {
-> > > > 	     USERFAULT_MISSING_BIT = 0,
-> > > > 	     USERFAULT_MINOR_BIT = 1,
-> > > > 	     USERFAULT_RWP_BIT = 2,
-> > > > 	     USERFAULT_WP_BIT = 3,
-> > > > 	};
-> > > >
-> > > > 	#define USERFAULT_MISSING BIT(USERFAULT_MISSING_BIT)
-> > > > etc.
-> > >
-> > > Looks over-engineered to me tbh, if we drop an enum, I'd just
-> > >
-> > > #define FLAG (1 << SHIFT)
-> > >
-> > > and call it a day.
-> > >
-> > > Also see below about aligning with uABI flags.
-> >
-> > See review on 6/6, I'm confused actually why we have several sets of these
-> > flags...
->
-> I can see that ;-)
+> +#error "Define only one of DA_MON_POOL_SIZE or DA_MON_ALLOCATION_STRATEG=
+Y"
+> +#endif
+> +#if DA_MON_POOL_SIZE =3D=3D 0
+> +#error "DA_MON_POOL_SIZE must be non-zero"
+> +#endif
+> +#define DA_MON_ALLOCATION_STRATEGY DA_ALLOC_POOL
+> +#endif /* DA_MON_POOL_SIZE */
+> +
+> +#ifndef DA_MON_ALLOCATION_STRATEGY
+> +#ifdef DA_SKIP_AUTO_ALLOC
 
-Right, I do think in general if experienced(-ish ;) kernel maintainers find
-things confusing, this is _usually_ a signal that things could be made more
-clear in the series.
+Right, I told you not to touch nomiss, but there's no need to maintain
+DA_SKIP_AUTO_ALLOC, we can have the monitor do
 
-Of course not excluding the possibility that I am simply not bright enough
-to figure it out :)
+  #define DA_MON_ALLOCATION_STRATEGY DA_ALLOC_MANUAL
 
->
-> > But in general it seems like these flags (in one form or another) are being
-> > repeatedly referenced, so it's not really over-engineering I don't think to
-> > abstract some of that.
->
-> Again, the bit numbers do not matter, they are the same because it's easy
-> to count from 0. I can make one of those count backwards if it helps :)
+(without any other change), so we can simplify the logic.
 
-I think you're missing the point, but I go into detail with examples in 6/6
-that hopefully clarifies things.
+...
+> +/*
+> + * Per-object teardown hook, called after da_monitor_reset_all() +
+> + * da_monitor_sync_hook() and before hash_del_rcu() for each entry.
+> + * All HA timer callbacks have completed at this point.
+> + * Define before including this header.=C2=A0 Default: no-op.
+> + */
+> +#ifndef da_extra_cleanup
+> +#define da_extra_cleanup(da_mon)
+> +#endif
 
-The enum/bit number/keeping equality stuff was just me thinking out loud,
-the point here is about abstraction and keeping things clear.
+da_extra_cleanup() doesn't belong in this patch, does it?
+You could have a separate patch for this.
 
-I mean, and give me some rope, by your argument, why have
-vma_is_anonymous()? Just check for !vma->vm_ops everywhere right?
+...
+> +/*
+> + * da_create_pool_storage - pop a free pool slot and insert it into the =
+hash.
+> + *
+> + * Returns the new da_monitor, or NULL if the pool is exhausted.=C2=A0 F=
+inding
+> + * an existing entry for the same id fires WARN_ON_ONCE (double-start bu=
+g).
+> + *
+> + * Caller must hold an RCU read-side CS and the monitor's serialisation =
+lock.
+> + */
+> +static inline struct da_monitor *
+> +da_create_pool_storage(da_id_type id, monitor_target target,
+> +=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct da_monitor *da_mon)
+> +{
+> +=09struct da_monitor_storage *mon_storage, *existing;
+> +
+> +=09if (da_mon)
+> +=09=09return da_mon;
+> +
+> +=09mon_storage =3D mempool_alloc_preallocated(&da_monitor_pool);
+> +=09if (!mon_storage)
+> +=09=09return NULL;
+> +=09memset(mon_storage, 0, sizeof(*mon_storage));
+> +
+> +=09mon_storage->id =3D id;
+> +=09mon_storage->target =3D target;
+> +
+> +=09/* Single consumer under the caller's lock; duplicate is a double-
+> start bug. */
+> +=09existing =3D __da_get_mon_storage(id);
+> +=09if (WARN_ON_ONCE(existing)) {
+> +=09=09mempool_free(mon_storage, &da_monitor_pool);
+> +=09=09return NULL;
+> +=09}
 
-Well I'd argue that it is _far_ clearer, self-documents, abstracts the
-_means_ by which a VMA is anonymous (no vm_ops) from the semantics of 'is
-this VMA anonymous'.
+Isn't this check for existing redundant? da_prepare_storage() is always
+called after a da_get_monitor(), so the first check for da_mon is in
+fact validating that we do not already have this entry.
 
-Equally so here.
+It doesn't return NULL because the entire machine doesn't expect two
+different targets with the same id. This doesn't seem to be expected in
+your case either (you WARN), so I think you can easily drop this check.
 
-I actually think it'd not be unreasonable, given how few flags there are to
-have e.g.:
+> +=09hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
+> +=09return &mon_storage->rv.da_mon;
+> +}
+> +
+...
+> @@ -607,21 +723,37 @@ static inline void da_monitor_destroy(void)
+> =C2=A0=09 * pending, we can safely assume no concurrent user.
+> =C2=A0=09 */
+> =C2=A0=09hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage, node) {
+> +=09=09da_extra_cleanup(&mon_storage->rv.da_mon);
 
-	vma_handles_uffd_missing()
-	vma_handles_uffd_minor()
-	vma_handles_uffd_wp()
-	vma_handles_uffd_rwp()
+This one line belongs to another patch, see the comment about
+da_extra_cleanup() above.
 
-Or something like this?
+> =C2=A0=09=09hash_del_rcu(&mon_storage->node);
+> -=09=09kfree(mon_storage);
+> +=09=09if (DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_POOL)
+> +=09=09=09mempool_free(mon_storage, &da_monitor_pool);
+> +=09=09else
+> +=09=09=09kfree(mon_storage);
+> +=09}
+> +
+> +=09if (DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_POOL) {
+> +=09=09rcu_barrier();
+> +=09=09mempool_exit(&da_monitor_pool);
+> =C2=A0=09}
+> =C2=A0}
+> =C2=A0
+> =C2=A0/*
+> - * Allow the per-object monitors to run allocation manually, necessary i=
+f the
+> - * start condition is in a context problematic for allocation (e.g.
+> scheduling).
+> - * In such case, if the storage was pre-allocated without a target, set =
+it
+> now.
+> + * da_prepare_storage - allocate or link per-object monitor storage.
+> + *
+> + * Called only from da_handle_start_run_event(); must run in task contex=
+t
 
-And, as I say in 6/6, you are checking vma_test(vma, VMA_UFFD_BIT) each
-time (or perhaps context != NULL? Not sure if equivalent) now you can
-abstract that and remove duplication.
+Also from da_handle_start_event(), you could use
+da_handle_start*_event() in the comment or even better say "only when the
+monitor is started for the first time", because we still call
+da_handle_start_event() and friends when the monitor is running on
+models where the start event can occur again, but obviously do not
+reallocate (that's what the check for da_mon was for).
 
-And _then_ the weird 'WP but not uffd' case can be self-documented and
-called out like:
+> + * for DA_ALLOC_AUTO and DA_ALLOC_POOL (both take a spinlock_t internall=
+y).
+> + * Subsequent event handlers use da_handle_event() and never allocate.
+> =C2=A0 */
+> -#ifdef DA_SKIP_AUTO_ALLOC
+> -#define da_prepare_storage da_fill_empty_storage
+> -#else
+> -#define da_prepare_storage da_create_storage
+> -#endif /* DA_SKIP_AUTO_ALLOC */
+> +static inline struct da_monitor *
+> +da_prepare_storage(da_id_type id, monitor_target target,
+> +=09=09=C2=A0=C2=A0 struct da_monitor *da_mon)
+> +{
+> +=09if (DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_POOL)
+> +=09=09return da_create_pool_storage(id, target, da_mon);
+> +=09if (DA_MON_ALLOCATION_STRATEGY =3D=3D DA_ALLOC_MANUAL)
+> +=09=09return da_fill_empty_storage(id, target, da_mon);
+> +=09return da_create_storage(id, target, da_mon);
+> +}
 
-	vma_was_uffd_wp()
+The rest of the implementation looks good.
 
-Or whatever naming would make sense.
+Thanks,
+Gabriele
 
-Hopefully that clarifies my point.
-
->
-> > Maybe can be in wrappers that make it nicer. But really the issue is the
-> > duplication in modes/reasons/flags...
-> >
-> > >
-> > > > > @@ -168,9 +168,9 @@ struct uffd_msg {
-> > > > >
-> > > > >  /* flags for UFFD_EVENT_PAGEFAULT */
-> > > > >  #define UFFD_PAGEFAULT_FLAG_WRITE	(1<<0)	/* If this was a write fault */
-> > > > > -#define UFFD_PAGEFAULT_FLAG_WP		(1<<1)	/* If reason is VM_UFFD_WP */
-> > > > > -#define UFFD_PAGEFAULT_FLAG_MINOR	(1<<2)	/* If reason is VM_UFFD_MINOR */
-> > > > > -#define UFFD_PAGEFAULT_FLAG_RWP		(1<<3)	/* If reason is VM_UFFD_RWP */
-> > > > > +#define UFFD_PAGEFAULT_FLAG_WP		(1<<1)	/* If reason is uffd-wp */
-> > > > > +#define UFFD_PAGEFAULT_FLAG_MINOR	(1<<2)	/* If reason is uffd-minor */
-> > > > > +#define UFFD_PAGEFAULT_FLAG_RWP		(1<<3)	/* If reason is uffd-rwp */
-> > > >
-> > > > Is it worth retaining the same bit indexes as the reasons?
-> > > >
-> > > > Reasons:
-> > > >
-> > > > 	Bit number
-> > > > MINOR	0
-> > > > RWP	1
-> > > > WP	2
-> > > >
-> > > > Page fault flags:
-> > > >
-> > > > 	Bit number
-> > > > MINOR	2
-> > > > RWP	3
-> > > > WP	1
-> > >
-> > > If we go this way, than it must be
-> > >
-> > > #define USERFAULT_MINOR UFFD_PAGEFAULT_FLAG_MINOR
-> > >
-> > > so we won't need to keep them in sync explicitly.
-> > >
-> > > With a caveat of USERFAULT_MISSING that is expressed as "no flags in
-> > > uffd_msg" :)
-> >
-> > Ugh.
->
-> Yeah, and the PAGEFAULT_FLAG numbers are set in stone because it's uABI.
-
-Ack.
-
->
-> > > >
-> > > > With matching flags and unsigned long you could do
-> > > >
-> > > > 	msg.arg.pagefault.flags |= reason;
-> > > >
-> > > > I think?
-> > >
-> > > Almost:
-> > >
-> > > 	msg.arg.pagefault.flags |= (reason & ~USERFAULT_MISSING);
-> > >
-> > > And define USERFAULT_MISSING as (1 << 0) with a comment why it's fine.
-> > >
-> > > I don't feel strongly about it, but my preference is to define reason flags
-> > > independently of UFFD_PAGEFAULT_FLAGs and keep the ifs here.
-> >
-> > And also modes... Again I think fixing that mess somehow is the better way forward.
->
-> Can you elaborate?
-
-I'm talking about the 'mode' naming, which I think we have reached
-agreement upon in 6/6.
-
->
-> > > > > @@ -2793,14 +2793,14 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
-> > > > >  	 * If VMA has UFFD WP faults enabled and WP fault, wait for userspace to
-> > > > >  	 * resolve the fault.
-> > > > >  	 */
-> > > > > -	if (!pte_write(ptent) && (reason & VM_UFFD_WP))
-> > > > > +	if (!pte_write(ptent) && (reason & USERFAULT_WP))
-> > > >
-> > > > I wonder if you could actually
-> > > >
-> > > > You do this quite a lot and they read a bit horribly with the && and & on the
-> > > > same sight-line. With the changes to the enum proposed above you could do:
-> > > >
-> > > > 	if (!pte_write(ptent) && test_bit(reason, USERFAULT_WP_BIT))
-> > >
-> > > I find && and & perfectly readable and adding _BIT defines looks really
-> > > excessive to me.
-> >
-> > Discussed in sub-thread. We'll agree to disagree I suppose.
->
-> Yes, we will :)
-
-See elsewhere.
-
->
-> > > > > @@ -2835,7 +2835,7 @@ static inline unsigned int userfaultfd_get_blocking_state(unsigned int flags)
-> > > > >   * fatal_signal_pending()s, and the mmap_lock must be released before
-> > > > >   * returning it.
-> > > > >   */
-> > > > > -vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
-> > > > > +vm_fault_t handle_userfault(struct vm_fault *vmf, enum uf_reason reason)
-> > > >
-> > > > Hmm what was the 'reason' here before? The flags? Maybe more reason (no pun
-> > > > intended) to keep the values the same?
-> > >
-> > > The 'reason' before was a VM_UFFD_SOMETHING, we really can't keep the
-> > > values the same, but we surely can keep it unsigned long.
-> >
-> > I notice the 'mode' which is not the same as the 'reason' is an unsigned
-> > int in 6/6...
->
-> Didn't you suggest to make 'reason' an unsigned int as well?
-
-unsigned long :) but I think unsigned int is fine.
-
->
-> 'mode' in 6/6 is an unsigned int because if it were an enum it'd require
-> #include <linux/userfaultfd_k.h> in mm_types.h, see the commit message
-> there.
-
-Or we could just move flags out of that horrible header :)
-
-I hate how C headers can force us into difficult decisions that make life
-harder...
-
->
-> > --
-> > Cheers, Lorenzo
-> >
->
-> --
-> Sincerely yours,
-> Mike.
-
---
-Cheers, Lorenzo
