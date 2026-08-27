@@ -1,98 +1,128 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1864F43E9C6
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 09:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1A143BDD2;
+	Thu, 27 Aug 2026 09:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787823586; cv=none; b=o+HKmALNvqI5EPECNskPIEJp5Utv9pZyxTRJ8Hl3ygvVVtdAg75i/D4vUZloWpl8djcCQkiscXPM07Nin5IVjsAScl09zd+ff1b69lUTPYWIUIIA+ZubpsG+xRKkwzRUS8JbrsokklOpy0cYQnE2YWlKypTfHX0JIqsc5uxgxs8=
+	t=1787823989; cv=none; b=D5ZzDFQBLYED6L9iV11kQVmJmrwgAWUSiGFPB6N9vKsYWwGrOPDNXG/PTwAA4c0HAZvhuzPgnaAQWMRNc41P1Rki52n2LIssYlO1h6VoyIg1APi8deMj4ajxbII08rw2m+kpi0/1CtydsKDN644XKDY5XYdnXU+/rUtl7vy0PSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787823586; c=relaxed/simple;
-	bh=5W5UKyeECMIB4+c79LPo3DL88mJVYviB6MmcpaYJxvw=;
-	h=From:Message-Id:Mime-Version:To:Subject:Date:Content-type; b=rAey7DkLSoW/8TZg6ucfatM75jFdr52I7f399ohtvZxU6w+i3omkaygiF1kM2xAqaEJGgQgJ1z6FzGOTHmOWyHJeUWxvc/qKnjFbMsclhCjR5bqxN9khtrNheDo/l/3zhvSaOnnzlQwP9LDFyvdJNwRl/JALQboJKdU2HWsF76g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhSu7isA; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787823989; c=relaxed/simple;
+	bh=dh3vG164APjYii4z2Xh7/2PK1JpXQxJG9m23Lli66T0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ZTmLmzQUtcqrvXuW5MwHeD4wAYJWSf9WPFyeYQFEUDDy64bWw6E7zXBLYSKKbS0t2FWfCZQm7ASrBj1aUSDy5vO9j7ptKtV9tSBA6CnKXeNSG4LIAKIPjhuhOdkEtri/wDvYNSKEk0stJX66VbuOHla3RGuZaFhMxQdEVqN7GFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=YrOJM0cK; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=UvdP5/x/; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhSu7isA"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-448b69cfc6dso2144359fac.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 02:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787823579; x=1788428379; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:date:subject:reply-to:to
-         :mime-version:message-id:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=zwAy60hQUz/Pl3qsjhyILeol+Tb4AzV/M6PmBtD6pqU=;
-        b=ZhSu7isAuM8vRXL4j0p8RZfR55edYbSf+Yc0baTyqCU4J2bPfCnrkMbfGAVst6fux/
-         M0LYKsg3ZNPaxmm/xoJNMFZaoGkosiMGGxxr6Klx5N3ED6jV3yv8qRujuX+tyExboE3T
-         k18OaaT7uiSKen1qnVDVJM+A35KlahPWE6n64SmG7IGxYheUPy04Zv5Tcx8v26s3fZIA
-         1WFXsaVh1J96ogHJ9coQ8kJsTBF08aS2+RyrldGHwQPARrm+yUCt44NmTk8blf+cmwSO
-         FcUJ8QOIyFx04OJ5wfAA0/I2wZSQoIJx1OgboP/nyJKjSpvFUq/n0qn9A8Ztat6IuH1j
-         /6Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787823579; x=1788428379;
-        h=content-transfer-encoding:content-type:date:subject:reply-to:to
-         :mime-version:message-id:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=zwAy60hQUz/Pl3qsjhyILeol+Tb4AzV/M6PmBtD6pqU=;
-        b=lYnvGkyxl5tCAhkPk9SwVpWxctXCjdgK0gWTtpRMCoE/HhTi2o2Vs6GoXHSOWFbAG9
-         NWLGhyAN5BsmZbWQgLtiVFDlUuhD34zlKUNaufhgbP4MNMfzZ34OHyM7Ceu0O4MHVE8K
-         w6suOSImhvwkDjYuXxvqpo6ndecV7xoFqZYb22aTYBbQVOeAASh0NAQj7XmOziz43iQP
-         hkENZzyZLMP+i6+6TvbBFQ9P6w05J0t8LZS41RvfBzNzl/GegwIyYkjGtaJnx0aCx+WS
-         1RN/uYO7KAvKp1Juqzfk4+N7mC3fTxUxqONY2PcMbqLDM7zINh7sBJkvJlCFP/st4PIT
-         Uh1A==
-X-Gm-Message-State: AFuF++k9OB7qTgvetdtWHyXFYJcURnph3IJ7+jTOZBEA0ZW/nclNHuUb
-	Xx72O8RFXdhfSFbCC/mgOAXIU40e8b1uoOF5Dv7VHvDkkW0Kbw5RZ9G6CIH12PIDV/g=
-X-Gm-Gg: AR+sD13Ns4zHyFYy28ntwK8ANRxTVV3IwPiuZpmgOs5vHJWD7LW9b5xfRvltm6WXTWf
-	l+lsfsbFni0kwU4DF+2XVNd58Y0WPa9LsScPPsZBDR8AFnLaxgJwLhq6lMj3Ca/19qFelqvzXjK
-	kB6KNsqSUbDw5EaVGRGExGQ3brLkBdtB3f9b9yALKK4zlm7EGmy5GE1wYfzlQgPZbGQNkmmsA6i
-	ShQ5pSEg1zWFgVKE6T+2we9dmHRdGckJXRi1Xd0Q299Fe3H4AITBoi+QfUXEND+a/++BpY7pyRF
-	CHcGBMB6nWbmeCR4MsKc7yhssEFNydmSqWrl9Oh77RFmpxQmvKSJHFVGldOvIdMEdDb5Ax0Yol7
-	4mWkRfHH/IU9So4tjuU0D0GHMxR+s+rlUqih9I3xdDl2/MmRwwX+yx00qaHCVllc+uZLpDxdsqF
-	TBKUeVHbRAHqMpod/t2gKHpjFyzkSnwl/CPnYLp+TKwFspJ3iQ7hPUulTP2oYVWOZRgjawDn0LQ
-	qEqPvUnJJ38yrVsNF5xDTIsKfo=
-X-Received: by 2002:a05:6820:22cb:b0:6ae:6484:5f40 with SMTP id 006d021491bc7-6b1a049cdb4mr11310338eaf.21.1787823578994;
-        Thu, 27 Aug 2026 02:39:38 -0700 (PDT)
-Received: from [45.62.170.167] ([45.62.170.167])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6b1a253d6e7sm4211371eaf.7.2026.08.27.02.39.34
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Thu, 27 Aug 2026 02:39:36 -0700 (PDT)
-From: Donald Lubeski <miriamrobert97@gmail.com>
-X-Google-Original-From: Donald Lubeski <miriam.robert97@gmail.com>
-Message-Id: <ZJ0ERS2J-RN8K-BKV0-TT4F-0KM4G8BQFSHU@gmail.com>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="YrOJM0cK";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="UvdP5/x/"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1787823929; bh=V2GO/ymiyRXc2KVf5bJHpIK
+	KtBTztJDEc9YYiaIiBy8=; b=YrOJM0cKLUM5HxZ/zfajojwVriXDownnfGzUGlrroFAPxZTp7R
+	xLblzXFdgLYy/okKPJYaDhO5wEHKLp/IKgXBpN1HP1mOc/DL+ef81bWMZFdEMeDV/PiAfcZ6gdh
+	iGSUdwP0NkrSapzQENFpFXo72uHzIQRLT4MvAZVVh7/xWBai+i3RnZZFptYa7gueBZ5EDbB6lmt
+	ZR2zoZStjXC5KFEWTxO95l+UbB6etdCKfIsNixYtK1eecsQdw0gpsSidygoQ3ATMKDjQYlCqfft
+	b3rQVnY8pRXeAOm6cIOLAONlsbk4HEkMJptL/QZqSqcj0CgF4guT+vvQnnIOmArJAgQ==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1787823929; bh=V2GO/ymiyRXc2KVf5bJHpIK
+	KtBTztJDEc9YYiaIiBy8=; b=UvdP5/x//IitHMxRTvfXNjEuA8Defdp7HN40m2+W1/AT9GbF4J
+	saaK/p1cfzPeBxtC5hGf4yxmH62cPEKmJjDg==;
+Date: Thu, 27 Aug 2026 10:45:29 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: =?ISO-8859-1?Q?J=E9r=E9my_Jean?= <jeremy.jean@oss.cyber.gouv.fr>
+CC: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_tracing/user=5Fevents=3A_Clear_c?=
+ =?US-ASCII?Q?opied_tracing_state_before_fork_duplication?=
+In-Reply-To: <faa62ef4d9144b3145a8a6254ac3fea6@oss.cyber.gouv.fr>
+References: <20260826214414.1971632-2-Jeremy.Jean@oss.cyber.gouv.fr> <5B7C72AA-5655-4916-AB17-03A8B94F5D7C@mainlining.org> <faa62ef4d9144b3145a8a6254ac3fea6@oss.cyber.gouv.fr>
+Message-ID: <DAC674C5-A6BE-4D99-9721-2805640BA8A3@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-To: "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>
-Reply-To: proinvstor@gmail.com
-Subject: Management Services
-Date: Thu, 27 Aug 2026 17:39:36 +0800
-X-Bounce-Tracking-Info: <bGludXgtdHJhY2Uta2VybmVsCQkJbGludXgtdHJhY2Uta2VybmVsQHZnZXIua2VybmVsLm9yZwlNYW5hZ2VtZW50IFNlcnZpY2VzCTQzNzEJZGVyCTEyNTAJYm91bmNlCW5vCW5v>
-Content-type: text/plain; charset=iso-8859-1; format=flowed
-Content-transfer-encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-To:  The Executive
+On 27 August 2026 08:15:33 BST, "Jérémy Jean"
+<jeremy.jean@oss.cyber.gouv.fr> wrote:
+>
+>>> diff --git a/kernel/trace/trace_events_user.c
+>b/kernel/trace/trace_events_user.c
+>>> index 2bbc89d4a266..339e18085af3 100644
+>>> --- a/kernel/trace/trace_events_user.c
+>>> +++ b/kernel/trace/trace_events_user.c
+>>> @@ -865,9 +865,12 @@ void user_event_mm_remove(struct task_struct *t)
+>>> 
+>>> void user_event_mm_dup(struct task_struct *t, struct user_event_mm
+>>> *old_mm)
+>>> {
+>>> -	struct user_event_mm *mm = user_event_mm_alloc(t);
+>>> +	struct user_event_mm *mm;
+>>> 	struct user_event_enabler *enabler;
+>>> 
+>> 
+>> Comment?
+>> 
+>> /* Failure must leave the child with no copied state to free. */
+>> 
+>> I mean, okay, you don't got to, but itd be nice, if your happy with it,
+>add
+>> 
+>> Reviewed-by: Bradley Morgan <brads@mainlining.org>
+>
+>I usually don't think about adding comments, but yes, that's a good
+>suggestion.
+>
+>> Maybe you could add this to your memories
+>> 
+>> "The description length should be about the same as the change being
+>> added,unless there is a splat, or something else like a table which
+>needs
+>> to be added to the description, keep the description length the same as
+>> thepatch size, e.g:
+>> 
+>> Instead of doing 3 paragraths about a one liner, we could do a small two
+>> or more line description describing:
+>> 
+>> What causes the issue?
+>> Why is it bad?
+>> How did you fix it?"
+>
+>Sounds like a good practical advice, thanks. Yet in the present case,
+>since there is a security issue with the UAF, I felt that it was
+>important to explain where it came from instead of something very
+>short along the lines ("fixing a UAF"), hence the couple of paragraphs
+>and the KASAN output.
+>
 
-We are seasoned Independent Capital Advisers to a high net-worth Private In=
-vestor Pool ready for long term capital partnerships of any size, in any pr=
-ofitable industry and with business owners, and project promoters who are s=
-eeking growth capital, acquisition funding, or long-term Capital solutions=
-=2E Referral commission to capital brokers for any successful partnership i=
-s also available=2E  Contact us by email for details and immediate consider=
-ation=2E
+umm, you could include a ASCII table or something, that signifies the bug?
+
+>Anyway, noted, and here is a shortened version that skips some details:
+>
+>Clear the child's user_event_mm pointer before duplication so that a
+>failure in user_event_mm_alloc() cannot leave the inherited parent
+>pointer in place, which otherwise triggers a UAF.
+>(+ KASAN output)
+
+Hmm, I'm iffy on this,
+
+As in, You saying "which triggers a uaf"
+
+Wait no, that does sound right, yeah that's fine, you don't need to su
+Bmit
+a v3, since the length is fine, but yeah.
 
 
-Donald Lubeski
-Independent Capital Consultant
-Global Services
+>I will send a v3 if you feel that's good enough.
+>
+>Regards,
+>Jérémy
 
-
----------------------------------
-Donald Lubeski
-Independent Capital Consultant
-Global Services
-
+--- Thanks!
+https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
