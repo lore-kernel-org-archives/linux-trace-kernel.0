@@ -1,185 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59BC3B38BF;
-	Thu, 27 Aug 2026 08:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A52E3CBE6F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 08:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787818236; cv=none; b=DiRDaYgdwoLuGRabC//7PrlOaVGim/UsLyntH4g+gtnYqBhkpyia4DGPIly0p2EISx0a8sDXxEbeEII4JsL0uiGTXNULyc2y114x/h4ndJcsVZ6oce6u+5Z1bin3zVBSTOJaYn1+RFN0uoESo8GaG83WgnG7lOaOwJRhahfZ63Q=
+	t=1787818717; cv=none; b=JKvzKCATty3H2Ur9Upz6emw7B4KJf5Mt3OgvKTX7G1RDe2Tu8RdptQPkXR9VgtDmoIrS021uXPCWE/NIYh9laZJ7hr870j/MWZl9qgH0LwKDRm9veyNP9x3H2PL2oLPB6bs2IkLfXwwsPi/mTqrAl6BZ+xKfECZcSn3UHcRMgjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787818236; c=relaxed/simple;
-	bh=f2YLykpxlpJ4GMyj8KmbX12yBlJxyZunxPtC+70Jdy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WH4uN43a+NV0qbLtVhQWkK7HkeM2jC7q99MFiyjLUaF4T4zUzp3Bp9tiImir7bXTd8cvSqhxk37Mq0rjW16fwbzPk5acSX9h1PZqFm7QUxpGt8NcoN/4FTU41xvim/968dWLk8mIX9vkJyxWYXNVok3FkPAYyVKsyW4gCXsIGMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AODPS2N8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787818717; c=relaxed/simple;
+	bh=+f0CNIxvIeYqfF1de6wzqTeVVwJY0SE8+kB5zidrYPs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZTZMTbGFPR+iNhH3rEnplKIk1Vlqp3Lx1wthq8J5JgaKuSZnQwIyoHjBixF05BUyMdrF5J69ph+X4enj5xeKzHBAaPmOZylT8Xb09djT5QYxKihhRJAQavPCLs+W0As7iRDuEylXqolWSFhw9tOZzc9WaF2lCDB416Vfol8MYK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SpNESQ4F; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AODPS2N8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850CF1F000E9;
-	Thu, 27 Aug 2026 08:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787818235;
-	bh=HwBoRCj9MIATU2Qil8eVnmnQigb4zkTVmy3cTirRlBk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=AODPS2N8Z6i40bV0jaUFc2PuvLy4MqHjmeqaz4bIOilDBIarfveD10jTbTdIkd2iQ
-	 td7570nLQ0oCM7k5JCPCOMM4nYs/HUuVSnY7FjRcD5phtnS6eXpkJG2rTe671lm6RI
-	 coQQZWHQV6DQ22IS7lhT2hTwxa/SQsVzogDIvAvHM7e3TGvPmCV+jy0j/bRVCrn4DB
-	 +D6NjQcrY1HKk31ONHwzhCcVH1OmkqlNutD4cj45ua7LpeiJ+9OVN2VrbkoMMue4Cd
-	 iSMdxUiqVZvku+Su9hCtOaGBeZVtoEdxYentNKnACiFe+45NXWKaMtpYXCZkSQeNgf
-	 GxMfYHTbrqzCw==
-Message-ID: <e8aaddde-0a07-4197-9874-5ca0ea8af43f@kernel.org>
-Date: Thu, 27 Aug 2026 10:10:24 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SpNESQ4F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787818714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=+f0CNIxvIeYqfF1de6wzqTeVVwJY0SE8+kB5zidrYPs=;
+	b=SpNESQ4FTm0EOCkcTScKpjgxHbINKZ1pXZZV44lgUh61g5nAKOSgoBr/RyjZk2E3sRNTjx
+	1s5UeCKc+PH4lkXZYsq1BfGuNV/PHnsOjg05qZnD2xf4xri92Ci39heDRDgJR14Gj+l/O9
+	1THOh23VDpltV14mfpNhJHntUtEYhBA=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-624-zgYsRDTZM1u3BoZJCKBG3g-1; Thu, 27 Aug 2026 04:18:33 -0400
+X-MC-Unique: zgYsRDTZM1u3BoZJCKBG3g-1
+X-Mimecast-MFC-AGG-ID: zgYsRDTZM1u3BoZJCKBG3g_1787818712
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-6a5e9603d71so615826a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 01:18:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787818712; x=1788423512;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=+f0CNIxvIeYqfF1de6wzqTeVVwJY0SE8+kB5zidrYPs=;
+        b=VA9/RVpoaqPjwk4DVM0MgrbQMDAbEYuXCfO91RaLxCLLw1bInBuGA/o2T6XeMkq21p
+         a6QXZ0f75I8qW4rOlUsJFm7x9ookEd4wKVjxOL8JaYO+koy87ov37AOYUGgnokbqgDlv
+         jvEQTjW6EMsvnTzXfFa88AnPlzkSJWnfsYZt8f8K0WUFSohRWCrUlh8L7QyASv5458T4
+         x2tjZQYGBW9riWDGmilPWwnkhmhytCQmGpgKYt/Qsv66CXZzurcLJrn+92tVp46Jsqe0
+         WE5bHuHMyQ+zzY4XimLnUvRL0Ak7kXutOAhwLMwbWxY/tMGZnNXTSpyeRLgYuMn1PuCG
+         yaOg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp4KxczrhpzrCfa8UBITONRwaiB9zs6a3+NIqSmk3O6FZFXQptYHnfPbUE2kZiIg78z6ZZcVWhP6FtabL3cHKMpGQo=@vger.kernel.org
+X-Gm-Message-State: AFuF++kqbAVqZq4kzGB2iSqp65FKc76l/8M9wUJj3JzEIc0Fg8IONjFB
+	j2ewn4WEYWIwQtbznLBmVUaKMmPk2+cYIAP6Ua8fl8KvnvszbXhobjn0jVY8zbF5UeadIabBQJH
+	G0wVRSjbHzCb1e+pODyP2H5AMciCnDQD2YeWBz1jyg/fqEU3I6NHhhBdXbbjnLn+05uN+0D9zDp
+	wGE8Kwx+Qk
+X-Gm-Gg: AR+sD12DrvZwCZEnKyD7lAbGd3QUgkBa9YjMGsDsGQDJmg7RfUhz+uMsdkK0Y1Gs6b7
+	NIBQgPOBCMyiUf8FK2FPm3NkUbYkWQp2iVlz4J9j0BkRI77lhQXZ4wG2IScLnSjgrSAHSoozKwr
+	zahxHaiN6TxDAEOSwh6MG6zhlCT9X5IbKzxc+d7KpWoCpWLF2W5AInPQrk2JxUaFkJ5ouxrIxBg
+	eJLd5C71hdDEXoQ0ecG94U7AFwX98X2Gq+zPsP6uAhGkvJmNDvunFxZgtTbtWs5Jin9mbEOpwMM
+	VE1M6P25UpO6F42uh1xPwJnaeoufKQtIhwGtbyZsdMabQOHqtJKR/UQpBp/dMQG6DwqmIyrjIfF
+	C0qwTEsRPji0Xg4kxbXsIW5ka1mJUxQzA4FK0MnomCEhcRqO+gJD1r7DTnmaPFC/Sog4diQ==
+X-Received: by 2002:a17:907:c084:b0:c24:6382:2648 with SMTP id a640c23a62f3a-c2535f4bc77mr425514766b.5.1787818711794;
+        Thu, 27 Aug 2026 01:18:31 -0700 (PDT)
+X-Received: by 2002:a17:907:c084:b0:c24:6382:2648 with SMTP id a640c23a62f3a-c2535f4bc77mr425510966b.5.1787818711265;
+        Thu, 27 Aug 2026 01:18:31 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c254ab6e16csm4939666b.11.2026.08.27.01.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 01:18:30 -0700 (PDT)
+Message-ID: <40084ae4b7139fc20543a8989cdc349cf9b6bcdb.camel@redhat.com>
+Subject: Re: [RFC 0/3] rv: per-edge dwell-time statistics for per-cpu
+ monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Tobias Schaffner <tobias.schaffner@siemens.com>, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>,  Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jan Kiszka	
+ <jan.kiszka@siemens.com>, Philippe Gerum <rpm@xenomai.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 27 Aug 2026 10:18:29 +0200
+In-Reply-To: <20260827072400.45734-1-tobias.schaffner@siemens.com>
+References: <20260827072400.45734-1-tobias.schaffner@siemens.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] userfaultfd: decouple fault reason from VMA flags
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Barry Song <baohua@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>,
- Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
- Lance Yang <lance.yang@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt
- <rostedt@goodmis.org>, Suren Baghdasaryan <surenb@google.com>,
- Usama Arif <usama.arif@linux.dev>, Vlastimil Babka <vbabka@kernel.org>,
- Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-5-3086981b33cf@kernel.org>
- <5bb86e34-6196-4b50-b553-be2ff7c1fa32@kernel.org>
- <ao_sCh5zP0IC9H2S@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
- ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
- AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
- 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
- g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
- ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
- 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
- /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
- jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
- DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
- HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
- 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
- LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
- 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
- VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
- /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
- iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
- 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
- zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
- azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
- FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
- sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
- 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
- EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
- IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
- 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
- Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
- sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
- yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
- 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
- r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
- 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
- CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
- qIws/H2t
-In-Reply-To: <ao_sCh5zP0IC9H2S@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: YbCk3zG2b5glbfL2QULRc4qgiV95PhCTFK2H6yEmEPY_1787818712
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/27/26 09:49, Mike Rapoport wrote:
-> On Mon, Aug 24, 2026 at 04:46:14PM +0200, David Hildenbrand (Arm) wrote:
->> On 8/23/26 14:17, Mike Rapoport (Microsoft) wrote:
->>> Introduce enum uffd_reason to define reasons for user faults rather than
->>> overload VM_UFFD_* VMA flags for that.
->>>
->>> Using a dedicated enum makes the code clearer and decoupling the fault
->>> reason from VMA flags clears the way for moving the uffd mode bits out
->>> of VMA namespace.
->>>
->>> No functional change.
->>>
->>> Assisted-by: copilot:claude-opus-4.6
->>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->>> ---
->>>  include/linux/userfaultfd_k.h    | 16 ++++++++++++++--
->>>  include/uapi/linux/userfaultfd.h |  6 +++---
->>>  mm/huge_memory.c                 |  6 +++---
->>>  mm/hugetlb.c                     | 10 +++++-----
->>>  mm/memory.c                      | 10 +++++-----
->>>  mm/shmem.c                       |  4 ++--
->>>  mm/userfaultfd.c                 | 30 +++++++++++++++---------------
->>>  7 files changed, 47 insertions(+), 35 deletions(-)
->>>
->>> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
->>> index 45355bdb4ec7..f401623f315d 100644
->>> --- a/include/linux/userfaultfd_k.h
->>> +++ b/include/linux/userfaultfd_k.h
->>> @@ -9,6 +9,18 @@
->>>  #ifndef _LINUX_USERFAULTFD_K_H
->>>  #define _LINUX_USERFAULTFD_K_H
->>>  
->>> +#include <linux/bits.h>
->>> +
->>> +/* Fault reason #PF handler passes to handle_userfault() */
->>> +enum uf_reason {
->>
->> Can we just call this "userfault_reason" or "uffd_reason" ? Maybe the latter is
->> actually what we want?
-> 
-> userfault_reason sounds better to me.
-> 
-> It describes what kind of user fault we are handling and the 'fd' part has
-> nothing to do with it. 
-> We do use uffd as a short name for the subsystem, but still most if not all
-> userfaultfd "external" APIs use userfault_ prefix.
-> 
-> uf_ was an attempt to make it wee shorter :)
+On Thu, 2026-08-27 at 09:23 +0200, Tobias Schaffner wrote:
+> Hi Steven, Gabriele,
+>=20
+> I am using the RV system for a downstream project called EVL (aka Xenomai=
+4).
+> It is a small co-kernel system, small enough that I can model the whole
+> co-kernel with RV instead of just a fragment of it.
 
-Yeah, I got that; while uffd is a known acronym, the uf_ not so much (and also I
-wouldn't suggest it to become a thing, lol :) )
+Hi Tobias,
 
-I've been wondering for a while whether it really should be called
+Haven't heard about Xenomai in a while.. That sounds very interesting.
 
-	handle_userfault()
+Since it's something out-of-tree you likely don't want to submit monitors
+upstream, but if you can trigger BPF events from your co-kernel you may wan=
+t to
+have a look at RV BPF monitors, which I'm likely going to submit in a coupl=
+e of
+days.
 
-And not instead
+Otherwise we can always get out-of-tree monitors as modules, currently not
+supported just out of a missing use-case.
 
-	handle_userfaultfd()
+> The patches in this series add a per-monitor "stats" file that exposes ho=
+w
+> often an edge has been visited and the dwell time in the prior state for
+> per-cpu monitors.
 
-Or maybe even better
+The idea crossed my mind a few times, good you came up with an implementati=
+on!
 
-	handle_uffd_fault()
+> This allows me to not only check if the model is correct but also to see =
+if
+> all paths are exercised by my stress tooling and to decompose the latency=
+ of
+> the co-kernel's wakeup path.
 
-And then have
+Your first need (see if all paths are exercised) doesn't really require the=
+ stat
+to be per-monitor-instance (i.e. per-cpu) right?
+You could have a global accumulator matrix, at least for count and sum wher=
+e you
+can be atomic. This could extend the feature to other types of monitors.
 
-	uffd_fault_reason
+Just brainstorming here though.
 
-... but just a thought.
+> I think that some of the upstream monitors like e.g. the sts monitor coul=
+d
+> also
+> profit from this.
+>=20
+> As an example, here is the sts monitor on a StarFive VisionFive2 running =
+an rt
+> kernel (isolcpus=3D2-3), after enabling it and generating some scheduler =
+load.
+> Only the edges the automaton actually takes are non-zero:
+>=20
+> =C2=A0 # cat monitors/sched/sts/stats
+> =C2=A0 # cpu edge label count max_ns sum_ns
+> =C2=A0 0 0 can_sched:irq_disable 367732 3998500 14773091250
+> =C2=A0 0 4 can_sched:schedule_entry 40282 398750 45510750
+> =C2=A0 0 7 cant_sched:irq_enable 367732 32500 532791750
+> =C2=A0 0 8 cant_sched:irq_entry 26188 6250 38357250
+> =C2=A0 0 13 disable_to_switch:irq_enable 4933 12500 12275000
+> =C2=A0 0 14 disable_to_switch:irq_entry 31 2250 35250
+> =C2=A0 0 15 disable_to_switch:sched_switch 35373 26750 111615750
+> =C2=A0 0 18 enable_to_exit:irq_disable 373 3250 649750
+> =C2=A0 0 19 enable_to_exit:irq_enable 373 20000 1676250
+> =C2=A0 0 20 enable_to_exit:irq_entry 309 4750 420000
+> =C2=A0 0 23 enable_to_exit:schedule_exit 40298 3000 37335000
+> =C2=A0 0 25 in_irq:irq_enable 31 12250 140750
+> =C2=A0 0 30 scheduling:irq_disable 40337 18000 45449500
+> =C2=A0 0 37 switching:irq_enable 35373 9250 72471000
+> =C2=A0 [ cpus 1-2 omitted ]
+> =C2=A0 3 0 can_sched:irq_disable 567 3983750 300860250
+> =C2=A0 3 4 can_sched:schedule_entry 150 1500 171000
+> =C2=A0 3 7 cant_sched:irq_enable 567 21500 1777500
+> =C2=A0 3 8 cant_sched:irq_entry 76 6500 164750
+> =C2=A0 3 15 disable_to_switch:sched_switch 150 4250 413750
+> =C2=A0 3 23 enable_to_exit:schedule_exit 150 1500 147750
+> =C2=A0 3 30 scheduling:irq_disable 150 1500 166000
+> =C2=A0 3 37 switching:irq_enable 150 3750 277000
+>=20
+> The sts model splits the schedule->switch path into separate states, so t=
+he
+> per-edge dwell decomposes the scheduler's interrupts-off window: on cpu0 =
+the
+> prep phase (disable_to_switch, irqs off until the switch) tops out at 26.=
+8us
+> and the switch itself (switching:irq_enable) at 9.3us, over 35k switches.=
+ The
+> counts also line up with the model, e.g. every irq_disable in can_sched h=
+as a
+> matching irq_enable in cant_sched (367732 =3D=3D 367732). The isolated cp=
+us 2-3
+> take almost no switches (150 on cpu3, versus 35k on cpu0) and their worst=
+ case
+> is tighter still (~4us), so the same file also makes the effect of cpu
+> isolation visible per cpu.
+>=20
+> The changes are gated by CONFIG_RV_EDGE_STAT and dormant until a monitor =
+is
+> enabled, so existing setups are unaffected. When enabled, each accepted
+> transition adds one local_clock() and a few lock-free local64_t updates. =
+With
+> the config off there is no code on the hot path at all.
+>=20
+> I focused on per-cpu monitors as a first step. Per-task and per-object
+> monitors would have to aggregate entities that share a cpu, which is hard=
+er
+> to get right, so I left them out for now.
 
--- 
-Cheers,
+As said before, I haven't really played with an implementation but I think
+atomic types may help here.
 
-David
+> What is your opinion on this? Do you think this is worth getting upstream=
+ed?
+
+I will have a look at your patches but it's definitely something I'd want.
+
+Thanks,
+Gabriele
+
+>=20
+> Thanks for taking a look,
+> Tobias
+>=20
+> Tobias Schaffner (3):
+> =C2=A0 rv: add per-edge dwell-time statistics primitive
+> =C2=A0 rv: add per-monitor edge-stat facility and stats file
+> =C2=A0 rv: collect per-edge dwell time for per-cpu DA/HA monitors
+>=20
+> =C2=A0.../trace/rv/runtime-verification.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 24 ++++
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0=C2=A0 1 +
+> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 18 +++
+> =C2=A0include/linux/rv_edge_stat.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 60 =
++++++++++
+> =C2=A0include/rv/da_monitor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 53 ++++++++
+> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 11 ++
+> =C2=A0kernel/trace/rv/rv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 116 +++++++++++++++++-
+> =C2=A0tools/testing/selftests/verification/config=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 1 +
+> =C2=A0.../verification/test.d/rv_edge_stats.tc=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 32 +++++
+> =C2=A09 files changed, 315 insertions(+), 1 deletion(-)
+> =C2=A0create mode 100644 include/linux/rv_edge_stat.h
+> =C2=A0create mode 100644
+> tools/testing/selftests/verification/test.d/rv_edge_stats.tc
+
