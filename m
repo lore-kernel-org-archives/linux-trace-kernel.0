@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76720361657
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 18:35:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91712D7D47
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 18:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787855757; cv=none; b=K/Tx4q4u+75q1LzIuuIGqN1vzvB4MTslk05RJvTX7r6KwlBkwYmQMNRg9ZqTamoAy58gfMwh3dDumhtWoutqTzKQEaDXszrUEx4WQekETtLEQ63KPNUYsQPiFNp632I51+GJHFYut39oojP3xvqb+D2JZY4NBXt5XSfHNXdY3kU=
+	t=1787855817; cv=none; b=Ns4snYK1S1NE/nz3Y9/0W28dgED5QK/Tcf5euc8iONus+k0rflRP2Fd8oCtLcDWhCYCnfCuhNWyN2iCi2hSkpVSAHVgSI8xxD1iOBMmt2Sg+D+8VHAFHdOQby67zg156M4B7bVPR4+WSR/v8uB5jKRj4UjMp2kC0D5Mt1P+9HcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787855757; c=relaxed/simple;
-	bh=p3dPFm7loSI8i0vucRQlkJOclXOQdsr8iqtU1ektu5Q=;
+	s=arc-20240116; t=1787855817; c=relaxed/simple;
+	bh=Iy8xrmf1SWQFo2w0jaLUVe43ClEa/SfnzDLOGmtq+jQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Cpd+VXStGe+Cs6sHL3tjtdIsaSklVjAJAM2e5R3/UonbxNe83Sk91VxPAYcezDQXLWBexDLnL8k2JOnQOCEWDY63EzBFDkyi0yI2eSq9ulby7jlvM3/vQ4VKok/5Tt8iBMSSkhS9Yylb4AkbIL1wT7+Aj1s9q7fMsK3q2HkyTUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fo5aE1X0; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=jgLt7pcYsSI1phUrBgSD9A/OQPbUFHZIxgR/4pBdN/qdRnC9SD1TB8Xpl/SyLC4zSK/4xYE9WC7lLYq5jQlinO2CfG4M3PWzycJD9P9W1qwGJ0rcki2hWgPUA7WPHtpnt33tl6sxEc0EwDsxGNXgErQq8ZpP05r1deaAg8YgvQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWnSyATA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fo5aE1X0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB271F000E9;
-	Thu, 27 Aug 2026 18:35:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWnSyATA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE191F000E9;
+	Thu, 27 Aug 2026 18:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787855754;
-	bh=tm7W2lqC2dFXA58QDZbEbRfNyKe/U+XsePBWKbTcxTk=;
+	s=k20260515; t=1787855815;
+	bh=EHCzwAo+5DVA6fK+mycltX86tNdg36OxZJHBphUT4KY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fo5aE1X0iUPvEucYE8rKy1x+Bkm05NlQb4Xl+gP7th/jcj9PW4dF/piwk+yxVVb+d
-	 KiUB8ntHYOZPN+26nDn6PzyL1AW1ICJyENgPav+wmx58ibTy86ldR8dAwkOC3NGXgh
-	 ZQ45JF8b9Cbkg/pvXf9+cHoiLv9cV5r7o4tV95pCv9rPQTxuoI+XofF9idy3af+0uZ
-	 OrDTphsoBYyadK3f5sainqMfVQGXUPzWkJu7sL/fs6ztMeOYz7LJs+UaWKrzViOuWK
-	 Tpng3ZQiXw0llBIHmFsxd5jJS4kGrKR3j/Hg2hHQa9cgRgjQF7QIzrAz0dqlUBdUk0
-	 oV3jGlPetqRcw==
+	b=GWnSyATAPy26+nROpHs6MTbjtCHHzrNCXsIacUovFUxnRaFKDSzVbRFEvAuyCR10o
+	 kLdpM0x6BBwwAqxF8vDpGTJYqXjDLEuXmmn7X0Et94vHUcI2OzxFvLgaD8j398TpFs
+	 O0xo23SF8Vss3jGPYlSdehXZHar+p3PG2xns+JXnWnPAmfZGXS1ozLvl5LVXjWErke
+	 6BNh/1SqL2wwJoilUYrk7bXeY3DWmfbws723bPLcStcXow7mX3fE6kbSoSym4mCgSS
+	 8Og4JJ+VG0Y/nBKv5VGgv8Ql/w0IMKAEomZPwoJ8w1UBqABH+zdtKy9XRUQFbpimvb
+	 X+/oQMaVWgW6Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/6] treewide: Replace memcpy(..., current->comm)
- with copy_task_comm()
+Subject: Re: [PATCH v4 1/4] rv/reactors: use LD_WAIT_SPIN as the reactor
+ lockdep wait type
 Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@igalia.com>
+To: wen.yang@linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260827-tonyk-long_name-v5-2-5fa843782a00@igalia.com>
-References: <20260827-tonyk-long_name-v5-0-5fa843782a00@igalia.com>
- <20260827-tonyk-long_name-v5-2-5fa843782a00@igalia.com>
+In-Reply-To: <7bfe97bd497a2641de36b35e17f69e6f3f291c2a.1787854397.git.wen.yang@linux.dev>
+References: <cover.1787854397.git.wen.yang@linux.dev>
+ <7bfe97bd497a2641de36b35e17f69e6f3f291c2a.1787854397.git.wen.yang@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Aug 2026 18:35:54 +0000
-Message-Id: <20260827183554.8BB271F000E9@smtp.kernel.org>
+Date: Thu, 27 Aug 2026 18:36:55 +0000
+Message-Id: <20260827183655.6EE191F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,53 +47,72 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The treewide replacement of memcpy() with copy_task_comm() misse=
-d a tracepoint in the BPF test module.
+- [Low] The documentation for reactor locking rules was added to the wrong =
+file (`monitor_synthesis.rst` instead of `runtime-verification.rst`), causi=
+ng an inconsistency between the commit message, source code comments, and t=
+he actual documentation.
 --
 
-commit 0b4391937405bf7ef33f5ddc8cc5b7e81c93d587
-Author: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+commit 26073218a7c3b83225869704d414a262b5e15e47
+Author: Wen Yang <wen.yang@linux.dev>
 
-treewide: Replace memcpy(..., current->comm) with copy_task_comm()
+rv/reactors: use LD_WAIT_SPIN as the reactor lockdep wait type
 
-This patch replaces treewide instances of memcpy() copying task->comm with a
-new copy_task_comm() function. This ensures the destination buffer is always
-NUL-terminated, preparing for future extensions of the task command name
-length.
+This commit changes the lockdep wait type override in rv_react() from
+LD_WAIT_FREE to LD_WAIT_SPIN to prevent spurious "Invalid wait context"
+warnings. It also adds documentation explaining the reactor locking rules.
+
+> diff --git a/Documentation/trace/rv/monitor_synthesis.rst b/Documentation=
+/trace/rv/monitor_synthesis.rst
+> index 2c1b5a0ae1545..aab4b0342d5f5 100644
+> --- a/Documentation/trace/rv/monitor_synthesis.rst
+> +++ b/Documentation/trace/rv/monitor_synthesis.rst
+> @@ -365,6 +365,26 @@ but higher overhead. The timer wheel (``HA_TIMER_WHE=
+EL``) is a good alternative
+>  for monitors with several instances (e.g. per-task) that achieves lower
+>  overhead with increased latency, yet without compromising precision.
+> =20
+> +Reactors
+> +--------
+> +
+> +A reactor is a callback triggered by a monitor when a violation is
+> +detected. Reactors are registered via ``/sys/kernel/tracing/rv/reactors/=
+``
+> +and enabled per monitor.
+> +
+> +Reactor Locking Rules
+> +++++++++++++++++++++
 
 [ ... ]
 
-> diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-> index b9a129eb54d9e..e3faaeb997ef2 100644
-> --- a/include/trace/events/task.h
-> +++ b/include/trace/events/task.h
-> @@ -21,7 +21,7 @@ TRACE_EVENT(task_newtask,
+> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
+> index 2f5fc8d18dea4..afc97d0971091 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -465,7 +465,11 @@ int init_rv_reactors(struct dentry *root_dir)
 > =20
->  	TP_fast_assign(
->  		__entry->pid =3D task->pid;
-> -		memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
-> +		copy_task_comm(__entry->comm, task, TASK_COMM_LEN);
->  		__entry->clone_flags =3D clone_flags;
->  		__entry->oom_score_adj =3D task->signal->oom_score_adj;
->  	),
+>  void rv_react(struct rv_monitor *monitor, const char *msg, ...)
+>  {
+> -	static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_FREE);
+> +	/*
+> +	 * Use LD_WAIT_SPIN uniformly for deterministic lockdep checking.
+> +	 * See Documentation/trace/rv/runtime-verification.rst.
+> +	 */
 
-[Severity: Medium]
-Did this treewide replacement miss a tracepoint in the BPF test module?
+[Severity: Low]
+Is the documentation for reactor locking rules added to the wrong file?
 
-Looking at TRACE_EVENT(bpf_testmod_test_read) in
-tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h, it still uses
-memcpy() instead of copy_task_comm():
+The comment added here in rv_react() points to
+Documentation/trace/rv/runtime-verification.rst for the explanation of the
+LD_WAIT_SPIN override. However, the documentation was actually added to
+Documentation/trace/rv/monitor_synthesis.rst.
 
-memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
+Could the comment or the file location be updated so readers following the
+code comment will look in the correct documentation file?
 
-If a task sets its name to 16 or more characters (which becomes possible
-with the extension to 64 bytes in later patches) and the
-bpf_testmod_test_read tracepoint is hit, the 16-byte __entry->comm buffer
-will not be NUL-terminated.
-
-Can this cause an out-of-bounds read when tracing consumers or TP_printk()
-read the non-NUL-terminated comm buffer?
+> +	static DEFINE_WAIT_OVERRIDE_MAP(rv_react_map, LD_WAIT_SPIN);
+>  	va_list args;
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260827-tonyk-long=
-_name-v5-0-5fa843782a00@igalia.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787854397.gi=
+t.wen.yang@linux.dev?part=3D1
