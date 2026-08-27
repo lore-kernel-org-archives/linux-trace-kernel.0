@@ -1,104 +1,189 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E235F37187C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 16:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787847707; cv=none; b=miMdow7b1lCsaSjYLd9Pbz6x40tsoYG9DOcoFup2UU3eJyV8pRnRQ/nqX8J0tY1SLGPcvo93PzO7/khT9TOVED043pB6OUixtlkzHJrNuxlkJWvQnAGyvkQsCL4ODEsA75wxd4YD3JsYSlVR+E1cef67iHYlP/Trd3YpDo9ncck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787847707; c=relaxed/simple;
-	bh=O80S3pjkeXSWObOAxYWMssL152HBOgoLeVg1gUU1MFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ll7A3H95gw9crqfxoo7Y8HXCWSoVN41sB8XjcB9LNtvHKWhWsvNStKbDRzu82BhF5QGOcCB4g2bmLubIdee80FSG5njniUQ4bxZ/Ho1tHS1jifBi36/f+GYiD3ke0xKLmRSdYq8xDynMIqSnxDkswX2Czz2Re/GimacbQFtVx3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ccQ4mwvC; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A2F4908BD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 16:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787849091; cv=pass; b=kPms3iJ3jMoMBHUepLrnhRE+oPQdgmnVZOllgU8go2fhXeNrJWxYZc4HytsGbqHPb/+jOV58jjGLvJOpbjDZEFggNyFxIu+t529O6Gr0Px7WeXogP2Whv8L3wEipbltYtvIHfngGfD4r6cVWaE087+ELlFC/SOSrHmkruOblkfA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787849091; c=relaxed/simple;
+	bh=v7IQgN97nNU6kWAssSMaVVvwbCRHdAYIf+fc+BRypo4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U4l2v9Zd7xyrRW4wdoa/q0XSudFib6qBI4/3K9RQ8exQJcvB8dMWPhRf63yoRSA4AXNbjhroaeZwC2eO7OHqvpvzK/oAkOEWeoswVFkABk74jEk7yNMyCnVRllWHztXT1wMyl5PezdgWfCqyvqhMowqYL33nLcxMd+tPteL0aOU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nphfjp3y; arc=pass smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ccQ4mwvC"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-499ae1c6471so15026565e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 09:21:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nphfjp3y"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-8518b3ff3e9so205660b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 09:44:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787849088; cv=none;
+        d=google.com; s=arc-20260327;
+        b=aMCRakC1Bf7fxewEo19mN79VyArn963zxxmzsElKYgEA1zMm0l+jBfQBvAKiUiYZBp
+         sKfBo+oAsnFthrKNQnt1dnN0/G4E9n5LpXWt6sF9Wr5URZbZFYEZwtdQmrq8dBk4HyIU
+         7OIUfEd7N9s+JX1r1nBRKlGK565ngEFkOS9FXqUfSKt7o0+7slAiMl8Ozq30M24ZTg2p
+         VjgEuSmeqLJ7RTlAHN/OY6IHr2sWWudUbp+qxTl8ad73VKwLaLbvRcXzNVlbsG99Wqme
+         LdSR/0oIHjiO4F+GyCjGqXEe7hya92nSGOg8tc24TwgxXhiaeUbGbyTULVjuLKpEs0qN
+         kAAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=v7IQgN97nNU6kWAssSMaVVvwbCRHdAYIf+fc+BRypo4=;
+        fh=rtrvoi1uPtf3FC0KBUXYbtHUT1Ib1BBazqQyaCXc2tM=;
+        b=GR0nKAM/r5zwm9eZojxSwcNXtsf++R4Esp80tPTAKIQOmdo34ZSGLof0tOvNtjliDn
+         pq2xgi29tbxTTx7WTFSkcHzd4epT/29xx3dCLC8xFMVNYRI/UNV/TpcYrEd162b9GHoA
+         IR1KsvwJJTq2YCDlHW1LhwCx5SGzuWd3KH3+26NKa/inonV5exJLSagxd1LiyJFO7nNk
+         V4w4bSNEHuedtOotbJw0GvIe6rPhy/YbQ6TCM0Gq/lw5iX2br1PEBogMScTfjSFYLcZq
+         ryusBV/81xidoP93BBngA6hg/CNDI5Ad1HSzabRaO1hRlVhk4Ov9mL8pJKdxWIIATYbX
+         TIJA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787847704; x=1788452504; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1787849088; x=1788453888; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=xgZRRPFD/4tuccx91/eOfBZb+vhsoVmREaFx21ykfHI=;
-        b=ccQ4mwvCr/2Hf0YCgNNZ0mWQ0u2yv2oNuqmGam8j5SJ9ALrzhJa1He53QqVsw0Ez9n
-         /1rOwV8Act/ugNLWrsqtzjRK5avfHx61RTur5yYNQaIa7GseB+EARAr2OUjFh3Ef58RN
-         5hdb23UhRGPiNzAXgMgA1eCnIKdK6gQRzPLlysT3UAyC2ZxANL7RMgjaNpb6+3MRygoU
-         Ozs8jy9YmETdcgNfw+kcAZFs/TfeJTzJOVHuNS7z0/yMxgVpqiv2lINnYY7pnHiHjQ+q
-         GrdDM9IDSdFvbjd7ySAoviv+gfsDZohVvuZnObPauAFDPqNSt9UjFUhGqtAXY6YEiZSO
-         4Wog==
+        bh=v7IQgN97nNU6kWAssSMaVVvwbCRHdAYIf+fc+BRypo4=;
+        b=Nphfjp3ye4B8Xe7Ggq3mS3z8FVe6NelfabzfvszHK2g635RLdkxksOs73geL6Bms9h
+         41ir4mPhcvKps2p3EllMQBKuIoUhBgNB350VEc3/TmSl/Vw/TAk2yERkbgg4TKB03LRm
+         iQqk2d7BNCjVSseA253lgsbnqFWmTzrbZXdEQUYhzowEGanay7N33PpGLsLsWo1CdoT6
+         hOKjZlm6IFpLn9b7TpbRwjgKtCdE2cdJZ4YTFyZ9x14hCNBaC5CI0su4yypNFX+ucbbJ
+         DbZPPaefdJC29H4D6tVzXy0KqtMSzae+dtMqov/Rp7wZVVzyQCTQCT70dqidkPI/9fQz
+         NqnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787847704; x=1788452504;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20251104; t=1787849088; x=1788453888;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=xgZRRPFD/4tuccx91/eOfBZb+vhsoVmREaFx21ykfHI=;
-        b=NKuyg0Ig1beQEcehAgPSGvzsYC5taz9/F4cv/mXeusff8HDyNQYDKxbuGagv6RxgCR
-         RCDd+s+i/KkSK8Sb6YI5xq/eQPSa35q30ohYdwgBnHVWud1qJNSE5NiFh2dcKimyNh9k
-         kLg5/KteX4TFKLbF77I7Ry/a7/Bqq1vZl5YFtzcz/CLwKJFMe12ZJtFHXh3Ybho/5gNS
-         E3/UrGTSEPc3Nv7wQEtdH0R5p03hyTNzOTk+TdBSpC3k7Q6LUCjyJ87Dl2aSkLwEwmzR
-         vnnlPtV4Y8xSmIDvVgnQYWX+oZQ9hsTgMITHaYTYbqGacfoQwofwNoZAgBdAuIprhuih
-         kg8Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpJ65/MABmXrdLQMKMPiP6wrWodNzVXYE8ExY72jbl2TipKuwb/iCMfHsUZJqNsl+rIPVXE3KTDSNLqoynNRHXnAzY=@vger.kernel.org
-X-Gm-Message-State: AFuF++mDgdnK0bNqpBd0N2eiAfrRofAcBKP35Dj96nEQB0KP8JbgIANa
-	CWMY/ZhQH1UdH0HCU5p4cWkExIyhkarplKFNw/BKUwvg6nhq8d46Tpd4VyVXYEWOvg==
-X-Gm-Gg: AR+sD12rUiNz2T67tK+0bqZQ09NwgafDgvv+EQnKmVBirqS4lL4iQqps9hVfVNN8Ssl
-	TTE88BMYV8nq40REBds4doJ2C1J9JTO+z1rPKcg+wnHSuZCYzVSiZHv9yxX2532mBU8+cPauskP
-	HpJgLdP1jG9uWXgrfmepR5+w+MQ0ud8rFk2DIVy2ou+xOgZSajKgs0nNXDkp3sq8S3UNguNsG3/
-	phPSJ8SzRFqhB7uNhxrciFoq5AQCzLawCT9pRNuL0tzR1mAOpjP08PC2kXFpdc2ol+GOeQOKCjk
-	sIOi3TrLTj9NKm2V4M0JtODi0/Yp8tET/eu0I3Rw8LBidVQ+YMsh18zbCJat+BtC0k8A3Ck7FMt
-	nEkbxXlWl7vu3hzFLnogGz8ena2IOI7+nL9bHgL5UVjJpWd3ztrA8AdzNsXEYElq+CgsQNLSzeP
-	zbtnC0lm+gG7IxeVsisAI0mdRhk+iL4FpKxoaRhiXNrFzpeE5Ae34epSqr9by4bXJN8JoPE+fH+
-	yaUFfX+Ke3pIemCb/oXLa79nzu8h4ob
-X-Received: by 2002:a05:600c:8885:b0:49b:909e:922e with SMTP id 5b1f17b1804b1-49b91c4884amr767005e9.10.1787847703719;
-        Thu, 27 Aug 2026 09:21:43 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b91c52609sm108385e9.2.2026.08.27.09.21.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2026 09:21:42 -0700 (PDT)
-Date: Thu, 27 Aug 2026 17:21:39 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/3] tracing: Fix subbuf resize races with
- trace_pipe_raw readers
-Message-ID: <apBhLDTEa_3yYZP5@google.com>
-References: <20260826094528.3738023-1-vdonnefort@google.com>
- <20260826094528.3738023-2-vdonnefort@google.com>
- <20260826095947.4FF8B1F000E9@smtp.kernel.org>
- <20260826103736.2b55b464@gandalf.local.home>
- <ao8TQ-SvhjYgy43-@google.com>
- <20260826143123.1b3e3854@gandalf.local.home>
- <ao_Zu0ThaWThj9YZ@google.com>
- <20260827091541.5d03e33c@gandalf.local.home>
+        bh=v7IQgN97nNU6kWAssSMaVVvwbCRHdAYIf+fc+BRypo4=;
+        b=fVHNFsRf3d9ihw7dLa2uJ1WsonkyvF7BD6uGka6KE8nG/A7h7pt1aZE5sRQ7MVKxbY
+         tMvuVVrDVwEzli86qd/vBEY0ETPHDBpn0FWHFtq5ocnq/ozO+IOeeDcMjo9oMn9s9ziu
+         Gy8N3t1anrJj2nLIaVra0gWQUTdFE0l65XTeRM4PTkV8LVXQ5NXgw5d9G2fT7O1q35pi
+         kcNQy2TdLzRCnl8uvIRlQie/uGv5UeNbl7KwR3ZJuHqyZNiZF3WnI58Tzm5fWOZ/3hzk
+         07Gy+GrV0gWmvtQGEaDTUiTxkr6gU3r+OAppwrT0bBs22HUBBPY82C7tWpDxMbIeW1ep
+         w2dg==
+X-Forwarded-Encrypted: i=1; AHgh+RqVyTXWUgm9G77o0WqrTpqBMqmtPy2ppNlJ+MN4VSiiCUUNou4M30whzeTXFKtnaulihqi3tGGCHkE+ECeds0RLPaU=@vger.kernel.org
+X-Gm-Message-State: AFuF++kfKpA52esiIrPw99jFzWP9dn8WZRse26QhOD9PI7JNOxU0oj/0
+	Y8JTrxEPtbVtgNloO9uJNrTQf0WSAOehVAfP+3WUIsdPZJRH3CoUypLS42tKBpqKMK7lgcNNFcJ
+	gUQ2NhLx5NquB2P5nQv989RXJVlVQpxM=
+X-Gm-Gg: AR+sD10NKOa08aYOrqBsKkxmj58hvULkA4oNonmP9OAC1N2EdDN3B4iS31HiYaojDI8
+	r/0ZFFLDG3BVjwSbBHI4as6O2EAzWqBtkArga8xn+lkK3kKT8Pp6VetC76J45yluTleyMTJMXjx
+	CYH2h7W4VKdI5Z3oVqXkTXQ82FN8+njjiK+iJtPUTWXe4CmxgvpKCrZqTTrZcjqc8r3VCOaYgZO
+	eqgLFM9ow+hVSzCK7+LbNfqbMu+/Z1c7ItNbI0VX2TPpbmoptE8ONCfdrRu+wJpdcSF52bgC9bP
+	fsHNfcs1gZXOTOU7EAJ0+/N6eMPxS8VtAw51uOzHgFwrGXvvMsdfaBOzPo+1SmRY7WnhOwdz69Z
+	In371TeloMsGB5m0+6uMOAJ00phW2E8c67+wV
+X-Received: by 2002:a05:6a00:194b:b0:848:63c9:ee39 with SMTP id
+ d2e1a72fcca58-8562a7d9953mr954998b3a.12.1787849088008; Thu, 27 Aug 2026
+ 09:44:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260827091541.5d03e33c@gandalf.local.home>
+References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
+ <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
+ <aotM6tRUHI9Bo7gW@redhat.com> <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
+ <aoxp3Rcbp3fUuqS8@redhat.com> <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
+ <ao2KDQuBMNtONu0K@redhat.com> <CAEf4Bza0Hy_a4BpFBrsP2F5wvEDOyL6n2jK5FK8r-QyRFwvBPw@mail.gmail.com>
+ <CAEf4BzZGQ50=B4S2NBZnqWN29YBgthMX8LsYGLq5rOsdGzpS3w@mail.gmail.com> <ao7Sr0zqFoiKgaRM@redhat.com>
+In-Reply-To: <ao7Sr0zqFoiKgaRM@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 27 Aug 2026 09:44:35 -0700
+X-Gm-Features: AcwNN1VwKE6dNPobT74Ama0YIkZp7TzSNXhg7LUnXQN4SlYoNfZY0TE8WRNlOWY
+Message-ID: <CAEf4BzYXCpm3wok2AOn5hErvoFSRGax5seRgr6j1LdFscDfA6w@mail.gmail.com>
+Subject: Re: SIGILL and uretprobes, WAS: [PATCH] uprobes: Free utask on
+ dup_return_instance() failure
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 27, 2026 at 09:15:41AM -0400, Steven Rostedt wrote:
-> On Thu, 27 Aug 2026 07:31:23 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > Looking at the function again, shouldn't we add !rb_is_static(cpu_buffer) as
-> > well to the full page test?
-> 
-> Why? 
-> 
-> -- Steve
+On Wed, Aug 26, 2026 at 4:49=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/25, Andrii Nakryiko wrote:
+> >
+> > On Tue, Aug 25, 2026 at 9:38=E2=80=AFAM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Tue, Aug 25, 2026 at 5:27=E2=80=AFAM Oleg Nesterov <oleg@redhat.co=
+m> wrote:
+> > > >
+> > > > On 08/24, Andrii Nakryiko wrote:
+> > > > >
+> > > > > On Mon, Aug 24, 2026 at 8:57=E2=80=AFAM Oleg Nesterov <oleg@redha=
+t.com> wrote:
+> > > > > >
+> > > > > > force_exit_sig(SIGILL) can't be ignored too. But I am fine eith=
+er way.
+> > > > >
+> > > > > Current SIGILL sending is already pretty bad behavior that bites =
+us
+> > > > > periodically, instead of doubling down on killing the user space
+> > > > > process because something about installing uprobe goes wrong, let=
+'s
+> > > > > think about a bit less destructive way to do this. Mark uprobe fo=
+r a
+> > > > > particular process as defunct or "detaching it", or something alo=
+ng
+> > > > > those lines. But not just kill innocent processes.
+> > > >
+> > > > Well. Yes, SIGILL sending acts as BUG_ON(), this is not nice and
+> > >
+> > > The problem is that this is actually not a bug but a very real and
+> > > expected behavior with user-space using fibers or coroutines. Any
+> > > suggestions how we can make this less violent, as it's actually quite
+> > > dangerous and kills production applications when someone (unknowingly=
+)
+> > > tries to uretprobe trace them...
+> > >
+> >
+> > IIUC, this SIGILL and coroutines/fibers issue is due to
+> > uprobe_handle_trampoline not finding utrask->return_instances, because
+> > a bit earlier we threw out pending uretprobes due to
+> > arch_uretprobe_is_alive() returned false due to that `regs->sp <=3D
+> > ret->stack` check (for x86-64).
+>
+> Well, unless I am totally confused this is another thing...
+>
+> Yes, arch_uretprobe_is_alive() sucks, it assumes the single stack.
+>
+> And I do not know how to fix this problem... uprobe_handle_trampoline()
+> must fix regs->ip correctly somehow, otherwise it is pointless to contunu=
+e.
+>
 
-So that the splice can make progress when the ring-buffer is presistent or
-user-mapped. Or do we say that's expected behaviour? 
+Argh, I completely forgot about regs->ip fix up, sorry.
 
--- 
-Vincent
+> Note also that the current instruction_pointer_set(ri->orig_ret_vaddr)
+> can be wrong if the probed task switches its stack.
+>
+> And we have the same problems with sigaltstack().
+>
+> ATM, I don't see any solution, and I don't really understand what do
+> you propose...
+>
+
+Well, conceptually, I'd like us to try to find correct return_instance
+instead of assuming the last one in the list is the one we want.
+Whether that's technically sound, is a good question, I haven't done a
+very thorough home work on this, sorry.
+
+But we do have all pending return instances, and they record original
+stack pointer, maybe we can do something with that? On user function
+return, stack pointer should match what we had when we installed
+return_instance, isn't that right? So in normal/happy case we'll do
+what we do today, but if we find our that return_instance is "not
+valid", we keep searching across all pending return instances. That's
+going to be slower for sure, but at least it a) won't kill the app and
+b) will be immensely useful.
+
+> Oleg.
+>
