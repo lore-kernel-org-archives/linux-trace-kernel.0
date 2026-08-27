@@ -1,73 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35CE3B27FA;
-	Thu, 27 Aug 2026 09:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1864F43E9C6
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 09:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787822502; cv=none; b=N8OZbgWlVpmrylthuQzBTFvzfqVn6jfKhOvut2TbDzTmm06IYAcmj+m727m8zQgxKZvtqK64G5h/bvVEnJXeoJSStDsVOc7NdIGhYUYOIzYb31RsM8E5QkiGtIBKVaaQT4ZjwGN9/0yG5/WunLETG4ij1oRjbA8m90VwpyR43ME=
+	t=1787823586; cv=none; b=o+HKmALNvqI5EPECNskPIEJp5Utv9pZyxTRJ8Hl3ygvVVtdAg75i/D4vUZloWpl8djcCQkiscXPM07Nin5IVjsAScl09zd+ff1b69lUTPYWIUIIA+ZubpsG+xRKkwzRUS8JbrsokklOpy0cYQnE2YWlKypTfHX0JIqsc5uxgxs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787822502; c=relaxed/simple;
-	bh=n4z9h38OfpEH2Q8HujaPpay0A2etD00gYp/7BjEfmXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RoLWNwNikTDhysPSQ4lU20jyDTpL/RyJ3oniGOt24qZbDu2zkxay0rq9NpW9XNp01qjRH8nMsQO2lzlktQBVF9XxkjcNb67cnsvnPIW7B7J9aLKQWh9X00HuiftsJ5zafQ4yEyJ9P9FygCFiRp47bp1tF032d71YVhW7X7yKGPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpAIlQkz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787823586; c=relaxed/simple;
+	bh=5W5UKyeECMIB4+c79LPo3DL88mJVYviB6MmcpaYJxvw=;
+	h=From:Message-Id:Mime-Version:To:Subject:Date:Content-type; b=rAey7DkLSoW/8TZg6ucfatM75jFdr52I7f399ohtvZxU6w+i3omkaygiF1kM2xAqaEJGgQgJ1z6FzGOTHmOWyHJeUWxvc/qKnjFbMsclhCjR5bqxN9khtrNheDo/l/3zhvSaOnnzlQwP9LDFyvdJNwRl/JALQboJKdU2HWsF76g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhSu7isA; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpAIlQkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA07E1F000E9;
-	Thu, 27 Aug 2026 09:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787822500;
-	bh=n4z9h38OfpEH2Q8HujaPpay0A2etD00gYp/7BjEfmXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jpAIlQkz8SPDBEHr/++so/yIfXSgHbjIgfwBjM0AnESqfPxYYIyw7mOcf1VeWz7H7
-	 dWc4G8Vcvna7EtYgW14PuMnBFfwaPSUMhDnXDNvcmrutWQ7/KBlDuNTWG6SGTzAs1f
-	 bgtSdTc44WUrqbLs4fbf5ciNiUUewPvph2b9Jd+E2+wDZbdX5GUlbjgb1jL5QIYFBu
-	 cdgtM2FcQ73fbrZ0kcJCIslqpAVgKKMSGrnLPhHpzWPpatzuBD1YjPnbvVMgQVgEc+
-	 csnfU7xXh4lo7wlNL/iEsZ9D+OX4gQBBv/Z/FxAM1NFJ19iVi9bi9ALqP+KcOBEFB7
-	 4CHak9EewcvJQ==
-Date: Thu, 27 Aug 2026 10:21:31 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>, 
-	Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Lance Yang <lance.yang@linux.dev>, "Liam R. Howlett" <liam@infradead.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>, 
-	Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Usama Arif <usama.arif@linux.dev>, 
-	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] userfaultfd: decouple fault reason from VMA flags
-Message-ID: <apABifdLFy3ct2IN@gremlin>
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-5-3086981b33cf@kernel.org>
- <5bb86e34-6196-4b50-b553-be2ff7c1fa32@kernel.org>
- <ao_sCh5zP0IC9H2S@kernel.org>
- <e8aaddde-0a07-4197-9874-5ca0ea8af43f@kernel.org>
- <ao_-uZrrsVX9lzbz@kernel.org>
- <01aae5b4-ee10-4601-8ddd-c9428e11d651@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhSu7isA"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-448b69cfc6dso2144359fac.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Aug 2026 02:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787823579; x=1788428379; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:date:subject:reply-to:to
+         :mime-version:message-id:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=zwAy60hQUz/Pl3qsjhyILeol+Tb4AzV/M6PmBtD6pqU=;
+        b=ZhSu7isAuM8vRXL4j0p8RZfR55edYbSf+Yc0baTyqCU4J2bPfCnrkMbfGAVst6fux/
+         M0LYKsg3ZNPaxmm/xoJNMFZaoGkosiMGGxxr6Klx5N3ED6jV3yv8qRujuX+tyExboE3T
+         k18OaaT7uiSKen1qnVDVJM+A35KlahPWE6n64SmG7IGxYheUPy04Zv5Tcx8v26s3fZIA
+         1WFXsaVh1J96ogHJ9coQ8kJsTBF08aS2+RyrldGHwQPARrm+yUCt44NmTk8blf+cmwSO
+         FcUJ8QOIyFx04OJ5wfAA0/I2wZSQoIJx1OgboP/nyJKjSpvFUq/n0qn9A8Ztat6IuH1j
+         /6Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787823579; x=1788428379;
+        h=content-transfer-encoding:content-type:date:subject:reply-to:to
+         :mime-version:message-id:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=zwAy60hQUz/Pl3qsjhyILeol+Tb4AzV/M6PmBtD6pqU=;
+        b=lYnvGkyxl5tCAhkPk9SwVpWxctXCjdgK0gWTtpRMCoE/HhTi2o2Vs6GoXHSOWFbAG9
+         NWLGhyAN5BsmZbWQgLtiVFDlUuhD34zlKUNaufhgbP4MNMfzZ34OHyM7Ceu0O4MHVE8K
+         w6suOSImhvwkDjYuXxvqpo6ndecV7xoFqZYb22aTYBbQVOeAASh0NAQj7XmOziz43iQP
+         hkENZzyZLMP+i6+6TvbBFQ9P6w05J0t8LZS41RvfBzNzl/GegwIyYkjGtaJnx0aCx+WS
+         1RN/uYO7KAvKp1Juqzfk4+N7mC3fTxUxqONY2PcMbqLDM7zINh7sBJkvJlCFP/st4PIT
+         Uh1A==
+X-Gm-Message-State: AFuF++k9OB7qTgvetdtWHyXFYJcURnph3IJ7+jTOZBEA0ZW/nclNHuUb
+	Xx72O8RFXdhfSFbCC/mgOAXIU40e8b1uoOF5Dv7VHvDkkW0Kbw5RZ9G6CIH12PIDV/g=
+X-Gm-Gg: AR+sD13Ns4zHyFYy28ntwK8ANRxTVV3IwPiuZpmgOs5vHJWD7LW9b5xfRvltm6WXTWf
+	l+lsfsbFni0kwU4DF+2XVNd58Y0WPa9LsScPPsZBDR8AFnLaxgJwLhq6lMj3Ca/19qFelqvzXjK
+	kB6KNsqSUbDw5EaVGRGExGQ3brLkBdtB3f9b9yALKK4zlm7EGmy5GE1wYfzlQgPZbGQNkmmsA6i
+	ShQ5pSEg1zWFgVKE6T+2we9dmHRdGckJXRi1Xd0Q299Fe3H4AITBoi+QfUXEND+a/++BpY7pyRF
+	CHcGBMB6nWbmeCR4MsKc7yhssEFNydmSqWrl9Oh77RFmpxQmvKSJHFVGldOvIdMEdDb5Ax0Yol7
+	4mWkRfHH/IU9So4tjuU0D0GHMxR+s+rlUqih9I3xdDl2/MmRwwX+yx00qaHCVllc+uZLpDxdsqF
+	TBKUeVHbRAHqMpod/t2gKHpjFyzkSnwl/CPnYLp+TKwFspJ3iQ7hPUulTP2oYVWOZRgjawDn0LQ
+	qEqPvUnJJ38yrVsNF5xDTIsKfo=
+X-Received: by 2002:a05:6820:22cb:b0:6ae:6484:5f40 with SMTP id 006d021491bc7-6b1a049cdb4mr11310338eaf.21.1787823578994;
+        Thu, 27 Aug 2026 02:39:38 -0700 (PDT)
+Received: from [45.62.170.167] ([45.62.170.167])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6b1a253d6e7sm4211371eaf.7.2026.08.27.02.39.34
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Thu, 27 Aug 2026 02:39:36 -0700 (PDT)
+From: Donald Lubeski <miriamrobert97@gmail.com>
+X-Google-Original-From: Donald Lubeski <miriam.robert97@gmail.com>
+Message-Id: <ZJ0ERS2J-RN8K-BKV0-TT4F-0KM4G8BQFSHU@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01aae5b4-ee10-4601-8ddd-c9428e11d651@kernel.org>
+Mime-Version: 1.0
+To: "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>
+Reply-To: proinvstor@gmail.com
+Subject: Management Services
+Date: Thu, 27 Aug 2026 17:39:36 +0800
+X-Bounce-Tracking-Info: <bGludXgtdHJhY2Uta2VybmVsCQkJbGludXgtdHJhY2Uta2VybmVsQHZnZXIua2VybmVsLm9yZwlNYW5hZ2VtZW50IFNlcnZpY2VzCTQzNzEJZGVyCTEyNTAJYm91bmNlCW5vCW5v>
+Content-type: text/plain; charset=iso-8859-1; format=flowed
+Content-transfer-encoding: quoted-printable
 
-On Thu, Aug 27, 2026 at 11:19:01AM +0200, David Hildenbrand (Arm) wrote:
-> I lean towards just calling stuff uffd consistently might be cleanest.
+To:  The Executive
 
-Agreed. Let's use the same naming everywhere please.
+We are seasoned Independent Capital Advisers to a high net-worth Private In=
+vestor Pool ready for long term capital partnerships of any size, in any pr=
+ofitable industry and with business owners, and project promoters who are s=
+eeking growth capital, acquisition funding, or long-term Capital solutions=
+=2E Referral commission to capital brokers for any successful partnership i=
+s also available=2E  Contact us by email for details and immediate consider=
+ation=2E
 
---
-Cheers, Lorenzo
+
+Donald Lubeski
+Independent Capital Consultant
+Global Services
+
+
+---------------------------------
+Donald Lubeski
+Independent Capital Consultant
+Global Services
+
