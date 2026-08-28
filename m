@@ -1,133 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C457C9F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Aug 2026 13:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA6644AB7A;
+	Fri, 28 Aug 2026 14:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787925540; cv=none; b=aGU5nnkrDHwAVI/Tts/EEqiazW8huQ2sgn0JvFD/8on08ttzLBs2LgtxMMl+qDApKFvM3uLpZcyDjdo8GaZ3A89P/TnrkWzqa9mEk4oFoTgBqG1FXNfPUIehvzOnbsOaAU4f/YzU/UWVDSzmNM6v7UMP68qUh/WTqfwjvc35wBA=
+	t=1787926290; cv=none; b=XL+/Hc1iCqpK9KIbm9CHyht8upoRNMKAuNjb1T72CImUiKpitwS8PxiQdITVVPuSMw7idHl7ucR+36VzFzHmOJ4ZeVbD4nG7lzfwfkhqJ/kyVk2hULQ6INNc1spb1uxIaFSIQ+4xFK2xG63qG5BdFRoCP/BRqKE70oo3y/IGFgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787925540; c=relaxed/simple;
-	bh=LS0osjMXDePnUP/Cry2skNZj5SUuVHwt80Vd/ZjCB7Y=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=oUd0cKORApKQFdohfx9pZAG+2OriZUDlTvqgXtYDZ4zKZPBn3EVKdN+Cl2wqpHXbdC7f3L/4uhxaUTkElBskHzqIR559ffdNMBH6dFiYxx2ajW/kxjrgGwZi7f5+7fsUTK/DHYdL1x282sDpek1ZR+F85tXRHU0h89FswOWJ7Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYqZPBby; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787926290; c=relaxed/simple;
+	bh=zrWYftSCGtfnzZIw9FBRwaFuP0lkn+KXDXTp3VXyk30=;
+	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=NB4XJtaDUDEGD+zDYTQGxHqoAImse5rgkQaiiZNL1dl9JLeHeXEgDy0epN0ubG5RxoIVUMPwDPcUuVWJ6fEN70okiB+7AVOjirWYAPX7dl7FeGBe+OQhjxnGICWAOkDQmZ+8vCjccAVA9YeWZIodmQxwnHoT9i5kbBM24YGWrUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Ycnv+HBq; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=pAwUirXl; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYqZPBby"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC501F000E9;
-	Fri, 28 Aug 2026 13:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787925538;
-	bh=2oDomlgvtjVK8oRaHwtJzk8T294/I9oAAampEZwtly8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lYqZPBbys9Vy5B+i59sG6b+vJpt9R0sDXy31gU65CWyb4a+reNiBnt1NsG2WHQBxW
-	 6mZSwWyXAiWzJ/UHDFtUpzUh3GlsMN4BOZAtgQUkOg1KsuY2yD89G6OFJCLcLbgLac
-	 PYzOVM1sVAifLQfA529TF4cVyP1E5OAlsSOEq3Ebo8d2HOK2L4G3JSc/i9CgN3tLBj
-	 3CKynjOBKJtZZLd/3Hc4H711d3tKF2/H50cyeHKLnPzaJ3YYOCsI8aBFqZO6HHl4K/
-	 /GtNSvc0kUXnOa2aEukFbrz3QgRnw+1vgtUJMuKVeMsU/Nrj7janByztD3AQ7EjH9U
-	 sAiJOuhPMefAQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing: Have show_event_filters/triggers files take
- trace array ref
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260828094153.17b95037@gandalf.local.home>
-References: <20260828094153.17b95037@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Aug 2026 13:58:57 +0000
-Message-Id: <20260828135858.2AC501F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Ycnv+HBq";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="pAwUirXl"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1787926269; bh=iZASGKq02X3MlmO8ig05lys
+	xUTvXqLjttI83Y8LZB04=; b=Ycnv+HBqjWQS5U5unDzB96IugCG4zABbml+qs+cqmqoPXqgymN
+	G+vRqqgTKjoq8x60DPVW7sOXe0Hsqb5XVKob6OFULWPoJT11vMeGF3D6JUgoiFXpy8emipbSAo6
+	IwZ457tXuzzZ7gSK37RTznHw3k8u1/25x4QLcudfso8yHnZrbd3bb+ih/OBHLubdyDLScT66loD
+	ikQi4ZPR4efqWGzX5p2Yrzeq4egeTH6Z+oT6Jf1CHeGEwpw0pPrnrAFypM0ywwauY1QphgUu0c7
+	SIURc0XASezSaZ5NV9SeEzXFGejC8yS+NYgdAuQWayIoBCn0E1BA9kJwQOGqmRnLmsw==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1787926269; bh=iZASGKq02X3MlmO8ig05lys
+	xUTvXqLjttI83Y8LZB04=; b=pAwUirXl2vj2hacynI1LWN6FYowJY8LNRSofKFRBFio/OCLbR+
+	G44FlI0f44HKl1e99r6flMyTrSMraop1b0DA==;
+Date: Fri, 28 Aug 2026 15:11:08 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: ardb+git@google.com
+CC: abarnas@google.com, akpm@linux-foundation.org, ardb@kernel.org,
+ atomlin@atomlin.com, catalin.marinas@arm.com, da.gomez@kernel.org,
+ kevin.brodsky@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mark.rutland@arm.com, mcgrof@kernel.org, mhiramat@kernel.org,
+ petr.pavlu@suse.com, rostedt@goodmis.org, rppt@kernel.org,
+ ryan.roberts@arm.com, samitolvanen@google.com, will@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_4/9=5D_module=3A_Allocate_MOD=5F?=
+ =?US-ASCII?Q?INIT=5FTEXT_from_the_MOD=5FTEXT_ROX_allocation?=
+In-Reply-To: <20260822135323.795946-15-ardb+git@google.com>
+Message-ID: <5D55C497-95FF-4603-98E4-8C47CDAB504C@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On 22 August 2026 14:53:26 BST, Ard Biesheuvel <ardb+git@google.com> wrote:
+>From: Ard Biesheuvel <ardb@kernel.org>
+>
+>When execmem ROX caches are used for module text and inittext, place
+>them adjacently in memory, by allocating space for both initially, and
+>splitting off the space for MOD_INIT_TEXT as needed.
+>
+>This avoids the corner case on arm64, where .init.text being placed far
+>from .text results in a lot of complexity wrt indirect branches and PLTs
+>that we'd prefer to avoid.
+>
 
-Pre-existing issues:
-- [Critical] Use-after-free in trace_options_core_read and trace_options_co=
-re_write due to missing trace_array reference.
---
+I can't see anything wrong, thanks for the patch
 
-commit ea5806b528a93a9450975f8b2320a019a3fbc9c7
-Author: Steven Rostedt <rostedt@goodmis.org>
+Reviewed-by: Bradley Morgan <brads@mainlining.org> # kernel/
 
-tracing: Have show_event_filters/triggers files take trace array ref
+>Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>---
+> kernel/module/main.c | 22 ++++++++++++++++----
+> 1 file changed, 18 insertions(+), 4 deletions(-)
+>
+>diff --git a/kernel/module/main.c b/kernel/module/main.c
+>index 46dd8d25a605..2d6213496359 100644
+>--- a/kernel/module/main.c
+>+++ b/kernel/module/main.c
+>@@ -1342,7 +1342,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+> {
+> 	unsigned int size = PAGE_ALIGN(mod->mem[type].size);
+> 	enum execmem_type execmem_type;
+>-	void *ptr;
+>+	void *ptr = NULL;
+> 
+> 	mod->mem[type].size = size;
+> 
+>@@ -1351,11 +1351,25 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+> 	else
+> 		execmem_type = EXECMEM_MODULE_TEXT;
+> 
+>-	ptr = execmem_alloc_rw(execmem_type, size);
+>+	bool is_rox = execmem_is_rox(execmem_type);
+>+	if (is_rox) {
+>+		/*
+>+		 * Special case for MOD_TEXT / MOD_INIT_TEXT: allocate the
+>+		 * latter by splitting off required space from the former
+>+		 * so that they are always placed close together.
+>+		 */
+>+		if (type == MOD_TEXT)
+>+			size += PAGE_ALIGN(mod->mem[MOD_INIT_TEXT].size);
+>+		else if (type == MOD_INIT_TEXT)
+>+			ptr = execmem_split(mod->mem[MOD_TEXT].base, size);
+>+	}
+>+
+>+	if (!ptr)
+>+		ptr = execmem_alloc_rw(execmem_type, size);
+> 	if (!ptr)
+> 		return -ENOMEM;
+> 
+>-	mod->mem[type].is_rox = execmem_is_rox(execmem_type);
+>+	mod->mem[type].is_rox = is_rox;
+> 
+> 	/*
+> 	 * The pointer to these blocks of memory are stored on the module
+>@@ -1368,7 +1382,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+> 	 * *do* eventually get freed, but let's just keep things simple
+> 	 * and avoid *any* false positives.
+> 	 */
+>-	if (!mod->mem[type].is_rox)
+>+	if (!is_rox)
+> 		kmemleak_not_leak(ptr);
+> 
+> 	memset(ptr, 0, size);
+>
 
-This commit fixes a use-after-free issue when reading show_event_filters or
-show_event_triggers files by ensuring their open operations take a reference
-on the trace array. This prevents the trace array from being freed via rmdir
-while a task is still reading the files.
 
-Closes: https://lore.kernel.org/all/CA+0ovCjerKZJLwXScM9bF2ga2rLi4_XOpUfK41=
-NDbENpeu98jA@mail.gmail.com/
-
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 9f8f2d02276ca..e676601943362 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-
-[ ... ]
-
-> @@ -2908,7 +2908,17 @@ ftrace_event_set_open(struct inode *inode, struct =
-file *file)
->  static int
->  ftrace_event_show_filters_open(struct inode *inode, struct file *file)
->  {
-> -	return ftrace_event_open(inode, file, &show_show_event_filters_seq_ops);
-> +	struct trace_array *tr =3D inode->i_private;
-> +	int ret;
-> +
-> +	ret =3D tracing_check_open_get_tr(tr);
-
-[Severity: Critical]
-This isn't a bug introduced by this patch, but since we are fixing missing
-trace array references, does a similar use-after-free exist for the trace
-options files?
-
-Looking at trace_options_core_fops in kernel/trace/trace.c, it registers
-tracing_open_generic() as the open handler. That function passes NULL
-to tracing_check_open_get_tr(), bypassing the trace_array_get() call:
-
-kernel/trace/trace.c:tracing_open_generic() {
-	int ret;
-
-	ret =3D tracing_check_open_get_tr(NULL);
-	if (ret)
-		return ret;
-
-	filp->private_data =3D inode->i_private;
-	return 0;
-}
-
-Because no reference is taken on the trace array, could a user remove the
-trace instance via rmdir while holding the options file open, and then
-trigger a use-after-free when reading or writing?
-
-For example, trace_options_core_read() retrieves the freed trace_array
-via get_tr_index() and immediately dereferences it:
-
-kernel/trace/trace.c:trace_options_core_read() {
-	...
-	get_tr_index(tr_index, &tr, &index);
-
-	if (tr->trace_flags & (1ULL << index))
-	...
-}
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D ftrace_event_open(inode, file, &show_show_event_filters_seq_ops=
-);
-> +	if (ret < 0)
-> +		trace_array_put(tr);
-> +	return ret;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260828094153.17b9=
-5037@gandalf.local.home?part=3D1
+--- Thanks!
+https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
