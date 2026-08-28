@@ -1,27 +1,27 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2845125B08D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Aug 2026 16:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526AD346A14
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Aug 2026 16:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787934829; cv=none; b=iVDRpNiLrGiOWS+ZvtTGNEvnkuTSL0PAJJ4mNV8IQBlHWySWsdRX3zxq2ICF8sEX1o8uwIY+rRTQQMa/uLuUe7IB4HfsGj7HQsxzS3psoJ411s1y7WAasfBI+8F/2PKxvUlyoPJKFRTlFeIod8zWs2jOCqfiGCm84hgTg5A2sT4=
+	t=1787934848; cv=none; b=jJu0biyfNTSXi6v6Fjipex4mnWFQOM/ykaM8HvmkHcQFF3vFsWCnohvMOuWAAv1w0zWpl0mW5HHs9IYzLjNSCcgVe3Yv6IBxVQ+tg/Imb+eX0Qsu44Syo0fvGJa/NiKnb5CfeKirVjPv/BC0+1Qgi0f0cP+H5JC7MwNJ9OBmBoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787934829; c=relaxed/simple;
-	bh=9HSRueymnHQnumlP71WqP6C9CeR414LuTtFYONZ46K0=;
+	s=arc-20240116; t=1787934848; c=relaxed/simple;
+	bh=SMBK2Yy7EbjA2SEaIooljoEXmFpi0vgTfw4WNzbXxM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MEqy3YWUdy2tCjymxYC8wS1IX3cEbx8ImgIVgGk7zFW6ZVjjL51/mtYo9Uokk0roK/O5/h/1Lcl2eUBtiS/DNazQ8Udb9nAGjIyRE3EQGHrwMeBwoQtvZksJD8+JVWDz8Sz/3AmNWkMaurfdu8WPYupXIICThxR7I3ODGRmwqEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=5KmBiQoY; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=YRlyeEfdd8y3IMAej9wQc73MjPVxHUIMAmXfkgiZnPZIaNyj1HiiRCaigw2RdabcdKRJ7cI/incc4jJ5lrZg2N2U1ZaN18RgbAJyjhc33OCwTGaqx7v7xOeDK6Pse36DH1iB2g2wp7e0MAvyP9J1Uzyksgr5xRoaPGEw7+cLLkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=onZ96OnV; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="5KmBiQoY"
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id BFBFFC046C;
-	Fri, 28 Aug 2026 16:33:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 1215F80012;
-	Fri, 28 Aug 2026 16:33:40 +0000 (UTC)
-Date: Fri, 28 Aug 2026 12:34:30 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="onZ96OnV"
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 5EF30A0477;
+	Fri, 28 Aug 2026 16:34:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id B4D1720027;
+	Fri, 28 Aug 2026 16:34:02 +0000 (UTC)
+Date: Fri, 28 Aug 2026 12:34:52 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Breno Leitao <leitao@debian.org>
 Cc: mark.rutland@arm.com, mhiramat@kernel.org,
@@ -42,14 +42,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1215F80012
-X-Stat-Signature: dd9yjheigdjgcxoa7cs94h7ksem8fjfc
-X-Rspamd-Server: rspamout07
+X-Stat-Signature: 5yi85nyoky7kbqynbo4y16nzwkw185oi
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: B4D1720027
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ilEJ0sPgTXV3zdQZWVvo4cNFXGrg1yaA=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=3a4s3Zj8VMrkmsYP6OiMSzG3EOe0UYRfujTzuOKdAqQ=; b=5KmBiQoY3pJc0pcJFD45K/fmT+ApIneFQLVrtoyT1w9+bGsOt4C9ZiQzchsKyHLzIZyKGMbPaFb3PmBMCHMcal+ll3NeWQuJi81oZEaliimpz6ZFjHASmRt4dfr675h7Li7vMB/pxzHQTI5bMB+uXRN0a/GQmkjLZuh1M/Aubf0=
-X-HE-Tag: 1787934820-738212
-X-HE-Meta: U2FsdGVkX1/C1JSNPQeNeDT8DPFkgEjw6mP66+v/BcrHZVwL+eM+nvKAm6cckN88Icn/tjq1FeABat3gzQXvQWL0vSXayNmnzibAV4N0arBt3x8vzGifZErrg/Zzv9lUcSvickEx5gaN7JQZ7KNXKjildNRLuY9AEFzJmv7CPHM5h/D1VNHf49QE3qJYh255mTvBvwYuvntoxjZRpwJF2rlNXzFIqo2fP5r+qDNtKef55lOMg5iMCkJLIEdXi/ZEs0LkuW86uHGF9PT2ZCsycB1yxNUv4p7BZPj9y2qUfGNMDCkLYUDymI9SwIpPy9+/ltLxWlmoH1+jbytIRoJtEHIndn+mif//
+X-Session-ID: U2FsdGVkX1+D+plsFRN12ivv4iCA5vfIigbWuXeHlsQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=VUWdWiE20cmNutD4YDHUMmXMGw9dsti+jXOrsvFJPwk=; b=onZ96OnVa+Wcrm50/yBkJtbu955pWQ2k0ou2ciTtd679XPdLUlm0cQnOwJxqyydePcAT0kU7+tMyGHAOLbbKbfqpI94IxBrqtPjGwKXKSmfqdEB/RJe/7zogImgn85g3PQ5//UdsuC9JsC+Eyu5PSphcZN3FasNWfkI7+qUzYkQ=
+X-HE-Tag: 1787934842-838244
+X-HE-Meta: U2FsdGVkX18xNdSOMMjpAy+Gc4O7vwkHvNidlHSx7URjm5N2GatyaFBEcMqwmJo1ICiMCpNMpC2tjpGYcKrbv7NJhjeSQhvUVQEA1cCcrtgdX/0gkSRMhmxdlzOBZ4Cm7ruP2OvhJs08eXLwJ3DXsiNh6LW7sW88mB5V9d6OkCwElUxRQ/4O7dBoFghatrVhh7gPAzQYxyWBwHYI3biBQXNeFKjrzZ/cvLE5mksy38bCz/jqBuqYgWzo2xx0c2c2zprmRAlm6JkWMdRh8nqPE4/zs7zdScTeMPe8HJ4X3drtcVJzSosKf0iusO9wUBMYkRwWqC6uozrAXaj7HVCswmPYAusVjRM7
+Message-ID: <20260828163452.FSU7ejbJe9onK4amKMjmoCOJqemfXwQZjCrHsdy33eY@z>
 
 On Fri, 28 Aug 2026 08:59:39 -0700
 Breno Leitao <leitao@debian.org> wrote:
@@ -131,6 +132,8 @@ I hate these comments. It's really pointless to state this. It's a "no shit" com
 
 But this also assumes that ops->private is always a trace_array. Which may
 someday change and we will get a hidden bug if it does.
+
+This is the exact reason I want to look deeper at it.
 
 -- Steve
 
