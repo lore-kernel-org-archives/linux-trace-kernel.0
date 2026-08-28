@@ -1,131 +1,75 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA6644AB7A;
-	Fri, 28 Aug 2026 14:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E91F471CED
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Aug 2026 14:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787926290; cv=none; b=XL+/Hc1iCqpK9KIbm9CHyht8upoRNMKAuNjb1T72CImUiKpitwS8PxiQdITVVPuSMw7idHl7ucR+36VzFzHmOJ4ZeVbD4nG7lzfwfkhqJ/kyVk2hULQ6INNc1spb1uxIaFSIQ+4xFK2xG63qG5BdFRoCP/BRqKE70oo3y/IGFgQ=
+	t=1787928077; cv=none; b=KQqNEd7c1Q364Cr/jLV3mMnfZJQTA12VXCiH0d+kjzdY9dMmn0kGQ93NOApIvkcjt7vWOm/8um3oPDlcesVKYr6loi9nM3vIcUGFvo0m7QtEBHmk2gVh1o8f6l3ZZxnBdRqtTR/TiEJ26OI6hXftVATkVlay4Di727ezq6n2fQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787926290; c=relaxed/simple;
-	bh=zrWYftSCGtfnzZIw9FBRwaFuP0lkn+KXDXTp3VXyk30=;
-	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=NB4XJtaDUDEGD+zDYTQGxHqoAImse5rgkQaiiZNL1dl9JLeHeXEgDy0epN0ubG5RxoIVUMPwDPcUuVWJ6fEN70okiB+7AVOjirWYAPX7dl7FeGBe+OQhjxnGICWAOkDQmZ+8vCjccAVA9YeWZIodmQxwnHoT9i5kbBM24YGWrUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Ycnv+HBq; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=pAwUirXl; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1787928077; c=relaxed/simple;
+	bh=CsIaoi0CGG2Q/uq/TQBZ3t8bquE3rp7aOB+eNaqsJ6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AjCy7Cq81JMbpBqmz12citNqRBJBYLgXWTBng6i7LHTBm7pSqXA52UjOFNBOCvTyVjVHDQCBZNeRi+23j700OODL2jaOAGDk+ZRN7BkEKRPl8GLyZG4O+QhbuCMVjCbgrqgVXrdVs4ANRQgPEfvSAy+ZeJp103KJrwJKm25L/u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=AbVYLWWa; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Ycnv+HBq";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="pAwUirXl"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1787926269; bh=iZASGKq02X3MlmO8ig05lys
-	xUTvXqLjttI83Y8LZB04=; b=Ycnv+HBqjWQS5U5unDzB96IugCG4zABbml+qs+cqmqoPXqgymN
-	G+vRqqgTKjoq8x60DPVW7sOXe0Hsqb5XVKob6OFULWPoJT11vMeGF3D6JUgoiFXpy8emipbSAo6
-	IwZ457tXuzzZ7gSK37RTznHw3k8u1/25x4QLcudfso8yHnZrbd3bb+ih/OBHLubdyDLScT66loD
-	ikQi4ZPR4efqWGzX5p2Yrzeq4egeTH6Z+oT6Jf1CHeGEwpw0pPrnrAFypM0ywwauY1QphgUu0c7
-	SIURc0XASezSaZ5NV9SeEzXFGejC8yS+NYgdAuQWayIoBCn0E1BA9kJwQOGqmRnLmsw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1787926269; bh=iZASGKq02X3MlmO8ig05lys
-	xUTvXqLjttI83Y8LZB04=; b=pAwUirXl2vj2hacynI1LWN6FYowJY8LNRSofKFRBFio/OCLbR+
-	G44FlI0f44HKl1e99r6flMyTrSMraop1b0DA==;
-Date: Fri, 28 Aug 2026 15:11:08 +0100
-From: Bradley Morgan <brads@mainlining.org>
-To: ardb+git@google.com
-CC: abarnas@google.com, akpm@linux-foundation.org, ardb@kernel.org,
- atomlin@atomlin.com, catalin.marinas@arm.com, da.gomez@kernel.org,
- kevin.brodsky@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mark.rutland@arm.com, mcgrof@kernel.org, mhiramat@kernel.org,
- petr.pavlu@suse.com, rostedt@goodmis.org, rppt@kernel.org,
- ryan.roberts@arm.com, samitolvanen@google.com, will@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_4/9=5D_module=3A_Allocate_MOD=5F?=
- =?US-ASCII?Q?INIT=5FTEXT_from_the_MOD=5FTEXT_ROX_allocation?=
-In-Reply-To: <20260822135323.795946-15-ardb+git@google.com>
-Message-ID: <5D55C497-95FF-4603-98E4-8C47CDAB504C@mainlining.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="AbVYLWWa"
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 122081A03B5;
+	Fri, 28 Aug 2026 14:41:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 637D132;
+	Fri, 28 Aug 2026 14:41:12 +0000 (UTC)
+Date: Fri, 28 Aug 2026 10:42:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: mark.rutland@arm.com, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: ftrace: UAF in ftrace_regex_open() on a removed tracing
+ instance
+Message-ID: <20260828104201.21aa9d08@gandalf.local.home>
+In-Reply-To: <apGORjltZgAiAYHT@gmail.com>
+References: <apGORjltZgAiAYHT@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ab7m7s7yfsqeju15npnb5qn3wzbkzgk1
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 637D132
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+/DvSTQWRdzAkCe1AD8LbzbGiaR2oL8pI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ZO5skQkuDIAHlO0rxSAZ+pmHhdrynFYIYBlSqMeFr4A=; b=AbVYLWWacjhGDYoWyM8EcKL/yXiM+Za/RegBWJ3RibL/VpXB4BEx7l/X0/qVzPNUxKOVCPhPw+brwBjvsSoyeEgoJa8lN91TZ9SOZD0hZgRBKfNKVE4KWk8QBNrox6gyq2Cwl5yU6bvXADyNocNlUjij02gy3zs6qvIDLUcbkro=
+X-HE-Tag: 1787928072-3306
+X-HE-Meta: U2FsdGVkX1/ICfyGN6LKNJpWczMdvtpafmHv20DAxcyxFnPdzK+By/fvUZOIQgC2RBDEKmBesjCkRjjH5DQxEWPfcueIYGezx2G5dK5+RSwBRHf4/NuUXgbTTp3p1sB8/QKHayVLBIACzDNBXCLOhF374vQCM0+1MYw2a84xMo8drYpTwmM3yaFOMgKUsdrtjgDgrbvo4COftoc9sAaX906V2l3/vCFrXPRfWjoQd0lhq8HYdnDnZVnrr5C5rn3ei2lEv7UgNvZWeXR5mrhp3BUGP3KCTd83UIeBR8rJpRk+9XCgtDzcdvF1rinu9Ya4sVylnxHS9kJfhv0VBVbfHZTPdpsb5VMyrChTdlU1EOvjGUclqqhbsg==
 
-On 22 August 2026 14:53:26 BST, Ard Biesheuvel <ardb+git@google.com> wrote:
->From: Ard Biesheuvel <ardb@kernel.org>
->
->When execmem ROX caches are used for module text and inittext, place
->them adjacently in memory, by allocating space for both initially, and
->splitting off the space for MOD_INIT_TEXT as needed.
->
->This avoids the corner case on arm64, where .init.text being placed far
->from .text results in a lot of complexity wrt indirect branches and PLTs
->that we'd prefer to avoid.
->
+On Fri, 28 Aug 2026 06:38:17 -0700
+Breno Leitao <leitao@debian.org> wrote:
 
-I can't see anything wrong, thanks for the patch
+> I am seeing some UAF KASAN issue on ftrace in Meta prod, and I think
+> I got a reproducer that works ok.
+> 
+>  BUG: KASAN: slab-use-after-free in ftrace_regex_open+0x50/0x770
+>   Read of size 8 at addr ffff00097627f418 by task stress-ng-fanot/1811644
 
-Reviewed-by: Bradley Morgan <brads@mainlining.org> # kernel/
+> 
+> #define TRACEFS  "/sys/kernel/tracing"
+> #define INSTANCE TRACEFS "/instances/uaf"
+> #define TARGET   INSTANCE "/set_ftrace_filter"
 
->Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->---
-> kernel/module/main.c | 22 ++++++++++++++++----
-> 1 file changed, 18 insertions(+), 4 deletions(-)
->
->diff --git a/kernel/module/main.c b/kernel/module/main.c
->index 46dd8d25a605..2d6213496359 100644
->--- a/kernel/module/main.c
->+++ b/kernel/module/main.c
->@@ -1342,7 +1342,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
-> {
-> 	unsigned int size = PAGE_ALIGN(mod->mem[type].size);
-> 	enum execmem_type execmem_type;
->-	void *ptr;
->+	void *ptr = NULL;
-> 
-> 	mod->mem[type].size = size;
-> 
->@@ -1351,11 +1351,25 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
-> 	else
-> 		execmem_type = EXECMEM_MODULE_TEXT;
-> 
->-	ptr = execmem_alloc_rw(execmem_type, size);
->+	bool is_rox = execmem_is_rox(execmem_type);
->+	if (is_rox) {
->+		/*
->+		 * Special case for MOD_TEXT / MOD_INIT_TEXT: allocate the
->+		 * latter by splitting off required space from the former
->+		 * so that they are always placed close together.
->+		 */
->+		if (type == MOD_TEXT)
->+			size += PAGE_ALIGN(mod->mem[MOD_INIT_TEXT].size);
->+		else if (type == MOD_INIT_TEXT)
->+			ptr = execmem_split(mod->mem[MOD_TEXT].base, size);
->+	}
->+
->+	if (!ptr)
->+		ptr = execmem_alloc_rw(execmem_type, size);
-> 	if (!ptr)
-> 		return -ENOMEM;
-> 
->-	mod->mem[type].is_rox = execmem_is_rox(execmem_type);
->+	mod->mem[type].is_rox = is_rox;
-> 
-> 	/*
-> 	 * The pointer to these blocks of memory are stored on the module
->@@ -1368,7 +1382,7 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
-> 	 * *do* eventually get freed, but let's just keep things simple
-> 	 * and avoid *any* false positives.
-> 	 */
->-	if (!mod->mem[type].is_rox)
->+	if (!is_rox)
-> 		kmemleak_not_leak(ptr);
-> 
-> 	memset(ptr, 0, size);
->
+Ugg, this is similar to the bug I just fixed[1]. But this one will not be
+so trivial to solve. As the trace_array in question owns the ftrace_ops
+that is used to register the set_ftrace_filter file. Upping the reference
+to the trace_array will require some thought.
 
+Let me look deeper at it.
 
---- Thanks!
-https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
+-- Steve
+
+[1] https://lore.kernel.org/all/20260828094153.17b95037@gandalf.local.home/
