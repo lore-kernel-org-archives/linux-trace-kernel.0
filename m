@@ -1,87 +1,133 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18D9469834;
-	Fri, 28 Aug 2026 13:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14C457C9F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Aug 2026 13:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787925010; cv=none; b=YsfPrB5coo3GY1rW0e2fQTqq12rTcYVbiVU1XKZ04YHl8Uz1AAmeIRuFHNyGRZWhuP6INBHuOFzntCMJh+nPwp71Lw0NUE1nM1XKyApmt7uZLB0wq6lM0APh3Efpc6FuiV+otIEewGDBWT/IM+ZOHExKxg9cSQVjFD5O2weeTo4=
+	t=1787925540; cv=none; b=aGU5nnkrDHwAVI/Tts/EEqiazW8huQ2sgn0JvFD/8on08ttzLBs2LgtxMMl+qDApKFvM3uLpZcyDjdo8GaZ3A89P/TnrkWzqa9mEk4oFoTgBqG1FXNfPUIehvzOnbsOaAU4f/YzU/UWVDSzmNM6v7UMP68qUh/WTqfwjvc35wBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787925010; c=relaxed/simple;
-	bh=MNM2Sraq4K3iY6iYHq8qBZekPaB//ruHF0n2Pe5EE9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s/orXk/wXG5bh4j/Ol7lHnwmdTqECyF54F4Bs5t4DQBCuoxLiuRYT7GvZWxTbqmMy4dU3z5Zm7qt3Igf6BOXBGyHjbLgikvD0dMc+bGLpZllsEXEbN7EBerN7mwCEMOgmEFit0h0czDBd1v5SdyUcFTJzbvm0v/OJ0qQULUnuoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=NrfI9ypO; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1787925540; c=relaxed/simple;
+	bh=LS0osjMXDePnUP/Cry2skNZj5SUuVHwt80Vd/ZjCB7Y=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=oUd0cKORApKQFdohfx9pZAG+2OriZUDlTvqgXtYDZ4zKZPBn3EVKdN+Cl2wqpHXbdC7f3L/4uhxaUTkElBskHzqIR559ffdNMBH6dFiYxx2ajW/kxjrgGwZi7f5+7fsUTK/DHYdL1x282sDpek1ZR+F85tXRHU0h89FswOWJ7Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYqZPBby; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="NrfI9ypO"
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id BB1FA1403BE;
-	Fri, 28 Aug 2026 13:50:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id CD8B780011;
-	Fri, 28 Aug 2026 13:50:02 +0000 (UTC)
-Date: Fri, 28 Aug 2026 09:50:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: syzbot <syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, kartikey406@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@kernel.org,
- sh_def@163.com, stable@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- vdonnefort@google.com, vulab@iscas.ac.cn
-Subject: Re: [syzbot] [fs?] [trace?] WARNING in eventfs_create_events_dir
-Message-ID: <20260828095052.442529a5@gandalf.local.home>
-In-Reply-To: <6a91709f.4d659fcc.734b4.001c.GAE@google.com>
-References: <6a8c13ee.91706f20.16b6e3.02d5.GAE@google.com>
-	<6a91709f.4d659fcc.734b4.001c.GAE@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYqZPBby"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC501F000E9;
+	Fri, 28 Aug 2026 13:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787925538;
+	bh=2oDomlgvtjVK8oRaHwtJzk8T294/I9oAAampEZwtly8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lYqZPBbys9Vy5B+i59sG6b+vJpt9R0sDXy31gU65CWyb4a+reNiBnt1NsG2WHQBxW
+	 6mZSwWyXAiWzJ/UHDFtUpzUh3GlsMN4BOZAtgQUkOg1KsuY2yD89G6OFJCLcLbgLac
+	 PYzOVM1sVAifLQfA529TF4cVyP1E5OAlsSOEq3Ebo8d2HOK2L4G3JSc/i9CgN3tLBj
+	 3CKynjOBKJtZZLd/3Hc4H711d3tKF2/H50cyeHKLnPzaJ3YYOCsI8aBFqZO6HHl4K/
+	 /GtNSvc0kUXnOa2aEukFbrz3QgRnw+1vgtUJMuKVeMsU/Nrj7janByztD3AQ7EjH9U
+	 sAiJOuhPMefAQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Have show_event_filters/triggers files take
+ trace array ref
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Steven Rostedt" <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260828094153.17b95037@gandalf.local.home>
+References: <20260828094153.17b95037@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Aug 2026 13:58:57 +0000
+Message-Id: <20260828135858.2AC501F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CD8B780011
-X-Stat-Signature: z491yxqsyqgox5f3i1worag15f1a6ykj
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+h7Gtx0qv3xGNpLED3o53D4lmvvufA+OM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=cr5uBqV5JgJ9Fno9O8Jwk+stMeWknF2R8YkK6zixjtA=; b=NrfI9ypOB/5PcxsukxvRyrA6I6XQt1we0foMDhOOuB7M3PtxvXCkTwHfJLBgpzX7efTahJkGv18ODlOJWCaVEmyR7Vb+wts6NrdgCjbhTiNb4FzBY4fxD4sY+CDmGsoL7PP6pbuiJE/LTbZ2uxD3tdPpx+v+f1L4MGf84aeIV6o=
-X-HE-Tag: 1787925002-802069
-X-HE-Meta: U2FsdGVkX1/eeJ/t4MKwRAoHEzQcGc24lczz+hypsh98K9gSWHbTmlNAHiHlEFYQ8CpueE9anMnhhDL7Gj/HTsoVQO6kacDuHsh3deNArKrdAJjut3lskN/Oimq9NUuRtzxFhHk6ZEdULqVPP5OJci8v5aYr1wrB/UNOMAz3iUsnE+CN9sFmN8waoPDBgS1nYHKba+bj6sJAhcis9M+ANr0vhcZwKXFD2ObeaaOr5XasTIpgJ8WkCjJJu27J/SmwWnfhIxDLepeqm63B/I3ZeUl327m5/uJvzT3Om5jYjsOhwRRnbDFFTBmpsCYdayul1ttT5go6qou/uG/JXsrulf5Zh3RN2JqwIL19XOIpf7v/x4yUt44EQMQ4IfPrbfvgvwQWq1fwnOL3WHSRAvofrjtF2iwpFatlioqctPpffkY4B4HlAPkH5KB/HDCYC2lbcuc2AZJxeCsmV9m9Mx2Mww==
 
-On Fri, 28 Aug 2026 04:27:27 -0700
-syzbot <syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    818bebeb63dd drm/xe: Don't hand out the flat CCS storage a..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16eddd49580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ccca94d2c01b9e78
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3ef80b4ed02226d04a06
-> compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17986d79580000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+3ef80b4ed02226d04a06@syzkaller.appspotmail.com
-> 
-> R10: 0000000000000000 R11: 0000000000000202 R12: 00007fae2ca35a9f
-> R13: 00007fae2ca35adb R14: 00007fae2ca5ccc0 R15: 0000000000000002
->  </TASK>
-> ------------[ cut here ]------------
-> !list_empty(&ei->children)
-> WARNING: fs/tracefs/event_inode.c:128 at free_ei fs/tracefs/event_inode.c:128 [inline], CPU#0: syz-executor340/6037
-> WARNING: fs/tracefs/event_inode.c:128 at cleanup_ei fs/tracefs/event_inode.c:150 [inline], CPU#0: syz-executor340/6037
-> WARNING: fs/tracefs/event_inode.c:128 at cleanup_ei fs/tracefs/event_inode.c:145 [inline], CPU#0: syz-executor340/6037
-> WARNING: fs/tracefs/event_inode.c:128 at eventfs_create_events_dir+0xa3d/0xbe0 fs/tracefs/event_inode.c:838, CPU#0: syz-executor340/6037
+Pre-existing issues:
+- [Critical] Use-after-free in trace_options_core_read and trace_options_co=
+re_write due to missing trace_array reference.
+--
 
-This should be fixed by: https://lore.kernel.org/all/20260827151011.389282397@kernel.org/
+commit ea5806b528a93a9450975f8b2320a019a3fbc9c7
+Author: Steven Rostedt <rostedt@goodmis.org>
 
-Which is in my queue to send to Linus (and currently in my "fixes" branch).
-I have some more patches to process before I send Linus my pull request.
+tracing: Have show_event_filters/triggers files take trace array ref
 
--- Steve
+This commit fixes a use-after-free issue when reading show_event_filters or
+show_event_triggers files by ensuring their open operations take a reference
+on the trace array. This prevents the trace array from being freed via rmdir
+while a task is still reading the files.
+
+Closes: https://lore.kernel.org/all/CA+0ovCjerKZJLwXScM9bF2ga2rLi4_XOpUfK41=
+NDbENpeu98jA@mail.gmail.com/
+
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 9f8f2d02276ca..e676601943362 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+
+[ ... ]
+
+> @@ -2908,7 +2908,17 @@ ftrace_event_set_open(struct inode *inode, struct =
+file *file)
+>  static int
+>  ftrace_event_show_filters_open(struct inode *inode, struct file *file)
+>  {
+> -	return ftrace_event_open(inode, file, &show_show_event_filters_seq_ops);
+> +	struct trace_array *tr =3D inode->i_private;
+> +	int ret;
+> +
+> +	ret =3D tracing_check_open_get_tr(tr);
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but since we are fixing missing
+trace array references, does a similar use-after-free exist for the trace
+options files?
+
+Looking at trace_options_core_fops in kernel/trace/trace.c, it registers
+tracing_open_generic() as the open handler. That function passes NULL
+to tracing_check_open_get_tr(), bypassing the trace_array_get() call:
+
+kernel/trace/trace.c:tracing_open_generic() {
+	int ret;
+
+	ret =3D tracing_check_open_get_tr(NULL);
+	if (ret)
+		return ret;
+
+	filp->private_data =3D inode->i_private;
+	return 0;
+}
+
+Because no reference is taken on the trace array, could a user remove the
+trace instance via rmdir while holding the options file open, and then
+trigger a use-after-free when reading or writing?
+
+For example, trace_options_core_read() retrieves the freed trace_array
+via get_tr_index() and immediately dereferences it:
+
+kernel/trace/trace.c:trace_options_core_read() {
+	...
+	get_tr_index(tr_index, &tr, &index);
+
+	if (tr->trace_flags & (1ULL << index))
+	...
+}
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D ftrace_event_open(inode, file, &show_show_event_filters_seq_ops=
+);
+> +	if (ret < 0)
+> +		trace_array_put(tr);
+> +	return ret;
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260828094153.17b9=
+5037@gandalf.local.home?part=3D1
