@@ -1,39 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC84035B657
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Aug 2026 19:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3679E27A47F;
+	Fri, 28 Aug 2026 19:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787946860; cv=none; b=F403cWmYthcIevnTVs3m/ND2o3XTj+03TLnTq9bXDq5QJs/8xsNQvw3Aq1pvw5saIbB/PbjQfcbdOdbQ65rJq0+hMBUMlSJn+KQv4BtZbllkI3Nu1es1BLD4IGRslZLSjkeOd2lSM8FkxcpVmL7BhTTbgOzfZTJ0dx2eO+YTwhk=
+	t=1787947144; cv=none; b=fc4Ob4RFSLh10BIKhNPTn7Zij51FOM1TtafTcTWYqybazp78uQTgbq4ngjMuMJfS1GVfeKCmeWjZu/CoqUpjJW9Zqg4D5CdkbHvN/gQtATIpR0xgq4qWjnn2v5s/3WeAk1Ry4PQfRXVgECHnVDRJrzw3YaEqFjD3X9uznXBIqMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787946860; c=relaxed/simple;
-	bh=tpFcNd3+ARgr9deCsnxBsTiuRNqriI6MS5kW/9S2MBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WlJVI6hSezbvOPE/ZDSDeuPWYSf19UTorS43cHpCZIuYkg92LhTqZtGymUUY0nS1g+PJHqPyAGa6iMi0cCLZjCviAHH1XcBX0PNVqqakrd0XMwGLn6xNq2RQrddY6elbvkHo+AG0O9x/O4IV3S1OgqNzJX0Fr/EkzY3OEb/X1hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=gVce8Sw5; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1787947144; c=relaxed/simple;
+	bh=LgMOatiy+7XEyiCvqb4M1kKcLipTyx0ODtzakxJIjiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RkV1oyWWUDC+olcr+jKgKSzMG4mWtGDyrS1fBLYEOY2y5mhY5r5O1im44DM4eI87kw/j9m/Fd48o+rjhsX61W5E3rvYz2uUhxryqDQ3BbZx+6ZAhKzExXux4VWX8APLu3p9+yUpJPllocWGi5+dG/M5mTztoBXmSLUCe1b1b4Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=5tzIGdy2; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="gVce8Sw5"
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 7817A1C20DF;
-	Fri, 28 Aug 2026 19:54:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 9ABF02F;
-	Fri, 28 Aug 2026 19:54:14 +0000 (UTC)
-Date: Fri, 28 Aug 2026 15:55:04 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="5tzIGdy2"
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 5BC7CA056A;
+	Fri, 28 Aug 2026 19:58:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 8DFE72002B;
+	Fri, 28 Aug 2026 19:58:52 +0000 (UTC)
+Date: Fri, 28 Aug 2026 15:59:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: mark.rutland@arm.com, mhiramat@kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: ftrace: UAF in ftrace_regex_open() on a removed tracing
- instance
-Message-ID: <20260828155504.529c97e4@gandalf.local.home>
-In-Reply-To: <20260828140411.14108739@gandalf.local.home>
-References: <apGORjltZgAiAYHT@gmail.com>
-	<20260828104201.21aa9d08@gandalf.local.home>
-	<apGwPEj65dcbZFxS@gmail.com>
-	<20260828140411.14108739@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Breno Leitao <leitao@debian.org>
+Subject: [PATCH] ftrace: Take trace_array reference before accessing its
+ ftrace_ops
+Message-ID: <20260828155942.445f46e5@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,24 +39,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 9efmfp97357t97czm8rmcg16a1u5ii51
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 9ABF02F
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 8DFE72002B
+X-Stat-Signature: 1w18up9pq5e83gw6exubumdrwzsuiahp
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX191LqbQQBNhluJj5SuuE1+Hm40uP6FEdDs=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=CV1ZCmldjUu3sB1IbDPmsTqt35XXT0B5c6jUqaL04us=; b=gVce8Sw5pd4kAAm5Qq79Bv83BiIFaWlY29xXWud4PawDeRbF8vu1Yfn5POhb0XxYud1bPgqQNHNRW2Ds9SVT7bo5cdXKjFgMUZbgTU3V4318ONCc6DGOFtwB23Aea3LUnV126poW6PcMX7pZ4Oi9aGCtyoyMtl7JTDEj659hA3E=
-X-HE-Tag: 1787946854-127370
-X-HE-Meta: U2FsdGVkX1/VbzNPVzLQ83qzHGbX0RPh7JWyBnLtIrbAmBVJvh9Tvy6YzOfZVNFtvd0INT6pTGuSqL5i8RvXdQKIBHDERkCDHrH3G57uxI4STXzSFN/tSVTopjgQ8HzU/OtaE7ZwP5taRbK46HKHVsYDTfHM4EWi6gQ636luxYvYPgQetQhr7BfPc/AAISN2Nd/BvKvdimOFndGOO3K8wBmMTyaJThBQgu8UCBW4wngQy5vYsJhtBZfDzuWRIfetwBz8oWy9Y5S0dMMuqI+EPH0zTxeLOSPaZDdcJFzPen/FnhLwtS+w24twcuXuW+/kE7L4ScvPYf7G2M2VeytOEfyP4bEJJLs6VBUCaagCHXtrOJ8Be4ELoIQuRjmNkdgx
+X-Session-ID: U2FsdGVkX18Yb9jRXkSyPDoXLbuSUOgC5KL9Ug1cS/k=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=1/oOOJl68blsipXdwWwm/N25KYqVOSFFcMXMMZnjr0g=; b=5tzIGdy285KOFGiOi29CMVK7EAiyxxk8cJFNRJjO2KQ0NjPYzHI7smRHe/u6dkLMFL+6LGdJUVoHc6l+hGqEzwDBm4D2Vytxalx7EI52yt92jq4Wpyr2zQSNxbHNt8DiByRyA1Rocl64JD/tssh7ojctiUIeaJW7kbwaLjxLFEU=
+X-HE-Tag: 1787947132-504366
+X-HE-Meta: U2FsdGVkX1/CQrSRG4dsWZo4R5CUyOZdH6yYH/GpYuGXqQBu22yyyb7pzXRgNs3D4jxqi/lm9ToPzzuoL3jayETzSkTqsNHVBb6u64DwF4Zgjo4Rq+28aAO9kAuHQDT2Vake3tNtxy4MgHEmOsHk3MeOnQZ2PJ3i6uI+3vxxVZ6KE+JhB8lGjYcsV5BbbNH0izXN00xfkc8Y00It5aAQylTALEqUdqaGfXJ9xmLFFd/K2E7J7vxL/fQLOedntq9+cFBqShSLbr1Z8p5+MiQnCbms9yX3TVCSTo/8prYubLuQwhW6H4kvOb8J5nITN1Is9mL524E15yhzfbyDtQXLyQgPgpJsZsc0Wgs2wyoY/H08geuVvwqFyU2M9ImV5gRCKDa7PlnwJXG2l/2a/GdZhENYb92kdl3RKnPt3Di4QGCZdCbvaOaMpW471KD36gTeOavCj1rtFl8=
 
-On Fri, 28 Aug 2026 14:04:11 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> I guess the issue is that the ops may be freed before you get access to the
-> trace array. Anyway more needs to be changed. I may remove the extra
-> reference. No need to do it twice. Also since trace_stack may have the
-> issue too.
+The trace instance files set_ftrace_filter and set_ftrace_notrace was
+updated to work with specific trace instances (trace_arrays). The issue is
+that when these files are opened, there is a small race window where it
+will use the ftrace_ops from the inode->private pointer to get a reference
+to the trace_array and then take its reference. The problem is that the
+ftrace_ops itself could be freed. If the rmdir on the instance happens at
+the same time the set_ftrace_filter file is opened, the rmdir could have
+also freed the ftrace_ops and referencing it will cause a use-after-free
+bug and crash the kernel.
 
-Something more like this:
+Instead, pass in the trace_array as the file private data (NULL for the
+top level instance), and then pass both the trace_array and the ftrace_ops
+to the ftrace_regex_open() function. If the trace_array is NULL, then it
+just uses the ftrace_ops without the need to take its reference (like
+normal). If the ftrace_ops is NULL, that is only the case for the top
+level instance and the global_ops can be used.
+
+This allows the trace_array to have its reference incremented before
+touching the ftrace_ops that could also be freed when the instance is.
+
+Cc: stable@vger.kernel.org
+Fixes: 591dffdade9f0 ("ftrace: Allow for function tracing instance to filter functions")
+Reported-by: Breno Leitao <leitao@debian.org>
+Closes: https://lore.kernel.org/all/apGORjltZgAiAYHT@gmail.com/
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ include/linux/ftrace.h         |  5 ++--
+ kernel/trace/ftrace.c          | 52 ++++++++++++++++++++--------------
+ kernel/trace/trace.h           |  5 ++--
+ kernel/trace/trace_functions.c |  2 +-
+ kernel/trace/trace_stack.c     |  2 +-
+ 5 files changed, 39 insertions(+), 27 deletions(-)
 
 diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
 index 02bc5027523a..bd76a16a63af 100644
@@ -87,18 +108,29 @@ index 02bc5027523a..bd76a16a63af 100644
  #define ftrace_set_filter_ip(ops, ip, remove, reset) ({ -ENODEV; })
  #define ftrace_set_filter_ips(ops, ips, cnt, remove, reset) ({ -ENODEV; })
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f9d80c7bd9f1..fa7c7186c02f 100644
+index f9d80c7bd9f1..4babd86c7be0 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -4677,6 +4677,7 @@ ftrace_avail_addrs_open(struct inode *inode, struct file *file)
+@@ -4677,7 +4677,8 @@ ftrace_avail_addrs_open(struct inode *inode, struct file *file)
  
  /**
   * ftrace_regex_open - initialize function tracer filter files
+- * @ops: The ftrace_ops that hold the hash filters
 + * @tr: The trace_array that holds the ftrace_ops [optional]
-  * @ops: The ftrace_ops that hold the hash filters
++ * @ops: The ftrace_ops that hold the hash filters [optional]
   * @flag: The type of filter to process
   * @inode: The inode, usually passed in to your open routine
-@@ -4694,23 +4695,29 @@ ftrace_avail_addrs_open(struct inode *inode, struct file *file)
+  * @file: The file, usually passed in to your open routine
+@@ -4691,26 +4692,38 @@ ftrace_avail_addrs_open(struct inode *inode, struct file *file)
+  * tracing_lseek() should be used as the lseek routine, and
+  * release must call ftrace_regex_release().
+  *
++ * Note, If @tr is not NULL, its reference has to be taken before
++ *       @ops may be referenced.
++ *       If @ops is NULL and @tr is not, then @tr->ops is used.
++ *       If both @tr and @ops are NULL, then the &global_ops is
++ *       to be used.
++ *
   * Returns: 0 on success or a negative errno value on failure
   */
  int
@@ -135,7 +167,7 @@ index f9d80c7bd9f1..fa7c7186c02f 100644
  	iter = kzalloc_obj(*iter);
  	if (!iter)
  		goto out;
-@@ -4788,21 +4795,19 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
+@@ -4788,21 +4801,19 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
  static int
  ftrace_filter_open(struct inode *inode, struct file *file)
  {
@@ -163,7 +195,7 @@ index f9d80c7bd9f1..fa7c7186c02f 100644
  				 inode, file);
  }
  
-@@ -7492,15 +7497,15 @@ static const struct file_operations ftrace_graph_notrace_fops = {
+@@ -7492,15 +7503,15 @@ static const struct file_operations ftrace_graph_notrace_fops = {
  };
  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
  
@@ -182,7 +214,7 @@ index f9d80c7bd9f1..fa7c7186c02f 100644
  }
  
  /*
-@@ -7525,7 +7530,6 @@ void ftrace_destroy_filter_files(struct ftrace_ops *ops)
+@@ -7525,7 +7536,6 @@ void ftrace_destroy_filter_files(struct ftrace_ops *ops)
  
  static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
  {
@@ -190,7 +222,7 @@ index f9d80c7bd9f1..fa7c7186c02f 100644
  	trace_create_file("available_filter_functions", TRACE_MODE_READ,
  			d_tracer, NULL, &ftrace_avail_fops);
  
-@@ -7538,7 +7542,7 @@ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
+@@ -7538,7 +7548,7 @@ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
  	trace_create_file("touched_functions", TRACE_MODE_READ,
  			d_tracer, NULL, &ftrace_touched_fops);
  
@@ -255,4 +287,3 @@ index 0aa2514a6593..e7f4e523587d 100644
 -- 
 2.53.0
 
--- Steve
