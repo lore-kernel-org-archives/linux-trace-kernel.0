@@ -1,211 +1,163 @@
-Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021113.outbound.protection.outlook.com [52.101.95.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F55DF6C
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 29 Aug 2026 18:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788028982; cv=none; b=GdJCfYLxT5Bxd5o2e9Qw8GCNad+Q0y35ajHg0PqsCI2BDG2KtnzadVeHxJhxQv02+pw+PcPLDZpRItghr+8c+3ex7LMbLklg62JR0uqGWquvb883gk0E1L17vUvThQjH4rpxENGJfmZRSgDlp7cwhrgIQrwMXd7o8crvnx/x51g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788028982; c=relaxed/simple;
-	bh=8Gj2G76gEDUSTrJh9wyKhjlV0WDG+1riVaR0UmTV1c4=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=pLkHNXCM+OF5/Vxk8c6ojAHSwAS+eIJmhRvhzv5L0EyN7ktOkSMdxqsYMtFYxEupD5evRWQ56bPcaizujTB+W3EkwPj5pohu1XQ8qD9yGtOFbaYqIGo9G17r75rmyAivgCNVqGdoWUegsnpqsYUQawAFF4FbA1keFHaSJEkOcWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=YaJycs+P; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=xJMFBU7G; arc=none smtp.client-ip=148.163.139.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="YaJycs+P";
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="xJMFBU7G"
-Received: from pps.filterd (m0167077.ppops.net [127.0.0.1])
-	by mx0b-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67TIYsOE1452365
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 29 Aug 2026 14:42:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps01; bh=0bd5
-	PAmYpGy8JaYT1BKzRh2l/HCvYP+lW1f+KIURCm8=; b=YaJycs+PgkXAxiEmTQzc
-	x40/bpBx1OYZh241szBo3lKKjWsHNNTm/SUNCPAfRi3n/VvGgS3pPmiT6vJfeTeE
-	GiYqlQAcB9LxnBFHNoESzb5esOccev9qrcQWHm0gEHQGot5RZ3TlnUHgTh1mlvDz
-	d9N5rHFvicpTxBVJ1Kc7qEh1Y27NhJ6xXj8g377SAqIe5++so+krlfoZAvQs/gIU
-	kCMT6z/E5NYAilPWjvHEyj6ymy4uPe3Gtsnyao6hjzXSseIMYastb0rZJFYPC+xh
-	8rKV341s6RpP56zWTz8d8V831a4RBpe5IcA1BvubzOBoLFQUXRg3oy5g0dCR/q6W
-	2A==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 4gbs0ptuhm-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 29 Aug 2026 14:42:59 -0400 (EDT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-52ff59f2c47so24280721cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 29 Aug 2026 11:42:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=columbia.edu; s=lionmail; t=1788028979; x=1788633779; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=0bd5PAmYpGy8JaYT1BKzRh2l/HCvYP+lW1f+KIURCm8=;
-        b=xJMFBU7GQCayIbfE/cZMP8mwh0IfylQylrPhUpZBxmpVYi2RVGAjfDyeBsDEwx9xzd
-         TfrpRpffrA/wJ6xl9pQYcSVBhmEKp9cDktrlyJojPzwSDh4OA40bIIK/lPQYNv4qiejL
-         Ui4/zvXdVV1fseG53Y3bbx05exgxDw/IqliY8WXjDbo65O8jB2hu4kgVxZV9V+4phyKk
-         1KyvFBv7Q8Oj9PIPcEy99NQJ6X0Y9HpYMDP1lDnhiAQc4uLTX1Y6+HABwvmdTv/BthEj
-         quQK3NYVN5hBoiMWWqQpwMP+iIedprzIMuUaz/g9KiNUtGdZnLUjB709S9MnDJCQyu9H
-         q9ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788028979; x=1788633779;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=0bd5PAmYpGy8JaYT1BKzRh2l/HCvYP+lW1f+KIURCm8=;
-        b=DWomufp5l0BUIQmesykqssbjh9W9rN5wiTM69UTKzlKdrsYN19sBAFtdUd2psVaYD+
-         4+iwAA3zbWjoTpV7AeDKYTOz+I69Dx+JTMUh/7e5+sPxUxDmd0yBtK+wMkuczd43crs5
-         HXA3ehJzqv3xsiUtn+HjLh4p1yZWY1XGRZZOsFe3PLBtlAb4lfpUpK2JxAfZJL9IRYK9
-         qUvUA7onRd8te0n8gKpgjGj6I29XE2UE3X2vviyXEOEl9KB4QJhAWrk2Vdok5QoD40fh
-         /ocKvMzZS8yNv8RiamIv0s/KGtnCG80oX5gY40Y/bVWI0nhXhCMQ0rCDEb84ikYgeCpl
-         qEQA==
-X-Forwarded-Encrypted: i=1; AHgh+RqYg6vpv99fyEGFLN1dUwrklSB4siMzAIvgGX2B0MoHJZg6Fcr0/zVmye2KLz+nVjk1bv2tRPY/n6MsqpLYFdSsLvQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++ntbBErU809Rwco8IOHQeqeV8t7ursNrr2LcqMGzDByE4k9e3JM
-	4o3AjPlagbCZrypzEhYu/gpO0u5eZUYOi+SR4x/VmYs7fd94Gz1gmwL4VohDMFI+sjCgzlwcXQ+
-	epeJS1IB8LE71S1A1n4jJn6SP1peBZKjA7c3XCh10kkt9Fg7SeCxz75FZU14uBOB2krmNBw==
-X-Gm-Gg: AR+sD11xs8Mkf1PXRXitI/DhMuTLm23/RlvG8PE+3O7lNd01PNXrj5+KrNQJntKjm/f
-	OF2kHDatIWeAlucC09iK9mlD1EOz3O3QAfXGN0SUQ8hAGZWdf2fm7MBr5nqLA9r/kA0k82Vz9Fa
-	EoDAXuvgOlwBbx2QaTDnCLHM0mfizcimKMyLUIfYm8yHn3MNObD636fno66i2eY5tFERZUdN6Mh
-	xWuCzY2PHr1A3KsB/LXX/cN6Jfbhmz80woamUlJPYVeMvyPgGvYUGaguZsITpsaNUfuRHS7CKsa
-	tTd47cmsBdgxV7mtc6xsWoecSEMI55N6PmStrntMjn+YR6jIlpaUry1NTe4bAKoX8FJKiCy6OH/
-	8r2bYgxF6fPJoGha/uQAudm701k87tv5jhu5HRDqIy/oVwII=
-X-Received: by 2002:a05:622a:1910:b0:52e:4982:22cc with SMTP id d75a77b69052e-52fa1a4aab2mr249923161cf.5.1788028979074;
-        Sat, 29 Aug 2026 11:42:59 -0700 (PDT)
-X-Received: by 2002:a05:622a:1910:b0:52e:4982:22cc with SMTP id d75a77b69052e-52fa1a4aab2mr249922571cf.5.1788028978606;
-        Sat, 29 Aug 2026 11:42:58 -0700 (PDT)
-Received: from [127.0.1.1] (bzq-79-179-7-133.red.bezeqint.net. [79.179.7.133])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482fbb32d30sm12171637f8f.34.2026.08.29.11.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2026 11:42:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925E43FC5D1;
+	Sat, 29 Aug 2026 23:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788044729; cv=fail; b=R9tgSffGeQmHak7qDvens5NVxibOvlxy+Ad4h3h25NJHuEbIh77k4qXe2WR2QlE6GGTgbvw12e/IbqVZkL1ncEE02lXKSm91Wmar2h2I6HVqBwHGIGIfrx2Qvd6SkBrMrS9gogxKnV8tB80pS1kMyGs+wLp3bJBF8xLvRF1n/TA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788044729; c=relaxed/simple;
+	bh=LHvmAtCX0//c2Wnv4/O43M6AZ2dHWxWFMpGrKGwekvE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=i4csfGWmVeo9UDvfi0t4Fl+wsZo5hhhJO7QAM3Hy8c77M6Yw6ZRA5UDHaEh5JlS+ha8vJldT7nGcKCcmXiBHn3qHM++VXTG7dz6qJmxmuCUZwaShE6KATglyCWLqlY/9kI307pZ4jEAVfAjAKT6drSSm7LEO6QDt7i/2wo/2uzo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CiYtGie7uSxJ7dyk3cOj2BsTOznsoCVbLlODimKvsg87wfFj8w9xKGbZO8ba5vRDiLerybJtc00zfGqtIkQ6+UaEIQ/YlFCtkOD69hKjHc9NVGV4yTtWkEYC3CcXUglIVemxfURTfW1IO5wW/SlpC/LwAuBzwvM5gD6YaC4HofQtHrC8EIoRvMXAV5FnEilYCR3mutEyoRooXNxm15cK85NRwebYEn7Vil9IRi6bnwQGRfOyXWHFT6M6KF3EPj7jS3P9PhcIMTiOZR6S07Lk7qH6T7Ev3cXOTsj65/2NAreEv0rwxu9DbUIApbLyuPWDK0phN+lpA24KHKQoX1wc4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=V5kuxSBt/VMAEKHC+ZgKZ2GcMbaS8f6o2/NmxJ8Gk90=;
+ b=bjVORX34GlpO0+B6zH4b7ZheSusHq2AFafYHavVO7mNctHG5SWKqvxk3x5MCoXfInM8v+8nSuzCyCNnszy/3ipoB96MKivJRUKPLQzrA5aI7cG75A3Rg2Bfd/B16envUHFDtnmyz01IuZ+JDIO9RMHWicLcXbfQhKDg43nDVGSInKBxSdZCnd7nQhoh6b4Kr06Qkoxp4aBv1r3LrJPebfIeSiNRUgLFFjmQDXR9gTjqBHQ9UXUm8HpuZxB7bHPwSgkxOxOpqnOutDZkMWd14R42H5uKjewhBUWmtVqVNgYS/vYx31qTuk98EOI4nfMUOW2Tk7urIM536jtDQQooF/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by CWYP123MB9008.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:288::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Sat, 29 Aug
+ 2026 23:05:23 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0360.008; Sat, 29 Aug 2026
+ 23:05:22 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: tj@kernel.org
+Cc: jianshanlai@mail.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	osandov@osandov.com,
+	atomlin@atomlin.com,
+	neelx@suse.com,
+	sean@ashe.io,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/3] workqueue: Add telemetry tracepoints for CPU hogs, distress, and BH budget yields
+Date: Sat, 29 Aug 2026 19:05:14 -0400
+Message-ID: <20260829230517.42468-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN9P223CA0015.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:408:10b::20) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 6/6] userfaultfd: collapse
- VM_UFFD_{MISSING,WP,MINOR,RWP} into single VM_UFFD
-From: Tal Zussman <tz2294@columbia.edu>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-        "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>,
-        Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, Lance Yang <lance.yang@linux.dev>,
-        "Liam R. Howlett" <liam@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-        Nico Pache <nico.pache@linux.dev>, Oscar Salvador <osalvador@suse.de>,
-        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
-        Ryan Roberts <ryan.roberts@arm.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Usama Arif <usama.arif@linux.dev>, Vlastimil Babka <vbabka@kernel.org>,
-        Zi Yan <ziy@nvidia.com>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <apK7s4xSgA_GmY7d@kernel.org>
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-6-3086981b33cf@kernel.org>
- <ao16VxNvaYzlt2WG@gremlin> <ao_9R3CbjYFipFu7@kernel.org>
- <apAB9GSnHNyNoSc1@gremlin> <apAcweThjiD-iIBF@gremlin>
- <37f6af95-950e-4457-886e-6548d4719f0d@kernel.org>
- <apK7s4xSgA_GmY7d@kernel.org>
-Date: Sat, 29 Aug 2026 14:42:52 -0400
-Message-Id: <178802897277.671075.10362065249796431311.b4-reply@b4>
-X-Mailer: b4 0.17-dev-db0b7
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788028972; l=1768;
- i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
- bh=8Gj2G76gEDUSTrJh9wyKhjlV0WDG+1riVaR0UmTV1c4=;
- b=cMv3WyS297uSy6OhyEPKL7TFiV6NgPyRlli6/52vFPU3U+wxk43IDrwyt65mNyPQi/updU28Q
- fXkQOPOdareAvP+hQQ2rgHqvMZY30DpDTGX/m0/lnTSj2MdkKXGNeAi
-X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
- pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI5MDE2MCBTYWx0ZWRfXzj+YFPcRWxgI
- LB6h4vxKyFGiXzgihyxqtPMSmjvsitKemvIj5qZSfuB13YKnBKlETeD4G2t8m0vQtmbIhE4Hgkn
- xxX8j0rajORiHC5QkVI0A8s8PJO97F1th79I33fUjHEq4p6zC4NTFqBGsFkA1nDcYEkBvGnleS0
- VEn0gcdruFPwZUrueIXEGbxl+htzBInb8qrdHpU/0dHuEbaE1hNn4iQ7po01aEwX7mqqUWi9ajT
- UiZGb7+Cgpy5mniIp/NTfd7FCXwUasYj8L151Sfz5DrM7t+mP0utnrY4FefYLUrsjBie3IwVXH6
- iiXT7Mvyk6EH3C7XRQUZopefjd4RTpDGp8G6gihFd0WPeFzox19ETEEw1L2hb7VWuFuxmOn7DUS
- GqOdjvIJ5AaGnfR0ywVxv3Lc2NcmIMQXiPsIpsh9nE4z80MwL58UYDyAPehfboLoT0iIrn7nrYA
- UqcQhlrWKhUu9bA6AeQ==
-X-Authority-Analysis: v=2.4 cv=EtbiaycA c=1 sm=1 tr=0 ts=6a932833 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=LRATYcvZeiQrLRB5MfbBvg==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=x7bEGLp0ZPQA:10 a=A0y_DWxS2BwA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Da8U98TiO7q1upZEImrf:22 a=QOCMdifcju39GKoXhKua:22
- a=kX8B4L1VaituP6mSkuYA:9 a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODI5MDE2MCBTYWx0ZWRfX/hU4JuBJTZYD
- CP6K07CJ5rndGNItPUDFUIENLX78mDMXz0zW9rzCP44X6DJlmQcIzkosYGGily3CbhQEyMZtXGH
- r9i2kTsI093NpHHV79bilwCjzsCM492nw2Jb0YEG6UqBlSvLA5aM
-X-Proofpoint-ORIG-GUID: R0-0Gv41vyH48YcN9WMEId_3LH2nTDGp
-X-Proofpoint-GUID: R0-0Gv41vyH48YcN9WMEId_3LH2nTDGp
-X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11890
- signatures=596817
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=10
- spamscore=0 clxscore=1011 impostorscore=10 phishscore=0 bulkscore=10
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608290160
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CWYP123MB9008:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e52c797-36bc-42c6-34bb-08df06220084
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|10067099003|56012099006|6133799003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	r03Q8RkJiHZR1bpRfvoL7mTwVwkhL3uDieuIeq7qU9diagvmgiyzObOD5Xi6MnyMZukSBex2FuQfT7dG4EPZG6fsZdnXqEHh8vwXJeWRoIsQKiCTDiT/QauS75S4pMX5NbwfeBRWC0ZNSceRfDeaxnG4TaC5dkBY3KhjXN59d8Hs1SgAaCDwg3f8+gXrWfVuRa/Eu77tnjRZDqy8n3cZL0KGPlLGDesNqCj+nXvmfHKPqU+ALtXTHWYSvDyME44DzR6NXquhWV066VyMRbam6m0h7vFrynUp4/sJEX8wWUwEJPyVDnt3Yd6W+0naB52eGGbQCP1sSrvNN6p/9ZOCWCkGLzi9/GnmYtAGltPZEA4PTT3YGZlYVIgAo57DEw48doksY73N3aSXlJPrgFlrj3WJsfZt2nINZBanQxGrv1yIsVSt6HrgKLlep6MVJeFowOsB51zlNQCZYuyTZGT8zLlppq/TALuRNmva9rafip/UKad9IRFYKQst+rUOiA2/Pg+ocu7ifvx1Z2WwgAuLMZFsXWLh+jZ4DvHFK3EImx540xgyvzcRd0YOVidnvCbSwXB9Ad8Rko+keSFWcvGblFh7f/gUWQlt15upplZLyI0CqRprugJn9BkMsstesIhbQZ7vndHSWVh7dvXLIIG87n5olixtiDEo/3sMThpwZg4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(10067099003)(56012099006)(6133799003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5e5BtvVlu6IDPgDqetJs4xoZkm4yuC6gCTmVJ2XugS3utObKfK8T7pzNBKeV?=
+ =?us-ascii?Q?KGauIqdZy7RiB73N/h5TiblddiL4bqdTUP+2efV75/ThD69OX+r4s4JzbvJz?=
+ =?us-ascii?Q?EiKrlaiqP6SOtmTpn6vIEuFdgH+nTfsxQhtTFyb/HBoj3hN7U2misbB46ENN?=
+ =?us-ascii?Q?lPNG3MizCYUSfCOl6k79HX5IIYUmTrf50FAhk2aEvvTmy/WNxEloGkwa3F3w?=
+ =?us-ascii?Q?+db87xDUlnLBfkOuH2FQq1+C2mgn2kAStRx/To7/0VbnPzeqAK0Ghj8cTpjW?=
+ =?us-ascii?Q?B3aAIILWa7U6vqfXn25lYZm9mn5rCQ61oavosF9EbGae6uDpYUicC7BPvJYc?=
+ =?us-ascii?Q?pGlkp5pd9xAW8qK4iAcsxWi+rPcdbsqBngtR5cUc6/S3lgKcTPpFWkXX8rHC?=
+ =?us-ascii?Q?qCEqzDnDAxx4lYtvPusfu9MrA7TTrVQEJdIEStWk4KFvCio0t+acptFNl0PA?=
+ =?us-ascii?Q?iFgQvwIpYaB2eOeuZr4GZoZK+NORAjP4A5+9J4aRzz/YEvcxD0NJAtNJHMjs?=
+ =?us-ascii?Q?vMBr5Zk25O2nFNHOtbugO1Rieiy8g479dWR57tPB+DESJM6mgNwH4KvE78wD?=
+ =?us-ascii?Q?GNkAox6tJUCTZG64+7giG4OgkTUZskqpwws3VCBkOSFN6L8uGIQ9qNrLURDG?=
+ =?us-ascii?Q?vkBsdA+GZYmUD3o6Z7mZ0zJ930gTYa6MlXQDghiO2ala0N05zSDrNKeEn5ZA?=
+ =?us-ascii?Q?KSjOJmECSn/i91DZ0encqtnwSPnwZKpM4UxbEI+dfeh5lhrxpwmnSaLAAPcD?=
+ =?us-ascii?Q?AEYwXyzgtCxaINRfWxngA2O7YrmLXKaf64mVhLR8Ll3AqF6Ov+9L2YJ1Ktan?=
+ =?us-ascii?Q?RI9e7lDcvfhlbQ/cmQkFT+bgE9/2lUw6oArPrxVTcfeQ68nXFZRcM8UjPNIL?=
+ =?us-ascii?Q?p55yPmRLKxeCLcNZHXKCpgAezRM+WKsXBXcMwwuRYn7mFHzJecNDuLUKaCCX?=
+ =?us-ascii?Q?unrjxNoDPK7YvX+wvHA7JzW8AqHKx0VpJfnxxO8OVJ87WN1Avs5VwKxoV8u9?=
+ =?us-ascii?Q?MTV0kCXHxnq2aYwCBNr2wXk17+vslWVQP719XyIzBKUoXgXd0wuGeB6VGep/?=
+ =?us-ascii?Q?0GTkp/vo9uym9XCwZ8eVRNKxBQyplv8SCuYCPPJR3R8I3sLUsRhy+aPV4kwf?=
+ =?us-ascii?Q?8odiMuurPqQEXEFN0kKpVZslu2gWWlhJRMfFCF8gZHHLKi1XTitA6OZlfSSd?=
+ =?us-ascii?Q?kSz8q/or2uoc5yVWAI0a6wdcRTW557QRldp5I+wXJeKf67tw3WSvJPqiqMw7?=
+ =?us-ascii?Q?YBFc0W/HpKumGQJmgaM1IzzexVolk7EHPop0FdXKPFQ20ZZ8QyvPFkeIcYPR?=
+ =?us-ascii?Q?U8hpxbilqt+vgrEuVUDh05e95aaD+md3l8KHFePglh5winHOOqMDlKNOkawU?=
+ =?us-ascii?Q?89cH019ln5h3Vw42By6iIYbEyzSklXYP6R8KRmcYws/Kx8tsgm5xoqChOsSr?=
+ =?us-ascii?Q?AU2Njbk4Z5qPGUvTsYq2nLfdQe5MkfHCu4KjNMg5RIaLfUTXt54BbzpPt/v0?=
+ =?us-ascii?Q?R4kaNC51Ed1epegU3BuLYO2f1/jJIaASXK1IaGf5P/XP2enrTdUQkpl+XxhP?=
+ =?us-ascii?Q?Vbt1g7LtbCyP8qKrVZI9JqDkm2BEj67JOpKuxVII7a2FavArXB5+UICuemeG?=
+ =?us-ascii?Q?2/YHo4IiquUUpXPWV4O7c5wI5ke1ouNYojrNrnVV9nJqpUa4VNG1Ra6mqYuJ?=
+ =?us-ascii?Q?DSYl2hsKQ8Plc0Jr4ZiOk+U1AWaPqlYXRpQVO1x3yaogCEhsm9IV/hcpE0FU?=
+ =?us-ascii?Q?ldedF2xr/g=3D=3D?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e52c797-36bc-42c6-34bb-08df06220084
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2026 23:05:21.9664
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pUrbbou2a4S8HrO5Wid6c8vsiNcIxvQGDP7dEXwlMSIEBGa92dGIMaVjYJXw57X+mUGSANU0+t1AHVEluWPKag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWYP123MB9008
 
-On 2026-08-29 14:00 +0300, Mike Rapoport wrote:
-> On Thu, Aug 27, 2026 at 05:19:30PM +0200, David Hildenbrand (Arm) wrote:
-> > On 8/27/26 13:18, Lorenzo Stoakes (ARM) wrote:
-> > > On Thu, Aug 27, 2026 at 12:16:32PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > >> So actually you're increasing by a cacheline and increasing the VMA size by
-> > >> 64 bytes, i.e. 1/3, which is unacceptable obviously.
-> > >>
-> > >> Maybe there's something that can be done with:
-> > >>
-> > >> 		/* forced alignments: 1 */
-> > >>
-> > >> Perhaps? But that looks potentially ugly.
-> > >>
-> > > 
-> > > I say elsewhere (or think I do) but to highlight - I think probably we could fix
-> > > this by putting the flags in the low bits of vm_uffd_state.ctx?
-> > 
-> > if that's possible that would be clearly preferable memory-wise.
-> 
-> This gives only 4 bits and makes this completely not extendable.
+Hi Tejun, Lai,
 
-Wouldn't it be 6 bits? struct userfaultfd_ctx is allocated with
-kmem_cache_create() and SLAB_HWCACHE_ALIGN, and most of the flags are
-only available on 64 bit, so it should be 64-byte aligned in the
-relevant cases.
+While the workqueue subsystem maintains rich internal telemetry via
+pwq->stats[], wq_cpu_intensive_thresh_us, and distress mechanisms, several
+critical state transitions and execution anomalies currently lack real-time
+event notifications.
 
-(Not that 6 is that much better than 4... but it's a little more wiggle
-room.)
+Across production fleets and low-latency networking workloads, polling
+pwq->stats[] or running drgn scripts is impractical for detecting
+intermittent stalls. Tail-latency spikes and packet drops often stem from
+softirq overruns or latency-critical work items queueing behind CPU-bound
+tasks. These event-driven tracepoints allow zero-overhead eBPF tools and
+latency profilers to capture stack traces and kernel context at the exact
+moment a starvation event or softirq budget exhaustion occurs.
 
-It could in theory also be bumped up to 7 by setting align in
-kmem_cache_create(). userfaultfd_ctx already takes 192 bytes due to
-existing alignment. Aligning it to 128 bytes would make it 256 bytes,
-adding 64 bytes to each uffd rather than each VMA. But this sounds like
-more pain for little gain :)
+This patch series introduces lightweight tracepoints for these key
+operational boundaries:
 
-> So I think I'll drop this for now and wait until VMA grows another cache
-> line or until having per-VMA uffd state rather than a pointer to per-fd
-> context is a must.
->  
-> > -- 
-> > Cheers,
-> > 
-> > David
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-> 
-> 
+Patch 1 adds workqueue_cpu_intensive tracepoint. When a concurrency-managed
+worker runs for longer than wq_cpu_intensive_thresh_us without sleeping,
+wq_worker_tick() marks it as WORKER_CPU_INTENSIVE and kicks the pool to
+prevent queue starvation. The tracepoint will capture the offending work
+function, workqueue name, CPU, and elapsed duration.
 
+Patch 2 adds workqueue_mayday and workqueue_rescued tracepoints. One when
+worker allocation stalls trigger mayday distress, and another when pending
+work items are handed off to the rescuer thread to ensure forward progress.
+
+Patch 3 adds workqueue_bh_budget_yield tracepoint. Bottom-Half (BH)
+workqueues enforce execution limits in softirq context (BH_WORKER_JIFFIES
+and BH_WORKER_RESTARTS). When a BH worker hits these limits while pending
+work remains, it yields and re-raises the softirq. The tracepoint can be
+used to identify softirq budget saturation and track whether yielding
+occurred due to time slice expiration or restart counts.
+
+Aaron Tomlin (3):
+  workqueue: Add workqueue_cpu_intensive tracepoint
+  workqueue: Add workqueue_mayday and workqueue_rescued tracepoints
+  workqueue: Add workqueue_bh_budget_yield tracepoint
+
+ include/trace/events/workqueue.h | 146 +++++++++++++++++++++++++++++++
+ kernel/workqueue.c               |  24 ++++-
+ 2 files changed, 168 insertions(+), 2 deletions(-)
+
+-- 
+2.55.0
 
