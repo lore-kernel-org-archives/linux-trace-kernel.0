@@ -1,25 +1,25 @@
 Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021113.outbound.protection.outlook.com [52.101.95.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F56741CB20;
-	Sat, 29 Aug 2026 23:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C00D437448;
+	Sat, 29 Aug 2026 23:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.113
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788044730; cv=fail; b=XcetpHWko4gh557jwlf5gvbySqkZXkKoo7msAB6y7Ren74lUOjG1RbMpZuHSz3LrYfyowhHuR1mTf8s6rg+Y3BYxoxStUBZ7kWWoTTj5t+2blXHxIYcXgHPWFYVC4+fFtwN3sJ+Zp39JOqcSyvk69dcZRaHiBSF9pfxPeiY1+tg=
+	t=1788044732; cv=fail; b=A9Bs9qvgBiZtkiCLLPn9hbKBADCmRmp+hh6eZKZNpNr8MxPklSutph/iulelaaa9DN8PuLivYm+t2jnSNKbJ25WX3f2nnMW09ZVwG/c/lnISLxep5Pub5o3JDUkmsmqbSX0gu90CN3gRGTNTopQhBs0lt8exWnRXOHvJ7JqxDww=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788044730; c=relaxed/simple;
-	bh=XBWxHG0KNX2zQQzSCP7NAsj6y1h/2YJFLW3Rxng+wrA=;
+	s=arc-20240116; t=1788044732; c=relaxed/simple;
+	bh=zddBvMQBCSVhPaMGDET8Z6JCF8m6G5eMjzXjbDNPRLM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cSuEYFi4FlTCpbQN6uNeWGpdyxV55+Nu3QbICmKuGkSKFzBWj6SZQxoKVbZE8NCSRTvjXxDtgdM2lKcF5q9NqIAV9ypU24wh3bSxgpjhV3a1nWQlk3tx5Zx6Z4L651SoeHTlhIJAhexBAwZjBBHkdB+JHHgNIJ+1QSaX83cJAXo=
+	 Content-Type:MIME-Version; b=ReWwkPdX9mlariqMgYSogEULhll7fkTyESi4qsW/7KPmwnaDH1jb4UDxcR5ZEkOkkvP/M6QmqugXxZoqqK2Zn3Lva5oah24wr0hvPIkI34VjWvO6y6H+vAHM2k5EiirDzNh0mhA1s3u/XvdSx46MtCbms1AUi7LEjgUxHzG3hUk=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NyG0iuy2Ak5mbVksGCWGkUEUhKZrigIARqZrMbUUVP0pGavCFtu70bfOybhB+yMup7pnJxpCBlGjs785XDARD663GnjiB5jTshJoBRTstARsFytPDKHVvtSvJIcdSyRcSOUhGSZEKQedS7dlT0HABNPlAU2hVI+LWESm+U03COTbzXYgw0So2Z8Akohw3ph5TaPoSxYgwkbsD7cXC5ocEnuBpf6Qwc0RURanU8DrBoRu01t0FUwSlZensE0FVu1UywEn9Z8at1XyHhS6EVEzWNiViAxYx7hARA+wd6krntVx5wXIlecPRUyI3JY+TbKSJAbz/6qE5xbK1YceKrmovA==
+ b=fgiNGuiAe5JAZOenoCYpb3+woVIeTFQHNnWzwZxmk8xr68lmBvSEa4sI9NnRihipK5O3nklL/tzQd6bUP8qJctGI6r0CATddowAL8mYr3whwCPyW2Opa53LSaG3v+vtIxhSJO+Q70PrMatYvODbP7OEeH8f9iAVqFuFKJqmpUvLovu1uHCAuv6Q0pQlK9BFHQ7xaKY8fz4A5hE6j3natjYZ0ki9BgL1DhjMhC3GWkECtPjDll2qNEDvmZPO6DP3r/x6DhrKrD3mj5QSiM2/25l4Tc63oL07Nhb6ZnG3sa8UiIYVndewN3qIG+I5WKnIBUqnIBjYKRyIvGU4pXF1tzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=OYMGu8J62ruScyV8VKzm0/riYEUw5t/297iGAfkwSmE=;
- b=rUcRRJjIOSWKF1w95/CSZu5HUS31GDkpO6FYbkh1WtSInYixYiUReaOgG8mSIyxneAxMzCPtSYFuwB/UqJbuyjIfUdI84PnxoCsFEC1bAJ+PSznVhlx6GZ/Cb435a9xkU+dHcHZdgfbN0iEVjtFRzoeMlN8GnCNF4Ftk8Xwi/pD4cgt7amJbIq4XYm+V7omhEoRxCFNj7e6d2SHFAYPTwlaTVBUUr/xUkQrVuKStYeXAdse9UDrUIL0/Jj8jabzeWN/3dWicUBRI47Hs69QBeoph4qyJTSL239DsYkXMAMBtuXC24tVoecPeuhzk6Bn19ZPc0EcenYDAzX1uVSPa5g==
+ bh=L8xm2tL5NuuQRIsBY4MHChqgqO4ZLhZlZXMQtcUJ424=;
+ b=LyUoLC9DFRGQHdKHxcTMIj3SmIlJ/LDfNMpP62lqfv/Z1IJqsAkWxlh+LOrbZGjB7k43Y+w6u0utcFjAP0j5jJvaH6q/Pm3QUUBviNJpp63Xe7agszUHfIIdJ/XhThfzlfl7tzQWMFlWNRV5vE3Igxci8f8iBZAfbULwrwvzL597f5zXnxlfHM5CvFsDAC8eBVGWetaaE531WGTa79whugqxx+F/jHHvi0XR2PtBENrLw6ep3b8kVf5s5/7Wzfbn2sSFDXz1NycViECxbzSuOubop+0qegUImKVU6nsGdWujUl8fm89Xlu2RNa3Q5fBmoAqJEFS+nWIhiQI5NbIuqQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by CWYP123MB9008.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:288::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Sat, 29 Aug
- 2026 23:05:25 +0000
+ 2026 23:05:29 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0360.008; Sat, 29 Aug 2026
- 23:05:25 +0000
+ 23:05:29 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: tj@kernel.org
 Cc: jianshanlai@mail.com,
@@ -45,16 +45,16 @@ Cc: jianshanlai@mail.com,
 	sean@ashe.io,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 1/3] workqueue: Add workqueue_cpu_intensive tracepoint
-Date: Sat, 29 Aug 2026 19:05:15 -0400
-Message-ID: <20260829230517.42468-2-atomlin@atomlin.com>
+Subject: [PATCH 2/3] workqueue: Add workqueue_mayday and workqueue_rescued tracepoints
+Date: Sat, 29 Aug 2026 19:05:16 -0400
+Message-ID: <20260829230517.42468-3-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260829230517.42468-1-atomlin@atomlin.com>
 References: <20260829230517.42468-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0651.namprd03.prod.outlook.com
- (2603:10b6:408:13b::26) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN9PR03CA0461.namprd03.prod.outlook.com
+ (2603:10b6:408:139::16) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -64,113 +64,142 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CWYP123MB9008:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60df1c87-8165-4db6-9d66-08df062202af
+X-MS-Office365-Filtering-Correlation-Id: d7e98a29-559f-42cd-3575-08df062204d4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|10067099003|56012099006|6133799003|18002099003|22082099003;
+	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|10067099003|56012099006|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	7euXUixEav6WkwCS8VjTO9dUE3En0t7/bvTrjQU5g9ENLO55NLgmSiZ1Mnn6d5nL/r/GlysEykR0c19d/cWyo+KjudysJhfi12zEHOg9t136uCcxfdJ0w2tegK/UPAesbgBudi/YVNbccrgn1My9pT+bFqHZkPTxblU0h0t8kGhHkBblg0eC+xEr45tNpfS0/b8C6R583hwq3ukNuSdaPjCJsP9pefceDR7PZuaIbsevR8A5QDRywnXEkj3QV5geHGVMFOdpBWdWn65dxh3IMfBnY6kQacMocnPft36D/2HhKRdYPB14lab1l4nnmMluLSaTM7WJPHWHd90nuXYTVAuNSB0m5Q+PKNtzqB0BagXpG8W/O64QEBI9kuP5YTckSyMK5udLo91YkWXDwKiPagkjRqdrHqBsj4IzO3uIswFLcoKOU+SEidUvvoTjZ9TqfISOk1futkr88EwKP6bvHJBD4JbL8xxsj3TtBsq+X/xLhyhCmSw9jzkhPyuxO1HqGxtlH1BW4XixauAkf3u4FWaGEawPz7OCqPnCbRH8aiC9cNPh+DOZGsrtxDgdqeWiTP69I5L0OPwiMgL1RTm5i+AK+k0taARpeCosuLXAW8aymWF39j9aEseDjH4N+nbf61CtAht9lU3UVOM1fCyqygR8gjGyJM5YK9ppeQpKKl4=
+	h2UrXfp6TIgnH/P8a1KnbIA9dMylgpuM+SWnOvh+GeeMDl0iIIl3ZzT9Y2beZs1KP6fF7teLA7HN2oTSxG0doY9zU2etLrlmXW7ZejWyOi0IHdF3CCp3reizF3ESFNfJYIEKbMfaccom68NAXnAX/YT/sVpOv6whNYTdB7orkgb7EmonnQot0iVchLy/rOvnjRTGBkelCEYDcwYdPcJA7Zxh8rtfzNoPFquBW7mZ5dT5ecNvXsVmT9KybdGpcGXHYGlQVV1Tn3mOddL1LEZ3vgYmVxXkKSlFnutcwuVO+AFqPYsR0WR4NEu96OskI6fnO4dq0FF0JYTcgLMdsRdbWGwBj+vsV3s6m36NJJ0JeupPfvQavtrf/PxYmrGK1lnHUwX06+5Y2MrpgSBKCOBo5zWX5FbuMLK1CFRLf9ej5BiFd69RVrGbQ2dG8zB/yFo+n7Qp94gkndGI69EtbwwkZRps5vgL7qoYgG63laj9fcXv/doQmew1Xl2qWKZIVEsuxjqdaLCu3cTjimOCb5fz4K4rIB3u0Ne80VtoiQwMhIhWlClWG+Pa4qyrZ5PW5fkQIB1LBTFYU3UL8AhdKoMa1sURHewiscJgxhhEPiBrunXXTH1iwrChNMWyqhNxKlyepHqIEkM09832CRzGtWYcVaXybhyHUGvxk9wMC1v/LBI=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(10067099003)(56012099006)(6133799003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(10067099003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?X+ec/QMDJ9IYG4W6HNb0Mitrr6xjLPswq+N8mn8pRE8z81CFxf8VqhIC8bMh?=
- =?us-ascii?Q?S5MQRtEBHXM97Q+ZvfaBXdirrL6zEb28AQ++xkVBXfD/hpnrQwpqi+OZtjQ5?=
- =?us-ascii?Q?YCVA+TaJwOMVpZ91jGXbF3FlTzt2kTSmUePFjW0sNC3nZJzECtAfeOIL/p2T?=
- =?us-ascii?Q?PmD+rYXohoEEaD9CbJnodwsXluGgmVPBOg56h7DtmwiWrTK4b2quJ49ioDNf?=
- =?us-ascii?Q?gevHXxdjUBDEvxWArCQQJma0HwGdKmUMRjROvZgnyY4dtFc58TRNi5BZjkFT?=
- =?us-ascii?Q?Gi1ZWGm48gx0e/NVa3z0wsKKVa5VJ68rG/UP2K1TSjS0OUoZV3Wn0cuO5YOJ?=
- =?us-ascii?Q?tEQe5SzQ7FfFN6eQmZEjE0sGAdzUKoJsCYqhmPbh9Klj8xFYLMIcthUNZbbt?=
- =?us-ascii?Q?NpU8Fj7mjwtC+KdU/qRXRQIdolPtFVYdidX45TiXCPjlKFnxXWN/LOv9Iku+?=
- =?us-ascii?Q?ZEeRnfj1ULqSJS1Ajy+dHIgC9DYBuJKSdGIUbyafNLPTfE5v7zMlkLdyzc0R?=
- =?us-ascii?Q?jB3FE/e5YGLji1JxWV78pPncF9i6sUxaKaM3PimwAvVxO2Qi7JMIrf79eVlx?=
- =?us-ascii?Q?aqbTE2n2iMUKnZLgZEMy3dBK+664byyP8g7gUgMFhyyYxEgc5LgowOeiNeoX?=
- =?us-ascii?Q?+Osx94I+Um0DUhYxST7hqrSPZackv6ayTe7exC0AT48m54cUGsv5vO/7f3hn?=
- =?us-ascii?Q?qOLIffPSMLcaTH1vOg6AvCTyIKESrASfvamD/JcymGPWrjaHDL0Hr2d4zlqk?=
- =?us-ascii?Q?oe0qx4gKFaBfnXWV5VltpxBHhaSXwwuEbylfaHmdHtiMccFdXVkMLVbi0q5b?=
- =?us-ascii?Q?iFA8nthWqy/Lqy9pDiiAjT0kLvwRZ5YOcKSvmg70wSVtA6fBwiqdK/bYznhN?=
- =?us-ascii?Q?D5W/zTu5pXI03Rkb1o949wl1B9JHPLXDVTS9/pNBlaob6Q+09zxvN1FwVfWs?=
- =?us-ascii?Q?NvE8NVANWTRRmOJpAsbGN4H1bAUQwC7AwEZY9NXpOKQivU0Bpt8xRnYHAQ8S?=
- =?us-ascii?Q?7R9B1QGzqlwvj9vxEUmXTofbMa/B9VEu5Z1Cy5tFz5EaJVufT7Cx/VjQhMy+?=
- =?us-ascii?Q?1H62GH9GMObXnnQGbGIkeboGm0Cx74/o7vYV6mG3csxCL1xfDrMOer8wWAuA?=
- =?us-ascii?Q?uXYIZnMD6FMp7z4C5OjQVvjhQxFSj1HXIAChyfwjPTkX2SElBLA/EtFM5scT?=
- =?us-ascii?Q?wMxehPuXJzHE3bS73kIeZ3X2GL7r8NhYvFUvuT4eXFdZ73lDXMXi+s06eohf?=
- =?us-ascii?Q?hsW0WVbKn6VzJZteXmdLl61QpYu3ktCT0rSb+wCQ0l2heT5UIQOt5+VBtcXW?=
- =?us-ascii?Q?XzuMPqLFpF24SV1Rp5m1sWQ9YtL7gjdyQqtwPmqsgItUvDYcyTXrpHCibXdJ?=
- =?us-ascii?Q?0lJ0H1fQDl7vebXncaUNUiLDFp1r6pWeCxQmDXVA3cpKop/NS1wFNs4J08cy?=
- =?us-ascii?Q?JZgkycTDyCqlRPyXCtW8MAN2pwTrZvOoa3Oro6LQe20EUGiXp8HS9YBfkw4c?=
- =?us-ascii?Q?wXHpNngAtzz+YbrOZ45n2fnyjGDmMxNA3VYDoyA3ERmsfQ/D/xBibMcXTaRy?=
- =?us-ascii?Q?hUHvAYRtVk/Btji+6RDT9lLwr2nKWsA/oyMcFzEy3+Rgf3/HYPzKSdIsB+Wh?=
- =?us-ascii?Q?OC4424Z36f1tSQnI6T0vKNPp5zHrfey+StjmMyWGODxtDnJQjkVYN9MYNlI1?=
- =?us-ascii?Q?CxtLUIBFklCZl9SIe++kO+8rTQZAnwK4HDb/rOmH7g4ulesJWRVpzQV+4ljb?=
- =?us-ascii?Q?1qcF6yPuJA=3D=3D?=
+	=?us-ascii?Q?VXOnB0yT6xuotdSdEXFPhpXW2dU4ZyLsMd9svUwhF0sbe1fqO44t5c0pZSCY?=
+ =?us-ascii?Q?0v/xRU8s1WhaFQMCUZok6GsVvWzuWpiaO0BMyvNTgYzXYKkTrWz8Z5w5yGbH?=
+ =?us-ascii?Q?vk0ghH/DCLWtpB7rX9if+KtFmUDdCb6rgPTZzLlINiMjgTYL8eAuBg5940e7?=
+ =?us-ascii?Q?kNSkHCj/dbWi6kquQMlVKnu5caky4FSI1rew//UWfoEwjeCVgtfVrwo/oplr?=
+ =?us-ascii?Q?I0lxzLxyNBfiJ9nGG/gZpISqdLjlfvO/LMYcgWojqsCM3J5Bl+IxmpQHXn2e?=
+ =?us-ascii?Q?DEWGgbRkcpsToxKBvQsI2l1dCWWPN+sPdVxz+oQYJkAdHvkb6ByQmQ5N2sJx?=
+ =?us-ascii?Q?AMQyFM/JzTRqeKB09X3TpRQZWK6OQhaC0nLrLJiT8XkbeQXAarB9M8ZJGZal?=
+ =?us-ascii?Q?xkLQmMoxSJe0Lg5Ie+F9gQpVJlJCIGezOUwSnlbU16aMdK7nNmhQxUnvjh2h?=
+ =?us-ascii?Q?fzaCR2jFns3Q3ahgH3+LL0Iz3KPwbhmTlTTB30YC/kqM/r2D4CuIAXIP5hTt?=
+ =?us-ascii?Q?lWQQpRt/IGy6REf2PrgNO03PwM0596hQPjR0qvnt2HOkrvtBAM/lW7+XOT1m?=
+ =?us-ascii?Q?W+IMkHW4SYRdBHFb1nIH8guvpnFIeWriBL1+jKyJlq9WcFHPzS7AiqUlKIgR?=
+ =?us-ascii?Q?oc+eIBJITZRlXQ12hyjwa9ujPTuE9lc3hp99kWw4OSFJt3UcvXA2ka+7Jbnp?=
+ =?us-ascii?Q?BbsKlqp4wTVksaU65vuOOpcN+X3mBeZSqCfOSKdC9HtPeP62J+K41M8O/kPm?=
+ =?us-ascii?Q?gt323Qeat1v46nXqZm/6mto5ALIZJjHZQSI9eDgHHhXapnSQOoVnae1hDJ9D?=
+ =?us-ascii?Q?DfitlCBsGEZjJ74ROwCWsvbOQ6HrnKy1JKgHU7QEELRgRbfmZPoCheOymGqx?=
+ =?us-ascii?Q?TFxDmPIdNCJtbHg8E/5tZUruAnQHTGha6XbhIjYTtmdZLfz68Lt2unW+BUyg?=
+ =?us-ascii?Q?qEcSnc76kPlnSOVdmVUleA4SPsfj4O7oLxF+eFt5fosf13n1n6hXhRSmcLO6?=
+ =?us-ascii?Q?wgt9pbWFbmRRO+KSrJ6f//z+xiUoiKdr5s9WV9aNXpcbmRZwgrWceE9GJ8Vp?=
+ =?us-ascii?Q?c4rNjyA9GnTX0yCcbClglORaO5jVG547R2v2z9llCZHvEIByey7ZW3eZMQaA?=
+ =?us-ascii?Q?UeG4gkIb6+iMGMevXZDT8Z9dOjoZR0aRSfZphyS8YACLdlqjpAzAX1UK2EPu?=
+ =?us-ascii?Q?+F5uhBDkw/hWCNTRQK/ZPXfF68kwg6julBu9/tYHm73GBpunVJ+r6pWvzTpB?=
+ =?us-ascii?Q?OZg8lLh4zej5609QFVIp1O56vpZmEDkpKu0N0hFuZE2+SAUBx5LaXSqNw93A?=
+ =?us-ascii?Q?UMaliUxiCJHnIeIIMByFrJzaAsCgHKHu4+hixinisB1OAh75WjSmDIyDYlGp?=
+ =?us-ascii?Q?PC+e/fp4GsNRFG13hSu47fkv7OWubDBeNL7/AfAcGf8/FZaORGW/87UW3eQN?=
+ =?us-ascii?Q?51SB/NqeP3RuLSfyHzcQ1vOZJbuJSqIrxjZjKC2lBDLMveZ/6AYRyQHj9mUm?=
+ =?us-ascii?Q?zxxsyy3A9N5N36i/QiXtCOmxNzJwwtpwFQJhJ0YoAS+CwaR4K0FLW04lG/dQ?=
+ =?us-ascii?Q?1+HF8i6a7P2fhZg8X8B8YZtkgFBN2zEYpp5gprw/w9KEZqcZ/jjcZ2+dasv3?=
+ =?us-ascii?Q?UnUx+HVrqF7QNTpSz39aRt/d73jctFiLGAz7QMtJc3km4pkCxX47e/Ea4q6U?=
+ =?us-ascii?Q?R1OmtMsB8wh7iYKy7NM0DaBnldhEgwvJ6aokoKuljwge6DeJ6QokxbEzrZ+4?=
+ =?us-ascii?Q?cPLh6/sHnw=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60df1c87-8165-4db6-9d66-08df062202af
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7e98a29-559f-42cd-3575-08df062204d4
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2026 23:05:25.5387
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2026 23:05:29.1289
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 13IXyykOofZ1zwnur6t0ftTNiiNYBWAvysb9KPuWOZsIMU2cAP9JPbIcHa/d+lqJP10fPTu08CG4XmH++yESkQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: MX6byvM+p3kg49RgBJnlJxWWoRkY4IbGH7/1dHUD5Nk/cJRrEGZngf1H+F35c/5V5C6JMuo9BbRcMvwcRuS4Hw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWYP123MB9008
 
-When a concurrency-managed per-CPU work item runs continuously without
-sleeping for longer than wq_cpu_intensive_thresh_us, wq_worker_tick() marks
-the worker as WORKER_CPU_INTENSIVE and kicks it out of concurrency
-management so that pending work items on the pool are not starved.
+When a worker pool fails to create a new worker thread within
+MAYDAY_INTERVAL (e.g., typically under severe memory pressure where
+memory reclaim paths depend on pending work items), send_mayday()
+signals distress to the workqueue's rescuer thread. The rescuer then
+takes over processing the pending work items via assign_rescuer_work().
 
-While CONFIG_WQ_CPU_INTENSIVE_REPORT logs rate-limited warnings and
-pwq->stats[PWQ_STAT_CPU_INTENSIVE] maintains a cumulative counter, there is
-currently no tracepoint emitted at the moment of this transition.
+While pwq->stats[PWQ_STAT_MAYDAY] and pwq->stats[PWQ_STAT_RESCUED] track
+these occurrences cumulatively, there is currently no event-driven
+mechanism to observe exactly when mayday distress occurs or which work
+items require rescue.
 
-Therefore, add the workqueue_cpu_intensive tracepoint, recording the
-work_struct pointer and callback function pointer, workqueue name,
-executing CPU, and the runtime duration consumed in microseconds.
-
-This enables eBPF profilers, bpftrace, and Ftrace to immediately detect and
-attribute CPU-hogging work items in real time.
+Add two new tracepoints namely workqueue_mayday and workqueue_rescued to
+make distress and rescuer execution easily observable (e.g., via Ftrace
+or eBPF).
 
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- include/trace/events/workqueue.h | 39 ++++++++++++++++++++++++++++++++
- kernel/workqueue.c               |  9 ++++++--
- 2 files changed, 46 insertions(+), 2 deletions(-)
+ include/trace/events/workqueue.h | 68 ++++++++++++++++++++++++++++++++
+ kernel/workqueue.c               |  2 +
+ 2 files changed, 70 insertions(+)
 
 diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
-index b0de2bc9ed52..ef0f3a4b73a8 100644
+index ef0f3a4b73a8..013cfa472f6d 100644
 --- a/include/trace/events/workqueue.h
 +++ b/include/trace/events/workqueue.h
-@@ -126,6 +126,45 @@ TRACE_EVENT(workqueue_execute_end,
- 	TP_printk("work struct %p: function %ps", __entry->work, __entry->function)
+@@ -165,6 +165,74 @@ TRACE_EVENT(workqueue_cpu_intensive,
+ 		  __entry->cpu, __entry->duration_us)
  );
  
 +/**
-+ * workqueue_cpu_intensive - called when a work item exceeds cpu_intensive threshold
++ * workqueue_mayday - called when a pool_workqueue sends mayday to rescuer
++ * @pwq:	pointer to struct pool_workqueue
++ *
++ * This event occurs when a worker pool fails to create a new worker
++ * within MAYDAY_INTERVAL and requests the workqueue's rescuer thread to
++ * process pending works.
++ */
++TRACE_EVENT(workqueue_mayday,
++
++	TP_PROTO(struct pool_workqueue *pwq),
++
++	TP_ARGS(pwq),
++
++	TP_STRUCT__entry(
++		__string( workqueue,	pwq->wq->name	)
++		__field( int,		pool_id		)
++		__field( int,		cpu		)
++		__field( int,		nr_active	)
++	),
++
++	TP_fast_assign(
++		__assign_str(workqueue);
++		__entry->pool_id	= pwq->pool->id;
++		__entry->cpu		= pwq->pool->cpu;
++		__entry->nr_active	= pwq->nr_active;
++	),
++
++	TP_printk("workqueue=%s pool_id=%d cpu=%d nr_active=%d",
++		  __get_str(workqueue), __entry->pool_id, __entry->cpu,
++		  __entry->nr_active)
++);
++
++/**
++ * workqueue_rescued - called when a work item is assigned to a rescuer
 + * @pwq:	pointer to struct pool_workqueue
 + * @work:	pointer to struct work_struct
 + * @function:	pointer to worker function
-+ * @duration_us: CPU time consumed in microseconds
 + *
-+ * This event occurs when a concurrency-managed work item runs for longer
-+ * than wq_cpu_intensive_thresh_us without sleeping and is excluded from
-+ * concurrency management to prevent stalling other work items.
++ * This event occurs when a work item is claimed by a rescuer thread
++ * to guarantee forward progress.
 + */
-+TRACE_EVENT(workqueue_cpu_intensive,
++TRACE_EVENT(workqueue_rescued,
 +
 +	TP_PROTO(struct pool_workqueue *pwq, struct work_struct *work,
-+		 work_func_t function, u64 duration_us),
++		 work_func_t function),
 +
-+	TP_ARGS(pwq, work, function, duration_us),
++	TP_ARGS(pwq, work, function),
 +
 +	TP_STRUCT__entry(
 +		__field( void *,	work		)
 +		__field( void *,	function	)
 +		__string( workqueue,	pwq->wq->name	)
 +		__field( int,		cpu		)
-+		__field( u64,		duration_us	)
 +	),
 +
 +	TP_fast_assign(
@@ -178,52 +207,36 @@ index b0de2bc9ed52..ef0f3a4b73a8 100644
 +		__entry->function	= function;
 +		__assign_str(workqueue);
 +		__entry->cpu		= pwq->pool->cpu;
-+		__entry->duration_us	= duration_us;
 +	),
 +
-+	TP_printk("work struct=%p function=%ps workqueue=%s cpu=%d duration_us=%llu",
++	TP_printk("work struct=%p function=%ps workqueue=%s cpu=%d",
 +		  __entry->work, __entry->function, __get_str(workqueue),
-+		  __entry->cpu, __entry->duration_us)
++		  __entry->cpu)
 +);
 +
  #endif /*  _TRACE_WORKQUEUE_H */
  
  /* This part must be outside protection */
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 3c034cbc5bb3..6ee644155b82 100644
+index 6ee644155b82..6f6fe2068389 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -1532,6 +1532,7 @@ void wq_worker_tick(struct task_struct *task)
- 	struct worker *worker = kthread_data(task);
- 	struct pool_workqueue *pwq = worker->current_pwq;
- 	struct worker_pool *pool = worker->pool;
-+	u64 dur;
- 
- 	if (!pwq)
- 		return;
-@@ -1557,9 +1558,10 @@ void wq_worker_tick(struct task_struct *task)
- 	 * double decrements. The task is releasing the CPU anyway. Let's skip.
- 	 * We probably want to make this prettier in the future.
- 	 */
-+	dur = (READ_ONCE(worker->task->se.sum_exec_runtime) - worker->current_at) /
-+	      NSEC_PER_USEC;
- 	if ((worker->flags & WORKER_NOT_RUNNING) || READ_ONCE(worker->sleeping) ||
--	    READ_ONCE(worker->task->se.sum_exec_runtime) - worker->current_at <
--	    wq_cpu_intensive_thresh_us * NSEC_PER_USEC)
-+	    dur < wq_cpu_intensive_thresh_us)
- 		return;
- 
- 	raw_spin_lock(&pool->lock);
-@@ -1572,6 +1574,9 @@ void wq_worker_tick(struct task_struct *task)
- 		pwq->stats[PWQ_STAT_CM_WAKEUP]++;
- 
- 	raw_spin_unlock(&pool->lock);
-+
-+	trace_workqueue_cpu_intensive(pwq, worker->current_work,
-+				      worker->current_func, dur);
+@@ -3122,6 +3122,7 @@ static void send_mayday(struct pool_workqueue *pwq)
+ 		list_add_tail(&pwq->mayday_node, &wq->maydays);
+ 		wake_up_process(wq->rescuer->task);
+ 		pwq->stats[PWQ_STAT_MAYDAY]++;
++		trace_workqueue_mayday(pwq);
+ 	}
  }
  
- /**
+@@ -3619,6 +3620,7 @@ static bool assign_rescuer_work(struct pool_workqueue *pwq, struct worker *rescu
+ 	list_for_each_entry_safe_from(work, n, &pool->worklist, entry) {
+ 		if (get_work_pwq(work) == pwq && assign_work(work, rescuer, &n)) {
+ 			pwq->stats[PWQ_STAT_RESCUED]++;
++			trace_workqueue_rescued(pwq, work, work->func);
+ 			/* put the cursor for next search */
+ 			list_move_tail(&cursor->entry, &n->entry);
+ 			return true;
 -- 
 2.55.0
 
