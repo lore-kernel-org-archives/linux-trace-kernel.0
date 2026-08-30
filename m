@@ -1,139 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1974525785D;
-	Sun, 30 Aug 2026 05:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04ECF25785D;
+	Sun, 30 Aug 2026 05:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788068178; cv=none; b=W8tA7+8lDyuqCBnokRVIAdy7iJ0XuIpvAhyrI1bIxi9gAxE7s0lF4AB51/Pf+eK5Jt6Llgiq9lUPK+DKWYvD0WvVZRje59B1ijzpofBCF7ogp/izZrT9VKm/Y1IrGBdjgyF0Ttyczg6bymuUu6g1OcxvSbK3RTQJQlTm6R9JYhw=
+	t=1788068182; cv=none; b=oetXmM4RPEi3Kk9z2ZPBiDvWHJihwPunugj2XJodTj0fAZ8LBo1xL5MgwLYbMifuEB9/s+L3QndXrhojxKB1LhPZpoyR2P3UyGMxSGFmqa9adRPgUhS1OordnVAOCbct4UKHjSwRGIHNI0FebmsEk0RZ+UgnVcGnDno7Dygfc34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788068178; c=relaxed/simple;
-	bh=ppANgCqYjbrHGJPNi8JX7qDzvfAij53sX9+QybYQSlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RaDsuKmUL6jHrGL+pnnD5SfZkn3nPRs2VRk+QhYsCm3zfoOuPIRowjgo7mbxz3H9ydG3amYGDnmgn7hXLXMMJ4PoJIKKPkjK4xTXb3zHgOnDhUwrZd+NdH82BikAamYaJuiPQ2W4KLecAtLM7nEN1xRACDsQpC+bVTuhQETZiCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5e3f3zr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788068182; c=relaxed/simple;
+	bh=GXDYinhy1ReIzdHSavEFXK4As69kwht4etzenPsKovk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ENrAqdwtJy1PZh+psS9v/Gaa6fLdTWy19K9ZNoNil9qFpmXn5N3dUXvTjnuiy2vyY0cDB71kaSBaxxfPmZ+PqLdoLwD7hMBTJpov3YFzUNMsHfC8tma5KzERTvnTgPKXwkyi/8RE4hcvJgSruFfrKwOtK17yGMQNHWqISUc3uL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qj5OBNPW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5e3f3zr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9AFA1F000E9;
-	Sun, 30 Aug 2026 05:36:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qj5OBNPW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770921F000E9;
+	Sun, 30 Aug 2026 05:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788068176;
-	bh=dbu7Q3qcydpbduK5d5xuw3bm+6kDkYu6ps7F3h/cYC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=F5e3f3zrh6K28tm/qQp6Oue55tKOTLOm01Yu0X0OpWd11buxJM+oaQZgRaPgAlviw
-	 orfhumU4zI6rXgZbcTbz0VyTxjMqyrqmt1yX+dwx/pPQKPoDwxaZymNkiEKL37jeMy
-	 m8iwifd6CBos3sCjQc12VSH5HxST5TNAz8sS8HWLLTXtD53zgpGszWjYd1Udf6YqOi
-	 RItioxeawc68IRB5v4ZTiIT2/t0l07vAMlA5MEkxNFTdL0oaOKmRwu/l+811BFK+ra
-	 hPrKDWDpFPIFCqHB2QRZ5eP+KTGkOQHlKN9AYVVTraJss062/hlCVu+RUurmS761IA
-	 JU6btVfCDBo7Q==
-Date: Sun, 30 Aug 2026 08:36:01 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Tal Zussman <tz2294@columbia.edu>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	"Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Barry Song <baohua@kernel.org>, Dev Jain <dev.jain@arm.com>,
-	Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>, Lance Yang <lance.yang@linux.dev>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Nico Pache <nico.pache@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Usama Arif <usama.arif@linux.dev>,
-	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] userfaultfd: collapse VM_UFFD_{MISSING,WP,MINOR,RWP}
- into single VM_UFFD
-Message-ID: <apPBQQ-850DwlCVA@kernel.org>
-References: <20260823-uffd-vm-flags-v1-v1-0-3086981b33cf@kernel.org>
- <20260823-uffd-vm-flags-v1-v1-6-3086981b33cf@kernel.org>
- <ao16VxNvaYzlt2WG@gremlin>
- <ao_9R3CbjYFipFu7@kernel.org>
- <apAB9GSnHNyNoSc1@gremlin>
- <apAcweThjiD-iIBF@gremlin>
- <37f6af95-950e-4457-886e-6548d4719f0d@kernel.org>
- <apK7s4xSgA_GmY7d@kernel.org>
- <178802897277.671075.10362065249796431311.b4-reply@b4>
+	s=k20260515; t=1788068180;
+	bh=5SpUPc6lpWFq9g8ozhFar0PITb/R1MsKVf+d0+GMV90=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Qj5OBNPWcoOCN0KtuYPiNexPXZgso4+p/+WGYEh6uw510dnHqn6lKwheH/bMqFNuu
+	 40WV1ZJtDVAHkIu2mWYyQceFpebfgiA7+vUqy/kS+Eebg/nXFtcrFtOJ0dxVnXvh3o
+	 Dd5/xO03hm5kngNwsnBw4i6RzyEb+Ub+Q3XPMydb3T1GKZPIhLjoPKds5CAJT3OIBd
+	 nxPiXvWskokrr++pNaMIe7k5SMyQ2mt4tIh9NAIM8ilcdBpHMPN9DnOwyqlBnoH3ZB
+	 CjqtU/1//qCyep/XkNqzNRjuy3tmGrVCMDB5RRt1YxJsq4fPFN5jFgMCrsz2ocQyxC
+	 ZtYreG/WPAVQA==
+Date: Sun, 30 Aug 2026 14:36:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 12/12] tracing/wprobe: Support BTF struct offset
+ resolution in set_wprobe trigger
+Message-Id: <20260830143617.5edd4b9e94278a941ee6f28f@kernel.org>
+In-Reply-To: <20260822095110.0772E1F000E9@smtp.kernel.org>
+References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
+	<178739072694.1520941.18132159339101776117.stgit@devnote2>
+	<20260822095110.0772E1F000E9@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <178802897277.671075.10362065249796431311.b4-reply@b4>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 29, 2026 at 02:42:52PM -0400, Tal Zussman wrote:
-> On 2026-08-29 14:00 +0300, Mike Rapoport wrote:
-> > On Thu, Aug 27, 2026 at 05:19:30PM +0200, David Hildenbrand (Arm) wrote:
-> > > On 8/27/26 13:18, Lorenzo Stoakes (ARM) wrote:
-> > > > On Thu, Aug 27, 2026 at 12:16:32PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > > >> So actually you're increasing by a cacheline and increasing the VMA size by
-> > > >> 64 bytes, i.e. 1/3, which is unacceptable obviously.
-> > > >>
-> > > >> Maybe there's something that can be done with:
-> > > >>
-> > > >> 		/* forced alignments: 1 */
-> > > >>
-> > > >> Perhaps? But that looks potentially ugly.
-> > > >>
-> > > > 
-> > > > I say elsewhere (or think I do) but to highlight - I think probably we could fix
-> > > > this by putting the flags in the low bits of vm_uffd_state.ctx?
-> > > 
-> > > if that's possible that would be clearly preferable memory-wise.
-> > 
-> > This gives only 4 bits and makes this completely not extendable.
-> 
-> Wouldn't it be 6 bits? struct userfaultfd_ctx is allocated with
-> kmem_cache_create() and SLAB_HWCACHE_ALIGN, and most of the flags are
-> only available on 64 bit, so it should be 64-byte aligned in the
-> relevant cases.
-> 
-> (Not that 6 is that much better than 4... but it's a little more wiggle
-> room.)
+On Sat, 22 Aug 2026 09:51:09 +0000
+sashiko-bot@kernel.org wrote:
 
-I did remember that SLAB_HWCACHE_ALIGN could be as small as 16 bytes, but I
-didn't verify it for architectures that support fancy uffd modes.
- 
-> It could in theory also be bumped up to 7 by setting align in
-> kmem_cache_create(). userfaultfd_ctx already takes 192 bytes due to
-> existing alignment. Aligning it to 128 bytes would make it 256 bytes,
-> adding 64 bytes to each uffd rather than each VMA. But this sounds like
-> more pain for little gain :)
-
-Yeah, even with as plenty as 7 bits :)
- 
-> > So I think I'll drop this for now and wait until VMA grows another cache
-> > line or until having per-VMA uffd state rather than a pointer to per-fd
-> > context is a must.
+> > @@ -990,6 +992,181 @@ static void wprobe_trigger_free(struct event_trigger_data *data)
+> >  	}
+> >  }
 > >  
-> > > -- 
-> > > Cheers,
-> > > 
-> > > David
-> > 
-> > -- 
-> > Sincerely yours,
-> > Mike.
-> > 
-> > 
+> > +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+> > +
+> > +static int get_offset_of_field(struct btf *btf, const struct btf_type *type, char *field_name)
+> > +{
+> > +	const struct btf_member *field;
+> > +	int bitoffs = 0;
+> > +	u32 anon_offs;
+> > +	char *next;
+> > +
+> > +	do {
+> > +		next = strchr(field_name, '.');
+> > +		if (next)
+> > +			*next++ = '\0';
+> > +
+> > +		field = btf_find_struct_member(btf, type, field_name, &anon_offs);
+> > +		if (IS_ERR_OR_NULL(field))
+> > +			return -ENOENT;
+> > +
+> > +		if (btf_type_kflag(type)) {
 > 
+> [Severity: High]
+> Does this code check the kflag of the original parent type instead of the
+> anonymous struct that actually contains the field?
 > 
+> btf_find_struct_member() can return a field from a nested anonymous struct,
+> but if the parent struct and the anonymous struct have mismatched BTF kflags
+> (for example, the parent has kflag=0 while the anonymous struct has kflag=1
+> because it contains bitfields), using the parent's kflag here will cause
+> the bitfield size encoded in the upper 8 bits of the offset to be
+> misinterpreted as part of the byte offset.
+
+Oops, that's right! btf_find_struct_member() skips anonymous struct and
+get the field directly. Hmm, it seems the same issue in the trace_probe.c.
+Let me make a fix patch.
+
+> 
+> This can add a massively inflated value to bitoffs and result in a wild
+> pointer dereference when the wprobe triggers.
+> 
+> > +			/* Reject bitfield member access */
+> > +			if (BTF_MEMBER_BITFIELD_SIZE(field->offset))
+> > +				return -EINVAL;
+> > +			bitoffs += anon_offs + BTF_MEMBER_BIT_OFFSET(field->offset);
+> > +		} else {
+> > +			bitoffs += anon_offs + field->offset;
+> > +		}
+> > +
+> > +		field_name = next;
+> > +		if (next) {
+> > +			type = btf_type_skip_modifiers(btf, field->type, NULL);
+> > +			if (!type)
+> > +				return -ENOENT;
+> > +		}
+> > +	} while (next);
+> > +	return bitoffs / BITS_PER_BYTE;
+> > +}
+> 
+> [ ... ]
+> 
+> > +static int wprobe_trigger_typecast_parse(char **field_str_ptr,
+> > +					 struct trace_event_file *file,
+> > +					 struct wprobe_trigger_data *wprobe_data,
+> > +					 const char *glob)
+> > +{
+> > +	struct btf *btf __free(btf_put) = NULL;
+> > +	const struct btf_type *type;
+> > +	char *assign_field;
+> > +	char *event_field;
+> > +	char *type_field;
+> > +	char *type_name;
+> > +	char *offs;
+> > +	long val = 0;
+> > +	int id;
+> > +	int adjust;
+> > +
+> > +	type_name = *field_str_ptr + 1;
+> > +	event_field = strchr(type_name, ')');
+> > +	if (!event_field) {
+> > +		wprobe_trigger_log_err(file, glob, type_name - glob, DEREF_OPEN_BRACE);
+> 
+> [Severity: Low]
+> Will this log message place the caret out of bounds and hide the user's
+> input?
+> 
+> The glob string passed into wprobe_trigger_log_err() seems to be truncated
+> by an earlier strsep() call replacing the delimiter with a null terminator:
+> 
+> kernel/trace/trace_events_trigger.c:trigger_process_regex() {
+>     ...
+>     command = strsep(&next, ": \t");
+>     ...
+> }
+
+Oops, strsep modifies the buffer. OK. let me fix it.
+
+Thanks!
+
+
+> 
+> Since glob is truncated to just the command name, calculating the offset as
+> type_name - glob can point far past the end of the printed text, making the
+> syntax error logs illegible.
+> 
+> > +		return -EINVAL;
+> > +	}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/178739053919.1520941.17662338993878200834.stgit@devnote2?part=12
+
 
 -- 
-Sincerely yours,
-Mike.
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
