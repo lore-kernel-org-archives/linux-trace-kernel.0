@@ -1,112 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1CB3BA22C;
-	Sun, 30 Aug 2026 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E792690EC;
+	Sun, 30 Aug 2026 15:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788101574; cv=none; b=uHV5RLCgQ2DYYPbhbdBwf+sHlka15gSXer3ORpDyzT0/LrP1+TL/cPKk79B8xJaTxr/dIk4jtOVIKXcKL0Or1CuwK+VLZD1RNr+7Ru5haSEJ+bBfdlKbHniJAHrmtpE28lcw/XzM/gKuvaLfel8QXrDzsHUnMIT0YMo+U5C1GqQ=
+	t=1788103667; cv=none; b=ZvgOmNKgwjQHSeck/OLN0a7s3TIwKcRQJtBjux69+woKFOLyif/oyi86YsKGGDEC5LvX8QKSoy+Ehlrq1Q3wfUNtRk3mRMM/7xPMRIxvHwqxNlCeD2RVGsN6dKSpNGcyT7xtT8u469F45kTaNubwr62eICBfN2oWZdIa08xnHwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788101574; c=relaxed/simple;
-	bh=uOHyFLRuc+2SE6QFYbozwto90vg1cSP5ANW0W5/C05U=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uBZCnALTn9lYwnw3a2L8ZtS/Job4Hu7b1GWSRRr3KwH428CcTIiPaljkOfZK/BsguJ5MFctFUCfYqFKuJDse9aNzJQJpFf/72OO4JCuc+ds3kdkSbR+l9DYJE7exJj0MAnR+3Vdboko09oiEefPla8DP65YIC5cfYJjc9UVovmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2Xdzfhf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788103667; c=relaxed/simple;
+	bh=I7Ge3OAJGK9JQhfcKD1K/P9hN6xI8VC1tbOgPs0s1zI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nFHxMlX4Pgwdty8Yw0iZiy7jcw1dGwgTvfpnwII4iqPdUgVtEqDvQW7oCJMXJRNq2yWYUQBvXJbXcgffzBNuaSZGW9d6pFwRNsOy/1JApxoWthQhfZ8qUytqx/hD7VceLbc+NEt2rjl5sRIG4FLJS41MY7QKe5Lf+rrMegfeqWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AM7Wjfkr; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2Xdzfhf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA74A1F000E9;
-	Sun, 30 Aug 2026 14:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788101572;
-	bh=xl6NCJDud5NrLa33LNwHcrWZwaFTcKNOvQwTtBwHmqw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=G2XdzfhfllUpatS/H+JnSFUH7eB+U6F14dZt5aNBlvPuCQGQZJmrayUBCsvHDvHMR
-	 zIB7KQ4oIg4vqFP5WvZeiLSVcmLi9aD8EQKsVIJ+18XMEzua0inCVm4Zf3+VmlHj7/
-	 i+61ICxwe3QA42E9SWOG8q5F8+2uwe5dO7Nik4hmNoGzqgQ1Qw47s/6SMjKI7eSfSt
-	 moQX1jA+8xeLsoxWLfZhotQhCuBkGLSDUuTJ9dx1ms5GvJuVUHWoFxomq9gQXxMyN8
-	 txn+VV3nCEnMGtaueiDqMabGb1krD9a9d3LGqa4LOXVQkqzjtptzugA5ExAL4+z+xa
-	 8k7SOjqnngIsQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 11/14] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178810013249.64882.3483637605217266271.stgit@devnote2>
-References: <178810001186.64882.2161016469449127450.stgit@devnote2>
- <178810013249.64882.3483637605217266271.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:52:52 +0000
-Message-Id: <20260830145252.AA74A1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AM7Wjfkr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=A3IpWgOyKaN3UdCIY6ZmmklNOhbLYQXe6zzrRcPkFWk=; b=AM7WjfkrdRPZouVvW8RNYyh+xq
+	O924yClD3Gds5H9EtmO4JoZU7Bnk2KhFLGsC0/TzPQTURamNZMyK4Z6TdCC0t2YTrIsq1odUukpd4
+	6RNDnIPjOPQlDXXeiM56Si7ipg/paQmcQ/WDWjdPEzve624EZrJyAPTPb7whVV/fugcqeu12OQPR7
+	t59tyRF2xTzBN+8P2MPm7x8bC6tfc5MuMVJNgF7CBMTtv34FwUh3+uEAe0QBRYyiTqFUHjzWqukwZ
+	xXa8ClIbGDLS0Idzhm+gVUqcOPC10LhX7Hz+KEg1qEYqFJWNkeiyTp+Q5mTM7ikcH/dPWLP0Gv78W
+	9eQijlmA==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1x0hRY-00000007rGG-0RMe;
+	Sun, 30 Aug 2026 15:27:36 +0000
+Message-ID: <a61aa866-f95a-42fa-86d8-86f0726e0d00@infradead.org>
+Date: Sun, 30 Aug 2026 08:27:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/4] Documentation/ftrace: Document function comm
+ filters
+To: hu.shengming@zte.com.cn
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, corbet@lwn.net, skhan@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, ran.xiaokai@zte.com.cn, xu.xin16@zte.com.cn,
+ zhang.run@zte.com.cn
+References: <20260830191258354QN6qx13iCRbQd2Uj3Ve2s@zte.com.cn>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260830191258354QN6qx13iCRbQd2Uj3Ve2s@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Calling `cancel_work_sync()` on an uninitialized `work_struct` i=
-n the error path triggers a kernel warning (WARN_ON).
---
+Hi,
 
-commit 5e74cd56c202daf7ad5f60c9e251b2bc86cf21d8
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Subject: tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+On 8/30/26 4:12 AM, hu.shengming@zte.com.cn wrote:
+> From: Shengming Hu <hu.shengming@zte.com.cn>
+> 
+> Document set_ftrace_comm and set_ftrace_notrace_comm, including their
+> write and O_TRUNC behavior, accepted comm names, interaction with PID
+> filters, and when a task is rechecked after its comm changes.
+> 
+> Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
+> ---
+>  Documentation/trace/ftrace.rst | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index 7261f25f8b4b..a96fc436ec16 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -313,6 +313,37 @@ of ftrace. Here is a list of some of the key files:
+>          If a PID is in both this file and "set_ftrace_pid", then this
+>          file takes precedence, and the thread will not be traced.
+> 
+> +  set_ftrace_comm:
+> +
+> +	Have the function and function_graph tracers trace only threads whose
+> +	task comm is listed in this file. Names are matched exactly and must
+> +	contain between 1 and TASK_COMM_LEN - 1 bytes.
+> +
+> +	Each write adds one name. A single trailing newline is ignored, while
+> +	embedded newlines are rejected. A zero-length write or a write containing
+> +	only a newline adds no entry. Duplicate entries have no effect.
+> +
+> +	Opening the file with O_TRUNC clears the filter. Otherwise, writes add
 
-This commit adds set_wprobe and clear_wprobe event triggers to dynamically
-attach and detach hardware breakpoint address monitoring based on event fie=
-ld
-contents.
+Is there a way to clear the filter from (in) a shell script?
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
+> +	names to the existing filter. From a shell, use >> to add a name without
+> +	clearing the filter. Reading an empty filter prints `no comm`.
+> +
+> +	If both set_ftrace_pid and set_ftrace_comm contain entries, a thread must
+> +	match both filters to be traced.
+> +
+> +  set_ftrace_notrace_comm:
+> +
+> +	Have the function and function_graph tracers ignore threads whose task
+> +	comm is listed in this file. Matching and file operations have the same
+> +	semantics as set_ftrace_comm.
+> +
+> +	A match in either set_ftrace_notrace_pid or set_ftrace_notrace_comm
+> +	excludes the thread and takes precedence over all include filters.
+> +
+> +	Function-tracer task filters are evaluated when a task is scheduled in,
+> +	and the result is cached per CPU. Changing a filter refreshes the result
+> +	for currently running tasks. If a running task changes its comm, it is
+> +	rechecked the next time it is scheduled in.
+> +
+>    set_event_pid:
+> 
+>  	Have the events only trace a task with a PID listed in this file.
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index 6a11c55e75373..29eae708ae7bc 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-[ ... ]
-> @@ -199,14 +217,62 @@ static int __register_trace_wprobe(struct trace_wpr=
-obe *tw)
-[ ... ]
->  static void free_trace_wprobe(struct trace_wprobe *tw)
->  {
->  	if (tw) {
-> +		irq_work_sync(&tw->irq_work);
-> +		cancel_work_sync(&tw->work);
+-- 
+~Randy
 
-[Severity: Medium]
-Will this trigger a kernel warning in __flush_work() if the work struct has
-not been initialized yet?
-
-In alloc_trace_wprobe(), if the kstrdup() allocation for the symbol fails,
-the function returns early. Since the tw pointer is managed by the
-__free(free_trace_wprobe) guard, it will automatically invoke this cleanup
-function:
-
-alloc_trace_wprobe() {
-    ...
-    tw =3D kzalloc_flex(*tw, tp.args, nargs);
-    ...
-    if (symbol) {
-        tw->symbol =3D kstrdup(symbol, GFP_KERNEL);
-        if (!tw->symbol)
-            return ERR_PTR(-ENOMEM); /* triggers free_trace_wprobe(tw) */
-    }
-    ...
-    INIT_WORK(&tw->work, wprobe_work_func);
-}
-
-Because the early return happens before INIT_WORK() is called,
-cancel_work_sync() will operate on a zeroed work_struct, which can cause a
-WARN_ON(!work->func).
-
->  		trace_probe_cleanup(&tw->tp);
->  		kfree(tw->symbol);
->  		kfree(tw);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178810001186.64882.=
-2161016469449127450.stgit@devnote2?part=3D11
