@@ -1,157 +1,468 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3317842FCDB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 13:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A8047DF86;
+	Mon, 31 Aug 2026 13:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788183041; cv=none; b=qvTVySKXETLWtnsvxHjxQLjQQ92WYyhKdlAGGXftC6ZN3Xx8TNRjqRYnsK8wbDiin+QshAEWBgYCV8q0+pcqPDOrPYcyLWYbgpUyM3ig6FLDtJiCpyKe+lLxRhOTs9kk7mZjSGfYBq5FY1tId9+ol1F02vhMzPQ0vrxbbbwIPTQ=
+	t=1788183458; cv=none; b=HnPtJ49THqVWc32flmgXKszAHQKOezJVpPT5JNEqLiTr8uSQqvaNiie5+8BXJz5KxN+9Bb55kXoMWlQ11XViSK2DOK6BP20GW0SYVxJ5cYzIZN0mFAhnEv3MpdnZ8CCpfPKm5JkEXnPKrKJ7MtjGNB/YiRi+YQFuv/7NMN7nGLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788183041; c=relaxed/simple;
-	bh=eAs5v0X4DQXO5Yp0nfjTElZLxyJMKOOQvrmCKjejTMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zp4uLDXIkqAWrmAF8viP8/vORCiYZYbbOcumeHpCaoVGNPxWaj6fYLdmdLr69oLHPub+Pk0qjmBuk8Y66fSeKAvjTsCUZ1luSFLFfkH3Cg0w7t/JjtV531fFYSCI9eYnP9/izhzm7yir71QoKVWx0o73EXEgISYdoQlR6Km2en0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QoJwjGk1; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1788183458; c=relaxed/simple;
+	bh=+hBV3VC8oghTFATaE06fBctpbwHYg/11NE4p8sUtRwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LhrM2RUfGgsze2WBDEiK8kgRNb9Etc1hG46qaCkolIBT5QjFDVv9Ct8jjVIBuqauYaSf5wH6XH4Z+1jdHEGLR959qHRdxy7A6mbh4HaZlhz3YT48rUGW5gWfPtIRZRPQ2nl1uxy/A/RhUFAm6oOOHjvQjIZ+jL7+7UZoe5SowBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPCkp9kJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QoJwjGk1"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c1677c91969so330764066b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 06:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1788183038; x=1788787838; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bclo5dNXV+6Jy1wwsMfxD1j5QCeC9PLq5D/ZXM1ZV+o=;
-        b=QoJwjGk1lJkZUVbaTJ12PYABKBy7QxMBcy39riN/BPMnm9TwZ3W7fhwvSIiUqMUTjQ
-         F3ul1vDx99QAH0E1c7niSi9sf4Axf4kLy1EyeRVq6ynJwD+XzbA4tFWCXXp42SrtxMPG
-         cnkF5+ftKmIKEsPdz0jaqkj28HTVMTPsYTQTPsKb/ZjoG8I684rCN9Z4YlLdIUX6MhbA
-         5c9xE6j0XgI0nph/mpRxPBGbrZLtnFyIVmKdqMrKi1xM5sCxvWXE7H3H1b1Z+Pa7FvCj
-         2Roh0gkWAWMlXcWyzC9BzGVYtefXxYbDDZPkplTe9Vmg2RPyaUe31hPtcTTRYd5rQQWe
-         Eh0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788183038; x=1788787838;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=bclo5dNXV+6Jy1wwsMfxD1j5QCeC9PLq5D/ZXM1ZV+o=;
-        b=UqhO8COPj0g6ZIs31QmnFzdznGMf490l3U+Mmw8xlPAjpY8v7U9S70TcJs+/t+ib5W
-         BeoWx59FKH04Oc9S3abwNL8LivMpEhhmBjGgtgf8fzrkw98c+vTau4PtDBMPIxAJ6DEL
-         aCYDUUDQx7SYDXCcWmaT9OSn4GaWdKT6h/KIo/Eqojn63i9wrxg5hZlrAF+OWYuhT8HJ
-         FgJbkAXM6EOk/WYZ2fPF1ww/QsdoRt9JZfwttS213Kt60PAwpCFCw3gbIubK5W/yBCbl
-         sSzML9EicA+PWiMSLw493D+BUjguz+OimYtkbnWoY8Y7oJz1QXkS9YTpBzIaK7hvMuKG
-         3zpQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrnCoLAw58K+LLIEuUomZhfY56tJcSvaQFUGd3UXz5H8Kmej/240GI6jhO1RKr6p4omMuUiRXN6q8JOM/YRoklOy2o=@vger.kernel.org
-X-Gm-Message-State: AFuF++mHhKucDTV9t0tDjw91LPqSZDXMwxCQlT8Vb+5Et9f/EyP2Y+cX
-	qdnGs94eWCpwmqv3hMMTWCuaUfm0pm9m0ESL+9PotwDbBTEaBuM4Qnu7D+zn78ue8x8=
-X-Gm-Gg: AR+sD11YAWoci6JaN9vcvTq6yDLNTuMVt7/tcsj0diTcLrU/HVntdm+VYTDOS5XQHlg
-	Im2kFlsAo4j+tsayQ+reiDzJtZHF04cSY5QwSNwNwDtCTFs1TTyV2PTtnz1yxWHcFxZk99SpK82
-	q7vXAdOXWZt9TsZQXoKsyZu3INdK3wegDEuFqolcqeIeTd7Lf+e/FM2fV4ZY8zmYz1BER2o/VQi
-	iKdIrtg4W3SVFcOXsE06IUX9rgNoagnX0IFe1FAfjnb/xlY8gyxDOnDe+gQ64MGy/GN4VmS6hzZ
-	Wtv6Ao1ZVStRVCvwYEWW0ZTpz9ggrRLlfz7jThSGccN0Fyhy8g1jGIfjPW+YNoV7tJKySugWPS/
-	Tc3a6OGLVxPjocepn2rzxsPsGEPUsGPSsdFkB/klkCvwvMe1l40nfFrEomdzl8D5BIjekm1moNj
-	jfs9rFgZQq9kdTfdAMGhX7U32nu/lnfqnZiDhkMIhTLI4onnV1UaEXjvkbX2hovqG5f/zxWwiCT
-	4Yc+FL7f06nl45Nv5Onf8zW
-X-Received: by 2002:a17:907:3cc2:b0:c1c:5aa1:de57 with SMTP id a640c23a62f3a-c2557030696mr1575327866b.13.1788183038289;
-        Mon, 31 Aug 2026 06:30:38 -0700 (PDT)
-Received: from ?IPV6:2a07:de40:8100:0:fc6c:f9a2:4a0a:6354? ([2001:af0:8000:1409:193:86:92:181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c255ee0b233sm435317266b.11.2026.08.31.06.30.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2026 06:30:37 -0700 (PDT)
-Message-ID: <5e6231aa-10b9-4c41-b7ab-dee5e8f64bec@suse.com>
-Date: Mon, 31 Aug 2026 15:30:36 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPCkp9kJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425731F000E9;
+	Mon, 31 Aug 2026 13:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788183456;
+	bh=hp0zo/g+UZnqTLyekrqgz6rWmUrXHOudIzqku7WJKes=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=cPCkp9kJ4jh0YSbsWckfQ9iarRPGisC5SS8JjKZPDVgEAPs/IANTa/lROLfHnS1xp
+	 MSZm+irJzp+tb5cjND0oDq0+4UWNq2cGodD1YW/K9V/Qh548bYcuuhvqb2t+eplvQf
+	 7Tb8+DeXRWZpruM+OB3EpTfx7Iv88ecEspgLFqfNQhz84y/iux2O2oncAeQZ8skZDj
+	 X9+4cJhq+3ic0aNHdNckt97fP7+HL1t5nZ0Atnmm+b1v1G0UpKmdnZi7jP8xQSlLcY
+	 7g2+WgppuC4QfPQjQQCwlyWVAU1P6PbhZpomGro4fN9DWKYKgUQisuhgmzDPt/M4YX
+	 gbnbae7RWMO6A==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Karl Mehltretter <kmehltretter@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.18-6.1] tracing: Disable KCOV instrumentation for trace_irqsoff.o
+Date: Mon, 31 Aug 2026 09:22:15 -0400
+Message-ID: <20260831133314.4125787-107-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260831133314.4125787-1-sashal@kernel.org>
+References: <20260831133314.4125787-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/9] arm64: Allocate .text and .init.text together
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
- =?UTF-8?Q?Adrian_Barna=C5=9B?= <abarnas@google.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org
-References: <20260822135323.795946-11-ardb+git@google.com>
- <524b5817-c097-47cb-b301-4a9c0f1d2947@suse.com>
- <cee89666-9de0-4012-b665-69da3846c5ef@app.fastmail.com>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <cee89666-9de0-4012-b665-69da3846c5ef@app.fastmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.18.48
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/28/26 3:45 PM, Ard Biesheuvel wrote:
-> On Fri, 28 Aug 2026, at 15:07, Petr Pavlu wrote:
->> On 8/22/26 3:53 PM, Ard Biesheuvel wrote:
->>> From: Ard Biesheuvel <ardb@kernel.org>
->>>
->>> The arm64 module loader has to deal with a couple of corner cases that
->>> may occur when .init.text is placed out of direct branch range of .text:
->>>
->>> - ordinary direct branches from .init.text into .text may require the
->>>   use of a PLT entry (i.e., a trampoline aka veneer), which means not
->>>   only that additional PLT entries need to be allocated for
->>>   cross-section calls, but also that .init.text needs its own PLT
->>>   reservation, as the one in .text will be out of range as well;
->>>
->>> - dynamic patching of the ftrace handler into .init.text code needs its
->>>   own dedicated trampoline as the one in .text may be too far away.
->>>
->>> - recent compilers may omit BTI veneers for static functions that never
->>>   have their address taken, and so additional veneers will need to be
->>>   added to .text in case cross-section direct branches from .init.text 
->>>   require a PLT entry (and therefore a landing pad at the target end).
->>>
->>> This is unfortunate, because it is actually somewhat unusual for .text
->>> and .init.text to be so far away from each other: only when allocating
->>> either of them (but not both) exhausts the 'near' (PLT-less) module
->>> region, the other will be allocated from the spillover region, which is
->>> not in direct branching range, and therefore requires PLT entries for
->>> cross-section calls.
->>>
->>> This series addresses this wart by allocating both of them as a single
->>> chunk, and freeing the .init.text part along with the other init
->>> sections at the appropriate time. This ensures that the two regions will
->>> never require veneers for cross-section calls, allowing the arm64 module
->>> loader to be simplified.
->>
->> It looks like this should also be useful for ppc64, which currently
->> merges .init.text and .text because keeping them separate would require
->> stubs between the two, and consequently .init.text is never released in
->> modules on this architecture.
->>
-> 
-> Thanks for the data point - are those stubs needed when there is some
-> distance between the placements of .text and .init.text?
+From: Karl Mehltretter <kmehltretter@gmail.com>
 
-Yes, my understanding is that these stubs are primarily needed because
-the BL instruction on ppc64 can only reach a range of +-32 MB.
+[ Upstream commit 01046072880b654dbadf71be2f645aad4a7b5d87 ]
 
-Another aspect on ppc64 is the use of the Table of Contents (TOC). In
-theory, when splitting .text and .init.text, one would also want
-separate TOCs, along with stubs to support switching between them.
-However, I don't think this is particularly feasible. As far as I can
-see, the ABI and GCC don't allow separate TOCs within a single
-relocatable object file. In practice, it shouldn't be a large problem to
-keep a single TOC, even if some data related only to .init.text remains
-present after the module is loaded. Being able to free .init.text is the
-important part. On newer Power10 with PCREL, the TOC is not used, so
-this issue goes away.
+When KCOV runs its boot selftest with whole-kernel instrumentation
+enabled, it sets current->kcov_mode to KCOV_MODE_TRACE_PC without
+installing a coverage area. Any instrumented code accepted as task-context
+coverage in that window dereferences current->kcov_area and crashes.
 
+On ARMv5 Versatile PB with CONFIG_KCOV_SELFTEST=y,
+CONFIG_KCOV_INSTRUMENT_ALL=y and CONFIG_IRQSOFF_TRACER=y, boot hits a
+NULL pointer fault during the selftest:
+
+  kcov: running self test
+  Internal error: Oops: 5 [#1] ARM
+  PC is at __sanitizer_cov_trace_pc+0x4c/0x90
+  Kernel panic - not syncing: Fatal exception
+
+A diagnostic run showed the unwanted coverage comes from the IRQs-off
+tracer callbacks reached from ARM IRQ entry before hardirq context is
+visible to KCOV:
+
+  __sanitizer_cov_trace_pc from tracer_hardirqs_off+0x18/0x1cc
+  tracer_hardirqs_off from trace_hardirqs_off+0x34/0x54
+  trace_hardirqs_off from __irq_svc+0x58/0xb0
+  __irq_svc from kcov_init+0x7c/0xdc
+
+and similarly through tracer_hardirqs_on().
+
+trace_preemptirq.o is already excluded because this tracing path can run
+from early interrupt code and produce coverage unrelated to syscall
+inputs. Exclude trace_irqsoff.o as well, instead of requiring users to
+turn off CONFIG_KCOV_INSTRUMENT_ALL=y, which is the default whole-kernel
+KCOV mode.
+
+With the exclusion in place, the same ARMv5 Versatile PB QEMU test boots
+through the KCOV selftest and reaches userspace.
+
+Tested on ARMv5 Versatile PB QEMU with CONFIG_KCOV_SELFTEST=y,
+CONFIG_KCOV_INSTRUMENT_ALL=y and CONFIG_IRQSOFF_TRACER=y.
+
+Link: https://patch.msgid.link/20260525170428.67211-1-kmehltretter@gmail.com
+Assisted-by: Codex:gpt-5
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+LLM Generated explanations, may be completely bogus:
+
+## Phase 1: Commit Message Forensics
+
+### Step 1.1: Subject line
+**Record:** `[tracing] [disable] Disable KCOV instrumentation for
+trace_irqsoff.o` — tracing subsystem; disables KCOV instrumentation on
+one object file to prevent a boot crash.
+
+### Step 1.2: Tags
+**Record:**
+- **Link:**
+  https://patch.msgid.link/20260525170428.67211-1-kmehltretter@gmail.com
+- **Assisted-by:** Codex:gpt-5
+- **Signed-off-by:** Karl Mehltretter `<kmehltretter@gmail.com>`
+- **Signed-off-by:** Steven Rostedt `<rostedt@goodmis.org>` (tracing
+  maintainer)
+- No Fixes:, Reported-by:, Tested-by:, Reviewed-by:, Acked-by:, or Cc:
+  stable tags
+- Notable: maintainer sign-off; tested configuration described in body;
+  no syzbot report
+
+### Step 1.3: Body analysis
+**Record:**
+- **Bug:** With `CONFIG_KCOV_SELFTEST=y`,
+  `CONFIG_KCOV_INSTRUMENT_ALL=y`, and `CONFIG_IRQSOFF_TRACER=y`, KCOV
+  boot selftest sets `current->kcov_mode = KCOV_MODE_TRACE_PC` without
+  installing a coverage area. Instrumented IRQ-off tracer code reached
+  from ARM IRQ entry can call `__sanitizer_cov_trace_pc()`, which
+  dereferences NULL `current->kcov_area`.
+- **Symptom:** NULL pointer fault / kernel panic during boot on ARMv5
+  Versatile PB QEMU: `PC is at __sanitizer_cov_trace_pc`, panic during
+  `kcov: running self test`.
+- **Root cause:** `trace_irqsoff.o` is still KCOV-instrumented while
+  `trace_preemptirq.o` was already excluded; `tracer_hardirqs_off()` /
+  `tracer_hardirqs_on()` live in `trace_irqsoff.c` and run from IRQ
+  entry before hardirq context is visible to KCOV’s `in_task()`
+  filtering.
+- **Stack trace (from message):** `__sanitizer_cov_trace_pc` ←
+  `tracer_hardirqs_off` ← `trace_hardirqs_off` ← `__irq_svc` ←
+  `kcov_init`.
+
+### Step 1.4: Hidden bug fix?
+**Record:** Yes. Although framed as instrumentation exclusion, this is a
+real boot crash fix for a valid Kconfig combination, completing the same
+class of fix already applied to `trace_preemptirq.o` in commit
+`bb5eb8f3b3297` (2022).
+
+---
+
+## Phase 2: Diff Analysis
+
+### Step 2.1: Inventory
+**Record:**
+- **Files:** `kernel/trace/Makefile` only (+3/-2 lines net)
+- **Change:** Add `KCOV_INSTRUMENT_trace_irqsoff.o := n`; broaden
+  comment from “this file” to “these files”
+- **Scope:** Single-file, surgical Makefile change
+
+### Step 2.2: Code flow
+**Record:**
+- **Before:** Only `trace_preemptirq.o` excluded from KCOV;
+  `trace_irqsoff.o` remains instrumented when
+  `CONFIG_KCOV_INSTRUMENT_ALL=y`.
+- **After:** Both `trace_preemptirq.o` and `trace_irqsoff.o` excluded.
+- **Affected path:** IRQ entry/exit →
+  `trace_hardirqs_off()`/`trace_hardirqs_on()` (uninstrumented wrapper
+  in `trace_preemptirq.c`) →
+  `tracer_hardirqs_off()`/`tracer_hardirqs_on()` (instrumented
+  implementation in `trace_irqsoff.c`) → `__sanitizer_cov_trace_pc()`.
+
+### Step 2.3: Bug mechanism
+**Record:** **Category:** NULL pointer dereference / boot crash in debug
+instrumentation path.
+- `kcov_init()` selftest sets `kcov_mode` without `kcov_area` (verified
+  in `kernel/kcov.c:1097-1098`).
+- `check_kcov_mode()` allows tracing when `in_task()` is true
+  (`kernel/kcov.c:183-184`); during early ARM IRQ handling,
+  `preempt_count` may not yet reflect hardirq context
+  (`include/linux/preempt.h:130`).
+- Instrumented `tracer_hardirqs_*()` in `trace_irqsoff.o` calls
+  `__sanitizer_cov_trace_pc()` which dereferences `t->kcov_area` at line
+  220 without NULL guard.
+
+### Step 2.4: Fix quality
+**Record:** Obviously correct; mirrors existing
+`KCOV_INSTRUMENT_trace_preemptirq.o := n` pattern from `bb5eb8f3b3297`.
+Minimal, no API changes. Regression risk very low — only disables KCOV
+on code that should never contribute syscall-relevant coverage anyway.
+
+---
+
+## Phase 3: Git History Investigation
+
+### Step 3.1: Blame
+**Record:** Lines 34-36 in `kernel/trace/Makefile` introduced by
+`bb5eb8f3b3297` (Congyu Liu, 2022-05-23) — preemptirq exclusion only.
+`trace_irqsoff.c` has existed since `81d68a96a3984` (2008). The gap
+(preemptirq excluded, irqsoff not) has been present since the 2022 fix.
+
+### Step 3.2: Fixes: tag
+**Record:** Not applicable — no Fixes: tag in commit message.
+
+### Step 3.3: Related file history
+**Record:** Recent `trace_irqsoff.c` changes are unrelated tracer fixes
+(e.g. `c834a97962c70`). No prerequisite series; standalone one-line
+Makefile fix. The candidate commit is not yet in this tree (fix absent
+from current `kernel/trace/Makefile`).
+
+### Step 3.4: Author context
+**Record:** Steven Rostedt signed off (tracing maintainer). Prior
+related fix `bb5eb8f3b3297` was Acked-by Dmitry Vyukov (KCOV author).
+Karl Mehltretter appears to be reporting/fixing a gap in the 2022
+exclusion.
+
+### Step 3.5: Dependencies
+**Record:** No dependencies. Uses standard `KCOV_INSTRUMENT_<stem>.o`
+mechanism in `scripts/Makefile.lib:84-90`. Applies standalone.
+
+---
+
+## Phase 4: Mailing List and External Research
+
+### Step 4.1: Original discussion
+**Record:** UNVERIFIED — `b4 shazam` could not find the message-id;
+lore.kernel.org returns 403/bot protection via WebFetch and curl. Link
+from commit message could not be fetched.
+
+### Step 4.2: Reviewers
+**Record:** UNVERIFIED via b4 dig -w (could not locate thread). Steven
+Rostedt SOB confirms maintainer acceptance.
+
+### Step 4.3: Bug report
+**Record:** Reproduced by author on ARMv5 Versatile PB QEMU with
+documented Kconfig. No syzbot/bugzilla link. Severity: boot panic during
+KCOV selftest.
+
+### Step 4.4: Related patches
+**Record:** Direct predecessor: `bb5eb8f3b3297 tracing: Disable kcov on
+trace_preemptirq.c` — same rationale, incomplete because tracer
+implementation lives in separate `trace_irqsoff.o`.
+
+### Step 4.5: Stable list history
+**Record:** UNVERIFIED — could not search lore stable archive due to
+access restrictions.
+
+---
+
+## Phase 5: Code Semantic Analysis
+
+### Step 5.1: Key functions
+**Record:** `tracer_hardirqs_off()`, `tracer_hardirqs_on()` in
+`trace_irqsoff.c`; `trace_hardirqs_off()`, `trace_hardirqs_on()` in
+`trace_preemptirq.c`; `__sanitizer_cov_trace_pc()`, `check_kcov_mode()`,
+`selftest()`, `kcov_init()` in `kcov.c`.
+
+### Step 5.2: Callers
+**Record:** `trace_hardirqs_off`/`on` called from ARM entry code
+(`arch/arm/kernel/entry-header.S:208,215,217` via `svc_exit`;
+`arch/arm/kernel/entry-armv.S:210`). Exported symbols used broadly
+across architectures for IRQ flag tracing. `kcov_init` is
+`device_initcall` — runs during boot with interrupts enabled.
+
+### Step 5.3: Callees
+**Record:** `tracer_hardirqs_off()` → `start_critical_timing()`; KCOV-
+instrumented code in `trace_irqsoff.o` inserts calls to
+`__sanitizer_cov_trace_pc()`.
+
+### Step 5.4: Reachability
+**Record:** Triggered during boot when KCOV selftest runs
+(`device_initcall`) and a timer interrupt fires during the 300ms wait
+loop. Reachable with `CONFIG_KCOV=y`, `CONFIG_KCOV_SELFTEST=y`,
+`CONFIG_KCOV_INSTRUMENT_ALL=y` (default **y** per
+`lib/Kconfig.debug:2149`), and `CONFIG_IRQSOFF_TRACER=y` or
+`CONFIG_PREEMPT_TRACER=y` (both build `trace_irqsoff.o`).
+
+### Step 5.5: Similar patterns
+**Record:** Extensive KCOV exclusions across tree (mm/, lib/, kernel/,
+arch/*/entry/, `kernel/trace/Makefile` for preemptirq). This fix fills
+an obvious gap in the same file/pattern.
+
+---
+
+## Phase 6: Cross-Reference Against Local Tree
+
+### Step 6.1: Buggy code present?
+**Record:** **Yes.** Local tree is **Linux 6.18.44** (`git describe
+HEAD` → `v6.18.44`). `kernel/trace/Makefile` has only:
+```34:36:kernel/trace/Makefile
+# Functions in this file could be invoked from early interrupt
+# code and produce random code coverage.
+KCOV_INSTRUMENT_trace_preemptirq.o := n
+```
+`trace_irqsoff.o` is built (lines 62-63) but not excluded. All
+KCOV/selftest infrastructure present (`lib/Kconfig.debug`,
+`kernel/kcov.c`).
+
+### Step 6.2: Backport complications
+**Record:** Clean apply expected — exact context matches the proposed
+diff. No conflicting changes in this area.
+
+### Step 6.3: Related fixes already present?
+**Record:** Partial fix `bb5eb8f3b3297` is present (preemptirq only).
+This specific irqsoff exclusion is **not** present. No duplicate fix
+found.
+
+---
+
+## Phase 7: Subsystem and Maintainer Context
+
+### Step 7.1: Subsystem criticality
+**Record:** **tracing + KCOV** — IMPORTANT for kernel developers,
+fuzzers (syzkaller per `KCOV_INSTRUMENT_ALL` help text), and CI systems
+using KCOV selftest. Not universal production path, but KCOV is
+security-relevant infrastructure.
+
+### Step 7.2: Subsystem activity
+**Record:** tracing subsystem actively maintained in 6.18.y (recent
+irqsoff tracer fixes in 2025).
+
+---
+
+## Phase 8: Impact and Risk Assessment
+
+### Step 8.1: Who is affected
+**Record:** Config-specific — users/distributions building with KCOV
+enabled, especially `KCOV_SELFTEST` (Kconfig says “Recommended to be
+enabled”) and whole-kernel instrumentation (`KCOV_INSTRUMENT_ALL`,
+default y). Affects fuzzing/CI/boot-validation workflows, not typical
+end-user kernels without KCOV.
+
+### Step 8.2: Trigger conditions
+**Record:** Boot-time, with KCOV selftest + instrument-all +
+irqsoff/preempt tracer enabled; timer interrupt during selftest wait
+loop. Not userspace-triggerable on production kernels without KCOV, but
+reliably reproducible in the described test config.
+
+### Step 8.3: Failure mode severity
+**Record:** NULL pointer dereference → kernel oops → **panic during
+boot**. Severity: **CRITICAL** for affected configurations (system does
+not reach userspace).
+
+### Step 8.4: Risk-benefit
+**Record:**
+- **Benefit:** Prevents deterministic boot panic for valid, documented
+  Kconfig used in fuzzing/CI; completes incomplete 2022 fix.
+- **Risk:** Very low — one Makefile line, established exclusion
+  mechanism, no behavior change except suppressing inappropriate KCOV
+  callbacks.
+- **Ratio:** Favorable for backport.
+
+---
+
+## Phase 9: Final Synthesis
+
+### Step 9.1: Evidence summary
+
+**FOR backport:**
+- Real boot crash (NULL deref in `__sanitizer_cov_trace_pc`)
+- Small, surgical, obviously correct fix following existing pattern
+- Bug exists in 6.18.44 tree; fix not yet applied
+- `KCOV_INSTRUMENT_ALL` defaults to y; `KCOV_SELFTEST` recommended in
+  Kconfig
+- Maintainer (Rostedt) signed off
+- Completes gap left by `bb5eb8f3b3297`
+
+**AGAINST backport:**
+- Only affects KCOV debug/fuzzing configurations, not typical production
+  kernels
+- No syzbot/CVE report
+- Mailing list review details unverified
+
+**Unresolved:** Full lore thread content; whether reviewers explicitly
+nominated for stable.
+
+### Step 9.2: Stable rules checklist
+1. Obviously correct and tested? **PASS** — author tested on ARMv5 QEMU;
+   mechanism verified in code; mirrors prior accepted fix.
+2. Fixes a real bug? **PASS** — boot panic with documented Kconfig.
+3. Important issue? **PASS** — boot crash (CRITICAL for affected
+   config); KCOV is fuzzing/security infrastructure.
+4. Small and contained? **PASS** — 1 line + comment, single Makefile.
+5. No new features/APIs? **PASS** — build-time instrumentation exclusion
+   only.
+6. Can apply to local tree? **PASS** — code present, clean apply
+   expected.
+
+### Step 9.3: Exception categories
+**Record:** Build/instrumentation fix for valid kernel configuration —
+analogous to existing KCOV exclusion pattern (similar to build-fix
+category for instrumented builds).
+
+### Step 9.4: Decision rationale
+
+For **Linux 6.18.44**, this commit should be backported. The tree has
+the incomplete 2022 preemptirq KCOV exclusion but not the irqsoff one,
+leaving `tracer_hardirqs_*()` instrumented. Combined with KCOV selftest
+(which deliberately enables tracing without a coverage area), this
+causes a deterministic boot panic on interrupt during `kcov_init()`. The
+fix is minimal, follows an established in-tree pattern, is signed by the
+tracing maintainer, and has very low regression risk while preventing a
+hard boot failure for KCOV/fuzzing configurations that stable trees are
+expected to support.
+
+---
+
+## Verification
+
+- [Phase 1] Parsed subject, tags, body; identified boot panic bug and
+  maintainer SOB
+- [Phase 2] Diff: 1 Makefile line added; verified call chain preemptirq
+  wrapper → irqsoff tracer → `__sanitizer_cov_trace_pc`
+- [Phase 3] `git describe HEAD`: v6.18.44 / 6.18.44
+- [Phase 3] `git blame kernel/trace/Makefile:34-36`: `bb5eb8f3b3297`
+  (2022-05-23)
+- [Phase 3] `git show bb5eb8f3b3297`: prior preemptirq-only exclusion
+  confirmed
+- [Phase 3] `trace_irqsoff.c` exists since 2008 (`81d68a96a3984`)
+- [Phase 3] Fix commit not in tree; `KCOV_INSTRUMENT_trace_irqsoff.o`
+  absent
+- [Phase 4] UNVERIFIED: lore/b4 thread inaccessible (403/bot protection,
+  message-id not found)
+- [Phase 5] Read `kernel/kcov.c:174-220,1080-1132`: selftest sets mode
+  without area; `check_kcov_mode` + NULL `kcov_area` deref confirmed
+- [Phase 5] Read `kernel/trace/trace_irqsoff.c:643-647`,
+  `trace_preemptirq.c:102-109`: tracer in irqsoff.o, wrapper in
+  preemptirq.o
+- [Phase 5] Read `arch/arm/kernel/entry-header.S:202-218`:
+  `trace_hardirqs_off/on` called from `svc_exit` during IRQ handling
+- [Phase 5] Read `include/linux/preempt.h:130`: `in_task()` based on
+  preempt_count hardirq bits
+- [Phase 5] Read `scripts/Makefile.lib:84-90`:
+  `KCOV_INSTRUMENT_<stem>.o` mechanism confirmed
+- [Phase 6] Current `kernel/trace/Makefile` missing irqsoff exclusion;
+  `trace_irqsoff.o` built at lines 62-63
+- [Phase 6] `lib/Kconfig.debug:2146-2172`: `KCOV_INSTRUMENT_ALL` default
+  y; `KCOV_SELFTEST` recommended
+- [Phase 8] Failure mode: boot panic, severity CRITICAL for affected
+  Kconfig
+
+**YES**
+
+ kernel/trace/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index dcb4e02afc5f4..36b3ed5251f46 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -31,9 +31,10 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
+ GCOV_PROFILE := y
+ endif
+ 
+-# Functions in this file could be invoked from early interrupt
+-# code and produce random code coverage.
++# Functions in these files can run from IRQ entry before hardirq context
++# is visible to KCOV, and produce coverage unrelated to syscall inputs.
+ KCOV_INSTRUMENT_trace_preemptirq.o := n
++KCOV_INSTRUMENT_trace_irqsoff.o := n
+ 
+ CFLAGS_bpf_trace.o := -I$(src)
+ 
 -- 
-Cheers,
-Petr
+2.53.0
+
