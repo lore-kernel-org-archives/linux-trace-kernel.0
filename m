@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4002D7DD7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45E32DF132;
 	Mon, 31 Aug 2026 00:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788135920; cv=none; b=Ues9nfhwWoDqIf8ZQ34BXDuKswN0HuwHV+EKweuj97QVzr/HqC1mjvbruzfPqX85z80UZ+9K5GLmlRWvu8bZ9Esfhj3Wa85M6WwqghxTRPn3iVlLuNqQd5MZgE47Uy/mjeduO012siG8U54M0u5Jmy+x3lMWqNT6OFzDVrM6C9c=
+	t=1788135920; cv=none; b=lw4MixwvTfJjA7g1XmW6r7D0yofQ73FLgHIaPgquVIKgmw2HxGYInBykX7rAn6alliu5v7jaZiZM7pq/kFeXUFpXYNtqWnhVGeUy5qUEslGHfTPXeYNX6gUsn18U8e0OfvidQUXVVKDLAJlRGUoNcdfW64RZKzsWkovfYw4wcKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788135920; c=relaxed/simple;
-	bh=NVIB4YZ2kDgX3qlQ+0A5ajMihiiTtAsgO51nyX8IOus=;
+	bh=Fli/DnBLQa0bHgyS0nPH35ihIsGgdhE8vQogj3yPsdk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HLI/igEawN3X0sfbemRZJ7UaxcdEPqwpJAvPrBJfzH2T/gcyvYY0e0VSyYYbnKJAQBKoeCYofW/oqN+jk3UUmj2h0cp04BHIWvq1owrcg/H3g/Adq2TpU1rjhsGMDPKG8Zyo6IFZFvZ1McBRxykvyCLBj3lYrXfNvuffrQKmWcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsl6nZXs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FGjIQRZmD1h3Ga/6l4ppUAQ69UDDg3bUuI5VCzg1QnAXcmEDoTIkAtV97ZGMncTP5Tzqk91RqT0EG2SMESoWRcuRKCG/Zica2m2swIrliRs6L3wV7bP65DRRh/eWTmzl8O2FAmk66+Oo6+vBrmtHQ3gZoMszJzvkVLJfu//+sjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbGX/joD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsl6nZXs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 46ADFC4DDE6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbGX/joD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5A134C4AF61;
 	Mon, 31 Aug 2026 00:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1788135920;
-	bh=NVIB4YZ2kDgX3qlQ+0A5ajMihiiTtAsgO51nyX8IOus=;
+	bh=Fli/DnBLQa0bHgyS0nPH35ihIsGgdhE8vQogj3yPsdk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lsl6nZXsNgATcI3jmXs23yepveXd5oGimMzXreiqX7FTUIyIpm7Q3iHUFGX5N7ODI
-	 zSJhA9Xavsd/pCjLWBrJPF8et7EzFZnqUp2GnshDhpBYzHzKsUJAAtMnbJS50i4NuX
-	 MOe8YoOey3AcRCSk42GNi/p0gQLtyREsFUolSwH/KlMAeccEtQpZnOtCHusOtOSAQq
-	 jCROPdORw5fz5jskYdTh+pHXCzkQbeDVYcSR1I84LE842SlJOjbtfOzXx7LNK/q+Ih
-	 t2AJJgSILt+IQiV4Kr+1M5/GZ4XSwrnMamAlfeGIeyZ5bfkLWEpawnwbAnankzHpqV
-	 3qqkvbbkB1p6w==
+	b=fbGX/joDHj66klVr6YZzDrsFN+qzMM1kRbN4852/HbLwsIeGF7U1cGvb0uaqY5Z3J
+	 g2Vifm6ygULXaJESEtqgs2j+Am/cR+KR+IK5eczGm/IPxQRYBejGSDPv04zX9kP60z
+	 yfkkwuMx18hdP2NBjSOy3F4ZB7xXOuyJqNDNxvrszjnjCLXen6F1ZnGUmjS7UWtc8J
+	 5Oxmu8xkZ0FRGFDzMFUjBw6i9U7ANRDOuMg6Ya7RQLnMC5tDNTz6rjNtwKZ8Y2oqLB
+	 ugw8O24hSnGCCJeYYGtEnHAzsCMSuQWAgtRP411h7W5Zml/vMUsLfL8+9OKLqbNLaN
+	 DnRGNIF1rLdrw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2341FC61DFF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B33C61DE4;
 	Mon, 31 Aug 2026 00:25:20 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Sun, 30 Aug 2026 17:25:09 -0700
-Subject: [PATCH v12 08/45] KVM: Provide generic interface for checking
- memory private/shared status
+Date: Sun, 30 Aug 2026 17:25:10 -0700
+Subject: [PATCH v12 09/45] KVM: guest_memfd: Stub in ability to enable
+ in-place shared<=>private conversion
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260830-gmem-inplace-conversion-v12-8-85e5fd25252a@google.com>
+Message-Id: <20260830-gmem-inplace-conversion-v12-9-85e5fd25252a@google.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 In-Reply-To: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -81,11 +81,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
  Xiaoyao Li <xiaoyao.li@intel.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=3261;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=5719;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=FbOIpdQVO+RwvRFKHPGy4BnPCrkZsXfvGDUTuDvfNzg=;
- b=gQ9Z+DSRv+BLdUurVmhuuUYQtb0izEpsgSvFLb1Fr/+8fxBISS4sS0q/umexz2Tl4hikiChn8
- OqSEFW1Rlh+D9nERLQLR9zZUdBpXbj8Dk6OpWJlGXSDA6W1ca0RGYv0
+ bh=fuPA5g+KPLXd1J5vplOVCQXEWYNrFEGb5t+IM2iiuDA=;
+ b=Zl/GFK2YJOqfEO1qjinm3ljaqYpgc7Xmo3lnukUV3NCuYapl+/+wXFtGqMiNeGWakN0SxQX15
+ TjkhIIejtvfAdDTFm/ry6aZXV6coxoMu8iqP9u9A4q7YByz7s7W68ws
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -95,92 +95,155 @@ Reply-To: ackerleytng@google.com
 
 From: Sean Christopherson <seanjc@google.com>
 
-Introduce a generic kvm_is_private_gfn() interface using a static call to
-determine if a GFN is private. This allows the implementation for checking
-a GFN's private/shared status to be set at runtime.
+Stub in global variable to enable in-place guest_memfd private<=>shared
+memory conversion, which will eventually be exposed to userspace via a
+module param, and wire up the __kvm_is_private_gfn() static call to the
+guest_memfd version when in-place conversion is enabled, i.e. when gmem is
+the sole authority on private vs. shared memory.
 
-In preparation for choosing implementations between a guest_memfd lookup
-and the existing VM attribute lookup, rename the existing
-VM-attribute-based check to kvm_vm_is_private_gfn() to emphasize that it
-looks up VM attributes.
-
+Cc: Fuad Tabba <tabba@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Reviewed-by: Fuad Tabba <tabba@google.com>
-Tested-by: Shivank Garg <shivankg@amd.com>
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- include/linux/kvm_host.h | 14 ++++++++++++--
- virt/kvm/kvm_main.c      | 15 +++++++++++++++
- 2 files changed, 27 insertions(+), 2 deletions(-)
+ Documentation/virt/kvm/api.rst |  7 +++++++
+ include/linux/kvm_host.h       |  6 ++++++
+ virt/kvm/guest_memfd.c         | 26 ++++++++++++++++++++++++++
+ virt/kvm/kvm_main.c            | 12 +++++++++++-
+ 4 files changed, 50 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index e0430cc750c9e..90a29424c54c8 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6382,6 +6382,11 @@ KVM_SET_USER_MEMORY_REGION2, e.g. shared memory can be lazily mapped/allocated
+ on-demand.
+ 
+ When mapping a gfn into the guest, KVM selects shared vs. private, i.e consumes
++userspace_addr vs. guest_memfd, based on the state in guest_memfd, which is the
++sole authority on private vs. shared memory.  See :ref:`KVM_CREATE_GUEST_MEMFD`
++to find out more about the creation-time shared/private status.
++
++If in-place conversion is disabled, KVM selects shared vs. private, i.e consumes
+ userspace_addr vs. guest_memfd, based on the gfn's KVM_MEMORY_ATTRIBUTE_PRIVATE
+ state.  At VM creation time, all memory is shared, i.e. the PRIVATE attribute
+ is '0' for all gfns.  Userspace can control whether memory is shared/private by
+@@ -6429,6 +6434,8 @@ the state of a gfn/page as needed.
+ 
+ The "flags" field is reserved for future extensions and must be '0'.
+ 
++.. _KVM_CREATE_GUEST_MEMFD:
++
+ 4.142 KVM_CREATE_GUEST_MEMFD
+ ----------------------------
+ 
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 9b97266f61ec8..3579feb631775 100644
+index 3579feb631775..b0110143d2ff8 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -2573,16 +2573,26 @@ bool kvm_arch_pre_set_vm_memory_attributes(struct kvm *kvm,
- bool kvm_arch_post_set_vm_memory_attributes(struct kvm *kvm,
- 					    struct kvm_gfn_range *range);
+@@ -2580,6 +2580,8 @@ static inline bool kvm_vm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
+ #endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
  
--static inline bool kvm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
-+static inline bool kvm_vm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
- {
- 	return kvm_get_vm_memory_attributes(kvm, gfn) & KVM_MEMORY_ATTRIBUTE_PRIVATE;
+ #ifdef kvm_arch_has_private_mem
++extern bool gmem_in_place_conversion;
++
+ typedef bool (kvm_is_private_gfn_t)(struct kvm *kvm, gfn_t gfn);
+ DECLARE_STATIC_CALL(__kvm_is_private_gfn, kvm_is_private_gfn_t);
+ 
+@@ -2588,6 +2590,8 @@ static inline bool kvm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
+ 	return static_call(__kvm_is_private_gfn)(kvm, gfn);
  }
-+#endif  /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
-+
-+#ifdef kvm_arch_has_private_mem
-+typedef bool (kvm_is_private_gfn_t)(struct kvm *kvm, gfn_t gfn);
-+DECLARE_STATIC_CALL(__kvm_is_private_gfn, kvm_is_private_gfn_t);
-+
-+static inline bool kvm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
-+{
-+	return static_call(__kvm_is_private_gfn)(kvm, gfn);
-+}
  #else
++#define gmem_in_place_conversion false
++
  static inline bool kvm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
  {
  	return false;
- }
--#endif /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
-+#endif /* kvm_arch_has_private_mem */
+@@ -2595,6 +2599,8 @@ static inline bool kvm_is_private_gfn(struct kvm *kvm, gfn_t gfn)
+ #endif /* kvm_arch_has_private_mem */
  
  #ifdef CONFIG_KVM_GUEST_MEMFD
++bool kvm_gmem_is_private_gfn(struct kvm *kvm, gfn_t gfn);
++
  int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order);
+ #else
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index ce5efcacda36e..cd966eef45b69 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -478,6 +478,32 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return 0;
+ }
+ 
++bool kvm_gmem_is_private_gfn(struct kvm *kvm, gfn_t gfn)
++{
++	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
++	struct inode *inode;
++
++	if (!slot)
++		return 0;
++
++	CLASS(gmem_get_file, file)(slot);
++	if (!file)
++		return 0;
++
++	inode = file_inode(file);
++
++	/*
++	 * Rely on the maple tree's internal RCU lock to ensure a stable result.
++	 * This result can become stale as soon as the lock is dropped, so the
++	 * caller _must_ protect consumption of private vs. shared either by
++	 * holding guest_memfd's invalidate lock for the entire duration, or by
++	 * checking mmu_invalidate_retry_gfn() under mmu_lock to serialize
++	 * against concurrent attribute updates.
++	 */
++	return kvm_gmem_is_private_mem(inode, kvm_gmem_get_index(slot, gfn));
++}
++EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_gmem_is_private_gfn);
++
+ static struct file_operations kvm_gmem_fops = {
+ 	.mmap		= kvm_gmem_mmap,
+ 	.open		= generic_file_open,
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 91d5af7d60d0f..78278730b2ae4 100644
+index 78278730b2ae4..46d2e123448c2 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2628,6 +2628,20 @@ static int kvm_vm_ioctl_set_mem_attributes(struct kvm *kvm,
- }
- #endif /* CONFIG_KVM_VM_MEMORY_ATTRIBUTES */
+@@ -102,6 +102,10 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(halt_poll_ns_shrink);
+ static bool __ro_after_init allow_unsafe_mappings;
+ module_param(allow_unsafe_mappings, bool, 0444);
  
 +#ifdef kvm_arch_has_private_mem
-+DEFINE_STATIC_CALL_RET0(__kvm_is_private_gfn, kvm_is_private_gfn_t);
-+EXPORT_STATIC_CALL_GPL(__kvm_is_private_gfn);
-+
-+static void kvm_init_memory_attributes(void)
-+{
-+#ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
-+	static_call_update(__kvm_is_private_gfn, kvm_vm_is_private_gfn);
-+#endif
-+}
-+#else
-+static void kvm_init_memory_attributes(void) { }
++bool __ro_after_init gmem_in_place_conversion = false;
 +#endif
 +
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn)
+ /*
+  * Ordering of locks:
+  *
+@@ -2423,6 +2427,9 @@ static int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm,
+ static u64 kvm_supported_vm_mem_attributes(struct kvm *kvm)
  {
- 	return __gfn_to_memslot(kvm_memslots(kvm), gfn);
-@@ -6541,6 +6555,7 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
- 	kvm_preempt_ops.sched_in = kvm_sched_in;
- 	kvm_preempt_ops.sched_out = kvm_sched_out;
+ #ifdef kvm_arch_has_private_mem
++	if (gmem_in_place_conversion)
++		return 0;
++
+ 	if (!kvm || kvm_arch_has_private_mem(kvm))
+ 		return KVM_MEMORY_ATTRIBUTE_PRIVATE;
+ #endif
+@@ -2634,8 +2641,11 @@ EXPORT_STATIC_CALL_GPL(__kvm_is_private_gfn);
  
-+	kvm_init_memory_attributes();
- 	kvm_init_debug();
- 
- 	r = kvm_vfio_ops_init();
+ static void kvm_init_memory_attributes(void)
+ {
++	if (gmem_in_place_conversion)
++		static_call_update(__kvm_is_private_gfn, kvm_gmem_is_private_gfn);
+ #ifdef CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+-	static_call_update(__kvm_is_private_gfn, kvm_vm_is_private_gfn);
++	else
++		static_call_update(__kvm_is_private_gfn, kvm_vm_is_private_gfn);
+ #endif
+ }
+ #else
 
 -- 
 2.55.0.897.gb25b4bd76c-goog
