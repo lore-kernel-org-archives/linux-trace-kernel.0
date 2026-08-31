@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DC02EEE60;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5641D3382C7;
 	Mon, 31 Aug 2026 00:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788135922; cv=none; b=ZuvDwUH+L8iUA909dl9fjmxsrMZrpIST0VsVHqvoOfWPMkiG7q2kNUe4BYWKCv00iyHf4XSwh3fzps4crwriqU3COrOYDdMHPaCOsZFRaw2sVEIgNLrn6lGxcOzd4PeqMoZt/uKkwRROoGy5ErmB+fydrPNS4QffwTMauwv1Euk=
+	t=1788135922; cv=none; b=j1HztZF7sXQPXsmDI5qLba7b3JOCSEN1h3LHaemjJfHVzvnvPG2mHenwJNxZLfnyupgEtYtL8x/764RmbRnO15nrD56eepmVlXemlWbTpX3EkytXNn9gJzYiGL1zFGgr64to4N7idBmC75H8dEFO+AiWSVLWjEmQJo/wEcssgXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788135922; c=relaxed/simple;
-	bh=wJ0HFZ639XCyCJUINstQYMk/aJO14np7PyBQNhcLW4c=;
+	bh=M3bGP8eN2EkZz+TH6F9ZZ7lnZVDiPkWGy0QRvi56dQk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YWbG128XDzlB0bJnjyAK2U85Db3YxI9y7dwh/sgagt/QgfoUw7bczYmsqv4EV1qjVntlJVg5b8YetcTFogah6UVlGsX5olgFgks3PjP9+YA3I15hrPEAHLCXhbVuWRe74yjIPzU9seq1mfeONmlVf34NF6R2vTuNg7UFJfCQ1ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMKT7i65; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=AVhr0LLGfNf7C6gVBvlulxCmHpMvGtKWLI6mt5Q2+UO7km3EsH8wMORpGoWdKISQhsglWtfnE7jOXEOMnksaRNWpg2OruPUbv99QMyQ1tM99dMd2EBExZ5r4fe+Ida4XHjRjT0t3FK9FB/F+NLSlqcbGEPVFKnYYcOUEHh407cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSe4BTN/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMKT7i65"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 23065C32782;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSe4BTN/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3AB80C2BCFC;
 	Mon, 31 Aug 2026 00:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1788135922;
-	bh=wJ0HFZ639XCyCJUINstQYMk/aJO14np7PyBQNhcLW4c=;
+	bh=M3bGP8eN2EkZz+TH6F9ZZ7lnZVDiPkWGy0QRvi56dQk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KMKT7i65k/WsFlmyDROAB+p2TxV5AT2YqWmFO8F/kkNy+psOVgqFQSuMVDQHUCcAE
-	 w0nRpVO0OuvNRxZrMB3QmECirZwuZ3H+MC4v0aobw5RjZLjg+Bv/g5qhF7Zh/cU5t3
-	 UIgreUwECiomF/jxbrlJG+RRoY/xRBph+8P9LUa6CIUjFE+LlrNf10vRtCO5XDw3xd
-	 EvbMRfxV1gdAxI5Fpvediv6wX3A3jMwyXM8emEwHhQalNJmBTvSa3HDwDSZGayOozW
-	 PTMwxI0E81BxWaAJe9HYOVGjm9hS0y+21MLEWR/pD+I3v4RXbJTsV4IpguLH/6JQUD
-	 YKpwUpDff+pew==
+	b=bSe4BTN/UUC6U8zw2icNXCdGw6WWu+oDjPpgVDbsEgXIt1DkfwIZL8QxDdjh5gjgI
+	 2gxsvm8rK6ud1BrYk87CnxAcyzN/QvNTy/S+zLvmXXDqDJEiC/+jvacDkNQo3J1x49
+	 Hi5fhAuQLFgly7WHMAU0qBwDfy0XSWp0JjTGfBN9Aki9uGrrcwVDtM7/XvpEQYO+pt
+	 lKWGKSX4mJ8fPWkAMdebho7fhH3qD+xzhHm4EUxKLVg+MHGhIX5R8VFwUQQT11zE7z
+	 LJsWvzBV3lI5rf62K7tN0lIatAQHjfb03o+vpMrm3TW2VqmHb+fsm1TEb6Ne8z8u4z
+	 Gq/frVhKC4ptQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC78C61DE2;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2465EC61DE4;
 	Mon, 31 Aug 2026 00:25:22 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Sun, 30 Aug 2026 17:25:26 -0700
-Subject: [PATCH v12 25/45] KVM: selftests: Create gmem fd before "regular"
- fd when adding memslot
+Date: Sun, 30 Aug 2026 17:25:27 -0700
+Subject: [PATCH v12 26/45] KVM: selftests: Rename guest_memfd{,_offset} to
+ gmem_{fd,offset}
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260830-gmem-inplace-conversion-v12-25-85e5fd25252a@google.com>
+Message-Id: <20260830-gmem-inplace-conversion-v12-26-85e5fd25252a@google.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 In-Reply-To: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -80,11 +80,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=2916;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=5047;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=FzqOYqjoRqio5Tf5GMzyqkhVO+XY7bfbFLlkq3H6LaQ=;
- b=JKi9QkjIbWgmEZutF4Q114HPVnpKdnnCJthVjkvj3BeW4MpXotZ/Lfvs9fsNMGSQfuVR1qof0
- Ju2ph/EWKJQAF3XVOFrleCZghv14OwSSWO0BT/UqKjcOhAk++RFTpts
+ bh=CnemoPfuFdaUvSMt9CmQCu9n5JepQ0i6fFu3iUOfF5I=;
+ b=ImO7KsNUAOvVm4KzayHLnGzn1IPUTQrDIoBwwQmwHLMBTZ4gPEZFQmcuIh7SHUEbdn8uyQ4H2
+ 6IUvtQf8AROAHmfLddoKJqpsR3tPXdFyG52/+m+vjDnE4tf3wKqsLW/
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -94,82 +94,124 @@ Reply-To: ackerleytng@google.com
 
 From: Sean Christopherson <seanjc@google.com>
 
-When adding a memslot associated with a guest_memfd instance, create/dup
-the guest_memfd before creating the "normal" backing file.  This will allow
-dup'ing the gmem fd as the normal fd when guest_memfd supports mmap(),
-i.e. to make guest_memfd the _only_ backing source for the memslot.
+Rename local variables and function parameters for the guest memory file
+descriptor and its offset to use a "gmem_" prefix instead of
+"guest_memfd_".
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- tools/testing/selftests/kvm/lib/kvm_util.c | 45 +++++++++++++++---------------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h |  6 +++---
+ tools/testing/selftests/kvm/lib/kvm_util.c     | 26 +++++++++++++-------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 5a7a455b53875..cf49a84de02e8 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -690,17 +690,17 @@ int __vm_set_user_memory_region(struct kvm_vm *vm, u32 slot, u32 flags,
+ 				gpa_t gpa, u64 size, void *hva);
+ void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ 				gpa_t gpa, u64 size, void *hva,
+-				u32 guest_memfd, u64 guest_memfd_offset);
++				u32 gmem_fd, u64 gmem_offset);
+ int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ 				 gpa_t gpa, u64 size, void *hva,
+-				 u32 guest_memfd, u64 guest_memfd_offset);
++				 u32 gmem_fd, u64 gmem_offset);
+ 
+ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+ 				 enum vm_mem_backing_src_type src_type,
+ 				 gpa_t gpa, u32 slot, u64 npages, u32 flags);
+ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		gpa_t gpa, u32 slot, u64 npages, u32 flags,
+-		int guest_memfd_fd, u64 guest_memfd_offset);
++		int gmem_fd, u64 gmem_offset);
+ 
+ #ifndef vm_arch_has_protected_memory
+ static inline bool vm_arch_has_protected_memory(struct kvm_vm *vm)
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 9ddc047d5c275..3413d45e34faf 100644
+index 3413d45e34faf..af501a27211a2 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -1077,6 +1077,29 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
- 	if (alignment > 1)
+@@ -970,7 +970,7 @@ void vm_set_user_memory_region(struct kvm_vm *vm, u32 slot, u32 flags,
+ 
+ int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ 				 gpa_t gpa, u64 size, void *hva,
+-				 u32 guest_memfd, u64 guest_memfd_offset)
++				 u32 gmem_fd, u64 gmem_offset)
+ {
+ 	struct kvm_userspace_memory_region2 region = {
+ 		.slot = slot,
+@@ -978,8 +978,8 @@ int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ 		.guest_phys_addr = gpa,
+ 		.memory_size = size,
+ 		.userspace_addr = (uintptr_t)hva,
+-		.guest_memfd = guest_memfd,
+-		.guest_memfd_offset = guest_memfd_offset,
++		.guest_memfd = gmem_fd,
++		.guest_memfd_offset = gmem_offset,
+ 	};
+ 
+ 	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
+@@ -989,10 +989,10 @@ int __vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ 
+ void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ 				gpa_t gpa, u64 size, void *hva,
+-				u32 guest_memfd, u64 guest_memfd_offset)
++				u32 gmem_fd, u64 gmem_offset)
+ {
+ 	int ret = __vm_set_user_memory_region2(vm, slot, flags, gpa, size, hva,
+-					       guest_memfd, guest_memfd_offset);
++					       gmem_fd, gmem_offset);
+ 
+ 	TEST_ASSERT(!ret, "KVM_SET_USER_MEMORY_REGION2 failed, errno = %d (%s)",
+ 		    errno, strerror(errno));
+@@ -1002,7 +1002,7 @@ void vm_set_user_memory_region2(struct kvm_vm *vm, u32 slot, u32 flags,
+ /* FIXME: This thing needs to be ripped apart and rewritten. */
+ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		gpa_t gpa, u32 slot, u64 npages, u32 flags,
+-		int guest_memfd, u64 guest_memfd_offset)
++		int gmem_fd, u64 gmem_offset)
+ {
+ 	int ret;
+ 	struct userspace_mem_region *region;
+@@ -1078,12 +1078,12 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
  		region->mmap_size += alignment;
  
-+	if (flags & KVM_MEM_GUEST_MEMFD) {
-+		if (guest_memfd < 0) {
-+			u32 guest_memfd_flags = 0;
-+
-+			TEST_ASSERT(!guest_memfd_offset,
-+				    "Offset must be zero when creating new guest_memfd");
-+			guest_memfd = vm_create_guest_memfd(vm, mem_size, guest_memfd_flags);
-+		} else {
-+			/*
-+			 * Install a unique fd for each memslot so that the fd
-+			 * can be closed when the region is deleted without
-+			 * needing to track if the fd is owned by the framework
-+			 * or by the caller.
-+			 */
-+			guest_memfd = kvm_dup(guest_memfd);
-+		}
-+
-+		region->region.guest_memfd = guest_memfd;
-+		region->region.guest_memfd_offset = guest_memfd_offset;
-+	} else {
-+		region->region.guest_memfd = -1;
-+	}
-+
- 	region->fd = -1;
- 	if (backing_src_is_shared(src_type))
- 		region->fd = kvm_memfd_alloc(region->mmap_size,
-@@ -1106,28 +1129,6 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
- 
- 	region->backing_src_type = src_type;
- 
--	if (flags & KVM_MEM_GUEST_MEMFD) {
+ 	if (flags & KVM_MEM_GUEST_MEMFD) {
 -		if (guest_memfd < 0) {
 -			u32 guest_memfd_flags = 0;
++		if (gmem_fd < 0) {
++			u32 gmem_flags = 0;
+ 
 -			TEST_ASSERT(!guest_memfd_offset,
--				    "Offset must be zero when creating new guest_memfd");
++			TEST_ASSERT(!gmem_offset,
+ 				    "Offset must be zero when creating new guest_memfd");
 -			guest_memfd = vm_create_guest_memfd(vm, mem_size, guest_memfd_flags);
--		} else {
--			/*
--			 * Install a unique fd for each memslot so that the fd
--			 * can be closed when the region is deleted without
--			 * needing to track if the fd is owned by the framework
--			 * or by the caller.
--			 */
++			gmem_fd = vm_create_guest_memfd(vm, mem_size, gmem_flags);
+ 		} else {
+ 			/*
+ 			 * Install a unique fd for each memslot so that the fd
+@@ -1091,11 +1091,11 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 			 * needing to track if the fd is owned by the framework
+ 			 * or by the caller.
+ 			 */
 -			guest_memfd = kvm_dup(guest_memfd);
--		}
--
++			gmem_fd = kvm_dup(gmem_fd);
+ 		}
+ 
 -		region->region.guest_memfd = guest_memfd;
 -		region->region.guest_memfd_offset = guest_memfd_offset;
--	} else {
--		region->region.guest_memfd = -1;
--	}
--
- 	region->unused_phy_pages = sparsebit_alloc();
- 	if (vm_arch_has_protected_memory(vm))
- 		region->protected_phy_pages = sparsebit_alloc();
++		region->region.guest_memfd = gmem_fd;
++		region->region.guest_memfd_offset = gmem_offset;
+ 	} else {
+ 		region->region.guest_memfd = -1;
+ 	}
 
 -- 
 2.55.0.897.gb25b4bd76c-goog
