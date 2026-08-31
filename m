@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D3F3546E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8DA357A4A;
 	Mon, 31 Aug 2026 00:25:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788135923; cv=none; b=tG0FRQYUXyOqZ8Xh4La1ldT3Gi1nfce3E6Sxjb8pCHMQysBgUeXj8sIP8ih0FsxoNupgGyhjVX4FnvsXrJDOAtM5tVshy7shVBMcJtwFuelK8xlHR22ZxuhgDFOICs8F6Y3bUlGe7YLy4wANbCDJeFKjQlSotqOnlN+eyvzTFz0=
+	t=1788135923; cv=none; b=XIa2kacywd1BUbyEEGm2mLLceDIz+8clZQLkhtnedwFMHpSugjSdX5BQ98Qoenmsj91Gh0cOkl1HGfMhQ+nQLLesMGLwF5yJ3aKV1ztqQq6+uwGEf5rHjz7uGooIS1/prDoIQ817Qht8ifRUIvMt/GmGhgmApKkVyhY2v0bcO50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788135923; c=relaxed/simple;
-	bh=L5YUbh7/6Cud6VplfoNsOCErNzDbpKzPkXGdi+gnbdU=;
+	bh=tbu5H941T3WFmTkcFYkjGccJoW2TPAMlO8ekt00YDMs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=V5ydDSVSnMeRUnkWpRrsH/wZVf7iRvs7xRHQknE6A2H1h2DORFTqM+NZmmnw+Scdik3oTev+fjg3Q0SCYnRUVFcWuXa3HDkg8by4GApd8u26Md7bfr+P4w/hoA4cWIIMpbCiIjTu27jAMgdSlD6TRTpQh57XRmFakiOuPK7H8Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPTQ+t1u; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=R7UqODSwkaK/1lr+3pbiD42CQ0mZQoekKvm+NvhpKbkYWzNx/Q2ftd/Ub6UlvmsEMcepiILl8ISuuG6FqBKH1mzdHNvQXXMboKSmCjiNX0sa8FOeUb6b+j447speO/DaIgy53cHzdXiQ+nzuEHDdVewy8Ze3QSpotH4Kl9Hs+7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLdd0WYG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPTQ+t1u"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F903C2BCC7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLdd0WYG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B5432C2BCFF;
 	Mon, 31 Aug 2026 00:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1788135923;
-	bh=L5YUbh7/6Cud6VplfoNsOCErNzDbpKzPkXGdi+gnbdU=;
+	bh=tbu5H941T3WFmTkcFYkjGccJoW2TPAMlO8ekt00YDMs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=bPTQ+t1u1KJjMEQTfYicl1vmRbZYLA+VOfQu93BZwsXWbldiwg6PNm30qHe0W10K0
-	 XtCa9z6HDK8A5k1txAJpJL58AlHLyAbmczeQ/IpK9XpD6lIr2kzcHefew4QTc5BA88
-	 iMDUhwUuI2EL9SEMLGlKffIEEJth7aLvjv2DGcPxEIdq8mDIK4UyFpvM6ZpyWqMrys
-	 OvbqhqLr7XXtMTr5UFO7JxdaMUp1M+lcM5bMovKgq/lgGcTFj9M0vUGLOiA6ESK0m7
-	 sKIoxphgrKi/QDY1hKD5ebCMyEvYt2uuX6DixiqQZQMIxUZyiKfE6ZyzfJv+zI1FQH
-	 JSTusVRdWlHdQ==
+	b=qLdd0WYG07wxjmoTmvbspYTXLe89JNFssEMi+/rkuZGYIRdzdKg7RubQxPC5eEDUl
+	 xWPTTAwNH4hVWxT3FqNU/Vbec3rXeaie2lyXwjrK+h4G9GHlzAc5jCWlFMnGfzYFP0
+	 xRBQZUgqZqIdMbazPBh5dLiCtF3oFuLW1uPBIX7DgzhRL0FGgCACrjgUBx+J1jrhJU
+	 A5dwzkyx6yZuROIt8d5vl2jcvZdQ0M3L3hgfECB+WmB+Iq6k7EUx2kh2men14JXQEu
+	 Ejed8kqKvgMVxdfNM3soweAU5SAeUNYmfa5/nhl0TN563MUzz87i6EEZf477JX/bMa
+	 c+KgOuJdDlLtQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FB9C624A5;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B894C624C2;
 	Mon, 31 Aug 2026 00:25:23 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Sun, 30 Aug 2026 17:25:38 -0700
-Subject: [PATCH v12 37/45] KVM: selftests: Add helpers to pin pages with
- CONFIG_GUP_TEST
+Date: Sun, 30 Aug 2026 17:25:41 -0700
+Subject: [PATCH v12 40/45] KVM: selftests: Provide function to look up
+ guest_memfd details from gpa
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260830-gmem-inplace-conversion-v12-37-85e5fd25252a@google.com>
+Message-Id: <20260830-gmem-inplace-conversion-v12-40-85e5fd25252a@google.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 In-Reply-To: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -80,11 +80,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135916; l=2738;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135916; l=3994;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=kIKJvxj0NxcBPACHPOvZ7iTswFnwraQaYm+ccyn/5BU=;
- b=rGCmlwIzORjmkoJ/SJOyYoV95Ir/p5lCBR7+rCAJ4+Z6RA7bgx6OE8YI2QhKLVx8Bf7niBqyg
- E+q8HPCVsK9A9d7RM04XRCGr5I32p1B80Sh8qYZ73BetOSxApsH5i8U
+ bh=aODtj3bXiyKjP4uoEZrBjbprOQXjj5kFxo+MyuHmpxU=;
+ b=814LT748FADHWK7t5YnPGMVd2fhYxt4cbFtAGUXwoXEic+bZE3wurSvaMhHeph8EyNcGn/JJt
+ Y4jxXfT+FFPDaK7q3wrjhxRlMZ2eNvl2G3nr6Qflsl9ATYEbd1JM9x1
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -94,82 +94,103 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Add helper functions to allow KVM selftests to pin memory using
-CONFIG_GUP_TEST. This is useful for creating test scenarios where some page
-has an increased refcount, such as when testing guest_memfd in-place
-conversion.
+Introduce a new helper, kvm_gpa_to_guest_memfd(), to find the
+guest_memfd-related details of a memory region that contains a given guest
+physical address (GPA).
 
-The helpers open /sys/kernel/debug/gup_test and invoke the
-PIN_LONGTERM_TEST_START and PIN_LONGTERM_TEST_STOP ioctls. Since this
-functionality depends on the kernel being built with CONFIG_GUP_TEST,
-provide stub implementations that trigger a test failure if the
-configuration is missing.
+The function returns the file descriptor for the memfd, the offset into
+the file that corresponds to the GPA, and the number of bytes remaining
+in the region from that GPA.
 
+kvm_gpa_to_guest_memfd() was factored out from vm_guest_mem_fallocate();
+refactor vm_guest_mem_fallocate() to use the new helper.
+
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
  tools/testing/selftests/kvm/include/kvm_util.h |  3 +++
- tools/testing/selftests/kvm/lib/kvm_util.c     | 25 +++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ tools/testing/selftests/kvm/lib/kvm_util.c     | 37 ++++++++++++++++----------
+ 2 files changed, 26 insertions(+), 14 deletions(-)
 
 diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 575032e9791d2..3cfe243d7c8b0 100644
+index 3cfe243d7c8b0..795c9eb311071 100644
 --- a/tools/testing/selftests/kvm/include/kvm_util.h
 +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -1206,6 +1206,9 @@ static inline int pin_self_to_any_cpu(void)
- 	return pin_task_to_any_cpu(pthread_self());
+@@ -428,6 +428,9 @@ static inline void vm_enable_cap(struct kvm_vm *vm, u32 cap, u64 arg0)
+ 	vm_ioctl(vm, KVM_ENABLE_CAP, &enable_cap);
  }
  
-+void pin_pages(void *vaddr, uint64_t size);
-+void unpin_pages(void);
++int kvm_gpa_to_guest_memfd(struct kvm_vm *vm, gpa_t gpa, off_t *fd_offset,
++			   size_t *nr_bytes);
 +
- void kvm_print_vcpu_pinning_help(void);
- void kvm_parse_vcpu_pinning(const char *pcpus_string, u32 vcpu_to_pcpu[],
- 			    int nr_vcpus);
+ /*
+  * KVM_SET_MEMORY_ATTRIBUTES{,2} overwrites _all_ attributes.  These
+  * flows need significant enhancements to support multiple attributes.
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index cd468b2bb8343..b1456ed76e27e 100644
+index b1456ed76e27e..1188d0a6c0a5f 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -19,6 +19,8 @@
- #include <unistd.h>
- #include <linux/kernel.h>
+@@ -1332,27 +1332,20 @@ void vm_guest_mem_fallocate(struct kvm_vm *vm, u64 base, u64 size,
+ 			    bool punch_hole)
+ {
+ 	const int mode = FALLOC_FL_KEEP_SIZE | (punch_hole ? FALLOC_FL_PUNCH_HOLE : 0);
+-	struct userspace_mem_region *region;
+ 	u64 end = base + size;
+-	gpa_t gpa, len;
+ 	off_t fd_offset;
+-	int ret;
++	int fd, ret;
++	size_t len;
++	gpa_t gpa;
  
-+#include "../../../../../mm/gup_test.h"
-+
- #define KVM_UTIL_MIN_PFN	2
+ 	for (gpa = base; gpa < end; gpa += len) {
+-		u64 offset;
+-
+-		region = userspace_mem_region_find(vm, gpa, gpa);
+-		TEST_ASSERT(region && region->region.flags & KVM_MEM_GUEST_MEMFD,
+-			    "Private memory region not found for GPA 0x%lx", gpa);
++		fd = kvm_gpa_to_guest_memfd(vm, gpa, &fd_offset, &len);
++		len = min(end - gpa, len);
  
- u32 kvm_random_seed;
-@@ -645,6 +647,29 @@ int __pin_task_to_cpu(pthread_t task, int cpu)
- 	return pthread_setaffinity_np(task, sizeof(cpuset), &cpuset);
+-		offset = gpa - region->region.guest_phys_addr;
+-		fd_offset = region->region.guest_memfd_offset + offset;
+-		len = min_t(u64, end - gpa, region->region.memory_size - offset);
+-
+-		ret = fallocate(region->region.guest_memfd, mode, fd_offset, len);
++		ret = fallocate(fd, mode, fd_offset, len);
+ 		TEST_ASSERT(!ret, "fallocate() failed to %s at %lx (len = %lu), fd = %d, mode = %x, offset = %lx",
+ 			    punch_hole ? "punch hole" : "allocate", gpa, len,
+-			    region->region.guest_memfd, mode, fd_offset);
++			    fd, mode, fd_offset);
+ 	}
  }
  
-+static int gup_test_fd = -1;
-+
-+void pin_pages(void *vaddr, uint64_t size)
+@@ -1689,6 +1682,22 @@ void *addr_gpa2alias(struct kvm_vm *vm, gpa_t gpa)
+ 	return (void *) ((uintptr_t) region->host_alias + offset);
+ }
+ 
++int kvm_gpa_to_guest_memfd(struct kvm_vm *vm, gpa_t gpa, off_t *fd_offset,
++			   size_t *nr_bytes)
 +{
-+	const struct pin_longterm_test args = {
-+		.addr = (uint64_t)vaddr,
-+		.size = size,
-+		.flags = PIN_LONGTERM_TEST_FLAG_USE_WRITE,
-+	};
++	struct userspace_mem_region *region;
++	gpa_t gpa_offset;
 +
-+	gup_test_fd = __open_path_or_exit("/sys/kernel/debug/gup_test", O_RDWR,
-+					  "Is CONFIG_GUP_TEST enabled?");
++	region = userspace_mem_region_find(vm, gpa, gpa);
++	TEST_ASSERT(region && region->region.flags & KVM_MEM_GUEST_MEMFD,
++		    "guest_memfd memory region not found for GPA 0x%lx", gpa);
 +
-+	TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_START, &args), 0);
++	gpa_offset = gpa - region->region.guest_phys_addr;
++	*fd_offset = region->region.guest_memfd_offset + gpa_offset;
++	*nr_bytes = region->region.memory_size - gpa_offset;
++	return region->region.guest_memfd;
 +}
 +
-+void unpin_pages(void)
-+{
-+	TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_STOP), 0);
-+
-+	kvm_free_fd(gup_test_fd);
-+}
-+
- static u32 parse_pcpu(const char *cpu_str, const cpu_set_t *allowed_mask)
+ /* Create an interrupt controller chip for the specified VM. */
+ void vm_create_irqchip(struct kvm_vm *vm)
  {
- 	u32 pcpu = atoi_non_negative("CPU number", cpu_str);
 
 -- 
 2.55.0.897.gb25b4bd76c-goog
