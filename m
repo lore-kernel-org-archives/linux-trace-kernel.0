@@ -1,155 +1,173 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F336F39CD1E;
-	Mon, 31 Aug 2026 10:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AB23B3883;
+	Mon, 31 Aug 2026 10:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788172905; cv=none; b=JPtjJYzNEMbfAO9WZWljmKcptW+TgCqs/VgXmybkpXOAJmUHk5BD92I+Im7zsimn3Ytz0hf3nFpHNodIYg/4+OCM/4KvHfazbECYO3X3ven4W+p50qyc+TIgbGhQzeqtucXlfWVx9EX4FozEcQc7cbIStjKGbHn6tJOxIeddkZw=
+	t=1788173524; cv=none; b=nMYkuzYuh7FQf/s4UwW+SI22dmgjRRAFTF4Pw0gjzU3W2zot6bMMvijaTD4cHR7aok0m5P1bFMNHZLgMGEwPbbBQ+KNE8ZtY/B8C65Q9pVENTjSV240U1Zw2HQAsmjjBln5wq0lBMNgAT78wIY4VX+02yL4mvCwZATftqTXavPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788172905; c=relaxed/simple;
-	bh=suL+s9BotwZwxJIz5p0LXcdBnprSV2qHihd9mkbvKq0=;
-	h=Message-ID:In-Reply-To:References:Date:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=uEyeHBnt88Z//kT17tVZXqWxCgV1DNrMjJ+QMeFzHIauqYSXBDi7BLnWD1QvA2hckDBr8JxXrzw3ff0zHyONJnjhm4IIOw9I8mgBB5ZwVVIGuabNgWpkckbt5av3J0oSgiQmAALoU7/253IN9FaxCXzVNkzb8VjW/8cSZo79o7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4hYQXG4NXXz55y1s;
-	Mon, 31 Aug 2026 18:41:34 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 67VAfRbd011322;
-	Mon, 31 Aug 2026 18:41:27 +0800 (+08)
-	(envelope-from hu.shengming@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 31 Aug 2026 18:41:30 +0800 (CST)
-X-Zmail-TransId: 2af96a955a5aaab-8c47f
-X-Mailer: Zmail v1.0
-Message-ID: <20260831184130077NszBddcqeMjSj8i-E-6gf@zte.com.cn>
-In-Reply-To: <20260831102042.6f91bd1e35691ea2d1ac808d@kernel.org>
-References: 20260830190743637MhXoixrAPc1rfm-G8eIcg@zte.com.cn,20260831102042.6f91bd1e35691ea2d1ac808d@kernel.org
-Date: Mon, 31 Aug 2026 18:41:30 +0800 (CST)
+	s=arc-20240116; t=1788173524; c=relaxed/simple;
+	bh=Zs8y5SBquzJ/I5UF45QdUkJiDUIeZBIPW8l73Kh5dN0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W7Ps4bBH/371fAbBH5DkQ0fAIvhTQ/Q09oxNjr68TYr6MuG+OB86uwsoSz3YroECkafzQ9NenYF+BcvZ+iP/CnxFb+4t+KtQILPysYD3AxlS+SixkytH+R/TtHgxqSW2pNCtsJXUtseZWq+M9K7fFIDjAXNaXRpuhggCxJR9u8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cAUMof4M; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cAUMof4M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B411F000E9;
+	Mon, 31 Aug 2026 10:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1788173521;
+	bh=TyIzgxKJ2thBNZs4HZrx3LqIWoSrNjbJnZV9L1yorRE=;
+	h=From:Subject:Date:To:Cc;
+	b=cAUMof4M6IZ3goyl62fggs8yZFliRj09IuzvweYC+vIq+uDvwsram6HzHL2b+uvtF
+	 xzuFatEGbtwLFC/q970hokrFb4qFUYMsG3Yj+r59mDR6mCR3neEJao60B7KFMlWqpI
+	 eGE8iKv/tdUwavhdxY96y8dFvfaWut7zA+nH/pAo=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 0/2] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Date: Mon, 31 Aug 2026 12:51:45 +0200
+Message-Id: <20260831-bind_taint-v2-0-1082d631213b@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <hu.shengming@zte.com.cn>
-To: <mhiramat@kernel.org>, <xu.xin16@zte.com.cn>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
-        <mark.rutland@arm.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
-        <rdunlap@infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <ran.xiaokai@zte.com.cn>, <zhang.run@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtSRkMgUEFUQ0ggMC80XSBmdHJhY2U6IEFkZCB0YXNrIGNvbW0gZmlsdGVyaW5nIGZvciBmdW5jdGlvbiB0cmFjaW5n?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 67VAfRbd011322
-X-TLS: YES
-X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
-X-SOURCE-IP: 10.5.228.132 unknown Mon, 31 Aug 2026 18:41:34 +0800
-X-CLEAN: YES
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6A955A5E.000/4hYQXG4NXXz55y1s
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/02OywqDMBREf0XuuikxGLVd9T+KlLzUW0oieYhF/
+ PdGS6HLAzNnZoVgPJoA12IFb2YM6GwGdipAjcIOhqDODIyymraME4lWP6JAG4muaNPItqFSVZA
+ Lkzc9Lofs3n05JPk0Ku6GPTFiiM6/j7W53HM/cf0vnktCCWeS8r4Sl5qr2wttWnqXrBYxPzw7P
+ 0C3bdsHLGBBF8AAAAA=
+X-Change-ID: 20260825-bind_taint-d4077b870bc4
+To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+ Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+ Aaron Tomlin <atomlin@atomlin.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Bradley Morgan <brads@mainlining.org>, 
+ Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-usb@vger.kernel.org, driver-core@lists.linux.dev, 
+ linux-trace-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Johan Hovold <johan@kernel.org>
+X-Mailer: b4 0.17-dev-362b8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4908;
+ i=gregkh@linuxfoundation.org; h=from:subject:message-id;
+ bh=Zs8y5SBquzJ/I5UF45QdUkJiDUIeZBIPW8l73Kh5dN0=;
+ b=owGbwMvMwCRo6H6F97bub03G02pJDFlTY04znnvq7bjCji3qsm5PS5uCM5/R3OzHR0PiVX+bM
+ GUlcf7uiGVhEGRikBVTZPmyjefo/opDil6Gtqdh5rAygQxh4OIUgInM0GVYcOhdEM9jGxFL3+3i
+ wa9WNorc0n+VxbDg/Px0teDKyqshtz+Hxmeoqz3aeOwGAA==
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp;
+ fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 
-Masami wrote:
+The ability to add and remove devices from a driver through the sysfs
+"bind" and "unbind" files was created all those decades ago as a way
+that kernel developers can iterate faster, and provide a debugging way
+for users to attempt to add a new device to a driver without having to
+rebuild their kernel.
 
-> On Sun, 30 Aug 2026 19:07:43 +0800 (CST)
-> <hu.shengming@zte.com.cn> wrote:
-> 
-> > Hi Steven and Masami,
-> > 
-> > This series adds two comm-based task filters for the function and
-> > function_graph tracers:
-> > 
-> >   set_ftrace_comm
-> >   set_ftrace_notrace_comm
-> > 
-> > Function tracing currently supports selecting tasks by PID. This makes
-> > it difficult to configure tracing before a service starts, because it
-> > does not have a PID yet. It is also inconvenient to keep tracing the
-> > same service across restarts, as its PID may change. This use case was
-> > suggested by Xuxin, a KSM reviewer.
-> 
-> Thanks for the idea. I thought we can use `pidof` but it is for running
-> processes.
-> 
+This api over the years has been abused and recently come under a major
+fuzzing "attack" through tools like syzbot which decided that it would
+attempt to just randomly bind any driver to any type of device, causing
+loads of unneeded errors and pointless kernel patches to be generated by
+unsuspecting new developers.
 
-Yes, exactly. The main use case is to configure tracing before the
-target task starts, when there is no PID for pidof to return. Thanks,
-Xuxin! :)
+Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
+will be set on the driver if the bind/unbind sysfs files are ever
+written to.  This lets kernel developers "know" that a user is
+attempting to do something that is not normal, and as such, if the
+kernel breaks they get to keep the shiny pieces laying around on the
+floor.
 
-> > 
-> > The new filters match task comm names exactly. When both PID and comm 
-> > include filters are active, a task must match both to be traced. A
-> > match in either the PID or comm notrace filter excludes the task.
-> > 
-> > To avoid string matching in the function tracing fast path, the filters
-> > are evaluated when a task is scheduled in. The result is stored in the
-> > existing per-CPU cache used by PID filtering. Changing a filter refreshes
-> > the cached result for currently running tasks. If a task's comm changes,
-> > the new name is used the next time the task is scheduled in.
-> 
-> OK, but can trace scheduler event (or add a new event) that we just convert
-> comm to PID when the comm is changed and add/remove it to pid filter?
-> If that works, we can also extend generic event trigger to set ftrace pid
-> filter. Using this allows you to add or remove processes as ftrace targets
-> at runtime—not only based on comm, but for other reasons as well.
-> (of course, setting per-cpu cache requires to kick a worker...)
-> 
-> This will leak the pid via set_ftrace_pid, but that is good from the
-> monitoring point of view.
-> 
-> Thank you,
-> 
+The flag is 'Y' which was unused, and can remembered as the user is
+"yeeting" the device being operated on here (thrown with force without
+regard for the thing being thrown).
 
-Thank you for the suggestion!
+Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
+as many times crashes/oops/warnings/failures happen within the callback,
+and the taint flag needs to be there to show what was being attempted.
+If it were to be set after the callback happens, the oops report would
+not properly reflect what foolishness was being attempted.
 
-My understanding is that, instead of adding comm-specific function
-filters, we could add generic event-trigger actions that update the
-existing function PID filter.
+Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
+the tool from hitting bind/unbind, should be run with panic_on_taint
+enabled so that they fall over and don't continue on, thinking that they
+actually found a real issue.
 
-For example, the task_rename event already observes task comm changes.
-Conceptually, a user could configure something like:
+Userspace operations that rely on the bind/unbind files to work around
+the lack of will to upgrade a kernel image to a newer version with
+proper support for new devices, or the lack of will to submit valid
+device ids to driver authors, will still work properly, but now the
+kernel will be flagged in a way that will show that perhaps those users
+should reconsider their behavior and work to have the drivers properly
+support these devices in a "native" manner.
 
-  ftrace_pid_add:pid if newcomm == "foo"
-  ftrace_pid_del:pid if oldcomm == "foo" && newcomm != "foo"
+Finally, the bind/unbind files can find real use-after-free issues with
+some drivers by forcing the process to happen virtually without having
+to rely on manual removal processes.  Those real bugs should still be
+worked on, but by adding this taint flag, developers can more easily
+determine bug reports that are actually worth looking at.
 
-The command names and syntax above are only examples. The PID field
-would be selected from the event record, so the same actions could be
-used with other events and filters, rather than being tied to comm or
-task_rename.
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+Changes in v2:
+- rebase on 7.3-rc1
+- Add changelog text to describe panic_on_taint and how it should be set
+  for tools like syzbot.
+- Add changelog text to describe why 'Y' was picked.
+- Fixes based on sashiko review:
+  - Make add_taint_module() handle a NULL for module pointer, fixing a
+    problem with built-in drivers.
+  - Fix up prototype for when CONFIG_MODULES is disabled so it will
+    actually build properly.
+  - rst table header fixes.
+- Link to v1: https://patch.msgid.link/20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org
 
-I think the trigger actions could update the same PID list used by
-set_ftrace_pid. A PID added by a trigger would then become a normal
-set_ftrace_pid entry and would be visible when the file is read. The
-list would be shared state, without tracking whether an entry came from
-a user or a particular trigger. Removing a trigger would stop future
-updates but would not roll back PIDs that it had already added.
+To: Luis Chamberlain <mcgrof@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+To: Daniel Gomez <da.gomez@kernel.org>
+To: Sami Tolvanen <samitolvanen@google.com>
+To: Aaron Tomlin <atomlin@atomlin.com>
+To: Jonathan Corbet <corbet@lwn.net>
+To: Shuah Khan <skhan@linuxfoundation.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-modules@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: driver-core@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
 
-Since an event trigger may run in a context where the PID list and
-per-CPU cache cannot be updated directly, the trigger could queue the
-operation to a worker. The worker would update the PID list and refresh
-the cached task-filter result.
+---
+Greg Kroah-Hartman (2):
+      module: pull out add_taint_module() to be public
+      driver core: add TAINT_FORCED_BIND for when userspace manually messes with devices and drivers
 
-For the comm use case, a delete action on task_rename would remove a PID
-when the task no longer has the selected comm. A delete action on
-sched_process_exit could also remove stale PIDs when matching tasks
-exit.
+ Documentation/admin-guide/tainted-kernels.rst | 52 ++++++++++++++-------------
+ drivers/base/bus.c                            |  3 ++
+ include/linux/module.h                        | 10 ++++++
+ include/linux/panic.h                         |  3 +-
+ include/trace/events/module.h                 |  3 +-
+ kernel/module/main.c                          | 16 +++++++--
+ kernel/panic.c                                |  5 +--
+ tools/debugging/kernel-chktaint               |  8 +++++
+ 8 files changed, 69 insertions(+), 31 deletions(-)
+---
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+change-id: 20260825-bind_taint-d4077b870bc4
 
-This would primarily support rules installed before a task starts or
-before the relevant event occurs. It would not discover tasks that
-already match when the trigger is installed unless they generate the
-event again.
+Best regards,
+--  
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Does this shared PID-list and generic add/delete trigger model match
-what you had in mind?
-
---
-With Best Regards,
-Shengming
