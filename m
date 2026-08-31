@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44BA3F1045;
-	Mon, 31 Aug 2026 01:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D05D279DB6;
+	Mon, 31 Aug 2026 01:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788139249; cv=none; b=meFNDIqvScxXIBda3JgpsflWgdALjRMfTsLVpV93iXnGeM1Mrq3AmGzYOW3cHbVYtiC8tS0XnNatgHXEGpPWqPSzrw9WYOUEVLI9d0FhLBiAzrHc/jIB3F9T5SWztm9EpnRL07+RNZoW+Oyqg2IO/svyEzq7ri78fhM5MKd6YnQ=
+	t=1788139481; cv=none; b=BxYP6fJ5chp1xy65CPIUiKoama1lzTDoV6LDWjQSkC7reyGshVSPdOR3iNwcnKbCf9v7d0cwZI/+FYlFl67oImeywnrdMbTYaTLjdNCEhU5k9YwPdukOT5pxmVoTbXf7Ycfgm/TqeS2pfHPuYCoPJZqjKh8IuzqW0tjelXIrI+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788139249; c=relaxed/simple;
-	bh=XRQc1fGyoLLjiVHvTIuRDuY4AJVA16SC5BIymvzToGk=;
+	s=arc-20240116; t=1788139481; c=relaxed/simple;
+	bh=uU6Bu64/mCOOmpJUmAsElEOXt1HEW/clGBxYxKaC7os=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Prz6ZrJn6vT7Me7L6YyHJ786xZz1x1HIdX/U8hgvLPei/YKrJwRmKQGR0mh6i2j4WAEJ0krozYDxhni6RJDzVo0gaAe4/QeCX9kS6ZLj1udlFTDzeVjTT2IngG05JJw6gGzOf+fi3LPAqcD65RJj9ED6ZWNbbNiP2LtrVkoj7hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATnz0yUC; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=EpmayShdRSdFHg06nTrlMZuNU/46tv9yhuNT4WcUnUxYhRTj7VzXP5bv9hCBvC9m/YC6/XEgHa6oeJir9W9MEavMemWDsz8iTc3nIpt8QLv1x0sxgZmc2yn2234bOOCvawZPp2UVEiBdgKb0SXMhZo9q1cqgKwUN75kj4vfsYgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGSa1x0+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATnz0yUC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27C531F000E9;
-	Mon, 31 Aug 2026 01:20:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGSa1x0+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 086761F000E9;
+	Mon, 31 Aug 2026 01:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788139248;
-	bh=kxqglTzX5el/KsW91k91hjmZuG0uTrHN9C0U9a3Lu9s=;
+	s=k20260515; t=1788139480;
+	bh=2+UGWvmVaFyFlmCIpKD8Agf97VAFFZ31rHeCyDj3PFU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ATnz0yUCGQK2R2Icttr60wuNp37xldHFd7FYbP0B+7BE3ORKJRlh9KYZtcIyVabnl
-	 PCKjPYXF2Y8rAcjP12yyNpqjwE+vJfgYBxMZg5Fw5R65X91ezoxmSdt+GvQjZ4fIKj
-	 Bayr5qB2nU9OBkHgNCOkyVCOkg0dSxV0clHFyl2VpR88S83LIO29U0QIyTipgmXjU+
-	 LbRZU3kLKyH1EqriujkCkAhNGCAmDsWztA6UPUnID+YNHtyUxlpqPB2yFOaz7SIbBe
-	 MEzyjntmln+KP87U7k1tpg5R25JROhQWMlxFKICPe3HZzuDxvdEqOB5qskyYWIPbkK
-	 K9ZJIQGzDD3VA==
-Date: Mon, 31 Aug 2026 10:20:42 +0900
+	b=RGSa1x0+ejGLYOCgPe3qpZXEkM9Euxu6HL65bI7lHnCvoxV0lsf1LYnLE1iMZ8RTh
+	 ZMLA0M/Fyuv2pIZCxlaBb4rn8rWSfeen0WUhYrf5bRqp+ay5ORTQYfQbakCwwEOc0R
+	 GJnCv4Ckieed95CuIsrLRMQpMXD56Mda9jdwYq9Eavub6k0JMhHJPuB2MBLK7EcPpM
+	 4mmLuJ46rLWezDNVGIcIYgEYDAy+LkXH5lWBJsqiPPQmpETYJlNPUpiRMz5eu8Fxlp
+	 8Ij7hNdEUDYHMjvphdG5BUOSpIHoYi6Hhczqiw/O12lz1CF2chWtYDAgpBMGw6DdAb
+	 xSvNBc3uZ5RMQ==
+Date: Mon, 31 Aug 2026 10:24:37 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: <hu.shengming@zte.com.cn>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <mark.rutland@arm.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <rdunlap@infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <ran.xiaokai@zte.com.cn>, <xu.xin16@zte.com.cn>, <zhang.run@zte.com.cn>
-Subject: Re: [RFC PATCH 0/4] ftrace: Add task comm filtering for function
- tracing
-Message-Id: <20260831102042.6f91bd1e35691ea2d1ac808d@kernel.org>
-In-Reply-To: <20260830190743637MhXoixrAPc1rfm-G8eIcg@zte.com.cn>
-References: <20260830190743637MhXoixrAPc1rfm-G8eIcg@zte.com.cn>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v14 02/14] tracing/probes: Fix BTF kflag check for
+ anonymous struct member access
+Message-Id: <20260831102437.7af7f7a28a8f34ff79655e07@kernel.org>
+In-Reply-To: <20260830143859.D56991F00A3D@smtp.kernel.org>
+References: <178810001186.64882.2161016469449127450.stgit@devnote2>
+	<178810003326.64882.5820404025124695636.stgit@devnote2>
+	<20260830143859.D56991F00A3D@smtp.kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,89 +48,87 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Sun, 30 Aug 2026 19:07:43 +0800 (CST)
-<hu.shengming@zte.com.cn> wrote:
+On Sun, 30 Aug 2026 14:38:59 +0000
+sashiko-bot@kernel.org wrote:
 
-> Hi Steven and Masami,
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 > 
-> This series adds two comm-based task filters for the function and
-> function_graph tracers:
+> Pre-existing issues:
+> - [High] Unnamed bitfields break nested anonymous struct resolution in btf_find_struct_member().
+> --
 > 
->   set_ftrace_comm
->   set_ftrace_notrace_comm
+> commit 20a606aa6d4e155be5a531c5d52d78c34205c0b4
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Function tracing currently supports selecting tasks by PID. This makes
-> it difficult to configure tracing before a service starts, because it
-> does not have a PID yet. It is also inconvenient to keep tracing the
-> same service across restarts, as its PID may change. This use case was
-> suggested by Xuxin, a KSM reviewer.
+> tracing/probes: Fix BTF kflag check for anonymous struct member access
+> 
+> This commit fixes how BTF kflags are checked when traversing nested
+> anonymous structures and unions in btf_find_struct_member() by using
+> the actual containing type.
+> 
+> > diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+> > --- a/kernel/trace/trace_btf.c
+> > +++ b/kernel/trace/trace_btf.c
+> 
+> [ ... ]
+> 
+> > @@ -91,17 +92,23 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+> >  	for_each_member(i, type, member) {
+> >  		if (!member->name_off) {
+> >  			/* Anonymous union/struct: push it for later use */
+> > +			u32 m_off = btf_type_kflag(type) ?
+> > +				BTF_MEMBER_BIT_OFFSET(member->offset) :
+> > +				member->offset;
+> > +
+> >  			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
+> >  			    top < BTF_ANON_STACK_MAX) {
+> >  				anon_stack[top].tid = tid;
+> >  				anon_stack[top++].offset =
+> > -					cur_offset + member->offset;
+> > +					cur_offset + m_off;
+> >  			}
+> >  		} else {
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but is it possible for unnamed
+> bitfields to break nested anonymous struct resolution here?
+> 
 
-Thanks for the idea. I thought we can use `pidof` but it is for running
-processes.
+Oops, unnamed bitfield.... I didn't expected that.
+
+> Since unnamed bitfields (like int : 5) also have name_off == 0, they get
+> pushed onto anon_stack alongside actual anonymous structs.
+
+OK, I got it. This function only expects anonymous struct/union, not
+anonymous bitfield.
 
 > 
-> The new filters match task comm names exactly. When both PID and comm 
-> include filters are active, a task must match both to be traced. A
-> match in either the PID or comm notrace filter excludes the task.
+> Because anon_stack is processed in LIFO order, an unnamed bitfield defined
+> after an anonymous struct will be popped first. When it is popped at the top
+> of btf_find_struct_member():
 > 
-> To avoid string matching in the function tracing fast path, the filters
-> are evaluated when a task is scheduled in. The result is stored in the
-> existing per-CPU cache used by PID filtering. Changing a filter refreshes
-> the cached result for currently running tasks. If a task's comm changes,
-> the new name is used the next time the task is scheduled in.
+> retry:
+> 	if (!btf_type_is_struct(type)) {
+> 		member = ERR_PTR(-EINVAL);
+> 		goto out;
+> 	}
+> 
+> Does this cause the scalar type check to fail and abort the entire search,
+> preventing the earlier anonymous struct from ever being searched?
 
-OK, but can trace scheduler event (or add a new event) that we just convert
-comm to PID when the comm is changed and add/remove it to pid filter?
-If that works, we can also extend generic event trigger to set ftrace pid
-filter. Using this allows you to add or remove processes as ftrace targets
-at runtime—not only based on comm, but for other reasons as well.
-(of course, setting per-cpu cache requires to kick a worker...)
+Yeah, this is wrong. it should check this is the last anon_stack entry
+and retry. Maybe we should make it a loop.
 
-This will leak the pid via set_ftrace_pid, but that is good from the
-monitoring point of view.
-
-Thank you,
+Thanks!
 
 > 
-> The first two patches prepare the existing PID-filtering infrastructure
-> by using general task-filter names and centralizing sched_switch probe
-> registration and per-CPU cache updates. The third patch adds the comm
-> filters, and the final patch documents their interface and interaction
-> with PID filters.
-> 
-> This is an RFC intended to discuss whether comm-based task filtering is
-> a useful direction for function tracing and whether this interface would
-> be suitable for eventual upstream inclusion. Additional selftests are
-> planned for the next revision. Feedback on the overall approach and
-> interface would be greatly appreciated.
-> 
-> Thanks,
-> Shengming
-> 
-> Shengming Hu (4):
->   ftrace: Generalize function task filter names
->   ftrace: Centralize task filter state updates
->   ftrace: Add exact task comm filtering
->   Documentation/ftrace: Document function comm filters
-> 
->  Documentation/trace/ftrace.rst |  31 +++
->  include/linux/ftrace.h         |   4 +-
->  kernel/trace/Makefile          |   1 +
->  kernel/trace/comm_list.c       | 314 +++++++++++++++++++++++++
->  kernel/trace/comm_list.h       |  17 ++
->  kernel/trace/fgraph.c          |   4 +-
->  kernel/trace/ftrace.c          | 402 ++++++++++++++++++++++++++++++---
->  kernel/trace/trace.c           |   5 +
->  kernel/trace/trace.h           |  34 ++-
->  kernel/trace/trace_events.c    |  16 +-
->  kernel/trace/trace_functions.c |   2 +-
->  kernel/trace/trace_pid.c       |   8 +-
->  12 files changed, 791 insertions(+), 47 deletions(-)
->  create mode 100644 kernel/trace/comm_list.c
->  create mode 100644 kernel/trace/comm_list.h
+> >  			name = btf_name_by_offset(btf, member->name_off);
+> >  			if (name && !strcmp(member_name, name)) {
+> >  				if (anon_offset)
+> >  					*anon_offset = cur_offset;
 > 
 > -- 
-> 2.25.1
+> Sashiko AI review · https://sashiko.dev/#/patchset/178810001186.64882.2161016469449127450.stgit@devnote2?part=2
 
 
 -- 
