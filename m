@@ -1,160 +1,260 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B78E2D5C7A;
-	Sun, 30 Aug 2026 22:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90B325B0BD;
+	Mon, 31 Aug 2026 00:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788130580; cv=none; b=iS7ZJzf5cjIhjKi8XR4V34MmRkkojfN2hE/Z9A9SW3ey3MR4aWFEC5y+vcTNDWpvV/fHxqJv7Zdo7zlOnCpEgeRNLWRbLNdOiTAOZhDPt5+TotVSvL7oMyOoGyZT+YzyOftshi5YVQsxbc2SIyFRVIA1s3MjuDQv7FE7JI/Jc/c=
+	t=1788135920; cv=none; b=q8B2YnBJOAdzKcnXkdQWn5vS1Vtq1f00vFPEHq9tFEsv3n76V4NI4PZbMYEmpqeAPwjFDbc8bBWp/VcI78t+6n4j1sPbyBm7W7ztigE+RShkRlNzkAoV9b6Spe9zJ+DybhOhaILlxx68I38gaUEn03SuWMBRF1ozwdGggj7mfdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788130580; c=relaxed/simple;
-	bh=w2+MqKImWzvJSAsgyiI2Ii4OdoNpIUEYROMw5ChEGl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FSH26Sxn+9DfL+Z2FUbI4ikyflCnvyRlE93bKSuajt88jBznhGZLZkPWRrJDO2JvMT6S+1mhsmbBBK/wJeYZ1HGQiCIj7I+2z2fSYndDJwjY9x8VTzW+JhjkUehtmUnSs118BOy7iIBT/Sj+96zyRknCUms8yGzOjLXytM9bqZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HsO29Q73; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1788135920; c=relaxed/simple;
+	bh=jB3934St+OXWHZBQYrRZ5bx+0JcniUdY+5MQ7UHR2bg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FJa2InTu1q4N8zuWEh8KXlSiKCKJh106/+CgA42LSyR0RWdFPCXEHatu5AfEtH1HWouaS+hpOFUgeLS3oZEa/oq2F3Zp2+5rzyTBl1dBHwTN1KD2YM2wJAcy3FTwO72WBIhJQ1Uws0e5vFHRm67VhAoZiiYKeRCKZ+WS+hS9PJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/DsBHmA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HsO29Q73"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788130578; x=1819666578;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=w2+MqKImWzvJSAsgyiI2Ii4OdoNpIUEYROMw5ChEGl8=;
-  b=HsO29Q73F2wZHId1/+MSz2yLzRuMdcKbqUGQ6GczG7oKyH3+aVqG1wyV
-   i/DO7/IsxQrtB75s7cxZHSu6MUavqPoX0lUf/n0nxLVxfuO3BUfl8DkTW
-   DZF/ogpquYmgxgjnnIzSb5MGKvlFUG3oEGSlh2m+lMC+Dm32GWjHw0l3W
-   fYOe91qmvvGtt31+Yt3QrZso3y8nBFRcLwrPV/U7oWuFqbn2qEwwynghK
-   8WJXkGxsIkmIP4fDpk7WVDbybVhaRyJkJR6PefaV6nmcQDFWEMgXiI+Ls
-   uzPckbFcND60cGhOPjHIwJGI+4caGhENhg8anlkyD3nO+bLx6cAsXOyLk
-   Q==;
-X-CSE-ConnectionGUID: Ij15GTZNRtKBoPbcn9+p3Q==
-X-CSE-MsgGUID: afoDczH5Tee+TBHZx06vvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="88462317"
-X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
-   d="scan'208";a="88462317"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 15:56:17 -0700
-X-CSE-ConnectionGUID: RywSKtqsQvSRZEniFtSE1g==
-X-CSE-MsgGUID: TucMrbV9Sc+der39RTEi7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
-   d="scan'208";a="292139749"
-Received: from igk-lkp-server01.igk.intel.com (HELO 32268bdb9915) ([10.211.93.152])
-  by fmviesa002.fm.intel.com with ESMTP; 30 Aug 2026 15:56:12 -0700
-Received: from kbuild by 32268bdb9915 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1x0oRc-000000000GZ-40gG;
-	Sun, 30 Aug 2026 22:56:08 +0000
-Date: Mon, 31 Aug 2026 00:55:20 +0200
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Christian Brauner <brauner@kernel.org>, Kees Cook <kees@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>, willy@infradead.org,
-	mathieu.desnoyers@efficios.com,
-	David Laight <david.laight.linux@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	akpm@linux-foundation.org, Yafang Shao <laoar.shao@gmail.com>,
-	andrii.nakryiko@gmail.com, arnaldo.melo@gmail.com,
-	Petr Mladek <pmladek@suse.com>
-Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
-	kernel-dev@igalia.com, linux-mm@kvack.org,
-	linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Subject: Re: [PATCH v5 6/6] selftests: prctl: Add test for long thread names
-Message-ID: <202608310045.6IJtlqhj-lkp@intel.com>
-References: <20260827-tonyk-long_name-v5-6-5fa843782a00@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/DsBHmA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C15BC2BCF5;
+	Mon, 31 Aug 2026 00:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1788135919;
+	bh=jB3934St+OXWHZBQYrRZ5bx+0JcniUdY+5MQ7UHR2bg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=p/DsBHmACKvCnTUXaQUBvx+B0rhbCevFn3J1wVa41KmY2z/4jwj9NXJSoKVBm8e5t
+	 GK+zJXnK2Q8T2MAtuI66FOXMTtH/eKrubu+EGLBpBseRJDNZFMbls+8Fd+9/cJoRfy
+	 zAu2gGK+W6zNW+07odNQpNGzeDUbVSM7Fqcu8SHrHViKjIHAf6WO+3Q1c2y5RTu44g
+	 jfPuBU/zY+/SSNIxAph0jtre65vyir1ipceRSZokQuMuk2cvxR0ueZuMha4Ng4vmET
+	 ZtcT9NRYl4Y3dX4pEMc6JCWScmm3LBoejvxi3ZE//RXFqMA/Rjh9zLF7wcQF8EoSjo
+	 DZUnuj3WTkrzA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD07C61DE4;
+	Mon, 31 Aug 2026 00:25:19 +0000 (UTC)
+From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
+Subject: [PATCH v12 00/45] guest_memfd: In-place conversion support
+Date: Sun, 30 Aug 2026 17:25:01 -0700
+Message-Id: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260827-tonyk-long_name-v5-6-5fa843782a00@igalia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN/JlGoC/33TzW6DMAwA4FepOC9b4pC/nfYe0w4mcShagS50q
+ FPVd19oJ9EJwTGR/dmxnEsxUGpoKF53lyLR2AxN3+WDgKdd4ffY1cSakC8K4KA5gGJ1Sy1ruuM
+ BPTHfdyOlKYlVgYcqSGeUxCJnHxPF5nyj3z/yucKBWJWw8/vJ+xzbl47Opyl03wynPv3cmhjll
+ HAvJ4VcLTdKxpmKXgAaTt66t7rv6wM9+74tpnpj+QCBXofKDFEOi+QUjzEsIDVDJdh1SGUoWM2
+ t99EjwALSM6S4WYd0hpzASqGthMNyAZkHCGAdMhmCyCNS6bSSfAHZGdJi42l26iiAU04qY5VcQ
+ G6GzNaMXIakig7JA1JYzkjwWbJbQxL89jgvLJEOssIlJR6orQ0QIlMchQoWjXP4n7relznR13f
+ +Hqe/jb5efwEgqf/KPAMAAA==
+X-Change-ID: 20260225-gmem-inplace-conversion-bd0dbd39753a
+To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+ brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+ jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
+ oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+ rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+ steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
+ suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org, 
+ Paolo Bonzini <pbonzini@redhat.com>, 
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+ Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+ Randy Dunlap <rdunlap@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, Fuad Tabba <fuad.tabba@linux.dev>, 
+ Vlastimil Babka <vbabka@kernel.org>, Baoquan He <baoquan.he@linux.dev>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+ linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
+ Xiaoyao Li <xiaoyao.li@intel.com>, Fuad Tabba <fuad.tabba@linux.dev>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=9254;
+ i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
+ bh=jB3934St+OXWHZBQYrRZ5bx+0JcniUdY+5MQ7UHR2bg=;
+ b=EvLGdfk9baBRMpq/23qyZcMJi59GXHj122oJ7ORw+P2MUKpHjulgOv6RBjqtNYFuBFt6oURl+
+ xrFxovZ3s5dAN25sL5le2Vudaf2xFBkbWh4JMmubAiPQS4r+zIFrKd3
+X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
+ pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
+X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
+ auth_id=649
+X-Original-From: Ackerley Tng <ackerleytng@google.com>
+Reply-To: ackerleytng@google.com
 
-Hi André,
+Here's v12. Thanks everyone for the comments and fast responses!  We're now
+at ~4 weeks to soft-close at 7.3-rc5.
 
-kernel test robot noticed the following build warnings:
+v12 is based on 7.3-rc1 (contains the mm/ bugfixes). Like v11, v12 is also
+dependent on another series [3], which makes kvm_gmem_get_pfn() NOT return
+a refcounted page to KVM.
 
-[auto build test WARNING on 73e3f0710014fe6d4ed98cfc02292f6121db7558]
+Here's everything stitched together for your convenience:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andr-Almeida/treewide-Get-rid-of-get_task_comm/20260827-152300
-base:   73e3f0710014fe6d4ed98cfc02292f6121db7558
-patch link:    https://lore.kernel.org/r/20260827-tonyk-long_name-v5-6-5fa843782a00%40igalia.com
-patch subject: [PATCH v5 6/6] selftests: prctl: Add test for long thread names
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20260831/202608310045.6IJtlqhj-lkp@intel.com/config)
-compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260831/202608310045.6IJtlqhj-lkp@intel.com/reproduce)
+https://github.com/googleprodkernel/linux-cc/commits/guest_memfd-inplace-conversion-v12
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202608310045.6IJtlqhj-lkp@intel.com/
+This revision resolves the issue on v10/v11 to do with over-zapping of
+non-gmem memory because of the requested filters. [1]
 
-All warnings (new ones prefixed by >>):
+The resolution is in a new patch "KVM: guest_memfd: Always fault from
+guest_memfd if in-place conversion is enabled". I also updated the
+documentation as requested.
 
-   security/smack/smack_lsm.c:150:8: error: call to undeclared function 'get_task_comm'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     150 |                 acc, get_task_comm(comm, tsk), note);
-         |                      ^
-   security/smack/smack_lsm.c:150:8: note: did you mean 'get_task_mm'?
-   include/linux/sched/mm.h:151:26: note: 'get_task_mm' declared here
-     151 | extern struct mm_struct *get_task_mm(struct task_struct *task);
-         |                          ^
->> security/smack/smack_lsm.c:150:8: warning: format specifies type 'char *' but the argument has type 'int' [-Wformat]
-     148 |         pr_info("Smack %s: (%s %s %s) %s %s\n", smk_bu_mess[rc],
-         |                                       ~~
-         |                                       %d
-     149 |                 smk_of_task(tsp)->smk_known, oskp->smk_known,
-     150 |                 acc, get_task_comm(comm, tsk), note);
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/printk.h:584:34: note: expanded from macro 'pr_info'
-     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
-         |                                 ~~~     ^~~~~~~~~~~
-   include/linux/printk.h:511:60: note: expanded from macro 'printk'
-     511 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
-         |                                                     ~~~    ^~~~~~~~~~~
-   include/linux/printk.h:483:19: note: expanded from macro 'printk_index_wrap'
-     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-         |                         ~~~~    ^~~~~~~~~~~
-   1 warning and 1 error generated.
+Documentation updates are in these patches:
 
++ KVM: guest_memfd: Stub in ability to enable in-place shared<=>private conversion
++ KVM: guest_memfd: Always fault from guest_memfd if in-place conversion is enabled
++ KVM: guest_memfd: Add base support for KVM_SET_MEMORY_ATTRIBUTES2
 
-vim +150 security/smack/smack_lsm.c
+The documentation update in v10's "KVM: Let userspace disable per-VM mem
+attributes, enable per-gmem attributes" was misplaced imo so I folded it
+conceptually into the patches above.
 
-d166c8024d620d Casey Schaufler    2014-08-27  132  
-fba3d32825f4bb Konstantin Andreev 2026-05-11  133  static int
-fba3d32825f4bb Konstantin Andreev 2026-05-11  134  smk_bu_tsk_to_obj(struct task_struct *tsk, const struct task_smack *tsp,
-fba3d32825f4bb Konstantin Andreev 2026-05-11  135  		  char *note, struct smack_known *oskp, int mode, int rc)
-d166c8024d620d Casey Schaufler    2014-08-27  136  {
-fba3d32825f4bb Konstantin Andreev 2026-05-11  137  #ifdef CONFIG_SECURITY_SMACK_BRINGUP
-d166c8024d620d Casey Schaufler    2014-08-27  138  	char acc[SMK_NUM_ACCESS_TYPE + 1];
-fba3d32825f4bb Konstantin Andreev 2026-05-11  139  	char comm[TASK_COMM_LEN];
-d166c8024d620d Casey Schaufler    2014-08-27  140  
-d166c8024d620d Casey Schaufler    2014-08-27  141  	if (rc <= 0)
-d166c8024d620d Casey Schaufler    2014-08-27  142  		return rc;
-bf4b2fee997997 Casey Schaufler    2015-03-21  143  	if (rc > SMACK_UNCONFINED_OBJECT)
-bf4b2fee997997 Casey Schaufler    2015-03-21  144  		rc = 0;
-d166c8024d620d Casey Schaufler    2014-08-27  145  
-d166c8024d620d Casey Schaufler    2014-08-27  146  	smk_bu_mode(mode, acc);
-fba3d32825f4bb Konstantin Andreev 2026-05-11  147  
-bf4b2fee997997 Casey Schaufler    2015-03-21  148  	pr_info("Smack %s: (%s %s %s) %s %s\n", smk_bu_mess[rc],
-fba3d32825f4bb Konstantin Andreev 2026-05-11  149  		smk_of_task(tsp)->smk_known, oskp->smk_known,
-fba3d32825f4bb Konstantin Andreev 2026-05-11 @150  		acc, get_task_comm(comm, tsk), note);
-d166c8024d620d Casey Schaufler    2014-08-27  151  	return 0;
-d166c8024d620d Casey Schaufler    2014-08-27  152  #else
-fba3d32825f4bb Konstantin Andreev 2026-05-11  153  	return rc;
-d166c8024d620d Casey Schaufler    2014-08-27  154  #endif
-fba3d32825f4bb Konstantin Andreev 2026-05-11  155  }
-fba3d32825f4bb Konstantin Andreev 2026-05-11  156  
+private_mem_conversions_test was updated in v11 to test dual backing, and
+that's meaningless now since with gmem_in_place_conversions, we're now
+always faulting from guest_memfd, and the userspace_addr not being from the
+gmem associated with the memslot is considered a user error.
 
+I now only have 1 patch "KVM: selftests: Update
+private_mem_conversions_test for in-place conversions" instead of 2 in v11.
+
+Resolves discussion at [2].
+
+Here's v12 with tests:
+
+https://github.com/googleprodkernel/linux-cc/commits/guest_memfd-inplace-conversion-coco-selftests-v12
+
+Tested with both CONFIG_KVM_VM_MEMORY_ATTRIBUTES enabled and disabled:
+
++ tools/testing/selftests/kvm/guest_memfd_test.c
++ tools/testing/selftests/kvm/pre_fault_memory_test.c
++ tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
++ tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++ tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
+
+[1] https://lore.kernel.org/all/apCLFSbj8sq2biJp@google.com/
+[2] https://lore.kernel.org/all/apCj6gz8x24Dkle8@google.com/
+[3] https://lore.kernel.org/all/20260826-gmem-no-return-page-v4-0-3bb9c1ddb4e3@google.com/
+
+v11: https://patch.msgid.link/20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com
+v10: https://lore.kernel.org/r/20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com
+v9: https://lore.kernel.org/r/20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com
+v8: https://lore.kernel.org/r/20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com
+v7: https://lore.kernel.org/r/20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com
+v6: https://lore.kernel.org/r/20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com
+RFC v5: https://lore.kernel.org/r/20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com
+RFC v4: https://lore.kernel.org/all/20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com/T/
+RFC v3: https://lore.kernel.org/r/20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com/T/
+RFC v2: https://lore.kernel.org/all/cover.1770071243.git.ackerleytng@google.com/T/
+RFC v1: https://lore.kernel.org/all/cover.1760731772.git.ackerleytng@google.com/T/
+
+Previous versions of this feature, part of other series, are available at:
+
++ https://lore.kernel.org/all/bd163de3118b626d1005aa88e71ef2fb72f0be0f.1726009989.git.ackerleytng@google.com/
++ https://lore.kernel.org/all/20250117163001.2326672-6-tabba@google.com/
++ https://lore.kernel.org/all/b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com/
+
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+---
+Ackerley Tng (23):
+      KVM: Rename kvm_mem_is_private() to kvm_is_private_gfn()
+      KVM: guest_memfd: Always fault from guest_memfd if in-place conversion is enabled
+      KVM: guest_memfd: Pass mapping type filter to invalidation helper
+      KVM: guest_memfd: Add base support for KVM_SET_MEMORY_ATTRIBUTES2
+      KVM: guest_memfd: Ensure pages are not in use before conversion
+      KVM: guest_memfd: Call arch make_shared callback for to-shared conversion
+      KVM: guest_memfd: Return early if range already has requested attributes
+      KVM: guest_memfd: Handle lru_add fbatch refcounts during conversion safety check
+      KVM: guest_memfd: Zero page while getting pfn
+      KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
+      KVM: selftests: Test basic single-page conversion flow
+      KVM: selftests: Test conversion flow when INIT_SHARED
+      KVM: selftests: Test conversion precision in guest_memfd
+      KVM: selftests: Test conversion before allocation
+      KVM: selftests: Convert with allocated folios in different layouts
+      KVM: selftests: Test that truncation does not change shared/private status
+      KVM: selftests: Add helpers to pin pages with CONFIG_GUP_TEST
+      KVM: selftests: Test conversion with elevated page refcount
+      KVM: selftests: Reset shared memory after hole-punching
+      KVM: selftests: Provide function to look up guest_memfd details from gpa
+      KVM: selftests: Make TEST_EXPECT_SIGBUS thread-safe
+      KVM: selftests: Set up page size and alignment independently for guest_memfd
+      KVM: selftests: Update private_mem_conversions_test for in-place conversions
+
+Michael Roth (1):
+      KVM: SEV: Make 'uaddr' parameter optional for KVM_SEV_SNP_LAUNCH_UPDATE
+
+Sean Christopherson (21):
+      KVM: guest_memfd: Optimize away conversion overheads via dead-code elimination
+      KVM: guest_memfd: Use kvm_mem_is_private() when populating guest_memfd memory
+      KVM: guest_memfd: Introduce per-gmem attributes, use to guard user mappings
+      KVM: Rename KVM_GENERIC_MEMORY_ATTRIBUTES to KVM_VM_MEMORY_ATTRIBUTES
+      KVM: Enumerate support for PRIVATE memory iff kvm_arch_has_private_mem is defined
+      KVM: Rename memory attribute APIs to prepare for in-place gmem conversion
+      KVM: Provide generic interface for checking memory private/shared status
+      KVM: guest_memfd: Stub in ability to enable in-place shared<=>private conversion
+      KVM: Consolidate private memory and guest_memfd ifdeffery in kvm_host.h
+      KVM: guest_memfd: Invalidate both SHARED and PRIVATE mappings for in-place conversions
+      KVM: Move KVM_VM_MEMORY_ATTRIBUTES config definition to x86
+      KVM: Let userspace disable per-VM mem attributes, enable per-gmem attributes
+      KVM: guest_memfd: Enable INIT_SHARED on guest_memfd for x86 Coco VMs
+      KVM: selftests: Create gmem fd before "regular" fd when adding memslot
+      KVM: selftests: Rename guest_memfd{,_offset} to gmem_{fd,offset}
+      KVM: selftests: Add support for mmap() on guest_memfd in core library
+      KVM: selftests: Add selftests global for guest memory attributes capability
+      KVM: selftests: Add helpers for calling ioctls on guest_memfd
+      KVM: selftests: Test that shared/private status is consistent across processes
+      KVM: selftests: Provide common function to set memory attributes
+      KVM: selftests: Update private memory exits test to work with per-gmem attributes
+
+ Documentation/admin-guide/kernel-parameters.txt    |  25 +
+ Documentation/virt/kvm/api.rst                     | 107 ++++-
+ .../virt/kvm/x86/amd-memory-encryption.rst         |  14 +-
+ Documentation/virt/kvm/x86/intel-tdx.rst           |   4 +
+ arch/x86/include/asm/kvm-x86-ops.h                 |   2 +-
+ arch/x86/include/asm/kvm_host.h                    |   9 +-
+ arch/x86/kvm/Kconfig                               |  15 +-
+ arch/x86/kvm/mmu/mmu.c                             |  28 +-
+ arch/x86/kvm/svm/sev.c                             |  13 +-
+ arch/x86/kvm/vmx/tdx.c                             |   8 +-
+ arch/x86/kvm/x86.c                                 |  20 +-
+ include/linux/kvm_host.h                           |  83 ++--
+ include/trace/events/kvm.h                         |   6 +-
+ include/uapi/linux/kvm.h                           |  16 +
+ mm/folio.c                                         |   2 +
+ tools/testing/selftests/kvm/Makefile.kvm           |   1 +
+ tools/testing/selftests/kvm/include/kvm_util.h     | 139 +++++-
+ tools/testing/selftests/kvm/include/test_util.h    |  34 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c         | 222 +++++----
+ tools/testing/selftests/kvm/lib/test_util.c        |   7 -
+ .../kvm/x86/guest_memfd_conversions_test.c         | 512 +++++++++++++++++++++
+ .../kvm/x86/private_mem_conversions_test.c         |  66 ++-
+ .../selftests/kvm/x86/private_mem_kvm_exits_test.c |  36 +-
+ virt/kvm/Kconfig                                   |   3 -
+ virt/kvm/guest_memfd.c                             | 469 +++++++++++++++++--
+ virt/kvm/kvm_main.c                                |  92 ++--
+ 26 files changed, 1646 insertions(+), 287 deletions(-)
+---
+base-commit: a0c789941a3d705d00c018b3c9348b4b930c0c74
+change-id: 20260225-gmem-inplace-conversion-bd0dbd39753a
+
+Best regards,
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Ackerley Tng <ackerleytng@google.com>
+
+
