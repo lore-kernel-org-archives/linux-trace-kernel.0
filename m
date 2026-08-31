@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A384F311C1D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99B0322A1F;
 	Mon, 31 Aug 2026 00:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788135921; cv=none; b=JlgXF8dOczLfiB6Xfs+WBj4FgEJluJNBDVXjdxh3IKDHd399vXcYGYrfngcmRxtcV+9tXImc1EWrI/X3BBgv8S5CAjw9ldQcol8yw5rmD+0AvQjM42mLq39lmY/CYs4qhPTJW3MIQnFMkNVWiDwU1xClAic4k0aZ89tt7Bf7s6Y=
+	t=1788135921; cv=none; b=ACiUKZsaOQgs4BbXtPTMinI0/eSvHq5pEfaay15CTW4WvOnqrJ/3WBArD02r1hQKs50JZSgDN7AJDgZD6dgaDOVLW+xnV4fElQiX4QZfKGj05B552OgIMtFtYjxrJO8kYwZtk/I/IObhuxR/Nz8qNDoM/o2UyF1Fq2Wv9y5Ac4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788135921; c=relaxed/simple;
-	bh=EXsOSFV1vU8DO2BOHPz/Ce8cakRIbhdqPxZFrapJwFs=;
+	bh=8shTrhUaGv3fKB50otzvqy15VrpXV2k9eT7uzPpO87A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J43Y0wxIe5Jn7jE2jSefYoXuT17Na0gcW/vLSK8yIqRGmuQIs1CCwfxHBXKqO4N28jckMZ9TzQ5P+Xre1nH14vHpVfsFZdt8RvWhafwz1m4ji1G07azzY496CRnzJP4vr2ogFNfyJUlSdpnM+ZplrNba7/+Cd9N+8opZDTAx0Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6Zn/gCf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=qC0k3cU/AWuBJUO2k1yJQjYxCPkf3Ie30s87N2/P1s/2cpKTWFGvkplJ2U+DZYxwel+3Fyt9glIdWdSJxefnA5PUYCB1c9PAzjlsYciiIPSA4xnvznI5drGyDgD9vQMmP7fLqfaMwCB2zBqJPSKZgKRkzyPX0XtJnwsZE1T9RW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2a+e3+F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6Zn/gCf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 82D06C2BCC7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2a+e3+F"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BA28BC2BCFD;
 	Mon, 31 Aug 2026 00:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1788135921;
-	bh=EXsOSFV1vU8DO2BOHPz/Ce8cakRIbhdqPxZFrapJwFs=;
+	bh=8shTrhUaGv3fKB50otzvqy15VrpXV2k9eT7uzPpO87A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=R6Zn/gCf/axP6nr1BaengQ/HEwKUXk8Cq6jD0GwrDYmNy59fv6L18Ccf+xAvZbxd2
-	 z53c5te2jZ88oxW7EYusMTkvM4Oz1lkt2N7Qt7QJE5VeQ3jwISbpaw/SD1jKsEsKrs
-	 EzgOlbKj0EQyJ+RU1TnYadGVrY/x+BwRtx6UMqTrCLLHi4EZpFyWj1afFRSWXu++M5
-	 mtx4k8LGgMkC0M7p42WjHBkRnXIoVwLnLq/fVDRNOeR6KcRRQK7WrU4NGHNr1s/DUS
-	 ppr27tO+OozYMgdK6vqEcA3D+Vv/3EKbE6DSdwSAEI8DTa6dXZWMZKCDP5dd7qCCEk
-	 uo2qvO66eQIow==
+	b=U2a+e3+Fu3IkwA9ogIkqDjTokD5Ywx6OsEmQ2dtf62zdCoCUC+CShxrFeKOox7WVo
+	 QYUk1reCWg11G5xDMbfzGLtqejPe1f0T3f6GBI2dCzmzUczD9fDUf1nAb47E+FYffO
+	 GR17qgNZyuRjoN5W6tnFeLHKg4RsmT7oo1GhBtgDLaIc8xobHymV3xYEBxPs3UUy5P
+	 O8Z1WOItbP6G7q/T0LMvXLvPmPk2Cz4R30PJE7eNwvgiR3/3ujPgrTMUd/e0M4XUH7
+	 j56lUxumT+3xRHANST2nTojscXUD/YxQgwAY6OEWsOmMSD7lyciIEhU3cOiwIdN8MW
+	 ZgIE95nqdWNcQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF2AC61DFF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B39C61DFD;
 	Mon, 31 Aug 2026 00:25:21 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Sun, 30 Aug 2026 17:25:20 -0700
-Subject: [PATCH v12 19/45] KVM: guest_memfd: Zero page while getting pfn
+Date: Sun, 30 Aug 2026 17:25:22 -0700
+Subject: [PATCH v12 21/45] KVM: TDX: Make source page optional for
+ KVM_TDX_INIT_MEM_REGION
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260830-gmem-inplace-conversion-v12-19-85e5fd25252a@google.com>
+Message-Id: <20260830-gmem-inplace-conversion-v12-21-85e5fd25252a@google.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 In-Reply-To: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -80,11 +81,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
  Xiaoyao Li <xiaoyao.li@intel.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=3028;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135915; l=3571;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=cUGg+sf4DufBRW7+H+nQruNnSYvplZ5+HPGnat0Z7N0=;
- b=iaUEix/boqWHf265FiFwo3RPtQTjSrXq4zSJrf1krBwQQG7RpimowPl9GrMH5wwiWvEnLTWM6
- eoZpOCymVXPCpSEDnOsDrQzfSoTA27VtGyKj0i0A3pUg0T40KvmIX/V
+ bh=njc9wPSBjD6tmKwt2PhlMiU1O1S+4eQ2KtODaEWL4xY=;
+ b=xet/UHJxW/icBX2JrNtGGU28LtYGzpL8u5/A2zHQu7TLEnsVz5ggJjGJpERO2fdfgD7Fxr51C
+ ip40S/BlqIICNfbuaM0UoGpRZF7btZdQpGjyeJFTBr9EgNvYJ9H3K1t
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -94,86 +95,83 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Move the folio initialization logic from kvm_gmem_get_pfn() into
-__kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-kvm_gmem_populate().
+Update tdx_gmem_post_populate() to handle cases where userspace requests
+"no source page". To handle "no source page", populate (perform
+TDH.MEM.PAGE.ADD) using memory in-place at the target PFN.
 
-With in-place conversion, the existing data in a guest_memfd page can be
-populated into guest memory through platform-specific ioctls.
+Allow "no source page" only when gmem_in_place_conversion is enabled,
+because retroactively adding support for out-of-place conversion would mean
+requiring a userspace update for a feature that's being deprecated.
 
-Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-might contain uninitialized host memory, which would leak to the guest if
-the populate completes.
+Also, KVM supporting "no source page" without in-place conversion would
+effectively be an obscure zero-page optimization that relies on the page
+being zeroed when it is allocated by guest_memfd.
 
-guest_memfd pages are zeroed at most once in the page's entire lifetime
-with guest_memfd, and that is tracked using the uptodate flag.
+Rejecting "no source page" without in-place conversion scenario is valuable
+for KVM developers since it helps newcomers understand what exactly is and
+isn't possible.
 
-Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-can get a page, write to the page and then set page uptodate without
-zeroing.
-
-There may be some performance penalty due to redundant zeroing, but this
-would pale in comparison to the cost of actually assigning the page to the
-VM.
-
-This aligns with the concept of zeroing before first use - the other place
-where zeroing happens is in kvm_gmem_fault_user_mapping().
-
-On populate failure, the page is not re-zeroed, since on SNP, if firmware
-rejects a CPUID page, the expected CPUID values provided by firmware are
-returned to userspace via page contents. More generally, page contents may
-be modified on populate failure.
-
-Don't mark the page uptodate again after populating, since the page would
-already be marked uptodate before the post_populate() call.
-
-Reviewed-by: Fuad Tabba <tabba@google.com>
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Tested-by: Yan Zhao <yan.y.zhao@intel.com>
+Reviewed-by: Yan Zhao <yan.y.zhao@intel.com>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- virt/kvm/guest_memfd.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ Documentation/virt/kvm/x86/intel-tdx.rst | 4 ++++
+ arch/x86/kvm/vmx/tdx.c                   | 8 +++++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 1fe935aaef36f..5db578fdce6af 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -1105,6 +1105,11 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
- 		return ERR_PTR(-EHWPOISON);
- 	}
+diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
+index 6a222e9d09541..d8d9409120e61 100644
+--- a/Documentation/virt/kvm/x86/intel-tdx.rst
++++ b/Documentation/virt/kvm/x86/intel-tdx.rst
+@@ -158,6 +158,10 @@ KVM_TDX_INIT_MEM_REGION
+ Initialize @nr_pages TDX guest private memory starting from @gpa with userspace
+ provided data from @source_addr. @source_addr must be PAGE_SIZE-aligned.
  
-+	if (!folio_test_uptodate(folio)) {
-+		clear_highpage(folio_page(folio, 0));
-+		folio_mark_uptodate(folio);
-+	}
++If guest_memfd in-place conversion is enabled, pass 0 for @source_addr
++to represent "no source page". A source page is required if in-place
++conversion is not enabled or not supported.
 +
- 	*pfn = folio_file_pfn(folio, index);
- 	if (max_order)
- 		*max_order = 0;
-@@ -1133,11 +1138,6 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		goto out;
- 	}
+ Note, before calling this sub command, memory attribute of the range
+ [gpa, gpa + nr_pages] needs to be private.  Userspace can use
+ KVM_SET_MEMORY_ATTRIBUTES to set the attribute.
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b272c20586a74..7654a9f5fa128 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -3189,7 +3189,7 @@ static int tdx_gmem_post_populate(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ 	if (KVM_BUG_ON(kvm_tdx->page_add_src, kvm))
+ 		return -EIO;
  
--	if (!folio_test_uptodate(folio)) {
--		clear_highpage(folio_page(folio, 0));
--		folio_mark_uptodate(folio);
--	}
--
- 	if (kvm_arch_has_gmem_convert() &&
- 	    kvm_gmem_is_private_mem(file_inode(file), index))
- 		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
-@@ -1179,8 +1179,6 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	}
+-	kvm_tdx->page_add_src = src_page;
++	kvm_tdx->page_add_src = src_page ?: pfn_to_page(pfn);
+ 	ret = kvm_tdp_mmu_map_private_pfn(arg->vcpu, gfn, pfn);
+ 	kvm_tdx->page_add_src = NULL;
  
- 	ret = post_populate(kvm, gfn, pfn, src_page, opaque);
--	if (!ret)
--		folio_mark_uptodate(folio);
+@@ -3235,7 +3235,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+ 	if (copy_from_user(&region, u64_to_user_ptr(cmd->data), sizeof(region)))
+ 		return -EFAULT;
  
- out_put_folio:
- 	folio_put(folio);
+-	if (!PAGE_ALIGNED(region.source_addr) || !region.source_addr ||
++	if (!PAGE_ALIGNED(region.source_addr) ||
++	    (!gmem_in_place_conversion && !region.source_addr) ||
+ 	    !PAGE_ALIGNED(region.gpa) || !region.nr_pages ||
+ 	    region.gpa + (region.nr_pages << PAGE_SHIFT) <= region.gpa ||
+ 	    !vt_is_tdx_private_gpa(kvm, region.gpa) ||
+@@ -3266,7 +3267,8 @@ static int tdx_vcpu_init_mem_region(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *c
+ 			break;
+ 		}
+ 
+-		region.source_addr += PAGE_SIZE;
++		if (region.source_addr)
++			region.source_addr += PAGE_SIZE;
+ 		region.gpa += PAGE_SIZE;
+ 		region.nr_pages--;
+ 
 
 -- 
 2.55.0.897.gb25b4bd76c-goog
