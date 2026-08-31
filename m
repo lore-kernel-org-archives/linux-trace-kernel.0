@@ -1,64 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49C03D953D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 09:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969E23DA7D0
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 09:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788167228; cv=none; b=sCjSjxuqxbXTLQpc/DiHZZ7KEXXWGqc6YQw+QSKeRtbL2MRhZ1jrCA8fFWU8/H22dQcLC5IluHrb6JueNOkENsRZ3DBJX4VNVjrdWGK+CF5kPW5WZatiKvCV6osvUXyB2yACaNx0aUwoJS1j/7GfqCS/VygjkOPAiiAYOCCXXXA=
+	t=1788167233; cv=none; b=jdbD5kF7TyPMsLq34kaPVWSt+GyfzRdz1QcqQKpMp81WQmex6SKcezl0IYFr/k+Gj5ubkdb0hFMJ+izQWmzR8ehGIC/LjbT5wcZZ5ZMHdlAyY+5x1KV1oXQlAg+a6XoTIp226TL/j5fSr09GIABbZwQOwG1hIzCGAzCWQnSZAac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788167228; c=relaxed/simple;
-	bh=j9Bk+0pj2/24u8T6/SP13Tt6ikszrpnpvXPCcD/6MLU=;
+	s=arc-20240116; t=1788167233; c=relaxed/simple;
+	bh=3DM/K98fffruEH8/09LX1Unl1VL6OtdvW7P6hrxuI0s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=SwJIo7jjeT7UKhXLq2/5ckD804G+8CdwoYJT5EWTK1cYi5RctdZfqk63FnvtldyrN98yzm6ulytadVARZp9hYzYvwditu+QUkfJXcz+O70WTqoICZd4wgeDTM0Srfa/T3h1RK21jeqfivqdeSIExVcOzWG2RaErHEecpzaBGCbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qf55p/90; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=Nk6NFj73sTEUo0tXTv1Ewb9QtqpM7AHifOESaHgOOJtu7Kvts5XsqJltC5cdSXo9u8iMaIYlWmJ6zi2g+piExeF5vB+EKXh5KNgnQJQYR2TOGg0LVWZANjed+L2d6imoM29UGjexqfUFv/+ETaanodXrDoi/xMxH349dA4m+w/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DbTAmYy+; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qf55p/90"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DbTAmYy+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788167225;
+	s=mimecast20190719; t=1788167230;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7jsHCsFIe83xcZRq1DwfLWv9aF61ZEwjfkBd6QeliCQ=;
-	b=Qf55p/90OoNKWVCMmK1gW8p+zfCsQTY7Egoj3VMM9O9b2DNw8RtSlqFsAJC/Co9BMR3vAn
-	YzaO9TsYGQpJQP/ut5L/+bD+eE1vm0r/F3BaGmECVRkR8uhIEflnD1tpsogDCiGyKDoa0P
-	/CzMCTL4trqDcdhQQC1T4d2/4DOwzAM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=x6xpONabfnSBWbWSB7Bl4iKA12vAnmh9pV4xx/IOXqI=;
+	b=DbTAmYy+jYSIOFz8J6NEruGtb8krwjwj5zYLGIflyi+6Q19ybc5TUhiZKz8ryxTr+axJ9K
+	yxG803XhIEVAozlepnP8P8z788WfO6B0vc+hAx7XeOXry9D5yk2ib46isnC7QuX7Ng6mmN
+	xbox7UxomtShXr2JjPKui75sDH83orA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-262-3GBh1lUkPE2U7wQ8A-ui3Q-1; Mon,
- 31 Aug 2026 05:07:00 -0400
-X-MC-Unique: 3GBh1lUkPE2U7wQ8A-ui3Q-1
-X-Mimecast-MFC-AGG-ID: 3GBh1lUkPE2U7wQ8A-ui3Q_1788167219
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-436-3aVp4fTkMX6317d2y747XQ-1; Mon,
+ 31 Aug 2026 05:07:04 -0400
+X-MC-Unique: 3aVp4fTkMX6317d2y747XQ-1
+X-Mimecast-MFC-AGG-ID: 3aVp4fTkMX6317d2y747XQ_1788167223
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB240182E6B4;
-	Mon, 31 Aug 2026 09:06:58 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 215471944B23;
+	Mon, 31 Aug 2026 09:07:03 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C234C18005BB;
-	Mon, 31 Aug 2026 09:06:53 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C45E118005BB;
+	Mon, 31 Aug 2026 09:06:59 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
+	Gabriele Monaco <gmonaco@redhat.com>
 Cc: Nam Cao <namcao@linutronix.de>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>,
 	Tobias Schaffner <tobias.schaffner@siemens.com>,
 	Viktor Malik <vmalik@redhat.com>
-Subject: [RFC PATCH 01/20] sched: Add task enqueue/dequeue trace points
-Date: Mon, 31 Aug 2026 11:05:05 +0200
-Message-ID: <20260831090524.106845-2-gmonaco@redhat.com>
+Subject: [RFC PATCH 02/20] tools/rv: Skip empty pid error in selftest if command failed
+Date: Mon, 31 Aug 2026 11:05:06 +0200
+Message-ID: <20260831090524.106845-3-gmonaco@redhat.com>
 In-Reply-To: <20260831090524.106845-1-gmonaco@redhat.com>
 References: <20260831090524.106845-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -68,102 +64,41 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: et9i4L59hvqmrhYXJj8BFxVlsxqPlg7_RO8l5Az1of0_1788167219
+X-Mimecast-MFC-PROC-ID: p0yDW1Yyx2GIju7gm9Pws3llB8D0cpG-ay5quxexwVk_1788167223
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Nam Cao <namcao@linutronix.de>
+Some rv userspace selftests rely on the pid of the rv process to match
+with the output and fail prematurely in case the pid was not found.
+If the rv process failed, however, it's likely it will terminate before
+catching the pid, and the test reports empty pid ignoring the error that
+caused the process to fail.
 
-Add trace points into enqueue_task() and dequeue_task().
+Report empty pid only when the rv process succeeds (exit code not what
+was expected) and continue showing exit code and output otherwise.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Co-developed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/trace/events/sched.h |  8 ++++++++
- kernel/sched/core.c          | 12 +++++++++++-
- kernel/sched/sched.h         |  2 ++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ tools/verification/tests/engine.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 535860581f15..d6e41edc25d2 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -896,6 +896,14 @@ DECLARE_TRACE(sched_set_need_resched,
- 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
- 	TP_ARGS(tsk, cpu, tif));
+diff --git a/tools/verification/tests/engine.sh b/tools/verification/tests/engine.sh
+index cfdf2180aad8..4dad43b0b822 100644
+--- a/tools/verification/tests/engine.sh
++++ b/tools/verification/tests/engine.sh
+@@ -60,8 +60,9 @@ _check() {
+ 	failbuf=''
+ 	fail=0
  
-+DECLARE_TRACE(sched_enqueue,
-+	TP_PROTO(struct task_struct *tsk, int cpu),
-+	TP_ARGS(tsk, cpu));
-+
-+DECLARE_TRACE(sched_dequeue,
-+	TP_PROTO(struct task_struct *tsk, int cpu),
-+	TP_ARGS(tsk, cpu));
-+
- #define DL_OTHER 0
- #define DL_TASK 1
- #define DL_SERVER_FAIR 2
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f78275192036..8561ca324943 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -121,6 +121,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_enqueue_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dequeue_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_throttle_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_replenish_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_update_tp);
-@@ -2181,6 +2183,9 @@ unsigned long get_wchan(struct task_struct *p)
- 
- void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- {
-+	if (trace_sched_enqueue_tp_enabled() && !(flags & ENQUEUE_DELAYED))
-+		trace_sched_enqueue_tp(p, cpu_of(rq));
-+
- 	if (!(flags & ENQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
- 
-@@ -2207,6 +2212,8 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
-  */
- inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- {
-+	bool ret;
-+
- 	if (sched_core_enabled(rq))
- 		sched_core_dequeue(rq, p, flags);
- 
-@@ -2223,7 +2230,10 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- 	 * and mark the task ->sched_delayed.
- 	 */
- 	uclamp_rq_dec(rq, p);
--	return p->sched_class->dequeue_task(rq, p, flags);
-+	ret = p->sched_class->dequeue_task(rq, p, flags);
-+	if (trace_sched_dequeue_tp_enabled() && !(flags & DEQUEUE_SLEEP))
-+		trace_sched_dequeue_tp(p, cpu_of(rq));
-+	return ret;
- }
- 
- void activate_task(struct rq *rq, struct task_struct *p, int flags)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index e656c7059bf8..a2cb06beafe6 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3070,6 +3070,8 @@ static inline void sub_nr_running(struct rq *rq, unsigned count)
- 
- static inline void __block_task(struct rq *rq, struct task_struct *p)
- {
-+	trace_sched_dequeue_tp(p, cpu_of(rq));
-+
- 	if (p->sched_contributes_to_load)
- 		rq->nr_uninterruptible++;
- 
+-	# Suppress any other error if a needed pid is empty
+-	if [ -z "$pid" ] && grep -q "\$pid" <<< "$patterns"; then
++	# Suppress any other error if a needed pid is empty and there was no other error
++	if [ -z "$pid" ] && grep -q "\$pid" <<< "$patterns" \
++		&& [ $exitcode -eq "$expected_exitcode" ]; then
+ 		result=''
+ 		failure "# Empty pid for $command"
+ 		return 1
 -- 
 2.55.0
 
