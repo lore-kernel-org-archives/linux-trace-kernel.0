@@ -1,174 +1,165 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A4846EC90;
-	Mon, 31 Aug 2026 17:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280E343A7F7;
+	Mon, 31 Aug 2026 17:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788197033; cv=none; b=WdnB/nqcaBX5Ieg7UikqxarUBqYju2gfktXZDDEX5WhgttXOZP17ULinSVgIr8LTb+z8f84S6z0sx+F6dkWJtAmy1toNJPpXt08bzkeRCXNFdpaCX3/0Rq260/tzXVFeFkLaNKsU4O/WOvymStRkm199Fr0H8l+O5WhHc3YnY/w=
+	t=1788198127; cv=none; b=V+6cmGeT1bcKG24EZzd5/z3YIrpU2uWatuBjQ4XzFJea0w0Sfqrx6s2JO05hf749wbVkk0VjINEZ100Zwy5ha6PUhlbk5O9AsNYRs1aas1g+AQ9QZSkZAROu/zTUXTje80IIo08DYYlFYvIyKBMzZkP4byhtPCd9L54oH6f3wkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788197033; c=relaxed/simple;
-	bh=SofsqkZn9Sfflh3ZuGu0KB4bjMJ/qEOKFsuU4lZlqTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B7rI5XMV+Lc8jdFuEilvUch2sjjGa6YTtTC62mc5DdT7qESOpOwqhx7Kz5/ECPgIk1A8v2hYHI9tIqXy4KZATy4jFVoVQ5KXma3/fLJdaOLiYRqKvrPiSND/UgimTNAtMCWDSQdHoOi8qI39rVddyAsP1Hjl2l2P263ShATJt40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=ijHpdeEs; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788198127; c=relaxed/simple;
+	bh=so8IkYrIFJkKsVHjdJM0GxDIu1LdB+E9VAEbkhZ61ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nf9szwgly0ftprc3QzC1+gwS0dTMlzFgaciBDWIwvnxQhrkaA5cYETsTuQErDgOxy/K8OJSeMmm9KegtNQcpegiOg4T73DemX8HjyI/EuyfX0wWWYndHwwPWNv/n8aRMRyFmGW8yyEdgZI5nKXhdW+FbbM8w6FPY38OKy8AUbBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xu6RyNmF; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="ijHpdeEs"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 3D879401E0;
-	Mon, 31 Aug 2026 17:23:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id A8F3B2002B;
-	Mon, 31 Aug 2026 17:23:40 +0000 (UTC)
-Date: Mon, 31 Aug 2026 13:24:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Praveen Talari <praveen.talari@oss.qualcomm.com>
-Cc: konrad.dybcio@oss.qualcomm.com, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Vinod Koul
- <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
- chandana.chiluveru@oss.qualcomm.com, mukesh.savaliya@oss.qualcomm.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/3] dmaengine: qcom: gpi: trace: Add trace events
- header for Qualcomm GPI DMA
-Message-ID: <20260831132437.2477e920@gandalf.local.home>
-In-Reply-To: <20260831-add-trace-support-gpio-v1-1-7b0fd0d0ddb3@oss.qualcomm.com>
-References: <20260831-add-trace-support-gpio-v1-0-7b0fd0d0ddb3@oss.qualcomm.com>
-	<20260831-add-trace-support-gpio-v1-1-7b0fd0d0ddb3@oss.qualcomm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xu6RyNmF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788198125; x=1819734125;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=so8IkYrIFJkKsVHjdJM0GxDIu1LdB+E9VAEbkhZ61ok=;
+  b=Xu6RyNmFDon9UDIXi49XVknRMtYleOAglZ9egq4tWn8eW6lN2GV32FbQ
+   DfxrWOa0UNmdoB7T/IHZXm8TfKTu4hkpx0xQnAE+/PLF4BlxBHIPRSkMf
+   OKFAc39cSJFxdNqkbGrdrUX7gv63vJIbxywMoEUIm8LOpJ6aOU26d5wSy
+   Ql46xtVMmq70H63BFMalQQafDlpC2gnWoPI4Xma6x461vQlgJNP07R46P
+   jj9Cj41X2WTgYL0YNqYs/8Ma+fgp5KbctH72IBuWeW8WFzHzvMGx+YsiE
+   zlsPXH9zC1H7FRfAj5H/hB7IUDOI16iYvVud0bHuDN1KyVtVWh/MHcwCI
+   w==;
+X-CSE-ConnectionGUID: 1Inxxrg3SueQSEPTVhRupQ==
+X-CSE-MsgGUID: AkkGx/UYRPuSaEzSzeFkxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11892"; a="88464527"
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="88464527"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 10:42:05 -0700
+X-CSE-ConnectionGUID: flHojNHIQGebNubr/skqfg==
+X-CSE-MsgGUID: 0LietNoWT86T3ePcjh/C2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="265620148"
+Received: from igk-lkp-server01.igk.intel.com (HELO 32268bdb9915) ([10.211.93.152])
+  by fmviesa007.fm.intel.com with ESMTP; 31 Aug 2026 10:42:02 -0700
+Received: from kbuild by 32268bdb9915 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1x1619-000000000Yf-2gGQ;
+	Mon, 31 Aug 2026 17:41:59 +0000
+Date: Mon, 31 Aug 2026 19:41:59 +0200
+From: kernel test robot <lkp@intel.com>
+To: Aaron Tomlin <atomlin@atomlin.com>, tj@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, jianshanlai@mail.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, osandov@osandov.com,
+	atomlin@atomlin.com, neelx@suse.com, sean@ashe.io,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] workqueue: Add workqueue_bh_budget_yield tracepoint
+Message-ID: <202608311949.TSPVREg4-lkp@intel.com>
+References: <20260829230517.42468-4-atomlin@atomlin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: A8F3B2002B
-X-Stat-Signature: tcjjuyeg8ochjc1mze7kfhqd6zmzfbc9
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18fF0ui6xjKhLdEp6d+GUR4oNAc3xDXTh0=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=TZXXHOZM/aShp3K6xp57FxmGWKsPm0eT9S0BWA7sJhI=; b=ijHpdeEsazzJhDAyk8i45p8+N9FTyKKs636cO2W/ExILrzN84VXHwGK6tA6cQgRHsalQloXkxTPmSx7Xs2WsPVAr5E5KBaa5sC1k1jQeOCkhLd81bsqrZCgPOqSNlggJXhNaPIw+dPvGzmWlUWISrJqPyRX9Wu97EQnDsSkRTP8=
-X-HE-Tag: 1788197020-800869
-X-HE-Meta: U2FsdGVkX19bNpgFulyRSYJnQtOa7YUgjITi2mr8MHUqqxYHbbNtgQJpAQxc5hS4v1JLecQECY2lApvgULoRWOAwG2WyhyElhHy4KfsokhPkiFg3Ch6om8u+ShSegKws22noG5/TxMIeMT/LEb2/05WMFvhzSu0f44Ef3dAp894vniN/MzzduL5fS9f94+JH2MR4ZAL1Jc9SVO9wPlmcFM6/9O3IBW0ruaipPCDzTLInXmYVSnxugsJD4gJwV4yrUBUBVVk1qXiWfZHAV2uauQETB84UzqhWl+My21+0mZgEncEtcvAiNs3h5TpO/5h40iYzRgTo+EIXKkcgEfywc/3efasR0uIf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260829230517.42468-4-atomlin@atomlin.com>
 
-On Mon, 31 Aug 2026 22:06:35 +0530
-Praveen Talari <praveen.talari@oss.qualcomm.com> wrote:
+Hi Aaron,
 
+kernel test robot noticed the following build errors:
 
-> +TRACE_EVENT(gpi_ev_process,
-> +	    TP_PROTO(struct device *dev, u32 chid, u32 ev_type, u8 code,
-> +		     u16 status, u32 length),
-> +	    TP_ARGS(dev, chid, ev_type, code, status, length),
-> +
-> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
-> +			     __field(u32, chid)
-> +			     __field(u32, ev_type)
-> +			     __field(u8, code)
-> +			     __field(u16, status)
-> +			     __field(u32, length)
+[auto build test ERROR on tj-wq/for-next]
+[also build test ERROR on linus/master v7.3-rc1 next-20260831]
+[cannot apply to trace/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I would swap the above a little to have the u8 code at the end to remove
-any holes. It may have a hole at the end of the event, but you don't want
-holes in the middle.
+url:    https://github.com/intel-lab-lkp/linux/commits/Aaron-Tomlin/workqueue-Add-workqueue_cpu_intensive-tracepoint/20260829-190515
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-next
+patch link:    https://lore.kernel.org/r/20260829230517.42468-4-atomlin%40atomlin.com
+patch subject: [PATCH 3/3] workqueue: Add workqueue_bh_budget_yield tracepoint
+config: i386-allnoconfig-bpf (https://download.01.org/0day-ci/archive/20260831/202608311949.TSPVREg4-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260831/202608311949.TSPVREg4-lkp@intel.com/reproduce)
 
-			     __field(u32, chid)
-			     __field(u32, ev_type)
-			     __field(u32, length)
-			     __field(u16, status)
-			     __field(u8, code)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202608311949.TSPVREg4-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: kernel/workqueue.o: in function `wq_worker_tick':
+>> kernel/workqueue.c:1561:(.text+0xa0b6): undefined reference to `__udivdi3'
 
 
+vim +1561 kernel/workqueue.c
 
-> +	    ),
-> +
-> +	    TP_fast_assign(__assign_str(name);
-> +			   __entry->chid = chid;
-> +			   __entry->ev_type = ev_type;
-> +			   __entry->code = code;
-> +			   __entry->status = status;
-> +			   __entry->length = length;
-> +	    ),
-> +
-> +	    TP_printk("%s: chid=%u ev_type=0x%02x code=%u status=%u length=%u",
-> +		      __get_str(name), __entry->chid, __entry->ev_type,
-> +		      __entry->code, __entry->status, __entry->length)
-> +);
-> +
->
+  1522	
+  1523	/**
+  1524	 * wq_worker_tick - a scheduler tick occurred while a kworker is running
+  1525	 * @task: task currently running
+  1526	 *
+  1527	 * Called from sched_tick(). We're in the IRQ context and the current
+  1528	 * worker's fields which follow the 'K' locking rule can be accessed safely.
+  1529	 */
+  1530	void wq_worker_tick(struct task_struct *task)
+  1531	{
+  1532		struct worker *worker = kthread_data(task);
+  1533		struct pool_workqueue *pwq = worker->current_pwq;
+  1534		struct worker_pool *pool = worker->pool;
+  1535		u64 dur;
+  1536	
+  1537		if (!pwq)
+  1538			return;
+  1539	
+  1540		/*
+  1541		 * @pwq is shared across CPUs for unbound wqs and this advisory stat is
+  1542		 * bumped outside pool->lock, so the update is intentionally racy.
+  1543		 */
+  1544		data_race(pwq->stats[PWQ_STAT_CPU_TIME] += TICK_USEC);
+  1545	
+  1546		if (!wq_cpu_intensive_thresh_us)
+  1547			return;
+  1548	
+  1549		/*
+  1550		 * If the current worker is concurrency managed and hogged the CPU for
+  1551		 * longer than wq_cpu_intensive_thresh_us, it's automatically marked
+  1552		 * CPU_INTENSIVE to avoid stalling other concurrency-managed work items.
+  1553		 *
+  1554		 * Set @worker->sleeping means that @worker is in the process of
+  1555		 * switching out voluntarily and won't be contributing to
+  1556		 * @pool->nr_running until it wakes up. As wq_worker_sleeping() also
+  1557		 * decrements ->nr_running, setting CPU_INTENSIVE here can lead to
+  1558		 * double decrements. The task is releasing the CPU anyway. Let's skip.
+  1559		 * We probably want to make this prettier in the future.
+  1560		 */
+> 1561		dur = (READ_ONCE(worker->task->se.sum_exec_runtime) - worker->current_at) /
+  1562		      NSEC_PER_USEC;
+  1563		if ((worker->flags & WORKER_NOT_RUNNING) || READ_ONCE(worker->sleeping) ||
+  1564		    dur < wq_cpu_intensive_thresh_us)
+  1565			return;
+  1566	
+  1567		raw_spin_lock(&pool->lock);
+  1568	
+  1569		worker_set_flags(worker, WORKER_CPU_INTENSIVE);
+  1570		wq_cpu_intensive_report(worker->current_func);
+  1571		pwq->stats[PWQ_STAT_CPU_INTENSIVE]++;
+  1572	
+  1573		if (kick_pool(pool))
+  1574			pwq->stats[PWQ_STAT_CM_WAKEUP]++;
+  1575	
+  1576		raw_spin_unlock(&pool->lock);
+  1577	
+  1578		trace_workqueue_cpu_intensive(pwq, worker->current_work,
+  1579					      worker->current_func, dur);
+  1580	}
+  1581	
 
-
-> +TRACE_EVENT(gpi_alloc_ring,
-> +	    TP_PROTO(struct device *dev, u32 elements, u32 el_size,
-> +		     u32 req_len, u64 len, size_t alloc_size),
-> +	    TP_ARGS(dev, elements, el_size, req_len, len, alloc_size),
-> +
-> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
-> +			     __field(u32, elements)
-> +			     __field(u32, el_size)
-> +			     __field(u32, req_len)
-> +			     __field(u64, len)
-> +			     __field(size_t, alloc_size)
-
-Same here. I would move the 64 and size to the beginning and the other 4
-byte fields to the end:
-
-	    TP_STRUCT__entry(__field(u64, len)
-			     __field(size_t, alloc_size)
-			     __string(name, dev_name(dev))
-			     __field(u32, elements)
-			     __field(u32, el_size)
-			     __field(u32, req_len)
-
-
-And yes, the __string() is a 4 byte meta-data and should be treated as 4
-bytes.
-
-> +	    ),
-> +
-> +	    TP_fast_assign(__assign_str(name);
-> +			   __entry->elements = elements;
-> +			   __entry->el_size = el_size;
-> +			   __entry->req_len = req_len;
-> +			   __entry->len = len;
-> +			   __entry->alloc_size = alloc_size;
-> +	    ),
-> +
-> +	    TP_printk("%s: elements=%u el_size=%u req_len=%u len=%llu alloc_size=%zu",
-> +		      __get_str(name), __entry->elements, __entry->el_size,
-> +		      __entry->req_len, __entry->len, __entry->alloc_size)
-> +);
-> +
-> +TRACE_EVENT(gpi_ring_info,
-> +	    TP_PROTO(struct device *dev, dma_addr_t dma_handle, phys_addr_t phys_addr,
-> +		     u32 len, u32 el_size, u32 elements),
-> +	    TP_ARGS(dev, dma_handle, phys_addr, len, el_size, elements),
-> +
-> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
-
-Move the __string() to after phys_addr.
-
-> +			     __field(u64, dma_handle)
-> +			     __field(u64, phys_addr)
-> +			     __field(u32, len)
-> +			     __field(u32, el_size)
-> +			     __field(u32, elements)
-> +	    ),
-> +
-> +	    TP_fast_assign(__assign_str(name);
-> +			   __entry->dma_handle = dma_handle;
-> +			   __entry->phys_addr = phys_addr;
-> +			   __entry->len = len;
-> +			   __entry->el_size = el_size;
-> +			   __entry->elements = elements;
-> +	    ),
-> +
-> +	    TP_printk("%s: dma_handle=%llx phys_addr=%llx len=%u el_size=%u elements=%u",
-> +		      __get_str(name), __entry->dma_handle, __entry->phys_addr,
-> +		      __entry->len, __entry->el_size, __entry->elements)
-> +);
-> +
-
--- Steve
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
