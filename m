@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794A53537F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D3F3546E5;
 	Mon, 31 Aug 2026 00:25:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788135923; cv=none; b=UX2iF+j1dV1U1o84Vw1fNDC3ReAHJSNGO2x62IMIFCPL3VdjdEnedGY2WEQXt/yRX0DBKxMTJBxxXg9IEaxz2+6VbwwWQU8J2q3Ec/4i3IYCQLt+T3YoXnUSXiVh4mlcUNahBaLLSgcrvNX/ojOEXaD/zIU4OpXsbdhy6i4yF3s=
+	t=1788135923; cv=none; b=tG0FRQYUXyOqZ8Xh4La1ldT3Gi1nfce3E6Sxjb8pCHMQysBgUeXj8sIP8ih0FsxoNupgGyhjVX4FnvsXrJDOAtM5tVshy7shVBMcJtwFuelK8xlHR22ZxuhgDFOICs8F6Y3bUlGe7YLy4wANbCDJeFKjQlSotqOnlN+eyvzTFz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788135923; c=relaxed/simple;
-	bh=xJxv/ExQUAEvw7T0RAQG38FUrG9mFWRgWPRG7f5xFX4=;
+	bh=L5YUbh7/6Cud6VplfoNsOCErNzDbpKzPkXGdi+gnbdU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OVg8bZ/uKtFHkB7M//+8m0PEQFIActhHjSMrVdZzl0f307lJ5fRJOdKBD0r7mOkfVY3tPD/cf9AYkvqXErxadcRxzxR1+2+6o6faBZeED3VQvzWnd2FyvESO5G6FLOw6SIU7bhc7TgvojEVrsnNcWbF5os/7n+wh+zZxh3bcKlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKiRnc4Q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=V5ydDSVSnMeRUnkWpRrsH/wZVf7iRvs7xRHQknE6A2H1h2DORFTqM+NZmmnw+Scdik3oTev+fjg3Q0SCYnRUVFcWuXa3HDkg8by4GApd8u26Md7bfr+P4w/hoA4cWIIMpbCiIjTu27jAMgdSlD6TRTpQh57XRmFakiOuPK7H8Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPTQ+t1u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKiRnc4Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 32C49C4AF64;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPTQ+t1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F903C2BCC7;
 	Mon, 31 Aug 2026 00:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1788135923;
-	bh=xJxv/ExQUAEvw7T0RAQG38FUrG9mFWRgWPRG7f5xFX4=;
+	bh=L5YUbh7/6Cud6VplfoNsOCErNzDbpKzPkXGdi+gnbdU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=LKiRnc4QKxQ40mY/5ieaFKg89gjw3u53hXQZzCyfxjPIGCU5oxrVSGCRG8U08s1iy
-	 UsXe4Vx1/kVtYyvmeIefrLfAilisshQpKP9/EZbKS6Gsk+uaj4qkn6aThd0p5XVbuK
-	 V1inqUA4xGFHFXV6u5MsRI+oUi5c81lwc8MisQEBqnohsc6QMeMTCpkO861mDhXLfW
-	 RwqY4PFBtuZv95/JfDUov/ws382t9f2h1mjHFLix7Bnqx7M7HuTMs9+Uz3p+52OhVB
-	 HIkdPkOsPo+wvKw+fxpLNXfMSxnm+wfsn7BMSQqjlURInckNXFEJs3rxvHQcvXRc6f
-	 /hsd9fIjXRo/g==
+	b=bPTQ+t1u1KJjMEQTfYicl1vmRbZYLA+VOfQu93BZwsXWbldiwg6PNm30qHe0W10K0
+	 XtCa9z6HDK8A5k1txAJpJL58AlHLyAbmczeQ/IpK9XpD6lIr2kzcHefew4QTc5BA88
+	 iMDUhwUuI2EL9SEMLGlKffIEEJth7aLvjv2DGcPxEIdq8mDIK4UyFpvM6ZpyWqMrys
+	 OvbqhqLr7XXtMTr5UFO7JxdaMUp1M+lcM5bMovKgq/lgGcTFj9M0vUGLOiA6ESK0m7
+	 sKIoxphgrKi/QDY1hKD5ebCMyEvYt2uuX6DixiqQZQMIxUZyiKfE6ZyzfJv+zI1FQH
+	 JSTusVRdWlHdQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECADC61DE4;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FB9C624A5;
 	Mon, 31 Aug 2026 00:25:23 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Sun, 30 Aug 2026 17:25:36 -0700
-Subject: [PATCH v12 35/45] KVM: selftests: Test that truncation does not
- change shared/private status
+Date: Sun, 30 Aug 2026 17:25:38 -0700
+Subject: [PATCH v12 37/45] KVM: selftests: Add helpers to pin pages with
+ CONFIG_GUP_TEST
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260830-gmem-inplace-conversion-v12-35-85e5fd25252a@google.com>
+Message-Id: <20260830-gmem-inplace-conversion-v12-37-85e5fd25252a@google.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 In-Reply-To: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -80,11 +80,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135916; l=2066;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788135916; l=2738;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=tNExLNWLFDn50j0RlKFtcHpdRLOf4T07FWqRSpyOYNY=;
- b=YUToXWIB44Po+fdLbmu0EdGYzg3DMaTns2uQZw0fL0Iq2D4zUBQHSEZYILSpCQ07agH3oEiZH
- gxvtPHsPUXzBhBletXy8wcGKYoBB0+IOFC/BYas0faHs9bAX/B1Cgz4
+ bh=kIKJvxj0NxcBPACHPOvZ7iTswFnwraQaYm+ccyn/5BU=;
+ b=rGCmlwIzORjmkoJ/SJOyYoV95Ir/p5lCBR7+rCAJ4+Z6RA7bgx6OE8YI2QhKLVx8Bf7niBqyg
+ E+q8HPCVsK9A9d7RM04XRCGr5I32p1B80Sh8qYZ73BetOSxApsH5i8U
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -94,56 +94,82 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Add a test to verify that deallocating a page in a guest memfd region via
-fallocate() with FALLOC_FL_PUNCH_HOLE does not alter the shared or private
-status of the corresponding memory range.
+Add helper functions to allow KVM selftests to pin memory using
+CONFIG_GUP_TEST. This is useful for creating test scenarios where some page
+has an increased refcount, such as when testing guest_memfd in-place
+conversion.
 
-When a page backing a guest memfd mapping is deallocated, e.g., by punching
-a hole or truncating the file, and then subsequently faulted back in, the
-new page must inherit the correct shared/private status tracked by
-guest_memfd.
+The helpers open /sys/kernel/debug/gup_test and invoke the
+PIN_LONGTERM_TEST_START and PIN_LONGTERM_TEST_STOP ioctls. Since this
+functionality depends on the kernel being built with CONFIG_GUP_TEST,
+provide stub implementations that trigger a test failure if the
+configuration is missing.
 
-Co-developed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../selftests/kvm/x86/guest_memfd_conversions_test.c       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/testing/selftests/kvm/include/kvm_util.h |  3 +++
+ tools/testing/selftests/kvm/lib/kvm_util.c     | 25 +++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-index acdff2d154046..b7a54d2a90928 100644
---- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-+++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-@@ -10,6 +10,7 @@
- #include <linux/sizes.h>
- 
- #include "kvm_util.h"
-+#include "kvm_syscalls.h"
- #include "kselftest_harness.h"
- #include "test_util.h"
- #include "ucall_common.h"
-@@ -312,6 +313,19 @@ GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(unallocated_folios, 8)
- 		test_convert_to_shared(t, i, 'B', 'C', 'D');
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 575032e9791d2..3cfe243d7c8b0 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -1206,6 +1206,9 @@ static inline int pin_self_to_any_cpu(void)
+ 	return pin_task_to_any_cpu(pthread_self());
  }
  
-+/* Truncation should not affect shared/private status. */
-+GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
++void pin_pages(void *vaddr, uint64_t size);
++void unpin_pages(void);
++
+ void kvm_print_vcpu_pinning_help(void);
+ void kvm_parse_vcpu_pinning(const char *pcpus_string, u32 vcpu_to_pcpu[],
+ 			    int nr_vcpus);
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index cd468b2bb8343..b1456ed76e27e 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -19,6 +19,8 @@
+ #include <unistd.h>
+ #include <linux/kernel.h>
+ 
++#include "../../../../../mm/gup_test.h"
++
+ #define KVM_UTIL_MIN_PFN	2
+ 
+ u32 kvm_random_seed;
+@@ -645,6 +647,29 @@ int __pin_task_to_cpu(pthread_t task, int cpu)
+ 	return pthread_setaffinity_np(task, sizeof(cpuset), &cpuset);
+ }
+ 
++static int gup_test_fd = -1;
++
++void pin_pages(void *vaddr, uint64_t size)
 +{
-+	host_do_rmw(t->mem, 0, 0, 'A');
-+	kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	host_do_rmw(t->mem, 0, 0, 'A');
++	const struct pin_longterm_test args = {
++		.addr = (uint64_t)vaddr,
++		.size = size,
++		.flags = PIN_LONGTERM_TEST_FLAG_USE_WRITE,
++	};
 +
-+	test_convert_to_private(t, 0, 'A', 'B');
++	gup_test_fd = __open_path_or_exit("/sys/kernel/debug/gup_test", O_RDWR,
++					  "Is CONFIG_GUP_TEST enabled?");
 +
-+	kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	test_private(t, 0, 0, 'A');
++	TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_START, &args), 0);
 +}
 +
- int main(int argc, char *argv[])
++void unpin_pages(void)
++{
++	TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_STOP), 0);
++
++	kvm_free_fd(gup_test_fd);
++}
++
+ static u32 parse_pcpu(const char *cpu_str, const cpu_set_t *allowed_mask)
  {
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+ 	u32 pcpu = atoi_non_negative("CPU number", cpu_str);
 
 -- 
 2.55.0.897.gb25b4bd76c-goog
