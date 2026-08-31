@@ -1,76 +1,92 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548D54A43ED;
-	Mon, 31 Aug 2026 14:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF6C2DC350;
+	Mon, 31 Aug 2026 15:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788188256; cv=none; b=U0sWnuB8diZ9zK++H0L6qaIzQNh0mhD9vPesZNZmCuaOB0zbWiW3BgdfthTaBmZyLNEjp3wWOxxm89JdhwMYjHkenLkrbJVGyYTP93sOG91nJX4Qdxb0/jS1K5fp9/c7dTzc6kKO4W7/Z5+IUszbSCcYclin23ydbk529vODkmY=
+	t=1788188761; cv=none; b=UgTLFprUEMw7ZDsksi1zPhlVppD2yo/p2/YNjFk5IAkb6Jj8Dpc8w4fhhE6lsyeoJQXX5Qpz9HbaUL//kpDB284ozeQ5gTEGkQmMEjDkDK8JzIxpFfj+OvJUxxKqNiYZeUTfECZwgt5ZMoSpYq3918sD+PCNX1XlM8lKg/NN6Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788188256; c=relaxed/simple;
-	bh=hx8R/AApQKzG7E/fkYUEPAjK1cuHUksamCW4BIOX3Ec=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wnt+m2BFUjJZWXPEaJaSRobjUUzapi2eSzCV+jWAYuRMP+z+bymDcObbL5QG+ejPiYI/j03N+2pRwhsNnhxsRdxjkwWC1cHwhnYcy6joNANJXsQDDGjxKj91hBci88MzrwEk34lzRKx/LEVteZaeSKcdirokbPsLu1vSMMB7BXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=CEBXjHXo; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788188761; c=relaxed/simple;
+	bh=BDGGItK3Y2cuCahLN1xSaEEaxEmU2S2vFz4MO4pVCNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A1A+RXqGeQm7+Pee/DEx131UaQ2GRxyZsmBG/y1NXUx3Eydfl7hmxsT7kTnS4S4SkTGjyG/Qc07McFQzuZuamLvZMztXdA5XEt1O/Dj4abqBo+t7af8Upxopytr8mc0/DRXQV2adlakPY4eqSO+JdC4LqKh/0gxh/Cy4J6Og9fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wp+OP/kj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="CEBXjHXo"
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 3F804C018C;
-	Mon, 31 Aug 2026 14:57:26 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 14DDF1D;
-	Mon, 31 Aug 2026 14:57:23 +0000 (UTC)
-Date: Mon, 31 Aug 2026 10:58:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Rui Qi" <qirui.001@bytedance.com>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <pjw@kernel.org>,
- <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] riscv: ftrace: reject out-of-range non-direct targets
-Message-ID: <20260831105820.22085739@gandalf.local.home>
-In-Reply-To: <20260901020000.1-qirui.001@bytedance.com>
-References: <20260707121235.759104-1-qirui.001@bytedance.com>
-	<20260901020000.1-qirui.001@bytedance.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wp+OP/kj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F4821F000E9;
+	Mon, 31 Aug 2026 15:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788188760;
+	bh=HO8cmTtR0MakW3g1JFEX5UizaR105ubCT8Daiy7XPXk=;
+	h=From:To:Cc:Subject:Date;
+	b=Wp+OP/kjX+y16DhSvvDwM3nnnQy/TUHBYfzK7cuJmZ7h60T5ZdDZjAqCqOsr6Wrvi
+	 7+t9MaLlU6D9hQQZ4mYnfzT9gXfInmfo6K9AhowZ2bSILQkNMjjYJuDiiVQSOtTUVC
+	 e5l8Vin65bUeo0iD7ifMRSQ2u7LM91Hm4TtlhUdbec0pW7nlj9M3smhvHC2KajJAgT
+	 VLktMUuoFbXfq427pGfmGRKGoK2PT+Wf3WKKYmbFdMm/DD7RZhDE0rMjFHig2xcbN/
+	 4Ex+E1AS9R+Fc5NDfeH67ukokytdpSWfsbJJcR35HfM5hZ0GA1ktx4Pi0/+fKmn1A1
+	 czNDPOZ34/cug==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/2] tracing/probes: Fix BTF structure member finder
+Date: Tue,  1 Sep 2026 00:05:54 +0900
+Message-ID: <178818875393.104360.1469039168635349344.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: i3pjcmzphm14rwrt1owf6ty49twegz1t
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 14DDF1D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1//eGqi8bpd7aR+4JRxanQExgdzhlCWk8w=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=kimCP8YvJCUrptM2WnuQUVqNPk5kAPjReUuPtX6bnJo=; b=CEBXjHXo/VvdsMQTjfUVOvrvdTU2K9wWoKunjm5+neGQf+heP7S4QpWKvNqXJ5DC619z43JnJMeT4+2ZSC4pz2pgo5mdltlbKDtldo4R+juO5Z7HJfcVKmHpffF7T7AyoC/anhPYEbDZTmkBI/6BgNj5im8omFwbblloWVliimg=
-X-HE-Tag: 1788188243-30817
-X-HE-Meta: U2FsdGVkX19lQdUL0R9LZgKiHVJI6aXbwu2zVZ/wFibAXM2rhRi59Dnl1TnGlQ96Wv8srtUKsRWlob/uDFb7hygVDLaWVpyAgWSACryK37fyeTbGFDkskivDNtHwXiWByiLLiIIccRVuUuhFr5F/GWBMgdKYqKsXdEl17M1LAJ4E8qd64ogN0lg2HPP4oFPAJxVpzhIfaLIh9em+EHnxK9T4YFw2vWHXFWoDkbH9W0iF2Qjry0wl5pVjF7/cPFk8sMV/U2eS39zZ9Ryj/eGiJ0YPc7BivS9+FPKfj6YSq4aZ+vvlECRxB29glzPuCM99zhmBPx6gI8GV4Ds3DGEQjqbrxoWY1tkb
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 Aug 2026 11:50:45 +0800
-"Rui Qi" <qirui.001@bytedance.com> wrote:
+Hi,
 
-> Hi Steven,
-> 
-> Gentle ping on this patch. It's been over a month since submission
-> and I'd appreciate your review when you have a chance.
-> 
-> The patch fixes ftrace_modify_call() on RISC-V to properly validate
-> old_addr/addr instead of always treating sites as FTRACE_ADDR, and
-> rejects out-of-range non-direct targets that can't be dispatched
-> through the existing ftrace_caller path.
+This is a series of fixes for the BTF structure member finder in trace_btf.c
+Sashiko found 2 problems in it during reviewing the wprobe series.[1][2]
+I decided to pick those fixes as independent fix series.
+[1] https://lore.kernel.org/all/20260822095110.0772E1F000E9@smtp.kernel.org/
+[2] https://lore.kernel.org/all/20260830143859.D56991F00A3D@smtp.kernel.org/
 
-This patch looks very architecture specific. Is there a generic ftrace
-issue you have with this? "out-of-range" issues are specific to an
-architecture (x86 doesn't have this issue).
+ - [1/2] btf_find_struct_member() did not consider unnamed bitfields.
+   Fix it to skip such unnamed bitfields from nested struct search.
+ - [2/2] get_bitoffset_of_field() wrongly checks the field's
+   type->kflag for offset encoding. It should check the member's
+   type->kflag instead. Thus it adds member_type out-parameter to
+   btf_find_struct_member() to get the member's type information
+   and use it.
 
-You need the RISC-V maintainers to review and accept this patch. I don't
-see anything specific to generic ftrace infrastructure here, which is what
-I maintain.
+Thanks,
 
--- Steve
+---
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
 
+Masami Hiramatsu (Google) (2):
+      tracing/probes: Fix anon_stack check for unnamed bitfields in btf_find_struct_member
+      tracing/probes: Fix BTF kflag check for anonymous struct member access
+
+
+ kernel/trace/trace_btf.c   |   31 +++++++++++++++++--------------
+ kernel/trace/trace_btf.h   |    3 ++-
+ kernel/trace/trace_probe.c |   15 ++++++++-------
+ 3 files changed, 27 insertions(+), 22 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
