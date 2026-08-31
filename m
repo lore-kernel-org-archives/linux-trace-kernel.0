@@ -1,60 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E7B3D954D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 09:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C923DB620
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 09:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788167265; cv=none; b=n9QxRFq9CtR9hdxcJ9nZcsL+ItkqTMO5zOPIF2pHfv00vJ+gBQa+tSDoB6jN4xhTpsdbVcLFHn+6qwWx5S2rGpoO3lpoENXaXUHd6PVzuGHVdX1UWTjw8JnUZW1RTOwr6nUUxtDsgJIKZAgy0qVf5QKq51uF1o+ybuv7lQRFIZI=
+	t=1788167267; cv=none; b=RFWnfJTs5oZCLIWFRsMXag9tBw7c1BiPMhfh7aF4sZMkIbymNWawCKkZX9mkwUSJmmVs+8mlUF1Htfi+bNwcMEFgaUIlGN5Jeo3ABT/vrQve/cf0ACBljQCg7uk9VBePgVOL0UQ3IWol5ftsGHfIWsv632jMIamp0osq6BKzS00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788167265; c=relaxed/simple;
-	bh=9r5M4rIj4+hF+KtfQqrO2x8G++VULgRCMeD1ZgM3wHY=;
+	s=arc-20240116; t=1788167267; c=relaxed/simple;
+	bh=uSJomDprxsnWTtFPX/R2Afszocpxml5nszMvKZHe0KU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Soxj000h8p9d+OsgGCx8ux8Z4Yjn7azOIzhDKbozcSWgiA7dWvxeqZ4+qdlp25fRmAYguApzVNQ50mjNj0Ivb3MRTx8G+job+741vVlM3VTgBm+riHDOSGzpyAkX/ouTAOzhYUjVKiv7EZVAPn4WsJHWUFJw2P1cqW8jtSrKCmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eqhk/oyZ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=j/L0sG9BwRwjGH3LhumthipSGhaYZA+wBnSFcrBKg32TIZcG3BNtr59Bc3aKoS/5O4x2XnUSkLKkKM/K1+euxFO3O6EHLMvAkS43WHFrAgKpoU/GHNsX4zaxS7Lt1R+vSE3E/bOO1b9E168uurvQAxoH123IzeQdp5BLmTpsjlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DXLhWY6U; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eqhk/oyZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXLhWY6U"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788167262;
+	s=mimecast20190719; t=1788167263;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KV/Vux23DHgPSLGlb27mR1UC4IHDhvUez5agcR2b54Q=;
-	b=eqhk/oyZuNDKkyfQ0zmP++Rhr2bRVT5YbbIyqrTi5kxNkI0EAO0c2OF1Qdv3u5vkH6uko/
-	A/ZF5dQ4Ayv8OIl01HfykXkOSzCPPSPwduK9gGoEnoVfQVBFvWbs3yG7tYYhVZyEqNCJoI
-	HfIPDBROXnY0aBw/dfFfdHb/gQnZlIo=
+	bh=Gb4BBRJgsos+aIxLr9PMCch4Op1Of0hAHjtYV/DYPx8=;
+	b=DXLhWY6UHFDhTV4KBSaAs21KhD88whIXGlGhBFfV8jwZpFuKsHkbiWJZ/KPJDvWK8vWIFg
+	pbyDpRlGwV7Jc+lWDKtq0Y+HvSJfcmsy6yH2m6oKzr2u0/NMu/QAFtRb8iDYNbJo+VZlIi
+	HmmR3Hfi5fvI5eAldATJp6STxntKw9w=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-578-Ia3uqnTqOHilvwHzV_fL7w-1; Mon,
- 31 Aug 2026 05:07:37 -0400
-X-MC-Unique: Ia3uqnTqOHilvwHzV_fL7w-1
-X-Mimecast-MFC-AGG-ID: Ia3uqnTqOHilvwHzV_fL7w_1788167256
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-155-nmhHIhIeNTyhCdyEogHfYQ-1; Mon,
+ 31 Aug 2026 05:07:42 -0400
+X-MC-Unique: nmhHIhIeNTyhCdyEogHfYQ-1
+X-Mimecast-MFC-AGG-ID: nmhHIhIeNTyhCdyEogHfYQ_1788167260
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 77E6F1977536;
-	Mon, 31 Aug 2026 09:07:36 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CAA94195C248;
+	Mon, 31 Aug 2026 09:07:40 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 84EFD18005BB;
-	Mon, 31 Aug 2026 09:07:33 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A64DB18005BB;
+	Mon, 31 Aug 2026 09:07:37 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	bpf@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>,
 	Wen Yang <wen.yang@linux.dev>,
 	Tobias Schaffner <tobias.schaffner@siemens.com>,
 	Viktor Malik <vmalik@redhat.com>
-Subject: [RFC PATCH 10/20] tools/build: Add a feature test for bpftool-btf
-Date: Mon, 31 Aug 2026 11:05:14 +0200
-Message-ID: <20260831090524.106845-11-gmonaco@redhat.com>
+Subject: [RFC PATCH 11/20] tools/rv: Move argument parsing from in_kernel to utils
+Date: Mon, 31 Aug 2026 11:05:15 +0200
+Message-ID: <20260831090524.106845-12-gmonaco@redhat.com>
 In-Reply-To: <20260831090524.106845-1-gmonaco@redhat.com>
 References: <20260831090524.106845-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,60 +64,504 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: 8SQAobJyXU1Z_NdARrApDdfHEKgMM8duL8ebmJwe2KI_1788167256
+X-Mimecast-MFC-PROC-ID: XR4XjqU0Cv9GLaUte3Y-k_m3sbDZMm5EREPpd2hok24_1788167260
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-RV can run bpf monitors and also build them, only the latter requires
-the vmlinux.h from bpftool btf.
+The configuration of the in-kernel RV monitor is relying on global
+variables, some static and some extern and the argument parsing occurs
+there. That's not scalable especially if the configuration needs to be
+shared by other monitor implementations (e.g. BPF).
 
-Add a feature so that RV can be built with BPF support without having to
-build in-tree BPF monitors if not supported on the system.
+Move the common argument parsing in utils and use a global struct for
+the configuration. Implementation-specific configuration such as the
+reactors are still handled in the in-kernel source.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/build/Makefile.feature | 1 +
- tools/build/feature/Makefile | 7 ++++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ tools/verification/rv/include/utils.h |  17 ++-
+ tools/verification/rv/src/in_kernel.c | 176 ++++++--------------------
+ tools/verification/rv/src/utils.c     |  95 +++++++++++++-
+ 3 files changed, 149 insertions(+), 139 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 99eb0ea09537..18e3a7ae893a 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -129,6 +129,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          libdebuginfod			\
-          clang-bpf-co-re		\
-          bpftool-skeletons		\
-+         bpftool-btf			\
-          libunwind			\
-          libunwind-debug-frame		\
-          $(foreach arch,$(LIBUNWIND_ARCHS),libunwind-$(arch) libunwind-debug-frame-$(arch))
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 7d165018116a..2f01203dda5c 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -71,7 +71,8 @@ FILES=                                          \
-          test-libpfm4.bin			\
-          test-rust.bin				\
-          test-libopenssl.bin			\
--         test-bpftool-skeletons.bin
-+         test-bpftool-skeletons.bin		\
-+         test-bpftool-btf.bin
+diff --git a/tools/verification/rv/include/utils.h b/tools/verification/rv/include/utils.h
+index f24ae8282bd2..61f77a72a1a2 100644
+--- a/tools/verification/rv/include/utils.h
++++ b/tools/verification/rv/include/utils.h
+@@ -1,8 +1,23 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- FILES := $(addprefix $(OUTPUT),$(FILES))
- 
-@@ -383,6 +384,10 @@ $(OUTPUT)test-bpftool-skeletons.bin:
- 	{ $(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons'; } \
- 		> $(@:.bin=.make.output) 2>&1 && touch $@
- 
-+$(OUTPUT)test-bpftool-btf.bin:
-+	$(SYSTEM_BPFTOOL) btf help \
-+		> $(@:.bin=.make.output) 2>&1 && touch $@
++#include <stdbool.h>
 +
- # Testing Rust is special: we don't compile anything, it's enough to check the
- # compiler presence. Compiling a test code for this purposes is problematic,
- # because Rust will emit a dependency file without any external references,
+ #define MAX_PATH		1024
+ 
+ void debug_msg(const char *fmt, ...);
+ void err_msg(const char *fmt, ...);
++void mon_usage(int exit_val, char *monitor_name, const char *fmt, ...);
++int parse_arguments(char *monitor_name, int argc, char **argv);
++
++void ikm_usage_print_reactors(void);
+ 
+-extern int config_debug;
++struct config {
++	bool debug;
++	bool is_container;
++	bool trace;
++	int has_id;
++	int my_pid;
++	char *initial_reactor;
++	char *reactor;
++};
++extern struct config config;
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index e6dea4040f8f..90c340a73c76 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -4,7 +4,6 @@
+  *
+  * Copyright (C) 2022 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+  */
+-#include <getopt.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -16,14 +15,6 @@
+ #include <utils.h>
+ #include <rv.h>
+ 
+-static int config_has_id;
+-static int config_is_container;
+-static int config_my_pid;
+-static int config_trace;
+-
+-static char *config_initial_reactor;
+-static char *config_reactor;
+-
+ /*
+  * __ikm_read_enable - reads monitor's enable status
+  *
+@@ -66,7 +57,7 @@ static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
+ 	if (!available_monitors)
+ 		return -1;
+ 
+-	config_is_container = 0;
++	config.is_container = 0;
+ 	cursor = available_monitors;
+ 	while ((line = strsep(&cursor, "\n"))) {
+ 		char *colon = strchr(line, ':');
+@@ -83,7 +74,7 @@ static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
+ 			/* If there are children, they are on the next line. */
+ 			line = strsep(&cursor, "\n");
+ 			if (line && !strncmp(line, monitor_name, len) && line[len] == ':')
+-				config_is_container = 1;
++				config.is_container = 1;
+ 		}
+ 
+ 		found = 1;
+@@ -391,7 +382,7 @@ int ikm_list_monitors(char *container)
+ static void ikm_print_header(struct trace_seq *s)
+ {
+ 	trace_seq_printf(s, "%16s-%-8s %5s %5s ", "<TASK>", "PID", "[CPU]", "TYPE");
+-	if (config_has_id)
++	if (config.has_id)
+ 		trace_seq_printf(s, "%8s ", "ID");
+ 
+ 	trace_seq_printf(s, "%24s x %-24s -> %-24s %s\n",
+@@ -402,7 +393,7 @@ static void ikm_print_header(struct trace_seq *s)
+ 
+ 	trace_seq_printf(s, "%16s %-8s %5s %5s ", " | ", " | ", " | ", " | ");
+ 
+-	if (config_has_id)
++	if (config.has_id)
+ 		trace_seq_printf(s, "%8s ", " | ");
+ 
+ 	trace_seq_printf(s, "%24s   %-24s    %-24s %s\n",
+@@ -431,25 +422,25 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 	int val;
+ 	bool missing_id;
+ 
+-	if (config_has_id)
++	if (config.has_id)
+ 		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+-	if (config_has_id && (config_my_pid == id))
++	if (config.has_id && (config.my_pid == id))
+ 		return 0;
+-	else if (config_my_pid == pid)
++	else if (config.my_pid == pid)
+ 		return 0;
+ 
+ 	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
+ 			TEP_PRINT_COMM, TEP_PRINT_PID, TEP_PRINT_CPU);
+ 
+-	if (config_is_container)
++	if (config.is_container)
+ 		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
+ 	else
+ 		trace_seq_printf(s, "event ");
+ 
+-	if (config_has_id) {
++	if (config.has_id) {
+ 		if (missing_id)
+ 			/* placeholder if we are dealing with a mixed-type container*/
+ 			trace_seq_printf(s, "        ");
+@@ -490,24 +481,24 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	int val;
+ 	bool missing_id;
+ 
+-	if (config_has_id)
++	if (config.has_id)
+ 		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+-	if (config_has_id && config_my_pid == id)
++	if (config.has_id && config.my_pid == id)
+ 		return 0;
+-	else if (config_my_pid == pid)
++	else if (config.my_pid == pid)
+ 		return 0;
+ 
+ 	trace_seq_printf(s, "%8lld [%03d] ", pid, cpu);
+ 
+-	if (config_is_container)
++	if (config.is_container)
+ 		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
+ 	else
+ 		trace_seq_printf(s, "error ");
+ 
+-	if (config_has_id) {
++	if (config.has_id) {
+ 		if (missing_id)
+ 			/* placeholder if we are dealing with a mixed-type container*/
+ 			trace_seq_printf(s, "        ");
+@@ -548,8 +539,8 @@ static int ikm_enable_trace_events(char *monitor_name, struct trace_instance *in
+ 				   ikm_error_handler, NULL);
+ 
+ 	/* set if at least 1 monitor has id in case of a container */
+-	config_has_id = ikm_has_id(monitor_name);
+-	if (config_has_id < 0)
++	config.has_id = ikm_has_id(monitor_name);
++	if (config.has_id < 0)
+ 		return -1;
+ 
+ 
+@@ -596,7 +587,7 @@ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
+ 	struct trace_instance *inst;
+ 	int retval;
+ 
+-	if (!config_trace)
++	if (!config.trace)
+ 		return NULL;
+ 
+ 	/* alloc data */
+@@ -610,7 +601,7 @@ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
+ 	if (retval)
+ 		goto out_free;
+ 
+-	if (config_is_container)
++	if (config.is_container)
+ 		retval = ikm_enable_trace_container(monitor_name, inst);
+ 	else
+ 		retval = ikm_enable_trace_events(monitor_name, inst);
+@@ -645,7 +636,7 @@ static void ikm_destroy_trace_instance(struct trace_instance *inst)
+ /*
+  * ikm_usage_print_reactors - print all available reactors, one per line.
+  */
+-static void ikm_usage_print_reactors(void)
++void ikm_usage_print_reactors(void)
+ {
+ 	char *reactors = tracefs_instance_file_read(NULL, "rv/available_reactors", NULL);
+ 	char *start, *end;
+@@ -669,106 +660,6 @@ static void ikm_usage_print_reactors(void)
+ 
+ 	fprintf(stderr, "\n");
+ }
+-/*
+- * ikm_usage - print usage
+- */
+-static void ikm_usage(int exit_val, char *monitor_name, const char *fmt, ...)
+-{
+-
+-	char message[1024];
+-	va_list ap;
+-	int i;
+-
+-	static const char *const usage[] = {
+-		"",
+-		"	-h/--help: print this menu and the reactor list",
+-		"	-r/--reactor 'reactor': enables the 'reactor'",
+-		"	-s/--self: when tracing (-t), also trace rv command",
+-		"	-t/--trace: trace monitor's event",
+-		"	-v/--verbose: print debug messages",
+-		"",
+-		NULL,
+-	};
+-
+-	va_start(ap, fmt);
+-	vsnprintf(message, sizeof(message), fmt, ap);
+-	va_end(ap);
+-
+-	fprintf(stderr, "  %s\n", message);
+-
+-	fprintf(stderr, "\n  usage: rv mon %s [-h] [-q] [-r reactor] [-s] [-v]", monitor_name);
+-
+-	for (i = 0; usage[i]; i++)
+-		fprintf(stderr, "%s\n", usage[i]);
+-
+-	ikm_usage_print_reactors();
+-	exit(exit_val);
+-}
+-
+-/*
+- * parse_arguments - parse arguments and set config
+- */
+-static int parse_arguments(char *monitor_name, int argc, char **argv)
+-{
+-	int c, retval;
+-
+-	config_my_pid = getpid();
+-
+-	while (1) {
+-		static struct option long_options[] = {
+-			{"help",		no_argument,		0, 'h'},
+-			{"reactor",		required_argument,	0, 'r'},
+-			{"self",		no_argument,		0, 's'},
+-			{"trace",		no_argument,		0, 't'},
+-			{"verbose",		no_argument,		0, 'v'},
+-			{0, 0, 0, 0}
+-		};
+-
+-		/* getopt_long stores the option index here. */
+-		int option_index = 0;
+-
+-		c = getopt_long(argc, argv, "hr:stv", long_options, &option_index);
+-
+-		/* detect the end of the options. */
+-		if (c == -1)
+-			break;
+-
+-		switch (c) {
+-		case 'h':
+-			ikm_usage(0, monitor_name, "help:");
+-			break;
+-		case 'r':
+-			config_reactor = optarg;
+-			break;
+-		case 's':
+-			config_my_pid = -1;
+-			break;
+-		case 't':
+-			config_trace = 1;
+-			break;
+-		case 'v':
+-			config_debug = 1;
+-			break;
+-		}
+-	}
+-
+-	if (config_reactor) {
+-		config_initial_reactor = ikm_get_current_reactor(monitor_name);
+-		if (!config_initial_reactor)
+-			ikm_usage(1, monitor_name,
+-				  "ikm: failed to read current reactor, are reactors enabled?");
+-
+-		retval = ikm_write_reactor(monitor_name, config_reactor);
+-		if (retval <= 0)
+-			ikm_usage(1, monitor_name,
+-				  "ikm: failed to set %s reactor, is it available?",
+-				  config_reactor);
+-	}
+-
+-	debug_msg("ikm: my pid is %d\n", config_my_pid);
+-
+-	return 0;
+-}
+ 
+ /**
+  * ikm_run_monitor - apply configs and run the monitor
+@@ -805,9 +696,22 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ 	/* we should be good to go */
+ 	retval = parse_arguments(full_name, argc, argv);
+ 	if (retval)
+-		ikm_usage(1, nested_name, "ikm: failed parsing arguments");
++		mon_usage(1, nested_name, "ikm: failed parsing arguments");
++
++	if (config.reactor) {
++		config.initial_reactor = ikm_get_current_reactor(full_name);
++		if (!config.initial_reactor)
++			mon_usage(1, full_name,
++				  "ikm: failed to read current reactor, are reactors enabled?");
++
++		retval = ikm_write_reactor(full_name, config.reactor);
++		if (retval <= 0)
++			mon_usage(1, full_name,
++				  "ikm: failed to set %s reactor, is it available?",
++				  config.reactor);
++	}
+ 
+-	if (config_trace) {
++	if (config.trace) {
+ 		inst = ikm_setup_trace_instance(nested_name);
+ 		if (!inst)
+ 			goto out_free_instance;
+@@ -817,11 +721,11 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ 	if (retval < 0)
+ 		goto out_free_instance;
+ 
+-	if (config_trace)
++	if (config.trace)
+ 		ikm_print_header(inst->seq);
+ 
+ 	while (!should_stop()) {
+-		if (config_trace) {
++		if (config.trace) {
+ 			retval = tracefs_iterate_raw_events(inst->tep,
+ 							    inst->inst,
+ 							    NULL,
+@@ -840,14 +744,14 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ 	ikm_disable(full_name);
+ 	ikm_destroy_trace_instance(inst);
+ 
+-	if (config_reactor && config_initial_reactor)
+-		ikm_write_reactor(full_name, config_initial_reactor);
++	if (config.reactor && config.initial_reactor)
++		ikm_write_reactor(full_name, config.initial_reactor);
+ 
+ 	return 1;
+ 
+ out_free_instance:
+ 	ikm_destroy_trace_instance(inst);
+-	if (config_reactor && config_initial_reactor)
+-		ikm_write_reactor(full_name, config_initial_reactor);
++	if (config.reactor && config.initial_reactor)
++		ikm_write_reactor(full_name, config.initial_reactor);
+ 	return -1;
+ }
+diff --git a/tools/verification/rv/src/utils.c b/tools/verification/rv/src/utils.c
+index 5677b439dc2f..e19dd65ec789 100644
+--- a/tools/verification/rv/src/utils.c
++++ b/tools/verification/rv/src/utils.c
+@@ -5,11 +5,14 @@
+  * Copyright (C) 2022 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+  */
+ 
++#include <getopt.h>
+ #include <stdarg.h>
++#include <stdlib.h>
+ #include <stdio.h>
++#include <unistd.h>
+ #include <utils.h>
+ 
+-int config_debug;
++struct config config;
+ 
+ #define MAX_MSG_LENGTH	1024
+ 
+@@ -36,7 +39,7 @@ void debug_msg(const char *fmt, ...)
+ 	char message[MAX_MSG_LENGTH];
+ 	va_list ap;
+ 
+-	if (!config_debug)
++	if (!config.debug)
+ 		return;
+ 
+ 	va_start(ap, fmt);
+@@ -45,3 +48,91 @@ void debug_msg(const char *fmt, ...)
+ 
+ 	fprintf(stderr, "%s", message);
+ }
++
++/*
++ * mon_usage - print usage
++ */
++void mon_usage(int exit_val, char *monitor_name, const char *fmt, ...)
++{
++
++	char message[1024];
++	va_list ap;
++	int i;
++
++	static const char *const usage[] = {
++		"",
++		"	-h/--help: print this menu and the reactor list",
++		"	-r/--reactor 'reactor': enables the 'reactor'",
++		"	-s/--self: when tracing (-t), also trace rv command",
++		"	-t/--trace: trace monitor's event",
++		"	-v/--verbose: print debug messages",
++		"",
++		NULL,
++	};
++
++	va_start(ap, fmt);
++	vsnprintf(message, sizeof(message), fmt, ap);
++	va_end(ap);
++
++	fprintf(stderr, "  %s\n", message);
++
++	fprintf(stderr, "\n  usage: rv mon %s [-h] [-q] [-r reactor] [-s] [-v]", monitor_name);
++
++	for (i = 0; usage[i]; i++)
++		fprintf(stderr, "%s\n", usage[i]);
++
++	ikm_usage_print_reactors();
++	exit(exit_val);
++}
++
++/*
++ * parse_arguments - parse arguments and set config
++ */
++int parse_arguments(char *monitor_name, int argc, char **argv)
++{
++	int c;
++
++	config.my_pid = getpid();
++
++	while (1) {
++		static struct option long_options[] = {
++			{"help",		no_argument,		0, 'h'},
++			{"reactor",		required_argument,	0, 'r'},
++			{"self",		no_argument,		0, 's'},
++			{"trace",		no_argument,		0, 't'},
++			{"verbose",		no_argument,		0, 'v'},
++			{0, 0, 0, 0}
++		};
++
++		/* getopt_long stores the option index here. */
++		int option_index = 0;
++
++		c = getopt_long(argc, argv, "hr:stv", long_options, &option_index);
++
++		/* detect the end of the options. */
++		if (c == -1)
++			break;
++
++		switch (c) {
++		case 'h':
++			mon_usage(0, monitor_name, "help:");
++			break;
++		case 'r':
++			config.reactor = optarg;
++			break;
++		case 's':
++			config.my_pid = -1;
++			break;
++		case 't':
++			config.trace = 1;
++			break;
++		case 'v':
++			config.debug = 1;
++			break;
++		}
++	}
++
++	debug_msg("ikm: my pid is %d\n", config.my_pid);
++
++	return 0;
++}
 -- 
 2.55.0
 
