@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB5D3B71DA;
-	Mon, 31 Aug 2026 09:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDC03DAAB1;
+	Mon, 31 Aug 2026 09:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788169306; cv=none; b=ZRWWvhHZ75xnMzUc9q+mQHJh8zk3Zt6ev66cf+aYm0e2nJJkt1s+Nrbn0ge00htoqEcmjAkbDkle7qg2fpEXafaOu7a/OHl0E1zNFvNpkZfwQJUy4s/7sljygf+gXxRl322HO6QmlRudBemYYJ8FE69FPU8Q2s/pHHa3GFbE6uw=
+	t=1788169442; cv=none; b=kCw8taG0yapsa5xRgr/625fMv3SOGAmzEVQE/lcLLGRCNKN6tpGTMgNjNn5JJPHG6ROW9aam/AzNBzD9Z/4oA80hyDwRywnhu0XstlrdKj8hDAMx/AeUCoHvQKjyPOm7np+JXHjCOR4CyQJu/RhyCxDVwsGH3U+eAkdc1yiUV4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788169306; c=relaxed/simple;
-	bh=G/vWlsR6Zyop8nGpunfiyi7m+av8eWLKR+/lzfrUbz4=;
+	s=arc-20240116; t=1788169442; c=relaxed/simple;
+	bh=vRuIoghT0mruPhZScNVjR6AqsdQgjGXTidnqjZtE4tI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uuf+JTcx9KoxlxBfakKkxOW+w5GnvmQjzI1uMsCVCk0nkm4qjQ34oEe9TmDkE2cYpL0EDyHfrRWcslJ7AmUbyNqMZMXlB0g1/Ae3gj3dJq2P6MedUUWv2G0meyuck50zk/mknuv2glShy+g60ZSdMuwYT0jAnO35rTvLdS0duSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjsT6X8q; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=evd3kJP3lNXGytfnldHa5Ij4/1UqKXqW0sodMkFa0uV8c82DfnpD6hDqO/oNlpzzazQD/isf7qGci7/PS6kjVjunebFf2CwtGmaFeugbxIugdb5j/FBlNi+H6T/+NgwgYbG37/fEmYbKBW6Lmr13/q2O9QGL+RvrmnQmtJgCr2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExIXGdAo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjsT6X8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEAAD1F000E9;
-	Mon, 31 Aug 2026 09:41:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExIXGdAo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DD51F000E9;
+	Mon, 31 Aug 2026 09:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788169305;
-	bh=YBko+KbKsaQweY2012fIHU/9GWR0HwqVYKP8+V8VIlE=;
+	s=k20260515; t=1788169441;
+	bh=KamKTf6SLaH3ogkny6EVPx1QTF2YUhFtZl7AUyal9Mk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LjsT6X8q3uJu5tmLEVvEebpgzMYOwDl5w2CsjmvIMK4OoebG2mc8XENt0RFBM6xrm
-	 aqXb+GAJfnhzQwrOOc6nZKbiG8gUrEUpfDPCmK2JRyLDXim6grS7WVAOPQ9E1tucUT
-	 1UO7NmW0D4K98zeSzj6JeOgjA23bmj+mRI6d1DO2iCKRJu3uBFO1De0Q4RBNZsRURT
-	 EZxSfR75wre932CgYaoRh+rXRlAyLcCB885f/l6YifbNXGblXI5Eqm/AtU67jP3h9d
-	 +SLFTOV6mCwa31rKM6tVFK0JprGd6wewLt2PUftsINOyIBFGPWsd2oGF/eSZSfQNi7
-	 twmsdq5kar6gQ==
+	b=ExIXGdAokcHEeBjSVaHv0mwyhlOuUpTyado/cApYk+XjJJf5GjTitIVLZpMn+8ejr
+	 AHr9aOro6gXvjB97vLtrKpgEI9ZGhXv74MEK02rGLo6w/c/1MD3Gq3NN7I/bil7+Sz
+	 rUKW/FplNb+RWjc7fjWQbQBfyp3+a6lr7CFQl2xXfuB9LL9IHLJnvTtGvdrWIT8qBB
+	 PKDWs9dRj1XpVkgyvp3gGoNKg8nRI9TOEGpNa1tnRaA4oR8CseqV9WDn0FyJNbyOrp
+	 GYxd0i3DS3bgVJ1tdqJn5IBtBIhXPfsxXuo2+syorSMeewmhQaZMOZ5xPBe5tJRlmZ
+	 0B7P8unZ7R/eA==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 18/20] verification/rvgen: Add support for BPF
- monitors
+Subject: Re: [RFC PATCH 19/20] tools/rv: Add selftest for rv bpf
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Gabriele Monaco" <gmonaco@redhat.com>
 Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260831090524.106845-19-gmonaco@redhat.com>
+In-Reply-To: <20260831090524.106845-20-gmonaco@redhat.com>
 References: <20260831090524.106845-1-gmonaco@redhat.com>
- <20260831090524.106845-19-gmonaco@redhat.com>
+ <20260831090524.106845-20-gmonaco@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 09:41:44 +0000
-Message-Id: <20260831094144.DEAAD1F000E9@smtp.kernel.org>
+Date: Mon, 31 Aug 2026 09:44:00 +0000
+Message-Id: <20260831094400.D1DD51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,67 +46,70 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Generated BPF monitor arrays for state and event names lack null=
- termination if names are 32 characters or longer, leading to out-of-bounds=
- reads.
+- [Medium] ABA vulnerability in tracefs UAF mitigation due to pointer reuse.
 --
 
-commit 53fecfe68f54b9383a7c0b099f9a1311ed5ff3ef
+commit d6f30a79c0307745af03ca13f0fdeb754d0c04a9
 Author: Gabriele Monaco <gmonaco@redhat.com>
 
-verification/rvgen: Add support for BPF monitors
+tools/rv: Add selftest for rv bpf
+   =20
+Add selftest cases for the rv userspace tool BPF commands and monitors,
+test BPF monitors registration, unregistration and functionality,
+including traces and reactors.
 
-This commit adds the -b flag to the rvgen monitor tool to generate BPF
-monitors for deterministic automata. It updates the code generator to emit
-BPF-compatible array structures and hooks while maintaining the existing
-in-kernel monitor support.
-
-> diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification=
-/rvgen/rvgen/dot2c.py
-> index 22938ce1bf6cb..5be9fe44a19b2 100644
-> --- a/tools/verification/rvgen/rvgen/dot2c.py
-> +++ b/tools/verification/rvgen/rvgen/dot2c.py
-> @@ -111,10 +111,17 @@ class Dot2c(Automata):
->          min_type =3D self.get_minimun_type()
->          buff =3D []
->          buff.append(f"struct {self.struct_automaton_def} {{")
-> -        buff.append(f"\tchar *state_names[state_max{self.enum_suffix}];")
-> -        buff.append(f"\tchar *event_names[event_max{self.enum_suffix}];")
-> -        if self.is_hybrid_automata():
-> -            buff.append(f"\tchar *env_names[env_max{self.enum_suffix}];")
-> +        if self.bpf:
-> +            # BPF struggles with non-fixed string pointers
-> +            buff.append(f"\tchar state_names[state_max{self.enum_suffix}=
-][32];")
-> +            buff.append(f"\tchar event_names[event_max{self.enum_suffix}=
-][32];")
-> +            if self.is_hybrid_automata():
-> +                buff.append(f"\tchar env_names[env_max{self.enum_suffix}=
-][32];")
+> diff --git a/tools/verification/rv/tests/rv_bpf.t b/tools/verification/rv=
+/tests/rv_bpf.t
+> new file mode 100644
+> index 0000000000000..902343f0d3f10
+> --- /dev/null
+> +++ b/tools/verification/rv/tests/rv_bpf.t
+[ ... ]
+> +check "already enabled monitor returns error" \
+> +	"echo 1 > $RVDIR/monitors/nohz/enable; $RV mon nohz" 1 \
+> +	"monitor nohz (BPF) is already enabled"
+> +[ -n "$TEST_COUNT" ] && echo 0 > $RVDIR/monitors/nohz/enable
+> +
+> +check "already enabled monitor prevents unregistration" \
+> +	"echo 1 > $RVDIR/monitors/nohz/enable; $RV bpf unregister" 1 \
+> +	"monitor nohz is enabled, cannot unregister" \
+> +	"unregistered [0-9]\+ BPF monitor(s)"
+> +[ -n "$TEST_COUNT" ] && echo 0 > $RVDIR/monitors/nohz/enable
+> +
+> +check "unregister BPF monitors" \
+> +	"$RV bpf unregister" 0 "unregistered [0-9]\+ BPF monitor(s)"
 
 [Severity: Medium]
-Could this lead to out-of-bounds reads in BPF trace output if the monitor
-model has state or event names of 32 characters or longer?
+Could this sequence of registration and unregistration expose an ABA
+vulnerability in the tracefs use-after-free mitigation?
 
-When a fixed-size character array is initialized with a string literal equal
-to or larger than its size, the null terminator is silently omitted in C.
-If the names generated from the model are exactly 32 bytes or longer, these
-arrays will lack a null terminator.
+When a monitor is unregistered here, its struct rv_monitor inside the
+bpf_struct_ops map can be freed. If a user still holds a tracefs file
+(such as enable or reactors) open for this monitor, filp->private_data
+becomes a dangling pointer.
 
-Since the BPF verifier permits reading .rodata, string formatting helpers
-reading from these fields could run past the array bounds until a null byte
-is encountered in adjacent memory. This could cause garbled trace output and
-a minor info leak.
+If a new monitor is then loaded and allocated at the exact same memory
+address, the pointer check in monitor_enable_write_data() might pass
+incorrectly:
 
-Would it make sense to enforce truncation of the source string during
-generation, or explicitly ensure null termination here?
+kernel/trace/rv/rv.c:monitor_enable_write_data() {
+	...
+	guard(mutex)(&rv_interface_lock);
 
-> +        else:
-> +            buff.append(f"\tchar *state_names[state_max{self.enum_suffix=
-}];")
-> +            buff.append(f"\tchar *event_names[event_max{self.enum_suffix=
-}];")
+	if (!rv_is_monitor_registered(mon))
+		return -ENODEV;
+
+	if (val)
+		retval =3D rv_enable_monitor(mon);
+	...
+}
+
+Since rv_is_monitor_registered() simply checks if the raw pointer mon
+exists in rv_monitors_list, it would return true for the new monitor.
+This would allow a privileged user to accidentally or intentionally
+alter the state of the newly registered monitor using the old file
+descriptor.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831090524.1068=
-45-1-gmonaco@redhat.com?part=3D18
+45-1-gmonaco@redhat.com?part=3D19
