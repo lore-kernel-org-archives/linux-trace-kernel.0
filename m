@@ -1,58 +1,58 @@
-Received: from mta0.migadu.com (out-236.mta0.migadu.com [91.218.175.236])
+Received: from mta0.migadu.com (out-162.mta0.migadu.com [91.218.175.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744463955EF
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 10:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770CA34E74B
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 10:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788257636; cv=none; b=rZpws+x++J+TWbVheDhZvgdydzamUf+IS4LR+RQlUbWqu8HQcHiKuI/vD6yzgyq44x4YaFkQMZHuHWN679OBYMtuXl5OJ6zSKNfca573piC0g3Pf2saCoip3Bl06npZXRAIyl3TW1CeELaVUtpZSJWvxBrCdLfy/NjW3a4Ehm9o=
+	t=1788258899; cv=none; b=symEdmhjG4hfomg9f/r2/ZgH/uvB8gsaecS731yMX41F2wKVq4YNo3oLTku0a1uqGgRBWdlhdT9wMBB+3qLOww9/whMW2xeOedO+2ylnE9sqt0D1vS6IZQdZQ2rZhxxFNxKz1I1wJbTF75497QbmAq03mX+R/ol2qfwoxro3vSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788257636; c=relaxed/simple;
-	bh=AVdE0MD+h6o2Np6u6CwnfB0M91U/Y/LHHzhpZ1Tty+I=;
+	s=arc-20240116; t=1788258899; c=relaxed/simple;
+	bh=hGwrqJibjsI979lLLZMh7q1FzrzRBk6jSe5g0u5F2Qc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lkHArE4EKDoVe/wgYfUhcFTJINQ/zzmg4PWW3K3je2iMq8Ry94u24N3OOeOFqmFeHv+BCK2vxq13wAzLAatmLSR6d9ty6e5NEFLdbSwUQvRdlRupTjiejLQt16VWxJOVXzlDrcTQWBbxrGKfytuqlgUr6xuxW+qbI7kyI7uQqWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xIU+twcA; arc=none smtp.client-ip=91.218.175.236
+	 To:Cc:Content-Type; b=oVLPDzn+B3vxMHzpSmsnJAr3uGFqoPji+rDI7voMDueMFf1aW4DhLvknYMJVhYsJ+Rexs29tRCaxQ96bMehcoK9lgiJdsPB1CcY05BM9bTl42mscJQZfzncETMoD5mUKRAkQA5/jMmU0hrhQQ5qNYcIiMQTWcoRuyq60j0cgesI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mq1f/7Vu; arc=none smtp.client-ip=91.218.175.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xIU+twcA"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mq1f/7Vu"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=AVdE0MD+h6o2Np6u6CwnfB0M91U/Y/LHHzhpZ1Tty+I=;
+DKIM-Signature: a=rsa-sha256; bh=hGwrqJibjsI979lLLZMh7q1FzrzRBk6jSe5g0u5F2Qc=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788257632; v=1; x=1788862432;
- b=xIU+twcAlKDuQ7Bh/CxzKew9Eb2v2q9sQ6K1OhINRr8IcXwQ7k7j0C70c0D/9iJGdknFEfIk
- al9FqHJ/FQOeT5vqQzLdcJQpJpAHcWS4ialT5AUb7fID1gJQAReE7583f2JATc59lan9T6SyF9d
- G1BygXeStRWjSfOseXxd/bds=
+ t=1788258895; v=1; x=1788863695;
+ b=mq1f/7VuoYejo8kDH2nDeuJWEf7Id2zVtyoyl8edNXahhl/ikdcdIpHhhmivFQq3VauUspxs
+ 8cbDqtUigM/XVxHfnGXirlhX0Q3IyVbX2zqr1qbX6QTiALAXcwUqpnSAPvHda1I8U93b6Uca7tn
+ CpDVe6WLb/IQ7xMlxSL7/pBU=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 424b8922a0c43f7d;
-	Tue, 01 Sep 2026 10:13:52 +0000
-X-Mizu-Trace-ID: 424b8922a0c43f7d
+Received: by smtp.migadu.com with ESMTPS id b8b3d08cd4f89bea;
+	Tue, 01 Sep 2026 10:34:55 +0000
+X-Mizu-Trace-ID: b8b3d08cd4f89bea
 X-Migadu-Flow: FLOW_OUT
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5b2a73da7e1so6480e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 03:13:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvByp6IFuqEdkbCPpv2Ov0qJfIqsZ5Y/cK4IvBhccnx6hJk/SOUQ1TJZ4oX8hGqFGXWM3uG5SRP1ShZj1mXFZYc2yFJ4=@vger.kernel.org
-X-Gm-Message-State: AFuF++mzZxfYUhKmHOfoJVA7vsISp8/b654nXEYqpZVLkPsWM3HfvrjY
-	TGVEtlanD+iDjHFV6a6s/twHIa9ATUi8EFQN3F3aoDrGGF7M+JDnnws+jfdiXvDRrqKJPnBM3u4
-	/ffTwGzY0oj/YEduDUzld2v9ABx5bEC0GbmUswhcS
-X-Received: by 2002:a05:6512:3e0c:b0:5b2:a5e9:3aba with SMTP id
- 2adb3069b0e04-5b5ff28cff6mr137091e87.6.1788257629010; Tue, 01 Sep 2026
- 03:13:49 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5b5e5aaf7deso7042e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 03:34:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByJYyHpSUR12c3Jg6v7VkdGRRZapQ3gh3GNxaZYIaHGsajHaE/bEEJtrtDeE5HJNQSgh4Hi8xoi00nGxtNLW3hvX4Q=@vger.kernel.org
+X-Gm-Message-State: AFuF++l/1WzNaG7JpEq8zvpo026O25QZ9DdAIMoapvHPBgLD75VrkfOG
+	EbSOykW2Qb/zEeZQsoBseSL2j80wUZ+qU4vx6pWJeY1wc39mC9byAji34p7I6BKykVNzDHdazt+
+	qUm7jBls/SdPSV/dC0lseE/4PUL+FzazOgq+9H7cI
+X-Received: by 2002:a05:6512:ac4:b0:5a8:6646:d7b4 with SMTP id
+ 2adb3069b0e04-5b600a0b6f4mr114181e87.1.1788258889928; Tue, 01 Sep 2026
+ 03:34:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com> <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com>
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com>
+References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com> <20260830-gmem-inplace-conversion-v12-13-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-13-85e5fd25252a@google.com>
 From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Tue, 1 Sep 2026 11:13:00 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTz5phoUdE9W_FY846p9hUSu+dGtnz4JMUFN3eRxpjVQGQ@mail.gmail.com>
-X-Gm-Features: AcwNN1VxSYWT9NZrhIzgE-QIHtarTDbXrfKaWL85aQCa702UGFBp2Nv9VWlrElc
-Message-ID: <CA+EHjTz5phoUdE9W_FY846p9hUSu+dGtnz4JMUFN3eRxpjVQGQ@mail.gmail.com>
-Subject: Re: [PATCH v12 12/45] KVM: guest_memfd: Always fault from guest_memfd
- if in-place conversion is enabled
+Date: Tue, 1 Sep 2026 11:33:00 +0100
+X-Gmail-Original-Message-ID: <CA+EHjTxdJmjBu8vJqbZks3ANP7QFZzGvp4J7kqxvTNR-fKMmJA@mail.gmail.com>
+X-Gm-Features: AcwNN1W_H4CnVusKniYHLtrTvE9k4_Zq5YT-PzaJWqqbnOmAYps19c1F8GBPWTQ
+Message-ID: <CA+EHjTxdJmjBu8vJqbZks3ANP7QFZzGvp4J7kqxvTNR-fKMmJA@mail.gmail.com>
+Subject: Re: [PATCH v12 13/45] KVM: guest_memfd: Pass mapping type filter to
+ invalidation helper
 To: ackerleytng@google.com
 Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
 	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
@@ -90,30 +90,17 @@ On Mon, 31 Aug 2026 at 01:25, Ackerley Tng via B4 Relay
 >
 > From: Ackerley Tng <ackerleytng@google.com>
 >
-> If a guest_memfd memslot is created but the guest_memfd does not have the
-> GUEST_MEMFD_FLAG_MMAP set, KVM still fulfils guest faults by looking up the
-> memslot's userspace_addr.
+> Accept the mapping type filter as a parameter in the invalidation start
+> helper instead of querying it internally. This allows callers to specify
+> which mappings (shared, private, or both) should be invalidated.
 >
-> Set KVM_MEMSLOT_GMEM_ONLY if in-place conversion is enabled so that the
-> guest_memfd's memory will be used for both shared and private memory. With
-> in-place conversion, guest_memfd will be the only backing memory for the
-> memslot.
+> In the next patch, the conversion process will use this new parameter to
+> invalidate mappings only when they're different from the target state of
+> the conversion, i.e. invalidate only shared mappings on a shared to private
+> conversion and not both.
 >
-> No validation is performed to require userspace_addr to be a mapping from
-> the associated guest_memfd because even after validation, userspace is free
-> to remap something else at the provided userspace_addr.
+> No functional change intended.
 >
-> userspace_addr will still be used by functions like kvm_read_guest(), and
-> if userspace_addr does not match up with the corresponding memory in the
-> memslot's guest_memfd (whether userspace_addr points to the wrong offset or
-> some non-guest_memfd memory, etc), that is a user error.
->
-> Requiring both shared and private memory to come from the only associated
-> guest_memfd simplifies invalidation in stage 2 page tables. On a PUNCH_HOLE
-> operation on a guest_memfd, the invalidation is now guaranteed to be
-> invalidating only memory mapped from the given guest_memfd.
->
-> Suggested-by: Sean Christopherson <seanjc@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 
 Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
@@ -123,63 +110,66 @@ Cheers,
 
 
 > ---
->  Documentation/virt/kvm/api.rst | 22 ++++++++++++++--------
->  virt/kvm/guest_memfd.c         |  2 +-
->  2 files changed, 15 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 90a29424c54c8..668886f50024d 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -6381,10 +6381,16 @@ mapping for userspace_addr is not required to be valid/populated at the time of
->  KVM_SET_USER_MEMORY_REGION2, e.g. shared memory can be lazily mapped/allocated
->  on-demand.
->
-> -When mapping a gfn into the guest, KVM selects shared vs. private, i.e consumes
-> -userspace_addr vs. guest_memfd, based on the state in guest_memfd, which is the
-> -sole authority on private vs. shared memory.  See :ref:`KVM_CREATE_GUEST_MEMFD`
-> -to find out more about the creation-time shared/private status.
-> +When mapping a gfn into the guest, guest faults are always serviced from
-> +guest_memfd regardless of whether memory is shared or private.  KVM determines
-> +shared vs. private based on the state in guest_memfd, which is the sole
-> +authority on private vs. shared memory.  See :ref:`KVM_CREATE_GUEST_MEMFD` to
-> +find out more about the creation-time shared/private status.
-> +
-> +userspace_addr is expected to be the mmap()-ed address corresponding to the
-> +right offset within the guest_memfd. Any mismatch between userspace_addr and
-> +guest_memfd is not validated and is a user error. userspace_addr is only used
-> +for host-side guest accesses such as kvm_read_guest().
->
->  If in-place conversion is disabled, KVM selects shared vs. private, i.e consumes
->  userspace_addr vs. guest_memfd, based on the gfn's KVM_MEMORY_ATTRIBUTE_PRIVATE
-> @@ -6490,10 +6496,10 @@ specified via KVM_CREATE_GUEST_MEMFD.  Currently defined flags:
->                                 page tables. Private memory cannot.
->    ============================ ================================================
->
-> -When the KVM MMU performs a PFN lookup to service a guest fault and the backing
-> -guest_memfd has the GUEST_MEMFD_FLAG_MMAP set, then the fault will always be
-> -consumed from guest_memfd, regardless of whether it is a shared or a private
-> -fault.
-> +When the KVM MMU performs a PFN lookup to service a guest fault, the fault will
-> +always be consumed from guest_memfd, regardless of whether it is a shared or a
-> +private fault (unless in-place conversion is disabled and the backing
-> +guest_memfd does not have the GUEST_MEMFD_FLAG_MMAP flag set).
->
->  See KVM_SET_USER_MEMORY_REGION2 for additional details.
+>  virt/kvm/guest_memfd.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 >
 > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 0afe1468d2d9d..e41802944756b 100644
+> index e41802944756b..e19de803149c2 100644
 > --- a/virt/kvm/guest_memfd.c
 > +++ b/virt/kvm/guest_memfd.c
-> @@ -746,7 +746,7 @@ int kvm_gmem_bind(struct kvm *kvm, struct kvm_memory_slot *slot,
->          */
->         WRITE_ONCE(slot->gmem.file, file);
->         slot->gmem.pgoff = start;
-> -       if (kvm_gmem_supports_mmap(inode))
-> +       if (gmem_in_place_conversion || kvm_gmem_supports_mmap(inode))
->                 slot->flags |= KVM_MEMSLOT_GMEM_ONLY;
+> @@ -192,13 +192,13 @@ static void __kvm_gmem_invalidate_start(struct gmem_file *f, pgoff_t start,
+>  }
 >
->         xa_store_range(&f->bindings, start, end - 1, slot, GFP_KERNEL);
+>  static void kvm_gmem_invalidate_start(struct inode *inode, pgoff_t start,
+> -                                     pgoff_t end)
+> +                                     pgoff_t end,
+> +                                     enum kvm_gfn_range_filter filter)
+>  {
+> -       enum kvm_gfn_range_filter attr_filter = kvm_gmem_get_all_gfns_filter(inode);
+>         struct gmem_file *f;
+>
+>         kvm_gmem_for_each_file(f, inode)
+> -               __kvm_gmem_invalidate_start(f, start, end, attr_filter);
+> +               __kvm_gmem_invalidate_start(f, start, end, filter);
+>  }
+>
+>  static void __kvm_gmem_invalidate_end(struct gmem_file *f, pgoff_t start,
+> @@ -224,6 +224,7 @@ static void kvm_gmem_invalidate_end(struct inode *inode, pgoff_t start,
+>
+>  static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+>  {
+> +       enum kvm_gfn_range_filter filter = kvm_gmem_get_all_gfns_filter(inode);
+>         pgoff_t start = offset >> PAGE_SHIFT;
+>         pgoff_t end = (offset + len) >> PAGE_SHIFT;
+>
+> @@ -233,7 +234,7 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+>          */
+>         filemap_invalidate_lock(inode->i_mapping);
+>
+> -       kvm_gmem_invalidate_start(inode, start, end);
+> +       kvm_gmem_invalidate_start(inode, start, end, filter);
+>
+>         truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
+>
+> @@ -522,6 +523,8 @@ static int kvm_gmem_migrate_folio(struct address_space *mapping,
+>
+>  static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *folio)
+>  {
+> +       struct inode *inode = mapping->host;
+> +       enum kvm_gfn_range_filter filter;
+>         pgoff_t start, end;
+>
+>         filemap_invalidate_lock_shared(mapping);
+> @@ -529,7 +532,8 @@ static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *fol
+>         start = folio->index;
+>         end = start + folio_nr_pages(folio);
+>
+> -       kvm_gmem_invalidate_start(mapping->host, start, end);
+> +       filter = kvm_gmem_get_all_gfns_filter(inode);
+> +       kvm_gmem_invalidate_start(inode, start, end, filter);
+>
+>         /*
+>          * Do not truncate the range, what action is taken in response to the
 >
 > --
 > 2.55.0.897.gb25b4bd76c-goog
