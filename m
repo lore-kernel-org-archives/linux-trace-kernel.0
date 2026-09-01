@@ -1,73 +1,78 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1B047ECC6
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 13:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD2847F2CD
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 13:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788270377; cv=none; b=nbkwhrtEQTN4goIwU0kbuDZiMH3+yFZNl6vGLFfGObZ1Z1Nn06fQi2QIZHQFo2Utfw58rlWQVbley2Y36XPR0GuJIPBzW37SqXJlzRYjFjlvStcgRtEOCLNwP+TLwPcm1tr73F4QKLqrSps5Hn9ZkrDR/LEb98gcQdit+xVQEoI=
+	t=1788270379; cv=none; b=gvycr2w/yZuITuSd2YJlLBK840pTU6mBaXU4SqNzVonPJ3ummD6py2nGno7w90STVsPREKIQ2eq0+il8/4OnGEJpXF77i+mbfPxuchnSVoALeC5GJx85BtvX1fkJ3DjpQgXqLMR601T0zViq17LifmbwAMe8NkEvJUK4JmnwKQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788270377; c=relaxed/simple;
-	bh=bm8bp3OKvTpbmVk86pCxKeMFsEBnuwMNAx9kusqWPLg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BAmvnaSZBHDwHvk59r8FF+ta9Tl7OY56qhc2LaFPt6iqo11Wa2fw+wp+JnL0Sq3ydxYLrfCxLru+v7PgFAC19gZHhFA8mRGIslzr3SJ/rGs1SaVXRzDFq3o3pCsze1jMr8ik2uAffuIXgO4sud2EJh4yT69cskfII0RqmupXVrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CfyGHiWr; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1788270379; c=relaxed/simple;
+	bh=vTuXdHjoahpfvREK3vR0JpIpWmDjOwvXZYApg71J5w0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pY1X7Cadj67wDplQtBYe+3YN7O12V43JkEsRBXc7LpJXnRwf4GIB5oYF3h2DA8e4eSlTa+oI8ww1lnyAnd3SqvawtMPtB+ogHbixw8rXBsfyYZ4lnoY+nw3T5An13GFJF+HxpHUW3+Yho4AfC5rFVZZQoHwfFqMyDoh349bV0AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQubPDbH; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfyGHiWr"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-8557c3f270eso3953476b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 06:46:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQubPDbH"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-84faf0fa17eso4867852b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 06:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788270375; x=1788875175; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wwOVRZXUuFeiUE0jd/1FDXen2th6EKXLFmcEZJapFes=;
-        b=CfyGHiWryRfLOCo/uaY5apvPkjWgGPUOQCNFmh0c5GiZ3vSBk/fmao8zyt74nWN7zq
-         PaDwJYHGEhilO8PDjZyARTgHVc7AI+1xGa15uT0GZ948pI4GgTDTIWeLE4iO1oxCCw8v
-         hHsuhaEUPPem7qkA88NSkzvtTWZHGWU3C8NTLgm149LNOVP/hwQikSH/hxk5W9v1aEVq
-         31z+WsfdOdL7PgCY27LGSN+2yKwdUOZvzgIWa3Ol3r2xZajOshFiCECMAiUBwidDFngS
-         uC7Qd6dsxAvVoQuI+JR3JnSXr1lDJxXgi/6olOU5tyIFthSx+0w+nG6kCX1vWGVrEQ8D
-         hWzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788270375; x=1788875175;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1788270377; x=1788875177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=wwOVRZXUuFeiUE0jd/1FDXen2th6EKXLFmcEZJapFes=;
-        b=T28sokhnC9rhdzTJYPWATHhtM0onjA4bA98T9wF02bkcE96r5tJ+kLc6xwwh8Srhje
-         Cg4Isn+DVVQQ1kBT7oxrzJoueIurpgKlhFyC79UbVJ2ka5w1xhTcnmvIhPazpad+Sm0p
-         0PNyjzgcyb3QrGq+al5Pep9xm1XzJ3TL+480rhuNXz/8ltWryglAoz2VmQBUgEwuR6fK
-         VIs+HpQOMObd9cXKS+ch0yisebHHwjGvO45poTceZhpCjRjU5ETNIWwrRr8dbd8Ifr1k
-         3P+LoNmv/BYeHkq8G/xM/ttWY18fxlNKwW+mhwF58AXqmjpmW2qK8/jsFSvAphHOj9mV
-         UmJQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rq6TKrxy08A3NUpshlv5JYyitXnjRvKsQuNXuhsx04XNMCldN6hGqEcnKfYPcytV1YPyaWIRP9eWhRlP9O5Lo83tLY=@vger.kernel.org
-X-Gm-Message-State: AFuF++kzk4nAjTqczxR2Lgm+SWm6f1txU2XPUX7iVSMBgBDXxmZ1iZ+V
-	iuj4EGwQ6WWQoejQ5ytuIdXa8ud77WFpBYzlkps7rAB1vmNWsyRMIy82
-X-Gm-Gg: AR+sD13xx6S1WEX9lyC60yKD291pI4ff2bZ7v6AzhPNx1Axg7sFp61lk+T/vkRKWJG1
-	A1Ns+AxBKLdJ+Eaqryz7t6hf4xO1+mCi0vWFILfr0dHY756LI0LCZEb9V2LAQfkKwR/T9qSI36L
-	oFVDB5FbDmXyJAZCvmrYW7c6Tcq5kplNtpjGrsI5KP1Po4/BvRfMQHAQIfxpXJ6eELWH89kCoBZ
-	0IuW1aR/98eZ3WvK//dhjDCsuCh7qZza18OH/tSIySR53/s19ClY1J8ba/EnLFyCOV2cRlB9VtO
-	95I0I91UsSs7SK2CmgibQDjLcfHxWZ1DkLmNOCRB1HNdq53XKT7J5kch7KzaEAbx7y1/0EfBsyl
-	zX7KgxMTFnPSRsQ9Pps1K6cGF92cQGQRnJQ05kHPl4VuSjS+gEuEq3OWTzbZKyJZ/xEMcEauYos
-	dl8xucJ96cFEi7XjqJQk1YXQO3uaZmGXXlMt4qDCD6vKiI55EnfzqJyELdezxTH4MT4m94HC9YV
-	iLB
-X-Received: by 2002:a05:6a00:1f11:b0:857:73e2:9105 with SMTP id d2e1a72fcca58-85773e29383mr38768468b3a.21.1788270374889;
-        Tue, 01 Sep 2026 06:46:14 -0700 (PDT)
+        bh=VVcj/Jgo+entMeAtqsoiHxTBvbTk7zVsLySF0C5WcdM=;
+        b=mQubPDbHp2C4r0ur3ETgpaE3iTvn5Q2owz3zGfUibQrN99R2igaGfQpmfnNHcvH+85
+         p7pX6URJbq3XijPUATSZbnvL+CovUQTu+uWYBjffuvp8Q7FrvBbGaAyMUZaSDnOgmE8V
+         e3rUlOJWBM2MBI9Vdime67UDhyTC4qKa1FZWzZ+SuE7ifAQjw9mRBN6L1ilTBZKbCfqD
+         o2O576aQxFOFlnqFEuc+Rpwv1HlI02BmGB8v16OGfUKRiyQvH7zV+qaPn4Mkb1NqdbyI
+         BLxuGX+W0pUnp692Md5Eya6mZocWdrO1FHUpyxRXERf7ow4lVFX8Db+bYP6da3ODzBT+
+         UOBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788270377; x=1788875177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=VVcj/Jgo+entMeAtqsoiHxTBvbTk7zVsLySF0C5WcdM=;
+        b=PxruD/5j0aghJa+ojYvjNeBn2WIaiBJYbG2B/NYCsulsGchzSGJ5I+aShOx0upEz+7
+         JYPVIrD8jho/QGszAXXW/bMiEO/qNoUl40rWoMfo/RWRtqkzr99+TZzq+haaVmaM8Rhp
+         Jle5aqe8yQBm6vQA5PuawWcgYjmEZUPfKUwLzbm+AwusJ06cCVCfikmHa2rtaSHblv+h
+         SV2g4ZH8WO2N+AsrqttnTjgYUJiTmqt9Upi9wEHMs1cOJnNbg/rIUeF5SNk9PaFQcsA0
+         t3pABFeDwExCdhLsDxyVx8st1sWrR72fi0tyjy8Rry46tSa2t4o02isc0ZFJsXbcEy7T
+         EhcQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpepqtEWNxINN8H7x++XW2mXK0UXd/GgPyhMkhDeGKM7OXa9jwNjhd9BbDmYa/PPHK1WN5T/b8lTHo76GLALuvscog=@vger.kernel.org
+X-Gm-Message-State: AFuF++kcvuzYqJOrV6ysYRmzfcGkroKJBo66VdS+fLcsW3Ha5Ha1J1dL
+	4GeG7JWCM10du5WdpcNSCH1mR9oK1AUyDCATVEZySBYx+CCncOC33+i6
+X-Gm-Gg: AR+sD13gXkAw/2KmEfXLiwENxxwSD451d0OBjPhWHTwfWX3faAydGwYQ/zH5He8drvV
+	h3Iu06U+cLKPXzW+2WRNnFqOoJKlFgTe2Pgv06PVSdCLcfccCl71VZcwdFgUQrgWDQz0RCsxVKf
+	aRt6v76CJisu6LW1TakDqNL8tHoZo2fV782IAIoHVu7Ez36gMcEK5HrExzIjGyAcfog48Ogh8tC
+	3NdliLwUDVNWC/Un/nk/ScVX2QqMmutktoGMpee8gmcTQl6kjR8rGM5A0kNZ1luVSmNWJTeHBzP
+	wD6DEOln4weIKpABLDKQp0N8U1iBZh4/LOMRUqOg1tcY+JmfzUih87Y8X+BP0PB+bAS5BBz/3nG
+	1M2sPd1b3sdjhmcCRuhsW8NjMIGqTwXg1J83X4BntegP42wJtm7GuzfXu/HPBkmoxpqtfkvQ5Nl
+	dKSlrM2a0JLdag57r4/NeNJZfw8li4RWdtHmxMx510HWGAm5iBc6hub2b6esA6vRixBKHa0X/cq
+	/2M
+X-Received: by 2002:a05:6a00:a221:b0:857:7337:5db9 with SMTP id d2e1a72fcca58-85773375f9cmr32559402b3a.23.1788270377256;
+        Tue, 01 Sep 2026 06:46:17 -0700 (PDT)
 Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85be8f52cb4sm1132502b3a.39.2026.09.01.06.46.12
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85be8f52cb4sm1132502b3a.39.2026.09.01.06.46.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 06:46:14 -0700 (PDT)
+        Tue, 01 Sep 2026 06:46:16 -0700 (PDT)
 From: Donglin Peng <dolinux.peng@gmail.com>
 To: rostedt@goodmis.org
 Cc: mhiramat@kernel.org,
 	dolinux.peng@gmai.com,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	pengdonglin <pengdonglin@xiaomi.com>
-Subject: [PATCH v5 0/3] Use BTF to trim return values
-Date: Tue,  1 Sep 2026 21:46:01 +0800
-Message-Id: <20260901134604.4052265-1-dolinux.peng@gmail.com>
+	pengdonglin <pengdonglin@xiaomi.com>,
+	Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+Subject: [PATCH v5 1/3] ftrace: Build trace_btf.c when CONFIG_DEBUG_INFO_BTF is enabled
+Date: Tue,  1 Sep 2026 21:46:02 +0800
+Message-Id: <20260901134604.4052265-2-dolinux.peng@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260901134604.4052265-1-dolinux.peng@gmail.com>
+References: <20260901134604.4052265-1-dolinux.peng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -78,92 +83,50 @@ Content-Transfer-Encoding: 8bit
 
 From: pengdonglin <pengdonglin@xiaomi.com>
 
-The funcgraph-retval option currently records one machine-word return
-value without considering the function's declared return type. As a
-result, void-returning functions can produce meaningless output, and
-return values narrower than a general-purpose register can include
-undefined high bits.
+The trace_btf.c file provides BTF helper functions used by the ftrace
+subsystem. Make the compilation of trace_btf.c solely depend on
+CONFIG_DEBUG_INFO_BTF, allowing features like funcgraph-retval to also
+utilize these helpers.
 
-This series uses kernel BTF to identify the return type of traced
-functions and to improve funcgraph-retval output:
+Additionally, the redundant dependency on CONFIG_PROBE_EVENTS_BTF_ARGS
+is removed, as CONFIG_DEBUG_INFO_BTF already depends on
+CONFIG_BPF_SYSCALL.
 
-  - Do not print a return value for functions with a void return type.
-  - Trim integer, enum, struct, and union values to the available return
-    value width when the BTF type provides suitable size information.
-  - Format integer, enum, and boolean values according to their BTF
-    encoding.
-  - Mark values as "(trunc)" when the return type is wider than the
-    value captured by the function graph tracer.
+Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+---
+ kernel/trace/Kconfig  | 2 +-
+ kernel/trace/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Here is an output comparison:
-
-Before:
- # perf ftrace -G vfs_read --graph-opts retval
- ...
- 1)               |   touch_atime() {
- 1)               |     atime_needs_update() {
- 1)   0.069 us    |       make_vfsuid(); /* ret=0x0 */
- 1)   0.067 us    |       make_vfsgid(); /* ret=0x0 */
- 1)               |       current_time() {
- 1)   0.197 us    |         ktime_get_coarse_real_ts64_mg(); /* ret=0x187f886aec3ed6f5 */
- 1)   0.352 us    |       } /* current_time ret=0x69380753 */
- 1)   0.792 us    |     } /* atime_needs_update ret=0x0 */
- 1)   0.937 us    |   } /* touch_atime ret=0x0 */
-
-After:
- # perf ftrace -G vfs_read --graph-opts retval
- ...
- 2)               |   touch_atime() {
- 2)               |     atime_needs_update() {
- 2)   0.070 us    |       make_vfsuid(); /* ret=0x0 */
- 2)   0.070 us    |       make_vfsgid(); /* ret=0x0 */
- 2)               |       current_time() {
- 2)   0.162 us    |         ktime_get_coarse_real_ts64_mg();
- 2)   0.312 us    |       } /* current_time ret=0x69380649(trunc) */
- 2)   0.753 us    |     } /* atime_needs_update ret=false */
- 2)   0.899 us    |   } /* touch_atime */
-
-Changelog:
-
-v5:
-  - Add an inline fallback for btf_trim_retval() when
-    CONFIG_DEBUG_INFO_BTF is disabled.
-  - Release the BTF reference after return type lookup.
-
-v4:
-  - Link: https://lore.kernel.org/all/20251215034153.2367756-1-dolinux.peng@gmail.com/
-  - Build trace_btf.c when CONFIG_DEBUG_INFO_BTF is enabled.
-  - Remove the redundant BPF_SYSCALL dependency from
-    CONFIG_PROBE_EVENTS_BTF_ARGS.
-  - Update the funcgraph-retval documentation and cover letter.
-
-v3:
-  - Link: https://lore.kernel.org/all/20251209121349.525641-1-dolinux.peng@gmail.com/
-  - Print the return value based on its type for human readability,
-    thanks Masami.
-  - Update the documentation and cover letter.
-
-v2:
-  - Link: https://lore.kernel.org/all/20251208131917.2444620-1-dolinux.peng@gmail.com/
-  - Update the funcgraph-retval documentation.
-  - Revise the cover letter.
-
-v1:
-  - Link: https://lore.kernel.org/all/20251207142742.229924-1-dolinux.peng@gmail.com/
-
-pengdonglin (3):
-  ftrace: Build trace_btf.c when CONFIG_DEBUG_INFO_BTF is enabled
-  fgraph: Enhance funcgraph-retval with BTF-based type-aware output
-  tracing: Update funcgraph-retval documentation
-
- Documentation/trace/ftrace.rst       | 88 ++++++++++++++++------------
- kernel/trace/Kconfig                 |  2 +-
- kernel/trace/Makefile                |  2 +-
- kernel/trace/trace_btf.c             | 68 +++++++++++++++++++++
- kernel/trace/trace_btf.h             | 16 +++++
- kernel/trace/trace_functions_graph.c | 50 ++++++++++++----
- 6 files changed, 173 insertions(+), 53 deletions(-)
-
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 0ab5916575a9..d8faeb659cfc 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -770,7 +770,7 @@ config FPROBE_EVENTS
+ config PROBE_EVENTS_BTF_ARGS
+ 	depends on HAVE_FUNCTION_ARG_ACCESS_API
+ 	depends on FPROBE_EVENTS || KPROBE_EVENTS
+-	depends on DEBUG_INFO_BTF && BPF_SYSCALL
++	depends on DEBUG_INFO_BTF
+ 	bool "Support BTF function arguments for probe events"
+ 	default y
+ 	help
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index f934ff586bd4..28b08f31e7e5 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -119,7 +119,7 @@ obj-$(CONFIG_KGDB_KDB) += trace_kdb.o
+ endif
+ obj-$(CONFIG_DYNAMIC_EVENTS) += trace_dynevent.o
+ obj-$(CONFIG_PROBE_EVENTS) += trace_probe.o
+-obj-$(CONFIG_PROBE_EVENTS_BTF_ARGS) += trace_btf.o
++obj-$(CONFIG_DEBUG_INFO_BTF) += trace_btf.o
+ obj-$(CONFIG_UPROBE_EVENTS) += trace_uprobe.o
+ obj-$(CONFIG_BOOTTIME_TRACING) += trace_boot.o
+ obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
 -- 
 2.34.1
 
