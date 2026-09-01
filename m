@@ -1,136 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20791480DF0
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 16:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5F73859D7;
+	Tue,  1 Sep 2026 17:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788281350; cv=none; b=jJ+x55B7yhQmQCM0u2DVXYJe9bJqyMQ1H8d8W2xzwqurP/Jw+TOur5zwluQtTePfUrY+bz2iDNywEmWSOhewnQwpfbFDJGOqWhWwqaAcRii8W6LlLxUfReRbhXflFTPrZ0uqRDj1N4qSS3lG3FLqg1lTcvmCfqFqYJsXLmQHh8I=
+	t=1788284986; cv=none; b=cC7vwK7EWDJZFD5MMda4neNRHzXpg9THKmGDYd5AEgFuX5wp9gMzJw2BBnwjqYZ5vhOCi9QZVQfTdyJZHUqXtQfA30HUDx19MhDA9209Ca640k5rgYqpaxx4SSfJ1be9JkxoJFVPjrSucbUIZEMt1CYyQ4rRAq1dXHi8c15jeK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788281350; c=relaxed/simple;
-	bh=P+ghaIFdvhiv1gc5rr1LafGAKnlltIHpWDu3K7S4lz8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RGLngfZz0b5FIqi8dhQW/2Isj8J5iBLuxGOnKbpiMxgeShsf1Lzbs+82DtqONouKHLhGs/LBLZh6LGsteXY9ui+qWbIDSFz9/ft27qoikBBT11k1ZrYn4F1A6HPZeuVk/GpGqAZYty2Z16wYFlLNk+o8ikz9A82mNxNNnT9Cj/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RutvT3Sp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1788284986; c=relaxed/simple;
+	bh=cnAoMGE9nklht8651wLeA0npk+YDqzAEltkj6uh38Lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ldt88h21zxMYG7FesMAFJJzt8DmZ+6FDSLBdD9revXK50w8onkrMZR0BppCZGse7Y3WD87cyu8QrVtzQIW4iL2IoCW2ILlg14xN+PSgQI5Cqku6X+5psac+qp3QJ2XBpJtJS67lhNh7UAIhnrOUdLiNV/w5Hjof3rbonABn7acs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=1mgqFkkr; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RutvT3Sp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788281347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HQdU6nS9X5s/Sk+3p7QLJBTOkdIV0pLZBILT9fDuDE4=;
-	b=RutvT3SpEQh+MxWdCDwCMPkn2F7dpHrvwL2mJEE5+xdHn1+YS6ZKgXQLSfs12QXvU6bOA3
-	RKdegNAOzIBL3Q/yXzW3urbPhkbVo0R5MYjToqW47rcXcUNsJ/fmw1ybTfyycekJFU16B/
-	wUYz2EXuKVyRSDiYBaCew4aLsCkX+rk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-208-1N2ooOimOl69bJ72Y4XlcA-1; Tue, 01 Sept 2026 12:49:06 -0400
-X-MC-Unique: 1N2ooOimOl69bJ72Y4XlcA-1
-X-Mimecast-MFC-AGG-ID: 1N2ooOimOl69bJ72Y4XlcA_1788281346
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-936e393061dso16578485a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 09:49:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788281346; x=1788886146;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HQdU6nS9X5s/Sk+3p7QLJBTOkdIV0pLZBILT9fDuDE4=;
-        b=mc083W8Dvihh//RilU94CCsOR8v2DohqpuMXNH5DUMLQ8jUEWI89W6l5rDj5X/ELGF
-         1msjrre/GF3bQkbKDDOQhNfumurtjh4CFewO2x/39ZhI9cOCWpAcdCM6aGr8ohwlxr8n
-         twNiBW8tRib77Dn+m1jPLv14Okh/8YVJ0TcC6mNTOobmO2RX56qu9P3Q1XXEvliSRnPQ
-         6mQH5BQCYdf0/26UNavSSblelRJvk/qBONrReGnmMEU8ZTty8P6lzVcOKPPwHblS50y3
-         yxS+50jHj9sN7Ao9QahT9cUhc4AzfGuE+nL6HZ5j4e8Dr+1uEbDyIB/5K9cjqV6LacyG
-         WQvw==
-X-Forwarded-Encrypted: i=1; AHgh+RrQ3UfkbPhiohPvteMt5kzJNskyeGlf8pOMeJvv3bau3W9GFYVFyFaKJPjugYdVBTn+O0zcRzN4MtmxA+Z9qzOdco0=@vger.kernel.org
-X-Gm-Message-State: AFuF++m3DSfKXwDOnzaWGHDQElLvpKJMW+XfcKhdd+/9ioYT8po1yKiv
-	MHL6z0cHSQNCdwHYfMQLIAoo+NxdAJXRfrsvMjpZXPKwuGEG8/orXaVAPDLBS+IL7dr11oaIW9D
-	q80HMBQBZwrE4rRiZB9V3Ps5BQoqdRTmgtgOUggk6FEjBhKUWGXSuW4gbmc9a6sSrffK1HFNZUA
-	==
-X-Gm-Gg: AR+sD13GcjN5auIDxvUKEKnSl+Bet+TSS1hYN2oFkuyBh2nPvxqlHR9mvjKf/rgqUs7
-	FpC5i5uxNr5nbkJBNzdafWYVLvGnMWDT+ya8FJL1WurdzW/hNXDMS16rjTss4SEnnzBu+2U2jPz
-	gGVE0sXixcLsxOcTsMWISdIpdKBlzXPGpnW0iMSXwsAqxeVcFQC3asJzIVYD5t83YlFG1rSqsRt
-	oOdO7dSSP76J07WNeNIUIURaAU2MIL5q5fR4O/pAJL5HMJbwDM9i6Gp/e/wHQfBuKEELnekhtry
-	86HvJjyqnRgHsDCjO0nGrsRlklcsJJCqRKYvdLBiXau87RqAAwgJHC9oAZqfNfFejaZ4PPbBV6+
-	uaqph0DKngtYsCLEZjON3TKv76k/3PXSK
-X-Received: by 2002:a05:620a:2b43:b0:936:bc78:791b with SMTP id af79cd13be357-9391379810fmr4573152285a.15.1788281346119;
-        Tue, 01 Sep 2026 09:49:06 -0700 (PDT)
-X-Received: by 2002:a05:620a:2b43:b0:936:bc78:791b with SMTP id af79cd13be357-9391379810fmr4573141485a.15.1788281345545;
-        Tue, 01 Sep 2026 09:49:05 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc01:6890:c623:cd89:345e:99f3])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-939170138eesm1085336385a.3.2026.09.01.09.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 09:49:05 -0700 (PDT)
-Message-ID: <1aeef720f40a21514c42ed7a76779086e867ebaf.camel@redhat.com>
-Subject: Re: [PATCH 1/4] tracing/osnoise: Per-cpu mutex and fd detachment
-From: Crystal Wood <crwood@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
-	linux-trace-kernel@vger.kernel.org
-Date: Tue, 01 Sep 2026 11:49:04 -0500
-In-Reply-To: <CAP4=nvTE0YsxMUTJuC2uT=T-5TX29JDZ1axR6nZBP7XjMNV0WQ@mail.gmail.com>
-References: <20260824211544.3984835-1-crwood@redhat.com>
-	 <20260824211544.3984835-2-crwood@redhat.com>
-	 <CAP4=nvTE0YsxMUTJuC2uT=T-5TX29JDZ1axR6nZBP7XjMNV0WQ@mail.gmail.com>
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="1mgqFkkr"
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id E5B95804FF;
+	Tue,  1 Sep 2026 17:49:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 18B6320027;
+	Tue,  1 Sep 2026 17:49:28 +0000 (UTC)
+Date: Tue, 1 Sep 2026 13:50:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@kernel.org>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Muchun
+ Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R.
+ Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Nico
+ Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain
+ <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, Lance Yang
+ <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, Gregory Price
+ <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
+ Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng
+ <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song
+ <kasong@tencent.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, Jonathan
+ Corbet <corbet@lwn.net>, Jan Kara <jack@suse.cz>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>, Shuah Khan
+ <skhan@linuxfoundation.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, kexec@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 14/14] mm/page-flags: remove PG_private
+Message-ID: <20260901135027.028ea9e4@gandalf.local.home>
+In-Reply-To: <21998471-74B7-4799-9E8C-D75003D1A4CB@nvidia.com>
+References: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
+	<20260831-remove-pg_private-v2-14-3668159cd9e8@nvidia.com>
+	<20260901115542.35cf337f@gandalf.local.home>
+	<21998471-74B7-4799-9E8C-D75003D1A4CB@nvidia.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: nSi6MbyTprya9bC_2-k6k3yA21meduGcg8Z1heho3Ys_1788281346
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 18B6320027
+X-Stat-Signature: 7ef3suggza6rwrwt98ucxd5tb1in8g7f
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19gFCgDW4g7ez/BxoPyHANfn1/41/yL2k8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ygP2WicIyxvIfgiulI4Z+w98tf+NFr5YAyeGttsc9pU=; b=1mgqFkkrL4Js3FsbhN/khvoOEvnHVh/aadmAMTCUde9xGE7BUvdArUa1RFWye4SH2Ctek4vS4gXiMbJcZCGFh5DVr4gJ1YyJQrfjy3W7IYtjDzLOP7asP560ZaX5A29U3FwYxXzeZu3rRui/fC5b+U4Jy3KfK07GTDhVffGq7Bg=
+X-HE-Tag: 1788284968-292977
+X-HE-Meta: U2FsdGVkX19FFDvFfWjTCdlnsQZ6K9ZDH4G8yyE+mLes3dBmHWO8NPu6yEW8XXzWgHsuxMDRFSptqXWfMG/Mc+vYMqM5I7IvoIiQAb8UocwUi/mhVmxt81zskgiVGnoXtfTLsJnPK2S+57J8V1WnQFXxP6OtVQ7C3JQiqyk6GHKdnEceDMmgU8UvEa1Vj0wlxj76LZY6CogJO8meStEy2MeviQuBcRNaEP1/lsb0/kCfQ/lF+Pw1bHZfL8fAaIqQ9wHGLY9MM3CVEabUY6AJmK8sY0fn0jiO4bl6CHHeOt5dG97E3JSrappl0A9/PWW3XYCVCivoJPwoLVwpncq/jSqtrYDYGvgG
 
-On Tue, 2026-09-01 at 15:32 +0200, Tomas Glozar wrote:
-> On Mon, Aug 24, 2026 at 11:16=E2=80=AFPM Crystal Wood <crwood@redhat.com>=
- wrote:
-> >=20
-> > Clean up a variety of synchronization issues and related bandaids
-> > by having a per-cpu mutex that guards changes to kthread, and
-> > fd open/close/revoke.
-> >=20
-> > Replace the SIGKILL hack for userspace timerlat threads (that doesn't
-> > even work, because we don't wait for the process to actually die) with
-> > a mutex-protected detachment mechanism.  The mutex should be uncontende=
-d
-> > during normal timerlat_fd_read() usage.
-> >=20
->=20
-> I agree with detaching the file descriptor, that seems to be the right
-> pattern. An alternative would be to make the user process to block the
-> tracer until it detaches, but that would make it less consistent with
-> kernel thread mode - which owns (creates/stops) the threads - as well
-> to make it more prone to locking issues during user process exit.
->=20
-> Can we perhaps clean up the synchronization issues without using a0
-> mutex? If one thread is switching timerlat between no thread, user
-> thread, and kernel thread, it could mark the osn percpu structure
-> "busy" and reject all other switching operations until it is finished.
-> As you say, the resource should be uncontended during normal usage, so
-> the user shouldn't care about being returned an error instead of
-> waiting. Or am I missing something?
+On Tue, 01 Sep 2026 12:01:24 -0400
+Zi Yan <ziy@nvidia.com> wrote:
 
-The issue is waiting for the completion of an fd operation that has
-already passed the "busy" check.  Maybe something custom could be done,
-but a mutex seemed simplest at the time.
+> No problem.
+> 
+> BTW, the plan is to add PG_folio after this series is picked up by Andrew/David.
+> So the new __DEF_PAGEFLAG_NAME() will have no user then and can be deleted.
+> It should be fine, right?
 
-That said, there is another issue with this patch in its current state,
-in that you need to wait for the timer to wake the timerlat thread in
-order to get the mutex to detach (and maybe longer depending on mutex
-fairness issues).  So it could take a long time if the user sets a long
-period.
+Yeah, then we just remove that macro and change the one user of
+__DEF_PAGEFLAG_NAME() to DEF_PAGEFLAG_NAME().
 
-I've also recently seen some additional issues that I'm in the process
-of debugging.
+It will make that patch even easier ;-)
 
--Crystal
-
+-- Steve
