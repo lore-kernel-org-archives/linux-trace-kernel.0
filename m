@@ -1,120 +1,132 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3709D36E467
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 03:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D6146AEFC
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 07:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788232239; cv=none; b=H5cqQpGa10t90qXG8x7ekbPjhW0vDA0f7D15/DfThTTSmfOOcTncl8gYTv9nanCRqK1c0QHue9DLYwhp4K4YAkRhq6d5wehvOPCAGI17ajq3rMIZ7mO2b332XzRZUG6knu+5wNPwN0Ife1g1LDAjnLcdJoApF3guw8FheiQnddo=
+	t=1788248256; cv=none; b=TyxcV2N6Xpqz9mvPVEbKqG1IoJEsmcW+QNq3YD8Igz2a1gr4EyJq0Wi7T4Mw+Fuy8x5pfdtPAxfQUi5+/DgTKs4GEEevAhjHPh5iX5ihudY6Vxfup+oqT1F6E+8U1//gTxaHp7bqhmH9/0CB+4qevefJFHdPEnE2EQT2kd4nK9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788232239; c=relaxed/simple;
-	bh=ENw7urg0+GVpzz2A949PwjF8i3RAVOxo5v//+QnGY0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jtr6ko2sj/7WQyqysc+PBYmZ/fDa7GLN/njci03BmOaDVLVcHRb8Z7sF/Gwy6CKyNfaGSvUD5N4mDhsHr5Hwb8bdlyOKiByedPgxF9/qEc08B7XCviDYuASKIVMsgB1G4ygAdIdRqfQ1NZhssMv43BTmRKPX3rvcFujTrQhLiA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ne2wjoa/; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788248256; c=relaxed/simple;
+	bh=K4whIrp1pNPEOzUr6rWkDT7pTMOtTqyyOI4wtAV+6Fg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V2iT+aK1a6F9U/9MvBEVDWVXr0jvoZTefJc784hhePFyDBG5fMUmZK1NGUPSr2MRjWpqCsJxJwKYGIE7hSX2MdsPqRfR+sU3hT1Jbl1hHBdFDvB8bZf1en0UONHhJECM7ei7F0tpjRrBfWIq19KHJr3S5i9UbR4DdawvF5F09fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hLEdJ3Wh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ne2wjoa/"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2d91ded8174so3049025ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Aug 2026 20:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788232237; x=1788837037; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ENw7urg0+GVpzz2A949PwjF8i3RAVOxo5v//+QnGY0Y=;
-        b=Ne2wjoa/fOj43M0lZHYgR77XyqPkE2w41tAdFnEuHFfjWsb+IWwSPX+6/YWbeukCYX
-         kcJUAqqz3EMNBkcdxHHcwXWRzN81/KtJW+e1ytpSERzOEWEMaFYMNyjUxDigXm3Xu+Q6
-         o2LK+9FOaGRapf6W01Cu5mUjFihV7H49BIB3vE28QSfXdC2AzrXt4ZrKy12Vu7s9ZE0E
-         o7s8bhpELs2BbsFWQGlTsS65TkvGyuDaOxa8pDkQv3K4M/3cOJ7QMf1mycTKtuQciw3L
-         brA7lo6VvZ1t6Buvt0ZX88S2Hm+fuwfoC44RTrerzwFNQXaaeLEZwzga6SCrF9Cjm+BE
-         bbmw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hLEdJ3Wh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788248253;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wjsUtVP0vVMcIYKMR24Ou/avzPDLmevZdJbSMcHJbPE=;
+	b=hLEdJ3Wh5JejpwRJx0T88GtHjGrSVJjq/dEOGSnDLNZgX8iIs/AkfafGv2v1K3CHyH3f+h
+	sV96BWPmLwXx+0LtjK6+aHJqOZo/LND0eAGlXjZov4Fv+OGteC3WZXmYz4iYd+VTjC2ptx
+	jsboztnCKwDYYAq+krrgw7vEJ9mw5nk=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-531-R33akhyMM4OpbfIT_LXo6A-1; Tue, 01 Sept 2026 03:37:32 -0400
+X-MC-Unique: R33akhyMM4OpbfIT_LXo6A-1
+X-Mimecast-MFC-AGG-ID: R33akhyMM4OpbfIT_LXo6A_1788248251
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49a1b4ea633so40251035e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 00:37:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788232237; x=1788837037;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ENw7urg0+GVpzz2A949PwjF8i3RAVOxo5v//+QnGY0Y=;
-        b=C9AoTz8HN3Yhg1Rjaub/cqAnQDEu4fnqRBmz6pmokrNueJ+kVJDz0xFg0R788MXSco
-         6w/Q6e8Mh57o6r/r8j23+NY8P5SO40YgdWpVvORy4gXkVjo1unAfR3b23IpfN3oARKSe
-         67L7dGCCg5KZhL8tYOlG35inzZ2RBF/AvjDt1MqhBkP9GberNczHU0uwv8bTUo2wm+Se
-         vSbrxQX0nX4Wi2xLtcH2oydm7bfrKHrSHf0OwF2xBAZ3YwjZ0rGOO5JR2JY3eBTCDp5A
-         HegKXp1ixuyvwOhXWt58Qno0YzZSzqcs6DzyezXQ04XTUwxnf98NOUj6EgCFNNDvooLK
-         SjHQ==
-X-Forwarded-Encrypted: i=1; AKwUvBww4/ZDihN+B76p6dn1Pq1zLniLqCTgLGmko4yXi9lmmZKpXmlLlGJQ5YkQhTztohJLRUgewaY0tbM1QovNac17C8c=@vger.kernel.org
-X-Gm-Message-State: AFuF++lso55E1/6uhB4LmSj4Z22HzMm05kHqd9Lb416Dd5Y9LPWNVvRa
-	i3wx+XYUE0VLTKf0SE2hsktv7jXWmxkv7NA87xWv7zOFheY3MNG8CkSM
-X-Gm-Gg: AYBFou2FVSVYnOmtRBqxLREIIvLshonNS7yjl48MG9+vALMjUWEI8G1bj4g8T7ec96I
-	b0OS5TUQPPb2Vk1nvoTeSwhGyUp1vREmvsidb+TBm6PKVXp53bYARzY5EBzYJZ1mr9k2he+pf1F
-	mfSvinQqQSMjFcOQcgjvii1dT3H22eqlNJxMRNEmWdOYWly2KLr4XEHru9Is07WSFPct06v06cH
-	fUU8vaP8vYB7WVytVK5G86hj81QtETOMWLdVN+yrVfxiT6R4WCZWI0vUMaWmbJ4O2cR7fWYqaEh
-	s2ijHIjzIBI2bfLUDSiow/xMeNPmatShGVWBYHEv1PX3fyZM5FV18j7EkKbv8vRYzm+v45hJen7
-	dK/I0AW/c19/O/4nX3s2ibKoa741Kje+u/eboAJe+XhJpN0z1mz7+DeqUOUquuuqwpWQ6q9rcM/
-	iKLTzNkbXhLSDzJpsEU6KZlbLL/ts/n/QklbnM2gTZYyXf09C95wAP3hGJpHGEqKQhrY9BItT93
-	tEMEZG5LS16O/Tk/DQiclYf1ZsYIA==
-X-Received: by 2002:a17:90b:5626:b0:398:9bd1:3216 with SMTP id 98e67ed59e1d1-3989bd135fcmr34928730a91.23.1788232237281;
-        Mon, 31 Aug 2026 20:10:37 -0700 (PDT)
-Received: from lipengfei28-ThinkStation-P368.mioffice.cn ([2408:8607:1b00:8:379e:cb2a:beb0:a2e8])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3990d463798sm2813901a91.6.2026.08.31.20.10.30
+        d=1e100.net; s=20251104; t=1788248251; x=1788853051;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Rk6MoM1HIB054uV59BcMTgA//1R4qE5kuR4lQOsz+qc=;
+        b=F7j56GvXEkAX3EAe7hb7+EKBgSPFyow8HKp1mJ8dEBKnXrUmkgBo2OF+SVKEe6XKF7
+         mHric/1OHHE+2P7zJhDAWJxpfbl8QmORmXLX7V5lEQoO1iFzFq6jmjnUBhH14MhgHFW1
+         aNfOfnYmwfN98f+qK+V7+oOXu0o70wWd0MD+WNXl50bLws5956K5OOkbHTbpFQYHg1zb
+         HyRH0HUu0NIFi5dqsLitG0+VHQx8+8DwXguAwBon6AEvFlc3Xc/Z6A2E4ygy510udAKE
+         Vkpho9vUjyvnbTo1TuELzgBC5pLEPmol2NxTwN7zP9hQgPcyPXf2mawtYjQJT8VhJQN5
+         hNTw==
+X-Forwarded-Encrypted: i=1; AHgh+RoOf8bwKiZhmU66ut6Od1B++mR18CXK7VSPEgiTv+pc4skujKUUjVBorYd34eDWqyot97mcLnX7ezwOhOZwyI43iWM=@vger.kernel.org
+X-Gm-Message-State: AFuF++kMSsEpQ6R0IQOkgq1hZUX8fsbRtmjTMMjM+1K/RRLRE3Qt+WyU
+	b7ERFuAPWHN9zCl/BXmJGT1lEBfLpa6pG/25/wqqeR5y2P8e4HeuNC2CwODRaA+u6gbf8kLpcHk
+	0PuKcbkgDJ1hP4iL8HMOP4ZbUlFFs7jRhihUgt2iVHql9UJA+A8QJksra4LZmKPcz6vploy3N1R
+	1c4c3kZ46u
+X-Gm-Gg: AR+sD12S4/zBSu+wqJndGVtG2IOZu1r4HAlUhjT7pIv41ELr106UxnuTkP0TSZ2mwJx
+	F1zkpVLw+P7HBhN2TDcuZW5Yt8dhEzyEDzry/tAWDSg+xAlFL3pZp84uSBcYebaNpku4GauSYUu
+	8vEF2WMhkb5LLEQm5bgile471sOYlVeGGj6TMzSqnSiDjtQxqw1wXw6QR59TZExyv8dBNZn/om5
+	HWvd1xGysX+ZwRvW+TF0nWeEXOUQN/B5HThauyJl25KnjPd2XhPr1j6ogxJVkmz0Hj33+cnD0ci
+	C76wKCbOUkqfCaJw7/g2rIN29MlF0RLa1Ly/E4p069xnjBnprO4SW5JmVSHIbaEVnoFMbIv73YC
+	Vqh3J6Z+zMq/ZvxkNlh4EkJn30sdv7g==
+X-Received: by 2002:a05:600c:a418:b0:499:b65e:49c9 with SMTP id 5b1f17b1804b1-49cdc558513mr101959705e9.10.1788248251554;
+        Tue, 01 Sep 2026 00:37:31 -0700 (PDT)
+X-Received: by 2002:a05:600c:a418:b0:499:b65e:49c9 with SMTP id 5b1f17b1804b1-49cdc558513mr101958885e9.10.1788248251168;
+        Tue, 01 Sep 2026 00:37:31 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b91c5790csm286144315e9.0.2026.09.01.00.37.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 20:10:36 -0700 (PDT)
-From: Li Pengfei <ljdlns1987@gmail.com>
-X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mark.rutland@arm.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhangbo56@xiaomi.com,
-	lipengfei28@xiaomi.com
-Subject: Re: [RFC PATCH v4 1/3] trace: add lock-free stackmap for stack trace deduplication
-Date: Tue,  1 Sep 2026 11:10:06 +0800
-Message-Id: <20260901031006.357894-1-lipengfei28@xiaomi.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260821235129.078dd489@fedora>
-References: <20260616064119.438063-1-lipengfei28@xiaomi.com> <20260616064119.438063-2-lipengfei28@xiaomi.com> <20260714171144.4537f163@gandalf.local.home> <20260715031245.2571869-1-lipengfei28@xiaomi.com> <20260821235129.078dd489@fedora>
+        Tue, 01 Sep 2026 00:37:30 -0700 (PDT)
+Message-ID: <0b0b115713a6d5a10d719085284dc7cef21ed892.camel@redhat.com>
+Subject: Re: [RFC 1/3] rv: add per-edge dwell-time statistics primitive
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Tobias Schaffner <tobias.schaffner@siemens.com>, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>,  Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jan Kiszka	
+ <jan.kiszka@siemens.com>, Philippe Gerum <rpm@xenomai.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 01 Sep 2026 09:37:28 +0200
+In-Reply-To: <20260827072400.45734-2-tobias.schaffner@siemens.com>
+References: <20260827072400.45734-1-tobias.schaffner@siemens.com>
+	 <20260827072400.45734-2-tobias.schaffner@siemens.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: FIk0hTJI25p0OLYBz4HpqEZKygt4xxnXYEBOjDasJXs_1788248251
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Pengfei Li <lipengfei28@xiaomi.com>
+On Thu, 2026-08-27 at 09:23 +0200, Tobias Schaffner wrote:
+> +=09while (dwell_ns > (u64)max) {
+> +=09=09s64 prev =3D local64_cmpxchg(&s->max_ns, max, dwell_ns);
+> +
+> +=09=09if (prev =3D=3D max)
+> +=09=09=09break;
+> +=09=09max =3D prev;
+> +=09}
 
-On Fri, 21 Aug 2026 23:51:29 -0400 Steven Rostedt wrote:
-> Honestly, I don't think we need to be as strict on reset as you are
-> trying to be. What is the worse thing that happens if a reset happens
-> while the buffer is not cleared and the trace still exists?
+try_cmpxchg() functions produce arguably cleaner code, would you mind doing=
+:
 
-Nothing that hurts the kernel. The map side stands on its own: the
-resetting flag turns away new get_id() callers, synchronize_rcu()
-drains the in-flight ones, and reset frees nothing - it only memsets
-storage it still owns. So there is no use-after-free and no torn
-read to worry about.
+  while (dwell_ns > (u64)max) {
+      if (local64_try_cmpxchg(&s->max_ns, &max, dwell_ns))
+          break;
+  }
 
-What is left is purely what userspace reads back. The buffer can
-still hold TRACE_STACK_ID events after the map has been cleared, and
-those ids resolve in one of two ways: either stack_map has no entry
-for the id, or - once tracing continues and the slot gets reused -
-the id now resolves to an unrelated stack. The second one is the
-uglier of the two, since it is silent misattribution rather than an
-obvious gap. Either way it is misleading output, not corruption.
-
-Since that is the whole exposure, I agree it does not warrant
-machinery to close the traceon window. v5 documents reset as
-best-effort and leaves it at that.
-
-If you would rather relax it further - drop the -EBUSY when tracing
-is on, and stop clearing the ring buffer, leaving reset to only clear
-the map - I am happy to do that. I would send it as a follow-up
-rather than hold v5 on it, since the id-reuse case above is the only
-thing the buffer clear was buying and it is cosmetic.
+Also, although issues are practically impossible, I'd avoid an unbound loop=
+ in
+hot paths, you could go up to MAX_DA_RETRY_RACING_EVENTS (already existing =
+in
+da_monitor) and put some warning in case you reach the maximum amount of
+retries.
 
 Thanks,
-Pengfei
+Gabriele
+
