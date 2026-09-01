@@ -1,128 +1,101 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8DE47DD66
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 23:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A77E30C617;
+	Tue,  1 Sep 2026 23:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788304426; cv=none; b=l51bMyEHCUIhYJQ4bChA0BY8MsreDVv65Z8n8MXiX3Ga3cUlLq2gBQvW/at1I//axWA0cN3zZU2EBYE4wgE0BOZ3sGrEhEakZQKdvd3GWVuBLfdhssSAV/Gz6VYb7Muaq1smx/F9lREItQp7N3KarJFdqI3zn1JrB+dKGRjFWEs=
+	t=1788305020; cv=none; b=JXgp0+IaowR3rtHIkA3FmjlIRMOvDfHJpyIURM/xobKmpAM07ce/dOv2KXgZfxxsqnLKxRugIcME19ojL5mUH15jtWF0VZT6Eb9WpRffiylEHqIcpRdooz1stsLp/Q+pFAOlN9z+zNqon+0Hr5/TgSikbjGisxuHg7xx3rgiz08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788304426; c=relaxed/simple;
-	bh=CMg8EnicEcBtJJY6z/2G7WoIQ6/fvphazvoroAr7x0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GZY6S6iIx06QLxZObSD+XdWa3BlVQPBW0iR/TVh2KwW58DHP+SVvJqb9omzIRVn/5iFTR5V6NvACYzqGID1F5VbrYpOpAFYqqB+S5wNx05Ii7FsiA0Ka1GvMyChGr2oG3vnXd/CQRnMwTf/7tZ+3T7ehYMlggs+Fb3L//wDXPHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=KQY9VhMC; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788305020; c=relaxed/simple;
+	bh=fc/L5vrioavvnwfpbHYZffAEMQ7zxGRaz75RZilOFxA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Ue6rH5Pj/zHCt2fCKRXdSDgqkAWAYa2QfSxElSoyFYgAiztdVBDQK2gSu3OPpqGfZhZah6U+EDxMUDpVFuuBWzyedHNSdsmfS0SbB7GfeUISLpapEEK7iRq3CtW5YxG3nzbxu4xGrD4ukj5zqFZscGtbqJFUWgOWCg49TD00GIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nk5MPcXG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="KQY9VhMC"
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id BEA06A4402;
-	Tue,  1 Sep 2026 23:13:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 3B33319;
-	Tue,  1 Sep 2026 23:13:41 +0000 (UTC)
-Date: Tue, 1 Sep 2026 19:13:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Take trace_array reference when opening
- options file
-Message-ID: <20260901191339.25a5a060@robin>
-In-Reply-To: <20260901205421.5832E1F000E9@smtp.kernel.org>
-References: <20260901163620.6cbe0ada@gandalf.local.home>
-	<20260901205421.5832E1F000E9@smtp.kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nk5MPcXG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D410D1F000E9;
+	Tue,  1 Sep 2026 23:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788305018;
+	bh=Fhr+9NI7Byya+hvnanRJCc+7UsoeZAsVIqoSoylHTao=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=nk5MPcXG76BlmXVNyecivr2iaX6aYZQ4vURG0sw1apocPk3Iwq06FmmyA1ECTZjqs
+	 Eatz6Vac4TSR9NpVMfh2WrQxXxuVqn7NtTlutq1t/bn00QXolctSkTh5eL1Z+rjxiF
+	 9wAR7mWIDZRSgVTZneSGobtiEzbf5wWAtg/HXoHy1EkOP5KUwdo/ppvNfGMDyjPdVJ
+	 8cSX/xBKr4hZPOG6pyEgilKVONSICUc83nBs3Rrw/iD+goj1x9wgSWCqKc1ER8B+rr
+	 jSfMNABYEe2KMCKR/AP1E+xkz7l2oqEW9SBl5Yrrzt5/GXhndQ0wb1VzXQTabHar+G
+	 fSItJQ/MB8ShA==
+Date: Wed, 2 Sep 2026 08:23:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] tracing/probes: Fix BTF kflag check for
+ anonymous struct member access
+Message-Id: <20260902082332.921e8a1d0ae8a3da6f167d2a@kernel.org>
+In-Reply-To: <20260901103725.7ca9629f@gandalf.local.home>
+References: <178827248631.123716.2627172171811720261.stgit@devnote2>
+	<178827250904.123716.17452648791331881284.stgit@devnote2>
+	<20260901103725.7ca9629f@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: y4gwk7bankse1xsqoiyhczpnnwtou531
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 3B33319
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+d1yI+SllBX+/x/1VAQa2tyusVLFyiG3w=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=VpZd83Dau/0k0soWwaL4NH7We7iw+l/e5YU5ZKkI9ik=; b=KQY9VhMCIR11aXfm5SfsLEbZK3upNoxglcqK41k9pNSmBDYVUL5f8yMExc7gF46gy7F/Q0gYbcCVUBSZYVB1sYujSASEKP7heyuxl8Z1Cxj7eatA1mGeAmkPmNjKI4PytPgury/tEXhlRAL6LOHIyy3VI7+MGCm97qe5ElnXkE0=
-X-HE-Tag: 1788304421-134859
-X-HE-Meta: U2FsdGVkX1+cO5+8/HWq9sSXJaW4Sd/adHEvsf1HeFvEmoCRVbOBJwrB4gWLAb9v7HmxMhmB3iyGbTleqwKxpx8CqUGM5Ck4BdwN0GP4rx778I6ek35qjvJS/g8S4iaX7eU173AqcgrgN//i6Ac+Q96JPSpV1uFq8Kh8yUj5O1+h/e8o8Oguq9WPOw0OwqwygFzpx4TaDcRT0q9vOgZ1zBemLiF0rimcLm9st6+K49NW9Rl+8sB0lFUjtW+zuIyXJDaLHenf6+yiu04ILYbSLERCjO+4yycfpPhTyVsWYbKoL6/K2NEAuCvZYv/zlJux7ileS868MA0TjUFL3/LLOF8K7SBke2vq
 
-On Tue, 01 Sep 2026 20:54:20 +0000
-sashiko-bot@kernel.org wrote:
+On Tue, 1 Sep 2026 10:37:25 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> [Severity: High]
-> Does this raw memory address comparison account for reallocation of the
-> trace_array struct?
+> On Tue,  1 Sep 2026 23:21:49 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> If a trace instance is deleted, its trace_array is freed. If a new instance
-> is subsequently created, it could be allocated at the exact same memory
-> address. Could a user holding an O_PATH file descriptor to a core options
-> file of the deleted instance reopen it and manipulate the tracer flags of
-> the newly allocated instance?
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > btf_find_struct_member() traverses into nested anonymous structures and
+> > unions to find a struct member. However, get_bitoffset_of_field() in
+> > trace_probe.c checked btf_type_kflag(type) using the outer parent type
+> > instead of the actual anonymous structure/union that directly contains
+> > the found member.
+> > 
+> > If the parent structure and anonymous structure have mismatched kflags
+> > (e.g., the parent has kflag=0 while the anonymous structure has kflag=1
+> > because it contains bitfields), the bitfield size encoded in the upper
+> > 8 bits of member->offset is erroneously treated as part of the byte/bit
+> > offset, corrupting the resolved offset and failing to set last_bitsize.
+> > Similarly, btf_find_struct_member() pushed anonymous member offsets
+> > onto anon_stack without masking BTF_MEMBER_BIT_OFFSET() when kflag is set.
+> > 
+> > To fix this problem, update btf_find_struct_member() to return actual
+> > containing structure/union type via member_type, use appropriate
+> > __btf_member_bit_offset() to get bit offset, and use member_type for
+> > btf_type_kflag() in get_bitoffset_of_field().
+> > 
+> > Fixes: c440adfbe302 ("tracing/probes: Support BTF based data structure field access")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Sashiko <sashiko-bot@kernel.org>
+> > Closes: https://lore.kernel.org/all/20260822095110.0772E1F000E9@smtp.kernel.org/
+> > Assisted-by: Antigravity:gemini-3.7-flash
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 
-Yes, and we don't care ;-)
+Thanks! Let me pick those to probes/fixes.
 
-If the admin is deleting and creating trace instances and opening
-option files at the same time, it's their own fault if the wrong trace
-instance option gets changed.
 
 > 
-> > +			return __trace_array_get(tr);  
-> 
-> [Severity: Low]
-> Will this compile successfully? It appears __trace_array_get() is an
-> undeclared function, which might cause a build failure.
+> -- Steve
 
-Really?
 
-Then what's this: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace.c#n614
-?
-
-> 
-> > +	}
-> > +	return -ENODEV;
-> > +}  
-> 
-> [ ... ]
-> 
-> >  static const struct file_operations trace_options_core_fops = {
-> > -	.open = tracing_open_generic,
-> > -	.read = trace_options_core_read,
-> > -	.write = trace_options_core_write,
-> > -	.llseek = generic_file_llseek,
-> > +	.open		= trace_options_open,
-> > +	.read		= trace_options_core_read,
-> > +	.write		= trace_options_core_write,
-> > +	.llseek		= generic_file_llseek,
-> > +	.release	= trace_options_release,
-> >  };  
-> 
-> [Severity: Critical]
-> This is a pre-existing issue, but does this same Use-After-Free
-> vulnerability also exist for tracer-specific options and other
-> per-instance files?
-> 
-> While this patch addresses core option files by replacing
-> tracing_open_generic with trace_options_open, files like
-> tracing_max_latency and tracer-specific options still appear to use
-> tracing_open_generic, which doesn't take a reference to the
-> trace_array.
-> 
-> For example, if a user opens a per-instance tracing_max_latency file,
-> keeps the descriptor open, and the instance is removed, could a
-> subsequent write dereference the freed memory?
-> 
-> kernel/trace/trace.c:tracing_max_lat_write() {
->     ...
->     return tracing_nsecs_write(filp->private_data, ubuf, cnt, ppos);
-> }
-> 
-> Where tracing_nsecs_write would perform an unlocked write to the
-> freed pointer?
-
-Possibly, but this one was a bit more complex than those others will be
-to fix.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
