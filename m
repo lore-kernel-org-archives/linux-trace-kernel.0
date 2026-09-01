@@ -1,121 +1,128 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0937E306764
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Sep 2026 13:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6C431E85E;
+	Tue,  1 Sep 2026 14:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788270623; cv=none; b=erftkKb+iUxqyN3k3CEjIgQoN6HDIkTtcmwSsW8HfRqdmdJU1q+xkepNXPfrac3MVei7s/eKj7xMumXJft89o07LhwYd1qf40F8It/flvshGLC9GX8+MSLWNyEC4ESzJIrjFpO4sECw8U7hrO6is9MXZ7bEJ40AhxMsofmKkgzc=
+	t=1788271246; cv=none; b=oQHI27Ih56AZzEc6SU2+i5sJEfOYDgU0SzCcKEsAU1qVTLKOG/KvyZ4cakXEvL5bwN1499U2A97Pt6YOOnwn2FEObZLLfgRRPbYvnBxUgKpiCUAe3AsWL1j+6GUweKKVC2GHeIrIXvbYfZ54RF3mXTQDo9Yfo67mIq0rpijNj0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788270623; c=relaxed/simple;
-	bh=WynuTooh3d2w4bp9yyON0x52RjuGtTuYYXM1KX5OJEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CzYRiYRVaeJ0exavkKjsyA8+xXapabJV/5z5zkGW4wShuUCzRmWTjAWoIKAu9Sklky9ZvGW9hz1jeUeaMPR0XWeIMeT0htS0bs1BeWk9KsMbtf+Y7FAMdCq0nHbjsJ2y/ptFeQZ6UwJryOu40A61SxpWDeJPWWHZmli5fVqSOpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gg22Jx5Q; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1788271246; c=relaxed/simple;
+	bh=ZgsBwpg411JJNZ4embw4wLigS9kwzzvokWpoFKgkcyY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RtJOlASm7y8UlBumN3500FBBKkQ6C6a0Bv3hEKYy6/1UekArRs+Qo9imbxK86xy72tmy6z8OShnqPvuyaWErtcoNEAB4IxsP3NAmQvxv5sMPtLD3D9Uhwz0aVSdBfTWqsmtho4gtuOX+YPq40hxGv5WgZkuiGj5jfxzRTdRgLrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lhz2FrhV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gg22Jx5Q"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c1c26d7e951so822347566b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Sep 2026 06:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788270620; x=1788875420; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=F8+SZOE2xWNs6AbBanAPIBFLsvkxmbh30lToZDOa/Pk=;
-        b=gg22Jx5Qw01lioC0iaWB8DT6B8dQEafNNz5j4qYEcayCJlyo4TAkRZnuItB6qkWeTM
-         uO8TmfOeN9gDYbwXvEXgrNiuXsmI9yE/DCm9o2KXxGJ0crj0WmHy/WXdCwaW+iikD2Bd
-         P9OVKmecUTFoQ8qwOYniOhCIaNgKGRkBDdfHtt1lFZs9h6GJ+Acf7GfJGp0obAQK/ffP
-         22z4KWM551+UG1e/J/bTnzoYulxOhiR3YmwDJrK0KFej9dZ4tmIDctCw0tH6lf0eo/Is
-         MYy/qsueTmttzEQOJskT3SB3Jy1jeSZvV7oXAp6iI4htszKNsbtSWFfcrdkOw1s4GZqc
-         jvEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788270620; x=1788875420;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=F8+SZOE2xWNs6AbBanAPIBFLsvkxmbh30lToZDOa/Pk=;
-        b=eyqmIOXJLJWq1BQkUa6scqXUXY3VlqGox672NLd/665tNgOqa70k9lqmNve+ChbOOT
-         N2GbmuFeNn6c+BCW6ukVAerLv1ojgvVVASVA20iwN7xdkNHylhRVXmVfc0zd95YD8a91
-         1xPFR02QwYeds8fsoAtTyToN1QFuFohrsoEhKDkiaaYp70Rq0Ra25JgMTg/hBYzhql7g
-         0dgMbxk+i/w+YhmRldp38mqByrcbOhmLX9Cf8cfKzieiEJ/f9V/cY8lv97lkNAtcFYyW
-         Hc9e+7EyGzgl515606BzFBS11dCFwWbts6wL6yzWb7W0tYKJXSEtju5tilztrpQ4Rwe9
-         97fA==
-X-Forwarded-Encrypted: i=1; AKwUvBw8+fsDt2Cmb+INIEgdvBnJDzAMQKG1rOydtxhLXFRNLJV+C2X/dF7vbJIrOKjaLt21Dh1iuBfZB2nad/qTQIOVtPA=@vger.kernel.org
-X-Gm-Message-State: AFuF++m5Iozq0gisge3E9rH9xKqTd8RSVFwRAkLrirHPKqoyA2/vdKPs
-	tvI9MBjvccc1DaJ9ttSdWq4v0en6FLPaW13xyJRFtSrj6ctYzJRPt7eq10DLVSSpSQ==
-X-Gm-Gg: AR+sD10NS9glcH16diAOqIs0RMLlmWSQCzvu+5FdDOLSyVNiAP3ySLDV19n21Mxgib9
-	61beFH/o805WfBT585kB6EL8eh1sx7oUQz19bpcHrDDZjxaLRpjy67/HhxY4DtWr1DlCC6HsYiC
-	yGjo42OrdsY2SrpugFuL995FjdgAJH5tRWj0Bltud9PLrKv0yQ3uBc/xyXRT0Ezpvmd6Pq0umP2
-	z1Q666K5EjCgMjjg40rzcUshXTz5EzKl92R84He6QXHCrDsbYINOPMaXjQRylyO0DT0Sk9tLhYS
-	YfuDNMgniIL/Y1SMrmS2Z+XYy0x+rIVQ9H/9JwEIZb/18POC7TkzLoPbVHCQWMbPZppvs+giLC1
-	T+rVfBOy14tD0IUpP/pJTG4Luwult/+3FNKU6ymujdvdBPMX9ymNEmN+AkAE/goSW4kcX5R8tL9
-	UEbueZvoEno7GmppB1GGR1lWQRormYDfdTtwgQvAJpClvGQLa7dcbIVxTdWQpq9PKwjkFcdLZxy
-	xDx7ZfVUkebRbcGcofVQT50mUxIbnkD
-X-Received: by 2002:a05:6938:a08e:20b0:c25:62db:772b with SMTP id a640c23a62f3a-c25b3bb8c0emr448253566b.7.1788270619586;
-        Tue, 01 Sep 2026 06:50:19 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c255f1b1443sm588471166b.41.2026.09.01.06.50.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 06:50:18 -0700 (PDT)
-Date: Tue, 1 Sep 2026 14:50:15 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Lee Jones <lee@kernel.org>
-Cc: stable@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: STABLE REQ: [PATCH v5 06/10] tracing: Fix subbuf resize races
- with trace_pipe_raw readers
-Message-ID: <apbYF8rGD5EKG-oq@google.com>
-References: <20260813131152.3589632-1-vdonnefort@google.com>
- <20260813131152.3589632-7-vdonnefort@google.com>
- <20260901123444.GA1350131@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lhz2FrhV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3E41F000E9;
+	Tue,  1 Sep 2026 14:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788271245;
+	bh=blOwsfAdeVNIhFbf25w6vatwg29Ryi252r/5Grzq3b0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Lhz2FrhVD2k4wd/Ss/pLlDoG0wJSmMd8G/z2Pj1RdsQgqw8B9OrDhQqpVRFarIvn3
+	 U7Oy1Yc+DJMsf6TStk/Ux8H0n+PcsD62qTCPdSJh/XOi3ULjP4iLjlOUSHQQbrFBm1
+	 OqSsa8L8EfEcSDAaB/nx//tN93E7vG6+WWie8//PdL6OTZ5r2T8srkGlq92wb44ac+
+	 5i6K1Vi2Tt8Q7S4dkmtUYwcqswyQUMv1eymwqw6mRiof947QVpZuJOMRm2cm6ri9vM
+	 RdluK/DrCVDoZmAZxgG/Wi5H9lwuIgFRDXrBtLH8ig10lYWJYIYeCbeE0FIIItnC5F
+	 xyOGtNFfiJyyA==
+Date: Tue, 1 Sep 2026 23:00:39 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] tracing/probes: Fix BTF kflag check for
+ anonymous struct member access
+Message-Id: <20260901230039.8b4ac66d0d38f68b500a154e@kernel.org>
+In-Reply-To: <20260901090442.7cd378dc@gandalf.local.home>
+References: <178822361441.115597.11442662641658772793.stgit@devnote2>
+	<178822363712.115597.2744784023996949800.stgit@devnote2>
+	<20260901090442.7cd378dc@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260901123444.GA1350131@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 01, 2026 at 01:34:44PM +0100, Lee Jones wrote:
-> Dear Stable,
+On Tue, 1 Sep 2026 09:04:42 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Tue,  1 Sep 2026 09:47:17 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> > Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
-> > uninitialized memory to userspace due to stale size values.
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > 
-> > Modify ring_buffer_alloc_read_page() to let it handle the resizing of
-> > a previous buffer_data_read_page if necessary and add a new
-> > ring_buffer_read_page_size() which enable ring-buffer users to not use
-> > the racy ring_buffer_subbuf_size_get(). This makes the spare_size member
-> > of ftrace_buffer_info redundant.
+> > btf_find_struct_member() traverses into nested anonymous structures and
+> > unions to find a struct member. However, get_bitoffset_of_field() in
+> > trace_probe.c checked btf_type_kflag(type) using the outer parent type
+> > instead of the actual anonymous structure/union that directly contains
+> > the found member.
 > > 
-> > Use those functions in trace_pipe_raw readers and handle in both the
-> > case where the subbuf order is modified in the middle of the read.
+> > If the parent structure and anonymous structure have mismatched kflags
+> > (e.g., the parent has kflag=0 while the anonymous structure has kflag=1
+> > because it contains bitfields), the bitfield size encoded in the upper
+> > 8 bits of member->offset is erroneously treated as part of the byte/bit
+> > offset, corrupting the resolved offset and failing to set last_bitsize.
+> > Similarly, btf_find_struct_member() pushed anonymous member offsets
+> > onto anon_stack without masking BTF_MEMBER_BIT_OFFSET() when kflag is set.
 > > 
-> > Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > To fix this problem, update btf_find_struct_member() to return actual
+> > containing structure/union type via member_type, use appropriate
+> > __btf_member_bit_offset() to get bit offset, and use member_type for
+> > btf_type_kflag() in get_bitoffset_of_field().
+> > 
+> > Fixes: c440adfbe302 ("tracing/probes: Support BTF based data structure field access")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Sashiko <sashiko-bot@kernel.org>
+> > Closes: https://lore.kernel.org/all/20260822095110.0772E1F000E9@smtp.kernel.org/
+> > Assisted-by: Antigravity:gemini-3.7-flash
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
 > 
-> Not sure if this is the latest version or not?
 > 
-> I see review comments, but no v6.  Anyway, no matter, it'll do.
+> > @@ -661,11 +662,11 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+> >  			ctx->last_bitsize = 0;
+> >  		}
+> >  
+> > -			type = btf_type_skip_modifiers(btf, field->type, NULL);
+> > -			if (!type) {
+> > -				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > -				return -EINVAL;
+> > -			}
+> > +		type = btf_type_skip_modifiers(btf, field->type, NULL);
+> > +		if (!type) {
+> > +			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > +			return -EINVAL;
+> > +		}
 > 
-> Could we have this applied to Stable please:
-> 
-> 8a5f63637890 ("ring-buffer: Fix subbuf resize race with ring buffer readers")
-> 
-> -- 
-> Lee Jones
+> Is this just to fix the indentation? If so, can you make this a separate
+> patch? We don't need it to be part of a patch that gets backported. It may
+> make it more difficult to do so.
 
-Steven hasn't taken all the patches from v5, a few of them were not ready yet.
+OK, let me split it.
 
-The latest version is v8 [1]... and I am about to send a v9.
+Thanks,
 
-[1] https://lore.kernel.org/all/20260826094528.3738023-1-vdonnefort@google.com/ 
+> 
+> -- Steve
+> 
+> 
+> >  
+> >  		if (next)
+> >  			ctx->offset += next - fieldname;
+> 
+> 
+
 
 -- 
-Vincent
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
