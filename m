@@ -1,170 +1,158 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A794A2065;
-	Wed,  2 Sep 2026 15:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A408F4A9D4C
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 16:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788363854; cv=none; b=N9GGKplyeauqVfKWcATNmp1LkDDaL31ObawglfTZ0Fyp7BmY3t09vlQzXGhPD2BvdtAchucJJhe0oDH+XyynPmk/uKZTHhDSfAG0gp18L4BqrpuZ/a0BvAGnuubZkF3uUXwOXugWeWYH81XDh8yE0yu3Kl3415WeyF3GnVPnQ4k=
+	t=1788364929; cv=none; b=UEJ7CV68VjhJClPfeScCk+vkKa3l5dSFyEJRaMXpQk2lPVvxSPmT8D+PwjFGzP9pkM1WeuHTiT6RZrIvjhYXM31sw7BjXn6LPR0eKmJYr5qZQy5D4F7pWVTuxviiIX1rrhFDBafJnaJ91FuzVEYrNsYJYfUkKunW9RTyXCuNrIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788363854; c=relaxed/simple;
-	bh=Fw01rL7riqwZdjiKWEKmz/l2BwDbbv84wKasnKUZOLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CksU1mrSgYGCjzu2cfxNBka+TD4jHL8Sh6nJvTstpG/40O5xcOHg0gecsOVndhzQ69JH3DocHnfbEKKYUuPslKrwNs9bOIEHRXSKoVxfnewg9vzIn1U2O0puEgvJ+aFmIMxKonyQUMJNhlUtc4fzGiNJmAwaJ6PL7yU5WF851Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=46B78Ajj; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788364929; c=relaxed/simple;
+	bh=wCyWO6igle3tHFb/WOM44Uj3t/2lzWLQU291SaAUKLA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Dt4kFS1ikJU3ftNfNdeHcAbF4/2IBlRclSvHgFjNW7otqfEWLhF3OJJG60wZYe0QFOQjFaDK5jkd+8Tgde6/n5qv42mJzwsP0fPU/puCCtMMeoVnmbvyFB/3kZaDbssejjtOnXJrI0ghoP6gB58DPQX6yq7fhjmukm343ej+LG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PN+BN7E+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="46B78Ajj"
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 848A11C1781;
-	Wed,  2 Sep 2026 15:44:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id EA76A2002C;
-	Wed,  2 Sep 2026 15:44:01 +0000 (UTC)
-Date: Wed, 2 Sep 2026 11:45:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Take trace_array reference when opening options
- file
-Message-ID: <20260902114502.723d8243@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PN+BN7E+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12BE51F000E9;
+	Wed,  2 Sep 2026 16:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788364928;
+	bh=5qQn5hfh7wXNLaZK3qY2TfnIJ9twHYC5RCc3yPpr0zs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=PN+BN7E+CrknuyQ/s3OwQkTQr4o4Pf3KWHYUHn207tg+VCm5bhRdh7jM4o58UH2yy
+	 ueib+gW4Oym6Rtl41kvrqeE1xCXkT7VPaLyDq4G5Ut7T5qR1DoDM8YFXjcU1McFxky
+	 RBATdbBU010IQCSs351WUsJZI7NKab9NF6dPSVuiF2RJhOI9f8PM2OzgS1fuNTzmD4
+	 ne4bKGJEud+FpH9RbTevhGyHs6BhdIXhL2Q7y/G90Jzt+Y/Svu7tN9Vz4dXmvH8ape
+	 gg8I/WBqaVych/FwL1GVV5jqdx3Zb2QB1eWlKwN811TB0obhWzVbklJG8aYMRjhZuM
+	 fjrda29ewpNLw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] tracing: Take trace_array reference when opening
+ options file
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Steven Rostedt" <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260902114502.723d8243@gandalf.local.home>
+References: <20260902114502.723d8243@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Sep 2026 16:02:07 +0000
+Message-Id: <20260902160208.12BE51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: EA76A2002C
-X-Stat-Signature: tjtjco3rogwfwjqkso3o7jhwxb4phfbe
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/sLCS4HK3W3ZRkz5eXZUfH7XNedD/o3Co=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=zRIa+gyahkEBV/0rqC86lizCEufj5BJfSy7NLH11Y48=; b=46B78AjjDsqUZCgm15zXmzQeS4GOR3cUJ78l0Vpv7GGdmKYF7A3jD3aJXHGPxjqh06L0WyvpFNGirnl0NNeJWHmhqnybma+DQG6SvpUEoOygxxnVvPwhcvODIr5SxVQugkwoIs1sYOMEkzp2jKarBAJbAoSN1apj9At8WtEcSlI=
-X-HE-Tag: 1788363841-679979
-X-HE-Meta: U2FsdGVkX1846+rh4RNQpNcAGUtH09NSDbiUvd3URnopZbBVk0VLegHSdNXerkFYNAdepMygfwfz34CScHZtbYVsoGA5rrxfopL0+APYH9LKViKMQfXhyotG0nrw++wlIN2P3M9hxYpF4+Rj2CMAZ+kS41HOp06KXC+eLXfHoNcRfuU7M6QPuuIpWMdJ3yaNrwCkXgYdScYtx/2u1ztEDEEVilG9UL/HlqobnuhaUQ9gafwYBtGG/if8cdYozXyI6mVzrJEGmYee6fvswvDKuerQNahqggnRywDNmMKQjuEPh1Jbn+7enwYzkabF6vWIWg5obUCZtOX6X47AsRTlY3JX+FQvTwbFlmQQNWI6igWtd8cHJWBrax47YcfrimnafpL5ciL1vq3Q5QclYMobvnYZf4TUKwFc72NVxraLwHx1/g7JO3e+lautwYlRh4Bvm6rNx1oRdGnVTU40TM3POqaYhvNKbrpFeAVy0/s+mhk=
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
 
-The options files do not take the trace_array reference for the options
-they represent. This could cause a use-after-free kernel crash if one of
-these files is opened by one task and another task removes the instance
-that the option is for. Because it doesn't take a reference upon opening,
-it will not stop the removal which will free the options descriptor that
-is being used.
+New issues:
+- [Low] The patch introduces a call to `__trace_array_get()`, which is neit=
+her declared nor defined anywhere in the kernel, causing a build failure.
+- [Low] The commit message claims to have added a `(void *)` cast to fix a =
+kernel test robot warning, but the cast is missing from the submitted patch.
 
-As the options are somewhat dynamic in their creation at boot up, each
-file represents a flag in the trace_array. The trace_array has an array of
-indexes to represent each of these flags that is stored in the
-trace_flags_index array. The address of the index array element is used to
-pass to the inode->i_private pointer. Then that element is read which
-holds the index (which represents the flag) and then the index is used to
-calculate the trace_array descriptor from its trace_flags_index array.
+Pre-existing issues:
+- [Critical] The patch fixes the use-after-free for core options, but leave=
+s tracer-specific options and other per-instance files vulnerable to the ex=
+act same use-after-free.
+- [Critical] The validation logic for the dangling trace_array pointer is v=
+ulnerable to an ABA (Slab Reuse) problem, allowing cross-instance privilege=
+ escalation.
+--
 
-One issue is that the index element can not be referenced until the
-trace_array's reference is taken. To handle this, create a new helper
-function called: trace_array_options_get() that will iterate all the
-existing trace_arrays in the ftrace_trace_arrays list (under the
-trace_types_lock), and compare the passed in address of the index element
-with the entire array of the trace_array's trace_flags_index array.
-If it matches, then up the corresponding trace_array's reference and
-return.
+commit 16f2151bdbc0994e69e88bb0c5631ea2027da7fa
+Author: Steven Rostedt <rostedt@goodmis.org>
 
-Cc: stable@vger.kernel.org
-Fixes: 577b785f55168 ("tracing: add tracer dependent options to options directory")
-Reported-by: sashiko-bot@kernel.org
-Closes: https://lore.kernel.org/linux-trace-kernel/20260828135858.2AC501F000E9@smtp.kernel.org/
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20260901163620.6cbe0ada@gandalf.local.home
+tracing: Take trace_array reference when opening options file
 
-- Added (void *) typecast to comparison. (kernel test robot)
+This patch addresses a use-after-free when an options file is opened by
+one task and the underlying trace instance is removed by another. It adds
+a new helper to validate the index element address and safely acquire a
+reference to the trace_array.
 
- kernel/trace/trace.c | 67 +++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 63 insertions(+), 4 deletions(-)
+Closes: https://lore.kernel.org/linux-trace-kernel/20260828135858.2AC501F00=
+0E9@smtp.kernel.org/
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a946e0183fd1..61ca05ee991d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7842,11 +7842,70 @@ trace_options_core_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	return cnt;
- }
- 
-+/*
-+ * The tr_index is the address of a trace_array->trace_flags_index[]
-+ * element that holds the index of the trace flag. But since the
-+ * trace_array reference has not been taken yet, it cannot be referenced
-+ * as it could have been freed by a rmdir of the instance the trace_array
-+ * represents.
-+ *
-+ * Search the list of trace_arrays and compare the tr_index to the
-+ * address of the entire trace_array trace_flags_index array for each
-+ * trace_array in the list. If one is matched, then take the reference
-+ * and return it. If not, the trace_array no longer exits.
-+ */
-+static int trace_array_options_get(void *tr_index)
-+{
-+	struct trace_array *tr;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
-+	if (tracing_disabled)
-+		return -ENODEV;
-+
-+	guard(mutex)(&trace_types_lock);
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		if (tr_index >= &tr->trace_flags_index[0] &&
-+		    tr_index < &tr->trace_flags_index[TRACE_FLAGS_MAX_SIZE])
-+			return __trace_array_get(tr);
-+	}
-+	return -ENODEV;
-+}
-+
-+static int trace_options_open(struct inode *inode, struct file *filp)
-+{
-+	void *tr_index = inode->i_private;
-+
-+	if (trace_array_options_get(tr_index) < 0)
-+		return -ENODEV;
-+
-+	filp->private_data = tr_index;
-+
-+	return 0;
-+}
-+
-+static int trace_options_release(struct inode *inode, struct file *filp)
-+{
-+	void *tr_index = filp->private_data;
-+	struct trace_array *tr;
-+	unsigned int index;
-+
-+	get_tr_index(tr_index, &tr, &index);
-+
-+	trace_array_put(tr);
-+
-+	return 0;
-+}
-+
- static const struct file_operations trace_options_core_fops = {
--	.open = tracing_open_generic,
--	.read = trace_options_core_read,
--	.write = trace_options_core_write,
--	.llseek = generic_file_llseek,
-+	.open		= trace_options_open,
-+	.read		= trace_options_core_read,
-+	.write		= trace_options_core_write,
-+	.llseek		= generic_file_llseek,
-+	.release	= trace_options_release,
- };
- 
- struct dentry *trace_create_file(const char *name,
--- 
-2.53.0
+> - Added (void *) typecast to comparison. (kernel test robot)
 
+[Severity: Low]
+Does the pointer comparison in the code still trigger a compiler warning?
+The patch notes mention adding a (void *) typecast to fix a kernel test
+robot warning, but the cast appears to be missing from the submitted code.
+
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index d3005279165d9..3e001ed8cf376 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+
+[ ... ]
+
+> +static int trace_array_options_get(void *tr_index)
+> +{
+> +	struct trace_array *tr;
+> +	int ret;
+> +
+> +	ret =3D security_locked_down(LOCKDOWN_TRACEFS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (tracing_disabled)
+> +		return -ENODEV;
+> +
+> +	guard(mutex)(&trace_types_lock);
+> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> +		if (tr_index >=3D &tr->trace_flags_index[0] &&
+> +		    tr_index < &tr->trace_flags_index[TRACE_FLAGS_MAX_SIZE])
+
+[Severity: Critical]
+This is a pre-existing issue, but does this validation logic remain
+vulnerable to an ABA (slab reuse) problem? If an unprivileged user holds
+an O_PATH file descriptor to a freed instance's options file, the inode
+is kept alive with a dangling i_private pointer.
+
+If a new instance is created and allocated at the exact same memory
+address, wouldn't this bounds check falsely succeed on the dangling
+pointer, granting read and write access to the new (potentially root-create=
+d)
+trace_array options? This same ABA flaw seems to exist in the general
+trace_array_get() function as well.
+
+> +			return __trace_array_get(tr);
+
+[Severity: Low]
+Is __trace_array_get() defined anywhere in the kernel? It looks like
+this might cause a build failure because the function is neither declared
+nor defined.
+
+> +	}
+> +	return -ENODEV;
+> +}
+
+[ ... ]
+
+>  static const struct file_operations trace_options_core_fops =3D {
+> -	.open =3D tracing_open_generic,
+> -	.read =3D trace_options_core_read,
+> -	.write =3D trace_options_core_write,
+> -	.llseek =3D generic_file_llseek,
+> +	.open		=3D trace_options_open,
+> +	.read		=3D trace_options_core_read,
+> +	.write		=3D trace_options_core_write,
+> +	.llseek		=3D generic_file_llseek,
+> +	.release	=3D trace_options_release,
+>  };
+
+[Severity: Critical]
+This is a pre-existing issue, but by only updating trace_options_core_fops,
+do tracer-specific options and other per-instance files remain vulnerable
+to the exact same use-after-free?=20
+
+Files like trace_options_fops, set_tracer_fops, and tracing_max_lat_fops
+still use tracing_open_generic for their open callbacks, which fails to
+take a reference to the instance's trace_array.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902114502.723d=
+8243@gandalf.local.home?part=3D1
