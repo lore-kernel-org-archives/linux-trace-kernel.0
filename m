@@ -1,92 +1,170 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC454A499C;
-	Wed,  2 Sep 2026 15:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A794A2065;
+	Wed,  2 Sep 2026 15:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788361912; cv=none; b=kmkhNvezY+qK99mBRKooX5IOIwMhckBETbj1WlguP5CBZFw7EamffUAy/U+YbijhXwKHCAWgttK7wGx+B/8Ld88n0FeljM6x+Jh6gSeG3uWs0Tm85Z5MKAG95G4uXmuYVZmArhwQUzehR+akzNThP0e6nDLdWGDGHVFjbBFOmfg=
+	t=1788363854; cv=none; b=N9GGKplyeauqVfKWcATNmp1LkDDaL31ObawglfTZ0Fyp7BmY3t09vlQzXGhPD2BvdtAchucJJhe0oDH+XyynPmk/uKZTHhDSfAG0gp18L4BqrpuZ/a0BvAGnuubZkF3uUXwOXugWeWYH81XDh8yE0yu3Kl3415WeyF3GnVPnQ4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788361912; c=relaxed/simple;
-	bh=ibr/j2gpobjRQbUD99yRSw2v85e/E3NAoGIW7RNmVyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nLZsRJLkAzumj2uZqSQxWbkPWipA8rJsoC30i2gOUuvW4YMvhwE1b1ec7I8UVMx9+1FGrcKOM8m20l3/OpVBWx37bMy09lTF48EJ8FRRyhczuzcH0r96QYMsdJ5SHvt8ymktAgVc7ETmlAJ9tTSFk9Yw4JD4YD1o/9y4jNwDhc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=W0XbqfPV; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=aPsZeRXA; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1788363854; c=relaxed/simple;
+	bh=Fw01rL7riqwZdjiKWEKmz/l2BwDbbv84wKasnKUZOLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CksU1mrSgYGCjzu2cfxNBka+TD4jHL8Sh6nJvTstpG/40O5xcOHg0gecsOVndhzQ69JH3DocHnfbEKKYUuPslKrwNs9bOIEHRXSKoVxfnewg9vzIn1U2O0puEgvJ+aFmIMxKonyQUMJNhlUtc4fzGiNJmAwaJ6PL7yU5WF851Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=46B78Ajj; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="W0XbqfPV";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="aPsZeRXA"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4hZmR64J8TzMlCH;
-	Wed, 02 Sep 2026 17:11:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1788361906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aNgEJx62+KEZOmgroOUI48+z30y8hztgfacUD+uqH7c=;
-	b=W0XbqfPVhlXJw9H/wb1v26+1LkpgBy11XR5DpV+Scyc1zPuoEm4j37obzeKvMllIHOayBa
-	30MOAsI+whQayy8VsCP//hfAEQDitYfGr+nMRVIBvOVJGPQ/3dS943e+LpZRs8hrtrtRrP
-	T6RoU3JhfGh32mKfoNXYwy08eSdnap2sXVSAN3ACAzNc5d43hweTj+Mum18uBVN/VZSg+s
-	28nmNshSQIwONfVMlx/7KYHIi12CTaUelCm+1MMm4Op8VmvgHn43/wepQbF6kHAntJOURx
-	JiQTCdS2lKKD7P5YVuz1wQJBK8FfU6e5ki+FZqMYkVZs6LCu+dM5W2p1975dDA==
-From: Manuel Ebner <manuelebnerli@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1788361905;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aNgEJx62+KEZOmgroOUI48+z30y8hztgfacUD+uqH7c=;
-	b=aPsZeRXAto/1Hi9ZBNqzziK7/FYpNAGM99vVf6/b/2GdeVVXLMtkFy0yBcPxLHI35kSxq2
-	DUYvISOHyEGUVHDuckumZj27YlsANuATh5EmevLWqSteB9gVMuNeKpdXs6ZlBI8mnapDvE
-	QUkKD4P1ImGM7eGZ9zl6GlgO7wsbfGP6wKwy3+qhHPjS9RpXnGwf8i8rXh21Prl987R2d8
-	5EXCNEz99QIKqhcsIAiN77O0rhSXosqaoGde9bOzkVyZO6IegexOHIUh5q1ikO/KDvUijb
-	pZPP6VudTH5MoawbuvJP4HRP5Zub3LqkvOAorf4MHen6evwlKFlTp/mkAMHHQQ==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: Manuel Ebner <manuelebnerli@mailbox.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] Documentation: trace: histogram-design: fix bracket
-Date: Wed,  2 Sep 2026 17:10:31 +0200
-Message-ID: <20260902151032.706407-2-manuelebnerli@mailbox.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="46B78Ajj"
+Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 848A11C1781;
+	Wed,  2 Sep 2026 15:44:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id EA76A2002C;
+	Wed,  2 Sep 2026 15:44:01 +0000 (UTC)
+Date: Wed, 2 Sep 2026 11:45:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] tracing: Take trace_array reference when opening options
+ file
+Message-ID: <20260902114502.723d8243@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: e72e2b03c3e05f244d4
-X-MBO-RS-META: t9wtxtaoe499fbwss8w6pdyf1uxrxq1f
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: EA76A2002C
+X-Stat-Signature: tjtjco3rogwfwjqkso3o7jhwxb4phfbe
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/sLCS4HK3W3ZRkz5eXZUfH7XNedD/o3Co=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=zRIa+gyahkEBV/0rqC86lizCEufj5BJfSy7NLH11Y48=; b=46B78AjjDsqUZCgm15zXmzQeS4GOR3cUJ78l0Vpv7GGdmKYF7A3jD3aJXHGPxjqh06L0WyvpFNGirnl0NNeJWHmhqnybma+DQG6SvpUEoOygxxnVvPwhcvODIr5SxVQugkwoIs1sYOMEkzp2jKarBAJbAoSN1apj9At8WtEcSlI=
+X-HE-Tag: 1788363841-679979
+X-HE-Meta: U2FsdGVkX1846+rh4RNQpNcAGUtH09NSDbiUvd3URnopZbBVk0VLegHSdNXerkFYNAdepMygfwfz34CScHZtbYVsoGA5rrxfopL0+APYH9LKViKMQfXhyotG0nrw++wlIN2P3M9hxYpF4+Rj2CMAZ+kS41HOp06KXC+eLXfHoNcRfuU7M6QPuuIpWMdJ3yaNrwCkXgYdScYtx/2u1ztEDEEVilG9UL/HlqobnuhaUQ9gafwYBtGG/if8cdYozXyI6mVzrJEGmYee6fvswvDKuerQNahqggnRywDNmMKQjuEPh1Jbn+7enwYzkabF6vWIWg5obUCZtOX6X47AsRTlY3JX+FQvTwbFlmQQNWI6igWtd8cHJWBrax47YcfrimnafpL5ciL1vq3Q5QclYMobvnYZf4TUKwFc72NVxraLwHx1/g7JO3e+lautwYlRh4Bvm6rNx1oRdGnVTU40TM3POqaYhvNKbrpFeAVy0/s+mhk=
 
-Remove needless ')' from sentence.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
+The options files do not take the trace_array reference for the options
+they represent. This could cause a use-after-free kernel crash if one of
+these files is opened by one task and another task removes the instance
+that the option is for. Because it doesn't take a reference upon opening,
+it will not stop the removal which will free the options descriptor that
+is being used.
+
+As the options are somewhat dynamic in their creation at boot up, each
+file represents a flag in the trace_array. The trace_array has an array of
+indexes to represent each of these flags that is stored in the
+trace_flags_index array. The address of the index array element is used to
+pass to the inode->i_private pointer. Then that element is read which
+holds the index (which represents the flag) and then the index is used to
+calculate the trace_array descriptor from its trace_flags_index array.
+
+One issue is that the index element can not be referenced until the
+trace_array's reference is taken. To handle this, create a new helper
+function called: trace_array_options_get() that will iterate all the
+existing trace_arrays in the ftrace_trace_arrays list (under the
+trace_types_lock), and compare the passed in address of the index element
+with the entire array of the trace_array's trace_flags_index array.
+If it matches, then up the corresponding trace_array's reference and
+return.
+
+Cc: stable@vger.kernel.org
+Fixes: 577b785f55168 ("tracing: add tracer dependent options to options directory")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://lore.kernel.org/linux-trace-kernel/20260828135858.2AC501F000E9@smtp.kernel.org/
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 ---
- Documentation/trace/histogram-design.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1: https://patch.msgid.link/20260901163620.6cbe0ada@gandalf.local.home
 
-diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-index 41a726cd3..b757afa22 100644
---- a/Documentation/trace/histogram-design.rst
-+++ b/Documentation/trace/histogram-design.rst
-@@ -876,7 +876,7 @@ next_pid field on this sched_switch event, we retrieve the
- variables specified in the wakeup_latency() trace action, and use
- them to generate a new wakeup_latency event into the trace stream.
+- Added (void *) typecast to comparison. (kernel test robot)
+
+ kernel/trace/trace.c | 67 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 63 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a946e0183fd1..61ca05ee991d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7842,11 +7842,70 @@ trace_options_core_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	return cnt;
+ }
  
--Note that the way the trace handlers such as wakeup_latency() (which
-+Note that the way the trace handlers such as wakeup_latency() which
- could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid)
- are implemented, the parameters specified to the trace handler must be
- variables.  In this case, $wakeup_lat is obviously a variable, but
++/*
++ * The tr_index is the address of a trace_array->trace_flags_index[]
++ * element that holds the index of the trace flag. But since the
++ * trace_array reference has not been taken yet, it cannot be referenced
++ * as it could have been freed by a rmdir of the instance the trace_array
++ * represents.
++ *
++ * Search the list of trace_arrays and compare the tr_index to the
++ * address of the entire trace_array trace_flags_index array for each
++ * trace_array in the list. If one is matched, then take the reference
++ * and return it. If not, the trace_array no longer exits.
++ */
++static int trace_array_options_get(void *tr_index)
++{
++	struct trace_array *tr;
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	if (ret)
++		return ret;
++
++	if (tracing_disabled)
++		return -ENODEV;
++
++	guard(mutex)(&trace_types_lock);
++	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
++		if (tr_index >= &tr->trace_flags_index[0] &&
++		    tr_index < &tr->trace_flags_index[TRACE_FLAGS_MAX_SIZE])
++			return __trace_array_get(tr);
++	}
++	return -ENODEV;
++}
++
++static int trace_options_open(struct inode *inode, struct file *filp)
++{
++	void *tr_index = inode->i_private;
++
++	if (trace_array_options_get(tr_index) < 0)
++		return -ENODEV;
++
++	filp->private_data = tr_index;
++
++	return 0;
++}
++
++static int trace_options_release(struct inode *inode, struct file *filp)
++{
++	void *tr_index = filp->private_data;
++	struct trace_array *tr;
++	unsigned int index;
++
++	get_tr_index(tr_index, &tr, &index);
++
++	trace_array_put(tr);
++
++	return 0;
++}
++
+ static const struct file_operations trace_options_core_fops = {
+-	.open = tracing_open_generic,
+-	.read = trace_options_core_read,
+-	.write = trace_options_core_write,
+-	.llseek = generic_file_llseek,
++	.open		= trace_options_open,
++	.read		= trace_options_core_read,
++	.write		= trace_options_core_write,
++	.llseek		= generic_file_llseek,
++	.release	= trace_options_release,
+ };
+ 
+ struct dentry *trace_create_file(const char *name,
 -- 
-2.54.0
+2.53.0
 
