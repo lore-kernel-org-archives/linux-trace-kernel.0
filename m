@@ -1,93 +1,160 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49816472F67;
-	Wed,  2 Sep 2026 13:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D571B3925
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 13:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788354901; cv=none; b=aEDBcytdHkiwaFV1y3JGOVdyOWMCVVVAxfo/gTiu2O9ayu/7Bb0HjPev2nQD85jjzXteqt4ql6WJ8zK/pHL39iDBrlKmbjKtcfDN0ON0/RGSRj7LH9VArOhio3KGhlpiELR3WVIS5+3VZqH9Jrh8sRdSewBWf5tURIySnw8U524=
+	t=1788355837; cv=none; b=Yv18huoyts15/KCuaAy3asE47V5lsOyPMUQ4PPWleemESBrBpF5Db8W7tOaAZDIJu89+ZxtgieSaqRta3A79bQfoZwwmiD1Ql52C8BD85nc0RnjJijepfCK1OzOkO+AuUeGrqaJjYWOTAbjus/qTHiXf6+5auEiVkN9EvKgKgwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788354901; c=relaxed/simple;
-	bh=llL0fq6MHfb3x3/fbHPbOaKi1AltfhsdW+uncHlYs5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Si5FGZh3p+s3p1gQxPP3ptOLgUQuSqJL9eAisqwvvDn9oZym2BD5ahXWv5yF4+sxoDrw/FX4Z9/vEvVpbb8jB4JBijhvuz7Z4D6uISjMGnuciCO9EsUnLDdAyj4SpnL30nsk6+qPa1rkHkXivyhGPqPuhAPAHeq8PN85Mhiy7fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=W3kMTaAZ; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788355837; c=relaxed/simple;
+	bh=MHL7rgwCnCCzQ0ALQS+vHavGvj+m/st2KmAo4YeAg84=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pGvY0Zfv/jWO/9652ljiRDNuUHNektLpziLPk1hf5EAMGUPqG7i3BiSn1WybZ3jDT/2vxckojH9ndX+gu14t+9+mkCrzEgFUrJr1blWrjBXQ5jf5226x4n9BqhIytAp7v95nZXSzq55TB3gEBuC15tOc/eWzrCqXOkNo+XswARU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDa/0Oej; arc=none smtp.client-ip=209.85.214.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="W3kMTaAZ"
-Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id D0163140202;
-	Wed,  2 Sep 2026 13:14:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id D86E11B;
-	Wed,  2 Sep 2026 13:14:54 +0000 (UTC)
-Date: Wed, 2 Sep 2026 09:15:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
-Cc: Xiang Gao <gxxa03070307@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <ljs@kernel.org>, Gao Xu <gaoxu2@honor.com>,
- =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [External Mail]Re: [RFC] tracing: aggregate ring-buffer memory
- statistics
-Message-ID: <20260902091555.450b521c@gandalf.local.home>
-In-Reply-To: <88d476d443e74672957a5e0d1f8bf9ba@xiaomi.com>
-References: <20260825141015.3539553-1-gaoxiang17@xiaomi.com>
-	<20260827113815.0a0e37fb@gandalf.local.home>
-	<15c244f5bc8f4858b8ffa2974a46d009@xiaomi.com>
-	<88d476d443e74672957a5e0d1f8bf9ba@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDa/0Oej"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d7443e0f0bso16780365ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Sep 2026 06:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788355835; x=1788960635; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mjYXG96MoSl8fTQZ7UxomEUfCMCHuYclL43aTeN6TlM=;
+        b=HDa/0OejXOLAo60mi/WsaiaFauY4lpsEUXD5S4ErepL7tSUt6BK+qswUsGtrZxee/k
+         AMZ89vrXic2a8oIk4MUXmdYjVgcZ22N31iZpGhm6wp5bEqyvzlstVg8GIru4/ZFYzAr2
+         z2ufT38pcUCxPWK5qjzBy7ZVEK8dn1yag6u5B0ZE8bax5eVnab2YxmbXblLtfaGalYs7
+         hpi+q61IuH+UMrDxcLyEQcHs1kOGaHEs8S50arsWnyewMnF8WqwSfP4x89pnsj9u46Qt
+         kPnJeo8nKopTl1HZzVkxmvjcGr8KP/cKkQGbpIuRrlO9PndMduKx7tHKOR7x6cSnWQGr
+         M4Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788355835; x=1788960635;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mjYXG96MoSl8fTQZ7UxomEUfCMCHuYclL43aTeN6TlM=;
+        b=CrQMTD/fA6LYaT6wRr8x8nLcOwsMsJdrM5xqaKPTPGzdOn+3pAfXhfNgeezhLFPyfa
+         wbVLZoDh3N/tVHs+ymC3g5Q/uq5ohEopJCbhTGlTncfYChK2nsaX5ZgZA+8sDEcTOaAe
+         9s9E9ec828K0j6uh6b8IRNzbyU92AQvcn0N0ZTVqeM7qVgnYv3nd26r9N86CzEtksKvc
+         kLISKNQtt8FneCMVVQFone+WNisI3QqpXjRP+oPLCPsjZzxp5yAsdv5WAJX2FtaX+RHj
+         nzhA1+ixeGDbUuKEnDj4wubWuFkrGAKNetRty3vcs7PikVHTQYPjl3VP/OPjUwOlIoUY
+         55nA==
+X-Forwarded-Encrypted: i=1; AKwUvBzP745kYk16Sl3vmB5SzBtnlPfa8bvJyvciXSSkveRgpAL+G1Dj2n+FbSnKnQFTfr3WIMAR0IbB/EPwAxAW7U4BarA=@vger.kernel.org
+X-Gm-Message-State: AFuF++mzezTG7uT1cO/UxybQQcz1btJkxl1y3WKSB+FJqkjcvk9o67Mh
+	qjRfmWhtMibMLje51SIkwhbncJdfhVtpqnwPZp7/MSUFhoRp/04TjZBLIY614Xo1bIzxUujDnZV
+	Y8xoVqg==
+X-Received: from plnt11.prod.google.com ([2002:a17:903:196b:b0:2d3:7166:b1a6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec8b:b0:2d9:43f6:59f0
+ with SMTP id d9443c01a7336-2daec7bae38mr68887665ad.22.1788355834704; Wed, 02
+ Sep 2026 06:30:34 -0700 (PDT)
+Date: Wed, 2 Sep 2026 06:30:34 -0700
+In-Reply-To: <33431813-fc94-48fb-9042-5cfc68af05b8@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: aknydimr6a97o9us8nh3bkrou6z5k6u1
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: D86E11B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+ohUGFcNZp7XbN1Z9V/SQ2mcXexHS1Dbc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=aNSS6owsISO1dJeq02hyfcUeTR42Jaw3NROhHSm+DEI=; b=W3kMTaAZgMmlRRBCrpebeZ8dKGzvcnFxy6yId0TuxcpJfbgTW/pzL8fS0/ebVMlWibXJu1XmK/PmSWrjLp7k9tjpB/kOPFD8Be6YxJ/gCp1fZGhcOeJTbsaA1k2WBRexZ7CPqaTM1iwK8uGRoYi/v+AID4MDOOrrBar8fbAEHMk=
-X-HE-Tag: 1788354894-503581
-X-HE-Meta: U2FsdGVkX18s9Af5vshpTC/L79oepm5794RlazNh0uSs54U8WDIXxZyUYQrQK4ZhwxiL5IVEJscA8u4WjRBZaikCHSwBgQeb0Se1jmDic8Pd4Ap8VZKWXq41dXaHX90TEDnrBa1BDeLrYcUSGUnYDg1SSvi1Cl3gsIYRWUXc6h5zEAIDg9Hr2gNYzFXUd08HqbP/R/lJ286P+QGbgkm6mtFBeXTkl4+R6HpNCk341qQZEim6oYRBNU+F9an5cieBwOpZlNv53267y0e+VRR/r+RUsqau8BI9OQbrfRLfkUxhVckk3VN8HAx4A35vm4K/kDW6vpdzs48Ge2eIY1BbUIec6FJO7Tp+x2C6VhXieNVm2lfkERFipg==
+Mime-Version: 1.0
+References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-23-85e5fd25252a@google.com>
+ <CA+EHjTzALzghuG5J-LFuG5pXJ4WgEfrMHgwkMHnq1U-D6yS7Pg@mail.gmail.com>
+ <apcY5b2o5k04XffH@google.com> <33431813-fc94-48fb-9042-5cfc68af05b8@linux.intel.com>
+Message-ID: <apgk-nKsB31WVCWp@google.com>
+Subject: Re: [PATCH v12 23/45] KVM: Let userspace disable per-VM mem
+ attributes, enable per-gmem attributes
+From: Sean Christopherson <seanjc@google.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: Fuad Tabba <fuad.tabba@linux.dev>, ackerleytng@google.com, aik@amd.com, 
+	andrew.jones@linux.dev, brauner@kernel.org, chao.p.peng@linux.intel.com, 
+	david@kernel.org, jmattson@google.com, jthoughton@google.com, 
+	michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	shivankg@amd.com, steven.price@arm.com, willy@infradead.org, 
+	wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com, 
+	pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org, 
+	liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+	Randy Dunlap <rdunlap@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-coco@lists.linux.dev, 
+	Xiaoyao Li <xiaoyao.li@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 2 Sep 2026 02:24:23 +0000
-=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
+On Wed, Sep 02, 2026, Binbin Wu wrote:
+> On 9/2/2026 2:26 AM, Sean Christopherson wrote:
+> > On Tue, Sep 01, 2026, Fuad Tabba wrote:
+> >> Hi Sean, Ackerley,
+> >>
+> >> On Mon, 31 Aug 2026 at 01:25, Ackerley Tng via B4 Relay
+> >> <devnull+ackerleytng.google.com@kernel.org> wrote:
+> >> ...
+> >>> +       kvm.gmem_in_place_conversion=
+> >>> +                       [KVM] Controls whether KVM enables in-place conversion
+> >>> +                       support for guest_memfd and tracks the private/shared
+> >>> +                       state of memory per guest_memfd instead of per VM.
+> >>> +
+> >>> +                       If enabled, KVM enables the KVM_SET_MEMORY_ATTRIBUTES2
+> >>> +                       ioctl on guest_memfd file descriptors and disables the
+> >>> +                       legacy VM-scoped KVM_SET_MEMORY_ATTRIBUTES ioctl for
+> >>> +                       private memory state tracking. Only the
+> >>> +                       KVM_MEMORY_ATTRIBUTE_PRIVATE attribute moves to
+> >>> +                       per-guest_memfd tracking; other attributes remain
+> >>> +                       per-VM.
+> >>> +
+> >>> +                       This parameter toggles KVM's in-place conversion
+> >>> +                       capability support. Whether a VMM uses separate backends
+> >>> +                       or out-of-place memory management is determined by
+> >>> +                       userspace VMM design.
+> >>> +
+> >>> +                       Note, this parameter is only available when
+> >>> +                       CONFIG_KVM_VM_MEMORY_ATTRIBUTES=y. When
+> >>> +                       CONFIG_KVM_VM_MEMORY_ATTRIBUTES is not set, in-place
+> >>> +                       conversion is unconditionally enabled.
+> >>> +
+> >>> +                       Default is Y (on).
+> >>
+> >> The parameter is only settable when CONFIG_KVM_VM_MEMORY_ATTRIBUTES=y, and
+> >> in that config gmem_in_place_conversion initialises to
+> >> !IS_ENABLED(CONFIG_KVM_VM_MEMORY_ATTRIBUTES), i.e. N, not Y. Is the doc line
+> >> wrong, or is N-by-default not what was intended here?
+> > 
+> > The doc is wrong.  The intent is to maintain backwards compatibility with existing
+> > deployments if KVM_VM_MEMORY_ATTRIBUTES=y.
+> > 
+> 
+> Will it result in the situation that kernel builds with CONFIG_KVM_VM_MEMORY_ATTRIBUTES
+> enabled by default for backwards compatibility, which requires users to explicitly enable 
+> gmem_in_place_conversion by the kernel option? Then it effectively disables
+> gmem_in_place_conversion by default.
 
-> Hi Steve,
->=20
->=20
-> Just checking if the metadata split I proposed last time looks
-> reasonable, so I know whether to proceed with the implementation:
->=20
->=20
->   total:
->   buffers_mem:
->   snapshot_buffers_mem:
->   metadata_mem:
->=20
->=20
-> where buffers_mem and snapshot_buffers_mem report all page memory, and
-> metadata_mem reports the slab-allocated ring-buffer metadata.
->=20
->=20
-> Would you like me to proceed with this split?
->=20
+Yes.  My intent/expectation is that the only reason to build with
+CONFIG_KVM_VM_MEMORY_ATTRIBUTES=y is for backwards compatibility, and so it makes
+sense to have the existing behavior be the default.  If a deployment only wants
+the new behavior, then it can simply build with CONFIG_KVM_VM_MEMORY_ATTRIBUTES=n.
 
-Let's start with just the buffers for now. Thinking about this more, the
-file can be called "memory_usage" and we can drop the "_mem" part of the
-items.
+Folks that want only the new behavior but are using a distro/pre-built kernel will
+need to manually enable in-place conversion, but that's not too onerous, and it's
+simply not feasible to provide defaults that work for every possible scenario.
 
- # cat memory_usage_kb
- buffers: XXX
- snapshot buffers: XXX
+> But I guess it's OK for CSPs since they know what they want.
 
-
-We can then add more information later.
-
--- Steve
+Yep.
