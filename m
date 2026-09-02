@@ -1,116 +1,105 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEFA49E5C7;
-	Wed,  2 Sep 2026 13:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9675847D44A
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 13:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788357245; cv=none; b=c3T0lH0GGprhH33g4MURqGpnagt5WSE57UhS77IITcoAqH4EyU/UQlUHFaLeLvLA1KKnIXiefBLZudBfbCR9e2IunWrnWsKFGaGW9znRKGNqR1cFAJJFzKyRVAD8vs4j4eOnjR8idixrQZ9gI/7svjJaJcGAfpvF5aOWoMiTPmc=
+	t=1788357320; cv=none; b=EZ6Gs2H9s3IIWDW4s+LTrEwiEk9zPo1XZrcnCjTYQTeKKxxN1tizrPPxBij5vlg6pvyB5D//iCJfRkqVU7Vx9Vwro8YTwkiIs2GMFTxsESQUIUU5C//omjR4//hkeOKEbGRciyPWxn7b3kv3gmhFgoQPLKjCfx5Q9eZqzT5d2hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788357245; c=relaxed/simple;
-	bh=2xhiSNl6rv+NV5hd3w1FW9ynAL8rnL8SoqADV1EVwNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sB79YXR1Jf9LWhGJ7mt3hZcGmcLrwG8AtELCDWZdkgWz0dvJwev/xni0yycnaxJZcvTcPa2JVqxHgafgn2zqVEI1zoZoORi/z1i3dCt6fulNZF8+IAfZEEBONXd7IYhiUJ9Mfz3SvbNKevkA7cs7o8piLWB+Ujo/4JeW78lhwl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=tqTd1v+a; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788357320; c=relaxed/simple;
+	bh=jfdE2nG5pNX1G/psaPW085o1MgM1bA59x2+rO9S80W0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=d9JY/xJc3/HRIHbYRUexIB4Pss/J4G7eaNK0ujjI4BLNNojrybxGe/G5H0ZT4kOwepZTb1j9jBgh5Azyb8+0CIswo+PiGuek6+cLorwCivk9nnuOH4zFYWXcftfmJD3kmx1t4pOCBnSLNU/mVkf9UPj2y+Gui4o81vbkpU+1uIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FkHwTP3Q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="tqTd1v+a"
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id EF6F3120221;
-	Wed,  2 Sep 2026 13:54:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 5D64420025;
-	Wed,  2 Sep 2026 13:54:00 +0000 (UTC)
-Date: Wed, 2 Sep 2026 09:55:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] ftrace: Synchronize the initialization of ftrace_ops
-Message-ID: <20260902095501.6b59af20@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FkHwTP3Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E7C51F000E9;
+	Wed,  2 Sep 2026 13:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788357319;
+	bh=TnnID2oKD2qyugiiTtsyeGsrJCfCyrWFr0lU5tGKjEU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=FkHwTP3Qrr1CwynD4F0TJU/523HR9CckGCTuk9X8BY8K10quLJ/sw8XdTwe7KoGhp
+	 xaEyikDfz2lT5sC6KXEBdIKanvjOoVLnBuRGb50FWzS1/oyb28H/R5wNIOtzYxqf8q
+	 HOb5GEFvtbDi3beee4gNCFtvJ3jJMFvXLvm4TPreg5ixGAedx98zJnowwCNW6pYR+Z
+	 LsMIfmwL0FkQoLCs8vKLqMNunWDaChlsBbdNBWm/YgeaskCiV9c/LD3ziWnk1Qh8Ve
+	 pocrYmYQIdTyJA4KqnQuO9Ci4teC7WrCRGlEC7yiEXzgySpg8osnmzpEZMBrDtUGzY
+	 cYgtgTgb1TUyA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 8/8] rtla/osnoise: Trace IPI events when recording a
+ trace file
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Valentin Schneider" <vschneid@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260902123942.695822-9-vschneid@redhat.com>
+References: <20260902123942.695822-1-vschneid@redhat.com>
+ <20260902123942.695822-9-vschneid@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Sep 2026 13:55:18 +0000
+Message-Id: <20260902135519.1E7C51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 6zarnnjh5qgyn5kgmchx3jecoi3fqz16
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 5D64420025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18OSNDThE9QNvit8ihvgFlUFk6P0IMr36I=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=uqBwdvyULbyZePMiwHIC2xgx+6flyyWZas5DwoTT0r4=; b=tqTd1v+aDgwfEhF0TZxSSVHEopW9dKpaSySpB0Cl8xMNb4uGwTR5nsSIEXzLCoNB7s+fYhoVzGsDhTT8zqWt+Kqho3edGeDjP1htgmDEV2JiIeD8zPdORywehcGF4anIu1PZBxsMaUF+0FlFkwaOYds9zxbkvyY7Y35uzsSpWN8=
-X-HE-Tag: 1788357240-278134
-X-HE-Meta: U2FsdGVkX1+QPe7Uj9LrTdGDWiRX4Jvq/CI23WyodBUHXT2sAQJaw8cNbLppb5+PM4iPPXHeS5rIlKRECE5MtIxEmGetr3PMz8235IwpCHcJHFGGoZCbRUACfeP9Xs956SJWJPnN9+JNfVvnc2HRuF6AswmqYSVtICBK5S04VHi1mIKFNlCo1AQs+mH6xwj/n7JsyxK2uBGQ7f6kpGWe4rbC8qG44zLKeHPaju9q49BXngxvmFOvkUT9caF3wHtFBYkHaFMr2r4idlExp1j5hFhhVcXUactwQvkNh4BqeSj0JnCZvkeF/GbXyVVdSon+3PcN6RmsKOPVAD9AuAN8Xirf3NZwoyfHP28NFvYTFZg0+ZFmoBTIIlpTfPQleKTN21JOXM6cH1KcU2RwWZ7yqJDJpidfOqMtWXS6gUmXw5uyR8fFHuspftgV46iF0jUV9BZ9bXqaBrgMef8YPNpJNNtH0/jvjd/8JRBTfeEtydM=
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Out-of-bounds read in osnoise_ipi_cpumask_handler due to using C=
+PU_AND on a dynamically sized trace event field.
+--
 
-There's some internal state that ftrace_ops needs to have set, but since
-it can be declared outside of the ftrace.c code, it calls
-ftrace_ops_init() on the ops in every global function. The issue is that
-if two tasks call it on the same ops at the same time it is possible to
-have the initialization of one corrupt the initialization of the other
-call.
+commit 25aed6d1003b38e3162e406562eb91e3fee93066
+Author: Valentin Schneider <vschneid@redhat.com>
 
-Create a ops_mutex to use to synchronize every initialization of the
-ftrace_ops. The mutex is taken within checking the ftrace_ops flag that
-states it was initializied but the flag is checked again after the mutex
-has been taken. Checking first outside the mutex allows it to shortcut
-having to take the mutex. But then the check needs to be done again after
-the mute is taken in case of races.
+rtla/osnoise: Trace IPI events when recording a trace file
 
-Cc: stable@vger.kernel.org
-Fixes: f04f24fb7e48d ("ftrace, kprobes: Fix a deadlock on ftrace_regex_lock")
-Reported-by: sashiko-bot@kernel.org
-Close: https://lore.kernel.org/all/20260829025528.49A831F000E9@smtp.kernel.org/
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20260901202020.09a1119a@robin
+IPIs can now be monitored and accounted by osnoise top. When that is
+the case, also record them when saving a trace file. To match what is
+being recorded by the tool for its own analysis, event filters are
+applied to the events recorded to the trace output.
 
-- Added smp_load_acquire() and smp_store_release() to make sure that
-  the flags value that is compared is really updated after the code has
-  been initialized. (Sashiko)
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
+c/osnoise_top.c
+> index afab2f341a1e9..87d28865515b5 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+> @@ -392,7 +392,7 @@ osnoise_ipi_cpumask_handler(struct trace_seq *s, stru=
+ct tep_record *record,
+>   */
+>  struct osnoise_tool *osnoise_init_top(struct common_params *params)
+>  {
+> -	bool ipi_filters_enabled =3D false;
+> +	bool ipi_filters_enabled;
+>  	struct osnoise_tool *tool;
+>  	int retval;
 
- kernel/trace/ftrace.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+[Severity: Medium]
+Can this lead to an out-of-bounds read when processing the IPI cpumask?
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index c7cf36f2dd7b..53d5db60bfa5 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -75,6 +75,8 @@
- 	.func_hash		= &opsname.local_hash,			\
- 	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock), \
- 	.subop_list		= LIST_HEAD_INIT(opsname.subop_list),
-+/* Used only to synchronize the initialization of ftrace_ops */
-+static DEFINE_MUTEX(ops_mutex);
- #else
- #define INIT_OPS_HASH(opsname)
- #endif
-@@ -159,11 +161,18 @@ const struct ftrace_ops ftrace_nop_ops = {
- static inline void ftrace_ops_init(struct ftrace_ops *ops)
- {
- #ifdef CONFIG_DYNAMIC_FTRACE
--	if (!(ops->flags & FTRACE_OPS_FL_INITIALIZED)) {
-+	unsigned long flags = smp_load_acquire(&ops->flags);
-+
-+	if (!(flags & FTRACE_OPS_FL_INITIALIZED)) {
-+		guard(mutex)(&ops_mutex);
-+		/* Could have been initialized before lock taken */
-+		if (unlikely(ops->flags & FTRACE_OPS_FL_INITIALIZED))
-+			return;
- 		mutex_init(&ops->local_hash.regex_lock);
- 		INIT_LIST_HEAD(&ops->subop_list);
- 		ops->func_hash = &ops->local_hash;
--		ops->flags |= FTRACE_OPS_FL_INITIALIZED;
-+		flags = ops->flags | FTRACE_OPS_FL_INITIALIZED;
-+		smp_store_release(&ops->flags, flags);
- 	}
- #endif
- }
--- 
-2.53.0
+Looking at osnoise_ipi_cpumask_handler() above, it processes the
+ipi_send_cpumask trace event:
 
+tools/tracing/rtla/src/osnoise_top.c:osnoise_ipi_cpumask_handler() {
+    ...
+    cpumask =3D tep_get_field_raw(s, event, "cpumask", record, &len, 1);
+    ...
+    event_cpus =3D (cpu_set_t *)cpumask;
+    ...
+    CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_cpus);
+    ...
+}
+
+tep_get_field_raw() returns a pointer to a dynamically sized field and its
+actual length in len.
+
+Since the code ignores len and casts the pointer to a cpu_set_t *, and
+glibc's CPU_AND() unconditionally iterates and reads sizeof(cpu_set_t)
+(128 bytes) from the source pointers, does this read well past the end
+of the trace field for the cpumask (which would be 8 bytes for 64 CPUs)?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902123942.6958=
+22-1-vschneid@redhat.com?part=3D8
