@@ -1,198 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD094968FE
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 13:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBD648035F;
+	Wed,  2 Sep 2026 13:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788356654; cv=none; b=tD1USuoeGSmlvFeR5Zgsj+8NePr/zPhZ0oC7KxFvQDKvKvvNx9c4iii1CqO130gYhoEM7bVoeF4K2JrXPuhVSdqr4TFWPVrg7AOsWJRzO9K/5kFOSnaxnH3m+KrruKUoBoaIKeOt1DuziyUM/G8kAOoBmQNnFd4/CUVBZHDIi9Y=
+	t=1788356801; cv=none; b=DzlF4oxrw3Omr+cEL5Ik+fQvzy0D3JhkjP+Kz+I79Xz79i9Zj60fXfR3UaU5maPxBz9oNU5ZDJMM4A/cb322xaSAFqRBJBSEfxPulHn/NKcLv1QEZA3ir5NMxegfRGJpw1gb137opZhvJqJYBOux3tH/cZ0ESOztLxRysdbSJ3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788356654; c=relaxed/simple;
-	bh=pRUqb97H8vrC9+iaFu2jrLuXdilk+UpwE840//dw1B4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Bjj0nsM1u6eYnQEFL6XpGsmpmscJNaw5AuSXvYQfAHaixbCCJYzIr/63+WlghDyyyZChha2RUuDp9QhdB6Bci82gMBVV9wUB6rJyEmJbGwfUIe5FAuJS1l71bZv050fANO/9xbFdkRrkbfs1kBNxwDJLliJGnnsyPsDr09kFXM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6mPFeJo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788356801; c=relaxed/simple;
+	bh=P2j+lKDQZ1G5aGLG5JoEI2eXCL7Dy1YBHIlPymGrNoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rxlZXl2INVY9Jd78CMDjBtuX+AssDfskjY4CCPjvG2ZJ/6JJcUcTfaf3U0/CXzzE7KKlMTDc8fVlhRNRbiE+H2N8Dti40a1lPJETGeX/QaVIKCIqaYcFYPwb3Mkx40Orey4YNOhr/bXHiVjPWK7xqpAXLjrkdhGbgBwP21NSrmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=yzaxrYqc; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6mPFeJo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943AD1F000E9;
-	Wed,  2 Sep 2026 13:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788356652;
-	bh=skTqcjuBaPTwrnVdFVDw5dizOIr7NopLp9D0unhy2PQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=a6mPFeJoZ+loI/E+j8WIR/TB79GB9kczZTXj7Z6SA2bHnphee7FwiPPTuABnvjhWH
-	 g7UDKb+/+J29bToaNa5eyTED96/nyuOfSB+BZ/50lDFO6wx64nvOR8icjyefEpzZoR
-	 1Xj9zNJmddkjyOGUqYd/T/ynixvvqvXlEvlIt1w/c774toFpGXuYNW5KEztxSgayAC
-	 KWjifs+qQlXDIMV3b2zjaR5n1rlQnP7s4FxiAQTEjtHimp/BXUAxfrhBGw5WR+P+Hx
-	 EAVTATFGCoqTZ2bShyRo7kGEiY7Amv8qOuulodUttvZzBd4c6w3Pl+dAKAz8F1JZBh
-	 dCI1YYGoOSNeQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 7/8] rtla: Unconditionally clean any pre-existing
- filters for user-provided events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Valentin Schneider" <vschneid@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260902123942.695822-8-vschneid@redhat.com>
-References: <20260902123942.695822-1-vschneid@redhat.com>
- <20260902123942.695822-8-vschneid@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Sep 2026 13:44:12 +0000
-Message-Id: <20260902134412.943AD1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="yzaxrYqc"
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id BD21540202;
+	Wed,  2 Sep 2026 13:46:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id D72421B;
+	Wed,  2 Sep 2026 13:46:35 +0000 (UTC)
+Date: Wed, 2 Sep 2026 09:47:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: kernel test robot <lkp@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, oe-kbuild-all@lists.linux.dev, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Take trace_array reference when opening
+ options file
+Message-ID: <20260902094736.2fcd3d5e@gandalf.local.home>
+In-Reply-To: <202609021814.YH14WR0q-lkp@intel.com>
+References: <20260901163620.6cbe0ada@gandalf.local.home>
+	<202609021814.YH14WR0q-lkp@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: D72421B
+X-Stat-Signature: dshprnfczjbzjc4xdy9s1ky8e933ysma
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19YOE1xz9XKIH0iIdcwPJfH1GpYiFczEew=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=PQ4uVyoFqfhmwHdEmgX9n8s1dQPgnO3UwApcxrO8s6w=; b=yzaxrYqcePIS5Dmo9O4NUpkJxVbaLezMebMvUrWI9uzKHHsN+YVUra8nHM3RsUkmTStOkRCOhlP93W7ZHpQxUnAblyneml5di/Nv3h7Bn/s35PWHkxA3wh5MqL47O1sj77g5wqXJK5o6dNa6cmoY4cBorr8EzMG7lEP/EzQPJYE=
+X-HE-Tag: 1788356795-802407
+X-HE-Meta: U2FsdGVkX19CpEm06zOi2rUcJstNRaxzk9mqigs+f3c8hzlfQGJnvSjHs/ZhNUub1lEvJvzYtMrXf9N5fRU7E9MRLouMvBk6Bw/2z+cp6W80N494WQaR2VekFpRMo7rw62icYljM35DApdupTISxnsx7bYzhrhsHoWd+CuiLrVc9mNnIOt4J+wSturgq/IaohIy7Tp44ZnEloMiY+C2UAi9kW0JzP0cWzHPR75eSIoqbWirkPX/txN/yR6lUM39nsccx6oZEbFphgD6iYpxfi/Q7kyS2CgGmRDzc8ozmMbMgWmDR9NvBXhDWRCEdj9zgEBuT7KX2qlvAF9JfgRdj0YJsKciDIwoM
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Medium] Logic error in command-line trigger processing causing triggers =
-to accumulate instead of overriding.
-- [Medium] Unconditionally clearing filters during event processing destroy=
-s previously configured specific event filters when a subsystem is enabled.
-- [Medium] Out-of-bounds read in osnoise_ipi_cpumask_handler due to using g=
-libc CPU_AND on a dynamically sized trace event field.
-- [Medium] Missing bounds check on `dst_cpu` parsed from trace record leads=
- to an out-of-bounds array write.
---
+On Wed, 2 Sep 2026 18:36:45 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-commit 5cb00dbb92aa356c89071b1755fbef9a7743360f
-Author: Valentin Schneider <vschneid@redhat.com>
+> All warnings (new ones prefixed by >>):
+> 
+>    kernel/trace/trace.c: In function 'trace_array_options_get':
+> >> kernel/trace/trace.c:7871:30: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]  
+>     7871 |                 if (tr_index >= &tr->trace_flags_index[0] &&
+>          |                              ^~
+>    kernel/trace/trace.c:7872:30: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+>     7872 |                     tr_index < &tr->trace_flags_index[TRACE_FLAGS_MAX_SIZE])
+>          |                              ^
 
-rtla: Unconditionally clean any pre-existing filters for user-provided even=
-ts
+Hmm, I thought void pointers could compare to anything. Oh well, I'll
+typecast the address too.
 
-This commit unconditionally cleans up pre-existing filters when enabling an
-event provided via the '-e' command line argument to prevent confusion. It
-also documents that when the same event is specified multiple times, only
-the last specified filter or trigger applies.
-
-> diff --git a/Documentation/tools/rtla/common_options.txt b/Documentation/=
-tools/rtla/common_options.txt
-> index 38da1cf443a48..6bf0f86393333 100644
-> --- a/Documentation/tools/rtla/common_options.txt
-> +++ b/Documentation/tools/rtla/common_options.txt
-> @@ -26,12 +26,19 @@
-> =20
->  **--filter** *<filter>*
-> =20
-> -        Filter the previous **-e** *sys:event* event with *<filter>*. Fo=
-r further information about event filtering see https://www.kernel.org/doc/=
-html/latest/trace/events.html#event-filtering.
-> +        Filter the previous **-e** *sys:event* event with *<filter>*.
-> +
-> +        If the same event is specified more than once but with different=
- filters, the last specified filter will be the only one applied.
-> +
-> +	For further information about event filtering see https://www.kernel.or=
-g/doc/html/latest/trace/events.html#event-filtering.
-> =20
->          This option cannot be unset.
-> =20
->  **--trigger** *<trigger>*
->          Enable a trace event trigger to the previous **-e** *sys:event*.
-> +
-> +        If the same event is specified more than once but with different=
- triggers, the last specified trigger will be the only one applied.
-> +
-
-[Severity: Medium]
-Does the command-line trigger processing actually implement this override
-behavior?
-
-Looking at trace_event_enable_trigger() in tools/tracing/rtla/src/trace.c,
-the new trigger is written without clearing prior triggers for the same
-event:
-
-	retval =3D tracefs_event_file_write(instance->inst, tevent->system,
-					  tevent->event, "trigger", trigger);
-
-Since tracefs 'trigger' files are cumulative by default, could this cause
-triggers to accumulate instead of replacing the previous one?
-
->          If the *hist:* trigger is activated, the output histogram will b=
-e automatically saved to a file named *system_event_hist.txt*.
->          For example, the command:
-> =20
-> diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trac=
-e.c
-> index 17d148f7d5d6e..06204d339f967 100644
-> --- a/tools/tracing/rtla/src/trace.c
-> +++ b/tools/tracing/rtla/src/trace.c
-> @@ -487,6 +487,10 @@ static int trace_event_enable_filter(struct trace_in=
-stance *instance,
->  	char filter[MAX_PATH];
->  	int retval;
-> =20
-> +	/* Unconditionally clean any pre-existing filters */
-> +	tracefs_event_file_write(instance->inst, tevent->system,
-> +				 tevent->event, "filter", "0");
-> +
-
-[Severity: Medium]
-Will this destroy previously configured specific event filters when a broad=
-er
-subsystem is enabled?
-
-If tevent->event is NULL (e.g., when enabling an entire subsystem like
-'-e sched'), unconditionally writing '0' to the subsystem's filter file
-might wipe out all specific event filters previously configured within
-that subsystem.
-
->  	if (!tevent->filter)
->  		return 0;
-> =20
-
-While reviewing this series, I also noticed a couple of issues introduced
-in osnoise_top.c:
-
-[Severity: Medium]
-Does osnoise_ipi_cpumask_handler() have an out-of-bounds read when parsing
-the cpumask field?
-
-When processing a broadcast IPI trace event, the dynamically sized 'cpumask'
-field is extracted into event_cpus:
-
-tools/tracing/rtla/src/osnoise_top.c:osnoise_ipi_cpumask_handler() {
-    ...
-    event_cpus =3D tep_get_field_raw(s, event, "cpumask", record, &len, 1);
-    ...
-    CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_cpus);
-    ...
-}
-
-Since glibc's CPU_AND() unconditionally reads 128 bytes (sizeof(cpu_set_t))
-from event_cpus, and the raw buffer size is only 'len' bytes, could this
-read past the end of the buffer?
-
-
-[Severity: Medium]
-Is there a missing bounds check on dst_cpu in osnoise_ipi_cpu_handler()
-that could lead to an out-of-bounds write?
-
-The 'cpu' field is parsed from the trace record directly into dst_cpu and
-used as an array index:
-
-tools/tracing/rtla/src/osnoise_top.c:osnoise_ipi_cpu_handler() {
-    ...
-    tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
-    account_ipi(tool, dst_cpu);
-    ...
-}
-
-tools/tracing/rtla/src/osnoise_top.c:account_ipi() {
-    ...
-    cpu_data =3D &data->cpu_data[dst_cpu];
-    update_sum(&cpu_data->ipi_count, &inc);
-    ...
-}
-
-If the trace record contains an unexpectedly high CPU ID (e.g., due to hotp=
-lug
-or trace buffer corruption), could this write beyond the bounds of the
-data->cpu_data array since there's no verification that dst_cpu < nr_cpus?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902123942.6958=
-22-1-vschneid@redhat.com?part=3D7
+-- Steve
