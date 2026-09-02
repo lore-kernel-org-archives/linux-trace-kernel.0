@@ -1,82 +1,86 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6824C4A4995;
-	Wed,  2 Sep 2026 14:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993D44A5EB4;
+	Wed,  2 Sep 2026 14:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788360439; cv=none; b=t6lTMF+313Vnlo8YJg0yi+rJOIgfynq2Ybxwh32xwSJkP+0FH3k9UxYpLI5JA7Sa+PyEpA4v6LyeeqPvJNdJRZd4WAPdWgciwcCFDtw3UR7LVGrIETHJTxX7AQimKMWVVNEMEam2codisl18uL7hwQEwX+5womVmglFvhU1U7e0=
+	t=1788360942; cv=none; b=bhyN9Fyb3pSfoXzsCU9IAVbEQ5qu6Vak4mvfV/23yPBI3v/x3XIRBbBLZsxvEsZOlwpVJzegIizJSb7EIp1mfw3lCPNAfEmYs0IND9DjQSEwzPwD7t2hG3odNxR41XQA5FyrcXSwgAJWPxtItFoWHHHdNytP9PrO4psZ0L4hJCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788360439; c=relaxed/simple;
-	bh=bOcbTYWOSnGi5jznXtg1XYwg4lMEoIvH6Y8FiYqBbXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qrEsgvn1AuAoXOWtp0/KdWOpuHxxo7y0v5VzmJXtGipSYh93gYqHpR1XMNq6XR/dxeal/N3mNBUm1KDGmq8QsO3ZJxsNHxu0z/TKFv57xRzdLYYpHmZEkBJuABTb2GBdB0sBrkPWO+0T6rNp+YbOHSmjJEQmLrnL7nBQ3R1XXOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=rzIiNjuL; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788360942; c=relaxed/simple;
+	bh=OgD0qGPB5f+MJB13UFV92iCXE2XY2AgqTqZKVf2ib7U=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pgE4xVNDGjk0b2fzYcLO0i+ecKVZoqBs8sc5nXgICVT2YnM0ESp9sFOiu5IV83K/dZuIuheGDEHsCboNAZ0pdyITXnuleBb/c1JmUB5OXV/Iq5qkqgRnk/A8LaJRn1Wt5DQ81vTDExYJp8lnoclz0fzj+jeCc1u68AS9jXu+syg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elfU7kO/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="rzIiNjuL"
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 4337416020E;
-	Wed,  2 Sep 2026 14:47:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3A9C320025;
-	Wed,  2 Sep 2026 14:47:13 +0000 (UTC)
-Date: Wed, 2 Sep 2026 10:48:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
-Cc: Xiang Gao <gxxa03070307@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <ljs@kernel.org>, Gao Xu <gaoxu2@honor.com>,
- =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [External Mail]Re: [RFC] tracing: aggregate ring-buffer memory
- statistics
-Message-ID: <20260902104813.658823b7@gandalf.local.home>
-In-Reply-To: <e4c4d3f20b1445869ba329e561f6d042@xiaomi.com>
-References: <20260825141015.3539553-1-gaoxiang17@xiaomi.com>
-	<20260827113815.0a0e37fb@gandalf.local.home>
-	<15c244f5bc8f4858b8ffa2974a46d009@xiaomi.com>
-	<88d476d443e74672957a5e0d1f8bf9ba@xiaomi.com>
-	<20260902091555.450b521c@gandalf.local.home>
-	<ca552a4c093b4498b2e308d266d5ab6f@xiaomi.com>
-	<20260902103938.6cf6f61c@gandalf.local.home>
-	<e4c4d3f20b1445869ba329e561f6d042@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elfU7kO/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 100221F000E9;
+	Wed,  2 Sep 2026 14:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788360938;
+	bh=4VkIc8pjkpY1oFoTfyYo3gvdAh5Yf+vjfAn89/ZsDGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=elfU7kO/7Y0JO3xq65MZpi2xurdnDenwPNo1FjzKUbil7EKy1r1A4a5IdW27RfdXF
+	 6tz8XM85yXqGcn/0N5TR2eCZvNMi5A/k5YdEvfJQoqt7l6FDJZZyOVbGE+NQbWKwfB
+	 4DVVoZ/N+IEril7xQY3nWFHTNTJjZHkfEWCEuCJQ2Rl+Diad5twnqhjtG5oHm46QG5
+	 G26MfD/XoymgRsOBZOyF282TJYNSkR4aOUDXiexPp9+0Wg6TcWnujaZXCAm8bu9Y4b
+	 kRgaHn4UEOG7dEkT/MOJBtIEoBTKqZj+Z37x1BmnhrQG/5ZUS7zxDETlqiYiyh6Ad8
+	 egdRe/a23z+Lw==
+Date: Wed, 2 Sep 2026 23:55:33 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Peng Donglin <dolinux.peng@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
+ dolinux.peng@gmai.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pengdonglin <pengdonglin@xiaomi.com>
+Subject: Re: [PATCH v5 0/3] Use BTF to trim return values
+Message-Id: <20260902235533.ea387f764b51b1b2a8ce8224@kernel.org>
+In-Reply-To: <f18beeb4-f3df-41eb-9990-5be295a2729b@gmail.com>
+References: <20260901134604.4052265-1-dolinux.peng@gmail.com>
+	<20260901135715.4812fde9@gandalf.local.home>
+	<f18beeb4-f3df-41eb-9990-5be295a2729b@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: ed11yfzzffczpq8q4dwd3dfcjcc4mr11
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 3A9C320025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19StsrfhKF+weKPGtcADRxnAZedVSuCQgE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Oed39cMjAakAu0s/CMQfMdp1Ef8v0B+jU/QKmVYOIqc=; b=rzIiNjuL4WallsfpXY8FEZMOWreQr1KYTroB2iDNg+5WZzA4n7qtevHQYi19GA1Fu3Wv3DjktYgxxiYZFwwRVy0kPK1Z6y2LVtWZ0fd790YPfKV8tpgD39Tw37QWwHTp2wAbyo/8iiFD3/lUUEqcyBow3uD0UU9c8XhOlSEPXCM=
-X-HE-Tag: 1788360433-46278
-X-HE-Meta: U2FsdGVkX19swY5FgH3aFEpYEcyltZMIUZN8o7wq8YsmaTSU72A5c8zNjTFGuhehM8rDpohAeDjL9z5adzSpWRuJRa49UNHFzNPgiIhqu2op7UT/yhIT6by8x/vgc4JKdkp54s9hwI9b/MkzXyC/RkdUAbuECXX8b5CFWyvQlazfD9as/OlskQl5SqSeWt33Ab1ItM6JPghx0OeRtQ7Qz6kTMr+tuSPjCb7rMqonAbTaQO1ex2+KdskScwevod0m0u/Ep5aZ52jRDlM6yy1F+c6Q48dtIboP0dUxEzUmRNaEK+99sF2HxCTHmiyZoK8ui0iYSSYC/j0TBiLTjIodanKTLQKxMzgM
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2 Sep 2026 14:46:21 +0000
-=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
+On Wed, 2 Sep 2026 11:25:29 +0800
+Peng Donglin <dolinux.peng@gmail.com> wrote:
 
-> Thanks, Steve.
->=20
->=20
-> One more question on the per-CPU view. Should I also provide:
->=20
->   /sys/kernel/tracing/trace_stats/per_cpu/cpuN/memory_usage_kb
->=20
->=20
-> with the same two-line format, reporting only the buffers belonging to
-> that CPU? Or should the initial version only have the top-level
-> memory_usage_kb file?
->=20
-> Once this is settled, I'll send the patch for review.
+> >>    - Do not print a return value for functions with a void return type.
+> >>    - Trim integer, enum, struct, and union values to the available return
+> >>      value width when the BTF type provides suitable size information.
+> >>    - Format integer, enum, and boolean values according to their BTF
+> >>      encoding.
+> >>    - Mark values as "(trunc)" when the return type is wider than the
+> >>      value captured by the function graph tracer.
+> > 
+> > Hmm, I really don't like the "(trunc)" If it's the real return type, then
+> > it should just print what the real size is. No need to state it was truncated.
+> 
+> Thanks, I agree. We can remove the "(trunc)" suffix and print the actual 
+> type information instead, for example:
+> 
+>      ret=0x5[struct:0x10]
+> 
+> This would indicate that the return type is a struct with a size of 0x10 
+> bytes.
 
-You can add it as a separate patch in the series.
+Hmm, shouldn't both the actually applied size and the true size be displayed?
+e.g.
 
--- Steve
+ret=0x5 (in 8 bytes, true size: 16 bytes)
+
+Thank you,
+
+> 
+> Would this be acceptable?
+> 
+> > 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
