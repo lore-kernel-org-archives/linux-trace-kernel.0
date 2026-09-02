@@ -1,105 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9675847D44A
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 13:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EA94A2A7D;
+	Wed,  2 Sep 2026 14:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788357320; cv=none; b=EZ6Gs2H9s3IIWDW4s+LTrEwiEk9zPo1XZrcnCjTYQTeKKxxN1tizrPPxBij5vlg6pvyB5D//iCJfRkqVU7Vx9Vwro8YTwkiIs2GMFTxsESQUIUU5C//omjR4//hkeOKEbGRciyPWxn7b3kv3gmhFgoQPLKjCfx5Q9eZqzT5d2hQ=
+	t=1788359926; cv=none; b=TtHnj6WzZqhfSU50B9WfcLbAo4Qn03b34MnvyoRjpmIfzBrqCFATAH3kGYfPVwCVlAMhE9BGG6dS4bho5TrPaew6/KLrnYkudxHfNmX+AIX5zwknYliAKjy1WomVOC+0v86Lg1Ab66TbrIfTbyoARVGvXyXNRNmatNCf0ffocRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788357320; c=relaxed/simple;
-	bh=jfdE2nG5pNX1G/psaPW085o1MgM1bA59x2+rO9S80W0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=d9JY/xJc3/HRIHbYRUexIB4Pss/J4G7eaNK0ujjI4BLNNojrybxGe/G5H0ZT4kOwepZTb1j9jBgh5Azyb8+0CIswo+PiGuek6+cLorwCivk9nnuOH4zFYWXcftfmJD3kmx1t4pOCBnSLNU/mVkf9UPj2y+Gui4o81vbkpU+1uIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FkHwTP3Q; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788359926; c=relaxed/simple;
+	bh=INfjYsPwROmmhIRiUPQSd1pXkNc9oUc19N5sYMNK/dY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XI448Ivxu0fAJkFT2kNemO1u5/09dnVKnOJ0M00tw2pDH69gUtwijs3wrsO9Sd+SJ3P3R+HXo0uSyWnbR95C34U52xdaieAOlonu1hbvjCa3XIn4MZ3cp2q2jVleJ/3kif6452oGE7EACN+OPzUvXz2PoiWjCc2SGZvHpQuvYrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Z2ZaRtG3; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FkHwTP3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E7C51F000E9;
-	Wed,  2 Sep 2026 13:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788357319;
-	bh=TnnID2oKD2qyugiiTtsyeGsrJCfCyrWFr0lU5tGKjEU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FkHwTP3Qrr1CwynD4F0TJU/523HR9CckGCTuk9X8BY8K10quLJ/sw8XdTwe7KoGhp
-	 xaEyikDfz2lT5sC6KXEBdIKanvjOoVLnBuRGb50FWzS1/oyb28H/R5wNIOtzYxqf8q
-	 HOb5GEFvtbDi3beee4gNCFtvJ3jJMFvXLvm4TPreg5ixGAedx98zJnowwCNW6pYR+Z
-	 LsMIfmwL0FkQoLCs8vKLqMNunWDaChlsBbdNBWm/YgeaskCiV9c/LD3ziWnk1Qh8Ve
-	 pocrYmYQIdTyJA4KqnQuO9Ci4teC7WrCRGlEC7yiEXzgySpg8osnmzpEZMBrDtUGzY
-	 cYgtgTgb1TUyA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 8/8] rtla/osnoise: Trace IPI events when recording a
- trace file
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Valentin Schneider" <vschneid@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260902123942.695822-9-vschneid@redhat.com>
-References: <20260902123942.695822-1-vschneid@redhat.com>
- <20260902123942.695822-9-vschneid@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Sep 2026 13:55:18 +0000
-Message-Id: <20260902135519.1E7C51F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Z2ZaRtG3"
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 1A6FD14023F;
+	Wed,  2 Sep 2026 14:38:41 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 73F062002C;
+	Wed,  2 Sep 2026 14:38:37 +0000 (UTC)
+Date: Wed, 2 Sep 2026 10:39:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
+Cc: Xiang Gao <gxxa03070307@gmail.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, Gao Xu <gaoxu2@honor.com>,
+ =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [External Mail]Re: [RFC] tracing: aggregate ring-buffer memory
+ statistics
+Message-ID: <20260902103938.6cf6f61c@gandalf.local.home>
+In-Reply-To: <ca552a4c093b4498b2e308d266d5ab6f@xiaomi.com>
+References: <20260825141015.3539553-1-gaoxiang17@xiaomi.com>
+	<20260827113815.0a0e37fb@gandalf.local.home>
+	<15c244f5bc8f4858b8ffa2974a46d009@xiaomi.com>
+	<88d476d443e74672957a5e0d1f8bf9ba@xiaomi.com>
+	<20260902091555.450b521c@gandalf.local.home>
+	<ca552a4c093b4498b2e308d266d5ab6f@xiaomi.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: jtydmfnpre5giy4t8yxi8hacespb757o
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 73F062002C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+gGPWDhDF0xe+lImErs1VS48gUvn3WEqk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=INfjYsPwROmmhIRiUPQSd1pXkNc9oUc19N5sYMNK/dY=; b=Z2ZaRtG3KNWWeOOuzxJUhXcLVffP9jUZzEVURCM+xwoYXfQH9hjMm35rs1wGbN4pWPwB7jKo5o9ZDPGCR7eJ1VZWvXOv7pC9MvfSg7QuAQGj5SADqoMpla0GMOtA7bGZWSdLmMyqyU8MslTeOVK5fcE9aq/Hb2XAdi5+cE4MUuI=
+X-HE-Tag: 1788359917-521601
+X-HE-Meta: U2FsdGVkX18UsHfgc5Y3ohWFlrue2dYo8ylPX6jADsn4vzI3cJj/QPEunSSAJGmSxjHvlkrNrhGZkaDDCRto8dMhEg/6jpm0mpNTOy8iSX7Sk2mEMN8FRXGy/CHRjIyrvlJfrjT6JaPMZYG9K3AjEFT/pbATEsS4D6CL6b5HQll5Do8r9kxQHIkiyHAJOxEA6Id1Bn/FDmfvYgdbfIlNLJCDbcWPhuc8+ZTKUrBZVLgeL2D6aNxawi2gr+oI8OBfHs1Rg3wr/3aZ95Qs12zNbdNs70yfG1eYX32j9rq3n2ykNz3HmBxdNo4UOnzuY4bOm7aIk1LcJaYHqmgueQQEF419X+UegXqu07m7mRiuqcjxR3y28Gncvg==
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Out-of-bounds read in osnoise_ipi_cpumask_handler due to using C=
-PU_AND on a dynamically sized trace event field.
---
+On Wed, 2 Sep 2026 14:31:17 +0000
+=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
 
-commit 25aed6d1003b38e3162e406562eb91e3fee93066
-Author: Valentin Schneider <vschneid@redhat.com>
+> The values are in KiB. Should I keep a separate total line, or will the
+> two categories suffice for now?
 
-rtla/osnoise: Trace IPI events when recording a trace file
+Just the two lines. People can add for themselves ;-)
 
-IPIs can now be monitored and accounted by osnoise top. When that is
-the case, also record them when saving a trace file. To match what is
-being recorded by the tool for its own analysis, event filters are
-applied to the events recorded to the trace output.
-
-> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
-c/osnoise_top.c
-> index afab2f341a1e9..87d28865515b5 100644
-> --- a/tools/tracing/rtla/src/osnoise_top.c
-> +++ b/tools/tracing/rtla/src/osnoise_top.c
-> @@ -392,7 +392,7 @@ osnoise_ipi_cpumask_handler(struct trace_seq *s, stru=
-ct tep_record *record,
->   */
->  struct osnoise_tool *osnoise_init_top(struct common_params *params)
->  {
-> -	bool ipi_filters_enabled =3D false;
-> +	bool ipi_filters_enabled;
->  	struct osnoise_tool *tool;
->  	int retval;
-
-[Severity: Medium]
-Can this lead to an out-of-bounds read when processing the IPI cpumask?
-
-Looking at osnoise_ipi_cpumask_handler() above, it processes the
-ipi_send_cpumask trace event:
-
-tools/tracing/rtla/src/osnoise_top.c:osnoise_ipi_cpumask_handler() {
-    ...
-    cpumask =3D tep_get_field_raw(s, event, "cpumask", record, &len, 1);
-    ...
-    event_cpus =3D (cpu_set_t *)cpumask;
-    ...
-    CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_cpus);
-    ...
-}
-
-tep_get_field_raw() returns a pointer to a dynamically sized field and its
-actual length in len.
-
-Since the code ignores len and casts the pointer to a cpu_set_t *, and
-glibc's CPU_AND() unconditionally iterates and reads sizeof(cpu_set_t)
-(128 bytes) from the source pointers, does this read well past the end
-of the trace field for the cpumask (which would be 8 bytes for 64 CPUs)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902123942.6958=
-22-1-vschneid@redhat.com?part=3D8
+-- Steve
