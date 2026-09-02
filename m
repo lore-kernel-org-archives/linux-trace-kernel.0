@@ -1,282 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDD5493639
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 12:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ECE49B210
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Sep 2026 13:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788352858; cv=none; b=kZXjoTWcetcH5Xj7JEu7Z7qyBhD7Kfwx8V+X9P2mCAdCdQ6D5W13VunRAoDFSNu4PxW5iH89CemdsJVxKie84f3hIJ7+Rl+CxmPPxD291befofRb4mB9yCtne9izP8ZaLivu045bK05g4k2LCccD4Kc+K9tpDQoGUY4TUDgn3pA=
+	t=1788354062; cv=none; b=KLx0c1teefZx79DrQoVXkQbhkGdfGrhBGtw84iiOUQTo8wU54H8r2ff/rxqt5uRRS6IgP80tETU0u4lHRa7NVLZcy4ICDURGfdEI8ZZrR8Aemn5um7rmvbbKCBWN1vm+PBnZCfzB9+3Ds6LB8YAaGpLvITLF2fQuIpR1A7eV2NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788352858; c=relaxed/simple;
-	bh=xyTZtukQ0nTIad9odCB2JAq1OSBUbce1d5b+4Bs6x8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=edbZSPoq9e5dA8dagkb2eUbefQIu82+RHqKq/5PromVV4I3jvF8w+La7osKj5lCPfU7pvU7VLW/NUvgnnlDPyHKToMfoGIKHuN51Pd871wmagbrdBLGR2GZT9pI2CqxqvRYPxWqmGCOVKKnp1zGj3bEI1DD8heUoc/1mwMX9mHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AY3IMnds; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1788354062; c=relaxed/simple;
+	bh=+gp7Q6PMTQ28kUW7Tp8lCxH4mgpKGbF2CWdLWc1zss8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=HFq9+45I3sCHc/mfsPUrGfWMQAoHtC1tHKPg1ouQPlBs5y93f3EiLOP5Vpcvw9CjCH3EzDGQvZ+AxGqSBJ4dDTx4IU6W0siy7VVLK25wt+BK4GglvBCsm/ugHC461+HHbXuX095SxFbfXTdn2PGdGAJYmkS2wfqo2Fh9locNl/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd9BoJap; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AY3IMnds"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788352855;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hioaiPo7qfRBBdUI+++gzH6e7JfDnvI7QypkLOQkxAg=;
-	b=AY3IMndscpCxqbN4LGc/ujYhcAijsiLLygWK3lVwMzSDwBqZVY6p9job7OfbcnLNpvjKwQ
-	Hz3b9USg5iChCYWQJMeTtLO7gp31UiNlKooWHQ3rZb96vDUgJwBIdhTHf5YChC/n7wHONj
-	epKjArOS0LMgoyuJtStCVV9l5oAAg9E=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-evUGaa1zP3ujXCvI2C7LBQ-1; Wed,
- 02 Sept 2026 08:40:52 -0400
-X-MC-Unique: evUGaa1zP3ujXCvI2C7LBQ-1
-X-Mimecast-MFC-AGG-ID: evUGaa1zP3ujXCvI2C7LBQ_1788352850
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4B4B31921EEA;
-	Wed,  2 Sep 2026 12:40:50 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.44.33.19])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4FEB51955F72;
-	Wed,  2 Sep 2026 12:40:46 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v5 8/8] rtla/osnoise: Trace IPI events when recording a trace file
-Date: Wed,  2 Sep 2026 14:39:37 +0200
-Message-ID: <20260902123942.695822-9-vschneid@redhat.com>
-In-Reply-To: <20260902123942.695822-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd9BoJap"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961641F00ACF;
+	Wed,  2 Sep 2026 13:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788354060;
+	bh=WeIkHW0zvLxkEjqBB7X0Un21CMRqdUL+aYbxitrj6tA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=fd9BoJapoJuRZThN7WQ2VIqPVSQes6GD6+w1+hY8UdY21DI/dwY0iaiAZ4BixCTpW
+	 3twTwCuohkBy97DERJLy1pAhbGgM8nX3WGwLbbLshh435EetUYjPYiK+UwDip9Qlol
+	 qT7YGh2agUqYTMBaSIvAlYDOhXNaMSZloIfw3mzBLKaR+o2/FwXzB5rkolqzCMnbKY
+	 kgPYqy5112reMl8uw8CuxZHDTrdAq7FxhnSiv2mfoTp7KpJp9p+0GNQGoRYrNZHq4G
+	 Am3MbXzpNT1hchqrSTXQsdsHzoSdEjUDFvQDAzyshl3UXKJ8oStX9r6UhpU8Y02a6k
+	 dvhnlLs5opcxg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 2/8] rtla/osnoise: Record IPI count in osnoise top
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Valentin Schneider" <vschneid@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260902123942.695822-3-vschneid@redhat.com>
 References: <20260902123942.695822-1-vschneid@redhat.com>
+ <20260902123942.695822-3-vschneid@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Sep 2026 13:01:00 +0000
+Message-Id: <20260902130100.961641F00ACF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: ePehsb6eK7PSiunU_DncIXWGbwADTo4E71lhxNbZeus_1788352850
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-IPIs can now be monitored and accounted by osnoise top. When that is
-the case, also record them when saving a trace file.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] Out-of-bounds read and potential unaligned access when parsing t=
+he dynamically sized cpumask trace field with CPU_AND.
+- [Medium] Missing return value check for tep_get_field_val() leaves dst_cp=
+u uninitialized, leading to out-of-bounds memory accesses.
+--
 
-To match what is being recorded by the tool for its own analysis, event
-filters are applied to the events recorded to the trace output.
+commit ff03318823c0d1c72fb9d5969112afecabf91462
+Author: Valentin Schneider <vschneid@redhat.com>
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- tools/tracing/rtla/src/common.c      |  2 +-
- tools/tracing/rtla/src/common.h      |  2 +-
- tools/tracing/rtla/src/osnoise.c     | 72 +++++++++++++++++++++++++++-
- tools/tracing/rtla/src/osnoise.h     |  4 ++
- tools/tracing/rtla/src/osnoise_top.c | 36 ++------------
- 5 files changed, 80 insertions(+), 36 deletions(-)
+rtla/osnoise: Record IPI count in osnoise top
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index 8c7f5e75b2ec8..2f6cf83475550 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -205,7 +205,7 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
- 
- 	if (params->threshold_actions.present[ACTION_TRACE_OUTPUT] ||
- 	    params->end_actions.present[ACTION_TRACE_OUTPUT]) {
--		tool->record = osnoise_init_trace_tool(ops->tracer);
-+		tool->record = osnoise_init_trace_tool(params, ops->tracer);
- 		if (!tool->record) {
- 			err_msg("Failed to enable the trace instance\n");
- 			goto out_free;
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 045253230fcf2..421e06e10f3f1 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -178,7 +178,7 @@ int osnoise_set_workload(struct osnoise_context *context, bool onoff);
- 
- void osnoise_destroy_tool(struct osnoise_tool *top);
- struct osnoise_tool *osnoise_init_tool(char *tool_name);
--struct osnoise_tool *osnoise_init_trace_tool(const char *tracer);
-+struct osnoise_tool *osnoise_init_trace_tool(struct common_params *params, const char *tracer);
- bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record);
- int osnoise_set_stop_us(struct osnoise_context *context, long long stop_us);
- int osnoise_set_stop_total_us(struct osnoise_context *context,
-diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-index 4ff5dad013b10..ae6e5f03e828f 100644
---- a/tools/tracing/rtla/src/osnoise.c
-+++ b/tools/tracing/rtla/src/osnoise.c
-@@ -1178,10 +1178,56 @@ struct osnoise_tool *osnoise_init_tool(char *tool_name)
- 	return top;
- }
- 
-+/*
-+ * osnoise_init_ipi_filters - Initialize event filtering for IPI events
-+ */
-+int osnoise_init_ipi_filters(struct osnoise_tool *tool,
-+				    struct common_params *params,
-+				    bool *filters_enabled)
-+{
-+	char filter[MAX_PATH];
-+	int retval;
-+	/*
-+	 * If tracing on a subset of possible CPUs, leverage the kernel filtering
-+	 * infrastructure to only generate events on traced CPUs.
-+	 * Older kernels (pre v6.6) may have the IPI events but not the ability
-+	 * to filter them, so allow that to fail gracefully.
-+	 */
-+
-+	snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n", params->cpus);
-+	retval = tracefs_event_file_write(tool->trace.inst,
-+					  "ipi", "ipi_send_cpu", "filter",
-+					  filter);
-+	if (retval < 0) {
-+		debug_msg("Could not set ipi_send_cpu CPU filter\n");
-+		*filters_enabled = false;
-+		return 0;
-+	}
-+
-+
-+	snprintf(filter, ARRAY_SIZE(filter), "cpumask & CPUS{%s}\n", params->cpus);
-+	retval = tracefs_event_file_write(tool->trace.inst,
-+					  "ipi", "ipi_send_cpumask", "filter",
-+					  filter);
-+	if (retval < 0) {
-+		/*
-+		 * If we managed to set up the previous filter but not
-+		 * this one, something's really wrong
-+		 */
-+		err_msg("Could not set ipi_send_cpumask CPU filter\n");
-+		*filters_enabled = false;
-+		return -1;
-+	}
-+
-+	*filters_enabled = true;
-+	return 0;
-+}
-+
- /*
-  * osnoise_init_trace_tool - init a tracer instance to trace osnoise events
-  */
--struct osnoise_tool *osnoise_init_trace_tool(const char *tracer)
-+struct osnoise_tool *osnoise_init_trace_tool(struct common_params *params,
-+					     const char *tracer)
- {
- 	struct osnoise_tool *trace;
- 	int retval;
-@@ -1196,6 +1242,30 @@ struct osnoise_tool *osnoise_init_trace_tool(const char *tracer)
- 		goto out_err;
- 	}
- 
-+	if (!params->ipi)
-+		goto done;
-+
-+	retval = tracefs_event_enable(trace->trace.inst, "ipi", "ipi_send_cpu");
-+	if (retval < 0 && !errno) {
-+		err_msg("Could not find ipi_send_cpu event\n");
-+		goto out_err;
-+	}
-+
-+	retval = tracefs_event_enable(trace->trace.inst, "ipi", "ipi_send_cpumask");
-+	if (retval < 0 && !errno) {
-+		err_msg("Could not find ipi_send_cpumask event\n");
-+		goto out_err;
-+	}
-+
-+	if (params->cpus) {
-+		bool unused;
-+
-+		retval = osnoise_init_ipi_filters(trace, params, &unused);
-+		if (retval < 0)
-+			goto out_err;
-+	}
-+
-+done:
- 	retval = enable_tracer_by_name(trace->trace.inst, tracer);
- 	if (retval) {
- 		err_msg("Could not enable %s tracer for tracing\n", tracer);
-diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
-index 340ff5a64e6e4..81a704c361ec0 100644
---- a/tools/tracing/rtla/src/osnoise.h
-+++ b/tools/tracing/rtla/src/osnoise.h
-@@ -63,6 +63,10 @@ int osnoise_enable(struct osnoise_tool *tool);
- int osnoise_main(int argc, char **argv);
- int hwnoise_main(int argc, char **argv);
- 
-+int osnoise_init_ipi_filters(struct osnoise_tool *tool,
-+			     struct common_params *params,
-+			     bool *filters_enabled);
-+
- extern struct tool_ops timerlat_top_ops, timerlat_hist_ops;
- extern struct tool_ops osnoise_top_ops, osnoise_hist_ops;
- 
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index afab2f341a1e9..87d28865515b5 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -392,7 +392,7 @@ osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *record,
-  */
- struct osnoise_tool *osnoise_init_top(struct common_params *params)
- {
--	bool ipi_filters_enabled = false;
-+	bool ipi_filters_enabled;
- 	struct osnoise_tool *tool;
- 	int retval;
- 
-@@ -424,41 +424,11 @@ struct osnoise_tool *osnoise_init_top(struct common_params *params)
- 		goto out_err;
- 	}
- 
--	/*
--	 * If tracing on a subset of possible CPUs, leverage the kernel filtering
--	 * infrastructure to only generate events on traced CPUs.
--	 * Older kernels (pre v6.6) may have the IPI events but not the ability
--	 * to filter them, so allow that to fail gracefully.
--	 */
- 	if (params->cpus) {
--		char filter[MAX_PATH];
--
--		snprintf(filter, ARRAY_SIZE(filter), "cpu & CPUS{%s}\n", params->cpus);
--		retval = tracefs_event_file_write(tool->trace.inst,
--						  "ipi", "ipi_send_cpu", "filter",
--						  filter);
--		if (retval < 0) {
--			debug_msg("Could not set ipi_send_cpu CPU filter\n");
--			goto no_filter;
--		}
--
--
--		snprintf(filter, ARRAY_SIZE(filter), "cpumask & CPUS{%s}\n", params->cpus);
--		retval = tracefs_event_file_write(tool->trace.inst,
--						  "ipi", "ipi_send_cpumask", "filter",
--						  filter);
--		if (retval < 0) {
--			/*
--			 * If we managed to set up the previous filter but not
--			 * this one, something's really wrong
--			 */
--			err_msg("Could not set ipi_send_cpumask CPU filter\n");
-+		retval = osnoise_init_ipi_filters(tool, params, &ipi_filters_enabled);
-+		if (retval < 0)
- 			goto out_err;
--		}
--
--		ipi_filters_enabled = true;
- 	}
--no_filter:
- 
- 	/*
- 	 * If no filtering is available and we're tracing all CPUs, we can still
--- 
-2.55.0
+This commit leverages the ipi_send_cpu and ipi_send_cpumask trace events to
+record the count of IPIs sent to monitored CPUs. It adds these statistics to
+the osnoise top output, enabled via the new --ipi command line option.
 
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
+c/osnoise_top.c
+> index 512a6299cb018..7b5ae5336cf08 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+
+[ ... ]
+
+> @@ -275,12 +282,93 @@ osnoise_top_apply_config(struct osnoise_tool *tool)
+>  	return -1;
+>  }
+> =20
+> +static void account_ipi(struct osnoise_tool *tool, unsigned long long ds=
+t_cpu)
+> +{
+> +	struct osnoise_top_cpu *cpu_data;
+> +	struct osnoise_top_data *data;
+> +	unsigned long long inc =3D 1;
+> +
+> +	data =3D tool->data;
+> +	cpu_data =3D &data->cpu_data[dst_cpu];
+> +
+> +	update_sum(&cpu_data->ipi_count, &inc);
+> +}
+> +
+> +/*
+> + * osnoise_ipi_cpu_handler - this is the handler for single CPU IPI even=
+ts.
+> + */
+> +static int
+> +osnoise_ipi_cpu_handler(struct trace_seq *s, struct tep_record *record,
+> +		     struct tep_event *event, void *context)
+> +{
+> +	struct osnoise_tool *tool;
+> +	struct osnoise_params *params;
+> +	unsigned long long dst_cpu;
+> +	struct trace_instance *trace =3D context;
+> +
+> +	tool =3D container_of(trace, struct osnoise_tool, trace);
+> +	params =3D to_osnoise_params(tool->params);
+> +
+> +	tep_get_field_val(s, event, "cpu", record, &dst_cpu, 1);
+> +
+> +	if (CPU_ISSET(dst_cpu, &params->common.monitored_cpus))
+> +		account_ipi(tool, dst_cpu);
+
+[Severity: Medium]
+If tep_get_field_val() fails to extract the field (for instance, due to a
+trace format mismatch), the return value is ignored and dst_cpu is left
+uninitialized.
+
+Could this result in an out-of-bounds read inside the CPU_ISSET() macro, or
+an out-of-bounds heap write when dst_cpu is passed to account_ipi() and used
+as an index for data->cpu_data[dst_cpu]?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static cpu_set_t cpumask_tmp_cpus;
+> +
+> +/*
+> + * osnoise_ipi_cpumask_handler - this is the handler for broadcasted IPI=
+ events.
+> + */
+> +static int
+> +osnoise_ipi_cpumask_handler(struct trace_seq *s, struct tep_record *reco=
+rd,
+> +			 struct tep_event *event, void *context)
+> +{
+> +	struct trace_instance *trace =3D context;
+> +	struct osnoise_tool *tool;
+> +	struct osnoise_params *params;
+> +	struct tep_format_field *field;
+> +	cpu_set_t *event_cpus;
+> +	int len;
+> +
+> +	tool =3D container_of(trace, struct osnoise_tool, trace);
+> +	params =3D to_osnoise_params(tool->params);
+> +
+> +	field =3D tep_find_field(event, "cpumask");
+> +	if (!field)
+> +		return 0;
+> +
+> +	event_cpus =3D tep_get_field_raw(s, event, "cpumask", record, &len, 1);
+> +	if (!event_cpus) {
+> +		err_msg("Failed to get cpumask field\n");
+> +		return 0;
+> +	}
+> +
+> +	CPU_AND(&cpumask_tmp_cpus, event_cpus, &params->common.monitored_cpus);
+
+[Severity: Medium]
+The event_cpus pointer returned by tep_get_field_raw() points to dynamically
+sized raw bytes according to the len parameter. The glibc CPU_AND() macro
+assumes both source arguments are full cpu_set_t objects and unconditionally
+operates on 128 bytes.
+
+Does this cause an out-of-bounds read and potential unaligned access when
+parsing the trace field with CPU_AND()?
+
+> +
+> +	/*
+> +	 * Computing the mask weight is overkill but there is no leaner option
+> +	 * provided by glibc, e.g cpumask_first() or somesuch.
+> +	 */
+> +	if (CPU_COUNT(&cpumask_tmp_cpus)) {
+> +		for (int cpu =3D 0; cpu < nr_cpus; cpu++) {
+> +			if (CPU_ISSET(cpu, &cpumask_tmp_cpus))
+> +				account_ipi(tool, cpu);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902123942.6958=
+22-1-vschneid@redhat.com?part=3D2
