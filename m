@@ -1,87 +1,143 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D8476055;
-	Wed,  2 Sep 2026 17:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1C94AA59E;
+	Wed,  2 Sep 2026 17:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788369443; cv=none; b=ImAgUvA1Zdk25Oi4o35fr95UmXTHk/DSFrx/2V07L6w/VBRbDBURN7sKpLgF+hbDm3FSNZBBIYSw+Yhj8i9vQdmj/bFi1u/1HUypYVIhCpk7KxOIPN8LHp8rej4Pq0eUsXz2vjIJK6r9RZdpiKzlhVM2nN+RnkC86Hha/0zcDfI=
+	t=1788369814; cv=none; b=VAz/cql547sFTttoAARWmgRdLgss71+FB6mqYgwLwB1cmu9u5xyOttv1krTTfoQMUQohZVZnXcGL+kFZTaLq6W+FJ9TZxptQIq7ZzgS4zvfZtpKtFjeT4e5WnKjt4IKz4vxOFHBcxRhJSVFNYydOATKDeOgVYOb/rGu/Jc9vY78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788369443; c=relaxed/simple;
-	bh=Kf8iOLL/oK/xM4IISV7gQzZdZcdKU0vIyyxOi9MLkPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qNYexeOTZp6mSTe9vYS1SXGoh4Z90WoEqf7714rdZmzRWdEiPC495tFG1hGInI1kYiG+q8RdU63d3a3mnC2+/wLhcy4pztASWW2tZij0vKLkguMZO3hmys2pCkI0fzIMxUwnv2mom86MUId2hpzw3vqxl00ZR0JlgVS0td2Bh1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vCUKh0Vb; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1788369814; c=relaxed/simple;
+	bh=YVgUIxC4qvnn0Vv9lVwgjAu8cVfniffOqE/RSreBVFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fAQ/idqwNPrubeneWBrD6UwrhX4FzJ+FG8CLbd3DMs0VyHSSDpI8oQblZ30lZ0DxA7gbvzN6qy5JZ7I5P7FAWW2g1E8haHR8PQezg8x6DBY8GWO8D3kaXQ2UC6+Nx+F00fp7wdhneTMB2iqxG09qVYfrTj0C/kpt8fCQEtgVDXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQ/e64IL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCUKh0Vb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=eF4juUrbhNqhHjtflWtqgPAc4Y/UG+CSO89tj/V20dU=; b=vCUKh0VbIzMkQMmX8xKy98i/Cw
-	K470Y655tbXjQu50Hz0s6fqy1xfsUuH5L8lfppXeXAX1cdwlVY1NsBqVqYEwFsJooU2UiVmCdhe0s
-	JJhn3oga6k8eE4vZTIoZ3CX/UwoQ1GT2+ip7Nf3g3lsrqeLjzFepNtrw0yerzBxLZeeCpqQ8rqM9J
-	XKJ+EZSUzYUvxnU9LbWgieWde7oRJb7rpHd+IibWT3Y15HF1lwCky+jRD3QDT81SHJbZGv9YAKUOZ
-	OIITabV8/U2LBXOMa77BF6Dc3yYTHiX6z1siAaLCQl31kuNAe155xtQ2xsq9SRTQCTSlXuMRk+p+B
-	Sc8q6pjQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1oaL-0000000FPum-3hH1;
-	Wed, 02 Sep 2026 17:17:17 +0000
-Message-ID: <c0edc549-7dd1-4d96-a4d2-55ec6fee5caf@infradead.org>
-Date: Wed, 2 Sep 2026 10:17:17 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQ/e64IL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B05C1F00A3A;
+	Wed,  2 Sep 2026 17:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788369812;
+	bh=XmNQ6WKBMzr8oIBSZDnJlW7h+ZrhoZOuFj83Jzmbsfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SQ/e64ILDN1pnMgED8ssh6q9/0rLdHgxDHqnOBlzw92WYCiWJaT5cTvF+TPGYNpsX
+	 MX3S60psaFTPn+grPZ3LvrWhFEpGNfvppk5aC/ydk2gk7hv3FHidWSHch5Tghbqtnt
+	 BLiitH1a1HWIYSaP7P14oDJzjpjM2XT6PYZw4KxZrFOErwOxMcfQxwIQk56lhejnjk
+	 qv0z3nBoKeZH/L4lNhlM/6jirLe1WCUqP2JogwSOPRgGzo3aYZq8Nas0eyO455mxcs
+	 jJv1M6Zjvwe/9CiiQzd8B8PuXrz3OsZgV0HQNShSz7a8MGhj6HQElRLPKoLifUjQH1
+	 rGVz9fCVKnzcQ==
+Date: Wed, 2 Sep 2026 20:23:22 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Adrian =?utf-8?Q?Barna=C5=9B?= <abarnas@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org
+Subject: Re: [RFC PATCH 0/9] arm64: Allocate .text and .init.text together
+Message-ID: <aphbiuSzIrM6vhJt@kernel.org>
+References: <20260822135323.795946-11-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: trace: histogram-design: fix bracket
-To: Manuel Ebner <manuelebnerli@mailbox.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20260902151032.706407-2-manuelebnerli@mailbox.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260902151032.706407-2-manuelebnerli@mailbox.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260822135323.795946-11-ardb+git@google.com>
 
+Hi Ard,
 
-
-On 9/2/26 8:10 AM, Manuel Ebner wrote:
-> Remove needless ')' from sentence.
+On Sat, Aug 22, 2026 at 03:53:22PM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
-> ---
->  Documentation/trace/histogram-design.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The arm64 module loader has to deal with a couple of corner cases that
+> may occur when .init.text is placed out of direct branch range of .text:
 > 
-> diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-> index 41a726cd3..b757afa22 100644
-> --- a/Documentation/trace/histogram-design.rst
-> +++ b/Documentation/trace/histogram-design.rst
-> @@ -876,7 +876,7 @@ next_pid field on this sched_switch event, we retrieve the
->  variables specified in the wakeup_latency() trace action, and use
->  them to generate a new wakeup_latency event into the trace stream.
->  
-> -Note that the way the trace handlers such as wakeup_latency() (which
-> +Note that the way the trace handlers such as wakeup_latency() which
->  could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid)
->  are implemented, the parameters specified to the trace handler must be
->  variables.  In this case, $wakeup_lat is obviously a variable, but
+> - ordinary direct branches from .init.text into .text may require the
+>   use of a PLT entry (i.e., a trampoline aka veneer), which means not
+>   only that additional PLT entries need to be allocated for
+>   cross-section calls, but also that .init.text needs its own PLT
+>   reservation, as the one in .text will be out of range as well;
+> 
+> - dynamic patching of the ftrace handler into .init.text code needs its
+>   own dedicated trampoline as the one in .text may be too far away.
+> 
+> - recent compilers may omit BTI veneers for static functions that never
+>   have their address taken, and so additional veneers will need to be
+>   added to .text in case cross-section direct branches from .init.text 
+>   require a PLT entry (and therefore a landing pad at the target end).
+> 
+> This is unfortunate, because it is actually somewhat unusual for .text
+> and .init.text to be so far away from each other: only when allocating
+> either of them (but not both) exhausts the 'near' (PLT-less) module
+> region, the other will be allocated from the spillover region, which is
+> not in direct branching range, and therefore requires PLT entries for
+> cross-section calls.
+> 
+> This series addresses this wart by allocating both of them as a single
+> chunk, and freeing the .init.text part along with the other init
+> sections at the appropriate time. This ensures that the two regions will
+> never require veneers for cross-section calls, allowing the arm64 module
+> loader to be simplified.
+> 
+> Ard Biesheuvel (9):
+>   mm: execmem: Add API to split an existing execmem cache allocation
+>   mm: execmem: Allow huge vmappings to be avoided for execmem caches
+>   module: Place MOD_TEXT before MOD_INIT_TEXT in enumeration
+>   module: Allocate MOD_INIT_TEXT from the MOD_TEXT ROX allocation
+>   arm64: mm: Permit permissions changes on huge vmappings
+>   arm64: Enable the execmem ROX cache for module text
+>   arm64: ftrace: Revert "fix unreachable PLT for ftrace_caller ..."
+>   arm64: module: Combine init and core PLT entries again
+>   arm64: ftrace: Simplify PLT handling
 
-Seems to me that the "which ..." should be a parenthetical phrase,
-i.e., with parentheses at both ends of it. IMO.
-But let's see the the TRACE maintainers have an opinion about it.
+I can't say I like the idea of tying the single chunk allocation of
+modules .text and .init.text to the ROX cache.
 
+The goal of the cache is to have executable code mapped at higher page
+table levels. Letting it use base-page mappings completely dismisses it.
+
+I'm not against having execmem_split() or something along these lines, but
+it should work without the ROX cache as well.
+
+Another question I had is did you consider splitting the area on free
+rather than on alloc?
+
+In this case it could be execmem_shrink() that immediately frees the
+.init.text part.
+ 
+>  arch/arm64/Kconfig                  |  1 +
+>  arch/arm64/include/asm/module.h     |  2 -
+>  arch/arm64/include/asm/module.lds.h |  3 -
+>  arch/arm64/kernel/ftrace.c          | 13 +---
+>  arch/arm64/kernel/module-plts.c     | 63 +++++---------------
+>  arch/arm64/kernel/module.c          | 20 +------
+>  arch/arm64/mm/init.c                | 19 +++++-
+>  arch/arm64/mm/pageattr.c            | 13 +++-
+>  include/linux/execmem.h             | 11 ++++
+>  include/linux/module.h              |  4 +-
+>  kernel/module/main.c                | 22 +++++--
+>  mm/execmem.c                        | 47 ++++++++++++++-
+>  12 files changed, 124 insertions(+), 94 deletions(-)
+> 
+> -- 
+> 2.55.0.860.g4b6b3295ed-goog
+> 
 
 -- 
-~Randy
-
+Sincerely yours,
+Mike.
