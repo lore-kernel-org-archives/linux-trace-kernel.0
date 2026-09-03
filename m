@@ -1,78 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6AB449EB8;
-	Thu,  3 Sep 2026 10:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FCC37E5CD;
+	Thu,  3 Sep 2026 12:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788432530; cv=none; b=GtdM3Jjh4OeduTG4H4ub08L5n5Gm8d5zYHhoSxwty+HEyG1cttM89xSlNiV40omB3WcR9rRw6E7r5blll/sqcMJNt4KYe1pf7QoC8co7BKmI1p9ll/T/mvOeRMAGxhCAO6FbRulbG7puwvpqYA/jZKjul2uCnqSA14Y4knoFqoU=
+	t=1788438901; cv=none; b=jc5+jplzhd5EkbWIODbCfo9APA7SC6GmEY2KIIP5vdcgB6AnjYc4LrchRImkOHYsRYCiflveMcuWJ71Jc68E+5wRHVJGpal9H2pUeXTHP998ky6qcNoTrpmnnUk2PkIB95TIYtBwBWHCU1iKGHaVHSEUS/4TJ/U4r3DVpyjYhG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788432530; c=relaxed/simple;
-	bh=8GGHXpoinHMF8S3XF+nIIttC4DJt7cPH2zOWSyjOLMk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=S922WA+54SKq3SzCdWWhhx/5BEC9gyXCwJ9hVzC2AEII1AzpiQO3qJsGQ8ATnXa+cK9cIuP0ZadTeuRo1zlXCvY70+gFvWOv02G2GdhyCoXAE8SyzBVk9kJxifX4W1Z5xMJhdPHzi3zhActj8G+TMLJOwq1UT2kQpfHEZdGwrbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0p67jG8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788438901; c=relaxed/simple;
+	bh=fuBAGqqUDOqetB2V/lzjUNoB/11ynai98RY5zv5kmM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tzNNw+U9AGK4HJFF26YLFQ5u+P3v/x8CS7deWC4gyXIt0gIen13P9I2CL8kct7S5dbmXNOh9Mzl7Xyqxl/tcRYXfzmDM5yGH+TjFk+9aMzkPA9S59HhA73/YsAUDxv2rV1xx+lJMFOGtoZaodCn/KkEWvCVPVVLr0vZkjXnizdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvHP23vb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0p67jG8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF221F000E9;
-	Thu,  3 Sep 2026 10:48:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvHP23vb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C671F000E9;
+	Thu,  3 Sep 2026 12:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788432528;
-	bh=8GGHXpoinHMF8S3XF+nIIttC4DJt7cPH2zOWSyjOLMk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D0p67jG81rSHSrJG5QAe435bHXddsWghRHB0VqZPykQEYgTMVVt2g9gEF/FEmMh5n
-	 o/p/SM1G8lmw0j0BoY128VNEO0viJykmsEP7VXs8saboatZHTjeVQDeuIHTgDQ+70e
-	 CXewnJcVqJYbGn3hu3qxegzZyNvFqsvXQxIP6jd+dA6TsTuzGNA8Pl1A5qnSRxyyio
-	 07/JJL7KkSaxhHOBtVPjxwIthxoc7useKZWfEMGtIqtYKU8Os8jeMqcq1Z1xpiKuQU
-	 O1a/DCQ+MCBuHcyERt94WQT3CQlw8joj9YzEZYqOQTHD69eNcugK5XcCBvthZw1yB0
-	 uDr1aROVc7I3w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/8] mm: use hw_pte_t for generic PTE table storage
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Muhammad Usama Anjum" <usama.anjum@arm.com>
-Cc: intel-gfx@lists.freedesktop.org, damon@lists.linux.dev, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, dri-devel@lists.freedesktop.org
-In-Reply-To: <20260903103002.1091859-4-usama.anjum@arm.com>
-References: <20260903103002.1091859-1-usama.anjum@arm.com>
- <20260903103002.1091859-4-usama.anjum@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 10:48:44 +0000
-Message-Id: <20260903104844.DEF221F000E9@smtp.kernel.org>
+	s=k20260515; t=1788438900;
+	bh=LkHyojIiqDTwswEf0pCBO7d+LqykZSReJx6ZH4c8vlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hvHP23vbG9IiqSRn4lxC6hbe1z2w6jX7yKRajvDm8CYyw7qtAzs2GKMuoeulyrCZD
+	 50CrgXsfTLYRZ0/Xh5DGU6Ts9RyXEOuzdwzxISxdXgP4ibYzaJJCQm74BP2bG3zBis
+	 FMPWBib8khhEm4efo00Bly60KuFlugbnp99YtmqRqJh1nHtFCw80pVk3TGGWCsnkod
+	 ncvG3tQjzaZfF0RgHXrg2urDhQoV9IIHJFnuKJz8eh7g2NSEyvFa8yNHpDrvqiP4Yg
+	 52fMOU8q/ZYpTb5ssWQYYxvW3zsexK51HIpEXal4IhBKTin2nOQFMX5ax4wZrS8F8V
+	 xDXeF39Z42zgw==
+Date: Thu, 3 Sep 2026 13:34:55 +0100
+From: Lee Jones <lee@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: STABLE REQ: [PATCH v5 06/10] tracing: Fix subbuf resize races
+ with trace_pipe_raw readers
+Message-ID: <20260903123455.GS2133376@google.com>
+References: <20260901123444.GA1350131@google.com>
+ <20260902-daily-reply-0006-tracing-subbuf-resize-7-2@kernel.org>
+ <apk_dQ4Q6msdw_Ub@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <apk_dQ4Q6msdw_Ub@google.com>
 
-> Generic page-table interfaces use pte_t * for both pointers to PTE table
-> storage and pointers to software PTE values. Convert the generic
-> declarations and their MM, fs, and kernel users together so parameters,
-> return types, callbacks, and local pointers that designate table storage
-> use hw_pte_t *.
->=20
-> Include linux/pgtable_types.h from headers that expose the converted
-> interfaces. It continues to provide pgprot_t to vmalloc.h through
-> asm/page.h.
->=20
-> Keep software PTE values as pte_t and retain pte_t * for value interfaces.
->=20
-> No architecture selects ARCH_HAS_HW_PTE_T at this point, so hw_pte_t
-> remains an alias of pte_t and this changes the interface vocabulary witho=
-ut
-> changing representation or behavior.
->=20
-> Most of this mechanical conversion was generated with the Coccinelle scri=
-pt
-> included in the cover letter. The script deliberately ignores pte_t *
-> pointers named ptentp because they designate software PTE values. The
-> result was then audited, and sites the script could not convert were
-> updated by hand.
->=20
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+On Thu, 03 Sep 2026, Vincent Donnefort wrote:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> On Wed, Sep 02, 2026 at 06:14:05PM -0400, Sasha Levin wrote:
+> > > Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
+> > > uninitialized memory to userspace due to stale size values.
+> > >
+> > > Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
+> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > >
+> > > Not sure if this is the latest version or not?
+> > >
+> > > I see review comments, but no v6.  Anyway, no matter, it'll do.
+> > 
+> > Queued for 7.2, thanks.
+> > 
+> > -- 
+> > Thanks,
+> > Sasha
+> 
+> This isn't the last version of this patch, I have just posted a v9 [1] and
+> Steven hasn't reviewed it yet.
+> 
+> [1] https://lore.kernel.org/all/20260901155445.1475405-3-vdonnefort@google.com/
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903103002.1091=
-859-1-usama.anjum@arm.com?part=3D3
+The confusion  is mine to own.  I responded to the wrong patch mail, sorry!
 
+  `ring-buffer: Fix subbuf resize race with ring buffer readers`
+
+Which is in Mainline with the immutable SHA 8a5f63637890.  My assumption
+is that Sasha queued the correct commit or the tools would have
+complained loudly.
+
+-- 
+Lee Jones
