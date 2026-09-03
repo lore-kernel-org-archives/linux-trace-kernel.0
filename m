@@ -1,130 +1,104 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE243F12C4;
-	Thu,  3 Sep 2026 07:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242A33FE35A
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 07:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788419625; cv=none; b=Riw/yN49FawQEYv3jOd/mJovlFmCjm6yE4cuVG3Y5+EO3f5WX8aIfpu9d5wAhgi6xlAGH4tOEHhsMbbjMVu8E4iAVXz9Njk6X5ly7D4gWVGNMT9sb/r4kOZTpyDFFtjEj0XLwDKRBKclOVktqLS2Vsohe4HQInQTfUOvt35iDXY=
+	t=1788419726; cv=none; b=TbgWhL1QwQyg9aLjTe03prdIoHAfZmqZ5AyM4GR+GQyxoFkvAQyWdlw4egjarZGFfP4L/x4WKUGLH1pc0+R/R8NEdh4Xs/vx7epJyqOccjqoVUmMuIsU+rt4nAUo888XBtP0qN990Q0hVDO8Csxjpkpo+52YNsrA+5XzKRJUevo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788419625; c=relaxed/simple;
-	bh=Lx4HaE9/zI4yZt20nbJr8PLbaPbxanYfNMyZ1nBAmxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ERNvy8H3HwMJ2cU2nUgcLB5FxfsWmLQ6g/eId5ykhS9CrOwpnW4dC/25SNkdv9HPwGwIOrOFxF6rQu+aXNngw0JIEL+ZLguVgx1O/LaWQSJAdL6/vD7AFavy6H5iwLMLiNCrSK0B2Rj4Ra+kSpOGSIv9VC+8yfRyzOM0ixN74vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=JpyWLiSV; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Si8KeBPB; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1788419726; c=relaxed/simple;
+	bh=oFBS6Acf3DIfp1QcsySu3fteHOLnb1ld42822S6Hbf0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Cnpd8cZZ42pNwikqtJGTUFSZZ7ZH0V87HGXjgOG5HjFTZAVsqJAniRtg8azzJJ4wxjVRObgREsKZ9H9gD0p1r7MRtMH2Z9WX0cpPfhxr7UxTcrqKAzlKMZM6e4odo3DdLnCafbchocOlTILMZOmWft3LoneVjGrO5cgl0lKdc1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fn236bmA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="JpyWLiSV";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Si8KeBPB"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4hb9mx1KFjzKw2t;
-	Thu, 03 Sep 2026 09:13:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1788419617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mhVzuNfs214pBfjxrEWTK1wGYLUc4myD0XNH0Nog408=;
-	b=JpyWLiSVouzuNePf0RYJPJjfgm6hQi9u9bOkMSv2ZwuyEbqML4i7xB9Gnn/oMpBzBJi9Ly
-	07wphsgMD0e6U0arggyIHd0J5fG8rfeNh8c6AMf9eA4T2tnlbqrDH1gOBV/cgRJyQ5Yw9G
-	jhAUFJMqhaljxcm918ctjT87HsM++aANNnE2FXTMLNzRDCtgSgrQizC364XebW9jSVuOgJ
-	/AoCf1iL0NuErsvhFeUW3vxhYBLibgz7gJdeK0layTAIBLx1c7HYkP98yp4e04odF6OjG0
-	DtYD1cPQNSnDsGBknDkEvlWEK7Rw1n6fCdEdG2vaKboKaItP0/+aehubby28yg==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=Si8KeBPB;
-	spf=pass (outgoing_mbo_mout: domain of manuelebnerli@mailbox.org designates 2001:67c:2050:b231:465::1 as permitted sender) smtp.mailfrom=manuelebnerli@mailbox.org
-From: Manuel Ebner <manuelebnerli@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1788419616;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mhVzuNfs214pBfjxrEWTK1wGYLUc4myD0XNH0Nog408=;
-	b=Si8KeBPBD7E1o6ad6JHPxy2+biBTjQuqPnVYELCCL2S6+O2jByvWpjJqtP1PVs9S32eELp
-	sRYPdVSfQFUBlwWtO5gEEbmXGJsV1xRXqOS7SBJHfKeOO9vN8JOTu6QXQfyAhjpusNTzTx
-	J+ILqpWmnOtTA6FvifNZsHMAT/8gUXAsh/vXl6lWPXtw3KJ162lu8By7pPtbIZ085if2L2
-	swVe7XiHcrxZTxC5LSkPKE4vh6sv2S0q0jIgRvIeGIdNXgF5aJenuzlsvllTdB1bVneJc6
-	7L2FS8hgRN1Zdjq/56/MyV79yp73ACu8CsfDndmhM52xd8PZi7ssbiax6ZTvmg==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: Manuel Ebner <manuelebnerli@mailbox.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2] Documentation: trace: histogram-design: fix bracket, improve wording
-Date: Thu,  3 Sep 2026 09:11:05 +0200
-Message-ID: <20260903071105.714325-3-manuelebnerli@mailbox.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fn236bmA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5121F00A3A;
+	Thu,  3 Sep 2026 07:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788419720;
+	bh=oyz2zrvVIrF0LQlbY1/9UfoIHBVbtBhHfvVohZ/d9Ts=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Fn236bmAmA91KpcfaZaf8ddm7yj7Y0dBPbEWiBOIJ5LDGJl+kkrOwWogDLsrCyN/Z
+	 21/oW5T0SCZ1EubU9M0T9dRjh2XxprIIgkKt7/ZjySp087cReRPT2jpHB/nmPam2H5
+	 1N+3SSyAM7sR350lqm3idbUDFE6flmgWHUQn+x8fZo9dG6jwxp5ijocENw+gk/I0lV
+	 SJn1DyUj6xXgbJdfMUHN3u7XbhcrjvC5Lr8oLCcgUFTi+j+ihf98oe3c8qFCRgOe3h
+	 wR1kDHOFa8VSqHcoPyBHdkU3riuyiPhBpdW4RiBh5BvSAOBtxs/7jeJTQFDon30CTp
+	 GoKQ70dHkLN6Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] Documentation: trace: histogram-design: fix bracket,
+ improve wording
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Manuel Ebner" <manuelebnerli@mailbox.org>
+Cc: linux-trace-kernel@vger.kernel.org
 In-Reply-To: <20260903070249.713483-2-manuelebnerli@mailbox.org>
 References: <20260903070249.713483-2-manuelebnerli@mailbox.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 07:15:20 +0000
+Message-Id: <20260903071520.BA5121F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: 7r7bpx36cphoewr3uqb6817abkwecypd
-X-MBO-RS-ID: 772a1b30ccd34e4c01f
-X-Rspamd-Queue-Id: 4hb9mx1KFjzKw2t
 
-Add missing ')' and add note about the new way of triggering an event.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] The patch fails to implement the missing parenthesis fix claimed=
+ in the commit message.
+- [Low] An unrelated line of documentation was accidentally deleted, breaki=
+ng a sentence structure.
+--
 
-CC: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
----
-I sent the previous mail on accident, sorry.
+commit 708a883b89775bdba5b9179959e1d7aeeadf6600
+Author: Manuel Ebner <manuelebnerli@mailbox.org>
 
-@ Steven, I added this line to your suggestion because else the references
-wouldn't make sense. References: $wakeup_lat, next_pid
-Let me know what you think.
+Documentation: trace: histogram-design: fix bracket, improve wording
 
-+ ... (which
-+could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid)
- are implemented, the parameters specified to the trace handler must be
- variables.  In this case, $wakeup_lat is obviously a variable, but
- next_pid isn't, since it's just naming a field in the sched_switch
----
- Documentation/trace/histogram-design.rst | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+This commit aims to add a missing parenthesis and include a note about the
+new way of triggering an event in the histogram-design documentation.
 
-diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-index 41a726cd3..c0271463b 100644
---- a/Documentation/trace/histogram-design.rst
-+++ b/Documentation/trace/histogram-design.rst
-@@ -877,7 +877,7 @@ variables specified in the wakeup_latency() trace action, and use
- them to generate a new wakeup_latency event into the trace stream.
- 
- Note that the way the trace handlers such as wakeup_latency() (which
--could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid)
-+could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid))
- are implemented, the parameters specified to the trace handler must be
- variables.  In this case, $wakeup_lat is obviously a variable, but
- next_pid isn't, since it's just naming a field in the sched_switch
-@@ -916,6 +916,13 @@ means it will be automatically converted into a field variable::
-           onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,next_pid)' >>
- 	  /sys/kernel/tracing/events/sched/sched_switch/trigger
- 
-+Note that the above is the old way to trigger a synthetic event, whereas the
-+newer way is preferred, which uses the trace() action handler::
-+
-+  # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
-+          onmatch(sched.sched_waking).trace(wakeup_latency,$wakeup_lat,next_pid)' >>
-+	  /sys/kernel/tracing/events/sched/sched_switch/trigger
-+
- The diagram for the sched_switch event is similar to previous examples
- but shows the additional field_vars[] array for hist_data and shows
- the linkages between the field_vars and the variables and references
--- 
-2.54.0
+> ---
+> @ Steven, I added this line, because else the references wouldn't make se=
+nse.
+> References: $wakeup_lat, next_pid
+>=20
+> + ... (which
+> +could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid)
+>  are implemented, the parameters specified to the trace handler must be
+>  variables.  In this case, $wakeup_lat is obviously a variable, but
+>  next_pid isn't, since it's just naming a field in the sched_switch
+> ---
 
+[Severity: Medium]
+It looks like the intended fix for the missing parenthesis was accidentally
+placed between the `---` separators in the commit message. As a result, this
+hunk is treated as commentary by git and dropped during patch application,
+so the parenthesis fix is missing from the actual file. Should this hunk be
+moved into the diff proper?
+
+> diff --git a/Documentation/trace/histogram-design.rst b/Documentation/tra=
+ce/histogram-design.rst
+> index 41a726cd35369..86c83b177e446 100644
+> --- a/Documentation/trace/histogram-design.rst
+> +++ b/Documentation/trace/histogram-design.rst
+> @@ -25,7 +25,7 @@ tracing_map.c.
+> =20
+>  If the kernel is compiled with CONFIG_HIST_TRIGGERS_DEBUG set, an
+>  event file named 'hist_debug' will appear in each event's
+> -subdirectory.  This file can be read at any time and will display some
+> +
+
+[Severity: Low]
+Was this deletion intentional? It appears an unrelated line of documentation
+was accidentally removed here, breaking the sentence structure of the
+paragraph.
+
+>  of the hist trigger internals described in this document. Specific
+>  examples and output will be described in test cases below.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903070249.7134=
+83-2-manuelebnerli@mailbox.org?part=3D1
