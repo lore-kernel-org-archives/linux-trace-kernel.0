@@ -1,149 +1,208 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0883630B3;
-	Thu,  3 Sep 2026 18:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABE3511237
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 20:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788460156; cv=none; b=qOPD30gqMqTNE3TYCWs5JJ2nxt82xfB2lQ6QPkAfdwKVxfwxvSRaSvxbt3Dsjrm8yqb7C4yGRw15GVPxlXconFnFoXzlTgvECzw+Pw0XUkmHdDa//Y5OgVUCUsAU2u6Is7/Mk10r58/pL3nwzcFzCbzAx0LpUoRSWI1K/p+pUnk=
+	t=1788467418; cv=none; b=G7f1YiBOyA5NDHJl/y3F63x+/SLSR+PLLWC+BmfmfMe1x0R99GZPVDQDA+TUmarFyGvnIPXv4ZhTcZQNBEOXya6BafvW8mblgGtZ6QdY84PMjAXmwsVUvyHSrJCWhHAqPBccxvnBGdCu5mLpVjytrxhk/Zdj8r7aekDQpnFGmPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788460156; c=relaxed/simple;
-	bh=Ep3jtkS57sFuTNOwlOGRYF5czvDRE5v4rodsQ9qthIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fS0pU9eezrpbD1kc+0akDO8sroNjVMGDzdBKa6hSGjifqBluemIipZkM4JourqP76Grd9mTC2XtRenFz+Hjs2bS6pubzKfFzB75MOyqjeE6gs8uThL21wDvYcH5wC369yF/yIlxDqj4S7fbHRqRWuMm4v5KpVCr5npisgyZ+Hjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aEaF+Php; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1788467418; c=relaxed/simple;
+	bh=BpRN0E+h4206Xe8hsUbO3Z8TKNOEgNlJgNv/rQ/udFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bctyWQ7jEZW+zr23IIyTaa2j371WUWfTrn776KCleX6wIpYfDaL+5M3DJgyRhqowALIcrCBNya+Pf6uZUApGZ5pl+o9kZzlLcI4EaT6sf+L+SnoII1c29+XuZcgBUu0nvQKb2G6HMbHjZ88IYJh+0uLZ2EeQex6v2CimXRR8yFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rZ5Xfmok; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aEaF+Php"
-Received: from CPC-beaub-VBQ1L.localdomain (unknown [70.37.26.63])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B338220B7166;
-	Thu,  3 Sep 2026 11:28:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B338220B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1788460113;
-	bh=O3M4JsqWoYQ8EQJC8k/Da4yhDi3jSkzWDS5OauMn9oI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aEaF+Php9gSN1IIqaYYWf6Fugl0LX8a5ah/Gcm4atpVWBgLWf3HmjNPiG88VyXVJ/
-	 PxpKZvYsXTe1rcM8WmDFGTj5ZrQgVkPvk8NqmfA7YqO/B2sTg/zqhvfbGMy/zofGnd
-	 dEiEe/w0Bp0CTdOk7P1KNXdpsHEGssKponGrIJH4=
-Date: Thu, 3 Sep 2026 18:29:03 +0000
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Henry Martin <bsdhenrymartin@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZ5Xfmok"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5bf9506704fso152227e0c.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Sep 2026 13:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788467399; x=1789072199; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=A5h3C3ueW/KtTzkUQ4MiM5kplP4HGSznat6sPB/kFpg=;
+        b=rZ5Xfmok/DURfKZiJV+SRNLFsaRWx+95jdAXkOk1dl69ZKKKBm6K8vBN7B6ZdMQQM1
+         YL26/F1VzK3eOpId3MGEYzjOqEUxu6YPyjroF/Qz/CVDfBiphnYIVLjq4a7rdI3Y9IzN
+         VVY84q3jG0E4PP5Bj7u1YeawgETSYZM9SdPkTpKamnONVKJOO9WS9vaxQrpz6n1a0GBJ
+         RSjRlKfrg+Ogc5II0rWIoVXVKUSRuOj69+mZlxIsafUTvsyqGyOTZcpW4MQNZMg0AbGh
+         O0wDgJIMeWGkuSE8I2zKWpJv1qRLOSvL7lTip+o5+1rijbKx91lCc0N56i7wfteZrz8V
+         GWcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788467399; x=1789072199;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=A5h3C3ueW/KtTzkUQ4MiM5kplP4HGSznat6sPB/kFpg=;
+        b=HTIB3Y0AlMcY1GP8mY2e/jwzrBDQqH7c48Rxfn5nXcVa7rjU5YkUPOIOZhSDl7qcBW
+         e8uO/0A9BW1QrLOwzURfjT3NSD3Oqd9FOucE5Yma1E1PGJJ7ls2ykDF30KlFN07exluk
+         ooG+DDxImy8rEOIhl2Y1Tk7hT4ftmXlISCsOYFqv6GrNSgM+KhR7mtgXFehe/2tSmuA5
+         ZJ1viPDl61qpRSFhc76at1one8umPA1b3bhEy2MOQIXkIQ8y8LZ5bAKu5W/YqeIw9z+i
+         KzjB5G2mH1MwPFRUTBR4q8qcAAuiW/KhwZkYxwhlhwoICmx4UitVK8sttf7dnASz8A0b
+         s7rA==
+X-Forwarded-Encrypted: i=1; AKwUvBwVlLLMyxEPRc87ZfaTSJmaCTk82z8yeb7jvDp6m73xddbNM+ZNzo2d0X65lwAi2GKmvZjUfC+hx6PjA8ro1ctPYWM=@vger.kernel.org
+X-Gm-Message-State: AFuF++krGaDpFZm+qY/5kQb2n3sC8MybZbEzepihDf6t9QBlrQWt1m3+
+	eMmh/df2TZvE53Yw4y9ZYKfKeanijRFqQEYOgJrsSXj8j0fETBYtMzDK
+X-Gm-Gg: AYBFou1e1tq1mSRxz2xsu+udiS9R6lbvmYGhUF5COZX8Rg5xiiDufVHKOdmdoxrGohI
+	Wkvsvj3Lfk69LrgaNpMiBgAbLKgRGhDRzgTIfP+g5+eh/BzmR5CRv7HzaXZODVsz5MJe/mr+qzX
+	WZ7WUZYdrSVf8n/KHtgP6P79XBLq23sTPhU3zc1WZ5zQCmDO55JxQwwNvdbPxMX4GSIf75LAAXY
+	QIsKgSHew0YiAcMhe0wL60sgUNfz1yLj0tp1K5ZkuK0857MUeVEbvmxO02cKW7/M6M2T/+4MqZU
+	+AXqX8MnM+8T9a8HR0vVq+SWKeMeh60whdUws+2EVXEvx3nO/oJ0TTOhG4+bp4li4eI94clp0Jz
+	pJyF8BQSmn+1faLLyP5PVtn245sA8na04/ZBVAiDWkhEOMWiCnx/akQ+6mBIEOhri/XgjzjyYJ5
+	qBSGArVIIC6iyuJ6X574CAkYrc+9wmplY9yN62pCR/12jUHaDfzZpMv5kobhD9qSE=
+X-Received: by 2002:a05:6102:5487:b0:77a:2268:9fdb with SMTP id ada2fe7eead31-78a4a995f6cmr108164137.7.1788467398516;
+        Thu, 03 Sep 2026 13:29:58 -0700 (PDT)
+Received: from adriano ([190.215.95.120])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-9808ed7018fsm253962241.6.2026.09.03.13.29.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2026 13:29:58 -0700 (PDT)
+From: Adriano Cordova <adrianox@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: Don't destroy fields when event
- removal fails
-Message-ID: <20260903182903.GA62-beaub@linux.microsoft.com>
-References: <20260824102907.4173063-1-bsdhenrymartin@gmail.com>
- <20260824163955.522cb5b0@gandalf.local.home>
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Adriano Cordova <adrianox@gmail.com>,
+	syzbot+4dfd96209d744263a972@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH] blktrace: always record ftrace events as blk_io_trace2
+Date: Thu,  3 Sep 2026 16:29:32 -0400
+Message-ID: <20260903202932.156278-1-adrianox@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260824163955.522cb5b0@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 24, 2026 at 04:39:55PM -0400, Steven Rostedt wrote:
-> 
-> Beau,
-> 
-> Can you review this patch?
-> 
+The ftrace ring buffer always uses the v2 (blk_io_trace2) format, but
+__blk_add_trace() switched the reserve size and record format on
+bt->version. That field only describes the relay/classic blktrace record
+format and must not change what goes into the ftrace buffer: the ftrace
+readers (print_one_line() and friends) unconditionally parse blk_io_trace2.
 
-Sure thing.
+The BLKTRACESETUP ioctl sets bt->version to 1. With the blk tracer also
+enabled, __blk_add_trace() recorded a 48-byte v1 event into the ftrace
+ring buffer, but the reader parses the 64-byte v2 layout, so pdu_start()
+points 16 bytes past the PDU and blk_log_remap() reads out of bounds - a
+use-after-free when the ring buffer page is resized concurrently.
 
-> Thanks,
-> 
-> -- Steve
-> 
-> 
-> On Mon, 24 Aug 2026 18:29:07 +0800
-> Henry Martin <bsdhenrymartin@gmail.com> wrote:
-> 
+Always use the v2 format in the blk_tracer path, and initialize
+bt->version to 2 in blk_trace_setup_queue() so the sysfs-enabled path no
+longer leaves it uninitialized.
 
-Hey Henry, thanks for this!
+Fixes: e48886b9d668 ("blktrace: for ftrace use correct trace format ver")
+Reported-by: syzbot+4dfd96209d744263a972@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=4dfd96209d744263a972
+Tested-by: syzbot+4dfd96209d744263a972@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Adriano Cordova <adrianox@gmail.com>
+---
+ kernel/trace/blktrace.c | 74 +++++++++++------------------------------
+ 1 file changed, 20 insertions(+), 54 deletions(-)
 
-> > destroy_user_event() destroys the event's fields before attempting to
-> > remove the trace event call. If user_event_set_call_visible() fails,
-> > e.g. because the event is still enabled and trace_remove_event_call()
-> > returns -EBUSY, the event is left registered with an irreversibly
-> > destroyed field list. Any subsequent interaction with the event then
-> > operates on an empty field list while it is still fully visible in
-> > tracefs.
-> > 
-> > Move the field destruction after the call removal, and splice the
-> > field list back onto the event when the removal fails so the event
-> > remains in a consistent state.
-> > 
-> > Fixes: 7f5a08c79df35 ("user_events: Add minimal support for trace_event into ftrace")
-> > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> > ---
-> >  kernel/trace/trace_events_user.c | 16 ++++++++++------
-> >  1 file changed, 10 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> > index 8c82ecb735f41..0b021c212995a 100644
-> > --- a/kernel/trace/trace_events_user.c
-> > +++ b/kernel/trace/trace_events_user.c
-> > @@ -1119,10 +1119,9 @@ static void user_event_destroy_validators(struct user_event *user)
-> >  	}
-> >  }
-> >  
-> > -static void user_event_destroy_fields(struct user_event *user)
-> > +static void user_event_destroy_fields(struct list_head *head)
-> >  {
-> >  	struct ftrace_event_field *field, *next;
-> > -	struct list_head *head = &user->fields;
-> >  
-> >  	list_for_each_entry_safe(field, next, head, link) {
-> >  		list_del(&field->link);
-> > @@ -1499,17 +1498,21 @@ static int user_event_set_call_visible(struct user_event *user, bool visible)
-> >  
-> >  static int destroy_user_event(struct user_event *user)
-> >  {
-> > +	LIST_HEAD(fields);
-> >  	int ret = 0;
-> >  
-> >  	lockdep_assert_held(&event_mutex);
-> >  
-> > -	/* Must destroy fields before call removal */
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 8cd2520b4c99..ae010969c144 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -385,66 +385,26 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
+ 	if (blk_tracer) {
+ 		buffer = blk_tr->array_buffer.buffer;
+ 		trace_ctx = tracing_gen_ctx_flags(0);
+-		switch (bt->version) {
+-		case 1:
+-			trace_len = sizeof(struct blk_io_trace);
+-			break;
+-		case 2:
+-		default:
+-			/*
+-			 * ftrace always uses v2 (blk_io_trace2) format.
+-			 *
+-			 * For sysfs-enabled tracing path (enabled via
+-			 * /sys/block/DEV/trace/enable), blk_trace_setup_queue()
+-			 * never initializes bt->version, leaving it 0 from
+-			 * kzalloc(). We must handle version==0 safely here.
+-			 *
+-			 * Fall through to default to ensure we never hit the
+-			 * old bug where default set trace_len=0, causing
+-			 * buffer underflow and memory corruption.
+-			 *
+-			 * Always use v2 format for ftrace and normalize
+-			 * bt->version to 2 when uninitialized.
+-			 */
+-			trace_len = sizeof(struct blk_io_trace2);
+-			if (bt->version == 0)
+-				bt->version = 2;
+-			break;
+-		}
+-		trace_len += pdu_len + cgid_len;
++		/*
++		 * The ftrace ring buffer always uses the v2 (blk_io_trace2)
++		 * format; the ftrace readers parse only that. bt->version
++		 * describes just the relay/classic blktrace record format.
++		 * Recording a v1-sized event here would shift pdu_start() 16
++		 * bytes past the PDU and make blk_log_remap() read past the
++		 * event (a use-after-free on concurrent buffer resize), and v1
++		 * cannot represent the newer 64-bit zone actions anyway.
++		 */
++		trace_len = sizeof(struct blk_io_trace2) + pdu_len + cgid_len;
+ 		event = trace_buffer_lock_reserve(buffer, TRACE_BLK,
+ 						  trace_len, trace_ctx);
+ 		if (!event)
+ 			return;
+ 
+ 		tracing_record_cmdline(current);
+-		switch (bt->version) {
+-		case 1:
+-			record_blktrace_event(ring_buffer_event_data(event),
+-					      pid, cpu, sector, bytes,
+-					      what, bt->dev, error, cgid, cgid_len,
+-					      pdu_data, pdu_len);
+-			break;
+-		case 2:
+-		default:
+-			/*
+-			 * Use v2 recording function (record_blktrace_event2)
+-			 * which writes blk_io_trace2 structure with correct
+-			 * field layout:
+-			 *   - 32-bit pid at offset 28
+-			 *   - 64-bit action at offset 32
+-			 *
+-			 * Fall through to default handles version==0 case
+-			 * (from sysfs path), ensuring we always use correct
+-			 * v2 recording function to match the v2 buffer
+-			 * allocated above.
+-			 */
+-			record_blktrace_event2(ring_buffer_event_data(event),
+-					       pid, cpu, sector, bytes,
+-					       what, bt->dev, error, cgid, cgid_len,
+-					       pdu_data, pdu_len);
+-			break;
+-		}
++		record_blktrace_event2(ring_buffer_event_data(event),
++				       pid, cpu, sector, bytes,
++				       what, bt->dev, error, cgid, cgid_len,
++				       pdu_data, pdu_len);
+ 
+ 		trace_buffer_unlock_commit(blk_tr, buffer, event, trace_ctx);
+ 		return;
+@@ -1913,6 +1873,12 @@ static int blk_trace_setup_queue(struct request_queue *q,
+ 
+ 	bt->dev = bdev->bd_dev;
+ 	bt->act_mask = (u16)-1;
++	/*
++	 * This sysfs-enabled path feeds the ftrace blk tracer, which always
++	 * uses the v2 (blk_io_trace2) format. Initialize the version so it is
++	 * never left dangling as 0 for future consumers.
++	 */
++	bt->version = 2;
+ 
+ 	blk_trace_setup_lba(bt, bdev);
+ 
+-- 
+2.51.0
 
-We really need a comment to stick around, it's not going to be obvious
-why we have to remove the fields before destroy (It's because removing
-the event frees the list memory, which are owned by user_events).
-
-> > -	user_event_destroy_fields(user);
-> > +	list_splice_init(&user->fields, &fields);
-> >  
-> >  	ret = user_event_set_call_visible(user, false);
-> >  
-> > -	if (ret)
-> > +	if (ret) {
-
-Would be good to get a comment on here stating why we are putting the
-fields back. We have to recover them.
-
-> > +		list_splice(&fields, &user->fields);
-> >  		return ret;
-> > +	}
-> > +
-> > +	user_event_destroy_fields(&fields);
-> >  
-> >  	dyn_event_remove(&user->devent);
-> >  	hash_del(&user->node);
-> > @@ -2209,7 +2212,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
-> >  put_user_lock:
-> >  	mutex_unlock(&event_mutex);
-> >  put_user:
-> > -	user_event_destroy_fields(user);
-> > +	user_event_destroy_fields(&user->fields);
-> >  	user_event_destroy_validators(user);
-> >  	kfree(user->call.print_fmt);
-> >  
-
-Thanks,
--Beau
