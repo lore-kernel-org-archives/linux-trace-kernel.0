@@ -1,85 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FCC37E5CD;
-	Thu,  3 Sep 2026 12:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99934A64E4;
+	Thu,  3 Sep 2026 12:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788438901; cv=none; b=jc5+jplzhd5EkbWIODbCfo9APA7SC6GmEY2KIIP5vdcgB6AnjYc4LrchRImkOHYsRYCiflveMcuWJ71Jc68E+5wRHVJGpal9H2pUeXTHP998ky6qcNoTrpmnnUk2PkIB95TIYtBwBWHCU1iKGHaVHSEUS/4TJ/U4r3DVpyjYhG0=
+	t=1788439448; cv=none; b=rxDwn6A1wKZQnuDBpyqnwdXTQPi8p96d7hhbmuIyTwKO99Yq+uapLv73o50nYiP5/dKLesG/MiTDGeFWD8XbfiAqfv87Xw0h/a8dYmD+TDAjW5k0Vhwrs78Ayciqn5tjEAjSA/FTr0skRtXAedSxChHgXUULIPgp7xVeOpxFqg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788438901; c=relaxed/simple;
-	bh=fuBAGqqUDOqetB2V/lzjUNoB/11ynai98RY5zv5kmM4=;
+	s=arc-20240116; t=1788439448; c=relaxed/simple;
+	bh=cgezBnVAdGNvF15YdIHB7Gnm9MrkiYXQWreUSZmMFHo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tzNNw+U9AGK4HJFF26YLFQ5u+P3v/x8CS7deWC4gyXIt0gIen13P9I2CL8kct7S5dbmXNOh9Mzl7Xyqxl/tcRYXfzmDM5yGH+TjFk+9aMzkPA9S59HhA73/YsAUDxv2rV1xx+lJMFOGtoZaodCn/KkEWvCVPVVLr0vZkjXnizdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvHP23vb; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHb5nIjZuyx9WQiGYYBs327ZjbALVM0aGDsVx/H3/Amd9X5GFdYoYMlOlKPVRjB/c3pW3ShHsAvUNCrcNAgklTOLwKfqXHxN3F32CasZ5nbg9BztbiWk6LFRqnR/tr4MWr8rmetwCN84a1ydotlCF1QtqmZmFMvAOREp59A4v6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfrF5wDT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvHP23vb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C671F000E9;
-	Thu,  3 Sep 2026 12:34:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfrF5wDT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4BB1F00A3A;
+	Thu,  3 Sep 2026 12:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788438900;
-	bh=LkHyojIiqDTwswEf0pCBO7d+LqykZSReJx6ZH4c8vlY=;
+	s=k20260515; t=1788439447;
+	bh=jTSqFkEkk1q8IwdWmCwMO27IdBMn6LIcghxRPdcz8rA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hvHP23vbG9IiqSRn4lxC6hbe1z2w6jX7yKRajvDm8CYyw7qtAzs2GKMuoeulyrCZD
-	 50CrgXsfTLYRZ0/Xh5DGU6Ts9RyXEOuzdwzxISxdXgP4ibYzaJJCQm74BP2bG3zBis
-	 FMPWBib8khhEm4efo00Bly60KuFlugbnp99YtmqRqJh1nHtFCw80pVk3TGGWCsnkod
-	 ncvG3tQjzaZfF0RgHXrg2urDhQoV9IIHJFnuKJz8eh7g2NSEyvFa8yNHpDrvqiP4Yg
-	 52fMOU8q/ZYpTb5ssWQYYxvW3zsexK51HIpEXal4IhBKTin2nOQFMX5ax4wZrS8F8V
-	 xDXeF39Z42zgw==
-Date: Thu, 3 Sep 2026 13:34:55 +0100
-From: Lee Jones <lee@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	b=AfrF5wDTwpvROMIlgrvi8Uz/8ZcbQ7scGNLe28Ii00xQ3p1EGQmBjqyhxY1J8yKMD
+	 irnVmLXmFPEuPE7FkE3MVwzmwdBJyL5fy5sce71QOA2BM+Coe4btMaCpV7vHqL4MS6
+	 6gockvW8XPGvvetUG0ioTMpLutRHHxddbwrvmj3cs33UQTd+WAgsUdwUkCIf8ws7sT
+	 7ABolApcFwKp6YyF9PCkbkiJXbfkPrE1qapChTV6PscCXt+nGVTcpVVoGe9o7yKipZ
+	 CWbO/M+u/rURsJbheK80XqUPFpyM9kpR1RW/pWzKTJtYKMuqOzWFSFEwjsYO75MIXr
+	 /t6fMy/HsVDgw==
+Date: Thu, 3 Sep 2026 08:44:05 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>, stable@vger.kernel.org,
 	rostedt@goodmis.org, mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
 	kernel-team@android.com, linux-kernel@vger.kernel.org
 Subject: Re: STABLE REQ: [PATCH v5 06/10] tracing: Fix subbuf resize races
- with trace_pipe_raw readers
-Message-ID: <20260903123455.GS2133376@google.com>
+ with trace_pipe_raw readers\
+Message-ID: <aplrlQbTRxAxMsAF@laps>
 References: <20260901123444.GA1350131@google.com>
  <20260902-daily-reply-0006-tracing-subbuf-resize-7-2@kernel.org>
  <apk_dQ4Q6msdw_Ub@google.com>
+ <20260903123455.GS2133376@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <apk_dQ4Q6msdw_Ub@google.com>
+In-Reply-To: <20260903123455.GS2133376@google.com>
 
-On Thu, 03 Sep 2026, Vincent Donnefort wrote:
+On Thu, Sep 03, 2026 at 01:34:55PM +0100, Lee Jones wrote:
+>On Thu, 03 Sep 2026, Vincent Donnefort wrote:
+>
+>> On Wed, Sep 02, 2026 at 06:14:05PM -0400, Sasha Levin wrote:
+>> > > Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
+>> > > uninitialized memory to userspace due to stale size values.
+>> > >
+>> > > Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
+>> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+>> > >
+>> > > Not sure if this is the latest version or not?
+>> > >
+>> > > I see review comments, but no v6.  Anyway, no matter, it'll do.
+>> >
+>> > Queued for 7.2, thanks.
+>> >
+>> > --
+>> > Thanks,
+>> > Sasha
+>>
+>> This isn't the last version of this patch, I have just posted a v9 [1] and
+>> Steven hasn't reviewed it yet.
+>>
+>> [1] https://lore.kernel.org/all/20260901155445.1475405-3-vdonnefort@google.com/
+>
+>The confusion  is mine to own.  I responded to the wrong patch mail, sorry!
+>
+>  `ring-buffer: Fix subbuf resize race with ring buffer readers`
+>
+>Which is in Mainline with the immutable SHA 8a5f63637890.  My assumption
+>is that Sasha queued the correct commit or the tools would have
+>complained loudly.
 
-> On Wed, Sep 02, 2026 at 06:14:05PM -0400, Sasha Levin wrote:
-> > > Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
-> > > uninitialized memory to userspace due to stale size values.
-> > >
-> > > Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
-> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > >
-> > > Not sure if this is the latest version or not?
-> > >
-> > > I see review comments, but no v6.  Anyway, no matter, it'll do.
-> > 
-> > Queued for 7.2, thanks.
-> > 
-> > -- 
-> > Thanks,
-> > Sasha
-> 
-> This isn't the last version of this patch, I have just posted a v9 [1] and
-> Steven hasn't reviewed it yet.
-> 
-> [1] https://lore.kernel.org/all/20260901155445.1475405-3-vdonnefort@google.com/
-
-The confusion  is mine to own.  I responded to the wrong patch mail, sorry!
-
-  `ring-buffer: Fix subbuf resize race with ring buffer readers`
-
-Which is in Mainline with the immutable SHA 8a5f63637890.  My assumption
-is that Sasha queued the correct commit or the tools would have
-complained loudly.
+Indeed, sorry for the confusion! I've queued 8a5f63637890 ("ring-buffer: Fix
+subbuf resize race with ring buffer readers") for 7.2.
 
 -- 
-Lee Jones
+Thanks,
+Sasha
