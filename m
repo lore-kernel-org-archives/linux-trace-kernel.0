@@ -1,38 +1,34 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5384B66D2
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1A64F55D3;
+	Thu,  3 Sep 2026 17:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788456183; cv=none; b=BeS6Fj3Y6TIyMube4FyoTpBFG6kyCEIyjGWzswsrhONWoMYtflA6mX2pEdKbN2aqfwBFGkbwsVCwFF3aE4jNMRW4wG516rFlI3nUsZEXEublN96ApLu7kEO4Zq2+HmjxD4QH7tsgVX99CY/5gCtLYVuMwZH/GUR+dEFjFBwxAE8=
+	t=1788456395; cv=none; b=DVDL7DtfRhT2CUi9aPxVwIX704oELyyp3suivSF2apGlt+9E7EjN+a4jH8qV1EbQ8uxOw2d2sc1qj5F0RGPoJdrt65eXQ5qXzCX2QqiM0O8B78QxdO0MNRCQlPSdQfkA5zEJbBdZSZirkNsVr1xO9BkOppS3KLM47NRErpH0+YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788456183; c=relaxed/simple;
-	bh=L8avaB3vz50XsE5RZy/q+KtmSrZY7E0I4tFrIpp9dYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZMRw00ZMfBD1mUIEke/s33U7KL4Fzd8NVYQJwEyP3p/WCoAIbCt6SoyupUDGDwwG2jJ1+/b4g4uDXIgH0bmmQ659MAhrZAYorq6qWf792HPaUy6P0/Sy7pOEsZ9ynbH0t6k3Zs+d5ONGDqBxlRUt6X9+lE9L0LY9+d0t2BPyxTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=eZAm/W/t; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1788456395; c=relaxed/simple;
+	bh=6MZkHmI7KIdxZmtzWmbWfXmFLSbXSnS/AF5iFuCjuGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u/m6zH3cFDugXfWvTgksXdlkCck1cGuDq/B0gu678UtsjhvrIzxH7LtjN6g7s4IfhZDDu0/T85wswr59qfyM2KIX5ZSJ5BDA7HHAg5SrLedoVoM3mxyWcQvSrZpKL+ajMHaeZAlxYzy9ChY9gqBTuftOq74qg6ntjGnTrobTdqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=NIoAdcnC; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="eZAm/W/t"
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 966441A0606;
-	Thu,  3 Sep 2026 17:22:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id E96F92000E;
-	Thu,  3 Sep 2026 17:22:51 +0000 (UTC)
-Date: Thu, 3 Sep 2026 13:23:55 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="NIoAdcnC"
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id D0A5D405E2;
+	Thu,  3 Sep 2026 17:26:26 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 27EB320030;
+	Thu,  3 Sep 2026 17:26:25 +0000 (UTC)
+Date: Thu, 3 Sep 2026 13:27:28 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Vincent Donnefort"
- <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] ring-buffer: Prevent truncation of nr_pages /
- nr_subbufs
-Message-ID: <20260903132355.4a8d2209@gandalf.local.home>
-In-Reply-To: <20260901164836.D962D1F000E9@smtp.kernel.org>
-References: <20260901155445.1475405-1-vdonnefort@google.com>
-	<20260901155445.1475405-5-vdonnefort@google.com>
-	<20260901164836.D962D1F000E9@smtp.kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH] ftrace: Add checking nr_subbufs to persistent ring buffer 
+ validation
+Message-ID: <20260903132728.7fb27d34@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,29 +38,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zjgdrqqydd3nitpwkzhsdqytqsnpx69w
+X-Stat-Signature: xm63i8kti5fzcdp3aym4uo8sc86cj3zr
 X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: E96F92000E
+X-Rspamd-Queue-Id: 27EB320030
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/GGQr6NM3jvmYXuhXhyVmerfxljqbx03k=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=QXAEomfLwf93YfKqQJqiQUhttw7hpor21nTM2BOdgBY=; b=eZAm/W/trM3AFYMIcddQMKKYeTncGh6AIFJEhV51jinzYn9z+dyS/bANX8RJc5bX4huHue3LE/vEgfguDV/JqJ0d/57WkZBqcJoagkmPEtDHO/V65uW/GEOSkyFQrL25KLDmzIJt+0AmxCsoC1iI9uNhTjGVYwIGnex4oDPDlng=
-X-HE-Tag: 1788456171-947340
-X-HE-Meta: U2FsdGVkX18mJ7KLrw1YiqV7/+PpjJdm++PQHZLII+iMhBjjTsX6dHAc1XArlyGztVpT1+RcsNRaDhea/EBLtHi7tusjSo1wx8nUR8sP5HrOiaJjhowTbq3g/UAte9klUsnFnYGtNu5my2+Wf/UPb8KGpfBhDefFrxpBGsJmeyx3DIV2KyKXGxlILWKx3EMQ3o+47OIv3B4oLfFdrH5+T3pEfRpZqiSBDlE5NiHxx5C7g375aQhYNCbrlLQNgDnV2D6nSVt9GdWTl8bVfGX6R84S7/0OOERusZ8j4A6fCXZG54ipLlGtwBerRzQkh5cssMA8BOYlyGlT5XikJsncasQCLf86a2P5
+X-Session-ID: U2FsdGVkX18MTPDN1pO17eBclGPNQPbBTTtaEcie9Z0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Kx242b73O88THqGlqMnzySnHUjwHnJ8hlJwPqHlsHI4=; b=NIoAdcnCZwhRH6NcTIVihpkJJ5NvXHIlC7OADu5sN+BQntaIXkmW3kedJC693fghG+XTjZAF/8vqr9oPA9ZSGZCOFl6elpF/QjHcHQ+PTUTt79sWPS3ayr9udnXOf5OWkLTnYdoumISvSMwGf/nRwFnW4RlLW4LoGdCDkYo2ob4=
+X-HE-Tag: 1788456385-270618
+X-HE-Meta: U2FsdGVkX18msQmni3doAfXqNixdA771BOOqF/FKKjxMBIhv0NFnI20vm2C199Gzqc8Alp7VEydBQ+eZHFYj0vux1kUbbeS2hFe8Zl+/hQ/5e6OPR+govPV5bcHXu40hl2AmgQilzU3/1ES7lF0G4X1rTmM0P0dwLHC++edcTJXKc9hNzG6inEVBtgwtu6stPvdECKvrnDr5YhoLXwVGYQM6DaXnmzu8tzwLWm9rvLpmpQrto0/RhntjgS0WymF/uSmJg9lZjqN2IPAgl7yndRHd3M74Hm3heJSnIt2CD4cys6oU7HrvgNyyvKdU7LB89SnfsvZvmrx+3VIGFjHanl4EvvY2ztcWS1pYkVYny01wYygHAaA4OJ1tTF6E2rREXWGz7iYG0RhmUa6xFxV4/Q==
 
-On Tue, 01 Sep 2026 16:48:36 +0000
-sashiko-bot@kernel.org wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> [Severity: High]
-> This is a pre-existing issue, but does this function overflow the
-> subbuf_mask bitmap?
-> 
-> The size of subbuf_mask is allocated as nr_pages + 1 bits in
-> rb_range_meta_init(). However, this function unconditionally uses
-> meta->nr_subbufs from the persistent memory mapped region without
-> validating it against nr_pages + 1.
+Sashiko reported that the code was using meta->nr_subbufs without making
+sure that it matched the nr_pages + 1 on data that was assuming the two
+were the same.
 
-Sounds like another validation check. Make sure what's in the meta data
-matches nr_pages + 1. I'll add this:
+Add a check to the persistent ring buffer validation code to make sure
+that the saved nr_subbufs matches what we expect.
+
+Fixes: f5b95f1fa2ef3 ("ring-buffer: Validate the persistent meta data subbuf array")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://lore.kernel.org/all/20260901164836.D962D1F000E9@smtp.kernel.org/
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
 index ef66f726e2e2..748d4ae8badf 100644
@@ -82,4 +80,6 @@ index ef66f726e2e2..748d4ae8badf 100644
  	buffers_start = meta->first_buffer;
  	buffers_end = meta->first_buffer + (subbuf_size * meta->nr_subbufs);
  
--- Steve
+-- 
+2.53.0
+
