@@ -1,108 +1,246 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9EC4D2ED4
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 15:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41D44E3779;
+	Thu,  3 Sep 2026 15:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788448804; cv=none; b=E658nmSOErnOomX3Uo8ImROn44TkU3hyhO1mT7vxWrVv1VlSDmW52pDK6SWUWK03E9SmxxBSVJBEC1J68awreWY2AWbJyMxQ0n1p4sp+flRLdTcIj8jNk5tOMtN2wjsvhNERsVQa32SaagSxvJ1F6pfO21EBd8//QdelfecysP8=
+	t=1788449001; cv=none; b=UP5nICITX1FGcEFPZgEEU+795G7FjYfiNQrcGbrl5GTFfs7JgxXWI2Hkyi8Ou2NSJ+NoZN+tDc5QT/7k1yGOBY3CjO1K3mBcRiweNZ8QYB/feZRA1lnFZn1W6nVUIWr2gMf6EANNSVnQpILXr1o3ASEo7ubY2uABmg/E9ijur2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788448804; c=relaxed/simple;
-	bh=jHZdAdF+lmGzPYsT8GrQUp9u1PkWPJu0bdv2XBa5BQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b91PeOuaRYMbjxUEbOwavGSenvxiqUjXow5ZYq4BSISEJ54eKalZ2ulbs1DwnVtMAJIwQBoPJyB0MjXPrs3p6QucAFJMNALki3UvjP8GEmvyBiQNMr70q2ZpVGCxxsIWPYPAQNsmd1VIo1Q8rfvzF5xIo4j4SGIBFxNfGS++a4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h0EVelC6; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1788449001; c=relaxed/simple;
+	bh=o2+jE7zMGV521nI3uzRtLApGCI55D68YCg4DPbBy104=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jWF37EpX7oavJUFbJ+BiucE+0Tv56q2jOu6+r2hDeEZxfjE144Lrsr9tL2cccXF5sfZe7vh4qnsigehqgSPExuq8psaTGVDeTFvG8dUDa6yeeurd+0nrsaSXbJAogHhaXTAK5LLOkz647spCrvHguxC87hgSNbdOkYdMzRd9Qb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dj/wJPv8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h0EVelC6"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6a0a4aa99bdso3551395a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Sep 2026 08:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788448801; x=1789053601; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=aAKIuEKuV7qhY7WF80gvKc7qYwMnmaoC0K+ccLX7aeM=;
-        b=h0EVelC6A3CVGqPBTfq5Ep+kk9QEZ78PoFsMeDqc1Aghi85+k4q5OODRiuV8WGbPBT
-         kglaaxeZoSRzOYD7Bc1z3PNeScSf+YphLW9BQV1FINM4eneiOWrD8vb43ow2SwLtvs+L
-         GEcjTREj/C797xEbY2iJ+kkQg0yPKacfKIU9346Xit1iuFyEcqDczo4erYuV5pC087qX
-         ieS5osJW3BUbyc+S4B+SItRZmoSPF7KO2X8a/KcxwF2ZOiqnD/2MHCUgtj031ArU+5Hm
-         XlJerFbtyQC4q14XWxA+ldJNs8+z5nVWZj42lM4JF0FZSeSjTa/72bDaQLfGkO1YKLr9
-         Jt2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788448801; x=1789053601;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aAKIuEKuV7qhY7WF80gvKc7qYwMnmaoC0K+ccLX7aeM=;
-        b=eN8GZbz2KUvtIkzEcrxHZGYnC0NcrO7j8kJRIVU7Bs6dcuu495ksDD64JdCTl9wvsP
-         CsvJHv1gpGhrFiy7hvjzh8aLId4QFFAtDLJ/ec+MNULXEFeKe4YWGdhDkbqhj0wohIg9
-         uXXTN9ICPCjbLssoT7F7ZeBs4lA/q/iFIXmrtLkakVlWFG3CndXPAVKk9+jDXeilEiGX
-         B3FwLYBWUjwAf3sI+rD4To0BKbBzosuSWqzMFd86APPh8tLnnpMHsGsXL2pLm/I87jC1
-         lwQB5S23Xh6lq4TrHbDSV8ze/gfSTHy+fnJfKB8htMKSui0/KkcTvX+Ixfukmb4AhxoO
-         QKpA==
-X-Forwarded-Encrypted: i=1; AKwUvBy2qGix4eFhCjD5zAYRol5MWOZ/MdERt8HHhBsW8WFJ62RoqpqodwQGxn/l323ZL1LAk+T0VKL6VsUJR3RSAbKX3aY=@vger.kernel.org
-X-Gm-Message-State: AFuF++niZDi3VjNL84QgudWQVEz61WuQmZUR4k3YF9gJ+MhH76DklIVF
-	vY2Tk9V4GqrWMEi/13dfI790zWABkX0CcO4jYOfV+PR4o0YGZA8Geujmv9BshHw1Dg==
-X-Gm-Gg: AYBFou2Z7eFCtKnpHI4xQaFWD7hyOeadLeoYSVMsxBtGmTrcGJP/RqKtx83yqa15th4
-	9J7+V752IcTbT6JAdzjrUfxzZQ4iYioHOD/8tDD4I3YtG0OMaIhYsKSZ6VhaiBUQwrUH+rTkjBb
-	aDPobTWqy0eqje4XPam8s9ifme+XFhMTW2EqE6KCo7+jxwblOFKIudKmYuxjRweBLdn3h+o1oUf
-	d0f0nvxGQRPEVbku4LT3ezemVMrOwrq8OfIi6GofphHEXBhKKqmGxXMMEDvvSs/iLKIw7wDMqrD
-	49OEOMAB23Qw9u/ligLXBlAN6BsB3TmPcBiNeeYh6W8dN9yENybGdUzu1d3CHPmj4v8r1x3C452
-	Ra8f8QAmQ2Amu+KFJAqJX6H3n/8SaAIGrjxU1bEt6a2Qe6j+to5jealQ91Wnwg8Ij3BuoKJJIpG
-	IK/im/3yiQOI+oe1ATNK6oTrrLi70boetkyubm8aiBMDX1muNObJ8KpdmoUN+EaDZ8So8Eg4tf/
-	sbqjNVbpT0wW+FIoaGaWjVh+0soGGEp
-X-Received: by 2002:a05:6402:360c:b0:6a6:cc:269e with SMTP id 4fb4d7f45d1cf-6a68257bceamr9136219a12.8.1788448800426;
-        Thu, 03 Sep 2026 08:20:00 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a69a010c72sm997336a12.8.2026.09.03.08.19.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2026 08:19:59 -0700 (PDT)
-Date: Thu, 3 Sep 2026 16:19:55 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/4] ring-buffer: Fixes for subbuf resizing and
- persistent buffers
-Message-ID: <apmQGwDuvjSn0gzP@google.com>
-References: <20260901155445.1475405-1-vdonnefort@google.com>
- <20260903103116.6cb7c39c@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dj/wJPv8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9251F00A3E;
+	Thu,  3 Sep 2026 15:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788448998;
+	bh=XkCXKilCOc9Ih+HiuXfcOSyP8S6gCoctHhMqE3KtinY=;
+	h=From:To:Cc:Subject:Date;
+	b=Dj/wJPv8N4PcTP5EXHvhHOrZN+YatDBBir29FpcnTVGSNXzos7H5BozqwqSpPp4Be
+	 hISsQBdHlxiaRCDJ/am+kcC4hqnuNRx3uBwibdKg1YgvImdJT8fPipKyAGeMBTv9Qp
+	 T+4dahwF+Fo3ohhsMSmgyGr0U5GM97QGwGgh8iDeiVNKkEKnFx3irIn0lH8iurtTKF
+	 4FxhsFoBdNNsgdoJoHVyzGmAFimQbQhzUWGbRDc1BBUISRKGMHjfyNbhZeBnDn3aDd
+	 iyg8F6Dwdhu54zAAFw+DRbz7z9Et5/bZIfaKYJjr+GQlql9Cn5y9K9nJAxUB98vp3I
+	 c4ndTNmUazfqA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Breno Leitao <leitao@debian.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v3] bootconfig: Skip printing early params to cmdline from bootconfig
+Date: Fri,  4 Sep 2026 00:23:15 +0900
+Message-ID: <178844899530.263905.7707547252181797215.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260903103116.6cb7c39c@gandalf.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 03, 2026 at 10:31:16AM -0400, Steven Rostedt wrote:
-> On Tue,  1 Sep 2026 16:54:41 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > This series addresses multiple issues discovered with the dynamic ring
-> > buffer resizing.
-> > 
-> > I have managed to reproduce a ring_buffer_read_page() race with
-> > 
-> >  $ while true; do for i in 8 16 32; do echo $i > /sys/kernel/tracing/buffer_subbuf_size_kb; sleep 0.1; done; done
-> 
-> Did you do anything else while running the above?
-> 
-> I ask because I ran this for several hours and it didn't produce anything.
-> What bug does it supposed to trigger?
-> 
-> -- Steve
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I clearly have been imprecise here.
+If user configures `kernel.key` in bootconfig, the 'key' is shown
+in kernel cmdline (/proc/cmdline) and kernel boot parameter
+handler associated with 'key' is invoked. However, since the
+bootconfig does not support the parameter defined with early_param,
+those keys are shown in '/proc/cmdline' but not handled by kernel.
 
-I had "trace-record -e sched" and I have just verified with a print that it has
-run into the reader->order != read_page->order case.
+This could easily mislead users who expected to be able to specify
+early parameters via the boot configuration, leading them to wonder
+why it doesn't work.
 
--- 
-Vincent
+Let's skip printing out early params to cmdline buffer, and warn
+if there is such parameters in bootconfig.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+Changes in v3:
+ - Add xbc_snprint_cmdline_filter() for filter support.
+ - Fix param matching for dual early/late params (e.g. console=) and
+   module parameters so they are not incorrectly dropped.
+ - Print warning for skipped parameter.
+---
+ include/linux/bootconfig.h |   10 +++++-
+ init/main.c                |   73 ++++++++++++++++++++++++++++++++++++++++----
+ lib/bootconfig.c           |   16 +++++++---
+ 3 files changed, 87 insertions(+), 12 deletions(-)
+
+diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+index deda507500da..1f929034d42f 100644
+--- a/include/linux/bootconfig.h
++++ b/include/linux/bootconfig.h
+@@ -266,7 +266,15 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+ 			struct xbc_node *node, char *buf, size_t size);
+ 
+ /* Render key/value pairs under @root as a flat cmdline string */
+-int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root);
++typedef bool (*xbc_cmdline_filter_fn)(struct xbc_node *node, const char *key, void *data);
++
++int __init xbc_snprint_cmdline_filter(char *buf, size_t size, struct xbc_node *root,
++				      xbc_cmdline_filter_fn filter, void *data);
++
++static inline int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
++{
++	return xbc_snprint_cmdline_filter(buf, size, root, NULL, NULL);
++}
+ 
+ /**
+  * xbc_node_compose_key() - Compose full key string of the XBC node
+diff --git a/init/main.c b/init/main.c
+index 2613d3f9b3ce..aaee5625e123 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -325,9 +325,64 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
+ 
+ #ifdef CONFIG_BOOT_CONFIG
+ 
++/* Check if a parameter name matches an obs_kernel_param entry */
++static bool __init match_obs_param(const char *param, const char *pattern)
++{
++	size_t n = strlen(pattern);
++
++	if (n > 0 && pattern[n - 1] == '=')
++		return parameqn(param, pattern, n - 1) && param[n - 1] == '\0';
++
++	return parameq(param, pattern);
++}
++
++/* Return true if the given param is only defined by early_param(). */
++static bool __init is_early_only_param(const char *param)
++{
++	const struct obs_kernel_param *p;
++	const struct kernel_param *kp;
++	bool has_early = false;
++
++	/* If handled by a regular module_param, it is not early-only */
++	for (kp = __start___param; kp < __stop___param; kp++) {
++		if (parameq(param, kp->name))
++			return false;
++	}
++
++	/* Check __setup / early_param table */
++	for (p = __setup_start; p < __setup_end; p++) {
++		if (match_obs_param(param, p->str)) {
++			if (!p->early)
++				return false;
++			has_early = true;
++		}
++	}
++	return has_early;
++}
++
++struct xbc_filter_data {
++	bool warn;
++};
++
++static bool __init xbc_kernel_param_filter(struct xbc_node *node,
++					   const char *key, void *data)
++{
++	struct xbc_filter_data *fdata = data;
++
++	if (is_early_only_param(key)) {
++		if (fdata && fdata->warn)
++			pr_warn("bootconfig: early_param 'kernel.%s' cannot be applied from bootconfig, skipping\n",
++				key);
++		return false;
++	}
++	return true;
++}
++
+ /* Make an extra command line under given key word */
+-static char * __init xbc_make_cmdline(const char *key)
++static char * __init xbc_make_cmdline(const char *key, bool is_kernel)
+ {
++	struct xbc_filter_data fdata = { .warn = true };
++	xbc_cmdline_filter_fn filter = is_kernel ? xbc_kernel_param_filter : NULL;
+ 	struct xbc_node *root;
+ 	char *new_cmdline;
+ 	int ret, len = 0;
+@@ -336,8 +391,12 @@ static char * __init xbc_make_cmdline(const char *key)
+ 	if (!root)
+ 		return NULL;
+ 
+-	/* Count required buffer size */
+-	len = xbc_snprint_cmdline(NULL, 0, root);
++	/*
++	 * Pass 1: Count required buffer size. Emit warnings for skipped early
++	 * params in this pass so they are logged even if all parameters under
++	 * @key are skipped and len becomes 0.
++	 */
++	len = xbc_snprint_cmdline_filter(NULL, 0, root, filter, &fdata);
+ 	if (len <= 0)
+ 		return NULL;
+ 
+@@ -347,7 +406,9 @@ static char * __init xbc_make_cmdline(const char *key)
+ 		return NULL;
+ 	}
+ 
+-	ret = xbc_snprint_cmdline(new_cmdline, len + 1, root);
++	/* Pass 2: Render into buffer with warnings suppressed */
++	fdata.warn = false;
++	ret = xbc_snprint_cmdline_filter(new_cmdline, len + 1, root, filter, &fdata);
+ 	if (ret < 0 || ret > len) {
+ 		pr_err("Failed to print extra kernel cmdline.\n");
+ 		memblock_free(new_cmdline, len + 1);
+@@ -427,9 +488,9 @@ static void __init setup_boot_config(void)
+ 		 * before this series.
+ 		 */
+ 		if (!from_embedded || !xbc_embedded_cmdline_applied())
+-			extra_command_line = xbc_make_cmdline("kernel");
++			extra_command_line = xbc_make_cmdline("kernel", true);
+ 		/* Also, "init." keys are init arguments */
+-		extra_init_args = xbc_make_cmdline("init");
++		extra_init_args = xbc_make_cmdline("init", false);
+ 	}
+ 	return;
+ }
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 89c88e359179..820f6cf28456 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -539,18 +539,21 @@ static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+ #define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
+ 
+ /**
+- * xbc_snprint_cmdline() - Render bootconfig keys under @root as a cmdline string
++ * xbc_snprint_cmdline_filter() - Render bootconfig keys as cmdline string
+  * @buf: Destination buffer (may be NULL when @size is 0 to query the length)
+  * @size: Size of @buf in bytes
+  * @root: Subtree root whose key=value pairs should be rendered
++ * @filter: Filter callback (returns true to include, false to skip; may be NULL)
++ * @data: Private context passed to @filter
+  *
+  * Walk all key/value pairs under @root and emit them as a space-separated
+  * cmdline string into @buf. Values containing whitespace are quoted with
+- * double quotes. Returns the number of bytes that would be written if @buf
+- * were large enough (matching snprintf semantics), or a negative errno on
+- * failure.
++ * double quotes. Keys for which @filter returns false are omitted.
++ * Returns the number of bytes that would be written if @buf were large enough
++ * (matching snprintf semantics), or a negative errno on failure.
+  */
+-int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
++int __init xbc_snprint_cmdline_filter(char *buf, size_t size, struct xbc_node *root,
++				      xbc_cmdline_filter_fn filter, void *data)
+ {
+ 	struct xbc_node *knode, *vnode;
+ 	const char *val, *q;
+@@ -582,6 +585,9 @@ int __init xbc_snprint_cmdline(char *buf, size_t size, struct xbc_node *root)
+ 		if (ret < 0)
+ 			return ret;
+ 
++		if (filter && !filter(knode, xbc_namebuf, data))
++			continue;
++
+ 		vnode = xbc_node_get_child(knode);
+ 		if (!vnode) {
+ 			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
+
