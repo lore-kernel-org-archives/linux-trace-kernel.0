@@ -1,129 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E3C42E43B;
-	Thu,  3 Sep 2026 21:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7A22D7DCF;
+	Thu,  3 Sep 2026 22:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788469516; cv=none; b=ax8iI7AiKcuTqMrwiVcCAf+jEh4UvTcT0OaABu8wedge4+mrIgPpYj3uh9mSaHS2+rYKK9RvANP89x+iq6zvSbMPVWdOVOrzAEuLVFO42rgJQ5fyqDYgLRPb4oDsrQ4grO1VjG7VdExdWfeHeFyAUC5wk0Sa+Jrqmt+MfPvrvJQ=
+	t=1788474794; cv=none; b=Iojo+FjwTLYxwrrYAB6W5Jtlq2zuvx4tdgC4uI/O2Gi+E2jTUheTaVu+RZwnwiuPjJV/tUkEStUCSD+F+uuxngaSkPp0etnEIeg3elzb/iPTcU5h1m6bjo60DH3n1N4p2GXzxCwa6NKmrnpNrDfu97cXPCFHqHqTIVXxBIS74Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788469516; c=relaxed/simple;
-	bh=h6aU+GI/NNBMe45yjlTzbFuwmdjgMJ/60CUJrOHFlxM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XjWbQ5MrVoaWw46UMtzU4g9naxP55ZQwFnMygNfOM9Ng8beRezQJhzSSG/tkTqIoskNa/yXkNmZ9kn+kkDo4DPVuAKIbr7CJvdVAmD0btsKc2KZLyYF5EBbdXPc3q0EiaT8W8t0RwR+6r7H8iCZldhts69krW92QbsuYsQQAyRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SN0VQquj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788474794; c=relaxed/simple;
+	bh=PIXL1HlOr2OAWCKfAcP7uuThZNVlq9Vbb6VY/5c8pcE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=X/+dgPTc9qA/RArUJ/s9piPq5o7HC8aw+vSkBaTWeWrECl6Xjdnj/islRVkx1ADV5z14WnT3VOYQiJ/K+GBlhgxIPq9Zi/+M75blOnPqi1el6ZrCvMJefPyaeM/dYdMBhm3d5dGYPBYqzwr/x7f6XQW8ZpdQNwya0L+dpPXrGvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=JxhafLRB; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SN0VQquj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6571A1F000E9;
-	Thu,  3 Sep 2026 21:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788469512;
-	bh=uPGbhKaL9I8pugMbLO9ZOWj7e7M7/4AZuGgPzXdmBSw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SN0VQquj1q5kPtEp0guv3Z4pENUbTCd6qb1p1PE97EN2KPDVXzuOhQ7gC2eXngpwa
-	 sY6vITh63TURz4Q16b0lkZGezxnYRgE7WicPMCM6kU3aQ6s7f/2bsf0rC0CSdsa5uc
-	 1ILIb5PH0xdHTimeYSM/ms4k8P66cQ7YfBgFVYNjrX9p0Tl2cpvQeAiyLWnSdyMV3y
-	 Y9ivPwapNl1iSR/cHUpQsd9k5yqXV3zBXWoWjtHTR3iwMT/oKnBcpoCxbe/7yWCsSK
-	 NvrmJ7yIX8eSuxnaSro4TUM1pCgf9NDA6sguKsTq9CqIW/CQ1TopkID/eHOJwIGkuL
-	 r01gGCXNSvxRQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/3] dmaengine: use dma_chan_name() helper to get
- per-channel device name
-Reply-To: sashiko-reviews@lists.linux.dev
-To: Frank.Li@oss.nxp.com
-Cc: imx@lists.linux.dev, linux-sunxi@lists.linux.dev, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260903-dma-chan_dev-rename-v2-2-0db305b6c716@nxp.com>
-References: <20260903-dma-chan_dev-rename-v2-0-0db305b6c716@nxp.com>
- <20260903-dma-chan_dev-rename-v2-2-0db305b6c716@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 21:05:12 +0000
-Message-Id: <20260903210512.6571A1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="JxhafLRB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=ZpOyW9JwdzvymqD7nh64dhGMgQ9gYFcIgy1C7e7EDew=; b=JxhafLRBFfiDbyUgKcxbdSJ2dB
+	G/LvGMoB/v6HYzBXhKjf6dKeFB5H+10bD37VRifeQ+IQOe1OOrI2sYFlDm8ol7jTn2tPJyT1qAxf9
+	2g7eLzUtwiPDksHmpo5egNV1iJ3GeKdR33UH5IPfi+V20GQ7DZaS3mAIHe/lR6+R4bjLPOgNyBVWN
+	eGhbVPL7oZXNhllf05l+l2reLpOpV8o9PVpH/MPGKrrj6j+/coMHh8vSbqi4cjoNrEDN7dijdO5DI
+	lrpCi+m+/WHQRtrKOEnzkBkCWiYJ31KSiouFHjsJYXPZro5rxKb/hxeJNcmS4Qw5US97USWLcyIWE
+	y9y2zAvg==;
+Received: from [104.157.31.28] (helo=[192.168.1.251])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.2)
+	(envelope-from <logang@deltatee.com>)
+	id 1x2FzL-00000001iUZ-2jmV;
+	Thu, 03 Sep 2026 16:32:56 -0600
+Message-ID: <1fb463b3-437c-43fa-95df-29c2c7d2496d@deltatee.com>
+Date: Thu, 3 Sep 2026 16:30:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Frank.Li@oss.nxp.com, Jacky Huang <ychuang3@nuvoton.com>,
+ Shan-Chun Hung <schung@nuvoton.com>, Vinod Koul <vkoul@kernel.org>,
+ Frank Li <Frank.Li@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Binbin Zhou <zhoubinbin@loongson.cn>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ =?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thierry Reding <thierry.reding@kernel.org>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>,
+ Viresh Kumar <vireshk@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Manivannan Sadhasivam <mani@kernel.org>, Daniel Mack <daniel@zonque.org>,
+ Haojian Zhuang <haojian.zhuang@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>, Chen-Yu Tsai <wens@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Kelvin Cao <kelvin.cao@microchip.com>,
+ Laxman Dewangan <ldewangan@nvidia.com>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
+References: <20260903-dma-chan_dev-rename-v2-0-0db305b6c716@nxp.com>
+ <20260903-dma-chan_dev-rename-v2-1-0db305b6c716@nxp.com>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20260903-dma-chan_dev-rename-v2-1-0db305b6c716@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 104.157.31.28
+X-SA-Exim-Rcpt-To: Frank.Li@oss.nxp.com, ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org, Frank.Li@kernel.org, paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, andriy.shevchenko@linux.intel.com, zhoubinbin@loongson.cn, patrice.chotard@foss.st.com, amelie.delaunay@foss.st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, thierry.reding@kernel.org, jonathanh@nvidia.com, ludovic.desroches@microchip.com, vireshk@kernel.org, keguang.zhang@gmail.com, afaerber@suse.de, mani@kernel.org, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, wens@kernel.org, jernej.skrabec@gmail.com, samuel@sholland.org, kelvin.cao@microchip.com, ldewangan@nvidia.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev, imx@lists.linux.dev, Frank.Li@nxp.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH v2 1/3] dmaengine: vchan: add vchan_chan_name() to get
+ channel device name
+X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Tasklets created for DMA channels are not killed during driver rem=
-oval, risking use-after-free panics if scheduled after devm allocations are=
- freed.
---
 
-commit fe57b7262d586b3f961d1d34cf7a9a0acf70d3c7
-Author: Frank Li <Frank.Li@nxp.com>
+On 2026-09-03 2:53 p.m., Frank.Li@oss.nxp.com wrote:
+> From: Frank Li <Frank.Li@nxp.com>
+> 
+> Introduce vchan_chan_name() to obtain the DMA channel device name.
+> 
+> Use a dedicated helper instead of directly accessing dma_chan::dev
+> so callers remain unaffected by an upcoming rename of the struct member.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-dmaengine: use dma_chan_name() helper to get per-channel device name
+Makes sense to me:
 
-This commit updates various DMA engine drivers to use the existing
-dma_chan_name() helper instead of open-coding the per-channel device name
-retrieval. The change simplifies the code and improves consistency across
-the subsystem without altering functionality.
-
-[ ... ]
-
-> diff --git a/drivers/dma/loongson/loongson2-apb-dma.c b/drivers/dma/loong=
-son/loongson2-apb-dma.c
-> index aceb069e71fca..7c3d7c3273955 100644
-> --- a/drivers/dma/loongson/loongson2-apb-dma.c
-> +++ b/drivers/dma/loongson/loongson2-apb-dma.c
-> @@ -282,7 +282,7 @@ static int ls2x_dma_alloc_chan_resources(struct dma_c=
-han *chan)
->  	struct ls2x_dma_chan *lchan =3D to_ldma_chan(chan);
-> =20
->  	/* Create a pool of consistent memory blocks for hardware descriptors */
-> -	lchan->pool =3D dma_pool_create(dev_name(chan2dev(chan)),
-> +	lchan->pool =3D dma_pool_create(dma_chan_name(chan),
->  				      chan->device->dev, PAGE_SIZE,
->  				      __alignof__(struct ls2x_dma_hw_desc), 0);
->  	if (!lchan->pool) {
-
-[Severity: High]
-This isn't a bug introduced by this patch, but I noticed a pre-existing
-issue in ls2x_dma_remove() missing tasklet cleanup.
-
-Should ls2x_dma_remove() iterate over the channels and call
-tasklet_kill(&chan->vchan.task) before returning?
-
-The driver relies on devm allocations for channel memory, which are
-automatically freed immediately after remove() completes. If the DMA driver
-is unbound shortly after an interrupt fires, the interrupt handler schedules
-the channel's tasklet. If this scheduled tasklet executes after the memory
-is freed, can it dereference invalid memory and cause a use-after-free
-panic?
-
-[ ... ]
-
-> diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-> index 386e85cd4882a..6b29e15b0616c 100644
-> --- a/drivers/dma/mmp_pdma.c
-> +++ b/drivers/dma/mmp_pdma.c
-> @@ -565,7 +565,7 @@ static int mmp_pdma_alloc_chan_resources(struct dma_c=
-han *dchan)
->  	if (chan->desc_pool)
->  		return 1;
-> =20
-> -	chan->desc_pool =3D dma_pool_create(dev_name(&dchan->dev->device),
-> +	chan->desc_pool =3D dma_pool_create(dma_chan_name(dchan),
->  					  chan->dev,
->  					  sizeof(struct mmp_pdma_desc_sw),
->  					  __alignof__(struct mmp_pdma_desc_sw),
-
-[Severity: High]
-This isn't a bug introduced by this patch, but there appears to be a similar
-pre-existing issue in mmp_pdma_remove().
-
-Does mmp_pdma_remove() also need a loop over the channels to call
-tasklet_kill(&chan->tasklet)?
-
-Like the Loongson driver, this driver also uses devm allocations for
-channel structures and could experience a use-after-free panic if a tasklet
-runs after mmp_pdma_remove() finishes and the memory is freed.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903-dma-chan_d=
-ev-rename-v2-0-0db305b6c716@nxp.com?part=3D2
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
