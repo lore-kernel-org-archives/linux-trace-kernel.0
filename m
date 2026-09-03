@@ -1,148 +1,139 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1FA4A3D25
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 17:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F54FECDB;
+	Thu,  3 Sep 2026 18:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788457329; cv=none; b=a+PSgVpWF4R+dB535cXZWHU//MjSTZg8YYsXQN1ccQkIDWRMzlOQhQXj+H+AiX8oRz8By9wg8HYbZrzRoQnKgntHuhTuBOf7JCbkmAtNkns4/g/61GGYT9GqXIlT5PJyagydhAQzhHmrah9ITmJQpZfIej4lXFphvRbrvuNNNkw=
+	t=1788459185; cv=none; b=Zo6XYQy0fB0UjNpoKTEgBR4kLvlQDSR/Bbu1N+APj5HH7CkpZWaRADwSOizf9GsXfvZs9FycyWSlor7exoeqHN29+s+ClsNLd4Vs+SSoyYR7jKxdWghN2xZYEIP0Of+i5VfzLvqgL2YC3vOF4HnTBtldIVT7Q62PvxbUN1zGTIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788457329; c=relaxed/simple;
-	bh=0c6h30lvNuwZCKR0KcWCDjNBuyr8IdwzE21BpfW1KxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HR2nyPq4H1ZaWv9+thVMXCslTBdAXv9Fff3nC5IMrcZPhACQsczVOIAoEsR0TfjgjdLSFkfwWR1W3Ij31ttoilI0zkga7tXys5xpLUNgsmrtCLa1QYStVJI4SgdsLPo2KUqKt1NC/TlQ5xjC/ZCyQRmq2tc6hJVHCi9VxRWfzN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nCRJtRYl; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1788459185; c=relaxed/simple;
+	bh=lMjDwwDcEuib5CqUG8sAFJffsPxgRDckMPxZ/W2C4oQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jcjeu1yX8DO0Ln9rmLFedbgYwNieCAgNUq4XDEO0159OnmE4FTcd142WmM8BpxiV8PCcXqrzo8POcWpm/qYtDqwjlJTxJQqkpb4j2KGTpsZW07kbSfKfTO7Mo557QXcVr+Q+BIGVnbxhax/R6hQ55+MLevJmy3+cIsJ3nuP6IxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=MO03n2E2; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nCRJtRYl"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-47fe89fb333so100378f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Sep 2026 10:42:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788457326; x=1789062126; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/QcOMac4m+jPNu8ZvLbuOuvzBr1+9wApKD/IVdlK39Q=;
-        b=nCRJtRYlrHUibT9QrzLsa+Ja8Ks81TN8Wc/Ktsf8hpjnY/8n90QnfECqwd4l5qcdvR
-         XICEOoib0YjuSt/JljL0HFJpsG1+qaCKTzu4Os4kaCNDDQtaZAF2TQjiUhjNl2a7Y7G5
-         4LLdntXOs4mBRPjuAHCvFZcawtLPMbs4bBNzuFeWwgQ/TaH59PFGwZhvlkpz5tcJDT4F
-         vVkwWu3AbG/wHowkeKNqvJYhXqe5WKdeo1SXyT067DU8jUqO/GGOAVTLcwrNIGELZgSu
-         PuSxIE1FmgbEHvaOKCHmb2mITjdHHoQyMsuLLgiAvCFAiZNjzrEghG/XN40lb9Qr61Et
-         Z1Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788457326; x=1789062126;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=/QcOMac4m+jPNu8ZvLbuOuvzBr1+9wApKD/IVdlK39Q=;
-        b=SkoZymp5lBkZqZXNyrGC1RjeSKJkCmteeHeeqKAFc1G4CphYBcam5F7ljy4PgVUedr
-         O30QJQTQC7bcrTVtiS0FBQPt7Nb0+4T0btkEuXiOayHbFuhZxb+SWx6TQY4ZLGl2Cx4k
-         Az7nKgAnhPnWIOEWFMabyXXnbApaj98goptIMOsxc9v1PeT+80/qkpPw4r+hyWarBltc
-         6+kszbTKS04r0pF72lChO5mjUo0F5kraWS9IRybr37iZhieDzkQBCJToTAbvy7hw+Eq3
-         jV1kDi+FWBOtP+NZroqzjKxIgrpqXf/ybGPluIHl8NbDYi38teUrtImaN2LEFpaejKut
-         RWHg==
-X-Forwarded-Encrypted: i=1; AKwUvBxpTnnHsNqvqtV13zoQgwN8NllcjsDBm3WYncsH899HTarGxqgxhn4mLEc+CKub9oZbj8uXdWhzEz79IqDOv8TMC2I=@vger.kernel.org
-X-Gm-Message-State: AFuF++nrc2EBreSybUEtrv7oEx1EO5BOTT9cGEhPX38vlYMGMqxfSyla
-	BnNoN4Gjt54AriP+4VKQQ3lMdvaqwXnKsHgKKMC3vIcJBMfgly1Vuv/hoMnY6AvDhg==
-X-Gm-Gg: AYBFou0EUr4SAF4i14ktJJBXgXfsyVBcHvzqW3+L2dZ4L/uVI04xg33A5h/ewj/cfjX
-	ZUv7gNKY9xoA6PPEYm5BQ5dUCIGQnzV3cKDHQ/Mq7OGXCeLruYDTvBSDRFaTItDPnLSx5BOBQUG
-	nybYTHrwksC0brZucM2pq6h92MhJIfee+NNdyFzJzq8l7MC32mvvOHy+pU7hKpaHRDjgFsoI5nY
-	wdBtkBdmTpElObuqvz/VwEMKtTEjZGnhLwSyNw+jBJKIpgew4Tg1El4VD5K3xXu3JXZpqktAPJQ
-	NpIIo8TElzJomYvhBNKSIqTx7sGGpEHKswqX7MMGcjPuq3Kkb649bbas7jsXH3vvB9cVAXZcm2k
-	YZD+FVbbsYeTAlxLAIffNVtigONKIafmW/3FnZ5ssUUCvZEXh2fKbVRa8wYURK7YiSK6dqjBdNF
-	ToUFork1jBR6veq6Qha/DIwrzK7ByN55gAs0m5dhNf3gWatcIaZdc05ZATEj3SvGnboGstH5hdd
-	/33muO2kwUXQSQMgbjA6eyGsc3hthcIYQRllUghfjc=
-X-Received: by 2002:a05:6000:4b03:b0:485:81b9:f09e with SMTP id ffacd0b85a97d-48586c2faa2mr1582388f8f.0.1788457325756;
-        Thu, 03 Sep 2026 10:42:05 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4858791bddasm350031f8f.0.2026.09.03.10.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2026 10:42:05 -0700 (PDT)
-Date: Thu, 3 Sep 2026 18:42:01 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Add checking nr_subbufs to persistent ring
- buffer validation
-Message-ID: <apmxacws0NlAdcAu@google.com>
-References: <20260903132728.7fb27d34@gandalf.local.home>
- <20260903173823.4D61C1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="MO03n2E2"
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 701D1A0641;
+	Thu,  3 Sep 2026 18:13:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 569992000E;
+	Thu,  3 Sep 2026 18:12:58 +0000 (UTC)
+Date: Thu, 3 Sep 2026 14:14:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Manuel Ebner <manuelebnerli@mailbox.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: trace: histogram-design: fix bracket,
+ improve wording
+Message-ID: <20260903141401.15642336@gandalf.local.home>
+In-Reply-To: <20260903071105.714325-3-manuelebnerli@mailbox.org>
+References: <20260903070249.713483-2-manuelebnerli@mailbox.org>
+	<20260903071105.714325-3-manuelebnerli@mailbox.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903173823.4D61C1F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 569992000E
+X-Stat-Signature: 11q46h9jp8wtgqfzztasot9fciyf3ypn
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+kupAkMGIdxw3cgI+3UO4FAllszSrbEqg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=JHDpEoWJLWHYBo/t8UiZ3kxdwGOLeR8l1PdtSTxqOPc=; b=MO03n2E2cGfJ1vUCKGMbsyFeyqLL7WihhmAnQO0m/0c/i4NQRuV2pgBvJ/Ua/JQfi2sgCiBKeaDtmlgqiWLNnZfan3dkcrvZ3E/jhiyQxBxIkVAlSw7ylGlEyt9wqRoRle+4Skw8UzCz9B16EHM+RMdZBDYLOMEsWLwAKEE1lCU=
+X-HE-Tag: 1788459178-861670
+X-HE-Meta: U2FsdGVkX19o/bfv712u7FyZ1FktV6m9BuPRqsBybMeu5JImhOV3A/oSf02EK0p/jTopvAxZ9qZy58tIAt3UV37c7UmDg3NUPIBkOJkR4JCrCvccurKcgM4Gva3cY/s6J2FNwuNK59sZ8RpdjLhuNm0ftc05gPSR0IVMY3UxkhiGVebGyVG7oMecMKB0i01jcDHcuw2TQGEt+Pzd10NPFNF4e3GKyVeLmpCZtAn4WUEfQESYjpjEjTyYDqdBrpBbQSn5zOqx1f48xCtBz68BuMePEM/G7ZHDRJ8aoWf/3O5nsCuBDJHPU4mt+zaLG1ea27faaZUlEUewkUuiP4uTwhktbDHugFiVci5M3hg5FaMazlbQ+m01xsq+B7C8I6kuAEr76157G9jWPhqMCF4WmFOGpwMS3Nuv03z72oWXBKbb0pDY02GkVRCXRe10l8Dy8sPg/KAtZ3EzEtigL4kcUt1pAq6IBrHec90ffY4WhtgiKU/aWXuCaA==
 
-On Thu, Sep 03, 2026 at 05:38:22PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [High] Integer overflow in per-CPU ring buffer metadata calculations due to 32-bit arithmetic, leading to memory corruption and false validation rejections for trace buffers larger than 2GB/4GB.
-> --
-> 
-> commit dffcd0268ea5b9908d6dadacec8d07651bd25ceb
-> Author: Steven Rostedt <rostedt@goodmis.org>
-> 
-> ftrace: Add checking nr_subbufs to persistent ring buffer validation
->     
-> This commit adds a check to the persistent ring buffer validation logic. It
-> ensures that the saved nr_subbufs in the metadata matches the expected
-> nr_pages + 1 to prevent mismatches.
-> 
-> Closes: https://lore.kernel.org/all/20260901164836.D962D1F000E9@smtp.kernel.org/
-> 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -1856,6 +1856,11 @@ static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
-> >  		return false;
-> >  	}
-> >  
-> > +	if (meta->nr_subbufs != nr_pages + 1) {
-> > +		pr_info("Ring buffer boot meta [%d] invalid nr_subbufs\n", cpu);
-> > +		return false;
-> > +	}
-> > +
-> >  	buffers_start = meta->first_buffer;
-> >  	buffers_end = meta->first_buffer + (subbuf_size * meta->nr_subbufs);
-> 
-> [Severity: High]
-> This is a pre-existing issue, but could this 32-bit arithmetic overflow for
-> very large trace buffers? 
-> 
-> In rb_cpu_meta_valid(), subbuf_size is an int and meta->nr_subbufs is a __u32.
-> If an administrator configures a per-CPU trace buffer larger than 4GB, their
-> product might truncate before being added to the 64-bit meta->first_buffer.
-> Would this result in an artificially small buffers_end, causing valid buffers
-> to falsely fail the bounds check on reboot?
-> 
-> A similar pre-existing issue appears in rb_range_meta(), where both variables
-> are signed 32-bit ints:
-> 
-> kernel/trace/ring_buffer.c:rb_range_meta() {
->     ...
->     ptr += subbuf_size * nr_subbufs;
->     ...
-> }
-> 
-> Does this signed multiplication overflow for buffers over 2GB, causing the
-> ptr to move backward and potentially corrupt memory when written?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903132728.7fb27d34@gandalf.local.home?part=1
-> 
+On Thu,  3 Sep 2026 09:11:05 +0200
+Manuel Ebner <manuelebnerli@mailbox.org> wrote:
 
-hahah, yes we know :) 
+> Add missing ')' and add note about the new way of triggering an event.
+> 
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
+> ---
+> I sent the previous mail on accident, sorry.
+> 
+> @ Steven, I added this line to your suggestion because else the references
+> wouldn't make sense. References: $wakeup_lat, next_pid
+> Let me know what you think.
 
-https://lore.kernel.org/all/apmwYLVIxX-C21aB@google.com/
+It still looks fine without it. Here's the statement in full without the line:
 
--- 
-Vincent
+   Note that the way the trace handlers such as wakeup_latency() are
+   implemented, the parameters specified to the trace handler must be
+   variables.  In this case, $wakeup_lat is obviously a variable, but
+   next_pid isn't, since it's just naming a field in the sched_switch trace
+   event.  Since this is something that almost every trace() and save()
+   action does, a special shortcut is implemented to allow field names to
+   be used directly in those cases.  How it works is that under the covers,
+   a temporary variable is created for the named field, and this variable
+   is what is actually passed to the trace handler.  In the code and
+   documentation, this type of variable is called a 'field variable'.
+
+Perhaps it may look better if we move the text around a bit:
+
+  The onmatch() action below basically says that whenever we have a
+  sched_switch event, if we have a matching sched_waking event, in this
+  case if we have a pid in the sched_waking histogram that matches the
+  next_pid field on this sched_switch event, we retrieve the
+  variables specified in the wakeup_latency() trace action, and use
+  them to generate a new wakeup_latency event into the trace stream.
+
+  First, we define the wakeup_latency synthetic event::
+
+    # echo 'wakeup_latency u64 lat; pid_t pid' >> synthetic_events
+
+  Next, the sched_waking hist trigger as before::
+
+    # echo 'hist:keys=pid:ts0=common_timestamp.usecs' >>
+            events/sched/sched_waking/trigger
+
+  Finally, we create a hist trigger on the sched_switch event that
+  generates a wakeup_latency() trace event.  In this case we pass
+  next_pid into the wakeup_latency synthetic event invocation, which
+  means it will be automatically converted into a field variable::
+
+    # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
+            onmatch(sched.sched_waking).trace(wakeup_latency,$wakeup_lat,next_pid)' >>
+	    /sys/kernel/tracing/events/sched/sched_switch/trigger
+
+  Note, the above can also be written where wakeup_latency() is the
+  action handler instead of trace()::
+
+    # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
+            onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,next_pid)' >>
+            /sys/kernel/tracing/events/sched/sched_switch/trigger
+
+  The diagram above illustrates the new elements described in the context
+  of the sched_switch histogram using the onmatch() handler and the trace()
+  action.
+
+  Note that the way the trace handlers such as wakeup_latency() are
+  implemented, the parameters specified to the trace handler must be
+  variables.  In this case, $wakeup_lat is obviously a variable, but
+  next_pid isn't, since it's just naming a field in the sched_switch trace
+  event.  Since this is something that almost every trace() and save()
+  action does, a special shortcut is implemented to allow field names to
+  be used directly in those cases.  How it works is that under the covers,
+  a temporary variable is created for the named field, and this variable
+  is what is actually passed to the trace handler.  In the code and
+  documentation, this type of variable is called a 'field variable'.
+
+  Fields on other trace event's histograms can be used as well.  In that
+  case we have to generate a new histogram and an unfortunately named
+  'synthetic_field' (the use of synthetic here has nothing to do with
+  synthetic events) and use that special histogram field as a variable.
+
+
+-- Steve
