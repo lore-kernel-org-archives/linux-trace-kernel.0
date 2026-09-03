@@ -1,141 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1DA396588
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 05:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD4B3FDC18;
+	Thu,  3 Sep 2026 07:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788415172; cv=none; b=uOR2XozS52LXZhW2Zl6k5opUsW019RvQA63dmUVu9GCvGdioMHTZy2sAutKCqBEyVS62B8w7H7ghvxCgYU7aBO8UAALAKUs2XmjtwgBvi6A0rCimTCauxVPpkC3mO7Mog42ifoePVAFlsRzZ1Oz0O6ascIH0hrMLjZ3LMuP2SyE=
+	t=1788419073; cv=none; b=nFSWBPco4VkybWHNQrJvYDX1ee2wYXWtojCs0i4/mZ/ZwHQ1hBNWj5WgtzOFUal0GY6ZslGoulWHpT3duZZGUEwr6aKDqDzlrrQxrGu5Iwn0SdrcFXONiFoi07C8B1iAmC5oND9N/gQAowh7ivlor8XyAMKvKXnLCr/hUR1A/oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788415172; c=relaxed/simple;
-	bh=Phcia0okgnDAZI/BivUc3xYNHf06Yl8aViGTe//pk58=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lV/hS/tQIC3s+XEWAIxvS9p0vUBiWVReOMYAx9xSjmQrT6910Iv2VtWsBK3RZxoNvFC9rzuY0EGJ3h1hyokymsqSgODQzmWSXWDv1hNXQvCdDf4nke4lLvbmBdpA4vAs0iUvgo2Van48uA40XcoWlIE5pyBgnrAFiViYf68rMbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJfhH61+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788419073; c=relaxed/simple;
+	bh=mwANxLS6bxYhyYMrT+1jzLYffebrt+HciyIfKItAAH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IC3FZccep55QMuGdf4THwQyGFrh9PAWEZJDWO6KxdRPm1XypqkYNl9JzlENiM63EGmeNE/6omNcFW/AS9a5ckET8Kod1A17PYxRpJDOV2SzGMj6cLFVuHEiZ0E2dpxJR9qWgYyudCFgtr8cWFMkLJHhO4Em/SZlsT1qasMsoFtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=S05MFAq6; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=F5Xo+jZI; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJfhH61+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E572F1F000E9;
-	Thu,  3 Sep 2026 05:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788415165;
-	bh=65Qs27ngX+m5A9hYT9Ufye9rpkZFU8aHHHATiNv5H0s=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CJfhH61+eLTJDDcCP+rqAeUj4k5QqyEbDSzCdZx6S1j5w7L/jl/r17HyamyrA3dM+
-	 iKtPHEvdj1T4C7EQQr2XuIy93Fy6A7XXjCdBD7fsWjTpc3ElHXruzTXlnHRJgvFQ3B
-	 tX/UA6sSM/7uEK4kL+001qBbJHbrnLR1DI2DSn8GGDZ+kPVHP4Emb/DTY9gCWjaOW3
-	 8c3UnzYJmHOAyhRDf/gfjOfmTEdTdlG6xHFFH5ZYaXfIpnwHX+U6Cpvdjqya0/6edg
-	 IujdUhmeNXyq6aoiHIeKG8dNBkgvvCgvdJsiiHZ5VJ9L+djR7Gye6Dc4NZ9dE0DCmk
-	 +7eysuDdQdZlA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 12/12] i2c: designware: add support for I2C_XFER_V2 -
- detailed fault reporting
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dmitry Guzman" <Dmitry.Guzman@mobileye.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260903-i2c-fault-reporting-v2-12-fedeb91792e6@mobileye.com>
-References: <20260903-i2c-fault-reporting-v2-0-fedeb91792e6@mobileye.com>
- <20260903-i2c-fault-reporting-v2-12-fedeb91792e6@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 05:59:24 +0000
-Message-Id: <20260903055924.E572F1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="S05MFAq6";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="F5Xo+jZI"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4hb9ZL1F9VzKv7V;
+	Thu, 03 Sep 2026 09:04:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1788419066;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EDszXM77rysWN3TrIUrTbiqTu09Lh/qkUY7ZyZhkYsI=;
+	b=S05MFAq6DstWIPsRlUwep6wgGyqpVGUUxOlL1V4hL8VjKvRlMBphIB4kHdyNyGFSVBc2Xt
+	D7I+EsW2FE/utdh1+sVU7L/LePfyj7wfX0z4Fv8IU5JWSlPFpW/9L2RczxkryUzKF5rhXw
+	ZXw5u7Hx00hWd6YLyZUVhiMDh39clGPu1r64lgGVD3rv2oR8bf0eXNMrR7oDcilwCU53Wi
+	0LC5e0oKgzjU/7pWnLuJs1OsRSPfhrcYFBpWCBHhku9jObNLmH9qpVB3d8dJOyP6fTS2ZJ
+	55kAavX5iFqW70dpPifJshgo5UnxNS1KicF6K7Bpv28YCITJ2QRd+otasNPUVQ==
+From: Manuel Ebner <manuelebnerli@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1788419064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EDszXM77rysWN3TrIUrTbiqTu09Lh/qkUY7ZyZhkYsI=;
+	b=F5Xo+jZISY4G+JpM2HK0KQ9ipszZrU59CmmDBlctCnZcASLSdivYzA81ZDEy5i3t0htql5
+	eZLZyDhMjcakrYyHjqRubpBvuei9inTqBZiAI4FwfoshIeIrlcpLiHPRYg/OoMwTaidp5R
+	ulIX15AMEBDMrzXQ8xDRV/I0ZGkNGHLSfjnmvYVWqG8R/oqShAWrAVYgA/8Pi6k5XW18+h
+	BfSN3mIVBfOvam3LdUAveP71nwPXmMX7xr1VXktq0HR+A3uzPiDoiJAFttiL319aBSPM6O
+	qRUxHyUKVSd4DVRocob4EhypI3QBD3y9CClbuH8Us+N1fBinddJScBeV50KHtQ==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: Manuel Ebner <manuelebnerli@mailbox.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2] Documentation: trace: histogram-design: fix bracket, improve wording
+Date: Thu,  3 Sep 2026 09:02:49 +0200
+Message-ID: <20260903070249.713483-2-manuelebnerli@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: xxnkpgn7a7hyy7ak3ebssxd34nea59fe
+X-MBO-RS-ID: 2fe46c1e398b0076018
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] Uninitialized stack variable `stat` is evaluated if `regmap_read=
-` fails.
-- [Medium] i2c_dw_fault_report incorrectly reports transmission progress on=
- non-abort errors, and unconditional addition corrupts potential error retu=
-rns.
---
+Add missing ')' and add note about the new way of triggering an event.
 
-commit ace9d554c2f401ddd92040765e5f36fab0bfd74c
-Author: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-Subject: i2c: designware: add support for I2C_XFER_V2 - detailed fault repo=
-rting
+CC: Randy Dunlap <rdunlap@infradead.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
+---
+@ Steven, I added this line, because else the references wouldn't make sense.
+References: $wakeup_lat, next_pid
 
-This commit introduces support for I2C_XFER_V2 in the i2c-designware driver.
-It enables clients to get detailed reports on transmission failures by
-detecting the number of un-sent bytes via the FLUSH_CNT field and checking
-abort flags after FIFO reads and writes.
++ ... (which
++could equivalently be written trace(wakeup_latency,$wakeup_lat,next_pid)
+ are implemented, the parameters specified to the trace handler must be
+ variables.  In this case, $wakeup_lat is obviously a variable, but
+ next_pid isn't, since it's just naming a field in the sched_switch
+---
+ Documentation/trace/histogram-design.rst | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/bus=
-ses/i2c-designware-master.c
-> index f029aa1eadbf8..bc23c3fdaaf2e 100644
-> --- a/drivers/i2c/busses/i2c-designware-master.c
-> +++ b/drivers/i2c/busses/i2c-designware-master.c
+diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
+index 41a726cd3..86c83b177 100644
+--- a/Documentation/trace/histogram-design.rst
++++ b/Documentation/trace/histogram-design.rst
+@@ -25,7 +25,7 @@ tracing_map.c.
+ 
+ If the kernel is compiled with CONFIG_HIST_TRIGGERS_DEBUG set, an
+ event file named 'hist_debug' will appear in each event's
+-subdirectory.  This file can be read at any time and will display some
++
+ of the hist trigger internals described in this document. Specific
+ examples and output will be described in test cases below.
+ 
+@@ -916,6 +916,13 @@ means it will be automatically converted into a field variable::
+           onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,next_pid)' >>
+ 	  /sys/kernel/tracing/events/sched/sched_switch/trigger
+ 
++Note that the above is the old way to trigger a synthetic event, whereas the
++newer way is preferred, which uses the trace() action handler::
++
++  # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
++          onmatch(sched.sched_waking).trace(wakeup_latency,$wakeup_lat,next_pid)' >>
++	  /sys/kernel/tracing/events/sched/sched_switch/trigger
++
+ The diagram for the sched_switch event is similar to previous examples
+ but shows the additional field_vars[] array for hist_data and shows
+ the linkages between the field_vars and the variables and references
+-- 
+2.54.0
 
-[ ... ]
-
-> @@ -33,6 +34,16 @@
->  #define AMD_TIMEOUT_MAX_US	250
->  #define AMD_MASTERCFG_MASK	GENMASK(15, 0)
-> =20
-> +static int i2c_dw_fault_report(struct dw_i2c_dev *dev, struct i2c_transf=
-er_report *report);
-> +
-> +static inline bool i2c_dw_check_abort_flag(struct dw_i2c_dev *dev)
-> +{
-> +	u32 stat;
-> +
-> +	regmap_read(dev->map, DW_IC_RAW_INTR_STAT, &stat);
-> +	return (!!(stat & DW_IC_INTR_TX_ABRT));
-> +}
-
-[Severity: Medium]
-If regmap_read() fails (for example, due to a bus error or PM state),
-could this result in evaluating an uninitialized stack variable?
-
-If stat contains a garbage value, this might spuriously detect a TX abort,
-prematurely breaking the FIFO read/write loops and causing non-deterministic
-transfer behavior.
-
-[ ... ]
-
-> @@ -918,16 +980,83 @@ i2c_dw_xfer_common(struct dw_i2c_dev *dev, struct i=
-2c_msg msgs[], int num)
-> =20
->  	i2c_dw_release_lock(dev);
-> =20
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		if (report) {
-> +			i2c_dw_fault_report(dev, report);
-> +			report->msgs_cplt +=3D msgs_in_prev_parts;
-> +			report->fault_msg_idx +=3D msgs_in_prev_parts;
-> +		}
->  		return ret;
-> +	}
-
-[Severity: Medium]
-Will this unconditional addition corrupt a negative error code if
-i2c_dw_fault_report() sets report->msgs_cplt to a negative value to indicate
-an indeterminate state?
-
-[ ... ]
-
-> +static int i2c_dw_fault_report(struct dw_i2c_dev *dev, struct i2c_transf=
-er_report *report)
-> +{
-> +	int idx;
-> +	int n_flushed =3D FIELD_GET(DW_IC_TX_ABRT_SOURCE_FLUSH_CNT_MASK, dev->a=
-bort_source);
-
-[Severity: Medium]
-Does this code correctly handle non-abort errors like timeouts?
-
-If a timeout occurs and dev->abort_source is 0, n_flushed will be 0. Could
-this cause bytes stuck in the FIFO to be incorrectly reported as successful=
-ly
-sent on the wire?
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903-i2c-fault-=
-reporting-v2-0-fedeb91792e6@mobileye.com?part=3D12
