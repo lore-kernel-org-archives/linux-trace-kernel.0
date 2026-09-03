@@ -1,102 +1,82 @@
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7A22D7DCF;
-	Thu,  3 Sep 2026 22:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0400633C1B6;
+	Thu,  3 Sep 2026 23:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788474794; cv=none; b=Iojo+FjwTLYxwrrYAB6W5Jtlq2zuvx4tdgC4uI/O2Gi+E2jTUheTaVu+RZwnwiuPjJV/tUkEStUCSD+F+uuxngaSkPp0etnEIeg3elzb/iPTcU5h1m6bjo60DH3n1N4p2GXzxCwa6NKmrnpNrDfu97cXPCFHqHqTIVXxBIS74Vo=
+	t=1788477909; cv=none; b=JbVRACXmXd5V3VNAfvkiEsAtIgzr4W0S8Q345VWSizeP291V7YX8mFARMvPRGWCKu3tcQAQDt0ZX0e2BCa8sbc6XPKJBOmYJSfFvkVKNeSnI2CQ2qt9RhcmIC3ITWVcb94yM1unwQylg6gVEDM1cHo0wxRGHpNm1pBXvzE1op9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788474794; c=relaxed/simple;
-	bh=PIXL1HlOr2OAWCKfAcP7uuThZNVlq9Vbb6VY/5c8pcE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=X/+dgPTc9qA/RArUJ/s9piPq5o7HC8aw+vSkBaTWeWrECl6Xjdnj/islRVkx1ADV5z14WnT3VOYQiJ/K+GBlhgxIPq9Zi/+M75blOnPqi1el6ZrCvMJefPyaeM/dYdMBhm3d5dGYPBYqzwr/x7f6XQW8ZpdQNwya0L+dpPXrGvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=JxhafLRB; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+	s=arc-20240116; t=1788477909; c=relaxed/simple;
+	bh=6OAuvrdzd2ZNTwj7UpXxxD0LsMcuEQ2k1hWXgR9BA4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NswfCSG0rWHsVPHZKxskTR+kXoOi4LjIi/7jB55wNK5hiA0tZRvk3vE94cnzMqL7tGrzYi0VYwDkLqHXdG9xI6IuSxUj8zHCSac9yeSMiJDBCeMzFB6mMfo3ldTPXN3cBP+8mYZP5GHUstm259+sdsvvdVGoGPS/t3eiXh/ukoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyEjKAxC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="JxhafLRB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=ZpOyW9JwdzvymqD7nh64dhGMgQ9gYFcIgy1C7e7EDew=; b=JxhafLRBFfiDbyUgKcxbdSJ2dB
-	G/LvGMoB/v6HYzBXhKjf6dKeFB5H+10bD37VRifeQ+IQOe1OOrI2sYFlDm8ol7jTn2tPJyT1qAxf9
-	2g7eLzUtwiPDksHmpo5egNV1iJ3GeKdR33UH5IPfi+V20GQ7DZaS3mAIHe/lR6+R4bjLPOgNyBVWN
-	eGhbVPL7oZXNhllf05l+l2reLpOpV8o9PVpH/MPGKrrj6j+/coMHh8vSbqi4cjoNrEDN7dijdO5DI
-	lrpCi+m+/WHQRtrKOEnzkBkCWiYJ31KSiouFHjsJYXPZro5rxKb/hxeJNcmS4Qw5US97USWLcyIWE
-	y9y2zAvg==;
-Received: from [104.157.31.28] (helo=[192.168.1.251])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1x2FzL-00000001iUZ-2jmV;
-	Thu, 03 Sep 2026 16:32:56 -0600
-Message-ID: <1fb463b3-437c-43fa-95df-29c2c7d2496d@deltatee.com>
-Date: Thu, 3 Sep 2026 16:30:55 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyEjKAxC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A9311F000E9;
+	Thu,  3 Sep 2026 23:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788477907;
+	bh=C0kPI2M93Ze8THghUXdRhJZCUAdeQJlJKvwixiYVDh8=;
+	h=From:To:Cc:Subject:Date;
+	b=KyEjKAxCMTDKI8R+55O6pUvBC7piDhYtOnmTukmsLa6g+mojRBc0jQfHimYKpnrSS
+	 C2RUlx2PmF83N3i14QKgYvjUyEczKm6YkGHDLAas8rTFoOSiW/vp35pi8/4BegkkXA
+	 aXUOdkHrE0w/SWri7/s1lL8tSOZdytrPRL7Y6nrYvzGddSVD9rJlqA8pim9OERLWZ+
+	 mZDiXwsaVydrNyigaeez1+eHg9ZhXM3uUookh0ebB7vy1KMiiWCIGqBtWnz5yBzyM6
+	 QUtzMq75fiGjM5h1HEGL2utTD+Ii1k5OtPRVj3hyOiXApqGx8yy7aAx24Lbkmxnzjg
+	 E8nGolQHttDJA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Fix to avoid creating trace instances with duplicate names
+Date: Fri,  4 Sep 2026 08:25:04 +0900
+Message-ID: <178847790399.283263.5313150997200138426.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Frank.Li@oss.nxp.com, Jacky Huang <ychuang3@nuvoton.com>,
- Shan-Chun Hung <schung@nuvoton.com>, Vinod Koul <vkoul@kernel.org>,
- Frank Li <Frank.Li@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Binbin Zhou <zhoubinbin@loongson.cn>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- =?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thierry Reding <thierry.reding@kernel.org>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Viresh Kumar <vireshk@kernel.org>, Keguang Zhang <keguang.zhang@gmail.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Manivannan Sadhasivam <mani@kernel.org>, Daniel Mack <daniel@zonque.org>,
- Haojian Zhuang <haojian.zhuang@gmail.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>, Chen-Yu Tsai <wens@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Kelvin Cao <kelvin.cao@microchip.com>,
- Laxman Dewangan <ldewangan@nvidia.com>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-References: <20260903-dma-chan_dev-rename-v2-0-0db305b6c716@nxp.com>
- <20260903-dma-chan_dev-rename-v2-1-0db305b6c716@nxp.com>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20260903-dma-chan_dev-rename-v2-1-0db305b6c716@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 104.157.31.28
-X-SA-Exim-Rcpt-To: Frank.Li@oss.nxp.com, ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org, Frank.Li@kernel.org, paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, andriy.shevchenko@linux.intel.com, zhoubinbin@loongson.cn, patrice.chotard@foss.st.com, amelie.delaunay@foss.st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, thierry.reding@kernel.org, jonathanh@nvidia.com, ludovic.desroches@microchip.com, vireshk@kernel.org, keguang.zhang@gmail.com, afaerber@suse.de, mani@kernel.org, daniel@zonque.org, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, wens@kernel.org, jernej.skrabec@gmail.com, samuel@sholland.org, kelvin.cao@microchip.com, ldewangan@nvidia.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev, imx@lists.linux.dev, Frank.Li@nxp.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH v2 1/3] dmaengine: vchan: add vchan_chan_name() to get
- channel device name
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+Since commit e645535a954a ("tracing: Add option to use memmapped
+memory for trace boot instance") changed trace_array_get_by_name() to
+trace_array_create_systems(), enable_instances() does not reuse the
+same name instance. Therefore, if an administrator mistakenly specifies
+multiple `trace_instance=` options with duplicate names, all are
+created but only the first is accessible via tracefs.
 
-On 2026-09-03 2:53 p.m., Frank.Li@oss.nxp.com wrote:
-> From: Frank Li <Frank.Li@nxp.com>
-> 
-> Introduce vchan_chan_name() to obtain the DMA channel device name.
-> 
-> Use a dedicated helper instead of directly accessing dma_chan::dev
-> so callers remain unaffected by an upcoming rename of the struct member.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Check whether an instance with the same name already exists before
+creating a new one, and reject duplicates with a warning.
 
-Makes sense to me:
+Fixes: e645535a954a ("tracing: Add option to use memmapped memory for trace boot instance")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a946e0183fd1..536e71f28d51 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9651,6 +9651,11 @@ __init static void enable_instances(void)
+ 		if (flag_delim)
+ 			*flag_delim++ = '\0';
+ 
++		if (trace_array_find(name)) {
++			pr_warn("Tracing: Instance %s already exists\n", name);
++			continue;
++		}
++
+ 		if (backup) {
+ 			if (backup_instance_area(backup, &addr, &size) < 0)
+ 				continue;
+
