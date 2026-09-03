@@ -1,68 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC2341D4F3;
-	Wed,  2 Sep 2026 22:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B4C1E8332;
+	Thu,  3 Sep 2026 01:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788387272; cv=none; b=pWGb0tKzyIc5HZrEhNONKWftJPcbEeVXWYBaZxk+8blgf0YeNCrYidK0+k0zy90kiBlLqvktnt/SDplM9dFh9/qqoPIsIHzgdBTrXPFdhDMoe2LAp/gFK8donw8m7EfO504twnJS0+5zsovO1C6QCcAS8cX8g49fPLBTjB53tTA=
+	t=1788397418; cv=none; b=EEE/I0hvlkIJw80/XAvi77282dXclguBzu720p0D8zcyUIQgdJuiJ75uSxg3r2kPtZhsGdVl91wL/R5/yZoYanvepLjpEYdZDnlne6k4i3t29UVU6IIA510o2sfXQkEm71Bj/qagqqvLIv1kRxTb1ea0FdiSULdsmiCQ+eSL9/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788387272; c=relaxed/simple;
-	bh=mEGxaygLEVF+0pFwWFu7necal/VkHZ96PXEvCXDTTBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BMjQiCJp1KFuXxarakiPPDbQgaPkI9HJMyuBvEmZ7W5hNf/iE2dG7tlrKPQbKRUwNHt6OaljXSLSSOjZCCbtp8V4yHto/NPw6HRk5lZHMQgYUEOBOWBT0SekIqt+yQf2ZsRu/D9zePHsrDoe+DAAuAfq/On68bqBvIHbhVEJG44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hyeb32ql; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hyeb32ql"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CEE91F00A3D;
-	Wed,  2 Sep 2026 22:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788387267;
-	bh=ZmMoe4LxxlhmDnwmcXUyGO7LsP2v+nJ/KvbYpZVDDHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Hyeb32ql4z4cMIWCfHXpyttOam8g/A41304yT9nZEr4o+YskmGJDIfJraoBt8PhNG
-	 8yA+go3YboVx9vIdY9ye7R+gj+fHnPecBGTOqxcupFhF3GPiYMzH4cN1YlhiU6l6JB
-	 +UVpFaM3NCFPtRbED+gWn3LWfRn57AMHAbvHyjUM61dwYQ6QjziaqOs17qULfhB+91
-	 ZEDbJxPn2oIOL5q+5xgDuIFYylT/g8YR1BLzUwT57HsyODwVu8FHRQng8h6oTL+FGj
-	 r1bN7V+4UfO4IutiMXZgLqaEHpgDB+N3It8j5AnDVkYpNiquIqSa5XFrc/8jwJwSrR
-	 /EEM1B+1JxM9Q==
-From: Sasha Levin <sashal@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>,
-	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org,
-	Lee Jones <lee@kernel.org>
-Subject: Re: STABLE REQ: [PATCH v5 06/10] tracing: Fix subbuf resize races with trace_pipe_raw readers
-Date: Wed,  2 Sep 2026 18:14:05 -0400
-Message-ID: <20260902-daily-reply-0006-tracing-subbuf-resize-7-2@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260901123444.GA1350131@google.com>
-References: <20260901123444.GA1350131@google.com>
+	s=arc-20240116; t=1788397418; c=relaxed/simple;
+	bh=Yjs22QPyEZz39ou9ZXRrAMkokUlDqqdJ6uQDHy8S/jY=;
+	h=Message-ID:In-Reply-To:References:Date:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=XSpshDzOPxJGMF5yBJbyzof9ANqE9itNUZN7E/uyBBBLDs8lhyaZO3NH8wTmXjvhYjhRo/Sx0OyW3N3lKE3F9WizSQAbdZwNtUIZsPFxFVwPS0F5V67iV7TCYWPYgO48W369oy34fJsW0pzbblR1//l83/XxerQOl8BX8fJKFeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4hb1Yp4gvtz8Xrr9;
+	Thu, 03 Sep 2026 09:03:26 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl1.zte.com.cn with SMTP id 68313LfN052625;
+	Thu, 3 Sep 2026 09:03:21 +0800 (+08)
+	(envelope-from hu.shengming@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 3 Sep 2026 09:03:22 +0800 (CST)
+X-Zmail-TransId: 2af96a98c75a204-859ef
+X-Mailer: Zmail v1.0
+Message-ID: <20260903090322460l3RLOYBqnQOT1Wf1Qb2E9@zte.com.cn>
+In-Reply-To: <20260831094914.50eb26b7@gandalf.local.home>
+References: 20260830190743637MhXoixrAPc1rfm-G8eIcg@zte.com.cn,20260831094914.50eb26b7@gandalf.local.home
+Date: Thu, 3 Sep 2026 09:03:22 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+From: <hu.shengming@zte.com.cn>
+To: <rostedt@goodmis.org>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+        <mark.rutland@arm.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+        <rdunlap@infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <ran.xiaokai@zte.com.cn>, <xu.xin16@zte.com.cn>,
+        <zhang.run@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtSRkMgUEFUQ0ggMC80XSBmdHJhY2U6IEFkZCB0YXNrIGNvbW0gZmlsdGVyaW5nIGZvciBmdW5jdGlvbiB0cmFjaW5n?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 68313LfN052625
+X-TLS: YES
+X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
+X-SOURCE-IP: 10.5.228.132 unknown Thu, 03 Sep 2026 09:03:26 +0800
+X-CLEAN: YES
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6A98C75E.001/4hb1Yp4gvtz8Xrr9
 
-> Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
-> uninitialized memory to userspace due to stale size values.
->
-> Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
->
-> Not sure if this is the latest version or not?
->
-> I see review comments, but no v6.  Anyway, no matter, it'll do.
+Steven wrote:
 
-Queued for 7.2, thanks.
+> On Sun, 30 Aug 2026 19:07:43 +0800 (CST)
+> <hu.shengming@zte.com.cn> wrote:
+> 
+> > Hi Steven and Masami,
+> > 
+> > This series adds two comm-based task filters for the function and
+> > function_graph tracers:
+> > 
+> >   set_ftrace_comm
+> >   set_ftrace_notrace_comm
+> 
+> I'd like to avoid adding more files like this. If anything, I would love to
+> add triggers to the function tracers.
 
--- 
-Thanks,
-Sasha
+Agreed. Adding two more tracefs files may not be the best interface. Together
+with the points raised in the earlier discussion with Masami, I also think a
+trigger-based interface would be a cleaner direction.
+
+> > 
+> > Function tracing currently supports selecting tasks by PID. This makes
+> > it difficult to configure tracing before a service starts, because it
+> > does not have a PID yet. It is also inconvenient to keep tracing the
+> > same service across restarts, as its PID may change. This use case was
+> > suggested by Xuxin, a KSM reviewer.
+> 
+> I've always recommended a simple wrapper script for applications:
+> 
+> echo '#! /bin/bash
+>   echo $$ > /sys/kernel/tracing/set_ftrace_pid
+>   echo $$ > /sys/kernel/tracing/set_event_pid
+>   exec "$@"' > trace-me.sh
+> 
+> chmod +x trace-me.sh
+> 
+>   ./trace-me.sh command to be traced
+> 
+> The above will do what you want.
+> 
+
+Yes, this works well when we have control over how the application is
+launched. Thanks for the example!
+
+> But if we really do want to add more filters to function tracing, then
+> adding triggers to it would be the way to go.
+
+Understood. To make sure I understand the proposed direction, here is a
+conceptual example of what the interface might look like:
+
+echo 'ftrace_pid_add if newcomm == "foo"' > \
+ events/task/task_rename/trigger
+
+When a task changes its comm to foo, the trigger would add the PID from
+the task_rename event to the function tracer's PID filter. The function
+and function_graph tracers would then trace that task using the existing
+PID-filtering mechanism.
+
+We may also need a corresponding ftrace_pid_remove trigger command to
+remove the PID associated with the triggering event from the function
+tracer's PID list.
+
+The command names above are only illustrative. Is this roughly the kind of
+trigger interface you had in mind?
+
+If so, we will investigate extending the trigger infrastructure in this
+direction instead of adding the comm-filter files.
+
+--
+With Best Regards,
+Shengming
