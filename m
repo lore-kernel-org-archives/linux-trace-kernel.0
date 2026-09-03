@@ -1,52 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A6142DA3D;
-	Thu,  3 Sep 2026 08:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B707C3EEAE1
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 09:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788424720; cv=none; b=JL7UAdHlikfwdD0BA9R7Rf+y0Lap7aRHGQ2eSY1s82ZhgzI+Jn7GSX4kPceGdXMIo4CtPYG99yaG/p+1h4ZM60ZRNCGXFQ+9wjFbqlzTFfyQYX446ierSSYQ95D0lqFqDySruXGn7xo0Ukf1VSrZ0hEMN4j6txzdASaZp+8BTHE=
+	t=1788428157; cv=none; b=rUOoDusMgcyknzjBrwYw1AyCk4R//aL0A23yhmb8UWqCsIz71F8qzQGaNccrVdDUE0VzONYF9IW2T3o2jeDJdwASSVms4CzbTSg5Hx2++6jOXI3RZrrgUtdUFrAbzlaAQdM8QoPTCDT0gFfrSXYK8MqW2yMs2verVuF7bDLlP5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788424720; c=relaxed/simple;
-	bh=MpkGd3Wq9g0clpSZ0PtgNlSw09+OWGS17sCRuiBABsE=;
+	s=arc-20240116; t=1788428157; c=relaxed/simple;
+	bh=6dxSwnVMhBQ6QrxcI00aXBMeMsbJMY0TD4I+y+LKu/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X/Nl3saAT6VDVyXeplOaUpD9vuyZl6chO4t8Cw0LBHgFRvU8GppFTnGpGTQ8eh9glAb2zhTkcjx6aYvkNPQk/+7tpGWI5WLDD2xqJYTCWlsPU0WD04wX7VnSrN8hjdqRJZDfS8BKfy0834lxFMgsRd4vJZnNWRi+xtFtjM4kaps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jslV3LkW; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=gk+f5/S+YUMYiH3JpB3iDc8P6Suzw65t8KvP1SkWVD4Pm4sjyhgKvMufznIe6TiJ1ICbNEynzirHQiNoBR5LpCGYJxxdYRvmhT+ECcEC/8uGaoFPGi6qGImT09WRheE2Z+VNDkcrF+sqgprBLDrhKRu1Z2bpHfTNwMcWAFq+FsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=exUGNFig; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jslV3LkW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A7981F00A3A;
-	Thu,  3 Sep 2026 08:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788424719;
-	bh=62T38dYAlVZeyw20TJ22LXgeeZg8s/iaCz4GUJ6sgBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jslV3LkWqAecm6log/JYiuGF/LSipT74D2SqNFLafBB8aNxhMSC6os3vDEhaU4TxC
-	 0zHl3WK6lBWgj8GVXKDM3NosfcArzMu35vIJSogFbg+Ezrp25y1WeENxsuFHDwEeGZ
-	 FhVlzIHXHVAc5VarqPPoa5KWuw9vVWrkijL/bf90JPjGgvxNUcGkiCAEWSgN2bUluQ
-	 44/nsY3LVM8TBAEJEjy5IPxaIoM4qMLtLPv81Dy6liclte+56WP8Be6wnbcKX5WZXu
-	 EwMHE9TdteyhT1AldKn4ZAXUSr7238tscuBfJBEv03nElWaGH3rVmILME/PlPeKalE
-	 6uMUIt7z60bfA==
-Date: Thu, 3 Sep 2026 09:38:34 +0100
-From: Lee Jones <lee@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Vincent Donnefort <vdonnefort@google.com>, stable@vger.kernel.org,
-	mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="exUGNFig"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49954b88fffso16464595e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Sep 2026 02:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788428154; x=1789032954; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=SA0YMkKZrk5pHRtNM6ynurrEGkiVyx5dwe1u190lCDo=;
+        b=exUGNFigLqG7qUWyYpfXvNYjTx/7yDbbBtTm/KWAsQhVB4CYbGOUHDf8wYBy6sCAhw
+         1FsCyDToJJWi/T0jsZNlAx3vvXNG7Umlr7QMUFHTTI3mOo8KAeea+M6yYNAM6351/4zc
+         aqC0Qfekez5FKPZGgqI15mgdQuvmbNhWV3abWKd2ZaJTjJbU/+aoUq9BRIP77f9llJA3
+         luOztfFpL9WqdtmXjpeJdq/oUTTTMYS3iZMXq1YK0RjtJO+IwREWyyWNTat31yeU2+mw
+         e5pYvFaMROzMXnmWB7CYfHoKJ9+GwdyjNB2t1tLB1Q/1KXNjvOTRtx85yPKJcUSLKF3w
+         HdLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788428154; x=1789032954;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=SA0YMkKZrk5pHRtNM6ynurrEGkiVyx5dwe1u190lCDo=;
+        b=sLU0GrT9Gl547uBXU0Niol1PFkXLJJNx8dop6akzGDyxF5VKp2TW1HLwP4WBzF9wfr
+         oqhWtqa8ag6qrJQ80z5RTTT9QPwl6mc801ZBeYlQH3aIAtunSff2TKrfXGmCsiRqriqX
+         BATWVxmiOg5b/gU37Ti/Erq9wA8YgY4RAdHzC7JJ47j5L2oUJOmpKzEzC5RJDyb8YYbv
+         YKqv+E7H1pW5hS1Ymx8Y7RDYYoYED0j1jJSqN+za/OOcFNzD9GNkNRz3+WdESPdvo2Na
+         iBhc1HG5NdC+dAUb8GCMsZTQ2K3zTlVyxLpIo0iMgjpzA327MYluN88MNlMffZJmhaGH
+         TrEA==
+X-Forwarded-Encrypted: i=1; AKwUvBzf6WQcdwYvdL/3riClR2tsRdl/hs0gG0lUHLndHIea4ntk2DkfWh8NBdb8a8tw8gJ4Dyzs2E7G8VacN3LZGebNQ1Q=@vger.kernel.org
+X-Gm-Message-State: AFuF++kTPQvwfcaTikM5VMy8ovQrK7QbjTuZ4EoYzzfQbJ5DZEAgBK71
+	8wvnr8bzHA0TkQIZSqxVVOy99kcllbEiusZqR1Yp5fwjahepYENk6hvlwbQE1J/F8OP5KNBUCW2
+	9MaMB1Q==
+X-Gm-Gg: AYBFou1UX9sdG0ggFzI9nvvBBPnaVpTvVMNj8/ruS67CaCz+R/dgh/7TqZsNhAfdUdM
+	tvCVIUwN5m3n8DJu8/ImUB112aU6F8w1syE7pg5X+HE+qOIUyG+t4/Hgzy+EISIfXRygDhKG3AQ
+	ESojBy4/HoDmOuv4qMwl8hYO0emz3qvc06O6mVHCsDbJZSbCapIk5g1Zpv3j7bBOzz5XdM8umlb
+	p/Z79O/AKgU3tULz2fyH9hCvm57FpNFbVMNrvQJWtTQUrwIQIpD05Y2rrkZUKkp68jcww5dubTJ
+	UXV5lFg2kUG+NHOiwDn3FkVXtAIPQhfibwaWylY15Ar5VPLiSOz/WwZkqF6d5+y7y43zpdeVZ6a
+	icp0i6Nv8juXHJObevgpR/Sa7uqt9GiHkJOpZ6e+qcvq40j3JsTE37bZ0NBMhmeMeAxiPNMg4cs
+	i7JjInoWcULrtfcsepFhQFVogPwP/57JmMImcZ5Ndo9Z26Om9CXK/AY6Tq3uJulGid5IZ5fd4p8
+	6XToj4+bIZSe97ca2k5ZzADmuL5d4iL
+X-Received: by 2002:a05:600c:4ed0:b0:499:726a:a017 with SMTP id 5b1f17b1804b1-49ce57ec163mr200889865e9.1.1788428153444;
+        Thu, 03 Sep 2026 02:35:53 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee80eda4sm55247145e9.15.2026.09.03.02.35.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2026 02:35:52 -0700 (PDT)
+Date: Thu, 3 Sep 2026 10:35:49 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, linux-kernel@vger.kernel.org,
+	Lee Jones <lee@kernel.org>
 Subject: Re: STABLE REQ: [PATCH v5 06/10] tracing: Fix subbuf resize races
  with trace_pipe_raw readers
-Message-ID: <20260903083834.GE2133376@google.com>
-References: <20260901094656.487b278f@gandalf.local.home>
- <20260902082717.GM2943942@google.com>
- <2026090230-entryway-acquaint-d12e@gregkh>
- <20260902095744.GN2943942@google.com>
- <2026090221-riverbank-overlay-704c@gregkh>
- <20260902115944.GS2943942@google.com>
- <20260902082141.00583dfc@gandalf.local.home>
- <20260902082550.4644fe91@gandalf.local.home>
- <20260902162246.GC2133376@google.com>
- <20260902123325.615e3934@gandalf.local.home>
+Message-ID: <apk_dQ4Q6msdw_Ub@google.com>
+References: <20260901123444.GA1350131@google.com>
+ <20260902-daily-reply-0006-tracing-subbuf-resize-7-2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,27 +81,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260902123325.615e3934@gandalf.local.home>
+In-Reply-To: <20260902-daily-reply-0006-tracing-subbuf-resize-7-2@kernel.org>
 
-On Wed, 02 Sep 2026, Steven Rostedt wrote:
-
-> On Wed, 2 Sep 2026 17:22:46 +0100
-> Lee Jones <lee@kernel.org> wrote:
+On Wed, Sep 02, 2026 at 06:14:05PM -0400, Sasha Levin wrote:
+> > Concurrent subbuffer resizes may crash trace_pipe_raw readers or leak
+> > uninitialized memory to userspace due to stale size values.
+> >
+> > Fixes: bce761d75745 ("ring-buffer: Read and write to ring buffers with custom sub buffer size")
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> >
+> > Not sure if this is the latest version or not?
+> >
+> > I see review comments, but no v6.  Anyway, no matter, it'll do.
 > 
-> > So what happens when you receive the FAILED message?
-> > 
-> > And why are you interested to know how far back a fix can be backported?
-> > 
-> > Personally, I'm _very_ interested in a _small_ number of patches, but
-> > none of which usually emanate from subsystems I maintain.
+> Queued for 7.2, thanks.
 > 
-> I'm interested because they only get backported to kernels that are
-> maintained for some reason. And since these are in my subsystem, I do like
-> to know that my code works for all supported kernel releases. ;-)
+> -- 
+> Thanks,
+> Sasha
 
-Well that's unusually conscientious of you.  I like it.  =:-)
+This isn't the last version of this patch, I have just posted a v9 [1] and
+Steven hasn't reviewed it yet.
 
-NB: Not that _you_ are unconscientious - I was referring to the rest of us!
+[1] https://lore.kernel.org/all/20260901155445.1475405-3-vdonnefort@google.com/
 
 -- 
-Lee Jones
+Vincent
