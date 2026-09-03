@@ -1,48 +1,49 @@
 Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EAF38F949
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Sep 2026 05:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4B7392C39;
+	Thu,  3 Sep 2026 05:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.104.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788413996; cv=none; b=TOatOduv6CdlvCzJzrmRM4uIZQc0jqLGR2z25KEjcm9L6y073pg+6kD4nwJXJHDTV2rB0iAbEppQLxRBX74NPbYe9ggV9u+4CmHfgnUYWanfm5JhbuwhMY4B/TRl1luiebDggYKYdlh5fv6jyZclPVJ7/RBgfYnBNMH3JtjpNvM=
+	t=1788414002; cv=none; b=eoBK5QLiTWWWefGMgiwYEJRdRsOL3ZfRWw+X6DSAg3ttq6wr44qG8pl0N/WPyiGAgTTF7JEJogLQl/za8vojXavUzMxbyvKX6TDsSKmFqRpK3PobxG35lkavhhI14c4GdT6tLnXllRmJK7uiKV/Qh0WVqe0zLDLoJX/WuyFeml8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788413996; c=relaxed/simple;
-	bh=yEoKYkqAzY02mykJ1us0DXeoBWZGGZzvI9Pqcx6SKBY=;
+	s=arc-20240116; t=1788414002; c=relaxed/simple;
+	bh=HlYAVuM9vZLFTesP9pfThfI3jTZfqm2p6kxvhhe8OIs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=COssT4AGyo1VOpuz+wSX3a7i4DALVp1ksrYy1RClJX9WRSAc8ZsaW0tnnTqoO/3Oe3UWFd2EY+Rczx1rFVGueZV9S5D+jqyzG73FWoojBl4eTwV6gPQz7ezY/6KUfg8+jABFJYKwNuTECrNhyKu7a7zrmO4GQGlDtVc/ApMRf/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=Cjk9zi+p reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.147
+	 In-Reply-To:To:Cc; b=HwmdpPRUkUJtWnkrEkevI6lmAmweUQj55uAZcxS/5RYVBIWU0wmz+ZB9VLhvGCQ686WrQh7EhJNZTyDgTjpMqtGNd+zcYnlyUDfkny3iBxuW9CXANzTRJbSIjZRVWwnd7SN6EX4G3SJHGoxIfYrF1c32L4c56IWyrQ01PNNisJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=n3vV20OP reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="Cjk9zi+p"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="n3vV20OP"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1788413993; x=1819949993;
+  t=1788413996; x=1819949996;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=yEoKYkqAzY02mykJ1us0DXeoBWZGGZzvI9Pqcx6SKBY=;
-  b=Cjk9zi+psKSpPtJZ8M7KTcDNfF0vPBw7PzNwBTx0STKPa6LSOIa3Le6z
-   xeDOBoekV7vcyL7ZPJhdjlusIoEOunspztZZ28/QQSR5ZdAJqDluFNRlA
-   qQTzXnvqHPotKdIYpdCP06eH3OUGoo9DjpdUjnq2f0fQYohVK2rnjbHSn
-   +P0heUdo7+NNSxWGgEXgnurqeHrVlMEy8l9jtrg+gKq27tgtwSKY+0PzC
-   tM9QDWgAiVqd17mX0A7QaidYvUsMj4VovQy/n5QamGpl2vD1HmklX0R+p
-   a+80KluBROTTALnifJ7tNhnFX1kVu7OXXZEtfsuDmmK6UKA5i4TwuFFkv
-   g==;
+  bh=HlYAVuM9vZLFTesP9pfThfI3jTZfqm2p6kxvhhe8OIs=;
+  b=n3vV20OP8CVa5vqGCifBFPYj/I+skQ4A8O3ywxZeyiwjI2RECktvNtGB
+   r4PYYEVQPb/XZmkUHPpVcSXm63l7kdhokHVkHuimB6aqeyYy1XkMquNjY
+   0cbfm4IZLjdLexlszkEM8ozuRhN+Jf4gq/czLbllFPEdDJceudRhp1WZK
+   EkSZ0tmMB9TKmX6R2PsLkZUsbpL28eKt37w9cA9K6hasGvpso02hRlcAO
+   K473eDLH3O/jZNURFDMpT4dIEIOw5hMVY5hRDZEd4TM/io/RtiKcVLGc6
+   GePTlvG6nYc7cfR539GJLf1T21HW+yDEkmvm3tPTgKBXcRFkqybJCAy9z
+   A==;
 X-CSE-ConnectionGUID: WLsDcoMiRqeta1S+3AaaXA==
-X-CSE-MsgGUID: uTwTKCDYSrSG2+vTWAA4vw==
+X-CSE-MsgGUID: pfpTQci7RAi4ym1F4MPsvw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from unknown (HELO ces03_data.me-corp.lan) ([146.255.191.134])
-  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 08:38:41 +0300
-X-CSE-ConnectionGUID: iDBMjCADQDiUsQoKA31dWg==
-X-CSE-MsgGUID: pmROrQ4KQ02cYRqFDneMXg==
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 08:38:47 +0300
+X-CSE-ConnectionGUID: DGlRIx87RHqxRAx0DKNZDQ==
+X-CSE-MsgGUID: /Qj9nrTdRMmiTWGdE7nxiw==
 Received: from unknown (HELO epgd056.me-corp.lan) ([10.154.54.3])
-  by ces03_data.me-corp.lan with SMTP; 03 Sep 2026 08:45:08 +0300
-Received: by epgd056.me-corp.lan (sSMTP sendmail emulation); Thu, 03 Sep 2026 08:38:40 +0300
+  by ces03_data.me-corp.lan with SMTP; 03 Sep 2026 08:45:15 +0300
+Received: by epgd056.me-corp.lan (sSMTP sendmail emulation); Thu, 03 Sep 2026 08:38:46 +0300
 From: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-Date: Thu, 03 Sep 2026 08:38:11 +0300
-Subject: [PATCH v2 04/12] i2c: nomadik: return proper fault codes
+Date: Thu, 03 Sep 2026 08:38:17 +0300
+Subject: [PATCH v2 10/12] i2c: designware: stop transfer if spurious STOP
+ is detected
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,7 +52,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260903-i2c-fault-reporting-v2-4-fedeb91792e6@mobileye.com>
+Message-Id: <20260903-i2c-fault-reporting-v2-10-fedeb91792e6@mobileye.com>
 References: <20260903-i2c-fault-reporting-v2-0-fedeb91792e6@mobileye.com>
 In-Reply-To: <20260903-i2c-fault-reporting-v2-0-fedeb91792e6@mobileye.com>
 To: Andi Shyti <andi.shyti@kernel.org>, 
@@ -67,69 +68,51 @@ Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
  Dmitry Guzman <Dmitry.Guzman@mobileye.com>
 X-Mailer: b4 0.14.2
 
-I2C documentation Documentation/i2c/fault-codes.rst defines fault codes
-for different negative results in I2C transmittion. Previously,
-i2c-nomadik driver didn't implement them properly - it returned
-ETIMEDOUT on most errors and EIO on master arbitration lost.
+In `i2c_dw_process_transfer()`, if STOP_DET flag is set while read or
+write is in progress, the transfer should be aborted. If this flag is
+handled the same interrupt as TX_EMPTY flag, the driver first handles
+TX_EMPTY flag and transmits the following messages, and only afterwards
+checks STOP_DET flag.
 
-To comply with the documentation, return the proper fault codes for
-different conditions, namely:
+Also, if STOP_DET flag is set, interrupts are not masked, so if TX_EMPTY
+interrupts arrives later, the driver will also send further messages.
 
-- EAGAIN if arbitration lost
-- EOVERFLOW if message is too long (>2047 bytes)
-- ENXIO if target address is not acknowledged
-- EIO on other errors detected by controller (for example, NACK on data)
-- ETIMEDOUT if driver gets timeout waiting for message completion
-  without any fault condition detected by the controller (for example,
-too long message, or SDA/SCL line stuck on 0).
+To abort transmitting data after spurious STOP, check STOP_DET flag
+before TX_EMPTY flag, and if STOP_DET flag is set while transfer is in
+progress, disable interrupts as it is done in case of TX_ABRT flag set.
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
 Signed-off-by: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
 ---
- drivers/i2c/busses/i2c-nomadik.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-designware-master.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-nomadik.c b/drivers/i2c/busses/i2c-nomadik.c
-index ca9366e09e7125b9c86dd0f995162018df56634d..a3cef4b66190a9e45898e25867a3ceefce5d3d0a 100644
---- a/drivers/i2c/busses/i2c-nomadik.c
-+++ b/drivers/i2c/busses/i2c-nomadik.c
-@@ -226,6 +226,18 @@ static const char *abort_causes[] = {
- 	"overflow, maxsize is 2047 bytes",
- };
+diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
+index 76f28e1696bdc81326cf149dfe88c52dd2f0731f..936b9150754e85a1bac2d17a0fa65f6963e4ef3e 100644
+--- a/drivers/i2c/busses/i2c-designware-master.c
++++ b/drivers/i2c/busses/i2c-designware-master.c
+@@ -651,17 +651,19 @@ static void i2c_dw_process_transfer(struct dw_i2c_dev *dev, unsigned int stat)
+ 	if (stat & DW_IC_INTR_RX_FULL)
+ 		i2c_dw_read(dev);
  
-+/* Linux fault codes for controller abort causes */
-+static int fault_codes[] = {
-+	ENXIO,
-+	EIO,
-+	EIO,
-+	EAGAIN,
-+	EIO,
-+	EIO,
-+	EOVERFLOW,
-+	EIO
-+};
+-	if (stat & DW_IC_INTR_TX_EMPTY)
+-		i2c_dw_xfer_msg(dev);
+-
+ 	/* Abort if we detect a STOP in the middle of a read or a write */
+ 	if ((stat & DW_IC_INTR_STOP_DET) &&
+ 	    (dev->status & (STATUS_READ_IN_PROGRESS | STATUS_WRITE_IN_PROGRESS))) {
+ 		dev_err(dev->dev, "spurious STOP detected\n");
+ 		dev->rx_outstanding = 0;
+ 		dev->msg_err = -EIO;
++		__i2c_dw_write_intr_mask(dev, 0);
++		goto tx_aborted;
+ 	}
+ 
++	if (stat & DW_IC_INTR_TX_EMPTY)
++		i2c_dw_xfer_msg(dev);
 +
- static inline void i2c_set_bit(void __iomem *reg, u32 mask)
- {
- 	writel(readl(reg) | mask, reg);
-@@ -653,6 +665,8 @@ static int nmk_i2c_xfer_one(struct nmk_i2c_dev *priv, u16 flags)
- 				cause >= ARRAY_SIZE(abort_causes) ?
- 				"unknown reason" :
- 				abort_causes[cause]);
-+			priv->result = -fault_codes[cause];
-+			status = priv->result;
- 		}
- 
- 		init_hw(priv);
-@@ -865,7 +879,7 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
- 
- 	/* Master Arbitration lost interrupt */
- 	case I2C_IT_MAL:
--		priv->result = -EIO;
-+		priv->result = -EAGAIN;
- 		init_hw(priv);
- 
- 		i2c_set_bit(priv->virtbase + I2C_ICR, I2C_IT_MAL);
+ 	/*
+ 	 * No need to modify or disable the interrupt mask here.
+ 	 * i2c_dw_xfer_msg() will take care of it according to
 
 -- 
 2.43.0
