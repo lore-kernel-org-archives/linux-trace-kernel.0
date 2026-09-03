@@ -1,39 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6414A3846;
-	Thu,  3 Sep 2026 16:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139F44F30EE;
+	Thu,  3 Sep 2026 16:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788453309; cv=none; b=K6iS1LGP7WVxwS/XX1yoSyT6OVlUrtMZp0clqSHc1CcvPeVO36JMs4tvMjWg/Td2UCL1w71z65HuzXxSQ01eXAyx06tKKdZejaBPReZzFJfijp4+DOUSC5NU8QufQj9IVXW9EN0yPhBKHvskYehbi8W8SFiii7d4c1FL8OOd9eQ=
+	t=1788454535; cv=none; b=YxdeSjESNKBtKdofWerWLE8LpVTq6P6s8vFDEu+H9F34ueKWf0CcqApuPYH7NYTFC3rbQ8qZ+bczehiTAosEn39yBeG90ZHvhYQw4PZsqgnRzsdIik60E/5i1Zn6sJKgLtX7DJkUt5XpgidGennOlMKPbzQ+5DAG3TBqS90NyDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788453309; c=relaxed/simple;
-	bh=k5ro6TI+X/hlymQmTV2S9JypG6xvQdKKh4M6ScuMPnc=;
+	s=arc-20240116; t=1788454535; c=relaxed/simple;
+	bh=8WHzY9NyHgmc2ohi2rMNL0Xt+Sbb6vGYDrmBNMLFuyY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MCGlrjhI1tBYYWtaX9F/sUGei7zBlAG3vE787OJIRfGTNo41vFo3l2nACEXnrbxUn4K8yg8zcby+639hGS2FD0tQlKhbZLVw8a/b440BASE4JG7N4oHWez8tYpUWAzfVRZ/c9OGLgHbmSY7XdjIjgAS5eXNJfNY7FWimlXo3QDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=2sHoeePs; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=KMnAbE5BBL3vD62gi03YdVBqg9qvcOx8zj2ydJsKVGutztPZBQXbA5MY+yonvWTA+XmUaGw5pAZR6Wg1QjRRrHuJJqdjezmhlN5wGW38sBw6VKhFNYBk1UyjP1LMS9ZcD/IkaJNpQzSupAVa0vxPxB9tvWaVlykL33Cmz/hA3zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=CnwAu9Qg; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="2sHoeePs"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 7984D1205B5;
-	Thu,  3 Sep 2026 16:35:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 8BF1120024;
-	Thu,  3 Sep 2026 16:35:03 +0000 (UTC)
-Date: Thu, 3 Sep 2026 12:36:06 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="CnwAu9Qg"
+Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id A4067A4669;
+	Thu,  3 Sep 2026 16:55:25 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id BAA1F2000E;
+	Thu,  3 Sep 2026 16:55:23 +0000 (UTC)
+Date: Thu, 3 Sep 2026 12:56:21 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peng Donglin <dolinux.peng@gmail.com>, dolinux.peng@gmai.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- pengdonglin <pengdonglin@xiaomi.com>
-Subject: Re: [PATCH v5 0/3] Use BTF to trim return values
-Message-ID: <20260903123606.6e5bc37e@gandalf.local.home>
-In-Reply-To: <20260902235533.ea387f764b51b1b2a8ce8224@kernel.org>
-References: <20260901134604.4052265-1-dolinux.peng@gmail.com>
-	<20260901135715.4812fde9@gandalf.local.home>
-	<f18beeb4-f3df-41eb-9990-5be295a2729b@gmail.com>
-	<20260902235533.ea387f764b51b1b2a8ce8224@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 3/4] ring-buffer: Cap static ring buffer nr_pages
+Message-ID: <20260903125621.36cd33b8@gandalf.local.home>
+In-Reply-To: <20260901155445.1475405-4-vdonnefort@google.com>
+References: <20260901155445.1475405-1-vdonnefort@google.com>
+	<20260901155445.1475405-4-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,25 +41,110 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 8BF1120024
-X-Stat-Signature: 57epuggdoh1mos475afbm1jya1y4p5ho
+X-Stat-Signature: cfs3iw96eun6gxzpetbt9kysaktxice3
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: BAA1F2000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18JigZdIexYP6SmyGbKpHXWh81XpwpiShk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=v2fYFgHItsVJon5i4uqh44uE7r6moAwhyEs99h7vg+M=; b=2sHoeePsCbrdhe8t7BBqtKAJCRQBr7SVJoO4yJdM2fQWMdfGncV9TeYpT+Et78BJWt2CoW9LIC0m8estZa1vPFiVEYPC9gX04bUKCvwSqiqu2gBjnCghcaH+AjeB0EiE5YI5wY2iUiZ5DvQuR6sV6KRC7I/UTeqVFkMvgg6+Nag=
-X-HE-Tag: 1788453303-2937
-X-HE-Meta: U2FsdGVkX1+gVgNAc60hA4xDTsJpfHncZMbeSDm+R/BoC4VSvdZGvHmuTlxeFP/BUc6WWmaL+sYD+L5IqyJ3rX7ncuDnln0FGjx5F++54wmAthiq+tLPNqtpX4A7cDabnttvC3UyFAR09maikr9URPFUMIX1C4e0WzgTkHhfn+8bHnVwoebhE/Gm7OYIVCfF9PflQhPxmyPiRPy6EKH3Rb3Jj6ZV4v3LywaQULNr8IoMD1giuWI3PfU5I5uRc58rCz9ogfzV0GqBkLKID36tZeiYOlH2X/vQ8NPEShMaFbhCCy3Bv40pwzE48ZstGBBhYPq+x1cp0UD8WGe3dJEAFcYjW2jCFHFZ
+X-Session-ID: U2FsdGVkX19h0V6qv4jDnLkjd6pDu+1eS9uz8p+Vcb8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=yYjsUcoAO6nzkm3oiEYR0fnUlNb08Ho92FmFoR9fJoc=; b=CnwAu9QgqbRumYhCLCz6aaSAAV1I4AAneLJ04jTunvXfShuO0TfYH3keNTJSarJPz4YAd7GbLDaFCyWLH8zEfZ3p9SSv+XcfXqXS+Jb2pK91gj0Nmv+R3qa9cC2ylSTUcAdtOxBhgfU+GV5nM00OgDQGF9n9pRDFWjp42NzmEm4=
+X-HE-Tag: 1788454523-549378
+X-HE-Meta: U2FsdGVkX19K7/dYI+sPeiHNONtb4OWZJ9dS5MHOgR7Z7z8ZODqub/3MwDV0mSEDQH3MQvpvLqHIC+qSobGTxnyF9sunI1wwgNHH15nvDDdC7zPBgVrwAjV1EDE2GJvvinoG7IMvi4hj+GzEJbqTKoHg6RJeDAKFcEqVKvmYMLT7hDRWigF+/Ztdp9fJrpRGI/5rFUgaj8YeehBfQbRSz8rBf4Ek99VLChJT9RQJTl60vfrGkppzKzx2IyWulzlz8/GgYQwl2jJiOxlvGF2BlWbwmIXAuTkriBdFMxoGNzotMq1iKO3BH1PdLLMxBh3DWpYUmdi+lhMcfyKOK2eFePnSqupKL0V7
 
-On Wed, 2 Sep 2026 23:55:33 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue,  1 Sep 2026 16:54:44 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> Hmm, shouldn't both the actually applied size and the true size be displayed?
-> e.g.
+> Static ring buffers (i.e. persistent, user-mapped and remote) rely on
+> the bpage::id field. The number of pages for those ring buffers must fit
+> into that variable. Enforce this limit on ring buffer creation or
+> user-mapping.
 > 
-> ret=0x5 (in 8 bytes, true size: 16 bytes)
+> While at it, make buffer_page::id 31 bits. This does not change the
+> struct buffer_page size.
 
-I have to ask. Why do we care? Is there a use for this information?
+Let's not add that change to this patch. Especially since this has a fixes
+tag to it. That change has nothing to do with the fix.
 
-If not, ret=0x5 would be sufficient.
+The reason I had it as 30 to begin with was to reserve a bit in case I
+found another reason for it. If 1<<30 is too small for the number of boot
+buffer pages, we can always up in another order in the future.
+
+> 
+> Fixes: be68d63a139b ("ring-buffer: Add ring_buffer_alloc_range()")
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 28dd76edfecf..c4260d6ecdfc 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -350,7 +350,7 @@ struct buffer_page {
+>  	local_t		 entries;	/* entries on this page */
+>  	unsigned long	 real_end;	/* real end of data */
+>  	unsigned	 order;		/* order of the page */
+> -	u32		 id:30;		/* ID for external mapping */
+> +	u32		 id:31;		/* ID for external mapping */
+>  	u32		 range:1;	/* Mapped via a range */
+>  	struct buffer_data_page *page;	/* Actual data page */
+>  };
+> @@ -657,6 +657,15 @@ static bool rb_is_static(struct ring_buffer_per_cpu *cpu_buffer)
+>  	return cpu_buffer->user_mapped || cpu_buffer->remote || cpu_buffer->ring_meta;
+>  }
+>  
+> +static unsigned long rb_static_max_pages(void)
+> +{
+> +	/*
+> +	 * Static ring buffers are using bpage::id and must account for the
+> +	 * reader page.
+> +	 */
+> +	return (1UL << 31) - 1;
+> +}
+> +
+>  struct ring_buffer_iter {
+>  	struct ring_buffer_per_cpu	*cpu_buffer;
+>  	unsigned long			head;
+> @@ -2842,6 +2851,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  		 */
+>  		nr_pages = (size - sizeof(struct ring_buffer_cpu_meta)) /
+>  			(subbuf_size + sizeof(int));
+> +
+> +		if (nr_pages > rb_static_max_pages())
+> +			goto fail_free_buffers;
+> +
+
+If you want to add something, we could add to the beginning of this
+function:
+
+	/* Prevent ridiculously small sizes */
+	if (size < PAGE_SIZE)
+		return NULL;
+
+to shut up Sashiko about overflows :-p
 
 -- Steve
+
+
+
+>  		/* Need at least two pages plus the reader page */
+>  		if (nr_pages < 3)
+>  			goto fail_free_buffers;
+> @@ -2874,6 +2887,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+>  		/* The writer is remote. This ring-buffer is read-only */
+>  		atomic_inc(&buffer->record_disabled);
+>  		nr_pages = desc->nr_page_va - 1;
+> +
+> +		if (nr_pages > rb_static_max_pages())
+> +			goto fail_free_buffers;
+> +
+>  		if (nr_pages < 2)
+>  			goto fail_free_buffers;
+>  	} else {
+> @@ -7836,6 +7853,9 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  	/* prevent another thread from changing buffer/sub-buffer sizes */
+>  	guard(mutex)(&buffer->mutex);
+>  
+> +	if (cpu_buffer->nr_pages > rb_static_max_pages())
+> +		return -E2BIG;
+> +
+>  	err = rb_alloc_meta_page(cpu_buffer);
+>  	if (err)
+>  		return err;
+
