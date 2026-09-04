@@ -1,160 +1,152 @@
-Received: from mta1.migadu.com (out-31.mta1.migadu.com [95.215.58.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0295C37269C
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 01:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF531368D42;
+	Fri,  4 Sep 2026 01:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788484833; cv=none; b=U7WCZxDrdxJGUI4HAhokIgK7sCv3xiMYPp3qGhjco1Bdb8oT0TJXbp7G+PJ15O0iv00JsZ79NvRuZgqmoT6Bdmi0GDShlu2k2zn0A8WcEwyIzZwzccWnjLsWLBhdl6yPtdMX+pwF75M880h23LKPArLFG564GRhMhPlFPkvAQj8=
+	t=1788485632; cv=none; b=R/oI7x1kfp5j3e9dFu2VMys0sLIZynGYl6+Fs1oGdxAnfZ8pIzLbJLhEbU9utre5DmG/OTbPViQ9Fe7Bb1vRQU5L7pO+9iuLR4+442un9UvGaCdtvgStQUcJIfat4dWmgaDBMyoyLjxifVcE4AH+3U92nMQ8jfRLUZB5KdYMpno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788484833; c=relaxed/simple;
-	bh=Ufq/i5RxOOSZfLeBtm9lDTBjR97/7RG5RV5oPvNgPrw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TJtq4trJB2+VV0NpNzsubbxW0+BrPUY53GKgPFURzFYaP/xGCeDNU/ao5x8PUS68uNO8w1gh4pBPdngrU6vMAPtbPGKr1fpxyBdFwESPEyIRwOXYSiZ7cfj0xKU2Pot27lactevkLxC8OlPLP1fcCb1R6Q0NemfRtml7nADm4hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MAbJA9Rz; arc=none smtp.client-ip=95.215.58.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1788485632; c=relaxed/simple;
+	bh=P/MrAVGM6Bp/rOzN3pa59j8NBWOPizXJZLkyhC5vnh8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=pw/Csm+y60Rxv8K0bk+K59x6r4+CiUpsDFxq9eUeNP7StP7ZRMu3YFdGvGW7f5E91cY9OQ2Ui66Y46E2jzvgCcsJbBPy1L5r20JqRpZOcdzLXGV3c/H6+1Yn5kKexmWiSCkxtGYW4uBVbz/p2/hZR2cqt/dueJlNe7NNKF3UV4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqd2GtwG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MAbJA9Rz"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=Ufq/i5RxOOSZfLeBtm9lDTBjR97/7RG5RV5oPvNgPrw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788484828; v=1; x=1789089628;
- b=MAbJA9RzogsAnYG35GAkEbvPoWBLzxh+pCyXrG2y1vpmjxpj6PrqTNNvPJm0oocPjWf5t9V3
- Neju+RyphenP3BOAFfpzI23kaDYZ+7niWAaas43FclHTcXZRKPH7wXSGBfcEctCOdUw92pYz+Dp
- lKadYHrxFCsgTlrsRbaAm5Bw=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 0b2fa0c76e2e4bda;
-	Fri, 04 Sep 2026 01:20:28 +0000
-X-Mizu-Trace-ID: 0b2fa0c76e2e4bda
-X-Migadu-Flow: FLOW_OUT
-From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Date: Fri, 04 Sep 2026 01:18:40 +0000
-Subject: [PATCH RFC 8/8] arm64: ftrace: Allow CALL_OPS on kCFI kernels
- built with Rust
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqd2GtwG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5141B1F000E9;
+	Fri,  4 Sep 2026 01:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788485630;
+	bh=768etRWAKyJbvvOPCzBMrVJRNK2LxPl0STlGR/Mq4ns=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jqd2GtwGAga9pNvG6kpFf+UOIzedvQoqeb2g2AWa9lu4DvzIgp7sZqQVaw8FPAPvS
+	 JUSneg2MesaLQ5/gq4A+r4GABY3ELp0Lh7Yn7WU28foxhxGCHo5KqQE28cP15yhXX/
+	 6LvhRBeK4oZtpYV/621uvok6J0t9QAUtiYKDieIkRl0lIOfg5gjLQf27CST/ZvMckO
+	 AHiBwgjrNf/FOcOmcRmq7WscXAeFVyc2L+fKVj+g3XYQC4FuG2jYS6tEOfkNtpc8ph
+	 eUUXXYJp6OvxgyZpFWxH/rQ1v6GWd63PgcVgBCErnwpqYtuFtsTDs3z07HtnSrFu8q
+	 rHg+bzby3o2eA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC 1/8] ftrace: Let ftrace_call_adjust() reject a patch
+ site
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?Sm9zZSBGZXJuYW5kZXogKEFudGhyb3BpYyk=?= <jose.fernandez@linux.dev>
+Cc: ojeda@kernel.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-1-ce6687739b0c@linux.dev>
+References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
+ <20260904-b4-arm64-callops-kcfi-v1-1-ce6687739b0c@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 01:33:49 +0000
+Message-Id: <20260904013350.5141B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260904-b4-arm64-callops-kcfi-v1-8-ce6687739b0c@linux.dev>
-References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
-In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
- Emil Tsalapatis <emil@etsalapatis.com>, 
- Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
- Ard Biesheuvel <ardb@kernel.org>, 
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@kernel.org>, 
- Alexandre Courbot <acourbot@nvidia.com>, 
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
- Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>
-Cc: Leon Hwang <leon.hwang@linux.dev>, 
- Ihor Solodrai <ihor.solodrai@linux.dev>, 
- Josh Poimboeuf <jpoimboe@kernel.org>, live-patching@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
- linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Ben Cressey <ben@cressey.dev>, 
- "Florent Revest (Anthropic)" <florent.revest@linux.dev>, 
- "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-X-Mailer: b4 0.15.2
 
-Pass -Zpatchable-function-entry=M,M,.discard.patchable_function_entries
-to rustc when CFI and CALL_OPS are both enabled, so Rust functions get
-the same prefix NOPs as C functions. The section argument needs
-Rust 1.98 [1]. Probe for it, and let ARM64_CFI_PERMITS_CALL_OPS
-accept RUST=y when the probe passes.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-[1] https://github.com/rust-lang/rust/pull/157445
+New issues:
+- [Medium] Permanent memory leak of ftrace page group when all tracepoints =
+in a module are rejected.
 
-Suggested-by: Ben Cressey <ben@cressey.dev>
-Reviewed-by: Ben Cressey <ben@cressey.dev>
-Reviewed-by: Florent Revest (Anthropic) <florent.revest@linux.dev>
-Assisted-by: LLM
-Signed-off-by: Jose Fernandez (Anthropic) <jose.fernandez@linux.dev>
----
- arch/arm64/Kconfig  | 7 ++++++-
- arch/arm64/Makefile | 3 +++
- rust/Makefile       | 5 ++++-
- 3 files changed, 13 insertions(+), 2 deletions(-)
+Pre-existing issues:
+- [High] Lockless readers can observe uninitialized ftrace pages due to a m=
+issing write memory barrier.
+--
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index afa566e0fa86c..cad2bdf3456ff 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -282,11 +282,16 @@ config CC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
- 	# https://github.com/llvm/llvm-project/pull/131230
- 	def_bool $(cc-option,-fpatchable-function-entry=1$(comma)1$(comma).discard.patchable_function_entries)
- 
-+config RUSTC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
-+	# The section argument needs Rust 1.98.0 or later:
-+	# https://github.com/rust-lang/rust/pull/157445
-+	def_bool $(rustc-option,-Zpatchable-function-entry=1$(comma)1$(comma).discard.patchable_function_entries)
-+
- config ARM64_CFI_PERMITS_CALL_OPS
- 	def_bool y
- 	depends on CFI
- 	depends on CC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
--	depends on !RUST
-+	depends on !RUST || RUSTC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
- 
- config ARM64_FUNCTION_PREFIX_NOPS
- 	int
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 653c1ed6ef38f..b23430e2b8567 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -152,6 +152,9 @@ ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS),y)
- 			 -DCC_USING_PATCHABLE_FUNCTION_PREFIX=$(prefix_nops)
-     KBUILD_CFLAGS += $(CFI_PREFIX_CFLAGS)
-     export CFI_PREFIX_CFLAGS
-+    # Rust functions are not patched by ftrace, but they are called indirectly
-+    # from C and make indirect calls themselves, so they need the same prefix.
-+    KBUILD_RUSTFLAGS += -Zpatchable-function-entry=$(prefix_nops),$(prefix_nops),.discard.patchable_function_entries
-   endif
- else ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_ARGS),y)
-   KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-diff --git a/rust/Makefile b/rust/Makefile
-index da1a7409d9845..0036cefbed76f 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -432,7 +432,10 @@ rusttest-macros: $(src)/macros/lib.rs \
- 	+$(call if_changed,rustdoc_test)
- 
- ifdef CONFIG_CC_IS_CLANG
--bindgen_c_flags = $(c_flags)
-+# bindgen generates no code, and its libclang may predate the section
-+# argument of -fpatchable-function-entry that a kCFI kernel with CALL_OPS
-+# passes on arm64.
-+bindgen_c_flags = $(filter-out -fpatchable-function-entry=%,$(c_flags))
- else
- # bindgen relies on libclang to parse C. Ideally, bindgen would support a GCC
- # plugin backend and/or the Clang driver would be perfectly compatible with GCC.
+commit 47d688aa11de52022b8f09bf86665d475e816eb6
+Author: Jose Fernandez (Anthropic) <jose.fernandez@linux.dev>
+Subject: ftrace: Let ftrace_call_adjust() reject a patch site
 
--- 
-2.52.0
+This commit addresses an issue where ftrace_process_locs() does not skip a
+patch site when ftrace_call_adjust() returns 0. It tests the adjusted addre=
+ss
+and skips the site if it is NULL, preventing a bug_on() during ftrace_init_=
+nop
+on arm64.
 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index f9d80c7bd9f16..394f82230e0c3 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7676,6 +7676,10 @@ static int ftrace_process_locs(struct module *mod,
+>  		}
+> =20
+>  		addr =3D ftrace_call_adjust(addr);
+> +		if (!addr) {
+> +			skipped++;
+> +			continue;
+> +		}
+
+[Severity: Medium]
+If all tracepoints in a module are rejected and skipped here, the allocated
+start_pg retains an index of 0. When the module is later unloaded, does this
+leave the empty page permanently in the global ftrace_pages list?
+
+During module unload, ftrace_release_mod() checks if the first record's ip
+is within the module:
+
+kernel/trace/ftrace.c:ftrace_release_mod() {
+    ...
+	for (pg =3D ftrace_pages_start; pg; pg =3D pg->next) {
+		rec =3D &pg->records[0];
+		if (within_module(rec->ip, mod)) {
+			/*
+			 * pg->index could be zero if we only allocated
+			 * a page but did not store any records
+			 */
+            ...
+}
+
+Since the record ip is 0, within_module(0, mod) fails, and the page group
+would not be freed. Can this regression cause a memory leak of the ftrace
+page group for each incompatible module load?
+
+[Severity: High]
+This isn't a bug introduced by this patch, but while reviewing this functio=
+n,
+I noticed that the new ftrace page is published to the lockless list without
+a write memory barrier earlier in ftrace_process_locs():
+
+kernel/trace/ftrace.c:ftrace_process_locs() {
+    ...
+		if (WARN_ON(ftrace_pages->next)) {
+			/* Hmm, we have free pages? */
+			while (ftrace_pages->next)
+				ftrace_pages =3D ftrace_pages->next;
+		}
+
+		ftrace_pages->next =3D start_pg;
+    ...
+}
+
+Because the cpu can reorder the kzalloc initialization of start_pg after its
+publication to the ftrace_pages list, lockless readers like
+ftrace_location_range() iterating the list under rcu_read_lock() might read
+uninitialized data:
+
+kernel/trace/ftrace.c:lookup_rec() {
+    ...
+	for (pg =3D ftrace_pages_start; pg; pg =3D pg->next) {
+		if (pg->index =3D=3D 0 ||
+		    rec->ip < pg->records[0].ip ||
+		    rec->ip > pg->records[pg->index - 1].ip)
+			continue;
+    ...
+}
+
+Could this lead to a panic or memory corruption due to an out-of-bounds
+access or a garbage pointer dereference in bsearch() if the reader observes=
+ an
+uninitialized pg->index?
+
+> =20
+>  		end_offset =3D (pg->index+1) * sizeof(pg->records[0]);
+>  		if (end_offset > PAGE_SIZE << pg->order) {
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-b4-arm64-c=
+allops-kcfi-v1-0-ce6687739b0c@linux.dev?part=3D1
