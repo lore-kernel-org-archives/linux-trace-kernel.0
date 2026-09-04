@@ -1,113 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6247626159E;
-	Fri,  4 Sep 2026 01:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1295A23A99F;
+	Fri,  4 Sep 2026 02:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788486470; cv=none; b=XQwKs/KmZwZlF22am0kX1Xfkt46eiV9E3YZxAKk06CqWz6tR5T0aZyOrxBawyhzmqhksEyVhKZMEhDmkaamz/lPy0U46pfl2hBFgkVc8h777VbbDFJUWI1ErIO4E9/z6sXNd2IPG9ZRhV0mQ5UaBD5PkSDfgUeILtHpZcoUdJGA=
+	t=1788488326; cv=none; b=a/pe6n0qPJzxXX6fQIu04064jKVj2sKP9DovzNpcZqHxi/zqC3f/oc0d3rSDxyy6yRGdLCp1aQCAAfDUtOFv0qty99XQwyRj6I7zjgcIkO3rzH9g6uq6SrleNCjRCZuUaNXSdC+ZwUxT332RsABbKnOcx+Z6bWdfFoHV46zL/18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788486470; c=relaxed/simple;
-	bh=JVDeMIkLAV+FTDJQW2eQo7JhGBJ6KEDiA1nqd6dgOaI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IWWdpLPgtUa0bg/8wih1cck37KK0mGVbz1q7vxCYQAxNN6fzEXrEMPeaRbATQgsgj+8AQeRTbfBwXV89QfgjV3nrSowQvaG6S0pYdwAn6NF7I4dPAKq3FmgKVCLVnNmKuB0LAAYAjY8nHh6c2Nkn4EZoRM202yI9rVTK315hcDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0Be6oyF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788488326; c=relaxed/simple;
+	bh=2vKe9SIi+kPaJ1tVSsMdPJXsUYHXEKmpAMEhFm5m/DQ=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=p41Nd0BGClOdlVEKQpgBCOPSktCrQZZoxeuKWmnCL92SmNzbw+wcpUNn2Ee+VC/+NXy9ZtGEdvL/fRzVxL4M76xmXGEXunqZf5MrZ7eiAujb3tZ/GElRzJzkHGeFGGlqn5aCqNA404HccN7quL6ARMsGkmuf+t1Jkw+Pcjf4tyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaIEeWtP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0Be6oyF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04AA1F000E9;
-	Fri,  4 Sep 2026 01:47:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaIEeWtP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DFD61F000E9;
+	Fri,  4 Sep 2026 02:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788486469;
-	bh=RZ163bT2SBMXkLQEC+5u90c1x+gxGZEmjcnUHnCF/8A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k0Be6oyFwDcODmK7c+iYIRQHgJYvQZcYniX9PhZkHPqT0/EnApR1/g1JcjrcSAzzA
-	 h+iVFjLyT/Pwj2p+IcGcYG3fugZbdr5BnzMYgPV/ukJ+fT26pTzKYcEitFyPRrp6fd
-	 XOBKXNolKa+U6CC3MTk0PcvwecTkWMSahnzDGK3tv+JFYXsbrzsazIO2OCBxuxZc0d
-	 BAzb7yJMpbbcvjVhdoHU2K4EJP864yVVplzS7dX9d5KBbgvRG7u1EoF/8jdDHNPph+
-	 aQfFFX73NCgNx3/8tFj6KKdFY4H1uzeUSf3sz5FV6VD3f1rIZ9KfcpWz9liizB4ZSA
-	 uSUUYFZhzoVTA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 5/8] arm64: cfi: Use
- CONFIG_ARM64_FUNCTION_PREFIX_NOPS for the type hash offset
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?Sm9zZSBGZXJuYW5kZXogKEFudGhyb3BpYyk=?= <jose.fernandez@linux.dev>
-Cc: bpf@vger.kernel.org, ojeda@kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-5-ce6687739b0c@linux.dev>
-References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
- <20260904-b4-arm64-callops-kcfi-v1-5-ce6687739b0c@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 01:47:48 +0000
-Message-Id: <20260904014748.C04AA1F000E9@smtp.kernel.org>
+	s=k20260515; t=1788488324;
+	bh=sIxQ5O7GKOzHUKEwaHhaIsAgRdz8hmxCkdwAf/qbsnc=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=UaIEeWtP0MTyKMO/GNHiv4Wvgcfwe4hPIjFDflStZurM/OvSbo3fenkDz7Ehwgp79
+	 G9/pfgkH6pE65dmGECFPdS2bZitrApxkMcsZK1/0w25Hf38ZhwLGzEG50F8Z4rVpRv
+	 H0jbV+2Dy8eY2QYwK4IMNwxF2sr+qpWmNu0DnP8vTi3Ewa919MKWJ9zvJ+SsH2WSP7
+	 ZsRlpy5+XyspMsuFwx6PcaNGE4Bnw6fZwQ4NLNIHJpa4o2TyOsBwcdSpEUGUSlEX0J
+	 ro8vMzcp3mH8wiYFcZFWXLsTNrno3uufDEg9oWMkQZQmILE++Ms1tsfHicVRQrcPMY
+	 jTjyGVfl+KmPQ==
+Content-Type: multipart/mixed; boundary="===============4734120382397292463=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-Id: <f8a2bae9bd33842b276cff7f66ff799aefbd803f05ac6abc06dbdb486f6a0778@mail.kernel.org>
+In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-2-ce6687739b0c@linux.dev>
+References: <20260904-b4-arm64-callops-kcfi-v1-2-ce6687739b0c@linux.dev>
+Subject: Re: [PATCH RFC 2/8] scripts/sorttable: Make the arm64 before_func offset configurable
+From: bot+bpf-ci@kernel.org
+To: jose.fernandez@linux.dev,rostedt@goodmis.org,mhiramat@kernel.org,mark.rutland@arm.com,mathieu.desnoyers@efficios.com,nathan@kernel.org,nsc@kernel.org,ndesaulniers@google.com,morbo@google.com,justinstitt@google.com,catalin.marinas@arm.com,will@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,puranjay@kernel.org,xukuohai@huaweicloud.com,ardb@kernel.org,ilias.apalodimas@linaro.org,ojeda@kernel.org,boqun@kernel.org,gary@garyguo.net,bjorn3_gh@protonmail.com,lossin@kernel.org,a.hindborg@kernel.org,aliceryhl@google.com,tmgross@umich.edu,dakr@kernel.org,daniel.almeida@collabora.com,tamird@kernel.org,acourbot@nvidia.com,work@onurozkan.dev,samitolvanen@google.com,kees@kernel.org
+Cc: leon.hwang@linux.dev,ihor.solodrai@linux.dev,jpoimboe@kernel.org,live-patching@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-kbuild@vger.kernel.org,llvm@lists.linux.dev,linux-arm-kernel@lists.infradead.org,bpf@vger.kernel.org,linux-efi@vger.kernel.org,rust-for-linux@vger.kernel.org,ben@cressey.dev,florent.revest@linux.dev,jose.fernandez@linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Fri,  4 Sep 2026 02:18:42 +0000 (UTC)
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+--===============4734120382397292463==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Pre-existing issues:
-- [Medium] bpf_prog_fill_jited_linfo() calculates incorrect line info addre=
-sses because ctx.offset includes the CFI prefix size.
---
+> diff --git a/scripts/Makefile b/scripts/Makefile
+> index 3434a82a119f0..366c6a35141a6 100644
+> --- a/scripts/Makefile
+> +++ b/scripts/Makefile
+> @@ -51,6 +51,9 @@ endif
+>
+>  ifdef CONFIG_BUILDTIME_MCOUNT_SORT
+>  HOSTCFLAGS_sorttable.o += -DMCOUNT_SORT_ENABLED
+> +ifneq ($(filter-out 0,$(CONFIG_ARM64_FUNCTION_PREFIX_NOPS)),)
+> +HOSTCFLAGS_sorttable.o += -DFUNCTION_PREFIX_BYTES=$(shell expr 4 \* $(CONFIG_ARM64_FUNCTION_PREFIX_NOPS))
+> +endif
+>  endif
 
-commit 1909b8cf9ec25c69a7f49627fb1a30b3d8e545d4
-Author: Jose Fernandez (Anthropic) <jose.fernandez@linux.dev>
-arm64: cfi: Use CONFIG_ARM64_FUNCTION_PREFIX_NOPS for the type hash offset
+This isn't a bug, but would it be worth letting a configured 0 through
+here (or noting why it deliberately keeps the historical 8-byte
+tolerance), so the block doesn't read as honouring a value it actually
+filters out? As written, when CONFIG_ARM64_FUNCTION_PREFIX_NOPS is set
+to 0, the guard treats it the same as the symbol being absent, so both
+fall back to sorttable.c's built-in 8. This is behaviour-preserving
+today and avoids passing an empty value to expr, but once the symbol
+lands with a default of 0 for the non-CALL_OPS case, the one configured
+value that differs from the legacy constant is the one the guard
+discards.
 
-This patch modifies the CFI prefix to use CONFIG_ARM64_FUNCTION_PREFIX_NOPS
-instead of hardcoding four bytes. It adjusts cfi_get_offset(),
-SYM_TYPED_FUNC_START, and the BPF JIT to account for the dynamic number of
-NOPs required by kCFI kernels with CALL_OPS or ThinLTO and BTI.
-
-> diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-> index c18e005a41dbe..7ad14d9847138 100644
-> --- a/arch/arm64/net/bpf_jit_comp.c
-> +++ b/arch/arm64/net/bpf_jit_comp.c
 [ ... ]
-> @@ -185,8 +185,12 @@ static inline void emit_bti(u32 insn, struct jit_ctx=
- *ctx)
-> =20
->  static inline void emit_kcfi(u32 hash, struct jit_ctx *ctx)
->  {
-> -	if (IS_ENABLED(CONFIG_CFI))
-> -		emit_u32_data(hash, ctx);
-> +	if (!IS_ENABLED(CONFIG_CFI))
-> +		return;
-> +
-> +	emit_u32_data(hash, ctx);
-> +	for (int i =3D 0; i < CONFIG_ARM64_FUNCTION_PREFIX_NOPS; i++)
-> +		emit(A64_NOP, ctx);
->  }
 
-[Severity: Medium]
-This is a pre-existing issue, but does expanding the CFI prefix length
-cause bpf_prog_fill_jited_linfo() to calculate incorrect line info addresses
-by adding the CFI prefix twice?
 
-When loading any BPF program with line info on an arm64 kernel built with
-kCFI, ctx.offset measures from the start of the JIT buffer, which includes
-the CFI prefix emitted here.
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-However, in bpf_int_jit_compile() in arch/arm64/net/bpf_jit_comp.c, the
-offsets are passed to bpf_prog_fill_jited_linfo():
-
-arch/arm64/net/bpf_jit_comp.c:bpf_int_jit_compile() {
-    ...
-    for (i =3D 0; i <=3D prog->len; i++)
-        ctx.offset[i] *=3D AARCH64_INSN_SIZE;
-    bpf_prog_fill_jited_linfo(prog, ctx.offset + 1);
-    ...
-}
-
-Since bpf_prog_fill_jited_linfo() adds these offsets to prog->bpf_func,
-which is already shifted past the CFI prefix by cfi_get_offset(), the CFI
-prefix length ends up being added twice. The bug existed prior to this patch
-(off by 4 bytes) but this patch exacerbates it to 16 or 24 bytes depending
-on the number of NOPs.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-b4-arm64-c=
-allops-kcfi-v1-0-ce6687739b0c@linux.dev?part=3D5
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/33826319138
+--===============4734120382397292463==--
