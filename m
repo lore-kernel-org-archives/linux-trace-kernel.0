@@ -1,33 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257D451A746;
-	Fri,  4 Sep 2026 18:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EAA345CCD;
+	Fri,  4 Sep 2026 19:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788547682; cv=none; b=o8RtlTRDtISbaBUa1lQsPhsFwKi0QcXo/ZBsaVDEYS58iYzqExasGn3L7VjcodtQbee/22mWhZwz8N47FGCuIY4NgRYK84CE2fPhYvA30rjVd5qG8BfSVuBKMIAjoVU1IfEtruPLJlk5RHpEau/MEKu60NQoTw871JAFA6wih/8=
+	t=1788549344; cv=none; b=J1TxjPYpPhtAmgIqVEKM0PxOdqrWk5la5ccZAIyOSs3o6ASoqMZb3FBooiknq5AXvvgPmmgLntELl/dXrl20ry+o1XZr8ApmWoWTTk/qvSZBjmcHhDHnjC3KxXP2re3E+wE14Yo9iI7/9xw3ORlJFSegbbFBUuDoeXxXMsnoe8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788547682; c=relaxed/simple;
-	bh=1w4IiuOGzu+7c6F7J2tT++TPLaBtwAUCqLimBi9v92o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=C19Pi+Pcu6raTHXk3/jf2GjiVHFUVkB0zcKO1gVtad2R5GCK8IOofIfk5RiSzFdqTvAXpWgUMLduAeGb3UkbpUK1VkNboQb5MoPkMgM5XTUSAOwQ5GELxN9+A2t9y1YSRCcUapkfVChbSukKO0HH0p4a3eV5Mp6UcmqKEFK2viI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=PjbFcQdw; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1788549344; c=relaxed/simple;
+	bh=+3Ds5Gq1u175Hlow3Rzkg33W5qXfKfIlFdy+C/U/5Lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iLRTv//i7wq8GgRSXvLnojUZXKht2Rg8XWg2htPav9gLNDZau6HELupID3+nniVjj/tZXNVMp4seNavkPObZgiPXFCpb0rI/0u2Mr5B45jbfGedjcqZ3sxYPwmIm5H+YHbYMZ9xh14VqqWVJPWdP8W/hp/rfdbkE0KConHkTg9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Py4Ij9FR; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="PjbFcQdw"
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 9B48E1C0E24;
-	Fri,  4 Sep 2026 18:47:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id F2DDA2000F;
-	Fri,  4 Sep 2026 18:47:56 +0000 (UTC)
-Date: Fri, 4 Sep 2026 14:49:02 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Py4Ij9FR"
+Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6C8FB1201CE;
+	Fri,  4 Sep 2026 19:15:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id CEA062002A;
+	Fri,  4 Sep 2026 19:15:35 +0000 (UTC)
+Date: Fri, 4 Sep 2026 15:16:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH] tracing: Fix comment in tracing_buffers_splice_read()
-Message-ID: <20260904144902.506862a1@gandalf.local.home>
+Subject: [PATCH] ring-buffer: Use a macro for static buffer bits
+Message-ID: <20260904151641.17eae0aa@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,53 +37,58 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: F2DDA2000F
-X-Stat-Signature: xe3wc7murc7zxzefq6b37zeomy49cmuu
-X-Rspamd-Server: rspamout03
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: CEA062002A
+X-Stat-Signature: om3stoke54uwziekxrzie33okgtuugp5
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+fkc77siUfI8tds78EWHWM6xAMVDFqBVs=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=WHtUlS/S3IuYsDOaQvCTXzr2xQjMj9MLFo+p/8KdbxQ=; b=PjbFcQdwpdcPw6mIdA9guZWfXkpvruMK2plELaMm8jQ7dRjZRQ3+XbFY1BgwMUdDlG4QN/pt6g7SBcNt9ZDClRUwZCkS4QGl2SsvKEleClam95nJFDCgqNNSo8nUsOssZ3QgKb+vDbUTki/wbHQYAM+D62YdSwUGe7cbFO0nb4U=
-X-HE-Tag: 1788547676-690281
-X-HE-Meta: U2FsdGVkX189116QGrs4UF0+NYBV1sqYWzNTB4gqLtPI3oj0Fv6O7yq5LWsU/lqvtdw8lwHVTr9+K8/w/xQmOnZJ+BbRvV+irgrR8UQ0ATwVOyZHyZSPhrF+fTbyQTyLxP+scH7pR+cOy2K+/2+IJUmuAAl0bLUg+yIKri03ci3zSqnTKU+G4RHy0hIAHHSmV7qtq4VDj711G/VahECCxLJVJgXv/55TE5P6Z9bP8QahSy5iLXpwpNv/NwVAs4Ms+aJMdBAsLDSeP/epY/b+vIzbwDRDIx1J1IVTL8KI51Zmb5id5kroQ2DM4CbhOEbQlawPWKYdtzHhaU+knl8rHT9PfXwvguoBLJjDZaliL2XiHFbtWQ6n1RpdxrEf2GL1ye7v3mJfdaZusG3NvhMapA==
+X-Session-ID: U2FsdGVkX18v7hUYL6adM/ScCQsoq+/rQma261e7Pto=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=3B9mKRTJEn62anHtOeqV1zOb4pQdNUm4Nc45WbFuPA4=; b=Py4Ij9FRq9O2fV2RHrMpDj5FSdhK3ZavpFCeYwzJ4HV4gzqZmamv71grbmNvk+kcV22w3uxaCTDpPBQ/SvVMmuZT7WdHqj2hMs690WgM5AEVOi4YpSUs8AcLYyfKb9QosCk0FfR469NazDB72leLHPEJwAmXNcCHGG9nHU9wnoM=
+X-HE-Tag: 1788549335-690543
+X-HE-Meta: U2FsdGVkX1+gwCjavrRpAH6KEWsIbdI+p9wfHHgjNZyyBr6alqKyuYp6xm7CQf+CmaD2NfAyouEx98ls50HJplmiRkdx5f5LY2tlW4IKhYhWsF0hRuFq6vd4MYeASjxsLKMs7ApzPU72R9Ti2XP665gRjnlGsngtpuAE4DgpvLVwLkOKeEIse0JEpDO6dR28vOFjbK9LEKbBpBvjNgFjiCG6wLk66RxL+zZQu/3qKOtH1j7PBrOCh9XcgbPXYXKoEqh61B0LFnbzm89oepkcrL6ql8byRxHUtrAeFmIr0kKLfE55wPcT03J/GPuTYCKwzrCT2XfDEkvT1f4iOdrlMk1z5ObCKHP9cml5rMvEUkIcyT0ibzhkiLHjuAcxw8iG
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The comment about returning an error if the read fails on the first
-iteration is slightly incorrect. It makes it sound like the only reason it
-could fail on a later iteration is if the subbuf order changed. That is
-incorrect, it could also fail if the length passed in was not a multiple
-of the subbuf size. Fix the comment.
+Instead of hard coding 30 for the number of bits used for the static
+buffer ids in two places, create a macro. This way if it changes in the
+future, it will change in all the locations that use it.
 
-Link: https://lore.kernel.org/all/20260904143527.40e73d36@gandalf.local.home/
-Fixes: TBD
 Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ kernel/trace/ring_buffer.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b26c4c277ce5..8658cad53cb5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7296,11 +7296,13 @@ ssize_t tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 			r = ring_buffer_read_page(ref->buffer, ref->rpage, len, iter->cpu_file, 1);
- 		} else if (!i) {
- 			/*
--			 * We failed to read because the length is too small
--			 * or unaligned. If this is the first iteration, it's
--			 * an invalid userspace input. Otherwise, this is due
--			 * to a subbuf order change. Do not report an error
--			 * and just finish the read.
-+			 * If this fails to read on the first iteration, it
-+			 * means the length was too small and an error should
-+			 * be returned to user space. Otherwise, at least
-+			 * one sub-buffer was successfully read but this failed
-+			 * due to either the length was unaligned or the
-+			 * subbuf order changed. Either case, do not report
-+			 * an error.
- 			 */
- 			ret = -EINVAL;
- 		}
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 220b8405adfc..b88c75b52e8f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -335,6 +335,9 @@ static __always_inline unsigned int rb_read_page_capacity(struct buffer_data_rea
+ 	return (PAGE_SIZE << rpage->order) - BUF_PAGE_HDR_SIZE;
+ }
+ 
++/* The number of bits for static buffer ids */
++#define RB_STATIC_BITS	30
++
+ /*
+  * Note, the buffer_page list must be first. The buffer pages
+  * are allocated in cache lines, which means that each buffer
+@@ -350,7 +353,7 @@ struct buffer_page {
+ 	local_t		 entries;	/* entries on this page */
+ 	unsigned long	 real_end;	/* real end of data */
+ 	unsigned	 order;		/* order of the page */
+-	u32		 id:30;		/* ID for external mapping */
++	u32		 id:RB_STATIC_BITS; /* ID for external mapping */
+ 	u32		 range:1;	/* Mapped via a range */
+ 	struct buffer_data_page *page;	/* Actual data page */
+ };
+@@ -663,7 +666,7 @@ static unsigned long rb_static_max_pages(void)
+ 	 * Static ring buffers are using bpage::id and must account for the
+ 	 * reader page.
+ 	 */
+-	return (1UL << 30) - 1;
++	return (1UL << RB_STATIC_BITS) - 1;
+ }
+ 
+ struct ring_buffer_iter {
 -- 
 2.53.0
 
