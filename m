@@ -1,235 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5241D43637C;
-	Fri,  4 Sep 2026 09:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0B343F4A2
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 09:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788513562; cv=none; b=XfABXQxI9z7niixpmQXtnaaPAioRvt4jFv0pemEtxqm+aUEVYwQAKlCdm9JkViA+OOmaZQc4/oNVnQF0syVnpBPTpmkMvwWRRTZaUYaS5hguvBGW7MUXPoDN/tQFWxB+ZmJxM2ceaj5nypScjNWxUsmhNa47/fvxNhXbPxujOc0=
+	t=1788513907; cv=none; b=I7rVhMnvOfo8HJRToL8QIuiIrj9GhVYbi0HFAa26NgONUqJRai8w7W09vAQRWyqRH3+Nv+B6SiXE1UHIscEE50ZnJyRFqwVuHAfiWXTJJL73ndjNBFzAwxh/mgYLAUGnm2iWoPAQXqAt0+3w0m5tjsDEnHa2sQsve2HIjKIxZWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788513562; c=relaxed/simple;
-	bh=Ciu3EUMUtyrEFe1yr//0MMiw5+oF+KjxR5BN8wbUdAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WB4tZbtonNLlvsk3S84ULkCYWkBB39WHAeNjh/SQMqR5FJfzPyTHvzT664s4uuTWhfNJba+qYmn6cJS1ov0/3Si/Ds1ZWgiQk3uMek8D+MOicxFo3PZpU05wjR+COM9Zw5mSMl/3eR/9kRpmBsdeoKNMG2FPhzzkaYNMc+6+3Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RsElDCme; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788513907; c=relaxed/simple;
+	bh=2X6NTd5o5cahP7ikmbjYlSQ9HSpozpUrhg4lY0w+n/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cl37FoXhK4UhJA5oqxWJEK2H76PjlFJP5NmIZ6cwg3GnlVed22Muu+o4vy568h6s52xcC/Q7Ly4W4r2eeX5vyO3e8ibJRiOHgC26lDYEGbkS4dxVYf568rJ2R1EUHwBI93zeBB40JakaGs/m21pzLZHq9bdp8RIOS9SrhFYnWoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PmqGs3Jf; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RsElDCme"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788513560; x=1820049560;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ciu3EUMUtyrEFe1yr//0MMiw5+oF+KjxR5BN8wbUdAE=;
-  b=RsElDCmeaRg7oFk7AIHfvLhglCC4GdtqIoDC8dWlFTaZ6p9Z8daw994w
-   /GuzDkyudvSY/wn4fo8khEIK4tAokIofo9Vc+fzVmGrtAmNbCPRnBvxzK
-   zaMFM/OjZOAPUWceH+W2zPGuh+H/pCVT1LLnFD28lyXweAshyV5HMv8JU
-   1fdhpVi6Y15y7LyCexEA3L5qVnq2pl8tdukSYM5OzeBKc9iqb7o22Yl1S
-   /n5TSaThldYPZt/VGJ3gPImSi3lSIoX+ZA8dVRpNG7cYCFbFdxVeoUlVc
-   QcdEdtvd0IcIqDuSbK9Hmco2v2mhej2vSCQkzZOO6LpQusEVcZX6Xlnri
-   w==;
-X-CSE-ConnectionGUID: u1lCC2tbRWCbwEAIErAqrA==
-X-CSE-MsgGUID: TGCessxhTXq60/SsXcMDuQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="88859559"
-X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="88859559"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2026 02:19:19 -0700
-X-CSE-ConnectionGUID: VxyZgL0WS8O2yrnlkTwwVw==
-X-CSE-MsgGUID: gb9jsf5TTzWkjd20oz81HQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="268676438"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.224])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2026 02:19:11 -0700
-Date: Fri, 4 Sep 2026 12:19:08 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Frank.Li@oss.nxp.com
-Cc: Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thierry Reding <thierry.reding@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Kelvin Cao <kelvin.cao@microchip.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 3/3] dmaengine: add union chan_dev for dma_chan::dev
- for clarity
-Message-ID: <apqNDHoNt09QYJe7@ashevche-desk.local>
-References: <20260903-dma-chan_dev-rename-v2-0-0db305b6c716@nxp.com>
- <20260903-dma-chan_dev-rename-v2-3-0db305b6c716@nxp.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PmqGs3Jf"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4998b5a63e2so8330675e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 02:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1788513903; x=1789118703; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=juEQFS8o8HO1Is63IJWO2O6D58EgoESYis0VW0w9IIA=;
+        b=PmqGs3Jfjcm9RsIObXqIelgKvAwX3JWpJvG+mRoBbpCUVMAZkBfkukImAGg6duqEXF
+         2/NotoUTM9I9ejF13/4eUmF3m5xFuBTTNIQi6wWO8Ex6PoPY1PbHzGYW13x8Ee5jKIJf
+         5DkcdCWxjvwqaS//asktGFgdKxwZf7T1amMonkktp2BydnZW87DoFc3k9M5a73/vYknx
+         RkV0UK3cJAk0qkF8uOGpFm4bjoWrn0gu/1rVkutXIXFWouC6GlpfoSv+exiWDmCmHzM3
+         p58D6orPCFIJo/yLxXr0vvqLQvARpXLvsbNvlBN+yQ+Xdpu1OWofk+WziZClvMyDfYD2
+         jSxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788513903; x=1789118703;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=juEQFS8o8HO1Is63IJWO2O6D58EgoESYis0VW0w9IIA=;
+        b=fU/DTD+aTWyhaohtH/sLI710amhhVmt1g+GK8zHeGN+LxgDbRi9BvwSQWkvg06L9gO
+         dv5oXhg/V7pCkMoAuMRJzPQM5tCw5D0CA8XjgEiKiH11SnmjNY2VfASMEU06N41TaBOv
+         Sfa78I+SG6XCRG1O6vgwd7g+gvi2jOl0XvgkcngLBLVmhkwnHtQkH02RflJ7nLgZen0q
+         emXQbGf0lpD4I/eP+GRTvc9YZKWZEMtPqFjZbyoHPr8zmvm4h4XM5yz4KOSXx317+ya9
+         bWjnFmfEff1IDYXuEcqkei+/p0nJSg2l/bE9/YN52ZbgZ+0PQ8wW/k3R6hPJEFDn3sKc
+         yz0w==
+X-Forwarded-Encrypted: i=1; AKwUvBwiESJ9H/vUQrPsmiVpdTmAZc/BjohyinJge/o9g/HU0lOUKxObEuStBN8N5TAlHt58NyfJYcOMn085IgQq6QhILMw=@vger.kernel.org
+X-Gm-Message-State: AFuF++kpQPz8Vsq3wEz794SuU+HvAbA2Oqxgc5vS6oKKJXB8cXg29hI8
+	zHMMxnsiK7xdN1qEMc7rxl1AFxpU7Enrb/81J2M38Q3UoNIJZ2KZ7k3d/jYMh+fEk2E=
+X-Gm-Gg: AYBFou3Z7ZSIvXzUjdjFg/YIRzawHfpNp9FAb+YY3WhnmSnQPZOmYjHSKxsEyNlI5Kv
+	Az7ZxsPlZ+CLD/LMmguM9L187VhMQ6lQRU+yLQBL54xbiG95Rkj1/Zz43ACX4dOcuEug1sLeicF
+	eW7afSGQ4592avDUFJJ4DC3ThiVCxpRCi9v+ahzpGkPbyA1agXcaNbl4EIOFpljJZC7BZJ2XCSJ
+	fo0k7kPmLm76QoFPAumHTxNXljMZ0HsHpV+cngQq9n9rvMql/LAiC0zjKnKOFSMh7WUuJ2juE71
+	4hD1i/3rDZBIJtJgm4FmPf4xTX6dStemxYEP2xjOmFqhLcDllsfsWzMzqi52wiAVKwmmoRue4nA
+	Zb2ui19lsIfmlryC4S3cClRPcZsCp/zCRvfYMLqJC7FmS/GRu75Fk74/PlWJymEiuXaOPaSA+mV
+	TeaknqbTNFiILfVcjayBYUgyQTsL4k5Wo6OCaA8d6YgXK9Ld0aVrlKODnbQqNOCbBk73/hK9txk
+	hO38czkGkOO+NU6gXHFPk1Ukv3AcH338U0=
+X-Received: by 2002:a05:600c:474a:b0:499:79b9:e220 with SMTP id 5b1f17b1804b1-49cf825d722mr44304815e9.10.1788513903166;
+        Fri, 04 Sep 2026 02:25:03 -0700 (PDT)
+Received: from ?IPV6:2a07:de40:8100:0:fc6c:f9a2:4a0a:6354? ([2001:af0:8000:1409:193:86:92:181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cf770fcf5sm52989345e9.6.2026.09.04.02.25.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2026 02:25:02 -0700 (PDT)
+Message-ID: <a79a6a06-cc48-4036-882d-95e9b4cc01cf@suse.com>
+Date: Fri, 4 Sep 2026 11:25:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260903-dma-chan_dev-rename-v2-3-0db305b6c716@nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] module: pull out add_taint_module() to be public
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Bradley Morgan <brads@mainlining.org>, Aleksandr Nogikh <nogikh@google.com>,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ Johan Hovold <johan@kernel.org>
+References: <20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org>
+ <20260904-bind_taint-v3-1-30025465f38a@linuxfoundation.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20260904-bind_taint-v3-1-30025465f38a@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 03, 2026 at 04:53:13PM -0400, Frank.Li@oss.nxp.com wrote:
-
-> The current dma_chan structure contains both "device" and "dev". So
+On 9/4/26 7:10 AM, Greg Kroah-Hartman wrote:
+> Other kernel code might want to call add_taint_module() so pull it out
+> and make it global.  If modules are not enabled, this defaults to a call
+> to add_taint(), so all is fine.
 > 
-> chan->device->dev refers to the DMA engine device.
-> chan->dev->device refers to the per-channel device instance.
+> Reviewed-by: Johan Hovold <johan@kernel.org>
+> Tested-by: Johan Hovold <johan@kernel.org>
+> Reviewed-by: Bradley Morgan <brads@mainlining.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  include/linux/module.h | 10 ++++++++++
+>  kernel/module/main.c   | 16 +++++++++++++---
+>  2 files changed, 23 insertions(+), 3 deletions(-)
 > 
-> Their similar naming makes the distinction unclear and increases reader
-> confusion.
-> 
-> Add union dma_chan::chan_dev to make its purpose explicit and clearly
-> identify it as the per-channel device. After all user switch to chan_dev,
-> union and dma_chan::dev will be removed.
-> 
-> Update the kernel-doc accordingly. Besides its sysfs usage, the per-channel
-> device is also used by some DMA engine drivers for IOMMU mapping and
-> therefore deserves a more accurate description.
-> 
-> No functional change intended.
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 96cc98568eea..f6f90cd88f15 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -29,6 +29,7 @@
+>  #include <linux/srcu.h>
+>  #include <linux/static_call_types.h>
+>  #include <linux/dynamic_debug.h>
+> +#include <linux/panic.h>
 
-...
+Note that I'm working on cleaning up linux/module.h to reduce its
+preprocessed size. The main motivation is to shorten the compilation
+time of all the small *.mod.c files. Since linux/module.h already
+includes linux/panic.h indirectly, adding this include explicitly seems
+fine to me for now. In the future, I think we should introduce something
+like kernel/module/stubs.c where the CONFIG_MODULES=n variants of
+add_taint_module() and other similar functions can live without bloating
+linux/module.h.
 
->  static inline struct device *chan2dev(struct axi_dma_chan *chan)
->  {
-> -	return &chan->vc.chan.dev->device;
-> +	return &chan->vc.chan.chan_dev->device;
->  }
-
-Looking at this and below I think we need a common helper(s)
-
->  static struct device *chan2dev(struct loongson2_cmc_dma_chan *lchan)
->  {
-> -	return &lchan->vchan.chan.dev->device;
-> +	return &lchan->vchan.chan.chan_dev->device;
->  }
-
->  	({								\
->  		u32 _v;							\
->  		_v = readl_relaxed((phy)->base + _reg((phy)->idx));	\
-> -		dev_vdbg(&phy->vchan->vc.chan.dev->device,		\
-> +		dev_vdbg(&phy->vchan->vc.chan.chan_dev->device,		\
->  			 "%s(): readl(%s): 0x%08x\n", __func__, #_reg,	\
->  			  _v);						\
->  		_v;							\
-
->  #define phy_writel(phy, val, _reg)					\
->  	do {								\
->  		writel((val), (phy)->base + _reg((phy)->idx));		\
-> -		dev_vdbg(&phy->vchan->vc.chan.dev->device,		\
-> +		dev_vdbg(&phy->vchan->vc.chan.chan_dev->device,		\
->  			 "%s(): writel(0x%08x, %s)\n",			\
->  			 __func__, (u32)(val), #_reg);			\
->  	} while (0)
->  #define phy_writel_relaxed(phy, val, _reg)				\
->  	do {								\
->  		writel_relaxed((val), (phy)->base + _reg((phy)->idx));	\
-> -		dev_vdbg(&phy->vchan->vc.chan.dev->device,		\
-> +		dev_vdbg(&phy->vchan->vc.chan.chan_dev->device,		\
->  			 "%s(): writel_relaxed(0x%08x, %s)\n",		\
->  			 __func__, (u32)(val), #_reg);			\
->  	} while (0)
-
->  out_unlock:
->  	spin_unlock_irqrestore(&pdev->phy_lock, flags);
-> -	dev_dbg(&pchan->vc.chan.dev->device,
-> +	dev_dbg(&pchan->vc.chan.chan_dev->device,
->  		"%s(): phy=%p(%d)\n", __func__, found,
->  		found ? found->idx : -1);
 >  
-
-> -	dev_dbg(&chan->vc.chan.dev->device,
-> +	dev_dbg(&chan->vc.chan.chan_dev->device,
->  		"%s(): freeing\n", __func__);
-
-> -	dev_dbg(&phy->vchan->vc.chan.dev->device,
-> +	dev_dbg(&phy->vchan->vc.chan.chan_dev->device,
->  		"%s(); phy=%p(%d) misaligned=%d\n", __func__,
->  		phy, phy->idx, misaligned);
-
-> -	dev_dbg(&phy->vchan->vc.chan.dev->device,
-> +	dev_dbg(&phy->vchan->vc.chan.chan_dev->device,
->  		"%s(): phy=%p(%d)\n", __func__, phy, phy->idx);
-
-> -	dev_dbg(&chan->vc.chan.dev->device,
-> +	dev_dbg(&chan->vc.chan.chan_dev->device,
->  		"%s(): desc=%p\n", __func__, desc);
->  	if (!chan->phy) {
->  		chan->phy = lookup_phy(chan);
->  		if (!chan->phy) {
-> -			dev_dbg(&chan->vc.chan.dev->device,
-> +			dev_dbg(&chan->vc.chan.chan_dev->device,
->  				"%s(): no free dma channel\n", __func__);
->  			return;
-
-(and so on in this PXA driver)
-
-Besides that we should drop __func__ from all _dbg() messages, that can be
-enabled run-time with help of Dynamic Debug.
-
-So I think this driver requires more prerequisite work.
-
->  static struct device *chan2dev(struct stm32_dma_chan *chan)
+>  #include <linux/percpu.h>
+>  #include <asm/module.h>
+> @@ -770,6 +771,9 @@ static inline bool is_livepatch_module(struct module *mod)
+>  
+>  void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
+>  
+> +void add_taint_module(struct module *mod, unsigned flag,
+> +		      enum lockdep_ok lockdep_ok);
+> +
+>  #else /* !CONFIG_MODULES... */
+>  
+>  static inline struct module *__module_address(unsigned long addr)
+> @@ -877,6 +881,12 @@ static inline bool module_is_coming(struct module *mod)
+>  static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
 >  {
-> -	return &chan->vchan.chan.dev->device;
-> +	return &chan->vchan.chan.chan_dev->device;
 >  }
+> +
+> +static inline void add_taint_module(struct module *mod, unsigned flag,
+> +				    enum lockdep_ok lockdep_ok)
+> +{
+> +	add_taint(flag, lockdep_ok);
+> +}
+>  #endif /* CONFIG_MODULES */
+>  
+>  #ifdef CONFIG_SYSFS
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index d0e1e0bd2ad0..444d990c9983 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -191,11 +191,21 @@ static inline int strong_try_module_get(struct module *mod)
+>  		return -ENOENT;
+>  }
+>  
+> -static inline void add_taint_module(struct module *mod, unsigned flag,
+> -				    enum lockdep_ok lockdep_ok)
+> +/**
+> + * add_taint_module: add a taint flag if not already set for a specific module
+> + * @mod: pointer to the module that caused the problem
+> + * @flag: one of the TAINT_* constants.
+> + * @lockdep_ok: whether lock debugging is still OK.
+> + *
+> + * If something bad has gone wrong, you'll want @lockdebug_ok = false, but for
+> + * some noteworthy-but-not-corrupting cases, it can be set to true.
 
->  static struct device *chan2dev(struct stm32_dma3_chan *chan)
+Nit: The final paragraph is mostly copied from the description of
+add_taint() but I don't think it is quite right. The parameter name
+should be lockdep_ok, not lockdebug_ok and the values are
+LOCKDEP_STILL_OK / LOCKDEP_NOW_UNRELIABLE, not true / false.
+
+I suggest updating this part for both add_taint() and add_taint_module()
+to something like:
+
+ * Use @lockdep_ok = LOCKDEP_NOW_UNRELIABLE if something serious has gone wrong.
+ * For noteworthy but non-corrupting cases, use LOCKDEP_STILL_OK instead.
+
+> + */
+> +void add_taint_module(struct module *mod, unsigned flag,
+> +		      enum lockdep_ok lockdep_ok)
 >  {
-> -	return &chan->vchan.chan.dev->device;
-> +	return &chan->vchan.chan.chan_dev->device;
+>  	add_taint(flag, lockdep_ok);
+> -	set_bit(flag, &mod->taints);
+> +	if (mod)
+> +		set_bit(flag, &mod->taints);
 >  }
+>  
+>  /*
+> 
 
->  static struct device *chan2dev(struct stm32_mdma_chan *chan)
->  {
-> -	return &chan->vchan.chan.dev->device;
-> +	return &chan->vchan.chan.chan_dev->device;
->  }
+Otherwise, this looks ok to me. Feel free to add:
 
-...
-
-Something like
-
-vchan_to_device(vchan)
-{
-	return &vchan->chan.chan_dev->device;
-}
-
-
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Petr
