@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E8D3B7B7B;
-	Fri,  4 Sep 2026 05:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FEE3AE198;
+	Fri,  4 Sep 2026 05:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788499284; cv=none; b=jMvfXHxjQLSKFelNlZdmh+qeDYyZ0wRZ56WESEgxjzbS3tdH0Lx2Mw1qaRKfNa6S+3F0ZkdivPcYTWvtz+yA4FDDavgsq37DLS05TrJLGhzTkbhg72nHgnzv1TPwW3Qae0kDoHtwWwe4zxNE85kTTkEIk6JhGSOUmLu15e4LIDM=
+	t=1788499330; cv=none; b=P2RAETzOwbzjueqTsOaKZvXF8n1pn195G4XNpm3n0gT41NNbUnMCu2Ids7MIrD8tHl+HGK1sI/au7/hJv3kF3FkT4yBMVoc4gV3g9w1EVCKwK0MWdN0VHulufo6i5asq2uOmM3Nu2ZTCZzcimJYVuc+p7VSFa+WsrThm1/Ymmdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788499284; c=relaxed/simple;
-	bh=X5ozIG10Ce9hsx/METcFRP5F7yooikx661AOjjl4qbI=;
+	s=arc-20240116; t=1788499330; c=relaxed/simple;
+	bh=rTrt+q6TS6h+DCj42AoStwYcKK631TAq2PvTHqFqwXU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tPhmrUVvsSArQD5TFZyVDPrX+F9ySAKIOlxiVY8ayeEXjhYQmPA9iqdIl5IujR03D2rPPxMi3XIDkGcb7uvVxVM0oNwulQ/UGxpUIITHQQTC2jlKIHIo66U4TxtUPZsX87OHQBIHPh3kNbemF5c/Lt/jQ2g6nvOfxCZRgczaYXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2gaM5DG; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=KCG5EBI22XKQcftbRMt9ib7KNoh8E7dhqiLtOGFa/p2XuAMwNB1HaPMdzMQPcuWHUxKPb6wmYBHBQcHRCDsf0mMfU9PGv3geAjwkzPHksiWoXp6zkd61yfwrELnoOwKGLWfzwDQAmk3/fCTu8rYzi5ToWb++EAdr7fQ4NX/jHbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrFtsWTM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2gaM5DG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E601F00AC4;
-	Fri,  4 Sep 2026 05:21:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrFtsWTM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF4211F00A3E;
+	Fri,  4 Sep 2026 05:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788499283;
-	bh=D9crCEWL5vnXxb2g5bv61naRSiuM325jlq1qnWvLlBs=;
+	s=k20260515; t=1788499329;
+	bh=gok6+JC7+Em+ZzbkORBDiuruKhcq/J5gIrEeQeceWAg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Y2gaM5DGvDl0GWPW8xEOqeIMfxBc5KH8Ij2fgXvSBRCFcGut/9ALQSn+7PBRfsj+/
-	 Eb3eFQ9TgqyjkhOtHqbBYsASu5qxdQqjE4k9tmAnBveHy18FwO4MJj9o1cwgUhdQXG
-	 RrfVCLQLOFmrJQfAx7p4StPNBMp5cPvqQ+58RmZhaAZtAWtmqxYh+Nk0Ble3ogL5oE
-	 adDT+YMqb905bIdAHXaC6XyDqRawmRLL0rc6VqkiMt+fFLMBuq/w0mUDCvQZ9Sv762
-	 sz5/FTjidMWeOlevCv0YTAROrYMg4ceK5VI1H7EmXzkpK44kvaXsVuSpAw5RpNE4G8
-	 mzd4xxIHr7uJA==
+	b=UrFtsWTMTctk/v+bqdTg8WA9CLmqkVgigya1TYq2LLdcdxYNOWwZ7nz610ifvqIZt
+	 FwtUOqpdgzbEID4y8HAVWiVtran5fF4bBaB7mkVGaJCxbCnMhaYgVtH/u7e3SIN9df
+	 qagXwtkEMO1cJ4xG+61QxEdQfvf1WZ9sduxVRSQ3G++CLDAQtuG6cTo5pxs+7HSp9y
+	 7C6yNDXfewOw08CgxemGvwSk3/CH3mrfw9mJw9HcQKRitr9ogs/sTE8oAUZrMRuDhA
+	 s3smOiKnzJtJK21j+CKTY3Hm5qj30YaxnLQ39mdRsQ3vPUv2VjZPxP1APfuRCWiGyB
+	 0oUQUmbjZCOkg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/2] module: pull out add_taint_module() to be public
+Subject: Re: [PATCH v3 2/2] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Cc: linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260904-bind_taint-v3-1-30025465f38a@linuxfoundation.org>
+In-Reply-To: <20260904-bind_taint-v3-2-30025465f38a@linuxfoundation.org>
 References: <20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org>
- <20260904-bind_taint-v3-1-30025465f38a@linuxfoundation.org>
+ <20260904-bind_taint-v3-2-30025465f38a@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 05:21:22 +0000
-Message-Id: <20260904052123.27E601F00AC4@smtp.kernel.org>
+Date: Fri, 04 Sep 2026 05:22:08 +0000
+Message-Id: <20260904052208.DF4211F00A3E@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -46,59 +47,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The newly added docstring for `add_taint_module` provides danger=
-ously misleading advice regarding the `lockdep_ok` parameter, treating an e=
-num as a boolean and effectively reversing its logical meaning.
+- [High] Tainting the kernel unconditionally on any sysfs bind/unbind opera=
+tion marks legitimate, standard virtualization and networking setups as tai=
+nted.
 --
 
-commit 2864484c56cc4bda3a7f73ba92dcb0a54f6a1232
+commit 5047195fb07d09f62b1e24672350bc622948fa9e
 Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: module: pull out add_taint_module() to be public
 
-This commit makes add_taint_module() public so other kernel code can call
-it, providing a fallback to add_taint() when modules are not enabled.
+driver core: add TAINT_FORCED_BIND for when userspace manually messes with =
+devices and drivers
 
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index d0e1e0bd2ad06..444d990c99832 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
+This commit adds a new TAINT_FORCED_BIND flag to track when userspace binds
+or unbinds devices via sysfs, aiming to flag potentially unstable fuzzing or
+unsupported states. It sets this taint flag unconditionally in the sysfs bi=
+nd
+and unbind store callbacks.
+
+> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+> index d17bd91490ee4..c51ad96d4de4b 100644
+> --- a/drivers/base/bus.c
+> +++ b/drivers/base/bus.c
 [ ... ]
-> +/**
-> + * add_taint_module: add a taint flag if not already set for a specific =
-module
-> + * @mod: pointer to the module that caused the problem
-> + * @flag: one of the TAINT_* constants.
-> + * @lockdep_ok: whether lock debugging is still OK.
-> + *
-> + * If something bad has gone wrong, you'll want @lockdebug_ok =3D false,=
- but for
-> + * some noteworthy-but-not-corrupting cases, it can be set to true.
-> + */
+> @@ -241,6 +242,7 @@ static ssize_t unbind_store(struct device_driver *drv=
+, const char *buf,
+> =20
+>  	dev =3D bus_find_device_by_name(bus, NULL, buf);
+>  	if (dev && dev->driver =3D=3D drv) {
+> +		add_taint_module(drv->owner, TAINT_FORCED_BIND, LOCKDEP_STILL_OK);
 
-[Severity: Medium]
-Does this documentation invert the logical meaning of the lockdep_ok enum?
+[Severity: High]
+Will this unconditionally taint the kernel during officially supported unbi=
+nd
+operations? The sysfs unbind file is the documented UAPI for legitimate
+subsystems and setups like VFIO PCI passthrough, DPDK, and USB over IP.=20
 
-Since lockdep_ok is an enum where LOCKDEP_STILL_OK is 0 and
-LOCKDEP_NOW_UNRELIABLE is 1, a developer following this advice and passing
-false (0) when a serious error occurs will inadvertently leave lock
-debugging enabled. Passing true (1) for minor issues will unintentionally
-disable lock debugging.
+Applying this taint for standard operations might cause normal enterprise
+environments to be permanently marked as tainted, causing valid bug reports
+to be ignored, and could trigger panics on systems running with panic_on_ta=
+int
+enabled.
 
-Would it be clearer to document the explicit enum values rather than
-suggesting boolean true and false?
+>  		device_driver_detach(dev);
+>  		err =3D count;
+>  	}
+[ ... ]
+> @@ -264,6 +266,7 @@ static ssize_t bind_store(struct device_driver *drv, =
+const char *buf,
+> =20
+>  	dev =3D bus_find_device_by_name(bus, NULL, buf);
+>  	if (dev && driver_match_device(drv, dev)) {
+> +		add_taint_module(drv->owner, TAINT_FORCED_BIND, LOCKDEP_STILL_OK);
 
-Also, there is a small typo in the parameter name here: @lockdebug_ok
-is used instead of @lockdep_ok.
+[Severity: High]
+Similarly, will this mark the kernel as tainted when standard virtualization
+daemons or userspace networking tools write to the bind file? Is there a way
+to distinguish between abusive fuzzing attempts and normal administrative
+actions so we do not invalidate valid bug reports from these common setups?
 
-> +void add_taint_module(struct module *mod, unsigned flag,
-> +		      enum lockdep_ok lockdep_ok)
->  {
->  	add_taint(flag, lockdep_ok);
-> -	set_bit(flag, &mod->taints);
-> +	if (mod)
-> +		set_bit(flag, &mod->taints);
->  }
+>  		err =3D device_driver_attach(drv, dev);
+>  		if (!err) {
+>  			/* success */
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-bind_taint=
--v3-0-30025465f38a@linuxfoundation.org?part=3D1
+-v3-0-30025465f38a@linuxfoundation.org?part=3D2
