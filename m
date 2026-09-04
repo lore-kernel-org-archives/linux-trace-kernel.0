@@ -1,93 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8B742124D;
-	Fri,  4 Sep 2026 11:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E138947B43A;
+	Fri,  4 Sep 2026 11:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788521934; cv=none; b=L8IOl4mpkKc4pt5V7Lquz8TP2s13u/O2+m8kmqPitIP720O7/xzyy9uTDXfz5TXylBcI+a5uXHreGGjgAnFGUIcjQ+I9DSQHDWSxvrEeOKitCNHxySt502jkZ6ram2oppgLix4K2i57IXMBtPlF45LIUHUAyqFh+i8zkLJ3bQ00=
+	t=1788522081; cv=none; b=mkXWooj5B11HJyUcJnfxKqFvtGM9buVx3TT0K+/Gk6i7rD9Qx2HdHcfKOL1Ol56QsBQFE+U210H7Cwfwm/qLPwUZuxSXqZcQVlbIfWAnEklh4lrzB/KLa/iWCnPtTlhfeAi6t9mCI5NeJKKeFx/plvQjodoQ6qyKRkucPLsZrOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788521934; c=relaxed/simple;
-	bh=sI88re9mQH9GGvNdQuqSOyqwac+FJGSZRs1mUIUeR4w=;
+	s=arc-20240116; t=1788522081; c=relaxed/simple;
+	bh=Q1NvEJXFyy5z7/NMmrTiOmbn6NbJe0qgf75i2SY26DE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GkUg4QPwqdho71NNwlSd+UcvqD0WpduP81hdnGUbVZdoeAdKs9Y9ZDunqmkZQkwVo1f9u+WEmsi+imm2RYgwwoHTeP7nMozglc7qnByFnoqOHFuGhDdb2kQNWLHfRa/kCw2upGn3a/vcFpILSFlOy+b7KbM5JoNaSXlp/5D6hQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UqaD9GhP; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zn6cBI33ifgQz42Kvg0tPcYOylljuaCRVnHw9jYj9iHWZtPK1OwH2qZ7nlZ26zfLdB0xRwLRX4iLkVd3UD1GN4u+EsjDE/nbcxuGYj8GZ3nOWeAEZsI5/LJm9jeD+byc4BWqy31IkAnZ4PPe4vWIZPnFBh2hLhIU8d1ncdcEez8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AiADOeqn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UqaD9GhP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788521931; x=1820057931;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sI88re9mQH9GGvNdQuqSOyqwac+FJGSZRs1mUIUeR4w=;
-  b=UqaD9GhPIW/SEAoEvQoN/3I3/quz0Twf58glhUF4UbcXAPhfSIYEFom8
-   asi/GlcCJpRE4/DOAHGUgb+lzY83/2fJFiSVHp3kIyLRaB6hWCpIa8k8q
-   2t2iYNFuw9Dr7Hk9t/y1vRxsLA5OJ2KRzi9R+3Red0tuBJTXGQyPFVZnm
-   1d+aS26JkqiJQKkrpvB8p2z/WALCvpkcItvZe9BoKVWDKKGJnpx8a3gNZ
-   XYXsb57cpHTJlPkVqGh9f8Pow1nOt4cx7pZ/9pUxOGI7HKrGZcjEOjNDs
-   UUsJEjk6FIPLMA3G8Trl1a4ffLKBe9mI1SCtb+QVB9iwP4XBRbXs88tcv
-   Q==;
-X-CSE-ConnectionGUID: LatcrKqzSN2OAwTI6oWWHw==
-X-CSE-MsgGUID: FFbvIKOaRBitth8s6SHZTw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="92720050"
-X-IronPort-AV: E=Sophos;i="6.25,262,1779174000"; 
-   d="scan'208";a="92720050"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2026 04:38:50 -0700
-X-CSE-ConnectionGUID: ObP9eg0VQSCbRIFJ00EGKA==
-X-CSE-MsgGUID: UlijwXHGRmWAqOZ/7kly8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,262,1779174000"; 
-   d="scan'208";a="268698798"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.224])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2026 04:38:42 -0700
-Date: Fri, 4 Sep 2026 14:38:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: Frank.Li@oss.nxp.com, Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AiADOeqn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6381A1F00A3E;
+	Fri,  4 Sep 2026 11:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788522079;
+	bh=AVcKEaA4QKNBqPQxG7kCkdRB1jRFfjMN2gDUjmG9sC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=AiADOeqnGMHeLkfaGNji1T3Dj3iV1UB/ASC2xLDgi7AfO3Xx5O8iq6YxSwXlm2j4e
+	 +kp9dklRJ7+iqSVX2PJ5wPUaOLeh0xL3AG7uZXSajQB8Ueai6Q/MwLs+2KsniKywT4
+	 ng5I34uDzQcmVKk7eyz2TXtpx4Ht+KP87LPZnCDOBaW8k2Rs8suvD9hMRM0s3nI03H
+	 khymos7oQULP1MD/xvWmlFFMgkHQ9XejH5YMHiX3uh0rmk92ZYbQ98AlvpLzDSohTg
+	 v3IUX38C/8KGCNvpFnTzHhpBe9kqorbNRNmkYYevlia5fsjiGh0O87jfvbAnvMeM0J
+	 1APOUvIK5UabA==
+Date: Fri, 4 Sep 2026 12:41:05 +0100
+From: Will Deacon <will@kernel.org>
+To: Thierry Reding <thierry.reding@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thierry Reding <thierry.reding@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Kelvin Cao <kelvin.cao@microchip.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-actions@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 1/3] dmaengine: vchan: add vchan_chan_name() to get
- channel device name
-Message-ID: <apqtvq2Xov1LKBPN@ashevche-desk.local>
-References: <20260903-dma-chan_dev-rename-v2-0-0db305b6c716@nxp.com>
- <20260903-dma-chan_dev-rename-v2-1-0db305b6c716@nxp.com>
- <apqKgda7dW_JXolJ@ashevche-desk.local>
- <be376690-5219-4bf3-8ed7-02a49cee0e30@foss.st.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chun Ng <chunn@nvidia.com>, Mark Rutland <mark.rutland@arm.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thierry Reding <treding@nvidia.com>, vdonnefort@google.com
+Subject: Re: [PATCH v6 00/12] dma-buf: heaps: Add support for Tegra VPR
+Message-ID: <apquUWgrD9C2jWQ0@willie-the-truck>
+References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -96,60 +89,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be376690-5219-4bf3-8ed7-02a49cee0e30@foss.st.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
 
-On Fri, Sep 04, 2026 at 11:26:37AM +0200, Amelie Delaunay wrote:
-> On 9/4/26 11:08, Andy Shevchenko wrote:
-> > On Thu, Sep 03, 2026 at 04:53:11PM -0400, Frank.Li@oss.nxp.com wrote:
-> > 
-> > > Introduce vchan_chan_name() to obtain the DMA channel device name.
-> > > 
-> > > Use a dedicated helper instead of directly accessing dma_chan::dev
-> > > so callers remain unaffected by an upcoming rename of the struct member.
-> > 
-> > LGTM,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > ...
-> > 
-> > >   		ret = devm_request_irq(&pdev->dev, chan->irq,
-> > >   				       stm32_dma_chan_irq, 0,
-> > > -				       dev_name(chan2dev(chan)), chan);
-> > > +				       vchan_chan_name(&chan->vchan), chan);
-> > >   		if (ret) {
-> > >   			dev_err(&pdev->dev,
-> > >   				"request_irq failed with err %d channel %d\n",
-> > 
-> > This one...
-> > 
-> > > +++ b/drivers/dma/stm32/stm32-dma3.c
-> > 
-> > >   		ret = devm_request_irq(&pdev->dev, chan->irq, stm32_dma3_chan_irq, 0,
-> > > -				       dev_name(chan2dev(chan)), chan);
-> > > +				       vchan_chan_name(&chan->vchan), chan);
-> > >   		if (ret) {
-> > >   			dev_err_probe(&pdev->dev, ret, "Failed to request channel %s IRQ\n",
-> > > -				      dev_name(chan2dev(chan)));
-> > > +				      vchan_chan_name(&chan->vchan));
-> > >   			goto err_clk_disable;
-> > 
-> > ...and this one are duplicate messages as devm_request*irq() printsr
-> > most of the information.
-> > 
-> > Not sure if there will be a patch to simply drop them.
+Hi Thierry,
+
+On Fri, Sep 04, 2026 at 12:44:51PM +0200, Thierry Reding wrote:
+> This series adds support for the video protection region (VPR) used on
+> Tegra SoC devices. It's a special region of memory that is protected
+> from accesses by the CPU and used to store DRM protected content (both
+> decrypted stream data as well as decoded video frames).
 > 
-> It was the purpose of this series:
-> https://lore.kernel.org/dmaengine/20260709135846.97972-1-panchuang@vivo.com/
+> Patches 1 through 3 add DT binding documentation for the VPR and add the
+> VPR to the list of memory-region items for display, host1x and NVDEC.
+> 
+> The set_direct_map_*_noflush() functions that will be used later in this
+> series are exported in patch 4 so that the drivers that use them can be
+> built as a module.
+> 
+> Patch 5 adds bitmap_allocate(), which is like bitmap_allocate_region()
+> but works on sizes that are not a power of two.
+> 
+> The of_node_to_nid() function is exported in patch 6 because it is used
+> in a later patch adding a driver that can be built as a module.
+> 
+> Patch 7 introduces new APIs needed by the Tegra VPR implementation that
+> allow memory to be allocated at a fixed offset within a CMA area. Tegra
+> VPR needs this in order to implement its own allocator on top of CMA to
+> meet the strict hardware requirements. This replaces the dynamic CMA
+> area creation patch from earlier versions.
 
-Yes, thanks. My point is (independently on who contributes that patch) that
-the piece above may be an unneeded churn due to messages are going to be
-removed. It all relies if that series (a.k.a. patch that removes messages)
-goes first.
+Did you get a chance to see how this could work with Vincent's series:
 
--- 
-With Best Regards,
-Andy Shevchenko
+https://lore.kernel.org/r/20260902104712.2399797-1-vdonnefort@google.com
 
+? I think that should remove your reliance on can_set_direct_map() and
+mean that you can retain block mappings for most of the linear mapping.
 
+Looks like you forgot to cc him, so I added him here.
+
+Cheers,
+
+Will
