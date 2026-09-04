@@ -1,138 +1,132 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFBD4FB9B7
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 15:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2021148C8AF
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 16:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788536210; cv=none; b=AJ/J+F3NBtfYM6OM9kixPZxXoBneWCgMnEFQ0y7T8vUgOdUq7j4FF+SVOd2rkRiE6j0RvQttNRMAza0UpugCJY0s/yWz5QSqseoZGU6QqJtqY5LMRdP1wABJctIF+GXTZ1pOh28x65dx6k5O97QWdYwfFEwgVSMZXdC/LEmlUAk=
+	t=1788538593; cv=none; b=GpMIIg6aa0uvSE4gzjosYDPVtuzFwEqQTf/bsV9uZa7AQYqj4osGIRgKitx3e1eZ/WvdNGP/1kNRnSp0STLqpcilurjDZ/nsvXFVM/jIOY8oQDOR+oXUyzUySGFSpGq5I+tkNF7+UTf93km8q3o3Fyam/lRF0mWRIvgPWi5zKFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788536210; c=relaxed/simple;
-	bh=aaZIP2ylDVjQUtzurgdQ9wq0pNSQxBzXiVQVyeKHPJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xv3SLzogo9UozGOnVMYNDN7VDHIH1l15a8rVO+PX+U3AefvQd8ocgLn5vqp/UuUv9ztL1UUH5Ia8jV4GRksNpA2J+NmNTUEYWAfd0naN5eAKziOM48b7g0MvuaKFxNPXQnocR51lmyiwl0FbvZvRdd7vQVpwwH1PVaEJgrMmMCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CqyFV6Xe; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1788538593; c=relaxed/simple;
+	bh=S3ktW0mgvYiUuy41pETr8cIXqy6mtnT30IxPC+xLG+0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=me+hNbDGxiXIEZ7FGFb4TsJ7ZT+B+0AclUQKYRkCLhWcIhljvCgkCiysEGoXPXbSOqa8N3qxJ+jkLVDute8bULzcBF4+b+rtk6SLFl/W2NVCIFRcBSce/w1RhqKJEaZoH6pSXN4hdPCl3rLl3sao8gkbcszKbHuVUrKNhqDQ8K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5LIOVc2; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CqyFV6Xe"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4843f205a5bso768408f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 08:36:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5LIOVc2"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-97c940ef65cso824629241.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 09:16:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1788536206; x=1789141006; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LsB/pfsHs0wy5wl2WAyEdIegLrat6VbBoQVukEgDfgo=;
-        b=CqyFV6XeE2iPSCzk6+O/m23NWilPd2Smy+mM2MKJ5ZJWNCGy54GcaJto9wt+h9Mg8n
-         zYoTDai2HA42UhptJ+knw9JM5TZXUkRdv8eyad9XFN9zBdYjEsMmrdO51edXk+UKSVUx
-         hMDtEu2ArAwarUPEH3Ve3+hXGXb6XB1vZsb6/cveP6PAMaybbCtMVLK3FZSkbhiEoTVw
-         dlnOhQ7asxq3bNB7o2Z6PmCdS7iHz38dHteLsP0sXlph/NvJq18khoP6ATmpl6NuvSNG
-         +M1GPP1///TqT5k1boTtZGpiXmg3t7iZaagIQ+EmYH8le0CiFCwetKAAfg+o7CKA65x1
-         keug==
+        d=gmail.com; s=20251104; t=1788538591; x=1789143391; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=S3ktW0mgvYiUuy41pETr8cIXqy6mtnT30IxPC+xLG+0=;
+        b=Q5LIOVc2jydu3NQfKcT4lyGyOMiNWV2OoAgdGHXlHq35NzwAYSfwepheqYbQhZK7dS
+         kQefbZAhXLuNLnVQTkwcb2DkK2G53gHl0EGJq/MiDaFyJ1qGupDaWxxbpv/kwG9e71QG
+         J5KH5NBxa6ngviZBotoOFJceD4CQZdzEjCnE7EAWzlwbffBE5YeC7MTMj9vJhAuDMkX2
+         M34YBHZrj3PhD5dtgdJwZnkChRcAUlXDbP5Q8q/vQexjGYODJaT5oZYBVQ4pAXR3idWi
+         BWov1SJIFPc5emxphanmC5umsA3G0mzMWaUQgRDM9MNVY4XPDR7A3OtxjfiSZNxS6YKT
+         D4tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788536206; x=1789141006;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=LsB/pfsHs0wy5wl2WAyEdIegLrat6VbBoQVukEgDfgo=;
-        b=dkLyR65rcX1nGGjvj/m1tqksp6gpXnGjieqCeUilbGb2BdI6jolE3GRnXhsSZlPd5/
-         1VefzudsUW5FzeZW40Pm1vVWTcnztThAH9PL0LcbYvX6rIPDSpERWtEyYYqQHfS0CW/W
-         zcGACWP92snkA9RdcNKlDHXq0R4pafpsgPrjNRp71PPCbU0BXqYP/iX7zKoZNWUNbU2E
-         3QeHGWkUciJN9VBM8zqiGGd0/tm9YiBy+rNVjS+ZJj60fJ15u/EuI1c+4Ni3aT6c+3+9
-         m1cLRPBN07/EiZiX6gjlJc2WVgH83XUs0G3vBSXVoEwfPie/GkFAgchqCSVRV2YWuubT
-         tUvQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxK+dlhU84OOXAjpOc0QYCSBI3hfLAhi5DMZlOpebxZvQKbtO4z/0sEEgqHEOMiwtCGl3dzjzz4n0LM/1iUxFYdU+Y=@vger.kernel.org
-X-Gm-Message-State: AFuF++kl/69Qat8oHjP5t1GrFJC+WftrMp234JITxIjOfz5XQwr+v4Pf
-	rX5XmI4//U2KMLQfsVNFT0R8iVCaFB+nGvhg/MM3n9aozF8uOpOWPUuQFoTf0Hb1t6A=
-X-Gm-Gg: AYBFou1GHFOM7RGo3xEZ5mE8mdCmizCNTkI0T/VB01Ysh9dFfaS38VDcrNMBPNrW01R
-	0gkzirYLun/hObw4It4VFs63jtqgVGdgG7KHW4oxe7jhGcA2M/N/84eH4QniDNkj/g0ROYYB1HK
-	SAJkpwEVT2DLUYTFWDYT+L4zGJBC/YFnogmgC9BB2fjL4Fdxv0cvi5+Xi7xcoME22GxQar0W/nX
-	c9ki4s3S3c/+OJtE/d3jZc8lU9qVKVzzK+POSJqo7MF6q168qjepfzVz5YoSl8+iK98k4g+zcaL
-	Aj3yRbUvFtbeI+d+UDDqsqR+IdUi/NTlj6evfJBi9CGneXvO9U8dMoYqWKJpz80HpLiRK1qy0HL
-	dzRs73hFyr9oZQa3R3k4XA1K5AtJf7gXR14Q2AljoEtt1F1CfM4/V3f7BBjS3sNashjMoF0gw6A
-	vwmGCT+pApbOUdmUT4WkCk1meYkEtc23uB9RmMsWEoN/45TM3tvxT4FMDg5hgV6T0KQ58OHMxz8
-	Mc3I9YkztQLsfAjRGGo5wJ32536QkdepKyIYQ==
-X-Received: by 2002:a05:6000:1863:b0:482:e6b5:61c with SMTP id ffacd0b85a97d-48587098310mr9747937f8f.8.1788536206395;
-        Fri, 04 Sep 2026 08:36:46 -0700 (PDT)
-Received: from ?IPV6:2a07:de40:8100:0:89a9:fd0e:583d:4a53? ([2001:af0:8000:1409:193:86:92:181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485883c6ba4sm7833177f8f.25.2026.09.04.08.36.45
+        d=1e100.net; s=20251104; t=1788538591; x=1789143391;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=S3ktW0mgvYiUuy41pETr8cIXqy6mtnT30IxPC+xLG+0=;
+        b=EUDH6TXwX45MOhsXrHy+Qs5FSCRmWUgyhRVRjGjgsT60+tJg1IzcMWVLgkrx/gj7Mm
+         J9xbZvwwSbeH/5xfatTjcRvh7whCNu1ZNlR57lr7bi7y4qhgF945IMGhZW0VWATgC6h2
+         DgOkm+6mk3YcR0LmJLzNspk/Ry1MydbEp+Jy2cqBl8jDh6/rfB6rDArWKGeIRWObV5/5
+         Gn123re8NkHwfJ+uqZWZRIJ9EW4RrcNAvKG8M0lzQ6euQTKyh4CZd74nVTMnC6It8P/y
+         vHCNBnnpNi/PbWgTEm2WfwLEbWoccDiwhKNK3ROx7BpqEU9YaZCBd3q6+Z94z95q8wjo
+         n9RQ==
+X-Forwarded-Encrypted: i=1; AKwUvByPtIVckX2B6d8U2bWsg333G18bQkIjm0Wpdi4v12NuM4fMdLNBzQd/vOnoaNP5iQsAf2Eum0pNOolAmGEAwovlopI=@vger.kernel.org
+X-Gm-Message-State: AFuF++nePNCkUVPsuDQUki/IWbefY4eRZ4ExpGP6GGpkj9jRKpZnQmtc
+	DnIugtwBKfDJWQOZqRdwdOzv1y2Szi2vj4Ni734nAhs6ZOgueFkpolmW
+X-Gm-Gg: AYBFou2J1+ChbzQnUV0s+KgKDFw56afAeAvgABf0QlMwqTsnpBvWnK5eCKTbFDTH9bd
+	FcTDJ6FsbHn1FKUPra83ztli1DjC3gaSW6DS9CQbQlGYCbRulJuoqAfO1cqi3DKPhkD3QHKRykK
+	fqMCQ6Yi/Kr+q9KGDpFRpzqwF/vDYs+CHEaqfNlJkgD8m3eS8gAF6q6tHAurB7NI95kgANZIrqb
+	zIudYVsoQrm7LQundUGW855HBzjxJor+G0J4RLAwfmRkLe+yx+G9smXx2SCBUSmS3zvgIo10G0S
+	cyiPrpuqaE/DCtkm+LuDxJ6a4qe6NeNEjhfSlSt31b5lx/WKyvtDTum1c7Vp1Jv76IakaQumlGR
+	ZrV+6NjElwVd/4XqtKX0nalDxi6LVp+1bE0rkRGxHBtxK2HgCSd3OCbqWvj2em2j+8vrbtj3oCM
+	R2U9Gt92PYdHHfaO8BCKq/ym+ojC5LS36kB2HqLYtwkfXrbC2QXO8IFdMpoYNSw+zUQwS7FpMEq
+	6kQXeI22n0s2XdRW8pC1/zCj1iN924+pa3iph9K4xWWAYBTDbDbz+w=
+X-Received: by 2002:a05:6102:3749:b0:785:eb33:87aa with SMTP id ada2fe7eead31-78a4a8b86a5mr2672910137.5.1788538590614;
+        Fri, 04 Sep 2026 09:16:30 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:1b::])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-78a4764e321sm2244966137.0.2026.09.04.09.16.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2026 08:36:46 -0700 (PDT)
-Message-ID: <33487133-b587-42f8-9716-b0bbe2f1511b@suse.com>
-Date: Fri, 4 Sep 2026 17:36:45 +0200
+        Fri, 04 Sep 2026 09:16:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] module: pull out add_taint_module() to be public
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Bradley Morgan <brads@mainlining.org>, Aleksandr Nogikh <nogikh@google.com>,
- linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
- driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
- Johan Hovold <johan@kernel.org>
-References: <20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org>
- <20260904-bind_taint-v3-1-30025465f38a@linuxfoundation.org>
- <a79a6a06-cc48-4036-882d-95e9b4cc01cf@suse.com>
- <2026090432-outlying-glitch-9295@gregkh>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <2026090432-outlying-glitch-9295@gregkh>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Fri, 04 Sep 2026 09:16:28 -0700
+Message-Id: <DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com>
+Cc: "Gabriele Monaco" <gmonaco@redhat.com>, "Nam Cao"
+ <namcao@linutronix.de>, "LKML" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>, "bpf"
+ <bpf@vger.kernel.org>, "Wen Yang" <wen.yang@linux.dev>, "Tobias Schaffner"
+ <tobias.schaffner@siemens.com>, "Viktor Malik" <vmalik@redhat.com>, "Linus
+ Torvalds" <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 00/20] rv: Add support for BPF monitors
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Steven Rostedt" <rostedt@goodmis.org>
+X-Mailer: aerc
+References: <20260831090524.106845-1-gmonaco@redhat.com>
+ <87se3sakgi.fsf@yellow.woof>
+ <df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com>
+ <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com>
+ <eb3dd8158942d663ec8ad4c529eacd666c5f96d9.camel@redhat.com>
+ <20260903090211.50d15220@gandalf.local.home>
+ <CAADnVQK8e1Qp9rf1zThZxb3vr4Gc_bpo0nqpEO2LdnEwHdKokA@mail.gmail.com>
+ <20260904074317.01b2c0e1@robin>
+In-Reply-To: <20260904074317.01b2c0e1@robin>
 
-On 9/4/26 2:19 PM, Greg Kroah-Hartman wrote:
-> On Fri, Sep 04, 2026 at 11:25:01AM +0200, Petr Pavlu wrote:
->> On 9/4/26 7:10 AM, Greg Kroah-Hartman wrote:
->>> diff --git a/kernel/module/main.c b/kernel/module/main.c
->>> index d0e1e0bd2ad0..444d990c9983 100644
->>> --- a/kernel/module/main.c
->>> +++ b/kernel/module/main.c
->>> @@ -191,11 +191,21 @@ static inline int strong_try_module_get(struct module *mod)
->>>  		return -ENOENT;
->>>  }
->>>  
->>> -static inline void add_taint_module(struct module *mod, unsigned flag,
->>> -				    enum lockdep_ok lockdep_ok)
->>> +/**
->>> + * add_taint_module: add a taint flag if not already set for a specific module
->>> + * @mod: pointer to the module that caused the problem
->>> + * @flag: one of the TAINT_* constants.
->>> + * @lockdep_ok: whether lock debugging is still OK.
->>> + *
->>> + * If something bad has gone wrong, you'll want @lockdebug_ok = false, but for
->>> + * some noteworthy-but-not-corrupting cases, it can be set to true.
->>
->> Nit: The final paragraph is mostly copied from the description of
->> add_taint() but I don't think it is quite right. The parameter name
->> should be lockdep_ok, not lockdebug_ok and the values are
->> LOCKDEP_STILL_OK / LOCKDEP_NOW_UNRELIABLE, not true / false.
->>
->> I suggest updating this part for both add_taint() and add_taint_module()
->> to something like:
->>
->>  * Use @lockdep_ok = LOCKDEP_NOW_UNRELIABLE if something serious has gone wrong.
->>  * For noteworthy but non-corrupting cases, use LOCKDEP_STILL_OK instead.
-> 
-> How about I add another patch to the series that fixes up the
-> documentation for both functions?  They both should be fixed up and I
-> might as well get them in sync properly.
+On Fri Sep 4, 2026 at 4:43 AM PDT, Steven Rostedt wrote:
+> On Thu, 3 Sep 2026 20:30:19 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+>> > > On Wed, 2026-09-02 at 18:57 -0700, Alexei Starovoitov wrote: =20
+>> > > > I don't think bpf fits here. I haven't seen active use of RV and e=
+ven less
+>> > > > so of any request from people who want this kind of programmabilit=
+y.
+>> > > >
+>> > > > So Nack for now. Sorry. =20
+>> > >
+>
+>>=20
+>> Ok.
+>> Please add
+>> Nacked-by: Alexei Starovoitov <ast@kernel.org>
+>>=20
+>> when you submit it to Linus.
+>> Let him decide whether bpf maintainers have an authority
+>> to say where bpf is used in the kernel.
+>
+> When this is ready, I'll be happy to inform Linus on the pull request
+> that you NACKed it, if you are still against it by then. He's Cc'd on
+> this conversation now. But you left out any technical reason for the
+> NACK. You basically just said "I don't see how this is useful to me".
+> That's not a valid reason for a NACK.
 
-Makes sense to me.
+You added a whole bunch of hardcoded "monitors". None of them were
+necessary. The whole RV is imo a waste of kernel code.
+All of that could have been done via existing bpf tracing functionality.
+One can delete kernel/trace/rv and do the same thing with bpf.
+So I'm strongly against bolting bpf to RV as yet another "monitor".
+It's a wrong design. Keep adding hard coded monitors and don't mess
+with bpf.
 
--- 
-Thanks,
-Petr
+> Gabriele will be presenting this work at Linux Plumbers[1]. This will
+
+I didn't vote for it. Other bpf maintainers did. Hence it's in schedule.
+But my stance is still a nack.
