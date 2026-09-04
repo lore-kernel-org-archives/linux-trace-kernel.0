@@ -1,177 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092A2175A9D;
-	Fri,  4 Sep 2026 12:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0C43F12CB;
+	Fri,  4 Sep 2026 12:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788524508; cv=none; b=f/DYKgOf3sdEFtlRGGk1XFO7x/yaHZQ7aAlDy65lqcDr3euL7yhuNvT/pJ4PGw5LZ8ApnnYtVUZ8Ljt40Gty4ngUp6MrILDZMN6L2SQHwhZqYXhYhEiayJfJqbZ6Xhi4mC7TdmhMvoOuRs23BruNg8J6i4r90UC7Q036WACAni4=
+	t=1788525689; cv=none; b=rd9HVDXz39n5KLw8Oxkpd4CiGcNaWGPSpwq1oy8BWXHzJHnft/P+BQfZgn1RBM4Bz0tbVQrVguL/NoXNUtsZHALE73/1hEjTKfeabV6Kn9fUV9rp1bp8EcnVfQ1dAUDA3vnIh/Js4IDrriVDso26nkSu+8OS9U/xjrXOTNDyiB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788524508; c=relaxed/simple;
-	bh=dGEwsl/QZPhzvlA+Mi/r76rmR6CKptJayLW6wdJ2m34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PMWXxUwciM8KHX6iBG3U2r/Urag9dI7GBAXraBMj75kVDCRfVDuinA9xeNEq7vfsV++dznQyFlFPPk2ylSdin1k/7juNXsIdysgIntKayhj+j4skqMAfbTnhQM1kpDgBDOBAQ7J5roeC6DBCjseScJqTB4Yv/x+X4ypxakcsjWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YS/gc8PL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788525689; c=relaxed/simple;
+	bh=W6JKX7ahqnb99xfBn6RyrSANuKyNMCi0bJovw3pOCDg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IzWxbUUHbyFCK9qMDRsxDfL9QAadqahSs+XAvAGoL1w1QPZjBs1fFZ0tM6sf2rl3TumQMuAVlcYxaEvaU7v9+IIbbBWKdTtuXN9OIQkXx2sjDddEdO7jCKVhozzKzOKlw5UUojZTnt9/VFbFTLIPNi4QUv+8KGHWycjQFYWptFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGf1RJU5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YS/gc8PL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78D91F00A3D;
-	Fri,  4 Sep 2026 12:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1788524505;
-	bh=n0Ai26c+BBRDL6nXffU6QVI3E3AyrZw/QywDCntvJXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YS/gc8PLWOxND3JfXW3uxDEITVnYv+tTnEDDPxhxeMRAKYroLEr8inBUP4WK83rLR
-	 zIuRyMuxYnD4xgXAcW3s4VF3Rjg7Vk8ZCHLprV0IdH+sEdREfcApZUE5zElmq0d84y
-	 NKrVJpBZEQUgErkhyHtAkmB7fXdZrRXKLnHckniA=
-Date: Fri, 4 Sep 2026 14:19:59 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Bradley Morgan <brads@mainlining.org>,
-	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 1/2] module: pull out add_taint_module() to be public
-Message-ID: <2026090432-outlying-glitch-9295@gregkh>
-References: <20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org>
- <20260904-bind_taint-v3-1-30025465f38a@linuxfoundation.org>
- <a79a6a06-cc48-4036-882d-95e9b4cc01cf@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGf1RJU5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDC71F00A3D;
+	Fri,  4 Sep 2026 12:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788525688;
+	bh=UMlLb9vJyOjadzPTuVKcm4BXcQdkedIOo1s9dZIX00Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=oGf1RJU5E2E1hc5yPFBLMbMic0oPzVmytHmCYp83Bb8EV3snKTx2aN+oMdoFFx41W
+	 oKPm6dxUIdKBNX6pT0C/ErlctSxqAtaSEHoTuQ94v2UZr0c1wqPLIjoy94H/styoVo
+	 spI7SYRif4VdHtKYf1RJSFXUS3KD2xr1sXFB83AtUbj9CaKF+bLDSPFQerLyOd1DkB
+	 kYcVMFBbi7D8YRAW3HRpsxtFJQkdPkyXpb3xsuHjXTc56iUBCV44aWVw3X1ALiVbI4
+	 lD7LgdbE1kJ2QWoTsU661654/ppx4Itw9vxDUdFqE5DUT38FNEnDcuCrpTVvJZgGqb
+	 8un7//vGps9Jg==
+Date: Fri, 4 Sep 2026 21:41:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinke Han <jinkehan@didiglobal.com>
+Cc: <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+ <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+ <peterz@infradead.org>, <rppt@kernel.org>, <kees@kernel.org>,
+ <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/kprobe: Fix crash when probe cs call
+Message-Id: <20260904214122.15b0924c7ee32dbf0998d876@kernel.org>
+In-Reply-To: <20260827025756.GA26653@didi-ThinkCentre-M920t-N000>
+References: <20260827025756.GA26653@didi-ThinkCentre-M920t-N000>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a79a6a06-cc48-4036-882d-95e9b4cc01cf@suse.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 04, 2026 at 11:25:01AM +0200, Petr Pavlu wrote:
-> On 9/4/26 7:10 AM, Greg Kroah-Hartman wrote:
-> > Other kernel code might want to call add_taint_module() so pull it out
-> > and make it global.  If modules are not enabled, this defaults to a call
-> > to add_taint(), so all is fine.
-> > 
-> > Reviewed-by: Johan Hovold <johan@kernel.org>
-> > Tested-by: Johan Hovold <johan@kernel.org>
-> > Reviewed-by: Bradley Morgan <brads@mainlining.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  include/linux/module.h | 10 ++++++++++
-> >  kernel/module/main.c   | 16 +++++++++++++---
-> >  2 files changed, 23 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/module.h b/include/linux/module.h
-> > index 96cc98568eea..f6f90cd88f15 100644
-> > --- a/include/linux/module.h
-> > +++ b/include/linux/module.h
-> > @@ -29,6 +29,7 @@
-> >  #include <linux/srcu.h>
-> >  #include <linux/static_call_types.h>
-> >  #include <linux/dynamic_debug.h>
-> > +#include <linux/panic.h>
-> 
-> Note that I'm working on cleaning up linux/module.h to reduce its
-> preprocessed size. The main motivation is to shorten the compilation
-> time of all the small *.mod.c files. Since linux/module.h already
-> includes linux/panic.h indirectly, adding this include explicitly seems
-> fine to me for now. In the future, I think we should introduce something
-> like kernel/module/stubs.c where the CONFIG_MODULES=n variants of
-> add_taint_module() and other similar functions can live without bloating
-> linux/module.h.
-> 
-> >  
-> >  #include <linux/percpu.h>
-> >  #include <asm/module.h>
-> > @@ -770,6 +771,9 @@ static inline bool is_livepatch_module(struct module *mod)
-> >  
-> >  void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
-> >  
-> > +void add_taint_module(struct module *mod, unsigned flag,
-> > +		      enum lockdep_ok lockdep_ok);
-> > +
-> >  #else /* !CONFIG_MODULES... */
-> >  
-> >  static inline struct module *__module_address(unsigned long addr)
-> > @@ -877,6 +881,12 @@ static inline bool module_is_coming(struct module *mod)
-> >  static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
-> >  {
-> >  }
-> > +
-> > +static inline void add_taint_module(struct module *mod, unsigned flag,
-> > +				    enum lockdep_ok lockdep_ok)
-> > +{
-> > +	add_taint(flag, lockdep_ok);
-> > +}
-> >  #endif /* CONFIG_MODULES */
-> >  
-> >  #ifdef CONFIG_SYSFS
-> > diff --git a/kernel/module/main.c b/kernel/module/main.c
-> > index d0e1e0bd2ad0..444d990c9983 100644
-> > --- a/kernel/module/main.c
-> > +++ b/kernel/module/main.c
-> > @@ -191,11 +191,21 @@ static inline int strong_try_module_get(struct module *mod)
-> >  		return -ENOENT;
-> >  }
-> >  
-> > -static inline void add_taint_module(struct module *mod, unsigned flag,
-> > -				    enum lockdep_ok lockdep_ok)
-> > +/**
-> > + * add_taint_module: add a taint flag if not already set for a specific module
-> > + * @mod: pointer to the module that caused the problem
-> > + * @flag: one of the TAINT_* constants.
-> > + * @lockdep_ok: whether lock debugging is still OK.
-> > + *
-> > + * If something bad has gone wrong, you'll want @lockdebug_ok = false, but for
-> > + * some noteworthy-but-not-corrupting cases, it can be set to true.
-> 
-> Nit: The final paragraph is mostly copied from the description of
-> add_taint() but I don't think it is quite right. The parameter name
-> should be lockdep_ok, not lockdebug_ok and the values are
-> LOCKDEP_STILL_OK / LOCKDEP_NOW_UNRELIABLE, not true / false.
-> 
-> I suggest updating this part for both add_taint() and add_taint_module()
-> to something like:
-> 
->  * Use @lockdep_ok = LOCKDEP_NOW_UNRELIABLE if something serious has gone wrong.
->  * For noteworthy but non-corrupting cases, use LOCKDEP_STILL_OK instead.
+On Thu, 27 Aug 2026 10:57:56 +0800
+Jinke Han <jinkehan@didiglobal.com> wrote:
 
-How about I add another patch to the series that fixes up the
-documentation for both functions?  They both should be fixed up and I
-might as well get them in sync properly.
-
-> > + */
-> > +void add_taint_module(struct module *mod, unsigned flag,
-> > +		      enum lockdep_ok lockdep_ok)
-> >  {
-> >  	add_taint(flag, lockdep_ok);
-> > -	set_bit(flag, &mod->taints);
-> > +	if (mod)
-> > +		set_bit(flag, &mod->taints);
-> >  }
-> >  
-> >  /*
-> > 
+> When I used eBPF to probe the call instructions within a function,
+> we encountered a kernel crash.
 > 
-> Otherwise, this looks ok to me. Feel free to add:
+> The ebpf tool probes the 257 offset of the __hrtimer_run_queues
+> function.
 > 
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+> <__hrtimer_run_queues+249>:  nopl   0x0(%rax,%rax,1)
+> <__hrtimer_run_queues+254>:  mov    %r14,%rdi
+> <__hrtimer_run_queues+257>:  cs call <__x86_indirect_thunk_r12>
+> <__hrtimer_run_queues+263>:  mov    %eax,%r12d
+> <__hrtimer_run_queues+266>:  xchg   %ax,%ax
+> <__hrtimer_run_queues+268>:  mov    %r13,%rdi
+> 
+> The scene of kernel crash is as follows:
+> 
+> [73665.737181] BUG: unable to handle page fault for address: 00000000000f41c9
+> [73665.744253] #PF: supervisor write access in kernel mode
+> [73665.749643] #PF: error_code(0x0002) - not-present page
+> [73665.754843] PGD 0 P4D 0
+> [73665.757390] Oops: 0002 [#1] SMP NOPTI
+> [73665.761073] CPU: 1 PID: 0 Comm: swapper/1 Kdump: loaded Tainted: P
+> [73665.782671] RIP: 0010:__hrtimer_run_queues+0x106/0x230
+> 
+> Note that __hrtimer_run_queues+0x106 is __hrtimer_run_queues+262, which is
+> at the 6th byte of the above cs call instruction. Since the cs call
+> instruction occupies 6 bytes, the exception occurred in the middle of that
+> call instruction.
 
-Great, will do, and I'll do a v4 early next week with the documentation
-fixes.
+Ah, OK. So it adds a dummy CS prefix for padding the instruction.
+Also, please Cc probe patch to linux-trace-kernel@vger.kernel.org too.
 
-thanks,
+> 
+> The root cause is that when using eBPF tools to probe in the middle of a
+> function, kprobe with int3 is used as the underlying implementation.
+> During single-step emulation of the original call instruction,
+> int3_emulate_call assumes that the probed call instruction is 5 bytes
+> long. However, the actual CS-prefixed call instruction occupies 6 bytes,
+> so it constructs an incorrect exception return address. When the CPU
+> returns from the kprobe handler, the next instruction to be executed is at
+> the address of the last byte of that CS call instruction. Coincidentally,
+> starting from that address, the CPU fetches and decodes a completely
+> different instruction, which ultimately triggers a kernel crash.
+> 
+> Fix the issue by using the actual instruction length obtained from
+> the instruction decoder when constructing the exception return
+> address, rather than relying on the hardcoded CALL_INSN_SIZE macro.
+> 
 
-greg k-h
+OK, this fixes kprobe local, but for cleanliness, I have a comment.
+
+> Cc: stable@kernel.org
+> Fixes: 6256e668b7af ("x86/kprobes: Use int3 instead of debug trap for single-step")
+> Signed-off-by: Jinke Han <jinkehan@didiglobal.com>
+> ---
+>  arch/x86/kernel/kprobes/core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> index 4e5f8c1736ec..b50e4a60bdfe 100644
+> --- a/arch/x86/kernel/kprobes/core.c
+> +++ b/arch/x86/kernel/kprobes/core.c
+> @@ -511,9 +511,11 @@ NOKPROBE_SYMBOL(kprobe_emulate_ret);
+>  static void kprobe_emulate_call(struct kprobe *p, struct pt_regs *regs)
+>  {
+>  	unsigned long func = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
+> +	unsigned long ip = func;
+>  
+>  	func += p->ainsn.rel32;
+
+This looks a bit less readability because func is once have a return address
+and later it becomes call address. Moreover int3_emulate_call() is kept broken :(.
+
+> -	int3_emulate_call(regs, func);
+> +	int3_emulate_push(regs, ip);
+> +	int3_emulate_jmp(regs, func);
+
+What about updating int3_emulate_call() to get ip (=return address) and func?
+
+void int3_emulate_call(struct pt_regs *regs, unsigned long ip, unsigned long func)
+{
+	int3_emulate_push(regs, ip);
+	int3_emulate_jmp(regs, func);
+}
+
+Then in  smp_text_poke_int3_handler(struct pt_regs *regs),  we will call:
+
+	int3_emulate_call(regs, (long)ip, (long)ip + tpl->disp);
+
+And in this, we simply call;
+
+	unsigned long ip = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
+
+	int3_emulate_call(regs, ip, ip + p->ainsn.rel32);
+
+(Note: currently smp_text_poke_batch() does not handle non-5 byte nop.
+it checks the size.)
+
+Thanks,
+
+>  }
+>  NOKPROBE_SYMBOL(kprobe_emulate_call);
+>  
+> -- 
+> 2.34.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
