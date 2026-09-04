@@ -1,111 +1,325 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD3C42F712;
-	Fri,  4 Sep 2026 11:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EA346EF6A
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 11:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788519841; cv=none; b=qN7vNuXuIlK9MIR+p/hkyrjZ78qImoHZNpiK8JzpcAUbkV89d7xOge98F391PeXnUkH+QBOZtQod00zO4/jyoMdj0TWT4xTDesMF/uXgt1rIpIYmzbERA2Zq+cBW4auEz6N4zD1C4ijqxukx3P+4at+y/7FXyDCKhM7eKk+AHHQ=
+	t=1788519994; cv=none; b=d1GKSSY2hrnsL6l/Wci5tuHKO2ODMYC87qS2W2WvLX2//XOtGQtOcVUHeo8aLEaGHcnDcMW6JvBpZsoLQEXjNp6plCyBcbcidsYl8e5VGJDTnAMKeJtm3WXQjBXV8L7z+gq9IqLgY/YvuNUVVpGc/jULjp+4iA//wX40vQ7y6HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788519841; c=relaxed/simple;
-	bh=wmQF2YqXQK5D1pVhFo7BE3ugnTdhdCnbz9fgmSpU9LE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fKo2GdEidq93oK1OGlEt0M9pRo5IQk+G/0zzDmll8cCmAGLE8LKx6QNekI8Br6rZtNY6ZswN4hQaYR+12WwaDbxiCKAGUXsYySnEYayJumX5UaVXAE2yG3ktJVpHWamJa41I8NpdGjlEGLBER57xW3pXnx8TfOaYxP4hIsqJFXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwDTDxzC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788519994; c=relaxed/simple;
+	bh=w61n32K7yju7ZBZSoaJ7YUaVGJsA65OE5vqupbVdfuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pJmGI/2lAZgZIr9yKoTjeX+CM0dHw9hj4kWeBfouBBQr/tAgnpNp9DiKZCaqCcw9ry0GA6wHt6m8LkCyfINnQqNbkJ0fylPgqZhXbWl8qJ/vR9ncBt67QjErB+yksEBhJqFedrOADfwC1rUdhFYXWHwaGKZoCVxwFvKHYl0W+qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MoFnhj+h; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwDTDxzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 799131F00A3F;
-	Fri,  4 Sep 2026 11:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788519840;
-	bh=03WZ/RbYT1BfhS6cRy0LG4WhNbveMON3bVI/gDXIpsY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mwDTDxzCsttYTDz6tbb7e7YKyHUNmfColuvkU5BbDJIJT5SsuM7S3X5TE+6rh29ei
-	 lWaB+cMhoOfrEsoMx5vpNCNUu9yJsEWyuPCHtnn/MQ0XJPj7JKD6VhPtnz2aLy/Js9
-	 ABr443ro3hlJX01wKiI9Kk5I4b4ylLY6ihX0BafwJwX+VqszexCvVelrev4w2gdLv4
-	 L1RtK0ynMMz1MTUpNUgj2omdRkqoTcjJDb0y4b6LBiNIQJn0vnMwIy9rdqmGC8n/re
-	 eGun6hzackKav1aaqpUZaM5nspbS1awbJ0TNCb5zkGQBC4GSu1lt+aW5ws+5ctueNt
-	 iAT/H4MorXbkA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 03/12] dt-bindings: gpu: host1x: Document
- memory-regions for NVDEC
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thierry Reding" <thierry.reding@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, "Heiko Carstens" <hca@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, conor+dt@kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, "Christian
- Borntraeger" <borntraeger@linux.ibm.com>, robh@kernel.org, media-ci@linuxtv.org, devicetree@vger.kernel.org, linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260904-tegra-vpr-v6-3-79042cfa8de5@nvidia.com>
-References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
- <20260904-tegra-vpr-v6-3-79042cfa8de5@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 11:03:59 +0000
-Message-Id: <20260904110359.799131F00A3F@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MoFnhj+h"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6a682579c72so1058438a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 04:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1788519989; x=1789124789; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=w8c0zgCdZSXgeITpMZz/Cd5zd6jUWTEuCO88FJazoaM=;
+        b=MoFnhj+hLz0GZUtOH6vGsGe1frAO5pWV6S9cuKDXl8IsqVCT6r4bslOJiLoUrXZb7W
+         jz5uSsxJuwXLQWb8vrvHDFuby7qvV9t2NkQ/RR0ype0LW47cFas3SvVeGJCyUIsKKCht
+         omqnULLGaylf9TP3uNDrfQY0W1MazIdS5YjC2irE9UjhnnolvmXewV+8l64Gk3rMl4A1
+         r/Gp0KOP8y0QQpXKSq0ODelgVylZhFUbEx5WaSrmUoryeG8AsXoz+6gqJtbxfbkfUvY8
+         3rd3YBf53l7yOUrUaW0/pyzId+Ps6wH+D2YBhUOdMCFsbjnSiAfJKY3Lt+G9ENvA4iqC
+         Z2vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788519989; x=1789124789;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=w8c0zgCdZSXgeITpMZz/Cd5zd6jUWTEuCO88FJazoaM=;
+        b=c1q49OFpj5+ReVy4lyF2xbZGVyqfbxlcfq150CrD8rYM3mFUUtPOtkn6DzoTgO/4cq
+         kGPh84rzAlTH+NPltODx1byo2wwGcRmWy3BgBywwkdWAcqO7pFiS7p2UmQ6LD5xsq72G
+         cI7E3JsOQL1KYcajQPuIUf60OkqO+01TYdQbN34J4BmsRRUnKQSZ/G5AaPD27YwPuZ4B
+         kJCmFY+SK0u84iiKSha1uFACFUbpmsZef/XMtd60LQFU+NRs4UtEf/d7+1pfHfbMrR2A
+         lxil+PafWOhFXhl53fguZLV3QAdO/PBfOvEJ7sUutUss82KtXYosGV8PUV9GENe6i4Ay
+         gTpQ==
+X-Forwarded-Encrypted: i=1; AKwUvBywza6/vaBfws4esIvuLkBDj/FG0+wtst45b0rtlgaTr6oDK2wDHTabn09E4h3J+6pP6LZTpy/KS+ZeLEzrTzDigqE=@vger.kernel.org
+X-Gm-Message-State: AFuF++n63LQq3F8nnhQ/sBhoPW29GSfTe2g2u/5ODmhtLOi8u0rXzkEl
+	oA/Xc0Fizi88McVGgFTp8iVxqQx9pdekxtSCySls+lfdAVInPO/SKFwUk40h/V8hZMY=
+X-Gm-Gg: AYBFou1/VZRdIgKFj8U/NQqXfolnLpf0ZkHyBZtrQpdXeNc4Wb99Qo8YQc/WPx93w7V
+	UbXHFLpHcGq7SDkVJG925IHt3fmhEYS6SQ1Xg4L6bJBWczhfXMRWlzKdjtwN2sPNDHkPtozi2Ee
+	NGvMqqoInrpBZ4A3z/DuTwFmjOfneiHw2+B+j8wqRE8SqaflPW+C6psoxITNsRzIsw3Kl6D5clM
+	inZoxvRJjsmUziu5TSqYsGhrepdLX2LS1XuAOsSI9FcRNqW/dOsO7ieqWZeW0O8ZRhKrYDD6u1h
+	NYEz9n/UMMZ9F641jfuijSUDQpPjDk9NkIcLuyhHORoyfDt6P2kQQ8HbMrmUkbZkdoSrE2DMj1U
+	AH3BrxEIzXJVmR7yhRZ6hfRfZkjnvwiTtREQks+Ie0jlgqwbAg6DELTZ+MvOLVBgY01oViCNfBp
+	rTaTZmhN3EpcRLR75eFQFr447M7KXZQElYNFzWj3HmdOXPzUEBmx19JE95Rbr2gmqbLpCCmV9Bj
+	A==
+X-Received: by 2002:a17:907:94c7:b0:c15:e8c8:340 with SMTP id a640c23a62f3a-c260cb54a27mr338016566b.23.1788519989375;
+        Fri, 04 Sep 2026 04:06:29 -0700 (PDT)
+Received: from localhost (109-81-91-122.rct.o2.cz. [109.81.91.122])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485885b7bfasm5673432f8f.29.2026.09.04.04.06.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2026 04:06:28 -0700 (PDT)
+Date: Fri, 4 Sep 2026 13:06:27 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Ye Liu <ye.liu@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, Ye Liu <liuye@kylinos.cn>,
+	Pavel Machek <pavel@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+	Petr Mladek <pmladek@suse.com>, Waiman Long <longman@redhat.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/8] kernel: convert process/thread iterators to
+ for_each_*_rcu
+Message-ID: <apqmM9GCQn9KFxEA@tiehlicka>
+References: <20260904083001.553587-1-ye.liu@linux.dev>
+ <20260904083001.553587-6-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260904083001.553587-6-ye.liu@linux.dev>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The `memory-region` and `memory-region-names` properties for the=
- Video Protection Region (VPR) were added to the Tegra234 NVDEC binding but=
- omitted from the older NVDEC binding (`nvidia,tegra210-nvdec.yaml`) which =
-covers Tegra210, Tegra186, and Tegra194. Other hardware blocks on these old=
-er chips (such as VIC and DC) already document and use `memory-region` for =
-the VPR, indicating that the hardware shares the same capability. Failing t=
-o update the related YAML files in the same family causes schema validation=
- to fail for complete device trees.
---
+On Fri 04-09-26 16:29:57, Ye Liu wrote:
+> From: Ye Liu <liuye@kylinos.cn>
+> 
+> Replace the manual rcu_read_lock()/rcu_read_unlock() and guard(rcu)
+> pairs combined with for_each_process(), for_each_thread() and
+> for_each_process_thread() loops across kernel/ with the
+> for_each_*_rcu() macros.
+> 
+> No functional change.
+> 
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
 
-commit c5ee297bfa8219c2a7d714b86f0738c220914705
-Author: Thierry Reding <treding@nvidia.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-dt-bindings: gpu: host1x: Document memory-regions for NVDEC
+> ---
+>  kernel/cpu.c             | 4 +---
+>  kernel/freezer.c         | 4 +---
+>  kernel/hung_task.c       | 7 ++-----
+>  kernel/locking/lockdep.c | 4 +---
+>  kernel/rcu/update.c      | 4 +---
+>  kernel/sched/core.c      | 3 +--
+>  kernel/sched/debug.c     | 4 +---
+>  kernel/trace/fgraph.c    | 8 ++------
+>  kernel/unwind/deferred.c | 3 +--
+>  9 files changed, 11 insertions(+), 30 deletions(-)
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index b3c8553d7bd6..bc70fd21561a 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -1254,8 +1254,7 @@ void clear_tasks_mm_cpumask(int cpu)
+>  	 * full-fledged tasklist_lock.
+>  	 */
+>  	WARN_ON(cpu_online(cpu));
+> -	rcu_read_lock();
+> -	for_each_process(p) {
+> +	for_each_process_rcu(p) {
+>  		struct task_struct *t;
+>  
+>  		/*
+> @@ -1268,7 +1267,6 @@ void clear_tasks_mm_cpumask(int cpu)
+>  		arch_clear_mm_cpumask_cpu(cpu, t->mm);
+>  		task_unlock(t);
+>  	}
+> -	rcu_read_unlock();
+>  }
+>  
+>  /* Take this CPU down. */
+> diff --git a/kernel/freezer.c b/kernel/freezer.c
+> index a76bf957fb32..a27b2382fda9 100644
+> --- a/kernel/freezer.c
+> +++ b/kernel/freezer.c
+> @@ -217,11 +217,9 @@ void thaw_process(struct task_struct *p)
+>  {
+>  	struct task_struct *t;
+>  
+> -	rcu_read_lock();
+> -	for_each_thread(p, t) {
+> +	for_each_thread_rcu(p, t) {
+>  		__thaw_task(t);
+>  	}
+> -	rcu_read_unlock();
+>  }
+>  
+>  /**
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 6fcc94ce4ca9..76871f78497f 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -315,8 +315,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>  		return;
+>  
+>  	this_round_count = 0;
+> -	rcu_read_lock();
+> -	for_each_process_thread(g, t) {
+> +	for_each_process_thread_rcu(g, t) {
+>  		if (!max_count--)
+>  			goto unlock;
+>  		if (time_after(jiffies, last_break + HUNG_TASK_LOCK_BREAK)) {
+> @@ -337,9 +336,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>  			hung_task_info(t, timeout, this_round_count);
+>  		}
+>  	}
+> - unlock:
+> -	rcu_read_unlock();
+> -
+> +unlock:
+>  	if (!this_round_count)
+>  		return;
+>  
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index c56a7f91d72e..9c3dce0f0c4b 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -6834,15 +6834,13 @@ void debug_show_all_locks(void)
+>  	}
+>  	pr_warn("\nShowing all locks held in the system:\n");
+>  
+> -	rcu_read_lock();
+> -	for_each_process_thread(g, p) {
+> +	for_each_process_thread_rcu(g, p) {
+>  		if (!p->lockdep_depth)
+>  			continue;
+>  		lockdep_print_held_locks(p);
+>  		touch_nmi_watchdog();
+>  		touch_all_softlockup_watchdogs();
+>  	}
+> -	rcu_read_unlock();
+>  
+>  	pr_warn("\n");
+>  	pr_warn("=============================================\n\n");
+> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> index 2a778b8ab4ad..c48a84a0da82 100644
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -548,15 +548,13 @@ void synchronize_rcu_trivial_preempt(void)
+>  	struct task_struct *t;
+>  
+>  	smp_mb(); // Order prior accesses before grace-period start.
+> -	rcu_read_lock(); // Protect task list.
+> -	for_each_process_thread(g, t) {
+> +	for_each_process_thread_rcu(g, t) {
+>  		if (t == current)
+>  			continue;  // Don't deadlock on ourselves!
+>  		// Order later rcu_read_lock() on other tasks after QS.
+>  		while (smp_load_acquire(&t->rcu_trivial_preempt_nesting))
+>  			continue;
+>  	}
+> -	rcu_read_unlock();
+>  }
+>  EXPORT_SYMBOL_GPL(synchronize_rcu_trivial_preempt);
+>  #endif // #if IS_ENABLED(CONFIG_TRIVIAL_PREEMPT_RCU)
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 0697ed0f1c3d..a41cdd2ff02f 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2005,8 +2005,7 @@ static void uclamp_sync_util_min_rt_default(void)
+>  	smp_mb__after_spinlock();
+>  	read_unlock(&tasklist_lock);
+>  
+> -	guard(rcu)();
+> -	for_each_process_thread(g, p)
+> +	for_each_process_thread_rcu(g, p)
+>  		uclamp_update_util_min_rt_default(p);
+>  }
+>  
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 72236db67983..8f37b1a7adfe 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -1029,14 +1029,12 @@ static void print_rq(struct seq_file *m, struct rq *rq, int rq_cpu)
+>  #endif
+>  		   "\n");
+>  
+> -	rcu_read_lock();
+> -	for_each_process_thread(g, p) {
+> +	for_each_process_thread_rcu(g, p) {
+>  		if (task_cpu(p) != rq_cpu)
+>  			continue;
+>  
+>  		print_task(m, rq, p);
+>  	}
+> -	rcu_read_unlock();
+>  }
+>  
+>  void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 40d373d65f9b..e522433ec8a5 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1057,11 +1057,10 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+>  		}
+>  	}
+>  
+> -	rcu_read_lock();
+> -	for_each_process_thread(g, t) {
+> +	for_each_process_thread_rcu(g, t) {
+>  		if (start == end) {
+>  			ret = -EAGAIN;
+> -			goto unlock;
+> +			goto free;
+>  		}
+>  
+>  		if (t->ret_stack == NULL) {
+> @@ -1074,9 +1073,6 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+>  			t->ret_stack = ret_stack_list[start++];
+>  		}
+>  	}
+> -
+> -unlock:
+> -	rcu_read_unlock();
+>  free:
+>  	for (i = start; i < end; i++)
+>  		kmem_cache_free(fgraph_stack_cachep, ret_stack_list[i]);
+> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+> index 5bea47314254..61fe2d4727ce 100644
+> --- a/kernel/unwind/deferred.c
+> +++ b/kernel/unwind/deferred.c
+> @@ -319,9 +319,8 @@ void unwind_deferred_cancel(struct unwind_work *work)
+>  
+>  	synchronize_srcu(&unwind_srcu);
+>  
+> -	guard(rcu)();
+>  	/* Clear this bit from all threads */
+> -	for_each_process_thread(g, t) {
+> +	for_each_process_thread_rcu(g, t) {
+>  		atomic_long_andnot(BIT(bit),
+>  				   &t->unwind_info.unwind_mask);
+>  		if (t->unwind_info.cache)
+> -- 
+> 2.25.1
+> 
 
-The video protection region is a reserved memory region that can be used
-for secure video playback. NVDEC can access this region to decode images
-into securely.
-
-> diff --git a/Documentation/devicetree/bindings/gpu/host1x/nvidia,tegra234=
--nvdec.yaml b/Documentation/devicetree/bindings/gpu/host1x/nvidia,tegra234-=
-nvdec.yaml
-> index 4eb325cfd2961..bcaaabca945dc 100644
-> --- a/Documentation/devicetree/bindings/gpu/host1x/nvidia,tegra234-nvdec.=
-yaml
-> +++ b/Documentation/devicetree/bindings/gpu/host1x/nvidia,tegra234-nvdec.=
-yaml
-> @@ -60,6 +60,14 @@ properties:
->        - const: dma-mem
->        - const: write
-> =20
-> +  memory-region:
-> +    items:
-> +      - description: reference to the video protection memory region
-> +
-> +  memory-region-names:
-> +    items:
-> +      - const: protected
-
-[Severity: Medium]
-Should these properties also be added to the older NVDEC binding
-(nvidia,tegra210-nvdec.yaml) which covers Tegra210, Tegra186, and Tegra194?
-
-Other hardware blocks on these older chips (such as VIC and DC) already
-document and use memory-region for the Video Protection Region, indicating
-that the hardware shares the same capability.
-
-If a device tree for Tegra210, Tegra186, or Tegra194 correctly specifies
-the Video Protection Region for NVDEC, will it fail schema validation
-because the properties are undocumented and additionalProperties: false
-is set in the older binding?
-
-> +
->    nvidia,memory-controller:
->      $ref: /schemas/types.yaml#/definitions/phandle
->      description:
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-tegra-vpr-=
-v6-0-79042cfa8de5@nvidia.com?part=3D3
+-- 
+Michal Hocko
+SUSE Labs
