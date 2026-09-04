@@ -1,172 +1,79 @@
-Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331EB4AA3EC;
-	Fri,  4 Sep 2026 13:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.77.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D1F49362C;
+	Fri,  4 Sep 2026 14:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788529250; cv=none; b=DIlEOvKNO+SHIQ/eEZ0KH1MdomysvXm1nHvrmQCHEYi3GoVnRJgviBVgmE/wHNOHdfMTBORmqpbugSJmUVzIy2SPJmc80l0gFqcCZmTyPlSiJba5sDsOgRP6BDm55elLRT72Oos5wKTktwBe8h9KzYFK/SAO2FzyUFd1ZfCYlIQ=
+	t=1788530509; cv=none; b=fIsKUgIOvMHOxXeeucjmpkOb3IyN8b58k5BOdU3ePgVCjIwnVvw9f/dvighPgSLjkI+PK5ehB4fLRNTfU3ufbcDDr7M8sowfePNMAkMfsV5//52feitNHV5az0x4oHM1qjGHBDwTIZyIw2RoqErR8vZebyy7/tVDBK/E824jNzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788529250; c=relaxed/simple;
-	bh=zesXpEseowuhkScQQajGo9Gm6M5KbuH5TUA2nQ5LhGE=;
-	h=From:Date:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LPuZsU3AjFqQaK8HKBCjs9hfERhwZkCHg8c8mRWUxZw8VpLnmktCM4KKUfKSXBV84blg/t3ARJm0GdxnbjllKzJgxWdxebkiQCSsflOkoO6ZX+ciebLtNo9Qo+lGbdfccwtly1C1xAeHpI4/ust+RsXaQHuN7IWRiU2+8LjKPrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=tXZFjS1b reason="key not found in DNS"; arc=none smtp.client-ip=207.54.77.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	s=arc-20240116; t=1788530509; c=relaxed/simple;
+	bh=UwRD2WUfuDoxmcivM5qX0VBAz63TN1nNnpQ29bLmIiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PnrzW2FUVrGDP/2o5wARQJGrCLkxPyBYmm8DbRwrg4RQQzvhAE/6tPHzq+0Xqa+UmPHsUlgCeKnANdMv1dQXfxg2ObMk/jp3SNUh0zf7PCcZjhktOEE7Ck1g30LwRH8ESeXUt1mYylmonaa6jt9l6lEe5GyOAI2v1U3ebIDvT4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=JRFBXRy1; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="tXZFjS1b"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1788529244; x=1820065244;
-  h=from:date:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zesXpEseowuhkScQQajGo9Gm6M5KbuH5TUA2nQ5LhGE=;
-  b=tXZFjS1bk12R4WvipFwTkGkhlLk1Q6UV0TUx2ie3x8CVO/kunftLP0V5
-   Zugfs4iHWWogKYIQ/UG78p4ZRU69XdeDbDkUufIhd2EthEnN2SrZSdJ+6
-   ibgpcHJVUum4mKWcJxyo8kdmV9i1wyJC/Gc2VR8x372AfEuydSkVqXDiB
-   xLRIlaJMWJyLR8Ga+OC9SMPl+S65/p9um4SJTju4x0wQpQb4z+UvYIa+P
-   eSuw60QKEn3G4O6WQ96MSpmAAOnwXgnk1TG2tASeoy1fz4WRxrKmehnp/
-   Cdl35PSHaT1V9mIljblLUStXZHlDTcMTT0dc875szXV6C7ERBZqKfZID9
-   A==;
-X-CSE-ConnectionGUID: +2GJib0/R6CjHDIc/kM5dA==
-X-CSE-MsgGUID: ZXjXowgRTF2paV6sdN/fvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
-  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2026 16:39:32 +0300
-X-CSE-ConnectionGUID: ZM77DTLQR0+7lN7bawTt/g==
-X-CSE-MsgGUID: rIrAksyhTzmCLYfnSyIKtg==
-Received: from unknown (HELO epgd056.me-corp.lan) ([10.154.54.2])
-  by ces04_data.me-crop.lan with SMTP; 04 Sep 2026 16:46:09 +0300
-Received: by epgd056.me-corp.lan (sSMTP sendmail emulation); Fri, 04 Sep 2026 16:39:30 +0300
-From: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-Date: Fri, 4 Sep 2026 13:53:55 +0300
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Linus Walleij
- <linusw@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- =?UTF-8?B?QmVub8OudA==?= Monin <benoit.monin@bootlin.com>
-Subject: Re: [PATCH v2 01/12] i2c: core: add I2C_XFER_V2 - support for
- detailed transfer reporting
-Message-Id: <20260904135355.427fcb01d57c172552748943@mobileye.com>
-In-Reply-To: <apkgBIgF09HAcbot@ashevche-desk.local>
-References: <20260903-i2c-fault-reporting-v2-0-fedeb91792e6@mobileye.com>
-	<20260903-i2c-fault-reporting-v2-1-fedeb91792e6@mobileye.com>
-	<apkgBIgF09HAcbot@ashevche-desk.local>
-Organization: MobilEye
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="JRFBXRy1"
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 2FB3C4142C;
+	Fri,  4 Sep 2026 14:01:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3F58E20028;
+	Fri,  4 Sep 2026 14:01:40 +0000 (UTC)
+Date: Fri, 4 Sep 2026 10:02:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 3/4] ring-buffer: Cap static ring buffer nr_pages
+Message-ID: <20260904100245.245f7bdd@gandalf.local.home>
+In-Reply-To: <aprB6OE1juuopC7q@google.com>
+References: <20260901155445.1475405-1-vdonnefort@google.com>
+	<20260901155445.1475405-4-vdonnefort@google.com>
+	<20260903125621.36cd33b8@gandalf.local.home>
+	<aprB6OE1juuopC7q@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 46hbtgd7nu8oh9pu3iuwixgqpzkdefot
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 3F58E20028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/1yATNb5ROcziw3rVKwj4vZnD1MYIjET8=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=/TjXvOb3lkdNV/sBn5FPU3DChTGoZhV4vkAONSsG7WA=; b=JRFBXRy1UmsI4COxTPifQmTzRKFmWgaN1CYS7q8RgSs37R0xK0gqT1WDMZDbLFWSmQeDEGVKx4LYLOOBAuM428CYACOaiIZYaLJMMhAnBwgNmKG0zhzE6dL+W0JPN/0CRLCu/IRfDGrpygDg7dkRrU7p82nr09AeWmAJsX+cwwg=
+X-HE-Tag: 1788530500-960308
+X-HE-Meta: U2FsdGVkX1+QMpBzt2qqbjWM6DFtDwvqWRXwkHgQ4jnA11lna/1LEX+lb/BHUKq9s00+CZpt6YysJIbZqpdXFTIdoDJtyYDoNXFN1E30z01QrFES1QKiMCd8Am6h733IT+Hu8hmqzIbOzOSRn35sz3j7Wki1+p/qTJufVbiwpjez47HrkJC2kli7Hh4/nmJhXQ+Yel7UQAyZPxEpTo78BX3l+7/G/ABQPdas6kLIHNf3LjG3nLWUkncbFdW9nWOUQSWAmHxw9c9RbHaq5LKOrbYhjbAOm8NyhM51XgCqd9nZtFqdLJU7wg5tG4mJ5PvRjAQYbkVvdEtFMnEzMYIWnxnIKkmaoxyB
 
-Hi,
-On Thu, 3 Sep 2026 10:21:40 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Fri, 4 Sep 2026 14:04:40 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> > I2C bus controller driver may implement either both callbacks or any one
-> > of them. The implementation of both callbacks may make sense if the
-> > precise detection of the fault position requires different handling with
-> > the hardware that causes to extra CPU load or other consequences that
-> > may be unwanted if the precise fault report is not required. If the
-> > precise fault detection is free, the driver may implement only `xfer_v2`
-> > callback - the infrastructure will provide pointer to a dummy fault
-> > report that will be dropped if the client uses old API.
+> > If you want to add something, we could add to the beginning of this
+> > function:
+> > 
+> > 	/* Prevent ridiculously small sizes */
+> > 	if (size < PAGE_SIZE)
+> > 		return NULL;
+> > 
+> > to shut up Sashiko about overflows :-p
+> > 
+> > -- Steve  
 > 
-> What tool do you use?
-
-vim, git and b4
-
-> The problem with the submission is that:
-> - it has no cover letter
-
-The cover letter is here: 
-https://lore.kernel.org/linux-i2c/20260903-i2c-fault-reporting-v2-0-fedeb91792e6@mobileye.com/
-
-It also contains link to the patch for i2c-tools that adds support for the
-new API.
-
-> - it has been send with In-Reply-To set to the previous version of the set.
-
-https://lore.kernel.org/linux-i2c/20260903-i2c-fault-reporting-v2-1-fedeb91792e6@mobileye.com/raw
-In-Reply-To: <20260903-i2c-fault-reporting-v2-0-fedeb91792e6@mobileye.com>
-
-What's wrong with this?
-
+> tracer_alloc_buffers() uses size of 1 for non-expanded buffers.
 > 
+> I'll test size just before 
 > 
-> > -int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
-> > +int __i2c_transfer_v2(struct i2c_adapter *adap, struct i2c_msg *msgs, int num,
-> > +		   struct i2c_transfer_report *report)
-> >  {
-> > +	struct i2c_transfer_report dummy_report;
-> >  	unsigned long orig_jiffies;
-> >  	int ret, try;
-> >  
-> > -	if (!adap->algo->master_xfer) {
-> > +	if (report) {
-> > +		report->msgs_cplt = -EOPNOTSUPP;
-> > +		report->bytes_cplt = -EOPNOTSUPP;
-> > +		report->fault_msg_idx = -EOPNOTSUPP;
-> 
-> Why all three?! Why even a single one as long as we return an error code?
+>   nr_pages = (size - sizeof(struct ring_buffer_cpu_meta)) /
+>   	(subbuf_size + sizeof(int));
 > 
 
-There are two distinct cases when we return -EOPNOTSUPP:
+Ack.
 
-1) The I2C driver reports that it cannot transfer a specific message.
-For example, there are controllers that have message length limit less than
-8K, or cannot do zero-length reads or writes, or cannot change target
-address without generating STOP.
-In this case, `msgs_cplt` and `bytes_cplt` are the number of messages and
-bytes transferred successfully (both should be zero if the driver validates
-the whole batch before starting transfer), and `fault_msg_idx` points to
-the message that cannot be sent.
-
-2) The driver does not support detailed fault reporting (does not implement
-`i2c_xfer_v2` callback). In this case, all fields of the transfer report
-structure have -EOPNOTSUPP value.
-
-Also, in theory, I can imagine a controller that supports only message-wise
-report and not byte-wise. This can be indicated by -EOPNOTSUPP value in
-`bytes_cplt` field.
-
-Thanks for the question. I think I should add a comment explaining this.
-
-> 
-> > +		report = &dummy_report;
-> 
-> 
-> > +	if (adap->quirks) {
-> > +		struct i2c_msg *bad_msg = i2c_check_for_quirks(adap, msgs, num);
-> > +
-> > +		if (bad_msg) {
-> 
-> This style is bad for maintenance. Whenever you need to validate something,
-> never assign it in the definition.
-> 
-
-OK, I'll fix the coding style (here and in other patches also).
-
-> 
-> ...
-> 
-> Make sure you do a series of a small logically finished pieces. For example,
-> introducing a v2 of a hook with a new prototype. This can be done in a separate
-> patch. Adding report is another, and so on...
-> 
-
-OK, I'll split it into a series of small patches. Thanks for the review.
-
--- 
-Best regards,
-Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-
+-- Steve
