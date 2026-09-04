@@ -1,75 +1,29 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2021148C8AF
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 16:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7964FECD3;
+	Fri,  4 Sep 2026 16:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788538593; cv=none; b=GpMIIg6aa0uvSE4gzjosYDPVtuzFwEqQTf/bsV9uZa7AQYqj4osGIRgKitx3e1eZ/WvdNGP/1kNRnSp0STLqpcilurjDZ/nsvXFVM/jIOY8oQDOR+oXUyzUySGFSpGq5I+tkNF7+UTf93km8q3o3Fyam/lRF0mWRIvgPWi5zKFI=
+	t=1788539414; cv=none; b=uGgVSGPbswhnjpqJxzvCfFAFnDF1XbW3lFoH44qh03DvoHjUrA2c3QTnnjuygqQ2MI42HO3Eq/sokDt0ygYWXrYeFzdxR9HLCwMfTNuAezOG/ZwT8h+R3v15DFaCm//Epvr1iz5xkcktUoUsgb6QVHs58XKp54E8opuj84Poa18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788538593; c=relaxed/simple;
-	bh=S3ktW0mgvYiUuy41pETr8cIXqy6mtnT30IxPC+xLG+0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=me+hNbDGxiXIEZ7FGFb4TsJ7ZT+B+0AclUQKYRkCLhWcIhljvCgkCiysEGoXPXbSOqa8N3qxJ+jkLVDute8bULzcBF4+b+rtk6SLFl/W2NVCIFRcBSce/w1RhqKJEaZoH6pSXN4hdPCl3rLl3sao8gkbcszKbHuVUrKNhqDQ8K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5LIOVc2; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788539414; c=relaxed/simple;
+	bh=TXxtulEj8I0CB6Un45dWCWX/x1I/VebmxSfxyNoMKgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GTbmA3uzFmGhhBhfoYfbEP86O1QK7AeHCRuBe14PMqH555I+8dufVHnEcwW//90yCUwen3BD2/t7sPYAmho+2S20wNPU5rNNZq4/4vggteoSX/gCLay4+yqte92KIMZW27AN1jtfRdCoINnkvksXybX+mp5M1E1eWcBArK07J1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=VOioYwo5; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5LIOVc2"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-97c940ef65cso824629241.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 09:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788538591; x=1789143391; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=S3ktW0mgvYiUuy41pETr8cIXqy6mtnT30IxPC+xLG+0=;
-        b=Q5LIOVc2jydu3NQfKcT4lyGyOMiNWV2OoAgdGHXlHq35NzwAYSfwepheqYbQhZK7dS
-         kQefbZAhXLuNLnVQTkwcb2DkK2G53gHl0EGJq/MiDaFyJ1qGupDaWxxbpv/kwG9e71QG
-         J5KH5NBxa6ngviZBotoOFJceD4CQZdzEjCnE7EAWzlwbffBE5YeC7MTMj9vJhAuDMkX2
-         M34YBHZrj3PhD5dtgdJwZnkChRcAUlXDbP5Q8q/vQexjGYODJaT5oZYBVQ4pAXR3idWi
-         BWov1SJIFPc5emxphanmC5umsA3G0mzMWaUQgRDM9MNVY4XPDR7A3OtxjfiSZNxS6YKT
-         D4tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788538591; x=1789143391;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=S3ktW0mgvYiUuy41pETr8cIXqy6mtnT30IxPC+xLG+0=;
-        b=EUDH6TXwX45MOhsXrHy+Qs5FSCRmWUgyhRVRjGjgsT60+tJg1IzcMWVLgkrx/gj7Mm
-         J9xbZvwwSbeH/5xfatTjcRvh7whCNu1ZNlR57lr7bi7y4qhgF945IMGhZW0VWATgC6h2
-         DgOkm+6mk3YcR0LmJLzNspk/Ry1MydbEp+Jy2cqBl8jDh6/rfB6rDArWKGeIRWObV5/5
-         Gn123re8NkHwfJ+uqZWZRIJ9EW4RrcNAvKG8M0lzQ6euQTKyh4CZd74nVTMnC6It8P/y
-         vHCNBnnpNi/PbWgTEm2WfwLEbWoccDiwhKNK3ROx7BpqEU9YaZCBd3q6+Z94z95q8wjo
-         n9RQ==
-X-Forwarded-Encrypted: i=1; AKwUvByPtIVckX2B6d8U2bWsg333G18bQkIjm0Wpdi4v12NuM4fMdLNBzQd/vOnoaNP5iQsAf2Eum0pNOolAmGEAwovlopI=@vger.kernel.org
-X-Gm-Message-State: AFuF++nePNCkUVPsuDQUki/IWbefY4eRZ4ExpGP6GGpkj9jRKpZnQmtc
-	DnIugtwBKfDJWQOZqRdwdOzv1y2Szi2vj4Ni734nAhs6ZOgueFkpolmW
-X-Gm-Gg: AYBFou2J1+ChbzQnUV0s+KgKDFw56afAeAvgABf0QlMwqTsnpBvWnK5eCKTbFDTH9bd
-	FcTDJ6FsbHn1FKUPra83ztli1DjC3gaSW6DS9CQbQlGYCbRulJuoqAfO1cqi3DKPhkD3QHKRykK
-	fqMCQ6Yi/Kr+q9KGDpFRpzqwF/vDYs+CHEaqfNlJkgD8m3eS8gAF6q6tHAurB7NI95kgANZIrqb
-	zIudYVsoQrm7LQundUGW855HBzjxJor+G0J4RLAwfmRkLe+yx+G9smXx2SCBUSmS3zvgIo10G0S
-	cyiPrpuqaE/DCtkm+LuDxJ6a4qe6NeNEjhfSlSt31b5lx/WKyvtDTum1c7Vp1Jv76IakaQumlGR
-	ZrV+6NjElwVd/4XqtKX0nalDxi6LVp+1bE0rkRGxHBtxK2HgCSd3OCbqWvj2em2j+8vrbtj3oCM
-	R2U9Gt92PYdHHfaO8BCKq/ym+ojC5LS36kB2HqLYtwkfXrbC2QXO8IFdMpoYNSw+zUQwS7FpMEq
-	6kQXeI22n0s2XdRW8pC1/zCj1iN924+pa3iph9K4xWWAYBTDbDbz+w=
-X-Received: by 2002:a05:6102:3749:b0:785:eb33:87aa with SMTP id ada2fe7eead31-78a4a8b86a5mr2672910137.5.1788538590614;
-        Fri, 04 Sep 2026 09:16:30 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:1b::])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-78a4764e321sm2244966137.0.2026.09.04.09.16.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2026 09:16:29 -0700 (PDT)
-Precedence: bulk
-X-Mailing-List: linux-trace-kernel@vger.kernel.org
-List-Id: <linux-trace-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Sep 2026 09:16:28 -0700
-Message-Id: <DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="VOioYwo5"
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 5B0AD120134;
+	Fri,  4 Sep 2026 16:30:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 0F9C218;
+	Fri,  4 Sep 2026 16:30:02 +0000 (UTC)
+Date: Fri, 4 Sep 2026 12:31:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
 Cc: "Gabriele Monaco" <gmonaco@redhat.com>, "Nam Cao"
  <namcao@linutronix.de>, "LKML" <linux-kernel@vger.kernel.org>,
  "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>, "bpf"
@@ -77,56 +31,56 @@ Cc: "Gabriele Monaco" <gmonaco@redhat.com>, "Nam Cao"
  <tobias.schaffner@siemens.com>, "Viktor Malik" <vmalik@redhat.com>, "Linus
  Torvalds" <torvalds@linux-foundation.org>
 Subject: Re: [RFC PATCH 00/20] rv: Add support for BPF monitors
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-X-Mailer: aerc
+Message-ID: <20260904123108.1fa1d815@gandalf.local.home>
+In-Reply-To: <DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com>
 References: <20260831090524.106845-1-gmonaco@redhat.com>
- <87se3sakgi.fsf@yellow.woof>
- <df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com>
- <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com>
- <eb3dd8158942d663ec8ad4c529eacd666c5f96d9.camel@redhat.com>
- <20260903090211.50d15220@gandalf.local.home>
- <CAADnVQK8e1Qp9rf1zThZxb3vr4Gc_bpo0nqpEO2LdnEwHdKokA@mail.gmail.com>
- <20260904074317.01b2c0e1@robin>
-In-Reply-To: <20260904074317.01b2c0e1@robin>
+	<87se3sakgi.fsf@yellow.woof>
+	<df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com>
+	<DL5B40CU17WD.3KD75URQZ6RRR@gmail.com>
+	<eb3dd8158942d663ec8ad4c529eacd666c5f96d9.camel@redhat.com>
+	<20260903090211.50d15220@gandalf.local.home>
+	<CAADnVQK8e1Qp9rf1zThZxb3vr4Gc_bpo0nqpEO2LdnEwHdKokA@mail.gmail.com>
+	<20260904074317.01b2c0e1@robin>
+	<DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Precedence: bulk
+X-Mailing-List: linux-trace-kernel@vger.kernel.org
+List-Id: <linux-trace-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 0F9C218
+X-Stat-Signature: i3t6jwjjocy3by9p9t5ttg5q7p6wwnkk
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/udEqlQ3DfV28hAfWdP9Q6Hcj2odL1m5g=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=y5+ZcOiopCfkKRJx022RKf8Hjr7n9jWmU6NpW0k7akc=; b=VOioYwo5LSWjE//yjjC2XovpgVNriHV/OdtJ/oA0BEB+3TF2oC6fKtiPrTf7weTt8FPsAfwhb58HRu3s7hbFdP951AoLmtnRukLHeih3EVTAhliyLnd432Sf7Gd4LA4V3P+KQSAl0g2F2OQEtaZkolMzePUK75Ww4Ajt5hn9M3M=
+X-HE-Tag: 1788539402-400731
+X-HE-Meta: U2FsdGVkX1+RIKJGqaaRHhNIqF68av7jRYbgDurG8vV/0QagXQPWz1WnJ8lLYq9vQFmics/15u9hDM9jHCispwe3CjhY49+RKXjW5aGgkv21Pv0YMftvvyGnjuRsqzzeSzq1Rjs433t3CgeqZBCuK0OxTqOW3pLVb5dt4rKm3aI7MWLFG45GqBRO72xJsniGj8wnmMIXioUjpiGWv1ov4CqbAS8gw3S1Kdf061TSQbJTsBOsj8YLFjF+3T5GvZwbD2RBK0Dun7aG1oqGSMTpq15N0W1L2H1s8hHVjcteinyyWoNj8DPLbzaSbNa3WMldqa/QsV/soOiSH0x3vlbc9LoJlM1tIgxU
 
-On Fri Sep 4, 2026 at 4:43 AM PDT, Steven Rostedt wrote:
-> On Thu, 3 Sep 2026 20:30:19 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
->> > > On Wed, 2026-09-02 at 18:57 -0700, Alexei Starovoitov wrote: =20
->> > > > I don't think bpf fits here. I haven't seen active use of RV and e=
-ven less
->> > > > so of any request from people who want this kind of programmabilit=
-y.
->> > > >
->> > > > So Nack for now. Sorry. =20
->> > >
->
->>=20
->> Ok.
->> Please add
->> Nacked-by: Alexei Starovoitov <ast@kernel.org>
->>=20
->> when you submit it to Linus.
->> Let him decide whether bpf maintainers have an authority
->> to say where bpf is used in the kernel.
->
-> When this is ready, I'll be happy to inform Linus on the pull request
-> that you NACKed it, if you are still against it by then. He's Cc'd on
-> this conversation now. But you left out any technical reason for the
-> NACK. You basically just said "I don't see how this is useful to me".
-> That's not a valid reason for a NACK.
+On Fri, 04 Sep 2026 09:16:28 -0700
+"Alexei Starovoitov" <alexei.starovoitov@gmail.com> wrote:
 
-You added a whole bunch of hardcoded "monitors". None of them were
-necessary. The whole RV is imo a waste of kernel code.
-All of that could have been done via existing bpf tracing functionality.
-One can delete kernel/trace/rv and do the same thing with bpf.
-So I'm strongly against bolting bpf to RV as yet another "monitor".
-It's a wrong design. Keep adding hard coded monitors and don't mess
-with bpf.
+> You added a whole bunch of hardcoded "monitors". None of them were
+> necessary. The whole RV is imo a waste of kernel code.
+> All of that could have been done via existing bpf tracing functionality.
+> One can delete kernel/trace/rv and do the same thing with bpf.
+> So I'm strongly against bolting bpf to RV as yet another "monitor".
+> It's a wrong design. Keep adding hard coded monitors and don't mess
+> with bpf.
 
-> Gabriele will be presenting this work at Linux Plumbers[1]. This will
+In the beginning, Daniel Bristot looked into doing this with BPF and found
+issues with it. I do not recall what they were and unfortunately Daniel is
+no longer around to explain it. Maybe Gabriele knows what they were.
 
-I didn't vote for it. Other bpf maintainers did. Hence it's in schedule.
-But my stance is still a nack.
+> 
+> > Gabriele will be presenting this work at Linux Plumbers[1]. This will  
+> 
+> I didn't vote for it. Other bpf maintainers did. Hence it's in schedule.
+> But my stance is still a nack.
+
+So be it, it will likely be a lively discussion ;-)
+
+-- Steve
