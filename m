@@ -1,38 +1,38 @@
-Received: from mta0.migadu.com (out-108.mta0.migadu.com [91.218.175.108])
+Received: from mta1.migadu.com (out-108.mta1.migadu.com [95.215.58.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E593368D77
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 01:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594BB368D42
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 01:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788484743; cv=none; b=HIR9CcWcYnN9z2Znap3dArdI0RN8gTf8yvLt33ZL3QzwHhVtZKKXYDGJEhMoXrAasBjJfu3QjwyKyu6rendMejgHZBVvudBBCEI+y2yArV2Ft1Vor/84SNZ7PLvb1YF1vFYa63UUlIdD4X4zMTVRg4b90H1YILdYC/OYt6Tow30=
+	t=1788484756; cv=none; b=JBXNuxO5srVw0r724X7RaYjIPm3/VO8p9s4cR5JcbP+9Sxc/WTILZ1WI+RahDaU9H+sk4rDAQ7vH/se21b8S5BAP8SCQm592gws+7drNP7/zsMkhKS5LqNzySB3WQ419JcDrius5jQVn4+qc4D0OmzVf+GZsbn9jNXy6EYNGxug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788484743; c=relaxed/simple;
-	bh=ZF36Qtxrn778JK1+doKN+UFXM1BY0v6mpypALrzmwys=;
+	s=arc-20240116; t=1788484756; c=relaxed/simple;
+	bh=uVjDr7dZL7yoKSrQjhePnAihc0cTtyYDH0m68MNyVco=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KIkPo6+9BWSlGaJxJVSXwXOYWxwL0AwOxCDr52z4vMrEWK2mYzQxfSnJPDt1rKYhs9gfKfEvKISbYH9G7SuAl4jo+zDnnERycAT/V5SN/kUAexnRhbJY2Hr/RY+9cmU5WnaDhqRKo1Z1LGcaNUw8rZiD6/G+wjqg9XYBNUmboXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DmQgZNse; arc=none smtp.client-ip=91.218.175.108
+	 In-Reply-To:To:Cc; b=lZeHMJf4x7xlYC1OFo1x82GmCaH14NgAGT9JQkFXFnaS2ZB9PmP7bCSe9uEdLJmg+93UPcwLOr4G6VHvRn0XjEmCrbGKo5HX5tRqvO1JKajX/rwM71vBZfCPtnvO1iO/gv/L/BOmqQW4mgy19WvDqQ97fApqldrEFcyY+ydxy0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TCM+NeT2; arc=none smtp.client-ip=95.215.58.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DmQgZNse"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TCM+NeT2"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=ZF36Qtxrn778JK1+doKN+UFXM1BY0v6mpypALrzmwys=;
+DKIM-Signature: a=rsa-sha256; bh=uVjDr7dZL7yoKSrQjhePnAihc0cTtyYDH0m68MNyVco=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788484740; v=1; x=1789089540;
- b=DmQgZNserxW2OaaJTh9qprlegZO3IjdbHHpZLICzOIVDt2Wnr0MMDKfLHCe6/tuAqabxONhZ
- yVclT8ODB+z7tSRnmcCoIIKAZPrMrQOE3yI3cgztgufxRMjVvnOPxbMiOYtA1xnC2fO0cwx6b9b
- XY1Bo2NgQO8vIXWqtaNDhMz8=
+ t=1788484752; v=1; x=1789089552;
+ b=TCM+NeT2+KyWgDd/U4By2gfp/3/qVfWDnP4DWVbRhS66XX7GA2k28Pgk1DEHru8egdLQLPU+
+ 0omXg/e6u16phqDsmNLUKV8PegxjXZNq3M6OjXo/8yxFBvz+WrOhGwkBnMWpUjCvEvGi9Rplc+G
+ +ICdQGlY1HecaonN+0RHIxEs=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 684c16dc299b021e;
-	Fri, 04 Sep 2026 01:18:58 +0000
-X-Mizu-Trace-ID: 684c16dc299b021e
+Received: by smtp.migadu.com with ESMTPS id ce60cf1ee74e60ff;
+	Fri, 04 Sep 2026 01:19:12 +0000
+X-Mizu-Trace-ID: ce60cf1ee74e60ff
 X-Migadu-Flow: FLOW_OUT
 From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Date: Fri, 04 Sep 2026 01:18:33 +0000
-Subject: [PATCH RFC 1/8] ftrace: Let ftrace_call_adjust() reject a patch
- site
+Date: Fri, 04 Sep 2026 01:18:34 +0000
+Subject: [PATCH RFC 2/8] scripts/sorttable: Make the arm64 before_func
+ offset configurable
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260904-b4-arm64-callops-kcfi-v1-1-ce6687739b0c@linux.dev>
+Message-Id: <20260904-b4-arm64-callops-kcfi-v1-2-ce6687739b0c@linux.dev>
 References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
 In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
 To: Steven Rostedt <rostedt@goodmis.org>, 
@@ -83,37 +83,59 @@ Cc: Leon Hwang <leon.hwang@linux.dev>,
  "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
 X-Mailer: b4 0.15.2
 
-When ftrace_call_adjust() returns 0 for a patch site,
-ftrace_process_locs() does not skip the site. The NULL test runs before
-the adjustment since commit 6eeca746fa5f ("ftrace: Test mcount_loc
-addr before calling ftrace_call_addr()"), so the 0 is stored as the
-record's ip and ftrace_init_nop() later hits the BUG_ON() in arm64's
-patch_map(). Test the adjusted address too and count the site as
-skipped.
+sorttable hardcodes before_func to 8 bytes on arm64 (two prefix NOPs).
+Make it configurable from CONFIG_ARM64_FUNCTION_PREFIX_NOPS instead.
+kCFI kernels with CALL_OPS need three NOPs. The symbol does not exist
+yet, so no functional change.
 
 Reviewed-by: Ben Cressey <ben@cressey.dev>
 Reviewed-by: Florent Revest (Anthropic) <florent.revest@linux.dev>
 Assisted-by: LLM
 Signed-off-by: Jose Fernandez (Anthropic) <jose.fernandez@linux.dev>
 ---
- kernel/trace/ftrace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/Makefile    | 3 +++
+ scripts/sorttable.c | 7 ++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f9d80c7bd9f16..394f82230e0c3 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7676,6 +7676,10 @@ static int ftrace_process_locs(struct module *mod,
- 		}
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 3434a82a119f0..366c6a35141a6 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -51,6 +51,9 @@ endif
  
- 		addr = ftrace_call_adjust(addr);
-+		if (!addr) {
-+			skipped++;
-+			continue;
-+		}
+ ifdef CONFIG_BUILDTIME_MCOUNT_SORT
+ HOSTCFLAGS_sorttable.o += -DMCOUNT_SORT_ENABLED
++ifneq ($(filter-out 0,$(CONFIG_ARM64_FUNCTION_PREFIX_NOPS)),)
++HOSTCFLAGS_sorttable.o += -DFUNCTION_PREFIX_BYTES=$(shell expr 4 \* $(CONFIG_ARM64_FUNCTION_PREFIX_NOPS))
++endif
+ endif
  
- 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
- 		if (end_offset > PAGE_SIZE << pg->order) {
+ # The following programs are only built on demand
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index d8dc2a1b7c312..925382bb23dcc 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -281,6 +281,11 @@ static int add_field(uint64_t addr, uint64_t size)
+ /* Used for when mcount/fentry is before the function entry */
+ static int before_func;
+ 
++/* How far before the function entry a patchable entry may be recorded */
++#ifndef FUNCTION_PREFIX_BYTES
++#define FUNCTION_PREFIX_BYTES	8
++#endif
++
+ /* Only return match if the address lies inside the function size */
+ static int cmp_func_addr(const void *K, const void *A)
+ {
+@@ -899,7 +904,7 @@ static int do_file(char const *const fname, void *addr)
+ 		/* fallthrough */
+ 	case EM_RISCV:
+ 		/* arm64 and RISC-V place patchable entries before the function. */
+-		before_func = 8;
++		before_func = FUNCTION_PREFIX_BYTES;
+ #else
+ 	case EM_AARCH64:
+ 	case EM_RISCV:
 
 -- 
 2.52.0
