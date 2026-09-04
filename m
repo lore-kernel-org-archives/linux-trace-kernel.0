@@ -1,250 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C012E4746C1;
-	Fri,  4 Sep 2026 11:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE93634F27F
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Sep 2026 11:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788520954; cv=none; b=I1BhoMop6BMW4aDoh2+zCjsFocviQUn5xyC5t6nYayHWAVIRDcQDriF7jiwgkHnddp/vITu255tWPI0DKSGrOBwl4T+hIG94whAHSwmFtAX+o4orbXOG3wgRwWUR3IHGZyAdNoFJYgpXvALn1zZ17A3ue3MDu0l7SBx0PBLZk4Q=
+	t=1788521021; cv=none; b=rpHXNeHSwWdmGBVZE+Q1Ds/44ddxc+bS9nFHOsLVI1xfKcxjY2BVTAouM0kPTn8SjHrCD96sKy3x2cKj5HAN1XJdNSUlLZ8JXHtuCfwvoHa1YQ9CdV7rcHS6CoEGCD4N4UP1czo0LpRrdC7jMdL/1qw+m8ggviv7Wx/7sI5n+rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788520954; c=relaxed/simple;
-	bh=1OJ8OEceBtLoU11yuXztES2ERg0THZboio7cDVZU84c=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=p2B1pD5FZivKkt6sIQ1RSOpj7HSE9qs/dD7kQe6VSqlY/wXXHG5eiBLP/33pgN7/THYTF1KAL9KyMo0k/GeNrGwDyklzuR2v8rkwK7P+JC7EM/uDPi4IaCSJIH8ZV7IjKQ6ijSsJOl9GUFinOACIqjcfWmx9k8WRlmZgc5GXBEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+H1IUQm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788521021; c=relaxed/simple;
+	bh=2lecvDZ/BSD8c+InIe90+zaCIL0CBuMX3DDlyXPCoFw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ulaLMA3aXG/i4VuPhCb07/8b+LKDlBKxtFy2lmJ8W87duXP7Ii9DagE+I0HymKX9EJt7sxOUNxmw8mrYHq6egBnC5RkjHyWRWHpQ8nkJ3ef8W/4Z59z5g1Q4ivijcefbegvW6sRkrQ2LEiZ6A4F1c37FyUQE8KmtdzeiAkJ1OAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhVeyV3o; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+H1IUQm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDAB1F00A3D;
-	Fri,  4 Sep 2026 11:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788520952;
-	bh=+O7tQlPvBZA98q2AjoKIyg6tgq/TkM085PHnF+s/fF4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=b+H1IUQmAvHiI+tZ5goWmK22+M7MDRjROqWsQ2/TRpSY8vP8YHMsaUbS6Nw3ywoZo
-	 kiA8ZnBygsH53x53uq5AClxeGKkjSUschcUAbVCbAwlFaaFZDQW6RniYJC0w+7RPXK
-	 cdoNp1oSJBTyJR5iJyBn9cVDypKGST92B0xyqsAUtFXck7hWqh5LGd78WpznZ5+0m3
-	 zf3+pqlJ8Xc0IxkgRmwzWnE6eNpEWxYlnxKB4EV22pNK387/nT8WYJFC2c3TbHj8OL
-	 wjT7XkynLjiYT++a5otcv0nrDMjHZiUcbxCfRZktT3A/VNmd6V7tenHREjpl69B5vT
-	 29UGmsB1bDGmw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 07/12] mm/cma: Introduce cma_alloc_at() API
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thierry Reding" <thierry.reding@kernel.org>
-Cc: "Christian Borntraeger" <borntraeger@linux.ibm.com>, dri-devel@lists.freedesktop.org, conor+dt@kernel.org, linux-trace-kernel@vger.kernel.org, robh@kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, media-ci@linuxtv.org, "Vasily Gorbik" <gor@linux.ibm.com>, devicetree@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260904-tegra-vpr-v6-7-79042cfa8de5@nvidia.com>
-References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
- <20260904-tegra-vpr-v6-7-79042cfa8de5@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 11:22:31 +0000
-Message-Id: <20260904112232.0DDAB1F00A3D@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhVeyV3o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788521018;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2lecvDZ/BSD8c+InIe90+zaCIL0CBuMX3DDlyXPCoFw=;
+	b=DhVeyV3onUCEiGKZpO6UvGL72Xe1UoA2WNVtYBrpot/5jyTwQawN5Y6bQ0ofosdY/xoPeN
+	ta0KHILXWQZ0DZWapsIPiK9L72mg/tcECEgdH2Fb6o2p0KVYIylcvPz8PMo+JozOuphh0G
+	05XWS8YXYVZUliYBXiSVajgM8y09vFY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-307-1jkKcyjbO_iIiqPRTUm1Vw-1; Fri, 04 Sep 2026 07:23:35 -0400
+X-MC-Unique: 1jkKcyjbO_iIiqPRTUm1Vw-1
+X-Mimecast-MFC-AGG-ID: 1jkKcyjbO_iIiqPRTUm1Vw_1788521014
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c1c232fa136so126164766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 04:23:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788521014; x=1789125814;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=2lecvDZ/BSD8c+InIe90+zaCIL0CBuMX3DDlyXPCoFw=;
+        b=FGu6SRq+e2Niamun53jRyxnKE5e/FDKQ/iekQnWZm6uiKXf4vKn8FUm/81UuNxZrzd
+         cmOGqKgZMQ5ciZc/KTubv/NMX70C/vTjY4K4hb7rGgGODM7JYK6jRnQBaQFDERFL8wdb
+         98TNVavMWSiQojK8+fgZho4P7j2e1j7pWPRRiCGy2VwToKUIruZOXPaP+Ds3arBtaphn
+         1RLmrWaRtfSxb+cdkwoWEpX3gNGrpNZfe1A9FeQChr5j0z68l2yKMiimumcaK8F0eyaH
+         eupEy6/Q9CH1EG/7jpES6rBTmT9EqeO52XYfnwxYMkekszyWDDGBIdI1tTFvtZpWB0b2
+         5tmw==
+X-Forwarded-Encrypted: i=1; AKwUvBy5oNPV05o/XZc51BAE0yg0IPqrghQlugi0inpwS0W0UFIXPePAUOeLPxORMwUd+H6mEUQfviKiDjdYNXFnHOtNjao=@vger.kernel.org
+X-Gm-Message-State: AFuF++nygQQ23ahIU92MD9uatt0uEH1eXC28wunmPfGtQ+Ggz20gWczz
+	7dalkRTUTUMntQ3uQR2g4jGnJBx+9Qv8wdE+SDkB3CCfKaFutrTEySQChBUHGT5hiW+n7gsrRjy
+	UeVvwKVYE8JYslqXF3zjs0hfwdU1cILyCjfeRwAoeyyUf5lfKFiI2QrytCh0mz3l7l52Mf0YFdt
+	gghw/vBLeZaHH6Tlboeg2Ikos3byQaHr3C4KlRWKgLkaB1OULJcFw8RT0lzXw=
+X-Gm-Gg: AYBFou0eMwASLSRsmo+owS9Ye95KXdhGeJ4ZeuWPfTZVr5bEjRxJ8/heHYYVmLilUxG
+	kezFIYoe45cS2v5A/Bh3ezGw2QI+H2U7U+VJDmrLCExZUntUQi8WMpCkMlqqcpC33AIfjtens2j
+	ksaMgPb7nLhZaHN+J9sLdGHO37DfbzP+8q0Dllt2NygRhbOK8rmedtIa/XkRVTLQvPWOmChxdH
+X-Received: by 2002:a17:907:c50a:b0:c25:8b1e:3750 with SMTP id a640c23a62f3a-c2610474a62mr161182666b.12.1788521014272;
+        Fri, 04 Sep 2026 04:23:34 -0700 (PDT)
+X-Received: by 2002:a17:907:c50a:b0:c25:8b1e:3750 with SMTP id
+ a640c23a62f3a-c2610474a62mr161180766b.12.1788521013862; Fri, 04 Sep 2026
+ 04:23:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260831090524.106845-1-gmonaco@redhat.com> <87se3sakgi.fsf@yellow.woof>
+ <df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com> <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com>
+In-Reply-To: <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 4 Sep 2026 13:23:21 +0200
+X-Gm-Features: AcwNN1VYWiS12e-wX0_oY-0KV9RCS33pApbGhM3jUchKS91T2uscR3QBMlp3mw4
+Message-ID: <CAP4=nvSCxbFTLBSvXVFnv-smMyFd9fNFXjodJGEqah=_GEuXkA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/20] rv: Add support for BPF monitors
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Nam Cao <namcao@linutronix.de>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Wen Yang <wen.yang@linux.dev>, 
+	Tobias Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ta9eRmwJ_-iG-J74TDr4QTS_nSdm5sUXXir__aZX7Kg_1788521014
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
-- [Critical] Infinite loop in `cma_range_alloc()` when the found page range=
- is not contiguous.
-- [High] Unit mismatch in `cma_range_alloc()` causes out-of-bounds bitmap a=
-ccesses when `cma->order_per_bit > 0`.
-- [Medium] `__cma_alloc_frozen()` dereferences the `cma` pointer before ver=
-ifying that it is not NULL.
-- [Medium] `cma_alloc_at()` with offset 0 bypasses multi-range protection, =
-allowing incorrect fallback allocations.
-- [Medium] `cma_alloc_at()` lacks alignment validation for `offset`, leadin=
-g to silent truncation.
-- [Low] The newly defined trace events `cma_alloc_at_start` and `cma_alloc_=
-at_finish` are never emitted.
---
+On Thu, Sep 3, 2026 at 4:03=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> I don't think bpf fits here. I haven't seen active use of RV and even les=
+s
+> so of any request from people who want this kind of programmability.
+>
+> So Nack for now. Sorry.
+>
 
-commit 14084cc27d73ffca7f55e0856f2f9a10ae91ca42
-Author: Thierry Reding <treding@nvidia.com>
-Date:   Fri Sep 4 10:44:58 2026 +0000
+A major application of RV is monitoring the combined behavior of the
+kernel and an external application, see [1] [2]. Adopting RV for these
+use cases is difficult because the monitors are currently built into
+the kernel. Blocking BPF adoption because it is not widely used risks
+a deadlock: RV not getting enough users, because it cannot use BPF,
+and BPF rejecting RV because it lacks sufficient use.
 
-mm/cma: Introduce cma_alloc_at() API
+Of course, I might be entirely wrong: RV may not end up being
+interesting enough to users even with the BPF hooks in place, or it
+might grow enough with only in-kernel monitors for you to take it
+seriously. However, we cannot predict that in advance.
 
-This commit introduces a new cma_alloc_at() API to allocate contiguous=20
-memory starting at a fixed page offset. The cma_range_alloc() function=20
-is refactored to support range-bounded allocations, enabling the new=20
-API to reuse the existing allocation path.
+(Note also that the idea to use BPF in RV dates back to 2022 [3].)
 
-> diff --git a/include/trace/events/cma.h b/include/trace/events/cma.h
-> index 37195edf24986..4e0ab63e303f0 100644
-> --- a/include/trace/events/cma.h
-> +++ b/include/trace/events/cma.h
-[ ... ]
-> @@ -132,6 +140,69 @@ TRACE_EVENT(cma_alloc_busy_retry,
->  		  __entry->align)
->  );
-> =20
-> +TRACE_EVENT(cma_alloc_at_start,
-> +
-> +	TP_PROTO(const char *name, unsigned long pfn,
-> +		 unsigned long request_count, unsigned long available_count,
-> +		 unsigned long total_count),
+[1] https://lore.kernel.org/linux-trace-kernel/20260827072400.45734-1-tobia=
+s.schaffner@siemens.com/T/#e8a8b21136a60ad7c8f67b07c66f71de0ec0c1075
+[2] https://docs.kernel.org/trace/rv/monitor_rtapp.html
+[3] https://gitlab.com/linux-rv-tools/dot2bpf
 
-[Severity: Low]
-Are these new trace events actually emitted anywhere?
+Tomas
 
-It looks like cma_alloc_at() calls __cma_alloc_frozen(), which continues
-to use the existing trace_cma_alloc_start() and trace_cma_alloc_finish()
-events. Do we need these new definitions if they remain unused?
-
-> diff --git a/mm/cma.c b/mm/cma.c
-> index a10ea37a261da..f92d3a1882098 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-[ ... ]
->  static int cma_range_alloc(struct cma *cma, struct cma_memrange *cmr,
-> -				unsigned long count, unsigned int align,
-> -				struct page **pagep, gfp_t gfp)
-> +			   unsigned long start, unsigned long end,
-> +			   unsigned long count, unsigned int align,
-> +			   struct page **pagep, gfp_t gfp)
->  {
->  	unsigned long bitmap_maxno, bitmap_no, bitmap_count;
-> -	unsigned long start, pfn, mask, offset;
-> -	int ret =3D -EBUSY;
-> +	unsigned long pfn, mask, offset;
->  	struct page *page =3D NULL;
-> +	int ret =3D -EBUSY;
-> =20
->  	mask =3D cma_bitmap_aligned_mask(cma, align);
->  	offset =3D cma_bitmap_aligned_offset(cma, cmr, align);
-> -	bitmap_maxno =3D cma_bitmap_maxno(cma, cmr);
-> +	bitmap_maxno =3D (end > start) ? end : cma_bitmap_maxno(cma, cmr);
->  	bitmap_count =3D cma_bitmap_pages_to_bits(cma, count);
-> =20
->  	if (bitmap_count > bitmap_maxno)
->  		goto out;
-> =20
-> -	for (start =3D 0; ; start =3D bitmap_no + mask + 1) {
-> +	while (true) {
->  		spin_lock_irq(&cma->lock);
-[ ... ]
-> +		bitmap_no =3D bitmap_find_next_zero_area_off(cmr->bitmap,
-> +				bitmap_maxno, start, bitmap_count, mask,
-> +				offset);
-
-[Severity: High]
-Does this code use page counts where bit indices are expected?
-
-The end and start parameters are passed in as unscaled page counts from
-cma_alloc_at(), and end is assigned directly to bitmap_maxno. If
-cma->order_per_bit > 0, a single bit represents multiple pages.
-
-Passing unscaled page counts directly as bit indices to
-bitmap_find_next_zero_area_off() could cause it to read past the end of the
-bitmap, and subsequently cause bitmap_set() to write out of bounds.
-
->  		if (bitmap_no >=3D bitmap_maxno) {
->  			spin_unlock_irq(&cma->lock);
->  			break;
->  		}
-> =20
->  		pfn =3D cmr->base_pfn + (bitmap_no << cma->order_per_bit);
->  		page =3D pfn_to_page(pfn);
-> =20
->  		/*
->  		 * Do not hand out page ranges that are not contiguous, so
->  		 * callers can just iterate the pages without having to worry
->  		 * about these corner cases.
->  		 */
->  		if (!page_range_contiguous(page, count)) {
->  			spin_unlock_irq(&cma->lock);
->  			pr_warn_ratelimited("%s: %s: skipping incompatible area [0x%lx-0x%lx]=
-",
->  					    __func__, cma->name, pfn, pfn + count - 1);
->  			continue;
->  		}
-
-[Severity: Critical]
-Could this continue statement cause an infinite loop?
-
-Since this was changed from a for loop to a while (true) loop, the
-continue statement jumps directly back to the loop condition. This skips
-the 'start =3D bitmap_no + mask + 1;' update at the end of the loop body.
-
-The loop will retry with the exact same start index and unmodified bitmap
-state, find the exact same incompatible area, and loop without terminating.
-
-[ ... ]
-> -static struct page *__cma_alloc_frozen(struct cma *cma,
-> -		unsigned long count, unsigned int align, gfp_t gfp)
-> +static struct page *__cma_alloc_frozen(struct cma *cma, unsigned long st=
-art,
-> +				       unsigned long end, unsigned long count,
-> +				       unsigned int align, gfp_t gfp)
->  {
->  	struct page *page =3D NULL;
->  	int ret =3D -ENOMEM, r;
->  	unsigned long i;
-> -	const char *name =3D cma ? cma->name : NULL;
-> +
-> +	/* cma_alloc_at() and friends will only work with single-range CMA */
-> +	if (WARN_ON_ONCE(start > 0 && cma->nranges !=3D 1))
-> +		return page;
-
-[Severity: Medium]
-Is there a risk of a NULL pointer dereference here?
-
-If __cma_alloc_frozen() is called with a NULL cma pointer and a non-zero
-start offset via the exported cma_alloc_at() API, cma->nranges is
-evaluated before the '!cma || !cma->count' safety check below it.
-
-[Severity: Medium]
-Does this check properly guard exact-offset allocations if offset is 0?
-
-If a caller requests an allocation exactly at offset 0, start will be 0,
-which evaluates to false for the 'start > 0' condition.
-
-This bypasses the single-range enforcement. If the first range is busy, the
-code could erroneously fall back and iterate over subsequent ranges,
-potentially returning an allocation at an arbitrary physical offset.
-
-> =20
->  	if (!cma || !cma->count)
->  		return page;
-[ ... ]
-> +/**
-> + * cma_alloc_at() - allocate pages from contiguous area at fixed offset
-> + * @cma:     Contiguous memory region for which the allocation is perfor=
-med.
-> + * @offset:  Index of the first page to allocate.
-> + * @count:   Requested number of pages (in PAGE_SIZE order).
-> + * @no_warn: Avoid printing message about failed allocation.
-> + *
-> + * This function allocates a part of the contiguous memory on a specific
-> + * contiguous memory area.
-> + */
-> +struct page *cma_alloc_at(struct cma *cma, unsigned long offset,
-> +			  unsigned long count, bool no_warn)
-> +{
-
-[Severity: Medium]
-Does this API need to validate that the requested offset is aligned with
-the CMA block size?
-
-CMA allocates memory in chunks of (1 << cma->order_per_bit) pages. The
-offset is passed in pages without validation. If properly scaled to bits
-later, an unaligned offset would be silently truncated, allocating a block
-at a rounded-down physical address instead of the exact requested offset.
-
-> +	struct page *page;
-> +
-> +	page =3D cma_alloc_at_frozen(cma, offset, count, no_warn);
-> +	if (page)
-> +		set_pages_refcounted(page, count);
-> +
-> +	return page;
-> +}
-> +EXPORT_SYMBOL_GPL(cma_alloc_at);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-tegra-vpr-=
-v6-0-79042cfa8de5@nvidia.com?part=3D7
