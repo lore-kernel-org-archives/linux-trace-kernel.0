@@ -1,24 +1,25 @@
 Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021141.outbound.protection.outlook.com [52.101.95.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FB34FC8C0;
-	Fri,  4 Sep 2026 19:34:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60802511222;
+	Fri,  4 Sep 2026 19:34:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.141
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788550496; cv=fail; b=bQ5znW5NO85qWuGKeVO5kH5I9qmAEUysMSj16vCLYDSnAnxXUolcq8bf+bikaLBgFl+HLW28fDhaALh1L/gSJyw2vGhNVrBI6vZApZNW96devi/hDoxVoJxK81OiJ7mPcM4V1HwfbDfZXFNVmzlVYrTH3tgz6kTwNaYXYX3gKjc=
+	t=1788550498; cv=fail; b=H38Kqe2xKRTIVUDMh+kiUq1c2HHM8KiUPZk0S8gjEM6KJBPMtSEtl34n5zNQ5Qwg6b2YJBcThs3yf/7qXs/cOh3aPzmPyeyZxeZKZRJWAN5GRZxw/WfRkDh4u/TQp4p6jvVjzTABO7tJ8reYxGX0SjXEqSxtwG+SWcVJqt/Fcog=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788550496; c=relaxed/simple;
-	bh=GWt3JWN7AdWjxH5CwmcpkwiRRLbeV3em5FaXMZqXkjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=j48vduDh+xAkgs/JrQCCIYi5vqnZ/MUNMNe+Apb01vzsxyLUAhO9EMEsGSUIEL28uH7hKjqVh4dtefZVHylj4l+zpc6n7rtBChTdtymW8gvCY4TFxxSiAZ3FPcK1q+3ykAf+bWr+xe23CVhlz+RIkLZcBukejZE9JoEMnO/8vx0=
+	s=arc-20240116; t=1788550498; c=relaxed/simple;
+	bh=IjM6tPF+KSBrbl6tvDGDsc8LsiV9fJ/DNxEr8obtcdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rBYV8WWevP7pdgwvp/K85T6QJZp5/N/wb0ysb4otTB5ltEex+eb8xQJgkqzq4gxpemnYvNGCdyFWj7WuytHACYSAYXoG07EjAleajiCe2tQKsk/t2rUft84b3Av+bFMQsSWam6ruEABie3BEujSHKHOwFqbV6acrWin/q7tctAg=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KBMgayhUTrvXsV2YQsomm8ae0NPhki/Ne9jXaLKejJk8c2YUyNZCGvXUYa0cmQQdViKjBZUD+yNm3FQ0HXpBQxq++7fnfPN19PIh03GrqX5cOwmQ8I3WzGvEZpRYCBDHXr2Lr29pawtAJAd6BppNL/NL+lzriXc9G7ePsB814s5FK15pi+6MnQDS6rfZaimFjYmKSJq5PzYKsZVwrAVq9ZOyEfAK1bZGmeu1QzUbTqx5ChMvZYofr4/fgBvGmPgjhXBcY1BDSQFfoCfhsvg/+nxgxscrBLBpai79q9yLwNxi3W9JzZK77p/mcsbCUZdBnU2CCkFpMN/NfLeowSQ2ZQ==
+ b=uj25hPNg3jEi9eouW0btdRyl2FQWIoC2FOi2nyg99UrFzwos5YURBtYSUap9/nZBv5PwCu2Vb7H8syMaLnq9RZcDFPokozwebNd8H67kK/mECoE2RemLCzYG1YlZqdqrNjlDBA5a+lKSbP/e09yr11XZZgP1OpyeYcvpVafHszhqUZVmmBDFkJxGqCtXQRMnJTAp06GQPo0IyXfAMfczAI8XUWhIEjs6v05wkcJMCu+6sZBxC5aaTJYw9FSKHwk5nhtDlO4lR5NxVqmTrw2yLIKj5H1c+R5HoFiDWA0eRhnEqLr4f5qmfBl40MLeo0Y69VbRDJVjiOrZi2/obKd8ZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=UdmfwxvEvdPZcVlH9RzPiwfRailq9Z6kpBF9xW5gJ7s=;
- b=JanJe+1DaMOC5wXhT1rFx9bNDHpB+hABr4qyuNtFOHPdRq1m7Ch4xO+vzWLtC7vV0B1BLqKrCCed0byYgeCulgkQbqGWTOMP1mtGS7+klFtrO3urmQFg4wN5c+2YtoZ7jReL+C4yMyJp+McGXTNB8s1bQp8Rk3Z1vXTEN+0TF4GV7j7QE5xp4M4+AXFrbh0jY8+Jy7XI1p9V6+7LZwzsWRXPqFo5K4ZqDe7K+MQBSRcgUQF0Hj6fKo+lFhs81GRmG2EzHPjoZIuMO7cJTpQFG7Cf7MGJeW9GbBN26fOCtdi5CuhwhF/S4HeXKZ+8tZKGTXz/DQWlDOchgZNtNt+Okg==
+ bh=T7O9lvpns/4pU+Cc0w/gFbEPoPkbxb3Ug9E7fy3mvQ0=;
+ b=YvxAcu4mUehhj9BiTnr2Xc9amlEFRErU5Q6lvz3Ar70fg2/xmzRn5pnUTjZjmBm/7WOq911Osg/Mh3CBrmsaFN8LlLUU6HQcPI9JVgWo5rktLiPqouQPtGgMakgPTxu/32XiGzT8V2oxsw9KnQO+z5TMBSk+pSkij9Uwxe+BPTuTtgSzNFfJilgUggkMO6FFuIBz3nwkwRO4ujjXS2aXBh9wy1e765yPJiLRFgbYwuJXLQWQN8GMYjCuh7dm06zgwGGghPvB8QaHmifmFCdTkzxX0uYqaxPXTe17nGV5vLvCX8Ag6mjjDa+ka1j6GXetm+iwmJiESZgfunk46D6/6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -28,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LO4P123MB6609.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:27e::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Fri, 4 Sep
- 2026 19:34:50 +0000
+ 2026 19:34:54 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0360.008; Fri, 4 Sep 2026
- 19:34:50 +0000
+ 19:34:54 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: tj@kernel.org
 Cc: jiangshanlai@gmail.com,
@@ -45,14 +46,16 @@ Cc: jiangshanlai@gmail.com,
 	marco.crivellari@suse.com,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Add telemetry tracepoints for CPU hogs, distress, and BH budget yields
-Date: Fri,  4 Sep 2026 15:34:44 -0400
-Message-ID: <20260904193447.247502-1-atomlin@atomlin.com>
+Subject: [PATCH v2 1/3] workqueue: Add workqueue_cpu_intensive tracepoint
+Date: Fri,  4 Sep 2026 15:34:45 -0400
+Message-ID: <20260904193447.247502-2-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260904193447.247502-1-atomlin@atomlin.com>
+References: <20260904193447.247502-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN9P220CA0018.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:408:13e::23) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN9P220CA0023.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:408:13e::28) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,125 +65,165 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO4P123MB6609:EE_
-X-MS-Office365-Filtering-Correlation-Id: 67dbe7f0-0c1d-4c79-5dd2-08df0abb962f
+X-MS-Office365-Filtering-Correlation-Id: 2ddc7b72-7153-458d-b99a-08df0abb984a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|366016|1800799024|10067099003|6133799003|18002099003|56012099006;
+	BCL:0;ARA:13230040|23010399003|376014|7416014|366016|1800799024|10067099003|6133799003|18002099003|22082099003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	R1IoxnPoKStcgRCsqYcTfkifPFsI1waaSHb7Fh4tjidfVekdfkuSqk9cid2eZad6tOG1GSHn1UO/u6+OpBt0lI1ma4MTRpIM+PLfW4FcYdw2lkGKloClxhOMMDYvBxapZ/SaTRXdShvDIADI4US8jDiHMybL74pMySHx2aPzmmu8KUMW1JcbfNJhWN2A3LExH/+TXS7MCRSJ0TRKe7JXyNVHVHGipwYsMV7BuGsjzu/cjdASWenpbXts5uv669ebdD5QdPoZTMlYAnkqN+ErbP/P5fvGFhsjHdCiq8AzWGPe4QxYr4shpUMxOY/Gnq4sqKlQJmH2OQ7GjZ6HS731+35pCdR9H3UbeBfZaDvc5DveeoDJWuErAyILpY/w9M8gM531QSlztjZ1MAe9ryzCYvVmwGra8sSFsD55lvWoqvq9lMEuiPpjwnewXyPyf3SiuD9bIBZTyay4NUZhc3cFwPm9Ns84uFb0tI2AdrvOj0nPjIDvSRBn6xwfTmIt/KBv6435IlJRuBxoteMYfnXVRRTalM/Z2TvO74L1Uqay9ZKry2CD7UYyIlE0VaQvrqbJElCq6rxZUPeXgW20riguHGVXPCYwn2tuk0GA5kTT4tEqZehgBnlArk4or2cpOWlVmPuEzbWiPWO6DYiMOuGDfH+PAYhkurj1+qHFwnUXWtk=
+	xJUxI5ztzxZtEmpBGU/t6QnMOb/pnVwUm4l/uJjMXInnWzaKzshZM1oN94Gp1ZOI9TUGFbfTUKjQHgnoqu+f2h8jsq2gQ2EYgCxpwbsG/0TnflW1xXiYO/0A9yMm7zdmzmiIZ/u4odndVqnpiLwOv+LtXhMnvbFXYNGDBVuWuPs8Ci0Z33hOaZDIeYp2OfRzCiM6pf2vXMmYnj0+vHTY6LZCX86kEVShBL00y/6mu2JP5Ldzed8RJPnWs1SHp2p27gm8/r9lJQwV1aNmvwWC7Ijn0z4inFHq4SDGoSB+eBid1X1/dzH7Ist69wbsdvg/9LBgm6kPaZREEugHy+9Hm2/Balnx5CV2SetC/aO+klPXcTCBG/aSgdr9NhEY518+GTKWtQT6Vi+eMTJjcPeRJ1cOPV9Jy6DsNZuiy1VjAftisgeVueSngQFhSe5SyQrivRZZkyqWS9/omPh75n+HrzCpdcWWqKGglhUZGQEN2FB8Yw8hzSzq7Sf57vheeFxe3J+EALuU65YNsnRj1MnzIvc/De4Os9YzSCyAwPwk/kRKllJL7gkt3HC0kl67quh9IWmUa7rFGJzH2Kz20+6tMbK4fXSOzNQn1uBeskO6MxniYQRh2LrRtFYjRhO7vIbmofw8jgse0mhFHaobEggUUNp9QIWH6Ov/38F5/7+yPNY=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(366016)(1800799024)(10067099003)(6133799003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(366016)(1800799024)(10067099003)(6133799003)(18002099003)(22082099003)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hCUDuUeJQrY7ceDqbCIYmsJB/2DDjlg+CSBGmZJYZ/wWWF677EGY6X5aROvd?=
- =?us-ascii?Q?Qrc5YgtzIVZStn7EEjO8kIz0wWLYeHNmwzEEEtdfK4xYjvvkKbgSX1MU5qXk?=
- =?us-ascii?Q?PzS3Ahq1PAhPvgHvHxgdW0ctnUL6aY+ECf/LY8fsNZYu73m8AZtUKBctbrwY?=
- =?us-ascii?Q?YKXUsqAGA+tXBpOmqsZaRHJQ7i9ur29yESFNl9rSMRUE8falH1bVgZGkz6FZ?=
- =?us-ascii?Q?UuXAOqhn3w5KT2W5ViG/3DK+hz8pKFeb1FTBCDdYuP6kX2hPCrGcXeRJ6HLu?=
- =?us-ascii?Q?gpOTHeEeYcV58nHH2a0fvPurB9TOk3gI9/IkjfKL2XCzyK9LNvzjTT28nuVL?=
- =?us-ascii?Q?+MepiaMkr3b9+MeKjuucdm3gQQ0Gk6dsbe0H+Sme9JPZYtBYyz4E3OnSW+x7?=
- =?us-ascii?Q?p6OZvuzwKknrQTV66YumtwyrwnVFxyO1JlUl3CS46enDaWNftS5yLi56hCtx?=
- =?us-ascii?Q?Py+a7zKdrgDLeA9qLKbklgpDW2yRe0WaHp2Y42QdfPSdwI6rD16otGaoNFpZ?=
- =?us-ascii?Q?V7GlEDI7JF5DIvOBzakcZ1UybAeU8BoWALgl8vaQobLuZrYsoapn7fA9navC?=
- =?us-ascii?Q?p6baX9xBF1lDItaMvW56/zENFLLNVZxnvfCcxh4xxqsUyV+KDfuCl7Vc/73Z?=
- =?us-ascii?Q?G4gswWykv/ojAlNfBP94OGeH1SI/3mzOFWJtSclAGpmD4f8kWwHnUwVJutd2?=
- =?us-ascii?Q?Irk404QL5eji0br6UancxveunuRHnoqV2vDdkyRjCKCl8vKIW9FmuqqjrBTu?=
- =?us-ascii?Q?IDptmMMSTbTso/W+qT97O7RKiZhR4KToHkpwT3OgW2jBP3EobNyOb87EDf11?=
- =?us-ascii?Q?a1u9vWbnBZJcY3u69aor6bWGhlgHI5Bq+O/X7BDUcNTtijDS7UfcTmGoRs66?=
- =?us-ascii?Q?NQsKFvJIMM3q2jxt/lzF+hAcE+CuFAJcV56NbSbakRfkxDzvUlQhZfudVQ1+?=
- =?us-ascii?Q?ZBtMMxpU0TZ1AdK0iVxJ0Jhg4B5nWGfgmz4RGEu1KRLK5pB3tUymBkF3p8b8?=
- =?us-ascii?Q?1KsIk32Nbuj1gTWq8+bBf94ez6l/hX8fac2hhOzfoEoDKm2PpLzXSeKRafC8?=
- =?us-ascii?Q?Glwn9k0hyk2WwQcItaoU2yZi+euLsaa7MutNIXcNuVw1zFz7prQxrN3u3w1W?=
- =?us-ascii?Q?WyiHr1/5SdY4xuyLgFjA63tPx31zaiZnPpi1GV+kTR/WsUBGQfXKsRvaDwxA?=
- =?us-ascii?Q?25n1ozzyRE02Sm6mchuwVnzTu4Yj+u6nNnOQf0n0ulfdsc8kCeN4ISrdymO8?=
- =?us-ascii?Q?HDekBJYLQE3aWQEEtaAU2eOHDxzxckbozSMnN2p71NV/btk9O//fWFvKlsBQ?=
- =?us-ascii?Q?a69pl4iOcicWBAsOCD+6awQSvpc11nzAhvWflVM+rVoDwfaj6UEL81PMJ8Wb?=
- =?us-ascii?Q?4aaVxfSWesI0MnbffdRi6Brz4sUZGuRnQ+N/9Yn9Eak9+fsZn/rFZNcuyQjm?=
- =?us-ascii?Q?R3DwJfSDGiR12P4M1h9PFS3zOO2myBibtZHaMNhSpdNa1XPnwzrm4f4WzWHG?=
- =?us-ascii?Q?SzEhHotF2xHSmeCDbey9ObgiYUa8i+G4rb0vsDI8+9Yr6zEq1mVFfnDyGyy4?=
- =?us-ascii?Q?Tlf6E2xS3Vt9etuRNNDKBFN+hRoRCnUm2htmgt+KscFYjF26UcTC/lr7NThZ?=
- =?us-ascii?Q?QLWK4Sim8rF1Kq9DLA0HY7d2MdWAns7XRXWXI/KSDpravzwNvpLSuM0O5DnD?=
- =?us-ascii?Q?8vTF/TGEtrCBobSpyYRuJYneCEN41y+tM0zwu6IB7cCLBpMzPa7efRzNGbQr?=
- =?us-ascii?Q?hNYiOCwLMw=3D=3D?=
+	=?us-ascii?Q?ximktAxfjaFQ+/5IRoo6A2LucDPYvTYsj/gORbfFl6yfSlbcu34zSvPx4O0Z?=
+ =?us-ascii?Q?4pJUhqoRz92QmzDPM3cQMlkb41RwjdLQJuV3wyluuEwdYnEDE2rsrGkssSoZ?=
+ =?us-ascii?Q?7duwCYwjBt3apzq5uzzN82n47/U/VCKxMg9zrOLzDY9ShTcV26zj040hlaEq?=
+ =?us-ascii?Q?+u5KM4FcHl87XHb42k+GkXk8D/ScjgWCBdfw2EVe4ev9PrmUzt729S5Pe2Ir?=
+ =?us-ascii?Q?C621XPWvjMIMei9D3sEOJE5HsNnLYUYB8cRFsogjN2MbBY82/AecXcSmZs8A?=
+ =?us-ascii?Q?hUlSFOqaPwCbLA/iHR0Gy5hoCYXCHdw6OLc3lDwYGNpS0Gnpi7S3RWrZklrx?=
+ =?us-ascii?Q?oQTkPqKiMSqAVBCbY/Xs4QYVKapDfsd46p60Ya6/tw9BuUejqwtgIMyiI/0w?=
+ =?us-ascii?Q?BMxZmOncG7204P85dNCNu2ThxhCQ/Oi2g7gggYr151yI/+kxPY31p9romf+B?=
+ =?us-ascii?Q?eBnMr2qrcv4Ke9MHVqnXClOGlbyGpu+8cA9Z2ogONu9UC5w5ljeREnBWBZX/?=
+ =?us-ascii?Q?pq6iwZZ7vkHlYG9NDnxQBw2W6sMPLtFOkT+RbiXT+JClKaM+eJAc1yNuaCv2?=
+ =?us-ascii?Q?hc4V5opdsxuiTMbWRlDJ23UM4pLS3NK0Pxo7QPMmLN1EYXAUNqng30o308k8?=
+ =?us-ascii?Q?L12JPqjIdh3QptcL2MHgEXv4owL207LR4L3ReTwcPpgS3gSRXZtJVWT8aMyb?=
+ =?us-ascii?Q?GT2uVcbSc6KKWaFCyqoSibgwX5hX6n2AvGaPgAfBhrY1hi0Tgl7Sb7j8PlDS?=
+ =?us-ascii?Q?q9HfUy6ha4XA/uKTpJkPec63OI8UYdEGtebL8kAsb5ond9XT3+1UiJ1mT8wz?=
+ =?us-ascii?Q?prSOGeDcuAuf6rRCMcvwKfHrBLvAw6QzTOj0noyakNXz/11iGSn1BXIbYkie?=
+ =?us-ascii?Q?vAmlkqcdgm6ewFNUoZcSLfu5izpqJPx9h6Z4ESWpE91CuVgvviqSsXQfPQZv?=
+ =?us-ascii?Q?1judaz8r17bo4RgMsvQ6W2tU+3X5lDNoJQ6RuYOUq+a2ieqzrKe/J44p8sBs?=
+ =?us-ascii?Q?B36GrbIpl/ZJjl76pAU6sUyXK6LY5IPeWBOJDjgI14/oeqdUXaokwuwdI0RE?=
+ =?us-ascii?Q?KkHmnqSS5mRndSwKKLlvEefuXL2/eq5im1wK+MYaUr1OahWGDt4R9KH+bf6l?=
+ =?us-ascii?Q?49Klm9yfTyCGM7RHFP/hGJ2afFGtfU+qAt2drSX2xNuaMr5ExB/UcfuWbrxy?=
+ =?us-ascii?Q?R+2puFRqMlhmZBHYabUL2Gl4R6CmP9Y4SlpKiMrlJOok5rH8CsVG7v8GXJAf?=
+ =?us-ascii?Q?nF941TIZSDOHettFw206dx86lpD2YW7IlNNeWqZSXAPB51T/mA30aFdBKK0E?=
+ =?us-ascii?Q?rQXbyFcbhO/dGY8LGKOMzSAGjS+lF8ukLnCT6rHOUiaiTbkMUelJcG6Zef5d?=
+ =?us-ascii?Q?74wGwOu7Qkp37BGszO/UQwKwfhfIwC20OK35CrBd63DcKpQDQ8T5CqJ3184B?=
+ =?us-ascii?Q?n4xvrDtUYO1+THj7mkdIAkUzBxNSd6sJ74D88fhk2O1K2gmUXtUYd2HtvraC?=
+ =?us-ascii?Q?flLstv3ZdfEqw0atdGuVfuemQf+0E00HnKs4QTbK4F200zsEpG5YJyRUF3+x?=
+ =?us-ascii?Q?Q86GvQMWsoj9sv5tsf84PTJnoDsxSBI/1fVHG7DNEUOFjK0AbGByFnrR4c+3?=
+ =?us-ascii?Q?BLw4O3VC4uaBE8p6gIF2If/dFYgm3MaZJfgmHQWZmd7y08DsP2j3pP0j+umE?=
+ =?us-ascii?Q?hyu66XoxS15eA1iLUTSNIIYcZzpBu7lnUN7Mym+Zl6RtXLMR9mStWztmYenV?=
+ =?us-ascii?Q?x00M6Wz9zw=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67dbe7f0-0c1d-4c79-5dd2-08df0abb962f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ddc7b72-7153-458d-b99a-08df0abb984a
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2026 19:34:50.6787
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2026 19:34:54.1838
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F9+MpGqlxv97hNK94PLpmtRKF1ls1WnKNCdE4lk1Q2WgM7jjaMOmAEvFl0xbES5MmJh2WUOn37+8E3J/ZTo5Fw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: SLkxmj9Ef2DTmwKCkpGOUloPJDgbe0hTzE+gpzRlry53hvbXYY4Z/4IoHHHhZ/VuRFBYbcpewdXn2tsnhNlRYA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO4P123MB6609
 
-Hi Tejun, Lai,
+When a concurrency-managed per-CPU work item runs continuously without
+sleeping for longer than wq_cpu_intensive_thresh_us, wq_worker_tick() marks
+the worker as WORKER_CPU_INTENSIVE and kicks it out of concurrency
+management so that pending work items on the pool are not starved.
 
-While the workqueue subsystem maintains rich internal telemetry via
-pwq->stats[], wq_cpu_intensive_thresh_us, and distress mechanisms, several
-critical state transitions and execution anomalies currently lack real-time
-event notifications.
+While CONFIG_WQ_CPU_INTENSIVE_REPORT logs rate-limited warnings and
+pwq->stats[PWQ_STAT_CPU_INTENSIVE] maintains a cumulative counter, there is
+currently no tracepoint emitted at the moment of this transition.
 
-Across production fleets and low-latency networking workloads, polling
-pwq->stats[] or running drgn scripts is impractical for detecting
-intermittent stalls. Tail-latency spikes and packet drops often stem from
-softirq overruns or latency-critical work items queueing behind CPU-bound
-tasks. These event-driven tracepoints allow zero-overhead eBPF tools and
-latency profilers to capture stack traces and kernel context at the exact
-moment a starvation event or softirq budget exhaustion occurs.
+Therefore, add the workqueue_cpu_intensive tracepoint, recording the
+work_struct pointer and callback function pointer, workqueue name,
+executing CPU, and the runtime duration consumed in microseconds.
 
-This patch series introduces lightweight tracepoints for these key
-operational boundaries:
+This enables eBPF profilers, bpftrace, and Ftrace to immediately detect and
+attribute CPU-hogging work items in real time.
 
-Patch 1 adds workqueue_cpu_intensive tracepoint. When a concurrency-managed
-worker runs for longer than wq_cpu_intensive_thresh_us without sleeping,
-wq_worker_tick() marks it as WORKER_CPU_INTENSIVE and kicks the pool to
-prevent queue starvation. The tracepoint captures the offending work
-function, workqueue name, CPU, and elapsed duration.
+Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+---
+ include/trace/events/workqueue.h | 40 ++++++++++++++++++++++++++++++++
+ kernel/workqueue.c               |  7 ++++++
+ 2 files changed, 47 insertions(+)
 
-Patch 2 adds workqueue_mayday and workqueue_rescued tracepoints. One when
-worker allocation stalls trigger mayday distress, and another when pending
-work items are handed off to the rescuer thread to ensure forward progress.
-
-Patch 3 adds workqueue_bh_budget_yield tracepoint. Bottom-Half (BH)
-workqueues enforce execution limits in softirq context (BH_WORKER_JIFFIES
-and BH_WORKER_RESTARTS). When a BH worker hits these limits while pending
-work remains, it yields and re-raises the softirq. The tracepoint can be
-used to identify softirq budget saturation and track whether yielding
-occurred due to time slice expiration or restart counts.
-
-Changes since v1:
-
- - Fixed 32-bit architecture build/link failures reported by including
-   <linux/math64.h> and using div_u64() (Tejun Heo)
-
- - Kept the fast-path threshold comparison in wq_worker_tick() untouched to
-   avoid performing division on every timer tick
-
- - Calculated elapsed duration using div_u64() on the cold path only after
-   marking the worker CPU_INTENSIVE and releasing pool->lock
-
- - Eliminated the race where re-reading jiffies after the loop could
-   misattribute an exhausted restart budget to a timeout; timeout is now
-   derived directly inside the loop from the condition that actually
-   terminated it (Tejun Heo)
-
- - Corrected restart counting. Explicitly tracked and reported the actual
-   number of restarts executed rather than total loop iterations
-   (Tejun Heo)
-
- - Link to v1: https://lore.kernel.org/lkml/20260829230517.42468-1-atomlin@atomlin.com/
-
-Aaron Tomlin (3):
-  workqueue: Add workqueue_cpu_intensive tracepoint
-  workqueue: Add workqueue_mayday and workqueue_rescued tracepoints
-  workqueue: Add workqueue_bh_budget_yield tracepoint
-
- include/trace/events/workqueue.h | 147 +++++++++++++++++++++++++++++++
- kernel/workqueue.c               |  35 +++++++-
- 2 files changed, 180 insertions(+), 2 deletions(-)
-
+diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
+index b0de2bc9ed52..d2ad38f93a83 100644
+--- a/include/trace/events/workqueue.h
++++ b/include/trace/events/workqueue.h
+@@ -126,7 +126,47 @@ TRACE_EVENT(workqueue_execute_end,
+ 	TP_printk("work struct %p: function %ps", __entry->work, __entry->function)
+ );
+ 
++/**
++ * workqueue_cpu_intensive - called when a work item exceeds cpu_intensive threshold
++ * @pwq:	pointer to struct pool_workqueue
++ * @work:	pointer to struct work_struct
++ * @function:	pointer to worker function
++ * @duration_us: CPU time consumed in microseconds
++ *
++ * This event occurs when a concurrency-managed work item runs for longer
++ * than wq_cpu_intensive_thresh_us without sleeping and is excluded from
++ * concurrency management to prevent stalling other work items.
++ */
++TRACE_EVENT(workqueue_cpu_intensive,
++
++	TP_PROTO(struct pool_workqueue *pwq, struct work_struct *work,
++		 work_func_t function, u64 duration_us),
++
++	TP_ARGS(pwq, work, function, duration_us),
++
++	TP_STRUCT__entry(
++		__field( void *,	work		)
++		__field( void *,	function	)
++		__string( workqueue,	pwq->wq->name	)
++		__field( int,		cpu		)
++		__field( u64,		duration_us	)
++	),
++
++	TP_fast_assign(
++		__entry->work		= work;
++		__entry->function	= function;
++		__assign_str(workqueue);
++		__entry->cpu		= pwq->pool->cpu;
++		__entry->duration_us	= duration_us;
++	),
++
++	TP_printk("work struct=%p function=%ps workqueue=%s cpu=%d duration_us=%llu",
++		  __entry->work, __entry->function, __get_str(workqueue),
++		  __entry->cpu, __entry->duration_us)
++);
++
+ #endif /*  _TRACE_WORKQUEUE_H */
+ 
+ /* This part must be outside protection */
+ #include <trace/define_trace.h>
++
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 3c034cbc5bb3..bad1217cf45a 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -56,6 +56,7 @@
+ #include <linux/kvm_para.h>
+ #include <linux/delay.h>
+ #include <linux/irq_work.h>
++#include <linux/math64.h>
+ 
+ #include "workqueue_internal.h"
+ 
+@@ -1532,6 +1533,7 @@ void wq_worker_tick(struct task_struct *task)
+ 	struct worker *worker = kthread_data(task);
+ 	struct pool_workqueue *pwq = worker->current_pwq;
+ 	struct worker_pool *pool = worker->pool;
++	u64 delta;
+ 
+ 	if (!pwq)
+ 		return;
+@@ -1572,6 +1574,11 @@ void wq_worker_tick(struct task_struct *task)
+ 		pwq->stats[PWQ_STAT_CM_WAKEUP]++;
+ 
+ 	raw_spin_unlock(&pool->lock);
++
++	delta = READ_ONCE(worker->task->se.sum_exec_runtime) - worker->current_at;
++	trace_workqueue_cpu_intensive(pwq, worker->current_work,
++				      worker->current_func,
++				      div_u64(delta, NSEC_PER_USEC));
+ }
+ 
+ /**
 -- 
 2.55.0
 
