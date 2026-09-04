@@ -1,162 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0C43F12CB;
-	Fri,  4 Sep 2026 12:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC3547F77D;
+	Fri,  4 Sep 2026 12:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788525689; cv=none; b=rd9HVDXz39n5KLw8Oxkpd4CiGcNaWGPSpwq1oy8BWXHzJHnft/P+BQfZgn1RBM4Bz0tbVQrVguL/NoXNUtsZHALE73/1hEjTKfeabV6Kn9fUV9rp1bp8EcnVfQ1dAUDA3vnIh/Js4IDrriVDso26nkSu+8OS9U/xjrXOTNDyiB0=
+	t=1788526003; cv=none; b=qrGozGsVZnWQdzc5slTGEmayRl5UC1oqmU9NYwWeBqBcVnYpFzQsrhYS+PiG6kJSGCrkzZOFQDDDsZOw1xaLp/1hWKCJbdLrcrtMYUjonYLhSQFUK46oeHTT9CVaNyPRHAAygJsNB3hFKfGthYViCS3BgpVE9ZEUqPC6ylt0fpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788525689; c=relaxed/simple;
-	bh=W6JKX7ahqnb99xfBn6RyrSANuKyNMCi0bJovw3pOCDg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IzWxbUUHbyFCK9qMDRsxDfL9QAadqahSs+XAvAGoL1w1QPZjBs1fFZ0tM6sf2rl3TumQMuAVlcYxaEvaU7v9+IIbbBWKdTtuXN9OIQkXx2sjDddEdO7jCKVhozzKzOKlw5UUojZTnt9/VFbFTLIPNi4QUv+8KGHWycjQFYWptFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGf1RJU5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788526003; c=relaxed/simple;
+	bh=As8XxMMmUVQ6vU2afjgBis2r1SCVwnUYWmZavRxoyqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G1x79uihJF9BM6kequ5RSC5SlMMbQERYoyHLV5xoEkB5JAxcqtCEYI6UOqbgwxnDxzysd9grflb6M5EiMI3AeJdq4n+im5tH3vHxMsjex6NE+cqmaIJIeDBPB/0Seq/VMnoCm32BPeE5Ce71SwKTp65K0x5rx/aaxSgg6f8MXqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=NPdhDsXt; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGf1RJU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDC71F00A3D;
-	Fri,  4 Sep 2026 12:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788525688;
-	bh=UMlLb9vJyOjadzPTuVKcm4BXcQdkedIOo1s9dZIX00Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=oGf1RJU5E2E1hc5yPFBLMbMic0oPzVmytHmCYp83Bb8EV3snKTx2aN+oMdoFFx41W
-	 oKPm6dxUIdKBNX6pT0C/ErlctSxqAtaSEHoTuQ94v2UZr0c1wqPLIjoy94H/styoVo
-	 spI7SYRif4VdHtKYf1RJSFXUS3KD2xr1sXFB83AtUbj9CaKF+bLDSPFQerLyOd1DkB
-	 kYcVMFBbi7D8YRAW3HRpsxtFJQkdPkyXpb3xsuHjXTc56iUBCV44aWVw3X1ALiVbI4
-	 lD7LgdbE1kJ2QWoTsU661654/ppx4Itw9vxDUdFqE5DUT38FNEnDcuCrpTVvJZgGqb
-	 8un7//vGps9Jg==
-Date: Fri, 4 Sep 2026 21:41:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinke Han <jinkehan@didiglobal.com>
-Cc: <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
- <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
- <peterz@infradead.org>, <rppt@kernel.org>, <kees@kernel.org>,
- <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/kprobe: Fix crash when probe cs call
-Message-Id: <20260904214122.15b0924c7ee32dbf0998d876@kernel.org>
-In-Reply-To: <20260827025756.GA26653@didi-ThinkCentre-M920t-N000>
-References: <20260827025756.GA26653@didi-ThinkCentre-M920t-N000>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="NPdhDsXt"
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id E900A1C3140;
+	Fri,  4 Sep 2026 12:46:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 9BA072000F;
+	Fri,  4 Sep 2026 12:46:23 +0000 (UTC)
+Date: Fri, 4 Sep 2026 08:47:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, Emil Tsalapatis
+ <emil@etsalapatis.com>, Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai
+ <xukuohai@huaweicloud.com>, Ard Biesheuvel <ardb@kernel.org>, Ilias
+ Apalodimas <ilias.apalodimas@linaro.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin
+ <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich
+ <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir
+ Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>,
+ Onur =?UTF-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, Sami Tolvanen
+ <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, Leon Hwang
+ <leon.hwang@linux.dev>, Ihor Solodrai <ihor.solodrai@linux.dev>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, live-patching@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org,
+ linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, Ben Cressey
+ <ben@cressey.dev>, "Florent Revest (Anthropic)" <florent.revest@linux.dev>
+Subject: Re: [PATCH RFC 1/8] ftrace: Let ftrace_call_adjust() reject a patch
+ site
+Message-ID: <20260904084728.6d2ebcc8@gandalf.local.home>
+In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-1-ce6687739b0c@linux.dev>
+References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
+	<20260904-b4-arm64-callops-kcfi-v1-1-ce6687739b0c@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: oo7jr9m9z6jjp57k8xucfg4kjueaxsfh
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 9BA072000F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18YuV40KmwbrX6ibO0kN1K+x6irXRzKExI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=QaHLNrSIOC0AXa1uJvhFJRMc8GEchbvlX2qvJDmaOvM=; b=NPdhDsXtjyaUMzMA7BQ1IUmN2ClbmLVpUQk/XNTBg4AXNwKSmhvpVdoCLxSbMPJUYrTQkJm8rjuBWqwtcQrN+dnpSw/MTzpEXQryjRIwuo1AHZ9Cn3hsl3hc2lsNlGJBQgi5KY0YSc6iraUWlUhcAydwjDl8WMwfUS/r3zFQnC0=
+X-HE-Tag: 1788525983-132897
+X-HE-Meta: U2FsdGVkX18t68M7ClrpuwNfMkqgpVsFcoI/sjyjLj3Rj9zo4g6cHAKPRoTEn7iqHMIvC7xF3POXtibnasp7h9/k0RFP/0yKOtn6TVOi8VVb7mGMn0zl0EWK1KLT1h+WhC3Lnd9oYxTXCNf5qKeUNR6xuyEmDQMrF/LjQa+5dSKOd9rcmfh5CFMc+u9fRYl+NOJxaDWkYH/w34kQvyOyqomLGDOtmaqrat7/jVAI/ME4n13QGxwuyrAA2GofGsXAPtDTYNKROvBOI9SKkmbe4hMKocbXXV1wASFNGLdydjcZRo3FRqartvezELQ2dl5E
 
-On Thu, 27 Aug 2026 10:57:56 +0800
-Jinke Han <jinkehan@didiglobal.com> wrote:
+On Fri, 04 Sep 2026 01:18:33 +0000
+"Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev> wrote:
 
-> When I used eBPF to probe the call instructions within a function,
-> we encountered a kernel crash.
-> 
-> The ebpf tool probes the 257 offset of the __hrtimer_run_queues
-> function.
-> 
-> <__hrtimer_run_queues+249>:  nopl   0x0(%rax,%rax,1)
-> <__hrtimer_run_queues+254>:  mov    %r14,%rdi
-> <__hrtimer_run_queues+257>:  cs call <__x86_indirect_thunk_r12>
-> <__hrtimer_run_queues+263>:  mov    %eax,%r12d
-> <__hrtimer_run_queues+266>:  xchg   %ax,%ax
-> <__hrtimer_run_queues+268>:  mov    %r13,%rdi
-> 
-> The scene of kernel crash is as follows:
-> 
-> [73665.737181] BUG: unable to handle page fault for address: 00000000000f41c9
-> [73665.744253] #PF: supervisor write access in kernel mode
-> [73665.749643] #PF: error_code(0x0002) - not-present page
-> [73665.754843] PGD 0 P4D 0
-> [73665.757390] Oops: 0002 [#1] SMP NOPTI
-> [73665.761073] CPU: 1 PID: 0 Comm: swapper/1 Kdump: loaded Tainted: P
-> [73665.782671] RIP: 0010:__hrtimer_run_queues+0x106/0x230
-> 
-> Note that __hrtimer_run_queues+0x106 is __hrtimer_run_queues+262, which is
-> at the 6th byte of the above cs call instruction. Since the cs call
-> instruction occupies 6 bytes, the exception occurred in the middle of that
-> call instruction.
-
-Ah, OK. So it adds a dummy CS prefix for padding the instruction.
-Also, please Cc probe patch to linux-trace-kernel@vger.kernel.org too.
-
-> 
-> The root cause is that when using eBPF tools to probe in the middle of a
-> function, kprobe with int3 is used as the underlying implementation.
-> During single-step emulation of the original call instruction,
-> int3_emulate_call assumes that the probed call instruction is 5 bytes
-> long. However, the actual CS-prefixed call instruction occupies 6 bytes,
-> so it constructs an incorrect exception return address. When the CPU
-> returns from the kprobe handler, the next instruction to be executed is at
-> the address of the last byte of that CS call instruction. Coincidentally,
-> starting from that address, the CPU fetches and decodes a completely
-> different instruction, which ultimately triggers a kernel crash.
-> 
-> Fix the issue by using the actual instruction length obtained from
-> the instruction decoder when constructing the exception return
-> address, rather than relying on the hardcoded CALL_INSN_SIZE macro.
-> 
-
-OK, this fixes kprobe local, but for cleanliness, I have a comment.
-
-> Cc: stable@kernel.org
-> Fixes: 6256e668b7af ("x86/kprobes: Use int3 instead of debug trap for single-step")
-> Signed-off-by: Jinke Han <jinkehan@didiglobal.com>
-> ---
->  arch/x86/kernel/kprobes/core.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> index 4e5f8c1736ec..b50e4a60bdfe 100644
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -511,9 +511,11 @@ NOKPROBE_SYMBOL(kprobe_emulate_ret);
->  static void kprobe_emulate_call(struct kprobe *p, struct pt_regs *regs)
->  {
->  	unsigned long func = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
-> +	unsigned long ip = func;
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index f9d80c7bd9f16..394f82230e0c3 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7676,6 +7676,10 @@ static int ftrace_process_locs(struct module *mod,
+>  		}
 >  
->  	func += p->ainsn.rel32;
-
-This looks a bit less readability because func is once have a return address
-and later it becomes call address. Moreover int3_emulate_call() is kept broken :(.
-
-> -	int3_emulate_call(regs, func);
-> +	int3_emulate_push(regs, ip);
-> +	int3_emulate_jmp(regs, func);
-
-What about updating int3_emulate_call() to get ip (=return address) and func?
-
-void int3_emulate_call(struct pt_regs *regs, unsigned long ip, unsigned long func)
-{
-	int3_emulate_push(regs, ip);
-	int3_emulate_jmp(regs, func);
-}
-
-Then in  smp_text_poke_int3_handler(struct pt_regs *regs),  we will call:
-
-	int3_emulate_call(regs, (long)ip, (long)ip + tpl->disp);
-
-And in this, we simply call;
-
-	unsigned long ip = regs->ip - INT3_INSN_SIZE + p->ainsn.size;
-
-	int3_emulate_call(regs, ip, ip + p->ainsn.rel32);
-
-(Note: currently smp_text_poke_batch() does not handle non-5 byte nop.
-it checks the size.)
-
-Thanks,
-
->  }
->  NOKPROBE_SYMBOL(kprobe_emulate_call);
+>  		addr = ftrace_call_adjust(addr);
+> +		if (!addr) {
+> +			skipped++;
+> +			continue;
+> +		}
 >  
-> -- 
-> 2.34.1
-> 
 
+The above could use a comment to why addr could be zero (I didn't even
+realize some architectures do that).
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	/* Some architectures may return zero for mis-aligned addresses */
+
+-- Steve
