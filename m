@@ -1,136 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1012A43B6F5;
-	Fri,  4 Sep 2026 21:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A278F35E1B8;
+	Fri,  4 Sep 2026 22:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788559122; cv=none; b=dXYDQD5NrLzaaFbmWsjyPm6m8atxuvHh4X9ZeH44yfkWJ9S4x5TVOTVwPATQtBmqmzAt2+8WiLqJrgsszVYDx6lmntt0IsjSs78ROEjxR7N8ofNfMsHxzvtonyxRBNve5zFJq4ez5xjXvG2lAh0fn+868HvRIfUT88f9+Q2/Vbw=
+	t=1788559293; cv=none; b=P3JGZeiPKn6YkLnLfzI2GyRHnIcomT6NtKQqa1xmzq89bVQ5D2lYGqULPmqq27eRTVenejjFs0IAODoaTh8js4hC/MbOyBYEcK4M+uyroAF6pewyzpTWv+soumugvs2nd52LPiG4b/MURmcfWgcFzTBN5vPTZtqEozFHF2Y8umM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788559122; c=relaxed/simple;
-	bh=at8CIRZ0TNBVpctp8dT90vBugok053GV4sw0O8B29QE=;
+	s=arc-20240116; t=1788559293; c=relaxed/simple;
+	bh=vHNoLk2zJSm35IC0+3iIo8WY333/NscunDJQKlumXyU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ikg09ESgpiEWCyI/Z84b0lttTrRqmXN5TDTlNkWUfoctg3FBhJSY3E01m9Vg9hgFaGfWfFpPBCBglgU8QmSq3vTU4Wj1aZQkNWyz44m2LRH6sNiO3Jzq7Xsxm4sG1ILWNFlx4QnYFJwZrCCh1Z7s+X5X+MMA8Gd/CUG8Veob2CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpKUck+N; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=rIcNYzndqeAhHRl4h1dE35/kRiFCMDN9YS2JnihpCZhRS7QvCTDw7RksGkvEsLG3xeEGZBJ/1SqdcqukaHMOL+5HVMQzzGgJYdxGb6jgCArgROFP48lxrCNQFnmCG0wy77dbeczc92lk5gTQaKLJtV9cql2BG5slZ6Bm/P9GEV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTj53qZr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpKUck+N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB4601F00A3D;
-	Fri,  4 Sep 2026 21:58:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTj53qZr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0A71F00A3D;
+	Fri,  4 Sep 2026 22:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788559116;
-	bh=P3XEYP2Kj9qLv57nmXAVEL7Jr+Q9ZqbVqPeyqeUWlI0=;
+	s=k20260515; t=1788559287;
+	bh=Cz2kXaJ4DnWPyb/HwFM4psXPdhuGHHP/ewJJjuWfhLs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kpKUck+N2fwby+5laqfz5//Z2TjsJOLhJCf0BlI47ANcsEx+kXLtskEqKIu4jjNBT
-	 O3qImJCOZTx3DzMAhZ79TtciIDK5UqMG8od/L1ajK2cYsaWhf+DnEtGrz68tkpMdi+
-	 KM4ydGHo+n+nqjA150VuhLbWCXNBHM0E4Sxi9JKxmAKrboBfeTNhrSjZSLbtVa1Lbu
-	 ClYpHPZc6tltwSW2kyij2BCY5vC602ytoU7WZhNpaBsQtIeaf1GSdxWd7+B/2OgfBY
-	 VRB23WzQ2ZROdZZap8A2yZylyVKuUWJbzrzsPUHILBDANU7IrzuRAYcCcWzFjfLPMT
-	 3M6k1jzK/JITQ==
+	b=jTj53qZrVZDlXDSyejJlL6N5P5Rd9DmWVMhPPFvANsaV/0SqnKvWbLt0soyr+D7dh
+	 EnISS8DgAC8D9ky8BGWBH1q/jPISiWYfbmWBIRVkrwpy6vShkSbSbAWglTog6/x1Fo
+	 MiB/7uacxMqE8U+4nWlOxPuG5MFzX/+bBmQ1Yaq75h3Pp/1PEqNmUDZQ1WMbX0YmK6
+	 +5n9xNEtUaWWOMxCOT0uYhX/5PmXb4/6T++7GJn4Z3adrR4irAEyxwksu6K4HP0Fbg
+	 oDNyqvf1QryqPRfX3TgB7nER/C1K1y2VCryc+G0O4+hQvssU5qcHwK1ydtTQjtMH+/
+	 cR0Bn9dSHF54Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/4] dmaengine: use dma_chan_name() helper to get
- per-channel device name
+Subject: Re: [PATCH v3 4/4] dmaengine: add union chan_dev for dma_chan::dev
+ for clarity
 Reply-To: sashiko-reviews@lists.linux.dev
 To: Frank.Li@oss.nxp.com
-Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, imx@lists.linux.dev, Frank.Li@kernel.org, linux-trace-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
-In-Reply-To: <20260904-dma-chan_dev-rename-v3-2-685601b0b788@nxp.com>
+Cc: linux-sunxi@lists.linux.dev, Frank.Li@kernel.org, vkoul@kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260904-dma-chan_dev-rename-v3-4-685601b0b788@nxp.com>
 References: <20260904-dma-chan_dev-rename-v3-0-685601b0b788@nxp.com>
- <20260904-dma-chan_dev-rename-v3-2-685601b0b788@nxp.com>
+ <20260904-dma-chan_dev-rename-v3-4-685601b0b788@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 21:58:35 +0000
-Message-Id: <20260904215835.CB4601F00A3D@smtp.kernel.org>
+Date: Fri, 04 Sep 2026 22:01:27 +0000
+Message-Id: <20260904220127.7C0A71F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Missing tasklet_kill() in driver removal path leads to Use-After-F=
-ree.
-- [High] Devres pool leak in error path of channel resource allocation.
+- [High] Missing put_device() on device_register() failure leads to resourc=
+e leak and potential Use-After-Free.
+- [High] Modifying device bus after registration circumvents the device cor=
+e lifecycle and causes mismatched bus notifications.
+- [High] Missing synchronize_rcu() in DMA device unregistration path leads =
+to Use-After-Free in dma_issue_pending_all().
 --
 
-commit 46c4d3dece5bd1126d02c64f04aca18a9510a860
+commit 99f7cae9d62138cb68f0b59f43bd77ab9e9bb860
 Author: Frank Li <Frank.Li@nxp.com>
-dmaengine: use dma_chan_name() helper to get per-channel device name
 
-This patch updates several DMA engine drivers to use the dma_chan_name() he=
-lper
-instead of open-coding the channel name logic. This improves consistency and
-simplifies the code across the subsystem.
+dmaengine: add union chan_dev for dma_chan::dev for clarity
+
+The current dma_chan structure contains both "device" and "dev", which
+increases reader confusion. Add union dma_chan::chan_dev to make its
+purpose explicit and clearly identify it as the per-channel device.
+
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index a7ac2729e4d9d..bb30a9aa54d3f 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
 
 [ ... ]
 
-> diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-> index 386e85cd4882a..6b29e15b0616c 100644
-> --- a/drivers/dma/mmp_pdma.c
-> +++ b/drivers/dma/mmp_pdma.c
-> @@ -565,7 +565,7 @@ static int mmp_pdma_alloc_chan_resources(struct dma_c=
-han *dchan)
->  	if (chan->desc_pool)
->  		return 1;
-> =20
-> -	chan->desc_pool =3D dma_pool_create(dev_name(&dchan->dev->device),
-> +	chan->desc_pool =3D dma_pool_create(dma_chan_name(dchan),
->  					  chan->dev,
->  					  sizeof(struct mmp_pdma_desc_sw),
->  					  __alignof__(struct mmp_pdma_desc_sw),
+> @@ -1122,7 +1122,7 @@ static int __dma_async_device_channel_register(stru=
+ct dma_device *device,
+>   err_out_ida:
+>  	ida_free(&device->chan_ida, chan->chan_id);
+>   err_free_dev:
+> -	kfree(chan->dev);
+> +	kfree(chan->chan_dev);
 
 [Severity: High]
-This is a pre-existing issue, but while reviewing this file's DMA resource
-management, I noticed a potential use-after-free during driver unbind.
+This is a pre-existing issue, but is it correct to use kfree() directly on =
+the
+device structure here instead of put_device() after device_register() fails?
 
-In mmp_pdma_chan_init(), a tasklet is initialized for each DMA channel using
-tasklet_setup(&chan->tasklet, dma_do_tasklet), and the channel structures a=
-re
-allocated via devm_kzalloc().
+In __dma_async_device_channel_register(), if device_register() fails (e.g.
+due to memory pressure or name collision), the error path jumps to
+err_free_dev. Using kfree() directly circumvents the device core reference
+counting.
 
-However, mmp_pdma_remove() unregisters the DMA engine but does not call
-tasklet_kill() to cancel pending tasklets. Because there is no explicit
-teardown of the tasklets, will pending or executing tasklets continue runni=
-ng
-after devres automatically frees the channel memory, resulting in a
-use-after-free if the driver is unbound while a tasklet is scheduled?
+Does this leak the device structure's associated resources, such as its
+allocated name? Also, if the device's kobject was already linked into sysfs
+ksets, can this lead to a Use-After-Free?
 
 [ ... ]
 
-> diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdm=
+> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dm=
 a.c
-> index e3bbdc9ee36ed..c274638e919c2 100644
-> --- a/drivers/dma/stm32/stm32-mdma.c
-> +++ b/drivers/dma/stm32/stm32-mdma.c
-> @@ -1484,7 +1484,7 @@ static int stm32_mdma_alloc_chan_resources(struct d=
-ma_chan *c)
->  	struct stm32_mdma_device *dmadev =3D stm32_mdma_get_dev(chan);
->  	int ret;
+> index b3327aa35de40..e76c58f213d84 100644
+> --- a/drivers/dma/tegra186-gpc-dma.c
+> +++ b/drivers/dma/tegra186-gpc-dma.c
+> @@ -1554,7 +1554,7 @@ static int tegra_dma_probe(struct platform_device *=
+pdev)
+>  				return dev_err_probe(chdev, -EINVAL,
+>  					   "Failed to get stream ID for channel %d\n", tdc->id);
 > =20
-> -	chan->desc_pool =3D dmam_pool_create(dev_name(&c->dev->device),
-> +	chan->desc_pool =3D dmam_pool_create(dma_chan_name(c),
->  					   c->device->dev,
->  					   sizeof(struct stm32_mdma_hwdesc),
->  					  __alignof__(struct stm32_mdma_hwdesc),
+> -			chan->dev->chan_dma_dev =3D true;
+> +			chan->chan_dev->chan_dma_dev =3D true;
+>  		}
 
 [Severity: High]
-This isn't a bug introduced by this patch, but looking at the error handling
-path immediately following this pool creation, is there a devres leak here?
+This is a pre-existing issue, but does modifying the device bus after
+registration circumvent the device core lifecycle and cause mismatched bus
+notifications?
 
-When dmam_pool_create() is called, it binds the devres release action to the
-DMA controller device (c->device->dev), rather than the channel lifecycle.
+During device probe in tegra_dma_probe(), the channels are registered via
+dmaenginem_async_device_register(), and then chdev->bus =3D pdev->dev.bus
+is set manually in this use_iommu_map block:
 
-If the subsequent pm_runtime_resume_and_get() call or stm32_mdma_disable_ch=
-an()
-fail, stm32_mdma_alloc_chan_resources() returns an error without destroying
-the newly allocated pool via dmam_pool_destroy().
+drivers/dma/tegra186-gpc-dma.c:tegra_dma_probe() {
+    ...
+		if (use_iommu_map) {
+			chdev->bus =3D pdev->dev.bus;
+    ...
+}
 
-Since the DMA engine core assumes the allocation function cleans up after
-itself on failure, will repeated allocation failures endlessly leak devres =
-pool
-entries and memory on the controller device until the driver is unloaded?
+Does bypassing bus_add_device() during initialization but later triggering
+bus_remove_device() on teardown lead to missing add notifications? During
+driver unbind or probe rollback, device_del() sees the non-NULL bus and bli=
+ndly
+triggers bus_remove_device(). Can this crash or corrupt listeners such as t=
+he
+IOMMU subsystem that expect properly ordered device lifecycle notifications?
+
+While reviewing this patch, I also noticed a pre-existing issue in
+drivers/dma/dmaengine.c that isn't directly touched by this commit:
+
+[Severity: High]
+This is a pre-existing issue, but can the missing synchronize_rcu() in the
+DMA device unregistration path lead to a Use-After-Free in
+dma_issue_pending_all()?
+
+When a DMA controller is unbound, dma_async_device_unregister() puts the
+device reference. Then dma_device_release() unlinks the device using
+list_del_rcu(&device->global_node) but fails to wait for an RCU grace period
+before allowing devres to automatically free the backing memory:
+
+drivers/dma/dmaengine.c:dma_device_release() {
+    ...
+	list_del_rcu(&device->global_node);
+	dma_channel_rebalance();
+    ...
+}
+
+Concurrently, the RCU reader iterates over the list in dma_issue_pending_al=
+l()
+and accesses the freed device memory:
+
+drivers/dma/dmaengine.c:dma_issue_pending_all() {
+    ...
+	list_for_each_entry_rcu(device, &dma_device_list, global_node) {
+		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+    ...
+}
+
+Could concurrent RCU readers dereferencing the freed device pointer here
+experience memory corruption or a kernel panic?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-dma-chan_d=
-ev-rename-v3-0-685601b0b788@nxp.com?part=3D2
+ev-rename-v3-0-685601b0b788@nxp.com?part=3D4
