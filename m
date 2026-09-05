@@ -1,156 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B78453A44;
-	Sat,  5 Sep 2026 11:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F10D24C06A
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  5 Sep 2026 11:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788607778; cv=none; b=h/3dGEUC0KQ4DMFhr0AeO8d0z/5XfT9y/txVfCRtk1vK/t6xhnH7ois/1rbIYrbAm70D/3hgRJybOu2RZmGyO9vWy8cm75qp776nqqT3IWLyaezMKDGxVK1TAuaU+hgKXrfe1hIBAiNmYvA63DAiMZvgpXSiYvSY9Qx+mXxyiSw=
+	t=1788608324; cv=none; b=U3juqF8sQN+PQ65CuEM7mL9+3yifN4uu7J3CpOlDE7WDXzvZayz3wilj/Powi0FaAPG36SnfbFEWQ+ZXr9yJKa83xhMQ8TuYMOD0Q6XQrqHTWyxQFUmm6RbU5cENYr9/o0xxhpEpruKcevARi7+GzF0oDRRgpSNmJVGnzUSGhsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788607778; c=relaxed/simple;
-	bh=6QlfVPFcF/JHSfLa9SAEC7zdo7QfY4euoKXQ/sK6GjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4DhT5+Oqv1zjwt6haNINqeSbolX7tp1C8AyQIUXxIE0XAb14t27OC4qvV+q7zmGR91M5eND7qJ8a/ONypobIbNYNmUvMOMGeAVQrqdtmUkJLKQh7+HxPASn6Gyf5gaQgEvZFGWRkPeAUEziqUeghMFaHjJNGO0pa3YAlumzfGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=syXLJRc8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788608324; c=relaxed/simple;
+	bh=i23O8iOz3ltxtARdHc3lFAkpzshBshk1QDKqhuNSDlw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=nKtWarQCxbY4e76ZzaHGzTnbC/LhM9RnNp+t7MorYBI9M9zzWZ9tqBIq86rb7VPUTy892BvfH2HjbGQBZQE/wBCvTCWS7DEUrZLmDHUhkKijqsu/5wf4uoIzFisqRnp3g2n2b4lkih9fiWlOXOFuNoQ0A0GEzpbIP2lkddYj568=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJzV6/0q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="syXLJRc8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C691F00A3D;
-	Sat,  5 Sep 2026 11:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1788607776;
-	bh=NJjp7hyLSGDcY0T4wPUidEv8MR3gxhn3/lAEx5oetG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=syXLJRc8Qt140rlFiEVX2z6Ayz3tdNxSLO+4qNaGVJEUzBMblPT1YU8iiP9themzZ
-	 MO5S/OwEjQ7ZUQKELKXoG2fshz9qTTwazYyULIJszn0cQ6w+ByEwYHmnVH+VYKL7K4
-	 LeT6ll8QifcRley2chTb1MuFumJnjGGiDhw/Nai8=
-Date: Sat, 5 Sep 2026 13:27:51 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Bradley Morgan <brads@mainlining.org>,
-	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 0/2] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-Message-ID: <2026090546-skimming-bundle-0655@gregkh>
-References: <20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org>
- <9ac44f3f-1c67-4c37-aa72-255cec1578d2@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJzV6/0q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7599E1F00A3D;
+	Sat,  5 Sep 2026 11:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788608322;
+	bh=zwxGLNyODVdBmClo9pdWwuiIcx6d5LwtgJKCLC6BxG8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bJzV6/0qNy9vHFUCBaeXduOu9pmEaqSukzsKgH/V6bDAFNnJppJkTDI+6o/4p68VX
+	 UY04Ftt0bVcr3DgoJm8/K8KcHoKNrLiuKGaN5E7E5CHJIh/iEkDyJqYXZZi1ZU/Ahe
+	 KqlZC1M+Ri9jK/S33OqmTwdUx5O5/D4KNd9pNp7O5zEb/mHTsYH7n9NHAj1rOHAhQe
+	 mBo4EFxQNy+6ZjlCEAKJ7Y+vC6ip6Fmbcz6qDA4v24DAGCHbUMsa2P1SF5XxKiqyDp
+	 iwykpcCgZMTQF2cZ6/fgk+p/2GP6KI/51tMLAloTVQ+tqGNvKNI9vgZElC/NUyKF2S
+	 PvVHyo3j2SKTQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] tracing: add ring-buffer memory usage statistics in
+ tracefs
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xiang Gao" <gxxa03070307@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260905112732.3705405-2-gaoxiang17@xiaomi.com>
+References: <20260905112732.3705405-1-gaoxiang17@xiaomi.com>
+ <20260905112732.3705405-2-gaoxiang17@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 05 Sep 2026 11:38:41 +0000
+Message-Id: <20260905113842.7599E1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ac44f3f-1c67-4c37-aa72-255cec1578d2@gmx.de>
 
-On Fri, Sep 04, 2026 at 09:46:59PM +0200, Armin Wolf wrote:
-> 
-> Am 04.09.26 um 07:10 schrieb Greg Kroah-Hartman:
-> > The ability to add and remove devices from a driver through the sysfs
-> > "bind" and "unbind" files was created all those decades ago as a way
-> > that kernel developers can iterate faster, and provide a debugging way
-> > for users to attempt to add a new device to a driver without having to
-> > rebuild their kernel.
-> > 
-> > This api over the years has been abused and recently come under a major
-> > fuzzing "attack" through tools like syzbot which decided that it would
-> > attempt to just randomly bind any driver to any type of device, causing
-> > loads of unneeded errors and pointless kernel patches to be generated by
-> > unsuspecting new developers.
-> > 
-> > Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
-> > will be set on the driver if the bind/unbind sysfs files are ever
-> > written to.  This lets kernel developers "know" that a user is
-> > attempting to do something that is not normal, and as such, if the
-> > kernel breaks they get to keep the shiny pieces laying around on the
-> > floor.
-> > 
-> > The flag is 'Y' which was unused, and can remembered as the user is
-> > "yeeting" the device being operated on here (thrown with force without
-> > regard for the thing being thrown).
-> > 
-> > Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
-> > as many times crashes/oops/warnings/failures happen within the callback,
-> > and the taint flag needs to be there to show what was being attempted.
-> > If it were to be set after the callback happens, the oops report would
-> > not properly reflect what foolishness was being attempted.
-> > 
-> > Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
-> > the tool from hitting bind/unbind, should be run with panic_on_taint
-> > enabled so that they fall over and don't continue on, thinking that they
-> > actually found a real issue.
-> > 
-> > Userspace operations that rely on the bind/unbind files to work around
-> > the lack of will to upgrade a kernel image to a newer version with
-> > proper support for new devices, or the lack of will to submit valid
-> > device ids to driver authors, will still work properly, but now the
-> > kernel will be flagged in a way that will show that perhaps those users
-> > should reconsider their behavior and work to have the drivers properly
-> > support these devices in a "native" manner.
-> 
-> What about users that use driver_override together with vfio-pci? AFAIK
-> they still need to write to bind/unbind.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Compilation failure due to evaluating a struct type in a boolean co=
+ntext.
+--
 
-As I state above, that is an abuse of this api.
+commit 59684c76ae178c23d488e6128dbc2d350cbbec1d
+Author: Xiang Gao <gxxa03070307@gmail.com>
 
-> Also i always liked the fact that the bind/unbind attributes make it very
-> easy in creating generic drivers. In fact, i am intending to use this feature
-> in order to add netlink support to the ACPI-WMI subsystem in the future.
-> I am planning to realize this thru a generic WMI driver that has to be manually
-> bound to a given WMI device to make it available over netlink, so having
-> users be able to write bind/unbind without potentially triggering a kernel panic
-> would be very nice.
+tracing: add ring-buffer memory usage statistics in tracefs
 
-It's a taint flag being set, not a panic, showing developers that "hey,
-the user just did something odd here, ask them about it when handling
-this bug report."
+This commit adds memory consumption statistics for tracing ring buffers to
+tracefs. It reports the memory consumed by the main and snapshot buffers
+across all instances, tracking the full pages backing the sub-buffers.
 
-> Additionally, writing into the bind attribute still checks if the driver and the
-> device match:
-> 
-> /*
->  * Manually attach a device to a driver.
->  * Note: the driver must want to bind to the device,
->  * it is not possible to override the driver's id table.
->  */
-> static ssize_t bind_store(struct device_driver *drv, const char *buf, size_t count)
-> 
-> Because of this i would suggest that the taint (if at all) be added to the
-> driver_override attribute instead, because only with this attribute users can bind
-> random drivers to truly random devices.
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 5fc009edc1ec9..4579053d34ec4 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
 
-I had thought of that, but the force removal of drivers from devices
-wouldn't show up this way, which is one of the things that we do want to
-warn developers about.
+[ ... ]
 
-And, if we just did the driver_override taint, it would allow those
-drivers who claim to be "generic" like you are referring to, to keep
-"getting away with that" when it's obviously not true that they can
-handle any device for that bus, otherwise it would have automatically
-bound to it already (and no manual intervention would be needed.)
+> @@ -6526,6 +6526,47 @@ unsigned long ring_buffer_size(struct trace_buffer=
+ *buffer, int cpu)
 
-By keeping the manual configuration of bind, you are forcing userspace
-to manually do work, while still a possible thing to do, now at least a
-developer who gets a bug report will _know_ it happened, which is why
-the taint flag is there.
+[ ... ]
 
-Does that make a bit more sense?
+> +unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int c=
+pu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long subbuf_size;
+> +	unsigned long size;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return 0;
+> +
+> +	/* Range and remote buffers use externally owned memory. */
+> +	if (buffer->range_addr_start || buffer->remote)
+> +		return 0;
+> +
+> +	cpu_buffer =3D buffer->buffers[cpu];
+> +	subbuf_size =3D PAGE_SIZE << buffer->subbuf_order;
+> +
+> +	/* Data sub-buffers plus the reader page. */
+> +	size =3D (cpu_buffer->nr_pages + 1) * subbuf_size;
+> +
+> +	/* The cached read page, if present, is a full sub-buffer page. */
+> +	if (cpu_buffer->free_page)
 
-thanks,
+[Severity: Low]
+Does this code cause a compilation failure?
 
-greg k-h
+The free_page member of struct ring_buffer_per_cpu is an embedded struct
+(struct buffer_data_read_page), rather than a pointer. Evaluating it
+directly in a boolean context will cause a compiler error because a scalar
+value is required.
+
+Should this condition check a field within the struct instead, such as
+cpu_buffer->free_page.data?
+
+> +		size +=3D subbuf_size;
+> +
+> +	/* The mmap metadata page is a single system page. */
+> +	if (cpu_buffer->meta_page)
+> +		size +=3D PAGE_SIZE;
+> +
+> +	return size;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260905112732.3705=
+405-1-gaoxiang17@xiaomi.com?part=3D1
