@@ -1,185 +1,161 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ECD175A6D
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  5 Sep 2026 00:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788567734; cv=pass; b=cLoOjcgX//rJH706GdlRCz0HLnxczgTiiecn1cgKXrzfM2JWBatlEmj8dsl3klnxOVPCUu1cMZ0LlT6y1J/xmjyo/Z/MLNXJt00pDgbj4PQp9LNEYanzAIRuoDy6NzQ9lFhXMk+tqWTKRq0hzFwYhccQiI8sFCs1MkwaqMuWVUg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788567734; c=relaxed/simple;
-	bh=5onHwot6PankN+uVkGS5JVOApEBlu2xFYDhZufrfQes=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qv3WzzjIV/SmqMje5NtHT70NxTrt2Krge9ciIrExTXBYa5JqGJ0Ee+HiLV3mPeYRmsz7bU7eMGWfzT0VRnann/k/8um72M1i+YoPONuVfoIZD3MUOnheJM2mguc586jb5AedgfTjc3QgM2c+ZEMzCAEnG9KLptBWxcXssolNf9k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d9KOmB57; arc=pass smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFCE22A80D
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  5 Sep 2026 05:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788585443; cv=none; b=Awavh5VIrw8V1rWcMvFvsktanl9PYTcL/SDuHktET/bg3CyJhQk3/hrpoxCciTWzfDO/kZ2mcAQpb53ywYC/22zsKMxHQPKju/NeMBws4sUxQDuv9UWyLGHNqTGSoyhEORMqVvmbBwl5NZ8moLZSqKgwsRxaAuBql/9XAzmAK8g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788585443; c=relaxed/simple;
+	bh=xCw3BKMnnnpcM6cHV4oiS+dkkkFjk9pf8nZpwMCYcTY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Df2qXyMq9bBI9zRAxDTbLwysKcqyfaVsADLPuAUOyhyCw1HoeyhImJcHHoJQdz+fPojItduUq1PsiEdj/3matwi6etJ/ubc8bu89MpmEe+fpIIHJojJH1cS68IEAVbrt4ZzZORqLrBVUnzmpCwhy8Xv/XmBqxsTWH5gS9K2huo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JpGqlvLZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9KOmB57"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-85339ed040aso1325852b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 17:22:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788567733; cv=none;
-        d=google.com; s=arc-20260327;
-        b=D7m2SMJI5tYfao7LRS2Q9PaiOMDsrh+srdQdlxRZISmG1X9IbGgHjZAXveRY1OtEFu
-         g4tN+FPi5v43gfJprEyt0Ldlfxwp4JYiyx3TOl7RjLEM+qzMH7bRDhVTt+Pn7p7V5JYG
-         EnmlxBis1J+PoYJp+FZiM1lzx0LCm6Wpszcm+wldMeHZex96G/8LvgiCEJqVLmwwHIqt
-         GA4rQgG+x7TfI+bvqVKkx6M9/FDb8b4Wjt3I11PpAAavtiLPad3acT1T6IbctqA5vuLK
-         PjTSRDAbAnlrhlKptdqsm8wA5TlY9xr0DLLt0dLUi/dIoc13QbvFrF+bOZGJw13vNqYu
-         2Sww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=5onHwot6PankN+uVkGS5JVOApEBlu2xFYDhZufrfQes=;
-        fh=VvDFRrI+tRW9FF8W3PRcX18hsB3eSNhFQTHZFaokH6M=;
-        b=SAgAXmWomBha7bhoC85u7K4WBwWr5KlHmz/aejv9nf5LvM/qX6eoJmPVpwlLFCOC4H
-         DW3/sJ2PH3MsbfGMkavdn9doUYui6Em/T79HLnN76DQkHmkwb8dqKxKYaXN+yVZNcahb
-         s5ge9kZh32XugjuAOBXEcrUbQOwVmo7YbCwRrR2gIXIneS85tViZPBe98t/q+0MjJICn
-         /HXb2ZBk7wzhfgWUAdFXefu3js4O/N+Dbvy90YVCR6VG6aDl0L6S/VHiLcY3Py+fJqE/
-         iQ3abkTuaAF2wR6PdKJ+Yupdt3MdQr8D6rqqdjumV1PWtVoJymP0hmwZasMrGltiIgGJ
-         Mc6w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788567733; x=1789172533; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=5onHwot6PankN+uVkGS5JVOApEBlu2xFYDhZufrfQes=;
-        b=d9KOmB57cXDp23+e/Mms8T5ixxs3rsAGpJzBPhHAL51p9cBPw1nc2Uk+hI6ktVgL9R
-         poL6fi0p5cXySrdDklp8CMD56OFk6baOPZJrvMAI2Mk70C/iIrK40MQOvffGOzJ9ZXFS
-         VzoK/tmWcrsBXr2ThUHm2jnY0r8JNqFRZcmp8NCk1+xTF65DGCDKNKtjsWyH8o4ZjrZe
-         /SDqa7p3r55rnX1Ve9QOym1ZOjb1+MmzSQwxXjw6O2midzOJ+sCLWiSZUXBNyMGw1mEf
-         TZy1ch63F6WkbM0yyq/6/7LTniyvLirSHFJ9osUClYkjNCwLjS7p/zo9SM/PLHa/wJ27
-         GcHg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JpGqlvLZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788585440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xCw3BKMnnnpcM6cHV4oiS+dkkkFjk9pf8nZpwMCYcTY=;
+	b=JpGqlvLZUehpZcnwEOkGECjjGLh+wpzw5Tzrn2XIzXKG7jCbMCOfXytXBNdHddtUrAzV+x
+	LFA7BdPJD8qWLocmNZFo2wJ3PSvBG3UB7BUcENvcu/Wcttdn6Dc9cPJBnw+O59+FXjrQ6T
+	NeJbuyo3ulvJFFVn3Vga2on3KULyP2U=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-138-rsYegfaPPEWoSrTH-_NW0g-1; Sat, 05 Sep 2026 01:17:16 -0400
+X-MC-Unique: rsYegfaPPEWoSrTH-_NW0g-1
+X-Mimecast-MFC-AGG-ID: rsYegfaPPEWoSrTH-_NW0g_1788585436
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49545071724so12350915e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 04 Sep 2026 22:17:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788567733; x=1789172533;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20251104; t=1788585435; x=1789190235;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5onHwot6PankN+uVkGS5JVOApEBlu2xFYDhZufrfQes=;
-        b=dOJyqeZ531Y0Ix5wjVY2TIn6rCuL//9Zse4puH8Urd/Cqz6bCh+2CIEcLfgPHCvGbg
-         wrnMJcKkozjALRcQ5KNPt6FA1GVJKeGVrsZDAHRtmw1TxaH0/njhej0AeHsUduAoxFlW
-         PEynt7dGoZr47CqnIezTK2Mng9a37Tni4/iP0ahsR10crQ9x5CLNIMgHDjeX36bheWgR
-         UnmzRct65T7VrADqKATxmx/+0i2zv9ILQiu2V9aSV0klsRfuDMrvBkJgv27FahvndO0j
-         G91NwN+gGaqXZdMYB5PEziLo0Q8JUvozYozY9N7e+NhP08K5Yir+HxUs3qPZ6GdirGSS
-         ZCCg==
-X-Forwarded-Encrypted: i=1; AKwUvBz19xYq+MrO+tfTysx99mXcRBtF650Qs/5pDFJADVUO+8nCcsoUgURyfYs/m2d4YEWUCpYMBBNftxmIeMMIiqlHvfY=@vger.kernel.org
-X-Gm-Message-State: AFuF++lQn8VvVzaL9g9tyLLcMNN4drvRT6eOVcDwWosL5eBO3kLt9Whj
-	8LA62adnzU9gnMnjFKbvDtkEKo4w9jdZCLG0Dp2MVSl349CKYGr2/G4K+3DvRkIb5hX1db2pg7R
-	A30JFlEkfhvZiLRBSfoj7EV3X2thxEHw=
-X-Gm-Gg: AYBFou19Eh6Gsa6d5+qAvuNXHSMQRm/GqsAAWS1Ga/zd+dvaOb9am6PeNAeBj4tKsWh
-	jMA+NnL8Qvgtyxdh040mKpUNQ+E8RWpCnZNapG1e/MvSriRyNqRC7F4QiqD5KFSO+DREJ33VnX7
-	M63P9Y5pqAK9ijN1IbK/hsegESm29+/ik/2i87OAzlgbDEje9Z8INVvl3SgRAfuXlaY1U58Vcfz
-	lENUs3LkL4PnmK3CyxK2KzG+UtW2IgP7KgUz2pZFOYmJkbzQzuzcewN93SJp0gyLWkz2vkNqAnW
-	LnTxTDlyCsp9dhXahP0pPPAuJBkkc3EIWoOV2PGKM7wWR2mp+jVf7Ou2x+wW3gS1SbKRPnbIStO
-	LxqOS1je5FF81ojcG4SbgNZYgauXr
-X-Received: by 2002:a05:6a00:2183:b0:857:7384:b5f9 with SMTP id
- d2e1a72fcca58-86169974910mr12096926b3a.21.1788567732659; Fri, 04 Sep 2026
- 17:22:12 -0700 (PDT)
+        bh=2N7N3DFQuE+aWAvgayOoeK9Kdsr9ItgNWqqp2QW4O6Q=;
+        b=MPwO8Bira+MnCLTG2+meuXyJgBoX/aR8NIRK4npBhLQnomhf6wYc1yTWRm6PiAIcv0
+         yMkrjvaS7IP1VTSsNBIz4IPTQsmkDmVXa4viidIVJCzlsqruDM9b4nq8zDmyk/U67Fu5
+         UaAlTTiITE5ZkW7sA0FtUofYArvX0kEGqWjR/Kb2pFZ2lE611ExaYpr11dQ8IcvPlezW
+         H9LAubLJUtVv1bHG6rujKLi+WKNebqDna3akLEQj/YA0aBR2NaVg3sekg2N/sAuHAqYb
+         7MT5AeEt3mDNbDkjsrKBwuFeyvXVKCIt2zSOEMw7IjONbdiEwy8fShzu32uyDcCEsd4C
+         IKXQ==
+X-Forwarded-Encrypted: i=1; AKwUvByuhNt6Eplzi9dJeTscCX90lleMWf8zqjol5XiQ5II4yPuLx5l0vghRujTogzt6hKXMLmZ4WX66F0E58K5n0VNZfbI=@vger.kernel.org
+X-Gm-Message-State: AFuF++kiqrsefhk9O3ShBfciDUuZ1Jr/g+zShI7MHgOFuUZS1f3NrHfe
+	WX9SrGLhRtLLOw/3VhbWh9jqUfLCaRoy1rvbqDQ8G0bTqzbD/LnZ+zaMgL6W5skR1dC10y4aLtH
+	6LlwDpdVQMleIthS509ffNem4Jn5YywLZ7lchpbn1cV7US53A5FdHOcU8q4tBRYKjSHoKuCkEEA
+	==
+X-Gm-Gg: AYBFou3bNA+imDpeqBoE2aNogfNAQYgkIcury9yDFnqh5CjepDfP605vNCN4CRWx0vr
+	2XsdngXLt6lb52tGhzMbYLvAS/MdstJ/Dnm+YOvvYQhnm43FepP88SoRRu/6G3kTAHteKK/VQ3I
+	zGm+hFXkIOrVWcLFd5D/tIOg+rhhyzAcL0hvmYPydoH2grDubP3yA37UnJts3OwACKO6SLg7aQk
+	h7bqah8SaKprmJesFX5+VEZBl3ceXDCas/x/KcXPQxWM3dSKjlVltwul5YIHdClEH9KKbLy3Kdo
+	f6dBnuqyc24ur2KyM5Vb+Q5jpbzX3xHaivxJtnMQRZYauPobAu05ExL+TLwllGbM3GlaIzSxsQl
+	U7yuu+fycAw==
+X-Received: by 2002:a05:600c:4585:b0:49c:fc6c:be16 with SMTP id 5b1f17b1804b1-49cfea09f08mr58738645e9.28.1788585435736;
+        Fri, 04 Sep 2026 22:17:15 -0700 (PDT)
+X-Received: by 2002:a05:600c:4585:b0:49c:fc6c:be16 with SMTP id 5b1f17b1804b1-49cfea09f08mr58738395e9.28.1788585435425;
+        Fri, 04 Sep 2026 22:17:15 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([195.174.135.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee80eda4sm200070045e9.15.2026.09.04.22.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2026 22:17:15 -0700 (PDT)
+Date: Sat, 05 Sep 2026 04:53:35 +0000
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+CC: Nam Cao <namcao@linutronix.de>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ bpf <bpf@vger.kernel.org>, Wen Yang <wen.yang@linux.dev>,
+ Tobias Schaffner <tobias.schaffner@siemens.com>,
+ Viktor Malik <vmalik@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 00/20] rv: Add support for BPF monitors
+In-Reply-To: <CAADnVQ+x4iRNXOg69nUmuJ53pB3-JtroePcyoReATy9+V1aRPg@mail.gmail.com>
+References: <20260831090524.106845-1-gmonaco@redhat.com> <87se3sakgi.fsf@yellow.woof> <df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com> <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com> <eb3dd8158942d663ec8ad4c529eacd666c5f96d9.camel@redhat.com> <20260903090211.50d15220@gandalf.local.home> <CAADnVQK8e1Qp9rf1zThZxb3vr4Gc_bpo0nqpEO2LdnEwHdKokA@mail.gmail.com> <20260904074317.01b2c0e1@robin> <DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com> <20260904123108.1fa1d815@gandalf.local.home> <20260904132421.111c0279@gandalf.local.home> <DL6XBKITK7ZT.3RXK9YGGUYZZE@gmail.com> <20260904194620.0c7a8363@gandalf.local.home> <CAADnVQJH1SYR_GN6gewF3w_z_Sex9HFE1T1oXkQe6+v18bDTWA@mail.gmail.com> <20260904201741.2986efca@gandalf.local.home> <CAADnVQ+x4iRNXOg69nUmuJ53pB3-JtroePcyoReATy9+V1aRPg@mail.gmail.com>
+Message-ID: <228FE969-EBFF-4B60-B0E7-C1E4FD82FB8B@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260831090524.106845-1-gmonaco@redhat.com> <87se3sakgi.fsf@yellow.woof>
- <df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com>
- <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com> <eb3dd8158942d663ec8ad4c529eacd666c5f96d9.camel@redhat.com>
- <20260903090211.50d15220@gandalf.local.home> <CAADnVQK8e1Qp9rf1zThZxb3vr4Gc_bpo0nqpEO2LdnEwHdKokA@mail.gmail.com>
- <20260904074317.01b2c0e1@robin> <DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com>
- <20260904123108.1fa1d815@gandalf.local.home> <20260904132421.111c0279@gandalf.local.home>
- <DL6XBKITK7ZT.3RXK9YGGUYZZE@gmail.com> <20260904194620.0c7a8363@gandalf.local.home>
- <CAADnVQJH1SYR_GN6gewF3w_z_Sex9HFE1T1oXkQe6+v18bDTWA@mail.gmail.com> <20260904201741.2986efca@gandalf.local.home>
-In-Reply-To: <20260904201741.2986efca@gandalf.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 4 Sep 2026 17:22:01 -0700
-X-Gm-Features: AcwNN1X-0VTNjdRrTUxdMQ1ugj5hag_YepmKhEpgX0sankiyuCcGLwirKWItB5Q
-Message-ID: <CAADnVQ+x4iRNXOg69nUmuJ53pB3-JtroePcyoReATy9+V1aRPg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/20] rv: Add support for BPF monitors
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, Nam Cao <namcao@linutronix.de>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Wen Yang <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>, 
-	Viktor Malik <vmalik@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 2qfuBEDqpwGcKBV5FvNta9UyUJBFs6H2KwNQpQucclM_1788585436
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 4, 2026 at 5:16=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Fri, 4 Sep 2026 16:48:55 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > On Fri, Sep 4, 2026 at 4:45=E2=80=AFPM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
-> > >
-> > > On Fri, 04 Sep 2026 16:34:00 -0700
-> > > "Alexei Starovoitov" <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > > bpf in 2022 was surely less capable then it is today.
-> > > > It took us 2 years of bpf core development to statisfy sched-ext de=
-mands
-> > > > and we're still adding new features for sched-ext needs.
-> > > > If you're trully willing to remove 90% of kernel/trace/rv/ and refa=
-ctor
-> > > > it into tiny shim where all of the core pieces are bpf driven we ca=
-n
-> > > > certainly work together (like we did with sched-ext) and add whatev=
-er
-> > > > is missing on bpf side. Then all existing monitors will become bpf =
-programs.
-> > > > But adding bpf as another 'monitor', sorry but hard NO.
-> > > > If hardcoded monitors was a mistake then admit it and fix it by del=
-eting it,
-> > > > if it's not a mistake then keep adding hardcoded monitors.
-> > >
-> > > Regardless of whether or not BPF can replace "hardcoded monitors" tod=
-ay, it
-> > > wasn't a mistake back then if BPF wasn't able to do it when they were=
- first
-> > > being added. sched_ext wanted to use BPF for scheduling as module plu=
-gins
-> > > were nack'd by the scheduler maintainers for a long time. BPF program=
-s to
-> > > handle scheduling was the work-around to that, and basically the only=
- way
-> > > forward. And it still required special hooks into the scheduler.
-> > >
-> > > The rv monitors only needed to use tracepoints for hooks. A module wa=
-s the
-> > > easiest way to get there, as BPF at the time wasn't an option.
-> > >
-> > > If you want to use hostile language like "admit you made a mistake" t=
-hen it
-> > > makes it harder to collaborate.
-> >
-> > If you're offended by the word "mistake" then ok. There is no path forw=
-ard.
-> > Keep adding hardcoded stuff.
->
-> I'm not offended by the words, I'm offended by your tone. As BPF was
-> insufficient when RV started, it obviously wasn't a mistake that we didn'=
-t
-> use it. If you are just going to say it was a mistake because we didn't
-> modify BPF to suite our needs (which I highly doubt you would have wanted
-> to help us, as you already stated that you don't care about this project)=
-,
-> then you are obviously biased against us.
->
-> Your response was fine until you through in that last sentence. As making=
- a
-> mistake means that the other non-mistake option was viable at the item. I=
-t
-> wasn't.
->
-> Look, if BPF has changed so much that it could be re-evaluated to see if =
-it
-> suits the needs of RV, then sure. We could look into doing that. Perhaps =
-it
-> can replace the hard-coded monitors. But what we have been doing has not
-> been a mistake. Saying so is a bit disrespectful to the project and a
-> direct insult to Daniel.
 
-I respectfully disagree. Let's stop here.
+
+Il 5 settembre 2026 00:22:01 UTC, Alexei Starovoitov <alexei.starovoitov@gm=
+ail.com> ha scritto:
+>On Fri, Sep 4, 2026 at 5:16=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>>
+>> On Fri, 4 Sep 2026 16:48:55 -0700
+>> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>>
+>> > On Fri, Sep 4, 2026 at 4:45=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
+.org> wrote:
+>> > >
+>> > > On Fri, 04 Sep 2026 16:34:00 -0700
+>> > > "Alexei Starovoitov" <alexei.starovoitov@gmail.com> wrote:
+>> > >
+>> > > > bpf in 2022 was surely less capable then it is today.
+>> > > > It took us 2 years of bpf core development to statisfy sched-ext d=
+emands
+>> > > > and we're still adding new features for sched-ext needs.
+>> > > > If you're trully willing to remove 90% of kernel/trace/rv/ and ref=
+actor
+>> > > > it into tiny shim where all of the core pieces are bpf driven we c=
+an
+>> > > > certainly work together (like we did with sched-ext) and add whate=
+ver
+>> > > > is missing on bpf side. Then all existing monitors will become bpf=
+ programs.
+>> > > > But adding bpf as another 'monitor', sorry but hard NO.
+>> > > > If hardcoded monitors was a mistake then admit it and fix it by de=
+leting it,
+>> > > > if it's not a mistake then keep adding hardcoded monitors.
+
+Alexei, what I read from your opinion is: if you really want to do this RV =
+thing, then you should just implement it all in BPF.
+
+Please correct me if I'm wrong, but I don't see how this series isn't a ste=
+p towards it. I am obviously open to all sorts of criticism on /how/ I'm do=
+ing it.
+We are adding the possibility to write (existing or new) monitors in BPF, n=
+ot adding another fat "bpf monitor".
+
+And if you believe my attempt to have in-kernel and BPF monitors coexist is=
+ a waste of time, I get that too and I'm open to discuss.
+
+As you mentioned, when the project started, BPF was just not ready. My inte=
+ntion with this series is to reassess this today.
+
+RV was initially built with the functional safety use-case in mind. For var=
+ious technical reasons this didn't take off, but that scenario drove toward=
+s implementing RV reactors like the panic() one. Something BPF just shouldn=
+'t do, as I get it.
+
+The interoperability with other tools (via RV-generated tracepoints) was al=
+so a driving factor, together with Daniel probably being more proficient wi=
+th those back then.
+
+That's just from the top of my head: there are historical and technical rea=
+sons for why RV looks like it is today, whether those are valid or just "mi=
+stakes" is simply not for us to say.
+
+I'd rather discuss on what is the best approach /today/. And that's precise=
+ly why I submitted the talk for LPC.
+
+Gabriele
+
