@@ -1,185 +1,156 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4216444A3F0
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  5 Sep 2026 11:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B78453A44;
+	Sat,  5 Sep 2026 11:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788607680; cv=none; b=oQpmKEMZRTDoNDIgE23dW1nYdfHe4H3MoFCawudIBWpWt5bLJsqbJH8FTDdugALqsGzMCDXN2+2t2A+J+nCIv3Q0dGOI2R/7szcM75oPqzD3WOV8mj7XuUNBLpEsvWNoDdTPiKRsZE6u+gIsnFCi3OnvDsjYIIO+jmYUwzEN9jI=
+	t=1788607778; cv=none; b=h/3dGEUC0KQ4DMFhr0AeO8d0z/5XfT9y/txVfCRtk1vK/t6xhnH7ois/1rbIYrbAm70D/3hgRJybOu2RZmGyO9vWy8cm75qp776nqqT3IWLyaezMKDGxVK1TAuaU+hgKXrfe1hIBAiNmYvA63DAiMZvgpXSiYvSY9Qx+mXxyiSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788607680; c=relaxed/simple;
-	bh=WjYK3pzeawJSBXL1J2JOmg+my2lNZqZrxPiPYoz/Tl8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Co/EWvQSgMJKZVz7fGA515tqq1MGIwQ0/KzJQu94m4C8t/N3hHUEzytR18A8Aue2nFcEVCPF1D3zeTDTlroNgpQglD82/pBBfY346TW3iHDZ0/NbzcWTUVna+JJTR1Parg5M9RyY52zyyHytx1H2pYemktgKk0m3PBVhSwbXHpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqyGPXR3; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788607778; c=relaxed/simple;
+	bh=6QlfVPFcF/JHSfLa9SAEC7zdo7QfY4euoKXQ/sK6GjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4DhT5+Oqv1zjwt6haNINqeSbolX7tp1C8AyQIUXxIE0XAb14t27OC4qvV+q7zmGR91M5eND7qJ8a/ONypobIbNYNmUvMOMGeAVQrqdtmUkJLKQh7+HxPASn6Gyf5gaQgEvZFGWRkPeAUEziqUeghMFaHjJNGO0pa3YAlumzfGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=syXLJRc8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqyGPXR3"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-8487214ad2bso2116805b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 05 Sep 2026 04:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788607677; x=1789212477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=7Ncv0qza4n7xU/ePfsTNxTo8wWj87uTeUF7PMp8e4PA=;
-        b=nqyGPXR3xHd1juHLW/YnZb+9IZQ96DbnWTilkPOJzzBE3LrdpslTNLl5663Ed5t7xg
-         tkexMyBB33el8kZvt2P/abmrOZva7eERHgOlCdlWKxJOD77PQRtjkwnyKFJZelCgxqmA
-         q2hGwmsy7+zLGjTonVCMQMZIiq3Vd32R1P7wViG6y1OJ+IzEQjZWZeuIwKdcK7MMO4If
-         4CyZnnnyIgH4Xdfwk4GmlNCGM6IyNazncPNJDdMfy/h8QaLRdzXRjP+7Pzdoynf1BAwA
-         /c33zpwMGRcd3nq/DNllmbjbhXTPhfPts7bV762dkbTPsfvj143mohqBnEgIudooJ1+F
-         o9Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788607677; x=1789212477;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=7Ncv0qza4n7xU/ePfsTNxTo8wWj87uTeUF7PMp8e4PA=;
-        b=RRfm72i9RBxzR2TGDozjTG8vYZfnR0MWp92LHHBKRmBUH1N3tiMoF8K+vEZKa4B4qb
-         bLT05nHplLhQbC3LGIi8ZXEwQkHYLpgs4dRK410lyC6ZBZ6YtljowYmYc00q0vgvyd7I
-         FcasDWQTB+OPlbLTmz7N3tY2M6A122NIOLmDCN/XTXqVTPHpQLbj0+zo2P0M7CmbO+er
-         5x1FNLkWWhYXXQqkiSUDrJxaW52tzxDvheT4x6OtrhmWs0S7IV4c4OXQ4j9Ov0vuk+3B
-         tDxe/hx34SXCYnMOWOBwR5Dm209RTK/Ay4ZBMkBS/4+7N0ptyCMbCcfXE0XX87qQgV3D
-         bylg==
-X-Forwarded-Encrypted: i=1; AKwUvBxDCcUbYe0y059kNmejwBKi5KcneSHuruYtWRoBiD8BXK9IgcF2uRDXwzBJzQsP9cJNG8xFoXxEzb5ldOgSdUYTwvw=@vger.kernel.org
-X-Gm-Message-State: AFuF++k3zJ1AzWvE/HTfO3YiPEvLRXISjOVDHWJTHZOmchWq3Othm+yX
-	71L8+uAxNW5pMJNjDUjB4umVf3x8ZKazN0K0EszPHdT7eD1G9lnjY47E
-X-Gm-Gg: AYBFou3YthrSuCJ8XW8X00tPa4KuUQobhDlAvqKp0KzVYjBoKjy6zqMdwV44ytKufs5
-	JLGssOvd4Qwr3ssKoogfFnFI4N0mNdj8LNFNp4pMwAk+WHY5e2t1tbTVz8wzdCuSViKMbGQ21+8
-	rZwd2aJG8xsn9Ls6OzvWF62WqJvYBmlSqSbH8iHUWjs1OR+Az4xhrYvgChP9RuAoc2a0bK9JR1W
-	R3g7Jl/dquRG1vlubSASmSc81XYV0n4kNGJO1UYtDJdNKU3KYxqFmoZITQMAnmwh6XGe6xO0AcY
-	4dOrct/1dsZeUdnmX8o2phNJGGCgTDP+yBSYTBo4SHgRbf5Y9YJ9AqXKDiPpiSYdQQye5NgqBEJ
-	rrQyN+8VY8ag5mTbXC/XXJEx5D2LZtPiOkVOq023mQk3zegxrAzCAMAN0kxecp11wjLEgrlgyN1
-	lbdxyfcfQyi2kH+TglN2mX3gZE7+cb0474pIlwJteUu2zh0tAnJP9cKGNQ+8fJEaWEtUhf1vdN0
-	HROmaAbTrca8cJtMyqV5a933n/x
-X-Received: by 2002:a05:6a00:a204:b0:852:5f99:1866 with SMTP id d2e1a72fcca58-861653da118mr14724734b3a.0.1788607677497;
-        Sat, 05 Sep 2026 04:27:57 -0700 (PDT)
-Received: from bj-kjy-standalone-gaoxiang17.mioffice.cn ([43.224.245.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-86152e39a38sm2228779b3a.39.2026.09.05.04.27.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2026 04:27:56 -0700 (PDT)
-From: Xiang Gao <gxxa03070307@gmail.com>
-X-Google-Original-From: Xiang Gao <gaoxiang17@xiaomi.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="syXLJRc8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C691F00A3D;
+	Sat,  5 Sep 2026 11:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1788607776;
+	bh=NJjp7hyLSGDcY0T4wPUidEv8MR3gxhn3/lAEx5oetG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=syXLJRc8Qt140rlFiEVX2z6Ayz3tdNxSLO+4qNaGVJEUzBMblPT1YU8iiP9themzZ
+	 MO5S/OwEjQ7ZUQKELKXoG2fshz9qTTwazYyULIJszn0cQ6w+ByEwYHmnVH+VYKL7K4
+	 LeT6ll8QifcRley2chTb1MuFumJnjGGiDhw/Nai8=
+Date: Sat, 5 Sep 2026 13:27:51 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	gao xu <gaoxu2@honor.com>,
-	yinchuang1@xiaomi.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xiang Gao <gaoxiang17@xiaomi.com>
-Subject: [PATCH 2/2] tracing: add per-CPU memory usage statistics in tracefs
-Date: Sat,  5 Sep 2026 19:27:32 +0800
-Message-Id: <20260905112732.3705405-3-gaoxiang17@xiaomi.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260905112732.3705405-1-gaoxiang17@xiaomi.com>
-References: <20260905112732.3705405-1-gaoxiang17@xiaomi.com>
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 0/2] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <2026090546-skimming-bundle-0655@gregkh>
+References: <20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org>
+ <9ac44f3f-1c67-4c37-aa72-255cec1578d2@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ac44f3f-1c67-4c37-aa72-255cec1578d2@gmx.de>
 
-Provide a per-CPU view of the tracing ring-buffer memory usage under
-trace_stats/per_cpu/cpuN/memory_usage_kb, using the same format as the
-aggregate file. Each file reports only the buffers belonging to that CPU
-across the global trace array and all tracing instances.
+On Fri, Sep 04, 2026 at 09:46:59PM +0200, Armin Wolf wrote:
+> 
+> Am 04.09.26 um 07:10 schrieb Greg Kroah-Hartman:
+> > The ability to add and remove devices from a driver through the sysfs
+> > "bind" and "unbind" files was created all those decades ago as a way
+> > that kernel developers can iterate faster, and provide a debugging way
+> > for users to attempt to add a new device to a driver without having to
+> > rebuild their kernel.
+> > 
+> > This api over the years has been abused and recently come under a major
+> > fuzzing "attack" through tools like syzbot which decided that it would
+> > attempt to just randomly bind any driver to any type of device, causing
+> > loads of unneeded errors and pointless kernel patches to be generated by
+> > unsuspecting new developers.
+> > 
+> > Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
+> > will be set on the driver if the bind/unbind sysfs files are ever
+> > written to.  This lets kernel developers "know" that a user is
+> > attempting to do something that is not normal, and as such, if the
+> > kernel breaks they get to keep the shiny pieces laying around on the
+> > floor.
+> > 
+> > The flag is 'Y' which was unused, and can remembered as the user is
+> > "yeeting" the device being operated on here (thrown with force without
+> > regard for the thing being thrown).
+> > 
+> > Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
+> > as many times crashes/oops/warnings/failures happen within the callback,
+> > and the taint flag needs to be there to show what was being attempted.
+> > If it were to be set after the callback happens, the oops report would
+> > not properly reflect what foolishness was being attempted.
+> > 
+> > Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
+> > the tool from hitting bind/unbind, should be run with panic_on_taint
+> > enabled so that they fall over and don't continue on, thinking that they
+> > actually found a real issue.
+> > 
+> > Userspace operations that rely on the bind/unbind files to work around
+> > the lack of will to upgrade a kernel image to a newer version with
+> > proper support for new devices, or the lack of will to submit valid
+> > device ids to driver authors, will still work properly, but now the
+> > kernel will be flagged in a way that will show that perhaps those users
+> > should reconsider their behavior and work to have the drivers properly
+> > support these devices in a "native" manner.
+> 
+> What about users that use driver_override together with vfio-pci? AFAIK
+> they still need to write to bind/unbind.
 
-Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
----
- Documentation/trace/ftrace.rst |  3 +++
- kernel/trace/trace.c           | 46 +++++++++++++++++++++++++++++++++-
- 2 files changed, 48 insertions(+), 1 deletion(-)
+As I state above, that is an abuse of this api.
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index ff9d604dd1b8..694c9ed8f241 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -230,6 +230,9 @@ of ftrace. Here is a list of some of the key files:
- 	    buffers: ...
- 	    snapshot_buffers: ...
- 
-+	The same file is provided under trace_stats/per_cpu/cpuN/, reporting
-+	only the buffers belonging to that CPU.
-+
-   buffer_subbuf_size_kb:
- 
- 	This sets or displays the sub buffer size. The ring buffer is broken up
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b343e03a6cf8..ea05077af4a0 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5815,6 +5815,31 @@ static int trace_mem_show(struct seq_file *m, void *v)
- }
- DEFINE_SHOW_ATTRIBUTE(trace_mem);
- 
-+static struct trace_mem_stats trace_buffers_memory_cpu(int cpu)
-+{
-+	struct trace_mem_stats stats = {};
-+	struct trace_array *tr;
-+
-+	guard(mutex)(&trace_types_lock);
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list)
-+		trace_array_buffer_memory(tr, cpu, &stats.buffers,
-+					  &stats.snapshot);
-+
-+	return stats;
-+}
-+
-+static int trace_mem_per_cpu_show(struct seq_file *m, void *v)
-+{
-+	struct trace_mem_stats stats = trace_buffers_memory_cpu((long)m->private);
-+
-+	seq_printf(m, "buffers: %lu\n", stats.buffers >> 10);
-+	seq_printf(m, "snapshot_buffers: %lu\n", stats.snapshot >> 10);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(trace_mem_per_cpu);
-+
- #define LAST_BOOT_HEADER ((void *)1)
- 
- static void *l_next(struct seq_file *m, void *v, loff_t *pos)
-@@ -9236,7 +9261,9 @@ static struct notifier_block trace_module_nb = {
- 
- static __init void init_trace_stats_tracefs(void)
- {
--	struct dentry *stats_dir;
-+	struct dentry *stats_dir, *per_cpu_dir, *cpu_dir;
-+	char cpu_dir_name[30];
-+	int cpu;
- 
- 	stats_dir = tracefs_create_dir("trace_stats", NULL);
- 	if (!stats_dir)
-@@ -9244,6 +9271,23 @@ static __init void init_trace_stats_tracefs(void)
- 
- 	trace_create_file("memory_usage_kb", TRACE_MODE_READ, stats_dir,
- 			  NULL, &trace_mem_fops);
-+
-+	per_cpu_dir = tracefs_create_dir("per_cpu", stats_dir);
-+	if (!per_cpu_dir)
-+		return;
-+
-+	for_each_tracing_cpu(cpu) {
-+		snprintf(cpu_dir_name, 30, "cpu%d", cpu);
-+		cpu_dir = tracefs_create_dir(cpu_dir_name, per_cpu_dir);
-+		if (!cpu_dir) {
-+			pr_warn("Could not create tracefs '%s' entry\n",
-+				cpu_dir_name);
-+			continue;
-+		}
-+
-+		trace_create_file("memory_usage_kb", TRACE_MODE_READ, cpu_dir,
-+				  (void *)(long)cpu, &trace_mem_per_cpu_fops);
-+	}
- }
- 
- static __init void tracer_init_tracefs_work_func(struct work_struct *work)
--- 
-2.34.1
+> Also i always liked the fact that the bind/unbind attributes make it very
+> easy in creating generic drivers. In fact, i am intending to use this feature
+> in order to add netlink support to the ACPI-WMI subsystem in the future.
+> I am planning to realize this thru a generic WMI driver that has to be manually
+> bound to a given WMI device to make it available over netlink, so having
+> users be able to write bind/unbind without potentially triggering a kernel panic
+> would be very nice.
 
+It's a taint flag being set, not a panic, showing developers that "hey,
+the user just did something odd here, ask them about it when handling
+this bug report."
+
+> Additionally, writing into the bind attribute still checks if the driver and the
+> device match:
+> 
+> /*
+>  * Manually attach a device to a driver.
+>  * Note: the driver must want to bind to the device,
+>  * it is not possible to override the driver's id table.
+>  */
+> static ssize_t bind_store(struct device_driver *drv, const char *buf, size_t count)
+> 
+> Because of this i would suggest that the taint (if at all) be added to the
+> driver_override attribute instead, because only with this attribute users can bind
+> random drivers to truly random devices.
+
+I had thought of that, but the force removal of drivers from devices
+wouldn't show up this way, which is one of the things that we do want to
+warn developers about.
+
+And, if we just did the driver_override taint, it would allow those
+drivers who claim to be "generic" like you are referring to, to keep
+"getting away with that" when it's obviously not true that they can
+handle any device for that bus, otherwise it would have automatically
+bound to it already (and no manual intervention would be needed.)
+
+By keeping the manual configuration of bind, you are forcing userspace
+to manually do work, while still a possible thing to do, now at least a
+developer who gets a bug report will _know_ it happened, which is why
+the taint flag is there.
+
+Does that make a bit more sense?
+
+thanks,
+
+greg k-h
