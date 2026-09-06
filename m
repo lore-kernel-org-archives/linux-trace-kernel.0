@@ -1,148 +1,122 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
+Received: from mta0.migadu.com (out-81.mta0.migadu.com [91.218.175.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91F1356771
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 16:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788713823; cv=pass; b=cHPWIUtEg5Zl9pVYbmFb/y5G/9do9ivUz5C2L/jgPoyUcxl3o6vOJdXWRzQY4V/5cNPNG4AbqEZSt9ueZ4Kkf0JupfYHEEuU+5RozrM0ueOjXgoPq6+emUoe3QAfFu3h/FXseIioBliFQnmf9G+yyXN8CUl2GoEOG919NaI2bjo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788713823; c=relaxed/simple;
-	bh=jLbNWAYKOjUjCxKPAnKQtbCBXntzd3CfPr6hFf0UbZI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jpc0LCwIZDKd3XbsZESIYyhtYWCyiJTkw/d7h2RUr/9Bm0M/NUIBKu8AbnVmVIjHuNSkwE6KjSJV0HY/Vx29GMo141/qs5ce+Q2ZurVVNS5TRSCZJNja7WW4BSTJVFtD/HOWjNd84sNNbkYeTC4Yk7QTz3/BLCfPB3FybvwSSOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UjHPtZQt; arc=pass smtp.client-ip=74.125.227.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAC913777E
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 17:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788714653; cv=none; b=Q2d3Qt1+ygv096TqnBpnpWgLGrpaGGrA44j/H3vMaxeE9T3oqHC46Ghkpp6RC15GU9B57QVbhpmxMFBlgL0bKI2rRfJ1MI6G1QumJu+vIZLpevvAqyHEgHHLrDHs0gT8ePk4u65DsYwDw9U4rvk1sl0uCQX5kl+Jfpb4N4JZsd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788714653; c=relaxed/simple;
+	bh=uhIsSL8uAPCL9XFxrlzbBIUvS1+f1cED469hgoP/HY4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=u0R/X0OOqQ6UreGx6DLRKRxZMFpM9neOAJsOQx0XKz1z2FZNSJAN2DyNzvVHE4ArVnVrQt/Wb1rs+iasugZhFRbPky8s+FeRjmIAztZRtv6TNCx81b0NieXSXgzZ0bhlPOdMAY7guNcInsvLDq0v1PVpVsIhMcFen/6EWyqu2Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aDOejnep; arc=none smtp.client-ip=91.218.175.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjHPtZQt"
-Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-39666e7c9edso172208a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 06 Sep 2026 09:57:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788713821; cv=none;
-        d=google.com; s=arc-20260327;
-        b=iWYm7DG699Kdqa4tsgnQLMrdRWvvswoIvUADjA1BEPPLDI3BHydAbSDpc4BUg5Our8
-         vTxwn0/N+R0jtd9jozmJRhr12YgBYZI7V0mCtPEvVMmj8wRASfYCdlQxDOuKvUje7dnp
-         WbkhqDHtKvNvkc2Gx2lZCQS46kUxDxVSkxOPNssSfsDVuESXrEFOpK4m+WZHVDhO3EHi
-         XQEig2fvqrzuiKowH3GSzhtGN5CDS1tbZczw1eeJZHYI//Qx3ZlkRele+f7rSV7vGEwb
-         O2xvB2jLj5QPWKcsqO1nMfgPF9YL3HZI+PQAKEc1BfkoE9Y5fWriiONlaOpiXCKvbVUW
-         HN0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jLbNWAYKOjUjCxKPAnKQtbCBXntzd3CfPr6hFf0UbZI=;
-        fh=8Bh07VZsPaM0isKj4faiqyUuax7AjfAfZE7vnx6M1cw=;
-        b=Ga5HHKeb5kkb9DQapezCfTt+nnllpQEfcccVR1LVb58N1iLxiY6KtxLd7u72XAfFZr
-         asXpsHQc7NCJsAWnJK0f1FSbq4jnH+EgRWdyLb4tzl5PZP7USbblgeE1XwN/ThXZ3JH5
-         K1ply5T8+ta0xtQOUvelxqvblDozIe61h9c70A2T3VpMvX0ST47v+mOMc0d4HvXhNy2W
-         uXpvOT0qZX4B1arWtSmc0zPGWj5H1/G39thwzOaaGjp715t0ygoilquzdNMyFsY5HlVw
-         pbZhLAGyA6X4JP1oUz1NnC8A4avdkdumfJU4NzSQ3kJ/6yhVk6Pctp9janhV60y2/epD
-         N6AQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788713821; x=1789318621; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jLbNWAYKOjUjCxKPAnKQtbCBXntzd3CfPr6hFf0UbZI=;
-        b=UjHPtZQtZlfn+jMBdsesbKV9hhN0VxB45TUW8NF6jsIj/u6sMjuVZl/S6vNiEMAdHB
-         Te+UXjaLTopyZrVKblQ6F2RdO17BiDzp8YSjJWd1LjGv8/lpVMX/mJq6tjMcQBGE+lh3
-         gkbl212FSvMq4hzn08kjNsXAWfz8CFVxj8DwBvGDcA2V9pboEq4SigdRgrpS5P3lbPAR
-         WaeQlpczdSbYO4EXZkRcm/d2DFhfIccQOCyUcacVGnAtc0aqHvm4nD/lvAQStGw+ys2S
-         nEMr3QPCYz3NCaB4lrh+lVRBv1NLXl63CMfDijyK5BqBSV6Pp1fy8GFAFtzsiR1Bm/Qi
-         cjSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788713821; x=1789318621;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jLbNWAYKOjUjCxKPAnKQtbCBXntzd3CfPr6hFf0UbZI=;
-        b=NeL0nJ6+T8KrYogJhmNPnbeCPSc2oXBEs6m7AvFzZZvGASmZAzau18vQso6aHVASjy
-         dNH99JN+4su83azmqdi1AOAebPkZnBaGlvySYRmT80GdVZAxq/tNY/nnoOIIPk2H6lCz
-         W3xoprNvPnYDDVwedPq6Gr8ib0fszPk28qSzT02aq4QW/k3ccmdgR856svgbIpC4oRRp
-         UAr+b6fj9gaty0YZeNHnxiQMMQ+DGI12meRo5vfNnTgoaHdY9hSRNrnLemzyq0hG/X4O
-         OOeWzi5hJk0+lNhTATc3CzZ6P/bg+Obp1TeTJ1vxWmUHWHD9SGTL0mxde1TVxSqgfZlh
-         5WVQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxtwaA6kHVykad26+LzxiT5sJbjPJcqTPBAmR0LpVVtidPGeZkSKVGQ91lwtRNrqkupq7Edrc8cpWQLmSD3lKhaWLA=@vger.kernel.org
-X-Gm-Message-State: AFuF++mLNKiZijCdFaEgB2/CTxAT215+iWAU/aB7e2wmvIPN564Bcgde
-	zaJmHT5XlCjliw+n5Jpg6gzM0j0lGepIvaPWllBB7ZjfSbnQRItrjDVVx0ypYpJl8lGfPFr+t7U
-	ml8y+yHf4B1FPPJT7es4VGHkJmhFjqDA=
-X-Gm-Gg: AYBFou2Olo3K1b6ZvuGtASfcxxYdZvRNJnSydqtsoFf34n+pW9xiDh6A3U42VrL8NyW
-	7brGiAGexoe/h2oOD8zg0SULiaolpTyWHi6H4JX3ITPGuRdlipO2tjV8Jd+KuyM3h6+3UnHpd2V
-	v2Se8LGprdFOAy0aIntSyMJpB5DvanC7JMGy3SikZONx/Zx2qKBRvmyS9oYaKFAygasSst5Rs/u
-	aqzqe0hAs5soCDjVkVeyCREsPgB3TmvR9jqomZuw4rFPSafPO49K2Prr1O7QIwdfDk6LNwgmbKJ
-	6XzJCKz6+ME1KFjL8JZzUdmJF3JrwPQjGUMIkA46c7XAAuloVMiETuwTgpIqOJEN+XigJ/MhDRG
-	UOHcSw0qYDPjZn0B4bI1aIsIcPxOgS6io8edU70fMn0UeY5FtViG0zyPs36xlv5/faZWE083t
-X-Received: by 2002:a17:90b:384d:b0:398:bac0:238e with SMTP id
- 98e67ed59e1d1-39b3d8377camr12050791a91.6.1788713821151; Sun, 06 Sep 2026
- 09:57:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aDOejnep"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=uhIsSL8uAPCL9XFxrlzbBIUvS1+f1cED469hgoP/HY4=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788714649; v=1; x=1789319449;
+ b=aDOejnep06KU67Dx9YIzkSmox/de6aphd+eZKUExPOyEzK6n4i/M7IFPtgvk+TRBF42HAuIe
+ RVG+EhJ2oyMMrw7grRRi0kPqxBmiW05PApbNNfX1k7yGXJTiVnfC2q9vbozlMmPH+0Rc0rVVP99
+ KOs+KB/kmCA9yY+6hecKNFQE=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by mta11.migadu.com with ESMTPS id ae97c8c60dec1d97;
+	Sun, 06 Sep 2026 17:10:49 +0000
+X-Mizu-Trace-ID: ae97c8c60dec1d97
+X-Migadu-Flow: FLOW_OUT
+From: wen.yang@linux.dev
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wen Yang <wen.yang@linux.dev>
+Subject: [PATCH v5 0/5] rv/reactors: fix lockdep warning and add tests
+Date: Mon,  7 Sep 2026 01:10:36 +0800
+Message-Id: <cover.1788705281.git.wen.yang@linux.dev>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev> <20260904-b4-arm64-callops-kcfi-v1-8-ce6687739b0c@linux.dev>
-In-Reply-To: <20260904-b4-arm64-callops-kcfi-v1-8-ce6687739b0c@linux.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 6 Sep 2026 18:56:47 +0200
-X-Gm-Features: AcwNN1Vz7OHfpHx7W0dFC3jg8glvxcm1hmRiClFLpwy0F6DpBbL1JHHuwRxDDvo
-Message-ID: <CANiq72=xOrSXBBdmrKYfX1=qgF37LRAMzMJd4GJkXaYHMVe9yQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 8/8] arm64: ftrace: Allow CALL_OPS on kCFI kernels
- built with Rust
-To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	=?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
-	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
-	Leon Hwang <leon.hwang@linux.dev>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Ben Cressey <ben@cressey.dev>, "Florent Revest (Anthropic)" <florent.revest@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 4, 2026 at 3:20=E2=80=AFAM Jose Fernandez (Anthropic)
-<jose.fernandez@linux.dev> wrote:
->
-> +# bindgen generates no code, and its libclang may predate the section
-> +# argument of -fpatchable-function-entry that a kCFI kernel with CALL_OP=
-S
-> +# passes on arm64.
-> +bindgen_c_flags =3D $(filter-out -fpatchable-function-entry=3D%,$(c_flag=
-s))
+From: Wen Yang <wen.yang@linux.dev>
 
-In general, one should be using the same version (we warn otherwise
-early in the build), but yeah, it is just a warning for now and it is
-nice to try to remain a bit flexible.
+We occasionally hit a lockdep "Invalid wait context" warning in
+production when a reactor callback is preempted by a timer interrupt.
+On interrupt exit the scheduler takes rq->__lock (LD_WAIT_SPIN) while
+rv_react() still holds its wait-type-override map, which declared
+LD_WAIT_FREE.  On any kernel where the task context has preemption
+enabled (not just CONFIG_PREEMPT_RT) this triggers a spurious lockdep
+report:
 
-Now, if we are going to filter this out for Clang, should we just
-filter it out for GCC too? i.e. outside the `ifdef`?
+    [ BUG: Invalid wait context ]
+    1 lock held by kunit_try_catch/209:
+     #0: (rv_react_map-wait-type-override){+.+.}-{1:1}
+    kunit_try_catch/209 is trying to lock:
+    ffff8a743ed3e8a0 (&rq->__lock){-...}-{2:2}
 
-By the way, "generates no code" sounds a bit strange, since `bindgen`
-generates source code...
+This series fixes the wait type (patch 1), makes reactor registration
+failures propagate (patch 2), adds support for module-based
+reactors (patch 3), and adds KUnit/kselftest coverage (patch 4-5).
 
-Thanks!
+Changes in v5:
+- Patch 1: the locking rules no longer go to
+  Documentation/trace/rv/monitor_synthesis.rst, which is not about
+  reactors (Gabriele); they are documented in code comments.
+  Functional code unchanged.
+- Patch 2: unchanged
+- Patch 3: redesigned. v4 only exported the registration helpers,
+  which is harmless while all in-tree reactors are built-in, but
+  would let a loudable reactor module be unloaded while a monitor
+  still refereances its react() callback. Per the suggestion in
+  commit 3d3800b4f7 ("rv: Remove rv_reactor's reference counter").
+  A new selftest (patch 5) exercises it.
+- Patch 4: The test callback is kept busy for two timer ticks so
+  the test also passes with HZ < 200.
+- Patch 5: a selftest module that registers a reactor exercises
+  the module pinni g end to end: rmmod must fail while a monitor
+  is attached. 
 
-Cheers,
-Miguel
+v4: https://lore.kernel.org/lkml/cover.1787854397.git.wen.yang@linux.dev/
+v3: https://lore.kernel.org/lkml/cover.1786294920.git.wen.yang@linux.dev/
+v2: https://lore.kernel.org/lkml/cover.1785695669.git.wen.yang@linux.dev/
+v1: https://lore.kernel.org/lkml/cover.1781541556.git.wen.yang@linux.dev/
+
+Wen Yang (5):
+  rv/reactors: use LD_WAIT_SPIN as the reactor lockdep wait type
+  rv/reactors: propagate rv_register_reactor() error from reactor init
+  rv/reactors: export rv_register_reactor() and rv_unregister_reactor()
+  rv/reactors: add KUnit tests for reactor registration and dispatch
+  selftests/verification: Test loadable module-based reactor
+
+ include/linux/rv.h                            |   3 +
+ kernel/trace/rv/Kconfig                       |  12 ++
+ kernel/trace/rv/Makefile                      |   1 +
+ kernel/trace/rv/reactor_panic.c               |   3 +-
+ kernel/trace/rv/reactor_printk.c              |   3 +-
+ kernel/trace/rv/rv.c                          |   5 +
+ kernel/trace/rv/rv_reactors.c                 |  48 ++++++--
+ kernel/trace/rv/rv_reactors_kunit.c           | 110 ++++++++++++++++++
+ tools/testing/selftests/verification/Makefile |   1 +
+ tools/testing/selftests/verification/config   |   2 +
+ .../test.d/rv_reactor_loadable.tc             |  46 ++++++++
+ .../verification/test_modules/Makefile        |  16 +++
+ .../test_modules/rv_test_reactor.c            |  37 ++++++
+ 13 files changed, 276 insertions(+), 11 deletions(-)
+ create mode 100644 kernel/trace/rv/rv_reactors_kunit.c
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_reactor_loadable.tc
+ create mode 100644 tools/testing/selftests/verification/test_modules/Makefile
+ create mode 100644 tools/testing/selftests/verification/test_modules/rv_test_reactor.c
+
+base-commit: 785095112f4198de49760552374f364043c8dbdf
+-- 
+2.25.1
+
