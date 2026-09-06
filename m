@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-91.mta0.migadu.com [91.218.175.91])
+Received: from mta0.migadu.com (out-93.mta0.migadu.com [91.218.175.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D39F38B127
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 17:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732C63BBFBC
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 17:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788714668; cv=none; b=gaY9oyDAkGcgdEFhEmlubF4cVXmVwqK4hNrOaXhU+AQnwnjAb/sB3SHoloWWCqzKN7Iy151LUpI/5FGSMgoDERB6jLhVUCP0gfn+79Lfz+131OUC1LBUGkGZnxViNkblrlvZhZ44tn16XwTD9xXEC6ri885AhEKxyWnvBXfPPR0=
+	t=1788714670; cv=none; b=Ub+1U7rK4D9K5wPEwvRdxZfHLMJBehZZ231JaWZ23T5MEslpvJaudQKGrPUTFFKd7MCbnD7O62cjCQEIeVPr3R0nBhBvDKoYGAa1Og5wocWkcneJdyd1qFeF2Jo164PeykgfUCEp1f6S+ez+y9YnqnEFVGHzGraY8SYZl9JoVNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788714668; c=relaxed/simple;
-	bh=97qOxR95BvEhLUNVNSUNlYfU51gXbkrkpDOCNYqvOAQ=;
+	s=arc-20240116; t=1788714670; c=relaxed/simple;
+	bh=OW4UqLTrNI7q54EASlGxQ7moAEK5tuNqr5Zpl0Z108A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DmHGZ5A3qlxgnUITXZix9BJIjAUkdGJIhBV023yXirqZrZbC8/mM0E1jzKdjcGl8Bu7SSaoP/1FZhTTjwSaEXiDyYPuUAtugd9lWrbt5M30dGzxy8K0sgTAZ9w9NDawcwqsonUYqTfmt1Z3UJhj8t5TqQFoXo1/0+KXKNeZ+VXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wXSTDedu; arc=none smtp.client-ip=91.218.175.91
+	 MIME-Version; b=NeZhebesGUhF1Hl/iKA5nYoHBUGTVX5VbunICvqNGwEsKmDQhO4Wx7XA8RjqXEjVDG3uFQZd5hq2dvSKlNgpDWQjlFUYvxppkO5a9SssuIGji7ALx2k6idHpm/7+r5KlswPCoN56ntNAOnRMLfeZyusGrzoo64gwFt+BkL5hVO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dzPaHW5s; arc=none smtp.client-ip=91.218.175.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wXSTDedu"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dzPaHW5s"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=97qOxR95BvEhLUNVNSUNlYfU51gXbkrkpDOCNYqvOAQ=;
+DKIM-Signature: a=rsa-sha256; bh=OW4UqLTrNI7q54EASlGxQ7moAEK5tuNqr5Zpl0Z108A=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788714663; v=1; x=1789319463;
- b=wXSTDeduTwzSxUjpsFwMMbJzu2NHFivZYkvq2i4jw160UKDvpEDE8ix4M6+rJfL/CX7J57XD
- judU3mzP41gjMCr9uRG3aW4ljNZ36AuKKjdXIRi8yu3DS3pUZT0obSi7nJXZFDBtQZs7sUPKrSn
- 9fkRbH+C1QhAQW4c2yY5D/5g=
+ t=1788714666; v=1; x=1789319466;
+ b=dzPaHW5smGFPxu8zV1Xzgu49dvQ3Jf0TG0KSl1nSkPEMsilStQmOibAfoUkQF6LzHae2A3xq
+ 7C/P8bRfz7Pr9N84/RInY1ni+djd/p8ON9V2o9WUtousaQ/IpHTLps5mu4T20AKFOUsetZuDG7k
+ /q3RY5podOiHliBx3MgJAO54=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id 8a0cdfe16dd5e2d6;
-	Sun, 06 Sep 2026 17:11:03 +0000
-X-Mizu-Trace-ID: 8a0cdfe16dd5e2d6
+Received: by mta11.migadu.com with ESMTPS id 4fb2ac31f6cbe7cb;
+	Sun, 06 Sep 2026 17:11:06 +0000
+X-Mizu-Trace-ID: 4fb2ac31f6cbe7cb
 X-Migadu-Flow: FLOW_OUT
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
@@ -35,9 +35,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v5 4/5] rv/reactors: add KUnit tests for reactor registration and dispatch
-Date: Mon,  7 Sep 2026 01:10:40 +0800
-Message-Id: <1262e72539bd8ebc66707eb6f6598549a48285f7.1788705281.git.wen.yang@linux.dev>
+Subject: [PATCH v5 5/5] selftests/verification: Test loadable module-based reactor
+Date: Mon,  7 Sep 2026 01:10:41 +0800
+Message-Id: <8337c115db6ca718a0d442ad85f0d2d4eaa2422b.1788705281.git.wen.yang@linux.dev>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1788705281.git.wen.yang@linux.dev>
 References: <cover.1788705281.git.wen.yang@linux.dev>
@@ -51,175 +51,163 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wen.yang@linux.dev>
 
-Add KUnit tests covering the reactor register/unregister lifecycle
-(including duplicate and name-length rejection) and rv_react() dispatch
-(a no-op without a callback, exactly one invocation with one).  The
-mdelay() callback keeps the CPU busy so a timer interrupt lands inside
-rv_react()'s lockdep context, exercising the LD_WAIT_SPIN wait type
-from the previous patch; a spurious lockdep splat there would show up
-in the test output.
+Add a selftest module that register an RV reactor and a test that
+exercises the module pinning: rmmod must fail while a monitor is
+attached to the reactor and succeed after it is detached. A trap
+unloads the module on failure so it does not break the next insmod.
 
-The dispatch tests rely o reacting_on being enabled, since rv_react()
-returns early when it if off.
+THe module is built through the kselftest TEST_GEN_MODS_DIR mechanism,
+like the livepatch selftests.
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- kernel/trace/rv/Kconfig             |  12 +++
- kernel/trace/rv/Makefile            |   1 +
- kernel/trace/rv/rv_reactors_kunit.c | 110 ++++++++++++++++++++++++++++
- 3 files changed, 123 insertions(+)
- create mode 100644 kernel/trace/rv/rv_reactors_kunit.c
+ tools/testing/selftests/verification/Makefile |  1 +
+ tools/testing/selftests/verification/config   |  2 +
+ .../test.d/rv_reactor_loadable.tc             | 46 +++++++++++++++++++
+ .../verification/test_modules/Makefile        | 16 +++++++
+ .../test_modules/rv_test_reactor.c            | 37 +++++++++++++++
+ 5 files changed, 102 insertions(+)
+ create mode 100644 tools/testing/selftests/verification/test.d/rv_reactor_loadable.tc
+ create mode 100644 tools/testing/selftests/verification/test_modules/Makefile
+ create mode 100644 tools/testing/selftests/verification/test_modules/rv_test_reactor.c
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index efa930f94ea4..9bfd429ffdea 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -113,6 +113,18 @@ config RV_REACT_PANIC
- 	  Enables the panic reactor. The panic reactor emits a printk()
- 	  message if an exception is found and panic()s the system.
+diff --git a/tools/testing/selftests/verification/Makefile b/tools/testing/selftests/verification/Makefile
+index aa8790c22a71..7ff7382d11f0 100644
+--- a/tools/testing/selftests/verification/Makefile
++++ b/tools/testing/selftests/verification/Makefile
+@@ -3,6 +3,7 @@ all:
  
-+config RV_REACTORS_KUNIT
-+	tristate "KUnit tests for RV reactors" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	depends on RV_REACTORS
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable KUnit tests for RV reactor registration and dispatch.
-+	  These tests verify the register/unregister lifecycle, duplicate
-+	  rejection, and that rv_react() correctly invokes callbacks.
-+
-+	  If unsure, say N.
-+
- config RV_MONITORS_KUNIT_TEST
- 	tristate "KUnit tests for RV monitors" if !KUNIT_ALL_TESTS
- 	depends on KUNIT && RV && RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index cdbf68c84f5a..c895d81dfdad 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -25,4 +25,5 @@ obj-$(CONFIG_RV_MON_WAKEUP) += monitors/wakeup/wakeup.o
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
- obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
-+obj-$(CONFIG_RV_REACTORS_KUNIT) += rv_reactors_kunit.o
- obj-$(CONFIG_RV_MONITORS_KUNIT_TEST) += rv_monitors_test.o
-diff --git a/kernel/trace/rv/rv_reactors_kunit.c b/kernel/trace/rv/rv_reactors_kunit.c
+ TEST_PROGS := verificationtest-ktap
+ TEST_FILES := test.d settings
++TEST_GEN_MODS_DIR := test_modules
+ EXTRA_CLEAN := $(OUTPUT)/logs/*
+ 
+ include ../lib.mk
+diff --git a/tools/testing/selftests/verification/config b/tools/testing/selftests/verification/config
+index 43072c1c38f4..ddd7581f07b9 100644
+--- a/tools/testing/selftests/verification/config
++++ b/tools/testing/selftests/verification/config
+@@ -1 +1,3 @@
+ CONFIG_RV=y
++CONFIG_MODULES=y
++CONFIG_MODULES_UNLOAD=y
+diff --git a/tools/testing/selftests/verification/test.d/rv_reactor_loadable.tc b/tools/testing/selftests/verification/test.d/rv_reactor_loadable.tc
 new file mode 100644
-index 000000000000..a408edcdde04
+index 000000000000..ff1691661521
 --- /dev/null
-+++ b/kernel/trace/rv/rv_reactors_kunit.c
-@@ -0,0 +1,110 @@
++++ b/tools/testing/selftests/verification/test.d/rv_reactor_loadable.tc
+@@ -0,0 +1,46 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-or-later
++# description: Test a loadable module-based reactor
++# requires: available_reactors insmod:program rmmod:program
++
++MODULE_KO="$FTRACETEST_ROOT/test_modules/rv_test_reactor.ko"
++[ -f "$MODULE_KO" ] || exit_unsupported
++[ -f /proc/modules ] || exit_unsupported
++monitor=$(ls monitors | head -n 1)
++[ -n "$monitor" ] || exit_unsupported
++
++cleanup() {
++	if grep -q '^test_reactors$' available_reactors; then
++		echo nop > "monitors/$monitor/reactors" || true
++		rmmod rv_test_reactor || true
++	fi
++}
++trap cleanup EXIT
++
++test_loadable_reactor() {
++	local monitor="$1"
++
++	insmod "$MODULE_KO"
++	grep -q test_reactor available_reactors
++
++	echo test_reactor > "monitors/$monitor/reactors"
++	grep -q "\[test_reactor\]"  "monitors/$monitor/reactors"
++
++	echo 1 > "monitors/$monitor/enable"
++
++	if rmmod rv_test_reactor 2> /dev/null; then
++		echo "FAIL: rmmod succeeded while the reactor is attached to a monitor"
++		return 1
++	fi
++	grep -q test_reactor available_reactors
++
++	echo nop > "monitors/$monitor/reactors"
++	grep -q "\[nop\]"  "monitors/$monitor/reactors"
++	grep -q 1 "monitors/$monitor/enable"
++
++	echo 0 > "monitors/$monitor/enable"
++	rmmod rv_test_reactor
++	! grep -q test_reactor available_reactors
++}
++
++test_loadable_reactor "$monitor"
+diff --git a/tools/testing/selftests/verification/test_modules/Makefile b/tools/testing/selftests/verification/test_modules/Makefile
+new file mode 100644
+index 000000000000..0af95207a9a9
+--- /dev/null
++++ b/tools/testing/selftests/verification/test_modules/Makefile
+@@ -0,0 +1,16 @@
++# SPDX-License-Identifier: GPL-2.0
++
++TESTMODS_DIR := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
++KDIR ?= /lib/modules/$(shell uname -r)/build
++
++obj-m += rv_test_reactor.o
++
++modules:
++ifneq ("$(wildcard $(KDIR))", "")
++	$(Q)$(MAKE) -C $(KDIR) modules KBUILD_EXTMOD=$(TESTMODS_DIR)
++endif
++
++clean:
++ifneq ("$(wildcard $(KDIR))", "")
++	$(Q)$(MAKE) -C $(KDIR) clean KBUILD_EXTMOD=$(TESTMODS_DIR)
++endif
+diff --git a/tools/testing/selftests/verification/test_modules/rv_test_reactor.c b/tools/testing/selftests/verification/test_modules/rv_test_reactor.c
+new file mode 100644
+index 000000000000..a243df81fa52
+--- /dev/null
++++ b/tools/testing/selftests/verification/test_modules/rv_test_reactor.c
+@@ -0,0 +1,37 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * KUnit tests for RV reactor registration and dispatch.
-+ *
-+ * The dispatch tests rely on reacting_on beinng enabled, since rv_react()
-+ * returns early when it is off. It is on by default when the suites run
-+ * built-in; as a module, re-enable it if disabled via
-+ * /sys/kerne/tracing/rv/reacting_on.
++ * Loadable RV reactor for the verification selftests. Register a
++ * reactor with owner = THIS_MODULE so the selftests can exercise the
++ * module pinning: unloading is refused while a monitor is attached
++ * to the reactor.
 + */
 +
-+#include <kunit/test.h>
++#include <linux/module.h>
 +#include <linux/rv.h>
-+#include <linux/delay.h>
-+#include "rv.h"
 +
-+static struct rv_reactor test_reactor = {
-+	.name		= "kunit_test_reactor",
-+	.description	= "KUnit test reactor",
++__printf(1, 0) static void rv_test_reaction(const char *msg, va_list args)
++{
++}
++
++static struct rv_reactor rv_test_reactor = {
++	.name = "test_reactor",
++	.description = "selftest reactor: exercise module-based reactors.",
++	.react = rv_test_reaction,
++	.owner = THIS_MODULE,
 +};
 +
-+static void reactor_teardown(void *arg)
++static int __init rv_test_reactor_init(void)
 +{
-+	rv_unregister_reactor(&test_reactor);
++	return rv_register_reactor(&rv_test_reactor);
 +}
 +
-+static void register_test_reactor(struct kunit *test)
++static void __exit rv_test_reactor_exit(void)
 +{
-+	KUNIT_ASSERT_EQ(test, rv_register_reactor(&test_reactor), 0);
-+	KUNIT_ASSERT_EQ(test,
-+			kunit_add_action_or_reset(test, reactor_teardown, NULL), 0);
++	rv_unregister_reactor(&rv_test_reactor);
 +}
 +
-+static void test_double_register(struct kunit *test)
-+{
-+	register_test_reactor(test);
-+	KUNIT_EXPECT_EQ(test, rv_register_reactor(&test_reactor), -EINVAL);
-+}
-+
-+static const char long_reactor_name[] = "kunit_reactor_name_too_long_xxx_";
-+_Static_assert(sizeof(long_reactor_name) - 1 >= MAX_RV_REACTOR_NAME_SIZE,
-+	       "long_reactor_name must be at least MAX_RV_REACTOR_NAME_SIZE chars");
-+
-+static void test_name_too_long(struct kunit *test)
-+{
-+	static struct rv_reactor long_reactor = {
-+		.name = long_reactor_name,
-+	};
-+
-+	KUNIT_EXPECT_EQ(test, rv_register_reactor(&long_reactor), -EINVAL);
-+}
-+
-+static struct kunit_case rv_reactor_registration_cases[] = {
-+	KUNIT_CASE(test_double_register),
-+	KUNIT_CASE(test_name_too_long),
-+	{}
-+};
-+
-+static struct kunit_suite rv_reactor_registration_suite = {
-+	.name		= "rv_reactor_registration",
-+	.test_cases	= rv_reactor_registration_cases,
-+};
-+
-+static int react_call_count;
-+
-+__printf(1, 0) static void mock_react(const char *msg, va_list args)
-+{
-+	react_call_count++;
-+	/* Busy-wait so a timer interrupt fires inside rv_react(). */
-+	mdelay(20);
-+}
-+
-+static void test_react_no_callback(struct kunit *test)
-+{
-+	struct rv_monitor monitor = {
-+		.name = "kunit_null_react",
-+	};
-+
-+	react_call_count = 0;
-+	rv_react(&monitor, "no callback");
-+
-+	KUNIT_EXPECT_EQ(test, react_call_count, 0);
-+}
-+
-+static void test_react_callback_invoked(struct kunit *test)
-+{
-+	struct rv_monitor monitor = {
-+		.name	= "kunit_dispatch_monitor",
-+		.react	= mock_react,
-+	};
-+
-+	react_call_count = 0;
-+	rv_react(&monitor, "callback invocation test");
-+	KUNIT_EXPECT_EQ(test, react_call_count, 1);
-+}
-+
-+static struct kunit_case rv_react_dispatch_cases[] = {
-+	KUNIT_CASE(test_react_no_callback),
-+	KUNIT_CASE(test_react_callback_invoked),
-+	{}
-+};
-+
-+static struct kunit_suite rv_react_dispatch_suite = {
-+	.name		= "rv_react_dispatch",
-+	.test_cases	= rv_react_dispatch_cases,
-+};
-+
-+kunit_test_suites(&rv_reactor_registration_suite, &rv_react_dispatch_suite);
++module_init(rv_test_reactor_init);
++module_exit(rv_test_reactor_exit);
 +
 +MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("KUnit tests for RV reactor registration and dispatch");
++MODULE_DESCRIPTION("Loadable RV reactor for verification selftests");
 -- 
 2.25.1
 
