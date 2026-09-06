@@ -1,77 +1,73 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1B439733E
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 06:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F83738DC74
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 12:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788677954; cv=none; b=qzNcNIDlJCxMahLiCiGgYPjJ30WrdAbN+B4qcvQjlIMUkEUHGE/H04lwlxe4nVq07Qi6b38ah8WhrfNMj+DKhd71Z8D/PHQ/iOxjVXg5G/HBh5jvxLko+CJctgT9MMqkW0tq7z1e3EHnKM27RRb6L1+9ppa+SpoOIVP7/eo3E6g=
+	t=1788698436; cv=none; b=eBL7ZbP3T5SwuQoPhVF/5PqBcNRynSDmOh04Ha4Rmm+fu5dGQqJ6JGfXREW8LA53nraKRqAReAbYrGn+iBfLyT4steMjczNBQFaueL3UGjdzN9GaPzGnqJkij49T5ViUoQbrQYIMl0U2A5Qwp74CVYpQHlVa0eIzFxIAk/ll7Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788677954; c=relaxed/simple;
-	bh=nmsAQww9dgWl/W5T2Mjb95A7HHO+Y3Vn0GUTxAd2cV4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fU2aji/MrwepFjV4U0QuDPiuLdHceWdl13+cnZoMMSUz1CxuLEUm7mlJ5m36k4oP9tiUip2ysTnABbtRBobFivx+Rs6RfB3S0NZS8fYoVCGkAJtEFFYIH8SVceLMhczy1jczLh4QVf1Upy3qEp6TE579P0oLzJZm80Ddelp8JZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AdlCVU3M; arc=none smtp.client-ip=209.85.216.49
+	s=arc-20240116; t=1788698436; c=relaxed/simple;
+	bh=48zN5gDkt335ZWJwEnQrm9lNHGpPcYw1ZDJEI3WvGoo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=foGr/eYDl37bFE18jOJ3EtKwD50xCZxDmSQT9gfmncSnAGOV7Vj606bwTfZViMuyCUUXVDDKLDKpLFen5HMGX63IdM8o9BgdpEh3pGb/Ktax0sCu5HG3GzysPbB01TIdF81lUiYvGFns4YGqr1R7TonIB9Z8C/oCQ+/IQPFfgvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kj/svzLU; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdlCVU3M"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-398b3c37877so2269362a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 05 Sep 2026 23:59:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kj/svzLU"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3966791a6eeso3124347a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 06 Sep 2026 05:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788677953; x=1789282753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=nmsAQww9dgWl/W5T2Mjb95A7HHO+Y3Vn0GUTxAd2cV4=;
-        b=AdlCVU3MYOgXK3/IvMbNZxahp9pbp0ZYAH6KcmBJPbUu4tp5FTll4wiKnl+lV5Edw5
-         DcuMlOknZfQ2ID6WF2UttBtoU3wdysEcHAQ6tvCr3GryUOHDPX0mF59ZsxsYqTFAi7cb
-         XDx0dUq7gTffiTzRIhPK3Ga5uxWsY2tIMFVdzpmhgOmM2BHc1mcYjbKoJNVNbC3gCEcu
-         pUNw6YfL0dqCMGgZhYqO+E6KGHebg91rMOixtmJf3WHMirhNNki9PJJmtgAWaH7sxWBS
-         m3a0ogbbkmtR2uLAOUYGUOL8ZDIDrOKytrlaxAs1pnewMJfptgvJKUSjpEdgtCrgHRJ7
-         zMzQ==
+        d=gmail.com; s=20251104; t=1788698432; x=1789303232; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=0Tls/LC4+9ZyOkyuToAojJmb/W5OKZbgatlDq3B6sz4=;
+        b=Kj/svzLUDlCyWGPtxJo6XLN4lSqK2cMRbgVfvczntJCM1cp+ADoEygw3Qa4cNo20Mx
+         P0zRiOOCscTTJAtOGT4f1G7FqYNhZnPTPgTs5JQxgRrMIuJsoIEFbbciQrbcYbi5EVSy
+         nWyNCZe5L0/zRnuZc2LSTRAsAqyI7vEtSsCGsPJgZG90YscagiZ3+ESc0ruHGC1RHyFH
+         vSyU8/GA4Fr0Z5ZPvVEZc5KxOWlL44NBMs/in2WzChm+05c9bwKLc8yt5l8IQdBtWIg+
+         43nUwAv1O2ELM0H/NopyGCZff+pd/AOPCsakdVvvpoMiSghZuQ1KsdwgNH3kE/1ttwap
+         djYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788677953; x=1789282753;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nmsAQww9dgWl/W5T2Mjb95A7HHO+Y3Vn0GUTxAd2cV4=;
-        b=ADL1pm790U1OY1eNjv4sFrfAWXrV0p6XGquwJmhVkfLkmDFB8b8UKvlrakYt2JS7eA
-         1A0+pZME2v//wyexKZY2YCa1+r7WX2OrJk3NoatzLZpfEhe/zJNrWa5aVyGTsIpkGzPR
-         LclCRkY2FhzuqrkBp8j6PbVVqtAzS+T0WWQUbObHDfDVA5xrqi3IJ4G10Ftz0Jj+OFs4
-         +f9U7a88KOOhmS3FdHnKKFtAEcWzcQ8GRqNGiKhP9bZHiWpr0+VYqVSRQVzCIAUE1bA4
-         nkuMCyYmY6H7xYTc8xtrIT2fzGUr9mwIfB7+lQ02oxpkUGRGGFA7o0x7SOcOu6y86j9K
-         GYtA==
-X-Forwarded-Encrypted: i=1; AKwUvByMmv5VvYIdFKDmBfXB6rtga2nujepvZ7Was/bTZmIbaNz04y37X81bMAnyI5duMvr1e3NSDFNJpIWlxzlA1XWSioc=@vger.kernel.org
-X-Gm-Message-State: AFuF++mnNFHHx0iFBa5IgfqMO84dmVMTsX7zJl5WPpR8fs/gFyDoH9El
-	P3s7wPHoG228ZeQC6a0cJfc8B9jIxJ3a63ljoJD3bFhZyozIyRLKBuQ=
-X-Gm-Gg: AYBFou1HPenSCRYoKMNdmP0aDM9fGgmffAS+28aHZBg3im5jZq/U4B5hkjFNUlLYkhi
-	Ky+tu0j+uCB5NQ4lymw9Ge6PW1Vva2aUIIImx2CJuKQuzIHdCZHRfmCxeTM+VGPFxFsuKeSFK/3
-	6fFD5D+SVf+3linCSnWZB+0+K0jMEyC8LjVpl3SnKkQuCo7wQCj+dKeOm4wbjmbI3mQU3o0VkLJ
-	zCAqFElReXkymYzl8nRkBDYB5eSXLjS9EmeAfMOtquxZ/xrddIQA4OdveXpGBAJEcrvd8WaXOy3
-	p7ohJ9cR18FLpncRwpgB65lyZKssq1pClLuM1gSk4qQz7S9o5wa/iXmnwGwpzrXfmoOolAeMki/
-	rpfcn6DdUYl9WhwDK7VGm5/WSugfp1MNcIZY4zMXWQvPiMDrVxTl6oNuDRMpjHQrpKpgH/1a1Yl
-	oEz4PlbZVJBteaolVJtb5yAoGIy9JKAry2nx3RGQvtJYIAtNA/Co1KmA1Guh7WjJ8IVBHvYuTdD
-	u8MkSw2YXk4jMbN6BeuBSffZAj3
-X-Received: by 2002:a17:90b:39a7:b0:381:cef1:11ac with SMTP id 98e67ed59e1d1-39b26125efemr23047016a91.10.1788677952877;
-        Sat, 05 Sep 2026 23:59:12 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788698432; x=1789303232;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0Tls/LC4+9ZyOkyuToAojJmb/W5OKZbgatlDq3B6sz4=;
+        b=XwJAfWKan2kLwp7GiNaFitsf7Nf5L0bh89hPtdeI9nXXxA8S8ONuPKJYA+xNLeff8u
+         WeuiAk8i6COua6V3958dkAGDe0RTic38SbucD0jjmdY7JhPbDCfdHWb4x0RlNZ4QGj9f
+         Z75rM6DW1exr6fKvCph7Yolu1jo2dS3obCnyhaBECxqI7qAWtBuh4Y8gAxocc3Z9mczQ
+         Ms6joWEJLeqFbGBgBnoOExUXXpl5UmDIK8xzRLeMWBxpfFC29as4Lw93IBrJI12lOhji
+         Rz+MUYbzgYieqagnn5gRq5jGwLDtEuDsTSU+bevIshN7PgkX4X/mgAl4hXIFTixtMbky
+         qXjg==
+X-Gm-Message-State: AFuF++lggF5+wP4vxfqpVEhFjf2f3SS11270ZrQg2b3eQcpy/3+SOzeK
+	WIB9rbHRsDX6ylSaV2ljoOsZOBUzSpp9PQKKtCrLPm7RdamlAdzm3Fg=
+X-Gm-Gg: AYBFou1WmW7KGlLQXto4RMbEnVHUxvQ5kPghEIWHSOfBKxdfFk01uSApff4ZwA8mrOt
+	oXxpitcbP4qHHprdOL20DoDge/8Myl5CSXL7Xz6shbDgmlm2htITWHpqsVdPR6pZVhIKb00wYzg
+	l8O2M4b9uGRDTTotUOhmYbwMGXYAm6vqXWxrouHBjh9jDoWe3eNf5OLoAuP1zbVKZjgXIFFq2Hx
+	+CZoSlN9OK8lbxsuhtDiwCxm1ErSrljFLdl3UGRltYmrPTVJPTuZom7KajBzhS5IGSBN7cuCJAS
+	Ed9IMRuQu53OBK7K17E1WGeX7Tq5HPCQ87lvLXZCNk/Vqm+FGsJn9dBEyMpBGW8F7H9YewYtN9K
+	zv0iAIUOjAfCOreWWxNLWAAQhUGKYkvgKd/UqBOjyLBQzwaO58t8uI/NZE4HnEd1XRWqkA7XfcM
+	hEdHnvrki18qYBCsdJXDbTOH4D+hPZZ8+KeA74W1a6uN2EFBla/WSbZdhS+m6XED/8SrY2tgPMX
+	WbxH3PCJWzkq7X+
+X-Received: by 2002:a17:90a:da8f:b0:398:b71e:60c1 with SMTP id 98e67ed59e1d1-39b26208e7amr24843114a91.12.1788698431962;
+        Sun, 06 Sep 2026 05:40:31 -0700 (PDT)
 Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:2b14:fe4a:ab17:f236])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b260fe843sm13604739a91.10.2026.09.05.23.59.10
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b08bcc090sm21083005a91.4.2026.09.06.05.40.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2026 23:59:12 -0700 (PDT)
+        Sun, 06 Sep 2026 05:40:30 -0700 (PDT)
 From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	donggeunyoo.kernel@gmail.com
-Subject: Re: [PATCH] function_graph: Use the saved entry's size when reprinting it
-Date: Sun,  6 Sep 2026 15:59:07 +0900
-Message-ID: <20260906065907.1495913-1-donggeunyoo.kernel@gmail.com>
+Subject: [PATCH] tracing: hist: free var refs regardless of how often they are referenced
+Date: Sun,  6 Sep 2026 21:40:25 +0900
+Message-ID: <20260906124025.3550596-1-donggeunyoo.kernel@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260906040248.3D46F1F00A3A@smtp.kernel.org>
-References: <20260906034406.1335316-1-donggeunyoo.kernel@gmail.com> <20260906040248.3D46F1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,32 +76,128 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 06, 2026 at 04:02:47AM +0000, sashiko-bot@kernel.org wrote:
-> - [High] This problem wasn't introduced by this patch, but state
-> desynchronization when reprinting a previously failed trace entry causes
-> the current entry in the ring buffer to be incorrectly consumed and
-> permanently dropped.
+Using the same variable three or more times in one hist trigger leaks the
+variable reference and its strings when the trigger is removed.
 
-print_graph_entry() does not always return TRACE_TYPE_HANDLED.
-print_graph_entry_nested() returns TRACE_TYPE_NO_CONSUME, for the reason
-given in the comment above it, so the quoted branch is not reached in the
-nested case.
+commit 656fe2ba85e8 ("tracing: Use hist trigger's var_ref array to destroy
+var_refs") made a trigger's var_refs[] array the only owner of a var ref:
+destroy_hist_field() returns early for HIST_FIELD_FL_VAR_REF, so the field
+expressions never destroy one. One entry, freed once, no count needed.
 
-For a leaf, print_graph_entry_leaf() has printed the entry and its return
-as one line, so the entry left at the head has already been shown and
-consuming it is correct, as it is on the normal path. The iter->cpu != cpu
-test is what separates the two: on another CPU the head is not the return
-of the pair just reprinted, so it is left alone and ignore is set for it
-instead.
+commit 8bcebc77e85f ("tracing: Fix histogram code when expression has same
+var as value") then made repeated references share one object and added a
+count of them. Only the increment side exists, since those expressions
+still return early and never drop a reference, so __destroy_hist_field()
+sees how many references were created rather than how many are left. It
+frees when the decremented count is 0 or 1, so two references work and
+three or more leak.
 
-The other two are pre-existing, and I looked at both while working on this
-patch. get_return_for_leaf() returning at !event has already consumed the
-entry, so failing there leaves data->failed set over a copy from an earlier
-pass. I saw that once in about 30000 replays but could not pin any output
-on it, so I have not sent a fix; say the word if you would rather have one
-on the reachability argument alone. The static on ret in
-print_graph_entry() has no reason to be there, though I found nothing that
-misbehaves.
+Sharing kept one array entry per object, and create_var_ref() searches and
+appends within a single trigger, so nothing outside it holds the object.
+Removing a trigger whose variables are still referenced is already refused
+by check_var_refs() with -EBUSY. Drop the count and free unconditionally.
 
-Thanks,
-Donggeun
+Fixes: 8bcebc77e85f ("tracing: Fix histogram code when expression has same var as value")
+Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+---
+Reproduced under QEMU (x86_64) with CONFIG_DEBUG_KMEMLEAK. Two triggers
+differing only in a third reference to the same variable, each installed
+and removed 200 times:
+
+  hist:keys=next_pid:delta=common_timestamp-$start,start2=$start:
+      onmatch(sched.sched_waking).trace(first,$start2,common_timestamp,next_pid,$delta)
+
+  ... plus delta2=common_timestamp-$start
+
+  two references    0 unreferenced objects,   0 bytes
+  three references  620 / 666 objects, 62000 / 66600 bytes over two runs
+
+With this patch both are 0. kmemleak points at the var ref itself and at
+the strings init_var_ref() attaches to it:
+
+  unreferenced object (size 192):
+    create_hist_field+0x39/0x390
+    create_var_ref+0x96/0x100
+    parse_atom+0x4ad/0x910
+  unreferenced object (size 8):
+    hex dump: 73 74 61 72 74 00 00 00   start...
+    kstrdup+0x37/0x70
+    init_var_ref+0x88/0x110
+
+tools/testing/selftests/ftrace test.d/trigger: 45 tests, results identical
+before and after, including the ones covering variable references --
+field variable support, fully-qualified variable reference support,
+inter-event combined, onmatch, onmax, onmatch-onmax and trace action all
+pass. Three tests fail identically with and without the patch (onchange
+action, and trace action with a dynamic string param); I did not chase
+those down.
+
+checkpatch --strict is clean and an x86_64 W=1 build of the file adds no
+warnings.
+
+ kernel/trace/trace_events_hist.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 963e0d6b61fd..f90680b33a37 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -169,7 +169,6 @@ struct hist_field {
+ 	struct hist_field		*operands[HIST_FIELD_OPERANDS_MAX];
+ 	struct hist_trigger_data	*hist_data;
+ 	enum hist_field_fn		fn_num;
+-	unsigned int			ref;
+ 	unsigned int			size;
+ 	unsigned int			offset;
+ 	unsigned int                    is_signed;
+@@ -1913,16 +1912,8 @@ static int contains_operator(char *str, char **sep)
+ 	return field_op;
+ }
+ 
+-static void get_hist_field(struct hist_field *hist_field)
+-{
+-	hist_field->ref++;
+-}
+-
+ static void __destroy_hist_field(struct hist_field *hist_field)
+ {
+-	if (--hist_field->ref > 1)
+-		return;
+-
+ 	kfree(hist_field->var.name);
+ 	kfree(hist_field->name);
+ 
+@@ -1969,8 +1960,6 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
+ 	if (!hist_field)
+ 		return NULL;
+ 
+-	hist_field->ref = 1;
+-
+ 	hist_field->hist_data = hist_data;
+ 
+ 	if (flags & HIST_FIELD_FL_EXPR || flags & HIST_FIELD_FL_ALIAS)
+@@ -2223,10 +2212,8 @@ static struct hist_field *create_var_ref(struct hist_trigger_data *hist_data,
+ 	for (i = 0; i < hist_data->n_var_refs; i++) {
+ 		ref_field = hist_data->var_refs[i];
+ 		if (ref_field->var.idx == var_field->var.idx &&
+-		    ref_field->var.hist_data == var_field->hist_data) {
+-			get_hist_field(ref_field);
++		    ref_field->var.hist_data == var_field->hist_data)
+ 			return ref_field;
+-		}
+ 	}
+ 	/* Sanity check to avoid out-of-bound write on 'hist_data->var_refs' */
+ 	if (hist_data->n_var_refs >= TRACING_MAP_VARS_MAX)
+@@ -3276,7 +3263,6 @@ static struct hist_field *create_var(struct hist_trigger_data *hist_data,
+ 		goto out;
+ 	}
+ 
+-	var->ref = 1;
+ 	var->flags = HIST_FIELD_FL_VAR;
+ 	var->var.idx = idx;
+ 	var->var.hist_data = var->hist_data = hist_data;
+
+base-commit: 1fc5a74b108fc90951890ec513ac81869f5eaff1
+-- 
+2.53.0
+
