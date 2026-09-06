@@ -1,149 +1,184 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC28A28851F
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 03:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3664392C32
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  6 Sep 2026 04:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788666255; cv=none; b=GT1EUiEVUbo5fzPNPf1uYXH7kL9XlopOd+BN3CFIF5c0UElggvvnu8uDpJ/BYcheTisjNMLfPSjLPSxzegn5/dQP2+R8eaSnxrajl8cA1H8crUldRwes+Xc8BJtSCh7/fyaAcs6qLTDuKjd0BoFwW9beS4xZdzbLWtY+U4mU2S0=
+	t=1788667370; cv=none; b=VBaycW+IVC/rjcfBEfFPa2pubO81lC/fVZwi6sFZJrl79XMSg49re/NF2TmfMSNgzKslzEFvKjwrbOKVOlQ6Rx4SVSPJ270CeqfliwE+mnQ07LuK3TtdhZ52zsOM3HONd4eU9cx7nocVwZCyb7VgEDPw7nr/g7tR+5cuqdVgaso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788666255; c=relaxed/simple;
-	bh=nz7WpThK2Yj7pbRrI2t4/rlRY2RNQP/63J6KbYYh4Vk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HBaugJg/SeJAHOatYS9vwfkmAfxb2/tg9YttSUwjsRR/i5WAlt7DZA6eLp9HikDhpY3/ymSl6KB4Hkptx/pnWapJq3jcbjHWyiitX6IEP5kfiamsio7KQXhPncXdI/4gqP+UK3hpPJaFZZsdW/w8KEX4EZPku5GXcOqCdi26Wjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gW4z/BbB; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788667370; c=relaxed/simple;
+	bh=ZyZaWr+3jLddQqtXNVSlvvlju6xc06N3QrUtt1V9ncY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gfM+jqqHV6tF/HNkGBaiUZDY0UVPUg7Die8UHH59olNHc1MK4EZtD/UVZ6mvDiOabgD+ZmQ7l9jXYhO0pO/62MmPyjfID6Fys3xatDT/7YA0WITmR8fTjL9X/9tA8fX0kFM6yicTgiXJEsgWarqWz54keh3oFq+8Nuv0b1fKskc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWnqZeGe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gW4z/BbB"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-39b35105ba4so1860623a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 05 Sep 2026 20:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788666253; x=1789271053; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=C4Ap773c76TL1E1578+g8wGsSz9MJ+j7nGEGULZVyZ8=;
-        b=gW4z/BbB+9lbC1GbCfud00QxSZZJ0aRmwBiAijOo/LM5wfhW+9JI0DU0iGcEvIcYVu
-         SYaKGPzvt5pZ9ETW4Bu1bPHxuVzXMLUxWGoJ7nvFGwrtcyq5AfaTXaDWoFcta1fby0wF
-         l53TqmDENCnNqCaDGqwxDy0VfPdPRcnApmvvoo5lhpN+h6ux676r0iiC4LWJ5bNqz8bY
-         hDLzTPaJqJuUFGlpvpJSHCHrRvn3gyx/McixGxBI41+aA2K+W4OYbtdYRhl8aHEFMa/3
-         tfCgtWtEDUt6cogMP4R79z6QdbFJfqDhZBhHZvAKQylCwRefe3hxsCCYiPprm0WI6Dou
-         bK+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788666253; x=1789271053;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=C4Ap773c76TL1E1578+g8wGsSz9MJ+j7nGEGULZVyZ8=;
-        b=QwFN+2paZ0gnVTOX1r1xW72tVDJboRQg9N1rr1vqQZt1f98yEpiWQwV3ZRKqVEIU5r
-         Kz5wbdix+3s4SYEWz1ozgt7EnJWh5GJRZ39EB8eU3/f4mYHG8hzD0iYFF1GuhvElSKZo
-         QvRZjlUAfAP6z0t3KtNOEePC/gIcdeo9E9kJJ03qafNk7MBaO4ZEjrHJ3vbx6uS+AqJL
-         uI23q12HjSo9wzEfg5nCzvfDJGHgpZV/ufiCOrMEraWZ8IFP66DNhKEBDxgshWzK1wsW
-         VFs2+AZJ+WPnNnHbtzFHcz+oZ/RNW33UTIxrW86SepTzBPghWROV+sp6trfhs+EEXvrj
-         Qm2w==
-X-Forwarded-Encrypted: i=1; AKwUvBy895FmnSlKd2GfLa35yc+7X2xjkKlxDInT1pKhBkEpcAJwFFAedv9XZmo12b34eHtKd3q2/dLetxhqwpXqVPd6tOs=@vger.kernel.org
-X-Gm-Message-State: AFuF++k5tCLkqs/QRLBe9HmDO5WjuI2Y8G2mwJHwaoaDoyqJtB93SGDR
-	axwbBF6cuq9eB9saOpBejCDwLPfLzy4bBYwJIsLtkjQNk2NhLMSYcQQ=
-X-Gm-Gg: AYBFou3YqFhIS6fjyH3z6Gmjro43VoI8Q5RPnWmkvAAvtHxONl5jZpk1Yg0WP4rQuT0
-	cdzcmOiKmsiN88Vg2WRlaPy2UF8MM/Y5Lp3GR968IRaeu/tHQv92WA4h57zsWD4LI4iEvEKfJSg
-	aApNeUJAi2U/Z2UuHn9FqMgRN46A3oEibW+s2j4+E0s9rwjoJs4kVT6TPX3bTWYY6yLKrXDjX/v
-	aXoqiL+pOwlm901S5Hjj+r+ZAPHkvHFb9UKkWijX2dJpG7cfQ6XrxX6evCzn3P4oIauUUZyAE+a
-	n/HbJSJyQhNcOjf3NB3keQ65ePg8f9ahdolnSCrjSshoAU3g+BffNLKCzUHqnoEa/sQ6ybhgtBx
-	zVsJHiS/CStAuCvNab2E3neFKiK7IBNT17vV5SofDAa5LFZLig53Tz96zhDG4tdqBjxUf3kOhOI
-	iffrtgoleKpokimSqknTVU6M6lwC5UfT0ptT/abW+3D25fgWWTMMIjEPYGrRg/EB0nKDOLPGJyy
-	Tz9NxE6PsHhGmO3
-X-Received: by 2002:a17:90b:224c:b0:398:9bd4:d15 with SMTP id 98e67ed59e1d1-39b26245d08mr21476187a91.20.1788666252720;
-        Sat, 05 Sep 2026 20:44:12 -0700 (PDT)
-Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:2b14:fe4a:ab17:f236])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b260fdf9asm13075385a91.9.2026.09.05.20.44.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2026 20:44:12 -0700 (PDT)
-From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	donggeunyoo.kernel@gmail.com
-Subject: [PATCH] function_graph: Use the saved entry's size when reprinting it
-Date: Sun,  6 Sep 2026 12:44:06 +0900
-Message-ID: <20260906034406.1335316-1-donggeunyoo.kernel@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWnqZeGe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D46F1F00A3A;
+	Sun,  6 Sep 2026 04:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788667368;
+	bh=VRKGuANLApz0YMPYHBp7FbGv06Q+yAicrcYz583h4fk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=IWnqZeGeBNvIb9d3Tp5XJB4eJW9FFA1k6UvCPiukJZD+Ewf1wKoWyewwvhK7ODUCc
+	 ntf/f6xeFrysHIK3KHZ/SaFNf53Do+S4t7eQUVolViO0LgfWGTE29Dv/9yb5lAYr9F
+	 YbDUGrNJabrSnaZbDoTH4SbEo9r47PkE7TPb6Dw12AvwTpCquBPraOMviuELm9eDga
+	 Ikheb5YIBJ4BlnIb49pB+0GikBEV03bPa/ZnIOyG4xIBDtTBBlsE347H2fdBHu0DjG
+	 u4I7/N5aEcPX+d+om4DgbngQUejHeS+1pgonBodxbw7TMKobzH0foDi2by8wrfQrbu
+	 gSgW93ByWkbRw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] function_graph: Use the saved entry's size when
+ reprinting it
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260906034406.1335316-1-donggeunyoo.kernel@gmail.com>
+References: <20260906034406.1335316-1-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 06 Sep 2026 04:02:47 +0000
+Message-Id: <20260906040248.3D46F1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When a graph entry does not fit in the trace_seq, print_graph_entry()
-saves it in the iterator's fgraph_data and reprints it on the next read.
-The entry has already been consumed from the ring buffer by then, so the
-copy is all that is left of it.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-The copy is sized with iter->ent_size, which no longer describes the
-saved entry but whatever entry the iterator has moved on to. The
-argument count is derived from the same field, so a 72 byte entry saved
-and then reprinted ahead of a 48 byte return entry loses its arguments.
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but state desynchron=
+ization when reprinting a previously failed trace entry causes the current =
+entry in the ring buffer to be incorrectly consumed and permanently dropped.
+- [High] This problem wasn't introduced by this patch, but if the sequence =
+buffer fills up while processing the final event in the ring buffer, `print=
+_graph_entry()` records a failure state without saving the current entry, c=
+ausing uninitialized or stale data reads.
+- [High] This problem wasn't introduced by this patch, but the local variab=
+le `ret` in `print_graph_entry()` is declared as `static`, creating a data =
+race when multiple trace instances or concurrent trace pipe readers are act=
+ive.
+--
 
-Record the size next to the failure flag, so that the two are always set
-together, and restore it before reprinting.
+commit ca8f0abc7d748db3bcb46f95c502d76a2725b949
+Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
 
-Fixes: ff5c9c576e75 ("ftrace: Add support for function argument to graph tracer")
-Cc: stable@vger.kernel.org
-Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
----
-Reproduced under QEMU (x86_64 defconfig plus FTRACE, FUNCTION_GRAPH_TRACER,
-DEBUG_INFO_BTF, 2 vCPUs). function_graph with funcgraph-args on, trace_pipe
-read in 64K chunks 300 times from a static init:
+function_graph: Use the saved entry's size when reprinting it
 
-  before: 271 reprints, 190 of them with a size that did not match the saved
-          entry, 184 of those deciding the argument count the wrong way.
-          _raw_spin_unlock() takes one argument and printed as
-          "_raw_spin_unlock()" 19 times out of 2209.
-  after:  same workload, 0 times.
+This patch fixes an issue where a saved graph entry was reprinted using the
+size of the newly processed entry instead of its own original size. By
+explicitly saving and restoring ent_size, it prevents argument loss or
+truncation when reprinting.
 
-Toggling funcgraph-args and funcgraph-retaddr during the run produces all four
-entry sizes (24, 32, 72, 80 here) and they are all reprinted with their own.
+> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_fu=
+nctions_graph.c
+> index ff7cb1a76b953..c5befd0c5b9a2 100644
+> --- a/kernel/trace/trace_functions_graph.c
+> +++ b/kernel/trace/trace_functions_graph.c
 
-No change in tools/testing/selftests/ftrace: 80 passed, 3 failed, 13 unresolved,
-81 unsupported both with and without the patch, identical per test. The
-in-kernel selftests pass, including "Testing tracer function_graph". A KASAN
-build reports nothing on the same workload.
+[ ... ]
 
- kernel/trace/trace_functions_graph.c | 3 +++
- 1 file changed, 3 insertions(+)
+> @@ -1274,6 +1275,7 @@ print_graph_entry(struct ftrace_graph_ent_entry *fi=
+eld, struct trace_seq *s,
+>  		if (s->full) {
+>  			data->failed =3D 1;
+>  			data->cpu =3D cpu;
+> +			data->ent_size =3D iter->ent_size;
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index ff7cb1a76b95..c5befd0c5b9a 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -52,6 +52,7 @@ struct fgraph_data {
- 	};
- 	struct ftrace_graph_ret_entry	ret;
- 	int				failed;
-+	int				ent_size;
- 	int				cpu;
- };
- 
-@@ -1274,6 +1275,7 @@ print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
- 		if (s->full) {
- 			data->failed = 1;
- 			data->cpu = cpu;
-+			data->ent_size = iter->ent_size;
- 		} else
- 			data->failed = 0;
- 	}
-@@ -1457,6 +1459,7 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
- 	if (data && data->failed) {
- 		field = &data->ent.ent;
- 		iter->cpu = data->cpu;
-+		iter->ent_size = data->ent_size;
- 		ret = print_graph_entry(field, s, iter, flags);
- 		if (ret == TRACE_TYPE_HANDLED && iter->cpu != cpu) {
- 			per_cpu_ptr(data->cpu_data, iter->cpu)->ignore = 1;
--- 
-2.53.0
+[Severity: High]
+This isn't a bug introduced by this patch, but if the sequence buffer fills
+up while processing the final event in the ring buffer, could this record a
+failure state without saving the current entry, causing uninitialized or
+stale data reads?
 
+In get_return_for_leaf(), if the ring buffer is empty on peek, it returns
+NULL early:
+
+	if (!event)
+		return NULL;
+
+	next =3D ring_buffer_event_data(event);
+
+	if (data) {
+		/*
+		 * Save current and next entries for later reference
+		 * if the output fails.
+		 */
+		int size =3D min_t(int, sizeof(data->rent), iter->ent_size);
+
+		memcpy(&data->rent, curr, size);
+
+Because the memcpy() is bypassed on the last event, setting data->failed =
+=3D 1
+unconditionally here on buffer full assumes the entry was successfully save=
+d.
+On the next read iteration, the trace output may print uninitialized memory
+from data->ent.ent.
+
+[Severity: High]
+This is a pre-existing issue, but does declaring ret as a static local
+variable in print_graph_entry() create a data race?
+
+static enum print_line_t
+print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
+			struct trace_iterator *iter, u32 flags)
+{
+	struct fgraph_data *data =3D iter->private;
+	struct ftrace_graph_ent *call;
+	struct ftrace_graph_ret_entry *leaf_ret;
+	static enum print_line_t ret;
+
+If multiple userspace processes concurrently read from different instances =
+of
+trace_pipe, they execute print_graph_entry() in parallel. If one thread
+assigns TRACE_TYPE_PARTIAL_LINE to ret but another thread immediately
+overwrites it with TRACE_TYPE_HANDLED, the first thread will incorrectly
+return TRACE_TYPE_HANDLED, leading the tracing core to improperly consume an
+unprinted event.
+
+>  		} else
+>  			data->failed =3D 0;
+>  	}
+> @@ -1457,6 +1459,7 @@ print_graph_function_flags(struct trace_iterator *i=
+ter, u32 flags)
+>  	if (data && data->failed) {
+>  		field =3D &data->ent.ent;
+>  		iter->cpu =3D data->cpu;
+> +		iter->ent_size =3D data->ent_size;
+>  		ret =3D print_graph_entry(field, s, iter, flags);
+>  		if (ret =3D=3D TRACE_TYPE_HANDLED && iter->cpu !=3D cpu) {
+>  			per_cpu_ptr(data->cpu_data, iter->cpu)->ignore =3D 1;
+
+[Severity: High]
+This is a pre-existing issue, but could this logic cause trace events to be
+permanently dropped without being printed?
+
+For trace_pipe reads, get_return_for_leaf() consumes the current entry from
+the ring buffer early to peek at the next one:
+
+			/*
+			 * We need to consume the current entry to see
+			 * the next one.
+			 */
+			ring_buffer_consume(iter->array_buffer->buffer, iter->cpu,
+					    NULL, NULL);
+
+When reprinting a previously failed trace entry here, if the new event is on
+the same CPU (iter->cpu =3D=3D cpu), the function fails to set
+TRACE_TYPE_NO_CONSUME in print_graph_function_flags():
+
+		if (ret =3D=3D TRACE_TYPE_HANDLED && iter->cpu !=3D cpu) {
+			per_cpu_ptr(data->cpu_data, iter->cpu)->ignore =3D 1;
+			ret =3D TRACE_TYPE_NO_CONSUME;
+		}
+		iter->cpu =3D cpu;
+		return ret;
+
+Because it returns TRACE_TYPE_HANDLED, the generic iterator assumes the
+current entry was handled and consumes it from the ring buffer, permanently
+dropping it without printing.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260906034406.1335=
+316-1-donggeunyoo.kernel@gmail.com?part=3D1
