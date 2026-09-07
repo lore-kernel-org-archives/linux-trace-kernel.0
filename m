@@ -1,168 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3C54457C9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 09:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4684643CE56
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 09:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788773396; cv=none; b=o+L3NlPQPEYeiJcQT6Z5KdnmhTvdGkN6/NbT9UeEATY0c0h01nA/i8F0ketRNpii+g4WUYmEHFtA3xzPHeMBWM4482C4LN1M/UWsLrbJE3f7UXnKo5Xp3X2rhHTHhIcQen4AE4U5tuNMJqsCIIaVF2WhhGcnBC5YWvq49oIZ5JU=
+	t=1788773752; cv=none; b=pGBSbFZgr6s7iGry7CI7JWM6dn7W2iqfvOQv5JnPov05qR6KaJvWM2wcJGHVUktKP4N4zThNZtLU9LQ3a32YgrxSMV4/hbYEUq+CJH53ki7zsVQoH1eJV9dcdloexEmj4igEoYEx+W+1Yf4+QEJ4C2OO+W0894SDTUb8564qfd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788773396; c=relaxed/simple;
-	bh=Yd1mFkva7OcbJJe61Bzl0dMd4q4gfCTyl4XKjYsc+v8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=M3RKqOZFCj1iojMt5TWspXljPuBQHEkSRgdub/146UkXNkUqMW2MLfquLOmo8kESZFNN5l20MrgAF/U52+CCw0cxRcXHpsdDRGFZA+RFB2J1PUp8YmM7moaopQV3jGbZOJciOcB6xsRGubUJ5eJZXfmLblVNDnIVvkq7j9BRvt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7+eP5tS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788773752; c=relaxed/simple;
+	bh=+1OruMYcQA77jLKl8fk/VE7hjZNXJ6hFvLeuBJHiyjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=TLIvTdAG730tyixMkvVtyjF9LCfSRlm1XUoP116iIr3RhzBXSsXAHJvAJv4bxez1sW+YaGSU00uUg+u2BfCXefN+vKaWWaVDBeRuv7Fr1RTY+v2wPGmkqt04tMKBIXf8gKSqZ8vHC7f2D5h1mkr5oFpWZM413pT94YHz86aRFr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TbcYznCb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7+eP5tS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3950E1F00A3D;
-	Mon,  7 Sep 2026 09:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788773384;
-	bh=IFmlERJClZ2bQSiNGMKTZLUBvDPGO+LlgSOdSN8QtFA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Z7+eP5tSuobPn4aix5eoCxE3tX14x/2/koTiprXrsZ1KXx0q5ATIj+ZcuXJgAYcyp
-	 ldlKJIRsgoDQHX5Kz7YrJKnEfvI/Kt7nBR/8cypTBQ0x6qlbpXWo1ptpyJbVQPN2o3
-	 eFofB/VVedQX9o0DwrU5JI23oz8z8m/nSiccgFydwGgUguE0GqRwMApTlkbbCrImMq
-	 W+CJbe2Y94byyS1ZTtZVnp5NM2FRAjdrSJmkAB7dDri9NNGt0Utl0lXfUnOn5LKumy
-	 p2xckgnJRTtOja84q0h+3AgqhhdXC3lb6o9zsytpnzblXZnceQQha/6RS4Rr2DsX0O
-	 /McwFE2ttnXLw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing: hist: set the trace clock before registering
- the trigger
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260907091415.554535-1-donggeunyoo.kernel@gmail.com>
-References: <20260907091415.554535-1-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 07 Sep 2026 09:29:43 +0000
-Message-Id: <20260907092944.3950E1F00A3D@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbcYznCb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788773750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+1OruMYcQA77jLKl8fk/VE7hjZNXJ6hFvLeuBJHiyjQ=;
+	b=TbcYznCb6ERev+Vm76gfsXKbfh2IVh5abKL88TbcXxJdkDJvioAceNi6ZGlGIOy7UPkGt7
+	ZAfsfUeAOM3ramjx11I7sGYN4rOg1PnTmiOaCvoCX5ajV9ILnIzRj+TH7V7mznrauaGj2f
+	bQ20nrR8IZKR4uGro76XrZj6obyFDac=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-225-U96dqzotMg279n9Gg43hkw-1; Mon,
+ 07 Sep 2026 05:35:46 -0400
+X-MC-Unique: U96dqzotMg279n9Gg43hkw-1
+X-Mimecast-MFC-AGG-ID: U96dqzotMg279n9Gg43hkw_1788773744
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E53B1801300;
+	Mon,  7 Sep 2026 09:35:43 +0000 (UTC)
+Received: from fedora (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EA98D1955F11;
+	Mon,  7 Sep 2026 09:35:22 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  7 Sep 2026 11:35:43 +0200 (CEST)
+Date: Mon, 7 Sep 2026 11:35:21 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Ye Liu <ye.liu@linux.dev>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Marco Elver <elver@google.com>, Ye Liu <liuye@kylinos.cn>,
+	Tejun Heo <tj@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Yi Tao <escape@linux.alibaba.com>, Michal Hocko <mhocko@suse.com>,
+	paulmck@kernel.org, mingo@redhat.com, rostedt@goodmis.org,
+	jpoimboe@kernel.org, mic@digikod.net, tglx@kernel.org,
+	akpm@linux-foundation.org, david@kernel.org, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, rafael@kernel.org, gnoack3000@gmail.com,
+	ljs@kernel.org, sj@kernel.org, rientjes@google.com,
+	shakeel.butt@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, will@kernel.org, boqun@kernel.org,
+	frederic@kernel.org, neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	tony.luck@intel.com, reinette.chatre@intel.com, x86@kernel.org,
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+	pavel@kernel.org, lance.yang@linux.dev, mhiramat@kernel.org,
+	pmladek@suse.com, longman@redhat.com,
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev, dietmar.eggemann@arm.com, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com,
+	mark.rutland@arm.com, Dave.Martin@arm.com, james.morse@arm.com,
+	babu.moger@amd.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 1/8] sched: introduce for_each_process_rculock and
+ for_each_thread_rculock
+Message-ID: <ap6FWZ9FYjkFKoH_@redhat.com>
+References: <20260907081334.1152889-1-ye.liu@linux.dev>
+ <20260907081334.1152889-2-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20260907081334.1152889-2-ye.liu@linux.dev>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: V2q_amF01lT8a2_i2GhKzVaNKg2WnsVDNBbBsLHm2fY_1788773744
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On 09/07, Ye Liu wrote:
+>
+> Introduce for_each_process_rculock(), for_each_thread_rculock() and
+> for_each_process_thread_rculock() macros that acquire the RCU read
+> lock before the iteration starts and release it when the loop is left,
+> so that the RCU read-side critical section is scoped to the loop body
+> instead of an externally managed rcu_read_lock()/rcu_read_unlock()
+> pair.
+>
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-Pre-existing issues:
-- [High] Use-After-Free list corruption if `event_hist_trigger_init` fails =
-during named trigger initialization.
-- [High] Use-After-Free list corruption because a newly created named trigg=
-er remains on the global `named_triggers` list if `hist_trigger_enable()` f=
-ails.
---
+Thanks, I personally like the new _rculock suffix more ;)
 
-commit 1e5ea6c77dc8e3a10275a88758d5ef5a8d54be44
-Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+I see the comments about indentation from Lorenzo, I am fine either way.
 
-tracing: hist: set the trace clock before registering the trigger
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-hist_register_trigger() puts the trigger on the global named_triggers
-list in cmd_ops->init(), and only then sets the trace clock.
-The clock string is not checked anywhere before that call, so a named
-trigger using common_timestamp with an unknown clock fails after it has
-already become findable.
-
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index 963e0d6b61fdf..6c628415468a6 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -6643,12 +6643,6 @@ static int hist_register_trigger(char *glob,
->  		data->cmd_ops =3D cmd_ops;
->  	}
-> =20
-> -	if (data->cmd_ops->init) {
-> -		ret =3D data->cmd_ops->init(data);
-> -		if (ret < 0)
-> -			goto out;
-> -	}
-> -
-
-[ ... ]
-
-> @@ -6661,6 +6655,15 @@ static int hist_register_trigger(char *glob,
->  		tracing_set_filter_buffering(file->tr, true);
->  	}
-> =20
-> +	if (data->cmd_ops->init) {
-> +		ret =3D data->cmd_ops->init(data);
-> +		if (ret < 0) {
-> +			if (hist_data->enable_timestamps)
-> +				tracing_set_filter_buffering(file->tr, false);
-> +			goto out;
-> +		}
-> +	}
-> +
->  	if (named_data) {
->  		remove_hist_vars(hist_data);
->  		destroy_hist_data(hist_data);
-
-While reviewing this patch, I noticed a couple of pre-existing issues
-related to how named triggers are handled during initialization and error=20
-paths in this same file.
-
-kernel/trace/trace_events_hist.c:event_hist_trigger_named_init() {
-    ...
-	save_named_trigger(data->named_data->name, data);
-
-	ret =3D event_hist_trigger_init(data->named_data);
-	if (ret < 0) {
-		kfree(data->cmd_ops);
-		data->cmd_ops =3D &trigger_hist_cmd;
-	}
-
-	return ret;
-}
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this error path leave=20
-the new trigger on the global named_triggers list?=20
-
-If event_hist_trigger_init() fails, the trigger is never removed from the=20
-list before the function returns the error. The caller then propagates=20
-this error, eventually calling trigger_data_free() which frees the=20
-structure. Can this lead to a Use-After-Free list corruption when the=20
-global named_triggers list is accessed later?
-
-Also, further down in the file:
-
-kernel/trace/trace_events_hist.c:event_hist_trigger_parse() {
-    ...
-	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
-	if (ret < 0)
-		goto out_free;
-
-	ret =3D hist_trigger_enable(trigger_data, file);
-	if (ret)
-		goto out_unreg;
-    ...
- out_unreg:
-	event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
- out_free:
-	remove_hist_vars(hist_data);
-
-	trigger_data_free(trigger_data);
-    ...
-}
-
-[Severity: High]
-This is a pre-existing issue, but does this error path also result in=20
-Use-After-Free list corruption?
-
-If hist_trigger_enable() fails, it drops the trigger from the local file=20
-list but then we jump to out_unreg. Because the trigger is no longer in=20
-file->triggers, event_trigger_unregister() won't find it and skips calling=
-=20
-cmd_ops->free() (which would normally call del_named_trigger()).=20
-
-The code then falls through to trigger_data_free(). Does this manually=20
-free the memory without ever calling del_named_trigger(), leaving a freed=20
-node on the global named_triggers list?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907091415.5545=
-35-1-donggeunyoo.kernel@gmail.com?part=3D1
