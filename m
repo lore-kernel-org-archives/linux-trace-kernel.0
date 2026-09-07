@@ -1,148 +1,160 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B130835E953
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 12:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541B1488DBA
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 12:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788785099; cv=none; b=B3y8MVRZ/BLQ6VghHAhpt8Vw1sva2iosU6wHncZz6hPKERAP6HkazfG0WMX/RmuH9jvkGwEheiyszdXzTGCqXgpr1xGSs1IOmZjGEiEK/d7h8qKJSRfHUdmxq3X6rlKsZaXAKmQN3HIRTxA0bmeLqmdo7gB9Z1v/2ghiDDvQxsk=
+	t=1788785981; cv=none; b=Qrt39khV27h1lT2Y3+8fSPGQxSn9kEI/XjmRX7ST/IVa1p7u0h0odD8nlw3om89DnSUCFWX5mvNAl06EhFTdoiq46A35RR57QT8HuPP2LWb2DRLMHmQNjI4Se33Yny0p7sc8JwPrC6Yjx3ZPGS6I/+WVJ78A6wXYlvXfMs9yVE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788785099; c=relaxed/simple;
-	bh=B+iiOiHkAB3SjnD4jE/kaBzO11YGeGn0DnIBjQ/9GYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tlbAEwr3XmepmVEMiklfs0QhulQh3/kLDVfsaRb8zH+HIQrOj4cGmwPxOM3uJwhSHPShJ6ynbES1yGPdTtI/SVkOLn0+v/dE+Bh/iV+GmwqJjTxTSPYEndPrMMdgsDyKPnszDqtUGutn7n+0v7W/dLE/A8Q/tErOAuAJKlJWF0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=btL/Nhgx; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788785981; c=relaxed/simple;
+	bh=JM+RZIKDwFmAvoyCyS5C4EdBFwyhcNrhWNRat0X0Z9g=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=NYPkqAZF0rfhJtaaNm7aWCm6UvDoePrGBSX8dI5Vo0lSAVV+01KV9NfM3YqWGT67NtMinSkkqQHJEHE94t7BVkEoR+LpSyGXVjv6L0P49EVH/2Vwu8qRcVwfoNL9Oz6jgaM6KfORdPGAKVGqPC5HlD+awljnhdQbObxOeY2Fawk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXZCYkku; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btL/Nhgx"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-398c1101c1bso3361090a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 05:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788785097; x=1789389897; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=pgRcHlGojddIrdA4thflhygGudJUQQ+TeRB5rtetsFg=;
-        b=btL/NhgxdSOkoZ+gQqFXxJQXkk6aa1NZqqTRux/OhwtOBPNIbpQHbzwigGHfdjDzur
-         dYFd0pGHcjtCmGd2P7A35BpjW8qU5SmA3i5k+qRGgVijvjQOsGJg/y5rXQ0x5KGRQMn/
-         nu1mV6DFKg+GdSTBZ6MbbeQloNaw/K42QdoRe1bNMSvDc+08489zUaZ0/b0RzBZ89eGH
-         Tn6Js4k/otrluAUezvQkwaEMDLswVK4tsqg18FpMMDVpMkBKfOZ6IYo9hu05HQIwV9rF
-         ND4O55nSusVL+4MnvrEpJQnFU6H269x9x4wQ6UnK83RuiPHoqHVZMsP5piI6YosZQ6p9
-         vVEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788785097; x=1789389897;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=pgRcHlGojddIrdA4thflhygGudJUQQ+TeRB5rtetsFg=;
-        b=XjykGZs2XRlBzIKTJgqO05I8vc8shXdQLRRCD+WvTvorxVIKMcSanm0sXa8Zyy0lBp
-         w6En9HDRJp6ldGl8ZFk1EqsR6SH+nImdqHunNxHOjg8eNNGVCXA0PpIenxHRxFp4XJ1J
-         2SfLSritp9HR03Birxi7CDnLg70AdtwjKNeCL1nuGrMNmdAENzGJWd4iP0TZwaH6cfaI
-         ka0aeEmmdVHC8WbBw35/YGeNBJCoDE5dvWOhjiP1dghcC5543ifWqPdASy6jZlCLzwqm
-         PTejIzgtAuVqGpWLOdc7zYBYGgyLkKG10x0pTu6hFE5uls2er4aErqyLySbfvhu8rw5s
-         1yow==
-X-Forwarded-Encrypted: i=1; AKwUvBwefiwzEil4USBzfmrdF17m5086Zx8L1TszJYQKZXbZAgeKTpneN/HEY3pb6xI9Zk2oU8QhGkTDbVs81ie6mllBcS0=@vger.kernel.org
-X-Gm-Message-State: AFuF++kduyzOjPsylWmOiTE0tCoLYD1ZD9rBu55WRmp43Aw0eS5hM8ie
-	7r1Ial3+WL9bAfF6jNkb+E1ew2w9srdLSEgNwteqH8N5RHt1vAdlqX0=
-X-Gm-Gg: AYBFou3u35EdWswouy/GFgAjfZpFlDdMaxSy5A1NX0pWp11sAo/0y2qZjBilOjBcwDQ
-	NB7sYvVuX2TuxhLh7Wnt/qObm+8Gm6BRfuDHpy6V1BIaBR9aM7OvTdVq9fIap1/pOC+Iak/V39t
-	Xa+Hsc0L8zrL7GuWSypPE0rOwpivnsKeNLMtxxNJz3kKGXOgQt7hiktqSgYo6SrnB8KupVJaoUU
-	NkRO144E/lGA1R6qUpogGuTR6wsyTsW31cqHI6PUw3aprhNncvczLD0jzvHPnRPSPrHIXc7t1s9
-	fAO788heFkWfRbBcr9Fcrm13dGJKz5j4Gxa3lK1Ru61Qg6xF2uzmDFpNvDHiPznA2G/nijd3fr+
-	c+o9HXvbYTrPKXpupwwiLukIcoPtunzozfKjmkVapUdb64m46L8y/BAfotDZjessOEROLC8WTaV
-	L8557zSvZrdPMVyljr3ItxvahGgBXdki585sNhLK0uqaqjUP6OkgMA9w4DM6pQxUbUhwuatzyBR
-	jFcx8ZhtWHwimJG
-X-Received: by 2002:a17:90b:5844:b0:398:dc16:3c29 with SMTP id 98e67ed59e1d1-39b26101530mr34967440a91.7.1788785096980;
-        Mon, 07 Sep 2026 05:44:56 -0700 (PDT)
-Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:c773:5f09:906c:a72b])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b083e4fafsm26491178a91.1.2026.09.07.05.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 05:44:56 -0700 (PDT)
-From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	donggeunyoo.kernel@gmail.com
-Subject: Re: [PATCH] tracing: hist: set the trace clock before registering the trigger
-Date: Mon,  7 Sep 2026 21:44:51 +0900
-Message-ID: <20260907124451.607209-1-donggeunyoo.kernel@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260907092944.3950E1F00A3D@smtp.kernel.org>
-References: <20260907091415.554535-1-donggeunyoo.kernel@gmail.com> <20260907092944.3950E1F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXZCYkku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6261F00A3E;
+	Mon,  7 Sep 2026 12:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788785974;
+	bh=BUKvrvpPBk4PqrtLQTprSd5gXjwA62RXJzn3DtWQc+0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EXZCYkkujv0xtalhIIUulDPN92OgXOnk6E9h8UVP5/PCdoODSsXLbDBp86pK555jS
+	 Ztd4Q9/T7dBrDWv5Ccsm/WD68Cf4dEg26CBA7Pa1w/tRJ8uWhz9uMn9lBuh+YYEDDR
+	 L488qx4U2ofE3QrZhRPLAdKxR21hm7UHrH9xjMhY/4lcaXRaP8BACwO4G3kK8MRGbG
+	 ncllZEWwq3Q/inWzLvO0bqNt23bogEFc/Y/kqNYTHl5iB6+n9DHBvnFhHpufS80qol
+	 7UtLqJ9COiXUR6HIGfxwId5xHzzo/sfG1kVdkNaJExBn3jfJORkiM9kEWzXxCWWGUo
+	 EMRH7Ndcxfgpw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] tracing: hist: take the reference before publishing
+ the named trigger
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260907124420.607097-2-donggeunyoo.kernel@gmail.com>
+References: <20260907124420.607097-1-donggeunyoo.kernel@gmail.com>
+ <20260907124420.607097-2-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 07 Sep 2026 12:59:33 +0000
+Message-Id: <20260907125934.5C6261F00A3E@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 07, 2026 at 09:29:43AM +0000, sashiko-bot@kernel.org wrote:
-> This isn't a bug introduced by this patch, but does this error path leave
-> the new trigger on the global named_triggers list?
->
-> If event_hist_trigger_init() fails, the trigger is never removed from the
-> list before the function returns the error. The caller then propagates
-> this error, eventually calling trigger_data_free() which frees the
-> structure. Can this lead to a Use-After-Free list corruption when the
-> global named_triggers list is accessed later?
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Yes, and so does the second one. Both end in the same read this patch is
-about, and neither is fixed by it.
+Pre-existing issues:
+- [High] The patch leaves an identical Use-After-Free and memory leak if tr=
+igger registration fails after `.init()` succeeds.
+- [Medium] Ignored return value from `save_named_trigger()` causes silent f=
+ailure and breaks histogram sharing.
+--
 
-event_hist_trigger_named_init() publishes the trigger before the only step
-that can fail:
+commit 540a72d9b730e99f5331add357da7f87a7bcb997
+Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
 
-	data->ref++;
+tracing: hist: take the reference before publishing the named trigger
 
-	save_named_trigger(data->named_data->name, data);
+This commit delays the publication of a named trigger to the global list
+until after its initialization succeeds. This prevents a failed
+initialization from leaving a dangling pointer in the named_triggers list
+and fixes a use-after-free bug.
 
-	ret = event_hist_trigger_init(data->named_data);
+Link: https://lore.kernel.org/linux-trace-kernel/20260907092944.3950E1F00A3=
+D@smtp.kernel.org/
 
-event_hist_trigger_init() can only fail on alloc_hist_pad() returning
--ENOMEM. Forcing that, with this patch applied:
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
+_hist.c
+> index 963e0d6b61fdf..c6c04926bdf0c 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -6383,17 +6383,18 @@ static int event_hist_trigger_named_init(struct e=
+vent_trigger_data *data)
+>  {
+>  	int ret;
+> =20
+> -	data->ref++;
+> -
+> -	save_named_trigger(data->named_data->name, data);
+> -
+>  	ret =3D event_hist_trigger_init(data->named_data);
+>  	if (ret < 0) {
+>  		kfree(data->cmd_ops);
+>  		data->cmd_ops =3D &trigger_hist_cmd;
+> +		return ret;
+>  	}
+> =20
+> -	return ret;
+> +	data->ref++;
+> +
+> +	save_named_trigger(data->named_data->name, data);
 
-  BUG: KASAN: slab-use-after-free in find_named_trigger+0xac/0xc0
-  Read of size 8 at addr ffff888009346860 by task init/1
-   find_named_trigger+0xac/0xc0
-   hist_register_trigger+0xc1/0xa00
-   event_hist_trigger_parse+0x3146/0x6af0
-   event_trigger_write+0xce/0x160
-  Freed by task 67:
-   kfree+0x154/0x420
-   trigger_kthread_fn+0xfd/0x160
+[Severity: Medium]
+This is a pre-existing issue, but does ignoring the return value of
+save_named_trigger() break histogram sharing?
 
-> If hist_trigger_enable() fails, it drops the trigger from the local file
-> list but then we jump to out_unreg. Because the trigger is no longer in
-> file->triggers, event_trigger_unregister() won't find it and skips calling
-> cmd_ops->free() (which would normally call del_named_trigger()).
->
-> The code then falls through to trigger_data_free(). Does this manually
-> free the memory without ever calling del_named_trigger(), leaving a freed
-> node on the global named_triggers list?
+save_named_trigger() uses kstrdup() to allocate the name string, which can
+fail and return -ENOMEM. If this happens, the trigger is not added to the
+named_triggers list, but the function continues as if it succeeded.
 
-Yes. hist_trigger_enable() removes the trigger from file->triggers before
-returning the error, so the list walk in hist_unregister_trigger() matches
-nothing, test stays NULL, cmd_ops->free() is not called and
-del_named_trigger() never runs. Forcing trace_event_enable_disable() to
-fail for a named trigger:
+Could this lead to a state where the trigger exists but cannot be found by
+functions like pause_named_trigger()? Does this silently break histogram
+sharing semantics (causing subsequent triggers with the same name to create
+independent maps instead of sharing them) and group pause/unpause logic?
 
-  BUG: KASAN: slab-use-after-free in find_named_trigger+0xac/0xc0
-  Read of size 8 at addr ffff8880091d3160 by task init/1
-   find_named_trigger+0xac/0xc0
-   hist_register_trigger+0xc1/0xa00
-   event_hist_trigger_parse+0x3146/0x6af0
-   event_trigger_write+0xce/0x160
-  Freed by task 69:
-   kfree+0x154/0x420
-   trigger_kthread_fn+0xfd/0x160
+This same return value is also ignored in event_hist_trigger_init():
 
-A control run with no injected failure is clean on both.
+kernel/trace/trace_events_hist.c:event_hist_trigger_init() {
+    ...
+    if (!data->ref && hist_data->attrs->name)
+        save_named_trigger(hist_data->attrs->name, data);
+    ...
+}
 
-Both fixed here:
+> +
+> +	return 0;
 
-  https://lore.kernel.org/linux-trace-kernel/20260907124420.607097-1-donggeunyoo.kernel@gmail.com/
+[Severity: High]
+This isn't a bug introduced by this patch, but does this fix leave another
+identical use-after-free and memory leak reachable from tracefs?
+
+If trigger registration fails in hist_register_trigger() after this .init()
+function succeeds, the error propagates up without undoing it:
+
+kernel/trace/trace_events_hist.c:hist_register_trigger() {
+    ...
+    ret =3D tracing_set_clock(file->tr, hist_data->attrs->clock);
+    if (ret) {
+        hist_err(tr, HIST_ERR_SET_CLOCK_FAIL, errpos(clock));
+        goto out;
+    }
+    ...
+}
+
+The caller event_hist_trigger_parse() then catches this error and blindly
+frees the trigger data:
+
+kernel/trace/trace_events_hist.c:event_hist_trigger_parse() {
+    ...
+ out_free:
+    remove_hist_vars(hist_data);
+    trigger_data_free(trigger_data);
+    ...
+}
+
+Because trigger_data_free() does not invoke cmd_ops->free(), does this leave
+the newly freed trigger linked in the global named_triggers list and leak
+data->cmd_ops, leading to the exact same KASAN slab-use-after-free this pat=
+ch
+was intended to fix?
+
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907124420.6070=
+97-1-donggeunyoo.kernel@gmail.com?part=3D1
