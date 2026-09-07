@@ -1,143 +1,145 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCDA463B94
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 19:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788809599; cv=pass; b=OwG3ldyluBkIWu9OwKMeQzWiAzQ/eHU8u/W5EdxxalE1QXCw8a4hfoarRDku68xNdZBYnOlpeLgfqBeG9SzUoDctNTbaZzT7B/h0tx8yXSl6iKtASfnBk51Ha4CYbwPfg9yjmgiwNl4QjtRi8qAwvBh/JDVbJy2NCszavCaUTPU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788809599; c=relaxed/simple;
-	bh=LbkJYZrKBAOtEAIquwnyRiPsYzlue46mhX6agZEqU8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BRiRLAUFsrqXaVS61oe4V0G9YvMaKDKLV/IICH8gf9pUuNme4Pp1grE+WyLXsDnrY04VhFNX96ijdbotwytFlEcPgdIjBLMb6NXGV9YHzRFqz+mBGxuaJLBqHQkiBikbwaQZ1Lr9i8vbmTTlK6UdqPzNN++zw/98dQEUOn15Ck8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iK0qYj5j; arc=pass smtp.client-ip=74.125.227.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2432F3AB5DE
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 19:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788810129; cv=none; b=ZBYpAV5TauTajjCt/9+emG8Eqi7sak7v9M8AchSHc5t9dksj4St9u315KuLZ8Cw4MYoupkG5bqZQpcIPL/x+JLqUB+8NZ+09ed0n5uQiaQJwUIkzVR/jE0uAjY4K2n2cEbqkzVEqzMnkh0b+YgV12QwnP0lpHOBxXPMDfDJKoOM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788810129; c=relaxed/simple;
+	bh=m2UY8BFvJpZvuA+NSZ6i71ePqMySFvPVUAarmZA9JM0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=sPsz0w+BznA62rr0AOuwQnYFjd9Zixo11VyBnZH8j9qY7a7KM25OmDIdUOaMQZRCeFYMiRqXLr96le+nSORMnA79ffqU+HU8bAc+cqiUGhoMAS7Yt0kdYUNyrfcBGrKhI1cFYvUSrNjZovyqAI6Vk3pzIJPPaLX9F06CkltfMUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAUj3s+z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iK0qYj5j"
-Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-39666bed441so700716a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 12:33:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788809597; cv=none;
-        d=google.com; s=arc-20260327;
-        b=I48J1TAQo2WXFDDYjkrAn8fhaW9FLh5jZWyn5hfSzlUbFjvF5XunHnsOrADZoyFD5u
-         N8m0jaoPxpOPG8z5wdV+iFzXZYr+JoB8pfBQTK0J/9WUVTBuEph3mrWHSHfLwaXVvSjA
-         R99l5M0DuzHYnYRKnatvuAfN+hoIHFGvKGXAKhOaGN05nrS92hEgXOx9TCatlsPGPIp9
-         67GhlfL9ecE/zs2rvPEx3ZJPfCMM258dvPR2yVgvsPWeYcTjnJWe9Po/xrmQ8KP//mwn
-         ob3AZ1quFQHTDAUjEBM3PReNpL7okPSMVDyVhbbbfTyT/mo4DhtsTIXStsXR6DJMBJez
-         QIjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LbkJYZrKBAOtEAIquwnyRiPsYzlue46mhX6agZEqU8A=;
-        fh=tmFNrS31yjDr+0awNOaWQv0vFKlZXErNVDgp70d6lGA=;
-        b=Eo/v9vFHqreFW6x/Ia096hPD8WKObBHORuX0fZ5mf0NnIHxN7pMv1dVx6dAr/xOFnI
-         Yb5+Kvy1w0GLsicE/c6jCT4A3qkixXJIamTDOs2ESItPRaVKzvmiGHHe4wtINQr5Nydi
-         3SUh92UE9jQiMl+j9Tli+/EAxArepfB43ttjXt3a+sBdSNmIxuI0JGJ6LvAM8g6Uai/E
-         5XNUThPupIAEhX58zfoYu6T/rtNbVG6G84XImkyFdgGXI22NTPSEXwqnJkP+IZ829xF+
-         XU7HXNEfN7aQxpVwXd3tYXDsJRIDAJ+HYBOpEOl0d4w3Vg5hC1KASDNmvMnu+7V+UKbM
-         bt1A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788809597; x=1789414397; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=LbkJYZrKBAOtEAIquwnyRiPsYzlue46mhX6agZEqU8A=;
-        b=iK0qYj5js7h9LqZ16ntFi4pR+coNw+J1DIsxddLy2bybdXua8s7AhsQh5PKG4aPy8k
-         cWfcsot8Jd3QOFo9QOMLhxclr26W+2bFQXUQb/5htv9RCQ75k/nTYOvsiDpAh9ZC1h0P
-         17HYrGhBkPAcaFKfVJDBRota6XZwJTFU94U1d0QKrv1bCLj5OM6vuETU3sDAU1WcF6/P
-         XwKGZTES39HLJn7EPOvbTJ556I3rp76dCWF5AVgyuUSKXaJklfe1ypw/YLdAV2Pt4o8p
-         oIt3UyGz4+F70fE+3rhKKK66OxHCacES0jUQHDbVEe3CfUFb1qgvkTLFywu8+KyEsrhR
-         Wz6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788809597; x=1789414397;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LbkJYZrKBAOtEAIquwnyRiPsYzlue46mhX6agZEqU8A=;
-        b=SJTTBRkTNxi5fLK84S323DXjP8IM5SW5RU5gv5jfdRR8GyP3RtH3aDORMccevkj62+
-         FSFd0w+HJF+UYPhmjtyWLaQL5+28SgR6UHOZubyyDDyEfAG2uR01OmnUXAPYgUf1jpvK
-         hjHoh/JAfBtPSpk8qhOcpCpPo6doLHOVuMtD2GvB6Lrt2KF+PWpZ9ALUrCgNdn8X7kXF
-         Kf5dnMxmtP7fHgY7eieTTHSjmd8PzoSmkmJ12VqXH3JWb/MfObGeUSFxOz57mYS7FG+u
-         nixNVvKMIVizMdzV4HB8DpRgWW7lytfr14qR2S5B86cQf4+ZykaQj64Y0+qfZneOJXiQ
-         aRXA==
-X-Forwarded-Encrypted: i=1; AKwUvBz8Pk1X//Ei7hiWaKcvOCYNDk7OD3U9MZ/j9i2RhBXD3sht0LUmc/cX+VBAeIdVQK6yHziQ89QwE2kGmZl5ey9KRXY=@vger.kernel.org
-X-Gm-Message-State: AFuF++nbG/Db31qxsvFsyMHqqT8byiKL0jZQ/2OlDjTzUQ1+iIirC5iN
-	SWmJ86KKO0SDLhoQRSXi1+SSwkxpDDDlIksUX/0G4h41AQv41fbKvVp7/sQQr0ZRGI2uB6BHhWL
-	YojmaMPfK65IrJ6uXZDEOP4xqPesUw38=
-X-Gm-Gg: AYBFou3+j93sEi5j/eD4+efrGplUYXD3ECDxpZ4+DTmFWB4o0mh+nVS85UuTNLGPoYM
-	mpFaDboEQ9Oih7/SAvExHLoCI68je4x1xj0V4hKjxIC5KtDTUv9BX+UYPL+arAP5YaojZeJBmGq
-	dMD/qtPpvg3SvDlFOfUm8zj/8WTUIJ2gBrPtggVmIPdbOyjNx3Ii+Upg8HfNtVTfFH9YCxgNhaL
-	3YEX+JJ9V9/MLNrhsDb0R6yTq6N8/tjSYTZvK8B07Le6YI5sKt6KjkbGV6+epTGJym1Phz6cWGV
-	Es9M1B6pJ9QFuNqOjdG7OFuixrjf/wWvpFx06rEydImMd7g2MpCF2EBzze9Bo9EwlpyTd8NyrOf
-	Mg9PUPGJDOw3F5G5VUB87jXFTw2fxZ/O10C9VXt4pRor50AqhyOHWeAg4hSvfLA==
-X-Received: by 2002:a17:90b:1e04:b0:396:463e:2eeb with SMTP id
- 98e67ed59e1d1-39b264b24e2mr23088437a91.0.1788809597288; Mon, 07 Sep 2026
- 12:33:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAUj3s+z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8281D1F00A3A;
+	Mon,  7 Sep 2026 19:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788810127;
+	bh=n8BDEye/Jgc0TiLkdFkooi+5UmvPKtndORXksI9R528=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KAUj3s+zCnwbgXQUz8i9QoPXNKK/kAORK5uuEf442ST1Op1i4DH9rU2MDMF2ZqYqZ
+	 2zhYVRHPkgWr3LmK1qYD1MegtPHDOZh7ujvDij92Fg84nTWBbZLA/zGiVag1msaf3z
+	 QzAGS1kZZY+gnsBPOhVOzyGX/RCPjq/v+7g0BEOMNsDcrd1SS+l7il2gxDMzOjrqL5
+	 skAzRo6Ane2Z/3oLS/nWH/0xpjBBXQ9HowfLdhlKo6SW6+8OJQcHGp2D0Ctv3MAj3x
+	 oMy5AgqLuqy/J4c2I8thx8Hu/Pmz6uZkdpWEXGzGDx7zqNTQ0JiWxsgI5iYcfe/NDD
+	 h5cETijYQWilg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/2] tracing/remotes: Account for ring buffer page
+ header in size calculation
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260907192643.42513-2-vdonnefort@google.com>
+References: <20260907192643.42513-1-vdonnefort@google.com>
+ <20260907192643.42513-2-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 07 Sep 2026 19:42:07 +0000
+Message-Id: <20260907194207.8281D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
- <20260904-b4-arm64-callops-kcfi-v1-8-ce6687739b0c@linux.dev>
- <CANiq72=xOrSXBBdmrKYfX1=qgF37LRAMzMJd4GJkXaYHMVe9yQ@mail.gmail.com> <ap3Z-YDtzmdtMiMk@linux.dev>
-In-Reply-To: <ap3Z-YDtzmdtMiMk@linux.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 7 Sep 2026 21:33:03 +0200
-X-Gm-Features: AcwNN1UJ5AD1nmjaRgagxZvj3fkfuD3Z7c-j0Zc231NENpcPq2HjO9j40kxIvNk
-Message-ID: <CANiq72mVXNmqh-RdOunFLBKRwMgYHFBqJOP7NbXrd8WHPb3sAw@mail.gmail.com>
-Subject: Re: [PATCH RFC 8/8] arm64: ftrace: Allow CALL_OPS on kCFI kernels
- built with Rust
-To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	=?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
-	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
-	Leon Hwang <leon.hwang@linux.dev>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Ben Cressey <ben@cressey.dev>, "Florent Revest (Anthropic)" <florent.revest@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 6, 2026 at 11:24=E2=80=AFPM Jose Fernandez (Anthropic)
-<jose.fernandez@linux.dev> wrote:
->
-> # Do not pass -fpatchable-function-entry to bindgen: its libclang may not
-> # support the section argument (Clang >=3D 21), and parsing does not need=
- it.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Thanks! Hmm... Not sure if "parsing" is the right word, i.e. a flag
-change could still make `bindgen` parse and generate code fine but not
-match the ABI of the C compiler.
+Pre-existing issues:
+- [High] Integer overflow in DIV_ROUND_UP macro when buffer_size is near UL=
+ONG_MAX, resulting in silently undersized trace buffer allocation and bypas=
+sing the nr_pages overflow check.
+--
 
-i.e. I guess I would have expected something like "...: its libclang
-may not support the section argument (Clang >=3D 21) and the removal of
-the flag does not change the ABI" or similar.
+commit 5b0a9673088fdd2f5832774541f4590e32126561
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-Cheers,
-Miguel
+tracing/remotes: Account for ring buffer page header in size calculation
+
+This commit adjusts the trace buffer size calculation to account for the ri=
+ng
+buffer page header size. It also introduces bounds checking for the number =
+of
+pages to prevent out-of-bounds calculations.
+
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index afc7daa6ee7dc..7a1a92f876503 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+[ ... ]
+> @@ -281,9 +283,14 @@ static inline struct ring_buffer_desc *__first_ring_=
+buffer_desc(struct trace_buf
+> =20
+>  static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned=
+ int nr_cpus)
+>  {
+> -	unsigned int nr_pages =3D max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL=
+) + 1;
+> +	unsigned long nr_pages =3D
+> +		max(DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
+
+[Severity: High]
+This isn't a bug introduced by this patch, but is there an integer overflow
+when evaluating DIV_ROUND_UP() with a very large buffer_size?
+
+If a privileged user writes a near-maximum value (like ULONG_MAX - 1023) to
+the tracefs buffer_size_kb file, it passes the earlier check_shl_overflow()
+because the top 10 bits are zero.
+
+When calculating the pages here:
+
+    DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE)
+
+the macro expands to adding (PAGE_SIZE - BUF_PAGE_HDR_SIZE - 1) to
+buffer_size. This addition overflows the 64-bit integer, wrapping around
+to a small number.
+
+This causes nr_pages to be miscalculated as a tiny value (like 3), complete=
+ly
+bypassing the newly added "> UINT_MAX" safety check.
+
+Since the backing pages might be sized based on a PAGE_ALIGN() wrap, while
+nr_page_va is set to 3, could this discrepancy cause out-of-bounds hypervis=
+or
+memory accesses on systems with >=3D 64 CPUs?
+
+>  	struct ring_buffer_desc *rbdesc;
+> =20
+> +	/* Capped by ring_buffer_desc::nr_page_va */
+> +	if (nr_pages > UINT_MAX)
+> +		return SIZE_MAX;
+> +
+>  	return size_add(offsetof(struct trace_buffer_desc, __data),
+>  			size_mul(nr_cpus, struct_size(rbdesc, page_va, nr_pages)));
+>  }
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index 75fa1ffc4c96d..2e0fdbb730b7b 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+[ ... ]
+> @@ -991,6 +994,7 @@ int trace_remote_alloc_buffer(struct trace_buffer_des=
+c *desc, size_t desc_size,
+>  	desc->struct_len =3D min_desc_size;
+> =20
+>  	rb_desc =3D __first_ring_buffer_desc(desc);
+> +	nr_pages =3D max(DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZ=
+E), 2UL) + 1;
+
+[Severity: High]
+This is a pre-existing issue, but are we exposing the same wrapping
+vulnerability here?
+
+Since the same macro is used to compute the actual page allocation loop
+bounds, would it duplicate the same integer overflow when calculating the
+loop limit for allocating the buffer?
+
+> =20
+>  	for_each_cpu(cpu, cpumask) {
+>  		unsigned int id;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907192643.4251=
+3-1-vdonnefort@google.com?part=3D1
