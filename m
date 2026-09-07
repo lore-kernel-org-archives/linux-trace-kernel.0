@@ -1,125 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77E22949E0
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 05:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2483655D6
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 06:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788759074; cv=none; b=e6ZBgNiA/PV1MYAWjs3egUvJbPem7Zqz3qpD9eowtXMneB3PQxsxkTnt248UeGOHL402TYKV3MPLBzj+IvO8+vkWrlFW6H5GYeOpRuQJ8Sm8QOOT0MUSsW5ym4wGJ0tZAVS0b7zSKfjVFhPeZAXSe/T2RDjtOrVvy5MVN62aQb0=
+	t=1788761012; cv=none; b=Lg5BQOYHmnszZntDP6bUrk9pmeJKGCM52z9wy/CGeduF6nj38jUMc/b3IMYBkGPqvjUZ8IWiaJNFqan+zRT1yA0wpfGscqbmdhu4smqm0MHvWoQP6tesENjP/xdy/Bz1A5j0eUVOvYUUnJK1GjzN1efblQRblsJX+S1Szj5vzTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788759074; c=relaxed/simple;
-	bh=AEZlGEqzntNg6zAj9xRJE2JUA2M0MqXOdfzr7ZaT7kU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XFhWJ7iJKjwwv9rroUbhfPJf9zFs1VlpRx1W16pQwjN5njTL3UbjDh6ue4rmogfIi1l0XNRYt78IoM49lSH8FUQa2489XyyGUn5jjlJ7lfrOlGyIZT5f96Z52kzYxQa14k6TVcOAXPWqBfSGf4CTh7ZWSSg0Fyg0GisHllAnejA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRosyjy0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788761012; c=relaxed/simple;
+	bh=Nt2lC421KGj6k/zMmxzDYBaPvInT84oKibKrryL2NgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lwjw8CJx8HG88fRLjEmsJlhzpYhuCWX/dCbTlrezgyxOsQgrWOzoFn3At9qYzIabLtAsu3lKgDWgWC3lip2WYKdu5hmwRDYWZ4wPOu7f3byOSWi1dZ0qZJ87sePsj55g8QDEihhHM9gMd9JyaLYALawhZBKnzk2aQfkprJJaxWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IqIkmWhY; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRosyjy0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CED91F00A3A;
-	Mon,  7 Sep 2026 05:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788759073;
-	bh=L9tilZ73ePX28KRrLBTBU9s81uNJoBjEa2OygM2FA0w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bRosyjy0kPzd8OCseL93aJ/WtJ2Iw+JNMOBtQrXnNv42uWjeGTtR4B2Pn/bCuTmrE
-	 /uyMhfGcKUKuUn6R0c0qgTuu4BwZW/yqesZD89kYq8eHC2rGODtDfnN4u30ClAmis1
-	 BclBzP7gNXrBzm3IxCJMjvX5jQKvLCa94WkG4HRzyd2fyg63PQM0isyslX7FZBUT4C
-	 b9QfIgbihRHlVqulApRWJ2b3EIpDh9MGFSx7MbthS7zp+lPF1hHROs/ndGxzJXluTq
-	 /uXDVlIgTsH5/gLv1wdeg0jBdgCBCKqVC8TorZhnBvDiiCBJZObTYgsg2z+ktCy+uZ
-	 7rYoO1aqRrXoA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing: hist: let values keep the percent and graph
- modifiers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260907052113.430818-1-donggeunyoo.kernel@gmail.com>
-References: <20260907052113.430818-1-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 07 Sep 2026 05:31:12 +0000
-Message-Id: <20260907053113.1CED91F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqIkmWhY"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2d8fd3b729dso25399785ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 06 Sep 2026 23:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788761009; x=1789365809; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=QIQIslv7KrGu5ytY96/0sD/t/rOZ560Khhwx/pFUmS8=;
+        b=IqIkmWhYdap/PYgi0NJT8ZPMreqP6jQBGbsCN4qblOqewzUQ7UW4MaQtF/ntsdR9u2
+         3M0qz9mFW4yAmaMJwIdIbyon5EDv2BY4tO4mXQMpGyU3JVFDjTeMWZPRGgTcdE9yaCRs
+         ics4SQqtWNhQmDoDFCqLB0xtpOchIOUHQ7K2kf/Rtp28+9lheXo+oUURYT9Kmvm73AIp
+         CLNwDIh9iuCDplj9xWJycAGA37xeANpz8HmFVXrQJ/J4Ru3Rd/DivGHhg3mDv0oyF5LS
+         4sKE3xaZt08u0bWL+r7ofK96DObbiZTq7KaFtOZlUCv9X9l3ad3C6IQj6pD9jqRRz6fx
+         LI/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788761009; x=1789365809;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=QIQIslv7KrGu5ytY96/0sD/t/rOZ560Khhwx/pFUmS8=;
+        b=i1UT/ERKJ4pbuiZoqNCRz853iGeNI1Pb/xTXiEY8a9NlZcSihc5OAl8+DkbBue8at5
+         A2u1hwHTcCyLE5vES7EZrMJ22pvCRx+9bvZ11+gaqy0ujZoJsdbNjM4dt+sPZuNwSASN
+         hfr7dDDZX3G7uRpHv3FTC+/o7Nx3zLPnjR3JbU09afBZGqgV36ZY+4bdZ4NZ3buz1wyh
+         vwPOejdJ02JnrCKfO7yfmFcpieSNXaxoICk9QEfkBowHIqd3uhYCgrfo38yi0voxU7AC
+         y2wuBzFVogQawoLQ94nLpWieqUIAyq8fYOqGFh7rC4S1tKhscPr0AckHBmGkdKJPuuj8
+         4VXw==
+X-Forwarded-Encrypted: i=1; AKwUvBwum16VMSvATLskntAyU6B1cVCkWX2PykzMRl/vChzFQUwwNzrtqQL+QK1A2eccyBMuEubbSawzNFJW+BSVRPHro0w=@vger.kernel.org
+X-Gm-Message-State: AFuF++nca5x5XB+SnopXjiulV7QUfCCj+5fpuCzGMAqfr1BMqfIm+S0l
+	w2Jx+MsQ0J3pb2b1MjeO4tDhVwYABNs5egQ6+SbgEnEBusFrtJzpJOCEM/+eNPsDew==
+X-Gm-Gg: AYBFou2FDLqIoxBwJftYPvqwRF3ZhidLc+tGUJ4Ueb3t1K1MqhxuSrjtMtNaT2/3A/m
+	DPXlSy/ZH8qYPXXMvoXi0UreIaa7DMcHaFhXmJJpNpz9rpNjV7sEw9Kye7Z59GBZ+yXRSiumHDN
+	3TVdgCpDpdiFm0C9H2GA+52ysnoBp5IZURK5zCWU1mDQUA1bOoISWKGDYcFGe76p00GMJzunmdP
+	1PcI7XAq0z5sUhayb8MDxsqas81C3Ww0M0KH38NYuA1yj/45X9XV0ZF6sPlVUT66kDfQzDlT4Fj
+	0W0SW5Z4sEEia3XgfKNoy7isWALFMtrIRDk9GDJEwwmHHJgUSOSRCHG/Ag4jj5nLeptvpAi6Mi+
+	w489om+tTR8xN83whf1uock3xIfcEezl/fY6NEEL7oPI4eqIeGlewhCTqQR9IVcoe+CUudVc80a
+	YwqZ9Mu6VO9TiT4hG8UERVp8DOvqGJXaMUEepSDZMTklEsEYS0H8R7+JlLEWuHyRvMW7sNjYpuv
+	gLuaUdAM6d8bbcrAA==
+X-Received: by 2002:a17:903:3810:b0:2d6:3c22:99bf with SMTP id d9443c01a7336-2db124afcefmr323518875ad.9.1788761008657;
+        Sun, 06 Sep 2026 23:03:28 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:c773:5f09:906c:a72b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2db1499dad4sm39669455ad.55.2026.09.06.23.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2026 23:03:28 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Tom Zanussi <zanussi@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	donggeunyoo.kernel@gmail.com
+Subject: [PATCH] tracing: hist: keep the entry count when the stats allocation fails
+Date: Mon,  7 Sep 2026 15:03:23 +0900
+Message-ID: <20260907060323.480728-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+print_entries() uses n_entries both as the number of sort entries and as
+its own return value, so the -ENOMEM it stores when the stats allocation
+fails overwrites the count that the cleanup still needs:
 
-Pre-existing issues:
-- [Critical] Out-of-bounds loop and invalid pointer free in tracing_map_des=
-troy_sort_entries when stats allocation fails.
---
-
-commit 0ec7f4c23d8ecafd15abb3d5f3ff02ac2abded8a
-Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-tracing: hist: let values keep the percent and graph modifiers
-
-This commit stops rejecting the .percent and .graph modifiers on histogram
-values, fixing a regression introduced in v6.3. It allows these modifiers
-to be parsed and printed correctly when triggered.
-
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index 893bd8b0e48a8..6cb595cbcdafe 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -4313,8 +4313,7 @@ static int __create_val_field(struct hist_trigger_d=
-ata *hist_data,
->  			goto err;
->  	} else {
->  		/* Value */
-> -		if (hist_field->flags & (HIST_FIELD_FL_GRAPH | HIST_FIELD_FL_PERCENT |
-> -					 HIST_FIELD_FL_BUCKET | HIST_FIELD_FL_LOG2 |
-> +		if (hist_field->flags & (HIST_FIELD_FL_BUCKET | HIST_FIELD_FL_LOG2 |
->  					 HIST_FIELD_FL_SYM | HIST_FIELD_FL_SYM_OFFSET |
->  					 HIST_FIELD_FL_SYSCALL | HIST_FIELD_FL_STACKTRACE))
->  			goto err;
-
-[Severity: Critical]
-This is a pre-existing issue, but by allowing these modifiers to pass
-through, does this expose an out-of-bounds loop in print_entries()?
-
-If kzalloc_objs() fails when allocating stats for the percent or graph
-modifiers, it sets n_entries to -ENOMEM:
-
-kernel/trace/trace_events_hist.c:print_entries() {
-    ...
-		if (!stats) {
-			stats =3D kzalloc_objs(*stats, hist_data->n_vals);
+	n_entries = tracing_map_sort_entries(map, ...);
+	if (n_entries < 0)
+		return n_entries;
+	...
 			if (!stats) {
-				n_entries =3D -ENOMEM;
+				n_entries = -ENOMEM;
 				goto out;
 			}
-		}
-    ...
-}
-
-It then jumps to the out label where it passes this negative value to
-tracing_map_destroy_sort_entries():
-
-out:
+	...
+ out:
 	tracing_map_destroy_sort_entries(sort_entries, n_entries);
 
-However, tracing_map_destroy_sort_entries() takes an unsigned int for
-n_entries:
+tracing_map_destroy_sort_entries() takes an unsigned int and loops up to
+it, so -ENOMEM arrives as 4294967284. It walks an array of at most
+map->max_elts pointers and calls destroy_sort_entry(), which dereferences
+and frees, on whatever lies past the end.
 
-kernel/trace/tracing_map.c:tracing_map_destroy_sort_entries() {
-void tracing_map_destroy_sort_entries(struct tracing_map_sort_entry **entri=
-es,
-                                      unsigned int n_entries)
-{
-	unsigned int i;
+Reading the hist file of a trigger with a .percent value, with that
+allocation forced to fail:
 
-	for (i =3D 0; i < n_entries; i++)
-		destroy_sort_entry(entries[i]);
-    ...
-}
+  BUG: KASAN: vmalloc-out-of-bounds in tracing_map_destroy_sort_entries+0xa0/0xb0
+  Read of size 8 at addr ffffc90000045000 by task init/1
+   tracing_map_destroy_sort_entries+0xa0/0xb0
+   hist_show+0x6f7/0x1df0
+   seq_read_iter+0x2b8/0x1190
+   vfs_read+0x176/0xa40
+  The buggy address belongs to a 4-page vmalloc region starting at
+  ffffc90000041000 allocated at tracing_map_sort_entries+0x5c/0xd50
 
-Will passing -ENOMEM as n_entries result in a ~4 billion iteration loop
-and an out-of-bounds memory access?
+A few pages further the fault is fatal. The registers at the oops confirm
+the bound: the loop's end pointer less the array start, over the pointer
+size, is 4294967284.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907052113.4308=
-18-1-donggeunyoo.kernel@gmail.com?part=3D1
+Return the error in a separate variable and leave n_entries holding the
+count, the way tracing_map_sort_entries() does on its own error path.
+
+The stats block is only entered for a value carrying .percent or .graph,
+which __create_val_field() has rejected since v6.3, so this cannot be
+reached in mainline as it stands. It becomes reachable again with
+"tracing: hist: let values keep the percent and graph modifiers", so it
+should be applied first.
+
+Fixes: abaa5258ce5e ("tracing: Add .percent suffix option to histogram values")
+Cc: stable@vger.kernel.org
+Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+---
+Reproduced under QEMU x86_64 on 1fc5a74b108f, with the percent/graph patch
+applied so the block is reachable and with the stats allocation forced to
+fail. Before this change the read of the hist file never returns: KASAN
+reports the vmalloc-out-of-bounds quoted above and the kernel then takes a
+fatal page fault. After it the read returns, the histogram prints its
+header with no rows, and KASAN is silent.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20260907052113.430818-1-donggeunyoo.kernel@gmail.com/
+
+ kernel/trace/trace_events_hist.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 963e0d6b61fd..67f324d7dc78 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5690,7 +5690,7 @@ static int print_entries(struct seq_file *m,
+ {
+ 	struct tracing_map_sort_entry **sort_entries = NULL;
+ 	struct tracing_map *map = hist_data->map;
+-	int i, j, n_entries;
++	int i, j, n_entries, ret;
+ 	struct hist_val_stat *stats = NULL;
+ 	u64 val;
+ 
+@@ -5700,6 +5700,8 @@ static int print_entries(struct seq_file *m,
+ 	if (n_entries < 0)
+ 		return n_entries;
+ 
++	ret = n_entries;
++
+ 	/* Calculate the max and the total for each field if needed. */
+ 	for (j = 0; j < hist_data->n_vals; j++) {
+ 		if (!(hist_data->fields[j]->flags &
+@@ -5708,7 +5710,7 @@ static int print_entries(struct seq_file *m,
+ 		if (!stats) {
+ 			stats = kzalloc_objs(*stats, hist_data->n_vals);
+ 			if (!stats) {
+-				n_entries = -ENOMEM;
++				ret = -ENOMEM;
+ 				goto out;
+ 			}
+ 		}
+@@ -5729,7 +5731,7 @@ static int print_entries(struct seq_file *m,
+ out:
+ 	tracing_map_destroy_sort_entries(sort_entries, n_entries);
+ 
+-	return n_entries;
++	return ret;
+ }
+ 
+ static void hist_trigger_show(struct seq_file *m,
+-- 
+2.53.0
+
