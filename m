@@ -1,76 +1,72 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C222625B082
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 06:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC953A8755
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 06:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788761197; cv=none; b=bljc7eiyFkMuTQipCIMNJYgv8C+TC4gQkJVwj4EOK8ueZTDplmtX9ZYo0M135Z6YrMsA5OI+W+16++T5u8T+vmenFrV8Szbf7owASY62HeSGR/wOyCGQ9G+tnKoTRXmRNfEcHzrccp7TnxZM3n9NYo9qkJXWMH/zfHS5/DP5CMM=
+	t=1788762375; cv=none; b=QvA3Q5rxj/h9cp80KlE1h9Oz+QQxzpMqgu9kB4FfSk2sH1StXBK2QEyN56pcdYIHs2S4agqtKAGhVhjCVnQJXFMF6pzW5mCsEgHy1kQ1lDvAhwIRWTGsRIoqfRjJCGEKRU+j7v5AqE48cYo1WSt6iAjdwedoEYOsMxxHoijkf3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788761197; c=relaxed/simple;
-	bh=GLaZB2K+gwKIH9wEH+yvU3NKxxa8zul0fZq1t1FUP1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bbRJsYRGpLQak52YXwBHKf2dpC8+mput6LJjDLjgS+zOv9Q1lWl633qZP8D9akI+avsG9ql5m2tt3AbXtxI8i2RcE2Kz6IldwitwNBtNOAPnkzntsGXEye7zstCqqM159Ag1OLDV2SQM/Y+4mV84FdEOk/NKjIN81/GnAfug0r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ovuxdm9k; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1788762375; c=relaxed/simple;
+	bh=ytaOgPiD27NmO0p/hdzmEK5TXPSV7EgzssfUs4MDXBc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GNL1vZPtgBLpZCB7aR61LMLhSQrLZT7NuNtzHLKKpGfmuVxMlDZiiurE+x3fsmPYh7+Mg+HDCPRxjqv7zwMN7otBxLWSBCwhAu48UVfvwBhIbHeSJfzcAPAugbNp0cSZHDYB9NojLU/gwXAr5DfJyiRJJxNV89NX5WB71VFqqKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oLFXwa+T; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovuxdm9k"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2d9201076b3so35887955ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 06 Sep 2026 23:06:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLFXwa+T"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cc1cbb64a1fso3064861a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 06 Sep 2026 23:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788761195; x=1789365995; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=nshbquzAgQsD94khPjnUSoSNOBjwfXeTGVGmlFk/VVs=;
-        b=ovuxdm9kFcVQZy92sfV8lStYs2N9iA+nmDJo8TV/aR2I2Cm1wEWRRmYgvOP0C7+OPR
-         vh092GNWmiBq6oiLM4FDh61Z0cRljF1NZhbDgQ4wlPHZHRSDvQzF3n17R5ajlFHjrr6Z
-         NtjPYaXBM+YkLSGks4aiv7qHvLG6lWoP3mAyv2a2xlVsqw6QwSQxRTxMlBSzrWtnzPL0
-         bKT3b3zSwwhmo1wV77LC2O3pdMfGCeN+lPoXkTzxkDqzBOSn6NWMNu4QngaoCa0LrXbf
-         Z708CKXrqR9n/B2l4zCmmfkAczxjFdwEDD8v5gZ0tWc9eplvjxK93ZixAuhLg/VkCIrw
-         4kCQ==
+        d=gmail.com; s=20251104; t=1788762373; x=1789367173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=02lq+eXcDw6s0xPfNQzAdvi3Q6KYZBjnBNOuKbpzIQE=;
+        b=oLFXwa+TCQ8s0ApW4KClE/BUvwo8Cjtw2++6wskABH4IheceP0S4ng1JtO3FT6KM5m
+         1UhMFbcjne7meBTil+g/BJY2ec+ehhYpBntp9WqtBN1C1ndPj3mQsA2+FVPwyiYjuanh
+         70zKS16qD9puTEYcPtNqzeqi1AgWPaMyTp3JSG+buuPUs8OxOSFTe9KwbIr1h8vk8jNS
+         XgwNfGbTzQqwB58CqDkzI2Wbd6Tot9Zi3+lJIgYxsVi/CfxHzQ8ngnU8WdC/l5kmwvQL
+         e8FfdnHG7FtPzTBGie2mJ3wBUtUvrRugyabd1Q5xx1i3119t9u+CW2BKofY97mZuBrn1
+         rJ+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788761195; x=1789365995;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nshbquzAgQsD94khPjnUSoSNOBjwfXeTGVGmlFk/VVs=;
-        b=X88k5wkBGnkMsPLBiC8onbTJWoFNb8gYaCseyJaK9ZhPjje5qiP5vOmw7FejQyboS5
-         5BSdDjfpNo8tk18jjOz/D8amOmw2bCKMl75b9MnTnv3BXd2mIoztCvS1l+bjNbCbV3Ia
-         vEDnwIHUst4hf3rRwbg8FCiWZ/lP2mMTZRWaSax7fCZYy8Rg7l2NwQq4FLXOAOKnidL/
-         T7DNd37XcyUoUoVGZ1W7We/TtW/edwxkXkjZKQN4DstVlCstjTF+EqpaT2UycBzccV1P
-         cNggiyfXhXNfVIGB0iH6cxMhB6JlXqIUrxkjM1Om8iRJZRQtP0ovV2Rt3ivfp+vT3g27
-         eFzQ==
-X-Gm-Message-State: AFuF++n14c8OrqesjI2cleEoU7RkG8wcmzV610gqsGrbg4wpbV0Tv2WT
-	7DpxszL+eWLQFYpUEJS9DJ/YKzXSSmxPMbxI2wlnHO2Mzf0s6vZq3Yw=
-X-Gm-Gg: AYBFou3isTm3sTT2tzndJa8k45NuNII+CufTDwSZiknNDe0dGR4CuGspqANUXNyThYR
-	2x8Xvm+VKBpbmFlgFIL1YPApr/mPxt5j3V9KtXdCJ3eUxpRALC6wNUUzKouh+kX/3GXFTeSkNE4
-	krv/ZJjTmPLA3ShfPC49V0FZHSvjdWNB4LrZWo8OkdS1mj8Q07agQe/bINrV1b2nOQJGvcT3jkd
-	dPmXKdvDQAan8v9+OP9jrtKLpkYCrYekaNDfAdbi0vGRjENAyHNzpTVqHA1cSydTuu1zrWQwuXx
-	9k9aa3hSgoRhckfzWbvbPmH1kHJz//cHSGeRBzGCY3Svx4QwL8P1znRBp10yofXJQieXJcnqFoW
-	cI6isZwUlmKPjf8eHxPj7bv2h1Tu8UdouU7pb/7XPs/IG/DfVGpu3L7Zlv8aHhQABFqbUuM0ol9
-	iNZIOWBTIv79GsSmjsE/w8werCSRDRrOIuuECNabthSWwz71oXPy1kYiuJ5eD2iQ37zW/6KiUtZ
-	zr5gpaUFigsHx80
-X-Received: by 2002:a17:903:1a8c:b0:2d8:d4d1:313d with SMTP id d9443c01a7336-2db1267bc0emr294219495ad.20.1788761195085;
-        Sun, 06 Sep 2026 23:06:35 -0700 (PDT)
-Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:c773:5f09:906c:a72b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2db14ae7637sm39485515ad.79.2026.09.06.23.06.32
+        d=1e100.net; s=20251104; t=1788762373; x=1789367173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=02lq+eXcDw6s0xPfNQzAdvi3Q6KYZBjnBNOuKbpzIQE=;
+        b=ScPkMxKij+oDKC4Ed8dyIljT1PruxVRcY2YVy53pvCokJ9ZEgeEQAe9RXS6gRz+i7P
+         T4ohy78o+r+xEkabmbtiq+RVHvWoapnkS1g0Nod3jk0FRt8tOjymbW5VrXMevCbPZW7J
+         4r+1G9TKpAMTePKl0I3hPKLy7BiGdUc61Fj/JmbOOxjap7RAKRaFUVP+0zR/BKc/gSI8
+         K18VnubjrrIM9SbQUSv4n0O+zvrF8Xv8MOcJBsrbvfp0r7RyudlYhFbhkitujeu7/haq
+         F532r1fRYGpNfF2GVldfUCgMM2EAAPb3TgN7/enwPV725XsUwU9EyRomq3qxoTKt2l8L
+         62Sw==
+X-Forwarded-Encrypted: i=1; AKwUvByjcrE0FuGGxPIodDWSeZTPH3ljU+0Vz3BaVYAGTLgsTvkEUJPwcfZ1VTKnZfnP835zVWcG56Ap0g1q9OLW9eux0as=@vger.kernel.org
+X-Gm-Message-State: AFuF++n1//y+5oll+CeW3E+iqGLyLYZZd68JzekQB55wUEru49zu5e+h
+	+cC1YErmgwyc9R06gQRNO9wwYwHUmsR4E4Qr8BetTQzRnI/XPfcx1FUm
+X-Gm-Gg: AYBFou3J2HiBxfCKIDqHxve1yDnpedn8Y6I6+BtR5nAhKDlq/lQbJlx/sqRkdVpAfUD
+	VdPtVXj/uLzd4Q4v2BXglqJj/A/I1owMCnmoMskf3YT6PxlysxL9TrLnCNBjI0zCJMkQ6VqbXFP
+	flEfF7lQyL96vdY1ng3WUjgl/USobtOhvTzV7jUpZA3sqdkgVzc4nvN0jQTh/YYL5NPK8mMqhIW
+	u1jecQBAMn33xD+JqKXg8Pw20MydVnWKM8mUdh5dchb/RUMT5tTddgW6fptzs9I7MCeEYOpCxTX
+	OBQyRerOFoeJyutFXoZSTo77oZYZ7iH/nsRxZqpN7aXjwCBc3ediHUEEx1STGrbUZ3wK2uYrjl8
+	x7qYamAIrefksZpD5oQ/IwOQkR7yjaaXitKWw6jIE4Idrh3srJOHoFDQ6SQepWUeCqF53RkVeFN
+	Y7+ClZzNRgzmPNEhLCxQr2FohqRmaOhhmmkJabxgB3z2A6kvkbctLSUILagwAHs6XYdGTzelFBR
+	6++bLc5FrGH+RAjpfk+NuCH
+X-Received: by 2002:a05:6a21:9103:b0:3d3:ae40:51e6 with SMTP id adf61e73a8af0-3da3a104fefmr31944175637.26.1788762373444;
+        Sun, 06 Sep 2026 23:26:13 -0700 (PDT)
+Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339b8f44d7sm24354228eec.22.2026.09.06.23.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2026 23:06:34 -0700 (PDT)
-From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
+        Sun, 06 Sep 2026 23:26:13 -0700 (PDT)
+From: Hemanth Selam <hemanth.selam@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	donggeunyoo.kernel@gmail.com
-Subject: Re: [PATCH] tracing: hist: let values keep the percent and graph modifiers
-Date: Mon,  7 Sep 2026 15:06:30 +0900
-Message-ID: <20260907060630.481398-1-donggeunyoo.kernel@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260907053113.1CED91F00A3A@smtp.kernel.org>
-References: <20260907052113.430818-1-donggeunyoo.kernel@gmail.com> <20260907053113.1CED91F00A3A@smtp.kernel.org>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: fix typo "availabe" in comment
+Date: Mon,  7 Sep 2026 11:56:08 +0530
+Message-ID: <20260907062608.13924-1-hemanth.selam@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,28 +75,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 07, 2026 at 05:31:12AM +0000, sashiko-bot@kernel.org wrote:
-> [Critical] Out-of-bounds loop and invalid pointer free in
-> tracing_map_destroy_sort_entries when stats allocation fails.
+Correct "availabe" to "available", reported by scripts/checkpatch.pl using
+the misspelling list in scripts/spelling.txt.  Only touches comments, no
+code changes.
 
-Confirmed, including the reachability the report points at: this patch is
-what makes that path live again.
+Assisted-by: Cursor:claude-opus-5
+Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
+---
+ kernel/trace/rethook.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reproduced with the stats allocation forced to fail, reading the hist file
-of a trigger with a .percent value:
+diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+index 5a8bdf88999a..87a27f3aa4a6 100644
+--- a/kernel/trace/rethook.c
++++ b/kernel/trace/rethook.c
+@@ -171,7 +171,7 @@ struct rethook_node *rethook_try_get(struct rethook *rh)
+ 	 * This expects the caller will set up a rethook on a function entry.
+ 	 * When the function returns, the rethook will eventually be reclaimed
+ 	 * or released in the rethook_recycle() with call_rcu().
+-	 * This means the caller must be run in the RCU-availabe context.
++	 * This means the caller must be run in the RCU-available context.
+ 	 */
+ 	if (unlikely(!rcu_is_watching()))
+ 		return NULL;
+-- 
+2.48.1
 
-  BUG: KASAN: vmalloc-out-of-bounds in tracing_map_destroy_sort_entries+0xa0/0xb0
-  Read of size 8 at addr ffffc90000045000 by task init/1
-   tracing_map_destroy_sort_entries+0xa0/0xb0
-   hist_show+0x6f7/0x1df0
-   seq_read_iter+0x2b8/0x1190
-   vfs_read+0x176/0xa40
-
-followed by a fatal page fault a few pages further. The registers at the
-oops give the bound: the loop's end pointer less the array start, over the
-pointer size, is 4294967284, which is -ENOMEM as an unsigned int.
-
-Fix sent, with Cc: stable and a note that it should be applied before this
-one:
-
-  https://lore.kernel.org/linux-trace-kernel/20260907060323.480728-1-donggeunyoo.kernel@gmail.com/
