@@ -1,106 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BBF3AB5DE
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 19:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E184D25B082;
+	Mon,  7 Sep 2026 21:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788810179; cv=none; b=LYA+tIzi5IOOjeBhEYHbl6bs7eFN//Py73r/Iu7u1sNe1iTNxabmxDfLAZUY2IveTifybQ+o7JjQbk/sDk8FuiwGq1JIper5iXPCPV2fFZdz80cV/9ApE+HofoRV1IX0y/5unniWJzO8jGbh1dm8E8bMY4awxz1oJOpqD1L9M0g=
+	t=1788814872; cv=none; b=PoBSPrbmDCbX8QX+n6UhJDP68k8FcOFBxYPNl3SoSvruGH8CZ/01Fdr0ecr3lya0JwcBLgan7B65G3oatlBxheySem06cW9ZnopfPE8mX57SvznfPUNF81QadKyozt5b4FE2cV+ifsEiOWVAQfX0M/CPVkfZ0hlriiBkUlYcvsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788810179; c=relaxed/simple;
-	bh=xWeO59TTl377knUNGMhNw7JdIl97jFni/8E2JmP7Uxg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FeSByb3RXHRWYgFS6ljHuz2aqJ7oi4TurwBmR4zb8sQ41KusSnARpeMRmNaWVAnXb+g/YKQ8pump6Y055B0TbcXgaeNAnqZ4KhgajhL+/6lxOpgGt5beZ2xtylPvOrt/bAvW4j4YkP98lgV0NbvQfweoEQmkm8nnF82HGNgGJik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVyaWLJh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788814872; c=relaxed/simple;
+	bh=mrYhEaR9IK2yeyG/ryNn5tLLDTUhEhyf1+dAvbhMTY8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VSwquCb4vZnF1XmKqSxDoQg1Tm76RCM+HzQiFu+LUXlWHhPe2W16iTvt18PuJMiM+K3VAoKxccwd+iLuWTc5avIOhFbQ5uDEnf55wjKH0hk2X7BwOHIB3H1XBf01AP0eFhYgmG7hhVGF8sz/kgSwDp4G2Lmi4od3J095tGaMwwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqH16lWx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVyaWLJh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6E21F00A3A;
-	Mon,  7 Sep 2026 19:42:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqH16lWx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE5B1F00A3E;
+	Mon,  7 Sep 2026 21:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788810178;
-	bh=uvWKEZXmXJpXX7Dix3feO30N6iJMRZRzbaOz+FRrmQs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KVyaWLJh0hp4a80TpytBEQdH1jSKJU7tobj08suVbJvifRGCTJoGXRmFXETZJXo4X
-	 0leffbgKpLPFV3DQbuxBq9/NoNdWlMoLhG+lQ1MF0Rj9qXNtf/tmi9Y0SVOinuDFLG
-	 /ENitgQFElqoxwBrC7Y6bmCe/Guph+BNaxqRGBYyXNYAa/iXgjOelFxyAadgQW6YsN
-	 QL98xzQap+IznBl3dSxaFwrnKw43STsrggLiJTGTrPafAftrfMSpkSotLYZThGnrF8
-	 as7yEfeN8xkKWwZzGYYFEJ43IjhHVcIx0AtezOS0YMj2+cY2etBtlsvghO+/UjMBZO
-	 L/CvwHeSOi+IA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 2/2] ring-buffer: Unify ring buffer minimum page
- calculations
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260907192643.42513-3-vdonnefort@google.com>
-References: <20260907192643.42513-1-vdonnefort@google.com>
- <20260907192643.42513-3-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
+	s=k20260515; t=1788814870;
+	bh=n1wZ7r4xayWp9nNQN29FZBPntyP6nacsynwTW8yABMk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=MqH16lWxY9rAj2RAKZcgaJ0bRqsUtkedUcprRyQQHHiKIU4kLqQ4depqjYj9XD1k/
+	 fY46WbEkCdTzjWPOtXamgWAu7EDr/jWsN4us+NKMdikWKRjhRG7b982Vi0cNQH/uSI
+	 lodBsazUSH/rBfznGsG6XC1UMIVyDwXU5xh57egIwylCemyipzo28hS8bh8Wf2ouSJ
+	 AtFebYUon7PhgZRq0n6/NDg1OhzJn28TB0iYo0Ah52EdnYePj9YR7Fj74OCjYuCJkh
+	 wy6e8+Gv/oqhJtvhLzpXYrgvbWoSFRCwK2is+n0biwzloQhPNv6EB3lm/M/kJuFcHc
+	 HaeTypu3XmEtg==
+Message-ID: <c64ce430a9c5ba3b7c36acaf8b5befe84bdd6f50.camel@kernel.org>
+Subject: Re: [PATCH 1/2] tracing: hist: take the reference before publishing
+ the named trigger
+From: Tom Zanussi <zanussi@kernel.org>
+To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>, Steven Rostedt
+	 <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 07 Sep 2026 16:01:09 -0500
+In-Reply-To: <20260907124420.607097-2-donggeunyoo.kernel@gmail.com>
+References: <20260907124420.607097-1-donggeunyoo.kernel@gmail.com>
+	 <20260907124420.607097-2-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 07 Sep 2026 19:42:57 +0000
-Message-Id: <20260907194258.4E6E21F00A3A@smtp.kernel.org>
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] A hardcoded minimum page limit was missed during refactoring in tra=
-ce_rb_cpu_prepare().
---
-
-commit 699b707360c7ac89e4a8f2b996c220e5cb22ea93
-Author: Vincent Donnefort <vdonnefort@google.com>
-
-ring-buffer: Unify ring buffer minimum page calculations
-
-The commit introduces the RING_BUFFER_MIN_NR_PAGES macro to formalize the
-requirement of having at least two pages in a ring buffer. It updates multi=
-ple
-sites across the codebase to use this new unified calculation instead of
-scattered hardcoded values.
-
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index 7a1a92f876503..a9401b8ebc721 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -99,6 +99,13 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigne=
-d long size, unsigned flag
-> =20
->  void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int=
- *size);
-> =20
-> +/*
-> + * A minimum of 2 pages ensures we can always swap a page out of the ring
-> + * buffer. This does not account for the reader page or any other page
-> + * containing meta data used by static ring buffers.
-> + */
-> +#define RING_BUFFER_MIN_NR_PAGES 2UL
+On Mon, 2026-09-07 at 21:44 +0900, Donggeun Yoo wrote:
+> event_hist_trigger_named_init() puts the trigger on the global
+> named_triggers list and only then takes the reference on the trigger it
+> shares its histogram with:
+>=20
+> 	data->ref++;
+>=20
+> 	save_named_trigger(data->named_data->name, data);
+>=20
+> 	ret =3D event_hist_trigger_init(data->named_data);
+> 	if (ret < 0) {
+> 		kfree(data->cmd_ops);
+> 		data->cmd_ops =3D &trigger_hist_cmd;
+> 	}
+>=20
+> 	return ret;
+>=20
+> event_hist_trigger_init() fails when alloc_hist_pad() cannot allocate, an=
+d
+> nothing takes the trigger back off the list on the way out.
+> event_hist_trigger_parse() frees it, and the next lookup by name reads th=
+e
+> freed object:
+>=20
+> =C2=A0BUG: KASAN: slab-use-after-free in find_named_trigger+0xac/0xc0
+> =C2=A0Read of size 8 at addr ffff888009346860 by task init/1
+> =C2=A0 find_named_trigger+0xac/0xc0
+> =C2=A0 hist_register_trigger+0xc1/0xa00
+> =C2=A0 event_hist_trigger_parse+0x3146/0x6af0
+> =C2=A0 event_trigger_write+0xce/0x160
+> =C2=A0Freed by task 67:
+> =C2=A0 kfree+0x154/0x420
+> =C2=A0 trigger_kthread_fn+0xfd/0x160
+>=20
+> Do the reference first and publish once it has succeeded, so that nothing
+> which can fail runs after the trigger becomes findable.
+>=20
+> Reported-by: Sashiko AI <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/linux-trace-kernel/20260907092944.3950E1F=
+00A3D@smtp.kernel.org/
+> Fixes: 7ab0fc61ce73 ("tracing: Move histogram trigger variables from stac=
+k to per CPU structure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+> ---
+> =C2=A0kernel/trace/trace_events_hist.c | 11 ++++++-----
+> =C2=A01 file changed, 6 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
+_hist.c
+> index 963e0d6b61fd..c6c04926bdf0 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -6383,17 +6383,18 @@ static int event_hist_trigger_named_init(struct e=
+vent_trigger_data *data)
+> =C2=A0{
+> =C2=A0	int ret;
+> =C2=A0
+> -	data->ref++;
+> -
+> -	save_named_trigger(data->named_data->name, data);
+> -
+> =C2=A0	ret =3D event_hist_trigger_init(data->named_data);
+> =C2=A0	if (ret < 0) {
+> =C2=A0		kfree(data->cmd_ops);
+> =C2=A0		data->cmd_ops =3D &trigger_hist_cmd;
+> +		return ret;
+> =C2=A0	}
+> =C2=A0
+> -	return ret;
+> +	data->ref++;
 > +
+> +	save_named_trigger(data->named_data->name, data);
+> +
+> +	return 0;
+> =C2=A0}
+> =C2=A0
 
-[Severity: Low]
-Was a hardcoded minimum page limit missed during this refactoring?
+Makes sense. Note that save_named_trigger() can also fail with -ENOMEM,
+but maybe that's a separate patch..
 
-Looking at kernel/trace/ring_buffer.c:trace_rb_cpu_prepare(), when a newly
-hotplugged CPU is brought online and detects varying subbuffer sizes across
-existing CPUs (!nr_pages_same), it still uses a hardcoded fallback limit:
+Acked-by: Tom Zanussi <zanussi@kernel.org>
 
-kernel/trace/ring_buffer.c:trace_rb_cpu_prepare() {
-    ...
-	/* allocate minimum pages, user can later expand it */
-	if (!nr_pages_same)
-		nr_pages =3D 2;
-    ...
-}
 
-Should this fallback allocation use the newly introduced
-RING_BUFFER_MIN_NR_PAGES macro instead to avoid a maintenance hazard if the
-minimum requirement changes in the future?
+> =C2=A0static void event_hist_trigger_named_free(struct event_trigger_data=
+ *data)
+>=20
+> base-commit: df2908090cda368b01ff43709f51890076c56157
 
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907192643.4251=
-3-1-vdonnefort@google.com?part=3D2
