@@ -1,103 +1,176 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mta1.migadu.com (out-96.mta1.migadu.com [95.215.58.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A428F1D7E5C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 06:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5B240BCBC
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 08:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788764174; cv=none; b=np58HR1dLafnms5SSZbWkncspcNKGVF7NOlUgA1ohy7szzvW7YWacEAFBEMJ2AhnESdmrQs330sEMQnSI3jB/36132IFPjomc7MZsJydCNGJmdEv1KDMCPiOZAKH3M6Dt/gr//iNtXVvdW+CLLJ1+UtxdHCWw6oyhG7ztzzZbkE=
+	t=1788768832; cv=none; b=Kdmlmx44lrynRoMf2aRe+UxzMm39w2mw0JePh39veuvOGROiT15jKmQwIqRbEjiWyvR8KKBTmvQm7rQNg/Gl4eNnW+aloJ9/Ds4Xq8iGeeLW/BbPO9EP4VIHb9HDBucEneDpoU1kmmiw8LNCd0fBBZ/WBTRvkE8ScJ9hjSfh0cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788764174; c=relaxed/simple;
-	bh=NhpmIIeSpHxOh5isXBwUScoeaVEik8jNta2lhSfppSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GofsbDt1m3PTejNKPOQXlyg8ih8C6x/LM/4DALkPlxoz5nbaVxEIwaSRditiPhkceYeei53oAGI/cI2p+UhYv8E5dNDe4n8hD+dYcuQ1uAkcjKE2aM7ze8EhL3UTU7p/twaqKdiu8KKJzqIlW/UH5lQwrSPbzvfcXDLusUomr+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOFMWWUM; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788768832; c=relaxed/simple;
+	bh=WPjsFkKr6FEYMnlHhMl1nDBxkpUdBFsa1ndkFSmZ/0Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DbYL5KQ1wCH34ZynYQr1QN70vQnz7RQatbLu1SV/olfCbTaM3BtS0vfZ7mv8293/ERwrr2oN9BBR/QAGSN0wEQAQokITgox/iwJVUAgkhrz94YemkrteJTTfgV5SF6rqEUTfT/HScIB3vj5gAT5w3l6B0R7zzLSU8Q5/9Sts1C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=crrNKirS; arc=none smtp.client-ip=95.215.58.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOFMWWUM"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3969e82ff8fso3287267a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 06 Sep 2026 23:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788764173; x=1789368973; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mC7T3ph+JEOY8FMTTcX05SQsuupJCdCJ8BZxUfDf5oM=;
-        b=eOFMWWUMzw+CfzNZP6L6skcE4+/Efkjt7RfqpsEU0/ndigMoso9Xqwt6QE6umHwDCU
-         JkKbnJi9mY0iF5wNKMx5yltL2RMwvQBCnVw7GdgkdWRRDTVvSm4WrTETtoUm5SzcWkTg
-         pqFp2W0gjc78QNOTm5c5ezPuOXrNo4Tre1dZxlIp+Upm2NfjTv3y7ZFryh36Z+6ykN6Z
-         LuAY+yNj05UxEx+f1ismHJvQJVTcvkg24vd4AYGztBCwr7RYXV14Q23M10WmiokB6dHP
-         514sNqrm22SfC/UhIb+djMokznh7kqcigzK7c2NHqod8bFCoeGGQQrul+v6gE9INA/fJ
-         FV9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788764173; x=1789368973;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mC7T3ph+JEOY8FMTTcX05SQsuupJCdCJ8BZxUfDf5oM=;
-        b=hyZexn1bLFoUHeDHNLN7Db8Gb7lxpMsS7JNTAwocvFMHGMUycV3/OTSqGm3UQXyrn8
-         Edl12pmXi1cuSUum7oEK/cwwehRiQmCAApsDjoGrf4pTWDKl8JszJ2AuP6h3DFBrRju4
-         RMyhmK8QUTo52sa6YsEBpdY6xwXCdwBJ8m35uhH1LVHFs+kZ7odOF3spw7BsbmBHazyM
-         KVFOzIWmJcaEjL5geYFqg0XNM3R/oV3+XHCynWgMTfJvBMensWI+z7jEROtqZHN82eT9
-         hsJ61H9g7wVd+Q1z00Ho4GWin1Rri2T3MRuvJ6V5Er3Os1ZvCA6fQAF3zJnx1F5uxnz6
-         K3yg==
-X-Forwarded-Encrypted: i=1; AKwUvBzEayNKTfDmQcNGkmkB7Yt985DRbHwcUiwuQo7orOs47rZCNwnzOVnvbFlFLO9mukTXYJLxsq/E476zMIemwj2HcNQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++n+A5dq0vjHhVBCj81pwNBLlFz2dpR2at4ydKzR8GKwwMxvxTxw
-	hjWOXnMKoOAPXzORnfl8kqqN8it0m+jCpQDAMkGVq2dNPAOfEGmJregO
-X-Gm-Gg: AYBFou3TZzeHXzSjVIAEd+3vY94vrflXp7xcf3GnWGzgCRSevwu2zS1kSiFRF3wAkZC
-	2ODpLRYEAIMPlkEKuYNRVALijS0YHHwIG82jA0YtaYyVdim4ZmPFnjXPpsKSKAey40VZm5LR4bO
-	d36bfV3NbGxrkOpNm2YliTEz093bOGUvByZSBzqXmvNnXXGFhzfLAQd9/8DHmyD45psyRg0BOl5
-	zIvOhoMG6pAVboKoXTZ5vKawN6E2kKjkjnSeUvEP3pq9xiBJjfE8PM2m3F5R+s4JJhHmvbZpwfL
-	rvFZ4ola9PW1EkM3yZrJBn+xhAzs/b7/qmPj73DagQJt10Yy/Cg0MIXJYgmewBZ9AZKwrKg4rN5
-	7vFpCiUGtkGYOpk+y+FBfmkqEYA173q9vaQuqk/OLD5DOkS7ErmMR8TB4TWeJu9j4kwqlgTBS6P
-	bGtbBfnC20tL+NzNXT8P3Ped4xoxHH/6Zi+Wltg+WCh+vvAdYoGKAiqpCyfBludqvQG74XkmlVO
-	5ESxdmYKjEQpA==
-X-Received: by 2002:a17:90a:d44b:b0:398:bee5:61d6 with SMTP id 98e67ed59e1d1-39b26252edamr34497069a91.24.1788764172958;
-        Sun, 06 Sep 2026 23:56:12 -0700 (PDT)
-Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14344a86512sm2067445c88.10.2026.09.06.23.56.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2026 23:56:12 -0700 (PDT)
-From: Hemanth Selam <hemanth.selam@gmail.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="crrNKirS"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=WPjsFkKr6FEYMnlHhMl1nDBxkpUdBFsa1ndkFSmZ/0Q=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788768828; v=1; x=1789373628;
+ b=crrNKirSqCWRXtMKzcMLrd5Pr+KEL469evIyIDu0TuNSSltuuZgJPHpt1rJogB6oRN0/99hM
+ nQnFgQYvjoiAgHCnf1L6IQynfj3mqIKlj4TLcxUCRfXwXHPGzd8tS0xRmj5V3wnp1uj3vngbMc2
+ wo/yPRoS2cZswZPb4rm8udr0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 2103926bec6903fd;
+	Mon, 07 Sep 2026 08:13:48 +0000
+X-Mizu-Trace-ID: 2103926bec6903fd
+X-Migadu-Flow: FLOW_OUT
+From: Ye Liu <ye.liu@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 08/14] tracing: fix typo "preceeded" in comment
-Date: Mon,  7 Sep 2026 12:26:07 +0530
-Message-ID: <20260907065607.36615-1-hemanth.selam@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: Ye Liu <liuye@kylinos.cn>,
+	David Hildenbrand <david@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	SJ Park <sj@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	rientjes@google.com,
+	shakeel.butt@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	will@kernel.org,
+	boqun@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	tony.luck@intel.com,
+	reinette.chatre@intel.com,
+	x86@kernel.org,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	pavel@kernel.org,
+	lance.yang@linux.dev,
+	mhiramat@kernel.org,
+	pmladek@suse.com,
+	longman@redhat.com,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	kprateek.nayak@amd.com,
+	mark.rutland@arm.com,
+	Dave.Martin@arm.com,
+	james.morse@arm.com,
+	babu.moger@amd.com
+Subject: [PATCH v2 0/8] sched: introduce for_each_process_rculock and for_each_thread_rculock
+Date: Mon,  7 Sep 2026 16:13:26 +0800
+Message-Id: <20260907081334.1152889-1-ye.liu@linux.dev>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Correct "preceeded" to "Preceded", reported by scripts/checkpatch.pl using
-the misspelling list in scripts/spelling.txt.  Only touches comments, no
-code changes.
+From: Ye Liu <liuye@kylinos.cn>
 
-Assisted-by: Cursor:claude-opus-5
-Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
----
- include/trace/events/timer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Introduce for_each_process_rculock(), for_each_thread_rculock() and
+for_each_process_thread_rculock() macros that combine the existing
+iteration macros with scoped_guard(rcu), so that the RCU read lock
+is automatically acquired before iteration and released when the
+loop exits — including via break, goto, or return.
 
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index ca82fd62dc30..3aa0608c6361 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -302,7 +302,7 @@ DECLARE_EVENT_CLASS(hrtimer_class,
-  * hrtimer_start_expired - Invoked when a expired timer was started
-  * @hrtimer:	pointer to struct hrtimer
-  *
-- * Preceeded by a hrtimer_start tracepoint.
-+ * Preceded by a hrtimer_start tracepoint.
-  */
- DEFINE_EVENT(hrtimer_class, hrtimer_start_expired,
- 
+The rest of the series converts manual rcu_read_lock()/
+rcu_read_unlock() and guard(rcu)() pairs across mm/, kernel/, fs/,
+lib/ and security/ to use the new macros.
+
+Changes since v1 [1]:
+  - Rename macros from *_rcu to *_rculock, as suggested by Steven
+    Rostedt and acked by Thomas Gleixner, to avoid confusion with
+    existing *_rcu() list iterators that expect the caller to hold
+    the RCU read lock.
+  - Improve the comment on for_each_process_thread_rculock() to
+    document that 'break' only exits the inner loop and 'goto' is
+    needed to exit both loops (Thomas Gleixner).
+  - Rename the stale 'unlock:' label to 'out:' in hung_task.c, as
+    noted by Günther Noack.
+  - Clarify in patch 4 that page_pgoff() is safe outside the RCU
+    read-side critical section (SJ Park).
+  - CC all relevant maintainers on every patch (Lorenzo Stoakes).
+  - Drop the mm: prefix from patch 1, as the macros are in
+    include/linux/sched/signal.h (Michal Hocko).
+
+Patch 1 may trigger checkpatch "Macros with complex values should be
+enclosed in parentheses" errors.  These are false positives — the
+scoped_guard() pattern is a control-flow construct, not a multi-
+statement macro, and the same idiom is used elsewhere in the kernel.
+
+Suggested by Michal Hocko for the oom_kill path [2].
+
+[1] https://lore.kernel.org/all/20260904083001.553587-1-ye.liu@linux.dev/
+[2] https://lore.kernel.org/all/20260813092933.562028-1-ye.liu@linux.dev/
+
+Ye Liu (8):
+  sched: introduce for_each_process_rculock and for_each_thread_rculock
+  mm/oom_kill: convert process/thread iterators to for_each_*_rculock
+  mm/ksm: convert process iterator to for_each_process_rculock
+  mm/memory-failure: convert process iterator to for_each_process_rculock
+  kernel: convert process/thread iterators to for_each_*_rculock
+  fs: convert process/thread iterators to for_each_*_rculock
+  lib: convert process iterator to for_each_process_rculock
+  security/landlock: convert thread iterator to for_each_thread_rculock
+
+ fs/proc/base.c               |  4 +---
+ fs/resctrl/rdtgroup.c        |  8 ++------
+ include/linux/sched/signal.h | 25 +++++++++++++++++++++++++
+ kernel/cpu.c                 |  4 +---
+ kernel/freezer.c             |  4 +---
+ kernel/hung_task.c           | 11 ++++-------
+ kernel/locking/lockdep.c     |  4 +---
+ kernel/rcu/update.c          |  4 +---
+ kernel/sched/core.c          |  3 +--
+ kernel/sched/debug.c         |  4 +---
+ kernel/trace/fgraph.c        |  8 ++------
+ kernel/unwind/deferred.c     |  3 +--
+ lib/is_single_threaded.c     |  5 +----
+ mm/ksm.c                     |  4 +---
+ mm/memory-failure.c          | 16 ++++------------
+ mm/oom_kill.c                | 20 +++++---------------
+ security/landlock/tsync.c    |  8 ++------
+ 17 files changed, 54 insertions(+), 81 deletions(-)
+
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
+
+--
+2.25.1
