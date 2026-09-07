@@ -1,139 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E184D25B082;
-	Mon,  7 Sep 2026 21:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEE53F44EB
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 21:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788814872; cv=none; b=PoBSPrbmDCbX8QX+n6UhJDP68k8FcOFBxYPNl3SoSvruGH8CZ/01Fdr0ecr3lya0JwcBLgan7B65G3oatlBxheySem06cW9ZnopfPE8mX57SvznfPUNF81QadKyozt5b4FE2cV+ifsEiOWVAQfX0M/CPVkfZ0hlriiBkUlYcvsM=
+	t=1788815123; cv=none; b=u0H8Xs5DUc2ZerG8vGUd+AKeh/y3hYpoWaj2uAACl4PtFd+sBZUOtRhmlwfqTeinnFLvzvOdcGxNq2QDc33KH6VBF9ko0YHTgr78aoLxqphp+9JHM0C+h2vLEuCO6pZaB/eG4wcm82YumIaOxRyFtBOISlvxWKvXNAjSgST/ruk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788814872; c=relaxed/simple;
-	bh=mrYhEaR9IK2yeyG/ryNn5tLLDTUhEhyf1+dAvbhMTY8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VSwquCb4vZnF1XmKqSxDoQg1Tm76RCM+HzQiFu+LUXlWHhPe2W16iTvt18PuJMiM+K3VAoKxccwd+iLuWTc5avIOhFbQ5uDEnf55wjKH0hk2X7BwOHIB3H1XBf01AP0eFhYgmG7hhVGF8sz/kgSwDp4G2Lmi4od3J095tGaMwwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqH16lWx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788815123; c=relaxed/simple;
+	bh=UJGiGn2L6JlGWKi00NV6I86Kya9Dh8i6c/d0ym4ux+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SjnONJOF8f21pzUwcnWSC1CmkEjuFBUV7v1bzSusTn5Yo0rhpmELVWDJDtFHl6HQ+qdSdgEuyZS60HnvbfFYC4p79RHbP6ANyn3dzBkeqmArXauFib1GU1ISXLXtuiZYRcDGywKfLSOLLZ9pkKsFLZzoCT1uWu4BHfcJf8YA8xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cwfRj0Eu; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqH16lWx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE5B1F00A3E;
-	Mon,  7 Sep 2026 21:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788814870;
-	bh=n1wZ7r4xayWp9nNQN29FZBPntyP6nacsynwTW8yABMk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=MqH16lWxY9rAj2RAKZcgaJ0bRqsUtkedUcprRyQQHHiKIU4kLqQ4depqjYj9XD1k/
-	 fY46WbEkCdTzjWPOtXamgWAu7EDr/jWsN4us+NKMdikWKRjhRG7b982Vi0cNQH/uSI
-	 lodBsazUSH/rBfznGsG6XC1UMIVyDwXU5xh57egIwylCemyipzo28hS8bh8Wf2ouSJ
-	 AtFebYUon7PhgZRq0n6/NDg1OhzJn28TB0iYo0Ah52EdnYePj9YR7Fj74OCjYuCJkh
-	 wy6e8+Gv/oqhJtvhLzpXYrgvbWoSFRCwK2is+n0biwzloQhPNv6EB3lm/M/kJuFcHc
-	 HaeTypu3XmEtg==
-Message-ID: <c64ce430a9c5ba3b7c36acaf8b5befe84bdd6f50.camel@kernel.org>
-Subject: Re: [PATCH 1/2] tracing: hist: take the reference before publishing
- the named trigger
-From: Tom Zanussi <zanussi@kernel.org>
-To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>, Steven Rostedt
-	 <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 07 Sep 2026 16:01:09 -0500
-In-Reply-To: <20260907124420.607097-2-donggeunyoo.kernel@gmail.com>
-References: <20260907124420.607097-1-donggeunyoo.kernel@gmail.com>
-	 <20260907124420.607097-2-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cwfRj0Eu"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92f0b5ed131so475414985a.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 14:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1788815120; x=1789419920; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=jr5pTyJqXfvpszR/f6xdIiW4q3ltvvAQPTAcZR/VHKM=;
+        b=cwfRj0EuGT8r0csM3DJky7VB9De0Icu2GDXtIvRlZqxLdmvO7mCHZRG5fQbndYJ4oO
+         J43XMFZlpeBwItWjZhxc4pdb6mvqQoAAFpPSTlVOdbACto/BIrOcs5jxFZQQnWqgK1hQ
+         ocf/erDEK2Xnnw9DctkL/hHH0xi7KGn8bE5SMh02lnmzrtlF711Fl5/2PATJ409jKaMj
+         O03gUkpUsoz/Ji6+mn6cRlnTJfEfzElDQPpN82DY4cSq/0XMvxracxiL1DKLVn1zC8/a
+         WstEOPvR3b3Y8Dd0nW4ywk6a1VNSWUccBRenO/gnpOABPhyKse8qGBQO0VuJpAXTg6EM
+         oa4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788815120; x=1789419920;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jr5pTyJqXfvpszR/f6xdIiW4q3ltvvAQPTAcZR/VHKM=;
+        b=Pni1Cx+oWHjrErOStzHctxOawr0/0YOMbKJsCRY8nGM/rYeo3+gBmwEZfJNhGak8WP
+         UrJUN8dFvcdvbaH/5YISdVJaCcJVF0IehzvT3RoZzhpZGFu+OvKh9LhL+DbqwfIvjeWH
+         erI3CuUp4ZP/0vWhw9wgumyn3R+vlBO7uap8skfw9HtywG7CobCee4qL6Hu9MX/FxPUB
+         kXMa2LnUONyKLr2Zj9B/CXOUYMBrgE+ECU12FV6IUQxZ8rH1cyVrbEz3lOAXnrsJEpCc
+         XSK0veZaU3o/Bi8Uy3QtZjFzo3JBKcxAtkTu3NQg5BCeScHAsN0xQDY4M3Fw56ABYFUz
+         srqQ==
+X-Forwarded-Encrypted: i=1; AKwUvByvBY2xM0tJNPzwK+V8NbJkLlwklbAvf9sCuH1mcLCtSxY2hdlcygzP+/CCYXR3/sSmHPpe0H9SJ5RUUNvUSWl5iKU=@vger.kernel.org
+X-Gm-Message-State: AFuF++l4XEATk6HHJFQqSHdiRtqcU9nom81dXkToLY7nErtPBVah4N3J
+	0mrQBhhqzCL+7kxFq5GlYIuyNkliXb0PY8EQ31aOkDYEk6LLBH5iVcyzyvNP5AvH0Zw=
+X-Gm-Gg: AYBFou39lAnUXSoteJ83oHm44ygycFWD4pwWps9pX04BYplKLZ2KcT5REGV9ZvMmmKA
+	nUNlw8xaP2gDVmiGSUjE8l96XjBwdUGcV9HYtN3ia1ptZmOUXsB/hcyp03xgrkn8oDNzqYzlC9h
+	b7BZJCsQ+/LVVMPuIOGZCymxPJlgcDgC5Ead0RRTgMgO+/zM4qhBl0FYxTY2U/nHWt4c5tMpReV
+	rLIOcXVyZ78gyUUPwVHeM8Sg0D3YyljUJordAVxXbcXCfrNePIpuAoUq2rowH7CW91bICkyMxwT
+	W2aIaPIkBl3Aftzm9nAPBp+8j+qUQ8wUuasKUpFMey8OAM7RWINPSB9yj5d5jEcGBolWaWmbyqp
+	therANqW5ijCgitg/DLMEv2wGkX4YF5uYrMdx7HrgxFf0qFA9mw72jLpPLhH0E/PkQXwdcW7hFz
+	7mDlylMzqAVcY5C7Aqcy39hM8O8irIIM1AShTmwdzUt4cYZ/1Fu5fQKhsqlswIEOTnJgCVGm2Dn
+	YePwE8FgDxlablE0kgZZIpei4hzH8lnDHA4qv8a0Ygl5ld+u65YSJE=
+X-Received: by 2002:a05:620a:404c:b0:939:df5:977c with SMTP id af79cd13be357-93980361c84mr2678122285a.19.1788815119859;
+        Mon, 07 Sep 2026 14:05:19 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9399429b97esm677101585a.29.2026.09.07.14.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2026 14:05:19 -0700 (PDT)
+Date: Mon, 7 Sep 2026 17:05:15 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Ye Liu <ye.liu@linux.dev>, Thomas Gleixner <tglx@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Ye Liu <liuye@kylinos.cn>, 
+	Michal Hocko <mhocko@suse.com>, mic@digikod.net, david@kernel.org, linmiaohe@huawei.com, 
+	nao.horiguchi@gmail.com, gnoack3000@gmail.com, ljs@kernel.org, sj@kernel.org, 
+	rientjes@google.com, shakeel.butt@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, tony.luck@intel.com, reinette.chatre@intel.com, x86@kernel.org, 
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pavel@kernel.org, 
+	lance.yang@linux.dev, pmladek@suse.com, longman@redhat.com, 
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com, qiang.zhang@linux.dev, 
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	kprateek.nayak@amd.com, mark.rutland@arm.com, Dave.Martin@arm.com, james.morse@arm.com, 
+	babu.moger@amd.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] kernel: convert process/thread iterators to
+ for_each_*_rculock
+Message-ID: <ap8mgnpE7D4TTrno@gourry-fedora-PF4VCD3F>
+References: <20260907081334.1152889-1-ye.liu@linux.dev>
+ <20260907081334.1152889-6-ye.liu@linux.dev>
+ <ap7dC-LWNaoPYJvv@gourry-fedora-PF4VCD3F>
+ <ap76-0-hN6CAcYXX@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ap76-0-hN6CAcYXX@redhat.com>
 
-On Mon, 2026-09-07 at 21:44 +0900, Donggeun Yoo wrote:
-> event_hist_trigger_named_init() puts the trigger on the global
-> named_triggers list and only then takes the reference on the trigger it
-> shares its histogram with:
->=20
-> 	data->ref++;
->=20
-> 	save_named_trigger(data->named_data->name, data);
->=20
-> 	ret =3D event_hist_trigger_init(data->named_data);
-> 	if (ret < 0) {
-> 		kfree(data->cmd_ops);
-> 		data->cmd_ops =3D &trigger_hist_cmd;
-> 	}
->=20
-> 	return ret;
->=20
-> event_hist_trigger_init() fails when alloc_hist_pad() cannot allocate, an=
-d
-> nothing takes the trigger back off the list on the way out.
-> event_hist_trigger_parse() frees it, and the next lookup by name reads th=
-e
-> freed object:
->=20
-> =C2=A0BUG: KASAN: slab-use-after-free in find_named_trigger+0xac/0xc0
-> =C2=A0Read of size 8 at addr ffff888009346860 by task init/1
-> =C2=A0 find_named_trigger+0xac/0xc0
-> =C2=A0 hist_register_trigger+0xc1/0xa00
-> =C2=A0 event_hist_trigger_parse+0x3146/0x6af0
-> =C2=A0 event_trigger_write+0xce/0x160
-> =C2=A0Freed by task 67:
-> =C2=A0 kfree+0x154/0x420
-> =C2=A0 trigger_kthread_fn+0xfd/0x160
->=20
-> Do the reference first and publish once it has succeeded, so that nothing
-> which can fail runs after the trigger becomes findable.
->=20
-> Reported-by: Sashiko AI <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/linux-trace-kernel/20260907092944.3950E1F=
-00A3D@smtp.kernel.org/
-> Fixes: 7ab0fc61ce73 ("tracing: Move histogram trigger variables from stac=
-k to per CPU structure")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-> ---
-> =C2=A0kernel/trace/trace_events_hist.c | 11 ++++++-----
-> =C2=A01 file changed, 6 insertions(+), 5 deletions(-)
->=20
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index 963e0d6b61fd..c6c04926bdf0 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -6383,17 +6383,18 @@ static int event_hist_trigger_named_init(struct e=
-vent_trigger_data *data)
-> =C2=A0{
-> =C2=A0	int ret;
-> =C2=A0
-> -	data->ref++;
-> -
-> -	save_named_trigger(data->named_data->name, data);
-> -
-> =C2=A0	ret =3D event_hist_trigger_init(data->named_data);
-> =C2=A0	if (ret < 0) {
-> =C2=A0		kfree(data->cmd_ops);
-> =C2=A0		data->cmd_ops =3D &trigger_hist_cmd;
-> +		return ret;
-> =C2=A0	}
-> =C2=A0
-> -	return ret;
-> +	data->ref++;
-> +
-> +	save_named_trigger(data->named_data->name, data);
-> +
-> +	return 0;
-> =C2=A0}
-> =C2=A0
+On Mon, Sep 07, 2026 at 07:57:15PM +0200, Oleg Nesterov wrote:
+> On 09/07, Gregory Price wrote:
+> >
+> > On Mon, Sep 07, 2026 at 04:13:31PM +0800, Ye Liu wrote:
+> > > --- a/kernel/hung_task.c
+> > > +++ b/kernel/hung_task.c
+> > > @@ -315,13 +315,12 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+> > >  		return;
+> > >
+> > >  	this_round_count = 0;
+> > > -	rcu_read_lock();
+> > > -	for_each_process_thread(g, t) {
+> > > +	for_each_process_thread_rculock(g, t) {
+> > >  		if (!max_count--)
+> > > -			goto unlock;
+> > > +			goto out;
+> > ... snip ...
+> > > - unlock:
+> > > -	rcu_read_unlock();
+> > > -
+> > > +out:
+> > >  	if (!this_round_count)
+> > >  		return;
+> > >
+> >
+> > The sunken rcu_read_lock()/unlock() + scoped_guard usage makes this goto
+> > at a minimum very confusing, if not actually broken.
+> 
+> I am afraid I misunderstood you concerns...
+>
 
-Makes sense. Note that save_named_trigger() can also fail with -ENOMEM,
-but maybe that's a separate patch..
+This might be my - admittedly shallow - understanding of scoped_guard,
+but does scoped guard handle goto correctly?
 
-Acked-by: Tom Zanussi <zanussi@kernel.org>
+On the surface it looks like it would skip the unlock entirely.
 
+That is what i mean by "at a minimum very confusing, if not broken"
+and why it's generally discouraged to mix cleanup.h and goto.
 
-> =C2=A0static void event_hist_trigger_named_free(struct event_trigger_data=
- *data)
->=20
-> base-commit: df2908090cda368b01ff43709f51890076c56157
-
+~Gregory
