@@ -1,138 +1,147 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8D94EA396
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 15:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBEC4D2EE1
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 15:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788796263; cv=none; b=mr5clSKnaYBjiUwOLfKWWicqfBe1PzUFtbtoH4oVyIWOD/Z15tH5omX0Q98pEKGK9ymFED50Upc7Meiq8PIW6hqGNFtCcXphW3BpO05fm0fjMD9pTb/o2s50DF+bYXaEq++7Ie/FwY5EdSAagK0fBwSBBUUiP8Q7/3nK2nSD3y8=
+	t=1788796438; cv=none; b=Kst1v8zGEnYKqf6JYY9nxL2dyxdytdcCS7bcymIXv5f9QcYGA3a0TYQ5jOsr677PCFts07JD4nDy6VND6fiFSx2ZJbCWJ4IWa6CSx9Yc30A6MDVKTP8G62dxrA5FOIlfGOhbwc967A5u+FA7aFgV6x3OQ/2SaX0e3PAxaDwU7+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788796263; c=relaxed/simple;
-	bh=DhiBgG7xnL08u0x0FTkYm6cczKwYmCOp1xitilaqnUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=is3ZSeCc7sgqjViy5NuknjVssycelv5w3yLJQevKEY8nhStcSf9E7pnWavVpltQQ41nmiFQn42mPyVqNgRI2VBxQUJYQxmJaZ14QiKpSgscw4TW/7tgvKOkR6zh1TiNpMUd3+mJ/12lkiGfEeLS82x1aiC1VRTca+ybtJdd7GY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLl16i1H; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788796438; c=relaxed/simple;
+	bh=kdW80z8QSijQXKWXMTATEq/l6KVSa+t5CIJEX8QYy6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PohjVIHjg4OhxMWfi8VcxFHSO8efCEIWu999J/uRnckDRRC1cFuH7YLz6IB157N9jyWa3+ukreTqOhnhnZ8Qowi54uHV9E0pjxxSHZi4/qvnuKlQ41/T9bogZgJwNSGYY6J90DdVq1H1QmdV9mHPbU+JOK9Ro1cA6XX0wqEvjOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Ct/qjgub; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLl16i1H"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2cace91f112so29857425ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 08:50:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Ct/qjgub"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-939949d9c33so179087885a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 08:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788796258; x=1789401058; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=CEKj5eE4ZkqVaXrVpceSXQRZCzNc8P/mNmuBsDFjR7I=;
-        b=LLl16i1H7jds4lCauJc5qlUPdeYVj/+PycqL1V7Rwdnvn5owCzXfjyPGniQh+vazkR
-         +3GTsKQJjNKPbfNBSrzLjlhOeSOaJVd17g7+ekmP5LMMQGNpHy0dKyBSQ0+bYCDzF6fJ
-         MEQwrYAACFGs6QYHfeVS/qFYSOs5SnFC2fTSbHOcmT+1Hao8/VWdNwIPLovLrhtSvEln
-         NTclDu0wf27AQ+5Hs95/BPPZZzAWbHLn1B6frDGEhsbT0g1mLo0ZV9TlVsXPSdQV0c56
-         i0n9U40O+y9yJNUCUol3kZBp0g5wl4rwk+ypT85pHRxnYapuDumLcqeCVaqlYIXk1D/v
-         tSLg==
+        d=gourry.net; s=google; t=1788796435; x=1789401235; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=MpjJCtF9a7Ao8JicOrb9fcW3ZU3uKqej/fz3Z0ryD7g=;
+        b=Ct/qjgubq83YDJuMY08ToLOHwyKEQAwm5/0XgADGkzXP/clOU6nt0U4E2QnUwbl9Ym
+         4+G7A8NlhptRM84KvYs42cjxX0FLUrShBMnPRYud/Iy6CauD5sBoOmOCLhxOOXiDIe05
+         2AzWTldRciiRFeRxCDYwLrU3sVqlLqmsm23QSOMa0r41Ga53oGwtbc6Iz7SPupKP7msQ
+         k8kAh0dn52fzlA3KbLMr3dJn95x5embEN/wOPU7Z1nwZkwB4hgqkaZh/dbr4JIDaB3gB
+         lWciwpHEO2RE0uIh4WpGSQMfrYNwG3jq2xZ4qWc7HQx+wCfO5pp2mS8p9as7Cy6fGzZ1
+         F6ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788796258; x=1789401058;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CEKj5eE4ZkqVaXrVpceSXQRZCzNc8P/mNmuBsDFjR7I=;
-        b=BYNF3pL1JMbmt8YiqLnb8Zzo6UWHLAtichqq/bVVateKyHwDKGPBWVa8hJz9eN0/Ds
-         BJPd91FqD9bUc9Wp8jYUMv6z0COpnmg1gbuUn5a6oiCp6ShL1+lS2cGu4J219tomextV
-         MM642UeplrWinPv1oSXxlx/xcXaMWznRb2EYjd7Sa2WvCNUpPa3ddu0NvUdXC2rlxB4L
-         2R7vNq/kDtBR0pACwPkvPPT630RfE3xkaD7tpuj9CM/rj4M6pFt9o+BP96UX83rk+2Q2
-         XVUbJgRdzdifWqT+iUG6LpngrgaU7gj4HvvJtx9CZzLRliNDuWucmZGNoC9lR9BrOm8h
-         DRXQ==
-X-Gm-Message-State: AFuF++mmdMUsDnB9hCe6N14R20W9Darj2mlbujD5gxV4a3NYICZS4rTq
-	//sslKLcXe5fd/OiwVGaz0/q1vkyTr8NhZ9/Zjz8+YmlNev1XlxjvAw=
-X-Gm-Gg: AYBFou1sD9eJGj0KYnc7IHq6WeA+S86WJyHq3rBKm6VEaUs5bAAFipa3iyQ5JgS1m+/
-	1I67AR+rjTet+yy+bC/kv8Cng9gfNMk3Q5QqfPs2v8stcCHA3enXxU8x2kgCwNU0qqaPom+bZh5
-	1uy9YYtiQUL7YHyGDYdRohNmBMftwR5aqfNTzH2HsiDud8owZE8i9A+O4amqK0QxxjV4KGtegWZ
-	DEiZufJyIw51gy4ozkdi0ApVQkN3UK3lr2/jNYOrnk3bohktBZ2cNYZdZk36D8QsXMEXC5zLE2a
-	59CayYe20Ow5gAbt1SBDdMHkNYmEScmpZUTQWXg74lVviXCzRkDgevVPR30z7wGMSyPINPlEaxT
-	z4Af1x/6IxONoqfOauHTHX0TNUwknBsT/HUG2dkT1S9IV+jkOddlt91txzCeMHjaJ1qiZh2EvJJ
-	jvKBq1lrdl94JwuxPiosEwIqXu+hKV63sfgjLD00mQ4+/9FnArOFiWq/KJ975Py3KjSeMWZBN76
-	iF+4zqn91J8xRW3
-X-Received: by 2002:a17:903:3c24:b0:2db:479a:5127 with SMTP id d9443c01a7336-2db479a55c8mr128165285ad.19.1788796258200;
-        Mon, 07 Sep 2026 08:50:58 -0700 (PDT)
-Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:c773:5f09:906c:a72b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2db149c3b80sm47265405ad.63.2026.09.07.08.50.55
+        d=1e100.net; s=20251104; t=1788796435; x=1789401235;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MpjJCtF9a7Ao8JicOrb9fcW3ZU3uKqej/fz3Z0ryD7g=;
+        b=Q3SeWbBltMVpQ+b4jybYTv5ZQ7+L7MpuwmTlY2HtgbED6LXJHjS2MurMx710oiD1eX
+         uKoVKIvwvejiLlMUTV+Ewu9acw9a2m98DtAjxJzCVDmtQwnJgrAOGZxWW5KvwFALPZyK
+         WypyZYeQxTsz5bj7K5r17myQFP29ph8w9LBpxyplw/soLPQ2Bc+aM8aG6ep2kIiQmtLd
+         Csek4vru6rlPct4rEEW3a/ccV0mJtc8kCM6oaqkKYmUN1CY1WeeDVP/0fxPgSZ+m5tGa
+         HWdXC0775rpI+MqTKYgvbzuHz7DnyspAeL6sf4L9PpMn6kpLYJ/l2UhFBsyc/WR2wxUa
+         Qkrg==
+X-Forwarded-Encrypted: i=1; AKwUvBxQsVeVYiDxGo7K7sxsOLsmZXEVs+0JuLxmmCB2x4gek2uhv9xO2zXJc+DHTwUkma+fvHG5te/uwYa75dW6qYhYfdc=@vger.kernel.org
+X-Gm-Message-State: AFuF++msnGxYIqNQJjA0eoyzZoH9UzLDbNtQ3IEufns7BVWaM8MSBMPV
+	FCeCZZUgti/KufeOW/Vpp9ADY3W8KndSJKNmgwQVnZPo2EBaXep+xdxu64cjxDimJ4Y=
+X-Gm-Gg: AYBFou2yLSjnULmmkjFFtxLJkD1bxL+Hi9MtIz08EvY7QuhhVLChpGT+AdGWj0OV5S5
+	2/f67QzUR5zXYS0eKfbZ5JYd60Vp9pMUSRWiOLsMWyUiwpCXNWHAGOo0M/OqRLJANBquwroI7JC
+	thMnx40je/t42mxIdY8B9mcRhaS/ZX0A8Ny7qkMv9fHNL/pcISgkvSi9qahM/bTNE9fGl5kNMnZ
+	TW6U82Nie4D6ljwqYHrSvCloRr3Lf/Fu+YOmu2W00t3E7F0Sb4Vme0on69OnDYeEbLR1Me0wNT6
+	wHHso2xK7bC76AYsZyJlQ0xDkvoLIomW649zI20SFofcTiHTcGfM7sJHI209R40rsirdMbWv/x1
+	Z0nxB2JtILYIjhhNVTc8OuS9EkotoEzxTuj5TYzlSq02mJ88xDl7Pi7Ipr3g0521uem6xl2ukG3
+	8UkidfrU7y2eUzlFnsWw3KXmh93HInZWBTv7Wfus8goYggR6tT/bTu8ywn2y6XU0Dwn+aPlYK04
+	luZc1niBO4VHRaGNkRe0zVrWrX27rOfHn2G77GICpes
+X-Received: by 2002:a05:620a:851d:b0:939:6de8:43e3 with SMTP id af79cd13be357-939804cc15amr1836196285a.48.1788796434937;
+        Mon, 07 Sep 2026 08:53:54 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9397fb59c72sm907982585a.26.2026.09.07.08.53.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 08:50:57 -0700 (PDT)
-From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	donggeunyoo.kernel@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] tracing: Fix memory corruption from a "STACKTRACE" histogram key
-Date: Tue,  8 Sep 2026 00:50:45 +0900
-Message-ID: <20260907155045.692664-3-donggeunyoo.kernel@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260907155045.692664-1-donggeunyoo.kernel@gmail.com>
-References: <20260907155045.692664-1-donggeunyoo.kernel@gmail.com>
+        Mon, 07 Sep 2026 08:53:54 -0700 (PDT)
+Date: Mon, 7 Sep 2026 11:53:51 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Ye Liu <ye.liu@linux.dev>
+Cc: Thomas Gleixner <tglx@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Ye Liu <liuye@kylinos.cn>, 
+	Michal Hocko <mhocko@suse.com>, mic@digikod.net, oleg@redhat.com, david@kernel.org, 
+	linmiaohe@huawei.com, nao.horiguchi@gmail.com, gnoack3000@gmail.com, ljs@kernel.org, 
+	sj@kernel.org, rientjes@google.com, shakeel.butt@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, tony.luck@intel.com, reinette.chatre@intel.com, x86@kernel.org, 
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pavel@kernel.org, 
+	lance.yang@linux.dev, pmladek@suse.com, longman@redhat.com, 
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com, qiang.zhang@linux.dev, 
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	kprateek.nayak@amd.com, mark.rutland@arm.com, Dave.Martin@arm.com, james.morse@arm.com, 
+	babu.moger@amd.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] kernel: convert process/thread iterators to
+ for_each_*_rculock
+Message-ID: <ap7dC-LWNaoPYJvv@gourry-fedora-PF4VCD3F>
+References: <20260907081334.1152889-1-ye.liu@linux.dev>
+ <20260907081334.1152889-6-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260907081334.1152889-6-ye.liu@linux.dev>
 
-"cpu", "CPU", "stacktrace" and "STACKTRACE" are generic fields, defined
-with an offset and a size of zero so that the filter code can match them
-by name. parse_field() maps them onto their common_* equivalents for
-backward compatibility, but unlike the common_* names it hands the
-placeholder back to the caller instead of NULL.
+On Mon, Sep 07, 2026 at 04:13:31PM +0800, Ye Liu wrote:
+> From: Ye Liu <liuye@kylinos.cn>
+> 
+> Replace the manual rcu_read_lock()/rcu_read_unlock() and guard(rcu)
+> pairs combined with for_each_process(), for_each_thread() and
+> for_each_process_thread() loops across kernel/ with the
+> for_each_*_rculock() macros, which scope the RCU read lock to the
+> loop body via scoped_guard(rcu).
+> 
+> No functional change.
+> 
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-create_hist_field() takes a non-NULL field as a promise that the record
-carries a stacktrace and picks HIST_FIELD_FN_STACK, so the __data_loc
-word is read from offset 0, that is from common_type, and its low 16
-bits are followed as an offset into the record. What is found there
-becomes the length of an unbounded memcpy. Pick an event whose id is
-small enough that the offset stays inside its own record and the length
-is a kernel text address:
+Question below
 
-  # cd /sys/kernel/tracing
-  # echo 'hist:keys=STACKTRACE' > events/ftrace/print/trigger
-  # echo hello > trace_marker
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 6fcc94ce4ca9..73a5ad3be9a8 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -315,13 +315,12 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>  		return;
+>  
+>  	this_round_count = 0;
+> -	rcu_read_lock();
+> -	for_each_process_thread(g, t) {
+> +	for_each_process_thread_rculock(g, t) {
+>  		if (!max_count--)
+> -			goto unlock;
+> +			goto out;
+... snip ...
+> - unlock:
+> -	rcu_read_unlock();
+> -
+> +out:
+>  	if (!this_round_count)
+>  		return;
+>  
 
-  Oops: general protection fault, probably for non-canonical address
-  RIP: 0010:rb_next+0x23/0x60
-   </IRQ>
-  RIP: 0010:memcpy+0xc/0x30
-   event_hist_trigger+0x2e7/0x12c0
-  Kernel panic - not syncing: Fatal exception in interrupt
+The sunken rcu_read_lock()/unlock() + scoped_guard usage makes this goto
+at a minimum very confusing, if not actually broken.
 
-Leave the field NULL, which is what the comment above the branch says
-the code does and what common_stacktrace already does. FILTER_CPU and
-FILTER_COMM are left alone, their create_hist_field() branches never
-look at the field.
+Are we sure this isn't broken as-written? Generally we don't mix cleanup
+and goto for exactly this reason.
 
-Fixes: 4b512860bdbd ("tracing: Rename stacktrace field to common_stacktrace")
-Cc: stable@vger.kernel.org
-Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
----
-'hist:keys=STACKTRACE' now reads back as 'hist:keys=common_stacktrace'
-rather than 'hist:keys=STACKTRACE.stacktrace', since hist_field->field
-is what the print side keys off.
-
- kernel/trace/trace_events_hist.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 620a74fc62e4..eabe95419b97 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2417,6 +2417,7 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
- 				*flags |= HIST_FIELD_FL_CPU;
- 			} else if (field && field->filter_type == FILTER_STACKTRACE) {
- 				*flags |= HIST_FIELD_FL_STACKTRACE;
-+				field = NULL;
- 			} else if (field && field->filter_type == FILTER_COMM) {
- 				*flags |= HIST_FIELD_FL_COMM | HIST_FIELD_FL_STRING;
- 			} else {
--- 
-2.53.0
-
+~Gregory
