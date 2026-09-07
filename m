@@ -1,99 +1,108 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD7B4AEBF9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 13:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA4A38F638;
+	Mon,  7 Sep 2026 14:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788786849; cv=none; b=kPhA1SnpxaNRjB3sqMw1Wq1f34ruq2AgH31cSZYw101bEwiFzamO1TP5KQoVgivmdyYEz1Ic4IovrmyEAUx6K+b1PvfiQeJ7waIFLtnZv2QGt31dawS0VTwKBTJbYMSUJHH8E2f8mFsRSfyUqH11qbWVMhiNUyp+nBE/CBh+nwY=
+	t=1788792113; cv=none; b=QVi+D9jON9P+lZp2bO+Fw0u/3sC+HleuenAjWDVvlfZgc5MLPnGR3Q9Bn5wyPF/yMz4ssiPEpzkA4TOmpftJBh/6emgwhL7cadZorree1TeL8pDNF5TxwYO87ZjBnRDYGOrCae1TpnZBl1fUFAM+4dfMTSeNhybDjRPNwZ9HY5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788786849; c=relaxed/simple;
-	bh=dWzNR75g7GxtOP9gnAemxDujVQlcOaJPEWJ4zxqivnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FiwYXhFu1y6OdtdzDjiZZSXgd+xBJFai4N7aGJ94CS/PAaH4ZtgLggeoqIagPAI6R2ioudIfLgqHwVXR68OsfA796ywx+rNH95DJLpKqM3QZNz/Ph5wUSAI5TI1NlhwYGFxotrMTbFmcWPOLLiZ9Y2VAFzOj/5whlWpKzwlYmv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d3aZ8mBj; arc=none smtp.client-ip=74.125.227.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788792113; c=relaxed/simple;
+	bh=5IyDnu4y6puq3ryqOWh8dyW1Po/qKtPCAtB0xw6VQW8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oWk+rhwCtMolT2Dbk2eJcSw/EBef3A4Aigxxp55ddZGC1sjm87vdaxFCEnldqLwjbyCDoxY4bdpQX1zCu+wn/JXVJ4TtLbmrMxwZ+KpuBzDVCZWxvaadb9teuTXGVSEN9qahhevZzkwqACnvvxuj27ezni9V2aL2aXwixJiwTlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEH192QR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3aZ8mBj"
-Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-396ccd78e6eso56858a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 06:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788786843; x=1789391643; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=nBNOe0eEjUTG15p8/eAAeCa3HJjbYU/T5PhuLMghgho=;
-        b=d3aZ8mBjoT8Q3pD2+IjedJ+RH8gpZ9SEv8xlbiy3fN+KMokEZr7wT7hOBBrrIlNAm3
-         9Jf6cbau9QDKAGjfB3VDScJt9amSp2UKCnQlOVAh14nXTO2RjyYgRPAupn0DhjRQuqDD
-         iwD8g9a9gGq10U0iSKScqVoRv45SARLUyrPQj1QsTkzdB6/Q909iUs/CVREDQXr4+RQm
-         TtitMK5aqJDQfofcQsuJ/rQU9JeAqxifEEWcp7pVx9eBPUAnr9w07QJMse+1hhOMghjY
-         jJ6bY2hKR4NV1KQCchIQdAjwDyCUeRgiJrCJ7pkfgVEXxX7pFNVTo8nQY7w/wudjx5RC
-         /dXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788786843; x=1789391643;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nBNOe0eEjUTG15p8/eAAeCa3HJjbYU/T5PhuLMghgho=;
-        b=oFt6FuSSXbakoxgJOtvUOiFKov9uRWZVOBE7vuf9iU3VaSClRXts8AuZZ6F4f7l2+0
-         QYUsoydHlFcQCzB95Z16GCT/XhsxtPZ2Agz7Z1Xr12Dagtd7UeJz8srL+eJMUztgkIpm
-         xEGRmhOyPGqs9f+s/qQd/Ki5ahDEA/Ji+vN1ObADMnhmH/4xuX65Hhg9nHZw9ZNC6L0B
-         OwLIyiNa7Anp9WY2Lbv42vX4sejCSXFiqDoquzCAjJOWiT81AAuVxeOG4PV9abX+Gf29
-         6kXs4zzkO0QdaLXS0eT+zeA2ViHa8jkGCRpTGMX0ZEpr1jx26f8xZ9uhoTDhhmIi4zFJ
-         +WaA==
-X-Forwarded-Encrypted: i=1; AKwUvBwISiggZxgiaoYKuUp54xKAwGe71NaOe6HJBZDMSxQ+foxGV+kJCVHA4BGYv4rNm+zW6Mw8NrSXHM9Mw0znuJe724w=@vger.kernel.org
-X-Gm-Message-State: AFuF++mjWXCld7KBBdMLqEodq9qPjA2p5/Ol1nAK1o/1iLD8lIWxEWMF
-	PnkQOnNXMI4T2Sn69W2Hi/dNfNseAPsI1M/E9it0u7fSoYC5JXouMbQ=
-X-Gm-Gg: AYBFou2v4rsbXf6dhyEXiANGSfU9TW5DeOoDIypHG3o6A3XwJf9Afwmbc77IOGDUW/s
-	y59skozoWyOEs7szVXe30u7eKeMRvNXQ6BXp6fXRXwX5Az9yVlMNFAXl5y9/sxopO9WdugJ96Yz
-	dXu9lfdBnUoiXSC2qv6PWiuwGxCr4xG4mF/AgbFf9T0eP7KTrWA4xGjCNGv0uh+dO1cpUm+W0oN
-	lsuLtCQXtYoENtniUDnLtGZ93P+cOWOWczCDa6q/fx6Bza7Xv8ts0bsX/iHgFrMup3T/lk3VIAq
-	OroXu3PhOtWrcLlCQ7pr81uSYAIBciLU8ViIiYEAHKPUprbW71SeDB/quAbboGfuoZA1cErIEun
-	2LVmG0Wz75y9j9i4oHhtghgs9/1Ze0szV0MGMPzmQvBV5+ZbjVX45iMFdjK9iNpgIszp0Cc4+hp
-	Ni9Mw7RmK5RoAF1UG/A+XPy2DB5auh5RS9ukqh9vP0uZGxZT6X2tygrFbhuF19CLm2xVAHa9uOl
-	uye1kw1E95aWuiOjA==
-X-Received: by 2002:a17:90b:4ad1:b0:38f:657:6823 with SMTP id 98e67ed59e1d1-39b8bd997f7mr695966a91.8.1788786842561;
-        Mon, 07 Sep 2026 06:14:02 -0700 (PDT)
-Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:c773:5f09:906c:a72b])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b25f88475sm20713756a91.1.2026.09.07.06.13.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 06:14:02 -0700 (PDT)
-From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	donggeunyoo.kernel@gmail.com
-Subject: Re: [PATCH 2/2] tracing: hist: undo the registration when enabling the trigger fails
-Date: Mon,  7 Sep 2026 22:13:57 +0900
-Message-ID: <20260907131357.613555-1-donggeunyoo.kernel@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260907130105.94DD51F00A3D@smtp.kernel.org>
-References: <20260907124420.607097-3-donggeunyoo.kernel@gmail.com> <20260907130105.94DD51F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEH192QR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F911F00A3A;
+	Mon,  7 Sep 2026 14:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788792110;
+	bh=WtgESNz2LvJtM+W7EtZmYUPe7qe1mpTJaQo8pOa+czk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ZEH192QR5zlW+3Yb3EUja9wud/iVyHp5vAfnCrTe/5J2uvwr6C5Ev15+ASxq432eO
+	 d+PnTnb6yI5u07khlpR5Ivjbq9XgAz+qHbyzHfrJbCafqlnoRRKWOJkSy+QPKahztF
+	 b05BJBr1vI4+C5A611KOezxys9OQvgzYIU52PkhuJJShOLuL0SduJeFJ8KJuUXNfrI
+	 VQ/YTLXwO6JhmH+85moUdlJJAcHrR6JqLMGj5gNrwZUnthOtltjaY2U7fvPQWusVLm
+	 eP6ZtOFXsVegx0Env1hD3HBYGigpn9Mh32uDx47O6H8C/QwS02m4oboQbLsBBOp570
+	 M27FJ7qlTbXgw==
+Date: Mon, 7 Sep 2026 23:41:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ring-buffer: Rename ring_buffer_size() to
+ ring_buffer_capacity()
+Message-Id: <20260907234146.9739977b015a6c8c39ce3693@kernel.org>
+In-Reply-To: <20260907094238.3624013-1-vdonnefort@google.com>
+References: <20260907094238.3624013-1-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 07, 2026 at 01:01:05PM +0000, sashiko-bot@kernel.org wrote:
-> [Severity: High]
-> This is a pre-existing issue, but missing cleanup in the error path before
-> this label can lead to a use-after-free on the global named_triggers list.
->
-> When hist_register_trigger() fails after successfully executing
-> data->cmd_ops->init(data), it returns a negative error code without undoing
-> the initialization. For instance, if tracing_set_clock() fails due to an
-> invalid clock name:
+On Mon,  7 Sep 2026 10:42:38 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Same one as on patch 1, answered there:
+> Since commit 8a5f63637890 ("ring-buffer: Fix subbuf resize race with ring
+> buffer readers"), "capacity" refers to the memory available for events
+> (excluding subbuffer headers) while "size" refers to the raw allocation.
+> ring_buffer_size() actually calculates this event capacity. Rename it to
+> ring_buffer_capacity() to align with this convention.
 
-  https://lore.kernel.org/linux-trace-kernel/20260907125934.5C6261F00A3E@smtp.kernel.org/
+I think this is OK, but I have a question.
 
-It is fixed by a separate patch that moves tracing_set_clock() above the
-init, which this series is not based on.
+[...]
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 8658cad53cb5..f0251788ec75 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -4712,9 +4712,9 @@ void trace_set_buffer_entries(struct array_buffer *buf, unsigned long val)
+>  static void update_buffer_entries(struct array_buffer *buf, int cpu)
+>  {
+>  	if (cpu == RING_BUFFER_ALL_CPUS) {
+> -		trace_set_buffer_entries(buf, ring_buffer_size(buf->buffer, 0));
+> +		trace_set_buffer_entries(buf, ring_buffer_capacity(buf->buffer, 0));
+>  	} else {
+> -		per_cpu_ptr(buf->data, cpu)->entries = ring_buffer_size(buf->buffer, cpu);
+> +		per_cpu_ptr(buf->data, cpu)->entries = ring_buffer_capacity(buf->buffer, cpu);
+
+nit: Don't we need to re-word this "entries" with "capacity" too? 
+
+Actually, this "entries" is a bit odd because
+
+- ring_buffer_entries() returns the number of events.
+- trace_set_buffer_entries() sets the buffer capacity in bytes.
+
+It seems we call it as "entries" historical reason, but now it becomes the
+source of confusion. Maybe we should change it too. (but in the separate patch)
+
+Thanks,
+
+>  	}
+>  }
+>  
+> @@ -8476,7 +8476,7 @@ int allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int
+>  
+>  	/* Allocate the first page for all buffers */
+>  	trace_set_buffer_entries(&tr->array_buffer,
+> -				 ring_buffer_size(tr->array_buffer.buffer, 0));
+> +				 ring_buffer_capacity(tr->array_buffer.buffer, 0));
+>  
+>  	return 0;
+>  }
+> 
+> base-commit: df2908090cda368b01ff43709f51890076c56157
+> -- 
+> 2.55.0.979.g7e5102b832-goog
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
