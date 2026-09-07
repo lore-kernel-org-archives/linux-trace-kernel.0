@@ -1,321 +1,181 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11023135.outbound.protection.outlook.com [40.107.159.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463EA442387
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 09:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788772095; cv=fail; b=S5ODPUUDXZayqUgJcYUiAKFi5Ltb+Xfbu3qS+HE2SnN7Gz/KXYlVY+6EVRhYQ9+x9J5pEGZa6GSjfDLxBH5Zsozc4XCKHmqeTjZKmHflGXrEy0xMt22TDYzfh89l1uWoJzzBWbIyXjZIm29znvJMBQErSEFgAj+WSgM+FIO7p3U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788772095; c=relaxed/simple;
-	bh=L8Bedn1fmlk9fqllz6UzfMKq49K3XgDqTu6fovX2Y8o=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XV81HQvpS5J3JrwUAjZ7XYeYMRjDSA7ir9mP08jGt+faUONw/+soJPnduvC8YaL2rtJrdg3CvOw6PdrMbB2joRecv/L4HTa1Nw0ZBvulvmPPFxtq5NrCTuq9PzuWds7NVQNp+t71JyQ5qW25QuARdEnd5eo3DmTnCjKcEjQzy+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ikerlan.es; spf=pass smtp.mailfrom=ikerlan.es; dkim=pass (1024-bit key) header.d=ikerlan.es header.i=@ikerlan.es header.b=fzbrPxul; arc=fail smtp.client-ip=40.107.159.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ikerlan.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ikerlan.es
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823ED44A408
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 09:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788772463; cv=none; b=RYPyf2x1TiNPuS0f0R+WucpgTOPohX1hcXL6EYBClR3pbNbXZbcI4DP3iXqeUTApZHzGHOBYYj5rzRcLMis1ae5FanjmQUO706PfQhJOX4jaSiYFtjaKICfnyIJHxXn4DB8hqLxkjxerIH6l6aUsKv/3UdOy+7ssa4+af2KzKSc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788772463; c=relaxed/simple;
+	bh=61gavAb+bNjBQjmGBMHXBoJ8xLmqWgRO9jK0W5nwO2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QSdjPa0UYze5E0dfmkzDEgbNM/tcpwBdw+URAbeSQ/MsbfhSyQIxNp1SGvlChgsRhCeP68/dXNldIouYr3o0za0EUgnjT8o8C0PljXca6GpqyQ/yn2gSxSJdYPk5UEIZxp9R9UD9nHIZEqr4PGmB33DruTTb/KH1fgfHyj+T90E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hZNkmjr8; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ikerlan.es header.i=@ikerlan.es header.b="fzbrPxul"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i7ZFJALRGAQg1EtR7yS2jgjhrHu3vZ63SpH9ZTl0sgFgUzT+R8cAt052KU3BSIg6Bs4GhxzALriPpvLZwT6yOti/zj6CdNb46Zfhg2fwir5eyQKJx7f5gBZ1PX1GK46aOSXmDsBUgzsV9e433Op0pFt/mzIuKZNiDW3/sCcLdz3NdPeEWxoFoc8BlQHu6XF16ip5P/fyNzM4AqG+q93nYKqf2bdYgZw56FdAO2ZGURCZmG3QLPNCYDrPFhwv2T2jSOrgOKGGhMO3GfhvHzBrjKB3LLD+8gswY8IoZSrJQFtJeBQrF2inAMq5MchVLH+/SEK7cR6cJeCxKakLLK8ScQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=93tonlTP6mC9XrPqKw6f52lebI/rikZVnejs9eyKrNI=;
- b=G4ZZOzWmIM8K2Tk0Q09MmQUPrgVvTHIx2B4pPt/LtoYnxXrO9/9irRE9yhun9327hV2YDSE7jxJXr7fVYvuHStNuw3W4mapSg2JuIf/VRxpowQTSBH69fqEbopxfSmL01hFR8m37zszIiAbr7/zIVkO/xseNlG1gP//8lPquusMj5xaAJnLlt3SwJQxa7nY+ZAcNYqskdoxY/LyOpNGBAjebEXG/jwkHx2cW67sSkw5vdMwrZ5fOYIqY7C0SXsiTYUlWqknZASKQwofAbg3Ud4OvexoyJjgcqQkLPqofPXypfIaEUlXoj8K7J1eju5vh+kZKSxayvU7IhD0Fg95hFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ikerlan.es; dmarc=pass action=none header.from=ikerlan.es;
- dkim=pass header.d=ikerlan.es; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ikerlan.es;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=93tonlTP6mC9XrPqKw6f52lebI/rikZVnejs9eyKrNI=;
- b=fzbrPxulepT6OxPC2+nrxBXm/Qss0HSArWALchgpjH94kW4rBC0hWW4UQY5EYCHz04HCVLGwa15zcuTrk0fCRMp+BDylbduIn/Q9dRg9E2ohTx6Ri3/9T8VEyDiM1JH34zCRAUhVdCKA3YJyt3Zw5ZNV5P9HTOWbIAh6QBYHtgI=
-Received: from PAWPR03MB9213.eurprd03.prod.outlook.com (2603:10a6:102:330::13)
- by GV1PR03MB8687.eurprd03.prod.outlook.com (2603:10a6:150:91::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Mon, 7 Sep
- 2026 09:07:58 +0000
-Received: from PAWPR03MB9213.eurprd03.prod.outlook.com
- ([fe80::8022:4f2b:847c:d3a8]) by PAWPR03MB9213.eurprd03.prod.outlook.com
- ([fe80::8022:4f2b:847c:d3a8%4]) with mapi id 15.21.0382.014; Mon, 7 Sep 2026
- 09:07:57 +0000
-From: Lahoz Fernando <flahoz@ikerlan.es>
-To: "rostedt@goodmis.org" <rostedt@goodmis.org>, "mhiramat@kernel.org"
-	<mhiramat@kernel.org>
-CC: "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: [BUG?] tracing: unexpected behavior trying to keep IRQ code away from
- traces
-Thread-Topic: [BUG?] tracing: unexpected behavior trying to keep IRQ code away
- from traces
-Thread-Index: AQHdPELAHW3WRQNeNEeXNtt/mWTpKQ==
-Date: Mon, 7 Sep 2026 09:07:57 +0000
-Message-ID:
- <PAWPR03MB92138194E34B81962AA24738A2B52@PAWPR03MB9213.eurprd03.prod.outlook.com>
-Accept-Language: es-ES, en-US
-Content-Language: es-ES
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ikerlan.es;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAWPR03MB9213:EE_|GV1PR03MB8687:EE_
-x-ms-office365-filtering-correlation-id: 4d0e23bc-ed9f-49c8-b911-08df0cbf8241
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|10067099003|6133799003|18002099003|56012099006|11063799006|38070700021;
-x-microsoft-antispam-message-info:
- ZrMtwnz5ZWqfgJd1oexUwIIIq2/NlMZSeOUByqi1nVnpi+QjiMaxoeGfprsXh5JnCv9B+WHVX4jsMbQ75BaXwkmMamE3+Ui8Low4KpY/LOayvpVdPxt1xCLe4NCdC8to+KHm2CG2dBe27B4iK2huixvt0DW3jZGJpjzsXu4gPx2oB1ukwizmHQOqOxYCPGBfMtUOzlpLEKQQx+mefpFK1T+bAF6uU8+vf6Ss6MAE5R7613MM6oTvPDNzawdfrixqdOO+Eg0iGP1yqAWsUg2hvrTDl2oyREzJiStuhC0IEJ+LmUIK7zD4SQYZs2FQbcNNcSHrY/42jPe9a1T01N3/8Svr/EGilam0AOmev8HQx/cpGcxB/0QPGcIVpH22kFapSUwqrJ59rvkqsREmyP8UqI4RRl3bAgbbXRn+qwAYpm10FfxBebu6U8yhcd3L09nxXbMN4APjDa+uZa00naURQPYc2rp4VLkXyS+rdNaeogKHjEIw9qzAiLRwfBpaWatzPQAx6gzw/embt1tBgncK6I6fi6FetZyjZsSC17RS78m8CTx5wltorrx4UfHLvgraC9iYojdtFAD35bHGgqAlWqgRBBf8nzX3/Ku0XqbPldOFc29wUe0vizf2qb8ZQFxDSBh3aY4vgd76kGOnWRpsLyfaUWJQkI/CFtf2GkJ1tGCTeetgBNnKYKHBYIUVsVmytNFuIIWTtoorCI6Fmg6flg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR03MB9213.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(10067099003)(6133799003)(18002099003)(56012099006)(11063799006)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?jlLzdoHDcdHAI2P6R215Nu22T5GBez6id/VNDUhdIkwzoVfslBhsnP8OZk?=
- =?iso-8859-1?Q?eWqmEj725lC0A34jvbcuFFtjg46Nee0ScZko3kooweQsEaI1XOzLnuyTtp?=
- =?iso-8859-1?Q?OFi7tJmMziGNODn6djZJxNhaa+HgVBTeqY/JKiFMK5NmGhNEVzUGuyXv5h?=
- =?iso-8859-1?Q?YCCldJ3fx4eJmc+vQI1CSB2SrI/I1qB25XooD2P8RSVWBGEi4kfPJNUPGN?=
- =?iso-8859-1?Q?AZXsLE3G48gFG/Ht6IadYUWlozl2sAAGqQvwtaz1DqhUTUHwU1+D92sa1p?=
- =?iso-8859-1?Q?lvS3fU9uFI6ADDPhAk4br3fQrY9nj7nhsglYxV0ZsUBSrogmeDsnIMc2W1?=
- =?iso-8859-1?Q?kTa7pR/CApISt0mspX4yB/0iyRcnkJFcWBWbE21vfVA41bhRZbmP4aSdK3?=
- =?iso-8859-1?Q?lnis//lhhFoNZNPTCvr0wWmcNBlHqd4UNapTf3uixxqTpVkUlFIqkTqvPv?=
- =?iso-8859-1?Q?q4Kkowyd8EAeMjSy3w8iDKl/TiHDn14LeDw8dugtz5NizuXqmaOBr/WLvo?=
- =?iso-8859-1?Q?NkIe2x8OEALJM5iaL7lN0jCKMz6nskd5w7uGlQLKQue7zkNHcfkmoZC2JW?=
- =?iso-8859-1?Q?L1xpWCl1/Qxa42GC8UezPEF59GAJNeJc7ejGWuLf3Icue8+5Wsnxk2ag9u?=
- =?iso-8859-1?Q?IeCjVRz8GWXnAYjnW3MJ2nzKAy3wI8q9BJre3s7VsNiX5ZLJ9BXTH2p6xh?=
- =?iso-8859-1?Q?qG1ortwP9x3iS+Y6d7uGckVieMauVG27k/eZwfQqKbqnJVjf0dfWCaCxlZ?=
- =?iso-8859-1?Q?rno4MtE3GAy440Aqyf6zld1ys/HIJ0MM585akuL9cohpecuowMM2e5CwGf?=
- =?iso-8859-1?Q?OZzInLZ2HbJxDjpjmXOcdYm+nTLXTNPJkd25U1yk9xEljMtV3NxyQUf4nY?=
- =?iso-8859-1?Q?XY4RqyxL8/mjTZMyw2sa79J0aicdiz9Xn+8f8p7DiBB55qhGSZEIVJErsV?=
- =?iso-8859-1?Q?w9sAjQrKGfU8M0CCAxe3iS5VG8/o7V7mFbNQdKagyIYa61QlOg0cDTQBcQ?=
- =?iso-8859-1?Q?G+YMvp+HXXfxh+9StvU1Ep98CPv2YQvKkHzIsVwY40lQHIbwUDCqfpjuUK?=
- =?iso-8859-1?Q?N+ASg9wDEThVGTSeH4CGL5kbeHugq6wsWgWpOBoROdDPtX5jyN0gcR6it8?=
- =?iso-8859-1?Q?xUTJ19v3H79b3yfASgquQ3oIU8jfaxyNrQkvQfCmsQl7bNibCTwo4aEcH5?=
- =?iso-8859-1?Q?aIiIU6NgC3jy9zRBr6DPXUYDiqywIjBA9LUKpsKwU+JOS57AOB68h+IJto?=
- =?iso-8859-1?Q?ENYk8YcPTKnltPpXZc1Q3qRFIaSq/MhFaAxi17vAg9YDySzQA5+PQk5/lu?=
- =?iso-8859-1?Q?jAI/PczUpTZo12zIxo5StKlcEkkqR20wwzIivxs+80ZkaTid33PlIKrrJu?=
- =?iso-8859-1?Q?YQFf5q5K1oH9VDgZNsjcFZTVXUQMR9HtUfSleW8UB93dudGD09GHyLDiPK?=
- =?iso-8859-1?Q?lzK9UDaSVx2Mch34G5GsMS9agjw1MSXWv/DDk9RqU5ccqrXH2BRuzItJho?=
- =?iso-8859-1?Q?sl2g21G+3Rfw+zSsyKysvQcFunbulIJb7otZfsv3t/Y6PCaeyuUq62/bqA?=
- =?iso-8859-1?Q?xD/Lz/hGV8FAXInEnQ09Q33t610yWetyDM1qKaxOZNh05OXiY9H16vEPdV?=
- =?iso-8859-1?Q?fm5qPWwdUQw4rwzfiDMSosAVU+RBz4qOTCzLxq7bCXS32qajE3ei3ZKiWk?=
- =?iso-8859-1?Q?hx6WKaYn2Uq2XZRUssbhBGl9Fe2FBZ/sKWFD6ilCS0wHHc1xHDXQq2Uy6G?=
- =?iso-8859-1?Q?VEMRwmwK/tOAukmrAenCQxi8RtyeP7FaL+aWKCOBHHSksH?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZNkmjr8"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-398b1e63c49so3568897a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 02:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788772461; x=1789377261; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ouVF9IIg80xCvpdvVIuKRM26PH9Y1EbfH42UFcbYLts=;
+        b=hZNkmjr8klcaBtEQtEP0iNP2asvyNFwLtUld+Mgl+aao+pGu8MLNr/NyBj5QXKdWF/
+         b8WohH9ftbO0b5IjeztPCOjvUfuhRTdgF2zgovxQcZ5z6iCNNoZdXv+mGmVfgUHnHT27
+         j981HOTf+w4318w6UU9kWhkhmBC3Ak7sNCf1pymFy0eAaEtXrGWf4mirAZwDneKm1/7R
+         NLOlcajor/z4BX1CsbpVdFtrZj9DdLKrOrddGI+PDrRu4/dyAZpsywSUsr7wyJj9y5WD
+         y7PF+S6u4+qQvGreL/OfoQdRtL3kRHun5o/km0R57bGWIvk0jBCACEUOiBOYIgnnLpAg
+         +3hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788772461; x=1789377261;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ouVF9IIg80xCvpdvVIuKRM26PH9Y1EbfH42UFcbYLts=;
+        b=WGEIfmIn5W08RCwlNMZqQpBwiK++0hWvQl9kAyBna/a9oPDIW28zlrbRO0zMNDXwXK
+         azlqdJ/t3woc3Hg1N0azDXKUjsNq5aJqlUenxiBEcfKqtgsHp4/oVlq/fzkqB9L67NJc
+         P9XuqQuMSYSEiYQcXxg9e731mdcu2hjUkhiPfoiqkUrt0AfAHpBDXXi4wyqURN1vJGo1
+         z196rKEO/aPuSUDTUPn/emeyPYjt59TJQsExqSnCIEZf8gHgZlCc2qOc8tShPxs3AdOt
+         MXX8bkaljkZuUpn6xgU6Vtsm5U/agiRbFdYNf9VHoglz9Q/pLfPHV1fUKeRyDUHfq4sy
+         e26w==
+X-Forwarded-Encrypted: i=1; AKwUvByHkLjuYR+QXcOYCi/7VcpRbV4Qa+b5U1EBQxDfui63LeMsKDk3rw6Me6BLvpZbZXc7jsKhjdwpuga2acCQ/DI6B/I=@vger.kernel.org
+X-Gm-Message-State: AFuF++lZi8mX0zhfn08NkS8kasVtIItdUt0NZv4Zajq1L/3ekpslsPyW
+	kQQtUuo2L3C0lQx1LlSvvkKPG52fzMe1Q2cdjXIBGG5VGX9E7W9C4i8=
+X-Gm-Gg: AYBFou2UEhlwhWNToDSdK34y/JDhauNa8KOsKpjViF+1KTz9/Z8dKdpfKb7jC6lfeUi
+	7rQiHPCL/fcSPWKuomQgjpbj7q9h9ZweaIkO+JB1Akp0t5jwr+qZt3bcL2qgwHHFiIQcdh6MRhC
+	3V6CzC4F5+AtqGEjEO6A6e5E8AC6T4BNbnVDl6lW0wd+3XXElQEMLy4t1JDk45atiq6l5iMoo/d
+	+iEYBXv/k32nO1KIxGbc/nBUhwP//l6A/SYazS/lM+a6AvPGJcr9+d37kJTge1A0u9O/vjHwVr7
+	/KQ9Hv+zZCVy5JaJDf7G4JjbssD643F3/ojAJe7GVAbe4EQBqbHPDnnkyG4Yg0Q9cNf6XxGufay
+	PV5JTX8TgGiHFe2zHqUkBpY/p1s9EMSPG6Zr5kRLAAUsuALVeXjeSeddU7z7Kmz645I2Jybd3Gy
+	+zpnk1yC45xwOzGIrB7W01SonGx6ey0rAFJHLKKHSza30W8GALlZ2nPEVVV5v9mLthQ96NaUqwJ
+	1thRBjdmVa7ycM7
+X-Received: by 2002:a17:90b:584f:b0:38f:657:6823 with SMTP id 98e67ed59e1d1-39b27c8b9e4mr16888502a91.8.1788772460729;
+        Mon, 07 Sep 2026 02:14:20 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:6467:d689:c773:5f09:906c:a72b])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b25f88475sm19450233a91.1.2026.09.07.02.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2026 02:14:20 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	donggeunyoo.kernel@gmail.com
+Subject: [PATCH] tracing: hist: set the trace clock before registering the trigger
+Date: Mon,  7 Sep 2026 18:14:15 +0900
+Message-ID: <20260907091415.554535-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ikerlan.es
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAWPR03MB9213.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d0e23bc-ed9f-49c8-b911-08df0cbf8241
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2026 09:07:57.3368
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 910ac815-f855-4a08-bf29-90b46552cf11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QESU2vZ2eUTprhP0VRXFA+xbCU5M2ptXsOKS5xjYlOyxRdqadankDu03ieJ6yOM6idYqfmC1CwkLGGrFrmk27Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB8687
+Content-Transfer-Encoding: 8bit
 
-Hello,=0A=
-=0A=
-It seems that code executed during IRQ entry/exit may be traced as task con=
-text=0A=
-because HARDIRQ_OFFSET is not reflected in preempt_count until irq_enter_rc=
-u()=0A=
-is called. As a result, both in_task() and in_hardirq() may incorrectly cla=
-ssify=0A=
-some IRQ-entry code, causing IRQ-related functions to appear even when IRQ=
-=0A=
-tracing is disabled.=0A=
-=0A=
-=0A=
-I've been developing a minimal syscall tracer using ftrace's api from a ker=
-nel=0A=
-module. During the process I've tried to prevent interrupt-related code fro=
-m=0A=
-appearing in the trace data, therefore I use the in_task() macro to filter=
-=0A=
-everything that is not in running in "task context". However, some function=
-s=0A=
-executed in hardirq context bypass the check, as they are executed before=
-=0A=
-preempt_count is updated.=0A=
-=0A=
-I was not certain whether this was a bug on how the flag is set or the inte=
-nded=0A=
-behaviour, so, I traced the same code using the function-graph-tracer with=
-=0A=
-'funcgraph-irqs' option active, but I saw the same behaviour.=0A=
-=0A=
-=0A=
-I'm using a fully preemptive kernel, compiled for both aarch64 (this one ru=
-ns=0A=
-on an evaluation board) and riscv (this one runs on qemu). I have not check=
-ed=0A=
-if it happens in any other arch. I first saw this behaviour in v6.15.5 with=
-=0A=
-aarch64, but it's still present in v7.2.2. I have not checked older version=
-s.=0A=
-=0A=
-=0A=
-The root of the problem seems to be that there is instrumentable code that=
-=0A=
-executes on every IRQ before and after HARDIRQ_OFFSET is added/substracted =
-to=0A=
-preempt_count, so function tracers cannot correctly filter IRQ using in_har=
-dirq().=0A=
-=0A=
-	(All the source I show comes from kernel v7.2.2)=0A=
-=0A=
-	In file: "/arch/arm64/kernel/entry-common.c" (lines 501-513)=0A=
-=0A=
-		static __always_inline void __el1_irq(struct pt_regs *regs,=0A=
-		                                      void (*handler)(struct pt_regs *))=
-=0A=
-		{=0A=
-			irqentry_state_t state;=0A=
-=0A=
-			state =3D arm64_enter_from_kernel_mode(regs);=0A=
-=0A=
-			irq_enter_rcu();  // <-- `preempt_count_add(HARDIRQ_OFFSET)`=0A=
-			do_interrupt_handler(regs, handler);=0A=
-			irq_exit_rcu();   // <-- `preempt_count_sub(HARDIRQ_OFFSET);`=0A=
-=0A=
-			arm64_exit_to_kernel_mode(regs, state);=0A=
-		}=0A=
-=0A=
-I've tried to wrap this function between preempt_count_add(HARDIRQ_OFFSET)=
-=0A=
-and preempt_count_sub(HARDIRQ_OFFSET), but kernel won't finish booting up.=
-=0A=
-=0A=
-Similarly, this also happens in riscv, as it can be seen in file=0A=
-"/arch/riscv/kernel/traps.c" (lines 424-445) that irq_enter_rcu is called a=
-fter=0A=
-the equivalent function to arm64_enter_from_kernel_mode.=0A=
-=0A=
-=0A=
-Test using function graph tracer:=0A=
-=0A=
-As I said, I wanted to check if IRQs also appeared inside the trace file wh=
-ile=0A=
-option funcgraph-irqs was disabled. Ftrace's documentation=0A=
-(https://docs.kernel.org/trace/ftrace.html) decribes this parameter as foll=
-ows:=0A=
-=0A=
-	"When disabled, functions that happen inside an interrupt will not be trac=
-ed."=0A=
-=0A=
-so I expected it to remove every function called inside __el1_irq from the =
-trace.=0A=
-=0A=
-I isolated CPU 3 for it to run the test program alone with taskset.=0A=
-I traced with the following configuration:=0A=
-=0A=
-	TRACEFS=3D"/sys/kernel/tracing"=0A=
-=0A=
-	# Stop tracing and clean buffer=0A=
-	echo 0 > "${TRACEFS}/tracing_on"=0A=
-	: > "${TRACEFS}/trace"=0A=
-=0A=
-	# Trace only CPU 3 with 1GB buffer=0A=
-	echo 8 > "${TRACEFS}/tracing_cpumask"=0A=
-	echo 1048576 > "${TRACEFS}/per_cpu/cpu3/buffer_size_kb"=0A=
-=0A=
-	echo local > "${TRACEFS}/trace_clock"=0A=
-	echo function_graph > "${TRACEFS}/current_tracer"=0A=
-=0A=
-	for opt in 'funcgraph-proc' 'funcgraph-tail' 'irq-info' 'nofuncgraph-irqs'=
-; do=0A=
-		echo "$opt" > "${TRACEFS}/trace_options"=0A=
-	done=0A=
-=0A=
-	# Clean filters and trace only syscalls=0A=
-	: > "${TRACEFS}/set_graph_function"=0A=
-	echo "__arm64_sys_*" > "${TRACEFS}/set_graph_function"=0A=
-=0A=
-The resulting trace shows only syscalls code, being sometimes interrupted b=
-y=0A=
-code inside __el1_irq:=0A=
-=0A=
- ...=0A=
- 3) randbyt-14268  |               |            mntput() {                 =
- //__arm64_sys_openat=0A=
- 3) randbyt-14268  |               |              mntput_no_expire() {     =
- //__arm64_sys_openat=0A=
- 3) randbyt-14268  |   1.180 us    |                __rcu_irq_enter_check_t=
-ick(); //IRQ CODE=0A=
- 3) randbyt-14268  |   1.900 us    |                irq_enter_rcu();=0A=
- 3) randbyt-14268  |   1.340 us    |                idle_cpu();=0A=
- 3) randbyt-14268  |               |                tick_nohz_irq_exit() {=
-=0A=
- ...=0A=
- 3) randbyt-14268  | + 13.072 us   |                } /* tick_nohz_irq_exit=
- */=0A=
- 3) randbyt-14268  |               |                raw_irqentry_exit_cond_=
-resched() {=0A=
- 3) randbyt-14268  |               |                  preempt_schedule_irq(=
-) {=0A=
- ...=0A=
- 3) randbyt-14268  | + 73.637 us   |                  } /* preempt_schedule=
-_irq */=0A=
- 3) randbyt-14268  | + 75.938 us   |                } /* raw_irqentry_exit_=
-cond_resched */=0A=
- 3) randbyt-14268  |   0.960 us    |                __rcu_read_lock();=0A=
- 3) randbyt-14268  |   1.070 us    |                __rcu_read_unlock();   =
- //IRQ CODE=0A=
- 3) randbyt-14268  | ! 146.225 us  |              } /* mntput_no_expire */ =
- //__arm64_sys_openat=0A=
- 3) randbyt-14268  | ! 148.385 us  |            } /* mntput */             =
- //__arm64_sys_openat=0A=
- ...=0A=
-=0A=
-From here I suspected that funcgraph-irqs' implementation relied on the sam=
-e=0A=
-flags I checked in my custom tracer, so I searched inside the graph tracer =
-code=0A=
-and found this early-exit condition being called from graph_entry:=0A=
-=0A=
-	In file: "/kernel/trace/trace_functions_graph.c" (lines 209-217)=0A=
-=0A=
-		static inline int ftrace_graph_ignore_irqs(struct trace_array *tr)=0A=
-		{=0A=
-			if (!ftrace_graph_skip_irqs || trace_recursion_test(TRACE_IRQ_BIT))=0A=
-				return 0;=0A=
-=0A=
-			if (tracer_flags_is_set(tr, TRACE_GRAPH_PRINT_IRQS))=0A=
-				return 0;=0A=
-=0A=
-			return in_hardirq();=0A=
-		}=0A=
-=0A=
-Both in_task() an in_hardirq() macros check preempt_count, which has the fa=
-ult=0A=
-of not being fully set before any code executes on IRQ context.=0A=
-=0A=
-=0A=
-I do not know whether preempt_count is intended to provide precise context=
-=0A=
-information during IRQ entry/exit transitions. If not, would there be a=0A=
-recommended mechanism for tracers that need to distinguish task and IRQ con=
-texts=0A=
-during these early entry stages?=0A=
-=0A=
-For my tracer I patched __el1_irq in aarch64, making it noinline instead of=
-=0A=
-__always_inline. That way I can catch its beginning and end registering a=
-=0A=
-ftrace_direct routine with the minimal changes to vanilla Linux.=0A=
-I have not tried any fix for riscv.=0A=
-=0A=
-Is this behavior intentional, meaning that code executed before irq_enter_r=
-cu()=0A=
-is considered outside hardirq context, or is this an unintended limitation =
-of=0A=
-tracing based on preempt_count?=0A=
+hist_register_trigger() puts the trigger on the global named_triggers
+list in cmd_ops->init(), and only then sets the trace clock:
+
+	if (data->cmd_ops->init) {
+		ret = data->cmd_ops->init(data);
+		if (ret < 0)
+			goto out;
+	}
+
+	if (hist_data->enable_timestamps) {
+		ret = tracing_set_clock(file->tr, hist_data->attrs->clock);
+		if (ret) {
+			hist_err(tr, HIST_ERR_SET_CLOCK_FAIL, errpos(clock));
+			goto out;
+		}
+
+The clock string is not checked anywhere before that call, so a named
+trigger using common_timestamp with an unknown clock fails after it has
+already become findable. event_hist_trigger_parse() then frees it
+without taking it off the list, and the next lookup by name reads the
+freed object:
+
+ ~# cd /sys/kernel/tracing/events/sched/sched_switch
+ ~# echo 'hist:name=foo:keys=common_pid:ts=common_timestamp:clock=bogus' > trigger
+ bash: echo: write error: Invalid argument
+ ~# echo 'hist:name=foo:keys=common_pid' > trigger
+
+  BUG: KASAN: slab-use-after-free in find_named_trigger+0xac/0xc0
+  Read of size 8 at addr ffff88800915d760 by task init/1
+   find_named_trigger+0xac/0xc0
+   hist_register_trigger+0xc1/0x900
+   event_hist_trigger_parse+0x3146/0x6af0
+   event_trigger_write+0xce/0x160
+  Freed by task 63:
+   kfree+0x154/0x420
+   trigger_kthread_fn+0xfd/0x160
+
+Set the clock before the trigger is registered, so that nothing which
+can fail runs after it is published, the way commit 6f86bdeab633
+("tracing: Fix bad hist from corrupting named_triggers list") moved the
+registration below the rest of the setup.
+
+tracing_set_filter_buffering() is reference counted, so the init failure
+path has to drop the reference that the clock block now takes first.
+
+Fixes: a4072fe85ba3 ("tracing: Add a clock attribute for hist triggers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+---
+Reproduced on x86_64 under KASAN_INLINE on v7.3-rc2, with an initramfs
+that does the two writes above from init and then waits for the deferred
+free. Without the patch the second write reports the slab-use-after-free
+quoted above; with it there is no report, and each rejected clock leaves
+its own entry in tracing/error_log instead of only the first attempt
+getting that far.
+
+Same kernel and initramfs, selftests/ftrace test.d/trigger before and
+after: 45 results, identical item by item (32 passed, 3 failed, 2
+unresolved, 8 unsupported). The failures and the unresolved results are
+there without the patch as well.
+
+ kernel/trace/trace_events_hist.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 963e0d6b61fd..6c628415468a 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6643,12 +6643,6 @@ static int hist_register_trigger(char *glob,
+ 		data->cmd_ops = cmd_ops;
+ 	}
+ 
+-	if (data->cmd_ops->init) {
+-		ret = data->cmd_ops->init(data);
+-		if (ret < 0)
+-			goto out;
+-	}
+-
+ 	if (hist_data->enable_timestamps) {
+ 		char *clock = hist_data->attrs->clock;
+ 
+@@ -6661,6 +6655,15 @@ static int hist_register_trigger(char *glob,
+ 		tracing_set_filter_buffering(file->tr, true);
+ 	}
+ 
++	if (data->cmd_ops->init) {
++		ret = data->cmd_ops->init(data);
++		if (ret < 0) {
++			if (hist_data->enable_timestamps)
++				tracing_set_filter_buffering(file->tr, false);
++			goto out;
++		}
++	}
++
+ 	if (named_data) {
+ 		remove_hist_vars(hist_data);
+ 		destroy_hist_data(hist_data);
+
+base-commit: df2908090cda368b01ff43709f51890076c56157
+-- 
+2.53.0
+
