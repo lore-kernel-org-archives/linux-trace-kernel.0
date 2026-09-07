@@ -1,136 +1,320 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C61521219
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 17:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B392D3A7198
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Sep 2026 19:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788803859; cv=none; b=FDZ0q+YGJu1XceIVTU4liSVe9a5M4Rjl7RxGYAtCO1FKJTHLlUGdOA2ZQY4IovLZiSjtVnGQMfrxrSfhG2h/5LL1QaQLXMpiBbVZLQA5CY8yA8Zv9ZHvOdgnsu9IzXvzvlWGofIJO7smjaXCKiokEmpEyTrWtrM7XIrNcIOgFUQ=
+	t=1788808685; cv=none; b=GRQgL4fO1bJJJsVuRU8fBHG8UnqG/cCu5Cd0Ei4iChC1MY0fuvKc5R6jCwYJO4HIwRF8CcDTQlDGlRdqiSNrsMujT6uzgaVLQNKMopAE2wt0P6tmttv1Jsol57/MVDpLrQ+DIWBady8bw24id1piEg5dFjc6oXtp1DviCFG7Xi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788803859; c=relaxed/simple;
-	bh=7j1GuZlr4DkZd3tFGTmsdUmo9C7PnISCitw4kPz9VIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=YgYKzqLYJgaps14MFaTwiA9rWRCTaWpRATzLiHNlRUh8C+0UEB6/85ECrlSBaQcQkuvxLuzJCDcJNYYJoD5R5u95mAZL6w0AqfRsd/nsgUgnoVmbL8GpkKaEm0PlEY7y77Wp+4aJl0g3qL09FXLCqshSZr8xLYmkwHkGX8cOUnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bklFb8/E; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bklFb8/E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788803855;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PBB+Ha5hfEwnTM3XMtEUMJZL5woFR7RP7WxRg6VNgHk=;
-	b=bklFb8/EvP1uzvxOrXFhiGw/Tok/euVXiL+HN3bzYt1tLY9MWXx5ZXtc/pFjLU+4G+izaH
-	lCIJcxAoT1jck0QEofMHCtHKMfi6VFOTR42o0VnFuDOMNv64ru+gtQGqoaqgMJmpI9REDS
-	Z26Wp6hm/teQYDCZUbbgyd8R9j5899M=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-599-LOu-IESzNa-TentWVwO3qQ-1; Mon,
- 07 Sep 2026 13:57:34 -0400
-X-MC-Unique: LOu-IESzNa-TentWVwO3qQ-1
-X-Mimecast-MFC-AGG-ID: LOu-IESzNa-TentWVwO3qQ_1788803853
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC8E71954B12;
-	Mon,  7 Sep 2026 17:57:32 +0000 (UTC)
-Received: from fedora (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 779F3180059E;
-	Mon,  7 Sep 2026 17:57:16 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  7 Sep 2026 19:57:32 +0200 (CEST)
-Date: Mon, 7 Sep 2026 19:57:15 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Ye Liu <ye.liu@linux.dev>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, Ye Liu <liuye@kylinos.cn>,
-	Michal Hocko <mhocko@suse.com>, mic@digikod.net, david@kernel.org,
-	linmiaohe@huawei.com, nao.horiguchi@gmail.com, gnoack3000@gmail.com,
-	ljs@kernel.org, sj@kernel.org, rientjes@google.com,
-	shakeel.butt@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, tony.luck@intel.com,
-	reinette.chatre@intel.com, x86@kernel.org, paul@paul-moore.com,
-	jmorris@namei.org, serge@hallyn.com, pavel@kernel.org,
-	lance.yang@linux.dev, pmladek@suse.com, longman@redhat.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, dietmar.eggemann@arm.com, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com,
-	mark.rutland@arm.com, Dave.Martin@arm.com, james.morse@arm.com,
-	babu.moger@amd.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] kernel: convert process/thread iterators to
- for_each_*_rculock
-Message-ID: <ap76-0-hN6CAcYXX@redhat.com>
-References: <20260907081334.1152889-1-ye.liu@linux.dev>
- <20260907081334.1152889-6-ye.liu@linux.dev>
- <ap7dC-LWNaoPYJvv@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1788808685; c=relaxed/simple;
+	bh=0QaHieNOw6KcvnOUUn3YC2pxzyaljxv036GAwc2TNyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ikyiq6+g/QetegV2faPiROw8jP4Ejhr9s9AUV+vuX13xIc4xGu9GF62PE4u56FcrAGWTQQyKpTOLgyK0d+Jnc6nEG1chidkn1440p+cehnmfnuVgyxiS34sEG+wk2rzW7xJmWCQ3Yv83q2Pl1tab4a1GblmMKkSh+5bR0a0ptJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maskray.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6a7f27637d6so5169742a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 12:18:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788808682; x=1789413482;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=D7+PGqvd3SIvPbBZ74nQwLWteKLtMN7893g76P/jiAU=;
+        b=aBaIak0XRWnbrmLreNOOblddyKGjRKqNZ7N3BDPq3hejeGD5MSq+7Ev5fAOv5EQ0w+
+         UMi8y3UYx+xy4RYEq2h6SHuk/ziztmGT4PN08dfMYCMRssStA9gdAlSut/+pVc1mUn+Q
+         P9antAnyjXqhoJSpawNbE15aCrimTgg9V6PVej5XDAYkRbjuaR4CAxGfkpu1at5DYCCO
+         rOxlM9OGWf5frDP+Cx6QY54OrCL+sgZP1Y9PzdQc7uEB1y6L3BmuSkD85OAJqDD5upiQ
+         cGyaOjeUbUNoiCzXz3SZLRwvxx9N7TqD/1ghRLbTDCIIC5T+Sk5WxdF0ZhARtJ1fDzto
+         ToDg==
+X-Forwarded-Encrypted: i=1; AKwUvBwtRsPiqT5OBSVQ7C6OvVCjVu0bdPuGprYtENoxTSizetih2fi3z5pQX6yrxN32iz5EQcFkHeQSzmQf1GuqTMjrD7s=@vger.kernel.org
+X-Gm-Message-State: AFuF++lDpdgqnswYpWD8J3SDvrLg678KDW2Se2BLWK77pi349hfqZp2Q
+	bHStlia5d/NA1zrGl3w+lvUBWAWFZo60ZM1iowbRNY/TdfzvBn979EKtd65+5SsusFE=
+X-Gm-Gg: AYBFou0uyAXWRnnT9a2kfVRT0zVvd5P++YYUOX5JyS6dPe/OWTJhhhIly3pztVwwCOF
+	BEczbCXn6Jlyjp/urzsVLsom/ub0v7bnbCRQKoT/xhFeqOUWPPa/xwowcsB61eslmywM6q6Lw5R
+	J/uPIkPUb2vQJNZ/UuMgdusruFUiI4xd3zqgIgsROG8tKAfJU6AWIRNFx2pbSojNMjF8N77tI2T
+	TLtYX8wDKGTx72bV7nqG7W1Uwfp4FVqHuG42qwH0kyPjmOVoVe3CMcQpkmf+DnBEU4omNfqKR1p
+	CQqg21Xs9O/nIbV3c+S5OVKRYM8acKspLev7zgZFZ9Rbbh3PF6FjgG4+bkQBKDg8cU67k0+UZbj
+	GNWWQkbEQx4SUCegBlXZnH7lnF928IH09FdITMOMV21EjSQe+U2nZ/buHaH1rxLQPlChk8rdWrB
+	bwQG2ITohkhlHV7hQkKRHF6A4s1pUFNr2vD+4iWO+RX99Sa5PBLg89dDgium5hatQbpW3T+chsF
+	VrZMR5kkj3C87qqD5AAYlK2G2Tl3LFt0Q7pc6CcbJSECt0=
+X-Received: by 2002:a05:6402:1944:b0:6a3:ff14:ebc9 with SMTP id 4fb4d7f45d1cf-6a7e8d97983mr11732412a12.11.1788808681644;
+        Mon, 07 Sep 2026 12:18:01 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a7e68e9679sm4499766a12.20.2026.09.07.12.18.00
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2026 12:18:00 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c250c6a6a9aso625653366b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Sep 2026 12:18:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByQF0NzTkFrHzZeWEl2KUmga2Ov6IU3GFFX7hlVNgrntjsuqX5iVQKirETPuYKOvZ/VfmXCx+ZcDrc5d9bf49m6XWw=@vger.kernel.org
+X-Received: by 2002:a17:906:7953:b0:c25:5114:c832 with SMTP id
+ a640c23a62f3a-c260c971f07mr1826536466b.3.1788808679899; Mon, 07 Sep 2026
+ 12:17:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ap7dC-LWNaoPYJvv@gourry-fedora-PF4VCD3F>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: 9F-lFEmGNx5nBHnHSrmu-F1F-wI4xoPNvm0lOQWFojI_1788803853
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260821195259.2688377-1-jremus@linux.ibm.com>
+In-Reply-To: <20260821195259.2688377-1-jremus@linux.ibm.com>
+From: Fangrui Song <i@maskray.me>
+Date: Mon, 7 Sep 2026 12:17:48 -0700
+X-Gmail-Original-Message-ID: <CAN30aBFo-1v+igPmm2JEqOBVuywxMD7HPVcxf+OQSd8LBnZYaQ@mail.gmail.com>
+X-Gm-Features: AcwNN1Ui_dhr8zWhdtT8d8B1cx26oY95n-5s0YmX52J9IMUYBxLn9nwqemexDEs
+Message-ID: <CAN30aBFo-1v+igPmm2JEqOBVuywxMD7HPVcxf+OQSd8LBnZYaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/24] unwind_user: Implement .eh_frame handling
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, x86@kernel.org, 
+	Steven Rostedt <rostedt@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Indu Bhagat <ibhagatgnu@gmail.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Namhyung Kim <namhyung@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Sam James <sam@gentoo.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/07, Gregory Price wrote:
+On Fri, Aug 21, 2026 at 12:53=E2=80=AFPM Jens Remus <jremus@linux.ibm.com> =
+wrote:
 >
-> On Mon, Sep 07, 2026 at 04:13:31PM +0800, Ye Liu wrote:
-> > --- a/kernel/hung_task.c
-> > +++ b/kernel/hung_task.c
-> > @@ -315,13 +315,12 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
-> >  		return;
-> >
-> >  	this_round_count = 0;
-> > -	rcu_read_lock();
-> > -	for_each_process_thread(g, t) {
-> > +	for_each_process_thread_rculock(g, t) {
-> >  		if (!max_count--)
-> > -			goto unlock;
-> > +			goto out;
-> ... snip ...
-> > - unlock:
-> > -	rcu_read_unlock();
-> > -
-> > +out:
-> >  	if (!this_round_count)
-> >  		return;
-> >
+> This series adds support for parsing DWARF Call Frame Information (CFI)
+> from the .eh_frame_hdr and .eh_frame sections of user space ELF files.
 >
-> The sunken rcu_read_lock()/unlock() + scoped_guard usage makes this goto
-> at a minimum very confusing, if not actually broken.
+> The code is based on the deferred unwind user work originally done for
+> SFrame by Josh, Steven, and myself:
+>
+>   v4 : https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.o=
+rg/
+>   v10: https://lore.kernel.org/all/20250827201548.448472904@kernel.org/
+>   v16: https://lore.kernel.org/all/20260521142546.3908498-1-jremus@linux.=
+ibm.com/
+>
+> The goal is to make user space stack traces available in-kernel without
+> requiring frame pointers and without copying large parts of the user
+> stack for later processing.
+>
+> Today, reliable user stack traces from the kernel generally requires
+> frame pointers.  Otherwise, profilers such as perf have to copy large
+> amounts of user space stack into the kernel ring buffer and process it
+> later.  Frame pointers are simple and robust, but enabling them for
+> all executables and libraries has a performance cost.
+>
+> Another issue is that the frame layout can vary between compilers and
+> architectures, and on architectures such as s390 there is no defined
+> frame layout which allows reliable frame-pointer based stack tracing.
+> The only way to perform user space profiling on there architectures is
+> to copy the user space into the kernel buffer.
+>
+>
+> The .eh_frame section is already emitted by most toolchains on most
+> architectures unless explicitly disabled.  It contains DWARF CFI
+> describing how to recover the caller state at any point in a function.
+> The .eh_frame_hdr section provides a binary search table for looking
+> up the Frame Description Entry (FDE) for a given instruction pointer
+> (IP).
+>
+> Because the .eh_frame_hdr and .eh_frame sections live in the ELF file,
+> they need to be faulted in when used.  This means that walking the user
+> space stack requires being in a faultable context.  As profilers like
+> perf request a stack trace in interrupt or NMI context, the walking
+> cannot be done when requested.  This series reuses the deferred unwind
+> user framework, that performed the actual user stack trace is later in
+> a faultable context, before the task returns to user space.
+>
+> This series implements .eh_frame[_hdr] support for the deferred unwind
+> user code and enables it for x86-64 and s390.
+>
+> It intentionally not implement a complete DWARF unwinder.  It evaluates
+> only the subset of DWARF CFI needed for stack tracing:
+>
+>   - Call Frame Address (CFA):  Using rule from DWARF CFI.
+>
+>   - Stack pointer (SP):  Using an implicit rule based on the CFA
+>     definition (SP =3D CFA for most architectures).
+>
+>   - Frame pointer (FP):  Using rule from DWARF CFI.
+>
+>   - Return address (RA):  Using rule from DWARF CFI.
+>
+> Unsupported CFI instructions, unsupported expressions, invalid data, or
+> user memory faults stop the stack tracing safely and results in a partial
+> stack trace.
+>
+>
+> This series applies on top of v7.2 tag:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  v7.2
+>
+> The to be stack-traced user space executables and libraries need to
+> contain .eh_frame_hdr and .eh_frame sections as well as a GNU_EH_FRAME
+> PHDR.
+>
+> Namhyung Kim's related perf tools deferred callchain support can be used
+> for testing, for example:
+>
+>   perf record --call-graph fp,defer ...
+>   perf report
+>   perf script
+>
+>
+> Why .eh_frame?
+>
+> This series is not meant to replace or undermine the SFrame work.
+> SFrame remains the simpler and more purpose-built format for user stack
+> tracing.  The motivation for .eh_frame support is pragmatic:  .eh_frame
+> is already widely deployed today.
+>
+> - Availability and maturity:  .eh_frame is already present in most ELF
+>   binaries for C++ exception handling.  It has been used in production
+>   for decades for exception handling and debugger stack unwinding.
+>
+> - Toolchain support:  .eh_frame is supported across all major compilers
+>   and architectures today, whereas .sframe adoption is still emerging.
+>
+> - Size:  .sframe would be added in addition to existing .eh_frame[_hdr]
+>   rather than replacing it, increasing the ELF file size. [1]
+>
+>
+> Addressing historical DWARF concerns:
+>
+> Using DWARF for kernel unwinding has a bad history.  Previous attempts
+> were complex, fragile, slow, and hard to maintain.  Hand-written
+> assembly and the complexity of the DWARF state machine were among the
+> reasons the simpler ORC kernel unwind format was developed. [2,3,4]
+>
+> However, this implementation for user space stack tracing differs from
+> those problematic kernel unwinding attempts:
+>
+> - It stack traces user space, not kernel.
+>
+> - It runs in a deferred, faultable context, not in NMI, interrupt, or
+>   oops context.
+>
+> - It may return partial stack traces.  Bad CFI, unsupported operations,
+>   invalid user memory, or faults are allowed to terminate the unwind.
+>
+> - It implements only the CFI subset needed for stack tracing, not a
+>   general DWARF unwinder.
+>
+> - It does not include a general-purpose DWARF expression VM.  Expression
+>   size is bounded.  Only a small number of pattern-matched expressions
+>   is supported (e.g. DRAP and PLT expressions on x86).  Unsupported
+>   expressions cause stack tracing to fail safely.
+>
+> - All user memory access uses [unsafe_]get_user() with proper bounds
+>   checking and fault handling.
+>
+> - Corruption detection with automatic section removal on invalid
+>   .eh_frame prevents further stack tracing attempts.
+>
+>
+> Limitations and future work:
+>
+> - CIE version 1 support only and no DWARF64 support, as I have not run
+>   into either during my testing.
+>
+> - Signal frames are not handled yet.  An architecture hook could support
+>   unwinding through FDEs whose CIE augmentation contains 'S' (signal
+>   frame), similar to Glibc's SFrame backtrace() support.  See also my
+>   "[RFC PATCH v1 0/5] s390: Signal frame user space unwinding". [5]
+>
+> - x86-32, x86-x32, and 32-bit compat mode support not implemented yet.
+>
+> - CIE caching would be useful.  Reading an FDE requires reading its
+>   referenced CIE first to obtain the FDE encoding.  Most .eh_frame
+>   sections have only a very small number of CIEs, often one default
+>   CIE shared by most FDEs and possibly one signal frame CIE.  Caching
+>   the last CIE per section, together with the initial CFA, FP, and RA
+>   rules, would avoid repeated CIE parsing and initial CFI instruction
+>   processing.
+>
+>
+> [1]: https://lore.kernel.org/all/CAN30aBFVDxeoXApn_g_Hw0Ayhi4V=3Dm7CcX8UD=
+O6ZDTi6xA-3Pg@mail.gmail.com/
+> [2]: https://lwn.net/Articles/727553/
+> [3]: https://lkml.org/lkml/2012/2/10/356
+> [4]: https://lkml.org/lkml/2017/5/20/165
+> [5]: https://lore.kernel.org/all/20260127153331.2902504-1-jremus@linux.ib=
+m.com/
+>
+>
+> Patches 1-6 add base functionality to unwind user to support .eh_frame-
+> based (or .sframe-based) unwinding.  Patches originate from my latest
+> .sframe patch series.
+>
+> Patches 7-10 add the basic infrastructure for reading .eh_frame_hdr and
+> .eh_frame sections and storing them in a per-mm maple tree.
+>
+> Patches 11-14 wire up the eh_frame infrastructure to the unwind user
+> framework and add error handling and debugging support.
+>
+> Patch 15 duplicates registered .eh_frame_hdr section data on clone/fork.
+>
+> Patch 16 improves .eh_frame DWARF CFI instruction processing.
+>
+> Patch 17 enables architectures to implement selected DWARF expressions
+> in CFI instructions.
+>
+> Patches 18-21 enable .eh_frame unwinding on x86-64 with minimal DWARF
+> expression support for DRAP and PLT expressions.
+>
+> Patches 22-23 enable .eh_frame unwinding on s390.
+>
+> Patch 24 adds a prctl() interface for (un)registering .eh_frame_hdr
+> sections for shared libraries.  I will send a related test-patch for
+> Glibc separately.
+>
+>
+> Changes in RFC v2:
+> - Addressed most of Sashikos AI review feedback.
+> - Dropped patch that added support for linear .eh_frame search, as
+>   there is no good mean to limit it from reading outside of the
+>   .eh_frame section.
+> - Tweaked limits based on limited testing (still fairly arbitrary;
+>   needs more thought):
+>   - Reduced state stack depth limit to 1.
+>   - Added FDE length limit of 32.768 bytes.
+>   - Added CFI instruction limit (CIE+FDE) of 16.384 instructions.
+>
+>
+> Note that I will be away from keyboard for two weeks.  I'll reply
+> to your (and Sashiko AI's) feedback afterwards.
+>
+>
+> Thanks and regards,
+> Jens
 
-I am afraid I misunderstood you concerns...
+Thanks for pivoting to .eh_frame unwinding. This work is highly appreciated=
+.
 
-This patch renames the "unlock:" label to "out:", and to me this makes sense.
+The moment deferred unwinding is implemented, the kernel space
+objection (https://lwn.net/Articles/728339/) no longer applies.
+Every argument for ORC (and derived formats like SFrame) -- that it
+must not crash during crash handling, that it is simple enough to be
+bug-free, and that it is fast enough for lockdep -- was formulated
+specifically to justify that kernel execution path.
 
-Unfortunately for_each_process_thread() and the new helper can't use "break".
+On the userspace side, we are seeing major advances in compact unwinding:
 
-Oleg.
+* x86-64 (Alexis Engelke): Implemented a compact-unwind encoder in lld
+that encodes 100% of Clang (main) -O3 and 99.9% of GCC 15 -O3
+functions in an -fno-exceptions libLLVM.so. This reduces .eh_frame_hdr
++ .eh_frame size by 87% for Clang (1.80 descriptors per FDE) and 71%
+for GCC (3.85 descriptors per FDE).
+https://conf.gnu-tools-cauldron.org/prg26/talk/review/WV7MVNYXJA8XSMKRVBBV9=
+GQJZZ3LW9KT
+* AArch64 (Shoaib): Implemented a corresponding compact-unwind encoder
+for AArch64, used in Android apps.
 
+Crucially, neither of these approaches generates unwind information in
+relocatable files.
+Given the massive size reductions achieved by these compact unwind
+descriptors, I suspect there won't be a use case or remaining need for
+.sframe on either AArch64 or x86-64.
