@@ -1,214 +1,126 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mta1.migadu.com (out-251.mta1.migadu.com [95.215.58.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5694A4B2031
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 09:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBE4530E1C
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 11:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788858665; cv=none; b=tgEAsD+AtrWkJp/7GamewaTY262+QTwoD0jKiMFKc+MyT4wz3jSLX4em28ZioX+Qv2hn7ac38CcskRVD9GYBwemsU3Ds6BTF61OY7YfoBu6G8RTPXQLP5wHL+UXy7F/bVFp/Y65pP8LnoFHsWkcrN2FNG21AziX8aZzh19STi+0=
+	t=1788868457; cv=none; b=NyOEayio+m87KGIQZ+kumvrFtw4kf8u34uKJeCYCZq8I37744kj9qX/w3pHjhXOkgnwW5G1B2sKM8RhkY6klW6JycaEdnlFYTr2Rj2CdLi9dlzr9DV56RywTCj5J6i48u9w+VyK0L7vPyyn5O4bcO2gGpdI/Zx0cJrrieqYbmhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788858665; c=relaxed/simple;
-	bh=PvXsmkWYs08Fb6emr0vNeygHcdGIKgZy2QeAteTTf+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHIj40+zrMMDxS69gju333vhFmnRG/kWrCANbSTq1symgQ8GgS17vhM5TgYs5+keGKs3xdJbbqQQ3yvKRIXpzDHb9kE3fa+wVPjk7Zjn6h7wzY4gsU9dUtBmrIkkiydrN37pYH888YJp3J2vzgqc44Q1g3PN9z/zs67GmMlqKas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=od9zMfWD; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1788868457; c=relaxed/simple;
+	bh=q2uuuWxuA0R7WRoemD62oQI/xDxL83ABPelDLYsNoKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2SzJXxW5tbgzO16YrFFJ5unInDxfQ7twcd3FafhHJTMk2rBIrTzTremRdbr+Cq+TA9Pj9tFr+rVP0ticQbceI+OWJMZzLkw0vOnfoEh/7P0jhvqnQ81dHfH/d4L6Xxw3YohaBOR6/dnVViYo6qq7X+qHHkxT8tra+YCwBG0t8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z8UtDFLo; arc=none smtp.client-ip=95.215.58.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="od9zMfWD"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49b96837ca3so35026065e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 02:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788858660; x=1789463460; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jO5c4Bt3ZAdytp/EWde+NVli4TynjxjjAsIpB98Fp84=;
-        b=od9zMfWDcF4OHQCHDnTSp+IxWBh7YcrsnqnYcySKIEcmm/ceS5PK+Ald4WsDAMQGca
-         JtStGdPNa4jsxYXMI/49ZgEEFYt9UcWI8IyRBsO3AybC/oohRQiO3QSxj3hPa2MT3HmE
-         jG815bbsxFI0fkVFJ6+wGUaARnLJaKxSfY22sakMY30hoTw9lRCpmnZd9jHdxlPxrk9a
-         IhrRS2O3xf1/jf1vWiD+7YlOF/bR52YD3FZlFwsuobxev0U4c3rqbs0WfcZmcYym8q6G
-         JzkgBiT4ugQ/LjmCIyf9fuaf6Rc5IxypahVG3fBdT3jSyDWYo8B9u4GFtEseJ8rKv28I
-         CGHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788858660; x=1789463460;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jO5c4Bt3ZAdytp/EWde+NVli4TynjxjjAsIpB98Fp84=;
-        b=ihCjNnoYf5926s7saJCOhIhsCyecPcnN64jXK5WkSOKurwNn9CP45c9slvhl21Mt4H
-         7gSqv/tTSprSSzJx08+qHhno4Bte6Np+kPxXTTHhlbTceDMY6jMsA6Kq/RPp7kgKpTtZ
-         3cZbVDTAiJVgrIlxxomn07hozF7p5buu75SgZ8LN25PSzA6FZVL40S0yRZqDlNDllSky
-         0KviFfjwjvfgwptqaCB320nUHzs3ToX/3JkjzKeDWgH5G/0edNUm3HdLzJ+2hhRZXnHu
-         D9N7v/cl1R/KteH1PxKBRc0I6Pfs9Mt0oM5bWkPprwtoQqKjlrkesNc6qA9hVUuDxoUF
-         l/fA==
-X-Forwarded-Encrypted: i=1; AKwUvByWUIbM8CqoKLPz7hv75OUKDLY1BBWVvNodSkORNg2jmUdps9vn710DDf/m4ic5x9I4elXX452n0FAI/HKqWbfl/nw=@vger.kernel.org
-X-Gm-Message-State: AFuF++kumDgVBhxOA80b78LagACo8pX4fCXQhzILBJuZryjT4SqND+gS
-	+g+HILEeGP9lXp6C/2K96zVXs1QzP4SXsBiYqlsHAgVR8mXB2ljQcsBpYVWNION1zw==
-X-Gm-Gg: AYBFou00T9g+n605pS5toU4p63wEFZhUJy3k9UvsrkFQfzFWKFGKsiNu6Fa2fzI3ZMQ
-	bC0qrwLBzSpUSWxmfOnUFEm2YYRwckBiehip2tO0t0tZ079zhbL9xpBCd/TnX9/Y49fJLt27HDS
-	CNOn9VHoUodA+8a75yC/LFBvghqOBh8Jc07QyPmcoa2PulSrognwGIM3nS/v/tmBSqByLa55ZHK
-	eE3nqZnbS7qsW3mS7ADFRqwANCbmyuzmH8Ol6IGP2+dOnXapfswPZV4RfVJBSwxWuZtSDESPly0
-	1hqhFY4hHUr0mOo9OQGlr4RAskmE8ylTMHgZ1VaJj3CmOLgCmnr4MM66sDzEHCxz3Fa9XoHkql2
-	z+1sR+pQRlpd9+ny3s4VSSoh4vBcJd67H2xIRkaKmtDOZtmcFJGapr3dKVDeQjZPKnOCPuYvdG5
-	w9UbJu0+7Xisqr3Kb3edd7GF0a3M2ls78zy5An+Gq6BaeuSjX62QQjf89jQTkXMgMAMDUgQRpK2
-	MxAfEGW1Qkn7LgzvBx3H/D22aKRthfIViGUK0r2QQw=
-X-Received: by 2002:a05:600c:1549:b0:499:a5fc:2087 with SMTP id 5b1f17b1804b1-49cf81f47e6mr290181665e9.6.1788858659472;
-        Tue, 08 Sep 2026 02:10:59 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cfd3f815bsm279081265e9.4.2026.09.08.02.10.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 02:10:58 -0700 (PDT)
-Date: Tue, 8 Sep 2026 10:10:55 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Thierry Reding <thierry.reding@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chun Ng <chunn@nvidia.com>, Mark Rutland <mark.rutland@arm.com>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-mm@kvack.org,
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v6 00/12] dma-buf: heaps: Add support for Tegra VPR
-Message-ID: <ap_RH4ZDE3XI0rng@google.com>
-References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
- <apquUWgrD9C2jWQ0@willie-the-truck>
- <ap_HzwVp-6aOKEbJ@orome>
- <ap_OFQepcu26g88u@google.com>
- <ap_QJG8EevX98SXa@orome>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z8UtDFLo"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=q2uuuWxuA0R7WRoemD62oQI/xDxL83ABPelDLYsNoKQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788868448; v=1; x=1789473248;
+ b=Z8UtDFLoIqDcR3WoWxgGT4F93JqT4N/23HElfCz308Z2LPEGv/dc46BVqrg0ec/Q7yBNnyLu
+ cploW7y7qsCBfc/BF1/zX4L9X7IulyYOC99Rk4Iq6O21MPLN8prbo1QPPuMCN5US0hKQxK6Mu68
+ 1LXc/Tobj2+Q2BDDbNg4hieo=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 5ff08160f280dc8b;
+	Tue, 08 Sep 2026 11:54:08 +0000
+X-Mizu-Trace-ID: 5ff08160f280dc8b
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <7ad86bff-acbb-5acb-ac41-711d36251f04@linux.dev>
+Date: Tue, 8 Sep 2026 07:54:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ap_QJG8EevX98SXa@orome>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] dma-mapping: don't trace the DMA address when the
+ allocation fails
+Content-Language: en-US
+To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, iommu@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260907120124.603373-1-donggeunyoo.kernel@gmail.com>
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20260907120124.603373-1-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 08, 2026 at 11:08:26AM +0200, Thierry Reding wrote:
-> On Tue, Sep 08, 2026 at 09:57:57AM +0100, Vincent Donnefort wrote:
-> > On Tue, Sep 08, 2026 at 10:39:17AM +0200, Thierry Reding wrote:
-> > > On Fri, Sep 04, 2026 at 12:41:05PM +0100, Will Deacon wrote:
-> > > > Hi Thierry,
-> > > > 
-> > > > On Fri, Sep 04, 2026 at 12:44:51PM +0200, Thierry Reding wrote:
-> > > > > This series adds support for the video protection region (VPR) used on
-> > > > > Tegra SoC devices. It's a special region of memory that is protected
-> > > > > from accesses by the CPU and used to store DRM protected content (both
-> > > > > decrypted stream data as well as decoded video frames).
-> > > > > 
-> > > > > Patches 1 through 3 add DT binding documentation for the VPR and add the
-> > > > > VPR to the list of memory-region items for display, host1x and NVDEC.
-> > > > > 
-> > > > > The set_direct_map_*_noflush() functions that will be used later in this
-> > > > > series are exported in patch 4 so that the drivers that use them can be
-> > > > > built as a module.
-> > > > > 
-> > > > > Patch 5 adds bitmap_allocate(), which is like bitmap_allocate_region()
-> > > > > but works on sizes that are not a power of two.
-> > > > > 
-> > > > > The of_node_to_nid() function is exported in patch 6 because it is used
-> > > > > in a later patch adding a driver that can be built as a module.
-> > > > > 
-> > > > > Patch 7 introduces new APIs needed by the Tegra VPR implementation that
-> > > > > allow memory to be allocated at a fixed offset within a CMA area. Tegra
-> > > > > VPR needs this in order to implement its own allocator on top of CMA to
-> > > > > meet the strict hardware requirements. This replaces the dynamic CMA
-> > > > > area creation patch from earlier versions.
-> > > > 
-> > > > Did you get a chance to see how this could work with Vincent's series:
-> > > > 
-> > > > https://lore.kernel.org/r/20260902104712.2399797-1-vdonnefort@google.com
-> > > > 
-> > > > ? I think that should remove your reliance on can_set_direct_map() and
-> > > > mean that you can retain block mappings for most of the linear mapping.
-> > > 
-> > > I'm not sure if it would help all that much. Yes, if we mark the VPR
-> > > region as LLMAP (or PTE_MAP, whichever it ends up being), it should make
-> > > the checks for can_set_direct_map() redundant. However, from what I can
-> > > tell, Vincent's series still forces page-granularity on these regions,
-> > > so it won't retain block mappings at all for them.
-> > > 
-> > > The block mappings can be retained for the non-VPR memory, so that's
-> > > nice. It also reduces the amount of external prerequisites, but I had
-> > > kind of hoped that we could go one step further and keep block mappings
-> > > even for the VPR memory if the region happened to be a multiple of the
-> > > block size.
-> > > 
-> > > The recent addition of page count to the set_direct_map_*() functions
-> > > helps reduce the amount of checks that need to be run, so maybe there's
-> > > not too much to be gained from removing whole block mappings at once
-> > > from the linear map.
-> > > 
-> > > Thierry
-> > 
-> > I should be able to add PMD_SIZE mapping support to the series. That was
-> > actually my original idea as we can easily force the CMA allocation granule to
-> > be PMD_SIZE too.
-> > 
-> > I didn't implement it as I thought there were not much interest in the end (and
-> > also as contiguous.c is always using PAGE_SIZE granularity).
-> > 
-> > But now as I have implemented a specific pool (and do not use contiguous.c as
-> > originally planned), if you believe it is important for the VPR driver, let me
-> > see if I can extend the support in a V2.
+On 9/7/26 08:01, Donggeun Yoo wrote:
+> dma_alloc_attrs() passes *dma_handle to trace_dma_alloc() without
+> checking whether the allocation succeeded. No backend writes it on
+> failure: dma_direct_alloc(), iommu_dma_alloc() and the dma_map_ops
+> instances assign it only on the path that returns a buffer. Callers
+> usually pass an uninitialized automatic variable, so a failed allocation
+> records whatever the stack held, next to the virt_addr=(null) that marks
+> the record as an error:
 > 
-> I don't think it needs to be part of a v2 and can be a follow-up. It
-> should be transparent from an API point of view and merely be an
-> optimisation for that specific case.
+>   dma_alloc: dmatrace dir=BIDIRECTIONAL dma_addr=deadbeefdeadbeef
+>   size=1099511627776 virt_addr=0000000000000000
 > 
-> Eventually it'd be nice to have, though it might also be worth checking
-> what the actually gains are.
+> The device coherent pool path reaches the same call: a non-zero return
+> from dma_alloc_from_dev_coherent() means the request was handled, not
+> that it succeeded, so cpu_addr is NULL and dma_handle is untouched once
+> the pool runs out.
 > 
-> Thierry
+> For an allocation event a NULL virt_addr already means the request
+> failed, so the address field carries nothing. Report 0 for it in the
+> event class rather than at each call site, which covers dma_alloc_pages()
+> and dma_alloc_sgt_err() as well.
+> 
+> Fixes: 038eb433dc14 ("dma-mapping: add tracing for dma-mapping API calls")
+> Fixes: 68b6dbf1f441 ("dma-mapping: trace more error paths")
+> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+> ---
+> v2:
+> - report 0 in the event class instead of splitting the two call sites,
+>    as suggested by Marek. kernel/dma/mapping.c is untouched now, so
+>    debug_dma_alloc_coherent() keeps being called for a failed allocation
+>    and decides for itself what to do with it.
+> - tested on x86_64 rather than compile-tested only.
+> v1: https://lore.kernel.org/linux-iommu/20260905071919.30784-1-donggeunyoo.kernel@gmail.com/
+> 
+> Tested with a module that puts a known value in the caller's handle and
+> then asks for 1 TiB from a 32-bit capable device, with the dma_alloc
+> event enabled. Before, the record carries the caller's stale value; after,
+> it carries 0:
+> 
+>   -dma_addr=deadbeefdeadbeef size=1099511627776 virt_addr=0000000000000000
+>   +dma_addr=0 size=1099511627776 virt_addr=0000000000000000
+> 
+> A PAGE_SIZE request from the same device, as a control, reports its real
+> address on both kernels, matching the handle the caller got back.
+> 
+> This changes what the record contains, not what the caller does:
+> *dma_handle is still read to build the tracepoint arguments, since those
+> are evaluated before the static branch.
+> 
+>   include/trace/events/dma.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
+> index 9df02c1511de..b06d8f99922d 100644
+> --- a/include/trace/events/dma.h
+> +++ b/include/trace/events/dma.h
+> @@ -134,7 +134,7 @@ DECLARE_EVENT_CLASS(dma_alloc_class,
+>   	TP_fast_assign(
+>   		__assign_str(device);
+>   		__entry->virt_addr = virt_addr;
+> -		__entry->dma_addr = dma_addr;
+> +		__entry->dma_addr = virt_addr ? dma_addr : 0;
+>   		__entry->size = size;
+>   		__entry->flags = flags;
+>   		__entry->dir = dir;
+> 
+> base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
 
-Ack. I'll keep it as is then and we will see later how to extend it, if it is
-necessary.
-
--- 
-Vincent
+Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
