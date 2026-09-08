@@ -1,102 +1,103 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C784A53A8AA;
-	Tue,  8 Sep 2026 12:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3899B4FC8F6;
+	Tue,  8 Sep 2026 13:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788871611; cv=none; b=YADboNyErEfhVGL5iyPa309ycYDJMGsI/HY8yjG90zW16HikF0x+710mrUeWKUQrYtU7wHGfSfdl5haVgFq4XmoaKnATTirtwEUODQpzM8wCOHS/DoScWKaW9eaITAcwINnJcs00WkjterE3TXhwm0B6FSlU3KyxfsMDyL0E3Gk=
+	t=1788874780; cv=none; b=eE3mtwjXFi8k1eTqynQG0LyWgoXLRQMJGP2Ctcab2TSAHPFsB8jtrF16zGuAXdzKqNEZUZelkDY/jNJtjyFlZ2WGkQ4KuT1Yk1rOzha89/KF31b8IBgHizKFelJW4dofowPUs2zJEb14qCpJRKsrotKQR4F2AWdWg5y6rmNX+ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788871611; c=relaxed/simple;
-	bh=hFwSZaU4jX+gf2S7p1+ZS5OtlLj8rto2j+q1fKuvxqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AY8O/0Z1nJoXM/GpXer9//FG3sU5XJf5t/mgkvC5Bb3PwLBz2+j9HEduWZ1BGInJZXN1DSLYJUIOPb45f1qxOpC+eVNMFLFMqfofpD1d2iJIeQIliV98KONfR1gvjQNbKtAS5qtKPdk92OnqpJIIYeLMYGuVX6YrHkgIR5AEl3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HFrpLme8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1788874780; c=relaxed/simple;
+	bh=mJIId2SG/DApe53JkGn9U6e1GVax4WGYQiytD1mHnd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PB8b23Eo8BElkouDizeN7kC5hvtST2PIdciXn9fos8IHAKLGrEFa/7JHV9jQvzR415ssDVOT9zwDeUOaccXvdbmaqJG087qx7YQ7hohe0nEp+jZi9oFc3xrQmOEbMtgfPBKkSyXFRg/Sq55tRDkxg5M3H2d6LVlAHz+jplQmhuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=suJHOVuK; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HFrpLme8"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 688AVcoD2959797;
-	Tue, 8 Sep 2026 12:46:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=hFwSZaU4jX+gf2S7p1+ZS5OtlLj8rt
-	o2j+q1fKuvxqs=; b=HFrpLme8WhjkMoAoeZlZ3zjb2vlP1fJZWJtmDTIFeX3Tgg
-	bdnhU2zG0AOIexcFSQPK/s/McVN0l8TEHIv+AxmZiVaLhc8pVyJZzWU9v06dM1WN
-	2EgaTiciQK6iaWmy3eNCMkYyd00Tb9i7XYxfNLoBru5IHF+2iqtyTvp2WefhLm14
-	WHPY1XblnziJnAfxFhUYAtrhy8ZrHdKUNR+zu227/juONnXypoEdD4sOgd7ka+lI
-	l+kIXJvFm76Vl0MaK/HaHbvhHfhvaAU6M3MYqGhCRUqA6nlKjR3vSJpwnAVyDTVQ
-	KhZo+oJ4BZR+2b6nWwejlzgFHdXKp8bUywDdwCTg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ggbqjxuy3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Sep 2026 12:46:45 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 688CfEQ1008738;
-	Tue, 8 Sep 2026 12:46:44 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ggwsw3x43-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Sep 2026 12:46:44 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 688CkgxP34013494
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Sep 2026 12:46:42 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7908D20043;
-	Tue,  8 Sep 2026 12:46:42 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5402E20040;
-	Tue,  8 Sep 2026 12:46:42 +0000 (GMT)
-Received: from tuxmaker (unknown [9.87.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  8 Sep 2026 12:46:42 +0000 (GMT)
-Date: Tue, 8 Sep 2026 14:46:41 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/2] ftrace/selftests: Fix registering kprobe on
- non-unique symbol
-Message-ID: <20260908124641.1135846Aeb-agordeev@linux.ibm.com>
-References: <cover.1787670777.git.agordeev@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="suJHOVuK"
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 2B55CA06D8;
+	Tue,  8 Sep 2026 13:39:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 4606F20024;
+	Tue,  8 Sep 2026 13:39:21 +0000 (UTC)
+Date: Tue, 8 Sep 2026 09:40:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Vincent Donnefort
+ <vdonnefort@google.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: [PATCH] ring-buffer: Add a MAINTAINERS category specific for the
+ tracing ring-buffer
+Message-ID: <20260908094035.0b180833@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1787670777.git.agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: n_uIeoWkxEb1tAfiJfjUDKsT8nFFife0
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA4MDEzNCBTYWx0ZWRfX0QsiZieEoLwh
- olfpXjkEWAVoN4N1ZBWrTIju7Y95I1ckZY+bWtndO+Im4sYvAcu9Q8NYR2ZIil9RmoRCFeteIl4
- Q/LeVwy3kjC0o/OBy5wCyZXjO7SpXOw=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA4MDEzNCBTYWx0ZWRfXzFFnAKT+VKSs
- JGOJPf9K6AwCdCT6Adm0VkRVrwe86ZnBqY/Fw0DLJGFhyCfdDs1LqtD17NK/0tqE1uaZ3lqaUhn
- Ac+0IwEZ7Jpa7eD2VgyZ2u7gu5SzK57+7F4qnLBE/76d4Y4bwJRADAhc8bPW7JZHLB4bKfgF0Fj
- kpjVdZICd+oNF6HHsHbpgIWJThvUooRQKZdHfQvlwkaY77cZgm1MdXHlBl0jEaM48TQOVP9NR0i
- Fj6glPHjckDz9NaFQcaHBY45QK4K3KCS/c2qvnNV5pqchvP3yhDqxJ0IKldTeeiYVf2gMWHa4Vh
- ulQVpNGujGuAQqZ0Zk2GJoV89gIaJ7wJ8lQO5scLuKFtOmV8HK8lilOzrx80nXiTOumU/Qxp+qI
- 3VQJfKv9dAuF9lgRtPi1WiCUMqJvwjJ/+Gb1r8KrF/ESsUhKzrvqgLMNwYc9Q6GiTA+0jxrndoq
- DKuSUljAzsN4dZfiQ7w==
-X-Authority-Analysis: v=2.4 cv=JaKMa0KV c=1 sm=1 tr=0 ts=6aa003b5 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=wdextDOBopOhIuI0tKgA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: n_uIeoWkxEb1tAfiJfjUDKsT8nFFife0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-08_02,2026-09-07_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- adultscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609080134
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4606F20024
+X-Stat-Signature: rg9hhdjkzd6f6otuzqn4mw53woao1ei9
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18CN4A85BQPBe5+wWf3JuXp3pbGA1LwvaI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=kZ6ltbc+kee29n1wPsToONv5ZZsAdG14wi0YCLinLKQ=; b=suJHOVuKGjKmCfQusyK1VqYaQot4HUkFrnRAZHKUZ9S6XX3vUSFZ0pmFsk+qRAr3HdWvTQ9f9aIVMUeBMqtLSm6pR7F62QdmU928tR9f5je8TBATCJ+lMrsWTYQ3Kh0NoFe/xcJCQopDS/75uYs7dKxP2QGzkEItJKBqoi/F5fA=
+X-HE-Tag: 1788874761-143922
+X-HE-Meta: U2FsdGVkX1/+Iqkp1MAOogVscGZvFVmbUg2auJShrWbIrj+8N2W0nSyqSa4oZX7/8AcPo21yx1CWPHhel/jk3kf0v1FvHv7+zXz4a4nbQAer38CeTHQGyY+G7nYTLVuHJeY2DRV5cONMffxaCKfYB+3YoEh5MrIDUO9zHvQDWC8QXG/s+1df9//4A5Z/nzMeLsKpg/n1THrCm7xnOwTpX+F4fnNnEwbuIIrgOp/fmqrG/OpWiJtUUifn/8o3ZuzAjmWQ4quRGFImAHB246KAsuWFwtujv6R2PEVpZ25TnJqSNNiBq2wJcSvmIcdYC+T09ti99baHOAbUY9a5mI/xEvlWmwraM8UZI1f4M008WA/BvV41EukdKgrKP0qvVEYkINd9ljn6B3bwwho/XDRalx7TY6CHcEB81R6fXCpU/bFcPTuVzvvuktVQlvQye6uxHYkKS7sYyw3jns7t+/2+aUIHVd74JNvcA8WDZsInIMCMYW/A7dENdSjm/dDKiFA0
 
-Polite ping.
+From: Steven Rostedt <rostedt@goodmis.org>
+
+The ring buffer code in the tracing directory has always been decoupled
+from the tracing code. It had a clean abstracted API to allow it to be
+used by systems outside of tracing. The API even allowed the ring buffer
+code to be drastically changed without affecting the tracing sub-system.
+
+Recently, Vincent Donnefort has been contributing a lot of work to enhance
+the ring buffer. He implemented the user space mappings and recently
+created a version to allow pKVM hypervisors to use the code to trace
+the hypervisor and expose the events to the user.
+
+Create a separate category for maintaining the ring buffer code so that
+Vincent can become an official maintainer of it. His work has little to do
+with the tracing code itself. In the future, he may even be the main
+maintainer of the ring buffer.
+
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ MAINTAINERS | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3a19da74d00c..71bd2f57055d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -27778,6 +27778,22 @@ F:	kernel/trace/trace_irqsoff.c
+ F:	kernel/trace/trace_osnoise.c
+ F:	kernel/trace/trace_sched_wakeup.c
+ 
++TRACING RING BUFFER
++M:	Steven Rostedt <rostedt@goodmis.org>
++M:	Vincent Donnefort <vdonnefort@google.com>
++M:	Masami Hiramatsu <mhiramat@kernel.org>
++L:	linux-kernel@vger.kernel.org
++L:	linux-trace-kernel@vger.kernel.org
++S:	Maintained
++Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
++F:	Documentation/trace/ring-buffer*
++F:	Documentation/trace/remotes.rst
++F:	include/linux/ring-buffer*.h
++F:	kernel/trace/*ring_buffer*.c
++F:	kernel/trace/remote*.c
++F:	tools/testing/selftests/ring-buffer/
++
+ TRADITIONAL CHINESE DOCUMENTATION
+ M:	Chen-Yu Yeh <chenyou910331@gmail.com>
+ M:	Weijie Yuan <wy@wyuan.org>
+-- 
+2.53.0
+
