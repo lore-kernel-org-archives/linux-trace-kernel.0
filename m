@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBAD2EEE7E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 23:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035E26DCE1
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 23:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788909904; cv=none; b=GTW7J2iHSVqdhecLbB/ymgDHRFH6avPZ7Qi3W2p0gX21BJ882GkkG4WGeKhP15KEBA78t+V0b6WSeX3dzznTjpkPsNVPVmKiD95w5dRd+6a9Ld4KMtbswifkVIdtqMeNhU54ybkc+xUHeFHcjNtVgmBubqjjTMqbWekwrqKTeYs=
+	t=1788909931; cv=none; b=ZzYXx/sZrSSN4dv7XZ6toCa+rozrGP8Sz/Wkstvjd3yPtWP5/Zend7sbeMO9BvLGeI0SGDTYmRHeN9gnxDuacZQqYRqD12e5qlzyvBA/m+MwJhuWArc0NtuZNUeq36JNzInA2w9dmTPA5yU3XMrT/eOE5y7LJJFdCsoTnpoNVa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788909904; c=relaxed/simple;
-	bh=E9dbkJaeDn7PwERbk9AzYAh4G6f6cCO5jVjbDGtLLl8=;
+	s=arc-20240116; t=1788909931; c=relaxed/simple;
+	bh=m0jGN75aBujP9iovf8fBfvMrLqIAVW7S/lcUPB+92D4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Lyvhmj9QMPgS8tSeUt/DiCN2v+7/0Sxs5kcu+LWrFb1wQ76N2M4zWxTaCaFDmThpawzf4Nr98FcxpZDP9Dm5TH7jfYThEoRVRxLMgeUKFDVMbhjfCjy1Fjz4Upc2U4rZuYuNyIYH5wgtP6AxRqwA/biXVN3Ylco6kwbShTe9fpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=au+aqYiV; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=TYruAlbDeFtuTSSiRFlPQnISiH1MzI7bgjjUn0ZpioqbiGDScEHekJhJw0qYtO5U8ddS7xVpGrotuhH5nwHcFh1kGzGhLDY377huJVhzOFlrgWSBMbK/ICEylIW4Mnwd6/oWAiHmMmkOP7NJVjLsDRrP9U43rJo/Ky2zfc4F/Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1xEh7Lf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="au+aqYiV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F481F00A3A;
-	Tue,  8 Sep 2026 23:25:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1xEh7Lf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C61B1F00A3A;
+	Tue,  8 Sep 2026 23:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788909903;
-	bh=CLCdocsCypd3wvtDayGuLs/D1QyGIWsP/nDDWefAxFc=;
+	s=k20260515; t=1788909929;
+	bh=YRHlSpaKfPAZXNSRV5/NpeUjctbvYAA7maNZ9n9Umx0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=au+aqYiVVYuVw6srWDBIjjIBWwuFE1vc6BD1vEJ0cL5zYz/JMdoLpxnA6sVMzYaV2
-	 58fhdaYh3s7LCazDePUlKlLvJgMlZJFIQk2+srM6TGMH0f7A0FuZRWTlGw2WNQ0zwU
-	 U/zdZQZ5sSJUSN34/9z7Omyw6wpHOe2lwmiW4MOdKA6czSaUznnYv2tVofrIYVxISf
-	 Tio6oGZyXiMddK6O5kuup+ogwZtMQycoBKRHR/jkAl/caG1U7/FYX7uBRpI25EO6Sb
-	 wpe2CT0GUQ8Zwx7n2e1ModO09OEBqP6itKiLk+Vgs2WS9N7qq3Z7Or70BeBz8ixqVS
-	 brEf+kA3b91rw==
-Date: Wed, 9 Sep 2026 08:24:59 +0900
+	b=o1xEh7LfOkLwTSTSzTDenaDAWL7g/PkKIc4D721mtMimgkn7Xt2SEO/jDCy6sNl1V
+	 qlpX+xxAcLrYAaxoqhmwCkj27owUhcG3gFENJmWegxX9smZXYuaJcCooaTOvHfYzzK
+	 ecIxoPLIRqXld35OlKjWk5peoJpnIoYmUxDaznWSMx/zqzqgNSTa7D8Sea0AVOsHIO
+	 S9IjEQjHPVWtmFRC3UPBe3k8QzGmV4lqXJwN1ApEYyVjgaRItuUws56oraoq5gNyTJ
+	 2TLz/e2K3jZgNSl9p6d87KdRUVvS4MMPAByUgx9P++s4ZBA2n/RUSAicJIVUgANNHA
+	 TKd5jvZ+9uZSg==
+Date: Wed, 9 Sep 2026 08:25:26 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Sang-Heon Jeon <ekffu200098@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bootconfig: remove unreachable index checks in
- xbc_verify_tree()
-Message-Id: <20260909082459.77701fe379794a39242ebff4@kernel.org>
-In-Reply-To: <CABFDxMEot48G141HrLT-4_H1xKez58UhK8yFMNkWpqT_MOXu7Q@mail.gmail.com>
-References: <20260905141637.1547429-1-ekffu200098@gmail.com>
-	<20260908104629.e7a85a90e376b843dbc51dc7@kernel.org>
-	<CABFDxMEot48G141HrLT-4_H1xKez58UhK8yFMNkWpqT_MOXu7Q@mail.gmail.com>
+Subject: Re: [PATCH] bootconfig: merge _xbc_exit() into xbc_exit()
+Message-Id: <20260909082526.19601bb6a61b31fc141d8f57@kernel.org>
+In-Reply-To: <20260908165712.1703439-1-ekffu200098@gmail.com>
+References: <20260908165712.1703439-1-ekffu200098@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,95 +42,130 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 9 Sep 2026 00:34:35 +0900
+On Wed,  9 Sep 2026 01:57:11 +0900
 Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
 
-> Hi,
+> Since commit 87ce9e83ab8b ("memblock, treewide: make memblock_free()
+> handle late freeing"), both branches of xbc_free_mem() call
+> memblock_free(), and the early argument has no effect.
 > 
-> On Tue, Sep 8, 2026 at 10:46 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Sat,  5 Sep 2026 23:16:36 +0900
-> > Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
-> >
-> > > xbc_verify_tree() checks that every node's next and child are below
-> > > xbc_node_num. Both fields store the index of an existing node, which
-> > > is below xbc_node_num.
-> >
-> > This is a kind of foolpoof/defensive checking. (so I call it verify.)
-> >
-> > >
-> > > So remove the checks.
-> > >
-> > > No functional change.
-> >
-> > Hmm, OK, I think we should decouple the logic/implementation
-> > verification from runtime verification (e.g. wrong format)
-> > and move the former to tools/bootconfig.
-> >
-> > Thank you,
+> memblock_free() also does nothing if addr is NULL, so the check
+> before the call is redundant.
 > 
-> Thanks for the review, Masami.
+> So remove the argument and the NULL check, and merge _xbc_exit() into
+> xbc_exit().
 > 
-> To make sure I understand, you mean moving the foolproof check after
-> xbc_init() in tools/bootconfig?
+> No functional change.
 
-Instead of just removing this, move this verification into tools/bootconfig.
-(we still need verification of user given broken bootconfig.)
-Let me handle it.
+Good catch!
+Let me pick this to bootconfig/for-next.
 
-Thank you,
+Thank you!
 
 > 
-> > >
-> > > Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-> > > ---
-> > >  lib/bootconfig.c | 13 +------------
-> > >  1 file changed, 1 insertion(+), 12 deletions(-)
-> > >
-> > > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> > > index 89c88e359179..d383430637ee 100644
-> > > --- a/lib/bootconfig.c
-> > > +++ b/lib/bootconfig.c
-> > > @@ -1005,7 +1005,7 @@ static int __init xbc_close_brace(char **k, char *n)
-> > >
-> > >  static int __init xbc_verify_tree(void)
-> > >  {
-> > > -     int i, depth;
-> > > +     int depth;
-> > >       size_t len, wlen;
-> > >       struct xbc_node *n, *m;
-> > >
-> > > @@ -1022,17 +1022,6 @@ static int __init xbc_verify_tree(void)
-> > >               return -ENOENT;
-> > >       }
-> > >
-> > > -     for (i = 0; i < xbc_node_num; i++) {
-> > > -             if (xbc_nodes[i].next >= xbc_node_num) {
-> > > -                     return xbc_parse_error("No closing brace",
-> > > -                             xbc_node_get_data(xbc_nodes + i));
-> > > -             }
-> > > -             if (xbc_nodes[i].child >= xbc_node_num) {
-> > > -                     return xbc_parse_error("Broken child node",
-> > > -                             xbc_node_get_data(xbc_nodes + i));
-> > > -             }
-> > > -     }
-> > > -
-> > >       /* Key tree limitation check */
-> > >       n = &xbc_nodes[0];
-> > >       depth = 1;
-> > > --
-> > > 2.43.0
-> > >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+> ---
+>  include/linux/bootconfig.h |  7 +------
+>  lib/bootconfig.c           | 22 +++++++++-------------
+>  2 files changed, 10 insertions(+), 19 deletions(-)
 > 
-> Best regards,
-> Sang-Heon Jeon
+> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+> index deda507500da..fdc15b6f4d1b 100644
+> --- a/include/linux/bootconfig.h
+> +++ b/include/linux/bootconfig.h
+> @@ -291,12 +291,7 @@ int __init xbc_init(const char *buf, size_t size, const char **emsg, int *epos);
+>  int __init xbc_get_info(int *node_size, size_t *data_size);
+>  
+>  /* XBC cleanup data structures */
+> -void __init _xbc_exit(bool early);
+> -
+> -static __always_inline void xbc_exit(void)
+> -{
+> -	_xbc_exit(false);
+> -}
+> +void __init xbc_exit(void);
+>  
+>  /* XBC embedded bootconfig data in kernel */
+>  #ifdef CONFIG_BOOT_CONFIG_EMBED
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index 89c88e359179..aba11caf6903 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -187,12 +187,9 @@ static inline void * __init xbc_alloc_mem(size_t size)
+>  	return memblock_alloc(size, SMP_CACHE_BYTES);
+>  }
+>  
+> -static inline void __init xbc_free_mem(void *addr, size_t size, bool early)
+> +static inline void __init xbc_free_mem(void *addr, size_t size)
+>  {
+> -	if (early)
+> -		memblock_free(addr, size);
+> -	else if (addr)
+> -		memblock_free(addr, size);
+> +	memblock_free(addr, size);
+>  }
+>  
+>  #else /* !__KERNEL__ */
+> @@ -202,7 +199,7 @@ static inline void *xbc_alloc_mem(size_t size)
+>  	return calloc(1, size);
+>  }
+>  
+> -static inline void xbc_free_mem(void *addr, size_t size, bool early)
+> +static inline void xbc_free_mem(void *addr, size_t size)
+>  {
+>  	free(addr);
+>  }
+> @@ -1123,20 +1120,19 @@ static int __init xbc_parse_tree(void)
+>  }
+>  
+>  /**
+> - * _xbc_exit() - Clean up all parsed bootconfig
+> - * @early: Set true if this is called before budy system is initialized.
+> + * xbc_exit() - Clean up all parsed bootconfig
+>   *
+>   * This clears all data structures of parsed bootconfig on memory.
+>   * If you need to reuse xbc_init() with new boot config, you can
+>   * use this.
+>   */
+> -void __init _xbc_exit(bool early)
+> +void __init xbc_exit(void)
+>  {
+> -	xbc_free_mem(xbc_data, xbc_data_size, early);
+> +	xbc_free_mem(xbc_data, xbc_data_size);
+>  	xbc_data = NULL;
+>  	xbc_data_size = 0;
+>  	xbc_node_num = 0;
+> -	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX, early);
+> +	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX);
+>  	xbc_nodes = NULL;
+>  	brace_index = 0;
+>  }
+> @@ -1189,7 +1185,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
+>  	if (!xbc_nodes) {
+>  		if (emsg)
+>  			*emsg = "Failed to allocate bootconfig nodes";
+> -		_xbc_exit(true);
+> +		xbc_exit();
+>  		return -ENOMEM;
+>  	}
+>  
+> @@ -1202,7 +1198,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
+>  			*epos = xbc_err_pos;
+>  		if (emsg)
+>  			*emsg = xbc_err_msg;
+> -		_xbc_exit(true);
+> +		xbc_exit();
+>  	} else {
+>  		ret = xbc_node_num;
+>  	}
+> 
+> base-commit: 85595d3f964825c833fd2597521fcef67c3071de
+> -- 
+> 2.43.0
+> 
 
 
 -- 
