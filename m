@@ -1,162 +1,422 @@
-Received: from mail-oa1-f78.google.com (mail-oa1-f78.google.com [209.85.160.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557B13998BE
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 07:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1248B3F54D9
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 08:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788854196; cv=none; b=jp/DI4b7JDmJK+OQNhWzAp/H4iIY7Zu6K0jNbqVUnevBXKYAuItTgnKeq87Pwg/ZB6ewHdESA/7diibk2WBBka3JF8zTtlfIuhwF6qMJnrsy54jL7VmwApZ8EcOn4JyqYP4jwHDIiQTGC0LeI3q57PNh2RTDMnUdcBdJoDXfp6I=
+	t=1788855674; cv=none; b=t2okPR+d1mAUuWF2hzJZihndaPH0nxqB/8UZyrZCLYYpsHGenrElQTK3WnlbATk/l0gl2J5WyHQZYFvKtblJAy53b5r5BhkCVeFCIwYXcjsD0CpOd4MG1NOYgCJ9OKbkchHDqEhEJmV4uBwI6vLsB6yBjLxHQpKf7Zl4n445T68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788854196; c=relaxed/simple;
-	bh=v50rnfyNHekOw3pkFFRsKufh9AeiT5Wh2yTuQCZH/Cc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tIc0jXUCsLGZN0LjAxegdliSqcHHm3ngt+4Vb8KTXtidRXauAlXp07B9dumsuqVapvmd00MFBXzFiUvFUl1fvIpADoKU3lO96u5NgE8KfjWGVl9KJ5ZJQ6i8XwpSkdAaokZ4IZyYJWGzLlVP0NZUJF0I7P01Q4olnWPylf2Jk8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.160.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oa1-f78.google.com with SMTP id 586e51a60fabf-464e69965b8so7033075fac.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 00:56:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788854193; x=1789458993;
-        h=content-type:to:from:subject:message-id:in-reply-to:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=3BySEZRl8UhArKujmGigWk2ThQA+iSjb8SaLMLunxGc=;
-        b=WqUI6IL5He2dJm4gNL74apwKM9nONZOZES701KuzhpyZPucGBCco1fhbjzcbTLBCTM
-         Jn7QVEuCzqtVFctVPgBKXYNn/NHbcH4ADpCtu31Dyw3mMNpiZR4oxGHIM8+Lo+vaYJ91
-         tLfdSJqLfJYy/C/7giSuHPts5anjNMUzfURX8mgUTVtK0EynecgTQMq1+D6Z2UGb5utd
-         T5kKzqrPFWEoPurnZqhlGAWtxdF/B6q2UMks+whq9DQtD4hu9quPQdZCzmJGOF9EI02s
-         ntKtqUScqacwNbD3wAg3YM87Es/ucE83U4GPWxFe0l6xkkfxfvLA0GS7rKRxypYxS31+
-         OMfQ==
-X-Forwarded-Encrypted: i=1; AKwUvBx+qT3HEGdcy1JCaRIUwvPCrZgIczFdLXBdQ8vTNOuG+HIjfwWYUwPXjE8DtQWijfbiJTkr/0JC+hQuXBPbqaVX16I=@vger.kernel.org
-X-Gm-Message-State: AFuF++lm8E+jqehytcWWYx9IhogpRpzjOf+i0UzsjSe0WLR+NJq/c7Bh
-	aV+AmN19PbPk+Kp6b7b4yfOcpOhqCu9+y8/acOAMCzMIDWn4UAKsCziCoBK4IilMcZKpHlU847T
-	kFq2pzAFl5N1kLxmZHvaBUhy3+4AWGRzEC38EqkpGs7C5IL7O3EHsl/dUmVM=
+	s=arc-20240116; t=1788855674; c=relaxed/simple;
+	bh=2GPv3CSE0qVbAhsN2Kki3IjcD+uwTwSi7RbmJjZRcIM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=jeUmXcRCYSgDF5S+gbuqMDaOPwunk/4AdWUX3A8vzUd3WuhjOrD2PUuHYwXdx1Euxn/F9dbuRNR56nsyyfgKHk2QK0rWXCE42A+LatqbAmaX0kqU0iXrCxcyVm2edZQ1/Y4UjTA1CAaavuaKk7Pxm5V/M7DgM0UeyUY6eQODOeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=KmAefoZG; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KmAefoZG"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260908082102euoutp01bc8431abb877722da285445148e6768e~TSr8-XUBg3190131901euoutp01m
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 08:21:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260908082102euoutp01bc8431abb877722da285445148e6768e~TSr8-XUBg3190131901euoutp01m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1788855662;
+	bh=Sfx91CShzrdAeYPF8QQviGdlRmGljU972NsYhPjm+hY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=KmAefoZGlo4tlmfgmycp5ej0k1xg7W7ABt9FWYLRrWFZZNx9ougFH/ZmcCnWZGvya
+	 f+WAV8zZQ464ojpc5Sv21SuCvzi/f98EEKTVuIGoWrWR0y5Tp+Zg7yIH5vZMWUZgRX
+	 Pr9DllXIxRHLWDddd/tr97W6bfWXSq0Vr9Vhu5cQ=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260908082101eucas1p1b98597ee7866e0889bb1a853c318175c~TSr8gW6EM0711007110eucas1p1J;
+	Tue,  8 Sep 2026 08:21:01 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260908082100eusmtip2b264cdb1a3edc330096d5427b9dc35a5~TSr7mezgn3204232042eusmtip2C;
+	Tue,  8 Sep 2026 08:21:00 +0000 (GMT)
+Message-ID: <fa91f9e3-ae45-44b2-9429-348fbc73c285@samsung.com>
+Date: Tue, 8 Sep 2026 10:21:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:2007:b0:6b5:ec2f:356e with SMTP id
- 006d021491bc7-6b5ec2f3676mr12495556eaf.31.1788854193238; Tue, 08 Sep 2026
- 00:56:33 -0700 (PDT)
-Date: Tue, 08 Sep 2026 00:56:33 -0700
-In-Reply-To: <6a707c4f.13bfb6d0.1ecdd5.027e.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6a9fbfb1.f614420e.2bf292.000a.GAE@google.com>
-Subject: Re: [syzbot] [trace?] WARNING in trace_rb_cpu_prepare
-From: syzbot <syzbot+fbe07bcf949966f3c00f@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH v6 07/12] mm/cma: Introduce cma_alloc_at() API
+To: Thierry Reding <thierry.reding@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20260904-tegra-vpr-v6-7-79042cfa8de5@nvidia.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20260908082101eucas1p1b98597ee7866e0889bb1a853c318175c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20260904104542eucas1p15f23d1ef005ed971314ee29521fc1e9d
+X-EPHeader: CA
+X-CMS-RootMailID: 20260904104542eucas1p15f23d1ef005ed971314ee29521fc1e9d
+References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
+	<CGME20260904104542eucas1p15f23d1ef005ed971314ee29521fc1e9d@eucas1p1.samsung.com>
+	<20260904-tegra-vpr-v6-7-79042cfa8de5@nvidia.com>
 
-syzbot has found a reproducer for the following issue on:
+On 04.09.2026 12:44, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>
+> This API can be used to allocate a number of CMA pages starting at a
+> fixed offset. This is useful, for example, if the CMA area is used as
+> backing storage for a nested allocator that has stricter requirements
+> than CMA itself.
+>
+> In order to reuse most of the existing code, the cma_range_alloc()
+> function is enhanced to take as inputs a range of pages to look for a
+> free region. If this range encompasses the entire CMA range, the
+> behavior is as before, but the range can also be specified to match
+> the offset and size passed in from cma_alloc_at(), in which case that
+> is the range that will be allocated (or allocation will fail if the
+> range is not available).
+>
+> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> Changes in v6:
+> - refactor cma_range_alloc() so it can be reused for _at() code paths
+> ---
+>  include/linux/cma.h        |  4 +++
+>  include/trace/events/cma.h | 77 ++++++++++++++++++++++++++++++++++++++--
+>  mm/cma.c                   | 88 +++++++++++++++++++++++++++++++++++-----------
+>  3 files changed, 146 insertions(+), 23 deletions(-)
+>
+> diff --git a/include/linux/cma.h b/include/linux/cma.h
+> index 8555d38a97b1..844404459a42 100644
+> --- a/include/linux/cma.h
+> +++ b/include/linux/cma.h
+> @@ -49,11 +49,15 @@ extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+>  					struct cma **res_cma);
+>  extern struct page *cma_alloc(struct cma *cma, unsigned long count, unsigned int align,
+>  			      bool no_warn);
+> +extern struct page *cma_alloc_at(struct cma *cma, unsigned long offset,
+> +				 unsigned long count, bool no_warn);
+>  extern bool cma_release(struct cma *cma, const struct page *pages, unsigned long count);
+>  
+>  struct page *cma_alloc_frozen(struct cma *cma, unsigned long count,
+>  		unsigned int align, bool no_warn);
+>  struct page *cma_alloc_frozen_compound(struct cma *cma, unsigned int order);
+> +struct page *cma_alloc_at_frozen(struct cma *cma, unsigned long offset,
+> +				 unsigned long count, bool no_warn);
+>  bool cma_release_frozen(struct cma *cma, const struct page *pages,
+>  		unsigned long count);
+>  
+> diff --git a/include/trace/events/cma.h b/include/trace/events/cma.h
+> index 37195edf2498..4e0ab63e303f 100644
+> --- a/include/trace/events/cma.h
+> +++ b/include/trace/events/cma.h
+> @@ -38,13 +38,17 @@ TRACE_EVENT(cma_release,
+>  
+>  TRACE_EVENT(cma_alloc_start,
+>  
+> -	TP_PROTO(const char *name, unsigned long request_count, unsigned long available_count,
+> +	TP_PROTO(const char *name, unsigned long start, unsigned long end,
+> +		unsigned long request_count, unsigned long available_count,
+>  		unsigned long total_count, unsigned int align),
+>  
+> -	TP_ARGS(name, request_count, available_count, total_count, align),
+> +	TP_ARGS(name, start, end, request_count, available_count, total_count,
+> +		align),
+>  
+>  	TP_STRUCT__entry(
+>  		__string(name, name)
+> +		__field(unsigned long, start)
+> +		__field(unsigned long, end)
+>  		__field(unsigned long, request_count)
+>  		__field(unsigned long, available_count)
+>  		__field(unsigned long, total_count)
+> @@ -53,14 +57,18 @@ TRACE_EVENT(cma_alloc_start,
+>  
+>  	TP_fast_assign(
+>  		__assign_str(name);
+> +		__entry->start = start;
+> +		__entry->end = end;
+>  		__entry->request_count = request_count;
+>  		__entry->available_count = available_count;
+>  		__entry->total_count = total_count;
+>  		__entry->align = align;
+>  	),
+>  
+> -	TP_printk("name=%s request_count=%lu available_count=%lu total_count=%lu align=%u",
+> +	TP_printk("name=%s start=%lu end=%lu request_count=%lu available_count=%lu total_count=%lu align=%u",
+>  		  __get_str(name),
+> +		  __entry->start,
+> +		  __entry->end,
+>  		  __entry->request_count,
+>  		  __entry->available_count,
+>  		  __entry->total_count,
+> @@ -132,6 +140,69 @@ TRACE_EVENT(cma_alloc_busy_retry,
+>  		  __entry->align)
+>  );
+>  
+> +TRACE_EVENT(cma_alloc_at_start,
+> +
+> +	TP_PROTO(const char *name, unsigned long pfn,
+> +		 unsigned long request_count, unsigned long available_count,
+> +		 unsigned long total_count),
+> +
+> +	TP_ARGS(name, pfn, request_count, available_count, total_count),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(unsigned long, pfn)
+> +		__field(unsigned long, request_count)
+> +		__field(unsigned long, available_count)
+> +		__field(unsigned long, total_count)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name);
+> +		__entry->pfn = pfn;
+> +		__entry->request_count = request_count;
+> +		__entry->available_count = available_count;
+> +		__entry->total_count = total_count;
+> +	),
+> +
+> +	TP_printk("name=%s pfn=%lx, request_count=%lu available_count=%lu total_count=%lu",
+> +		  __get_str(name),
+> +		  __entry->pfn,
+> +		  __entry->request_count,
+> +		  __entry->available_count,
+> +		  __entry->total_count)
+> +);
+> +
+> +TRACE_EVENT(cma_alloc_at_finish,
+> +
+> +	TP_PROTO(const char *name, unsigned long pfn, const struct page *page,
+> +		 unsigned long count, int errorno),
+> +
+> +	TP_ARGS(name, pfn, page, count, errorno),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(unsigned long, pfn)
+> +		__field(const struct page *, page)
+> +		__field(unsigned long, count)
+> +		__field(int, errorno)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name);
+> +		__entry->pfn = pfn;
+> +		__entry->page = page;
+> +		__entry->count = count;
+> +		__entry->errorno = errorno;
+> +	),
+> +
+> +	TP_printk("name=%s pfn=0x%lx page=%p count=%lu errorno=%d",
+> +		  __get_str(name),
+> +		  __entry->pfn,
+> +		  __entry->page,
+> +		  __entry->count,
+> +		  __entry->errorno)
+> +);
+> +
+>  #endif /* _TRACE_CMA_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/mm/cma.c b/mm/cma.c
+> index a10ea37a261d..f92d3a188209 100644
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -783,25 +783,32 @@ static void cma_debug_show_areas(struct cma *cma)
+>  	spin_unlock_irq(&cma->lock);
+>  }
+>  
+> +/*
+> + * Searches the CMA memrange, from @start to @end, for a free region of
+> + * @count bits. If @end is less or equal to @start, will search the entire
+> + * memrange.
+> + */
+>  static int cma_range_alloc(struct cma *cma, struct cma_memrange *cmr,
+> -				unsigned long count, unsigned int align,
+> -				struct page **pagep, gfp_t gfp)
+> +			   unsigned long start, unsigned long end,
+> +			   unsigned long count, unsigned int align,
+> +			   struct page **pagep, gfp_t gfp)
+>  {
+>  	unsigned long bitmap_maxno, bitmap_no, bitmap_count;
+> -	unsigned long start, pfn, mask, offset;
+> -	int ret = -EBUSY;
+> +	unsigned long pfn, mask, offset;
+>  	struct page *page = NULL;
+> +	int ret = -EBUSY;
+>  
+>  	mask = cma_bitmap_aligned_mask(cma, align);
+>  	offset = cma_bitmap_aligned_offset(cma, cmr, align);
+> -	bitmap_maxno = cma_bitmap_maxno(cma, cmr);
+> +	bitmap_maxno = (end > start) ? end : cma_bitmap_maxno(cma, cmr);
+>  	bitmap_count = cma_bitmap_pages_to_bits(cma, count);
+>  
+>  	if (bitmap_count > bitmap_maxno)
+>  		goto out;
+>  
+> -	for (start = 0; ; start = bitmap_no + mask + 1) {
+> +	while (true) {
+>  		spin_lock_irq(&cma->lock);
+> +
+>  		/*
+>  		 * If the request is larger than the available number
+>  		 * of pages, stop right away.
+> @@ -810,6 +817,7 @@ static int cma_range_alloc(struct cma *cma, struct cma_memrange *cmr,
+>  			spin_unlock_irq(&cma->lock);
+>  			break;
+>  		}
+> +
+>  		bitmap_no = bitmap_find_next_zero_area_off(cmr->bitmap,
+>  				bitmap_maxno, start, bitmap_count, mask,
+>  				offset);
+> @@ -835,10 +843,11 @@ static int cma_range_alloc(struct cma *cma, struct cma_memrange *cmr,
+>  
+>  		bitmap_set(cmr->bitmap, bitmap_no, bitmap_count);
+>  		cma->available_count -= count;
+> +
+>  		/*
+> -		 * It's safe to drop the lock here. We've marked this region for
+> -		 * our exclusive use. If the migration fails we will take the
+> -		 * lock again and unmark it.
+> +		 * It's safe to drop the lock here. We've marked this region
+> +		 * for our exclusive use. If the migration fails we will take
+> +		 * the lock again and unmark it.
+>  		 */
+>  		spin_unlock_irq(&cma->lock);
+>  
+> @@ -856,37 +865,45 @@ static int cma_range_alloc(struct cma *cma, struct cma_memrange *cmr,
+>  			 __func__, pfn, page);
+>  
+>  		trace_cma_alloc_busy_retry(cma->name, pfn, page, count, align);
+> +		start = bitmap_no + mask + 1;
+>  	}
+> +
+>  out:
+>  	if (!ret)
+>  		*pagep = page;
+> +
+>  	return ret;
+>  }
+>  
+> -static struct page *__cma_alloc_frozen(struct cma *cma,
+> -		unsigned long count, unsigned int align, gfp_t gfp)
+> +static struct page *__cma_alloc_frozen(struct cma *cma, unsigned long start,
+> +				       unsigned long end, unsigned long count,
+> +				       unsigned int align, gfp_t gfp)
+>  {
+>  	struct page *page = NULL;
+>  	int ret = -ENOMEM, r;
+>  	unsigned long i;
+> -	const char *name = cma ? cma->name : NULL;
+> +
+> +	/* cma_alloc_at() and friends will only work with single-range CMA */
+> +	if (WARN_ON_ONCE(start > 0 && cma->nranges != 1))
+> +		return page;
+>  
+>  	if (!cma || !cma->count)
+>  		return page;
+>  
+> -	pr_debug("%s(cma %p, name: %s, count %lu, align %d)\n", __func__,
+> -		(void *)cma, cma->name, count, align);
+> +	pr_debug("%s(cma %p, name: %s, start %lu, end %lu, count %lu, align %d)\n",
+> +		 __func__, (void *)cma, cma->name, start, end, count, align);
+>  
+>  	if (!count)
+>  		return page;
+>  
+> -	trace_cma_alloc_start(name, count, cma->available_count, cma->count, align);
+> +	trace_cma_alloc_start(cma->name, start, end, count,
+> +			      cma->available_count, cma->count, align);
+>  
+>  	for (r = 0; r < cma->nranges; r++) {
+>  		page = NULL;
+>  
+> -		ret = cma_range_alloc(cma, &cma->ranges[r], count, align,
+> -				       &page, gfp);
+> +		ret = cma_range_alloc(cma, &cma->ranges[r], start, end,
+> +				      count, align, &page, gfp);
+>  		if (ret != -EBUSY || page)
+>  			break;
+>  	}
+> @@ -908,7 +925,7 @@ static struct page *__cma_alloc_frozen(struct cma *cma,
+>  	}
+>  
+>  	pr_debug("%s(): returned %p\n", __func__, page);
+> -	trace_cma_alloc_finish(name, page ? page_to_pfn(page) : 0,
+> +	trace_cma_alloc_finish(cma->name, page ? page_to_pfn(page) : 0,
+>  			       page, count, align, ret);
+>  	if (page) {
+>  		count_vm_event(CMA_ALLOC_SUCCESS);
+> @@ -926,14 +943,22 @@ struct page *cma_alloc_frozen(struct cma *cma, unsigned long count,
+>  {
+>  	gfp_t gfp = GFP_KERNEL | (no_warn ? __GFP_NOWARN : 0);
+>  
+> -	return __cma_alloc_frozen(cma, count, align, gfp);
+> +	return __cma_alloc_frozen(cma, 0, 0, count, align, gfp);
+>  }
+>  
+>  struct page *cma_alloc_frozen_compound(struct cma *cma, unsigned int order)
+>  {
+>  	gfp_t gfp = GFP_KERNEL | __GFP_COMP | __GFP_NOWARN;
+>  
+> -	return __cma_alloc_frozen(cma, 1 << order, order, gfp);
+> +	return __cma_alloc_frozen(cma, 0, 0, 1 << order, order, gfp);
+> +}
+> +
+> +struct page *cma_alloc_at_frozen(struct cma *cma, unsigned long offset,
+> +				 unsigned long count, bool no_warn)
+> +{
+> +	gfp_t gfp = GFP_KERNEL | (no_warn ? __GFP_NOWARN : 0);
+> +
+> +	return __cma_alloc_frozen(cma, offset, offset + count, count, 0, gfp);
+>  }
+>  
+>  /**
+> @@ -959,6 +984,29 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+>  }
+>  EXPORT_SYMBOL_GPL(cma_alloc);
+>  
+> +/**
+> + * cma_alloc_at() - allocate pages from contiguous area at fixed offset
+> + * @cma:     Contiguous memory region for which the allocation is performed.
+> + * @offset:  Index of the first page to allocate.
+> + * @count:   Requested number of pages (in PAGE_SIZE order).
+> + * @no_warn: Avoid printing message about failed allocation.
+> + *
+> + * This function allocates a part of the contiguous memory on a specific
+> + * contiguous memory area.
+> + */
+> +struct page *cma_alloc_at(struct cma *cma, unsigned long offset,
+> +			  unsigned long count, bool no_warn)
+> +{
+> +	struct page *page;
+> +
+> +	page = cma_alloc_at_frozen(cma, offset, count, no_warn);
+> +	if (page)
+> +		set_pages_refcounted(page, count);
+> +
+> +	return page;
+> +}
+> +EXPORT_SYMBOL_GPL(cma_alloc_at);
+> +
+>  static struct cma_memrange *find_cma_memrange(struct cma *cma,
+>  		const struct page *pages, unsigned long count)
+>  {
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-HEAD commit:    28924df2a08f Merge tag 'perf-tools-fixes-for-v7.3-2026-09-..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15761af9580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b454dc6b1b7acd30
-dashboard link: https://syzkaller.appspot.com/bug?extid=fbe07bcf949966f3c00f
-compiler:       Debian clang version 22.1.8 (++20260613092233+e80beda6e255-1~exp1~20260613092250.77), Debian LLD 22.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ea2af9580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10eb3af9580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/dec945b3d75e/disk-28924df2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4e41f1bc0876/vmlinux-28924df2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ec9e83ddda2c/bzImage-28924df2.xz
-
-Bisection is inconclusive: the first bad commit could be any of:
-
-6a80838814ee tracing: Add show_event_triggers to expose active event triggers
-729757b96a66 tracing: Add show_event_filters to expose active event filters
-e4ef389e761b tracing: Check the return value of tracing_update_buffers()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d7d4f9580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fbe07bcf949966f3c00f@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-failed to allocate ring buffer on CPU 1
-WARNING: kernel/trace/ring_buffer.c:8103 at trace_rb_cpu_prepare+0x330/0x3c0 kernel/trace/ring_buffer.c:8102, CPU#0: syz.2.31/6050
-Modules linked in:
-CPU: 0 UID: 0 PID: 6050 Comm: syz.2.31 Not tainted syzkaller #0 PREEMPT_{RT,(full)} 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/24/2026
-RIP: 0010:trace_rb_cpu_prepare+0x332/0x3c0 kernel/trace/ring_buffer.c:8102
-Code: 08 f0 48 0f ab 03 31 c0 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 87 2e fc ff 48 8d 3d 40 36 eb 0d 89 ee <67> 48 0f b9 3a b8 f4 ff ff ff eb d2 e8 6d 2e fc ff e9 ef fe ff ff
-RSP: 0018:ffffc90004a377d0 EFLAGS: 00010293
-RAX: ffffffff81ca5f89 RBX: dffffc0000000000 RCX: ffff888027b3be80
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffffffff8fb595d0
-RBP: 0000000000000001 R08: ffffffff8fb1e77f R09: 1ffffffff1f63cef
-R10: dffffc0000000000 R11: fffffbfff1f63cf0 R12: 0000000000000000
-R13: ffff88803e2a2908 R14: ffff88805d68b0a0 R15: 0000000000000000
-FS:  00007f1a0c90e6c0(0000) GS:ffff888125bd1000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005555867aea68 CR3: 000000002b852000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- cpuhp_invoke_callback+0x498/0x810 kernel/cpu.c:204
- cpuhp_issue_call+0x3f0/0x750 kernel/cpu.c:-1
- __cpuhp_state_add_instance_cpuslocked+0x225/0x560 kernel/cpu.c:2423
- __cpuhp_state_add_instance+0x25/0x40 kernel/cpu.c:2444
- cpuhp_state_add_instance include/linux/cpuhotplug.h:383 [inline]
- alloc_buffer+0x188f/0x1d70 kernel/trace/ring_buffer.c:2917
- __ring_buffer_alloc+0x2c/0x40 kernel/trace/ring_buffer.c:2959
- allocate_trace_buffer+0x1d2/0x950 kernel/trace/trace.c:8465
- allocate_trace_buffers kernel/trace/trace.c:8498 [inline]
- trace_array_create_systems+0x590/0xe60 kernel/trace/trace.c:8676
- trace_array_create kernel/trace/trace.c:8719 [inline]
- instance_mkdir+0xd5/0x140 kernel/trace/trace.c:8734
- tracefs_syscall_mkdir+0x11a/0x190 fs/tracefs/inode.c:121
- vfs_mkdir+0x408/0x620 fs/namei.c:5410
- filename_mkdirat+0x289/0x520 fs/namei.c:5443
- __do_sys_mkdirat fs/namei.c:5464 [inline]
- __se_sys_mkdirat+0x35/0x150 fs/namei.c:5461
- do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
- do_syscall_64+0x166/0x520 arch/x86/entry/syscall_64.c:84
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1a0d2ae159
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1a0c90e028 EFLAGS: 00000246 ORIG_RAX: 0000000000000102
-RAX: ffffffffffffffda RBX: 00007f1a0d535fa0 RCX: 00007f1a0d2ae159
-RDX: 00000000000001ff RSI: 0000200000000140 RDI: ffffffffffffff9c
-RBP: 00007f1a0d345024 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f1a0d536038 R14: 00007f1a0d535fa0 R15: 00007ffc0a111b18
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	08 f0                	or     %dh,%al
-   2:	48 0f ab 03          	bts    %rax,(%rbx)
-   6:	31 c0                	xor    %eax,%eax
-   8:	48 83 c4 30          	add    $0x30,%rsp
-   c:	5b                   	pop    %rbx
-   d:	41 5c                	pop    %r12
-   f:	41 5d                	pop    %r13
-  11:	41 5e                	pop    %r14
-  13:	41 5f                	pop    %r15
-  15:	5d                   	pop    %rbp
-  16:	c3                   	ret
-  17:	cc                   	int3
-  18:	cc                   	int3
-  19:	cc                   	int3
-  1a:	cc                   	int3
-  1b:	cc                   	int3
-  1c:	e8 87 2e fc ff       	call   0xfffc2ea8
-  21:	48 8d 3d 40 36 eb 0d 	lea    0xdeb3640(%rip),%rdi        # 0xdeb3668
-  28:	89 ee                	mov    %ebp,%esi
-* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
-  2f:	b8 f4 ff ff ff       	mov    $0xfffffff4,%eax
-  34:	eb d2                	jmp    0x8
-  36:	e8 6d 2e fc ff       	call   0xfffc2ea8
-  3b:	e9 ef fe ff ff       	jmp    0xffffff2f
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
