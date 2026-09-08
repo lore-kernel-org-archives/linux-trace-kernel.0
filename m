@@ -1,56 +1,56 @@
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F5B51FCB1
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 09:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B73521218
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 09:09:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788858586; cv=none; b=mns8r5vcpus1HxpfSMBXKBPCQtDxr+WleSLsQbm0uqvzPdEVnQr8srKigo4yit6UfT7zABm3MSaMzvJAjUCsIPLir35CddnTrtVQ06bVQceOimNKyWXixY54FlTi3NIeYjuFeOb2drLIQAhr6klrkeX3TYRmO/KO7zx3K/Y/MJo=
+	t=1788858587; cv=none; b=NeWCNnru5dQkEEDZfpTnxL6mG1+b20RWoH7jAqYXzcd5PXMkDcM/5ByDfV0j63j6/KOgi0Qy1ucb2MbQj1L7CObnA+aOG5NDCIPuIRHLerA2ahBRGenXKeM2H7bAAIOG0BHhtrHWs1Ln8iCAHWrOUYMLEunLRiy5wWqoZZNlPaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788858586; c=relaxed/simple;
-	bh=WcDaN6hHiVluvOA2lS8pubL4eTLiYDYeTnKPFd3Fs44=;
+	s=arc-20240116; t=1788858587; c=relaxed/simple;
+	bh=94iWMjTIwc0TonrLV6eGBag3QwHv2vDmbqxBkMi2cSQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VGtahgtjmIlfU1VPcVpSqmDKXVWPfModJRV/ajmK7U/gk9olExWStWHUSn8Youz4sYc9DNxzcMbWsKrv/z0NkoiuIpzI+TXgM3EaVK0+deVK3Ho+Qc8o1nAPRb4v6RrL4NuxgAAYtzBnBlERPfuiEuY65OQ84XT4dxvfFNitXaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WfKp1c6n; arc=none smtp.client-ip=209.85.128.70
+	 To:Cc:Content-Type; b=qAw9LOHOCC2PPNHK1/LrIuqZMiah+JcB6jrr3YClXWsg7Z0xRpRplRtEoh+/0CxdrXL/O1H3m5f4a0dbSqMBL7cE/N+eRtB4npU9h/Q9AtiGNI77VlWe2fmqLvFm09FB4BQokeQRCSA8if7/qoaTdizEToVqQ/z/wZb5GlyR1Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vFvrTHkt; arc=none smtp.client-ip=209.85.128.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WfKp1c6n"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49d1a778b9dso6025285e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 02:09:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vFvrTHkt"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49ccfad90f1so27007915e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 02:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788858582; x=1789463382; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1788858583; x=1789463383; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=WJHTU/SBkLLmpaJ4t49Bu1+HFXy4GBXkX7+X7MengXI=;
-        b=WfKp1c6ngkqs63mIu+eY03vs0bHj1YVZePAMw5yla3TtiEWd4pH0mgGY8O9eXbRILt
-         W3O9+f2NaKAEFauYMef58rcLnCl+sPl0z332M0vnnQSYLkDTsio/5wV3XzmohhlshRjW
-         lcY1ziGx8rlOtCbSwUJMJFP44u80aBpjXoVC+XRjbSR4f0K6DIiqrGyRYHMbxFNJj9px
-         AOVA4IWlh+TpkvrvI5mnt+yeuubhZW41tHL8DB8S7HEFs8AvfNrLc1c48DX6yJ9Ke6vI
-         5K+OdYL7mQ/4qP2ZhOvQuUonAg6DgsrUwmJsxw4b1uc+e+w/fTh/cz3JyG4gIqBHitBV
-         Yf5w==
+        bh=boy6Bccw47o3amNkT4CAs/pFHV7Gzoaqb7AJB1HcaIk=;
+        b=vFvrTHktKvSCZHDzAtE3OFzcgu2fUDhy8s4G7hmy3OinJIDdqUgY9GMgZ2Gq1pU9wC
+         2KaY7YyP/K+F9CGcC8M6rnRtkoaX4G9Kc00fwXb8M+qzeFtwMUG5TDfEgaXdM3GLKPxX
+         i9REI/tLocISSf8bxonLZgn8E6xU8mWIp19Loghw8U5q+ogOJOBxhl8U1T1K/TQvj6cn
+         +OhX8v7ygqGj+SajFpgnN0TNfYrhlQTolj+uvloFdNJmDxu9VZof/KF9FRPH1RyU6WH7
+         q1/aOJUWreWC6iuotngz4X7/35UTemGIIPe54kylsukCcLjgJ/h8ENx87t/GaFs1J0z4
+         0LSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788858582; x=1789463382;
+        d=1e100.net; s=20251104; t=1788858583; x=1789463383;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=WJHTU/SBkLLmpaJ4t49Bu1+HFXy4GBXkX7+X7MengXI=;
-        b=AXTixP42R+uSpUTnzFiFNH0YaVpy+iNgblh+6sY+n6qCcPgUrhTuiZnLZNFfk76Xkp
-         48T5b68tfSuIILF9QK9rTPgcyhpkMItsmiQuHkHqH2ywZcDv0hULPVKbdyTDj0zO4SP6
-         f9Ube9+Y9DP43g2pSdfaDnVcEPNNGJEah+Ty7GCXiej9HU8+UUPFz9cqvDq3T439LKVS
-         2cG2z2cy7gyItRLE2XovCP6NheqVnBCfupHseJTnAI/Bem+vJnPey+sikj48WLFVGZrX
-         OeeCES51vHAlglvZq9cuaxnT+I5yH5w4XUg0PU/IMu5J3bPiVQzO0WAwDZYFgemdJ09B
-         ao4g==
-X-Forwarded-Encrypted: i=1; AKwUvByVSxILoVJqk+FCuXZK+Nmk78/4nhzwVSCnh/sdSJ9m2l782cHXPEoZq6fUgkqyMQpxQLxZfmG+ltIlT4ts9FlEEa8=@vger.kernel.org
-X-Gm-Message-State: AFuF++nMGrrKDGclJx3b+qkmb/h0Fgb1N3AvWR8Xygiblb5DPHyCDbrQ
-	yCAMcZz5s0fTwwC+c4W2YdYfCj7OuoLIreaF60xLbiMoY9epBTs3qhtuBs8kOr7G0zVjiQv7L8Q
-	55n7prOAvf1eqFsxPJQH1+g==
-X-Received: from wmpo33.prod.google.com ([2002:a05:600c:33a1:b0:499:58e2:b51f])
+        bh=boy6Bccw47o3amNkT4CAs/pFHV7Gzoaqb7AJB1HcaIk=;
+        b=iE5Cb1x5mdS+kKyl6nYInNVA7Yus9yBteZjCOVfrnox6yUNspKc51DuyPmTLPvFa+L
+         6SwR8EFfyOXa+u8JwK8Ew8zcB+vWaiTQh+fNsNd/BziftGOuznEPGcSnSUj9s9uzf9xZ
+         bbySuc3WDXx7cQk6OWi+3iharOg+YfkkwxVSu9TkWASsE5iQIcGfLhQj9CZiDeH8waVO
+         0pzx3Yzrj6kgZbk2801zSyrF9yebITljp6/tFPx0Dsd5FnfKf/R4Srpx1nwyGiSy4vSe
+         fmBcXYP8wOEL3LFrVqzcDd8lbrQxdcm+Tbd4ri+hoSEZpgaN2ksiV4evgJYXT43BH42r
+         pcGQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwqxvPQ+yyNCmhUHoogonSd/VhvgjOICYNV7RYqjPLReZVvpygLk6AMLr5Pp2OHsA7AlccPojZt33mjoBYjxX1QxSs=@vger.kernel.org
+X-Gm-Message-State: AFuF++k9jQ0rD2aFS8OuIdJbwBZQFDXIgC08d/3UDJJwyxUvjdGAPqYq
+	vFA3GrsfrY3beNeEhXhYxucNMcfIwFqAnqkRMoEKQ73sc8Dn9PIIAIxdgadXzaIu4ABiGfVMNI4
+	vrINk0AvqjvnjMN1iMhu92w==
+X-Received: from wmby25-n2.prod.google.com ([2002:a05:600c:c059:20b0:499:dd82:8175])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8b6d:b0:499:a277:e8b5 with SMTP id 5b1f17b1804b1-49cf7fdd67emr540341955e9.3.1788858582425;
- Tue, 08 Sep 2026 02:09:42 -0700 (PDT)
-Date: Tue,  8 Sep 2026 10:09:36 +0100
+ 2002:a05:600d:4449:20b0:49d:3a:e576 with SMTP id 5b1f17b1804b1-49d003ae639mr149520405e9.5.1788858583494;
+ Tue, 08 Sep 2026 02:09:43 -0700 (PDT)
+Date: Tue,  8 Sep 2026 10:09:37 +0100
 In-Reply-To: <20260908090937.838544-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260908090937.838544-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.979.g7e5102b832-goog
-Message-ID: <20260908090937.838544-3-vdonnefort@google.com>
-Subject: [PATCH v2 2/3] tracing: Rename trace_array::entries to capacity
+Message-ID: <20260908090937.838544-4-vdonnefort@google.com>
+Subject: [PATCH v2 3/3] tracing: Rename tracing_entries_fops to tracing_capacity_fops
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -73,163 +73,98 @@ Since commit 8a5f63637890 ("ring-buffer: Fix subbuf resize race with
 ring buffer readers"), "capacity" refers to the memory available for
 events, while "entries" refers to the number of events in a ring buffer.
 As a consequence, rename trace_array::entries to capacity to align with
-this convention and avoid any confusion.
+this convention.
 
-Rename also the helper functions trace_set_buffer_entries and
-update_buffer_entries.
+While at it, rename also tracing_total_entries_fops. It is the aggragate
+of all ring buffer capacities.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/trace.c          | 26 +++++++++++++-------------
- kernel/trace/trace.h          |  4 ++--
- kernel/trace/trace_snapshot.c | 14 +++++++-------
- 3 files changed, 22 insertions(+), 22 deletions(-)
+ kernel/trace/trace.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index f0251788ec75..400d7a97e745 100644
+index 400d7a97e745..780c4987032b 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4701,20 +4701,20 @@ int tracer_init(struct tracer *t, struct trace_array *tr)
- 	return t->init(tr);
+@@ -5672,8 +5672,7 @@ tracing_syscall_buf_write(struct file *filp, const char __user *ubuf,
  }
  
--void trace_set_buffer_entries(struct array_buffer *buf, unsigned long val)
-+void trace_set_buffer_capacity(struct array_buffer *buf, unsigned long val)
+ static ssize_t
+-tracing_entries_read(struct file *filp, char __user *ubuf,
+-		     size_t cnt, loff_t *ppos)
++tracing_capacity_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
  {
- 	int cpu;
- 
- 	for_each_tracing_cpu(cpu)
--		per_cpu_ptr(buf->data, cpu)->entries = val;
-+		per_cpu_ptr(buf->data, cpu)->capacity = val;
+ 	struct inode *inode = file_inode(filp);
+ 	struct trace_array *tr = inode->i_private;
+@@ -5720,8 +5719,7 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
  }
  
--static void update_buffer_entries(struct array_buffer *buf, int cpu)
-+static void update_buffer_capacity(struct array_buffer *buf, int cpu)
+ static ssize_t
+-tracing_entries_write(struct file *filp, const char __user *ubuf,
+-		      size_t cnt, loff_t *ppos)
++tracing_capacity_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
  {
- 	if (cpu == RING_BUFFER_ALL_CPUS) {
--		trace_set_buffer_entries(buf, ring_buffer_capacity(buf->buffer, 0));
-+		trace_set_buffer_capacity(buf, ring_buffer_capacity(buf->buffer, 0));
- 	} else {
--		per_cpu_ptr(buf->data, cpu)->entries = ring_buffer_capacity(buf->buffer, cpu);
-+		per_cpu_ptr(buf->data, cpu)->capacity = ring_buffer_capacity(buf->buffer, cpu);
- 	}
+ 	struct inode *inode = file_inode(filp);
+ 	struct trace_array *tr = inode->i_private;
+@@ -5748,8 +5746,7 @@ tracing_entries_write(struct file *filp, const char __user *ubuf,
  }
  
-@@ -4770,12 +4770,12 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
- 		goto out_start;
- 	}
+ static ssize_t
+-tracing_total_entries_read(struct file *filp, char __user *ubuf,
+-				size_t cnt, loff_t *ppos)
++tracing_total_capacity_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ {
+ 	struct trace_array *tr = filp->private_data;
+ 	char buf[64];
+@@ -6600,10 +6597,10 @@ static const struct file_operations tracing_pipe_fops = {
+ 	.release	= tracing_release_pipe,
+ };
  
--	update_buffer_entries(&tr->snapshot_buffer, cpu);
-+	update_buffer_capacity(&tr->snapshot_buffer, cpu);
+-static const struct file_operations tracing_entries_fops = {
++static const struct file_operations tracing_capacity_fops = {
+ 	.open		= tracing_open_generic_tr,
+-	.read		= tracing_entries_read,
+-	.write		= tracing_entries_write,
++	.read		= tracing_capacity_read,
++	.write		= tracing_capacity_write,
+ 	.llseek		= generic_file_llseek,
+ 	.release	= tracing_release_generic_tr,
+ };
+@@ -6623,9 +6620,9 @@ static const struct file_operations tracing_buffer_meta_fops = {
+ 	.release	= tracing_seq_release,
+ };
  
-  out:
- #endif /* CONFIG_TRACER_SNAPSHOT */
+-static const struct file_operations tracing_total_entries_fops = {
++static const struct file_operations tracing_total_capacity_fops = {
+ 	.open		= tracing_open_generic_tr,
+-	.read		= tracing_total_entries_read,
++	.read		= tracing_total_capacity_read,
+ 	.llseek		= generic_file_llseek,
+ 	.release	= tracing_release_generic_tr,
+ };
+@@ -7653,7 +7650,7 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
+ 				tr, cpu, &tracing_stats_fops);
  
--	update_buffer_entries(&tr->array_buffer, cpu);
-+	update_buffer_capacity(&tr->array_buffer, cpu);
-  out_start:
- 	tracing_start_tr(tr);
- 	return ret;
-@@ -5694,8 +5694,8 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
- 		for_each_tracing_cpu(cpu) {
- 			/* fill in the size from first enabled cpu */
- 			if (size == 0)
--				size = per_cpu_ptr(tr->array_buffer.data, cpu)->entries;
--			if (size != per_cpu_ptr(tr->array_buffer.data, cpu)->entries) {
-+				size = per_cpu_ptr(tr->array_buffer.data, cpu)->capacity;
-+			if (size != per_cpu_ptr(tr->array_buffer.data, cpu)->capacity) {
- 				buf_size_same = 0;
- 				break;
- 			}
-@@ -5711,7 +5711,7 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
- 		} else
- 			r = sprintf(buf, "X\n");
- 	} else
--		r = sprintf(buf, "%lu\n", per_cpu_ptr(tr->array_buffer.data, cpu)->entries >> 10);
-+		r = sprintf(buf, "%lu\n", per_cpu_ptr(tr->array_buffer.data, cpu)->capacity >> 10);
+ 	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_WRITE, d_cpu,
+-				tr, cpu, &tracing_entries_fops);
++				tr, cpu, &tracing_capacity_fops);
  
- 	mutex_unlock(&trace_types_lock);
+ 	if (tr->range_addr_start)
+ 		trace_create_cpu_file("buffer_meta", TRACE_MODE_READ, d_cpu,
+@@ -8954,10 +8951,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 			  tr, &tracing_pipe_fops);
  
-@@ -5758,7 +5758,7 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
+ 	trace_create_file("buffer_size_kb", writable_mode, d_tracer,
+-			  tr, &tracing_entries_fops);
++			  tr, &tracing_capacity_fops);
  
- 	mutex_lock(&trace_types_lock);
- 	for_each_tracing_cpu(cpu) {
--		size += per_cpu_ptr(tr->array_buffer.data, cpu)->entries >> 10;
-+		size += per_cpu_ptr(tr->array_buffer.data, cpu)->capacity >> 10;
- 		if (!tr->ring_buffer_expanded)
- 			expanded_size += trace_buf_size >> 10;
- 	}
-@@ -8475,8 +8475,8 @@ int allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int
- 	}
+ 	trace_create_file("buffer_total_size_kb", TRACE_MODE_READ, d_tracer,
+-			  tr, &tracing_total_entries_fops);
++			  tr, &tracing_total_capacity_fops);
  
- 	/* Allocate the first page for all buffers */
--	trace_set_buffer_entries(&tr->array_buffer,
--				 ring_buffer_capacity(tr->array_buffer.buffer, 0));
-+	trace_set_buffer_capacity(&tr->array_buffer,
-+				  ring_buffer_capacity(tr->array_buffer.buffer, 0));
- 
- 	return 0;
- }
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 5e76f94e7a80..d3d7e88d6172 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -191,7 +191,7 @@ struct trace_array;
- struct trace_array_cpu {
- 	local_t			disabled;
- 
--	unsigned long		entries;
-+	unsigned long		capacity;
- 	unsigned long		saved_latency;
- 	unsigned long		critical_start;
- 	unsigned long		critical_end;
-@@ -730,7 +730,7 @@ ssize_t tracing_nsecs_read(unsigned long *ptr, char __user *ubuf,
- ssize_t tracing_nsecs_write(unsigned long *ptr, const char __user *ubuf,
- 			    size_t cnt, loff_t *ppos);
- 
--void trace_set_buffer_entries(struct array_buffer *buf, unsigned long val);
-+void trace_set_buffer_capacity(struct array_buffer *buf, unsigned long val);
- 
- /*
-  * Should be used after trace_array_get(), trace_types_lock
-diff --git a/kernel/trace/trace_snapshot.c b/kernel/trace/trace_snapshot.c
-index 07b43c9863a2..d7308f3b505f 100644
---- a/kernel/trace/trace_snapshot.c
-+++ b/kernel/trace/trace_snapshot.c
-@@ -142,18 +142,18 @@ int resize_buffer_duplicate_size(struct array_buffer *trace_buf,
- 	if (cpu_id == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			ret = ring_buffer_resize(trace_buf->buffer,
--				 per_cpu_ptr(size_buf->data, cpu)->entries, cpu);
-+				 per_cpu_ptr(size_buf->data, cpu)->capacity, cpu);
- 			if (ret < 0)
- 				break;
--			per_cpu_ptr(trace_buf->data, cpu)->entries =
--				per_cpu_ptr(size_buf->data, cpu)->entries;
-+			per_cpu_ptr(trace_buf->data, cpu)->capacity =
-+				per_cpu_ptr(size_buf->data, cpu)->capacity;
- 		}
- 	} else {
- 		ret = ring_buffer_resize(trace_buf->buffer,
--				 per_cpu_ptr(size_buf->data, cpu_id)->entries, cpu_id);
-+				 per_cpu_ptr(size_buf->data, cpu_id)->capacity, cpu_id);
- 		if (ret == 0)
--			per_cpu_ptr(trace_buf->data, cpu_id)->entries =
--				per_cpu_ptr(size_buf->data, cpu_id)->entries;
-+			per_cpu_ptr(trace_buf->data, cpu_id)->capacity =
-+				per_cpu_ptr(size_buf->data, cpu_id)->capacity;
- 	}
- 
- 	return ret;
-@@ -193,7 +193,7 @@ void free_snapshot(struct trace_array *tr)
- 	 */
- 	ring_buffer_subbuf_order_set(tr->snapshot_buffer.buffer, 0);
- 	ring_buffer_resize(tr->snapshot_buffer.buffer, 1, RING_BUFFER_ALL_CPUS);
--	trace_set_buffer_entries(&tr->snapshot_buffer, 1);
-+	trace_set_buffer_capacity(&tr->snapshot_buffer, 1);
- 	tracing_reset_online_cpus(&tr->snapshot_buffer);
- 	tr->allocated_snapshot = false;
- }
+ 	trace_create_file("trace_clock", writable_mode, d_tracer, tr,
+ 			  &trace_clock_fops);
 -- 
 2.55.0.979.g7e5102b832-goog
 
