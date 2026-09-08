@@ -1,87 +1,123 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07BFDF59;
-	Tue,  8 Sep 2026 05:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73EB37F8CA;
+	Tue,  8 Sep 2026 06:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788844773; cv=none; b=Mo8xH+5oASiKg0Tt4iadVtEKrbljjq1OC7qO+7f3inGCcNrq+I1iawLu1vFSyadVvQx6aFdTWrEKJfPFk1yA8H+oWavjQQO4VdTrw+3q/Uhu+Tpj2HPwmfT2ONdw5dh5Fg7zsgr/D/fMQ1CZekpNvvs0WfE4zrSRJ5TUgEiQo/Y=
+	t=1788848540; cv=none; b=AReqSsXLsmf4VUXBNTb6y8yFLwdzJQYkLPf5qn/VpW7s+BnXdpSockGkDMK7or/lDepzWOwgasMnDx1D7ivTedHt4Ri1UDwFA8QZHlYRSQmwBr4S2WqJHdONw6av7CvblIpLR9OGyRhd0Xp0Yo5SlQgw9XuZZVRMaoE6gBFCW60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788844773; c=relaxed/simple;
-	bh=10fUHKpmSTJ+7R5x0KbZuyTXiA3ie8KsbJgtDEqUc78=;
-	h=From:To:Cc:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=YbpNqKBmLw7giOYiHVtsyvkoedB1yb0z0ENGPjU1koH/d8/9BducUxh7gUhCMWb/GbmkfEarmzI1+FMVCcOstOhWbLHY4D8iCEykytF9mICg+ptBZch7Dc2oen2tdqZ5yD8Bk4+OKmtCGyUZL2ZdeYSLFKs6YhcpOKuY0Lk0oc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BGFN+osx; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1788848540; c=relaxed/simple;
+	bh=BsE3w5FprehD8KyPfUD9ThZFJtkdMaJDUcMwNFyC/4o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i+xe3/RGkyukfHdSHsHXb8TOVh/cltCxzGqmQJm9/+uNC++SfOkEjv/gxjsX/Z4w+J/VoNs8U7j4yYVp1ecGQPrCKfWEHt+6qWu74V9ALfs18FS3h/JSmx92Xoewh9B9SBV85UpeI0n/u4PN1gudV+WS5uXXezOEvRGdSpsz/gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MZrEeCh0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7oPc0+n1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BGFN+osx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:MIME-Version:Content-Type:Date:
-	Message-ID; bh=10fUHKpmSTJ+7R5x0KbZuyTXiA3ie8KsbJgtDEqUc78=; b=B
-	GFN+osx/DyscS3zmrs/knSYtHEJPBP4Mey16RFpLdwy+7xfcnAA26wwXEGSVd545
-	LV1TWDGRFV3RvO8znHI6U1G3X1dGanc4ByeRVW+u4SexLDrK4S/mKdLCWvxytep2
-	pOTvLQ1aItGpJsddomJ7cDhptUbjvvUv+UpSidunM4=
-Received: from 163.com (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBXIM6mmp9qk6R1BQ--.60461S2;
-	Tue, 08 Sep 2026 13:18:31 +0800 (CST)
-From: Cao Ruichuang <create0818@163.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Luis Chamberlain <mcgrof@kernel.org>,
- Petr Pavlu <petr.pavlu@suse.com>,
- Daniel Gomez <da.gomez@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>,
- Aaron Tomlin <atomlin@atomlin.com>,
- Shuah Khan <shuah@kernel.org>,
- linux-trace-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org,
- linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing: Export live module tracepoint strings in
- printk_formats
-In-Reply-To: <178647423521.280401.10184675433127100074@163.com>
-References: <20260428083920.4a64eaf6@gandalf.local.home>
- <178647423521.280401.10184675433127100074@163.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MZrEeCh0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7oPc0+n1"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788848537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6k1TQAscyciGriLYtNZRwXqcuqy8v/dZ5ksZ2zTH48w=;
+	b=MZrEeCh0tJesxx3G04P4pgQKtfdfkpDP7k+vT2T1sA6Z6mbwvO1xJPXzmTTxY8cRsTcPnZ
+	ympId3DUhqyiKL9MSCShgeVD+NUcU0Yg21kWYlTUznyjKUc7ZFb63Papgei/1+fcFHgrHn
+	Z+HVHTn7wKpTLyequnBa15i7Wp5pyE/h8Ls7jTQLeEbNcJLqmkVfvFt3z1ttumD5i/F+lz
+	fnT6BXczFwo/GxFG4trIbNhdHyhg6XFM2YHGTTa2EFEFBzPYqJQPlq8/IXQOFTJ2YFx8jg
+	N5kU+XfadwfwBJws23sa8HP+lU5WbHZRH8GFfAa4aLgqa6VfYm5rqT6zN6RHvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788848537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6k1TQAscyciGriLYtNZRwXqcuqy8v/dZ5ksZ2zTH48w=;
+	b=7oPc0+n1TGMbWLx9VQX3H3Gd1StIMHRYoqo/chfIFf6KfNYeuyIJvEoRbcDAWiNMP9HKzF
+	Jkjo+lDA/k/bcgDg==
+Subject: [PATCH v2 0/7] tracing: Parse filter from boot event string
+Date: Tue, 08 Sep 2026 08:22:14 +0200
+Message-Id: <20260908-tracing-cli-event-filter-v2-0-05396a3fb663@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Date: Tue, 08 Sep 2026 05:18:23 +0000
-Message-ID: <5ba26e8ce9dd4d51ab4ff7c75f14b139@163.com>
-X-CM-TRANSID:_____wBXIM6mmp9qk6R1BQ--.60461S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtryxGFW3Cr43KrW3WFWruFg_yoWfuFX_ur
-	yqqwnFgw48uanFyrs8KFW5Xa47Cw47u34UA3y8uwn3t348ArsrGF4kKr9rXw1xGa4F9F9I
-	ka1kJa4xJr1avjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbX18PUUUUU==
-X-CM-SenderInfo: pfuht3jhqyimi6rwjhhfrp/xtbC6AdSi2qfmqeoeAAA3u
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WNywqDMBBFf0Vm3SlJbH101f8oLkIcdUBimaTBI
+ v57U6HLLs+Be+4GgYQpwK3YQChx4MVnMKcC3GT9SMh9ZjDKVKrRBqNYx35ENzNSIh9x4DmSYO1
+ aTVSW1tQEef4UGng90o8u88QhLvI+npL+2l+0/B9NGhVea3ehRpnWNdV9Zv+Ksnhezz1Bt+/7B
+ 1Qqn9nEAAAA
+X-Change-ID: 20260812-tracing-cli-event-filter-7c91ee33a27e
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ stable@vger.kernel.org
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788848535; l=2176;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=BsE3w5FprehD8KyPfUD9ThZFJtkdMaJDUcMwNFyC/4o=;
+ b=MAG66dD9xxK2pQZ3gqlJCxZ/DuoVtnZ/OJW74GqhwSksq2P8Oei5bR1uJema7GM4eQdSYL7Yk
+ n9EPLJAyi9nAKKgMC7hEyaWILRV/Zf8j6HxL4BxVIg7w5DWY1vgOmIi
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi Steven,
+Make it possible to specify a trace event filter from the
+kernel command line.
 
-Gentle ping on this v3.
+Example:
 
-While rechecking the selftest, I found that the unload checks can miss a
-failure: if the first test string remains in printk_formats but the
-second is gone, the test still passes. The first negated grep returns
-nonzero, but set -e does not terminate the script for a negated command.
-I reproduced this with a fixture containing only the first string.
+    trace_event=syscalls:sys_enter_clock_nanosleep:filter:which_clock==0
 
-I would add explicit failure handling (|| exit_fail) to both checks.
-Would you prefer a v4 with this correction?
+As a preparation also add a KUnit test for the event string parsing.
 
-I can also make the final rmmod failure fatal and add a comment explaining
-that trace_bprintk_fmt_cnt counts permanently retained, unique formats
-and therefore is not decremented on module unload.
+Patch 1 is a bugfix which is already useful.
+Patch 2 is a cleanup which is already useful.
 
-The current test checks the exported mappings, but does not exercise the
-new membership lookup through a TRACE_EVENT and the tp_printk path. I can
-extend coverage there as well if you would like it included in v4.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Require an explicit :filter: prefix.
+- Drop RFC prefix.
+- Add MODULE_DESCRIPTION() to test module.
+- Avoid invalid __free(kfree).
+- Add documentation.
+- Only allow filters from the boot command line.
+- Move the filter to the very end of the event string and add a :filter: keyword.
+- Add an example.
+- Link to v1: https://patch.msgid.link/20260813-tracing-cli-event-filter-v1-0-57c4e8029c86@linutronix.de
 
-Thanks,
-Cao Ruichuang
+---
+Thomas Weißschuh (7):
+      tracing: Restore :mod: trailer after parsing in ftrace_set_clr_event()
+      tracing: Remove duplicate declaration of ftrace_set_clr_event()
+      tracing: Stop modifying the input buffer in ftrace_set_clr_event()
+      tracing: Split the event string parsing logic into a dedicated function
+      tracing: Add a test for ftrace_parse_event_string()
+      tracing: Add a filter argument to __ftrace_set_clr_event()
+      tracing: Parse filter from boot event string
+
+ Documentation/admin-guide/kernel-parameters.txt |   9 +-
+ Documentation/trace/events.rst                  |   5 +
+ include/linux/trace_events.h                    |   2 +-
+ kernel/trace/Kconfig                            |   8 ++
+ kernel/trace/Makefile                           |   1 +
+ kernel/trace/trace.h                            |   6 +-
+ kernel/trace/trace_boot.c                       |   2 +-
+ kernel/trace/trace_events.c                     | 123 +++++++++++++++---------
+ kernel/trace/trace_events_test.c                | 122 +++++++++++++++++++++++
+ 9 files changed, 228 insertions(+), 50 deletions(-)
+---
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+change-id: 20260812-tracing-cli-event-filter-7c91ee33a27e
+
+Best regards,
+--  
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
