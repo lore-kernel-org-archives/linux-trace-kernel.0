@@ -1,126 +1,102 @@
-Received: from mta1.migadu.com (out-251.mta1.migadu.com [95.215.58.251])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBE4530E1C
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 11:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C784A53A8AA;
+	Tue,  8 Sep 2026 12:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788868457; cv=none; b=NyOEayio+m87KGIQZ+kumvrFtw4kf8u34uKJeCYCZq8I37744kj9qX/w3pHjhXOkgnwW5G1B2sKM8RhkY6klW6JycaEdnlFYTr2Rj2CdLi9dlzr9DV56RywTCj5J6i48u9w+VyK0L7vPyyn5O4bcO2gGpdI/Zx0cJrrieqYbmhQ=
+	t=1788871611; cv=none; b=YADboNyErEfhVGL5iyPa309ycYDJMGsI/HY8yjG90zW16HikF0x+710mrUeWKUQrYtU7wHGfSfdl5haVgFq4XmoaKnATTirtwEUODQpzM8wCOHS/DoScWKaW9eaITAcwINnJcs00WkjterE3TXhwm0B6FSlU3KyxfsMDyL0E3Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788868457; c=relaxed/simple;
-	bh=q2uuuWxuA0R7WRoemD62oQI/xDxL83ABPelDLYsNoKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2SzJXxW5tbgzO16YrFFJ5unInDxfQ7twcd3FafhHJTMk2rBIrTzTremRdbr+Cq+TA9Pj9tFr+rVP0ticQbceI+OWJMZzLkw0vOnfoEh/7P0jhvqnQ81dHfH/d4L6Xxw3YohaBOR6/dnVViYo6qq7X+qHHkxT8tra+YCwBG0t8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z8UtDFLo; arc=none smtp.client-ip=95.215.58.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1788871611; c=relaxed/simple;
+	bh=hFwSZaU4jX+gf2S7p1+ZS5OtlLj8rto2j+q1fKuvxqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AY8O/0Z1nJoXM/GpXer9//FG3sU5XJf5t/mgkvC5Bb3PwLBz2+j9HEduWZ1BGInJZXN1DSLYJUIOPb45f1qxOpC+eVNMFLFMqfofpD1d2iJIeQIliV98KONfR1gvjQNbKtAS5qtKPdk92OnqpJIIYeLMYGuVX6YrHkgIR5AEl3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HFrpLme8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z8UtDFLo"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=q2uuuWxuA0R7WRoemD62oQI/xDxL83ABPelDLYsNoKQ=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788868448; v=1; x=1789473248;
- b=Z8UtDFLoIqDcR3WoWxgGT4F93JqT4N/23HElfCz308Z2LPEGv/dc46BVqrg0ec/Q7yBNnyLu
- cploW7y7qsCBfc/BF1/zX4L9X7IulyYOC99Rk4Iq6O21MPLN8prbo1QPPuMCN5US0hKQxK6Mu68
- 1LXc/Tobj2+Q2BDDbNg4hieo=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5ff08160f280dc8b;
-	Tue, 08 Sep 2026 11:54:08 +0000
-X-Mizu-Trace-ID: 5ff08160f280dc8b
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <7ad86bff-acbb-5acb-ac41-711d36251f04@linux.dev>
-Date: Tue, 8 Sep 2026 07:54:02 -0400
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HFrpLme8"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 688AVcoD2959797;
+	Tue, 8 Sep 2026 12:46:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=hFwSZaU4jX+gf2S7p1+ZS5OtlLj8rt
+	o2j+q1fKuvxqs=; b=HFrpLme8WhjkMoAoeZlZ3zjb2vlP1fJZWJtmDTIFeX3Tgg
+	bdnhU2zG0AOIexcFSQPK/s/McVN0l8TEHIv+AxmZiVaLhc8pVyJZzWU9v06dM1WN
+	2EgaTiciQK6iaWmy3eNCMkYyd00Tb9i7XYxfNLoBru5IHF+2iqtyTvp2WefhLm14
+	WHPY1XblnziJnAfxFhUYAtrhy8ZrHdKUNR+zu227/juONnXypoEdD4sOgd7ka+lI
+	l+kIXJvFm76Vl0MaK/HaHbvhHfhvaAU6M3MYqGhCRUqA6nlKjR3vSJpwnAVyDTVQ
+	KhZo+oJ4BZR+2b6nWwejlzgFHdXKp8bUywDdwCTg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ggbqjxuy3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Sep 2026 12:46:45 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 688CfEQ1008738;
+	Tue, 8 Sep 2026 12:46:44 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ggwsw3x43-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Sep 2026 12:46:44 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 688CkgxP34013494
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Sep 2026 12:46:42 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7908D20043;
+	Tue,  8 Sep 2026 12:46:42 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5402E20040;
+	Tue,  8 Sep 2026 12:46:42 +0000 (GMT)
+Received: from tuxmaker (unknown [9.87.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  8 Sep 2026 12:46:42 +0000 (GMT)
+Date: Tue, 8 Sep 2026 14:46:41 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/2] ftrace/selftests: Fix registering kprobe on
+ non-unique symbol
+Message-ID: <20260908124641.1135846Aeb-agordeev@linux.ibm.com>
+References: <cover.1787670777.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] dma-mapping: don't trace the DMA address when the
- allocation fails
-Content-Language: en-US
-To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, iommu@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260907120124.603373-1-donggeunyoo.kernel@gmail.com>
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20260907120124.603373-1-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1787670777.git.agordeev@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: n_uIeoWkxEb1tAfiJfjUDKsT8nFFife0
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA4MDEzNCBTYWx0ZWRfX0QsiZieEoLwh
+ olfpXjkEWAVoN4N1ZBWrTIju7Y95I1ckZY+bWtndO+Im4sYvAcu9Q8NYR2ZIil9RmoRCFeteIl4
+ Q/LeVwy3kjC0o/OBy5wCyZXjO7SpXOw=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA4MDEzNCBTYWx0ZWRfXzFFnAKT+VKSs
+ JGOJPf9K6AwCdCT6Adm0VkRVrwe86ZnBqY/Fw0DLJGFhyCfdDs1LqtD17NK/0tqE1uaZ3lqaUhn
+ Ac+0IwEZ7Jpa7eD2VgyZ2u7gu5SzK57+7F4qnLBE/76d4Y4bwJRADAhc8bPW7JZHLB4bKfgF0Fj
+ kpjVdZICd+oNF6HHsHbpgIWJThvUooRQKZdHfQvlwkaY77cZgm1MdXHlBl0jEaM48TQOVP9NR0i
+ Fj6glPHjckDz9NaFQcaHBY45QK4K3KCS/c2qvnNV5pqchvP3yhDqxJ0IKldTeeiYVf2gMWHa4Vh
+ ulQVpNGujGuAQqZ0Zk2GJoV89gIaJ7wJ8lQO5scLuKFtOmV8HK8lilOzrx80nXiTOumU/Qxp+qI
+ 3VQJfKv9dAuF9lgRtPi1WiCUMqJvwjJ/+Gb1r8KrF/ESsUhKzrvqgLMNwYc9Q6GiTA+0jxrndoq
+ DKuSUljAzsN4dZfiQ7w==
+X-Authority-Analysis: v=2.4 cv=JaKMa0KV c=1 sm=1 tr=0 ts=6aa003b5 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=wdextDOBopOhIuI0tKgA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: n_uIeoWkxEb1tAfiJfjUDKsT8nFFife0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-08_02,2026-09-07_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609080134
 
-On 9/7/26 08:01, Donggeun Yoo wrote:
-> dma_alloc_attrs() passes *dma_handle to trace_dma_alloc() without
-> checking whether the allocation succeeded. No backend writes it on
-> failure: dma_direct_alloc(), iommu_dma_alloc() and the dma_map_ops
-> instances assign it only on the path that returns a buffer. Callers
-> usually pass an uninitialized automatic variable, so a failed allocation
-> records whatever the stack held, next to the virt_addr=(null) that marks
-> the record as an error:
-> 
->   dma_alloc: dmatrace dir=BIDIRECTIONAL dma_addr=deadbeefdeadbeef
->   size=1099511627776 virt_addr=0000000000000000
-> 
-> The device coherent pool path reaches the same call: a non-zero return
-> from dma_alloc_from_dev_coherent() means the request was handled, not
-> that it succeeded, so cpu_addr is NULL and dma_handle is untouched once
-> the pool runs out.
-> 
-> For an allocation event a NULL virt_addr already means the request
-> failed, so the address field carries nothing. Report 0 for it in the
-> event class rather than at each call site, which covers dma_alloc_pages()
-> and dma_alloc_sgt_err() as well.
-> 
-> Fixes: 038eb433dc14 ("dma-mapping: add tracing for dma-mapping API calls")
-> Fixes: 68b6dbf1f441 ("dma-mapping: trace more error paths")
-> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-> ---
-> v2:
-> - report 0 in the event class instead of splitting the two call sites,
->    as suggested by Marek. kernel/dma/mapping.c is untouched now, so
->    debug_dma_alloc_coherent() keeps being called for a failed allocation
->    and decides for itself what to do with it.
-> - tested on x86_64 rather than compile-tested only.
-> v1: https://lore.kernel.org/linux-iommu/20260905071919.30784-1-donggeunyoo.kernel@gmail.com/
-> 
-> Tested with a module that puts a known value in the caller's handle and
-> then asks for 1 TiB from a 32-bit capable device, with the dma_alloc
-> event enabled. Before, the record carries the caller's stale value; after,
-> it carries 0:
-> 
->   -dma_addr=deadbeefdeadbeef size=1099511627776 virt_addr=0000000000000000
->   +dma_addr=0 size=1099511627776 virt_addr=0000000000000000
-> 
-> A PAGE_SIZE request from the same device, as a control, reports its real
-> address on both kernels, matching the handle the caller got back.
-> 
-> This changes what the record contains, not what the caller does:
-> *dma_handle is still read to build the tracepoint arguments, since those
-> are evaluated before the static branch.
-> 
->   include/trace/events/dma.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
-> index 9df02c1511de..b06d8f99922d 100644
-> --- a/include/trace/events/dma.h
-> +++ b/include/trace/events/dma.h
-> @@ -134,7 +134,7 @@ DECLARE_EVENT_CLASS(dma_alloc_class,
->   	TP_fast_assign(
->   		__assign_str(device);
->   		__entry->virt_addr = virt_addr;
-> -		__entry->dma_addr = dma_addr;
-> +		__entry->dma_addr = virt_addr ? dma_addr : 0;
->   		__entry->size = size;
->   		__entry->flags = flags;
->   		__entry->dir = dir;
-> 
-> base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
-
-Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
+Polite ping.
