@@ -1,170 +1,214 @@
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B73521218
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 09:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5694A4B2031
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 09:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788858587; cv=none; b=NeWCNnru5dQkEEDZfpTnxL6mG1+b20RWoH7jAqYXzcd5PXMkDcM/5ByDfV0j63j6/KOgi0Qy1ucb2MbQj1L7CObnA+aOG5NDCIPuIRHLerA2ahBRGenXKeM2H7bAAIOG0BHhtrHWs1Ln8iCAHWrOUYMLEunLRiy5wWqoZZNlPaw=
+	t=1788858665; cv=none; b=tgEAsD+AtrWkJp/7GamewaTY262+QTwoD0jKiMFKc+MyT4wz3jSLX4em28ZioX+Qv2hn7ac38CcskRVD9GYBwemsU3Ds6BTF61OY7YfoBu6G8RTPXQLP5wHL+UXy7F/bVFp/Y65pP8LnoFHsWkcrN2FNG21AziX8aZzh19STi+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788858587; c=relaxed/simple;
-	bh=94iWMjTIwc0TonrLV6eGBag3QwHv2vDmbqxBkMi2cSQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qAw9LOHOCC2PPNHK1/LrIuqZMiah+JcB6jrr3YClXWsg7Z0xRpRplRtEoh+/0CxdrXL/O1H3m5f4a0dbSqMBL7cE/N+eRtB4npU9h/Q9AtiGNI77VlWe2fmqLvFm09FB4BQokeQRCSA8if7/qoaTdizEToVqQ/z/wZb5GlyR1Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vFvrTHkt; arc=none smtp.client-ip=209.85.128.70
+	s=arc-20240116; t=1788858665; c=relaxed/simple;
+	bh=PvXsmkWYs08Fb6emr0vNeygHcdGIKgZy2QeAteTTf+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PHIj40+zrMMDxS69gju333vhFmnRG/kWrCANbSTq1symgQ8GgS17vhM5TgYs5+keGKs3xdJbbqQQ3yvKRIXpzDHb9kE3fa+wVPjk7Zjn6h7wzY4gsU9dUtBmrIkkiydrN37pYH888YJp3J2vzgqc44Q1g3PN9z/zs67GmMlqKas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=od9zMfWD; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vFvrTHkt"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49ccfad90f1so27007915e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 02:09:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="od9zMfWD"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49b96837ca3so35026065e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 02:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788858583; x=1789463383; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=boy6Bccw47o3amNkT4CAs/pFHV7Gzoaqb7AJB1HcaIk=;
-        b=vFvrTHktKvSCZHDzAtE3OFzcgu2fUDhy8s4G7hmy3OinJIDdqUgY9GMgZ2Gq1pU9wC
-         2KaY7YyP/K+F9CGcC8M6rnRtkoaX4G9Kc00fwXb8M+qzeFtwMUG5TDfEgaXdM3GLKPxX
-         i9REI/tLocISSf8bxonLZgn8E6xU8mWIp19Loghw8U5q+ogOJOBxhl8U1T1K/TQvj6cn
-         +OhX8v7ygqGj+SajFpgnN0TNfYrhlQTolj+uvloFdNJmDxu9VZof/KF9FRPH1RyU6WH7
-         q1/aOJUWreWC6iuotngz4X7/35UTemGIIPe54kylsukCcLjgJ/h8ENx87t/GaFs1J0z4
-         0LSg==
+        d=google.com; s=20251104; t=1788858660; x=1789463460; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=jO5c4Bt3ZAdytp/EWde+NVli4TynjxjjAsIpB98Fp84=;
+        b=od9zMfWDcF4OHQCHDnTSp+IxWBh7YcrsnqnYcySKIEcmm/ceS5PK+Ald4WsDAMQGca
+         JtStGdPNa4jsxYXMI/49ZgEEFYt9UcWI8IyRBsO3AybC/oohRQiO3QSxj3hPa2MT3HmE
+         jG815bbsxFI0fkVFJ6+wGUaARnLJaKxSfY22sakMY30hoTw9lRCpmnZd9jHdxlPxrk9a
+         IhrRS2O3xf1/jf1vWiD+7YlOF/bR52YD3FZlFwsuobxev0U4c3rqbs0WfcZmcYym8q6G
+         JzkgBiT4ugQ/LjmCIyf9fuaf6Rc5IxypahVG3fBdT3jSyDWYo8B9u4GFtEseJ8rKv28I
+         CGHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788858583; x=1789463383;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=boy6Bccw47o3amNkT4CAs/pFHV7Gzoaqb7AJB1HcaIk=;
-        b=iE5Cb1x5mdS+kKyl6nYInNVA7Yus9yBteZjCOVfrnox6yUNspKc51DuyPmTLPvFa+L
-         6SwR8EFfyOXa+u8JwK8Ew8zcB+vWaiTQh+fNsNd/BziftGOuznEPGcSnSUj9s9uzf9xZ
-         bbySuc3WDXx7cQk6OWi+3iharOg+YfkkwxVSu9TkWASsE5iQIcGfLhQj9CZiDeH8waVO
-         0pzx3Yzrj6kgZbk2801zSyrF9yebITljp6/tFPx0Dsd5FnfKf/R4Srpx1nwyGiSy4vSe
-         fmBcXYP8wOEL3LFrVqzcDd8lbrQxdcm+Tbd4ri+hoSEZpgaN2ksiV4evgJYXT43BH42r
-         pcGQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwqxvPQ+yyNCmhUHoogonSd/VhvgjOICYNV7RYqjPLReZVvpygLk6AMLr5Pp2OHsA7AlccPojZt33mjoBYjxX1QxSs=@vger.kernel.org
-X-Gm-Message-State: AFuF++k9jQ0rD2aFS8OuIdJbwBZQFDXIgC08d/3UDJJwyxUvjdGAPqYq
-	vFA3GrsfrY3beNeEhXhYxucNMcfIwFqAnqkRMoEKQ73sc8Dn9PIIAIxdgadXzaIu4ABiGfVMNI4
-	vrINk0AvqjvnjMN1iMhu92w==
-X-Received: from wmby25-n2.prod.google.com ([2002:a05:600c:c059:20b0:499:dd82:8175])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600d:4449:20b0:49d:3a:e576 with SMTP id 5b1f17b1804b1-49d003ae639mr149520405e9.5.1788858583494;
- Tue, 08 Sep 2026 02:09:43 -0700 (PDT)
-Date: Tue,  8 Sep 2026 10:09:37 +0100
-In-Reply-To: <20260908090937.838544-1-vdonnefort@google.com>
+        d=1e100.net; s=20251104; t=1788858660; x=1789463460;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jO5c4Bt3ZAdytp/EWde+NVli4TynjxjjAsIpB98Fp84=;
+        b=ihCjNnoYf5926s7saJCOhIhsCyecPcnN64jXK5WkSOKurwNn9CP45c9slvhl21Mt4H
+         7gSqv/tTSprSSzJx08+qHhno4Bte6Np+kPxXTTHhlbTceDMY6jMsA6Kq/RPp7kgKpTtZ
+         3cZbVDTAiJVgrIlxxomn07hozF7p5buu75SgZ8LN25PSzA6FZVL40S0yRZqDlNDllSky
+         0KviFfjwjvfgwptqaCB320nUHzs3ToX/3JkjzKeDWgH5G/0edNUm3HdLzJ+2hhRZXnHu
+         D9N7v/cl1R/KteH1PxKBRc0I6Pfs9Mt0oM5bWkPprwtoQqKjlrkesNc6qA9hVUuDxoUF
+         l/fA==
+X-Forwarded-Encrypted: i=1; AKwUvByWUIbM8CqoKLPz7hv75OUKDLY1BBWVvNodSkORNg2jmUdps9vn710DDf/m4ic5x9I4elXX452n0FAI/HKqWbfl/nw=@vger.kernel.org
+X-Gm-Message-State: AFuF++kumDgVBhxOA80b78LagACo8pX4fCXQhzILBJuZryjT4SqND+gS
+	+g+HILEeGP9lXp6C/2K96zVXs1QzP4SXsBiYqlsHAgVR8mXB2ljQcsBpYVWNION1zw==
+X-Gm-Gg: AYBFou00T9g+n605pS5toU4p63wEFZhUJy3k9UvsrkFQfzFWKFGKsiNu6Fa2fzI3ZMQ
+	bC0qrwLBzSpUSWxmfOnUFEm2YYRwckBiehip2tO0t0tZ079zhbL9xpBCd/TnX9/Y49fJLt27HDS
+	CNOn9VHoUodA+8a75yC/LFBvghqOBh8Jc07QyPmcoa2PulSrognwGIM3nS/v/tmBSqByLa55ZHK
+	eE3nqZnbS7qsW3mS7ADFRqwANCbmyuzmH8Ol6IGP2+dOnXapfswPZV4RfVJBSwxWuZtSDESPly0
+	1hqhFY4hHUr0mOo9OQGlr4RAskmE8ylTMHgZ1VaJj3CmOLgCmnr4MM66sDzEHCxz3Fa9XoHkql2
+	z+1sR+pQRlpd9+ny3s4VSSoh4vBcJd67H2xIRkaKmtDOZtmcFJGapr3dKVDeQjZPKnOCPuYvdG5
+	w9UbJu0+7Xisqr3Kb3edd7GF0a3M2ls78zy5An+Gq6BaeuSjX62QQjf89jQTkXMgMAMDUgQRpK2
+	MxAfEGW1Qkn7LgzvBx3H/D22aKRthfIViGUK0r2QQw=
+X-Received: by 2002:a05:600c:1549:b0:499:a5fc:2087 with SMTP id 5b1f17b1804b1-49cf81f47e6mr290181665e9.6.1788858659472;
+        Tue, 08 Sep 2026 02:10:59 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cfd3f815bsm279081265e9.4.2026.09.08.02.10.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2026 02:10:58 -0700 (PDT)
+Date: Tue, 8 Sep 2026 10:10:55 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Thierry Reding <thierry.reding@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chun Ng <chunn@nvidia.com>, Mark Rutland <mark.rutland@arm.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-mm@kvack.org,
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v6 00/12] dma-buf: heaps: Add support for Tegra VPR
+Message-ID: <ap_RH4ZDE3XI0rng@google.com>
+References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
+ <apquUWgrD9C2jWQ0@willie-the-truck>
+ <ap_HzwVp-6aOKEbJ@orome>
+ <ap_OFQepcu26g88u@google.com>
+ <ap_QJG8EevX98SXa@orome>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260908090937.838544-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.55.0.979.g7e5102b832-goog
-Message-ID: <20260908090937.838544-4-vdonnefort@google.com>
-Subject: [PATCH v2 3/3] tracing: Rename tracing_entries_fops to tracing_capacity_fops
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ap_QJG8EevX98SXa@orome>
 
-Since commit 8a5f63637890 ("ring-buffer: Fix subbuf resize race with
-ring buffer readers"), "capacity" refers to the memory available for
-events, while "entries" refers to the number of events in a ring buffer.
-As a consequence, rename trace_array::entries to capacity to align with
-this convention.
+On Tue, Sep 08, 2026 at 11:08:26AM +0200, Thierry Reding wrote:
+> On Tue, Sep 08, 2026 at 09:57:57AM +0100, Vincent Donnefort wrote:
+> > On Tue, Sep 08, 2026 at 10:39:17AM +0200, Thierry Reding wrote:
+> > > On Fri, Sep 04, 2026 at 12:41:05PM +0100, Will Deacon wrote:
+> > > > Hi Thierry,
+> > > > 
+> > > > On Fri, Sep 04, 2026 at 12:44:51PM +0200, Thierry Reding wrote:
+> > > > > This series adds support for the video protection region (VPR) used on
+> > > > > Tegra SoC devices. It's a special region of memory that is protected
+> > > > > from accesses by the CPU and used to store DRM protected content (both
+> > > > > decrypted stream data as well as decoded video frames).
+> > > > > 
+> > > > > Patches 1 through 3 add DT binding documentation for the VPR and add the
+> > > > > VPR to the list of memory-region items for display, host1x and NVDEC.
+> > > > > 
+> > > > > The set_direct_map_*_noflush() functions that will be used later in this
+> > > > > series are exported in patch 4 so that the drivers that use them can be
+> > > > > built as a module.
+> > > > > 
+> > > > > Patch 5 adds bitmap_allocate(), which is like bitmap_allocate_region()
+> > > > > but works on sizes that are not a power of two.
+> > > > > 
+> > > > > The of_node_to_nid() function is exported in patch 6 because it is used
+> > > > > in a later patch adding a driver that can be built as a module.
+> > > > > 
+> > > > > Patch 7 introduces new APIs needed by the Tegra VPR implementation that
+> > > > > allow memory to be allocated at a fixed offset within a CMA area. Tegra
+> > > > > VPR needs this in order to implement its own allocator on top of CMA to
+> > > > > meet the strict hardware requirements. This replaces the dynamic CMA
+> > > > > area creation patch from earlier versions.
+> > > > 
+> > > > Did you get a chance to see how this could work with Vincent's series:
+> > > > 
+> > > > https://lore.kernel.org/r/20260902104712.2399797-1-vdonnefort@google.com
+> > > > 
+> > > > ? I think that should remove your reliance on can_set_direct_map() and
+> > > > mean that you can retain block mappings for most of the linear mapping.
+> > > 
+> > > I'm not sure if it would help all that much. Yes, if we mark the VPR
+> > > region as LLMAP (or PTE_MAP, whichever it ends up being), it should make
+> > > the checks for can_set_direct_map() redundant. However, from what I can
+> > > tell, Vincent's series still forces page-granularity on these regions,
+> > > so it won't retain block mappings at all for them.
+> > > 
+> > > The block mappings can be retained for the non-VPR memory, so that's
+> > > nice. It also reduces the amount of external prerequisites, but I had
+> > > kind of hoped that we could go one step further and keep block mappings
+> > > even for the VPR memory if the region happened to be a multiple of the
+> > > block size.
+> > > 
+> > > The recent addition of page count to the set_direct_map_*() functions
+> > > helps reduce the amount of checks that need to be run, so maybe there's
+> > > not too much to be gained from removing whole block mappings at once
+> > > from the linear map.
+> > > 
+> > > Thierry
+> > 
+> > I should be able to add PMD_SIZE mapping support to the series. That was
+> > actually my original idea as we can easily force the CMA allocation granule to
+> > be PMD_SIZE too.
+> > 
+> > I didn't implement it as I thought there were not much interest in the end (and
+> > also as contiguous.c is always using PAGE_SIZE granularity).
+> > 
+> > But now as I have implemented a specific pool (and do not use contiguous.c as
+> > originally planned), if you believe it is important for the VPR driver, let me
+> > see if I can extend the support in a V2.
+> 
+> I don't think it needs to be part of a v2 and can be a follow-up. It
+> should be transparent from an API point of view and merely be an
+> optimisation for that specific case.
+> 
+> Eventually it'd be nice to have, though it might also be worth checking
+> what the actually gains are.
+> 
+> Thierry
 
-While at it, rename also tracing_total_entries_fops. It is the aggragate
-of all ring buffer capacities.
+Ack. I'll keep it as is then and we will see later how to extend it, if it is
+necessary.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
----
- kernel/trace/trace.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 400d7a97e745..780c4987032b 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5672,8 +5672,7 @@ tracing_syscall_buf_write(struct file *filp, const char __user *ubuf,
- }
- 
- static ssize_t
--tracing_entries_read(struct file *filp, char __user *ubuf,
--		     size_t cnt, loff_t *ppos)
-+tracing_capacity_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- {
- 	struct inode *inode = file_inode(filp);
- 	struct trace_array *tr = inode->i_private;
-@@ -5720,8 +5719,7 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
- }
- 
- static ssize_t
--tracing_entries_write(struct file *filp, const char __user *ubuf,
--		      size_t cnt, loff_t *ppos)
-+tracing_capacity_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
- {
- 	struct inode *inode = file_inode(filp);
- 	struct trace_array *tr = inode->i_private;
-@@ -5748,8 +5746,7 @@ tracing_entries_write(struct file *filp, const char __user *ubuf,
- }
- 
- static ssize_t
--tracing_total_entries_read(struct file *filp, char __user *ubuf,
--				size_t cnt, loff_t *ppos)
-+tracing_total_capacity_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- {
- 	struct trace_array *tr = filp->private_data;
- 	char buf[64];
-@@ -6600,10 +6597,10 @@ static const struct file_operations tracing_pipe_fops = {
- 	.release	= tracing_release_pipe,
- };
- 
--static const struct file_operations tracing_entries_fops = {
-+static const struct file_operations tracing_capacity_fops = {
- 	.open		= tracing_open_generic_tr,
--	.read		= tracing_entries_read,
--	.write		= tracing_entries_write,
-+	.read		= tracing_capacity_read,
-+	.write		= tracing_capacity_write,
- 	.llseek		= generic_file_llseek,
- 	.release	= tracing_release_generic_tr,
- };
-@@ -6623,9 +6620,9 @@ static const struct file_operations tracing_buffer_meta_fops = {
- 	.release	= tracing_seq_release,
- };
- 
--static const struct file_operations tracing_total_entries_fops = {
-+static const struct file_operations tracing_total_capacity_fops = {
- 	.open		= tracing_open_generic_tr,
--	.read		= tracing_total_entries_read,
-+	.read		= tracing_total_capacity_read,
- 	.llseek		= generic_file_llseek,
- 	.release	= tracing_release_generic_tr,
- };
-@@ -7653,7 +7650,7 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 				tr, cpu, &tracing_stats_fops);
- 
- 	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_WRITE, d_cpu,
--				tr, cpu, &tracing_entries_fops);
-+				tr, cpu, &tracing_capacity_fops);
- 
- 	if (tr->range_addr_start)
- 		trace_create_cpu_file("buffer_meta", TRACE_MODE_READ, d_cpu,
-@@ -8954,10 +8951,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 			  tr, &tracing_pipe_fops);
- 
- 	trace_create_file("buffer_size_kb", writable_mode, d_tracer,
--			  tr, &tracing_entries_fops);
-+			  tr, &tracing_capacity_fops);
- 
- 	trace_create_file("buffer_total_size_kb", TRACE_MODE_READ, d_tracer,
--			  tr, &tracing_total_entries_fops);
-+			  tr, &tracing_total_capacity_fops);
- 
- 	trace_create_file("trace_clock", writable_mode, d_tracer, tr,
- 			  &trace_clock_fops);
 -- 
-2.55.0.979.g7e5102b832-goog
-
+Vincent
