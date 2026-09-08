@@ -1,174 +1,246 @@
-Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D2D56329B
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 15:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788881696; cv=pass; b=GYNJeqwHvSB0NaWBiEcPYoFCDLDUxTbRAJfKBUiF9+bOcOeidFk7t/800cRwYBv2uRhPN5+IRLpNgPvbtGZ8xS/TIyTyBxbKbbbZVoqbiZsTl7b/L7+eap+luViJKTjTI6lU9OWUiFgfLUrn9VnZhSpGWebYYjnullM+oe/yoNY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788881696; c=relaxed/simple;
-	bh=GBED/SDYaogbqorGAh/G24+xZmO8kz03GCogtDApe3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uhYHviAP1fi9jXZbSTj3F6FLxcdVo7jJorU5oit8WqrO6CrIH+xo0ITXgUWnOENtW9FbrL5VnAYs6xdzAPHP1j95ozIUsfvoUzyh82yAj88SSmjpv4qMJH+OjowtLDvZevVMZQldPg6tpOXyv44thAVh9Sx1Z3/VRhc8qB4XbCk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sqBXqJNN; arc=pass smtp.client-ip=74.125.224.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03BB572670
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Sep 2026 16:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788883466; cv=none; b=CLryDaygKR+O8+aE0J9QqdYlHd9oHmvmDUnAcxTJ//JtxR66gnwlqkbTtEiYUan10dhoZ+VYzkXfDzCkqpVF/EJJFXASy26RJAHh9K+7GjB4vNByYOjU5GMyoV6pMsEWKLiuUgaGZxVJSxP1DsQsO0u3sSwcuKQ4tv77xaWpej4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788883466; c=relaxed/simple;
+	bh=wwjGm1sChVlECtSsAuFj34DqSRyAk3CmYXTBcmAKUdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OGrKmcjnVP+7Efed1iJwR2KoQ+mDV6aOxTF8PCGaTRkWCG/I5E/L8Y3GGBZhXlBdaN/4UkCcbKWwHwM501C6N+P0g+nrzU7Cab1Iz6NYKKTaJkY7uvtGusnQP7WJ2rYRKRlJBvVVm6rAtyUt33OJW8BuipkyCALzuZ/ta6Mqxfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=YDl5jKPP; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqBXqJNN"
-Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-66e63afda8fso3861033d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 08:34:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788881687; cv=none;
-        d=google.com; s=arc-20260327;
-        b=RsYVHHZl78/RLfc+94CkMk7jJ9vqKoJDpKaPw2/s8Rfi3Te1YVOa4mOgUStLSYnbCH
-         oi2Vxkv39CWVDl4aK7Xi9pMqh8PfvOZRGYsKQ4ulEHV6CAQBMEVudVQdvkycyLFM/aJS
-         QHl4WC6sZ+SDJD9pFC+plIfddHjasvnop2c3QVQ/Qk5fJSNp20+OQvqczTzFGvJb/msg
-         NZ8koNqOlIGq1GsNRRnhgnO6xq3oI9dkQGFaFOPauY3+oScTxppBj1F5ephrm/SamvMl
-         1o2cWOkx5PX5x0mgfa6UnNhz6NfK0zwQVR27PC9T/bFizTS2il7Is/5bKpKhyC5nlbUX
-         4FnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ag/6JOE4QZd3KV3LuQrhVTWPmbIfMwEdth2tbHfGZAo=;
-        fh=C/2jUE2PUu6O+WqQTbcqGhv25fTWZdxYrll9F/Rq67Y=;
-        b=KK6iItiOZH8TS4bC0CuNuUimSTaHXJdOelcjJZ1HT0hDxq8CVFa/zGRVnFcNwq9D+3
-         K6wzjwyODGygaAhMUxLGZ0/XvVVYRmD5Kg6PKrv0mbVfNzya/eMRq4gYCfVgGQ54DIFy
-         JzTnuz9jN7GvMODLAiAb5nurUKGZuFLl0JExPhxYNry175/zsbpI1WnwwdrSC6kFnlKC
-         YNa2vn9PWJ1fdAKpUZp1FkCgNHY8zkSrxrJ2pGDxwmth209qEXSrmYBscoYia12yNRad
-         uaascVDHQmQdq4ay5AfYq2iYSnCe2UyRoF0MWdQhp2jPD2NQAibIiK0hpc4zBdRNIqgN
-         DGMQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788881687; x=1789486487; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ag/6JOE4QZd3KV3LuQrhVTWPmbIfMwEdth2tbHfGZAo=;
-        b=sqBXqJNNTaYB416puoaJHgtHbjRCQvpr2YLhchJl/+tD5OUORC0k/Ns8xqoAikXmdb
-         QMqMrBXI8qWW9L8P9erCxAhLQhoLVSxI63idxONwPS/RZuUmk5xxnWEXp67ilkHpIPYs
-         w+Fb3KL2b76K8B4StoFp2lqJy7zi/U/KyiXSaboFkCTOSTGR3OGWTEmne8XYY6AMSWLs
-         RvSOHBKmTA+oFI8jrvEJM1Fk5n4K8n2mY5Lz23wP33QqSvQbsMuc7UKluHs+Z3lN+Jbb
-         volEfeTZV1CEsohp18FmPOscRaIotID2f7hcHWU4WOH4is+x4IwTDcOPSDKdIw7i/RZK
-         ONvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788881687; x=1789486487;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ag/6JOE4QZd3KV3LuQrhVTWPmbIfMwEdth2tbHfGZAo=;
-        b=Te0m4cNPk02t8wwXdX3IO9jOd5EndgF9S4Co5SsWflyKLR6JkMvZD0oVJ6fzJgzNdX
-         Xmr7+2n0ElLQ68ZgCXLAK/CVzNWDBkHTtU0JFj62qGHUdF6ulWtPq7v9nX9KEoOoc/kh
-         Jj4IMTYF4i7guSUE/E7R4Hq8nfiCh8ACcOlk4zSlrDnNM3HMBugKm/XyHzwyYk5yrZjz
-         4p+y9cWEkA+6gaWMGVQexZ6C38mIqlLdWMT8Q03V5o8YN+X02wDI3M0fSkzl8c/SqKU8
-         XNJ2OW0yeIXBFDr9GTCatY6pZZ/UYBqetwIUyewZcIcPlrjkEwzz/ynLWIexUcwI3G2L
-         Oa/Q==
-X-Forwarded-Encrypted: i=1; AKwUvByv4GNUELIGRJtmdGCv/UD6g5tH/KrdTNj+B5LOQBvLEHDXAe/D2/xjt+dAe+ZbWcrAoxKqpy/idjmpFprT4wx90mY=@vger.kernel.org
-X-Gm-Message-State: AFuF++lKuMTBayw3ivYw0loa7gM7J7JjfzsPKPxrcHaoAz9U+FxU6PJJ
-	TlPkwFnV6Sl/Xg/bgQ1AvPHY/vt3l9WG0+YBS1BzyVbmuZxJWp9mso8VoSdVQuAnttReGjx/Yi9
-	VJzIOmQ4MmtADOhOknUcnbC9T+Qayj44=
-X-Gm-Gg: AYBFou1C9DuGiCtb/BwVmkiYW+afNZG0xUoel9BfnF2YFYg+fCkRORgOICtC8lVOi9V
-	lWilKdMTLQyWCEUTAb1ZdrkIchB/zHDiTryZIJZIkfljgGBZUaR3LWmTVi134Woo8by8MAHa/TJ
-	kgGOksWMSQmJx3liPbXN1x8unbZq7HjRK8SMUweMGlDDfMc1cg7W8Y4/EA88/Pu0ecB1/MLkJ4r
-	cTvkJrpG3QHnJ/SNki1QdcdDQn0FWpJBQWhjhpIMHEewIOiPcD67H+oMPY1Sjr9hDehuq0UjEB2
-	RDLoYFTKPVOfLDKVZ8KbIbS+HlXyWGnUK8Cft6eQ0A==
-X-Received: by 2002:a05:690e:454b:20b0:66f:c1d5:cf78 with SMTP id
- 956f58d0204a3-66fc1d5d05fmr5692554d50.53.1788881686859; Tue, 08 Sep 2026
- 08:34:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="YDl5jKPP"
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id D61B880614;
+	Tue,  8 Sep 2026 16:04:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 1931E34;
+	Tue,  8 Sep 2026 16:04:20 +0000 (UTC)
+Date: Tue, 8 Sep 2026 12:05:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Lahoz Fernando <flahoz@ikerlan.es>
+Cc: "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [BUG?] tracing: unexpected behavior trying to keep IRQ code
+ away from traces
+Message-ID: <20260908120534.390672a8@gandalf.local.home>
+In-Reply-To: <PAWPR03MB92138194E34B81962AA24738A2B52@PAWPR03MB9213.eurprd03.prod.outlook.com>
+References: <PAWPR03MB92138194E34B81962AA24738A2B52@PAWPR03MB9213.eurprd03.prod.outlook.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260905141637.1547429-1-ekffu200098@gmail.com> <20260908104629.e7a85a90e376b843dbc51dc7@kernel.org>
-In-Reply-To: <20260908104629.e7a85a90e376b843dbc51dc7@kernel.org>
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Wed, 9 Sep 2026 00:34:35 +0900
-X-Gm-Features: AcwNN1W84vc454fRbDSYQRJZlI-4LhRrNKvccTiKIF0N0VfPexcPXdsUmd59F8E
-Message-ID: <CABFDxMEot48G141HrLT-4_H1xKez58UhK8yFMNkWpqT_MOXu7Q@mail.gmail.com>
-Subject: Re: [PATCH] bootconfig: remove unreachable index checks in xbc_verify_tree()
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1931E34
+X-Stat-Signature: cwu38m4mygprkxuuckrb861f5e64zdwi
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/V74UreVB8DQRvMtsey9IYkoEAd6H2kk0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=rGc/x/gncOgl7pBCzKKeNcSWmvRouaaT0k0LCfkc4Dk=; b=YDl5jKPP0lsjfLZpTpMb4tltEU0knbAvNYRW/wRrw44/FEurX28Xqq1PLePJGKPMfKm/RkBYU96MD38KWQ+VKPL8qXd7MCRH1VnqtgC+Xd8Kwt13o/KxDaCET6qkQy5OyiaR52DxGLYhCyOWNW0Kb5bmDKJa8GW5UT5hsxxmcs0=
+X-HE-Tag: 1788883460-219209
+X-HE-Meta: U2FsdGVkX1+dmktGRiJOtIqX3HBM4mtJzVnjfMCcv6dV9y8Hqe2rIWcj0VKKklvZiAtkRamSloU9D/y0L0m88eYspw8N1YodpHI+ViuedqlsMebnLjJnNduzBeXhq4kuV3lIsdryxllSn1k8F+brnKiIreL/TLIcJyFcEk8ph4orVemzc2A+0R/yB51NsKNX+VBUkFZ6BdmEoJCPjQR2Xc1byHmUL96JcRkOfnPqJITMM0mxylaBV2ywY6ysr9TEBXe2s5MEdB2V54Dra+22opxGyOw9bW/OQLuOhT3FoRGFtXVRM5VkCJ/nbPqDLpTRGyDnGGZjqIiSE+wvCAXkAKQ1ERjmyMNMkNtyVdf86qyZpNazYtvLv3qU1aRg40EmZsdzkA3TYvB5HrnP8oXpRg==
 
-Hi,
+On Mon, 7 Sep 2026 09:07:57 +0000
+Lahoz Fernando <flahoz@ikerlan.es> wrote:
 
-On Tue, Sep 8, 2026 at 10:46=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Sat,  5 Sep 2026 23:16:36 +0900
-> Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
->
-> > xbc_verify_tree() checks that every node's next and child are below
-> > xbc_node_num. Both fields store the index of an existing node, which
-> > is below xbc_node_num.
->
-> This is a kind of foolpoof/defensive checking. (so I call it verify.)
->
-> >
-> > So remove the checks.
-> >
-> > No functional change.
->
-> Hmm, OK, I think we should decouple the logic/implementation
-> verification from runtime verification (e.g. wrong format)
-> and move the former to tools/bootconfig.
->
-> Thank you,
+> Hello,
+> 
+> It seems that code executed during IRQ entry/exit may be traced as task context
+> because HARDIRQ_OFFSET is not reflected in preempt_count until irq_enter_rcu()
+> is called. As a result, both in_task() and in_hardirq() may incorrectly classify
+> some IRQ-entry code, causing IRQ-related functions to appear even when IRQ
+> tracing is disabled.
+> 
+> 
+> I've been developing a minimal syscall tracer using ftrace's api from a kernel
+> module. During the process I've tried to prevent interrupt-related code from
+> appearing in the trace data, therefore I use the in_task() macro to filter
+> everything that is not in running in "task context". However, some functions
+> executed in hardirq context bypass the check, as they are executed before
+> preempt_count is updated.
+> 
+> I was not certain whether this was a bug on how the flag is set or the intended
+> behaviour, so, I traced the same code using the function-graph-tracer with
+> 'funcgraph-irqs' option active, but I saw the same behaviour.
 
-Thanks for the review, Masami.
+It's a bug that's been know about since 2009 :-/
 
-To make sure I understand, you mean moving the foolproof check after
-xbc_init() in tools/bootconfig?
+Yes, because we use preempt_count to determine if an event is in interrupt
+context or not, and there's some places that trigger events (function
+tracer) before the preempt count is updated, we can report the wrong context.
 
-> >
-> > Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-> > ---
-> >  lib/bootconfig.c | 13 +------------
-> >  1 file changed, 1 insertion(+), 12 deletions(-)
-> >
-> > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> > index 89c88e359179..d383430637ee 100644
-> > --- a/lib/bootconfig.c
-> > +++ b/lib/bootconfig.c
-> > @@ -1005,7 +1005,7 @@ static int __init xbc_close_brace(char **k, char =
-*n)
-> >
-> >  static int __init xbc_verify_tree(void)
-> >  {
-> > -     int i, depth;
-> > +     int depth;
-> >       size_t len, wlen;
-> >       struct xbc_node *n, *m;
-> >
-> > @@ -1022,17 +1022,6 @@ static int __init xbc_verify_tree(void)
-> >               return -ENOENT;
-> >       }
-> >
-> > -     for (i =3D 0; i < xbc_node_num; i++) {
-> > -             if (xbc_nodes[i].next >=3D xbc_node_num) {
-> > -                     return xbc_parse_error("No closing brace",
-> > -                             xbc_node_get_data(xbc_nodes + i));
-> > -             }
-> > -             if (xbc_nodes[i].child >=3D xbc_node_num) {
-> > -                     return xbc_parse_error("Broken child node",
-> > -                             xbc_node_get_data(xbc_nodes + i));
-> > -             }
-> > -     }
-> > -
-> >       /* Key tree limitation check */
-> >       n =3D &xbc_nodes[0];
-> >       depth =3D 1;
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This is well known, and is the reason behind the TRANSITION_BIT in the
+recursion protection lock[1]. The recursion detection tests if an event was
+triggered in the same context, and if it is, it drops the event. But it was
+reported that not all entry into interrupts were traced, and that's because
+if an interrupt went off while it was recording an event in task context,
+the recursion would detect it as the same context recursion (not allowed)
+and drop it. But once the preempt_count was updated, the rest of the
+interrupt events were traced.
 
-Best regards,
-Sang-Heon Jeon
+> 
+> 
+> I'm using a fully preemptive kernel, compiled for both aarch64 (this one runs
+> on an evaluation board) and riscv (this one runs on qemu). I have not checked
+> if it happens in any other arch. I first saw this behaviour in v6.15.5 with
+> aarch64, but it's still present in v7.2.2. I have not checked older versions.
+
+It happens on all archs that can trace before preempt_count is updated. I
+detected it on x86.
+
+> 
+> 
+> The root of the problem seems to be that there is instrumentable code that
+> executes on every IRQ before and after HARDIRQ_OFFSET is added/substracted to
+> preempt_count, so function tracers cannot correctly filter IRQ using in_hardirq().
+> 
+> 	(All the source I show comes from kernel v7.2.2)
+> 
+> 	In file: "/arch/arm64/kernel/entry-common.c" (lines 501-513)
+> 
+> 		static __always_inline void __el1_irq(struct pt_regs *regs,
+> 		                                      void (*handler)(struct pt_regs *))
+> 		{
+> 			irqentry_state_t state;
+> 
+> 			state = arm64_enter_from_kernel_mode(regs);
+> 
+> 			irq_enter_rcu();  // <-- `preempt_count_add(HARDIRQ_OFFSET)`
+> 			do_interrupt_handler(regs, handler);
+> 			irq_exit_rcu();   // <-- `preempt_count_sub(HARDIRQ_OFFSET);`
+> 
+> 			arm64_exit_to_kernel_mode(regs, state);
+> 		}
+> 
+> I've tried to wrap this function between preempt_count_add(HARDIRQ_OFFSET)
+> and preempt_count_sub(HARDIRQ_OFFSET), but kernel won't finish booting up.
+
+And you are now seeing why we haven't fixed it since 2009 ;-)
+
+> 
+> Similarly, this also happens in riscv, as it can be seen in file
+> "/arch/riscv/kernel/traps.c" (lines 424-445) that irq_enter_rcu is called after
+> the equivalent function to arm64_enter_from_kernel_mode.
+> 
+> 
+> Test using function graph tracer:
+> 
+> As I said, I wanted to check if IRQs also appeared inside the trace file while
+> option funcgraph-irqs was disabled. Ftrace's documentation
+> (https://docs.kernel.org/trace/ftrace.html) decribes this parameter as follows:
+> 
+> 	"When disabled, functions that happen inside an interrupt will not be traced."
+> 
+> so I expected it to remove every function called inside __el1_irq from the trace.
+> 
+> I isolated CPU 3 for it to run the test program alone with taskset.
+> I traced with the following configuration:
+> 
+> 	TRACEFS="/sys/kernel/tracing"
+> 
+> 	# Stop tracing and clean buffer
+> 	echo 0 > "${TRACEFS}/tracing_on"
+> 	: > "${TRACEFS}/trace"
+> 
+> 	# Trace only CPU 3 with 1GB buffer
+> 	echo 8 > "${TRACEFS}/tracing_cpumask"
+> 	echo 1048576 > "${TRACEFS}/per_cpu/cpu3/buffer_size_kb"
+> 
+> 	echo local > "${TRACEFS}/trace_clock"
+> 	echo function_graph > "${TRACEFS}/current_tracer"
+> 
+> 	for opt in 'funcgraph-proc' 'funcgraph-tail' 'irq-info' 'nofuncgraph-irqs'; do
+> 		echo "$opt" > "${TRACEFS}/trace_options"
+> 	done
+> 
+> 	# Clean filters and trace only syscalls
+> 	: > "${TRACEFS}/set_graph_function"
+> 	echo "__arm64_sys_*" > "${TRACEFS}/set_graph_function"
+> 
+> The resulting trace shows only syscalls code, being sometimes interrupted by
+> code inside __el1_irq:
+> 
+>  ...
+>  3) randbyt-14268  |               |            mntput() {                  //__arm64_sys_openat
+>  3) randbyt-14268  |               |              mntput_no_expire() {      //__arm64_sys_openat
+>  3) randbyt-14268  |   1.180 us    |                __rcu_irq_enter_check_tick(); //IRQ CODE
+>  3) randbyt-14268  |   1.900 us    |                irq_enter_rcu();
+>  3) randbyt-14268  |   1.340 us    |                idle_cpu();
+>  3) randbyt-14268  |               |                tick_nohz_irq_exit() {
+>  ...
+>  3) randbyt-14268  | + 13.072 us   |                } /* tick_nohz_irq_exit */
+>  3) randbyt-14268  |               |                raw_irqentry_exit_cond_resched() {
+>  3) randbyt-14268  |               |                  preempt_schedule_irq() {
+>  ...
+>  3) randbyt-14268  | + 73.637 us   |                  } /* preempt_schedule_irq */
+>  3) randbyt-14268  | + 75.938 us   |                } /* raw_irqentry_exit_cond_resched */
+>  3) randbyt-14268  |   0.960 us    |                __rcu_read_lock();
+>  3) randbyt-14268  |   1.070 us    |                __rcu_read_unlock();    //IRQ CODE
+>  3) randbyt-14268  | ! 146.225 us  |              } /* mntput_no_expire */  //__arm64_sys_openat
+>  3) randbyt-14268  | ! 148.385 us  |            } /* mntput */              //__arm64_sys_openat
+>  ...
+> 
+> >From here I suspected that funcgraph-irqs' implementation relied on the same  
+> flags I checked in my custom tracer, so I searched inside the graph tracer code
+> and found this early-exit condition being called from graph_entry:
+> 
+> 	In file: "/kernel/trace/trace_functions_graph.c" (lines 209-217)
+> 
+> 		static inline int ftrace_graph_ignore_irqs(struct trace_array *tr)
+> 		{
+> 			if (!ftrace_graph_skip_irqs || trace_recursion_test(TRACE_IRQ_BIT))
+> 				return 0;
+> 
+> 			if (tracer_flags_is_set(tr, TRACE_GRAPH_PRINT_IRQS))
+> 				return 0;
+> 
+> 			return in_hardirq();
+> 		}
+> 
+> Both in_task() an in_hardirq() macros check preempt_count, which has the fault
+> of not being fully set before any code executes on IRQ context.
+
+Correct.
+
+> 
+> 
+> I do not know whether preempt_count is intended to provide precise context
+> information during IRQ entry/exit transitions. If not, would there be a
+> recommended mechanism for tracers that need to distinguish task and IRQ contexts
+> during these early entry stages?
+
+It would require looking at the hardware flags directly *at every event*,
+which would greatly impact performance of the tracer.
+
+> 
+> For my tracer I patched __el1_irq in aarch64, making it noinline instead of
+> __always_inline. That way I can catch its beginning and end registering a
+> ftrace_direct routine with the minimal changes to vanilla Linux.
+> I have not tried any fix for riscv.
+> 
+> Is this behavior intentional, meaning that code executed before irq_enter_rcu()
+> is considered outside hardirq context, or is this an unintended limitation of
+> tracing based on preempt_count?
+
+It's the limitation of using preempt_count to determine irq context as it
+is the fastest way to do so. Basically, we just need to cope with this and
+try to find other means to handle it.
+
+Ideally, the preempt_count update would be moved to locations that happen
+before any events (function or otherwise) trigger. But that is no easy
+task. Maybe something you could do? ;-)
+
+-- Steve
+
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/trace_recursion.h#n35
