@@ -1,351 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAF32D2381;
-	Wed,  9 Sep 2026 05:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471A557C9F;
+	Wed,  9 Sep 2026 05:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788931325; cv=none; b=cTMrYNSb2c0QTbFj9XwbNGiGbSv0xT/TczF6fUSMhFVG4nSwnuOmAH8ZREM9JvBcBzTziAPP9FXIEUscnf6TUzcyGPZqnMVlkN9adVmZ2XJGNRXYGCKN5Vrsf+492omLxGWSkZZtBnkhkl+co3ipj03w7gl1xyAU+DKkEdyICGY=
+	t=1788931390; cv=none; b=FJblEErXb+lcmRb3y8u16PbuofKh7RqzXzYuRNtLSI8Oos38eljqEUuN5J6e/s4rKa4/Zp2nfvaqAk0Wl1C9vnp4kInfMKYdWXToaPcEHKbTNyU3QmxElD5QcJo30xBhN+6K6nyLwbBK3imWp+U276ZVfnG4Bnh9OGJYJXldlkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788931325; c=relaxed/simple;
-	bh=pz5BhKY/ECpTf9EJPq9cOsCi6Xqkgcsc2NTpHlgsUMc=;
+	s=arc-20240116; t=1788931390; c=relaxed/simple;
+	bh=m3VyOJdfEt4CBBiIc/oklURgJpvvE8vpsqAJdcPDoME=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AnRsxi0ypprk1qVkRYhICKdUTFYE010DH0+26WcAw3axEORz0YGOyHbTg9fqVH6dezEXJFHRpDJPKcr86FUQs+ZVniOcllHGCaituL1gcvhjpoWBw8c/+qVt9og3nkSGyQMz8XfQAaHCXMvPtxlqAdczxduFlAj7rLJ890vCaU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iw80Jzz0; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=UWvKsrpiQ6Jtryb+Lozga0F/fTfSNeIXz6CdlqTGjJ8D+Wej0diN+rX/OXX+s6J+8xxnuGSw+27eWk3eyN0VzIj8HCMMJKZn9zXqi3ndp9unK5Yz/2DCFUqkUvwaqN1/kkksZSl/BPCMZPzo8JNjT3zUyjg4BwixU/o8dh4BkFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8ZWJuLD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iw80Jzz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D88341F00A3A;
-	Wed,  9 Sep 2026 05:22:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8ZWJuLD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27C41F00A3A;
+	Wed,  9 Sep 2026 05:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788931323;
-	bh=cRDbDqmQDY+8mI7kYexJ/h4pJNZ14bCsb9IsoF9Ora0=;
+	s=k20260515; t=1788931388;
+	bh=bBGI5+0TaCJ5LUAwyqXocT8JVAJ0iIwwH3Wb66JKBzg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iw80Jzz0mUqDeyZw0tiwJ2acwpXPSINBtO2HgqxwkmFQ/po6tW0gpZ2YrqSXNHMfk
-	 iThSq89sXPo7oBPPKOBQ1O/F/vNd83CZQhIOyKxDrtPeXxidvQTMDvHta6IGHrG1cp
-	 hV/Dtjsl90OqKdcZ5z0yxYo5q3pBbCP0otO+4UVk3Xt1aVzwhhJBJSioM9PNb9zBGx
-	 IllH64gCwNwNBovSXzCb2TwHCgE7MJ+OQPT/E0nHFBsDwtjsyeScS1qXfmnwPc/GAH
-	 TQaYSltmcKwuYAD1ZPxlh2OzHgYQwUIHzOsx/ZLCcfnqRN4UK3AV0LCcDUHxeTBGmp
-	 bvBYer2yb/jWQ==
+	b=Z8ZWJuLD0eTfZi+HXdwHHdrJYQHbw1y0uXXmPmdpjh02AYyYK41Bg9UcglPYqLpHz
+	 ZPft/+SpNfazmkjBxI00/dqO5xnbDUj3KcMf3dSx3QWMEAEBVpH2/DumvpnvAAtPmi
+	 ylRyfenDmOl/deAHg7pe3pWeL5XJ4mG+AXmxP5ST580FOJhnscDdJ6UCirwGGFoFXt
+	 3HRvEEn1COMoR1oVXfPuhLqOXNxt8XwDjzRGUHI2oQukdxFKe3mImOFJIj3EayIE1t
+	 ouNAyBIlnF/+1FOhPZXWR3qlvJ/PiqQ7Flsbz7WetiwiFj8ZmIg7ICif0XuDi189Dc
+	 LxhnBvsl6ln7g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/3] dmaengine: qcom: gpi: Convert dev_dbg() calls to
- tracepoints
+Subject: Re: [PATCH v2 2/3] dmaengine: qcom: gpi: Add trace event support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Praveen Talari" <praveen.talari@oss.qualcomm.com>
-Cc: vkoul@kernel.org, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260909-add-trace-support-gpio-v2-3-01f81739bb88@oss.qualcomm.com>
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260909-add-trace-support-gpio-v2-2-01f81739bb88@oss.qualcomm.com>
 References: <20260909-add-trace-support-gpio-v2-0-01f81739bb88@oss.qualcomm.com>
- <20260909-add-trace-support-gpio-v2-3-01f81739bb88@oss.qualcomm.com>
+ <20260909-add-trace-support-gpio-v2-2-01f81739bb88@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Sep 2026 05:22:02 +0000
-Message-Id: <20260909052202.D88341F00A3A@smtp.kernel.org>
+Date: Wed, 09 Sep 2026 05:23:08 +0000
+Message-Id: <20260909052308.A27C41F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
 
+New issues:
+- [Medium] The `gpi_irq_status` tracepoint is only called before the interr=
+upt processing loop, silently omitting back-to-back interrupts.
+
 Pre-existing issues:
-- [High] Unvalidated hardware event 'chid' used as an array index.
-- [High] Unvalidated hardware event 'tre_index' leads to out-of-bounds memo=
-ry read.
-- [High] The driver drops gchan->vc.lock while a DMA descriptor remains on =
-the virt-dma issued list, leading to a race with channel termination and a =
-use-after-free.
-- [High] Error path in gpi_resume() leaves the hardware IRQ enabled while t=
-he software state remains paused, leading to unbalanced IRQ enables upon re=
-try.
-- [High] The driver does not validate the physical address (`ptr`) returned=
- in a DMA completion event, allowing untrusted input to corrupt ring buffer=
- pointers.
-- [High] Missing dma_rmb() before reading the DMA event ring buffer.
-- [High] Missing memory barrier before ringing the event doorbell in gpi_pr=
-ocess_events().
-- [High] Missing dma_wmb() before writing to the channel doorbell in gpi_is=
-sue_pending().
+- [High] Tasklet Use-After-Free due to incorrect teardown order in gpi_free=
+_chan_resources.
+- [High] Incorrect channel cleanup in gpi_ch_init error path.
+- [High] Leak of transfer ring DMA memory when gpi_ch_init fails.
+- [High] Missing dma_wmb() barrier before writing to the channel doorbell r=
+egister, which may cause the hardware to read stale descriptors.
+- [High] Missing dma_rmb() barrier before reading event ring descriptors, r=
+isking processing of stale event data.
 --
 
-commit 1bf9fce9a4cdb676de685f3966a35631e5323808
+commit 4cf86dc6d78f8720092d0dce56c8bcfee50f39a4
 Author: Praveen Talari <praveen.talari@oss.qualcomm.com>
 
-dmaengine: qcom: gpi: Convert dev_dbg() calls to tracepoints
-
-Replace the remaining dev_dbg() based debug logging in the GPI DMA
-driver with the qcom_gpi tracepoints, providing structured runtime
-visibility into GPI DMA behavior without requiring invasive debug
-patches. dev_err() calls are left untouched.
+    dmaengine: qcom: gpi: Add trace event support
+   =20
+    Wire up the qcom_gpi tracepoints into the GPI DMA engine driver to
+    provide runtime visibility into driver behavior without requiring
+    invasive debug patches.
 
 > diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index b09354a73b46e..8e7d25a461475 100644
+> index a5055a6273af6..b09354a73b46e 100644
 > --- a/drivers/dma/qcom/gpi.c
 > +++ b/drivers/dma/qcom/gpi.c
-> @@ -945,17 +940,10 @@ static void gpi_process_imed_data_event(struct gcha=
-n *gchan,
->  		struct gpi_tre *gpi_tre;
+
+[ ... ]
+
+> @@ -841,6 +846,7 @@ static irqreturn_t gpi_handle_irq(int irq, void *data)
 > =20
->  		spin_unlock_irqrestore(&gchan->vc.lock, flags);
-> -		dev_dbg(gpii->gpi_dev->dev, "event without a pending descriptor!\n");
->  		gpi_ere =3D (struct gpi_ere *)imed_event;
-> -		dev_dbg(gpii->gpi_dev->dev,
-> -			"Event: %08x %08x %08x %08x\n",
-> -			gpi_ere->dword[0], gpi_ere->dword[1],
-> -			gpi_ere->dword[2], gpi_ere->dword[3]);
->  		gpi_tre =3D tre;
-> -		dev_dbg(gpii->gpi_dev->dev,
-> -			"Pending TRE: %08x %08x %08x %08x\n",
-> -			gpi_tre->dword[0], gpi_tre->dword[1],
-> -			gpi_tre->dword[2], gpi_tre->dword[3]);
-> +		trace_gpi_ev_no_desc(gpii->gpi_dev->dev, imed_event->chid,
-> +				     gpi_ere->dword, gpi_tre->dword);
->  		return;
+>  	offset =3D GPII_n_CNTXT_TYPE_IRQ_OFFS(gpii->gpii_id);
+>  	type =3D gpi_read_reg(gpii, gpii->regs + offset);
+> +	trace_gpi_irq_status(gpii->gpi_dev->dev, gpii_id, type);
+> =20
+>  	do {
+>  		/* global gpii error */
+
+[Severity: Medium]
+Will this tracepoint miss subsequent back-to-back interrupts?
+
+In drivers/dma/qcom/gpi.c:gpi_handle_irq(), the hardware can trigger
+back-to-back interrupts. The function reads the type register before the
+loop, traces it, and then processes the interrupt. It reads the type
+register again at the end of the loop and finds another interrupt, but
+continues the loop without invoking trace_gpi_irq_status() for the newly
+read type.
+
+[ ... ]
+
+> @@ -1887,6 +1897,7 @@ static void gpi_issue_pending(struct dma_chan *chan)
 >  	}
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this code lead to an
-out-of-bounds memory read?
-
-drivers/dma/qcom/gpi.c:gpi_process_imed_data_event() {
-    ...
-    void *tre =3D ch_ring->base + (ch_ring->el_size * imed_event->tre_index=
+> =20
+>  	gpi_desc =3D to_gpi_desc(vd);
+> +	trace_gpi_queue_xfer(gpii->gpi_dev->dev, gchan->chid, gpi_desc->num_tre=
 );
-    ...
-    gpi_tre =3D tre;
-    trace_gpi_ev_no_desc(gpii->gpi_dev->dev, imed_event->chid,
-                         gpi_ere->dword, gpi_tre->dword);
-}
-
-The tre_index is read from imed_event->tre_index without a bounds check aga=
-inst
-ch_ring->elements. If it exceeds the ring size, will the tracepoint derefer=
-ence
-out-of-bounds memory?
-
-[ ... ]
-
-> @@ -1064,11 +1052,10 @@ static void gpi_process_xfer_compl_event(struct g=
-chan *gchan,
->  		dev_err(gpii->gpi_dev->dev, "Error in Transaction\n");
->  		result.result =3D DMA_TRANS_ABORTED;
->  	} else {
-> -		dev_dbg(gpii->gpi_dev->dev, "Transaction Success\n");
->  		result.result =3D DMA_TRANS_NOERROR;
->  	}
->  	result.residue =3D gpi_desc->len - compl_event->length;
-> -	dev_dbg(gpii->gpi_dev->dev, "Residue %d\n", result.residue);
-> +	trace_gpi_xfer_result(gpii->gpi_dev->dev, chid, result.result, result.r=
-esidue);
-> =20
->  	dma_cookie_complete(&vd->tx);
->  	dmaengine_desc_get_callback_invoke(&vd->tx, &result);
+>  	for (i =3D 0; i < gpi_desc->num_tre; i++) {
+>  		tre =3D &gpi_desc->tre[i];
+>  		gpi_queue_xfer(gpii, gchan, tre, &wp);
 
 [Severity: High]
-This is a pre-existing issue, but does this driver validate the physical ad=
-dress
-returned in a DMA completion event?
+This is a pre-existing issue, but is there a missing dma_wmb() barrier
+before writing to the channel doorbell register?
 
-drivers/dma/qcom/gpi.c:gpi_process_xfer_compl_event() {
-    ...
-    void *ev_rp =3D to_virtual(ch_ring, compl_event->ptr);
-    ...
-}
+After the loop populates descriptors in
+drivers/dma/qcom/gpi.c:gpi_issue_pending(), the doorbell is rung:
 
-The compl_event->ptr is a physical address provided by the hardware DMA eve=
-nt,
-and to_virtual() converts it without bounds checking. If the hardware yield=
-s an
-invalid ptr outside the physical bounds of the ring buffer, can this corrup=
-t the
-ring pointer tracking by assigning a bogus virtual pointer to ch_ring->rp?
+	gpi_desc->db =3D ch_ring->wp;
+	gpi_write_ch_db(gchan, &gchan->ch_ring, gpi_desc->db);
+
+Since gpi_write_ch_db() uses writel_relaxed(), without a preceding
+dma_wmb(), could the CPU reorder the relaxed MMIO doorbell write before
+the main memory TRE writes become globally visible, causing the hardware
+to process uninitialized or stale descriptors?
 
 [Severity: High]
-This isn't a bug introduced by this patch, but can this code race with chan=
-nel
-termination and cause a use-after-free?
+This isn't a bug introduced by this patch, but does
+gpi_free_chan_resources() in drivers/dma/qcom/gpi.c have a race
+condition that could lead to a use-after-free?
 
-drivers/dma/qcom/gpi.c:gpi_process_xfer_compl_event() {
-    ...
-gpi_free_desc:
-    spin_lock_irqsave(&gchan->vc.lock, flags);
-    list_del(&vd->node);
-    spin_unlock_irqrestore(&gchan->vc.lock, flags);
-    kfree(gpi_desc);
-}
+	tasklet_kill(&gpii->ev_task);
 
-The interrupt handler drops gchan->vc.lock earlier after getting the descri=
-ptor
-via vchan_next_desc(), without removing it from the desc_issued list.
+	/* send command to de allocate event ring */
+	if (cur_state =3D=3D ACTIVE_STATE)
+		gpi_send_cmd(gpii, NULL, GPI_EV_CMD_DEALLOC);
 
-If a concurrent vchan_terminate_all() acquires the lock, removes, and frees=
- the
-descriptor, the IRQ handler will then resume, modify the freed descriptor
-(dma_cookie_complete), and call list_del(&vd->node) on freed memory.
+	gpi_free_ring(&gpii->ev_ring, gpii);
 
-This also applies to gpi_process_imed_data_event() where the same pattern e=
-xists.
+	/* disable interrupts */
+	if (cur_state =3D=3D ACTIVE_STATE)
+		gpi_disable_interrupts(gpii);
 
-[ ... ]
-
-> @@ -1100,11 +1087,8 @@ static void gpi_process_events(struct gpii *gpii)
->  			chid =3D gpi_event->xfer_compl_event.chid;
->  			type =3D gpi_event->xfer_compl_event.type;
-> =20
-> -			dev_dbg(gpii->gpi_dev->dev,
-> -				"Event: CHID:%u, type:%x %08x %08x %08x %08x\n",
-> -				chid, type, gpi_event->gpi_ere.dword[0],
-> -				gpi_event->gpi_ere.dword[1], gpi_event->gpi_ere.dword[2],
-> -				gpi_event->gpi_ere.dword[3]);
-> +			trace_gpi_process_event(gpii->gpi_dev->dev, chid, type,
-> +						gpi_event->gpi_ere.dword);
-> =20
->  			switch (type) {
->  			case XFER_COMPLETE_EV_TYPE:
->  				gchan =3D &gpii->gchan[chid];
+The tasklet is killed and the ring is freed before the interrupt is
+disabled. If a delayed or spurious hardware interrupt occurs in this
+window, the interrupt handler will read pm_state as PREPARE_TERMINATE,
+and could schedule the tasklet again. The tasklet would then run and
+access the freed ev_ring.
 
 [Severity: High]
-This isn't a bug introduced by this patch, but is a dma_rmb() missing before
-reading the DMA event ring buffer?
+This is a pre-existing issue, but does gpi_ch_init() in
+drivers/dma/qcom/gpi.c have an incorrect channel cleanup in its
+error path?
 
-drivers/dma/qcom/gpi.c:gpi_process_events() {
-    cntxt_rp =3D gpi_read_reg(gpii, gpii->ev_ring_rp_lsb_reg);
-    rp =3D to_virtual(ev_ring, cntxt_rp);
+error_start_chan:
+	for (i =3D i - 1; i >=3D 0; i--) {
+		gpi_stop_chan(&gpii->gchan[i]);
+		gpi_send_cmd(gpii, gchan, GPI_CH_CMD_RESET);
+	}
+	i =3D 2;
+error_alloc_chan:
+	for (i =3D i - 1; i >=3D 0; i--)
+		gpi_reset_chan(gchan, GPI_CH_CMD_DE_ALLOC);
 
-    do {
-        while (rp !=3D ev_ring->rp) {
-            gpi_event =3D ev_ring->rp;
-    ...
-}
-
-Because gpi_read_reg() wraps readl_relaxed(), it provides no ordering guara=
-ntees
-against normal memory reads. Can the CPU speculatively fetch from the DMA-m=
-apped
-event ring before the register read completes and confirms there is new dat=
-a?
-
-[Severity: High]
-This is a pre-existing issue, but does this code use an unvalidated hardware
-event chid as an array index?
-
-drivers/dma/qcom/gpi.c:gpi_process_events() {
-    ...
-    chid =3D gpi_event->xfer_compl_event.chid;
-    type =3D gpi_event->xfer_compl_event.type;
-
-    trace_gpi_process_event(gpii->gpi_dev->dev, chid, type,
-                            gpi_event->gpi_ere.dword);
-
-    switch (type) {
-    case XFER_COMPLETE_EV_TYPE:
-        gchan =3D &gpii->gchan[chid];
-    ...
-}
-
-If the hardware is compromised or fails and sends a chid value greater than=
- or
-equal to MAX_CHANNELS_PER_GPII, indexing gpii->gchan[chid] will read out of
-bounds. Can this corrupt adjacent memory or crash the kernel?
-
-[ ... ]
-
-> @@ -1121,11 +1104,8 @@ static void gpi_process_events(struct gpii *gpii)
->  							    &gpi_event->immediate_data_event);
->  				break;
->  			case QUP_NOTIF_EV_TYPE:
-> -				dev_dbg(gpii->gpi_dev->dev, "QUP_NOTIF_EV_TYPE\n");
->  				break;
->  			default:
-> -				dev_dbg(gpii->gpi_dev->dev,
-> -					"not supported event type:0x%x\n", type);
->  			}
->  			gpi_ring_recycle_ev_element(ev_ring);
->  		}
+If initialization fails, it jumps to the error path. The loop iterates
+over i, but it erroneously passes the single argument gchan to
+gpi_stop_chan(), gpi_send_cmd(), and gpi_reset_chan() instead of
+&gpii->gchan[i]. Could this repeatedly reset the same channel while
+abandoning the other channel in a partially initialized state?
 
 [Severity: High]
-This is a pre-existing issue, but is a memory barrier missing before ringing
-the event doorbell?
+This isn't a bug introduced by this patch, but does
+gpi_alloc_chan_resources() in drivers/dma/qcom/gpi.c leak the transfer
+ring DMA memory when gpi_ch_init() fails?
 
-drivers/dma/qcom/gpi.c:gpi_process_events() {
-    ...
-            gpi_ring_recycle_ev_element(ev_ring);
-        }
-        gpi_write_ev_db(gpii, ev_ring, ev_ring->wp);
-    ...
-}
+	ret =3D gpi_alloc_ring(&gchan->ch_ring, CHAN_TRES,
+			     sizeof(struct gpi_tre), gpii);
+	if (ret)
+		goto xfer_alloc_err;
 
-The gpi_write_ev_db() wraps writel_relaxed(). The smp_wmb() inside
-gpi_ring_recycle_ev_element() only orders normal memory writes, not prior m=
-emory
-reads against subsequent MMIO writes. Does this mean the hardware might
-overwrite the DMA event ring descriptor before the CPU actually finishes re=
-ading
-it? A full mb() or rmb() is typically required before the doorbell.
+	ret =3D gpi_ch_init(gchan);
 
-[ ... ]
+	mutex_unlock(&gpii->ctrl_lock);
 
-> @@ -1578,7 +1554,7 @@ static int gpi_resume(struct dma_chan *chan)
-> =20
->  	mutex_lock(&gpii->ctrl_lock);
->  	if (gpii->pm_state =3D=3D ACTIVE_STATE) {
-> -		dev_dbg(gpii->gpi_dev->dev, "channel is already active\n");
-> +		trace_gpi_already_state(gpii->gpi_dev->dev, gpii->gpii_id, gpii->pm_st=
-ate);
->  		mutex_unlock(&gpii->ctrl_lock);
->  		return 0;
->  	}
+	return ret;
+
+When gpi_ch_init() returns an error, the function exits without calling
+gpi_free_ring() to release the locally allocated gchan->ch_ring.
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does this error path leave t=
-he
-hardware IRQ enabled while the software state remains paused?
+This is a pre-existing issue, but is there a missing dma_rmb() barrier
+before reading event ring descriptors in
+drivers/dma/qcom/gpi.c:gpi_process_events()?
 
-drivers/dma/qcom/gpi.c:gpi_resume() {
-    ...
-    enable_irq(gpii->irq);
+	cntxt_rp =3D gpi_read_reg(gpii, gpii->ev_ring_rp_lsb_reg);
+	rp =3D to_virtual(ev_ring, cntxt_rp);
 
-    for (i =3D 0; i < MAX_CHANNELS_PER_GPII; i++) {
-        ret =3D gpi_send_cmd(gpii, &gpii->gchan[i], GPI_CH_CMD_START);
-        if (ret) {
-            dev_err(gpii->gpi_dev->dev, "Error starting chan, ret:%d\n", re=
-t);
-            mutex_unlock(&gpii->ctrl_lock);
-            return ret;
-        }
-    ...
-}
+	do {
+		while (rp !=3D ev_ring->rp) {
+			gpi_event =3D ev_ring->rp;
 
-If gpi_send_cmd() fails, it returns without disabling the IRQ, and pm_state
-remains PAUSE_STATE. On the next resume attempt, will it bypass the active =
-state
-check and call enable_irq() a second time, resulting in an unbalanced IRQ e=
-nable
-and a kernel warning?
-
-[Severity: High]
-This is a pre-existing issue, but is a dma_wmb() missing before writing to =
-the
-channel doorbell?
-
-drivers/dma/qcom/gpi.c:gpi_issue_pending() {
-    for (i =3D 0; i < gpi_desc->num_tre; i++) {
-        tre =3D &gpi_desc->tre[i];
-        gpi_queue_xfer(gpii, gchan, tre, &wp);
-    }
-
-    gpi_desc->db =3D ch_ring->wp;
-    gpi_write_ch_db(gchan, &gchan->ch_ring, gpi_desc->db);
-}
-
-Descriptors are written to the DMA ring using memcpy() in gpi_queue_xfer(),=
- and
-then the doorbell is rung via gpi_write_ch_db(), which wraps writel_relaxed=
-().
-Since writel_relaxed() does not order against prior normal memory writes, c=
-an
-the doorbell write reach the device before the memcpy() is visible in RAM?
+The CPU reads the hardware progress register via gpi_read_reg() which
+uses readl_relaxed(). It then immediately reads the corresponding DMA
+memory at ev_ring->rp. Without an intervening dma_rmb(), could the CPU
+speculatively fetch the descriptors from memory before the progress
+pointer read completes, reading stale events?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909-add-trace-=
-support-gpio-v2-0-01f81739bb88@oss.qualcomm.com?part=3D3
+support-gpio-v2-0-01f81739bb88@oss.qualcomm.com?part=3D2
