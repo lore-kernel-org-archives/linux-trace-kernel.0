@@ -1,113 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C712155D865;
-	Wed,  9 Sep 2026 16:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F1437DABC;
+	Wed,  9 Sep 2026 17:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788971803; cv=none; b=uZBPMifcqjqNPRjVIDlQKsBLK77D79/e7QeTgdf9bciLVwgaxsLGeZdx9lKsDDQU5qQG+QSSJRUDDzny151R5iKHaZ45XLywwtqi9j3PmBdexefWnPTekeR4cPnPUQOnelIG3Nz9p63yFtDLVfnQx5JU6Qw+ug2ee+8xoyIgDMM=
+	t=1788975646; cv=none; b=QIEFr/4WotVLdXK2pdmBtF5NVVW+LGydaCWLTB+mnl5mOTg+OpmdWqgLqrKXj0d8/Utaly8cIeTzM5N5GiD5HQDjXRDuPRIErMLzj65HD+nz4iT4nNmhdWq0VMs3KdA9VGkN430mxailEi5d2xRUvGxOQIpOmW06s2e+X0XrR7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788971803; c=relaxed/simple;
-	bh=ivQODqGc8KFRbT+CDhnacTUmIisuYelCOQ7C8DxNKCM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=j2uIUfN4r9fEKL1vK8q0P/sfasC170plCnZGFVgaByDwi+e3aszxCDQzvLZaIi3hviI2MOZtNLhVI6deBcXAzIycyRH6h9O1gxkT53SiB/dy/XM+v6dly3axnvJ9sLHEoYlknSDu/bW6xlImtzgFG1HiOjWMiAJ/pVgxiK0LWD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dx70I1I+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788975646; c=relaxed/simple;
+	bh=vOPyrWVi6qqE7sYvrSwJa8RgdfKrzdkdQpU53OStgZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LfQS/oo9WdbZUbAPbQcljVMxLUQAiFYggbK1TpZiYEQpj8++mBFj8ZT4nc0x+RVHez5AjT/nQSVE8evCNMQftPxN3fkaG/nV1rDlUqFDduQY91vuq04LH9bMwuGrVJRSmjSiAY44Gz8pvsCteUbJ9HXJkP/xPmjK5ichzzl+bxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=JaopRl5H; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dx70I1I+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E26281F00893;
-	Wed,  9 Sep 2026 16:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788971801;
-	bh=nDQ3BlVROek4PxaLywwCvD6/LeA/synqwhaOMOah7lE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dx70I1I+8UJyr/VBOxcjZH9n5kihC+kb27i9VnPrDp1ipyea5JH6DRYBTXNJ3aHJY
-	 tK/lTlLld6Mvv7CaO7FT8M6c5n1GYf9rlDfs9yhitsA/IXKiamVj7l1M3n8UHZJ5IL
-	 m7z4Moz1bEehf5qcj1SHdImqffS1Cu1dM14AYN4P9z184AZ+ga7ltA5bZ1z3wI57G4
-	 EeU31nzGMeRyayLgVWtVu4tewA7jtJa5PaPmpdPh8+X2MyFDHES2XPpzl75tdtpAMC
-	 vqtNyPXNE76OqzpHTp0UaEJFZjHyS0j1zW12o+fRCKt/82SUkmevuYH1JhPAXvRx1u
-	 xAViDSWb1GEHA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/4] dmaengine: vchan: add vchan_chan_name() to get
- channel device name
-Reply-To: sashiko-reviews@lists.linux.dev
-To: Frank.Li@oss.nxp.com
-Cc: linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260909-dma-chan_dev-rename-v4-1-d8fb6892a70f@nxp.com>
-References: <20260909-dma-chan_dev-rename-v4-0-d8fb6892a70f@nxp.com>
- <20260909-dma-chan_dev-rename-v4-1-d8fb6892a70f@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Sep 2026 16:36:40 +0000
-Message-Id: <20260909163640.E26281F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="JaopRl5H"
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 4251B1402CD;
+	Wed,  9 Sep 2026 17:40:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 3CD3741;
+	Wed,  9 Sep 2026 17:40:40 +0000 (UTC)
+Date: Wed, 9 Sep 2026 13:41:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Fix unique symbol check in
+ kprobe_non_uniq_symbol.tc
+Message-ID: <20260909134156.6425e8b0@gandalf.local.home>
+In-Reply-To: <20260909092954.2200558-1-svens@linux.ibm.com>
+References: <20260909092954.2200558-1-svens@linux.ibm.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: nbdht7udeopfaonmwdpqtri7st73s5k3
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 3CD3741
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+wuuizAZRrBrnyHyxgaQYOxQm3npG6WN4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=k61UOLUWtwxb1LR5yESkPyq61Z+yxGwDgikexfhecXQ=; b=JaopRl5H1fOGQJARN6rJSGOCV1e10YwV5nTNJEVEZg0RapgQMD2cEAoV25W3xhQCnibWyPHn9MAm8UaBz1Ja4p8gBm0leLSFiUwqKa89Dj+DANbM2AKxZOKSc927XrS396RxasM1y9Kuqj0kiOcKrSth2xPplfLHE7I/GRcs3l0=
+X-HE-Tag: 1788975640-759811
+X-HE-Meta: U2FsdGVkX19n25FivK7oKhLguDDUNlMMVkgUg5KTF61fe3HFxSzHstYk+2jBwlusxRCXNnjix7NnadiJPLATtUUZLsVctJ1Za63yZBUyooeEmyuCEt5P93Vep6hdZp/RIDKIYbzFfImGn+A3u9qwTczNJ9ylEa3yukgXuU6yHLEOwbjisz9yeY11hauz7d05GyEFAurr4Ycd44xowUHtpST0GrhXs13yd232utl60ULUOzYqAYzg5DnvRHr/Oxc1t/D3RJ+jWDEyQP4TInauUsCmAZlbnAY7FI1hSh13l4+KTFds9I+B9Z4m4KKFzUYoq2Ag687ifm+6J1ZDbRYslc6UqGahn1hPJy6qVtJCaULLLv9eysur5lcQ9fSOuUAqjKkm3l/tNeU/gGwJ/aFBXg==
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Wed,  9 Sep 2026 11:29:53 +0200
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-Pre-existing issues:
-- [High] Use-After-Free of DMA channel name in probe error path due to devm=
-/manual cleanup mismatch
---
+> The current regex also matches symbols in modules, which makes the
+> test fail on s390 where name_show is present only once in the kernel,
+> but also multiple times in modules:
+> 
+> 000001b1401cdc20 t name_show
+> 000001b0c05e6c40 t name_show    [mdev]
+> 000001b0c0495f30 t name_show    [i2c_core]
+> 
+> Fix this by changing the regular expression to only match the function
+> name.
+> 
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> ---
+>  .../selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc    | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+> index bc9514428dba..07b1177c1634 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+> @@ -6,7 +6,7 @@
+>  SYMBOL='name_show'
+>  
+>  # We skip this test on kernel where SYMBOL is unique or does not exist.
+> -if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}" /proc/kallsyms)" -le '1' ]; then
+> +if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
+>  	exit_unsupported
+>  fi
+>  
 
-commit 6477701933e50dc5df4ddb73cea43b46ef1b83f8
-Author: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 
-    dmaengine: vchan: add vchan_chan_name() to get channel device name
-   =20
-    Introduce vchan_chan_name() to obtain the DMA channel device name.
-   =20
-    Use a dedicated helper instead of directly accessing dma_chan::dev
-    so callers remain unaffected by an upcoming rename of the struct member.
+But I wonder if "type_show" or "init_once" is a better option than
+"name_show"?
 
-[ ... ]
-
-> diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-> index d3ad78562a140..3e8151e2ad75a 100644
-> --- a/drivers/dma/stm32/stm32-dma.c
-> +++ b/drivers/dma/stm32/stm32-dma.c
-> @@ -1668,7 +1668,7 @@ static int stm32_dma_probe(struct platform_device *=
-pdev)
-> =20
->  		ret =3D devm_request_irq(&pdev->dev, chan->irq,
->  				       stm32_dma_chan_irq, 0,
-> -				       dev_name(chan2dev(chan)), chan);
-> +				       vchan_chan_name(&chan->vchan), chan);
->  		if (ret) {
->  			dev_err(&pdev->dev,
->  				"request_irq failed with err %d channel %d\n",
-
-[Severity: High]
-This is a pre-existing issue, but in drivers/dma/stm32/stm32-dma.c at
-stm32_dma_probe(), devm_request_irq() stores the dynamically allocated DMA
-channel name (vchan_chan_name()) as the IRQ name.
-
-If a subsequent initialization step fails, such as a failure in
-of_dma_controller_register(), the code jumps to err_unregister:
-
-drivers/dma/stm32/stm32-dma.c:stm32_dma_probe() {
-    ...
-err_unregister:
-	dma_async_device_unregister(dd);
-    ...
-}
-
-Because dma_async_device_unregister() is called manually, it frees the DMA
-device and its associated channel name string immediately. However, since t=
-he
-IRQ is managed by devm, its cleanup is deferred until devres runs after pro=
-be
-returns.
-
-Could this create a use-after-free window where the IRQ subsystem retains a
-dangling pointer to the freed string? If an interrupt fires or if a user
-reads /proc/interrupts concurrently during this window, could this lead to =
-an
-oops or memory corruption?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909-dma-chan_d=
-ev-rename-v4-0-d8fb6892a70f@nxp.com?part=3D1
+-- Steve
