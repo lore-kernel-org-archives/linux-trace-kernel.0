@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9461DA62E;
-	Wed,  9 Sep 2026 15:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6015650ED;
+	Wed,  9 Sep 2026 15:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788968133; cv=none; b=H22DU92p1eApAlouSuouJdnJCpnTntwHIp7NOGOiqiseelEjLaXQ0ZNcGkDInTuDvDDN2SjELwykwgwbBnwCHnjVg2Gln43yygSyNdp/Gp3lOk8VM0/fFNVgAbAYs5b2YsPikhQPZ9Gz3uKToBuI1Y3iCLfteH2ZtEJPTIC16hs=
+	t=1788968422; cv=none; b=Z+Bm9ffwGXEsc/JBO5L9ANmI7PgzQ3mnICftiYfjtyErznLY9VCDlS/130yExj/YZNsaWPOinucrrY2QEE4z6RAiyH5J3b1oqKE8efXp0YKM8hlZsm//jyqrn5aiIZAahMvvPirUtwPVOUKw7fdzEuVVWjLLWQjbz83MoMw4mDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788968133; c=relaxed/simple;
-	bh=sUZgJsqJBO3n6j2kAUKbkseTt+lRaKH1qZcLs3ytEfY=;
+	s=arc-20240116; t=1788968422; c=relaxed/simple;
+	bh=OTpD1mn++QZ6cnu/XQdOkc8XsknDB0Wm8sUuOPNTh+g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ri1Z+hJTZ4qLWBHaxNlgVg4OR5Ks3bqE8u17rxs54mawNedLd1OOmxp+Cl9O7CQv72I5h5eIfZmnuS6slP+SkFQBfqGxQjJe6fxD2lTGO1avA5c3sklPY3766zLEkGxh/t1yPASiEIf9SrEPfoyliH+/eWtmzOkVxFWzxowgplA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8tXXPP0; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=PyMNCtlU0ByJfui+vLt27A7oib1QEahPfYXGxD9sCGeyAVSGIj9bypt0ti0DU+9JKurOJtmchmkXnsYLn1sH8Vy5CrWnF8zUJd+Iu+7hNyWoQSljGemAcynZ+KdorWS7/L6qUEJuJYVFaqBk3wkEvdmwaNJrxvENXXwdNfMjwYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b67FWDHV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8tXXPP0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870621F00A3A;
-	Wed,  9 Sep 2026 15:35:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b67FWDHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5D41F00A3A;
+	Wed,  9 Sep 2026 15:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788968132;
-	bh=uh93x1YF/dEaPyXWzFbI73dZS8rpJkADyL58fkB1FYU=;
+	s=k20260515; t=1788968421;
+	bh=AXYYQlIGAZBrAHu4CUr6VQDiXrusLKFHKO4tw/xbR/o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=B8tXXPP0BpNZCnZ6D6dQeWWfG9eCaCcLp1iGPfB7DFfT+ATRDi8hxrzJjm0UIJWID
-	 6OOcroK7SZ5KAWqwBjOU7ychXay7xhZCjUJWqnvA2HLCB8qdRLU7SoQ8IEIgTwWed7
-	 Bw2SKj1yugxKiwOlo5T55L2Us/XLRZNiRFUpRp/tDkHI+7loZUpfPCuiuV1P40bYzX
-	 gemsILP/z4wH2hbB+0Cs/bsJMiEIehCS2IE9dZ/8+RenT1ybJ+fSgCgkaTjGsCyUBz
-	 xj3gs4FgpTBFUEnQQGFnaF3zZyLCInbnln1VTOdXEaGH1E5lrK00ebKwI28JeiJ9bP
-	 XyQzu4+v48ZJQ==
-Message-ID: <10b49972-dab0-4563-a3a4-c3549d9f553d@kernel.org>
-Date: Wed, 9 Sep 2026 17:35:13 +0200
+	b=b67FWDHVrvKlADudVooPhLmJOQAbQa4r/JfwC9gUSiN2XwdjDzXh8PDhLIbwBJ2Bl
+	 N6Vzk3XSxn9iwept0h4EbsT1QjEwa1ArTZoWsrAUs3sRxTkLtG3u6Tqn48pqVF4w42
+	 Hbr0VynPh2dln0S6/KgjarMmfPtDZf/8puPSLa3d6dAowUIbor3F3E8wZW4gfkHAy7
+	 ioBnUGH/HGUgh73jIHLXiP9er2c5LG71oVhLkOGVgFSr+kjgVMlPqHXLGlxCQA7ZS5
+	 LcMe5V5KBReJ3ihsKdA8eubDNI8HqYBjN9XKnu0HuBHiiD05yVhAVNYtvLFO27T70K
+	 2JOkNN9/OsV+Q==
+Message-ID: <26f620c7-043a-4cb3-a74b-29069bded0dd@kernel.org>
+Date: Wed, 9 Sep 2026 17:40:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 02/45] KVM: guest_memfd: Use kvm_mem_is_private() when
- populating guest_memfd memory
+Subject: Re: [PATCH v12 12/45] KVM: guest_memfd: Always fault from guest_memfd
+ if in-place conversion is enabled
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -70,9 +70,9 @@ To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
+ linux-coco@lists.linux.dev
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-2-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -119,27 +119,41 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-2-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/31/26 02:25, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
-> Use kvm_mem_is_private() when populating guest_memfd instead of using an
-> open coded equivalent.  In addition to simplifying the populate code *now*,
-> this avoids the need to provide a range-based gmem lookup API in the future
-> as well.
+> If a guest_memfd memslot is created but the guest_memfd does not have the
+> GUEST_MEMFD_FLAG_MMAP set, KVM still fulfils guest faults by looking up the
+> memslot's userspace_addr.
 > 
-> No functional change intended.
+> Set KVM_MEMSLOT_GMEM_ONLY if in-place conversion is enabled so that the
+> guest_memfd's memory will be used for both shared and private memory. With
+> in-place conversion, guest_memfd will be the only backing memory for the
+> memslot.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-> Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
+> No validation is performed to require userspace_addr to be a mapping from
+> the associated guest_memfd because even after validation, userspace is free
+> to remap something else at the provided userspace_addr.
+> 
+> userspace_addr will still be used by functions like kvm_read_guest(), and
+> if userspace_addr does not match up with the corresponding memory in the
+> memslot's guest_memfd (whether userspace_addr points to the wrong offset or
+> some non-guest_memfd memory, etc), that is a user error.
+> 
+> Requiring both shared and private memory to come from the only associated
+> guest_memfd simplifies invalidation in stage 2 page tables. On a PUNCH_HOLE
+> operation on a guest_memfd, the invalidation is now guaranteed to be
+> invalidating only memory mapped from the given guest_memfd.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
+
+Yeah, that matches what we discussed in the call
 
 Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
